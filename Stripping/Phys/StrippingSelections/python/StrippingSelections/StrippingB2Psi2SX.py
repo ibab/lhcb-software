@@ -48,32 +48,33 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'ChKTRCHI2DOF':5,
                  'ChKPID': 0 ,# before -2
                  'PhiWin':20,
-                 'PhiPT':500,
+                 'PhiPT':1000, #before 500 #ara 1000
                  'PhiVFASPF':16,
                  'PhiMAXTRCHI2DOF':5,
                  'PhiMINTRCHI2DOF':-2,#
                  'KstMassDown':  826,
                  'KstMassUp': 966,
-                 'KstAPT':500,
+                 'KstAPT':1500, #before 500
                  'KstVFASPF':16,
                  'KstTRCHI2DOF':4,
                  'KstPIDK': 0, #before -2
                  'KstPIDpi': 10, #new 10
                  'KsVFASPF':20,
                  'KsBPVDLS':5,
-                 'incl_LinePrescale':0.5, #0.1
+                 'incl_LinePrescale':0.1, #0.1 #before 0.5 #avui 0.2 
                  'incl_LinePostscale':1,
-                 'BsMassCutDownPre':5000,
-                 'BsMassCutUpPre':5650,
-                 'BsMassCutDownPost':5100,
-                 'BsMassCutUpPost':5550,
+                 'BPVLTIME_detatched':0.15,
+                 'BsMassCutDownPre':5050,#before 5000
+                 'BsMassCutUpPre':5600,#before 5650
+                 'BsMassCutDownPost':5150,#before 5100
+                 'BsMassCutUpPost':5500, #before 5550
                  'BsVCHI2PDOF':10,
                  'sig_LinePrescale': 1,
                  'sig_LinePostscale': 1,
                  'ChKPT': 500 ,
                  'K_LinePrescale': 1, #0.5
                  'K_LinePostscale': 1,
-                 'Kstar_LinePrescale': 1, #0.5
+                 'Kstar_LinePrescale': 1, #0.5 #before 1 #ara 0.5 
                  'Kstar_LinePostscale': 1,
                  'MINTREEPT2' : 1000,
                  'BKsVCHI2PDOF': 10,
@@ -122,6 +123,7 @@ class B2Psi2SXConf(LineBuilder) :
                               'KsBPVDLS',
                               'incl_LinePrescale',
                               'incl_LinePostscale',
+                              'BPVLTIME_detatched',
                               'BsMassCutDownPre',
                               'BsMassCutUpPre',
                               'BsMassCutDownPost',
@@ -229,7 +231,8 @@ class B2Psi2SXConf(LineBuilder) :
                                                               BsMassCutUpPre = config['BsMassCutUpPre'],
                                                               BsMassCutDownPost = config['BsMassCutDownPost'],
                                                               BsMassCutUpPost = config['BsMassCutUpPost'],
-                                                              BsVCHI2PDOF = config['BsVCHI2PDOF']
+                                                              BsVCHI2PDOF = config['BsVCHI2PDOF'],
+                                                              BPVLTIME = config['BPVLTIME_detatched']
                                                               )
         
         self.Bs2Psi2SPhiJpsiPiPi_line = StrippingLine(sig + "Line",
@@ -249,7 +252,8 @@ class B2Psi2SXConf(LineBuilder) :
                                                           BsMassCutUpPre = config['BsMassCutUpPre'],
                                                           BsMassCutDownPost = config['BsMassCutDownPost'],
                                                           BsMassCutUpPost = config['BsMassCutUpPost'],
-                                                          BsVCHI2PDOF = config['BsVCHI2PDOF']
+                                                          BsVCHI2PDOF = config['BsVCHI2PDOF'],
+                                                          BPVLTIME = config['BPVLTIME_detatched']
                                                           )
         
         self.Bu2Psi2SKJpsiPiPi_line = StrippingLine(K + "Line",
@@ -272,7 +276,8 @@ class B2Psi2SXConf(LineBuilder) :
                                                                   BsMassCutDownPost = config['BsMassCutDownPost'],
                                                                   BsMassCutUpPost = config['BsMassCutUpPost'],
                                                                   BsVCHI2PDOF = config['BsVCHI2PDOF'],
-                                                                  MINTREEPT2 = config['MINTREEPT2']
+                                                                  MINTREEPT2 = config['MINTREEPT2'],
+                                                                  BPVLTIME = config['BPVLTIME_detatched']
                                                                   )
         
         self.Bd2Psi2SKstarJpsiPiPi_line = StrippingLine(Kstar + "Line",
@@ -473,11 +478,12 @@ def makeBs2Psi2SPhiJpsiPiPi(name,
                             BsMassCutUpPre,
                             BsMassCutDownPost,
                             BsMassCutUpPost,
-                            BsVCHI2PDOF #<10
+                            BsVCHI2PDOF, #<10
+                            BPVLTIME
                             ) :
     
     _preVertexCuts = "in_range(%(BsMassCutDownPre)s,AM,%(BsMassCutUpPre)s)" % locals()
-    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s)" % locals()
+    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s) & (BPVLTIME()> %(BPVLTIME)s*ps) " % locals()
     
 #    print 'makeBs2Psi2SPhiJpsiPiPi', name, 'MotherCuts:', _motherCuts, '_preVertexCuts:', _preVertexCuts
     
@@ -506,12 +512,13 @@ def makeBu2Psi2SKJpsiPiPi(name,
                           BsMassCutUpPre,
                           BsMassCutDownPost,
                           BsMassCutUpPost,
-                          BsVCHI2PDOF #<10
+                          BsVCHI2PDOF, #<10
+                          BPVLTIME
                           ) :
 
     _daughtersCuts= {"K+": "(PT > %(ChKPT)s)" % locals()}
     _preVertexCuts = "in_range(%(BsMassCutDownPre)s,AM,%(BsMassCutUpPre)s)" % locals()
-    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s)" % locals()
+    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s) & (BPVLTIME()> %(BPVLTIME)s*ps)" % locals()
     
 #    print 'makeBu2Psi2SKJpsiPiPi', name, 'MotherCuts:', _motherCuts, '_preVertexCuts:', _preVertexCuts, '_daughtersCuts', _daughtersCuts
     _Bs = CombineParticles( DecayDescriptor = "[B+ -> psi(2S) K+]cc",
@@ -541,11 +548,12 @@ def makeBd2Psi2SKstarJpsiPiPi(name,
                               BsMassCutDownPost,
                               BsMassCutUpPost,
                               BsVCHI2PDOF, #<10
-                              MINTREEPT2
+                              MINTREEPT2,
+                              BPVLTIME
                               ) :
 
     _preVertexCuts = "in_range(%(BsMassCutDownPre)s,AM,%(BsMassCutUpPre)s)" % locals()
-    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s) & (MINTREE('K*(892)0'==ABSID, PT)> %(MINTREEPT2)s*MeV)" % locals()
+    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s) & (MINTREE('K*(892)0'==ABSID, PT)> %(MINTREEPT2)s*MeV) & (BPVLTIME()> %(BPVLTIME)s*ps)" % locals()
 
 #    print 'makeBd2Psi2SKstarJpsiPiPi', name, 'MotherCuts:', _motherCuts, '_preVertexCuts:', _preVertexCuts
     

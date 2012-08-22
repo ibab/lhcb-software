@@ -38,23 +38,23 @@ config_params = {'muPID':0.,
                  'ChKTRCHI2DOF':5,
                  'ChKPID':0, #before -2
                  'PhiWin':20,
-                 'PhiPT':500,
+                 'PhiPT':1000, #before 500
                  'PhiVFASPF':16,
                  'PhiMAXTRCHI2DOF':5,
                  'PhiMINTRCHI2DOF':-2,
                  'KstMassDown':  826,
                  'KstMassUp': 966,
-                 'KstAPT':500,
+                 'KstAPT':1200, #before 500
                  'KstVFASPF':16,
                  'KstTRCHI2DOF':4,
                  'KstPIDK': 0, # before -2
                  'KstPIDpi': 10, #new
                  'KsVFASPF':20,
                  'KsBPVDLS':5,
-                 'incl_LinePrescale':0.1,
+                 'incl_LinePrescale':0.05, #before 0.1
                  'incl_LinePostscale':1,
-                 'BPVLTIME_detatched':0.15,
-                 'incl_DetatchedLinePrescale':0.5,
+                 'BPVLTIME_detatched':0.2, #before 0.15
+                 'incl_DetatchedLinePrescale':0.2, #before 0.5
                  'incl_DetatchedLinePostscale':1,
                  'BsMassCutDownPre':5050, #before 5000
                  'BsMassCutUpPre':5600,  #before 5650
@@ -71,16 +71,16 @@ config_params = {'muPID':0.,
 #                 'sig_UnbiasedLinePrescale':1,
 #                 'sig_UnbiasedLinePostscale':1,
                  'ChKPT':500,
-                 'K_PrescaledLinePrescale':0.2, #before 0.3
+                 'K_PrescaledLinePrescale':0.1, #before 0.3 #before 0.2
                  'K_PrescaledLinePostscale':1,
-                 'K_DetatchedLinePrescale':1,
+                 'K_DetatchedLinePrescale':1, #before 0.1
                  'K_DetatchedLinePostscale':1,
 #                 'K_UnbiasedLinePrescale':0.7, #before 1.
 #                 'K_UnbiasedLinePostscale':1,
                  'KstarPT': 2,
-                 'Kstar_PrescaledLinePrescale':0.1,
+                 'Kstar_PrescaledLinePrescale':0.07, #before 0.1
                  'Kstar_PrescaledLinePostscale':1,
-                 'Kstar_DetatchedLinePrescale':1,
+                 'Kstar_DetatchedLinePrescale':1, #before 1
                  'Kstar_DetatchedLinePostscale':1,
 #                 'Kstar_UnbiasedLinePrescale':0.6, #before 1
 #                 'Kstar_UnbiasedLinePostscale':1,
