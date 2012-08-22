@@ -42,6 +42,7 @@ class DstarD2KShhBuilder(LineBuilder) :
                               'KSDDCutMass',
                               'KSLLCutFDChi2',
                               'KSDDCutFDChi2',
+                              'KSCutZFDFromD',
                               'trackFromDCutP',
                               'trackFromDCutPIDe',
                               'trackFromDCutPIDp',
@@ -112,12 +113,12 @@ class DstarD2KShhBuilder(LineBuilder) :
         strDecaysPP = [ "D0 -> KS0 pi+ pi-" ]
         strDecaysKP = [ "D0 -> KS0 K+ pi-", "D0 -> KS0 K- pi+" ]
         strDecaysKK = [ "D0 -> KS0 K+ K-" ]
-        self.selD2KSKKLL = makeD2KShh('D2KSKKLLFor'+name, strDecaysKK, self.selKSLL, self.selDauKK, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KK'], config['wideDMassCut_KKLL'], config['DCutTau'])
-        self.selD2KSKPLL = makeD2KShh('D2KSKPLLFor'+name, strDecaysKP, self.selKSLL, self.selDauKP, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KP'], config['wideDMassCut_KPLL'], config['DCutTau'])
-        self.selD2KSPPLL = makeD2KShh('D2KSPPLLFor'+name, strDecaysPP, self.selKSLL, self.selDauPP, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_PP'], config['wideDMassCut_PPLL'], config['DCutTau'])
-        self.selD2KSKKDD = makeD2KShh('D2KSKKDDFor'+name, strDecaysKK, self.selKSDD, self.selDauKK, config['preFitDMassCut_DD'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KK'], config['wideDMassCut_KKDD'], config['DCutTau'])
-        self.selD2KSKPDD = makeD2KShh('D2KSKPDDFor'+name, strDecaysKP, self.selKSDD, self.selDauKP, config['preFitDMassCut_DD'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KP'], config['wideDMassCut_KPDD'], config['DCutTau'])
-        self.selD2KSPPDD = makeD2KShh('D2KSPPDDFor'+name, strDecaysPP, self.selKSDD, self.selDauPP, config['preFitDMassCut_DD'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_PP'], config['wideDMassCut_PPDD'], config['DCutTau'])
+        self.selD2KSKKLL = makeD2KShh('D2KSKKLLFor'+name, strDecaysKK, self.selKSLL, self.selDauKK, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KK'], config['wideDMassCut_KKLL'], config['DCutTau'], config['KSCutZFDFromD'])
+        self.selD2KSKPLL = makeD2KShh('D2KSKPLLFor'+name, strDecaysKP, self.selKSLL, self.selDauKP, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KP'], config['wideDMassCut_KPLL'], config['DCutTau'], config['KSCutZFDFromD'])
+        self.selD2KSPPLL = makeD2KShh('D2KSPPLLFor'+name, strDecaysPP, self.selKSLL, self.selDauPP, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_PP'], config['wideDMassCut_PPLL'], config['DCutTau'], config['KSCutZFDFromD'])
+        self.selD2KSKKDD = makeD2KShh('D2KSKKDDFor'+name, strDecaysKK, self.selKSDD, self.selDauKK, config['preFitDMassCut_DD'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KK'], config['wideDMassCut_KKDD'], config['DCutTau'], config['KSCutZFDFromD'])
+        self.selD2KSKPDD = makeD2KShh('D2KSKPDDFor'+name, strDecaysKP, self.selKSDD, self.selDauKP, config['preFitDMassCut_DD'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KP'], config['wideDMassCut_KPDD'], config['DCutTau'], config['KSCutZFDFromD'])
+        self.selD2KSPPDD = makeD2KShh('D2KSPPDDFor'+name, strDecaysPP, self.selKSDD, self.selDauPP, config['preFitDMassCut_DD'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_PP'], config['wideDMassCut_PPDD'], config['DCutTau'], config['KSCutZFDFromD'])
 
         # ConjugateNeutralPID is needed for decays to self-conjugate final state (KSpi+pi-, KSK+K-)
         # It takes a D0 and makes a corresponding D0bar (identical except for PDG code)
@@ -226,7 +227,7 @@ def makeKS(name, inputName, minDz, maxDz, KSCutDIRA, KSCutMass, KSCutFDChi2) :
                       Algorithm = _KsFilter,
                       RequiredSelections = [_stdLooseKs])
 
-def makeD2KShh(name, inputDecayDescriptors, inputKs, inputDaughters, preFitMassCut, preFitDCutPT, DCutDIRA, DCutVtxChi2, postFitMassCut, DCutTau) :
+def makeD2KShh(name, inputDecayDescriptors, inputKs, inputDaughters, preFitMassCut, preFitDCutPT, DCutDIRA, DCutVtxChi2, postFitMassCut, DCutTau, KSCutZFDFromD) :
     """
     Given lists of D0 daughter tracks and a list of KS, reconstruct D0 -> KS h+ h-.
     The same routine works for all final states and for KS via long/downstream tracks.
@@ -239,7 +240,8 @@ def makeD2KShh(name, inputDecayDescriptors, inputKs, inputDaughters, preFitMassC
     _motherCutsVtx  = '(VFASPF(VCHI2) < %(DCutVtxChi2)s )' % locals()
     _motherCutsMass = "(ADMASS('D0') < %(postFitMassCut)s * MeV)" % locals()
     _motherCutsTau = "(BPVLTIME()> %(DCutTau)s * ps)" % locals()
-    _motherCuts = '( ' + _motherCutsBase + ' & ' + _motherCutsVtx + ' & ' + _motherCutsMass + ' & ' + _motherCutsTau + ')'
+    _motherCutsKSFD = '( (CHILD(VFASPF(VZ),1) - VFASPF(VZ)) > %(KSCutZFDFromD)s * mm)' % locals()
+    _motherCuts = '( ' + _motherCutsBase + ' & ' + _motherCutsVtx + ' & ' + _motherCutsMass + ' & ' + _motherCutsTau + ' & ' + _motherCutsKSFD + ')'
     _D0 = CombineParticles( DecayDescriptors = inputDecayDescriptors,
                             CombinationCut = _combCuts,
                             MotherCut = _motherCuts)

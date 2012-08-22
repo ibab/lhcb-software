@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-22 - Mat Charles
+ - Reapply commit lost in SVN implosion: Added a cut on z flight distance between KS and D0 vertices in StrippingDstarD2KShh.py
+
 ! 2012-08-22 - Patrick Koppenburg
  - Bu2LLK: Do B->eeK* and B->emK(*) ae well as B->eeK. Changed cuts slightly.
 
