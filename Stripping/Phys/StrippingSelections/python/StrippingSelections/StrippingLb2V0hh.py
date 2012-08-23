@@ -1,9 +1,8 @@
 """
 Module for construction of Lb->V0hh stripping Selections and StrippingLines.
-Provides functions to build KS->DD, KS->LL and Lb selections.
-For the Stripping18 the only mode included are Lb->Ksph and for the next
-version the idea is to include Lb->Lshh modes.
-Provides class Lb2KShhConf, which constructs the Selections and StrippingLines
+Provides functions to build Lambda0->DD and Lambda0->LL selections.
+Stripping20 with an inclusive approach for Lb->Lambda hh modes.
+Provides class Lb2V0hhConf, which constructs the Selections and StrippingLines
 given a configuration dictionary.
 Selections based on previous version of the line by Jussara Miranda.
 Exported symbols (use python help!):
@@ -11,43 +10,41 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Thomas Latham','Rafael Coutinho']
-__date__ = '15/03/2012'
-__version__ = 'Stripping18'
+__date__ = '23/08/2012'
+__version__ = 'Stripping20'
 __all__ = 'Lb2V0hhConf'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
 from StandardParticles import StdLoosePions as Pions
-from StandardParticles import StdLooseKaons as Kaons
-from StandardParticles import StdLooseProtons as Protons
 
 default_config = {'Trk_Chi2'                 : 4.0,
-                  'KS_DD_MassWindow'         : 30.0,
-                  'KS_DD_VtxChi2'            : 12.0,
-                  'KS_DD_FDChi2'             : 50.0,
-                  'KS_DD_Pmin'               : 6000.0,
-                  'KS_LL_MassWindow'         : 20.0,
-                  'KS_LL_VtxChi2'            : 12.0,
-                  'KS_LL_FDChi2'             : 80.0,
-                  'Lb_Mlow'                  : 200.0,
-                  'Lb_Mhigh'                 : 651.0,
+                  'Lambda_DD_MassWindow'     : 30.0,
+                  'Lambda_DD_VtxChi2'        : 12.0,
+                  'Lambda_DD_FDChi2'         : 50.0,
+                  'Lambda_DD_Pmin'           : 6000.0,
+                  'Lambda_LL_MassWindow'     : 20.0,
+                  'Lambda_LL_VtxChi2'        : 12.0,
+                  'Lambda_LL_FDChi2'         : 80.0,
+                  'Lb_Mlow'                  : 1119.0,
+                  'Lb_Mhigh'                 : 500.0,
                   'Lb_APTmin'                : 1000.0,
                   'Lb_PTmin'                 : 1500.0,
                   'LbDaug_MedPT_PT'          : 800.0,
                   'LbDaug_MaxPT_IP'          : 0.05,
                   'LbDaug_DD_maxDocaChi2'    : 5.0,
                   'LbDaug_LL_maxDocaChi2'    : 5.0,
-                  'LbDaug_DD_PTsum'          : 3000.0,
+                  'LbDaug_DD_PTsum'          : 4200.0,
                   'LbDaug_LL_PTsum'          : 3000.0,
                   'Lb_VtxChi2'               : 12.0,
                   'Lb_Dira'                  : 0.9999,
                   'Lb_DD_IPCHI2wrtPV'        : 8.0,
                   'Lb_LL_IPCHI2wrtPV'        : 8.0,
-                  'Lb_FDwrtPV'               : 1.0,
+                  'Lb_FDwrtPV'               : 1.5,
                   'Lb_DD_FDChi2'             : 50.0,
                   'Lb_LL_FDChi2'             : 50.0,
                   'GEC_MaxTracks'            : 250,
@@ -68,26 +65,26 @@ class Lb2V0hhConf(LineBuilder) :
     The lines can be used directly to build a StrippingStream object.
 
     Exports as instance data members:
-    selKS2DD               : KS -> Down Down Selection object
-    selKS2LL               : KS -> Long Long Selection object
-    selLb2V0DDhh           : Lb -> KS(DD) p+ h- Selection object
-    selLb2V0LLhh           : Lb -> KS(LL) p+ h- Selection object        
+    selLambda2DD           : Lambda0 -> Down Down Selection object
+    selLambda2LL           : Lambda0 -> Long Long Selection object
+    selLb2V0DDhh           : Lb -> Lambda0(DD) p+ h- Selection object
+    selLb2V0LLhh           : Lb -> Lambda0(LL) p+ h- Selection object        
     Lb_dd_line             : StrippingLine made out of selLb2V0DDhh
     Lb_ll_line             : StrippingLine made out of selLb2V0LLhh        
     lines                  : List of lines, [Lb_line, Lb_line]
 
     Exports as class data member:
-    B2KShhConf.__configuration_keys__ : List of required configuration parameters.
+    Lb2V0hhConf.__configuration_keys__ : List of required configuration parameters.
     """
 
     __configuration_keys__ = ('Trk_Chi2',
-                              'KS_DD_MassWindow',
-                              'KS_DD_VtxChi2',
-                              'KS_DD_FDChi2',
-                              'KS_DD_Pmin',
-                              'KS_LL_MassWindow',
-                              'KS_LL_VtxChi2',
-                              'KS_LL_FDChi2',
+                              'Lambda_DD_MassWindow',
+                              'Lambda_DD_VtxChi2',
+                              'Lambda_DD_FDChi2',
+                              'Lambda_DD_Pmin',
+                              'Lambda_LL_MassWindow',
+                              'Lambda_LL_VtxChi2',
+                              'Lambda_LL_FDChi2',
                               'Lb_Mlow',
                               'Lb_Mhigh',
                               'Lb_APTmin',
@@ -122,15 +119,9 @@ class Lb2V0hhConf(LineBuilder) :
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
         self.pions   = Pions
-        self.kaons   = Kaons
-        self.protons = Protons
 
-        self.hadrons = MergedSelection("HadronsFor" + name,
-                                       RequiredSelections = [ self.pions, self.kaons, self.protons ] )
-        
-
-        self.makeKS2DD( 'KSfor'+Lb_dd_name, config )
-        self.makeKS2LL( 'KSfor'+Lb_ll_name, config )        
+        self.makeLambda2DD( 'Lambda0for'+Lb_dd_name, config )
+        self.makeLambda2LL( 'Lambda0for'+Lb_ll_name, config )
 
         self.makeLb2V0DDhh( Lb_dd_name, config )
         self.makeLb2V0LLhh( Lb_ll_name, config )
@@ -152,45 +143,44 @@ class Lb2V0hhConf(LineBuilder) :
         self.registerLine(self.Lb_dd_line)
         self.registerLine(self.Lb_ll_line)
 
-    def makeKS2DD( self, name, config ) :
+    def makeLambda2DD( self, name, config ) :
         # define all the cuts
-        _massCut = "(ADMASS('KS0')<%s*MeV)" % config['KS_DD_MassWindow']
-        _vtxCut  = "(VFASPF(VCHI2)<%s)"     % config['KS_DD_VtxChi2']
-        _fdCut   = "(BPVVDCHI2>%s)"         % config['KS_DD_FDChi2']
-        _momCut  = "(P>%s*MeV)"             % config['KS_DD_Pmin']
+        _massCut = "(ADMASS('Lambda0')<%s*MeV)" % config['Lambda_DD_MassWindow']
+        _vtxCut  = "(VFASPF(VCHI2)<%s)   "      % config['Lambda_DD_VtxChi2']
+        _fdCut   = "(BPVVDCHI2>%s)"             % config['Lambda_DD_FDChi2']
+        _momCut  = "(P>%s*MeV)"                 % config['Lambda_DD_Pmin']
         _allCuts = _momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut
 
-        # get the KS's to filter
-        _stdKSDD = DataOnDemand( Location = "Phys/StdLooseKsDD/Particles" )
-
+        # get the Lambda0's to filter
+        _stdLambdaDD = DataOnDemand(Location = "Phys/StdLooseLambdaDD/Particles")
+        
         # make the filter
-        _filterKSDD = FilterDesktop( Code = _allCuts )
+        _filterLambdaDD = FilterDesktop( Code = _allCuts )
 
         # make and store the Selection object
-        self.selKS2DD = Selection( name, Algorithm = _filterKSDD, RequiredSelections = [_stdKSDD] )
+        self.selLambda2DD = Selection( name, Algorithm = _filterLambdaDD, RequiredSelections = [_stdLambdaDD] )
 
-    def makeKS2LL( self, name, config ) :
+    def makeLambda2LL( self, name, config ) : 
         # define all the cuts
-        _massCut    = "(ADMASS('KS0')<%s*MeV)" % config['KS_LL_MassWindow']
-        _vtxCut     = "(VFASPF(VCHI2)<%s)"     % config['KS_LL_VtxChi2']
-        _fdCut      = "(BPVVDCHI2>%s)"         % config['KS_LL_FDChi2']
+        _massCut    = "(ADMASS('Lambda0')<%s*MeV)" % config['Lambda_LL_MassWindow']
+        _vtxCut     = "(VFASPF(VCHI2)<%s)"         % config['Lambda_LL_VtxChi2']
+        _fdCut      = "(BPVVDCHI2>%s)"             % config['Lambda_LL_FDChi2']
         _trkChi2Cut1 = "(CHILDCUT((TRCHI2DOF<%s),1))" % config['Trk_Chi2']
         _trkChi2Cut2 = "(CHILDCUT((TRCHI2DOF<%s),2))" % config['Trk_Chi2']
         _allCuts = _massCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2+'&'+_vtxCut+'&'+_fdCut
 
-        # get the KS's to filter
-        _stdKSLL = DataOnDemand( Location = "Phys/StdLooseKsLL/Particles" )
+        # get the Lambda's to filter
+        _stdLambdaLL = DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")
 
         # make the filter
-        _filterKSLL = FilterDesktop( Code = _allCuts )
-
+        _filterLambdaLL = FilterDesktop( Code = _allCuts )
+        
         # make and store the Selection object
-        self.selKS2LL = Selection( name, Algorithm = _filterKSLL, RequiredSelections = [_stdKSLL] )
-
+        self.selLambda2LL = Selection( name, Algorithm = _filterLambdaLL, RequiredSelections = [_stdLambdaLL] )
 
     def makeLb2V0DDhh( self, name, config ) :
         """
-        Create and store a Lb -> KS(DD) p+ h- Selection object.
+        Create and store a Lb ->Lambda0(DD) p+ h- Selection object.
         Arguments:
         name             : name of the Selection.
         config           : config dictionary
@@ -216,18 +206,17 @@ class Lb2V0hhConf(LineBuilder) :
         _motherCuts = _ptCut+'&'+_vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
 
         _Lb = CombineParticles()
-        _Lb.DecayDescriptors = [ "Lambda_b0 -> p+ pi- KS0", "Lambda_b~0 -> p~- pi+ KS0", \
-                                 "Lambda_b0 -> p+ K- KS0",  "Lambda_b~0 -> p~- K+ KS0"]
-        _Lb.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "p+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+        _Lb.DecayDescriptors = [ "Lambda_b0 -> pi+ pi- Lambda0", "Lambda_b~0 -> pi+ pi- Lambda~0"]
+        _Lb.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         _Lb.CombinationCut = _combCuts
         _Lb.MotherCut = _motherCuts
 
-        self.selLb2V0DDhh = Selection (name, Algorithm = _Lb, RequiredSelections = [ self.selKS2DD, self.hadrons ])
+        self.selLb2V0DDhh = Selection (name, Algorithm = _Lb, RequiredSelections = [self.selLambda2DD, self.pions ])
 
 
     def makeLb2V0LLhh( self, name, config ) :
         """
-        Create and store a Lb -> KS(LL) p+ h- Selection object.
+        Create and store a Lb -> Lambda0(LL) p+ h- Selection object.
         Arguments:
         name             : name of the Selection.
         config           : config dictionary
@@ -253,11 +242,10 @@ class Lb2V0hhConf(LineBuilder) :
         _motherCuts = _ptCut+'&'+_vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
 
         _Lb = CombineParticles()
-        _Lb.DecayDescriptors = [ "Lambda_b0 -> p+ pi- KS0", "Lambda_b~0 -> p~- pi+ KS0", \
-                                 "Lambda_b0 -> p+ K- KS0",  "Lambda_b~0 -> p~- K+ KS0"]
-        _Lb.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "p+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+        _Lb.DecayDescriptors = [ "Lambda_b0 -> pi+ pi- Lambda0", "Lambda_b~0 -> pi+ pi- Lambda~0" ]
+        _Lb.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         _Lb.CombinationCut = _combCuts
         _Lb.MotherCut = _motherCuts
 
-        self.selLb2V0LLhh = Selection (name, Algorithm = _Lb, RequiredSelections = [ self.selKS2LL, self.hadrons ])
+        self.selLb2V0LLhh = Selection (name, Algorithm = _Lb, RequiredSelections = [self.selLambda2LL, self.pions  ])
 

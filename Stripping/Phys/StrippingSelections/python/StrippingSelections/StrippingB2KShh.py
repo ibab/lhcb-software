@@ -9,19 +9,17 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Thomas Latham','David Dossett','Jussara Miranda','Rafael Coutinho']
-__date__ = '15/03/2012'
-__version__ = 'Stripping18'
+__date__ = '23/08/2012'
+__version__ = 'Stripping20'
 __all__ = 'B2KShhConf'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
 from StandardParticles import StdLoosePions as Pions
-from StandardParticles import StdLooseKaons as Kaons
-from StandardParticles import StdLooseProtons as Protons
 
 default_config = {'Trk_Chi2'                : 4.0,
                   'KS_DD_MassWindow'        : 30.0,
@@ -31,25 +29,29 @@ default_config = {'Trk_Chi2'                : 4.0,
                   'KS_LL_MassWindow'        : 20.0,
                   'KS_LL_VtxChi2'           : 12.0,
                   'KS_LL_FDChi2'            : 80.0,
-                  'B_Mlow'                  : 500.0,
-                  'B_Mhigh'                 : 587.0,
+                  'B_Mlow'                  : 1279.0,
+                  'B_Mhigh'                 : 921.0,
                   'B_APTmin'                : 1000.0,
                   'B_PTmin'                 : 1500.0,
                   'BDaug_MedPT_PT'          : 800.0,
                   'BDaug_MaxPT_IP'          : 0.05,
                   'BDaug_DD_maxDocaChi2'    : 5.0,
                   'BDaug_LL_maxDocaChi2'    : 5.0,
-                  'BDaug_DD_PTsum'          : 3000.0,
+                  'BDaug_DD_PTsum'          : 4200.0,
                   'BDaug_LL_PTsum'          : 3000.0,
+                  'B_DD_IPCHI2sum'          : 50.0,
                   'B_VtxChi2'               : 12.0,
-                  'B_Dira'                  : 0.9999,
-                  'B_DD_IPCHI2wrtPV'        : 8.0,
+                  'B_DD_Dira'               : 0.999,
+                  'B_LL_Dira'               : 0.9999,
+                  'B_DD_IPCHI2wrtPV'        : 6.0,
                   'B_LL_IPCHI2wrtPV'        : 8.0,
-                  'B_FDwrtPV'               : 1.0,
+                  'B_DD_FDwrtPV'            : 1.7,
+                  'B_LL_FDwrtPV'            : 1.0,
                   'B_DD_FDChi2'             : 50.0,
                   'B_LL_FDChi2'             : 50.0,
                   'GEC_MaxTracks'           : 250,
                   'Prescale'                : 1.0,
+                  'Prescale_SameSign'       : 1.0,
                   'Postscale'               : 1.0
                   }
 
@@ -70,9 +72,13 @@ class B2KShhConf(LineBuilder) :
     selKS2LL               : KS -> Long Long Selection object
     selB2KSDDhh            : B -> KS(DD) h+ h- Selection object
     selB2KSLLhh            : B -> KS(LL) h+ h- Selection object
+    selB2KSDDhh_SameSign   : B -> KS(DD) h+(-) h+(-) Selection object
+    selB2KSLLhh_SameSign   : B -> KS(LL) h+(-) h+(-) Selection object
     dd_line                : StrippingLine made out of selB2KSDDhh
     ll_line                : StrippingLine made out of selB2KSLLhh
-    lines                  : List of lines, [dd_line, ll_line]
+    dd_line_same           : StrippingLine made out of selB2KSDDhh_SameSign
+    ll_line_same           : StrippingLine made out of selB2KSLLhh_SameSign
+    lines                  : List of lines, [dd_line, ll_line, dd_line_same, ll_line_same]
 
     Exports as class data member:
     B2KShhConf.__configuration_keys__ : List of required configuration parameters.
@@ -96,15 +102,19 @@ class B2KShhConf(LineBuilder) :
                               'BDaug_LL_maxDocaChi2',
                               'BDaug_DD_PTsum',
                               'BDaug_LL_PTsum',
+                              'B_DD_IPCHI2sum',
                               'B_VtxChi2',
-                              'B_Dira',
+                              'B_DD_Dira',
+                              'B_LL_Dira',
                               'B_DD_IPCHI2wrtPV',
                               'B_LL_IPCHI2wrtPV',
-                              'B_FDwrtPV',
+                              'B_DD_FDwrtPV',
+                              'B_LL_FDwrtPV',
                               'B_DD_FDChi2',
                               'B_LL_FDChi2',
                               'GEC_MaxTracks',
                               'Prescale',
+                              'Prescale_SameSign',
                               'Postscale'
                               )
 
@@ -115,22 +125,22 @@ class B2KShhConf(LineBuilder) :
         dd_name = name+'DD'
         ll_name = name+'LL'
 
+        dd_name_same = name+'DD'+'SameSign'
+        ll_name_same = name+'LL'+'SameSign'
+
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
         self.pions = Pions
-        self.kaons = Kaons
-        self.protons = Protons
-
-        self.hadrons = MergedSelection("HadronsFor" + name,
-                                       RequiredSelections = [ self.pions, self.kaons, self.protons ] )
-        
 
         self.makeKS2DD( 'KSfor'+dd_name, config )
         self.makeKS2LL( 'KSfor'+ll_name, config )
 
         self.makeB2KSDDhh( dd_name, config )
         self.makeB2KSLLhh( ll_name, config )
+
+        self.makeB2KSDDhh( dd_name_same, config )
+        self.makeB2KSLLhh( ll_name_same, config )
 
         self.dd_line = StrippingLine(dd_name+"Line",
                                      prescale = config['Prescale'],
@@ -145,8 +155,25 @@ class B2KShhConf(LineBuilder) :
                                      FILTER = GECCode
                                      )
 
+        self.dd_line_same = StrippingLine(dd_name_same+"Line",
+                                     prescale = config['Prescale_SameSign'],
+                                     postscale = config['Postscale'],
+                                     selection = self.selB2KSDDhh_SameSign,
+                                     HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
+                                     FILTER = GECCode
+                                     )   
+        self.ll_line_same = StrippingLine(ll_name_same+"Line",
+                                     prescale = config['Prescale_SameSign'],
+                                     postscale = config['Postscale'],
+                                     selection =  self.selB2KSLLhh_SameSign,
+                                     HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
+                                     FILTER = GECCode
+                                     )
         self.registerLine(self.dd_line)
         self.registerLine(self.ll_line)
+        
+        self.registerLine(self.dd_line_same)
+        self.registerLine(self.ll_line_same)
 
     def makeKS2DD( self, name, config ) :
         # define all the cuts
@@ -185,45 +212,51 @@ class B2KShhConf(LineBuilder) :
 
     def makeB2KSDDhh( self, name, config ) :
         """
-        Create and store a B -> KS(DD) h+ h- Selection object.
+        Create and store either a B -> KS(DD) h+ h- Selection object, or a B -> KS(DD) h+(-) h+(-) Same Sign Selection Object
         Arguments:
         name             : name of the Selection.
         config           : config dictionary
         """
 
-        _massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
-        _massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
-        _aptCut         = "(APT>%s*MeV)"                     % config['B_APTmin']
-        _daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
-        _daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
-        _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_DD_maxDocaChi2']
-        _daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_DD_PTsum']
+        _massCutLow       = "(AM>(5279-%s)*MeV)"                                                        % config['B_Mlow']
+        _massCutHigh      = "(AM<(5279+%s)*MeV)"                                                        % config['B_Mhigh']
+        _aptCut           = "(APT>%s*MeV)"                                                              % config['B_APTmin']
+        _daugMedPtCut     = "(ANUM(PT>%s*MeV)>=2)"                                                      % config['BDaug_MedPT_PT']
+        _daugMaxPtIPCut   = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)"                                          % config['BDaug_MaxPT_IP']
+        _maxDocaChi2Cut   = "(ACUTDOCACHI2(%s,''))"                                                     % config['BDaug_DD_maxDocaChi2']
+        _daugPtSumCut     = "((APT1+APT2+APT3)>%s*MeV)"                                                 % config['BDaug_DD_PTsum']
 
         _combCuts = _aptCut+'&'+_daugPtSumCut+'&'+_daugMedPtCut+'&'+_massCutLow+'&'+_massCutHigh+'&'+_daugMaxPtIPCut+'&'+_maxDocaChi2Cut
 
-        _ptCut      = "(PT>%s*MeV)"                    % config['B_PTmin']
-        _vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
-        _diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
-        _ipChi2Cut  = "(MIPCHI2DV(PRIMARY)<%s)"        % config['B_DD_IPCHI2wrtPV']
-        _fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
-        _fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_DD_FDChi2']
+        _ptCut            = "(PT>%s*MeV)"                                                               % config['B_PTmin']
+        _vtxChi2Cut       = "(VFASPF(VCHI2)<%s)"                                                        % config['B_VtxChi2']
+        _diraCut          = "(BPVDIRA>%s)"                                                              % config['B_DD_Dira']
+        _ipChi2Cut        = "(MIPCHI2DV(PRIMARY)<%s)"                                                   % config['B_DD_IPCHI2wrtPV']
+        _fdCut            = "(VFASPF(VMINVDDV(PRIMARY))>%s)"                                            % config['B_DD_FDwrtPV']
+        _fdChi2Cut        = "(BPVVDCHI2>%s)"                                                            % config['B_DD_FDChi2']
+        _ipChi2SumCut     = "(SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='pi+') | (ABSID=='pi-')),0.0) > %s)"  % config['B_DD_IPCHI2sum']
 
-        _motherCuts = _ptCut+'&'+_vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
+        _motherCuts = _ptCut+'&'+_vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut+'&'+_ipChi2SumCut
 
         _B = CombineParticles()
-        _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
-                                "B0 -> K+ pi- KS0", "B0 -> pi+ K- KS0", \
-                                "B0 -> K+ K- KS0", \
-                                "B0 -> p+ p~- KS0" ]
-        _B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "p+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+        _B.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
-        self.selB2KSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.hadrons ])
+        if "SameSign" in name:
+            _B.DecayDescriptors = [ "B0 -> pi+ pi+ KS0", "B0 -> pi- pi- KS0" ]
+
+            self.selB2KSDDhh_SameSign = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.pions ])
+
+        else:
+            _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0" ]
+
+            self.selB2KSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.pions ])
+
 
     def makeB2KSLLhh( self, name, config ) :
         """
-        Create and store a B -> KS(LL) h+ h- Selection object.
+        Create and store either a B -> KS(LL) h+ h- Selection object, or a B -> KS(LL) h+(-) h+(-) Same Sign Selection Object
         Arguments:
         name             : name of the Selection.
         config           : config dictionary
@@ -241,21 +274,24 @@ class B2KShhConf(LineBuilder) :
 
         _ptCut      = "(PT>%s*MeV)"                    % config['B_PTmin']
         _vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
-        _diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
+        _diraCut    = "(BPVDIRA>%s)"                   % config['B_LL_Dira']
         _ipChi2Cut  = "(MIPCHI2DV(PRIMARY)<%s)"        % config['B_LL_IPCHI2wrtPV']
-        _fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
+        _fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_LL_FDwrtPV']
         _fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_LL_FDChi2']
 
         _motherCuts = _ptCut+'&'+_vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
 
         _B = CombineParticles()
-        _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
-                                "B0 -> K+ pi- KS0", "B0 -> pi+ K- KS0", \
-                                "B0 -> K+ K- KS0", \
-                                "B0 -> p+ p~- KS0"]
-        _B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "p+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+        _B.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
-        self.selB2KSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.hadrons ])
+        if "SameSign" in name:
+            _B.DecayDescriptors = [ "B0 -> pi+ pi+ KS0", "B0 -> pi- pi- KS0" ]
 
+            self.selB2KSLLhh_SameSign = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.pions ])
+
+        else:
+            _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0" ]
+
+            self.selB2KSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.pions ])
