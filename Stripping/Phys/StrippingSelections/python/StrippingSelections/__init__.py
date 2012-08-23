@@ -129,6 +129,7 @@ import StrippingXibc
 import StrippingDstarD02KKmumuRegular
 import StrippingDstarD02KKpipiRegular
 import StrippingDstarPromptWithD02HHHH
+import StrippingDstarPromptWithD02HHMuMu
 import StrippingDstarD2KShh
 
 import StrippingD02K3PiForXSec
