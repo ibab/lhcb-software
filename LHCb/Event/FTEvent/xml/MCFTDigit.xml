@@ -36,14 +36,14 @@
         <code> return key(); </code>
       </method>
 
-      <method    name   = "operator&lt;"
-                 desc   = "Define operator &lt; on FTChannelID"
-                 argList= "const LHCb::MCFTDigit x"
-                 type   = "bool"
-                 access = "PUBLIC">
-        <code> std::cout &lt;&lt; "key() &lt; x.key()="&lt;&lt;(key() &lt; x.key())&lt;&lt; std::endl; return ( key() &lt; x.key() ); </code>
+      <method    name   = "lowerByChannelID"
+		 desc   = "Comparison for sorting by channel ID"
+		 argList = "MCFTDigit* d1, MCFTDigit* d2"
+		 type    = "bool"
+		 static  = "TRUE"
+		 access  = "PUBLIC">
+	<code> return d1-&gt;channelID() &lt; d2-&gt;channelID(); </code>
       </method>
-
 
       <attribute name   = "adcCount"
                  desc   = "ADC Count for ChannelID"
