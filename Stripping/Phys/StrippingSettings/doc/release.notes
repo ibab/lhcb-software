@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-08-23 - Andrea Contu
+ - Stripping20/LineConfigDictionaries_Charm.py
+  . Added new lines for D02KSKS, D2KSHHH, DstarPromptWithD02HHMuMu(+ control modes)
+  . CharmFromBSemi moved to LineConfigDictionaries_Charm.py from LineConfigDictionaries_Semileptonic.py
+
 ! 2012-08-22 - Mat Charles
  - Stripping20/LineConfigDictionaries_Charm.py:
   . Loosened IPCHI2 cut for tagged 4-body (HHHH) lines

@@ -526,54 +526,162 @@ D2XMuMu = {
    'BUILDERTYPE' : 'D2XMuMuConf',
     'CONFIG' : {
     'MuonP'         : 3000. ,    #MeV
-    'MuonPT'        : 500.  ,    #MeV
-    'MuonMINIPCHI2' : 6  ,    #adimensional
-    'MuonTRCHI2'    : 8     ,    #adimensional
-    'PionP'         : 2000. ,    #MeV
+    'MuonPT'        : 400.  ,    #MeV
+    'MuonMINIPCHI2' : 6     ,    #adminensional
+    'MuonTRCHI2'    : 3     ,    #adminensional
+    'PionP'         : 3000. ,    #MeV
     'PionPT'        : 300.  ,    #MeV
     'PionMINIPCHI2' : 6     ,    #adminensional
-    'PionTRCHI2'    : 8  ,    #adminensional
-    'KaonP'         : 2000. ,    #MeV
+    'PionTRCHI2'    : 3     ,    #adminensional
+    'KaonP'         : 3000. ,    #MeV
     'KaonPT'        : 300.  ,    #MeV
     'KaonPIDK'      : -1.   ,    #adimensional
-    'KaonMINIPCHI2' : 6     ,    #adimensional
-    'KaonTRCHI2'    : 8     ,    #adimensional
-    'MINIPCHI2_CS_hhmumu' : 6. , #adimensional
-    'PT_CS_hhmumu' : 400 , #MeV
-    'DimuonMass'    : 250.  ,    #MeV
-    'DVCHI2DOF'     : 5     ,    #adimeensional
-    'DMAXDOCA'      : 0.15  ,    #mm
-    'DdauMAXIPCHI2' : 20    ,    #adimensinal
-    'DFDCHI2'       : 9     ,    #adimensional
-    'DDIRA'         : 0.9999,    #adimensional
+    'KaonMINIPCHI2' : 6     ,    #adminensional
+    'KaonTRCHI2'    : 3     ,    #adminensional
+    'ProtonP'         : 3000. ,    #MeV
+    'ProtonPT'        : 300.  ,    #MeV
+    'ProtonMINIPCHI2' : 6     ,    #adminensional
+    'ProtonTRCHI2'    : 3     ,    #adminensional
+    'DVCHI2DOF'     : 6     ,    #adminensional
+    'DMAXDOCA'      : 0.25  ,    #mm
     'DIPCHI2'       : 30    ,    #adimensional
-    'DMassWin'      : 200.  ,    #MeV, mass window
-    'DMassWin_CS_hhmumu'  : 100.  ,    #MeV, mass window
-    'DMassLow'      :1763.  ,    #MeV, low-mass veto
-    'D2PiMuMuOSLinePrescale'  : 1 ,
-    'D2PiMuMuOSLinePostscale' : 1 ,
-    'D2PiMuMuSSLinePrescale'  : 1 ,
-    'D2PiMuMuSSLinePostscale' : 1 ,
-    'D2KMuMuOSLinePrescale'   : 1 ,
-    'D2KMuMuOSLinePostscale'  : 1 ,
-    'D2KMuMuSSLinePrescale'   : 1 ,
-    'D2KMuMuSSLinePostscale'  : 1 ,
-    'D2PiPiPiCalLinePrescale' : 0.01 ,
-    'D2PiPiPiCalLinePostscale': 1 ,
-    'D02KKMuMuLinePrescale'   : 1 ,
-    'D02KKMuMuLinePostscale'  : 1 ,
-    'D02PiPiMuMuLinePrescale'   : 1 ,
-    'D02PiPiMuMuLinePostscale'  : 1,
-    'D02KPiMuMuLinePrescale'   : 1 ,
-    'D02KPiMuMuLinePostscale'  : 1,
-    'D02KKPiPiLinePrescale'     :    0.01,
-    'D02KKPiPiLinePostscale'    :    1,
-    'D02K3PiLinePrescale'       :    0.01,
-    'D02K3PiLinePostscale'      :    1,
-    'D2K2PiLinePrescale'        :    0.01,
-    'D2K2PiLinePostscale'       :    1,
-    'D22KPiLinePrescale'        :    0.01,
-    'D22KPiLinePostscale'       :    1
+    'MINIPCHI2_hhmumu' : 2. ,  #adminensional
+    'PT_hhmumu'        : 300 , #MeV
+    'MuonPIDmu_hhmumu' : -5,   #adimensional
+    'DPT_hhmumu'           : 2500.,     #MeV
+    'DVCHI2DOF_hhmumu'     : 8     ,    #adminensional
+    'DMAXDOCA_hhmumu'      : 0.25  ,    #mm
+    'DdauMAXIPCHI2_hhmumu' : 15    ,    #adimensinal
+    'DFDCHI2_hhmumu'       : 36     ,   #adimensional
+    'DIPCHI2_hhmumu'       : 25    ,    #adimensional
+    'DIPCHI2_4bodyCS'      : 25    ,    #adimensional
+    'MINIPCHI2_4bodyCS' : 3. ,  #adminensional
+    'DDIRA'         : 0.9999,    #adimensional
+    'DimuonMass'    : 250.  ,    #MeV
+    'DMassWin'                   : 200.  ,    #MeV, mass window
+    'DMassWin_CS_hhmumu'         : 80.  ,    #MeV, mass window
+    'LambdacMassWin'             : 80. , #MeV, mass window
+    'DMassLow'                   :1763.  ,    #MeV, low-mass veto
+    'D2PiMuMuOSLinePrescale'     : 1 ,
+    'D2PiMuMuOSLinePostscale'    : 1 ,
+    'D2PiMuMuSSLinePrescale'     : 1 ,
+    'D2PiMuMuSSLinePostscale'    : 1 ,
+    'D2KMuMuOSLinePrescale'      : 1 ,
+    'D2KMuMuOSLinePostscale'     : 1 ,
+    'D2KMuMuSSLinePrescale'      : 1 ,
+    'D2KMuMuSSLinePostscale'     : 1 ,
+    'D2PiPiPiCalLinePrescale'    : 0.0075 ,
+   'D2PiPiPiCalLinePostscale'   : 1 ,
+    'D2K2PiLinePrescale'         : 0.005 ,
+    'D2K2PiLinePostscale'        : 1 ,
+    'D22KPiLinePrescale'         : 0.005 ,
+    'D22KPiLinePostscale'        : 1,
+    'D02KKMuMuLinePrescale'      : 1 ,
+    'D02KKMuMuLinePostscale'     : 1 ,
+    'D02PiPiMuMuLinePrescale'    : 1 ,
+    'D02PiPiMuMuLinePostscale'   : 1,
+    'D02KPiMuMuLinePrescale'     : 1 ,
+    'D02KPiMuMuLinePostscale'    : 1,
+    'D02KKPiPiLinePrescale'      : 0.01 ,
+    'D02KKPiPiLinePostscale'     : 1,
+    'D02K3PiLinePrescale'        : 0.003 ,
+    'D02K3PiLinePostscale'       : 1,
+    'D02PiPiPiPiLinePrescale'    : 0.0075 ,
+    'D02PiPiPiPiLinePostscale'   : 1,
+    'Lambdac2PMuMuLinePrescale'  : 1 ,
+    'Lambdac2PMuMuLinePostscale' : 1 ,
+    'Lambdac2PPiPiLinePrescale'  : 0.0075 ,
+    'Lambdac2PPiPiLinePostscale' : 1
+  } ,
+  'WGs' : [ 'Charm' ],
+  'STREAMS' : [ 'Charm' ]
+  }
+
+## Benoit Viaud
+## Added in Stripping20
+## Tagged D02H(H)Mumu.
+## Lives in StrippingDstarPromptWithD02HHMuMu.py
+DstarPromptWithD02HHMuMu = {
+   'BUILDERTYPE' : 'DstarPromptWithD02HHMuMuConf',
+    'CONFIG' : {
+     'CombDelmLower'     : -9.*MeV
+  ,'CombDelmUpper'    : 20*MeV
+  ,'DelmLower'        : -8*MeV
+  ,'DelmUpper'        : 18*MeV
+  ,'CombD0MassWin'    : 120*MeV
+  ,'D0MassWin'        : 100*MeV
+  ,'DstarDOCA'        : 0.3*mm
+  ,'D0MaxDOCA'        : 0.3*mm
+  ,'D0DauPt'          : 300*MeV
+  ,'D0DauP'           : 3*GeV
+  ,'D0Pt'             : 2.*GeV
+  ,'DstarPt'          : 2.*GeV
+  ,'SlowPionPt'       : 120*MeV
+  ,'DstarVtxChi2DOF'  : 20
+  ,'D0VtxChi2DOF'     : 20
+  ,'D0DauMaxIPChi2'   : 9
+  ,'D0DauIPChi2'      : 2.0
+  ,'D0FDChi2'         : 30
+  ,'D0IPChi2'         : 36
+  ,'D0DIRA'           : 0.9998
+  ,'TrackChi2DOF'     : 3
+  ,'ApplyKaonPIDK'    : False
+  ,'KaonPIDK'         : -100.
+  ,'ApplyPionPIDK'    : False
+  ,'PionPIDK'         : 100
+  ,'CheckPV'          : True # reject events with no PVs
+  ,'ApplyGECs'        : False # set to False to apply no GECs
+  ,'MaxLongTracks'    : 250
+  ,'MaxVeloTracks'    : None
+  ,'MaxSpdDigits'     : None
+  ,'MaxITClusters'    : None
+  ,'Prescale'         : 1
+  ,'Postscale'        : 1
+  } ,
+  'WGs' : [ 'Charm' ],
+  'STREAMS' : [ 'Charm' ]
+  }
+
+## Benoit Viaud
+## Added in Stripping20
+## Control channels for Tagged D02H(H)Mumu.
+## Uses in StrippingDstarPromptWithD02HHHH.py
+DstarPromptWithD02HHMuMuControl = {
+   'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
+    'CONFIG' : {
+      'CombDelmLower'     : -9.*MeV
+  ,'CombDelmUpper'    : 20*MeV
+  ,'DelmLower'        : -8*MeV
+  ,'DelmUpper'        : 18*MeV
+  ,'CombD0MassWin'    : 120*MeV
+  ,'D0MassWin'        : 100*MeV
+  ,'DstarDOCA'        : 0.3*mm
+  ,'D0MaxDOCA'        : 0.3*mm
+  ,'D0DauPt'          : 300*MeV
+  ,'D0DauP'           : 3*GeV
+  ,'D0Pt'             : 2.*GeV
+  ,'DstarPt'          : 2.*GeV
+  ,'SlowPionPt'       : 120*MeV
+  ,'DstarVtxChi2DOF'  : 20
+  ,'D0VtxChi2DOF'     : 20
+  ,'D0DauMaxIPChi2'   : 9
+  ,'D0DauIPChi2'      : 2.0
+  ,'D0FDChi2'         : 30
+  ,'D0IPChi2'         : 36
+  ,'D0DIRA'           : 0.9998
+  ,'TrackChi2DOF'     : 3
+  ,'ApplyKaonPIDK'    : False
+  ,'KaonPIDK'         : -100.
+  ,'ApplyPionPIDK'    : False
+  ,'PionPIDK'         : 100 # not applied to the slow pion
+  ,'CheckPV'          : True # reject events with no PVs
+  ,'ApplyGECs'        : False # set to False to apply no GECs
+  ,'MaxLongTracks'    : 250
+  ,'MaxVeloTracks'    : None
+  ,'MaxSpdDigits'     : None
+  ,'MaxITClusters'    : None
+  ,'Prescale'         : 0.01
+  ,'Postscale'        : 1.
   } ,
   'WGs' : [ 'Charm' ],
   'STREAMS' : [ 'Charm' ]
@@ -1294,6 +1402,66 @@ D2KS0HHH = {
 }
 
 
+# D02KSKS Lines
+# Micro-DST, Markward Britsch
+# Added: Stripping20
+# Lives in StrippingD02KSKS.py 
+D02KSKS = {
+    'BUILDERTYPE' : 'D02KSKSConf',
+    'CONFIG'      : {
+      'D0_MassWindowBeforeFit'          : 150.0,
+      'D0_MassWindow'                   : 100.0,
+      'D0_DOCA_LL'                      : 1.0,
+      'D0_DOCA_DD'                      : 4.0,
+      'KS_LL_nu2prime'                  : 0.0,
+      'KS_LL_signedFLchi2'              : 50.0,
+      'KS_DD_nu2prime'                  : 0.0,
+      'KS_DD_signedFLchi2'              : 50.0,
+      'D0_vertexChi2_LL'                : 20.0,
+      'D0_IPchi2_LL'                    : 50.0,
+      'D0_KS_signedFLchi2_LL'           : 200.0,
+      'D0_signedFLchi2_LL'              : -1.0,
+      'D0_vertexChi2_LD'                : 20.0,
+      'D0_IPchi2_LD'                    : 10.0,
+      'D0_KSLL_signedFLchi2_LD'         : 500.0,
+      'D0_signedFLchi2_LD'              : 1.0,
+      'D0_vertexChi2_DD'                : 20.0,
+      'D0_IPchi2_DD'                    : 10.0,
+      'D0_KS_nu2prime'                  : 4.0,
+      'D0_lnPt_DD'                      : 21.0,
+      'slowPi_IPchi2_LL'                : 40.0,
+      'slowPi_IPchi2_LD'                : 40.0,
+      'slowPi_IPchi2_DD'                : 40.0,
+      'Dst_mass_LL'                     : 200.,
+      'Dst_mass_LD'                     : 200.,
+      'Dst_mass_DD'                     : 200.,
+      'Dst_vertexChi2_LL'               : 40.0,
+      'Dst_vertexChi2_LD'               : 40.0,
+      'Dst_vertexChi2_DD'               : 40.0,
+      'Dst_massDiffLow_LL'              : 135.,
+      'Dst_massDiffHigh_LL'             : 160.,
+      'Dst_massDiffLow_LD'              : 135.,
+      'Dst_massDiffHigh_LD'             : 160.,
+      'Dst_massDiffLow_DD'              : 135.,
+      'Dst_massDiffHigh_DD'             : 160.,
+      'PrescaleLL'                        : 1.0,
+      'PostscaleLL'                       : 1.0,
+      'PrescaleLD'                        : 1.0,
+      'PostscaleLD'                       : 1.0,
+      'PrescaleDD'                        : 1.0,
+      'PostscaleDD'                       : 1.0,
+      'DstPrescaleLL'                        : 1.0,
+      'DstPostscaleLL'                       : 1.0,
+      'DstPrescaleLD'                        : 1.0,
+      'DstPostscaleLD'                       : 1.0,
+      'DstPrescaleDD'                        : 1.0,
+      'DstPostscaleDD'                       : 1.0
+    },
+    'WGs' : ['Charm'],
+    'STREAMS' :  ['Charm']
+    }
+
+
 # Cross-section lines.
 # Imported in Stripping19, taking from the Stripping18 version of
 # LineConfigDictionaries_CharmXsec.py, which was removed in Stripping18b.
@@ -1524,5 +1692,85 @@ D02HHForXSec = {
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'CharmCompleteEvent' ] 
+    }
+
+
+# CharmFromBSemi Lines
+# Micro-DST, Mika Vesterinen
+# Moved to this file in Stripping20
+# Lives in StrippingCharmFromBSemi.py
+CharmFromBSemi = {
+    'BUILDERTYPE' : 'CharmFromBSemiAllLinesConf',
+    'CONFIG' :  {
+    "GEC_nLongTrk"   : 250    # adimensional
+    ,"TrGhostProbMax": 0.5    # adimensional
+    ,"MinBMass"      : 2500   # MeV
+    ,"MaxBMass"      : 6000   # MeV
+    ,"MinBMassTight" : 2800   # MeV
+    ,"MaxBMassTight" : 5100   # MeV
+    ,"MINIPCHI2"     : 9.0    # adimensiional
+    ,"TRCHI2"        : 4.0    # adimensiional
+    ,"KaonPIDK"      : 4.0    # adimensiional
+    ,"PionPIDK"      : 10.0   # adimensiional
+    ,"PionPIDKTight" : 4.0    # adimensiional
+    ,"MuonIPCHI2"    : 4.0    # adimensiional
+    ,"MuonPT"        : 800.0  # MeV
+    ,"KPiPT"         : 300.0  # MeV
+    ,"DsDIRA"        : 0.99   # adimensiional
+    ,"DsFDCHI2"      : 100.0  # adimensiional
+    ,"DsMassWin"     : 80.0   # MeV
+    ,"DsAMassWin"    : 100.0  # MeV
+    ,"Dto4h_MassWin" : 40.0   # MeV
+    ,"Dto4h_AMassWin": 42.0   # MeV
+    ,"DsIP"          : 7.4    # mm
+    ,"DsVCHI2DOF"    : 6.0    # adimensiional
+    ,"PIDmu"         : -0.0   # adimensiional
+    ,"BDIRA"         : 0.999  # adimensiional
+    ,"BVCHI2DOF"     : 6.0    # adimensiional
+    ,"DZ"            : 0      #mm
+    ,"DDocaChi2Max"  : 20     #adimensiional
+    ,"MINIPCHI2Loose": 4.0   #adimensiional
+    ,"KaonPIDKloose" : -5     #adimensiional
+    ,'KSCutZFDFromD' :   10.0  #mm
+    ,'KSLLPMin'         : 2000  ## MeV
+    ,'KSLLPTMin'        : 400   ## MeV
+    ,'KSDDPMin'         : 3000  ## MeV
+    ,'KSDDPTMin'        : 500   ## MeV
+    ,'KSLLCutMass'      : 30    ## MeV
+    ,'KSDDCutMass'      : 30    ## MeV
+    ,'KSLLCutFDChi2'    : 100   ## unitless
+    ,'KSDDCutFDChi2'    : 100   ## unitless
+    ,'KSDaugTrackChi2'  : 4     ## max chi2/ndf for Ks daughter tracks
+    ,'KSVertexChi2'     : 6     ## max chi2/ndf for Ks vertex
+    ,'KSCutDIRA'        : 0.99  ## unitless
+    ,'LambdaLLPMin'       : 2000 ## MeV
+    ,'LambdaLLPTMin'      : 500  ## MeV
+    ,'LambdaLLCutMass'    : 30   ## MeV
+    ,'LambdaLLCutFDChi2'  : 100  ## unitless
+    ,'LambdaDDPMin'       : 3000 ## MeV
+    ,'LambdaDDPTMin'      : 800  ## MeV
+    ,'LambdaDDCutMass'    : 30   ## MeV
+    ,'LambdaDDCutFDChi2'  : 100  ## unitless
+    ,'LambdaCutDIRA'      : 0.99 ## unitless
+    ,'LambdaDaugTrackChi2': 4    ## unitless
+    ,'LambdaVertexChi2'   : 6    ## max chi2/ndf for Lambda0 vertex
+    ,"Pi0PtMinLoose"    : 1000    # Minimum Pt of pi0 (MeV)
+    ,"Pi0PtMin"         : 1300   # Minimum Pt of pi0 (MeV)
+    ,"Pi0PMin"          : 3000   # Minimum P of pi0 (MeV)
+    ,"PhotonCL"         : 0.25   # Confidence level for Pi0 photons
+    ,"D02HHPi0AMassWin" : 220  # MeV (mass window for combination)
+    ,"D02HHPi0MassWin"  : 210  # MeV (mass window after vertex fit)
+    ,"D02HHPi0DocaCut"  : 6.0    # mm
+    ,"Dstar_Chi2"       :  8.0 ## unitless
+    ,"Dstar_SoftPion_PIDe" : 2. ## unitless
+    ,"Dstar_SoftPion_PT" : 180. ## MeV ### 
+    ,"Dstar_wideDMCutLower" : 0. ## MeV
+    ,"Dstar_wideDMCutUpper" : 170. ## MeV
+    ,"PTSUMLoose"  : 1400. ## MeV
+    ,"PTSUM"       : 1800. ## MeV
+    ,"PTSUM_HHPi0" : 1800. ## MeV
+    },
+    'STREAMS' : ['Charm'] ,
+    'WGs'    : ['Charm']
     }
 
