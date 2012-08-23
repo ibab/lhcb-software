@@ -85,7 +85,7 @@ class HHHBuilder(object):
 
     def _makeK1(self):
         '''Makes the K1+ -> K+ pi+ pi- +cc '''
-        k1 = self._makeX2HHH('K1_2Kpipi',['[K_1(1270)+ -> K+ pi- pi+]cc'],'(AM<2500*MeV)',self.config,[self.pions,self.kaons],False)
+        k1 = self._makeX2HHH('K1_2Kpipi',['[K_1(1270)+ -> K+ pi- pi+]cc'],'(AM<2000*MeV)',self.config,[self.pions,self.kaons],False)
         mass = self._massWindow('K1','K_1(1270)+').replace('ADAMASS','ADMASS')
         return [filterSelection('K1_2Kpipi',mass,[k1])]
 

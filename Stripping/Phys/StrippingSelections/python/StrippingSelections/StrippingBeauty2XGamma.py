@@ -80,7 +80,7 @@ config = { # Cuts made on all charged input particles in all lines
                    #'pP_MIN'        : '10000*MeV' # for pH only (obviously)
                  },
            # Cuts for omega -> 3 body decay
-           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '150*MeV', 'K1': ['1.0*GeV', '2.0*GeV']},
+           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '150*MeV', 'K1': ['1.0*GeV', '1.7*GeV']},
                     'DAUGHTERS'     : {'PT_MIN':'350*MeV','P_MIN':'2000*MeV'},
                     'AMAXDOCA_MAX'  : '0.50*mm',
                     'VCHI2DOF_MAX'  : 9,

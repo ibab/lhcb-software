@@ -168,7 +168,7 @@ class HHBuilder(object):
         '''Makes X -> Ks0pi- + c.c.'''
         ## Change the mass window to 4.5 GeV to improve the timing
         sel = self._makeXPLUS2HH('X2KsPi',['[K*(892)+ -> KS0 pi+]cc'],
-                                '(AM < 2.5*GeV)',self.config, self.ks+[self.pions])
+                                '(AM < 2.0*GeV)',self.config, self.ks+[self.pions])
         #ll = self._makeXPLUS2HH('X2KsPiLL',['[K*(892)+ -> KS0 pi+]cc'],
         #                        '(AM < 2.5*GeV)',self.config,
         #                        self.ks["DD"]+[self.pions])
@@ -177,20 +177,20 @@ class HHBuilder(object):
     def _makeKPi0(self):
         '''Makes X -> K+pi0 + c.c.'''
         m = self._makeXPLUS2HH('X2KPi0Merged',['[K*(892)+ -> K+ pi0]cc'],
-                               '(AM < 2.5*GeV)',self.config,
+                               '(AM < 2.0*GeV)',self.config,
                                self.pi0["Merged"]+[self.kaons],True)
         r = self._makeXPLUS2HH('X2KPi0Resolved',['[K*(892)+ -> K+ pi0]cc'],
-                               '(AM < 2.5*GeV)',self.config,
+                               '(AM < 2.0*GeV)',self.config,
                                self.pi0["Resolved"]+[self.kaons],True)
         return [MergedSelection('X2KPi0Beauty2XGamma',RequiredSelections=[m,r])]
 
     def _makePiPi0(self):
         '''Makes X -> pi+pi0'''        
         m = self._makeXPLUS2HH('X2PiPi0Merged',['[rho(770)+ -> pi+ pi0]cc'],
-                               'AM < 2.5*GeV',self.config,
+                               'AM < 2.0*GeV',self.config,
                                [self.pions]+self.pi0["Merged"],True)
         r = self._makeXPLUS2HH('X2PiPi0Resolved',['[rho(770)+ -> pi+ pi0]cc'],
-                               'AM < 2.5*GeV',self.config,
+                               'AM < 2.0*GeV',self.config,
                                [self.pions]+self.pi0["Resolved"],True)
         return [MergedSelection('X2PiPi0Beauty2XGamma',
                                 RequiredSelections=[m,r])]
