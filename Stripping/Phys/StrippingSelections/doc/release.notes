@@ -4,11 +4,16 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-23 - Stefano Perazzini
+ - Update configuration dictionary for StrippingHb2Charged2Body.py
+ - Created new lines in StrippingB2HHBkg.py, going to Bhadron stream 
+
 ! 2012-08-22 - Aurelien Martens
-- Update StrippingBu2KSh.py (to not explicitely build KSK anymore, pions are now NoPID pions)
+ - Update StrippingBu2KSh.py (to not explicitely build KSK anymore, pions are now NoPID pions)
 
 ! 2012-08-22 - Neus Lopez March
-- Update StrippingB2Psi2SXMuMu.py and StrippingB2Psi2SX.py to satisfy requirements.
+ - Update StrippingB2Psi2SXMuMu.py and StrippingB2Psi2SX.py to satisfy requirements.
+
 ! 2012-08-22 - Anton Poluektov 
  - Add thack ghost probability cut to Beauty2Charm selections, once again (svn conflict?)
 
