@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
+! 2012-08-23 - Thomas Blake
+ - Removed the ~ISMUON cut from the K/pi/p in B2XMuMu 
+
+
 ! 2012-08-23 - Johannes Albrecht
  - retuning of VRD lines, replace tight trChi2 (<2) by ghostProb
  - first running version of B2htaumu

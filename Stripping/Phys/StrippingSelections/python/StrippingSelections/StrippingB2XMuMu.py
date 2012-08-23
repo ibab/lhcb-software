@@ -1,5 +1,5 @@
 
-__author__ = 'Paul Schaack'
+__author__ = 'Paul Schaack, M. Kreps, T. Blake'
 __date__ = '12/02/2011'
 __version__ = '$Revision: 1.2 $'
 
@@ -220,7 +220,7 @@ class B2XMuMuConf(LineBuilder) :
 
         self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s)" %config
 
-        self.HadronCuts = "(MIPCHI2DV(PRIMARY) > %(Hadron_MinIPCHI2)s) & (HASRICH) & (~ISMUON)" %config
+        self.HadronCuts = "(MIPCHI2DV(PRIMARY) > %(Hadron_MinIPCHI2)s) & (HASRICH)" %config
         
         self.KaonCut = self.TrackCuts + " & " + self.HadronCuts
         self.PionCut = self.TrackCuts + " & " + self.HadronCuts
