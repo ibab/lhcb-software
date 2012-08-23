@@ -38,6 +38,10 @@ from CommonParticles.StandardDiElectron import *
 _locations.update ( locations )
 from CommonParticles.StandardLambdac import *
 _locations.update ( locations )
+from CommonParticles.StandardTau import *
+_locations.update ( locations )
+from CommonParticles.StandardDipion import *
+_locations.update ( locations )
 
 # redefine the locations 
 locations = _locations
