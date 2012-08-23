@@ -25,8 +25,8 @@ from StrippingUtils.Utils        import LineBuilder, checkConfig
 
 default_config = { 'PrescaleB2PPbar'   : 1,
                    'MinPTB2PPbar'      : 900,
-                   'MinIPChi2B2PPbar'  : 9,
-                   'TrChi2'            : 4,
+                   'MinIPChi2B2PPbar'  : 10,
+                   #'TrChi2'            : 4,
                    'PIDppi'            : 0,
                    'PIDpk'             : -1,
                    'MaxPTB2PPbar'      : 2100,
@@ -35,7 +35,8 @@ default_config = { 'PrescaleB2PPbar'   : 1,
                    'VertexChi2B2PPbar' : 16,
                    'BPTB2PPbar'        : 1100,
                    'BIPChi2B2PPbar'    : 20,
-                   'BDIRA'             : 0.9995
+                   'BDIRA'             : 0.9995,
+                   'MaxGhostProb'      : 0.4
                  }
 
 
@@ -45,7 +46,7 @@ class B2TwoBaryonLines( LineBuilder ) :
     __configuration_keys__ = ( 'PrescaleB2PPbar',
                                'MinPTB2PPbar',
                                'MinIPChi2B2PPbar',
-                               'TrChi2',
+                               #'TrChi2',
                                'PIDppi',
                                'PIDpk',
                                'MaxPTB2PPbar',
@@ -55,6 +56,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                                'BPTB2PPbar',
                                'BIPChi2B2PPbar',
                                'BDIRA',
+                               'MaxGhostProb'
                              )
     
     def __init__( self,name,config ) :        
@@ -65,7 +67,7 @@ class B2TwoBaryonLines( LineBuilder ) :
         
         self.B2PPbar = makeB2PPbar( B2PPbarName,
                                     config['MinPTB2PPbar'],
-                                    config['TrChi2'],
+                                    #config['TrChi2'],
                                     config['PIDppi'],
                                     config['PIDpk'],
                                     config['MinIPChi2B2PPbar'],
@@ -75,7 +77,9 @@ class B2TwoBaryonLines( LineBuilder ) :
                                     config['VertexChi2B2PPbar'],
                                     config['BIPChi2B2PPbar'],
                                     config['BPTB2PPbar'],
-                                    config['BDIRA'] )
+                                    config['BDIRA'],
+                                    config['MaxGhostProb']
+                                    )
         
         self.lineB2PPbar = StrippingLine( B2PPbarName+"Line",
                                           prescale = config['PrescaleB2PPbar'],
@@ -85,11 +89,14 @@ class B2TwoBaryonLines( LineBuilder ) :
         self.registerLine(self.lineB2PPbar)    
 
 def makeB2PPbar( name,
-                 minPT, trChi2, pidPPi, pidPK, minIPChi2, maxIPChi2,
+                 minPT,
+                 #trChi2,
+                 pidPPi, pidPK, minIPChi2, maxIPChi2,
                  combMassWindow, maxPT,
-                 vertexChi2, bIPChi2, bPT, bDIRA ) :
+                 vertexChi2, bIPChi2, bPT, bDIRA, maxGhostProb ) :
 
-    _daughters_cuts = "(PT > %(minPT)s * MeV) & (TRCHI2DOF < %(trChi2)s) & ((PIDp-PIDpi) > %(pidPPi)s) & ( (PIDp-PIDK) > %(pidPK)s ) & (MIPCHI2DV(PRIMARY) > %(minIPChi2)s)" %locals()
+    #_daughters_cuts = "(PT > %(minPT)s * MeV) & (TRCHI2DOF < %(trChi2)s) & ((PIDp-PIDpi) > %(pidPPi)s) & ( (PIDp-PIDK) > %(pidPK)s ) & (MIPCHI2DV(PRIMARY) > %(minIPChi2)s)" %locals()
+    _daughters_cuts = "(PT > %(minPT)s * MeV) & ((PIDp-PIDpi) > %(pidPPi)s) & ( (PIDp-PIDK) > %(pidPK)s ) & (MIPCHI2DV(PRIMARY) > %(minIPChi2)s) & (TRGHP < %(maxGhostProb)s )" %locals()
     _combination_cuts = "(ADAMASS('B0') < %(combMassWindow)s * MeV) & ( AMAXCHILD(MAXTREE('p+'==ABSID,PT)) > %(maxPT)s * MeV ) & ( AMAXCHILD(MAXTREE('p+'==ABSID,MIPCHI2DV(PRIMARY))) > %(maxIPChi2)s )" %locals()
     _mother_cuts = "(PT > %(bPT)s * MeV) & ( VFASPF(VCHI2PDOF) < %(vertexChi2)s ) & ( BPVDIRA > %(bDIRA)s ) & ( BPVIPCHI2() < %(bIPChi2)s )" %locals()
 
