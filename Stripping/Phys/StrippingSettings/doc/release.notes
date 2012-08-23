@@ -4,6 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-08-22 - Mat Charles
+ - Stripping20/LineConfigDictionaries_Charm.py:
+  . Split off D0 WS lines in full DST -- they can be kept unprescaled by using tighter cuts.
+  . Added D02hh TIS lines to full DST with a 10% prescale for trigger studies at Vava's request
+  . Better HLT1 TOS requirement in D02hh
+
 ! 2012-08-23 - Anton Poluektov 
   - Remove StrippingDev dictionary to avoid confusion. 
   - Modify Stripping20/B2OC dictionary to use ghost probability cut. 
