@@ -119,6 +119,7 @@ import StrippingD02MuMu
 import StrippingPromptCharm
 import StrippingD2hh
 import StrippingD2KS0H_conf
+import StrippingD2KS0HHH_conf
 import StrippingCharmedAndCharmedStrangeSpectroscopy
 import StrippingD2hhh_conf
 import StrippingD2XMuMuSS
