@@ -7,7 +7,8 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !----------------------------------------------------------------------------
-
+! 2012-08-23 - H. Gordon
+- Added Kshhh lines in new configurable Hlt2CharmHadD2HHHKs.py, based on HHKs lines
 !========================= Hlt2Lines v8r24 2012-06-23 =========================
 ! 2012-06-21 - C. Thomas
 - Added alternative DD inclusive line
