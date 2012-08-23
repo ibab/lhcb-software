@@ -257,7 +257,7 @@ class StrippingDstarD02xxConf(LineBuilder):
         line_Kpi_box  = self.baseLine(name,config,"K",  "pi")
         #line_eK_box   = self.baseLine(name,config,"e",   "K")
         #line_epi_box  = self.baseLine(name,config,"e",   "pi")
-        line_mue_box  = self.baseLine(name,config,"e",  "mu")
+        #line_mue_box  = self.baseLine(name,config,"e",  "mu") #removed in St20
         #line_pimu_box = self.baseLine(name,config,"pi", "mu")
         line_Kmu_box  = self.baseLine(name,config,"K",  "mu")
 
@@ -274,11 +274,11 @@ class StrippingDstarD02xxConf(LineBuilder):
         # Untagged minimum bias lines for trigger efficiency estimate
         
         line_Kpi_minbias =  self.baseLine_untagged(name,config,"K",  "pi",   1)
-        line_pipi_minbias =  self.baseLine_untagged(name,config,"pi",  "pi", 1)
+        #line_pipi_minbias =  self.baseLine_untagged(name,config,"pi",  "pi", 1) #removed in St20
         
         line_Kpi_minbias_treff =  self.baseLine_untagged(name,config,"K",  "pi",   2)
         
-        lines = [line_pipi_box,  line_mumu_box, line_Kpi_box, line_mue_box, line_Kmu_box,line_mumu_untagged_box ,line_Kmu_untagged_box, line_pipi_untagged_box,line_Kpi_untagged_box, line_Kpi_minbias, line_pipi_minbias,  line_Kpi_minbias_treff]
+        lines = [line_pipi_box,  line_mumu_box, line_Kpi_box, line_Kmu_box,line_mumu_untagged_box ,line_Kmu_untagged_box, line_pipi_untagged_box,line_Kpi_untagged_box, line_Kpi_minbias,  line_Kpi_minbias_treff]
         
         return lines
     

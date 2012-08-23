@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-23 - Andrea Contu
+   - removed 2 lines in StrippingDstarD02xx.py
+
 ! 2012-08-23 - Sam Hall
    - Beauty2Charm D2PhiMuNu Update (particularly in _B2DX.py)
 
