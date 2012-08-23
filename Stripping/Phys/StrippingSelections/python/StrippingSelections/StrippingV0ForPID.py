@@ -30,41 +30,31 @@
 # @date 2010-09-05
 # =============================================================================
 """
-
 Usage:
-
->>> stream = ...
-
->>> from StrippingSelections import StrippingV0ForPID
-
->>> V0ForPID = StrippingV0ForPID.StrippingV0ForPIDConf ('noPIDV0',StrippingV0ForPID.default_config)
-
->>> stream.appendLines( V0ForPID.lines() )
-
-Results from running over:
-$STRIPPINGSELECTIONSROOT/tests/data/Reco11a_Run97120_SDSTs.py
-
-with prescales above prescales:
-
-StrippingReport                                                INFO Event 100000, Good event 99280
- |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
- |_StrippingGlobal_                                  |  1.7718|      1759|       |  18.045|       |       |       |
- |_StrippingSequenceStreamTest_                      |  1.7718|      1759|       |  18.038|       |       |       |
- |!StrippingnoPIDDstarLine                           |  0.2820|       280|  1.057|   2.885|      0|      0|     83|
- |!StrippingK0SLLLinenoPIDV0                         |  0.2810|       279|  1.082|   0.125|      0|      0|      2|
- |!StrippingK0SDDLinenoPIDV0                         |  0.2830|       281|  1.089|   0.218|      0|      0|      2|
- |!StrippingLam0LLLine1noPIDV0                       |  0.2971|       295|  1.020|   0.861|      0|      0|     18|
- |!StrippingLam0LLLine2noPIDV0                       |  0.2347|       233|  1.017|   4.647|      0|      0|     66|
- |!StrippingLam0DDLinenoPIDV0                        |  0.3062|       304|  1.020|   0.880|      0|      0|      0|
- |!StrippingLam0LLIsMUONLine1noPIDV0                 |  0.0695|        69|  1.014|   0.040|      0|      0|      0|
- |!StrippingLam0LLIsMUONLine2noPIDV0                 |  0.0101|        10|  1.000|   0.040|      0|      0|      0|
- |!StrippingLam0DDIsMUONLinenoPIDV0                  |  0.0977|        97|  1.000|   7.878|      0|      0|      0|
+ >>> stream = ...
+ >>> from StrippingSelections.StrippingV0ForPID import StrippingV0ForPIDConf as builder_v0
+ >>> from StrippingSelections.StrippingV0ForPID import default_config as config_v0
+ >>> lb_v0  = builder_v0( name='noPIDV0', config=config_v0)
+ >>> stream.appendLines( lb_v0.lines()  )
  
+Results from running over:
+$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py
+
+StrippingReport                                                INFO Event 100000, Good event 100000
+|                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+|!StrippingK0SLLLinenoPIDV0                         |  0.3290|       329|  1.116|   0.388|
+|!StrippingK0SDDLinenoPIDV0                         |  0.3190|       319|  1.135|   0.931|
+|!StrippingLam0LLLine1noPIDV0                       |  0.5050|       505|  1.085|   2.783|
+|!StrippingLam0LLLine2noPIDV0                       |  0.2960|       296|  1.017|  16.511|
+|!StrippingLam0DDLinenoPIDV0                        |  0.2920|       292|  1.051|   4.443|
+|!StrippingLam0LLIsMUONLine1noPIDV0                 |  0.1640|       164|  1.043|   0.117|
+|!StrippingLam0LLIsMUONLine2noPIDV0                 |  0.0080|         8|  1.000|   0.116|
+|!StrippingLam0DDIsMUONLinenoPIDV0                  |  0.1270|       127|  1.031|  39.297|                
 """
 # =============================================================================
 __author__  = 'Andrew Powell a.powell1@physics.ox.ac.uk'
 __date__    = '27-08-2011'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 __all__ = ('StrippingV0ForPIDConf')
 # =============================================================================
 
@@ -129,11 +119,11 @@ default_config = {
     ## define LL-category of K0S 
     "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) "
     ] ,
-    'KS0LL_Prescale'           : 0.024 ,
-    'KS0DD_Prescale'           : 0.026 , 
-    'LamLL_Prescale_LoP'       : 0.151 , 
+    'KS0LL_Prescale'           : 0.020 ,
+    'KS0DD_Prescale'           : 0.024 , 
+    'LamLL_Prescale_LoP'       : 0.140 , 
     'LamLL_Prescale_HiP'       : 1.000 ,
-    'LamDD_Prescale'           : 0.099 , 
+    'LamDD_Prescale'           : 0.100 , 
     'LamLLIsMUON_Prescale_LoP' : 1.000 ,
     'LamLLIsMUON_Prescale_HiP' : 1.000 ,
     'LamDDIsMUON_Prescale'     : 1.000   

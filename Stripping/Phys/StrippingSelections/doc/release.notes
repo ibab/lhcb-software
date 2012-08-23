@@ -4,9 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-23 - Andrew Powell
+ - Updated default prescales in:
+   - StrippingNoPIDDstarWithD02RSKPi.py
+   - StrippingV0ForPID.py
+
 ! 2012-08-23 - Thomas Blake
  - Removed the ~ISMUON cut from the K/pi/p in B2XMuMu 
-
 
 ! 2012-08-23 - Johannes Albrecht
  - retuning of VRD lines, replace tight trChi2 (<2) by ghostProb
@@ -15,6 +19,7 @@
  
 ! 2012-08-23 - Hamish Gordon
  - Added new stripping lines for D+(s)->Kshhh, in new configurable StrippingD2KS0HHH_conf.py
+
 ! 2012-08-23 - Stefano Perazzini
  - Update configuration dictionary for StrippingHb2Charged2Body.py
  - Created new lines in StrippingB2HHBkg.py, going to Bhadron stream 
@@ -26,7 +31,7 @@
  - Update StrippingB2Psi2SXMuMu.py and StrippingB2Psi2SX.py to satisfy requirements.
 
 ! 2012-08-22 - Anton Poluektov 
- - Add thack ghost probability cut to Beauty2Charm selections, once again (svn conflict?)
+ - Add track ghost probability cut to Beauty2Charm selections, once again (svn conflict?)
 
 ! 2012-08-22  - Konstantinos A. Petridis
  - Modified StrippingB2MuMuMuMuLines.py: Moved DetachedDiMuon Line of B2MuMuX to B2MuMuMuMu

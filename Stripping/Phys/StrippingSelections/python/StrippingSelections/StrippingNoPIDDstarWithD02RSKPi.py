@@ -1,28 +1,27 @@
 # $Id: StrippingNoPIDDstarWithD02RSKPi.py,v 1.1 2010-09-03 22:38:21 pxing Exp $
 
 __author__  = ['Philip Xing', 'Andrew Powell']
-__date__    = '27th August 2011'
-__version__ = '$Revision: 6.0 $'
+__date__    = '23rd August 2012'
+__version__ = '$Revision: 7.0 $'
 
 '''
 Configurable for the RICH calibration using D*+ -> pi+ D0( K- pi+).
 
 Usage:
-
-from StrippingSelections import StrippingNoPIDDstarWithD02RSKPi
-confNoPIDDstarWithD02RSKPi = StrippingNoPIDDstarWithD02RSKPi.NoPIDDstarWithD02RSKPiConf("StripDstarNoPIDsWithD02RSKPi",StrippingNoPIDDstarWithD02RSKPi.default_config)
-stream.appendLines( confNoPIDDstarWithD02RSKPi.lines() )
+ >>> stream = ...
+ >>> from StrippingSelections.StrippingNoPIDDstarWithD02RSKPi import NoPIDDstarWithD02RSKPiConf as builder_dst
+ >>> from StrippingSelections.StrippingNoPIDDstarWithD02RSKPi import default_config as config_dst
+ >>> lb_dst = builder_dst(name='noPIDDstar', config=config_dst)
+ >>> stream.appendLines( lb_dst.lines() )
 
 Results from running over:
-$STRIPPINGSELECTIONSROOT/tests/data/Reco12-Stripping16_SDSTs.py
+$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py
 
-StrippingReport                                                INFO Event 100000, Good event 99280
- |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
- |_StrippingGlobal_                                  |  0.2820|       280|       |   2.885|       |       |       |
- |_StrippingSequenceStreamTest_                      |  0.2820|       280|       |   2.855|       |       |       |
- |!StrippingDstarNoPIDsWithD02RSKPiLine              |  0.2820|       280|  1.057|   2.885|      0|      0|     83|
-
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingnoPIDDstarLine                           |  0.4800|       480|  1.075|  11.597|
 '''
+
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from GaudiKernel.SystemOfUnits import mm, cm , MeV, GeV
@@ -56,10 +55,10 @@ default_config =  {
     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
     ##
-    , 'Prescale'         : 0.482          ## unitless
+    , 'Prescale'         : 0.800          ## unitless
     , 'Postscale'        : 1.00           ## unitless
     ##
-    , 'Monitor'          : False           ## Activate the monitoring?
+    , 'Monitor'          : False          ## Activate the monitoring?
     }
 
 class NoPIDDstarWithD02RSKPiConf(LineBuilder) :
