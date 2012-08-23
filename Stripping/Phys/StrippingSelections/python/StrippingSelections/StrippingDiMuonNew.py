@@ -864,16 +864,16 @@ class DiMuonConf(LineBuilder):
             self.registerLine( self.Psi2MuMuLine )
 
         else:    
-            self.registerLine( self.DiMuonExclusiveLine )
+            #self.registerLine( self.DiMuonExclusiveLine )
             self.registerLine( self.DiMuonNoPVLine )
             self.registerLine( self.DiMuonHighMassLine )
             self.registerLine( self.DiMuonHighMassSameSignLine )
-            self.registerLine( self.DiMuonLowMassLine )
+            #self.registerLine( self.DiMuonLowMassLine )
             #self.registerLine( self.Jpsi2MuMuLine )
             self.registerLine( self.Jpsi2MuMuTOSLine )
             #self.registerLine( self.Psi2MuMuLine )
             self.registerLine( self.Psi2MuMuTOSLine )
-            self.registerLine( self.DiMuonDetachedLine )
+            #self.registerLine( self.DiMuonDetachedLine )
             self.registerLine( self.Jpsi2MuMuDetachedLine )
             self.registerLine( self.Psi2MuMuDetachedLine )
         
