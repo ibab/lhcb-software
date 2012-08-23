@@ -744,7 +744,7 @@ DstarPromptWithD02HHHH = {
     ,'D0DauMaxIPChi2'   : 30
     ,'D0DauIPChi2'      : 3.0
     ,'D0FDChi2'         : 48
-    ,'D0IPChi2'         : 30
+    ,'D0IPChi2'         : 10000.0   # Mat changed from 30 to a large number in S20
     ,'D0DIRA'           : 0.9998
     ,'TrackChi2DOF'     : 4
     ,'ApplyKaonPIDK'    : True
@@ -787,7 +787,7 @@ DstarPromptWithD02HHHHNoPID = {
     ,'D0DauMaxIPChi2'   : 30
     ,'D0DauIPChi2'      : 3.0
     ,'D0FDChi2'         : 48
-    ,'D0IPChi2'         : 30
+    ,'D0IPChi2'         : 10000.0   # Mat changed from 30 to a large number in S20
     ,'D0DIRA'           : 0.9998
     ,'TrackChi2DOF'     : 4
     ,'ApplyKaonPIDK'    : False 
@@ -1227,6 +1227,72 @@ DstarD2hhpi0 = {
     'WGs' : [ 'Charm' ],
     'STREAMS' : ['Charm' ] 
 }
+
+# D(s)+ -> KS h+ h+ h-
+# Responsible: Hamish Gordon
+# Added: Stripping20
+# Lives in StrippingD2KS0HHH_conf.py
+D2KS0HHH = {
+    'BUILDERTYPE' : 'D2KS0HHHConf',
+    'CONFIG'      : {
+        'KS0DaugP'                  : 3000  
+        ,'KS0DaugPT'                :  200
+        ,'KS0DaugTrackChi2'         :    4  
+        ,'KS0DaugMIPChi2'           :   40
+        ,'KS0DaugPIDK'              :    5
+        ,'KS0MassWindow'            :   35 
+        ,'KS0MIPChi2'               :    7 
+        ,'KS0MIPChi2DD'             :    0
+        ,'KS0VertexChi2'            :    8  
+        ,'KS0PT'                    :  600
+        ,'KS0BPVVDCHI2'             :  300
+        ,'KS0BPVVDCHI2DD'           :  200
+        ,'BachPionP'                : 5000               
+        ,'BachPionPT'               :  320     
+        ,'BachPionTrackChi2'        :    3
+        ,'BachPionMIPChi2'          :    5 
+        ,'BachPionPIDK'             :    0
+        ,'BachKaonP'                : 5000                 
+        ,'BachKaonPT'               :  320     
+        ,'BachKaonTrackChi2'        :    3
+        ,'BachKaonMIPChi2'          :    5 
+        ,'BachKaonPIDK'             :    8 
+        ,'DMesonComboLowMass'       : 1760          
+        ,'DMesonComboHighMass'      : 2080
+        ,'DMesonComboDOCA'          :  1.0 
+        ,'DMesonAPT'                : 1700
+        ,'DMesonADOCAChi2'          :   20 
+        ,'dau2PT'                   : 1200
+        ,'dau2IPCHI2'               :   20
+        ,'DMesonMotherLowMass'      : 1770
+        ,'DMesonMotherHighMass'     : 2070
+        ,'DMesonMotherVertexChi2'   :   20
+        ,'DMesonMotherMIPChi2'      :   15  
+        ,'DMesonMotherPT'           : 1800
+        ,'KS0ZDiff'                 :   10
+        ,'DMesonFlightDistChi2'     :   50
+        ,'MaxTracksInEvent'         :  400
+        ,'PiPiPiLinePrescale'       :    1 
+        ,'KPiPiLinePrescale'        :    1
+        ,'KKPiLinePrescale'         :    1
+        ,'KPiPiOSLinePrescale'      :    1 
+        ,'PiPiPiLinePrescaleDD'     :    1
+        ,'KPiPiLinePrescaleDD'      :    1
+        ,'KKPiLinePrescaleDD'       :    1
+        ,'KPiPiOSLinePrescaleDD'    :    1
+        ,'PiPiPiLinePostscale'      :    1 
+        ,'KPiPiLinePostscale'       :    1
+        ,'KKPiLinePostscale'        :    1
+        ,'KPiPiOSLinePostscale'     :    1
+        ,'PiPiPiLinePostscaleDD'    :    1 
+        ,'KPiPiLinePostscaleDD'     :    1
+        ,'KKPiLinePostscaleDD'      :    1
+        ,'KPiPiOSLinePostscaleDD'   :    1
+         },
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : ['Charm' ]
+}
+
 
 # Cross-section lines.
 # Imported in Stripping19, taking from the Stripping18 version of

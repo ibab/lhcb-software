@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-08-22 - Mat Charles
+ - Stripping20/LineConfigDictionaries_Charm.py:
+  . Loosened IPCHI2 cut for tagged 4-body (HHHH) lines
+  . Added new D(s)+ -> KS h+ h+ h- line suite
+
 ! 2012-08-23 - Andrew Powell
   - Stripping20: Updates to LineConfigDictionaries_Calib.py
 
