@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-08-23 - Anton Poluektov 
+  - Remove StrippingDev dictionary to avoid confusion. 
+  - Modify Stripping20/B2OC dictionary to use ghost probability cut. 
+
 ! 2012-08-23 - Andrea Contu
  - Stripping20/LineConfigDictionaries_Charm.py
   . Added new lines for D02KSKS, D2KSHHH, DstarPromptWithD02HHMuMu(+ control modes)
