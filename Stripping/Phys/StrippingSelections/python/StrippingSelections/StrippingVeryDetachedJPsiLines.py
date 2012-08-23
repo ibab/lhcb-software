@@ -91,7 +91,8 @@ def makeDefault(name) :
     Detached2mu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Detached2mu.OfflineVertexFitter.useResonanceVertex = False
     Detached2mu.ReFitPVs = True
-    Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 2 ) "\
+    Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 3 ) "\
+                                  " & (TRGHOSTPROB<0.3) "\
                                   " & (MIPCHI2DV(PRIMARY)> 100)"\
                                   "& (PT > 700*MeV) "}
                                  

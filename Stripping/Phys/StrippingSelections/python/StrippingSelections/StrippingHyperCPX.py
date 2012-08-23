@@ -147,9 +147,9 @@ _default_configuration_ = {
     #
     # Selection of basic particles
     #
-    'ProtonCuts' : ' ( TRCHI2DOF < 5 ) & ( 0 < PIDp  - PIDpi ) & ( BPVIPCHI2() > 12 ) ' , 
-    'MuonCuts'   : ' ( TRCHI2DOF < 2 ) & ISMUON                & ( BPVIPCHI2() > 12 ) ' ,                
-    'PionCuts'   : ' ( TRCHI2DOF < 2 )                         & ( BPVIPCHI2() > 12 ) ' ,
+    'ProtonCuts' : ' ( TRCHI2DOF < 5 ) & ( 0 < PIDp  - PIDpi ) & ( BPVIPCHI2() > 12 ) & (TRGHOSTPROB<0.3)' , 
+    'MuonCuts'   : ' ( TRCHI2DOF < 2 ) & ISMUON                & ( BPVIPCHI2() > 12 ) & (TRGHOSTPROB<0.3)' ,                
+    'PionCuts'   : ' ( TRCHI2DOF < 3 )                         & ( BPVIPCHI2() > 12 ) & (TRGHOSTPROB<0.3)' ,
     'MuonCuts_forTau23Mu'   : ' ( PT > 300 * MeV ) & ( TRCHI2DOF < 4  ) & ISMUON                & ( BPVIPCHI2() > 9 ) ' ,                
     'PionCuts_forTau23Mu'   : ' ( PT > 300 * MeV ) & ( TRCHI2DOF < 4 )                         & ( BPVIPCHI2() > 9 ) ' ,
     #

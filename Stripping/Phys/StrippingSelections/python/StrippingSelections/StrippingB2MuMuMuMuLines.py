@@ -95,13 +95,12 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         LineBuilder.__init__(self, name, config)
         #checkConfig(B2MuMuMuMuLinesConf.__configuration_keys__,config)
 
-        default_name=name
-
-        D_name='D2MuMuMuMu'
-	Dst_name = 'Dstar2D2MuMuMuMu'
-	Dimuon_name = 'Dimuon'
-        DetachedDimuons_name = 'DetachedDimuons'
-        B2DetachedDimuons_name = 'B2DetachedDimuons'
+        default_name=name+"B24Mu"
+        D_name=name+'D24Mu'
+	Dst_name = name+'Dstar2D2MuMuMuMu'
+	Dimuon_name = name+'Dimuon'
+        DetachedDimuons_name = name+'DetachedDimuons'
+        B2DetachedDimuons_name = name+'B2DetachedDimuons'
 
         self.inPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
         self.inMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
@@ -186,8 +185,9 @@ def makeD2MuMuMuMu(name,inputSel) :
     D2MuMuMuMu.addTool( OfflineVertexFitter )
     D2MuMuMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
 
-    D2MuMuMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 2.0 ) "\
+    D2MuMuMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 3.0 ) "\
                                   " & (MIPCHI2DV(PRIMARY)> 4.)"\
+                                 " & (TRGHOSTPROB<0.3) "\
                                   " & (P> 3000.*MeV)"}
 
     D2MuMuMuMu.CombinationCut =  "(ADAMASS('D0')<300*MeV) "\
