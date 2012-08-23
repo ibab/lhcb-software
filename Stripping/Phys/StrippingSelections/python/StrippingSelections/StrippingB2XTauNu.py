@@ -1,4 +1,4 @@
-# $Id: StrippingB2XTauNu.py,v 1.0 2012-8-13 14:28:54 dhill Exp $
+# $Id: StrippingB2XTauNu.py,v 1.1 2012-8-13 14:28:54 dhill Exp $
 '''
 Module for constuction of:
 
@@ -7,6 +7,7 @@ Bd->DTauNu
 Bu->D0TauNu
 Bs->DsTauNu
 Bc->J/psiTauNu
+Bd->D**0TauNu
 
 ==== Description of the lines ====
 
@@ -15,6 +16,7 @@ Bd->DTauNu, with D -> K pi pi
 Bs->DsTauNu, with Ds -> K K pi
 Bu->D0TauNu, with D0 -> K pi
 Bc->JpsiTauNu, with Jpsi -> Mu Mu
+Bd->D**0TauNu, with D**0 -> D*+ pi-
 
 Tau -> 3pi in all cases
 
@@ -45,14 +47,18 @@ all.printCuts()
 '''
 __author__ = [ 'Donal Hill','Conor Fitzpatrick' ]
 __date__ = '2012-8-23'
-__version = '$Revision: 1.0 $'
+__version = '$Revision: 1.1 $'
 
 #### Next is the dictionary of all tunable cuts ########
 
 confdict={
-    'Prescale'    : 1.0 ,
+    'Prescale_B0d2DstarTauNu'        : 1.0,
+    'Prescale_B0d2DTauNu'            : 1.0,
+    'Prescale_Bu2D0TauNu'            : 1.0,
+    'Prescale_B0s2DsTauNu'           : 1.0,
+    'Prescale_Bc2JpsiTauNu'          : 1.0,
+    'Prescale_B0d2DdoubleStarTauNu'  : 1.0,
     'Postscale'   : 1.0 ,
-    'Prescale_WS' : 1.0,
     #B cuts
     'B_BPVDIRA'       : 0.999,
     #B combination cuts
@@ -194,9 +200,13 @@ class B2XTauNuAllLinesConf(LineBuilder):
     
     
     __configuration_keys__=[
-        'Prescale',
+        'Prescale_B0d2DstarTauNu',        
+        'Prescale_B0d2DTauNu',            
+        'Prescale_Bu2D0TauNu',            
+        'Prescale_B0s2DsTauNu',          
+        'Prescale_Bc2JpsiTauNu',          
+        'Prescale_B0d2DdoubleStarTauNu',
         'Postscale',
-        'Prescale_WS',
         #B cuts
         'B_BPVDIRA',
         #B combi cuts
@@ -428,17 +438,16 @@ class B2XTauNuAllLinesConf(LineBuilder):
         from PhysSelPython.Wrappers import SelectionSequence
 
 
-
         ### Now make B stripping lines ###
         Bd2DstarTauNuLine=StrippingLine("Bd2DstarTauNuFor"+self._name,
-                                        prescale = config['Prescale'],
+                                        prescale = config['Prescale_B0d2DstarTauNu'],
                                         postscale = config['Postscale'],
                                         algos = [ self.B0d2DstarTauNuSel ]
                                         )
         self.registerLine(Bd2DstarTauNuLine)
         
         Bd2DstarTauNuWSLine=StrippingLine("Bd2DstarTauNuWSFor"+self._name,
-                                          prescale = config['Prescale_WS'],
+                                          prescale = config['Prescale_B0d2DstarTauNu'],
                                           postscale = config['Postscale'],
                                           algos = [ self.B0d2DstarTauNuSelWS ]
                                           )
@@ -446,7 +455,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         
         Bd2DTauNuLine=StrippingLine("Bd2DTauNuFor"+self._name,
-                                    prescale = config['Prescale'],
+                                    prescale = config['Prescale_B0d2DTauNu'],
                                     postscale = config['Postscale'],
                                     algos = [ self.B0d2DTauNuSel ]
                                     )
@@ -454,21 +463,21 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         
         Bd2DTauNuWSLine=StrippingLine("Bd2DTauNuWSFor"+self._name,
-                                      prescale = config['Prescale_WS'],
+                                      prescale = config['Prescale_B0d2DTauNu'],
                                       postscale = config['Postscale'],
                                       algos = [ self.B0d2DTauNuSelWS ]
                                       )
         self.registerLine(Bd2DTauNuWSLine)
         
         Bu2D0TauNuLine=StrippingLine("Bu2D0TauNuFor"+self._name,
-                                     prescale = config['Prescale'],
+                                     prescale = config['Prescale_Bu2D0TauNu'],
                                      postscale = config['Postscale'],
                                      algos = [ self.Bu2D0TauNuSel ]
                                      )
         self.registerLine(Bu2D0TauNuLine)
         
         Bu2D0TauNuWSLine=StrippingLine("Bu2D0TauNuWSFor"+self._name,
-                                       prescale = config['Prescale_WS'],
+                                       prescale = config['Prescale_Bu2D0TauNu'],
                                        postscale = config['Postscale'],
                                        algos = [ self.Bu2D0TauNuSelWS ]
                                        )
@@ -476,7 +485,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         
         Bc2JpsiTauNuLine=StrippingLine("Bc2JpsiTauNuFor"+self._name,
-                                       prescale = config['Prescale'],
+                                       prescale = config['Prescale_Bc2JpsiTauNu'],
                                        postscale = config['Postscale'],
                                        algos = [ self.Bc2JpsiTauNuSel ]
                                        )
@@ -484,14 +493,14 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         
         Bs2DsTauNuLine=StrippingLine("Bs2DsTauNuFor"+self._name,
-                                     prescale = config['Prescale'],
+                                     prescale = config['Prescale_B0s2DsTauNu'],
                                      postscale = config['Postscale'],
                                      algos = [ self.B0s2DsTauNuSel ]
                                      )
         self.registerLine(Bs2DsTauNuLine)
         
         Bs2DsTauNuWSLine=StrippingLine("Bs2DsTauNuWSFor"+self._name,
-                                       prescale = config['Prescale_WS'],
+                                       prescale = config['Prescale_B0s2DsTauNu'],
                                        postscale = config['Postscale'],
                                        algos = [ self.B0s2DsTauNuSelWS ]
                                        )
@@ -499,14 +508,14 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
 
         Bd2DdoubleStarTauNuLine=StrippingLine("Bd2DdoubleStarTauNuFor"+self._name,
-                                        prescale = config['Prescale'],
+                                        prescale = config['Prescale_B0d2DdoubleStarTauNu'],
                                         postscale = config['Postscale'],
                                         algos = [ self.B0d2DdoubleStarTauNuSel ]
                                         )
         self.registerLine(Bd2DdoubleStarTauNuLine)
         
         Bd2DdoubleStarTauNuWSLine=StrippingLine("Bd2DdoubleStarTauNuWSFor"+self._name,
-                                          prescale = config['Prescale_WS'],
+                                          prescale = config['Prescale_B0d2DdoubleStarTauNu'],
                                           postscale = config['Postscale'],
                                           algos = [ self.B0d2DdoubleStarTauNuSelWS ]
                                           )
@@ -549,7 +558,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.Line=Bd2DdoubleStarTauNuLine
         self.Selections=[self.DdoubleStar2DstarPiSel, self.B0d2DdoubleStarTauNuSel]
 
-        self.Line=Bd2DstarTauNuWSLine
+        self.Line=Bd2DdoubleStarTauNuWSLine
         self.Selections=[self.DdoubleStar2DstarPiSel, self.B0d2DdoubleStarTauNuSelWS]
 
         
