@@ -504,7 +504,7 @@ MBMEvtSelector::MBMEvtSelector(const string& nam, ISvcLocator* svc)
 {
   m_input = "EVENT";
   m_decode = true;
-  declareProperty("MaxRetry",m_maxRetry=10000);
+  declareProperty("MaxRetry",m_maxRetry=-1);
 }
 
 // IService implementation: Db event selector override
