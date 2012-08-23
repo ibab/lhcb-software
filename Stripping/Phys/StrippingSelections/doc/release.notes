@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-23 - Matthew Reid
+   - StrippingB2JpsiKShh.py
+     - Tighter chi2/ndof vertex cut for B
+     - Tighter chi2/ndof for the vertex on KS
+     - Added same sign combinations B0 -> Jpsi KS pi(+-) pi(+-)
+     - Loose PT cut applied to mother B
+     - Added ipChi2 cut for B.
+
 ! 2012-08-23 - Eduardo Rodrigues
  - Updated the stripping line in StrippingB2TwoBaryons.py
 
