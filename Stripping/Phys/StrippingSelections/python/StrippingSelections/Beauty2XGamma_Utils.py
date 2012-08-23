@@ -67,14 +67,14 @@ def filterPhotons(inputs, config):
 
 def filterPhotonsConv(inputs,config):
     ''' Makes converted photons before the magnet '''
-    cuts = ['AM']
-    #code = LoKiCuts(cuts,config).code()
-    #return filterSelection("GammaConv", code, inputs)
-    comboCuts = LoKiCuts(cuts,config).code()
-    momCuts = LoKiCuts(['VCHI2DOF'],config).code()
-    decay = ['gamma -> e+ e-']
-    comb = CombineParticles(CombinationCut=comboCuts, MotherCut=momCuts, DecayDescriptors=decay)
-    return Selection('GammaConv', Algorithm=comb, RequiredSelections = inputs)
+    cuts = ['AM','VCHI2DOF']
+    code = LoKiCuts(cuts,config).code()
+    return filterSelection("GammaConv", code, inputs)
+    #comboCuts = LoKiCuts(cuts,config).code()
+    #momCuts = LoKiCuts(['VCHI2DOF'],config).code()
+    #decay = ['gamma -> e+ e-']
+    #comb = CombineParticles(CombinationCut=comboCuts, MotherCut=momCuts, DecayDescriptors=decay)
+    #return Selection('GammaConv', Algorithm=comb, RequiredSelections = inputs)
     #code = LoKiCuts.combine(["ABSID==11",LoKiCuts(cuts,config).code()])
     #return filterSelection("GammaConv", code, inputs)
 
