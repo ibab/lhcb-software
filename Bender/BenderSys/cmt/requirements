@@ -31,7 +31,7 @@ author        Vanya BELYAEV
 use           Bender         v21r1   Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v20r1   Phys 
+use           BenderTools    v21r1   Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v20r0   Ex
