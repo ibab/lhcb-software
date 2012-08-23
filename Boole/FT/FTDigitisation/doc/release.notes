@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2012-08-23 - Olivier Callot
+ - Change the sorting function for MCFTDigit. No longer need for the functor class...
+
 ! 2012-07-30 - Olivier Callot
  - From Eric's version, I cleaned-up a bit the code.
  - Implement proper computation of number of photo-electrons

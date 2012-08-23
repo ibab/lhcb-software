@@ -77,6 +77,9 @@ StatusCode MCFTDepositMonitor::execute() {
     //pointer to the Hit
     MCHit* ftHit = *iterHit;
 
+    plot2D( ftHit->entry().x(), ftHit->entry().y(), "x/y entry",  -500., 500., -500., 500., 100, 100 );
+
+
     plot(ftHit->energy(),"CheckEnergyPerHit", "Energy deposited [Hit level]; Energy [MeV];Number of hits" , 0 , 10 );  
 
     // ( call of calculateHits method) 

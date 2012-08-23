@@ -108,8 +108,9 @@ StatusCode MCFTDigitCreator::execute() {
 
   // Digits are sorted according to there ChannelID to prepare the clusterisation stage
   // done at this point, before final writing in transient data store
-  std::stable_sort( digitCont->begin(), digitCont->end(), LHCb::FTSortingFunctor::LessByChannel<MCFTDigit*>());
-
+  //std::stable_sort( digitCont->begin(), digitCont->end(), LHCb::FTSortingFunctor::LessByChannel<MCFTDigit*>());
+  std::stable_sort( digitCont->begin(), digitCont->end(), LHCb::MCFTDigit::lowerByChannelID );
+  
   // TEST : print Digit content after sorting
   if ( msgLevel( MSG::DEBUG) ) {
     for (MCFTDigits::const_iterator iterDigit = digitCont->begin(); iterDigit!=digitCont->end();++iterDigit){
