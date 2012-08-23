@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-23 - Ricardo Vazquez Gomez
+ - StrippingBeauty2XGamma.py
+   - Removed the Bd->Omega(hh)Gamma line as it is included in the Bd -> rho gamma line
+   - Merge the lines with LL and DD Kshorts into a single line
+   - Add 2 lines with converted photons using the new DiElectronMaker. Bd->K*Gamma, Bs->PhiGamma  
+
 ! 2012-08-23 - Mika Vesterinen
  - StrippingJPsiForSL.py
    - Added Loose GhostProb cut on the bachelor track

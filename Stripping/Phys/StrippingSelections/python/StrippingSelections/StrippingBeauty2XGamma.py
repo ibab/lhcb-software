@@ -18,8 +18,9 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 # Standard Particles
-from StandardParticles import StdLooseResolvedPi0, StdLooseMergedPi0, StdLooseAllPhotons, StdAllLooseElectrons #, StdAllLooseGammaConversion 
+from StandardParticles import StdLooseResolvedPi0, StdLooseMergedPi0, StdLooseAllPhotons, StdAllLooseElectrons
 from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, StdAllNoPIDsProtons
+from StandardParticles import StdAllLooseGammaLL, StdAllLooseGammaDD
 
 # Builders
 from Beauty2XGamma_HHBuilder import HHBuilder as HHBuilder
@@ -40,7 +41,7 @@ config = { # Cuts made on all charged input particles in all lines
                        'CL_MIN'       : 0.25 
                      },
            # Cuts made on the converted photon
-           "GAMMACONV" : { 'AM_MAX'        : '50*MeV',
+           "GAMMACONV" : { 'MM_MAX'        : '50*MeV',
                            'VCHI2DOF_MAX'  : 9  ,
                         },   
            # Cuts made on all K shorts
@@ -129,10 +130,11 @@ class Beauty2XGamma(LineBuilder):
         ks_ll = filterInputs('KS0_LL',
                              [dataOnDemand("StdLooseKsLL")],
                              config['KS0']) # KS from Long-Long
-        ks = {"DD": [ks_dd], "LL": [ks_ll]}
+        #ks = {"DD": [ks_dd], "LL": [ks_ll]}
+        ks = [ks_dd, ks_ll]
         # Prefilter photons
         photons = filterPhotons([StdLooseAllPhotons], config['GAMMA'])
-        photonsConv = filterPhotonsConv([StdAllLooseElectrons],config['GAMMACONV'])
+        photonsConv = filterPhotonsConv([StdAllLooseGammaDD,StdAllLooseGammaLL], config['GAMMACONV'])
         # Prefilter pi0
         pi0_merged   = filterPi0s('Merged', [StdLooseMergedPi0], config['Pi0'])
         pi0_resolved = filterPi0s('Resolved', [StdLooseResolvedPi0], config['Pi0'])

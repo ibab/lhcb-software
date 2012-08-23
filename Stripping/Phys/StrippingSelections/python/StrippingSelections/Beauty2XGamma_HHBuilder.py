@@ -58,7 +58,7 @@ class HHBuilder(object):
         self.pK = self._makePK() 
         self.phi = self._makePhi(self.kk)
         self.rho0 = self._makeRho0(self.pipi)
-        self.omega = self._makeOmega()
+        #self.omega = self._makeOmega()
         # WS selections (ie doubly-charged ones)
         self.hh_ws = self._makeHHWS()
         # PID filtered selections
@@ -102,21 +102,11 @@ class HHBuilder(object):
         return [self._makeX2HH('X2PiPi',['rho(770)0 -> pi+ pi-'],
                               '(AM < 3.0*GeV)',self.config,[self.pions])]
 
-    def _makeOmega(self):
-        ''' Makes Omega -> pi+ pi- '''
-        #massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['OMEGA'])
-        presel = self._makeX2HH('Omega2PiPi',['omega(782) -> pi+ pi-'],'(AM < 1000*MeV)',self.config,[self.pions])
-        mass = self._massWindow('OMEGA','omega(782)').replace('ADAMASS','ADMASS')
-        return [filterSelection('Omega2PiPi',mass,[presel])]
-        #return [self._makeX2HH('Omega2PiPi',['omega(782) -> pi+ pi-'],'(750*MeV < AM < 815*MeV)',self.config,[self.pions])]
-
-#    def _makeOmega(self,pipi):
-#        ''' Makes Omega -> pi+ pi- '''
-#        sel = self.pipi
-#        decays = [['pi+','pi-']]
-#        filter = SubPIDMMFilter('X2PiPiSubPIDBeauty2XGamma',Code='ALL',MinMM=750,MaxMM=815,PIDs=decays)
-#        presel = Selection('X2PiPiSubPIDSelBeauty2XGamma',Algorithm=filter,RequiredSelections=sel)
-#        return [filterSelection('Omega2PiPi',filter,[presel])]
+        #    def _makeOmega(self):
+        #''' Makes Omega -> pi+ pi- '''
+        #presel = self._makeX2HH('Omega2PiPi',['omega(782) -> pi+ pi-'],'(AM < 1000*MeV)',self.config,[self.pions])
+        #mass = self._massWindow('OMEGA','omega(782)').replace('ADAMASS','ADMASS')
+        #return [filterSelection('Omega2PiPi',mass,[presel])]
 
     def _makePiPiWSSels(self):
         '''Makes X -> pi+pi+ + c.c.'''
@@ -177,14 +167,12 @@ class HHBuilder(object):
     def _makeKsPi(self):
         '''Makes X -> Ks0pi- + c.c.'''
         ## Change the mass window to 4.5 GeV to improve the timing
-        dd = self._makeXPLUS2HH('X2KsPiDD',['[K*(892)+ -> KS0 pi+]cc'],
-                                '(AM < 2.5*GeV)',self.config,
-                                self.ks["DD"]+[self.pions])
-        ll = self._makeXPLUS2HH('X2KsPiLL',['[K*(892)+ -> KS0 pi+]cc'],
-                                '(AM < 2.5*GeV)',self.config,
-                                self.ks["DD"]+[self.pions])
-        return [MergedSelection('X2KsPiBeauty2XGamma',
-                                RequiredSelections=[dd,ll])]
+        sel = self._makeXPLUS2HH('X2KsPi',['[K*(892)+ -> KS0 pi+]cc'],
+                                '(AM < 2.5*GeV)',self.config, self.ks+[self.pions])
+        #ll = self._makeXPLUS2HH('X2KsPiLL',['[K*(892)+ -> KS0 pi+]cc'],
+        #                        '(AM < 2.5*GeV)',self.config,
+        #                        self.ks["DD"]+[self.pions])
+        return [MergedSelection('X2KsPiAllBeauty2XGamma', RequiredSelections=[sel])]
 
     def _makeKPi0(self):
         '''Makes X -> K+pi0 + c.c.'''
