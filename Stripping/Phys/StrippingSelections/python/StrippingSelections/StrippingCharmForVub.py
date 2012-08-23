@@ -290,7 +290,7 @@ def makeKaonsFromB(name,
           kaonSel, 
           TRACK_MINIPCHI2) :
     """
-    Create hard kaons for all channels
+    Create hard kaons for all channels.
     """
     _code = "(MIPCHI2DV(PRIMARY) > %(TRACK_MINIPCHI2)s )" % locals()
     _kaonFromBFilter = FilterDesktop (Code = _code ) 
