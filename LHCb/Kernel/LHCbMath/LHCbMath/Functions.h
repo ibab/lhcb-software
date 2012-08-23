@@ -2240,6 +2240,9 @@ namespace Gaudi
       // ======================================================================
       /// calculate the shape 
       double operator() ( const double x ) const ;
+      /// get the amplitude 
+      std::complex<double> 
+      amplitude ( const double x ) const { return m_bw.amplitude ( x ) ; }
       // ======================================================================
     public:
       // ======================================================================
