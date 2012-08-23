@@ -140,9 +140,6 @@ class DBuilder(object):
         if which is 'D0':
             min = 1864.84 - dm # D0 - dm
             max = 1864.84 + dm # D0 + dm
-        elif which is 'D2PhiMu':
-            min = 1019.46 + 105.67 # phi + mu
-            max = 1968.49 + dm     # Ds + dm
         else:
             min = 1869.62 - dm # D+ - dm
             max = 1968.49 + dm # Ds+ + dm
@@ -370,36 +367,30 @@ class DBuilder(object):
 
     def _makeD2PhiMuNu(self,up=False):
         '''makes Ds->phi mu nu'''
-        min,max = self._massWindow('D2PhiMu')
-        mWindow = '150*MeV'
         decays  = [['phi(1020)','mu+']]
-        wm      = awmFunctor(decays,min,max)
-        # Make a kk from kaons (the only method that uses self.kaons)
-        comboCuts = [LoKiCuts(['ASUMPT'],self.config).code()]
-        comboCuts.append( '(AM < 5.2*GeV)' )
-        comboCuts.append( hasTopoChild() )
-        comboCuts.append( LoKiCuts(['AMAXDOCA'],self.config).code() )
-        comboCuts = LoKiCuts.combine(comboCuts)
-        momCuts   = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],self.config).code()
-        cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
-                                    DecayDescriptors=['phi(1020) -> K+ K-'])
-        kk = Selection('X2KK'+'Beauty2Charm',Algorithm=cp,
+        min = '1125.13*MeV' 
+        max = '2168.49*MeV' 
+        cpkk = CombineParticles(    CombinationCut="ADAMASS('phi(1020)') < 150*MeV", #( hasTopoChild() )
+                                    MotherCut='(VFASPF(VCHI2/VDOF) < 10)',
+                                    DaughtersCuts={'K+' : '(PIDK>-10)' },
+                                    DecayDescriptors=['phi(1020) -> K+ K-'] )
+        phi = Selection('PHI2KK4D2PhiMuNu'+'Beauty2Charm',
+                                    Algorithm=cpkk,
                                     RequiredSelections=[self.kaons])
-        # Filter on kk mass to get phi and then PID to get phi_pid
-        mass = "ADMASS('phi(1020)') < %s" %mWindow 
-        phi = filterSelection('PHI4D2PHIMU',mass,[kk])
-        phi_pid = filterPID('PHIPID4D2PHIMU',[phi],self.config_pid)
-        # Construct the D -> phi mu (+ and -)
-        protoD2PhiMuNuPlus  = self._makeD2X('D2PhiMuNuPlus', ['D+ -> phi(1020) mu+'],
-                                    wm,up,self.config,[self.muons,phi_pid])
-        protoD2PhiMuNuMinus = self._makeD2X('D2PhiMuNuMinus',['D- -> phi(1020) mu-'],
-                                    wm,up,self.config,[self.muons,phi_pid])
-        psel = subPIDSels(decays,        'D2PhiMuNuPlus', '',min,max,[protoD2PhiMuNuPlus])
-        msel = subPIDSels(getCCs(decays),'D2PhiMuNuMinus','',min,max,[protoD2PhiMuNuMinus])
-        return [MergedSelection('D2PhiMuNuBeauty2Charm',
-                                    RequiredSelections=[psel,msel])]
+        #comboCuts = [LoKiCuts(['ASUMPT'],{'ASUMPT_MIN':'400*MeV'}).code()] # at rest the max is at 1400
+        #comboCuts.append(hasTopoChild()) 
+        #comboCuts = LoKiCuts.combine(comboCuts)
+        momCuts = [LoKiCuts(['VCHI2DOF'],self.config).code()]
+        momCuts.append( '(MM < 2168.49)' )
+        momCuts = LoKiCuts.combine(momCuts)
 
-
+        cpp = CombineParticles(     #CombinationCut=comboCuts, 
+                                    MotherCut=momCuts,
+                                    DecayDescriptors=['[D+ -> phi(1020) mu+]cc'])
+        protoD2PhiMuNu  = Selection('ProtoD2PhiMuNuBeauty2Charm',
+                                    Algorithm=cpp,
+                                    RequiredSelections=[phi,self.muons])
+        return [protoD2PhiMuNu]
 
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

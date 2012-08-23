@@ -37,6 +37,7 @@ class B2DXBuilder(object):
         self._makeB02D0KS('D2HH',self.d.hh,'DD') # B0  -> D0(HH)  KS
         self._makeB02D0KS('D2HH',self.d.hh,'LL') # B0  -> D0(HH)  KS
         self._makeB2D0HH('D2HH',self.d.hh) # B+- -> D0(HH) H+- H0
+        self._makeB02DHD2PhiMu('D2PhiMuNu',self.d.phimu) # B0 -> D( phi mu nu) H+-
         # B -> D+-(HHH) X
         self._makeB02DH('D2HHH',self.d.hhh) # B0  -> D+-(HHH) H-+   (+WS)
         self._makeB02DH('D2HHHUP',self.d.hhh_up) # B0  -> D+-(HHH) H-+   (+WS)
@@ -611,4 +612,34 @@ class B2DXBuilder(object):
         self.lines.append(ProtoLine(b2dstdstks_rs,1.0))
         self.lines.append(ProtoLine(b2dstdstks_ws,0.1))
     
+    def _makeB02DHD2PhiMu(self,dname,d2x,useIP=True):
+        '''Makes RS and WS B0 -> D + h- + c.c.'''
+        config = deepcopy(self.config)
+        #config{ # Cuts made on all B's and Lb's used in all lines
+        config['SUMPT_MIN'    ] = '1500*MeV'
+        config['VCHI2DOF_MAX' ] = 10 #4,
+        config['BPVLTIME_MIN' ] = '0.1*ps'
+        config['BPVDIRA_MIN'  ] = 0.95 #0.999,
+        config['AM_MIN'       ] = '4000*MeV' 
+        config['AM_MAX'       ] = '7000*MeV' 
+        
+        tag = 'B02D%s'
+        if not useIP: tag += 'NoIP'
+        pions = self.topoPions
+        kaons = self.topoKaons
+        decays = {tag%'Pi': ["[B0 -> D- pi+]cc"]}
+        inputs = {tag%'Pi': d2x+pions}
+        if useIP:
+            decays[tag%'K'] = ["[B0 -> D- K+]cc"]
+            inputs[tag%'K'] = d2x+kaons
+        b02dh_rs = makeB2XSels(decays,dname,inputs,config,useIP)        
+        decays = {tag%'PiWS': ["[B0 -> D- pi-]cc"]}
+        inputs = {tag%'PiWS': d2x+pions}
+        if useIP:
+            decays[tag%'KWS'] = ["[B0 -> D- K-]cc"]
+            inputs[tag%'KWS'] = d2x+kaons
+        b02dh_ws = makeB2XSels(decays,dname,inputs,config,useIP)
+        self.lines.append(ProtoLine(b02dh_rs,1.0))
+        self.lines.append(ProtoLine(b02dh_ws,0.1))
+
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
