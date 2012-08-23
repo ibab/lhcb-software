@@ -169,12 +169,16 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(ws,0.1))
 
     def _makeLb2D0PH(self):
-        '''Makes RS Lb -> D0(HH) p+- H-+ + c.c.'''
+        '''Makes RS Lb -> D0(HH) p+- H-+ + c.c. and WS lines'''
         decs = ["Lambda_b0 -> D0 Lambda0","Lambda_b0 -> D0 Lambda~0"]
         decays = {'Lb2D0PH': decs}
         inputs = {'Lb2D0PH': self.d0+self.hh.ph_pid}
         rs = makeB2XSels(decays,'D02HH',inputs,self.config)
         self.lines.append(ProtoLine(rs,1.0))
+        decays = {'Lb2D0PHWS': decs}
+        inputs = {'Lb2D0PHWS': self.d0+self.hh.ph_ws}
+        ws = makeB2XSels(decays,'D02HH',inputs,self.config)
+        self.lines.append(ProtoLine(ws,0.1))
     
     def _makeSb02DP(self):
         '''Make RS and WS Sb0 -> D+- p-+ + cc.'''

@@ -91,8 +91,8 @@ class B2DXBuilder(object):
         # B0 -> D+-(Pi0HHH) H-+  (resolved & merged) (+WS)
         self._makeB02DH('D2Pi0HHHResolved',self.d.pi0hhh_resolved)
         self._makeB02DH('D2Pi0HHHMerged',self.d.pi0hhh_merged)
-        self._makeB02DH('D2Pi0HHHResolvedUP',self.d.pi0hhh_resolved_up)
-        self._makeB02DH('D2Pi0HHHMergedUP',self.d.pi0hhh_merged_up) 
+        #self._makeB02DH('D2Pi0HHHResolvedUP',self.d.pi0hhh_resolved_up)
+        #self._makeB02DH('D2Pi0HHHMergedUP',self.d.pi0hhh_merged_up) 
         # B -> D0(HH) 3h
         self._makeB2D0HHH('D2HHPID',self.d.hh_pid)   # B+- -> D0(HH)  H+H-H+
         self._makeB2D0HHH('D2KSHHDD',self.d.kshh_dd)
