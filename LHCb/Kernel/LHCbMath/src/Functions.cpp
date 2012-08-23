@@ -829,6 +829,32 @@ namespace
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
    */
+  double phase_space_3_1_GSL ( double x , void* params )  
+  {
+    //
+    const Gaudi::Math::PhaseSpace3* ps = 
+      (Gaudi::Math::PhaseSpace3*) params ;
+    //
+    return ps -> ps2_aux (x) ;
+  }
+  // ==========================================================================
+  /** helper function for itegration of PhaseSpace shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  double phase_space_3_2_GSL ( double x , void* params )  
+  {
+    //
+    const Gaudi::Math::PhaseSpace3* ps = 
+      (Gaudi::Math::PhaseSpace3*) params ;
+    //
+    return (*ps)(x) ;
+  }
+  // ==========================================================================
+  /** helper function for itegration of PhaseSpace shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
   double phase_space_NL_GSL ( double x , void* params )  
   {
     //
@@ -2442,6 +2468,152 @@ Gaudi::Math::PhaseSpace2::q1
     std::complex<double> ( 0 , 0.5  * std::sqrt ( -lam ) / m     ) ;
 }
 // ============================================================================
+
+// ============================================================================
+/*  constructor from three masses
+ *  @param m1 the mass of the first  particle 
+ *  @param m2 the mass of the second particle 
+ *  @param m3 the mass of the third  particle 
+ *  @param l1 the angular momentum between 1st and 2nd particle 
+ *  @param l2 the angular momentum between the pair and 3rd particle 
+ */
+// ============================================================================
+Gaudi::Math::PhaseSpace3::PhaseSpace3
+( const double         m1 , 
+  const double         m2 , 
+  const double         m3 , 
+  const unsigned short l1 , 
+  const unsigned short l2 ) 
+  : std::unary_function<double,double> () 
+  , m_m1 ( std::abs ( m1 ) ) 
+  , m_m2 ( std::abs ( m2 ) ) 
+  , m_m3 ( std::abs ( m3 ) ) 
+  , m_l1 ( l1 ) 
+  , m_l2 ( l2 ) 
+{}
+// ============================================================================
+// deststructor 
+// ============================================================================
+Gaudi::Math::PhaseSpace3::~PhaseSpace3 () {}
+// ============================================================================
+// evaluate 3-body phase space 
+// ============================================================================
+double Gaudi::Math::PhaseSpace3::operator () ( const double x ) const 
+{
+  //
+  if ( x <= lowEdge() ) { return 0 ; }
+  //
+  /// set the temporary mass 
+  m_tmp = x ;
+  //
+  // make integral of ps2_aux from m_m1+m_m2 till x-m_m3
+  //
+  const double low  = m_m1 + m_m2 ;
+  const double high = x    - m_m3 ;
+  //
+  // use GSL to evaluate the integral 
+  //
+  Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function = &phase_space_3_1_GSL ;
+  const PhaseSpace3* _ps = this  ;
+  F.params   = const_cast<PhaseSpace3*> ( _ps ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag 
+    ( &F                ,            // the function 
+      low   , high      ,            // low & high edges 
+      s_PRECISION       ,            // absolute precision            
+      s_PRECISION       ,            // relative precision 
+      s_SIZE            ,            // size of workspace 
+      GSL_INTEG_GAUSS31 ,            // integration rule  
+      workspace ( m_workspace ) ,    // workspace  
+      &result           ,            // the result 
+      &error            ) ;          // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    gsl_error ( "Gaudi::Math::PhaseSpace3::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// helper function to get the phase space as 
+// ============================================================================
+double Gaudi::Math::PhaseSpace3::ps2_aux 
+( const double m12 ) const
+{
+  //
+  if ( m_tmp <= lowEdge()    ) { return 0 ; }
+  //
+  if ( m12   <= m_m1  + m_m2 ) { return 0 ; }
+  if ( m12   >= m_tmp - m_m3 ) { return 0 ; }
+  //  
+  // represent 3-body phase space as extention of 2-body phase space 
+  return  m12 / M_PI *  
+    Gaudi::Math::PhaseSpace2::phasespace ( m12   , m_m1 , m_m2 , m_l1 ) * 
+    Gaudi::Math::PhaseSpace2::phasespace ( m_tmp , m12  , m_m3 , m_l2 ) ;
+  //  
+}
+// ============================================================================
+// get the integral between low and high limits 
+// ============================================================================
+double  Gaudi::Math::PhaseSpace3::integral 
+( const double low  , 
+  const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN 
+  if (           low > high   ) { return - integral ( high ,                                                     
+                                                      low  ) ; } // RETURN 
+  //
+  if ( lowEdge() >= high  ) { return 0 ; }
+  if ( lowEdge() >  low   ) { return integral ( lowEdge() , high ) ; }
+  
+  //
+  if ( 0 < lowEdge() && 5 * lowEdge() < ( high - low ) ) 
+  {
+    return 
+      integral ( low                   , 0.5 *  ( high + low ) ) + 
+      integral ( 0.5 *  ( high + low ) ,          high         ) ;
+  }
+  //
+  // use GSL to evaluate the integral 
+  //
+  Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function = &phase_space_3_2_GSL ;
+  const PhaseSpace3* _ps = this  ;
+  F.params   = const_cast<PhaseSpace3*> ( _ps ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag 
+    ( &F                ,             // the function 
+      low   , high      ,             // low & high edges 
+      s_PRECISION       ,             // absolute precision            
+      s_PRECISION       ,             // relative precision 
+      s_SIZE            ,             // size of workspace 
+      GSL_INTEG_GAUSS31 ,             // integration rule  
+      workspace ( m_workspace2 ) ,    // workspace  
+      &result           ,             // the result 
+      &error            ) ;           // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    gsl_error ( "Gaudi::Math::PhaseSpace3::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+  }
+  //
+  return result ;
+}
+// ============================================================================
 // constructor from threshold and number of particles 
 // ============================================================================
 Gaudi::Math::PhaseSpaceLeft::PhaseSpaceLeft 
@@ -3515,7 +3687,14 @@ double Gaudi::Math::PhaseSpace23L::q ( const double x ) const
 double Gaudi::Math::PhaseSpace23L::p ( const double x ) const 
 { return Gaudi::Math::PhaseSpace2::q ( m_m , x , m_m3 ) ; }
 // ============================================================================
+// calculate the phase space
+// ============================================================================
 double Gaudi::Math::PhaseSpace23L::operator () ( const double x ) const 
+{ return ps23L( x ) ; }
+// ============================================================================
+// calculate the phase space
+// ============================================================================
+double Gaudi::Math::PhaseSpace23L::ps23L ( const double x ) const 
 {
   //
   if ( lowEdge() >= x || highEdge() <= x ) { return  0 ; }

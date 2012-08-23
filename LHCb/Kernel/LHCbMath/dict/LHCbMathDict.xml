@@ -41,6 +41,7 @@
   <class name    = "Gaudi::Math::BifurcatedGauss"         />
   <class name    = "Gaudi::Math::GramCharlierA"           />
   <class name    = "Gaudi::Math::PhaseSpace2"             />
+  <class name    = "Gaudi::Math::PhaseSpace3"             />
   <class name    = "Gaudi::Math::PhaseSpaceLeft"          />
   <class name    = "Gaudi::Math::PhaseSpaceRight"         />
   <class name    = "Gaudi::Math::PhaseSpaceNL"            />
@@ -48,6 +49,7 @@
   <class name    = "Gaudi::Math::LASS23L"                 />
   <class name    = "Gaudi::Math::Bugg23L"                 />
   <class name    = "Gaudi::Math::BW23L"                   />
+  <class name    = "Gaudi::Math::Voigt"                   />
   <class name    = "Gaudi::Math::Flatte23L"               />
   <class name    = "Gaudi::Math::BreitWigner">
     <field name = "m_rho_fun" transient = "true"/>      

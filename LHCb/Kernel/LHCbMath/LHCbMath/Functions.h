@@ -1133,6 +1133,81 @@ namespace Gaudi
       // ======================================================================
     } ;  
     // ========================================================================
+    /** @class PhaseSpace3
+     *  simple function to represent three-body phase space 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API PhaseSpace3
+      : public std::unary_function<double,double>     
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from three masses
+       *  @param m1 the mass of the first  particle 
+       *  @param m2 the mass of the second particle 
+       *  @param m3 the mass of the third  particle 
+       *  @param l1 the angular momentum between 1st and 2nd particle 
+       *  @param l2 the angular momentum between the pair and 3rd particle 
+       */
+      PhaseSpace3 ( const double         m1     , 
+                    const double         m2     , 
+                    const double         m3     , 
+                    const unsigned short l1 = 0 , 
+                    const unsigned short l2 = 0 ) ;
+      /// deststructor 
+      ~PhaseSpace3 () ;                                         // deststructor 
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// evaluate 3-body phase space 
+      double operator () ( const double x ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PhaseSpace3 () ;                   // the default constructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================
+      double lowEdge () const { return m_m1 + m_m2 + m_m3 ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// helper phase space ("23L")
+      double ps2_aux ( const double m12 ) const ;
+      /// get the integral between low and high limits 
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the mass of the first particle 
+      double         m_m1 ; // the mass of the first particle 
+      /// the mass of the second particle 
+      double         m_m2 ; // the mass of the second particle 
+      /// the mass of the third particle 
+      double         m_m3 ; // the mass of the third  particle
+      /// the orbital momentum of the first pair 
+      unsigned short m_l1 ; // the orbital momentum of the first pair 
+      /// the orbital momentum between the pair and the third particle
+      unsigned short m_l2 ; // the orbital momentum between the pair and the third particle
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the temporary mass 
+      mutable double m_tmp ; /// the temporary mass 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace 
+      Gaudi::Math::WorkSpace m_workspace  ;    // integration workspace 
+      /// integration workspace 
+      Gaudi::Math::WorkSpace m_workspace2 ;    // integration workspace 
+      // ======================================================================
+    } ;  
+    // ========================================================================
     /** @class PhaseSpaceLeft
      *  simple function to represent N-body phase space near left-threshold 
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
@@ -1319,8 +1394,13 @@ namespace Gaudi
       // ======================================================================
     public:
       // ====================================================================== 
-      /// evaluate N/L-body phase space 
+      /// calculate the phase space
       double operator () ( const double x ) const ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      /// calculate the phase space
+      double ps23L ( const double x ) const ;
       // ====================================================================== 
     public:
       // ====================================================================== 

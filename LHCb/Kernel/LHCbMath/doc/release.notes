@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-08-23 - Vanya Belyaev
+
+ - add three-body phase space 
+
 !========================= LHCbMath v3r34 2012-07-24 =========================
 ! 2012-07-21 - Vanya Belyaev
  - improve Bernstein & positive polynomials 
