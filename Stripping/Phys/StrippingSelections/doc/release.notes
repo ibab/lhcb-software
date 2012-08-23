@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-23 - Marco Adinolfi
+ - StrippingDstarD02KShhForTrackingEff.py
+   - Add 4 lines to reconstruct D* -> D0 pi (D0 -> KS h h) where the KS is not
+   - looked for. To be used for downstream tracking efficiency measurement.
+
 ! 2012-08-23 - Ricardo Vazquez Gomez
  - StrippingBeauty2XGamma.py
    - Removed the Bd->Omega(hh)Gamma line as it is included in the Bd -> rho gamma line
