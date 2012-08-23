@@ -43,17 +43,39 @@ def getRootFile(filename):
     else:
         print "ERROR Accessing ROOT file for job", j.id
     return file
+
+def rootFileListFromTextFile(rootFileList):
+
+    # Open the text file
+    files = open(rootFileList,'r')
+
+    # list of root files
+    rootfiles = [ ]
+
+    # Read file list from text file
+    for file in files.read().split('\n') :
+        if len(file) > 0 :
+            rootfiles += [file]
+    
+    # Close the file
+    files.close()
+
+    # Return the file list
+    return rootfiles
     
 def fitHPD(filename,copyNumber,fitType='Sobel',clean=True,plotFile=""):
 
     from GaudiPython import gbl
-    from ROOT import TH2D, TEllipse
+    from ROOT import TH2D, TEllipse, TText
     import os
     
     # Make a root Canvas
     canvas = rootCanvas()
     canvas.Clear()
     canvas.Divide(2,2)
+
+    # Min number of entries in HPD alignment histogram for update
+    minHPDEntries = 10000
     
     # Open the ROOT file
     rootfile = getRootFile(filename)
@@ -65,12 +87,24 @@ def fitHPD(filename,copyNumber,fitType='Sobel',clean=True,plotFile=""):
     if image == None :
         print "Failed to open", plotname
         return
-    
+    if image.GetEntries() < minHPDEntries :
+        print "Too few entries"
+        return
+
+    # Get the occ plot, for number of events
+    occplotname = 'RICH/HPDHitsMoni/PDs/NumHits/CopyNum-'+str(copyNumber)
+    occplot = rootfile.Get(occplotname)
+    if occplot == None :
+        print "Failed to open", occplotname
+        return
+
+    nEvents = int(occplot.GetEntries())
+   
     canvas.cd(1)
     image.DrawCopy('zcol')
     
     # Cleaner
-    cleaner = gbl.Rich.HPDImage.Clean(image)
+    cleaner = gbl.Rich.HPDImage.Clean(image,nEvents)
     cleanedImage = cleaner.filter()
     
     canvas.cd(2)
@@ -86,13 +120,13 @@ def fitHPD(filename,copyNumber,fitType='Sobel',clean=True,plotFile=""):
     params.cleanHistogram = clean
 
     # Do the fit
-    result = hpdfitter().fit(image,params)
+    result = hpdfitter().fit(image,params,nEvents)
 
     canvas.cd(3)
     sobelImage.Draw('zcol')
     
     if result.OK() :
-        print "Fit OK : centre",result.col(),",",result.row(),"radius",result.radInPix()
+        print "Fit OK : centre",result.col(),",",result.row(), "radius (mm)",result.radInMM()
 
         # Draw circle
         circle = TEllipse( result.col(), result.row(), result.radInPix(), result.radInPix() )
@@ -121,7 +155,14 @@ def fitHPD(filename,copyNumber,fitType='Sobel',clean=True,plotFile=""):
     if result.OK() :
         circle.Draw()
         centre.Draw()
-            
+
+    text = TText()
+    text.SetNDC()
+    #text.SetTextSize(0.02)
+    text.DrawText( 0.3, 0.4, "x " + str(result.x()) )
+    text.DrawText( 0.3, 0.5, "y " + str(result.y()) )
+    text.DrawText( 0.3, 0.6, "R " + str(result.radInMM()) )
+    
     # Print the result
     if plotFile == "" :
         if not os.path.exists('hpdPlots') : os.mkdir('hpdPlots')
@@ -132,20 +173,22 @@ def fitHPD(filename,copyNumber,fitType='Sobel',clean=True,plotFile=""):
     else:
         canvas.Print(plotFile)
     
-def plotAll(filename,fitType='SimpleChi2'):
+def plotAll(files,minHPD=0,maxHPD=484,fitType="Sobel"):
 
     # Make a root Canvas
     canvas = rootCanvas()
     canvas.Divide(2,2)
 
-    # Run number from file
-    run = getIntInfo(filename,'Run')
+    filenames = rootFileListFromTextFile(files)
+
+    plotname = "hpdPlots/HPDFits_"+fitType+".pdf"
         
-    plotname = "hpdPlots/Run-"+str(run)+"_"+fitType+"_allHPDs.pdf"
     canvas.Print(plotname+"[")
 
-    for hpd in range(0,484):
-        fitHPD(filename,hpd,fitType,plotFile=plotname)
-
+    for filename in filenames :
+        for hpd in range(minHPD,maxHPD) :
+            fitHPD(filename,hpd,fitType,plotFile=plotname)
+        
     canvas.Print(plotname+"]")
+
     print "Created", plotname

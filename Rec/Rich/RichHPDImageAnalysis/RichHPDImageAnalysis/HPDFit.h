@@ -139,7 +139,8 @@ namespace Rich
 
       /// Run a fit of the given 2D HPD image histogram
       HPDFit::Result fit ( const TH2D& hist,
-                           const Params& params ) const;
+                           const Params& params,
+                           const unsigned int nEvents = 0 ) const;
 
       /// Get the boundary pixels (read only access)
       const Pixel::List & boundaryPixels() const { return m_boundaryPixels; }

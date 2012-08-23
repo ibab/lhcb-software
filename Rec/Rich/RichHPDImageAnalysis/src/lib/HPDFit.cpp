@@ -39,7 +39,8 @@ HPDFit::HPDFit()
 HPDFit::~HPDFit() { }
 
 HPDFit::Result HPDFit::fit ( const TH2D& hist,
-                             const Params& params ) const
+                             const Params& params,
+                             const unsigned int nEvents ) const
 {
   // Make a results object to return
   Result result;
@@ -52,7 +53,7 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
   const TH2D * hToUse = &hist;
   if ( params.cleanHistogram )
   {
-    const Clean cleaner(&hist);
+    const Clean cleaner(&hist,nEvents);
     hToUse = cleaner.filter();
   }
 

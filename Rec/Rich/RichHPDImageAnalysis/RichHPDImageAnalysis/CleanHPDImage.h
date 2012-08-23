@@ -2,6 +2,8 @@
 #ifndef RICHHPDIMAGEANALYSIS_CLEANHPDIMAGE_H
 #define RICHHPDIMAGEANALYSIS_CLEANHPDIMAGE_H 1
 
+#include <list>
+
 #include "TH2D.h"
 
 namespace Rich
@@ -33,29 +35,33 @@ namespace Rich
       public:
         /// Default Constructor
         Params() 
-          : hotBinFractor           ( 5.0  ), 
+          : hotBinFactor            ( 5.0  ), 
             centreRegionSize        ( 3.0  ),
             minBinContent           ( 1.0  ),
             giveRemovedPixAvCont    ( true ),
             neighbourFracForDeadPix ( 0.1  ),
-            hotRowColFraction       ( 0.5  )
+            hotRowColFraction       ( 0.5  ),
+            maxEventOcc             ( 0.5  )
         { }
       public:
-        double hotBinFractor;
+        double hotBinFactor;
         double centreRegionSize;
         double minBinContent;
         bool giveRemovedPixAvCont;
         double neighbourFracForDeadPix;
         double hotRowColFraction;
+        double maxEventOcc;
       };
 
     public:
 
       /// Standard constructor
       Clean( const TH2D* inH,
+             const unsigned int nEvents = 0,
              const Params& params = Params() )
-        : m_inHist ( inH    ),
-          m_params ( params )
+        : m_inHist  ( inH     ),
+          m_params  ( params  ),
+          m_nEvents ( nEvents )
       { }
 
       /// Destructor
@@ -72,9 +78,21 @@ namespace Rich
     private:
       
       /// Compute average bin content from neighbours
-      double avFromNeighbours(  const int COL,
-                                const int ROW ) const;
+      double avFromNeighbours( const int COL,
+                               const int ROW ) const;
 
+      void excludePixel( const int i, const int j ) const
+      {
+        m_excludedPixels.push_back( (i*100000)+j );
+      }
+
+      bool isExcluded( const int i, const int j ) const
+      {
+        return std::find( m_excludedPixels.begin(),
+                          m_excludedPixels.end(),
+                          (i*100000)+j ) != m_excludedPixels.end();
+      }
+      
     private:
 
       /// Pointer to original histogram
@@ -82,6 +100,15 @@ namespace Rich
 
       /// Parameters
       Params m_params;
+
+      /// Number of events in the histogram
+      unsigned int m_nEvents;
+
+    private: // working variables
+      
+      mutable double m_avPixCont; ///< Average pixel content
+
+      mutable std::vector<unsigned int> m_excludedPixels;
 
     };
 

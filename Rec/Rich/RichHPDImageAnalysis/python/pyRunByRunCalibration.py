@@ -621,8 +621,8 @@ def runToFill(run):
     return fill
 
 def runAll(files='2012-RootFiles.txt'):
-    #hpdImageShiftsFollow(files)
-    hpdImageShiftsAverage(files)
+    hpdImageShiftsFollow(files)
+    #hpdImageShiftsAverage(files)
     #hpdOccupancies(files)
 
 def hpdOccupancies(files='2012-RootFiles.txt'):
@@ -632,12 +632,12 @@ def hpdOccupancies(files='2012-RootFiles.txt'):
 
 def hpdImageShiftsFollow(files='2012-RootFiles.txt'):
     calibrationByRuns(rootfiles=files,followType="Smoothed",
-                      fitType='Sobel',smoothSigmaHours=1.5,
+                      fitType='Sobel',smoothSigmaHours=1.0,
                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
 
 def hpdImageShiftsAverage(files='2012-RootFiles.txt'):
     calibrationByRuns(rootfiles=files,followType="Average",
-                      fitType='Sobel',smoothSigmaHours=1.5,
+                      fitType='Sobel',smoothSigmaHours=1.0,
                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
     
 def calibrationByRuns(rootfiles='2012-RootFiles.txt',
@@ -682,7 +682,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
     maxHPDID = 484
 
     # Min number of entries in HPD alignment histogram for update
-    minHPDEntries = 500
+    minHPDEntries = 10000
 
     # Get the run/fill info
     runFillData = getRunFillData(rootfiles)
@@ -772,23 +772,29 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
                     if image != None :
                     
                         if image.GetEntries() >= minHPDEntries :
+
+                            # Get the occ plot, for number of events
+                            occplotname = 'RICH/HPDHitsMoni/PDs/NumHits/CopyNum-'+str(hpdID)
+                            occplot = file.Get(occplotname)
+                            if occplot != None :
                         
-                            # Setup the fit object
-                            params      = gbl.Rich.HPDImage.HPDFit.Params()
-                            params.type = fitType
-                        
-                            # Do the fit
-                            result = hpdfitter().fit(image,params)
-                        
-                            # Get the results
-                            xOff   = (result.x(),result.xErr())
-                            yOff   = (result.y(),result.yErr())
-                            rad    = (result.radInMM(),result.radErrInMM())
-                            plotData[hpdID][flag] = { "FitOK"   : result.OK(),
-                                                      "ShiftR"  : rFromXY(xOff,yOff),
-                                                      "ShiftX"  : xOff,
-                                                      "ShiftY"  : yOff,
-                                                      "Radius"  : rad }
+                                # Setup the fit object
+                                params      = gbl.Rich.HPDImage.HPDFit.Params()
+                                params.type = fitType
+
+                                # Do the fit
+                                result = hpdfitter().fit(image,params,int(occplot.GetEntries()))
+
+                                # Get the results
+                                xOff   = (result.x(),result.xErr())
+                                yOff   = (result.y(),result.yErr())
+                                rad    = (result.radInMM(),result.radErrInMM())
+                                plotData[hpdID][flag] = { "FitOK"   : result.OK(),
+                                                          "ShiftR"  : rFromXY(xOff,yOff),
+                                                          "ShiftX"  : xOff,
+                                                          "ShiftY"  : yOff,
+                                                          "Radius"  : rad }
+        
             else:
 
                 # No fitting so fake it
