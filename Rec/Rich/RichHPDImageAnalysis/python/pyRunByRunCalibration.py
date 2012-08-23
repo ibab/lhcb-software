@@ -47,7 +47,7 @@ def initialise():
 
         DDDBConf(DataType = "2012")
         LHCbApp().DDDBtag   = "head-20120413"
-        LHCbApp().CondDBtag = "head-20120420"
+        LHCbApp().CondDBtag = "cond-20120730"
 
         # Move HPD Occs
         #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
@@ -621,9 +621,9 @@ def runToFill(run):
     return fill
 
 def runAll(files='2012-RootFiles.txt'):
-    hpdImageShiftsFollow(files)
+    #hpdImageShiftsFollow(files)
     hpdImageShiftsAverage(files)
-    hpdOccupancies(files)
+    #hpdOccupancies(files)
 
 def hpdOccupancies(files='2012-RootFiles.txt'):
     calibrationByRuns(rootfiles=files,followType="Smoothed",
@@ -728,6 +728,9 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
             # HPD copy number
             copyNumber = gbl.Rich.DAQ.HPDCopyNumber(hpdID)
 
+            # SmartID
+            smartID = richSystem().richSmartID(copyNumber)
+
             # Get the alignment condition
             siAlign = getSiSensorAlignment(copyNumber)
 
@@ -799,8 +802,8 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
             occ = (0,0)
             ok  = False
             if createHPDOccUpdate :
-                #occPlot = file.Get('RICH/HPDL0HitsMoni/NumHits_HPDCopyN_'+str(hpdID))
-                occPlot = file.Get('RICH/HPDHitsMoni/NumHits_HPDCopyN_'+str(hpdID))
+                #occPlot = file.Get('RICH/HPDL0HitsMoni/PDs/NumHits/CopyNum-'+str(hpdID))
+                occPlot = file.Get('RICH/HPDHitsMoni/PDs/NumHits/CopyNum-'+str(hpdID))
                 if occPlot :
                     if occPlot.GetEntries() >= 10 :
                         occ = ( occPlot.GetMean(), occPlot.GetMeanError() )
