@@ -139,7 +139,7 @@ _my_immutable_config = {
         , 'Xicc_K_PIDKPIDpi_Min'        :   5.0
         , 'Xicc_P_PIDpPIDpi_Min'        :   5.0
         , 'Xicc_P_PIDpPIDK_Min'         :   0.0
-        , 'Xicc_APT_Min'                :   1.0*GeV
+        , 'Xicc_APT_Min'                :   2.0*GeV # Mat changes from 1.0 to 2.0 GeV for S20
         , 'Xicc_ADOCAMAX_Max'           :   0.5*mm
         , 'Xicc_BPVDIRA_Min'            :   0.0
         , 'Xicc_BPVVDCHI2_Min'          :  -1.0

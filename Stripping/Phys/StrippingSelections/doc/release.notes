@@ -5,6 +5,9 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2012-08-23 - Andrea Contu
+   - tweaked PT cut in StrippingXicc.py (1.0 -> 2.0 GeV)
+
+! 2012-08-23 - Andrea Contu
    - added StrippingD02KSKS.py to __init__.py
 
 ! 2012-08-23 - Andrea Contu
