@@ -5,6 +5,9 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2012-08-23 - Andrea Contu
+   - added StrippingD02KSKS.py to __init__.py
+
+! 2012-08-23 - Andrea Contu
    - removed 2 lines in StrippingDstarD02xx.py
 
 ! 2012-08-23 - Sam Hall

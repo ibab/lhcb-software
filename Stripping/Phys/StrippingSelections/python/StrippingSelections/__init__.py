@@ -140,6 +140,7 @@ import StrippingLambdac2PKPiForXSec
 import StrippingD2PhiPiForXSec
 import StrippingD2HHHForXSec
 import StrippingD02HHForXSec
+import StrippingD02KSKS
 
 #import StrippingBu3hFrom2h
 import StrippingB2HHPi0
