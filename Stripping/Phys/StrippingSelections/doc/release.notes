@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-23 - Mika Vesterinen
+ - StrippingJPsiForSL.py
+   - Added Loose GhostProb cut on the bachelor track
+   - Added slot for GhostProb cut on the NoPIDs muons (set to 999 for now)
+   - Tighter IPchi2 for bachelor track
+   - Tighter vertex chi2 for J/psi.
+ - StrippingCharmFromBSemi.py
+   - Added loose GhostProb cut to all long tracks.
+   - Looser Sum PT cut for D0->KsKs.
 
 ! 2012-08-23 - Benoit VIAUD
  - In StrippingD2XMuMuSS.py

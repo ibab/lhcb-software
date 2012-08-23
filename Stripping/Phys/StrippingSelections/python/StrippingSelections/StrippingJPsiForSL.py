@@ -1,12 +1,12 @@
 """
-Stripping line for J/psi -> mu mu candidates
-where only one muon is identified.
-For measuring muon detection asymmetries for the semileptonic
-asymmetry analyses.
+Stripping line for J/psi -> mu mu candidates where only one muon is identified.
+The psi must also vertex with another track such that the combination
+is consistent with a fully/partially reconstructed B->J/psi X decay.
+For measuring muon detection asymmetries for the semileptonic asymmetry analyses.
 """
 __author__ = ['Mika Vesterinen']
 __date__ = '25/06/2012'
-__version__ = '$Revision: 0.0 $'
+__version__ = '$Revision: 0.1 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -20,36 +20,40 @@ __all__ = ('JPsiForSLAllLinesConf',
            'confdict')
 
 confdict = {
-    "PrescaleSemiIncJpsi2mumu"    : 1.0
-    ,"MuonPT" : 1200.
-    ,"MuonP" : 6000.
-    ,"MuonChi2" : 3.
-    ,"MuonIPChi2" : 4. 
-    ,"TrackPT" : 500.
-    ,"TrackP" : 3000.
-    ,"TrackChi2" : 3.
-    ,"TrackIPChi2" : 5.
-    ,"PsiMasswinPreFit" : 150
-    ,"PsiDocaChi2Max" : 10
-    ,"PsiVChi2NdofMax" : 10
-    ,"PsiMasswin" : 140
-    ,"PsiPT" : 500
-    ,"PsiFDChi2Min" : 100
-    ,"PsiDIRAMin" : 0.99
-    ,"BCombMassMin" : 3400
-    ,"BCombMassMax" : 6000
-    ,"BDocaChi2Max" : 10.
-    ,"BVChi2NdofMax" : 3.
-    ,"BPTMin" : 800.
-    ,"BFDChi2Min" : 200.
-    ,"BDIRAMin" : 0.9995
-    ,"nLongTrackMax" : 250
+    "PrescaleSemiIncJpsi2mumu" : 1.0 ## adimensional
+    ,"TrackGhostProbMax" : 0.35 # adimensional
+    ,"MuonGhostProbMax" : 999. # adimensional
+    ,"MuonPT" : 1200. # MeV
+    ,"MuonP" : 6000. # MeV
+    ,"MuonChi2" : 3. # adimensional
+    ,"MuonIPChi2" : 4. # adimensional
+    ,"TrackPT" : 500. # MeV
+    ,"TrackP" : 3000. # MeV
+    ,"TrackChi2" : 3. # adimensional
+    ,"TrackIPChi2" : 9. # adimensional
+    ,"PsiMasswinPreFit" : 150 # MeV
+    ,"PsiDocaChi2Max" : 10 # adimensional
+    ,"PsiVChi2NdofMax" : 4. # adimensional
+    ,"PsiMasswin" : 140 # MeV
+    ,"PsiPT" : 500 # MeV
+    ,"PsiFDChi2Min" : 100 # adimensional
+    ,"PsiDIRAMin" : 0.99 # adimensional
+    ,"BCombMassMin" : 3400 # MeV
+    ,"BCombMassMax" : 6000 # MeV
+    ,"BDocaChi2Max" : 10. # adimensional
+    ,"BVChi2NdofMax" : 3. # adimensional
+    ,"BPTMin" : 800. # MeV
+    ,"BFDChi2Min" : 200. # adimensional
+    ,"BDIRAMin" : 0.9995 # adimensional
+    ,"nLongTrackMax" : 250 # adimensional
     }
 
 class JPsiForSLAllLinesConf(LineBuilder) :
     
     __configuration_keys__ = (
         "PrescaleSemiIncJpsi2mumu"
+        ,"TrackGhostProbMax"
+        ,"MuonGhostProbMax"
         ,"MuonPT"
         ,"MuonP"
         ,"MuonChi2"
@@ -83,13 +87,19 @@ class JPsiForSLAllLinesConf(LineBuilder) :
         self.__confdict__=config
 
         #### muon selection
-        Muon_cuts = "(PT > %(MuonPT)s) & (P> %(MuonP)s) & (TRCHI2DOF < %(MuonChi2)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPChi2)s)" % config
+        Muon_cuts = "(PT > %(MuonPT)s) & (P> %(MuonP)s)"\
+                    "& (TRCHI2DOF < %(MuonChi2)s)"\
+                     "& (TRGHOSTPROB < %(MuonGhostProbMax)s)"\
+                    "& (MIPCHI2DV(PRIMARY)> %(MuonIPChi2)s)" % config
         self.muons = Selection( "Muons_for_" + name,
                                 Algorithm = FilterDesktop(Code = Muon_cuts),
                                 RequiredSelections = [StdNoPIDsMuons])
 
         #### additional track selection
-        Track_cuts = "(PT > %(TrackPT)s) & (P> %(TrackP)s) & (TRCHI2DOF < %(TrackChi2)s) & (MIPCHI2DV(PRIMARY)> %(TrackIPChi2)s)" % config
+        Track_cuts = "(PT > %(TrackPT)s) & (P> %(TrackP)s)"\
+                     "& (TRCHI2DOF < %(TrackChi2)s)"\
+                     "& (TRGHOSTPROB < %(TrackGhostProbMax)s)"\
+                     "& (MIPCHI2DV(PRIMARY)> %(TrackIPChi2)s)" % config
         self.tracks = Selection( "Tracks_for_" + name,
                                  Algorithm = FilterDesktop(Code = Track_cuts),
                                  RequiredSelections = [StdNoPIDsKaons]

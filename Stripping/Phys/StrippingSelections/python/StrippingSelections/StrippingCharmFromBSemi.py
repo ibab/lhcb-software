@@ -34,6 +34,7 @@ __all__ = ('CharmFromBSemiAllLinesConf',
 
 confdict = {
     "GEC_nLongTrk"   : 250    # adimensional
+    ,"TrGhostProbMax": 0.5    # adimensional
     ,"MinBMass"      : 2500   # MeV
     ,"MaxBMass"      : 6000   # MeV
     ,"MinBMassTight" : 2800   # MeV
@@ -96,7 +97,7 @@ confdict = {
     ,"Dstar_SoftPion_PT" : 180. ## MeV ### 
     ,"Dstar_wideDMCutLower" : 0. ## MeV
     ,"Dstar_wideDMCutUpper" : 170. ## MeV
-    ,"PTSUMLoose"  : 1500. ## MeV
+    ,"PTSUMLoose"  : 1400. ## MeV
     ,"PTSUM"       : 1800. ## MeV
     ,"PTSUM_HHPi0" : 1800. ## MeV
     }
@@ -105,6 +106,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
     
     __configuration_keys__ = (
         "GEC_nLongTrk"
+        ,"TrGhostProbMax"
         ,"MinBMass"      
         ,"MaxBMass"      
         ,"MinBMassTight" 
@@ -642,12 +644,13 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.registerLine( StrippingLine('b2DstarMuXKsKs_DDLL' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuXKsKs_DDLL))
 
         ########### D0 -> HHHHH
-        self.registerLine( StrippingLine('b2D0MuXK3Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuXK3Pi) )
+        ## all but the 4pi are in the SL full DST stream.
+        #self.registerLine( StrippingLine('b2D0MuXK3Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuXK3Pi) )
         self.registerLine( StrippingLine('b2D0MuX4Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuX4Pi) )
         #self.registerLine( StrippingLine('b2D0MuX2K2Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuX2K2Pi) )
         #self.registerLine( StrippingLine('b2D0MuX3KPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuX3KPi) )
         ## D*+ versions
-        self.registerLine( StrippingLine('b2DstarMuXK3Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuXK3Pi) )
+        #self.registerLine( StrippingLine('b2DstarMuXK3Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuXK3Pi) )
         self.registerLine( StrippingLine('b2DstarMuX4Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuX4Pi) )
         #self.registerLine( StrippingLine('b2DstarMuX2K2Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuX2K2Pi) )
         #self.registerLine( StrippingLine('b2DstarMuX3KPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuX3KPi) )
@@ -691,8 +694,6 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         ########### D+ -> KsH
         self.registerLine( StrippingLine('b2DsMuXKKPiDCS' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXKKPiDCS) )
-        
-        ########### D+ -> KsH
         self.registerLine( StrippingLine('b2DsMuXKsLLK' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXKsLLK) )
         self.registerLine( StrippingLine('b2DsMuXKsDDK' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXKsDDK) )
         self.registerLine( StrippingLine('b2DsMuXKsLLPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXKsLLPi) )
@@ -711,7 +712,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.registerLine( StrippingLine('b2MuXLc2L0DDPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2L0DDPiMuX) )
         self.registerLine( StrippingLine('b2MuXLc2L0LLK' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2L0LLKMuX) )
         self.registerLine( StrippingLine('b2MuXLc2L0DDK' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2L0DDKMuX) )
-
+        
         ########## Lambda_c+ -> p HH 
         self.registerLine( StrippingLine('b2LcMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2LcMuX) )
         self.registerLine( StrippingLine('b2LcDCSMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2LcDCSMuX) )
@@ -720,6 +721,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         
     def _muonFilter( self , _name):
         _code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV)"\
+                "& (TRGHOSTPROB< %(TrGhostProbMax)s)"\
                 "& (TRCHI2DOF< %(TRCHI2)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s)"\
                 "& (PIDmu > %(PIDmu)s)" % self.__confdict__
         _mu = FilterDesktop( name = _name, Code = _code )
@@ -727,30 +729,35 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
     def _pionFilter( self , _name):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
-                   "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % self.__confdict__
+                "& (TRGHOSTPROB< %(TrGhostProbMax)s)"\
+                "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % self.__confdict__
         _pi = FilterDesktop( name = _name, Code = _code )
         return _pi
 
     def _kaonFilter( self , _name ):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
-                   "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK> %(KaonPIDK)s)" % self.__confdict__
+                "& (TRGHOSTPROB< %(TrGhostProbMax)s)"\
+                "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK> %(KaonPIDK)s)" % self.__confdict__
         _ka = FilterDesktop( name = _name, Code = _code )
         return _ka 
 
     def _protonFilter( self, _name ):
         _code = "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(KPiPT)s *MeV) & (P>2.0*GeV)"\
-                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDp> %(KaonPIDK)s) & (PIDp-PIDK>1.0e-10)" % self.__confdict__ 
+                "& (TRGHOSTPROB< %(TrGhostProbMax)s)"\
+                "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDp> %(KaonPIDK)s) & (PIDp-PIDK>1.0e-10)" % self.__confdict__ 
         _pr = FilterDesktop( name = _name, Code = _code)
         return _pr
         
     def _kaonlooseFilter( self, _name ):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+                "& (TRGHOSTPROB< %(TrGhostProbMax)s)"\
                 "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s) &  (PIDK> %(KaonPIDKloose)s)" % self.__confdict__
         _kal = FilterDesktop( name = _name, Code = _code )
         return _kal 
     
     def _pionlooseFilter( self , _name):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+                "& (TRGHOSTPROB< %(TrGhostProbMax)s)"\
                 "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s)" % self.__confdict__
         _pil = FilterDesktop( name = _name, Code = _code )
         return _pil
@@ -787,6 +794,8 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                 " & (ADMASS('KS0') < %(KSLLCutMass)s *MeV) & (BPVVDCHI2> %(KSLLCutFDChi2)s)" \
                 " & CHILDCUT((TRCHI2DOF < %(KSDaugTrackChi2)s),1)" \
                 " & CHILDCUT((TRCHI2DOF < %(KSDaugTrackChi2)s),2)" \
+                " & CHILDCUT((TRGHOSTPROB< %(TrGhostProbMax)s),1)"\
+                " & CHILDCUT((TRGHOSTPROB< %(TrGhostProbMax)s),2)"\
                 " & (VFASPF(VCHI2PDOF) < %(KSVertexChi2)s)" \
                 " & (BPVDIRA > %(KSCutDIRA)s )" % self.__confdict__
         _pil = FilterDesktop( name = _name, Code = _code)
@@ -797,6 +806,8 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                 " & (ADMASS('Lambda0') < %(LambdaLLCutMass)s *MeV) & (BPVVDCHI2> %(LambdaLLCutFDChi2)s)" \
                 " & CHILDCUT((TRCHI2DOF < %(LambdaDaugTrackChi2)s),1)" \
                 " & CHILDCUT((TRCHI2DOF < %(LambdaDaugTrackChi2)s),2)" \
+                " & CHILDCUT((TRGHOSTPROB< %(TrGhostProbMax)s),1)"\
+                " & CHILDCUT((TRGHOSTPROB< %(TrGhostProbMax)s),2)"\
                 " & (VFASPF(VCHI2PDOF) < %(LambdaVertexChi2)s)" \
                 " & (BPVDIRA > %(LambdaCutDIRA)s )" % self.__confdict__
         _pil = FilterDesktop( name = _name, Code = _code)
@@ -858,19 +869,18 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
     
     def _D02KsHHFilter( self , _decayDescriptors, _name):
-        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV)"\
-                          "& (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSUM)s *MeV)"\
+        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV)" \
+                          "& (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSUM)s *MeV)" \
                           "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                     "& (SUMTREE( PT,  ISBASIC )> %(PTSUM)s*MeV)"\
-                     "& ((CHILD(VFASPF(VZ),1) - VFASPF(VZ)) > %(KSCutZFDFromD)s * mm)" \
+                     "& (SUMTREE( PT,  ISBASIC )> %(PTSUM)s*MeV)" \
+                     "& (MINTREE(((ABSID=='KS0')) , VFASPF(VZ))-VFASPF(VZ) > %(KSCutZFDFromD)s *mm )" \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _d02KsHH = CombineParticles( name = _name,
                                      DecayDescriptors = _decayDescriptors,
                                      CombinationCut = _combinationCut,
                                      MotherCut = _motherCut)                            
         return _d02KsHH
-
 
     def _D2KsHHHFilter( self , _name, _decayDescriptors,_requiredSelections):
         _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV)"\
