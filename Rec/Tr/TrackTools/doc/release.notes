@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-08-23 - Johannes Albrecht & Johann Brehmer 
+ - TrackNNGhostId: fix NN output value to range 0-1 
+
 !========================= TrackTools v4r16 2012-08-16 =========================
 
 ! 2012-08-16 - Chris Jones

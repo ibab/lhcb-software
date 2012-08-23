@@ -536,14 +536,31 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
       debug()<<" NN output:  "<<retval<<endmsg;
       debug()<<"now tranform"<<endmsg;
     }
+    
+    //restrict range to that known by flattening function
+    // function defined between -0.2 and +1.1986
+    if( retval < -0.2 ) retval = 1;
+    if( retval > 1.195 ) retval = 0;
+    if( retval >= -0.2 && retval <= 1.195) {
+      // flatten
+      retval = m_FlattenLookupTable->value(retval);
+    }
+    
 
-    // flatten
-    retval = m_FlattenLookupTable->value(retval);
-
-    if ( UNLIKELY( isDebug ) ) debug()<<"transformed value: "<<retval<<endmsg;
+    if ( UNLIKELY( isDebug ) ) debug()<<"transformed value (in loop) : "<<retval<<endmsg;
 
   }//end evaluate long track for MC2012 tuning
 
+  if( retval < 0 ) { 
+    Warning("after flattening ghost prob < 0 - this should not be possible",StatusCode::SUCCESS, 1);
+    retval = 0;
+  }
+  else if( retval > 1 ){
+    Warning("after flattening ghost prob > 0 - this should not be possible",StatusCode::SUCCESS, 1);   
+    retval = 1;
+  }
+  
+  if ( UNLIKELY( isDebug ) ) debug()<<"transformed value (before fill) : "<<retval<<endmsg;
   aTrack.setGhostProbability(retval);
 
   return StatusCode::SUCCESS;
