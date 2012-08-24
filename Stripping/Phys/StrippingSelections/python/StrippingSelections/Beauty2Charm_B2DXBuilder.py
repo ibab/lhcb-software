@@ -628,6 +628,7 @@ class B2DXBuilder(object):
         #config{ # Cuts made on all B's and Lb's used in all lines
         config['SUMPT_MIN'    ] = '4000*MeV'
         config['AM_MIN'       ] = '4000*MeV' 
+        config.pop('BPVIPCHI2_MAX')
         
         tag = 'B02D%s'
         if not useIP: tag += 'NoIP'
