@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-24 - Mika Vesterinen
+  - Changed name of line in StrippingB2DMuForTauMu.py
+  - Minor changes to default configs in B2DMuNuX and JPsiForSL
+  - added the two new D*taunu modules in __init__.py
+
 ! 2012-08-24 - Rafael Coutinho
  - Update on the StrippingLb2V0hh by increasing the lower 
    limit on the invariant mass and tighter cuts 

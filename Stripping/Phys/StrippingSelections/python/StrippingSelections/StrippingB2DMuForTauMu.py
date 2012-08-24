@@ -109,7 +109,7 @@ class B2DMuForTauMuconf(LineBuilder) :
                  "Preambulo": ["from LoKiTracks.decorators import *"]}
 
         ########## D0 -> HH ###########
-        self.B2DMuForTauMu = StrippingLine('mystripping' + 'Line', prescale = 1, selection = self.selb2D0MuX, FILTER  = GECs)
+        self.B2DMuForTauMu = StrippingLine('b2D0MuX' + name+ 'Line', prescale = 1, selection = self.selb2D0MuX, FILTER  = GECs)
         self.registerLine(self.B2DMuForTauMu)        
 
 

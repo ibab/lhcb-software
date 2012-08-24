@@ -107,6 +107,8 @@ import StrippingMiniBias
 
 import StrippingNoPIDDstarWithD02RSKPi
 
+import StrippingB2DMuForTauMu
+import StrippingB2XTauNu
 import StrippingJPsiForSL
 import StrippingCharmForVub
 import StrippingDstarD02KMuNu

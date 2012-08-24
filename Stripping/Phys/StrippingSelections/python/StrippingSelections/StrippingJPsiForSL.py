@@ -22,7 +22,7 @@ __all__ = ('JPsiForSLAllLinesConf',
 confdict = {
     "PrescaleSemiIncJpsi2mumu" : 1.0 ## adimensional
     ,"TrackGhostProbMax" : 0.35 # adimensional
-    ,"MuonGhostProbMax" : 999. # adimensional
+    ,"MuonGhostProbMax" : 0.5 # adimensional
     ,"MuonPT" : 1200. # MeV
     ,"MuonP" : 6000. # MeV
     ,"MuonChi2" : 3. # adimensional

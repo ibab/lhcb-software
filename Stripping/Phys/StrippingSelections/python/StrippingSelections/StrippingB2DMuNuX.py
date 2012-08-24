@@ -43,7 +43,7 @@ confdict = {
     ,"DsFDCHI2"      : 100.0  # adimensiional
     ,"DsMassWin"     : 80.0   # MeV
     ,"DsAMassWin"    : 100.0  # MeV
-    ,"D02HHHHMassWin": 40.0   # MeV
+    ,"D02HHHHMassWin": 60.0   # MeV
     ,"D02HHHHSumPT"  : 1800.0   # MeV
     ,"DsIP"          : 7.4    #mm
     ,"DsVCHI2DOF"    : 6.0    # adimensiional
