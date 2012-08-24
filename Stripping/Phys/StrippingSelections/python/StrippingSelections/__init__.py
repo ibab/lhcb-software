@@ -40,8 +40,6 @@ import StrippingV0ForPID
 import StrippingB2JpsiXforBeta_s
 import StrippingB2Psi2SX
 import StrippingB2Psi2SXMuMu
-import StrippingB2ChicK
-import StrippingB2EtacKst
 
 import StrippingBs2JpsieePhi
 import StrippingB2CharmlessQuasi2Body
@@ -49,9 +47,7 @@ import StrippingBs2PhiPhi
 import StrippingBs2Kst0Kst0
 import StrippingBs2Kst_0Kst_0
 import StrippingBs2PhiKst0
-import StrippingBs2EtacPhi
-import StrippingBs2ChicPhi_Chic2KKPiPi
-import StrippingBs2ChicPhi_Chic2PiPiPiPi
+import StrippingB2CharmoniumX_6H
 import StrippingBs2Q2B
 import StrippingB2JpsiKShh
 
