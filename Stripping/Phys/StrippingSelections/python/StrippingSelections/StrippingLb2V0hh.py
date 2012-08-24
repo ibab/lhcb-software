@@ -23,14 +23,15 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLoosePions as Pions
 
 default_config = {'Trk_Chi2'                 : 4.0,
-                  'Lambda_DD_MassWindow'     : 30.0,
+                  'Lambda_DD_MassWindow'     : 20.0,
                   'Lambda_DD_VtxChi2'        : 12.0,
                   'Lambda_DD_FDChi2'         : 50.0,
-                  'Lambda_DD_Pmin'           : 6000.0,
-                  'Lambda_LL_MassWindow'     : 20.0,
+                  'Lambda_DD_FD'             : 300.0,
+                  'Lambda_DD_Pmin'           : 8000.0,
+                  'Lambda_LL_MassWindow'     : 15.0,
                   'Lambda_LL_VtxChi2'        : 12.0,
-                  'Lambda_LL_FDChi2'         : 80.0,
-                  'Lb_Mlow'                  : 1119.0,
+                  'Lambda_LL_FDChi2'         : 50.0,
+                  'Lb_Mlow'                  : 1319.0,
                   'Lb_Mhigh'                 : 500.0,
                   'Lb_APTmin'                : 1000.0,
                   'Lb_PTmin'                 : 1500.0,
@@ -41,7 +42,8 @@ default_config = {'Trk_Chi2'                 : 4.0,
                   'LbDaug_DD_PTsum'          : 4200.0,
                   'LbDaug_LL_PTsum'          : 3000.0,
                   'Lb_VtxChi2'               : 12.0,
-                  'Lb_Dira'                  : 0.9999,
+                  'Lb_DD_Dira'               : 0.9999,
+                  'Lb_LL_Dira'               : 0.9999,
                   'Lb_DD_IPCHI2wrtPV'        : 8.0,
                   'Lb_LL_IPCHI2wrtPV'        : 8.0,
                   'Lb_FDwrtPV'               : 1.5,
@@ -81,6 +83,7 @@ class Lb2V0hhConf(LineBuilder) :
                               'Lambda_DD_MassWindow',
                               'Lambda_DD_VtxChi2',
                               'Lambda_DD_FDChi2',
+                              'Lambda_DD_FD',
                               'Lambda_DD_Pmin',
                               'Lambda_LL_MassWindow',
                               'Lambda_LL_VtxChi2',
@@ -96,7 +99,8 @@ class Lb2V0hhConf(LineBuilder) :
                               'LbDaug_DD_PTsum',
                               'LbDaug_LL_PTsum',
                               'Lb_VtxChi2',
-                              'Lb_Dira',
+                              'Lb_DD_Dira',
+                              'Lb_LL_Dira',
                               'Lb_DD_IPCHI2wrtPV',
                               'Lb_LL_IPCHI2wrtPV',
                               'Lb_FDwrtPV',
@@ -145,11 +149,13 @@ class Lb2V0hhConf(LineBuilder) :
 
     def makeLambda2DD( self, name, config ) :
         # define all the cuts
-        _massCut = "(ADMASS('Lambda0')<%s*MeV)" % config['Lambda_DD_MassWindow']
-        _vtxCut  = "(VFASPF(VCHI2)<%s)   "      % config['Lambda_DD_VtxChi2']
-        _fdCut   = "(BPVVDCHI2>%s)"             % config['Lambda_DD_FDChi2']
-        _momCut  = "(P>%s*MeV)"                 % config['Lambda_DD_Pmin']
-        _allCuts = _momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut
+        _massCut   = "(ADMASS('Lambda0')<%s*MeV)"      % config['Lambda_DD_MassWindow']
+        _vtxCut    = "(VFASPF(VCHI2)<%s)   "           % config['Lambda_DD_VtxChi2']
+        _fdChi2Cut = "(BPVVDCHI2>%s)"                  % config['Lambda_DD_FDChi2']
+        _fdCut     = "(VFASPF(VMINVDDV(PRIMARY))>%s)"  % config['Lambda_DD_FD']
+        _momCut    = "(P>%s*MeV)"                      % config['Lambda_DD_Pmin']
+
+        _allCuts = _momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_fdChi2Cut
 
         # get the Lambda0's to filter
         _stdLambdaDD = DataOnDemand(Location = "Phys/StdLooseLambdaDD/Particles")
@@ -198,7 +204,7 @@ class Lb2V0hhConf(LineBuilder) :
 
         _ptCut      = "(PT>%s*MeV)"                    % config['Lb_PTmin']
         _vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['Lb_VtxChi2']
-        _diraCut    = "(BPVDIRA>%s)"                   % config['Lb_Dira']
+        _diraCut    = "(BPVDIRA>%s)"                   % config['Lb_DD_Dira']
         _ipChi2Cut  = "(MIPCHI2DV(PRIMARY)<%s)"        % config['Lb_DD_IPCHI2wrtPV']
         _fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['Lb_FDwrtPV']
         _fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['Lb_DD_FDChi2']
@@ -226,15 +232,14 @@ class Lb2V0hhConf(LineBuilder) :
         _massCutHigh    = "(AM<(5620+%s)*MeV)"               % config['Lb_Mhigh']
         _aptCut         = "(APT>%s*MeV)"                     % config['Lb_APTmin']
         _daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['LbDaug_MedPT_PT']
-        _daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['LbDaug_MaxPT_IP']
         _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['LbDaug_LL_maxDocaChi2']
         _daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['LbDaug_LL_PTsum']
 
-        _combCuts = _aptCut+'&'+_daugPtSumCut+'&'+_daugMedPtCut+'&'+_massCutLow+'&'+_massCutHigh+'&'+_daugMaxPtIPCut+'&'+_maxDocaChi2Cut
+        _combCuts = _aptCut+'&'+_daugPtSumCut+'&'+_daugMedPtCut+'&'+_massCutLow+'&'+_massCutHigh+'&'+_maxDocaChi2Cut
 
         _ptCut      = "(PT>%s*MeV)"                    % config['Lb_PTmin']
         _vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['Lb_VtxChi2']
-        _diraCut    = "(BPVDIRA>%s)"                   % config['Lb_Dira']
+        _diraCut    = "(BPVDIRA>%s)"                   % config['Lb_LL_Dira']
         _ipChi2Cut  = "(MIPCHI2DV(PRIMARY)<%s)"        % config['Lb_LL_IPCHI2wrtPV']
         _fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['Lb_FDwrtPV']
         _fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['Lb_LL_FDChi2']

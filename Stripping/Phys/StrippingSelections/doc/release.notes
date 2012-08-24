@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-24 - Rafael Coutinho
+ - Update on the StrippingLb2V0hh by increasing the lower 
+   limit on the invariant mass and tighter cuts 
+
 ! 2012-08-24 - Mike Williams (Beauty2Charm updates)
  - Added all D->X decays that do not involve a pi0 or KS allowing one UP track in the D.
  - Added all non-WS B->DX lines + UP pion where the UP pion+D make a D*.
