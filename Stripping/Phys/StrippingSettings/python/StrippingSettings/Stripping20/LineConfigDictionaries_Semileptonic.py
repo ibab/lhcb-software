@@ -1,167 +1,80 @@
 JPsiForSL = {
     'BUILDERTYPE' : 'JPsiForSLAllLinesConf',
     'CONFIG' :  {
-    "PrescaleSemiIncJpsi2mumu"    : 0.5
-    ,"MuonPT" : 1200.
-    ,"MuonP" : 6000.
-    ,"MuonChi2" : 3.
-    ,"MuonIPChi2" : 4. 
-    ,"TrackPT" : 500.
-    ,"TrackP" : 3000.
-    ,"TrackChi2" : 3.
-    ,"TrackIPChi2" : 5.
-    ,"PsiMasswinPreFit" : 150
-    ,"PsiDocaChi2Max" : 10
-    ,"PsiVChi2NdofMax" : 10
-    ,"PsiMasswin" : 140
-    ,"PsiPT" : 500
-    ,"PsiFDChi2Min" : 100
-    ,"PsiDIRAMin" : 0.99
-    ,"BCombMassMin" : 3400
-    ,"BCombMassMax" : 6000
-    ,"BDocaChi2Max" : 10.
-    ,"BVChi2NdofMax" : 3.
-    ,"BPTMin" : 800.
-    ,"BFDChi2Min" : 200.
-    ,"BDIRAMin" : 0.9995
-    ,"nLongTrackMax" : 250
+    "PrescaleSemiIncJpsi2mumu" : 1.0 ## adimensional
+    ,"TrackGhostProbMax" : 0.35 # adimensional
+    ,"MuonGhostProbMax" : 0.5 # adimensional
+    ,"MuonPT" : 1200. # MeV
+    ,"MuonP" : 6000. # MeV
+    ,"MuonChi2" : 3. # adimensional
+    ,"MuonIPChi2" : 4. # adimensional
+    ,"TrackPT" : 500. # MeV
+    ,"TrackP" : 3000. # MeV
+    ,"TrackChi2" : 3. # adimensional
+    ,"TrackIPChi2" : 9. # adimensional
+    ,"PsiMasswinPreFit" : 150 # MeV
+    ,"PsiDocaChi2Max" : 10 # adimensional
+    ,"PsiVChi2NdofMax" : 4. # adimensional
+    ,"PsiMasswin" : 140 # MeV
+    ,"PsiPT" : 500 # MeV
+    ,"PsiFDChi2Min" : 100 # adimensional
+    ,"PsiDIRAMin" : 0.99 # adimensional
+    ,"BCombMassMin" : 3400 # MeV
+    ,"BCombMassMax" : 6000 # MeV
+    ,"BDocaChi2Max" : 10. # adimensional
+    ,"BVChi2NdofMax" : 3. # adimensional
+    ,"BPTMin" : 800. # MeV
+    ,"BFDChi2Min" : 200. # adimensional
+    ,"BDIRAMin" : 0.9995 # adimensional
+    ,"nLongTrackMax" : 250 # adimensional
     },
     'STREAMS' : ['Dimuon'] ,
     'WGs'    : ['Semileptonic']
     }
 
 
-CharmFromBSemi = {
-    'BUILDERTYPE' : 'CharmFromBSemiAllLinesConf',
-    'CONFIG' :  {
-    "GEC_nLongTrk"    : 250   #adimensional
-    ,"MINIPCHI2"      : 9.0    # adimensional
-    ,"TRCHI2"        : 4.0    # adimensional
-    ,"TRCHI2Loose"   : 5.0    # adimensional    
-    ,"KaonPIDK"      : 4.0    # adimensional
-    ,"PionPIDK"      : 10.0   # adimensional
-    ,"PionPIDKTight" : 4.0    # adimensional
-    ,"MuonIPCHI2"    : 4.00   # adimensional
-    ,"MuonPT"        : 800.0  # MeV
-    ,"KPiPT"         : 300.0  # MeV
-    ,"DsDIRA"        : 0.99   # adimensional
-    ,"DsFDCHI2"      : 100.0  # adimensional
-    ,"DsMassWin"     : 80.0   # MeV
-    ,"DsAMassWin"    : 100.0  # MeV
-    ,"DsIP"          : 7.4    #mm
-    ,"DsVCHI2DOF"    : 6.0    # adimensional
-    ,"PIDmu"         : -0.0   # adimensional
-    ,"BDIRA"         : 0.999  #adimensional
-    ,"BVCHI2DOF"     : 6.0    # adimensional
-    ,"DZ"            : 0   #mm
-    ,"DDocaChi2Max"  : 20     #adimensional
-    ,"MINIPCHI2Loose": 4.0   #adimensional
-    ,"KaonPIDKloose" : -5     #adimensional
-    ,"PhiVCHI2"      :25.0    #adimensional
-    ,"PhiMassWin"    :50      #adimensional
-    ,'KSLLPMin'         : 2000  ## MeV
-    ,'KSLLPTMin'        : 500   ## MeV
-    ,'KSDDPMin'         : 3000  ## MeV
-    ,'KSDDPTMin'        : 800   ## MeV
-    ,'KSLLCutMass'      : 20    ## MeV
-    ,'KSDDCutMass'      : 20    ## MeV
-    ,'KSLLCutFDChi2'    : 100   ## unitless
-    ,'KSDDCutFDChi2'    : 100   ## unitless
-    ,'KSDaugTrackChi2'  : 4     ## max chi2/ndf for Ks daughter tracks
-    ,'KSVertexChi2'     : 6     ## max chi2/ndf for Ks vertex
-    ,'KSCutDIRA'        : 0.99  ## unitless
-    ,'LambdaLLPMin'       : 2000 ## MeV
-    ,'LambdaLLPTMin'      : 500  ## MeV
-    ,'LambdaLLCutMass'    : 30   ## MeV
-    ,'LambdaLLCutFDChi2'  : 100  ## unitless
-    ,'LambdaDDPMin'       : 3000 ## MeV
-    ,'LambdaDDPTMin'      : 800  ## MeV
-    ,'LambdaDDCutMass'    : 30   ## MeV
-    ,'LambdaDDCutFDChi2'  : 100  ## unitless
-    ,'LambdaCutDIRA'      : 0.99 ## unitless
-    ,'LambdaDaugTrackChi2': 4    ## unitless
-    ,'LambdaVertexChi2'   : 6    ## max chi2/ndf for Lambda0 vertex
-    ,"Pi0PtMin"     : 1200         # Minimum Pt of pi0 (MeV)
-    ,"Pi0PMin"      : 3000         # Minimum P of pi0 (MeV)
-    ,"PhotonCL"     : 0.25         # Confidence level for Pi0 photons
-    ,"D02HHPi0AMassWin" : 220  # MeV (mass window for combination)
-    ,"D02HHPi0MassWin"  : 200  # MeV (mass window after vertex fit)
-    ,"D02HHPi0DocaCut"  : 6    # mm
-    ,"D02HHPi0PtCut"    : 2000 # MeV
-    ,"Dstar_preFitMassCut" : 100 # MeV
-    ,"Dstar_preFitMassCut_HHPi0" : 200 # MeV
-    ,"Dstar_Chi2" :  10.0 ## unitless
-    ,"Dstar_SoftPion_PIDe" : 5. ## unitless
-    ,"Dstar_SoftPion_PT" : 200. ## MeV
-    ,"Dstar_wideDMCutLower" : -2. ## MeV
-    ,"Dstar_wideDMCutUpper" : 15. ## MeV
-    ,"Dto4h_MassWin" : 40. ## MeV
-    ,"Dto4h_AMassWin" : 42. ## MeV
-    },
-    'STREAMS' : ['Charm'] ,
-    'WGs'    : ['Charm']
-    }
-
-
 B2DMuNuX = {
     'BUILDERTYPE' : 'B2DMuNuXAllLinesConf',
-    'CONFIG' :  {
-    "PrescalD0Mu"    : 0.5
-    ,"PrescalDsPi_fakes"  : 0.5    # for Bs->(Ds->PhiPi)Pi for Fakes line
-    ,"MINIPCHI2"      : 9.0   # adimensional    
-    ,"TRCHI2"        : 4.0    # adimensional
-    ,"TRCHI2Loose"   : 5.0    # adimensional
-    ,"KaonPIDK"      : 4.0    # adimensional
-    ,"PionPIDK"      : 10.0   # adimensional
-    ,"PionPIDKTight" : 4.0    # adimensional
-    ,"MuonIPCHI2"    : 4.00   # adimensional
+    'CONFIG' : {
+    "GEC_nLongTrk" : 250 # adimensional
+    ,"TRGHOSTPROB" : 0.5 # adimensional
+    ,"MuonGHOSTPROB" : 0.5 #adimensional
+    ,"PrescalD0Mu"    : 0.5  # for D0->KPi line
+    ,"PrescalDsPi_fakes" : 0.5  # for Bs->(Ds->PhiPi)Pi for Fakes line
+    ,"MINIPCHI2"     : 9.0    # adimensiional
+    ,"TRCHI2"        : 4.0    # adimensiional
+    ,"TRCHI2Loose"   : 5.0    # adimensiional    
+    ,"KaonPIDK"      : 4.0    # adimensiional
+    ,"KaonPIDKTight" : 8.0    # adimensiional
+    ,"PionPIDK"      : 10.0   # adimensiional
+    ,"PionPIDKTight" : 4.0    # adimensiional
+    ,"MuonIPCHI2"    : 4.00   # adimensiional
     ,"MuonPT"        : 800.0  # MeV
     ,"KPiPT"         : 300.0  # MeV
-    ,"DsDIRA"        : 0.99   # adimensional
-    ,"DsFDCHI2"      : 100.0  # adimensional
+    ,"DsDIRA"        : 0.99   # adimensiional
+    ,"DsFDCHI2"      : 100.0  # adimensiional
     ,"DsMassWin"     : 80.0   # MeV
-    ,"DsAMassWin"    : 100.0  # MeV      
+    ,"DsAMassWin"    : 100.0  # MeV
+    ,"D02HHHHMassWin": 60.0   # MeV
+    ,"D02HHHHSumPT"  : 1800.0   # MeV
     ,"DsIP"          : 7.4    #mm
-    ,"DsVCHI2DOF"    : 6.0    # adimensional
-    ,"PIDmu"         : -0.0   # adimensional
-    ,"BDIRA"         : 0.999  #adimensional
-    ,"BVCHI2DOF"     : 6.0    # adimensional 
-    ,"DZ"            : 0     #mm
+    ,"DsVCHI2DOF"    : 6.0    # adimensiional
+    ,"PIDmu"         : -0.0   # adimensiional
+    ,"BDIRA"         : 0.999  #adimensiional
+    ,"BVCHI2DOF"     : 6.0    # adimensiional
     ,"DZLoose"       : -9999  #mm
-    ,"DDocaChi2Max"  : 20     #adimensional
-    ,"MINIPCHI2Loose" : 4.0   #adimensional
-    ,"KaonPIDKloose" : -5     #adimensional
-    ,"PhiVCHI2"      :25.0    #adimensional
-    ,"PhiMassWin"    :50      #adimensional
-    ,'KSLLPMin'         : 2000  ## MeV
-    ,'KSLLPTMin'        : 500   ## MeV
-    ,'KSDDPMin'         : 3000  ## MeV
-    ,'KSDDPTMin'        : 800   ## MeV
-    ,'KSLLCutMass'      : 20    ## MeV
-    ,'KSDDCutMass'      : 20    ## MeV
-    ,'KSLLCutFDChi2'    : 100   ## unitless
-    ,'KSDDCutFDChi2'    : 100   ## unitless
-    ,'KSDaugTrackChi2'  : 4     ## max chi2/ndf for Ks daughter tracks
-    ,'KSVertexChi2'     : 6     ## max chi2/ndf for Ks vertex
-    ,'KSCutDIRA'        : 0.99  ## unitless
-    ,'LambdaLLPMin'       : 2000 ## MeV
-    ,'LambdaLLPTMin'      : 500  ## MeV
-    ,'LambdaLLCutMass'    : 30   ## MeV
-    ,'LambdaLLCutFDChi2'  : 100  ## unitless
-    ,'LambdaDDPMin'       : 3000 ## MeV
-    ,'LambdaDDPTMin'      : 800  ## MeV
-    ,'LambdaDDCutMass'    : 30   ## MeV
-    ,'LambdaDDCutFDChi2'  : 100  ## unitless
-    ,'LambdaCutDIRA'      : 0.99 ## unitless
-    ,'LambdaDaugTrackChi2': 4    ## unitless
-    ,'LambdaVertexChi2'   : 6    ## max chi2/ndf for Lambda0 vertex   
-    ,"Pi0PtMin"     : 1200         # Minimum Pt of pi0 (MeV)
-    ,"Pi0PMin"      : 3000         # Minimum P of pi0 (MeV)
-    ,"PhotonCL"     : 0.25         # Confidence level for Pi0 photons
-    ,"D02HHPi0AMassWin" : 160  # MeV (mass window for combination)
-    ,"D02HHPi0MassWin"  : 150  # MeV (mass window after vertex fit)
-    ,"D02HHPi0DocaCut"  : 6    # mm
-    ,"D02HHPi0PtCut"    : 2000 # MeV    
+    ,"DZ"            : 0  #mm
+    ,"DDocaChi2Max"  : 20     #adimensiional
+    ,"DDocaChi2MaxTight"  : 9.0     #adimensiional
+    ,"MINIPCHI2Loose" : 4.0   #adimensiional
+    ,"KaonPIDKloose" : -5     #adimensiional
+    ,"PhiVCHI2"      :25.0    #adimensiional
+    ,"PhiMassWin"    :40      #adimensiional
+    ,"Dstar_Chi2"       :  8.0 ## unitless
+    ,"Dstar_SoftPion_PIDe" : 2. ## unitless
+    ,"Dstar_SoftPion_PT" : 180. ## MeV ###
+    ,"Dstar_wideDMCutLower" : 0. ## MeV
+    ,"Dstar_wideDMCutUpper" : 170. ## MeV
     },
     'STREAMS' : ['Semileptonic'] ,
     'WGs'    : ['Semileptonic']
@@ -169,8 +82,11 @@ B2DMuNuX = {
 
 B2XuMuNu = {
     'BUILDERTYPE' : 'B2XuMuNuBuilder',
-    'CONFIG' :  {
-     #Muons
+    'CONFIG' : {
+    "GEC_nLongTrk"        : 250.  , #adimensional
+    "TRGHOSTPROB"         : 0.5    ,#adimensional
+    #Muons
+    "MuonGHOSTPROB"       : 0.5    ,#adimensional
     "MuonTRCHI2"          : 4.    ,#adimensional
     "MuonP"               : 3000. ,#MeV
     "MuonPT"              : 1000. ,#MeV
@@ -427,3 +343,114 @@ D0ForBXX = {
     'STREAMS' : ['CharmCompleteEvent'],
     'WGs'    : ['Semileptonic'] 
     }
+
+
+B2XTauNu = {
+    'BUILDERTYPE'       : 'B2XTauNuAllLinesConf',
+    'CONFIG'    : {
+    'Prescale_B0d2DstarTauNu'        : 1.0,
+    'Prescale_B0d2DTauNu'            : 1.0,
+    'Prescale_Bu2D0TauNu'            : 1.0,
+    'Prescale_B0s2DsTauNu'           : 1.0,
+    'Prescale_Bc2JpsiTauNu'          : 1.0,
+    'Prescale_B0d2DdoubleStarTauNu'  : 1.0,
+    'Postscale'   : 1.0 ,
+    #B cuts
+    'B_BPVDIRA'       : 0.999,
+    #B combination cuts
+    'B_DeltaM_low'       : -2579.0, #MeV
+    'B_DeltaM_high'      : 300.0,   #MeV
+    'B_DOCAMAX'          : 0.13,  #mm
+    'B_upperDeltaM_low'  : 720.0,   #MeV
+    'B_upperDeltaM_high' : 1721.0,  #MeV
+    #D kaon cuts
+    'D_K_PT'          : 150.0,  #MeV
+    'Dplus_K_PT'      : 1500.0, #MeV
+    'Ds_K_PT'         : 1500.0, #MeV
+    'D_K_TRCHI2DOF'   : 3.0,
+    'D_K_IPCHI2'      : 4.0,
+    'D_K_PIDK'        : -5.0,
+    'Dplus_K_PIDK'    : 0.0,
+    'Dplus_K_TRPCHI2' : 0.1,
+    #D pion cuts
+    'D_Pi_PT'         : 150.0, # MeV
+    'D_Pi_TRCHI2'     : 3.0,
+    'D_Pi_IPCHI2'     : 4.0,
+    'D_Pi_PIDK'       : 8.0,
+    'Dplus_Pi_TRPCHI2' : 0.1,
+    #D0-resonance parameters
+    'D0_MassW'        : 40.0,      #MeV, 100 in StdLooseD0 
+    'D0_BPVVDCHI2'    : 50.0,      #36 in StdLooseD0
+    'D0_DIRA'         : 0.999,
+    'D0_PT'           : 1600.0,    #MeV, 1.2 GeV in StdLooseD02KPi
+    'D0_VCHI2'        : 10.0,      #10 in StdLooseD0
+    #D0 combination cut
+    'D0_DOCAMAX'      : 0.1,     #mm, 0.5 mm in StdLooseD0
+    #D-resonance parameters
+    'D_MassW'         : 40.0,      #MeV, 100 in StdLooseDplus
+    'D_BPVVDCHI2'     : 50.0,      #36 in StdLooseDplus
+    'Ds_BPVVDCHI2'    : 36.0,      #shorter lifetime than Dplus 
+    'D_DIRA'          : 0.999,   #0.98 in StdLooseDplus
+    'D_PT'            : 1600.0,    #MeV, 1.2 in StdLooseDplus
+    'D_VCHI2'         : 10.0,      #30 in StdLooseDplus
+    'D_MIPCHI2'       : 10.0,
+    #Dstar-resonance parameters
+    'slowPi_TRCHI2DOF' : 3.0,
+    'slowPi_PT'        : 110.0,    #MeV
+    'Dstar_PT'         : 1250.0,   #MeV, 1250 in StdLooseD*
+    'Dstar_VCHI2'      : 10.0,     #MeV, 25 in StdLooseD*WithD02KPi 
+    'Dstar_MassW'      : 50.0,     #MeV, 50 MeV in StdLooseD*WithD02KPi
+    'Dstar_DeltaM_low'  : 135.0,
+    'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD*
+    #Muon and J/psi cuts
+    'Muon_TRCHI2DOF'    : 3.0,
+    'Muon_PT'           : 1000.0,  #MeV
+    'Jpsi_MassW'        : 80.0,    #MeV, 100 in StdLooseJpsi
+    'Jpsi_VCHI2'        : 9.0,   #25 in StdLooseJpsi
+    'Jpsi_PT'           : 2000.0,  #MeV
+     #Cuts on single pions which are used to form the D_1(2420)0 from D* and pion
+    'D1_Pi_IPCHI2' : 4.0,
+    'D1_Pi_TRCHI2' : 3.0,
+    'D1_Pi_PIDK'   : 8.0,
+    #D1(2420) and D*2(2460) cuts
+    'D1_VCHI2'         : 25.0,
+    'D1_PT'            : 500.0,  #MeV
+    'D1_DeltaM_low'    : 350.0,  #MeV
+    'D1_DeltaM_high'   : 450.0,  #MeV
+    'D1_MassW'         : 300.0,  #MeV
+    #Ghost Prob cut on all tracks apart from slow pion
+    'TRGHP'             : 0.4,
+    #Slow pion ghost prob
+    'TRGHP_slowPi'      : 0.6
+    },
+    'STREAMS' : ['BhadronCompleteEvent'],
+    'WGs'    : ['Semileptonic'] 
+    }
+
+
+B2DMuForTauMu = {
+    'BUILDERTYPE'       : 'B2DMuForTauMuconf',
+    'CONFIG'    : {
+     "MINIPCHI2"     : 45.0    # adimensiional 
+    ,"GhostProb"     : 0.5     # adimensional  
+    ,"KaonPIDK"      : 4.0    # adimensiional
+    ,"PionPIDKTight" : 2.0    # adimensiional
+    ,"MuonIPCHI2"    : 45.00   # adimensiional
+    ,"KPiPT"         : 300.0  # MeV
+    ,"DSumPT"        : 1400.0 # MeV
+    ,"DsDIRA"        : 0.9998   # adimensiional
+    ,"DsFDCHI2"      : 250.0  # adimensiional
+    ,"DsMassWin"     : 80.0   # MeV
+    ,"DsAMassWin"    : 100.0  # MeV
+    ,"DsVCHI2DOF"    : 4.0    # adimensiional
+    ,"PIDmu"         : 2.0   # adimensiional
+    ,"BDIRA"         : 0.9995  #adimensiional
+    ,"BVCHI2DOF"     : 6.0    # adimensiional
+    ,"SPDmax"        : 600    # adimensiional
+     },
+    'STREAMS' : ['Semileptonic'],
+    'WGs'    : ['Semileptonic'] 
+    }
+
+
+
