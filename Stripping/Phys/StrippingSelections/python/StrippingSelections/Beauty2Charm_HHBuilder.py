@@ -45,6 +45,8 @@ class HHBuilder(object):
         self.ph = self._makePH()
         self.phi = self._makePhi(self.kk)
         self.rho0 = self._makeRho0(self.pipi)
+        self.rhopm = self._makeRhoPM(self.pipi0)
+        self.kstarpm = self._makeKstarPM(self.kpi0)
         # WS selections (ie doubly-charged ones)
         self.hh_ws = self._makeHHWS()
         self.ph_ws = self._makePHWS()
@@ -170,6 +172,14 @@ class HHBuilder(object):
         mass = self._massWindow('PHI','phi(1020)').replace('ADAMASS','ADMASS')
         return [filterSelection('PHI',mass,kk)]
 
+    def _makeRhoPM(self,pipi):
+        mass = self._massWindow('RHO','rho(770)+').replace('ADAMASS','ADMASS')
+        return [filterSelection('RHOPM',mass,pipi)]
+
+    def _makeKstarPM(self,kpi):
+        mass = self._massWindow('KST','K*(892)+').replace('ADAMASS','ADMASS')
+        return [filterSelection('K*PM',mass,kpi)]
+                                
     def _makePH(self):
         '''Makes X -> p+ h- + c.c.'''
         sel = self._makeX2HH('X2PPi',['Lambda0 -> pi+ pi-'],

@@ -36,7 +36,7 @@ class B2DXBuilder(object):
         self.lines[-2].pre = 0.1 # WS D line
         self._makeB02D0KS('D2HH',self.d.hh,'DD') # B0  -> D0(HH)  KS
         self._makeB02D0KS('D2HH',self.d.hh,'LL') # B0  -> D0(HH)  KS
-        self._makeB2D0HH('D2HH',self.d.hh) # B+- -> D0(HH) H+- H0
+        self._makeB2D0HH('D2HHPID',self.d.hh_pid) # B+- -> D0(HH) H+- H0
         self._makeB02DHD2PhiMu('D2PhiMuNu',self.d.phimu) # B0 -> D( phi mu nu) H+-
         # B -> D+-(HHH) X
         self._makeB02DH('D2HHH',self.d.hhh) # B0  -> D+-(HHH) H-+   (+WS)
@@ -48,6 +48,7 @@ class B2DXBuilder(object):
         self._makeB2DV('D2HHHPID',self.d.hhh_pid)#B+- ->D+-(HHH) V(HH)
         self._makeB2DKS('D2HHH',self.d.hhh,'DD') # B+-  -> D+-(HHH)  KS
         self._makeB2DKS('D2HHH',self.d.hhh,'LL') # B+-  -> D+-(HHH)  KS
+        self._makeB02DV('D2HHHCFPID',self.d.hhh_cf_pid)
         # B -> D(KSH[H]) X (LL & DD)
         self._makeB02DH('D2KSHLL',self.d.ksh_ll) # B0  -> D+-(KSLLH) H-+ (+WS)
         self._makeB02DH('D2KSHDD',self.d.ksh_dd) # B0  -> D+-(KSDDH) H-+ (+WS)
@@ -86,8 +87,8 @@ class B2DXBuilder(object):
         #self._makeB2D0H('D2Pi0HHMergedUP',self.d.pi0hh_merged_up)
         self._makeB02D0HH('D2Pi0KPiResolved',self.d.pi0kpi_resolved)
         self._makeB02D0HH('D2Pi0KPiMerged',self.d.pi0kpi_merged)
-        self._makeB02D0KS('D2Pi0KPiResolved',self.d.pi0kpi_resolved,'DD')
-        self._makeB02D0KS('D2Pi0KPiMerged',self.d.pi0kpi_merged,'LL') 
+        #self._makeB02D0KS('D2Pi0KPiResolved',self.d.pi0kpi_resolved,'DD')
+        #self._makeB02D0KS('D2Pi0KPiMerged',self.d.pi0kpi_merged,'LL') 
         # B0 -> D+-(Pi0HHH) H-+  (resolved & merged) (+WS)
         self._makeB02DH('D2Pi0HHHResolved',self.d.pi0hhh_resolved)
         self._makeB02DH('D2Pi0HHHMerged',self.d.pi0hhh_merged)
@@ -267,7 +268,16 @@ class B2DXBuilder(object):
                   'B2DPhi'  : d2x+self.hh.phi_pid}
         b2dv = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2dv,1.0))
- 
+
+    def _makeB02DV(self,dname,d2x):
+        '''Makes B+ -> D+ V(h0h-) + c.c.'''
+        decays = {'B02DRhoPM'   : ["[B0 -> D+ rho(770)-]cc"],
+                  'B02DKstarPM' : ["[B0 -> D- K*(892)+]cc"]}
+        inputs = {'B02DRhoPM': d2x+self.hh.rhopm,
+                  'B02DKstarPM' : d2x+self.hh.kstarpm}
+        b2dv = makeB2XSels(decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b2dv,1.0))
+                                    
     def _makeB2D0H(self,dname,d2x,useIP=True):
         '''Makes RS B+ -> D0 h+ (h=pi,K) + c.c.'''
         tag = 'B2D0%s'
