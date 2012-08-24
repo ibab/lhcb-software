@@ -4,6 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-08-24 Francesca Dordei
+ - Update Stripping20/LineConfigDictionaries_B2CC.py:
+     - update config dictionary for B2Psi2SXConf
+     - update config dictionary for Bs2Psi2SPhiMuMuConf and B2JpsiKShhConf
+     - new config dictionary for B2CharmoniumX_6HAllLinesConf
+     - remove config dictionary for Bs2JpsieePhiConf  
+
 ! 2012-08-24 - Mika Vesterinen
  - Update of SL lines for Stripping20
 
