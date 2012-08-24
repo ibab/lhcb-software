@@ -1,7 +1,7 @@
 
 __author__ = ['Phillip Urquijo, Alessandra Borgia']
 __date__ = '08/05/2010'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 '''
 B->Xu mu nu exclusive reconstruction in Xu=rho/K/K*+ channels
@@ -70,7 +70,9 @@ Last modification $Date: 2012-January-27 $
 
 confdict= {
     "GEC_nLongTrk"        : 250.  , #adimensional
+    "TRGHOSTPROB"         : 0.5    ,#adimensional
     #Muons
+    "MuonGHOSTPROB"       : 0.5    ,#adimensional
     "MuonTRCHI2"          : 4.    ,#adimensional
     "MuonP"               : 3000. ,#MeV
     "MuonPT"              : 1000. ,#MeV
@@ -159,6 +161,8 @@ class B2XuMuNuBuilder(LineBuilder):
     
     __configuration_keys__ = [
         "GEC_nLongTrk"
+        ,"MuonGHOSTPROB"
+        ,"TRGHOSTPROB"          
         ,"MuonTRCHI2"          
         ,"MuonP"               
         ,"MuonPT"              
@@ -270,6 +274,7 @@ class B2XuMuNuBuilder(LineBuilder):
         
     def _NominalMuSelection( self ):
         return "(TRCHI2DOF < %(MuonTRCHI2)s ) &  (P> %(MuonP)s *MeV) &  (PT> %(MuonPT)s* MeV)"\
+               "& (TRGHOSTPROB < %(MuonGHOSTPROB)s)"\
                "& (PIDmu-PIDpi> %(MuonPIDmu)s )"\
                "& (PIDmu-PIDp> %(MuonPIDp)s )"\
                "& (PIDmu-PIDK> %(MuonPIDK)s )"\
@@ -277,11 +282,13 @@ class B2XuMuNuBuilder(LineBuilder):
     
     def _MajoranaLineMuSelection( self ):
         return "(P > %(KS0DaugP)s) & (PT > %(KS0DaugPT)s)"\
+               "& (TRGHOSTPROB < %(MuonGHOSTPROB)s)"\
                "&(TRCHI2DOF < %(KS0DaugTrackChi2)s ) & (PIDmu-PIDpi> %(MuonPIDmu)s )& (PIDmu-PIDp> %(MuonPIDp)s )"\
                "&(PIDmu-PIDK> %(MuonPIDK)s )&(MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s)"\
                
     def _NominalKSelection( self ):
         return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
+               "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                "& (PIDK-PIDpi> %(KaonPIDK)s )& (PIDK-PIDp> %(KaonPIDp)s )& (PIDK-PIDmu> %(KaonPIDmu)s ) "\
                "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
     

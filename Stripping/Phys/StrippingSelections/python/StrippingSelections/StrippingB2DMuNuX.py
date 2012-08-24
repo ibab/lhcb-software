@@ -6,7 +6,7 @@ D+->KKK (for mass measurement)
 """
 __author__ = ['Liming Zhang, Alessandra Borgia']
 __date__ = '23/07/2010'
-__version__ = '$Revision: 1.9 $'
+__version__ = '$Revision: 2.0 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -25,8 +25,10 @@ __all__ = ('B2DMuNuXAllLinesConf',
 
 confdict = {
     "GEC_nLongTrk" : 250 # adimensional
-    ,"PrescalD0Mu"    : 1.0    # for D0->KPi line
-    ,"PrescalDsPi_fakes" : 0.5    # for Bs->(Ds->PhiPi)Pi for Fakes line
+    ,"TRGHOSTPROB" : 0.5 # adimensional
+    ,"MuonGHOSTPROB" : 0.5 #adimensional
+    ,"PrescalD0Mu"    : 0.5  # for D0->KPi line
+    ,"PrescalDsPi_fakes" : 0.5  # for Bs->(Ds->PhiPi)Pi for Fakes line
     ,"MINIPCHI2"     : 9.0    # adimensiional
     ,"TRCHI2"        : 4.0    # adimensiional
     ,"TRCHI2Loose"   : 5.0    # adimensiional    
@@ -69,6 +71,8 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
     
     __configuration_keys__ = (
         "GEC_nLongTrk"
+        ,"TRGHOSTPROB"
+        ,"MuonGHOSTPROB"
         ,"PrescalD0Mu"
         ,"PrescalDsPi_fakes" 
         ,"MINIPCHI2"     
@@ -253,6 +257,15 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                      BDIRA = config['BDIRA'],
                                      DZ = config['DZLoose']
                                      )
+
+        self.selb2D0MuXKpiDCS = makeb2DMuX('b2D0MuXKpiDCS' + name,
+                                           DecayDescriptors = [ '[B+ -> D0 mu+]cc' ],
+                                           MuSel = self.selmuonhighPT,
+                                           DSel = self.seld02kpi,
+                                           BVCHI2DOF = config['BVCHI2DOF'],
+                                           BDIRA = config['BDIRA'],
+                                           DZ = config['DZLoose']
+                                           )
         
         self.selb2D0MuXDst = makeb2DMuX('b2D0MuXDst' + name,
                                         DecayDescriptors = [ '[B0 -> D*(2010)- mu+]cc','[B0 -> D*(2010)- mu-]cc'],
@@ -373,7 +386,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         
         self.selb2DsMuXPhiPi = makeb2DMuX('b2DsMuXPhiPi' + name,
                                           DecayDescriptors = [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
-                                          MuSel = self.selmuon, 
+                                          MuSel = self.selmuonhighPT, 
                                           DSel = self.selds2phipi,
                                           BVCHI2DOF = config['BVCHI2DOF'],
                                           BDIRA = config['BDIRA'],
@@ -396,7 +409,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
 
         ########## D0 -> HH ###########
         self.b2D0MuXLine = StrippingLine('b2D0MuX' + name + 'Line', prescale = config['PrescalD0Mu'], selection = self.selb2D0MuX)
-        #self.b2D0MuXKpiDCSLine = StrippingLine('b2D0MuXKpiDCS' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKpiDCS)
+        self.b2D0MuXKpiDCSLine = StrippingLine('b2D0MuXKpiDCS' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKpiDCS)
         self.b2D0MuXKKLine = StrippingLine('b2D0MuXKK' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKK)
         self.b2D0MuXpipiLine = StrippingLine('b2D0MuXpipi' + name + 'Line', prescale = 1, selection = self.selb2D0MuXpipi)
         
@@ -429,7 +442,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
 
         ######### lines from stripping 17 #######
         self.registerLine(self.b2D0MuXLine)        
-        #self.registerLine(self.b2D0MuXKpiDCSLine)        
+        self.registerLine(self.b2D0MuXKpiDCSLine)        
         self.registerLine(self.b2DpMuXLine)
         self.registerLine(self.b2DMuXKKKLine)
         self.registerLine(self.b2DsMuXLine)
@@ -451,36 +464,43 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.registerLine(self.b2DsPi_PhiPi_fakesLine)
 
     def _muonFilter( self ):
-        _code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV) & (TRCHI2DOF< %(TRCHI2Loose)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) & (PIDmu > %(PIDmu)s)" % self.__confdict__
+        _code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV)"\
+                "&(TRGHOSTPROB < %(MuonGHOSTPROB)s)"\
+                "& (TRCHI2DOF< %(TRCHI2Loose)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) & (PIDmu > %(PIDmu)s)" % self.__confdict__
         _mu = FilterDesktop( Code = _code )
         return _mu        
 
     def _pionFilter( self ):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
-                   "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % self.__confdict__
+                "&(TRGHOSTPROB < %(TRGHOSTPROB)s)"\
+                "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % self.__confdict__
         _pi = FilterDesktop( Code = _code )
         return _pi
 
     def _kaonFilter( self ):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
-                   "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK> %(KaonPIDK)s)" % self.__confdict__
+                "&(TRGHOSTPROB < %(TRGHOSTPROB)s)"\
+                "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK> %(KaonPIDK)s)" % self.__confdict__
         _ka = FilterDesktop( Code = _code )
         return _ka 
   
     def _kaonlooseFilter( self ):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+                "&(TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                 "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s) &  (PIDK> %(KaonPIDKloose)s)" % self.__confdict__
         _kal = FilterDesktop( Code = _code )
         return _kal 
     
     def _pionlooseFilter( self ):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+                "&(TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                 "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s)" % self.__confdict__
         _pil = FilterDesktop( Code = _code )
         return _pil
     
     def _pionFilter_fakes( self ):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+                "&(TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                 "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s) & (PIDmu < %(PIDmu)s)" % self.__confdict__
         _pil_fakes = FilterDesktop( Code = _code )
         return _pil_fakes

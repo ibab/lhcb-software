@@ -14,8 +14,8 @@ from StrippingConf.StrippingStream import StrippingStream
 SL_stream = StrippingStream("_SL_DST")
 Dimuon_stream = StrippingStream("_Dimuon_DST")
 BHad_stream = StrippingStream("_BHad_DST")
-PID_stream = StrippingStream("_PID_MDST")
-Charm_stream = StrippingStream("_Charm_MDST")
+#PID_stream = StrippingStream("_PID_MDST")
+Charm_stream = StrippingStream("_Charm_DST")
 
 ######## Semileptonic full DST #########
 
@@ -39,6 +39,11 @@ from StrippingSelections import StrippingB2DMuNuX
 confB2DMuNuX = StrippingB2DMuNuX.B2DMuNuXAllLinesConf("B2DMuNuX", StrippingB2DMuNuX.confdict)
 SL_stream.appendLines( confB2DMuNuX.lines() )
 
+### B->D tau(->mu) nu 
+from StrippingSelections import StrippingB2DMuForTauMu
+confB2DMuForTauMu = StrippingB2DMuForTauMu.B2DMuForTauMuconf("B2DMuForTauMu",StrippingB2DMuForTauMu.confdict)
+SL_stream.appendLines( confB2DMuForTauMu.lines())
+
 ##### CHARM MICRO DST STREAM #########
 
 from StrippingSelections import StrippingDForBSemi
@@ -59,22 +64,27 @@ Dimuon_stream.appendLines( confJPsiForSL.lines() )
 ##### BHADRON FULL DST ##################
 
 # B->D* TAU NU
-from StrippingSelections import StrippingBd2DstarTauNu
-confBd2DstarTauNu = StrippingBd2DstarTauNu.Bd2DstarTauNuAllLinesConf("Bd2DstarTauNu", StrippingBd2DstarTauNu.confdict)
-BHad_stream.appendLines( confBd2DstarTauNu.lines() )
+#from StrippingSelections import StrippingBd2DstarTauNu
+#confBd2DstarTauNu = StrippingBd2DstarTauNu.Bd2DstarTauNuAllLinesConf("Bd2DstarTauNu", StrippingBd2DstarTauNu.confdict)
+#BHad_stream.appendLines( confBd2DstarTauNu.lines() )
+
+from StrippingSelections import StrippingB2XTauNu
+confB2XTauNu = StrippingB2XTauNu.B2XTauNuAllLinesConf("B2XTauNu",StrippingB2XTauNu.confdict)
+BHad_stream.appendLines( confB2XTauNu.lines() )
 
 #### PID MICRO DST STREAM ###############
 
 ## MUID calibration
-from StrippingSelections import StrippingMuIDCalib
-confMuIDCalib = StrippingMuIDCalib.MuIDCalibConf("MuIDCalib",StrippingMuIDCalib.config_params)
-PID_stream.appendLines([confMuIDCalib.line_DetachedNoMIP])
+#from StrippingSelections import StrippingMuIDCalib
+#confMuIDCalib = StrippingMuIDCalib.MuIDCalibConf("MuIDCalib",StrippingMuIDCalib.config_params)
+#PID_stream.appendLines([confMuIDCalib.line_DetachedNoMIP])
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
 
 # Configure the stripping using the same options as in Reco06-Stripping10
-sc = StrippingConf( Streams = [ SL_stream,Dimuon_stream,PID_stream , Charm_stream],
+#sc = StrippingConf( Streams = [ SL_stream,Dimuon_stream,PID_stream , Charm_stream],
+sc = StrippingConf( Streams = [ SL_stream,Dimuon_stream,Charm_stream,BHad_stream],
                     MaxCandidates = 2000,
                     AcceptBadEvents = False,
                     BadEventSelection = filterBadEvents )
@@ -87,7 +97,6 @@ regexp = "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(
 from Configurables import LoKi__HDRFilter
 filterHLT = LoKi__HDRFilter("FilterHLT",Code = regexp )
 
-
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 from Configurables import AuditorSvc, ChronoAuditor
@@ -95,6 +104,7 @@ AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 
 from Configurables import StrippingReport
 sr = StrippingReport(Selections = sc.selections())
+sr.OnlyPositive = False
 
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
@@ -108,7 +118,7 @@ MakePionsEtc = FilterDesktop('MakePionsEtc')
 MakePionsEtc.Inputs=["Phys/StdNoPIDsKaons","Phys/StdNoPIDsMuons","Phys/StdLooseKaons","Phys/StdLoosePions","Phys/StdLooseMuons","Phys/StdLooseDstarWithD02KPi"]
 MakePionsEtc.Code="ALL"
 
-DaVinci().PrintFreq = 5000
+DaVinci().PrintFreq = 10000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().EvtMax = 50000
 DaVinci().EventPreFilters = [ filterHLT ]
@@ -122,3 +132,4 @@ DaVinci().DDDBtag  = "head-20120413"
 DaVinci().CondDBtag = "head-20120420"
 
 importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/Reco13e.py")
