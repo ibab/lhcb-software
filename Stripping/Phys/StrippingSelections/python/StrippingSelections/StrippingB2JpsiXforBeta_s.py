@@ -42,7 +42,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         			,       'Bd2JpsiKstarPrescale'
         			,       'Bd2JpsiKsPrescale'
                                 ,       'Bs2JpsiPhiPrescale'
-        			,       'Bs2JpsiEtaPrescale'
+        			#,       'Bs2JpsiEtaPrescale'
                               )
 
     def __init__(self, name, config) :
@@ -72,16 +72,16 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.PhiList = self.createSubSel( OutputList = "Phi2KKForBetaS" + self.name,
                         InputList = DataOnDemand(Location = "Phys/StdLoosePhi2KK/Particles"),
                         Cuts = "(in_range(980,M,1050))" \
-                        "& (PT > 500.*MeV) " \
-                        "& (VFASPF(VCHI2) < 16)" \
+                        "& (PT > 1000.*MeV) " \
+                        "& (VFASPF(VCHI2) < 25)" \
                         "& (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
                         "& (MINTREE('K+'==ABSID, PIDK) > -2)" % self.config)
       
 	self.KstarList = self.createSubSel( OutputList = "Kstar2KpiForBetaS" + self.name,
 			InputList = DataOnDemand(Location = "Phys/StdLooseKstar2Kpi/Particles"),
                         Cuts = "(in_range(826,M,966))" \
-                        "& (PT > 1.*GeV) " \
-                        "& (VFASPF(VCHI2) < 16)" \
+                        "& (PT > 1.5*GeV) " \
+                        "& (VFASPF(VCHI2) < 25)" \
                         "& (MAXTREE('K+'==ABSID,  TRCHI2DOF) < %(TRCHI2DOF)s )" \
                         "& (MAXTREE('pi-'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
                         "& (MINTREE('K+'==ABSID, PIDK) > -2)" % self.config)
@@ -157,7 +157,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.makeBs2Jpsif0   ()
         self.makeBs2JpsiKstar()
         self.makeLambdab2JpsiLambda() 
-        self.makeBs2JpsiEta  ()  
+#        self.makeBs2JpsiEta  ()  
         self.makeBd2JpsiPi0  ()  
         self.makeLambdab2Jpsippi() 
 
@@ -225,7 +225,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bu2JpsiKPrescaledLine = StrippingLine( self.name + "Bu2JpsiKPrescaledLine", algos = [ Bu2JpsiK ] , prescale = self.config["Bu2JpsiKPrescale"])
 
         Bu2JpsiKDetached = self.createSubSel( InputList = Bu2JpsiK, OutputList = Bu2JpsiK.name() + "Detached" + self.name,
-                                        Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
+                                        Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps) &" \
+					       "(MINTREE('K+'==ABSID, PT) > 500.*MeV)" % self.config )
         Bu2JpsiKDetachedLine  = StrippingLine( self.name + "Bu2JpsiKDetachedLine", algos = [ Bu2JpsiKDetached ] )
 
         Bu2JpsiKUnbiased = self.createSubSel( InputList = Bu2JpsiK,
@@ -411,7 +412,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                   PostVertexCuts = "in_range(5200,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                   )
 
-        Bs2JpsiEtaPrescaledLine = StrippingLine( self.name + "Bs2JpsiEtaPrescaledLine", algos = [ Bs2JpsiEta ] , prescale = self.config['Bs2JpsiEtaPrescale'])
+        Bs2JpsiEtaPrescaledLine = StrippingLine( self.name + "Bs2JpsiEtaPrescaledLine", algos = [ Bs2JpsiEta ] , prescale = 0.2 )
         Bs2JpsiEtaDetachedLine  = StrippingLine( self.name + "Bs2JpsiEtaDetachedLine",
                                             algos = [ self.createSubSel( InputList = Bs2JpsiEta,
                                                                OutputList = Bs2JpsiEta.name() + "Detached" + self.name,
