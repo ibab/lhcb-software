@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-24 - Remove Susan's Bu2D0h lines from __init__.py
+
 ! 2012-08-24 - Mika Vesterinen
  - minor updates to tests/TestSemileptonicsOnRealData.py
  - StrippingB2DMuNuX.py: switch back on DCS Kpi in B. Use muonhighPT for the phipi. Add Loose Ghost prob cuts
