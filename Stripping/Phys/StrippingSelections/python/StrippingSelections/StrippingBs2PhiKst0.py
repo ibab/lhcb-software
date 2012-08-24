@@ -28,6 +28,23 @@ from StrippingUtils.Utils import LineBuilder
 
 default_name = "Bs2PhiKst"
 
+confdict = {
+          "KaonPT"                : 500.0 # MeV
+          ,     "KaonIPCHI2"            : 9.    # adimensional
+          ,     "KaonPIDK"              : 0.    # adimensional
+          ,     "PionPT"                : 500.0 # MeV
+          ,     "PionIPCHI2"            : 9.    # adimensional
+          ,     "PionPIDK"              : 10.    # adimensional
+          ,     "PhiVCHI2"              : 9.    # adimensional
+          ,     "PhiPT"                 : 900.0 # MeV
+          ,     "PhiMassWin"            : 25.0  # MeV
+          ,     "KstarVCHI2"            : 9.0   # adimensional
+          ,     "KstarPT"               : 900.0 # MeV
+          ,     "KstarMassWin"          : 150.0 # MeV
+          ,     "BMassWin"              : 500.0 # MeV
+          ,     "BVCHI2"                : 15.0  # adimensional
+          ,     "BDOCA"                 : 0.3   # mm
+          }
 
 
 class StrippingBs2PhiKstConf(LineBuilder):
@@ -69,27 +86,6 @@ class StrippingBs2PhiKstConf(LineBuilder):
           "BMassWin",
           "BVCHI2",
           "BDOCA")
-
-
-     confdict = {
-          "KaonPT"                : 500.0 # MeV
-          ,     "KaonIPCHI2"            : 9.    # adimensional
-          ,     "KaonPIDK"              : 0.    # adimensional
-          ,     "PionPT"                : 500.0 # MeV
-          ,     "PionIPCHI2"            : 9.    # adimensional
-          ,     "PionPIDK"              : 10.    # adimensional
-          ,     "PhiVCHI2"              : 9.    # adimensional
-          ,     "PhiPT"                 : 900.0 # MeV
-          ,     "PhiMassWin"            : 25.0  # MeV
-          ,     "KstarVCHI2"            : 9.0   # adimensional
-          ,     "KstarPT"               : 900.0 # MeV
-          ,     "KstarMassWin"          : 150.0 # MeV
-          ,     "BMassWin"              : 500.0 # MeV
-          ,     "BVCHI2"                : 15.0  # adimensional
-          ,     "BDOCA"                 : 0.3   # mm
-          }
-
-
 
 
      def __init__(self, name, config) :
