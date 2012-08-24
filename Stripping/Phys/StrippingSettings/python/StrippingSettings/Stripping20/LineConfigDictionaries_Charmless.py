@@ -1,57 +1,5 @@
 ##
-## StrippingHb2Charged2Body
-##
-Hb2Charged2Body = {
-    'WGs'         : ['Charmless'],
-    'BUILDERTYPE' : 'Hb2Charged2BodyLines',
-    'CONFIG'      : {'PrescaleB2Charged2Body'   : 1,      'PrescaleBs2KK_NoIPCutOnB' : 1,
-                     'MinPTB2Charged2Body'      : 1100,
-                     'MinIPB2Charged2Body'      : 0.12,
-                     'MinIPChi2B2Charged2Body'  : 100,
-                     'TrChi2'                   : 5,
-                     'MaxPTB2Charged2Body'      : 2500,
-                     'MaxIPB2Charged2Body'      : 0.25,
-                     'MaxIPChi2B2Charged2Body'  : 200,
-                     'CombMassLow'              : 4800,
-                     'CombMassHigh'             : 5800,
-                     'DOCA'                     : 0.08,
-                     'BPT'                      : 1200,
-                     'BIP'                      : 0.1,
-                     'BIPChi2B2Charged2Body'    : 12,
-                     'BTAU'                     : 0.0006,
-                     'MassLow'                  : 4800,
-                     'MassHigh'                 : 5800,
-                     'PIDKBs2KK_NoIPCutOnB'     : 0.
-                    },
-    'STREAMS'     : [ 'BhadronCompleteEvent' ]
-    }
-
-##
-## StrippingB2TwoBaryons
-##
-B2PPbar = {
-    'WGs'         : ['Charmless'],
-    'BUILDERTYPE' : 'B2TwoBaryonLines',
-    'CONFIG'      : {'PrescaleB2PPbar'   : 1,
-                     'MinPTB2PPbar'      : 900,
-                     'MinIPChi2B2PPbar'  : 9,
-                     'TrChi2'            : 4,
-                     'PIDppi'            : 0,
-                     'PIDpk'             : -1,
-                     'MaxPTB2PPbar'      : 2100,
-                     'MaxIPChi2B2PPbar'  : 25,
-                     'CombMassWindow'    : 200,
-                     'VertexChi2B2PPbar' : 16,
-                     'BPTB2PPbar'        : 1100,
-                     'BIPChi2B2PPbar'    : 20,
-                     'BDIRA'             : 0.9995
-                    },
-    'STREAMS'     : [ 'Bhadron' ]
-    }
-
-
-##
-## StrippingBu2KSh
+## StrippingBu2KSh.py
 ##
 Bu2KSh = {
     'WGs'         : ['Charmless'],
@@ -89,9 +37,56 @@ Bu2KSh = {
     'STREAMS'     : [ 'Bhadron' ]
     }
 
+##
+## StrippingHb2Charged2Body.py
+##
+Hb2Charged2Body = {
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'Hb2Charged2BodyLines',
+    'CONFIG'      : {'PrescaleB2Charged2Body'   : 1,
+                     'MinPTB2Charged2Body'      : 1100,
+                     'MinIPB2Charged2Body'      : 0.15,
+                     'MinIPChi2B2Charged2Body'  : 100,
+                     'TrChi2'                   : 3,
+                     'MaxPTB2Charged2Body'      : 2700,
+                     'MaxIPB2Charged2Body'      : 0.27,
+                     'MaxIPChi2B2Charged2Body'  : 200,
+                     'CombMassLow'              : 4600,
+                     'CombMassHigh'             : 6000,
+                     'DOCA'                     : 0.08,
+                     'BPT'                      : 1200,
+                     'BIP'                      : 0.08,
+                     'BIPChi2B2Charged2Body'    : 12,
+                     'BTAU'                     : 0.0006,
+                     'MassLow'                  : 4800,
+                     'MassHigh'                 : 5800
+                    },
+    'STREAMS'     : [ 'BhadronCompleteEvent' ]
+    }
 
 ##
-## StrippingB2hhLTUnbiased
+## StrippingB2HHBkg.py
+##
+B2HHBkg = {
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'B2HHBkgLines',
+    'CONFIG'      : {'PrescaleB2HHBkg' : 0.5,
+                     'MinPT'           : 1000,
+                     'MinIP'           : 0.12,
+                     'TrChi2'          : 3,
+                     'CombMassLow'     : 4600,
+                     'CombMassHigh'    : 6000,
+                     'DOCA'            : 0.1,
+                     'BPT'             : 1200,
+                     'BIP'             : 0.12,
+                     'BTAU'            : 0.0003,
+                     'MassLow'         : 4800,
+                     'MassHigh'        : 5800 
+                    },
+    'STREAMS'     : [ 'Bhadron' ]
+    }
+##
+## StrippingB2hhLTUnbiased.py
 ##
 B2hhLTUnbiased = {
     'WGs'         : ['Charmless'],
@@ -115,10 +110,10 @@ B2hhLTUnbiased = {
     'STREAMS'    : [ 'Bhadron' ]
     }
 ##
-## StrippingB2hhLTUnbiased
+## StrippingB2hhLTUnbiased.py
 ##
 B2hhLTUnbiasedDetached= {
-    'WGs'         : ['Charmless'], 
+    'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'StrippingB2hhLTUnbiasedConf' ,
     'CONFIG'      : {'TrackChi2'               :    5.0
                      , 'DaughterPtMin'         :    1.5 # GeV
@@ -138,7 +133,6 @@ B2hhLTUnbiasedDetached= {
                    },
     'STREAMS'    : [ 'Bhadron' ]
     }
-
 ##
 ## StrippingBu2hhh.py
 ##
@@ -175,7 +169,6 @@ B2hhh = {
                     },
     'STREAMS'     : [ 'Bhadron' ]
     }
-
 ##
 ## StrippingB2HHPi0.py
 ##
@@ -206,73 +199,100 @@ B2HHPi0 = {
                       },
       'STREAMS'     : [ 'BhadronCompleteEvent' ]
     }
-
 ##
-## StrippingB2KShh
+## StrippingB2TwoBaryons.py
+##
+B2PPbar = {
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'B2TwoBaryonLines',
+    'CONFIG'      : {'PrescaleB2PPbar'   : 1,
+                     'MinPTB2PPbar'      : 900,
+                     'MinIPChi2B2PPbar'  : 10,
+                     'PIDppi'            : -1,
+                     'PIDpk'             : -2,
+                     'MaxPTB2PPbar'      : 2100,
+                     'MaxIPChi2B2PPbar'  : 25,
+                     'CombMassWindow'    : 200,
+                     'VertexChi2B2PPbar' : 9,
+                     'BPTB2PPbar'        : 1100,
+                     'BIPChi2B2PPbar'    : 16,
+                     'BDIRA'             : 0.9997,
+                     'MaxGhostProb'      : 0.4
+                    },
+    'STREAMS'     : [ 'Bhadron' ]
+    }
+##
+## StrippingB2KShh.py
 ##
 B2KShh = {
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'B2KShhConf',
-    'CONFIG' : {  'Trk_Chi2'                : 4.0,
-                  'KS_DD_MassWindow'        : 30.0,
-                  'KS_DD_VtxChi2'           : 12.0,
-                  'KS_DD_FDChi2'            : 50.0,
-                  'KS_DD_Pmin'              : 6000.0,
-                  'KS_LL_MassWindow'        : 20.0,
-                  'KS_LL_VtxChi2'           : 12.0,
-                  'KS_LL_FDChi2'            : 80.0,
-                  'B_Mlow'                  : 500.0,
-                  'B_Mhigh'                 : 587.0,
-                  'B_APTmin'                : 1000.0,
-                  'B_PTmin'                 : 1500.0,
-                  'BDaug_MedPT_PT'          : 800.0,
-                  'BDaug_MaxPT_IP'          : 0.05,
-                  'BDaug_DD_maxDocaChi2'    : 5.0,
-                  'BDaug_LL_maxDocaChi2'    : 5.0,
-                  'BDaug_DD_PTsum'          : 3000.0,
-                  'BDaug_LL_PTsum'          : 3000.0,
-                  'B_VtxChi2'               : 12.0,
-                  'B_Dira'                  : 0.9999,
-                  'B_DD_IPCHI2wrtPV'        : 8.0,
-                  'B_LL_IPCHI2wrtPV'        : 8.0,
-                  'B_FDwrtPV'               : 1.0,
-                  'B_DD_FDChi2'             : 50.0,
-                  'B_LL_FDChi2'             : 50.0,
-                  'GEC_MaxTracks'           : 250,
-                  'Prescale'                : 1.0,
-                  'Postscale'               : 1.0
-                 },
+    'CONFIG' : {'Trk_Chi2'                : 4.0,
+                'KS_DD_MassWindow'        : 30.0,
+                'KS_DD_VtxChi2'           : 12.0,
+                'KS_DD_FDChi2'            : 50.0,
+                'KS_DD_Pmin'              : 6000.0,
+                'KS_LL_MassWindow'        : 20.0,
+                'KS_LL_VtxChi2'           : 12.0,
+                'KS_LL_FDChi2'            : 80.0,
+                'B_Mlow'                  : 1279.0,
+                'B_Mhigh'                 : 921.0,
+                'B_APTmin'                : 1000.0,
+                'B_PTmin'                 : 1500.0,
+                'BDaug_MedPT_PT'          : 800.0,
+                'BDaug_MaxPT_IP'          : 0.05,
+                'BDaug_DD_maxDocaChi2'    : 5.0,
+                'BDaug_LL_maxDocaChi2'    : 5.0,
+                'BDaug_DD_PTsum'          : 4200.0,
+                'BDaug_LL_PTsum'          : 3000.0,
+                'B_DD_IPCHI2sum'          : 50.0,
+                'B_VtxChi2'               : 12.0,
+                'B_DD_Dira'               : 0.999,
+                'B_LL_Dira'               : 0.9999,
+                'B_DD_IPCHI2wrtPV'        : 6.0,
+                'B_LL_IPCHI2wrtPV'        : 8.0,
+                'B_DD_FDwrtPV'            : 1.7,
+                'B_LL_FDwrtPV'            : 1.0,
+                'B_DD_FDChi2'             : 50.0,
+                'B_LL_FDChi2'             : 50.0,
+                'GEC_MaxTracks'           : 250,
+                'Prescale'                : 1.0,
+                'Prescale_SameSign'       : 1.0,
+                'Postscale'               : 1.0
+               },
     'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
 ##
-## StrippingLb2V0hh
+## StrippingLb2V0hh.py
 ##
 Lb2V0hh = {
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'Lb2V0hhConf',
     'CONFIG'      : {'Trk_Chi2'                 : 4.0,
-                     'KS_DD_MassWindow'         : 30.0,
-                     'KS_DD_VtxChi2'            : 12.0,
-                     'KS_DD_FDChi2'             : 50.0,
-                     'KS_DD_Pmin'               : 6000.0,
-                     'KS_LL_MassWindow'         : 20.0,
-                     'KS_LL_VtxChi2'            : 12.0,
-                     'KS_LL_FDChi2'             : 80.0,
-                     'Lb_Mlow'                  : 200.0,
-                     'Lb_Mhigh'                 : 651.0,
+                     'Lambda_DD_MassWindow'     : 20.0,
+                     'Lambda_DD_VtxChi2'        : 12.0,
+                     'Lambda_DD_FDChi2'         : 50.0,
+                     'Lambda_DD_FD'             : 300.0,
+                     'Lambda_DD_Pmin'           : 8000.0,
+                     'Lambda_LL_MassWindow'     : 15.0,
+                     'Lambda_LL_VtxChi2'        : 12.0,
+                     'Lambda_LL_FDChi2'         : 50.0,
+                     'Lb_Mlow'                  : 1319.0,
+                     'Lb_Mhigh'                 : 500.0,
                      'Lb_APTmin'                : 1000.0,
                      'Lb_PTmin'                 : 1500.0,
                      'LbDaug_MedPT_PT'          : 800.0,
                      'LbDaug_MaxPT_IP'          : 0.05,
                      'LbDaug_DD_maxDocaChi2'    : 5.0,
                      'LbDaug_LL_maxDocaChi2'    : 5.0,
-                     'LbDaug_DD_PTsum'          : 3000.0,
+                     'LbDaug_DD_PTsum'          : 4200.0,
                      'LbDaug_LL_PTsum'          : 3000.0,
                      'Lb_VtxChi2'               : 12.0,
-                     'Lb_Dira'                  : 0.9999,
+                     'Lb_DD_Dira'               : 0.9999,
+                     'Lb_LL_Dira'               : 0.9999,
                      'Lb_DD_IPCHI2wrtPV'        : 8.0,
                      'Lb_LL_IPCHI2wrtPV'        : 8.0,
-                     'Lb_FDwrtPV'               : 1.0,
+                     'Lb_FDwrtPV'               : 1.5,
                      'Lb_DD_FDChi2'             : 50.0,
                      'Lb_LL_FDChi2'             : 50.0,
                      'GEC_MaxTracks'            : 250,
@@ -282,7 +302,7 @@ Lb2V0hh = {
     'STREAMS' : [ 'Bhadron' ]
     }
 ##
-## StrippingB2Kphiphi
+## StrippingB2Kphiphi.py
 ##
 B2KPhiPhi = {
     'WGs'               : ['Charmless'],
@@ -290,21 +310,15 @@ B2KPhiPhi = {
     'CONFIG' : {
     'Prescale'                : 1.0 ,
     'Postscale'               : 1.0 ,
-
-    #K parameters
     'K_PT'                    : 400.,
     'K_IPCHI2'                : 6.25,
     'K_TRCHI2'                : 3.3,
-
-    #phi parameters         
     'phi_VDZ'                 : 0.,
     'phi_PT'                  : 300.,
     'phi_IPCHI2'              : 6.,
     'phi_VCHI2_VDOF'          : 16.,
     'phi_MM_max'              : 1060.,
     'phi_MM_min'              : 980.,
-
-    #B parameters
     'B_ADAMASS'              : 500.,
     'B_DIRA'                 : 0.999,
     'B_IPCHI2'               : 12.25,
@@ -314,82 +328,75 @@ B2KPhiPhi = {
     },
     'STREAMS' : [ 'Bhadron' ]
     }
-
-
 ##
-## StrippingB2CharmlessQuasi2Body
+## StrippingB2CharmlessQuasi2Body.py
 ##
 BetaSQ2B = {
     'WGs'               : ['Charmless'],
     'BUILDERTYPE'       : 'B2Quasi2BodyConf',
-    'CONFIG' : { 'Q2BPrescale'     : 1.,
-                 'Q2BResMinPT'     : 600.,
-                 'Q2BResMinP'      : 10.,
-                 'Q2BResMaxMass'   : 1000.,
-                 'Q2BResVtxChiDOF' : 9.,
-                 'Q2BBMinM4pi'     : 3800.,
-                 'Q2BBMinM3pi'     : 4400.,
-                 'Q2BBMaxM'        : 5700.,
-                 'Q2BBMinCorrM4pi' : 0.,
-                 'Q2BBMinCorrM3pi' : 0.,
-                 'Q2BBMaxCorrM'    : 6000.,
-                 'Q2BBVtxChi2DOF'  : 9.
-                 },
+    'CONFIG' : {'Q2BPrescale'     : 1.,
+                'Q2BResMinPT'     : 600.,
+                'Q2BResMaxMass'   : 1000.,
+                'Q2BResVtxChi2DOF': 9.,
+                'Q2BBMinPT'       : 2500.,
+                'Q2BBMinM4pi'     : 3800.,
+                'Q2BBMinM3pi'     : 4400.,
+                'Q2BBMaxM'        : 5700.,
+                'Q2BBMaxCorrM'    : 6000.,
+                'Q2BBVtxChi2DOF'  : 6.
+               },
     'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
-
 ##
-## StrippingBs2PhiKst0
+## StrippingBs2PhiKst0.py
 ##
 BetaSBs2PhiKst = {
         'WGs'           : ['Charmless'],
         'BUILDERTYPE'   : 'StrippingBs2PhiKstConf',
         'CONFIG'        : {
-               "KaonPT"                : 500.0 # MeV
-         ,     "KaonIPCHI2"            : 9.    # adimensional
-         ,     "KaonPIDK"              : 0.    # adimensional
-         ,     "PionPT"                : 500.0 # MeV
-         ,     "PionIPCHI2"            : 9.    # adimensional
-         ,     "PionPIDK"              : 10.   # adimensional
-         ,     "PhiVCHI2"              : 9.    # adimensional
-         ,     "PhiPT"                 : 900.0 # MeV
-         ,     "PhiMassWin"            : 25.0  # MeV
-         ,     "KstarVCHI2"            : 9.0   # adimensional
-         ,     "KstarPT"               : 900.0 # MeV
-         ,     "KstarMassWin"          : 150.0 # MeV
-         ,     "BMassWin"              : 500.0 # MeV
-         ,     "BVCHI2"                : 15.0  # adimensional
-         ,     "BDOCA"                 : 0.3   # mm
+               "KaonPT"                : 500.0 
+         ,     "KaonIPCHI2"            : 9.    
+         ,     "KaonPIDK"              : 0.    
+         ,     "PionPT"                : 500.0 
+         ,     "PionIPCHI2"            : 9.    
+         ,     "PionPIDK"              : 10.   
+         ,     "PhiVCHI2"              : 9.    
+         ,     "PhiPT"                 : 900.0 
+         ,     "PhiMassWin"            : 25.0  
+         ,     "KstarVCHI2"            : 9.0   
+         ,     "KstarPT"               : 900.0 
+         ,     "KstarMassWin"          : 150.0 
+         ,     "BMassWin"              : 500.0 
+         ,     "BVCHI2"                : 15.0  
+         ,     "BDOCA"                 : 0.3   
         },
         'STREAMS' : [ 'BhadronCompleteEvent' ]
         }
-
 ##
-## StrippingBs2Kst0Kst0
+## StrippingBs2Kst0Kst0.py
 ##
 BetaSBs2KstKst = {
     'WGs'               : ['Charmless'],
     'BUILDERTYPE'       : 'StrippingBs2KstKstConf',
     'CONFIG'    : {
-                "KaonPT"        : 500.0 # MeV
-         ,      "KaonIPCHI2"        : 9.     # adimensional
-         ,      "PionPT"                : 500.0 # MeV
-         ,      "PionIPCHI2"            : 9.    # adimensional
-         ,      "PionPIDK"              :10. #adimensional
-         ,      "KstarVCHI2"        : 9.0   # adimensional
-         ,      "KstarPT"        : 900.0 # MeV
-         ,      "KaonPIDK"              : -5.0  # adimensional
-         ,      "KstarMassWin"        : 150.0 # MeV
-         ,      "BMassWin"        : 500.0 # MeV
-         ,      "BVCHI2"        : 15.0    # adimensional
-         ,      "BDOCA"                 : 0.3   # mm
-         ,      "BIPCHI2"               : 25    # adimensional
+                "KaonPT"        : 500.0 
+         ,      "KaonIPCHI2"    : 9.    
+         ,      "PionPT"        : 500.0 
+         ,      "PionIPCHI2"    : 9.    
+         ,      "PionPIDK"      : 10. 
+         ,      "KstarVCHI2"    : 9.0   
+         ,      "KstarPT"       : 900.0 
+         ,      "KaonPIDK"      : -5.0  
+         ,      "KstarMassWin"  : 150.0 
+         ,      "BMassWin"      : 500.0 
+         ,      "BVCHI2"        : 15.0
+         ,      "BDOCA"         : 0.3
+         ,      "BIPCHI2"       : 25
          },
     'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
-
 ##
-## StrippingBs2Kst_0Kst_0
+## StrippingBs2Kst_0Kst_0.py
 ##
 BetaSBs2K0stK0st = {
     'WGs'               : ['Charmless'],
@@ -415,7 +422,7 @@ BetaSBs2K0stK0st = {
     'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
 ##
-## StrippingBs2Q2B
+## StrippingBs2Q2B.py
 ##
 BetaSBs2Q2Body4pi = {
     'WGs'       :       ['Charmless'],
@@ -423,37 +430,38 @@ BetaSBs2Q2Body4pi = {
     'CONFIG'  : {'Q2BPrescale'     : 1.,
                  'Q2BResMinPT'     : 900.,
                  'Q2BResMinP'      : 1.,
+                 'Q2BResMinMass'   : 0.,
                  'Q2BResMaxMass'   : 1100.,
                  'Q2BResVtxChiDOF' : 9.,
                  'Q2BBMinM'        : 4500.,
                  'Q2BBMaxM'        : 5700.,
                  'Q2BBVtxChi2DOF'  : 9.,
-                 'Q2BIPCHI2' : 25
+                 'Q2BIPCHI2'       : 15
                  },
     'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
-
 ##
-## StrippingBs2KKhh
+## StrippingBs2KKhh.py
 ##
 BsPhiRho = {
-    'WGs'       :       ['Charmless'],
-    'BUILDERTYPE'       : 'BsPhiRhoConf',
-    'CONFIG'  : {'PRPrescale'     : 1.,
-                 'PRResMinPT'     : 900.,
-                 'PRResMinP'      : 1.,
-                 'PRResMaxMass'   : 4000.,
-                 'PRResVtxChiDOF' : 9.,
-                 'PRBMinM'        : 5000.,
-                 'PRBMaxM'        : 5600.,
-                 'PRPhiWindow'    : 25.,
-                 'PRBVtxChi2DOF'  : 9.,
-                 'PRIPCHI2' : 25
-                 },
+    'WGs'         :       ['Charmless'],
+    'BUILDERTYPE' : 'BsPhiRhoConf',
+    'CONFIG'      : {'PRPrescale'     : 1.,
+                     'PRResMinPT'     : 900.,
+                     'PRResMinP'      : 1.,
+                     'PRResMinMass'   : 0.,
+                     'PRResMaxMass'   : 4000.,
+                     'PRResVtxChiDOF' : 9.,
+                     'PRBMinM'        : 5000.,
+                     'PRBMaxM'        : 5600.,
+                     'PRPhiWindow'    : 25.,
+                     'PRBVtxChi2DOF'  : 9.,
+                     'PRIPCHI2'       : 15
+                    },
     'STREAMS' : [ 'Bhadron' ]
     }
 ##
-## StrippingB2FourKHigh
+## StrippingB2FourKHigh.py
 ##
 Bs2Q2Body4K = {
     'WGs'         : ['Charmless'],
@@ -461,120 +469,109 @@ Bs2Q2Body4K = {
     'CONFIG'      : {'Q2BPrescale'     : 1.,
                      'Q2BResMinPT'     : 900.,
                      'Q2BResMinP'      : 1.,
+                     'Q2BResMinMass'   : 990.,
                      'Q2BResMaxMass'   : 2500.,
                      'Q2BResVtxChiDOF' : 9.,
                      'Q2BBMinM'        : 5200.,
                      'Q2BBMaxM'        : 5500.,
                      'Q2BBVtxChi2DOF'  : 9.,
-                     'Q2BIPCHI2' : 25
+                     'Q2BIPCHI2'       : 20
                     },
     'STREAMS'     : ['Bhadron']
     }
 ##
-## StrippingBs2PhiPhi
+## StrippingBs2PhiPhi.py
 ##
 BetaSBs2PhiPhi  = {
     'WGs'               : ['Charmless'],
     'BUILDERTYPE'       : 'StrippingBs2PhiPhiConf',
-    'CONFIG'   : {'KaonPT'              : 450      # MeV/c
-                , 'KaonIPCHI2'          : 3.5      # adimensional
-                , 'PhiPT'               : 0        # MeV/c
-                , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
-                , 'PhiVertexCHI2pDOF'   : 25       # adimensional
-                , 'PhiMassWindow'       : 25       # MeV/cc
-                , 'PhiMassMax'          : 1090     # MeV/cc
-                , 'BsVertexCHI2pDOF'    : 25       # adimensional
-                , 'BsMassWindow'        : 300      # MeV/cc
-                , 'WidePrescale'        : 0.05     # adimensional
+    'CONFIG'   : {'KaonPT'             : 500 
+                  ,'KaonIPCHI2'        : 3.5 
+                  ,'PhiPT'             : 0   
+                  ,'PhiPTsq'           : 2.0 
+                  ,'PhiVertexCHI2pDOF' : 12  
+                  ,'PhiMassWindow'     : 25  
+                  ,'PhiMassMax'        : 1090
+                  ,'BsVertexCHI2pDOF'  : 12  
+                  ,'BsMassWindow'      : 300 
+                  ,'WidePrescale'      : 0.05
+
                   },
     'STREAMS' : [ 'BhadronCompleteEvent' ]
-    } 
+    }
 ##
-## StrippingBs2KSKS
+## StrippingBs2KSKS.py
 ##
 Bs2KSKS = {
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'Bs2KSKSConf',
-    'CONFIG'      : {'MVA_LL_PROBABILITY_CUT_BCC'         : 0.5, # MVA probability cut, BsLL combination cut, the MVA is optimized for 0.5 !
-                     'MVA_LL_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsLL mother cut, the MVA is optimized for 0.5 !
-                     'MVA_LD_PROBABILITY_CUT_BCC'         : 0.5, # MVA probability cut, BsLD combination cut, the MVA is optimized for 0.5 !
-                     'MVA_LD_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsLD mother cut, the MVA is optimized for 0.5 !
-                     'MVA_DD_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsDD mother cut, the MVA is optimized for 0.5 !
-                     'KS_LL_MASS'                  :50.0,           # KSLL mass window cut in MeV
-                     'KS_DD_MASS'                  :100.0,           # KSDD mass window cut in MeV
-                     'KS_LL_DOCA'                  :1.0,           # DoCA cut in mm
-                     'KS_DD_DOCA'                  :4.0,           # DoCA cut in mm
-##################################################
-                     'B_MassWindow'                  : 600.0, # B mass window cut in MeV _this_is_where_we_can_reduce_the_retention_rate_ if needed 
-                     'B_DOCA_LL'                      : 1.0, # DOCA cut in mm for Bs->KSLL KSLL
-                     'B_DOCA_DD'                      : 4.0, # DOCA cut in mm for Bs->KSLL KSDD and Bs->KSDD KSDD
-                     'Prescale'                : 1.0,
-                     'Postscale'               : 1.0
+    'CONFIG'      : {'MVA_LL_PROBABILITY_CUT_BCC' : 0.5,
+                     'MVA_LL_PROBABILITY_CUT_BCu' : 0.5,
+                     'MVA_LD_PROBABILITY_CUT_BCC' : 0.5,
+                     'MVA_LD_PROBABILITY_CUT_BCu' : 0.5,
+                     'MVA_DD_PROBABILITY_CUT_BCu' : 0.5,
+                     'KS_LL_MASS'                 :50.0,
+                     'KS_DD_MASS'                 :100.0,
+                     'KS_LL_DOCA'                 :1.0,  
+                     'KS_DD_DOCA'                 :4.0, 
+                     'B_MassWindow'               : 600.0,
+                     'B_DOCA_LL'                  : 1.0,
+                     'B_DOCA_DD'                  : 4.0,
+                     'Prescale'                   : 1.0,
+                     'Postscale'                  : 1.0
                     },
     'STREAMS'     : ['BhadronCompleteEvent']
     }
-
 ##
-## StrippingB2XEta
+## StrippingB2XEta.py
 ##
 B2XEta = {
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'B2XEtaConf',
     'CONFIG'      : {'Trk_Chi2'                : 3.0,
-                  'Trk_PT'                  : 250.0,
-                  'Trk_IPChi2'              : 10.0,
-                  'KS_DD_MassWindow'        : 25.0,
-                  'KS_DD_VtxChi2'           : 10.0,
-                  'KS_DD_FDChi2'            : 400.0,
-                  'KS_DD_PTmin'             : 2500.0,
-                  'KS_DD_Dira'              : 0.9998,
-                  'KS_LL_MassWindow'        : 15.0,
-                  'KS_LL_VtxChi2'           : 10.0,
-                  'KS_LL_FDChi2'            : 20.0,
-                  'KS_LL_Dira'              : 0.9998,
-                  'KS_LL_PTmin'             : 1500.0,
-                  'L_DD_MassWindow'         : 20.0,
-                  'L_DD_VtxChi2'            : 10.0,
-                  'L_DD_FDChi2'             : 100.0,
-                  'L_DD_PTmin'              : 2500.0,
-                  'L_DD_Dira'               : 0.9998,
-                  'L_LL_MassWindow'         : 15.0,
-                  'L_LL_VtxChi2'            : 10.0,
-                  'L_LL_FDChi2'             : 15.0,
-                  'L_LL_Dira'               : 0.9998,
-                  'L_LL_PTmin'              : 1500.0,
-                  'rho_MassWindow'          : 200.0,
-                  'rho_PT'                  : 600.0,
-                  'rho_DOCA'                : 10.0,
-                  'rho_deltaZ'              : 0.0,
-                  'rho_IPChi2'              : 50.0,
-                  'rho_vtxChi2'             : 10.0,
-                  'eta_prime_MassWindow'    : 45.0,
-                  'eta_prime_PT'            : 1500.0,
-                  'eta_prime_vtxChi2'       : 10.0,
-                  'eta_prime_DOCA'          : 8.0,
-                  'B_MassWindow'            : 500.0,
-                  'B_PTmin'                 : 600.0,
-                  'BDaug_DD_maxDocaChi2'    : 20.0,
-                  'BDaug_LL_maxDocaChi2'    : 20.0,
-                  'B_VtxChi2'               : 12.0,
-                  'B_Dira'                  : 0.999,
-                  'B_DD_IPCHI2wrtPV'        : 20.0,
-                  'B_LL_IPCHI2wrtPV'        : 20.0,
-                  'B_DD_FDChi2'             : 20.0,
-                  'B_LL_FDChi2'             : 20.0,
-                  'Lb_MassWindow'           : 500.0,
-                  'Lb_Pmin'                 : 5000.0,
-                  'LbDaug_DD_maxDocaChi2'   : 15.0,
-                  'LbDaug_LL_maxDocaChi2'   : 15.0,
-                  'Lb_VtxChi2'              : 12.0,
-                  'Lb_Dira'                 : 0.999,
-                  'Lb_DD_IPCHI2wrtPV'       : 20.0,
-                  'Lb_LL_IPCHI2wrtPV'       : 20.0,
-                  'GEC_MaxTracks'           : 300,
-                  'Prescale'                : 1.0,
-                  'Postscale'               : 1.0
-                 },
+                     'Trk_PT'                  : 400.0,
+                     'Trk_IPChi2'              : 20.0,
+                     'KS_DD_MassWindow'        : 28.0,
+                     'KS_DD_VtxChi2'           : 12.0,
+                     'KS_DD_FDChi2'            : 500.0,
+                     'KS_DD_PTmin'             : 1000.0,
+                     'KS_LL_MassWindow'        : 18.0,
+                     'KS_LL_VtxChi2'           : 12.0,
+                     'KS_LL_FDChi2'            : 15.0,
+                     'KS_LL_PTmin'             : 1000.0,
+                     'L_DD_MassWindow'         : 20.0,
+                     'L_DD_VtxChi2'            : 12.0,
+                     'L_DD_PTmin'              : 1500.0,
+                     'L_LL_MassWindow'         : 15.0,
+                     'L_LL_VtxChi2'            : 12.0,
+                     'L_LL_PTmin'              : 1500.0,
+                     'eta_P'                   : 12000, 
+                     'gamma_PT'                : 800,  
+                     'eta_prime_MassWindow'    : 50.0,
+                     'eta_prime_PT'            : 800.0,
+                     'eta_prime_vtxChi2'       : 10.0,
+                     'eta_prime_DOCA'          : 12.0,
+                     'B_MassWindow'            : 750.0,
+                     'B_PTmin'                 : 800.0,
+                     'BDaug_DD_maxDocaChi2'    : 20.0,
+                     'BDaug_LL_maxDocaChi2'    : 20.0,
+                     'B_VtxChi2'               : 20.0,
+                     'B_Dira'                  : 0.999,
+                     'B_DD_IPCHI2wrtPV'        : 20.0,
+                     'B_LL_IPCHI2wrtPV'        : 20.0,
+                     'B_DD_FDChi2'             : 20.0,
+                     'B_LL_FDChi2'             : 20.0,
+                     'Lb_MassWindow'           : 750.0,
+                     'Lb_Pmin'                 : 6000.0,
+                     'LbDaug_DD_maxDocaChi2'   : 20.0,
+                     'LbDaug_LL_maxDocaChi2'   : 20.0,
+                     'Lb_VtxChi2'              : 20.0,
+                     'Lb_Dira'                 : 0.999,
+                     'Lb_DD_IPCHI2wrtPV'       : 20.0,
+                     'Lb_LL_IPCHI2wrtPV'       : 20.0,
+                     'GEC_MaxTracks'           : 250,
+                     'Prescale'                : 1.0,
+                     'Postscale'               : 1.0
+                    },
     'STREAMS'     : ['BhadronCompleteEvent']
     }
-
