@@ -16,8 +16,7 @@ from GaudiKernel.SystemOfUnits import *
 Beauty2XGamma = {
     'BUILDERTYPE' : 'Beauty2XGamma',
     'CONFIG' : {
-
-     "ALL" : {  'TRCHI2DOF_MAX' : 3,
+    "ALL" : {  'TRCHI2DOF_MAX' : 3,
                       'PT_MIN'        : '300*MeV',
                       'P_MIN'         : '1000*MeV',
                       'MIPCHI2DV_MIN' : 16 },
@@ -41,7 +40,7 @@ Beauty2XGamma = {
                      'P_MIN'         : '4000*MeV',
                      'CHILDCL1_MIN'  : 0.25,
                      'CHILDCL2_MIN'  : 0.25 },
-           # Cuts made on all B's and Lb's used in all lines
+	   # Cuts made on all B's and Lb's used in all lines
            "B2X" : { 'SUMPT_MIN'     : '5000*MeV',
                      'VCHI2DOF_MAX'  : 9,
                      'BPVIPCHI2_MAX' : 9,
@@ -64,8 +63,8 @@ Beauty2XGamma = {
                    'ASUMPT_MIN'       : '1500*MeV',
                    #'pP_MIN'        : '10000*MeV' # for pH only (obviously)
                  },
-           # Cuts for omega -> 3 body decay
-           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '150*MeV', 'K1': ['1.0*GeV', '1.7*GeV']},
+            # Cuts for omega -> 3 body decay
+           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '150*MeV', 'K1': ['1.0*GeV', '2.0*GeV']},
                     'DAUGHTERS'     : {'PT_MIN':'350*MeV','P_MIN':'2000*MeV'},
                     'AMAXDOCA_MAX'  : '0.50*mm',
                     'VCHI2DOF_MAX'  : 9,
@@ -84,9 +83,6 @@ Beauty2XGamma = {
                      'K'  : {'PIDK_MIN' : -10} },
     "Prescales"  : {},
     "GECNTrkMax" : 500
-
-     
-
      },
     'WGs'    : ['RD'],
     'STREAMS' : [ 'Radiative' ] 
