@@ -126,9 +126,9 @@ B2XMuMu =  {
     ,'UseNoPIDsHadrons'          : True,
 
     # B cuts
-    'B_Comb_MassLow'	  : 4800.0,
+    'B_Comb_MassLow'	  : 4600.0,
     'B_Comb_MassHigh'     : 7100.0,
-    'B_MassLow'           : 4900.0,
+    'B_MassLow'           : 4600.0,
     'B_MassHigh'          : 7000.0,
     'B_VertexCHI2'        :    8.0,
     'B_IPCHI2'            :   16.0,
