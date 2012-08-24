@@ -53,10 +53,10 @@ class B2DXBuilder(object):
         self._makeB02DH('D2KSHDD',self.d.ksh_dd) # B0  -> D+-(KSDDH) H-+ (+WS)
         self._makeB2D0H('D2KSHHLL',self.d.kshh_ll)# B+- -> D0(KSLLHH) H+-
         self._makeB2D0H('D2KSHHDD',self.d.kshh_dd)# B+- -> D0(KSDDHH) H+-
-        self._makeB02DH('D2KSHLLUP',self.d.ksh_ll_up) # B0  -> D+-(KSLLH) H-+ (+WS)
-        self._makeB02DH('D2KSHDDUP',self.d.ksh_dd_up) # B0  -> D+-(KSDDH) H-+ (+WS)
-        self._makeB2D0H('D2KSHHLLUP',self.d.kshh_ll_up)# B+- -> D0(KSLLHH) H+-
-        self._makeB2D0H('D2KSHHDDUP',self.d.kshh_dd_up)# B+- -> D0(KSDDHH) H+-
+        #self._makeB02DH('D2KSHLLUP',self.d.ksh_ll_up) # B0  -> D+-(KSLLH) H-+ (+WS)
+        #self._makeB02DH('D2KSHDDUP',self.d.ksh_dd_up) # B0  -> D+-(KSDDH) H-+ (+WS)
+        #self._makeB2D0H('D2KSHHLLUP',self.d.kshh_ll_up)# B+- -> D0(KSLLHH) H+-
+        #self._makeB2D0H('D2KSHHDDUP',self.d.kshh_dd_up)# B+- -> D0(KSDDHH) H+-
         self._makeB02D0HH('D2KSHHLL',self.d.kshh_ll) # B0  -> D0(KSLLHH)H+H-
         self._makeB02D0HH('D2KSHHDD',self.d.kshh_dd) # B0  -> D0(KSDDHH)H+H-
         self._makeB2D0H('D2KSHHLLWS',self.d.kshh_ll_ws)
@@ -79,11 +79,11 @@ class B2DXBuilder(object):
         self._makeB2D0H('D2Pi0HHResolved',self.d.pi0hh_resolved)
         self._makeB2D0H('D2Pi0HHWSResolved',self.d.pi0hh_resolved_ws)
         self.lines[-1].pre = 0.1 # last line is WS D line
-        self._makeB2D0H('D2Pi0HHResolvedUP',self.d.pi0hh_resolved_up)
+        #self._makeB2D0H('D2Pi0HHResolvedUP',self.d.pi0hh_resolved_up)
         self._makeB2D0H('D2Pi0HHMerged',self.d.pi0hh_merged)
         self._makeB2D0H('D2Pi0HHWSMerged',self.d.pi0hh_merged_ws)
         self.lines[-1].pre = 0.1 # last line is WS D line
-        self._makeB2D0H('D2Pi0HHMergedUP',self.d.pi0hh_merged_up)
+        #self._makeB2D0H('D2Pi0HHMergedUP',self.d.pi0hh_merged_up)
         self._makeB02D0HH('D2Pi0KPiResolved',self.d.pi0kpi_resolved)
         self._makeB02D0HH('D2Pi0KPiMerged',self.d.pi0kpi_merged)
         self._makeB02D0KS('D2Pi0KPiResolved',self.d.pi0kpi_resolved,'DD')
