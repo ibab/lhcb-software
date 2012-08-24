@@ -97,7 +97,8 @@ import StrippingMuMuSS
 import StrippingLowMult
 import StrippingDiPhotonDiMuon
 import StrippingA1MuMu
-
+import StrippingHighPtTopo
+import StrippingStrangeBaryons
 import StrippingDisplVertices
 import StrippingHighPtJets
 import StrippingInclbJets
