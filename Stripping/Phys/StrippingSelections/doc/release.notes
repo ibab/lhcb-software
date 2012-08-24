@@ -4,9 +4,25 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+
+! 2012-08-24 - Katarzyna Senderowska
+ - files removed: StrippingBs2ChicPhi_Chic2PiPiPiPi.py, StrippingBs2ChicPhi_Chic2KKPiPi.py, 
+   StrippingBs2EtacPhi.py, StrippingB2EtacKst.py and StrippingB2ChicK.py
+ - instead, StrippingB2CharmoniumX_6H.py file added
+ - it contains 5 stripping lines wih 6 hadrons in the final state, 
+   where B/Bs decay to chi_c0 X or eta_c X: 
+     StrippingBs2ChicPhi_Chic2PiPiPiPi,
+     StrippingBs2ChicPhi_Chic2KKPiPi,
+     StrippingBs2EtacPhi_Etac2KKPiPi,
+     StrippingB2EtacKst_Etac2KKPiPi,
+     StrippingB2ChicKst_Chic2KKPiPi,
+ - 'Hlt2.*Topo*' filter added and stripping cuts tightened to match the requirements
+
+
 ! 2012-08-24 - Albert Puig
  - Widened K1 mass window to pick up more interesting K resonances.
  - Increased AM for HHH combinations to build K resonances.
+
 
 ! 2012-08-24 - Rafael Coutinho
  - StrippingB2KShh
