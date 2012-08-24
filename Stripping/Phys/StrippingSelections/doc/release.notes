@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-24 - Eduardo Rodrigues
+ - Line for Bd,s -> p pbar in StrippingB2TwoBaryons.py further tightened
 
 ! 2012-08-24 - Katarzyna Senderowska
  - files removed: StrippingBs2ChicPhi_Chic2PiPiPiPi.py, StrippingBs2ChicPhi_Chic2KKPiPi.py, 
@@ -17,7 +19,6 @@
      StrippingB2EtacKst_Etac2KKPiPi,
      StrippingB2ChicKst_Chic2KKPiPi,
  - 'Hlt2.*Topo*' filter added and stripping cuts tightened to match the requirements
-
 
 ! 2012-08-24 - Albert Puig
  - Widened K1 mass window to pick up more interesting K resonances.

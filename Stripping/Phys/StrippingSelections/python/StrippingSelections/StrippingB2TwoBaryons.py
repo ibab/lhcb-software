@@ -32,10 +32,10 @@ default_config = { 'PrescaleB2PPbar'   : 1,
                    'MaxPTB2PPbar'      : 2100,
                    'MaxIPChi2B2PPbar'  : 25,
                    'CombMassWindow'    : 200,
-                   'VertexChi2B2PPbar' : 16,
+                   'VertexChi2B2PPbar' : 9,
                    'BPTB2PPbar'        : 1100,
-                   'BIPChi2B2PPbar'    : 20,
-                   'BDIRA'             : 0.9995,
+                   'BIPChi2B2PPbar'    : 16,
+                   'BDIRA'             : 0.9997,
                    'MaxGhostProb'      : 0.4
                  }
 
