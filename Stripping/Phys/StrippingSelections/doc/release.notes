@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2012-08-24 - Susan Haines
+- removed StrippingBu2D0h_D02KShh_NoPID.py and StrippingBu2D0h_D02KShh_NoPID_WS.py
+- removed associated tests: test_Bu2D0h_D02Kshh_NoPID.py and test_Bu2D0h_D02Kshh_NoPID_WS.py
+
 ! 2012-08-24 - Will Barter
  - minor change in StrippingZ02MuMu.py so that line also retains signal used in High Mass DY analysis.
 
