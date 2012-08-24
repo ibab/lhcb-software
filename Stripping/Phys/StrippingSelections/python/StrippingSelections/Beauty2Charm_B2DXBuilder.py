@@ -626,12 +626,8 @@ class B2DXBuilder(object):
         '''Makes RS and WS B0 -> D + h- + c.c.'''
         config = deepcopy(self.config)
         #config{ # Cuts made on all B's and Lb's used in all lines
-        config['SUMPT_MIN'    ] = '1500*MeV'
-        config['VCHI2DOF_MAX' ] = 10 #4,
-        config['BPVLTIME_MIN' ] = '0.1*ps'
-        config['BPVDIRA_MIN'  ] = 0.95 #0.999,
+        config['SUMPT_MIN'    ] = '4000*MeV'
         config['AM_MIN'       ] = '4000*MeV' 
-        config['AM_MAX'       ] = '7000*MeV' 
         
         tag = 'B02D%s'
         if not useIP: tag += 'NoIP'
