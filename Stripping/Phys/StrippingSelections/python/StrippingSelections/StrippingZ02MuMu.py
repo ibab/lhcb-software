@@ -3,7 +3,7 @@
 #
 # S.Bifani
 #
-# Z02MuMu signal:     StdAllLooseMuons,  pT>15GeV & MM>40GeV
+# Z02MuMu/High Mass DY signal:     StdAllLooseMuons,  pT>3GeV & MM>40GeV
 
 
 from Gaudi.Configuration import *
@@ -15,7 +15,7 @@ from StandardParticles import StdAllLooseMuons, StdAllNoPIDsMuons
 
 confdict_Z02MuMu = { 'Z02MuMu_Prescale'  : 1.0,
                      'Z02MuMu_Postscale' : 1.0,
-                     'pT'    : 15.,
+                     'pT'    : 3.,
                      'MMmin' : 40.
                      }
 
