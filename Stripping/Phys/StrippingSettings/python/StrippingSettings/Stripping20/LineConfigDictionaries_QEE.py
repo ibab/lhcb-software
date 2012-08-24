@@ -20,7 +20,7 @@ Z02MuMu = {
     'CONFIG'       : {
     'Z02MuMu_Prescale'  : 1.0,
     'Z02MuMu_Postscale' : 1.0,
-    'pT'    : 15.,
+    'pT'    : 3.,
     'MMmin' : 40.
     },
     'WGs' : [ 'QEE' ],
