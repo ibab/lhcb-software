@@ -149,6 +149,7 @@ import StrippingBs2KKhh
 import StrippingBs2KSKS
 import StrippingB2XEta
 import StrippingBu2KSh
+import StrippingB2HHBkg
 
 import StrippingB2SameChargeMuon
 import StrippingHyperCPX

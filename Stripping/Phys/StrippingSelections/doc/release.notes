@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-24 - Anton Poluektov 
+  - Add missing StrippingB2HHBkg to __init__.py
+
 ! 2012-08-24 - Sam Hall 
  - Updated Ds2PhiMuNu for Beauty2Charm lines
 
