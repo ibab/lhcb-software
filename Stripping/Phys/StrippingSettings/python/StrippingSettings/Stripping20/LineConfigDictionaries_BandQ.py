@@ -77,7 +77,7 @@ FullDSTDiMuon = {
         'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
         'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
         'DiMuon_MinMass'                           :  3000.   ,  # MeV
-        'DiMuon_MaxMass'                           :  4000.   ,  # MeV
+        'DiMuon_MaxMass'                           :  1.0e+8  ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                :  3000.   ,  # MeV, no cut now 
 
@@ -95,7 +95,7 @@ FullDSTDiMuon = {
         'DiMuonPrescaled_MuonP'                    : -8000.   ,  # MeV, no cut now 
         'DiMuonPrescaled_MuonTRCHI2DOF'            :     5.   , 
         'DiMuonPrescaled_MinMass'                  :  3000.   ,  # MeV
-        'DiMuonPrescaled_MaxMass'                  :  4000.   ,  # MeV
+        'DiMuonPrescaled_MaxMass'                  :  1.0e+8  ,  # MeV
         'DiMuonPrescaled_VCHI2PDOF'                :    20.   , 
         'DiMuonPrescaled_PT'                       : -1000.   ,  # MeV, no cut now 
         
@@ -241,7 +241,7 @@ MicroDSTDiMuon = {
         'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
         'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
         'DiMuon_MinMass'                           :  3000.   ,  # MeV
-        'DiMuon_MaxMass'                           :  4000.   ,  # MeV
+        'DiMuon_MaxMass'                           :  1.0e+8  ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                :  2000.   ,  # MeV
 
@@ -259,7 +259,7 @@ MicroDSTDiMuon = {
         'DiMuonPrescaled_MuonP'                    : -8000.   ,  # MeV, no cut now 
         'DiMuonPrescaled_MuonTRCHI2DOF'            :     5.   ,
         'DiMuonPrescaled_MinMass'                  :  3000.   ,  # MeV
-        'DiMuonPrescaled_MaxMass'                  :  4000.   ,  # MeV
+        'DiMuonPrescaled_MaxMass'                  :  1.0e+8  ,  # MeV
         'DiMuonPrescaled_VCHI2PDOF'                :    20.   , 
         'DiMuonPrescaled_PT'                       : -1000.   ,  # MeV, no cut now 
 
@@ -610,7 +610,7 @@ Bc2JpsiMu = {
     'BcVtxCHI2'           :    9.   ,  # adimentional
     'BcPT'                : 6000.      # MeV, May incrase up to 5000 MeV if needed      
     },
-    'STREAMS' : [ 'Leptonic' ] ,
+    'STREAMS' : [ 'Dimuon' ] ,
     'WGs'    : [ 'BandQ' ]
   }
 
