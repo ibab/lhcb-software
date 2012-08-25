@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-08-25 - Anton Poluektov 
+ - Add StrippingDstarD02KShhForTrackingEff to Calib dict
+ - Enable DisplVertices
+
+! 2012-08-25 - Anton Poluektov 
  - Update TriggerValidation dict in Calib (add missing keys)
  - Update B2OC dict
  - Update MiniBias dict (add missing keys)

@@ -336,3 +336,34 @@ TriggerValidation = {
            'HLT':"HLT_PASS_RE('Hlt1MBNoBiasDecision')"    
            }
     }
+
+DstarD02KShh_ForTrackingEff = {
+    'BUILDERTYPE' : 'DstarD02KShh_ForTrackingEffBuilder',
+    'WGs' : [ 'ALL' ],
+    'STREAMS' : [ 'Calibration' ],
+    'CONFIG' : {
+                  'LongTrackGEC'          :  150
+                , 'Trk_PT_MIN'            :  300.0
+                , 'Trk_P_MIN'             : 3000.0
+                , 'Pair_AMINDOCA_MAX'     :    0.1
+                , 'Pair_BPVVD_MIN'        :    0.0
+                , 'Pair_SumAPT_MIN'       :    0.0
+                , 'Pair_BPVCORRM_MAX'     : 3500.0
+                , 'TrkPt_SlowPion'        :  300.0
+                , 'TrkP_SlowPion'         : 3000.0
+                , 'TrkChi2_SlowPion'      :    2.25
+                , 'TrkChi2_MAX_Child_MAX' :    2.25
+                , 'IPCHI2_MAX_Child_MIN'  :   36.0
+                , 'IPCHI2_PiSlow_MAX'     :    9.0
+                , 'PairMaxDoca_Dstar'     :  100.0
+                , 'PT_Dstar_MIN'          : 3750.0
+                , 'DIRA_D0_MIN'           :    0.99
+                , 'FDCHI2_D0_MIN'         :  100.0
+                , 'VCHI2_D0_MAX'          :   10.0
+                , 'M_MAX'                 : 1900.0
+                , 'DeltaM_MIN'            :    0.0
+                , 'DeltaM_MAX'            :  250.0
+                , 'prescale'              :    1.0
+                , 'postscale'             :    1.0
+    }
+}

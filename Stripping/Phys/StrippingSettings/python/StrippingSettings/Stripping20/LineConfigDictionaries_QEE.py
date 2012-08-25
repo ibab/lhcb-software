@@ -220,7 +220,6 @@ SingleTrackTIS = {
     }
 
 #DisplVertices
-"""
 DisplVertices = {
     'BUILDERTYPE'  : 'DisplVerticesLinesConf',
     'CONFIG'       : {
@@ -338,7 +337,6 @@ DisplVertices = {
     'WGs' : [ 'QEE' ],
     'STREAMS' : [ 'EW' ]
     }
-"""
     
 #HighPtJets
 HighPtJets = {
