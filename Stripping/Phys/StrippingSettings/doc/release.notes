@@ -4,6 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-08-25 - Anton Poluektov 
+ - Update TriggerValidation dict in Calib (add missing keys)
+ - Update B2OC dict
+ - Update MiniBias dict (add missing keys)
+ - Temporarily disable DisplVertices dict in QEE (produces an error)
+ - Add dbase/stripping20 for tests
+
 ! 2012-08-25 - Jibo He
  - Update of BandQ WG dict
 

@@ -220,12 +220,13 @@ SingleTrackTIS = {
     }
 
 #DisplVertices
+"""
 DisplVertices = {
     'BUILDERTYPE'  : 'DisplVerticesLinesConf',
     'CONFIG'       : {
     ## Velo tracks filter
     "FilterVelo"              : { "Apply"                : True
-                                  , "MinIP"                : 0.1*units.mm
+                                  , "MinIP"                : 0.1*mm
                                   , "MinIPChi2"            : -1.0
                                   , "MinNumTracks"         : 4
                                   , "PVLocation"           : "Rec/Vertex/Primary" ## TODO check if this makes sense
@@ -236,9 +237,9 @@ DisplVertices = {
     #==========        SELECTION CUT VALUES         ==========#
     
     ## Velo reconstruction
-    , "RV2PWithVelo"            : { "MinRho"               :  0.4*units.mm
-                                    , "MinMass"              :  3.0*units.GeV
-                                    , "MinSumPT"             :  0.0*units.GeV
+    , "RV2PWithVelo"            : { "MinRho"               :  0.4*mm
+                                    , "MinMass"              :  3.0*GeV
+                                    , "MinSumPT"             :  0.0*GeV
                                     , "MinNumTracks"         :  4
                                     , "MaxFractE1Track"      :  10.
                                     , "MaxFractTrwHitBefore" :  10.
@@ -247,17 +248,17 @@ DisplVertices = {
                                     , "MaxChi2NonVeloOnly"   : 5.0
                                     , "UseVeloTracks"        : False
                                     , "ComputeMatterVeto"    : True
-                                    , "FirstPVMaxRho"        : 0.3*units.mm
-                                    , "FirstPVMinZ"          : -300.0*units.mm
-                                    , "FirstPVMaxZ"          : 500.0*units.mm
+                                    , "FirstPVMaxRho"        : 0.3*mm
+                                    , "FirstPVMinZ"          : -300.0*mm
+                                    , "FirstPVMaxZ"          : 500.0*mm
                                     , "FirstPVMinNumTracks"  : 10
                                     }
     ## Single LLP line
     , "SingleSelection"         : { "PreScale"             :  1.0
                                     #       HighMass,         Medium,         HighFD
-                                    , "MinRho"               : [  1.0*units.mm ,  2.*units.mm ,  4.*units.mm  ]
-                                    , "MinMass"              : [ 8.*units.GeV,  6.5*units.GeV,  4.5*units.GeV ]
-                                    , "MinSumPT"             :  3.0*units.GeV
+                                    , "MinRho"               : [  1.0*mm ,  2.*mm ,  4.*mm  ]
+                                    , "MinMass"              : [ 8.*GeV,  6.5*GeV,  4.5*GeV ]
+                                    , "MinSumPT"             :  3.0*GeV
                                     , "MinNumTracks"         : [  8            ,  7            ,  6             ]
                                     , "ApplyMatterVeto"      : True
                                     , "MaxFractE1Track"      :  0.8
@@ -265,9 +266,9 @@ DisplVertices = {
                                     }
     # prescaled
     , "SinglePSSelection"       : { "PreScale"             :  0.005
-                                    , "MinRho"               :  0.5*units.mm
-                                    , "MinMass"              :  3.0*units.GeV
-                                    , "MinSumPT"             :  0.0*units.GeV
+                                    , "MinRho"               :  0.5*mm
+                                    , "MinMass"              :  3.0*GeV
+                                    , "MinSumPT"             :  0.0*GeV
                                     , "MinNumTracks"         :  4
                                     , "ApplyMatterVeto"      :  False
                                     , "MaxFractE1Track"      :  10.
@@ -276,22 +277,22 @@ DisplVertices = {
     
     ## Double LLP line
     , "DoubleSelection"         : { "PreScale"             :  1.0
-                                      , "MinRho"               :  0.6*units.mm
-                                    , "MinMass"              :  3.0*units.GeV
-                                    , "MinSumPT"             :  3.0*units.GeV
+                                      , "MinRho"               :  0.6*mm
+                                    , "MinMass"              :  3.0*GeV
+                                    , "MinSumPT"             :  3.0*GeV
                                     , "MinNumTracks"         :  6
                                     , "ApplyMatterVeto"      :  False
                                     , "MaxFractE1Track"      :  0.8
                                     , "MaxFractTrwHitBefore" :  0.49
                                     ## Double only
-                                    , "MinHighestMass"       : 3.0*units.GeV
+                                    , "MinHighestMass"       : 3.0*GeV
                                     , "ApplyMatterVetoOne"   : True
                                     }
     
     ## Downstream reconstruction
-    , "RV2PDown"                : { "MinRho"               :  2.0*units.mm
-                                    , "MinMass"              :  3.0*units.GeV
-                                    , "MinSumPT"             :  0.0*units.GeV
+    , "RV2PDown"                : { "MinRho"               :  2.0*mm
+                                    , "MinMass"              :  3.0*GeV
+                                    , "MinSumPT"             :  0.0*GeV
                                     , "MinNumTracks"         :  4
                                     , "MaxFractE1Track"      :  10.
                                     , "MaxFractTrwHitBefore" :  10.
@@ -300,29 +301,29 @@ DisplVertices = {
                                     , "MaxChi2NonVeloOnly"   : 5.0
                                     , "UseVeloTracks"        : False
                                     , "ComputeMatterVeto"    : False
-                                    , "FirstPVMaxRho"        : 0.3*units.mm
-                                    , "FirstPVMinZ"          : -300.0*units.mm
-                                    , "FirstPVMaxZ"          : 500.0*units.mm
+                                    , "FirstPVMaxRho"        : 0.3*mm
+                                    , "FirstPVMinZ"          : -300.0*mm
+                                    , "FirstPVMaxZ"          : 500.0*mm
                                     , "FirstPVMinNumTracks"  : 10
                                     }
     , "SingleDownSelection"     : { "PreScale"             :  1.0
-                                    , "MinRho"               :  2.0*units.mm
-                                    , "MinMass"              :  3.0*units.GeV
-                                    , "MinSumPT"             :  0.0*units.GeV
+                                    , "MinRho"               :  2.0*mm
+                                    , "MinMass"              :  3.0*GeV
+                                    , "MinSumPT"             :  0.0*GeV
                                     , "MinNumTracks"         :  4
                                     , "ApplyMatterVeto"      : False
                                     , "MaxFractE1Track"      :  10.
                                     , "MaxFractTrwHitBefore" :  10.
                                     # Down only
-                                    , "MinZ"                 :  170.*units.mm
+                                    , "MinZ"                 :  170.*mm
                                     }
     
     #========== Other lines for efficiency studies ==========#
     , "HLTPS"             : { "PreScale"             :  1.0 }
     , "HltEffCharmHLTSelection"  : { "PreScale"             :  1.0
-                                     , "MinRho"               :  0.6*units.mm
-                                     , "MinMass"              :  5.5*units.GeV
-                                     , "MinSumPT"             :  3.0*units.GeV
+                                     , "MinRho"               :  0.6*mm
+                                     , "MinMass"              :  5.5*GeV
+                                     , "MinSumPT"             :  3.0*GeV
                                      , "MinNumTracks"         :  6
                                      , "ApplyMatterVeto"      : False
                                      , "MaxFractE1Track"      :  10.
@@ -337,6 +338,7 @@ DisplVertices = {
     'WGs' : [ 'QEE' ],
     'STREAMS' : [ 'EW' ]
     }
+"""
     
 #HighPtJets
 HighPtJets = {
