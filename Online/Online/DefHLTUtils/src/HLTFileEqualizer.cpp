@@ -183,7 +183,7 @@ HLTFileEqualizer::HLTFileEqualizer()
   m_enabledFarm.clear();
   m_NodeList = 0;
   m_NodeListDiff = 0;
-  for (row='b';row<='e';row++)
+  for (row='a';row<='e';row++)
   {
     for (int rack=1;rack<=11;rack++)
     {
