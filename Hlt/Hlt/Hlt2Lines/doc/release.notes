@@ -7,19 +7,25 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !----------------------------------------------------------------------------
+
+! 2012-08-27 - V. Gligorov
+ - Add Ks2HHMuMu and hyperon lines for M. Sokoloff
+ - Expand the hhX lines to include baryon decays
+
 ! 2012-08-23 - H. Gordon
-- Added Kshhh lines in new configurable Hlt2CharmHadD2HHHKs.py, based on HHKs lines
+ - Added Kshhh lines in new configurable Hlt2CharmHadD2HHHKs.py, based on HHKs lines
+ 
 !========================= Hlt2Lines v8r24 2012-06-23 =========================
 ! 2012-06-21 - C. Thomas
-- Added alternative DD inclusive line
+ - Added alternative DD inclusive line
 
 !========================= Hlt2Lines v8r23 2012-06-19 =========================
 
 ! 2012-06-18 - P. David
-- Cleaned-up and retuned Hlt2 displaced vertex lines, see also Hlt/HltDisplVertices
+ - Cleaned-up and retuned Hlt2 displaced vertex lines, see also Hlt/HltDisplVertices
 
 ! 2012-06-15 - C. Thomas
-- Tightened some cuts
+ - Tightened some cuts
 
 ! 2012-06-13 - C. Thomas
  - Added two further lines to Hlt2CEPLines, tweaked some cuts
