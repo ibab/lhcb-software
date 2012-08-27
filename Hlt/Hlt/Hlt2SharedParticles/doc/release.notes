@@ -5,6 +5,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2012-08-27 - V. Gligorov
+ - Clean up messy comments in Ks.py
+
 !========================= Hlt2SharedParticles v6r11 2012-06-19 =========================
 ! 2012-06-13 - V. Gligorov
  - Modify TrackFittedBasicPArticles to enable lower PT Rich kaons 
