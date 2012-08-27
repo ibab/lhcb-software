@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-08-27 - V. Gligorov
+ - Add HHHKs, Ks->MuMuHH, and hyperon lines
+
 !========================= HltTracking v9r24 2012-06-27 =========================! 2012-06-27 - E. van Herwijnen
  - Configure LooseForward min pt to 500 (from 300)
 
