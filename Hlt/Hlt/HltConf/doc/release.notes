@@ -3,6 +3,13 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2012-08-27 - V. Gligorov
+ - Add Hlt1HighPTJet line in HltInit
+ - Add Ks->HHMuMu and hyperon lines to Hlt2.py
+ - Add D->HHHKs line to Hlt2.py
+ - Add new routing bits for hhX lines   
+
 ! 2012-07-13 - Sascha Stahl
  - Added TrackAllL0Tight in to ANNSvc.
 
