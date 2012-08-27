@@ -85,6 +85,10 @@ from Hlt2Lines.Hlt2CharmHadMinBiasLines import Hlt2CharmHadMinBiasLinesConf
 from Hlt2Lines.Hlt2CharmHadD2KS0KS0Lines import Hlt2CharmHadD2KS0KS0LinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHXDstLines import Hlt2CharmHadD02HHXDstLinesConf
 from Hlt2Lines.Hlt2CEPLines import Hlt2CEPLinesConf
+from Hlt2Lines.Hlt2CharmHadD2HHHKsLines import Hlt2CharmHadD2HHHKsLinesConf
+from Hlt2Lines.Hlt2ChargedHyperon2LambdaHLines import Hlt2ChargedHyperon2LambdaHLinesConf
+from Hlt2Lines.Hlt2TwoMuonForKshortToMuMuPiPi import Hlt2TwoMuonForKshortToMuMuPiPiConf
+from Hlt2Lines.Hlt2KshortToMuMuPiPi import Hlt2KshortToMuMuPiPiConf
 #################################################################################################
 #
 # Hlt2 Tracking
@@ -152,6 +156,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2CharmHadD2KS0KS0LinesConf
                              , Hlt2CharmHadD02HHXDstLinesConf
                              , Hlt2CEPLinesConf
+                             , Hlt2CharmHadD2HHHKsLinesConf
+                             , Hlt2ChargedHyperon2LambdaHLinesConf
+                             , Hlt2TwoMuonForKshortToMuMuPiPiConf   
+                             , Hlt2KshortToMuMuPiPiConf
                              ]
     __slots__ = { "DataType"                        : '2012' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
