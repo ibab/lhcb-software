@@ -4,6 +4,14 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-08-27 - V. Gligorov
+ - Add a bunch of new settings files for September 2012
+ - Add Hlt1HighPTJets and corresponding Hlt2 lines to Physics_September2012
+ - Commit Ks->HHMuMu settings for Mike
+ - Add HHHKs lines to CharmHadron_September2012 for Hamish
+ - Add new hhX lines to CharmHadron_September2012   
+ - Increase D->HH mass window for Joerg
+
 !========================= HltSettings v5r42 2012-07-04 =========================
 !========================= HltSettings v5r41 2012-06-27 =========================
 ! 2012-06-27 - E. van Herwijnen
