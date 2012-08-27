@@ -60,6 +60,10 @@ from Hlt2Lines.Hlt2CharmHadLambdaC2LambdaHLines import Hlt2CharmHadLambdaCLambda
 from Hlt2Lines.Hlt2CharmHadD2KS0KS0Lines import Hlt2CharmHadD2KS0KS0LinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHXDstLines import Hlt2CharmHadD02HHXDstLinesConf
 from Hlt2Lines.Hlt2CEPLines import Hlt2CEPLinesConf
+from Hlt2Lines.Hlt2CharmHadD2HHHKsLines import Hlt2CharmHadD2HHHKsLinesConf
+from Hlt2Lines.Hlt2ChargedHyperon2LambdaHLines import Hlt2ChargedHyperon2LambdaHLinesConf
+from Hlt2Lines.Hlt2TwoMuonForKshortToMuMuPiPi import Hlt2TwoMuonForKshortToMuMuPiPiConf
+from Hlt2Lines.Hlt2KshortToMuMuPiPi import Hlt2KshortToMuMuPiPiConf
 #
 # The tracking configurations
 #
@@ -128,6 +132,10 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2CharmHadD2KS0KS0LinesConf
                              , Hlt2CharmHadD02HHXDstLinesConf
                              , Hlt2CEPLinesConf
+                             , Hlt2CharmHadD2HHHKsLinesConf
+                             , Hlt2ChargedHyperon2LambdaHLinesConf
+                             , Hlt2TwoMuonForKshortToMuMuPiPiConf   
+                             , Hlt2KshortToMuMuPiPiConf
                              ]
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...

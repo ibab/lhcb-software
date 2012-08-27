@@ -259,7 +259,11 @@ class HltConf(LHCbConfigurableUser):
                       , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
                       , 87 : "HLT_PASS_RE('Hlt2DisplVertices.*Decision')"
                       , 88 : "HLT_PASS_RE('Hlt2HighPtJets.*Decision')"
-		      , 89 : "HLT_PASS_RE('Hlt2PassThrough.*Decision')"
+		              , 89 : "HLT_PASS_RE('Hlt2PassThrough.*Decision')"
+                      , 90 : "HLT_PASS_RE('Hlt2.*Charm.*hhX.*Decision')"  
+                      , 91 : "HLT_PASS_RE('Hlt2.*Charm.*_hhX.*Decision')"
+                      , 92 : "HLT_PASS_RE('Hlt2.*Charm.*_Baryon.*hhX.*Decision')"
+                      , 93 : "HLT_PASS_RE('Hlt2.*Charm.*_Lepton.*hhX.*Decision')"    
                          }
         HltRoutingBitsWriter().RoutingBits = routingBits
 

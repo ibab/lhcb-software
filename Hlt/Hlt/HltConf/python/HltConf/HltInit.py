@@ -29,6 +29,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1L0B2gasDecision"                   :   25,
     "Hlt1L0MUON,minbiasDecision"            :   26,
     "Hlt1L0HighSumETJetDecision"            :   27,
+    "Hlt1HighPtJetsSinglePVDecision"        :   28, 
     # Misc..
     "Hlt1IncidentDecision"                  :   30,
     "Hlt1Tell1ErrorDecision"                :   31,
