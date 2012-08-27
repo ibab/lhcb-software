@@ -22,7 +22,7 @@ macro_append ROOT_linkopts " -lGpad " WIN32 " libHist.lib "
 #apply_pattern install_more_includes more=Gaucho
 
 # linker library
-
+macro_append  DefHLTUtils_linkopts $ROOT_linkopts
 apply_pattern component_library library=DefHLTUtils
 library DefHLTUtils HLTPerfFormatter.cpp
 apply_pattern linker_library library=DefHLTUtils
