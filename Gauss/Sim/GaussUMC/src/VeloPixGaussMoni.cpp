@@ -43,8 +43,8 @@ VeloPixGaussMoni::VeloPixGaussMoni( const std::string& name,
   declareProperty("TestMCHit", m_testMCHit);
   declareProperty("DetailedMonitor", m_detailedMonitor);
   declareProperty("VeloPixDetLocation", m_velopixDetLocation);
-  declareProperty("VeloPixMCHits" , 
-                  m_velopixMCHitsLocation = "MC/VeloPix/Hits" ) ; // Should be defined in MCHits as LHCb::MCHitLocation::VeloPix in future
+  declareProperty("VeloPixMCHits" ,
+                  m_velopixMCHitsLocation = LHCb::MCHitLocation::VP /* "MC/VP/Hits" */ ) ;
 }
 //=============================================================================
 // Destructor
@@ -61,7 +61,7 @@ StatusCode VeloPixGaussMoni::initialize() {
   debug() << "==> Initialize" << endmsg;
   //
   m_velopixDet=( getDet<DeVeloPix>(m_velopixDetLocation ) );
-  setHistoTopDir("VeloPix/");
+  setHistoTopDir("VP/");
   //
   return StatusCode::SUCCESS;
 };
@@ -117,6 +117,7 @@ StatusCode VeloPixGaussMoni::getData()
   }else{
     m_velopixMCHits=get<LHCb::MCHits>( m_velopixMCHitsLocation );
   }
+  // printf("VeloPixGaussMoni::getData(): %d MC hits\n", m_velopixMCHits->size() );
   //  
   if(m_printInfo){
     info()<< "----------------------------------------------------" <<endmsg;
