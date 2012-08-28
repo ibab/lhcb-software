@@ -20,13 +20,13 @@ class DeMuonDetector;
  *
  */
 
+class MuonHitDecode : public GaudiTool, 
+                      virtual public IMuonHitDecode , 
+                      virtual public IIncidentListener
+{
 
-
-
-
-
-class MuonHitDecode : public GaudiTool, virtual public IMuonHitDecode , virtual public IIncidentListener{
 public: 
+
   MuonHitDecode( const std::string& type, 
                  const std::string& name,
                  const IInterface* parent);
@@ -90,8 +90,7 @@ public:
 
   // from GaudiTool
   virtual StatusCode 	initialize ();
-  virtual StatusCode 	finalize ();
-  
+ 
   // from IIncidentListener
   virtual void handle ( const Incident& incident );   
 protected:

@@ -8,8 +8,14 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2012-08-28 - Chris Jones
+ - Optimise a bit better the last commit, using getIfExists
+ - Protect debug() print statements behind if check.
+
 ! 2012-08-22 - Michel De Cian
- - Modified MuonHitDecode to cope with the new raw locations, per default only the central location is now looked for. Number of prev/next locations to look for is now a configurable option.
+ - Modified MuonHitDecode to cope with the new raw locations, per default only the 
+   central location is now looked for. Number of prev/next locations to look for is 
+   now a configurable option.
 
 !========================= MuonTrackRec v3r6p1 2011-12-15 =========================
 ! 2011-11-23 - Marco Cattaneo
@@ -30,7 +36,8 @@
 
 !========================= MuonTrackRec v3r4p1 2011-02-28 =========================
 ! 2011-02-21 - Michel De Cian
- - Changed static variable to member variable in MuonTrackMomRec, to allow multiple instances of the tool to work independently
+ - Changed static variable to member variable in MuonTrackMomRec, to allow multiple 
+   instances of the tool to work independently
 
 !======================== MuonTrackRec v3r4 2010-06-21 ======================
 
