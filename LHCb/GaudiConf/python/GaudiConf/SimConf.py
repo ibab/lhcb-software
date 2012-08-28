@@ -105,7 +105,7 @@ class SimConf(LHCbConfigurableUser) :
                 if 'PuVeto' in dets :
                     packing.Members += [ MCPuVetoHitPacker("MCPuVetoHitPacker"+slot) ]
 
-                if 'VeloPix' in dets :
+                if 'VP' in dets :
                     packing.Members += [ MCVeloPixHitPacker("MCVeloPixHitPacker"+slot) ]
 
                 if 'TT' in dets :
@@ -137,6 +137,9 @@ class SimConf(LHCbConfigurableUser) :
                     packing.Members += [ MCRichOpticalPhotonPacker("MCRichOpPhotPacker"+slot) ]
                     packing.Members += [ MCRichSegmentPacker("MCRichSegmentPacker"+slot) ]
                     packing.Members += [ MCRichTrackPacker("MCRichTrackPacker"+slot) ]
+
+        # print "SimConf.py: _doPacking(): packing.Members =", packing.Members
+
 
     def _makeUnpacker(self, type, name, slot, tesLoc):
         
@@ -186,8 +189,8 @@ class SimConf(LHCbConfigurableUser) :
             if 'PuVeto' in dets :
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCPuVetoHitPacker_, "UnpackMCPuVetoHits", slot, 'PuVeto/Hits' )
 
-            if 'VeloPix' in dets :
-                self._makeUnpacker( DataPacking__Unpack_LHCb__MCVeloPixHitPacker_, "UnpackMCVeloPixHits", slot, 'VeloPix/Hits' )
+            if 'VP' in dets :
+                self._makeUnpacker( DataPacking__Unpack_LHCb__MCVeloPixHitPacker_, "UnpackMCVeloPixHits", slot, 'VP/Hits' )
 
             if 'IT' in dets :
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCITHitPacker_, "UnpackMCITHits", slot, 'IT/Hits' )
@@ -327,8 +330,8 @@ class SimConf(LHCbConfigurableUser) :
                 if 'PuVeto' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'PuVeto/Hits' ) ]
 
-                if 'VeloPix' in dets :
-                    simList += [ self.tapeLocation( slot, mcRoot, 'VeloPix/Hits' ) ]
+                if 'VP' in dets :
+                    simList += [ self.tapeLocation( slot, mcRoot, 'VP/Hits' ) ]
 
                 if 'IT' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'IT/Hits' ) ]
@@ -372,6 +375,8 @@ class SimConf(LHCbConfigurableUser) :
                     tape.OptItemList += simList
                 else:
                     tape.ItemList    += simList
+
+        # print "addSubDetSimInfo(", tape, "): simList =", simList
                 
     def _defineOutputData( self ):
         """
