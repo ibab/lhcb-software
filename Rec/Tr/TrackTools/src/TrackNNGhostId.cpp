@@ -539,24 +539,23 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     
     //restrict range to that known by flattening function
     // function defined between -0.2 and +1.1986
-    if( retval < -0.2 ) retval = 1;
-    if( retval > 1.195 ) retval = 0;
-    if( retval >= -0.2 && retval <= 1.195) {
-      // flatten
+    if      ( retval < -0.2  ) { retval = 1; }
+    else if ( retval > 1.195 ) { retval = 0; }
+    else    // flatten
+    {
       retval = m_FlattenLookupTable->value(retval);
     }
     
-
     if ( UNLIKELY( isDebug ) ) debug()<<"transformed value (in loop) : "<<retval<<endmsg;
 
   }//end evaluate long track for MC2012 tuning
 
   if( retval < 0 ) { 
-    Warning("after flattening ghost prob < 0 - this should not be possible",StatusCode::SUCCESS, 1);
+    Warning("Ghost prob < 0 - this should not be possible",StatusCode::SUCCESS, 1);
     retval = 0;
   }
   else if( retval > 1 ){
-    Warning("after flattening ghost prob > 0 - this should not be possible",StatusCode::SUCCESS, 1);   
+    Warning("Ghost prob > 1 - this should not be possible",StatusCode::SUCCESS, 1);   
     retval = 1;
   }
   

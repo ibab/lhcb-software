@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-08-28 - Chris Jones
+ - Fix a bug in the last fix, limiting the output range to 0-1.
+
 !========================= TrackTools v4r17 2012-08-28 =========================
 ! 2012-08-23 - Johannes Albrecht & Johann Brehmer 
  - TrackNNGhostId: fix NN output value to range 0-1 
