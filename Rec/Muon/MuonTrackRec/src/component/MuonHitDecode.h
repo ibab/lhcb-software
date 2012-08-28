@@ -93,10 +93,9 @@ public:
  
   // from IIncidentListener
   virtual void handle ( const Incident& incident );   
-protected:
-
 
 private:
+
   void clearHits();
   IMuonRawBuffer* m_recTool;
   DeMuonDetector* m_muonDetector;
