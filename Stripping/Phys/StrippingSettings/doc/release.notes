@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-08-28 - Anton Poluektov 
+ - Update B2OC dict for Stripping20 (move some lines between Bhadron and BhadronCompleteEvent streams)
+
 ! 2012-08-28 - Stefano Perazzini
  - Update dictionary for Charmless WG for Stripping20 
 
