@@ -18,7 +18,7 @@
       <base     name="ContainedObject"/>
       <location name="Velo"    place="MC/Velo/Hits"    />
       <location name="PuVeto"  place="MC/PuVeto/Hits"  />
-      <location name="VeloPix" place="MC/VeloPix/Hits" />
+      <location name="VP"      place="MC/VP/Hits" />
       <location name="VL"      place="MC/VL/Hits"      />
       <location name="TT"      place="MC/TT/Hits"      />
       <location name="IT"      place="MC/IT/Hits"      />
