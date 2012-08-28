@@ -1,6 +1,5 @@
 // $Id: $
 // Include files
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "CaloUtils/CaloTrackTool.h"
@@ -346,9 +345,24 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
         if( Mgamma > m_mmax || Mgamma < m_mmin)continue;
 
         //--- CREATE THE DIELECTRON
-        const LHCb::Particle* dielectron = this->cloneAndMarkTree( &mother );
-        dielectrons.push_back( (LHCb::Particle*) dielectron );
-
+        //const LHCb::Particle* dielectron = this->cloneAndMarkTree( &mother ); // memory leak !!
+        // memory leak hack 
+        
+        mother.removeFromDaughters(ele1);
+        mother.removeFromDaughters(ele2);
+        LHCb::Vertex* vtx=mother.endVertex();
+        vtx->removeFromOutgoingParticles(ele1);
+        vtx->removeFromOutgoingParticles(ele2);
+        LHCb::Particle* e1=ele1->clone();
+        LHCb::Particle* e2=ele2->clone();
+        LHCb::Vertex* diev = vtx->clone();
+        diev->addToOutgoingParticles(e1);
+        diev->addToOutgoingParticles(e2);
+        LHCb::Particle* dielectron = new LHCb::Particle( mother);
+        dielectron->addToDaughters(e1);
+        dielectron->addToDaughters(e2);
+        dielectron->setEndVertex(diev);
+        dielectrons.push_back( dielectron );
       }
       else
       {
@@ -362,8 +376,12 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
     debug() << "Created " << dielectrons.size() << " " << m_pid << "->ee" << endmsg;
   counter("Created "+m_pid+"->ee") += dielectrons.size();
   // cleaning
+  debug() << "clear electrons"<<endmsg;
   clear(electrons);
+  debug() << "clear trash"<<endmsg;
   clear(trash);
+  debug() << "done" <<endmsg;
+  
   //====================
   return StatusCode::SUCCESS;
 }
@@ -371,8 +389,7 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
 void DiElectronMaker::clear(LHCb::Particle::Vector & vector)
 {
   for ( LHCb::Particle::Vector::iterator v = vector.begin();
-        vector.end() != v; ++v )
-  {
+        vector.end() != v; ++v ){
     delete *v;
     *v = NULL;
   }
