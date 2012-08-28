@@ -18,6 +18,7 @@ using namespace LHCb;
 void MCHitPacker::pack( const DataVector & hits,
                         PackedDataVector & phits ) const
 {
+  // printf("MCHitPacker::pack(): %d hits, version=%d\n", hits.size(), (int)phits.packingVersion());
   phits.data().reserve( hits.size() );
   if ( 0 == phits.packingVersion() )
   {

@@ -57,7 +57,7 @@ namespace LHCb
   {
     static const std::string& Velo    = "pSim/Velo/Hits";
     static const std::string& PuVeto  = "pSim/PuVeto/Hits";
-    static const std::string& VeloPix = "pSim/VeloPix/Hits";
+    static const std::string& VP      = "pSim/VP/Hits";
     static const std::string& VL      = "pSim/VL/Hits";
     static const std::string& TT      = "pSim/TT/Hits";
     static const std::string& IT      = "pSim/IT/Hits";
@@ -246,12 +246,19 @@ namespace LHCb
   {
   public:
     MCVeloPixHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
-    {
+    { // printf("MCVeloPixHitPacker::MCVeloPixHitPacker()\n");
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
     }
-    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::VeloPix; }
-    static const std::string unpackedLocation() { return LHCb::MCHitLocation::VeloPix;       }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::VP; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::VP;       }
+    /*
+    void pack( const DataVector & hits,
+               PackedDataVector & phits ) const
+    { printf("MCVeloPixHitPacker::pack(%d hits):\n", hits.size() );
+      // printf("MCVeloPixHitPacker::pack(%d): %s => %s\n", hits.size(), LHCb::MCHitLocation::VP, LHCb::PackedMCHitLocation::VP );
+      MCHitPacker::pack(hits, phits); }
+    */
   };
 
   /** @class MCVLHitPacker Event/PackedMCHit.h
