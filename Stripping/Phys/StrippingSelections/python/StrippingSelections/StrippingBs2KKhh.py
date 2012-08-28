@@ -8,8 +8,8 @@ phi mass
 '''
 
 __author__ = ['Sean Benson']
-__date__ = '21/08/2012'
-__version__ = '2.0'
+__date__ = '28/08/2012'
+__version__ = '2.1'
 
 __all__ = ( 'BsPhiRhoConf',
             'mkDiTrackList',
@@ -22,11 +22,11 @@ config_params = {'PRPrescale'     : 1.,
                  'PRResMinMass'   : 0.,
                  'PRResMaxMass'   : 4000.,
                  'PRResVtxChiDOF' : 9.,
-                 'PRBMinM'        : 5000.,
+                 'PRBMinM'        : 4800.,
                  'PRBMaxM'        : 5600.,
                  'PRPhiWindow'    : 25.,
                  'PRBVtxChi2DOF'  : 9.,
-		 'PRIPCHI2' : 15}
+		 'PRIPCHI2' : 20}
 
 
 from Gaudi.Configuration import *
@@ -59,7 +59,7 @@ class BsPhiRhoConf(LineBuilder) :
 	self.name = name
         LineBuilder.__init__(self, name, config)
 
-        _trkFilter = FilterDesktop(Code = "(PT>500.*MeV) & (TRCHI2DOF < 3.5) & (MIPCHI2DV(PRIMARY) > 16)")
+        _trkFilter = FilterDesktop(Code = "(TRGHOSTPROB < 0.5) & (PT>500.*MeV) & (TRCHI2DOF < 3.5) & (MIPCHI2DV(PRIMARY) > 16)")
         
 	self.TrackListhh = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,

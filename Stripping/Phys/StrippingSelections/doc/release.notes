@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-Aug-28 - Sean Benson
+ - Added ghost probability cut to StrippingBsPhiRhoLine
+
 ! 2012-Aug-28 - Patrick Spradlin
  - Added methods in the following configurables to suppress creation of lines
    when prescales or postscales that are set to 0:
