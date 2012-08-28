@@ -372,15 +372,18 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       }
     }
   }
+  
   if (msgLevel(MSG::DEBUG))
     debug() << "Created " << dielectrons.size() << " " << m_pid << "->ee" << endmsg;
+
   counter("Created "+m_pid+"->ee") += dielectrons.size();
+
   // cleaning
-  debug() << "clear electrons"<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "clear electrons"<<endmsg;
   clear(electrons);
-  debug() << "clear trash"<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "clear trash"<<endmsg;
   clear(trash);
-  debug() << "done" <<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "done" <<endmsg;
   
   //====================
   return StatusCode::SUCCESS;
