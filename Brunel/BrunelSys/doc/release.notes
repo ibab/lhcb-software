@@ -3,6 +3,33 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+- New Tuning
+  . New TrackNNGhostID tuning now runs in standard tracking sequence and is
+    picked up by default as input to ANNPID (RecConf, TrackSys)
+
+</PRE><H1><A NAME=v43r2p1>2012-08-28 Brunel v43r2p1</A></H1><PRE>
+This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1,
+ Rec v14r1p1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Patch release built on v43r1p2b branch, for Reco13e/Reco14.
+
+- Bug fixes
+  . TrackNNGhostId: fix NN output value to range 0-1 (TrackTools v4r16)
+
+</PRE><H1><A NAME=v43r2>2012-08-16 Brunel v43r2</A></H1><PRE>
+This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1,
+ Rec v14r1p1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Patch release built on v43r1p2b branch, for Reco13e/Reco14.
+
+- New Tuning
+  . Added a second instance of TrackAddNNGhostId, running after ProtoParticle
+    creation, that updates the TrackNNGhostID of long tracks based on MC 2012
+    tuning (TrackTools v4r16, RecConf v2r8, TrackSys v7r6)
+  . Updated the default ANN PIDtuning for 2012 and 2011 to MC12TuneV1, trained on
+    a preliminary sample of 2012 B inclusive MC processed with Reco13d.
+    (ChargedProtoANNPID v1r8)
+
 </PRE><H1><A NAME=v43r1p2>2012-08-10 Brunel v43r1p2</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1,
  Rec v14r1p1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
