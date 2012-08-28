@@ -43,6 +43,48 @@ class StrippingD2PhiPiForXSecConf(LineBuilder): # {
                              )
 
 
+    ## Possible parameters and default values copied from the definition
+    ##   of StrippingLine
+    def _strippingLine ( self,
+                          name             ,   # the base name for the Line
+                          prescale  = 1.0  ,   # prescale factor
+                          ODIN      = None ,   # ODIN predicate
+                          L0DU      = None ,   # L0DU predicate
+                          HLT       = None ,   # HltDecReports predicate
+                          FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
+                          checkPV   = True ,   # Check PV before running algos
+                          algos     = None ,   # the list of stripping members
+                          selection = None ,
+                          postscale = 1.0    ,   # postscale factor
+                          MaxCandidates = "Override",   # Maxumum number
+                          MaxCombinations = "Override", # Maxumum number
+                          HDRLocation = None ) : # other configuration parameters
+    # {
+
+        if (prescale > 0) and (postscale > 0) : # {
+            line = StrippingLine( name,
+                                  prescale        = prescale,
+                                  ODIN            = ODIN,
+                                  L0DU            = L0DU,
+                                  HLT             = HLT,
+                                  FILTER          = FILTER,
+                                  checkPV         = checkPV,
+                                  algos           = algos,
+                                  selection       = selection,
+                                  postscale       = postscale,
+                                  MaxCandidates   = MaxCandidates,
+                                  MaxCombinations = MaxCombinations,
+                                  HDRLocation     = HDRLocation )
+
+            self.registerLine(line)
+            return line
+        # }
+        else : 
+            return False
+
+    # }
+
+
     def __init__(self, name, config) : # {
 
         LineBuilder.__init__(self, name, config)
@@ -74,14 +116,12 @@ class StrippingD2PhiPiForXSecConf(LineBuilder): # {
                           )
 
 
-        self.line_D2PhiPi = StrippingLine( d2PhiPi_name + 'Line',
+        self.line_D2PhiPi = self._strippingLine( name = d2PhiPi_name + 'Line',
                                            HLT = config['HltFilter'],
                                            prescale   = config['PrescaleD2PhiPi'],
                                            postscale = config['PostscaleD2PhiPi'],
-                                           algos = [ self.selD2PhiPi ]
+                                           selection = self.selD2PhiPi
                                          )
-        self.registerLine(self.line_D2PhiPi)
-
     # }
 
 # }

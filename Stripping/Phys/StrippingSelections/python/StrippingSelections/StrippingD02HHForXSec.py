@@ -51,6 +51,47 @@ class StrippingD02HHForXSecConf(LineBuilder): # {
                              )
 
 
+    ## Possible parameters and default values copied from the definition
+    ##   of StrippingLine
+    def _strippingLine ( self,
+                          name             ,   # the base name for the Line
+                          prescale  = 1.0  ,   # prescale factor
+                          ODIN      = None ,   # ODIN predicate
+                          L0DU      = None ,   # L0DU predicate
+                          HLT       = None ,   # HltDecReports predicate
+                          FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
+                          checkPV   = True ,   # Check PV before running algos
+                          algos     = None ,   # the list of stripping members
+                          selection = None ,
+                          postscale = 1.0    ,   # postscale factor
+                          MaxCandidates = "Override",   # Maxumum number
+                          MaxCombinations = "Override", # Maxumum number
+                          HDRLocation = None ) : # other configuration parameters
+    # {
+
+        if (prescale > 0) and (postscale > 0) : # {
+            line = StrippingLine( name,
+                                  prescale        = prescale,
+                                  ODIN            = ODIN,
+                                  L0DU            = L0DU,
+                                  HLT             = HLT,
+                                  FILTER          = FILTER,
+                                  checkPV         = checkPV,
+                                  algos           = algos,
+                                  selection       = selection,
+                                  postscale       = postscale,
+                                  MaxCandidates   = MaxCandidates,
+                                  MaxCombinations = MaxCombinations,
+                                  HDRLocation     = HDRLocation )
+
+            self.registerLine(line)
+            return line
+        # }
+        else : 
+            return False
+
+    # }
+
 
     def __init__(self, name, config) : # {
 
@@ -76,13 +117,12 @@ class StrippingD02HHForXSecConf(LineBuilder): # {
                                  )
 
 
-        self.line_D02HH = StrippingLine( d02HH_name + 'Line',
+        self.line_D02HH = self._strippingLine( name = d02HH_name + 'Line',
                                          HLT = config['HltFilter'],
                                          prescale  = config['PrescaleD02HH'],
                                          postscale = config['PostscaleD02HH'],
-                                         algos = [ self.selD02HH ]
+                                         selection = self.selD02HH
                                        )
-        self.registerLine(self.line_D02HH)
 
 
         self.selDstar2D0Pi_D02HH = makeDstar2D0Pi( dstar_name
@@ -93,13 +133,12 @@ class StrippingD02HHForXSecConf(LineBuilder): # {
                     , Dstar_MDiff_MAX     = config['Dstar_MDiff_MAX']
         )
 
-        self.line_Dstar2D0Pi_D02HH = StrippingLine( dstar_name + 'Line',
+        self.line_Dstar2D0Pi_D02HH = self._strippingLine( name = dstar_name + 'Line',
                                          HLT = config['HltFilter'],
                                          prescale   = config['PrescaleDstar2D0Pi_D02HH'],
                                          postscale = config['PostscaleDstar2D0Pi_D02HH'],
-                                         algos = [ self.selDstar2D0Pi_D02HH ]
+                                         selection = self.selDstar2D0Pi_D02HH
                                         )
-        self.registerLine(self.line_Dstar2D0Pi_D02HH)
 
     # }
 

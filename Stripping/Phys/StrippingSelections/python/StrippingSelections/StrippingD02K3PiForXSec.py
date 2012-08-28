@@ -102,6 +102,49 @@ class D02K3PiForXSecConf(LineBuilder):
     'MaxVeloTracks' : ( 'Tagged', 'Untagged' )
     }
 
+
+  ## Possible parameters and default values copied from the definition
+  ##   of StrippingLine
+  def _strippingLine ( self,
+                        name             ,   # the base name for the Line
+                        prescale  = 1.0  ,   # prescale factor
+                        ODIN      = None ,   # ODIN predicate
+                        L0DU      = None ,   # L0DU predicate
+                        HLT       = None ,   # HltDecReports predicate
+                        FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
+                        checkPV   = True ,   # Check PV before running algos
+                        algos     = None ,   # the list of stripping members
+                        selection = None ,
+                        postscale = 1.0    ,   # postscale factor
+                        MaxCandidates = "Override",   # Maxumum number
+                        MaxCombinations = "Override", # Maxumum number
+                        HDRLocation = None ) : # other configuration parameters
+  # {
+
+    if (prescale > 0) and (postscale > 0) : # {
+      line = StrippingLine( name,
+                            prescale        = prescale,
+                            ODIN            = ODIN,
+                            L0DU            = L0DU,
+                            HLT             = HLT,
+                            FILTER          = FILTER,
+                            checkPV         = checkPV,
+                            algos           = algos,
+                            selection       = selection,
+                            postscale       = postscale,
+                            MaxCandidates   = MaxCandidates,
+                            MaxCombinations = MaxCombinations,
+                            HDRLocation     = HDRLocation )
+
+      self.registerLine(line)
+      return line
+    # }
+    else : 
+      return False
+
+  # }
+
+
   def __init__(self, moduleName, config):
     LineBuilder.__init__(self, moduleName, config)
 
@@ -154,7 +197,7 @@ class D02K3PiForXSecConf(LineBuilder):
      if _filter is not None and _filter!="" and config['ApplyGECs'][name]:
          _filter={"Code":_filter, "Preambulo": ["from LoKiTracks.decorators import *", "from LoKiNumbers.decorators import *"]}
 
-     _line = StrippingLine(sel.name()+"Line"
+     _line = self._strippingLine(name = sel.name()+"Line"
                            ,prescale = config['Prescale'][name]
                            ,postscale = config['Postscale'][name]
                            ,selection = sel
@@ -164,8 +207,6 @@ class D02K3PiForXSecConf(LineBuilder):
      if name=='Untagged': self.line_untagged=_line
      else: self.line_tagged=_line
 
-    self.registerLine(self.line_untagged)
-    self.registerLine(self.line_tagged)
 
 
 def makeD02K3Pi(moduleName, config):

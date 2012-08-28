@@ -176,6 +176,49 @@ class XiccBuilder(LineBuilder) :
                                , 'signalPrescaleViaD0DCS'
                                , 'Hlt2TisTosSpec')
 
+
+    ## Possible parameters and default values copied from the definition
+    ##   of StrippingLine
+    def _strippingLine ( self,
+                          name             ,   # the base name for the Line
+                          prescale  = 1.0  ,   # prescale factor
+                          ODIN      = None ,   # ODIN predicate
+                          L0DU      = None ,   # L0DU predicate
+                          HLT       = None ,   # HltDecReports predicate
+                          FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
+                          checkPV   = True ,   # Check PV before running algos
+                          algos     = None ,   # the list of stripping members
+                          selection = None ,
+                          postscale = 1.0    ,   # postscale factor
+                          MaxCandidates = "Override",   # Maxumum number
+                          MaxCombinations = "Override", # Maxumum number
+                          HDRLocation = None ) : # other configuration parameters
+    # {
+
+        if (prescale > 0) and (postscale > 0) : # {
+            line = StrippingLine( name,
+                                  prescale        = prescale,
+                                  ODIN            = ODIN,
+                                  L0DU            = L0DU,
+                                  HLT             = HLT,
+                                  FILTER          = FILTER,
+                                  checkPV         = checkPV,
+                                  algos           = algos,
+                                  selection       = selection,
+                                  postscale       = postscale,
+                                  MaxCandidates   = MaxCandidates,
+                                  MaxCombinations = MaxCombinations,
+                                  HDRLocation     = HDRLocation )
+
+            self.registerLine(line)
+            return line
+        # }
+        else : 
+            return False
+
+    # }
+
+
     def __init__(self, name, config) :
 
         LineBuilder.__init__(self, name, config)
@@ -286,14 +329,6 @@ class XiccBuilder(LineBuilder) :
 
 
 
-        # Control lines (to be prescaled!)
-        #self.lineControl1 = StrippingLine(name+'ControlLc',
-                                          #selection = self.filterLcForControl)
-        #self.lineControl2 = StrippingLine(name+'ControlXicZero',
-                                          #selection = self.combineXicZero)
-        #self.lineControl3 = StrippingLine(name+'ControlXicPlus',
-                                          #selection = self.combineXicPlus)
-
         self.selXicc1 = makeTisTos(name+'SelXiccPlusToLcKPi'
                                    , selection = self.combineXicc1
                                    , hltTisTosSpec = config['Hlt2TisTosSpec'])
@@ -375,195 +410,164 @@ class XiccBuilder(LineBuilder) :
 
 
         # Control lines (to be prescaled!)
-        self.lineControl1 = StrippingLine(name+'ControlLc',
+        self.lineControl1 = self._strippingLine(name = name+'ControlLc',
                                           prescale = config['controlPrescaleLc'],
                                           postscale = 1.0,
                                           FILTER = _globalEventCuts,
                                           selection = self.filterLcForControl)
-        self.lineControl2 = StrippingLine(name+'ControlXicZero',
+        self.lineControl2 = self._strippingLine(name = name+'ControlXicZero',
                                           prescale = config['controlPrescaleXic'],
                                           postscale = 1.0,
                                           FILTER = _globalEventCuts,
                                           selection = self.combineXicZero)
-        self.lineControl3 = StrippingLine(name+'ControlXicPlus',
+        self.lineControl3 = self._strippingLine(name = name+'ControlXicPlus',
                                           prescale = config['controlPrescaleXic'],
                                           postscale = 1.0,
                                           FILTER = _globalEventCuts,
                                           selection = self.combineXicPlus)
-        self.lineControl4 = StrippingLine(name+'ControlDp',
+        self.lineControl4 = self._strippingLine(name = name+'ControlDp',
                                           prescale = config['controlPrescaleDp'],
                                           postscale = 1.0,
                                           FILTER = _globalEventCuts,
                                           selection = self.dplus)
-        self.lineControl5 = StrippingLine(name+'ControlD0',
+        self.lineControl5 = self._strippingLine(name = name+'ControlD0',
                                           prescale = config['controlPrescaleD0'],
                                           postscale = 1.0,
                                           FILTER = _globalEventCuts,
                                           selection = self.dzero)
-        self.lineControl6 = StrippingLine(name+'ControlDsp',
+        self.lineControl6 = self._strippingLine(name = name+'ControlDsp',
                                           prescale = config['controlPrescaleDsp'],
                                           postscale = 1.0,
                                           FILTER = _globalEventCuts,
                                           selection = self.dsplus)
 
         # Physics lines
-        self.lineXicc1 = StrippingLine(name+'XiccPlusToLcKPi',
+        self.lineXicc1 = self._strippingLine(name = name+'XiccPlusToLcKPi',
                                       prescale = config['signalPrescaleViaLc'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc1)
-        self.lineXicc2 = StrippingLine(name+'XiccPlusPlusToLcKPiPi',
+        self.lineXicc2 = self._strippingLine(name = name+'XiccPlusPlusToLcKPiPi',
                                       prescale = config['signalPrescaleViaLc'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc2)
-        self.lineXicc1WC = StrippingLine(name+'XiccPlusToLcKPiWC',
+        self.lineXicc1WC = self._strippingLine(name = name+'XiccPlusToLcKPiWC',
                                       prescale = config['signalPrescaleViaLcWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc1WC)
-        self.lineXicc2WC = StrippingLine(name+'XiccPlusPlusToLcKPiPiWC',
+        self.lineXicc2WC = self._strippingLine(name = name+'XiccPlusPlusToLcKPiPiWC',
                                       prescale = config['signalPrescaleViaLcWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc2WC)
-        self.lineXicc1DCS = StrippingLine(name+'XiccPlusToLcKPiDCS',
+        self.lineXicc1DCS = self._strippingLine(name = name+'XiccPlusToLcKPiDCS',
                                       prescale = config['signalPrescaleViaLcDCS'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc1DCS)
-        self.lineXicc2DCS = StrippingLine(name+'XiccPlusPlusToLcKPiPiDCS',
+        self.lineXicc2DCS = self._strippingLine(name = name+'XiccPlusPlusToLcKPiPiDCS',
                                       prescale = config['signalPrescaleViaLcDCS'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc2DCS)
-        self.lineXicc1a = StrippingLine(name+'XiccPlusToDpPK',
+        self.lineXicc1a = self._strippingLine(name = name+'XiccPlusToDpPK',
                                       prescale = config['signalPrescaleViaDp'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc1a)
-        self.lineXicc2a = StrippingLine(name+'XiccPlusPlusToDpPKPi',
+        self.lineXicc2a = self._strippingLine(name = name+'XiccPlusPlusToDpPKPi',
                                       prescale = config['signalPrescaleViaDp'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc2a)
-        self.lineXicc1aWC = StrippingLine(name+'XiccPlusToDpPKWC',
+        self.lineXicc1aWC = self._strippingLine(name = name+'XiccPlusToDpPKWC',
                                       prescale = config['signalPrescaleViaDpWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc1aWC)
-        self.lineXicc2aWC = StrippingLine(name+'XiccPlusPlusToDpPKPiWC',
+        self.lineXicc2aWC = self._strippingLine(name = name+'XiccPlusPlusToDpPKPiWC',
                                       prescale = config['signalPrescaleViaDpWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc2aWC)
-        self.lineXicc2aWC0 = StrippingLine(name+'XiccPlusPlusToDpPKPiWC0',
+        self.lineXicc2aWC0 = self._strippingLine(name = name+'XiccPlusPlusToDpPKPiWC0',
                                       prescale = config['signalPrescaleViaDpWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc2aWC0)
-        self.lineXicc3 = StrippingLine(name+'XiccPlusToXicZeroPi',
+        self.lineXicc3 = self._strippingLine(name = name+'XiccPlusToXicZeroPi',
                                       prescale = config['signalPrescaleViaXic'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc3)
-        self.lineXicc4 = StrippingLine(name+'XiccPlusPlusToXicZeroPiPi',
+        self.lineXicc4 = self._strippingLine(name = name+'XiccPlusPlusToXicZeroPiPi',
                                       prescale = config['signalPrescaleViaXic'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc4)
-        self.lineXicc5 = StrippingLine(name+'XiccPlusToXicPlusPiPi',
+        self.lineXicc5 = self._strippingLine(name = name+'XiccPlusToXicPlusPiPi',
                                       prescale = config['signalPrescaleViaXic'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc5)
-        self.lineXicc6 = StrippingLine(name+'XiccPlusPlusToXicPlusPi',
+        self.lineXicc6 = self._strippingLine(name = name+'XiccPlusPlusToXicPlusPi',
                                       prescale = config['signalPrescaleViaXic'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc6)
-        self.lineXicc3WC = StrippingLine(name+'XiccPlusToXicZeroPiWC',
+        self.lineXicc3WC = self._strippingLine(name = name+'XiccPlusToXicZeroPiWC',
                                       prescale = config['signalPrescaleViaXicWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc3WC)
-        self.lineXicc4WC = StrippingLine(name+'XiccPlusPlusToXicZeroPiPiWC',
+        self.lineXicc4WC = self._strippingLine(name = name+'XiccPlusPlusToXicZeroPiPiWC',
                                       prescale = config['signalPrescaleViaXicWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc4WC)
-        self.lineXicc5WC = StrippingLine(name+'XiccPlusToXicPlusPiPiWC',
+        self.lineXicc5WC = self._strippingLine(name = name+'XiccPlusToXicPlusPiPiWC',
                                       prescale = config['signalPrescaleViaXicWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc5WC)
-        self.lineXicc6WC = StrippingLine(name+'XiccPlusPlusToXicPlusPiWC',
+        self.lineXicc6WC = self._strippingLine(name = name+'XiccPlusPlusToXicPlusPiWC',
                                       prescale = config['signalPrescaleViaXicWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc6WC)
-        self.lineXicc7 = StrippingLine(name+'XiccPlusToD0PKPi',
+        self.lineXicc7 = self._strippingLine(name = name+'XiccPlusToD0PKPi',
                                       prescale = config['signalPrescaleViaD0'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc7)
-        self.lineXicc8 = StrippingLine(name+'XiccPlusPlusToD0PKPiPi',
+        self.lineXicc8 = self._strippingLine(name = name+'XiccPlusPlusToD0PKPiPi',
                                       prescale = config['signalPrescaleViaD0'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc8)
-        self.lineXicc7WC = StrippingLine(name+'XiccPlusToD0PKPiWC',
+        self.lineXicc7WC = self._strippingLine(name = name+'XiccPlusToD0PKPiWC',
                                       prescale = config['signalPrescaleViaD0WC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc7WC)
-        self.lineXicc8WC = StrippingLine(name+'XiccPlusPlusToD0PKPiPiWC',
+        self.lineXicc8WC = self._strippingLine(name = name+'XiccPlusPlusToD0PKPiPiWC',
                                       prescale = config['signalPrescaleViaD0WC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc8WC)
-        self.lineXicc7DCS = StrippingLine(name+'XiccPlusToD0PKPiDCS',
+        self.lineXicc7DCS = self._strippingLine(name = name+'XiccPlusToD0PKPiDCS',
                                       prescale = config['signalPrescaleViaD0DCS'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc7DCS)
-        self.lineXicc8DCS = StrippingLine(name+'XiccPlusPlusToD0PKPiPiDCS',
+        self.lineXicc8DCS = self._strippingLine(name = name+'XiccPlusPlusToD0PKPiPiDCS',
                                       prescale = config['signalPrescaleViaD0DCS'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc8DCS)
 
-        self.registerLine(self.lineControl1)
-        self.registerLine(self.lineControl2)
-        self.registerLine(self.lineControl3)
-        self.registerLine(self.lineControl4)
-        self.registerLine(self.lineControl5)
-        self.registerLine(self.lineControl6)
-        self.registerLine(self.lineXicc1)
-        self.registerLine(self.lineXicc2)
-        self.registerLine(self.lineXicc1WC)
-        self.registerLine(self.lineXicc2WC)
-        self.registerLine(self.lineXicc1DCS)
-        self.registerLine(self.lineXicc2DCS)
-        self.registerLine(self.lineXicc1a)
-        self.registerLine(self.lineXicc2a)
-        self.registerLine(self.lineXicc1aWC)
-        self.registerLine(self.lineXicc2aWC)
-        self.registerLine(self.lineXicc2aWC0)
-        self.registerLine(self.lineXicc3)
-        self.registerLine(self.lineXicc4)
-        self.registerLine(self.lineXicc5)
-        self.registerLine(self.lineXicc6)
-        self.registerLine(self.lineXicc3WC)
-        self.registerLine(self.lineXicc4WC)
-        self.registerLine(self.lineXicc5WC)
-        self.registerLine(self.lineXicc6WC)
-        self.registerLine(self.lineXicc7)
-        self.registerLine(self.lineXicc8)
-        self.registerLine(self.lineXicc7WC)
-        self.registerLine(self.lineXicc8WC)
-        self.registerLine(self.lineXicc7DCS)
-        self.registerLine(self.lineXicc8DCS)
 
 def mergeLists(localName, inputSelections) :
     return MergedSelection ( localName,

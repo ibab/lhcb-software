@@ -56,6 +56,47 @@ class StrippingLambdac2PKPiForXSecConf(LineBuilder): # {
                              )
 
 
+    ## Possible parameters and default values copied from the definition
+    ##   of StrippingLine
+    def _strippingLine ( self,
+                          name             ,   # the base name for the Line
+                          prescale  = 1.0  ,   # prescale factor
+                          ODIN      = None ,   # ODIN predicate
+                          L0DU      = None ,   # L0DU predicate
+                          HLT       = None ,   # HltDecReports predicate
+                          FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
+                          checkPV   = True ,   # Check PV before running algos
+                          algos     = None ,   # the list of stripping members
+                          selection = None ,
+                          postscale = 1.0    ,   # postscale factor
+                          MaxCandidates = "Override",   # Maxumum number
+                          MaxCombinations = "Override", # Maxumum number
+                          HDRLocation = None ) : # other configuration parameters
+    # {
+
+        if (prescale > 0) and (postscale > 0) : # {
+            line = StrippingLine( name,
+                                  prescale        = prescale,
+                                  ODIN            = ODIN,
+                                  L0DU            = L0DU,
+                                  HLT             = HLT,
+                                  FILTER          = FILTER,
+                                  checkPV         = checkPV,
+                                  algos           = algos,
+                                  selection       = selection,
+                                  postscale       = postscale,
+                                  MaxCandidates   = MaxCandidates,
+                                  MaxCombinations = MaxCombinations,
+                                  HDRLocation     = HDRLocation )
+
+            self.registerLine(line)
+            return line
+        # }
+        else : 
+            return False
+
+    # }
+
 
     def __init__(self, name, config) : # {
 
@@ -177,38 +218,33 @@ class StrippingLambdac2PKPiForXSecConf(LineBuilder): # {
                                            , hltTisTosSpec = config['Hlt2TisTosSpec'])
 
 
-        self.line_Lambdac2PKPi = StrippingLine( lambdac_name + 'Line',
+        self.line_Lambdac2PKPi = self._strippingLine( name = lambdac_name + 'Line',
                                          HLT = config['HltFilter'],
                                          prescale  = config['PrescaleLambdac2PKPi'],
                                          postscale = config['PostscaleLambdac2PKPi'],
-                                         algos = [ self.selLambdac2PKPi ]
+                                         selection = self.selLambdac2PKPi
                                        )
 
-        self.line_Lambdac2PKK = StrippingLine( lambdac_pKK_name + 'Line',
+        self.line_Lambdac2PKK = self._strippingLine( name = lambdac_pKK_name + 'Line',
                                          HLT = config['HltFilter'],
                                          prescale  = config['PrescaleLambdac2PKK'],
                                          postscale = config['PostscaleLambdac2PKK'],
-                                         algos = [ self.selLambdac2PKK ]
+                                         selection = self.selLambdac2PKK
                                        )
 
-        self.line_Lambdac2PPiPi = StrippingLine( lambdac_ppipi_name + 'Line',
+        self.line_Lambdac2PPiPi = self._strippingLine( name = lambdac_ppipi_name + 'Line',
                                          HLT = config['HltFilter'],
                                          prescale  = config['PrescaleLambdac2PPiPi'],
                                          postscale = config['PostscaleLambdac2PPiPi'],
-                                         algos = [ self.selLambdac2PPiPi ]
+                                         selection = self.selLambdac2PPiPi
                                        )
 
-        self.line_Lambdac2PPiKWS = StrippingLine( lambdac_ppiK_name + 'Line',
+        self.line_Lambdac2PPiKWS = self._strippingLine( name = lambdac_ppiK_name + 'Line',
                                          HLT = config['HltFilter'],
                                          prescale  = config['PrescaleLambdac2PPiKWS'],
                                          postscale = config['PostscaleLambdac2PPiKWS'],
-                                         algos = [ self.selLambdac2PPiKWS ]
+                                         selection = self.selLambdac2PPiKWS
                                        )
-
-        self.registerLine(self.line_Lambdac2PKPi)
-        self.registerLine(self.line_Lambdac2PKK)
-        self.registerLine(self.line_Lambdac2PPiPi)
-        self.registerLine(self.line_Lambdac2PPiKWS)
 
     # }
 

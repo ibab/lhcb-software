@@ -55,6 +55,47 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
                              )
 
 
+    ## Possible parameters and default values copied from the definition
+    ##   of StrippingLine
+    def _strippingLine ( self,
+                          name             ,   # the base name for the Line
+                          prescale  = 1.0  ,   # prescale factor
+                          ODIN      = None ,   # ODIN predicate
+                          L0DU      = None ,   # L0DU predicate
+                          HLT       = None ,   # HltDecReports predicate
+                          FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
+                          checkPV   = True ,   # Check PV before running algos
+                          algos     = None ,   # the list of stripping members
+                          selection = None ,
+                          postscale = 1.0    ,   # postscale factor
+                          MaxCandidates = "Override",   # Maxumum number
+                          MaxCombinations = "Override", # Maxumum number
+                          HDRLocation = None ) : # other configuration parameters
+    # {
+
+        if (prescale > 0) and (postscale > 0) : # {
+            line = StrippingLine( name,
+                                  prescale        = prescale,
+                                  ODIN            = ODIN,
+                                  L0DU            = L0DU,
+                                  HLT             = HLT,
+                                  FILTER          = FILTER,
+                                  checkPV         = checkPV,
+                                  algos           = algos,
+                                  selection       = selection,
+                                  postscale       = postscale,
+                                  MaxCandidates   = MaxCandidates,
+                                  MaxCombinations = MaxCombinations,
+                                  HDRLocation     = HDRLocation )
+
+            self.registerLine(line)
+            return line
+        # }
+        else : 
+            return False
+
+    # }
+
 
     def __init__(self, name, config) : # {
 
@@ -96,12 +137,11 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
              )
 
 
-        self.line_D2KPP = StrippingLine( d2KPP_name + 'Line',
+        self.line_D2KPP = self._strippingLine( name = d2KPP_name + 'Line',
                                 HLT = config['HltFilter'],
                                 prescale = config['PrescaleD2KPP'],
                                 postscale = config['PostscaleD2KPP'],
-                                algos = [ self.selD2KPP ])
-        self.registerLine(self.line_D2KPP)
+                                selection = self.selD2KPP)
 
 
         ## The (K- K+ pi+) final state
@@ -128,12 +168,11 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
              )
 
 
-        self.line_D2KKP = StrippingLine( d2KKP_name + 'Line',
+        self.line_D2KKP = self._strippingLine( name = d2KKP_name + 'Line',
                                 HLT = config['HltFilter'],
                                 prescale = config['PrescaleD2KKP'],
                                 postscale = config['PostscaleD2KKP'],
-                                algos = [ self.selD2KKP ])
-        self.registerLine(self.line_D2KKP)
+                                selection = self.selD2KKP)
 
 
 
@@ -160,12 +199,11 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
              )
 
 
-        self.line_D2KKK = StrippingLine( d2KKK_name + 'Line',
+        self.line_D2KKK = self._strippingLine( name = d2KKK_name + 'Line',
                                 HLT = config['HltFilter'],
                                 prescale = config['PrescaleD2KKK'],
                                 postscale = config['PostscaleD2KKK'],
-                                algos = [ self.selD2KKK ])
-        #self.registerLine(self.line_D2KKK)
+                                selection = self.selD2KKK)
 
 
         ## The (pi- pi+ pi+) final state
@@ -192,12 +230,11 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
              )
 
 
-        self.line_D2PPP = StrippingLine( d2PPP_name + 'Line',
+        self.line_D2PPP = self._strippingLine( name = d2PPP_name + 'Line',
                                 HLT = config['HltFilter'],
                                 prescale = config['PrescaleD2PPP'],
                                 postscale = config['PostscaleD2PPP'],
-                                algos = [ self.selD2PPP])
-        #self.registerLine(self.line_D2PPP)
+                                selection = self.selD2PPP)
 
 
         ## The (K+ pi- pi+) final state
@@ -224,12 +261,11 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
              )
 
 
-        self.line_D2PPK = StrippingLine( d2PPK_name + 'Line',
+        self.line_D2PPK = self._strippingLine( name = d2PPK_name + 'Line',
                                 HLT = config['HltFilter'],
                                 prescale = config['PrescaleD2KPPDCS'],
                                 postscale = config['PostscaleD2KPPDCS'],
-                                algos = [ self.selD2PPK ])
-        #self.registerLine(self.line_D2PPK)
+                                selection = self.selD2PPK )
 
     # }
 
@@ -312,13 +348,13 @@ default_config = {  'Daug_All_IPCHI2_MIN' : 2.0
                   , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
                   , 'PrescaleD2KPP' : 1.0
                   , 'PrescaleD2KKP' : 1.0
-                  , 'PrescaleD2KKK' : 1.0
-                  , 'PrescaleD2PPP' : 1.0
-                  , 'PrescaleD2KPPDCS' : 1.0
+                  , 'PrescaleD2KKK' : -1.0
+                  , 'PrescaleD2PPP' : -1.0
+                  , 'PrescaleD2KPPDCS' : -1.0
                   , 'PostscaleD2KPP' : 1.0
                   , 'PostscaleD2KKP' : 1.0
-                  , 'PostscaleD2KKK' : 1.0
-                  , 'PostscaleD2PPP' : 1.0
-                  , 'PostscaleD2KPPDCS' : 1.0
+                  , 'PostscaleD2KKK' : -1.0
+                  , 'PostscaleD2PPP' : -1.0
+                  , 'PostscaleD2KPPDCS' : -1.0
                  }
 
