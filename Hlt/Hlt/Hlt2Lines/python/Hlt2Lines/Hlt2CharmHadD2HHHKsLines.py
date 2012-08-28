@@ -187,7 +187,7 @@ class Hlt2CharmHadD2HHHKsLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def __KshhhTFDCombine(self, name, inputSeq, decayDesc = [ "D_s+ -> D+ KS0" ], extracuts = None) : # {
+    def __KshhhTFDCombine(self, name, inputSeq, decayDesc = [ "[D+ -> K*(892)+ KS0]cc" ], extracuts = None) : # {
         """
         # Function to configure the D+ -> K_S hhh combinations
         #   It lashes the new CombineParticles to a bindMembers with its
@@ -306,7 +306,7 @@ class Hlt2CharmHadD2HHHKsLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         combineKshhhTF3Body = Hlt2Member( CombineParticles
                                        , 'Combine'
-                                       , DecayDescriptors = [ "D+ -> pi- pi+ pi-", "D+ -> K+ K- pi+", "D+ -> K- pi+ pi+", "D+ -> K+ pi- pi+" ]
+                                       , DecayDescriptors = [ "[K*(892)+ -> pi- pi+ pi-]cc", "[K*(892)+ -> K+ K- pi+]cc", "[K*(892)+ -> K- pi+ pi+]cc", "[K*(892)+ -> K+ pi- pi+]cc" ]
                                        , Inputs = [ lclKshhhTFInputKaons, lclKshhhTFInputPions ]
                                        , CombinationCut = KshhhHHHcombcuts
                                        , MotherCut = KshhhHHHparentcuts
