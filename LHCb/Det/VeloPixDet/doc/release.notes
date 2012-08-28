@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2012-08-28 - Paul Szczypka / Pawel Jalocha
+ - change from VeloPix to VP in container names
+
 !========================= VeloPixDet v1r10 2011-02-22 =========================
 ! 2011-02-17 - Chris Jones
  - Fix some coverity resource leaks

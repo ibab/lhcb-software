@@ -30,7 +30,7 @@ static const CLID CLID_DeVeloPix = 8200;
   #pragma warning(disable:177) // variable was declared but never referenced
 #endif
 namespace DeVeloPixLocation{
-  static const std::string& Default="/dd/Structure/LHCb/BeforeMagnetRegion/VeloPix";
+  static const std::string& Default="/dd/Structure/LHCb/BeforeMagnetRegion/VP";
 }
 
 class DeVeloPix: public DetectorElement {
