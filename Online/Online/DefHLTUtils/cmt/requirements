@@ -22,18 +22,18 @@ macro_append ROOT_linkopts " -lGpad -lRint" WIN32 " libHist.lib "
 #apply_pattern install_more_includes more=Gaucho
 
 # linker library
-macro_append  DefHLTUtils_linkopts ${ROOT_linkopts}
-apply_pattern component_library library=DefHLTUtils
-library DefHLTUtils HLTPerfFormatter.cpp
-apply_pattern linker_library library=DefHLTUtils
+#apply_pattern component_library library=DefHLTUtil
+library DefUtil HLTPerfFormatter.cpp
+apply_pattern linker_library library=DefUtil
+macro_append  DefUtil_shlibflags ${ROOT_linkopts}
 
 #macro_append  DefHLTUtils_linkopts    " -lDefHLTUtils "
 
 #macro_append HLTFileEqualizer_linkopts " -lDefHLTUtils " WIN32 " libHist.lib "
 
 application HLTFileEqualizer ../src/HLTFileEqualizer.cpp
-macro_append  HLTFileEqualizer_dependencies    " DefHLTUtils "
-macro_append  HLTFileEqualizer_linkopts    " -lDefHLTUtils "
+macro_append  HLTFileEqualizer_dependencies    " DefUtil "
+#macro_append  HLTFileEqualizer_linkopts    " -lDefUtil "
 
 #macro_append  HLTFileEqualizer_dependencies    " ROMon "
 
@@ -41,12 +41,12 @@ macro_append  HLTFileEqualizer_linkopts    " -lDefHLTUtils "
 #macro_append  PerformanceFormatter_dependencies    " ROMon GaucholLib"
 
 application HLTDefBridge ../src/HLTDefBridge.cpp
-#macro_append  HLTDefBridge_dependencies    " DefHLTUtils "
+macro_append  HLTDefBridge_dependencies    " DefUtil "
 
 application DefHltPlot ../src/DefHltPlot.cpp
 #macro_append  DefHltPlot_dependencies   " GaucholLib "
-macro_append  DefHltPlot_dependencies    " DefHLTUtils "
-macro_append  DefHltPlot_linkopts    " -lDefHLTUtils "
+macro_append  DefHltPlot_dependencies    " DefUtil "
+#macro_append  DefHltPlot_linkopts    " -lDefUtil "
 
 # component library
 
