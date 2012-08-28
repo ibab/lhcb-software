@@ -452,11 +452,11 @@ BsPhiRho = {
                      'PRResMinMass'   : 0.,
                      'PRResMaxMass'   : 4000.,
                      'PRResVtxChiDOF' : 9.,
-                     'PRBMinM'        : 5000.,
+                     'PRBMinM'        : 4800.,
                      'PRBMaxM'        : 5600.,
                      'PRPhiWindow'    : 25.,
                      'PRBVtxChi2DOF'  : 9.,
-                     'PRIPCHI2'       : 15
+                     'PRIPCHI2' : 20
                     },
     'STREAMS' : [ 'Bhadron' ]
     }
