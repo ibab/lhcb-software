@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-08-28 - Thomas Blake
+ - Fixed Bhadron -> BhadronCompleteEvent for B2XTau
+
+
 ! 2012-08-25 - Anton Poluektov 
  - Add StrippingDstarD02KShhForTrackingEff to Calib dict
  - Enable DisplVertices

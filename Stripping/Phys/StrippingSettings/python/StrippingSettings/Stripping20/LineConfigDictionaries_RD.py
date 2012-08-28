@@ -721,7 +721,7 @@ KS02MuMu = {
 B2XTau =  {
     'BUILDERTYPE' : 'B2XTauConf',
     'WGs' : [ 'RD' ],
-    'STREAMS' : [ 'Bhadron' ],
+    'STREAMS' : [ 'BhadronCompleteEvent' ],
     'CONFIG' : {
     'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
     'PTMAX_HAD_ALL_FINAL_STATE'     : '500',  # MeV
