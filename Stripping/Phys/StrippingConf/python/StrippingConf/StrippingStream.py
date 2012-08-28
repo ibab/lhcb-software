@@ -74,10 +74,13 @@ class StrippingStream ( object ) :
 	    	line.MaxCandidates = self.MaxCandidates
 	    if line.MaxCombinations == "Override" : 
 	    	line.MaxCombinations = self.MaxCombinations
-	    	    
-	    line.createConfigurable( self.TESPrefix, self.HDRLocation )
-            log.debug("ADDING configurable " + line.configurable().name() + "to stream " + self.name() )
-            self.algs.append(line.configurable())
+
+	    if line.prescale() > 0. : 
+		line.createConfigurable( self.TESPrefix, self.HDRLocation )
+        	log.debug("ADDING configurable " + line.configurable().name() + "to stream " + self.name() )
+        	self.algs.append(line.configurable())
+    	    else : 
+    		log.warning("Line " + line.name() + " has zero prescale, skipping" )
 
         # Make the line for stream decision (OR of all stream lines)
 
