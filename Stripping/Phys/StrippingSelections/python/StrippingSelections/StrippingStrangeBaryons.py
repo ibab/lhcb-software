@@ -227,10 +227,10 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
            self.makeXiminus("XiminusDDL",  [Lambda2pPiD, PionsForXiDLList], 'Xi_FDCHI2_OWNPV_DDL')
 
            
-           self.makeXiminus("OmegaminusLLL",  [Lambda2pPiLOmega, KaonsForOmegaLList], 'Omega_FDCHI2_OWNPV')
-#           self.makeXiminus("OmegaminusDDL",  [Lambda2pPiD, KaonsForOmegaLList], 'Omega_FDCHI2_OWNPV')
-           self.makeXiminus("OmegaminusDDD",  [Lambda2pPiDOmega, KaonsForOmegaDList], 'Omega_FDCHI2_OWNPV')
-           self.makeXiminus("OmegaminusDDL",  [Lambda2pPiDOmega, KaonsForOmegaLList], 'Omega_FDCHI2_OWNPV')
+           self.makeOmegaminus("OmegaminusLLL",  [Lambda2pPiLOmega, KaonsForOmegaLList], 'Omega_FDCHI2_OWNPV')
+#           self.makeOmegaminus("OmegaminusDDL",  [Lambda2pPiD, KaonsForOmegaLList], 'Omega_FDCHI2_OWNPV')
+           self.makeOmegaminus("OmegaminusDDD",  [Lambda2pPiDOmega, KaonsForOmegaDList], 'Omega_FDCHI2_OWNPV')
+           self.makeOmegaminus("OmegaminusDDL",  [Lambda2pPiDOmega, KaonsForOmegaLList], 'Omega_FDCHI2_OWNPV')
 
            
 
