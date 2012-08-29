@@ -238,7 +238,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
 
        def makeXiminus(self, OutputList, DaughterLists, FDCHI2 ):            
               ''' Make a Xi minus candidate '''
-              print "Make %s"%OutputList
+              #print "Make %s"%OutputList
               PostVertexCuts = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s) & (LV01 > %(COS_L_Xi)s)" %self.config
               #PostVertexCuts = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s) " %self.config
               PostVertexCuts += "(BPVVDCHI2 > %s)" %self.config[FDCHI2]
@@ -262,7 +262,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
               
        def makeOmegaminus(self, OutputList, DaughterLists, FDCHI2 ): 
               ''' Make an Omega minus candidate '''
-              print "Make %s"%OutputList
+              #print "Make %s"%OutputList
               Omegaminus2LambdaK = createCombinationSel(OutputList = OutputList,
                                                         DecayDescriptor = "[Omega- -> Lambda0 K-]cc",
                                                         DaughterLists = DaughterLists,
@@ -295,12 +295,14 @@ def createCombinationSel( OutputList,
                           PreVertexCuts = "ALL",
                           PostVertexCuts = "ALL" ) :
        '''create a selection using a ParticleCombiner with a single decay descriptor'''
+       """
        print "here are combination parameters"
        print DecayDescriptor
        print DaughterLists
        print DaughterCuts
        print PreVertexCuts
        print PostVertexCuts
+       """
        combiner = CombineParticles( DecayDescriptor = DecayDescriptor,
                                     DaughtersCuts = DaughterCuts,
                                     MotherCut = PostVertexCuts,
