@@ -113,7 +113,7 @@ def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
     if not resVert:
         b2x = b2x.configurable(name+'Beauty2CharmVertexFitter')
         b2x.addTool(OfflineVertexFitter)
-        b2x.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+        b2x.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
         b2x.OfflineVertexFitter.useResonanceVertex = False
     return Selection(name,Algorithm=b2x,RequiredSelections=inputs)
 
