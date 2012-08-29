@@ -4,12 +4,14 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+! 2012-08-29 - Johannes Albrecht
+ - Hlt1GEC: add settings for Activity trigger
+ - add Hlt1pALines
 
 ! 2012-08-29 - Eric van Herwijnen
  - In Hlt1MuonLines, add an ODINFilter to Hlt1NoPVPassThrough to prevent it
    from firing while the velo is still open.
  
-
 !========================= Hlt1Lines v6r26 2012-07-04 =========================
 ! 2012-07-03 - Rosen Matev
  - In Hlt1BeamGasLines, add setting slot 'FullZVetoLumiTriggers' (boolean),
