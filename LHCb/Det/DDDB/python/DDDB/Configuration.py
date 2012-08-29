@@ -134,7 +134,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20120413")
-        self.__set_tag__(["LHCBCOND"], "cond-20120730")
+        self.__set_tag__(["LHCBCOND"], "cond-20120829")
         self.__set_tag__(["DQFLAGS"], "dq-20120727")
         if not self.getProp("Simulation"):
             # set initialization time to a safe default
@@ -146,7 +146,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "dddb-20120727")
-        self.__set_tag__(["LHCBCOND"], "cond-20120730")
+        self.__set_tag__(["LHCBCOND"], "cond-20120829")
         self.__set_tag__(["DQFLAGS"], "dq-20120727")
         if not self.getProp("Simulation"):
             self.__set_init_time__(datetime.utcfromtimestamp(1319991087)) # End of fill 2267
