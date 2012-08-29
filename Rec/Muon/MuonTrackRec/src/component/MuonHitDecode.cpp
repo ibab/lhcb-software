@@ -73,11 +73,11 @@ StatusCode MuonHitDecode::initialize() {
 StatusCode MuonHitDecode::decodeRawData() 
 {
   StatusCode sc;
-  std::vector<std::pair<LHCb::MuonTileID,unsigned int> >  tileAndTDC;
-  std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator it;
 
+  typedef std::vector<std::pair<LHCb::MuonTileID,unsigned int> > TileAndTDCMap;
+  TileAndTDCMap tileAndTDC;
 
-  MuonLogHit* newhit=NULL;
+  MuonLogHit * newhit = NULL;
   // run MuonRawBuffer on all avilable BXs
 
   bool validLocation = false;
@@ -90,23 +90,24 @@ StatusCode MuonHitDecode::decodeRawData()
       debug()<<"Looking at BX: "<<i<<" "<<locBX(i)<<endmsg;
 
     // -- Check raw locations and load raw event. Second option is for backward compatibility
-    LHCb::RawEvent* raw = getIfExists<LHCb::RawEvent>(locBX(i)+LHCb::RawEventLocation::Muon) 
+    LHCb::RawEvent* raw = getIfExists<LHCb::RawEvent>(evtSvc(),locBX(i)+LHCb::RawEventLocation::Muon);
     if ( raw )
     {
       validLocation = true;
     }
     else
     {
-      raw = getIfExists<LHCb::RawEvent>(locBX(i)+LHCb::RawEventLocation::Default);
+      raw = getIfExists<LHCb::RawEvent>(evtSvc(),locBX(i)+LHCb::RawEventLocation::Default);
       if ( raw ) { validLocation = true; }
     }
   
-    if(!raw) continue;
+    if (!raw) continue;
 
     sc = m_recTool->getTileAndTDC(raw,tileAndTDC,locBX(i));
     if (!sc) return sc;
 
-    for(it = tileAndTDC.begin(); it != tileAndTDC.end(); it++){
+    for( TileAndTDCMap::iterator it = tileAndTDC.begin(); it != tileAndTDC.end(); ++it ) 
+    {
       // set the time taking into account the BX. must be positive so I need to add an offset...
       unsigned int tprim = (*it).second;
       (*it).second += (7+i)*16;
@@ -124,16 +125,16 @@ StatusCode MuonHitDecode::decodeRawData()
     m_recTool->forceReset();
   }
 
-  if(!validLocation) error() << "No valid raw data found in: " << LHCb::RawEventLocation::Muon
-                             << " and " << LHCb::RawEventLocation::Default
-                             << " and corresponding Prev/Next locations" << endmsg;
-
+  if (!validLocation) error() << "No valid raw data found in: " << LHCb::RawEventLocation::Muon
+                              << " and " << LHCb::RawEventLocation::Default
+                              << " and corresponding Prev/Next locations" << endmsg;
 
   if ( msgLevel(MSG::DEBUG) )
     debug()<<"Size of tilesAndTDC container is: "<<m_tilesAndTDC.size()<<endmsg;
 
   // create list of MuonLogHit objects
-  for(it = m_tilesAndTDC.begin(); it != m_tilesAndTDC.end(); it++){
+  for ( TileAndTDCMap::iterator it = m_tilesAndTDC.begin(); it != m_tilesAndTDC.end(); ++it )
+  {
     newhit = new MuonLogHit( &((*it).first) );
     long L1Number,link_number,ODE_number,ode_ch;
     m_muonDetector->getDAQInfo()->findHWNumber ( (*it).first,
