@@ -66,29 +66,31 @@ __version = '$Revision: 1.6 $'
 
 confdict={
 ##     'LooseNOPr' : { 'Prescale'    : 1.0 ,
-##                 'Postscale'   : 1.0 ,
-##                 #muon paramters # loose # Tight
-##                 'MuPT'        : 700, # 800  # MeV
-##                 'MuTrPID'     :-20,  # -5   
-##                 #kaon parameters
-##                 'KPT'         : 350, # 350  # MeV
-##                 'KTrPID'      : -5,  #-5    
-##                 #pion parameters
-##                 'PiPT'        : 350, # MeV
-##                 #D0-resonance parameters
-##                 'D0MassW'     : 60, # 40    # MeV
-##                 'D0_BPVVDCHI2': 50,
-##                 #Dstar-resonance parameters
-##                 'Dstar_PT'     : 1250, # 1250 # MeV
-##                 'Dstar_VCHI2'  : 25, # 20 # 
-##                 'DstarMassW'   : 80, # 50 # MeV
-##                 #Bd-resonance parameters
-##                 'B0d_VCHI2'    : 10, # 10 # 
-##                 'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
-##                 'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
-##                 },
+##                  'Postscale'   : 1.0 ,
+##                  'TrGHOSTPROBCut' : 1, # loose cut   
+##                  #muon paramters # loose # Tight
+##                  'MuPT'        : 700, # 800  # MeV
+##                  'MuTrPID'     :-20,  # -5   
+##                  #kaon parameters
+##                  'KPT'         : 350, # 350  # MeV
+##                  'KTrPID'      : -5,  #-5    
+##                  #pion parameters
+##                  'PiPT'        : 350, # MeV
+##                  #D0-resonance parameters
+##                  'D0MassW'     : 60, # 40    # MeV
+##                  'D0_BPVVDCHI2': 50,
+##                  #Dstar-resonance parameters
+##                  'Dstar_PT'     : 1250, # 1250 # MeV
+##                  'Dstar_VCHI2'  : 25, # 20 # 
+##                  'DstarMassW'   : 80, # 50 # MeV
+##                  # Bd-resonance parameters
+##                  'B0d_VCHI2'    : 10, # 10 # 
+##                  'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
+##                  'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
+##                  },
     'Loose' : { 'Prescale'    : 0.3 ,
                 'Postscale'   : 1.0 ,
+                'TrGHOSTPROBCut' : 1, # loose cut   
                 #muon paramters # loose # Tight
                 'MuPT'        : 700, # 800  # MeV
                 'MuTrPID'     :-20,  # -5   
@@ -111,6 +113,7 @@ confdict={
                 },
     'Tight'   : {'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
+                 'TrGHOSTPROBCut' : 0.5, # 
                  #muon paramters # 
                  'MuPT'        : 800, # MeV
                  'MuTrPID'     :-5,
@@ -195,7 +198,7 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
     Line=None
     Selections=[]
     TopSelectionSeq=None
-    
+
     MuCut=''
     KCut=''
     PiCut=''
@@ -217,6 +220,7 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
     __configuration_keys__=[
         'Prescale',
         'Postscale',
+        'TrGHOSTPROBCut',
         #muon paramters
         'MuPT',
         'MuTrPID',
@@ -252,15 +256,18 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
 
         # Cuts for Mu        
         self.MuCut = " (PT >  %(MuPT)s *MeV) & (P > 2.0*GeV) & (ISMUON) & (HASMUON) & "\
+                     " (TRGHOSTPROB < %(TrGHOSTPROBCut)s) & "\
                      " (PIDmu > %(MuTrPID)s) " % config
 
         # Cuts to refine D0 selection
 	self.KCut  = "& CHILDCUT(CHILDCUT( (PT > %(KPT)s*MeV) & (P > 2.0*GeV) & "\
                      " (MIPDV(PRIMARY) > 0.04*mm) & "\
+                     " (TRGHOSTPROB < %(TrGHOSTPROBCut)s) & "\
                      " (PIDK >  %(KTrPID)s ),1),2) " % config
 		     
         
 	self.PiCut = "& CHILDCUT(CHILDCUT( (PT> %(PiPT)s*MeV) & (P > 2.0*GeV) & "\
+                     " (TRGHOSTPROB < %(TrGHOSTPROBCut)s) & "\
                      " (MIPDV(PRIMARY) > 0.04*mm) ,2),2) " % config
 
 
