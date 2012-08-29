@@ -533,14 +533,16 @@ LHCb::Track::eraseInfo( const int key )
 std::ostream& LHCb::Track::fillStream(std::ostream& os) const
 {
   os << "*** Track ***" << std::endl
-     << " key     : " << key() << std::endl
-     << " type    : " << type() << std::endl
-     << " history : " << history() << std::endl
-     << " fitstatus: " << fitStatus() << std::endl
-     << " # ids    : " << nLHCbIDs() << std::endl
-     << " # meas   : " << nMeasurements() << std::endl
+     << " key        : " << key() << std::endl
+     << " type       : " << type() << std::endl
+     << " history    : " << history() << std::endl
+     << " fitstatus  : " << fitStatus() << std::endl
+     << " # ids      : " << nLHCbIDs() << std::endl
+     << " # meas     : " << nMeasurements() << std::endl
      << " chi2PerDoF : " << (float)m_chi2PerDoF << std::endl
-     << " nDoF       : " << m_nDoF << std::endl;
+     << " nDoF       : " << m_nDoF << std::endl
+     << " GhostProb  : " << ghostProbability() << std::endl
+     << " Likelihood : " << likelihood() << std::endl;
 
   os << " extraInfo : [";
   for ( ExtraInfo::const_iterator i = extraInfo().begin();

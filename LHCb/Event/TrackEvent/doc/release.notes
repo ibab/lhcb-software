@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+! 2012-08-29 - Chris Jones
+ - Add likelihood and ghost probability to Track::fillStream printout.
+
 !========================= TrackEvent v5r17 2012-07-24 =========================
 ! 2012-07-22 - Wouter Hulsbergen
  - Added extra info field for fraction of used OT drifttimes.
