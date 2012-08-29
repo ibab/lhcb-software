@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to configurable
+   . Run PuVetoFillRawBuffer in the DigiVeloSeq. Previously this was done in
+     the L0 emulation, no longer done by default in Boole.
+
  - Changes to references to follow changes in underlying packages
    . Adapt boole-2011-latestdb.ref to new global tags "dddb-20120727" and
      "sim-20120726-vc-md100" (updates Velo R sensor cross-talk simulation) 

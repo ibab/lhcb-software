@@ -315,13 +315,13 @@ class Boole(LHCbConfigurableUser):
     def configureDigiVelo(self, seq, tae ):
         # Velo digitisation and clustering (also for PuVeto and trigger)
         if tae == "":
-            from Configurables import VeloSim
+            from Configurables import (VeloSim, PuVetoFillRawBuffer)
             importOptions("$VELOSIMULATIONROOT/options/VeloSim.opts")
             seq.Members += [ VeloSim("VeloSim") ]
             seq.Members += [ VeloSim("VeloPUSim") ]
             if True != self.getProp("VeloTell1Processing"):
                 from Configurables import (VeloDataProcessor, VeloClusterMaker,
-                                           PrepareVeloRawBuffer)
+                                           PrepareVeloRawBuffer )
                 importOptions("$VELOALGORITHMSROOT/options/VeloAlgorithms.opts")
                 seq.Members += [ VeloDataProcessor("VeloDataProcessor") ]
                 if self.getProp("DataType") == "Upgrade" :
@@ -340,6 +340,7 @@ class Boole(LHCbConfigurableUser):
                 from Configurables import VeloTell1DataProcessor, VeloSimTell1ClusterMaker
                 seq.Members += [ VeloTell1DataProcessor() ]
                 seq.Members += [ VeloSimTell1ClusterMaker() ]
+            seq.Members += [ PuVetoFillRawBuffer() ]
         else:
             raise RuntimeError("TAE not implemented for VELO")
 
