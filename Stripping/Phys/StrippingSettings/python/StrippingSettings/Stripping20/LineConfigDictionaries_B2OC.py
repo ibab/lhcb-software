@@ -6,7 +6,7 @@ Beauty2Charm = {
     'PT_MIN'        : '100*MeV',
     'P_MIN'         : '1000*MeV',
     'MIPCHI2DV_MIN' : 4., 
-    'TRGHP_MAX'     : 0.4
+    'TRGHP_MAX'     : 0.3
     },
     "UPSTREAM" : { # Cuts made on all upstream particles
     'TRCHI2DOF_MAX' : 3.,
@@ -105,7 +105,7 @@ Beauty2Charm = {
     'B02D0D0Beauty2CharmLine'   : 1.0,
     'B02DDWSBeauty2CharmLine'   : 1.0
     },
-    'GECNTrkMax'   : 500
+    'GECNTrkMax'   : 250
   }, 
   'STREAMS' : { 
     'BhadronCompleteEvent' : [
