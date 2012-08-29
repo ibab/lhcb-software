@@ -30,11 +30,19 @@ Hlt::GEC::GEC
   : base_class  ( type , name , parent )
   , m_maxOTHits ( 10000 )
   , m_maxITHits ( 3000 )
-  , m_maxVeloHits ( 3000 )    
+  , m_maxVeloHits ( 3000 )
+  , m_minOTHits ( 50 )
+  , m_minITHits ( 50 )
+  , m_minVeloHits ( 50 )
+  , m_isActivity ( false) 
 {
   declareProperty ( "MaxOTHits" , m_maxOTHits , "Maximum number of OT-hits" ) ;
   declareProperty ( "MaxITHits" , m_maxITHits , "Maximum number of IT-hits" ) ;
   declareProperty ( "MaxVeloHits" , m_maxVeloHits , "Maximum number of Velo-hits" ) ;
+  declareProperty ( "MinOTHits" , m_minOTHits , "Minimum number of OT-hits" ) ;
+  declareProperty ( "MinITHits" , m_minITHits , "Minimum number of IT-hits" ) ;
+  declareProperty ( "MinVeloHits" , m_minVeloHits , "Minimum number of Velo-hits" ) ;
+  declareProperty ( "IsActivity" , m_isActivity , "is activity trigger or upper GEC " );
 }
 // ============================================================================
 // virtual & protected destructor 
@@ -65,10 +73,21 @@ StatusCode Hlt::GEC::finalize ()
 // ============================================================================
 bool Hlt::GEC::accept () const 
 { 
-  return (m_maxOTHits<0   || (int)m_rawBankDecoder->totalNumberOfHits() < m_maxOTHits)
+  if ( m_isActivity ){
+    //always()<<"run activity trigger"<<endmsg;
+    return (m_minOTHits<0   || (int)m_rawBankDecoder->totalNumberOfHits() > m_minOTHits)
+      || (m_minITHits<0   || (int)get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters)->size() > m_minITHits)
+      || (m_minVeloHits<0 || (int)get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default)->size() > m_minVeloHits) 
+      ;
+    
+  }
+  else {
+    return (m_maxOTHits<0   || (int)m_rawBankDecoder->totalNumberOfHits() < m_maxOTHits)
       && (m_maxITHits<0   || (int)get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters)->size() < m_maxITHits)
       && (m_maxVeloHits<0 || (int)get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default)->size() < m_maxVeloHits) 
       ;
+  }
+  
 }
 // ============================================================================
 // check

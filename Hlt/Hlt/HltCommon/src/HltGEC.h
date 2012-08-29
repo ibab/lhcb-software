@@ -88,10 +88,18 @@ namespace Hlt
     /// the maximum number of IT-hits 
     int m_maxITHits;                  // the maximum number of IT-hits
     /// the maximum number of Velo-hits 
-    int m_maxVeloHits;                  // the maximum number of Velo-hits    
+    int m_maxVeloHits; 
+    /// the minimum number of OT-hits 
+    int m_minOTHits;                  // the minimum number of OT-hits 
+    /// the minimum number of IT-hits 
+    int m_minITHits;                  // the minimum number of IT-hits
+    /// the minimum number of Velo-hits 
+    int m_minVeloHits;                  // the minimum number of Velo-hits    
     /// the decodetr tool 
     IOTRawBankDecoder* m_rawBankDecoder; // the decodetr tool 
-    // ========================================================================
+    //is it a upper GEC or an activity trigger
+    bool m_isActivity;
+    // ========================================================================    
   };
   // ==========================================================================
 } // end of namespace Hlt
