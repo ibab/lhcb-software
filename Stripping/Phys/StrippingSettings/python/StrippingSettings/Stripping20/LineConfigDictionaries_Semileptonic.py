@@ -169,6 +169,7 @@ Bd2DstarMuNu = {
     'CONFIG' :
     { 'Loose' : { 'Prescale'    : 0.3 ,
                 'Postscale'   : 1.0 ,
+                  'TrGHOSTPROBCut' : 1, # loose cut
                 #muon paramters # loose # Tight
                 'MuPT'        : 700, # 800  # MeV
                 'MuTrPID'     :-20,  # -5  
@@ -191,6 +192,7 @@ Bd2DstarMuNu = {
                   },
       'Tight'   : {'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
+                   'TrGHOSTPROBCut' : 0.5, #
                  #muon paramters #
                  'MuPT'        : 800, # MeV
                  'MuTrPID'     :-5,

@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-08-29 - Jibo He
+ - Stripping20/LineConfigDictionaries_Semileptonic.py
+   . Updated conf dict of Bd2DstarMuNu
+ - Updated stripping20 dbase 
+
 ! 2012-08-28 - Anton Poluektov 
  - Update B2OC dict for Stripping20 (move some lines between Bhadron and BhadronCompleteEvent streams)
 
