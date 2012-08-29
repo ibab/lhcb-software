@@ -51,7 +51,7 @@ public:
   enum BannedCaloCluster { InfMom, TrackMatch ,TrackMatchTT ,TrackMatchHCAL ,TrackMatchHCALTT , Bremsstrahlung ,
                            Photon  , CnvPhoton  , ResolvedPi0 , MergedPi0 , ChargedHadron } ;
 
-  enum ChargedOperation { Unknown, RejectDoNotBanCluster , RejectBanCluster, KeepInPF, KeepInPFBanned } ;
+  enum ChargedOperation { Unknown, RejectDoNotBanCluster , RejectBanCluster, KeepInPF, KeepInPFBanned , TurnTo0Momentum } ;
 
 protected:
 
@@ -176,6 +176,10 @@ private:
 
   double m_photonID4PhotonTban;
 
+  double m_minHCALE_NR;
+  double m_minECALE_NR;
+  
+
   typedef std::map< std::string , std::pair< const IProtoParticleFilter* , const LHCb::ParticleProperty * > > ProtoMap;
   ProtoMap m_protoMap;
 
@@ -183,25 +187,20 @@ private:
   
   bool m_neutralRecovery;
 
+  bool m_useVelo;
+
   const DeCalorimeter* m_ecal ;
   const DeCalorimeter* m_hcal ;
   //-----------------------------------------
-
-
 };
 
 
-
-
-class sortChi2PerDoF {
+class sortChi2 {
  public:
-  inline bool operator() (const LHCb::Particle* obj1 ,
-			  const LHCb::Particle* obj2) { 
-    return obj1->endVertex()->chi2PerDoF()  < obj2->endVertex()->chi2PerDoF();      
-  }
-}; 
-
-
-
+ inline bool operator() (const LHCb::Particle* obj1 ,
+ const LHCb::Particle* obj2) { 
+ return obj1->endVertex()->chi2PerDoF() < obj2->endVertex()->chi2PerDoF(); 
+ }
+};
 
 #endif // PARTICLEFLOW4JETS_H

@@ -3,7 +3,7 @@ __author__  = "Victor Coco <Victor.Coco@cern.ch>"
 
 from LHCbKernel.Configuration import *
 
-from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow4Jets, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , CaloClusterMCTruth,CaloDigit2MCLinks2Table,NeutralPP2MC , PVRelatorAlg)
+from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow4Jets, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , CaloClusterMCTruth,CaloDigit2MCLinks2Table,NeutralPP2MC , PVRelatorAlg, ChargedProtoParticleMaker)
 
 
 #####################################
@@ -63,8 +63,8 @@ class ParticleFlowConf:
          self.InputParticles = _InputParticles
          self.MC = _MCSeq
          ## Default parameter: the closer from what we used before + HCAL
-         self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. ,
-                          'Chi2MaxDown': 10. , 'Chi2MaxUp': 10. , 'PtMinUp': 0. , 'UseTTHits':False ,'MaxChi2NoTT': 5.,
+         self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. , 'TrackType':['Downstream','Long','Upstream'],
+                          'Chi2MaxDown': 10. , 'Chi2MaxUp': 10. , 'PtMinUp': 0. ,'Chi2MaxVelo': 10. ,'UseTTHits':False ,'MaxChi2NoTT': 5.,
                           'UseHCAL': True ,'MaxMatchECALTr': 4.,'MinHCALE': 1800.,'UsePIDInfo':True,
                           'MaxMatchHCALLowEValue': 5000.,'MaxMatchHCALHighEValue': 10000.,
                           'MaxMatchHCALTrSmallE': 25.,'MaxMatchHCALTrMediumE':16. ,'MaxMatchHCALTrLargeE':16. ,'MaxMatchHCALTr_T': 16.,
@@ -74,7 +74,8 @@ class ParticleFlowConf:
                           'CandidateToBanLocation':'','PFProtoParticlesOutputLocation':"Rec/ProtoP/PF",
                           'PFOutputLocation': "Phys/PFParticles/Particles",'PFBannedOutputLocation':"Phys/PFBannedParticles/Particles",
                           'PFHiddenNeutralOutputLocation':"Phys/PFNeutralParticles/Particles",
-                          "CalibECAL_EovP": 0.1,"CalibHCAL_EovP": 0.9,"NSigmaForCaloRecovery": 3.
+                          "CalibECAL_EovP": 0.1,"CalibHCAL_EovP": 0.9,"NSigmaForCaloRecovery": 3.,
+                          "MinECALE_NeutralRecovery": 0.,"MinHCALE_NeutralRecovery": 0.,'UseVelo':False
                           }
 ##          self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. ,
 ##                           'Chi2MaxDown': 7. , 'Chi2MaxUp': 7. , 'PtMinUp': 0. , 'UseTTHits':True ,'MaxChi2NoTT': 3.,
@@ -113,6 +114,7 @@ class ParticleFlowConf:
         for key in self.paramDef.keys():
             if params.has_key(key): self.__dict__[key] = params[key]
             else: self.__dict__[key] = self.paramDef[key]
+        if "Velo" in self.TrackType and not self.UseVelo: self.UseVelo=True
 
 
     
@@ -124,9 +126,28 @@ class ParticleFlowConf:
         alg = ParticleFlow4Jets ( self.name )
 
         ## Definition of cuts to apply to input tracks for inputselection
-        TrackCuts = {  "Long"       : {   "Chi2Cut" : [0,self.Chi2MaxLong]  , "MinPtCut": self.PtMinLong, "CloneDistCut" : [5000, 9e+99 ],"AcceptClones" : self.AcceptClone }
-                       ,"Downstream" : {  "Chi2Cut" : [0,self.Chi2MaxDown] , "MinPtCut": self.PtMinDown }
-                       ,"Upstream"   : {  "Chi2Cut" : [0,self.Chi2MaxUp] , "MinPtCut": self.PtMinUp }}
+        
+        TrackCuts = {}
+        print '###################################### ',self.TrackType
+        if self.UseVelo and not "Velo" in self.TrackType:
+            self.TrackType.append("Velo")
+        for trtype in self.TrackType:
+            if trtype == "Long":
+                TrackCuts["Long"]={   "Chi2Cut" : [0,self.Chi2MaxLong]  , "MinPtCut": self.PtMinLong, "CloneDistCut" : [5000, 9e+99 ],"AcceptClones" : self.AcceptClone }
+            if trtype == "Downstream":
+                TrackCuts["Downstream"]={  "Chi2Cut" : [0,self.Chi2MaxDown]   , "MinPtCut": self.PtMinDown }
+            if trtype == "Upstream":
+                TrackCuts["Upstream"]={  "Chi2Cut" : [0,self.Chi2MaxUp]     , "MinPtCut": self.PtMinUp }
+            if trtype == "Velo":
+                TrackCuts["Velo"]={  "Chi2Cut" : [0,self.Chi2MaxVelo]    }
+                protos = ChargedProtoParticleMaker("VeloProtoPMaker")
+                protos.Inputs = ["Rec/Track/Best"]
+                protos.Output = "Rec/ProtoP/VeloProtoPMaker"
+                protos.addTool( DelegatingTrackSelector, name="TrackSelector" )
+                protos.TrackSelector.TrackTypes = ["Velo"]
+                self.setupTypeTrackSelector( "Velo" , protos.TrackSelector ,TrackCuts["Velo"] )
+                self.algorithms.append(  protos )   
+                
         
         ## Neutral related cuts
 
@@ -165,7 +186,7 @@ class ParticleFlowConf:
                 alg.TrackSelectorType = "DelegatingTrackSelector"
                 alg.addTool( DelegatingTrackSelector, name="TrackSelector" )
                 tracktypes = TrackCuts.keys()
-                alg.TrackSelector.TrackTypes = ["Long","Downstream","Upstream"]
+                alg.TrackSelector.TrackTypes = self.TrackType
                 for type in tracktypes : self.setupTypeTrackSelector( type, alg.TrackSelector,TrackCuts )
                 
                 ## Track related cuts
