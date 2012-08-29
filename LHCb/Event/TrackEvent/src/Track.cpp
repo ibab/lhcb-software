@@ -384,31 +384,41 @@ Track* Track::clone() const
 void Track::copy( const Track& track )
 {
   reset();
+
   setChi2PerDoF( track.chi2PerDoF() );
   setNDoF( track.nDoF() );
   setFlags( track.flags() );
   setLhcbIDs( track.lhcbIDs() );
   setExtraInfo( track.extraInfo() );
+  setGhostProbability( track.ghostProbability() );
+  setLikelihood( track.likelihood() );
   
   // copy the states
   m_states.reserve( track.states().size() ) ;
-  for( std::vector<State*>::const_iterator istate = track.states().begin() ;
-       istate != track.states().end(); ++istate)
-    m_states.push_back( (*istate)->clone() ) ;
+  for ( std::vector<State*>::const_iterator istate = track.states().begin();
+        istate != track.states().end(); ++istate )
+  {
+    m_states.push_back( (*istate)->clone() );
+  }
   
   // copy the track fit info
-  if( track.m_fitResult ) m_fitResult = track.m_fitResult->clone() ;
+  if ( track.m_fitResult ) { m_fitResult = track.m_fitResult->clone(); }
 
   // copy the ancestors
   const SmartRefVector<Track>& ancestors = track.ancestors();
-  for (SmartRefVector<Track>::const_iterator it4 = ancestors.begin();
-       it4 != ancestors.end();  ++it4) addToAncestors(*(*it4));
+  for ( SmartRefVector<Track>::const_iterator it4 = ancestors.begin();
+        it4 != ancestors.end(); ++it4 )
+  {
+    addToAncestors(*(*it4));
+  }
+
 }
 
 //=============================================================================
 // Clear the state vector
 //=============================================================================
-void Track::clearStates() { 
+void Track::clearStates()
+{ 
   std::for_each(m_states.begin(), m_states.end(),TrackFunctor::deleteObject()) ;
   m_states.clear();
 }
