@@ -5,8 +5,9 @@
 !-------------------------------------------------------------------------------
 
 ! 2012-08-29 - Chris Jones
- - Add likelihood and ghost probability to Track::fillStream printout.
- - Properly set the ghost prob and likelihood values in Track::copy
+ - Add likelihood and ghost probability to LHCb::Track::fillStream printout.
+ - Properly set the ghost prob and likelihood values in LHCb::Track::copy
+ - Add a proper copy constructor for LHCb::Track
 
 !========================= TrackEvent v5r17 2012-07-24 =========================
 ! 2012-07-22 - Wouter Hulsbergen

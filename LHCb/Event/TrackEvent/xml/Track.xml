@@ -278,7 +278,7 @@
 	argList  = "const LHCb::Track::History&amp; history, const LHCb::Track::Types&amp; trackType,
                     const LHCb::Track::PatRecStatus&amp; patStatus"
 	explicit = "TRUE"
-	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(), m_states(), m_fitResult(0),  m_ancestors()">
+	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(), m_states(), m_fitResult(0), m_ancestors()">
       <code>
       setHistory(history);
       setType(trackType);
@@ -286,7 +286,14 @@
       </code>
       </constructor>
 
-
+    <constructor 
+       desc     = "Copy constructor." 
+       initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(), m_states(), m_fitResult(0), m_ancestors()">
+         <arg const="TRUE" name="track" type="LHCb::Track"/>
+       <code>
+         this -&gt; copy( track ); 
+       </code>
+    </constructor>
 
       <destructor
         desc = 'Track destructor'>

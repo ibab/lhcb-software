@@ -362,8 +362,7 @@ void Track::reset()
 //=============================================================================
 Track* Track::cloneWithKey( ) const
 {
-  int theKey = this -> key();
-  Track* tr = new Track( theKey );
+  Track* tr = new Track( this -> key() );
   tr -> copy( *this );
   return tr;
 }
