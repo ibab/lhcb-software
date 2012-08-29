@@ -261,5 +261,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         Hlt1NoPVMuonPassThrough = Line( 'NoPVPassThrough'
                                         , prescale = self.prescale
                                         , L0DU = "L0_CHANNEL_RE('.*lowMult')"
+					, ODIN = "~jbit( ODIN_EVTTYP,0 )"
                                         , postscale = self.postscale)
 
