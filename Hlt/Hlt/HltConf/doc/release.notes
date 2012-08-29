@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-08-29 - Johannes Albrecht
+ - add Hlt1pALines in Hlt1.py and the lines in HltInit.py 
+
 ! 2012-08-27 - V. Gligorov
  - Add Hlt1HighPTJet line in HltInit
  - Add Ks->HHMuMu and hyperon lines to Hlt2.py
