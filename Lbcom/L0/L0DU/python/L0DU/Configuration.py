@@ -33,6 +33,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"FilterL0FromRaw": False
         ,"MonitorL0"      : False
         ,"TCK"            : None
+        ,"FullPileUpSimulation"     : False
         ,"EnableL0DecodingOnDemand" : False
         ,"FastL0DUDecoding"         : False
         ,"FullL0MuonDecoding"       : False
@@ -68,7 +69,8 @@ class L0Conf(LHCbConfigurableUser) :
         ,"FilterL0FromRaw": """ If True, run the L0DU decoding and filter according to L0 decision."""
         ,"FilterL0"       : """ If True, filter according to L0 decision."""
         ,"TCK"            : """ Specifies the TCK to be used in simulation or emulation."""
-        ,"EnableL0DecodingOnDemand" : """If True, setup the data on demand service for L0."""
+        ,"FullPileUpSimulation"     : """ If True, perform the full pileup simulation, filling raw banks from MC/Velo/PuFEs with PuVetoFillRawBuffer."""
+        ,"EnableL0DecodingOnDemand" : """ If True, setup the data on demand service for L0."""
         ,"FastL0DUDecoding"         : """ If True, activate fast decoding for L0DU."""
         ,"FullL0MuonDecoding"       : """ If True, decode all the L0Muon banks. Otherwise, decode only the one with the L0MuonCandidates."""
         ,"IgnoreL0MuonCondDB"       : """ If True, the L0Muon emulator parameter are not taken from the condition data base.""" 
@@ -234,9 +236,10 @@ class L0Conf(LHCbConfigurableUser) :
         if self.getProp("SimulateL0"):
             l0simulationSeq = GaudiSequencer( "L0SimulationSeq" )
 
-            # Pus specific processing : fill raw from MC
-            from Configurables import PuVetoFillRawBuffer
-            l0simulationSeq.Members+=[PuVetoFillRawBuffer()]
+            if self.getProp("FullPileUpSimulation"):
+                # Pus specific processing : fill raw from MC
+                from Configurables import PuVetoFillRawBuffer
+                l0simulationSeq.Members+=[PuVetoFillRawBuffer()]
 
             # Run emulators (L0Calo + L0Muon + PUVeto + L0DU)
             l0simulationSeq.Members+=[ self.l0emulatorSeq( writeBanks=True, writeOnTes=True ) ]
