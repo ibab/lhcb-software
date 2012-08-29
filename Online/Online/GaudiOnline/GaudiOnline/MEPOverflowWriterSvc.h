@@ -126,6 +126,7 @@ namespace LHCb
     FileDescr *m_FileDesc;
     ///List of runs and descriptors;
     std::map<unsigned int,RunDesc*> m_RunList;
+    std::string m_node;
 
   public:
     /// Standard Constructor

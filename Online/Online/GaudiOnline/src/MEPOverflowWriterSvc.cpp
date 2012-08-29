@@ -103,9 +103,11 @@ StatusCode MEPOverflowWriterSvc::initialize()
   StatusCode sc = OnlineService::initialize();
   m_BytesOut = 0;
   m_NumFiles = 0;
+  m_node = RTL::nodeNameShort();
   MsgStream log(msgSvc(), name());
   if (sc.isSuccess())
   {
+
     if (service(m_mepMgrName, m_mepMgr).isSuccess())
     {
       try
@@ -248,9 +250,9 @@ FileDescr *MEPOverflowWriterSvc::openFile(unsigned int runn)
   r->m_CurrentFileDescr = f;
   f->m_Sequence = seq;
   char fname[255];
-  std::string format = m_FilePrefix+"%07d_%s.MEP";
+  std::string format = m_FilePrefix+"%07d_%s.%s.MEP";
   std::string ftim = FileTime();
-  sprintf(fname,format.c_str(),runn,ftim.c_str());
+  sprintf(fname,format.c_str(),runn,ftim.c_str(),m_node.c_str());
   f->m_BytesWritten = 0;
   f->m_Handle = open(fname,O_RDWR|O_CREAT,S_IRWXU|S_IRWXG|S_IRWXO);
   f->m_FileName = fname;
@@ -295,7 +297,7 @@ std::string MEPOverflowWriterSvc::FileTime()
 void MEPOverflowWriterSvc::handleFileWriteError()
 {
   std::string node;
-  node = RTL::nodeNameShort();
+  node = m_node;
   for (unsigned int i=0;i<node.size();i++)
   {
     node[i] = toupper(node[i]);
