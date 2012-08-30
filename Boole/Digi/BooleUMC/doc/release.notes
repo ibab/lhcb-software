@@ -4,6 +4,10 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+! 2012-08-30 - Paul Szczypka
+ - Modify BuildMCTrackInfoUpgrade to use renamed VP (VeloPix)
+ - Modify BuildMCTrackWithVeloPixInfo to use renamed VP (VeloPix)
+
 ! 2012-07-30 - Olivier Callot
  - Modify BuildMCTrackInfoUpgrade to use VL (Velo light)
  - FT is implemented in BuildMCTrackInfoUpgrade

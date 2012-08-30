@@ -258,7 +258,8 @@ void BuildMCTrackWithVeloPixInfo::computeAcceptance ( std::vector<int>& station 
   const bool isDebug = msgLevel(MSG::DEBUG);
   std::vector<int> nVeloPix( station.size(), 0 );
   
-  LHCb::MCHits* veloPixHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VeloPix);
+  LHCb::MCHits* veloPixHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP);
+  //LHCb::MCHits* veloPixHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VeloPix);
   for ( LHCb::MCHits::const_iterator vHit = veloPixHits->begin();
         veloPixHits->end() != vHit; vHit++ ) {
     unsigned int MCNum = (*vHit)->mcParticle()->key();

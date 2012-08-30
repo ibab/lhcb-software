@@ -359,7 +359,8 @@ void BuildMCTrackInfoUpgrade::computeAcceptance ( std::vector<int>& station ) {
   const bool isDebug = msgLevel(MSG::DEBUG);
   if ( m_withVP ) {
     std::vector<int> nVeloPix( station.size(), 0 );
-    LHCb::MCHits* veloHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VeloPix);
+    //LHCb::MCHits* veloHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VeloPix);
+    LHCb::MCHits* veloHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP);
     for ( LHCb::MCHits::const_iterator vHit = veloHits->begin();
           veloHits->end() != vHit; vHit++ ) {
       unsigned int MCNum = (*vHit)->mcParticle()->key();
