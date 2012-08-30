@@ -185,21 +185,31 @@ Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
 Trying to import module StrippingArchive.Stripping19b
 Trying to import module StrippingArchive.Stripping19c
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-  File "/afs/cern.ch/user/p/poluekt/cmtuser/DaVinci_v32r0/InstallArea/x86_64-slc5-gcc43-opt/python/StrippingArchive/Utils.py", line 219, in buildStreams
-    scdb = _sConf(stripping)
-  File "/afs/cern.ch/lhcb/software/releases/STRIPPING/STRIPPING_v6r0/InstallArea/x86_64-slc5-gcc43-opt/python/StrippingSettings/Utils.py", line 22, in strippingConfiguration
-    return shelve.open( dbase(stripping), 'r' )
-  File "/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/lib/python2.6/shelve.py", line 239, in open
-    return DbfilenameShelf(filename, flag, protocol, writeback)
-  File "/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/lib/python2.6/shelve.py", line 223, in __init__
-    Shelf.__init__(self, anydbm.open(filename, flag), protocol, writeback)
-  File "/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/lib/python2.6/anydbm.py", line 77, in open
-    raise error, "need 'c' or 'n' flag to open new db"
-anydbm.error: need 'c' or 'n' flag to open new db
-----------FAILED----------
-Stripping19c failed 256
+# Register line: StrippingDiMuonAndGammaForCharmAssociative
+# Register line: StrippingDoubleDiMuonForCharmAssociative
+# Register line: StrippingChiAndDiMuonForCharmAssociative
+# Register line: StrippingDiChiForCharmAssociative
+# Register line: StrippingDiMuonAndWForCharmAssociative
+# Register line: StrippingChiAndWForCharmAssociative
+# WARNING: The non-default name is specified "B2psiX0"
+# WARNING: lineB2hhh_KKK_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
+# WARNING: lineB2hhh_pph_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
+# WARNING: The non-default name is specified "B2psiX"
+# WARNING: lineMBNoBias uses plain Gaudi configurable MBNoBiasORL. Consider using Selection instead!
+# WARNING: lineHlt1L0Any uses plain Gaudi configurable Hlt1L0AnyORL. Consider using Selection instead!
+Creating CharmToBeSwum stream with 14 lines
+Creating Bhadron stream with 205 lines
+Creating Semileptonic stream with 24 lines
+Creating BhadronCompleteEvent stream with 48 lines
+Creating Leptonic stream with 48 lines
+Creating PID stream with 15 lines
+Creating Dimuon stream with 107 lines
+Creating Calibration stream with 19 lines
+Creating Radiative stream with 36 lines
+Creating Charm stream with 209 lines
+Creating EW stream with 72 lines
+Creating MiniBias stream with 2 lines
+Creating CharmCompleteEvent stream with 74 lines
 =============================================
 Stripping18b :
 =============================================
