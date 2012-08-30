@@ -15,13 +15,14 @@ class  KshortMuMuPiPi_July2012 :
         Returns a list of active lines
         """
         
-        lines = [ #'Hlt2DimuonForKshortToMuMuPiPi'
-                  'Hlt2KshortToMuMuPiPi'
+        lines = [ 
+                    'Hlt2KshortToMuMuPiPi'
                   , 'Hlt2ChargedHyperon_Omega2Lambda0LLK'
                   , 'Hlt2ChargedHyperon_Omega2Lambda0DDK'
                   , 'Hlt2ChargedHyperon_Xi2Lambda0LLPi'
                   , 'Hlt2ChargedHyperon_Xi2Lambda0DDPi'
-                  #, 'Hlt2ChargedHyperon_Xi2Lambda0DDPiD'
+                  , 'Hlt2ChargedHyperon_Xi2Lambda0LLMu'
+                  , 'Hlt2ChargedHyperon_Xi2Lambda0DDMu'
              ]
         
         return lines
