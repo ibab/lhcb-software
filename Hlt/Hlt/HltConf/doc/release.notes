@@ -4,6 +4,7 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v9r21 2012-08-30 =========================
 ! 2012-08-29 - Johannes Albrecht
  - add Hlt1pALines in Hlt1.py and the lines in HltInit.py 
 
