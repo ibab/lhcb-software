@@ -9,7 +9,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Paula Alvarez Cartelle']
 __date__ = '26/08/2011'
-__version__= '1.0'
+__version__= '2.0'
 
 __all__=('StrippingBs2Kst_0Kst_0Conf',
          'makeBs2Kst_0Kst_0',
@@ -33,6 +33,8 @@ __config_default__ = {
      ,  "BIPCHI2"          : 25.   # adimensional
      ,  "BFDistanceCHI2"   : 81.   # adimensional
      ,  "SumPT"            : 5000  # MeV
+     ,  "MaxGHOSTPROB"             : 0.8   # adimensional
+     ,  "BDIRA"                    : 0.99      # adimensional
      }
 
 from Gaudi.Configuration import *
@@ -88,7 +90,9 @@ class StrippingBs2Kst_0Kst_0Conf(LineBuilder):
           "BDOCA",
           "BIPCHI2",
           "BFDistanceCHI2",
-          "SumPT")
+          "SumPT",
+          "MaxGHOSTPROB",
+          "BDIRA")
 
 
      
@@ -111,7 +115,8 @@ class StrippingBs2Kst_0Kst_0Conf(LineBuilder):
                                         KaonPIDK = config['KaonPIDK'],
                                         KstarVCHI2 = config['KstarVCHI2'],
                                         KstarMassWin = config['KstarMassWin'],
-                                        PionPIDK = config['PionPIDK'])
+                                        PionPIDK = config['PionPIDK'],
+                                        MaxGHOSTPROB = config['MaxGHOSTPROB'])
 
 
 
@@ -122,7 +127,8 @@ class StrippingBs2Kst_0Kst_0Conf(LineBuilder):
                                             BDOCA = config['BDOCA'],
                                             BIPCHI2 = config['BIPCHI2'],
                                             BFDistanceCHI2 = config['BFDistanceCHI2'],
-                                            SumPT = config['SumPT'])
+                                            SumPT = config['SumPT'],
+                                            BDIRA = config['BDIRA'])
           
         
           self.Bs2Kst_0Kst_0_line = StrippingLine(Kst_0Kst_0_name+"Line",
@@ -148,7 +154,8 @@ def makeKst_02Kpi(name,
                 KaonPIDK,
                 KstarVCHI2,
                 KstarMassWin,
-                PionPIDK):
+                PionPIDK,
+                MaxGHOSTPROB):
 
     """
     Create and return a Kstar_0(1430) -> K+pi- Selection object.
@@ -165,6 +172,7 @@ def makeKst_02Kpi(name,
     KaonPIDK         : Minimum PID_{K-pi} of K.
     KstarVCHI2       : Maximum Kstar vertex chi2 per degree of freedom.
     KstarMassWin     : Kstar invariant mass window around PDG mass value (MeV).
+    MaxGHOSTPROB     : Maximum Ghost Probability
     """
 
 
@@ -175,8 +183,8 @@ def makeKst_02Kpi(name,
     _Kstar_02Kpi = CombineParticles ("Combine"+name)
 
     _Kstar_02Kpi.DecayDescriptor = "[K*_0(1430)0 -> K+ pi-]cc"
-    _Kstar_02Kpi.DaughtersCuts = {"K+" : "(PT > %(KaonPT)s *MeV) & (PIDK > %(KaonPIDK)s) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s)"% locals()
-                                ,"pi-" : "(PT > %(PionPT)s *MeV) & (PIDK < %(PionPIDK)s) & (MIPCHI2DV(PRIMARY)> %(PionIPCHI2)s)"% locals()}
+    _Kstar_02Kpi.DaughtersCuts = {"K+" : "(PT > %(KaonPT)s *MeV) & (PIDK > %(KaonPIDK)s) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s) & (TRGHOSTPROB < %(MaxGHOSTPROB)s)"% locals()
+                                ,"pi-" : "(PT > %(PionPT)s *MeV) & (PIDK < %(PionPIDK)s) & (MIPCHI2DV(PRIMARY)> %(PionIPCHI2)s) & (TRGHOSTPROB < %(MaxGHOSTPROB)s)"% locals()}
                                 
     _Kstar_02Kpi.CombinationCut = "(ADAMASS('K*_0(1430)0') < %(KstarMassWin)s *MeV) & (APT > %(KstarAPT)s *MeV)"% locals()
     _Kstar_02Kpi.MotherCut = "(VFASPF(VCHI2/VDOF)< %(KstarVCHI2)s) & (PT > %(KstarPT)s *MeV)"% locals()
@@ -197,7 +205,8 @@ def makeBs2Kst_0Kst_0(name,
                   BDOCA,
                   BIPCHI2,
                   BFDistanceCHI2,
-                  SumPT):
+                  SumPT,
+                      BDIRA):
 
        """
        Create and return a Bs -> Kstar_0(1430)(Kpi) anti-Kstar_0(1430)(Kpi) Selection object.
@@ -211,7 +220,7 @@ def makeBs2Kst_0Kst_0(name,
        SumPT          : Sum|pT| of the daughters.
        """ 
        
-       _motherCuts = " (VFASPF(VCHI2/VDOF) < %(BVCHI2)s) & (MIPCHI2DV(PRIMARY)< %(BIPCHI2)s) & (BPVVDCHI2 > %(BFDistanceCHI2)s)"% locals()
+       _motherCuts = " (VFASPF(VCHI2/VDOF) < %(BVCHI2)s) & (MIPCHI2DV(PRIMARY)< %(BIPCHI2)s) & (BPVVDCHI2 > %(BFDistanceCHI2)s) & (BPVDIRA > %(BDIRA)s)"% locals()
        _combinationCut = "(ADAMASS('B_s0') < %(BMassWin)s *MeV) & (AMAXDOCA('')< %(BDOCA)s *mm) "\
                          "& ( (AMINCHILD(PT,ID=='K+') + AMINCHILD(PT,ID=='K-') + AMINCHILD(PT,ID=='pi-') + AMINCHILD(PT,ID=='pi+'))> %(SumPT)s *MeV)" % locals() 
 

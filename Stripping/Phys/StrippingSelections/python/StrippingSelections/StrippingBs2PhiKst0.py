@@ -10,7 +10,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Cibran Santamarina']
 __date__ = '28/07/2011'
-__version__= '2.1'
+__version__= '3.0'
 
 __all__=('StrippingBs2PhiKstConf',
          'makeBs2PhiKst',
@@ -44,6 +44,7 @@ confdict = {
           ,     "BMassWin"              : 500.0 # MeV
           ,     "BVCHI2"                : 15.0  # adimensional
           ,     "BDOCA"                 : 0.3   # mm
+          ,  "BDIRA"                    : 0.99      # adimensional
           }
 
 
@@ -85,7 +86,8 @@ class StrippingBs2PhiKstConf(LineBuilder):
           "KstarMassWin",
           "BMassWin",
           "BVCHI2",
-          "BDOCA")
+          "BDOCA",
+          "BDIRA")
 
 
      def __init__(self, name, config) :
@@ -118,7 +120,8 @@ class StrippingBs2PhiKstConf(LineBuilder):
                                             Kstsel = self.selKst2Kpi,
                                             BMassWin = config['BMassWin'],
                                             BVCHI2 = config['BVCHI2'],
-                                            BDOCA = config['BDOCA'])
+                                            BDOCA = config['BDOCA'],
+                                            BDIRA = config['BDIRA'])
           
           self.Bs2PhiKst_line = StrippingLine(PhiKst_name+"Line",
                                               prescale = 1,
@@ -134,7 +137,7 @@ def makePhi2KK( name,
                 KaonPIDK,
                 PhiMassWin,
                 PhiPT,
-                PhiVCHI2 ):
+                PhiVCHI2):
 
     """
     Create and return a Phi -> KK Selection object.
@@ -193,8 +196,8 @@ def makeKst2Kpi(name,
     """
 
 
-    KstarCuts = "(INTREE((ABSID=='K+') & (PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s) & (PIDK > %(KaonPIDK)s) ))"\
-        "& (INTREE((ABSID=='pi-') & (PT > %(PionPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(PionIPCHI2)s) & (PIDK < %(PionPIDK)s) ))"\
+    KstarCuts = "(INTREE((ABSID=='K+') & (PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s) & (PIDK > %(KaonPIDK)s)  ))"\
+        "& (INTREE((ABSID=='pi-') & (PT > %(PionPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(PionIPCHI2)s) & (PIDK < %(PionPIDK)s)  ))"\
         "& (ADMASS('K*(892)0') < %(KstarMassWin)s *MeV)"\
         "& (BPVDIRA > 0) & (VFASPF(VCHI2/VDOF)< %(KstarVCHI2)s) & (PT > %(KstarPT)s *MeV)"% locals()
 
@@ -214,7 +217,8 @@ def makeBs2PhiKst(name,
                   Kstsel,
                   BMassWin,
                   BVCHI2,
-                  BDOCA):
+                  BDOCA,
+                  BDIRA):
        """
        Create and return a Bs -> Phi (KK) Kstar (Kpi) Selection object.
        Arguments:
@@ -226,7 +230,7 @@ def makeBs2PhiKst(name,
        BDOCA       : Maximum Bs DOCA.
        """ 
        
-       _motherCuts = "(VFASPF(VCHI2/VDOF) < %(BVCHI2)s)"% locals()
+       _motherCuts = "(VFASPF(VCHI2/VDOF) < %(BVCHI2)s) & (BPVDIRA > %(BDIRA)s)"% locals()
        _combinationCut = "(ADAMASS('B_s0') < %(BMassWin)s *MeV) & (AMAXDOCA('')< %(BDOCA)s *mm)" % locals() 
 
        _Bs = CombineParticles('_'+name)

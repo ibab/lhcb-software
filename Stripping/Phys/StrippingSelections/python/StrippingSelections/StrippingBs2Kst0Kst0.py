@@ -10,9 +10,12 @@ Exported symbols (use python help!):
    - makeBd2JPsiKst
 '''
 
+
+
+
 __author__ = ['Paula Alvarez Cartelle']
 __date__ = '22/07/2011'
-__version__= '3.0'
+__version__= '4.0'
 
 __all__=('StrippingBs2KstKstConf',
          'makeBs2KstKst',
@@ -34,6 +37,8 @@ __config_default__ = {
      ,	"BVCHI2"		: 15.0	# adimensional
      ,	"BDOCA"                 : 0.3   # mm
      ,  "BIPCHI2"               : 25    # adimensional
+     ,  "MaxGHOSTPROB"             : 0.8   # adimensional
+     ,  "BDIRA"                    : 0.99      # adimensional
      }
 
 from Gaudi.Configuration import *
@@ -91,7 +96,9 @@ class StrippingBs2KstKstConf(LineBuilder):
           "BMassWin",
           "BVCHI2",
           "BDOCA",
-          "BIPCHI2")
+          "BIPCHI2",
+          "MaxGHOSTPROB",
+          "BDIRA")
 
 
     
@@ -121,21 +128,24 @@ class StrippingBs2KstKstConf(LineBuilder):
                                         KaonPIDK = config['KaonPIDK'],
                                         KstarVCHI2 = config['KstarVCHI2'],
                                         KstarMassWin = config['KstarMassWin'],
-                                        PionPIDK = config['PionPIDK'])
+                                        PionPIDK = config['PionPIDK'],
+                                        MaxGHOSTPROB = config['MaxGHOSTPROB'])
 
           self.selBs2KstKst = makeBs2KstKst(KstKst_name,
                                             Kstsel = self.selKst2Kpi,
                                             BMassWin = config['BMassWin'],
                                             BVCHI2 = config['BVCHI2'],
                                             BDOCA = config['BDOCA'],
-                                            BIPCHI2 = config['BIPCHI2'])
+                                            BIPCHI2 = config['BIPCHI2'],
+                                            BDIRA = config['BDIRA'])
           
           self.selBs2KstKstSameCharge = makeBs2KstKstSameCharge(KstKstSameCharge_name,
                                                                 Kstsel = self.selKst2Kpi,
                                                                 BMassWin = config['BMassWin'],
                                                                 BVCHI2 = config['BVCHI2'],
                                                                 BDOCA = config['BDOCA'],
-                                                                BIPCHI2 = config['BIPCHI2'])
+                                                                BIPCHI2 = config['BIPCHI2'],
+                                            BDIRA = config['BDIRA'])
 
           self.selBd2JPsiKst = makeBd2JPsiKst(BdJpsiKst_name,
                                               JPsisel = self.selJPsi2mumu,
@@ -143,7 +153,8 @@ class StrippingBs2KstKstConf(LineBuilder):
                                               BMassWin = config['BMassWin'],
                                               BVCHI2 = config['BVCHI2'],
                                               BDOCA = config['BDOCA'],
-                                              BIPCHI2 = config['BIPCHI2'])
+                                              BIPCHI2 = config['BIPCHI2'],
+                                            BDIRA = config['BDIRA'])
           
         
           self.Bs2KstKst_line = StrippingLine(KstKst_name+"Line",
@@ -223,7 +234,8 @@ def makeKst2Kpi(name,
                 KaonPIDK,
                 KstarVCHI2,
                 KstarMassWin,
-                PionPIDK):
+                PionPIDK,
+                MaxGHOSTPROB):
 
     """
     Create and return a Kstar -> K+pi- Selection object.
@@ -239,11 +251,12 @@ def makeKst2Kpi(name,
     KaonPIDK         : Minimum PID_{K-pi} of K.
     KstarVCHI2       : Maximum Kstar vertex chi2 per degree of freedom.
     KstarMassWin     : Kstar invariant mass window around PDG mass value (MeV).
+    MaxGHOSTPROB     : Maximum Ghost Probability
     """
 
 
-    KstarCuts = "(INTREE((ABSID=='K+') & (PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s) & (PIDK > %(KaonPIDK)s) ))"\
-        "& (INTREE((ABSID=='pi-') & (PT > %(PionPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(PionIPCHI2)s) & (PIDK < %(PionPIDK)s )  ))"\
+    KstarCuts = "(INTREE((ABSID=='K+') & (PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s) & (PIDK > %(KaonPIDK)s) & (TRGHOSTPROB< %(MaxGHOSTPROB)s) ))"\
+        "& (INTREE((ABSID=='pi-') & (PT > %(PionPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(PionIPCHI2)s) & (PIDK < %(PionPIDK)s ) & (TRGHOSTPROB< %(MaxGHOSTPROB)s) ))"\
         "& (ADMASS('K*(892)0') < %(KstarMassWin)s *MeV)"\
         "& (VFASPF(VCHI2/VDOF)< %(KstarVCHI2)s) & (PT > %(KstarPT)s *MeV)"% locals()
         
@@ -267,7 +280,8 @@ def makeBs2KstKst(name,
                   BMassWin,
                   BVCHI2,
                   BDOCA,
-                  BIPCHI2):
+                  BIPCHI2,
+                  BDIRA):
        """
        Create and return a Bs -> Kstar (Kpi) anti-Kstar (Kpi) Selection object.
        Arguments:
@@ -278,7 +292,7 @@ def makeBs2KstKst(name,
        BDOCA       : Maximum Bs DOCA.
        """ 
        
-       _motherCuts = " (VFASPF(VCHI2/VDOF) < %(BVCHI2)s) & (MIPCHI2DV(PRIMARY)< %(BIPCHI2)s)"% locals()
+       _motherCuts = " (VFASPF(VCHI2/VDOF) < %(BVCHI2)s) & (MIPCHI2DV(PRIMARY)< %(BIPCHI2)s) & (BPVDIRA > %(BDIRA)s)"% locals()
        _combinationCut = "(ADAMASS('B_s0') < %(BMassWin)s *MeV) & (AMAXDOCA('')< %(BDOCA)s *mm)" % locals() 
 
        _Bs = CombineParticles('_'+name)
@@ -307,7 +321,8 @@ def makeBs2KstKstSameCharge(name,
                             BMassWin,
                             BVCHI2,
                             BDOCA,
-                            BIPCHI2):
+                            BIPCHI2,
+                            BDIRA):
        """
        Create and return a Bs -> Kstar (Kpi) Kstar (Kpi) Selection object.
        Arguments:
@@ -318,7 +333,7 @@ def makeBs2KstKstSameCharge(name,
        BDOCA       : Maximum Bs DOCA.
        """ 
        
-       _motherCuts = "(VFASPF(VCHI2/VDOF) < %(BVCHI2)s) & (MIPCHI2DV(PRIMARY)< %(BIPCHI2)s)"% locals()
+       _motherCuts = "(VFASPF(VCHI2/VDOF) < %(BVCHI2)s) & (MIPCHI2DV(PRIMARY)< %(BIPCHI2)s) & (BPVDIRA > %(BDIRA)s)"% locals()
        _combinationCut = "(ADAMASS('B_s0') < %(BMassWin)s *MeV) & (AMAXDOCA('')< %(BDOCA)s *mm)" % locals() 
 
        _Bs = CombineParticles('_'+name)
@@ -347,7 +362,8 @@ def makeBd2JPsiKst(name,
                    BMassWin,
                    BVCHI2,
                    BDOCA,
-                   BIPCHI2):
+                   BIPCHI2,
+                   BDIRA):
        """
        Create and return a Bd -> JPsi(mumu) Kstar (Kpi) Selection object.
        Arguments:
@@ -359,7 +375,7 @@ def makeBd2JPsiKst(name,
        BDOCA       : Maximum Bd DOCA.
        """ 
        
-       _motherCuts = " (VFASPF(VCHI2/VDOF) < %(BVCHI2)s) & (MIPCHI2DV(PRIMARY)< %(BIPCHI2)s)"% locals()
+       _motherCuts = " (VFASPF(VCHI2/VDOF) < %(BVCHI2)s) & (MIPCHI2DV(PRIMARY)< %(BIPCHI2)s) & (BPVDIRA > %(BDIRA)s)"% locals()
        _combinationCut = "(ADAMASS('B_s0') < %(BMassWin)s *MeV) & (AMAXDOCA('')< %(BDOCA)s *mm)" % locals() 
 
        _Bd = CombineParticles('_'+name)

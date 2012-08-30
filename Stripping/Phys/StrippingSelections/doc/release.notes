@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-Aug-30 - Paula Alvarez
+ - Added BPVDIRA cut to StrippingBs2PhiKst0 
+ - Added BPVDIRA and TRGHOSTPROB cuts to StrippingBs2Kst0Kst0 and StrippingBs2Kst_0Kst_0
+
 ! 2012-Aug-30 - Sean Benson
  - Added BPVDIRA cut to StrippingBs2PhiPhi, StrippingBs2Q2Body4pi 
 
