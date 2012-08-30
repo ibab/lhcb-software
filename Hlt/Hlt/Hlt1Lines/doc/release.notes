@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+
+!========================= Hlt1Lines v6r27 2012-08-30 =========================
 ! 2012-08-29 - Johannes Albrecht
  - Hlt1GEC: add settings for Activity trigger
  - add Hlt1pALines
