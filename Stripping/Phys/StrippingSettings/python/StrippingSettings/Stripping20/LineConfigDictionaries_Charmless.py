@@ -377,7 +377,8 @@ BetaSBs2PhiKst = {
          ,     "KstarMassWin"          : 150.0 
          ,     "BMassWin"              : 500.0 
          ,     "BVCHI2"                : 15.0  
-         ,     "BDOCA"                 : 0.3   
+         ,     "BDOCA"                 : 0.3  
+         ,  "BDIRA"                    : 0.99      # adimensional 
         },
         'STREAMS' : [ 'BhadronCompleteEvent' ]
         }
@@ -401,6 +402,8 @@ BetaSBs2KstKst = {
          ,      "BVCHI2"        : 15.0
          ,      "BDOCA"         : 0.3
          ,      "BIPCHI2"       : 25
+         ,  "MaxGHOSTPROB"      : 0.8   # adimensional
+         ,  "BDIRA"             : 0.99      # adimensional
          },
     'STREAMS' : { 
       'BhadronCompleteEvent' : [
@@ -434,7 +437,9 @@ BetaSBs2K0stK0st = {
           ,  "BDOCA"                  : 0.3           # mm
           ,  "BIPCHI2"                : 25.           # adimensional
           ,  "BFDistanceCHI2"         : 81.           # adimensional
-          ,  "SumPT"                  : 5000          # MeV 
+          ,  "SumPT"                  : 5000          # MeV
+          ,  "MaxGHOSTPROB"           : 0.8   # adimensional
+          ,  "BDIRA"                  : 0.99      # adimensional 
          },
     'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
