@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+!========================= Moore v14r7 2012-08-30 =========================
 ! 2012-08-9 - Eric van Herwijnen
  - Add RunL0Emulator option for MC
 
