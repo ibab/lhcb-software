@@ -1033,9 +1033,11 @@ bool BackgroundCategory::areAllFinalStateParticlesCorrectlyIdentified(ParticleVe
     if ( *iPmc && *iP) {
       if( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ){
         
-        if( (*iP)->particleID().abspid() == 22 && !m_calo2MC->isPureNeutralCalo( *iP ) )continue; // gamma->ee is considered as composite
+        if( (*iP)->particleID().abspid() != 22 || m_calo2MC->isPureNeutralCalo( *iP ) ){ // gamma->ee is considered as composite
 
-        carryon = ( (*iP)->particleID().pid() == (*iPmc)->particleID().pid() );
+          carryon = ( (*iP)->particleID().pid() == (*iPmc)->particleID().pid() );
+        }
+        
       }
     }
     ++iP; ++iPmc;
@@ -1498,7 +1500,7 @@ bool BackgroundCategory::hierarchyProblem(MCParticleVector mc_particles_linked_t
       for (MCParticleVector::const_iterator iPPM = tempmothers.begin();
            iPPM != (tempmothers.end()); ++iPPM) {
         if (!(*iPPM)) break; //Shoudln't happen...
-        if ((*iPPM) == (*iPP2)) return true;
+        if ((*iPPM) == (*iPP2) && (*iPPM)->particleID().pid() != 22) return true;  // Warning gamma->ee is a 'stable' composite !
       }
 
     }
