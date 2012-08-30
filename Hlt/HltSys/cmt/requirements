@@ -1,16 +1,16 @@
 package HltSys
-version           v15r3p1
+version           v15r4
 
 branches cmt doc
 
-use Hlt1Lines           v6r25   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
+use Hlt1Lines           v6r27   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
 use Hlt1Muons           v1r5    Hlt   # Roel Aaij
-use Hlt2Lines           v8r23   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
-use Hlt2SharedParticles v6r11   Hlt   # Patrick Koppenburg, Gerhard Raven
+use Hlt2Lines           v8r25   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
+use Hlt2SharedParticles v6r13   Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v12r3   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v3r0    Hlt   # Plamen Hopchev
-use HltCommon           v8r5    Hlt   # Gerhard Raven
-use HltConf             v9r20   Hlt   # Vanya Belyaev, Gerhard Raven
+use HltCommon           v8r7    Hlt   # Gerhard Raven
+use HltConf             v9r21   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
 use HltDisplVertices    v3r11   Hlt   # Neil Gauvin, Victor Coco
 use HltGlobalMonitor    v3r9    Hlt   # Bruno de Paula
@@ -21,14 +21,15 @@ use HltMonitor          v1r1    Hlt   # Roel Aaij
 use HltRawData          v2r11   Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r14   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v12r1p1 Hlt   # Patrick Koppenburg
-use HltSettings         v5r41   Hlt   # Parick Koppenburg, Gerhard Raven
+use HltSettings         v5r43   Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
-use HltTracking         v9r24   Hlt   # Johannes Albrecht, Vava Gligorov
+use HltTracking         v9r25   Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r11   Hlt   # Gerhard Raven
 use LoKiTrigger         v12r8   Phys  # Vanya Belyaev
 
 #temporary
 use PatAlgorithms       v4r24   Tf    # Stephanie Hansmann-Menzemer
+use L0Calo              v11r8   L0    # Patrick Robbe
 
 # Declare this as a container package
 apply_pattern container_package
