@@ -9,8 +9,8 @@ removed.
 '''
 
 __author__ = ['Sean Benson']
-__date__ = '21/08/2012'
-__version__ = '2.0'
+__date__ = '30/08/2012'
+__version__ = '2.2'
 
 __all__ = ( 'Bs2Q2Body4piConf',
             'mkDiTrackList',
@@ -115,7 +115,7 @@ def mkBs2Q2B4pi( name,
     Charmless Q2B selection
     """
     _B2Q2BPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" % locals()
-    _B2Q2BPostVertexCuts = "(MIPCHI2DV(PRIMARY) < %(BIPchi2Cut)s) &  (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )" % locals()
+    _B2Q2BPostVertexCuts = "(BPVDIRA > 0.99) & (MIPCHI2DV(PRIMARY) < %(BIPchi2Cut)s) &  (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )" % locals()
 
     _combineB2Q2B = CombineParticles( DecayDescriptor="B0 -> rho(770)0 rho(770)0",
                                       MotherCut = _B2Q2BPostVertexCuts,

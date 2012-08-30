@@ -14,8 +14,8 @@ Both lines are build by the function _Bs2PhiPhi_X_Line, which accepts the name a
 '''
 
 __author__  = [ 'Sean Benson' ]
-__date__    = '2012/08/21'
-__version__    = '2.0'
+__date__    = '2012/08/30'
+__version__    = '2.2'
 
 
 '''
@@ -87,7 +87,7 @@ class StrippingBs2PhiPhiConf(LineBuilder):
 
     	    Bs2PhiPhi_DC = "(PT>%(PhiPT)s*MeV)" % config
     	    Bs2PhiPhi_CC = "(ADAMASS('B_s0')<((%(BsMassWindow)s+30)*MeV))&(ACHILD(PT,1)*ACHILD(PT,2)>%(PhiPTsq)s*GeV*GeV)" % config
-    	    Bs2PhiPhi_MC = "(VFASPF(VCHI2/VDOF)<%(BsVertexCHI2pDOF)s)&(ADMASS('B_s0')<%(BsMassWindow)s*MeV)" % config
+    	    Bs2PhiPhi_MC = "(BPVDIRA > 0.99) & (VFASPF(VCHI2/VDOF)<%(BsVertexCHI2pDOF)s)&(ADMASS('B_s0')<%(BsMassWindow)s*MeV)" % config
             ps = 1.0
             if wide == True :
               ps = config['WidePrescale']
