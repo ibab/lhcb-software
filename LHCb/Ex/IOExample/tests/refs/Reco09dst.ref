@@ -1,6 +1,6 @@
-# --> Including file '/build/cattanem/LHCb_v34r2/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
+# --> Including file '/afs/cern.ch/user/c/cattanem/cmtuser/Boole_HEAD/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
 # ROOT output file requested. Forcing reading of POOL input files with RootCnv
-# <-- End of file '/build/cattanem/LHCb_v34r2/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
+# <-- End of file '/afs/cern.ch/user/c/cattanem/cmtuser/Boole_HEAD/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
 # |-DataType    = '2011'
@@ -12,6 +12,7 @@
 # applying configuration of DstConf
 # /***** User DstConf/DstConf ************************************************************************
 # |-OutputName          = ''
+# |-WriteFSR            = True
 # |-SimType             = 'None'
 # |-PackType            = 'TES'
 # |-DstType             = 'NONE'
@@ -19,7 +20,7 @@
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
 # |-Persistency         = None
-# |-WriteFSR            = True
+# |-KeepDAQRawEvent     = False
 # |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
@@ -28,6 +29,7 @@
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
 # /***** User DstConf/DstConf ************************************************************************
 # |-OutputName          = ''
+# |-WriteFSR            = True
 # |-SimType             = 'None'
 # |-PackType            = 'TES'
 # |-DstType             = 'NONE'
@@ -35,7 +37,7 @@
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
 # |-Persistency         = None
-# |-WriteFSR            = True
+# |-KeepDAQRawEvent     = False
 # |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
@@ -46,8 +48,8 @@
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r1)
-                                          running on lxbuild163.cern.ch on Wed Mar 28 09:53:16 2012
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
+                                          running on lxplus421.cern.ch on Thu Aug 30 08:43:37 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
@@ -143,7 +145,7 @@ TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x13030f30@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x12dc4b70@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -231,14 +233,16 @@ TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 205 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
- key     : 0
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 44
- # meas   : 0
+ key        : 0
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 44
+ # meas     : 0
  chi2PerDoF : 0.904205
  nDoF       : 39
+ GhostProb  : 0.00139554
+ Likelihood : -2.37754
  extraInfo : [ FitVeloChi2=12.2674  FitVeloNDoF=13  FitTChi2=14.0024  FitTNDoF=17  FitMatchChi2=5.53209 ]
  p  : 14371.4
  pt : 928.433
@@ -290,14 +294,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 1
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 35
- # meas   : 0
+ key        : 1
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 35
+ # meas     : 0
  chi2PerDoF : 1.48807
  nDoF       : 30
+ GhostProb  : 0.00561117
+ Likelihood : -6.35858
  extraInfo : [ FitVeloChi2=7.50914  FitVeloNDoF=13  FitTChi2=10.6778  FitTNDoF=7  FitMatchChi2=13.8363 ]
  p  : 11108.4
  pt : 621.853
@@ -349,14 +355,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 2
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 34
- # meas   : 0
+ key        : 2
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 34
+ # meas     : 0
  chi2PerDoF : 1.11297
  nDoF       : 27
+ GhostProb  : -0
+ Likelihood : -3.41491
  extraInfo : [ FitVeloChi2=14.564  FitVeloNDoF=13  FitTChi2=6.59761  FitTNDoF=6  FitMatchChi2=5.96249 ]
  p  : 30457.5
  pt : 1646.54
@@ -408,14 +416,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 3
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 41
- # meas   : 0
+ key        : 3
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 41
+ # meas     : 0
  chi2PerDoF : 3.86425
  nDoF       : 34
+ GhostProb  : 0.147958
+ Likelihood : -40.0897
  extraInfo : [ FitVeloChi2=18.2663  FitVeloNDoF=11  FitTChi2=99.6674  FitTNDoF=15  FitMatchChi2=11.1824 ]
  p  : 3826.9
  pt : 159.715
@@ -467,14 +477,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 4
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 41
- # meas   : 0
+ key        : 4
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 41
+ # meas     : 0
  chi2PerDoF : 0.640393
  nDoF       : 35
+ GhostProb  : 0.00754296
+ Likelihood : -2.85738
  extraInfo : [ FitVeloChi2=7.00878  FitVeloNDoF=11  FitTChi2=7.2415  FitTNDoF=16  FitMatchChi2=2.99696 ]
  p  : 22482.4
  pt : 1266.57
@@ -525,9 +537,10 @@ DumpTracks          DEBUG *** Track ***
    2.05776e-09 9.10265e-10 1.32151e-12-3.73482e-13 2.95728e-14 ]
 
 
+IODataManager        INFO Referring to dataset ROOT-Reco09.dst by its file ID:BC574012-6EF2-E111-841B-003048F0E192
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x12f2f5b0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x12cc31f0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -606,14 +619,16 @@ TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 33 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
- key     : 0
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 40
- # meas   : 0
+ key        : 0
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 40
+ # meas     : 0
  chi2PerDoF : 0.789877
  nDoF       : 35
+ GhostProb  : -0
+ Likelihood : -3.14841
  extraInfo : [ FitVeloChi2=6.33316  FitVeloNDoF=12  FitTChi2=10.1491  FitTNDoF=14  FitMatchChi2=4.84235 ]
  p  : 16085.9
  pt : 979.977
@@ -665,14 +680,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 1
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 42
- # meas   : 0
+ key        : 1
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 42
+ # meas     : 0
  chi2PerDoF : 0.864396
  nDoF       : 37
+ GhostProb  : -0
+ Likelihood : -4.30934
  extraInfo : [ FitVeloChi2=7.81895  FitVeloNDoF=11  FitTChi2=20.2296  FitTNDoF=16  FitMatchChi2=2.40957 ]
  p  : 5446.92
  pt : 191.306
@@ -724,14 +741,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 2
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 34
- # meas   : 0
+ key        : 2
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 34
+ # meas     : 0
  chi2PerDoF : 0.885621
  nDoF       : 29
+ GhostProb  : -0
+ Likelihood : -2.73006
  extraInfo : [ FitVeloChi2=9.00928  FitVeloNDoF=11  FitTChi2=2.77477  FitTNDoF=9  FitMatchChi2=11.9313 ]
  p  : 32107.5
  pt : 1329.25
@@ -783,14 +802,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 3
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 42
- # meas   : 0
+ key        : 3
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 42
+ # meas     : 0
  chi2PerDoF : 0.795308
  nDoF       : 37
+ GhostProb  : -0
+ Likelihood : -4.15692
  extraInfo : [ FitVeloChi2=6.60442  FitVeloNDoF=11  FitTChi2=14.9512  FitTNDoF=17  FitMatchChi2=3.56828 ]
  p  : 21781.1
  pt : 1610.93
@@ -842,14 +863,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 4
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 38
- # meas   : 0
+ key        : 4
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 38
+ # meas     : 0
  chi2PerDoF : 1.31696
  nDoF       : 33
+ GhostProb  : 0.00207079
+ Likelihood : -4.90683
  extraInfo : [ FitVeloChi2=19.1834  FitVeloNDoF=10  FitTChi2=8.20715  FitTNDoF=14  FitMatchChi2=10.1982 ]
  p  : 2779.47
  pt : 386.297
@@ -902,7 +925,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1a139290@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x191448d0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -1022,14 +1045,16 @@ TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 160 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
- key     : 0
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 44
- # meas   : 0
+ key        : 0
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 44
+ # meas     : 0
  chi2PerDoF : 0.940576
  nDoF       : 38
+ GhostProb  : 0.0107694
+ Likelihood : -7.19364
  extraInfo : [ FitVeloChi2=7.92031  FitVeloNDoF=17  FitTChi2=13.6928  FitTNDoF=12  FitMatchChi2=10.7916 ]
  p  : 11074.5
  pt : 605.204
@@ -1081,14 +1106,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 1
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 46
- # meas   : 0
+ key        : 1
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 46
+ # meas     : 0
  chi2PerDoF : 1.17509
  nDoF       : 39
+ GhostProb  : 0.00818472
+ Likelihood : -4.7123
  extraInfo : [ FitVeloChi2=16.3576  FitVeloNDoF=15  FitTChi2=16.3439  FitTNDoF=15  FitMatchChi2=6.40982 ]
  p  : 36293
  pt : 1647.4
@@ -1140,14 +1167,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 2
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 47
- # meas   : 0
+ key        : 2
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 47
+ # meas     : 0
  chi2PerDoF : 0.536944
  nDoF       : 42
+ GhostProb  : 0.0130448
+ Likelihood : -3.38829
  extraInfo : [ FitVeloChi2=8.87008  FitVeloNDoF=15  FitTChi2=8.57884  FitTNDoF=18  FitMatchChi2=0.75337 ]
  p  : 4669.48
  pt : 218.061
@@ -1199,14 +1228,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 3
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 45
- # meas   : 0
+ key        : 3
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 45
+ # meas     : 0
  chi2PerDoF : 1.20781
  nDoF       : 39
+ GhostProb  : 0.00784152
+ Likelihood : -4.5261
  extraInfo : [ FitVeloChi2=21.3436  FitVeloNDoF=15  FitTChi2=14.2246  FitTNDoF=15  FitMatchChi2=2.92654 ]
  p  : 18777.7
  pt : 1047.44
@@ -1258,14 +1289,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 4
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 45
- # meas   : 0
+ key        : 4
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 45
+ # meas     : 0
  chi2PerDoF : 0.937654
  nDoF       : 38
+ GhostProb  : 0.00634059
+ Likelihood : -5.53739
  extraInfo : [ FitVeloChi2=11.8804  FitVeloNDoF=14  FitTChi2=16.4992  FitTNDoF=15  FitMatchChi2=2.14756 ]
  p  : 10440.7
  pt : 603.089
@@ -1318,7 +1351,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1ae3b3d0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1bc887e0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -1402,14 +1435,16 @@ TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 332 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
- key     : 0
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 44
- # meas   : 0
+ key        : 0
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 44
+ # meas     : 0
  chi2PerDoF : 15.5955
  nDoF       : 37
+ GhostProb  : 0.677642
+ Likelihood : -159.485
  extraInfo : [ FitVeloChi2=22.9415  FitVeloNDoF=13  FitTChi2=172.154  FitTNDoF=15  FitMatchChi2=368.159 ]
  p  : 5046.7
  pt : 381.211
@@ -1461,14 +1496,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 1
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 45
- # meas   : 0
+ key        : 1
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 45
+ # meas     : 0
  chi2PerDoF : 1.99426
  nDoF       : 38
+ GhostProb  : 0.263672
+ Likelihood : -14.345
  extraInfo : [ FitVeloChi2=18.82  FitVeloNDoF=14  FitTChi2=55.059  FitTNDoF=15  FitMatchChi2=1.30336 ]
  p  : 20937.5
  pt : 1254.92
@@ -1520,14 +1557,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 2
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 28
- # meas   : 0
+ key        : 2
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 28
+ # meas     : 0
  chi2PerDoF : 7.46887
  nDoF       : 21
+ GhostProb  : 0.861959
+ Likelihood : -190.691
  extraInfo : [ FitVeloChi2=43.1214  FitVeloNDoF=9  FitTChi2=77.8149  FitTNDoF=7  FitMatchChi2=36.2027 ]
  p  : 6027.14
  pt : 1084.08
@@ -1579,14 +1618,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 3
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 41
- # meas   : 0
+ key        : 3
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 41
+ # meas     : 0
  chi2PerDoF : 4.58117
  nDoF       : 34
+ GhostProb  : 0.687457
+ Likelihood : -159.131
  extraInfo : [ FitVeloChi2=19.5837  FitVeloNDoF=9  FitTChi2=98.2594  FitTNDoF=18  FitMatchChi2=37.247 ]
  p  : 3374.82
  pt : 86.3978
@@ -1638,14 +1679,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 4
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 36
- # meas   : 0
+ key        : 4
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 36
+ # meas     : 0
  chi2PerDoF : 9.63932
  nDoF       : 29
+ GhostProb  : 0.871336
+ Likelihood : -182.042
  extraInfo : [ FitVeloChi2=25.2632  FitVeloNDoF=12  FitTChi2=165.259  FitTNDoF=12  FitMatchChi2=89.1291 ]
  p  : 8848.09
  pt : 441.233
@@ -1698,7 +1741,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1a9d10e0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1a486570@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -1792,14 +1835,16 @@ TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 207 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
- key     : 0
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 42
- # meas   : 0
+ key        : 0
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 42
+ # meas     : 0
  chi2PerDoF : 0.737215
  nDoF       : 36
+ GhostProb  : -0
+ Likelihood : -3.93708
  extraInfo : [ FitVeloChi2=5.44754  FitVeloNDoF=10  FitTChi2=10.3768  FitTNDoF=17  FitMatchChi2=8.18492 ]
  p  : 8248.13
  pt : 496.594
@@ -1851,14 +1896,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 1
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 40
- # meas   : 0
+ key        : 1
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 40
+ # meas     : 0
  chi2PerDoF : 1.55313
  nDoF       : 33
+ GhostProb  : 0.0127013
+ Likelihood : -8.29729
  extraInfo : [ FitVeloChi2=16.4199  FitVeloNDoF=9  FitTChi2=27.1365  FitTNDoF=14  FitMatchChi2=3.72436 ]
  p  : 21731.9
  pt : 1192.89
@@ -1910,14 +1957,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 2
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 40
- # meas   : 0
+ key        : 2
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 40
+ # meas     : 0
  chi2PerDoF : 1.24782
  nDoF       : 33
+ GhostProb  : 0.0220284
+ Likelihood : -4.35601
  extraInfo : [ FitVeloChi2=5.97679  FitVeloNDoF=9  FitTChi2=22.8746  FitTNDoF=15  FitMatchChi2=10.5786 ]
  p  : 9062.13
  pt : 452.185
@@ -1969,14 +2018,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 3
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 40
- # meas   : 0
+ key        : 3
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 40
+ # meas     : 0
  chi2PerDoF : 0.841723
  nDoF       : 35
+ GhostProb  : -0
+ Likelihood : -3.14027
  extraInfo : [ FitVeloChi2=6.86334  FitVeloNDoF=9  FitTChi2=18.5344  FitTNDoF=17  FitMatchChi2=3.6411 ]
  p  : 10356.5
  pt : 758.151
@@ -2028,14 +2079,16 @@ DumpTracks          DEBUG *** Track ***
 
 
 DumpTracks          DEBUG *** Track ***
- key     : 4
- type    : Long
- history : PatForward
- fitstatus: Fitted
- # ids    : 30
- # meas   : 0
+ key        : 4
+ type       : Long
+ history    : PatForward
+ fitstatus  : Fitted
+ # ids      : 30
+ # meas     : 0
  chi2PerDoF : 1.2496
  nDoF       : 25
+ GhostProb  : -0
+ Likelihood : -6.47238
  extraInfo : [ FitVeloChi2=7.56661  FitVeloNDoF=10  FitTChi2=2.45278  FitTNDoF=6  FitMatchChi2=4.9581 ]
  p  : 12315.7
  pt : 867.238
@@ -2111,6 +2164,6 @@ EventLoopMgr         INFO Histograms converted successfully according to request
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 5/5/41(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
 RootCnvSvc           INFO Disconnected data IO:0EBD6778-BA80-E011-83CC-0025901D492E [root://castorlhcb.cern.ch//castor/cern.ch/grid//lhcb/LHCb/Collision11/DIMUON.DST/00010348/0000/00010348_00000579_1.dimuon.dst?svcClass=lhcbdisk]
-RootCnvSvc           INFO Disconnected data IO:12658A8F-A978-E111-BD05-003048C9CD62 [ROOT-Reco09.dst]
+RootCnvSvc           INFO Disconnected data IO:BC574012-6EF2-E111-841B-003048F0E192 [ROOT-Reco09.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

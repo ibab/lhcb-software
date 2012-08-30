@@ -1,8 +1,11 @@
 !-------------------------------------------------------------------------------
 ! Package: IOExample
-! Package Manager: M.Frank
-! Purpose: Demonstrate how to write and read back event data
+! Package Manager: M.Cattaneo
+! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
+
+! 2012-08-30 - Marco Cattaneo
+ - Follow fix to Track copy method, r144539
 
 ! 2012-08-08 - Marco Clemencic
  - Added python/IOExample/__init__.py.
