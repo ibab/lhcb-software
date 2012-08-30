@@ -14,7 +14,7 @@ __author__  = "Olivier Deschamps odescham@in2p3.fr"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
-    'StdLooseAllPhotons' ,
+    'StdVeryLooseAllPhotons' ,
     'locations'
     )
 # =============================================================================
@@ -39,7 +39,7 @@ photon.PtCut              = 75 * MeV
 locations = updateDoD ( algorithm )
 
 ## finally: define the symbol 
-StdLooseAllPhotons = algorithm 
+StdVeryLooseAllPhotons = algorithm 
 
 ## ============================================================================
 if '__main__' == __name__ :

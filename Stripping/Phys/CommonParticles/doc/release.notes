@@ -9,6 +9,11 @@
 !-----------------------------------------------------------------------------
 
 
+
+
+! 2012-08-30 - Olivier Deschamps
+	- fix typo in StdVeryLooseAllPhotons name
+
 ! 2012-08-24 - Susan Haines
 - Removed StdVeryLooseKs.py
 - Removed lines related to StdVeryLooseKs from StandardV0.py
