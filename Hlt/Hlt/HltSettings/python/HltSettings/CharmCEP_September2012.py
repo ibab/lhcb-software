@@ -28,6 +28,8 @@ class CharmCEP_September2012 :
                   , 'Hlt2LowMultChiC2HHHHWS'    
                   , 'Hlt2LowMultDDIncCP'
                   , 'Hlt2LowMultDDIncVF'
+                  , 'Hlt2LowMultChiC2PP'
+                  , 'Hlt2LowMultLMR2HH'
              ]
         
         return lines
