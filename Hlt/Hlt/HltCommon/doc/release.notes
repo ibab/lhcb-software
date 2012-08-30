@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================= HltCommon v8r7 2012-08-30 =========================
 ! 2012-08-29 - Johannes Albrecht
  - HltGEC: add activity trigger 
 
