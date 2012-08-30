@@ -24,9 +24,9 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
                   , 'VCHI2_D0_MAX_V0'             : 20.
                   , 'M_MAX'                       : 2500. 
                   , 'DeltaM_MIN'                  : 0.0 * MeV
-                  , 'DeltaM_MAX'                  : 275.0 * MeV
+                  , 'DeltaM_MAX'                  : 285.0 * MeV
                   , 'DeltaM_MINwide'              : 0.0 * MeV
-                  , 'DeltaM_MAXwide'              : 550.0 * MeV
+                  , 'DeltaM_MAXwide'              : 570.0 * MeV
                   ## GEC
                   , 'GEC_Filter_NTRACK'        : True       # do or do not
                   , 'GEC_NTRACK_MAX'           : 180        # max number of tracks
