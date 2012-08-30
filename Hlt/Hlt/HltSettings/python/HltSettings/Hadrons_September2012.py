@@ -70,7 +70,7 @@ class Hadrons_September2012 :
        
         d = { Hlt2B2HHLTUnbiasedLinesConf : {'NetCut' : (1.0 + (0.85))*0.5,'Prescale':{'Hlt2B2HHLTUnbiased' : 0.0} } }
  
-        from TopoLines_June2012 import TopoLines
+        from TopoLines_September2012 import TopoLines
         d.update ( TopoLines().Thresholds() )
 
         from Phi_draft2012 import Phi_draft2012 as PhiLines
