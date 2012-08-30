@@ -5,7 +5,8 @@
 # add the DN of user into the LFC
 #
 
-source /afs/cern.ch/project/gd/LCG-share/current_3.1/etc/profile.d/grid-env.csh
+#source /afs/cern.ch/project/gd/LCG-share/current_3.1/etc/profile.d/grid-env.csh
+source /afs/cern.ch/project/gd/LCG-share/current_3.2/etc/profile.d/grid-env.sh
 runpy LbRelease.add_DN_LFC ${*:q}
 
 exit 0
