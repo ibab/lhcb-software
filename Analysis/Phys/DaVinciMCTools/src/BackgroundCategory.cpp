@@ -451,7 +451,7 @@ int BackgroundCategory::topologycheck(const LHCb::Particle* topmother)
   }
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Final sum is " << sumofpids << endmsg;
-
+ 
   return sumofpids;
 }
 //=============================================================================
@@ -844,7 +844,7 @@ bool BackgroundCategory::doAllFinalStateParticlesHaveACommonMother(MCParticleVec
                                           << m_commonMother->particleID().pid()
                                           << endmsg ;
 
-    if ( isStable(m_commonMother->particleID().abspid())){
+    if ( m_commonMother->particleID().abspid() != 22 && isStable(m_commonMother->particleID().abspid())){
       if (msgLevel(MSG::VERBOSE)) verbose() << "Common mother is a stable "
                                             << m_commonMother->particleID().pid()
                                             << endmsg ;
@@ -1094,6 +1094,7 @@ bool BackgroundCategory::areAnyFinalStateParticlesGhosts(MCParticleVector mc_par
         ( isStable((*iPP)->particleID().abspid()) || (*iPP)->isBasicParticle()  )
         ) {
       carryon = false;
+      // info() <<"======== IT IS A GHOST ======= " << (*iPP)->particleID().abspid() << endmsg;
     }
     ++iP;
     ++iPP;
@@ -1272,7 +1273,7 @@ BackgroundCategory::associate_particles_in_decay(const ParticleVector & particle
       // and should be removed below ...
     }
     // ====== other basic or stables particles (Warning : including gamma->ee as gamma is considered as stable)
-    else if ( (isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ) && (*iP)->particleID().abspid() !=22)  {
+    else if ( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() )  {
 
       //Look at the full range of associated particles
       const LHCb::MCParticle* mc_correctPID = NULL;
@@ -1289,8 +1290,11 @@ BackgroundCategory::associate_particles_in_decay(const ParticleVector & particle
 
       // ===== gamma->ee
       if ( (*iP)->particleID().pid() == 22 ) {
-        mcPartRange.push_back( MCAssociation(this->origin(*iP),1.) );
+        const LHCb::MCParticle* mm = this->origin(*iP);
+        if(mm)mcPartRange.push_back( MCAssociation(mm,1.) );
         associating_a_neutral = true;
+        //info() << " ============ " << mm << "===============" << endmsg;
+        //if( mm ) info()<< mm->particleID().pid() << endmsg;
       } else {
         mcPartRange = m_smartAssociator->relatedMCPs(*iP);
         associating_a_neutral = false;
