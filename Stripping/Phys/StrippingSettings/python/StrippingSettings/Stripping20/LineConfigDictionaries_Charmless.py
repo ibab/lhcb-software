@@ -597,16 +597,16 @@ B2XEta = {
                     },
     'STREAMS'     : {
       'BhadronCompleteEvent' : [
-        'StrippingB2XEtaB2etapKSLLLineDecision',
-        'StrippingB2XEtaB2etapKSDDLineDecision',
-        'StrippingB2XEtaLb2etapLLLLineDecision',
-        'StrippingB2XEtaLb2etapLDDLineDecision'
+        'StrippingB2XEtaB2etapKSLLLine',
+        'StrippingB2XEtaB2etapKSDDLine',
+        'StrippingB2XEtaLb2etapLLLLine',
+        'StrippingB2XEtaLb2etapLDDLine'
         ],
       'Bhadron' : [
-        'StrippingB2XEtaB2etaKSLLLineDecision',
-        'StrippingB2XEtaB2etaKSDDLineDecision',
-        'StrippingB2XEtaLb2etaLLLLineDecision',
-        'StrippingB2XEtaLb2etaLDDLineDecision'
+        'StrippingB2XEtaB2etaKSLLLine',
+        'StrippingB2XEtaB2etaKSDDLine',
+        'StrippingB2XEtaLb2etaLLLLine',
+        'StrippingB2XEtaLb2etaLDDLine'
         ]
       }
     }
