@@ -260,7 +260,16 @@ B2KShh = {
                 'Prescale_SameSign'       : 1.0,
                 'Postscale'               : 1.0
                },
-    'STREAMS' : [ 'BhadronCompleteEvent' ]
+    'STREAMS' : { 
+      'BhadronCompleteEvent' : [
+        'StrippingB2KShhDDLine',     
+        'StrippingB2KShhLLLine'
+        ],
+      'Bhadron' : [
+        'StrippingB2KShhDDSameSignLine',
+        'StrippingB2KShhLLSameSignLine'
+        ]
+      }
     }
 ##
 ## StrippingLb2V0hh.py
@@ -393,7 +402,15 @@ BetaSBs2KstKst = {
          ,      "BDOCA"         : 0.3
          ,      "BIPCHI2"       : 25
          },
-    'STREAMS' : [ 'BhadronCompleteEvent' ]
+    'STREAMS' : { 
+      'BhadronCompleteEvent' : [
+        'StrippingBetaSBs2KstKstNominalLine',
+        'StrippingBd2JPsiKstForBetaSBs2KstKstLine'
+        ],
+      'Bhadron' : [
+        'StrippingBetaSBs2KstKstSameChargeLine'
+        ]
+      }
     }
 ##
 ## StrippingBs2Kst_0Kst_0.py
@@ -573,5 +590,18 @@ B2XEta = {
                      'Prescale'                : 1.0,
                      'Postscale'               : 1.0
                     },
-    'STREAMS'     : ['BhadronCompleteEvent']
+    'STREAMS'     : {
+      'BhadronCompleteEvent' : [
+        'StrippingB2XEtaB2etapKSLLLineDecision',
+        'StrippingB2XEtaB2etapKSDDLineDecision',
+        'StrippingB2XEtaLb2etapLLLLineDecision',
+        'StrippingB2XEtaLb2etapLDDLineDecision'
+        ],
+      'Bhadron' : [
+        'StrippingB2XEtaB2etaKSLLLineDecision',
+        'StrippingB2XEtaB2etaKSDDLineDecision',
+        'StrippingB2XEtaLb2etaLLLLineDecision',
+        'StrippingB2XEtaLb2etaLDDLineDecision'
+        ]
+      }
     }
