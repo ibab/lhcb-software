@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-08-30 - Julien Cogan
+ - L0Conf : complete the configuration for Moore 
+            (when the ForceSingleL0Configuration is True)
+
 ! 2012-08-29 - Julien Cogan
  - remove the PuVetoFillRawBuffer algorithm from the default sequence for 
    L0 simulation (now done in Boole together with the Velo simulation).

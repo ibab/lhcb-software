@@ -60,6 +60,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"RootInTESOnDemand" : """List of RootInTES for L0 algorithms decoding called via the on demand service."""
         ,"EnableTAEOnDemand" : """ If True, the data on demand service is set up to decode TAE events."""
         ,"ReplaceL0BanksWithEmulated" : """ If True, run the emulators and replace the existing L0 banks."""
+        ,"ForceSingleL0Configuration" : """ Option to be used in Moore to force a single TCK configuration."""
         ,"ReplayL0DU"     : """ If True, run the L0DU emulation starting from the L0DU banks."""
         ,"SimulateL0"     : """ If True, run the L0 simulation and write L0Banks."""
         ,"EmulateL0"      : """ If True, run the L0 emulators and write on TES at a non default location."""
@@ -111,6 +112,8 @@ class L0Conf(LHCbConfigurableUser) :
             raise L0ConfError("FilterL0FromRaw","DecodeL0")
         if self.getProp("FilterL0FromRaw") and self.getProp("DecodeL0DU"):
             raise L0ConfError("FilterL0FromRaw","DecodeL0DU")
+        if self.getProp("ForceSingleL0Configuration") and not self.isPropertySet("TCK"):
+            raise L0ConfError("ForceSingleL0Configuration","TCK")
         rootInTESOnDemand_checked = []
         for rootintes in self.getProp("RootInTESOnDemand"):
             if len(rootintes)>0 :
@@ -495,6 +498,24 @@ class L0Conf(LHCbConfigurableUser) :
 
         # Force all L0 components to use the single config provider (for Moore) 
         if self.getProp("ForceSingleL0Configuration"):
+            from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
+            L0TCK = self.getProp("TCK")
+            if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
+                raise KeyError('requested L0 TCK %s is not known'%L0TCK)
+            if 'ToolSvc.L0DUConfig.TCK_%s'%L0TCK not in allConfigurables :
+                raise KeyError('requested L0DUConfigProvider for TCK %s is not known'%L0TCK)
+            orig =  L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_'+L0TCK)
+            del allConfigurables['ToolSvc.L0DUConfig']
+            single = L0DUConfigProvider('ToolSvc.L0DUConfig')
+            for p,v in orig.getValuedProperties().items() : setattr(single,p,v)
+            single.TCK = L0TCK
+            from Configurables import L0DUFromRawTool, L0DUFromRawAlg
+            l0du   = L0DUFromRawAlg("L0DUFromRaw")
+            l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
+            getattr( l0du, 'L0DUFromRawTool' ).L0DUConfigProviderType = 'L0DUConfigProvider'
+            from Configurables import L0DUAlg
+            L0DUAlg('L0DU').L0DUConfigProviderType = 'L0DUConfigProvider'
+                    
             def _fixL0DUConfigProviderTypes() :
                 from Gaudi.Configuration import allConfigurables
                 for c in allConfigurables.values() :
@@ -502,7 +523,6 @@ class L0Conf(LHCbConfigurableUser) :
 
             from Gaudi.Configuration import appendPostConfigAction
             appendPostConfigAction( _fixL0DUConfigProviderTypes )
-                                        
 
 class L0ConfError(Exception):
     """ Raised when conflicting options have been selected in L0Conf."""
