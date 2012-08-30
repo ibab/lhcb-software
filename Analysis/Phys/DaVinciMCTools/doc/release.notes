@@ -4,6 +4,13 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+
+! 2012-06-12 - O. Deschamps
+ - Background category : improved treatment for non-standard configurations : 
+        - calorimetric-gamma/gamma conversion : photon is assumed to be a stable final state - specific treatment for gamma->ee conversion
+        - merged/resolved pi0 issue : merged is a basic particle while resolved have photons daughter - improved treatment
+
+
 !========================= DaVinciMCTools v10r5 2012-06-28 =========================
 
 ! 2012-06-12 - O. Deschamps

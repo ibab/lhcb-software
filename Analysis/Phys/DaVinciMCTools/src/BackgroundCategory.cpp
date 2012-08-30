@@ -11,6 +11,7 @@
 // Implementation file for class : BackgroundCategory
 //
 // 2005-11-23 : Vladimir Gligorov
+//
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -295,7 +296,7 @@ bool BackgroundCategory::isStable(int pid)
   if ( pid < 0 ) pid *= -1;
 
   if ( pid == 11 || //electron
-       //       pid == 22 || //photon  - removed from the sable particle list : only converted gamma->ee can come here (stable photons have a specific treatment)
+       pid == 22 || //photon  - photon conversion is treated elsewhere
        pid == 13 || //muon
        pid == 12 || //neutrinos
        pid == 14 ||
@@ -303,7 +304,6 @@ bool BackgroundCategory::isStable(int pid)
        pid == 211 || //pion (charged)
        pid == 321 || //kaon (charged)
        pid == 2212 //|| //proton
-       //pid == 111 //pion (neutral)
        ) return true; else return false;
 
 }
@@ -358,6 +358,12 @@ int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
 
   for (iP = (*iV)->products().begin(); iP != (*iV)->products().end(); ++iP) {
 
+
+
+    if ( m_useSoftPhotonCut &&
+         (*iP)->particleID().abspid() == 22 &&
+         (*iP)->momentum().e() < m_softPhotonCut ) continue; //soft photons are ignored
+
     //Need to protect against MCParticles with null endVertices,
     //which are assumed to be stable
     SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
@@ -367,25 +373,21 @@ int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
     //Print out some debug messages
     if (msgLevel(MSG::VERBOSE)) verbose() << "Printing out decay vertices of a "
                                           << (*iP)->particleID().abspid()
+                                          << " (E=" << (*iP)->momentum().e() << ") "
                                           << endmsg;
     if (msgLevel(MSG::VERBOSE)) verbose() << (*iP)->endVertices()
                                           << endmsg;
 
-    //Add stable neutrals including resolved/merged pi0. Remember that this causes
-    //a special problem because all MCParticls pi0 have two photon daughters,
-    //whereas only the resolved pi0 is reconstructed from two photon daughters.
     if (  isitstable || //if the MCParticle did not have an endVertex
-          isStable( (*iP)->particleID().abspid() ) || //if it is one of the MCParticles we always call stable
-          (*iP)->particleID().abspid() == 111 //or if it is a pi0, need this to deal with resolved/merged pi0
-
+          isStable( (*iP)->particleID().abspid() )  //if it is one of the MCParticles we always call stable
           ) {
 
-      if(((*iP)->particleID().abspid() != 22) &&
-         ((*iP)->particleID().abspid() != 12) &&
+      // neutrinos are not reconstructed
+      if(((*iP)->particleID().abspid() != 12) &&
          ((*iP)->particleID().abspid() != 14) &&
          ((*iP)->particleID().abspid() != 16)
          ) sumofpids += (*iP)->particleID().abspid();
-
+      
       if (msgLevel(MSG::VERBOSE)) verbose() << "MC sum having added a neutral is now "
                                             << sumofpids
                                             << endmsg;
@@ -433,7 +435,13 @@ int BackgroundCategory::topologycheck(const LHCb::Particle* topmother)
     //We never reconstruct neutrions so no need to worry abut them.
     if ((*iP) != 0) {
 
-      if((*iP)->particleID().abspid() != 22) sumofpids += (*iP)->particleID().abspid();
+      // merged pi0 : add the 2 unreconstructed photons to the sum
+      if((*iP)->particleID().abspid() == 111 && (*iP)->isBasicParticle() )sumofpids += 44;
+      // gamma->ee : do not add gamma (pid=22) but add the 2 rec'ed electrons (11*2=22) 
+      // -> transparent as gamma is considered to stable in the MC side (photon pid is added but not electrons !!)
+      if( (*iP)->particleID().abspid() == 22 && !(*iP)->isBasicParticle() )continue;
+
+      sumofpids += (*iP)->particleID().abspid();
       if (msgLevel(MSG::VERBOSE)) verbose() << "Sum is now "
                                             << sumofpids
                                             << endmsg;
@@ -978,7 +986,6 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
           if ( m_useSoftPhotonCut &&
                (*iP)->particleID().abspid() == 22 &&
                (*iP)->momentum().e() < m_softPhotonCut ) continue; //soft photons are ignored
-
           if (msgLevel(MSG::VERBOSE)) verbose() << "The MC-associated particle has pid : "
                                                 << (*iP)->particleID().pid()
                                                 << endmsg;
@@ -1024,10 +1031,10 @@ bool BackgroundCategory::areAllFinalStateParticlesCorrectlyIdentified(ParticleVe
 
   do {
     if ( *iPmc && *iP) {
-      //if ( (*iP)->isBasicParticle() ) {
-      if( isStable((*iP)->particleID().abspid()) ||
-          (*iP)->isBasicParticle()
-          ){
+      if( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ){
+        
+        if( (*iP)->particleID().abspid() == 22 && !m_calo2MC->isPureNeutralCalo( *iP ) )continue; // gamma->ee is considered as composite
+
         carryon = ( (*iP)->particleID().pid() == (*iPmc)->particleID().pid() );
       }
     }
@@ -1245,8 +1252,8 @@ BackgroundCategory::associate_particles_in_decay(const ParticleVector & particle
                                           << (*iP)->particleID().pid()
                                           << endmsg;
 
-    if( (*iP)->isBasicParticle() && m_calo2MC->isPureNeutralCalo( *iP ) ){ // pure neutral calorimetric particle
-      //if(  m_calo2MC->isPureNeutralCalo( *iP ) ){ // pure neutral calorimetric particle
+    // ======  pure neutral calorimetric *basic* particle : gamma & pi0-merged (pi0-resolved is treated as a composite particle)
+    if( (*iP)->isBasicParticle() && m_calo2MC->isPureNeutralCalo( *iP ) ){
       if(NULL == m_calo2MC)
         Exception("Something failed when making the calo->MC associators. Bye!");
       // associating neutral is done here :
@@ -1264,7 +1271,8 @@ BackgroundCategory::associate_particles_in_decay(const ParticleVector & particle
 
       // and should be removed below ...
     }
-    else if ( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ) {
+    // ====== other basic or stables particles (Warning : including gamma->ee as gamma is considered as stable)
+    else if ( (isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ) && (*iP)->particleID().abspid() !=22)  {
 
       //Look at the full range of associated particles
       const LHCb::MCParticle* mc_correctPID = NULL;
@@ -1279,8 +1287,9 @@ BackgroundCategory::associate_particles_in_decay(const ParticleVector & particle
       if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the array of matching particles"
                                             << endmsg;
 
-      if ( (*iP)->particleID().pid() == 22 || (*iP)->particleID().pid() == 111) {
-        mcPartRange = m_smartAssociator->relatedMCPs(*iP);
+      // ===== gamma->ee
+      if ( (*iP)->particleID().pid() == 22 ) {
+        mcPartRange.push_back( MCAssociation(this->origin(*iP),1.) );
         associating_a_neutral = true;
       } else {
         mcPartRange = m_smartAssociator->relatedMCPs(*iP);

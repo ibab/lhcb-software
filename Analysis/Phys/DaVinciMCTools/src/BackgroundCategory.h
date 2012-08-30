@@ -15,6 +15,7 @@
 #include "Kernel/ParticleProperty.h"
 #include "CaloInterfaces/ICalo2MCTool.h"
 #include "Kernel/IPrintDecay.h"
+#include "Kernel/MCAssociation.h"
 
 /** @class BackgroundCategory BackgroundCategory.h
  *
