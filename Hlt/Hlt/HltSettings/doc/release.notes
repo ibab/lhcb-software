@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-08-31 - Rosen Matev
+ - modify Physics_pAPilot settings: add Hlt1Lumi line with EnableReco=False
+   and keep Velo bank for nano events
+
 !========================= HltSettings v5r43 2012-08-30 =========================
 ! 2012-08-29 - Johannes Albrecht
  - add new setting: Physics_pAPilot

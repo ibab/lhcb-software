@@ -1,7 +1,6 @@
-
 class Physics_pAPilot :
     """
-    Threshold settings for Hlt1 and 2 for OuterTracker Cosmic Runs 
+    Threshold settings for the pilot pA run in September 2012
     
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
     
@@ -24,9 +23,9 @@ class Physics_pAPilot :
         self.verifyType( Physics_pAPilot )
         return          'Physics_pAPilot'
     
-#    def __init__(self) :
+    def __init__(self) :
 #        self.StripEndSequence = ['']
-
+        self.NanoBanks = ['ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo']
 
     def L0TCK(self) :
         return '0x1710'
@@ -45,21 +44,17 @@ class Physics_pAPilot :
                  'Hlt1ActivitySPD',
                  'Hlt1ActivityTracking',
                  'Hlt1MicroBiasVeloLowMult',
-                 'Hlt1MBNoBias']
+                 'Hlt1MBNoBias',
+                 'Hlt1Lumi',
+                 ]
 
-    
     def Thresholds(self) :
         """
         Returns a dictionary of cuts
         """
         from Hlt1Lines.Hlt1L0Lines import Hlt1L0LinesConf
-        return { Hlt1L0LinesConf : { 'Prescale' : { 'Hlt1L0Any'    : 1.}}}
-    
-    
-
-
-def ActiveHlt2Lines(self) :
-        """
-        Returns a list of active lines
-        """
-        return []
+        from Hlt1Lines.Hlt1LumiLines import Hlt1LumiLinesConf
+        
+        return { Hlt1L0LinesConf : { 'Prescale' : { 'Hlt1L0Any'    : 1.}}
+               , Hlt1LumiLinesConf : { 'EnableReco' : False }
+               }
