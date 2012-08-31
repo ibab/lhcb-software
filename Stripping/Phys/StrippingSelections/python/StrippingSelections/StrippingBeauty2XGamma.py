@@ -32,10 +32,11 @@ from Beauty2XGamma_Utils import *
 # Configuration dictionary
 moduleName = "Beauty2XGamma"
 config = { # Cuts made on all charged input particles in all lines
-           "ALL" : {  'TRCHI2DOF_MAX' : 3,
-                      'PT_MIN'        : '300*MeV',
-                      'P_MIN'         : '1000*MeV',
-                      'MIPCHI2DV_MIN' : 16 },
+           "ALL" : {  'TRCHI2DOF_MAX'  : 3,
+                      'PT_MIN'         : '300*MeV',
+                      'P_MIN'          : '1000*MeV',
+                      'MIPCHI2DV_MIN'  : 16,
+                      'TRGHP_MAX'      : 0.5},
            # Cuts made on the photon
            "GAMMA" : { 'PT_MIN'       : '2500*MeV',
                        'CL_MIN'       : 0.25 
