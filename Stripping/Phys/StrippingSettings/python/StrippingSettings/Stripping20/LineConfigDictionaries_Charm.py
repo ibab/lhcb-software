@@ -499,8 +499,8 @@ D2hhh = {
     'PTSum'                     : 2800.,
     'DOCAChi2'                  :   50.,
     'DPt'                       : 1000.,
-    'DIPChi2'                   :   15.,
-    'DdcaFDChi2'                :  100.,
+    'DIPChi2'                   :   12.,
+    'DdcaFDChi2'                :  125.,
     'DDIRA'                     :    0.0,
     'DVXChi2NDOF'               :   10.,
     'MinMassPosFit'             : 1800.,
@@ -551,8 +551,8 @@ D2hhhControl = {
     'PTSum'                     : 1800.,
     'DOCAChi2'                  :   50.,
     'DPt'                       : 1000.,
-    'DIPChi2'                   :   15.,
-    'DdcaFDChi2'                :  100.,
+    'DIPChi2'                   :   12.,
+    'DdcaFDChi2'                :  125.,
     'DDIRA'                     :    0.0,
     'DVXChi2NDOF'               :   10.,
     'MinMassPosFit'             : 1800.,
@@ -975,7 +975,7 @@ DstarPromptWithD02HHHHNoPID = {
     ,'MaxVeloTracks'    : None
     ,'MaxSpdDigits'     : None
     ,'MaxITClusters'    : None
-    ,'Prescale'         : 0.10
+    ,'Prescale'         : 0.05
     ,'Postscale'        : 1
     },
     'WGs' : [ 'Charm' ],
