@@ -9,7 +9,7 @@
 # =============================================================================
 
 package           DaVinciMCTools
-version           v10r5
+version           v10r6
 
 # This template is an example for a standard Algorithm package
 #
