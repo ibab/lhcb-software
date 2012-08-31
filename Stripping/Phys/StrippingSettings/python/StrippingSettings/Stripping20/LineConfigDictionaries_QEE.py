@@ -369,7 +369,7 @@ InclbJets = {
     ,  'DZSVPVCut'        : 1.0
     ,  'SumMomSVCut'      : 3.0
     ,  'VtxChi2Cut'       : 20.0
-    ,  'scale'            : 0.1
+    ,  'scale'            : 0.05
     },
     'WGs' : [ 'QEE' ],
     'STREAMS' : [ 'EW' ]
@@ -402,7 +402,7 @@ HighPtTopo = {
     'BUILDERTYPE'  : 'HighPtTopoJetsConf',
     'CONFIG'       : {
     'HighPtTopo_Prescale'    : 1.0,
-    'HighPtTopoLow_Prescale' : 0.1,
+    'HighPtTopoLow_Prescale' : 0.05,
     'HighPtTopo_Postscale'   : 1.0,
     'pT'        : 40000,
     'pTlow'     : 20000
