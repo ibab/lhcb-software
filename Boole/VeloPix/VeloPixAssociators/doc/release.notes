@@ -3,6 +3,9 @@
 ! Responsible : Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+! 2012-08-31 Pawel Jalocha
+ - Change VeloPix to VP in containers
+
 !================= VeloPixAssociators v1r2 2010-10-04 =====================
 ! 2010-09-22 - Victor Coco
  - Replace hardcoded container location by proper location definition

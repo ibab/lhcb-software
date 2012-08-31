@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY(VeloPixCluster2MCHitLinker);
 VeloPixCluster2MCHitLinker::VeloPixCluster2MCHitLinker(const std::string& name,
                             ISvcLocator* pSvcLocator) 
   : GaudiAlgorithm(name, pSvcLocator),
-    m_hitLocation("MC/VeloPix/Hits"),
+    m_hitLocation("MC/VP/Hits"),
     m_asctLocation(LHCb::VeloPixDigitLocation::VeloPixDigitLocation + "2MCHits")
 {
   declareProperty("InputData", m_inputData = 
@@ -74,7 +74,7 @@ StatusCode VeloPixCluster2MCHitLinker::execute()
   LinkerWithKey<MCHit,VeloPixCluster> myLink(evtSvc(),msgSvc(),outputData());
   // Loop and link VeloPixClusters to MC truth
   VeloPixClusters::const_iterator iterClus = clusterCont->begin();
-  for(; iterClus != clusterCont->end(); ++iterClus) {
+  for(; iterClus != clusterCont->end(); ++iterClus) {        // loop over clusters
     // Find all hits
     HitMap hitMap;
     StatusCode sc = associateToTruth(*iterClus,hitMap);

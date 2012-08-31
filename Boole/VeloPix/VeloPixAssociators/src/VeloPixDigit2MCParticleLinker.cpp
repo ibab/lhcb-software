@@ -59,7 +59,7 @@ StatusCode VeloPixDigit2MCParticleLinker::execute()
   // Get VeloPixDigits
   const VeloPixDigits* digitCont = get<VeloPixDigits>(m_inputData);
   // Get MCVeloPixDigits
-  const MCVeloPixDigits* digitsMC = get<MCVeloPixDigits>("MC/VeloPix/Digits");
+  const MCVeloPixDigits* digitsMC = get<MCVeloPixDigits>("MC/VP/Digits");
   // Get MCParticles
   MCParticles* mcParts = get<MCParticles>(MCParticleLocation::Default);
   // Creating linker
