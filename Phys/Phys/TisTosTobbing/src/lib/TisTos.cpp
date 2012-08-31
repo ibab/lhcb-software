@@ -41,15 +41,18 @@ TisTos::TisTos( const std::string& type,
 
   declareProperty("TOSFracVelo", m_TOSFrac[kVelo] = 0.7 );
   declareProperty("TOSFracOTIT", m_TOSFrac[kOTIT] = 0.7 );
-  declareProperty("TOSFracTT",   m_TOSFrac[kTT]   = 0.7 );
-  declareProperty("TOSFracMuon", m_TOSFrac[kMuon] = 0.6 );
+  //  declareProperty("TOSFracTT",   m_TOSFrac[kTT]   = 0.7 );
+  declareProperty("TOSFracTT",   m_TOSFrac[kTT]   = 0.0 );  // TT off by default (8/31/12)
+  //  declareProperty("TOSFracMuon", m_TOSFrac[kMuon] = 0.6 ); // low threshold to avoid problems 
+  declareProperty("TOSFracMuon", m_TOSFrac[kMuon] = 0.0001 );  // with Hlt1 muon lines in some data (8/31/12)  
   declareProperty("TOSFracEcal", m_TOSFrac[kEcal] = 0.01); 
   declareProperty("TOSFracHcal", m_TOSFrac[kHcal] = 0.01);
 
   declareProperty("TISFracVelo", m_TISFrac[kVelo] = 0.01 );
   declareProperty("TISFracOTIT", m_TISFrac[kOTIT] = 0.01 );
   declareProperty("TISFracTT",   m_TISFrac[kTT]   = 0.01 );
-  declareProperty("TISFracMuon", m_TISFrac[kMuon] = 0.01 );
+  //  declareProperty("TISFracMuon", m_TISFrac[kMuon] = 0.01 ); // see above
+  declareProperty("TISFracMuon", m_TISFrac[kMuon] = 0.0001 ); 
   declareProperty("TISFracEcal", m_TISFrac[kEcal] = 0.0099 ); 
   declareProperty("TISFracHcal", m_TISFrac[kHcal] = 0.0099 );
 
