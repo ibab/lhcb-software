@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-31 - Jibo He
+ - StrippingSelections/StrippingBc2JpsiMuXNew.py
+   . Added GhostProb cut
+ - StrippingSelections/StrippingBd2eeKstar(BDT).py
+   . Added GhostProb cut also on electron  
+
 ! 2012-Aug-30 - Paula Alvarez
  - Added BPVDIRA cut to StrippingBs2PhiKst0 
  - Added BPVDIRA and TRGHOSTPROB cuts to StrippingBs2Kst0Kst0 and StrippingBs2Kst_0Kst_0

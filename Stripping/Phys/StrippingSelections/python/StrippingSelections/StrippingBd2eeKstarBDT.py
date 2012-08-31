@@ -22,6 +22,7 @@ defaulSettings =  {
         #
         'ElectronPT'              :  200.   ,  # MeV
         'ElectronTrackCHI2pNDOF'  :    5.   ,
+        'ElectronGhostProb'       :    0.5  ,
         'ElectronIPCHI2'          :    1.   ,
         'ElectronPIDepi'          :   -2.   ,          
         #
@@ -29,13 +30,15 @@ defaulSettings =  {
         #
         'KaonPT'                  :  400.   ,  # MeV 
         'KaonP'                   : 3000.   ,  # MeV  
-        'KaonTrackCHI2pNDOF'      :    5.   , 
+        'KaonTrackCHI2pNDOF'      :    5.   ,
+        'KaonGhostProb'           :    0.35 ,
         'KaonIPCHI2'              :    4.   , 
         'KaonPIDKpi'              :   -5.   , 
         #
         'PionPT'                  :  250.   ,  # MeV
         'PionP'                   : 2000.   ,  # MeV 
-        'PionTrackCHI2pNDOF'      :    5.   , 
+        'PionTrackCHI2pNDOF'      :    5.   ,
+        'PionGhostProb'           :    0.35 ,
         'PionIPCHI2'              :    4.   , 
         'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
         #
@@ -64,6 +67,7 @@ class Bd2eeKstarBDTConf(LineBuilder):
         #
         'ElectronPT',
         'ElectronTrackCHI2pNDOF',
+        'ElectronGhostProb',
         'ElectronIPCHI2',
         'ElectronPIDepi',
         #
@@ -72,12 +76,14 @@ class Bd2eeKstarBDTConf(LineBuilder):
         'KaonPT',
         'KaonP',
         'KaonTrackCHI2pNDOF',
+        'KaonGhostProb',
         'KaonIPCHI2',
         'KaonPIDKpi',
         #
         'PionPT',
         'PionP',
         'PionTrackCHI2pNDOF',
+        'PionGhostProb',
         'PionIPCHI2',
         'PionPIDpiK',
         #
@@ -103,6 +109,7 @@ class Bd2eeKstarBDTConf(LineBuilder):
         self.SelEE = makeEE( 'eeFor'+Bd2eeKstarBDTName,
                              ElectronPT = config['ElectronPT'],
                              ElectronTrackCHI2pNDOF = config['ElectronTrackCHI2pNDOF'],
+                             ElectronGhostProb = config['ElectronGhostProb'],
                              ElectronIPCHI2 = config['ElectronIPCHI2'],
                              ElectronPIDepi = config['ElectronPIDepi'],
                              #
@@ -113,12 +120,14 @@ class Bd2eeKstarBDTConf(LineBuilder):
                                   KaonPT = config['KaonPT'],
                                   KaonP = config['KaonP'],
                                   KaonTrackCHI2pNDOF = config['KaonTrackCHI2pNDOF'],
+                                  KaonGhostProb = config['KaonGhostProb'],
                                   KaonIPCHI2 = config['KaonIPCHI2'],
                                   KaonPIDKpi = config['KaonPIDKpi'],
                                   #
                                   PionPT = config['PionPT'],
                                   PionP = config['PionP'],
                                   PionTrackCHI2pNDOF = config['PionTrackCHI2pNDOF'],
+                                  PionGhostProb = config['PionGhostProb'],
                                   PionIPCHI2 = config['PionIPCHI2'],
                                   PionPIDpiK = config['PionPIDpiK'],
                                   #
@@ -154,6 +163,7 @@ class Bd2eeKstarBDTConf(LineBuilder):
         self.FilterEE = filterEE( 'filterEEFor'+Bd2eeKstarBDTName,
                                   ElectronPT = config['ElectronPT'],
                                   ElectronTrackCHI2pNDOF = config['ElectronTrackCHI2pNDOF'],
+                                  ElectronGhostProb = config['ElectronGhostProb'],
                                   ElectronIPCHI2 = config['ElectronIPCHI2'],
                                   ElectronPIDepi = config['ElectronPIDepi'],
                                   #
@@ -190,6 +200,7 @@ def makeEE( name,
             #
             ElectronPT,
             ElectronTrackCHI2pNDOF,
+            ElectronGhostProb,
             ElectronIPCHI2,
             ElectronPIDepi,
             #
@@ -198,9 +209,9 @@ def makeEE( name,
 
     _StdLooseDetachedDiElectron = DataOnDemand(Location = "Phys/StdLooseDetachedDiElectron/Particles" )
     
-    ElectronPCut = "(INTREE( (ID=='e+') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) ))" % locals()
+    ElectronPCut = "(INTREE( (ID=='e+') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) & (TRGHOSTPROB<%(ElectronGhostProb)s ) ))" % locals()
 
-    ElectronMCut = "(INTREE( (ID=='e-') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) ))" % locals()
+    ElectronMCut = "(INTREE( (ID=='e-') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) & (TRGHOSTPROB<%(ElectronGhostProb)s ) ))" % locals()
     
     _EE = FilterDesktop( Code = eeCuts + " & " + ElectronPCut + " & " + ElectronMCut )
     
@@ -213,6 +224,7 @@ def filterEE( name,
               #
               ElectronPT,
               ElectronTrackCHI2pNDOF,
+              ElectronGhostProb,
               ElectronIPCHI2,
               ElectronPIDepi,
               #
@@ -221,9 +233,9 @@ def filterEE( name,
     
     _StdLooseDetachedDiElectron = DataOnDemand(Location = "Phys/StdDiElectronFromTracks/Particles" )
     
-    ElectronPCut = "(INTREE( (ID=='e+') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) ))" % locals()
+    ElectronPCut = "(INTREE( (ID=='e+') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) & (TRGHOSTPROB<%(ElectronGhostProb)s ) ))" % locals()
 
-    ElectronMCut = "(INTREE( (ID=='e-') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) ))" % locals()
+    ElectronMCut = "(INTREE( (ID=='e-') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) & (TRGHOSTPROB<%(ElectronGhostProb)s ) ))" % locals()
     
     _EE = FilterDesktop( Code = eeCuts + " & " + ElectronPCut + " & " + ElectronMCut )
     
@@ -237,12 +249,14 @@ def makeKstar(name,
               KaonPT,
               KaonP,
               KaonTrackCHI2pNDOF,
+              KaonGhostProb,
               KaonIPCHI2,
               KaonPIDKpi,
               #
               PionPT,
               PionP,
               PionTrackCHI2pNDOF,
+              PionGhostProb,
               PionIPCHI2,
               PionPIDpiK,
               #
@@ -252,8 +266,8 @@ def makeKstar(name,
 
     _StdVeryLooseDetachedKst2Kpi = DataOnDemand(Location = "Phys/StdVeryLooseDetachedKst2Kpi/Particles" )
     
-    KaonCut = "(INTREE( (ABSID=='K+') & (PT> %(KaonPT)s *MeV) & (P>%(KaonP)s *MeV) & (TRCHI2DOF < %(KaonTrackCHI2pNDOF)s) & (BPVIPCHI2()> %(KaonIPCHI2)s ) & (PIDK>%(KaonPIDKpi)s) & (TRGHOSTPROB<0.35) ))" % locals()
-    PionCut = "(INTREE( (ABSID=='pi+') &  (PT> %(PionPT)s *MeV) & (P>%(PionP)s *MeV) & (TRCHI2DOF < %(PionTrackCHI2pNDOF)s) & (BPVIPCHI2()> %(PionIPCHI2)s ) & (PIDK<%(PionPIDpiK)s) & (TRGHOSTPROB<0.35) ))" % locals()
+    KaonCut = "(INTREE( (ABSID=='K+') & (PT> %(KaonPT)s *MeV) & (P>%(KaonP)s *MeV) & (TRCHI2DOF < %(KaonTrackCHI2pNDOF)s) & (BPVIPCHI2()> %(KaonIPCHI2)s ) & (PIDK>%(KaonPIDKpi)s) & (TRGHOSTPROB<%(KaonGhostProb)s ) ))" % locals()
+    PionCut = "(INTREE( (ABSID=='pi+') &  (PT> %(PionPT)s *MeV) & (P>%(PionP)s *MeV) & (TRCHI2DOF < %(PionTrackCHI2pNDOF)s) & (BPVIPCHI2()> %(PionIPCHI2)s ) & (PIDK<%(PionPIDpiK)s) & (TRGHOSTPROB<%(PionGhostProb)s) ))" % locals()
     
     KstarMomCut = "(VFASPF(VCHI2/VDOF)< %(KstarVertexCHI2)s) & (ADMASS('K*(892)0')< %(KstarMassW)s *MeV)" % locals()
     

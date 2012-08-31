@@ -145,7 +145,7 @@ def makeBc2JpsiMu( name,
     from StandardParticles import StdAllNoPIDsMuons as NoPIDsMuonsForBc2JpsiMu
     
     # MuBc Cut
-    MuonBcCut = "(PT > %(MuonBcPT)s *MeV) & (P > %(MuonBcP)s *MeV) & (TRCHI2DOF < %(MuonBcTRCHI2DOF)s)" % locals()
+    MuonBcCut = "(PT > %(MuonBcPT)s *MeV) & (P > %(MuonBcP)s *MeV) & (TRCHI2DOF < %(MuonBcTRCHI2DOF)s) & (TRGHOSTPROB<0.4)" % locals()
 
     _MuonBcFilter = FilterDesktop( Code = MuonBcCut )
     
