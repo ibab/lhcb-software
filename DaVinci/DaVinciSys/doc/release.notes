@@ -15,6 +15,7 @@ Additional patched packages :-
  . Phys/DecayTreeTuple - Various improvements and bug fixes
  . Event/TrackEvent - Fix bug in Track copy method.
  . Kernel/LHCbKernel and Kernel/LHCbAlgs - Fixes for MinBias lines
+ . Phys/TisTosTobbing - Switch use of TT off, set Muon TOS threshold extra low
 
 </PRE><H1><A NAME=v32r1p2>2012-08-08 DaVinci v32r1p2</A></H1><PRE>
 

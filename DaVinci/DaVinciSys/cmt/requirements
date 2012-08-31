@@ -15,6 +15,7 @@ use MuonTrackRec    v3r7      Muon
 use ParticleMaker   v6r6      Phys
 use DaVinciMCTools  v10r6     Phys
 use DecayTreeTuple  v3r25     Phys
+use TisTosTobbing   v7r8      Phys
 
 # Declare this as a container package
 apply_pattern container_package
