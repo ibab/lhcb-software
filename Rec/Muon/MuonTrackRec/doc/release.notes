@@ -8,6 +8,8 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+!========================= MuonTrackRec v3r7 2012-08-31 =========================
+
 ! 2012-08-29 - Chris Jones
  - Fix a few bugs in the last changes ...
 
