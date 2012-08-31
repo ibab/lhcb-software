@@ -3,6 +3,8 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+!========================= TisTosTobbing v7r8 2012-08-31 =========================
+
 ! 2012-08-31 - Tomasz Skwarnicki
  - change defaults in TisTos.cpp: switch use of TT off, set Muon TOS threshold extra low
    will affect all TisTos tools
