@@ -123,8 +123,10 @@ class DigiConf(LHCbConfigurableUser):
         dets = self.getProp("Detectors")
         if 'Velo' in dets :
                     writer.ItemList += ["/Event/Link/Raw/Velo/Clusters#1"]
-        if 'VeloPix' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/VeloPix/Clusters#1"]
+        #if 'VeloPix' in dets :
+        #            writer.ItemList += ["/Event/Link/Raw/VeloPix/Clusters#1"]
+        if 'VP' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/VP/Clusters#1"]
         if 'L0' in dets :
                     writer.OptItemList += ["/Event/Link/Trig/L0/Calo#1"]
                     writer.OptItemList += ["/Event/Link/Trig/L0/FullCalo#1"]
@@ -148,8 +150,10 @@ class DigiConf(LHCbConfigurableUser):
         dets = self.getProp("Detectors")
         if 'Velo' in dets :
                     writer.ItemList += ["/Event/Link/Raw/Velo/Clusters2MCHits#1"]
-        if 'VeloPix' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/VeloPix/Clusters2MCHits#1"]
+        #if 'VeloPix' in dets :
+        #            writer.ItemList += ["/Event/Link/Raw/VeloPix/Clusters2MCHits#1"]
+        if 'VP' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/VP/Clusters2MCHits#1"]
         if 'TT' in dets :
                     writer.ItemList += ["/Event/Link/Raw/TT/Clusters2MCHits#1"]
         if 'IT' in dets :

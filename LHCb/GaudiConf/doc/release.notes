@@ -3,8 +3,11 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-08-31 Pawel Jalocha
+ - Change VeloPix to VP in containers (for Boole)
+
 ! 2012-08-28 - Paul Szczypka / Pawel Jalocha
- - change from VeloPix to VP in	container names
+ - change from VeloPix to VP in	container names (for Gauss)
 
 !========================= GaudiConf v16r2 2012-08-09 =========================
 ! 2012-08-09 - Marco Cattaneo
