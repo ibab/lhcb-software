@@ -257,6 +257,7 @@ Bd2eeKstarBDT = {
         #
         'ElectronPT'              :  200.   ,  # MeV
         'ElectronTrackCHI2pNDOF'  :    5.   ,
+        'ElectronGhostProb'       :    0.5  ,
         'ElectronIPCHI2'          :    1.   ,
         'ElectronPIDepi'          :   -2.   ,          
         #
@@ -264,13 +265,15 @@ Bd2eeKstarBDT = {
         #
         'KaonPT'                  :  400.   ,  # MeV 
         'KaonP'                   : 3000.   ,  # MeV  
-        'KaonTrackCHI2pNDOF'      :    5.   , 
+        'KaonTrackCHI2pNDOF'      :    5.   ,
+        'KaonGhostProb'           :    0.35 ,
         'KaonIPCHI2'              :    4.   , 
         'KaonPIDKpi'              :   -5.   , 
         #
         'PionPT'                  :  250.   ,  # MeV
         'PionP'                   : 2000.   ,  # MeV 
-        'PionTrackCHI2pNDOF'      :    5.   , 
+        'PionTrackCHI2pNDOF'      :    5.   ,
+        'PionGhostProb'           :    0.35 ,
         'PionIPCHI2'              :    4.   , 
         'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
         #
@@ -281,7 +284,7 @@ Bd2eeKstarBDT = {
         'BVertexCHI2'             :   16.   ,  # /ndf
         'BMassW'                  : 1000.   ,  # MeV  
         'BDIRA'                   :    0.999,
-        'BDTCutValue'             :   -0.98 ,
+        'BDTCutValue'             :   -0.95 ,
         'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'
         },
     'WGs'    : [ 'RD' ],
