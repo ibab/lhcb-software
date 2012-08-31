@@ -1,3 +1,7 @@
+2012-08-30  Joel Closier <joel.closier@cern.ch>
+
+        * scripts/add_DN_LFC: change the version of AFS UI
+        
 2012-07-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/genXMLCatalog: added the option --no=user to the call to SetupProject
