@@ -18,7 +18,7 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // ============================================================================
-// Boost 
+// Boost
 // ============================================================================
 #include "boost/static_assert.hpp"
 // ============================================================================
@@ -41,7 +41,7 @@ const TrackFitResult* Track::fitResult() const
 //=============================================================================
 // Retrieve a pointer to the fit result
 //=============================================================================
-TrackFitResult* Track::fitResult()  
+TrackFitResult* Track::fitResult()
 {
   //if( m_fitResult == 0 ) m_fitResult = new TrackFitResult() ;
   return m_fitResult ;
@@ -50,19 +50,19 @@ TrackFitResult* Track::fitResult()
 //=============================================================================
 // Set the fit result. This takes ownership.
 //=============================================================================
-void Track::setFitResult(LHCb::TrackFitResult* absfit) 
+void Track::setFitResult(LHCb::TrackFitResult* absfit)
 {
-  if( m_fitResult != absfit ) {
-    if( m_fitResult ) delete m_fitResult ;
+  if ( m_fitResult != absfit )
+  {
+    delete m_fitResult ;
     m_fitResult = absfit ;
   }
 }
 
-
 //=============================================================================
-// Get a range of nodes in this track 
+// Get a range of nodes in this track
 //=============================================================================
-Track::ConstNodeRange Track::nodes() const 
+Track::ConstNodeRange Track::nodes() const
 {
   if ( !m_fitResult ) { return Track::ConstNodeRange() ; }
   //
@@ -76,7 +76,7 @@ Track::ConstNodeRange Track::nodes() const
   const Iterator1 begin = nodes_ . begin () ;
   const Iterator1 end   = nodes_ . end   () ;
   //
-  // Helper union to avoid reinterpret_cast 
+  // Helper union to avoid reinterpret_cast
   union _IteratorCast
   {
     //
@@ -93,7 +93,7 @@ Track::ConstNodeRange Track::nodes() const
   _begin . input = &begin ;
   _end   . input = &end   ;
   //
-  return Track::ConstNodeRange ( *_begin.output , *_end.output ) ;  
+  return Track::ConstNodeRange ( *_begin.output , *_end.output ) ;
 }
 
 //=============================================================================
@@ -104,8 +104,8 @@ Track::ConstNodeRange Track::nodes() const
 Track::MeasurementContainer Track::measurements() const
 {
   MeasurementContainer meas ;
-  if( m_fitResult ) 
-    meas.insert(meas.end(),m_fitResult->measurements().begin(),m_fitResult->measurements().end()) ; 
+  if( m_fitResult )
+    meas.insert(meas.end(),m_fitResult->measurements().begin(),m_fitResult->measurements().end()) ;
   return meas ;
 }
 
@@ -114,12 +114,13 @@ Track::MeasurementContainer Track::measurements() const
 //=============================================================================
 double Track::probChi2() const
 {
-  double val(0) ; 
-  if (nDoF()>0) { 
+  double val(0) ;
+  if ( nDoF() > 0 )
+  {
     const double limit = 1e-15;
-    double chi2max = gsl_cdf_chisq_Qinv (limit, nDoF()); 
-    val = chi2() < chi2max ? gsl_cdf_chisq_Q(chi2(),nDoF()) : 0; 
-  } 
+    const double chi2max = gsl_cdf_chisq_Qinv( limit, nDoF() );
+    val = ( chi2() < chi2max ? gsl_cdf_chisq_Q(chi2(),nDoF()) : 0 );
+  }
   return val ;
 }
 
@@ -130,10 +131,10 @@ State & Track::closestState( double z )
 {
   std::vector<State*>::const_iterator iter =
     std::min_element( m_states.begin(),m_states.end(),
-		      TrackFunctor::distanceAlongZ<State>(z) );
+                      TrackFunctor::distanceAlongZ<State>(z) );
   if ( iter == m_states.end() )
     throw GaudiException( "No state closest to z","Track.cpp",
-			  StatusCode::FAILURE );
+                          StatusCode::FAILURE );
   return *(*iter);
 }
 
@@ -142,7 +143,8 @@ State & Track::closestState( double z )
 //=============================================================================
 const State & Track::closestState( double z ) const
 {
-  if ( m_fitResult && !m_fitResult->nodes().empty() ) {
+  if ( m_fitResult && !m_fitResult->nodes().empty() ) 
+  {
     std::vector<Node*>::const_iterator iter =
       std::min_element( m_fitResult->nodes().begin(),m_fitResult->nodes().end(),
                         TrackFunctor::distanceAlongZ<Node>(z) );
@@ -150,7 +152,9 @@ const State & Track::closestState( double z ) const
       throw GaudiException( "No state closest to z","Track.cpp",
                             StatusCode::FAILURE );
     return (*iter)->state();
-  } else {
+  } 
+  else
+  {
     std::vector<State*>::const_iterator iter =
       std::min_element( m_states.begin(),m_states.end(),
                         TrackFunctor::distanceAlongZ<State>(z) );
@@ -166,15 +170,18 @@ const State & Track::closestState( double z ) const
 //=============================================================================
 const State & Track::closestState( const Gaudi::Plane3D& plane ) const
 {
-  if ( m_fitResult && !m_fitResult->nodes().empty() ) {
-     std::vector<Node*>::const_iterator iter =
+  if ( m_fitResult && !m_fitResult->nodes().empty() ) 
+  {
+    std::vector<Node*>::const_iterator iter =
       std::min_element( m_fitResult->nodes().begin(),m_fitResult->nodes().end(),
                         TrackFunctor::distanceToPlane<Node>(plane) );
     if ( iter == m_fitResult->nodes().end() )
       throw GaudiException( "No state closest to z","Track.cpp",
                             StatusCode::FAILURE );
     return (*iter)->state();
-  } else {
+  }
+  else
+  {
     std::vector<State*>::const_iterator iter =
       std::min_element( m_states.begin(),m_states.end(),
                         TrackFunctor::distanceToPlane<State>(plane) );
@@ -190,7 +197,7 @@ const State & Track::closestState( const Gaudi::Plane3D& plane ) const
 //=============================================================================
 bool Track::hasStateAt( const LHCb::State::Location& location ) const
 {
-  return stateAt(location)!=0 ;
+  return ( stateAt(location) != 0 );
 }
 
 //=============================================================================
@@ -202,7 +209,7 @@ State* Track::stateAt( const LHCb::State::Location& location )
     std::find_if( m_states.begin(),m_states.end(),
                   TrackFunctor::HasKey<State,const LHCb::State::Location&>
                   (&State::checkLocation,location) );
-  return iter == m_states.end() ? 0 : *iter ;
+  return ( iter == m_states.end() ? 0 : *iter );
 }
 
 //=============================================================================
@@ -212,9 +219,9 @@ const State* Track::stateAt( const LHCb::State::Location& location ) const
 {
   StateContainer::const_iterator iter =
     std::find_if( m_states.begin(),m_states.end(),
-                 TrackFunctor::HasKey<State,const LHCb::State::Location&>
+                  TrackFunctor::HasKey<State,const LHCb::State::Location&>
                   (&State::checkLocation,location) );
-  return iter == m_states.end() ? 0 : *iter ;
+  return ( iter == m_states.end() ? 0 : *iter );
 }
 
 //=============================================================================
@@ -223,7 +230,7 @@ const State* Track::stateAt( const LHCb::State::Location& location ) const
 void Track::addToStates( const State& state )
 {
   State* local = state.clone();
-  int order = checkFlag(Track::Backward) ? -1 : 1;
+  const int order = ( checkFlag(Track::Backward) ? -1 : 1 );
   std::vector<State*>::iterator ipos =
     std::upper_bound(m_states.begin(),
                      m_states.end(),
@@ -253,7 +260,7 @@ void Track::addToStates( StateContainer& states )
 // Remove an LHCbID from the list of LHCbIDs associated to the Track
 //=============================================================================
 void Track::removeFromLhcbIDs( const LHCbID& value )
-{ 
+{
   LHCbIDContainer::iterator pos =
     std::lower_bound( m_lhcbIDs.begin(), m_lhcbIDs.end(), value ) ;
   m_lhcbIDs.erase( pos ) ;
@@ -270,31 +277,30 @@ void Track::removeFromStates( State* state )
 //=============================================================================
 // Add LHCbIDs to track
 //=============================================================================
-bool Track::addToLhcbIDs( const LHCb::LHCbID& value ) 
+bool Track::addToLhcbIDs( const LHCb::LHCbID& value )
 {
   LHCbIDContainer::iterator pos =
     std::lower_bound( m_lhcbIDs.begin(),m_lhcbIDs.end(),value ) ;
-  bool rc = (pos == m_lhcbIDs.end()) || !( (*pos) == value ) ;
-  if( rc ) m_lhcbIDs.insert( pos, value ) ;
+  const bool rc = (pos == m_lhcbIDs.end()) || !( (*pos) == value ) ;
+  if ( rc ) m_lhcbIDs.insert( pos, value ) ;
   return rc ;
 }
 
 //=============================================================================
 // Add LHCbIDs to track
 //=============================================================================
-bool Track::addSortedToLhcbIDs( const LHCbIDContainer& ids ) 
+bool Track::addSortedToLhcbIDs( const LHCbIDContainer& ids )
 {
   LHCbIDContainer result( ids.size() + m_lhcbIDs.size() ) ;
   LHCbIDContainer::iterator pos =
     std::set_union( ids.begin(), ids.end(),
-		    m_lhcbIDs.begin(), m_lhcbIDs.end(),
-		    result.begin()) ;
+                    m_lhcbIDs.begin(), m_lhcbIDs.end(),
+                    result.begin()) ;
   bool rc = pos == result.end() ;
   result.erase( pos, result.end() ) ;
   m_lhcbIDs.swap( result ) ;
   return rc ;
-}  
-
+}
 
 //=============================================================================
 // Compute the number of LHCbIDs that two tracks have in common
@@ -308,15 +314,22 @@ size_t Track::nCommonLhcbIDs(const Track& rhs) const
   LHCbIDContainer::const_iterator first2 = rhs.m_lhcbIDs.begin() ;
   LHCbIDContainer::const_iterator last2  = rhs.m_lhcbIDs.end() ;
   while (first1 != last1 && first2 != last2)
-    if (*first1 < *first2)
+  {
+    if ( *first1 < *first2 )
+    {
       ++first1;
-    else if (*first2 < *first1)
+    }
+    else if ( *first2 < *first1 )
+    {
       ++first2;
-    else {
+    }
+    else 
+    {
       ++first1;
       ++first2;
       ++rc ;
     }
+  }
   return rc ;
 }
 
@@ -335,7 +348,7 @@ bool Track::isOnTrack( const LHCb::LHCbID& value ) const
 //=============================================================================
 const Measurement* Track::measurement( const LHCbID& value ) const
 {
-  return m_fitResult ? m_fitResult->measurement(value) : 0 ;
+  return ( m_fitResult ? m_fitResult->measurement(value) : 0 );
 }
 
 //=============================================================================
@@ -343,17 +356,21 @@ const Measurement* Track::measurement( const LHCbID& value ) const
 //=============================================================================
 void Track::reset()
 {
-  m_chi2PerDoF = 0;
-  m_nDoF       = 0;
-  m_flags      = 0;
+  setChi2PerDoF ( 0 );
+  setNDoF       ( 0 );
+  setFlags      ( 0 );
+  setGhostProbability ( 999 );
+  setLikelihood ( 999 );
+
   m_lhcbIDs.clear();
-  std::for_each(m_states.begin(), m_states.end(),TrackFunctor::deleteObject()) ;
+  std::for_each( m_states.begin(), m_states.end(), TrackFunctor::deleteObject() );
   m_states.clear();
   m_ancestors.clear();
   m_extraInfo.clear();
-  if( m_fitResult ) {
+  if( m_fitResult )
+  {
     delete m_fitResult ;
-    m_fitResult = 0 ;
+    m_fitResult = NULL ;
   }
 }
 
@@ -391,7 +408,7 @@ void Track::copy( const Track& track )
   setExtraInfo( track.extraInfo() );
   setGhostProbability( track.ghostProbability() );
   setLikelihood( track.likelihood() );
-  
+
   // copy the states
   m_states.reserve( track.states().size() ) ;
   for ( std::vector<State*>::const_iterator istate = track.states().begin();
@@ -399,7 +416,7 @@ void Track::copy( const Track& track )
   {
     m_states.push_back( (*istate)->clone() );
   }
-  
+
   // copy the track fit info
   if ( track.m_fitResult ) { m_fitResult = track.m_fitResult->clone(); }
 
@@ -417,8 +434,9 @@ void Track::copy( const Track& track )
 // Clear the state vector
 //=============================================================================
 void Track::clearStates()
-{ 
-  std::for_each(m_states.begin(), m_states.end(),TrackFunctor::deleteObject()) ;
+{
+  std::for_each( m_states.begin(),
+                 m_states.end(),TrackFunctor::deleteObject() );
   m_states.clear();
 }
 
@@ -440,7 +458,9 @@ void Track::clearStates()
  */
 //=============================================================================
 bool LHCb::Track::hasInfo ( const int key ) const
-{ return m_extraInfo.end() != m_extraInfo.find( key ) ; }
+{
+  return ( m_extraInfo.end() != m_extraInfo.find(key) );
+}
 
 //=============================================================================
 /** Add new information, associated with the specified key.
@@ -464,7 +484,9 @@ bool LHCb::Track::hasInfo ( const int key ) const
  */
 //=============================================================================
 bool  LHCb::Track::addInfo ( const int key, const double info )
-{ return m_extraInfo.insert( key , info ).second ;}
+{ 
+  return m_extraInfo.insert( key , info ).second;
+}
 
 //=============================================================================
 /** extract the information associated with the given key
@@ -492,25 +514,25 @@ bool  LHCb::Track::addInfo ( const int key, const double info )
 double LHCb::Track::info( const int key, const double def ) const
 {
   ExtraInfo::iterator i = m_extraInfo.find( key ) ;
-  return m_extraInfo.end() == i ? def : i->second ;
+  return ( m_extraInfo.end() == i ? def : i->second );
 }
 
 //=============================================================================
 // Count the number of outliers
 //=============================================================================
 
-unsigned int LHCb::Track::nMeasurementsRemoved() const 
+unsigned int LHCb::Track::nMeasurementsRemoved() const
 {
-  return m_fitResult ? m_fitResult->nOutliers() : 0 ;
+  return ( m_fitResult ? m_fitResult->nOutliers() : 0 );
 }
 
 //=============================================================================
 // Count the number of outliers
 //=============================================================================
 
-unsigned int LHCb::Track::nMeasurements() const 
+unsigned int LHCb::Track::nMeasurements() const
 {
-  return m_fitResult ? m_fitResult->nActiveMeasurements() : 0 ;
+  return ( m_fitResult ? m_fitResult->nActiveMeasurements() : 0 );
 }
 
 //=============================================================================
@@ -563,7 +585,8 @@ std::ostream& LHCb::Track::fillStream(std::ostream& os) const
   }
   os << "]" << std::endl;
 
-  if ( !m_states.empty() ) {
+  if ( !m_states.empty() )
+  {
     os << " p  : " << (float) firstState().p() <<std::endl
        << " pt : " << (float) firstState().pt() <<std::endl
        << " " << nStates() << " states at z =";
@@ -580,7 +603,8 @@ std::ostream& LHCb::Track::fillStream(std::ostream& os) const
     }
     os << std::endl;
   }
-  else {
+  else
+  {
     os << " # states : " << nStates() << std::endl;
   }
 

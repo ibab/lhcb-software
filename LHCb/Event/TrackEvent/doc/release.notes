@@ -6,6 +6,9 @@
 
 !========================= TrackEvent v5r18 2012-08-31 =========================
 
+! 2012-08-31 - Chris Jones
+ - Reset the ghost prob and likelihood values back to 999, in Track::reset()
+
 ! 2012-08-29 - Chris Jones
  - Add likelihood and ghost probability to LHCb::Track::fillStream printout.
  - Properly set the ghost prob and likelihood values in LHCb::Track::copy
