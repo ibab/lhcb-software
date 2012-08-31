@@ -9,7 +9,8 @@
 !-----------------------------------------------------------------------------
 
 
-
+! 2012-09-01 - Anton Poluektov 
+  - fix test_inputlocations_consistency
 
 ! 2012-08-30 - Olivier Deschamps
 	- fix typo in StdVeryLooseAllPhotons name

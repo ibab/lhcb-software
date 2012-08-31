@@ -20,6 +20,7 @@ errors = {}
 message = ""
 
 for alg in algs :
+    if not hasattr(alg, 'Inputs') : continue
     locs = alg.Inputs
     for loc in locs :
         if not loc in outputLocations :
