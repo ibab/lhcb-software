@@ -18,7 +18,7 @@ from Configurables import LoKi__VoidFilter
 from PhysSelPython.Wrappers import EventSelection
 
 confdict_HighPtTopoJets = { 'HighPtTopo_Prescale'    : 1.0,
-                          'HighPtTopoLow_Prescale' : 0.1,
+                          'HighPtTopoLow_Prescale' : 0.05,
                           'HighPtTopo_Postscale'   : 1.0,
                           'pT'        : 40000,
                           'pTlow'     : 20000

@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2012-08-31 - Will Barter
+ - Stripping20/LineConfigDictionaries_QEE.py
+   . Updated InclbJets and HighPtTopo to increase prescales. 
 
 ! 2012-08-31 - Jibo He
  - Added Reco13e test sample (with new GhostProb tunning), Reco13e_Run120535.py

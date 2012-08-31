@@ -31,7 +31,7 @@ confdict = {
     ,  'DZSVPVCut'        : 1.0
     ,  'SumMomSVCut'      : 3.0
     ,  'VtxChi2Cut'       : 20.0
-    ,  'scale'            : 0.1
+    ,  'scale'            : 0.05
  }
 
 class InclbJetsLinesConf(LineBuilder) :
