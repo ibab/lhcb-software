@@ -39,7 +39,7 @@ config = {
         , "RV2PWithVelo"            : { "MinRho"               :  0.4*units.mm
                                       , "MinMass"              :  3.0*units.GeV
                                       , "MinSumPT"             :  0.0*units.GeV
-                                      , "MinNumTracks"         :  4
+                                      , "MinNumTracks"         :  5
                                       , "MaxFractE1Track"      :  10.
                                       , "MaxFractTrwHitBefore" :  10.
                                       , "ApplyMatterVeto"      :  False
@@ -58,7 +58,7 @@ config = {
                                       , "MinRho"               : [  1.0*units.mm ,  2.*units.mm ,  4.*units.mm  ]
                                       , "MinMass"              : [ 8.*units.GeV,  6.5*units.GeV,  4.5*units.GeV ]
                                       , "MinSumPT"             :  3.0*units.GeV
-                                      , "MinNumTracks"         : [  8            ,  7            ,  6             ]
+                                      , "MinNumTracks"         : [  8            ,  7            ,  7             ]
                                       , "ApplyMatterVeto"      : True
                                       , "MaxFractE1Track"      :  0.8
                                       , "MaxFractTrwHitBefore" :  0.49
@@ -68,7 +68,7 @@ config = {
                                       , "MinRho"               :  0.5*units.mm
                                       , "MinMass"              :  3.0*units.GeV
                                       , "MinSumPT"             :  0.0*units.GeV
-                                      , "MinNumTracks"         :  4
+                                      , "MinNumTracks"         :  5
                                       , "ApplyMatterVeto"      :  False
                                       , "MaxFractE1Track"      :  10.
                                       , "MaxFractTrwHitBefore" :  10.
@@ -121,7 +121,7 @@ config = {
         , "HLTPS"             : { "PreScale"             :  1.0 }
         , "HltEffCharmHLTSelection"  : { "PreScale"             :  1.0
                                       , "MinRho"               :  0.6*units.mm
-                                      , "MinMass"              :  5.5*units.GeV
+                                      , "MinMass"              :  6.*units.GeV
                                       , "MinSumPT"             :  3.0*units.GeV
                                       , "MinNumTracks"         :  6
                                       , "ApplyMatterVeto"      : False
