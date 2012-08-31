@@ -10,8 +10,10 @@ where the daughter charmed baryon is reconstructed via:
   Xic0 -> Xi- pi+
 and where the Xi- is reconstructed via:
   Xi- -> Lambda pi-, Lambda -> p pi- 
-
 '''
+
+
+
 
 __author__ = ['Lucio Andelini']
 __date__ = '1/Mar/2012'
@@ -51,81 +53,82 @@ from Configurables import TisTosParticleTagger
 default_name = "Xibc"
 
 default_config = {
-			'Pions4Lambdac_MINIPCHI2'             : 0.0
-			, 'Pion4Lambdac_TRPCHI2'              : 0.015
-			, 'Pion4Lambdac_PIDK'                 : 15
-			, 'Pion4Lambdac_PT'                   : '250*MeV'
-			, 'Protons4Lambdac_TRPCHI2'           : 0.05
-			, 'Protons4Lambdac_minP'              : '0*GeV'
-			, 'Kaon4Lambdac_TRPCHI2'              : 0.05
-			, 'Protons4Lambdac_PIDp'              : -2
-			, 'Protons4Lambdac_PIDp-PIDK'         : -5
-			, 'Protons4Lambdac_PT'                : '450*MeV'
-			, 'Kaon4Lambdac_PT'                   : '450*MeV'
-			, 'Kaon4Lambdac_PIDK'                 : 0
-			, 'Kaon4Lambdac_minP'                 : '0*GeV'
-			, 'Muon4Jpsi_PIDmu'                   : -2
-			, 'Muon4Jpsi_TRPCHI2'                 : 0.005
-			, 'Lambdac_MassWindowLarge'           : '120*MeV'
-			, 'Lambdac_MassWindowTight'           : '30*MeV'		
-			, 'Lambdac_MinAPT'                    : '1500*MeV' 
-			, 'Lambdac_MaxADOCA'                  : '0.5*mm'
-			, 'Lambdac_BPVDIRA'                   : 0.98
-			, 'Lambdac_minTAU'                    : -0.0001 	
-			, 'Lambdac_ENDVERTEXCHI2'             : 5						
-			, 'Jpsi_MassWindowLarge'              : '150*MeV'
-			, 'Jpsi_MassWindowTight'              : '50*MeV'
-			, 'Muon4Jpsi_PT'                      : '650*MeV'
-			, 'Jpsi_ENDVERTEXCHI2'                : 10
-			, 'Xibc_ENDVERTEXCHI2'                : 7
-			, 'Xibc_MassWindow'                   : '1.5*GeV'
-			, 'Xibc_MINPVIP'                      : 0.1			
-			, 'Xibc2LcJpsiPrescale'               : 1.0
+      'Pions4Lambdac_MINIPCHI2'             : 0.0
+      , 'Pion4Lambdac_TRPCHI2'              : 0.015
+      , 'Pion4Lambdac_PIDK'                 : 15
+      , 'Pion4Lambdac_PT'                   : '250*MeV'
+      , 'Protons4Lambdac_TRPCHI2'           : 0.05
+      , 'Protons4Lambdac_minP'              : '0*GeV'
+      , 'Kaon4Lambdac_TRPCHI2'              : 0.05
+      , 'Protons4Lambdac_PIDp'              : -2
+      , 'Protons4Lambdac_PIDp-PIDK'         : -5
+      , 'Protons4Lambdac_PT'                : '450*MeV'
+      , 'Kaon4Lambdac_PT'                   : '450*MeV'
+      , 'Kaon4Lambdac_PIDK'                 : 0
+      , 'Kaon4Lambdac_minP'                 : '0*GeV'
+      , 'Muon4Jpsi_PIDmu'                   : 0
+      , 'Muon4Jpsi_TRPCHI2'                 : 0.005
+      , 'Lambdac_MassWindowLarge'           : '120*MeV'
+      , 'Lambdac_MassWindowTight'           : '30*MeV'		
+      , 'Lambdac_MinAPT'                    : '1500*MeV' 
+      , 'Lambdac_MaxADOCA'                  : '0.5*mm'
+      , 'Lambdac_BPVDIRA'                   : 0.98
+      , 'Lambdac_minTAU'                    : -0.0001 	
+      , 'Lambdac_ENDVERTEXCHI2'             : 5						
+      , 'Jpsi_MassWindowLarge'              : '150*MeV'
+      , 'Jpsi_MassWindowTight'              : '50*MeV'
+      , 'Muon4Jpsi_PT'                      : '650*MeV'
+      , 'Jpsi_ENDVERTEXCHI2'                : 10
+      , 'Xibc_ENDVERTEXCHI2'                : 7
+      , 'Xibc_MassWindow'                   : '1.5*GeV'
+      , 'Xibc_MINPVIP'                      : 0.1			
+      , 'Xibc2LcJpsiPrescale'               : 1.0
 ####### #
-			, 'Protons4Lambda0_PIDp'              : -10
-			, 'LongProtons4Lambda0_MINIPCHI2'     : 2
-			, 'Protons4Lambda0_PT'                : '600*MeV'
-			, 'Pions4Lambda0_PIDK'                : +20
-			, 'Pions4Lambda0_PT'                  : '0*MeV'
-			, 'Pions4Lambda0_MINIPCHI2'           : 0.
-			, 'Lambda0_MassWindowLarge'           : '180*MeV'
-			, 'Lambda0_MassWindowTight'           : '30*MeV'
-			, 'Lambda0_APT'                       : '700*MeV'
-			, 'Lambda0_ENDVERTEXCHI2'             : 10	
-			, 'Lambda0_DownProtonTrackPvalue'     : 0
-			, 'Lambda0_DownPionTrackPvalue'       : 0
-			, 'Lambda0_minFD'                     : '1*mm/GeV'
-			, 'Pions4Ximinus_PT'                  : '0*MeV'
-			, 'Pions4Ximinus_PIDK'                : 20
-			, 'Pions4Ximinus_TRPCHI2'             : 0
-			, 'Pions4Ximinus_MINIPCHI2'           : 0
-			, 'Ximinus_MassWindowLarge'           : '120*MeV'
-			, 'Ximinus_MassWindowTight'           : '40*MeV'
-			, 'Ximinus_APT'                       : '800*MeV'
-			, 'Ximinus_FlightDistance'            : '0.1*mm/GeV'
-			, 'Ximinus_ENDVERTEXCHI2'             : 20
-			, 'Xic0_MassWindowLarge'              : '600*MeV'
-			, 'Xic0_MassWindowTight'              : '100*MeV'
-			, 'Pions4Xic0_PT'                     : '200*MeV'
-			, 'Pions4Xic0_PIDK'                   : 20
-			, 'Pions4Xic0_TRPCHI2'                : 0
-			, 'Xic0_APT'                          : '0*MeV'
-			, 'Xic0_ENDVERTEXCHI2'                : 20
-			, 'Xibc0_MassWindow'                  : '1.5*GeV'
-			, 'Xibc0_ENDVERTEXCHI2'               : 20
+      , 'Protons4Lambda0_PIDp'              : -10
+      , 'LongProtons4Lambda0_MINIPCHI2'     : 2
+      , 'Protons4Lambda0_PT'                : '600*MeV'
+      , 'Pions4Lambda0_PIDK'                : +20
+      , 'Pions4Lambda0_PT'                  : '0*MeV'
+      , 'Pions4Lambda0_MINIPCHI2'           : 0.
+      , 'Lambda0_MassWindowLarge'           : '180*MeV'
+      , 'Lambda0_MassWindowTight'           : '30*MeV'
+      , 'Lambda0_APT'                       : '700*MeV'
+      , 'Lambda0_ENDVERTEXCHI2'             : 10	
+      , 'Lambda0_DownProtonTrackPvalue'     : 0
+      , 'Lambda0_DownPionTrackPvalue'       : 0
+      , 'Lambda0_minFD'                     : '1*mm/GeV'
+      , 'Pions4Ximinus_PT'                  : '0*MeV'
+      , 'Pions4Ximinus_PIDK'                : 20
+      , 'Pions4Ximinus_TRPCHI2'             : 0
+      , 'Pions4Ximinus_MINIPCHI2'           : 0
+      , 'Ximinus_MassWindowLarge'           : '120*MeV'
+      , 'Ximinus_MassWindowTight'           : '40*MeV'
+      , 'Ximinus_APT'                       : '800*MeV'
+      , 'Ximinus_FlightDistance'            : '0.1*mm/GeV'
+      , 'Ximinus_ENDVERTEXCHI2'             : 20
+      , 'Xic0_MassWindowLarge'              : '600*MeV'
+      , 'Xic0_MassWindowTight'              : '100*MeV'
+      , 'Pions4Xic0_PT'                     : '200*MeV'
+      , 'Pions4Xic0_PIDK'                   : 20
+      , 'Pions4Xic0_TRPCHI2'                : 0
+      , 'Xic0_APT'                          : '0*MeV'
+      , 'Xic0_ENDVERTEXCHI2'                : 20
+      , 'Xibc0_MassWindow'                  : '1.5*GeV'
+      , 'Xibc0_ENDVERTEXCHI2'               : 20
 ####### 
-			, 'HighMassBaryon_MassLowEdge'        : '4.5*GeV'
-			, 'HighMassBaryon_MinAPT'             : '1*GeV'
-			, 'ProtonsForHighMassBaryon_TRPCHI2'  : 0.1
-			, 'ProtonsForHighMassBaryon_PT'       : '1*GeV'
-			, 'ProtonsForHighMassBaryon_P'        : '4*GeV'
-			, 'ProtonsForHighMassBaryon_PIDp'     : 13
-			, 'JpsiForHighMassBaryon_PT'          : '1*GeV'
-			, 'JpsiForHighMassBaryon_MassWin'     : '40*MeV'
-			, 'JpsiForHighMassBaryon_MuonPIDmu'   : 0
-			, 'JpsiProtonForHighMassBaryonCosth'  : 0.992
+      , 'HighMassBaryon_MassLowEdge'        : '4.5*GeV'
+      , 'HighMassBaryon_MinAPT'             : '1*GeV'
+      , 'ProtonsForHighMassBaryon_TRPCHI2'  : 0.1
+      , 'ProtonsForHighMassBaryon_PT'       : '1.5*GeV'
+      , 'ProtonsForHighMassBaryon_P'        : '5*GeV'
+      , 'ProtonsForHighMassBaryon_PIDp'     : 15
+      , 'JpsiForHighMassBaryon_PT'          : '1*GeV'
+      , 'JpsiForHighMassBaryon_MassWin'     : '40*MeV'
+      , 'JpsiForHighMassBaryon_MuonPIDmu'   : 0
+      , 'JpsiProtonForHighMassBaryonCosth'  : 0.992
 ####### #
-			, 'LongTrackGEC'                      : 150 
+      , 'GlobalGhostProb_Max'               : 0.4
+      , 'LongTrackGEC'                      : 150 
 			} 
 
 ## These configuration parameters should not be changed outside of this file.
@@ -228,6 +231,7 @@ class XibcBuilder(LineBuilder) :
 				, 'JpsiForHighMassBaryon_MuonPIDmu'			
 				, 'JpsiProtonForHighMassBaryonCosth'
 	####### #
+        , 'GlobalGhostProb_Max'  
 				, 'LongTrackGEC')								
  
 
@@ -337,6 +341,7 @@ def filterJpsi (localname,
   _filterAlgorithm = FilterDesktop(localname+"JpsiMuonFilter");
   _myCutOnMuons = ("(PIDmu > %(Muon4Jpsi_PIDmu)s) &"+
                   " (TRPCHI2 > %(Muon4Jpsi_TRPCHI2)s) &"+
+                  " (TRGHP < %(GlobalGhostProb_Max)s) &" +
                   " (PT > %(Muon4Jpsi_PT)s) ")%config
   _filterAlgorithm.Code = ("(CHILDCUT(("+_myCutOnMuons+"),1) & CHILDCUT(("+_myCutOnMuons+"),2)) &"+
                   " (VFASPF(VCHI2/VDOF)<%(Jpsi_ENDVERTEXCHI2)s) &"+
@@ -355,15 +360,18 @@ def makeLambdac (localname, _RequiredSelections, config=default_config):
   _lambdacCP.DaughtersCuts = {
         "p+" 	: ("(TRPCHI2 > %(Protons4Lambdac_TRPCHI2)s) & " + 
                   " (PIDp > %(Protons4Lambdac_PIDp)s) & " +
+                  " (TRGHP < %(GlobalGhostProb_Max)s) &" +
                   " (PT > %(Protons4Lambdac_PT)s) & " +
                   " (P > %(Protons4Lambdac_minP)s) & " +
                   " (PIDp - PIDK > %(Protons4Lambdac_PIDp-PIDK)s)" ) % config,
         "K-"	:	("(TRPCHI2 > %(Kaon4Lambdac_TRPCHI2)s) &"+
                   "(PIDK > %(Kaon4Lambdac_PIDK)s) & "+
+                  "(TRGHP < %(GlobalGhostProb_Max)s) &" +
                   "(P > %(Kaon4Lambdac_minP)s) & "+
                   "(PT > %(Kaon4Lambdac_PT)s)" ) % config,
         "pi+"	:	("(MIPCHI2DV(PRIMARY)> %(Pions4Lambdac_MINIPCHI2)s) &"+
                   " (TRPCHI2 > %(Pion4Lambdac_TRPCHI2)s) &"+
+                  " (TRGHP < %(GlobalGhostProb_Max)s) &" +
                   " (PIDK < %(Pion4Lambdac_PIDK)s) &"+
                   "(PT > %(Pion4Lambdac_PT)s)") % config 
 		}
@@ -387,7 +395,9 @@ def makeLambdac (localname, _RequiredSelections, config=default_config):
 def makeXibc (localname, _RequiredSelections ,config=default_config):
   _xibcLc = CombineParticles(localname + "Xibc2LcJpsiAlgorithm")
   _xibcLc.DecayDescriptor = "[Xi_bc+ -> J/psi(1S) Lambda_c+]cc"
-  _xibcLc.CombinationCut = "ADAMASS('Xi_bc+') < %(Xibc_MassWindow)s" % config 
+  _xibcLc.CombinationCut = ("(ADAMASS('Xi_bc+') < %(Xibc_MassWindow)s) " 
+#                          "(AMAXCHILD(TRGHP, ISBASIC) < %(GlobalGhostProb_Max)s)"
+                        ) % config
   _xibcLc.MotherCut = ("(VFASPF(VCHI2/VDOF)<%(Xibc_ENDVERTEXCHI2)s)" +
                         " & (MIPDV(PRIMARY) < %(Xibc_MINPVIP)s)") % config
     
@@ -526,8 +536,11 @@ def makeXibc0 (localname, _RequiredSelections, config=default_name):
 	
   _xibc = CombineParticles(localname + "xibc2xijpsi")
   _xibc.DecayDescriptor = "[Xi_bc0 -> Xi_c0 J/psi(1S)]cc"
-  _xibc.CombinationCut = "ADAMASS('Xi_bc0') < %(Xibc0_MassWindow)s" % config
+  _xibc.CombinationCut = ("(ADAMASS('Xi_bc0') < %(Xibc0_MassWindow)s) & " +
+                          "(AMAXCHILD(TRGHP, ISBASIC) < %(GlobalGhostProb_Max)s)"
+                          ) % config
   _xibc.MotherCut = ("(VFASPF(VCHI2/VDOF)< %(Xibc0_ENDVERTEXCHI2)s)" 
+#                    " & (MAXTREE(TRGHP, ISBASIC) < %(GlobalGhostProb_Max)s)"
                                                                   )% config
                   
 
@@ -550,10 +563,12 @@ def makeX (localname, _RequiredSelections, config=default_name):
                                                                           )% config
   _combinex.DaughtersCuts = { "p+" : ("(PT > %(ProtonsForHighMassBaryon_PT)s) &"+
                                     " (PIDp > %(ProtonsForHighMassBaryon_PIDp)s) &"+
+                                    " (TRGHP < %(GlobalGhostProb_Max)s) &" +
                                     " (TRPCHI2 > %(ProtonsForHighMassBaryon_TRPCHI2)s) & "+
                                     " ( P > %(ProtonsForHighMassBaryon_P)s)") % config
                           , "J/psi(1S)" : ("(PT > %(JpsiForHighMassBaryon_PT)s) & "+
                                     "(ADMASS('J/psi(1S)') < %(JpsiForHighMassBaryon_MassWin)s) &"+
+                                    "(MAXTREE(TRGHP, ISBASIC) < %(GlobalGhostProb_Max)s) & "
                                     "(MINTREE('mu+'==ABSID,PIDmu) > %(JpsiForHighMassBaryon_MuonPIDmu)s)"
                                                                             ) % config
      }
