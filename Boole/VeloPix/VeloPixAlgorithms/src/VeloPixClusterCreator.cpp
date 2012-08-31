@@ -131,6 +131,7 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
     tmpDigit.isUsed = 0;                                                               // mark all as not used by a cluster
     pixDigits.push_back(tmpDigit);
   }
+  LHCb::VeloPixChannelID baryCenterChID_prev = -1; // for quick clustering bug fix
   // Find clusters
   for(std::vector<PixDigit>::iterator id = pixDigits.begin();                          // search for clusters, start with strongest signals
       id != pixDigits.end(); id++) {
@@ -218,7 +219,9 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
           VeloPixCluster* newCluster = 
                           new VeloPixCluster(newLiteCluster,totVec);
           // here comes a failure sometimes, because the ChannelID already exists in the KeyedContainer - need to be fixed.
-          clusterCont->insert(newCluster,baryCenterChID);
+          if(baryCenterChID!=baryCenterChID_prev)
+          { clusterCont->insert(newCluster, baryCenterChID);
+            baryCenterChID_prev=baryCenterChID; }
           // printf("\n");
       	} 
       } else {
