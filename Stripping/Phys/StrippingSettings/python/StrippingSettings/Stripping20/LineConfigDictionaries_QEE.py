@@ -239,7 +239,7 @@ DisplVertices = {
     , "RV2PWithVelo"            : { "MinRho"               :  0.4*mm
                                     , "MinMass"              :  3.0*GeV
                                     , "MinSumPT"             :  0.0*GeV
-                                    , "MinNumTracks"         :  4
+                                    , "MinNumTracks"         :  5
                                     , "MaxFractE1Track"      :  10.
                                     , "MaxFractTrwHitBefore" :  10.
                                     , "ApplyMatterVeto"      :  False
@@ -258,7 +258,7 @@ DisplVertices = {
                                     , "MinRho"               : [  1.0*mm ,  2.*mm ,  4.*mm  ]
                                     , "MinMass"              : [ 8.*GeV,  6.5*GeV,  4.5*GeV ]
                                     , "MinSumPT"             :  3.0*GeV
-                                    , "MinNumTracks"         : [  8            ,  7            ,  6             ]
+                                    , "MinNumTracks"         : [  8            ,  7            ,  7             ]
                                     , "ApplyMatterVeto"      : True
                                     , "MaxFractE1Track"      :  0.8
                                     , "MaxFractTrwHitBefore" :  0.49
@@ -268,7 +268,7 @@ DisplVertices = {
                                     , "MinRho"               :  0.5*mm
                                     , "MinMass"              :  3.0*GeV
                                     , "MinSumPT"             :  0.0*GeV
-                                    , "MinNumTracks"         :  4
+                                    , "MinNumTracks"         :  5
                                     , "ApplyMatterVeto"      :  False
                                     , "MaxFractE1Track"      :  10.
                                     , "MaxFractTrwHitBefore" :  10.
@@ -276,7 +276,7 @@ DisplVertices = {
     
     ## Double LLP line
     , "DoubleSelection"         : { "PreScale"             :  1.0
-                                      , "MinRho"               :  0.6*mm
+                                    , "MinRho"               :  0.6*mm
                                     , "MinMass"              :  3.0*GeV
                                     , "MinSumPT"             :  3.0*GeV
                                     , "MinNumTracks"         :  6
@@ -321,7 +321,7 @@ DisplVertices = {
     , "HLTPS"             : { "PreScale"             :  1.0 }
     , "HltEffCharmHLTSelection"  : { "PreScale"             :  1.0
                                      , "MinRho"               :  0.6*mm
-                                     , "MinMass"              :  5.5*GeV
+                                     , "MinMass"              :  6.*GeV
                                      , "MinSumPT"             :  3.0*GeV
                                      , "MinNumTracks"         :  6
                                      , "ApplyMatterVeto"      : False
