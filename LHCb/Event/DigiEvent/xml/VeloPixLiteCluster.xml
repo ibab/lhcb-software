@@ -11,7 +11,7 @@
     <class name="VeloPixLiteCluster" 
      author="V. Coco" 
      desc="A cluster as might be produced by the TELL40 but without the full information"
-     location="Raw/VeloPix/LiteClusters"
+     location="Raw/VP/LiteClusters"
      serializers="FALSE"
     >
 

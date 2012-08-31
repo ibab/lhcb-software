@@ -7,7 +7,7 @@
    desc="This class represents digitized pixel hit in VeloPix"
    id="4503"
    name="VeloPixDigit">
-   <location name="VeloPixDigitLocation"   place="Raw/VeloPix/Digits"   />
+   <location name="VeloPixDigitLocation"   place="Raw/VP/Digits"   />
    <import name="Kernel/VeloPixChannelID"/>
    <template name="KeyedObjectDict" t1="LHCb::VeloPixChannelID"/>
    <base name="KeyedObject&lt;LHCb::VeloPixChannelID&gt;"/>
