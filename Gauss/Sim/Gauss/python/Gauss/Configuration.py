@@ -62,7 +62,7 @@ from DetCond.Configuration import CondDB
 class Gauss(LHCbConfigurableUser):
 
     __knownDetectors__ = [
-        'velo', 'puveto', 'velopix', 'vl',
+        'velo', 'puveto', 'vp', 'vl',
         'tt' ,
         'it' , 'sit',
         'ot' , 'ft', 
@@ -260,6 +260,8 @@ class Gauss(LHCbConfigurableUser):
     ##
     def veloMisAlignGeometry( self, VeloPostMC09 ):
 
+        print "veloMisAlignGeometry: %s" %(VeloPostMC09)
+
         """
         File containing the list of detector element to explicitely set
         to have misalignement in the VELO.
@@ -317,9 +319,8 @@ class Gauss(LHCbConfigurableUser):
     def defineVeloGeo( self , basePieces , detPieces ):
         # Alter in place BasePieces
         # check if the new velo geometry is required with the chosen DDDB tags
-                
+        
         VeloP = self.checkVeloDDDB()
-        print "VeloP: %s" %(VeloP)
         if (VeloP==1 or VeloP==2):
             basePieces['BeforeMagnetRegion']=[]
 
@@ -394,21 +395,20 @@ class Gauss(LHCbConfigurableUser):
             if "Velo" in self.getProp('DetectorGeo')['VELO']:
                 self.veloMisAlignGeometry(VeloP) # To misalign VELO
 
-        #print "WARNING: Geo not defined for VeloLite"
         pass
 
 
     def configureVLSim( self, slot, detHits ):
-        #region = "BeforeMagnetRegion"
-        #det = "VL"
-        #moni = GetTrackerHitsAlg(
-        #    'Get' + det + 'Hits' + slot,
-        #    MCHitsLocation = 'MC/' + det  + '/Hits',
-        #    CollectionName = det + 'SDet/Hits',
-        #    Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
-        #    )
-        #detHits.Members += [ moni ]
-        print "WARNING: Sim not defined for VeloLite"
+        region = "BeforeMagnetRegion"
+        det = "VL"
+        moni = GetTrackerHitsAlg(
+            'Get' + det + 'Hits' + slot,
+            MCHitsLocation = 'MC/' + det  + '/Hits',
+            CollectionName = det + 'SDet/Hits',
+            Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
+            )
+        detHits.Members += [ moni ]
+        #print "WARNING: Sim not defined for VeloLite"
         pass
 
 
@@ -418,7 +418,6 @@ class Gauss(LHCbConfigurableUser):
         from Configurables import VLHitMonitor
         detMoniSeq += [ VLHitMonitor("VLHitMonitor" + slot ) ]
 
-        print "WARNING: Moni not defined for VeloLite"
         pass
 
 #"""
@@ -433,19 +432,32 @@ class Gauss(LHCbConfigurableUser):
 
 
     def defineVPGeo( self, detPieces ):
-        #detPieces['BeforeMagnetRegion'] += ['VeloPix']
-        print "WARNING: Geo not defined for VP"
-        pass
+        if detPieces.has_key('BeforeMagnetRegion'):
+            detPieces['BeforeMagnetRegion'] += ['VP']
+
+
 
 
     def configureVPSim( self, slot, detHits ):
-        print "WARNING: Sim not defined for VP"
-        pass
+        region = "BeforeMagnetRegion"
+        det = "VP"
+        moni = GetTrackerHitsAlg(
+            'Get' + det + 'Hits' + slot,
+            MCHitsLocation = 'MC/' + det  + '/Hits',
+            CollectionName = det + 'SDet/Hits',
+            Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
+            )
+        detHits.Members += [ moni ]
+
+
+
+
 
 
     def configureVPMoni( self, slot, packCheckSeq, detMoniSeq, checkHits ):
         ## in case of a non default detector, need to be overwritten
         #detMoniSeq = GaudiSequencer( "DetectorsMonitor" + slot ) 
+        from Configurables import VeloPixGaussMoni
         detMoniSeq.Members += [ VeloPixGaussMoni( "VeloPixGaussMoni" + slot ) ]
 
         if self.getProp("EnablePack") and self.getProp("DataPackingChecks") :
@@ -455,14 +467,14 @@ class Gauss(LHCbConfigurableUser):
             checkHits.VeloHits =  'MC/VP/Hits'
             # This is not done in the PuVeto Moni config
             #checkHits.PuVetoHits = ''             
-            upVeloPix = DataPacking__Unpack_LHCb__MCVeloPixHitPacker_("UnpackVPHits"+slot,
+            upVP = DataPacking__Unpack_LHCb__MCVeloPixHitPacker_("UnpackVPHits"+slot,
                                                                       OutputName = "MC/VP/HitsTest" )
-            packCheckSeq.Members += [upVeloPix]
+            packCheckSeq.Members += [upVP]
 
             from Configurables import DataPacking__Check_LHCb__MCVeloPixHitPacker_
             #if self.getProp('DetectorSim')['VELO'].count('VP')>0:
-            cVeloPix = DataPacking__Check_LHCb__MCVeloPixHitPacker_("CheckVPHits"+slot)
-            packCheckSeq.Members += [cVeloPix]
+            cVP = DataPacking__Check_LHCb__MCVeloPixHitPacker_("CheckVPHits"+slot)
+            packCheckSeq.Members += [cVP]
 
 
 
@@ -689,7 +701,6 @@ class Gauss(LHCbConfigurableUser):
     def defineTTGeo( self , detPieces ):
         if 'TT' not in detPieces['BeforeMagnetRegion']:
             detPieces['BeforeMagnetRegion']+=['TT']
-
 
 
     def configureTTSim( self, slot, detHits ):
@@ -1225,13 +1236,14 @@ class Gauss(LHCbConfigurableUser):
         packCheckSeq.Members += [upPuVe]
         from Configurables import DataPacking__Check_LHCb__MCPuVetoHitPacker_
         # Do not include if we also have the VeloPix (inconsistent?) PSZ
-        if not self.getProp('DetectorSim')['VELO'].count('VeloPix')>0:
+        if not self.getProp('DetectorSim')['VELO'].count('VP')>0:
             cPuVe = DataPacking__Check_LHCb__MCPuVetoHitPacker_("CheckPuVetoHits"+slot)
             packCheckSeq.Members += [cPuVe]
 
         # Turn off the PuVeto hits if using modified detector
         veloDetList = self.getProp('DetectorSim')['VELO']
-        if ('VeloPix' in veloDetList) or ('VL' in veloDetList):
+        if ('VL' in veloDetList):
+        #if ('VeloPix' in veloDetList) or ('VL' in veloDetList):
             checkHits.PuVetoHits = ''
         # Outstanding issue here is how best to deal with the (VeloPix, VL)/PuVeto
         # inconsistancies.
@@ -1294,8 +1306,8 @@ class Gauss(LHCbConfigurableUser):
 
         # TEMPORARILY until migration to new particle propertysvc set the
         # options to read table from database. Before it was done by DDDB
-        #from Configurables import Gaudi__ParticlePropertySvc
-        #Gaudi__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt'
+        from Configurables import Gaudi__ParticlePropertySvc
+        Gaudi__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt'
 
 
 
@@ -1316,19 +1328,11 @@ class Gauss(LHCbConfigurableUser):
 
     def checkGeoSimMoniDictionary(self) :
         for subdet in self.TrackingSystem + self.PIDSystem:
-            #print "DetectorGeo: %s" %self.getProp('DetectorGeo')[subdet]
-            #print "DetectorSim: %s" %self.getProp('DetectorSim')[subdet] 
-            #print "SubDet: %s" %subdet
             for det in self.getProp('DetectorSim')[subdet]:
-                #print "Det: %s" %det
                 if self.getProp('DetectorGeo')[subdet].count(det) == 0 :
-                    #print "0 counts of %s in %s" %(det, self.getProp('DetectorGeo')[subdet])
-                    #if det not in ['']:
                     raise RuntimeError("Simulation has been required for '%s' sub-detector but it has been removed from Geometry" %det)
             for det in self.getProp('DetectorMoni')[subdet]:
                 if self.getProp('DetectorSim')[subdet].count(det) == 0 :
-                    #print "0 counts of %s in %s" %(det, self.getProp('DetectorSim')[subdet])
-                    #if det not in ['']:
                     raise RuntimeError("Monitoring has been required for '%s' sub-detector but it has been removed from Simulation" %det)
 
         
@@ -1408,7 +1412,6 @@ class Gauss(LHCbConfigurableUser):
         if 'PuVeto'  in self.getProp('DetectorSim')['VELO'] : detlist += ['PuVeto']
         if 'VP'      in self.getProp('DetectorSim')['VELO'] : detlist += ['VP']
         if 'VL'      in self.getProp('DetectorSim')['VELO'] : detlist += ['VL']
-        #if 'VeloPix' in self.getProp('DetectorSim')['VELO'] : detlist += ['VeloPix']
         if 'TT'      in self.getProp('DetectorSim')['TT']   : detlist += ['TT']
         if 'IT'      in self.getProp('DetectorSim')['IT']   : detlist += ['IT']
         if 'OT'      in self.getProp('DetectorSim')['OT']   : detlist += ['OT']
@@ -1461,14 +1464,10 @@ class Gauss(LHCbConfigurableUser):
     #--beta* and emittance
     #--and configure the colliding beam tool for all type of events in
     #--pp collisions.
-    #--For beam gas events (with hijing) only the energy of the beams is set
-    def setBeamParameters( self, CrossingSlots ):
+    def setBeamParameters( self, CrossingSlots, genInit):
 
-        #from Configurables import ( MinimumBias , FixedNInteractions , HijingProduction )
-        from Configurables import ( MinimumBias , FixedNInteractions ) 
-        #from Configurables import ( BcVegPyProduction , Special , BcVegPyProduction )
-        from Configurables import ( Special ) 
-
+        from Configurables import ( MinimumBias , FixedNInteractions , HijingProduction )
+        from Configurables import ( BcVegPyProduction , Special , BcVegPyProduction )
         from Configurables import ( Generation )
 
         #
@@ -1483,9 +1482,8 @@ class Gauss(LHCbConfigurableUser):
         sigmaX, sigmaY, sigmaZ         = self.getProp("InteractionSize")
 
 
-        
         # Give beam parameters to GenInit algorithm
-        genInit = GenInit( "GaussGen" )
+        #genInit = GenInit( "GaussGen" )
         genInit.CreateBeam              = True
         genInit.BeamEnergy              = beamMom
         genInit.HorizontalCrossingAngle = angle
@@ -1510,19 +1508,19 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.FixedNInteractions.NInteractions = 1
     
         # Special signal  (Bc with BcVegPy)
-        #pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
-        #ecmInGeV = 2*pInGeV
-        #txtECM = "upcom ecm "+str(ecmInGeV)
-        #gen_t0.addTool(Special,name="Special")
-        #gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
-        #gen_t0.Special.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
+        pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
+        ecmInGeV = 2*pInGeV
+        txtECM = "upcom ecm "+str(ecmInGeV)
+        gen_t0.addTool(Special,name="Special")
+        gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
+        gen_t0.Special.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
 
         # or with Hijing
-        #txtP = "hijinginit efrm "+str(pInGeV)
-        #gen_t0.addTool(MinimumBias,name="MinimumBias")
-        #gen_t0.MinimumBias.addTool(HijingProduction,name="HijingProduction")
-        #gen_t0.MinimumBias.HijingProduction.Commands += [ txtP ]
-
+        txtP = "hijinginit efrm "+str(pInGeV)
+        gen_t0.addTool(MinimumBias,name="MinimumBias")
+        gen_t0.MinimumBias.addTool(HijingProduction,name="HijingProduction")
+        gen_t0.MinimumBias.HijingProduction.Commands += [ txtP ]
+    #--For beam gas events (with hijing) only the energy of the beams is set
     ## end of functions to set beam paramters and propagate them
     ##########################################################################
 
@@ -1566,13 +1564,14 @@ class Gauss(LHCbConfigurableUser):
             TESNode = "/Event/"+self.slot_(slot)
             genInit = GenInit("GaussGen"+slot,
                               MCHeader = TESNode+"Gen/Header")
+
             if slot != '':
                 genInitT0 = GenInit("GaussGen")
                 if genInitT0.isPropertySet("RunNumber"):
                     genInit.RunNumber = genInitT0.RunNumber
                 if genInitT0.isPropertySet("FirstEventNumber"):
                     genInit.FirstEventNumber = genInitT0.FirstEventNumber
-
+                    
 
             genProc = 0
             genType = self.getProp("Production").upper()
@@ -1608,7 +1607,7 @@ class Gauss(LHCbConfigurableUser):
 # ><<   ><<  ><<  ><<   ><<  ><<   ><<      ><<        ><   ><< ><<   ><<      ><< ><             ><<
 #   ><<<<      ><<     ><<<  ><<   ><<      ><<        ><<  ><<   ><< ><<< ><< ><<   ><<<<    ><< ><<
 #"""
-    def configurePhases( self, SpillOverSlots ):
+    def configurePhases( self, SpillOverSlots  ):
         """
         Set up the top level sequence and its phases
         """
@@ -1779,7 +1778,8 @@ class Gauss(LHCbConfigurableUser):
 
 
     def defineGeoBasePieces( self, basePieces ):
-        basePieces['BeforeMagnetRegion']=['Velo2Rich1']
+        #basePieces['BeforeMagnetRegion']=['Velo2Rich1']
+        basePieces['BeforeMagnetRegion']=[]
         basePieces['MagnetRegion']=['PipeInMagnet','PipeSupportsInMagnet']
         basePieces['AfterMagnetRegion']=['PipeAfterT','PipeSupportsAfterMagnet']
         basePieces['DownstreamRegion']=['PipeDownstream','PipeSupportsDownstream','PipeBakeoutDownstream']
@@ -1840,7 +1840,7 @@ class Gauss(LHCbConfigurableUser):
         elif det == "hcal":
             self.defineHcalGeo( detPieces )
         # Upgrade detectors below
-        elif det == "velopix":
+        elif det == "vp":
             self.defineVPGeo( detPieces )
         elif det == "vl":
             self.defineVLGeo( detPieces )
@@ -1930,11 +1930,6 @@ class Gauss(LHCbConfigurableUser):
 
 
 
-        # Magnet definition strictly needs to be after defineStreamItemsGeo()
-        #self.defineMagnetGeo( geo, BasePieces, DetPieces )
-
-
-
 
 #"""
 #    ><<                             ><<      ><< <<                    
@@ -1977,8 +1972,8 @@ class Gauss(LHCbConfigurableUser):
         elif det == "hcal":
             self.configureHcalSim( slot, detHits )
         # Upgrade detectors below
-        elif det == "velopix":
-            self.configureVeloPixSim( slot, detHits )
+        elif det == "vp":
+            self.configureVPSim( slot, detHits )
         elif det == "vl":
             self.configureVLSim( slot, detHits )
         elif det == "torch":
@@ -2156,8 +2151,8 @@ class Gauss(LHCbConfigurableUser):
         elif det == "hcal":
             self.configureHcalMoni( slot, packCheckSeq, detMoniSeq, checkHits )
         # Upgrade detectors below
-        elif det == "velopix":
-            self.configureVeloPixMoni( slot, packCheckSeq, detMoniSeq, checkHits )
+        elif det == "vp":
+            self.configureVPMoni( slot, packCheckSeq, detMoniSeq, checkHits )
         elif det == "vl":
             self.configureVLMoni( slot, packCheckSeq, detMoniSeq, checkHits )
         elif det == "torch":
@@ -2414,8 +2409,8 @@ class Gauss(LHCbConfigurableUser):
              if len(self.getProp('DetectorSim')['RICH'])>0:
                  importOptions("$GAUSSCHERENKOVROOT/options/GaussCherenkov.opts")
              if len(self.getProp('DetectorSim')['RICH']) == 0:
-                 giga.ModularPL.addTool( GiGaPhysConstructorOp, name = "GiGaPhysConstructorOpCkv" )
-                 giga.ModularPL.addTool( GiGaPhysConstructorHpd, name = "GiGaPhysConstructorPhotoDetector" )
+                 giga.ModularPL.addTool( GiGaPhysConstructorOpCkv, name = "GiGaPhysConstructorOpCkv" )
+                 giga.ModularPL.addTool( GiGaPhysConstructorPhotoDetector, name = "GiGaPhysConstructorPhotoDetector" )
                  giga.ModularPL.GiGaPhysConstructorOpCkv.RichOpticalPhysicsProcessActivate = False
                  giga.ModularPL.GiGaPhysConstructorPhotoDetector.RichHpdPhysicsProcessActivate = False
 
@@ -2715,7 +2710,6 @@ class Gauss(LHCbConfigurableUser):
     def __apply_configuration__(self):
 
         GaudiKernel.ProcessJobOptions.PrintOff()
-        #GaudiKernel.ProcessJobOptions.PrintOn()
 
         #defineDB() in Boole and
         self.configureRndmEngine()
@@ -2733,10 +2727,14 @@ class Gauss(LHCbConfigurableUser):
 
         #Construct Crossing List
         crossingList = self.defineCrossingList()
+
+        # We want to pass this GenInit object to configure phases later
+        from Configurables import ( Generation )
+        genInitPrime = GenInit( "GaussGen" )
         
-        self.setBeamParameters( crossingList )
+        self.setBeamParameters( crossingList, genInitPrime )
         # PSZ - everything happens here
-        self.configurePhases( crossingList )  # in Boole, defineOptions() in Brunel
+        self.configurePhases( crossingList  )  # in Boole, defineOptions() in Brunel
 
         #--Configuration of output files and 'default' outputs files that can/should
         #--be overwritten in Gauss-Job.py
