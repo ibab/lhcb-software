@@ -3,6 +3,19 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v32r2>2012-08-31 DaVinci v32r2</A></H1><PRE>
+
+Patch release on top of v32r1p2, for stripping20.
+
+Additional patched packages :-
+
+ . Muon/MuonTrackRec - To fix tracking efficiency lines
+ . Phys/ParticleMaker - To fix a memory leak in the DiElectronMaker
+ . Phys/DaVinciMCTools - Improvements to background category for neutrals
+ . Phys/DecayTreeTuple - Various improvements and bug fixes
+ . Event/TrackEvent - Fix bug in Track copy method.
+ . Kernel/LHCbKernel and Kernel/LHCbAlgs - Fixes for MinBias lines
+
 </PRE><H1><A NAME=v32r1p2>2012-08-08 DaVinci v32r1p2</A></H1><PRE>
 
 Patch release on top of DaVinci v32r1p1. 
