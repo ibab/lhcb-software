@@ -91,28 +91,28 @@ StatusCode GenInit::initialize() {
                                        m_zLuminousRegion ) ) ;
   m_beam.setLuminosity( m_luminosity ) ;
 
-  // print the values used:
-  info() << "Beam Parameters :" << endmsg ;
-  info() << "Energy = " << m_beam.energy() / Gaudi::Units::TeV << " TeV" << endmsg ;
-  info() << "Bunch length RMS = " << m_beam.sigmaS() / Gaudi::Units::mm << " mm" << endmsg ;
-  info() << "Normalized emittance = " << m_beam.epsilonN() / Gaudi::Units::mm << " mm" << endmsg ;
-  info() << "Revolution frequency = " << m_beam.revolutionFrequency() / Gaudi::Units::kilohertz << " kHz" << endmsg ;
-  info() << "Total cross-section assumed = " << m_beam.totalXSec() / Gaudi::Units::millibarn << " mb" << endmsg ;
-  info() << "Horizontal crossing angle = " << m_beam.horizontalCrossingAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
-  info() << "Vertical crossing angle = " << m_beam.verticalCrossingAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
-  info() << "Horizontal beam line angle = " << m_beam.horizontalBeamlineAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
-  info() << "Vertical beam line angle = " << m_beam.verticalBeamlineAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
-  info() << "beta star = " << m_beam.betaStar() / Gaudi::Units::m << " m" << endmsg ;
-  info() << "Bunch spacing = " << m_beam.bunchSpacing() / Gaudi::Units::ns << " ns" << endmsg ;
-  info() << "Beam spot = " << m_beam.beamSpot() << " mm" << endmsg ;
-  info() << "Luminosity = " << m_beam.luminosity() * (Gaudi::Units::cm2 * Gaudi::Units::s ) << " /cm2/s" << endmsg ;
-  info() << "Nu = " << m_beam.nu() << endmsg;
-  info() << "emittance = " << m_beam.emittance() << endmsg;
-  info() << "Luminous region = ( " << m_beam.sigmaX() << ", "
-         << m_beam.sigmaY() << ", " << m_beam.sigmaZ() << " ), mm " << endmsg;
-
   if (m_createBeam) {
     info() << "Create BeamForInitialization" << endmsg;
+    // print the values used:
+    info() << "Beam Parameters :" << endmsg ;
+    info() << "Energy = " << m_beam.energy() / Gaudi::Units::TeV << " TeV" << endmsg ;
+    info() << "Bunch length RMS = " << m_beam.sigmaS() / Gaudi::Units::mm << " mm" << endmsg ;
+    info() << "Normalized emittance = " << m_beam.epsilonN() / Gaudi::Units::mm << " mm" << endmsg ;
+    info() << "Revolution frequency = " << m_beam.revolutionFrequency() / Gaudi::Units::kilohertz << " kHz" << endmsg ;
+    info() << "Total cross-section assumed = " << m_beam.totalXSec() / Gaudi::Units::millibarn << " mb" << endmsg ;
+    info() << "Horizontal crossing angle = " << m_beam.horizontalCrossingAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
+    info() << "Vertical crossing angle = " << m_beam.verticalCrossingAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
+    info() << "Horizontal beam line angle = " << m_beam.horizontalBeamlineAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
+    info() << "Vertical beam line angle = " << m_beam.verticalBeamlineAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
+    info() << "beta star = " << m_beam.betaStar() / Gaudi::Units::m << " m" << endmsg ;
+    info() << "Bunch spacing = " << m_beam.bunchSpacing() / Gaudi::Units::ns << " ns" << endmsg ;
+    info() << "Beam spot = " << m_beam.beamSpot() << " mm" << endmsg ;
+    info() << "Luminosity = " << m_beam.luminosity() * (Gaudi::Units::cm2 * Gaudi::Units::s ) << " /cm2/s" << endmsg ;
+    info() << "Nu = " << m_beam.nu() << endmsg;
+    info() << "emittance = " << m_beam.emittance() << endmsg;
+    info() << "Luminous region = ( " << m_beam.sigmaX() << ", "
+           << m_beam.sigmaY() << ", " << m_beam.sigmaZ() << " ), mm " << endmsg;
+
     LHCb::BeamParameters * beamParameters = new LHCb::BeamParameters( m_beam );
     BeamForInitialization::getInitialBeamParameters() = beamParameters;
   }
@@ -149,21 +149,20 @@ StatusCode GenInit::execute() {
   put( header, m_mcHeader );    
 
   // Check if BeamParameters already exists (main event only!!), in which case link from header
-  bool beamInMainEvent = exist<LHCb::BeamParameters>( m_beamParameters );
-  if ( beamInMainEvent ) {
-    debug() << "Set beam parameters link to main event" << endmsg;
-    LHCb::BeamParameters* beamParameters = 
-      get<LHCb::BeamParameters>( m_beamParameters );
-    header -> setBeamParameters ( beamParameters );
-  }
-  else {
+  if ( m_createBeam ) {
     // Create BeamParameters object and fill it.
     debug() << "Creating BeamParameters in main event" << endmsg;
     LHCb::BeamParameters* beamParameters = new LHCb::BeamParameters( m_beam ) ;
     put( beamParameters , m_beamParameters ) ;
-
+    
     // Link the beam parameters to the header
     header -> setBeamParameters( beamParameters ) ;
+  }
+  else {
+    debug() << "Set beam parameters link to main event" << endmsg;
+    LHCb::BeamParameters* beamParameters = 
+      get<LHCb::BeamParameters>( m_beamParameters );
+    header -> setBeamParameters ( beamParameters );
   }
 
   return StatusCode::SUCCESS;
