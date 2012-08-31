@@ -32,7 +32,7 @@ VeloPixSpilloverSubtraction::VeloPixSpilloverSubtraction(
   declareProperty("SpillVector", m_spillNames = 
 		              boost::assign::list_of("/")("/Prev/")("/PrevPrev/"));   
   declareProperty("InputLocation", m_inputLocation =  
-                  "VeloPix/Digits");
+                  "VP/Digits");
   declareProperty("SwitchOn", m_switchOn = true);
 }
 

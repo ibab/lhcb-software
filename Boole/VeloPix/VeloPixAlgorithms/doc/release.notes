@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Skwarnicki, Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+! 2012-08-31 - Pawel Jalocha
+ - Change VeloPix to VP in containers
+ - DEBUG_HISTO (in .h files) to activate debug histograms
 
 !======================== VeloPixAlgorithms v2r2 2012-08-14 ===================
 ! 2012-08-14 - Pawel Jalocha

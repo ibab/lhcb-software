@@ -37,13 +37,17 @@ DECLARE_ALGORITHM_FACTORY(VeloPixDigitCreator);
 //=============================================================================
 VeloPixDigitCreator::VeloPixDigitCreator(const std::string& name, 
                                          ISvcLocator* pSvcLocator)
-  : GaudiTupleAlg(name, pSvcLocator)    // for algorithm with histograms (setHistoTopDir, plot, plot2D)
-//  : GaudiAlgorithm(name, pSvcLocator)   // for an ordinary algorithm
+#ifdef DEBUG_HISTO
+  : GaudiTupleAlg(name, pSvcLocator)
+#else
+  : GaudiAlgorithm(name, pSvcLocator)
+#endif
+
 {
   declareProperty("InputLocation", m_inputLocation = 
-                  "MC/VeloPix/Digits");
+                  "MC/VP/Digits");
   declareProperty("OutputLocation", m_outputLocation = 
-                  "VeloPix/PreDigits");
+                  "VP/PreDigits");
   declareProperty("SamplesVector", m_sampleNames = 
          boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
   declareProperty("SpillVector", m_spillNames = 
@@ -64,7 +68,9 @@ StatusCode VeloPixDigitCreator::initialize() {
   m_isDebug = msgLevel(MSG::DEBUG);
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
+#ifdef DEBUG_HISTO
   setHistoTopDir("VeloPix/");
+#endif
   return StatusCode::SUCCESS;
 };
 
@@ -128,11 +134,13 @@ void VeloPixDigitCreator::createDigits(const MCVeloPixDigits* digitsMC,
     int Station = aChan.station()+1; if(aChan.sidepos()) Station = (-Station);
     int Chip    = aChan.chip();
 
+#ifdef DEBUG_HISTO
     if(totCharge>=500.0)
       plot2D( Station, Chip, "HitsPerChip", "VeloPixDigitCreator: number of hits/chip (all events)",
              -24.0, 24.0, 0.0, 12.0, 49, 12);
 
     plot(totCharge, "ChargePerPixel", "VeloPixDigitCreator: charge/pixel [e]", 250.0, 25000.0, 99);
+#endif
 
     if(totCharge > 0.0 ) {
       int tot = int( ceil(totCharge) );

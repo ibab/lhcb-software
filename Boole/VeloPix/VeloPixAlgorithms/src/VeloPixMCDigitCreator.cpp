@@ -32,9 +32,9 @@ VeloPixMCDigitCreator::VeloPixMCDigitCreator(const std::string& name,
   : GaudiAlgorithm(name, pSvcLocator)
 {
   declareProperty("InputLocation", m_inputLocation = 
-                  "MC/VeloPix/Deposits");
+                  "MC/VP/Deposits");
   declareProperty("OutputLocation", m_outputLocation = 
-                  "MC/VeloPix/Digits");
+                  "MC/VP/Digits");
   declareProperty("SamplesVector", m_sampleNames = 
          boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
   declareProperty("SpillVector", m_spillNames = 

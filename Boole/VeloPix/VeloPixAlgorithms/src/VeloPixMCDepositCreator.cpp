@@ -46,14 +46,18 @@ DECLARE_ALGORITHM_FACTORY(VeloPixMCDepositCreator);
 //=============================================================================
 VeloPixMCDepositCreator::VeloPixMCDepositCreator(const std::string& name, 
                                                  ISvcLocator* pSvcLocator)
-  // : GaudiAlgorithm(name, pSvcLocator),
+#ifdef DEBUG_HISTO
   : GaudiTupleAlg(name, pSvcLocator),
+#else
+  : GaudiAlgorithm(name, pSvcLocator),
+#endif
+
     m_veloPixelDet(0)
 {
   declareProperty("InputLocation", m_inputLocation = 
-                  "MC/VeloPix/Hits");
+                  "MC/VP/Hits");
   declareProperty("OutputLocation", m_outputLocation = 
-                  "MC/VeloPix/Deposits");
+                  "MC/VP/Deposits");
   declareProperty("SamplesVector", m_sampleNames = 
          boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
   declareProperty("SpillVector", m_spillNames = 
@@ -116,7 +120,9 @@ StatusCode VeloPixMCDepositCreator::initialize() {
   }
   m_diffuseSigma = sqrt(2 * m_kT / m_biasVoltage);
 
+#ifdef DEBUG_HISTO
   setHistoTopDir("VeloPix/");
+#endif
 
   return StatusCode::SUCCESS;
 };
@@ -169,8 +175,10 @@ void VeloPixMCDepositCreator::createDeposits(
     LHCb::MCHit* hit = *iHit;
     // printf(" MCHit: sensDetID=%2d path=%6.1f um dep. energy=%5.1f keV p=%7.1f MeV/c time=%5.3f ns\n",
     //               hit->sensDetID(), 1000*hit->pathLength(), 1000*hit->energy(), hit->p(), hit->time() );
+#ifdef DEBUG_HISTO
     plot(1000*hit->pathLength(), "PathInSensor",  "VeloPixMCDepositCreator: Path in sensor [um]" , 0.0, 300.0, 60);
     plot(1000*hit->energy(),     "EnergyInSensor","VeloPixMCDepositCreator: Energy deposited in sensor [keV]" , 0.0, 200.0, 40);
+#endif
     Count+=1;
     // Number of points per pixel to distribute charge on
     int simPoints = simulatedPoints(hit);                              // see into how many parts the path should be divided
@@ -255,7 +263,9 @@ void VeloPixMCDepositCreator::chargeToPoint(LHCb::MCHit* hit,
     // printf(" %3.1f", (*iP));                                         // print charge simulated for every point
   }
   // printf(" [%3.1f]\n", totalCharge);                                 // print charge for the whole path in silicon
+#ifdef DEBUG_HISTO
   plot(totalCharge, "DepositPerHit","VeloPixMCDepositCreator: Charge deposited in sensor [e]" , 0.0, 40000.0, 80);
+#endif
   if(fabs(totalCharge - charge) > 1.e-6) {
     Warning("Normalization problems");
   }
@@ -335,13 +345,17 @@ void VeloPixMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
     LHCb::VeloPixChannelID entryChannel;
     channelValid = sensor->pointToChannel(pnt,entryChannel,EntryFraction);                     // which pixel is this ?
     if(!channelValid) {
+#ifdef DEBUG_HISTO
       plot2D(pnt.x(), pnt.y(), "DeadSensorArea", "VeloPixMCDepositCreator: Dead sensor area [mm]",
              -40.0, 40.0, -40.0, 40.0, 160, 160);
+#endif
       // Warning("pointToChannel() failure");
       // printf(" => pointToChannel() failed\n");
       continue; }
+#ifdef DEBUG_HISTO
       plot2D(pnt.x(), pnt.y(), "ActiveSensorArea", "VeloPixMCDepositCreator: Active sensor area [mm]",
              -40.0, 40.0, -40.0, 40.0, 160, 160);
+#endif
     // printf(" => entryChannel @ [%02d:%c, %02d:%03dx%03d]\n",
     //       entryChannel.station(), entryChannel.sidepos()?'R':'L',
     //       entryChannel.chip(), entryChannel.pixel_lp(), entryChannel.pixel_hp() );

@@ -5,8 +5,14 @@
 // from STL
 #include <string>
 // from Gaudi
-// #include "GaudiAlg/GaudiAlgorithm.h"
+
+// #define DEBUG_HISTO // fill some histograms while the algorithm runs
+#ifdef DEBUG_HISTO
 #include "GaudiAlg/GaudiTupleAlg.h"
+#else
+#include "GaudiAlg/GaudiAlgorithm.h"
+#endif
+
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Point3DTypes.h"
 // GSL
@@ -25,8 +31,12 @@ class ISiDepositedCharge;
  *  @date   20/09/09
  */
 
-// class VeloPixMCDepositCreator : public GaudiAlgorithm {
+#ifdef DEBUG_HISTO
 class VeloPixMCDepositCreator : public GaudiTupleAlg {
+#else
+class VeloPixMCDepositCreator : public GaudiAlgorithm {
+#endif
+
 public:
   /// Standard constructor
   VeloPixMCDepositCreator(const std::string& name,ISvcLocator* pSvcLocator);

@@ -27,7 +27,7 @@ VeloPixDigitsCreator::VeloPixDigitsCreator( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty("SpillVector", m_spillNames = boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
-  declareProperty("InputLocation", m_inputLocation =  "VeloPix/PreDigits");
+  declareProperty("InputLocation", m_inputLocation =  "VP/PreDigits");
   declareProperty("OutputLocation", m_outputLocation ="/Event/"+LHCb::VeloPixDigitLocation::VeloPixDigitLocation );
 
   // discrimination threshold in electrons

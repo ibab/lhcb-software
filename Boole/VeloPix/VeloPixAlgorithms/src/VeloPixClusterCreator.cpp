@@ -45,15 +45,19 @@ bool sortByChannel(LHCb::VeloPixChannelID first,
 //=============================================================================
 VeloPixClusterCreator::VeloPixClusterCreator(const std::string& name, 
                                              ISvcLocator* pSvcLocator)
+#ifdef DEBUG_HISTO
   : GaudiTupleAlg(name, pSvcLocator)
-//  : GaudiAlgorithm(name, pSvcLocator)
+#else
+  : GaudiAlgorithm(name, pSvcLocator)
+#endif
+
 {
   declareProperty("InputLocation", m_inputLocation = 
                   LHCb::VeloPixDigitLocation::VeloPixDigitLocation);
   declareProperty("OutputLocation", m_outputLocation = 
                   LHCb::VeloPixClusterLocation::VeloPixClusterLocation);
   declareProperty("OutputLocationLite", m_outputLocationLite = 
-                  "VeloPix/LiteClusters");
+                  "VP/LiteClusters");
   // ToT sum in cluster divided by this number before saving in Lite cluster
   declareProperty("scaleFactorForToTSum", m_scaleFactor = 2.0);
   // number of bits to be used for saving Fractional positions and totSum in Lite cluster
@@ -79,7 +83,9 @@ StatusCode VeloPixClusterCreator::initialize() {
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
   m_veloPixelDet = getDet<DeVeloPix>(DeVeloPixLocation::Default);
+#ifdef DEBUG_HISTO
   setHistoTopDir("VeloPix/");
+#endif
   return StatusCode::SUCCESS;
 };
 
@@ -120,9 +126,9 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
   for(VeloPixDigits::const_iterator ipd = digitCont->begin();
       ipd != digitCont->end(); ipd++) {
     PixDigit tmpDigit;
-    tmpDigit.key = (*ipd)->channelID();
-    tmpDigit.tot = (*ipd)->ToTValue();
-    tmpDigit.isUsed = 0;                                                               // mark all as unused
+    tmpDigit.key = (*ipd)->channelID();                                                // pixel number
+    tmpDigit.tot = (*ipd)->ToTValue();                                                 // amplitude
+    tmpDigit.isUsed = 0;                                                               // mark all as not used by a cluster
     pixDigits.push_back(tmpDigit);
   }
   // Find clusters
@@ -183,6 +189,7 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
                                                   scaledToT,
                                                   xyFrac,
                                                   isLong);
+#ifdef DEBUG_HISTO
           plot2D( xyFraction.first, xyFraction.second,
                   "ClusterLinBaryCenter", "VeloPixClusterCreator: lin. fraction of cluster barycenter",
                   0.0, 1.0, 0.0, 1.0, 15, 15);
@@ -193,6 +200,13 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
                 0.5, 50.5, 50);
           plot( totVec.size(), "PixelsPerCluster", "VeloPixClusterCreator: Number of pixels in a cluster",
                 0.5, 9.5, 9);
+#endif
+          // printf(" totSum=%2d => scaledToT=%2d, xyFraction=[%4.2f,%4.2f] => xyFrac=[%d,%d]",
+          //               totSum, scaledToT, xyFraction.first, xyFraction.second, xyFrac.first, xyFrac.second);
+          // printf(" @ [%02d:%c, %02d:%03dx%03d]\n",
+          //   baryCenterChID.station(), baryCenterChID.sidepos()?'R':'L',
+          //   baryCenterChID.chip(), baryCenterChID.pixel_lp(), baryCenterChID.pixel_hp() );
+ 
           clusterLiteCont->push_back(newLiteCluster);
           // printf(" totSum=%2d => scaledToT=%2d, xyFraction=[%4.2f,%4.2f] => xyFrac=[%d,%d]",
           //               totSum, scaledToT, xyFraction.first, xyFraction.second, xyFrac.first, xyFrac.second);
@@ -203,6 +217,7 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
           // Fill new cluster
           VeloPixCluster* newCluster = 
                           new VeloPixCluster(newLiteCluster,totVec);
+          // here comes a failure sometimes, because the ChannelID already exists in the KeyedContainer - need to be fixed.
           clusterCont->insert(newCluster,baryCenterChID);
           // printf("\n");
       	} 
@@ -211,7 +226,9 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
       }   
     }
   }
+#ifdef DEBUG_HISTO
   plot(clusterCont->size(), "ClustersPerEvent", "VeloPixClusterCreator: Clusters/event", 0.5, 4000.5, 40);
+#endif
   return StatusCode::SUCCESS;
 }
 
