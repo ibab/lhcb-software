@@ -219,7 +219,12 @@ _default_configuration_ = {
     #
     # Selection of basic particles
     #
-    'TrackCuts'       : ' ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) & in_range  ( 2 , ETA , 5 ) ' ,
+    'TrackCuts'       : """
+    ( TRCHI2DOF < 5     ) &
+    ( PT > 250 * MeV    ) &
+    ( TRGHOSTPROB < 0.5 ) & 
+    in_range  ( 2 , ETA , 5 )
+    """ ,
     'BasicCuts'       : ' & ( 9 < MIPCHI2DV() ) ' ,
     'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                           ,
     'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                           ,

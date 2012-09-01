@@ -3,7 +3,15 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
+! 2012-09-01 - Vanya Belyaev
+ - add GhostProbability<0.5 cut for "PromptCharm" set of lines
+   the cut is applied for all hadrons, 
+   except for the slow bachelor pion form D*+, 
+   Sigma_c and Lambda_c* decays
+
 !========================= StrippingSelections v3r16 2012-09-01 =========================
+
 
 ! 2012-08-31 - Ricardo Vazquez Gomez
  - Include the ghostProb cut in the StrippingBeauty2XGamma.py lines
