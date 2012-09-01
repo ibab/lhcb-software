@@ -1219,6 +1219,7 @@ Xibc = {
                         , 'JpsiForHighMassBaryon_MuonPIDmu'   : 0
                         , 'JpsiProtonForHighMassBaryonCosth'  : 0.992
                            ####### #
+			, 'GlobalGhostProb_Max'               : 0.4
                         , 'LongTrackGEC'                      : 150 
                           },
     'STREAMS' : [ 'Dimuon' ],
