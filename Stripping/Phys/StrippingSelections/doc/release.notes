@@ -3,6 +3,7 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+!========================= StrippingSelections v3r16 2012-09-01 =========================
 
 ! 2012-08-31 - Ricardo Vazquez Gomez
  - Include the ghostProb cut in the StrippingBeauty2XGamma.py lines
