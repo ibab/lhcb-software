@@ -3,6 +3,19 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v6r2 2012-09-01 =========================
+
+! 2012-09-01 - Anton Poluektov 
+  Preliminary release for Stripping20 preparation
+   - StrippingSelections, StrippingSettings - new lines, updates to reduce timing and retention (including usage of ghost probability cut)
+   - CommonParticles
+      - fix typo in StdVeryLooseAllPhotons name
+      - Removed StdVeryLooseKs.py
+      - Removed lines related to StdVeryLooseKs from StandardV0.py
+      - Added StandardTau and StandardDipion to StandardIntermediate 
+   - StrippingConf 
+      - Prevent instantiating the lines with zero prescale. 
+
 !========================= StrippingSys v6r1 2012-07-27 =========================
 
 ! 2012-07-27 - Anton Poluektov 
