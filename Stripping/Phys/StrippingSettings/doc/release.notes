@@ -3,6 +3,7 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+!========================= StrippingSettings v2r16 2012-09-01 =========================
 
 ! 2012-09-01 - Anton Poluektov
  - Fix BandQ dict (Xibc line), update stripping20 dictionary
