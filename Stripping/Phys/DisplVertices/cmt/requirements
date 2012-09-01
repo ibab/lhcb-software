@@ -3,7 +3,7 @@
 # Maintainer : Victor Coco
 # ============================================================================
 package           DisplVertices
-version           v7r10
+version           v7r11
 
 # ============================================================================
 # Structure, i.e. directories to process. 

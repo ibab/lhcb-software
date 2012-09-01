@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================= DisplVertices v7r11 2012-09-01 =========================
+
 ! 2012-08-19 - Pieter David
  - Added MinSumPT to new algorithm + fixed a copy-paste bug
 
