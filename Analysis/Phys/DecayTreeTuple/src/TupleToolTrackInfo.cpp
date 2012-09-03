@@ -42,19 +42,20 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
   const std::string prefix = fullName(head);
 
   bool test = true;
-  if( !P ) return StatusCode::FAILURE;
+  if ( !P ) return StatusCode::FAILURE;
 
   //first just return if the particle isn't supposed to have a track
-  if( !P->isBasicParticle() ) return StatusCode::SUCCESS;
+  if ( !P->isBasicParticle() ) return StatusCode::SUCCESS;
 
   const LHCb::ProtoParticle* protop = P->proto();
-  if(!protop) return StatusCode::SUCCESS;
+  if (!protop) return StatusCode::SUCCESS;
+
   const LHCb::Track* track = protop->track();
-  if(!track) return StatusCode::SUCCESS;
+  if (!track) return StatusCode::SUCCESS;
 
-
-  if (msgLevel(MSG::DEBUG)) debug() << prefix << " " << track->type()
-                                    << " "+prefix+"_TRACK_CHI2 " << track->chi2() << endmsg ;
+  if (msgLevel(MSG::DEBUG)) 
+    debug() << prefix << " " << track->type()
+            << " "+prefix+"_TRACK_CHI2 " << track->chi2() << endmsg ;
   if (msgLevel(MSG::VERBOSE)) verbose() << *track << endmsg ;
   test &= tuple->column( prefix+"_TRACK_Type",  track->type() );
   test &= tuple->column( prefix+"_TRACK_Key",   track->key() );
@@ -68,14 +69,14 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
     test &= tuple->column( prefix+"_TRACK_PCHI2", track->probChi2() );
     if(isVerbose())
     {
-      if ( track->info(LHCb::Track::FitVeloNDoF,0) >0)
+      if ( track->info(LHCb::Track::FitVeloNDoF,0) > 0 )
       {
         test &= tuple->column( prefix+"_TRACK_VeloCHI2NDOF",
                                track->info(LHCb::Track::FitVeloChi2, -1.)/
                                track->info(LHCb::Track::FitVeloNDoF, 0) );
       }
       else test &= tuple->column( prefix+"_TRACK_VeloCHI2NDOF",-1.);
-      if ( track->info(LHCb::Track::FitTNDoF,0) >0)
+      if ( track->info(LHCb::Track::FitTNDoF,0) > 0 )
       {
         test &= tuple->column( prefix+"_TRACK_TCHI2NDOF",
                                track->info(LHCb::Track::FitTChi2, -1.)/
@@ -93,36 +94,36 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
     if(isVerbose()) test &= tuple->column( prefix+"_TRACK_VeloCHI2NDOF",-1.);
     if(isVerbose()) test &= tuple->column( prefix+"_TRACK_TCHI2NDOF",-1.);
   }
-  if(isVerbose())
+  if ( isVerbose() )
   {
+
     //hopefully unique double constructed from multiplying all Velo hit IDs
-    double veloUTID=1.;
-    //std::vector< unsigned int > veloIDs;
-    const std::vector< LHCb::LHCbID > & lhcbIDs = track->lhcbIDs();
-    std::vector< LHCb::LHCbID >::const_iterator itID = lhcbIDs.begin();
-    for ( ; itID != lhcbIDs.end(); itID++ )
+    double veloUTID = 1.;
+    for ( std::vector<LHCb::LHCbID>::const_iterator itID = track->lhcbIDs().begin();
+          itID != track->lhcbIDs().end(); ++itID )
     {
       if ( (*itID).isVelo() )
       {
-        //veloIDs.push_back( (*itID).veloID().channelID() );
-        veloUTID*=(double((*itID).veloID().channelID())/1000000.);
+        veloUTID *= (double((*itID).veloID().channelID())/1000000.);
       }
     }
-    //veloIDs.push_back( 0 );
     test &= tuple->column( prefix+"_VELO_UTID", veloUTID );
+
     const LHCb::State* uState = track->stateAt( LHCb::State::FirstMeasurement );
-    test &= tuple->column( prefix+"_TRACK_FirstMeasurementX",uState->x());
-    test &= tuple->column( prefix+"_TRACK_FirstMeasurementY",uState->y());
-    test &= tuple->column( prefix+"_TRACK_FirstMeasurementZ",uState->z());
+    test &= tuple->column( prefix+"_TRACK_FirstMeasurementX", uState ? uState->x() : -999 );
+    test &= tuple->column( prefix+"_TRACK_FirstMeasurementY", uState ? uState->y() : -999 );
+    test &= tuple->column( prefix+"_TRACK_FirstMeasurementZ", uState ? uState->z() : -999 );
     
   }
 
-  //}
-
-  test &= tuple->column( prefix+"_TRACK_MatchCHI2", track->info(LHCb::Track::FitMatchChi2,-1) );
-  test &= tuple->column( prefix+"_TRACK_GhostProb", track->ghostProbability() );
-  test &= tuple->column( prefix+"_TRACK_CloneDist", track->info(LHCb::Track::CloneDist, -1.) );
-  test &= tuple->column( prefix+"_TRACK_Likelihood", track->likelihood() );
+  test &= tuple->column( prefix+"_TRACK_MatchCHI2", 
+                         track->info(LHCb::Track::FitMatchChi2,-1) );
+  test &= tuple->column( prefix+"_TRACK_GhostProb", 
+                         track->ghostProbability() );
+  test &= tuple->column( prefix+"_TRACK_CloneDist", 
+                         track->info(LHCb::Track::CloneDist,-1) );
+  test &= tuple->column( prefix+"_TRACK_Likelihood", 
+                         track->likelihood() );
 
   return StatusCode(test);
 }
