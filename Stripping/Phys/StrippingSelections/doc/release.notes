@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-03 - Johannes Albrecht
+ - Bs2MuMuLines: add ghost prob cut to NoMuId and Kst line 
+
 ! 2012-09-03 - Paul Seyfert
  - add cut on GhostProbability to all non-electrons in all Tau23MuLines and LFVLines
 

@@ -210,7 +210,8 @@ def makeDefault(name) :
     Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )"\
                                     " & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
                                     " & (PT < 40*GeV)"\
-                                    " & (P < 500*GeV)"}
+                                    " & (P < 500*GeV)"\
+                                    " & ( TRGHOSTPROB < 0.3 )" }
     
     Bs2MuMuNoMuID.CombinationCut = "(ADAMASS('B_s0')<500*MeV)"\
                                    "& (AMAXDOCA('')<0.3*mm)"
@@ -318,7 +319,7 @@ def makeLoose(name, MuIPChi2, MuTrChi2, BIPChi2, BFDChi2 ) :
     from Configurables import OfflineVertexFitter
     Bs2MuMuNoMuIDLoose = CombineParticles("Combine"+name)
     Bs2MuMuNoMuIDLoose.DecayDescriptor = "B_s0 -> mu+ mu-"
-    # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
+
     Bs2MuMuNoMuIDLoose.addTool( OfflineVertexFitter )
     Bs2MuMuNoMuIDLoose.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuNoMuIDLoose.OfflineVertexFitter.useResonanceVertex = False
@@ -442,8 +443,12 @@ def makeBd(name) :
     makeKstar = CombineParticles("makeKstar")
 
     makeKstar.DecayDescriptor =  "[K*(892)0 -> K+ pi-]cc"
-    makeKstar.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 3 ) & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)",
-                               "pi-":"(ISLONG) & (TRCHI2DOF < 3 ) & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)"}
+    makeKstar.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 3 ) "\
+                               " & ( TRGHOSTPROB < 0.3 )"\
+                               " & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)",
+                               "pi-":"(ISLONG) & (TRCHI2DOF < 3 ) "\
+                               " & ( TRGHOSTPROB < 0.3 )"\
+                               "& (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)"}
     makeKstar.CombinationCut =  "(ADAMASS('K*(892)0')<2000*MeV)"#huge, to allow to study JPsi K1 etc
     makeKstar.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
 

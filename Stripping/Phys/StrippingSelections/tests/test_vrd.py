@@ -26,7 +26,7 @@ stream.appendLines( lb1.lines() )
 
 #ok
 from StrippingSelections.StrippingVeryDetachedJPsiLines import VDetJPsiLinesConf as b2
-lb2 = b2('bmm',b2.config_default)
+lb2 = b2('vDetj',b2.config_default)
 stream.appendLines( lb2.lines() )
 
 #ok
@@ -52,14 +52,33 @@ lb6 = b6('lfv',b6.config_default)
 stream.appendLines( lb6.lines() )
 
 #ok
+c7={
+        'Inflaton2MuMuLongPrescale'    : 0,
+        'Inflaton2MuMuDownstreamPrescale'    : 1,
+        'Inflaton2MuMuLongPostscale'    : 1,
+        'Inflaton2MuMuDownstreamPostscale'    : 1,
+        'Bu2InflatonKPrescale' : 1, 
+        'Bu2InflatonKPostscale' : 1, 
+        'Bs2InflatonPhiPrescale' : 1, 
+        'Bs2InflatonPhiPostscale' : 1, 
+        'Bd2InflatonKstPrescale' : 1, 
+        'Bd2InflatonKstPostscale' : 1,
+        'Bd2InflatonRhoPrescale' : 1, 
+        'Bd2InflatonRhoPostscale' : 1
+        }    
 from StrippingSelections.StrippingInflaton2MuMuLine import StrippingInflaton2MuMuConf as b7
-lb7 = b7('inflaton',b7.config_default)
+lb7 = b7('inflaton',c7 )
 stream.appendLines( lb7.lines() )
 
 #ok - go to mDST
-from StrippingSelections.StrippingK0s2MuMuLines import K0s2MuMuLinesConf as b8
-lb8 = b8('ksmm',b8.config_default)
-stream.appendLines( lb8.lines() )
+#from StrippingSelections.StrippingK0s2MuMuLines import K0s2MuMuLinesConf as b8
+#lb8 = b8('ksmm',b8.config_default)
+#stream.appendLines( lb8.lines() )
+
+from StrippingSelections.StrippingB2XTau_new import B2XTauConf as b9
+from StrippingSelections.StrippingB2XTau_new import config_params as c9
+lb9 = b9('B2Xtau',c9)
+stream.appendLines( lb9.lines() )
 
 
 # Tau2pmumu goes out
@@ -67,10 +86,9 @@ stream.appendLines( lb8.lines() )
 
 
 
-#for line in lb1.lines():
-#     print "AS DEBUG", line
+for line in lb6.lines():
+    print "AS DEBUG", line, "with name: ",line.name()
 #     print "AS DEBUG", line.name()
-
 
 
 
@@ -103,11 +121,11 @@ sr = StrippingReport(Selections = sc.selections())
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
 
-DaVinci().PrintFreq = 200
+DaVinci().PrintFreq = 1000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 100000
+DaVinci().EvtMax = 10000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
-DaVinci().appendToMainSequence( [ sr ] )
+DaVinci().appendToMainSequence( [ sr ] ) 
 DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().DataType  = "2012"
 DaVinci().InputType = "DST"
@@ -132,6 +150,7 @@ DaVinci().CondDBtag = "head-20120420"
 
 # input file
 importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13a_Run114753_SDST.py")
+
 
 
 
