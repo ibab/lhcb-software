@@ -34,7 +34,7 @@ class Physics_pAPilot :
         """
         Returns a list of active lines
         """
-        return  [ ]
+        return  [ 'Hlt2PassThrough' ]
    
     def ActiveHlt1Lines(self) :
         """
@@ -54,7 +54,9 @@ class Physics_pAPilot :
         """
         from Hlt1Lines.Hlt1L0Lines import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1LumiLines import Hlt1LumiLinesConf
+        from Hlt2Lines.Hlt2CommissioningLines import Hlt2CommissioningLinesConf
         
         return { Hlt1L0LinesConf : { 'Prescale' : { 'Hlt1L0Any'    : 1.}}
                , Hlt1LumiLinesConf : { 'EnableReco' : False }
+               , Hlt2CommissioningLinesConf : {'Prescale' : { 'Hlt2PassThrough'  : 1. }}
                }
