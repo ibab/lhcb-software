@@ -53,6 +53,7 @@ namespace ROMon  {
     char*             m_hltBuffer;
     int               m_overflow;
     int               m_overflowSvc;
+    long              m_overflowTime;
     ROMonServer       m_mbm;
     RODimFSMListener  m_fsm;
 

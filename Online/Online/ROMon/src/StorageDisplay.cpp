@@ -306,8 +306,8 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
               streams[s].source = "Recv Layer";
               continue;
             }
-            streams[str].sent += c.events;
-            streams[str].source = node;
+	    streams[str].sent += c.events;
+	    streams[str].source = node;
           }
           else if ( (typ=nullstr(nam,"_RCV")) ) {
             *(typ+3) = 0;

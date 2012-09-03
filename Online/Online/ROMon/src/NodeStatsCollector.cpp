@@ -63,6 +63,7 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   nam = strupper(RTL::nodeNameShort())+"_MEPRx_01/OverflowStatus";
   //log() << "MEPRx service:" << nam << endl;
   m_overflow    = '?';
+  m_overflowTime= ::time(0);
   m_overflowSvc = ::dic_info_service((char*)nam.c_str(),MONITORED,5,0,0,overflowHandler,(long)this,0,0);
   CPUMonData cpu(m_statBuffer);
   cpu.node->reset();
@@ -104,6 +105,7 @@ void NodeStatsCollector::overflowHandler(void* tag, void* address, int* size) {
     NodeStatsCollector* it = *(NodeStatsCollector**)tag;
     try {
       it->m_overflow = '?';
+      it->m_overflowTime = ::time(0);
       if ( address && size && *size>0 ) {
 	if ( ::strncmp((char*)address,"Overflow disabled",16)==0 )
 	  it->m_overflow = 'N';
@@ -212,13 +214,14 @@ int NodeStatsCollector::monitorStats() {
 /// Monitor Deferred HLT statistics information
 int NodeStatsCollector::monitorHLT() {
   int count = 0;
+  map<int,int> files;
   unsigned long long blk_size=0,total_blk=0,availible_blk=0;
   DeferredHLTStats* h = new(m_hltBuffer) DeferredHLTStats(RTL::nodeNameShort());
 
   /// Now load data into object
   ro_gettime(&h->time,&h->millitm);
-  h->overflowState = m_overflow;
-  map<int,int> files;
+  h->overflowState = ((::time(0) - m_overflowTime) > 30) ? '?' : m_overflow;
+
   DIR* dir = ::opendir("/localdisk/overflow");
   if ( dir ) {
     struct dirent *entry;
@@ -227,9 +230,9 @@ int NodeStatsCollector::monitorHLT() {
     h->localdisk.numBlocks  = total_blk;
     h->localdisk.freeBlocks = availible_blk;
     while ( (entry=::readdir(dir)) != 0 ) {
-      int run=0,date,time;
-      int ret = ::sscanf(entry->d_name,"Run_%07d_%8d-%d.MEP",&run,&date,&time);
-      if ( ret == 3 ) {
+      int run=0,date;
+      int ret = ::sscanf(entry->d_name,"Run_%07d_%8d-",&run,&date);
+      if ( ret == 2 ) {
 	map<int,int>::iterator i=files.find(run);
 	if ( i==files.end() ) files[run]=1;
 	else ++((*i).second);

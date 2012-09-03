@@ -106,13 +106,14 @@ void BufferDisplay::update(const void* data) {
           for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
             Clients::const_reference c = (*ic);
             cnam = (char*)c.name;
-            if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {   // Cleanup name if too long to be displayed properly....
+	    int mx_len = 20;
+            if ( ::strlen(cnam)>mx_len && (p=::strchr(cnam,'_')) ) {// Cleanup name if too long to be displayed properly...
               cnam = ++p;
-              if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
+              if ( ::strlen(cnam)>mx_len && (p=::strchr(cnam,'_')) ) {
                 cnam = ++p;
-                if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
+                if ( ::strlen(cnam)>mx_len && (p=::strchr(cnam,'_')) ) {
                   cnam = ++p;
-                  if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
+                  if ( ::strlen(cnam)>mx_len && (p=::strchr(cnam,'_')) ) {
                     cnam = ++p;
                   }
                 }
