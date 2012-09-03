@@ -205,7 +205,7 @@ def makeTau2eMuMu(name):
     from Configurables import OfflineVertexFitter
     Tau2eMuMu = CombineParticles("Comine"+name)
     Tau2eMuMu.DecayDescriptors = [" [ tau+ -> e+ mu+ mu- ]cc"," [ tau+ -> mu+ mu+ e- ]cc"]
-    Tau2eMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " ,
+    Tau2eMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) & (TRGHOSTPROB<0.3) " ,
                                 "e+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) "\
                                 "& (PIDe > 2) " }
     Tau2eMuMu.CombinationCut = "(ADAMASS('tau+')<200*MeV)"
@@ -241,7 +241,7 @@ def makeB2TauMu(name):
     Bs2TauMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2TauMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2TauMu.ReFitPVs = True
-    Bs2TauMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )"}
+    Bs2TauMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3)"}
 
     Bs2TauMu.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
@@ -277,7 +277,7 @@ def makeB2eMu(name):
     Bs2eMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2eMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2eMu.ReFitPVs = True
-    Bs2eMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )",
+    Bs2eMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3)",
                              "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )"}
 
     Bs2eMu.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
@@ -399,11 +399,11 @@ def makeB2heMu(name):
     Bs2heMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2heMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2heMu.ReFitPVs = True
-    Bs2heMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)",
+    Bs2heMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3) & (TRGHOSTPROB<0.3)",
                               "e+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3) & (PIDe > 2)",
                               "pi+" : "(MIPCHI2DV(PRIMARY)>25.)&( TRCHI2DOF < 3 )& (TRGHOSTPROB<0.3)",
-                              "p+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)&(PIDp>5)",
-                              "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)&(PIDK>5)"}
+                              "p+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)&(PIDp>5) & (TRGHOSTPROB<0.3)",
+                              "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)&(PIDK>5) & (TRGHOSTPROB<0.3)"}
 
     Bs2heMu.CombinationCut = "(ADAMASS('B+')<600*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
@@ -444,10 +444,10 @@ def makeB2pMu(name):
     #Bs2pMu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     #Bs2pMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2pMu.ReFitPVs = True
-    Bs2pMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )",
+    Bs2pMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3)",
                              "pi+" : "(MIPCHI2DV(PRIMARY)>36.)&(TRCHI2DOF<3)&(TRGHOSTPROB<0.3)",
-                             "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3) & (PIDK>5)",
-                             "p+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )& (PIDp>5)"}
+                             "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3) & (PIDK>5) & (TRGHOSTPROB<0.3)",
+                             "p+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )& (PIDp>5) & (TRGHOSTPROB<0.3)"}
 
     Bs2pMu.CombinationCut = "(ADAMASS('B_s0')<300*MeV)"\
                             "& (AMAXDOCA('')<0.1*mm)"
@@ -492,7 +492,7 @@ def makeBu(name) :
     PreselBu2JPsiKCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     PreselBu2JPsiKCommon.OfflineVertexFitter.useResonanceVertex = False
     PreselBu2JPsiKCommon.ReFitPVs = True
-    PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 3 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) "}
+    PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 3 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) & (TRGHOSTPROB<0.3) "}
     PreselBu2JPsiKCommon.CombinationCut = "(ADAMASS('B+') < 600*MeV)"
     PreselBu2JPsiKCommon.MotherCut = "(BPVIPCHI2()< 25)& (VFASPF(VCHI2)<45) "
 
