@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Rob Lambert -->
+<!--- Created : 2012-09-03 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='FSREvent'>
+
+
+<!-- IOFSR Class -->
+
+    <class
+      name="IOFSR"
+      author="Rob lambert"
+      desc="Class to store IO information about a job, upgraded EventAccountFSR, needs a special FSRWriter to add file-by-file"
+      stdVectorTypeDef="TRUE"
+      keyedContTypeDef="TRUE"
+      id="13506"
+      serializers="TRUE"
+      >
+<!--
+      <base name='DataObject'/>
+-->
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+
+      <enum
+        desc="FSR status, is the accounting OK"
+        name="StatusFlag"
+        strTypConv = 'TRUE'
+        access="PUBLIC" >
+        <enumval name="Unknown"    value = "-5"  desc="other enum possibilities"/>
+        <enumval name="UNRELIABLE" value = "-4"  desc="The counting in this FSR is known to be suspect"/>
+        <enumval name="EVENTDOUBLED" value = "-3"  desc="Some events have been multiply processed, seen events too large"/>
+        <enumval name="EVENTSKIPPED" value = "-2"  desc="Some events have been skipped, seen events too small"/>
+        <enumval name="UNCHECKED"  value = "-1"  desc="The counting needs to be checked"/>
+        <enumval name="ERROR"      value = "0"   desc="Missing or corrupt FSRs"/>
+        <enumval name="VERIFIED"   value = "1"   desc="The counting in all lower FSRs has been verified OK"/>
+      </enum>
+
+
+      <import name="vector" std="TRUE"/>
+      <import name="map" std="TRUE"/>
+       <import name="string" std="TRUE"/>
+      
+      <typedef
+        type="std::map&lt; std::string, ulonglong &gt;"
+        def="FileEventMap"
+        desc="File Input Events, {GUID:ulonglong}"
+        access="PUBLIC"
+	/> 
+
+      <attribute
+        desc="Number of events this output file should contain"
+        name="output"
+        type="ulonglong"
+        init="0"
+       />
+
+      <attribute
+        desc="Map of input files and event counts"
+        name="input"
+        type="FileEventMap"
+        init=""
+       />
+
+      <attribute
+        desc="Only used after merging, should be filled with file GUID"
+        name="FID"
+        type="std::string"
+        init=""
+       />
+
+
+      <attribute
+        desc="Is the FSR reliable? This time, OK wrt streaming. Fill only during merging."
+        name="statusFlag"
+        type="LHCb::IOFSR::StatusFlag"
+        init="LHCb::IOFSR::UNCHECKED"
+       />
+
+
+      <!-- No special setters and getters... only create in finalize to make singleton?-->
+      <location name="Default"   
+		place="/FileRecords/IOFSR"/>
+      
+    </class>
+
+  </package>
+
+
+</gdd>

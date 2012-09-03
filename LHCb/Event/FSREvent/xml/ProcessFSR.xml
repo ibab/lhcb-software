@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Rob Lambert -->
+<!--- Created : 2012-09-03 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='Event'>
+<!-- ****************************************************************
+     * ProcessFSR
+     ****************************************************************-->
+     <class 
+      author="R. Lambert"
+      desc="FSR based upon common base class for all process headers: GenHeader, MCHeader..."
+      name="ProcessFSR"
+      id="13507"
+     >
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+      
+       <import name="vector" std="TRUE"/>
+       <import name="string" std="TRUE"/>
+       
+       <location name = "Default"  place = "/FileRecords/ProcessFSR" />
+       <import name="Kernel/CondDBNameTagPair.h" />
+       <attribute
+        desc="Application or Program Name (e.g. Gauss, Boole or Pythia)"
+        name="applicationName"
+        type="std::string"
+        init='"Unknown"'
+       />
+       <attribute
+        desc="Application or Program version"
+        name="applicationVersion"
+        type="std::string"
+        init='"Unknown"'
+       />
+       <attribute
+        desc="Conditions database tags"
+        name="condDBTags"
+        type="std::vector&lt;LHCb::CondDBNameTagPair&gt;"
+       />
+      
+      <attribute
+        desc="Only used after merging, should be filled with file GUID"
+        name="FID"
+        type="std::string"
+        init=""
+       />
+      
+     </class>
+  </package>
+
+</gdd>
