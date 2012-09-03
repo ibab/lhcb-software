@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-09-03 - Mat Charles
+ - Stripping20/LineConfigDictionaries_Charm.py:
+   . Updated conf dict of PromptCharm for Vanya to match StrippingSelections.
+
 ! 2012-09-01 - Thomas Blake
  - Updated LineConfigDictionaries_RD for changes to Beauty2XGamma
 
