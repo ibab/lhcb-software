@@ -184,5 +184,5 @@ DaVinci().DDDBtag  = "head-20120413"
 DaVinci().CondDBtag = "cond-20120710"
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13e_Run120535.py")
 

@@ -29,6 +29,7 @@ default_config = {
            'MinIPB2Charged2Body'      : 0.15,
            'MinIPChi2B2Charged2Body'  : 100, 
            'TrChi2'                   : 3,
+           'TrGhostProb'              : 1,
            'MaxPTB2Charged2Body'      : 2700, 
            'MaxIPB2Charged2Body'      : 0.27,
            'MaxIPChi2B2Charged2Body'  : 200,  
@@ -70,6 +71,7 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                'MinIPB2Charged2Body',
                                'MinIPChi2B2Charged2Body',
                                'TrChi2',
+                               'TrGhostProb',
                                'MaxPTB2Charged2Body',  
                                'MaxIPB2Charged2Body',
                                'MaxIPChi2B2Charged2Body', 
@@ -100,6 +102,7 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         # make the various stripping selections
         self.B2Charged2Body = makeB2Charged2Body( B2Charged2BodyName,
                                                   config['TrChi2'],
+                                                  config['TrGhostProb'],
                                                   config['MinPTB2Charged2Body'],
                                                   config['MinIPB2Charged2Body'],
                                                   config['MinIPChi2B2Charged2Body'],
@@ -180,11 +183,11 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         self.registerLine(self.lineLb2KPlusPMinus)
 
 def makeB2Charged2Body( name, 
-                        trChi2,minPT,minIP,minIPChi2,
+                        trChi2,trGhostProb,minPT,minIP,minIPChi2,
                         maxPT,maxIP,maxIPChi2,combMassLow,combMassHigh,doca,
                         bPT,bIP,bIPChi2,bTAU,massLow,massHigh ) : 
     
-    _daughters_cuts = "(TRCHI2DOF < %(trChi2)s) & (PT > %(minPT)s * MeV) & ( (MIPDV(PRIMARY) > %(minIP)s ) | ( MIPCHI2DV(PRIMARY) > %(minIPChi2)s  ) )" %locals()
+    _daughters_cuts = "(TRGHOSTPROB < %(trGhostProb)s) & (TRCHI2DOF < %(trChi2)s) & (PT > %(minPT)s * MeV) & ( (MIPDV(PRIMARY) > %(minIP)s ) | ( MIPCHI2DV(PRIMARY) > %(minIPChi2)s  ) )" %locals()
     
     _combination_cuts = "(AMAXCHILD(MAXTREE('pi+'==ABSID,PT)) > %(maxPT)s ) & ( (AMAXCHILD(MAXTREE('pi+'==ABSID,MIPDV(PRIMARY))) > %(maxIP)s) | (AMAXCHILD(MAXTREE('pi+'==ABSID,MIPCHI2DV(PRIMARY))) > %(maxIPChi2)s ) ) & (AMAXDOCA('') < %(doca)s ) & (AM > %(combMassLow)s * MeV) & (AM < %(combMassHigh)s * MeV)" %locals()
     

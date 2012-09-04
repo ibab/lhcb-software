@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-04 - Stefano Perazzini
+ - Updated StrippingHb2Charged2Body.py in order to have also the GhostProb cut in the dictionary
+
 ! 2012-09-04 - Sean Benson
  - Tuning of StrippingBs2PhiPhi.py and StrippingBs2Q2B.py to reduce retention including GhostProb cuts
 
