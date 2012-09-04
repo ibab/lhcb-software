@@ -48,8 +48,6 @@
   <class name = "ITrajPoca"            />
   <class name = "IUsedLHCbID"          />
   <class name = "IReferenceRate"    />
-  <class name = "LHCb::TTNames"   />
-  <class name = "LHCb::ITNames"   />
   <class name = "LHCb::Inspector" />
   <class name = "IAccept"                />
   <class name = "ICountContainedObjects" />

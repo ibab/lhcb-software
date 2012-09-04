@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE gdd SYSTEM "gdd.dtd" >
 <gdd>
-  <package name='STKernel'>
+  <package name="LHCbKernel">
 <!-- ****************************************************************
      * ITNames                                                      *
      ****************************************************************-->
 
     <class
       author="M Needham"
-      desc="" 
-      name="ITNames" 
+      desc=""
+      name="ITNames"
       virtual = "FALSE"
-    >   
+    >
 
     <import name = "Kernel/STChannelID"/>
 
        <enum
         desc="Station names"
         name="Station"
-        unknownValue="UnknownStation" 
-        strTypConv = "TRUE" 
+        unknownValue="UnknownStation"
+        strTypConv = "TRUE"
         value="UnknownStation=0, IT1 = 1, IT2 = 2, IT3 = 3"
         access="PUBLIC"
        />
- 
+
        <enum
         desc="Box names"
         name="Box"
-        strTypConv = "TRUE" 
-        unknownValue="UnknownBox" 
+        strTypConv = "TRUE"
+        unknownValue="UnknownBox"
         value="UnknownBox=0, CSide = 1, ASide = 2, Bottom = 3, Top = 4"
         access="PUBLIC"
        />
@@ -36,13 +36,13 @@
        <enum
         desc="Layer names"
         name="Layer"
-        strTypConv = "TRUE" 
-        unknownValue="UnknownLayer" 
+        strTypConv = "TRUE"
+        unknownValue="UnknownLayer"
         value="UnknownLayer=0, X1=1, U=2, V=3, X2=4"
         access="PUBLIC"
-       /> 
+       />
 
-      <method 
+      <method
        name = "detector"
        type = "std::string"
        desc = "detector name"
@@ -55,7 +55,7 @@
         type = "std::string"
         argList = "LHCb::STChannelID chan"
         desc = "station string from id"
-       > 
+       >
         <code> return StationToString(chan.station());</code>
       </method>
 
@@ -64,7 +64,7 @@
         type = "std::string"
         argList = "LHCb::STChannelID chan"
         desc = "box string from id"
-       > 
+       >
         <code> return BoxToString(chan.detRegion());</code>
       </method>
 
@@ -73,7 +73,7 @@
         type = "std::string"
         argList = "LHCb::STChannelID chan"
         desc = "layer string from id"
-       > 
+       >
         <code> return LayerToString(chan.layer());</code>
       </method>
 
@@ -82,8 +82,8 @@
         type = "std::string"
         argList = "LHCb::STChannelID chan"
         desc = "unique box string from id"
-       > 
-        <code> std::string temp = StationToString(chan.station()); 
+       >
+        <code> std::string temp = StationToString(chan.station());
                temp += BoxToString(chan.detRegion());
                return temp;
         </code>
@@ -94,10 +94,10 @@
         type = "std::string"
         argList = "LHCb::STChannelID chan"
         desc = "unique layer string from id"
-       > 
-        <code> 
+       >
+        <code>
 
-        std::string temp = StationToString(chan.station()); 
+        std::string temp = StationToString(chan.station());
         temp += BoxToString(chan.detRegion());
         temp+= LayerToString(chan.layer());
         return temp;
@@ -108,73 +108,73 @@
         name = "UniqueSectorToString"
         type = "std::string"
         argList = "LHCb::STChannelID chan"
-        desc = "unique sector string from id"> 
+        desc = "unique sector string from id">
       </method>
 
-    
+
       <method
         name = "SectorToString"
         type = "std::string"
         argList = "LHCb::STChannelID chan"
-        desc = "sector string from id"> 
+        desc = "sector string from id">
       </method>
 
      <method
         name = "channelToString"
         type = "std::string"
         argList = "LHCb::STChannelID chan"
-        desc = "channel to string from id"> 
+        desc = "channel to string from id">
       </method>
 
    <method
         name = "allStations"
         type = "std::vector &lt; std::string &gt;"
-        desc = "vector of string names for all stations"> 
+        desc = "vector of string names for all stations">
    </method>
- 
+
   <method
         name = "allBoxes"
         type = "std::vector &lt; std::string &gt;"
-        desc = "vector of string names for all boxes"> 
+        desc = "vector of string names for all boxes">
    </method>
 
   <method
         name = "allLayers"
         type = "std::vector &lt; std::string &gt;"
-        desc = "vector of string names for all layers"> 
+        desc = "vector of string names for all layers">
    </method>
- 
+
 
   <method
         name = "stations"
         type = "std::vector &lt; std::string &gt;"
-        desc = "vector of string names for stations"> 
+        desc = "vector of string names for stations">
    </method>
- 
+
   <method
         name = "boxes"
         type = "std::vector &lt; std::string &gt;"
-        desc = "vector of string names for boxes"> 
+        desc = "vector of string names for boxes">
    </method>
 
   <method
         name = "layers"
         type = "std::vector &lt; std::string &gt;"
-        desc = "vector of string names for layers"> 
+        desc = "vector of string names for layers">
   </method>
 
   <method
     name = "stringToChannel"
     type = "LHCb::STChannelID"
-    argList = "std::string name" 
-    desc = "convert string to channel" > 
+    argList = "std::string name"
+    desc = "convert string to channel" >
    </method>
 
 
   <method
     name = "findStationType"
     type = "unsigned int"
-    argList = "const std::string testName, const std::vector&lt;std::string&gt; names" 
+    argList = "const std::string testName, const std::vector&lt;std::string&gt; names"
     access = "PRIVATE"
     desc = "find type in vector">
     </method>
@@ -182,7 +182,7 @@
    <method
     name = "findLayerType"
     type = "unsigned int"
-    argList = "const std::string testName, const std::vector&lt;std::string&gt; names" 
+    argList = "const std::string testName, const std::vector&lt;std::string&gt; names"
     access = "PRIVATE"
     desc = "find type in vector">
     </method>
@@ -190,18 +190,18 @@
     <method
     name = "findBoxType"
     type = "unsigned int"
-    argList = "const std::string testName, const std::vector&lt;std::string&gt; names" 
+    argList = "const std::string testName, const std::vector&lt;std::string&gt; names"
     access = "PRIVATE"
     desc = "find type in vector">
     </method>
 
 
-  <method 
+  <method
    name = "toInt"
    type = "unsigned int"
    argList = "const std::string&amp; str "
    desc = "convert string to int"
-   access = "PRIVATE" 
+   access = "PRIVATE"
   >
     </method>
 
