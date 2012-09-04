@@ -53,10 +53,13 @@ class Physics_pAPilot :
         Returns a dictionary of cuts
         """
         from Hlt1Lines.Hlt1L0Lines import Hlt1L0LinesConf
+        from Hlt1Lines.Hlt1MBLines import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1LumiLines import Hlt1LumiLinesConf
         from Hlt2Lines.Hlt2CommissioningLines import Hlt2CommissioningLinesConf
         
         return { Hlt1L0LinesConf : { 'Prescale' : { 'Hlt1L0Any'    : 1.}}
                , Hlt1LumiLinesConf : { 'EnableReco' : False }
+               , Hlt1MBLinesConf : {  'Prescale' : { 'Hlt1MBNoBias'  : 1. }
+                                      , 'Postscale' : { 'Hlt1MBNoBias'  : 'RATE(1000)' }}
                , Hlt2CommissioningLinesConf : {'Prescale' : { 'Hlt2PassThrough'  : 1. }}
                }
