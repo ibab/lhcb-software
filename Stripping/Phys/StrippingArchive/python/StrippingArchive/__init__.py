@@ -53,11 +53,11 @@ _strippingKeys = []
 #import known strippings
 for x in _known_strippings : 
     module_name = __name__ + "." + x
-    print "Trying to import module " + module_name
+    print "Trying to import module", module_name
     try : 
         __import__(module_name)
     except : 
-	print module_name, " cannot be loaded with this version of DaVinci"
+	print "  -> Cannot be loaded with this version of DaVinci"
     else : 
 	_strippingKeys.append(x)
 
