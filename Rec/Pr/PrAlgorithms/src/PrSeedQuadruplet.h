@@ -66,7 +66,6 @@ public:
     m_tx = ( bx * a2 - ax * b2 ) / den;
     m_x0 = ( sx - sz * m_tx - szs *m_ty ) / s0;
     m_z0 = sz / s0;
-    m_ty = m_ty;
     m_y0 = m_ty * m_z0;
     m_x0 = m_x0 + m_tx * m_z0;
   }; 

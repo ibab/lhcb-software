@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-09-04 - Olivier Callot
+ - Remove a useless line in PrSeedQuadruplet.h
+
 ! 2012-08-14 - Olivier Callot
  - Remove the cut on cy, loosing too much at low stereo angle.
 
