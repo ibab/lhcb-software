@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-09-2 - Victor Coco
+- Fix wrong case call for Velo Tracks 
+
 ! 2012-08-29 - Victor Coco
  - Fix bug in the Neutral recovery (in case of HCAL, typo using the ECAL sigmaE instead)
  - Add the possibilty of using Velo Track with infinitely low momenta 
