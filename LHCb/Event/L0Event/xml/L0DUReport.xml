@@ -54,7 +54,7 @@
       <attribute  desc=" Force Bit"                name="forceBit"           type="bool" />
       <attribute  desc=" L0DU algorithm configuration Key"         name="tck"        type="unsigned int" />
       <attribute  desc="'channels pre-decision' Summaries   (FCS)" name="channelsPreDecisionSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;"/>
-      <attribute  desc="'Channel decisions' Summaries  (TCS)"      name="channelsDecisionSummaries"type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
+      <attribute  desc="'Channel decisions' Summaries  (TCS)"      name="channelsDecisionSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
       <attribute  desc="'Elementary conditions' Summaries (ECS)"   name="conditionsValueSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
       <attribute  desc=" sum(Et) value over several BX"            name="sumEt"                    type="std::map&lt;int , unsigned int&gt;" getMeth='FALSE'/>
       <attribute  desc=" validity of the report"   name="valid"  type="bool"/>

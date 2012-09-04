@@ -70,8 +70,8 @@
  
       <attribute name = "id" desc = " L0DU Channel index "  type = "unsigned int" />
       <attribute name = "name" desc = " L0DU Channel name "  type = "std::string" />
-      <attribute name = "rate"desc = "Accept rate (%)"    type = "unsigned int" init = "100"/>
-      <attribute name = "decisionType"    desc = "decision type"type = "int" init = "L0DUDecision::Physics"/>
+      <attribute name = "rate" desc = "Accept rate (%)"    type = "unsigned int" init = "100"/>
+      <attribute name = "decisionType"    desc = "decision type" type = "int" init = "L0DUDecision::Physics"/>
       <attribute name = "elementaryConditions" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryCondition::Map" />
       <attribute name = "counter"   desc = " counter value" type = "unsigned int" init = "0" />     
       <attribute name = "emulatedDecision"  desc = "L0DU Channel emulated Decision (incl. downscaling decision)"  
