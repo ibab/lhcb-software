@@ -1,11 +1,14 @@
+
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltSettings
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2012-09-04 - Johannes Albrecht
+ - add Hlt2PTransparent to pA settings 
 
 ! 2012-09-03 - Johannes Albrecht
- - add Hlt2PassTrhrough to lumi settings
+ - add Hlt2PassThrough to pA settings
 
 ! 2012-08-31 - Rosen Matev
  - modify Physics_pAPilot settings: add Hlt1Lumi line with EnableReco=False

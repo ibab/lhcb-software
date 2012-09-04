@@ -34,7 +34,7 @@ class Physics_pAPilot :
         """
         Returns a list of active lines
         """
-        return  [ 'Hlt2PassThrough' ]
+        return  [ 'Hlt2PassThrough','Hlt2Transparent' ]
    
     def ActiveHlt1Lines(self) :
         """
