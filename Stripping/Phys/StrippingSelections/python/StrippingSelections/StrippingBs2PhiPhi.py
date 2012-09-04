@@ -14,8 +14,8 @@ Both lines are build by the function _Bs2PhiPhi_X_Line, which accepts the name a
 '''
 
 __author__  = [ 'Sean Benson' ]
-__date__    = '2012/08/30'
-__version__    = '2.2'
+__date__    = '2012/09/04'
+__version__    = '2.3'
 
 
 '''
@@ -36,16 +36,16 @@ from StandardParticles import StdLooseKaons as MyLooseKaons
 #  from StandardParticles import StdLooseKaons as MyLooseKaons
 
 config_params = {
-                  'KaonPT'              : 500      # MeV/c
-                , 'KaonIPCHI2'          : 3.5      # adimensional
+                  'KaonPT'              : 400      # MeV/c
+                , 'KaonIPCHI2'          : 2.5      # adimensional
                 , 'PhiPT'               : 0        # MeV/c
                 , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
-                , 'PhiVertexCHI2pDOF'   : 12       # adimensional
+                , 'PhiVertexCHI2pDOF'   : 15       # adimensional
                 , 'PhiMassWindow'       : 25       # MeV/cc
                 , 'PhiMassMax'          : 1090     # MeV/cc
-                , 'BsVertexCHI2pDOF'    : 12       # adimensional
+                , 'BsVertexCHI2pDOF'    : 15       # adimensional
                 , 'BsMassWindow'        : 300      # MeV/cc
-                , 'WidePrescale'        : 0.05     # adimensional
+                , 'WidePrescale'        : 0.15     # adimensional
 }
 
 class StrippingBs2PhiPhiConf(LineBuilder):
@@ -74,7 +74,7 @@ class StrippingBs2PhiPhiConf(LineBuilder):
 
     def _Bs2PhiPhi_X_Line( self, name, config, wide ) :
 
-            Phi2KK_DC = "(PT>%(KaonPT)s*MeV)&(MIPCHI2DV(PRIMARY)>%(KaonIPCHI2)s)" % config
+            Phi2KK_DC = "(TRGHOSTPROB < 0.8) & (PT>%(KaonPT)s*MeV)&(MIPCHI2DV(PRIMARY)>%(KaonIPCHI2)s)" % config
             Phi2KK_CC = "(AM<(%(PhiMassMax)s+30)*MeV)&(ADOCACHI2CUT(40, ''))" % config
 
             Phi2KK_MassCut = ""

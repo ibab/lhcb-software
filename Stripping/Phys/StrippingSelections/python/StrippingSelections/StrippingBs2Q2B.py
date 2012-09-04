@@ -9,8 +9,8 @@ removed.
 '''
 
 __author__ = ['Sean Benson']
-__date__ = '30/08/2012'
-__version__ = '2.2'
+__date__ = '04/09/2012'
+__version__ = '2.3'
 
 __all__ = ( 'Bs2Q2Body4piConf',
             'mkDiTrackList',
@@ -21,11 +21,11 @@ config_params = {'Q2BPrescale'     : 1.,
                  'Q2BResMinP'      : 1.,
                  'Q2BResMinMass'   : 0.,
                  'Q2BResMaxMass'   : 1100.,
-                 'Q2BResVtxChiDOF' : 9.,
+                 'Q2BResVtxChiDOF' : 12.,
                  'Q2BBMinM'        : 4500.,
                  'Q2BBMaxM'        : 5700.,
-                 'Q2BBVtxChi2DOF'  : 9.,
-                 'Q2BIPCHI2' : 15}
+                 'Q2BBVtxChi2DOF'  : 12.,
+                 'Q2BIPCHI2' : 20}
 
 
 from Gaudi.Configuration import *
@@ -57,7 +57,7 @@ class Bs2Q2Body4piConf(LineBuilder) :
 	self.name = name
         LineBuilder.__init__(self, name, config)
 
-        _trkFilter = FilterDesktop(Code = "(PT>500.*MeV) & (TRCHI2DOF < 4) & (MIPCHI2DV(PRIMARY) > 16)")
+        _trkFilter = FilterDesktop(Code = "(TRGHOSTPROB < 0.8) & (PT>500.*MeV) & (TRCHI2DOF < 4) & (MIPCHI2DV(PRIMARY) > 16)")
         self.TrackList = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
                                     RequiredSelections = [StdNoPIDsPions])

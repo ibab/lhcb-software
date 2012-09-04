@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-04 - Sean Benson
+ - Tuning of StrippingBs2PhiPhi.py and StrippingBs2Q2B.py to reduce retention including GhostProb cuts
+
 ! 2012-09-04 - Aurelien Martens
  - add GhostProb cut in Bu2KSH lines, different values for LL KS daughters and bachelor track
 
