@@ -33,9 +33,12 @@ class HLTp_Node
     {
       float f;
       sscanf(p.c_str(),"%f",&f);
-      m_perfsum += f;
-      m_perfsum2 += f*f;
-      m_samples++;
+      if (f > 0.0)
+      {
+        m_perfsum += f;
+        m_perfsum2 += f*f;
+        m_samples++;
+      }
     }
     void calc()
     {
