@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-04 - Mat Charles
+ - Add GhostProb cut to 5-body lines in StrippingXicc.py
+
 ! 2012-09-04 - Thomas Blake
  - Added GhostProb to B2XMuMu
 
