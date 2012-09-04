@@ -22,36 +22,38 @@ from Beauty2Charm_LoKiCuts import LoKiCuts
 
 from StandardParticles import StdNoPIDsPions as Pions
 
-default_config = {'Trk_Chi2'                : 3.0,
-                  'KS_DD_MassWindow'        : 30.0,
-                  'KS_LL_MassWindow'        : 15.0,
-                  'KS_DD_VtxChi2'           : 10.0,
-                  'KS_LL_VtxChi2'           : 10.0,
-                  'KS_DD_FDChi2'            : 50.0,
-                  'KS_LL_FDChi2'            : 100.0,
-                  'KS_DD_Pmin'              : 8000.0,
-                  'KS_LL_Pmin'              : 8000.0,
-                  'KS_DD_Ptmin'             : 1000.0,
-                  'KS_LL_Ptmin'             : 800.0,
-                  'Bach_Ptmin'              : 1000.0,
-                  'BDaug_MaxPT_IP'          : 0.05,
-                  'BDaug_DD_PTsum'          : 4000.0,
-                  'BDaug_LL_PTsum'          : 4000.0,
-                  'B_Mlow'                  : 500.0,
-                  'B_Mhigh'                 : 500.0,
-                  'B_Pmin'                  : 25000.0,
-                  'B_LL_VtxChi2'            : 6.0,
-                  'B_DD_VtxChi2'            : 6.0,
-                  'B_Dira'                  : 0.9995,
-                  'B_DD_IPCHI2wrtPV'        : 10.0,
-                  'B_LL_IPCHI2wrtPV'        : 10.0,
-                  'B_FDwrtPV'               : 1.0,
-                  'B_DD_FDChi2'             : 50,
-                  'B_LL_FDChi2'             : 50,
-                  'GEC_MaxTracks'           : 250,
-                  'Prescale'                : 1.0,
-                  'Postscale'               : 1.0
-                  }
+default_config = { 'KSDaug_LTrk_GhostProb'   : 1.0,
+                   'Trk_GhostProb'           : 0.5,
+                   'Trk_Chi2'                : 3.0,
+                   'KS_DD_MassWindow'        : 30.0,
+                   'KS_LL_MassWindow'        : 15.0,
+                   'KS_DD_VtxChi2'           : 10.0,
+                   'KS_LL_VtxChi2'           : 10.0,
+                   'KS_DD_FDChi2'            : 50.0,
+                   'KS_LL_FDChi2'            : 100.0,
+                   'KS_DD_Pmin'              : 8000.0,
+                   'KS_LL_Pmin'              : 8000.0,
+                   'KS_DD_Ptmin'             : 1000.0,
+                   'KS_LL_Ptmin'             : 800.0,
+                   'Bach_Ptmin'              : 1000.0,
+                   'BDaug_MaxPT_IP'          : 0.05,
+                   'BDaug_DD_PTsum'          : 4000.0,
+                   'BDaug_LL_PTsum'          : 4000.0,
+                   'B_Mlow'                  : 500.0,
+                   'B_Mhigh'                 : 500.0,
+                   'B_Pmin'                  : 25000.0,
+                   'B_LL_VtxChi2'            : 6.0,
+                   'B_DD_VtxChi2'            : 6.0,
+                   'B_Dira'                  : 0.9995,
+                   'B_DD_IPCHI2wrtPV'        : 10.0,
+                   'B_LL_IPCHI2wrtPV'        : 10.0,
+                   'B_FDwrtPV'               : 1.0,
+                   'B_DD_FDChi2'             : 50,
+                   'B_LL_FDChi2'             : 50,
+                   'GEC_MaxTracks'           : 250,
+                   'Prescale'                : 1.0,
+                   'Postscale'               : 1.0
+                   }
 
 class Bu2KShConf(LineBuilder) :
     """
@@ -80,7 +82,9 @@ class Bu2KShConf(LineBuilder) :
     Bu2KShConf.__configuration_keys__ : List of required configuration parameters.
     """
 
-    __configuration_keys__ = ('Trk_Chi2',
+    __configuration_keys__ = ('KSDaug_LTrk_GhostProb',
+                              'Trk_GhostProb',
+                              'Trk_Chi2',
                               'KS_DD_MassWindow',
                               'KS_LL_MassWindow',
                               'KS_DD_VtxChi2',
@@ -179,7 +183,9 @@ class Bu2KShConf(LineBuilder) :
         _ptCut      = "(PT>%s*MeV)"            % config['KS_DD_Ptmin']
         _trkChi2Cut1 = "(CHILDCUT((TRCHI2DOF<%s),1))" % config['Trk_Chi2']
         _trkChi2Cut2 = "(CHILDCUT((TRCHI2DOF<%s),2))" % config['Trk_Chi2']
-        _allCuts = _momCut+'&'+_ptCut+'&'+_massCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2+'&'+_vtxCut+'&'+_fdCut
+        _trkGPCut1 = "(CHILDCUT((TRGHOSTPROB<%s),1))" % config['KSDaug_LTrk_GhostProb']
+        _trkGPCut2 = "(CHILDCUT((TRGHOSTPROB<%s),2))" % config['KSDaug_LTrk_GhostProb']
+        _allCuts = _trkGPCut1 + '&' + _trkGPCut2 + '&' + _momCut+'&'+_ptCut+'&'+_massCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2+'&'+_vtxCut+'&'+_fdCut
 
         # get the KS's to filter
         _stdKSLL = DataOnDemand( Location = "Phys/StdLooseKsLL/Particles" )
@@ -193,8 +199,10 @@ class Bu2KShConf(LineBuilder) :
     def makeH( self, name, config ) :
         # define all the cuts
         _bachPtCut      = "(PT>%s*MeV)"                      % config['Bach_Ptmin']
-
-        _allCuts = _bachPtCut
+        _trkChi2Cut = "(TRCHI2DOF<%s)" % config['Trk_Chi2']
+        _trkGPCut = "(TRGHOSTPROB<%s)" % config['Trk_GhostProb']
+                
+        _allCuts = _trkGPCut + '&' + _trkChi2Cut + '&' + _bachPtCut
 
         # make the filter
         _filterH = FilterDesktop( Code = _allCuts )
