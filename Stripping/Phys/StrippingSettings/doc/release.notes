@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-09-04 - Thomas Blake
+ - Updated XMuMu in LineConfigDictionaries_RD.py
+
 ! 2012-09-04 - Jibo He
  - Stripping20/LineConfigDictionaries_BandQ.py
    . Removed MicroDSTNeuroBayesMuMu, X2psi, X2psiGamma, B2psiX, B2psiX0, Ccbar2Baryons

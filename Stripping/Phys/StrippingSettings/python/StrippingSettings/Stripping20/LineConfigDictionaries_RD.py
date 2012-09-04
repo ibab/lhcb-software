@@ -86,7 +86,7 @@ Beauty2XGamma = {
     "GECNTrkMax" : 500
     },
     'WGs'    : ['RD'],
-    'STREAMS' : [ 'Radiative' ] 
+   'STREAMS' : [ 'Radiative' ] 
     }
 
 
@@ -127,7 +127,7 @@ B2XMuMu =  {
     ,'UseNoPIDsHadrons'          : True,
 
     # B cuts
-    'B_Comb_MassLow'	  : 4600.0,
+    'B_Comb_MassLow'	  : 4500.0,
     'B_Comb_MassHigh'     : 7100.0,
     'B_MassLow'           : 4600.0,
     'B_MassHigh'          : 7000.0,
@@ -135,7 +135,7 @@ B2XMuMu =  {
     'B_IPCHI2'            :   16.0,
     'B_DIRA'              :    0.9999,
     'B_FlightCHI2'        :  121.0,
-   'B_Dau_MaxIPCHI2'     : 9.0,
+    'B_Dau_MaxIPCHI2'     : 9.0,
 
     # Daughter cuts
     'Dau_VertexCHI2'	  :   12.0,
@@ -156,6 +156,7 @@ B2XMuMu =  {
 
     # Track cuts
     'Track_CHI2nDOF'	  :    5.0,
+    'Track_GhostProb'     :    0.4,
 
     # Hadron cuts
     'Hadron_MinIPCHI2'    :    9.0,
