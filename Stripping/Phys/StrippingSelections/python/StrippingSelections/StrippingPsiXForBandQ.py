@@ -79,8 +79,16 @@ _default_configuration_ = {
     #
     ## pions and kaons
     # 
-    'PionCut'   : " MIPCHI2DV() > 9 " , 
-    'KaonCut'   : " MIPCHI2DV() > 9 " , 
+    'PionCut'   : """
+    ( CLONEDIST   > 5000 ) & 
+    ( TRGHOSTPROB < 0.5  ) &
+    ( MIPCHI2DV() > 9    ) 
+    """ , 
+    'KaonCut'   : """
+    ( CLONEDIST   > 5000 ) & 
+    ( TRGHOSTPROB < 0.5  ) &
+    ( MIPCHI2DV() > 9    ) 
+    """ , 
     #
     ## tight (K,pi) for multibody decays
     #

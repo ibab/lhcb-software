@@ -113,6 +113,13 @@ _default_configuration_ = {
     ( CLONEDIST     > 0 )     
     """ , 
     #
+    ## pion cuts
+    #
+    'PionCut'   : """
+    ( CLONEDIST   > 5000 ) & 
+    ( TRGHOSTPROB < 0.5  ) &
+    ( MIPCHI2DV() > 9    ) 
+    """ , 
     ## useful shortcuts:
     #
     'Preambulo' : [
@@ -315,7 +322,28 @@ class PsiX0Conf(LineBuilder) :
         return self._add_selection ( 'PsiX0Lines' , sel ) 
     
     ## pions :
-    def pions  ( self ) : return StdLoosePions 
+    def pions  ( self ) :
+        """
+        Pions for   B -> psi X0 lines 
+        """        
+        sel = self._selection ( 'Pion_Selection')
+        if sel : return sel
+        
+        alg  = FilterDesktop (
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            Code = self['PionCut'] ,
+            ##
+            )
+        
+        sel  = Selection (
+            "SelPiFor"         + self.name()     ,
+            Algorithm          =   alg           ,
+            RequiredSelections = [ StdLoosePions ]  
+            )
+        
+        return self._add_selection( 'Pion_Selection' , sel ) 
     ## muons 
     def muons  ( self ) : return StdLooseMuons 
     ## gamma 

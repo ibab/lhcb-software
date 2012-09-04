@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-04 - Vanya Belyaev
+
+ - StrippingPsiXForBandQ.py &  StrippingPsiX0.py
+	 add GhostProb cut for pions and kaons to reduce the rate 
+
 ! 2012-09-03 - Johannes Albrecht
  - Bs2MuMuLines: add ghost prob cut to NoMuId and Kst line 
 
