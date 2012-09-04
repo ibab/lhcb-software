@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-04 - Thomas Blake
+ - Added GhostProb to B2XMuMu
+
 ! 2012-09-04 - Stefano Perazzini
  - Updated StrippingHb2Charged2Body.py in order to have also the GhostProb cut in the dictionary
 

@@ -80,7 +80,8 @@ defaultConfig = {
     
     # Track cuts
     'Track_CHI2nDOF'      :    5.0,
- 
+    'Track_GhostProb'     :    0.4,  
+      
     # Hadron cuts
     'Hadron_MinIPCHI2'    :    9.0,
 
@@ -166,6 +167,7 @@ class B2XMuMuConf(LineBuilder) :
         
         # Track cuts
         'Track_CHI2nDOF',
+        'Track_GhostProb',
         
         # Hadron cuts
         'Hadron_MinIPCHI2',
@@ -193,7 +195,8 @@ class B2XMuMuConf(LineBuilder) :
         # Bd2KstartMuMu cuts definitions
         self.BdCombCut = "(AM > %(B_Comb_MassLow)s * MeV) & (AM < %(B_Comb_MassHigh)s * MeV)" %config
 
-        self.BdCut = "(M > %(B_MassLow)s * MeV) & " \
+        self.BdCut = "(SUMQ < 3) & " \
+                     "(M > %(B_MassLow)s * MeV) & " \
                      "(M < %(B_MassHigh)s * MeV) & " \
                      "(VFASPF(VCHI2/VDOF) < %(B_VertexCHI2)s) & " \
                      "(BPVIPCHI2() < %(B_IPCHI2)s) & " \
@@ -217,9 +220,10 @@ class B2XMuMuConf(LineBuilder) :
         self.DiMuonCombCut = "(AM < %(DimuonUPPERMASS)s *MeV)" %config 
         self.DiMuonCut = DaughterCuts + " & (BPVVDCHI2 > %(Dimu_FlightChi2)s) & " \
                          "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(Dimu_Dau_MaxIPCHI2)s )" %config
-
-        self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s)" %config
-
+        
+        self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s) & (TRGHP < %(Track_GhostProb)s)" %config
+        #self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s)" %config
+        
         self.HadronCuts = "(MIPCHI2DV(PRIMARY) > %(Hadron_MinIPCHI2)s) & (HASRICH)" %config
         
         self.KaonCut = self.TrackCuts + " & " + self.HadronCuts
@@ -227,7 +231,7 @@ class B2XMuMuConf(LineBuilder) :
         
         self.MuonCut = self.TrackCuts + " & (MIPCHI2DV(PRIMARY) > %(Muon_MinIPCHI2)s) & (PIDmu> %(MuonPID)s)" %config
 
-        self.KstarFilterCut  = self.KstarCut + " & (INTREE(ABSID=='K+') & " + self.KaonCut + ") & (INTREE(ABSID=='pi+') & " + self.PionCut + ")"
+        #self.KstarFilterCut  = self.KstarCut + " & (INTREE(ABSID=='K+') & " + self.KaonCut + ") & (INTREE(ABSID=='pi+') & " + self.PionCut + ")"
 
         self.Dimuon = self.__Dimuon__(config)        
         self.Protons = self.__Protons__(config)
@@ -252,9 +256,7 @@ class B2XMuMuConf(LineBuilder) :
                               self.Kstar, self.K1, self.Lambdastar, self.Kstar2KsPi,
                               self.Kstar2KPi0, config)
 
-#        self.line = None
 
-#        if ( config['SpdMult'] > 0 ):
         self.line = StrippingLine(self.name+"_Line",
                                   prescale = 1,
                                    FILTER = {
@@ -263,11 +265,11 @@ class B2XMuMuConf(LineBuilder) :
                                    },
                                   algos=[self.Bs]
                                   )
-#        else:
-#        self.line = StrippingLine(self.name+"_Line",
-#                                  prescale = 1,
-#                                  algos=[self.Bs]
-#                                  )
+        #        else:
+        #        self.line = StrippingLine(self.name+"_Line",
+        #                                  prescale = 1,
+        #                                  algos=[self.Bs]
+        #                                  )
         
         self.registerLine(self.line)
 
@@ -449,8 +451,9 @@ class B2XMuMuConf(LineBuilder) :
         """  
         _pi0resolved = AutomaticData(Location = 'Phys/StdLooseResolvedPi0/Particles')
         _pi0merged = AutomaticData(Location = 'Phys/StdLooseMergedPi0/Particles')
-        _filter_pi0resolved = FilterDesktop(Code = self.__Pi0Cuts__(conf))
-        _filter_pi0merged = FilterDesktop(Code = self.__Pi0Cuts__(conf))        
+        _filter_pi0resolved = FilterDesktop(Code = self.__Pi0Cuts__(conf) )
+        #+ " & ( 250*MeV < MINTREE('gamma' == ID, PT))"  )
+        _filter_pi0merged = FilterDesktop(Code = self.__Pi0Cuts__(conf)  )        
         _selpi0resolved = Selection("Selection_"+self.name+"_pi0resolved",
                              RequiredSelections = [ _pi0resolved ] ,
                              Algorithm = _filter_pi0resolved)
