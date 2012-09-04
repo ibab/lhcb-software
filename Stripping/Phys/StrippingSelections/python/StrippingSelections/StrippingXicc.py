@@ -235,6 +235,11 @@ class XiccBuilder(LineBuilder) :
         self.dauK  = filterKaons(name+'FilteredKaons')
         self.dauP  = filterProtons(name+'FilteredProtons')
 
+        # Optionally, apply additional ghost-prob filtering:
+        self.dauPi_GP = filterGhosts(name+'FilteredPionsGP', self.dauPi)
+        self.dauK_GP = filterGhosts(name+'FilteredKaonsGP', self.dauK)
+        self.dauP_GP = filterGhosts(name+'FilteredProtonsGP', self.dauP)
+
         # Pick up standard Lambdac -> p K- pi+ then filter it to reduce rate:
         self.filterLc = makeLc(name+'FilterLc')
         self.filterLcForControl = filterLcForControl(name+'FilterLcForControl', self.filterLc)
@@ -303,16 +308,19 @@ class XiccBuilder(LineBuilder) :
 
 
         # Combine D0 with a K, a p and a pi to make a Xicc+ or Xicc++:
+        # NB 5-body decays (#8) have the ghost prob cut applied
         self.combineXicc7 = makeXicc(name+'CombineXicc7', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc+ -> D0 p+ K- pi+]cc', _strCutComb, _strCutMoth4)
-        self.combineXicc8 = makeXicc(name+'CombineXicc8', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc++ -> D0 p+ K- pi+ pi+]cc', _strCutComb, _strCutMoth4)
+        self.combineXicc8 = makeXicc(name+'CombineXicc8', [ self.dzero, self.dauP_GP, self.dauK_GP, self.dauPi_GP ], '[Xi_cc++ -> D0 p+ K- pi+ pi+]cc', _strCutComb, _strCutMoth4)
 
         ## Construct charge violating combinations.
+        ## NB 5-body decays (#8) have the ghost prob cut applied
         self.combineXicc7WC = makeXicc(name+'CombineXicc7WC', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc+ -> D0 p+ K- pi-]cc', _strCutComb, _strCutMoth4)
-        self.combineXicc8WC = makeXicc(name+'CombineXicc8WC', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc++ -> D0 p+ K- pi+ pi-]cc', _strCutComb, _strCutMoth4)
+        self.combineXicc8WC = makeXicc(name+'CombineXicc8WC', [ self.dzero, self.dauP_GP, self.dauK_GP, self.dauPi_GP ], '[Xi_cc++ -> D0 p+ K- pi+ pi-]cc', _strCutComb, _strCutMoth4)
 
         ## Construct DCS combinations (background modelling check)
+        ## NB 5-body decays (#8) have the ghost prob cut applied
         self.combineXicc7DCS = makeXicc(name+'CombineXicc7DCS', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc+ -> D0 p+ K+ pi-]cc', _strCutComb, _strCutMoth4)
-        self.combineXicc8DCS = makeXicc(name+'CombineXicc8DCS', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc++ -> D0 p+ K+ pi+ pi-]cc', _strCutComb, _strCutMoth4)
+        self.combineXicc8DCS = makeXicc(name+'CombineXicc8DCS', [ self.dzero, self.dauP_GP, self.dauK_GP, self.dauPi_GP ], '[Xi_cc++ -> D0 p+ K+ pi+ pi-]cc', _strCutComb, _strCutMoth4)
 
 
         # Combine Xic0/+ with pion(s) to make Xicc+, Xicc++
@@ -671,6 +679,12 @@ def filterProtons(localName, configDict = _my_immutable_config) :
                        Algorithm = _filterP,
                        RequiredSelections = [ _stdP ] )
 
+def filterGhosts(localName, inputSelection) :
+    _strCutGhost = '( TRGHOSTPROB < 0.5 )'
+    _filter = FilterDesktop(Code = _strCutGhost)
+    return Selection(localName,
+                     Algorithm = _filter,
+                     RequiredSelections = [ inputSelection ] )
 
 def filterDplus(localName, configDict = _my_immutable_config) :
     # Pick up standard input list
