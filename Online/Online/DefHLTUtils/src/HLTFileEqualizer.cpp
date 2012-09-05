@@ -888,7 +888,7 @@ int main(int argc, char **argv)
     sscanf(argv[2],"%d",&high);
     elz.m_high = high;
   }
-  fprintf(outf,"Low high options %d %d",elz.m_low,elz.m_high);
+  fprintf(outf,"Low/high options %d %d\n",elz.m_low,elz.m_high);
   ExclInfo exclInfo((char*)"HLT/ExcludedNodes",&elz.m_exclNodes);
   DimInfo *defstate=new DimInfo("RunInfo/LHCb/DeferHLT",m_DefState);
   elz.m_DefStateInfo = defstate;
