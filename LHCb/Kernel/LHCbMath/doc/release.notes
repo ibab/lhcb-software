@@ -6,6 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-09-05 - Vanya Belyaev
+
+ - fix the bugg in Bugg23L function
+   many thanks to Liming Zhang! 
+
+ - add Gounaris-Sakurai function 
+
 ! 2012-08-23 - Vanya Belyaev
  - access amplitudes 
 

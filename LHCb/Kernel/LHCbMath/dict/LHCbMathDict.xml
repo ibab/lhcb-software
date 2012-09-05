@@ -51,6 +51,7 @@
   <class name    = "Gaudi::Math::BW23L"                   />
   <class name    = "Gaudi::Math::Voigt"                   />
   <class name    = "Gaudi::Math::Flatte23L"               />
+  <class name    = "Gaudi::Math::Gounaris23L"             />
   <class name    = "Gaudi::Math::BreitWigner">
     <field name = "m_rho_fun" transient = "true"/>      
   </class>

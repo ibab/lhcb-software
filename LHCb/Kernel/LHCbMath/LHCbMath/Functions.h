@@ -2386,6 +2386,126 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Gounaris23L 
+     *  parametrisation of rho0 for
+     *  two pion mass distribution from three body decays 
+     *
+     *  G.J.Gounaris and J.J.Sakurai, 
+     *  "Finite width corrections to the vector meson dominance
+     *  predictions for \f$\rho\rightarrow e^+e^-\f$",
+     *  Phys.Rev.Lett. 21 (1968) 244 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-01
+     */
+    class GAUDI_API Gounaris23L 
+      : public std::unary_function<double,double>     
+    {
+    public:
+      // ======================================================================
+      /** constructor from all masses and angular momenta 
+       *  @param M  mass of rho
+       *  @param g0 width parameter 
+       *  @param m1 the mass of the first  particle (the same as the second)
+       *  @param m3 the mass of the third  particle 
+       *  @param m  the mass of the mother particle (m>m1+m2+m3)
+       *  @param L  the angular momentum between the first pair and the third 
+       */
+      Gounaris23L ( const double         M  = 0.770         ,  // GeV  
+                    const double         g0 = 0.150         ,  // GeV 
+                    const double         m1 =  139.6 / 1000 ,  // MeV
+                    const double         m3 = 3097.0 / 1000 ,  // MeV 
+                    const double         m  = 5278.0 / 1000 ,  // MeV 
+                    const unsigned short L  =    1          ) ;
+      /// destructor 
+      ~Gounaris23L () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate the Gounaris-Sakurai shape
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the amlitude  (not normalized!)
+      std::complex<double> amplitude (  const double x ) const ;
+      /// get the phase space factor (taking into account L)
+      double phaseSpace ( const double x ) const { return m_ps  ( x ) ; }
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      // phase space variables
+      // ====================================================================== 
+      double m1        () const { return m_ps.m1 () ; }
+      double m2        () const { return m_ps.m2 () ; }      
+      double m3        () const { return m_ps.m3 () ; }      
+      double m         () const { return m_ps.m  () ; }      
+      // ======================================================================
+      double lowEdge   () const { return m_ps. lowEdge() ; }
+      double highEdge  () const { return m_ps.highEdge() ; }
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// get h-factor 
+      double h       ( const double x ) const ;
+      /// get h-factor 
+      double h       ( const double x , const double k ) const ;
+      /// get h'-factor 
+      double h_prime ( const double x ) const ;
+      /// get h'-factor 
+      double h_prime ( const double x , const double k ) const ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      // Gounaris & Sakurai variables 
+      // ====================================================================== 
+      double M      () const  { return m_M     ; }
+      double m0     () const  { return   M  () ; }
+      double mass   () const  { return   M  () ; }
+      double peak   () const  { return   M  () ; }
+      // ====================================================================== 
+      double g0     () const  { return m_g0    ; }
+      double gamma  () const  { return   g0 () ; }
+      double width  () const  { return   g0 () ; }
+      // ====================================================================== 
+      bool setM     ( const double value  ) ;
+      bool setM0    ( const double value  ) { return setM  ( value ) ; }
+      bool setMass  ( const double value  ) { return setM  ( value ) ; }
+      bool setPeak  ( const double value  ) { return setM  ( value ) ; }
+      // ====================================================================== 
+      bool setG0    ( const double value  ) ;
+      bool setGamma ( const double value  ) { return setG0 ( value ) ; }
+      bool setWidth ( const double value  ) { return setG0 ( value ) ; }
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      /// get the integral 
+      double integral () const ;
+      /// get the integral between low and high limits 
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      //  Gounaris and Sakurai variables 
+      // ======================================================================
+      /// mass of rho
+      double m_M  ; // mass of sigma (very different from the pole positon!)
+      /// width parameter 
+      double m_g0 ; // width parameter 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// phase space 
+      Gaudi::Math::PhaseSpace23L m_ps         ; // phase space 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace 
+      Gaudi::Math::WorkSpace     m_workspace  ;    // integration workspace 
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
 } //                                                     end of namespace Gaudi
