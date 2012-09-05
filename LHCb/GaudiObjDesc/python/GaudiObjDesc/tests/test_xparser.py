@@ -73,27 +73,6 @@ def test_instantiate():
     parser = xparser.xparser(dtdPath)
     assert parser
 
-# FIXME: The parsing of the database cannot work!!!
-def _test_parsedb_1():
-    tmp = TempDir({'test.xml':
-'''<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE gdd SYSTEM "gdd.dtd" >
-<gdd>
-  <class name="Class1" file="some/file.h"/>
-</gdd>
-''',
-                   })
-    dbfile = tmp('test.xml')
-
-    parser = xparser.xparser(dtdPath)
-
-    try:
-        data = parser.parseDB(dbfile)
-    except SystemExit:
-        assert False, 'sys.exit() called'
-
-    assert data == {'Class1': 'some/file.h'}
-
 
 def test_parse_minimal():
     tmp = TempDir({'test.xml':
