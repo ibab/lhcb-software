@@ -4,6 +4,9 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+
+!========================= HltSettings v5r44 2012-09-05 =========================
 ! 2012-09-04 - Johannes Albrecht
  - add Hlt2PTransparent to pA settings 
 
