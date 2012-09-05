@@ -878,13 +878,17 @@ int main(int argc, char **argv)
   DimServer::start("HLTFileEqualizer");
   DimServer::autoStartOn();
   int low,high;
-  if (argc == 3)
+  if (argc > 1)
   {
     sscanf(argv[1],"%d",&low);
-    sscanf(argv[2],"%d",&high);
     elz.m_low = low;
+  }
+  if (argc > 2)
+  {
+    sscanf(argv[2],"%d",&high);
     elz.m_high = high;
   }
+  fprintf(outf,"Low high options %d %d",elz.m_low,elz.m_high);
   ExclInfo exclInfo((char*)"HLT/ExcludedNodes",&elz.m_exclNodes);
   DimInfo *defstate=new DimInfo("RunInfo/LHCb/DeferHLT",m_DefState);
   elz.m_DefStateInfo = defstate;
