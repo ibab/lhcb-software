@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+!========================= Hlt2Lines v8r26 2012-09-05 =========================
+! 2012-09-05 - E. van Herwijnen for M. Williams
+ - relax v0 lifetime cut
+
 !========================= Hlt2Lines v8r25 2012-08-30 =========================
 ! 2012-08-29 - C. Thomas
  - Added ppbar and low-mass resonance lines to Hlt2CEPLines
