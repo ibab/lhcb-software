@@ -108,7 +108,11 @@ def test_parse_minimal():
                                                  'stdVectorTypeDef': 'FALSE',
                                                  'virtual': 'TRUE'}}]}]}
 
+    print "Expected:"
+    pprint(expected)
+    print "\nData:"
     pprint(data)
+
     assert data == expected
 
 def test_parse_comment():
@@ -146,7 +150,11 @@ def test_parse_comment():
                                                  'stdVectorTypeDef': 'FALSE',
                                                  'virtual': 'TRUE'}}]}]}
 
+    print "Expected:"
+    pprint(expected)
+    print "\nData:"
     pprint(data)
+
     assert data == expected
 
 
@@ -253,6 +261,113 @@ def test_parse_method():
                                                              u'virtual': u'FALSE'},
                                                    'code': [{'attrs': {'xml:space': 'preserve'},
                                                              'cont': '\n        // here goes the code\n        '}]}]}]}]}
+
+    print "Expected:"
+    pprint(expected)
+    print "\nData:"
+    pprint(data)
+
+    assert data == expected
+
+def test_parse_method_comment():
+    tmp = TempDir({'test.xml':
+'''<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="SomePackage">
+    <class name="Class1" author="Somebody" desc="Test class.">
+      <method name="doSomething" desc="a method">
+        <code>
+        // here goes the code
+        <!-- comment -->
+        // other code
+        </code>
+      </method>
+    </class>
+  </package>
+</gdd>
+'''})
+
+    dbfile = tmp('test.xml')
+
+    parser = xparser.xparser(dtdPath)
+
+    try:
+        data = parser.parseSource(dbfile)
+    except SystemExit:
+        assert False, 'sys.exit() called'
+
+    expected = {'attrs': {'version': '1.0'},
+                'package': [{'attrs': {'name': 'SomePackage'},
+                            'class': [{'attrs': {'allocator': 'DEFAULT',
+                                                 'author': 'Somebody',
+                                                 'contObjectTypeDef': 'FALSE',
+                                                 'defaultconstructor': 'TRUE',
+                                                 'defaultdestructor': 'TRUE',
+                                                 'desc': 'Test class.',
+                                                 'keyedContTypeDef': 'FALSE',
+                                                 'name': 'Class1',
+                                                 'serializers': 'TRUE',
+                                                 'stdVectorTypeDef': 'FALSE',
+                                                 'virtual': 'TRUE'},
+                                       'method': [{'attrs': {u'access': u'PUBLIC',
+                                                             u'const': u'FALSE',
+                                                             u'desc': u'a method',
+                                                             u'friend': u'FALSE',
+                                                             u'inline': u'FALSE',
+                                                             u'name': u'doSomething',
+                                                             u'static': u'FALSE',
+                                                             u'type': u'void',
+                                                             u'virtual': u'FALSE'},
+                                                   'code': [{'attrs': {'xml:space': 'preserve'},
+                                                             'cont': '\n        // here goes the code\n        \n        // other code\n        '}]}]}]}]}
+
+    print "Expected:"
+    pprint(expected)
+    print "\nData:"
+    pprint(data)
+
+    assert data == expected
+
+def test_parse_DataObject():
+    tmp = TempDir({'test.xml':
+'''<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="SomePackage">
+    <class name="Class1" author="Somebody" desc="Test class.">
+      &DataObject;
+    </class>
+  </package>
+</gdd>
+'''})
+
+    dbfile = tmp('test.xml')
+
+    parser = xparser.xparser(dtdPath)
+
+    try:
+        data = parser.parseSource(dbfile)
+    except SystemExit:
+        assert False, 'sys.exit() called'
+
+    expected = {'attrs': {'version': '1.0'},
+                'package': [{'attrs': {'name': 'SomePackage'},
+                            'class': [{'attrs': {'allocator': 'DEFAULT',
+                                                 'author': 'Somebody',
+                                                 'contObjectTypeDef': 'FALSE',
+                                                 'defaultconstructor': 'TRUE',
+                                                 'defaultdestructor': 'TRUE',
+                                                 'desc': 'Test class.',
+                                                 'keyedContTypeDef': 'FALSE',
+                                                 'name': 'Class1',
+                                                 'serializers': 'TRUE',
+                                                 'stdVectorTypeDef': 'FALSE',
+                                                 'virtual': 'TRUE'},
+                                       'template': [{'attrs': {'name': 'SmartRef',
+                                                               't1': 'THIS'}},
+                                                    {'attrs': {'name': 'SmartRefVector',
+                                                               't1': 'THIS'}}]}]}]}
 
     print "Expected:"
     pprint(expected)

@@ -10,6 +10,7 @@
  - Added a special target to just generate all the headers files (AllObj2doth).
  - Added tests for the XML parser.
  - Removed some dead code: parsing of GODsClassDB.xml (not supported by DTD).
+ - Added test for entities and comment handling in xparser.
 
 ! 2012-08-01 - Marco Clemencic
  - Added the possibility to set the allocator to 'ORDERED' on the command line.
