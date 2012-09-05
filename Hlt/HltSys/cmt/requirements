@@ -5,7 +5,7 @@ branches cmt doc
 
 use Hlt1Lines           v6r27   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
 use Hlt1Muons           v1r5    Hlt   # Roel Aaij
-use Hlt2Lines           v8r25   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
+use Hlt2Lines           v8r26   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
 use Hlt2SharedParticles v6r12   Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v12r3   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v3r0    Hlt   # Plamen Hopchev
@@ -21,7 +21,7 @@ use HltMonitor          v1r1    Hlt   # Roel Aaij
 use HltRawData          v2r11   Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r14   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v12r1p1 Hlt   # Patrick Koppenburg
-use HltSettings         v5r43   Hlt   # Parick Koppenburg, Gerhard Raven
+use HltSettings         v5r44   Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
 use HltTracking         v9r25   Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r11   Hlt   # Gerhard Raven
