@@ -195,7 +195,7 @@ class B2XMuMuConf(LineBuilder) :
         # Bd2KstartMuMu cuts definitions
         self.BdCombCut = "(AM > %(B_Comb_MassLow)s * MeV) & (AM < %(B_Comb_MassHigh)s * MeV)" %config
 
-        self.BdCut = "(SUMQ < 3) & " \
+        self.BdCut = "(abs(SUMQ) < 3) & " \
                      "(M > %(B_MassLow)s * MeV) & " \
                      "(M < %(B_MassHigh)s * MeV) & " \
                      "(VFASPF(VCHI2/VDOF) < %(B_VertexCHI2)s) & " \

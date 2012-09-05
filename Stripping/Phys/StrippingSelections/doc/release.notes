@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-05 - Thomas Blake
+ - Fixed bug in B2XMuMu that was introduced with other changes.
+
 ! 2012-09-04 - Mat Charles
  - Add GhostProb cut to 5-body lines in StrippingXicc.py
 
