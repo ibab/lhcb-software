@@ -4,7 +4,6 @@ Test that tools can be instantiated standalone from the tool service.
 '''
 
 tools = { 'Bd2KstarMuMuAngleCalculator' : 'IP2VVPartAngleCalculator',
-          'BremAdder' : 'IBremAdder',
           'Bs2JpsiPhiAngleCalculator' : 'IP2VVPartAngleCalculator',
           'CheckOverlap' : 'ICheckOverlap',
           'CheckSelResultsTool' : 'ICheckSelResults',
@@ -15,7 +14,6 @@ tools = { 'Bd2KstarMuMuAngleCalculator' : 'IP2VVPartAngleCalculator',
           'NeutralCCChangePIDTool' : 'IChangePIDTool',
           'GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_' : 'IRelatedPVFinder',
           'GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_' : 'IRelatedPVFinder',
-#          'OnOfflineTool' : 'IOnOffline',
           'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_' : 'IRelatedPVFinder',
           'GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_' : 'IRelatedPVFinder',
           'P2VVAngleCalculator' : 'IP2VVAngleCalculator',

@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-09-05 - Chris Jones
+ - Remove BremAdder from test_instantiate_tools.py. This tool now requires the
+   MagneticFieldService, so cannot be instanciated 'standalone'.
+
 !========================= DaVinciTools v23r2 2012-07-26 =========================
 
 ! 2012-07-23 - Chris Jones
