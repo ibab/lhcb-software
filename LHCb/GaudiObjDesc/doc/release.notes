@@ -5,6 +5,9 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2012-09-05 - Marco Clemencic
+ - Added CMake configuration and module (to be used by other packages).
+
 ! 2012-08-01 - Marco Clemencic
  - Added the possibility to set the allocator to 'ORDERED' on the command line.
  - Minor improvements to the command line option test.
