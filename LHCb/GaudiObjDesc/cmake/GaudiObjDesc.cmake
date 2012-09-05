@@ -71,6 +71,13 @@ function(god_build_headers)
   # - for the current one
   set(required_local_genheader_targets ${package}Obj2doth PARENT_SCOPE)
 
+  # Create a global target for all the obj2doth targets
+  if(TARGET AllObj2doth)
+    add_dependencies(AllObj2doth ${package}Obj2doth)
+  else()
+    add_custom_target(AllObj2doth DEPENDS ${package}Obj2doth)
+  endif()
+
   gaudi_install_headers(${dest})
 endfunction()
 
