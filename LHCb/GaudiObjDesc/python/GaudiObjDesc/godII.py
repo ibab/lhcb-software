@@ -57,6 +57,8 @@ class godII(object):
         self.opts, self.args = self._parser.parse_args(args)
         self._log = logging.getLogger(self._parser.get_prog_name())
 
+        logging.basicConfig(level=logging.INFO)
+
         # check options
         if self.opts.dtd == '':
             self._parser.error("invalid value for option -t (--dtd)")

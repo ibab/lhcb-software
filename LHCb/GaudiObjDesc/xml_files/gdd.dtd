@@ -84,20 +84,20 @@
         def              CDATA                             #REQUIRED
         access           (PUBLIC | PROTECTED | PRIVATE)    "PRIVATE"
 >
-<!ELEMENT constructor (arg*, code?, arg*)>
+<!ELEMENT constructor (arg*, code?)>
 <!ATTLIST constructor
         desc             CDATA                             #REQUIRED
         argList          CDATA                             #IMPLIED
         initList         CDATA                             #IMPLIED
         explicit         (TRUE | FALSE)                    "FALSE"
 >
-<!ELEMENT destructor (arg*, code?, arg*)>
+<!ELEMENT destructor (arg*, code?)>
 <!ATTLIST destructor
         desc             CDATA                             #REQUIRED
         argList          CDATA                             #IMPLIED
         virtual          (TRUE | FALSE)                    "FALSE"
 >
-<!ELEMENT method ((arg*, return?, arg*, code?, arg*) | (arg*, code?, arg*, return?, arg*))>
+<!ELEMENT method (arg*, return?, code?)>
 <!ATTLIST method
         name             CDATA                             #REQUIRED
         desc             CDATA                             #REQUIRED
