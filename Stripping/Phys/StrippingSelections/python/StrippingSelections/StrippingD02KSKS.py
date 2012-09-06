@@ -10,7 +10,7 @@ Exported symbols (use python help!):
     - D02KSKSConf
 """
 
-__author__ = ['Markward Britsch']
+__author__ = ['Markward Britsch','Marianna Fontana']
 __date__ = '31/07/2012'
 __version__ = 'Stripping20'
 __all__ = 'D02KSKSConf'
@@ -35,8 +35,10 @@ default_config = {'D0_MassWindowBeforeFit'          : 150.0, # D0 mass window cu
                   'D0_DOCA_DD'                      : 4.0, # DOCA cut in mm for D0->KSLL KSDD and D0->KSDD KSDD
                   'KS_LL_nu2prime'                  : 0.0, # nu'_2 = log((piplus_BPVIPCHI2*piminus_BPVIPCHI2)/(KS0_BPVIPCHI2^2 + KS0_DOCAMAX^2)), preselection cut for KsLL
                   'KS_LL_signedFLchi2'              : 50.0, # KsLL siged flight length chi2 preselection cut
+		  'KS_LL_TRGHOSTPROB'		    : 1.0,		# Track ghost probability KSLL
                   'KS_DD_nu2prime'                  : 0.0, # nu'_2, preselection cut for KsLL
                   'KS_DD_signedFLchi2'              : 50.0, # KsDD siged flight length chi2 preselection cut
+ 		  'KS_DD_TRGHOSTPROB'		    : 1.0,		# Track ghost probability KSDD
                   
                   'D0_vertexChi2_LL'                : 20.0, # D0LL reduced vertex chi2 cut
                   'D0_IPchi2_LL'                    : 50.0, # D0LL IP chi2 cut
@@ -56,6 +58,15 @@ default_config = {'D0_MassWindowBeforeFit'          : 150.0, # D0 mass window cu
                   'slowPi_IPchi2_LL'                : 40.0, # slow pi IP chi2 cut for LL
                   'slowPi_IPchi2_LD'                : 40.0, # slow pi IP chi2 cut for LD
                   'slowPi_IPchi2_DD'                : 40.0, # slow pi IP chi2 cut for DD
+	
+	 	  'slowPi_LLL_TRGHOSTPROB'	    : 1.0,  # Track ghost probability slow pi LL
+	 	  'slowPi_LDL_TRGHOSTPROB'	    : 1.0,  # Track ghost probability slow pi LD
+	 	  'slowPi_DDL_TRGHOSTPROB'	    : 1.0,  # Track ghost probability slow pi DD
+	
+	 	  'slowPi_LLU_TRGHOSTPROB'	    : 1.0,  # Track ghost probability slow pi LL
+	 	  'slowPi_LDU_TRGHOSTPROB'	    : 1.0,  # Track ghost probability slow pi LD
+	 	  'slowPi_DDU_TRGHOSTPROB'	    : 1.0,  # Track ghost probability slow pi DD
+	
                   'Dst_mass_LL'                     : 200, # mass window on D* cut LL in MeV
                   'Dst_mass_LD'                     : 200, # mass window on D* cut LD in MeV
                   'Dst_mass_DD'                     : 200, # mass window on D* cut DD in MeV
@@ -150,8 +161,10 @@ class D02KSKSConf(LineBuilder) :
                               'D0_DOCA_DD',
                               'KS_LL_nu2prime',
                               'KS_LL_signedFLchi2',
+			      'KS_LL_TRGHOSTPROB',
                               'KS_DD_nu2prime',
                               'KS_DD_signedFLchi2',
+			      'KS_DD_TRGHOSTPROB',
                               'D0_vertexChi2_LL',
                               'D0_IPchi2_LL',
                               'D0_KS_signedFLchi2_LL', # signed flight length of the Ks
@@ -167,6 +180,12 @@ class D02KSKSConf(LineBuilder) :
                               'slowPi_IPchi2_LL', # slow pi IP chi2 cut for LL
                               'slowPi_IPchi2_LD', # slow pi IP chi2 cut for LD
                               'slowPi_IPchi2_DD', # slow pi IP chi2 cut for DD
+			      'slowPi_LLL_TRGHOSTPROB', 
+      			      'slowPi_LDL_TRGHOSTPROB',
+      			      'slowPi_DDL_TRGHOSTPROB',
+      			      'slowPi_LLU_TRGHOSTPROB', 
+      			      'slowPi_LDU_TRGHOSTPROB',
+      			      'slowPi_DDU_TRGHOSTPROB',  
                               'Dst_mass_LL', # mass window on D* cut LL
                               'Dst_mass_LD', # mass window on D* cut LD
                               'Dst_mass_DD', # mass window on D* cut DD
@@ -362,7 +381,10 @@ class D02KSKSConf(LineBuilder) :
         #_mass_cut = "(ADMASS('KS0')<%s*MeV)" % config['KS_LL_MASS']
         _nu2prime_cut = "(log((CHILD(BPVIPCHI2(),1)*CHILD(BPVIPCHI2(),2))/(BPVIPCHI2()*BPVIPCHI2() + DOCAMAX*DOCAMAX)) > %s)" % config['KS_LL_nu2prime'] # 0
         _signedFLchi2_cut = "(BPVLTSIGNCHI2('PropertimeFitter/properTime:PUBLIC') > %s)" % config['KS_LL_signedFLchi2'] # 50
-        _allCuts = _nu2prime_cut + "&" + _signedFLchi2_cut
+        _trghost_cut1 = "(CHILD(TRGHOSTPROB, 1) <=%s )" % config['KS_LL_TRGHOSTPROB']
+        _trghost_cut2 = "(CHILD(TRGHOSTPROB, 2) <=%s )" % config['KS_LL_TRGHOSTPROB']
+	
+	_allCuts = _nu2prime_cut + "&" + _signedFLchi2_cut + "&" + _trghost_cut1 + "&" + _trghost_cut2
         
         ## make the filter
         _filterKSLL = FilterDesktop( Code = _allCuts )
@@ -412,7 +434,10 @@ class D02KSKSConf(LineBuilder) :
 #        _allCuts = _doca_cut + "&" + _mass_cut
         _nu2prime_cut = "(log((CHILD(BPVIPCHI2(),1)*CHILD(BPVIPCHI2(),2))/(BPVIPCHI2()*BPVIPCHI2() + DOCAMAX*DOCAMAX)) > %s)" % config['KS_DD_nu2prime'] # 0
         _signedFLchi2_cut = "(BPVLTSIGNCHI2('PropertimeFitter/properTime:PUBLIC') > %s)" % config['KS_DD_signedFLchi2'] # 50
-        _allCuts = _nu2prime_cut + "&" + _signedFLchi2_cut
+        _trghost_cut1 = "(CHILD(TRGHOSTPROB, 1) <=%s )" % config['KS_DD_TRGHOSTPROB']
+        _trghost_cut2 = "(CHILD(TRGHOSTPROB, 2) <=%s )" % config['KS_DD_TRGHOSTPROB']
+	
+	_allCuts = _nu2prime_cut + "&" + _signedFLchi2_cut + "&" + _trghost_cut1 + "&" + _trghost_cut2
 
         # make the filter
         _filterKSDD = FilterDesktop( Code = _allCuts )
@@ -545,7 +570,8 @@ class D02KSKSConf(LineBuilder) :
         config           : config dictionary
         """
 
-        _daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_LL'] # 40
+        #_daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_LL'] # 40
+        _daughterCuts = "(TRGHOSTPROB <=%s )" % config['slowPi_LLL_TRGHOSTPROB']
         
         _vertexChi2_cut = "(VFASPF(VCHI2/VDOF) < %s)" % config['Dst_vertexChi2_LL'] # 40
 
@@ -560,7 +586,7 @@ class D02KSKSConf(LineBuilder) :
         #_D.DecayDescriptors = [ "[D*(2010)+ -> D0 pi+]cc" ]
         _D.DecayDescriptors = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
         
-        #_D.DaughtersCuts = { "pi+" : _daughterCuts }
+        _D.DaughtersCuts = { "pi+" : _daughterCuts }
         _D.CombinationCut = _combCuts #+  " & " + ? # _cut_prob_BCC
         _D.MotherCut = _motherCuts
 
@@ -574,8 +600,9 @@ class D02KSKSConf(LineBuilder) :
         config           : config dictionary
         """
 
-        _daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_LL'] # 40
-        
+        #_daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_LL'] # 40
+        _daughterCuts = "(TRGHOSTPROB <=%s )" % config['slowPi_LLU_TRGHOSTPROB']
+
         _vertexChi2_cut = "(VFASPF(VCHI2/VDOF) < %s)" % config['Dst_vertexChi2_LL'] # 40
 
         _combCuts  = "(ADAMASS('D*(2010)+') < %s*MeV)" % config['Dst_mass_LL'] # 200
@@ -589,7 +616,7 @@ class D02KSKSConf(LineBuilder) :
         #_D.DecayDescriptors = [ "[D*(2010)+ -> D0 pi+]cc" ]
         _D.DecayDescriptors = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
         
-        #_D.DaughtersCuts = { "pi+" : _daughterCuts }
+        _D.DaughtersCuts = { "pi+" : _daughterCuts }
         _D.CombinationCut = _combCuts #+  " & " + ? # _cut_prob_BCC
         _D.MotherCut = _motherCuts
 
@@ -603,7 +630,8 @@ class D02KSKSConf(LineBuilder) :
         config           : config dictionary
         """
 
-        _daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_LD'] # 40
+        #_daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_LD'] # 40
+        _daughterCuts = "(TRGHOSTPROB <=%s )" % config['slowPi_LDL_TRGHOSTPROB']
         
         _vertexChi2_cut = "(VFASPF(VCHI2/VDOF) < %s)" % config['Dst_vertexChi2_LD'] # 40
 
@@ -618,7 +646,7 @@ class D02KSKSConf(LineBuilder) :
         #_D.DecayDescriptors = [ "[D*(2010)+ -> D0 pi+]cc" ]
         _D.DecayDescriptors = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
         
-        #_D.DaughtersCuts = { "pi+" : _daughterCuts }
+        _D.DaughtersCuts = { "pi+" : _daughterCuts }
         _D.CombinationCut = _combCuts #+  " & " + ? # _cut_prob_BCC
         _D.MotherCut = _motherCuts
 
@@ -632,7 +660,9 @@ class D02KSKSConf(LineBuilder) :
         config           : config dictionary
         """
 
-        _daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_LD'] # 40
+        #_daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_LD'] # 40
+        _daughterCuts = "(TRGHOSTPROB <=%s )" % config['slowPi_LDU_TRGHOSTPROB']
+
         
         _vertexChi2_cut = "(VFASPF(VCHI2/VDOF) < %s)" % config['Dst_vertexChi2_LD'] # 40
 
@@ -647,7 +677,7 @@ class D02KSKSConf(LineBuilder) :
         #_D.DecayDescriptors = [ "[D*(2010)+ -> D0 pi+]cc" ]
         _D.DecayDescriptors = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
         
-        #_D.DaughtersCuts = { "pi+" : _daughterCuts }
+        _D.DaughtersCuts = { "pi+" : _daughterCuts }
         _D.CombinationCut = _combCuts #+  " & " + ? # _cut_prob_BCC
         _D.MotherCut = _motherCuts
 
@@ -661,7 +691,8 @@ class D02KSKSConf(LineBuilder) :
         config           : config dictionary
         """
 
-        _daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_DD'] # 40
+        #_daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_DD'] # 40
+        _daughterCuts = "(TRGHOSTPROB <=%s )" % config['slowPi_DDL_TRGHOSTPROB']
         
         _vertexChi2_cut = "(VFASPF(VCHI2/VDOF) < %s)" % config['Dst_vertexChi2_DD'] # 40
 
@@ -676,7 +707,7 @@ class D02KSKSConf(LineBuilder) :
         #_D.DecayDescriptors = [ "[D*(2010)+ -> D0 pi+]cc" ]
         _D.DecayDescriptors = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
         
-        #_D.DaughtersCuts = { "pi+" : _daughterCuts }
+        _D.DaughtersCuts = { "pi+" : _daughterCuts }
         _D.CombinationCut = _combCuts #+  " & " + ? # _cut_prob_BCC
         _D.MotherCut = _motherCuts
 
@@ -690,7 +721,8 @@ class D02KSKSConf(LineBuilder) :
         config           : config dictionary
         """
 
-        _daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_DD'] # 40
+        #_daughterCuts = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_DD'] # 40
+        _daughterCuts = "(TRGHOSTPROB <=%s )" % config['slowPi_DDU_TRGHOSTPROB']
         
         _vertexChi2_cut = "(VFASPF(VCHI2/VDOF) < %s)" % config['Dst_vertexChi2_DD'] # 40
 
@@ -705,7 +737,7 @@ class D02KSKSConf(LineBuilder) :
         #_D.DecayDescriptors = [ "[D*(2010)+ -> D0 pi+]cc" ]
         _D.DecayDescriptors = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
         
-        #_D.DaughtersCuts = { "pi+" : _daughterCuts }
+        _D.DaughtersCuts = { "pi+" : _daughterCuts }
         _D.CombinationCut = _combCuts #+  " & " + ? # _cut_prob_BCC
         _D.MotherCut = _motherCuts
 

@@ -8,7 +8,7 @@ Exported symbols (use python help!):
     - Bs2KSKSConf
 """
 
-__author__ = ['Markward Britsch']
+__author__ = ['Markward Britsch','Marianna Fontana']
 __date__ = '18/06/2012'
 __version__ = 'Stripping19b'
 __all__ = 'Bs2KSKSConf'
@@ -35,6 +35,8 @@ default_config = {'MVA_LL_PROBABILITY_CUT_BCC'         : 0.5, # MVA probability 
                   'KS_DD_MASS'                  :100.0,           # KSDD mass window cut in MeV
                   'KS_LL_DOCA'                  :1.0,           # DoCA cut in mm
                   'KS_DD_DOCA'                  :4.0,           # DoCA cut in mm
+		  'KS_LL_TRGHOSTPROB'		:1.0,		# Track ghost probability KSLL
+  		  'KS_DD_TRGHOSTPROB'		:1.0,		# Track ghost probability KSDD
 ##################################################
                   'B_MassWindow'                  : 600.0, # B mass window cut in MeV _this_is_where_we_can_reduce_the_retention_rate_ if needed 
                   'B_DOCA_LL'                      : 1.0, # DOCA cut in mm for Bs->KSLL KSLL
@@ -86,6 +88,8 @@ class Bs2KSKSConf(LineBuilder) :
                               'KS_DD_MASS',
                               'KS_LL_DOCA',
                               'KS_DD_DOCA',
+			      'KS_LL_TRGHOSTPROB',
+     			      'KS_DD_TRGHOSTPROB',
                               'B_MassWindow',
                               'B_DOCA_LL',
                               'B_DOCA_DD',
@@ -195,7 +199,10 @@ class Bs2KSKSConf(LineBuilder) :
         #_allCuts = "(DOCAMAX < 1.0*mm)  & (ADMASS('KS0')<50*MeV)"
         _doca_cut = "(DOCAMAX < %s*mm)" % config['KS_LL_DOCA']
         _mass_cut = "(ADMASS('KS0')<%s*MeV)" % config['KS_LL_MASS']
-        _allCuts = _doca_cut + "&" + _mass_cut
+        _trghost_cut1 = "(CHILD(TRGHOSTPROB, 1) <=%s )" % config['KS_LL_TRGHOSTPROB']
+        _trghost_cut2 = "(CHILD(TRGHOSTPROB, 2) <=%s )" % config['KS_LL_TRGHOSTPROB']
+	
+        _allCuts = _doca_cut + "&" + _mass_cut + "&" + _trghost_cut1 + "&" + _trghost_cut2
 
         ## make the filter
         _filterKSLL = FilterDesktop( Code = _allCuts )
@@ -242,7 +249,10 @@ class Bs2KSKSConf(LineBuilder) :
 #        _allCuts = "(DOCAMAX<4.0*mm) & (ADMASS('KS0')<100*MeV)" 
         _doca_cut = "(DOCAMAX < %s*mm)" % config['KS_DD_DOCA']
         _mass_cut = "(ADMASS('KS0')<%s*MeV)" % config['KS_DD_MASS']
-        _allCuts = _doca_cut + "&" + _mass_cut
+        _trghost_cut1 = "(CHILD(TRGHOSTPROB, 1) <=%s )" % config['KS_DD_TRGHOSTPROB']
+        _trghost_cut2 = "(CHILD(TRGHOSTPROB, 2) <=%s )" % config['KS_DD_TRGHOSTPROB']
+	
+        _allCuts = _doca_cut + "&" + _mass_cut + "&" + _trghost_cut1 + "&" + _trghost_cut2
 
         # make the filter
         _filterKSDD = FilterDesktop( Code = _allCuts )
