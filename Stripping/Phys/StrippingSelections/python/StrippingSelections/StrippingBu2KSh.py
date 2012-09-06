@@ -22,7 +22,7 @@ from Beauty2Charm_LoKiCuts import LoKiCuts
 
 from StandardParticles import StdNoPIDsPions as Pions
 
-default_config = { 'KSDaug_LTrk_GhostProb'   : 1.0,
+default_config = { 'KSDaug_LTrk_GhostProb'   : 0.5,
                    'Trk_GhostProb'           : 0.5,
                    'Trk_Chi2'                : 3.0,
                    'KS_DD_MassWindow'        : 30.0,

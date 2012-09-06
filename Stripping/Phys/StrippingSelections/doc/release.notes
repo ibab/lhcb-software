@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-06 - Aurelien Martens
+ - update KsH GhostProb cut value on the KSLL daughters, accroding to Tom Latham's studies
+
 ! 2012-09-06 - Fred Blanc
  - Add GhostProb cut to lines in StrippingB2CharmlessQuasi2Body.py
  - moved remaining hardcoded cut values to dictionary
