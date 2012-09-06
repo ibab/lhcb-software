@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-06 - Fred Blanc
+ - Add GhostProb cut to lines in StrippingB2CharmlessQuasi2Body.py
+ - moved remaining hardcoded cut values to dictionary
+
 ! 2012-09-05 - Thomas Blake
  - Fixed bug in B2XMuMu that was introduced with other changes.
 
