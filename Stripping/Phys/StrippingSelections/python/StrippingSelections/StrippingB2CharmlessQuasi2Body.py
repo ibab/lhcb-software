@@ -3,8 +3,8 @@ B->charmless quasi 2-body selection
 '''
 
 __author__ = ['Fred Blanc', 'Albert Puig']
-__date__ = '02/08/2012'
-__version__ = '$Revision: 2.5 $'
+__date__ = '04/09/2012'
+__version__ = '$Revision: 2.6 $'
 
 __all__ = ( 'B2Quasi2BodyConf',
             'makeDiTrackList',
@@ -12,7 +12,11 @@ __all__ = ( 'B2Quasi2BodyConf',
             'makeB2Q2B3pi' )
 
 config_params = {'Q2BPrescale'     : 1.,
+                 'Q2BTrkGhostProb' : 0.5,
+                 'Q2BTrkMinIPChi2' : 25.,
+                 'Q2BTrkMinHiPT'   : 1000.,
                  'Q2BResMinPT'     : 600.,
+                 'Q2BResMinHiPT'   : 1000.,
                  'Q2BResMaxMass'   : 1000.,
                  'Q2BResVtxChi2DOF': 9.,
                  'Q2BBMinPT'       : 2500.,
@@ -38,7 +42,11 @@ class B2Quasi2BodyConf(LineBuilder) :
     """
 
     __configuration_keys__ = ( 'Q2BPrescale',
+                               'Q2BTrkGhostProb',
+                               'Q2BTrkMinIPChi2',
+                               'Q2BTrkMinHiPT',
                                'Q2BResMinPT',
+                               'Q2BResMinHiPT',
                                'Q2BResMaxMass',
                                'Q2BResVtxChi2DOF',
                                'Q2BBMinPT',
@@ -48,16 +56,20 @@ class B2Quasi2BodyConf(LineBuilder) :
                                'Q2BBMaxCorrM',
                                'Q2BBVtxChi2DOF')
 
+    __confdict__={}
+
     def __init__(self, name, config) :
 	self.name = name
+        self.__confdict__ = config_params
         LineBuilder.__init__(self, name, config)
 
-        _trkFilter = FilterDesktop(Code = "(MIPCHI2DV(PRIMARY) > 25)")
+        _trkFilter = FilterDesktop(Code = "(MIPCHI2DV(PRIMARY) > %(Q2BTrkMinIPChi2)s) & (TRGHOSTPROB < %(Q2BTrkGhostProb)s)" % self.__confdict__ )
+
         self.TrackList = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
                                     RequiredSelections = [StdNoPIDsPions])
 
-        _trkFilter_HiP = FilterDesktop(Code = "(PT > 1000)")
+        _trkFilter_HiP = FilterDesktop(Code = "(PT > %(Q2BTrkMinHiPT)s)" % self.__confdict__ )
         self.TrackList_HiP = Selection( 'TrackList_HiP' + self.name,
                                          Algorithm = _trkFilter_HiP,
                                          RequiredSelections = [self.TrackList])
@@ -68,7 +80,7 @@ class B2Quasi2BodyConf(LineBuilder) :
                                             MaxMassCut = config['Q2BResMaxMass'],
                                             VtxChi2DOFCut = config['Q2BResVtxChi2DOF'] )
 
-        _diTrackFilter_HiPt = FilterDesktop(Code = "(PT > 1000)")
+        _diTrackFilter_HiPt = FilterDesktop(Code = "(PT > %(Q2BResMinHiPT)s)" % self.__confdict__ )
         self.DiTrackList_HiPt = Selection( 'DiTracksHiPtForCharmlessB' + self.name,
                                            Algorithm = _diTrackFilter_HiPt,
                                            RequiredSelections = [self.DiTrackList])
