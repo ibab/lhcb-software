@@ -3,6 +3,7 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
 ! 2012-09-07 - Alvaro Gomes
  - Added GhostProb to StrippingBu2hhh.py
 
