@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2012-09-07 - Alvaro Gomes
+ - Added GhostProb to StrippingBu2hhh.py
 
 ! 2012-09-07 - Thomas Latham
  - added GhostProb cut for StrippingB2KShh.py lines (cut applied on KS

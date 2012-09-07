@@ -10,7 +10,7 @@ Exported symbols (use python help!):
    - makepph_incl
 '''
 
-__author__ = ['Irina Nasteva', 'Jussara Miranda']
+__author__ = ['Irina Nasteva', 'Jussara Miranda', 'Alvaro Gomes']
 __date__ = '25/08/2011'
 __version__ = '$Revision: 2.0 $'
 
@@ -26,6 +26,7 @@ config_params = {
     '_h_P'                  : 1500. ,    ## tracks min P  
     '_h_IPCHI2'             : 1. ,       ## min tracks IP wrt OWNPV
     '_h_TRCHI2DOF'          : 3.0 ,      ## max tracks CHI2DOF
+    '_h_TRGHP'             : .5,       ## Track GhostProbability     
     '_3h_DOCA'              : .2 ,       ## max DOCA between h and 2h 
     '_3h_PTmax'             : 1500 ,     ## min PT of the 3h highest PT track
     '_3h_DIRA'              : .99998 ,   ## min cos angle between 3h momentum and PV decay direction   
@@ -84,7 +85,8 @@ class Bu2hhhBuilder(LineBuilder) :
                               '_h_PT',             
                               '_h_P',               
                               '_h_IPCHI2',         
-                              '_h_TRCHI2DOF',       
+                              '_h_TRCHI2DOF',
+                              '_h_TRGHP',
                               '_3h_DOCA',            
                               '_3h_PTmax',          
                               '_3h_DIRA',            
@@ -122,7 +124,8 @@ class Bu2hhhBuilder(LineBuilder) :
                              _h_PT           = config['_h_PT'],
                              _h_P            = config['_h_P'],
                              _h_IPCHI2       = config['_h_IPCHI2'],
-                             _h_TRCHI2DOF    = config['_h_TRCHI2DOF'], 
+                             _h_TRCHI2DOF    = config['_h_TRCHI2DOF'],
+                             _h_TRGHP       = config['_h_TRGHP'],
                              _3h_DOCA        = config['_3h_DOCA'],
                              _3h_PTmax       = config['_3h_PTmax'],
                              _3h_DIRA        = config['_3h_DIRA'],
@@ -144,7 +147,8 @@ class Bu2hhhBuilder(LineBuilder) :
                              _h_PT           = config['_h_PT'],
                              _h_P            = config['_h_P'],
                              _h_IPCHI2       = config['_h_IPCHI2'],
-                             _h_TRCHI2DOF    = config['_h_TRCHI2DOF'], 
+                             _h_TRCHI2DOF    = config['_h_TRCHI2DOF'],
+                             _h_TRGHP       = config['_h_TRGHP'],       
                              _3h_DOCA        = config['_3h_DOCA'],
                              _3h_PTmax       = config['_3h_PTmax'],
                              _3h_DIRA        = config['_3h_DIRA'],
@@ -194,6 +198,7 @@ def makeKKK_incl(name,
            _h_P,
            _h_IPCHI2,
            _h_TRCHI2DOF,
+           _h_TRGHP,      
            _3h_DOCA,
            _3h_PTmax,
            _3h_DIRA,
@@ -214,7 +219,8 @@ def makeKKK_incl(name,
     _daughtersCuts = {"K+" : "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
-                             & (TRCHI2DOF < %(_h_TRCHI2DOF)s)" % locals()}
+                             & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(AM < %(_3hKKK_Mmax)s*MeV) \
                      & (AM > %(_3hKKK_Mmin)s*MeV) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
@@ -247,6 +253,7 @@ def makepph_incl(name,
            _h_P,
            _h_IPCHI2,
            _h_TRCHI2DOF,
+           _h_TRGHP,            
            _3h_DOCA,
            _3h_PTmax,
            _3h_DIRA,
@@ -267,11 +274,13 @@ def makepph_incl(name,
     _daughtersCuts = {"p+" : "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
-                             & (TRCHI2DOF < %(_h_TRCHI2DOF)s)" % locals(),
+                             & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals(),
 		      "K+" :  "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
-                             & (TRCHI2DOF < %(_h_TRCHI2DOF)s)" % locals()}
+                             & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(AM < (5279.15 + %(_3hpph_deltaMmax)s)*MeV) \
                      & (AM > (5279.15 - %(_3hpph_deltaMmin)s)*MeV) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
