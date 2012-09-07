@@ -5,14 +5,15 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2012-09-07 - O. Deschamps pour R. Lefevre
-	- update StrippingD02KPiPi0 & StrippingB2HHPi0 (adding GP)
+ - update StrippingD02KPiPi0 & StrippingB2HHPi0 (adding GP)
 
 ! 2012-09-06 - Marianna Fontana
- - Updated StrippingBs2KSKS.py and StrippingD02KSKS.py in order to have also the GhostProb 
-   cut in the dictionary
+ - Updated StrippingBs2KSKS.py and StrippingD02KSKS.py in order to have 
+   also the GhostProb cut in the dictionary
 
 ! 2012-09-06 - Aurelien Martens
- - update KsH GhostProb cut value on the KSLL daughters, accroding to Tom Latham's studies
+ - update KsH GhostProb cut value on the KSLL daughters, accroding to 
+   Tom Latham's studies
 
 ! 2012-09-06 - Fred Blanc
  - Add GhostProb cut to lines in StrippingB2CharmlessQuasi2Body.py
