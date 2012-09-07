@@ -60,7 +60,7 @@ config_default_NoPID = {
   ,'D0DauMaxIPChi2'   : 30
   ,'D0DauIPChi2'      : 3.0
   ,'D0FDChi2'         : 48
-  ,'D0IPChi2'         : 30
+  ,'D0IPChi2'         : 999999999999.9
   ,'D0DIRA'           : 0.9998
   ,'TrackChi2DOF'     : 4
   ,'ApplyKaonPIDK'    : False
@@ -73,6 +73,8 @@ config_default_NoPID = {
   ,'MaxVeloTracks'    : None
   ,'MaxSpdDigits'     : None
   ,'MaxITClusters'    : None
+  ,'ApplyGhostProbCut': True
+  ,'GhostProbCut'     : 0.5
   ,'Prescale'         : 0.10
   ,'Postscale'        : 1
   }
@@ -96,7 +98,7 @@ config_default= {
   ,'D0DauMaxIPChi2'   : 30
   ,'D0DauIPChi2'      : 3.0
   ,'D0FDChi2'         : 48
-  ,'D0IPChi2'         : 30
+  ,'D0IPChi2'         : 999999999999.9
   ,'D0DIRA'           : 0.9998
   ,'TrackChi2DOF'     : 4
   ,'ApplyKaonPIDK'    : True
@@ -109,6 +111,8 @@ config_default= {
   ,'MaxVeloTracks'    : None
   ,'MaxSpdDigits'     : None
   ,'MaxITClusters'    : None
+  ,'ApplyGhostProbCut': True
+  ,'GhostProbCut'     : 0.5
   ,'Prescale'         : 1
   ,'Postscale'        : 1
   }
@@ -168,6 +172,9 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
     ,'ApplyPionPIDK'
     ,'PionPIDK'
 
+    ,'ApplyGhostProbCut'
+    ,'GhostProbCut'
+
     ,'CheckPV'
 
     ,'ApplyGECs'
@@ -202,6 +209,8 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       ,kaonPIDK = config['KaonPIDK']
       ,applyPionPIDK = config['ApplyPionPIDK']
       ,pionPIDK = config['PionPIDK']
+      ,applyGhostProbCut = config['ApplyGhostProbCut']
+      ,ghostProbCut = config['GhostProbCut']
       )
 
     selPromptDstar = makePromptDstar(
@@ -284,6 +293,8 @@ def makeD02hhhh (
   ,kaonPIDK
   ,applyPionPIDK
   ,pionPIDK
+  ,applyGhostProbCut
+  ,ghostProbCut
   ):
   """Creates a D0->hhhh Selection object, merging D0->K3pi CF
   , D0->K3pi DCS, D0->KKpipi and D0->4pi, with cuts for physics analysis.
@@ -334,6 +345,13 @@ def makeD02hhhh (
     _pionCutsOLD = copy(_pionCuts)
     _pionCuts="(PIDK<%(pionPIDK)s) & (HASRICH) & " %locals()
     _pionCuts+=_pionCutsOLD
+  if applyGhostProbCut:
+    _ghostCut = "( TRGHOSTPROB < %(ghostProbCut)s )" %locals()
+    _kaonCutsOLD = copy(_kaonCuts)
+    _pionCutsOLD = copy(_pionCuts)
+    _kaonCuts = _kaonCutsOLD + " & " + _ghostCut
+    _pionCuts = _pionCutsOLD + " & " + _ghostCut
+    
 
   from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons
   from StandardParticles import StdAllLoosePions, StdAllLooseKaons
