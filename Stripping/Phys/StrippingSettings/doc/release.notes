@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-09-07 - Stefano Perazzini
+ - Updated dictionaries for Charmless WG
+
 ! 2012-09-07 - Andrea Contu
  - Added GhostProb cut for DstarD2xx lines
 
