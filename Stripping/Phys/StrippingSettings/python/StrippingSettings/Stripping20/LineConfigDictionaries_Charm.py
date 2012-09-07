@@ -1483,8 +1483,10 @@ D02KSKS = {
       'D0_DOCA_DD'                      : 4.0,
       'KS_LL_nu2prime'                  : 0.0,
       'KS_LL_signedFLchi2'              : 50.0,
+      'KS_LL_TRGHOSTPROB'               : 1.0,              # Track ghost probability KSLL
       'KS_DD_nu2prime'                  : 0.0,
       'KS_DD_signedFLchi2'              : 50.0,
+      'KS_DD_TRGHOSTPROB'               : 1.0,              # Track ghost probability KSDD
       'D0_vertexChi2_LL'                : 20.0,
       'D0_IPchi2_LL'                    : 50.0,
       'D0_KS_signedFLchi2_LL'           : 200.0,
@@ -1500,6 +1502,12 @@ D02KSKS = {
       'slowPi_IPchi2_LL'                : 40.0,
       'slowPi_IPchi2_LD'                : 40.0,
       'slowPi_IPchi2_DD'                : 40.0,
+      'slowPi_LLL_TRGHOSTPROB'          : 1.0,  # Track ghost probability slow pi LL
+      'slowPi_LDL_TRGHOSTPROB'          : 1.0,  # Track ghost probability slow pi LD
+      'slowPi_DDL_TRGHOSTPROB'          : 1.0,  # Track ghost probability slow pi DD
+      'slowPi_LLU_TRGHOSTPROB'          : 1.0,  # Track ghost probability slow pi LL
+      'slowPi_LDU_TRGHOSTPROB'          : 1.0,  # Track ghost probability slow pi LD
+      'slowPi_DDU_TRGHOSTPROB'          : 1.0,  # Track ghost probability slow pi DD
       'Dst_mass_LL'                     : 200.,
       'Dst_mass_LD'                     : 200.,
       'Dst_mass_DD'                     : 200.,

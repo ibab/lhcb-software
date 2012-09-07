@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-09-07 - Mat Charles
+ - Stripping20/LineConfigDictionaries_Charm.py
+  . Added slots for GhostProb cut to D02KSKS lines
+
 ! 2012-09-07 - Andrea Contu
  - Added GhostProb cut for D2XGamma lines
 
