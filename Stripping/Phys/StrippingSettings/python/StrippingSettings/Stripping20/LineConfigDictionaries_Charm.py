@@ -789,6 +789,7 @@ DstarD02xx = {
     ,'XTrackChi2Pi'         : 7.        # adimensional
     ,'XminIPChi2'         : 3        # adimensional
     ,'XmaxIPChi2'         : 8        # adimensional
+    ,'ghostProbCut'       : 0.5      #added for Stripping20 by A Contu
     ,'DMinFlightChi2'    :  20.
     ,'DDira'              : 0.9997     # adimensional
     ,'D0MinPT'            : 1800.      # MeV
