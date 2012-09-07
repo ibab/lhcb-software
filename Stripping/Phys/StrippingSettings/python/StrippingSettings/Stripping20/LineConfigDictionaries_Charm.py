@@ -1313,21 +1313,22 @@ Lambdac2PHHPrescFull = {
 D2XGamma = {
     'BUILDERTYPE' : 'StrippingD2XGammaConf',
     'CONFIG' : {
-    'TrChi2'            : 2.5
-    ,'TrIPchi2Phi'      : 25.
-    ,'TrPTPhi'          : 500.
-    ,'kDLL'             : 2.0
-    ,'PhiMassWinL'      : 1000.
-    ,'PhiMassWin'       : 50.
-    ,'PhiVCHI2'         : 16.
-    ,'D0MassWin'        : 200.
-    ,'D_BPVLTIME'       : 0.2 * picosecond ## not used ATM
-    ,'D0_PT'            : 1000.
-    ,'photonPT'         : 1700.
-    ,'DstVCHI2'         : 25.
-    ,'deltaMass'        : 160.0
-    ,'deltaMassL'       : 130.0
-    ,'pvRefit'          : False
+     'TrChi2'              : 2.5
+    ,'TrGhostProb'        : 0.3
+    ,'TrIPchi2Phi'        : 25.
+    ,'TrPTPhi'            : 500.
+    ,'kDLL'               : 2.0
+    ,'PhiMassWinL'        : 1000.
+    ,'PhiMassWin'         : 50.
+    ,'PhiVCHI2'           : 16.
+    ,'D0MassWin'          : 200.
+    ,'D_BPVLTIME'         : 0.2 * picosecond ## not used ATM                                                                                                                                                                               
+    ,'D0_PT'              : 1000.
+    ,'photonPT'           : 1700.
+    ,'DstVCHI2'           : 25.
+    ,'deltaMass'          : 160.0
+    ,'deltaMassL'         : 130.0
+    ,'pvRefit'             : False
     ,'D02PhiGammaPreScale'               : 1.0
     ,'D02PhiGammaPostScale'              : 1.0
     ,'PionLocation'   : "Phys/StdAllNoPIDsPions/Particles"

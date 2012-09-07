@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-09-07 - Andrea Contu
+ - Added GhostProb cut for D2XGamma lines
+
 ! 2012-09-04 - Thomas Blake
  - Updated XMuMu in LineConfigDictionaries_RD.py
 
