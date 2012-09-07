@@ -671,51 +671,6 @@ D2XMuMu = {
 DstarPromptWithD02HHMuMu = {
    'BUILDERTYPE' : 'DstarPromptWithD02HHMuMuConf',
     'CONFIG' : {
-     'CombDelmLower'     : -9.*MeV
-  ,'CombDelmUpper'    : 20*MeV
-  ,'DelmLower'        : -8*MeV
-  ,'DelmUpper'        : 18*MeV
-  ,'CombD0MassWin'    : 120*MeV
-  ,'D0MassWin'        : 100*MeV
-  ,'DstarDOCA'        : 0.3*mm
-  ,'D0MaxDOCA'        : 0.3*mm
-  ,'D0DauPt'          : 300*MeV
-  ,'D0DauP'           : 3*GeV
-  ,'D0Pt'             : 2.*GeV
-  ,'DstarPt'          : 2.*GeV
-  ,'SlowPionPt'       : 120*MeV
-  ,'DstarVtxChi2DOF'  : 20
-  ,'D0VtxChi2DOF'     : 20
-  ,'D0DauMaxIPChi2'   : 9
-  ,'D0DauIPChi2'      : 2.0
-  ,'D0FDChi2'         : 30
-  ,'D0IPChi2'         : 36
-  ,'D0DIRA'           : 0.9998
-  ,'TrackChi2DOF'     : 3
-  ,'ApplyKaonPIDK'    : False
-  ,'KaonPIDK'         : -100.
-  ,'ApplyPionPIDK'    : False
-  ,'PionPIDK'         : 100
-  ,'CheckPV'          : True # reject events with no PVs
-  ,'ApplyGECs'        : False # set to False to apply no GECs
-  ,'MaxLongTracks'    : 250
-  ,'MaxVeloTracks'    : None
-  ,'MaxSpdDigits'     : None
-  ,'MaxITClusters'    : None
-  ,'Prescale'         : 1
-  ,'Postscale'        : 1
-  } ,
-  'WGs' : [ 'Charm' ],
-  'STREAMS' : [ 'Charm' ]
-  }
-
-## Benoit Viaud
-## Added in Stripping20
-## Control channels for Tagged D02H(H)Mumu.
-## Uses in StrippingDstarPromptWithD02HHHH.py
-DstarPromptWithD02HHMuMuControl = {
-   'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
-    'CONFIG' : {
       'CombDelmLower'     : -9.*MeV
   ,'CombDelmUpper'    : 20*MeV
   ,'DelmLower'        : -8*MeV
@@ -732,23 +687,72 @@ DstarPromptWithD02HHMuMuControl = {
   ,'DstarVtxChi2DOF'  : 20
   ,'D0VtxChi2DOF'     : 20
   ,'D0DauMaxIPChi2'   : 9
-  ,'D0DauIPChi2'      : 2.0
+  ,'D0DauIPChi2'      : 3.0 # !!!
   ,'D0FDChi2'         : 30
   ,'D0IPChi2'         : 36
   ,'D0DIRA'           : 0.9998
   ,'TrackChi2DOF'     : 3
   ,'ApplyKaonPIDK'    : False
-  ,'KaonPIDK'         : -100.
+  ,'KaonPIDK'         : 0.
   ,'ApplyPionPIDK'    : False
-  ,'PionPIDK'         : 100 # not applied to the slow pion
+  ,'PionPIDK'         : 3 # not applied to the slow pion
   ,'CheckPV'          : True # reject events with no PVs
   ,'ApplyGECs'        : False # set to False to apply no GECs
   ,'MaxLongTracks'    : 250
   ,'MaxVeloTracks'    : None
   ,'MaxSpdDigits'     : None
   ,'MaxITClusters'    : None
+  ,'ApplyGhostProbCut': False # !!!
+  ,'GhostProbCut'     : 0.5 # !!!
+  ,'Prescale'         : 1
+  ,'Postscale'        : 1
+  } ,
+  'WGs' : [ 'Charm' ],
+  'STREAMS' : [ 'Charm' ]
+  }
+
+## Benoit Viaud
+## Added in Stripping20
+## Control channels for Tagged D02H(H)Mumu.
+## Uses in StrippingDstarPromptWithD02HHHH.py
+DstarPromptWithD02HHMuMuControl = {
+   'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
+    'CONFIG' : {
+       'CombDelmLower'     : -9.*MeV
+  ,'CombDelmUpper'    : 20*MeV
+  ,'DelmLower'        : -8*MeV
+  ,'DelmUpper'        : 18*MeV
+  ,'CombD0MassWin'    : 120*MeV
+  ,'D0MassWin'        : 100*MeV
+  ,'DstarDOCA'        : 0.3*mm
+  ,'D0MaxDOCA'        : 0.3*mm
+  ,'D0DauPt'          : 300*MeV
+  ,'D0DauP'           : 3*GeV
+  ,'D0Pt'             : 2.*GeV
+  ,'DstarPt'          : 2.*GeV
+  ,'SlowPionPt'       : 120*MeV
+  ,'DstarVtxChi2DOF'  : 20
+  ,'D0VtxChi2DOF'     : 20
+  ,'D0DauMaxIPChi2'   : 9
+  ,'D0DauIPChi2'      : 3.0 # !!!
+  ,'D0FDChi2'         : 30
+  ,'D0IPChi2'         : 36
+  ,'D0DIRA'           : 0.9998
+  ,'TrackChi2DOF'     : 3
+  ,'ApplyKaonPIDK'    : False
+  ,'KaonPIDK'         : 0.
+  ,'ApplyPionPIDK'    : False
+  ,'PionPIDK'         : 3 # not applied to the slow pion
+  ,'CheckPV'          : True # reject events with no PVs
+  ,'ApplyGECs'        : False # set to False to apply no GECs
+  ,'MaxLongTracks'    : 250
+  ,'MaxVeloTracks'    : None
+  ,'MaxSpdDigits'     : None
+  ,'MaxITClusters'    : None
+  ,'ApplyGhostProbCut': False # !!!
+  ,'GhostProbCut'     : 0.5 # !!!
   ,'Prescale'         : 0.01
-  ,'Postscale'        : 1.
+  ,'Postscale'        : 1
   } ,
   'WGs' : [ 'Charm' ],
   'STREAMS' : [ 'Charm' ]
@@ -920,7 +924,7 @@ DstarPromptWithD02HHHH = {
     ,'D0DauMaxIPChi2'   : 30
     ,'D0DauIPChi2'      : 3.0
     ,'D0FDChi2'         : 48
-    ,'D0IPChi2'         : 10000.0   # Mat changed from 30 to a large number in S20
+    ,'D0IPChi2'         : 999999999999.9   # Mat changed from 30 to a large number in S20
     ,'D0DIRA'           : 0.9998
     ,'TrackChi2DOF'     : 4
     ,'ApplyKaonPIDK'    : True
@@ -933,6 +937,8 @@ DstarPromptWithD02HHHH = {
     ,'MaxVeloTracks'    : None
     ,'MaxSpdDigits'     : None
     ,'MaxITClusters'    : None
+    ,'ApplyGhostProbCut': True
+    ,'GhostProbCut'     : 0.5
     ,'Prescale'         : 1
     ,'Postscale'        : 1
     },
@@ -963,7 +969,7 @@ DstarPromptWithD02HHHHNoPID = {
     ,'D0DauMaxIPChi2'   : 30
     ,'D0DauIPChi2'      : 3.0
     ,'D0FDChi2'         : 48
-    ,'D0IPChi2'         : 10000.0   # Mat changed from 30 to a large number in S20
+    ,'D0IPChi2'         : 999999999999.9   # Mat changed from 30 to a large number in S20
     ,'D0DIRA'           : 0.9998
     ,'TrackChi2DOF'     : 4
     ,'ApplyKaonPIDK'    : False 
@@ -976,6 +982,8 @@ DstarPromptWithD02HHHHNoPID = {
     ,'MaxVeloTracks'    : None
     ,'MaxSpdDigits'     : None
     ,'MaxITClusters'    : None
+    ,'ApplyGhostProbCut': True
+    ,'GhostProbCut'     : 0.5
     ,'Prescale'         : 0.05
     ,'Postscale'        : 1
     },
