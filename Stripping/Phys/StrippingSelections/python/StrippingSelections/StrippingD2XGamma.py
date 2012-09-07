@@ -47,6 +47,7 @@ default_name = 'D2XGamma'
 ##                     }
 default_confdict = {
     'TrChi2'              : 2.5
+    ,'TrGhostProb'        : 0.3
     ,'TrIPchi2Phi'        : 25.
     ,'TrPTPhi'            : 500.
     ,'kDLL'               : 2.0
@@ -112,6 +113,7 @@ class StrippingD2XGammaConf(LineBuilder):
 ##     StrippingB2XGammaConf.__configuration_keys__ : List of required configuration parameters.    
 ##     """
     __configuration_keys__ = ('TrChi2'
+                              ,'TrGhostProb'
                               ,'TrIPchi2Phi'
                               ,'TrPTPhi'
                               ,'kDLL'
@@ -141,6 +143,7 @@ class StrippingD2XGammaConf(LineBuilder):
         self.selPhi2KK = makePhi2KK('PhiFor%s' % name,
                                     config['TrIPchi2Phi'],
                                     config['TrChi2'],
+                                    config['TrGhostProb'],
                                     config['kDLL'],
                                     config['TrPTPhi'],
                                     config['PhiMassWinL'],
@@ -196,13 +199,14 @@ def makePhoton(name, photonPT):
     _stdGamma = StdLooseAllPhotons
     return Selection(name, Algorithm=_gammaFilter, RequiredSelections=[_stdGamma])
 
-def makePhi2KK(name, TrIPchi2Phi, TrChi2, kDLL, TrPTPhi, PhiMassWinL, PhiMassWin, PhiVCHI2, PhiLocation) :
+def makePhi2KK(name, TrIPchi2Phi, TrChi2, TrGhostProb, kDLL, TrPTPhi, PhiMassWinL, PhiMassWin, PhiVCHI2, PhiLocation) :
     """
     Create and return a Phi->KK Selection object, starting from DataOnDemand 'Phys/StdLoosePhi2KK'.
     
     @arg name: name of the Selection.
     @arg TrIPchi2Phi: minimum IP chi2 of the K+ tracks
     @arg TrChi2: minimum chi2 of the K+ tracks
+    @arg TrGhostProb2: ghostprob cut 
     @arg PhiMassWinL and PhiMassWin: lower bound on KK mass and the Phi mass window
     @arg PhiVCHI2: vertex chi2 of the Phi
     @arg kDLL: PIDK-PIDpi
@@ -211,8 +215,8 @@ def makePhi2KK(name, TrIPchi2Phi, TrChi2, kDLL, TrPTPhi, PhiMassWinL, PhiMassWin
     
     """
     
-    goodKaon = '( ((PIDK-PIDpi)>%(kDLL)s) & (MIPCHI2DV(PRIMARY) > %(TrIPchi2Phi)s) & (TRCHI2DOF < %(TrChi2)s) & (PT > %(TrPTPhi)s))' % locals()
-    goodPhi  = "( (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s) & (ADMASS('phi(1020)') < %(PhiMassWin)s*MeV) & (MM > %(PhiMassWinL)s*MeV) )" % locals()
+    goodKaon = "( ((PIDK-PIDpi)>%(kDLL)s) & (MIPCHI2DV(PRIMARY) > %(TrIPchi2Phi)s) & (TRCHI2DOF < %(TrChi2)s) & (PT > %(TrPTPhi)s)) & ( TRGHOSTPROB < %(TrGhostProb)s ) " % locals()
+    goodPhi  = "( (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s) & (ADMASS('phi(1020)') < %(PhiMassWin)s*MeV) & (MM > %(PhiMassWinL)s*MeV) ) " % locals()
     #goodPhi  = "( (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s) & (2010.0 - MM < %(PhiMassWinL)s*MeV) & (2010.0 - MM < %(PhiMassWinL)s*MeV) )" % locals()
     _code = goodPhi+" & CHILDCUT( " + goodKaon + ", 1 ) & CHILDCUT( " + goodKaon + ", 2 )"
     _phiFilter = FilterDesktop(Code=_code)
