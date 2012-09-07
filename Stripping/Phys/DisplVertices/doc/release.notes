@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2012-09-07 - Chris Jones
+ - Fix a compilation warning from icc11, due to -1 being assigned to an unsigned int
+
 !========================= DisplVertices v7r11 2012-09-01 =========================
 
 ! 2012-08-19 - Pieter David

@@ -17,7 +17,9 @@
  * @author Pieter David
  * @date   2012-03-27
  */
-class SelectVeloTracksNotFromPV : public GaudiAlgorithm {
+class SelectVeloTracksNotFromPV : public GaudiAlgorithm 
+{
+
 public:
 
   /// Standard constructor
@@ -39,15 +41,15 @@ private:
 
   std::string m_WithIPTrackLocation;          ///< where the tracks are saved
 
-  bool m_removeBackwardTracks;                ///< Remove backward
+  bool m_removeBackwardTracks;                ///< Remove backward tracks
   double m_ipcut;                             ///< Minimum IP cut value
   double m_ipchi2cut;                         ///< Minimum IPChi2 cut value
 
   unsigned int m_minNumTracks;                ///< Minimal number of tracks that have to pass before accepting the event
 
   bool m_rejectSplashEvents;                  ///< Reject all events where the FastVelo clone-killing fired
-  int m_maxNumInputTracks;                    ///< Reject events with more than this number of tracks before the filter
-  unsigned int m_maxNumOutputTracks;                   ///< Reject events with more than this number of tracks after the filter
+  unsigned int m_maxNumInputTracks;           ///< Reject events with more than this number of tracks before the filter
+  unsigned int m_maxNumOutputTracks;          ///< Reject events with more than this number of tracks after the filter
 
   // debug level flags
   bool m_debug;

@@ -12,6 +12,10 @@
 #include "LoKi/TrackCuts.h"
 #include "KalmanFilter/FastVertex.h"
 
+// boost
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
+
 // local
 #include "SelectVeloTracksNotFromPV.h"
 
@@ -27,53 +31,54 @@ using namespace LoKi::Cuts;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPV );
+DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPV )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-SelectVeloTracksNotFromPV::SelectVeloTracksNotFromPV( const std::string& name , ISvcLocator* pSvcLocator )
-  : GaudiAlgorithm( name , pSvcLocator )
+  SelectVeloTracksNotFromPV::SelectVeloTracksNotFromPV( const std::string& name , 
+                                                        ISvcLocator* pSvcLocator )
+    : GaudiAlgorithm( name , pSvcLocator )
 {
   declareProperty( "Inputs"
-                 , m_TracksLocations
-                 , "Input track locations" ) ;
+                   , m_TracksLocations
+                   , "Input track locations" ) ;
 
   declareProperty( "Output"
-                 , m_WithIPTrackLocation = "Hlt2/VeloWithIP/Track"
-                 , "Output track location" );
+                   , m_WithIPTrackLocation = "Hlt2/VeloWithIP/Track"
+                   , "Output track location" );
 
   declareProperty( "PVLocation"
-                 , m_PVLocation = LHCb::RecVertexLocation::Primary
-                 , "Primary Vertex location" );
+                   , m_PVLocation = LHCb::RecVertexLocation::Primary
+                   , "Primary Vertex location" );
 
   declareProperty( "RejectSplashEvents"
-                 , m_rejectSplashEvents = true
-                 , "Reject all FastVelo beam splash events, cfr. FastVeloTracking::beamSplashSpaceMerge" );
+                   , m_rejectSplashEvents = true
+                   , "Reject all FastVelo beam splash events, cfr. FastVeloTracking::beamSplashSpaceMerge" );
 
   declareProperty( "RemoveBackwardTracks"
-                 , m_removeBackwardTracks = true
-                 , "Remove backward tracks" );
+                   , m_removeBackwardTracks = true
+                   , "Remove backward tracks" );
 
   declareProperty( "MinIP"
-                 , m_ipcut = 0.3*Gaudi::Units::mm
-                 , "Minimum IP cut value (negative for no cut)" );
+                   , m_ipcut = 0.3*Gaudi::Units::mm
+                   , "Minimum IP cut value (negative for no cut)" );
 
   declareProperty( "MinIPChi2"
-                 , m_ipchi2cut = -1.0
-                 , "Minimum IPChi2 cut value (negative for no cut)" );
+                   , m_ipchi2cut = -1.0
+                   , "Minimum IPChi2 cut value (negative for no cut)" );
 
   declareProperty( "MaxNumInputTracks"
-                 , m_maxNumInputTracks = -1
-                 , "Maximal number of input tracks" );
+                   , m_maxNumInputTracks = boost::numeric::bounds<unsigned int>::highest()
+                   , "Maximal number of input tracks" );
 
   declareProperty( "MaxNumOutputTracks"
-                 , m_maxNumOutputTracks = -1
-                 , "Maximal number of output tracks" );
+                   , m_maxNumOutputTracks = boost::numeric::bounds<unsigned int>::highest()
+                   , "Maximal number of output tracks" );
 
   declareProperty( "MinNumTracks"
-                 , m_minNumTracks = 4
-                 , "Minimal number of output tracks required to accept the event" );
+                   , m_minNumTracks = 4
+                   , "Minimal number of output tracks required to accept the event" );
 
 }
 //=============================================================================
@@ -86,16 +91,15 @@ SelectVeloTracksNotFromPV::~SelectVeloTracksNotFromPV() { }
 //=============================================================================
 StatusCode SelectVeloTracksNotFromPV::initialize()
 {
-  StatusCode sc = GaudiAlgorithm::initialize();
+  const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  m_debug = msgLevel(MSG::DEBUG);
+  m_debug   = msgLevel(MSG::DEBUG);
   m_verbose = msgLevel(MSG::VERBOSE);
 
   if (m_debug) { debug() << "==> Initialize the VeloWithIP algorithm" << endmsg; }
 
-  return StatusCode::SUCCESS;
-
+  return sc;
 }
 
 namespace {
@@ -104,10 +108,10 @@ namespace {
   {
   public:
     CutIPAndChi2( const LHCb::Track* track, const double& maxIP, const double& maxIPChi2, bool iterate=false )
-    : m_track(track)
-    , m_maxIP(maxIP)
-    , m_maxIPChi2(maxIPChi2)
-    , m_iterate(iterate)
+      : m_track(track)
+      , m_maxIP(maxIP)
+      , m_maxIPChi2(maxIPChi2)
+      , m_iterate(iterate)
     {}
     bool operator() ( const LHCb::VertexBase* vx )
     {
@@ -162,7 +166,8 @@ StatusCode SelectVeloTracksNotFromPV::execute()
     LHCb::Track::Range trackContainer = get<LHCb::Track::Range>(iLocation);
     if (m_verbose) { verbose() << "Number of tracks: " << trackContainer.size() << endmsg; }
     nInput += trackContainer.size();
-    if ( ( m_maxNumInputTracks > 0 ) && ( nInput > m_maxNumInputTracks ) ) {
+    if ( nInput > m_maxNumInputTracks ) 
+    {
       ++counter("# rejected due to a too large number of input tracks");
       return StatusCode::SUCCESS;
     }
@@ -173,7 +178,7 @@ StatusCode SelectVeloTracksNotFromPV::execute()
       if (m_verbose) { verbose() << "Track " << iTr->key() << " " << ( ( TrBACKWARD(iTr) ) ? "backward" : "forward" ) << endmsg; }
 
       if ( ( ! ( m_removeBackwardTracks && iTr->checkFlag(LHCb::Track::Backward) ) )
-        && ( std::find_if( primaryVertices.begin(), primaryVertices.end(), CutIPAndChi2(iTr, m_ipcut, m_ipchi2cut) ) == primaryVertices.end() ) )
+           && ( std::find_if( primaryVertices.begin(), primaryVertices.end(), CutIPAndChi2(iTr, m_ipcut, m_ipchi2cut) ) == primaryVertices.end() ) )
       {
         if (m_verbose) { verbose() << "inserting track " << endmsg; }
         iptracks->add(iTr->clone());
@@ -185,7 +190,8 @@ StatusCode SelectVeloTracksNotFromPV::execute()
   if (m_debug) { debug() << "Accepted " << iptracks->size() << " tracks => " << ( ( iptracks->size() >= m_minNumTracks ) ? "Accepting" : "Rejecting" ) << " event"  << endmsg; }
   counter("# accepted tracks (all events)") += iptracks->size();
 
-  if ( ( m_maxNumOutputTracks > 0 ) && ( iptracks->size() > m_maxNumOutputTracks ) ) {
+  if ( iptracks->size() > m_maxNumOutputTracks ) 
+  {
     ++counter("# rejected due to a too large number of output tracks");
     return StatusCode::SUCCESS;
   }
