@@ -73,6 +73,8 @@ config_default= {
   ,'MaxVeloTracks'    : None
   ,'MaxSpdDigits'     : None
   ,'MaxITClusters'    : None
+  ,'ApplyGhostProbCut': True
+  ,'GhostProbCut'     : 0.5
   ,'Prescale'         : 1
   ,'Postscale'        : 1
   }
@@ -140,6 +142,9 @@ class DstarPromptWithD02HHMuMuConf(LineBuilder):
     ,'MaxSpdDigits'
     ,'MaxITClusters'
 
+    ,'ApplyGhostProbCut'
+    ,'GhostProbCut'    
+
     ,'Prescale'
     ,'Postscale'
     )
@@ -166,6 +171,8 @@ class DstarPromptWithD02HHMuMuConf(LineBuilder):
       ,kaonPIDK = config['KaonPIDK']
       ,applyPionPIDK = config['ApplyPionPIDK']
       ,pionPIDK = config['PionPIDK']
+      ,applyGhostProbCut = config['ApplyGhostProbCut']
+      ,ghostProbCut = config['GhostProbCut']
       )
 
     selPromptDstar = makePromptDstar(
@@ -248,6 +255,8 @@ def makeD02hhmumu(
   ,kaonPIDK
   ,applyPionPIDK
   ,pionPIDK
+  ,applyGhostProbCut
+  ,ghostProbCut  
   ):
   """Creates a D0->hhmumu Selection object, merging D0->Kpimumu CF
   , D0->Kpimumu DCS, D0->KKmumu and D0->pipimumu, with cuts for physics analysis.
@@ -299,6 +308,13 @@ def makeD02hhmumu(
     _pionCutsOLD = copy(_pionCuts)
     _pionCuts="(PIDK<%(pionPIDK)s) & (HASRICH) & " %locals()
     _pionCuts+=_pionCutsOLD
+  if applyGhostProbCut:
+    _ghostCut = "( TRGHOSTPROB < %(ghostProbCut)s )" %locals()
+    _kaonCutsOLD = copy(_kaonCuts)
+    _pionCutsOLD = copy(_pionCuts)
+    _kaonCuts = _kaonCutsOLD + " & " + _ghostCut
+    _pionCuts = _pionCutsOLD + " & " + _ghostCut
+    
 
   from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons
   from StandardParticles import StdAllLoosePions, StdAllLooseKaons, StdAllLooseMuons 
