@@ -9,7 +9,7 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Thomas Latham','David Dossett','Jussara Miranda','Rafael Coutinho']
-__date__ = '23/08/2012'
+__date__ = '07/09/2012'
 __version__ = 'Stripping20'
 __all__ = 'B2KShhConf'
 
@@ -22,6 +22,7 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLoosePions as Pions
 
 default_config = {'Trk_Chi2'                : 4.0,
+                  'Trk_GhostProb'           : 0.5,
                   'KS_DD_MassWindow'        : 30.0,
                   'KS_DD_VtxChi2'           : 12.0,
                   'KS_DD_FDChi2'            : 50.0,
@@ -85,6 +86,7 @@ class B2KShhConf(LineBuilder) :
     """
 
     __configuration_keys__ = ('Trk_Chi2',
+                              'Trk_GhostProb',
                               'KS_DD_MassWindow',
                               'KS_DD_VtxChi2',
                               'KS_DD_FDChi2',
@@ -175,12 +177,14 @@ class B2KShhConf(LineBuilder) :
         self.registerLine(self.dd_line_same)
         self.registerLine(self.ll_line_same)
 
+
     def makeKS2DD( self, name, config ) :
         # define all the cuts
         _massCut = "(ADMASS('KS0')<%s*MeV)" % config['KS_DD_MassWindow']
         _vtxCut  = "(VFASPF(VCHI2)<%s)"     % config['KS_DD_VtxChi2']
         _fdCut   = "(BPVVDCHI2>%s)"         % config['KS_DD_FDChi2']
         _momCut  = "(P>%s*MeV)"             % config['KS_DD_Pmin']
+
         _allCuts = _momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut
 
         # get the KS's to filter
@@ -192,14 +196,18 @@ class B2KShhConf(LineBuilder) :
         # make and store the Selection object
         self.selKS2DD = Selection( name, Algorithm = _filterKSDD, RequiredSelections = [_stdKSDD] )
 
+
     def makeKS2LL( self, name, config ) :
         # define all the cuts
-        _massCut    = "(ADMASS('KS0')<%s*MeV)" % config['KS_LL_MassWindow']
-        _vtxCut     = "(VFASPF(VCHI2)<%s)"     % config['KS_LL_VtxChi2']
-        _fdCut      = "(BPVVDCHI2>%s)"         % config['KS_LL_FDChi2']
-        _trkChi2Cut1 = "(CHILDCUT((TRCHI2DOF<%s),1))" % config['Trk_Chi2']
-        _trkChi2Cut2 = "(CHILDCUT((TRCHI2DOF<%s),2))" % config['Trk_Chi2']
-        _allCuts = _massCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2+'&'+_vtxCut+'&'+_fdCut
+        _massCut          = "(ADMASS('KS0')<%s*MeV)"         % config['KS_LL_MassWindow']
+        _vtxCut           = "(VFASPF(VCHI2)<%s)"             % config['KS_LL_VtxChi2']
+        _fdCut            = "(BPVVDCHI2>%s)"                 % config['KS_LL_FDChi2']
+        _trkChi2Cut1      = "(CHILDCUT((TRCHI2DOF<%s),1))"   % config['Trk_Chi2']
+        _trkChi2Cut2      = "(CHILDCUT((TRCHI2DOF<%s),2))"   % config['Trk_Chi2']
+        _trkGhostProbCut1 = "(CHILDCUT((TRGHOSTPROB<%s),1))" % config['Trk_GhostProb']
+        _trkGhostProbCut2 = "(CHILDCUT((TRGHOSTPROB<%s),2))" % config['Trk_GhostProb']
+
+        _allCuts = _massCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2+'&'+_trkGhostProbCut1+'&'+_trkGhostProbCut2+'&'+_vtxCut+'&'+_fdCut
 
         # get the KS's to filter
         _stdKSLL = DataOnDemand( Location = "Phys/StdLooseKsLL/Particles" )
@@ -210,6 +218,7 @@ class B2KShhConf(LineBuilder) :
         # make and store the Selection object
         self.selKS2LL = Selection( name, Algorithm = _filterKSLL, RequiredSelections = [_stdKSLL] )
 
+
     def makeB2KSDDhh( self, name, config ) :
         """
         Create and store either a B -> KS(DD) h+ h- Selection object, or a B -> KS(DD) h+(-) h+(-) Same Sign Selection Object
@@ -217,6 +226,11 @@ class B2KShhConf(LineBuilder) :
         name             : name of the Selection.
         config           : config dictionary
         """
+
+        _trkChi2Cut      = "(TRCHI2DOF<%s)"   % config['Trk_Chi2']
+        _trkGhostProbCut = "(TRGHOSTPROB<%s)" % config['Trk_GhostProb']
+
+        _daughtersCuts = _trkChi2Cut+'&'+_trkGhostProbCut
 
         _massCutLow       = "(AM>(5279-%s)*MeV)"                                                        % config['B_Mlow']
         _massCutHigh      = "(AM<(5279+%s)*MeV)"                                                        % config['B_Mhigh']
@@ -239,7 +253,7 @@ class B2KShhConf(LineBuilder) :
         _motherCuts = _ptCut+'&'+_vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut+'&'+_ipChi2SumCut
 
         _B = CombineParticles()
-        _B.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+        _B.DaughtersCuts = { "pi+" : _daughtersCuts }
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
@@ -262,6 +276,11 @@ class B2KShhConf(LineBuilder) :
         config           : config dictionary
         """
 
+        _trkChi2Cut      = "(TRCHI2DOF<%s)"   % config['Trk_Chi2']
+        _trkGhostProbCut = "(TRGHOSTPROB<%s)" % config['Trk_GhostProb']
+
+        _daughtersCuts = _trkChi2Cut+'&'+_trkGhostProbCut
+
         _massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
         _massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
         _aptCut         = "(APT>%s*MeV)"                     % config['B_APTmin']
@@ -282,7 +301,7 @@ class B2KShhConf(LineBuilder) :
         _motherCuts = _ptCut+'&'+_vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
 
         _B = CombineParticles()
-        _B.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+        _B.DaughtersCuts = { "pi+" : _daughtersCuts }
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
