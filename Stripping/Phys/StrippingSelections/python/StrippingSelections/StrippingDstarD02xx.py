@@ -45,6 +45,7 @@ config_default ={'PrescalepipiBox'     : 0.5
                  ,'XTrackChi2Pi'         : 7.        # adimensional
                  ,'XminIPChi2'         : 3        # adimensional
                  ,'XmaxIPChi2'         : 8        # adimensional
+                 ,'ghostProbCut'       : 0.5      #added for Stripping20 by A Contu
                  ,'DMinFlightChi2'    :  20.
                  ,'DDira'              : 0.9997     # adimensional
                  ,'D0MinPT'            : 1800.      # MeV
@@ -94,6 +95,7 @@ class StrippingDstarD02xxConf(LineBuilder):
                                  ,'XTrackChi2Pi'
                                  ,'XminIPChi2'
                                  ,'XmaxIPChi2'
+                                 ,'ghostProbCut'
                                  ,'DMinFlightChi2'
                                  ,'DDira'
                                  ,'D0MinPT'
@@ -128,7 +130,7 @@ class StrippingDstarD02xxConf(LineBuilder):
         else :
             d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWin)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV) & (APT> %(D0MinPT)s)"
             
-        d0comb_childcut = "(PT> %(XminPT)s *MeV) & (P>%(XminP)s *MeV) & (TRCHI2DOF<%(XTrackChi2)s) & (MIPCHI2DV(PRIMARY)> %(XminIPChi2)s) " 
+        d0comb_childcut = "(PT> %(XminPT)s *MeV) & (P>%(XminP)s *MeV) & (TRCHI2DOF<%(XTrackChi2)s) & (MIPCHI2DV(PRIMARY)> %(XminIPChi2)s) & ( TRGHOSTPROB < %(ghostProbCut)s )" 
         d0comb_d0cut = "(BPVDIRA> %(DDira)s) & (INGENERATION( (MIPCHI2DV(PRIMARY)>%(XmaxIPChi2)s),1 ) ) & (BPVVDCHI2> %(DMinFlightChi2)s) & (MIPCHI2DV(PRIMARY)< %(DMaxIPChi2)s) & (VFASPF(VCHI2/VDOF)< %(DVChi2)s)"
         xx_name = "D02"+xplus+xminus+postfix
         xx_comb = CombineParticles( config['prefix']+xx_name )
