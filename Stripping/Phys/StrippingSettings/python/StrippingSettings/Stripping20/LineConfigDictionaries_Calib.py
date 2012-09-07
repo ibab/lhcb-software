@@ -9,22 +9,23 @@ BeamGas = {
 
 D02KPiPi0 = {
    'BUILDERTYPE' : 'StrippingD02KPiPi0Conf',
-   'CONFIG' : { 'TrackMinPT'          : 300       # MeV
-                   ,'TrackMinPT_R'       : 600       # MeV  (>= TrackMinPT else no effect)
-                   ,'TrackMinTrackProb'  : 0.000001  # unitless
-                   ,'TrackMinIPChi2'     : 16        # unitless
-                   ,'Pi0MinPT_M'         : 2000      # MeV
-                   ,'Pi0MinPT_R'         : 1000      # MeV
-                   ,'ResPi0MinGamCL'     : 0.2       # unitless
-                   ,'D0MinM'             : 1600      # MeV
-                   ,'D0MaxM'             : 2100      # MeV
-                   ,'D0MinVtxProb'       : 0.001     # unitless
-                   ,'D0MaxIPChi2'        : 9         # unitless
-                   ,'D0MinDIRA'          : 0.9999    # unitless
-                   ,'D0MinVVDChi2'       : 64        # unitless
-                   ,'MergedLinePrescale'   : 0.5        # unitless
+   'CONFIG' : {     'TrackMinPT_M'         : 300       # MeV
+                   ,'TrackMinPT_R'         : 600       # MeV
+                   ,'TrackMinTrackProb'    : 0.000001  # unitless
+                   ,'TrackMaxGhostProb'    : 0.3       # unitless
+                   ,'TrackMinIPChi2'       : 16        # unitless
+                   ,'Pi0MinPT_M'           : 2000      # MeV
+                   ,'Pi0MinPT_R'           : 1000      # MeV
+                   ,'ResPi0MinGamCL'       : 0.2       # unitless
+                   ,'D0MinM'               : 1600      # MeV
+                   ,'D0MaxM'               : 2100      # MeV
+                   ,'D0MinVtxProb'         : 0.001     # unitless
+                   ,'D0MaxIPChi2'          : 9         # unitless
+                   ,'D0MinDIRA'            : 0.9999    # unitless
+                   ,'D0MinVVDChi2'         : 64        # unitless
+                   ,'MergedLinePrescale'   : 0.5       # unitless
                    ,'MergedLinePostscale'  : 1.        # unitless
-                   ,'ResolvedLinePrescale' : 0.5        # unitless
+                   ,'ResolvedLinePrescale' : 0.5       # unitless
                    ,'ResolvedLinePostscale': 1.        # unitless
                    },
    'STREAMS' : ['Calibration'],

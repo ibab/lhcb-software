@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-09-07 - Anton Poluektov 
+ - Correct small typo in StrippingB2HHPi0 line names (Charmless dict)
+ - Update D02KPiPi0 dict in Calib 
+ - Update stripping20 dbase
+
 ! 2012-09-07 - Andrea Contu
  - Added GhostProb cut for DstarD2HHHH and DstarD2HHMuMu lines
 

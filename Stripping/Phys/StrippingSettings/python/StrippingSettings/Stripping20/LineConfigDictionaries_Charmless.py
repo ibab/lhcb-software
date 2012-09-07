@@ -225,8 +225,8 @@ B2HHPi0 = {
                        'ResolvedLinePostscale': 1.
                       },
       'STREAMS'     : { 'Bhadron' : [],
-                        'BhadronCompleteEvent' : ['StrippingB2HHPI0_R',
-                                                  'StrippingB2HHPI0_M']
+                        'BhadronCompleteEvent' : ['StrippingB2HHPi0_R',
+                                                  'StrippingB2HHPi0_M']
                       }
     }
 ##
