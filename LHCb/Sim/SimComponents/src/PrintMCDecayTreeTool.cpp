@@ -236,6 +236,7 @@ void PrintMCDecayTreeTool::printInfo( const std::string &prefix,
     case E:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
           << part->momentum().e()/m_energyUnit;
+      break;
     case M:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
           << part->momentum().M()/m_energyUnit;

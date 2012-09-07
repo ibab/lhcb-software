@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2012-09-11 - Patrick Koppenburg
+ -PrintMCDecayTreeTool : Fix coverity warning http://lhcb-coverity.cern.ch:8080/sourcebrowser.htm?projectId=10002#mergedDefectId=39894&streamDefectId=47596&defectInstanceId=154950103&fileInstanceId=109386325
+
 ! 2012-08-15 - Patrick Koppenburg
  - PrintMCDecayTreeTool: Add PID field (optional)
  - MCDecayFinder : Ignore particles not in ParticleTable. 
