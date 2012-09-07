@@ -1,10 +1,17 @@
 ! $Id: release.notes,v 1.88 2010-07-02 08:12:17 mgrabalo Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
-! Responsible : Marco Musy (marco.musy@cern.ch)
+! Responsible : Marc Grabalosa (mgrabalo@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2012-09-07 - Marc Grabalosa
+ - In /root
+  . Fix sweight fill histo
+  . Added SSpi cuts from calibration
+  . Added ghost probability
+ - ghostprobability in BTaggingAnalysis
 
 !========================= FlavourTaggingChecker v6r11 2012-07-09 =========================
 

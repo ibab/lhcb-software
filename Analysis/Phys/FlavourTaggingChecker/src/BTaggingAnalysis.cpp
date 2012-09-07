@@ -296,7 +296,7 @@ StatusCode BTaggingAnalysis::execute() {
   debug()<<"Fill tagger info, vtags: "<<vtags.size()<<endreq;
 
   std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0), piperr(0), pipPU(0), pPl(0), ptheta(0);
-  std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pdistPhi(0), pveloch(0), pEOverP(0);
+  std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pgprob(0), pdistPhi(0), pveloch(0), pEOverP(0);
   std::vector<float> pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
   std::vector<float> pPIDNNe(0), pPIDNNm(0), pPIDNNk(0), pPIDNNp(0),pPIDNNpi(0);
   std::vector<float> pMCID(0), pMCP(0), pMCPt(0), pMCphi(0), pMCx(0), pMCy(0), pMCz(0), pMCPl(0),
@@ -394,6 +394,7 @@ StatusCode BTaggingAnalysis::execute() {
 
     //Fill NTP info -------------------------------------------------------   
     ptsal       .push_back(track->likelihood());
+    pgprob      .push_back(track->ghostProbability());
     ptrtyp      .push_back(trtyp);
     pID         .push_back(ID);
     pP          .push_back(P);
@@ -652,6 +653,7 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("trackzfirst", ptrackzfirst, "N", 200);
   tuple -> farray ("trackp", ptrackp, "N", 200);
   tuple -> farray ("tsal",    ptsal, "N", 200);
+  tuple -> farray ("gprob",   pgprob, "N", 200);
   tuple -> farray ("distPhi", pdistPhi, "N", 200);
   tuple -> farray ("veloch",  pveloch, "N", 200);
   tuple -> farray ("EOverP",  pEOverP, "N", 200);
