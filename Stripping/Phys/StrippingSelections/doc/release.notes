@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-07 - O. Deschamps pour R. Lefevre
+	- update StrippingD02KPiPi0 & StrippingB2HHPi0 (adding GP)
+
 ! 2012-09-06 - Marianna Fontana
  - Updated StrippingBs2KSKS.py and StrippingD02KSKS.py in order to have also the GhostProb 
    cut in the dictionary
