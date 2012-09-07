@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-07 - Stefano Perazzini
+ - Update of tests/TestCharmlessLines.py as reference to test Charmless WG lines.
+
 ! 2012-09-07 - Benoit Viaud
  - Added GhostProb to StrippingDstarPromptWithD02HHMuMu.py
 

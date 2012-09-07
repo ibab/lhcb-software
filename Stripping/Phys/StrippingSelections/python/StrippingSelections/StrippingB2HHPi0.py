@@ -19,6 +19,28 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsPions,StdLooseMergedPi0,StdLooseResolvedPi0
 
+default_config = {'PiMinPT'              : 500,
+                  'PiMinP'               : 5000,
+                  'PiMinTrackProb'       : 0.000001,
+                  'PiMaxGhostProb'       : 0.5,
+                  'PiMinIPChi2'          : 25,
+                  'Pi0MinPT_M'           : 2500,
+                  'Pi0MinPT_R'           : 1500,
+                  'ResPi0MinGamCL'       : 0.2,
+                  'BMinM'                : 4200,
+                  'BMaxM'                : 6400,
+                  'BMinPT_M'             : 3000,
+                  'BMinPT_R'             : 2500,
+                  'BMinVtxProb'          : 0.001,
+                  'BMaxIPChi2'           : 9,
+                  'BMinDIRA'             : 0.99995,
+                  'BMinVVDChi2'          : 64,
+                  'MergedLinePrescale'   : 1.,
+                  'MergedLinePostscale'  : 1.,
+                  'ResolvedLinePrescale' : 1.,
+                  'ResolvedLinePostscale': 1.
+                 }
+
 class StrippingB2HHPi0Conf(LineBuilder) :
 
     __configuration_keys__ = ( 'PiMinPT'
