@@ -50,16 +50,19 @@ confdict_2body = {'nbody':              2,
                   'MaxPiChi2':          4.0,
                   'MinPiPIDK':          2.0,
                   'MinPiPIDp':          2.0,
+                  'MaxPiGHP':           0.3,
                   'MinKPt':          1000.0,
                   'MinKIPChi2DV':      25.0,
                   'MaxKChi2':           4.0,
                   'MinKPIDPi':          2.0,
                   'MinKPIDp':           2.0,
+                  'MaxKGHP':            0.3,
                   'MinpPt':          1000.0,
                   'MinpIPChi2DV':      25.0,
                   'MaxpChi2':           4.0,
                   'MinpPIDPi':          2.0,
                   'MinpPIDK':           2.0,
+                  'MaxpGHP':            0.3,
                   'MaxKsDeltaM':       40.0,
                   'MinKsPt':         1000.0,
                   'MaxKsVertChi2DOF':  10.0,
@@ -182,9 +185,9 @@ from StrippingUtils.Utils import LineBuilder
 class B2nbodyConf(LineBuilder) :
     __configuration_keys__ = ('nbody','MinBMass','MaxBMass','MinBPt','MaxBVertChi2DOF','MinBPVVDChi2','MaxBPVIPChi2','MinBPVDIRA','MaxMass','MaxNtrk','MinNvc',
                               'doPi','doK','dop','doKs','doLm','doDz','doDp','doDs','doLc','doPh','doKS','doJp','doDS','prescale','MaxTrLong',
-                              'MinPiPt','MinPiIPChi2DV','MaxPiChi2','MinPiPIDK','MinPiPIDp',
-                              'MinKPt','MinKIPChi2DV','MaxKChi2','MinKPIDPi','MinKPIDp',
-                              'MinpPt','MinpIPChi2DV','MaxpChi2','MinpPIDPi','MinpPIDK',
+                              'MinPiPt','MinPiIPChi2DV','MaxPiChi2','MinPiPIDK','MinPiPIDp', 'MaxPiGHP',
+                              'MinKPt','MinKIPChi2DV','MaxKChi2','MinKPIDPi','MinKPIDp', 'MaxKGHP',
+                              'MinpPt','MinpIPChi2DV','MaxpChi2','MinpPIDPi','MinpPIDK', 'MaxpGHP',
                               'MaxKsDeltaM','MinKsPt','MaxKsVertChi2DOF','MinKsPVVDChi2','MinKsIPChi2','MinKsDauPt','MinKsDauIPChi2','MaxKsDauTrkChi2',
                               'MaxLmDeltaM','MinLmPt','MaxLmVertChi2DOF','MinLmPVVDChi2','MinLmIPChi2','MinLmPrtPt','MinLmPiPt','MinLmPrtIPChi2','MinLmPiIPChi2','MaxLmPrtTrkChi2','MaxLmPiTrkChi2',
                               'MaxDzDeltaM','MinDzPt','MaxDzVertChi2DOF','MinDzPVVDChi2','MinDzIPChi2','MinDzDauPt','MinDzDauIPChi2','MaxDzDauTrkChi2','MinDzKPIDPi','MinDzPiPIDK',
@@ -206,19 +209,22 @@ class B2nbodyConf(LineBuilder) :
                              MinPiIPChi2DV=config['MinPiIPChi2DV'],
                              MaxPiChi2    =config['MaxPiChi2'],
                              MinPiPIDK    =config['MinPiPIDK'],
-                             MinPiPIDp    =config['MinPiPIDp'])
+                             MinPiPIDp    =config['MinPiPIDp'], 
+                             MaxPiGHP     =config['MaxPiGHP'])
         self.selK = makeK( 'KFor'+name,
                              MinKPt      =config['MinKPt'],
                              MinKIPChi2DV=config['MinKIPChi2DV'],
                              MaxKChi2    =config['MaxKChi2'],
                              MinKPIDPi   =config['MinKPIDPi'],
-                             MinKPIDp    =config['MinKPIDp'])
+                             MinKPIDp    =config['MinKPIDp'],
+                             MaxKGHP     =config['MaxKGHP'])
         self.selp = makep( 'pFor'+name,
                              MinpPt      =config['MinpPt'],
                              MinpIPChi2DV=config['MinpIPChi2DV'],
                              MaxpChi2    =config['MaxpChi2'],
                              MinpPIDPi   =config['MinpPIDPi'],
-                             MinpPIDK    =config['MinpPIDK'])
+                             MinpPIDK    =config['MinpPIDK'],
+                             MaxpGHP     =config['MaxpGHP'])
         self.selKs = makeKs('KsFor'+name,
                             MaxKsDeltaM     =config['MaxKsDeltaM'],    
                             MinKsPt         =config['MinKsPt'],        
@@ -553,32 +559,35 @@ def makeB2nbody(name,PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,PhSel,K
     return Selection(name, Algorithm = _B, RequiredSelections = [_presel] )
 
 from StandardParticles import StdLoosePions
-def makePi(name, MinPiPt, MinPiIPChi2DV, MaxPiChi2, MinPiPIDK, MinPiPIDp) :
+def makePi(name, MinPiPt, MinPiIPChi2DV, MaxPiChi2, MinPiPIDK, MinPiPIDp, MaxPiGHP) :
     _code =  "(PT > %(MinPiPt)s*MeV)"%locals()
     _code+="& (MIPCHI2DV(PRIMARY) > %(MinPiIPChi2DV)s)"%locals()
     _code+="& (TRCHI2DOF<%(MaxPiChi2)s)"%locals()
     _code+="& (PIDpi-PIDK > %(MinPiPIDK)s)"%locals()
     _code+="& (PIDpi-PIDp > %(MinPiPIDp)s)"%locals()
+    _code+="& (TRGHP < %(MaxPiGHP)s)"%locals()
     _PiFilter=FilterDesktop(Code=_code)
     return Selection (name,  Algorithm = _PiFilter, RequiredSelections = [StdLoosePions])
                         
 from StandardParticles import StdLooseKaons
-def makeK(name, MinKPt, MinKIPChi2DV, MaxKChi2, MinKPIDPi, MinKPIDp) :
+def makeK(name, MinKPt, MinKIPChi2DV, MaxKChi2, MinKPIDPi, MinKPIDp, MaxKGHP) :
     _code =  "(PT > %(MinKPt)s*MeV)"%locals()
     _code+="& (MIPCHI2DV(PRIMARY) > %(MinKIPChi2DV)s)"%locals()
     _code+="& (TRCHI2DOF<%(MaxKChi2)s)"%locals()
     _code+="& (PIDK-PIDpi > %(MinKPIDPi)s)"%locals()
     _code+="& (PIDK-PIDp > %(MinKPIDp)s)"%locals()
+    _code+="& (TRGHP < %(MaxKGHP)s)"%locals()
     _KFilter=FilterDesktop(Code=_code)
     return Selection (name,  Algorithm = _KFilter, RequiredSelections = [StdLooseKaons])
                         
 from StandardParticles import StdLooseProtons
-def makep(name, MinpPt, MinpIPChi2DV, MaxpChi2, MinpPIDPi, MinpPIDK) :
+def makep(name, MinpPt, MinpIPChi2DV, MaxpChi2, MinpPIDPi, MinpPIDK, MaxpGHP) :
     _code =  "(PT > %(MinpPt)s*MeV)"%locals()
     _code+="& (MIPCHI2DV(PRIMARY) > %(MinpIPChi2DV)s)"%locals()
     _code+="& (TRCHI2DOF<%(MaxpChi2)s)"%locals()
     _code+="& (PIDp-PIDpi > %(MinpPIDPi)s)"%locals()
     _code+="& (PIDp-PIDK > %(MinpPIDK)s)"%locals()
+    _code+="& (TRGHP < %(MaxpGHP)s)"%locals()
     _pFilter=FilterDesktop(Code=_code)
     return Selection (name,  Algorithm = _pFilter, RequiredSelections = [StdLooseProtons])
 
