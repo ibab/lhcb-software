@@ -1263,7 +1263,7 @@ Lambdac2PHH = {
                   , 'Lambdac_BPVLTIME_MAX'  :    0.0012 * ns
                   , 'Lambdac_BPVLTIME_MIN'  :    0.0 * ns
                   , 'HltFilter'          : "HLT_PASS_RE('Hlt2Global.*')"
-                  , 'Hlt2TisTosSpec'     : { 'Hlt2Global%TIS' : 0,  'Hlt2CharmHad.*Decision%TOS' : 0 }
+                  , 'Hlt2TisTosSpec'     : { 'Hlt2Global%TIS' : 0,  'Hlt2CharmHad.*Decision%TOS' : 0, 'Hlt2CharmHadD02HHXDst.*%TUS' : 0 }
                   , 'PrescaleLambdac2PKPi'  :    1.0
                   , 'PostscaleLambdac2PKPi' :    1.0
                   , 'PrescaleLambdac2PKK'      : 1.0
@@ -1301,7 +1301,7 @@ Lambdac2PHHPrescFull = {
                   , 'Lambdac_BPVLTIME_MAX'  :    0.0012 * ns
                   , 'Lambdac_BPVLTIME_MIN'  :    0.0 * ns
                   , 'HltFilter'          : "HLT_PASS_RE('Hlt2Global.*')"
-                  , 'Hlt2TisTosSpec'     : { 'Hlt2Global%TIS' : 0,  'Hlt2CharmHad.*Decision%TOS' : 0 }
+                  , 'Hlt2TisTosSpec'     : { 'Hlt2Global%TIS' : 0,  'Hlt2CharmHad.*Decision%TOS' : 0, 'Hlt2CharmHadD02HHXDst.*%TUS' : 0 }
                   , 'PrescaleLambdac2PKPi'  :    0.1
                   , 'PostscaleLambdac2PKPi' :    1.0
                   , 'PrescaleLambdac2PKK'      : 0.1

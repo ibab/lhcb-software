@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-09-07 - Mat Charles
+ - Stripping20/LineConfigDictionaries_Charm.py
+  . Expanded TIS/TOS definition for Lc -> p h h lines to pick up new inclusive trigger.
+
 ! 2012-09-08 - Anton Poluektov 
  - Update B2OC dict to use GP cut in B2nbody
 
