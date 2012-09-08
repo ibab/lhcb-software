@@ -135,12 +135,19 @@ StatusCode SelectVeloTracksNotFromPV::execute()
   setFilterPassed(false);
 
   // If needed, reject splash events immedeately
-  if ( m_rejectSplashEvents ) {
-    if ( exist<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ) ) {
-      LHCb::ProcStatus* procStat = get<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default );
-      for( LHCb::ProcStatus::AlgStatusVector::const_iterator iAlg = procStat->algs().begin(); iAlg != procStat->algs().end(); ++iAlg ) {
-        if ( m_debug ) { debug() << "Found ProcStatus entry: " << (*iAlg).first << " (" << (*iAlg).second << ")" << endmsg; }
-        if ( (*iAlg).first.compare("OK:VELO:BeamSplashFastVelo:FastVeloTracking") == 0 ) {
+  if ( m_rejectSplashEvents ) 
+  {
+    if ( exist<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ) )
+    {
+      const LHCb::ProcStatus* procStat = 
+        get<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default );
+      for( LHCb::ProcStatus::AlgStatusVector::const_iterator iAlg = procStat->algs().begin(); 
+           iAlg != procStat->algs().end(); ++iAlg )
+      {
+        if ( m_debug ) { debug() << "Found ProcStatus entry: " 
+                                 << (*iAlg).first << " (" << (*iAlg).second << ")" << endmsg; }
+        if ( (*iAlg).first.compare("OK:VELO:BeamSplashFastVelo:FastVeloTracking") == 0 ) 
+        {
           if ( m_debug ) { debug() << "==> Rejecting event" << endmsg; }
           ++counter("#rejected splash");
           return StatusCode::SUCCESS;
@@ -149,21 +156,25 @@ StatusCode SelectVeloTracksNotFromPV::execute()
     }
   }
 
-  if ( ! exist<LHCb::RecVertex::Range>(m_PVLocation) ) {
+  if ( ! exist<LHCb::RecVertex::Range>(m_PVLocation) )
+  {
     return Warning("No RecVertex container found at " + m_PVLocation, StatusCode::SUCCESS, 1 );
   }
-  LHCb::RecVertex::Range primaryVertices = get<LHCb::RecVertex::Range>( m_PVLocation );
-  if (m_verbose) { verbose() << "Number of primary vertices: " << primaryVertices.size() << endmsg; }
+  const LHCb::RecVertex::Range primaryVertices = get<LHCb::RecVertex::Range>( m_PVLocation );
+  if (m_verbose) { verbose() << "Number of primary vertices: " 
+                             << primaryVertices.size() << endmsg; }
 
   LHCb::Tracks* iptracks = new LHCb::Tracks();
   put( iptracks, m_WithIPTrackLocation );
 
-  int nInput = 0;
-  BOOST_FOREACH( std::string iLocation, m_TracksLocations ) {
-    if ( ! exist<LHCb::Tracks>(iLocation) ) {
+  unsigned int nInput = 0;
+  BOOST_FOREACH( std::string iLocation, m_TracksLocations )
+  {
+    if ( ! exist<LHCb::Tracks>(iLocation) ) 
+    {
       return Warning( "No tracks found at " + iLocation, StatusCode::SUCCESS, 1 );
     }
-    LHCb::Track::Range trackContainer = get<LHCb::Track::Range>(iLocation);
+    const LHCb::Track::Range trackContainer = get<LHCb::Track::Range>(iLocation);
     if (m_verbose) { verbose() << "Number of tracks: " << trackContainer.size() << endmsg; }
     nInput += trackContainer.size();
     if ( nInput > m_maxNumInputTracks ) 
@@ -174,8 +185,11 @@ StatusCode SelectVeloTracksNotFromPV::execute()
     counter("# " + iLocation) += trackContainer.size();
 
     // add all forward tracks passing the MinIP requirement
-    BOOST_FOREACH( const LHCb::Track* iTr, trackContainer ) {
-      if (m_verbose) { verbose() << "Track " << iTr->key() << " " << ( ( TrBACKWARD(iTr) ) ? "backward" : "forward" ) << endmsg; }
+    BOOST_FOREACH( const LHCb::Track* iTr, trackContainer )
+    {
+      if (m_verbose) { verbose() << "Track " << iTr->key() << " "
+                                 << ( ( TrBACKWARD(iTr) ) ? "backward" : "forward" ) 
+                                 << endmsg; }
 
       if ( ( ! ( m_removeBackwardTracks && iTr->checkFlag(LHCb::Track::Backward) ) )
            && ( std::find_if( primaryVertices.begin(), primaryVertices.end(), CutIPAndChi2(iTr, m_ipcut, m_ipchi2cut) ) == primaryVertices.end() ) )
@@ -195,7 +209,8 @@ StatusCode SelectVeloTracksNotFromPV::execute()
     ++counter("# rejected due to a too large number of output tracks");
     return StatusCode::SUCCESS;
   }
-  if ( iptracks->size() >= m_minNumTracks ) {
+  if ( iptracks->size() >= m_minNumTracks )
+  {
     counter("# accepted tracks (accepted events)") += iptracks->size();
     setFilterPassed(true);
   }
