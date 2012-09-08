@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-09-08 - Anton Poluektov 
+ - Update B2OC dict to use GP cut in B2nbody
+
 ! 2012-09-07 - Anton Poluektov 
  - Correct small typo in StrippingB2HHPi0 line names (Charmless dict)
  - Update D02KPiPi0 dict in Calib 
