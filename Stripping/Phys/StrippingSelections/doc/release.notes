@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-09-08 - Anton Poluektov 
+ - Add ghost prob cut to B2nbody.py
+
 ! 2012-09-07 - Stefano Perazzini
  - Update of tests/TestCharmlessLines.py as reference to test Charmless WG lines.
 
@@ -365,7 +368,7 @@
 ! 2012-08-17 - Johannes Albrecht
  - tuning rate of VRD lines down, touched Tau23mMuLines, VeryDetachedJPsi, LFVLines, Bs2mumuLines
 
-! 2012-08-16 - Cédric Potterat	
+! 2012-08-16 - C??dric Potterat	
  - moved the HighPtTopo lines from StrippingBeauty2Charm to StrippingHighPtTopo.
 
 ! 2012-08-16 - Albert Puig
