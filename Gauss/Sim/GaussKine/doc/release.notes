@@ -4,6 +4,9 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-09-08 - Patrick Robbe
+ - GenerationToSimulation.cpp: transfer correctly particles for Higgs events
+
 !========================= GaussKine v6r0 2012-07-23 =========================
 ! 2012-07-23 - Gloria Corti
  - Adapt to LHCb::ParticlePropertySvc instead of the one in Gaudi

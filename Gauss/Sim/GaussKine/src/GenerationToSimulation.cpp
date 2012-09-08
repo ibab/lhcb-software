@@ -38,26 +38,26 @@ DECLARE_ALGORITHM_FACTORY( GenerationToSimulation );
 // Standard constructor, initializes variables
 //=============================================================================
 GenerationToSimulation::GenerationToSimulation( const std::string& name,
-						ISvcLocator* pSvcLocator)
+                                                ISvcLocator* pSvcLocator)
   : GaudiAlgorithm     ( name , pSvcLocator )
   , m_gigaSvc          ( 0 )
   , m_particleContainer( 0 )
-  , m_vertexContainer  ( 0 ) 
-{
+  , m_vertexContainer  ( 0 ) {
 
   declareProperty( "GiGaService",    m_gigaSvcName    = "GiGa" );
   declareProperty( "HepMCEventLocation", 
                    m_generationLocation = LHCb::HepMCEventLocation::Default );
   declareProperty( "Particles" ,
-		   m_particlesLocation = LHCb::MCParticleLocation::Default ) ;
+                   m_particlesLocation = LHCb::MCParticleLocation::Default ) ;
   declareProperty( "Vertices" ,
-		   m_verticesLocation = LHCb::MCVertexLocation::Default ) ;  
+                   m_verticesLocation = LHCb::MCVertexLocation::Default ) ;  
   declareProperty( "TravelLimit" , m_travelLimit = 1e-10*m ) ;
   declareProperty( "LookForUnknownParticles" , m_lookForUnknownParticles = false ) ;
   declareProperty( "SkipGeant" , m_skipGeant4 = false ) ;
   declareProperty( "UpdateG4ParticleProperties" , m_updateG4ParticleProperties = true ) ;
   declareProperty( "MCHeader" , m_mcHeader = LHCb::MCHeaderLocation::Default) ;
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -83,14 +83,14 @@ StatusCode GenerationToSimulation::initialize() {
       G4ParticlePropertyTable* PPT = G4ParticlePropertyTable::GetParticlePropertyTable();
       G4ParticleTable * particleTable = G4ParticleTable::GetParticleTable() ;
       for ( int i = 0 ; i < particleTable -> size() ; ++i ) {
-	G4ParticleDefinition * PDef = particleTable -> GetParticle( i ) ;
-  const LHCb::ParticleProperty * pp = ppSvc->find( LHCb::ParticleID( PDef->GetPDGEncoding() ) ) ;
-	if ( 0 != pp ) {
-	  G4ParticlePropertyData * PPData = PPT -> GetParticleProperty( PDef ) ;
-	  PPData -> SetPDGMass( pp -> mass() ) ;
-	  PPData -> SetPDGLifeTime( pp -> lifetime() ) ;
-	  PPT -> SetParticleProperty( *PPData ) ;
-	}
+        G4ParticleDefinition * PDef = particleTable -> GetParticle( i ) ;
+        const LHCb::ParticleProperty * pp = ppSvc->find( LHCb::ParticleID( PDef->GetPDGEncoding() ) ) ;
+        if ( 0 != pp ) {
+          G4ParticlePropertyData * PPData = PPT -> GetParticleProperty( PDef ) ;
+          PPData -> SetPDGMass( pp -> mass() ) ;
+          PPData -> SetPDGLifeTime( pp -> lifetime() ) ;
+          PPT -> SetParticleProperty( *PPData ) ;
+        }
       }
       release( ppSvc ) ;
     }  
@@ -107,7 +107,7 @@ StatusCode GenerationToSimulation::execute() {
   
   // Obtain events generation in generation phase
   LHCb::HepMCEvents* generationEvents = 
-	get<LHCb::HepMCEvents> ( m_generationLocation );
+    get<LHCb::HepMCEvents> ( m_generationLocation );
 
   // Create containers in TES for MCParticles and MCVertices
   m_particleContainer = new LHCb::MCParticles() ;
@@ -164,12 +164,12 @@ StatusCode GenerationToSimulation::execute() {
     for ( HepMC::GenEvent::particle_const_iterator itP = ev -> particles_begin() ;
           itP != ev -> particles_end() ; ++itP ) {
       if ( keep( *itP ) ) { 
-	mctruthList.push_back( *itP ) ;
-	// Set Id of End Vertex to one, then the particle with 
-	// production vertex of id 0 and end vertex of id 1 (or without end vertex)
-	// will be the start point of a decay tree to convert to MCTruth
-	HepMC::GenVertex * endVertex = (*itP) -> end_vertex() ;
-	if ( 0 != endVertex ) endVertex -> set_id ( 1 ) ;
+        mctruthList.push_back( *itP ) ;
+        // Set Id of End Vertex to one, then the particle with 
+        // production vertex of id 0 and end vertex of id 1 (or without end vertex)
+        // will be the start point of a decay tree to convert to MCTruth
+        HepMC::GenVertex * endVertex = (*itP) -> end_vertex() ;
+        if ( 0 != endVertex ) endVertex -> set_id ( 1 ) ;
       }
     }
     
@@ -178,7 +178,7 @@ StatusCode GenerationToSimulation::execute() {
     for ( it = mctruthList.begin() ; mctruthList.end() != it ; ++it ) {
       HepMC::GenVertex * prodVertex = (*it) -> production_vertex() ;
       if ( 0 == prodVertex ) 
-	warning() << "The particle has no production vertex !!" << endreq ;
+        warning() << "The particle has no production vertex !!" << endreq ;
       else if ( 0 == prodVertex -> id() )
         convert( *it , origVertex , primaryVertex , 0 , 0 ) ;
     }
@@ -204,50 +204,78 @@ StatusCode GenerationToSimulation::execute() {
 bool GenerationToSimulation::keep( const HepMC::GenParticle * particle ) const {
   LHCb::ParticleID pid( particle -> pdg_id() ) ;  
   switch ( particle -> status() ) {
-    case LHCb::HepMCEvent::StableInProdGen: return true ;
-    case LHCb::HepMCEvent::DecayedByDecayGen: return true ;
-    case LHCb::HepMCEvent::DecayedByDecayGenAndProducedByProdGen: return true ;
-    case LHCb::HepMCEvent::SignalInLabFrame: return true ;
-    case LHCb::HepMCEvent::StableInDecayGen: return true ;
-    case LHCb::HepMCEvent::DocumentationParticle: return false ;
-    case LHCb::HepMCEvent::Unknown: return false ;
-    case LHCb::HepMCEvent::DecayedByProdGen: 
-      if ( pid.isHadron() ) return true ;
-      if ( pid.isLepton() ) return true ;
-      if ( pid.isNucleus() ) return true ;
-      if ( pid.isDiQuark() ) return false ;
+  case LHCb::HepMCEvent::StableInProdGen: return true ;
+  case LHCb::HepMCEvent::DecayedByDecayGen: return true ;
+  case LHCb::HepMCEvent::DecayedByDecayGenAndProducedByProdGen: return true ;
+  case LHCb::HepMCEvent::SignalInLabFrame: return true ;
+  case LHCb::HepMCEvent::StableInDecayGen: return true ;
+  case LHCb::HepMCEvent::DocumentationParticle: 
+    // for some processes, the interesting particle has status 3, in Pythia6
+    if ( 24 == particle -> parent_event() -> signal_process_id() ) {
+      if ( 23 == pid.abspid() ) return true ;
+      else if ( 25 == pid.abspid() ) return true ;
+    }
+    else if ( 26 == particle -> parent_event() -> signal_process_id() ) {
+      if ( 24 == pid.abspid() ) return true ;
+      else if ( 25 == pid.abspid() ) return true ;
+    } else if ( 102 == particle -> parent_event() -> signal_process_id() ) {
+      if ( 25 == pid.abspid() ) return true ;
+    }
+    return false ;
+  case LHCb::HepMCEvent::Unknown: return false ;
+  case LHCb::HepMCEvent::DecayedByProdGen: 
+    if ( pid.isHadron() ) return true ;
+    if ( pid.isLepton() ) return true ;
+    if ( pid.isNucleus() ) return true ;
+    if ( pid.isDiQuark() ) return false ;
       
-      switch ( pid.abspid() ) {
-         // quarks
-        case LHCb::ParticleID::down    : return false ;
-        case LHCb::ParticleID::up      : return false ;
-        case LHCb::ParticleID::strange : return false ;
-        case LHCb::ParticleID::charm   : return false ;
-        case LHCb::ParticleID::bottom  : return false ;
-        case LHCb::ParticleID::top     : return false ;
-        //
-        case                   21      : return false ;  // gluon
-        //
-        case                   22      : return true  ;  // photon
-        case                   23      : return true  ;  // Z0
-        case                   24      : return true  ;  // W+-
-        case                   25      : return true  ;  // H_10
-        case                   32      : return true  ;  // Z'
-        case                   33      : return true  ;  // Z''
-        case                   34      : return true  ;  // W'+-
-        case                   35      : return true  ;  // H_20
-        case                   36      : return true  ;  // H_30
-        case                   37      : return true  ;  // H+-
-        //
-        case                   90      : return false ;  // system
-        case                   91      : return false ;  // cluster
-        case                   92      : return false ;  // string
-        case                   93      : return false ;  // indep
-        case                   94      : return false ;  // CMshower
-        default: return true ;
+    switch ( pid.abspid() ) {
+      // quarks
+    case LHCb::ParticleID::down    : return false ;
+    case LHCb::ParticleID::up      : return false ;
+    case LHCb::ParticleID::strange : return false ;
+    case LHCb::ParticleID::charm   : return false ;
+    case LHCb::ParticleID::bottom  : return false ;
+    case LHCb::ParticleID::top     : return false ;
+      //
+    case                   21      : return false ;  // gluon
+      //
+    case                   22      : return true  ;  // photon
+    case                   23      : // Z0 
+      // for some processes, the Z0 to transfer has status 3 instead of 2 (Pythia6)
+      if ( 24 == particle -> parent_event() -> signal_process_id() ) {
+        return false ;
+      }
+      return true  ;
+    case                   24      : // W+-
+      // for some processes, the W+ to transfer has status 3 instead of 2 (Pythia6)
+      if ( 26 == particle -> parent_event() -> signal_process_id() ) {
+        return false ;
+      }
+      return true  ;
+    case                   25      :   // H_10
+      if ( 24 == particle -> parent_event() -> signal_process_id() || 
+           26 == particle -> parent_event() -> signal_process_id() || 
+           102 == particle -> parent_event() -> signal_process_id() ) {
+        return false ;
       }
       return true ;
-    default: return false ;
+    case                   32      : return true  ;  // Z'
+    case                   33      : return true  ;  // Z''
+    case                   34      : return true  ;  // W'+-
+    case                   35      : return true  ;  // H_20
+    case                   36      : return true  ;  // H_30
+    case                   37      : return true  ;  // H+-
+      //
+    case                   90      : return false ;  // system
+    case                   91      : return false ;  // cluster
+    case                   92      : return false ;  // string
+    case                   93      : return false ;  // indep
+    case                   94      : return false ;  // CMshower
+    default: return true ;
+    }
+    return true ;
+  default: return false ;
   }
   return false ;
 }
@@ -265,8 +293,8 @@ void GenerationToSimulation::convert( HepMC::GenParticle *& particle ,
   // we skip the particle (3)
   unsigned char conversionCode = transferToGeant4( particle ) ;
   switch ( conversionCode ) {
-    case 1:
-      { // convert to G4Primary
+  case 1:
+    { // convert to G4Primary
       // check first if the particle was already converted (it will happen
       // for particles decaying to string,quarks, ...)
       // if yes and it has no mother, then destroy it and recreate it with 
@@ -279,24 +307,24 @@ void GenerationToSimulation::convert( HepMC::GenParticle *& particle ,
       if ( result != m_g4ParticleMap.end() ) {
         if ( result -> second.first ) return ;
         else {
-	  m_g4ParticleMap.erase( pBarcode ) ;
-	  G4PrimaryParticle * particleToDelete = result -> second.second ;
-	  m_particlesToDelete.push_back( particleToDelete ) ;
+          m_g4ParticleMap.erase( pBarcode ) ;
+          G4PrimaryParticle * particleToDelete = result -> second.second ;
+          m_particlesToDelete.push_back( particleToDelete ) ;
         }
       }
       
       G4PrimaryParticle * g4P = makeG4Particle( particle , mothermcp ) ;
       if ( 0 == motherg4 ) {
         if ( 0 == mothermcp ) m_g4ParticleMap.insert( std::make_pair( pBarcode ,
-                                                      std::make_pair( false , g4P ) ) ) ;
+                                                                      std::make_pair( false , g4P ) ) ) ;
         else m_g4ParticleMap.insert( std::make_pair( pBarcode ,
-				     std::make_pair( true , g4P ) ) ) ;
+                                                     std::make_pair( true , g4P ) ) ) ;
         // root particle -> attach to G4 primary vertex
         if ( 0 != pvertexg4 ) pvertexg4 -> SetPrimary( g4P ) ;
         else error() << "Primary vertex points to NULL !" << endreq ;
       } else {
         m_g4ParticleMap.insert( std::make_pair( pBarcode ,
-                                  std::make_pair( true , g4P ) ) ) ;
+                                                std::make_pair( true , g4P ) ) ) ;
         motherg4 -> SetDaughter( g4P ) ;
       }
       
@@ -304,9 +332,9 @@ void GenerationToSimulation::convert( HepMC::GenParticle *& particle ,
       originVertex = 0 ;
       motherg4 = g4P ;
       mothermcp = 0 ; }
-      break ;
-    case 2:
-      { // convert to MCParticle
+    break ;
+  case 2:
+    { // convert to MCParticle
       // check first it the particle has already been treated. In this case skip it
       const int pBarcode = particle -> barcode() ;
       std::map< int , bool >::const_iterator result = m_mcParticleMap.find( pBarcode ) ;
@@ -315,17 +343,17 @@ void GenerationToSimulation::convert( HepMC::GenParticle *& particle ,
       LHCb::MCVertex * endVertex = 0 ;
       LHCb::MCParticle * mcP = makeMCParticle( particle , endVertex ) ;
       if ( 0 != originVertex ) {
-	mcP -> setOriginVertex( originVertex ) ;
-	originVertex -> addToProducts( mcP ) ;
+        mcP -> setOriginVertex( originVertex ) ;
+        originVertex -> addToProducts( mcP ) ;
       }
       m_mcParticleMap.insert( std::make_pair( pBarcode , true ) ) ;
       mothermcp = mcP ;
       originVertex = endVertex ; }
-      break ;
-    case 3: 
-    default:
-      // just skip the particle
-      break ;
+    break ;
+  case 3: 
+  default:
+    // just skip the particle
+    break ;
   }
   // now convert all daughters of the HepMC particle, if any
   HepMC::GenVertex * ev = particle -> end_vertex() ;
@@ -374,7 +402,7 @@ unsigned char GenerationToSimulation::transferToGeant4( const HepMC::GenParticle
 // Create a G4PrimaryParticle from a HepMC Particle
 //==============================================================================================
 G4PrimaryParticle * GenerationToSimulation::makeG4Particle( HepMC::GenParticle *& particle , 
-  							    LHCb::MCParticle * mcp ) const {
+                                                            LHCb::MCParticle * mcp ) const {
   HepMC::FourVector mom = particle -> momentum() ;
   G4PrimaryParticle * g4P = 
     new G4PrimaryParticle( particle -> pdg_id() , mom.x() , mom.y() , mom.z() ) ;
@@ -413,7 +441,7 @@ G4PrimaryParticle * GenerationToSimulation::makeG4Particle( HepMC::GenParticle *
 // Create a MCParticle from HepMC
 //==============================================================================================
 LHCb::MCParticle * GenerationToSimulation::makeMCParticle( HepMC::GenParticle *& particle , 
-							   LHCb::MCVertex *& endVertex ) const {
+                                                           LHCb::MCVertex *& endVertex ) const {
   LHCb::MCParticle * mcp = new LHCb::MCParticle() ;
   m_particleContainer -> insert( mcp ) ;
   Gaudi::LorentzVector mom( particle -> momentum() ) ;
@@ -455,11 +483,11 @@ Gaudi::LorentzVector GenerationToSimulation::primaryVertex( const HepMC::GenEven
     if ( 0 != V ) result = V -> position() ; 
     else error() << "The beam particles have no end vertex !" << endreq ;
   } else if ( 0 != genEvent -> signal_process_vertex() ) { 
-  // Second option, use the signal vertex stored in HepMC 
+    // Second option, use the signal vertex stored in HepMC 
     HepMC::GenVertex * V = genEvent -> signal_process_vertex() ;
     result = V -> position() ;
   } else {
-  // Last option, take the production or end vertex of the particle with bar code 1
+    // Last option, take the production or end vertex of the particle with bar code 1
     HepMC::GenParticle * P = genEvent -> barcode_to_particle( 1 ) ;
     HepMC::GenVertex   * V = 0 ;
     if ( 0 != P ) {
@@ -482,7 +510,7 @@ Gaudi::LorentzVector GenerationToSimulation::primaryVertex( const HepMC::GenEven
 //===============================================================================================
 double GenerationToSimulation::lifetime( const HepMC::FourVector mom , 
                                          const HepMC::GenVertex * P ,
-					 const HepMC::GenVertex * E  ) const {
+                                         const HepMC::GenVertex * E  ) const {
   if ( 0 == E ) return 0. ;
   Gaudi::LorentzVector A( P -> position() ) ;
   Gaudi::LorentzVector B( E -> position() ) ;
