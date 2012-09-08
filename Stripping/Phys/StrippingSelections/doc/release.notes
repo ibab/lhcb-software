@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r17 2012-09-08 =========================
+
 ! 2012-09-08 - Anton Poluektov 
  - Add ghost prob cut to B2nbody.py
 
