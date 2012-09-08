@@ -4,6 +4,8 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r15 2012-09-08 =========================
+
 ! 2012-09-08 - Anton Poluektov 
  - Add Stripping20 
  - Update test reference
