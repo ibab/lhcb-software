@@ -46,7 +46,7 @@ static int s_compressionLevel = ROOT::CompressionSettings(ROOT::kLZMA,6);
 static bool match_wild(const char *str, const char *pat)    {
   //
   // Credits: Code from Alessandro Felice Cantatore.
-  // 
+  //
   static char table[256];
   static bool first = true;
   const char *s, *p;
@@ -55,7 +55,7 @@ static bool match_wild(const char *str, const char *pat)    {
     for (int i = 0; i < 256; ++i) table[i] = char(i);
     first = false;
   }
-loopStart:
+ loopStart:
   for (s = str, p = pat; *s; ++s, ++p) {
     switch (*p) {
     case '?':
@@ -76,7 +76,7 @@ loopStart:
   while (*p == '*') ++p;
   return (!*p);
 
-starCheck:
+ starCheck:
   if (!star) return false;
   str++;
   goto loopStart;
@@ -87,7 +87,7 @@ RootConnectionSetup::RootConnectionSetup() : refCount(1), m_msgSvc(0)
 {
 }
 
-/// Standard destructor      
+/// Standard destructor
 RootConnectionSetup::~RootConnectionSetup() {
   deletePtr(m_msgSvc);
 }
@@ -99,9 +99,9 @@ long RootConnectionSetup::setCompression(const std::string& compression) {
   if ( idx != string::npos ) {
     string alg = compression.substr(0,idx);
     ROOT::ECompressionAlgorithm alg_code = ROOT::kUseGlobalSetting;
-    if ( strcasecmp(alg.c_str(),"ZLIB") == 0 ) 
+    if ( strcasecmp(alg.c_str(),"ZLIB") == 0 )
       alg_code = ROOT::kZLIB;
-    else if ( strcasecmp(alg.c_str(),"LZMA") == 0 ) 
+    else if ( strcasecmp(alg.c_str(),"LZMA") == 0 )
       alg_code = ROOT::kLZMA;
     else
       throw runtime_error("ERROR: request to set unknown ROOT compression algorithm:"+alg);
@@ -159,7 +159,7 @@ RootDataConnection::RootDataConnection(const IInterface* owner, CSTR fname, Root
   addClient(owner);
 }
 
-// Standard destructor      
+// Standard destructor
 RootDataConnection::~RootDataConnection()   {
   m_setup->release();
   releasePtr(m_tool);
@@ -225,7 +225,7 @@ StatusCode RootDataConnection::connectRead()  {
   m_file = TFile::Open(m_pfn.c_str());
   if ( m_file && !m_file->IsZombie() )   {
     StatusCode sc = StatusCode::FAILURE;
-    msgSvc() << MSG::DEBUG << "Opened file " << m_pfn << " in mode READ. [" << m_fid << "]" << endmsg << MSG::DEBUG;    
+    msgSvc() << MSG::DEBUG << "Opened file " << m_pfn << " in mode READ. [" << m_fid << "]" << endmsg << MSG::DEBUG;
     if ( msgSvc().isActive() ) m_file->ls();
     msgSvc() << MSG::VERBOSE;
     if ( msgSvc().isActive() ) m_file->Print();
@@ -247,11 +247,11 @@ StatusCode RootDataConnection::connectRead()  {
       }
       if ( !need_fid && fid != m_fid ) {
         msgSvc() << MSG::ERROR << "FID mismatch:" << fid << "(Catalog) != " << m_fid << "(file)" << endmsg
-          << "for PFN:" << m_pfn << endmsg;
+		 << "for PFN:" << m_pfn << endmsg;
         return StatusCode::FAILURE;
       }
       msgSvc() << MSG::DEBUG << "Using FID " << m_fid << " from params table...." << endmsg
-        << "for PFN:" << m_pfn << endmsg;
+	       << "for PFN:" << m_pfn << endmsg;
       return sc;
     }
   }
@@ -416,7 +416,8 @@ TBranch* RootDataConnection::getBranch(CSTR section, CSTR branch_name, TClass* c
   TTree* t = getSection(section,true);
   TBranch* b = t->GetBranch(n.c_str());
   if ( !b && cl && m_file->IsWritable() ) {
-    b = t->Branch(n.c_str(),cl->GetName(),(void*)(ptr ? &ptr : 0));
+    b = t->Branch(n.c_str(),cl->GetName(),(void*)(ptr ? &ptr : 0),
+		  m_setup->bufferSize, m_setup->splitLevel);
   }
   if ( !b ) {
     b = t->GetBranch(branch_name.c_str());
@@ -448,19 +449,19 @@ CSTR RootDataConnection::getDb(int which) const {
 }
 
 // Empty string reference
-CSTR RootDataConnection::empty() const { 
+CSTR RootDataConnection::empty() const {
   return s_empty;
 }
 
 // Save object of a given class to section and container
-pair<int,unsigned long> 
+pair<int,unsigned long>
 RootDataConnection::saveObj(CSTR section, CSTR cnt, TClass* cl, DataObject* pObj,bool fill) {
   DataObjectPush push(pObj);
   return save(section,cnt,cl,pObj,fill);
 }
 
 // Save object of a given class to section and container
-pair<int,unsigned long> 
+pair<int,unsigned long>
 RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, bool fill_missing) {
   TBranch* b = getBranch(section, cnt, cl, (void*)(pObj ? &pObj : 0));
   if ( b ) {
@@ -471,7 +472,7 @@ RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, bool fi
         b->SetAddress(0);
 	num = nevt - evt;
 	while( num > 0 ) { b->Fill(); --num; }
-        msgSvc() << MSG::DEBUG << "Added " << long(nevt-evt) 
+        msgSvc() << MSG::DEBUG << "Added " << long(nevt-evt)
 		 << " / Tree: " << nevt << " / Branch: " << b->GetEntries()+1
 		 << " NULL entries to:" << cnt << endmsg;
 	evt = b->GetEntries();
@@ -506,8 +507,8 @@ int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, Dat
 	nb = b->GetEntry(entry);
 	msgSvc() << MSG::VERBOSE;
 	if ( msgSvc().isActive() ) {
-	  msgSvc() << "Load [" << entry << "] --> " << section 
-		   << ":" << cnt << "  " << nb << " bytes." 
+	  msgSvc() << "Load [" << entry << "] --> " << section
+		   << ":" << cnt << "  " << nb << " bytes."
 		   << endmsg;
 	}
 	if ( nb == 0 && pObj->clID() == CLID_DataObject) {
@@ -536,7 +537,7 @@ int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, Dat
 }
 
 // Access link section for single container and entry
-pair<const RootRef*,const RootDataConnection::ContainerSection*> 
+pair<const RootRef*,const RootDataConnection::ContainerSection*>
 RootDataConnection::getMergeSection(const string& container, int entry) const {
   //size_t idx = cont.find('/',1);
   //string container = cont[0]=='/' ? cont.substr(1,idx==string::npos?idx:idx-1) : cont;
@@ -549,18 +550,18 @@ RootDataConnection::getMergeSection(const string& container, int entry) const {
       if ( entry >= c.start && entry < (c.start+c.length) ) {
         if ( m_linkSects.size() > cnt ) {
           if ( msgSvc().isActive() ) {
-            msgSvc() << MSG::VERBOSE << "MergeSection for:" << container 
-              << "  [" << entry << "]" << endmsg
-              << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
+            msgSvc() << MSG::VERBOSE << "MergeSection for:" << container
+		     << "  [" << entry << "]" << endmsg
+		     << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
           }
           return make_pair(&(m_linkSects[cnt]), &c);
         }
       }
     }
   }
-  msgSvc() << MSG::DEBUG << "Return INVALID MergeSection for:" << container 
-    << "  [" << entry << "]" << endmsg
-    << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
+  msgSvc() << MSG::DEBUG << "Return INVALID MergeSection for:" << container
+	   << "  [" << entry << "]" << endmsg
+	   << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
   return make_pair((const RootRef*)0,(const ContainerSection*)0);
 }
 
@@ -608,10 +609,10 @@ void RootDataConnection::makeRef(CSTR name, long clid, int tech, CSTR dbase, CST
   ref.link      = clnk;
   ref.clid      = clid;
   ref.svc       = tech;
-  if ( ref.svc == POOL_ROOT_StorageType || 
-    ref.svc == POOL_ROOTKEY_StorageType || 
-    ref.svc == POOL_ROOTTREE_StorageType ) {
-      ref.svc = ROOT_StorageType;
-    }
+  if ( ref.svc == POOL_ROOT_StorageType ||
+       ref.svc == POOL_ROOTKEY_StorageType ||
+       ref.svc == POOL_ROOTTREE_StorageType ) {
+    ref.svc = ROOT_StorageType;
+  }
 }
 

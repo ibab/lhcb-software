@@ -22,6 +22,14 @@ class IDataManagerSvc;
 class IIncidentSvc;
 class TClass;
 
+// ROOT include files
+#include "TROOT.h"
+#include "TClass.h"
+#include "TTree.h"
+#include "TBranch.h"
+
+//#include "RootCnv/RootPerfMonSvc.h"
+
 /*
  * Gaudi namespace declaration
  */
@@ -36,7 +44,7 @@ namespace Gaudi {
   /** @class RootCnvSvc RootCnvSvc.h src/RootCnvSvc.h
    *
    * Description:
-   * 
+   *
    * RootCnvSvc class implementation definition.
    *
    *  @author  Markus Frank
@@ -91,7 +99,7 @@ namespace Gaudi {
     virtual ~RootCnvSvc();
 
     /// Update state of the service
-    virtual StatusCode updateServiceState(IOpaqueAddress* /* pAddress */) 
+    virtual StatusCode updateServiceState(IOpaqueAddress* /* pAddress */)
     { return StatusCode::SUCCESS;                  }
 
     /** Standard way to print errors. after the printout an exception is thrown.
@@ -116,11 +124,11 @@ namespace Gaudi {
     virtual StatusCode finalize();
 
     /// ConversionSvc overload: Create new Converter using factory
-    virtual IConverter* createConverter(long typ, 
-					const CLID& wanted, 
+    virtual IConverter* createConverter(long typ,
+					const CLID& wanted,
 					const ICnvFactory* fac);
 
-    /// ConversionSvc overload: Load the class (dictionary) for the converter 
+    /// ConversionSvc overload: Load the class (dictionary) for the converter
     virtual void loadConverter(DataObject* pObj);
 
     /** Connect the output file to the service with open mode.
@@ -162,7 +170,7 @@ namespace Gaudi {
     /** IAddressCreator implementation: Address creation.
      * Create an address using the link infotmation together with
      * the triple (database name/container name/object name).
-     * 
+     *
      * @param refLink           Reference to abstract link information
      * @param dbName            Database name
      * @param containerName     Object container name
@@ -172,10 +180,10 @@ namespace Gaudi {
      */
     virtual StatusCode createAddress( long                 svc_type,
 				      const CLID&          clid,
-				      const std::string*   par, 
+				      const std::string*   par,
 				      const unsigned long* ip,
 				      IOpaqueAddress*&     refpAddress);
-  
+
     /** IAddressCreator implementation: Creates an address in string form to object form
      *  @param      svc_type    Technology identifier encapsulated
      *                          in this address.

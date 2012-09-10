@@ -43,7 +43,7 @@ namespace Gaudi  {
     /// Type definition for string maps
     typedef std::vector<std::string> StringVec;
   protected:
-    /// Standard destructor      
+    /// Standard destructor
     virtual ~RootConnectionSetup();
     /// Object refrfence count
     int refCount;
@@ -65,6 +65,10 @@ namespace Gaudi  {
     int          autoFlush;
     /// RootCnvSvc Property: Basket optimization parameter for ROOT TTree (total basket size)
     int          basketSize;
+    /// RootCnvSvc Property: Buffer size optimization parameter for ROOT TTree
+    int			 bufferSize;
+    /// RootCnvSvc Property: Split level optimization parameter for ROOT TTree
+    int			 splitLevel;
 
     /// Standard constructor
     RootConnectionSetup();
@@ -140,7 +144,7 @@ namespace Gaudi  {
 
 
   protected:
-    /// Reference to the setup structure 
+    /// Reference to the setup structure
     RootConnectionSetup* m_setup;
     /// I/O read statistics from TTree
     TTreePerfStats*      m_statistics;
@@ -217,7 +221,7 @@ namespace Gaudi  {
       virtual TBranch* getBranch(const std::string&  section, const std::string& n) = 0;
       /// Internal overload to facilitate the access to POOL files
       virtual RootRef poolRef(size_t /* which */) const { return RootRef(); }
-	
+
       /// Read references section when opening data file
       virtual StatusCode readRefs() = 0;
       /// Save references section when closing data file
@@ -234,7 +238,7 @@ namespace Gaudi  {
 
     /// Standard constructor
     RootDataConnection(const IInterface* own, const std::string& nam, RootConnectionSetup* setup);
-    /// Standard destructor      
+    /// Standard destructor
     virtual ~RootDataConnection();
 
     /// Direct access to TFile structure
@@ -296,7 +300,7 @@ namespace Gaudi  {
     TTree* getSection(const std::string& sect, bool create=false);
 
     /// Access data branch by name: Get existing branch in read only mode
-    TBranch* getBranch(const std::string& section,const std::string& branch_name) 
+    TBranch* getBranch(const std::string& section,const std::string& branch_name)
     { return m_tool->getBranch(section,branch_name); }
     /// Access data branch by name: Get existing branch in write mode
     TBranch* getBranch(const std::string& section, const std::string& branch_name, TClass* cl, void* ptr);
@@ -311,13 +315,13 @@ namespace Gaudi  {
 
     /// Access database/file name from saved index
     const std::string& getDb(int which) const;
-    
+
     /// Access container name from saved index
-    const std::string& getCont(int which) const 
+    const std::string& getCont(int which) const
       { return (which>=0)&&(size_t(which)<m_conts.size()) ? *(m_conts.begin()+which) : empty();    }
-    
+
     /// Access link name from saved index
-    const std::string& getLink(int which) const 
+    const std::string& getLink(int which) const
       { return (which>=0)&&(size_t(which)<m_links.size()) ? *(m_links.begin()+which) : empty();    }
   };
 }         // End namespace Gaudi
