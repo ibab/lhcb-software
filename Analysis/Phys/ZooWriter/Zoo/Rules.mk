@@ -3,6 +3,8 @@
 #
 # try to help physicists avoid writing Makefiles
 #
+# see below for usage instructions
+#
 # release history
 # v0.1	2011-09-28 Manuel Schiller <manuel.schiller@nikhef.nl>
 # 	initial release
@@ -33,12 +35,21 @@
 # v0.8 2012-02-23 Manuel Schiller <manuel.schiller@nikhef.nl
 # 	more work towards compiler independence, recognise some
 # 	Fortran compilers and set up (hopefully) reasonable defaults
+# v0.9 2012-09-03 Manuel Schiller <manuel.schiller@nikhef.nl>
+# 	fix issue with per-target make variable overrides
+# 	fix postprocessing of rootcint to be even more tolerant
+# 	get reflex dictionaries to work
+# 	add documentation on how to write dictionaries
+# v0.10 2012-09-06 Manuel Schiller <manuel.schiller@nikhef.nl>
+# 	fix automatic dependency tracking in standalone build system
+# 	for Reflex dictionaries (make could miss occasions when the
+# 	dictionaries need to be remade)
 #######################################################################
 
 #######################################################################
-# usage:
-#
-# typical usage is as follows:
+# USAGE
+#######################################################################
+# typical usage in a Makefile is as follows:
 # 1. specify TARGETS, e.g.
 # 
 #	TARGETS = MyAnalysis test
@@ -90,6 +101,127 @@
 #       For most of the time, the full output just clutters your
 #       terminal, and you will be fine with the slightly shortened
 #       colorized version (which is activated by setting COLORMAKE=YES).
+#
+#
+#######################################################################
+# DICTIONARY HOWTO
+#######################################################################
+# If you need dictionaries to be able to write your objects to and
+# read them from ROOT files or to make the ROOT interpreter aware of
+# your classes, you need to set up files which describe for which
+# classes and how dictionaries are to be built.
+#
+# You have the choice among two technologies: rootcint and Reflex.
+# The former is easier to use, but is difficult to use with difficult
+# preprocessor constructs and templates becauses it does not
+# understand the entire C++ standard. Reflex dictionaries are more
+# powerful, need less memory and should support whatever constructs
+# gcc supports, but they are slightly less convenient to set up and use.
+#
+#
+#######################################################################
+# ROOTCINT DICTIONARIES
+#######################################################################
+# rootcint dictionaries are generated from a file which contains a
+# list of classes from which to generate dictionaries which ends in
+# *LinkDef.h. In it, you list all classes for which you want
+# dictionaries to be generated. Let's assume you write a library for
+# use in ROOT which contains a single class, YourClass, and a function,
+# yourFunc, for which you need a dictionary. Your YourLibLinkDef.h files
+# would then contain:
+#
+# #ifndef _YOURLIBLINKDEF_H
+# #ifdef __CINT__
+#
+# #pragma link off all globals;
+# #pragma link off all classes;
+# #pragma link off all functions;
+#
+# #pragma link C++ class YourClass+;
+# #pragma link C++ function yourFunc;
+#
+# #endif
+# #endif
+#
+# Your Makefile might then look something like this:
+#
+# TARGETS += YourLibDict.cxx libYourLib.so
+# alldicts += YourLibDict.cxx
+#
+# include Rules.mk
+#
+# YourLibDict.cxx: YourClass.h yourFunc.h YourLibLinkDef.h
+# libYourLib.so: YourClass.os yourFunc.os YourLibDict.os
+#
+# You can find more information about rootcint dictionaries in ROOT
+# documentation, e.g.
+
+# http://root.cern.ch/drupal/content/selecting-dictionary-entries-linkdefh
+#
+#
+#######################################################################
+# REFLEX DICTIONARIES
+#######################################################################
+# Reflex dictionaries are generated using a proper C++ compiler and
+# are therefore a little safer to use in the presence of templates and
+# other fancy C++ constructs. Two files are needed to tell reflex for
+# which classes you want dictionaries generated. They are typically
+# called *Rflx.xml and *Rflx.h. Let's again assume you write a library
+# for use in ROOT which contains a single class, YourClass, and a
+# function,  yourFunc, for which you need a dictionary. YourLibRflx
+# YourLibRflx.h file would then contain:
+#
+# #ifndef _YOURLIBRFLX_H
+#
+# #include "YourClass.h"
+# #include "yourFunc.h"
+# 
+# #endif
+# 
+# The corresponding YourRflxLib.xml file would look like this:
+#
+# <lcgdict>
+#     <selection>
+#         <class name="YourClass"/>
+#         <function name="yourFunc"/>
+#     </selection>
+# </lcgdict>
+#
+# Your Makefile might look something like this:
+#
+# TARGETS += YourLibRflx.cxx libYourLib.so
+# alldicts += YourLibRflx.cxx
+#
+# include Rules.mk
+#
+# YourLibRflx.cxx: YourLibRflx.h YourLibRflx.xml
+# libYourLib.so: YourClass.os yourFunc.os YourLibRflx.os
+#
+# That should be all that is needed to compile the code. The headers
+# file for the Reflex dictionary needs to be called the same as the XML
+# file and should include headers for all classes mentioned in the XML
+# file.
+#
+# To use Reflex dictionaries in your code, you'll have to do a bit
+# more. If you are using your library from the ROOT prompt, you need to
+# run
+#
+# gSystem->Load("libCintex.so");
+# Cintex::Enable();
+#
+# before loading your library. If you're compiling a standalone
+# application, you need to link it with -lCintex, and you need to call
+#
+# Cintex::Enable()
+#
+# at the beginning of your main routine.
+#
+# Again, for more detailed information, please refer to the ROOT
+# documentation,
+#
+# http://root.cern.ch/drupal/content/reflex
+#
+# seems like a good starting place
 #######################################################################
 
 #######################################################################
@@ -123,8 +255,8 @@ TAIL ?= tail
 GREP ?= grep
 
 # get compiler version(s) used to compile ROOT
-CC ?= $(shell $(ROOTCONFIG) --cc)
-CXX ?= $(shell $(ROOTCONFIG) --cxx)
+CC ?= $(shell $(ROOTCONFIG) --cc | $(SED) -e 's/ -[-a-zA-Z0-9_=:,]\\+//g')
+CXX ?= $(shell $(ROOTCONFIG) --cxx | $(SED) -e 's/ -[-a-zA-Z0-9_=:,]\\+//g')
 LD ?= $(shell $(ROOTCONFIG) --ld)
 CPP ?= $(CC) -E
 ROOTCONFIG_HASF77 := \
@@ -133,10 +265,21 @@ ifneq ($(ROOTCONFIG_HASF77),)
 ifneq ($(FC),/usr/bin/f77)
 # if FC points to /usr/bin/f77 (which is usually f2c in disguise), we
 # just take whatever ROOT used, because f2c s*cks...
-FC = $(shell $(ROOTCONFIG) --f77)
+FC = $(shell $(ROOTCONFIG) --f77 | $(SED) -e 's/ -[-a-zA-Z0-9_=:,]\\+//g')
 else
-FC ?= $(shell $(ROOTCONFIG) --f77)
+FC ?= $(shell $(ROOTCONFIG) --f77 | $(SED) -e 's/ -[-a-zA-Z0-9_=:,]\\+//g')
 endif
+endif
+# locate genreflex, rootcint, gccxml for dictionaries
+GENREFLEX ?= $(shell $(ROOTCONFIG) --bindir)/genreflex
+ROOTCINT ?= $(shell $(ROOTCONFIG) --bindir)/rootcint
+GCCXML ?= $(shell which gccxml)
+GCCXMLDIR ?= $(shell dirname $(GCCXML))
+ifneq ($(GENREFLEX),)
+GENREFLEX = $(shell which genreflex)
+endif
+ifneq ($(ROOTCINT),)
+ROOTCINT = $(shell which rootcint)
 endif
 # static libraries
 AR ?= ar
@@ -209,6 +352,10 @@ ROOTLIBS := $(ROOTLIBS)
 ROOTINCLUDES := $(ROOTINCLUDES)
 ROOTCFLAGS := $(ROOTCFLAGS)
 LIBGENVECTOR := $(LIBGENVECTOR)
+GCCXML := $(GCCXML)
+GCCXMLDIR := $(GCCXMLDIR)
+GENREFLEX := $(GENREFLEX)
+ROOTCINT := $(ROOTCINT)
 
 #######################################################################
 # detect OS/compiler flavour
@@ -378,14 +525,16 @@ TUNEFLAGS.SunPro ?= -xtarget=native -xarch=native -xbuiltin -fsimple=2
 # build default skeletal set of compiler flags
 CFLAGS ?= $(PIPEFLAG.$(CC_FLAVOUR)) $(STDOPTFLAGS.$(CC_FLAVOUR)) \
 	  $(TUNEFLAGS.$(CC_FLAVOUR)) $(WARNFLAGS.$(CC_FLAVOUR)) \
-	  $(STDDEBUGFLAGS.$(CC_FLAVOUR)) $(CSTD.$(CC_FLAVOUR))
+	  $(STDDEBUGFLAGS.$(CC_FLAVOUR)) $(CSTD.$(CC_FLAVOUR)) \
+	  $(PICFLAGS.$(CC_FLAVOUR))
 CXXFLAGS ?= $(PIPEFLAG.$(CXX_FLAVOUR)) $(STDOPTFLAGS.$(CXX_FLAVOUR)) \
 	    $(TUNEFLAGS.$(CXX_FLAVOUR)) $(WARNFLAGS.$(CXX_FLAVOUR)) \
 	    $(STDDEBUGFLAGS.$(CXX_FLAVOUR)) $(CXXSTD.$(CXX_FLAVOUR)) \
-	    $(ROOTCFLAGS)
+	    $(ROOTCFLAGS) $(PICFLAGS.$(CXX_FLAVOUR))
 FFLAGS ?= $(PIPEFLAG.$(FC_FLAVOUR)) $(STDOPTFLAGS.$(FC_FLAVOUR)) \
 	  $(TUNEFLAGS.$(FC_FLAVOUR)) $(WARNFLAGS.$(FC_FLAVOUR)) \
-	  $(STDDEBUGFLAGS.$(FC_FLAVOUR)) $(FSTD.$(FC_FLAVOUR))
+	  $(STDDEBUGFLAGS.$(FC_FLAVOUR)) $(FSTD.$(FC_FLAVOUR)) \
+	  $(PICFLAGS.$(FC_FLAVOUR))
 
 # this helps for stack traces from within the application
 ifndef LDFLAGS
@@ -419,10 +568,12 @@ endif
 #######################################################################
 # toolchain (compiler, linker)
 export CPP CC CXX FC LD AR RANLIB
-# compiler/linker flags
-export CFLAGS CXXFLAGS FFLAGS CPPFLAGS \
-    LDFLAGS SHFLAGS LDLIBS LOADLIBES \
-    CPPDEPFLAGS
+export GCCXML GCCXMLDIR ROOTCINT GENREFLEX
+# compiler/linker flags - we do not export those to retain the ability to
+# override them on a per target basis
+#export CFLAGS CXXFLAGS FFLAGS CPPFLAGS \
+#    LDFLAGS SHFLAGS LDLIBS LOADLIBES \
+#    CPPDEPFLAGS
 export PIPEFLAG.Unknown PIPEFLAG.GNU PIPEFLAG.Clang PIPEFLAG.Open64 \
     PIPEFLAG.PathScale PIPEFLAG.Intel PIPEFLAG.SunPro
 export WARNFLAGS.Unknown WARNFLAGS.GNU WARNFLAGS.Clang WARNFLAGS.Open64 \
@@ -458,10 +609,13 @@ export MAKEFLAGS COLORMAKE UNAME_SYS CC_FLAVOUR CXX_FLAVOUR FC_FLAVOUR
 #######################################################################
 # C sources
 csrc += $(wildcard *.c)
-# ROOT dictionaries
+# ROOT/genreflex dictionaries
 alldicts += $(sort $(wildcard *Dict.cc) $(wildcard *Dict.C) \
 	    $(wildcard *Dict.cpp) $(wildcard *Dict.cxx) \
-	    $(wildcard *Dict.c++))
+	    $(wildcard *Dict.c++) \
+	    $(wildcard *Rflx.cc) $(wildcard *Rflx.C) \
+	    $(wildcard *Rflx.cpp) $(wildcard *Rflx.cxx) \
+	    $(wildcard *Rflx.c++))
 # C++ sources (not all variations in use)
 ccsrc += $(sort $(wildcard *.cc) $(wildcard *.C) $(wildcard *.cpp) \
 	$(wildcard *.cxx) $(wildcard *.c++) $(alldicts))
@@ -579,7 +733,7 @@ $(1): $(2)
 endef
 # prototype of pattern rule without action
 define PATTERNRULE_NOACT_TEMPLATE
-$(1): $(2)
+$(1):: $(2)
 endef
 # these will be used in a few foreach loops to synthesize the required
 # rules
@@ -610,10 +764,11 @@ $(ccsrc.cpp:%.cpp=%.o) $(ccsrc.cpp:%.cpp=%.os): CPPFLAGS += $(ROOTINCLUDES)
 $(ccsrc.cxx:%.cxx=%.o) $(ccsrc.cxx:%.cxx=%.os): CPPFLAGS += $(ROOTINCLUDES)
 $(ccsrc.c++:%.c++=%.o) $(ccsrc.c++:%.c++=%.os): CPPFLAGS += $(ROOTINCLUDES)
 
-# patch pattern rules for position independent code (shared libraries)
-%.os: CFLAGS += $(PICFLAGS.$(CC_FLAVOUR)
-%.os: CXXFLAGS += $(PICFLAGS.$(CXX_FLAVOUR))
-%.os: FFLAGS += $(PICFLAGS.$(FC_FLAVOUR))
+# override PIC flags for normal objects - no need to produce position
+# independent code
+%.o: PICFLAGS.$(CC_FLAVOUR)=
+%.o: PICFLAGS.$(CXX_FLAVOUR)=
+%.o: PICFLAGS.$(FC_FLAVOUR)=
 
 # building archives
 ARMSG = "\\x1b[33m[AR]\\x1b[m\\t\\t$@\($^\)"
@@ -658,24 +813,52 @@ $(foreach extension,$(EXTENSIONS_F),$(eval \
 # ROOT dictionaries
 #
 # some versions of ROOT ship a buggy rootcint, so we postprocess with awk
-ROOTCINT_PP = $(AWK) '/.*<.*>::fgIsA = 0/ { if (!($$0 ~ /^template *<>/)) \
-    $$0 = "template <> " $$0; } // { print; }'
-DOROOTCINT = $(shell $(ROOTCONFIG) --bindir)/rootcint -f $@.tmp -c -p \
+ROOTCINT_PP = $(AWK) \
+	      '/^.*<.*>.*::(fgIsA = 0(; *\/\/.*|;)|Class_Name\(\)|ImplFileName\(\)|ImplFileLine\(\)|Dictionary\(\)|Class\(\)|Streamer\(.*\)|ShowMembers\(.*\))$$/ \
+	      { if (!($$0 ~ /^template *<>/)) $$0 = "template <> " $$0; } \
+	      // { print; }'
+DOROOTCINT = $(ROOTCINT) -f $@.tmp -c -p \
 	 $(filter-out %LinkDef.h,$^) $(filter %LinkDef.h,$^) && \
 	 $(ROOTCINT_PP) < $@.tmp > $@ ; $(RM) -f $@.tmp
 ROOTCINTMSG = "\\x1b[31m[ROOTCINT]\\x1b[m\\t$@"
 $(foreach extension,$(EXTENSIONS_CXX),$(eval $(call \
     PATTERNRULE_TEMPLATE,%Dict.$(extension) %Dict.$(extension).h,,ROOTCINTMSG,DOROOTCINT)))
-# no debugging info for dictionaries (no user code in there)
+# link dictionaries without debugging info
 $(foreach extension,$(OBJSUFFIXES),$(eval $(call \
-    PATTERNRULE_NOACT_TEMPLATE,%Dict.$(extension),STDDEBUGFLAGS=)))
+    PATTERNRULE_NOACT_TEMPLATE,%Dict.$(extension),\
+    STDDEBUGFLAGS.$(CXX_FLAVOUR)=)))
+
+#
+# genreflex dictionaries
+#
+# how to generate REFLEX dictionaries
+GENREFLEXMSG = "\\x1b[31m[GENREFLEX]\\x1b[m\\t$@"
+DOGENREFLEX = $(GENREFLEX) $(patsubst %.xml, %.h,$(filter %.xml,$^)) \
+	      -s $(filter %.xml,$^) -o $@ \
+	      --gccxmlpath=$(GCCXMLDIR) --quiet $(CPPFLAGS)
+$(foreach extension,$(EXTENSIONS_CXX),$(eval $(call \
+    PATTERNRULE_TEMPLATE,%Rflx.$(extension),,GENREFLEXMSG,DOGENREFLEX)))
+# tell genreflex where to find ROOT libraries
+$(foreach extension,$(EXTENSIONS_CXX),$(eval $(call \
+        PATTERNRULE_NOACT_TEMPLATE,%Rflx.$(extension),\
+	CPPFLAGS+=$(ROOTINCLUDES))))
+# link dictionaries without debugging info
+$(foreach extension,$(OBJSUFFIXES),$(eval $(call \
+    PATTERNRULE_NOACT_TEMPLATE,%Rflx.$(extension),\
+    STDDEBUGFLAGS.$(CXX_FLAVOUR)=)))
 
 #######################################################################
 # include dependency information (automatic prerequisites)
 #######################################################################
 # automatic prerequisites (inter-source file dependencies)
+#
+# this includes some mangling to get dependencies of Reflex
+# dictionaries right
+MKDEPEND_RFLXMANGLING := \
+    's,\.deps/\([^ .]\+\)Rflx\.dd : \1Rflx.\(C\|cc\|cpp\|cxx\|c++\), : \1Rflx.\2\n\1Rflx.\2 .deps/\1Rflx.dd :,g'
 MKDEPEND = $(CPP) $(CPPDEPFLAGS) $(CPPFLAGS) $< | \
-	   $(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' > $@ || \
+	   $(SED) -e 's,\($*\)\.o[ :]*,\1.o $@ : ,g' \
+	   	-e $(MKDEPEND_RFLXMANGLING) > $@ || \
 	   $(RM) -f $@
 MKDEPENDMSG = "\\x1b[36m[MKDEPEND]\\x1b[m\\t$<"
 # make sure we use the "right" preprocessor

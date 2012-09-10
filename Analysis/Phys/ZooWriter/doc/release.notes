@@ -7,6 +7,13 @@
 ! 2012-09-10 - Paul Seyfert
  - DVAlgorithm is deprecated. Inherit from DaVinciTupleAlgorithm instead.
    NB: not tested at all.
+ - new Zoo/Rules.mk file provided by Manuel Schiller
+   »Neu daran ist, dass man (so man will) genreflex-Dictionaries verwenden
+   kann, so dann man viel einfacher offizielle LHCb-Klassen "zweckentfremden
+   kann" - habe ich gerade zu Debuggingzwecken mit unserem Fittercode
+   gemacht. Sonst ein paar kleine fixes hier und da, und bessere
+   Dokumentation.«
+
 
 ! 2012-09-05 - Paul Seyfert
  - Add LHCb::Track::ghostProbability to ZooTrackInfo
