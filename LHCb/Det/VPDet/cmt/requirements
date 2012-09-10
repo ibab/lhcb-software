@@ -1,0 +1,39 @@
+# $Id: requirements,v 1.7 2010-04-13 10:09:43 cocov Exp $
+# =========================================================================
+
+# Maintained by : Victor Coco
+
+# =============== structure ===============================================
+package VPDet
+version           v1r10
+branches         src cmt doc VeloPixDet dict
+
+# =============== used packages ===========================================
+use DetDesc     v*    Det
+use DetDescCnv  v*    Det
+use LHCbKernel  v*    Kernel
+use LHCbMath    v*    Kernel
+use GaudiAlg    v*
+use GSL         v*    LCG_Interfaces
+use Boost       v*    LCG_Interfaces
+
+# =============== own includes ============================================
+apply_pattern install_more_includes more=VeloPixDet
+
+# =============== link library (base classes) =============================
+library          VeloPixDetLib        Lib/*.cpp
+
+# =============== component library =======================================
+library          VeloPixDet           component/*.cpp
+
+#================ patterns ================================================
+apply_pattern component_library library=VeloPixDet
+apply_pattern linker_library    library=VeloPixDetLib
+
+# =============== LCG Dictionaries ============================================
+apply_pattern     reflex_dictionary                                 \
+                  dictionary=VeloPixDet                                \
+                  headerfiles=$(VELOPIXDETROOT)/dict/VeloPixDetDict.h     \
+                  selectionfile=$(VELOPIXDETROOT)/dict/VeloPixDetDict.xml \
+                  options="-U__MINGW32__"
+
