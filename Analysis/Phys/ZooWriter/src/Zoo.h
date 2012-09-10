@@ -79,7 +79,7 @@ class ZooStable : public TObject
 };
       
       
-/** @ZooTreefitInfo
+/** @class ZooTreefitInfo
  *  \brief Information from fit of the complete decay tree
  */
 class ZooTreefitInfo : public TObject
@@ -902,8 +902,8 @@ class ZooTrackExtraInfo: public ZooKeyValueBlock
   ClassDef(ZooTrackExtraInfo, 3);
 };
 
-/** @class ZooTrack
- * track information
+/** @class ZooTrackInfo
+ * track information. We store one ZooTrackInfo per track. i.e. if a track is used for several ZooParticles in the event (a kaon and a pion) then both of them point to the same ZooTrackInfo.
  */
 class ZooTrackInfo : public TObject
 {
@@ -914,21 +914,22 @@ class ZooTrackInfo : public TObject
 	    m_nmeas(0), m_nlhcbids(0), m_nVeloIDs(0), m_nTTIDs(0), m_nITIDs(0),
 	    m_nOTIDs(0), m_nMuonIDs(0), m_type(UChar_t(-1)),
 	    m_history(UChar_t(-1)), m_patstate(UChar_t(-1)),
-	    m_fitstate(UChar_t(-1)) { }
+	    m_fitstate(UChar_t(-1)), m_ghostprob(-1.) { }
 
 	ZooTrackInfo(double chi2, int ndf, int nmeas, int nlhcbids,
 		int nVeloIDs, int nTTIDs, int nITIDs, int nOTIDs, int nMuonIDs,
 		int type, int flags, int history, int patstate, int fitstate,
-		int cloneDist) :
+		int cloneDist, double ghostprob) :
 	    m_chi2(chi2), m_cloneDist(cloneDist), m_flags(flags), m_ndf(ndf),
 	    m_nmeas(nmeas), m_nlhcbids(nlhcbids), m_nVeloIDs(nVeloIDs),
 	    m_nTTIDs(nTTIDs), m_nITIDs(nITIDs), m_nOTIDs(nOTIDs),
 	    m_nMuonIDs(nMuonIDs), m_type(type), m_history(history),
-	    m_patstate(patstate), m_fitstate(fitstate) { }
+	    m_patstate(patstate), m_fitstate(fitstate), m_ghostprob(ghostprob) { }
 
 	virtual ~ZooTrackInfo();
 
 	double chi2()       const { return m_chi2; }
+  double ghostProbability() const { return m_ghostprob; }
 	int ndf()           const { return m_ndf; }//for compatibility reasons
 	int nDoF()           const { return m_ndf; }
 	int nmeas()         const { return m_nmeas; }
@@ -1004,6 +1005,7 @@ class ZooTrackInfo : public TObject
 
     private:
 	Float_t m_chi2;	
+  Float_t m_ghostprob;
 	//FIXME: for the moment save this as an int but in reality this is a float
 	//check if we need floating point precision
 	Int_t m_cloneDist;
@@ -1037,7 +1039,7 @@ class ZooTrackInfo : public TObject
 	TRef m_expectedLhcbids;
 	TRef m_collectedLhcbids;
 
-	ClassDef(ZooTrackInfo, 4)
+	ClassDef(ZooTrackInfo, 5)
 };
 
 /// generator level info on generated event

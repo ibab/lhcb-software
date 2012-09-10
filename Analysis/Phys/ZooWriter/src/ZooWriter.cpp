@@ -1564,7 +1564,8 @@ void ZooWriter::writeTrackInfo(ZooP* zp, const LHCb::Particle* p)
 		    (int)tr->history(), 
 		    (int)tr->patRecStatus(),
 		    (int)tr->fitStatus(),
-		    (int)tr->info(LHCb::Track::CloneDist, -1.)));
+		    (int)tr->info(LHCb::Track::CloneDist, -1.),
+		    tr->ghostProbability()));
 	if (m_writeLHCbIDs) {
 	    const std::vector<LHCb::LHCbID>& ids = tr->lhcbIDs();
 	    ztri->setLhcbids(

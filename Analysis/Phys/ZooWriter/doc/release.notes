@@ -4,6 +4,14 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-09-05 - Paul Seyfert
+ - Add LHCb::Track::ghostProbability to ZooTrackInfo
+   NB: commits on 2009-06-10 and 2009-12-22 may be confusing in this context.
+       What got added on 2009-06-10 was the ghost classification (a MC 
+       classification of the ghost - what type of ghost is this). The actual 
+       ghost probabilty is a multivariate to state how likely it is that the
+       track is a ghost. This is also accessible on data.
+
 ! 2012-08-11 - Paul Seyfert
  - bugfix in backward compatibility in ZooOptionsReader
 
