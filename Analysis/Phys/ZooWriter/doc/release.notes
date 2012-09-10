@@ -4,6 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-09-10 - Paul Seyfert
+ - DVAlgorithm is deprecated. Inherit from DaVinciTupleAlgorithm instead.
+   NB: not tested at all.
+
 ! 2012-09-05 - Paul Seyfert
  - Add LHCb::Track::ghostProbability to ZooTrackInfo
    NB: commits on 2009-06-10 and 2009-12-22 may be confusing in this context.

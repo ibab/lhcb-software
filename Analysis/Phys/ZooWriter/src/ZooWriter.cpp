@@ -268,7 +268,7 @@ void ZooWriter::ZooWriterContext::endEvent()
 }
 
 ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
-    DVAlgorithm (name,svc), 
+    DaVinciTupleAlgorithm (name,svc), 
     m_context(0),
     m_dist(0),
     m_bkg(0),
@@ -339,7 +339,7 @@ ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
 
 StatusCode ZooWriter::initialize  ()
 {
-    DVAlgorithm::initialize();
+    DaVinciTupleAlgorithm::initialize();
 
     m_parts.clear();
     for (unsigned k = 0 ; k < m_sel_names.value().size() ; ++k)
@@ -501,7 +501,7 @@ StatusCode ZooWriter::finalize()
     }
     // release context
     m_ctx.reset();
-    return DVAlgorithm::finalize();
+    return DaVinciTupleAlgorithm::finalize();
 }
 
 ZooWriter::~ZooWriter () { }

@@ -16,7 +16,7 @@
 #include <TFile.h>
 #include <TTree.h>
 
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciTupleAlgorithm.h"
 #include "Kernel/Particle2MCLinker.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 
@@ -81,7 +81,7 @@ class ZooEv;
  *  @author Georg Krocker
  *  @date   2010-06-21
  */
-class ZooWriter : public DVAlgorithm {
+class ZooWriter : public DaVinciTupleAlgorithm {
     public:
 	ZooWriter( const std::string& name , ISvcLocator*       svc  );
 	virtual StatusCode initialize();
