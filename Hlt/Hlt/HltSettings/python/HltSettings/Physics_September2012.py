@@ -73,7 +73,7 @@ class Physics_September2012( object ):
                                                , 'AllL0Tight_GEC'        : 'Loose'
                                                , 'AllL0Tight_Velo_NHits' : 9 
                                                , 'AllL0Tight_Velo_Qcut'  : 3   
-                                               , 'AllL0Tight_ValidateTT' : False 
+                                               , 'AllL0Tight_ValidateTT' : True 
                                                , 'AllL0_PT'         :  1600
                                                , 'AllL0_P'          :  3000
                                                , 'AllL0_IP'         :  0.100
@@ -82,7 +82,7 @@ class Physics_September2012( object ):
                                                , 'AllL0_GEC'        : 'Loose'
                                                , 'AllL0_Velo_NHits' : 9 
                                                , 'AllL0_Velo_Qcut'  : 3  
-                                               , 'AllL0_ValidateTT' : False 
+                                               , 'AllL0_ValidateTT' : True 
                                                , 'Muon_PT'       :  1000 
                                                , 'Muon_P'        :  3000 
                                                , 'Muon_IP'       :     0.100
@@ -300,8 +300,7 @@ class Physics_September2012( object ):
                  , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
                  , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV','Hlt1NoPVPassThrough' ]
 
-        from Hlt1TechnicalLines import Hlt1TechnicalLines 
-        lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
-        
+        #from Hlt1TechnicalLines import Hlt1TechnicalLines 
+        #lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
 
         return lines 
