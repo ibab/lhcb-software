@@ -39,7 +39,8 @@ use OTDet                 v8r7    Det     # Alexandr Kozlinskiy
 use RichDet               v16r12  Det     # Chris Jones
 use STDet                 v4r27   Det     # J. van Tilburg
 use VeloDet               v13r18p1 Det    # Mark Tobin, Kurt Rinnert
-use VPDet                 v1r10   Det     # Victor Coco
+use VeloPixDet            v1r10   Det     # Victor Coco
+#use VPDet v1r0 Det
 use VLDet                 v1r1    Det     # Heinrich Schindler
 
 # Event data model
