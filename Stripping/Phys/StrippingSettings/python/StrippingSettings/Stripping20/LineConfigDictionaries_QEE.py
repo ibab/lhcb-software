@@ -437,10 +437,12 @@ StrangeBaryons = {
     'Lambda0MassWindow'            :       6., # < 6 for all six cases
     
     #Bachelor cuts
+    
     'minCHI2IPPV_Pi_Bachelor_LLL' :      10., # > 10
     'minCHI2IPPV_Pi_Bachelor_DDD' :       4., # > 4
     'minCHI2IPPV_Bachelor'     :       3., # > 3 for the other 3 cases: Tight DDL & DDD + Loose DDL
-    'minCHI2IPPV_K_Bachelor_D' :      10., # > 6
+    'minCHI2IPPV_K_Bachelor_D' :      3., # > 6
+    'minCHI2IPPV_K_Bachelor_L' :      3., # should have been 10 but use it for DDL case too , reduced to 3
     
     # Xi Decay
     'CHI2VTX_Xi'                  :      25., # < 25 for all 6 cases
