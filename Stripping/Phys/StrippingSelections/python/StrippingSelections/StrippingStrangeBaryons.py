@@ -8,7 +8,7 @@ Xi -> Lambda pi,   Omega -> Lambda K
 LLL DDL DDD
 '''
 
-__author__ = ['Anonymous']
+__author__ = ['Mihai Straticiuc', 'Florin Maciuc', 'Nguyen Thi Dung']
 __date__ = '26/06/2012'
 __version__ = '$Revision: 0.3 $'
 __all__ = ('StrippingStrangeBaryonsConf')
@@ -30,8 +30,8 @@ from GaudiKernel.SystemOfUnits import MeV
 
 config_default = { #PID cuts
                    'checkPV'   : True,
-		   'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')",
-		   'ProtonPIDppi'              :       -5.,  #(PIDp-PIDpi) > -5                   
+                   'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')",
+                   'ProtonPIDppi'              :       -5.,  #(PIDp-PIDpi) > -5                   
                    'PionPIDpiK'              :       0.,   #(PIDp-PIDK) > 0
                    
                    # Lambda Decay
@@ -50,10 +50,12 @@ config_default = { #PID cuts
                    'Lambda0MassWindow'            :       6., # < 6 for all six cases
                    
                    #Bachelor cuts
+
                    'minCHI2IPPV_Pi_Bachelor_LLL' :      10., # > 10
                    'minCHI2IPPV_Pi_Bachelor_DDD' :       4., # > 4
                    'minCHI2IPPV_Bachelor'     :       3., # > 3 for the other 3 cases: Tight DDL & DDD + Loose DDL
-                   'minCHI2IPPV_K_Bachelor_D' :      10., # > 6
+                   'minCHI2IPPV_K_Bachelor_D' :      3., # > 6
+                   'minCHI2IPPV_K_Bachelor_L' :      3., # should have been 10 but use it for DDL case too , reduced to 3
                    
                    # Xi Decay
                    'CHI2VTX_Xi'                  :      25., # < 25 for all 6 cases
@@ -101,6 +103,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                   'minCHI2IPPV_Pi_Bachelor_DDD',
                                   'minCHI2IPPV_Bachelor',
                                   'minCHI2IPPV_K_Bachelor_D',
+                                  'minCHI2IPPV_K_Bachelor_L',
                                   # Xi Decay
                                   'CHI2VTX_Xi',
                                   'Xi_FDCHI2_OWNPV_LLL',
@@ -124,21 +127,21 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
 
            #### LLL case ####
            PionsForLambdaLList = createSubSel( OutputList = "PionsForLambda" + self.name,
-                                               InputList = DataOnDemand("Phys/StdLoosePions/Particles"),
-                                               Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & "\
+                                               InputList = DataOnDemand("Phys/StdAllLoosePions/Particles"),
+                                               Cuts = "(ISLONG) & (TRCHI2DOF < %(TRCHI2DOF)s ) & "\
                                                "(BPVIPCHI2() > %(minCHI2IPPV_pPi_LL)s)" % self.config )
            ProtonsForLambdaLList = createSubSel( OutputList = "ProtonsForLambdaLoose" + self.name,
-                                                 InputList = DataOnDemand("Phys/StdLooseProtons/Particles"),
-                                                 Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & "\
+                                                 InputList = DataOnDemand("Phys/StdAllLooseProtons/Particles"),
+                                                 Cuts = "(ISLONG) & (TRCHI2DOF < %(TRCHI2DOF)s ) & "\
                                                  "(BPVIPCHI2() > %(minCHI2IPPV_L_LL)s)" % self.config )
            PionsForXiLList = createSubSel( OutputList = "PionsForXi" + self.name,
-                                           InputList = DataOnDemand("Phys/StdLoosePions/Particles"),
-                                           Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & "\
+                                           InputList = DataOnDemand("Phys/StdAllLoosePions/Particles"),
+                                           Cuts = "(ISLONG) & (TRCHI2DOF < %(TRCHI2DOF)s ) & "\
                                            "(BPVIPCHI2() > %(minCHI2IPPV_Pi_Bachelor_LLL)s)" % self.config )
            KaonsForOmegaLList = createSubSel( OutputList = "KaonsForOmega" + self.name,
-                                              InputList = DataOnDemand("Phys/StdLooseKaons/Particles"),
-                                              Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & "\
-                                              "(BPVIPCHI2() > %(minCHI2IPPV_Bachelor)s)" % self.config )
+                                              InputList = DataOnDemand("Phys/StdAllLooseKaons/Particles"),
+                                              Cuts = "(ISLONG) & (TRCHI2DOF < %(TRCHI2DOF)s ) & "\
+                                              "(BPVIPCHI2() > %(minCHI2IPPV_K_Bachelor_L)s)" % self.config )
            
 
            
@@ -153,10 +156,11 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                                  "(TRCHI2DOF < %(TRCHI2DOF)s ) "\
                                                  "& (BPVIPCHI2() > %(minCHI2IPPV_pPi)s)" % self.config )
            PionsForXiDLList = createSubSel( OutputList = "PionsForXiDL" + self.name,
-                                            InputList = DataOnDemand("Phys/StdLoosePions/Particles"),
-                                            Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & "\
+                                            InputList = DataOnDemand("Phys/StdAllLoosePions/Particles"),
+                                            Cuts = "(ISLONG) & (TRCHI2DOF < %(TRCHI2DOF)s ) & "\
                                             "(BPVIPCHI2() > %(minCHI2IPPV_Bachelor)s)" % self.config )
            
+
            
            #### DDD ####de adaugat conditiile pentru protoni
            PionsForXiDDList = createSubSel( OutputList = "PionsForXiDD" + self.name,
@@ -164,7 +168,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                             Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & "\
                                             "(BPVIPCHI2() > %(minCHI2IPPV_Pi_Bachelor_DDD)s)" % self.config )
            KaonsForOmegaDList = createSubSel( OutputList = "KaonsForOmegaD" + self.name,
-                                              InputList = DataOnDemand("Phys/StdLooseKaons/Particles"),
+                                              InputList = DataOnDemand("Phys/StdLooseDownKaons/Particles"),
                                               Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & "\
                                               "(BPVIPCHI2() > %(minCHI2IPPV_K_Bachelor_D)s)" % self.config )
            
@@ -238,17 +242,18 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
 
        def makeXiminus(self, OutputList, DaughterLists, FDCHI2 ):            
               ''' Make a Xi minus candidate '''
+              myPostVertexCuts  = "(VFASPF(VCHI2)< %%(CHI2VTX_Xi)s) & (BPVVDCHI2 > %%(%s)s) & "\
+                                                      "((CHILD(PX,1)*CHILD(PX,0)+CHILD(PY,1)*CHILD(PY,0)+CHILD(PZ,1)*CHILD(PZ,0))/(CHILD(P,1)*CHILD(P,0)) > %%(COS_L_Xi)s)" % (FDCHI2)
               #print "Make %s"%OutputList
-              PostVertexCuts = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s) & (LV01 > %(COS_L_Xi)s)" %self.config
+              #PostVertexCuts = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s) & (LV01 > %(COS_L_Xi)s)" %self.config
               #PostVertexCuts = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s) " %self.config
-              PostVertexCuts += "(BPVVDCHI2 > %s)" %self.config[FDCHI2]
+              #PostVertexCuts += "(BPVVDCHI2 > %s)" %self.config[FDCHI2]
               
               Ximinus2LambdaPi = createCombinationSel(OutputList = OutputList,
                                                       DecayDescriptor = "[Xi- -> Lambda0 pi-]cc",
                                                       DaughterLists   = DaughterLists,
                                                       PreVertexCuts   = "(ADAMASS('Xi-') < %(XiMassWindow)s*MeV)"% self.config,
-                                                      PostVertexCuts  = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s) & (BPVVDCHI2 > %(L_FDCHI2_OWNPV)s) & "\
-                                                      "((CHILD(PX,1)*CHILD(PX,0)+CHILD(PY,1)*CHILD(PY,0)+CHILD(PZ,1)*CHILD(PZ,0))/(CHILD(P,1)*CHILD(P,0)) > %(COS_L_Xi)s)" %self.config 
+                                                      PostVertexCuts = myPostVertexCuts % self.config
                                                       #"(LV01 > %(COS_L_Xi)s) " %self.config
                                                       #PostVertexCuts  = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s) & (BPVVDCHI2 > %(L_FDCHI2_OWNPV)s)" %self.config
                                                       # PostVertexCuts  = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s)" %self.config
@@ -263,14 +268,17 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
        def makeOmegaminus(self, OutputList, DaughterLists, FDCHI2 ): 
               ''' Make an Omega minus candidate '''
               #print "Make %s"%OutputList
+              myPostVertexCuts = "(VFASPF(VCHI2)< %%(CHI2VTX_Omega)s) & (BPVVDCHI2 > %%(%s)s) & "\
+                                                        "((CHILD(PX,1)*CHILD(PX,0)+CHILD(PY,1)*CHILD(PY,0)+CHILD(PZ,1)*CHILD(PZ,0))/(CHILD(P,1)*CHILD(P,0)) > %%(COS_L_Xi)s)" % (FDCHI2)
               Omegaminus2LambdaK = createCombinationSel(OutputList = OutputList,
                                                         DecayDescriptor = "[Omega- -> Lambda0 K-]cc",
                                                         DaughterLists = DaughterLists,
-                                                        DaughterCuts = {"K-"      : "(PT>0.1*GeV)"},
-                                                        PreVertexCuts = "(ADAMASS('Omega-') < %(OmegaMassWindow)s*MeV)"%self.config,
+#                                                        DaughterCuts = {"K-"      : "(PT>0.*GeV)"},
+                                                        PreVertexCuts = "(ADAMASS('Omega-') < %(OmegaMassWindow)s*MeV)" % self.config,
+                                                        PostVertexCuts = myPostVertexCuts % self.config
                                                         #PostVertexCuts = "(VFASPF(VCHI2/VDOF)<25) & (BPVDLS> %(DLSForLongLived)s) " %self.config
-                                                        PostVertexCuts = "(VFASPF(VCHI2)< %(CHI2VTX_Omega)s) & (BPVVDCHI2 > %(L_FDCHI2_OWNPV)s) & "\
-                                                        "((CHILD(PX,1)*CHILD(PX,0)+CHILD(PY,1)*CHILD(PY,0)+CHILD(PZ,1)*CHILD(PZ,0))/(CHILD(P,1)*CHILD(P,0)) > %(COS_L_Xi)s)" %self.config
+                                                        #PostVertexCuts = "(VFASPF(VCHI2)< %(CHI2VTX_Omega)s) & (BPVVDCHI2 > %(L_FDCHI2_OWNPV)s) & "\
+                                                        #"((CHILD(PX,1)*CHILD(PX,0)+CHILD(PY,1)*CHILD(PY,0)+CHILD(PZ,1)*CHILD(PZ,0))/(CHILD(P,1)*CHILD(P,0)) > %(COS_L_Xi)s)" %self.config
                                                         #"(LV01 > %(COS_L_Xi)s) " %self.config
                                                         )
               Omegaminus2LambdaKLine = StrippingLine(OutputList+self.name,  HLT = "HLT_PASS('Hlt1MBNoBiasDecision')", algos = [Omegaminus2LambdaK])
@@ -295,14 +303,12 @@ def createCombinationSel( OutputList,
                           PreVertexCuts = "ALL",
                           PostVertexCuts = "ALL" ) :
        '''create a selection using a ParticleCombiner with a single decay descriptor'''
-       """
-       print "here are combination parameters"
-       print DecayDescriptor
-       print DaughterLists
-       print DaughterCuts
-       print PreVertexCuts
-       print PostVertexCuts
-       """
+#       print "here are combination parameters"
+#       print DecayDescriptor
+#       print DaughterLists
+#       print DaughterCuts
+#       print PreVertexCuts
+#       print PostVertexCuts
        combiner = CombineParticles( DecayDescriptor = DecayDescriptor,
                                     DaughtersCuts = DaughterCuts,
                                     MotherCut = PostVertexCuts,
