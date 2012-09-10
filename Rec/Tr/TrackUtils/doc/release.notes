@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-09-10 - Paul Seyfert
+ - use getIfExists in TrackAddNNGhostId
+
 !========================= TrackUtils v1r48 2012-07-24 =========================
 ! 2012-07-19 - Paul Seyfert
  - Keep LHCb::Track::NCandCommonHits on DSTs for ghost probability computation

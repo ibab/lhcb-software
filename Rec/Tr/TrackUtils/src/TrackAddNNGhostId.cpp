@@ -43,7 +43,7 @@ StatusCode TrackAddNNGhostId::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> initialize" << endmsg;
 
   m_ghostTool =  tool<ITrackManipulator>(m_ghostToolName,this);
   
@@ -55,14 +55,13 @@ StatusCode TrackAddNNGhostId::initialize() {
 //=============================================================================
 StatusCode TrackAddNNGhostId::execute() {
 
-  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> Execute" << endmsg;
   
-  if( !exist<Tracks>(m_inputLocation) ){
-    if( msgLevel(MSG::DEBUG) ) debug() << "no tracks at "<<m_inputLocation << endmsg;
+  Tracks* inCont = getIfExists<Tracks>(m_inputLocation);
+  if (NULL==inCont) {
+    if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "no tracks at "<<m_inputLocation << endmsg;
     return StatusCode::SUCCESS;
   }
-  
-  Tracks* inCont = get<Tracks>(m_inputLocation);
   
   // loop 
   for (Tracks::iterator iterT = inCont->begin(); iterT != inCont->end(); ++iterT) {
@@ -80,7 +79,7 @@ StatusCode TrackAddNNGhostId::execute() {
 //=============================================================================
 StatusCode TrackAddNNGhostId::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
