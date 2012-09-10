@@ -32,6 +32,10 @@
 #include "RootCnv/RootDataConnection.h"
 #include "RootUtils.h"
 
+// ROOT include files
+#include "TROOT.h"
+#include "TTree.h"
+
 using namespace std;
 using namespace Gaudi;
 typedef const string& CSTR;
