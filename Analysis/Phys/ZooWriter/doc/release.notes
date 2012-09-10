@@ -13,6 +13,7 @@
    kann" - habe ich gerade zu Debuggingzwecken mit unserem Fittercode
    gemacht. Sonst ein paar kleine fixes hier und da, und bessere
    Dokumentation.«
+ - added developers_corner/makeZooList.py to generate ZooTriggerDecisions.
 
 
 ! 2012-09-05 - Paul Seyfert
