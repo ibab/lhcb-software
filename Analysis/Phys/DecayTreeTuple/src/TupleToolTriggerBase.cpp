@@ -142,7 +142,8 @@ bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
   boost::regex strip("Stripping.*Decision");
 
   //m_hlt1_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt1SelectionID");
-  for( std::vector< std::string >::const_iterator s=list.begin();s != list.end();++s)
+  for ( std::vector< std::string >::const_iterator s = list.begin(); 
+        s != list.end(); ++s )
   {
     if( boost::regex_match( *s, l0 ) )
     {
@@ -160,9 +161,11 @@ bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
     {
       m_stripping.push_back(*s);
     }
-    else {
+    else 
+    {
       error() << "List member ``" << *s 
-              << "'' does not seem to match any known pattern. Have you forgotten the trailing `Decision'?" << endmsg ;
+              << "'' does not match any known pattern. Have you forgotten the trailing 'Decision' or the starting 'Stripping' ?" 
+              << endmsg ;
     }
   }
 

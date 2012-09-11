@@ -28,12 +28,12 @@
  - src/TupleToolTriggerBase: complain when trailing Decision is missing.
 
 ! 2012-07-31 - Patrick Koppenburg
- Backward incompatible changes (i.e. some variables will change)
- - src/MCTupleToolKinematic.cpp : store OSCIL flag in Verbose mode only
- - src/TupleToolDecayTreeFitter : rename chi2_B to chi2
- Backward compatible changes:
- - src/DecayTreeTupleBase.* : inherit from DaVinciTupleAlg
- - src/TupleToolTrackInfo.cpp : add prefix+"_TRACK_FirstMeasurementX,Y,Z in Verbose mode
+ - Backward incompatible changes (i.e. some variables will change)
+  . src/MCTupleToolKinematic.cpp : store OSCIL flag in Verbose mode only
+  . src/TupleToolDecayTreeFitter : rename chi2_B to chi2
+ - Backward compatible changes:
+  . src/DecayTreeTupleBase.* : inherit from DaVinciTupleAlg
+  . src/TupleToolTrackInfo.cpp : add prefix+"_TRACK_FirstMeasurementX,Y,Z in Verbose mode
 
 !========================= DecayTreeTuple v3r24p1 2012-07-26 =========================
 
