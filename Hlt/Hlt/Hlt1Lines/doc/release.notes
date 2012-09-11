@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2012-09-11 - Johannes Albrecht
+ - fix preambulo in pALines
 
 !========================= Hlt1Lines v6r27 2012-08-30 =========================
 ! 2012-08-29 - Johannes Albrecht

@@ -47,7 +47,10 @@ class Hlt1pALinesConf(HltLinesConfigurableUser):
         from HltLine.HltLine import Hlt1Line as Line
         from HltLine.HltDecodeRaw import DecodeVELO
         from Configurables import LoKi__VoidFilter
-        fltr =  LoKi__VoidFilter ( 'velohits' , Code = " in_range ( 0 , CONTAINS('Raw/Velo/LiteClusters') , %(nVeloLowMultMicroBias)s ) " % self.getProps())
+        
+        fltr =  LoKi__VoidFilter ( 'velohits'
+                                   , Preambulo = ['from LoKiPhys.decorators import *','from LoKiCore.functions import *']
+                                   , Code = " in_range( 0 , CONTAINS('Raw/Velo/LiteClusters') , %(nVeloLowMultMicroBias)s ) " % self.getProps())
 
         Line('MicroBiasVeloLowMult',
              prescale  = self.prescale,
