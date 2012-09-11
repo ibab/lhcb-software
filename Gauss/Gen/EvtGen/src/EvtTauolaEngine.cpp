@@ -25,10 +25,10 @@
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtReport.hh"
 
-#include "Tauola.h"
-#include "TauolaHepMCEvent.h"
-#include "TauolaHepMCParticle.h"
-#include "TauolaParticle.h"
+#include "Tauola/Tauola.h"
+#include "Tauola/TauolaHepMCEvent.h"
+#include "Tauola/TauolaHepMCParticle.h"
+#include "Tauola/TauolaParticle.h"
 
 #include "HepMC/GenVertex.h"
 #include "HepMC/SimpleVector.h"
@@ -68,11 +68,11 @@ void EvtTauolaEngine::initialise() {
 
     // These three lines are not really necessary since they are the default.
     // But they are here so that we know what the initial conditions are.
-    Tauola::setDecayingParticle(_tauPDG); // tau PDG code
-    Tauola::setSameParticleDecayMode(Tauola::All); // all modes allowed
-    Tauola::setOppositeParticleDecayMode(Tauola::All); // all modes allowed
+    Tauolapp::Tauola::setDecayingParticle(_tauPDG); // tau PDG code
+    Tauolapp::Tauola::setSameParticleDecayMode(Tauolapp::Tauola::All); // all modes allowed
+    Tauolapp::Tauola::setOppositeParticleDecayMode(Tauolapp::Tauola::All); // all modes allowed
 
-    Tauola::initialize();
+    Tauolapp::Tauola::initialize();
 
     this->setUpPossibleTauModes();
 
@@ -175,7 +175,7 @@ void EvtTauolaEngine::setUpPossibleTauModes() {
 	  tauolaModeBFs[iTauMode] /= totalTauModeBF;
 	  double modeBF = tauolaModeBFs[iTauMode];
 	  report(INFO,"EvtGen")<<"Setting TAUOLA BF for mode "<<iTauMode+1<<" = "<<modeBF<<endl;
-	  Tauola::setTauBr(iTauMode+1, modeBF);
+	  Tauolapp::Tauola::setTauBr(iTauMode+1, modeBF);
 	  
 	}
 
@@ -302,7 +302,7 @@ void EvtTauolaEngine::decayTauEvent(EvtParticle* tauParticle) {
 	  tauMap[hepMCDaughter] = theDaughter;
 	} else {
 	  // Treat all other particles as "stable"
-	  hepMCDaughter->set_status(TauolaParticle::STABLE);
+	  hepMCDaughter->set_status(Tauolapp::TauolaParticle::STABLE);
 	}
 		
       } // theDaughter != 0
@@ -319,7 +319,7 @@ void EvtTauolaEngine::decayTauEvent(EvtParticle* tauParticle) {
   
   // Now pass the event to Tauola for processing
   // Create a Tauola event object
-  TauolaHepMCEvent tauolaEvent(theEvent);
+  Tauolapp::TauolaHepMCEvent tauolaEvent(theEvent);
 
   // Run the Tauola algorithm
   tauolaEvent.decayTaus();
@@ -436,7 +436,7 @@ HepMC::GenParticle* EvtTauolaEngine::createGenParticle(EvtParticle* theParticle)
   int PDGInt = EvtPDL::getStdHep(theParticle->getId());
 
   // Set the status flag for the particle.
-  int status = TauolaParticle::HISTORY;
+  int status = Tauolapp::TauolaParticle::HISTORY;
 
   HepMC::GenParticle* genParticle = new HepMC::GenParticle(hepMC_p4, PDGInt, status);
 

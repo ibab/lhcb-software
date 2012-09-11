@@ -19,8 +19,8 @@ use         photos++     v*  LCG_GeneratorsInterfaces
 use         tauola++     v*  LCG_GeneratorsInterfaces
 use         pythia8      v*  LCG_GeneratorsInterfaces
 
-macro photos++_native_version 3.3
-macro tauola++_native_version 1.0.5.p1
+macro photos++_native_version 3.51
+macro tauola++_native_version 1.0.7
 
 set PYTHIA8DATA $(pythia8_home)/xmldoc
 
