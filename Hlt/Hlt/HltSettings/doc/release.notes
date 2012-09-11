@@ -5,6 +5,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-09-11 - Johannes Albrecht
+ - put Hlt1 technical lines back in Physics_September2012
+ 
 !========================= HltSettings v5r47 2012-09-10 =========================
 ! 2012-09-10 - V. Gligorov
  - TT validate true in Physics_September2012
