@@ -1045,10 +1045,8 @@ StatusCode ParticleFlow4Jets::loadDatas() {
   }
   
   if (m_useVelo){
-    if( exist<LHCb::ProtoParticles>("Rec/ProtoP/VeloProtoPMaker") ){
-      return Warning("No charged protopacticles at Rec/ProtoP/VeloProtoPMaker");
-    }
-    m_protoParticles["Velo"] = get<LHCb::ProtoParticles*>("Rec/ProtoP/VeloProtoPMaker");
+    if( exist<LHCb::ProtoParticles>("Rec/ProtoP/VeloProtoPMaker") )
+       m_protoParticles["Velo"] = get<LHCb::ProtoParticles*>("Rec/ProtoP/VeloProtoPMaker");
   }
   // Get ECAL Clusters container
   if(exist<LHCb::CaloClusters>( "Rec/Calo/EcalClusters" ))

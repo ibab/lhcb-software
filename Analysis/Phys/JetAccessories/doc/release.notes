@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-09-11 - Murilo Rangel
+- Fix of the fix - wrong case call for Velo Tracks 
+
 ! 2012-09-2 - Victor Coco
 - Fix wrong case call for Velo Tracks 
 
