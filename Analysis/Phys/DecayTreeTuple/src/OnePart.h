@@ -2,7 +2,7 @@
 #ifndef ONEPART_H
 #define ONEPART_H 1
 
-// Include files
+#include "GaudiKernel/MsgStream.h"
 
 /** @class OnePart OnePart.h
  *
@@ -36,7 +36,7 @@ namespace Decays
     /// Refers to the particle's real syntax (not escaped)
     const std::string& getRealName() const;
     /// Prints the tree strucutre, if verbose, also prints the tool list
-    void printStructure( std::ostream& os, bool verbose=false ) const ;
+    void printStructure( MsgStream & os, bool verbose=false ) const ;
     /// depth
     int depth() const;
     /// set mother

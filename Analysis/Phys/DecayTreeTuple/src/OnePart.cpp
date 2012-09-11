@@ -65,20 +65,21 @@ std::vector<std::string> Decays::OnePart::mctoolList() const{
   return v;
 }
 // -----------------------------------------------------
-void Decays::OnePart::printStructure( std::ostream& os, bool verbose ) const{
-  int dd = depth();
+void Decays::OnePart::printStructure( MsgStream & os, bool verbose ) const
+{
+  const int dd = depth();
   std::string i;
   if( dd ) i = std::string( 3*dd, ' ' );
   i.append( info() );
-  if ( !verbose ) { os << i << "\n"; }
+  if ( !verbose ) { os << i << endmsg; }
   else 
   {
     std::vector<std::string> l = toolList();
-    os << "|" << i << std::setw( 20-i.size() ) <<  " " << ":";
-    os << Decays::join( l.begin(), l.end(), ", ", "none" ) << "\n";
+    os << "  " << i << std::setw( 30-i.size() ) << " :";
+    os << Decays::join( l.begin(), l.end(), ", ", "none" ) << endmsg;
   }
-  if( m_daughters.empty() ) return;
-  for( std::vector<const OnePart*>::const_iterator cit=m_daughters.begin();
+  if ( m_daughters.empty() ) return;
+  for( std::vector<const OnePart*>::const_iterator cit = m_daughters.begin();
        cit != m_daughters.end(); ++cit )
   {
     (*cit)->printStructure( os, verbose );

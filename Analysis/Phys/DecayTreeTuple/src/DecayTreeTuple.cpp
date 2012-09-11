@@ -22,13 +22,13 @@ DecayTreeTuple::DecayTreeTuple( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : DecayTreeTupleBase ( name , pSvcLocator )
 {
-  declareProperty( "TupleName", m_tupleName="DecayTree" );
   // fill some default value
   m_toolList.push_back( "TupleToolKinematic" );
   m_toolList.push_back( "TupleToolPid" );
   m_toolList.push_back( "TupleToolGeometry" );
   m_toolList.push_back( "TupleToolEventInfo" );
   declareProperty( "ToolList", m_toolList );
+  setProperty( "TupleName", "DecayTree" );
 }
 
 //=============================================================================
@@ -86,8 +86,8 @@ StatusCode DecayTreeTuple::execute()
   }
 
   //don't create the ntuple if there's nothing to fill!
-  Tuple tuple = nTuple( m_tupleName, m_tupleName );
-  test = fillTuple( tuple, heads, m_dkFinder );
+  Tuple tuple = nTuple( tupleName(), tupleName() );
+  test = fillTuple( tuple, heads, dkFinder() );
 
   if ( test.isSuccess() )
   {

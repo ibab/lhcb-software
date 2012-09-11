@@ -23,8 +23,11 @@ using namespace LHCb ;
 DecayTreeTupleBase::DecayTreeTupleBase( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : DaVinciTupleAlgorithm ( name , pSvcLocator )
-  , m_dkFinder  ( NULL               )
+  , m_mcdkFinder          ( NULL               )
+  , m_dkFinder            ( NULL               )
 {
+  declareProperty( "TupleName", m_tupleName = "" );
+
   declareProperty( "Branches", m_decayMap, "Branches with other tools" );
   declareProperty( "Decay", m_headDecay, "decay descriptor" );
   declareProperty( "UseLabXSyntax", m_useLabName = false, "Use labX syntax" );
@@ -208,24 +211,19 @@ bool DecayTreeTupleBase::checkUnicity() const
 //=========================================================================
 void DecayTreeTupleBase::printInfos() const
 {
-  // initalization done, printing some infos:
+  info() << "Tree " << m_tupleName << " initialized :-" << endmsg;
 
-  // generic tool info:
-  std::stringstream tmp;
-  std::vector<std::string> tools = getEventTools();
-  std::string tList = Decays::join( tools.begin(), tools.end() );
-  tmp << "Event related tools: " << tList;
+  info() << " Event related tools : " << getEventTools() << endmsg;
 
-  tmp << "\nParticle related stuffers: realname (tuplename) \n";
-  for( int i=0; i<(int)m_parts.size(); ++i )
+  info() << " Particle related stuffers :- " << endmsg;
+  for ( std::vector<Decays::OnePart*>::const_iterator iP = m_parts.begin();
+        iP != m_parts.end(); ++iP )
   {
-    if( !m_parts[i]->getMother() )
+    if( ! (*iP)->getMother() )
     {
-      m_parts[i]->printStructure( tmp, msgLevel( MSG::INFO ) );
+      (*iP)->printStructure( info(), msgLevel(MSG::INFO) );
     }
   }
-  info() << "Tree " << m_tupleName << " initialized:\n"
-         << tmp.str() << endreq ;
 }
 // ===============================================================
 // this is where all the difference between MC particle and Particle occurs

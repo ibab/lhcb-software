@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-09-11 - Chris Jones
+ - Clean up base classes, making things private that have no reason to be protected
+ - Rework printout som it uses MsgStream and doesn't send any "\n" characters that
+   screw up Message Service indenting.
+
 !========================= DecayTreeTuple v3r25 2012-08-31 =========================
 
 ! 2012-08-08 - Patrick Koppenburg

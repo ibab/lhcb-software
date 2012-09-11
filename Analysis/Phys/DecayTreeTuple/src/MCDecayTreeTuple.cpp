@@ -24,12 +24,11 @@ DECLARE_ALGORITHM_FACTORY( MCDecayTreeTuple )
                                       ISvcLocator* pSvcLocator)
     : DecayTreeTupleBase ( name , pSvcLocator )
 {
-  declareProperty( "TupleName", m_tupleName="MCDecayTree" );
   // fill some default value
   m_toolList.push_back( "MCTupleToolKinematic" );
   m_toolList.push_back( "TupleToolEventInfo" );
-
   declareProperty( "ToolList", m_toolList );
+  setProperty( "TupleName", "MCDecayTree" );
 }
 
 //=============================================================================
@@ -59,11 +58,14 @@ StatusCode MCDecayTreeTuple::execute()
 
   LHCb::MCParticle::ConstVector mothers ;
   const LHCb::MCParticle* head = 0 ;
-  while ( m_mcdkFinder->findDecay( head) ){
+  while ( mcdkFinder()->findDecay( head) )
+  {
     mothers.push_back(head);
   }
-  if( mothers.empty() ){
-    if (msgLevel(MSG::VERBOSE)) verbose() << "No mothers of decay " << m_headDecay << " found" << endreq;
+  if ( mothers.empty() )
+  {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "No mothers of decay " << headDecay() 
+                                          << " found" << endreq;
     setFilterPassed(false);
     return StatusCode::SUCCESS;
   }
@@ -82,8 +84,8 @@ StatusCode MCDecayTreeTuple::execute()
     return StatusCode::SUCCESS;
   }
   //don't create the ntuple if there's nothing to fill!
-  Tuple tuple = nTuple( m_tupleName,  m_tupleName );
-  test = fillTuple( tuple, heads, m_mcdkFinder );
+  Tuple tuple = nTuple( tupleName(), tupleName() );
+  test = fillTuple( tuple, heads, mcdkFinder() );
 
   if( test ){
     if (msgLevel(MSG::VERBOSE)) verbose() << "NTuple sucessfully filled" << endreq;
