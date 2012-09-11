@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 	tree = (TTree*) file.Get("Options");
 	if (!tree) {
 	    std::cerr << "File " << argv[i] <<
-		" does not appear to contian options, ignoring this file." << std::endl;
+		" does not appear to contain options, ignoring this file." << std::endl;
     // well if there's no tree, then don't try to read it: continue to the next file
     continue;
 	}
