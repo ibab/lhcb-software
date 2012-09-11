@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-09-11 - John Back
+ - Added missing EvtBCVFF class.
+
 ! 2012-07-11 - John Back
  - Added new decay models/classes from Alexey Luchinsky:
    EvtBcVMuNu, EvtTVP, EvtWnPi, EvtSVP, EvtXPsiGamma, EvtBcVNpi

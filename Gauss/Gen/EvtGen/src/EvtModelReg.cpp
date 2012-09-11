@@ -146,6 +146,12 @@
 #include "EvtGenModels/EvtBcBsNPi.hh"
 #include "EvtGenModels/EvtBcBsStarNPi.hh"
 
+#include "EvtGenModels/EvtBcVMuNu.hh"
+#include "EvtGenModels/EvtBcVNpi.hh"
+#include "EvtGenModels/EvtSVP.hh"
+#include "EvtGenModels/EvtTVP.hh"
+#include "EvtGenModels/EvtXPsiGamma.hh"
+
 #include "EvtGenModels/EvtTauola.hh"
 
 #include "EvtGenModels/EvtGenericDalitz.hh"
@@ -281,6 +287,12 @@ EvtModelReg::EvtModelReg(const std::list<EvtDecayBase*>* extraModels)
     modelist.registerModel(new EvtBcPsiNPi);
     modelist.registerModel(new EvtBcBsNPi);
     modelist.registerModel(new EvtBcBsStarNPi);
+
+    modelist.registerModel(new EvtBcVMuNu);
+    modelist.registerModel(new EvtBcVNpi);
+    modelist.registerModel(new EvtSVP);
+    modelist.registerModel(new EvtTVP);
+    modelist.registerModel(new EvtXPsiGamma);
 
     modelist.registerModel(new EvtPythia);
     modelist.registerModel(new EvtTauola);
