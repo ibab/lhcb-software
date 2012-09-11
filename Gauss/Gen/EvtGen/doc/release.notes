@@ -5,7 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-09-11 - John Back
- - Added missing EvtBCVFF class.
+ - Added missing EvtBCVFF class. Updated photos++ and tauola++ required 
+   versions to be 3.51 and 1.0.7, respectively. Added the use of the 
+   namespaces Photospp and Tauolapp in the classes EvtPhotosEngine 
+   and EvtTauolaEngine.
 
 ! 2012-07-11 - John Back
  - Added new decay models/classes from Alexey Luchinsky:
