@@ -4,11 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
-!========================= StrippingSettings v2r17 2012-09-08 =========================
-
 ! 2012-09-10 - Will Barter
  - Stripping20/LineConfigDictionaries_QEE.py
    . Included changes in dictionary from bug patch in StrippingStrangeBaryons.py 
+
+!========================= StrippingSettings v2r17 2012-09-08 =========================
 
 ! 2012-09-08 - Anton Poluektov 
  - Update stripping20 dbase
