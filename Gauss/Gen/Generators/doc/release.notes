@@ -4,6 +4,11 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2012-09-11 - John Back
+ - Added the use of the namespace Photospp for src/component/ApplyPhotos.cpp,
+   which is required for Photos++ version 3.5.
+
 ! 2012-07-13 - Patrick Robbe
  - Use LHCb::ParticlePropertySvc for the new particle property service
    name

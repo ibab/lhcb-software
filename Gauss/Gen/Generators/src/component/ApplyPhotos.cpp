@@ -56,11 +56,11 @@ StatusCode ApplyPhotos::initialize() {
         it != m_pdgIdList.end() ; ++it ) m_pdgIds.insert( *it ) ;
   
   // Initialize PHOTOS
-  Photos::initialize();
+  Photospp::Photos::initialize();
   // Set minimum photon energy (50keV at 1 GeV scale)
-  Photos::setInfraredCutOff(50.0e-6);
+  Photospp::Photos::setInfraredCutOff(50.0e-6);
   // Increase the maximum possible value of the interference weight
-  Photos::maxWtInterference(4.0); // 2^n, where n = number of charges (+,-)
+  Photospp::Photos::maxWtInterference(4.0); // 2^n, where n = number of charges (+,-)
 
   return StatusCode::SUCCESS;
 }
@@ -91,7 +91,7 @@ StatusCode ApplyPhotos::execute() {
 	  // daughters. Then call Photos++ on this event. Next, modify the original
 	  // event information with the new Photos++ results.
 
-	  PhotosHepMCEvent photosEvent(ev);
+	  Photospp::PhotosHepMCEvent photosEvent(ev);
 
 	  // Run the Photos algorithm. 
 	  // New photons should be automatically added to the (original) GenEvent pointer.
