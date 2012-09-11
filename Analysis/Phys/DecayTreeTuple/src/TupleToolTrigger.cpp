@@ -55,7 +55,7 @@ DECLARE_TOOL_FACTORY( TupleToolTrigger )
 StatusCode TupleToolTrigger::initialize ( )
 {
   const StatusCode sc = TupleToolTriggerBase::initialize();
-  if (m_doStripping || m_stripping.size()!=0)
+  if ( m_doStripping || !m_stripping.empty() )
   {
     return Error("You should use TupleToolStripping for that", StatusCode::FAILURE);
   }
@@ -68,49 +68,48 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple )
 {
   if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Basic" << endmsg ;
 
-  const std::string prefix=fullName();
+  const std::string prefix = fullName();
   //fill the L0 global
-  if (m_doL0)
+  if ( m_doL0 )
   {
-    if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) )
+    LHCb::L0DUReport* report =
+      getIfExists<LHCb::L0DUReport>(evtSvc(),LHCb::L0DUReportLocation::Default);
+    if ( !report )
     {
-      LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
-      if ( ! tuple->column( prefix+"L0Global", report->decision() ) ) return StatusCode::FAILURE;
-      if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endreq;
-    } else if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default, false) )
+      report =
+        getIfExists<LHCb::L0DUReport>(evtSvc(),LHCb::L0DUReportLocation::Default,false);
+    }
+    if ( ! tuple->column( prefix+"L0Global", report ? report->decision() : 0 ) )
+      return StatusCode::FAILURE;
+    if ( report )
     {
-      LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default, false);
-      if ( ! tuple->column( prefix+"L0Global", report->decision() ) ) return StatusCode::FAILURE;
       if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endreq;
     }
   }
 
-  //fill the HLT global
-  if (m_doHlt1 || m_doHlt2)
+  // fill the HLT global
+  if ( m_doHlt1 || m_doHlt2 )
   {
-    if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) )
+    const LHCb::HltDecReports* decReports =
+      getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default);
+    if ( !decReports )
     {
-      const LHCb::HltDecReports* decReports =
-        get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
-      //fill the HLT1 global
-      if( !tuple->column( prefix+"Hlt1Global", (decReports->decReport("Hlt1Global"))?
-                          (decReports->decReport("Hlt1Global")->decision()):0 )) return StatusCode::FAILURE;
-
-      //fill the HLT2 global
-      if( !tuple->column( prefix+"Hlt2Global", (decReports->decReport("Hlt2Global"))?
-                          (decReports->decReport("Hlt2Global")->decision()):0 )) return StatusCode::FAILURE;
-    } else if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default, false ) )
-    {
-      const LHCb::HltDecReports* decReports =
-        get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default, false );
-      //fill the HLT1 global
-      if( !tuple->column( prefix+"Hlt1Global", (decReports->decReport("Hlt1Global"))?
-                          (decReports->decReport("Hlt1Global")->decision()):0 )) return StatusCode::FAILURE;
-
-      //fill the HLT2 global
-      if( !tuple->column( prefix+"Hlt2Global", (decReports->decReport("Hlt2Global"))?
-                          (decReports->decReport("Hlt2Global")->decision()):0 )) return StatusCode::FAILURE;
+      decReports =
+        getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default,false);
     }
+
+    //fill the HLT1 global
+    if ( !tuple->column( prefix+"Hlt1Global", 
+                        decReports && decReports->decReport("Hlt1Global") ?
+                        decReports->decReport("Hlt1Global")->decision() : 0 ) )
+      return StatusCode::FAILURE;
+
+    //fill the HLT2 global
+    if ( !tuple->column( prefix+"Hlt2Global", 
+                         decReports && decReports->decReport("Hlt2Global") ?
+                         decReports->decReport("Hlt2Global")->decision() : 0 ) )
+      return StatusCode::FAILURE;
+
   }
 
   if (msgLevel(MSG::DEBUG)) debug() << "Done" << endmsg ;
@@ -164,15 +163,18 @@ StatusCode TupleToolTrigger::fillL0( Tuples::Tuple& tuple )
 
 StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & level)
 {
-  const std::string prefix=fullName();
+  const std::string prefix = fullName();
 
-  std::string loca = LHCb::HltDecReportsLocation::Default;
-  if( level == "L0" )loca="HltLikeL0/DecReports";
-  bool userootintes = exist<LHCb::HltDecReports>( loca );
-  if( exist<LHCb::HltDecReports>( loca, userootintes ) )
+  const std::string loca = ( level == "L0" ? "HltLikeL0/DecReports" :
+                             LHCb::HltDecReportsLocation::Default );
+  const LHCb::HltDecReports* decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca);
+  if ( !decReports )
   {
-    const LHCb::HltDecReports* decReports = get<LHCb::HltDecReports>( loca, userootintes );
+    decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
+  }
 
+  if ( decReports )
+  {
     unsigned int nsel = 0 ;
 
     std::vector<std::string> names = std::vector<std::string>(0);
@@ -185,10 +187,10 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
     for ( std::vector<std::string>::const_iterator n = names.begin() ; n!= names.end() ; ++n)
     {
       int found = -1 ;
-      if (msgLevel(MSG::DEBUG))  debug() << " In verbose HLT, Trying to fill  " << (*n)   << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << " In verbose HLT, Trying to fill  " << (*n)   << endmsg;
       // individual Hlt trigger lines
-      for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
-          it!=decReports->end();++it)
+      for ( LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
+            it != decReports->end(); ++it )
       {
         if (msgLevel(MSG::VERBOSE))  verbose() << " Hlt trigger name= " << it->first  << endmsg;
         if ( ( it->first == *n ) )
@@ -202,7 +204,7 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
       }
       if (msgLevel(MSG::VERBOSE)) verbose() << "Added " << *n << " " << found
                                             << " to " << nsel << endmsg ;
-      bool isDecision = ( n->find("Decision") == n->length()-8  ) ; // 8 is length of Decision
+      const bool isDecision = ( n->find("Decision") == n->length()-8  ) ; // 8 is length of Decision
       if (isDecision && found>0) nsel++ ;
       //if (isDecision || m_allSteps)
       //{
@@ -226,12 +228,9 @@ StatusCode TupleToolTrigger::fillRoutingBits( Tuples::Tuple& tuple )
   for ( std::vector<std::string>::const_iterator iLoc = m_rawEventLocs.begin();
         iLoc != m_rawEventLocs.end(); ++iLoc )
   {
-    if      ( exist<LHCb::RawEvent>(*iLoc,true)  ) { rawEvent = get<LHCb::RawEvent>(*iLoc,true);  }
-    else if ( exist<LHCb::RawEvent>(*iLoc,false) ) { rawEvent = get<LHCb::RawEvent>(*iLoc,false); }
-    if ( rawEvent )
-    {
-      break;
-    }
+    rawEvent                    = getIfExists<LHCb::RawEvent>(evtSvc(),*iLoc,true);
+    if ( !rawEvent ) { rawEvent = getIfExists<LHCb::RawEvent>(evtSvc(),*iLoc,false); }
+    if ( rawEvent  ) { break; }
   }
 
   if ( rawEvent )

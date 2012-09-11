@@ -61,13 +61,15 @@ StatusCode TupleToolVtxIsoln::initialize()
                            StatusCode::FAILURE);
 
   m_dist = m_dva->distanceCalculator ();
-  if( !m_dist ){
+  if ( !m_dist )
+  {
     Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
   }
 
   m_pVertexFit= m_dva->vertexFitter();
-  if( !m_pVertexFit ){
+  if ( !m_pVertexFit )
+  {
     Error("Unable to retrieve the IVertexFit tool");
     return StatusCode::FAILURE;
   }
@@ -83,12 +85,11 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
                                     , Tuples::Tuple& tuple )
 {
 
-  const std::string prefix=fullName(head);
+  const std::string prefix = fullName(head);
   Assert( P && mother && m_dist
           , "This should not happen, you are inside TupleToolVtxIsoln.cpp :(" );
 
-
-  bool test=true;
+  bool test = true;
 
   // --------------------------------------------------
 
@@ -102,21 +103,21 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
     return StatusCode::FAILURE;
     }
   */
-  const LHCb::Vertex* vtx;
-  if (P->isBasicParticle() || isPureNeutralCalo(P) ){
-    vtx = mother->endVertex();
+  const LHCb::Vertex* vtx = ( P->isBasicParticle() || isPureNeutralCalo(P) ?
+                              mother->endVertex() : P->endVertex() );
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "vertex for P, ID " << P->particleID().pid() 
+            << " = " << vtx << " at " << vtx->position() << endmsg;
   }
-  else{
-    vtx = P->endVertex();
-  }
-  debug()<<"vertex for P, ID " <<P->particleID().pid()<<" = " <<vtx<<" at "<<vtx->position()<<  endmsg;
-  if( !vtx ){
+  if ( !vtx )
+  {
     Error("Can't retrieve the  vertex for " + prefix );
     return StatusCode::FAILURE;
   }
 
   // The vertex chi2 of the composite particle being tested
-  double vtxChi2 = vtx->chi2();
+  const double vtxChi2 = vtx->chi2();
 
   //--------------------------------------------------
   // Get all the particle's final states
@@ -124,27 +125,31 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
   LHCb::Particle::ConstVector target;
   LHCb::Particle::ConstVector finalStates;
   LHCb::Particle::ConstVector parts2Vertex;
-  parts2Vertex.clear();
 
   //   const LHCb::Particle* prefix = P;
-  if (P->isBasicParticle()){
+  if (P->isBasicParticle())
+  {
     source.push_back(mother);
   }
-  else{
+  else
+  {
     source.push_back(P);
   }
   // The first iteration is for the particle to filter, which has an endVertex
-  do {
+  do 
+  {
     target.clear();
     for(LHCb::Particle::ConstVector::const_iterator isource = source.begin();
         isource != source.end(); isource++){
 
-      if(!((*isource)->daughters().empty())){
+      if(!((*isource)->daughters().empty()))
+      {
 
-        LHCb::Particle::ConstVector tmp = (*isource)->daughtersVector();
+        const LHCb::Particle::ConstVector& tmp = (*isource)->daughtersVector();
 
-        for( LHCb::Particle::ConstVector::const_iterator itmp = tmp.begin();
-             itmp!=tmp.end(); itmp++){
+        for ( LHCb::Particle::ConstVector::const_iterator itmp = tmp.begin();
+              itmp != tmp.end(); ++itmp )
+        {
           target.push_back(*itmp);
 
           // Add the final states, i.e. particles with proto and ignoring gammas
@@ -217,8 +222,9 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
     } // iparts
   } // m_inputParticles
 
-  if (msgLevel(MSG::DEBUG)) debug() << "Number of particles to check excluding signal, particles with same proto and gammas = "
-                                    << theParts.size() << endreq;
+  if (msgLevel(MSG::DEBUG)) 
+    debug() << "Number of particles to check excluding signal, particles with same proto and gammas = "
+            << theParts.size() << endreq;
   //--------------------------------------------------
 
   /*Now we want to make a list of daughters
@@ -244,11 +250,10 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
   double smallestDeltaChi2 = -1 ;
 
   // Now count how many particles are compatible with the vertex of the particle under study
-  for(LHCb::Particle::ConstVector::const_iterator iparts = theParts.begin();
-      iparts != theParts.end(); ++iparts){
+  for ( LHCb::Particle::ConstVector::const_iterator iparts = theParts.begin();
+        iparts != theParts.end(); ++iparts)
+  {
 
-
-    StatusCode sc = StatusCode::SUCCESS;
     LHCb::Vertex vtxWithExtraTrack;
 
     // Temporarily add the extra track to the parts2Vertex
@@ -256,20 +261,21 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
     // if (msgLevel(MSG::DEBUG)) debug() << "Adding trk pid"  << (*iparts)->particleID().pid() << " to vtx" << endmsg;
 
     // Fit
-    sc = m_pVertexFit->fit (vtxWithExtraTrack,parts2Vertex);
+    StatusCode sc = m_pVertexFit->fit (vtxWithExtraTrack,parts2Vertex);
     // replaced by V.B. 20.Aug.2k+9: (parts2Vertex,vtxWithExtraTrack);
     // Remove the added track from parts2Vertex
 
     parts2Vertex.pop_back();
-    if (!sc){
-      Warning("Failed to fit vertex").ignore();
+    if (!sc)
+    {
+      // Warning("Failed to fit vertex").ignore();
       // return sc;
     } else{
       double dChi2 = vtxWithExtraTrack.chi2() - vtxChi2 ;
       //fabs(vtxChi2 - vtxWithExtraTrack.chi2())  < m_deltaChi2 is not useful if the particle is basic
-      if(dChi2  < m_deltaChi2 &&
-         m_deltaChi2 > 0.0 && (! P->isBasicParticle()) ) nCompatibleDeltaChi2++;
-      if( (vtxWithExtraTrack.chi2()  < m_Chi2) && ( m_Chi2 > 0.0)  ) nCompatibleChi2++;
+      if ( dChi2  < m_deltaChi2 &&
+           m_deltaChi2 > 0.0 && (! P->isBasicParticle()) ) nCompatibleDeltaChi2++;
+      if ( (vtxWithExtraTrack.chi2()  < m_Chi2) && ( m_Chi2 > 0.0)  ) nCompatibleChi2++;
       if (msgLevel(MSG::DEBUG)) debug() << "Fitted vertex adding track has Delta chi2 = "
                                         << dChi2  << "chi2 = "
                                         << vtxWithExtraTrack.chi2() << endmsg;
@@ -280,7 +286,8 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
   } // iparts
   if ( P->isBasicParticle()) nCompatibleDeltaChi2=-1;
 
-  if ( msgLevel(MSG::DEBUG) ){
+  if ( msgLevel(MSG::DEBUG) )
+  {
     if(m_deltaChi2 > 0.0)  debug() << "Number of particles with delta chi2 < cut Delta chi2 = "
                                    << nCompatibleDeltaChi2 << endreq;
     if(m_Chi2 > 0.0)  debug() << "Number of particles with  chi2 < cut  chi2 = "

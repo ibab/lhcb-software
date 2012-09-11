@@ -41,13 +41,14 @@ DECLARE_TOOL_FACTORY( TupleToolEventInfo )
     : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty("InputLocation", 
+  declareProperty("InputLocation",
                   m_pvLocation = LHCb::RecVertexLocation::Primary,
                   "PV location to be used. If empty, take default");
   declareProperty("Mu", m_mu);
 }
 
 //=============================================================================
+
 StatusCode TupleToolEventInfo::initialize( )
 {
   const StatusCode sc = TupleToolBase::initialize();
@@ -62,54 +63,38 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   const std::string prefix = fullName();
 
   // Load the ODIN
-  LHCb::ODIN* odin(NULL);
-  if( exist<ODIN>( LHCb::ODINLocation::Default ) )
-  {
-    odin = get<ODIN>( LHCb::ODINLocation::Default );
-  }
-  else if( exist<ODIN>( LHCb::ODINLocation::Default, false ) )
-  {
-    odin = get<ODIN>( LHCb::ODINLocation::Default, false );
-  }
-  else
+  const LHCb::ODIN* odin = getIfExists<ODIN>(evtSvc(),LHCb::ODINLocation::Default);
+  if ( !odin ) { odin = getIfExists<ODIN>(evtSvc(),LHCb::ODINLocation::Default,false); }
+  if ( !odin )
   {
     // should always be available ...
     return Error( "Cannot load the ODIN data object", StatusCode::SUCCESS );
   }
 
-  // Number PVs
-  unsigned int nPVs = 0 ;
-  if (exist<RecVertex::Container>(m_pvLocation)) 
-    nPVs = (get<RecVertex::Container>(m_pvLocation))->size();
-
-  LHCb::L0DUReport* report = NULL;
-  if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default) )
+  LHCb::L0DUReport* report =
+    getIfExists<LHCb::L0DUReport>(evtSvc(),LHCb::L0DUReportLocation::Default);
+  if ( !report )
   {
-    report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+    report =
+      getIfExists<LHCb::L0DUReport>(evtSvc(),LHCb::L0DUReportLocation::Default,false);
   }
-  else if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default, false) )
+  if ( !report )
   {
-    report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default,false);
-  }
-  else
-  {
-    Warning("Can't get LHCb::L0DUReportLocation::Default (" +
-            LHCb::L0DUReportLocation::Default + ")").ignore();
+    Warning( "Can't get LHCb::L0DUReportLocation::Default (" +
+             LHCb::L0DUReportLocation::Default + ")" ).ignore();
   }
 
-  LHCb::HltDecReports* decreport = NULL;
-  if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default) )
+  LHCb::HltDecReports* decreport =
+    getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default);
+  if ( !decreport )
   {
-    decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default);
+    decreport =
+      getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default,false);
   }
-  else if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default, false) )
+  if ( !decreport )
   {
-    decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default, false);
-  }
-  else
-  {
-    Warning("Can't get LHCb::HltDecReportsLocation::Default (" +
-            LHCb::HltDecReportsLocation::Default + ")").ignore();
+    Warning( "Can't get LHCb::HltDecReportsLocation::Default (" +
+             LHCb::HltDecReportsLocation::Default + ")" ).ignore();
   }
 
   bool test = true;
@@ -126,6 +111,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   test &= tuple->column( prefix+"L0DUTCK",      report ? report->tck() : 0 );
   test &= tuple->column( prefix+"HLTTCK",       decreport ? decreport->configuredTCK() : 0 );
   test &= tuple->column( prefix+"GpsTime",      odin->gpsTime() );
+
   if ( isVerbose() )
   {
     const Gaudi::Time gtime = odin->eventTime();
@@ -137,8 +123,8 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
     test &= tuple->column( prefix+"GpsSecond", gtime.second(false)+gtime.nsecond()/1000000000. );
     test &= tuple->column( prefix+"TriggerType", odin->triggerType() );
   }
-  test &= tuple->column( prefix+"Primaries", nPVs );
-  if (m_magSvc) test &= tuple->column( prefix+"Polarity", (short)(m_magSvc->isDown()?-1:1) );
+
+  test &= tuple->column( prefix+"Polarity", (short)(m_magSvc->isDown()?-1:1) );
 
   if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endreq;
   return StatusCode(test);

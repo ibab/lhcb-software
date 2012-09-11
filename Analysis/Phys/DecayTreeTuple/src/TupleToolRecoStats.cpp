@@ -35,14 +35,11 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup )
   const std::string prefix = fullName();
 
   // Load the RecSummary object
-  const LHCb::RecSummary * rS = NULL;
-  if ( exist<LHCb::RecSummary>(LHCb::RecSummaryLocation::Default) )
+  const LHCb::RecSummary * rS = 
+    getIfExists<LHCb::RecSummary>(evtSvc(),LHCb::RecSummaryLocation::Default);
+  if ( !rS ) 
   {
-    rS = get<LHCb::RecSummary>(LHCb::RecSummaryLocation::Default);
-  }
-  else if ( exist<LHCb::RecSummary>(LHCb::RecSummaryLocation::Default,false) )
-  {
-    rS = get<LHCb::RecSummary>(LHCb::RecSummaryLocation::Default,false);
+    rS = getIfExists<LHCb::RecSummary>(evtSvc(),LHCb::RecSummaryLocation::Default,false); 
   }
 
   // Fill the tuple

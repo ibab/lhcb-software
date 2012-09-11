@@ -8,6 +8,10 @@
  - Clean up base classes, making things private that have no reason to be protected
  - Rework printout som it uses MsgStream and doesn't send any "\n" characters that
    screw up Message Service indenting.
+ - Update various tools to use getIfExists
+ - Remove nPVs from TupleToolEventInfo. Implementation would not work on a uDST,
+   variable is available from TupleToolRecoStats (where it is better at home anyway)
+   in a way that is uDST friendly.
 
 !========================= DecayTreeTuple v3r25 2012-08-31 =========================
 
