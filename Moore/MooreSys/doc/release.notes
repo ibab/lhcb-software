@@ -3,6 +3,8 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v14r7p1>2012-09-11 Moore v14r7p1</A></H1><PRE>
+Same as v14r7p1 with pA pilot run fix
 
 </PRE><H1><A NAME=v14r6p1>2012-07-2 Moore v14r6p1</A></H1><PRE>
 Uses Hlt v15r3p1 with fix in Gaudi to problem below
