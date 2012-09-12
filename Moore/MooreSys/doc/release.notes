@@ -3,6 +3,10 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+
+</PRE><H1><A NAME=v14r7p2>2012-09-11 Moore v14r7p2</A></H1><PRE>
+Low mult lines back in, no tracking activity for pA pilot run
+
 </PRE><H1><A NAME=v14r7p1>2012-09-11 Moore v14r7p1</A></H1><PRE>
 Same as v14r7p1 with pA pilot run fix
 
