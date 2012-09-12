@@ -66,9 +66,9 @@ for root, dirs, files in os.walk(srcdir, topdown=True) :
         src = os.path.join(root, d)
         dst = src.replace(srcdir + os.sep, "")
         dst = os.path.join(dstdir, dst)
-        if not os.path.exists(dst) :
-            log.info("Directory %s is missing, creating" % dst)
-            os.makedirs(dst)
+        #if not os.path.exists(dst) :
+        #    log.info("Directory %s is missing, creating" % dst)
+        #    os.makedirs(dst)
 
     for f in files :
         log.info("==> Processing file: %s" % f)
@@ -77,8 +77,10 @@ for root, dirs, files in os.walk(srcdir, topdown=True) :
         dst = os.path.join(dstdir, dst)
         if os.path.exists(dst):
             log.info("%s Old size: %s" % (dst, os.path.getsize(dst)))
-        log.info("Copying %s to %s" % (src, dst))
-        shutil.copy2(src, dst)
-        if os.path.exists(dst):
+            log.info("Copying %s to %s" % (src, dst))
+            shutil.copy2(src, dst)
             log.info("%s New size: %s" % (dst, os.path.getsize(dst)))
+        else:
+            log.info("Target does not exist skipping")
+
 
