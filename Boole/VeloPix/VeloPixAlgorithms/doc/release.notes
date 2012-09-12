@@ -3,10 +3,14 @@
 ! Responsible : Tomasz Skwarnicki, Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+! 2012-09-12 - Marco Cattaneo
+ - Fix unused variable warning in previous commit
+
 ! 2012-08-31 - Pawel Jalocha
  - Change VeloPix to VP in containers
  - DEBUG_HISTO (in .h files) to activate debug histograms
- - quick but dirthy bug fix for clustering algorithm which occasionally outputs same ChannelID (which crashes KeyedContainer)
+ - quick but dirthy bug fix for clustering algorithm which occasionally outputs
+   same ChannelID (which crashes KeyedContainer)
 
 !======================== VeloPixAlgorithms v2r2 2012-08-14 ===================
 ! 2012-08-14 - Pawel Jalocha

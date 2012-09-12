@@ -1,4 +1,3 @@
-// $Id: VeloPixDigitCreator.cpp,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
 // Include files:
 // STL
 #include <string>
@@ -132,10 +131,10 @@ void VeloPixDigitCreator::createDigits(const MCVeloPixDigits* digitsMC,
     //        aChan.chip(), aChan.pixel_lp(), aChan.pixel_hp() );
 
     int Station = aChan.station()+1; if(aChan.sidepos()) Station = (-Station);
-    int Chip    = aChan.chip();
 
 #ifdef DEBUG_HISTO
     if(totCharge>=500.0)
+      int Chip    = aChan.chip();
       plot2D( Station, Chip, "HitsPerChip", "VeloPixDigitCreator: number of hits/chip (all events)",
              -24.0, 24.0, 0.0, 12.0, 49, 12);
 
