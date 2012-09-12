@@ -42,9 +42,8 @@ class Physics_pAPilot :
         """
         return [ 'Hlt1L0Any',
                  'Hlt1ActivitySPD',
-                 'Hlt1ActivityTracking',
-#  doesn't work online		 
-#                 'Hlt1MicroBiasVeloLowMult',
+                 'Hlt1ActivityTracking',	 
+                 'Hlt1MicroBiasVeloLowMult',
                  'Hlt1MBNoBias',
                  'Hlt1Lumi',
                  ]
