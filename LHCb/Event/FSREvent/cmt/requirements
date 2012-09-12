@@ -21,3 +21,7 @@ end_private
 apply_pattern god_headers files=../xml/*.xml 
 apply_pattern install_more_includes more=Event
 apply_pattern god_dictionary files=../xml/*.xml 
+# Disable some compiler warnings in the automatically generated dict code
+macro_append FSREventDict_cppflags "" \
+                        target-icc " -wd191"
+

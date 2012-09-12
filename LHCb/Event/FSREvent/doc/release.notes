@@ -4,11 +4,14 @@
 ! Purpose     : FSRs common to applications
 !---------------------------------------------------------------------------
 
+! 2012-09-12 - Marco Cattaneo
+ - Suppress icc warnings when making the dictionary
+
 ! 2012-09-03 - Rob Lambert
  - Added ProcessFSR and IOFSR
  - ProcessFSR: store the same info as ProcessHeader, persist even if no events survive. (should be filled wherever a ProcessHeader is filled)
  - IOFSR: input and output events keyed by file. (must be filled by dedicated LHCb FSRWriter)
- - chack ClassIDs, follow on from LumiEvent
+ - check ClassIDs, follow on from LumiEvent
 
 ! 2012-08-20 - Rob Lambert
  - Create new package based on EventBase
