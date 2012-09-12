@@ -21,7 +21,7 @@
 #
 # =============================================================================
 package             Bender
-version             v21r1
+version             v21r2
 
 # =============================================================================
 branches            cmt doc python scripts 
@@ -40,12 +40,6 @@ apply_pattern       install_scripts
 # ================= aliases ===================================================
 alias bender_mc    "benderMc"
 alias bender_MC    "benderMc"
-alias dstExplorer  "dst_explorer"
-alias dst_Explorer "dst_explorer"
-alias Dst_Explorer "dst_explorer"
-alias check_trg    "trg_check" 
-alias dump_dst     "dst_dump" 
-alias dst_content  "dst_dump" 
 
 
 # =============================================================================
