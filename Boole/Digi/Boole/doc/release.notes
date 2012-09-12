@@ -8,6 +8,9 @@ Purpose: LHCb Digitization program
      the L0 emulation, no longer done by default in Boole.
 
  - Changes to references to follow changes in underlying packages
+   . Adapt boole-2012-latestdb.ref to new local tag "velo-20120831" and new
+     global tag "dddb-20120831" (MC2012 values of VELO sensor noise bad strips
+     and radiation damage maps, improved RF foil description) 
    . Adapt boole-2011-latestdb.ref to new global tags "dddb-20120727" and
      "sim-20120726-vc-md100" (updates Velo R sensor cross-talk simulation) 
 
