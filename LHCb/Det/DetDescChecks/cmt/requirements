@@ -11,15 +11,16 @@ branches          cmt doc src python
 # =============== dependencies ================================================
 use               DetDesc    v* Det
 use               DetDescSvc v* Det
-use               GaudiAlg   v*   	
-use               Boost      v* LCG_Interfaces 
+use               GaudiAlg   v*
+use               Boost      v* LCG_Interfaces
+use               AIDA       v* LCG_Interfaces -no_auto_imports
 
 # =============== constituents ================================================
 library           DetDescChecks   *.cpp -import=AIDA
 
 # =============== patterns ====================================================
-apply_pattern     component_library      library=DetDescChecks 
-apply_pattern     install_python_modules 
+apply_pattern     component_library      library=DetDescChecks
+apply_pattern     install_python_modules
 
 private
 
@@ -38,5 +39,5 @@ use               Magnet      v* Det
 
 apply_pattern QMTest
 # =============================================================================
-# The END 
+# The END
 # =============================================================================

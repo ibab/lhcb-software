@@ -1,5 +1,5 @@
 # =========================================================================
-package          FTDet 
+package          FTDet
 version          v1r0
 
 #==========================================================================
@@ -10,7 +10,7 @@ branches         cmt doc FTDet src dict
 #==========================================================================
 # Used packages
 #==========================================================================
-use   DetDescCnv   v*   Det 
+use   DetDescCnv   v*   Det
 use   LHCbKernel   v*   Kernel
 use   LHCbMath     v*   Kernel
 use   Boost        v*   LCG_Interfaces
@@ -30,14 +30,14 @@ apply_pattern      install_more_includes more=FTDet
 #==========================================================================
 # =============== Build linker and component libraries ====================
 #==========================================================================
+library            FTDetLib        ../src/Lib/*.cpp
 library            FTDet           ../src/component/*.cpp
-library            FTDetLib        ../src/Lib/*.cpp 
 
 #==========================================================================
 # Define link options for loading the libraries
 #==========================================================================
+apply_pattern      linker_library      library=FTDetLib
 apply_pattern      component_library   library=FTDet
-apply_pattern      linker_library      library=FTDetLib 
 
 #==========================================================================
 # LCG Dictionaries

@@ -5,6 +5,9 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2012-09-12 - Marco Clemencic
+ - Minor change to simplify translation to CMake.
+
 !========================= DetDescChecks v5r7 2012-01-31 =======================
 ! 2012-01-28 - Marco Clemencic
  - Fixed a glitch in the changes in the configuration of the tests.

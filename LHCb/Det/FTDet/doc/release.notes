@@ -4,6 +4,9 @@
 ! Responsible : Plamen Hopchev
 !--------------------------------------------------------------------------
 
+! 2012-09-12 - Marco Clemencic
+ - Minor change to simplify translation to CMake.
+
 ! 2012-07-25 P. Hopchev
    - Implement light sharing between neighbouring SiPM cells. For this
      purpose added two private methods: lightSharing and createLightSharingChannels.

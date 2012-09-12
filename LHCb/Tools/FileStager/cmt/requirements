@@ -2,9 +2,9 @@ package           FileStager
 version           v1r8
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
-branches          cmt doc dict src python FileStager 
+branches          cmt doc dict src python FileStager
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
@@ -32,11 +32,11 @@ apply_pattern    linker_library library=FileStagerFunctions
 #============================================================================
 # define applications
 #============================================================================
-application           garbage              "../src/app/garbage.cpp"
+application           garbage              ../src/app/garbage.cpp
 macro_append garbage_use_linkopts "${Boost_linkopts_program_options} "
 macro_append garbage_dependencies "FileStagerFunctions"
 
-application           hash_filename        "../src/app/hash_filename.cpp"
+application           hash_filename        ../src/app/hash_filename.cpp
 macro_append hash_filename_use_linkopts "${Boost_linkopts_program_options} "
 macro_append hash_filename_dependencies "FileStagerFunctions"
 
