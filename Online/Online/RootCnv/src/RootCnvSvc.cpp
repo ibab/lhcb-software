@@ -32,10 +32,6 @@
 #include "RootCnv/RootDataConnection.h"
 #include "RootUtils.h"
 
-// ROOT include files
-#include "TROOT.h"
-#include "TTree.h"
-
 using namespace std;
 using namespace Gaudi;
 typedef const string& CSTR;
@@ -48,7 +44,8 @@ namespace {
   static map<string, TClass*> s_classesNames;
   static map<CLID, TClass*>   s_classesClids;
 }
-#define MBYTE 1024*1024
+#define kBYTE (1024)
+#define MBYTE (kBYTE*kBYTE)
 
 // Standard constructor
 RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
@@ -63,7 +60,7 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("EnableIncident",   m_incidentEnabled     = true);
   declareProperty("RecordsName",      m_recordName          = "/FileRecords");
 
-  declareProperty("BasketSize",       m_setup->basketSize   = 2*MBYTE);
+  declareProperty("BasketSize",       m_setup->basketSize   = 2*MBYTE /* 40*MBYTE */);
   declareProperty("CacheSize",        m_setup->cacheSize    = 10*MBYTE);
   declareProperty("AutoFlush",        m_setup->autoFlush    = 100);
   declareProperty("LearnEntries",     m_setup->learnEntries = 10);
@@ -72,8 +69,8 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("VetoBranches",     m_setup->vetoBranches);
   declareProperty("GlobalCompression",m_compression); // empty: do nothing
 
-  declareProperty("BufferSize",	      m_setup->bufferSize   = 2*1024);
-  declareProperty("SplitLevel",       m_setup->splitLevel   = 0);
+  declareProperty("BufferSize",	      m_setup->bufferSize   = 2* kBYTE /* 32*1024 */);
+  declareProperty("SplitLevel",       m_setup->splitLevel   = 0        /* 99 */);
 }
 
 // Standard destructor
