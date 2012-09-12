@@ -21,11 +21,12 @@ use Camera              v1r23    Online
 use Checkpointing       v0r10    Online
 use CondDBServer        v1r4     Online
 use DailyReport         v1r2     Online
+use DefHLTUtils         v1r1     Online
 use DIM                 v19r36   Online
 ####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r10    Online
-use Gaucho              v7r27    Online
-use GauchoAppl          v1r6     Online
+use Gaucho              v7r28    Online
+use GauchoAppl          v1r7     Online
 use GaudiCheckpointing  v0r11    Online
 use GaudiOnline         v2r62    Online
 use GaudiRootCnvTests   v1r8     Online
