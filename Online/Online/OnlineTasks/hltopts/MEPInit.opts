@@ -10,7 +10,7 @@ ApplicationMgr.EvtSel                = "NONE";
 MBM.MapUnusedBuffers                 = false;
 MBM.PartitionBuffers                 = false;
 MBM.PartitionID                      = @OnlineEnv.PartitionID;
-MBM.InitFlags        = "-s=100000 -e=1000 -u=36 -b=17 -f -i=Events -c -s=40000 -e=150 -u=8 -b=17 -f -i=Overflow -c -s=30000 -e=150 -u=36 -f -i=Send -c";
+MBM.InitFlags        = "-s=100000 -e=1000 -u=40 -b=17 -f -i=Events -c -s=40000 -e=150 -u=8 -b=17 -f -i=Overflow -c -s=30000 -e=150 -u=36 -f -i=Send -c";
 Runable.Wait                         = 1;  // 1 of running as daemon
 MessageSvc.OutputLevel               = 5;  // Minimum is Error
 IncidentSvc.OutputLevel              = 4;

@@ -18,7 +18,7 @@ MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = { "Events" };
 
 Runable.OutputLevel       = 1;
-Runable.MEPBuffers        = 3;           // concurrently built events
+Runable.MEPBuffers        = 4;           // concurrently built events
 Runable.InitialMEPReqs    = 3;           // how many MEPs to send initially 
 Runable.maxMsForGetSpace  = 100;         // milliseconds to wait to get buffer memory from BM
 Runable.partitionID       = @OnlineEnv.PartitionID;

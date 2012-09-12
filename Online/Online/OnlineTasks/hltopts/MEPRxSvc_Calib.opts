@@ -1,7 +1,8 @@
 #include "$HLTOPTS/MEPRxSvc.opts"
-Runable.nameLiveBuf       = "MEP";
+Runable.nameLiveBuf       = "Events";
 Runable.overflow          = false;        //  use overflow 
-
+Runable.sockBuf           = 67108864;
 //disable MEP requests from Calib farm
 //MessageSvc.OutputLevel               = 1;
 Runable.IPNameOdin = "192.168.254.194";
+Runable.MEPBuffers        = 6;           // concurrently built events

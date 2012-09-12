@@ -109,7 +109,7 @@ BusyAdder.InDNS               = "<node>";
 
 MEPrxCountAdder.ReceiveTimeout     = 4;
 EVTProdCountAdder.ReceiveTimeout   = 12;
-DiskWRCountAdder.ReceiveTimeout   = 12;
+DiskWRCountAdder.ReceiveTimeout   = 4;
 GauchoHistAdder.ReceiveTimeout     = 12;
 GauchoCountAdder.ReceiveTimeout    = 12;
 OverflowAdder.ReceiveTimeout       = 4;

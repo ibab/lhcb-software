@@ -1,0 +1,4 @@
+#pragma print off
+#include "$HLTOPTS/MEPRxSvc.opts"
+Runable.MEPBuffers        = 1;           // concurrently built events
+Runable.InitialMEPReqs    = 1;           // how many MEPs to send initially 

@@ -97,5 +97,5 @@ GauchoHistAdder.ReceiveTimeout     = 6;
 GauchoCountAdder.ReceiveTimeout    = 6;
 MEPrxHistAdder.ReceiveTimeout      = 6;
 EVTProdHistAdder.ReceiveTimeout    = 6;
-DiskWRHistAdder.ReceiveTimeout    = 6;
+DiskWRHistAdder.ReceiveTimeout    = 3;
 BusyAdder.ReceiveTimeout          = 3;

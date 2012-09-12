@@ -66,7 +66,7 @@ GauchoHistAdder.ReceiveTimeout       = 3;
 GauchoCountAdder.ReceiveTimeout      = 3;
 MEPrxHistAdder.ReceiveTimeout        = 3;
 EVTProdCountAdder.ReceiveTimeout     = 3;
-DiskWRCountAdder.ReceiveTimeout      = 3;
+DiskWRCountAdder.ReceiveTimeout      = 2;
 OverflowAdder.ReceiveTimeout         = 3;
 
 BusySvc.BogusMips                    = 0.0;
