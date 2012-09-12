@@ -34,7 +34,7 @@ namespace Rich
       public:
         /// Default Constructor
         Params()
-          : cutFractor    ( 2.25 ),
+          : cutFractor    ( 2.00 ), // was 2.25
             minBoundary   ( 5    ),
             neighbourFrac ( 0.50 )  { }
       public:

@@ -29,7 +29,7 @@ void SobelPeakPixelFinder::findBoundary( Pixel::List & boundary ) const
     const int nbins         = m_hist->GetNbinsX() * m_hist->GetNbinsY();
     const double global_thr = m_params.cutFractor * m_hist->Integral() / (double)nbins;
 
-    for ( int icol = 0 ; icol < m_hist->GetNbinsX(); ++icol )
+    for ( int icol = 0; icol < m_hist->GetNbinsX(); ++icol )
     {
       for ( int irow = 0; irow < m_hist->GetNbinsY(); ++irow )
       {

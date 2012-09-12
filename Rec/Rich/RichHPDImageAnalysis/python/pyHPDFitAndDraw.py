@@ -126,7 +126,8 @@ def fitHPD(filename,copyNumber,fitType='Sobel',clean=True,plotFile=""):
     sobelImage.Draw('zcol')
     
     if result.OK() :
-        print "Fit OK : centre",result.col(),",",result.row(), "radius (mm)",result.radInMM()
+        print "HPD", copyNumber, "Fit OK : centre", result.col(),",",result.row(), \
+              "radius (mm)", result.radInMM()
 
         # Draw circle
         circle = TEllipse( result.col(), result.row(), result.radInPix(), result.radInPix() )

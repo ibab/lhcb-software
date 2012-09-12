@@ -21,8 +21,9 @@ using namespace Rich::HPDImage;
 TH2D* Clean::filter() const
 {
   TH2D * cleanedHist(NULL);
-  m_avPixCont = 0;
-  m_excludedPixels.clear();
+
+  // reset
+  reset();
 
   if ( m_inHist )
   {
@@ -49,7 +50,7 @@ TH2D* Clean::filter() const
     {
 
       // Loop once to fill info on column/row occupancies
-      std::map<unsigned int,unsigned int> xCount,yCount;
+      std::map<unsigned int,double> xCount,yCount;
       double cleanedSum(0);
       for ( int i = 0; i < m_inHist->GetNbinsX(); ++i )
       {
@@ -62,8 +63,8 @@ TH2D* Clean::filter() const
             if ( m_nEvents == 0 ||
                  (double)bin_cont/(double)m_nEvents < m_params.maxEventOcc )
             {
-              ++xCount[i];
-              ++yCount[j];
+              xCount[i]  += bin_cont;
+              yCount[j]  += bin_cont;
               cleanedSum += bin_cont;
             }
             else
@@ -78,16 +79,17 @@ TH2D* Clean::filter() const
       m_avPixCont = ( cleanedSum /
                       (double)( m_inHist->GetNbinsX() * m_inHist->GetNbinsY() ) );
 
-      // Loop over original bins
+      // First Loop to detect bad pixels to exclude
       for ( int i = 0; i < m_inHist->GetNbinsX(); ++i )
       {
         for ( int  j = 0; j < m_inHist->GetNbinsY(); ++j )
         {
-          // Bin content
-          const double bin_cont = m_inHist->GetBinContent(i+1,j+1);
-
           // Is Pixel OK
           bool pixOK = !isExcluded(i,j);
+          if ( !pixOK ) { continue; }
+
+          // Bin content
+          const double bin_cont = m_inHist->GetBinContent(i+1,j+1);
 
           // Skip 'hot' pixels
           pixOK &= ( bin_cont/m_avPixCont < m_params.hotBinFactor );
@@ -96,7 +98,6 @@ TH2D* Clean::filter() const
             // use number of events to clean
             const double frac = (double)bin_cont/(double)m_nEvents;
             pixOK &= ( frac < m_params.maxEventOcc );
-            if ( !pixOK ) excludePixel(i,j);
           }
 
           // skip dead columns
@@ -107,29 +108,56 @@ TH2D* Clean::filter() const
           pixOK &= ( yCount[j]/cleanedSum < m_params.hotRowColFraction );
 
           // Skip hot 'bi' columns or rows
-          pixOK &= ( (xCount[i]+xCount[i+1])/cleanedSum < m_params.hotRowColFraction );
-          pixOK &= ( (yCount[j]+yCount[j+1])/cleanedSum < m_params.hotRowColFraction );
+          pixOK &= ( (xCount[i]+xCount[i+1])/cleanedSum < m_params.hotBiRowColFraction );
+          pixOK &= ( (yCount[j]+yCount[j+1])/cleanedSum < m_params.hotBiRowColFraction );
 
           // ignore centre region
           pixOK &= ( std::sqrt(std::pow(i-15.5,2)+std::pow(j-15.5,2)) > m_params.centreRegionSize );
 
+          // update flags to excluded bad pixels from averages etc.
+          if ( !pixOK ) { excludePixel(i,j); }
+
+        }
+      }
+
+      // Second bad pixel loop, that requires avFromNeighbours
+      for ( int i = 0; i < m_inHist->GetNbinsX(); ++i )
+      {
+        for ( int  j = 0; j < m_inHist->GetNbinsY(); ++j )
+        {
+          // Is Pixel OK
+          bool pixOK = !isExcluded(i,j);
+          if ( !pixOK ) { continue; }
+
+          // Bin content
+          const double bin_cont = m_inHist->GetBinContent(i+1,j+1);
+
           // dead pixels (empty, but neighbours have lots of hits)
-          if ( pixOK && bin_cont < m_params.minBinContent )
+          if ( bin_cont < m_params.minBinContent )
           {
             const double neigh_cont = avFromNeighbours(i,j);
             if ( neigh_cont > m_avPixCont * m_params.neighbourFracForDeadPix ) { pixOK = false; }
           }
 
-          // Fill into final plot
-          if ( pixOK )
+          // update flags to excluded bad pixels from averages etc.
+          if ( !pixOK ) { excludePixel(i,j); }
+
+        }
+      }
+
+      // Final loop to fill the cleaned histogram
+      for ( int i = 0; i < m_inHist->GetNbinsX(); ++i )
+      {
+        for ( int  j = 0; j < m_inHist->GetNbinsY(); ++j )
+        {
+          if ( !isExcluded(i,j) )
           {
-            cleanedHist->Fill( i, j, bin_cont );
+            cleanedHist->Fill( i, j, m_inHist->GetBinContent(i+1,j+1) );
           }
           else if ( m_params.giveRemovedPixAvCont )
           {
             cleanedHist->Fill( i, j, avFromNeighbours(i,j) );
           }
-
         }
       }
 
@@ -149,8 +177,11 @@ double Clean::avFromNeighbours(  const int COL,
   {
     for ( int irow = ROW-1; irow <= ROW+1 ; ++irow )
     {
-      if ( COL == icol && ROW == irow ) { continue ; }
-      if ( isExcluded(icol,irow) ) { continue; }
+      // skip pixel average is being computed for
+      if ( COL == icol && ROW == irow ) { continue; }
+      // skip excluded pixels
+      if ( isExcluded(icol,irow)      ) { continue; }
+      // add this pix to the average calculation
       av += m_inHist->GetBinContent( icol+1, irow+1 );
       ++nPixels;
     }

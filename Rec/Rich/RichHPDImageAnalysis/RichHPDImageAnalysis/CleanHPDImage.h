@@ -40,7 +40,8 @@ namespace Rich
             minBinContent           ( 1.0  ),
             giveRemovedPixAvCont    ( true ),
             neighbourFracForDeadPix ( 0.1  ),
-            hotRowColFraction       ( 0.5  ),
+            hotRowColFraction       ( 0.25 ),
+            hotBiRowColFraction     ( 0.35 ),
             maxEventOcc             ( 0.5  )
         { }
       public:
@@ -50,6 +51,7 @@ namespace Rich
         bool giveRemovedPixAvCont;
         double neighbourFracForDeadPix;
         double hotRowColFraction;
+        double hotBiRowColFraction;
         double maxEventOcc;
       };
 
@@ -62,7 +64,9 @@ namespace Rich
         : m_inHist  ( inH     ),
           m_params  ( params  ),
           m_nEvents ( nEvents )
-      { }
+      { 
+        reset(); 
+      }
 
       /// Destructor
       ~Clean( ) { }
@@ -81,18 +85,27 @@ namespace Rich
       double avFromNeighbours( const int COL,
                                const int ROW ) const;
 
+      /// Add to list of excluded pixels
       void excludePixel( const int i, const int j ) const
       {
         m_excludedPixels.push_back( (i*100000)+j );
       }
 
+      /// check if the given pixel is excluded
       bool isExcluded( const int i, const int j ) const
       {
         return std::find( m_excludedPixels.begin(),
                           m_excludedPixels.end(),
                           (i*100000)+j ) != m_excludedPixels.end();
       }
-      
+
+      /// Reset
+      void reset() const 
+      { 
+        m_avPixCont = 0;
+        m_excludedPixels.clear();
+      }
+   
     private:
 
       /// Pointer to original histogram
