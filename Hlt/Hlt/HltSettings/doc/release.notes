@@ -5,6 +5,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-09-11 - Eric van Herwijnen
+ - comment 'Hlt1MicroBiasVeloLowMult'in Physics_pAPilot
+
 !========================= HltSettings v5r48 2012-09-12 =========================
 
 ! 2012-09-11 - Johannes Albrecht
