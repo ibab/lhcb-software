@@ -5,6 +5,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-09-12 - Eric van Herwijnen
+ - Add Hlt2Lumi to activehlt2lines in Physics_pAPilot
+
 !========================= HltSettings v5r51 2012-09-12 =========================
 ! 2012-09-12 - Eric van Herwijnen
  - removed ActivityTracking and replaced the MBNoBias postscale by
