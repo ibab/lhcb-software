@@ -41,8 +41,7 @@ class Physics_pAPilot :
         Returns a list of active lines
         """
         return [ 'Hlt1L0Any',
-                 'Hlt1ActivitySPD',
-                 'Hlt1ActivityTracking',	 
+                 'Hlt1ActivitySPD', 
                  'Hlt1MicroBiasVeloLowMult',
                  'Hlt1MBNoBias',
                  'Hlt1Lumi',
@@ -59,7 +58,6 @@ class Physics_pAPilot :
         
         return { Hlt1L0LinesConf : { 'Prescale' : { 'Hlt1L0Any'    : 1.}}
                , Hlt1LumiLinesConf : { 'EnableReco' : False }
-               , Hlt1MBLinesConf : {  'Prescale' : { 'Hlt1MBNoBias'  : 1. }
-                                      , 'Postscale' : { 'Hlt1MBNoBias'  : 'RATE(1000)' }}
+               , Hlt1MBLinesConf : {  'Prescale' : { 'Hlt1MBNoBias'  : 0.01 }}		      
                , Hlt2CommissioningLinesConf : {'Prescale' : { 'Hlt2PassThrough'  : 1. }}
                }

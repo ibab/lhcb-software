@@ -5,6 +5,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-09-12 - Eric van Herwijnen
+ - removed ActivityTracking and replaced the MBNoBias postscale by
+   a prescale in Physics_pAPilot
+
 !========================= HltSettings v5r50 2012-09-12 =========================
 ! 2012-09-12 - Eric van Herwijnen
  - 'Hlt1MicroBiasVeloLowMult' back in Physics_pAPilot
