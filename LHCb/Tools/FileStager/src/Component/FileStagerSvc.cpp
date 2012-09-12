@@ -33,6 +33,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/stream.hpp>
+#include <boost/unordered_map.hpp>
 
 // local
 #include <FileStager/FileStagerFunctions.h>
@@ -63,7 +64,10 @@ namespace {
    using std::vector;
    using std::istream;
    using std::getline;
+   using std::map;
 }
+
+extern char** environ;
 
 DECLARE_SERVICE_FACTORY( FileStagerSvc )
 
@@ -76,7 +80,8 @@ FileStagerSvc::FileStagerSvc( const string& name, ISvcLocator* svcLoc )
    declareProperty( "Tempdir", m_tmpdir = "", "The base of the temporary directory "
                     "where the files will be staged" );
    declareProperty( "StageNFiles", m_stageNFiles = 2, "The number of files to stage" );
-   declareProperty( "KeepFiles", m_keepFiles = false, "Keep staged files" );
+   declareProperty( "KeepFiles", m_keepFiles = false, "Keep staged files" )
+   ->declareUpdateHandler( &FileStagerSvc::keepFilesHandler, this );
    declareProperty( "DiskspaceTries", m_tries = 10, "The number of times to retry "
                     "whether there is sufficient diskspace" );
    declareProperty( "RetryStaging", m_retry = false, "Retry staging once it's failed." );
@@ -118,14 +123,21 @@ StatusCode FileStagerSvc::initialize()
    }
 
    // Check if the base dir exists.
-   if ( !fs::exists( m_tmpdir ) ) {
-      error() << "Base temp dir " << m_tmpdir << " does not exist." << endmsg;
+   if ( !fs::exists( m_tmpdir ) && !fs::create_directories( m_tmpdir ) ) {
+      error() << "Base temp dir " << m_tmpdir << " does not exist and could not be created." 
+              << endmsg;
       sc = StatusCode::FAILURE;
       return sc;
    }
 
+   // Check if there is an environment variable which ends in JOBID set. 
+   // If so, always switch off keep file mode.
+   if (checkJobID()) {
+      m_keepFiles = false;
+   }
+
    // Create the temporary directory.
-   if ( !m_keepFiles ) {
+   if ( !keepFiles() ) {
       // Create a random directory, we're not keeping the files
       fs::path p( m_tmpdir + "/FileStagerSvc_XXXXXX" );
       const char* temp = p.string().c_str();
@@ -148,7 +160,7 @@ StatusCode FileStagerSvc::initialize()
    }
 
    // Submit the garbage collector if not keeping files
-   if ( !m_keepFiles ) sc = garbage();
+   if ( !keepFiles() ) sc = garbage();
    if ( sc.isSuccess() ) {
       m_initialized = true;
    }
@@ -159,11 +171,11 @@ StatusCode FileStagerSvc::initialize()
 StatusCode FileStagerSvc::finalize()
 {
    StatusCode sc = clearFiles();
-   if ( !m_keepFiles && fs::exists( m_tmpdir ) ) {
+   if ( !keepFiles() && fs::exists( m_tmpdir ) ) {
       fs::remove( m_tmpdir );
    }
 
-   if ( !m_keepFiles ) {
+   if ( !keepFiles() ) {
       verbose() << "Killing garbage collector" << endmsg;
       kill( m_garbagePID, SIGTERM );
       boost::this_thread::sleep( pt::seconds( 5 ) );
@@ -542,7 +554,7 @@ void FileStagerSvc::removeFile( const_original_iterator it )
    // }
 
    fs::path p( temporary );
-   if ( !m_keepFiles && fs::exists( p ) ) {
+   if ( !keepFiles() && fs::exists( p ) ) {
       // Remove the file
       fs::remove( p );
       if ( outputLevel() <=  MSG::VERBOSE ) {
@@ -677,6 +689,7 @@ StatusCode FileStagerSvc::garbage()
       }
       if ( count ) {
          error() << "execvp failed with error: " << strerror( err ) << endmsg;
+         error() << "trying to exec " << command.string() << endmsg;
          return StatusCode::FAILURE;
       }
       close( pipefds[ 0 ] );
@@ -728,6 +741,55 @@ File* FileStagerSvc::createFile( const string& filename )
    File* f = new File( file, command, remote, temp.str() );
    f->setGood(true);
    return f;
+}
+
+//=============================================================================
+void FileStagerSvc::keepFilesHandler( Property& property )
+{
+   if ( keepFiles() && checkJobID() ) {
+      m_keepFiles = false;
+   }
+
+   // printout message
+   if ( msgLevel( MSG::DEBUG ) ) {
+      debug() << "Property update for " << property.name() << " : new value = " 
+              << keepFiles() << endmsg;
+   }
+}
+
+//=============================================================================
+bool FileStagerSvc::checkJobID() const
+{
+   // Check if there is an environment variable which ends in JOBID set. 
+   // If so, always switch off keep file mode.
+   typedef map<string, string> s_map_t;
+   s_map_t variables;
+   char** env_ptr = environ;
+   while ( *env_ptr ) {
+      string var( *env_ptr );
+      size_t pos = var.find( "=" );
+      if ( pos == string::npos ) {
+         continue;
+      }
+      variables.insert( make_pair( var.substr( 0, pos ), var.substr( pos + 1, string::npos ) ) );
+      env_ptr++;
+   }
+
+   smatch matches;
+   match_flag_type flags = boost::match_default;
+
+   bool job = false;
+   regex re_jobid( ".*JOBID$" );
+   BOOST_FOREACH( const s_map_t::value_type& entry, variables ) {
+      const string& name = entry.first;
+      if ( regex_match( name.begin(), name.end(), matches, re_jobid, flags ) ) {
+         warning() << "Keep files mode has been switched of since the presence of the "
+                   << "environment variable " << name << " indicates that this job is " 
+                   << "running on a batch system" << endmsg;
+         job = true;
+      }
+   }
+   return job;
 }
 
 #else
@@ -809,5 +871,11 @@ StatusCode FileStagerSvc::garbage()
 File* FileStagerSvc::createFile( const string& )
 {
    return 0;
+}
+
+//=============================================================================
+bool FileStagerSvc::checkJobID() const
+{
+   return false;
 }
 #endif

@@ -166,5 +166,10 @@ private:
    StatusCode garbage();
 
    File* createFile( const std::string& filename );
+
+   bool keepFiles() const { return m_keepFiles; }
+   void keepFilesHandler( Property& property );
+   
+   bool checkJobID() const;
 };
 #endif // FILESTAGER_H

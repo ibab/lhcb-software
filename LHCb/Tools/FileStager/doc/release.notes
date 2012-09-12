@@ -4,6 +4,10 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2012-09-12 - Roel Aaij
+ - Added extra protection to the use of KeepFiles. If there is an environment
+   variable set which ends in JOBID, files will never be kept.
+
 ! 2012-09-12 - Marco Clemencic
  - Minor change to simplify translation to CMake.
 
