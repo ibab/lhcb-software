@@ -424,8 +424,8 @@ int GaudiTask::startApplication()  {
   }
  Error:
   if ( m_autostart != 0 ) {
-    log << MSG::FATAL << "startApplication failed. --> Exit(-1)" << endmsg;
-    ::exit(-1);
+    log << MSG::FATAL << "startApplication failed. Going to ERROR" << endmsg;
+    //::exit(-1);
   }
   return 0;
 }

@@ -79,7 +79,7 @@ namespace LHCb
     virtual ~HltBufferedIOReader();
     /// IInterface implementation : queryInterface
     virtual StatusCode queryInterface(const InterfaceID& riid,
-        void** ppvInterface);
+                                      void** ppvInterface);
     /// IService implementation: initialize the service
     virtual StatusCode initialize();
     /// Low level overload from Service base class: sysStart
@@ -120,13 +120,13 @@ namespace LHCb
 // Instantiation of a static factory class used by clients to create instances of this service
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,HltBufferedIOReader)
 
-using namespace LHCb;
+  using namespace LHCb;
 using namespace std;
 
 /// Standard Constructor
 HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc) :
   OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_producer(0),
-      m_evtCount(0)
+  m_evtCount(0)
 {
   declareProperty("Buffer", m_buffer = "Mep");
   declareProperty("Directory", m_directory = "/localdisk");
@@ -142,8 +142,7 @@ HltBufferedIOReader::~HltBufferedIOReader()  {
 }
 
 /// IInterface implementation : queryInterface
-StatusCode HltBufferedIOReader::queryInterface(const InterfaceID& riid, void** ppIf)
-{
+StatusCode HltBufferedIOReader::queryInterface(const InterfaceID& riid, void** ppIf)    {
   if (IRunable::interfaceID().versionMatch(riid))  {
     *ppIf = (IRunable*) this;
     addRef();
@@ -262,17 +261,17 @@ size_t HltBufferedIOReader::scanFiles()   {
     while ((entry = ::readdir(dir)) != 0)    {
       //cout << "File:" << entry->d_name << endl;
       if ( 0 != ::strncmp(entry->d_name,"Run_",4) ) {
-	continue;
+        continue;
       }
       else if ( !take_all )  {
-	bool take_run = false;
-	for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
-	  if ( ::strstr(entry->d_name,(*i).c_str()) != 0 ) {
-	    take_run = true;
-	    break;
-	  }
-	}
-	if ( !take_run ) continue;
+        bool take_run = false;
+        for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
+          if ( ::strstr(entry->d_name,(*i).c_str()) != 0 ) {
+            take_run = true;
+            break;
+          }
+        }
+        if ( !take_run ) continue;
       }
       m_files.insert(m_directory + "/" + entry->d_name);
     }
@@ -280,7 +279,7 @@ size_t HltBufferedIOReader::scanFiles()   {
     return m_files.size();
   }
   const char* err = RTL::errorString();
-  error("Failed to open directory:" + string(err ? err : "????????"));
+  info("Failed to open directory:" + string(err ? err : "????????"));
   return 0;
 }
 
@@ -295,7 +294,10 @@ int HltBufferedIOReader::openFile()   {
         int sc = ::unlink(fname.c_str());
         if (sc != 0)        {
           error("CANNOT UNLINK file: " + fname + ": " + RTL::errorString());
-          ::exit(EBADF);
+          //::exit(EBADF);
+          m_receiveEvts = false;
+          incidentSvc()->fireIncident(Incident(name(),"DAQ_ERROR"));
+          return 0;
         }
       }
       m_current = fname;
@@ -303,18 +305,16 @@ int HltBufferedIOReader::openFile()   {
       return fd;
     }
     error("FAILD to open file: " + fname + " for deferred HLT processing: "
-        + RTL::errorString());
+          + RTL::errorString());
   }
   return 0;
 }
 
-void HltBufferedIOReader::safeRestOfFile(int file_handle)
-{
+void HltBufferedIOReader::safeRestOfFile(int file_handle)     {
   if (file_handle)  {
     char buffer[10 * 1024];
-    cout << "Saving rest of file[" << file_handle << "]:" << m_current << endl;
-    int cnt = 0, ret, fd = ::open(m_current.c_str(), O_CREAT | O_BINARY
-        | O_WRONLY, 0777);
+    info("Saving rest of file[%d]: %s",file_handle,m_current.c_str());
+    int cnt = 0, ret, fd = ::open(m_current.c_str(), O_CREAT | O_BINARY | O_WRONLY, 0777);
     if (fd < 0)    {
       error("CANNOT Create file: " + m_current + ": " + RTL::errorString());
     }
@@ -324,8 +324,7 @@ void HltBufferedIOReader::safeRestOfFile(int file_handle)
       }
       cnt += ret;
     }
-    cout << "Wrote " << cnt << " bytes to file:" << m_current << " fd:" << fd
-        << endl;
+    info("Wrote %d bytes to file:%s fd:%d",cnt,m_current.c_str(),fd);
     ::close(fd);
     ::close(file_handle);
     m_current = "";
@@ -365,8 +364,8 @@ StatusCode HltBufferedIOReader::i_run()  {
       if (0 == file_handle)  {
         file_handle = openFile();
         if (0 == file_handle)   {
-	  files_processed = scanFiles() == 0;
-	  if ( files_processed )    {
+          files_processed = scanFiles() == 0;
+          if ( files_processed )    {
             break;
           }
         }
