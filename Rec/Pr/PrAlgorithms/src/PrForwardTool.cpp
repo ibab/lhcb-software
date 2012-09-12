@@ -345,7 +345,8 @@ void PrForwardTool::selectXCandidates( PrForwardTrack& track ) {
         //====================================================================
         // Try to find a group of different planes with very small interval
         //====================================================================
-        if ( it2 - it1 > m_nbXPlanes && planeCount.nbDifferent() == m_nbXPlanes ) {
+        unsigned int itdiff = it2-it1;
+        if ( itdiff > m_nbXPlanes && planeCount.nbDifferent() == m_nbXPlanes ) {
           PrPlaneCounter pc;
           PrHits::iterator itStart = it1;
           PrHits::iterator it3 = it1 + m_nbXPlanes;

@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-09-12 - Marco Cattaneo
+ - Fix an i686 compilation warning in PrForwardTool.cpp
+
 ! 2012-09-04 - Olivier Callot
  - Remove a useless line in PrSeedQuadruplet.h
 
