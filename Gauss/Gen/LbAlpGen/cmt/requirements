@@ -65,6 +65,10 @@ macro_prepend LbAlpGen_linkopts " -Wl,--no-as-needed "
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir) "
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir)/alplib "
 
+macro_append AlpGenFragm_dependencies LbAlpGenLib 
+macro_append AlpGen4Q_dependencies LbAlpGenLib 
+macro_append AlpGenZbb_dependencies LbAlpGenLib 
+
 end_private
 # =============================================================================
 
