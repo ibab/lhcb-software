@@ -766,7 +766,7 @@ StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
 	//  static int nbLate=0;
 	unsigned int runNumber = getRunNumber(mHeader, len);
 //		if ((int) runNumber == -1 )
-	if ((int) runNumber <= 0 )
+	if ((int) runNumber <= 0 )	// checking for <=0 to discard spuriously large run numbers (> 2 billion seen once)
 	{
 		*m_log << MSG::FATAL << WHERE
 				<< "Event with runnumber < 0 received. Not forwarding."
