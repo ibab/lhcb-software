@@ -46,8 +46,8 @@ def initialise():
         #LHCbApp().CondDBtag = "head-20110914"
 
         DDDBConf(DataType = "2012")
-        LHCbApp().DDDBtag   = "head-20120413"
-        LHCbApp().CondDBtag = "cond-20120730"
+        LHCbApp().DDDBtag   = "dddb-20120831"
+        LHCbApp().CondDBtag = "cond-20120831"
 
         # Move HPD Occs
         #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
