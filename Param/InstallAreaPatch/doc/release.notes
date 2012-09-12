@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : InstaAreaPatch
+! Responsible : Ben Couturier 
+! Purpose     : Special package to allow updating files in an install area 
+!               wheni this cannot be done with install project.
+!-----------------------------------------------------------------------------
+
+!======================= InstallAreaPatch v1r9 2012-09-12 ==========================
+! 2012-09-12 - Ben Couturier 
+ - Added files to update libhepmcinterface.so wrongly deployed
+
