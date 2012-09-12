@@ -5,6 +5,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r52 2012-09-12 =========================
 ! 2012-09-12 - Eric van Herwijnen
  - Add Hlt2Lumi to activehlt2lines in Physics_pAPilot
 
