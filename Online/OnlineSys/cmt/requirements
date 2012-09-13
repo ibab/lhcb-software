@@ -18,7 +18,7 @@ use GaudiObjDesc      v11r14
 #macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
 #use $(CCPCHist_use)
 use Camera              v1r23    Online
-use Checkpointing       v0r10    Online
+use Checkpointing       v0r11    Online
 use CondDBServer        v1r4     Online
 use DailyReport         v1r2     Online
 use DefHLTUtils         v1r1     Online
@@ -59,7 +59,7 @@ use Trending            v2r1     Online
 use UPI                 v1r21    Online
 use UPIR                v1r4     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer              v1r40    Online
+use Writer              v1r46    Online
 
 # Declare this as a container package
 apply_pattern container_package
