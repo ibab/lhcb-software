@@ -15,7 +15,8 @@
 <PRE>
    Based in Gaudi v23r2p1.
    Updated packages are:
-     MDF               v3r34    DAQ
+     MDF                 v3r34    DAQ
+     DAQEvent            v9r10    Event
      DefHLTUtils         v1r1     Online
      FarmMonitor         v2r11    Online
      Gaucho              v7r28    Online
