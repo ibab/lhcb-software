@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2012-09-13 - Paul Szczypka
+ - Rename EVERYTHING from VeloPix to VP including veloPix to vP, VELOPIX to VP
+
 ! 2012-08-28 - Paul Szczypka / Pawel Jalocha
  - change from VeloPix to VP in container names
 

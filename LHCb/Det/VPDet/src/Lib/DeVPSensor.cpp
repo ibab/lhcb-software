@@ -1,6 +1,6 @@
-// $Id: DeVeloPixSensor.cpp,v 1.3 2009-10-21 11:19:28 cocov Exp $
+// $Id: DeVPSensor.cpp,v 1.3 2009-10-21 11:19:28 cocov Exp $
 //==============================================================================
-#define VELOPIXDET_DEVELOPIXSENSOR_CPP 1
+#define VPDET_DEVPSENSOR_CPP 1
 //==============================================================================
 // Include files 
 
@@ -15,13 +15,13 @@
 
 #include "DetDesc/Condition.h"
 
-// From VeloPix 
-#include "VeloPixDet/DeVeloPixSensor.h"
-#include "Kernel/VeloPixChannelID.h"
+// From VP 
+#include "VPDet/DeVPSensor.h"
+#include "Kernel/VPChannelID.h"
 
-/** @file DeVeloPixSensor.cpp
+/** @file DeVPSensor.cpp
  *
- *  Implementation of class : DeVeloPixSensor
+ *  Implementation of class : DeVPSensor
  *
  *  @author Victor Coco victor.coco@cern.ch
  *  
@@ -30,7 +30,7 @@
 //==============================================================================
 /// Standard constructor
 //==============================================================================
-DeVeloPixSensor::DeVeloPixSensor(const std::string& name) : 
+DeVPSensor::DeVPSensor(const std::string& name) : 
   DetectorElement(name)
 {
   ;
@@ -38,38 +38,38 @@ DeVeloPixSensor::DeVeloPixSensor(const std::string& name) :
 //==============================================================================
 /// Destructor
 //==============================================================================
-DeVeloPixSensor::~DeVeloPixSensor() {}
+DeVPSensor::~DeVPSensor() {}
 //==============================================================================
 /// Object identification
 //==============================================================================
-const CLID& DeVeloPixSensor::clID() 
-  const { return DeVeloPixSensor::classID(); }
+const CLID& DeVPSensor::clID() 
+  const { return DeVPSensor::classID(); }
 //==============================================================================
 /// Initialisation method
 //==============================================================================
-StatusCode DeVeloPixSensor::initialize() 
+StatusCode DeVPSensor::initialize() 
 {
-  // Trick from old DeVeloPix to set the output level
+  // Trick from old DeVP to set the output level
   PropertyMgr* pmgr = new PropertyMgr();
   int outputLevel=0;
   pmgr->declareProperty("OutputLevel", outputLevel);
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloPixSensor", pmgr);
+  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVPSensor", pmgr);
   if ( 0 < outputLevel ) {
-    msgSvc()->setOutputLevel("DeVeloPixSensor", outputLevel);
+    msgSvc()->setOutputLevel("DeVPSensor", outputLevel);
   }
   delete pmgr;
   if( !sc ) return sc;
-  MsgStream msg(msgSvc(), "DeVeloPixSensor");
+  MsgStream msg(msgSvc(), "DeVPSensor");
   sc = DetectorElement::initialize();
   if(!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to initialise DetectorElement" << endreq;
     return sc;
   }
-  m_debug   = (msgSvc()->outputLevel("DeVeloPixSensor") == MSG::DEBUG  ) ;
-  m_verbose = (msgSvc()->outputLevel("DeVeloPixSensor") == MSG::VERBOSE) ;
+  m_debug   = (msgSvc()->outputLevel("DeVPSensor") == MSG::DEBUG  ) ;
+  m_verbose = (msgSvc()->outputLevel("DeVPSensor") == MSG::VERBOSE) ;
   if( m_verbose ){
     m_debug = true;
   }
@@ -82,8 +82,8 @@ StatusCode DeVeloPixSensor::initialize()
     msg << MSG::ERROR <<"Failed to cache geometry"<<endmsg; 
     return sc;
   }
-  // get parent VeloPix Half box for pattern recognition alignment purposes
-  // heirarchy should be sensor -> Module -> VeloPix(Left|Right)
+  // get parent VP Half box for pattern recognition alignment purposes
+  // heirarchy should be sensor -> Module -> VP(Left|Right)
   IDetectorElement* halfBox = 
     this->parentIDetectorElement()->parentIDetectorElement();
   if(m_debug)
@@ -108,14 +108,14 @@ StatusCode DeVeloPixSensor::initialize()
 //==============================================================================
 /// Cache geometry parameters
 //==============================================================================
-StatusCode DeVeloPixSensor::cacheGeometry() 
+StatusCode DeVPSensor::cacheGeometry() 
 {
   m_z = m_geometry->toGlobal(Gaudi::XYZPoint(0,0,0)).z();
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
-void DeVeloPixSensor::initSensor()
+void DeVPSensor::initSensor()
 {
   // Get all the information we need from the DDDB
   m_module   = param<int>("Module");

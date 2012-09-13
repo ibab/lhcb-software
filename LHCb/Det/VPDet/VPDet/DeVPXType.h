@@ -1,50 +1,50 @@
-// $Id: DeVeloPixXType.h,v 1.3 2009-10-21 11:19:28 cocov Exp $
-#ifndef VELOPIXDET_DEVELOPIXXTYPE_H 
-#define VELOPIXDET_DEVELOPIXXTYPE_H 1
+// $Id: DeVPXType.h,v 1.3 2009-10-21 11:19:28 cocov Exp $
+#ifndef VPDET_DEVPXTYPE_H 
+#define VPDET_DEVPXTYPE_H 1
 
 // Include files
 
 // Gaudi Math definitions
 #include "GaudiKernel/Point3DTypes.h"
 
-// from VeloPixDet
-#include "VeloPixDet/DeVeloPixSensor.h"
+// from VPDet
+#include "VPDet/DeVPSensor.h"
 
-#include "VeloPixDet/PixelLadder.h"
+#include "VPDet/PixelLadder.h"
 
 // get trajectory
 #include "Kernel/Trajectory.h"
 
 // Unique class identifier
-static const CLID CLID_DeVeloPixXType = 1008202 ;
+static const CLID CLID_DeVPXType = 1008202 ;
 
 // Forward declaration needed for link to associated sensor
-class DeVeloPixYType;
+class DeVPYType;
 
 namespace LHCb {
-  class VeloPixChannelID;
+  class VPChannelID;
 }
 
-/** @class DeVeloPixXType DeVeloPixXType.h VeloPixDet/DeVeloPixXType.h
+/** @class DeVPXType DeVPXType.h VPDet/DeVPXType.h
  *  
  *
  *  @author Victor Coco
  *  @date   2009-05-14
  */
 
-class DeVeloPixXType : public DeVeloPixSensor {
+class DeVPXType : public DeVPSensor {
 public:
   /// Standard constructor
-  DeVeloPixXType( const std::string& name = "" ); 
+  DeVPXType( const std::string& name = "" ); 
 
-  virtual ~DeVeloPixXType( ); ///< Destructor
+  virtual ~DeVPXType( ); ///< Destructor
 
   /// object identifier (static method)
-  static  const CLID& classID() { return CLID_DeVeloPixXType; }
+  static  const CLID& classID() { return CLID_DeVPXType; }
   /// object identification
   virtual const CLID& clID()     const;
 
-  /// Initialise the DeVeloPixSensor from the XML
+  /// Initialise the DeVPSensor from the XML
   virtual StatusCode initialize();
 
   /// Calculate the nearest channel to a 3-d point.
@@ -57,29 +57,29 @@ public:
   virtual int WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) const;
 
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
-                                    LHCb::VeloPixChannelID& channel,
+                                    LHCb::VPChannelID& channel,
                                     std::pair <double, double>& fraction) const = 0;
 
   /// Determines if local 3-d point is inside sensor
   virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const;
 
   /// Access to the associated Y sensor on the same module
-  inline const DeVeloPixYType* associatedYSensor() const { return m_associatedYSensor; }
+  inline const DeVPYType* associatedYSensor() const { return m_associatedYSensor; }
     
   /// Access to the x sensor on the other side of the VELO
-  inline const DeVeloPixXType* otherSideXSensor() const { return m_otherSideXSensor; }
+  inline const DeVPXType* otherSideXSensor() const { return m_otherSideXSensor; }
   
   /// Access to the y sensor on the other side of the VELO
-  inline const DeVeloPixYType* otherSideYSensor() const { return m_otherSideYSensor; }
+  inline const DeVPYType* otherSideYSensor() const { return m_otherSideYSensor; }
   
-  /// Set the associated y sensor.  This should only be called by DeVeloPix::initialize()
-  inline void setAssociatedYSensor(const DeVeloPixYType* ys) { m_associatedYSensor = ys; }
+  /// Set the associated y sensor.  This should only be called by DeVP::initialize()
+  inline void setAssociatedYSensor(const DeVPYType* ys) { m_associatedYSensor = ys; }
   
-  /// Set the r sensor on the other side of the VELO.  This should only be called by DeVeloPix::initialize()
-  inline void setOtherSideXSensor(const DeVeloPixXType* xs) { m_otherSideXSensor = xs; }
+  /// Set the r sensor on the other side of the VELO.  This should only be called by DeVP::initialize()
+  inline void setOtherSideXSensor(const DeVPXType* xs) { m_otherSideXSensor = xs; }
 
-  /// Set the y sensor on the other side of the VELO.  This should only be called by DeVeloPix::initialize()
-  inline void setOtherSideYSensor(const DeVeloPixYType* ys) { m_otherSideYSensor = ys; }
+  /// Set the y sensor on the other side of the VELO.  This should only be called by DeVP::initialize()
+  inline void setOtherSideYSensor(const DeVPYType* ys) { m_otherSideYSensor = ys; }
 
 
 private:
@@ -94,13 +94,13 @@ private:
   std::vector<PixelLadder> m_ladders;
 
   /// pointer to associated phi sensor
-  const DeVeloPixYType* m_associatedYSensor;
+  const DeVPYType* m_associatedYSensor;
   
   /// pointer to the r sensor on the other side of the VELO
-  const DeVeloPixXType* m_otherSideXSensor;
+  const DeVPXType* m_otherSideXSensor;
   
   /// pointer to the phi sensor on the other side of the VELO
-  const DeVeloPixYType* m_otherSideYSensor;
+  const DeVPYType* m_otherSideYSensor;
 
   // used to control initialization NEVER ACCESS THIS IN AN INLINED METHOD!
   static bool m_staticDataInvalid;
@@ -111,9 +111,9 @@ private:
 };
 
 /// fast cast to X sensor, returns 0 for wrong type
-inline const DeVeloPixXType* DeVeloPixSensor::xType() const { 
-  return (m_isX ? static_cast<const DeVeloPixXType*>(this) : 0); 
+inline const DeVPXType* DeVPSensor::xType() const { 
+  return (m_isX ? static_cast<const DeVPXType*>(this) : 0); 
 }
 
 
-#endif // VELOPIXELDET_DEVELOPIXELXTYPE_H
+#endif // VPELDET_DEVPELXTYPE_H

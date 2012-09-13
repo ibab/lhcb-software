@@ -6,7 +6,7 @@
 # =============== structure ===============================================
 package VPDet
 version           v1r10
-branches         src cmt doc VeloPixDet dict
+branches         src cmt doc VPDet dict
 
 # =============== used packages ===========================================
 use DetDesc     v*    Det
@@ -18,22 +18,22 @@ use GSL         v*    LCG_Interfaces
 use Boost       v*    LCG_Interfaces
 
 # =============== own includes ============================================
-apply_pattern install_more_includes more=VeloPixDet
+apply_pattern install_more_includes more=VPDet
 
 # =============== link library (base classes) =============================
-library          VeloPixDetLib        Lib/*.cpp
+library          VPDetLib        Lib/*.cpp
 
 # =============== component library =======================================
-library          VeloPixDet           component/*.cpp
+library          VPDet           component/*.cpp
 
 #================ patterns ================================================
-apply_pattern component_library library=VeloPixDet
-apply_pattern linker_library    library=VeloPixDetLib
+apply_pattern component_library library=VPDet
+apply_pattern linker_library    library=VPDetLib
 
 # =============== LCG Dictionaries ============================================
 apply_pattern     reflex_dictionary                                 \
-                  dictionary=VeloPixDet                                \
-                  headerfiles=$(VELOPIXDETROOT)/dict/VeloPixDetDict.h     \
-                  selectionfile=$(VELOPIXDETROOT)/dict/VeloPixDetDict.xml \
+                  dictionary=VPDet                                \
+                  headerfiles=$(VPDETROOT)/dict/VPDetDict.h     \
+                  selectionfile=$(VPDETROOT)/dict/VPDetDict.xml \
                   options="-U__MINGW32__"
 

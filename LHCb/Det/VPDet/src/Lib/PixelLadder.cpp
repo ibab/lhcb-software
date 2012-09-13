@@ -1,9 +1,9 @@
 // $Id: PixelLadder.cpp,v 1.4 2009-10-28 13:02:28 cocov Exp $
 // Include files
 // local
-#define  VELOPIXDET_PIXELLADDER_CPP 1
+#define  VPDET_PIXELLADDER_CPP 1
 
-#include "VeloPixDet/PixelLadder.h"
+#include "VPDet/PixelLadder.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PixelLadder

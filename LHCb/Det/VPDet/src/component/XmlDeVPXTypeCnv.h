@@ -3,12 +3,12 @@
 /// DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 /// VeloDet 
-#include "VeloPixDet/DeVeloPixYType.h"
+#include "VPDet/DeVPXType.h"
 
 
 /// =======================================================================
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service
 /// =======================================================================
-typedef XmlUserDetElemCnv<DeVeloPixYType>         XmlDeVeloPixYTypeCnv;
-DECLARE_CONVERTER_FACTORY( XmlDeVeloPixYTypeCnv );
+typedef XmlUserDetElemCnv<DeVPXType>         XmlDeVPXTypeCnv;
+DECLARE_CONVERTER_FACTORY( XmlDeVPXTypeCnv );

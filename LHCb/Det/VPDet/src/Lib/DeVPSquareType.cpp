@@ -1,6 +1,6 @@
-// $Id: DeVeloPixSquareType.cpp,v 1.14 2010-04-13 10:09:43 cocov Exp $
+// $Id: DeVPSquareType.cpp,v 1.14 2010-04-13 10:09:43 cocov Exp $
 //==============================================================================
-#define VELOPIXDET_DEVELOPIXSQUARETYPE_CPP 1
+#define VPDET_DEVPSQUARETYPE_CPP 1
 //==============================================================================
 // Include files 
 
@@ -18,59 +18,59 @@
 #include "Kernel/LineTraj.h"
 #include "gsl/gsl_math.h"
 
-// From VeloPix
-#include "VeloPixDet/DeVeloPixSquareType.h"
-#include "Kernel/VeloPixChannelID.h"
+// From VP
+#include "VPDet/DeVPSquareType.h"
+#include "Kernel/VPChannelID.h"
 
 
 // Note for later: If by design or to assume possible non orthogonal position of the sensor plane wrt. 
 // the halfbox itself, the way global and halfbox position is stored should be review...
 
-namespace VeloPixDet {
+namespace VPDet {
   /** This function simply provides access to a local static
    *  data which is used to initialize references in each instance
-   *  of DeVeloPixSquareType.
+   *  of DeVPSquareType.
    *  The purpose of this function is to work around
    *  a Microsoft(tm) specific extension in VC++ that makes
    *  awkward to have static data mebers accessed by inline
    *  funtions.
    *
-   *  @see DeVeloPixSquareType
+   *  @see DeVPSquareType
    */
   //double& m_PixelsSize;
-  static double& deVeloPixSquareTypeStaticPixelSize()
+  static double& deVPSquareTypeStaticPixelSize()
   {
     static double s_PixelSize;
     return s_PixelSize;
   }
   /** This function simply provides access to a local static
    *  data which is used to initialize references in each instance
-   *  of DeVeloPixSquareType.
+   *  of DeVPSquareType.
    *  The purpose of this function is to work around
    *  a Microsoft(tm) specific extension in VC++ that makes
    *  awkward to have static data mebers accessed by inline
    *  funtions.
    *
-   *  @see DeVeloPixSquareType
+   *  @see DeVPSquareType
    */
   //int& m_NpixX ;
-  static int& deVeloPixSquareTypeStaticNpixX()
+  static int& deVPSquareTypeStaticNpixX()
   {
     static int s_NpixX;
     return s_NpixX;
   }
   /** This function simply provides access to a local static
    *  data which is used to initialize references in each instance
-   *  of DeVeloPixSquareType.
+   *  of DeVPSquareType.
    *  The purpose of this function is to work around
    *  a Microsoft(tm) specific extension in VC++ that makes
    *  awkward to have static data mebers accessed by inline
    *  funtions.
    *
-   *  @see DeVeloPixSquareType
+   *  @see DeVPSquareType
    */
   //double& m_ChipWidth ;
-  static double& deVeloPixSquareTypeStaticChipWidth()
+  static double& deVPSquareTypeStaticChipWidth()
   {
     static double s_ChipWidth;
     return s_ChipWidth;
@@ -78,16 +78,16 @@ namespace VeloPixDet {
 
   /** This function simply provides access to a local static
    *  data which is used to initialize references in each instance
-   *  of DeVeloPixSquareType.
+   *  of DeVPSquareType.
    *  The purpose of this function is to work around
    *  a Microsoft(tm) specific extension in VC++ that makes
    *  awkward to have static data mebers accessed by inline
    *  funtions.
    *
-   *  @see DeVeloPixSquareType
+   *  @see DeVPSquareType
    */
   // std::vector< bool >& m_ChipHorizontal;
-  static std::vector< bool >& deVeloPixSquareTypeStaticChipHorizontal()
+  static std::vector< bool >& deVPSquareTypeStaticChipHorizontal()
   {
     static std::vector< bool > s_ChipHorizontal;
     return s_ChipHorizontal;
@@ -95,75 +95,75 @@ namespace VeloPixDet {
   // 64 size at maximum
   /** This function simply provides access to a local static
    *  data which is used to initialize references in each instance
-   *  of DeVeloPixSquareType.
+   *  of DeVPSquareType.
    *  The purpose of this function is to work around
    *  a Microsoft(tm) specific extension in VC++ that makes
    *  awkward to have static data mebers accessed by inline
    *  funtions.
    *
-   *  @see DeVeloPixSquareType
+   *  @see DeVPSquareType
    */
   //std::vector< double >& m_ChipFirstPixelSize;  
-  static std::vector< double >& deVeloPixSquareTypeStaticChipFirstPixelSize()
+  static std::vector< double >& deVPSquareTypeStaticChipFirstPixelSize()
   {
     static std::vector< double > s_ChipFirstPixelSize;
     return s_ChipFirstPixelSize;
   }
   /** This function simply provides access to a local static
    *  data which is used to initialize references in each instance
-   *  of DeVeloPixSquareType.
+   *  of DeVPSquareType.
    *  The purpose of this function is to work around
    *  a Microsoft(tm) specific extension in VC++ that makes
    *  awkward to have static data mebers accessed by inline
    *  funtions.
    *
-   *  @see DeVeloPixSquareType
+   *  @see DeVPSquareType
    */
   //std::vector< double >& m_ChipLastPixelSize;  
-  static std::vector< double >& deVeloPixSquareTypeStaticChipLastPixelSize()
+  static std::vector< double >& deVPSquareTypeStaticChipLastPixelSize()
   {
     static std::vector< double > s_ChipLastPixelSize;
     return s_ChipLastPixelSize;
   }
   /** This function simply provides access to a local static
    *  data which is used to initialize references in each instance
-   *  of DeVeloPixSquareType.
+   *  of DeVPSquareType.
    *  The purpose of this function is to work around
    *  a Microsoft(tm) specific extension in VC++ that makes
    *  awkward to have static data mebers accessed by inline
    *  funtions.
    *
-   *  @see DeVeloPixSquareType
+   *  @see DeVPSquareType
    */
   //std::vector< int >& m_ChipsInLadder;
-  static std::vector< int >& deVeloPixSquareTypeStaticChipsInLadder()
+  static std::vector< int >& deVPSquareTypeStaticChipsInLadder()
   {
     static std::vector< int > s_ChipsInLadder;
     return s_ChipsInLadder;
   }
   /** This function simply provides access to a local static
    *  data which is used to initialize references in each instance
-   *  of DeVeloPixSquareType.
+   *  of DeVPSquareType.
    *  The purpose of this function is to work around
    *  a Microsoft(tm) specific extension in VC++ that makes
    *  awkward to have static data mebers accessed by inline
    *  funtions.
    *
-   *  @see DeVeloPixSquareType
+   *  @see DeVPSquareType
    */
   //std::vector< std::pair<double,double> >& m_xyChips;
-  static std::vector< std::pair<double,double> >& deVeloPixSquareTypeStaticChips()
+  static std::vector< std::pair<double,double> >& deVPSquareTypeStaticChips()
   {
     static std::vector< std::pair<double,double> > s_xyChips;
     return s_xyChips;
   }
 }
 // used to control initialization
-bool DeVeloPixSquareType::m_staticDataInvalid = true;
+bool DeVPSquareType::m_staticDataInvalid = true;
 
-/** @file DeVeloPixSquareType.cpp
+/** @file DeVPSquareType.cpp
  *
- *  Implementation of class : DeVeloPixSquareType
+ *  Implementation of class : DeVPSquareType
  *
  *  @author Victor Coco victor.coco@cern.ch
  */
@@ -171,37 +171,37 @@ bool DeVeloPixSquareType::m_staticDataInvalid = true;
 //==============================================================================
 /// Standard constructor
 //==============================================================================
-DeVeloPixSquareType::DeVeloPixSquareType(const std::string& name) : 
-  DeVeloPixSensor(name),
+DeVPSquareType::DeVPSquareType(const std::string& name) : 
+  DeVPSensor(name),
   m_ladders(),
   m_otherSideSensor(0),
-  m_PixelSize(VeloPixDet::deVeloPixSquareTypeStaticPixelSize()), 
-  m_NpixX(VeloPixDet::deVeloPixSquareTypeStaticNpixX()), 
-  m_ChipWidth(VeloPixDet::deVeloPixSquareTypeStaticChipWidth()), 
-  m_xyChips(VeloPixDet::deVeloPixSquareTypeStaticChips()),
-  m_ChipFirstPixelSize(VeloPixDet::deVeloPixSquareTypeStaticChipFirstPixelSize()), 
-  m_ChipLastPixelSize(VeloPixDet::deVeloPixSquareTypeStaticChipLastPixelSize()), 
-  m_ChipsInLadder(VeloPixDet::deVeloPixSquareTypeStaticChipsInLadder()),
-  m_ChipHorizontal(VeloPixDet::deVeloPixSquareTypeStaticChipHorizontal()),
+  m_PixelSize(VPDet::deVPSquareTypeStaticPixelSize()), 
+  m_NpixX(VPDet::deVPSquareTypeStaticNpixX()), 
+  m_ChipWidth(VPDet::deVPSquareTypeStaticChipWidth()), 
+  m_xyChips(VPDet::deVPSquareTypeStaticChips()),
+  m_ChipFirstPixelSize(VPDet::deVPSquareTypeStaticChipFirstPixelSize()), 
+  m_ChipLastPixelSize(VPDet::deVPSquareTypeStaticChipLastPixelSize()), 
+  m_ChipsInLadder(VPDet::deVPSquareTypeStaticChipsInLadder()),
+  m_ChipHorizontal(VPDet::deVPSquareTypeStaticChipHorizontal()),
   m_msgStream(NULL)
 {
 }
 //==============================================================================
 /// Destructor
 //==============================================================================
-DeVeloPixSquareType::~DeVeloPixSquareType()
+DeVPSquareType::~DeVPSquareType()
 {
   delete m_msgStream;
 }
 //==============================================================================
 /// Object identification
 //==============================================================================
-const CLID& DeVeloPixSquareType::clID() 
-  const { return DeVeloPixSquareType::classID(); }
+const CLID& DeVPSquareType::clID() 
+  const { return DeVPSquareType::classID(); }
 //==============================================================================
 /// Initialisation method
 //==============================================================================
-StatusCode DeVeloPixSquareType::initialize() 
+StatusCode DeVPSquareType::initialize() 
 {
   // Trick from old DeVelo to set the output level
   PropertyMgr* pmgr = new PropertyMgr();
@@ -210,21 +210,21 @@ StatusCode DeVeloPixSquareType::initialize()
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloPixSquareType", pmgr);
+  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVPSquareType", pmgr);
   if ( 0 < outputLevel ) {
-    msgSvc()->setOutputLevel("DeVeloPixSquareType", outputLevel);
+    msgSvc()->setOutputLevel("DeVPSquareType", outputLevel);
   }
   delete pmgr;
   if( !sc ) return sc;
 
-  sc = DeVeloPixSensor::initialize();
+  sc = DeVPSensor::initialize();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to initialise DeVeloPixSensor" << endreq;
+    msg() << MSG::ERROR << "Failed to initialise DeVPSensor" << endreq;
     return sc;
   }
 
-  m_debug   = (msgSvc()->outputLevel("DeVeloPixSquareType") == MSG::DEBUG  ) ;
-  m_verbose = (msgSvc()->outputLevel("DeVeloPixSquareType") == MSG::VERBOSE) ;
+  m_debug   = (msgSvc()->outputLevel("DeVPSquareType") == MSG::DEBUG  ) ;
+  m_verbose = (msgSvc()->outputLevel("DeVPSquareType") == MSG::VERBOSE) ;
   int numOfChips = 0;
   // Fill the ladder vector with parameters from the DDDB
   for (int nl = 0 ; nl < ladderNumber() ; nl ++)
@@ -260,7 +260,7 @@ StatusCode DeVeloPixSquareType::initialize()
 
   // get some bits and mask field for some bit manipulation...
   // fill a channelID 
-//   LHCb::VeloPixChannelID refid ((int)(pow(2,32)-1));
+//   LHCb::VPChannelID refid ((int)(pow(2,32)-1));
 
 //   m_ChipBit = (unsigned int)(log(refid.chip()+1.)/log(2.));
 //   m_PixelHPBit = (unsigned int)(log(refid.pixel_hp()+1.)/log(2.));
@@ -269,7 +269,7 @@ StatusCode DeVeloPixSquareType::initialize()
 //   unsigned ich_tmpnt zeroMask = 0x00000000 ;
 //   m_PixelBit = m_PixelHPBit+m_PixelLPBit;
 
-  LHCb::VeloPixChannelID ch_tmp(0);
+  LHCb::VPChannelID ch_tmp(0);
   m_PixelLPBit = ch_tmp.GetPixellpBits();
   m_PixelHPBit = ch_tmp.GetPixelhpBits();
   m_PixelBit =  ch_tmp.GetPixelBits();
@@ -281,7 +281,7 @@ StatusCode DeVeloPixSquareType::initialize()
     
   // geometry conditions, update global position in cache
   /*updMgrSvc()->
-    registerCondition(this,this->m_geometry,&DeVeloPixSquareType::updateGeometryCache);
+    registerCondition(this,this->m_geometry,&DeVPSquareType::updateGeometryCache);
    first update
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
@@ -297,7 +297,7 @@ StatusCode DeVeloPixSquareType::initialize()
 //==============================================================================
 // Return a trajectory (for track fit) from strip + offset
 //==============================================================================
-std::auto_ptr<LHCb::Trajectory> DeVeloPixSquareType::trajectory(const LHCb::VeloPixChannelID& id,
+std::auto_ptr<LHCb::Trajectory> DeVPSquareType::trajectory(const LHCb::VPChannelID& id,
                                                         const std::pair<double,double> offset) const {
   // offset is offset on R
   Gaudi::XYZPoint globalP;
@@ -316,13 +316,13 @@ std::auto_ptr<LHCb::Trajectory> DeVeloPixSquareType::trajectory(const LHCb::Velo
 
 //==============================================================================
 /// Calculate the nearest channel to a 3-d point 
-/// (assuming the DeVeloPixSquareType instance is already the correct one: z is corresponding to the sensor number)
+/// (assuming the DeVPSquareType instance is already the correct one: z is corresponding to the sensor number)
 //==============================================================================
-StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
-                                               LHCb::VeloPixChannelID& channel,
+StatusCode DeVPSquareType::pointToChannel(const Gaudi::XYZPoint& point,
+                                               LHCb::VPChannelID& channel,
                                                std::pair <double, double>& fraction) const
 {
-  //MsgStream msg(msgSvc(), "DeVeloPixSquareType");
+  //MsgStream msg(msgSvc(), "DeVPSquareType");
   
   Gaudi::XYZPoint localPoint = globalToLocal(point);
 
@@ -331,18 +331,18 @@ StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
   
   if(!sc.isSuccess())return sc;
   unsigned int sensor=sensorNumber();
-  // Create the associated VeloPixChannelID
+  // Create the associated VPChannelID
   channel.setSensor(sensor);
   // Get the ladder number in which the point is
   int ladderIndex = WhichLadder(localPoint);
   // Get the chip number in which the point is
   int chipIndex = WhichChip(localPoint,ladderIndex);
-  // Compute the proper chip number for VeloPixChanelID
+  // Compute the proper chip number for VPChanelID
   int prop_chipIndex = chipIndex;
   for(int ilad = 0 ; ilad < ladderIndex ; ilad ++){
     prop_chipIndex += m_ladders[ilad].nChip();
   }
-  // Set the chip number in the VeloPixChannelID
+  // Set the chip number in the VPChannelID
   channel.setChip(prop_chipIndex);  
   // Get the pixel position in which the point is
   std::pair <int,int> pixelPos = WhichPixel(localPoint,ladderIndex,chipIndex,fraction);
@@ -351,7 +351,7 @@ StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
     msg()<<MSG::INFO<<"Which Pixelfunction does not find the pixels..."<<endreq;
     return StatusCode::FAILURE;
   }
-  // Set the pixel position in the VeloPixChannelID
+  // Set the pixel position in the VPChannelID
   channel.setPixel_lp(pixelPos.first);
   channel.setPixel_hp(pixelPos.second);
   return StatusCode::SUCCESS;
@@ -360,11 +360,11 @@ StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
 //==============================================================================
 /// Calculate the position of a fraction in the given channel in global coordinates
 //==============================================================================
-StatusCode DeVeloPixSquareType::channelToPointWithFraction( const LHCb::VeloPixChannelID& channel,
+StatusCode DeVPSquareType::channelToPointWithFraction( const LHCb::VPChannelID& channel,
                                                         const std::pair<double,double> offset,
                                                         Gaudi::XYZPoint& point) const
 {
-  MsgStream msg(msgSvc(), "DeVeloPixSquareType");
+  MsgStream msg(msgSvc(), "DeVPSquareType");
   Gaudi::XYZPoint LocalPoint(0.,0.,0.);
   int ladderIndex = WhichLadder(channel.chip());
   std::pair<double,double> point2d = xyOfPixel(channel.pixel(),offset);
@@ -378,10 +378,10 @@ StatusCode DeVeloPixSquareType::channelToPointWithFraction( const LHCb::VeloPixC
 //==============================================================================
 /// Calculate the center of the pixel from a given channel
 //==============================================================================
-StatusCode DeVeloPixSquareType::channelToPoint( const LHCb::VeloPixChannelID& channel,
+StatusCode DeVPSquareType::channelToPoint( const LHCb::VPChannelID& channel,
                                                 Gaudi::XYZPoint& point) const
 {
-  MsgStream msg(msgSvc(), "DeVeloPixSquareType");
+  MsgStream msg(msgSvc(), "DeVPSquareType");
   Gaudi::XYZPoint LocalPoint(0.,0.,0.);
   int ladderIndex = WhichLadder(channel.chip());
   std::pair<double,double> point2d = xyOfPixel(channel.pixel());
@@ -397,12 +397,12 @@ StatusCode DeVeloPixSquareType::channelToPoint( const LHCb::VeloPixChannelID& ch
 /// If it needs to be used online maybe it might first be rethinked in order not
 /// to use 8 time pointToChannel function (search directly by channelID)
 //==============================================================================
-StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
-                                                    std::vector <LHCb::VeloPixChannelID>& channels) const
+StatusCode  DeVPSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
+                                                    std::vector <LHCb::VPChannelID>& channels) const
 {
-  //MsgStream msg(msgSvc(), "DeVeloPixSquareType");
+  //MsgStream msg(msgSvc(), "DeVPSquareType");
   // Get the channel corresponding to the central point 
-  LHCb::VeloPixChannelID  channelCentral;
+  LHCb::VPChannelID  channelCentral;
   std::pair <double, double> fraction;
   StatusCode sc = pointToChannel( point, channelCentral, fraction);
   Gaudi::XYZPoint loc_point = globalToLocal(point);
@@ -446,7 +446,7 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
     //if (diff)msg() << MSG::INFO<<"Central Channel "<<(channelCentral).sensor()<<" "<<(channelCentral).chip()<<" "<<(channelCentral).pixel_hp()<<" "<<(channelCentral).pixel_lp()<<" "<<size<<" x,y,zloc "<<loc_point<<endreq;
     for (int x = minX ; x < maxX ; x ++){
       for (int y = minY ; y < maxY ; y ++){
-	LHCb::VeloPixChannelID neig_channel(channelCentral);
+	LHCb::VPChannelID neig_channel(channelCentral);
 	if (x == 0 && y == 0)continue;
 	neig_channel.setChip(neig_channel.chip()+chipoffset);
 	neig_channel.setPixel_lp((neig_channel.pixel_lp()+x)%256);
@@ -462,13 +462,13 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
     for (int x = -1 ; x < 2 ; x ++){
       for (int y = -1 ; y < 2 ; y ++){
 	Gaudi::XYZPoint tmpPoint(point.x()+x*hpSize(),point.y()+y*hpSize(),point.z());
-	LHCb::VeloPixChannelID  channeltmp;
+	LHCb::VPChannelID  channeltmp;
 	std::pair <double, double> fractiontmp;
 	sc = pointToChannel( tmpPoint, channeltmp, fractiontmp);
 	if (sc.isSuccess()){
 	  bool used = false;
 	  // prevent reuse of long pixel (since here the space is checked in small pixel size)
-	  for (std::vector <LHCb::VeloPixChannelID>::iterator ich = channels.begin();channels.end()!=ich;ich++){
+	  for (std::vector <LHCb::VPChannelID>::iterator ich = channels.begin();channels.end()!=ich;ich++){
 	    if (channeltmp.channelID()==(*ich).channelID()){
 	      used=true;
 	      continue;
@@ -488,10 +488,10 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
 /// Get the 8 channel (if they exist) arround a given seed channel
 /// If one want to use it online, same remark than for pointTo3x3Channels
 //==============================================================================
-StatusCode  DeVeloPixSquareType::channelToNeighbours( const LHCb::VeloPixChannelID& seedChannel,
-                                                      std::vector <LHCb::VeloPixChannelID>& channels) const
+StatusCode  DeVPSquareType::channelToNeighbours( const LHCb::VPChannelID& seedChannel,
+                                                      std::vector <LHCb::VPChannelID>& channels) const
 { 
-  MsgStream msg(msgSvc(), "DeVeloPixSquareType");
+  MsgStream msg(msgSvc(), "DeVPSquareType");
   // Get the point corresponding to the seedChannel 
   std::pair <double, double> fraction(0.5,0.5);
   Gaudi::XYZPoint point;
@@ -530,7 +530,7 @@ StatusCode  DeVeloPixSquareType::channelToNeighbours( const LHCb::VeloPixChannel
   }
   for (int x = minX ; x < maxX ; x ++){
     for (int y = minY ; y < maxY ; y ++){
-      LHCb::VeloPixChannelID neig_channel(seedChannel);
+      LHCb::VPChannelID neig_channel(seedChannel);
       if (x == 0 && y == 0)continue;
       neig_channel.setChip(neig_channel.chip()+chipoffset);
       neig_channel.setPixel_lp((neig_channel.pixel_lp()+x)%256);
@@ -544,7 +544,7 @@ StatusCode  DeVeloPixSquareType::channelToNeighbours( const LHCb::VeloPixChannel
 //==============================================================================
 /// Checks if local point is inside sensor                      
 //==============================================================================
-StatusCode DeVeloPixSquareType::isInActiveArea(const Gaudi::XYZPoint& point) const
+StatusCode DeVPSquareType::isInActiveArea(const Gaudi::XYZPoint& point) const
 {
   // Check the the point is in the active part of a ladder
   
@@ -556,7 +556,7 @@ StatusCode DeVeloPixSquareType::isInActiveArea(const Gaudi::XYZPoint& point) con
 //==============================================================================
 /// Get the index of the ladder containing the point
 //==============================================================================
-int DeVeloPixSquareType::WhichLadder(const Gaudi::XYZPoint& point) const
+int DeVPSquareType::WhichLadder(const Gaudi::XYZPoint& point) const
 {
   for ( int index = 0 ; index <(int) m_ladders.size() ; index++){
     const Gaudi::XYZPoint pointRef = m_ladders[index].ReferencePoint();
@@ -593,7 +593,7 @@ int DeVeloPixSquareType::WhichLadder(const Gaudi::XYZPoint& point) const
 //==============================================================================
 /// Get the index of the ladder containing the channelID chip number
 //==============================================================================
-int DeVeloPixSquareType::WhichLadder(int chipNum) const
+int DeVPSquareType::WhichLadder(int chipNum) const
 {
   int ladderNum = ladderNumber();
   int ntotChip = 0;
@@ -608,7 +608,7 @@ int DeVeloPixSquareType::WhichLadder(int chipNum) const
 //==============================================================================
 /// Get the index relative to ladder of the chip containing the point
 //==============================================================================
-int DeVeloPixSquareType::WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) const
+int DeVPSquareType::WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) const
 {  
   // Get the ladder reference point (ie x,y,z of the bottom left corner)
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
@@ -636,7 +636,7 @@ int DeVeloPixSquareType::WhichChip(const Gaudi::XYZPoint& point, int ladderIndex
 //==============================================================================
 /// Get the index relative to the chip of the pixel containing the point 
 //==============================================================================
-std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex, int chipIndex, std::pair<double,double>& fraction) const
+std::pair<int,int> DeVPSquareType::WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex, int chipIndex, std::pair<double,double>& fraction) const
 {
   //step 1 local coordinates
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
@@ -705,14 +705,14 @@ std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point,
 //==============================================================================
 /// The function that retruns the size of a pixel from channelID                 
 //==============================================================================
-std::pair<double,double> DeVeloPixSquareType::PixelSize(LHCb::VeloPixChannelID channel) const
+std::pair<double,double> DeVPSquareType::PixelSize(LHCb::VPChannelID channel) const
 {
   return PixelSize(channel.pixel());
 }
 //==============================================================================
 /// The function that retruns true if channel is a long pixel              
 //==============================================================================
-bool DeVeloPixSquareType::isLong( LHCb::VeloPixChannelID channel ) const
+bool DeVPSquareType::isLong( LHCb::VPChannelID channel ) const
 {
   return isLong(channel.pixel());
 }
@@ -720,7 +720,7 @@ bool DeVeloPixSquareType::isLong( LHCb::VeloPixChannelID channel ) const
 //==============================================================================
 /// The function that fill the members in intialisation                  
 //==============================================================================
-StatusCode DeVeloPixSquareType::calcPixelsParam()
+StatusCode DeVPSquareType::calcPixelsParam()
 {
   // we only have to do this once, x and y position of pixel in chips 
   // are stored in statics, i.e. are technically the same
@@ -809,7 +809,7 @@ StatusCode DeVeloPixSquareType::calcPixelsParam()
 /// Update the Cache Geometry                
 //==============================================================================
 
-StatusCode DeVeloPixSquareType::updateGeometryCache()
+StatusCode DeVPSquareType::updateGeometryCache()
 {
   StatusCode sc = updatePixelSquareCache();
   if(!sc.isSuccess()) {
@@ -823,7 +823,7 @@ StatusCode DeVeloPixSquareType::updateGeometryCache()
 /// Update the Cache for Pixel position in the different frame             
 //==============================================================================
 
-StatusCode DeVeloPixSquareType::updatePixelSquareCache()
+StatusCode DeVPSquareType::updatePixelSquareCache()
 {
   // that's the place where, if we find a good way to store the global and halfbox info it shoulmd be done
   return StatusCode::SUCCESS;

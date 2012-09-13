@@ -1,6 +1,6 @@
-// $Id: DeVeloPixSensor.h,v 1.8 2009-12-03 15:05:18 cocov Exp $
-#ifndef VELOPIXDET_DEVELOPIXSENSOR_H
-#define VELOPIXDET_DEVELOPIXSENSOR_H 1
+// $Id: DeVPSensor.h,v 1.8 2009-12-03 15:05:18 cocov Exp $
+#ifndef VPDET_DEVPSENSOR_H
+#define VPDET_DEVPSENSOR_H 1
 
 // Include files
 #include <algorithm>
@@ -18,72 +18,72 @@
 #include "Kernel/Trajectory.h"
 
 // Unique class identifier
-static const CLID CLID_DeVeloPixSensor = 1008201 ;
+static const CLID CLID_DeVPSensor = 1008201 ;
 
 // forward declarations needed for fast casting
-class DeVeloPix;
-class DeVeloPixXType;
-class DeVeloPixYType;
-class DeVeloPixSquareType;
+class DeVP;
+class DeVPXType;
+class DeVPYType;
+class DeVPSquareType;
 
 namespace LHCb {
-  class VeloPixChannelID;
+  class VPChannelID;
 }
 
-/** @class DeVeloPixSensor DeVeloPixSensor.h VeloPixDet/DeVeloPixSensor.h
+/** @class DeVPSensor DeVPSensor.h VPDet/DeVPSensor.h
  *
- *  VeloPix sensor base class
+ *  VP sensor base class
  *  all functions the are common to evry type of sensor should be defined here
  *  @author Victor Coco
  *  @date   2009-05-14
  */
-class DeVeloPixSensor : public DetectorElement {
+class DeVPSensor : public DetectorElement {
 public:
   /// Standard constructor
-  DeVeloPixSensor( const std::string& name = "" );
+  DeVPSensor( const std::string& name = "" );
 
   /// Destructor
-  virtual ~DeVeloPixSensor( );
+  virtual ~DeVPSensor( );
 
   /// object identifier (static method)
-  static  const CLID& classID() { return CLID_DeVeloPixSensor; };
+  static  const CLID& classID() { return CLID_DeVPSensor; };
   /// object identification
   virtual const CLID& clID()     const;
 
-  /// Initialise the DeVeloPixSensor from the XML
+  /// Initialise the DeVPSensor from the XML
   virtual StatusCode initialize();
 
   /// Return a trajectory (for track fit) from strip + offset
-  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloPixChannelID& id, 
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VPChannelID& id, 
                                                      const std::pair<double,double> offset) const = 0;
 
   /// Calculate the nearest channel to a 3-d point.
   /// Also returns the fractional x-y position IN the pixel
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
-                                    LHCb::VeloPixChannelID& channel,
+                                    LHCb::VPChannelID& channel,
                                     std::pair <double, double>& fraction) const = 0;
 
   /// Calculate the XYZ center of a pixel
-  virtual StatusCode channelToPoint( const LHCb::VeloPixChannelID& channel,
+  virtual StatusCode channelToPoint( const LHCb::VPChannelID& channel,
                                                 Gaudi::XYZPoint& point) const = 0;
 
-  virtual StatusCode channelToPointWithFraction( const LHCb::VeloPixChannelID& channel,
+  virtual StatusCode channelToPointWithFraction( const LHCb::VPChannelID& channel,
                                                         const std::pair<double,double> offset,
                                                  Gaudi::XYZPoint& point) const= 0;
 
-  ///  Get the list of VeloPixChannelID forming the 3x3 cluster of pixel centered on point
+  ///  Get the list of VPChannelID forming the 3x3 cluster of pixel centered on point
   virtual StatusCode pointTo3x3Channels(const Gaudi::XYZPoint& point,
-                                        std::vector <LHCb::VeloPixChannelID>& channels) const = 0;
+                                        std::vector <LHCb::VPChannelID>& channels) const = 0;
 
   /// Get the 8 channel (if they exist) arround a given seed channel
-  virtual StatusCode  channelToNeighbours( const LHCb::VeloPixChannelID& seedChannel, 
-                                       std::vector <LHCb::VeloPixChannelID>& channels) const = 0;
+  virtual StatusCode  channelToNeighbours( const LHCb::VPChannelID& seedChannel, 
+                                       std::vector <LHCb::VPChannelID>& channels) const = 0;
 
   /// Return the pixel size (since the edge pixel might have different size)
-  virtual std::pair<double,double> PixelSize(LHCb::VeloPixChannelID channel) const = 0;
+  virtual std::pair<double,double> PixelSize(LHCb::VPChannelID channel) const = 0;
 
   /// Return true if the pixel is a long one
-  virtual bool isLong(LHCb::VeloPixChannelID channel) const = 0;
+  virtual bool isLong(LHCb::VPChannelID channel) const = 0;
 
   /// Determines if local 3-d point is inside sensor
   virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const = 0;
@@ -100,27 +100,27 @@ public:
     return m_geometry->toLocal(globalPos);
   }
 
-  /// Convert local position to position inside VeloPix half Box (one per side)
+  /// Convert local position to position inside VP half Box (one per side)
   /// Local from is +ve x and Upstream   [directly from DeVelo, not checked]
-  inline Gaudi::XYZPoint localToVeloPixHalfBox(const Gaudi::XYZPoint& localPos) const {
+  inline Gaudi::XYZPoint localToVPHalfBox(const Gaudi::XYZPoint& localPos) const {
     const Gaudi::XYZPoint globalPos = m_geometry->toGlobal(localPos);
     return m_halfBoxGeom->toLocal(globalPos);
   }
 
-  /// Convert position inside VeloPix half Box (one per side) into local position
+  /// Convert position inside VP half Box (one per side) into local position
   /// Local from is +ve x and Upstream    [directly from DeVelo, not checked]
-  inline Gaudi::XYZPoint veloPixHalfBoxToLocal(const Gaudi::XYZPoint& boxPos) const {
+  inline Gaudi::XYZPoint vPHalfBoxToLocal(const Gaudi::XYZPoint& boxPos) const {
     Gaudi::XYZPoint globalPos = m_halfBoxGeom->toGlobal(boxPos);
     return m_geometry->toLocal(globalPos);
   }
 
-  /// Convert position inside VeloPix half Box (one per side) to global [directly from DeVelo, not checked]
-  inline Gaudi::XYZPoint veloPixHalfBoxToGlobal(const Gaudi::XYZPoint& boxPos) const {
+  /// Convert position inside VP half Box (one per side) to global [directly from DeVelo, not checked]
+  inline Gaudi::XYZPoint vPHalfBoxToGlobal(const Gaudi::XYZPoint& boxPos) const {
     return m_halfBoxGeom->toGlobal(boxPos);
   }
 
-  /// Convert global position to inside VeloPix half Box (one per side)
-  inline Gaudi::XYZPoint globalToVeloPixHalfBox(const Gaudi::XYZPoint& globalPos) const {
+  /// Convert global position to inside VP half Box (one per side)
+  inline Gaudi::XYZPoint globalToVPHalfBox(const Gaudi::XYZPoint& globalPos) const {
     return m_halfBoxGeom->toLocal(globalPos);
   }
 
@@ -149,13 +149,13 @@ public:
   inline bool isSquare() const {return m_isSquare;}
 
   /// fast cast to X sensor, returns 0 for wrong type
-  inline const DeVeloPixXType* xType() const;
+  inline const DeVPXType* xType() const;
 
   /// fast cast to Y sensor, returns 0 for wrong type
-  inline const DeVeloPixYType* yType() const;
+  inline const DeVPYType* yType() const;
 
   /// fast cast to Square sensor, returns 0 for wrong type
-  inline const DeVeloPixSquareType* squareType() const;
+  inline const DeVPSquareType* squareType() const;
 
   ///  the chip active length (size along the dimension on which the chips are aligned)(mm)
   inline double chipLength() const {return m_chipLength;}
@@ -204,7 +204,7 @@ protected:
   //unsigned int m_numberOfZones;
 
   // THIS COMES FROM THE CHANNEL ID... IF CHANNEL ID CHANGES (ie.nb bits allocated to pixels and chip num) 
-  // IT SHOULD BE MODIFIED  --> recalculated in VeloPix...Type
+  // IT SHOULD BE MODIFIED  --> recalculated in VP...Type
   //static const unsigned long m_numberOfPixelsPerChip=65536;
   //static const unsigned long m_numberOfChips=64;
   
@@ -242,11 +242,11 @@ private:
  
   std::vector<double> m_pixelNoise ; ///< Vector of noise for pixels
   
-  friend class DeVeloPix        ;
+  friend class DeVP        ;
   mutable int m_moduleId          ;
 
   // Set output level for message service
   bool m_debug                    ;
   bool m_verbose                  ;
 };
-#endif // VELOPIXDET_DEVELOPIXSENSOR_H
+#endif // VPDET_DEVPSENSOR_H

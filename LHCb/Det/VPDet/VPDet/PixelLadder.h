@@ -1,10 +1,10 @@
 // $Id: PixelLadder.h,v 1.3 2009-10-28 13:02:28 cocov Exp $
-#ifndef VELOPIXDET_PIXELLADDER_H 
-#define VELOPIXDET_PIXELLADDER_H 1
+#ifndef VPDET_PIXELLADDER_H 
+#define VPDET_PIXELLADDER_H 1
 
 // Include files
 
-/** @class PixelLadder PixelLadder.h VeloPixelDet/PixelLadder.h
+/** @class PixelLadder PixelLadder.h VPelDet/PixelLadder.h
  *  A class to simplify manipulation of Detector element parameters
  *
  *  @author Coco Victor
@@ -37,4 +37,4 @@ private:
 };
 
 
-#endif // VELOPIXDET_PIXELLADDER_H
+#endif // VPDET_PIXELLADDER_H
