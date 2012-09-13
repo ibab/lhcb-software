@@ -8,7 +8,6 @@ import cPickle as pickle
 import CondDBUI
 import os
 from pprint import pprint
-os.environ["COOL_IGNORE_LFC"] = "1"
 
 def main():
     ###########################################################################

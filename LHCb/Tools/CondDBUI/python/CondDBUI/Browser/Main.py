@@ -8,8 +8,6 @@ __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
 # Define few global variables to tune the behavior depending on the environment
 from os import environ as env
-__lfc_replica_svc__ = 'CORAL_LFC_BASEDIR' in env and 'LFC_HOST' in env and not 'COOL_IGNORE_LFC' in env
-
 from os.path import isdir, exists, join
 __pit_special_dir__ = "/group/online/condb_viewer"
 __pit_environment__ = isdir(__pit_special_dir__)
@@ -40,13 +38,10 @@ def getStandardConnectionStrings(optionFiles):
     for name in allConfigurables:
         if hasattr(allConfigurables[name],"ConnectionString"):
             data[name] = allConfigurables[name].ConnectionString
-    # If we are at the PIT or we can use the offline Oracle ...
-    if __pit_environment__ or __lfc_replica_svc__:
-        # ... add Oracle connection strings explicitly
-        for c in [ "CondDB/DDDB", "CondDB/LHCBCOND", "CondDB/SIMCOND", "CondDBOnline/ONLINE" ]:
-            data[c] = c
-    if __pit_environment__: # these are only for the PIT
-        for c in [ "CondDBPrivate/PRIVATE" ]:
+    # If we are at the PIT (we can use Oracle)
+    if __pit_environment__:
+        for c in [ "CondDB/DDDB", "CondDB/LHCBCOND", "CondDB/SIMCOND", "CondDBOnline/ONLINE",
+                   "CondDBPrivate/PRIVATE" ]:
             data[c] = c
     return data
 
@@ -81,7 +76,7 @@ def main(argv = []):
     # Get the list of command line arguments after the filter applied by QApplication
     # and convert them to strings so that we can pass the to optparse
     argv = map(str, app.arguments())
-    
+
     from optparse import OptionParser
     parser = OptionParser(usage = "%prog [Qt-options] [options] [database]")
     parser.add_option("--rw", action = "store_true",
@@ -93,9 +88,9 @@ def main(argv = []):
                       help = "Increase verbosity")
     parser.set_defaults(rw = False,
                         option_files = __default_option_files__)
-    
+
     opts, args = parser.parse_args(argv[1:])
-    
+
     logging.basicConfig(level = opts.verbose and logging.INFO or logging.WARNING)
 
     if len(args) > 1:
@@ -103,7 +98,7 @@ def main(argv = []):
 
     mw = MainWindow()
     mw.setDefaultDatabases(getStandardConnectionStrings(opts.option_files))
-    
+
     # Use the first (and only) argument as name of the database to open
     if args:
         db = args[0]
@@ -112,8 +107,8 @@ def main(argv = []):
             mw.openStandardDatabase(db, readOnly = readOnly)
         else:
             mw.openDatabase(db, readOnly = readOnly)
-        
+
     mw.show()
-    
+
     # Execute the event loop
     return app.exec_()

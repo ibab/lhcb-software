@@ -6,8 +6,6 @@ __version__ = "$Id: CondDBAdmin_CompareDBs.py,v 1.1 2010-11-16 00:00:00 ishapova
 import os
 import CondDBUI
 
-os.environ["COOL_IGNORE_LFC"] = "1"
-
 def format_text(text, color_name, blink = False, underline = False):
     color_vocab = {'black':30,'red':31,'green':32,'yellow':33,'blue':34,\
                    'magenta':35,'cyan':36,'white':37,'':''}

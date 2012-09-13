@@ -47,31 +47,21 @@ def diff( originalDB, modifiedDB, diffDB,
     global _app
     if _app is None:
         _app = cool.Application()
-        import os
-        if 'CORAL_LFC_BASEDIR' in os.environ and 'LFC_HOST' in os.environ and not 'COOL_IGNORE_LFC' in os.environ:
-            # Load CORAL LFCReplicaService into the context of cool::Application
-            LFCRepSvcName = "CORAL/Services/LFCReplicaService"
-            if hasattr(_app,"loadComponent"):
-                _app.loadComponent(LFCRepSvcName)
-            elif  hasattr(_app,"connectionSvc") and hasattr(_app.connectionSvc(),"configuration"):
-                _app.connectionSvc().configuration().setLookupService(LFCRepSvcName)
-                _app.connectionSvc().configuration().setAuthenticationService(LFCRepSvcName)
-            del LFCRepSvcName
 
     dbs = _app.databaseService()
-    
+
     _log.info("Opening original database '%s'",originalDB)
     orig = dbs.openDatabase(originalDB)
-    
+
     if originalDB == modifiedDB:
         _log.info("Operating on two tags of the same database")
         dest = orig
     else:
         _log.info("Opening modified database '%s'",modifiedDB)
         dest = dbs.openDatabase(modifiedDB)
-    
+
     diff = None # the DB for differences is opened/created only if needed
-    
+
     _log.debug("Entering the loop over the modified database")
     # walk throughout the database
     for root, dirs, files in walk(dest,nodeName):
@@ -81,22 +71,22 @@ def diff( originalDB, modifiedDB, diffDB,
                     folderPath = root + f
                 else:
                     folderPath = root + '/' + f
-                
+
                 # vector containing the cool objects to add to the diff DB.
                 new_data = []
-                
+
                 dest_folder = dest.getFolder(folderPath)
                 is_single_version = \
                     dest_folder.versioningMode() == cool.FolderVersioning.SINGLE_VERSION
-                
+
                 _log.debug("Processing folder %s",folderPath)
-                
+
                 # get ready to iterate over new data
                 if is_single_version or modifiedTAG.upper() in [ "", "HEAD" ]:
                     dest_local_tag = ''
                 else:
                     dest_local_tag = dest_folder.resolveTag(modifiedTAG)
-                    
+
                 object_iterator = dest_folder.browseObjects( since, until, channels,
                                                              dest_local_tag )
                 # check if the folder is new or not
@@ -121,21 +111,21 @@ def diff( originalDB, modifiedDB, diffDB,
                                 orig_local_tag = ''
                             else:
                                 orig_local_tag = orig_folder.resolveTag(originalTAG)
-                            
-                            # Get the list of current objects to be covered by new one 
+
+                            # Get the list of current objects to be covered by new one
                             orig_objects = list(orig_folder.browseObjects( obj.since(),
                                                                            obj.until(),
                                                                            channels,
                                                                            orig_local_tag ))
-                            # Remove superfluous object to avoid half-closed 
-                            # time interval effect while getting objects by IOV 
+                            # Remove superfluous object to avoid half-closed
+                            # time interval effect while getting objects by IOV
                             if obj.until() == orig_objects[-1].since():
                                 del orig_objects[-1]
-                            
+
                             # Skip adding new object on top of current set of
                             # objects if and only if this set is composed of one
                             # object with its payload equal to the new payload.
-                            if not (len(orig_objects) == 1 and 
+                            if not (len(orig_objects) == 1 and
                                     orig_objects[0].payload() == obj.payload()):
                                 new_data.append(obj)
                         except:
@@ -145,8 +135,8 @@ def diff( originalDB, modifiedDB, diffDB,
                     # is a new folder: we have to copy everything
                     for obj in object_iterator:
                         new_data.append(obj)
-            
-                # if we have anything to add 
+
+                # if we have anything to add
                 if new_data:
                     _log.debug("Found %d objects to insert",len(new_data))
                     if diff is None:
@@ -189,7 +179,7 @@ def diff( originalDB, modifiedDB, diffDB,
                     diff_folder.flushStorageBuffer()
                 else:
                     _log.debug("No objects to insert")
-    
+
             except Exception, e:
                 s = str(e)
                 if "No child tag can be found in node" in s \

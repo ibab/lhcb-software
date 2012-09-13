@@ -5,6 +5,8 @@ __credits__ = "Illya Shapoval <illya.shapoval@cern.ch>, Marco Clemencic <marco.c
 __maintainer__ = "Illya Shapoval"
 __version__ = "$Id: CreateDBLookupFiles.py,v 1.0 2010/04/28 00:00:00 ishapova Exp $"
 
+# FIXME: This script should not be needed
+
 import os, sys
 import xml.etree.ElementTree as ET
 from subprocess import Popen,PIPE
@@ -78,13 +80,13 @@ def main():
         from optparse import OptionParser
         parser = OptionParser(usage = "%prog [options]",
                             version = __version__,
-                            description = 
+                            description =
     """Script to regenerate the 'authentication.xml' file and the full set of CondDB 'dblookup-*.xml' files for every '*' site, \
     which is currently available in LFC. Designed initially for the AppConfig package.""")
-        
+
         # parse command line
         options, args = parser.parse_args()
-        
+
         #Checking the place to write
         import datetime
         dir_name = datetime.datetime.today().strftime('conddb_%Y-%m-%d_%H:%M:%S')
@@ -93,20 +95,20 @@ def main():
         else:
             print "'%s' folder exists already. Try again."%dir_name
             return 0
-        
+
         if os.path.isfile('dblookup.xml'):
             print "Please delete 'dblookup.xml' file then retry."
             return 0
         if os.path.isfile('authentication.xml'):
             print "Please delete 'authentication.xml' file then retry."
             return 0
-        
+
         # Grabbing current set of available sites in the LFC connections configuration
         com_line_dump_sites = """tcsh -c "setenv PATH `echo $LD_LIBRARY_PATH | tr ':' '\\n' | grep 'CORAL.*lib' | tr -d '\\n'`/../bin:$PATH;\
         coral_replica_manager -l CondDB -ls | grep 'LCG' | awk '{print $5}'" """ # command line for dumping LFC connection settings
         proc_dump_sites = Popen(shlex.split(com_line_dump_sites), env = os.environ, stdout = PIPE)
         proc_dump_sites.wait()
-        
+
         grabbed_sites = proc_dump_sites.communicate()[0]
         if grabbed_sites:
             grabbed_sites = grabbed_sites.split('\n')
@@ -124,9 +126,9 @@ def main():
 Check environment is set up to use grid.\nNew files weren't generated."
             cleanup_remains(dir_name)
             return 0
-          
+
         #sites = ["LCG.IN2P3.fr","LCG.PIC.es","LCG.CERN.ch","LCG.CNAF.it","LCG.RAL.uk","LCG.GRIDKA.de","LCG.NIKHEF.nl","LCG.SARA.nl"]
-        
+
         logical_connect_strings = ['CondDB', 'CondDBOnline']
         merged_site_tree = None
         service_collection = {'CondDB':[],'CondDBOnline':[]}
@@ -134,13 +136,13 @@ Check environment is set up to use grid.\nNew files weren't generated."
         for site in sites:
             for log_con_string in logical_connect_strings:
                 print "Proccessing '%s' for '%s' ... "%(site,log_con_string)
-                
+
                 # Collecting data from the 'authentication.xml' file
                 com_line_dump_sett = """tcsh -c "setenv PATH `echo $LD_LIBRARY_PATH | tr ':' '\\n' | grep 'CORAL.*lib'`/../bin:$PATH;\
                 coral_replica_manager -exp -l %s -h %s" """%(log_con_string,site)
                 proc_dump_sett = Popen(shlex.split(com_line_dump_sett),env = os.environ,stdout = PIPE)
                 proc_dump_sett.wait()
-    
+
                 site_tree = ET.parse('authentication.xml')
                 site_connection_list = site_tree.getroot()
                 for connection in site_connection_list:
@@ -156,7 +158,7 @@ Check environment is set up to use grid.\nNew files weren't generated."
                         sites_connection_list.append(connection)
                     else:
                         merged_site_tree = site_tree
-                
+
                 # Collecting data from the 'dblookup.xml' file
                 service_tree = ET.parse('dblookup.xml')
                 servicelist = service_tree.getroot()
@@ -164,12 +166,12 @@ Check environment is set up to use grid.\nNew files weren't generated."
                     for service in logicalservice:
                         service_collection[log_con_string].append(service)
                 print 'Done.'
-        
+
         # Generating new authentication.xml file
         auth_file = write_file('authentication.xml',dir_name)
         indent(merged_site_tree.getroot(),level=0)
         merged_site_tree.write(auth_file)
-                  
+
         # Generating new dblookup-*.xml files for each site
         for site in sites:
             # Build and write the tree
@@ -188,11 +190,11 @@ Check environment is set up to use grid.\nNew files weren't generated."
                 merged_service_tree.write(dblookup_file_nikhef)
         Popen(shlex.split('tcsh -c "rm authentication.xml dblookup.xml"')).wait()
         print "\nNew files are placed in './conddb_current_date&time/'."
-    
+
     except KeyboardInterrupt:
         print "Aborted by user."
-        cleanup_remains(dir_name)                
+        cleanup_remains(dir_name)
         return 0
-    
+
 if __name__ == '__main__':
     sys.exit(main())

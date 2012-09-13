@@ -24,16 +24,6 @@ def coolApp():
         # Initialize COOL Application
         _coolApp = cool.Application()
 
-        if 'CORAL_LFC_BASEDIR' in os.environ and 'LFC_HOST' in os.environ and not 'COOL_IGNORE_LFC' in os.environ:
-            # Load CORAL LFCReplicaService into the context of cool::Application
-            LFCRepSvcName = "CORAL/Services/LFCReplicaService"
-            if hasattr(_coolApp,"loadComponent"):
-                _coolApp.loadComponent(LFCRepSvcName)
-            elif  hasattr(_coolApp,"connectionSvc") and hasattr(_coolApp.connectionSvc(),"configuration"):
-                _coolApp.connectionSvc().configuration().setLookupService(LFCRepSvcName)
-                _coolApp.connectionSvc().configuration().setAuthenticationService(LFCRepSvcName)
-            del LFCRepSvcName
-
         # disable CORAL time-out thread
         _coolApp.connectionSvc().configuration().disablePoolAutomaticCleanUp()
         _coolApp.connectionSvc().configuration().setConnectionTimeOut(0)
@@ -1784,6 +1774,7 @@ def _fix_xml(xml_data,folderset_path):
     xml_data = fix_env_vars(xml_data)
     return xml_data
 
+# FIXME: this wrapper should not be needed anymore
 def copy( sourceDb, targetDb,
           nodeName = '/',
           since = None,
@@ -1792,8 +1783,8 @@ def copy( sourceDb, targetDb,
           tags = []
           ):
     """
-    Wrapper around PyCoolCopy.copy needed because PyCoolCopy does not support yet
-    LFCReplicaSvc.
+    Wrapper around PyCoolCopy.copy.
+    Was needed because PyCoolCopy did not support LFCReplicaSvc.
     """
     # set defaults
     from PyCool import cool

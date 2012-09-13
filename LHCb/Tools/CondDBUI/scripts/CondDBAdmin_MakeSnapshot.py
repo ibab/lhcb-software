@@ -54,7 +54,7 @@ def main(argv):
     from optparse import OptionParser
 
     default_options_file = os.path.join(os.environ["SQLDDDBROOT"], "options", "SQLDDDB.py")
-    
+
     parser = OptionParser(usage = "%prog [options] partition destination",
                           version = __version__,
                           description =
@@ -71,10 +71,10 @@ connection string. 'destination' must be a connection string.""")
                              "partition name to the actual connection string. "
                              "[default = %s]" % default_options_file)
     parser.add_option("-s", "--since", type = "string",
-                      help = "Start of the interesting Interval Of Validity (local time). " 
+                      help = "Start of the interesting Interval Of Validity (local time). "
                              "Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]")
     parser.add_option("-u", "--until", type = "string",
-                      help = "End of the interesting Interval Of Validity (local time) " 
+                      help = "End of the interesting Interval Of Validity (local time) "
                              "Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]")
     parser.add_option("--merge", action = "store_true",
                       help = "Whether to merge the data into an existing DB")
@@ -95,14 +95,14 @@ connection string. 'destination' must be a connection string.""")
                         merge = False,
                         verbose = False,
                         to_files = False)
-    
+
     # parse command line
     options, args = parser.parse_args(args = argv[1:])
-    
+
     # check arguments
     if len(args) != 2:
         parser.error("not enough arguments. Try with --help.")
-    
+
     # Prepare logger
     import logging
     log = logging.getLogger(parser.prog or os.path.basename(sys.argv[0]))
@@ -116,58 +116,59 @@ connection string. 'destination' must be a connection string.""")
         options.options.append(default_options_file)
     source = os.path.expandvars(guessConnectionString(args[0], options.options))
     dest = os.path.expandvars(args[1])
-    
+
     # Import the heavy modules
     from PyCool import cool
     from CondDBUI.Admin import timeToValKey
     from time import time, ctime, asctime, gmtime
-    
+
     try:
         if options.to_files:
             # special checks on options for --to-files
             if options.until:
                 parser.error("conflicting options '--until' and '--to-files'. Try with --help.")
-                
+
             if not options.tags:
                 tag = "HEAD"
             else:
                 # If many tags are give, use only the last one
                 tag = options.tags[-1]
-            
+
             since = timeToValKey(options.since, int(time() * 1e9))
-            
+
             log.info("Dumping %s to %s" % (source, dest))
             log.info("Event Time (loc): %s" % ctime(since/1e9))
             log.info("Event Time (UTC): %s" % asctime(gmtime(since/1e9)))
             log.info("Tag: %s" % tag)
-            
+
             log.info("Copying, please wait...")
-            
+
             from CondDBUI.Admin import DumpToFiles
             DumpToFiles(connString = source, time = since, tag = tag,
                         destroot = dest, force = False)
-            
+
         else:
             since = timeToValKey(options.since, cool.ValidityKeyMin)
             until = timeToValKey(options.until, cool.ValidityKeyMax)
-    
+
             log.info("Cloning %s to %s" % (source, dest))
             log.info("IoV(loc): %s to %s" % (ctime(since/1e9), ctime(until/1e9)))
             log.info("IoV(UTC): %s to %s" % (asctime(gmtime(since/1e9)),
                                              asctime(gmtime(until/1e9))))
             log.info("Tags: %s" % options.tags)
-            
+
             log.info("Copying, please wait...")
-    
+
             from PyCoolCopy import Selection, PyCoolCopy, log as pcc_log
-            # Avoid multiple logging handlers 
+            # Avoid multiple logging handlers
             pcc_log.handlers = []
             if not options.verbose:
                 pcc_log.setLevel(logging.WARNING)
             else:
                 pcc_log.setLevel(logging.INFO)
-        
+
             from CondDBUI import CondDB
+            # FIXME: not needed because LFCReplicaService was dropped
             # Connect to source database (PyCoolCopy do not support CORAL LFCReplicaService)
             sourceDb = CondDB(source).db
             selection = Selection( since = since, until = until, tags = options.tags )
@@ -179,9 +180,9 @@ connection string. 'destination' must be a connection string.""")
             log.info("Copy completed.")
     except Exception, details:
         log.error('Copy failed with error: %s' % str(details))
-    
+
     return 0
-    
+
 if __name__ == '__main__':
     from sys import exit, argv
     exit(main(argv))
