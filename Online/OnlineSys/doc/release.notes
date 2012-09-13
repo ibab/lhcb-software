@@ -6,6 +6,29 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v4r68>2012-09-13 OnlineSys v4r68</A></H1>
+<PRE>
+   Like v4r67, but based in Gaudi v23r3.
+</PRE>
+
+<H1><A NAME=v4r67>2012-09-13 OnlineSys v4r67</A></H1>
+<PRE>
+   Based in Gaudi v23r2p1.
+   Updated packages are:
+     MDF               v3r34    DAQ
+     DefHLTUtils         v1r1     Online
+     FarmMonitor         v2r11    Online
+     Gaucho              v7r28    Online
+     GauchoAppl          v1r7     Online
+     GaudiOnline         v2r63    Online
+     GaudiRootCnvTests   v1r9     Online
+     OnlineKernel        v2r11    Online
+     OnlineTasks         v1r50    Online
+     Presenter           v3r6     Online
+     RootCnv             v1r16    Online
+     ROMon               v1r40    Online
+</PRE>
+
 <H1><A NAME=v4r66>2012-06-26 OnlineSys v4r66</A></H1>
 <PRE>
    Like v4r65, but based in Gaudi v23r3.
