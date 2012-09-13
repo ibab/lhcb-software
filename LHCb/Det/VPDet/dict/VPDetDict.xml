@@ -1,9 +1,9 @@
 <lcgdict>
-  <class name="DeVeloPix"        />
-  <class name="DeVeloPixSensor"  />
-  <class name="DeVeloPixYType" />
-  <class name="DeVeloPixXType"   />
-  <class name="DeVeloPixSquareType"   />
-  <class name="std::vector<DeVeloPixSensor*>"  />
-  <variable pattern="DeVeloPixLocation::*" />
+  <class name="DeVP"        />
+  <class name="DeVPSensor"  />
+  <class name="DeVPYType" />
+  <class name="DeVPXType"   />
+  <class name="DeVPSquareType"   />
+  <class name="std::vector<DeVPSensor*>"  />
+  <variable pattern="DeVPLocation::*" />
 </lcgdict>

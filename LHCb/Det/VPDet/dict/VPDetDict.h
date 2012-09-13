@@ -1,13 +1,13 @@
-#ifndef VELOPIXDET_DETDICT_H 
-#define VELOPIXDET_DETDICT_H 1
+#ifndef VPDET_DETDICT_H 
+#define VPDET_DETDICT_H 1
 
-#include "VeloPixDet/DeVeloPix.h"
-#include "VeloPixDet/DeVeloPixSensor.h"
-#include "VeloPixDet/DeVeloPixYType.h"
-#include "VeloPixDet/DeVeloPixXType.h"
-#include "VeloPixDet/DeVeloPixSquareType.h"
+#include "VPDet/DeVP.h"
+#include "VPDet/DeVPSensor.h"
+#include "VPDet/DeVPYType.h"
+#include "VPDet/DeVPXType.h"
+#include "VPDet/DeVPSquareType.h"
 
 // ============================================================================
-#endif // VELOPIXDET_DETDICT_H
+#endif // VPDET_DETDICT_H
 // ============================================================================
 
