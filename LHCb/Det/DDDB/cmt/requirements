@@ -11,11 +11,11 @@ package           DDDB
 ##############################################################
 version           v1r57
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc options
 
-# Used packages. 
+# Used packages.
 #============================================================================
 # The database
 use   SQLDDDB               v7r*  Det
@@ -28,9 +28,6 @@ use   CondDBEntityResolver  v*    Tools -no_auto_imports
 # Database back-end libraries
 use   sqlite                v*    LCG_Interfaces -no_auto_imports
 use   oracle                v*    LCG_Interfaces -no_auto_imports
-
-# To get credentials for accessing oracle db
-use   lfc                   v*    LCG_Interfaces -no_auto_imports
 
 include_path      none
 
