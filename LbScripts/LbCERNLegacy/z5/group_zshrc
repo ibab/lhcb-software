@@ -1,4 +1,12 @@
 if ! [ -e ${HOME}/.nogrouplogin -o -e ${HOME}/.noLHCBLoginscript ] ; then
+
+  #
+  # Setting the CMTCONFIG if empty
+  #
+  if [ ! -n "$CMTCONFIG" ]; then
+  export CMTCONFIG=x86_64-slc5-gcc46-opt
+  fi
+
   # Post setup, site wide, does not depend on CMTCONFIG (X509 vars for example)
   export LHCB_POST_SCRIPT=${GROUP_DIR}/post/site
 
