@@ -3,9 +3,14 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v32r2p1>2012-09-14 DaVinci v32r2p1</A></H1><PRE>
+
+Another patch release on top of v32r2, for Stripping20.
+Picks up a few last minute fixes in Stripping v6r2p1.
+
 </PRE><H1><A NAME=v32r2>2012-08-31 DaVinci v32r2</A></H1><PRE>
 
-Patch release on top of v32r1p2, for stripping20.
+Patch release on top of v32r1p2, for Stripping20.
 
 Additional patched packages :-
 
