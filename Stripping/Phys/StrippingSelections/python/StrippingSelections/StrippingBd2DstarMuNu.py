@@ -84,7 +84,7 @@ confdict={
 ##                  'Dstar_VCHI2'  : 25, # 20 # 
 ##                  'DstarMassW'   : 80, # 50 # MeV
 ##                  # Bd-resonance parameters
-##                  'B0d_VCHI2'    : 10, # 10 # 
+##                  'B0d_VCHI2'    : 25, # 10 # 
 ##                  'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
 ##                  'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
 ##                  },
@@ -107,7 +107,7 @@ confdict={
                 'Dstar_VCHI2'  : 25, # 20 # 
                 'DstarMassW'   : 80, # 50 # MeV
                 #Bd-resonance parameters
-                'B0d_VCHI2'    : 10, # 10 # 
+                'B0d_VCHI2'    : 25, # 10 # 
                 'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
                 'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
                 },
@@ -130,7 +130,7 @@ confdict={
                  'Dstar_VCHI2'  : 20, 
                  'DstarMassW'   : 70, 
                  #Bd-resonance parameters
-                 'B0d_VCHI2'    : 10, 
+                 'B0d_VCHI2'    : 25, 
                  'B0dD0_DeltaZVtx' : -2.5, # mm
                  'B0dPV_DeltaZVtx' : 0.5 #  mm
                  }
