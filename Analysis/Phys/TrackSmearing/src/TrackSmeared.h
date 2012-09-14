@@ -4,17 +4,17 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 #include "TrackInterfaces/ITrackFitter.h"
 #include <TF1.h>
 #include <TRandom3.h>
 /** @class TrackSmeared TrackSmeared.h
  *  
  *
- *  @author Christian Peter Linn
+ *  @author Sascha Stahl
  *  @date   2010-08-27
  */
-class TrackSmeared : public DVAlgorithm {
+class TrackSmeared : public DaVinciAlgorithm {
 public: 
   /// Standard constructor
   TrackSmeared( const std::string& name, ISvcLocator* pSvcLocator );
@@ -33,6 +33,7 @@ private:
   std::string m_trackLocation;
   std::string m_outputLocation;
   std::string m_protoLocation;
+  std::string m_settings;
   
   
   double getSigma( LHCb::State* state,  std::vector<TF1*> funcs_data, std::vector<TF1*> funcs_mc);

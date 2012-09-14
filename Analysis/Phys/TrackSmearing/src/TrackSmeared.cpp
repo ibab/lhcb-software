@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( TrackSmeared );
 //=============================================================================
 TrackSmeared::TrackSmeared( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : DaVinciAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputLocation",m_trackLocation = LHCb::TrackLocation::Default);
   declareProperty( "OutputLocation",m_outputLocation = "Smeared");
@@ -49,7 +49,8 @@ TrackSmeared::TrackSmeared( const std::string& name,
   declareProperty( "smearBest", m_smearBest = false);
   declareProperty( "smearProto", m_smearProto = false );
   declareProperty( "smearCopied", m_smearCopied = false );
-
+  declareProperty( "Settings", m_settings = "2012" );
+  
   // Parameters for MC10 and Reco12
   /*
   declareProperty( "paramsx_data",m_paramsx_data=
@@ -88,7 +89,22 @@ TrackSmeared::TrackSmeared( const std::string& name,
                    boost::assign::list_of< std::pair<double,double> >
                    (14.7947 , 17.0342 )(12.9836 , 25.0856 )(12.7721 , 25.6032 )(15.0134 , 17.299 )
                    (14.652 , 17.3152 )(13.187 , 24.8611 )(12.8251 , 25.2981 )(14.0403 , 17.3576 ) );
-
+  
+  if (m_settings == "2012"){
+    m_paramsx_data =  boost::assign::list_of< std::pair<double,double> >
+      (18.1363 , 21.151 )(19.4728 , 25.755 )(19.5616 , 25.6784 )(17.0959 , 21.3326 )
+      (17.5133 , 20.9126 )(20.0083 , 24.678 )(21.3094 , 25.1192 )(18.7363 , 20.945 );
+    m_paramsy_data = boost::assign::list_of< std::pair<double,double> >
+      (16.8973 , 21.3073 )(20.9937 , 24.8285 )(20.3615 , 24.5534 )(16.7094 , 21.2874 )
+      (16.8174 , 21.0898 )(21.8155 , 23.2996 )(22.415 , 24.2684 )(16.652 , 21.662 );
+    
+    m_paramsx_mc =  boost::assign::list_of< std::pair<double,double> >
+      (12.0798 + 2.23 , 16.419 )(14.2948 + 2.45, 26.1166 )(14.2859 + 2.44, 26.5871 )(12.1948 + 2.07 , 16.6805 )
+      (12.153 + 2.24 , 16.5793 )(14.5924 +2.47 , 25.8522 )(14.8085 + 2.7 , 26.277 )(12.0577 + 2.6, 16.6684 );
+    m_paramsy_mc =  boost::assign::list_of< std::pair<double,double> >
+      (14.0701 + 2.0 , 16.828 )(12.6155 + 2.98 , 24.5925 )(12.8974 + 2.70, 25.0376 )(14.3956 + 1.9 , 16.9418 )
+      (14.1787 + 1.69 , 16.7516 )(12.4779 + 3.26, 24.5073 )(13.0426 + 3.0, 24.5692 )(14.6289 + 1.61, 16.5893 );
+  }
   m_funcsy_mc.reserve(m_paramsy_mc.size());
   m_funcsx_mc.reserve(m_paramsx_mc.size());
   m_funcsy_data.reserve(m_paramsy_data.size());
@@ -106,7 +122,7 @@ TrackSmeared::~TrackSmeared() {}
 // Initialization
 //=============================================================================
 StatusCode TrackSmeared::initialize() {
-  StatusCode sc = DVAlgorithm::initialize();
+  StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
@@ -411,7 +427,7 @@ StatusCode TrackSmeared::finalize() {
     delete m_funcsy_data[i];
   }
   
-  return DVAlgorithm::finalize();
+  return DaVinciAlgorithm::finalize();
 }
 
 //=============================================================================
