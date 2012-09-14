@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r18 2012-09-14 =========================
+
 ! 2012-09-14 - Anton Poluektov 
  - Update Stripping20/LineConfigDictionaries_Semileptonic.py with changes by Stefania Vecchi
  - Update stripping20 dbase
