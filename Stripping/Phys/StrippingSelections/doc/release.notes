@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r18 2012-09-14 =========================
+
+! 2012-09-14 - Stefania Vecchi
+ - update default config of StrippingBd2DstarMuNu.py (tighten cuts)
+
 ! 2012-09-10 - Alex Grecu
  - patch StrippingStrangeBaryons.py to eliminate implicit low pT cuts and add names of 
    stripping line authors and contributors.
