@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-09-14 - Anton Poluektov 
+ - Update Stripping20/LineConfigDictionaries_Semileptonic.py with changes by Stefania Vecchi
+ - Update stripping20 dbase
+
 ! 2012-09-10 - Will Barter
  - Stripping20/LineConfigDictionaries_QEE.py
    . Included changes in dictionary from bug patch in StrippingStrangeBaryons.py 
