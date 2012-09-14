@@ -4,6 +4,11 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r16 2012-09-14 =========================
+
+! 2012-09-14 - Anton Poluektov 
+ - Update Stripping20/StrippingStrangeBaryons and StrippingBd2DstarMuNu
+
 !========================= StrippingArchive v1r15 2012-09-08 =========================
 
 ! 2012-09-08 - Anton Poluektov 
