@@ -292,7 +292,7 @@ StatusCode FileStagerSvc::addFiles( const vector< string >& files )
 
    BOOST_FOREACH( const string& filename, files ) {
       File* file = createFile( filename );
-      m_files.insert( FileWrapper( file ) );
+      if ( file ) m_files.insert( FileWrapper( file ) );
    }
 
    if ( !m_files.empty() ) {
@@ -721,10 +721,8 @@ File* FileStagerSvc::createFile( const string& filename )
 
    if ( !success ) {
       warning() << "Error manipulating the original descriptor: " << filename
-                << " into a suitable remote filename" << endmsg;
-      File* f = new File( filename, "", "", "" );
-      f->setGood( false );
-      return f;
+                << " into a suitable remote filename, file will not be staged" << endmsg;
+      return 0;
    }
 
    boost::hash< string > hash;
@@ -739,7 +737,7 @@ File* FileStagerSvc::createFile( const string& filename )
    temp << m_tmpdir << "/" << boost::format( "%|x|" ) % hash( remote ) << extension;
 
    File* f = new File( file, command, remote, temp.str() );
-   f->setGood(true);
+   f->setGood( true );
    return f;
 }
 

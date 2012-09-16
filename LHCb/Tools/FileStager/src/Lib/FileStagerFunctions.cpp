@@ -74,17 +74,18 @@ bool createPFN( string& remote, string& command, bool stageLocal )
       // castor file, no protocol specification
       command = "rfcp";
       return true;
-  } else if ( stageLocal && ( result = ba::find_first( remote, "file:" ) ) ) {
-      // local file, perhaps nfs or other networked filesystem
-      ba::erase_range( remote, result );
-      command = "cp";
-      return true;
    } else if ( stageLocal ) {
-      // assume local file, perhaps nfs or other networked filesystem
+      if ( result = ba::find_first( remote, "file:" ) ) {
+         // local file, perhaps nfs or other networked filesystem
+         ba::erase_range( remote, result );
+         ba::trim_left_if( remote, ba::is_any_of("/") );
+         remote = "/" + remote;
+      }
       command = "cp";
       return true;
+   } else {
+      return false;
    }
-   return false;
 }
 
 //=============================================================================

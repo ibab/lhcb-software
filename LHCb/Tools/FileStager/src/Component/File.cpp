@@ -2,6 +2,10 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <errno.h>
 
 // boost
 #include <boost/cstdint.hpp>
@@ -76,11 +80,13 @@ bool File::exists() const
 boost::uintmax_t  File::size() const
 {
    if ( !m_size ) {
-      if ( m_command.find( "rfcp" ) != string::npos ) {
+      vector<string> args;
+      ba::split(args, m_command, ba::is_any_of(" \t\n"));
+      if ( args[0] == "rfcp" ) {
          stringstream command;
          command << "rfstat " << m_remote;
          m_size = get_size( command.str(), 7, 0 );
-      } else if ( m_command.find( "xrdcp" ) != string::npos ) {
+      } else if ( args[0] == "xrdcp" ) {
          stringstream command;
          boost::regex re_xrd( "root://([a-zA-z\\.]+)(?::[0-9]+)?" );
          boost::smatch matches;
@@ -88,6 +94,15 @@ boost::uintmax_t  File::size() const
          boost::regex_search( m_remote.begin(), m_remote.end(), matches, re_xrd, flags );
          command << "xrd " << matches[1] << " \"stat " << matches.suffix() << "\"";
          m_size = get_size( command.str(), 0, 1 );
+      } else if ( args[0] == "cp" ) {
+         struct stat buf;
+         int r = ::stat(m_remote.c_str(), &buf);
+         if (r == -1) {
+            string msg = strerror(errno);
+            throw GaudiException( "Call to stat failed", msg, StatusCode::FAILURE );
+         } else {
+            m_size = uintmax_t(buf.st_size) / 1024.;
+         }
       } else {
          stringstream command;
          command << "gfal_teststat " << m_remote;
