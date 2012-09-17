@@ -7,13 +7,13 @@
 #include <cerrno>
 #include <memory>
 
-#include <fcntl.h>
 #include "RTL/rtl.h"
 #include "RTL/readdir.h"
+#include <fcntl.h>
+#include <sys/stat.h>
 #ifdef _WIN32
 #include <io.h>
 #include <direct.h>
-#include <sys/stat.h>
 #define O_NONBLOCK 0x0
 #define W_OK       0x6
 inline bool S_ISFIFO(int) { return false; }
