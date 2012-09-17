@@ -11,6 +11,7 @@
 #include "RTL/rtl.h"
 
 // C/C++ include files
+#include <sys/stat.h>
 #include <ctime>
 #include <set>
 
