@@ -19,7 +19,9 @@ use GaudiObjDesc        v11r14
 #use $(CCPCHist_use)
 use Camera              v1r23    Online
 use Checkpointing       v0r11    Online
-use CondDBServer        v1r4     Online
+macro CondDBServer_use "CondDBServer v1r4 Online" target-i686 ""
+use $(CondDBServer_use)
+###use CondDBServer        v1r4     Online
 use DailyReport         v1r2     Online
 use DefHLTUtils         v1r1     Online
 use DIM                 v19r36   Online
