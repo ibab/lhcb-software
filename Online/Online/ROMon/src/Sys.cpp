@@ -10,11 +10,11 @@
 #include <cerrno>
 #include <map>
 #include <fcntl.h>
+#include <sys/stat.h>
 
 #ifdef _WIN32
 #include <io.h>
 #include <process.h>
-#include <sys/stat.h>
 namespace {
   struct passwd {char pw_name[16];};
   passwd* getpwuid(int) { return 0; }
