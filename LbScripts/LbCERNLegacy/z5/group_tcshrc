@@ -24,8 +24,10 @@ if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
   if ( -e ${HOME}/.devLHCBuseCVMFS && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
     set use_cvmfs=1
   endif
+  if (  ($?ENVIRONMENT) ) then
   if ( ${ENVIRONMENT} == "BATCH" && ( !  -e ${HOME}/.devLHCBuseAFS ) && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
     set use_cvmfs=1
+  endif
   endif
 
   if ( $?LBLOGIN_DONE ) then
