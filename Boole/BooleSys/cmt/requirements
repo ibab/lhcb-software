@@ -1,5 +1,5 @@
 package BooleSys
-version v25r0
+version v25r1
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                      # Maintainer  
-use Boole               v25r0   Digi     # Marco Cattaneo
+use Boole               v25r1   Digi     # Marco Cattaneo
 use BooleUMC            v1r3    Digi     # Tomasz Skwarnicki
 use DigiAlg             v4r21   Digi     # Marco Cattaneo
 
@@ -20,7 +20,7 @@ use CaloMoniDigi        v2r4    Calo     # Olivier Deschamps
 use CaloDigit           v3r2    Calo     # Olivier Callot
 
 # Fibre Tracker
-use FTDigitisation      v1r0    FT       # Olivier Callot
+#use FTDigitisation      v1r0    FT       # Olivier Callot
 
 # Muon
 use MuonAlgs            v6r10p1 Muon     # Alessia Satta
@@ -44,7 +44,7 @@ use VeloPixAlgorithms   v2r1    VeloPix  # Marcin Kucharczyk
 use VeloPixAssociators  v1r2    VeloPix  # Marcin Kucharczyk
 
 # VeloLite
-use VLDigitisation      v1r0    VL       # Heinrich Schindler
+use VLDigitisation      v1r1    VL       # Heinrich Schindler
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
@@ -56,3 +56,4 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
+use L0DU v10r23 L0
