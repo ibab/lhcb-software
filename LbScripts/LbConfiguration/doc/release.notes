@@ -1,3 +1,8 @@
+2012-09-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: check if the requested project
+	was built for the requested platform (CMTCONFIG).
+
 2012-08-10 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Project.py: Set all defaults volume sizes to 15GB

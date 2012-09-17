@@ -435,6 +435,9 @@ class ProjectInfo:
     """
     # @todo: use LHCB_config.py instead of scanning directories
     searchpath = []
+    # Projects for which the check for the platform does not make sense.
+    no_platform_projects = ['Compat', 'LbScripts', 'LCGCMT', 'ExtraPackages', 'LHCbDirac'] + nocontainer_project_names
+
     def __init__(self, project, version, realName, path):
         self.name = FixProjectCase(project)
         self.version = version
@@ -490,6 +493,14 @@ class ProjectInfo:
             return "%s %s from %s" % (self.name, self.version, self.project_dir)
         else:
             return "%s from %s" % (self.name, self.project_dir)
+
+    def supportsPlatform(self, platform):
+        """
+        Check if the project supports the requested platform (i.e. it contains
+        the correct platform directory in the InstallArea).
+        """
+        return self.name in self.no_platform_projects or os.path.isdir(os.path.join(self.project_dir, 'InstallArea', platform))
+
 
 def _defaultSearchPath(env = None):
     search_path = []
@@ -1512,10 +1523,10 @@ class SetupProject:
             self.project_name = "LCGCMT"
             # let's see if the user actually passed us a version for ROOT
             if len(self.args) > 1 and re.match(r"\d+\.\d+\.\d+", self.args[1]):
-                 # yes, so we pretend we got "ROOT -v <version>"
-                 self.opts.ext_versions["ROOT"] = self.args[1]
-                 # and remove the already digested arguments
-                 del self.args[0:2]
+                # yes, so we pretend we got "ROOT -v <version>"
+                self.opts.ext_versions["ROOT"] = self.args[1]
+                # and remove the already digested arguments
+                del self.args[0:2]
             else:
                 # if the version is not given, we do not need to do anything
                 # special on the arguments, just ensure that the case is correct
@@ -1657,7 +1668,11 @@ class SetupProject:
                                                                        ignore_not_ready = self.opts.ignore_not_ready))
                     self.opts.use += pkgs
 
+        platform = self.environment["CMTCONFIG"]
         for p in self.overriding_projects + [self.project_info] + self.runtime_projects :
+            if not p.supportsPlatform(platform):
+                self._error("Project %s %s is not available for platform %s" % (p.name, p.version, platform))
+                return 1
             self._verbose("Project %s %s uses %s policy"%(p.name,
                                                           p.version,
                                                           p.policy))
