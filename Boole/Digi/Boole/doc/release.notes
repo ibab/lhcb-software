@@ -3,6 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v25r1>2012-09-18 Boole v25r1</A></H1><PRE>
+This version uses projects LCGCMT 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Production release for MC/2012 simulation.
+
  - Changes to configurable
    . Run PuVetoFillRawBuffer in the DigiVeloSeq. Previously this was done in
      the L0 emulation, no longer done by default in Boole.
