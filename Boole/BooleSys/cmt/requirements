@@ -20,7 +20,7 @@ use CaloMoniDigi        v2r4    Calo     # Olivier Deschamps
 use CaloDigit           v3r2    Calo     # Olivier Callot
 
 # Fibre Tracker
-#use FTDigitisation      v1r0    FT       # Olivier Callot
+use FTDigitisation      v1r0    FT       # Olivier Callot
 
 # Muon
 use MuonAlgs            v6r10p1 Muon     # Alessia Satta
