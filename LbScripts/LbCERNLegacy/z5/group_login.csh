@@ -57,7 +57,7 @@ else
 	  set use_cvmfs=1
       endif
       
-      if (  ($?ENVIRONMENT) then
+      if (  ($?ENVIRONMENT) ) then
       if (  ${ENVIRONMENT} == "BATCH" && ( !  -e ${HOME}/.devLHCBuseAFS ) && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
 	  set use_cvmfs=1
       endif
