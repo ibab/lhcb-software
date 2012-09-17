@@ -3,6 +3,7 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0DU v10r23 2012-09-17 =========================
 ! 2012-08-30 - Julien Cogan
  - L0Conf : complete the configuration for Moore 
             (when the ForceSingleL0Configuration is True)
