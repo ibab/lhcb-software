@@ -55,7 +55,7 @@ static bool match_wild(const char *str, const char *pat)    {
     for (int i = 0; i < 256; ++i) table[i] = char(i);
     first = false;
   }
- loopStart:
+loopStart:
   for (s = str, p = pat; *s; ++s, ++p) {
     switch (*p) {
     case '?':
@@ -76,7 +76,7 @@ static bool match_wild(const char *str, const char *pat)    {
   while (*p == '*') ++p;
   return (!*p);
 
- starCheck:
+starCheck:
   if (!star) return false;
   str++;
   goto loopStart;
@@ -247,11 +247,11 @@ StatusCode RootDataConnection::connectRead()  {
       }
       if ( !need_fid && fid != m_fid ) {
         msgSvc() << MSG::ERROR << "FID mismatch:" << fid << "(Catalog) != " << m_fid << "(file)" << endmsg
-		 << "for PFN:" << m_pfn << endmsg;
+          << "for PFN:" << m_pfn << endmsg;
         return StatusCode::FAILURE;
       }
       msgSvc() << MSG::DEBUG << "Using FID " << m_fid << " from params table...." << endmsg
-	       << "for PFN:" << m_pfn << endmsg;
+        << "for PFN:" << m_pfn << endmsg;
       return sc;
     }
   }
@@ -417,7 +417,7 @@ TBranch* RootDataConnection::getBranch(CSTR section, CSTR branch_name, TClass* c
   TBranch* b = t->GetBranch(n.c_str());
   if ( !b && cl && m_file->IsWritable() ) {
     b = t->Branch(n.c_str(),cl->GetName(),(void*)(ptr ? &ptr : 0),
-		  m_setup->bufferSize, m_setup->splitLevel);
+    		m_setup->bufferSize, m_setup->splitLevel);
   }
   if ( !b ) {
     b = t->GetBranch(branch_name.c_str());
@@ -551,8 +551,8 @@ RootDataConnection::getMergeSection(const string& container, int entry) const {
         if ( m_linkSects.size() > cnt ) {
           if ( msgSvc().isActive() ) {
             msgSvc() << MSG::VERBOSE << "MergeSection for:" << container
-		     << "  [" << entry << "]" << endmsg
-		     << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
+              << "  [" << entry << "]" << endmsg
+              << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
           }
           return make_pair(&(m_linkSects[cnt]), &c);
         }
@@ -560,8 +560,8 @@ RootDataConnection::getMergeSection(const string& container, int entry) const {
     }
   }
   msgSvc() << MSG::DEBUG << "Return INVALID MergeSection for:" << container
-	   << "  [" << entry << "]" << endmsg
-	   << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
+    << "  [" << entry << "]" << endmsg
+    << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
   return make_pair((const RootRef*)0,(const ContainerSection*)0);
 }
 
@@ -610,9 +610,9 @@ void RootDataConnection::makeRef(CSTR name, long clid, int tech, CSTR dbase, CST
   ref.clid      = clid;
   ref.svc       = tech;
   if ( ref.svc == POOL_ROOT_StorageType ||
-       ref.svc == POOL_ROOTKEY_StorageType ||
-       ref.svc == POOL_ROOTTREE_StorageType ) {
-    ref.svc = ROOT_StorageType;
-  }
+    ref.svc == POOL_ROOTKEY_StorageType ||
+    ref.svc == POOL_ROOTTREE_StorageType ) {
+      ref.svc = ROOT_StorageType;
+    }
 }
 

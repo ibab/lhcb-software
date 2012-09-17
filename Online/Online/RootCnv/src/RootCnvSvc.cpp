@@ -32,10 +32,6 @@
 #include "RootCnv/RootDataConnection.h"
 #include "RootUtils.h"
 
-// ROOT include files
-#include "TROOT.h"
-#include "TTree.h"
-
 using namespace std;
 using namespace Gaudi;
 typedef const string& CSTR;
@@ -48,8 +44,7 @@ namespace {
   static map<string, TClass*> s_classesNames;
   static map<CLID, TClass*>   s_classesClids;
 }
-#define kBYTE (1024)
-#define MBYTE (kBYTE*kBYTE)
+#define MBYTE 1024*1024
 
 // Standard constructor
 RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
@@ -64,7 +59,7 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("EnableIncident",   m_incidentEnabled     = true);
   declareProperty("RecordsName",      m_recordName          = "/FileRecords");
 
-  declareProperty("BasketSize",       m_setup->basketSize   = 2*MBYTE /* 40*MBYTE */);
+  declareProperty("BasketSize",       m_setup->basketSize   = 40*MBYTE);
   declareProperty("CacheSize",        m_setup->cacheSize    = 10*MBYTE);
   declareProperty("AutoFlush",        m_setup->autoFlush    = 100);
   declareProperty("LearnEntries",     m_setup->learnEntries = 10);
@@ -73,8 +68,8 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("VetoBranches",     m_setup->vetoBranches);
   declareProperty("GlobalCompression",m_compression); // empty: do nothing
 
-  declareProperty("BufferSize",	      m_setup->bufferSize   = 2* kBYTE /* 32*1024 */);
-  declareProperty("SplitLevel",       m_setup->splitLevel   = 0        /* 99 */);
+  declareProperty("BufferSize",	      m_setup->bufferSize   = 32*1024);
+  declareProperty("SplitLevel",       m_setup->splitLevel   = 99);
 }
 
 // Standard destructor
@@ -210,8 +205,6 @@ StatusCode RootCnvSvc::connectOutput(CSTR dsn, CSTR openMode)   {
   else if ( ::strncasecmp(openMode.c_str(),"UPDATE",1)==0 )
     sc = connectDatabase(dsn, IDataConnection::UPDATE, &m_current);
   if ( sc.isSuccess() && m_current && m_current->isConnected() )  {
-	TTree *tree = m_current->tool()->refs();
-	m_incidentSvc->fireIncident(ContextIncident<TTree*>(dsn,"CONNECTED_OUTPUT", tree));
     return S_OK;
   }
   m_incidentSvc->fireIncident(Incident(dsn,IncidentType::FailOutputFile));
@@ -228,21 +221,20 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
     bool fire_incident = false;
     *con = 0;
     if ( !c )  {
-      auto_ptr<IDataConnection> connection(new RootDataConnection(this,dataset,m_setup));
-      StatusCode sc;
-      if (mode != IDataConnection::READ) {
-        sc = m_ioMgr->connectWrite(connection.get(),IDataConnection::IoType(mode),"ROOT");
-        m_incidentSvc->fireIncident(Incident(dataset, "NEW_STREAM"));
-      }
-      else
-        sc = m_ioMgr->connectRead(false,connection.get());
+      auto_ptr<RootDataConnection> connection(new RootDataConnection(this,dataset,m_setup));
+      StatusCode sc = (mode != IDataConnection::READ)
+        ? m_ioMgr->connectWrite(connection.get(),IDataConnection::IoType(mode),"ROOT")
+        : m_ioMgr->connectRead(false,connection.get());
       c = sc.isSuccess() ? m_ioMgr->connection(dataset) : 0;
       if ( c )   {
-        fire_incident = m_incidentEnabled && (0 != (mode&(IDataConnection::UPDATE|IDataConnection::READ)));
+	bool writable = 0 != (mode&(IDataConnection::UPDATE|IDataConnection::RECREATE));
+        fire_incident = m_incidentEnabled && writable;
+	if ( writable ) {
+	  m_incidentSvc->fireIncident(ContextIncident<TFile*>(connection->pfn(),"CONNECTED_OUTPUT",connection->file()));
+	}
 	if ( 0 != (mode&IDataConnection::READ) ) {
 	  if ( !m_ioPerfStats.empty() ) {
-	    RootDataConnection* pc = dynamic_cast<RootDataConnection*>(c);
-	    pc->enableStatistics(m_setup->loadSection);
+	    connection->enableStatistics(m_setup->loadSection);
 	  }
 	}
         connection.release();

@@ -22,6 +22,14 @@ class IDataManagerSvc;
 class IIncidentSvc;
 class TClass;
 
+// ROOT include files
+#include "TROOT.h"
+#include "TClass.h"
+#include "TTree.h"
+#include "TBranch.h"
+
+//#include "RootCnv/RootPerfMonSvc.h"
+
 /*
  * Gaudi namespace declaration
  */
