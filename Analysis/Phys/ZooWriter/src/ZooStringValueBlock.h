@@ -285,6 +285,12 @@ class ZooStringValueBlock : protected ZooKeyValueBlock
 	ZooStringValueBlock() { }
 
     private:
+/// sorry, this is bad. This is a hotfix for gcc46. FIXME:check carefully, whether needed.
+	friend class ZooWriter;
+/// sorry, this is bad. This is a hotfix for gcc46. FIXME:check carefully, whether needed.
+	friend class ZooP;
+/// sorry, this is bad. This is a hotfix for gcc46. FIXME:check carefully, whether needed.
+	friend class ZooObjectManager;
 	ClassDef(ZooStringValueBlock, 1);
 };
 

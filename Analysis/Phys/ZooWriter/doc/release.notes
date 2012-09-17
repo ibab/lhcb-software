@@ -4,6 +4,11 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-09-17 - Paul Seyfert
+ - updated makeZooList.py as I used it to understand the impact of keeping
+   mostly consistend ZooTriggerDecisions.h files for 2010-2012 TCKs.
+ - hotfix to make Zoo package compilable with gcc 4.6
+
 ! 2012-09-10 - Paul Seyfert
  - DVAlgorithm is deprecated. Inherit from DaVinciTupleAlgorithm instead.
    NB: not tested at all.

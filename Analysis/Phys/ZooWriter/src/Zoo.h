@@ -929,7 +929,7 @@ class ZooTrackInfo : public TObject
 	virtual ~ZooTrackInfo();
 
 	double chi2()       const { return m_chi2; }
-  double ghostProbability() const { return m_ghostprob; }
+	int cloneDist()  const{ return m_cloneDist;}
 	int ndf()           const { return m_ndf; }//for compatibility reasons
 	int nDoF()           const { return m_ndf; }
 	int nmeas()         const { return m_nmeas; }
@@ -946,7 +946,7 @@ class ZooTrackInfo : public TObject
 	int history()       const { return m_history; }
 	int patRecoStatus() const { return m_patstate; }
 	int fitStatus()     const { return m_fitstate; }
-	int cloneDist()  const{ return m_cloneDist;}
+  double ghostProbability() const { return m_ghostprob; }
 
 
 	const ZooPackedStates* states() const { 
@@ -1005,7 +1005,6 @@ class ZooTrackInfo : public TObject
 
     private:
 	Float_t m_chi2;	
-  Float_t m_ghostprob;
 	//FIXME: for the moment save this as an int but in reality this is a float
 	//check if we need floating point precision
 	Int_t m_cloneDist;
@@ -1026,6 +1025,7 @@ class ZooTrackInfo : public TObject
 	UChar_t m_history;	
 	UChar_t m_patstate;	
 	UChar_t m_fitstate;	
+  Float_t m_ghostprob;
 
 	/// these need not be filled
 	TRef m_states;		
