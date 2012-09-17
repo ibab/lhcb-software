@@ -5,6 +5,7 @@
 
 #include "Checkpointing/Namespace.h"
 #include <climits>
+#include <cstdlib>
 #include <sys/stat.h>
 
 /*
@@ -228,9 +229,9 @@ namespace CHECKPOINTING_NAMESPACE  {
   public:
 
     struct MapInfo {
-      void*  addr;
-      size_t len;
-      MapInfo(void* a, size_t s) : addr(a), len(s) {}
+      void*       addr;
+      std::size_t len;
+      MapInfo(void* a, std::size_t s) : addr(a), len(s) {}
     };
 
     /// Default constructor
@@ -244,7 +245,7 @@ namespace CHECKPOINTING_NAMESPACE  {
     long memoryCount();
 
     /// Map anonymous section to store information of size "len"
-    MapInfo map(size_t len);
+    MapInfo map(std::size_t len);
     /// Unmap anonymous global section identified by the MapInfo data
     int unmap(MapInfo& info);
 
