@@ -6,7 +6,8 @@
 #include <cstdlib>
 #include <string>
 #include "rtl_internal.h"
-#include "fcntl.h"
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #if defined(__linux)
 #include "unistd.h"

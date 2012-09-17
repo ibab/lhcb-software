@@ -4,7 +4,7 @@
 #include <string>
 #include <cstring>
 #include <iostream>
-
+#include <sys/stat.h>
 using namespace RTL;
 
 static std::auto_ptr<lib_rtl_lock_map_t> s_map(new lib_rtl_lock_map_t);

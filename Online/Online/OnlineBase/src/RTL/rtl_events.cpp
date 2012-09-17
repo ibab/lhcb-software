@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
+#include <sys/stat.h>
 
 //inline int rtl_printf(const char* fmt, ...)  {
 //  va_list args;
