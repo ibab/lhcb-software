@@ -1,6 +1,6 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
-
+//
 
 ApplicationMgr.ExtSvc = { "EventSelector" };
 ApplicationMgr.ExtSvc += { "MonitorSvc" };
