@@ -100,6 +100,9 @@ else
     echo "                            x86_64-slc5-gcc46-opt";
     echo "                            x86_64-slc5-gcc46-dbg";
     echo "                            ";
+    echo "                            x86_64-slc6-gcc46-opt";
+    echo "                            x86_64-slc6-gcc46-dbg";
+    echo "                            ";
     echo "                            ";
     echo "                            ....";
 fi;
