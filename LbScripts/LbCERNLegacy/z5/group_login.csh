@@ -56,9 +56,11 @@ else
       if ( -e ${HOME}/.devLHCBuseCVMFS && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
 	  set use_cvmfs=1
       endif
-
-      if (  ($?ENVIRONMENT)  && ${ENVIRONMENT} == "BATCH" && ( !  -e ${HOME}/.devLHCBuseAFS ) && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
+      
+      if (  ($?ENVIRONMENT) then
+      if (  ${ENVIRONMENT} == "BATCH" && ( !  -e ${HOME}/.devLHCBuseAFS ) && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
 	  set use_cvmfs=1
+      endif
       endif
 
      if ( $use_cvmfs == 0 ) then
