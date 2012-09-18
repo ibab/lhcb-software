@@ -7,6 +7,8 @@
 ! 2012-09-18 - Paul Seyfert
  - bugfixes in flight distance computation, PV handling, and secondIP
    computation provided by Th. Nikodem.
+ - added "init.sh" to examples directory to help users setting up their
+   LD_LIBRARY_PATH variable
 
 ! 2012-09-17 - Paul Seyfert
  - updated makeZooList.py as I used it to understand the impact of keeping
