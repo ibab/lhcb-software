@@ -4,9 +4,10 @@ version v1r9
 
 branches  cmt tests
 
-use GaudiPolicy v*
-use RootCnv     v* Online
-use ROOT        v* LCG_Interfaces
+use GaudiPolicy        v*
+use GaudiCheckpointing v* Online
+use RootCnv            v* Online
+use ROOT               v* LCG_Interfaces
 
 library  GaudiRootCnvTests  *.cpp
 apply_pattern linker_library         library=GaudiRootCnvTests
