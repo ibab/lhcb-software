@@ -4,6 +4,14 @@
 ! Purpose     : Adaptor package for Herwig++
 !-----------------------------------------------------------------------------
 
+! 2012-09-18 - Gloria Corti
+ - Use herwigpp interface set up to also work on bash and adapt to macro set 
+   in there, removing include and ld_library path from requirements of this
+   package
+ - Use environment variable HERWIGPPHOME for location of heriwg repository for
+   loading, instead of HERWIGPPROOT that is now set by cmt to point to the 
+   interface package
+
 ! 2012-05-30 - Patrick Robbe
  - HerwigProduction.cpp: adapt to new particle property service
 

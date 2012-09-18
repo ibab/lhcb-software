@@ -195,14 +195,14 @@ StatusCode HerwigppProduction::initializeGenerator( ) {
     debug() << "Using path: " << *path << endmsg;
   
   // Load the default Herwig++ repository.
-  std::string herwigppRepo = System::getEnv("HERWIGPPROOT") 
+  std::string herwigppRepo = System::getEnv("HERWIGPPHOME") 
     + "/share/Herwig++/HerwigDefaults.rpo";
   debug() << "Loading Herwig++ repo from " << herwigppRepo << endmsg;
   ThePEG::Repository::load(herwigppRepo);
   debug() << "Loaded Herwig++ repository." << endmsg;
   
   // Get corrected diffractive PDF paths.
-  std::string pomeronPath = System::getEnv("HERWIGPPROOT") 
+  std::string pomeronPath = System::getEnv("HERWIGPPHOME") 
     + "/share/Herwig++/PDF/diffraction/";
   m_defaultSettings.push_back("set /Herwig/Partons/PomeronPDF:RootName " + pomeronPath);
 

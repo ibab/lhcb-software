@@ -15,7 +15,7 @@ include_dirs  $(LBHERWIGPPROOT)
 
 # Used packages.
 #============================================================================
-use           herwig++         v*    LCG_GeneratorsInterfaces
+use           herwigpp         v*    LCG_GeneratorsInterfaces
 use           thepeg           v*    LCG_GeneratorsInterfaces
 use           Generators       v*    Gen
 
@@ -29,17 +29,4 @@ library	      LbHerwigppRandom     Lib/*.cpp
 #============================================================================
 apply_pattern component_library library=LbHerwigpp
 
-# Reset from LCG interface packages
-# reset of include and library path until properly set in
-# LCG_GeneratorsInterface packages
-private
-include_dirs $(thepeg_home)/include
-end_private
-path_prepend LD_LIBRARY_PATH $(thepeg_home)/lib/ThePEG
-
-private
-macro herwig++_linkopts ""
-end_private
-path_prepend LD_LIBRARY_PATH "$(herwig++_home)/lib/Herwig++"
-set HERWIGPPROOT "$(herwig++_home)"
 
