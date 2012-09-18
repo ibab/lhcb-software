@@ -4,6 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-09-18 - Paul Seyfert
+ - bugfixes in flight distance computation, PV handling, and secondIP
+   computation provided by Th. Nikodem.
+
 ! 2012-09-17 - Paul Seyfert
  - updated makeZooList.py as I used it to understand the impact of keeping
    mostly consistend ZooTriggerDecisions.h files for 2010-2012 TCKs.

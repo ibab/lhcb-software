@@ -697,16 +697,53 @@ void ZooWriter::getTreefitParams(const LHCb::Particle* node, DecayTreeFitter::Fi
 }
 
 void ZooWriter::treeFit(const LHCb::Particle* p) {
-#if DV_VER < 271
-  const LHCb::RecVertex* pv =
-    dynamic_cast<const LHCb::RecVertex*>(desktop()->relatedVertex(p));
-#endif
-#if DV_VER >= 271
 //  const LHCb::RecVertex* pv =
+  const LHCb::RecVertex* bestpv = 0;
 //    dynamic_cast<const LHCb::RecVertex*>(this->getRelatedPV(p));
-  const LHCb::RecVertex* pv =
-    dynamic_cast<const LHCb::RecVertex*>(this->bestPV(p));
-#endif
+  if (!p->daughters().empty())
+  { 
+    //this method intelligently selects the best PV AFTER PV refit
+    //best PV is currently the PV with the smallest ip sig
+
+    double best_ipSig = 999.0;
+    double curr_ip, curr_ipChi2, curr_ipSig;
+
+    const LHCb::RecVertex::Range vtcs = primaryVertices();
+    BOOST_FOREACH(const LHCb::VertexBase* vtx, vtcs) {
+      if (!vtx->isPrimary()) continue;
+
+      const LHCb::RecVertex* currpv = dynamic_cast<const LHCb::RecVertex*>(vtx);
+      LHCb::RecVertex newpv(currpv  ? (*currpv) : LHCb::RecVertex());
+      if (m_pvReFitter->remove(p, &newpv))
+      { 
+        bool treefit_ok = true;
+
+        DecayTreeFitter::Fitter treefitter( *p, newpv ) ;
+        setTreefitMassConstraint(p, &treefitter);
+        treefitter.fit();//mass constraints here
+        if (treefitter.status() != 0)
+          treefit_ok = false;
+
+        //can additionally specify minimum number of tracks
+        if (    int(newpv.tracks().size()) > m_minTracksPV
+             && m_dist->distance(p, &newpv, curr_ip, curr_ipChi2)
+             && treefit_ok
+            )
+        {   
+            curr_ipSig = sqrt(curr_ipChi2);//negative ip chi2???
+            //selection according to smallest ipsig (similar to
+            //relatedvertex)
+            if (curr_ipSig < best_ipSig && !isnan(curr_ipSig))
+            { 
+              bestpv = currpv;
+              best_ipSig = curr_ipSig;//set new best values
+            }
+        }
+      }
+    }
+  }
+
+  const LHCb::RecVertex* pv = bestpv;
 
   //do the tree fit
   if (pv) {
@@ -829,13 +866,18 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
 		       */		
 		    curr_ipSig = sqrt(curr_ipChi2);//negative ip chi2???
 		    //selection according to smallest ipsig (similar to relatedvertex)
-		    if (curr_ipSig < best_ipSig && !isnan(curr_ipSig))
+                    if(!isnan(curr_ipSig)){		    
+                        if (curr_ipSig < best_ipSig)
 		    {
 			bestpv = currpv;
 			secondbest_ipSig = best_ipSig;//save second best (old) values
 			secondbest_ip = best_ip;
 			best_ipSig = curr_ipSig;//set new best values
 			best_ip = curr_ip;
+		        }else if(curr_ipSig < secondbest_ipSig){
+                            secondbest_ipSig = curr_ipSig;
+                            secondbest_ip = curr_ip;
+                        }
 		    }
 		}	    
 	    }
@@ -1764,10 +1806,7 @@ ZooMCP* ZooWriter::GetSaved(const LHCb::MCParticle* p)
     MCTrackInfo trackInfo( evtSvc(), msgSvc() );
     zp->m_mcTrackInfo = trackInfo.fullInfo(p);
 
-    SmartRefVector<LHCb::MCVertex>::const_iterator i=vtx.begin();
     
-    if (vtx.size()>0)
-      zp->m_decayVertex = (*i)->position();
 
     zp->m_key = p->key();
 
@@ -1781,9 +1820,16 @@ ZooMCP* ZooWriter::GetSaved(const LHCb::MCParticle* p)
 	    (pv->position() - Gaudi::XYZVector(ov->position())).R() < 1e-5)
 	zp->m_flags |= ZooMCP::isFromPV;
 
+    double maxFlightDistance = -1.;
     for(SmartRefVector<LHCb::MCVertex>::const_iterator i=vtx.begin();i!=vtx.end();++i){
-	const SmartRefVector<LHCb::MCParticle> &ch = (*i)->products();
 
+        double flightDistance = (p->originVertex()->position() -(*i)->position()).R();
+        if(flightDistance > maxFlightDistance){
+            maxFlightDistance = flightDistance; 
+            zp->m_decayVertex = (*i)->position(); //is multiple overwriting ok??? 
+        }
+
+        const SmartRefVector<LHCb::MCParticle> &ch = (*i)->products();
 	for(SmartRefVector<LHCb::MCParticle>::const_iterator j=ch.begin();
 		j!=ch.end();++j){
 
