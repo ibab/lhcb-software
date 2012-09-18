@@ -121,6 +121,8 @@ namespace LoKi
       , m_ids  ( LoKi::Cuts::GNONE ) 
       , m_moms ( LoKi::Cuts::GALL  ) 
       , m_forceNoCutAcceptance ( false )
+      , m_excludeFromMother ( false )
+      , m_excludeMotherNumber ( 39 )
     // 
       , m_charged    ( LoKi::Cuts::GALL ) 
       , m_gamma      ( LoKi::Cuts::GALL ) 
@@ -156,6 +158,8 @@ namespace LoKi
       m_particles.push_back ( "pi+" ) ;
       m_particles.push_back ( "K+"  ) ;
       m_particles.push_back ( "p+"  ) ;
+      declareProperty ( "ExcludeFromMother"        , m_excludeFromMother        ) ;
+      declareProperty ( "ExcludeMotherNumber"        , m_excludeMotherNumber        ) ;
       declareProperty ( "Processes"        , m_processes        ) ;
       declareProperty ( "Particles"        , m_particles        ) ;
       declareProperty ( "From"             , m_mothers          ) ;
@@ -220,6 +224,8 @@ namespace LoKi
     LoKi::Types::GCut   m_moms              ;
     //
     bool    m_forceNoCutAcceptance   ;
+    bool    m_excludeFromMother;
+    int     m_excludeMotherNumber;
     //std::string         m_OutputTable       ;
     
     LoKi::Types::GCut   m_charged           ;
@@ -503,7 +509,8 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
       cut = cut && GFROMTREE( moms.begin() , moms.end() ) ;
     }
   
-
+  Gaudi::LorentzVector included_energy(0.0,0.0,0.0,0.0);
+  Gaudi::LorentzVector excluded_energy(0.0,0.0,0.0,0.0);
   // collect "good" particles into the container 
   Container good ;
   good.reserve ( 2000 ) ;
@@ -520,9 +527,8 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
   for ( Container::const_iterator ip = good.begin() ; good.end() != ip ; ++ip ) 
     {
       const HepMC::GenParticle* p = *ip ;
-    
+      
       if ( 0 == p ) { continue ; };
-
       if (!m_processes.empty()){
 
       const HepMC::GenEvent* evt = p->parent_event();
@@ -535,6 +541,37 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
       //reject not good processes, if requested
       if(!GoodPro){continue;};
       }
+
+      if (m_excludeFromMother){
+	//reject particles here whose parent (and that particle's parent, etc) includes m_excludeMotherNumber.
+	bool in_loop = true;
+	bool from_mother = false;
+	const HepMC::GenParticle* p2 = p;     
+	while (in_loop) {
+	  if (p2==NULL) {
+	  break;
+	  }
+	  HepMC::GenVertex * thePV =  p2 -> production_vertex() ;
+	  if (thePV == NULL) {
+	    break;
+	  }
+	  HepMC::GenVertex::particle_iterator p_in ;
+	  for(p_in = thePV -> particles_begin( HepMC::parents); p_in != thePV -> particles_end(HepMC::parents); ++p_in){
+	    if (GABSID(*p_in)==m_excludeMotherNumber) {
+	      from_mother = true;
+	      in_loop = false;
+	      break;
+	    }
+	    p2=*p_in;
+	  }
+	}
+	if (from_mother){
+	  Gaudi::LorentzVector exc_mom ( p->momentum() ) ;
+	  excluded_energy+=exc_mom;
+	  continue;
+	}
+      }
+
       // create new particle 
       LHCb::Particle* particle = new LHCb::Particle() ;
       // fill it 
@@ -547,7 +584,8 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
 	}
       // fill the relation table if needed 
       if ( 0 != table ) { table->i_push( particle , p ) ; }     // NB: i_push! 
-    
+      Gaudi::LorentzVector inc_mom ( p->momentum() ) ;
+      included_energy+=inc_mom;
       // add to the container 
       particles.push_back ( particle ) ;
     }
@@ -561,6 +599,10 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
       if ( 0 != table ) { counter("#links") += table->relations().size() ; }
     }
   //
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"Included Momentum 4-vector of event: "<< included_energy<<std::endl;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"Excluded Momentum 4-vector of event: "<< excluded_energy<<std::endl;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"Invariant Mass of Excluded Momentum 4-vector: "<< excluded_energy.M()<<std::endl;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"Total Momentum 4-vector of event: "<< included_energy+excluded_energy<<std::endl;
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================

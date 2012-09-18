@@ -5,6 +5,9 @@
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-09-18 - Will Barter
+ - Adapted HepMCParticleMaker so that you can exclude particles from a particle mother.
+
 !========================= LoKiPhysMC v9r5 2012-02-09 =========================
 
 ! 2012-01-17 - Albert Bursche
