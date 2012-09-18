@@ -522,6 +522,11 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
     m_fskip(fd_in,size);
     return data_len;    
   }
+  if ( 0 == m_strcmp(nam,"/var/db/nscd/hosts") ) {  // new since slc6
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP image:");
+    m_fskip(fd_in,size);
+    return data_len;    
+  }
   if ((flags & MAP_ANONYMOUS) && (flags & MAP_SHARED)) {
     mtcp_output(MTCP_INFO,"*** WARNING: area %s specifies MAP_ANONYMOUS and MAP_SHARED.\n"
 		"*** Turning off MAP_ANONYMOUS and hoping for best.\n",nam);

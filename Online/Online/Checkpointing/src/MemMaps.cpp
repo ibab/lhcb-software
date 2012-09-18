@@ -40,6 +40,10 @@ static int checkpointing_area_skip(const Area& a) {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip  /var/db/nscd/passwd:");
     return 1;
   }
+  else if ( m_strcmp(a.name,"/var/db/nscd/hosts") == 0 ) { // since slc6
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip  /var/db/nscd/passwd:");
+    return 1;
+  }
   return 0;
 }
 
