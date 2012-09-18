@@ -228,7 +228,7 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
       c = sc.isSuccess() ? m_ioMgr->connection(dataset) : 0;
       if ( c )   {
 	bool writable = 0 != (mode&(IDataConnection::UPDATE|IDataConnection::RECREATE));
-        fire_incident = m_incidentEnabled && writable;
+        fire_incident = m_incidentEnabled && (0 != (mode&(IDataConnection::UPDATE|IDataConnection::READ)));
 	if ( writable ) {
 	  m_incidentSvc->fireIncident(ContextIncident<TFile*>(connection->pfn(),"CONNECTED_OUTPUT",connection->file()));
 	}
