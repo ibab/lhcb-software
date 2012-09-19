@@ -3,19 +3,19 @@
 <gdd>
   <package name='MCEvent'>
 
-    <class author="Marcin Kucharczyk" desc="This class represents charge deposited in a pixel by single MCHit" id="4501" name="MCVeloPixDeposit">
+    <class author="Marcin Kucharczyk" desc="This class represents charge deposited in a pixel by single MCHit" id="4501" name="MCVPDeposit">
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;
-      <location name="MCVeloPixDepositLocation"   place="MC/VP/Deposits"   />
-      <import name ="Kernel/VeloPixChannelID"/>
+      <location name="MCVPDepositLocation"   place="MC/VP/Deposits"   />
+      <import name ="Kernel/VPChannelID"/>
       <import name="Event/MCHit" /> 
-       <constructor argList="double charge, LHCb::VeloPixChannelID aChan, LHCb::MCHit* aHit" 
+       <constructor argList="double charge, LHCb::VPChannelID aChan, LHCb::MCHit* aHit" 
                     initList="m_depositedCharge(charge), m_channelID(aChan), m_mcHit(aHit)"  desc="special constructor">
         <code></code>
       </constructor>
       <attribute name="depositedCharge" type="double" setMeth = "FALSE" desc="charge deposited in pixel in electrons"/>
       <relation name="mcHit" type="LHCb::MCHit" desc="pointer to MCHit"/>
-      <attribute name="channelID" type="LHCb::VeloPixChannelID" setMeth = "FALSE" desc="channelID"/>
+      <attribute name="channelID" type="LHCb::VPChannelID" setMeth = "FALSE" desc="channelID"/>
     </class>
 
  </package>

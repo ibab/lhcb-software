@@ -2,6 +2,8 @@
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+! 2012-09-14 - Paul Szczypka
+ - renamed files/var from VeloPix to VP
 
 ! 2012-08-28 - Paul Szczypka / Pawel Jalocha
  - change from VeloPix to VP in	container names

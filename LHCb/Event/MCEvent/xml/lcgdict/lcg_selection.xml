@@ -10,7 +10,7 @@
     <class name = "KeyedObject<LHCb::CaloCellID>" />
     <class name = "KeyedObject<LHCb::STChannelID>" />
     <class name = "KeyedObject<LHCb::VeloChannelID>" />
-    <class name = "KeyedObject<LHCb::VeloPixChannelID>" />
+    <class name = "KeyedObject<LHCb::VPChannelID>" />
     <class name = "KeyedObject<LHCb::VLChannelID>" />
   </exclusion>
 
