@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2012-09-13 Paul Szczypka
+ - Renaming EVERYTHING from VeloPix to VP or corresponding string.
+
 !========================= TrackInterfaces v4r20 2012-02-28 =========================
 ! 2012-02-16 Mariusz Witek
  - Remove WithWeights methods as a consequence of removal WeightsVector from PatPV

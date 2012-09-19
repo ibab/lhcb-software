@@ -40,7 +40,7 @@
   <class name    = "IVeloExpectation"        />
   <struct name   = "IVeloExpectation::Info"  />
   <class name    = "IVeloClusterPosition"    />
-  <class name    = "IVeloPixClusterPosition" />
+  <class name    = "IVPClusterPosition" />
   <class name    = "IPitchResTool"           />
   <class name    = "ITrackStateProvider"     />
 </lcgdict>

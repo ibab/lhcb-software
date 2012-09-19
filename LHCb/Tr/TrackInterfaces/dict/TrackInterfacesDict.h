@@ -40,7 +40,7 @@
 #include "TrackInterfaces/ITrajFitter.h"
 #include "TrackInterfaces/IVeloExpectation.h"
 #include "TrackInterfaces/IVeloClusterPosition.h"
-#include "TrackInterfaces/IVeloPixClusterPosition.h"
+#include "TrackInterfaces/IVPClusterPosition.h"
 #include "TrackInterfaces/IPitchResTool.h"
 #include "TrackInterfaces/ITrackStateProvider.h"
 
