@@ -5,6 +5,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r54 2012-09-19 =========================
+! 2012-09-19 - V. Gligorov
+ - Use CharmhadronLines_Spetember2012.py in Hadrons_September2012.py
+
 !========================= HltSettings v5r53 2012-09-19 =========================
 ! 2012-09-19 - Eric van Herwijnen
  - Remove TopoLines_September2012.py; revert Hadrons_September2012.py to the one
