@@ -36,7 +36,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'NV0_3Body_MAX'     : 2,
         'NV0_4Body_MAX'     : 2,
         'MIN_V0_LT'         : '10*ps',
-        'V0LLDOCA_MAX'      : '0.2*mm',
         # bdt cuts
         'BDT_2BODY_MIN'     : 0.4,
         'BDT_3BODY_MIN'     : 0.4,
@@ -319,22 +318,11 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         props = self.getProps()
         comboCuts = 'AM > 0'
-        v0id = "((ID=='KS0')|(ABSID=='Lambda0'))"
-        isv01 = "((ACHILD(ABSID,1) == 310)|(ACHILD(ABSID,1)==3122))"
-        isv02 = "((ACHILD(ABSID,2) == 310)|(ACHILD(ABSID,2)==3122))"
-        isv0d1 = "(%s & (ACHILD(NINTREE(HASTRACK & ISLONG),1) == 0))" % isv01
-        isv0d2 = "(%s & (ACHILD(NINTREE(HASTRACK & ISLONG),2) == 0))" % isv02
-        hasv0d = "(%s | %s)" % (isv0d1,isv0d2)
-        hasv0 = "(ANUM(%s) > 0)" % v0id
-        nov0 = "(ANUM(%s) == 0)" % v0id
-        v0cutl = "(%s & (AMAXDOCA('LoKi::DistanceCalculator') < %s))" \
-                 % (hasv0,props['V0LLDOCA_MAX'])
-        v0cut = "(%s | %s)" % (hasv0d,v0cutl)
-        nov0cut = '(%s & (AALLSAMEBPV |(AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))'\
-                  " & (AMAXDOCA('LoKi::DistanceCalculator') < %s))" \
-                                           % (nov0,props["AMAXDOCA_MAX"])
         if useComboCuts:
-            comboCuts = "(AM < 7000*MeV) & (%s | %s)" % (v0cut,nov0cut)
+            comboCuts = "(AM < 7000*MeV) & ((ANUM((ID=='KS0')|(ABSID=='Lambda0'))>0) | "
+            comboCuts += '((AALLSAMEBPV |(AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))'
+            comboCuts += " & (AMAXDOCA('LoKi::DistanceCalculator') < %s)))" \
+                         % props["AMAXDOCA_MAX"]
         momCuts = "(BPVDIRA > 0) & (BPVVDCHI2 > %s)" % props['BPVVDCHI2_MIN']
         combo = Hlt2Member(CombineParticles, 'Combine',DecayDescriptors=decay,
                            Inputs=input, CombinationCut=comboCuts,

@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-09-19 - E. van Herwijnen for M. Williams
+ - Replaced Hlt2TopologicalLines.py by the one from v8r25, going back to 
+   previous v0 lifetime cut & without DOCA cuts
+
 !========================= Hlt2Lines v8r26 2012-09-05 =========================
 ! 2012-09-05 - E. van Herwijnen for M. Williams
  - relax v0 lifetime cut
