@@ -5,6 +5,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-09-19 - Eric van Herwijnen
+ - Remove TopoLines_September2012.py; revert Hadrons_September2012.py to the one
+   from HltSettings v5r43. (revert to V0 lt cut, remove doca cuts).
+
 !========================= HltSettings v5r52 2012-09-12 =========================
 ! 2012-09-12 - Eric van Herwijnen
  - Add Hlt2Lumi to activehlt2lines in Physics_pAPilot
