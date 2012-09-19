@@ -1,3 +1,7 @@
+2012-09-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: fixes to the platform check
+
 2012-09-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: check if the requested project

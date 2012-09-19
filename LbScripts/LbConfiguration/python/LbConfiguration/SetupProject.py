@@ -494,12 +494,14 @@ class ProjectInfo:
         else:
             return "%s from %s" % (self.name, self.project_dir)
 
-    def supportsPlatform(self, platform):
+    def supportsPlatform(self, platform, user_area=None):
         """
         Check if the project supports the requested platform (i.e. it contains
         the correct platform directory in the InstallArea).
         """
-        return self.name in self.no_platform_projects or os.path.isdir(os.path.join(self.project_dir, 'InstallArea', platform))
+        return (self.path == user_area
+                or self.name in self.no_platform_projects
+                or os.path.isdir(os.path.join(self.project_dir, 'InstallArea', platform)))
 
 
 def _defaultSearchPath(env = None):
@@ -1670,7 +1672,7 @@ class SetupProject:
 
         platform = self.environment["CMTCONFIG"]
         for p in self.overriding_projects + [self.project_info] + self.runtime_projects :
-            if not p.supportsPlatform(platform):
+            if not p.supportsPlatform(platform, self.user_area):
                 self._error("Project %s %s is not available for platform %s" % (p.name, p.version, platform))
                 return 1
             self._verbose("Project %s %s uses %s policy"%(p.name,
