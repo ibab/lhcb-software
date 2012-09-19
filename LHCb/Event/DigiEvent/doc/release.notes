@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2012-09-13 Paul Szczypka
+ - Rename EVERYTHING from VeloPix to VP or corresponding string.
+ - Moved some *VeloPix* files to *VP*
+
 ! 2012-08-31 Pawel Jalocha
  - Change VeloPix to VP in containers
 

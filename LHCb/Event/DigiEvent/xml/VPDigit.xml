@@ -4,13 +4,13 @@
  <package name="DigiEvent">
   <class
    author="Marcin Kucharczyk"
-   desc="This class represents digitized pixel hit in VeloPix"
+   desc="This class represents digitized pixel hit in VP"
    id="4503"
-   name="VeloPixDigit">
-   <location name="VeloPixDigitLocation"   place="Raw/VP/Digits"   />
-   <import name="Kernel/VeloPixChannelID"/>
-   <template name="KeyedObjectDict" t1="LHCb::VeloPixChannelID"/>
-   <base name="KeyedObject&lt;LHCb::VeloPixChannelID&gt;"/>
+   name="VPDigit">
+   <location name="VPDigitLocation"   place="Raw/VP/Digits"   />
+   <import name="Kernel/VPChannelID"/>
+   <template name="KeyedObjectDict" t1="LHCb::VPChannelID"/>
+   <base name="KeyedObject&lt;LHCb::VPChannelID&gt;"/>
    &KeyedContainer;
 
    <constructor argList="int tot"
@@ -24,23 +24,23 @@
    </constructor>
 
   <constructor desc = 'copy constructor'
-      initList = "KeyedObject&lt;LHCb::VeloPixChannelID&gt;(),m_ToTValue(digit.m_ToTValue),m_timeStamp(digit.m_timeStamp)" >
-      <arg const = 'TRUE' name = "digit" type = "LHCb::VeloPixDigit" />
+      initList = "KeyedObject&lt;LHCb::VPChannelID&gt;(),m_ToTValue(digit.m_ToTValue),m_timeStamp(digit.m_timeStamp)" >
+      <arg const = 'TRUE' name = "digit" type = "LHCb::VPDigit" />
   </constructor>
 
   <method desc= 'clone method'
    name = 'clone'
    const = 'TRUE'
-   type = "LHCb::VeloPixDigit*"
+   type = "LHCb::VPDigit*"
    access = "PUBLIC">
    <code>
-     return new LHCb::VeloPixDigit( *this );
+     return new LHCb::VPDigit( *this );
    </code>
   </method>
 
   <attribute name="ToTValue" type="int" desc="total digitized charge in a pixel measured as Time-over-Threshold "/>
   <attribute name="timeStamp" type="int" desc="time stamp related to when the threshold was exceeded"/>
-  <method type='LHCb::VeloPixChannelID' name='channelID' const='TRUE' desc='channel = key'>
+  <method type='LHCb::VPChannelID' name='channelID' const='TRUE' desc='channel = key'>
    <code>return key();</code>
   </method>
 

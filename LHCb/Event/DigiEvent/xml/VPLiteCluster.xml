@@ -8,36 +8,36 @@
 <!--- IF YOU PLAN TO MODIFY THE BITFIELD, PLEASE READ CAREFULLY THE FINAL COMMENT -->
 
 <package name="DigiEvent">
-    <class name="VeloPixLiteCluster" 
+    <class name="VPLiteCluster" 
      author="V. Coco" 
      desc="A cluster as might be produced by the TELL40 but without the full information"
      location="Raw/VP/LiteClusters"
      serializers="FALSE"
     >
 
-    <import name="Kernel/VeloPixChannelID"/>
+    <import name="Kernel/VPChannelID"/>
     <import name="Kernel/FastClusterContainer"/>
     <import name="Kernel/SiDataFunctor"/>
     <import name="LHCbMath/LHCbMath"/>
  
     <typedef desc = "channelID type"
-       type =  "LHCb::VeloPixChannelID"
+       type =  "LHCb::VPChannelID"
        def = "chan_type"
        access = "PUBLIC " />
 
     <typedef desc = "fast container for light clusters"
-       type =  "FastClusterContainer &lt; LHCb::VeloPixLiteCluster, ulonglong &gt;"
-       def = "VeloPixLiteClusters"
+       type =  "FastClusterContainer &lt; LHCb::VPLiteCluster, ulonglong &gt;"
+       def = "VPLiteClusters"
        access = "PUBLIC " />
 
 
      <typedef desc = "finding policy"
-       type =  "SiDataFunctor::CompareByChannel &lt; LHCb::VeloPixLiteCluster&gt;"
+       type =  "SiDataFunctor::CompareByChannel &lt; LHCb::VPLiteCluster&gt;"
        def = "findPolicy"
        access = "PUBLIC " /> 
 
      <constructor desc="Constructor" 
-       argList='VeloPixChannelID &amp; chan,  unsigned int ToT , std::pair&lt;double,double&gt; fracPix, bool longPix'>
+       argList='VPChannelID &amp; chan,  unsigned int ToT , std::pair&lt;double,double&gt; fracPix, bool longPix'>
        <code>
 
  unsigned int tFracX = (LHCb::Math::round(fracPix.first * (1 &lt;&lt;( interPixelFractionYBits-interPixelFractionXBits))));
@@ -56,7 +56,7 @@
 
 
     <constructor desc="Constructor" 
-       argList='VeloPixChannelID &amp; chan ,unsigned int ToT,
+       argList='VPChannelID &amp; chan ,unsigned int ToT,
                 std::pair&lt;unsigned int,unsigned int&gt; fracPixel, bool longPix'>
        <code>
 
@@ -79,9 +79,9 @@
      </code>
      </destructor>
 
-     <method type='LHCb::VeloPixLiteCluster &amp;' 
+     <method type='LHCb::VPLiteCluster &amp;' 
              name='operator ='
-             argList='const VeloPixLiteCluster &amp; c'  
+             argList='const VPLiteCluster &amp; c'  
              const='FALSE'  desc='equal'>
         <code>m_liteCluster = c.m_liteCluster; 
               return *this; </code>
@@ -185,11 +185,11 @@ return (unsigned int)((m_liteCluster &amp; (ulonglong)0x3800000000LL) &gt;&gt; i
       <method
       access="PUBLIC"
       name="channelID"
-      type="LHCb::VeloPixChannelID"
+      type="LHCb::VPChannelID"
       desc="The Channel"
       const="TRUE"
       >
-      <code> return VeloPixChannelID((unsigned int)((m_liteCluster &amp; 0xfffffffLL) &gt;&gt; channelIDBits)); 
+      <code> return VPChannelID((unsigned int)((m_liteCluster &amp; 0xfffffffLL) &gt;&gt; channelIDBits)); 
      </code>
      </method>
 
@@ -218,7 +218,7 @@ return (unsigned int)((m_liteCluster &amp; (ulonglong)0x3800000000LL) &gt;&gt; i
 
 <!--- Second attempt was to declare the mask fields as single attributes of type ulonglong. It solve the win32 problems    -->
 <!--- BUT the size of the class goes from 8 to 48 (8 for each ulonglong) causing runtime error in the constructor of FastClusterContainer -->
-<!--- since sizeof(ulonglong)!=sizeof(VeloPixLiteCluster) -->
+<!--- since sizeof(ulonglong)!=sizeof(VPLiteCluster) -->
 
 <!--- #    <attribute type='ulonglong' name='channelIDMask' setMeth="FALSE" getMeth="FALSE" desc='the channelID field mask' init='0xfffffffLL'/>-->
 <!--- #    <attribute type='ulonglong' name='clustToTMask' setMeth="FALSE" getMeth="FALSE" desc='the clustToTMask field mask' init='0x70000000LL'/>-->
