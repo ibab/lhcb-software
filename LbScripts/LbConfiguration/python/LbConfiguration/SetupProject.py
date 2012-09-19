@@ -436,7 +436,7 @@ class ProjectInfo:
     # @todo: use LHCB_config.py instead of scanning directories
     searchpath = []
     # Projects for which the check for the platform does not make sense.
-    no_platform_projects = ['Compat', 'LbScripts', 'LCGCMT', 'ExtraPackages', 'LHCbDirac'] + nocontainer_project_names
+    no_platform_projects = ['Compat', 'LbScripts', 'LCGCMT', 'ExtraPackages', 'LHCbDirac', 'LHCbGrid'] + nocontainer_project_names
 
     def __init__(self, project, version, realName, path):
         self.name = FixProjectCase(project)
