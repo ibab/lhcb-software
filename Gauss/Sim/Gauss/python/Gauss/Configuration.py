@@ -1,5 +1,6 @@
 """
 High level configuration tools for Gauss
+Beampipe configuration added.
 """
 __version__ = "$Id: Configuration.py,v 1.30 2010/05/09 18:14:28 gcorti Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
@@ -41,7 +42,7 @@ from Configurables import ( GenerationToSimulation, GiGaFlushAlgorithm,
                             GiGaGetEventAlg, GiGaGetHitsAlg,
                             GetTrackerHitsAlg, GetCaloHitsAlg, 
                             GetMCRichHitsAlg, GetMCRichOpticalPhotonsAlg,
-                            GetMCRichSegmentsAlg, GetMCRichTracksAlg,
+                            GetMCRichSegmentsAlg, #GetMCRichTracksAlg,
                             Rich__MC__MCPartToMCRichTrackAlg,
                             Rich__MC__MCRichHitToMCRichOpPhotAlg)
 from Configurables import ( GenMonitorAlg, MuonHitChecker, MCTruthMonitor,
@@ -82,9 +83,9 @@ class Gauss(LHCbConfigurableUser):
        ,"DatasetName"       : "Gauss"
        ,"DataType"          : ""
 # Re-ordered such that it's in detector order
-       ,"DetectorGeo"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1', 'Rich2'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
-       ,"DetectorSim"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1', 'Rich2'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
-       ,"DetectorMoni"      : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1', 'Rich2'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
+       ,"DetectorGeo"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
+       ,"DetectorSim"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
+       ,"DetectorMoni"      : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
        ,"SpilloverPaths"    : []
        ,"PhysicsList"       : {"Em":'NoCuts', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
        ,"DeltaRays"         : True
@@ -105,7 +106,10 @@ class Gauss(LHCbConfigurableUser):
        ,"EnablePack"        : True
        ,"DataPackingChecks" : True
        ,"WriteFSR"          : True
-       , "Persistency"      : None
+       ,"Persistency"      : None
+       ,"BeamPipe" : "BeamPipeOn" # _beamPipeSwitch = 1
+        #,"BeamPipe" : "BeamPipeOff"  # _beamPipeSwitch = 0
+        #,"BeamPipe" : "BeamPipeInDet"  # _beamPipeSwitch = -1
       }
     
     _propertyDocDct = { 
@@ -126,9 +130,61 @@ class Gauss(LHCbConfigurableUser):
        ,"WriteFSR"       : """Add file summary record, default True"""
        , "Persistency"   : """ROOT or POOL persistency, overwrite the default"""
        }
-    KnownHistOptions = ['NONE','DEFAULT']
-    TrackingSystem   = ['VELO','TT','IT','OT']
-    PIDSystem        = ['RICH','CALO','MUON']
+    KnownHistOptions     = ['NONE','DEFAULT']
+    TrackingSystem       = ['VELO','TT','IT','OT']
+    PIDSystem            = ['RICH','CALO','MUON']
+    _beamPipeStates = ['beampipeon', 'beampipeoff', 'beampipeindet']
+    # Keep default positive in private var
+    _beamPipeSwitch = 1
+
+
+    IncompatibleDetectors = {
+        "Velo" : [ ["Velo", "PuVeto"] , "VL", "VP" ],
+        "Rich" : [ ["Rich1", "Rich2" ], ["Rich1Pmt", "Rich2Pmt"] ],
+        "TT" : [ "TT", "UT" ],
+        "Tracking" : [ [ "IT", "OT"], ["FT"] ],
+        "Calo" : ["Spd", "Prs", "Ecal", "Hcal"],
+        "Muon" : [ "Moun", ["MuonNoM1", "Torch"] ]
+        }
+
+    _beamPipeElements = { "upstreamregion" : [
+            "/dd/Structure/LHCb/UpstreamRegion/PipeUpstream" , 
+            "/dd/Structure/LHCb/UpstreamRegion/MBXWHUp" ],
+                         "beforemagnetregion" : [
+            "/dd/Structure/LHCb/BeforeMagnetRegion/PipeJunctionBeforeVelo",
+            "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeBeforeVelo",
+            "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeSupportBeforeVelo" ],
+                         "velo" : [
+            "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamWakeFieldCone",
+            "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamWakeFieldCone",
+            "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownstreamPipeSections",
+            "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VacTank" ],
+                         "rich1" : [
+            "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1BeforeSubM",
+            "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1SubMaster",
+            "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1AfterSubM",
+            "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1BeamPipe" ],
+                         "tt" : [
+            "/dd/Structure/LHCb/BeforeMagnetRegion/TT/PipeInTT" ],
+                         "magnet" : [
+            "/dd/Structure/LHCb/MagnetRegion/PipeInMagnet",
+            "/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet" ],
+                         "AfterMagnetRegion" : [
+            "/dd/Structure/LHCb/AfterMagnetRegion/PipeAfterT",
+            "/dd/Structure/LHCb/AfterMagnetRegion/PipeSupportsAfterMagnet" ],
+                         "t" : [
+            "/dd/Structure/LHCb/AfterMagnetRegion/T/PipeInT" ],
+                         "rich2" : [
+            "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2BeamPipe" ],
+                         "downstreamregion" : [
+            "/dd/Structure/LHCb/DownstreamRegion/PipeDownstream",
+            "/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream",
+            "/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream" ],
+                         "aftermuon" : [
+            "/dd/Structure/LHCb/DownstreamRegion/AfterMuon/PipeAfterMuon",
+            "/dd/Structure/LHCb/DownstreamRegion/AfterMuon/MBXWSDown" ]
+        }
+
     
 #"""
 #Helper
@@ -190,6 +246,104 @@ class Gauss(LHCbConfigurableUser):
 ##########################################################################
 #"""
 
+
+
+# ><< ><<                                                                        
+# ><    ><<                                                ><                    
+# ><     ><<    ><<        ><<     ><<< ><< ><<  >< ><<       >< ><<      ><<    
+# ><<< ><     ><   ><<   ><<  ><<   ><<  ><  ><< ><  ><<  ><< ><  ><<   ><   ><< 
+# ><     ><< ><<<<< ><< ><<   ><<   ><<  ><  ><< ><   ><< ><< ><   ><< ><<<<< ><<
+# ><      >< ><         ><<   ><<   ><<  ><  ><< ><< ><<  ><< ><< ><<  ><        
+# ><<<< ><<    ><<<<      ><< ><<< ><<<  ><  ><< ><<      ><< ><<        ><<<<   
+#                                                ><<          ><<                
+
+    def setBeamPipeSwitch ( self, bpString ):
+        import string
+        bpLower = bpString.lower()
+        if bpLower not in self._beamPipeStates:
+            raise RuntimeError("ERROR: BeamPipe configuration '%s' not recognised!" %bpString)
+        else:
+            # default is "beampipeon" === 1
+            if bpLower in ["beampipeoff"]:
+                self._BeamPipeSwitch = 0
+            elif bpLower in ["beampipeindet"]:
+                self._beamPipeSwitch = -1
+
+    def removeBeamPipeElements( self, det ):
+        det = det.lower()
+        geo = GiGaInputStream('Geo')
+        # Remove beampipe elements in <det> - will be included automatically
+        if det in self._beamPipeElements.keys():
+            for element in self._beamPipeElements[det]:
+                # remove all instances of the element
+                while element in geo.StreamItems:
+                    geo.StreamItems.remove(element)
+
+    def removeAllBeamPipeElements( self ):
+        geo = GiGaInputStream('Geo')
+        # Remove all beampipe elements
+        for det in self._beamPipeElements.keys():
+            for element in self._beamPipeElements[det]:
+                # remove all instances of the element
+                while element in geo.StreamItems:
+                    geo.StreamItems.remove(element)
+                    
+                
+
+
+    def defineBeamPipeGeo ( self, geo, basePieces, detPieces ):
+        # Add all BeamPipe Elements in the BeamPipeElements dictionary
+        for region in self._beamPipeElements.keys():
+            for element in self._beamPipeElements[region]:
+                geo.StreamItems.append(element)
+
+
+        # Upstream
+        #geo.StreamItems.append("/dd/Structure/LHCb/UpstreamRegion/PipeUpstream")
+        #geo.StreamItems.append("/dd/Structure/LHCb/UpstreamRegion/MBXWHUp") # not clear what this is
+
+        # Before Magnet
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/PipeJunctionBeforeVelo")
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeBeforeVelo")
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeSupportBeforeVelo")
+
+        # Velo
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamWakeFieldCone")
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamWakeFieldCone")
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownstreamPipeSections")
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VacTank")
+
+        # Rich 1
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1BeforeSubM")
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1SubMaster")
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1AfterSubM")
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1BeamPipe")
+
+        # TT
+        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/TT/PipeInTT")
+        
+        # Magnet
+        #geo.StreamItems.append("/dd/Structure/LHCb/MagnetRegion/PipeInMagnet")
+        #geo.StreamItems.append("/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet")
+
+        # After Magnet Region
+        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/PipeAfterT")
+        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/PipeSupportsAfterMagnet")
+
+        # T
+        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/T/PipeInT")
+
+        # Rich 2
+        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2BeamPipe")
+
+        # Downstream Region
+        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/PipeDownstream")
+        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream")
+        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream")
+
+        # After Muon
+        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/AfterMuon/PipeAfterMuon")
+        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/AfterMuon/MBXWSDown")
 
 
 #"""
@@ -267,6 +421,10 @@ class Gauss(LHCbConfigurableUser):
         to have misalignement in the VELO.
         """
         Geo = GiGaInputStream('Geo')
+
+        # remove Automatically included detector elements
+        self.removeBeamPipeElements( "velo" )
+
 
         if "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" in Geo.StreamItems:
             Geo.StreamItems.remove("/dd/Structure/LHCb/BeforeMagnetRegion/Velo")
@@ -366,7 +524,7 @@ class Gauss(LHCbConfigurableUser):
                                                                 OutputName = "MC/Velo/HitsTest" )
             packCheckSeq.Members += [upVelo]
 
-            #if not self.getProp('DetectorSim')['VELO'].count('VeloPix')>0:
+            #if not self.getProp('DetectorSim')['VELO'].count('VP')>0:
             from Configurables import DataPacking__Check_LHCb__MCVeloHitPacker_
             cVelo = DataPacking__Check_LHCb__MCVeloHitPacker_("CheckVeloHits"+slot)
             packCheckSeq.Members += [cVelo]
@@ -384,7 +542,11 @@ class Gauss(LHCbConfigurableUser):
 #"""
 
 
+
     def defineVLGeo ( self, detPieces ):
+        # remove automatically included beampipe detector elements
+        self.removeBeamPipeElements( "velo" )
+
         detPieces['BeforeMagnetRegion'] += ['VeloLite']
 
         # Also sort out mis-alignment
@@ -405,7 +567,8 @@ class Gauss(LHCbConfigurableUser):
             'Get' + det + 'Hits' + slot,
             MCHitsLocation = 'MC/' + det  + '/Hits',
             CollectionName = det + 'SDet/Hits',
-            Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
+            #Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
+            Detectors = [ '/dd/Structure/LHCb/' + region + '/VeloLite' ]
             )
         detHits.Members += [ moni ]
         #print "WARNING: Sim not defined for VeloLite"
@@ -432,6 +595,7 @@ class Gauss(LHCbConfigurableUser):
 
 
     def defineVPGeo( self, detPieces ):
+        self.removeBeamPipeElements( "velo" )
         if detPieces.has_key('BeforeMagnetRegion'):
             detPieces['BeforeMagnetRegion'] += ['VP']
 
@@ -457,40 +621,41 @@ class Gauss(LHCbConfigurableUser):
     def configureVPMoni( self, slot, packCheckSeq, detMoniSeq, checkHits ):
         ## in case of a non default detector, need to be overwritten
         #detMoniSeq = GaudiSequencer( "DetectorsMonitor" + slot ) 
-        from Configurables import VeloPixGaussMoni
-        detMoniSeq.Members += [ VeloPixGaussMoni( "VeloPixGaussMoni" + slot ) ]
+        from Configurables import VPGaussMoni
+        detMoniSeq.Members += [ VPGaussMoni( "VPGaussMoni" + slot ) ]
 
         if self.getProp("EnablePack") and self.getProp("DataPackingChecks") :
             packCheckSeq = GaudiSequencer( "DataUnpackTest"+slot )
-            from Configurables import DataPacking__Unpack_LHCb__MCVeloPixHitPacker_
+            from Configurables import DataPacking__Unpack_LHCb__MCVPHitPacker_
             #if self.getProp('DetectorSim')['VELO'].count('VP')>0:    
             checkHits.VeloHits =  'MC/VP/Hits'
             # This is not done in the PuVeto Moni config
             #checkHits.PuVetoHits = ''             
-            upVP = DataPacking__Unpack_LHCb__MCVeloPixHitPacker_("UnpackVPHits"+slot,
+            upVP = DataPacking__Unpack_LHCb__MCVPHitPacker_("UnpackVPHits"+slot,
                                                                       OutputName = "MC/VP/HitsTest" )
             packCheckSeq.Members += [upVP]
 
-            from Configurables import DataPacking__Check_LHCb__MCVeloPixHitPacker_
+            from Configurables import DataPacking__Check_LHCb__MCVPHitPacker_
             #if self.getProp('DetectorSim')['VELO'].count('VP')>0:
-            cVP = DataPacking__Check_LHCb__MCVeloPixHitPacker_("CheckVPHits"+slot)
+            cVP = DataPacking__Check_LHCb__MCVPHitPacker_("CheckVPHits"+slot)
             packCheckSeq.Members += [cVP]
 
 
 
 #"""
-#><<<<<<<     ><<     ><<    ><<     ><<
-#><<    ><<   ><<  ><<   ><< ><<     ><<
-#><<    ><<   ><< ><<        ><<     ><<
-#>< ><<       ><< ><<        ><<<<<< ><<
-#><<  ><<     ><< ><<        ><<     ><<
-#><<    ><<   ><<  ><<   ><< ><<     ><<
-#><<      ><< ><<    ><<<<   ><<     ><<
+#  ><<<<<<<     ><<     ><<    ><<     ><<
+#  ><<    ><<   ><<  ><<   ><< ><<     ><<
+#  ><<    ><<   ><< ><<        ><<     ><<
+#  >< ><<       ><< ><<        ><<<<<< ><<
+#  ><<  ><<     ><< ><<        ><<     ><<
+#  ><<    ><<   ><<  ><<   ><< ><<     ><<
+#  ><<      ><< ><<    ><<<<   ><<     ><<
 #                                       
 #"""
 
 
     def defineRich1GeoDet( self , detPieces ):
+        self.removeBeamPipeElements( "rich1" )
         #if "Rich1" in self.getProp('DetectorGeo')['RICH']:
         detPieces['BeforeMagnetRegion']+=['Rich1']
 
@@ -500,11 +665,10 @@ class Gauss(LHCbConfigurableUser):
         geo.StreamItems += ["/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces"]
 
     def defineRich2GeoDet( self , detPieces ):
-        #if "Rich2" in self.getProp('DetectorGeo')['RICH']:
+        self.removeBeamPipeElements( "rich2" )
         detPieces['AfterMagnetRegion']+=['Rich2']
 
     def defineRich2GeoStream( self , geo ):
-        #if "Rich2" in self.getProp('DetectorGeo')['RICH']:
         geo.StreamItems += ["/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces"]
         #_________________________________
 
@@ -520,7 +684,8 @@ class Gauss(LHCbConfigurableUser):
         from Configurables import (
             GetMCCkvHitsAlg,
             GetMCCkvOpticalPhotonsAlg,
-            GetMCCkvSegmentsAlg
+            GetMCCkvSegmentsAlg,
+            GetMCRichTracksAlg
             )
 
         #for slot in SpillOverSlots:
@@ -571,17 +736,18 @@ class Gauss(LHCbConfigurableUser):
             configuredRichMoni[1] = True
 
 #"""
-#><<<<<<<     ><<     ><<    ><<     ><<    ><<<<<<<   ><<       ><< ><<< ><<<<<<
-#><<    ><<   ><<  ><<   ><< ><<     ><<    ><<    ><< >< ><<   ><<<      ><<    
-#><<    ><<   ><< ><<        ><<     ><<    ><<    ><< ><< ><< > ><<      ><<    
-#>< ><<       ><< ><<        ><<<<<< ><<    ><<<<<<<   ><<  ><<  ><<      ><<    
-#><<  ><<     ><< ><<        ><<     ><<    ><<        ><<   ><  ><<      ><<    
-#><<    ><<   ><<  ><<   ><< ><<     ><<    ><<        ><<       ><<      ><<    
-#><<      ><< ><<    ><<<<   ><<     ><<    ><<        ><<       ><<      ><<    
+#  ><<<<<<<     ><<     ><<    ><<     ><<    ><<<<<<<   ><<       ><< ><<< ><<<<<<
+#  ><<    ><<   ><<  ><<   ><< ><<     ><<    ><<    ><< >< ><<   ><<<      ><<    
+#  ><<    ><<   ><< ><<        ><<     ><<    ><<    ><< ><< ><< > ><<      ><<    
+#  >< ><<       ><< ><<        ><<<<<< ><<    ><<<<<<<   ><<  ><<  ><<      ><<    
+#  ><<  ><<     ><< ><<        ><<     ><<    ><<        ><<   ><  ><<      ><<    
+#  ><<    ><<   ><<  ><<   ><< ><<     ><<    ><<        ><<       ><<      ><<    
+#  ><<      ><< ><<    ><<<<   ><<     ><<    ><<        ><<       ><<      ><<    
 #                                                                                
 #"""
 
     def defineRich1MaPmtGeoDet( self , detPieces ):
+        self.removeBeamPipeElements( "rich1" )
         if "Rich1Pmt" in self.getProp('DetectorGeo')['RICH']:
             detPieces['BeforeMagnetRegion']+=['Rich1']
 
@@ -594,6 +760,7 @@ class Gauss(LHCbConfigurableUser):
 
 
     def defineRich2MaPmtGeoDet( self , detPieces ):
+        self.removeBeamPipeElements( "rich2" )
         if "Rich2Pmt" in self.getProp('DetectorGeo')['RICH']:
             detPieces['AfterMagnetRegion']+=['Rich2']
 
@@ -615,7 +782,8 @@ class Gauss(LHCbConfigurableUser):
         from Configurables import (
             GetMCCkvHitsAlg,
             GetMCCkvOpticalPhotonsAlg,
-            GetMCCkvSegmentsAlg
+            GetMCCkvSegmentsAlg,
+            GetMCRichTracksAlg
             )
         richHitsSeq = GaudiSequencer( "RichHits" + slot )
         detHits.Members += [ richHitsSeq ]
@@ -699,6 +867,7 @@ class Gauss(LHCbConfigurableUser):
 
 
     def defineTTGeo( self , detPieces ):
+        self.removeBeamPipeElements( "tt" )
         if 'TT' not in detPieces['BeforeMagnetRegion']:
             detPieces['BeforeMagnetRegion']+=['TT']
 
@@ -751,19 +920,76 @@ class Gauss(LHCbConfigurableUser):
         #    checkHits.TTHits = ''
 
 
+#"""
+# UT
+#"""
+
+
+    def defineUTGeo( self , detPieces ):
+        self.removeBeamPipeElements( "tt" )
+        if 'UT' not in detPieces['BeforeMagnetRegion']:
+            detPieces['BeforeMagnetRegion']+=['UT']
+
+
+    def configureUTSim( self, slot, detHits ):
+        region   = "BeforeMagnetRegion"
+        det = "UT"
+        moni = GetTrackerHitsAlg(
+            'Get' + det + 'Hits' + slot,
+            MCHitsLocation = 'MC/' + det  + '/Hits',
+            CollectionName = det + 'SDet/Hits',
+            Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
+            )
+        detHits.Members += [ moni ]
+
+
+    def configureUTMoni( self, slot, packCheckSeq, detMoniSeq, checkHits ):
+        # reinstate checkHits default value
+        checkHits.TTHits = 'MC/UT/Hits'
+
+        myZStations = [
+            2350.0*SystemOfUnits.mm,
+            2620.0*SystemOfUnits.mm
+            ]
+        myZStationXMax = 150.*SystemOfUnits.cm
+        myZStationYMax = 150.*SystemOfUnits.cm
+
+        detMoniSeq.Members += [ 
+            MCHitMonitor( 
+                "UTHitMonitor" + slot ,
+                mcPathString = "MC/UT/Hits",
+                zStations = myZStations,
+                xMax = myZStationXMax,
+                yMax = myZStationYMax
+                )
+            ]
+        if self.getProp("EnablePack") and self.getProp("DataPackingChecks") :
+                
+            packCheckSeq = GaudiSequencer( "DataUnpackTest"+slot )
+
+            from Configurables import DataPacking__Unpack_LHCb__MCUTHitPacker_
+            from Configurables import DataPacking__Check_LHCb__MCUTHitPacker_ ###
+            upUT   = DataPacking__Unpack_LHCb__MCUTHitPacker_("UnpackUTHits"+slot,
+                                                              OutputName = "MC/UT/HitsTest" )
+            cUT   = DataPacking__Check_LHCb__MCUTHitPacker_("CheckUTHits"+slot )
+            packCheckSeq.Members += [upUT, cUT]
+
+
+
 
 #"""
-#><< ><<< ><<<<<<
-#><<      ><<    
-#><<      ><<    
-#><<      ><<    
-#><<      ><<    
-#><<      ><<    
-#><<      ><<    
+#  ><<  ><<< ><<<<<<
+#  ><<       ><<    
+#  ><<       ><<    
+#  ><<       ><<    
+#  ><<       ><<    
+#  ><<       ><<    
+#  ><<       ><<    
 #                
 #"""
 
     def defineITGeo( self , detPieces ):
+        self.removeBeamPipeElements( "t" )
         region = "AfterMagnetRegion"
         if 'T' not in detPieces[region]:
             detPieces[region]+=['T']
@@ -833,18 +1059,58 @@ class Gauss(LHCbConfigurableUser):
 #   ><<            ><<    
 #                      
 #"""
+    def defineFTGeo( self , detPieces ):
+        self.removeBeamPipeElements( "t" )
+        region = "AfterMagnetRegion"
+        if 'T' not in detPieces[region]:
+            detPieces[region]+=['T']
 
-    def defineFTGeo ( self ):
-        print "WARNING: Geo not defined for FT"
-        pass
 
-    def configureFTSim ( self, slot, detHits ):
-        print "WARNING: Sim not defined for FT"
-        pass
+    def configureFTSim( self, slot, detHits ):
+        region   = "AfterMagnetRegion/T"
+        det = "FT"
+        moni = GetTrackerHitsAlg(
+            'Get' + det + 'Hits' + slot,
+            MCHitsLocation = 'MC/' + det  + '/Hits',
+            CollectionName = det + 'SDet/Hits',
+            Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
+            )
+        detHits.Members += [ moni ]
 
-    def configureFTMoni ( self, slot, packCheckSeq, detMoniSeq, checkHits ):
-        print "WARNING: Moni not defined for FT"
-        pass
+
+    def configureFTMoni( self, slot, packCheckSeq, detMoniSeq, checkHits ):
+        # reinstate checkHits default value
+        checkHits.FTHits = 'MC/FT/Hits'
+
+
+        # Upgrade
+        myZStations = [
+            7672.0*SystemOfUnits.mm,
+            8354.0*SystemOfUnits.mm,
+            9039.0*SystemOfUnits.mm
+            ]
+        myZStationXMax = 100.*SystemOfUnits.cm
+        myZStationYMax = 100.*SystemOfUnits.cm
+
+        detMoniSeq.Members += [ 
+            MCHitMonitor( 
+                "FTHitMonitor" + slot ,
+                mcPathString = "MC/FT/Hits",
+                zStations = myZStations,
+                xMax = myZStationXMax,
+                yMax = myZStationYMax
+                )
+            ]
+        if (False):
+
+            if self.getProp("EnablePack") and self.getProp("DataPackingChecks") :            
+                packCheckSeq = GaudiSequencer( "DataUnpackTest"+slot )
+                from Configurables import DataPacking__Unpack_LHCb__MCFTHitPacker_
+                upOT   = DataPacking__Unpack_LHCb__MCFTHitPacker_("UnpackFTHits"+slot,
+                                                              OutputName = "MC/FT/HitsTest" )
+                from Configurables import DataPacking__Check_LHCb__MCFTHitPacker_
+                cOT   = DataPacking__Check_LHCb__MCFTHitPacker_("CheckFTHits"+slot )
+                packCheckSeq.Members += [upFT, cFT]
 
 
 #"""
@@ -858,6 +1124,7 @@ class Gauss(LHCbConfigurableUser):
 #"""
 
     def defineOTGeo( self , detPieces ):
+        self.removeBeamPipeElements( "t" )
         region = "AfterMagnetRegion"
         if 'T' not in detPieces[region]:
             detPieces[region]+=['T']
@@ -928,9 +1195,10 @@ class Gauss(LHCbConfigurableUser):
 #"""
 
     def defineMuonGeo( self, detPieces ):
-            region = 'DownstreamRegion'
-            for det in self.getProp('DetectorGeo')['MUON']:
-                detPieces[region]+=[det]
+        #self.removeBeamPipeElements( "moun" )
+        region = 'DownstreamRegion'
+        for det in self.getProp('DetectorGeo')['MUON']:
+            detPieces[region]+=[det]
 
 
     def configureMuonSim ( self, slot, detHits ):
@@ -980,6 +1248,7 @@ class Gauss(LHCbConfigurableUser):
 #"""
 
     def defineSpdGeo( self, detPieces ):
+        self.removeBeamPipeElements("calo")
         region = 'DownstreamRegion'
         detPieces[region]+=['Spd']
         detPieces[region]+=['Converter']
@@ -1167,7 +1436,9 @@ class Gauss(LHCbConfigurableUser):
         #if "Magnet" not in self.getProp('DetectorGeo')['MAGNET']:
         if False:
             for element in detPieces['MagnetRegion']:
-                geo.StreamItems.remove([ path + element ])
+                myElement = path + element
+                if myElement in geo.StreamItems:
+                    geo.StreamItems.remove([ path + element ])
 
         # redundant check - shouldn't get here
         # test for non-empty string, nominally 'True'
@@ -1184,6 +1455,7 @@ class Gauss(LHCbConfigurableUser):
 
     def defineMagnetGeoField( self, giGaGeo ):
         # Only bother with the FIELD Geometry if simulated.
+        print "DEFINING MAGNETIC FIELD"
         if "Magnet" in self.getProp('DetectorSim')['MAGNET']:
             GiGaGeo().FieldManager           = "GiGaFieldMgr/FieldMgr"
             GiGaGeo().addTool( GiGaFieldMgr("FieldMgr"), name="FieldMgr" )
@@ -1192,7 +1464,7 @@ class Gauss(LHCbConfigurableUser):
             GiGaGeo().FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField"
             GiGaGeo().FieldMgr.addTool( GiGaMagFieldGlobal("LHCbField"), name="LHCbField" ) 
             GiGaGeo().FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc"
-
+            print "DEFINED MAGNETIC FIELD"
 
 
 
@@ -1233,19 +1505,22 @@ class Gauss(LHCbConfigurableUser):
         from Configurables import DataPacking__Unpack_LHCb__MCPuVetoHitPacker_
         upPuVe = DataPacking__Unpack_LHCb__MCPuVetoHitPacker_("UnpackPuVetoHits"+slot,
                                                               OutputName = "MC/PuVeto/HitsTest" )
-        packCheckSeq.Members += [upPuVe]
-        from Configurables import DataPacking__Check_LHCb__MCPuVetoHitPacker_
-        # Do not include if we also have the VeloPix (inconsistent?) PSZ
-        if not self.getProp('DetectorSim')['VELO'].count('VP')>0:
-            cPuVe = DataPacking__Check_LHCb__MCPuVetoHitPacker_("CheckPuVetoHits"+slot)
-            packCheckSeq.Members += [cPuVe]
+        ####### PROB
+        if self.getProp("EnablePack") and self.getProp("DataPackingChecks") :
+            packCheckSeq.Members += [upPuVe]
+
+            from Configurables import DataPacking__Check_LHCb__MCPuVetoHitPacker_
+            # Do not include if we also have the VP (inconsistent?) PSZ
+            if not self.getProp('DetectorSim')['VELO'].count('VP')>0:
+                cPuVe = DataPacking__Check_LHCb__MCPuVetoHitPacker_("CheckPuVetoHits"+slot)
+                packCheckSeq.Members += [cPuVe]
 
         # Turn off the PuVeto hits if using modified detector
         veloDetList = self.getProp('DetectorSim')['VELO']
         if ('VL' in veloDetList):
-        #if ('VeloPix' in veloDetList) or ('VL' in veloDetList):
+        #if ('VP' in veloDetList) or ('VL' in veloDetList):
             checkHits.PuVetoHits = ''
-        # Outstanding issue here is how best to deal with the (VeloPix, VL)/PuVeto
+        # Outstanding issue here is how best to deal with the (VP, VL)/PuVeto
         # inconsistancies.
         # Should only configure on demand - but sw has default values?
 
@@ -1410,8 +1685,6 @@ class Gauss(LHCbConfigurableUser):
         detlist = []
         if 'Velo'    in self.getProp('DetectorSim')['VELO'] : detlist += ['Velo']
         if 'PuVeto'  in self.getProp('DetectorSim')['VELO'] : detlist += ['PuVeto']
-        if 'VP'      in self.getProp('DetectorSim')['VELO'] : detlist += ['VP']
-        if 'VL'      in self.getProp('DetectorSim')['VELO'] : detlist += ['VL']
         if 'TT'      in self.getProp('DetectorSim')['TT']   : detlist += ['TT']
         if 'IT'      in self.getProp('DetectorSim')['IT']   : detlist += ['IT']
         if 'OT'      in self.getProp('DetectorSim')['OT']   : detlist += ['OT']
@@ -1422,6 +1695,10 @@ class Gauss(LHCbConfigurableUser):
         if 'Ecal'    in self.getProp('DetectorSim')['CALO'] : detlist += ['Ecal']
         if 'Hcal'    in self.getProp('DetectorSim')['CALO'] : detlist += ['Hcal']
         # PSZ - add upgrade detectors here
+        if 'VP'      in self.getProp('DetectorSim')['VELO'] : detlist += ['VP']
+        if 'VL'      in self.getProp('DetectorSim')['VELO'] : detlist += ['VL']
+        if 'UT'      in self.getProp('DetectorSim')['TT']   : detlist += ['UT']
+        if 'FT'      in self.getProp('DetectorSim')['OT']   : detlist += ['FT']
 
         SimConf().setProp("Detectors",detlist)
 
@@ -1431,14 +1708,14 @@ class Gauss(LHCbConfigurableUser):
 
 
 #"""
-#    ><<                                                              ><<                     ><<  
-# ><<   ><<                                  ><                       ><<        ><           ><<  
-#><<        >< ><<<   ><<     ><<<<  ><<<<      ><< ><<      ><<      ><<            ><<<<  ><>< ><
-#><<         ><<    ><<  ><< ><<    ><<     ><<  ><<  ><<  ><<  ><<   ><<       ><< ><<       ><<  
-#><<         ><<   ><<    ><<  ><<<   ><<<  ><<  ><<  ><< ><<   ><<   ><<       ><<   ><<<    ><<  
-# ><<   ><<  ><<    ><<  ><<     ><<    ><< ><<  ><<  ><<  ><<  ><<   ><<       ><<     ><<   ><<  
-#   ><<<<   ><<<      ><<    ><< ><<><< ><< ><< ><<<  ><<      ><<    ><<<<<<<< ><< ><< ><<    ><< 
-#                                                          ><<                                    
+#      ><<                                                              ><<                     ><<  
+#   ><<   ><<                                  ><                       ><<        ><           ><<  
+#  ><<        >< ><<<   ><<     ><<<<  ><<<<      ><< ><<      ><<      ><<            ><<<<  ><>< ><
+#  ><<         ><<    ><<  ><< ><<    ><<     ><<  ><<  ><<  ><<  ><<   ><<       ><< ><<       ><<  
+#  ><<         ><<   ><<    ><<  ><<<   ><<<  ><<  ><<  ><< ><<   ><<   ><<       ><<   ><<<    ><<  
+#   ><<   ><<  ><<    ><<  ><<     ><<    ><< ><<  ><<  ><<  ><<  ><<   ><<       ><<     ><<   ><<  
+#     ><<<<   ><<<      ><<    ><< ><<><< ><< ><< ><<<  ><<      ><<    ><<<<<<<< ><< ><< ><<    ><< 
+#                                                            ><<                                    
 #"""
     def defineCrossingList( self ):
         crossingList = [ '' ]
@@ -1451,13 +1728,13 @@ class Gauss(LHCbConfigurableUser):
 
 #"""
 #
-#><< ><<                                          ><<<<<<<                                                      
-#><    ><<                                        ><<    ><<                                                    
-#><     ><<    ><<        ><<     ><<< ><< ><<    ><<    ><<    ><<     >< ><<<    ><<     ><<< ><< ><<   ><<<< 
-#><<< ><     ><   ><<   ><<  ><<   ><<  ><  ><<   ><<<<<<<    ><<  ><<   ><<     ><<  ><<   ><<  ><  ><< ><<    
-#><     ><< ><<<<< ><< ><<   ><<   ><<  ><  ><<   ><<        ><<   ><<   ><<    ><<   ><<   ><<  ><  ><<   ><<< 
-#><      >< ><         ><<   ><<   ><<  ><  ><<   ><<        ><<   ><<   ><<    ><<   ><<   ><<  ><  ><<     ><<
-#><<<< ><<    ><<<<      ><< ><<< ><<<  ><  ><<   ><<          ><< ><<< ><<<      ><< ><<< ><<<  ><  ><< ><< ><<
+#  ><< ><<                                          ><<<<<<<                                                      
+#  ><    ><<                                        ><<    ><<                                                    
+#  ><     ><<    ><<        ><<     ><<< ><< ><<    ><<    ><<    ><<     >< ><<<    ><<     ><<< ><< ><<   ><<<< 
+#  ><<< ><     ><   ><<   ><<  ><<   ><<  ><  ><<   ><<<<<<<    ><<  ><<   ><<     ><<  ><<   ><<  ><  ><< ><<    
+#  ><     ><< ><<<<< ><< ><<   ><<   ><<  ><  ><<   ><<        ><<   ><<   ><<    ><<   ><<   ><<  ><  ><<   ><<< 
+#  ><      >< ><         ><<   ><<   ><<  ><  ><<   ><<        ><<   ><<   ><<    ><<   ><<   ><<  ><  ><<     ><<
+#  ><<<< ><<    ><<<<      ><< ><<< ><<<  ><  ><<   ><<          ><< ><<< ><<<      ><< ><<< ><<<  ><  ><< ><< ><<
 #"""
     #--Set the energy of the beam,
     #--the half effective crossing angle (in LHCb coordinate system),
@@ -1527,13 +1804,13 @@ class Gauss(LHCbConfigurableUser):
 
 
 #"""
-#    ><<                             ><<       ><<<<                        
-# ><<   ><<                        ><        ><    ><<                      
-#><<           ><<     ><< ><<   ><>< ><    ><<            ><<     ><< ><<  
-#><<         ><<  ><<   ><<  ><<   ><<      ><<          ><   ><<   ><<  ><<
-#><<        ><<    ><<  ><<  ><<   ><<      ><<   ><<<< ><<<<< ><<  ><<  ><<
-# ><<   ><<  ><<  ><<   ><<  ><<   ><<       ><<    ><  ><          ><<  ><<
-#   ><<<<      ><<     ><<<  ><<   ><<        ><<<<<      ><<<<    ><<<  ><<
+#      ><<                             ><<       ><<<<                        
+#   ><<   ><<                        ><        ><    ><<                      
+#  ><<           ><<     ><< ><<   ><>< ><    ><<            ><<     ><< ><<  
+#  ><<         ><<  ><<   ><<  ><<   ><<      ><<          ><   ><<   ><<  ><<
+#  ><<        ><<    ><<  ><<  ><<   ><<      ><<   ><<<< ><<<<< ><<  ><<  ><<
+#   ><<   ><<  ><<  ><<   ><<  ><<   ><<       ><<    ><  ><          ><<  ><<
+#     ><<<<      ><<     ><<<  ><<   ><<        ><<<<<      ><<<<    ><<<  ><<
 #                                                                           
 #"""
     def configureGen( self, SpillOverSlots ):
@@ -1765,13 +2042,13 @@ class Gauss(LHCbConfigurableUser):
 #GEO
 #Geo
 #
-#   ><<<<                         
-# ><    ><<                       
-#><<            ><<        ><<    
-#><<          ><   ><<   ><<  ><< 
-#><<   ><<<< ><<<<< ><< ><<    ><<
-# ><<    ><  ><          ><<  ><< 
-#  ><<<<<      ><<<<       ><<    
+#     ><<<<                         
+#   ><    ><<                       
+#  ><<            ><<        ><<    
+#  ><<          ><   ><<   ><<  ><< 
+#  ><<   ><<<< ><<<<< ><< ><<    ><<
+#   ><<    ><  ><          ><<  ><< 
+#    ><<<<<      ><<<<       ><<    
 #                                 
 #"""
 
@@ -1779,29 +2056,43 @@ class Gauss(LHCbConfigurableUser):
 
     def defineGeoBasePieces( self, basePieces ):
         #basePieces['BeforeMagnetRegion']=['Velo2Rich1']
-        basePieces['BeforeMagnetRegion']=[]
-        basePieces['MagnetRegion']=['PipeInMagnet','PipeSupportsInMagnet']
-        basePieces['AfterMagnetRegion']=['PipeAfterT','PipeSupportsAfterMagnet']
-        basePieces['DownstreamRegion']=['PipeDownstream','PipeSupportsDownstream','PipeBakeoutDownstream']
+        basePieces['UpstreamRegion']     = []
+        basePieces['BeforeMagnetRegion'] = []
+        basePieces['MagnetRegion']       = []
+        basePieces['AfterMagnetRegion']  = []
+        basePieces['DownstreamRegion']   = []
 
+        #basePieces['UpstreamRegion']=[]
+        #basePieces['BeforeMagnetRegion']=[]
+        #basePieces['MagnetRegion']=['PipeInMagnet','PipeSupportsInMagnet']
+        #basePieces['AfterMagnetRegion']=['PipeAfterT','PipeSupportsAfterMagnet']
+        #basePieces['DownstreamRegion']=['PipeDownstream','PipeSupportsDownstream','PipeBakeoutDownstream']
+
+    # This is where everything is parsed into geo items
     def defineStreamItemsGeo( self, geo, basePieces, detPieces ):
         for region in basePieces.keys():
             path = "/dd/Structure/LHCb/"+region+"/"
             if len(detPieces[region])==0 : continue
-            for element in basePieces[region]:
-                geo.StreamItems += [ path + element ]
-            for element in detPieces[region]:
-                geo.StreamItems += [ path + element ]
+            # This should preserve order
+            for element in basePieces[region] + detPieces[region]:
+                myStreamItem = path + element
+                if myStreamItem not in geo.StreamItems:
+                    geo.StreamItems += [ myStreamItem ]
+            #for element in detPieces[region]:
+            #    myStreamItem = path + element
+            #    if myStreamItem not in geo.StreamItems:
+            #        geo.StreamItems += [ myStreamItem ]
+
 
 
 #"""
-#><<<<<                    ><<       ><<<<                         
-#><<   ><<               ><        ><    ><<                       
-#><<    ><<    ><<     ><>< ><    ><<            ><<        ><<    
-#><<    ><<  ><   ><<    ><<      ><<          ><   ><<   ><<  ><< 
-#><<    ><< ><<<<< ><<   ><<      ><<   ><<<< ><<<<< ><< ><<    ><<
-#><<   ><<  ><           ><<       ><<    ><  ><          ><<  ><< 
-#><<<<<       ><<<<      ><<        ><<<<<      ><<<<       ><<    
+#  ><<<<<                    ><<       ><<<<                         
+#  ><<   ><<               ><        ><    ><<                       
+#  ><<    ><<    ><<     ><>< ><    ><<            ><<        ><<    
+#  ><<    ><<  ><   ><<    ><<      ><<          ><   ><<   ><<  ><< 
+#  ><<    ><< ><<<<< ><<   ><<      ><<   ><<<< ><<<<< ><< ><<    ><<
+#  ><<   ><<  ><           ><<       ><<    ><  ><          ><<  ><< 
+#  ><<<<<       ><<<<      ><<        ><<<<<      ><<<<       ><<    
 #
 #"""
 
@@ -1818,7 +2109,6 @@ class Gauss(LHCbConfigurableUser):
             self.definePuVetoGeo( )
         if det == "velo":
             self.defineVeloGeo( basePieces, detPieces )
-        # HERE
         elif det == "tt":
             self.defineTTGeo( detPieces )
         elif det == "it":
@@ -1847,7 +2137,7 @@ class Gauss(LHCbConfigurableUser):
         elif det == "torch":
             self.defineTorchGeo()
         elif det == "ft":
-            self.defineFTGeo()
+            self.defineFTGeo( detPieces )
         elif det == "rich1pmt":
             self.defineRich1MaPmtGeoDet( detPieces )
         elif det == "rich2pmt":
@@ -1884,11 +2174,21 @@ class Gauss(LHCbConfigurableUser):
         gaussSimulationSeq.Members += [ geo ]
 
         # Detector geometry to simulate
-        DetPieces = {'BeforeMagnetRegion':[],'AfterMagnetRegion':[],'DownstreamRegion':[],'MagnetRegion':[]}
-        BasePieces = {}
+        detPieces = {'UpstreamRegion':[], 'BeforeMagnetRegion':[],'AfterMagnetRegion':[],'DownstreamRegion':[],'MagnetRegion':[]}
+        #detPieces = {'BeforeMagnetRegion':[],'AfterMagnetRegion':[],'DownstreamRegion':[],'MagnetRegion':[]}
+        basePieces = {}
 
         # Must be first!
-        self.defineGeoBasePieces( BasePieces )
+        # This used to list all the beampipe detector elements
+        # which are not "inside" another detector.
+        # i.e. top-level detector elements
+        self.defineGeoBasePieces( basePieces )
+
+        # Define beampipe 
+        self.setBeamPipeSwitch ( self.getProp("BeamPipe") )
+        if (1 == self._beamPipeSwitch):
+            # BeamPipe on - add BP elements
+            self.defineBeamPipeGeo ( geo, basePieces, detPieces )
 
         # Use information from SIMCOND and GeometryInfo
         # Allows to be set to False by RichXPmt
@@ -1902,10 +2202,10 @@ class Gauss(LHCbConfigurableUser):
             for subDet in self.getProp('DetectorGeo')[det]:
                 # change to string to deal with magnet bool
                 subDet = "%s" %subDet
-                self.defineDetectorGeo( BasePieces, DetPieces, subDet )
+                self.defineDetectorGeo( basePieces, detPieces, subDet )
 
-        # StreamItems definition needs to be after that ^^^
-        self.defineStreamItemsGeo( geo, BasePieces, DetPieces )
+        # StreamItems definition needs to be after det definition
+        self.defineStreamItemsGeo( geo, basePieces, detPieces )
 
         # Define detector streams for RICHes
         for det in self.getProp('DetectorGeo').keys():
@@ -1914,21 +2214,40 @@ class Gauss(LHCbConfigurableUser):
                 subDet = "%s" %subDet
                 self.defineDetectorGeoStream( geo, giGaGeo, subDet )
 
-        """
-        # Also sort out mis-alignment
-        if self.getProp("DataType") != "Upgrade" :
-            VeloP = self.checkVeloDDDB()
-            # No need to check, this is the case if this is called.
-            # No need to misalign if only PuVeto exits - check me PSZ.
-            if "Velo" in self.getProp('DetectorGeo')['VELO']:
-                self.veloMisAlignGeometry(VeloP) # To misalign VELO
-        """
-
         # Seperate Calo opts
         if len(self.getProp('DetectorGeo')['CALO'])>0:
             importOptions("$GAUSSCALOROOT/options/Calo.opts")
 
+        print "\nDEBUG Detector Geometry Elements:"
+        print "\nkey : detPieces[key]"
+        for key in detPieces.keys():
+            print "%s : %s" %(key, detPieces[key])
+        print "\nkey : detPieces[key]"
+        
+        for key in sorted(detPieces.keys()):
+            print "%s : %s" %(key, detPieces[key])
 
+        print "\nkey : basePieces[key]"
+        for key in basePieces.keys():
+            print "%s : %s" %(key, basePieces[key])
+
+        print "\nkey : Sorted basePieces[key]"
+        for key in sorted(basePieces.keys()):
+            print "%s : %s" %(key, basePieces[key])
+
+        print "\ngeo StreamItems:"
+        for item in geo.StreamItems:
+            print "%s" %(item)
+
+        print "\ngeo StreamItems SORTED:"
+        mySortedGeoStream = geo.StreamItems[:]
+        mySortedGeoStream.sort()
+        for item in mySortedGeoStream:
+            print "%s" %(item)
+
+        # No BP requested - therefore remove all elements from Geo.StreamItems
+        if (0 == self._beamPipeSwitch):
+            self.removeAllBeamPipeElements()
 
 
 #"""
@@ -2070,13 +2389,13 @@ class Gauss(LHCbConfigurableUser):
 
 
 #"""
-#><<       ><<                         
-#>< ><<   ><<<                       ><
-#><< ><< > ><<    ><<     ><< ><<      
-#><<  ><<  ><<  ><<  ><<   ><<  ><< ><<
-#><<   ><  ><< ><<    ><<  ><<  ><< ><<
-#><<       ><<  ><<  ><<   ><<  ><< ><<
-#><<       ><<    ><<     ><<<  ><< ><<
+#  ><<       ><<                         
+#  >< ><<   ><<<                       ><
+#  ><< ><< > ><<    ><<     ><< ><<      
+#  ><<  ><<  ><<  ><<  ><<   ><<  ><< ><<
+#  ><<   ><  ><< ><<    ><<  ><<  ><< ><<
+#  ><<       ><<  ><<  ><<   ><<  ><< ><<
+#  ><<       ><<    ><<     ><<<  ><< ><<
 #                                      
 #
 #"""
@@ -2247,7 +2566,7 @@ class Gauss(LHCbConfigurableUser):
             # GiGaGetHitsAlg when a given detector is not monitored
             #self.configureTTMoni( checkHits )
 
-            # OverWrite some things if using VeloPix
+            # OverWrite some things if using VP
             #self.configureVPMoni( checkHits )
 
                   
