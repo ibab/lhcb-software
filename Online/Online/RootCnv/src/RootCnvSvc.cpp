@@ -59,7 +59,7 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("EnableIncident",   m_incidentEnabled     = true);
   declareProperty("RecordsName",      m_recordName          = "/FileRecords");
 
-  declareProperty("BasketSize",       m_setup->basketSize   = 40*MBYTE);
+  declareProperty("BasketSize",       m_setup->basketSize   = 2*MBYTE);
   declareProperty("CacheSize",        m_setup->cacheSize    = 10*MBYTE);
   declareProperty("AutoFlush",        m_setup->autoFlush    = 100);
   declareProperty("LearnEntries",     m_setup->learnEntries = 10);
@@ -68,7 +68,7 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("VetoBranches",     m_setup->vetoBranches);
   declareProperty("GlobalCompression",m_compression); // empty: do nothing
 
-  declareProperty("BufferSize",	      m_setup->bufferSize   = 32*1024);
+  declareProperty("BufferSize",	      m_setup->bufferSize   = 2*1024);
   declareProperty("SplitLevel",       m_setup->splitLevel   = 0);
 }
 
