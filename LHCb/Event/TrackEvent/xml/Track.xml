@@ -25,8 +25,8 @@
       <location name="Downstream" place="Rec/Track/Downstream"/>
       <location name="Tsa"        place="Rec/Track/Tsa"/>
       <location name="Muon"       place="Rec/Track/Muon"/>
-      <location name="VeloPix"    place="Rec/Track/VeloPix"/>
-      <location name="VeloPixTT"     place="Rec/Track/VeloPixTT"/>
+      <location name="VP"    place="Rec/Track/VP"/>
+      <location name="VPTT"     place="Rec/Track/VPTT"/>
 
       <location name="CaloCosmicsForward"       place="Calo/Track/Forward"/>
       <location name="CaloCosmicsBackward"      place="Calo/Track/Backward"/>
@@ -73,10 +73,10 @@
         <enumval name = "PatMatch"       value="16" desc="track produced with the PatMatch pattern recognition"/>
         <enumval name = "PatDownstream"  value="17" desc="track produced with the PatDownstream pattern recognition"/>
         <enumval name = "TTGeneric"      value="18" desc="track produced with the TTGenericTracking algorithm"/>
-	<enumval name = "PatVeloPixCheated" value="19" desc="track produced with the CheatedVeloPixPat algorithm"/>
+	<enumval name = "PatVPCheated" value="19" desc="track produced with the CheatedVPPat algorithm"/>
 	<enumval name = "HLTImportedTrack" value="20" desc="track imported from HLT to offline"/>
         <enumval name = "PatFastVelo"    value="21" desc="track produced by FastVelo algorithm"/>
-        <enumval name = "PatVeloPix"    value="22" desc="track produced by VeloPix algorithm"/>
+        <enumval name = "PatVP"    value="22" desc="track produced by VP algorithm"/>
       </enum>
 
       <enum
