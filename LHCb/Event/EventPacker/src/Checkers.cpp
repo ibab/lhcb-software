@@ -56,8 +56,8 @@ template class DataPacking::Check<LHCb::MCPuVetoHitPacker>;
 typedef DataPacking::Check<LHCb::MCPuVetoHitPacker> G;
 DECLARE_ALGORITHM_FACTORY( G )
 
-template class DataPacking::Check<LHCb::MCVeloPixHitPacker>;
-typedef DataPacking::Check<LHCb::MCVeloPixHitPacker> Fp;
+template class DataPacking::Check<LHCb::MCVPHitPacker>;
+typedef DataPacking::Check<LHCb::MCVPHitPacker> Fp;
 DECLARE_ALGORITHM_FACTORY( Fp )
 
 template class DataPacking::Check<LHCb::MCVLHitPacker>;

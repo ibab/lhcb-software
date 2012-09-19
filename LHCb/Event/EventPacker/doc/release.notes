@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-09-19 - Paul Szczypka
+ - Rename of VeloPix to VP
+
 !========================= EventPacker v2r18 2012-07-24 =========================
 ! 2012-07-09 - Marco Cattaneo
  - Use new TES getIfExists function instead of separate exist and get calls
