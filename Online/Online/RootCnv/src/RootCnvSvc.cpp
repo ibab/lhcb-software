@@ -45,7 +45,7 @@ namespace {
   static map<CLID, TClass*>   s_classesClids;
 }
 #define MBYTE 1024*1024
-
+#define kBYTE 1024
 // Standard constructor
 RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
 : ConversionSvc( nam, svc, ROOT_StorageType),
@@ -68,7 +68,7 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("VetoBranches",     m_setup->vetoBranches);
   declareProperty("GlobalCompression",m_compression); // empty: do nothing
 
-  declareProperty("BufferSize",	      m_setup->bufferSize   = 2*1024);
+  declareProperty("BufferSize",	      m_setup->bufferSize   = 2*kBYTE);
   declareProperty("SplitLevel",       m_setup->splitLevel   = 0);
 }
 
