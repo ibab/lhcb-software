@@ -1,29 +1,29 @@
-#ifndef VELOPIXGAUSSMONI_H 
-#define VELOPIXGAUSSMONI_H 1
+#ifndef VPGAUSSMONI_H 
+#define VPGAUSSMONI_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "Event/MCHit.h"
 
-/** @class VeloPixGaussMoni VeloPixGaussMoni.h
+/** @class VPGaussMoni VPGaussMoni.h
  *  
  *
  *  @author Victor Coco based on VeloGaussMoni
  *  @date   2009-06-05
  */
 
-class DeVeloPix;
-class DeVeloPixXType;
-class DeVeloPixYType;
-class DeVeloPixSquareType;
+class DeVP;
+class DeVPXType;
+class DeVPYType;
+class DeVPSquareType;
 
-class VeloPixGaussMoni : public GaudiTupleAlg {
+class VPGaussMoni : public GaudiTupleAlg {
 public: 
   /// Standard constructor
-  VeloPixGaussMoni( const std::string& name, ISvcLocator* pSvcLocator );
+  VPGaussMoni( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~VeloPixGaussMoni( ); ///< Destructor
+  virtual ~VPGaussMoni( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -33,14 +33,14 @@ protected:
 
   StatusCode checkTests();
   StatusCode getData();
-  StatusCode velopixMCHitMonitor();
+  StatusCode vpMCHitMonitor();
   StatusCode basicMonitor();
 
 private:
 
-  std::string m_velopixDetLocation;
-  DeVeloPix* m_velopixDet;
-  LHCb::MCHits* m_velopixMCHits;
+  std::string m_vpDetLocation;
+  DeVP* m_vpDet;
+  LHCb::MCHits* m_vpMCHits;
   int m_print;
   bool m_printInfo;
   bool m_detailedMonitor;
@@ -49,6 +49,6 @@ private:
   double m_nMCH2;
   int m_nEvent;
   /// Location of Velo MCHits 
-  std::string m_velopixMCHitsLocation ;
+  std::string m_vpMCHitsLocation ;
 };
-#endif // VELOPIXGAUSSMONI_H
+#endif // VPGAUSSMONI_H

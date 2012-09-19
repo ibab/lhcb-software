@@ -7,29 +7,29 @@
 #include "Event/MCParticle.h"
 
 // velo
-#include "VeloPixDet/DeVeloPix.h"
+#include "VPDet/DeVP.h"
 
 // local
-#include "VeloPixGaussMoni.h"
+#include "VPGaussMoni.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VeloPixGaussMoni
+// Implementation file for class : VPGaussMoni
 //
 // 2009-06-05 : Victor Coco, based on VeloGaussMoni
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloPixGaussMoni );
+DECLARE_ALGORITHM_FACTORY( VPGaussMoni );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloPixGaussMoni::VeloPixGaussMoni( const std::string& name,
+VPGaussMoni::VPGaussMoni( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
-    m_velopixDetLocation ( DeVeloPixLocation::Default ),
-    m_velopixMCHits ( ),
+    m_vpDetLocation ( DeVPLocation::Default ),
+    m_vpMCHits ( ),
     m_print ( 0 ),
     m_printInfo (false),
     m_detailedMonitor ( true ),
@@ -42,25 +42,25 @@ VeloPixGaussMoni::VeloPixGaussMoni( const std::string& name,
   declareProperty("PrintInfo", m_printInfo);
   declareProperty("TestMCHit", m_testMCHit);
   declareProperty("DetailedMonitor", m_detailedMonitor);
-  declareProperty("VeloPixDetLocation", m_velopixDetLocation);
-  declareProperty("VeloPixMCHits" ,
-                  m_velopixMCHitsLocation = LHCb::MCHitLocation::VP /* "MC/VP/Hits" */ ) ;
+  declareProperty("VPDetLocation", m_vpDetLocation);
+  declareProperty("VPMCHits" ,
+                  m_vpMCHitsLocation = LHCb::MCHitLocation::VP /* "MC/VP/Hits" */ ) ;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixGaussMoni::~VeloPixGaussMoni() {}; 
+VPGaussMoni::~VPGaussMoni() {}; 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode VeloPixGaussMoni::initialize() {
+StatusCode VPGaussMoni::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
   //
-  m_velopixDet=( getDet<DeVeloPix>(m_velopixDetLocation ) );
+  m_vpDet=( getDet<DeVP>(m_vpDetLocation ) );
   setHistoTopDir("VP/");
   //
   return StatusCode::SUCCESS;
@@ -69,13 +69,13 @@ StatusCode VeloPixGaussMoni::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode VeloPixGaussMoni::execute() {
+StatusCode VPGaussMoni::execute() {
 
   debug() << "==> Execute" << endmsg;
   //
   m_nEvent++;
   getData();
-  if(m_testMCHit) velopixMCHitMonitor();
+  if(m_testMCHit) vpMCHitMonitor();
   if(!m_detailedMonitor) basicMonitor();
   checkTests();
   //
@@ -85,7 +85,7 @@ StatusCode VeloPixGaussMoni::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode VeloPixGaussMoni::finalize() {
+StatusCode VPGaussMoni::finalize() {
 
   debug() << "==> Finalize" << endmsg;  
   m_nMCH/=m_nEvent;
@@ -94,7 +94,7 @@ StatusCode VeloPixGaussMoni::finalize() {
 
   //
   info()<< "------------------------------------------------------" <<endmsg;
-  info()<< "                - VeloPixGaussMoni table -                 " <<endmsg;
+  info()<< "                - VPGaussMoni table -                 " <<endmsg;
   info()<< "------------------------------------------------------" <<endmsg;
   if(m_nMCH>0){
     info()<< "| Number of MCHits/Event:       " << m_nMCH << "+/-"
@@ -107,45 +107,45 @@ StatusCode VeloPixGaussMoni::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 //
-StatusCode VeloPixGaussMoni::getData()
+StatusCode VPGaussMoni::getData()
 {
-  debug()<< " ==> VeloPixGaussMoni::getData" <<endmsg;
+  debug()<< " ==> VPGaussMoni::getData" <<endmsg;
 
-  if(!exist<LHCb::MCHits>( m_velopixMCHitsLocation )){
-    error()<< "There is no MCHits at "<<m_velopixMCHitsLocation<<" in TES!" <<endmsg;
+  if(!exist<LHCb::MCHits>( m_vpMCHitsLocation )){
+    error()<< "There is no MCHits at "<<m_vpMCHitsLocation<<" in TES!" <<endmsg;
     m_testMCHit=false;
   }else{
-    m_velopixMCHits=get<LHCb::MCHits>( m_velopixMCHitsLocation );
+    m_vpMCHits=get<LHCb::MCHits>( m_vpMCHitsLocation );
   }
-  // printf("VeloPixGaussMoni::getData(): %d MC hits\n", m_velopixMCHits->size() );
+  // printf("VPGaussMoni::getData(): %d MC hits\n", m_vpMCHits->size() );
   //  
   if(m_printInfo){
     info()<< "----------------------------------------------------" <<endmsg;
     if(m_testMCHit)
-      info()<< " ==> Number of MCHits found in VeloPix Detector: "
-            << m_velopixMCHits->size() <<endmsg;
+      info()<< " ==> Number of MCHits found in VP Detector: "
+            << m_vpMCHits->size() <<endmsg;
     info()<< "---------------------------------------------------" <<endmsg;
   }
   //
   return StatusCode::SUCCESS;
 }
 //
-StatusCode VeloPixGaussMoni::velopixMCHitMonitor()
+StatusCode VPGaussMoni::vpMCHitMonitor()
 {
-  debug()<< " ==> VeloPixGaussMoni::VeloMCHitMonitor " <<endmsg;
+  debug()<< " ==> VPGaussMoni::VeloMCHitMonitor " <<endmsg;
   //
-  double size=m_velopixMCHits->size();
+  double size=m_vpMCHits->size();
   m_nMCH+=size;
   m_nMCH2+=size*size;
   //
   plot(size, "nMCHits", 
-       "Number of hits in VeloPix per event",
+       "Number of hits in VP per event",
        0., 3000., 100);
   //
   LHCb::MCHits::iterator It;
 
   // loop over all MCHits stored into the container
-  for(It=m_velopixMCHits->begin(); It!=m_velopixMCHits->end(); It++){
+  for(It=m_vpMCHits->begin(); It!=m_vpMCHits->end(); It++){
     if(m_printInfo){
       info()<< " ==> Test MCHit: \n"
             << " sensor: " << ((*It)->sensDetID())
@@ -185,7 +185,7 @@ StatusCode VeloPixGaussMoni::velopixMCHitMonitor()
            "Time Of Flight [ns]", 
            0., 50., 100);
       //
-      const DeVeloPixSensor* sensor=m_velopixDet->sensor((*It)->sensDetID());
+      const DeVPSensor* sensor=m_vpDet->sensor((*It)->sensDetID());
       double x=(*It)->entry().x()/Gaudi::Units::cm;
       double y=(*It)->entry().y()/Gaudi::Units::cm;
       double z=(*It)->entry().z()/Gaudi::Units::cm;
@@ -267,19 +267,19 @@ StatusCode VeloPixGaussMoni::velopixMCHitMonitor()
   return StatusCode::SUCCESS;
 }
 //
-StatusCode VeloPixGaussMoni::basicMonitor()
+StatusCode VPGaussMoni::basicMonitor()
 {
-  debug()<< " ==> VeloPixGaussMoni::basicMonitor " <<endmsg;
+  debug()<< " ==> VPGaussMoni::basicMonitor " <<endmsg;
   
   double size=0.;
   if(m_testMCHit){
-    if(0==m_velopixMCHits){
+    if(0==m_vpMCHits){
       error()<< " -- No MCHit container retrieved! -- " <<endmsg;
       return StatusCode::FAILURE;
     }else{
       debug()<< " -- Retrieved MCHit container --" <<endmsg;
     }
-    size=m_velopixMCHits->size();    
+    size=m_vpMCHits->size();    
     m_nMCH+=size;
     m_nMCH2+=size*size;
     plot(size, "nMCHits", "Number of MCHits per event" , 0., 3000., 100);
@@ -289,10 +289,10 @@ StatusCode VeloPixGaussMoni::basicMonitor()
   return StatusCode::SUCCESS;
 }
 //
-StatusCode VeloPixGaussMoni::checkTests()
+StatusCode VPGaussMoni::checkTests()
 {
   if(!(m_testMCHit)){
-    error()<< " ==> VeloPixGaussMoni asked to monitor nothing! " <<endmsg;
+    error()<< " ==> VPGaussMoni asked to monitor nothing! " <<endmsg;
     return StatusCode::FAILURE;
   }
   //

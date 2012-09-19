@@ -6,6 +6,10 @@
 !               present detector simulation
 !-----------------------------------------------------------------------------
 
+! 2012-09-13 - Paul Szczypka
+ - Rename EVERYTHING from VeloPix to VP or corresponding string.
+ - Moved *VeloPix* files to *VP*
+
 ! 2012-08-28 - Paul Szczypka / Pawel Jalocha
  - change from VeloPix to VP in container names
 

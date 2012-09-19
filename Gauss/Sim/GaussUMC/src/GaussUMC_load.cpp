@@ -12,7 +12,7 @@
 
 DECLARE_FACTORY_ENTRIES(GaussUMC) {
 
-  DECLARE_ALGORITHM( VeloPixelGaussMoni );
+  DECLARE_ALGORITHM( VPelGaussMoni );
 
 }
 
