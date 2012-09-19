@@ -114,7 +114,7 @@ namespace LHCb
                    DstData,         // 60
                    DstAddress,      // 61
                    FileID,          // 62
-                   VeloPix,         // 63   
+                   VP,         // 63   
                    FTCluster,       // 64
                    VL,              // 65 
                    // Add new types here. Don't forget to update also RawBank.cpp
