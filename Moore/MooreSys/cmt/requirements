@@ -1,17 +1,14 @@
 package MooreSys
-version v14r7p2
+version v14r8
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v14r7p2     Hlt
+use  Moore               v14r8       Hlt
 use  IndependenceTests   v1r3        Hlt
 
-# fixes for pA pilot
-use  HltSettings         v5r52       Hlt
-use  Hlt1Lines           v6r28       Hlt
 
 # Bug fixes on top of LHCb v34r3 release stack
 use  RichDet             v16r11      Det

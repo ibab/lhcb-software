@@ -3,6 +3,8 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v14r8>2012-09-19 Moore v14r8</A></H1><PRE>
+Uses Hlt v15r5 (V0 LT cut as in june, no DOCA cuts)
 
 </PRE><H1><A NAME=v14r7p2>2012-09-11 Moore v14r7p2</A></H1><PRE>
 Low mult lines back in, no tracking activity for pA pilot run
