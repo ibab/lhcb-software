@@ -76,7 +76,7 @@ class Hadrons_September2012 :
         from Phi_draft2012 import Phi_draft2012 as PhiLines
         d.update ( PhiLines().Thresholds() )
 
-        from CharmHadronLines_June2012 import CharmHadronLines
+        from CharmHadronLines_September2012 import CharmHadronLines
         d.update ( CharmHadronLines().Thresholds() )
 
         return d
