@@ -5,6 +5,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r53 2012-09-19 =========================
 ! 2012-09-19 - Eric van Herwijnen
  - Remove TopoLines_September2012.py; revert Hadrons_September2012.py to the one
    from HltSettings v5r43. (revert to V0 lt cut, remove doca cuts).
