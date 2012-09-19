@@ -72,7 +72,7 @@ private
 #tag ONLINE_OVERRULE_MOORE_SETUP
 macro Create_RunMooreOnline_output  "../job/runMooreOnline_EFF.sh"
 macro Create_RunMooreOnline_command "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output) $(version) " \
-        ONLINE_OVERRULE_MOORE_SETUP "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output) $(version) Online v4r65" 
+        ONLINE_OVERRULE_MOORE_SETUP "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output) $(version) Online v4r67" 
 apply_pattern CallCommand  target=Create_RunMooreOnline
 
 # copy the TCK manifest for the _current_ release to the install area...

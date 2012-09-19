@@ -3,6 +3,9 @@ Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
 
+! 2012-09-19 - Eric van Herwijnen
+ - Use Online v4r67
+
 !========================= Moore v14r7p2 2012-09-12 =========================
 !========================= Moore v14r7p1 2012-09-12 =========================
 !========================= Moore v14r7 2012-08-30 =========================
