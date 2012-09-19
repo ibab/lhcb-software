@@ -153,6 +153,7 @@ def defaultHLTD0Selection():
                                     Code = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2) < 9.)" \
                                     " & (MINTREE('K+'==ABSID, PIDK) > 0)" \
                                     " & (MINTREE('pi+'==ABSID, PIDK) < 0)" )
+    
     # tighten the mass window for candidates used in alignment.
     AlignD02KPi = FilterDesktop("AlignD02KPi",
                                 Inputs = ["Phys/AlignD02KPiWide"], 
@@ -264,9 +265,8 @@ def defaultHLTDstarSelection():
     # kaon and pion.
     AlignD02KPiWide = FilterDesktop("AlignD02KPiWide",
                                     Inputs = ["Phys/StdLooseD02KPi"], 
-                                    Code = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2) < 9.)" ) #\
-                                                                                               #                                    " & (MINTREE('K+'==ABSID, PIDK) > 0)" \
-                                                                                               #                                    " & (MINTREE('pi+'==ABSID, PIDK) < 0)" )
+                                    Code = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2) < 9.)" )
+    
     # tighten the mass window for candidates used in alignment.
     AlignD02KPi = FilterDesktop("AlignD02KPi",
                                 Inputs = ["Phys/AlignD02KPiWide"], 
@@ -306,7 +306,7 @@ def defaultHLTJPsiSelection():
 
     # this still needs to be worked out
     from Configurables import Escher
-    Escher().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","MUON" ]
+    Escher().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","RICH","CALO","MUON","PROTO" ]
     Escher().MoniSequence = ["Tr","OT"]
 
     # if the Escher hlt filter is not set, set it here
@@ -340,11 +340,12 @@ def defaultHLTJPsiSelection():
     from Configurables import CombineParticles, FilterDesktop
     from CommonParticles.StdAllLooseMuons import StdAllLooseMuons
     from CommonParticles.StdLooseJpsi2MuMu import StdLooseJpsi2MuMu
+    StdLooseJpsi2MuMu.DaughtersCuts = { "mu-": "(PIDmu-PIDK>5.0) & (PIDmu-PIDe>8.0)" }
     
     ## tighten the mass window for candidates used in alignment
     AlignJpsi2MuMu = FilterDesktop("AlignJpsi2MuMu",
                                    Inputs = ["Phys/StdLooseJpsi2MuMu"],
-                                   Code = "(ADMASS('J/psi(1S)') < 35.*MeV) & (VFASPF(VCHI2) < 9.)")
+                                   Code = "(ADMASS('J/psi(1S)') < 35.*MeV) & (VFASPF(VCHI2) < 7.)") # Tight requirements on vchi2 - test 18/5/2012
     
     from Configurables import ChargedProtoParticleMaker, ChargedProtoParticleAddMuonInfo, ChargedProtoCombineDLLsAlg
     from Configurables import TrackParticleMonitor
@@ -368,4 +369,3 @@ def defaultHLTJPsiSelection():
                              Location = '/Event/Phys/AlignJpsi2MuMu/Particles',
                              Algorithm = recoJpsiSeq )
     return sel
-

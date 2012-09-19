@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2012-09-19 - Maurizio Martinelli
+ - modified J/psi selection adding PID
+ - defined a standard scenario for 2012 data alignment
+
 ! 2012-05-02 - Maurizio Martinelli
  - SurveyConstraints selects database uploaded by Fred
  - added a D*+->D0(K-pi+) pi+ particle selection
