@@ -5,6 +5,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-09-19 - Eric van Herwijnen
+ - L0 45 in Physics_September2012
+
 !========================= HltSettings v5r54 2012-09-19 =========================
 ! 2012-09-19 - V. Gligorov
  - Use CharmhadronLines_Spetember2012.py in Hadrons_September2012.py
