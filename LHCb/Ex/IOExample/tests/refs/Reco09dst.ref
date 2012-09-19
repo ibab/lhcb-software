@@ -1,6 +1,6 @@
-# --> Including file '/afs/cern.ch/user/c/cattanem/cmtuser/Boole_HEAD/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
 # ROOT output file requested. Forcing reading of POOL input files with RootCnv
-# <-- End of file '/afs/cern.ch/user/c/cattanem/cmtuser/Boole_HEAD/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
 # |-DataType    = '2011'
@@ -49,7 +49,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
-                                          running on lxplus421.cern.ch on Thu Aug 30 08:43:37 2012
+                                          running on lxbuild163.cern.ch on Wed Sep 19 15:16:06 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
@@ -68,7 +68,7 @@ TESFingerPrint      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 TESFingerPrint      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 TESFingerPrint      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 TESFingerPrint      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 TESFingerPrint      DEBUG Property ['Name': Value] =  'RootOnTES':
 TESFingerPrint      DEBUG Property ['Name': Value] =  'RootInTES':
 TESFingerPrint      DEBUG Property ['Name': Value] =  'Context':
@@ -109,7 +109,7 @@ DumpTracks          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 DumpTracks          DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 DumpTracks          DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 DumpTracks          DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-DumpTracks          DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+DumpTracks          DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 DumpTracks          DEBUG Property ['Name': Value] =  'RootOnTES':
 DumpTracks          DEBUG Property ['Name': Value] =  'RootInTES':
 DumpTracks          DEBUG Property ['Name': Value] =  'Context':
@@ -145,7 +145,7 @@ TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x12dc4b70@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x223c85c0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -537,10 +537,10 @@ DumpTracks          DEBUG *** Track ***
    2.05776e-09 9.10265e-10 1.32151e-12-3.73482e-13 2.95728e-14 ]
 
 
-IODataManager        INFO Referring to dataset ROOT-Reco09.dst by its file ID:BC574012-6EF2-E111-841B-003048F0E192
+IODataManager        INFO Referring to dataset ROOT-Reco09.dst by its file ID:30F8E32E-5C02-E211-99BC-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x12cc31f0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x22b0dab0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -925,7 +925,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x191448d0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x2a4dd920@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -1351,7 +1351,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1bc887e0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x2aadd040@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -1741,7 +1741,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1a486570@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x2a81d0a0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -2164,6 +2164,6 @@ EventLoopMgr         INFO Histograms converted successfully according to request
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 5/5/41(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
 RootCnvSvc           INFO Disconnected data IO:0EBD6778-BA80-E011-83CC-0025901D492E [root://castorlhcb.cern.ch//castor/cern.ch/grid//lhcb/LHCb/Collision11/DIMUON.DST/00010348/0000/00010348_00000579_1.dimuon.dst?svcClass=lhcbdisk]
-RootCnvSvc           INFO Disconnected data IO:BC574012-6EF2-E111-841B-003048F0E192 [ROOT-Reco09.dst]
+RootCnvSvc           INFO Disconnected data IO:30F8E32E-5C02-E211-99BC-003048C9CD62 [ROOT-Reco09.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

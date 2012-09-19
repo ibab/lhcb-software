@@ -1,6 +1,6 @@
-# --> Including file '/afs/cern.ch/user/c/cattanem/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/CopyPOOLtoROOTdigi.py'
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyPOOLtoROOTdigi.py'
 # ROOT output file requested. Forcing reading of POOL input files with RootCnv
-# <-- End of file '/afs/cern.ch/user/c/cattanem/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/CopyPOOLtoROOTdigi.py'
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyPOOLtoROOTdigi.py'
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
 # |-DataType    = '2011'
@@ -15,8 +15,8 @@
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r1)
-                                          running on lxbuild163.cern.ch on Thu Mar 22 11:13:53 2012
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
+                                          running on lxbuild163.cern.ch on Wed Sep 19 15:13:05 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
@@ -35,7 +35,7 @@ TESFingerPrint      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 TESFingerPrint      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 TESFingerPrint      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 TESFingerPrint      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 TESFingerPrint      DEBUG Property ['Name': Value] =  'RootOnTES':
 TESFingerPrint      DEBUG Property ['Name': Value] =  'RootInTES':
 TESFingerPrint      DEBUG Property ['Name': Value] =  'Context':
@@ -72,7 +72,7 @@ ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x15ed99d0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1cf30ef0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -127,9 +127,10 @@ evtTime :	212000
 DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
 DumpMCEventAlg       INFO There are 1208 Vertices:
 DumpMCEventAlg       INFO There are 1195 Particles:
+IODataManager        INFO Referring to dataset ROOT.digi by its file ID:C6DD80C6-5B02-E211-BED6-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x17086350@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1da3bbe0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -186,7 +187,7 @@ DumpMCEventAlg       INFO There are 1992 Vertices:
 DumpMCEventAlg       INFO There are 2042 Particles:
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x16e1e030@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1d7d3750@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -243,7 +244,7 @@ DumpMCEventAlg       INFO There are 1092 Vertices:
 DumpMCEventAlg       INFO There are 1190 Particles:
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x169dbee0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1d5d1df0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -300,7 +301,7 @@ DumpMCEventAlg       INFO There are 718 Vertices:
 DumpMCEventAlg       INFO There are 764 Particles:
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x16e1dec0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1da6f370@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -372,7 +373,7 @@ FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 10/0/15(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
-RootCnvSvc           INFO Disconnected data IO:0AB7B7ED-4773-E111-9DAB-003048C9CD62 [ROOT.digi]
+RootCnvSvc           INFO Disconnected data IO:C6DD80C6-5B02-E211-BED6-003048C9CD62 [ROOT.digi]
 RootCnvSvc           INFO Disconnected data IO:D499FBE3-4762-DE11-B281-00304879EE40 [castor:/castor/cern.ch/user/c/cattanem/Boole/v19r2/30000000-100ev-20090407-MC09.digi]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

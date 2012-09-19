@@ -4,6 +4,9 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2012-09-19 - Marco Cattaneo
+ - Fix references to follow change in options printout format in Gaudi v23r4 
+
 ! 2012-08-30 - Marco Cattaneo
  - Follow fix to Track copy method, r144539
 
