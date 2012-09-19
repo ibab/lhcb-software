@@ -1,16 +1,16 @@
-#ifndef _VeloPixDataFunctor_H_
-#define _VeloPixDataFunctor_H_
+#ifndef _VPDataFunctor_H_
+#define _VPDataFunctor_H_
 #include <functional>
 #include <numeric>
-#include "Kernel/VeloPixChannelID.h"
+#include "Kernel/VPChannelID.h"
 
-// This File contains the declaration of VeloPixDataFunctor namespace
+// This File contains the declaration of VPDataFunctor namespace
 // C++ code for 'LHCb Tracking package(s)'
 //
 //   Author: M. Kucharczyk
 //   Created: 12.10.2009
 
-namespace VeloPixDataFunctor {
+namespace VPDataFunctor {
 
 
 // Functors
@@ -85,4 +85,4 @@ template <class TYPE>
 };
 };
 
-#endif // _VeloPixDataFunctor_H
+#endif // _VPDataFunctor_H

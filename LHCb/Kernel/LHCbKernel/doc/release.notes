@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2012-09-13 - Paul Szczypka
+ - Renamed EVERYTHING from VeloPix to VP or corresponding string.
+ - Moved *VeloPix* files to *VP*
+
 ! 2012-09-04 - Marco Clemencic
  - Fixed the package name in ITNames.xml and TTNames.xml.
 

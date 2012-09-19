@@ -3,7 +3,7 @@
 
 <gdd>
   <package name='LHCbKernel'>
-    <class name = 'VeloPixChannelID' 
+    <class name = 'VPChannelID' 
       author    = 'Victor Coco' 
       desc      = 'This class describes a single channel of LHCb VELO PIX subdetector'
       virtual   = "FALSE"                                             >
@@ -12,9 +12,9 @@
         pixel type</desc>
       <constructor 
         argList='unsigned int station,  
-        VeloPixChannelID::sensorType type, 
-        VeloPixChannelID::sensorSide sidepos, 
-        VeloPixChannelID::ladderZPos zpos,
+        VPChannelID::sensorType type, 
+        VPChannelID::sensorSide sidepos, 
+        VPChannelID::ladderZPos zpos,
         unsigned int chip, 
         unsigned int pixel_lp, 
         unsigned int pixel_hp' 
@@ -47,7 +47,7 @@ m_channelID = ( station &lt;&lt; stationBits ) | ( type &lt;&lt; typeBits )  | (
 
       <copyconstructor/>
 
-      <method name='setType' argList='VeloPixChannelID::sensorType type'
+      <method name='setType' argList='VPChannelID::sensorType type'
         desc='Set sensor type bits'>
         <code>
           m_channelID &amp;=  ~typeMask;
@@ -55,7 +55,7 @@ m_channelID = ( station &lt;&lt; stationBits ) | ( type &lt;&lt; typeBits )  | (
         </code>
       </method>
 
-     <method type='LHCb::VeloPixChannelID::sensorType' name='type' 
+     <method type='LHCb::VPChannelID::sensorType' name='type' 
        desc="Get sensor type" const='TRUE'> 
         <code>
           return sensorType((m_channelID &amp; typeMask) &gt;&gt; typeBits);
@@ -64,15 +64,15 @@ m_channelID = ( station &lt;&lt; stationBits ) | ( type &lt;&lt; typeBits )  | (
 
       <method type='bool' name='isXType' const='TRUE'
         desc="Is the channel in an X type sensor">
-        <code> return (VeloPixChannelID::XType == type());</code>
+        <code> return (VPChannelID::XType == type());</code>
       </method>
 
       <method type='bool' name='isYType' const='TRUE'
         desc="Is the channel in a Y type sensor">
-        <code> return (VeloPixChannelID::YType == type());</code>
+        <code> return (VPChannelID::YType == type());</code>
       </method>
 
-     <method name='setSide' argList='VeloPixChannelID::sensorSide sidepos'
+     <method name='setSide' argList='VPChannelID::sensorSide sidepos'
         desc='Set sensor side bits'>
         <code>
           m_channelID &amp;=  ~sideposMask;
@@ -80,7 +80,7 @@ m_channelID = ( station &lt;&lt; stationBits ) | ( type &lt;&lt; typeBits )  | (
         </code>
       </method>
 
-     <method type='LHCb::VeloPixChannelID::sensorSide' name='sidepos' 
+     <method type='LHCb::VPChannelID::sensorSide' name='sidepos' 
        desc="Get sensor side" const='TRUE'> 
         <code>
           return sensorSide((m_channelID &amp; sideposMask) &gt;&gt; sideposBits);
@@ -89,15 +89,15 @@ m_channelID = ( station &lt;&lt; stationBits ) | ( type &lt;&lt; typeBits )  | (
 
       <method type='bool' name='isLeft' const='TRUE'
         desc="Is the channel in an Left side sensor">
-        <code> return (VeloPixChannelID::Left == sidepos());</code>
+        <code> return (VPChannelID::Left == sidepos());</code>
       </method>
 
       <method type='bool' name='isRight' const='TRUE'
         desc="Is the channel in a Right side sensor">
-        <code> return (VeloPixChannelID::Right == sidepos());</code>
+        <code> return (VPChannelID::Right == sidepos());</code>
       </method>
 
-     <method name='setLadderZPosition' argList='VeloPixChannelID::ladderZPos zpos'
+     <method name='setLadderZPosition' argList='VPChannelID::ladderZPos zpos'
         desc='Set ladder Z position bits'>
         <code>
           m_channelID &amp;=  ~zposMask;
@@ -105,7 +105,7 @@ m_channelID = ( station &lt;&lt; stationBits ) | ( type &lt;&lt; typeBits )  | (
         </code>
       </method>
 
-     <method type='LHCb::VeloPixChannelID::ladderZPos' name='zpos' 
+     <method type='LHCb::VPChannelID::ladderZPos' name='zpos' 
        desc="Get ladder Z position " const='TRUE'> 
         <code>
           return ladderZPos((m_channelID &amp; zposMask) &gt;&gt; zposBits);
@@ -114,12 +114,12 @@ m_channelID = ( station &lt;&lt; stationBits ) | ( type &lt;&lt; typeBits )  | (
 
       <method type='bool' name='isFront' const='TRUE'
         desc="Is the channel in an front ladder">
-        <code> return (VeloPixChannelID::Front == zpos());</code>
+        <code> return (VPChannelID::Front == zpos());</code>
       </method>
 
       <method type='bool' name='isBack' const='TRUE'
         desc="Is the channel in a back ladder">
-        <code> return (VeloPixChannelID::Back == zpos());</code>
+        <code> return (VPChannelID::Back == zpos());</code>
       </method>
 
       <method type='' name='operator long' const='TRUE'  desc='cast'>

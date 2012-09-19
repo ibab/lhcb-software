@@ -15,7 +15,7 @@
        <import name="Kernel/RichSmartID"/>
        <import name="Kernel/CaloCellID"/>
        <import name="Kernel/MuonTileID"/>
-       <import name="Kernel/VeloPixChannelID"/>
+       <import name="Kernel/VPChannelID"/>
        <import name="Kernel/VLChannelID"/>
        <import name="Kernel/FTChannelID"/>
 
@@ -24,7 +24,7 @@
        <enum
           desc   = "types of sub-detector channel ID"
           name   = "channelIDype"
-          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VeloPix, VL, FT"
+          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VP, VL, FT"
           access = 'PUBLIC'
        />
 
@@ -126,51 +126,51 @@
        </method>
 
        <constructor 
-         desc  = "Constructor from VeloPixChannelID, VeloPix corresponding to pixel solution for upgrade" >
-          <arg const="TRUE" name="chanID" type="VeloPixChannelID" />
+         desc  = "Constructor from VPChannelID, VP corresponding to pixel solution for upgrade" >
+          <arg const="TRUE" name="chanID" type="VPChannelID" />
           <code>
-  m_lhcbID = (VeloPix &lt;&lt; detectorTypeBits) + chanID;
+  m_lhcbID = (VP &lt;&lt; detectorTypeBits) + chanID;
           </code>
        </constructor>
 
        <method
          type  = "bool"
-         name  = "isVeloPix"
+         name  = "isVP"
          const = 'TRUE'
-         desc  = "return true if this is a VeloPix identifier">
+         desc  = "return true if this is a VP identifier">
          <code>
-  return (VeloPix == detectorType());
+  return (VP == detectorType());
          </code>
        </method>
 
        <method
          type  = "bool"
-         name  = "isVeloPixX"
+         name  = "isVPX"
          const = 'TRUE'
-         desc  = "return true if this is a VeloPix X identifier">
+         desc  = "return true if this is a VP X identifier">
          <code>
-  return (isVeloPix() ? velopixID().isXType(): false);
+  return (isVP() ? vpID().isXType(): false);
          </code>
        </method>
        
        <method
          type  = "bool"
-         name  = "isVeloPixY"
+         name  = "isVPY"
          const = 'TRUE'
-         desc  = "return true if this is a VeloPix Y identifier">
+         desc  = "return true if this is a VP Y identifier">
          <code>
-  return (isVeloPix() ? velopixID().isYType(): false);
+  return (isVP() ? vpID().isYType(): false);
          </code>
        </method>
      
 
        <method
-         type  = "LHCb::VeloPixChannelID"
-         name  = "velopixID"
+         type  = "LHCb::VPChannelID"
+         name  = "vpID"
          const = 'TRUE'
-         desc  = "return the VeloPixChannelID">
+         desc  = "return the VPChannelID">
 	 <code>
-  return ( isVeloPix() ? LHCb::VeloPixChannelID(m_lhcbID &amp; IDMask) : LHCb::VeloPixChannelID(0xF0000000));
+  return ( isVP() ? LHCb::VPChannelID(m_lhcbID &amp; IDMask) : LHCb::VPChannelID(0xF0000000));
          </code>
        </method>
 
@@ -434,7 +434,7 @@
         const   = "TRUE"
         desc    = "General ID: returns detector ID = internal unsigned int">
         <code>
-  if (isVeloPix()) return velopixID().channelID();
+  if (isVP()) return vpID().channelID();
   if (isVL())      return vlID().channelID();
   if (isVelo())    return veloID().channelID();
   if (isST())      return stID().channelID();
