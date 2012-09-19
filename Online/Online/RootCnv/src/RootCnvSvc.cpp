@@ -69,7 +69,7 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("GlobalCompression",m_compression); // empty: do nothing
 
   declareProperty("BufferSize",	      m_setup->bufferSize   = 32*1024);
-  declareProperty("SplitLevel",       m_setup->splitLevel   = 99);
+  declareProperty("SplitLevel",       m_setup->splitLevel   = 0);
 }
 
 // Standard destructor
