@@ -3,6 +3,11 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-09-19 Paul Szczypka
+ - Added options for FT and VL in Sim and DigiConf.
+ - Reordered imports in Sim and DigiConf to be as-needed (protection against 
+   upgrade code failure).
+
 ! 2012-08-31 Pawel Jalocha
  - Change VeloPix to VP in containers (for Boole)
 

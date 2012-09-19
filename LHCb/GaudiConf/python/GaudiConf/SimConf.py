@@ -64,21 +64,6 @@ class SimConf(LHCbConfigurableUser) :
     def _doPacking(self):
 
         from Configurables import ( PackMCParticle, PackMCVertex )
-        from Configurables import DataPacking__Pack_LHCb__MCVeloHitPacker_   as MCVeloHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCPuVetoHitPacker_ as MCPuVetoHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCVeloPixHitPacker_   as MCVeloPixHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCTTHitPacker_     as MCTTHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCITHitPacker_     as MCITHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCOTHitPacker_     as MCOTHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCMuonHitPacker_   as MCMuonHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCPrsHitPacker_    as MCPrsHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCSpdHitPacker_    as MCSpdHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCEcalHitPacker_   as MCEcalHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCHcalHitPacker_   as MCHcalHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCRichHitPacker_   as MCRichHitPacker
-        from Configurables import DataPacking__Pack_LHCb__MCRichOpticalPhotonPacker_ as MCRichOpticalPhotonPacker
-        from Configurables import DataPacking__Pack_LHCb__MCRichSegmentPacker_ as MCRichSegmentPacker
-        from Configurables import DataPacking__Pack_LHCb__MCRichTrackPacker_   as MCRichTrackPacker
 
         # Active Detectors
         dets = self.getProp("Detectors")
@@ -100,39 +85,62 @@ class SimConf(LHCbConfigurableUser) :
                 packing.Members += [ packMCP, packMCV ]
 
                 if 'Velo' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCVeloHitPacker_   as MCVeloHitPacker
                     packing.Members += [ MCVeloHitPacker("MCVeloHitPacker"+slot) ]
                 
                 if 'PuVeto' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCPuVetoHitPacker_ as MCPuVetoHitPacker
                     packing.Members += [ MCPuVetoHitPacker("MCPuVetoHitPacker"+slot) ]
 
                 if 'VP' in dets :
-                    packing.Members += [ MCVeloPixHitPacker("MCVeloPixHitPacker"+slot) ]
+                    from Configurables import DataPacking__Pack_LHCb__MCVPHitPacker_     as MCVPHitPacker
+                    packing.Members += [ MCVPHitPacker("MCVPHitPacker"+slot) ]
+
+                if 'VL' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCVLHitPacker_     as MCVLHitPacker
+                    packing.Members += [ MCVLHitPacker("MCVLHitPacker"+slot) ]
 
                 if 'TT' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCTTHitPacker_     as MCTTHitPacker
                     packing.Members += [ MCTTHitPacker("MCTTHitPacker"+slot) ]
 
                 if 'IT' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCITHitPacker_     as MCITHitPacker
                     packing.Members += [ MCITHitPacker("MCITHitPacker"+slot) ]
 
                 if 'OT' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCOTHitPacker_     as MCOTHitPacker
                     packing.Members += [ MCOTHitPacker("MCOTHitPacker"+slot) ]
 
+                if 'FT' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCFTHitPacker_     as MCFTHitPacker
+                    packing.Members += [ MCFTHitPacker("MCFTHitPacker"+slot) ]
+
                 if 'Muon' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCMuonHitPacker_   as MCMuonHitPacker
                     packing.Members += [ MCMuonHitPacker("MCMuonHitPacker"+slot) ]
 
                 if 'Prs' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCPrsHitPacker_    as MCPrsHitPacker
                     packing.Members += [ MCPrsHitPacker("MCPrsHitPacker"+slot) ]
 
                 if 'Spd' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCSpdHitPacker_    as MCSpdHitPacker
                     packing.Members += [ MCSpdHitPacker("MCSpdHitPacker"+slot) ]
 
                 if 'Ecal' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCEcalHitPacker_   as MCEcalHitPacker
                     packing.Members += [ MCEcalHitPacker("MCEcalHitPacker"+slot) ]
 
                 if 'Hcal' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCHcalHitPacker_   as MCHcalHitPacker
                     packing.Members += [ MCHcalHitPacker("MCHcalHitPacker"+slot) ]
 
                 if 'Rich' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCRichHitPacker_   as MCRichHitPacker
+                    from Configurables import DataPacking__Pack_LHCb__MCRichOpticalPhotonPacker_ as MCRichOpticalPhotonPacker
+                    from Configurables import DataPacking__Pack_LHCb__MCRichSegmentPacker_ as MCRichSegmentPacker
+                    from Configurables import DataPacking__Pack_LHCb__MCRichTrackPacker_   as MCRichTrackPacker
                     packing.Members += [ MCRichHitPacker("MCRichHitPacker"+slot) ]
                     packing.Members += [ MCRichOpticalPhotonPacker("MCRichOpPhotPacker"+slot) ]
                     packing.Members += [ MCRichSegmentPacker("MCRichSegmentPacker"+slot) ]
@@ -155,21 +163,6 @@ class SimConf(LHCbConfigurableUser) :
 
         from Configurables import DataOnDemandSvc
         from Configurables import UnpackMCParticle, UnpackMCVertex
-        from Configurables import DataPacking__Unpack_LHCb__MCVeloHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCPuVetoHitPacker_        
-        from Configurables import DataPacking__Unpack_LHCb__MCVeloPixHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCTTHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCITHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCOTHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCMuonHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCPrsHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCSpdHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCEcalHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCHcalHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCRichHitPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCRichOpticalPhotonPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCRichSegmentPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MCRichTrackPacker_
                 
         # Define the event locations
         crossingList = self.allEventLocations()
@@ -184,39 +177,62 @@ class SimConf(LHCbConfigurableUser) :
             self._makeUnpacker( UnpackMCVertex,   "UnpackMCVertices",  slot, 'Vertices' )
 
             if 'Velo' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCVeloHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCVeloHitPacker_, "UnpackMCVeloHits", slot, 'Velo/Hits' )
             
             if 'PuVeto' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCPuVetoHitPacker_        
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCPuVetoHitPacker_, "UnpackMCPuVetoHits", slot, 'PuVeto/Hits' )
 
             if 'VP' in dets :
-                self._makeUnpacker( DataPacking__Unpack_LHCb__MCVeloPixHitPacker_, "UnpackMCVeloPixHits", slot, 'VP/Hits' )
+                from Configurables import DataPacking__Unpack_LHCb__MCVPHitPacker_
+                self._makeUnpacker( DataPacking__Unpack_LHCb__MCVPHitPacker_, "UnpackMCVPHits", slot, 'VP/Hits' )
+
+            if 'VL' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCVLHitPacker_
+                self._makeUnpacker( DataPacking__Unpack_LHCb__MCVLHitPacker_, "UnpackMCVLHits", slot, 'VL/Hits' )
 
             if 'IT' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCITHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCITHitPacker_, "UnpackMCITHits", slot, 'IT/Hits' )
 
             if 'OT' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCOTHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCOTHitPacker_, "UnpackMCOTHits", slot, 'OT/Hits' )
 
+            if 'FT' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCFTHitPacker_
+                self._makeUnpacker( DataPacking__Unpack_LHCb__MCFTHitPacker_, "UnpackMCFTHits", slot, 'FT/Hits' )
+
             if 'TT' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCTTHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCTTHitPacker_, "UnpackMCTTHits", slot, 'TT/Hits' )
 
             if 'Muon' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCMuonHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCMuonHitPacker_, "UnpackMCMuonHits", slot, 'Muon/Hits' )
 
             if 'Spd' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCSpdHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCSpdHitPacker_, "UnpackMCSpdHits", slot, 'Spd/Hits' )
 
             if 'Prs' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCPrsHitPacker_                
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCPrsHitPacker_, "UnpackMCPrsHits", slot, 'Prs/Hits' )
 
             if 'Ecal' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCEcalHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCEcalHitPacker_, "UnpackMCEcalHits", slot, 'Ecal/Hits' )
 
             if 'Hcal' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCHcalHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCHcalHitPacker_, "UnpackMCHcalHits", slot, 'Hcal/Hits' )
                 
             if 'Rich' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCRichHitPacker_
+                from Configurables import DataPacking__Unpack_LHCb__MCRichOpticalPhotonPacker_
+                from Configurables import DataPacking__Unpack_LHCb__MCRichSegmentPacker_
+                from Configurables import DataPacking__Unpack_LHCb__MCRichTrackPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCRichHitPacker_,
                                     "UnpackMCRichHits", slot, 'Rich/Hits' )
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCRichOpticalPhotonPacker_,
@@ -333,11 +349,17 @@ class SimConf(LHCbConfigurableUser) :
                 if 'VP' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'VP/Hits' ) ]
 
+                if 'VL' in dets :
+                    simList += [ self.tapeLocation( slot, mcRoot, 'VL/Hits' ) ]
+
                 if 'IT' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'IT/Hits' ) ]
 
                 if 'OT' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'OT/Hits' ) ]
+
+                if 'FT' in dets :
+                    simList += [ self.tapeLocation( slot, mcRoot, 'FT/Hits' ) ]
 
                 if 'TT' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'TT/Hits' ) ]
