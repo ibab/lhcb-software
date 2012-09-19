@@ -14,6 +14,7 @@ class IOTest(LHCbConfigurableUser):
        ,"DataContent"       : "DST"
        ,"WithMC"            : False
        ,"LoadAll"           : False
+       ,"KillDAQ"           : False
        ,"DataType"          : "2011"
         }
 
@@ -22,6 +23,7 @@ class IOTest(LHCbConfigurableUser):
        ,'DataContent'       : """ Content of dataset (SIM, DIGI, RAW, DST, ...) """
        ,'WithMC'            : """ Flag to enable processing with MC Truth """
        ,'LoadAll'           : """ Load all leaves of input file with StoreExplorerAlg """
+       ,'KillDAQ'           : """ Do not attempt to load Event/DAQ """
        ,'DataType'          : """ Data type, steers year dependent test configuraton """
        }
 
@@ -33,6 +35,11 @@ class IOTest(LHCbConfigurableUser):
         EventSelector().PrintFreq = 1
 
     def _defineMonitors(self):
+        if self.getProp( "KillDAQ" ):
+            from Configurables import EventNodeKiller
+            daqKiller = EventNodeKiller("DAQKiller")
+            daqKiller.Nodes += [ "DAQ" ]
+            ApplicationMgr().TopAlg += [ daqKiller ]
         ApplicationMgr().TopAlg += [ "PrintHeader" ]
         ApplicationMgr().ExtSvc += [ "ToolSvc", "DataOnDemandSvc" ]
 

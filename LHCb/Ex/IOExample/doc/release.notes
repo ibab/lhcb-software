@@ -5,6 +5,9 @@
 !-------------------------------------------------------------------------------
 
 ! 2012-09-19 - Marco Cattaneo
+ - Add tests to copy and read Reco12Stripping17 and Reco14Stripping20 dst+mdst
+
+! 2012-09-19 - Marco Cattaneo
  - Fix references to follow change in options printout format in Gaudi v23r4 
 
 ! 2012-08-30 - Marco Cattaneo
