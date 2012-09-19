@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+- Package added Det/VPDet to replace Det/VeloPixDet that has been removed
+    o classes for description of Velo Pixel for Upgrade
+
 - Packages added: Det/FTDet v1r0     - Detector description for Fibre Tracker
                   Event/FTEvent v1r0 - Event classes for Fibre Tracker
                   Event/FSREvent v1r0 - FSR-specific classes not really lumi-related
