@@ -259,27 +259,27 @@ int ConeVariables::getFirstIndex(void) {
 }
 
 int ConeVariables::getNumberOfParameters(void) {
-  return 14; // This tool returns 13 parameters
+  return 14; // This tool returns 14 parameters
 }
 
 int ConeVariables::getInfo(int index, double & value, std::string & name) {
 
-  switch( index - getFirstIndex() ) {
-  case 0  : value = m_coneAngle; name = "angle"; break;
-  case 1  : value = (double)m_mult; name = "mult"; break;
-  case 2  : value = m_px; name = "px"; break;
-  case 3  : value = m_py; name = "py"; break;
-  case 4  : value = m_pz; name = "pz"; break;
-  case 5  : value = m_p;  name = "p" ; break;
-  case 6  : value = m_pt; name = "pt"; break;
-  case 7  : value = m_pxasy; name = "pxasy"; break;
-  case 8  : value = m_pyasy; name = "pyasy"; break;
-  case 9  : value = m_pzasy; name = "pzasy"; break;
-  case 10 : value = m_pasy;  name = "pasy";  break;
-  case 11 : value = m_ptasy; name = "ptasy"; break;
-  case 12 : value = m_deltaEta; name = "deltaEta"; break;
-  case 13 : value = m_deltaPhi; name = "deltaPhi"; break;
-  default: break;
+  switch( index - getFirstIndex() + LHCb::Particle::Cone1Angle) {
+    case LHCb::Particle::Cone1Angle    : value = m_coneAngle;    name = "angle"; break;
+    case LHCb::Particle::Cone1Mult     : value = (double)m_mult; name = "mult"; break;
+    case LHCb::Particle::Cone1PX       : value = m_px; name = "px"; break;
+    case LHCb::Particle::Cone1PY       : value = m_py; name = "py"; break;
+    case LHCb::Particle::Cone1PZ       : value = m_pz; name = "pz"; break;
+    case LHCb::Particle::Cone1P        : value = m_p;  name = "p" ; break;
+    case LHCb::Particle::Cone1PT       : value = m_pt; name = "pt"; break;
+    case LHCb::Particle::Cone1PXAsym   : value = m_pxasy; name = "pxasy"; break;
+    case LHCb::Particle::Cone1PYAsym   : value = m_pyasy; name = "pyasy"; break;
+    case LHCb::Particle::Cone1PZAsym   : value = m_pzasy; name = "pzasy"; break;
+    case LHCb::Particle::Cone1PAsym    : value = m_pasy;  name = "pasy";  break;
+    case LHCb::Particle::Cone1PTAsym   : value = m_ptasy; name = "ptasy"; break;
+    case LHCb::Particle::Cone1DeltaEta : value = m_deltaEta; name = "deltaEta"; break;
+    case LHCb::Particle::Cone1DeltaPhi : value = m_deltaPhi; name = "deltaPhi"; break;
+    default: break;
   }
 
   if (!m_variables.empty()) {

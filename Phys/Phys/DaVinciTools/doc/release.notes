@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-09-20 - Anton Poluektov 
+ - ConeVariables.cpp: Use enums from Particle.h instead of hardcoded indices. 
+
 ! 2012-09-05 - Chris Jones
  - Remove BremAdder from test_instantiate_tools.py. This tool now requires the
    MagneticFieldService, so cannot be instanciated 'standalone'.
