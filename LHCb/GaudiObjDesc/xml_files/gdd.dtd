@@ -82,7 +82,7 @@
         desc             CDATA                             #REQUIRED
         type             CDATA                             #REQUIRED
         def              CDATA                             #REQUIRED
-        access           (PUBLIC | PROTECTED | PRIVATE)    "PRIVATE"
+        access           (PUBLIC | PROTECTED | PRIVATE | GLOBAL) "PRIVATE"
 >
 <!ELEMENT constructor (arg*, code?)>
 <!ATTLIST constructor

@@ -73,6 +73,7 @@ namespace @@@classNamespace@@@
   }; // class @@@classname@@@
 
   @@@classTypedefs@@@
+  @@@globalTypedefs@@@
   @@@classOstreamOverload@@@
   @@@enumOstreamOverloads@@@
 } // namespace @@@classNamespace@@@;

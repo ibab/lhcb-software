@@ -5,6 +5,10 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2012-09-20 - Stefan Roiser
+ - Added the possibility of declaring typedefs in the scope of the namespace
+   surrounding the class (i.e. just outside the class).
+
 ! 2012-09-05 - Marco Clemencic
  - Added CMake configuration and module (to be used by other packages).
  - Added a special target to just generate all the headers files (AllObj2doth).

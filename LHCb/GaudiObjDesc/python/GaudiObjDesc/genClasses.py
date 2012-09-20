@@ -831,6 +831,7 @@ namespace {
             classDict['inheritance']                  = self.genInheritance(godClass)
             classDict['classContainerTypedefs']       = self.genClassContainerTypedefs(godClass)
             classDict['classTypedefs']                = self.genClassTypedefs(godClass)
+            classDict['globalTypedefs']               = self.genTypedefs('global',godClass)
             classDict['constructorDecls']             = self.genConstructors(godClass)
             classDict['destructorDecl']               = self.genDestructors(godClass)
             classDict['classIDDecl']                  = self.genClassIDFun(godClass)
