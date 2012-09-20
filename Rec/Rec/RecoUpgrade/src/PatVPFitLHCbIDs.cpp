@@ -1,4 +1,4 @@
-// $Id: PatVeloPixFitLHCbIDs.cpp,v 1.4 2010/03/10 16:25:59 lcarson Exp $
+// $Id: PatVPFitLHCbIDs.cpp,v 1.4 2010/03/10 16:25:59 lcarson Exp $
 // Include files
 
 // from Gu
@@ -8,12 +8,12 @@
 #include "Event/Track.h"
 
 // local
-#include "PatVeloPixFitLHCbIDs.h"
+#include "PatVPFitLHCbIDs.h"
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PatVeloPixFitLHCbIDs
-// Takes a list of VeloPix LHCbIDs from a track and reproduces the PatVelo 
+// Implementation file for class : PatVPFitLHCbIDs
+// Takes a list of VP LHCbIDs from a track and reproduces the PatVelo 
 // internal track fit
 //
 // 2010-03-10 : Laurence Carson and Victor Coco
@@ -21,13 +21,13 @@
 
 // Declaration of the Tool Factory
 namespace Tf{
-  DECLARE_TOOL_FACTORY( PatVeloPixFitLHCbIDs );
+  DECLARE_TOOL_FACTORY( PatVPFitLHCbIDs );
 }
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Tf::PatVeloPixFitLHCbIDs::PatVeloPixFitLHCbIDs( const std::string& type,
+Tf::PatVPFitLHCbIDs::PatVPFitLHCbIDs( const std::string& type,
 					  const std::string& name,
 					  const IInterface* parent )
   : GaudiTool ( type, name , parent )
@@ -39,18 +39,18 @@ Tf::PatVeloPixFitLHCbIDs::PatVeloPixFitLHCbIDs( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-Tf::PatVeloPixFitLHCbIDs::~PatVeloPixFitLHCbIDs() {
+Tf::PatVPFitLHCbIDs::~PatVPFitLHCbIDs() {
 }
 
-StatusCode Tf::PatVeloPixFitLHCbIDs::initialize(){
+StatusCode Tf::PatVPFitLHCbIDs::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if(!sc) return sc;
-  m_veloPix = getDet<DeVeloPix>( DeVeloPixLocation::Default );
-  m_positiontool =  tool<IVeloPixClusterPosition>("VeloPixClusterPosition");
+  m_vP = getDet<DeVP>( DeVPLocation::Default );
+  m_positiontool =  tool<IVPClusterPosition>("VPClusterPosition");
   return StatusCode::SUCCESS;
 }
 
-StatusCode Tf::PatVeloPixFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
+StatusCode Tf::PatVPFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
   
   m_sa = 0;
   m_sb = 0;
@@ -74,7 +74,7 @@ StatusCode Tf::PatVeloPixFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID)
   m_meanZ_a = 0;
   m_meanZ_b = 0;  
   
-  m_clusters = get<LHCb::VeloPixLiteCluster::VeloPixLiteClusters>(LHCb::VeloPixLiteClusterLocation::Default );
+  m_clusters = get<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default );
   std::vector<Gaudi::XYZPoint> thePoints;
 
   // place to store the LHCbIDs from other detectors
@@ -82,7 +82,7 @@ StatusCode Tf::PatVeloPixFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID)
   std::vector<LHCb::LHCbID>::const_iterator iID1;
 
   for( iID1 = track.lhcbIDs().begin() ; iID1 != track.lhcbIDs().end() ; ++iID1){
-    if( ! iID1->isVeloPix() ) {
+    if( ! iID1->isVP() ) {
       nonVELOIDs.push_back(*iID1);
     }
   }
@@ -118,15 +118,15 @@ StatusCode Tf::PatVeloPixFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID)
   debug()<<"Non Velo State: "<<savedStates.size()<<" velo state: "<<states.size()-savedStates.size()<<endreq;
 
 
-  // Get the VeloPix LHCbIDs and sort them (maybe not really needed)
+  // Get the VP LHCbIDs and sort them (maybe not really needed)
   std::vector< std::pair< double, LHCb::LHCbID > > IDsToSort;
   std::vector<LHCb::LHCbID>::const_iterator iIDtmp;
   for( iIDtmp = track.lhcbIDs().begin() ; iIDtmp != track.lhcbIDs().end() ; ++iIDtmp){
-    if (iIDtmp->isVeloPix()){
-       const LHCb::VeloPixLiteCluster* liteclusL = m_clusters->object(iIDtmp ->velopixID () );
-       IVeloPixClusterPosition::toolInfo clusInfoL = m_positiontool->position(liteclusL) ;
-       const DeVeloPixSquareType* sqDetL = 
-         static_cast<const DeVeloPixSquareType*>(m_veloPix->squareSensor(clusInfoL.pixel.sensor()));
+    if (iIDtmp->isVP()){
+       const LHCb::VPLiteCluster* liteclusL = m_clusters->object(iIDtmp ->vpID () );
+       IVPClusterPosition::toolInfo clusInfoL = m_positiontool->position(liteclusL) ;
+       const DeVPSquareType* sqDetL = 
+         static_cast<const DeVPSquareType*>(m_vP->squareSensor(clusInfoL.pixel.sensor()));
        double zL = sqDetL->globalXYZ(clusInfoL.pixel.pixel(),clusInfoL.fractionalPosition).z() ;
        IDsToSort.push_back(std::make_pair(zL,*iIDtmp));
     }
@@ -177,11 +177,11 @@ StatusCode Tf::PatVeloPixFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID)
   int index_ids = 0 ;
   for( iID = IDsToSort.begin() ; iID != IDsToSort.end() ; ++iID){
     track.addToLhcbIDs(((*iID).second)  );
-    const LHCb::VeloPixLiteCluster* liteclus = m_clusters->object( ((*iID).second).velopixID () );
+    const LHCb::VPLiteCluster* liteclus = m_clusters->object( ((*iID).second).vpID () );
     if(liteclus == NULL) continue;
-    IVeloPixClusterPosition::toolInfo clusInfo = m_positiontool->position(liteclus) ;
-    const DeVeloPixSquareType* sqDet = 
-      static_cast<const DeVeloPixSquareType*>(m_veloPix->squareSensor(clusInfo.pixel.sensor()));
+    IVPClusterPosition::toolInfo clusInfo = m_positiontool->position(liteclus) ;
+    const DeVPSquareType* sqDet = 
+      static_cast<const DeVPSquareType*>(m_vP->squareSensor(clusInfo.pixel.sensor()));
     Gaudi::XYZPoint thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
     thePoints.push_back(thePixPoint);
     

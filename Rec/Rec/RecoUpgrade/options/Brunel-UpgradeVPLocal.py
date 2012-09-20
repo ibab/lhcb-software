@@ -5,11 +5,11 @@ importOptions("$APPCONFIGOPTS/Brunel/Upgrade-WithTruth.py")
 from Configurables import Brunel
 Brunel().EvtMax = 50
 from Configurables import TrackSys,RecSysConf,RecMoniConf,DstConf
-TrackSys().TrackPatRecAlgorithms = ["VeloPix","Forward","TsaSeed","Match","Downstream","VeloPixTT"]
+TrackSys().TrackPatRecAlgorithms = ["VP","Forward","TsaSeed","Match","Downstream","VPTT"]
 ### remove MUON because of the call to TrackMasterFitter in MuonIDChi2Tool
 ### or something like that + remove "VELO" but nothing velo specific...
-RecSysConf().RecoSequence = ["Decoding", "VELOPIX","TT","IT","OT","Tr","Vertex","RICH","CALO","PROTO","MUON"]
-### remove VELO and Tr from the moni line (need to code something for VELOPIX) as well as Muon (because of muonID)
+RecSysConf().RecoSequence = ["Decoding", "VP","TT","IT","OT","Tr","Vertex","RICH","CALO","PROTO","MUON"]
+### remove VELO and Tr from the moni line (need to code something for VP) as well as Muon (because of muonID)
 RecMoniConf().MoniSequence=["CALO","OT","ST","PROTO","TT","IT"]
 ### remove Pat and tr as well as Mun 
 Brunel().MCCheckSequence = ["Pat","TT","IT","OT","CALO","PROTO"]
@@ -19,12 +19,12 @@ Brunel().MCLinksSequence = []
 Brunel().OutputType = "DST"
 
 from Configurables import LHCbApp
-LHCbApp().DDDBtag   = "velopix-mul-20100909"
+LHCbApp().DDDBtag   = "vp-mul-20100909"
 LHCbApp().CondDBtag = "sim-20100510-vc-md100"
 
 
 from Configurables import NTupleSvc , EventSelector                 
-NTupleSvc ( Output = [ "FILE1 DATAFILE='VeloPixTuple.root' TYPE='ROOT' OPT='NEW'"] )
+NTupleSvc ( Output = [ "FILE1 DATAFILE='VPTuple.root' TYPE='ROOT' OPT='NEW'"] )
 EventSelector().FirstEvent = 1
 
 from Gaudi.Configuration import * 
@@ -32,5 +32,5 @@ IODataManager().AgeLimit = 1
 from Gaudi.Configuration import * 
 
 EventSelector().Input   = [
-"   DATAFILE='file:/data4/cocov/VeloPix/Boole-50ev-20100922.digi' TYP='POOL_ROOTTREE' OPT='READ'"]
-FileCatalog().Catalogs = [ 'xmlcatalog_file:/data4/cocov/VeloPix/Boole_Gauss-50ev-20100922.xml' ]
+"   DATAFILE='file:/data4/cocov/VP/Boole-50ev-20100922.digi' TYP='POOL_ROOTTREE' OPT='READ'"]
+FileCatalog().Catalogs = [ 'xmlcatalog_file:/data4/cocov/VP/Boole_Gauss-50ev-20100922.xml' ]

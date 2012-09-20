@@ -1,20 +1,20 @@
 // $Id: $
-#ifndef VELOPIXTRACKALTER_H 
-#define VELOPIXTRACKALTER_H 1
+#ifndef VPTRACKALTER_H 
+#define VPTRACKALTER_H 1
 #include "gsl/gsl_cdf.h"
 // Include files
-#include "VeloPixHit.h"
+#include "VPHit.h"
 #include "Event/StateVector.h"
-/** @class VeloPixTrackAlter VeloPixTrackAlter.h
+/** @class VPTrackAlter VPTrackAlter.h
  *  
  *
  *  @author Wenbin Qian
  *  @date   2011-02-18
  */
-class VeloPixTrackAlter {
+class VPTrackAlter {
 public: 
   /// Standard constructor
-  VeloPixTrackAlter( ):
+  VPTrackAlter( ):
     m_valid(true),
     mx_e (0.),
     mx_x (0.),
@@ -37,11 +37,11 @@ public:
     m_hits.reserve(30);
   }; 
 
-  virtual ~VeloPixTrackAlter( ){
+  virtual ~VPTrackAlter( ){
     m_hits.clear();
   }; ///< Destructor
   
-  void addHit (VeloPixHit* hit)
+  void addHit (VPHit* hit)
   {
     m_hits.push_back(hit);
 
@@ -79,7 +79,7 @@ public:
     }
   }
   
-  void removeHit (VeloPixHit* hit)
+  void removeHit (VPHit* hit)
   {
     //think whether use erase or popback?
     m_hits.erase( std::remove( m_hits.begin(), m_hits.end(), hit), m_hits.end());
@@ -123,7 +123,7 @@ public:
   double xAtz( double z ) {return m_x0 + m_tx * z;}
   double yAtz( double z ) {return m_y0 + m_ty * z;}
   double zBeam () {return -( m_x0 * m_tx + m_y0 * m_ty )/( m_tx * m_tx + m_ty * m_ty);}
-  VeloPixHits hits() { return m_hits;}
+  VPHits hits() { return m_hits;}
   bool isValid() const { return m_valid; }
   void setValid( bool flag ) { m_valid = flag; }
   double probChi2(double chi2,int nDoF) const 
@@ -162,7 +162,7 @@ public:
     
 
   inline void display() const{
-   for(VeloPixHits::const_iterator itH = m_hits.begin(); itH != m_hits.end(); itH++){
+   for(VPHits::const_iterator itH = m_hits.begin(); itH != m_hits.end(); itH++){
       std::cout<<"hits: "<<(*itH)->z()<<" "<<(*itH)->x()
                <<" "<<(*itH)->y()<<" "<<(*itH)->getused()
                <<" "<<"dx: "<<(*itH)->x()-m_tx*(*itH)->z()-m_x0
@@ -194,7 +194,7 @@ private:
   double m_ty;
   double m_y0;
   double m_chi2;
-  VeloPixHits m_hits;
+  VPHits m_hits;
 };
-typedef std::vector<VeloPixTrackAlter> VeloPixTrackAlters; 
-#endif // VELOPIXTRACKALTER_H
+typedef std::vector<VPTrackAlter> VPTrackAlters; 
+#endif // VPTRACKALTER_H

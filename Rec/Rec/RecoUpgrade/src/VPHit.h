@@ -1,24 +1,24 @@
 // $Id: $
-#ifndef VELOPIXHIT_H 
-#define VELOPIXHIT_H 1
+#ifndef VPHIT_H 
+#define VPHIT_H 1
 
 // Include files
 #include "Kernel/LHCbID.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "Event/VPLiteCluster.h"
 
-/** @class VeloPixHit VeloPixHit.h
+/** @class VPHit VPHit.h
  *  
  *
  *  @author Wenbin Qian
  *  @date   2011-02-16
  */
-class VeloPixHit {
+class VPHit {
 public: 
   /// Standard constructor
-  VeloPixHit():
+  VPHit():
 	m_x(0.),m_y(0.),m_z(0.),m_dx(0.),m_dy(0.),m_used(0),m_sensor(-1){};
 
-  VeloPixHit( float x, float y, float z, float dx, float dy, int sensor){
+  VPHit( float x, float y, float z, float dx, float dy, int sensor){
     m_x = x;
     m_y = y;
     m_z = z;
@@ -28,7 +28,7 @@ public:
     m_sensor = sensor;
 }; 
 
-  VeloPixHit( double x, double y, double z, double dx, double dy, int sensor){
+  VPHit( double x, double y, double z, double dx, double dy, int sensor){
     m_x = float(x);
     m_y = float(y);
     m_z = float(z);
@@ -52,7 +52,7 @@ public:
   void removeused() {m_used--;}
   int  getused() const {return m_used;}
   int sensor() const{return m_sensor;}
-  virtual ~VeloPixHit( ) {}; ///< Destructor
+  virtual ~VPHit( ) {}; ///< Destructor
 protected:
 
 private:
@@ -66,5 +66,5 @@ private:
   LHCb::LHCbID m_lhcbid;
 };
 
-typedef std::vector<VeloPixHit*> VeloPixHits;
-#endif // VELOPIXHIT_H
+typedef std::vector<VPHit*> VPHits;
+#endif // VPHIT_H

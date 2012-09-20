@@ -1,20 +1,20 @@
 // $Id: $
-#ifndef VELOPIXTRACK_H 
-#define VELOPIXTRACK_H 1
+#ifndef VPTRACK_H 
+#define VPTRACK_H 1
 #include "gsl/gsl_cdf.h"
 // Include files
-#include "VeloPixHit.h"
+#include "VPHit.h"
 #include "Event/StateVector.h"
-/** @class VeloPixTrack VeloPixTrack.h
+/** @class VPTrack VPTrack.h
  *  
  *
  *  @author Wenbin Qian
  *  @date   2011-02-18
  */
-class VeloPixTrack {
+class VPTrack {
 public: 
   /// Standard constructor
-  VeloPixTrack( ):
+  VPTrack( ):
     m_valid(true),
     mx_e (0.),
     mx_x (0.),
@@ -37,11 +37,11 @@ public:
     m_hits.reserve(30);
   }; 
 
-  virtual ~VeloPixTrack( ){
+  virtual ~VPTrack( ){
     m_hits.clear();
   }; ///< Destructor
   
-  void addXHit (VeloPixHit* hit)
+  void addXHit (VPHit* hit)
   {
     m_hits.push_back(hit);
 
@@ -75,7 +75,7 @@ public:
     }
   }
   
-  void removeXHit (VeloPixHit* hit)
+  void removeXHit (VPHit* hit)
   {
     //think whether use erase or popback?
     m_hits.erase( std::remove( m_hits.begin(), m_hits.end(), hit), m_hits.end());
@@ -110,8 +110,8 @@ public:
   void UpdateYHits()
   {
     if(m_hits.size()>2){
-      for(VeloPixHits::iterator ihit = m_hits.begin(); ihit != m_hits.end(); ihit++){
-        VeloPixHit* hit = (*ihit);
+      for(VPHits::iterator ihit = m_hits.begin(); ihit != m_hits.end(); ihit++){
+        VPHit* hit = (*ihit);
         double y = hit->y();
         double dy = hit->dy();
         double z = hit->z();
@@ -142,7 +142,7 @@ public:
   double xAtz( double z ) {return m_x0 + m_tx * z;}
   double yAtz( double z ) {return m_y0 + m_ty * z;}
   double zBeam () {return -( m_x0 * m_tx + m_y0 * m_ty )/( m_tx * m_tx + m_ty * m_ty);}
-  VeloPixHits hits() { return m_hits;}
+  VPHits hits() { return m_hits;}
   bool isValid() const { return m_valid; }
   void setValid( bool flag ) { m_valid = flag; }
   double probChi2(double chi2,int nDoF) const 
@@ -181,7 +181,7 @@ public:
     
 
   inline void display() const{
-   for(VeloPixHits::const_iterator itH = m_hits.begin(); itH != m_hits.end(); itH++){
+   for(VPHits::const_iterator itH = m_hits.begin(); itH != m_hits.end(); itH++){
       std::cout<<"hits: "<<(*itH)->z()<<" "<<(*itH)->x()
                <<" "<<(*itH)->y()<<" "<<(*itH)->getused()
                <<" "<<"dx: "<<(*itH)->x()-m_tx*(*itH)->z()-m_x0
@@ -213,7 +213,7 @@ private:
   double m_ty;
   double m_y0;
   double m_chi2;
-  VeloPixHits m_hits;
+  VPHits m_hits;
 };
-typedef std::vector<VeloPixTrack> VeloPixTracks; 
-#endif // VELOPIXTRACK_H
+typedef std::vector<VPTrack> VPTracks; 
+#endif // VPTRACK_H

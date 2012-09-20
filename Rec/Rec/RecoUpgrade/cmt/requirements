@@ -13,14 +13,12 @@ use     MCInterfaces    v*      Kernel
 use     TrackKernel     v*      Tr
 use 	TrackSys	v*	Tf
 
-use     VeloPixDet      v*      Det
+use     VPDet           v*      Det
 use     TrackFitEvent   v*      Tr
 use     PatAlgorithms   v*      Tf
 
-
-use  VeloPixDet     v*       Det
-use  GaudiAlg       v*
-use  GaudiKernel     v*
+use  GaudiAlg           v*
+use  GaudiKernel        v*
 
 
 #============================================================================

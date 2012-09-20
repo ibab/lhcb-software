@@ -1,57 +1,56 @@
 // $Id: $for velo pix track fit
-#ifndef VELOPIXPATALTER_H 
-#define VELOPIXPATALTER_H 1
+#ifndef VPPATLINEAR_H 
+#define VPPATLINEAR_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "TrackInterfaces/IVeloPixClusterPosition.h"
-#include "VeloPixDet/DeVeloPix.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "TrackInterfaces/IVPClusterPosition.h"
+#include "VPDet/DeVP.h"
+#include "Event/VPLiteCluster.h"
 #include "TrackInterfaces/ITrackFitter.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
-#include "VeloPixTrackAlter.h"
-
-/** @class VeloPixPatAlter VeloPixPatAlter.h
+#include "VPTrack.h"
+/** @class VPPatLinear VPPatLinear.h
  *  
  *
  *  @author Wenbin Qian
  *  @date   2011-02-11
  */
-class VeloPixPatAlter : public GaudiAlgorithm {
+class VPPatLinear : public GaudiAlgorithm {
 public: 
   /// Standard constructor
-  VeloPixPatAlter( const std::string& name, ISvcLocator* pSvcLocator );
+  VPPatLinear( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~VeloPixPatAlter( ); ///< Destructor
+  virtual ~VPPatLinear( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
   void findQuadruplets(int);
   void findTriplets(int);
-  void findCrossed(int);
-  void extendTrack(VeloPixTrackAlter& , int, bool);
+   void findCrossed(int);
+  void extendTrack(VPTrack& , int, bool);
   void makeLHCbTracks( LHCb::Tracks* output );
   void mergeClones();
   void addAnotherSideHits();
-  VeloPixHit* FindClosest(VeloPixHits&, VeloPixTrackAlter&);
 protected:
 
 private:
-    DeVeloPix*  m_veloPix;
-    IVeloPixClusterPosition* m_positiontool;
+    DeVP*  m_vP;
+    IVPClusterPosition* m_positiontool;
     std::string m_clusterLocation;
     std::string m_outputTracksLocation;
-    LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
-    double m_chi2;
-    VeloPixTrackAlters m_tracks;
-    std::vector<VeloPixHits> m_hits;
+    LHCb::VPLiteCluster::VPLiteClusters* m_clusters;
     int m_sensor;
+    double m_chi2;
+    VPTracks m_tracks;
+    std::vector<VPHits> m_hits;
     double m_dist;	
     int m_maxMissed;
     bool m_stateAtBeam;
     double m_fractionForMerge;
+
     bool m_doTiming;
     ISequencerTimerTool* m_timerTool;
     int m_timeTotal;
@@ -61,5 +60,6 @@ private:
     int m_timeCross;
     int m_timeMerge;
     int m_timeFinal;
+
 };
-#endif // VELOPIXPATALTER_H
+#endif // VPPATLINEAR_H

@@ -1,48 +1,48 @@
-// $Id: PatVeloPixFitLHCbIDs.h,v 1.4(??) 2010/03/10 16:25:59(??) lcarson Exp(??) $
-#ifndef TF_PATVELOPIXFITLHCBIDS_H 
-#define TF_PATVELOPIXFITLHCBIDS_H 1
+// $Id: PatVPFitLHCbIDs.h,v 1.4(??) 2010/03/10 16:25:59(??) lcarson Exp(??) $
+#ifndef TF_PATVPFITLHCBIDS_H 
+#define TF_PATVPFITLHCBIDS_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
 #include "TrackInterfaces/ITrackFitter.h"
-#include "TrackInterfaces/IVeloPixClusterPosition.h"
-#include "VeloPixDet/DeVeloPix.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "TrackInterfaces/IVPClusterPosition.h"
+#include "VPDet/DeVP.h"
+#include "Event/VPLiteCluster.h"
 
 namespace LHCb {
   class Track;
 }
 
 // Forward declarations
-class DeVeloPix;
-class VeloPixLiteCluster;
+class DeVP;
+class VPLiteCluster;
 
 namespace Tf {
    
   // updated interface ID to 2.0 as part of the Tf update
-  static const InterfaceID IID_PatVeloPixFitLHCbIDs ("Tf::PatVeloPixFitLHCbIDs",1,0);
+  static const InterfaceID IID_PatVPFitLHCbIDs ("Tf::PatVPFitLHCbIDs",1,0);
 
-  /** @class PatVeloPixFitLHCbIDs PatVeloPixFitLHCbIDs.h
-   *  Tool to take a list of LHCbIDs from VeloPix and fit a track as per PatVelo
+  /** @class PatVPFitLHCbIDs PatVPFitLHCbIDs.h
+   *  Tool to take a list of LHCbIDs from VP and fit a track as per PatVelo
    *
    *  @author Laurence Carson and Victor Coco
    *  @date   2010-03-10
    */
-  class PatVeloPixFitLHCbIDs : public GaudiTool, 
+  class PatVPFitLHCbIDs : public GaudiTool, 
 			    virtual public ITrackFitter {
   public: 
 
     // Return the interface ID
-    static const InterfaceID& interfaceID() { return IID_PatVeloPixFitLHCbIDs; }
+    static const InterfaceID& interfaceID() { return IID_PatVPFitLHCbIDs; }
 
     /// Standard constructor
-    PatVeloPixFitLHCbIDs( const std::string& type, 
+    PatVPFitLHCbIDs( const std::string& type, 
 		      const std::string& name,
 		      const IInterface* parent);
 
-    virtual ~PatVeloPixFitLHCbIDs( ); ///< Destructor
+    virtual ~PatVPFitLHCbIDs( ); ///< Destructor
 
     StatusCode initialize(); ///< initialize
 
@@ -98,7 +98,7 @@ namespace Tf {
     double m_errorSlopY; ///< error on Y slope
 
     /// detector element
-    DeVeloPix* m_veloPix;
+    DeVP* m_vP;
 
     /// parameter to take MS into account
     bool m_beamState;
@@ -106,9 +106,9 @@ namespace Tf {
     double m_variableMS;
 
 
-    LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
-    IVeloPixClusterPosition* m_positiontool;
+    LHCb::VPLiteCluster::VPLiteClusters* m_clusters;
+    IVPClusterPosition* m_positiontool;
 
      };
 }
-#endif // TF_PATVELOPIXFITLHCBIDS_H
+#endif // TF_PATVPFITLHCBIDS_H

@@ -5,87 +5,85 @@
 #include "GaudiKernel/AlgFactory.h"
 
 #include "Event/Track.h"
-#include "Event/VeloPixCluster.h"
-#include "Event/VeloPixLiteMeasurement.h"
+#include "Event/VPCluster.h"
+#include "Event/VPLiteMeasurement.h"
 // local
-#include "VeloPixPatAlter.h"
-#include "VeloPixHit.h"
-#include "VeloPixTrackAlter.h"
+#include "VPPatLinear.h"
+#include "VPHit.h"
+#include "VPTrack.h"
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VeloPixPatAlter
+// Implementation file for class : VPPatLinear
 //
 // 2011-02-11 : Wenbin Qian
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloPixPatAlter )
+DECLARE_ALGORITHM_FACTORY( VPPatLinear )
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloPixPatAlter::VeloPixPatAlter( const std::string& name,
+VPPatLinear::VPPatLinear( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_sensor(48),
-    m_timeTotal(0),
+    m_timeTotal(0),  
     m_timePrepare(0),
     m_timeFind4(0),
     m_timeFind3(0),
     m_timeCross(0),
     m_timeMerge(0),
-    m_timeFinal(0) 
+    m_timeFinal(0)
 {
-  declareProperty("outputTracksLocation",      m_outputTracksLocation = LHCb::TrackLocation::VeloPix);
+  declareProperty("outputTracksLocation",      m_outputTracksLocation = LHCb::TrackLocation::VP);
   declareProperty("TrackChi2LimitePerNDOF",    m_chi2 = 0.00001);
   declareProperty("HitsWindows",               m_dist = 0.052*Gaudi::Units::mm);
   declareProperty("MaxMissed",                 m_maxMissed = 1);
   declareProperty("FractionForMerge", m_fractionForMerge= 0.60   );
   declareProperty("StateAtBeam",               m_stateAtBeam    = true );  
   declareProperty("TimingMeasurement", m_doTiming = true);
-  
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixPatAlter::~VeloPixPatAlter() {} 
+VPPatLinear::~VPPatLinear() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode VeloPixPatAlter::initialize() {
+StatusCode VPPatLinear::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_veloPix = getDet<DeVeloPix>(DeVeloPixLocation::Default);
+  m_vP = getDet<DeVP>(DeVPLocation::Default);
   
-  m_positiontool = tool<IVeloPixClusterPosition>("VeloPixClusterPosition");
+  m_positiontool = tool<IVPClusterPosition>("VPClusterPosition");
 
   if(m_doTiming){
     m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool/Timer", this );
-    m_timeTotal = m_timerTool->addTimer( "VeloPix Total" );
+    m_timeTotal = m_timerTool->addTimer( "VP Total" );
     m_timerTool->increaseIndent();
-    m_timePrepare = m_timerTool->addTimer( "VeloPix Prepare" );
-    m_timeFind4 = m_timerTool->addTimer( "VeloPix Quater" );
-    m_timeFind3 = m_timerTool->addTimer( "VeloPix triplet" );
-    m_timeCross = m_timerTool->addTimer( "VeloPix cross" );
-    m_timeMerge = m_timerTool->addTimer( "VeloPix Merge" );
-    m_timeFinal = m_timerTool->addTimer( "VeloPix store" );
+    m_timePrepare = m_timerTool->addTimer( "VP Prepare" );
+    m_timeFind4 = m_timerTool->addTimer( "VP Quater" );
+    m_timeFind3 = m_timerTool->addTimer( "VP triplet" );
+    m_timeCross = m_timerTool->addTimer( "VP cross" );
+    m_timeMerge = m_timerTool->addTimer( "VP Merge" );
+    m_timeFinal = m_timerTool->addTimer( "VP store" );
     m_timerTool->decreaseIndent();
   }
   
-
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode VeloPixPatAlter::execute() {
+StatusCode VPPatLinear::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
@@ -95,29 +93,29 @@ StatusCode VeloPixPatAlter::execute() {
   }
   
 
-  m_clusters = get<LHCb::VeloPixLiteCluster::VeloPixLiteClusters>(LHCb::VeloPixLiteClusterLocation::Default );
+  m_clusters = get<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default );
 
   m_hits.clear();
   for(int i=0; i<m_sensor;i++){
-    VeloPixHits dum;
+    VPHits dum;
     m_hits.push_back(dum);
   }
 
     
   //here,get position information from clusterlite
-  LHCb::VeloPixLiteCluster::VeloPixLiteClusters::const_iterator iclust;
+  LHCb::VPLiteCluster::VPLiteClusters::const_iterator iclust;
   for(iclust = m_clusters->begin(); iclust != m_clusters->end(); iclust++){  
-    IVeloPixClusterPosition::toolInfo clusInfo = m_positiontool->position(&(*iclust));
-    const DeVeloPixSquareType* sqDet =static_cast<const DeVeloPixSquareType*>(m_veloPix->squareSensor(clusInfo.pixel.sensor()));
+    IVPClusterPosition::toolInfo clusInfo = m_positiontool->position(&(*iclust));
+    const DeVPSquareType* sqDet =static_cast<const DeVPSquareType*>(m_vP->squareSensor(clusInfo.pixel.sensor()));
     Gaudi::XYZPoint thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ; 
     std::pair<double,double> pixSize = sqDet->PixelSize(clusInfo.pixel.pixel());
     
     double dx = pixSize.first*clusInfo.fractionalError.first ;
     if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
     double dy = pixSize.second*clusInfo.fractionalError.second;
-    LHCb::VeloPixChannelID pixid = (*iclust).channelID();
-    int sensornum = m_veloPix->sensorNum(pixid);
-    VeloPixHit* hit = new VeloPixHit(thePixPoint.x(),thePixPoint.y(),thePixPoint.z(),dx,dy,sensornum);
+    LHCb::VPChannelID pixid = (*iclust).channelID();
+    int sensornum = m_vP->sensorNum(pixid);
+    VPHit* hit = new VPHit(thePixPoint.x(),thePixPoint.y(),thePixPoint.z(),dx,dy,sensornum);
     hit->setLHCbID(LHCb::LHCbID(pixid));
     m_hits[sensornum].push_back(hit);   
   }
@@ -140,7 +138,7 @@ StatusCode VeloPixPatAlter::execute() {
   }
   
   for(int i = 0; i<m_sensor-6; i++){
-    VeloPixHits sensor0 = m_hits[i];
+    VPHits sensor0 = m_hits[i];
     if(sensor0.size()<1) continue;
     findQuadruplets(i);
   }
@@ -151,7 +149,7 @@ StatusCode VeloPixPatAlter::execute() {
   }
 
    for(int i = 0; i<m_sensor-4; i++){
-    VeloPixHits sensor0 = m_hits[i];
+    VPHits sensor0 = m_hits[i];
     if(sensor0.size()<1) continue;
     findTriplets(i);
    }
@@ -163,7 +161,7 @@ StatusCode VeloPixPatAlter::execute() {
 
    addAnotherSideHits(); 
    for(int i = 0; i<m_sensor-3; i++){
-    VeloPixHits sensor0 = m_hits[i];
+    VPHits sensor0 = m_hits[i];
     if(sensor0.size()<1) continue;
     findCrossed(i);
    }
@@ -193,7 +191,7 @@ StatusCode VeloPixPatAlter::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode VeloPixPatAlter::finalize() {
+StatusCode VPPatLinear::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg; 
 
@@ -201,13 +199,13 @@ StatusCode VeloPixPatAlter::finalize() {
 }
 
 //=============================================================================
-void VeloPixPatAlter::findQuadruplets( int sens0)
+void VPPatLinear::findQuadruplets( int sens0)
 {
-  VeloPixHits sensor0 = m_hits[sens0];
+  VPHits sensor0 = m_hits[sens0];
   
-  VeloPixHits sensor1;
-  VeloPixHits sensor2;
-  VeloPixHits sensor3;
+  VPHits sensor1;
+  VPHits sensor2;
+  VPHits sensor3;
  
   for( int iCase = 0; 4 > iCase; ++iCase){
     if( iCase == 0 ){
@@ -235,51 +233,65 @@ void VeloPixPatAlter::findQuadruplets( int sens0)
     if ( sensor2.size()<1 ) continue;
     if ( sensor3.size()<1 ) continue;
     
-    VeloPixHits::const_iterator c0, c3, c1, c2;
+    VPHits::const_iterator c0, c3, c1, c2;
     for( c0 = sensor0.begin();sensor0.end() != c0; ++c0){
       if((*c0)->getused()) continue;
-      VeloPixTrackAlter newtrack;
-      newtrack.addHit(&(*(*c0)));
+      VPTrack newtrack;
+      newtrack.addXHit(&(*(*c0)));
       for( c3 = sensor3.begin();sensor3.end() != c3; ++c3){
         if((*c3)->getused()) continue;
-        newtrack.addHit(&(*(*c3)));
-        VeloPixHit* bestc1 = FindClosest(sensor1,newtrack);
-        if(bestc1 == NULL) {newtrack.removeHit(&(*(*c3)));continue;}
-        newtrack.addHit(bestc1);
-        VeloPixHit* bestc2 = FindClosest(sensor2,newtrack);
-        if(bestc2 == NULL) {newtrack.removeHit(&(*(*c3)));newtrack.removeHit(bestc1);continue;}
-        newtrack.addHit(bestc2);
-        if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){ 
-            newtrack.removeHit(&(*(*c3)));
-            newtrack.removeHit(bestc2);
-            newtrack.removeHit(bestc1);
+        newtrack.addXHit(&(*(*c3)));
+        for( c1 = sensor1.begin();sensor1.end() != c1; ++c1){
+       if((*c1)->getused()) continue;
+          if(fabs((*c1)->x()-newtrack.xAtz((*c1)->z())) > m_dist ) continue;
+          newtrack.addXHit(&(*(*c1)));
+//          if( newtrack.probChi2(newtrack.getChi2(),newtrack.getHitsNum()-2)< m_chi2 ){ 
+             if( newtrack.getChi2()>(2*newtrack.getHitsNum()+13) ){
+             newtrack.removeXHit(&(*(*c1)));
             continue;
-        }
-        (*c0)->addused();
-        (bestc1)->addused();
-        (bestc2)->addused();
-        (*c3)->addused();
+          }
+          for( c2 = sensor2.begin();sensor2.end() != c2; ++c2){
+            if((*c2)->getused()) continue;
+            if(fabs((*c2)->x()-newtrack.xAtz((*c2)->z())) > m_dist ) continue;
+            newtrack.addXHit(&(*(*c2)));
+//            if( newtrack.probChi2(newtrack.getChi2(),newtrack.getHitsNum()-2) < m_chi2 ) {
+               if( newtrack.getChi2()>(2*newtrack.getHitsNum()+13) ){
+               newtrack.removeXHit(&(*(*c2)));
+              continue;
+            }
+            newtrack.UpdateYHits();
+//            if( newtrack.probChi2(newtrack.getChi2(),2*(newtrack.getHitsNum()-2)) < m_chi2 ) {
+             if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){ 
+             newtrack.removeXHit(&(*(*c2)));
+              continue;
+            }
+            (*c0)->addused();
+            (*c1)->addused();
+            (*c2)->addused();
+            (*c3)->addused();
             
-        if(iCase == 0)
-           extendTrack(newtrack, sens0+8, true);
-        else extendTrack(newtrack, sens0+10, true);
-        m_tracks.push_back(newtrack);
-        newtrack.removeHit(bestc2);
-        newtrack.removeHit(bestc1);
-        newtrack.removeHit(&(*(*c3)));
+            if(iCase == 0)
+              extendTrack(newtrack, sens0+8, true);
+            else extendTrack(newtrack, sens0+10, true);
+            m_tracks.push_back(newtrack);
+            newtrack.removeXHit(&(*(*c2)));
+          }//loop c2
+          newtrack.removeXHit(&(*(*c1)));
+        }//loop c1
+        newtrack.removeXHit(&(*(*c3)));
       }//loop c3
-      newtrack.removeHit(&(*(*c0)));
+      newtrack.removeXHit(&(*(*c0)));
     }//loop c0
   }//loop icase
 }
 
 
-void VeloPixPatAlter::findTriplets (int sens0)
+void VPPatLinear::findTriplets (int sens0)
 {
-  VeloPixHits sensor0 = m_hits[sens0];
+  VPHits sensor0 = m_hits[sens0];
   
-  VeloPixHits sensor1;
-  VeloPixHits sensor2;
+  VPHits sensor1;
+  VPHits sensor2;
  
   for( int iCase = 0; 3 > iCase; ++iCase){
     if( iCase == 0 ){
@@ -299,43 +311,51 @@ void VeloPixPatAlter::findTriplets (int sens0)
     if ( sensor1.size()<1 ) continue;
     if ( sensor2.size()<1 ) continue;
        
-    VeloPixHits::const_iterator c0, c1, c2;
+    VPHits::const_iterator c0, c1, c2;
     for( c0 = sensor0.begin();sensor0.end() != c0; ++c0){
       if((*c0)->getused()) continue;
-      VeloPixTrackAlter newtrack;
-      newtrack.addHit(&(*(*c0)));
+      VPTrack newtrack;
+      newtrack.addXHit(&(*(*c0)));
       for( c2 = sensor2.begin();sensor2.end() != c2; ++c2){
         if((*c2)->getused()) continue;
-        newtrack.addHit(&(*(*c2)));
-        VeloPixHit* bestc1 = FindClosest(sensor1,newtrack);
-        if(bestc1 == NULL) {newtrack.removeHit(&(*(*c2)));continue;}
-        newtrack.addHit(bestc1);
-        if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
-            newtrack.removeHit(&(*(*c2)));
-            newtrack.removeHit(bestc1);
+        newtrack.addXHit(&(*(*c2)));
+        for( c1 = sensor1.begin();sensor1.end() != c1; ++c1){
+          if((*c1)->getused()) continue;
+          if(fabs((*c1)->x()-newtrack.xAtz((*c1)->z())) > m_dist ) continue;
+          newtrack.addXHit(&(*(*c1)));
+//          if( newtrack.probChi2(newtrack.getChi2(),newtrack.getHitsNum()-2) < m_chi2) {
+           if( newtrack.getChi2()>(2*newtrack.getHitsNum()+13) ){
+            newtrack.removeXHit(&(*(*c1)));
             continue;
-        }
-       (*c0)->addused();
-       (bestc1)->addused();
-       (*c2)->addused();
-       if(iCase == 0)
-         extendTrack(newtrack, sens0+6, true);
-       else  extendTrack(newtrack, sens0+8, true);
-       m_tracks.push_back(newtrack);
-       newtrack.removeHit(bestc1);
-       newtrack.removeHit(&(*(*c2)));
-       }//loop c3
-      newtrack.removeHit(&(*(*c0)));
+          }
+          newtrack.UpdateYHits();
+//          if( newtrack.probChi2(newtrack.getChi2(),2*(newtrack.getHitsNum()-2)) < m_chi2) {
+            if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
+            newtrack.removeXHit(&(*(*c1)));
+            continue;
+          }
+          (*c0)->addused();
+          (*c1)->addused();
+          (*c2)->addused();
+          if(iCase == 0)
+            extendTrack(newtrack, sens0+6, true);
+          else  extendTrack(newtrack, sens0+8, true);
+          m_tracks.push_back(newtrack);
+          newtrack.removeXHit(&(*(*c1)));
+        }//loop c1
+        newtrack.removeXHit(&(*(*c2)));
+      }//loop c3
+      newtrack.removeXHit(&(*(*c0)));
     }//loop c0
   }//loop icase
 }
 
-void VeloPixPatAlter::findCrossed (int sens0)
+void VPPatLinear::findCrossed (int sens0)
 {
-  VeloPixHits sensor0 = m_hits[sens0];
+  VPHits sensor0 = m_hits[sens0];
              
-  VeloPixHits sensor1;
-  VeloPixHits sensor2;
+  VPHits sensor1;
+  VPHits sensor2;
           
   for( int iCase = 0; 6 > iCase; ++iCase){
     if( iCase == 0 ){
@@ -366,38 +386,46 @@ void VeloPixPatAlter::findCrossed (int sens0)
     if ( sensor1.size()<1 ) continue;
     if ( sensor2.size()<1 ) continue;
           
-    VeloPixHits::const_iterator c0, c1, c2;
+    VPHits::const_iterator c0, c1, c2;
     for( c0 = sensor0.begin();sensor0.end() != c0; ++c0){
       if((*c0)->getused()) continue;
-      VeloPixTrackAlter newtrack;
-      newtrack.addHit(&(*(*c0)));
+      VPTrack newtrack;
+      newtrack.addXHit(&(*(*c0)));
       for( c2 = sensor2.begin();sensor2.end() != c2; ++c2){
         if((*c2)->getused()) continue; 
-        newtrack.addHit(&(*(*c2)));
-        VeloPixHit* bestc1 = FindClosest(sensor1,newtrack);
-        if(bestc1 == NULL) {newtrack.removeHit(&(*(*c2)));continue;}
-        newtrack.addHit(bestc1);
-        if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
-            newtrack.removeHit(&(*(*c2)));
-            newtrack.removeHit(bestc1);
+        newtrack.addXHit(&(*(*c2)));
+        for( c1 = sensor1.begin();sensor1.end() != c1; ++c1){
+          if((*c1)->getused()) continue;
+          if(fabs((*c1)->x()-newtrack.xAtz((*c1)->z())) > m_dist ) continue;
+          newtrack.addXHit(&(*(*c1)));
+//          if( newtrack.probChi2(newtrack.getChi2(),newtrack.getHitsNum()-2) < m_chi2) {
+if( newtrack.getChi2()>(2*newtrack.getHitsNum()+13) ){
+            newtrack.removeXHit(&(*(*c1)));
             continue;
-        }
-        (*c0)->addused();
-        (bestc1)->addused();
-        (*c2)->addused();
-        if(iCase == 0)
-           extendTrack(newtrack, sens0+5, true);
-        else extendTrack(newtrack, sens0+7, true);
-        m_tracks.push_back(newtrack);
-        newtrack.removeHit(bestc1);
-        newtrack.removeHit(&(*(*c2)));
+          }
+          newtrack.UpdateYHits();
+//          if( newtrack.probChi2(newtrack.getChi2(),2*(newtrack.getHitsNum()-2)) < m_chi2) {
+if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
+            newtrack.removeXHit(&(*(*c1)));
+            continue; 
+          }
+          (*c0)->addused();
+          (*c1)->addused();
+          (*c2)->addused();
+          if(iCase == 0)
+            extendTrack(newtrack, sens0+5, true);
+          else extendTrack(newtrack, sens0+7, true);
+           m_tracks.push_back(newtrack);
+          newtrack.removeXHit(&(*(*c1)));
+        }//loop c1
+        newtrack.removeXHit(&(*(*c2)));
       }//loop c3
-      newtrack.removeHit(&(*(*c0)));
+      newtrack.removeXHit(&(*(*c0)));
     }//loop c0
   }//loop icase
 }
 
-void VeloPixPatAlter::extendTrack( VeloPixTrackAlter& newtrack, int sens0,  bool forward)
+void VPPatLinear::extendTrack( VPTrack& newtrack, int sens0,  bool forward)
 {
   int nMiss = 0;
   int sign;
@@ -406,50 +434,64 @@ void VeloPixPatAlter::extendTrack( VeloPixTrackAlter& newtrack, int sens0,  bool
   
   bool inside = sens0<m_sensor;
   while ( m_maxMissed >= nMiss && inside){
-    VeloPixHits sensor1 = m_hits[sens0];
+    bool addhit = false;
+    VPHits sensor1 = m_hits[sens0];
     if(sensor1.size()<1){
       nMiss++;
       sens0 = sens0 + sign *2;
-      inside =((sens0 >= 0) && (sens0 < m_sensor));
+      inside =((sens0 > 0) && (sens0 < m_sensor));
       continue;
     }
 
-    VeloPixHit* besthit = FindClosest(sensor1,newtrack);
-    if(besthit == NULL ) {
-      sens0 = sens0 + sign * 2;
-      inside =((sens0 >= 0) && (sens0 < m_sensor));
-      nMiss++;
-      continue;
-    }
-    newtrack.addHit(besthit);
-    if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
-        sens0 = sens0 + sign * 2;
-        inside =((sens0 >= 0) && (sens0 < m_sensor));
-        newtrack.removeHit(besthit);
-        nMiss++;
+    VPHits::iterator itbest;
+    double bestchi2 = 10000;
+    for(VPHits::iterator itH = sensor1.begin(); sensor1.end() != itH; ++itH ){
+      if(fabs((*itH)->x()-newtrack.xAtz((*itH)->z())) > m_dist) continue;
+      newtrack.addXHit(&(*(*itH)));
+//      if( newtrack.probChi2(newtrack.getChi2(),newtrack.getHitsNum()-2) < m_chi2 ) {
+if( newtrack.getChi2()>(2*newtrack.getHitsNum()+13) ){
+        newtrack.removeXHit(&(*(*itH)));
         continue;
+      }
+      newtrack.UpdateYHits();
+//      if( newtrack.probChi2(newtrack.getChi2(),2*(newtrack.getHitsNum()-2)) < m_chi2 ) {
+if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
+        newtrack.removeXHit(&(*(*itH)));
+        continue;
+      }
+      addhit = true;
+      if( newtrack.getChi2() < bestchi2 ){
+        bestchi2 = newtrack.getChi2();
+        itbest = itH;
+      }
+      newtrack.removeXHit(&(*(*itH)));
     }
-    besthit->addused();
+    if(!addhit) nMiss++;
+    else {
+      (*itbest)->addused();
+      newtrack.addXHit(&(*(*itbest)));
+      newtrack.UpdateYHits();
+    }
     sens0 = sens0 + sign * 2;
-    inside =((sens0 >= 0) && (sens0 < m_sensor));
+    inside =((sens0 > 0) && (sens0 < m_sensor));
   }
 }
 
-void VeloPixPatAlter::addAnotherSideHits()
+void VPPatLinear::addAnotherSideHits()
 {
   if(m_tracks.size() == 0) return;
-  VeloPixTrackAlters::iterator itT;
+  VPTracks::iterator itT;
   for( itT = m_tracks.begin(); itT != m_tracks.end();++itT){
     int firstsensor = (*((*itT).hits().begin()))->sensor()-1;
     int endsensor = (*( (*itT).hits().end()-1))->sensor()+1;
     if(firstsensor>-1){
-      const DeVeloPixSquareType *firsttype = m_veloPix->squareSensor(firstsensor);
+      const DeVPSquareType *firsttype = m_vP->squareSensor(firstsensor);
       double firstz = firsttype->z();
       Gaudi::XYZPoint firstpoint((*itT).xAtz(firstz),(*itT).yAtz(firstz),firstz);
       if(firsttype->isInActiveArea(firstpoint)) extendTrack((*itT),firstsensor,false);
     }
     if(endsensor < m_sensor){
-      const DeVeloPixSquareType *endtype = m_veloPix->squareSensor(endsensor);
+      const DeVPSquareType *endtype = m_vP->squareSensor(endsensor);
       double endz = endtype->z();
       Gaudi::XYZPoint endpoint((*itT).xAtz(endz),(*itT).yAtz(endz),endz);
       if(endtype->isInActiveArea(endpoint)) extendTrack((*itT),endsensor,true);
@@ -459,21 +501,21 @@ void VeloPixPatAlter::addAnotherSideHits()
 
 
 
-void VeloPixPatAlter::makeLHCbTracks( LHCb::Tracks* outputTracks)
+void VPPatLinear::makeLHCbTracks( LHCb::Tracks* outputTracks)
 {
   if(m_tracks.size()){
-    for( VeloPixTrackAlters::iterator itT = m_tracks.begin(); m_tracks.end() != itT; ++itT ){
+    for( VPTracks::iterator itT = m_tracks.begin(); m_tracks.end() != itT; ++itT ){
       if(!(*itT).isValid()) continue;
       LHCb::Track *newtrack = new LHCb::Track();
       newtrack->setType( LHCb::Track::Velo );
-      newtrack->setHistory( LHCb::Track::PatVeloPix );
-      newtrack->setPatRecStatus( LHCb::Track::PatRecIDs );
-      
+      newtrack->setHistory( LHCb::Track::PatVP );
+      newtrack->setPatRecStatus( LHCb::Track::PatRecIDs );     
+ 
       double zMin = 1.e9;
       double zMax = -1.e9;
 
-      VeloPixHits hits = (*itT).hits();
-      for( VeloPixHits::iterator itH = hits.begin();hits.end() != itH; itH++){
+      VPHits hits = (*itT).hits();
+      for( VPHits::iterator itH = hits.begin();hits.end() != itH; itH++){
         newtrack->addToLhcbIDs( (*itH)->lhcbID() );
         if( (*itH)->z() > zMax ) zMax = (*itH)->z();
         if( (*itH)->z() < zMin ) zMin = (*itH)->z();
@@ -502,16 +544,13 @@ void VeloPixPatAlter::makeLHCbTracks( LHCb::Tracks* outputTracks)
         state.setCovariance( (*itT).covariance( zMax ));
         newtrack->addToStates( state );
       }
-      
-      outputTracks->insert( newtrack );  
+        outputTracks->insert( newtrack );  
     }
   }
 }
-void VeloPixPatAlter::mergeClones ( ) {
+void VPPatLinear::mergeClones ( ) {
   if ( m_tracks.size() <= 1 ) return;
-  VeloPixTrackAlters::iterator it1, it2;
-  info()<<"tracks stored before clone removal: "<<m_tracks.size()<<endmsg;
-  int finalnumber = 0;
+  VPTracks::iterator it1, it2;
   for ( it1 = m_tracks.begin(); m_tracks.end()-1 > it1 ; ++it1 ) {
     if ( !(*it1).isValid() ) continue;
     int n1 = (*it1).hits().size();
@@ -520,9 +559,9 @@ void VeloPixPatAlter::mergeClones ( ) {
       int n2 = (*it2).hits().size();
       int minN = n1 > n2 ? n2 : n1;
       int nCommon = 0;
-      VeloPixHits::iterator itH1,itH2;
-      VeloPixHits hits1 = (*it1).hits();
-      VeloPixHits hits2 = (*it2).hits();
+      VPHits::iterator itH1,itH2;
+      VPHits hits1 = (*it1).hits();
+      VPHits hits2 = (*it2).hits();
       for ( itH1 = hits1.begin(); hits1.end() != itH1 ; ++itH1 ) {
         for ( itH2 = hits2.begin(); hits2.end() != itH2 ; ++itH2 ) {
           if ( (*itH1)== (*itH2) ) {++nCommon;
@@ -531,7 +570,6 @@ void VeloPixPatAlter::mergeClones ( ) {
       }
       
       if ( nCommon > m_fractionForMerge * minN ) {
-        finalnumber ++;
         if ( n2 > n1 ) {
           (*it1).setValid( false );
           break;
@@ -546,22 +584,5 @@ void VeloPixPatAlter::mergeClones ( ) {
       }
     } 
   }
-  info()<<"tracks after clone removal: "<<m_tracks.size()-finalnumber<<endmsg;
 }
-
-VeloPixHit* VeloPixPatAlter::FindClosest( VeloPixHits& hits, VeloPixTrackAlter& newtrack){
-   double minDist = 999.;
-   VeloPixHit* best = NULL;
-   for( VeloPixHits::iterator itH = hits.begin(); hits.end() != itH; itH++){
-     if((*itH)->getused()) continue;
-     double xdist = fabs((*itH)->x()-newtrack.xAtz((*itH)->z()));
-     if(xdist > m_dist) continue;
-     double ydist = fabs((*itH)->y()-newtrack.yAtz((*itH)->z()));
-     if(ydist > m_dist) continue;
-     double r2 = xdist*xdist+ydist*ydist;
-     if(r2 < minDist ) {minDist = r2; best = *itH;}
-  }
-  return best;
-}
-
 

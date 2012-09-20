@@ -4,6 +4,9 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+! 2012-09-20 - Paul Szczypka
+ - Rename VeloPix to VP
+
 !========================= RecoUpgrade v2r2 2011-04-27 =========================
 !2011-04-12  -Wenbin Qian
 -  modify covariance matrix
