@@ -16,7 +16,8 @@ parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogr
 import os
 rundir = os.getcwd()
 
-os.mkdir(opts.basedir)
+if not os.path.isdir(opts.basedir):
+    os.mkdir(opts.basedir)
 os.chdir(opts.basedir)
 
 for i in range(opts.firstiter,opts.numiter) :

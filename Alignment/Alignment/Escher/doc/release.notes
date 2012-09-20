@@ -4,11 +4,14 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
-</PRE><H1><A NAME=v4r13>2012-03-28 Escher v4r13</A></H1><PRE>
+! 2012-09-20 - Maurizio Martinelli
+ - updated Escher scripts for running 2012 alignment
 
 ! 2012-05-02 - Maurizio Martinelli
  - added an option to gaudipariter.py to write alignment results into
    a specified directory
+
+</PRE><H1><A NAME=v4r13>2012-03-28 Escher v4r13</A></H1><PRE>
 
 ! 2012-03-28 - Rob Lambert
  - Minor changes from Wouter and Mauritzio

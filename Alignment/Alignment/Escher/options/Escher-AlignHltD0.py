@@ -1,5 +1,5 @@
 ###############################################################################
-# File for running alignment with J/psi reconstructed from HLT sel reports
+# File for running alignment with D0 reconstructed from HLT sel reports
 ###############################################################################
 # Syntax is:
 #   gaudiiter.py Escher-AlignHltJpsi.py <someDataFiles>.py
@@ -9,11 +9,15 @@ from Configurables import Escher
 
 # Just instantiate the configurable...
 theApp = Escher()
-theApp.DataType   = "2011"
+theApp.DataType   = "2012"
 theApp.InputType  = "MDF"
-theApp.PrintFreq = 1000
-theApp.EvtMax = -1
+theApp.PrintFreq = 10000
+theApp.EvtMax = 200000
 theApp.DatasetName = 'AlignHltD0'
+
+# COND DB
+theApp.DDDBtag = 'dddb-20120831'
+theApp.CondDBtag = 'cond-20120831'
 
 # specify the input to the alignment
 from Configurables import TAlignment
@@ -24,4 +28,4 @@ TAlignment().TrackSelections = [ NoPIDTracksFromHlt() ]
 
 # specify what we actually align for
 from TAlignment.AlignmentScenarios import *
-configurePromptAlignment()
+configure2012DataAlignment()
