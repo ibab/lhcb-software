@@ -1104,10 +1104,10 @@ class Gauss(LHCbConfigurableUser):
         if self.getProp("EnablePack") and self.getProp("DataPackingChecks") :            
             packCheckSeq = GaudiSequencer( "DataUnpackTest"+slot )
             from Configurables import DataPacking__Unpack_LHCb__MCFTHitPacker_
-            upFT   = DataPacking__Unpack_LHCb__MCFTHitPacker_("UnpackFTHits"+slot,
+            upFT = DataPacking__Unpack_LHCb__MCFTHitPacker_("UnpackFTHits"+slot,
                                                               OutputName = "MC/FT/HitsTest" )
             from Configurables import DataPacking__Check_LHCb__MCFTHitPacker_
-            cFT   = DataPacking__Check_LHCb__MCFTHitPacker_("CheckFTHits"+slot )
+            cFT  = DataPacking__Check_LHCb__MCFTHitPacker_("CheckFTHits"+slot )
             packCheckSeq.Members += [upFT, cFT]
 
 
