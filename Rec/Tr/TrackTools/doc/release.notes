@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-09-20 - Paul Seyfert
+ - TrackNNGhostId and TMVA: tuning of ghost probability. tuned for Reco14, to
+   be used in postReco14 or in DaVinci on Reco14 data.
+
 ! 2012-09-20 - Paul Szczypka
  - Rename of VeloPix to VP
 

@@ -55,7 +55,6 @@ private:
   IClassifierReader* m_readerDownstream;
   IClassifierReader* m_readerTtrack;
   IClassifierReader* m_readerLong;
-  IClassifierReader* m_readerLong12;
 
   IHitExpectation* m_ttExpectation;
   IHitExpectation* m_itExpectation;
@@ -64,7 +63,11 @@ private:
 
   bool m_tuningMC12;
 
-  const Rich::TabulatedFunction1D* m_FlattenLookupTable;
+  const Rich::TabulatedFunction1D* m_FlattenLookupTableLongtrack;
+  const Rich::TabulatedFunction1D* m_FlattenLookupTableVelo;
+  const Rich::TabulatedFunction1D* m_FlattenLookupTableUpstream;
+  const Rich::TabulatedFunction1D* m_FlattenLookupTableDownstream;
+  const Rich::TabulatedFunction1D* m_FlattenLookupTableTtrack;
 
 };
 #endif // TRACKNNGHOSTID_H
