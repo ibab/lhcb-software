@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackFitEvent'>
+
+<!-- ================ MuonMeasurement class definition ================ -->
+
+    <class
+      name        = 'VPLiteMeasurement'
+      author      = 'Victor Coco, based on MuonMeasurement class'
+      desc        = 'VPLiteMeasurement is a measurement made from a VPLite cluster'
+      defaultconstructor ='FALSE'
+      serializers = 'FALSE'>
+
+      <base name='LHCb::Measurement' />
+      <import name='Event/Measurement' />
+      <import name='Event/VPLiteCluster' />
+      <import name='TrackInterfaces/IVPClusterPosition'/>
+      <import name='DeVP' namespace='::' soft='FORWARDONLY'/>
+      <import name='StateVector' soft='FORWARDONLY'/>
+      <import name='DeVPSquareType' namespace='::' soft='FORWARDONLY'/>
+
+      <enum
+        name   = 'VPLiteMeasurementType'
+        desc   = 'x or y measurement'
+        value  = 'X=1,
+	          Y=2'
+        access = 'PUBLIC' />
+
+      <constructor
+        desc = 'Constructor from a VPLitCluster'>
+        <arg type='DeVP' name='vpdet' const='TRUE' />
+        <arg type='LHCb::VPLiteCluster' name='cluster' const='TRUE' />
+        <arg type = 'IVPClusterPosition' name = 'clusPosTool' const='TRUE' />
+        <arg type='VPLiteMeasurement::VPLiteMeasurementType' name='xy' />
+      </constructor>
+
+      <constructor
+        desc = 'Constructor from a VPLitCluster with known TrState'>
+        <arg type='DeVP' name='vpdet' const='TRUE' />
+        <arg type='LHCb::VPLiteCluster' name='cluster' const='TRUE' />
+        <arg type = 'IVPClusterPosition' name = 'clusPosTool' const='TRUE' />
+        <arg type='VPLiteMeasurement::VPLiteMeasurementType' name='xy' />
+        <arg type='LHCb::StateVector' name='refVector' const='TRUE' />
+      </constructor>
+
+
+     <constructor
+        desc = 'Copy constructor'>
+        <arg type='LHCb::VPLiteMeasurement' name='other' const='TRUE'/>
+      </constructor>
+
+      <method
+        name   = 'init'
+        desc   = 'Initialize the data members'
+        access = 'PUBLIC'>
+        <arg type = 'DeVP' name = 'det' const='TRUE' />
+        <arg type = 'IVPClusterPosition::toolInfo' name = 'clusinfo'
+	  const='TRUE' />
+      </method>
+
+      <attribute
+        type = 'Gaudi::XYZPoint'
+        name = 'position'
+        desc = 'Position of the pixel center'/>
+
+      <attribute
+        type = 'VPLiteMeasurementType'
+        name = 'vPProjection'
+        desc = 'x or y vP measurement'/>
+
+      <attribute
+        type = 'const LHCb::VPLiteCluster*'
+        name = 'cluster'
+        desc = 'Pointer to the VPLiteCluster'
+	getMeth = 'FALSE'
+        setMeth = 'FALSE'  />
+
+      <method
+        type  = 'const LHCb::VPLiteCluster*'
+        name  = 'cluster'
+        desc  = 'Retrieve const  Pointer to the VPLiteCluster'
+        const = 'TRUE'>
+        <code>
+  return m_cluster;
+        </code>
+      </method>
+
+
+      <method
+        type    = 'LHCb::VPLiteMeasurement*'
+        name    = 'clone'
+        desc    = 'Clone the VPLiteMeasurement'
+        virtual = 'TRUE'
+        const   = 'TRUE'>
+        <code>
+          return new LHCb::VPLiteMeasurement(*this);
+        </code>
+      </method>
+
+
+     <method
+       type = 'const DeVPSquareType&amp;'
+       name = 'sensor'
+       desc = 'Retrieve const the sector of the measurement'
+       const = 'TRUE'>
+      </method>
+
+
+    </class>
+
+  </package>
+</gdd>
+

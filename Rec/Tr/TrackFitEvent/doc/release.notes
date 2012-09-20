@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 20120-09-20 - Paul Szczypka
+ - VeloPix to VP renaming
+
 !========================= TrackFitEvent v5r17 2012-07-24 =========================
 ! 2012-07-23 - Wouter Hulsbergen
 - added method to KalmanFitResult to compute number of active OTTimes and chi2

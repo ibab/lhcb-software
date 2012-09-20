@@ -1,16 +1,16 @@
-// $Id: VeloPixLiteMeasurement.cpp,v 1.1 2010-04-13 08:58:10 cocov Exp $
+// $Id: VPLiteMeasurement.cpp,v 1.1 2010-04-13 08:58:10 cocov Exp $
 // Include files 
 
 // local
-#include "Event/VeloPixLiteMeasurement.h"
-#include "VeloPixDet/DeVeloPix.h"
+#include "Event/VPLiteMeasurement.h"
+#include "VPDet/DeVP.h"
 #include "Kernel/LineTraj.h"
 #include "LHCbMath/LHCbMath.h"
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VeloPixLiteMeasurement
+// Implementation file for class : VPLiteMeasurement
 //
 // Author: Victor Coco, based on solution used in MuonMeasurement by Jose Hernando, 
 // Miriam Gandelman, Erica Polycarpo, Silvia Pozzi
@@ -18,38 +18,38 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 
-/// Constructor out of the VeloPixLite cluster, dx, dy are the error on the cluster...
-VeloPixLiteMeasurement::VeloPixLiteMeasurement( const DeVeloPix& velopixdet,const VeloPixLiteCluster& acluster,
-                                                const IVeloPixClusterPosition& clusPosTool, 
-                                                VeloPixLiteMeasurement::VeloPixLiteMeasurementType& XY)
-  : Measurement(Measurement::VeloPixLite,acluster.channelID(),0),
-    m_veloPixProjection(XY),
+/// Constructor out of the VPLite cluster, dx, dy are the error on the cluster...
+VPLiteMeasurement::VPLiteMeasurement( const DeVP& vpdet,const VPLiteCluster& acluster,
+                                                const IVPClusterPosition& clusPosTool, 
+                                                VPLiteMeasurement::VPLiteMeasurementType& XY)
+  : Measurement(Measurement::VPLite,acluster.channelID(),0),
+    m_vPProjection(XY),
     m_cluster(&acluster)
 {
-  IVeloPixClusterPosition::toolInfo clusInfo = 
+  IVPClusterPosition::toolInfo clusInfo = 
     clusPosTool.position(this->cluster()) ; 
-  this->init( velopixdet, clusInfo ) ;
+  this->init( vpdet, clusInfo ) ;
   
 }
-/// Constructor out of the VeloPixLite cluster knowing the ref track state, dx, dy are the error on the cluster...
-VeloPixLiteMeasurement::VeloPixLiteMeasurement( const DeVeloPix& velopixdet,const VeloPixLiteCluster& acluster,
-                                                const IVeloPixClusterPosition& clusPosTool, 
-                                                VeloPixLiteMeasurement::VeloPixLiteMeasurementType& XY,
+/// Constructor out of the VPLite cluster knowing the ref track state, dx, dy are the error on the cluster...
+VPLiteMeasurement::VPLiteMeasurement( const DeVP& vpdet,const VPLiteCluster& acluster,
+                                                const IVPClusterPosition& clusPosTool, 
+                                                VPLiteMeasurement::VPLiteMeasurementType& XY,
                                                 const LHCb::StateVector& refVector)
-  : Measurement(Measurement::VeloPixLite,acluster.channelID(),0),
-  m_veloPixProjection(XY),
+  : Measurement(Measurement::VPLite,acluster.channelID(),0),
+  m_vPProjection(XY),
     m_cluster(&acluster)
 {
-  IVeloPixClusterPosition::toolInfo clusInfo = 
+  IVPClusterPosition::toolInfo clusInfo = 
     clusPosTool.position(this->cluster(),refVector.position(),
                          std::pair<double,double>(refVector.tx(),refVector.ty())) ; 
-  this->init( velopixdet, clusInfo ) ;  
+  this->init( vpdet, clusInfo ) ;  
 }
 
-void VeloPixLiteMeasurement::init( const DeVeloPix& det, const IVeloPixClusterPosition::toolInfo& clusInfo )
+void VPLiteMeasurement::init( const DeVP& det, const IVPClusterPosition::toolInfo& clusInfo )
 {
   m_detectorElement = det.squareSensor(clusInfo.pixel.sensor() );
-  const DeVeloPixSquareType& sqDet=this->sensor();
+  const DeVPSquareType& sqDet=this->sensor();
   //std::pair<double,double> thePixPoint = sqDet.globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
   Gaudi::XYZPoint position =  sqDet.globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
 
@@ -68,7 +68,7 @@ void VeloPixLiteMeasurement::init( const DeVeloPix& det, const IVeloPixClusterPo
   double dy = pixSize.second*clusInfo.fractionalError.second;
   setZ(position.z());
   // Case of the X projection
-  if(m_veloPixProjection == X){
+  if(m_vPProjection == X){
     setMeasure(position.x());
     setErrMeasure(2.*dx);
     Gaudi::XYZVector y_dir(0,1,0); 
@@ -88,11 +88,11 @@ void VeloPixLiteMeasurement::init( const DeVeloPix& det, const IVeloPixClusterPo
 }
 
 /// Copy constructor
-VeloPixLiteMeasurement::VeloPixLiteMeasurement( const VeloPixLiteMeasurement& other ) 
-  : Measurement(other),m_veloPixProjection(other.m_veloPixProjection), m_cluster(other.m_cluster) {
+VPLiteMeasurement::VPLiteMeasurement( const VPLiteMeasurement& other ) 
+  : Measurement(other),m_vPProjection(other.m_vPProjection), m_cluster(other.m_cluster) {
 }
 
 
-const DeVeloPixSquareType& VeloPixLiteMeasurement::sensor() const{
-  return *static_cast<const DeVeloPixSquareType *>(detectorElement());
+const DeVPSquareType& VPLiteMeasurement::sensor() const{
+  return *static_cast<const DeVPSquareType *>(detectorElement());
 }

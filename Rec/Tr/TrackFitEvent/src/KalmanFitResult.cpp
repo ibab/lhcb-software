@@ -150,7 +150,7 @@ namespace LHCb
 	   it != fitnodes.end(); ++it ) {
 	if( (*it)->type() == LHCb::Node::HitOnTrack ) {
 	  switch( (*it)->measurement().type() ) {
-	  case Measurement::VeloPixLite:
+	  case Measurement::VPLite:
 	  case Measurement::VeloR:
 	  case Measurement::VeloPhi:
 	  case Measurement::VeloLiteR:
