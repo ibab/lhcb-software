@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2012-09-20 - Paul Szczypka
+ - Rename VeloPix to VP
+
 !========================= TrackProjectors v2r31 2012-03-27 =========================
 ! 2012-03-08 - Wouter Hulsbergen
  - resolve coverity issues in TrackOTLRSignTool

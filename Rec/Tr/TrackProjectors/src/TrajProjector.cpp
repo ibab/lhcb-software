@@ -41,12 +41,12 @@ struct Velo {
 typedef TrajProjector<Velo> TrajVeloProjector;
 DECLARE_TOOL_FACTORY( TrajVeloProjector )
 
-struct VeloPix {
+struct VP {
   static double defaultTolerance() { return 0.0005*Gaudi::Units::mm; }
 };
 
-typedef TrajProjector<VeloPix> TrajVeloPixProjector;
-DECLARE_TOOL_FACTORY( TrajVeloPixProjector )
+typedef TrajProjector<VP> TrajVPProjector;
+DECLARE_TOOL_FACTORY( TrajVPProjector )
 
 struct Muon {
   static double defaultTolerance() { return 0.002*Gaudi::Units::mm; }
