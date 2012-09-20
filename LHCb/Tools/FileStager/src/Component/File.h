@@ -42,6 +42,11 @@ public:
       return m_temporary;
    }
 
+   const std::string& errorMessage() const
+   {
+      return m_errorMessage;
+   }
+
    boost::mutex& openMutex()
    {
       return m_openMutex;
@@ -128,6 +133,9 @@ private:
    const std::string m_remote;
    // The name of the temporary file
    const std::string m_temporary;
+
+   // A string to hold possible error messages
+   mutable std::string m_errorMessage;
 
    bool m_staged;
    bool m_good;

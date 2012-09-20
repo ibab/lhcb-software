@@ -69,7 +69,8 @@ bool File::exists() const
    if ( !m_size ) {
       try {
          size();
-      } catch( const GaudiException& ) {
+      } catch( const GaudiException& e ) {
+         m_errorMessage = e.message();
          return false;
       }
    }

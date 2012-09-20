@@ -359,13 +359,14 @@ void FileStagerSvc::stage()
             // Check if file exists
             bool err = false;
 
-            if ( !stageFile->exists() && !fs::exists( temporaryPath ) ) {
-               error() << "Error: " << stageFile->remote() << " does not exists" << endmsg;
+            if ( !stageFile->exists() ) {
+               error() << stageFile->remote() << " does not exists" << endmsg;
+               error() << stageFile->errorMessage() << endmsg;
                err = true;
             }
 
             // Check available diskspace if we need it
-            if ( !fs::exists( temporaryPath ) ) {
+            if ( !err && !fs::exists( temporaryPath ) ) {
                uintmax_t space = diskspace();
                size_t tries = 0;
                while ( space < stageFile->size() + 1 && tries < m_tries ) {
