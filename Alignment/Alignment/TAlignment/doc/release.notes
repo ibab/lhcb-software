@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2012-09-20 - Maurizio Martinelli
+ - added the 2012 IT survey xmls for Magnet On and Off conditions (Fred didn't.)
+
 ! 2012-09-19 - Maurizio Martinelli
  - modified J/psi selection adding PID
  - defined a standard scenario for 2012 data alignment
