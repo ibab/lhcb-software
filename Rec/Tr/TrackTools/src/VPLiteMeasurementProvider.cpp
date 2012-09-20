@@ -1,6 +1,6 @@
-/** @class VeloPixLiteMeasurementProvider VeloPixLiteMeasurementProvider.cpp
+/** @class VPLiteMeasurementProvider VPLiteMeasurementProvider.cpp
  *
- * Implementation of VeloPixLiteMeasurementProvider tool
+ * Implementation of VPLiteMeasurementProvider tool
  * see interface header for description
  *
  *  @author Victor Coco based on Wouter Hulsbergen + Stefania Vecchi MuonMeasurmentProvider
@@ -12,13 +12,13 @@
 #include "GaudiKernel/ToolHandle.h"
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
-#include "Event/VeloPixLiteMeasurement.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "Event/VPLiteMeasurement.h"
+#include "Event/VPLiteCluster.h"
 #include "Event/StateVector.h"
-#include "VeloPixDet/DeVeloPix.h"
+#include "VPDet/DeVP.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "Event/TrackParameters.h"
-#include "TrackInterfaces/IVeloPixClusterPosition.h"
+#include "TrackInterfaces/IVPClusterPosition.h"
 #include "GaudiKernel/IIncidentListener.h"
 
 #include "Event/Measurement.h"
@@ -26,17 +26,17 @@
 
 #include "GaudiKernel/IIncidentSvc.h"
 
-class VeloPixLiteMeasurementProvider : public GaudiTool, virtual public IMeasurementProvider,
+class VPLiteMeasurementProvider : public GaudiTool, virtual public IMeasurementProvider,
                              virtual public IIncidentListener
 {
 public:
   
   /// constructer
-  VeloPixLiteMeasurementProvider(const std::string& type,
+  VPLiteMeasurementProvider(const std::string& type,
                           const std::string& name,
                           const IInterface* parent);
   
-  ~VeloPixLiteMeasurementProvider() {}
+  ~VPLiteMeasurementProvider() {}
   
   StatusCode initialize() ;
   /// measurement for single hits
@@ -60,15 +60,15 @@ public:
 
 private:
 
-  const LHCb::VeloPixLiteCluster::VeloPixLiteClusters* clusters() const ;
+  const LHCb::VPLiteCluster::VPLiteClusters* clusters() const ;
   
 
 private:
   // pointer to detector
-  mutable DeVeloPix* m_det;
-  ToolHandle<IVeloPixClusterPosition> m_positiontool ;
+  mutable DeVP* m_det;
+  ToolHandle<IVPClusterPosition> m_positiontool ;
   std::string m_clusterLocation ;
-  mutable LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
+  mutable LHCb::VPLiteCluster::VPLiteClusters* m_clusters;
 } ;
 
 //=============================================================================
@@ -76,27 +76,27 @@ private:
 //=============================================================================
 
 
-DECLARE_TOOL_FACTORY( VeloPixLiteMeasurementProvider )
+DECLARE_TOOL_FACTORY( VPLiteMeasurementProvider )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloPixLiteMeasurementProvider::VeloPixLiteMeasurementProvider( const std::string& type,
+VPLiteMeasurementProvider::VPLiteMeasurementProvider( const std::string& type,
 						const std::string& name,
 						const IInterface* parent )
   :  GaudiTool( type, name , parent ),
      m_det(0),
-     m_positiontool("VeloPixClusterPosition")
+     m_positiontool("VPClusterPosition")
 {
   declareInterface<IMeasurementProvider>(this);
-  declareProperty("ClusterLocation",m_clusterLocation = LHCb::VeloPixLiteClusterLocation::Default ) ;
+  declareProperty("ClusterLocation",m_clusterLocation = LHCb::VPLiteClusterLocation::Default ) ;
 }
 
 //-----------------------------------------------------------------------------
 /// Initialize
 //-----------------------------------------------------------------------------
 
-StatusCode VeloPixLiteMeasurementProvider::initialize()
+StatusCode VPLiteMeasurementProvider::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if( sc.isFailure() ) { return Error( "Failed to initialize!", sc ); }
@@ -104,7 +104,7 @@ StatusCode VeloPixLiteMeasurementProvider::initialize()
   sc = m_positiontool.retrieve() ;
   if( sc.isFailure() ) { return Error( "Failed to initialize position tool!", sc ); }
   // Retrieve the detector element
-  m_det = getDet<DeVeloPix>( "/dd/Structure/LHCb/BeforeMagnetRegion/VeloPix" ) ;
+  m_det = getDet<DeVP>( "/dd/Structure/LHCb/BeforeMagnetRegion/VP" ) ;
 
   // reset pointer to list of clusters at beginevent
   incSvc()->addListener(this, IncidentType::BeginEvent);
@@ -116,7 +116,7 @@ StatusCode VeloPixLiteMeasurementProvider::initialize()
 /// Handle a begin-event incidence: Make sure clusters are reloaded.
 //-----------------------------------------------------------------------------
 
-void VeloPixLiteMeasurementProvider::handle ( const Incident& incident )
+void VPLiteMeasurementProvider::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() ) m_clusters = 0 ;
 }
@@ -125,10 +125,10 @@ void VeloPixLiteMeasurementProvider::handle ( const Incident& incident )
 /// Load clusters from the TES
 //-----------------------------------------------------------------------------
 
-const LHCb::VeloPixLiteCluster::VeloPixLiteClusters* VeloPixLiteMeasurementProvider::clusters() const
+const LHCb::VPLiteCluster::VPLiteClusters* VPLiteMeasurementProvider::clusters() const
 {
   if( !m_clusters )
-    m_clusters = get<LHCb::VeloPixLiteCluster::VeloPixLiteClusters>( m_clusterLocation );
+    m_clusters = get<LHCb::VPLiteCluster::VPLiteClusters>( m_clusterLocation );
   return m_clusters ;
 }
 
@@ -136,18 +136,18 @@ const LHCb::VeloPixLiteCluster::VeloPixLiteClusters* VeloPixLiteMeasurementProvi
 /// Create a measurement
 //-----------------------------------------------------------------------------
 
-LHCb::Measurement* VeloPixLiteMeasurementProvider::measurement( const LHCb::LHCbID& id, bool localY ) const
+LHCb::Measurement* VPLiteMeasurementProvider::measurement( const LHCb::LHCbID& id, bool localY ) const
 {
   LHCb::Measurement* meas(0) ;
-  if( !id.isVeloPix() ) {
-    error() << "Not a VeloPix measurement" << endmsg ;
+  if( !id.isVP() ) {
+    error() << "Not a VP measurement" << endmsg ;
   } else {
-    const LHCb::VeloPixLiteCluster* clus = 
-      clusters()->object( id.velopixID () );
+    const LHCb::VPLiteCluster* clus = 
+      clusters()->object( id.vpID () );
     if (clus){
-      LHCb::VeloPixLiteMeasurement::VeloPixLiteMeasurementType dir = localY ? 
-        LHCb::VeloPixLiteMeasurement::Y : LHCb::VeloPixLiteMeasurement::X ;
-      meas = new LHCb::VeloPixLiteMeasurement(  *m_det,*clus, *m_positiontool , dir);
+      LHCb::VPLiteMeasurement::VPLiteMeasurementType dir = localY ? 
+        LHCb::VPLiteMeasurement::Y : LHCb::VPLiteMeasurement::X ;
+      meas = new LHCb::VPLiteMeasurement(  *m_det,*clus, *m_positiontool , dir);
     } else {
       error() << "Cannot find cluster for id " << id << endmsg ;
     }
@@ -159,22 +159,22 @@ LHCb::Measurement* VeloPixLiteMeasurementProvider::measurement( const LHCb::LHCb
 //-----------------------------------------------------------------------------
 
 
-LHCb::Measurement* VeloPixLiteMeasurementProvider::measurement( const LHCb::LHCbID& id,  const LHCb::ZTrajectory& reftraj,
+LHCb::Measurement* VPLiteMeasurementProvider::measurement( const LHCb::LHCbID& id,  const LHCb::ZTrajectory& reftraj,
                                                                 bool localY ) const
 {
   LHCb::Measurement* meas(0) ;
-  if( !id.isVeloPix() ) {
-    error() << "Not a VeloPix measurement" << endmsg ;
+  if( !id.isVP() ) {
+    error() << "Not a VP measurement" << endmsg ;
   } else {
-    const LHCb::VeloPixLiteCluster* clus = 
-      clusters()->object( id.velopixID () );
+    const LHCb::VPLiteCluster* clus = 
+      clusters()->object( id.vpID () );
     
     if (clus){
-      LHCb::VeloPixLiteMeasurement::VeloPixLiteMeasurementType dir = localY ? 
-        LHCb::VeloPixLiteMeasurement::Y : LHCb::VeloPixLiteMeasurement::X ;
+      LHCb::VPLiteMeasurement::VPLiteMeasurementType dir = localY ? 
+        LHCb::VPLiteMeasurement::Y : LHCb::VPLiteMeasurement::X ;
       double z = nominalZ(id) ;
       LHCb::StateVector refvector = reftraj.stateVector(z) ;
-      meas = new LHCb::VeloPixLiteMeasurement(  *m_det, *clus,*m_positiontool, dir, refvector );
+      meas = new LHCb::VPLiteMeasurement(  *m_det, *clus,*m_positiontool, dir, refvector );
     } else {
       error() << "Cannot find cluster for id " << id << endmsg ;
     }
@@ -186,22 +186,22 @@ LHCb::Measurement* VeloPixLiteMeasurementProvider::measurement( const LHCb::LHCb
 // Return the z-coordinate of this lhcb-id (w/o creating the hit)
 //-----------------------------------------------------------------------------
 
-double VeloPixLiteMeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const
+double VPLiteMeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const
 {
-  return m_det->squareSensor(id.velopixID().sensor())->z ()  ;
+  return m_det->squareSensor(id.vpID().sensor())->z ()  ;
 }
 
 //-----------------------------------------------------------------------------
 /// Create measurements for list of LHCbIDs
 //-----------------------------------------------------------------------------
 
-void VeloPixLiteMeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>& lhcbids,
+void VPLiteMeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>& lhcbids,
                                                  std::vector<LHCb::Measurement*>& measurements,
                                                  const LHCb::ZTrajectory& reftraj) const
 {
     
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug()<<" VeloPixLiteMeasurementProvider makes 2 measurements for each LHCbID, one X one Y"<<endmsg;
+    debug()<<" VPLiteMeasurementProvider makes 2 measurements for each LHCbID, one X one Y"<<endmsg;
   for( std::vector<LHCb::LHCbID>::const_iterator id = lhcbids.begin() ;
        id != lhcbids.end(); ++id) {
     measurements.push_back( measurement(*id,reftraj,false) )  ;

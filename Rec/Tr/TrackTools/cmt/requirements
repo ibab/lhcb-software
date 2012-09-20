@@ -31,7 +31,7 @@ use   Relations       v*     Kernel
 use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det
-use   VeloPixDet      v*     Det
+use   VPDet           v*     Det
 use   MuonDet         v*     Det
 use   CaloUtils       v*     Calo
 

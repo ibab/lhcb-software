@@ -35,7 +35,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_veloRProvider(  "MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider", this ),
     m_veloPhiProvider("MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider", this ),
-    m_veloPixProvider("VeloPixLiteMeasurementProvider", this ),
+    m_vPProvider("VPLiteMeasurementProvider", this ),
     m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider", this ),
     m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider", this ),
     m_otProvider(     "OTMeasurementProvider", this ),
@@ -43,7 +43,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
 {
   declareInterface<IMeasurementProvider>(this);
   declareProperty( "IgnoreVelo", m_ignoreVelo = false );
-  declareProperty( "IgnoreVeloPix", m_ignoreVeloPix = true ); // VeloPix does not exist in default detector
+  declareProperty( "IgnoreVP", m_ignoreVP = true ); // VP does not exist in default detector
   declareProperty( "IgnoreTT",   m_ignoreTT   = false );
   declareProperty( "IgnoreIT",   m_ignoreIT   = false );
   declareProperty( "IgnoreOT",   m_ignoreOT   = false );
@@ -52,7 +52,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
 
   declareProperty( "VeloRProvider", m_veloRProvider ) ;
   declareProperty( "VeloPhiProvider", m_veloPhiProvider ) ;
-  declareProperty( "VeloPixProvider", m_veloPixProvider ) ;
+  declareProperty( "VPProvider", m_vPProvider ) ;
   declareProperty( "TTProvider", m_ttProvider ) ;
   declareProperty( "ITProvider", m_itProvider ) ;
   declareProperty( "OTProvider", m_otProvider ) ;
@@ -75,7 +75,7 @@ StatusCode MeasurementProvider::initialize()
   if (sc.isFailure()) return sc;  // error already reported by base class
 
   m_providermap.clear() ;
-  m_providermap.resize(LHCb::Measurement::VeloPixLite+1,0) ;
+  m_providermap.resize(LHCb::Measurement::VPLite+1,0) ;
 
   if(!m_ignoreVelo) {
     sc = m_veloRProvider.retrieve() ;
@@ -87,10 +87,10 @@ StatusCode MeasurementProvider::initialize()
     m_providermap[LHCb::Measurement::VeloPhi] = &(*m_veloPhiProvider) ;
   }
 
-  if(!m_ignoreVeloPix) {
-    sc = m_veloPixProvider.retrieve() ;
+  if(!m_ignoreVP) {
+    sc = m_vPProvider.retrieve() ;
     if (sc.isFailure()) return sc;  
-    m_providermap[LHCb::Measurement::VeloPixLite] = &(*m_veloPixProvider) ;
+    m_providermap[LHCb::Measurement::VPLite] = &(*m_vPProvider) ;
   }
 
   if(!m_ignoreTT) {
@@ -132,8 +132,8 @@ StatusCode MeasurementProvider::finalize()
     sc = m_veloPhiProvider.release() ;
     if (sc.isFailure()) return sc;
   }
-  if(!m_ignoreVeloPix) {
-    sc = m_veloPixProvider.release() ;
+  if(!m_ignoreVP) {
+    sc = m_vPProvider.release() ;
     if (sc.isFailure()) return sc;
   }
   if(!m_ignoreTT) {
@@ -219,7 +219,7 @@ inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
   case LHCb::LHCbID::Velo: 
     rc = id.isVeloR() ? LHCb::Measurement::VeloR : LHCb::Measurement::VeloPhi ;
     break ;
-  case LHCb::LHCbID::VeloPix: rc = LHCb::Measurement::VeloPixLite ; break ;
+  case LHCb::LHCbID::VP: rc = LHCb::Measurement::VPLite ; break ;
   case LHCb::LHCbID::TT:      rc = LHCb::Measurement::TT      ; break ;
   case LHCb::LHCbID::IT:      rc = LHCb::Measurement::IT      ; break ;
   case LHCb::LHCbID::OT:      rc = LHCb::Measurement::OT      ; break ;
