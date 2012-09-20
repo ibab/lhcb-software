@@ -4,6 +4,9 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2012-09-20 - Roel Aaij
+ - Added protection to the finding of a file's size from dedicated command output.
+
 ! 2012-09-16 - Roel Aaij
  - Fixed handling of file:// PFNs (such as used at CNAF). Unless the StageLocal
    property is set, they are not staged.
