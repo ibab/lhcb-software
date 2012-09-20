@@ -7,7 +7,7 @@
 
 // includes from DigiEvent
 #include "Event/VeloCluster.h"
-#include "Event/VeloPixCluster.h"
+#include "Event/VPCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
 
@@ -33,7 +33,7 @@ PatLHCbIDUp2MCHit::PatLHCbIDUp2MCHit( const std::string& name,
 {
   m_targetName = "Pat/LHCbIDMCHit";
   declareProperty( "TargetName", m_targetName );
-  declareProperty( "LinkVELOPIX", m_linkVELOPIX=false);
+  declareProperty( "LinkVP", m_linkVP=false);
 }
 //=============================================================================
 // Destructor
@@ -65,27 +65,27 @@ StatusCode PatLHCbIDUp2MCHit::execute() {
   LHCb::MCHit* hit;
 
 
-  // link veloPix, if requested
-  if (m_linkVELOPIX) {
-    // Link is made from VeloPixCluster relation to MCP but is linked to VeloPixLiteCluster ID 
+  // link vP, if requested
+  if (m_linkVP) {
+    // Link is made from VPCluster relation to MCP but is linked to VPLiteCluster ID 
     
-    always()<<"# clusters: "<<LHCb::VeloPixClusterLocation::VeloPixClusterLocation<<endmsg;
-    LinkedTo<LHCb::MCHit,LHCb::VeloPixCluster>
-      veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation + "2MCHits" );
-    LHCb::VeloPixClusters* clusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+    always()<<"# clusters: "<<LHCb::VPClusterLocation::VPClusterLocation<<endmsg;
+    LinkedTo<LHCb::MCHit,LHCb::VPCluster>
+      vPLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation + "2MCHits" );
+    LHCb::VPClusters* clusters = get<LHCb::VPClusters>(LHCb::VPClusterLocation::VPClusterLocation );
     always()<<"# clusters: "<<clusters->size()<<endmsg;
     if (clusters->size() == 0){
-       error() << "Unable to retrieve VeloPixClusters, check the container name"
+       error() << "Unable to retrieve VPClusters, check the container name"
             << endmsg;
        return StatusCode::FAILURE;
     }
     if (clusters){
-      LHCb::VeloPixClusters::const_iterator iClus;
+      LHCb::VPClusters::const_iterator iClus;
       
       for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
         m_hitList.clear();
-        //int id   = LHCb::LHCbID( (*iClus)->channelID()).velopixID();
-        //hit = veloPixLink.first((*iClus)->channelID() );
+        //int id   = LHCb::LHCbID( (*iClus)->channelID()).vpID();
+        //hit = vPLink.first((*iClus)->channelID() );
         bool noAssHit = false;
         ILHCbIDsToMCHits::LinkMap testMap;
         StatusCode sc = linkTool()->link(LHCb::LHCbID( (*iClus)->channelID()),testMap);
@@ -101,7 +101,7 @@ StatusCode PatLHCbIDUp2MCHit::execute() {
         if(noAssHit)continue;
         for ( std::vector<const LHCb::MCHit*>::const_iterator itP = 
                 m_hitList.begin(); m_hitList.end() != itP; ++itP ) {
-          LHCb::LHCbID temp = LHCb::LHCbID((*iClus)->lCluster().channelID()).velopixID(); 
+          LHCb::LHCbID temp = LHCb::LHCbID((*iClus)->lCluster().channelID()).vpID(); 
           lhcbLink.link( temp.lhcbID(), *itP ); // same without cluster size
         }
       }

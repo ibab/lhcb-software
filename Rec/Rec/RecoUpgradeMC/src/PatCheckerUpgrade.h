@@ -16,7 +16,7 @@
  *
  *  @author Olivier Callot
  *  @date   2005-03-29
- * Modified by Wenbin Qian for VeloPix
+ * Modified by Wenbin Qian for VP
  *  @adapted to A-Team framework 2007-08-20 SHM
  */
   
@@ -36,13 +36,13 @@
     
   private:
     bool m_level1;
-    bool m_checkMissedVeloPix;
+    bool m_checkMissedVP;
     bool m_checkMissedForward;
     bool m_checkMissedSeed;
     bool m_checkMissedDownstream;
     bool m_checkMatchNotForward;
     
-    PatCounterUpgrade* m_veloPix;
+    PatCounterUpgrade* m_vP;
     PatCounterUpgrade* m_veloTT;
     PatCounterUpgrade* m_forward; 
     PatCounterUpgrade* m_tsa;
@@ -66,8 +66,8 @@
     int m_initTime;
     int m_partTime;
 
-    std::string veloPixName;
-    std::string m_hltVeloPixLocation;
+    std::string vPName;
+    std::string m_hltVPLocation;
     std::string m_hltVeloTTLocation;
     std::string m_hltForwardLocation;
   }; 

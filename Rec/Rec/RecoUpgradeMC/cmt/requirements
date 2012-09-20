@@ -6,7 +6,7 @@ branches cmt src doc options python
 
 use   LinkerEvent        v*    Event
 use   TrackFitEvent      v*    Tr
-use   VeloPixDet         v*    Det
+use   VPDet              v*    Det
 use   LinkerEvent        v*    Event
 use   TrackEvent         v*    Event
 use   TrackFitEvent      v*    Tr

@@ -49,7 +49,7 @@
     }  
     
     struct increasingSensor {
-     bool operator() ( LHCb::VeloPixCluster* clust1, LHCb::VeloPixCluster* clust2 ) const{
+     bool operator() ( LHCb::VPCluster* clust1, LHCb::VPCluster* clust2 ) const{
        return clust1->channelID().sensor() < clust2->channelID().sensor();
      }
   }  increasingSensor;
@@ -63,7 +63,7 @@
     bool m_linkIT;
     bool m_linkTT;
     bool m_linkVELO;
-    bool m_linkVELOPIX;
+    bool m_linkVP;
     // add your sub detector
   };
 #endif // PATLHCBIDUP2MCPARTICLE_H

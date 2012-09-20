@@ -19,7 +19,7 @@ namespace LHCb {
 /** @class TrackAssociator TrackAssociator.h
  *  
  *  This algorithm computes the link between a Track and a MCParticle.
- *  The requirement is a match of both the Velo/VeloPix and the Seed part of the 
+ *  The requirement is a match of both the Velo/VP and the Seed part of the 
  *  Track. If there are not enough coordinates, the match is assumed so that
  *  a Velo only or a Seed only are matched properly.
  *  The required fraction of hits is a jobOption 'FractionOK', default 0.70.
@@ -72,7 +72,7 @@ private:
   std::string m_linkerOutTable;     //< Name of the output Linker table
   double      m_fractionOK;         //< minimal good matching fraction
   bool        m_decideUsingMuons;   //< use muon hits in link decision
-  bool        m_useVeloPix;         //< To use VeloPix association (false by default since no VeloPix in default det)
+  bool        m_useVP;         //< To use VP association (false by default since no VP in default det)
 
 
   // Vector containing the MCParticles which
@@ -96,7 +96,7 @@ private:
   std::vector< double > m_nMuon;
 
   double m_nTotVelo;     // Total number of Velo hits
-  double m_nTotVeloPix;  // Total number of VeloPix hits
+  double m_nTotVP;  // Total number of VP hits
   double m_nTotTT1;      // Total number of TT hits
   double m_nTotSeed;     // Total number of IT+OT hits
   double m_nTotMuon;     // Total number of Muon hits

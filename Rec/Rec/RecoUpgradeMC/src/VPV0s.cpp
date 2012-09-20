@@ -13,10 +13,10 @@
 
 #include "Event/RecVertex.h"
 
-#include "Event/VeloPixCluster.h"
-#include "Event/VeloPixLiteMeasurement.h"
+#include "Event/VPCluster.h"
+#include "Event/VPLiteMeasurement.h"
 // local
-#include "VeloPixV0s.h"
+#include "VPV0s.h"
 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/Vector4DTypes.h"
@@ -38,19 +38,19 @@
 #endif
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VeloPixV0s
+// Implementation file for class : VPV0s
 //
 // 2006-05-11 : Olivier Callot
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloPixV0s )
+DECLARE_ALGORITHM_FACTORY( VPV0s )
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloPixV0s::VeloPixV0s( const std::string& name,
+VPV0s::VPV0s( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_extrapolator("TrackMasterExtrapolator",this),
@@ -97,20 +97,20 @@ VeloPixV0s::VeloPixV0s( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixV0s::~VeloPixV0s() {} 
+VPV0s::~VPV0s() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode VeloPixV0s::initialize() {
+StatusCode VPV0s::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
 
-  m_positiontool =  tool<IVeloPixClusterPosition>("VeloPixClusterPosition");
+  m_positiontool =  tool<IVPClusterPosition>("VPClusterPosition");
   m_linkTool = tool<ILHCbIDsToMCHits>("LHCbIDsToMCHits","IDsToMCHits",this);
-  m_veloPix = getDet<DeVeloPix>( DeVeloPixLocation::Default );
+  m_vP = getDet<DeVP>( DeVPLocation::Default );
 
 
   m_magfieldsvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
@@ -146,7 +146,7 @@ StatusCode VeloPixV0s::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode VeloPixV0s::execute() {
+StatusCode VPV0s::execute() {
 
   debug() << "==> Execute" << endmsg;
 
@@ -167,7 +167,7 @@ StatusCode VeloPixV0s::execute() {
        ipv != pvcontainer->end(); ++ipv ) 
     zprimary = std::max(zprimary, (*ipv)->position().z()) ;
   
-  m_clusters = get<LHCb::VeloPixLiteCluster::VeloPixLiteClusters>(LHCb::VeloPixLiteClusterLocation::Default );
+  m_clusters = get<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default );
 
 
   typedef std::vector<const LHCb::Track*> TrackContainer ;
@@ -464,7 +464,7 @@ StatusCode VeloPixV0s::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode VeloPixV0s::finalize() {
+StatusCode VPV0s::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
@@ -485,7 +485,7 @@ inline Gaudi::Vector3 transform( const Gaudi::XYZVector& vec)
 }
 
 void
-VeloPixV0s::constrainToVertex(const Gaudi::XYZPoint& pos,
+VPV0s::constrainToVertex(const Gaudi::XYZPoint& pos,
 				 const Gaudi::LorentzVector& p4,
 				 const Gaudi::SymMatrix7x7& cov7,
 				 const LHCb::RecVertex& pv,
@@ -577,7 +577,7 @@ VeloPixV0s::constrainToVertex(const Gaudi::XYZPoint& pos,
 }
 
 bool
-VeloPixV0s::hasV0Topology(LHCb::TwoProngVertex& vertex,
+VPV0s::hasV0Topology(LHCb::TwoProngVertex& vertex,
 			     const LHCb::RecVertices& pvs) const
 {
   // returns true if V0 candidate accepted. we veto two types of background:

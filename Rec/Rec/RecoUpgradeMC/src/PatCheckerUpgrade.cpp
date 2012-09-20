@@ -33,14 +33,14 @@ PatCheckerUpgrade::PatCheckerUpgrade( const std::string& name,
   m_initTime(0),
   m_partTime(0)
 {
-  declareProperty( "CheckMissedVeloPix",   m_checkMissedVeloPix    = false );
+  declareProperty( "CheckMissedVP",   m_checkMissedVP    = false );
   declareProperty( "CheckMissedForward",   m_checkMissedForward    = false );
   declareProperty( "CheckMissedSeed",      m_checkMissedSeed       = false );
   declareProperty( "CheckMissedDownstream",m_checkMissedDownstream = false );
   declareProperty( "CheckMatchNotForward", m_checkMatchNotForward  = false );
   declareProperty( "MeasureTime",          m_measureTime           = false );
-  declareProperty( "VeloTrackLocation",    veloPixName = LHCb::TrackLocation::VeloPix);
-  declareProperty( "HltVeloPixTrackLocation", m_hltVeloPixLocation = "");
+  declareProperty( "VeloTrackLocation",    vPName = LHCb::TrackLocation::VP);
+  declareProperty( "HltVPTrackLocation", m_hltVPLocation = "");
   declareProperty( "HltVeloTTTrackLocation", m_hltVeloTTLocation = "");
   declareProperty( "HltForwardTrackLocation", m_hltForwardLocation = ""); 
 }
@@ -61,20 +61,20 @@ StatusCode PatCheckerUpgrade::initialize() {
   std::string veloTTName    =  LHCb::TrackLocation::VeloTT;
   std::string forwardName   =  LHCb::TrackLocation::Forward;
   if ( "Hlt" == context() ) {
-    veloPixName   = m_hltVeloPixLocation;
+    vPName   = m_hltVPLocation;
     veloTTName    = m_hltVeloTTLocation;
     forwardName   = m_hltForwardLocation;
   }
 
-  m_veloPix = tool<PatCounterUpgrade>( "PatCounterUpgrade", "VeloPix", this );
-  m_veloPix->setContainer( veloPixName );
-  m_veloPix->setSelectId( 3 );
-  m_veloPix->addSelection( "   with hits" );
-  m_veloPix->addSelection( " OK for Velo" );
-  m_veloPix->addSelection( "        long" );
-  m_veloPix->addSelection( "long > 5 GeV" );
-  m_veloPix->addSelection( "      s+long" );
-  m_veloPix->addSelection( " and > 5 GeV" );
+  m_vP = tool<PatCounterUpgrade>( "PatCounterUpgrade", "VP", this );
+  m_vP->setContainer( vPName );
+  m_vP->setSelectId( 3 );
+  m_vP->addSelection( "   with hits" );
+  m_vP->addSelection( " OK for Velo" );
+  m_vP->addSelection( "        long" );
+  m_vP->addSelection( "long > 5 GeV" );
+  m_vP->addSelection( "      s+long" );
+  m_vP->addSelection( " and > 5 GeV" );
 
   m_veloTT = tool<PatCounterUpgrade>( "PatCounterUpgrade", "VeloTT", this );
   m_veloTT->setContainer( veloTTName );
@@ -142,7 +142,7 @@ StatusCode PatCheckerUpgrade::initialize() {
   m_best->addSelection( "        long" );
   m_best->addSelection( "long > 5 GeV" );
 
-  m_allCounters.push_back( m_veloPix  );
+  m_allCounters.push_back( m_vP  );
   m_allCounters.push_back( m_veloTT     );
   m_allCounters.push_back( m_forward );
   m_allCounters.push_back( m_tsa    );
@@ -301,9 +301,9 @@ StatusCode PatCheckerUpgrade::execute() {
     flags.push_back( isLong && strangeDown );
     flags.push_back( isLong && strangeDown && over5 );
 
-    int foundVeloPix = m_veloPix->count( part, flags, ids );
-    if ( m_checkMissedVeloPix &&
-         0 >  foundVeloPix &&
+    int foundVP = m_vP->count( part, flags, ids );
+    if ( m_checkMissedVP &&
+         0 >  foundVP &&
          flags.size() == 4 &&
          flags[3] ) {
     }
@@ -323,7 +323,7 @@ StatusCode PatCheckerUpgrade::execute() {
     int foundFwd = m_forward->count( part, flags, ids );
     if ( m_checkMissedForward &&
          0 >  foundFwd &&
-         0 <= foundVeloPix &&
+         0 <= foundVP &&
          10000. < fabs( part->p() ) &&
          isLong ) {
     }

@@ -10,7 +10,7 @@
 // Implementation file for class : PatCounterUpgrade
 //
 // 2005-06-02 : Olivier Callot
-// Modified by Wenbin Qian for VeloPix Efficiency
+// Modified by Wenbin Qian for VP Efficiency
 //-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY( PatCounterUpgrade )
@@ -144,7 +144,7 @@ int PatCounterUpgrade::count( const LHCb::MCParticle* part, std::vector<bool> fl
   } else {
     for ( std::vector<LHCb::LHCbID>::const_iterator itId = ids.begin();
           ids.end() != itId; ++itId ) {
-      if ( (*itId).isVeloPix() ) {
+      if ( (*itId).isVP() ) {
         if ( 0 == (m_selectId & 3 ) ) continue;
         nTrue += 1.;
       } else if ( (*itId).isOT() ) {
@@ -171,7 +171,7 @@ int PatCounterUpgrade::count( const LHCb::MCParticle* part, std::vector<bool> fl
           unsigned int nbMeas = 0;
           for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
                 tr->lhcbIDs().end() != itId; ++itId ) {
-            if(clone > 0 && (*itId).isVeloPix()){
+            if(clone > 0 && (*itId).isVP()){
 //              info()<<part->key()<<" "<<tr->key()<<" "<<(*itId)<<endmsg;
             }
             bool isFromMC = false;
@@ -183,7 +183,7 @@ int PatCounterUpgrade::count( const LHCb::MCParticle* part, std::vector<bool> fl
               }
             }
             if ( !isFromMC ) continue;
-            if ( (*itId).isVeloPix() ) {
+            if ( (*itId).isVP() ) {
               if ( 0 == (m_selectId & 3 ) ) continue;
               nbMeas += 1;
             } else if ( (*itId).isOT() ) {
@@ -222,7 +222,7 @@ void PatCounterUpgrade::printStatistics ( ) {
          << format( " : %8d tracks including %8d ghosts [%5.1f %%] Event average %5.1f %% ****",
                     m_totTrack, m_totGhost, frac, 100. * m_fracGhost / m_nEvent ) << endreq;
 
-  if(m_totTrackVlp>0) info() << format( "                      %8d by \'VeloPix\' PR %8d ghosts [%5.1f %%]",
+  if(m_totTrackVlp>0) info() << format( "                      %8d by \'VP\' PR %8d ghosts [%5.1f %%]",
                       m_totTrackVlp, m_totGhostVlp, 100.*double(m_totGhostVlp)/double(m_totTrackVlp) ) << endreq;
 
   for ( unsigned int kk = 0; m_name.size() > kk; ++kk ) {

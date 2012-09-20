@@ -54,7 +54,7 @@
     bool        m_level1;
     std::string m_targetName;
     std::vector<const LHCb::MCHit*> m_hitList;
-    bool m_linkVELOPIX;
+    bool m_linkVP;
     ILHCbIDsToMCHits* m_linkTool;
   };
 

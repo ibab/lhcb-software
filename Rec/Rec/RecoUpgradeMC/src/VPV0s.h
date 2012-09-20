@@ -1,14 +1,14 @@
-// $Id: VeloPixV0s.h,v 1.1.1.1 2007/10/09 18:41:19 smenzeme Exp $
-#ifndef VELOPIXV0S_H 
-#define VELOPIXV0S_H 1
+// $Id: VPV0s.h,v 1.1.1.1 2007/10/09 18:41:19 smenzeme Exp $
+#ifndef VPV0S_H 
+#define VPV0S_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "VeloPixDet/DeVeloPix.h"
-#include "TrackInterfaces/IVeloPixClusterPosition.h"
-#include "VeloPixDet/DeVeloPix.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "VPDet/DeVP.h"
+#include "TrackInterfaces/IVPClusterPosition.h"
+#include "VPDet/DeVP.h"
+#include "Event/VPLiteCluster.h"
 #include "MCInterfaces/ILHCbIDsToMCHits.h"
 #include "GaudiKernel/ToolHandle.h"
 
@@ -23,7 +23,7 @@ namespace LHCb {
   class ParticleProperty ;
 }
 
-/** @class VeloPixV0s VeloPixV0s.h
+/** @class VPV0s VPV0s.h
  *  
  *   Algorithm to produce an NTuple to check Pat tracks.
  *  @author Olivier Callot
@@ -32,12 +32,12 @@ namespace LHCb {
  */
 
 
-  class VeloPixV0s : public GaudiTupleAlg {
+  class VPV0s : public GaudiTupleAlg {
   public: 
     /// Standard constructor
-    VeloPixV0s( const std::string& name, ISvcLocator* pSvcLocator );
+    VPV0s( const std::string& name, ISvcLocator* pSvcLocator );
     
-    virtual ~VeloPixV0s( ); ///< Destructor
+    virtual ~VPV0s( ); ///< Destructor
     
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
@@ -58,10 +58,10 @@ namespace LHCb {
   private:
     std::string m_tupleName;
     std::string m_v0ContainerName;
-    DeVeloPix* m_veloPix;
-    IVeloPixClusterPosition* m_positiontool ;
+    DeVP* m_vP;
+    IVPClusterPosition* m_positiontool ;
     ILHCbIDsToMCHits* m_linkTool;
-    LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
+    LHCb::VPLiteCluster::VPLiteClusters* m_clusters;
     IMagneticFieldSvc* m_magfieldsvc ;
     ITrajPoca* m_pocatool ;
     ToolHandle<ITrackExtrapolator> m_extrapolator ;
@@ -96,8 +96,8 @@ namespace LHCb {
   };
 
 
-inline ILHCbIDsToMCHits* VeloPixV0s::linkTool() const{
+inline ILHCbIDsToMCHits* VPV0s::linkTool() const{
   return m_linkTool;
 }
 
-#endif // VELOPIXV0S_H
+#endif // VPV0S_H

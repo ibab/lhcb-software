@@ -13,10 +13,10 @@
 
 #include "Event/RecVertex.h"
 
-#include "Event/VeloPixCluster.h"
-#include "Event/VeloPixLiteMeasurement.h"
+#include "Event/VPCluster.h"
+#include "Event/VPLiteMeasurement.h"
 // local
-#include "VeloPixVertices.h"
+#include "VPVertices.h"
 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/Vector4DTypes.h"
@@ -34,19 +34,19 @@
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VeloPixVertices
+// Implementation file for class : VPVertices
 //
 // 2006-05-11 : Olivier Callot
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloPixVertices )
+DECLARE_ALGORITHM_FACTORY( VPVertices )
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloPixVertices::VeloPixVertices( const std::string& name,
+VPVertices::VPVertices( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
 {
@@ -57,27 +57,27 @@ VeloPixVertices::VeloPixVertices( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixVertices::~VeloPixVertices() {} 
+VPVertices::~VPVertices() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode VeloPixVertices::initialize() {
+StatusCode VPVertices::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
 
-  m_positiontool =  tool<IVeloPixClusterPosition>("VeloPixClusterPosition");
+  m_positiontool =  tool<IVPClusterPosition>("VPClusterPosition");
   m_linkTool = tool<ILHCbIDsToMCHits>("LHCbIDsToMCHits","IDsToMCHits",this);
-  m_veloPix = getDet<DeVeloPix>( DeVeloPixLocation::Default );
+  m_vP = getDet<DeVP>( DeVPLocation::Default );
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode VeloPixVertices::execute() {
+StatusCode VPVertices::execute() {
 
   debug() << "==> Execute" << endmsg;
   LinkedTo<LHCb::MCParticle, LHCb::Track> link( evtSvc(), msgSvc(), LHCb::TrackLocation::Default);
@@ -166,7 +166,7 @@ StatusCode VeloPixVertices::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode VeloPixVertices::finalize() {
+StatusCode VPVertices::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 

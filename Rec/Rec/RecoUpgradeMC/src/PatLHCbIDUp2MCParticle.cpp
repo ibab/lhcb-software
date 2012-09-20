@@ -7,7 +7,7 @@
 
 // includes from DigiEvent
 #include "Event/VeloCluster.h"
-#include "Event/VeloPixCluster.h"
+#include "Event/VPCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
 
@@ -40,7 +40,7 @@ PatLHCbIDUp2MCParticle::PatLHCbIDUp2MCParticle( const std::string& name,
   declareProperty( "LinkIT", m_linkIT=true);
   declareProperty( "LinkTT", m_linkTT=true);
   declareProperty( "LinkVELO", m_linkVELO=true);
-  declareProperty( "LinkVELOPIX", m_linkVELOPIX=false);
+  declareProperty( "LinkVP", m_linkVP=false);
 }
 //=============================================================================
 // Destructor
@@ -230,30 +230,30 @@ StatusCode PatLHCbIDUp2MCParticle::execute() {
   }
 
 
-  // link veloPix, if requested
-  if (m_linkVELOPIX) {
-    // Link is made from VeloPixCluster relation to MCP but is linked to VeloPixLiteCluster ID (that might differ)
+  // link vP, if requested
+  if (m_linkVP) {
+    // Link is made from VPCluster relation to MCP but is linked to VPLiteCluster ID (that might differ)
 
     
     // That is the correct one!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    LinkedTo<LHCb::MCParticle,LHCb::VeloPixCluster> 
-      veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
-    //LinkedTo<LHCb::MCParticle,LHCb::VeloPixCluster>
-    //  veloPixLink( evtSvc(), msgSvc(), "VeloPix/Clusters2MCParticles" );
+    LinkedTo<LHCb::MCParticle,LHCb::VPCluster> 
+      vPLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
+    //LinkedTo<LHCb::MCParticle,LHCb::VPCluster>
+    //  vPLink( evtSvc(), msgSvc(), "VP/Clusters2MCParticles" );
 
 
-    LHCb::VeloPixClusters* clusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+    LHCb::VPClusters* clusters = get<LHCb::VPClusters>(LHCb::VPClusterLocation::VPClusterLocation );
     debug()<<"# clusters: "<<clusters->size()<<endmsg;
     
     if (clusters){
       
       std::sort( clusters->begin(), clusters->end(), increasingSensor);
       
-      LHCb::VeloPixClusters::const_iterator iClus;
+      LHCb::VPClusters::const_iterator iClus;
       
       for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
         m_partList.clear();
-        part = veloPixLink.first((*iClus)->channelID() );
+        part = vPLink.first((*iClus)->channelID() );
 	
 	if (part == NULL ){
           debug()<<"No associated MCP"<<endreq;
@@ -262,12 +262,12 @@ StatusCode PatLHCbIDUp2MCParticle::execute() {
         while ( 0 != part ) {
           if ( isVerbose ) verbose() << " " << part->key();
           addToList( part );
-          part = veloPixLink.next();
+          part = vPLink.next();
         }
         if ( isVerbose ) verbose() << endreq;
         for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
                 m_partList.begin(); m_partList.end() != itP; ++itP ) {
-          LHCb::LHCbID temp = LHCb::LHCbID((*iClus)->lCluster().channelID()).velopixID();
+          LHCb::LHCbID temp = LHCb::LHCbID((*iClus)->lCluster().channelID()).vpID();
           lhcbLink.link( temp.lhcbID(), *itP ); // same without cluster size
         }
       }

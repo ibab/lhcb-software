@@ -11,49 +11,49 @@
 #include "LHCbMath/GeomFun.h"
 #include "Event/MCHit.h"
 
-#include "Event/VeloPixCluster.h"
-#include "Event/VeloPixLiteMeasurement.h"
+#include "Event/VPCluster.h"
+#include "Event/VPLiteMeasurement.h"
 // local
-#include "VeloPixChecker.h"
+#include "VPChecker.h"
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VeloPixChecker
+// Implementation file for class : VPChecker
 //
 // 2006-05-11 : Olivier Callot
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloPixChecker )
+DECLARE_ALGORITHM_FACTORY( VPChecker )
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloPixChecker::VeloPixChecker( const std::string& name,
+VPChecker::VPChecker( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
 {
   declareProperty( "NtupleName"           , m_tupleName = "Tracks"    );
-  declareProperty( "InputTracks"          , m_container = "Rec/Track/PreparedVeloPix" );
+  declareProperty( "InputTracks"          , m_container = "Rec/Track/PreparedVP" );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixChecker::~VeloPixChecker() {} 
+VPChecker::~VPChecker() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode VeloPixChecker::initialize() {
+StatusCode VPChecker::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
 
-  m_positiontool =  tool<IVeloPixClusterPosition>("VeloPixClusterPosition");
+  m_positiontool =  tool<IVPClusterPosition>("VPClusterPosition");
   m_linkTool = tool<ILHCbIDsToMCHits>("LHCbIDsToMCHits","IDsToMCHits",this);
-  m_veloPix = getDet<DeVeloPix>( DeVeloPixLocation::Default );
+  m_vP = getDet<DeVP>( DeVPLocation::Default );
 
   return StatusCode::SUCCESS;
 }
@@ -61,7 +61,7 @@ StatusCode VeloPixChecker::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode VeloPixChecker::execute() {
+StatusCode VPChecker::execute() {
 
   debug() << "==> Execute" << endmsg;
 
@@ -71,7 +71,7 @@ StatusCode VeloPixChecker::execute() {
   LinkedTo<LHCb::MCParticle, LHCb::Track> link( evtSvc(), msgSvc(), m_container );
 
 
-  m_clusters = get<LHCb::VeloPixLiteCluster::VeloPixLiteClusters>(LHCb::VeloPixLiteClusterLocation::Default );
+  m_clusters = get<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default );
   
   //always()<<"NB tracks in "<<m_container<<": "<< tracks->size()<<endreq;
   for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT ; ++itT ) {
@@ -92,7 +92,7 @@ StatusCode VeloPixChecker::execute() {
     LHCb::MCHit* hit = NULL;
     Gaudi::XYZPoint thePixPoint(0.,0.,0.);
     double dx(0.),dy(0.);
-    IVeloPixClusterPosition::toolInfo clusInfo;
+    IVPClusterPosition::toolInfo clusInfo;
     
     //always()<<"ere1"<<endreq;
     // get infos from the first hit
@@ -106,36 +106,36 @@ StatusCode VeloPixChecker::execute() {
       for (std::vector< const LHCb::Measurement * >::const_iterator i_meas = meas.begin(); meas.end()!=i_meas ; i_meas++){
         const LHCb::LHCbID & theLHCBID = (*i_meas)->lhcbID ();
         
-        LHCb::VeloPixChannelID 	veloPixID  = theLHCBID.velopixID ();
+        LHCb::VPChannelID 	vPID  = theLHCBID.vpID ();
         
-        const DeVeloPixSquareType* sqDet =static_cast<const DeVeloPixSquareType*>(m_veloPix->squareSensor(veloPixID.sensor()));
+        const DeVPSquareType* sqDet =static_cast<const DeVPSquareType*>(m_vP->squareSensor(vPID.sensor()));
         if (isBack && sqDet->z()>bestZ){
           bestZ=sqDet->z();
           theID.setDetectorType( theLHCBID.detectorType());  // create LHCbId from int. Clumsy !"
-          theID.setID( veloPixID.channelID() );
+          theID.setID( vPID.channelID() );
         }
         else if(!isBack && sqDet->z()<bestZ){
           bestZ=sqDet->z();
           theID.setDetectorType( theLHCBID.detectorType() );  // create LHCbId from int. Clumsy !"
-          theID.setID(veloPixID.channelID() );
+          theID.setID(vPID.channelID() );
         }
       }
 
-      if (  theID.isVeloPix ()){
+      if (  theID.isVP ()){
         ILHCbIDsToMCHits::LinkMap testMap;
         StatusCode sc = linkTool()->link(theID,testMap);
         
         ILHCbIDsToMCHits::LinkMap::iterator it = testMap.begin();
         hit = it->first;
      
-        // Get the VeloPixLiteCluster corresponding to the first measurment
-        const LHCb::VeloPixLiteCluster* liteclus = m_clusters->object( theID.velopixID () );
+        // Get the VPLiteCluster corresponding to the first measurment
+        const LHCb::VPLiteCluster* liteclus = m_clusters->object( theID.vpID () );
      	
         //const LHCb::StateVector* theStateVector = new LHCb::StateVector (tr->firstState().stateVector (), bestZ);
         // Get the position (halfbox) and errors (most important is error, position is can be accessed via detelem)
-        //IVeloPixClusterPosition::toolInfo clusInfo = m_positiontool->position(liteclus,*theStateVector) ;
+        //IVPClusterPosition::toolInfo clusInfo = m_positiontool->position(liteclus,*theStateVector) ;
         clusInfo = m_positiontool->position(liteclus) ;
-        const DeVeloPixSquareType* sqDet =static_cast<const DeVeloPixSquareType*>(m_veloPix->squareSensor(clusInfo.pixel.sensor()));
+        const DeVPSquareType* sqDet =static_cast<const DeVPSquareType*>(m_vP->squareSensor(clusInfo.pixel.sensor()));
         thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
         std::pair<double,double> pixSize = sqDet->PixelSize(clusInfo.pixel.pixel());
         //Check about errors too...
@@ -243,7 +243,7 @@ StatusCode VeloPixChecker::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode VeloPixChecker::finalize() {
+StatusCode VPChecker::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 

@@ -17,7 +17,7 @@ static const InterfaceID IID_PatCounterUpgrade ( "PatCounterUpgrade", 1, 0 );
  *
  *  @author Olivier Callot
  *  @date   2005-06-10
- *  Modified by Wenbin Qian for the VeloPix Pat Efficiency
+ *  Modified by Wenbin Qian for the VP Pat Efficiency
  *  @adpate to A-Team framework 2007-08-20 SHM
  */
 
@@ -70,7 +70,7 @@ static const InterfaceID IID_PatCounterUpgrade ( "PatCounterUpgrade", 1, 0 );
     // Event variables  
     int m_nbTrack;                 ///< Tracks for this event
     int m_nbGhost;                 ///< Ghosts for this event
-    int m_nbGhostVlp;              ///< Ghosts from 'VeloPix'
+    int m_nbGhostVlp;              ///< Ghosts from 'VP'
    
     
     // total variables

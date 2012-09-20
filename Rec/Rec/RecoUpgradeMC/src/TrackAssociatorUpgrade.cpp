@@ -18,8 +18,8 @@
 // from Event/VeloEvent
 #include "Event/VeloCluster.h"
 
-// from Event/VeloPixEvent
-#include "Event/VeloPixCluster.h"
+// from Event/VPEvent
+#include "Event/VPCluster.h"
 
 // from Event/STEvent
 #include "Event/STCluster.h"
@@ -46,7 +46,7 @@ TrackAssociatorUpgrade::TrackAssociatorUpgrade( const std::string& name,
   m_debugLevel(0),
   m_fractionOK(0.),
   m_nTotVelo(0.),
-  m_nTotVeloPix(0.),
+  m_nTotVP(0.),
   m_nTotTT1(0.),
   m_nTotSeed(0.),
   m_nTotMuon(0.),
@@ -57,7 +57,7 @@ TrackAssociatorUpgrade::TrackAssociatorUpgrade( const std::string& name,
   declareProperty( "LinkerOutTable", m_linkerOutTable = "" );
   declareProperty( "FractionOK"    , m_fractionOK = 0.70 );
   declareProperty( "DecideUsingMuons", m_decideUsingMuons = false );
-  declareProperty( "UseVeloPix", m_useVeloPix = false );
+  declareProperty( "UseVP", m_useVP = false );
 }
 
 //=============================================================================
@@ -103,30 +103,30 @@ StatusCode TrackAssociatorUpgrade::execute() {
     myLinker( evtSvc(), msgSvc(), m_linkerOutTable );
 
   // Get the linker table VeloCluster => MCParticle
-  /*if (m_useVeloPix == false ) {
+  /*if (m_useVP == false ) {
     LinkedTo<MCParticle,VeloCluster>
       veloLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
   }
   
-  if( veloLink.notFound() && m_useVeloPix == false) {
+  if( veloLink.notFound() && m_useVP == false) {
     error() << "Unable to retrieve VeloCluster to MCParticle linker table."
             << endreq;
     return StatusCode::FAILURE;
     }*/
   
-  // Get the linker table VeloPixCluster => MCParticle
-  ///LinkedTo<MCParticle,VeloPixCluster> 
-  ///   veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+  // Get the linker table VPCluster => MCParticle
+  ///LinkedTo<MCParticle,VPCluster> 
+  ///   vPLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
 
-  LHCb::VeloPixClusters* veloPixclusters = NULL ;
-  if (m_useVeloPix == true ) {
-    veloPixclusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+  LHCb::VPClusters* vPclusters = NULL ;
+  if (m_useVP == true ) {
+    vPclusters = get<LHCb::VPClusters>(LHCb::VPClusterLocation::VPClusterLocation );
   }
 
-  LinkedTo<MCParticle,VeloPixCluster>
-    veloPixLink( evtSvc(), msgSvc(),  LHCb::VeloPixClusterLocation::VeloPixClusterLocation  );
-  if( veloPixLink.notFound() && m_useVeloPix == true) {
-    error() << "Unable to retrieve VeloPixCluster to MCParticle linker table."
+  LinkedTo<MCParticle,VPCluster>
+    vPLink( evtSvc(), msgSvc(),  LHCb::VPClusterLocation::VPClusterLocation  );
+  if( vPLink.notFound() && m_useVP == true) {
+    error() << "Unable to retrieve VPCluster to MCParticle linker table."
             << endreq;
     return StatusCode::FAILURE;
   }
@@ -207,15 +207,15 @@ StatusCode TrackAssociatorUpgrade::execute() {
           continue;
           }*/
         
-        if( (*iId).isVeloPix() ) {
+        if( (*iId).isVP() ) {
           ++nMeas;
           
-          VeloPixChannelID vID = (*iId).velopixID();
+          VPChannelID vID = (*iId).vpID();
           // Check that this LiteCluster have the same ID than the Full cluster:
-          if ( vID != (veloPixclusters->object(vID)->lCluster().channelID()) ){
+          if ( vID != (vPclusters->object(vID)->lCluster().channelID()) ){
             debug() << "Central ID and Barycenter ID might be different" << endreq;
-            LHCb::VeloPixClusters::const_iterator iClus;
-            for(iClus = veloPixclusters->begin(); iClus != veloPixclusters->end(); ++iClus) {
+            LHCb::VPClusters::const_iterator iClus;
+            for(iClus = vPclusters->begin(); iClus != vPclusters->end(); ++iClus) {
               if (vID == ((*iClus)->lCluster().channelID()) ){
                 vID = (*iClus)->channelID();
               }
@@ -223,17 +223,17 @@ StatusCode TrackAssociatorUpgrade::execute() {
           }
           // Count number of Velo hits
           m_nTotVelo += 1.;
-          MCParticle* mcParticle = veloPixLink.first( vID );
+          MCParticle* mcParticle = vPLink.first( vID );
           
           if( m_debugLevel && 0 == mcParticle ) {
-            debug() << "No MCParticle linked with VeloPixCluster " << vID << endreq;
+            debug() << "No MCParticle linked with VPCluster " << vID << endreq;
           }
           while( 0 != mcParticle ) {
             if( mcParts != mcParticle->parent() ) {
               debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
             }
             else { countMCPart( mcParticle, 1., 0., 0., 0. ); }
-            mcParticle = veloPixLink.next();
+            mcParticle = vPLink.next();
           }
           continue;
         }

@@ -1,14 +1,14 @@
-// $Id: VeloPixV0s.h,v 1.1.1.1 2007/10/09 18:41:19 smenzeme Exp $
-#ifndef VELOPIXVERTICES_H 
-#define VELOPIXVERTICES_H 1
+// $Id: VPV0s.h,v 1.1.1.1 2007/10/09 18:41:19 smenzeme Exp $
+#ifndef VPVERTICES_H 
+#define VPVERTICES_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "VeloPixDet/DeVeloPix.h"
-#include "TrackInterfaces/IVeloPixClusterPosition.h"
-#include "VeloPixDet/DeVeloPix.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "VPDet/DeVP.h"
+#include "TrackInterfaces/IVPClusterPosition.h"
+#include "VPDet/DeVP.h"
+#include "Event/VPLiteCluster.h"
 #include "MCInterfaces/ILHCbIDsToMCHits.h"
 #include "GaudiKernel/ToolHandle.h"
 
@@ -23,7 +23,7 @@ namespace LHCb {
   class ParticleProperty ;
 }
 
-/** @class VeloPixVertices VeloPixVertices.h
+/** @class VPVertices VPVertices.h
  *  
  *   Algorithm to produce an NTuple to check Pat tracks.
  *  @author Olivier Callot
@@ -32,12 +32,12 @@ namespace LHCb {
  */
 
 
-  class VeloPixVertices : public GaudiTupleAlg {
+  class VPVertices : public GaudiTupleAlg {
   public: 
     /// Standard constructor
-    VeloPixVertices( const std::string& name, ISvcLocator* pSvcLocator );
+    VPVertices( const std::string& name, ISvcLocator* pSvcLocator );
     
-    virtual ~VeloPixVertices( ); ///< Destructor
+    virtual ~VPVertices( ); ///< Destructor
     
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
@@ -49,16 +49,16 @@ namespace LHCb {
   private:
     std::string m_tupleName;
     std::string m_v0ContainerName;
-    DeVeloPix* m_veloPix;
-    IVeloPixClusterPosition* m_positiontool ;
+    DeVP* m_vP;
+    IVPClusterPosition* m_positiontool ;
     ILHCbIDsToMCHits* m_linkTool;
-    LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
+    LHCb::VPLiteCluster::VPLiteClusters* m_clusters;
     
   };
 
 
-inline ILHCbIDsToMCHits* VeloPixVertices::linkTool() const{
+inline ILHCbIDsToMCHits* VPVertices::linkTool() const{
   return m_linkTool;
 }
 
-#endif // VELOPIXVERTICES_H
+#endif // VPVERTICES_H

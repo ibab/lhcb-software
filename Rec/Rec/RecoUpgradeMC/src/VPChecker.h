@@ -1,18 +1,18 @@
-// $Id: VeloPixChecker.h,v 1.1.1.1 2007/10/09 18:41:19 smenzeme Exp $
-#ifndef VELOPIXCHECKER_H 
-#define VELOPIXCHECKER_H 1
+// $Id: VPChecker.h,v 1.1.1.1 2007/10/09 18:41:19 smenzeme Exp $
+#ifndef VPCHECKER_H 
+#define VPCHECKER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "VeloPixDet/DeVeloPix.h"
-#include "TrackInterfaces/IVeloPixClusterPosition.h"
-#include "VeloPixDet/DeVeloPix.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "VPDet/DeVP.h"
+#include "TrackInterfaces/IVPClusterPosition.h"
+#include "VPDet/DeVP.h"
+#include "Event/VPLiteCluster.h"
 #include "MCInterfaces/ILHCbIDsToMCHits.h"
 
 
-/** @class VeloPixChecker VeloPixChecker.h
+/** @class VPChecker VPChecker.h
  *  
  *   Algorithm to produce an NTuple to check Pat tracks.
  *  @author Olivier Callot
@@ -21,12 +21,12 @@
  */
 
 
-  class VeloPixChecker : public GaudiTupleAlg {
+  class VPChecker : public GaudiTupleAlg {
   public: 
     /// Standard constructor
-    VeloPixChecker( const std::string& name, ISvcLocator* pSvcLocator );
+    VPChecker( const std::string& name, ISvcLocator* pSvcLocator );
     
-    virtual ~VeloPixChecker( ); ///< Destructor
+    virtual ~VPChecker( ); ///< Destructor
     
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
@@ -38,15 +38,15 @@
   private:
     std::string m_tupleName;
     std::string m_container;
-    DeVeloPix* m_veloPix;
-    IVeloPixClusterPosition* m_positiontool ;
+    DeVP* m_vP;
+    IVPClusterPosition* m_positiontool ;
     ILHCbIDsToMCHits* m_linkTool;
-    LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
+    LHCb::VPLiteCluster::VPLiteClusters* m_clusters;
   };
 
 
-inline ILHCbIDsToMCHits* VeloPixChecker::linkTool() const{
+inline ILHCbIDsToMCHits* VPChecker::linkTool() const{
   return m_linkTool;
 }
 
-#endif // VELOPIXCHECKER_H
+#endif // VPCHECKER_H

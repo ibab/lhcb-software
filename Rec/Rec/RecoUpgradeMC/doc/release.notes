@@ -5,6 +5,9 @@
 !               classes
 !-----------------------------------------------------------------------------
 
+! 2012-09-20 - Paul Szczypka
+ - Rename of VeloPix to VP
+
 !========================= RecoUpgradeMC v1r3p1 2011-12-15 =========================
 ! 2011-11-22 - Marco Cattaneo
  - Fix trivial gcc46 warning and icc remarks
