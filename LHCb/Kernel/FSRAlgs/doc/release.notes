@@ -4,6 +4,9 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-09-20 - Marco Cattaneo
+ - Adapt test reference to options printout format change in Gaudi v23r4
+
 ! 2012-08-13 - Rob Lambert
  - Creation of package. First step is a complete copy of Rec/LumiAlgs to preserve svn history.
  - Removal of algorithms which belong only in Rec/LumiAlgs. remainder is:
