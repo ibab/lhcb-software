@@ -2,6 +2,10 @@
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+! 2012-09-20 - Anton Poluektov 
+  - Update enums in Particle.h related to cone variables to match what is written 
+    by DaVinciTools/ConeVariables
+
 !========================= PhysEvent v11r17 2012-06-25 =========================
 ! 2012-06-21 - Olivier Deschamps
   - Add enum 'HasBremAdded' to Particle.xml to flag particle with brem-corrected momentum

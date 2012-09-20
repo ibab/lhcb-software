@@ -75,13 +75,13 @@
         <enumval name="Cone1PX" value="Cone1Angle+2"            desc="Cone Px, cone size 1" />
         <enumval name="Cone1PY" value="Cone1Angle+3"            desc="Cone Py, cone size 1" />
         <enumval name="Cone1PZ" value="Cone1Angle+4"            desc="Cone Pz, cone size 1" />
-        <enumval name="Cone1PT" value="Cone1Angle+5"            desc="Cone Pt, cone size 1" />
-        <enumval name="Cone1P" value="Cone1Angle+6"             desc="Cone P, cone size 1" />
+        <enumval name="Cone1P" value="Cone1Angle+5"             desc="Cone P, cone size 1" />
+        <enumval name="Cone1PT" value="Cone1Angle+6"            desc="Cone Pt, cone size 1" />
         <enumval name="Cone1PXAsym" value="Cone1Angle+7"        desc="Cone Px asymmetry, cone size 1" />
         <enumval name="Cone1PYAsym" value="Cone1Angle+8"        desc="Cone Py asymmetry, cone size 1" />
         <enumval name="Cone1PZAsym" value="Cone1Angle+9"        desc="Cone Pz asymmetry, cone size 1" />
-        <enumval name="Cone1PTAsym" value="Cone1Angle+10"       desc="Cone Pt asymmetry, cone size 1" />
-        <enumval name="Cone1PAsym" value="Cone1Angle+11"        desc="Cone P asymmetry, cone size 1" />
+        <enumval name="Cone1PAsym" value="Cone1Angle+10"        desc="Cone P asymmetry, cone size 1" />
+        <enumval name="Cone1PTAsym" value="Cone1Angle+11"       desc="Cone Pt asymmetry, cone size 1" />
         <enumval name="Cone1DeltaEta" value="Cone1Angle+12"     desc="Cone DeltaEta, cone size 1" />
         <enumval name="Cone1DeltaPhi" value="Cone1Angle+13"     desc="Cone DeltaPhi, cone size 1" />
         <enumval name="Cone2Angle" value="Cone1Angle+14"        desc="Cone angle, cone size 2" />
@@ -89,13 +89,13 @@
         <enumval name="Cone2PX" value="Cone2Angle+2"            desc="Cone Px, cone size 2" />
         <enumval name="Cone2PY" value="Cone2Angle+3"            desc="Cone Py, cone size 2" />
         <enumval name="Cone2PZ" value="Cone2Angle+4"            desc="Cone Pz, cone size 2" />
-        <enumval name="Cone2PT" value="Cone2Angle+5"            desc="Cone Pt, cone size 2" />
-        <enumval name="Cone2P" value="Cone2Angle+6"             desc="Cone P, cone size 2" />
+        <enumval name="Cone2P" value="Cone2Angle+5"             desc="Cone P, cone size 2" />
+        <enumval name="Cone2PT" value="Cone2Angle+6"            desc="Cone Pt, cone size 2" />
         <enumval name="Cone2PXAsym" value="Cone2Angle+7"        desc="Cone Px asymmetry, cone size 2" />
         <enumval name="Cone2PYAsym" value="Cone2Angle+8"        desc="Cone Py asymmetry, cone size 2" />
         <enumval name="Cone2PZAsym" value="Cone2Angle+9"        desc="Cone Pz asymmetry, cone size 2" />
-        <enumval name="Cone2PTAsym" value="Cone2Angle+10"       desc="Cone Pt asymmetry, cone size 2" />
-        <enumval name="Cone2PAsym" value="Cone2Angle+11"        desc="Cone P asymmetry, cone size 2" />
+        <enumval name="Cone2PAsym" value="Cone2Angle+10"        desc="Cone P asymmetry, cone size 2" />
+        <enumval name="Cone2PTAsym" value="Cone2Angle+11"       desc="Cone Pt asymmetry, cone size 2" />
         <enumval name="Cone2DeltaEta" value="Cone2Angle+12"     desc="Cone DeltaEta, cone size 2" />
         <enumval name="Cone2DeltaPhi" value="Cone2Angle+13"     desc="Cone DeltaPhi, cone size 2" />
         <enumval name="Cone3Angle" value="Cone2Angle+14"        desc="Cone angle, cone size 3" />
@@ -103,13 +103,13 @@
         <enumval name="Cone3PX" value="Cone3Angle+2"            desc="Cone Px, cone size 3" />
         <enumval name="Cone3PY" value="Cone3Angle+3"            desc="Cone Py, cone size 3" />
         <enumval name="Cone3PZ" value="Cone3Angle+4"            desc="Cone Pz, cone size 3" />
-        <enumval name="Cone3PT" value="Cone3Angle+5"            desc="Cone Pt, cone size 3" />
-        <enumval name="Cone3P" value="Cone3Angle+6"             desc="Cone P, cone size 3" />
+        <enumval name="Cone3P" value="Cone3Angle+5"             desc="Cone P, cone size 3" />
+        <enumval name="Cone3PT" value="Cone3Angle+6"            desc="Cone Pt, cone size 3" />
         <enumval name="Cone3PXAsym" value="Cone3Angle+7"        desc="Cone Px asymmetry, cone size 3" />
         <enumval name="Cone3PYAsym" value="Cone3Angle+8"        desc="Cone Py asymmetry, cone size 3" />
         <enumval name="Cone3PZAsym" value="Cone3Angle+9"        desc="Cone Pz asymmetry, cone size 3" />
-        <enumval name="Cone3PTAsym" value="Cone3Angle+10"       desc="Cone Pt asymmetry, cone size 3" />
-        <enumval name="Cone3PAsym" value="Cone3Angle+11"        desc="Cone P asymmetry, cone size 3" />
+        <enumval name="Cone3PAsym" value="Cone3Angle+10"        desc="Cone P asymmetry, cone size 3" />
+        <enumval name="Cone3PTAsym" value="Cone3Angle+11"       desc="Cone Pt asymmetry, cone size 3" />
         <enumval name="Cone3DeltaEta" value="Cone3Angle+12"     desc="Cone DeltaEta, cone size 3" />
         <enumval name="Cone3DeltaPhi" value="Cone3Angle+13"     desc="Cone DeltaPhi, cone size 3" />
         <enumval name="Cone4Angle" value="Cone3Angle+14"        desc="Cone angle, cone size 4" />
@@ -117,13 +117,13 @@
         <enumval name="Cone4PX" value="Cone4Angle+2"            desc="Cone Px, cone size 4" />
         <enumval name="Cone4PY" value="Cone4Angle+3"            desc="Cone Py, cone size 4" />
         <enumval name="Cone4PZ" value="Cone4Angle+4"            desc="Cone Pz, cone size 4" />
-        <enumval name="Cone4PT" value="Cone4Angle+5"            desc="Cone Pt, cone size 4" />
-        <enumval name="Cone4P" value="Cone4Angle+6"             desc="Cone P, cone size 4" />
+        <enumval name="Cone4P" value="Cone4Angle+5"             desc="Cone P, cone size 4" />
+        <enumval name="Cone4PT" value="Cone4Angle+6"            desc="Cone Pt, cone size 4" />
         <enumval name="Cone4PXAsym" value="Cone4Angle+7"        desc="Cone Px asymmetry, cone size 4" />
         <enumval name="Cone4PYAsym" value="Cone4Angle+8"        desc="Cone Py asymmetry, cone size 4" />
         <enumval name="Cone4PZAsym" value="Cone4Angle+9"        desc="Cone Pz asymmetry, cone size 4" />
-        <enumval name="Cone4PTAsym" value="Cone4Angle+10"       desc="Cone Pt asymmetry, cone size 4" />
-        <enumval name="Cone4PAsym" value="Cone4Angle+11"        desc="Cone P asymmetry, cone size 4" />
+        <enumval name="Cone4PAsym" value="Cone4Angle+10"        desc="Cone P asymmetry, cone size 4" />
+        <enumval name="Cone4PTAsym" value="Cone4Angle+11"       desc="Cone Pt asymmetry, cone size 4" />
         <enumval name="Cone4DeltaEta" value="Cone4Angle+12"     desc="Cone DeltaEta, cone size 4" />
         <enumval name="Cone4DeltaPhi" value="Cone4Angle+13"     desc="Cone DeltaPhi, cone size 4" />
         <enumval name="EWCone1Index" value="Cone4Angle+14"      desc="First index for EW cone variables, cone size 1" />
