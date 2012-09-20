@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-09-20 - Paul Szczypka
+ - Temporary fix in Configurable.py for non-schema VL path in DDDB
+
+! 2012-09-20 - Paul Szczypka
  - Modifications to Configurable.py to fix FT typo
 
 ! 2012-08-30 - Paul Szczypka

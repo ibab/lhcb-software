@@ -547,6 +547,8 @@ class Gauss(LHCbConfigurableUser):
         # remove automatically included beampipe detector elements
         self.removeBeamPipeElements( "velo" )
 
+        # Temp fix for non-schema VL path in DDDB
+        #detPieces['BeforeMagnetRegion'] += ['VL']
         detPieces['BeforeMagnetRegion'] += ['VeloLite']
 
         # Also sort out mis-alignment
@@ -567,11 +569,11 @@ class Gauss(LHCbConfigurableUser):
             'Get' + det + 'Hits' + slot,
             MCHitsLocation = 'MC/' + det  + '/Hits',
             CollectionName = det + 'SDet/Hits',
+            # Temp fix for non-schema VL path in DDDB
             #Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
             Detectors = [ '/dd/Structure/LHCb/' + region + '/VeloLite' ]
             )
         detHits.Members += [ moni ]
-        #print "WARNING: Sim not defined for VeloLite"
         pass
 
 
