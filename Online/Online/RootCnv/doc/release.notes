@@ -4,6 +4,16 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
+!========================= RootCnv v1r17 2012-09-16 ========================
+! 2012-09-16 - Markus Frank
+ - Add developments from Ivan Valencik for memory optimization.
+   Options to modify the default behaviour:
+   RootCnvSvc.BasketSize = 2*MBYTE
+   RootCnvSvc.BufferSize = 2*kBYTE
+   RootCnvSvc.SplitLevel = 0
+   Ivan also developed a small component to measure process quantities
+   such as the memory usage and cpu consumption.
+
 !========================= RootCnv v1r13 2012-02-23 ========================
 ! 2012-02-23 - Markus Frank
  - Add option to RootCnvSvc to change compression factor in the following form:
