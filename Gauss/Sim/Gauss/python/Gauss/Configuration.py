@@ -1101,16 +1101,14 @@ class Gauss(LHCbConfigurableUser):
                 yMax = myZStationYMax
                 )
             ]
-        if (False):
-
-            if self.getProp("EnablePack") and self.getProp("DataPackingChecks") :            
-                packCheckSeq = GaudiSequencer( "DataUnpackTest"+slot )
-                from Configurables import DataPacking__Unpack_LHCb__MCFTHitPacker_
-                upOT   = DataPacking__Unpack_LHCb__MCFTHitPacker_("UnpackFTHits"+slot,
+        if self.getProp("EnablePack") and self.getProp("DataPackingChecks") :            
+            packCheckSeq = GaudiSequencer( "DataUnpackTest"+slot )
+            from Configurables import DataPacking__Unpack_LHCb__MCFTHitPacker_
+            upFT   = DataPacking__Unpack_LHCb__MCFTHitPacker_("UnpackFTHits"+slot,
                                                               OutputName = "MC/FT/HitsTest" )
-                from Configurables import DataPacking__Check_LHCb__MCFTHitPacker_
-                cOT   = DataPacking__Check_LHCb__MCFTHitPacker_("CheckFTHits"+slot )
-                packCheckSeq.Members += [upFT, cFT]
+            from Configurables import DataPacking__Check_LHCb__MCFTHitPacker_
+            cFT   = DataPacking__Check_LHCb__MCFTHitPacker_("CheckFTHits"+slot )
+            packCheckSeq.Members += [upFT, cFT]
 
 
 #"""
