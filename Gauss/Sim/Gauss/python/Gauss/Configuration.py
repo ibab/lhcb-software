@@ -64,7 +64,7 @@ class Gauss(LHCbConfigurableUser):
 
     __knownDetectors__ = [
         'velo', 'puveto', 'vp', 'vl',
-        'tt' ,
+        'tt' , 'ut',
         'it' , 'sit',
         'ot' , 'ft', 
         'rich',  'rich1', 'rich2', 'torch' , 
@@ -2142,6 +2142,8 @@ class Gauss(LHCbConfigurableUser):
             self.defineRich1MaPmtGeoDet( detPieces )
         elif det == "rich2pmt":
             self.defineRich2MaPmtGeoDet( detPieces )
+        elif det == "ut":
+            self.defineUTGeo( detPieces )
         pass
 
     def defineDetectorGeoStream ( self, geo, giGaGeo, det ):
