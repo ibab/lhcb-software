@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2012-09-21 - Jianchun Wang
+ - Add UT summary
+
 !========================= RecEvent v2r42 2012-04-27 =========================
 
 ! 2012-04-27 - Chris Jones

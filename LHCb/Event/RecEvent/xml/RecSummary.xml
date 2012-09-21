@@ -41,6 +41,7 @@
          <enumval name="nVeloClusters"      value="30"   desc="Number of VELO clusters"/>
          <enumval name="nITClusters"        value="40"   desc="Number of IT clusters"/>
          <enumval name="nTTClusters"        value="50"   desc="Number of TT clusters"/>
+         <enumval name="nUTClusters"        value="51"   desc="Number of UT clusters"/>
          <enumval name="nOTClusters"        value="60"   desc="Number of OT clusters"/>
          <enumval name="nSPDhits"           value="70"   desc="Number of SPD hits"/>
          <enumval name="nMuonCoordsS0"      value="80"   desc="Number of Coords in Muon Station 0"/>

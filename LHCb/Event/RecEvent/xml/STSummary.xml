@@ -11,6 +11,7 @@
       <import name = "map" std = "TRUE" />
 
       <location name="TTSummary"   place="Rec/TT/Summary"   />
+      <location name="UTSummary"   place="Rec/UT/Summary"   />
       <location name="ITSummary"   place="Rec/IT/Summary"   />
     <typedef
         type   = "std::map&lt;unsigned int,double&gt;"
