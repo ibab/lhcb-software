@@ -52,6 +52,7 @@ StatusCode UnpackCluster::execute()
   // If any clusters already exist, return
   if ( exist<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default+m_extension)  ||
        exist<LHCb::STClusters>  (LHCb::STClusterLocation::TTClusters+m_extension) ||
+       exist<LHCb::STClusters>  (LHCb::STClusterLocation::UTClusters+m_extension) ||
        exist<LHCb::STClusters>  (LHCb::STClusterLocation::ITClusters+m_extension)  )
   {
     if ( msgLevel(MSG::DEBUG) ) 
@@ -64,6 +65,8 @@ StatusCode UnpackCluster::execute()
   put( vClus,  LHCb::VeloClusterLocation::Default  + m_extension );
   LHCb::STClusters*  ttClus = new LHCb::STClusters();
   put( ttClus, LHCb::STClusterLocation::TTClusters + m_extension );
+  LHCb::STClusters*  utClus = new LHCb::STClusters();
+  put( utClus, LHCb::STClusterLocation::UTClusters + m_extension );
   LHCb::STClusters*  itClus = new LHCb::STClusters();
   put( itClus, LHCb::STClusterLocation::ITClusters + m_extension );
 
@@ -176,6 +179,23 @@ StatusCode UnpackCluster::execute()
       }
     }
 
+    LHCb::STClusters* utRef = get<LHCb::STClusters>(LHCb::STClusterLocation::UTClusters);
+    for ( LHCb::STClusters::iterator itU = utClus->begin(); utClus->end() != itU; ++itU ) 
+    {
+      LHCb::STCluster* sCl = *itU;
+      LHCb::STCluster* sOld = utRef->object( sCl->key() );
+      if ( ( sOld->interStripFraction() != sCl->interStripFraction() ) ||
+           ( sOld->pseudoSize()         != sCl->pseudoSize() )         ||
+           ( sOld->highThreshold()      != sCl->highThreshold() )      ||
+           ( sOld->stripValues()        != sCl->stripValues() )         ) 
+      {
+        info() << "Old ST Cluster " << format( "frac%5.2f size%3d thr%2d ", sOld->interStripFraction(),
+                                               sOld->pseudoSize(),  sOld->highThreshold() ) << endmsg;
+        info() << " new           " << format( "frac%5.2f size%3d thr%2d ", sCl->interStripFraction(),
+                                               sCl->pseudoSize(),  sCl->highThreshold() ) << endmsg;
+      }
+    }
+
     LHCb::STClusters* itRef = get<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters);
     for ( LHCb::STClusters::iterator itI = itClus->begin(); itClus->end() != itI; ++itI )
     {
@@ -194,7 +214,7 @@ StatusCode UnpackCluster::execute()
     }
 
     info() << "Decoded " << vClus->size() << " Velo, " << ttClus->size()
-           << " TT and " << itClus->size() << " IT clusters;" << endmsg;
+           << " TT and " << utClus->size() << " UT, " << itClus->size() << " IT clusters;" << endmsg;
   }
 
   m_running = false;

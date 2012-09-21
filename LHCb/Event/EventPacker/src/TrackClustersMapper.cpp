@@ -105,6 +105,7 @@ void TrackClustersMapper::updateNodeTypeMap( const std::string & path )
       // Update the node type paths handled
       addPath( streamR + "/" + LHCb::VeloClusterLocation::Default  );
       addPath( streamR + "/" + LHCb::STClusterLocation::TTClusters );
+      addPath( streamR + "/" + LHCb::STClusterLocation::UTClusters );
       addPath( streamR + "/" + LHCb::STClusterLocation::ITClusters );
     }
     else

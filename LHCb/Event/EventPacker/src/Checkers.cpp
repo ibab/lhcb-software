@@ -68,6 +68,10 @@ template class DataPacking::Check<LHCb::MCTTHitPacker>;
 typedef DataPacking::Check<LHCb::MCTTHitPacker> H;
 DECLARE_ALGORITHM_FACTORY( H )
 
+template class DataPacking::Check<LHCb::MCUTHitPacker>;
+typedef DataPacking::Check<LHCb::MCUTHitPacker> Hu;
+DECLARE_ALGORITHM_FACTORY( Hu )
+
 template class DataPacking::Check<LHCb::MCITHitPacker>;
 typedef DataPacking::Check<LHCb::MCITHitPacker> I;
 DECLARE_ALGORITHM_FACTORY( I )

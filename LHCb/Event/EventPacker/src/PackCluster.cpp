@@ -66,6 +66,7 @@ StatusCode PackCluster::execute()
   // Load the clusters
   LHCb::VeloClusters* vClus = get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
   LHCb::STClusters*  ttClus = get<LHCb::STClusters>(LHCb::STClusterLocation::TTClusters);
+  LHCb::STClusters*  utClus = get<LHCb::STClusters>(LHCb::STClusterLocation::UTClusters);
   LHCb::STClusters*  itClus = get<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters);
 
   for ( std::vector<LHCb::LHCbID>::const_iterator itI = allIds.begin();
@@ -96,6 +97,20 @@ StatusCode PackCluster::execute()
       {
         std::ostringstream mess;
         mess << "Unknown TT cluster : " << *itI;
+        Warning( mess.str() ).ignore();
+      }
+    } 
+    else if ( (*itI).isUT() )
+    {
+      const LHCb::STCluster* cl = utClus->object( (*itI).stID() );
+      if ( cl ) 
+      {
+        out->addUTCluster( cl );
+      }
+      else 
+      {
+        std::ostringstream mess;
+        mess << "Unknown UT cluster : " << *itI;
         Warning( mess.str() ).ignore();
       }
     } 
