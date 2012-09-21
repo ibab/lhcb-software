@@ -112,6 +112,7 @@ inline DeSTSector* ST::CommonBase<PBASE>::findSector(const LHCb::STChannelID&
   DeSTSector* sector = tracker()->findSector(aChannel);
   if (sector == 0) throw GaudiException( "No sector found",
                          this->name(), StatusCode::FAILURE );
+
   return sector;
 }
 
@@ -144,26 +145,47 @@ inline const std::string& ST::CommonBase<PBASE>::detType() const {
 
 #include "Kernel/ITNames.h"
 #include "Kernel/TTNames.h"
+#include "Kernel/UTNames.h"
 #include "Kernel/STChannelID.h"
 
 template <class PBASE>
 inline std::string ST::CommonBase<PBASE>::station(const LHCb::STChannelID& chan) const{
-  return m_detType == "IT" ? LHCb::ITNames().StationToString(chan) : LHCb::TTNames().StationToString(chan) ;
+  if ( m_detType == "TT" )
+    return LHCb::TTNames().StationToString(chan) ;
+  else if ( m_detType == "IT" )
+    return LHCb::ITNames().StationToString(chan) ;
+  else
+    return LHCb::UTNames().StationToString(chan) ;
 } 
 
 template <class PBASE>
 inline std::string ST::CommonBase<PBASE>::uniqueDetRegion(const LHCb::STChannelID& chan) const{
-  return m_detType == "IT" ? LHCb::ITNames().UniqueBoxToString(chan) : LHCb::TTNames().UniqueRegionToString(chan) ;
+  if ( m_detType == "TT" )
+    return LHCb::TTNames().UniqueRegionToString(chan) ;
+  else if ( m_detType == "IT" )
+    return LHCb::ITNames().UniqueBoxToString(chan) ;
+  else
+    return LHCb::UTNames().UniqueRegionToString(chan) ;
 } 
 
 template <class PBASE>
 inline std::string ST::CommonBase<PBASE>::uniqueLayer(const LHCb::STChannelID& chan) const{
-  return m_detType == "IT" ? LHCb::ITNames().UniqueLayerToString(chan) : LHCb::TTNames().UniqueLayerToString(chan) ;
+  if ( m_detType == "TT" )
+    return LHCb::TTNames().UniqueLayerToString(chan) ;
+  else if ( m_detType == "IT" )
+    return LHCb::ITNames().UniqueLayerToString(chan) ;
+  else
+    return LHCb::UTNames().UniqueLayerToString(chan) ;
 } 
 
 template <class PBASE>
 inline std::string ST::CommonBase<PBASE>::uniqueSector(const LHCb::STChannelID& chan) const{
-  return m_detType == "IT" ? LHCb::ITNames().UniqueSectorToString(chan) : LHCb::TTNames().UniqueSectorToString(chan) ;
+  if ( m_detType == "TT" )
+    return LHCb::TTNames().UniqueSectorToString(chan) ;
+  else if ( m_detType == "IT" )
+    return LHCb::ITNames().UniqueSectorToString(chan) ;
+  else
+    return LHCb::UTNames().UniqueSectorToString(chan) ;
 } 
 
 template <class PBASE>
