@@ -126,7 +126,7 @@
 
 
      <attribute type='bitfield' name='liteCluster' desc='lite Cluster' setMeth="FALSE" getMeth="FALSE">
-        <bitfield name='channelID' length='24' desc='channelID' 
+        <bitfield name='channelID' length='25' desc='channelID' 
          setMeth="FALSE" getMeth="FALSE"/>
         <bitfield name='interStripFraction' length='&posBits;' desc='interStripFractionBits'
          setMeth="FALSE" getMeth="FALSE"/>

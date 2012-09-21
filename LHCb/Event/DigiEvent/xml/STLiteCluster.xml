@@ -20,8 +20,10 @@
      serializers = "TRUE">
      <location name="TTClusters"   place="Raw/TT/LiteClusters"   />
      <location name="ITClusters"   place="Raw/IT/LiteClusters"   />
+     <location name="UTClusters"   place="Raw/UT/LiteClusters"   />
       <import name = "Kernel/TTNames"/>
       <import name = "Kernel/ITNames" />
+      <import name = "Kernel/UTNames" />
 
   &STLiteClusterClass;
   &STLiteClusterChannelIDFunctions;

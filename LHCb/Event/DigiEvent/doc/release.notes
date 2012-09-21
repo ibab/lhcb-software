@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2012-09-21 - Jianchun Wang
+ - Add UT as one of ST & Si detector, add its digits & clusters
+ - Number of bits to address Si cluster is increased from 24 to 25.
+
 ! 2012-09-13 Paul Szczypka
  - Rename EVERYTHING from VeloPix to VP or corresponding string.
  - Moved some *VeloPix* files to *VP*
