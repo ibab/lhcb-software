@@ -104,6 +104,10 @@ class SimConf(LHCbConfigurableUser) :
                     from Configurables import DataPacking__Pack_LHCb__MCTTHitPacker_     as MCTTHitPacker
                     packing.Members += [ MCTTHitPacker("MCTTHitPacker"+slot) ]
 
+                if 'UT' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCUTHitPacker_     as MCUTHitPacker
+                    packing.Members += [ MCUTHitPacker("MCUTHitPacker"+slot) ]
+
                 if 'IT' in dets :
                     from Configurables import DataPacking__Pack_LHCb__MCITHitPacker_     as MCITHitPacker
                     packing.Members += [ MCITHitPacker("MCITHitPacker"+slot) ]
@@ -207,6 +211,10 @@ class SimConf(LHCbConfigurableUser) :
             if 'TT' in dets :
                 from Configurables import DataPacking__Unpack_LHCb__MCTTHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCTTHitPacker_, "UnpackMCTTHits", slot, 'TT/Hits' )
+
+            if 'UT' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCUTHitPacker_
+                self._makeUnpacker( DataPacking__Unpack_LHCb__MCUTHitPacker_, "UnpackMCUTHits", slot, 'UT/Hits' )
 
             if 'Muon' in dets :
                 from Configurables import DataPacking__Unpack_LHCb__MCMuonHitPacker_
@@ -363,6 +371,9 @@ class SimConf(LHCbConfigurableUser) :
 
                 if 'TT' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'TT/Hits' ) ]
+
+                if 'UT' in dets :
+                    simList += [ self.tapeLocation( slot, mcRoot, 'UT/Hits' ) ]
 
                 if 'Muon' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'Muon/Hits' ) ]

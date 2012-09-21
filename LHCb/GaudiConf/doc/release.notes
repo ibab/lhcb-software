@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-09-21 - Jianchun Wang
+ - Add UT in Sim and DigiConf
+
 ! 2012-09-19 Paul Szczypka
  - Added options for FT and VL in Sim and DigiConf.
  - Reordered imports in Sim and DigiConf to be as-needed (protection against 
