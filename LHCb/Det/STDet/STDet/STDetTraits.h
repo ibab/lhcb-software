@@ -10,19 +10,27 @@
  *  @author Matthew Needham Matthew.Needham@cern.ch
  */
 
-class DeTTDetector;
 class DeITDetector;
 class DeITStation;
-class DeTTStation;
 class DeITBox;
 class DeITLayer;
+class DeITLadder;
+class DeITSector;
+class DeITSensor;
+
+class DeTTDetector;
+class DeTTStation;
 class DeTTLayer;
 class DeTTHalfModule;
 class DeTTSector;
-class DeITSector;
-class DeITLadder;
-class DeITSensor;
 class DeTTSensor;
+
+class DeUTDetector;
+class DeUTStation;
+class DeUTLayer;
+class DeUTModule;
+class DeUTSector;
+class DeUTSensor;
 
 template <typename TYPE>
 class STDetTraits {
@@ -46,10 +54,24 @@ class STDetTraits<DeTTStation>{
 };
 
 template<>
+class STDetTraits<DeUTStation>{
+ public:
+  typedef DeUTDetector parent;
+  typedef DeUTLayer child;
+};
+
+template<>
 class STDetTraits<DeITBox>{
  public:
   typedef DeITStation parent;
   typedef DeITLayer child;
+};
+
+template<>
+class STDetTraits<DeITLayer>{
+ public:
+  typedef DeITBox parent;
+  typedef DeITLadder child;
 };
 
 template<>
@@ -60,10 +82,10 @@ class STDetTraits<DeTTLayer>{
 };
 
 template<>
-class STDetTraits<DeITLayer>{
+class STDetTraits<DeUTLayer>{
  public:
-  typedef DeITBox parent;
-  typedef DeITLadder child;
+  typedef DeUTStation parent;
+  typedef DeUTModule child;
 };
 
 template<>
@@ -81,17 +103,37 @@ class STDetTraits<DeTTHalfModule>{
 };
 
 template<>
+class STDetTraits<DeUTModule>{
+ public:
+  typedef DeUTLayer parent;
+  typedef DeUTSector child;
+};
+
+template<>
+class STDetTraits<DeITSector>{
+ public:
+  typedef DeITLadder parent;
+  typedef DeITSensor child;
+};
+
+template<>
 class STDetTraits<DeTTSector>{
  public:
   typedef DeTTHalfModule parent;
   typedef DeTTSensor child;
 };
 
+template<>
+class STDetTraits<DeUTSector>{
+ public:
+  typedef DeUTModule parent;
+  typedef DeUTSensor child;
+};
 
 template<>
-class STDetTraits<DeITSector>{
+class STDetTraits<DeITSensor>{
  public:
-  typedef DeITLadder parent;
+  typedef DeITSector parent;
   typedef DeITSensor child;
 };
 
@@ -103,13 +145,10 @@ class STDetTraits<DeTTSensor>{
 };
 
 template<>
-class STDetTraits<DeITSensor>{
+class STDetTraits<DeUTSensor>{
  public:
-  typedef DeITSector parent;
-  typedef DeITSensor child;
+  typedef DeUTSector parent;
+  typedef DeUTSensor child;
 };
-
-
-
 
 #endif

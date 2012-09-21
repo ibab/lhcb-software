@@ -37,10 +37,13 @@ namespace LHCb{
 namespace DeSTDetLocation {
 
 
-  /// IT location in transient detector store
+  /// TT location in transient detector store
   static const std::string& TT = "/dd/Structure/LHCb/BeforeMagnetRegion/TT";
 
   /// TT location in transient detector store
+  static const std::string& UT = "/dd/Structure/LHCb/BeforeMagnetRegion/UT";
+
+  /// IT location in transient detector store
   static const std::string& IT = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT";
 
   /// "short cut" if you know the type, ie TT or IT
@@ -249,11 +252,15 @@ private:
 };
 
 inline const std::string& DeSTDetLocation::location(const std::string& type){
-  return (type =="TT" ? DeSTDetLocation::TT : DeSTDetLocation::IT);
+  if ( type == "TT" ) return DeSTDetLocation::TT;
+  if ( type == "IT" ) return DeSTDetLocation::IT;
+  return DeSTDetLocation::UT;
 }
 
 inline unsigned int DeSTDetLocation::detType(const std::string& type){
-  return (type =="TT" ? LHCb::STChannelID::typeTT : LHCb::STChannelID::typeIT);
+  if ( type == "TT" ) return LHCb::STChannelID::typeTT;
+  if ( type == "IT" ) return LHCb::STChannelID::typeIT;
+  return LHCb::STChannelID::typeUT;
 }
 
 #include "STDet/DeSTSector.h"
