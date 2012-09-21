@@ -24,7 +24,7 @@
        <enum
           desc   = "types of sub-detector channel ID"
           name   = "channelIDype"
-          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VP, VL, FT"
+          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VP, VL, FT, UT"
           access = 'PUBLIC'
        />
 
@@ -221,7 +221,9 @@
          desc     = "Constructor from STChannelID " >
           <arg const="TRUE" name="chanID" type="STChannelID" />
           <code>
-  unsigned int stType = ( chanID.isTT() ? TT : IT );
+  unsigned int stType = TT;
+  if ( chanID.isIT() ) stType = IT;
+  if ( chanID.isUT() ) stType = UT;
   m_lhcbID = (stType &lt;&lt; detectorTypeBits) + chanID;
         </code>
       </constructor>
@@ -233,6 +235,16 @@
          desc  = "return true if this is a TT Silicon Tracker identifier">
          <code>
   return (TT == detectorType());
+         </code>
+       </method>
+
+       <method
+         type  = "bool"
+         name  = "isUT"
+         const = 'TRUE'
+         desc  = "return true if this is a UT Silicon Tracker identifier">
+         <code>
+  return (UT == detectorType());
          </code>
        </method>
 
@@ -250,9 +262,9 @@
          type  = "bool"
          name  = "isST"
          const = 'TRUE'
-         desc  = "return true if this is a Silicon Tracker identifier (i.e. TT or IT)">
+         desc  = "return true if this is a Silicon Tracker identifier (i.e. TT, IT or UT)">
          <code>
-  return ( isTT() || isIT() );
+  return ( isTT() || isUT() || isIT() );
          </code>
        </method>
 

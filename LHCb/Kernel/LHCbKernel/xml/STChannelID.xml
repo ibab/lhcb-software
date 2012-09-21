@@ -4,15 +4,15 @@
 <gdd>
   <package name='LHCbKernel'>
     <class name    = 'STChannelID' 
-           author  = 'M Needham'
+           author  = 'M Needham, J. Wang'
            desc    = 'Channel ID for class for ST'
-           virtual = 'FALSE'                 >
+           virtual = 'FALSE'>
       &StlVector;
 
       <enum
           desc   = "types of sub-detector channel ID"
           name   = "detType"
-          value  = "typeTT = 0, typeIT = 1"
+          value  = "typeTT = 0, typeIT = 1, typeUT = 2"
           access = 'PUBLIC'
        />
 
@@ -20,23 +20,30 @@
                             const unsigned int iLayer, const unsigned int iDetRegion, 
                             const unsigned int iSector, const unsigned int iStrip' 
                    desc='constructor with station, layer, detRegion, sector , strip,'>
-        <code>    
-
-          m_channelID = (iType &lt;&lt; typeBits) +
-                        (iStation &lt;&lt; stationBits) + 
-                        (iLayer &lt;&lt; layerBits) + 
-                        (iDetRegion &lt;&lt; detRegionBits) + 
-                        (iSector &lt;&lt;  sectorBits) + 
-                        (iStrip &lt;&lt; stripBits);
+        <code>
+          if ( iType == LHCb::STChannelID::typeUT )
+             m_channelID = (iType &lt;&lt; typeBits) +
+                           (iStation &lt;&lt; stationBits) + 
+                           (iLayer &lt;&lt; layer1Bits) + 
+                           (iDetRegion &lt;&lt; detRegion1Bits) + 
+                           (iSector &lt;&lt;  sector1Bits) + 
+                           (iStrip &lt;&lt; stripBits);
+          else
+             m_channelID = (iType &lt;&lt; typeBits) +
+                           (iStation &lt;&lt; stationBits) + 
+                           (iLayer &lt;&lt; layerBits) + 
+                           (iDetRegion &lt;&lt; detRegionBits) + 
+                           (iSector &lt;&lt;  sectorBits) + 
+                           (iStrip &lt;&lt; stripBits);
         </code>
       </constructor>
+
       <constructor argList='const STChannelID aChannelID' 
                    desc='copy constructor'>
-        <code>
-          m_channelID = aChannelID.m_channelID;
-        </code>
+        <code>  m_channelID = aChannelID.m_channelID;</code>
       </constructor>
-      <constructor argList='int id' 
+
+      <constructor argList='int id'
                    initList = 'm_channelID(id)'
                    desc='constructor with int'
                    explicit = "TRUE" >
@@ -44,34 +51,90 @@
       </constructor>
 
       <method type='' name='operator int' const='TRUE'  desc='cast'>
-        <code>return m_channelID;</code>
+        <code>  return m_channelID;</code>
       </method>
 
-      <method type='unsigned int' name='type' const='TRUE' desc='get the type'>
-        <code>return (m_channelID &amp; typeMask) >> typeBits;</code>
+      <method type='unsigned int' name='type' const='TRUE' desc='Retrieve type'>
+        <code>  return (m_channelID &amp; typeMask) >> typeBits;</code>
       </method>
 
       <method type='bool' name='isTT' const='TRUE' desc='test whether TT or not'>
-        <code>return (type() == LHCb::STChannelID::typeTT ? true : false);</code>
+        <code>  return (type() == LHCb::STChannelID::typeTT ? true : false);</code>
       </method>
 
       <method type='bool' name='isIT' const='TRUE' desc='test whether IT or not'>
-        <code>return (type() == LHCb::STChannelID::typeIT ? true : false);</code>
+        <code>  return (type() == LHCb::STChannelID::typeIT ? true : false);</code>
+      </method>
+
+      <method type='bool' name='isUT' const='TRUE' desc='test whether UT or not'>
+        <code>  return (type() == LHCb::STChannelID::typeUT ? true : false);</code>
+      </method>
+
+      <method type='unsigned int' name='sector' const='TRUE' desc='Retrieve sector'>
+        <code>
+          return ( isUT() ?
+                 (unsigned int)((m_channelID &amp; sector1Mask) &gt;&gt; sector1Bits) :
+                 (unsigned int)((m_channelID &amp; sectorMask) &gt;&gt; sectorBits) );
+        </code>
+      </method>
+
+      <method type='unsigned int' name='detRegion' const='TRUE' desc='Retrieve detRegion'>
+        <code>
+          return ( isUT() ?
+                 (unsigned int)((m_channelID &amp; detRegion1Mask) &gt;&gt; detRegion1Bits) :
+                 (unsigned int)((m_channelID &amp; detRegionMask) &gt;&gt; detRegionBits) );
+        </code>
+      </method>
+
+      <method type='unsigned int' name='layer' const='TRUE' desc='Retrieve layer'>
+        <code>
+          return ( isUT() ?
+                 (unsigned int)((m_channelID &amp; layer1Mask) &gt;&gt; layer1Bits) :
+                 (unsigned int)((m_channelID &amp; layerMask) &gt;&gt; layerBits) );
+        </code>
+      </method>
+
+      <method type='unsigned int' name='uniqueLayer' const='TRUE' desc='Retrieve unique layer'>
+        <code>
+          return ( isUT() ?
+                 (unsigned int)((m_channelID &amp; uniqueLayer1Mask) &gt;&gt; layer1Bits) :
+                 (unsigned int)((m_channelID &amp; uniqueLayerMask) &gt;&gt; layerBits) );
+        </code>
+      </method>
+
+      <method type='unsigned int' name='uniqueDetRegion' const='TRUE' desc='Retrieve unique detRegion'>
+        <code>
+          return ( isUT() ?
+                 (unsigned int)((m_channelID &amp; uniqueDetRegion1Mask) &gt;&gt; detRegion1Bits) :
+                 (unsigned int)((m_channelID &amp; uniqueDetRegionMask) &gt;&gt; detRegionBits) );
+        </code>
       </method>
 
       <attribute type='bitfield' name='channelID' desc='ST Channel ID'>
-        <bitfield name='strip' length='10'  desc='strip' setMeth='FALSE' />
-        <bitfield name='sector' length='5'  desc='sector' setMeth='FALSE'/>
-        <bitfield name='detRegion' length='3'  desc='detRegion' setMeth='FALSE'/>
-        <bitfield name='layer' length='3'  desc='layer' setMeth='FALSE'/>
-        <bitfield name='station' length='2' desc='station' setMeth='FALSE'/>
-        <bitfield name='type' length='1' desc='type - TT or IT' getMeth='FALSE' setMeth='FALSE'/>
-        <bitfield name='uniqueLayer' length='layer, station' 
-                  desc='Unique layer' setMeth='FALSE'/>
-        <bitfield name='uniqueDetRegion' length='detRegion, layer, station' 
-                  desc='Unique detRegion' setMeth='FALSE'/>
-        <bitfield name='uniqueSector' length='sector, detRegion, layer, station' 
-                  desc='Unique layer' setMeth='FALSE'/>
+        <bitfield name='strip'     length='10'  desc='strip'    setMeth='FALSE' />
+        <bitfield name='sector'    length='5'  desc='sector'    setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='detRegion' length='3'  desc='detRegion' setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='layer'     length='3'  desc='layer'     setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='station'   length='2'  desc='station'   setMeth='FALSE'/>
+        <bitfield name='type' length='2' desc='type - TT/IT/UT' setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='uniqueLayer'      length='layer, station' 
+                  desc='unique layer'     setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='uniqueDetRegion'  length='detRegion, layer, station' 
+                  desc='unique detRegion' setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='uniqueSector'     length='sector, detRegion, layer, station' 
+                  desc='unique sector'    setMeth='FALSE'/>
+      </attribute>
+
+      <attribute type='bitfield' name='channelID1' desc='UT Dummy Channel ID' setMeth='FALSE' getMeth='FALSE'>
+        <bitfield name='strip1'     length='10' desc='strip'     setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='sector1'    length='7'  desc='sector'    setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='detRegion1' length='2'  desc='detRegion' setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='layer1'     length='2'  desc='layer'     setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='station1'   length='2'  desc='station'   setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='uniqueLayer1'     length='layer1, station1' 
+                  desc='unique layer'     setMeth='FALSE' getMeth='FALSE'/>
+        <bitfield name='uniqueDetRegion1' length='detRegion1, layer1, station1' 
+                  desc='unique detRegion' setMeth='FALSE' getMeth='FALSE'/>
       </attribute>
 
       <method 

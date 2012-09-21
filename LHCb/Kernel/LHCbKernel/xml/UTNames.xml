@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='STKernel'>
+<!-- ****************************************************************
+     * ITNames                                                      *
+     ****************************************************************-->
+
+    <class name   = "UTNames"
+           desc   = ""
+           author = "Jianchun Wang"
+           virtual= "FALSE">
+
+    <import name = "Kernel/STChannelID"/>
+
+      <enum name  = "Station"
+            desc  = "Station names"
+            strTypConv  = "TRUE"
+            unknownValue= "UnknownStation"
+            value       = "UnknownStation=0, UTa = 1, UTb = 2"
+            access      = "PUBLIC"/>
+
+      <enum name = "detRegion"
+            desc ="Region names"
+            strTypConv   = "TRUE"
+            unknownValue = "UnknownRegion"
+            value        = "UnknownRegion=0, RegionC=1, RegionB=2, RegionA=3"
+            access       = "PUBLIC"/>
+
+      <method name = "detector"
+              desc = "detector name"
+              type = "std::string">
+        <code> return "UT"; </code>
+      </method>
+
+      <method name = "StationToString"
+              desc = "station string from id"
+              type = "std::string"
+              argList = "LHCb::STChannelID chan">
+        <code> return StationToString(chan.station());</code>
+      </method>
+
+      <method name = "channelToString"
+              desc = "channel to string from id"
+              type = "std::string"
+              argList = "LHCb::STChannelID chan"/>
+
+      <method name = "UniqueRegionToString"
+              desc = "unique box string from id"
+              type = "std::string"
+              argList = "LHCb::STChannelID chan">
+        <code>
+          std::string temp = UniqueLayerToString(chan);
+          temp += detRegionToString(chan.detRegion());
+          return temp;
+        </code>
+      </method>
+
+      <method name = "UniqueLayerToString"
+              desc = "unique layer string from id"
+              type = "std::string"
+              argList = "LHCb::STChannelID chan"/>
+
+      <method name = "UniqueSectorToString"
+              desc = "unique sector string from id"
+              type = "std::string"
+              argList = "LHCb::STChannelID chan"/>
+
+      <method name = "SectorToString"
+              desc = "sector string from id"
+              type = "std::string"
+              argList = "LHCb::STChannelID chan"/>
+
+      <method name = "allStations"
+              desc = "vector of string names for all stations"
+              type = "std::vector &lt; std::string &gt;"/>
+
+      <method name = "allDetRegions"
+              desc = "vector of string names for all regions"
+              type = "std::vector &lt; std::string &gt;"/>
+
+      <method name = "allLayers"
+              desc = "vector of string names for all layers"
+              type = "std::vector &lt; std::string &gt;"/>
+
+      <method name = "stations"
+              desc = "vector of string names for stations"
+              type = "std::vector &lt; std::string &gt;"/>
+
+      <method name = "detRegions"
+              desc = "vector of string names for regions"
+              type = "std::vector &lt; std::string &gt;"/>
+
+      <method name = "layers"
+              desc = "vector of string names for layers"
+              type = "const std::vector &lt; std::string &gt; &amp;"/>
+
+      <method name = "stringToChannel"
+              desc = "convert string to channel"
+              type = "LHCb::STChannelID"
+              argList = "std::string name"/>
+
+      <method name = "findStationType"
+              desc = "find type in vector"
+              type = "unsigned int"
+              argList = "const std::string testName, const std::vector&lt;std::string&gt; names"
+              access = "PRIVATE"/>
+
+      <method name = "findRegionType"
+              desc = "find type in vector"
+              type = "unsigned int"
+              argList = "const std::string testName, const std::vector&lt;std::string&gt; names"
+              access = "PRIVATE"/>
+
+      <method name = "toInt"
+              desc = "convert string to int"
+              type = "unsigned int"
+              argList = "const std::string&amp; str "
+              access = "PRIVATE"/>
+
+    </class>
+  </package>
+</gdd>
