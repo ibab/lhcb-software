@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-09-21 - Paul Szczypka
+ - Minor edits to BeamPipe configuration for UT
+
 ! 2012-09-20 - Paul Szczypka
  - Temporary fix in Configurable.py for non-schema VL path in DDDB
 

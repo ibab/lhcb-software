@@ -166,6 +166,8 @@ class Gauss(LHCbConfigurableUser):
             "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1BeamPipe" ],
                          "tt" : [
             "/dd/Structure/LHCb/BeforeMagnetRegion/TT/PipeInTT" ],
+                         "ut" : [
+            "/dd/Structure/LHCb/BeforeMagnetRegion/TT/PipeInUT" ],
                          "magnet" : [
             "/dd/Structure/LHCb/MagnetRegion/PipeInMagnet",
             "/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet" ],
@@ -928,7 +930,7 @@ class Gauss(LHCbConfigurableUser):
 
 
     def defineUTGeo( self , detPieces ):
-        self.removeBeamPipeElements( "tt" )
+        self.removeBeamPipeElements( "ut" )
         if 'UT' not in detPieces['BeforeMagnetRegion']:
             detPieces['BeforeMagnetRegion']+=['UT']
 
