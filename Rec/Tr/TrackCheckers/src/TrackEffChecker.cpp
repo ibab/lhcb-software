@@ -240,7 +240,7 @@ void TrackEffChecker::effInfo(){
             bool isPhi = (*itId).veloID().isPhiType();
             if ( isPhi && info.track->type() == LHCb::Track::VeloR ) continue;
             nTrue += 1.;
-          } else if ( (*itId).isVeloPix() ) {
+          } else if ( (*itId).isVP() ) {
             if ( info.track->type() == LHCb::Track::Ttrack || info.track->type() == LHCb::Track::Downstream ) continue;
             nTrue += 1.;
           } else if ( (*itId).isOT() ) {
@@ -480,7 +480,7 @@ void TrackEffChecker::plots(const std::string& type,
   if (track->history() != LHCb::Track::PatVeloR &&
       track->history() != LHCb::Track::PatVeloGeneric &&
       track->history() != LHCb::Track::PatVeloGeneral &&
-      track->history() != LHCb::Track::PatVeloPixCheated &&
+      track->history() != LHCb::Track::PatVPCheated &&
       track->type() != LHCb::Track::Velo &&
       track->type() != LHCb::Track::VeloR &&
       track->history() != LHCb::Track::PatVeloOpen){
@@ -517,7 +517,7 @@ double TrackEffChecker::weightedMeasurementSum(const LHCb::Track* aTrack) const{
     if (iter->isVelo() == true){
       wSum += 1;
     }
-    if (iter->isVeloPix() == true){
+    if (iter->isVP() == true){
       wSum += 1;
     }
     else if (iter->isST() == true) {
