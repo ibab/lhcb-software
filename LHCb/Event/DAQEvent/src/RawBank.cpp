@@ -23,6 +23,7 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::Velo            : return  "Velo";            
   case LHCb::RawBank::Rich            : return  "Rich";            
   case LHCb::RawBank::TT              : return  "TT";              
+  case LHCb::RawBank::UT              : return  "UT";
   case LHCb::RawBank::IT              : return  "IT";              
   case LHCb::RawBank::OT              : return  "OT";              
   case LHCb::RawBank::Muon            : return  "Muon";            
@@ -75,7 +76,7 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::DstData         : return  "DstData";
   case LHCb::RawBank::DstAddress      : return  "DstAddress";    
   case LHCb::RawBank::FileID          : return  "FileID";
-  case LHCb::RawBank::VP         : return  "VP";
+  case LHCb::RawBank::VP              : return  "VP";
   case LHCb::RawBank::FTCluster       : return  "FTCluster";  
   case LHCb::RawBank::VL              : return  "VL"; 
   default                             : return  "Undefined name";

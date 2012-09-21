@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2012-09-21 - Jianchun Wang
+ - Add UT to RawBank types
+
 !========================= DAQEvent v9r10 2012-07-24 =========================
 ! 2012-07-06 - Olivier Callot
  - Put VL after the previous last entry, FTCLuster.
