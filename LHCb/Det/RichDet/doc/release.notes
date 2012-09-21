@@ -4,12 +4,15 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-09-21 - Marco Clemencic
+ - Fixed compilation with -std=c++11 (-std=c++0x).
+
 !========================= RichDet v16r12 2012-07-24 =========================
 ! 2012-07-15 - Chris Jones
  - Add methods to DeRichSystem to return the number of PDs for each RICH
 
 ! 2012-06-26 - Chris Jones
- - Fix a small bug in DeRichPMTPanel, where a null pointer was not properly 
+ - Fix a small bug in DeRichPMTPanel, where a null pointer was not properly
    protected against being dereferenced.
 
 !========================= RichDet v16r11 2012-06-15 =========================
@@ -31,12 +34,12 @@
  - Add some additional debug and verbose printouts to DeRichSystem
 
 ! 2012-01-05 - Chris Jones
- - Fix a bug where a few maps where not cleared in 
+ - Fix a bug where a few maps where not cleared in
    DeRichSystem::buildPDMappings() before being (re)filled.
 
 !========================= RichDet v16r8 2011-12-14 =========================
 ! 2011-11-25 - Chris Jones
- - Remove MaPMT specific hacks from DeRichSystem. No longer needed as DB is 
+ - Remove MaPMT specific hacks from DeRichSystem. No longer needed as DB is
    now correct.
 
 ! 2011-11-24 - Chris Jones
@@ -55,8 +58,8 @@
 !========================= RichDet v16r7 2011-11-07 =========================
 ! 2011-10-05 - Chris Jones
  - Preliminary changes for future MaPMT support
-  + add new DeRichPD and DeRichPDPanel classes that the HPD specific DeRichHPD 
-    and DeRichHPDPanel classes now inherit from. provide the generic methods 
+  + add new DeRichPD and DeRichPDPanel classes that the HPD specific DeRichHPD
+    and DeRichHPDPanel classes now inherit from. provide the generic methods
     needed by any PD type (HPD or MaPMT). Used in the recosntruction, so it
     becomes neutral to the PD technology.
 
@@ -69,11 +72,11 @@
 !========================= RichDet v16r5 2011-07-25 =========================
 ! 2011-07-21 - Chris Jones
  - Add the UNLIKELY macro to the msgLevel methods in DeRichBase
- - Add a little extra protection to casts in DeRichBeamPipe to 
+ - Add a little extra protection to casts in DeRichBeamPipe to
    appease coverity
 
 ! 2011-07-14 - Chris Jones
- - Add new method DeRichAerogelRadiator::subTile() that indicates if the 
+ - Add new method DeRichAerogelRadiator::subTile() that indicates if the
    detector element is subtile (true) or full primary tile (false)
 
 ! 2011-07-07 - Chris Jones
@@ -87,21 +90,21 @@
    thus debug and verbose printed to be suppressed when not activate.
 
 ! 2011-06-10 - Sajan Easo
- - For using the new version of database with aerogel sub tiles, 
+ - For using the new version of database with aerogel sub tiles,
    modifications made to DeRichAerogelRadiator
-   and DeRichMultiSolidRadiator. These are backward compatible and hence can 
+   and DeRichMultiSolidRadiator. These are backward compatible and hence can
    be used for old version of database without the aerogel sub tiles.
 
 !========================= RichDet v16r4 2011-06-14 =========================
 ! 2011-05-25 - Chris Jones
  - Add some missing protection for failed dynamic casts in DeRichHPDPanel and
    DeRichSphMirror
- - Some other minor code tidy ups 
+ - Some other minor code tidy ups
 
 !========================= RichDet v16r3 2011-04-26 =========================
 ! 2011-04-14 - Chris Jones
  - Remove some obsolete DC06 compatibility hacks
- - Return StatusCode FAILURE from DeRichSystem::initialize() if initial 
+ - Return StatusCode FAILURE from DeRichSystem::initialize() if initial
    update fails.
 
 ! 2011-04-07 - Chris Jones
@@ -120,11 +123,11 @@
    C4F10 as well (currently not the case).
 
 ! 2011-03-28 - Chris Jones
- - Add missing clear() on L0 to L1 Hardware ID map during 
+ - Add missing clear() on L0 to L1 Hardware ID map during
    DeRichSystem::buildHPDMappings()
 
 ! 2011-03-23 - Chris Jones
- - Add new method to DeRichSystem to return the Level1 Hardware ID for a 
+ - Add new method to DeRichSystem to return the Level1 Hardware ID for a
    given Level0 ID
  - Add some checks when filling all the various maps, to
    first see if an entry already exists. If it does a warning is printed and
@@ -159,12 +162,12 @@
 !========================= RichDet v16r0 2011-01-31 =========================
 
 ! 2011-01-31 - Rob Lambert
- - The following change was accidentally not added into v15r3, 
+ - The following change was accidentally not added into v15r3,
    although the release notes were changed.
 
 ! 2011-01-31 - Antonis Papanestis
  - Changed the way to handle the refractive index of a gas radiator. Now the
-   relevant parameters can be read from the CondDB and a gas mixture is 
+   relevant parameters can be read from the CondDB and a gas mixture is
    supported.
 
 !========================= RichDet v15r3 2011-01-31 =========================
@@ -200,13 +203,13 @@
  - Refractive index of CF4 corrected by using the correct reference
    temperature. This fine tunes the refractive index by shifting n-1 by about
    7 percent. This can be used with older versions of DDDB.
-   The adhoc corrections made in conddb so far 
+   The adhoc corrections made in conddb so far
    for real data can be removed when using this by setting the
    RefractivityScaleFactor" to 1.0 in ../Conditions/Rich2/Environment/Gas.xml
    For MC data this was always 1.0 anyway. All changes in DeRichGasRadiator.cpp
 - Improved Refractive index of RICH2 gas by using a new parametrization
   from a recent reference.
-   This needs the new DDDB modifications as of Aug20-2010. 
+   This needs the new DDDB modifications as of Aug20-2010.
    In case of using the old DDDB the above
    mentioned correction will be automatically used to give the same correct
    refractive index. All changes in DeRichGasRadiator.cpp
@@ -217,14 +220,14 @@
 !======================== RichDet v14r5 2010-07-19 ===========================
 ! 2010-06-24 - Chris Jones
  - Various improvements to Rich::TabulatedFunction1D
-  + Fix the rms() method to return a real RMS (was returning the standard 
+  + Fix the rms() method to return a real RMS (was returning the standard
     deviation)
   + Add an explicit standardDeviation() method
   + Add to the rms() and new standardDeviation() and optional weight function
     that can be used during the calculations if supplied to weight (multiply)
     the function.
-  + Add a new static method combine() that takes a vector of tabulated 
-    functions, merges them, and returns a new function that represents the 
+  + Add a new static method combine() that takes a vector of tabulated
+    functions, merges them, and returns a new function that represents the
     product of the functions.
   + Inline the constructors for speed
 
@@ -239,9 +242,9 @@
 
 !======================== RichDet v14r3 2010-05-21 ===========================
 ! 2010-05-17 - Antonis Papanestis
- - Update to allow the detector element to initialize even if the 
+ - Update to allow the detector element to initialize even if the
    normal gas conditions are not there. The HLT gas conditions are required
-   in this case. If the normal refarctive index is asked for in the HLT 
+   in this case. If the normal refarctive index is asked for in the HLT
    environment an exception is thrown.
 
 !======================== RichDet v14r2 2010-04-26 ===========================
@@ -256,14 +259,14 @@
  - Include (n-1) scale factor in printout on gas refractive index updates.
 
 ! 2010-04-22 - Antonis Papanestis
- - Changes for a new HPD magnification algorithm in the presence of magnetic 
+ - Changes for a new HPD magnification algorithm in the presence of magnetic
    field.
 
 ! 2010-04-22 - Stephanie Hansmann-Menzemer
  - addapt to changes in magnetic field service
 
 !======================== RichDet v14r1 2010-04-09 ===========================
-! 2010-03-25 - Sajan Easo 
+! 2010-03-25 - Sajan Easo
  - Added the capability to use the C3F8 as RICH1 Gas in DeRichGasRadiator.cpp.
    This modification is backward compatible.
 
@@ -272,7 +275,7 @@
 
 !======================== RichDet v14r0 2010-03-17 ===========================
 ! 2010-03-09 - Antonis Papanestis
- - Allow the use of different demagnification parameters for positive and 
+ - Allow the use of different demagnification parameters for positive and
    negative magnetic field
 
 !======================== RichDet v13r4 2010-02-12 ===========================
@@ -280,7 +283,7 @@
  - Change output level to DEBUG for the update of parameters in the HPDs
 
 ! 2010-01-21 - Antonis Papanestis
- - Correctly handle the presence or absence of magnetic field for the 
+ - Correctly handle the presence or absence of magnetic field for the
    magnetic field corrections in the HPDs.
  - It's possible to force the use of magnetic corrections using a DDDB parameter
 
@@ -295,7 +298,7 @@
 
 !======================== RichDet v13r2 2009-12-11 ===========================
 ! 2009-12-10 - Antonis Papanestis
- - new (single) condition for the temperature and pressure of the 
+ - new (single) condition for the temperature and pressure of the
    Gas Radiators
 
 !======================== RichDet v13r1 2009-11-22 ===========================
@@ -315,7 +318,7 @@
 
 !======================== RichDet v12r1 2009-07-28 ===========================
 ! 2009-07-26 - Chris Jones
- - Add new base class 'DeRichBase' that implements various common 
+ - Add new base class 'DeRichBase' that implements various common
    functionality for all RICH detector elements.
 
 ! 2009-07-17 - Antonis Papanestis
@@ -324,7 +327,7 @@
 
 !======================== RichDet v12r0 2009-06-29 ===========================
 ! 2009-06-26 - Antonis Papanestis
- - New transform from the global frame to the photodetector panel frame that 
+ - New transform from the global frame to the photodetector panel frame that
    can cope better with misalignments. Method globalPosition removed from
    DeRichHPDPanel.
 
@@ -340,7 +343,7 @@
  - Sort inactive HPD lists
 
 ! 2009-03-30 - Chris Jones
- - Include P and T values in message printed when a refractive index 
+ - Include P and T values in message printed when a refractive index
    update occurs.
 
 !======================== RichDet v11r4 2009-01-08 ===========================
@@ -373,12 +376,12 @@
 
 !======================== RichDet v11r1 2008-09-02 ===========================
 ! 2008-08-18 - Chris Jones
- - Add method to DeRichRadiator to provide interpolated function for the 
+ - Add method to DeRichRadiator to provide interpolated function for the
    effective absorption length, as a function of photon energy.
- - Make sure interpolators in DeRichRadiator are re-initialised when the 
+ - Make sure interpolators in DeRichRadiator are re-initialised when the
    underlying tables are updated.
  - Move the method initTabPropInterpolators() to the DeRichRadiator base class.
- - Add the public method initInterpolator to Rich::TabulatedProperty1D to 
+ - Add the public method initInterpolator to Rich::TabulatedProperty1D to
    allow the forced re-initialisation of the interpolator.
 
 !======================== RichDet v11r0 2008-07-27 ===========================
@@ -394,7 +397,7 @@
  In DeRichHPDPanel:
  - Added method to retrieve the local z offset of the detection plane.
  - Removed method globalToPDPanel.
- - fixed problem with local x/y offset. 
+ - fixed problem with local x/y offset.
 
 ! 2008-05-07 - Chris Jones
  - Remove obsolete object locations in DeRichLocations.h
@@ -405,26 +408,26 @@
    volumes.
 
 ! 2008-02-17 - Chris Jones
- - Remove use of floor function in DeRichHPDPanel::findHPDColAndPos 
+ - Remove use of floor function in DeRichHPDPanel::findHPDColAndPos
    (surprisingly slow)
 
 !======================== RichDet v10r10 2008-02-15 ==========================
 ! 2008-02-15 - Chris Jones
- - Add a new public method to DeRichHPDPanel to return a pointer to the 
+ - Add a new public method to DeRichHPDPanel to return a pointer to the
    DeRichHPD object associated to a given HPD as defined by a RichSmartID
 
 !======================== RichDet v10r9 2008-02-02 ========================
 ! 2008-01-29 - "Antonis Papanestis"
  - Changes for composite (CMA) Rich1 spherical mirrors. The Rich1 mirrors
    now have individual alignment conditions.
- - Introduced user parameters in DeRich1/2 for the location of the 
+ - Introduced user parameters in DeRich1/2 for the location of the
    mirror reflectivity.
 
 ! 2008-01-10 - "Antonis Papanestis"
  - Changes for post-DC06 xml description.
  - New locations for detector elements. The paths are parameters
    in DeRich1 and DeRich2, which can stiil be found in DeRichLocations.
- - Individual QE per HPD (Rich::TabulatedProperty1D) from LHCBCOND (Tabulated 
+ - Individual QE per HPD (Rich::TabulatedProperty1D) from LHCBCOND (Tabulated
    Property). Warning from 4 HPDs (one per panel) if not found.
  - Changes compatible with DC06.
  - One method for magnification in DeRichHPD, for both old and new way.
@@ -436,7 +439,7 @@
   + Various fixes to correct a small disagreement between ray tracing results
     and the full photon reconstruction.
   + Clean up a little how the various transforms from DeRichHPD are accessed
-  + Add the method DeRichHPD::testKaptonShadowing which checks for 
+  + Add the method DeRichHPD::testKaptonShadowing which checks for
     intersections with the kapton shield
   + Various other minor doxygen and code improvements
 
@@ -444,7 +447,7 @@
 ! 2007-12-04 - Chris Jones
  - Update Rich::TabulatedFunction1D to allow an existing object to be
    re-initialised with new data values.
- - Update DeRichHPD to use new re-initialisation functionality of 
+ - Update DeRichHPD to use new re-initialisation functionality of
    Rich::TabulatedFunction1D
 
 ! 2007-11-09 - "Antonis Papanestis"
@@ -456,7 +459,7 @@
 
 !======================== RichDet v10r7 2007-09-17 ========================
 ! 2007-09-13 - Juan PALACIOS
- - Changes to adapt to new IGeometryInfo interface. 
+ - Changes to adapt to new IGeometryInfo interface.
    NEEDS Det/DetDesc v18r0 OR HIGHER!
  - Files modified:
    RichDet/DeRichBeamPipe.h
@@ -479,7 +482,7 @@
    and for the method that only traces to the HPD plane.
 
 ! 2007-08-09 - Chris Jones
- - Update DeRichHPD to cache the transformation matrix for the silicon 
+ - Update DeRichHPD to cache the transformation matrix for the silicon
    sensor to speed up the detectionPoint method
  - Update methods that find the points on the detection plane to return
    a summary object indicating the acceptance
@@ -499,7 +502,7 @@
  - Make LCG dictionaries for public classes (previously in DetSys)
 
 ! 2007-04-23 - Chris Jones
- - Move RichDAQDefinitions.h into RichKernel -> Introduce dependency on 
+ - Move RichDAQDefinitions.h into RichKernel -> Introduce dependency on
 	 RichKernel
 
 ! 2007-04-04 - Chris Jones
@@ -510,7 +513,7 @@
  - move the detectionPoint functionality from DeRichHPDPanel to DeRichHPD
    to be able to use individual properties of HPDs.
  - Added DeRichLocations.h to hold all the locations of DeRich objects
- - Added methods in DeRichSystem to return the copy number and xml 
+ - Added methods in DeRichSystem to return the copy number and xml
    location of an HPD in smartID form.
 
 ! 2007-03-26 - Chris Jones
@@ -534,7 +537,7 @@
 
 !======================== RichDet v10r2 2007-03-01 ========================
 ! 2007-03-01 - Marco Cattaneo
- - Remove obsolete RichDet_load.cpp 
+ - Remove obsolete RichDet_load.cpp
 
 ! 2007-02-28 - Marco Clemencic
  - Replaced "const CLID&" with "const CLID"
@@ -556,7 +559,7 @@
 
 ! 2006-12-02 - Chris Jones
  - Add method to DeRichBeamPipe to only test for intersection.
-   Skips computing the entry and exit points in global coords, 
+   Skips computing the entry and exit points in global coords,
    so is a bit faster.
 
 !======================== RichDet v9r9 2006-12-01 =========================
@@ -573,7 +576,7 @@
 !======================== RichDet v9r8 2006-11-03 =========================
 ! 2006-11-03 - Marco Cattaneo
  - Remove second format() call from DeRichSystem.cpp
- - Always take SystemOfUnits.h from GaudiKernel 
+ - Always take SystemOfUnits.h from GaudiKernel
 
 ! 2006-11-01 - Chris Jones
  - Updates to RichDet to implement refraction correction at HPD (Antonis)
@@ -625,7 +628,7 @@
  - Add ALICE mode options to DAQ definitions
 
 ! 2006-04-10 - Antonis Papanestis
- - Changed DeRich to produce WARNING if alignment cond is not there, but not 
+ - Changed DeRich to produce WARNING if alignment cond is not there, but not
    fail.
  - Increased active radius on pixel chip in HPDPanel.
 
@@ -643,12 +646,12 @@
    created
  - Add a work around to the problem of Rich1DTabProperty objects being created
    before UMS has updated the underlying tables. This problem will "go away"
-   once Rich1DTabProperty can automatically update itself on changes to the 
+   once Rich1DTabProperty can automatically update itself on changes to the
    underlying tables
  - Some speed optimisations for the RichRadIntersections class
 
 ! 2006-03-15 - Antonis Papanestis
- - Added classes DeRichGasRadiator and DeRichAerogelRadiator to handle 
+ - Added classes DeRichGasRadiator and DeRichAerogelRadiator to handle
    the update of the gas and aerogel properties. Small changes in the
    DeRich1/2 moving common code to the base class. Requires new xml.
 
@@ -701,7 +704,7 @@
 ! 2005-10-14 - Chris Jones
  - Additions to radiator detector elements to load up RichCondition tools.
    Needed to ensure these tools are initialised before the detector elememts.
-   Note - not entriely happy with this approach, but it seems to work. 
+   Note - not entriely happy with this approach, but it seems to work.
    It is should be considered under review.
 
 ! 2005-09-23 - Antonis Papanestis
@@ -717,7 +720,7 @@
 
 !========================= RichDet v8r3 2005-03-04 =========================
 ! 2005-02-22 - Chris Jones
- - Add fix to DeRichHPDPanel to protect against invalid pixel information 
+ - Add fix to DeRichHPDPanel to protect against invalid pixel information
    being set into RichSmartID
  - Minor other improvements
 
@@ -749,7 +752,7 @@
  - Added documentation
 
 ! 2004-07-01 - Antonis Papanestis
- - added RichMirrorSegPosition for row/column info on mirrors provided 
+ - added RichMirrorSegPosition for row/column info on mirrors provided
    by the DeRich class
  - changed method signature in HPDPanel to use RichTraceMode
  - minor improvements here and there
@@ -794,7 +797,7 @@
 ! 2003-11-21 - Antonis Papanestis
  - Added DeRich.h as a base class for DeRich1 and DeRich2 with a new function
    to return the side.
- - Modified heavily RichHPDPanel, Rich1HPDPanel, Rich1CdfHPDPanel and 
+ - Modified heavily RichHPDPanel, Rich1HPDPanel, Rich1CdfHPDPanel and
    Rich2HPDPanel so that all the common code in in the HPDPanel class
  - Added a extra variable in the PDWindow method (with a default value) to
    use a simple (and quick) algorith for getting the HPD.
@@ -810,7 +813,7 @@
  - minor improvements.
 
 ! 2003-10-14 - Antonis Papanestis
- - added a new function to the DeRichPDPanel and moved some of the 
+ - added a new function to the DeRichPDPanel and moved some of the
    functionality of the traceToDetectorWithoutEff from RichDetTools to RichDet.
  - improved the algorithm that finds the photoDetector within the Panel
  - added some more debug information.
@@ -829,7 +832,7 @@
 ! 2003-06-20 - Antonis Papanestis
  - added DeRichPDPanel to allow for the introduction of MaPMTs.  All Panels
    inherit from PDPanel.
- - added function in DeRich(H)PDPanel to fill a vector with all 
+ - added function in DeRich(H)PDPanel to fill a vector with all
    possible RichSmartdIDs
  - bug fixes
 

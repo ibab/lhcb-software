@@ -14,7 +14,9 @@
 
 // boost
 #include "boost/format.hpp"
+#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
 #include "boost/assign/list_of.hpp"
+#endif
 
 //-----------------------------------------------------------------------------
 
@@ -36,10 +38,24 @@ PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
     m_photCount         ( Rich::NRadiatorTypes, 0 ),
     m_photCountLast     ( Rich::NRadiatorTypes, 0 )
 {
-  using namespace boost::assign;
-
   // Define the interface
   declareInterface<IPhotonCreator>(this);
+
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  // defaults         Aero   R1Gas  R2Gas
+  m_minCKtheta     = {0.075, 0.005, 0.005} ;
+  m_maxCKtheta     = {0.320, 0.075, 0.035} ;
+  m_minPhotonProb  = {1e-15, 1e-15, 1e-15} ;
+  if ( contextContains("HLT") )
+  {
+    m_nSigma = { 3.5, 2.8, 3.0 } ;
+  }
+  else // Offline settings
+  {
+    m_nSigma = { 3.8, 3.3, 3.3 } ;
+  }
+#else
+  using namespace boost::assign;
 
   // defaults                 Aero    R1Gas   R2Gas
   m_minCKtheta     = list_of (0.075) (0.005) (0.005) ;
@@ -53,6 +69,7 @@ PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
   {
     m_nSigma = list_of (3.8) (3.3) (3.3) ;
   }
+#endif
 
   // set properties
   declareProperty( "RichRecPhotonLocation",
@@ -72,7 +89,12 @@ PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
                    "The CK theta # sigma selection range for each radiator (Aero/R1Gas/R2Gas)");
   declareProperty( "MaxPhotons", m_maxPhotons = 9999999,
                    "The maximum number of photon candidates to allow per event" );
-  declareProperty( "MaxPhotDetOcc", m_maxHPDOccForReco = list_of(15)(99999)(99999),
+  declareProperty( "MaxPhotDetOcc", m_maxHPDOccForReco =
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+      {15, 99999, 99999},
+#else
+      list_of(15)(99999)(99999),
+#endif
                    "Max photon detector occupancy for each radiator (Aero/R1Gas/R2Gas)" );
   declareProperty( "RejectAeroPhotonsIfGas", m_rejAeroPhotsIfGas = false );
 
@@ -80,7 +102,20 @@ PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
 
 const std::vector<std::string> & PhotonCreatorBase::photonCreatorJobOptions() const
 {
-  static const std::vector<std::string> jos = boost::assign::list_of
+  static const std::vector<std::string> jos =
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+   {{"RichRecPhotonLocation"},
+    {"DoBookKeeping"},
+    {"PhotonPredictor"},
+    {"MinAllowedCherenkovTheta"},
+    {"MaxAllowedCherenkovTheta"},
+    {"MinPhotonProbability"},
+    {"NSigma"},
+    {"MaxPhotons"},
+    {"MaxPhotDetOcc"},
+    {"RejectAeroPhotonsIfGas"}};
+#else
+    boost::assign::list_of
     ("RichRecPhotonLocation")
     ("DoBookKeeping")
     ("PhotonPredictor")
@@ -91,6 +126,7 @@ const std::vector<std::string> & PhotonCreatorBase::photonCreatorJobOptions() co
     ("MaxPhotons")
     ("MaxPhotDetOcc")
     ("RejectAeroPhotonsIfGas");
+#endif
   return jos;
 }
 
@@ -134,7 +170,7 @@ StatusCode PhotonCreatorBase::initialize()
 
   m_pidTypes = m_richPartProp->particleTypes();
 
-  if ( msgLevel(MSG::DEBUG) ) 
+  if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Maximum HPD pixels (Aero/R1Gas/R2Gas) = " << m_maxHPDOccForReco << endmsg;
     debug() << "Particle types considered = " << m_pidTypes << endmsg;
@@ -142,7 +178,7 @@ StatusCode PhotonCreatorBase::initialize()
     if ( m_rejAeroPhotsIfGas )
       debug() << "Will reject Aerogel photons if pixel has a Rich1 Gas photon" << endmsg;
   }
-  
+
   return sc;
 }
 
@@ -232,13 +268,13 @@ StatusCode PhotonCreatorBase::reconstructPhotons() const
 
           // only make photons if reco has not been aborted
           if ( !abortPhotonReco ) { reconstructPhotons( *iSegment ); }
-          
+
           // check on size of photon container
           abortPhotonReco = ( richPhotons()->size() > m_maxPhotons );
-          
+
           // flag this segment as having all its photons reconstructed
           (*iSegment)->setAllPhotonsDone(true);
-          
+
         } // gas radiator segment
 
       } // segment loop
@@ -247,20 +283,20 @@ StatusCode PhotonCreatorBase::reconstructPhotons() const
       for ( LHCb::RichRecSegments::const_iterator iSegment = richSegments()->begin();
             iSegment != richSegments()->end(); ++iSegment )
       {
- 
+
         // is this a gas radiator segment ?
         if ( Rich::Aerogel == (*iSegment)->trackSegment().radiator() )
         {
 
           // only make photons if reco has not been aborted
           if ( !abortPhotonReco ) { reconstructPhotons( *iSegment ); }
-          
+
           // check on size of photon container
           abortPhotonReco = ( richPhotons()->size() > m_maxPhotons );
-          
+
           // flag this segment as having all its photons reconstructed
           (*iSegment)->setAllPhotonsDone(true);
-          
+
         } // aerogel radiator segment
 
       } // segment loop
@@ -344,9 +380,9 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
     verbose() << "   -> PASSED predictor check" << endmsg;
   }
 
-  // If aerogel, and configured to do so, reject if the pixel already has 
+  // If aerogel, and configured to do so, reject if the pixel already has
   // a good Rich1Gas photon associated with it.
-  if ( m_rejAeroPhotsIfGas && 
+  if ( m_rejAeroPhotsIfGas &&
        Rich::Aerogel == segment->trackSegment().radiator() )
   {
     bool reject = false;
@@ -360,7 +396,7 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
         break;
       }
     }
-    if ( reject ) 
+    if ( reject )
     {
       if ( msgLevel(MSG::VERBOSE) )
       {
@@ -373,7 +409,7 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
   // Form the key for this photon
   const PhotonKey photonKey( pixel->key(), segment->key() );
 
-//   info() << "Sizes     " << sizeof(pixel->key()) << " " << sizeof(segment->key()) 
+//   info() << "Sizes     " << sizeof(pixel->key()) << " " << sizeof(segment->key())
 //          << " " << sizeof(photonKey.key()) << endmsg;
 //   info() << "Before    " << pixel->key() << " " << segment->key() << endmsg;
 //   info() << "PhotonKey " << photonKey << endmsg;
@@ -472,7 +508,7 @@ PhotonCreatorBase::reconstructPhotons( LHCb::RichRecSegment * segment ) const
 {
   // Skip segments not on, or already have all their photons reconstructed
   if ( !segment->richRecTrack()->allPhotonsDone() &&
-       !segment->allPhotonsDone()                 && 
+       !segment->allPhotonsDone()                 &&
        segment->richRecTrack()->inUse()            )
   {
     // Which Rich
@@ -481,7 +517,7 @@ PhotonCreatorBase::reconstructPhotons( LHCb::RichRecSegment * segment ) const
     // get appropriate pixel range
     const bool has1 = segment->hasPhotonsIn(Rich::top);
     const bool has2 = segment->hasPhotonsIn(Rich::bottom);
-    const IPixelCreator::PixelRange range = 
+    const IPixelCreator::PixelRange range =
       ( has1 && has2 ? pixelCreator()->range(rich) :
         has1         ? pixelCreator()->range(rich,Rich::top) :
         pixelCreator()->range(rich,Rich::bottom) );

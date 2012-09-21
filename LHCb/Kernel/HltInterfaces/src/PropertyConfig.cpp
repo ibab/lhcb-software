@@ -30,26 +30,32 @@ void PropertyConfig::initProperties(const IProperty& obj) {
     m_digest = digest_type::createInvalid();
 }
 
-void 
-PropertyConfig::updateCache() const 
-{ 
+void
+PropertyConfig::updateCache() const
+{
     // type, name and kind MUST be filled for a valid object...
     if (!m_type.empty() && !m_name.empty() && !m_kind.empty() )  {
-        m_digest = digest_type::compute(*this); 
+        m_digest = digest_type::compute(*this);
     }
 }
 
 PropertyConfig PropertyConfig::copyAndModify(const std::string& key, const std::string& value ) const
 {
     Properties update = properties();
-    Properties::iterator i = find_if( update.begin(),  
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+    Properties::iterator i = find_if( update.begin(),
+                                      update.end(),
+                                      [&](Prop& p) { return p.first == key; } );
+#else
+    Properties::iterator i = find_if( update.begin(),
                                       update.end(),
                                       bind(&Prop::first,_1) == key );
+#endif
     if (i==update.end()) {
           cerr << "trying to update a non-existing property: " << key << endl;
           return PropertyConfig();
     }
-    
+
     i->second = value;
     return PropertyConfig(*this, update);
 }
@@ -57,8 +63,8 @@ PropertyConfig PropertyConfig::copyAndModify(const std::string& key, const std::
 PropertyConfig PropertyConfig::copyAndModify(const std::string& keyAndValue) const
 {
     string::size_type c = keyAndValue.find(':');
-    if (c == string::npos ) { 
-        return PropertyConfig(); 
+    if (c == string::npos ) {
+        return PropertyConfig();
     }
     return copyAndModify(keyAndValue.substr(0,c),keyAndValue.substr(c+1,string::npos));
 }
@@ -77,9 +83,9 @@ istream& PropertyConfig::read(istream& is) {
         string s; getline(is,s);
         boost::smatch what;
         if (parsing_properties)  {
-            if (boost::regex_match(s,what,property) ) { 
+            if (boost::regex_match(s,what,property) ) {
                 m_properties.push_back(make_pair(what[1],what[2]));
-            } else if (boost::regex_match(s,what,propend) ) { 
+            } else if (boost::regex_match(s,what,propend) ) {
                 parsing_properties = false;
             } else {
                 cout << "parsing error while looking for properties!!! : [" << s << "]" << endl;
@@ -93,7 +99,7 @@ istream& PropertyConfig::read(istream& is) {
                 m_kind = what[1];
             } else if (boost::regex_match(s,what,propstart) ) { assert(m_properties.empty());
                 parsing_properties = true;
-            } else if (boost::regex_match(s,what,ignore)) { 
+            } else if (boost::regex_match(s,what,ignore)) {
                 // do nothing
             } else {
                 cout << "parsing error!!! : [" << s << "]" << endl;
@@ -111,7 +117,7 @@ ostream& PropertyConfig::print(ostream& os) const {
        << "Kind: " << m_kind << '\n'
        << "Type: " << m_type << '\n'
        << "Properties: [\n";
-    for (Properties::const_iterator i=m_properties.begin();i!=m_properties.end();++i ) 
+    for (Properties::const_iterator i=m_properties.begin();i!=m_properties.end();++i )
         os << " '"<< i->first << "':"<< boost::algorithm::erase_all_copy(i->second, "\n") <<'\n';
     return os << "]" << endl;
 }

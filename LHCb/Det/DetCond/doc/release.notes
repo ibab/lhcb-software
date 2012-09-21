@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-09-21 - Marco Clemencic
+ - Temporary hack to compile with -std=c++11 (-std=c++0x).
+
 ! 2012-08-09 - Marco Clemencic
  - Workaround for bug #96673.
 

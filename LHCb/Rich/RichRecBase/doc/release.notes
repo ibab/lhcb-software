@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2012-09-21 - Marco Clemencic
+ - Fixed compilation with -std=c++11 (-std=c++0x).
+
 !========================= RichRecBase v4r13 2012-06-25 =========================
 ! 2012-06-03 - Chris Jones
  - Update a few histogram limits
@@ -44,8 +47,8 @@
 !========================= RichRecBase v4r6 2011-04-26 =======================
 ! 2011-04-15 - Chris Jones
  - Suppress finalize() warnings about no pixels or photons being created.
-   Can happen in the HLT and it is not really a problem. 
-   Instead just print info messages as normal.   
+   Can happen in the HLT and it is not really a problem.
+   Instead just print info messages as normal.
 
 !========================= RichRecBase v4r5 2011-04-04 =======================
 ! 2011-03-15 - Chris Jones
@@ -67,7 +70,7 @@
 
 !======================== RichRecBase v4r2 2010-11-27 ========================
 ! 2010-11-21 - Chris Jones
- - Extend Rich::IPIDPlots::Configuration with a new option for expert 
+ - Extend Rich::IPIDPlots::Configuration with a new option for expert
    histograms.
  - Add a method to the photon creator base class that returns a list of the
    photon creator specific job options
@@ -93,7 +96,7 @@
    at gas/aerogel boundary).
 
 ! 2010-09-22 - Victor Coco
- - Canceled previous modification since VeloPix track type is being suppress 
+ - Canceled previous modification since VeloPix track type is being suppress
    from the Track class.
 
 ! 2010-09-21 - Victor Coco
@@ -116,7 +119,7 @@
    that include sub-detector, reason and status (OK/ABORT) information.
  - Update the the track selector base class so the default cuts are null (no
    rejection. Cuts are now explicitly set during configuration time.
- - Small technical change to the RichRecPhoton class that improves CPU 
+ - Small technical change to the RichRecPhoton class that improves CPU
    efficiency a little.
 
 ! 2010-07-08 - Olivier Callot
@@ -137,12 +140,12 @@
 !===================== RichRecBase v3r30 2010-04-26 ==========================
 ! 2010-04-23 - Chris Jones
  - Fix inconsistency in the naming convention used by the Segment Hypo rings
-   "OfflineEvent" -> "RecoEvent", in order to be the same as other RichRec 
+   "OfflineEvent" -> "RecoEvent", in order to be the same as other RichRec
    Event model classes.
 
 ! 2010-04-18 - Chris Jones
  - Add to Rec base class methods to access the ProcStatus object
- - Update pixel and photon creator base classes to update ProcStatus when the 
+ - Update pixel and photon creator base classes to update ProcStatus when the
    RICH processing is aborted due to too many hits or photon candidates.
 
 !===================== RichRecBase v3r29 2010-04-09 ==========================
@@ -244,7 +247,7 @@
 
 !===================== RichRecBase v3r16 2008-09-04 ==========================
 ! 2008-08-29 - Chris Jones
- - Resurrect the old FastRingFitter class, that provides a simple and fast 
+ - Resurrect the old FastRingFitter class, that provides a simple and fast
    circle fit to a set of (x,y) data points.
 
 ! 2008-08-18 - Chris Jones
@@ -273,7 +276,7 @@
 !===================== RichRecBase v3r13 2008-05-15 ==========================
 ! 2008-05-14 - Chris Jones
  - Add some additional debug printout to track selector base class
- - Add configuration option to stereographic fitter allow the user to decide 
+ - Add configuration option to stereographic fitter allow the user to decide
    if the segment and fitted photons are updated or not following the fit.
 
 ! 2008-05-09 - Chris Jones
@@ -300,10 +303,10 @@
 ! 2008-03-25 - Chris Jones
  - Add new Tool interface classes
   + IRichPID for track-by-track PID access on-demand
-  + IRichPixelBackgroundEsti for computing background estimates for given sets 
+  + IRichPixelBackgroundEsti for computing background estimates for given sets
     of HPD pixels
  - Add some missing include statements
- - Some minor improvements related to reconstucting photons on demand 
+ - Some minor improvements related to reconstucting photons on demand
    track-by-track, instead of the more commonly used all at once approach.
 
 !===================== RichRecBase v3r11 2008-02-25 ==========================
@@ -320,7 +323,7 @@
  - Add a flag to the IRichCherenkovAngle::avgCherenkovTheta method to force
    the calculation to use the emitted photon spectra instead of the detected.
  - Pass the mass hypothesis in IRichSignalDetection::photonDetEfficiency.
- - Update the RichRecPointOnRing class to store pointers to the mirror 
+ - Update the RichRecPointOnRing class to store pointers to the mirror
    segments.
 
 ! 2008-02-08 - Chris Jones
@@ -376,7 +379,7 @@
  - Speed improvements to pixel and photon creators and various event classes
  - fix ordering problem in pixel creator, that came in when the RichDAQ data
    structure changed
- - Streamline and inline the one method in RichRecRing.cpp, and then remove 
+ - Streamline and inline the one method in RichRecRing.cpp, and then remove
    this file
 
 ! 2007-08-09 - Chris Jones
@@ -410,7 +413,7 @@
  - Add new method to MC truth tool to get MC CK rings
 
 ! 2007-04-26 - Chris Jones
- - Fixes for lcg dictionaries on windows + add dictionaries for various 
+ - Fixes for lcg dictionaries on windows + add dictionaries for various
    utility classes
 
 !===================== RichRecBase v3r3 2007-04-23 =======================
@@ -423,7 +426,7 @@
  - Add class to store radiator corrected positions
 
 ! 2007-03-27 - Chris Jones
- - Add new options to RichPixelCreatorBase to turn off entirely the 
+ - Add new options to RichPixelCreatorBase to turn off entirely the
    clustering for reconstruction (HLT).
  - Some speed optimisations
   + Pass clusters and smartIDs by reference to RichRecPixel constructor
@@ -464,7 +467,7 @@
 
 !====================== RichRecBase v2r8 2006-11-06 ======================
 ! 2006-11-06 - Chris Jones
- - Allow RichRecSegment to store ray trace HPD panel points for both 
+ - Allow RichRecSegment to store ray trace HPD panel points for both
    RICH sides
  - Add method to Track Creator base to store HPD panel points in segments
 
@@ -473,7 +476,7 @@
 
 !====================== RichRecBase v2r7 2006-10-20 ======================
 ! 2006-10-04 - Chris Jones
- - Add simple workaround to RichPixelCreatorBase to avoid loading tools 
+ - Add simple workaround to RichPixelCreatorBase to avoid loading tools
    during first event, but during initialize instead
 
 !====================== RichRecBase v2r6 2006-09-04 ======================
@@ -516,7 +519,7 @@
 ! 2006-06-14 - Chris Jones
  - Remove obsolete methods from pixel creator interface
  - Add new methods to MC access tool
- - Update Pixel creator base class to move more functionality in from 
+ - Update Pixel creator base class to move more functionality in from
    derived classes
  - minor updates to Track creator base class
 
@@ -553,7 +556,7 @@
  - Makes dependency on RichDet permanent.
 
 ! 2006-02-02 - Marco Cattaneo
- - Add temporary dependency on RichDet to get round compilation problem with 
+ - Add temporary dependency on RichDet to get round compilation problem with
    RichKernel/IRichDetNumberingTool.h
 
 ! 2006-01-25 - Marco Cattaneo
@@ -573,8 +576,8 @@
 
 ! 2005-11-07 - Christopher Rob Jones
  - Bug fix to RichTrackSelector for TrStoredTracks that caused a boost array
-   to go out of range for "Unknown" or "UnUsable" tracks. 
-   Problem picked up when switching to Boost 1.32.0 since this version seems 
+   to go out of range for "Unknown" or "UnUsable" tracks.
+   Problem picked up when switching to Boost 1.32.0 since this version seems
    to have introduced some range checking.
 
 ! 2005-10-31 - Chris Jones
@@ -605,12 +608,12 @@
 
 ! 2005-05-26 - Chris Jones
  - Add new base classes for photon and track creator tools. Due to the
-   increase in the number of such tools, its is now convenient to have 
+   increase in the number of such tools, its is now convenient to have
    common functionality in shared base classes.
 
 ! 2005-05-13 - Chris Jones
  - Add explicit dependency on DAQEvent
- - Add new methods to access a range of RichRecPixels 
+ - Add new methods to access a range of RichRecPixels
    (e.g. only those in RICH1 or RICH1 upper panel )
  - Add base class for all pixel creator tools (shared common code)
    each creator only need implement those bits that are unique to each
@@ -620,7 +623,7 @@
 
 ! 2005-04-06 - Chris Jones
  - Only load the creator tools "on-demand" for the algorithm base classes
-   Avoids the loading of unused tools (for HLT for example). Has the side 
+   Avoids the loading of unused tools (for HLT for example). Has the side
    that some tools are only created during the first event...
 
 !==================== RichRecBase v1r15p1 2005-04-07 =======================
@@ -647,7 +650,7 @@
 
 !====================== RichRecBase v1r14 2004-11-18 =======================
 ! 2004-11-02 - Chris Jones
- - Update the way the XML is structured so that each file is parsed 
+ - Update the way the XML is structured so that each file is parsed
    individually. This improvement means if an xml file is changed the header
    file for that class (and only that class) is automatically regenerated.
 
@@ -677,8 +680,8 @@
  - Update to new IRichRayTracing interface
 
 ! 2004-06-23 - Chris Jones
- - Update RichTrackID and RichTrackSelector to no longer require knowledge of 
-   the bit structure in the TrStoredTrack "history" code. 
+ - Update RichTrackID and RichTrackSelector to no longer require knowledge of
+   the bit structure in the TrStoredTrack "history" code.
    Add track charge and momentum selection criteria to RichTrackSelector.
  - Remove debugging safety check from RichRecPhotonKey constructor
 
@@ -715,7 +718,7 @@
 
 !====================== RichRecBase v1r9p1 2004-03-08 ======================
 ! 2004-03-08 - Marco Cattaneo
- - In RichTrackID.cpp: use TrStoredTrack::isDownstream() instead of upstream() 
+ - In RichTrackID.cpp: use TrStoredTrack::isDownstream() instead of upstream()
 
 !======================= RichRecBase v1r9 2004-02-09 =======================
 ! 2004-01-13 - Chris Jones
@@ -726,7 +729,7 @@
 
 !======================= RichRecBase v1r8 2004-01-08 =======================
 ! 2004-01-08 - Marco Cattaneo
- - Move to Gaudi v14 (use RichEvent v7r* in requirements, 
+ - Move to Gaudi v14 (use RichEvent v7r* in requirements,
                       fix an include in RichRecBaseEvent_load.cpp)
 
 !======================= RichRecBase v1r7 2003-12-10 =======================
@@ -778,5 +781,5 @@
  - Release tools and interfaces
 
 ! 2003-03-13 - Chris Jones
- - First version - Merger of previous RichRecEvent, RichRecKernel and 
+ - First version - Merger of previous RichRecEvent, RichRecKernel and
    RichRecInterfaces packages due to increasing commonality

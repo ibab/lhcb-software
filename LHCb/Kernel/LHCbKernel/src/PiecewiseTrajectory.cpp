@@ -62,9 +62,14 @@ LHCb::PiecewiseTrajectory::PiecewiseTrajectory(const PiecewiseTrajectory& lhs)
 
 LHCb::PiecewiseTrajectory::~PiecewiseTrajectory()
 {
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  std::for_each(m_traj.begin(), m_traj.end(),
+                [](Trajs::value_type &e){ delete e.first; });
+#else
   std::for_each(m_traj.begin(),
                 m_traj.end(),
                 bind<void>(delete_ptr(),bind(&Trajs::value_type::first,_1)));
+#endif
 }
 
 void

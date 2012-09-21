@@ -3,6 +3,9 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+! 2012-09-21 - Marco Clemencic
+ - Fixed compilation with -std=c++11 (-std=c++0x).
+
 !========================= OTDAQ v7r14 2012-07-30 =========================
 ! 2012-07-27 - Marco Cattaneo
  - Replace separate exist<>() + get<>() calls with getIfExists
@@ -14,7 +17,7 @@
  - Fix UNINIT_CTOR defects
 
 ! 2012-06-08 - Marco Cattaneo
- - Add RawEventLocations property to OTRawBankDecoder, to allow to specify a 
+ - Add RawEventLocations property to OTRawBankDecoder, to allow to specify a
    search list of locations. Default is to look for RawEventLocation::Other
    followed by RawEventLocation::Default.
  - RawEventLocation property is declared obsolete. If set, it is prepended
@@ -67,7 +70,7 @@
 
 !======================= OTDAQ v7r5p1 2009-06-02 =======================
 ! 2009-06-02 - Marco Cattaneo
- - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows
 
 !======================= OTDAQ v7r5 2009-02-18 =======================
 ! 2009-02-18 - Wouter Hulsbergen
@@ -93,8 +96,8 @@
 
 !======================= OTDAQ v7r4 2009-01-08 =======================
 ! 2008-12-18 - Jan Amoraal
- - Change TELL1 numbering from 1-48 to 0x0TLQ where (T = {1,2,3}, L={0,1,2,3}, 
-   and Q={0,1,2,3} 
+ - Change TELL1 numbering from 1-48 to 0x0TLQ where (T = {1,2,3}, L={0,1,2,3},
+   and Q={0,1,2,3}
  - Also encode empty banks and empty gols
  - Added option to add empty banks ( default == true )
 
@@ -157,7 +160,7 @@
   o Encodes channel ids and puts them in the RawBuffer
   o Used to encoded MCOTTimes and can be used to encoded OTTime
  - Modified RawHit
-  o Added constructor for word channel and time 
+  o Added constructor for word channel and time
 
 ! 2008-05-27 Herve Terrier
  - check for duplicate hits in OTTimeCreator
@@ -225,7 +228,7 @@
 
 !====================== OTDAQ v4r4 2006-11-07 ========================
 ! 2006-11-07 M Needham
- - Make some minor changes in OTTimeCreator that speed up decoding a bit 
+ - Make some minor changes in OTTimeCreator that speed up decoding a bit
 
 !====================== OTDAQ v4r3 2006-07-25 ========================
 ! 2006-07-21 - Jan Amoraal
@@ -265,8 +268,8 @@
 
 !====================== OTDAQ v3r3 2005-07-13 ======================
 ! 2005-06-29 Jacopo Nardulli
- - Fixing bug in OTTimeCreator  
- - Moving from 50 to 75 ns in the ReadoutGateTool 
+ - Fixing bug in OTTimeCreator
+ - Moving from 50 to 75 ns in the ReadoutGateTool
  - Possibility to read Bank both with 1 and with 3 words as TELL1 Header
 
 !===================== OTDAQ v3r2p1 2005-03-07 =====================
@@ -278,7 +281,7 @@
 - Complete move to new base classes
 
 ! 2004-11-09 - Jacopo Nardulli
- - Move to the New Gaudi Base Classes  
+ - Move to the New Gaudi Base Classes
 
 !====================== OTDAQ v3r1 2004-10-26 ======================
 ! 2004-10-26 - Marco Cattaneo
@@ -287,37 +290,37 @@
 
 !====================== OTDAQ v3r0 2004-09-10 ======================
 ! 2004-09-10 - Marco Cattaneo
- - Add OTReadoutWindow tool (moved here to remove circular dependency on 
+ - Add OTReadoutWindow tool (moved here to remove circular dependency on
    OTSimulation)
  - Leave in OTDAQ subdirectory only .h files of interfaces
 
 ! 2004-08-30 - Jacopo Nardulli
-  Modification of the package according to the New OT Event Model 
+  Modification of the package according to the New OT Event Model
   and to the new OTChannelID.
-  The new algorithm called OTTimeCreator retrieves the data from the 
-  Raw Buffer and creates the object OTTime. It replaces both OTRetrieveBuffer 
+  The new algorithm called OTTimeCreator retrieves the data from the
+  Raw Buffer and creates the object OTTime. It replaces both OTRetrieveBuffer
   and OTClusterCreator.
   OTCheckOTDigit do not exist any more.
-  An xml subdirectory has been created containing the file OTDAQ.xml. 
+  An xml subdirectory has been created containing the file OTDAQ.xml.
   This automatically generates the headers files GolHeader.h and DataWord.h
   The Algorithm OTFillRawBuffer has been moved in the package OT/OTSimulation
-  The Algorithm OTFillBufferFromOTTime recreates the Buffer using the OTTime, 
+  The Algorithm OTFillBufferFromOTTime recreates the Buffer using the OTTime,
   this is useful for the buffer tampering.
 
 !====================== OTDAQ v2r0 2004-03-30 ======================
 ! 2004-03-30 - Jacopo Nardulli
-  Small modifications: 
-  - Fixing a bug related to the multiple hit capacity in OTRetrieveBuffer. 
+  Small modifications:
+  - Fixing a bug related to the multiple hit capacity in OTRetrieveBuffer.
   - Last version of the Algorithm OTChackOTDigit, which does not Run in Brunel.
     OTCheckOTDigit can be used with version  v23r2 of Brunel - Boole v5r2.
-    
+
 ! 2004-03-25 - Jacopo Nardulli
- Second version of the package OTDAQ. Principal modifications respect to the 
+ Second version of the package OTDAQ. Principal modifications respect to the
  previous versions are:
-  - New general data structure with 24 banks instead of 108 and 18 GOL 
+  - New general data structure with 24 banks instead of 108 and 18 GOL
     (instead of 4) per Bank.
   - Reimplementation of the Gol Header.
-  - Introduction of the Otis Headers.  
+  - Introduction of the Otis Headers.
   - Implementation of the multiple hit capacity (maximum 3 hits per channel).
   - Straw number encoded and decoded according to a different numbering scheme
     (closer to the hardware eletronic scheme) inside the package.
@@ -335,24 +338,24 @@
   - OTFillRawBuffer:   This algorithm retrieves the OTDigits and fills a RawBuffer
   - OTRetrieveBuffer:  This algorithm retrieves the RawEvent and creates the OTDigits.
 
-  - The RawBuffer is a container which holds the banks. The banks are vectors of 32 
-    bits-integers. There are 128 banks, each corresponding to a TELL 1 Board. Each bank has a 
+  - The RawBuffer is a container which holds the banks. The banks are vectors of 32
+    bits-integers. There are 128 banks, each corresponding to a TELL 1 Board. Each bank has a
     standard header (see note 2003 - 152).
-  - Each TELL 1 Board has the data from 4 GOLs (every GOL correspond to a short module) and 
-    each GOL takes data from 4 OTIS (each OTIS has 32 channels). See note 2003-041. 
-  - The OTChannelID's are converted to a bank number (7 bits), GOL number (2 bits) and 
+  - Each TELL 1 Board has the data from 4 GOLs (every GOL correspond to a short module) and
+    each GOL takes data from 4 OTIS (each OTIS has 32 channels). See note 2003-041.
+  - The OTChannelID's are converted to a bank number (7 bits), GOL number (2 bits) and
     Otis number (2 bits).
-  - The 32-bit data in the bank consists of GOL-headers (first bit is 0) and the actual hits 
+  - The 32-bit data in the bank consists of GOL-headers (first bit is 0) and the actual hits
     (first bit is 1).
   - GOL-header: -------------------------------------------------------------
                 bit     31  30-29   28-16     15-0
                          0   ID    nothing  GOL-size
       -------------------------------------------------------------
-  - For each two hits a data word is filled. The GOL-size is the number of the data-words 
+  - For each two hits a data word is filled. The GOL-size is the number of the data-words
     inside the GOL.
   - data word:  -------------First hit---------||-----Next hit----------------
                 bit     31  30-29  28-24  23-16  15  14-13    12-8  7-0
                          1 OTIS-ID straw  time    1 OTIS-ID  straw  time
       -------------------------------------------------------------
-  - The straw number runs from 0-31. 
+  - The straw number runs from 0-31.
 

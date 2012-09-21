@@ -4,16 +4,19 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-09-21 - Marco Clemencic
+ - Fixed compilation with -std=c++11 (-std=c++0x).
+
 !========================= MuonDAQ v4r14 2012-06-25 =========================
 ! 2012-06-08 - Marco Cattaneo
  - Add RawEventLocations property to MuonRawBuffer tool, to allow to specify
    a search list of locations. Default is to look for RawEventLocation::Muon
-   followed by RawEventLocation::Default. 
+   followed by RawEventLocation::Default.
  - Undo last change in MuonRec, superseded by this change
 
 !========================= MuonDAQ v4r13 2012-02-28 =========================
 ! 2012-02-22 - Helder Lopes
- - Change MuonRec to look for muon raw event in a location set by options and pass 
+ - Change MuonRec to look for muon raw event in a location set by options and pass
    it to MuonRawBuffer, to allow reading of muon raw info in PID mdsts.
 
 !========================= MuonDAQ v4r12 2011-11-07 =========================
@@ -57,11 +60,11 @@
 
 !========================== MuonDAQ v4r6p1 2009-06-02 ========================
 ! 2009-06-02 - Marco Cattaneo
- - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows
 
 !========================== MuonDAQ v4r6 2009-05-07 ==========================
 ! 2009-04-28 - Alessia Satta
- - Add MuonTAE Rec algo for reconstruction in TAE events. 
+ - Add MuonTAE Rec algo for reconstruction in TAE events.
    Also strips belonging to different BX are matched.
 
 !========================== MuonDAQ v4r5p1 2009-01-08 ========================
@@ -73,11 +76,11 @@
  - Fix gcc 4.3 warnings
 
 ! 2008-10-27 - Alessia Satta
- - change the default of muon raw data format from DC06 to Real data. 
+ - change the default of muon raw data format from DC06 to Real data.
    To get DC06 use   MuonDigitToRawBuffer.VType=1
 
 ! 2008-10-23 - Alessia Satta
- - add readoutbankerror to flag corrupted events avoiding the stop of process 
+ - add readoutbankerror to flag corrupted events avoiding the stop of process
    phase
 
 ! 2008-10-20 - Alessia Satta
@@ -85,25 +88,25 @@
 
 !========================== MuonDAQ v4r4 2008-09-04 ==========================
 ! 2008-08-28 - Alessia Satta
- - fix for empty raw bank during check of tell1 headers ( version and source id) 
+ - fix for empty raw bank during check of tell1 headers ( version and source id)
    thanks to T Ruf
 
 !========================== MuonDAQ v4r3 2008-07-16 ==========================
 ! 2008-07-14 - Alessia Satta
  - add check that all tell1 headers are consistent ( version and source id)
  - improve the Tell1 header decoding, statistics is printed and end of job in
-   case of errors 
+   case of errors
 
 !========================== MuonDAQ v4r2 2008-06-30 ==========================
 ! 2008-06-30 - Alessia Satta
- - Add Tell1 header decoding  
+ - Add Tell1 header decoding
 
 !========================== MuonDAQ v4r1 2008-06-04 ==========================
 ! 2008-06-04 - Marco Cattaneo
  - Fix the previous fix
 
 ! 2008-06--3 - Alessia Satta
- - move the reset of internal buffer from end event to begin event 
+ - move the reset of internal buffer from end event to begin event
    to solve a problem with GaudiPython and to be similar to TES reset
 
 ! 2008-05-29 - Alessia Satta
@@ -115,9 +118,9 @@
 
 !========================== MuonDAQ v4r0 2008-04-08 ==========================
 ! 2008-04-02 - Alessia Satta
- - many changes. 
-   Remove all cabling readout info. They are retrieved by the 
-   DeMuonDetector via the MuonDAQ Helper class. 
+ - many changes.
+   Remove all cabling readout info. They are retrieved by the
+   DeMuonDetector via the MuonDAQ Helper class.
    Add the possibility to decode and encode both DC06 data format and real data
    format (named v1)
    several new methods for getting the raw data are available.
@@ -144,7 +147,7 @@
 
 !========================= MuonDAQ v2r3 2006-11-16 ===========================
 ! 2006-11-16 - Alessia Satta
- - Modification for the TAE 
+ - Modification for the TAE
 
 !========================= MuonDAQ v2r2 2006-10-16 ===========================
 ! 2006-10-16 - Marco Cattaneo
@@ -167,7 +170,7 @@
  - Move algorithm include to src directory and cleanup included files
 
 ! 2006-01-31 - Alessia satta
- - implement the new Muon DAQ format (digit address first +TDC at the end of the bank)	
+ - implement the new Muon DAQ format (digit address first +TDC at the end of the bank)
  - adapt to new event model (mainly LHCb namespace & DAQEvent)
  - adapt to use /dd/Conditions for readoing the cabling info
 
@@ -193,7 +196,7 @@
 
 !========================== MuonDAQ v1r0 2004-02-10 =======================
 ! 2004-02-10 - Alessia Satta
- - Fix bug in readout type info and timeStamp storage 
+ - Fix bug in readout type info and timeStamp storage
 
 ! 2004-02-05 - Alessia Satta
  - First public version

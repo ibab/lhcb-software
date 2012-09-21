@@ -2,6 +2,9 @@
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2012-09-21 - Marco Clemencic
+ - Fixed compilation with -std=c++11 (-std=c++0x).
+
 !========================= OTDet v8r7 2011-07-25 =========================
 ! 2011-06-23 - Marco Cattaneo
  - Protect usage of DEBUG and VERBOSE messages
@@ -19,7 +22,7 @@
 
 !========================= OTDet v8r5 2010-12-14 =========================
 ! 2010-11-30 - Marco Cattaneo
- - Remove unneccessary public include of boost/assign/list_of.hpp that was 
+ - Remove unneccessary public include of boost/assign/list_of.hpp that was
    breaking compilation with icc
  - Remove a superfluous ; (icc remark)
 
@@ -43,7 +46,7 @@
  - fixed bug in RtRelation::initRTable
 
 ! 2008-10-23 - Jan Amoraal
- - Fix inefficient region around y = 0 in F-modules in odd layers see 
+ - Fix inefficient region around y = 0 in F-modules in odd layers see
    http://www.nikhef.nl/pub/experiments/bfys/lhcb/outerTracker/NamingConventions/Modules/index.html
 
 ! 2008-10-22 - Marco Cattaneo
@@ -58,7 +61,7 @@
 
 ! 2008-10-01 - Jan Amoraal
  - Default tofs weren't filled (caused Brunel to crash)
- 
+
 ! 2008-09-25 - Jan Amoraal
  - Head of DetDesc/DetectorElement now has a hasCondition method.
  - Was still asking for calibration condition without checking if it existed.
@@ -72,7 +75,7 @@
 ! 2008-09-19 - Jan Amoraal
  - Added callbacks for calibration conditions. T0s and RTs are now in CONDDB.
    Modified set functions to reflect this.
- 
+
 ! 2008-09-15 - Wouter Hulsbergen
  - Changed definition of coefficients t(r) and sigma_t(r) in
    RtRelation.h: Those coefficiencts now define a polynomial in r/rmax,
@@ -137,9 +140,9 @@
  - Bug fix in IndexToDetElementMap
 
 ! 2007-06-07 - Jan Amoraal
- - Some minor changes requested by the A-Team: 
+ - Some minor changes requested by the A-Team:
    - Random access to detector elements
-   - Added const find methods for detector elements  
+   - Added const find methods for detector elements
 
 ! 2007-05-25 - Marco Cattaneo
  - Add LCG dictionaries (moved from DetSys)
@@ -148,7 +151,7 @@
 !========================== OTDet v7r2 2007-03-05 =========================
 ! 2007-03-05 - Jan Amoraal
  - Fix warning in DeOTModule.h
- 
+
 ! 2007-03-01 - Marco Cattaneo
  - Remove obsolete OTDet_load.cpp file
 
@@ -205,26 +208,26 @@
 !========================== OTDet v6r4 2006-06-08 ==========================
 ! 2006-06-08 - Jan Amoraal
  - Gaudi::Units and added a method to return the thickness of the sensitive
-   volume of module. 
+   volume of module.
 
 !========================== OTDet v6r3 2006-05-03 ==========================
 ! 2006-05-16 - Jan Amoraal
  - Remove module check in traj representing first/last wire
 
 ! 2006-05-08 - Jan Amoraal
- - Fix x-coordinate of trajectory representing a wire 
- - Fix z-coordinate of middle trajectories  
- - Forgot to remove some debug msgs in DeOTModule.cpp 
+ - Fix x-coordinate of trajectory representing a wire
+ - Fix z-coordinate of middle trajectories
+ - Forgot to remove some debug msgs in DeOTModule.cpp
  - minor clean-ups
- 
+
 ! 2006-05-04 - Jan Amoraal
  - Changes for Brunel:
-    - DeOTLayer and DeOTModule returns a plane that goes through the centre of 
+    - DeOTLayer and DeOTModule returns a plane that goes through the centre of
       a layer/module.
     - Added trajectories for first and last wire. The first wire is by default
-      the most left wire in the first monolayer(=0). The last wire is by default 
+      the most left wire in the first monolayer(=0). The last wire is by default
       the most right wire in the second monolayer(=1).
-    - Fixed trajectories representing wires in a long module, i.e. correct for 
+    - Fixed trajectories representing wires in a long module, i.e. correct for
       inefficient regions.
 
 !========================== OTDet v6r2 2006-04-04 ==========================
@@ -235,11 +238,11 @@
  - isInsideEfficient is really efficient in discarding hits in stereo layers
 
 ! 2006-04-12 - Jan Amoraal
- - DeOTModule.*: removed bool m_longModule and added module type check methods  
-                 
+ - DeOTModule.*: removed bool m_longModule and added module type check methods
+
 ! 2006-04-11 - Jan Amoraal
  - Minor bug fixes
- 
+
 !========================== OTDet v6r1 2006-04-04 ==========================
 ! 2006-04-05 - Jan Amoraal
  - removed error message in sensitiveVolumeID()
@@ -252,7 +255,7 @@
 
 ! 2006-03-31 - Jan Amoraal
  - replace stereoAngle() with angle()
- 
+
 ! 2006-03-30 - Jan Amoraal
  - The "hopefully" new and improved OTDet
  - Interface is similar to STDet
@@ -276,9 +279,9 @@
  - Removed method DeOTDetector::getAngles(): This method didn't do
    anything other than to return a status code. Nor is it needed by any
    other code. It was probably used for debugging purposes.
- - Added DeOTDetector::sensitiveVolumeID as per Juan's request. 
-   Needs testing. 
- - Added isInside() checks and removed redundant checks in 
+ - Added DeOTDetector::sensitiveVolumeID as per Juan's request.
+   Needs testing.
+ - Added isInside() checks and removed redundant checks in
    DeOTModule::calculateHits.
 
 !========================== OTDet v5r6 2005-07-13 ==========================
@@ -301,13 +304,13 @@
 !========================== OTDet v5r4 2004-11-01 ==========================
 ! 2004-10-21 - Jacopo Nardulli
  - Beam Tilt implementation:
-   Add to DeOTDetector a function to return the angles. 
+   Add to DeOTDetector a function to return the angles.
 
 !========================== OTDet v5r3 2004-07-19 ==========================
 ! 2004-07-19 - Marco Cattaneo
  - Move to Gaudi v15 (use LHCbKernel v5r* in requirements)
 
-! 2004-06-22 - Jacopo Nardulli 
+! 2004-06-22 - Jacopo Nardulli
  - Fixing a bug related to the implementation of the isInside function.
 
 !========================== OTDet v5r2 2003-12-16 ==========================
@@ -322,7 +325,7 @@
 ! 2003-12-04 - Jacopo Nardulli
  - Introduction of DeOTQuarters. A DeOTLayer is now split into 4 quarters.
    Each quarter now has nine modules. The station, layer and module numbering
-   as also changed, see LHCbKernel v2r10 changes to OTChannelID for details 
+   as also changed, see LHCbKernel v2r10 changes to OTChannelID for details
 
 !========================== OTDet v4r1 2003-10-06 ==========================
 ! 2003-10-06 - Marco Cattaneo
@@ -333,7 +336,7 @@
  - use new package DetDescCnv
 
 ! 2003-03-19 - Jeroen van Tilburg
- - Removed OTLayer. Functionality is now in new class DeOTModule, which 
+ - Removed OTLayer. Functionality is now in new class DeOTModule, which
    inherits from DetectorElement.
  - DeOTModule gets its geometry information from the XML geometry-tree.
    (requires XmlDDDB from v16r0, dbase from v256r0)
@@ -359,10 +362,10 @@
 ! 2002-10-14 - Jeroen van Tilburg
  - Add member functions to DeOTDetector (a.o.):
      o double resolution()
-     o double propagationTime(OTChannelID, x, y)  
+     o double propagationTime(OTChannelID, x, y)
      o double driftTime(driftDist) = r-t relation
      o double driftDistance(driftTime) = inverse r-t relation
-   These functions will allow that hard-coded parameters are not needed 
+   These functions will allow that hard-coded parameters are not needed
    anymore.
  - Add function to OTLayer:
      o double distanceToWire(OTChannelID, HepPoint3D, double tx, double ty)
@@ -382,27 +385,27 @@
   - Change version to v2r0
 
 ! 2002-06-06 Jeroen van Tilburg
-  - OTLayer: added methods to check in which monolayer a straw is located 
+  - OTLayer: added methods to check in which monolayer a straw is located
     and methods to check if module is in top/bottom area.
     Removed obsolete 'get' methods.
-  - DeOTDetector: renamed method from numStation() to numStations(). 
-    Added method which returns the number of the first station with 
+  - DeOTDetector: renamed method from numStation() to numStations().
+    Added method which returns the number of the first station with
     OT technology.
 
 !========================= OTDet v1r1 2002-05-27 =========================
 ! 2002-05-27 - Olivier Callot
  - Make private the methods of OTLayer which are not used by OTAlgorithms or
-   FwTrack or TrFitEvent. 
- - Method names changed to agree with LHCb conventions, this means remove 
+   FwTrack or TrFitEvent.
+ - Method names changed to agree with LHCb conventions, this means remove
    the 'get' prefix.
 
 ! 2002-05-27 J. van Tilburg
   This is a new package for the Outer Tracker XML description.
-  It is the replacement for the OTSicbGeom package. Now it works only 
+  It is the replacement for the OTSicbGeom package. Now it works only
   for the OT digitization.
    - DeOTDetector:     DetectorElement class that reads in the XmlDDDB.
    - OTLayer:          Copied exactly from OTSicbGeom/OTDetectionLayer.
    - XmlOTDetectorCnv: Needed to read in xml.
 ! ====================================================================
- 
+
 !========================= OTDet v8r5 2010-12-14 =========================

@@ -16,10 +16,16 @@ using namespace LHCbAlgsTest;
 // ----------------------------------------------------------------------------
 DECLARE_ALGORITHM_FACTORY(ServiceStarter)
 
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+namespace {
+  const std::vector<std::string> phases = {"initialize", "start", "execute"};
+}
+#else
 #include "boost/assign/list_of.hpp"
 namespace {
   const std::vector<std::string> phases = boost::assign::list_of("initialize")("start")("execute");
 }
+#endif
 
 // ============================================================================
 // Standard constructor, initializes variables

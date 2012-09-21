@@ -47,7 +47,7 @@ private:
  *  // Enable the auditor
  *  ApplicationMgr.ExtSvc += { "AuditorSvc" };
  *  AuditorSvc.Auditors += { "FPEAuditor" };
- *  // Exceptions to trap 
+ *  // Exceptions to trap
  *  // Full list of possible types is "DivByZero","Overflow","Underflow","Invalid","Inexact".
  *  // "AllExcept" turns on all exceptions.
  *  FPEAuditor.TrapOn  = { "DivByZero","Overflow","Underflow","Invalid" };
@@ -58,7 +58,7 @@ private:
  *  @endverbatim
  *
  *  @see FPE::Guard
- *  
+ *
  *  @author Gerhard Raven
  *  @date   09/06/2008
  */
@@ -157,15 +157,25 @@ FPEAuditor::FPEAuditor( const std::string& name, ISvcLocator* pSvcLocator)
   : Auditor ( name , pSvcLocator )
   , m_log( msgSvc() , name )
 {
-  declareProperty("TrapOn", m_mask.set(  boost::assign::list_of("DivByZero")
-                                         ("Invalid")
-                                         ("Overflow") ).property() );
-  declareProperty("ActivateAt", m_when = boost::assign::list_of("Initialize")
+  declareProperty("TrapOn", m_mask.set(
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+    {"DivByZero", "Invalid", "Overflow"}
+#else
+    boost::assign::list_of("DivByZero")("Invalid")("Overflow")
+#endif
+  ).property() );
+  declareProperty("ActivateAt", m_when =
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+    {"Initialize", "ReInitialize", "Execute", "BeginRun", "EndRun", "Finalize"}
+#else
+    boost::assign::list_of("Initialize")
                   ("ReInitialize")
                   ("Execute")
                   ("BeginRun")
                   ("EndRun")
-                  ("Finalize") );
+                  ("Finalize")
+#endif
+  );
   declareProperty("DisableTrapFor", m_veto );
   declareProperty("EnableGlobal", m_activateSuperGuard = false );
 }

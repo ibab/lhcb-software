@@ -3,9 +3,12 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+! 2012-09-21 - Marco Clemencic
+ - Fixed compilation with -std=c++11 (-std=c++0x).
+
 !========================= STKernel v2r8 2012-05-02 =========================
 ! 2012-04-11 - Mark Tobin
- - Add end new method to return noise after pedestal subtraction 
+ - Add end new method to return noise after pedestal subtraction
    to ISTNoiseCalculation interface.
 
 !========================= STKernel v2r7 2012-03-26 =========================
@@ -30,7 +33,7 @@
 ! 2010-10-14 Mark Tobin
  - Add method in ISTNoiseCalculationTool to return the number of events used per
  strip in the calculation of the noise.
- 
+
 ! 2010-10-06 - Marco Clemencic
  - Fix for ICC.
 
@@ -40,7 +43,7 @@
  - Add writeMappingToXML to ISTReadoutTool interface
 
 !====================== STKernel v2r3 2010-08-25 ============================
-! 2010-20-07 
+! 2010-20-07
   - Change procStatus method to new syntax
 
 !====================== STKernel v2r2 2010-06-18 ============================
@@ -59,7 +62,7 @@
  - Add dependency on RecEvent
 
 ! 2010-04-24 M. Needham
-  - Add procFailure method to base class 
+  - Add procFailure method to base class
 
 ! 2010-03-20 M Needham
  - Comment out hack for TED run
@@ -96,37 +99,37 @@
 !====================== STKernel v1r17 2009-09-09 ===========================
 ! 2009-09-09 Marco Cattaneo
  - requirements: Add missing linkopts for Boost on Windows
- 
+
 ! 2009-08-31 - Jeroen van Tilburg
  - TTDetectorPlot: invert A and C side to comply with offline and IT plot.
 
 ! 2009-08-26 - Jeroen van Tilburg
- - Changes to TTDetectorPlot: add beam pipe and allow for finer binning. 
+ - Changes to TTDetectorPlot: add beam pipe and allow for finer binning.
 
 ! 2009-08-21 M Needham
  - Add STXMLUtils functions
 
 !2009-08-20 M Needham
  - Add ISTRawADCInfo interface
- - Add method to Beetle representation to decompose to beetle/strip 
+ - Add method to Beetle representation to decompose to beetle/strip
 
 ! 2009-08-08 M Needham
  - Add TTDetectorPlot class
 
 ! 2009-07-31 M Needham
- - Add pragmas to avoid warning from windows for alg base classes 
+ - Add pragmas to avoid warning from windows for alg base classes
 
 !====================== STKernel v1r16 2009-07-29 ===========================
 ! 2009-07-29 Marco Cattaneo
- - Remove "using namespace std" and "using namespace LHCb" from 
+ - Remove "using namespace std" and "using namespace LHCb" from
    ITDetectorPlot.cpp, to avoid confusing vc7 compiler
-   
+
 ! 2009-07-24 J Luisier
  - Add ITDetectorPlot class, to draw nice IT 2D plots
 
 !====================== STKernel v1r15 2009-07-13 ===========================
 ! 2009-07-07 Mark Tobin
- - Fix gcc43 compilation warnings 
+ - Fix gcc43 compilation warnings
 
 ! 2009-07-06 Mark Tobin
  - Moved method to retrieve TELL1 number from a SourceID from STCommonBase to
@@ -137,11 +140,11 @@
  - Bug fix in TTNumberToSourceIDMap (should have been fixed in v1r12??)
 
 !====================== STKernel v1r13 2009-05-07 ===========================
-! 2009-05-05 Mark Tobin 
-  Added method to STCommonBase class to return SourceID to TELL1 defined in 
+! 2009-05-05 Mark Tobin
+  Added method to STCommonBase class to return SourceID to TELL1 defined in
   STBoardMapping.h
 
-! 2009-05-03 M Needham 
+! 2009-05-03 M Needham
   Add dict for std::pair<STTell1ID, unsigned int>
 
 !====================== STKernel v1r12 2009-03-09 ===========================
@@ -182,16 +185,16 @@
  - Add uniquePort and uniqueBeetle functions
 
 ! 2008-12-02 M Needham
- - Add specializations for STDigit charge manipulation 
+ - Add specializations for STDigit charge manipulation
 
 !====================== STKernel v1r9 2008-11-18 ============================
 ! 2008-11-18 M Cattaneo
  - Fix a compilation error on Windows
 
-! 2008-11-05 M Needham 
+! 2008-11-05 M Needham
  - Add bank version to dictionary
  - Make DAQToOffline method safer in STTell1Board
- - Tidy getting service box name 
+ - Tidy getting service box name
 
 ! 2008-10-29 M Needhm
  - fix for gcc 4.3 in STCommonConstructors
@@ -214,14 +217,14 @@
  - add setDetType
 
 ! 2008-10-14 M Needham
- - bug fix in retrieval of readout tool 
+ - bug fix in retrieval of readout tool
 
 ! 2008-10-14 M Needham
- - Add new STAlgorithm base classes   
+ - Add new STAlgorithm base classes
 
 !====================== STKernel v1r8 2008-09-05 ============================
 ! 2008-09-05 M Needham
- - Add detector type to STTellBoard 
+ - Add detector type to STTellBoard
 
 ! 2008-08-31 M Needham
  - bug fixes in Representation classes
@@ -254,14 +257,14 @@
 ! 2008-07-15 M. Needham
  - Be more friendly for python [don't believe the hype!]
 
-! 2008-07-14 M Needham 
+! 2008-07-14 M Needham
   - Extend ISTReadoutTool interface
   - Add dictionaries for STTell1Board and STTell1ID
 
 !====================== STKernel v1r5 2008-06-30 ============================
 ! 2008-06-20 M Needham
  - Merge STTELL1Constants.h with STDAQDefinitions.h
- - Move STRawBankMap code here from STOnline and STDAQ 
+ - Move STRawBankMap code here from STOnline and STDAQ
 
 !====================== STKernel v1r4 2008-05-13 ============================
 ! 2008-05-12 M Needham

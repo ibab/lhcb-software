@@ -1,7 +1,11 @@
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
-! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
+! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
+
+! 2012-09-21 - Marco Clemencic
+ - Fixed compilation with -std=c++11 (-std=c++0x).
+
 ! 2012-09-14 - Paul Szczypka
  - renamed files/var from VeloPix to VP
 
@@ -17,8 +21,8 @@
 
 !========================= MCEvent v2r21 2011-07-25 =========================
 ! 2011-06-17 - Sajan Easo
-- Added the bit flags for Aerogel Subtiles in MCRichHit. 
-  This is using existing , but so far unused,  bits in the history code. 
+- Added the bit flags for Aerogel Subtiles in MCRichHit.
+  This is using existing , but so far unused,  bits in the history code.
 
 !========================= MCEvent v2r20 2011-06-14 =========================
 ! 2011-05-31 - Magnus Lieng
@@ -29,17 +33,17 @@
  - Fix uninitialised variable in MCMuonDigit constructor (coverity defect 16220)
 
 !========================= MCEvent v2r18 2011-01-31 =========================
-! 2011-01-12 - Marco Cattaneo	
+! 2011-01-12 - Marco Cattaneo
  - Fix ICC warnings and remarks
 
 !======================== MCEvent v2r17 2010-04-26 ===========================
 ! 2010-04-13 - Chris Jones
- - Add support for new RICH background source; Scintillation in the CF4 
+ - Add support for new RICH background source; Scintillation in the CF4
    radiator medium
 
 !======================== MCEvent v2r16 2009-11-27 ===========================
 ! 2009-11-27 - Marcin Kucharczyk
- - Add MCVeloPixDeposit.xml and MCVeloPixDigit.xml oblects used by pixel Velo 
+ - Add MCVeloPixDeposit.xml and MCVeloPixDigit.xml oblects used by pixel Velo
  - algorithms
 
 !======================== MCEvent v2r15p2 2009-11-13 =========================
@@ -152,9 +156,9 @@
  - Add GhostTrackInfo (needed by ghost track classification tools)
 
 ! 2007-05-03 M. Needham
- - Add MCTrackGeomCriteria.h/.cpp (wrapper to 
+ - Add MCTrackGeomCriteria.h/.cpp (wrapper to
    allow runtime composition of acceptance criteria )
- - Add MCFun.h/cpp functions to note if there is an interaction 
+ - Add MCFun.h/cpp functions to note if there is an interaction
    or not on the MCParticle
 
 ! 2007-04-30 M Needham
@@ -167,39 +171,39 @@
 
 !======================== MCEvent v2r2 2007-04-19 ============================
 ! 2007-04-19 - Chris Jones
- - Add complete copy constructor for MCHeader. 
-   NB : Please remember to update this constructor if the data members of 
+ - Add complete copy constructor for MCHeader.
+   NB : Please remember to update this constructor if the data members of
    the class are ever extended in the future.
 
 ! 2007-04-03 - Vanya BELYAEV
  - Event/MCCaloDataFunctor.h
-    new file with couple of generic useful functions to deal with 
-    MC-calorimeter data objects. These functions are particulartly 
-    very useful for Yasmine's & Kirill's studies of timing and time 
+    new file with couple of generic useful functions to deal with
+    MC-calorimeter data objects. These functions are particulartly
+    very useful for Yasmine's & Kirill's studies of timing and time
     alignement in Calorimeter
 
    typical usage:
 
      using namespace LHCb::CaloDataFunctor ;
-      
-     const LHCb::MCCaloDigit::Container* digits = 
+
+     const LHCb::MCCaloDigit::Container* digits =
          get<LHCb::MCCaloDigit::Container>( LHCb::MCCaloDigitLocation::Ecal ) ;
-     
+
      const double e1 = activeEnergyInTime ( digits , 0 ) ;
-     
-     const LHCb::MCCaloHit::Container* hits = 
+
+     const LHCb::MCCaloHit::Container* hits =
          get<LHCb::MCCaloHit::Container>( LHCb::MCCaloHitLocation::Ecal ) ;
-     
+
      const double e2 = activeEnergyInTime ( hits   , 0 ) ;
-     
+
      const LHCb::MCCaloHit*   hit   = ... ;
-     
+
      const double e3 = activeEnergyInTime ( hit   , 0 ) ;
-     
+
      const LHCb::MCCaloDigit* digit = ... ;
-      
+
      const double e4 = activeEnergyInTime ( digit   , 0 ) ;
-  
+
 
 !======================== MCEvent v2r1 2007-03-05 ============================
 ! 2007-03-05 - Chris Jones
@@ -211,7 +215,7 @@
    sharing in the HPD pixel chip silicon wafer
 
 ! 2007-03-01 - Pere Mato
- - Added dictionary for std::vector<const LHCb::MCParticle*> needed by 
+ - Added dictionary for std::vector<const LHCb::MCParticle*> needed by
    DecayFinder and other tools from Python
 
 ! 2007-02-27 - Alessia Satta
@@ -254,7 +258,7 @@
  - added includes to MCTrackInfo.h, to please genreflex
 
 ! 2006-11-03 - Chris Jones
- - Fix minor buglet in MCRichHit::isSignal() method 
+ - Fix minor buglet in MCRichHit::isSignal() method
      (should check scattered photon flag)
 
 !========================== MCEvent v1r6 2006-09-01 ==========================
@@ -265,7 +269,7 @@
  - Update fillstream methods for MCRichDigit and MCRichDigitHistoryCode
    to be more human-friendly
 
-! 2006-08-17 - Juan PALACIOS  
+! 2006-08-17 - Juan PALACIOS
   - xml/MCVertex.xml
     . generate typedefs LHCb::MCVertex::Vector and LHCb::MCVertex::ConstVector.
 
@@ -283,7 +287,7 @@
  - Add ISiDepositedCharge interface
 
 ! 2006-05-11 - Marco Cattaneo
- - Use explicitly Gaudi::Units namespace in MCParticle.h and MCHit.h, to avoid 
+ - Use explicitly Gaudi::Units namespace in MCParticle.h and MCHit.h, to avoid
    possible clash when also including the CLHEP files (e.g. in HepMC)
 
 !========================== MCEvent v1r2p1 2006-04-20 ========================
@@ -296,13 +300,13 @@
 !========================== MCEvent v1r2 2006-03-16 ==========================
 ! 2006-03-16 - P. Koppenburg
  - Kernel/IMCDecayFinder.h: replace MCParticle::ConstContainer by MCParticle::Container
-  
+
 ! 2006-03-15 - Juan Palacios
- - xml/Particle.xml: add typedefs for KeyedContainers of MCParticle and 
-   const MCParticle. LHCb::MCParticle::Container, 
+ - xml/Particle.xml: add typedefs for KeyedContainers of MCParticle and
+   const MCParticle. LHCb::MCParticle::Container,
    LHCb::MCParticle::ConstContainer.
    These should be generated automatically by GOD from Gaudi v18r3 onwards.
- - Kernel/IMCDecayFinder.h: replace LHCb::ConstMCParticles by LHCb::MCParticle::ConstContainer. 
+ - Kernel/IMCDecayFinder.h: replace LHCb::ConstMCParticles by LHCb::MCParticle::ConstContainer.
    Remove typedef LHCb::ConstMCParticles
 
 !========================== MCEvent v1r1 2006-03-07 ==========================
@@ -312,7 +316,7 @@
    MCParticle.h.
    Change xml/MCParticle.xml to generate typedefs LHCb::MCParticle::Vector and
    LHCb::MCParticle::ConstVector.
-   Change IMCDecayFinder hasDecay, findDecay, decayMembers, decaySubTrees 
+   Change IMCDecayFinder hasDecay, findDecay, decayMembers, decaySubTrees
    methods to use LHCb::ConstParticles and LHCb::MCParticle::Vector.
 
 ! 2006-03-07 - Gloria CORTI
@@ -327,7 +331,7 @@
   + Update history flags in MCRichOpticalPhoton to match those in the hit
     Add refraction point (for aerogel) and remove unused data members
   + MCRichSegment now support other radiator types
- 
+
 ! 2006-02-22 - Chris Jones
  - Update sensDetID member in MCRichHit to be of type RichSmartID
 
@@ -349,7 +353,7 @@
    Work arounds added where needed in GaussKine and GigaCnv instead
 
 ! 2006-02-06 - Chris Jones
- - Update MCRichDigitHistoryCode with new method to import flags from another 
+ - Update MCRichDigitHistoryCode with new method to import flags from another
    history code.
 
 !========================== MCEvent v1r0 2006-01-27 ==========================
@@ -390,8 +394,8 @@
 
 ! 2005-12-15 - Gloria CORTI
  - Introduce new data members in MCHeader: evtNumber and evtTime.
- - Add Kernel/IMCDecayFinder.h interface, moved from Phys/MCTools, the 
-   implementation is in new package Sim/SimComponents 
+ - Add Kernel/IMCDecayFinder.h interface, moved from Phys/MCTools, the
+   implementation is in new package Sim/SimComponents
 
 ! 2005-12-15 - Marco Cattaneo
  - Add Event/MCTruth.h helper class, moved from Event/Event on old event model
@@ -407,7 +411,7 @@
    migration to MathCore
 
 ! 2005-12-06 - Chris Jones
- - Import MCRichSegment, MCRichTrack, MCRichOpticalPhoton and MCRichHit from 
+ - Import MCRichSegment, MCRichTrack, MCRichOpticalPhoton and MCRichHit from
    RichEvent. Allows Gauss to be independant of RichEvent.
  - Port RICH classes from CLHEP to ROOT geometry classes
 
@@ -419,18 +423,18 @@
  - Change package name to MCEvent in *.xml, for GOD Reflex dict generation
  - MCHit adapted to Event Model review reccomendations:
    . no longer a KeyObject but a ContainedObject
-   . use of LHCb typedefs (to MathCore) for basic vector and point classes 
+   . use of LHCb typedefs (to MathCore) for basic vector and point classes
    . introduce new attribute for sensitive detector identifier (sensDetID
      with -1 as invalid number)
    . renaming of some methods
 
 ! 2005-11-15 - Patrick KOPPENBURG
- - New MCHeader class inheriting from ProcessHeader 
+ - New MCHeader class inheriting from ProcessHeader
  - MCParticle and MCVertex adapted to Physics Event Model guidelines, remove
    some methods (ex. collision() to be provided by tools) and adopt MathCore
 
 ! 2005-09-06 - P. Koppenburg
-  - Split package Event/Event into Event/MCEvent and Event/EventBase because 
+  - Split package Event/Event into Event/MCEvent and Event/EventBase because
     . Packages called Foo/Foo cause problems in cvs
     . Everything was depending on it which is not that nice since it contains
       MCParticle for instance

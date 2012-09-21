@@ -18,7 +18,9 @@
 #include "Event/MCParticle.h"
 #include "Event/MCTrackGeomCriteria.h"
 #include "CaloDet/DeCalorimeter.h"
+#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
 #include <boost/assign/list_of.hpp> // for 'map_list_of()'
+#endif
 #include "LHCbMath/LHCbMath.h"
 
 //-----------------------------------------------------------------------------
@@ -47,16 +49,24 @@ MCReconstructible::MCReconstructible( const std::string& type,
   declareInterface<IMCReconstructible>(this);
   // job options
   declareProperty( "AllowPrimaryParticles", m_allowPrimary = true );
-  declareProperty("ChargedLong", m_chargedLongCriteria = 
-		  boost::assign::list_of("hasVeloAndT"));
-  declareProperty("ChargedUpstream", m_chargedUpstreamCriteria = 
-		  boost::assign::list_of("hasVelo")("hasTT"));
-  declareProperty("ChargedDownstream", m_chargedDownstreamCriteria = 
-		  boost::assign::list_of("hasT")("hasTT"));
-  declareProperty("ChargedVelo", m_chargedVeloCriteria = 
-		  boost::assign::list_of("hasVelo"));
-  declareProperty("ChargedTtrack", m_chargedTCriteria = 
-		  boost::assign::list_of("hasT"));
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  declareProperty("ChargedLong", m_chargedLongCriteria = {"hasVeloAndT"});
+  declareProperty("ChargedUpstream", m_chargedUpstreamCriteria = {"hasVelo", "hasTT"});
+  declareProperty("ChargedDownstream", m_chargedDownstreamCriteria = {"hasT", "hasTT"});
+  declareProperty("ChargedVelo", m_chargedVeloCriteria = {"hasVelo"});
+  declareProperty("ChargedTtrack", m_chargedTCriteria = {"hasT"});
+#else
+  declareProperty("ChargedLong", m_chargedLongCriteria =
+                  boost::assign::list_of("hasVeloAndT"));
+  declareProperty("ChargedUpstream", m_chargedUpstreamCriteria =
+                  boost::assign::list_of("hasVelo")("hasTT"));
+  declareProperty("ChargedDownstream", m_chargedDownstreamCriteria =
+                  boost::assign::list_of("hasT")("hasTT"));
+  declareProperty("ChargedVelo", m_chargedVeloCriteria =
+                  boost::assign::list_of("hasVelo"));
+  declareProperty("ChargedTtrack", m_chargedTCriteria =
+                  boost::assign::list_of("hasT"));
+#endif
   declareProperty("NeutralEtMin", m_lowEt);
 }
 
@@ -67,9 +77,9 @@ MCReconstructible::~MCReconstructible()
 {
   // clean up
   delete m_tkInfo;
-  for ( CriteriaMap::iterator iterC = m_critMap.begin(); 
+  for ( CriteriaMap::iterator iterC = m_critMap.begin();
 	iterC != m_critMap.end(); ++iterC ) { delete iterC->second; }
-  m_critMap.clear();  
+  m_critMap.clear();
 }
 
 //=============================================================================
@@ -100,7 +110,7 @@ StatusCode MCReconstructible::initialize()
   LHCb::CaloCellID refInn = LHCb::CaloCellID(2, 2, 25 ,23);
   m_xECALInn = fabs(  m_calo->cellX(refInn)  );
   m_yECALInn = fabs(  m_calo->cellY(refInn)  );
-  m_xECALOut = fabs(  m_calo->cellX(refOut)  );  
+  m_xECALOut = fabs(  m_calo->cellX(refOut)  );
   m_yECALOut = fabs(  m_calo->cellY(refOut)  );
 
   return sc;
@@ -137,9 +147,9 @@ bool MCReconstructible::accept_neutral( const LHCb::MCParticle* mcPart ) const
   const double z  = mcPart->originVertex()->position().z();
   double pz = mcPart->momentum().pz();
   if( pz < 0 )return false;
-  pz < 0 ? pz = std::min(pz, -LHCb::Math::lowTolerance) : 
-               pz = std::max(pz, LHCb::Math::lowTolerance);  
-  
+  pz < 0 ? pz = std::min(pz, -LHCb::Math::lowTolerance) :
+               pz = std::max(pz, LHCb::Math::lowTolerance);
+
   const double sx = mcPart->momentum().px()/pz;
   const double sy = mcPart->momentum().py()/pz;
   //debug() << "accepted " << x << " " << y << " " << z << " & " << sx << " " << sy << endmsg ;
@@ -189,13 +199,13 @@ MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
     {
 
       // charged or neutral
-      const bool isCharged = mcPart->particleID().threeCharge() != 0;  
+      const bool isCharged = mcPart->particleID().threeCharge() != 0;
       if ( isCharged )
       {
 
         // n.b the order matters !
-        if (m_critMap[ChargedLong]->accepted(mcTkInfo(),mcPart) == true) 
-          return ChargedLong;       
+        if (m_critMap[ChargedLong]->accepted(mcTkInfo(),mcPart) == true)
+          return ChargedLong;
         else if (m_critMap[ChargedUpstream]->accepted(mcTkInfo(),mcPart) == true )
         {
           return ChargedUpstream;
@@ -232,7 +242,7 @@ MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
 bool MCReconstructible:: isReconstructibleAs(
         const IMCReconstructible::RecCategory& category,
         const LHCb::MCParticle* mcPart ) const{
-  
+
   // protect against the strip case
   if (category == NoClassification ){
     Warning("Called with no classification", StatusCode::SUCCESS);
@@ -241,13 +251,13 @@ bool MCReconstructible:: isReconstructibleAs(
 
   if (!inAcceptance(mcPart)) return false;
 
-  const bool isCharged = mcPart->particleID().threeCharge() != 0;  
+  const bool isCharged = mcPart->particleID().threeCharge() != 0;
   if (isCharged == true && category != Neutral && category != NotReconstructible){
     CriteriaMap::iterator criteria = m_critMap.find(category);
     if (criteria == m_critMap.end()) {
       Warning("Category not found - defaulting to false",StatusCode::SUCCESS);
-      return false; 
-    } 
+      return false;
+    }
     else {
       return criteria->second->accepted(mcTkInfo(),mcPart) && m_mcSel->accept(mcPart);
     }

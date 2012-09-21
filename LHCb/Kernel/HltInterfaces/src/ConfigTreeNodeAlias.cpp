@@ -1,7 +1,6 @@
 #include "Kernel/ConfigTreeNodeAlias.h"
 #include "GaudiKernel/GaudiException.h"
 #include "boost/regex.hpp"
-#include "boost/assign/list_of.hpp"
 
 #include <cassert>
 
@@ -28,13 +27,13 @@ unsigned int unhex(const std::string& val) {
 void
 ConfigTreeNodeAlias::invalidate(const std::string& reason) {
     if (!reason.empty()) cerr << reason << endl;
-    m_ref = digest_type::createInvalid(); 
+    m_ref = digest_type::createInvalid();
     m_alias = std::string();
 }
 
 ConfigTreeNodeAlias::ConfigTreeNodeAlias(const digest_type& ref, const alias_type& alias)
-      : m_ref(ref), m_alias(alias) { 
-    //Verify validity rules: 
+      : m_ref(ref), m_alias(alias) {
+    //Verify validity rules:
     if (alias.major()=="TCK")  {
         //  If TCK, it must of format TCK/0xabcd1234
         static boost::regex e("^TCK/(0x[0-9a-fA-F]{8})$");
@@ -70,7 +69,7 @@ std::string ConfigTreeNodeAlias::alias_type::major() const {
     return m_alias.substr(0,i);
 }
 
-bool ConfigTreeNodeAlias::alias_type::valid() const { 
+bool ConfigTreeNodeAlias::alias_type::valid() const {
     return !m_alias.empty();
 }
 

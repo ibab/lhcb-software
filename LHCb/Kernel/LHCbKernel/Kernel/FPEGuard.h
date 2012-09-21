@@ -11,7 +11,9 @@
 #include <string>
 #include <iostream>
 #include "GaudiKernel/GaudiException.h"
+#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
 #include "boost/assign/list_of.hpp"
+#endif
 
 /** @namespace FPE
  *
@@ -46,13 +48,23 @@ namespace FPE {
       return feenableexcept(mask) & FE_ALL_EXCEPT;
     }
     inline const std::map<std::string,mask_type>& map() {
-      static std::map<std::string,mask_type> m = boost::assign::map_list_of
+      static std::map<std::string,mask_type> m =
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+        {{ "Inexact"   , mask_type(FE_INEXACT)   },
+         { "DivByZero" , mask_type(FE_DIVBYZERO) },
+         { "Underflow" , mask_type(FE_UNDERFLOW) },
+         { "Overflow"  , mask_type(FE_OVERFLOW)  },
+         { "Invalid"   , mask_type(FE_INVALID)   },
+         { "AllExcept" , mask_type(FE_ALL_EXCEPT)}};
+#else
+        boost::assign::map_list_of
         ( "Inexact"   , mask_type(FE_INEXACT)  )
         ( "DivByZero" , mask_type(FE_DIVBYZERO))
         ( "Underflow" , mask_type(FE_UNDERFLOW))
         ( "Overflow"  , mask_type(FE_OVERFLOW) )
         ( "Invalid"   , mask_type(FE_INVALID)  )
         ( "AllExcept" , mask_type(FE_ALL_EXCEPT));
+#endif
       return m;
     }
     /// Default mask (for default FPE::Guard constructor)
@@ -65,11 +77,11 @@ namespace FPE {
     // mask_type enable(mask_type mask)  { mask_type p; _controlfp_s(&p, mask,_MCW_EM); return p;}
     // VS7
     inline mask_type get() { __asm { fwait };  return _controlfp(0,0); }
-    inline mask_type disable(mask_type mask) { 
+    inline mask_type disable(mask_type mask) {
       int cw = get(); // Get current control word
       cw |= ~mask; // set control bits, turn exceptions off
       return _controlfp(cw,_MCW_EM);}
-    inline mask_type enable(mask_type mask)  { 
+    inline mask_type enable(mask_type mask)  {
       _clearfp(); // remove any 'stale' exceptions before switching on trapping
                   // otherwise we immediately trigger an exception...
       int cw = mask;
@@ -139,7 +151,7 @@ namespace FPE {
    *  // to fix problems properly, such as exceptions from externals libraries
    *  // like GSL or CLHEP. It should not be used to mask problems in your code ;)
    *
-   *  // You should also minimise the lifetime of the guard as much as possible, 
+   *  // You should also minimise the lifetime of the guard as much as possible,
    *  // for instance by using a localised scope around the problematic call, e.g.
    *  double result(0);
    *  {
@@ -179,8 +191,8 @@ namespace FPE {
      */
     explicit Guard( mask_type mask,
 		    bool disable   = false )
-      : m_initial( disable ? 
-                   FPE::detail::disable(mask) : 
+      : m_initial( disable ?
+                   FPE::detail::disable(mask) :
                    FPE::detail::enable(mask)  )
     { }
 
@@ -202,7 +214,7 @@ namespace FPE {
       FPE::detail::disable( ~m_initial );
       mask_type mask = FPE::detail::enable( m_initial );
       // retry once, in case the FPU is a bit behind... yes, that happens
-      if (mask!=m_initial && FPE::detail::get()!=m_initial) { 
+      if (mask!=m_initial && FPE::detail::get()!=m_initial) {
           throw GaudiException("oops -- Guard failed to restore initial state","FPE::Guard",StatusCode::FAILURE);
       }
     }

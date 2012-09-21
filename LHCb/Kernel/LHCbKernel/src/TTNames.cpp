@@ -8,7 +8,9 @@
 #endif
 #include "boost/lexical_cast.hpp"
 #include <boost/assign/std/vector.hpp>
+#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
 #include <boost/assign/list_of.hpp>
+#endif
 
 #include <iostream>
 
@@ -48,7 +50,11 @@ std::vector<std::string> LHCb::TTNames::detRegions()
 const std::vector<std::string>& LHCb::TTNames::layers()
 {
   //messy
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  static const std::vector<std::string> layers = {"X", "U", "V"};
+#else
   static const std::vector<std::string> layers = boost::assign::list_of("X")("U")("V");
+#endif
   return layers;
 }
 
@@ -77,8 +83,13 @@ std::vector<std::string> LHCb::TTNames::allLayers() {
 
   typedef std::vector<std::string> Strings;
   Strings stationVec = stations();
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  std::vector<std::string> layers = {stationVec[0]+"X", stationVec[0]+"U",
+                                     stationVec[1]+"V", stationVec[1]+"X"};
+#else
   std::vector<std::string> layers = boost::assign::list_of(stationVec[0]+"X")(stationVec[0]+"U")
     (stationVec[1]+"V")(stationVec[1]+"X");
+#endif
   return layers;
 }
 

@@ -35,8 +35,12 @@ namespace Rich
       declareInterface<ITrackSelector>(this);
 
       // Default track types to select
-      declareProperty( "TrackAlgs", m_trNames = 
+      declareProperty( "TrackAlgs", m_trNames =
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+                       {"Forward", "Match", "Seed", "VeloTT", "KsTrack"} );
+#else
                        boost::assign::list_of("Forward")("Match")("Seed")("VeloTT")("KsTrack") );
+#endif
 
       declareProperty( "MinPCut",       m_minPCut     = 0.0 ); // in GeV
       declareProperty( "MaxPCut",       m_maxPCut     = 500 ); // in GeV
@@ -65,12 +69,18 @@ namespace Rich
       declareProperty( "MaxLikelihood", m_maxLL = boost::numeric::bounds<double>::highest() );
 
       m_jobOpts =
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+        {"MinPCut", "MaxPCut", "MinPtCut", "MaxPtCut",
+         "MinChi2Cut", "MaxChi2Cut", "Charge", "MinCloneDistCut", "MaxCloneDistCut",
+         "MinGhostProbCut", "MaxGhostProbCut",
+         "MinLikelihood", "MaxLikelihood", "AcceptClones", "RejectNonIsolated"};
+#else
         boost::assign::list_of
         ("MinPCut")("MaxPCut")("MinPtCut")("MaxPtCut")
         ("MinChi2Cut")("MaxChi2Cut")("Charge")("MinCloneDistCut")("MaxCloneDistCut")
         ("MinGhostProbCut")("MaxGhostProbCut")
         ("MinLikelihood")("MaxLikelihood")("AcceptClones")("RejectNonIsolated");
-
+#endif
     }
 
     //=============================================================================
@@ -220,7 +230,7 @@ namespace Rich
     double TrackSelectorBase::minLikelihoodCut( const Rich::Rec::Track::Type type ) const
     {
       TrackTools::const_iterator iT = m_tkTools.find(type);
-      return ( iT == m_tkTools.end() ? minLikelihoodCut() : 
+      return ( iT == m_tkTools.end() ? minLikelihoodCut() :
                max(minLikelihoodCut(),iT->second->minLikelihoodCut()) );
     }
 
@@ -276,28 +286,28 @@ namespace Rich
     double TrackSelectorBase::minCloneDistCut( const Rich::Rec::Track::Type type ) const
     {
       TrackTools::const_iterator iT = m_tkTools.find(type);
-      return ( iT == m_tkTools.end() ? 
+      return ( iT == m_tkTools.end() ?
                minCloneDistCut() : max(minCloneDistCut(),iT->second->minCloneDistCut()) );
     }
 
     double TrackSelectorBase::maxCloneDistCut( const Rich::Rec::Track::Type type ) const
     {
       TrackTools::const_iterator iT = m_tkTools.find(type);
-      return ( iT == m_tkTools.end() ? 
+      return ( iT == m_tkTools.end() ?
                maxCloneDistCut() : min(maxCloneDistCut(),iT->second->maxCloneDistCut()) );
     }
 
     double TrackSelectorBase::minGhostProbCut( const Rich::Rec::Track::Type type ) const
     {
       TrackTools::const_iterator iT = m_tkTools.find(type);
-      return ( iT == m_tkTools.end() ? 
+      return ( iT == m_tkTools.end() ?
                minGhostProbCut() : max(minGhostProbCut(),iT->second->minGhostProbCut()) );
     }
 
     double TrackSelectorBase::maxGhostProbCut( const Rich::Rec::Track::Type type ) const
     {
       TrackTools::const_iterator iT = m_tkTools.find(type);
-      return ( iT == m_tkTools.end() ? 
+      return ( iT == m_tkTools.end() ?
                maxGhostProbCut() : min(maxGhostProbCut(),iT->second->maxGhostProbCut()) );
     }
 

@@ -3,17 +3,20 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2012-09-21 - Marco Clemencic
+ - Fixed compilation with -std=c++11 (-std=c++0x).
+
 !========================= HltInterfaces v4r6 2012-03-26 =========================
 ! 2012-03-21 - Chris Jones
- - Update ReadRoutingBits to pass a const RawEvent, and to pass relevantBits 
+ - Update ReadRoutingBits to pass a const RawEvent, and to pass relevantBits
    by reference not value.
 
 !========================= HltInterfaces v4r5 2012-02-01 =========================
 ! 2012-02-01 - Eric van Herwijnen (with help from Gerhard!)
-  - Fix to PropertyConfig to remove embedded newlines from properties 
+  - Fix to PropertyConfig to remove embedded newlines from properties
 
 !========================= HltInterfaces v4r4 2011-11-08 =========================
-! 2011-08-11 - Anton Poluektov 
+! 2011-08-11 - Anton Poluektov
  - Move IConfigTreeEditor interface from HltBase package
  - Add dict entries for IConfigTreeEditor
 
@@ -30,11 +33,11 @@
 
 !========================= HltInterfaces v4r1p1 2010-10-25 =========================
 ! 2010-10-20 - Marco Cattaneo
- - Put ANNSvc back. Needed in more than one package (e.g. TrackUtils) so 
+ - Put ANNSvc back. Needed in more than one package (e.g. TrackUtils) so
    cannot sit inside HltDAQ
 
 ! 2010-10-19 - Gerhard Raven
- - remove ANNSvc from HltInterfaces altogether -- it also lives in HltDAQ, and 
+ - remove ANNSvc from HltInterfaces altogether -- it also lives in HltDAQ, and
    that seems to better fit the pattern as it is not an interface, but a mix-in
    class to help implement the IANNSvc interface.
 
@@ -49,7 +52,7 @@
 
 !============ Kernel/HltInterfaces v4r0 2010-05-21 ============================
 ! 2010-05-05 - Gerhard Raven
- - move interface code used to configure Hlt from a TCK, and to decode Hlt 
+ - move interface code used to configure Hlt from a TCK, and to decode Hlt
    raw date, out of Hlt/HltBase in the HLT project, so that it can be used
    elsewhere, i.e. add:
       Kernel/ANNSvc.h Kernel/ConfigTreeNode.h Kernel/ConfigTreeNodeAlias.h
@@ -73,7 +76,7 @@
  - ReadRoutingBits : Do not break on missing RawBank
 
 ! 2009-11-07 - Gerhard Raven
- - remove IHltSummaryTool 
+ - remove IHltSummaryTool
 
 ! 2009-11-06 - Patrick Koppenburg
  - New functions readRoutingBits and firexRoutingBits in namespace Hlt that
@@ -83,13 +86,13 @@
 
 !============ Kernel/HltInterfaces v2r0 2009-01-08 ============================
 ! 2008-12-29 - Gerhard Raven
- - remove some obsolete methods from IHltSummaryTool 
+ - remove some obsolete methods from IHltSummaryTool
 
 !============ Kernel/HltInterfaces v1r0 2008-06-30 ============================
 ! 2008-06-25 - Gerhard Raven
  - Add IANSvc, a restricted version of IANNSvc: only access keys, not values;
    IANNSvc, as extension, inherits from IANSvc.
-   
+
 ! 2008-06-17 - Patrick Koppenburg
  - First import
  - IANNSvc and IHltSummaryTool moved to here

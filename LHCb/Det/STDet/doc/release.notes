@@ -3,6 +3,9 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2012-09-21 - Marco Clemencic
+ - Fixed compilation with -std=c++11 (-std=c++0x).
+
 !========================= STDet v4r27 2012-01-31 ========================
 ! 2011-12-20 - Marco Cattaneo
  - Fix headers include recursions, Coverity defects 15534 to 15544
@@ -32,7 +35,7 @@
 !======================== STDet v4r22 2010-08-25 =========================
 ! 2010-07-23 M Needham
   - Add first and lastSector method to DeITLayer
-  - Add first and lastLayer method to DeITBox  
+  - Add first and lastLayer method to DeITBox
 
 !======================== STDet v4r21 2010-07-19 =========================
 ! 2010-07-12 M Needham
@@ -48,7 +51,7 @@
 
 !======================== STDet v4r18 2010-03-17 =========================
 ! 2010-02-26 M Needham
- - Bug fix in noise update methods [local cache not updated] 
+ - Bug fix in noise update methods [local cache not updated]
 
 !======================== STDet v4r17 2010-02-12 =========================
 ! 2010-02-01 M Needham
@@ -73,8 +76,8 @@
  - Bug fix in case of unexisting cmNoise paramVector in Noise condition
 
 ! 2009-10-21 M Needham
- - Add conditions for common mode noise. 
- - allow updating of noise condition 
+ - Add conditions for common mode noise.
+ - allow updating of noise condition
 
 !======================== STDet v4r14 2009-10-16 =========================
 ! 2009-09-15 - Jeroen van Tilburg
@@ -86,9 +89,9 @@
 ! 2009-09-02 - Marco Cattaneo
  - Remove obsolete file STDet_dll.cpp
 
-! 2009-08-08 M Needham 
+! 2009-08-08 M Needham
  - Add isStereo method to DeSTSector
- - Clean up noise methods in DeSTSector   
+ - Clean up noise methods in DeSTSector
 
 ! 2009-30-07 M Needham
  - Add methods to return disabled sectors and beetles to DeSTDetector
@@ -96,7 +99,7 @@
 !======================== STDet v4r12 2009-07-28 =========================
 ! 2009-19-07 M Needham
  - Add  tolerance to globalInActive method
- 
+
 !======================== STDet v4r11 2009-07-13 =========================
 ! 2009-07-06 - Jeroen van Tilburg
  - DeTTSector: Corrected small bug building of conditionsPathName.
@@ -112,11 +115,11 @@
  - Add access to Noise condition in DeSTSector
  - Add methods to read the noise per sector / beetle / beetle port and strip
    in DeSTSector
- - Add toElectron and toADC methods in DeSTSector 
+ - Add toElectron and toADC methods in DeSTSector
  - Add access to ProdID condition in DeITSector and DeTTHalfModule
  - Add prodID method in DeSTSector
 
-! 2009-04-06 
+! 2009-04-06
  - Clean up printout in case try to make invalid traj [DeSTSector]
 
 ! 2009-03-30 M Needham
@@ -135,7 +138,7 @@
 !======================== STDet v4r7 2009-02-19 ==========================
 ! 2009-02-19 M.Cattaneo
  - Fix ambiguous usage of namespace, was breaking Windows compilation
- 
+
 ! 2009-02-18 M Needham
  - Remove circular dependency on STKernel
  - Remove use of STLexicalCaster
@@ -181,13 +184,13 @@
 !======================== STDet v4r5 2008-09-02 ==========================
 ! 2008-08-04 M Needham
  -  Add lots of dictionary stuff for python
- - Alot of work !!!!!!!!! 
- 
+ - Alot of work !!!!!!!!!
+
 !======================== STDet v4r4 2008-07-27 ==========================
 ! 2008-07-18 M Needham
  - Add some info to printouts
  - Add NotBonded to enum in DeSTSector
- 
+
 !======================== STDet v4r3 2008-07-16 ==========================
 ! 2008-07-15 M Needham
  - Bug fixes in dead strip handling
@@ -231,8 +234,8 @@
 ! 2008-03-14 M Needham
  - Changes to add new level (DeSTSensor and derived classes)
    * These are major changes.
-   * Interface and functionality of DeSTSector has changed. 
-   * See talk in ST software meeting 13/03/08   
+   * Interface and functionality of DeSTSector has changed.
+   * See talk in ST software meeting 13/03/08
 
 !======================== STDet v3r9 2008-01-08 ==========================
 ! 2008-01-08 - Marco Cattaneo
@@ -246,12 +249,12 @@
 ! 2007-11-30 - Marco Cattaneo
  - Fix a compilation warning
 
-! 2007-11-30 M Needham 
+! 2007-11-30 M Needham
  - Release rest of deadstrip stuff. Functionality is off by default
 
 !======================== STDet v3r7 2007-11-06 ==========================
 ! 2007-11-06 M Needham
- - Remove isInside from base class DeSTBaseElement (functionality now 
+ - Remove isInside from base class DeSTBaseElement (functionality now
    provided by DetectorElement)
  - stripToChan method added to DeSTSector
 
@@ -290,7 +293,7 @@
 
 !======================== STDet v3r2 2007-03-01 ==========================
 ! 2007-03-01 - Matt Needham
- - add statuscode to DeSTLayer::cachePlane 
+ - add statuscode to DeSTLayer::cachePlane
 
 ! 2007-03-01 - Marco Cattaneo
  - Fix broken doxygen comments
@@ -348,7 +351,7 @@
  - Changes to findSector methods of DeSTDetector - factor 2 faster
  - Changes to DeSTSector method to get trajectory - factor 2 faster
  - Add methods to get plane in DeSTSector
- - Plane method added to layer 
+ - Plane method added to layer
  - Clean up what is cached after these changes
 
 ! 2006-04-10 - Jeroen van Tilburg
@@ -380,7 +383,7 @@
 
 !========================= STDet v2r0 2006-03-06 =======================
 ! 2006-03-06 M.Needham
- - fix bug in findSector in DeTTHalfModule 
+ - fix bug in findSector in DeTTHalfModule
  - correct flipping of the sensors
  - correct find method for DeITLadder
 
@@ -418,19 +421,19 @@
 - put back valid test
 - Add trajectory and inside functions
 
-! 2006-02-09 M. Needham 
-- change the printout from DeSTSector 
-- Few bug fixes in DeSTSector init 
+! 2006-02-09 M. Needham
+- change the printout from DeSTSector
+- Few bug fixes in DeSTSector init
 
-! 2006-02-08 M. Needham 
+! 2006-02-08 M. Needham
 - Remove pitch and strips per sector from DeSTDetector
 - Add next functionality to DeSTSector
-- return u to strip rather than u to channel 
+- return u to strip rather than u to channel
 
-! 2006-02-08 M. Needham 
+! 2006-02-08 M. Needham
  - Get TT Sector numbering init correct
 
-! 2006-02-06 M. Needham 
+! 2006-02-06 M. Needham
  - bug fix that gets numbering closer to correct
  - Minor bug fixes
 
@@ -441,9 +444,9 @@
   - Adapt to new numbering scheme
   - Add ITLadder
   - check child is correct type in DeSTDetector
-  - Better error handling: check really can find children/parent in 
+  - Better error handling: check really can find children/parent in
     DeSTBaseElement.h
-  - order initialize methods so that children got last  
+  - order initialize methods so that children got last
 
 ! 2006-01-18 M. Needham
   - check that child is of the correct type
@@ -490,7 +493,7 @@
 
 ! 2004-05-19 - M.needham
  - Add members to layer to convert u,v to x,y and vice versa
- - Add (another) member to wafer for checking if hit is inside 
+ - Add (another) member to wafer for checking if hit is inside
 
 !========================= STDet v1r1 2004-03-02 ========================
 ! 2004-03-02 - M.needham
@@ -503,4 +506,4 @@
 ! 2004-01-29 - M Needham
     - First release of the STDet package
     - Supports new TT geometries
-    
+

@@ -20,7 +20,9 @@
 
 // GSL
 #include "gsl/gsl_math.h"
+#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
 #include <boost/assign/list_of.hpp>
+#endif
 
 // local
 #include "OTDet/DeOTModule.h"
@@ -68,10 +70,10 @@ DeOTModule::DeOTModule(const std::string& name) :
 }
 
 
-DeOTModule::~DeOTModule() { /// Destructor 
+DeOTModule::~DeOTModule() { /// Destructor
 }
 
-const CLID& DeOTModule::clID() const { 
+const CLID& DeOTModule::clID() const {
   return classID();
 }
 
@@ -89,7 +91,7 @@ StatusCode DeOTModule::initialize() {
   m_nStraws = (unsigned int)param<int>("nStraws");
   m_angle = layer->params()->param<double>("stereoAngle");
   m_sinAngle = sin(m_angle);
-  m_cosAngle = cos(m_angle);  
+  m_cosAngle = cos(m_angle);
   OTChannelID aChan = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, 0u);
   setElementID(aChan);
   m_uniqueModuleID = aChan.uniqueModule();
@@ -108,15 +110,15 @@ StatusCode DeOTModule::initialize() {
   // Added for the A-team. This is the calibration for the
   // simulation. In the end, we need to read this from a database.
   m_propagationVelocity = 1/(4.0*Gaudi::Units::ns/Gaudi::Units::m) ;
- 
-  // double resolution     = 0.200*Gaudi::Units::mm ;  
+
+  // double resolution     = 0.200*Gaudi::Units::mm ;
   // Coefficients of polynomial t(r/rmax): for MC this is just t = 0 + 42/2.5 * r
   //std::vector<double> tcoeff    = boost::assign::list_of(0.0)(42*Gaudi::Units::ns ) ;
-  // Coefficients of polynomial sigma_t(r/rmax): for MC this is just sigma_t = 0.200 * 42/2.5 
+  // Coefficients of polynomial sigma_t(r/rmax): for MC this is just sigma_t = 0.200 * 42/2.5
   //std::vector<double> terrcoeff = boost::assign::list_of(resolution * 42*Gaudi::Units::ns / m_cellRadius) ;
   // Since everything is so simple, we need just two bins in the table
   //m_rtrelation = OTDet::RtRelation(m_cellRadius,tcoeff,terrcoeff,2) ;
-  
+
   // Get the lenght of the module
   //const ISolid* solid = this->geometry()->lvolume()->solid();
   //const SolidBox* mainBox = dynamic_cast<const SolidBox*>(solid);
@@ -148,31 +150,31 @@ StatusCode DeOTModule::initialize() {
       msg << MSG::VERBOSE << "Start first update of conditions" << endmsg;
     StatusCode sc = updMgrSvc()->update( this );
     if ( !sc.isSuccess() ) {
-      msg << MSG::WARNING << "Failed to update detector element " << this->name() 
+      msg << MSG::WARNING << "Failed to update detector element " << this->name()
           << "!" << endmsg;
       return sc;
-      
+
     }
   } catch (DetectorElementException &e) {
-    msg << MSG::ERROR    << "Failed to update detector element " << this->name() 
+    msg << MSG::ERROR    << "Failed to update detector element " << this->name()
         << "! " << "See exeption (next)." << endmsg;
     msg << MSG::ERROR << e << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
-void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint, 
+void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint,
                             const Gaudi::XYZPoint& exitPoint,
                             Straws& straws) const {
   /// This is in local cooridinates of a module
   const double xOffset = m_xMinLocal; //-(0.5*m_nStraws + 0.25)*m_xPitch;
-  double lo = (entryPoint.x()-xOffset)/m_xPitch; 
+  double lo = (entryPoint.x()-xOffset)/m_xPitch;
   double hi = (exitPoint.x()-xOffset)/m_xPitch;
-  
+
   if (lo > hi) std::swap(lo , hi);
-  
+
   const int exStraw = 1; ///< Add extra straws to the the left and right
   unsigned int strawLo = GSL_MAX_INT(0, int(std::floor(lo)) - exStraw);
   unsigned int strawHi = GSL_MIN_INT(int(m_nStraws)-1, GSL_MAX_INT(0, int(std::ceil(hi)) + exStraw));
@@ -188,22 +190,22 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
                                std::vector<std::pair<OTChannelID, double> >& chanAndDist) const {
   /// check that entry and exit points are inside module
   if (isInside(entryPoint) && isInside(exitPoint)) {
-    /// Make sure channels and driftdistances vectors are empty 
+    /// Make sure channels and driftdistances vectors are empty
     chanAndDist.clear(); ///< This should erase all elements, if any.
-  
+
     /// Go from global to local.
     Gaudi::XYZPoint enP = toLocal(entryPoint);
     Gaudi::XYZPoint exP = toLocal(exitPoint);
-    
+
     /// Need this to check that enZ and exZ aren't sort of in the same plane,
-    /// i.e. not a curly track. These are typically low momentum (50 MeV) 
-    /// electrons.  
+    /// i.e. not a curly track. These are typically low momentum (50 MeV)
+    /// electrons.
     bool samePlane = std::abs(enP.z()-exP.z()) < m_cellRadius;
     if (!samePlane) { // Track in cell
       /// Track
       Gaudi::Math::XYZLine track(enP, (exP-enP).Unit());
       /// Now let's get a list of possible hit straws
-      Straws straws; 
+      Straws straws;
       findStraws(enP, exP, straws);
       /// Wire
       const double z = 0.5*m_zPitch;
@@ -222,12 +224,12 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       OTChannelID aChannel; /// channelID
       /// loop over straws
       /// First monolayer
-      Straws::const_iterator iS; 
+      Straws::const_iterator iS;
       for (iS= straws.begin(); iS != straws.end(); ++iS) {
         straw = (*iS);
         x = localUOfStraw(straw);
         wB.SetX(x);
-        wT.SetX(x); 
+        wT.SetX(x);
         wire = Gaudi::Math::XYZLine(wB, (wT-wB).Unit());
         notParallel = Gaudi::Math::closestPoints(wire, track, mu, lambda);
         if (notParallel) {
@@ -265,9 +267,9 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       const double z2 = exP.z();
 
       double uLow = x1;
-      double uHigh = x2;      
+      double uHigh = x2;
       if ( uLow > uHigh ) std::swap(uLow, uHigh);
-        
+
       // zfrac is between 0 and 1. 2.7839542167 means nothing.
       // This seems to acts as a random number generator.
       // if distance xy entry-exit is small generate z3 close
@@ -281,14 +283,14 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       double z3Circ = ((distXY > 2.0*m_xPitch) ? 2.0 * (zfrac-0.5) :(z1<0?-zfrac:zfrac))*m_zPitch;
       double zCirc, uCirc, rCirc;
       sCircle(z1, x1, z2, x2, z3Circ, zCirc, uCirc, rCirc);
-    
-    
+
+
       double uStep = uLow;
       double distCirc = 0.0;
       int amb = 0;
       double dist = 0.0;
       OTChannelID aChannel;
-    
+
       // monolayer A
       unsigned int strawA = hitStrawA(uLow);
       const double zStrawA = -0.5*m_zPitch;//localZOfStraw(strawA);
@@ -304,7 +306,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
         }
         strawA = nextRightStraw(straw);
       }
-    
+
       // monolayer B
       unsigned int strawB = hitStrawB(uLow);
       const double zStrawB = 0.5*m_zPitch;//localZOfStraw(strawB);
@@ -329,19 +331,19 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
   }
 }
 
-void DeOTModule::sCircle(const double z1, const double u1, const double z2, 
+void DeOTModule::sCircle(const double z1, const double u1, const double z2,
                          const double u2, const double z3c,
                          double& zc, double& uc, double& rc) const {
   const double zw=(z1+z2)/2.0;
   double uw=(u2+u1)/2.0;
-  
+
   zc=0.5*(z3c*z3c-zw*zw-(u1-uw)*(u1-uw))/(z3c-zw);
   uc=uw;
   rc=std::abs(zc-z3c);
 }
 
-double DeOTModule::distanceToWire(const unsigned int aStraw, 
-                                  const Gaudi::XYZPoint& aPoint, 
+double DeOTModule::distanceToWire(const unsigned int aStraw,
+                                  const Gaudi::XYZPoint& aPoint,
                                   const double tx, const double ty) const {
   // go to the local coordinate system
   Gaudi::XYZVector vec(tx, ty, 1.);
@@ -351,33 +353,33 @@ double DeOTModule::distanceToWire(const unsigned int aStraw,
   // calculate distance to the straw
   double u = localPoint.x()+localVec.x()*(localZOfStraw(aStraw)-localPoint.z());
   double cosU = 1.0/gsl_hypot(1.0, (localVec.x()/localVec.z()));
-  
+
   // return distance to straw
   return (u-localUOfStraw(aStraw))*cosU;
 }
 
-void DeOTModule::monoLayerIntersection(int monolayer, 
-				       const Gaudi::XYZPoint& aPoint, 
+void DeOTModule::monoLayerIntersection(int monolayer,
+				       const Gaudi::XYZPoint& aPoint,
 				       const double tx, const double ty,
 				       double& straw, double& yfrac) const {
 
   const Gaudi::XYZVector& dp = m_dp0di ;
   Gaudi::XYZVector dX = aPoint - m_p0[monolayer] ;
-  
+
   // the is the most efficient I could come up with
   double trackCrossWireX =   (ty*m_dzdy -      1) ;
   double trackCrossWireY = - (tx*m_dzdy - m_dxdy) ;
-  
+
   double a = trackCrossWireX * ( dX.x() - tx * dX.z() ) ;
   double b = trackCrossWireY * ( dX.y() - ty * dX.z() ) ;
   double c = trackCrossWireY * ( ty * dp.z() - dp.y() ) ;
   double d = trackCrossWireX * ( tx * dp.z() - dp.x() ) ;
-  
+
   double u = - (a + b) / (c + d ) ;
-  
+
   // here we could still optimize something
   double eta = ( ( tx * dp.z() - dp.x() ) * u + dX.x() - tx * dX.z() ) / trackCrossWireY ;
-  
+
   // cross check with this alternative computation
   //   {
   //     Gaudi::XYZVector q( m_dxdy, 1, m_dzdy) ;
@@ -404,18 +406,18 @@ void DeOTModule::clear() {
 
 StatusCode DeOTModule::cacheInfo() {
   clear();
-  
+
   double xUpper = m_xMaxLocal;
   double xLower = m_xMinLocal;
   double yUpper = m_yMaxLocal;
   double yLower = m_yMinLocal;
 
-  /// Direction; points to readout 
+  /// Direction; points to readout
   if (bottomModule()) std::swap(yUpper, yLower);
   Gaudi::XYZPoint g1 = globalPoint(0.0, yLower, 0.0);
   Gaudi::XYZPoint g2 = globalPoint(0.0, yUpper, 0.0);
   m_dir = g2 - g1;
-  m_dir = m_dir.Unit();  
+  m_dir = m_dir.Unit();
 
   /// trajs of middle of monolayers
   Gaudi::XYZPoint g3[2];
@@ -423,7 +425,7 @@ StatusCode DeOTModule::cacheInfo() {
   g3[0] = globalPoint(xLower, 0.0, -0.5*m_zPitch);
   /// 1 -> second monolayer
   g3[1] = globalPoint(xLower, 0.0, +0.5*m_zPitch);
-  Gaudi::XYZPoint g4[2]; 
+  Gaudi::XYZPoint g4[2];
   /// first monolayer
   g4[0] = globalPoint(xUpper, 0.0, -0.5*m_zPitch);
   /// second monolayer
@@ -432,7 +434,7 @@ StatusCode DeOTModule::cacheInfo() {
   m_midTraj[0].reset(new LineTraj(g3[0], g4[0]));
   /// second monolayer
   m_midTraj[1].reset(new LineTraj(g3[1], g4[1]));
- 
+
   /// range -> wire length
   /// wire length = module length
   /// first mono layer
@@ -446,10 +448,10 @@ StatusCode DeOTModule::cacheInfo() {
   // m_dir "corrects" for sign of min and max
   if (longModule() && topModule()    )     m_range[m_layerID%2].first = m_yMinLocal + m_inefficientRegion;
   if (longModule() && bottomModule() ) m_range[1 - m_layerID%2].first = m_yMinLocal + m_inefficientRegion;
-  
+
   /// plane
   m_plane = Gaudi::Plane3D(g1, g2, g4[0] + 0.5*(g4[1]-g4[0]));
-  
+
   m_entryPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0.,-0.5*m_sensThickness));
   m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_sensThickness));
   m_centerModule = globalPoint(0.,0.,0.);
@@ -477,14 +479,14 @@ StatusCode DeOTModule::cacheInfo() {
   // propagation velocity along y-direction (includes correction for readout side)
   m_propagationVelocityY = m_propagationVelocity * m_dir.y() ;
 
-  // the t0 will be defined such that 
-  // 
-  //  tdc = drifttime + propagationtime + delta-tof + t0 
+  // the t0 will be defined such that
+  //
+  //  tdc = drifttime + propagationtime + delta-tof + t0
   //
   // the delta-tof is the tof compared to a straight line to the
   // midpoint of the straw. does that make sense, actually?
-      
-  // The following just makes sense for MC, of course. 
+
+  // The following just makes sense for MC, of course.
   std::fill( m_strawdefaulttof, m_strawdefaulttof + MAXNUMCHAN, 0 ) ;
   for(unsigned int istraw=1; istraw<=2*m_nStraws; ++istraw) {
     OTChannelID id(stationID(),layerID(),quarterID(),moduleID(),istraw,0) ;
@@ -495,11 +497,11 @@ StatusCode DeOTModule::cacheInfo() {
     double defaulttof = sqrt(p0.x()*p0.x() + p0.z()*p0.z()) / Gaudi::Units::c_light;
     m_strawdefaulttof[istraw - 1] = defaulttof ;
   }
-  
+
   /// Only call this one if the calibration condition doesn't exist
   /// Call it after all the trajectory stuff and after we've set some default tofs
   if ( !hasCondition( m_calibrationName ) ) fallbackDefaults();
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -511,11 +513,11 @@ StatusCode DeOTModule::calibrationCallback() {
   if( msg.level() <= MSG::DEBUG )
     msg << MSG::DEBUG << "Updating Calibration parameters" << endmsg;
   try {
-    const std::vector<double>& trParameters = 
+    const std::vector<double>& trParameters =
       m_calibration->param< std::vector<double> >( "TRParameters" ); // in ns
-    const std::vector<double>& sigmaTParameters = 
+    const std::vector<double>& sigmaTParameters =
       m_calibration->param< std::vector<double> >( "STParameters" ); // in ns
-    const std::vector<double>& t0Parameters = 
+    const std::vector<double>& t0Parameters =
       m_calibration->param< std::vector<double> >( "TZero" );
 
     // Here we assume the cell radius is the same for all straws. Should be  ;)
@@ -589,7 +591,7 @@ StatusCode DeOTModule::statusCallback() {
     msg << MSG::ERROR << "Failed to update status conditions for " << this->name() << "!" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -615,31 +617,31 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
     throw GaudiException("Failed to make trajectory!", "DeOTModule.cpp",
 			 StatusCode::FAILURE);
   }
-  
+
   unsigned int aStraw = aChan.straw();
-  
+
   unsigned int mono = (monoLayerA(aStraw)?0u:1u);
 
   Gaudi::XYZPoint posWire = m_midTraj[mono]->position( localUOfStraw(aStraw) );
-  
+
   return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono],true));
 }
 
-StatusCode DeOTModule::setStrawStatus( const std::vector< int >& flags ) 
+StatusCode DeOTModule::setStrawStatus( const std::vector< int >& flags )
 {
   if ( hasCondition( m_statusName ) ) {
     // Modify condition in TES
     m_status->param< std::vector<int> >( "ChannelStatus" ) = flags ;
     // m_calibration->neverUpdateMode() /// Always valid for any and all IOV
     // Now we need to inform the ums that the condition has changed
-    updMgrSvc()->invalidate( m_status.target() ); 
+    updMgrSvc()->invalidate( m_status.target() );
     // Trigger an update
     StatusCode sc = updMgrSvc()->update( this );
     if ( !sc.isSuccess() ) {
       MsgStream msg( msgSvc(), name() );
       msg << MSG::ERROR << "Failed to update straw status flags for " << this->name() << "!" << endmsg;
       return StatusCode::FAILURE;
-    } 
+    }
   } else {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::ERROR << "Condition " << m_statusName << " doesn't exist for " << this->name() << "!" << endmsg;
@@ -668,20 +670,20 @@ StatusCode DeOTModule::setStrawT0s( const std::vector< double >& tzeros ) {
     m_calibration->param< std::vector<double> >( "TZero" ) = tzeros;
     /// m_calibration->neverUpdateMode() /// Always valid for any and all IOV
     /// Now we need to inform the ums that the condition has changed
-    updMgrSvc()->invalidate( m_calibration.target() ); 
+    updMgrSvc()->invalidate( m_calibration.target() );
     /// Trigger an update
     StatusCode sc = updMgrSvc()->update( this );
     if ( !sc.isSuccess() ) {
       MsgStream msg( msgSvc(), name() );
       msg << MSG::ERROR << "Failed to update straw T0 conditions for " << this->name() << "!" << endmsg;
       return StatusCode::FAILURE;
-    } 
+    }
   } else {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::ERROR << "Condition " << m_calibrationName << " doesn't exist for " << this->name() << "!" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -720,7 +722,7 @@ StatusCode DeOTModule::setRtRelation(const OTDet::RtRelation& rtr) {
     msg << MSG::ERROR << "Condition " << m_calibrationName << " doesn't exist for " << this->name() << "!" << endmsg;
     return StatusCode::FAILURE;
   }
-    
+
   return StatusCode::SUCCESS;
 }
 
@@ -728,11 +730,18 @@ void DeOTModule::fallbackDefaults() {
   /// Need some default t0s and rt-relation
   /// Only to ensure backwards compatibility with DC06
   /// Frist the rt-relation
-  double resolution     = 0.200*Gaudi::Units::mm ;  
+  double resolution     = 0.200*Gaudi::Units::mm ;
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  // Coefficients of polynomial t(r/rmax): for MC this is just t = 0 + 42/2.5 * r
+  std::vector<double> tcoeff    = {0.0, 42*Gaudi::Units::ns};
+  // Coefficients of polynomial sigma_t(r/rmax): for MC this is just sigma_t = 0.200 * 42/2.5
+  std::vector<double> terrcoeff = {resolution * 42*Gaudi::Units::ns / m_cellRadius};
+#else
   // Coefficients of polynomial t(r/rmax): for MC this is just t = 0 + 42/2.5 * r
   std::vector<double> tcoeff    = boost::assign::list_of(0.0)(42*Gaudi::Units::ns ) ;
-  // Coefficients of polynomial sigma_t(r/rmax): for MC this is just sigma_t = 0.200 * 42/2.5 
+  // Coefficients of polynomial sigma_t(r/rmax): for MC this is just sigma_t = 0.200 * 42/2.5
   std::vector<double> terrcoeff = boost::assign::list_of(resolution * 42*Gaudi::Units::ns / m_cellRadius) ;
+#endif
   // Since everything is so simple, we need just two bins in the table
   m_rtrelation = OTDet::RtRelation(m_cellRadius,tcoeff,terrcoeff,2) ;
   m_walkrelation = OTDet::WalkRelation();
@@ -740,16 +749,16 @@ void DeOTModule::fallbackDefaults() {
   const double startReadOutGate[]   = { 28.0*Gaudi::Units::ns, 30.0*Gaudi::Units::ns, 32.0*Gaudi::Units::ns } ;
   double thisModuleStartReadOutGate = startReadOutGate[m_stationID-1] ;
 
-  // the t0 will be defined such that 
-  // 
-  //  tdc = drifttime + propagationtime + delta-tof + t0 
+  // the t0 will be defined such that
+  //
+  //  tdc = drifttime + propagationtime + delta-tof + t0
   //
   // the delta-tof is the tof compared to a straight line to the
   // midpoint of the straw. does that make sense, actually?
-      
+
   // The following just makes sense for MC, of course.
   std::fill( m_strawt0, m_strawt0 + MAXNUMCHAN, 0 ) ;
-  for( unsigned int istraw = 1; istraw <= 2*m_nStraws; ++istraw ) 
+  for( unsigned int istraw = 1; istraw <= 2*m_nStraws; ++istraw )
     m_strawt0[istraw - 1] = m_strawdefaulttof[istraw - 1] - thisModuleStartReadOutGate ;
 
 }
