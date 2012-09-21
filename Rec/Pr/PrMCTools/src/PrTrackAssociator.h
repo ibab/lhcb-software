@@ -37,7 +37,7 @@ public:
 /** @class TrackAssociator TrackAssociator.h
  *
  *  This algorithm computes the link between a Track and a MCParticle.
- *  The requirement is a match of both the Velo/VeloPix and the T part of the
+ *  The requirement is a match of both the Velo/VP and the T part of the
  *  Track. If there are not enough coordinates, the match is assumed so that
  *  a Velo only or a T only are matched properly.
  *  The required fraction of hits is a jobOption 'FractionOK', default 0.70.

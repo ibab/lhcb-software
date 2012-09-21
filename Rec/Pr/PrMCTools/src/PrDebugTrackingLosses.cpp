@@ -31,7 +31,7 @@ PrDebugTrackingLosses::PrDebugTrackingLosses( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "Velo",        m_velo        = false );
-  declareProperty( "VeloPix",     m_veloPix     = false );
+  declareProperty( "VP",     m_vP     = false );
   declareProperty( "Forward",     m_forward     = false );
   declareProperty( "Seed",        m_seed        = false );
   declareProperty( "Ghost",       m_ghost       = false );
@@ -66,7 +66,7 @@ StatusCode PrDebugTrackingLosses::initialize() {
 StatusCode PrDebugTrackingLosses::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if ( !m_velo && !m_veloPix && !m_forward && !m_seed ) return StatusCode::SUCCESS;
+  if ( !m_velo && !m_vP && !m_forward && !m_seed ) return StatusCode::SUCCESS;
 
   ++m_eventNumber;
 
@@ -80,7 +80,7 @@ StatusCode PrDebugTrackingLosses::execute() {
   }
 
   std::string veloTrack = LHCb::TrackLocation::Velo;
-  if ( m_veloPix ) veloTrack = LHCb::TrackLocation::VeloPix;
+  if ( m_vP ) veloTrack = LHCb::TrackLocation::VP;
   LinkedFrom<LHCb::Track,LHCb::MCParticle> veloLinker   ( evtSvc(), msgSvc(), veloTrack    );
 
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );
@@ -115,10 +115,10 @@ StatusCode PrDebugTrackingLosses::execute() {
     LHCb::Track* veloTr = veloLinker.first(part);
     bool hasVelo = veloTr != NULL;
 
-    if ( (m_velo || m_veloPix ) && !hasVelo && !m_clone ) {
+    if ( (m_velo || m_vP ) && !hasVelo && !m_clone ) {
       info() << "Missed Velo for MCParticle " << part->key() << " ";
       printMCParticle( part );
-    } else if ( (m_velo || m_veloPix ) && m_clone && veloLinker.next() != NULL ) {
+    } else if ( (m_velo || m_vP ) && m_clone && veloLinker.next() != NULL ) {
       info() << "Velo clone for particle " << part->key() << " ";
       printMCParticle( part );
     }
@@ -171,7 +171,7 @@ StatusCode PrDebugTrackingLosses::execute() {
     LinkedTo<LHCb::MCParticle>  idLink( evtSvc(), msgSvc(), "Pr/LHCbID" );
 
     std::string   location = LHCb::TrackLocation::Forward;
-    if ( m_velo || m_veloPix ) location = veloTrack;
+    if ( m_velo || m_vP ) location = veloTrack;
     if ( m_seed ) location = LHCb::TrackLocation::Seed;
     LinkedTo<LHCb::MCParticle> trackLinker( evtSvc(), msgSvc(), location );
 
@@ -205,8 +205,8 @@ StatusCode PrDebugTrackingLosses::execute() {
           } else if ( (*itId).isVL() ) {
             LHCb::VLChannelID idV = (*itId).vlID();
             info() << format( "   Velo Sensor %3d Strip %4d    ", idV.sensor(), idV.strip() );
-          } else if ( (*itId).isVeloPix() ) {
-            LHCb::VeloPixChannelID idV = (*itId).velopixID();
+          } else if ( (*itId).isVP() ) {
+            LHCb::VPChannelID idV = (*itId).vpID();
             info() << format( "   Velo Sensor %3d chip%3d pixel %4d ", idV.sensor(), idV.chip(), idV.pixel() );
           } else if ( (*itId).isTT() ) {
             LHCb::STChannelID stID = (*itId).stID();

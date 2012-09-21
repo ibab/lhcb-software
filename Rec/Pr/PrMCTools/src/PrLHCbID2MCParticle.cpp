@@ -8,7 +8,7 @@
 // includes from DigiEvent
 #include "Event/VeloCluster.h"
 #include "Event/VLCluster.h"
-#include "Event/VeloPixCluster.h"
+#include "Event/VPCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
 #include "Event/FTCluster.h"
@@ -95,14 +95,14 @@ StatusCode PrLHCbID2MCParticle::execute() {
 
   //== Velo Pixel
 
-  if ( exist<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation ) ) {
-    LinkedTo<LHCb::MCParticle> veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
-    m_detectorLink = &veloPixLink;
-    LHCb::VeloPixClusters* clusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
-    LHCb::VeloPixClusters::const_iterator iClus;
+  if ( exist<LHCb::VPClusters>(LHCb::VPClusterLocation::VPClusterLocation ) ) {
+    LinkedTo<LHCb::MCParticle> vPLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
+    m_detectorLink = &vPLink;
+    LHCb::VPClusters* clusters = get<LHCb::VPClusters>(LHCb::VPClusterLocation::VPClusterLocation );
+    LHCb::VPClusters::const_iterator iClus;
     for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
       LHCb::LHCbID myId = (*iClus)->lCluster().channelID();
-      int id            = myId.velopixID();
+      int id            = myId.vpID();
       linkAll( myId, id );
     }
   }

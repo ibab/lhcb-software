@@ -17,7 +17,7 @@ static const InterfaceID IID_PrCounter ( "PrCounter", 1, 0 );
  *
  *  @author Olivier Callot
  *  @date   2005-06-10
- *  Modified by Wenbin Qian for the VeloPix Pat Efficiency
+ *  Modified by Wenbin Qian for the VP Pat Efficiency
  *  @adpate to A-Team framework 2007-08-20 SHM
  */
 
