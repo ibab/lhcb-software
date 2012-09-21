@@ -5,6 +5,15 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+
+! 2012-09-21 - Stephane Tourneur
+ - Parameterized the alpgen options in a way they can be tuned in a standard lhcb job option file
+		->the changes are in AlpgenProduction
+- Added options to alpgen to generate partons inside the LHCb acceptance
+		->the changes are in zqqusr.f and AlpgenProduction
+- Added the possibility to use pdf libraries other that cteq5l
+		->the changes are in AlpgenProduction and requirements
+
 !========================== LbAlpGen v2r0 2012-07-23 ==========================
 ! 2012-07-23 - Patrick Robbe
  - Add AlpGenProduction Tool to perform in Gauss the generation of

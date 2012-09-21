@@ -14,9 +14,16 @@ c     etmiss > etmiss_min for neutrinos
 c
 c USE THIS ROUTINE TO ENFORCE OTHER CUTS    
 c
+      
+
       implicit none
       include 'alplib/alpgen.inc'
       include 'zqqlib/zqq.inc'
+ 
+c new options settable in python and communicated to fortran:
+      real letamin, betamin, letamin1, betamin1
+      common /etacut/ letamin, betamin, letamin1, betamin1
+    
       double precision wusr
       integer lnot,i
 c bb-jet declarations
@@ -24,6 +31,16 @@ c bb-jet declarations
 c initialize output parameters
       lnot=0
       wusr=1d0
+
+c LHCb code for LbAlpGen - Enforce new etamin cuts:
+c      write (6,*) 'letamin = ', letamin
+c      write (6,*) 'betamin = ', betamin
+      if (min(etab, etabb).lt.betamin) goto 10
+      if (min(etalp, etalm).lt.letamin) goto 10
+      if (max(etalp, etalm).lt.letamin1) goto 10
+      if (max(etab, etabb).lt.betamin1) goto 10
+            
+
 c
       return
 c     the following cuts allow to select events where just 1 b-jet is
