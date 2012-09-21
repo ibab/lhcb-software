@@ -63,8 +63,10 @@ use VeloSimulation    v3r12    Velo      # Tomasz Szumlak
 use VeloTools         v4r1p1   Velo      # Tomasz Szumlak
 
 # VeloPix
-use VeloPixDAQ        v1r4     VeloPix   # Marcin Kucharczyk
-use VeloPixTools      v1r0p1   VeloPix   # Victor Coco
+#use VeloPixDAQ        v1r4     VeloPix   # Marcin Kucharczyk
+#use VeloPixTools      v1r0p1   VeloPix   # Victor Coco
+use VPDAQ             v1r0     VP        # Marcin Kucharczyk
+use VPTools           v1r0     VP        # Victor Coco
 
 # VeloLite
 use VLDAQ             v1r1     VL        # Heinrich Schindler

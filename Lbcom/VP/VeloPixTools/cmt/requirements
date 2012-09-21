@@ -1,0 +1,27 @@
+# Created    : 02/02/10
+# Maintainer : Victor Coco
+#
+package           VeloPixTools
+version           v1r0p1
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+
+include_path none
+
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
+
+use  TrackInterfaces v*  Tr
+use  DigiEvent       v*  Event
+use  VeloPixDet      v*  Det
+use  GaudiAlg  v*  
+use  GaudiGSL  v*   
+use  TrackEvent      v*  Event
+
+# Component library building rule
+#============================================================================
+library          VeloPixTools      ../src/*.cpp 
+
+apply_pattern component_library library=VeloPixTools

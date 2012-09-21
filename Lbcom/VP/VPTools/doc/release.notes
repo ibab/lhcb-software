@@ -1,0 +1,18 @@
+!--------------------------------------------------------------------------
+! Package     : VeloPix/VeloPixTools
+! Responsible : Victor Coco
+! Purpose     : Ease the computation based on VeloPix
+!--------------------------------------------------------------------------
+
+!======================== VeloPixTools v1r0p1 2010-05-22 ==================
+! 2010-05-05 - Marco Cattaneo
+ - In requirements, replace HEAD by v* in use statements
+
+!======================== VeloPixTools v1r0 2010-04-26 ====================
+! 2010-04-13 - Victor Coco
+ - Modification of the error parametrisation (pol4 instead of gaus+pol2)
+ - Bug found in error calculation 
+
+! 2010-02-02 Victor Coco
+ - First release
+
