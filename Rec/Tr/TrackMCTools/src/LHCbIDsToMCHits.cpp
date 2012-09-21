@@ -8,7 +8,7 @@
 #include "Event/Track.h"
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
-#include "Event/VeloPixCluster.h"
+#include "Event/VPCluster.h"
 #include "Event/OTTime.h"
 #include "Event/MuonCoord.h"
 
@@ -24,13 +24,13 @@ LHCbIDsToMCHits::LHCbIDsToMCHits(const std::string& type,
   m_ttLinks(0,0,""),
   m_otLinks(0,0,""),
   m_veloLinks(0,0,""),
-  m_veloPixLinks(0,0,""),
+  m_vPLinks(0,0,""),
   m_muonLinks(0,0,""),
   m_configuredOT(false),
   m_configuredIT(false),
   m_configuredTT(false),
   m_configuredVelo(false),
-  m_configuredVeloPix(false),
+  m_configuredVP(false),
   m_configuredMuon(false),
   m_endString("2MCHits") {
 
@@ -87,8 +87,8 @@ StatusCode LHCbIDsToMCHits::link(const LHCbID& id, LinkMap& output) const{
  case LHCbID::Velo:
    linkVelo(id,output);
    break;
- case LHCbID::VeloPix:
-   linkVeloPix(id,output);
+ case LHCbID::VP:
+   linkVP(id,output);
    break;
  case LHCbID::OT:   
    linkOT(id,output);
@@ -111,7 +111,7 @@ void LHCbIDsToMCHits::handle ( const Incident& incident )
     m_configuredIT = false;
     m_configuredTT = false;
     m_configuredVelo = false;
-    m_configuredVeloPix = false;
+    m_configuredVP = false;
     m_configuredMuon = false;
   }
 }
@@ -171,17 +171,17 @@ void LHCbIDsToMCHits::linkVelo(const LHCbID& lhcbid, LinkMap& output) const{
  
 }
 
-void LHCbIDsToMCHits::linkVeloPix(const LHCbID& lhcbid, LinkMap& output) const{
+void LHCbIDsToMCHits::linkVP(const LHCbID& lhcbid, LinkMap& output) const{
 
-  if (!m_configuredVeloPix){
-    m_configuredVeloPix = true;
-    m_veloPixLinks = VeloPixLinks( evtSvc(), msgSvc(),LHCb::VeloPixClusterLocation::VeloPixClusterLocation+m_endString);
-    if (m_veloPixLinks.notFound()) {
-      throw GaudiException("no veloPixLinker", "LHCbIDsToMCHits" ,
+  if (!m_configuredVP){
+    m_configuredVP = true;
+    m_vPLinks = VPLinks( evtSvc(), msgSvc(),LHCb::VPClusterLocation::VPClusterLocation+m_endString);
+    if (m_vPLinks.notFound()) {
+      throw GaudiException("no vPLinker", "LHCbIDsToMCHits" ,
                            StatusCode::FAILURE);
     }
   }
-  linkToDetTruth(lhcbid.velopixID(),m_veloPixLinks, output);
+  linkToDetTruth(lhcbid.vpID(),m_vPLinks, output);
  
 }
 

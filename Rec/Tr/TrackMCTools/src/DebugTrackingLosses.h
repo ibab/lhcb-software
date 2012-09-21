@@ -35,7 +35,7 @@ private:
   mutable LHCb::IParticlePropertySvc* m_ppSvc; ///< Pointer to particle property service
 
   bool m_velo;
-  bool m_veloPix;
+  bool m_vP;
   bool m_forward;
   bool m_clone;
   bool m_ghost;

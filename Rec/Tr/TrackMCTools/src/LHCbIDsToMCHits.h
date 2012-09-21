@@ -22,7 +22,7 @@
 namespace LHCb{
   class STCluster;
   class VeloCluster;
-  class VeloPixCluster;
+  class VPCluster;
   class MuonCoord;
 }
 
@@ -86,7 +86,7 @@ private:
   typedef LinkedTo<LHCb::MCHit,LHCb::STCluster> STLinks;
   typedef LinkedTo<LHCb::MCHit> OTLinks;
   typedef LinkedTo<LHCb::MCHit,LHCb::VeloCluster> VeloLinks;
-  typedef LinkedTo<LHCb::MCHit,LHCb::VeloPixCluster> VeloPixLinks;
+  typedef LinkedTo<LHCb::MCHit,LHCb::VPCluster> VPLinks;
   typedef LinkedTo<LHCb::MCHit,LHCb::MuonCoord> MuonLinks;
 
   template<typename ID, typename LINKER>
@@ -96,21 +96,21 @@ private:
   void linkTT(const LHCb::LHCbID& id, LinkMap& output) const;
   void linkOT(const LHCb::LHCbID& id, LinkMap& output) const;
   void linkVelo(const LHCb::LHCbID& id, LinkMap& output) const;
-  void linkVeloPix(const LHCb::LHCbID& id, LinkMap& output) const;
+  void linkVP(const LHCb::LHCbID& id, LinkMap& output) const;
   void linkMuon(const LHCb::LHCbID& id, LinkMap& output) const;
 
   mutable STLinks m_itLinks;
   mutable STLinks m_ttLinks;
   mutable OTLinks m_otLinks;
   mutable VeloLinks m_veloLinks;
-  mutable VeloPixLinks m_veloPixLinks;
+  mutable VPLinks m_vPLinks;
   mutable MuonLinks m_muonLinks;
 
   mutable bool m_configuredOT;
   mutable bool m_configuredIT;
   mutable bool m_configuredTT;
   mutable bool m_configuredVelo;
-  mutable bool m_configuredVeloPix;
+  mutable bool m_configuredVP;
   mutable bool m_configuredMuon;
 
    

@@ -7,7 +7,7 @@
 #include "Linker/LinkedTo.h"
 
 #include "Event/MCParticle.h"
-#include "Event/VeloPixCluster.h"
+#include "Event/VPCluster.h"
 #include "Kernel/LHCbID.h"
 
 // local
@@ -43,9 +43,9 @@ PatPixelDebugTool::~PatPixelDebugTool() {}
 //=========================================================================
 bool PatPixelDebugTool::matchKey( LHCb::LHCbID& id, int key ) {
 
-  LinkedTo<LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+  LinkedTo<LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
 
-  LHCb::VeloPixChannelID idV = id.velopixID();
+  LHCb::VPChannelID idV = id.vpID();
   
   LHCb::MCParticle* part = vLink.first( idV );
   while ( 0 != part ) {
@@ -58,9 +58,9 @@ bool PatPixelDebugTool::matchKey( LHCb::LHCbID& id, int key ) {
 //  Print the list of MCParticle keys associated to the specified LHCbID
 //=========================================================================
 void PatPixelDebugTool::printKey( MsgStream& msg, LHCb::LHCbID& id ) {
-  LinkedTo<LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+  LinkedTo<LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
 
-  LHCb::VeloPixChannelID idV = id.velopixID();
+  LHCb::VPChannelID idV = id.vpID();
   LHCb::MCParticle* part = vLink.first( idV );
   while ( 0 != part ) {
     msg << " " << part->key();
