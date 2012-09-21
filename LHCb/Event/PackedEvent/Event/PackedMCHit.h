@@ -60,6 +60,7 @@ namespace LHCb
     static const std::string& VP      = "pSim/VP/Hits";
     static const std::string& VL      = "pSim/VL/Hits";
     static const std::string& TT      = "pSim/TT/Hits";
+    static const std::string& UT      = "pSim/UT/Hits";
     static const std::string& IT      = "pSim/IT/Hits";
     static const std::string& OT      = "pSim/OT/Hits";
     static const std::string& FT      = "pSim/FT/Hits";
@@ -298,6 +299,25 @@ namespace LHCb
     }
     static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::TT; }
     static const std::string unpackedLocation() { return LHCb::MCHitLocation::TT;       }
+  };
+
+  /** @class MCUTHitPacker Event/PackedMCHit.h
+   *
+   *  Utility class to handle the packing and unpacking of the MC UT Hits
+   *
+   *  @author Jianchun Wang
+   *  @date   2012-07-13
+   */
+  class MCUTHitPacker : public MCHitPacker
+  {
+  public:
+    MCUTHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    {
+      m_dispScale = 1.0e2;
+      m_enScale   = 5.0e3;
+    }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::UT; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::UT;       }
   };
 
   /** @class MCITHitPacker Event/PackedMCHit.h

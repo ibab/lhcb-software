@@ -79,6 +79,11 @@ namespace LHCb
       addSTCluster( sCl, 0x40000000 );
     }
 
+    void addUTCluster( const LHCb::STCluster* sCl ) 
+    {
+      addSTCluster( sCl, 0x50000000 ); // need to find the proper key (JC)
+    }
+
     void addITCluster( const LHCb::STCluster* sCl )
     {
       addSTCluster( sCl, 0x60000000 );

@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-09-21 - Jianchun Wang
+ - add UT hits & clusters
+
 ! 2012-08-28 - Paul Szczypka / Pawel Jalocha
  - change from VeloPix to VP in container names
 
