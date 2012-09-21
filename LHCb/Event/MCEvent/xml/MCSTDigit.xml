@@ -8,6 +8,7 @@
       <template name="KeyedObjectDict" t1="LHCb::STChannelID"/>
       &KeyedContainer;
       <location name="TTDigits"   place="MC/TT/Digits"   />
+      <location name="UTDigits"   place="MC/UT/Digits"   />
       <location name="ITDigits"   place="MC/IT/Digits"   />
       <import name ="Kernel/STChannelID"/>
       <import name="MCSTDeposit" soft="TRUE"/>

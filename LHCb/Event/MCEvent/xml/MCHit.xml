@@ -21,6 +21,7 @@
       <location name="VP"      place="MC/VP/Hits" />
       <location name="VL"      place="MC/VL/Hits"      />
       <location name="TT"      place="MC/TT/Hits"      />
+      <location name="UT"      place="MC/UT/Hits"      />
       <location name="IT"      place="MC/IT/Hits"      />
       <location name="OT"      place="MC/OT/Hits"      />
       <location name="Muon"    place="MC/Muon/Hits"    />

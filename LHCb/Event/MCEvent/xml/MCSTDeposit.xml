@@ -7,6 +7,7 @@
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;
       <location name="TTDeposits"   place="MC/TT/Deposits"   />
+      <location name="UTDeposits"   place="MC/UT/Deposits"   />
       <location name="ITDeposits"   place="MC/IT/Deposits"   />
 
       <import name ="Kernel/STChannelID"/>
