@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-09-21 - Paul Szczypka
+ - Rename of VeloPix to VP
+
 !========================= PatVeloTT v3r19 2012-05-02 =========================
 ! 2012-04-02 - Marco Cattaneo
  - Remove unnecessary bool flags from PatVTTTrack.h, fixes DEADCODE warnings
