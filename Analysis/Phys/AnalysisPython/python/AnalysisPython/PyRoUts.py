@@ -2631,6 +2631,112 @@ ROOT.TH1D.effic      = _h1_effic_
 ROOT.TH1F.efficiency = _h1_effic2_ 
 ROOT.TH1D.efficiency = _h1_effic2_ 
 
+# ================================================================================
+_sqrt_2_ = math.sqrt( 2.0 ) 
+## helper function : convolution of gaussian with the single pulse 
+def _cnv_ ( x , x0 , dx , sigma ) :
+    """
+    Simple wrapper over error-function:
+    convolution of gaussian with the single pulse 
+    """
+    _erf_ = ROOT.Math.erfc
+    
+    s = abs ( sigma )
+    if hasattr ( s , 'value' ) : s = s.value()
+    
+    h = ( x - ( x0 + 0.5 * dx ) ) / _sqrt_2_ / s 
+    l = ( x - ( x0 - 0.5 * dx ) ) / _sqrt_2_ / s 
+    
+    return 0.5 * ( _erf_ ( h ) - _erf_ ( l ) ) / dx 
+
+# =============================================================================
+## "Smear" : make a convolution of the histogram with gaussian function
+#  @param sigma     the gaussian resolutuon
+#  @param addsigmas the parameter to treat the bounary conditions 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-20
+def _smear_ ( h1 , sigma , addsigmas = 5 ) :
+    """
+    Smear the histogram through the convolution with the gaussian function:
+
+    >>> histo   = ...
+    >>> smeared = h.smear ( sigma = 0.01 )
+    """
+    #
+    ## clone the input histogram
+    #
+    h2  = h1.Clone ( hID () ) ; h2.Reset() ; h2.Sumw2()
+
+    first_bin = None
+    last_bin  = None
+
+    ## collect all bins
+    bins = []
+
+    for ibin in h1.iteritems() : bins.append ( ibin[1:] )
+
+    ## add few artificially replicated bins
+    fb    = bins [  0 ]
+    lb    = bins [ -1 ]
+    xmin  = fb[1].value() - fb[1].error()
+    xmax  = lb[1].value() + lb[1].error()    
+    x_min = xmin - abs ( addsigmas * sigma ) 
+    x_max = xmax + abs ( addsigmas * sigma ) 
+
+    ## add few fictive bins 
+    while  xmin > x_min :
+        
+        bin0 = bins[0]
+        
+        xc   = bin0[0]
+        val  = bin0[1]
+        
+        bin  = (xc-2*xc.error(),val)
+        bins.insert (  0, bin )
+        fb    = bins [  0 ]
+        
+        xmin  = bin[0].value()-bin[0].error()
+
+    ## add few fictive bins 
+    while  xmax < x_max :
+        
+        bin0 = bins[-1]
+        
+        xc   = bin0[0]
+        val  = bin0[1]
+        
+        bin  = (xc+2*xc.error(),val)
+        bins.append ( bin )
+        fb    = bins [  0 ]
+        
+        xmax  = bin[0].value()+bin[0].error()
+    
+
+    for ibin1 in bins :
+        
+        x1c  =     ibin1 [0].value () 
+        x1w  = 2 * ibin1 [0].error () 
+        val1 =     ibin1 [1]
+        
+        if 0 == val1.value() and 0 == val1.cov2() : continue
+        
+        for ibin2 in h2.iteritems() :
+
+            i2      =     ibin2 [0]
+            x2c     =     ibin2 [1].value () 
+            x2w     = 2 * ibin2 [1].error () 
+
+            val2    = VE ( val1 )
+            val2   *= x2w  
+            val2   *= _cnv_ ( x2c , x1c , x1w , sigma ) 
+            
+            h2[i2] += val2
+
+    return h2
+
+ROOT.TH1F. smear = _smear_
+ROOT.TH1D. smear = _smear_
+
 # =============================================================================
 ## make graph from data 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -3331,9 +3437,8 @@ for t in ( ROOT.TH2F , ROOT.TH2D ) :
     t . sum        = _h2_accumulate_
     t . integral   = _h2_accumulate_ 
 
-
 ## generic
-ROOT.TF1 . scale      = _h_scale_
+ROOT.TH1 . scale      = _h_scale_
 
     
 HStats   = cpp.Gaudi.Utils.HStats
@@ -3752,9 +3857,54 @@ ROOT.RooFitResult . param      = _rfr_param_
 ROOT.RooFitResult . parameter  = _rfr_param_
 ROOT.RooFitResult . parValue   = lambda s,n : s.parameter(n)[0]
 
+# =============================================================================
+## fix parameter at some value
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-20
+def _fix_par_ ( var , value ) :
+    """
+    Fix parameter at some value :
+
+    >>> par = ...
+    >>> par.fix ( 10 ) 
+    
+    """
+    #
+    if hasattr ( value , 'value' ) : value = value.value()
+    #
+    var.setVal      ( value )
+    var.setConstant ( True  )
+    #
+    return var.ve() 
+
+# =============================================================================
+## release the parameter
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-20
+def _rel_par_ ( var )  :
+    """
+    Release the parameters
+
+    >>> par = ...
+    >>> par.release () 
+    
+    """
+    var.setConstant ( False )
+    #
+    return var.ve()
+
+# =============================================================================
 ## decorate RooRealVar:
-ROOT.RooRealVar   . as_VE = lambda s :  VE( s.getVal () , s.getError()**2 )
-ROOT.RooRealVar   . ve    = lambda s :      s.as_VE  () 
+ROOT.RooRealVar   . as_VE   = lambda s :  VE( s.getVal () , s.getError()**2 )
+ROOT.RooRealVar   . ve      = lambda s :      s.as_VE  () 
+ROOT.RooRealVar   . fix     = _fix_par_
+ROOT.RooRealVar   . Fix     = _fix_par_
+ROOT.RooRealVar   . release = _rel_par_
+ROOT.RooRealVar   . Release = _rel_par_
+
+
+
+
 
 # =============================================================================
 ## further decoration

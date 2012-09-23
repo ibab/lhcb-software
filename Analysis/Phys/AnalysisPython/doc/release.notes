@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-09-23 - Vanya Belyaev
+ - few minor fixes in PyRoUts 
+ - add smearing of the histogams according to the Gaussian resolutions
+
 !========================= AnalysisPython v2r15 2012-07-26 =========================
 
 ! 2012-07-21 - Vanya Belyaev
