@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-09-23 - Paul Szczypka
+ - Minor edits to BeamPipe code fixing typos.
+
 ! 2012-09-21 - Paul Szczypka
  - Minor edits to BeamPipe configuration for UT
 

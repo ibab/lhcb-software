@@ -138,7 +138,7 @@ class Gauss(LHCbConfigurableUser):
     _beamPipeSwitch = 1
 
 
-    IncompatibleDetectors = {
+    _incompatibleDetectors = {
         "Velo" : [ ["Velo", "PuVeto"] , "VL", "VP" ],
         "Rich" : [ ["Rich1", "Rich2" ], ["Rich1Pmt", "Rich2Pmt"] ],
         "TT" : [ "TT", "UT" ],
@@ -198,8 +198,8 @@ class Gauss(LHCbConfigurableUser):
 #  ><<<<<< ><<  ><   ><<   ><< ><  ><<   ><   ><<   ><<   
 #  ><<     ><< ><<<<< ><<  ><< ><   ><< ><<<<< ><<  ><<   
 #  ><<     ><< ><          ><< ><< ><<  ><          ><<   
-#  ><<     ><<   ><<<<    ><<< ><<        ><<<<    ><<<   
-#                            ><<                        
+#  ><<     ><<   ><<<<     ><< ><<        ><<<<     ><<<   
+#                              ><<                        
 #
 #"""    
     ##
@@ -267,7 +267,7 @@ class Gauss(LHCbConfigurableUser):
         else:
             # default is "beampipeon" === 1
             if bpLower in ["beampipeoff"]:
-                self._BeamPipeSwitch = 0
+                self._beamPipeSwitch = 0
             elif bpLower in ["beampipeindet"]:
                 self._beamPipeSwitch = -1
 
