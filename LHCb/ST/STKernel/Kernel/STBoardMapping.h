@@ -4,7 +4,7 @@
 
 /** @namespace STBoardMapping STBoardMapping.h Kernel/STBoardMapping.h
  *
- *  Namespace for source ID to board number (and vice-versa) for IT and TT
+ *  Namespace for source ID to board number (and vice-versa) for IT and TT & UT
  *
  *  @author Johan Luisier
  * @author M Needham
@@ -27,6 +27,10 @@ namespace STBoardMapping{
 
   const Map& ITNumberToSourceIDMap();
 
+  const Map& UTSourceIDToNumberMap();
+
+  const Map& UTNumberToSourceIDMap();
+
   enum endValue {notFound = 999};
 
   /** trivial helper to find entries in the map safely */ 
@@ -37,6 +41,9 @@ namespace STBoardMapping{
  
   /** printout the IT mapping */
   std::string printITMap();
+
+  /** printout the UT mapping */
+  std::string printUTMap();
 
 }
 

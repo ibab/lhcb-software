@@ -23,11 +23,17 @@ inline LHCb::RawBank::BankType stringToType(const std::string& type){
   else if (type == "IT"){
     bankType = LHCb::RawBank::IT;
   }
+  else if (type == "UT"){
+    bankType = LHCb::RawBank::UT;
+  }
   else if (type == "TTFull"){
     bankType = LHCb::RawBank::TTFull;
   }
   else if (type == "ITFull"){
     bankType = LHCb::RawBank::ITFull;
+  }
+  else if (type == "UTFull"){
+    bankType = LHCb::RawBank::UTFull;
   }
   else if (type == "TTError" ) {
     bankType = LHCb::RawBank::TTError;
@@ -35,11 +41,17 @@ inline LHCb::RawBank::BankType stringToType(const std::string& type){
   else if (type == "ITError" ){
     bankType = LHCb::RawBank::ITError;
   }
+  else if (type == "UTError" ){
+    bankType = LHCb::RawBank::UTError;
+  }
   else if (type == "TTPedestal" ){
     bankType = LHCb::RawBank::TTPedestal;
   }
   else if (type == "ITPedestal" ){
     bankType = LHCb::RawBank::ITPedestal;
+  }
+  else if (type == "UTPedestal" ){
+    bankType = LHCb::RawBank::UTPedestal;
   }
   else {
     // use the Velo as NULL

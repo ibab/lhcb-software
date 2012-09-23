@@ -19,6 +19,7 @@
 #include "Kernel/STBoardMapping.h"
 #include "Kernel/ITDetectorPlot.h"
 #include "Kernel/TTDetectorPlot.h"
+#include "Kernel/UTDetectorPlot.h"
 #include "Kernel/STXMLUtils.h"
 
 struct _Instantiations{
@@ -31,6 +32,7 @@ struct _Instantiations{
   
   ST::ITDetectorPlot m_itdetPlot;
   ST::TTDetectorPlot m_ttdetPlot;
+  ST::UTDetectorPlot m_utdetPlot;
 
 }; 
 

@@ -23,10 +23,30 @@ public:
 
     m_id = (aRegion<<regionBits) +
            (aSubID<<subIDBits);                  
+    m_isUT = false;
+  }
+
+  STTell1ID(unsigned int aRegion,
+            unsigned int aSubID,
+            bool         aIsUT){
+    m_isUT = aIsUT;
+    if ( m_isUT )
+      m_id = (aRegion<<regionBitsUT) + (aSubID<<subIDBits);                  
+    else
+      m_id = (aRegion<<regionBits) + (aSubID<<subIDBits);
   }
   
   explicit STTell1ID(unsigned int id):
-  m_id(id){}
+  m_id(id){
+    m_isUT = false;
+  }
+
+  explicit STTell1ID(unsigned int id, bool isUT):
+  m_id(id){
+    m_isUT = isUT;
+  }
+
+
 
   /// Default Constructor
   STTell1ID()
@@ -53,6 +73,9 @@ public:
   /// Retrieve IT Channel ID
   unsigned int id() const;
 
+  /// Retrieve if it is UT
+  unsigned int isUT() const;
+
   /// Operator overloading for stringoutput
   friend std::ostream& operator<< (std::ostream& s, const STTell1ID& obj)
   {
@@ -69,10 +92,11 @@ public:
 
 private:
 
-  enum bits  {subIDBits = 0,  regionBits = 5}; /// Enumeration to store the bit packing offsets
-  enum masks {subIDMask = 0x0000001f, regionMask = 0x000000e0};
+  enum bits  {subIDBits = 0,  regionBits = 5, regionBitsUT = 6}; /// Enumeration to store the bit packing offsets
+  enum masks {subIDMask = 0x0000001f, regionMask = 0x000000e0, subIDMaskUT = 0x0000003f, regionMaskUT = 0x000000c0};
 
   unsigned int m_id; /// STell1ID
+  bool         m_isUT;
 };
 
 
@@ -100,14 +124,19 @@ inline unsigned int STTell1ID::id() const
   return m_id;
 }
 
+inline unsigned int STTell1ID::isUT() const
+{
+  return m_isUT;
+}
+
 inline unsigned int STTell1ID::region() const 
 {
-  return ((m_id & regionMask) >> regionBits);
+  return isUT() ? ((m_id & regionMask) >> regionBits) : ((m_id & regionMaskUT) >> regionBitsUT);
 }
 
 inline unsigned int STTell1ID::subID() const
 {
-  return ((m_id & subIDMask) >> subIDBits);
+  return isUT() ? ((m_id & subIDMask) >> subIDBits) : ((m_id & subIDMaskUT) >> subIDBits);
 }
 
 inline std::ostream& STTell1ID::fillStream(std::ostream& s) const
@@ -115,7 +144,9 @@ inline std::ostream& STTell1ID::fillStream(std::ostream& s) const
   s << "{ "
     << " STTell1ID:\t" << id() << std::endl
     << " region:\t"     << region() << std::endl
-    << " subID:\t"     << subID() << " } ";
+    << " subID:\t"     << subID();
+  if ( isUT() ) s << " isUT } " ;
+  else          s << " } ";
 
   return s;
 }

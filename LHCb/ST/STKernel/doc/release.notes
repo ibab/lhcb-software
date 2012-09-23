@@ -3,6 +3,10 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+! 2012-09-21 - Jianchun Wang
+ - Create UT as a ST detector with address bit pattern different from IT/TT
+ - Add board mapping similar to IT/TT. It may need to be moved to DB
+
 ! 2012-09-21 - Marco Clemencic
  - Fixed compilation with -std=c++11 (-std=c++0x).
 

@@ -55,7 +55,8 @@ namespace STDAQ{
   /// Store the number of strips in each sector
   enum StripsInSector{ 
     nStripsInITSector=384u,
-    nStripsInTTSector=512u
+    nStripsInTTSector=512u,
+    nStripsInUTSector=512u
   };
 
 
