@@ -3,8 +3,13 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+
+! 2012-09-24 - Jianchun Wang
+ - Small modification in STChannelID.xml to avoid warnings
+
 ! 2012-09-23 - Sajan Easo
  - Minor fix to RichRadiatorType.cpp to match the RichRadiatorType.h
+
 ! 2012-09-21 - Jianchun Wang
  - Add UT in STChannelID, ST detector switch and LHCbID
 
