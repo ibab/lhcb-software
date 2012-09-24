@@ -488,6 +488,8 @@ class SubversionCmd(RevisionControlSystem):
             path = path.replace("//", "/")
         if path not in self._ls_cache:
             out, _err, _retcode = _svn("ls", "/".join([self.repository, path]))
+            if _retcode:
+                raise IOError(_err)
             # @TODO add error-checking
             self._ls_cache[path] = out.splitlines()
         return self._ls_cache[path]
@@ -507,7 +509,11 @@ class SubversionCmd(RevisionControlSystem):
                 if (b in l) or ((b+'/') in l): # allow for files and dirs
                     return True
         # If path and dirname(path) are not in the cache, look for path in the repository
-        return self._ls(path)
+        try:
+            self._ls(path)
+            return True
+        except IOError:
+            return False
 
     def _walk(self, path = ""):
         entries = self._ls(path)
@@ -1098,7 +1104,7 @@ class SubversionCmd(RevisionControlSystem):
             # package full checkout
             for k in ["trunk", "tags", "branches"] :
                 _, pdir = self._getPackagePath(package, k)
-                if pdir :
+                if pdir:
                     _, prdir = self._getProjectPath(project, k)
                     ppdir = os.sep.join([prdir] + package.split("/"))
                     if self._exists(ppdir) :
@@ -1120,6 +1126,8 @@ class SubversionCmd(RevisionControlSystem):
                         # do the move
                         log.info("Moving %s to %s" %(pdir, ppdir))
                         _, _, _ = _svn("move", pdir, ppdir, cwd=root_dir, report_failure=True)
+                else:
+                    log.warning("Could not find %s for %s, the commit will fail.", k, package)
 
             self.modules[package] = project
             modlist = os.path.join(tmpdir_name,"packages.list")
