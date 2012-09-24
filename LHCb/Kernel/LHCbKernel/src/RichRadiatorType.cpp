@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file RichRadiatorType.cpp
  *
@@ -29,6 +28,8 @@ std::string Rich::text( const Rich::RadiatorType radiator )
   case Rich::HPDQuartzWin:       return "HPDQuartzWin";
   case Rich::Nitrogen:           return "Nitrogen";
   case Rich::AerogelFilter:      return "AerogelFilter";
+  case Rich::CO2:                return "Rich CO2";
+  case Rich::PMTQuartzWin:       return "PMTQuartzWin";
   case Rich::InvalidRadiator:    return "Invalid Radiator";
   default:                       return "SHOULD NEVER SEE THIS";
   }
