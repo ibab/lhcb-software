@@ -1,6 +1,6 @@
-// $Id: VeloPixRawBankDecoder.h,v 1.2 2010-06-10 17:06:10 cattanem Exp $
-#ifndef VELOPIXRAWBANKDECODER_H 
-#define VELOPIXRAWBANKDECODER_H 1
+// $Id: VPRawBankDecoder.h,v 1.2 2010-06-10 17:06:10 cattanem Exp $
+#ifndef VPRAWBANKDECODER_H 
+#define VPRAWBANKDECODER_H 1
 // STL
 #include <vector>
 // Si
@@ -8,21 +8,21 @@
 #include "SiDAQ/SiRawBufferWord.h"
 #include "SiDAQ/SiADCBankTraits.h"
 // Local
-#include "VeloPixClusterWord.h"
+#include "VPClusterWord.h"
 
 #ifdef _WIN32
 #pragma warning(disable : 4355) // 'this' used in base member initializer list
 #endif
 
 template<class CLUSTERWORD>
-class VeloPixRawBankDecoder;
+class VPRawBankDecoder;
 
 template<class CLUSTERWORD>
-class VeloPixRawBankDecoder {
+class VPRawBankDecoder {
 public:
   // Constructor
   //  Takes constant pointer to beginning of data content of a raw bank
-  VeloPixRawBankDecoder(const SiDAQ::buffer_word* bank) :
+  VPRawBankDecoder(const SiDAQ::buffer_word* bank) :
     m_bank(bank),
     m_header(SiHeaderWord(bank[0])),
     m_nClusters(m_header.nClusters()),
@@ -30,7 +30,7 @@ public:
     m_posEnd(pos_iterator(m_nClusters,this))
   { ; }
   // Copy construction   
-  VeloPixRawBankDecoder(const VeloPixRawBankDecoder& ini) :
+  VPRawBankDecoder(const VPRawBankDecoder& ini) :
     m_bank(ini.m_bank),
     m_header(ini.m_header),
     m_nClusters(ini.m_nClusters),
@@ -38,7 +38,7 @@ public:
     m_posEnd(pos_iterator(m_nClusters,this))
   { ; }
   // Assignment
-  const VeloPixRawBankDecoder& operator= (const VeloPixRawBankDecoder& rhs) 
+  const VPRawBankDecoder& operator= (const VPRawBankDecoder& rhs) 
   {
     m_bank            = rhs.m_bank;
     m_header          = rhs.m_header;
@@ -48,7 +48,7 @@ public:
     return *this;
   }
   // Destructor
-  ~VeloPixRawBankDecoder() { ; }
+  ~VPRawBankDecoder() { ; }
 
 
   // Lite cluster decoding
@@ -74,19 +74,19 @@ public:
     { return m_pos == rhs.m_pos; }
     bool operator!=(const pos_iterator& rhs) const 
     { return m_pos != rhs.m_pos; }
-    // Dereferencing to VeloPixCLusterWord
+    // Dereferencing to VPCLusterWord
     const CLUSTERWORD& operator*() const { return m_cluster; }
     const CLUSTERWORD* operator->() const { return &m_cluster; }
   private:
     // Constructor with position in raw bank reference to decoder
-    pos_iterator(unsigned int pos, const VeloPixRawBankDecoder* decoder);
+    pos_iterator(unsigned int pos, const VPRawBankDecoder* decoder);
     // Decode cluster position
     void decode() const;
   private:
     mutable unsigned int m_pos;
-    const VeloPixRawBankDecoder* m_decoder;
+    const VPRawBankDecoder* m_decoder;
     mutable CLUSTERWORD m_cluster;
-    friend class VeloPixRawBankDecoder;
+    friend class VPRawBankDecoder;
   };
   friend class pos_iterator;
 
@@ -112,30 +112,30 @@ private:
 
 
 //-----------------------------------------------------------------------------
-// Implementations for class template: VeloPixRawBankDecoder<CLUSTERWORD>
+// Implementations for class template: VPRawBankDecoder<CLUSTERWORD>
 //
 // 2009-12-27 : Marcin Kucharczyk
 //-----------------------------------------------------------------------------
 
 // LiteCluster position iterator
 template<class CLUSTERWORD>
-inline VeloPixRawBankDecoder<CLUSTERWORD>::pos_iterator::pos_iterator
-(unsigned int pos, const VeloPixRawBankDecoder<CLUSTERWORD>* decoder) : 
+inline VPRawBankDecoder<CLUSTERWORD>::pos_iterator::pos_iterator
+(unsigned int pos, const VPRawBankDecoder<CLUSTERWORD>* decoder) : 
   m_pos(pos),
   m_decoder(decoder)
 { 
   decode(); 
 }
 template<class CLUSTERWORD>
-inline void VeloPixRawBankDecoder<CLUSTERWORD>::pos_iterator::decode() const
+inline void VPRawBankDecoder<CLUSTERWORD>::pos_iterator::decode() const
 {
   if(m_pos < m_decoder->m_nClusters) m_cluster = CLUSTERWORD(m_decoder->m_bank[m_pos+1]);
 
   return;
 }
 template<class CLUSTERWORD>
-const typename VeloPixRawBankDecoder<CLUSTERWORD>::pos_iterator& 
-VeloPixRawBankDecoder<CLUSTERWORD>::pos_iterator::operator++() const
+const typename VPRawBankDecoder<CLUSTERWORD>::pos_iterator& 
+VPRawBankDecoder<CLUSTERWORD>::pos_iterator::operator++() const
 {
   if (*this != m_decoder->m_posEnd) {
     ++m_pos;
@@ -144,4 +144,4 @@ VeloPixRawBankDecoder<CLUSTERWORD>::pos_iterator::operator++() const
   return *this; 
 }
 
-#endif // VELOPIXRAWBANKDECODER_H
+#endif // VPRAWBANKDECODER_H

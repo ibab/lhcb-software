@@ -1,23 +1,23 @@
-// $Id: VeloPixClusterWord.h,v 1.1.1.1 2010-01-21 13:16:41 marcin Exp $
-#ifndef _VeloPixClusterWord_H
-#define _VeloPixClusterWord_H 1
+// $Id: VPClusterWord.h,v 1.1.1.1 2010-01-21 13:16:41 marcin Exp $
+#ifndef _VPClusterWord_H
+#define _VPClusterWord_H 1
 
 #include <iostream>
 
-/** @class VeloPixClusterWord
+/** @class VPClusterWord
  *
  *  Class for encapsulating word in RAW data format
- *  for the VeloPix detectors. 
+ *  for the VP detectors. 
  *
  *  @author Marcin Kucharczyk
  *  @date   27/12/2009
  */
 
-class VeloPixClusterWord {
+class VPClusterWord {
 
 public:
 
-  VeloPixClusterWord(long pixel,
+  VPClusterWord(long pixel,
                      unsigned int totValue,
                      unsigned int xFract,
                      unsigned int yFract,
@@ -35,11 +35,11 @@ public:
   /** Constructor with int
   @param value 
   */
-  explicit VeloPixClusterWord(unsigned int value = 0):
+  explicit VPClusterWord(unsigned int value = 0):
     m_value(value){}
 
   /** Destructor */
-  ~VeloPixClusterWord(){}
+  ~VPClusterWord(){}
 
   /** Cast to short*/
   operator short() const;
@@ -72,7 +72,7 @@ public:
 
   /** Operator overloading for stringoutput */
   friend std::ostream& operator<< (std::ostream& s, 
-                                   const VeloPixClusterWord& obj)
+                                   const VPClusterWord& obj)
   {
     return obj.fillStream(s);
   }
@@ -101,37 +101,37 @@ private:
 
 };
 
-inline VeloPixClusterWord::operator short() const
+inline VPClusterWord::operator short() const
 {
   return m_value;
 }
 
-inline unsigned int VeloPixClusterWord::value() const
+inline unsigned int VPClusterWord::value() const
 {
   return m_value;
 }
 
-inline long VeloPixClusterWord::pixel() const{
+inline long VPClusterWord::pixel() const{
   return (m_value & pixelMask) >> pixelBits;
 }
 
-inline unsigned int VeloPixClusterWord::totValue() const{
+inline unsigned int VPClusterWord::totValue() const{
   return (m_value & totValueMask) >> totValueBits;
 }
 
-inline unsigned int VeloPixClusterWord::xFract() const{
+inline unsigned int VPClusterWord::xFract() const{
   return (m_value & xFractMask) >> xFractBits;
 }
 
-inline unsigned int VeloPixClusterWord::yFract() const{
+inline unsigned int VPClusterWord::yFract() const{
   return (m_value & yFractMask) >> yFractBits;
 }
 
-inline bool VeloPixClusterWord::hasIsLong() const{
+inline bool VPClusterWord::hasIsLong() const{
   return (((m_value & isLongMask) >> isLongBits != 0) ? true : false);
 }
 
-inline std::ostream& VeloPixClusterWord::fillStream(std::ostream& s) const
+inline std::ostream& VPClusterWord::fillStream(std::ostream& s) const
 {
   s << "{ "
     << " pixel:\t" << pixel() << std::endl
@@ -142,4 +142,4 @@ inline std::ostream& VeloPixClusterWord::fillStream(std::ostream& s) const
   return s;
 }
 
-#endif // _VeloPixClusterWord_H
+#endif // _VPClusterWord_H

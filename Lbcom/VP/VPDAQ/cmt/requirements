@@ -19,7 +19,7 @@ use  VeloEvent     v*  Event
 use  VeloDet       v*  Det
 use  GaudiAlg      v*
 use  LinkerEvent   v*  Event
-use  VeloPixDet    v*  Det
+use  VPDet         v*  Det
 use  GSL           v*  LCG_Interfaces
 use  DAQEvent      v*  Event
 use  SiDAQ         v*  Si

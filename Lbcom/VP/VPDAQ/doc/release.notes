@@ -4,6 +4,10 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2012-09-24 - Paul Szczypka
+ - Rename Package to VPDAQ
+ - Rename files and code from VeloPix to VP.
+
 !========================= VeloPixDAQ v1r4 2011-04-05 =========================
 ! 2011-03-17 -Wenbin Qian
  - remove some information output from previous change

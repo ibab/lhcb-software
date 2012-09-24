@@ -1,6 +1,6 @@
-// $Id: VeloPixRawBankToPartialCluster.h,v 1.1 2010-03-01 10:51:28 cocov Exp $
-#ifndef VELOPIXRAWBANKTOPARTIALCLUSTER_H 
-#define VELOPIXRAWBANKTOPARTIALCLUSTER_H 1
+// $Id: VPRawBankToPartialCluster.h,v 1.1 2010-03-01 10:51:28 cocov Exp $
+#ifndef VPRAWBANKTOPARTIALCLUSTER_H 
+#define VPRAWBANKTOPARTIALCLUSTER_H 1
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -10,30 +10,30 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event
 #include "Event/RawEvent.h"
-#include "Event/VeloPixLiteCluster.h"
-// VeloPixelDet
-#include "VeloPixDet/DeVeloPix.h"
+#include "Event/VPLiteCluster.h"
+// VPelDet
+#include "VPDet/DeVP.h"
 // Si
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiRawBufferWord.h"
 #include "SiDAQ/SiADCBankTraits.h"
 // Local
-#include "VeloPixClusterWord.h"
-#include "VeloPixPatternWord.h"
+#include "VPClusterWord.h"
+#include "VPPatternWord.h"
 
-/** @class VeloPixRawBankToPartialCluster.h 
- *  VeloPixAlgorithms/VeloPixRawBankToPartialCluster.h
+/** @class VPRawBankToPartialCluster.h 
+ *  VPAlgorithms/VPRawBankToPartialCluster.h
  *
  *  @author Victor Coco
  *  @date   2010/02/24
  */
 
-class VeloPixRawBankToPartialCluster : public GaudiAlgorithm {
+class VPRawBankToPartialCluster : public GaudiAlgorithm {
 public:
   /// Standard constructor
-  VeloPixRawBankToPartialCluster(const std::string& name,
+  VPRawBankToPartialCluster(const std::string& name,
                               ISvcLocator* pSvcLocator);
-  virtual ~VeloPixRawBankToPartialCluster();   ///< Destructor
+  virtual ~VPRawBankToPartialCluster();   ///< Destructor
   virtual StatusCode initialize();          ///< Algorithm initialization
   virtual StatusCode execute   ();          ///< Algorithm execution
   virtual StatusCode finalize  ();          ///< Algorithm finalise
@@ -41,12 +41,12 @@ public:
 private:
 
 StatusCode decodeRawBanks(LHCb::RawEvent* rawEvt,
-           LHCb::VeloPixCluster::Container* clusCont) const;
+           LHCb::VPCluster::Container* clusCont) const;
 void createPartialCluster(
                unsigned int sensor,
-               VeloPixClusterWord aWord,
-               VeloPixPatternWord aPattern,
-               LHCb::VeloPixCluster::Container* clusCont) const;
+               VPClusterWord aWord,
+               VPPatternWord aPattern,
+               LHCb::VPCluster::Container* clusCont) const;
 
 private:
 
@@ -54,8 +54,8 @@ private:
   std::string m_rawEventLocation;
   bool m_isDebug; 
   bool m_isVerbose;
-  DeVeloPix* m_veloPixelDet;
+  DeVP* m_vPelDet;
 
 };
 
-#endif // VELOPIXRAWBANKTOLITECLUSTER_H
+#endif // VPRAWBANKTOLITECLUSTER_H

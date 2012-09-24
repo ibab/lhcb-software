@@ -1,44 +1,44 @@
-// $Id: PrepareVeloPixRawBank.cpp,v 1.2 2010-01-25 10:06:48 marcin Exp $
+// $Id: PrepareVPRawBank.cpp,v 1.2 2010-01-25 10:06:48 marcin Exp $
 // Include files:
 // GSL
 #include "gsl/gsl_math.h"
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Kernel
-#include "Kernel/VeloPixChannelID.h"
+#include "Kernel/VPChannelID.h"
 // Event
-#include "Event/VeloPixCluster.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "Event/VPCluster.h"
+#include "Event/VPLiteCluster.h"
 #include "Event/RawEvent.h"
 #include "Event/BankWriter.h"
-// VeloPixelDet
-#include "VeloPixDet/DeVeloPix.h"
+// VPelDet
+#include "VPDet/DeVP.h"
 // Local
-#include "VeloPixClusterWord.h"
-#include "VeloPixPatternWord.h"
-#include "VeloPixToTWord.h"
-#include "PrepareVeloPixRawBank.h"
+#include "VPClusterWord.h"
+#include "VPPatternWord.h"
+#include "VPToTWord.h"
+#include "PrepareVPRawBank.h"
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PrepareVeloPixRawBank
+// Implementation file for class : PrepareVPRawBank
 //
 // 2009-12-08 : Marcin Kucharczyk
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(PrepareVeloPixRawBank);
+DECLARE_ALGORITHM_FACTORY(PrepareVPRawBank);
 
 //=============================================================================
 // Constructor
 //=============================================================================
-PrepareVeloPixRawBank::PrepareVeloPixRawBank(const std::string& name,
+PrepareVPRawBank::PrepareVPRawBank(const std::string& name,
                                              ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
 {
   declareProperty("ClusterLocation", m_clusterLocation = 
-                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+                  LHCb::VPClusterLocation::VPClusterLocation );
   declareProperty("RawEventLocation", m_rawEventLocation =
                   LHCb::RawEventLocation::Default);
 }
@@ -46,23 +46,23 @@ PrepareVeloPixRawBank::PrepareVeloPixRawBank(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrepareVeloPixRawBank::~PrepareVeloPixRawBank(){};
+PrepareVPRawBank::~PrepareVPRawBank(){};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode PrepareVeloPixRawBank::initialize() {
+StatusCode PrepareVPRawBank::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
   // Get a list of sensor numbers to identify empty sensors
-  m_veloPixelDet = getDet<DeVeloPix>(DeVeloPixLocation::Default);
-  std::vector<DeVeloPixSensor*>::const_iterator sIter =
-                                 m_veloPixelDet->sensorsBegin();
-  std::vector<DeVeloPixSensor*>::const_iterator sEnd =
-                                 m_veloPixelDet->sensorsEnd();
+  m_vPelDet = getDet<DeVP>(DeVPLocation::Default);
+  std::vector<DeVPSensor*>::const_iterator sIter =
+                                 m_vPelDet->sensorsBegin();
+  std::vector<DeVPSensor*>::const_iterator sEnd =
+                                 m_vPelDet->sensorsEnd();
   for(; sIter != sEnd; ++sIter) {
     m_sensorNumbers.push_back((*sIter)->sensorNumber());
   }
@@ -74,15 +74,15 @@ StatusCode PrepareVeloPixRawBank::initialize() {
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode PrepareVeloPixRawBank::execute() {
+StatusCode PrepareVPRawBank::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
   // Get input containers of clusters
-  const VeloPixClusters* clusters = 0;
-  if(!exist<VeloPixClusters>(m_clusterLocation)) {
-    error() << " ==> There are no VeloPixClusters in TES! " << endmsg;
+  const VPClusters* clusters = 0;
+  if(!exist<VPClusters>(m_clusterLocation)) {
+    error() << " ==> There are no VPClusters in TES! " << endmsg;
     return StatusCode::FAILURE;
   } else {
-    clusters = get<VeloPixClusters>(m_clusterLocation);
+    clusters = get<VPClusters>(m_clusterLocation);
   }
   RawEvent* rawEvent;
   // Check if RawEvent exits
@@ -100,7 +100,7 @@ StatusCode PrepareVeloPixRawBank::execute() {
   std::stable_sort(m_sortedClusters.begin(),m_sortedClusters.end(),
                    sortLessBySensor);
   // Loop over all clusters and write one bank per sensor
-  std::vector<const VeloPixCluster*>::const_iterator firstOnSensor,
+  std::vector<const VPCluster*>::const_iterator firstOnSensor,
                                                      lastOnSensor;
   lastOnSensor = firstOnSensor = m_sortedClusters.begin();
   unsigned int currentSensorNumber;
@@ -135,19 +135,19 @@ StatusCode PrepareVeloPixRawBank::execute() {
 //=============================================================================
 // Store RawBank
 //=============================================================================
-void PrepareVeloPixRawBank::storeBank(int sensor,
-                      std::vector<const VeloPixCluster*>::const_iterator begin,
-                      std::vector<const VeloPixCluster*>::const_iterator end,
+void PrepareVPRawBank::storeBank(int sensor,
+                      std::vector<const VPCluster*>::const_iterator begin,
+                      std::vector<const VPCluster*>::const_iterator end,
                       RawEvent* rawEvent)
 {
   // Create new raw buffer in raw data cache, old one is cleared
   makeBank(begin,end);
   m_bankVersion = 1;
-  if(m_veloPixelDet->sensor(sensor)) {
+  if(m_vPelDet->sensor(sensor)) {
     debug() << "Sensor = " << sensor << endmsg;
     LHCb::RawBank* newBank =
           rawEvent->createBank(static_cast<SiDAQ::buffer_word>(sensor),
-                               LHCb::RawBank::VeloPix,
+                               LHCb::RawBank::VP,
                                m_bankVersion,
                                m_bankSizeInBytes,
                                &(m_rawData[0]));
@@ -160,9 +160,9 @@ void PrepareVeloPixRawBank::storeBank(int sensor,
 //=============================================================================
 // Make RawBank 
 //=============================================================================
-void PrepareVeloPixRawBank::makeBank(
-                std::vector<const VeloPixCluster*>::const_iterator begin,
-                std::vector<const VeloPixCluster*>::const_iterator end)
+void PrepareVPRawBank::makeBank(
+                std::vector<const VPCluster*>::const_iterator begin,
+                std::vector<const VPCluster*>::const_iterator end)
 {
   // Clear bank
   m_rawData.clear();
@@ -181,17 +181,17 @@ void PrepareVeloPixRawBank::makeBank(
   // Loop over clusters in range defined by iterator
   int nToT = 0;
   SiDAQ::buffer_word totRowData = 0x0;
-  std::vector<const VeloPixCluster*>::const_iterator iC = begin;
+  std::vector<const VPCluster*>::const_iterator iC = begin;
   for(; iC != end; ++iC) {
-    const LHCb::VeloPixCluster* cluster = *iC;
+    const LHCb::VPCluster* cluster = *iC;
     // Get vectors of active channelIDs and Tots
-    std::vector< std::pair<LHCb::VeloPixChannelID,int> > totVec;
+    std::vector< std::pair<LHCb::VPChannelID,int> > totVec;
     totVec = cluster->pixelHitVec();
-    std::vector<LHCb::VeloPixChannelID> activeChIDs; activeChIDs.clear();
+    std::vector<LHCb::VPChannelID> activeChIDs; activeChIDs.clear();
     std::vector<int> ToTs; ToTs.clear();
-    for(std::vector< std::pair<LHCb::VeloPixChannelID,int> >::iterator
+    for(std::vector< std::pair<LHCb::VPChannelID,int> >::iterator
         id = totVec.begin(); id != totVec.end(); id++) {
-      std::pair<LHCb::VeloPixChannelID,int> pair = *id;
+      std::pair<LHCb::VPChannelID,int> pair = *id;
       activeChIDs.push_back(pair.first);
       ToTs.push_back(pair.second);
     }
@@ -201,7 +201,7 @@ void PrepareVeloPixRawBank::makeBank(
              int(ceil(cluster->lCluster().interPixelFractionX() * maxFract));
     unsigned int yFract =
              int(ceil(cluster->lCluster().interPixelFractionY() * maxFract));
-    VeloPixClusterWord vplcw(cluster->lCluster().channelID().pixel(),
+    VPClusterWord vplcw(cluster->lCluster().channelID().pixel(),
                   cluster->lCluster().clustToT(),xFract,yFract,
                   cluster->lCluster().isLongPixel());
     SiDAQ::buffer_word packedCluster;
@@ -209,7 +209,7 @@ void PrepareVeloPixRawBank::makeBank(
     m_clusterLiteBuffer.push_back(packedCluster);
     // Pack centralPixel + pattern
     long pattern = findPattern(cluster->key(),activeChIDs);
-    VeloPixPatternWord vppcw(cluster->key().pixel(),pattern);
+    VPPatternWord vppcw(cluster->key().pixel(),pattern);
     SiDAQ::buffer_word packedPattern;
     packedPattern = static_cast<SiDAQ::buffer_word>(vppcw.value());
     m_clusterPattBuffer.push_back(packedPattern);
@@ -217,7 +217,7 @@ void PrepareVeloPixRawBank::makeBank(
     const size_t tot_shift = 4;
     int totBufferSize = 8;
     for(std::vector<int>::iterator it = ToTs.begin(); it != ToTs.end(); it++) {
-      VeloPixToTWord vptw(*it);
+      VPToTWord vptw(*it);
       totRowData |= (vptw.value() << nToT * tot_shift);
       ++nToT;
     }
@@ -255,24 +255,24 @@ void PrepareVeloPixRawBank::makeBank(
 //============================================================================
 // Determine 9 bit pattern
 //============================================================================
-long PrepareVeloPixRawBank::findPattern(LHCb::VeloPixChannelID centrChanID,
-                            std::vector<LHCb::VeloPixChannelID> activeChIDs)
+long PrepareVPRawBank::findPattern(LHCb::VPChannelID centrChanID,
+                            std::vector<LHCb::VPChannelID> activeChIDs)
 {
-  const DeVeloPixSensor* sensor = m_veloPixelDet->sensor(centrChanID);    
-  std::vector<LHCb::VeloPixChannelID> neighbsVec; neighbsVec.clear();
+  const DeVPSensor* sensor = m_vPelDet->sensor(centrChanID);    
+  std::vector<LHCb::VPChannelID> neighbsVec; neighbsVec.clear();
   StatusCode channelsValid;
   channelsValid = sensor->channelToNeighbours(centrChanID,neighbsVec);
   if(!channelsValid) Warning("channelToNeighbours failure");
   neighbsVec.push_back(centrChanID);
   std::sort(neighbsVec.begin(),neighbsVec.end(),sortLessByChannel);
   std::vector<int> patternVec; patternVec.clear();
-  for(std::vector<LHCb::VeloPixChannelID>::iterator
+  for(std::vector<LHCb::VPChannelID>::iterator
       inc = neighbsVec.begin(); inc != neighbsVec.end(); ++inc) {
-    LHCb::VeloPixChannelID nChan = *inc;
+    LHCb::VPChannelID nChan = *inc;
     int pattFlg = 0;
-    for(std::vector<LHCb::VeloPixChannelID>::iterator
+    for(std::vector<LHCb::VPChannelID>::iterator
         ipd = activeChIDs.begin(); ipd != activeChIDs.end(); ipd++) {
-      LHCb::VeloPixChannelID aChan = *ipd;
+      LHCb::VPChannelID aChan = *ipd;
       if(nChan == aChan) {
         pattFlg = 1;
       }
@@ -291,7 +291,7 @@ long PrepareVeloPixRawBank::findPattern(LHCb::VeloPixChannelID centrChanID,
 
 
 //============================================================================
-StatusCode PrepareVeloPixRawBank::finalize() {
+StatusCode PrepareVPRawBank::finalize() {
 
   return GaudiAlgorithm::finalize();
 

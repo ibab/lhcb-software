@@ -1,23 +1,23 @@
-// $Id: VeloPixPatternWord.h,v 1.1.1.1 2010-01-21 13:16:41 marcin Exp $
-#ifndef _VeloPixPatternWord_H
-#define _VeloPixPatternWord_H 1
+// $Id: VPPatternWord.h,v 1.1.1.1 2010-01-21 13:16:41 marcin Exp $
+#ifndef _VPPatternWord_H
+#define _VPPatternWord_H 1
 
 #include <iostream>
 
-/** @class VeloPixPatternWord
+/** @class VPPatternWord
  *
  *  Class for encapsulating word in RAW data format
- *  for the VeloPix detectors. 
+ *  for the VP detectors. 
  *
  *  @author Marcin Kucharczyk
  *  @date   27/12/2009
  */
 
-class VeloPixPatternWord {
+class VPPatternWord {
 
 public:
 
-  VeloPixPatternWord(long pixel,
+  VPPatternWord(long pixel,
                      long pattern) {
 
   m_value = (pixel << pixelBits) +
@@ -28,11 +28,11 @@ public:
   /** Constructor with int
   @param value 
   */
-  explicit VeloPixPatternWord(unsigned int value = 0):
+  explicit VPPatternWord(unsigned int value = 0):
     m_value(value){}
 
   /** Destructor */
-  ~VeloPixPatternWord(){}
+  ~VPPatternWord(){}
 
   /** Cast to short*/
   operator short() const;
@@ -54,7 +54,7 @@ public:
 
   /** Operator overloading for stringoutput */
   friend std::ostream& operator<< (std::ostream& s, 
-                                   const VeloPixPatternWord& obj)
+                                   const VPPatternWord& obj)
   {
     return obj.fillStream(s);
   }
@@ -77,25 +77,25 @@ private:
 
 };
 
-inline VeloPixPatternWord::operator short() const
+inline VPPatternWord::operator short() const
 {
   return m_value;
 }
 
-inline unsigned int VeloPixPatternWord::value() const
+inline unsigned int VPPatternWord::value() const
 {
   return m_value;
 }
 
-inline long VeloPixPatternWord::pixel() const{
+inline long VPPatternWord::pixel() const{
   return (m_value & pixelMask) >> pixelBits;
 }
 
-inline long VeloPixPatternWord::pattern() const{
+inline long VPPatternWord::pattern() const{
   return (m_value & patternMask) >> patternBits;
 }
 
-inline std::ostream& VeloPixPatternWord::fillStream(std::ostream& s) const
+inline std::ostream& VPPatternWord::fillStream(std::ostream& s) const
 {
   s << "{ "
     << " pixel:\t" << pixel() << std::endl
@@ -103,4 +103,4 @@ inline std::ostream& VeloPixPatternWord::fillStream(std::ostream& s) const
   return s;
 }
 
-#endif // _VeloPixPatternWord_H
+#endif // _VPPatternWord_H
