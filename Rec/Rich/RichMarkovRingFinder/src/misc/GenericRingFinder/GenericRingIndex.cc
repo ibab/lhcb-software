@@ -1,3 +1,0 @@
-
-#include "GenericRingFinder/GenericRingIndex.h"
-

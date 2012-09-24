@@ -1,7 +1,0 @@
-
-namespace Lester 
-{ 
- template<class SampleType>
- struct ProbabilityModuleSum; 
-}
-

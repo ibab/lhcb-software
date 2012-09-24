@@ -1,6 +1,0 @@
-
-namespace Lester 
-{ 
- template<class T, class Less = std::less<T> >
- class OrderedProbabilitySet; 
-}

@@ -1,7 +1,0 @@
-
-namespace Lester 
-{ 
- template < class DATAMODEL >
- class ThreePointCircleProposerB; 
-}
-

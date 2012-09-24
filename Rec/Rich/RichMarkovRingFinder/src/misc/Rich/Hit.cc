@@ -1,3 +1,0 @@
-
-#include "Hit.h"
-
