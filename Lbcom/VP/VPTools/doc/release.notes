@@ -4,6 +4,9 @@
 ! Purpose     : Ease the computation based on VeloPix
 !--------------------------------------------------------------------------
 
+! 2012-09-24 - Paul Szczypka
+ - Rename VeloPix to VP in filenames and in code.
+
 !======================== VeloPixTools v1r0p1 2010-05-22 ==================
 ! 2010-05-05 - Marco Cattaneo
  - In requirements, replace HEAD by v* in use statements

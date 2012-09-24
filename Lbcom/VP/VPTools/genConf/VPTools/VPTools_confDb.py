@@ -10,10 +10,10 @@ def _fillCfgDb():
 
     # populate the repository with informations on Configurables 
 
-    cfgDb.add( configurable = 'VeloPixClusterPosition',
-               package = 'VeloPixTools',
-               module  = 'VeloPixTools.VeloPixToolsConf',
-               lib     = 'VeloPixTools' )
+    cfgDb.add( configurable = 'VPClusterPosition',
+               package = 'VPTools',
+               module  = 'VPTools.VPToolsConf',
+               lib     = 'VPTools' )
     return #_fillCfgDb
 # fill cfgDb at module import...
 try:
@@ -23,4 +23,4 @@ try:
 except Exception,err:
     print "Py:ConfigurableDb   ERROR Problem with [%s] content!" % __name__
     print "Py:ConfigurableDb   ERROR",err
-    print "Py:ConfigurableDb   ERROR   ==> culprit is package [VeloPixTools] !"
+    print "Py:ConfigurableDb   ERROR   ==> culprit is package [VPTools] !"

@@ -1,27 +1,27 @@
 
-#ifndef VELOPIXCLUSTERPOSITION_H 
-#define VELOPIXCLUSTERPOSITION_H 1
+#ifndef VPCLUSTERPOSITION_H 
+#define VPCLUSTERPOSITION_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackInterfaces/IVeloPixClusterPosition.h"            // Interface
-#include "Kernel/VeloPixChannelID.h"
+#include "TrackInterfaces/IVPClusterPosition.h"            // Interface
+#include "Kernel/VPChannelID.h"
 #include "Kernel/PixelPositionInfo.h"
 #include "Event/StateVector.h"
 #include "GaudiMath/GaudiMath.h"
 
-/** @class VeloPixClusterPosition VeloPixClusterPosition.h
+/** @class VPClusterPosition VPClusterPosition.h
  *  
  *
  *  @author Victor Coco (based on  Tomasz Szumlak VeloClusterPosition)
  *  @date   2010-02-02
  */
 
-class DeVeloPix;
-class DeVeloPixSensor;
+class DeVP;
+class DeVPSensor;
 
-class VeloPixClusterPosition: public GaudiTool, virtual public IVeloPixClusterPosition{
+class VPClusterPosition: public GaudiTool, virtual public IVPClusterPosition{
 public:
 
   // throughout the code LA stands for Linear Approximation
@@ -36,25 +36,25 @@ public:
     ANGLE_PARA
   };
   
-  typedef IVeloPixClusterPosition::toolInfo toolInfo;
-  typedef IVeloPixClusterPosition::Direction Direction;
+  typedef IVPClusterPosition::toolInfo toolInfo;
+  typedef IVPClusterPosition::Direction Direction;
   typedef std::pair<double, double> Pair;
 
   virtual StatusCode initialize();    ///< Tool initialization
   virtual StatusCode finalize();      ///< Tool finalization
   /// Standard constructor
-  VeloPixClusterPosition( const std::string& type, 
+  VPClusterPosition( const std::string& type, 
                        const std::string& name,
                        const IInterface* parent);
-  virtual ~VeloPixClusterPosition( ); ///< Destructor
+  virtual ~VPClusterPosition( ); ///< Destructor
   //-- public interface ----------------------------------------------
-  virtual toolInfo position(const LHCb::VeloPixLiteCluster* aCluster) const;
+  virtual toolInfo position(const LHCb::VPLiteCluster* aCluster) const;
 
-  virtual toolInfo position(const LHCb::VeloPixLiteCluster* aCluster,
+  virtual toolInfo position(const LHCb::VPLiteCluster* aCluster,
                             const Gaudi::XYZPoint& aPoint,
                             const Direction& aDirection) const;
 
-  virtual toolInfo position(const LHCb::VeloPixLiteCluster* aCluster,
+  virtual toolInfo position(const LHCb::VPLiteCluster* aCluster,
                             const LHCb::StateVector& aState) const;
   //------------------------------------------------------------------
   //-- returns value of the projected angle
@@ -64,11 +64,11 @@ public:
 protected:
 
   /// full/lite cluster position implementation code
-  toolInfo position(const LHCb::VeloPixChannelID &centreChannel,
+  toolInfo position(const LHCb::VPChannelID &centreChannel,
                     const Pair &fractionalPos) const;
   
   /// full/lite cluster position implementation code with point and direction  
-  toolInfo position(const LHCb::VeloPixChannelID &centreChan,
+  toolInfo position(const LHCb::VPChannelID &centreChan,
                                           const Pair & fracPos,
                                           const Gaudi::XYZPoint& aGlobalPoint,
                     const Direction& aDirection) const;
@@ -77,11 +77,11 @@ protected:
   Pair errorEstimate(const Pair projAngle, const Pair pixelSize) const;
   
   //-- calculates the value of the projected angle
-  Pair projectedAngle(const DeVeloPixSensor* sensor) const;
+  Pair projectedAngle(const DeVPSensor* sensor) const;
   
 private:
 
-  DeVeloPix* m_veloPixDet;                  /// detector element
+  DeVP* m_vPDet;                  /// detector element
   std::vector<double> m_defaultResolution;  /// resolution para one angle
   mutable std::vector< std::pair<double,double> > m_errAnglePara;       /// angle projection para
 

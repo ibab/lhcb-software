@@ -12,11 +12,11 @@
 #include "GaudiKernel/Point3DTypes.h"
 
 // Velo
-#include "VeloPixDet/DeVeloPix.h"
-#include "Event/VeloPixCluster.h"
+#include "VPDet/DeVP.h"
+#include "Event/VPCluster.h"
 
 // local
-#include "VeloPixClusterPosition.h"
+#include "VPClusterPosition.h"
 
 // boost
 #include <boost/assign/std/vector.hpp>
@@ -29,12 +29,12 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( VeloPixClusterPosition );
+DECLARE_TOOL_FACTORY( VPClusterPosition );
 
 using namespace boost::assign;
 
-typedef IVeloPixClusterPosition::toolInfo toolInfo;
-typedef IVeloPixClusterPosition::Direction Direction;
+typedef IVPClusterPosition::toolInfo toolInfo;
+typedef IVPClusterPosition::Direction Direction;
 typedef std::pair<double, double> Pair;
 
 static const Gaudi::XYZVector ZVersor(0., 0., 1.);
@@ -42,16 +42,16 @@ static const Gaudi::XYZVector ZVersor(0., 0., 1.);
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloPixClusterPosition::VeloPixClusterPosition(const std::string& type,
+VPClusterPosition::VPClusterPosition(const std::string& type,
                                const std::string& name,
                                const IInterface* parent)
   : GaudiTool(type, name, parent),
-    m_veloPixDet ( 0 ),
+    m_vPDet ( 0 ),
     m_trackDir ( ),
     m_gloPoint ( ),
     m_fracPos ( std::make_pair(0.,0.) )
 {
-  declareInterface<IVeloPixClusterPosition>(this);
+  declareInterface<IVPClusterPosition>(this);
   // default paramertrizations are of form error=gaussian if angle is < 10.5 deg,
   // pol2 otherwise
   // By default the parameters are for tracks comming from PV (0,0,0)
@@ -64,25 +64,25 @@ VeloPixClusterPosition::VeloPixClusterPosition(const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixClusterPosition::~VeloPixClusterPosition(){
+VPClusterPosition::~VPClusterPosition(){
 };
 //=============================================================================
-StatusCode VeloPixClusterPosition::initialize()
+StatusCode VPClusterPosition::initialize()
 {
   debug()<< " ==> initialize() " <<endmsg;
   //
   StatusCode sc=GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
-  // get VeloPix detector
+  // get VP detector
   m_errAnglePara.reserve(7);
-  m_veloPixDet=getDet<DeVeloPix>( DeVeloPixLocation::Default );
+  m_vPDet=getDet<DeVP>( DeVPLocation::Default );
   //
   return ( StatusCode::SUCCESS );
 }
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode VeloPixClusterPosition::finalize() {
+StatusCode VPClusterPosition::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
@@ -98,7 +98,7 @@ StatusCode VeloPixClusterPosition::finalize() {
 //=========================================================================
 // Call with a cluster only
 
-toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixLiteCluster* cluster) const
+toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster) const
 {
   if( msgLevel(MSG::DEBUG) ) debug()<< " ==> position(liteCluster)  " <<endmsg;
   
@@ -107,12 +107,12 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixLiteCluster* cluste
 
 //=========================================================================
 // Call with the channelID + fractional position
-toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixChannelID &centreChannel,
+toolInfo VPClusterPosition::position(const LHCb::VPChannelID &centreChannel,
 				       const Pair &fractionalPos) const{
   toolInfo myInfo;
 
-  const DeVeloPixSensor* sens=m_veloPixDet->sensor(centreChannel.sensor());
-  const DeVeloPixSquareType* sqSens=dynamic_cast<const DeVeloPixSquareType*>(sens);
+  const DeVPSensor* sens=m_vPDet->sensor(centreChannel.sensor());
+  const DeVPSquareType* sqSens=dynamic_cast<const DeVPSquareType*>(sens);
   Gaudi::XYZPoint aPoint = sqSens->globalXYZ(centreChannel.pixel()) ;
   Direction aDirection ;
   aDirection.first=aPoint.x()/aPoint.z();
@@ -139,14 +139,14 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixChannelID &centreCh
 //===========================================================================
 // From cluster and track state
 
-toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixLiteCluster* cluster,
+toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster,
                                        const LHCb::StateVector& aState) const
 {
   if( msgLevel(MSG::DEBUG) ) 
     debug()<< " ==> position (LiteCluster,VectorState) " <<endmsg;
 
   unsigned int sensorNumber=cluster->channelID().sensor();
-  const DeVeloPixSensor* sensor=m_veloPixDet->sensor(sensorNumber);
+  const DeVPSensor* sensor=m_vPDet->sensor(sensorNumber);
   double z=sensor->z();
   // build space point in global ref. frame
   Gaudi::XYZPoint aPoint(aState.x(), aState.y(), z);
@@ -177,7 +177,7 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixLiteCluster* cluste
 
 //============================================================================
 // Call from a cluster and a point+direction
-toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixLiteCluster* cluster,
+toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster,
                                        const Gaudi::XYZPoint& aGlobalPoint,
                                        const Direction& aDirection) const
 {
@@ -208,7 +208,7 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixLiteCluster* cluste
 //============================================================================
 // The real position function
 
-toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixChannelID &centreChan,
+toolInfo VPClusterPosition::position(const LHCb::VPChannelID &centreChan,
                                           const Pair & fracPos,
                                           const Gaudi::XYZPoint& aGlobalPoint,
                                           const Direction& aDirection) const
@@ -216,10 +216,10 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixChannelID &centreCh
   // this struct will be returned as output
   toolInfo anInfo;
   // get information about sensor form passed cluster
-  const DeVeloPixSensor* sensor=m_veloPixDet->sensor(centreChan.sensor());
+  const DeVPSensor* sensor=m_vPDet->sensor(centreChan.sensor());
   if(sensor==0){
     Error("No valid pointer to sensor");
-    anInfo.pixel=LHCb::VeloPixChannelID(0);
+    anInfo.pixel=LHCb::VPChannelID(0);
     anInfo.fractionalPosition=std::make_pair(0.,0.);
     anInfo.fractionalError=std::make_pair(0.,0.);
     return ( anInfo );
@@ -255,7 +255,7 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixChannelID &centreCh
 // distance in mm, angles in degrees.
 // projAngle can be the anlge between TrState and sensor, as well as from 0
 //
-Pair VeloPixClusterPosition::errorEstimate(const Pair projAngle,
+Pair VPClusterPosition::errorEstimate(const Pair projAngle,
                                           const Pair pixelSize) const
 {
   if( msgLevel(MSG::DEBUG) ) debug() << " ==> errorEstimate() " <<endmsg;
@@ -304,7 +304,7 @@ Pair VeloPixClusterPosition::errorEstimate(const Pair projAngle,
 
 //============================================================================
 // Get the angles with sensor (in rad)
-Pair VeloPixClusterPosition::projectedAngle(const DeVeloPixSensor* sensor) const
+Pair VPClusterPosition::projectedAngle(const DeVPSensor* sensor) const
 {
   if( msgLevel(MSG::DEBUG) ) debug()<< " ==> projectedAngle(sensor) " <<endmsg;
   //-- returned pair consists of projected angles over x and y axis
@@ -327,7 +327,7 @@ Pair VeloPixClusterPosition::projectedAngle(const DeVeloPixSensor* sensor) const
   return ( m_projectedAngle );
 }
 
-Pair VeloPixClusterPosition::projectedAngle() const
+Pair VPClusterPosition::projectedAngle() const
 {
   if( msgLevel(MSG::DEBUG) ) debug() << " ==> projectedAngle() " << endmsg;
   //

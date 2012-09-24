@@ -2,7 +2,7 @@
 """Automatically generated. DO NOT EDIT please"""
 from GaudiKernel.Proxy.Configurable import *
 
-class VeloPixClusterPosition( ConfigurableAlgTool ) :
+class VPClusterPosition( ConfigurableAlgTool ) :
   __slots__ = { 
     'MonitorService' : 'MonitorSvc', # str
     'OutputLevel' : 7, # int
@@ -42,11 +42,11 @@ class VeloPixClusterPosition( ConfigurableAlgTool ) :
     'StatEntityList' : """ RegEx list, of StatEntity counters for CounterSummary. """,
   }
   def __init__(self, name = Configurable.DefaultName, **kwargs):
-      super(VeloPixClusterPosition, self).__init__(name)
+      super(VPClusterPosition, self).__init__(name)
       for n,v in kwargs.items():
          setattr(self, n, v)
   def getDlls( self ):
-      return 'VeloPixTools'
+      return 'VPTools'
   def getType( self ):
-      return 'VeloPixClusterPosition'
-  pass # class VeloPixClusterPosition
+      return 'VPClusterPosition'
+  pass # class VPClusterPosition
