@@ -1,4 +1,4 @@
-// $Id: VeloPixMCDepositCreator.cpp,v 1.2 2009-12-07 17:37:56 marcin Exp $
+// $Id: VPMCDepositCreator.cpp,v 1.2 2009-12-07 17:37:56 marcin Exp $
 // Include files:
 // STL
 #include <string>
@@ -13,38 +13,38 @@
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/RndmGenerators.h"
 // LHCbKernel
-#include "Kernel/VeloPixDataFunctor.h"
-#include "Kernel/VeloPixChannelID.h"
+#include "Kernel/VPDataFunctor.h"
+#include "Kernel/VPChannelID.h"
 #include "LHCbMath/LHCbMath.h"
 // MCEvent
 #include "Event/MCHit.h"
 #include "Event/MCParticle.h"
-#include "Event/MCVeloPixDeposit.h"
+#include "Event/MCVPDeposit.h"
 // MCInterfaces
 #include "MCInterfaces/ISiDepositedCharge.h"
-// VeloPixelDet
-#include "VeloPixDet/DeVeloPix.h"
+// VPelDet
+#include "VPDet/DeVP.h"
 // Boost
 #include <boost/foreach.hpp>
 #include "boost/assign/list_of.hpp"  
 // Local
-#include "VeloPixMCDepositCreator.h"
+#include "VPMCDepositCreator.h"
 
 using namespace LHCb;
 
 //------------------------------------------------------------
-// Implementation file for class : VeloPixMCDepositCreator
+// Implementation file for class : VPMCDepositCreator
 //
 // 20/09/2009 : Marcin Kucharczyk
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VeloPixMCDepositCreator);
+DECLARE_ALGORITHM_FACTORY(VPMCDepositCreator);
 
 //=============================================================================
 // Constructor
 //=============================================================================
-VeloPixMCDepositCreator::VeloPixMCDepositCreator(const std::string& name, 
+VPMCDepositCreator::VPMCDepositCreator(const std::string& name, 
                                                  ISvcLocator* pSvcLocator)
 #ifdef DEBUG_HISTO
   : GaudiTupleAlg(name, pSvcLocator),
@@ -52,7 +52,7 @@ VeloPixMCDepositCreator::VeloPixMCDepositCreator(const std::string& name,
   : GaudiAlgorithm(name, pSvcLocator),
 #endif
 
-    m_veloPixelDet(0)
+    m_vPelDet(0)
 {
   declareProperty("InputLocation", m_inputLocation = 
                   "MC/VP/Hits");
@@ -77,12 +77,12 @@ VeloPixMCDepositCreator::VeloPixMCDepositCreator(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixMCDepositCreator::~VeloPixMCDepositCreator(){};
+VPMCDepositCreator::~VPMCDepositCreator(){};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VeloPixMCDepositCreator::initialize() {
+StatusCode VPMCDepositCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
@@ -109,8 +109,8 @@ StatusCode VeloPixMCDepositCreator::initialize() {
   // Deposited charge 
   m_depositedCharge = tool<ISiDepositedCharge>(m_depChTool,"DepCharge",this);
   // Get detector elements
-  m_veloPixelDet = getDet<DeVeloPix>(DeVeloPixLocation::Default);
-  // printf("VeloPixMCDepositCreator::initialize()\n");
+  m_vPelDet = getDet<DeVP>(DeVPLocation::Default);
+  // printf("VPMCDepositCreator::initialize()\n");
   // Random number generators
   StatusCode scG = m_gaussDist.initialize(randSvc(),Rndm::Gauss(0.0,1.0));
   StatusCode scU = m_uniformDist.initialize(randSvc(),Rndm::Flat(0.0,1.0));
@@ -121,7 +121,7 @@ StatusCode VeloPixMCDepositCreator::initialize() {
   m_diffuseSigma = sqrt(2 * m_kT / m_biasVoltage);
 
 #ifdef DEBUG_HISTO
-  setHistoTopDir("VeloPix/");
+  setHistoTopDir("VP/");
 #endif
 
   return StatusCode::SUCCESS;
@@ -130,44 +130,44 @@ StatusCode VeloPixMCDepositCreator::initialize() {
 //=========================================================================
 //  Main execution
 //=========================================================================
-StatusCode VeloPixMCDepositCreator::execute() {
+StatusCode VPMCDepositCreator::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
   // Output containers put into the store  
-  std::vector<LHCb::MCVeloPixDeposits*> depositsVector;
+  std::vector<LHCb::MCVPDeposits*> depositsVector;
   BOOST_FOREACH(std::string path,m_outPaths) {
-    LHCb::MCVeloPixDeposits* depositsContainer = new LHCb::MCVeloPixDeposits();
+    LHCb::MCVPDeposits* depositsContainer = new LHCb::MCVPDeposits();
     depositsContainer->reserve(10000);
     put(depositsContainer,path);
     depositsVector.push_back(depositsContainer);
   }
-  // printf("VeloPixMCDepositCreator::execute() => %d spills\n", m_spillPaths.size());
+  // printf("VPMCDepositCreator::execute() => %d spills\n", m_spillPaths.size());
   // Loop over spills
   for(unsigned int iSpill = 0; iSpill < m_spillPaths.size(); ++iSpill) {
     if(exist<LHCb::MCHits>(m_spillPaths[iSpill]) == false) {
       debug() << "Unable to retrieve " + m_spillPaths[iSpill] << endmsg;
     }
     else {
-      // printf("VeloPixMCDepositCreator::execute() => process spill %d/%d = %s\n", iSpill, m_spillPaths.size(), m_spillPaths[iSpill].c_str() );
+      // printf("VPMCDepositCreator::execute() => process spill %d/%d = %s\n", iSpill, m_spillPaths.size(), m_spillPaths[iSpill].c_str() );
       const LHCb::MCHits* hits = get<LHCb::MCHits>(m_spillPaths[iSpill]);
       createDeposits(hits, depositsVector[iSpill]);
     }
   }
   // Sort by channel
-  BOOST_FOREACH(MCVeloPixDeposits* depositsContainer, depositsVector) {
+  BOOST_FOREACH(MCVPDeposits* depositsContainer, depositsVector) {
     std::stable_sort(depositsContainer->begin(), depositsContainer->end(),
-         VeloPixDataFunctor::Less_by_Channel<const MCVeloPixDeposit*>());
+         VPDataFunctor::Less_by_Channel<const MCVPDeposit*>());
   }
   return StatusCode::SUCCESS;
 }
 
 
 //============================================================================
-// Create MCVeloPixDeposits
+// Create MCVPDeposits
 //============================================================================
-void VeloPixMCDepositCreator::createDeposits(
+void VPMCDepositCreator::createDeposits(
                               const LHCb::MCHits* mcHitContainer, 
-                              LHCb::MCVeloPixDeposits*& depositsCont)
-{ // printf("VeloPixMCDepositCreator::createDeposits()\n");
+                              LHCb::MCVPDeposits*& depositsCont)
+{ // printf("VPMCDepositCreator::createDeposits()\n");
   int Count=0;
   // Loop over MChits
   for(LHCb::MCHits::const_iterator iHit = mcHitContainer->begin();    // loop over MC hits
@@ -176,13 +176,13 @@ void VeloPixMCDepositCreator::createDeposits(
     // printf(" MCHit: sensDetID=%2d path=%6.1f um dep. energy=%5.1f keV p=%7.1f MeV/c time=%5.3f ns\n",
     //               hit->sensDetID(), 1000*hit->pathLength(), 1000*hit->energy(), hit->p(), hit->time() );
 #ifdef DEBUG_HISTO
-    plot(1000*hit->pathLength(), "PathInSensor",  "VeloPixMCDepositCreator: Path in sensor [um]" , 0.0, 300.0, 60);
-    plot(1000*hit->energy(),     "EnergyInSensor","VeloPixMCDepositCreator: Energy deposited in sensor [keV]" , 0.0, 200.0, 40);
+    plot(1000*hit->pathLength(), "PathInSensor",  "VPMCDepositCreator: Path in sensor [um]" , 0.0, 300.0, 60);
+    plot(1000*hit->energy(),     "EnergyInSensor","VPMCDepositCreator: Energy deposited in sensor [keV]" , 0.0, 200.0, 40);
 #endif
     Count+=1;
     // Number of points per pixel to distribute charge on
     int simPoints = simulatedPoints(hit);                              // see into how many parts the path should be divided
-    // printf("VeloPixMCDepositCreator::createDeposits() => simPoints=%d\n", simPoints);
+    // printf("VPMCDepositCreator::createDeposits() => simPoints=%d\n", simPoints);
     if(simPoints > 0) {
       // Calculate charge for each point + delta ray inhomogeneities
       std::vector<double> sPoints(simPoints);                          // store simulated charge here
@@ -191,27 +191,27 @@ void VeloPixMCDepositCreator::createDeposits(
       diffuseCharge(hit,sPoints,depositsCont);                         // diffuse some charge to adjacent pixels
     }
   }
-  // printf("VeloPixMCDepositCreator::createDeposits() => %d hits\n", Count);
+  // printf("VPMCDepositCreator::createDeposits() => %d hits\n", Count);
 }
 
 //============================================================================
 // Calculate how many points are taken for the simulation in the silicon
 //============================================================================
-int VeloPixMCDepositCreator::simulatedPoints(LHCb::MCHit* hit)
+int VPMCDepositCreator::simulatedPoints(LHCb::MCHit* hit)
 {
   if(m_isDebug) debug() << " ==> simulatedPoints() " << endmsg;
   double nrPoints = 0.0;
   double path = hit->pathLength();
   nrPoints = ceil(path / m_siteSize);
   if(nrPoints > m_maxNumSites) nrPoints = double(m_maxNumSites);
-  // printf(" VeloPixMCDepositCreator::simulatedPoints() => path=%5.3f nrPoints=%3.1f\n", path, nrPoints);
+  // printf(" VPMCDepositCreator::simulatedPoints() => path=%5.3f nrPoints=%3.1f\n", path, nrPoints);
   return int(nrPoints);
 }
 
 //============================================================================
 // Allocate charge deposit to each point
 //============================================================================
-void VeloPixMCDepositCreator::chargeToPoint(LHCb::MCHit* hit, 
+void VPMCDepositCreator::chargeToPoint(LHCb::MCHit* hit, 
                                             std::vector<double>& simPoints) 
 {
   if(m_isDebug) debug() << " ==> chargeToPoint() " << endmsg;
@@ -225,7 +225,7 @@ void VeloPixMCDepositCreator::chargeToPoint(LHCb::MCHit* hit,
   // Some charge allocated by delta ray algorithm
   if(m_inhomogenCh) {
     double thickSi = 
-           m_veloPixelDet->sensor(hit->sensDetID())->siliconThickness();
+           m_vPelDet->sensor(hit->sensDetID())->siliconThickness();
     chargeE = m_chargeUniform * thickSi / Gaudi::Units::micrometer;
     if(chargeE > charge) chargeE = charge;
   } else {
@@ -256,7 +256,7 @@ void VeloPixMCDepositCreator::chargeToPoint(LHCb::MCHit* hit,
       }
     }
   }
-  // printf("VeloPixMCDepositCreator::chargeToPoint() =>");
+  // printf("VPMCDepositCreator::chargeToPoint() =>");
   double totalCharge = 0.0;
   for(iP = simPoints.begin(); iP != simPoints.end(); ++iP) {
     totalCharge += (*iP);
@@ -264,7 +264,7 @@ void VeloPixMCDepositCreator::chargeToPoint(LHCb::MCHit* hit,
   }
   // printf(" [%3.1f]\n", totalCharge);                                 // print charge for the whole path in silicon
 #ifdef DEBUG_HISTO
-  plot(totalCharge, "DepositPerHit","VeloPixMCDepositCreator: Charge deposited in sensor [e]" , 0.0, 40000.0, 80);
+  plot(totalCharge, "DepositPerHit","VPMCDepositCreator: Charge deposited in sensor [e]" , 0.0, 40000.0, 80);
 #endif
   if(fabs(totalCharge - charge) > 1.e-6) {
     Warning("Normalization problems");
@@ -275,7 +275,7 @@ void VeloPixMCDepositCreator::chargeToPoint(LHCb::MCHit* hit,
 //=============================================================================
 // Allocate remaining charge from delta ray distribution
 //=============================================================================
-void VeloPixMCDepositCreator::deltaRayCh(double charge, double frCh,
+void VPMCDepositCreator::deltaRayCh(double charge, double frCh,
 			                 std::vector<double>& simPoints) 
 {
   if(m_isDebug) debug() << " ==> deltaRayCh() " << endmsg;
@@ -301,7 +301,7 @@ void VeloPixMCDepositCreator::deltaRayCh(double charge, double frCh,
 //=============================================================================
 // Delta ray tail random numbers
 //=============================================================================
-double VeloPixMCDepositCreator::ranomDRTail(double minDRC, double maxDRC) 
+double VPMCDepositCreator::ranomDRTail(double minDRC, double maxDRC) 
 {
   if(m_isDebug) debug() << " ==> randomDRTail() " << endmsg;
   double range = (1.0 / minDRC) - (1.0 / maxDRC);
@@ -314,9 +314,9 @@ double VeloPixMCDepositCreator::ranomDRTail(double minDRC, double maxDRC)
 //=============================================================================
 // Diffuse charge from points to pixels & create deposits
 //=============================================================================
-void VeloPixMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
+void VPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
                               std::vector<double>& simPoints,          // ionization amounts simulated for this MC hit
-                              LHCb::MCVeloPixDeposits*& depositCont)   // storage for pixel deposits
+                              LHCb::MCVPDeposits*& depositCont)   // storage for pixel deposits
 {
   if(m_isDebug) debug() << " ==> diffuseCharge() " << endmsg;
   // Distance between steps on path
@@ -325,8 +325,8 @@ void VeloPixMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
   Gaudi::XYZPoint pnt = hit->entry() + path;                                                   // first 3-D point where ionization is simulated
   // printf(" => [%+8.3f,%+8.3f,%+9.3f] + %d x [%+6.3f,%+6.3f,%+6.3f]\n",
   //           pnt.x(), pnt.y(), pnt.z(), simPoints.size()-1, path.x(), path.y(), path.z());
-  const DeVeloPixSensor* sensor = m_veloPixelDet->sensor(hit->sensDetID());                    // sensor that was hit
-  // printf(" => DeVeloPixSensor(%02d): %3.1f um, chipLxW: %4.1fx%4.1f mm, %dx%d pix. pixelHxL: %1.0fx%1.0f um\n",
+  const DeVPSensor* sensor = m_vPelDet->sensor(hit->sensDetID());                    // sensor that was hit
+  // printf(" => DeVPSensor(%02d): %3.1f um, chipLxW: %4.1fx%4.1f mm, %dx%d pix. pixelHxL: %1.0fx%1.0f um\n",
   //          hit->sensDetID(), 1000*sensor->siliconThickness(),
   //          sensor->chipLength(), sensor->chipWidth(),
   //          sensor->nPixCol(), sensor->nPixRow(),
@@ -342,34 +342,34 @@ void VeloPixMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
     // printf(" simPoint[%d]:\n", iP-simPoints.begin());
     std::pair<double,double> EntryFraction;
     StatusCode channelValid;
-    LHCb::VeloPixChannelID entryChannel;
+    LHCb::VPChannelID entryChannel;
     channelValid = sensor->pointToChannel(pnt,entryChannel,EntryFraction);                     // which pixel is this ?
     if(!channelValid) {
 #ifdef DEBUG_HISTO
-      plot2D(pnt.x(), pnt.y(), "DeadSensorArea", "VeloPixMCDepositCreator: Dead sensor area [mm]",
+      plot2D(pnt.x(), pnt.y(), "DeadSensorArea", "VPMCDepositCreator: Dead sensor area [mm]",
              -40.0, 40.0, -40.0, 40.0, 160, 160);
 #endif
       // Warning("pointToChannel() failure");
       // printf(" => pointToChannel() failed\n");
       continue; }
 #ifdef DEBUG_HISTO
-      plot2D(pnt.x(), pnt.y(), "ActiveSensorArea", "VeloPixMCDepositCreator: Active sensor area [mm]",
+      plot2D(pnt.x(), pnt.y(), "ActiveSensorArea", "VPMCDepositCreator: Active sensor area [mm]",
              -40.0, 40.0, -40.0, 40.0, 160, 160);
 #endif
     // printf(" => entryChannel @ [%02d:%c, %02d:%03dx%03d]\n",
     //       entryChannel.station(), entryChannel.sidepos()?'R':'L',
     //       entryChannel.chip(), entryChannel.pixel_lp(), entryChannel.pixel_hp() );
     double diffuseSig = m_diffuseSigma * sqrt(thickSi * diffuseZ);
-    std::vector<LHCb::VeloPixChannelID> neighbsVec;
+    std::vector<LHCb::VPChannelID> neighbsVec;
     StatusCode channelsValid;
     channelsValid = sensor->pointTo3x3Channels(pnt,neighbsVec);
     if(!channelsValid) { Warning("pointTo3x3Channels failure");
                          // printf(" => pointTo3x3Channels() failed\n");
                          continue; }
     // printf(" => neighbsVec[%d]\n", neighbsVec.size());
-    for(std::vector<LHCb::VeloPixChannelID>::iterator                  // loop over center and neib. pixel
+    for(std::vector<LHCb::VPChannelID>::iterator                  // loop over center and neib. pixel
         ic = neighbsVec.begin(); ic != neighbsVec.end(); ++ic ) {
-      LHCb::VeloPixChannelID channel = *ic;                            // every channel = pixel
+      LHCb::VPChannelID channel = *ic;                            // every channel = pixel
       Gaudi::XYZPoint midPoint;
       StatusCode pointValid;
       pointValid = sensor->channelToPoint(channel,midPoint);           // mid-point of given pixel
@@ -390,8 +390,8 @@ void VeloPixMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
 		                  safe_gsl_sf_erf_Q(xdR / diffuseSig)) *
                      (safe_gsl_sf_erf_Q(ydL / diffuseSig) +
 		                  safe_gsl_sf_erf_Q(ydR / diffuseSig)) * (*iP);
-        MCVeloPixDeposit* newDeposit = 
-                          new MCVeloPixDeposit(chDepCentr,channel,hit);
+        MCVPDeposit* newDeposit = 
+                          new MCVPDeposit(chDepCentr,channel,hit);
         depositCont->insert(newDeposit);
         // printf("%9.3fe @ [%02d:%c, %02d:%03dx%03d]\n", chDepCentr,
         //        channel.station(), channel.sidepos()?'R':'L',
@@ -406,11 +406,11 @@ void VeloPixMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
 	                    safe_gsl_sf_erf_Q(xdMax / diffuseSig)) *
                      (safe_gsl_sf_erf_Q(ydMin / diffuseSig) -
 		                  safe_gsl_sf_erf_Q(ydMax / diffuseSig)) * (*iP);
-        // plot(chDepNeigh, "DepositPerPixel","VeloPixMCDepositCreator: Charge deposited in pixel [e]" , 1.0, 25001.0, 50);
+        // plot(chDepNeigh, "DepositPerPixel","VPMCDepositCreator: Charge deposited in pixel [e]" , 1.0, 25001.0, 50);
         const double minDeposit = 0.001;                  // [e] avoid storing smaller deposits
         if(chDepNeigh>=minDeposit)                        // added by Pawel Jalocha: to avoid very many deposits of very tiny charge.
-        { MCVeloPixDeposit* newDeposit =     
-                          new MCVeloPixDeposit(chDepNeigh,channel,hit);
+        { MCVPDeposit* newDeposit =     
+                          new MCVPDeposit(chDepNeigh,channel,hit);
           depositCont->insert(newDeposit);
           // printf("%9.3fe @ [%02d:%c, %02d:%03dx%03d]\n", chDepNeigh,
           //      channel.station(), channel.sidepos()?'R':'L',
@@ -428,7 +428,7 @@ void VeloPixMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
 
 
 //============================================================================
-StatusCode VeloPixMCDepositCreator::finalize() {
+StatusCode VPMCDepositCreator::finalize() {
 
   return GaudiAlgorithm::finalize();
 

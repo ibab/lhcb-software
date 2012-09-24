@@ -5,30 +5,30 @@
 #include "GaudiKernel/AlgFactory.h"
  
 // local
-#include "VeloPixDigitsCreator.h"
+#include "VPDigitsCreator.h"
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VeloPixDigitsCreator
+// Implementation file for class : VPDigitsCreator
 //
 // 2010-07-07 : Thomas Britton
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloPixDigitsCreator );
+DECLARE_ALGORITHM_FACTORY( VPDigitsCreator );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloPixDigitsCreator::VeloPixDigitsCreator( const std::string& name,
+VPDigitsCreator::VPDigitsCreator( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty("SpillVector", m_spillNames = boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
   declareProperty("InputLocation", m_inputLocation =  "VP/PreDigits");
-  declareProperty("OutputLocation", m_outputLocation ="/Event/"+LHCb::VeloPixDigitLocation::VeloPixDigitLocation );
+  declareProperty("OutputLocation", m_outputLocation ="/Event/"+LHCb::VPDigitLocation::VPDigitLocation );
 
   // discrimination threshold in electrons
   declareProperty("ChargeThreshold", m_Qthresh = 1000.0);  // Si thickness = 150um
@@ -60,11 +60,11 @@ VeloPixDigitsCreator::VeloPixDigitsCreator( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixDigitsCreator::~VeloPixDigitsCreator() {}
+VPDigitsCreator::~VPDigitsCreator() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode VeloPixDigitsCreator::initialize() {
+StatusCode VPDigitsCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -93,7 +93,7 @@ StatusCode VeloPixDigitsCreator::initialize() {
 
   m_numberOfFutureBunchX = int( m_maxTimeWalkAllowed/m_bunchCrossingSpacing );
 
-  m_buffer = new VeloPixDigits();
+  m_buffer = new VPDigits();
 
   // parameters of charge non-linearlity
   m_b1=-10869.0;
@@ -117,10 +117,10 @@ StatusCode VeloPixDigitsCreator::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode VeloPixDigitsCreator::execute() {
+StatusCode VPDigitsCreator::execute() {
   
   debug() << "==> Execute" << endmsg;
-  // printf("VeloPixDigitsCreator::execute() =>\n");
+  // printf("VPDigitsCreator::execute() =>\n");
 
   // ================================
   // add Previous (or Next) bunch crossing hits (min.bias) to the buffer with prev. bunch crossing info
@@ -131,18 +131,18 @@ StatusCode VeloPixDigitsCreator::execute() {
     
 
     for( unsigned int i=1; i<m_spillPaths.size(); ++i){
-      VeloPixDigits* container = get<VeloPixDigits>(m_spillPaths[i]);
+      VPDigits* container = get<VPDigits>(m_spillPaths[i]);
 
       // increment global bunch crossing number for previous bunch crossing hits
       m_bunchCrossingNumber++;
      
-      VeloPixDigits::const_iterator j=container->begin();      
+      VPDigits::const_iterator j=container->begin();      
       while(j != container->end()) {
 
-        VeloPixDigit & thisHit = **j;
+        VPDigit & thisHit = **j;
 
         // do we have hits for this pixels already in our buffer ?
-        VeloPixDigit* check= m_buffer->object(thisHit.key());
+        VPDigit* check= m_buffer->object(thisHit.key());
         if( check ) {
           // add to the previous hit and rest its clock
           double timeEff = m_peakTime + convertToTime( m_bunchCrossingNumber - check->timeStamp() );
@@ -150,7 +150,7 @@ StatusCode VeloPixDigitsCreator::execute() {
           check->setToTValue(int( oldChargeNow + thisHit.ToTValue() + 0.5 ));
           check->setTimeStamp(m_bunchCrossingNumber);
         } else {
-          VeloPixDigit* toBeAdded = thisHit.clone();
+          VPDigit* toBeAdded = thisHit.clone();
           toBeAdded->setTimeStamp(m_bunchCrossingNumber);
           m_buffer->insert(toBeAdded, thisHit.channelID());
         }
@@ -172,14 +172,14 @@ StatusCode VeloPixDigitsCreator::execute() {
   //   don't simulate if decay time is essentially zero 
   if( m_decayTime > 0.5 ){
 
-    VeloPixDigits* tempBuffer= new VeloPixDigits();
-    VeloPixDigits::const_iterator j=m_buffer->begin();
+    VPDigits* tempBuffer= new VPDigits();
+    VPDigits::const_iterator j=m_buffer->begin();
     while(j != m_buffer->end()) {
-      VeloPixDigit & thisHit = **j;
+      VPDigit & thisHit = **j;
       double timeEff = m_peakTime + convertToTime( bunchCrossingNumberNow - thisHit.timeStamp() );
       //  keep pulses which did not decayed completely
       if(  pulseShape( timeEff  ) > 0.0  ){
-        VeloPixDigit* toBeAdded = thisHit.clone();
+        VPDigit* toBeAdded = thisHit.clone();
         tempBuffer->insert(toBeAdded,thisHit.channelID());
       }
       j++;
@@ -196,14 +196,14 @@ StatusCode VeloPixDigitsCreator::execute() {
   // ================================
 
   // output container
-  LHCb::VeloPixDigits* digitizedCont= new LHCb::VeloPixDigits();
+  LHCb::VPDigits* digitizedCont= new LHCb::VPDigits();
  
   // current bunch crossing container
-  VeloPixDigits* container = get<VeloPixDigits>(m_spillPaths[0]);
+  VPDigits* container = get<VPDigits>(m_spillPaths[0]);
 
-  for( VeloPixDigits::const_iterator j=container->begin();j!= container->end(); ++j) {
+  for( VPDigits::const_iterator j=container->begin();j!= container->end(); ++j) {
 
-    VeloPixDigit & thisHit = **j;    
+    VPDigit & thisHit = **j;    
 
     double thisCharge = thisHit.ToTValue();
     if( m_ElectronicNoise > 0.1 ){
@@ -219,9 +219,9 @@ StatusCode VeloPixDigitsCreator::execute() {
     
     // see if there was a hit in the same pixel in the previous bunch crossings
     if( m_decayTime > 0.5 ){    
-      VeloPixDigit* check= m_buffer->object(thisHit.key());
+      VPDigit* check= m_buffer->object(thisHit.key());
       if( check ){
-        VeloPixDigit & oldHit = *check;
+        VPDigit & oldHit = *check;
         // time elapsed since the old bunch crossing
         double timeElapsed = convertToTime( bunchCrossingNumberNow - oldHit.timeStamp() );
         if( timeElapsed <=0.0 )timeElapsed -= m_numberOfFutureBunchX ? m_bunchCrossingSpacing : 0;        
@@ -275,13 +275,13 @@ StatusCode VeloPixDigitsCreator::execute() {
     // electrons -> ToT  convertion
     int tot = convertToTDC(nonLinearModel(thisCharge));
 
-    const VeloPixChannelID aChan = thisHit.channelID();
+    const VPChannelID aChan = thisHit.channelID();
     // printf(" %9.1f e => %2d [%02d:%c, %02d:%03dx%03d]\n", thisCharge, tot,
     //        aChan.station(), aChan.sidepos()?'R':'L',
     //        aChan.chip(), aChan.pixel_lp(), aChan.pixel_hp() );
 
-    LHCb::VeloPixDigit* newDigit =
-      new LHCb::VeloPixDigit(tot,int(timeWalk)); 
+    LHCb::VPDigit* newDigit =
+      new LHCb::VPDigit(tot,int(timeWalk)); 
     digitizedCont->insert(newDigit,thisHit.channelID());
 
   }
@@ -290,12 +290,12 @@ StatusCode VeloPixDigitsCreator::execute() {
   // add old/future hits that walked into present bunch crossing
   // ==========================
   if( ( m_maxTimeWalkAllowed > 0.1 ) && ( m_decayTime > 0.5 ) ){
-    for( VeloPixDigits::const_iterator j=m_buffer->begin();j!= m_buffer->end(); ++j) {
+    for( VPDigits::const_iterator j=m_buffer->begin();j!= m_buffer->end(); ++j) {
 
-      VeloPixDigit & thisHit = **j;    
+      VPDigit & thisHit = **j;    
 
       // skip if this pixel was present in current bunch crossing (already processed)
-      VeloPixDigit* check= container->object(thisHit.key());
+      VPDigit* check= container->object(thisHit.key());
       if( check ) continue;
 
       // above the threshold ?
@@ -319,13 +319,13 @@ StatusCode VeloPixDigitsCreator::execute() {
       // electrons -> ToT  convertion
       int tot = convertToTDC(nonLinearModel(thisCharge));
 
-      const VeloPixChannelID aChan = thisHit.channelID();
+      const VPChannelID aChan = thisHit.channelID();
       // printf(" %9.1f e => %2d [%02d:%c%c, %02d:%03dx%03d]\n", thisCharge, tot,
       //       aChan.station(), aChan.zpos()?'B':'F', aChan.sidepos()?'R':'L',
       //       aChan.chip(), aChan.pixel_lp(), aChan.pixel_hp() ); 
 
-      LHCb::VeloPixDigit* newDigit =
-        new LHCb::VeloPixDigit(tot,int(timeWalk)); 
+      LHCb::VPDigit* newDigit =
+        new LHCb::VPDigit(tot,int(timeWalk)); 
       digitizedCont->insert(newDigit,thisHit.channelID());
     }
   }
@@ -337,7 +337,7 @@ StatusCode VeloPixDigitsCreator::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode VeloPixDigitsCreator::finalize() {
+StatusCode VPDigitsCreator::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
@@ -348,7 +348,7 @@ StatusCode VeloPixDigitsCreator::finalize() {
 }
 
 // pulse shape with max normalized to 1.0
-double VeloPixDigitsCreator::pulseShape(double time) {
+double VPDigitsCreator::pulseShape(double time) {
   if( time < 0.0 )return 0.0;
   if( time <= m_peakTime )return (time/m_peakTime);
   if( time < ( m_peakTime+m_decayTime ) )return (1.0 - (time-m_peakTime)/m_decayTime);
@@ -356,12 +356,12 @@ double VeloPixDigitsCreator::pulseShape(double time) {
 }
 
 // from bunch crossing number difference to time
-double VeloPixDigitsCreator::convertToTime(int bunchCrossingNumberDifference) {
+double VPDigitsCreator::convertToTime(int bunchCrossingNumberDifference) {
   return (m_bunchCrossingSpacing*bunchCrossingNumberDifference);  
 }
 
 // linear conversion from charge in electrons to ToT counts
-int VeloPixDigitsCreator::convertToTDC(double charge) {
+int VPDigitsCreator::convertToTDC(double charge) {
   int tot = int(ceil(charge * m_conversion));
   if( tot > m_maxToT ) tot = m_maxToT;
   if( tot <  1 )tot = 1;  
@@ -369,7 +369,7 @@ int VeloPixDigitsCreator::convertToTDC(double charge) {
 }
 
 // non-linearity in charge digitazation
-double VeloPixDigitsCreator::nonLinearModel(double charge){
+double VPDigitsCreator::nonLinearModel(double charge){
   double q = charge*m_scale;  
   return (q + m_b1 - m_c1/(q-m_t))/m_scale;  
 }

@@ -1,6 +1,6 @@
-#// $Id: VeloPixDigitCreator.h,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
-#ifndef VELOPIXDIGITCREATOR_H
-#define VELOPIXDIGITCREATOR_H 1
+#// $Id: VPDigitCreator.h,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
+#ifndef VPDIGITCREATOR_H
+#define VPDIGITCREATOR_H 1
 // Include files
 // from STL
 #include <string>
@@ -16,23 +16,23 @@
 // Event
 #include "LHCbMath/LHCbMath.h"
 
-/** @class VeloPixDigitCreator.h 
- *  VeloPixAlgorithms/VeloPixDigitCreator.h
+/** @class VPDigitCreator.h 
+ *  VPAlgorithms/VPDigitCreator.h
  *
  *  @author Marcin Kucharczyk
  *  @date   2009/10/20
  */
 
 #ifdef DEBUG_HISTO
-class VeloPixDigitCreator : public GaudiTupleAlg {
+class VPDigitCreator : public GaudiTupleAlg {
 #else
-class VeloPixDigitCreator : public GaudiAlgorithm {
+class VPDigitCreator : public GaudiAlgorithm {
 #endif
 
 public:
   /// Standard constructor
-  VeloPixDigitCreator(const std::string& name,ISvcLocator* pSvcLocator);
-  virtual ~VeloPixDigitCreator();     ///< Destructor
+  VPDigitCreator(const std::string& name,ISvcLocator* pSvcLocator);
+  virtual ~VPDigitCreator();     ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalise
@@ -41,8 +41,8 @@ protected:
 
 private:
 
-  void createDigits(const LHCb::MCVeloPixDigits* digitsMC, 
-                    LHCb::VeloPixDigits* digitsCont);
+  void createDigits(const LHCb::MCVPDigits* digitsMC, 
+                    LHCb::VPDigits* digitsCont);
   int convertToTDC(double charge);
   std::string m_inputLocation;
   std::string m_outputLocation;
@@ -53,4 +53,4 @@ private:
   bool m_isDebug; 
   bool m_isVerbose;
 };
-#endif // VeloPixDigitCreator_H
+#endif // VPDigitCreator_H

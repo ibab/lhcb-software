@@ -1,4 +1,4 @@
-// $Id: VeloPixMCDigitCreator.cpp,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
+// $Id: VPMCDigitCreator.cpp,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
 // Include files:
 // STL
 #include <string>
@@ -6,28 +6,28 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Event
-#include "Event/MCVeloPixDeposit.h"
-#include "Event/MCVeloPixDigit.h"
+#include "Event/MCVPDeposit.h"
+#include "Event/MCVPDigit.h"
 // Boost
 #include "boost/assign/list_of.hpp"
 // Local
-#include "VeloPixMCDigitCreator.h"
+#include "VPMCDigitCreator.h"
 
 using namespace LHCb;
 
 //------------------------------------------------------------
-// Implementation file for class : VeloPixMCDigitCreator
+// Implementation file for class : VPMCDigitCreator
 //
 // 20/09/2009 : Marcin Kucharczyk
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VeloPixMCDigitCreator);
+DECLARE_ALGORITHM_FACTORY(VPMCDigitCreator);
 
 //=============================================================================
 // Constructor
 //=============================================================================
-VeloPixMCDigitCreator::VeloPixMCDigitCreator(const std::string& name, 
+VPMCDigitCreator::VPMCDigitCreator(const std::string& name, 
                                              ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
 {
@@ -44,12 +44,12 @@ VeloPixMCDigitCreator::VeloPixMCDigitCreator(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixMCDigitCreator::~VeloPixMCDigitCreator(){};
+VPMCDigitCreator::~VPMCDigitCreator(){};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VeloPixMCDigitCreator::initialize() {
+StatusCode VPMCDigitCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
@@ -61,7 +61,7 @@ StatusCode VeloPixMCDigitCreator::initialize() {
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode VeloPixMCDigitCreator::execute() {
+StatusCode VPMCDigitCreator::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
   // Clear path vectors
   m_spillPaths.clear();
@@ -78,16 +78,16 @@ StatusCode VeloPixMCDigitCreator::execute() {
   }
   // Loop over spills
   for(unsigned int iSpill = 0; iSpill < m_spillPaths.size(); ++iSpill) {
-    if(exist<MCVeloPixDeposits>(m_spillPaths[iSpill]) == false) {
+    if(exist<MCVPDeposits>(m_spillPaths[iSpill]) == false) {
       debug() << "Unable to retrieve " + m_spillPaths[iSpill] << endmsg;
     }
     else {
-      MCVeloPixDeposits* deposits = 
-                         get<MCVeloPixDeposits>(m_spillPaths[iSpill]);
-      // Create MCVeloPixDigits
-      LHCb::MCVeloPixDigits* digitsCont = new LHCb::MCVeloPixDigits();
+      MCVPDeposits* deposits = 
+                         get<MCVPDeposits>(m_spillPaths[iSpill]);
+      // Create MCVPDigits
+      LHCb::MCVPDigits* digitsCont = new LHCb::MCVPDigits();
       createMCDigits(deposits,digitsCont);
-      // Register MCVeloPixDigits in the transient data store
+      // Register MCVPDigits in the transient data store
       put(digitsCont,m_outPaths[iSpill]);
     }
   }
@@ -97,27 +97,27 @@ StatusCode VeloPixMCDigitCreator::execute() {
 
 
 //============================================================================
-// Create MCVeloPixDigits
+// Create MCVPDigits
 //============================================================================
-void VeloPixMCDigitCreator::createMCDigits(
-                            const MCVeloPixDeposits* depositCont,  // list of deposits is sorted accord. to channel id
-                            LHCb::MCVeloPixDigits* digitsCont)     // otherwise the collection method would not work
+void VPMCDigitCreator::createMCDigits(
+                            const MCVPDeposits* depositCont,  // list of deposits is sorted accord. to channel id
+                            LHCb::MCVPDigits* digitsCont)     // otherwise the collection method would not work
 {
-  // printf("VeloPixMCDigitCreator::createMCDigits(): %d deposits\n", depositCont->size());
+  // printf("VPMCDigitCreator::createMCDigits(): %d deposits\n", depositCont->size());
   // Collect all deposits that belong to the same pixel
-  MCVeloPixDeposits::const_iterator iterDep = depositCont->begin();
-  MCVeloPixDeposits::const_iterator jterDep = iterDep;
+  MCVPDeposits::const_iterator iterDep = depositCont->begin();
+  MCVPDeposits::const_iterator jterDep = iterDep;
   while(iterDep != depositCont->end()) {                   // loop over ionization charge deposits
     int Count=0;
-    SmartRefVector<MCVeloPixDeposit> depositVector;        // temporary storage
+    SmartRefVector<MCVPDeposit> depositVector;        // temporary storage
     do {
       depositVector.push_back(*jterDep);                   // keep adding to the temporary storage
       ++jterDep; Count++;
     } while ((jterDep != depositCont->end()) &&            // as long
              (keepAdding(*iterDep,*jterDep) == true));     // as same channel ID (= same pixel)
-    MCVeloPixDigit* newDigit = new MCVeloPixDigit();
+    MCVPDigit* newDigit = new MCVPDigit();
     newDigit->setMcDeposit(depositVector);
-    const VeloPixChannelID aChan = (*iterDep)->channelID(); // channel id for this group
+    const VPChannelID aChan = (*iterDep)->channelID(); // channel id for this group
 
     // printf(" [%02d:%c, %02d:%03dx%03d]",                    // print channel ID
     //        aChan.station(), aChan.sidepos()?'R':'L',
@@ -133,14 +133,14 @@ void VeloPixMCDigitCreator::createMCDigits(
 //============================================================================
 // Keep adding charge assigned to the same channelID 
 //============================================================================ 
-bool VeloPixMCDigitCreator::keepAdding(const MCVeloPixDeposit* firstDep,
-                                       const MCVeloPixDeposit* secondDep) const
+bool VPMCDigitCreator::keepAdding(const MCVPDeposit* firstDep,
+                                       const MCVPDeposit* secondDep) const
 {
   return (firstDep->channelID() == secondDep->channelID()); // return true if same channel ID (same pixel)
 }
 
 //============================================================================
-StatusCode VeloPixMCDigitCreator::finalize() {
+StatusCode VPMCDigitCreator::finalize() {
 
   return GaudiAlgorithm::finalize();
 

@@ -1,4 +1,4 @@
-// $Id: VeloPixClusterCreator.cpp,v 1.3 2010-01-06 14:08:46 marcin Exp $
+// $Id: VPClusterCreator.cpp,v 1.3 2010-01-06 14:08:46 marcin Exp $
 // Include files:
 // STL
 #include <string>
@@ -9,41 +9,41 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 // LHCbKernel
-#include "Kernel/VeloPixChannelID.h"
-#include "Kernel/VeloPixDataFunctor.h"
+#include "Kernel/VPChannelID.h"
+#include "Kernel/VPDataFunctor.h"
 #include "LHCbMath/LHCbMath.h"
 #include "Kernel/FastClusterContainer.h"
-// VeloPixelDet
-#include "VeloPixDet/DeVeloPix.h"
+// VPelDet
+#include "VPDet/DeVP.h"
 // Event
-#include "Event/VeloPixDigit.h"
-#include "Event/VeloPixCluster.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "Event/VPDigit.h"
+#include "Event/VPCluster.h"
+#include "Event/VPLiteCluster.h"
 // Boost
 #include "boost/numeric/conversion/bounds.hpp"
 // Local
-#include "VeloPixClusterCreator.h"
+#include "VPClusterCreator.h"
 
 using namespace LHCb;
 
 //------------------------------------------------------------
-// Implementation file for class : VeloPixClusterCreator
+// Implementation file for class : VPClusterCreator
 //
 // 12/11/2009 : Marcin Kucharczyk
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VeloPixClusterCreator);
+DECLARE_ALGORITHM_FACTORY(VPClusterCreator);
 
-bool sortByChannel(LHCb::VeloPixChannelID first,
-                   LHCb::VeloPixChannelID second) {
+bool sortByChannel(LHCb::VPChannelID first,
+                   LHCb::VPChannelID second) {
      return first < second;
 }
 
 //=============================================================================
 // Constructor
 //=============================================================================
-VeloPixClusterCreator::VeloPixClusterCreator(const std::string& name, 
+VPClusterCreator::VPClusterCreator(const std::string& name, 
                                              ISvcLocator* pSvcLocator)
 #ifdef DEBUG_HISTO
   : GaudiTupleAlg(name, pSvcLocator)
@@ -53,9 +53,9 @@ VeloPixClusterCreator::VeloPixClusterCreator(const std::string& name,
 
 {
   declareProperty("InputLocation", m_inputLocation = 
-                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation);
+                  LHCb::VPDigitLocation::VPDigitLocation);
   declareProperty("OutputLocation", m_outputLocation = 
-                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation);
+                  LHCb::VPClusterLocation::VPClusterLocation);
   declareProperty("OutputLocationLite", m_outputLocationLite = 
                   "VP/LiteClusters");
   // ToT sum in cluster divided by this number before saving in Lite cluster
@@ -70,21 +70,21 @@ VeloPixClusterCreator::VeloPixClusterCreator(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixClusterCreator::~VeloPixClusterCreator(){};
+VPClusterCreator::~VPClusterCreator(){};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VeloPixClusterCreator::initialize() {
+StatusCode VPClusterCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_maxValue = double(2 << (m_nBits-1) ) - 1;
   m_isDebug = msgLevel(MSG::DEBUG);
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
-  m_veloPixelDet = getDet<DeVeloPix>(DeVeloPixLocation::Default);
+  m_vPelDet = getDet<DeVP>(DeVPLocation::Default);
 #ifdef DEBUG_HISTO
-  setHistoTopDir("VeloPix/");
+  setHistoTopDir("VP/");
 #endif
   return StatusCode::SUCCESS;
 };
@@ -92,14 +92,14 @@ StatusCode VeloPixClusterCreator::initialize() {
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode VeloPixClusterCreator::execute() {
+StatusCode VPClusterCreator::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
-  // Get VeloPixDigits
-  VeloPixDigits* digitCont = get<VeloPixDigits>(m_inputLocation);
+  // Get VPDigits
+  VPDigits* digitCont = get<VPDigits>(m_inputLocation);
   // Clusterization
-  VeloPixClusters* clusterCont = new VeloPixClusters();
-  VeloPixLiteCluster::VeloPixLiteClusters* clusterLiteCont =
-                      new VeloPixLiteCluster::VeloPixLiteClusters();
+  VPClusters* clusterCont = new VPClusters();
+  VPLiteCluster::VPLiteClusters* clusterLiteCont =
+                      new VPLiteCluster::VPLiteClusters();
   put(clusterCont,m_outputLocation);
   put(clusterLiteCont,m_outputLocationLite);
   StatusCode sc = createClusters(digitCont,clusterCont,clusterLiteCont);
@@ -112,18 +112,18 @@ StatusCode VeloPixClusterCreator::execute() {
 
 
 //============================================================================
-// Create VeloPixClusters
+// Create VPClusters
 //============================================================================
-StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
-           VeloPixClusters* clusterCont,
-           VeloPixLiteCluster::VeloPixLiteClusters* clusterLiteCont)
-{ // printf("VeloPixClusterCreator::createClusters() =>\n");
-  // Sort VeloPixDigits by totValue
+StatusCode VPClusterCreator::createClusters(VPDigits* digitCont,
+           VPClusters* clusterCont,
+           VPLiteCluster::VPLiteClusters* clusterLiteCont)
+{ // printf("VPClusterCreator::createClusters() =>\n");
+  // Sort VPDigits by totValue
   std::stable_sort(digitCont->begin(),digitCont->end(),                               // sort all digits: strongest signal first
-              VeloPixDataFunctor::Greater_by_totValue<const VeloPixDigit*>());
+              VPDataFunctor::Greater_by_totValue<const VPDigit*>());
   // Prepare temporary digits
   std::vector<PixDigit> pixDigits;                                                    // copy only essential data into a temporary vector
-  for(VeloPixDigits::const_iterator ipd = digitCont->begin();
+  for(VPDigits::const_iterator ipd = digitCont->begin();
       ipd != digitCont->end(); ipd++) {
     PixDigit tmpDigit;
     tmpDigit.key = (*ipd)->channelID();                                                // pixel number
@@ -131,15 +131,15 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
     tmpDigit.isUsed = 0;                                                               // mark all as not used by a cluster
     pixDigits.push_back(tmpDigit);
   }
-  LHCb::VeloPixChannelID baryCenterChID_prev = -1; // for quick clustering bug fix
+  LHCb::VPChannelID baryCenterChID_prev = -1; // for quick clustering bug fix
   // Find clusters
   for(std::vector<PixDigit>::iterator id = pixDigits.begin();                          // search for clusters, start with strongest signals
       id != pixDigits.end(); id++) {
     PixDigit & dgt = *id;
     if(dgt.isUsed == 0) {                                                              // only consider if not already used for a cluster
       // Get 8 neighbour pixels
-      const DeVeloPixSensor* sensor = m_veloPixelDet->sensor(dgt.key);
-      std::vector<LHCb::VeloPixChannelID> neighbsVec; neighbsVec.clear();
+      const DeVPSensor* sensor = m_vPelDet->sensor(dgt.key);
+      std::vector<LHCb::VPChannelID> neighbsVec; neighbsVec.clear();
       StatusCode channelsValid;
       channelsValid = sensor->channelToNeighbours(dgt.key,neighbsVec);                 // list of adjacent channels 
       if(channelsValid) {
@@ -150,21 +150,21 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
         // Find active pixels
         std::vector<PixDigit> activePixels; activePixels.clear();
         int totSum = 0;
-	      std::vector< std::pair<LHCb::VeloPixChannelID,int> > totVec;
+	      std::vector< std::pair<LHCb::VPChannelID,int> > totVec;
         totVec.clear();
         bool isMax=true;
         for(std::vector<PixDigit>::iterator idi = pixDigits.begin();
             idi != pixDigits.end(); idi++) {
           PixDigit & digit = *idi;
-          for(std::vector<LHCb::VeloPixChannelID>::iterator 
+          for(std::vector<LHCb::VPChannelID>::iterator 
               inc = neighbsVec.begin(); inc != neighbsVec.end(); ++inc) {
-            LHCb::VeloPixChannelID nChannel = *inc;
+            LHCb::VPChannelID nChannel = *inc;
             if( digit.key == nChannel ){
               if( digit.tot > dgt.tot ) isMax=false;
               if( digit.isUsed == 0 ){
                 activePixels.push_back(digit);
                 totSum += digit.tot;
-                std::pair<LHCb::VeloPixChannelID,int> totPair;
+                std::pair<LHCb::VPChannelID,int> totPair;
                 totPair.first = digit.key;
                 totPair.second = digit.tot;
                 totVec.push_back(totPair);
@@ -176,8 +176,8 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
         // Check if central pixel contains max ToT
         //        bool isMax = maxCentral(dgt,activePixels);
         if( m_saveAllClusters || isMax) {
-          // Make VeloPixLiteCluster & VeloPixCluster
-          LHCb::VeloPixChannelID baryCenterChID;
+          // Make VPLiteCluster & VPCluster
+          LHCb::VPChannelID baryCenterChID;
           std::pair<double,double> xyFraction;
 	        bool isLong;
           // Determine barycenter
@@ -186,20 +186,20 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
           std::pair<unsigned int,unsigned int> xyFrac = scaleFrac(xyFraction);
 	        unsigned int scaledToT = scaleToT(totSum);
           // Fill new lite cluster
-          const VeloPixLiteCluster newLiteCluster(baryCenterChID,
+          const VPLiteCluster newLiteCluster(baryCenterChID,
                                                   scaledToT,
                                                   xyFrac,
                                                   isLong);
 #ifdef DEBUG_HISTO
           plot2D( xyFraction.first, xyFraction.second,
-                  "ClusterLinBaryCenter", "VeloPixClusterCreator: lin. fraction of cluster barycenter",
+                  "ClusterLinBaryCenter", "VPClusterCreator: lin. fraction of cluster barycenter",
                   0.0, 1.0, 0.0, 1.0, 15, 15);
           plot2D( xyFrac.first, xyFrac.second,
-                  "ClusterDigBaryCenter", "VeloPixClusterCreator: 3-bit fraction of cluster barycenter",
+                  "ClusterDigBaryCenter", "VPClusterCreator: 3-bit fraction of cluster barycenter",
                   -0.5, 7.5, -0.5, 7.5, 8, 8);
-          plot( totSum, "ChargePerCluster", "VeloPixClusterCreator: (dig.) Charge per cluster [ADC]",
+          plot( totSum, "ChargePerCluster", "VPClusterCreator: (dig.) Charge per cluster [ADC]",
                 0.5, 50.5, 50);
-          plot( totVec.size(), "PixelsPerCluster", "VeloPixClusterCreator: Number of pixels in a cluster",
+          plot( totVec.size(), "PixelsPerCluster", "VPClusterCreator: Number of pixels in a cluster",
                 0.5, 9.5, 9);
 #endif
           // printf(" totSum=%2d => scaledToT=%2d, xyFraction=[%4.2f,%4.2f] => xyFrac=[%d,%d]",
@@ -216,8 +216,8 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
           //   baryCenterChID.chip(), baryCenterChID.pixel_lp(), baryCenterChID.pixel_hp() );
  
           // Fill new cluster
-          VeloPixCluster* newCluster = 
-                          new VeloPixCluster(newLiteCluster,totVec);
+          VPCluster* newCluster = 
+                          new VPCluster(newLiteCluster,totVec);
           // here comes a failure sometimes, because the ChannelID already exists in the KeyedContainer - need to be fixed.
           if(baryCenterChID!=baryCenterChID_prev)
           { clusterCont->insert(newCluster, baryCenterChID);
@@ -230,7 +230,7 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
     }
   }
 #ifdef DEBUG_HISTO
-  plot(clusterCont->size(), "ClustersPerEvent", "VeloPixClusterCreator: Clusters/event", 0.5, 4000.5, 40);
+  plot(clusterCont->size(), "ClustersPerEvent", "VPClusterCreator: Clusters/event", 0.5, 4000.5, 40);
 #endif
   return StatusCode::SUCCESS;
 }
@@ -239,8 +239,8 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
 //============================================================================
 // Calculate barycenter of the cluster
 //============================================================================
-void VeloPixClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
-                                       LHCb::VeloPixChannelID& baryCenterChID,
+void VPClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
+                                       LHCb::VPChannelID& baryCenterChID,
                                        std::pair<double,double>& xyFraction,
                                        bool& isLong)
 {
@@ -251,8 +251,8 @@ void VeloPixClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
   for(std::vector<PixDigit>::iterator ipc = activePixels.begin();
       ipc != activePixels.end(); ipc++) {
     PixDigit dgt = *ipc;
-    const DeVeloPixSensor* sensor = 
-                           m_veloPixelDet->sensor(dgt.key);
+    const DeVPSensor* sensor = 
+                           m_vPelDet->sensor(dgt.key);
     Gaudi::XYZPoint midPoint(0.0,0.0,0.0);
     StatusCode pointValid;
     pointValid = sensor->channelToPoint(dgt.key,midPoint);
@@ -271,7 +271,7 @@ void VeloPixClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
   double avZ = sumZW / sumWeight;
   Gaudi::XYZPoint baryCenter(avX,avY,avZ);
   StatusCode EntryValid;
-  const DeVeloPixSensor* sensor = m_veloPixelDet->sensor(activePixels[0].key);
+  const DeVPSensor* sensor = m_vPelDet->sensor(activePixels[0].key);
   EntryValid = sensor->pointToChannel(baryCenter,baryCenterChID,xyFraction);
   if(!EntryValid) Warning("pointToChannel failure");
   isLong = sensor->isLong(baryCenterChID);
@@ -282,7 +282,7 @@ void VeloPixClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
 // Scale 3 bit xyFraction
 //============================================================================
 std::pair<unsigned int, unsigned int> 
-     VeloPixClusterCreator::scaleFrac(std::pair<double,double> xyFraction)
+     VPClusterCreator::scaleFrac(std::pair<double,double> xyFraction)
 {
   std::pair<unsigned int, unsigned int> xyFrac;
   xyFrac.first = int(ceil(xyFraction.first * m_maxValue));
@@ -296,7 +296,7 @@ std::pair<unsigned int, unsigned int>
 //============================================================================
 // Scale 3 bit total ToT
 //============================================================================
-unsigned int VeloPixClusterCreator::scaleToT(int totSum)
+unsigned int VPClusterCreator::scaleToT(int totSum)
 {
   unsigned int scaledToT = int(ceil(totSum / m_scaleFactor));
   if(scaledToT > m_maxValue) scaledToT = int(m_maxValue);
@@ -306,7 +306,7 @@ unsigned int VeloPixClusterCreator::scaleToT(int totSum)
 
 
 //============================================================================
-StatusCode VeloPixClusterCreator::finalize() {
+StatusCode VPClusterCreator::finalize() {
 
   return GaudiAlgorithm::finalize();
 

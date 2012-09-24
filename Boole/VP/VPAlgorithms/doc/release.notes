@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Skwarnicki, Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+! 2012-09-24 - Paul Szczypka
+ - Rename VeloPix to VO in filenames and code.
+
 ! 2012-09-12 - Marco Cattaneo
  - Fix unused variable warning in previous commit
 

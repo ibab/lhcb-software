@@ -1,6 +1,6 @@
 // $Id: $
-#ifndef VELOPIXDIGITSCREATOR_H 
-#define VELOPIXDIGITSCREATOR_H 1
+#ifndef VPDIGITSCREATOR_H 
+#define VPDIGITSCREATOR_H 1
 
 // Include files
 #include <string>
@@ -11,22 +11,22 @@
 #include "GaudiKernel/RndmGenerators.h"
 
 // Event
-#include "Event/VeloPixDigit.h"
+#include "Event/VPDigit.h"
 
 using namespace LHCb;
 
-/** @class VeloPixDigitsCreator VeloPixDigitsCreator.h
+/** @class VPDigitsCreator VPDigitsCreator.h
  *  
  *
  *  @author Thomas Britton
  *  @date   2010-07-07
  */
-class VeloPixDigitsCreator : public GaudiAlgorithm {
+class VPDigitsCreator : public GaudiAlgorithm {
 public: 
   /// Standard constructor
-  VeloPixDigitsCreator( const std::string& name, ISvcLocator* pSvcLocator );
+  VPDigitsCreator( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~VeloPixDigitsCreator( ); ///< Destructor
+  virtual ~VPDigitsCreator( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -53,7 +53,7 @@ private:
   int m_bunchCrossingNumber;
 
   // digit container to store hits from previous bunch crossings (timeStamp = bunchCrossing number)
-  VeloPixDigits* m_buffer;
+  VPDigits* m_buffer;
 
 
   // bunch crossing spacing in ns
@@ -103,4 +103,4 @@ private:
   
   
 };
-#endif // VELOPIXDIGITSCREATOR_H
+#endif // VPDIGITSCREATOR_H

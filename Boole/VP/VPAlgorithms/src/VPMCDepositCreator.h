@@ -1,6 +1,6 @@
-#// $Id: VeloPixMCDepositCreator.h,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
-#ifndef VELOPIXMCDEPOSITCREATOR_H
-#define VELOPIXMCDEPOSITCREATOR_H 1
+#// $Id: VPMCDepositCreator.h,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
+#ifndef VPMCDEPOSITCREATOR_H
+#define VPMCDEPOSITCREATOR_H 1
 // Include files
 // from STL
 #include <string>
@@ -19,28 +19,28 @@
 #include "gsl/gsl_sf_erf.h"
 #include "Kernel/FPEGuard.h"
 
-class DeVeloPix;
+class DeVP;
 class MCHit;
-class VeloPixChannelID;
+class VPChannelID;
 class ISiDepositedCharge;
 
-/** @class VeloPixMCDepositCreator.h 
- *  VeloPixAlgorithms/VeloPixMCDepositCreator.h
+/** @class VPMCDepositCreator.h 
+ *  VPAlgorithms/VPMCDepositCreator.h
  *
  *  @author Marcin Kucharczyk
  *  @date   20/09/09
  */
 
 #ifdef DEBUG_HISTO
-class VeloPixMCDepositCreator : public GaudiTupleAlg {
+class VPMCDepositCreator : public GaudiTupleAlg {
 #else
-class VeloPixMCDepositCreator : public GaudiAlgorithm {
+class VPMCDepositCreator : public GaudiAlgorithm {
 #endif
 
 public:
   /// Standard constructor
-  VeloPixMCDepositCreator(const std::string& name,ISvcLocator* pSvcLocator);
-  virtual ~VeloPixMCDepositCreator(); ///< Destructor
+  VPMCDepositCreator(const std::string& name,ISvcLocator* pSvcLocator);
+  virtual ~VPMCDepositCreator(); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalise
@@ -54,20 +54,20 @@ private:
     return gsl_sf_erf_Q(arg);
   }
   void createDeposits(const LHCb::MCHits* mcHitContainer, 
-                      LHCb::MCVeloPixDeposits*& depositVect);
+                      LHCb::MCVPDeposits*& depositVect);
   int simulatedPoints(LHCb::MCHit* hit);
   void chargeToPoint(LHCb::MCHit* hit, std::vector<double>& simPoints);
   void deltaRayCh(double charge, double frCh, std::vector<double>& simPoints);
   double ranomDRTail(double minDRC, double maxDRC);
   void diffuseCharge(LHCb::MCHit* hit, std::vector<double>& simPoints,
-                     LHCb::MCVeloPixDeposits*& depositCont);
+                     LHCb::MCVPDeposits*& depositCont);
   std::string m_inputLocation;
   std::string m_outputLocation;
   std::vector<std::string> m_sampleNames;
   std::vector<std::string> m_spillNames;
   std::vector<std::string> m_spillPaths;
   std::vector<std::string> m_outPaths;
-  DeVeloPix* m_veloPixelDet;
+  DeVP* m_vPelDet;
   double m_siteSize;
   int m_maxNumSites;
   int m_simPointsPerPixel;
@@ -89,4 +89,4 @@ private:
   bool m_isVerbose;
   
 };
-#endif // VeloPixMCDepositCreator_H
+#endif // VPMCDepositCreator_H
