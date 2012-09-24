@@ -5,7 +5,11 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
-! 2011-08-17 - Alex Grecu
+! 2012-09-24 - Gloria Corti
+ - introduce use of Gen/Generators to ensure header of interfaces from this
+   package are made available before the build of GenTune
+
+! 2012-08-17 - Alex Grecu
  - beta release under temporary name Gen/GenAnalysis
 
 ! 2012-06-20 - Gloria Corti
