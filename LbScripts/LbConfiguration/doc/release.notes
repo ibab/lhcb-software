@@ -1,3 +1,7 @@
+2012-09-24  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: Added new package InstallAreaPatch 
+
 2012-09-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: fixes to the platform check

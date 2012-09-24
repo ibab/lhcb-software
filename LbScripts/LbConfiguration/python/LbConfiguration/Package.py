@@ -44,6 +44,7 @@ package_names = ['XmlDDDB',
                  'TMVAWeights',
                  'ProdConf',
                  'GenXiccData',
+                 'InstallAreaPatch',
                  'ExoticaConfig',
                  'EWConfig',
                  'SemilepConfig']
@@ -286,6 +287,8 @@ TMVAWeights.setProject("PARAM")#IGNORE:E0602
 ProdConf.setProject("DBASE")#IGNORE:E0602
 
 GenXiccData.setProject("PARAM")#IGNORE:E0602
+
+InstallAreaPatch.setProject("PARAM")#IGNORE:E0602
 
 L0TCK.setHat("TCK")#IGNORE:E0602
 L0TCK.setProject("DBASE")#IGNORE:E0602
