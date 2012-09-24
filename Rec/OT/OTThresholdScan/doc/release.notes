@@ -1,8 +1,0 @@
-!-----------------------------------------------------------------------------
-! Package     : OT/OTThresholdScan
-! Responsible : Daan Van Eijk
-! Purpose     : Processing and analyzing OT threshold scans		
-!-----------------------------------------------------------------------------
-
-! 2010-10-26 - Daan Van Eijk
- - First release of package. Putting in basic scripts to perform the analysis
