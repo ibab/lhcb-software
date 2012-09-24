@@ -90,7 +90,7 @@ StatusCode TrackNNGhostId::initialize()
     return Error("Failed to initialize", sc);
   }
   if (m_tuningMC12) {
-    Error("deprecated property, will use latest tuning. Please fix.", StatusCode::SUCCESS,1);
+    Error("deprecated property, will use latest tuning. Please fix.", StatusCode::SUCCESS,1).ignore();
   }
 
   /**
@@ -1243,11 +1243,11 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
 
   // double check the result
   if( retval < 0 ) { 
-    Warning("Ghost prob < 0 - this should not be possible",StatusCode::SUCCESS, 1);
+    Warning("Ghost prob < 0 - this should not be possible",StatusCode::SUCCESS, 1).ignore();
     retval = 0;
   }
   else if( retval > 1 ){
-    Warning("Ghost prob > 1 - this should not be possible",StatusCode::SUCCESS, 1);   
+    Warning("Ghost prob > 1 - this should not be possible",StatusCode::SUCCESS, 1).ignore();   
     retval = 1;
   }
   
