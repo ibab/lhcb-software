@@ -10,10 +10,10 @@ branches cmt doc
 # Gauss application: the application is not built on Win32
 use Gauss               v42r1   Sim
 
-# LCG interfaces to generators, until available in LCGCMT (temp use HEAD)
-use LCG_Settings        HEAD    Gen              
-use thepeg              HEAD    LCG_GeneratorsInterfaces
-use herwigpp            HEAD    LCG_GeneratorsInterfaces      
+# LCG interfaces to generators, until available in LCGCMT
+use LCG_Settings        v64r0   Gen              
+use thepeg              v64r0   LCG_GeneratorsInterfaces
+use herwigpp            v64r0   LCG_GeneratorsInterfaces      
 
 # Generator packages: Basic configuration
 use GenCuts             v3r0    Gen
