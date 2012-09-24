@@ -1,36 +1,36 @@
-// $Id: VeloPixDigit2MCParticleLinker.cpp,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
+// $Id: VPDigit2MCParticleLinker.cpp,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Linker
 #include "Linker/LinkerWithKey.h"
 // Event
-#include "Event/VeloPixDigit.h"
+#include "Event/VPDigit.h"
 #include "Event/MCParticle.h"
 // local
-#include "VeloPixDigit2MCParticleLinker.h"
-#include "VeloPixMCLinkTool.h"
+#include "VPDigit2MCParticleLinker.h"
+#include "VPMCLinkTool.h"
 
 using namespace LHCb;
 
 //--------------------------------------------------------------
-// Implementation file for class : VeloPixDigit2MCParticleLinker
+// Implementation file for class : VPDigit2MCParticleLinker
 //
 // 06/11/2009 : Marcin Kucharczyk
 // Based on ST code
 //--------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VeloPixDigit2MCParticleLinker);
+DECLARE_ALGORITHM_FACTORY(VPDigit2MCParticleLinker);
 
-VeloPixDigit2MCParticleLinker::VeloPixDigit2MCParticleLinker(
+VPDigit2MCParticleLinker::VPDigit2MCParticleLinker(
                                const std::string& name,
                                ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
 {
   declareProperty("InputData", m_inputData = 
-                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation);
+                  LHCb::VPDigitLocation::VPDigitLocation);
   declareProperty("OutputData", m_outputData = 
-                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation+"2MCParticles");
+                  LHCb::VPDigitLocation::VPDigitLocation+"2MCParticles");
   declareProperty("AddSpillOverHits", m_addSpillOverHits = false); 
   declareProperty("Minfrac", m_minFrac = 0.05);
   declareProperty("OneRef", m_oneRef = false);
@@ -39,12 +39,12 @@ VeloPixDigit2MCParticleLinker::VeloPixDigit2MCParticleLinker(
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixDigit2MCParticleLinker::~VeloPixDigit2MCParticleLinker() {};
+VPDigit2MCParticleLinker::~VPDigit2MCParticleLinker() {};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VeloPixDigit2MCParticleLinker::initialize() {
+StatusCode VPDigit2MCParticleLinker::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   if(sc) debug() << "==> Initialise" << endmsg;
@@ -54,23 +54,23 @@ StatusCode VeloPixDigit2MCParticleLinker::initialize() {
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode VeloPixDigit2MCParticleLinker::execute()
+StatusCode VPDigit2MCParticleLinker::execute()
 {
-  // Get VeloPixDigits
-  const VeloPixDigits* digitCont = get<VeloPixDigits>(m_inputData);
-  // Get MCVeloPixDigits
-  const MCVeloPixDigits* digitsMC = get<MCVeloPixDigits>("MC/VP/Digits");
+  // Get VPDigits
+  const VPDigits* digitCont = get<VPDigits>(m_inputData);
+  // Get MCVPDigits
+  const MCVPDigits* digitsMC = get<MCVPDigits>("MC/VP/Digits");
   // Get MCParticles
   MCParticles* mcParts = get<MCParticles>(MCParticleLocation::Default);
   // Creating linker
-  LinkerWithKey<MCParticle,VeloPixDigit> 
+  LinkerWithKey<MCParticle,VPDigit> 
                myLink(evtSvc(),msgSvc(),outputData());
-  // Loop and link VeloPixDigits to MC truth
-  VeloPixDigits::const_iterator iterDigit = digitCont->begin();
+  // Loop and link VPDigits to MC truth
+  VPDigits::const_iterator iterDigit = digitCont->begin();
   for(; iterDigit != digitCont->end(); ++iterDigit) {
     // Find all particles
     ParticleMap partMap;
-    VeloPixMCLinkTool::associateToTruth(*iterDigit,digitsMC,partMap);
+    VPMCLinkTool::associateToTruth(*iterDigit,digitsMC,partMap);
     // Select references to add to table
     std::vector<PartPair> selectedRefs;
     double tCharge = this->totalCharge(partMap);
@@ -97,7 +97,7 @@ StatusCode VeloPixDigit2MCParticleLinker::execute()
 //============================================================================
 // Calculate total charge
 //============================================================================
-double VeloPixDigit2MCParticleLinker::totalCharge(const ParticleMap& partMap) 
+double VPDigit2MCParticleLinker::totalCharge(const ParticleMap& partMap) 
                                       const
 {
   double totCharge = 0.0;
@@ -114,7 +114,7 @@ double VeloPixDigit2MCParticleLinker::totalCharge(const ParticleMap& partMap)
 //============================================================================
 // Reference to related MC particles
 //============================================================================
-void VeloPixDigit2MCParticleLinker::refsToRelate(
+void VPDigit2MCParticleLinker::refsToRelate(
                                     std::vector<PartPair>& selRefs,
                                     const ParticleMap& partMap,
                                     const double totCharge,
@@ -140,7 +140,7 @@ void VeloPixDigit2MCParticleLinker::refsToRelate(
 
 
 //============================================================================
-StatusCode VeloPixDigit2MCParticleLinker::finalize() {
+StatusCode VPDigit2MCParticleLinker::finalize() {
 
   return GaudiAlgorithm::finalize();
 

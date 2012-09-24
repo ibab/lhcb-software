@@ -1,6 +1,6 @@
-// $Id: VeloPixCluster2MCParticleLinker.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
-#ifndef VELOPIXCLUSTER2MCPARTICLELINKER_H
-#define VELOPIXCLUSTER2MCPARTICLELINKER_H 1
+// $Id: VPCluster2MCParticleLinker.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
+#ifndef VPCLUSTER2MCPARTICLELINKER_H
+#define VPCLUSTER2MCPARTICLELINKER_H 1
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event
@@ -10,22 +10,22 @@ namespace LHCb {
   class MCParticle;
 };
 
-/** @class VeloPixCluster2MCParticleLinker VeloPixCluster2MCParticleLinker.h
+/** @class VPCluster2MCParticleLinker VPCluster2MCParticleLinker.h
  *  @Based on ST code
  *  
  *  @author Marcin Kucharczyk
  *  @date   01/12/2009
  */
 
-class VeloPixCluster2MCParticleLinker : public GaudiAlgorithm {
+class VPCluster2MCParticleLinker : public GaudiAlgorithm {
       
-      friend class AlgFactory<VeloPixCluster2MCParticleLinker>;
+      friend class AlgFactory<VPCluster2MCParticleLinker>;
   
 public:
   /// Standard constructor
-  VeloPixCluster2MCParticleLinker(const std::string& name,
+  VPCluster2MCParticleLinker(const std::string& name,
                                   ISvcLocator* pSvcLocator);
-  virtual ~VeloPixCluster2MCParticleLinker(); ///< Destructor
+  virtual ~VPCluster2MCParticleLinker(); ///< Destructor
   virtual StatusCode initialize();            ///< Algorithm initialization
   virtual StatusCode execute   ();            ///< Algorithm execution
   virtual StatusCode finalize  ();            ///< Algorithm finalise
@@ -41,7 +41,7 @@ private:
   void refsToRelate(std::vector<PartPair>& selectedRefs,
                     const ParticleMap& partMap, 
                     LHCb::MCParticles* particles) const;
-  StatusCode associateToTruth(const LHCb::VeloPixCluster* aCluster,
+  StatusCode associateToTruth(const LHCb::VPCluster* aCluster,
                               ParticleMap& partMap);
   std::string m_asctLocation;
   std::string m_inputData; 
@@ -51,11 +51,11 @@ private:
   bool m_oneRef;
 };
 
-inline std::string VeloPixCluster2MCParticleLinker::outputData() const {
+inline std::string VPCluster2MCParticleLinker::outputData() const {
   return  m_outputData;
 }
 
-#endif // VELOPIXCLUSTER2MCPARTICLELINKER_H
+#endif // VPCLUSTER2MCPARTICLELINKER_H
 
 
 

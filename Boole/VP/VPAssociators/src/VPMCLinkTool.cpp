@@ -1,10 +1,10 @@
-// $Id: VeloPixMCLinkTool.cpp,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
+// $Id: VPMCLinkTool.cpp,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Event
-#include "Event/VeloPixDigit.h"
-#include "Event/MCVeloPixDigit.h"
-#include "Event/MCVeloPixDeposit.h"
+#include "Event/VPDigit.h"
+#include "Event/MCVPDigit.h"
+#include "Event/MCVPDeposit.h"
 #include "Event/MCHit.h"
 #include "Event/MCParticle.h"
 #include "Event/MCTruth.h"
@@ -12,27 +12,27 @@
 #include "LHCbMath/LineTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
 // Local
-#include "VeloPixMCLinkTool.h"
+#include "VPMCLinkTool.h"
 
 using namespace LHCb;
 
 
-void VeloPixMCLinkTool::associateToTruth(const VeloPixDigit* aDigit,
-                                         const MCVeloPixDigits* digitsMC,
+void VPMCLinkTool::associateToTruth(const VPDigit* aDigit,
+                                         const MCVPDigits* digitsMC,
                                          std::map<const MCHit*,double>& hitMap,
                                          double& foundCharge)
 {
   // Make link to truth to MCHit from Digit
-  const MCVeloPixDigit* mcDigit = new MCVeloPixDigit();
-  MCVeloPixDigits::const_iterator iterMC = digitsMC->begin();
+  const MCVPDigit* mcDigit = new MCVPDigit();
+  MCVPDigits::const_iterator iterMC = digitsMC->begin();
   for(; iterMC != digitsMC->end(); ++iterMC) {
     if((*iterMC)->channelID() == aDigit->key()) mcDigit = *iterMC;
   }
   if(0 != mcDigit) {
     // Link to deposits
     std::map<const MCHit*,double> tempMap;
-    SmartRefVector<MCVeloPixDeposit> depCont = mcDigit->mcDeposit();
-    SmartRefVector<MCVeloPixDeposit>::iterator iterDep = depCont.begin();
+    SmartRefVector<MCVPDeposit> depCont = mcDigit->mcDeposit();
+    SmartRefVector<MCVPDeposit>::iterator iterDep = depCont.begin();
     while(iterDep != depCont.end()) {
       const MCHit* aHit = (*iterDep)->mcHit(); 
       foundCharge += (*iterDep)->depositedCharge(); 
@@ -50,7 +50,7 @@ void VeloPixMCLinkTool::associateToTruth(const VeloPixDigit* aDigit,
 }
 
 
-void VeloPixMCLinkTool::removeDeltaRays(
+void VPMCLinkTool::removeDeltaRays(
                         const std::map<const MCHit*, double>& inputMap,
                         std::map<const MCHit*,double>& hitMap) {
   // Separate into delta ray and not
@@ -90,7 +90,7 @@ void VeloPixMCLinkTool::removeDeltaRays(
       Gaudi::XYZPoint dPoint = drays->first->midPoint();
       XYZLine hitLine = XYZLine(iter2->first->entry(),iter2->first->exit());
       const double distToLine = impactParameter(dPoint,hitLine);
-      if(fabs(distToLine) < VeloPixMCLinkTool::drayTol) {
+      if(fabs(distToLine) < VPMCLinkTool::drayTol) {
 	// It's close, merge
         hitMap[iter2->first] += drays->second;
       } else {
@@ -101,14 +101,14 @@ void VeloPixMCLinkTool::removeDeltaRays(
 }
 
 
-void VeloPixMCLinkTool::associateToTruth(const VeloPixDigit* aDigit,
-                        const MCVeloPixDigits* digitsMC,
+void VPMCLinkTool::associateToTruth(const VPDigit* aDigit,
+                        const MCVPDigits* digitsMC,
                         std::map<const MCParticle*,double>& particleMap)
 {
   // Make truth link to MCParticle from Digit
   std::map<const MCHit*,double> hitMap;
   double foundCharge = 0.0;
-  VeloPixMCLinkTool::associateToTruth(aDigit,digitsMC,hitMap,foundCharge);
+  VPMCLinkTool::associateToTruth(aDigit,digitsMC,hitMap,foundCharge);
   double conversion = 2100.0;
   hitMap[0] += (aDigit->ToTValue() * conversion - foundCharge);
   if(!(hitMap.empty())) {

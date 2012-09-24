@@ -1,45 +1,45 @@
-// $Id: VeloPixCluster2MCHitLinker.cpp,v 1.3 2010-02-25 12:15:09 marcin Exp $
+// $Id: VPCluster2MCHitLinker.cpp,v 1.3 2010-02-25 12:15:09 marcin Exp $
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Linker
 #include "Linker/LinkerWithKey.h"
 #include "Linker/LinkerTool.h"
 // Event
-#include "Event/VeloPixCluster.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "Event/VPCluster.h"
+#include "Event/VPLiteCluster.h"
 #include "Event/MCTruth.h"
 // LHCbKernel
-#include "Kernel/VeloPixChannelID.h"
+#include "Kernel/VPChannelID.h"
 // Local
-#include "VeloPixCluster2MCHitLinker.h"
+#include "VPCluster2MCHitLinker.h"
 
 using namespace LHCb;
 
 //------------------------------------------------------------
-// Implementation file for class : VeloPixCluster2MCHitLinker
+// Implementation file for class : VPCluster2MCHitLinker
 //
 // 01/12/2009 : Marcin Kucharczyk
 // Based on ST code
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VeloPixCluster2MCHitLinker);
+DECLARE_ALGORITHM_FACTORY(VPCluster2MCHitLinker);
 
-VeloPixCluster2MCHitLinker::VeloPixCluster2MCHitLinker(const std::string& name,
+VPCluster2MCHitLinker::VPCluster2MCHitLinker(const std::string& name,
                             ISvcLocator* pSvcLocator) 
   : GaudiAlgorithm(name, pSvcLocator),
     m_hitLocation("MC/VP/Hits"),
-    m_asctLocation(LHCb::VeloPixDigitLocation::VeloPixDigitLocation + "2MCHits")
+    m_asctLocation(LHCb::VPDigitLocation::VPDigitLocation + "2MCHits")
 {
   declareProperty("InputData", m_inputData = 
-                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation);
+                  LHCb::VPClusterLocation::VPClusterLocation);
   declareProperty("OutputData", m_outputData = 
-                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation + "2MCHits");
+                  LHCb::VPClusterLocation::VPClusterLocation + "2MCHits");
   declareProperty("AddSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("MinFraction", m_minFrac = 0.2);
   declareProperty("OneRef",m_oneRef = false);
   declareProperty("DigitLocation", m_digitLocation =
-                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation );
+                  LHCb::VPDigitLocation::VPDigitLocation );
   declareProperty("Conversion", m_conversion = 2100.0);
   declareProperty("ScaleFactor", m_scaleFactor = 2.0);
 }
@@ -47,12 +47,12 @@ VeloPixCluster2MCHitLinker::VeloPixCluster2MCHitLinker(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixCluster2MCHitLinker::~VeloPixCluster2MCHitLinker() {};
+VPCluster2MCHitLinker::~VPCluster2MCHitLinker() {};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VeloPixCluster2MCHitLinker::initialize() {
+StatusCode VPCluster2MCHitLinker::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   if(sc) debug() << "==> Initialise" << endmsg;
@@ -62,18 +62,18 @@ StatusCode VeloPixCluster2MCHitLinker::initialize() {
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode VeloPixCluster2MCHitLinker::execute() 
+StatusCode VPCluster2MCHitLinker::execute() 
 {
   // Get STClusters
-  const VeloPixClusters* clusterCont = get<VeloPixClusters>(m_inputData);
+  const VPClusters* clusterCont = get<VPClusters>(m_inputData);
   // Get digits
-  m_digitCont = get<VeloPixDigits>(m_digitLocation);
+  m_digitCont = get<VPDigits>(m_digitLocation);
   // Get MCHits
   MCHits* mcHits = get<MCHits>("/Event/"+m_hitLocation);
   // Create linker
-  LinkerWithKey<MCHit,VeloPixCluster> myLink(evtSvc(),msgSvc(),outputData());
-  // Loop and link VeloPixClusters to MC truth
-  VeloPixClusters::const_iterator iterClus = clusterCont->begin();
+  LinkerWithKey<MCHit,VPCluster> myLink(evtSvc(),msgSvc(),outputData());
+  // Loop and link VPClusters to MC truth
+  VPClusters::const_iterator iterClus = clusterCont->begin();
   for(; iterClus != clusterCont->end(); ++iterClus) {        // loop over clusters
     // Find all hits
     HitMap hitMap;
@@ -104,7 +104,7 @@ StatusCode VeloPixCluster2MCHitLinker::execute()
 //============================================================================
 // Reference to related hits
 //============================================================================
-void VeloPixCluster2MCHitLinker::refsToRelate(std::vector<HitPair>& selRefs,
+void VPCluster2MCHitLinker::refsToRelate(std::vector<HitPair>& selRefs,
                                               const HitMap& hitMap,
                                               MCHits* hits) const
 {
@@ -125,31 +125,31 @@ void VeloPixCluster2MCHitLinker::refsToRelate(std::vector<HitPair>& selRefs,
 //============================================================================
 // Associate to MC truth
 //============================================================================
-StatusCode VeloPixCluster2MCHitLinker::associateToTruth(
-                                       const VeloPixCluster* aCluster,
+StatusCode VPCluster2MCHitLinker::associateToTruth(
+                                       const VPCluster* aCluster,
                                        HitMap& hitMap)
 {
   // Make link to truth  to MCHit from cluster
-  typedef LinkerTool<VeloPixDigit, MCHit> AsctTool;
+  typedef LinkerTool<VPDigit, MCHit> AsctTool;
   typedef AsctTool::DirectType Table;
   typedef Table::Range Range;
   typedef Table::iterator iterator;
-  // Use the VeloPixDigit to MCHit association
+  // Use the VPDigit to MCHit association
   AsctTool associator(evtSvc(),m_asctLocation);
   const Table* aTable = associator.direct();
   if(!aTable) return Error("Failed to find " + m_asctLocation + " table",
                            StatusCode::FAILURE);
-  std::vector< std::pair<LHCb::VeloPixChannelID,int> > tdcVec = 
+  std::vector< std::pair<LHCb::VPChannelID,int> > tdcVec = 
                                                        aCluster->pixelHitVec();
-  std::vector<VeloPixChannelID> chanVector;
-  for(std::vector< std::pair<LHCb::VeloPixChannelID,int> >::iterator 
+  std::vector<VPChannelID> chanVector;
+  for(std::vector< std::pair<LHCb::VPChannelID,int> >::iterator 
       ip = tdcVec.begin(); ip != tdcVec.end(); ip++) {
-    std::pair<LHCb::VeloPixChannelID,int> pair = *ip;
+    std::pair<LHCb::VPChannelID,int> pair = *ip;
     chanVector.push_back(pair.first);
   }
-  std::vector<VeloPixChannelID>::iterator iterChan = chanVector.begin();
+  std::vector<VPChannelID>::iterator iterChan = chanVector.begin();
   while(iterChan != chanVector.end()) {
-    VeloPixDigit* aDigit = m_digitCont->object(*iterChan);
+    VPDigit* aDigit = m_digitCont->object(*iterChan);
     double foundCharge = 0.0;
     if(aDigit !=0) {
       Range hitsCont = aTable->relations(aDigit);
@@ -166,7 +166,7 @@ StatusCode VeloPixCluster2MCHitLinker::associateToTruth(
   // Renormalize to 1
   HitMap::iterator iterMap = hitMap.begin();
   for(; iterMap != hitMap.end() ; ++iterMap) {
-    VeloPixLiteCluster lc = aCluster->lCluster();
+    VPLiteCluster lc = aCluster->lCluster();
     iterMap->second /= lc.clustToT() * m_scaleFactor * m_conversion;
   }
 
@@ -175,7 +175,7 @@ StatusCode VeloPixCluster2MCHitLinker::associateToTruth(
 
 
 //============================================================================
-StatusCode VeloPixCluster2MCHitLinker::finalize() {
+StatusCode VPCluster2MCHitLinker::finalize() {
 
   return GaudiAlgorithm::finalize();
 }

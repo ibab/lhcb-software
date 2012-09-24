@@ -1,36 +1,36 @@
-// $Id: VeloPixDigit2MCHitLinker.cpp,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
+// $Id: VPDigit2MCHitLinker.cpp,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Linker
 #include "Linker/LinkerWithKey.h"
 // Event
-#include "Event/VeloPixDigit.h"
+#include "Event/VPDigit.h"
 #include "Event/MCTruth.h"
 // Local
-#include "VeloPixDigit2MCHitLinker.h"
-#include "VeloPixMCLinkTool.h"
+#include "VPDigit2MCHitLinker.h"
+#include "VPMCLinkTool.h"
 
 using namespace LHCb;
 
 //------------------------------------------------------------
-// Implementation file for class : VeloPixDigit2MCHitLinker
+// Implementation file for class : VPDigit2MCHitLinker
 //
 // 06/11/2009 : Marcin Kucharczyk
 // Based on ST code
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VeloPixDigit2MCHitLinker);
+DECLARE_ALGORITHM_FACTORY(VPDigit2MCHitLinker);
 
-VeloPixDigit2MCHitLinker::VeloPixDigit2MCHitLinker(const std::string& name,
+VPDigit2MCHitLinker::VPDigit2MCHitLinker(const std::string& name,
                                                    ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator),
     m_hitLocation("MC/VP/Hits") 
 {
   declareProperty("InputData", m_inputData = 
-                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation);
+                  LHCb::VPDigitLocation::VPDigitLocation);
   declareProperty("OutputData", m_outputData = 
-                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation+"2MCHits");
+                  LHCb::VPDigitLocation::VPDigitLocation+"2MCHits");
   declareProperty("AddSpillOverHits", m_addSpillOverHits = false); 
   declareProperty("MinFraction", m_minFrac = 0.05);
   declareProperty("OneRef",m_oneRef = false);
@@ -40,12 +40,12 @@ VeloPixDigit2MCHitLinker::VeloPixDigit2MCHitLinker(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixDigit2MCHitLinker::~VeloPixDigit2MCHitLinker() {};
+VPDigit2MCHitLinker::~VPDigit2MCHitLinker() {};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VeloPixDigit2MCHitLinker::initialize() {
+StatusCode VPDigit2MCHitLinker::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   if(sc) debug() << "==> Initialise" << endmsg;
@@ -55,23 +55,23 @@ StatusCode VeloPixDigit2MCHitLinker::initialize() {
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode VeloPixDigit2MCHitLinker::execute()
-{ // printf("VeloPixDigit2MCHitLinker::execute():\n");
-  // Get VeloPixDigits
-  const VeloPixDigits* digitCont = get<VeloPixDigits>(m_inputData);
-  // Get MCVeloPixDigits
-  const MCVeloPixDigits* digitsMC = get<MCVeloPixDigits>("MC/VP/Digits");
+StatusCode VPDigit2MCHitLinker::execute()
+{ // printf("VPDigit2MCHitLinker::execute():\n");
+  // Get VPDigits
+  const VPDigits* digitCont = get<VPDigits>(m_inputData);
+  // Get MCVPDigits
+  const MCVPDigits* digitsMC = get<MCVPDigits>("MC/VP/Digits");
   // Get MC hits
   MCHits* mcHits = get<MCHits>(m_hitLocation); 
   // Create an association table 
-  LinkerWithKey<MCHit,VeloPixDigit> myLink(evtSvc(),msgSvc(),outputData());
-  // Loop and link VeloPixDigits to MC truth
-  VeloPixDigits::const_iterator iterDigit = digitCont->begin();
+  LinkerWithKey<MCHit,VPDigit> myLink(evtSvc(),msgSvc(),outputData());
+  // Loop and link VPDigits to MC truth
+  VPDigits::const_iterator iterDigit = digitCont->begin();
   for(; iterDigit != digitCont->end(); ++iterDigit) {
     // Find all hits
     HitMap hitMap;                                 // HitMap = std::map<const LHCb::MCHit*,double> HitMap;
     double foundCharge = 0.0;
-    VeloPixMCLinkTool::associateToTruth(*iterDigit,digitsMC,
+    VPMCLinkTool::associateToTruth(*iterDigit,digitsMC,
                                         hitMap,foundCharge);
     hitMap[0] += ((*iterDigit)->ToTValue() * m_conversion - foundCharge);
     // Select references to add to table
@@ -102,8 +102,8 @@ StatusCode VeloPixDigit2MCHitLinker::execute()
 //============================================================================
 // Calculate total charge
 //============================================================================
-double VeloPixDigit2MCHitLinker::totalCharge(const HitMap& hitMap) const
-{ // printf("VeloPixDigit2MCHitLinker::totalCharge():");
+double VPDigit2MCHitLinker::totalCharge(const HitMap& hitMap) const
+{ // printf("VPDigit2MCHitLinker::totalCharge():");
   double totCharge = 0.0;
   HitMap::const_iterator iterMap = hitMap.begin();
   while (iterMap != hitMap.end()) {
@@ -119,11 +119,11 @@ double VeloPixDigit2MCHitLinker::totalCharge(const HitMap& hitMap) const
 //============================================================================
 // Reference to related hits
 //============================================================================
-void VeloPixDigit2MCHitLinker::refsToRelate(std::vector<HitPair>& selectedRefs,
+void VPDigit2MCHitLinker::refsToRelate(std::vector<HitPair>& selectedRefs,
                                             const HitMap& hitMap,
                                             const double& totCharge,
                                             MCHits* hits) const
-{ // printf("VeloPixDigit2MCHitLinker::refsToRelate():");
+{ // printf("VPDigit2MCHitLinker::refsToRelate():");
   // Iterate over map
   HitMap::const_iterator iterMap = hitMap.begin();
   while(iterMap != hitMap.end()) {
@@ -146,7 +146,7 @@ void VeloPixDigit2MCHitLinker::refsToRelate(std::vector<HitPair>& selectedRefs,
 
 
 //============================================================================
-StatusCode VeloPixDigit2MCHitLinker::finalize() {
+StatusCode VPDigit2MCHitLinker::finalize() {
 
   return GaudiAlgorithm::finalize();
 

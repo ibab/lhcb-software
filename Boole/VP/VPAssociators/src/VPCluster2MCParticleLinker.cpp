@@ -1,38 +1,38 @@
-// $Id: VeloPixCluster2MCParticleLinker.cpp,v 1.3 2010-02-25 12:15:20 marcin Exp $
+// $Id: VPCluster2MCParticleLinker.cpp,v 1.3 2010-02-25 12:15:20 marcin Exp $
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Linker
 #include "Linker/LinkerWithKey.h"
 #include "Linker/LinkerTool.h"
 // Event
-#include "Event/VeloPixCluster.h"
+#include "Event/VPCluster.h"
 #include "Event/MCHit.h"
 #include "Event/MCParticle.h"
 // Local
-#include "VeloPixCluster2MCParticleLinker.h"
+#include "VPCluster2MCParticleLinker.h"
 
 using namespace LHCb;
 
 //--------------------------------------------------------------
-// Implementation file for class : VeloPixCluster2MCParticleLinker
+// Implementation file for class : VPCluster2MCParticleLinker
 //
 // 01/12/2009 : Marcin Kucharczyk
 // Based on ST code
 //--------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloPixCluster2MCParticleLinker );
+DECLARE_ALGORITHM_FACTORY( VPCluster2MCParticleLinker );
 
-VeloPixCluster2MCParticleLinker::VeloPixCluster2MCParticleLinker(
+VPCluster2MCParticleLinker::VPCluster2MCParticleLinker(
                                  const std::string& name,
                                  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator),
-    m_asctLocation(LHCb::VeloPixClusterLocation::VeloPixClusterLocation+"2MCHits")
+    m_asctLocation(LHCb::VPClusterLocation::VPClusterLocation+"2MCHits")
 {
   declareProperty("InputData", m_inputData = 
-                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+                  LHCb::VPClusterLocation::VPClusterLocation );
   declareProperty("OutputData", m_outputData = 
-                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+                  LHCb::VPClusterLocation::VPClusterLocation );
   declareProperty("AddSpillOverHits", m_addSpillOverHits = false); 
   declareProperty("MinFraction", m_minFrac = 0.2);
   declareProperty("OneRef", m_oneRef = false);
@@ -41,12 +41,12 @@ VeloPixCluster2MCParticleLinker::VeloPixCluster2MCParticleLinker(
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixCluster2MCParticleLinker::~VeloPixCluster2MCParticleLinker() {};
+VPCluster2MCParticleLinker::~VPCluster2MCParticleLinker() {};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VeloPixCluster2MCParticleLinker::initialize() {
+StatusCode VPCluster2MCParticleLinker::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   if(sc) debug() << "==> Initialise" << endmsg;
@@ -56,17 +56,17 @@ StatusCode VeloPixCluster2MCParticleLinker::initialize() {
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode VeloPixCluster2MCParticleLinker::execute()
+StatusCode VPCluster2MCParticleLinker::execute()
 {
-  // Get VeloPixClusters
-  const VeloPixClusters* clusterCont = get<VeloPixClusters>(m_inputData);
+  // Get VPClusters
+  const VPClusters* clusterCont = get<VPClusters>(m_inputData);
   // Get MCParticles
   MCParticles* mcParts = get<MCParticles>(MCParticleLocation::Default);
   // Create a linker
-  LinkerWithKey<MCParticle,VeloPixCluster> aLinker(evtSvc(),msgSvc(),
+  LinkerWithKey<MCParticle,VPCluster> aLinker(evtSvc(),msgSvc(),
                                                    outputData());
-  // Loop and link VeloPixClusters to MC truth
-  VeloPixClusters::const_iterator iterClus =  clusterCont->begin();
+  // Loop and link VPClusters to MC truth
+  VPClusters::const_iterator iterClus =  clusterCont->begin();
   for(; iterClus != clusterCont->end(); ++iterClus) {
     // Find all particles
     ParticleMap partMap;
@@ -97,7 +97,7 @@ StatusCode VeloPixCluster2MCParticleLinker::execute()
 //============================================================================
 // Reference to related MC particles
 //============================================================================
-void VeloPixCluster2MCParticleLinker::refsToRelate(
+void VPCluster2MCParticleLinker::refsToRelate(
                                       std::vector<PartPair>& selRefs,
                                       const ParticleMap& partMap,
                                       MCParticles* particles) const
@@ -120,16 +120,16 @@ void VeloPixCluster2MCParticleLinker::refsToRelate(
 //============================================================================
 // Associate to MC truth
 //============================================================================
-StatusCode VeloPixCluster2MCParticleLinker::associateToTruth(
-                                            const VeloPixCluster* aCluster,
+StatusCode VPCluster2MCParticleLinker::associateToTruth(
+                                            const VPCluster* aCluster,
                                             ParticleMap& partMap)
 {
   // Make link to truth  to MCHit from cluster
-  typedef LinkerTool<VeloPixCluster, MCHit> AsctTool;
+  typedef LinkerTool<VPCluster, MCHit> AsctTool;
   typedef AsctTool::DirectType Table;
   typedef Table::Range Range;
   typedef Table::iterator iterator;
-  // Use the VeloPixCluster to MCHit association
+  // Use the VPCluster to MCHit association
   AsctTool associator(evtSvc(),m_asctLocation);
   const Table* aTable = associator.direct();
   if(!aTable) return Error("Failed to find table", StatusCode::FAILURE);
@@ -147,7 +147,7 @@ StatusCode VeloPixCluster2MCParticleLinker::associateToTruth(
 
 
 //============================================================================
-StatusCode VeloPixCluster2MCParticleLinker::finalize() {
+StatusCode VPCluster2MCParticleLinker::finalize() {
 
   return GaudiAlgorithm::finalize();
 }

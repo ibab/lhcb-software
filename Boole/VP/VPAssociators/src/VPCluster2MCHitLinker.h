@@ -1,27 +1,27 @@
-// $Id: VeloPixCluster2MCHitLinker.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
-#ifndef VELOPIXCLUSTER2MCHITLINKER_H
-#define VELOPIXCLUSTER2MCHITLINKER_H 1
+// $Id: VPCluster2MCHitLinker.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
+#ifndef VPCLUSTER2MCHITLINKER_H
+#define VPCLUSTER2MCHITLINKER_H 1
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event
 #include "Event/MCHit.h"
-#include "Event/VeloPixDigit.h"
+#include "Event/VPDigit.h"
 
-/** @class VeloPixCluster2MCHitLinker VeloPixCluster2MCHitLinker.h
+/** @class VPCluster2MCHitLinker VPCluster2MCHitLinker.h
  *  @Based on ST code 
  * 
  *  @author Marcin Kucharczyk
  *  @date   01/12/2009
  */
 
-class VeloPixCluster2MCHitLinker : public GaudiAlgorithm {
+class VPCluster2MCHitLinker : public GaudiAlgorithm {
 
-      friend class AlgFactory<VeloPixCluster2MCHitLinker>;
+      friend class AlgFactory<VPCluster2MCHitLinker>;
   
 public:
   /// Standard constructor
-  VeloPixCluster2MCHitLinker(const std::string& name,ISvcLocator* pSvcLocator);
-  virtual ~VeloPixCluster2MCHitLinker(); ///< Destructor
+  VPCluster2MCHitLinker(const std::string& name,ISvcLocator* pSvcLocator);
+  virtual ~VPCluster2MCHitLinker(); ///< Destructor
   virtual StatusCode initialize();       ///< Algorithm initialization
   virtual StatusCode execute   ();       ///< Algorithm execution
   virtual StatusCode finalize  ();       ///< Algorithm finalise
@@ -37,9 +37,9 @@ private:
   void refsToRelate(std::vector<HitPair>& selectedRefs, 
                     const HitMap& hitMap,
                     LHCb::MCHits* hits) const;
-  StatusCode associateToTruth(const LHCb::VeloPixCluster* aCluster,
+  StatusCode associateToTruth(const LHCb::VPCluster* aCluster,
                               HitMap& hitMap);
-  LHCb::VeloPixDigits* m_digitCont;
+  LHCb::VPDigits* m_digitCont;
   std::string m_inputData;
   std::string m_hitLocation;
   std::string m_asctLocation;
@@ -52,8 +52,8 @@ private:
   double m_scaleFactor;
 };
 
-inline std::string VeloPixCluster2MCHitLinker::outputData() const {
+inline std::string VPCluster2MCHitLinker::outputData() const {
   return  m_outputData;
 }
 
-#endif // VELOPIXCLUSTER2MCHITLINKER_H
+#endif // VPCLUSTER2MCHITLINKER_H

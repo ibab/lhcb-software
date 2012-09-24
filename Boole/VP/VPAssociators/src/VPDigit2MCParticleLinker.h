@@ -1,27 +1,27 @@
-// $Id: VeloPixDigit2MCParticleLinker.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
-#ifndef VELOPIXDIGIT2MCPARTICLELINKER_H
-#define VELOPIXDIGIT2MCPARTICLELINKER_H 1
+// $Id: VPDigit2MCParticleLinker.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
+#ifndef VPDIGIT2MCPARTICLELINKER_H
+#define VPDIGIT2MCPARTICLELINKER_H 1
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 // from MC
 #include "Event/MCParticle.h"
 
-/** @class VeloPixDigit2MCParticleLinker VeloPixDigit2MCParticleLinker.h
+/** @class VPDigit2MCParticleLinker VPDigit2MCParticleLinker.h
  *  @Based on ST code
  *  
  *  @author Marcin Kucharczyk
  *  @date   06/11/2009
  */
 
-class VeloPixDigit2MCParticleLinker : public GaudiAlgorithm {
+class VPDigit2MCParticleLinker : public GaudiAlgorithm {
 
-      friend class AlgFactory<VeloPixDigit2MCParticleLinker>;
+      friend class AlgFactory<VPDigit2MCParticleLinker>;
 
 public:
   /// Standard constructor
-  VeloPixDigit2MCParticleLinker(const std::string& name,
+  VPDigit2MCParticleLinker(const std::string& name,
                                 ISvcLocator* pSvcLocator);
-  virtual ~VeloPixDigit2MCParticleLinker(); ///< Destructor
+  virtual ~VPDigit2MCParticleLinker(); ///< Destructor
   virtual StatusCode initialize();          ///< Algorithm initialization
   virtual StatusCode execute   ();          ///< Algorithm execution
   virtual StatusCode finalize  ();          ///< Algorithm finalise
@@ -46,8 +46,8 @@ private:
 
 };
 
-inline std::string VeloPixDigit2MCParticleLinker::outputData() const {
+inline std::string VPDigit2MCParticleLinker::outputData() const {
   return  m_outputData;
 }
 
-#endif // VELOPIXDIGIT2MCPARTICLELINKER_H
+#endif // VPDIGIT2MCPARTICLELINKER_H
