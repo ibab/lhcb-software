@@ -1,9 +1,9 @@
-# --> Including file '/afs/cern.ch/user/r/rmatev/cmtuser/Rec_v13r1/Rec/LumiAlgs/job/DumpLumiEvents.py'
-# <-- End of file '/afs/cern.ch/user/r/rmatev/cmtuser/Rec_v13r1/Rec/LumiAlgs/job/DumpLumiEvents.py'
+# --> Including file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/DumpLumiEvents.py'
+# <-- End of file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/DumpLumiEvents.py'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r1)
-                                          running on lxplus412.cern.ch on Thu Mar 29 11:12:53 2012
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
+                                          running on lxbuild163.cern.ch on Mon Sep 24 09:10:18 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DumpLumiEvents      DEBUG Property update for OutputLevel : new value = 2
@@ -24,7 +24,7 @@ DumpLumiEvents      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-DumpLumiEvents      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+DumpLumiEvents      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'RootOnTES':
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'RootInTES':
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'Context':

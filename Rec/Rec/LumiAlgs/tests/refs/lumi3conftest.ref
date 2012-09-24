@@ -1,24 +1,26 @@
-# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v42r0/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
-# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v42r0/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# --> Including file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# <-- End of file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
-# |-Persistency = None
-# |-DDDBtag     = ''
-# |-DataType    = '2009'
-# |-TimeStamp   = False
-# |-SkipEvents  = 0
-# |-OutputLevel = 3
-# |-EvtMax      = 100  (default: -1)
-# |-CondDBtag   = ''
-# |-DQFLAGStag  = ''
-# |-XMLSummary  = None
-# |-Simulation  = False
-# |-Monitors    = []  (default: [])
+# |-Persistency   = None
+# |-DataType      = '2012'
+# |-DDDBtag       = ''
+# |-SkipEvents    = 0
+# |-XMLSummary    = None
+# |-OutputLevel   = 3
+# |-EvtMax        = 100  (default: -1)
+# |-CondDBtag     = ''
+# |-DQFLAGStag    = ''
+# |-Monitors      = []  (default: [])
+# |-TimeStamp     = False
+# |-Simulation    = False
+# |-IgnoreDQFlags = True
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-UseLumiLow        = False
 # |-ForceFullSequence = False
+# |-InputType         = 'MDF'
 # |-DataType          = '2012'
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 1  (default: 3)
@@ -27,44 +29,51 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xa8e0e80>  (default: None)
-# |-InputType         = 'MDF'
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x14f163a0>  (default: None)
+# |-IgnoreDQFlags     = False
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20101206 for partition DDDB
-# WARNING: Using default tag head-20110614 for partition LHCBCOND
-# WARNING: Using default tag MC-20101026-vc15mm-md100 for partition SIMCOND
-# WARNING: Using default tag tt-20110126 for partition DQFLAGS
+# WARNING: Using default tag dddb-20120831 for partition DDDB
+# WARNING: Using default tag cond-20120831 for partition LHCBCOND
+# WARNING: Using default tag dq-20120831 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
-# |-DataType   = '2009'
+# |-DataType   = '2012'
 # |-DbRoot     = 'conddb:/lhcb.xml'
 # |-Simulation = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
+# |-Upgrade                   = False
+# |-DBSnapshotDirectory       = '/group/online/hlt/conditions'
+# |-SQLiteLocalCopiesDir      = ''
+# |-Online                    = False
+# |-LogFile                   = ''
+# |-EnableRunChangeHandler    = False
+# |-Tags                      = {}  (default: {})
+# |-LatestLocalTagsByDataType = []  (default: [])
+# |-AllLocalTagsByDataType    = []  (default: [])
+# |-PartitionName             = 'LHCb'
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
 # |-IgnoreHeartBeat           = False
-# |-Tags                      = {}  (default: {})
 # |-Overrides                 = []  (default: [])
-# |-DisableLFC                = False
 # |-Simulation                = False
-# |-SQLiteLocalCopiesDir      = ''
-# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
-# |-Online                    = False
 # |-QueryGranularity          = 0
 # |-UseOracle                 = False
-# |-LogFile                   = ''
+# |-LatestGlobalTagByDataType = ''
+# |-UseDBSnapshot             = False
+# |-DisableLFC                = False
+# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
 # |-UseLatestTags             = []  (default: [])
 # |-OverwriteSQLiteLocalCopy  = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v42r0
-                                          running on lxplus404.cern.ch on Wed Feb 15 14:07:10 2012
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
+                                          running on lxbuild163.cern.ch on Mon Sep 24 09:12:24 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -73,7 +82,7 @@ LumiSequence         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.69 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.27 times the speed of a 2.8 GHz Xeon.
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam
 LoKiSvc           SUCCESS
 
@@ -115,7 +124,7 @@ LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'RootInTES':
 LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'Context':
@@ -160,7 +169,7 @@ LumiCountNoBeam     DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-LumiCountNoBeam     DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+LumiCountNoBeam     DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'RootInTES':
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'Context':
@@ -190,10 +199,10 @@ LumiCountNoBeam   VERBOSE ServiceLocatorHelper::service: found service DetectorD
 LumiCountNoBeam     DEBUG ==> Register DB
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20101206"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20110614"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "dddb-20120831"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Using TAG "cond-20120831"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing
 LumiFilterBeamC...  DEBUG Property update for OutputLevel : new value = 1
@@ -213,7 +222,7 @@ LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'RootInTES':
 LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'Context':
@@ -258,7 +267,7 @@ LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'RootInTES':
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'Context':
@@ -304,7 +313,7 @@ LumiFilterBeam1     DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 LumiFilterBeam1     DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 LumiFilterBeam1     DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiFilterBeam1     DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-LumiFilterBeam1     DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 LumiFilterBeam1     DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiFilterBeam1     DEBUG Property ['Name': Value] =  'RootInTES':
 LumiFilterBeam1     DEBUG Property ['Name': Value] =  'Context':
@@ -349,7 +358,7 @@ FillingBeam1        DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 FillingBeam1        DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 FillingBeam1        DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 FillingBeam1        DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-FillingBeam1        DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+FillingBeam1        DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 FillingBeam1        DEBUG Property ['Name': Value] =  'RootOnTES':
 FillingBeam1        DEBUG Property ['Name': Value] =  'RootInTES':
 FillingBeam1        DEBUG Property ['Name': Value] =  'Context':
@@ -376,8 +385,8 @@ FillingBeam1        DEBUG Property ['Name': Value] =  'OutputLevel':1
 FillingBeam1        DEBUG ==> Initialize
 FillingBeam1      VERBOSE ServiceLocatorHelper::service: found service DetectorDataSvc
 FillingBeam1        DEBUG ==> Register DB
-ONLINE_2009          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/ONLINE-2009.db/ONLINE"
-ONLINE_2009          INFO Using TAG ""
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Using TAG ""
 FillingBeam1        DEBUG Conditions/Online/LHCb/LHCFillingScheme
 FillingBeam1        DEBUG Conditions/Online/LHCb/Magnet/Measured
 LumiCountBeam1      DEBUG Property update for OutputLevel : new value = 1
@@ -397,7 +406,7 @@ LumiCountBeam1      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-LumiCountBeam1      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+LumiCountBeam1      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'RootInTES':
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'Context':
@@ -443,7 +452,7 @@ LumiFilterBeam2     DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 LumiFilterBeam2     DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 LumiFilterBeam2     DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiFilterBeam2     DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-LumiFilterBeam2     DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 LumiFilterBeam2     DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiFilterBeam2     DEBUG Property ['Name': Value] =  'RootInTES':
 LumiFilterBeam2     DEBUG Property ['Name': Value] =  'Context':
@@ -488,7 +497,7 @@ FillingBeam2        DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 FillingBeam2        DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 FillingBeam2        DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 FillingBeam2        DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-FillingBeam2        DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+FillingBeam2        DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 FillingBeam2        DEBUG Property ['Name': Value] =  'RootOnTES':
 FillingBeam2        DEBUG Property ['Name': Value] =  'RootInTES':
 FillingBeam2        DEBUG Property ['Name': Value] =  'Context':
@@ -534,7 +543,7 @@ LumiCountBeam2      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-LumiCountBeam2      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+LumiCountBeam2      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'RootInTES':
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'Context':
@@ -579,7 +588,7 @@ TimeSpanAccounting  DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-TimeSpanAccounting  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+TimeSpanAccounting  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'RootOnTES':
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'RootInTES':
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'Context':
@@ -622,7 +631,7 @@ EventAccount        DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 EventAccount        DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 EventAccount        DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 EventAccount        DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-EventAccount        DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+EventAccount        DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 EventAccount        DEBUG Property ['Name': Value] =  'RootOnTES':
 EventAccount        DEBUG Property ['Name': Value] =  'RootInTES':
 EventAccount        DEBUG Property ['Name': Value] =  'Context':
@@ -793,7 +802,7 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.69 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.27 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO LumiSequence                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |

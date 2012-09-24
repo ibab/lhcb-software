@@ -1,13 +1,13 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiReader.py'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiReader.py'
+# --> Including file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/LumiReader.py'
+# <-- End of file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/LumiReader.py'
 # applying configuration of LumiReaderConf
 # WARNING: Using default tag head-20110721 for partition DDDB
 # WARNING: Using default tag head-20110614 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Mon Sep  5 10:57:45 2011
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
+                                          running on lxbuild163.cern.ch on Mon Sep 24 09:12:03 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -16,7 +16,7 @@ LumiSeq              INFO Member list: GaudiSequencer/readLumiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.27 times the speed of a 2.8 GHz Xeon.
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -36,7 +36,7 @@ readLumiSeq         DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 readLumiSeq         DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 readLumiSeq         DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 readLumiSeq         DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-readLumiSeq         DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+readLumiSeq         DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 readLumiSeq         DEBUG Property ['Name': Value] =  'RootOnTES':
 readLumiSeq         DEBUG Property ['Name': Value] =  'RootInTES':
 readLumiSeq         DEBUG Property ['Name': Value] =  'Context':
@@ -110,7 +110,7 @@ LumiFileReader      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 LumiFileReader      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 LumiFileReader      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiFileReader      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-LumiFileReader      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+LumiFileReader      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 LumiFileReader      DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiFileReader      DEBUG Property ['Name': Value] =  'RootInTES':
 LumiFileReader      DEBUG Property ['Name': Value] =  'Context':
@@ -150,7 +150,7 @@ InputDump           DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 InputDump           DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 InputDump           DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 InputDump           DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-InputDump           DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+InputDump           DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 InputDump           DEBUG Property ['Name': Value] =  'RootOnTES':
 InputDump           DEBUG Property ['Name': Value] =  'RootInTES':
 InputDump           DEBUG Property ['Name': Value] =  'Context':
@@ -895,19 +895,18 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.27 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.500 |     1.234 |    1.025       2.6 |      20 |     0.025 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.050 |     0.075 |    0.041       0.7 |      20 |     0.002 |
-ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.011 |    0.004       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiDecoder                 |     0.050 |     0.029 |    0.016       0.3 |      20 |     0.001 |
-ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.011 |    0.007       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.008 |    0.004       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.800 |     1.094 |    0.942       1.9 |      20 |     0.022 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.050 |     0.055 |    0.033       0.5 |      20 |     0.001 |
+ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.009 |    0.004       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   LumiDecoder                 |     0.000 |     0.018 |    0.013       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.009 |    0.007       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.007 |    0.004       0.0 |      20 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiLowFilter             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.050 |     0.319 |    0.285       0.6 |      20 |     0.006 |
-ToolSvc.Sequenc...   INFO   InputDump                   |     0.300 |     0.749 |    0.611       2.1 |      20 |     0.015 |
+ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.250 |     0.306 |    0.263       0.5 |      20 |     0.006 |
+ToolSvc.Sequenc...   INFO   InputDump                   |     0.500 |     0.662 |    0.590       0.7 |      20 |     0.013 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
