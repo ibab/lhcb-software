@@ -11,6 +11,9 @@ Purpose: LHCb reconstruction program
   . Remove conversion of Calo raw banks from 'packed' to '0-suppressed'
     (CaloDAQ)
   . Update default DDDB tags (DDDB)
+  . Follow changes in format of options printout in Gaudi v23r4
+  . New TrackNNGhostID tuning now runs in standard tracking sequence and is
+    picked up by default as input to ANNPID (RecConf, TrackSys)
 
 </PRE><H1><A NAME=v43r1p2>2012-08-10 Brunel v43r1p2</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1,
