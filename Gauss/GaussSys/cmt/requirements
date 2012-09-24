@@ -1,5 +1,5 @@
 package GaussSys
-version v42r1
+version v42r2
 
 branches cmt doc
 
@@ -9,6 +9,11 @@ branches cmt doc
 
 # Gauss application: the application is not built on Win32
 use Gauss               v42r1   Sim
+
+# LCG interfaces to generators, until available in LCGCMT (temp use HEAD)
+use LCG_Settings        HEAD    Gen              
+use thepeg              HEAD    LCG_GeneratorsInterfaces
+use herwigpp            HEAD    LCG_GeneratorsInterfaces      
 
 # Generator packages: Basic configuration
 use GenCuts             v3r0    Gen
@@ -20,17 +25,17 @@ use Generators          v12r1   Gen
 use LbPythia            v12r0   Gen
 
 # Generators packages: extensions to Pythia6
-#use LbAlpGen             v2r0    Gen - temp off, issue with nightly 64bits
-use BcVegPy              v3r0    Gen
-use GenXicc              v1r1    Gen
-use LbBcVegPy            v4r3    Gen
-use LbGenXicc            v2r0    Gen
-use LbHidValley          v3r2    Gen
-use LbOniaPairs          v1r2    Gen
+use LbAlpGen            v2r0    Gen 
+use BcVegPy             v3r0    Gen
+use GenXicc             v1r1    Gen
+use LbBcVegPy           v4r3    Gen
+use LbGenXicc           v2r0    Gen
+use LbHidValley         v3r2    Gen
+use LbOniaPairs         v1r2    Gen
 
 # Generators packages: alternative to Pythia6 for pp collisions
-use LbPythia8            v4r0    Gen
-#use LbHerwigpp           v1r0    Gen - temporarily off
+use LbPythia8           v4r0    Gen
+use LbHerwigpp          v1r0    Gen
 
 # Generators packages: alternative to Pythia6 for p-A collisions
 use   LbHijing          v7r0    Gen
@@ -57,7 +62,6 @@ use GaussRICH		v12r1     Sim
 use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r4	  Sim
 use GaussPhysics	v9r0	  Sim
-use GaussUMC            v1r1      Sim
 use GaussCherenkov      v2r1      Sim
 
 # Monitoring packages
@@ -67,13 +71,14 @@ use VeloGauss           v2r4      Velo
 use MuonMoniSim         v2r6      Muon
 use BcmMoniSim          v1r2      Bcm
 use BlsMoniSim          v1r1      Bls
-#use VLMoniSim           v1r0      VL
+use VLMoniSim           v1r0      VL
+use GaussUMC            v1r1      Sim
 
 # Packages for MC generator tuning - off for now
 #use GenTune             v*        Gen  
 
 # GMDL
-#use LbGDML               v1r0      Sim
+use LbGDML              v1r0      Sim
 
 # Visualization configuration
 use XmlVis              v1r14      Vis
