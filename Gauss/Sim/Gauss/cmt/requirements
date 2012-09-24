@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2006-07-21
-# Maintainer : Gloria Corti, Florence Ranjard
+# Maintainer : Gloria Corti (Patrick Robbe, Paul Szczypka) 
 #============================================================================
 package Gauss
-version v42r0
+version v42r2
 
 #============================================================================
 #-- Structure
@@ -17,7 +17,7 @@ branches src doc options cmt job python
 use DDDB               v*     Det            -no_auto_imports
 use ParamFiles         v8r5                  -no_auto_imports
 use FieldMap           v5r*                  -no_auto_imports
-use DecFiles           v25r*  Gen            -no_auto_imports
+use DecFiles           v26r*  Gen            -no_auto_imports
 use Geant4Files	       v94r0	             -no_auto_imports
 use MIBData            v3r2                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
@@ -32,10 +32,6 @@ use AppConfig          v3r*                  -no_auto_imports
 # Packages needed to compile and link the application
 use GaudiConf          v*                    -no_auto_imports
 use GaudiKernel        v*
-
-# Package needed to run the application as it still uses the old 
-# ParticlePropService - MUST be removed in next version       
-use GaudiPartProp      v*                    -no_auto_imports
 
 # Packages needed to resolve external dependencies at run time
 use Python             v*     LCG_Interfaces -no_auto_imports
@@ -60,11 +56,11 @@ use LbPGuns            v*     Gen            -no_auto_imports
 use LbMIB              v*     Gen            -no_auto_imports
 use LbPythia           v*     Gen            -no_auto_imports
 
-#-- Not built on Windows
-use LbHerwig           v*     Gen            -no_auto_imports
+#-- Additional generators
+use LbHerwigpp         v*     Gen            -no_auto_imports
 use LbBcVegPy          v*     Gen            -no_auto_imports
 use LbHidValley        v*     Gen            -no_auto_imports
-#use LbAlpGen           v*     Gen            -no_auto_imports # OFF for now
+use LbAlpGen           v*     Gen            -no_auto_imports
 use LbHijing           v*     Gen            -no_auto_imports
 use LbPythia8          v*     Gen            -no_auto_imports
 

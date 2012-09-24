@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-09-24 - Gloria Corti
+ - Remove use of LbHerwing that is obsolete since v42r1. 
+   Put use of LbAlpGen and LbHerwigpp that are new
+   Change version of DecFiles to v26r* for compatibility with new LHCb
+   ParticlePropertySvc and remove use of the Gaudi old one. 
+
 ! 2012-09-23 - Paul Szczypka
  - Minor edits to BeamPipe code fixing typos.
 
