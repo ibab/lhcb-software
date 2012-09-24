@@ -22,6 +22,7 @@
 // N.Nikitin (nnikit@mail.cern.ch)   June 18,2011    Module created
 // N.Nikitin (nnikit@mail.cern.ch)   Nov  09,2011    Module retested
 // N.Nikitin (nnikit@mail.cern.ch)   Jan  26,2012    Add B -> (K_1(1270), B -> K_1(1400)) ell^+ ell^- decya channels
+// N.Nikitin                         Sept 24 2012    Memory distribution optimization
 //
 //------------------------------------------------------------------------
 //
@@ -352,8 +353,8 @@ void EvtbTosllVectorAmpNewExt::CalcAmp( EvtParticle *parent,
 
 
   // B - and barB - mesons descriptors
-  static EvtIdSet bmesons("B-","anti-B0","anti-B_s0","B_c-");
-  static EvtIdSet bbarmesons("B+","B0","B_s0","B_c+");
+  EvtIdSet bmesons("B-","anti-B0","anti-B_s0","B_c-");
+  EvtIdSet bbarmesons("B+","B0","B_s0","B_c+");
 
   EvtId parentID = parent->getId();
 
@@ -655,6 +656,11 @@ double EvtbTosllVectorAmpNewExt::CalcMaxProb(EvtId parnum, EvtId mesnum,
      maxfoundprob = rho.normalizedProb(amp.getSpinDensity());
 
      delete scalar_part;
+//     delete root_part;
+     delete vect;
+     delete lep1;
+     delete lep2;
+
 
   } // if(res_swch==0)
   
@@ -849,6 +855,10 @@ double EvtbTosllVectorAmpNewExt::CalcMaxProb(EvtId parnum, EvtId mesnum,
        }
 
        delete scalar_part;
+//       delete root_part;
+       delete vect;
+       delete lep1;
+       delete lep2;
 
     } // for(k=0; k<=1000; k++)
 

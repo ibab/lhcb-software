@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2012-09-24 - Nikolai Nikitin
+ - Memory distribution optimization in the matrix elements fo the decays B -> (P,V,Gamma) l+l-
+
 ! 2012-08-03 - Nikolai Nikitin
  - Optimization of the maximum matrix element calculation for Bq -> 4 leptons and ff calculations 
    for the Bs -> f0(980) transitions.

@@ -21,6 +21,7 @@
 // N.Nikitin                         May  20 2008       Add maximum prabability
 // N.Nikitin                         June 04 2008       Add CKM matrix elements
 // N.Nikitin                         Feb  21 2011       CalcMaxProb(...) optimisation
+// N.Nikitin                         Sept 24 2012       Memory distribution optimization
 //
 //------------------------------------------------------------------------
 //
@@ -311,8 +312,8 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
 
 
   // B - and barB - mesons descriptors
-  static EvtIdSet bmesons("B-","anti-B0","anti-B_s0","B_c-");
-  static EvtIdSet bbarmesons("B+","B0","B_s0","B_c+");
+  EvtIdSet bmesons("B-","anti-B0","anti-B_s0","B_c-");
+  EvtIdSet bbarmesons("B+","B0","B_s0","B_c+");
 
   EvtId parentID = parent->getId();
 
@@ -392,7 +393,6 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
     }    
   }
 
-
 }
 
 
@@ -451,7 +451,7 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
 
      // The maximum probability calculation
      // from s_min to s_max
-     for(j=max_j/2; j<max_j; j++){ 
+     for(j=max_j/3; j<max_j; j++){ 
 
         s = s_min +ds*((double)j);
 
@@ -717,6 +717,10 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
           }
 
           delete scalar_part;
+//          delete root_part;
+          delete vect;
+          delete lep1;
+          delete lep2;
 
         } // for(k=0; k<=max_k; k++)
      } // for(j=0; j<max_j; j++)
@@ -937,6 +941,10 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
        }
 
        delete scalar_part;
+//       delete root_part;
+       delete vect;
+       delete lep1;
+       delete lep2;
 
     } // for(k=0; k<=1000; k++)
 

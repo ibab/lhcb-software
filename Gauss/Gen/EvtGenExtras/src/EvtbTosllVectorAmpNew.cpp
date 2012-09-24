@@ -23,6 +23,7 @@
 // N.Nikitin                         June  04,2008    Add CKM matrix elements
 // N.Nikitin                         Jan   03,2009    Vector meson polarisation modification
 // N.Nikitin                         Feb   21 2011    CalcMaxProb(...) optimisation
+// N.Nikitin                         Sept  24 2012    Memory distribution optimization
 //
 //------------------------------------------------------------------------
 //
@@ -344,8 +345,8 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
 
 
   // B - and barB - mesons descriptors
-  static EvtIdSet bmesons("B-","anti-B0","anti-B_s0","B_c-");
-  static EvtIdSet bbarmesons("B+","B0","B_s0","B_c+");
+  EvtIdSet bmesons("B-","anti-B0","anti-B_s0","B_c-");
+  EvtIdSet bbarmesons("B+","B0","B_s0","B_c+");
 
   EvtId parentID = parent->getId();
 
@@ -644,6 +645,10 @@ double EvtbTosllVectorAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
      maxfoundprob = rho.normalizedProb(amp.getSpinDensity());
 
      delete scalar_part;
+//     delete root_part;
+     delete vect;
+     delete lep1;
+     delete lep2;
 
   } // if(res_swch==0)
   
@@ -837,6 +842,10 @@ double EvtbTosllVectorAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
        }
 
        delete scalar_part;
+//       delete root_part;
+       delete vect;
+       delete lep1;
+       delete lep2;
 
     } // for(k=0; k<=1000; k++)
 

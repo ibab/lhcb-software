@@ -30,6 +30,7 @@
 //  N.Nikitin              March     07, 2010     New algorithm for maximum calculation
 //  N.Nikitin              July      16, 2010     Correction of the found bugs
 //  N.Nikitin              September 22, 2010     Close all reports in this file
+//  N.Nikitin              September 24, 2012     Memory distribution optimization
 //
 //-----------------------------------------------------------------------------------------
 //
@@ -788,6 +789,12 @@ double Evtbs2llGammaAmp::CalcMaxProb(EvtId parnum, EvtId photnum,
                     << "\n ijk =" << ijk
                     << std::endl;
           }
+
+          delete scalar_part;
+//          delete root_part;
+          delete gamm;
+          delete lep1;
+          delete lep2;
  
         } // for(ijk=0; ijk<=max_ijk; ijk++) 
      } // i_list - variable loop 
