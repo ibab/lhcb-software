@@ -54,12 +54,12 @@ DECLARE_ALGORITHM_FACTORY( RivetAnalysisHandler );
 //=============================================================================
 RivetAnalysisHandler::RivetAnalysisHandler( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
+  : GaudiAlgorithm ( name, pSvcLocator ),
     _analysisManager (0),
-    _scaleFactorEnergy (1.0),
-    _scaleFactorTime (1.0),
     _mHxAngle(0.0),
-    _mVxAngle(0.0)
+    _mVxAngle(0.0),
+    _scaleFactorEnergy (1.0),
+    _scaleFactorTime (1.0)
 {
   _isFirstEvent = true; _xHAngleCorrection = false; _xVAngleCorrection = false; m_xAngleDetect = true;
   myStats.assign(3, 0);
@@ -73,7 +73,6 @@ RivetAnalysisHandler::RivetAnalysisHandler( const std::string& name,
   declareProperty("CorrectCrossingAngles", m_xAngleDetect=true);
   declareProperty("xSectionNeeded", m_reqCrossSection=false);
   declareProperty("xSectionValue", m_crossSection=-1.);
-
 }
 //=============================================================================
 // Destructor
@@ -421,6 +420,10 @@ std::pair<HepMC::GenParticle*,HepMC::GenParticle*> RivetAnalysisHandler::findBea
 
 /// Detect beam crossing angles if they exist
 bool RivetAnalysisHandler::detectBeamCrossingAngles(HepMC::GenEvent* hEvent) {
+  if ( 0 == hEvent ) {
+    error() << "NULL GenEvent pointer. Skip beam crossing angles detection..." << endmsg;
+    return true;
+  };
   LHCb::BeamParameters * beamParams = get< LHCb::BeamParameters >(LHCb::BeamParametersLocation::Default);
   _mHxAngle = 0.0; _mVxAngle = 0.0;
   if ( 0 == beamParams ) {

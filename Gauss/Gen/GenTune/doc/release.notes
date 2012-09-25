@@ -5,6 +5,10 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+! 2012-09-25 - Alex Grecu
+ - few minor patches to eliminate compilation warnings
+ - a fully working plugin example in options/
+
 ! 2012-09-24 - Gloria Corti
  - introduce use of Gen/Generators to ensure header of interfaces from this
    package are made available before the build of GenTune

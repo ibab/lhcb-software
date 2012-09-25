@@ -10,31 +10,20 @@
 
 #include <string>
 #include <vector>
-#include <pair>
+#include <utility>
 
 using namespace std;
 
 /** @class RivetAnalysisHandler RivetAnalysisHandler.h component/RivetAnalysisHandler.h
  *  
  *  Component that interfaces Rivet to Gauss in order to run Rivet plug-ins 
- *  inside Gauss jobs. The interface is mainly inspired by the ATLAS API for 
+ *  inside Gauss jobs. The interface is heavily inspired by the ATLAS API for 
  *  Rivet which is developed and maintained by Andy Buckley and James Monk.
  *  
  *  @author Alex Grecu <alexandru.grecu@nipne.ro>
  *  @date   2011-08-12
  */
 class RivetAnalysisHandler : public GaudiAlgorithm {
-public: 
-
-  /// Standard constructor
-  RivetAnalysisHandler( const string& name, ISvcLocator* pSvcLocator );
-  virtual ~RivetAnalysisHandler( );     ///< Destructor
-  virtual StatusCode initialize();       ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();      ///< Algorithm finalization
-
-protected:
-
 private:
 
   std::pair<HepMC::GenParticle*,HepMC::GenParticle*> findBeamParticles(HepMC::GenEvent* hEvent);
@@ -100,6 +89,15 @@ private:
   vector<long int> myStats;   
 
   void compatSetCrossSection();
+
+public:
+  /// Standard constructor
+  RivetAnalysisHandler( const string& name, ISvcLocator* pSvcLocator );
+  virtual ~RivetAnalysisHandler( );     ///< Destructor
+  virtual StatusCode initialize();       ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();      ///< Algorithm finalization
+
 };
 
 bool cmpGenParticleByEDesc(const HepMC::GenParticle* a, const HepMC::GenParticle* b);
