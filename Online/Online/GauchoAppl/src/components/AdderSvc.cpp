@@ -302,7 +302,10 @@ StatusCode AdderSvc::finalize()
 //    m_phistsvc->unregisterObject((AIDA::IBaseHistogram*)m_arrhist);
   }
   m_arrhist = 0;
-  m_adder->m_histo = 0;
+  if (m_adder != 0)
+  {
+    m_adder->m_histo = 0;
+  }
   if ( m_pMonitorSvc )
   {
     m_pMonitorSvc->undeclareAll(this);
