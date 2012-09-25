@@ -93,6 +93,8 @@ StatusCode STErrorMonitor::initialize()
 
   if(detType() == "TT") m_activePorts -= 128;//< Very nastily hardcoded for now.
 
+  if(detType() == "UT") m_activePorts -= 128;//< Very nastily hardcoded for now.
+
   if(m_debug) debug() << "Number of active ports in " << detType() << " is " << m_activePorts << endmsg;
 
   // Get the tell1 mapping from source ID to tell1 number

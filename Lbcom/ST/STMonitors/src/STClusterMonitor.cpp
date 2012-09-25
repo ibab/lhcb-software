@@ -14,16 +14,19 @@
 #include "Kernel/STBoardMapping.h"
 #include "Kernel/STChannelID.h"
 #include "Kernel/TTNames.h"
+#include "Kernel/UTNames.h"
 #include "Kernel/ITNames.h"
 
 #include "Event/ODIN.h"
 #include "Kernel/TTDetectorPlot.h"
+#include "Kernel/UTDetectorPlot.h"
 #include "Kernel/ITDetectorPlot.h"
 #include "Kernel/STDAQDefinitions.h"
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 #include "STDet/DeTTSector.h"
+#include "STDet/DeUTSector.h"
 
 // from Boost
 #include <boost/assign/list_of.hpp>
@@ -125,6 +128,7 @@ StatusCode ST::STClusterMonitor::initialize() {
 
   m_nBeetlePortsPerSector = 1;
   if(detType() == "TT") m_nBeetlePortsPerSector=m_nBeetlePortsPerTTSector;
+  else if(detType() == "UT") m_nBeetlePortsPerSector=m_nBeetlePortsPerUTSector;
   else if(detType() == "IT") m_nBeetlePortsPerSector=m_nBeetlePortsPerITSector;
   m_nSectorsPerTELL1 = STDAQ::noptlinks*STDAQ::nports/m_nBeetlePortsPerSector;
 
@@ -269,6 +273,15 @@ void ST::STClusterMonitor::fillMPVMap(const DeSTSector* sector, double charge) {
           m_2d_sectorMPVs->fill(xBin,yBin,mpv);
           m_2d_sectorMPVsNorm->fill(xBin,yBin,1.);
         }
+      } else if(detType() == "UT") {
+        const DeUTSector* utSector = dynamic_cast<const DeUTSector* >(sector);
+        ST::UTDetectorPlot hitMap("map","map");
+        ST::UTDetectorPlot::Bins bins = hitMap.toBins(utSector);
+        double xBin = bins.xBin;
+        for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
+          m_2d_sectorMPVs->fill(xBin,yBin,mpv);
+          m_2d_sectorMPVsNorm->fill(xBin,yBin,1.);
+        }
       } else if( detType() == "IT" ) {// Cluster map for IT
         ST::ITDetectorPlot hitMap("map", "map");
         ST::ITDetectorPlot::Bins bins = hitMap.toBins(sector->elementID());
@@ -309,12 +322,12 @@ void ST::STClusterMonitor::bookHistograms() {
     m_2d_ClustersPerPortVsTELL1 = book2D("Clusters per port vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96);
   }
   m_1d_totalCharge = book1D("Cluster ADC Values", 0., 200., 200);
-  if(detType() == "TT" || m_plotBySvcBox) {
+  if(detType() == "TT" || detType() == "UT" || m_plotBySvcBox) {
     /// list of service boxes  
     std::vector<std::string>::const_iterator itSvcBoxes = readoutTool()->serviceBoxes().begin();
     for( ; itSvcBoxes != readoutTool()->serviceBoxes().end(); ++itSvcBoxes) {
       std::string svcBox=(*itSvcBoxes);
-      if(detType() == "TT") {
+      if(detType() == "TT" || detType() == "UT") {
         std::string quadrant = svcBox.substr(0,2);
         if(m_1ds_chargeByServiceBox[quadrant] == 0)
           m_1ds_chargeByServiceBox[quadrant] = book1D("Cluster ADC Values "+quadrant, 0., 200., 200);
@@ -328,6 +341,8 @@ void ST::STClusterMonitor::bookHistograms() {
     std::vector<std::string> names;
     if(detType() == "TT"){
       names = LHCb::TTNames().allDetRegions();
+    } else if(detType() == "UT"){
+      names = LHCb::UTNames().allDetRegions();
     } else if(detType() == "IT"){
       names = LHCb::ITNames().allBoxes();
     }
@@ -347,6 +362,17 @@ void ST::STClusterMonitor::bookHistograms() {
       m_2d_hitmap = book2D(hitMap.name(), hitMap.minBinX(), hitMap.maxBinX(), hitMap.nBinX(),
                            hitMap.minBinY(), hitMap.maxBinY(), hitMap.nBinY());
       ST::TTDetectorPlot MPVMap(idMPVMap, idMPVMap);
+      m_2d_sectorMPVs = book2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+                               MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
+      m_2d_sectorMPVsNorm = book2D(MPVMap.name()+" Normalisation", MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+				   MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
+      m_2dp_clSize_map = bookProfile2D(idClSize, MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+                                       MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
+    } else if(detType()=="UT"){// Cluster maps for UT
+      ST::UTDetectorPlot hitMap(idMap, idMap, m_nBeetlePortsPerUTSector);
+      m_2d_hitmap = book2D(hitMap.name(), hitMap.minBinX(), hitMap.maxBinX(), hitMap.nBinX(),
+                           hitMap.minBinY(), hitMap.maxBinY(), hitMap.nBinY());
+      ST::UTDetectorPlot MPVMap(idMPVMap, idMPVMap);
       m_2d_sectorMPVs = book2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
                                MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
       m_2d_sectorMPVsNorm = book2D(MPVMap.name()+" Normalisation", MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
@@ -399,7 +425,7 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
 
   const double totalCharge = cluster->totalCharge();
   if(totalCharge < m_chargeCut) return;
-  
+
   // calculate MPVs
   //  unsigned int sectorID=cluster->channelID().uniqueSector();
   const DeSTSector* sector=findSector(cluster->channelID());
@@ -442,10 +468,11 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   // Get service box and set up histogram IDs
   m_1d_totalCharge->fill(totalCharge);
   std::string svcBox = readoutTool()->serviceBox(cluster->channelID());
-  if(detType() == "TT") {
+  if(detType() == "TT" || detType() == "UT") {
     std::string quadrant = svcBox.substr(0,2);
     m_1ds_chargeByServiceBox[quadrant]->fill(totalCharge);
   }
+
   if(m_plotBySvcBox) m_1ds_chargeByServiceBox[svcBox]->fill(totalCharge);
   if(m_plotByDetRegion) m_1ds_chargeByDetRegion[cluster->detRegionName()]->fill(totalCharge);
 }
@@ -501,7 +528,7 @@ void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster*
   std::string svcBox = (this->readoutTool())->serviceBox(cluster->channelID());
   std::string idhStrip = " (" + boost::lexical_cast<std::string>(clusterSize) + " strip)";
   std::string idh;
-  if(detType() == "TT") {
+  if(detType() == "TT" || detType() == "UT") {
     idh = "Cluster ADCs in " + svcBox.substr(0,2)+idhStrip;
     plot1D(totalCharge,idh, idh,0.,200.,200);
   }
@@ -532,6 +559,25 @@ void ST::STClusterMonitor::fillClusterMaps(const LHCb::STCluster* cluster) {
     // cluster size by sector
     ST::TTDetectorPlot sizeMap("sizeMap","sizeMap");
     double clSizeBin = sizeMap.toBins(ttSector).xBin;
+
+    for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
+      m_2d_hitmap->fill(xBin,yBin,1./nBins);
+      m_2dp_clSize_map->fill(clSizeBin, yBin, cluster->size());
+    }
+  } else if(detType()=="UT"){// Cluster maps for UT
+    const DeSTSector* aSector = tracker()->findSector(cluster->channelID());
+    const DeUTSector* utSector = dynamic_cast<const DeUTSector* >(aSector);
+
+    // make the real hit map
+    ST::UTDetectorPlot hitMap(idMap, idMap, m_nBeetlePortsPerUTSector);
+    ST::UTDetectorPlot::Bins bins = hitMap.toBins(utSector);
+    int port = (cluster->channelID().strip()-1)/STDAQ::nstrips;
+    double xBin = bins.xBin - double(port+1)/m_nBeetlePortsPerUTSector + 0.5;
+    int nBins = bins.endBinY - bins.beginBinY;
+
+    // cluster size by sector
+    ST::UTDetectorPlot sizeMap("sizeMap","sizeMap");
+    double clSizeBin = sizeMap.toBins(utSector).xBin;
 
     for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
       m_2d_hitmap->fill(xBin,yBin,1./nBins);

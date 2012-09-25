@@ -143,6 +143,7 @@ namespace ST
     unsigned int m_nSectors;///< Number of sectors (ie hybrids)
     unsigned int m_nBeetlePortsPerSector; ///< Number of beetle ports per sector
     static const unsigned int m_nBeetlePortsPerTTSector=16u;///< Number of bins per TT sector in the hitmap (beetle ports)
+    static const unsigned int m_nBeetlePortsPerUTSector=16u;///< Number of bins per UT sector in the hitmap (beetle ports)
     static const unsigned int m_nBeetlePortsPerITSector=12u;///< Number of bins in each IT sector (beetle ports)
     unsigned int m_nSectorsPerTELL1;
     /// Accumulation of statistics for the MPV per sector
