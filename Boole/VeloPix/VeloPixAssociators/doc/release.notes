@@ -1,0 +1,21 @@
+!--------------------------------------------------------------------------
+! Package     : VeloPix/VeloPixAssociators
+! Responsible : Marcin Kucharczyk
+!--------------------------------------------------------------------------
+
+! 2012-08-31 Pawel Jalocha
+ - Change VeloPix to VP in containers
+
+!================= VeloPixAssociators v1r2 2010-10-04 =====================
+! 2010-09-22 - Victor Coco
+ - Replace hardcoded container location by proper location definition
+
+!================= VeloPixAssociators v1r1 2010-03-01 =====================
+! 2010-02-25 Marcin Kucharczyk
+ - Update output paths in the linkers
+
+! 2010-02-22 Marcin Kucharczyk
+ - Improve output paths in the linkers
+
+!================= VeloPixAssociators v1r0 2010-01-25 =====================
+! First release
