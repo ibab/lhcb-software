@@ -4,6 +4,9 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-09-25 - Paul Seyfert
+ - uninitialised memory in ZooDLL::m_isMuon
+
 ! 2012-09-18 - Paul Seyfert
  - bugfixes in flight distance computation, PV handling, and secondIP
    computation provided by Th. Nikodem.

@@ -698,6 +698,7 @@ class ZooDLL : public TObject
 {
     public:
 	virtual ~ZooDLL();
+  ZooDLL() : m_DLLe(0.f), m_DLLk(0.f), m_DLLp(0.f), m_DLLmu(0.f),m_isMuon(0), m_isMuonLoose(0), m_hasRich(0) {};
 	float  DLLe()   const { return m_DLLe; };
 	float  DLLk()   const { return m_DLLk; };
 	float  DLLmu()  const { return m_DLLmu; };

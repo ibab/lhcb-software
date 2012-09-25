@@ -1753,7 +1753,10 @@ void ZooWriter::writeDLL (ZooP* zp, const LHCb::Particle* p){
 	if (p->proto()->muonPID()!=0){
 	    dll->m_isMuon  = (int) p->proto()->muonPID()->IsMuon();
 	    dll->m_isMuonLoose  = (int) p->proto()->muonPID()->IsMuonLoose();
-	} 
+	} else {
+	    dll->m_isMuon = 0;
+	    dll->m_isMuonLoose = 0;
+  }
     } else {
 	zp->AssignInfo<ZooDLL>(dll);
     }
