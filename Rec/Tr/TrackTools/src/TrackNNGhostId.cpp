@@ -5,6 +5,7 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/IIncidentSvc.h" 
 
 #include "Event/OTTime.h"
 #include "Event/STCluster.h"
@@ -37,7 +38,7 @@
 //
 // 2009-10-06 : Johannes Albrecht
 // 2012-08-16 : JA: implement new tuning on MC2012
-// 2012-09-07 : Johann Brehmer: implement new tuning for all track types, remove old tuning
+// 2012-09-21 : Johann Brehmer: implement new tuning for all track types, remove old tuning
 //
 //  Tool to calculate a track quality variable using a trained (TMVA) netork
 //
@@ -68,7 +69,8 @@ DECLARE_TOOL_FACTORY( TrackNNGhostId )
       m_FlattenLookupTableVelo(0),
       m_FlattenLookupTableUpstream(0),
       m_FlattenLookupTableDownstream(0),
-      m_FlattenLookupTableTtrack(0)
+      m_FlattenLookupTableTtrack(0),
+      m_nOTCont(0)
 {
   declareInterface<ITrackManipulator>(this);
   declareProperty("IsMC2012Tuning",m_tuningMC12=false);
@@ -80,6 +82,59 @@ DECLARE_TOOL_FACTORY( TrackNNGhostId )
 TrackNNGhostId::~TrackNNGhostId() {}
 
 //=============================================================================
+void TrackNNGhostId::handle ( const Incident& incident ) {
+  if ( IncidentType::BeginEvent == incident.type() ) {
+    m_configured = false;
+    initEvent();
+  }
+} 
+
+void TrackNNGhostId::initEvent() {
+
+	if (false) { /// FIXME: this doesn't work at BeginEvent
+			debug() << "initEvent starting" << endmsg;
+		//m_nVeloCont = 0;
+		//m_nTTCont = 0;
+		//m_nITCont = 0;
+
+		LHCb::VeloClusters* veloCont = getIfExists<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
+		if (NULL==veloCont) {
+			error() << "no velo container found" << endmsg;
+			// do we want to do something here?
+		} else {
+		//	m_nVeloCont = veloCont->size();
+		}
+
+		LHCb::STClusters *ttCont = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::TTClusters);
+		if (NULL==ttCont) {
+			error() << "no TT container found" << endmsg;
+			// do we want to do something here?
+		} else {
+		//	m_nTTCont = ttCont->size();
+		}
+
+		LHCb::STClusters *itCont = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters);
+		if (NULL==itCont) {
+			error() << "no IT container found" << endmsg;
+			// do we want to do something here?
+		} else {
+		//	m_nITCont = itCont->size();
+		}
+	}
+
+	m_nOTCont = m_otdecoder->totalNumberOfHits();
+
+	if ( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+		debug() << "OT   size = " << m_nOTCont << endmsg;
+		debug() << "initEvent done" << endmsg;
+	}
+
+	m_configured = true;
+
+
+
+	return;
+}
 
 StatusCode TrackNNGhostId::initialize()
 {
@@ -87,8 +142,9 @@ StatusCode TrackNNGhostId::initialize()
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure())
   {
-    return Error("Failed to initialize", sc);
+    return Error("Failed to initialize", sc,1);
   }
+  incSvc()->addListener(this, IncidentType::BeginEvent); 
   if (m_tuningMC12) {
     Error("deprecated property, will use latest tuning. Please fix.", StatusCode::SUCCESS,1).ignore();
   }
@@ -99,109 +155,25 @@ StatusCode TrackNNGhostId::initialize()
    *
    */
   //velo tracks
-  m_inNames.clear();
-  m_inNames.push_back("track_Chi2");
-  m_inNames.push_back("track_Dof");
-  m_inNames.push_back("Vchi*Vdof");
-  m_inNames.push_back("Vdof");
-  m_inNames.push_back("observedV");
-  m_inNames.push_back("(observedV-expectedV)");
-  m_inNames.push_back("(observedIT-expectedIT)");
-  m_inNames.push_back("(observedTT-expectedTT)");
-  m_inNames.push_back("(observedOT-expectedOT)");
-  m_inNames.push_back("OThits");
-  m_inNames.push_back("IThits");
-  m_inNames.push_back("TThits");
-  m_inNames.push_back("VELOhits");
-  m_inNames.push_back("eta");
-  m_inNames.push_back("pt");
+  std::vector<std::string> names;
+  variableNames_Velo(m_inNames);
   m_readerVelo = new ReadMLP_fittedVelo( m_inNames );
 
   //upstream tracks
-  m_inNames.clear();
-  m_inNames.push_back("track_Chi2");
-  m_inNames.push_back("track_Dof");
-  m_inNames.push_back("Vchi*Vdof");
-  m_inNames.push_back("Vdof");
-  m_inNames.push_back("observedV");
-  m_inNames.push_back("observedTT");
-  m_inNames.push_back("(observedV-expectedV)");
-  m_inNames.push_back("(observedIT-expectedIT)");
-  m_inNames.push_back("(observedTT-expectedTT)");
-  m_inNames.push_back("(observedOT-expectedOT)");
-  m_inNames.push_back("OThits");
-  m_inNames.push_back("IThits");
-  m_inNames.push_back("TThits");
-  m_inNames.push_back("VELOhits");
-  m_inNames.push_back("eta");
-  m_inNames.push_back("pt");
+  variableNames_Upstream(m_inNames);
   m_readerUpstream = new ReadMLP_fittedUpstream( m_inNames );
 
   //downstream tracks
-  m_inNames.clear();
-  m_inNames.push_back("track_Chi2");
-  m_inNames.push_back("track_Dof");
-  m_inNames.push_back("Tchi*Tdof");
-  m_inNames.push_back("Tdof");
-  m_inNames.push_back("observedIT");
-  m_inNames.push_back("observedTT");
-  m_inNames.push_back("observedOT");
-  m_inNames.push_back("(observedIT-expectedIT)");
-  m_inNames.push_back("(observedTT-expectedTT)");
-  m_inNames.push_back("(observedOT-expectedOT)");
-  m_inNames.push_back("OThits");
-  m_inNames.push_back("IThits");
-  m_inNames.push_back("TThits");
-  m_inNames.push_back("VELOhits");
-  m_inNames.push_back("(OTbaddrifttime+OToutliers)");
-  m_inNames.push_back("eta");
-  m_inNames.push_back("pt");
+  variableNames_Downstream(m_inNames);
   m_readerDownstream = new ReadMLP_fittedDownstream( m_inNames );
 
   //Ttracks
-  m_inNames.clear();
-  m_inNames.push_back("track_Chi2");
-  m_inNames.push_back("track_Dof");
-  m_inNames.push_back("Tchi*Tdof");
-  m_inNames.push_back("Tdof");
-  m_inNames.push_back("observedIT");
-  m_inNames.push_back("observedOT");
-  m_inNames.push_back("(observedIT-expectedIT)");
-  m_inNames.push_back("(observedOT-expectedOT)");
-  m_inNames.push_back("OThits");
-  m_inNames.push_back("IThits");
-  m_inNames.push_back("TThits");
-  m_inNames.push_back("VELOhits");
-  m_inNames.push_back("(OTbaddrifttime+OToutliers)");
-  m_inNames.push_back("eta");
-  m_inNames.push_back("pt");
+  variableNames_Ttrack(m_inNames);
   m_readerTtrack = new ReadMLP_fittedTtrack( m_inNames );
 
 
   //long tracks
-  m_inNames.clear();
-  m_inNames.push_back("track_Chi2");
-  m_inNames.push_back("track_Dof");
-  m_inNames.push_back("track_MatchChi2");
-  m_inNames.push_back("Vchi*Vdof");
-  m_inNames.push_back("Vdof");
-  m_inNames.push_back("Tchi*Tdof");
-  m_inNames.push_back("Tdof");
-  m_inNames.push_back("observedV");
-  m_inNames.push_back("observedIT");
-  m_inNames.push_back("observedTT");
-  m_inNames.push_back("observedOT");
-  m_inNames.push_back("(observedV-expectedV)");
-  m_inNames.push_back("(observedIT-expectedIT)");
-  m_inNames.push_back("(observedTT-expectedTT)");
-  m_inNames.push_back("(observedOT-expectedOT)");
-  m_inNames.push_back("OThits");
-  m_inNames.push_back("IThits");
-  m_inNames.push_back("TThits");
-  m_inNames.push_back("VELOhits");
-  m_inNames.push_back("(OTbaddrifttime+OToutliers)");
-  m_inNames.push_back("eta");
-  m_inNames.push_back("pt");
+  variableNames_Longtrack(m_inNames);
   m_readerLong = new ReadMLP_fittedLong( m_inNames );
 
   m_inputVec = new std::vector<double>;
@@ -249,6 +221,8 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
 
   const bool isDebug   = msgLevel(MSG::DEBUG);
   double retval = 0;
+  m_inputVec->clear();
+  if (!m_configured) return Error("event initialisation failed",StatusCode::SUCCESS,10);
   if ( UNLIKELY( isDebug ) ) debug() << "==> Execute" << endmsg;
 
   int veloHits=0,ttHits=0,itHits=0,otHits=0;
@@ -260,13 +234,10 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     if(ids[i].isOT()) ++otHits;
   }
 
+  int nVeloCont=0;
+  int nTTCont=0;
+  int nITCont=0;
 
-  int nVeloCont = 0;
-  int nTTCont = 0;
-  int nITCont = 0;
-
-
-  // FIXME: these four numbers don't need to be computed per track, but per event instead!
   LHCb::VeloClusters* veloCont = getIfExists<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
   if (NULL==veloCont) {
     // do we want to do something here?
@@ -288,8 +259,8 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     nITCont = itCont->size();
   }
 
-  int nOTCont = m_otdecoder->totalNumberOfHits();
-  //int nHitMult = nVeloCont + nTTCont + nITCont + nOTCont;
+
+
 
 
 
@@ -299,9 +270,8 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
    */
    
   // Velo
-  if( aTrack.checkType(LHCb::Track::Velo) ){
+  if( aTrack.checkType(LHCb::Track::Velo) ) {
     aTrack.setGhostProbability(-888.);
-    m_inputVec->clear();
 
     if (!aTrack.hasInfo(LHCb::Track::FitVeloChi2)) {
       aTrack.setGhostProbability(-999.);
@@ -413,13 +383,6 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
         if (dump[i]) ret+=1.;
       expectedOT =  ret;
       if ( UNLIKELY( isDebug ) ) debug() << "expectedOT = " << ret << endmsg;
-    }
-
-    const LHCb::KalmanFitResult* kalfit =static_cast<const LHCb::KalmanFitResult*>(aTrack.fitResult()) ;
-    if( !kalfit ) {
-      aTrack.setGhostProbability(-999.);
-      if ( UNLIKELY( isDebug ) ) debug()<<"fit result not available... quit"<<endmsg;
-      return Warning("kalman fit result not available ... end loop and set ghostProb = -999.",StatusCode::SUCCESS, 1);
     }
 
 
@@ -436,46 +399,26 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     m_inputVec->push_back( (0-expectedIT));
     m_inputVec->push_back( (observedTT-expectedTT));
     m_inputVec->push_back( (0-expectedOT));
-    m_inputVec->push_back( nOTCont );
+    m_inputVec->push_back( m_nOTCont );
     m_inputVec->push_back( nITCont );
     m_inputVec->push_back( nTTCont );
     m_inputVec->push_back( nVeloCont );
     m_inputVec->push_back( aTrack.pseudoRapidity() );
     m_inputVec->push_back( aTrack.pt() );
 
-    if ( UNLIKELY( isDebug ) ) {
-      debug()<<"***   print all ***"<<endmsg;
-      debug()<<"aTrack.chi2()           :"<< aTrack.chi2()<<endmsg;
-      debug()<<"aTrack.nDoF()           :"<< aTrack.nDoF()<<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitVeloChi2,-1.)     :"<< aTrack.info(LHCb::Track::FitVeloChi2,-1.)<<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitVeloNDoF,-1.)     :"<<aTrack.info(LHCb::Track::FitVeloNDoF,-1.) <<endmsg;
-      debug()<<"observedV               :"<< observedV<<endmsg;
-      debug()<<"(observedV-expectedV)   :"<<(observedV-expectedV) <<endmsg;
-      debug()<<"(observedIT-expectedIT) :"<< (0-expectedIT)<<endmsg;
-      debug()<<"(observedTT-expectedTT) :"<< (observedTT-expectedTT)<<endmsg;
-      debug()<<"(observedOT-expectedOT) :"<< (0-expectedOT)<<endmsg;
-      debug()<<"OThits                  :"<<nOTCont <<endmsg;
-      debug()<<"IThits                  :"<<nITCont <<endmsg;
-      debug()<<"TThits                  :"<<nTTCont <<endmsg;
-      debug()<<"VELOhits                :"<<nVeloCont <<endmsg;
-      debug()<<"aTrack.pseudoRapidity() :"<<aTrack.pseudoRapidity() <<endmsg;
-      debug()<<"aTrack.pt()             :"<<aTrack.pt() <<endmsg;
-      debug()<<"***"<<endmsg;
-    }
 
     retval = m_readerVelo->GetMvaValue( *m_inputVec );
 
     if ( UNLIKELY( isDebug ) )
     {
+      debug_NN_input(aTrack.type());
       debug()<<" NN output:  "<<retval<<endmsg;
       debug()<<"now tranform"<<endmsg;
     }
     
     //restrict range to that known by flattening function
     // function defined between -0.2 and +1.1986
-    if      ( retval < -0.2  ) { retval = 1; }
-    else if ( retval > 1.195 ) { retval = 0; }
-    else    // flatten
+    if (!cutoff(retval))
     {
       retval = m_FlattenLookupTableVelo->value(retval);
     }
@@ -486,7 +429,6 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
   // Upstream
   if( aTrack.checkType(LHCb::Track::Upstream) ){
     aTrack.setGhostProbability(-888.);
-    m_inputVec->clear();
     if (!aTrack.hasInfo(LHCb::Track::FitVeloChi2)) {
       aTrack.setGhostProbability(-999.);
       if ( UNLIKELY( isDebug ) ) debug()<<"Track::FitVeloChi2.quit"<<endmsg;
@@ -601,13 +543,6 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
       if ( UNLIKELY( isDebug ) ) debug() << "expectedOT = " << ret << endmsg;
     }
 
-    const LHCb::KalmanFitResult* kalfit =static_cast<const LHCb::KalmanFitResult*>(aTrack.fitResult()) ;
-    if( !kalfit ) {
-      aTrack.setGhostProbability(-999.);
-      if ( UNLIKELY( isDebug ) ) debug()<<"fit result not available... quit"<<endmsg;
-      return Warning("kalman fit result not available ... end loop and set ghostProb = -999.",StatusCode::SUCCESS, 1);
-    }
-
     /*
      *    now fill the input vector to evaluate the NN
      */
@@ -622,47 +557,26 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     m_inputVec->push_back( (0-expectedIT));
     m_inputVec->push_back( (observedTT-expectedTT));
     m_inputVec->push_back( (0-expectedOT));
-    m_inputVec->push_back( nOTCont );
+    m_inputVec->push_back( m_nOTCont );
     m_inputVec->push_back( nITCont );
     m_inputVec->push_back( nTTCont );
     m_inputVec->push_back( nVeloCont );
     m_inputVec->push_back( aTrack.pseudoRapidity() );
     m_inputVec->push_back( aTrack.pt() );
 
-    if ( UNLIKELY( isDebug ) ) {
-      debug()<<"***   print all ***"<<endmsg;
-      debug()<<"aTrack.chi2()           :"<< aTrack.chi2()<<endmsg;
-      debug()<<"aTrack.nDoF()           :"<< aTrack.nDoF()<<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitVeloChi2,-1.)     :"<< aTrack.info(LHCb::Track::FitVeloChi2,-1.)<<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitVeloNDoF,-1.)     :"<<aTrack.info(LHCb::Track::FitVeloNDoF,-1.) <<endmsg;
-      debug()<<"observedV               :"<< observedV<<endmsg;
-      debug()<<"observedTT              :"<< observedTT<<endmsg;
-      debug()<<"(observedV-expectedV)   :"<<(observedV-expectedV) <<endmsg;
-      debug()<<"(observedIT-expectedIT) :"<< (0-expectedIT)<<endmsg;
-      debug()<<"(observedTT-expectedTT) :"<< (observedTT-expectedTT)<<endmsg;
-      debug()<<"(observedOT-expectedOT) :"<< (0-expectedOT)<<endmsg;
-      debug()<<"OThits                  :"<<nOTCont <<endmsg;
-      debug()<<"IThits                  :"<<nITCont <<endmsg;
-      debug()<<"TThits                  :"<<nTTCont <<endmsg;
-      debug()<<"VELOhits                :"<<nVeloCont <<endmsg;
-      debug()<<"aTrack.pseudoRapidity() :"<<aTrack.pseudoRapidity() <<endmsg;
-      debug()<<"aTrack.pt()             :"<<aTrack.pt() <<endmsg;
-      debug()<<"***"<<endmsg;
-    }
 
     retval = m_readerUpstream->GetMvaValue( *m_inputVec );
 
     if ( UNLIKELY( isDebug ) )
     {
+      debug_NN_input(aTrack.type());
       debug()<<" NN output:  "<<retval<<endmsg;
       debug()<<"now tranform"<<endmsg;
     }
     
     //restrict range to that known by flattening function
     // function defined between -0.2 and +1.1986
-    if      ( retval < -0.2  ) { retval = 1; }
-    else if ( retval > 1.195 ) { retval = 0; }
-    else    // flatten
+    if (!cutoff(retval))
     {
       retval = m_FlattenLookupTableUpstream->value(retval);
     }
@@ -673,7 +587,6 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
   // Downstream
   if( aTrack.checkType(LHCb::Track::Downstream) ){
     aTrack.setGhostProbability(-888.);
-    m_inputVec->clear();
 
     LHCb::HitPattern observedpattern(aTrack.lhcbIDs());
     LHCb::HitPattern expectedpattern;
@@ -799,7 +712,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     m_inputVec->push_back( (observedIT-expectedIT));
     m_inputVec->push_back( (observedTT-expectedTT));
     m_inputVec->push_back( (observedOT-expectedOT));
-    m_inputVec->push_back( nOTCont );
+    m_inputVec->push_back( m_nOTCont );
     m_inputVec->push_back( nITCont );
     m_inputVec->push_back( nTTCont );
     m_inputVec->push_back( nVeloCont );
@@ -807,41 +720,19 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     m_inputVec->push_back( aTrack.pseudoRapidity() );
     m_inputVec->push_back( aTrack.pt() );
 
-    if ( UNLIKELY( isDebug ) ) {
-      debug()<<"***   print all ***"<<endmsg;
-      debug()<<"aTrack.chi2()           :"<< aTrack.chi2()<<endmsg;
-      debug()<<"aTrack.nDoF()           :"<< aTrack.nDoF()<<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitTChi2,-1.)     :"<<aTrack.info(LHCb::Track::FitTChi2,-1.) <<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitTNDoF,-1.)     :"<< aTrack.info(LHCb::Track::FitTNDoF,-1.)<<endmsg;
-      debug()<<"observedIT              :"<< observedIT<<endmsg;
-      debug()<<"observedTT              :"<< observedTT<<endmsg;
-      debug()<<"observedOT              :"<< observedOT<<endmsg;
-      debug()<<"(observedIT-expectedIT) :"<< (observedIT-expectedIT)<<endmsg;
-      debug()<<"(observedTT-expectedTT) :"<< (observedTT-expectedTT)<<endmsg;
-      debug()<<"(observedOT-expectedOT) :"<< (observedOT-expectedOT)<<endmsg;
-      debug()<<"OThits                  :"<<nOTCont <<endmsg;
-      debug()<<"IThits                  :"<<nITCont <<endmsg;
-      debug()<<"TThits                  :"<<nTTCont <<endmsg;
-      debug()<<"VELOhits                :"<<nVeloCont <<endmsg;
-      debug()<<"nOTBad                  :"<<nOTBad <<endmsg;
-      debug()<<"aTrack.pseudoRapidity() :"<<aTrack.pseudoRapidity() <<endmsg;
-      debug()<<"aTrack.pt()             :"<<aTrack.pt() <<endmsg;
-      debug()<<"***"<<endmsg;
-    }
 
     retval = m_readerDownstream->GetMvaValue( *m_inputVec );
 
     if ( UNLIKELY( isDebug ) )
     {
+      debug_NN_input(aTrack.type()) ;
       debug()<<" NN output:  "<<retval<<endmsg;
       debug()<<"now tranform"<<endmsg;
     }
     
     //restrict range to that known by flattening function
     // function defined between -0.2 and +1.1986
-    if      ( retval < -0.2  ) { retval = 1; }
-    else if ( retval > 1.195 ) { retval = 0; }
-    else    // flatten
+    if (!cutoff(retval))
     {
       retval = m_FlattenLookupTableDownstream->value(retval);
     }
@@ -852,7 +743,6 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
   // Ttrack
   if( aTrack.checkType(LHCb::Track::Ttrack) ){
     aTrack.setGhostProbability(-888.);
-    m_inputVec->clear();
 
     LHCb::HitPattern observedpattern(aTrack.lhcbIDs());
     LHCb::HitPattern expectedpattern;
@@ -954,7 +844,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     m_inputVec->push_back( observedOT );
     m_inputVec->push_back( (observedIT-expectedIT));
     m_inputVec->push_back( (observedOT-expectedOT));
-    m_inputVec->push_back( nOTCont );
+    m_inputVec->push_back( m_nOTCont );
     m_inputVec->push_back( nITCont );
     m_inputVec->push_back( nTTCont );
     m_inputVec->push_back( nVeloCont );
@@ -962,39 +852,19 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     m_inputVec->push_back( aTrack.pseudoRapidity() );
     m_inputVec->push_back( aTrack.pt() );
 
-    if ( UNLIKELY( isDebug ) ) {
-      debug()<<"***   print all ***"<<endmsg;
-      debug()<<"aTrack.chi2()           :"<< aTrack.chi2()<<endmsg;
-      debug()<<"aTrack.nDoF()           :"<< aTrack.nDoF()<<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitTChi2,-1.)     :"<<aTrack.info(LHCb::Track::FitTChi2,-1.) <<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitTNDoF,-1.)     :"<< aTrack.info(LHCb::Track::FitTNDoF,-1.)<<endmsg;
-      debug()<<"observedIT              :"<< observedIT<<endmsg;
-      debug()<<"observedOT              :"<< observedOT<<endmsg;
-      debug()<<"(observedIT-expectedIT) :"<< (observedIT-expectedIT)<<endmsg;
-      debug()<<"(observedOT-expectedOT) :"<< (observedOT-expectedOT)<<endmsg;
-      debug()<<"OThits                  :"<<nOTCont <<endmsg;
-      debug()<<"IThits                  :"<<nITCont <<endmsg;
-      debug()<<"TThits                  :"<<nTTCont <<endmsg;
-      debug()<<"VELOhits                :"<<nVeloCont <<endmsg;
-      debug()<<"nOTBad                  :"<<nOTBad <<endmsg;
-      debug()<<"aTrack.pseudoRapidity() :"<<aTrack.pseudoRapidity() <<endmsg;
-      debug()<<"aTrack.pt()             :"<<aTrack.pt() <<endmsg;
-      debug()<<"***"<<endmsg;
-    }
 
     retval = m_readerTtrack->GetMvaValue( *m_inputVec );
 
     if ( UNLIKELY( isDebug ) )
     {
+      debug_NN_input(aTrack.type()) ;
       debug()<<" NN output:  "<<retval<<endmsg;
       debug()<<"now tranform"<<endmsg;
     }
     
     //restrict range to that known by flattening function
     // function defined between -0.2 and +1.1986
-    if      ( retval < -0.2  ) { retval = 1; }
-    else if ( retval > 1.195 ) { retval = 0; }
-    else    // flatten
+    if (!cutoff(retval))
     {
       retval = m_FlattenLookupTableTtrack->value(retval);
     }
@@ -1005,7 +875,6 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
   if( aTrack.checkType(LHCb::Track::Long) ){
 
     aTrack.setGhostProbability(-888.);
-    m_inputVec->clear();
     if (!aTrack.hasInfo(LHCb::Track::FitMatchChi2)) {
       aTrack.setGhostProbability(-999.);
       if ( UNLIKELY( isDebug ) ) debug()<<"Track::FitMatchChi2.quit"<<endmsg;
@@ -1185,7 +1054,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     m_inputVec->push_back( (observedIT-expectedIT));
     m_inputVec->push_back( (observedTT-expectedTT));
     m_inputVec->push_back( (observedOT-expectedOT));
-    m_inputVec->push_back( nOTCont );
+    m_inputVec->push_back( m_nOTCont );
     m_inputVec->push_back( nITCont );
     m_inputVec->push_back( nTTCont );
     m_inputVec->push_back( nVeloCont );
@@ -1193,46 +1062,19 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     m_inputVec->push_back( aTrack.pseudoRapidity() );
     m_inputVec->push_back( aTrack.pt() );
 
-    if ( UNLIKELY( isDebug ) ) {
-      debug()<<"***   print all ***"<<endmsg;
-      debug()<<"aTrack.chi2()           :"<< aTrack.chi2()<<endmsg;
-      debug()<<"aTrack.nDoF()           :"<< aTrack.nDoF()<<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitMatchChi2,-1.)     :"<< aTrack.info(LHCb::Track::FitMatchChi2,-1.)<<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitVeloChi2,-1.)     :"<< aTrack.info(LHCb::Track::FitVeloChi2,-1.)<<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitVeloNDoF,-1.)     :"<<aTrack.info(LHCb::Track::FitVeloNDoF,-1.) <<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitTChi2,-1.)     :"<<aTrack.info(LHCb::Track::FitTChi2,-1.) <<endmsg;
-      debug()<<"aTrack.info(LHCb::Track::FitTNDoF,-1.)     :"<< aTrack.info(LHCb::Track::FitTNDoF,-1.)<<endmsg;
-      debug()<<"observedV               :"<< observedV<<endmsg;
-      debug()<<"observedIT              :"<< observedIT<<endmsg;
-      debug()<<"observedTT              :"<< observedTT<<endmsg;
-      debug()<<"observedOT              :"<< observedOT<<endmsg;
-      debug()<<"(observedV-expectedV)   :"<<(observedV-expectedV) <<endmsg;
-      debug()<<"(observedIT-expectedIT) :"<< (observedIT-expectedIT)<<endmsg;
-      debug()<<"(observedTT-expectedTT) :"<< (observedTT-expectedTT)<<endmsg;
-      debug()<<"(observedOT-expectedOT) :"<< (observedOT-expectedOT)<<endmsg;
-      debug()<<"OThits                  :"<<nOTCont <<endmsg;
-      debug()<<"IThits                  :"<<nITCont <<endmsg;
-      debug()<<"TThits                  :"<<nTTCont <<endmsg;
-      debug()<<"VELOhits                :"<<nVeloCont <<endmsg;
-      debug()<<"nOTBad                  :"<<nOTBad <<endmsg;
-      debug()<<"aTrack.pseudoRapidity() :"<<aTrack.pseudoRapidity() <<endmsg;
-      debug()<<"aTrack.pt()             :"<<aTrack.pt() <<endmsg;
-      debug()<<"***"<<endmsg;
-    }
 
     retval = m_readerLong->GetMvaValue( *m_inputVec );
 
     if ( UNLIKELY( isDebug ) )
     {
+      debug_NN_input(aTrack.type());
       debug()<<" NN output:  "<<retval<<endmsg;
       debug()<<"now tranform"<<endmsg;
     }
     
     //restrict range to that known by flattening function
     // function defined between -0.2 and +1.1986
-    if      ( retval < -0.2  ) { retval = 1; }
-    else if ( retval > 1.195 ) { retval = 0; }
-    else    // flatten
+    if (!cutoff(retval))
     {
       retval = m_FlattenLookupTableLongtrack->value(retval);
     }
@@ -1242,16 +1084,18 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
   }//end evaluate long track
 
   // double check the result
-  if( retval < 0 ) { 
-    Warning("Ghost prob < 0 - this should not be possible",StatusCode::SUCCESS, 1).ignore();
-    retval = 0;
+  if( UNLIKELY ( retval < 0. ) ) { 
+    Warning("Ghost prob < 0. - this should not be possible",StatusCode::SUCCESS, 1).ignore();
+    retval = 0.;
   }
-  else if( retval > 1 ){
-    Warning("Ghost prob > 1 - this should not be possible",StatusCode::SUCCESS, 1).ignore();   
-    retval = 1;
+  else if( UNLIKELY ( retval > 1. ) ) {
+    Warning("Ghost prob > 1. - this should not be possible",StatusCode::SUCCESS, 1).ignore();   
+    retval = 1.;
   }
   
   if ( UNLIKELY( isDebug ) ) debug()<<"transformed value (before fill) : "<<retval<<endmsg;
+
+
   aTrack.setGhostProbability(retval);
 
   return StatusCode::SUCCESS;
@@ -1274,4 +1118,150 @@ StatusCode TrackNNGhostId::finalize()
   delete m_FlattenLookupTableTtrack;
   delete m_FlattenLookupTableLongtrack;
   return GaudiTool::finalize();  // must be called after all other actions
+}
+
+
+/**
+* @brief check if network output was outside the specified range (-0.2, 1.1986)
+*
+* @param unregularized will be set to 1. or 0. if cutoff was neccessary, otherwise unchanged
+*
+* @return true if cutoff was neccessary
+*/
+inline bool TrackNNGhostId::cutoff(double& unregularized) const {
+  if      ( unregularized < -0.2  ) { unregularized = 1.; return true; }
+  else if ( unregularized > 1.195 ) { unregularized = 0.; return true; }
+  return false;
+}
+
+void TrackNNGhostId::debug_NN_input(const LHCb::Track::Types type) const {
+  // This method shouldn't be called in the first place if not in debug mode.
+  std::vector<std::string> names;
+  if (LHCb::Track::Long==type)
+    variableNames_Longtrack(names);
+  else if (LHCb::Track::Velo==type)
+    variableNames_Velo(names);
+  else if (LHCb::Track::Upstream==type)
+    variableNames_Upstream(names);
+  else if (LHCb::Track::Downstream==type)
+    variableNames_Downstream(names);
+  else if (LHCb::Track::Ttrack==type)
+    variableNames_Ttrack(names);
+
+  debug() << "**** print all ****" << endmsg;
+  for (unsigned ii = 0 ; ii < names.size() ; ++ii) {
+    debug() << names[ii] << "\t\t" << (*m_inputVec)[ii] << endmsg;
+  }
+  debug() << "*******************" << endmsg;
+  return;
+}
+
+void TrackNNGhostId::variableNames_Upstream(std::vector<std::string>& inNames) const {
+  inNames.clear();
+  inNames.push_back("track_Chi2");
+  inNames.push_back("track_Dof");
+  inNames.push_back("Vchi*Vdof");
+  inNames.push_back("Vdof");
+  inNames.push_back("observedV");
+  inNames.push_back("observedTT");
+  inNames.push_back("(observedV-expectedV)");
+  inNames.push_back("(observedIT-expectedIT)");
+  inNames.push_back("(observedTT-expectedTT)");
+  inNames.push_back("(observedOT-expectedOT)");
+  inNames.push_back("OThits");
+  inNames.push_back("IThits");
+  inNames.push_back("TThits");
+  inNames.push_back("VELOhits");
+  inNames.push_back("eta");
+  inNames.push_back("pt");
+  return ;
+}
+
+void TrackNNGhostId::variableNames_Downstream(std::vector<std::string>& inNames) const {
+  inNames.clear();
+  inNames.push_back("track_Chi2");
+  inNames.push_back("track_Dof");
+  inNames.push_back("Tchi*Tdof");
+  inNames.push_back("Tdof");
+  inNames.push_back("observedIT");
+  inNames.push_back("observedTT");
+  inNames.push_back("observedOT");
+  inNames.push_back("(observedIT-expectedIT)");
+  inNames.push_back("(observedTT-expectedTT)");
+  inNames.push_back("(observedOT-expectedOT)");
+  inNames.push_back("OThits");
+  inNames.push_back("IThits");
+  inNames.push_back("TThits");
+  inNames.push_back("VELOhits");
+  inNames.push_back("(OTbaddrifttime+OToutliers)");
+  inNames.push_back("eta");
+  inNames.push_back("pt");
+  return ;
+}
+
+void TrackNNGhostId::variableNames_Ttrack(std::vector<std::string>& inNames) const {
+  inNames.clear();
+  inNames.push_back("track_Chi2");
+  inNames.push_back("track_Dof");
+  inNames.push_back("Tchi*Tdof");
+  inNames.push_back("Tdof");
+  inNames.push_back("observedIT");
+  inNames.push_back("observedOT");
+  inNames.push_back("(observedIT-expectedIT)");
+  inNames.push_back("(observedOT-expectedOT)");
+  inNames.push_back("OThits");
+  inNames.push_back("IThits");
+  inNames.push_back("TThits");
+  inNames.push_back("VELOhits");
+  inNames.push_back("(OTbaddrifttime+OToutliers)");
+  inNames.push_back("eta");
+  inNames.push_back("pt");
+  return ;
+}
+
+void TrackNNGhostId::variableNames_Velo(std::vector<std::string>& inNames) const {
+  inNames.clear();
+  inNames.push_back("track_Chi2");
+  inNames.push_back("track_Dof");
+  inNames.push_back("Vchi*Vdof");
+  inNames.push_back("Vdof");
+  inNames.push_back("observedV");
+  inNames.push_back("(observedV-expectedV)");
+  inNames.push_back("(observedIT-expectedIT)");
+  inNames.push_back("(observedTT-expectedTT)");
+  inNames.push_back("(observedOT-expectedOT)");
+  inNames.push_back("OThits");
+  inNames.push_back("IThits");
+  inNames.push_back("TThits");
+  inNames.push_back("VELOhits");
+  inNames.push_back("eta");
+  inNames.push_back("pt");
+  return ;
+}
+
+void TrackNNGhostId::variableNames_Longtrack(std::vector<std::string>& inNames) const {
+  inNames.clear();
+  inNames.push_back("track_Chi2");
+  inNames.push_back("track_Dof");
+  inNames.push_back("track_MatchChi2");
+  inNames.push_back("Vchi*Vdof");
+  inNames.push_back("Vdof");
+  inNames.push_back("Tchi*Tdof");
+  inNames.push_back("Tdof");
+  inNames.push_back("observedV");
+  inNames.push_back("observedIT");
+  inNames.push_back("observedTT");
+  inNames.push_back("observedOT");
+  inNames.push_back("(observedV-expectedV)");
+  inNames.push_back("(observedIT-expectedIT)");
+  inNames.push_back("(observedTT-expectedTT)");
+  inNames.push_back("(observedOT-expectedOT)");
+  inNames.push_back("OThits");
+  inNames.push_back("IThits");
+  inNames.push_back("TThits");
+  inNames.push_back("VELOhits");
+  inNames.push_back("(OTbaddrifttime+OToutliers)");
+  inNames.push_back("eta");
+  inNames.push_back("pt");
+  return;
 }

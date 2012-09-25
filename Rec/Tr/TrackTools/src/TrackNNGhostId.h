@@ -9,6 +9,7 @@
 #include "OTDAQ/IOTRawBankDecoder.h"
 
 #include "TrackInterfaces/ITrackManipulator.h"     
+#include "GaudiKernel/IIncidentListener.h" 
 
 // For interpolator
 #include "RichDet/Rich1DTabFunc.h"
@@ -28,7 +29,8 @@ class IVeloExpectation;
  *
  */
 class TrackNNGhostId : public GaudiTool,
-                       virtual public ITrackManipulator {
+                       virtual public ITrackManipulator,
+                       virtual public IIncidentListener {
 public:
 
   /// Standard constructor
@@ -43,6 +45,8 @@ public:
   StatusCode finalize();
 
   StatusCode execute(LHCb::Track& aTrack) const;
+
+  virtual void handle( const Incident& incident ); 
 
 private:
 
@@ -69,5 +73,21 @@ private:
   const Rich::TabulatedFunction1D* m_FlattenLookupTableDownstream;
   const Rich::TabulatedFunction1D* m_FlattenLookupTableTtrack;
 
+  int m_nITCont;
+  int m_nTTCont;
+  int m_nOTCont;
+  int m_nVeloCont;
+  bool m_configured;
+
+  bool cutoff(double& unregularized) const;
+  void variableNames_Longtrack(std::vector<std::string>& inNames) const;
+  void variableNames_Velo(std::vector<std::string>& inNames) const;
+  void variableNames_Upstream(std::vector<std::string>& inNames) const;
+  void variableNames_Downstream(std::vector<std::string>& inNames) const;
+  void variableNames_Ttrack(std::vector<std::string>& inNames) const;
+
+  void debug_NN_input(const LHCb::Track::Types type) const;
+
+  void initEvent(); 
 };
 #endif // TRACKNNGHOSTID_H
