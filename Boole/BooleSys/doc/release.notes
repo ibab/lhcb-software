@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Change in requirements to VP/VPAssociators and VP/VPAlgorithms
+
 - Add FT/FTDigitisation
  
 </PRE><H1><A NAME=v25r1>2012-09-18 Boole v25r1</A></H1><PRE>
