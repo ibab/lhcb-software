@@ -87,11 +87,10 @@ StatusCode DeVL::initialize() {
   }
   m_sensors.resize(maxSensorNumber + 1, 0);
 
-  m_nSensors = m_nRSensors = m_nPhiSensors = m_nPileUpSensors = 0;
+  m_nSensors = m_nRSensors = m_nPhiSensors = 0;
   m_nLeftSensors    = m_nRightSensors    = 0;
   m_nLeftRSensors   = m_nRightRSensors   = 0;
   m_nLeftPhiSensors = m_nRightPhiSensors = 0;
-  m_nLeftPUSensors  = m_nRightPUSensors  = 0;
   for (it = vlSensors.begin(); it != vlSensors.end(); ++it) {
     m_vpSensors.push_back(*it);
     ++m_nSensors;
@@ -128,16 +127,6 @@ StatusCode DeVL::initialize() {
       } else {
         m_vpRightPhiSensors.push_back(m_vpPhiSensors.back());
         ++m_nRightPhiSensors;
-      }
-    } else if ((*it)->isPileUp()) {
-      m_vpPUSensors.push_back(dynamic_cast<DeVLRSensor*>((*it)));
-      ++m_nPileUpSensors;
-      if (isLeftSensor) {
-        m_vpLeftPUSensors.push_back(m_vpPUSensors.back());
-        ++m_nLeftPUSensors;
-      } else {
-        m_vpRightRSensors.push_back(m_vpPUSensors.back());
-        ++m_nRightPUSensors;
       }
     } else {
       msg << MSG::ERROR << "Sensor type is unknown" << endmsg;
@@ -241,10 +230,6 @@ StatusCode DeVL::initialize() {
         << "There are " << m_nPhiSensors 
         << " Phi sensors (left: " << m_nLeftPhiSensors
         << ", right: " << m_nRightPhiSensors << ")" << endmsg;
-    msg << MSG::DEBUG 
-        << "There are  " << m_nPileUpSensors 
-        << " PU sensors  (left:  "  << m_nLeftPUSensors
-        << ", right:  " << m_nRightPUSensors << ")" << endmsg;
   }
   sc = registerConditionCallBacks();
   if (sc.isFailure()) {

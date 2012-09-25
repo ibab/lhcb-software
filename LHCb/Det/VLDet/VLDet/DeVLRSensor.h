@@ -221,9 +221,9 @@ private:
 
   /// Initialisation from XML
   StatusCode initSensor();
-  /// Calculate the global and half box strip radii when the alignment changes.
+  /// Calculate the global strip radii when the alignment changes.
   StatusCode updateStripCache();
-  /// Calculate the zone limits in the global and halfbox frame.
+  /// Calculate the zone limits in the global frame.
   StatusCode updateZoneCache();
   /// Update the geometry cache when the alignment changes.
   StatusCode updateGeometryCache();
@@ -273,7 +273,7 @@ private:
 
 /// Fast cast to R sensor, returns 0 for wrong type
 inline const DeVLRSensor* DeVLSensor::rSensor() const { 
-  return (m_isR || m_isPileUp ? static_cast<const DeVLRSensor*>(this) : 0); 
+  return (m_isR ? static_cast<const DeVLRSensor*>(this) : 0); 
 }
 
 #endif

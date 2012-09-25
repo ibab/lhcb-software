@@ -72,7 +72,7 @@ const CLID& DeVLRSensor::clID() const {
 //=============================================================================
 StatusCode DeVLRSensor::initialize() {
 
-  /// Set the output level.
+  // Set the output level.
   PropertyMgr* pmgr = new PropertyMgr();
   int outputLevel = 0;
   pmgr->declareProperty("OutputLevel", outputLevel);
@@ -90,24 +90,24 @@ StatusCode DeVLRSensor::initialize() {
   if (m_verbose) m_debug = true;
   MsgStream msg(msgSvc(), "DeVLRSensor");
 
-  /// Initialise the base class.
+  // Initialise the base class.
   sc = DeVLSensor::initialize();
   if (!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to initialise DeVLSensor." << endmsg;
     return sc;
   }
-  /// Initialise the sensor from the XML.
+  // Initialise the sensor from the XML.
   sc = initSensor();
   if (!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to initialise DeVLRSensor." << endmsg;
     return sc;
   }
-  /// Build up map of strips to routing lines.
+  // Build up map of strips to routing lines.
   buildRoutingLineMap();
-  /// Register geometry conditions, update strip cache.
+  // Register geometry conditions, update strip cache.
   updMgrSvc()->registerCondition(this, this->m_geometry,
                                  &DeVLRSensor::updateGeometryCache);
-  /// First update
+  // First update
   sc = updMgrSvc()->update(this);
   if (!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to update geometry cache." << endmsg;
@@ -123,27 +123,27 @@ StatusCode DeVLRSensor::initialize() {
 StatusCode DeVLRSensor::initSensor() {
   
   MsgStream msg(msgSvc(), "DeVLRSensor");
-  /// Number of zones
+  // Number of zones
   m_numberOfZones = param<int>("RNbZones");
-  /// Number of strips in each zone
+  // Number of strips in each zone
   std::vector<int> nbStrips = paramAsIntVect("RNbStrips");
-  /// Max. radius of each zone
+  // Max. radius of each zone
   std::vector<double> rMaxZone = paramAsDoubleVect("RMaxRadius");
-  /// Inner pitch
+  // Inner pitch
   m_innerPitch = param<double>("RInnerPitch");
-  /// Radius up to which the pitch is constant
+  // Radius up to which the pitch is constant
   m_rLogPitch = param<double>("RConstPitchRadius");
-  /// Pitch slope (logarithmic)
+  // Pitch slope (logarithmic)
   m_pitchSlope = param<double>("RPitchSlope");
-  /// Overhang
+  // Overhang
   m_overhang = param<double>("ROverhang");
-  /// Dead region from bias line
+  // Dead region from bias line
   m_phiGap = param<double>("RPhiGap") / 2;
-  /// Resolution of the sensor
+  // Resolution of the sensor
   m_resolution.first = param<double>("RResGrad");
   m_resolution.second = param<double>("RResConst");
 
-  /// Check the size of the vectors retrieved from XML.
+  // Check the size of the vectors retrieved from XML.
   if (nbStrips.size() != m_numberOfZones ||
       rMaxZone.size() != m_numberOfZones) {
     msg << MSG::ERROR 
@@ -151,13 +151,13 @@ StatusCode DeVLRSensor::initSensor() {
     return StatusCode::FAILURE;
   }
 
-  /// Count the total number of strips.
+  // Count the total number of strips.
   m_numberOfStrips = 0;
   for (unsigned int zone = 0; zone < m_numberOfZones; ++zone) {
     m_numberOfStrips += nbStrips[zone];
   }
 
-  /// Setup the zone parameters.
+  // Setup the zone parameters.
   m_zones.resize(m_numberOfZones);
   unsigned int stripIndex = 0;
   for (unsigned int zone = 0; zone < m_numberOfZones; ++zone) {
@@ -166,7 +166,7 @@ StatusCode DeVLRSensor::initSensor() {
     m_zones[zone].nbStrips = nbStrips[zone];
     m_zones[zone].rMin = innerRadius();
     m_zones[zone].rMax = rMaxZone[zone];
-    /// Determine the angular limits.
+    // Determine the angular limits.
     const double phiStart    = -90. * Gaudi::Units::degree;
     const double phiCoverage = 180. * Gaudi::Units::degree / m_numberOfZones;
     m_zones[zone].phiMin = phiStart + zone * phiCoverage;
@@ -184,7 +184,7 @@ StatusCode DeVLRSensor::initSensor() {
   unsigned int firstStripLowerEar = m_zones[2].firstStrip;
   unsigned int firstStripUpperEar = m_zones[2].firstStrip + m_zones[2].nbStrips;
 
-  /// Setup the strip parameters.
+  // Setup the strip parameters.
   m_stripLimits.clear();
   m_strips.resize(m_numberOfStrips);
   stripIndex = 0;
@@ -206,7 +206,7 @@ StatusCode DeVLRSensor::initSensor() {
       double y1 = radius * sin(phiMin);
       double x2 = radius * cos(phiMax);
       double y2 = radius * sin(phiMax);
-      /// Check if the end points are outside the bounding box.
+      // Check if the end points are outside the bounding box.
       if (x1 < m_overhang) {
         x1 = m_overhang;
         phiMin = acos(x1 / radius);
@@ -293,15 +293,15 @@ StatusCode DeVLRSensor::pointToChannel(const Gaudi::XYZPoint& point,
                                        double& fraction,
                                        double& pitch) const {
                                        
-  /// Transform to the local frame.
+  // Transform to the local frame.
   Gaudi::XYZPoint localPoint = globalToLocal(point);
-  /// Check boundaries.
+  // Check boundaries.
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
   const double radius = localPoint.Rho();
   const double phi    = localPoint.phi();
   const unsigned int zone = zoneOfPhiAndR(phi, radius);
-  /// Work out the closest channel.
+  // Work out the closest channel.
   unsigned int closestStrip = 0;
   if (radius > m_rLogPitch) {
     int iLo = m_zones[zone].firstStrip;
@@ -332,11 +332,11 @@ StatusCode DeVLRSensor::pointToChannel(const Gaudi::XYZPoint& point,
     closestStrip += m_zones[zone].firstStrip;
   }
   const unsigned int sensor = sensorNumber();
-  /// Set the VLChannelID.
+  // Set the VLChannelID.
   channel.setSensor(sensor);
   channel.setStrip(closestStrip);
   channel.setType(LHCb::VLChannelID::RType);
-  /// Calculate the pitch.
+  // Calculate the pitch.
   pitch = rPitch(channel.strip());
   return StatusCode::SUCCESS;
   
@@ -353,7 +353,7 @@ StatusCode DeVLRSensor::neighbour(const LHCb::VLChannelID& start,
   unsigned int startZone = zoneOfStrip(strip);
   strip += nOffset;
   unsigned int endZone = zoneOfStrip(strip);
-  /// Check boundaries.
+  // Check boundaries.
   if (numberOfStrips() <= strip) return StatusCode::FAILURE;
   if (startZone != endZone) return StatusCode::FAILURE;
   channel = start;
@@ -435,9 +435,9 @@ double DeVLRSensor::stripLength(const unsigned int strip) const {
 /// Residual of 3-d point to a VLChannelID
 //=============================================================================
 StatusCode DeVLRSensor::residual(const Gaudi::XYZPoint& point,
-                                     const LHCb::VLChannelID& channel,
-                                     double &residual,
-                                     double &chi2) const {
+                                 const LHCb::VLChannelID& channel,
+                                 double &residual,
+                                 double &chi2) const {
 
   return this->residual(point, channel, 0., residual, chi2);
 
@@ -446,13 +446,13 @@ StatusCode DeVLRSensor::residual(const Gaudi::XYZPoint& point,
 ///Residual of 3-d point to a VLChannelID + interstrip fraction
 //=============================================================================
 StatusCode DeVLRSensor::residual(const Gaudi::XYZPoint& point,
-                                     const LHCb::VLChannelID& channel,
-                                     const double interStripFraction,
-                                     double &residual,
-                                     double &chi2) const {
+                                 const LHCb::VLChannelID& channel,
+                                 const double interStripFraction,
+                                 double &residual,
+                                 double &chi2) const {
 
   Gaudi::XYZPoint localPoint = globalToLocal(point);
-  /// Check boundaries.
+  // Check boundaries.
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
 
@@ -526,7 +526,7 @@ void DeVLRSensor::buildRoutingLineMap() {
 /// Return a trajectory (for track fit) from strip + offset
 //==============================================================================
 std::auto_ptr<LHCb::Trajectory> DeVLRSensor::trajectory(const LHCb::VLChannelID& id,
-                                                            const double offset) const {
+                                                        const double offset) const {
 
   // Trajectory is a circle.
   double z = 0.;

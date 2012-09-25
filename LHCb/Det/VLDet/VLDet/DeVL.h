@@ -50,30 +50,45 @@ public:
   unsigned int numberRSensors() const      {return m_nRSensors;}
   /// Number of Phi type sensors
   unsigned int numberPhiSensors() const    {return m_nPhiSensors;}
-  /// Number of pile-up sensors
-  unsigned int numberPileUpSensors() const {return m_nPileUpSensors;}
 
   /// Sensor number for a point in the global frame
   const DeVLSensor* sensor(const Gaudi::XYZPoint& point) const;
-  
+ 
+  /// Return container of pointers to all sensors  
   const std::vector<DeVLSensor*>& sensors() {
     return m_vpSensors;
   }
+  /// Return container of pointers to all R sensors  
   const std::vector<DeVLRSensor*>& rSensors() {
     return m_vpRSensors;
   }
+  /// Return container of pointers to all Phi sensors  
   const std::vector<DeVLPhiSensor*>& phiSensors() {
     return m_vpPhiSensors;
   }
-
-  /// Return a trajectory (for track fit) from strip + offset
-  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, 
-                                             const double offset) const {
-    if (!id.isVL()) {
-      throw GaudiException("The LHCbID is not a VLChannelID", "DeVL", 
-                           StatusCode::FAILURE);
-    }
-    return sensor(id.vlID())->trajectory(id.vlID(), offset);
+  /// Return container of pointers to all sensors on left side 
+  const std::vector<DeVLSensor*>& leftSensors() {
+    return m_vpLeftSensors;
+  }
+  /// Return container of pointers to all sensors on right side 
+  const std::vector<DeVLSensor*>& rightSensors() {
+    return m_vpRightSensors;
+  }
+  /// Return container of pointers to all Phi sensors on left side 
+  const std::vector<DeVLRSensor*>& leftRSensors() {
+    return m_vpLeftRSensors;
+  }
+  /// Return container of pointers to all R sensors on right side 
+  const std::vector<DeVLRSensor*>& rightRSensors() {
+    return m_vpRightRSensors;
+  }
+  /// Return container of pointers to all Phi sensors on left side
+  const std::vector<DeVLPhiSensor*>& leftPhiSensors() {
+    return m_vpLeftPhiSensors;
+  }
+  /// Return container of pointers to all Phi sensors on right side  
+  const std::vector<DeVLPhiSensor*>& rightPhiSensors() {
+    return m_vpRightPhiSensors;
   }
 
   /// Return pointer to sensor for given sensor number
@@ -101,6 +116,16 @@ public:
     return phiSensor(channel.sensor());
   }
 
+  /// Return a trajectory (for track fit) for given strip and offset
+  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, 
+                                             const double offset) const {
+    if (!id.isVL()) {
+      throw GaudiException("The LHCbID is not a VLChannelID", "DeVL", 
+                           StatusCode::FAILURE);
+    }
+    return sensor(id.vlID())->trajectory(id.vlID(), offset);
+  }
+
   /// Return half box offset vectors (depends on geometry condition)
   const Gaudi::XYZPoint& halfBoxOffset(unsigned int half) {
     return m_halfBoxOffsets[half];
@@ -124,33 +149,23 @@ private:
 
   /// Vector of pointers to all sensors
   std::vector<DeVLSensor*> m_vpSensors;
-  /// Vector of pointers to the R sensors (excluding pile-up)
+  /// Vector of pointers to the R sensors 
   std::vector<DeVLRSensor*> m_vpRSensors;
   /// Vector of pointers to the Phi sensors
   std::vector<DeVLPhiSensor*> m_vpPhiSensors;
-  /// Vector of pointers to the pile-up sensors
-  std::vector<DeVLRSensor*> m_vpPUSensors;
   
   /// Vector of pointers to all sensors on the left side
   std::vector<DeVLSensor*> m_vpLeftSensors;
   /// Vector of pointers to all sensors on the right side
   std::vector<DeVLSensor*> m_vpRightSensors;
-  /// Vector of pointers to all left side R/Phi sensors (excluding pile-up)
-  std::vector<DeVLSensor*> m_vpLeftRPhiSensors;
-  /// Vector of pointers to all right side R/Phi sensors (excluding pile-up)
-  std::vector<DeVLSensor*> m_vpRightRPhiSensors;
-  /// Vector of pointers to all left side R Type sensors (excluding pile-up)
+  /// Vector of pointers to all left side R sensors
   std::vector<DeVLRSensor*> m_vpLeftRSensors;
-  /// Vector of pointers to all right side R Type sensors (excluding pile-up)
+  /// Vector of pointers to all right side R sensors
   std::vector<DeVLRSensor*> m_vpRightRSensors;
   /// Vector of pointers to all left side Phi sensors
   std::vector<DeVLPhiSensor*> m_vpLeftPhiSensors;
   /// Vector of pointers to all right side Phi sensors
   std::vector<DeVLPhiSensor*> m_vpRightPhiSensors;
-  /// Vector of pointers to all pile-up sensors on the left side
-  std::vector<DeVLRSensor*> m_vpLeftPUSensors;
-  /// Vector of pointers to all pile-up sensors on the right side
-  std::vector<DeVLRSensor*> m_vpRightPUSensors;
 
   /// Number of sensors
   unsigned int m_nSensors;
@@ -158,8 +173,6 @@ private:
   unsigned int m_nRSensors;
   /// Number of Phi type sensors
   unsigned int m_nPhiSensors;
-  /// Number of pile-up sensors
-  unsigned int m_nPileUpSensors;
   /// Number of left side sensors
   unsigned int m_nLeftSensors;
   /// Number of right side sensors
@@ -172,10 +185,6 @@ private:
   unsigned int m_nLeftPhiSensors;
   /// Number of right side Phi type sensors
   unsigned int m_nRightPhiSensors;
-  /// Number of left side pile-up sensors
-  unsigned int m_nLeftPUSensors;
-  /// Number of right side pile-up sensors
-  unsigned int m_nRightPUSensors;
 
   /// Indices of sensors in list of all sensors sorted by z
   mutable std::vector<DeVLSensor*> m_sensors;

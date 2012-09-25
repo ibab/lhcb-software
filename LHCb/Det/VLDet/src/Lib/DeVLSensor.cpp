@@ -137,13 +137,12 @@ StatusCode DeVLSensor::initSensor() {
   m_siliconThickness = param<double>("SiThick");
   m_module = param<std::string>("Module");
   m_type   = param<std::string>("Type");
-  m_isPileUp = m_type.find("Veto") == 0;
   m_isR      = m_type.find("R") == 0;
   m_isPhi    = m_type.find("Phi") == 0;
-  if (m_isR || m_isPileUp) {
-    m_outerRadius = param<double>("ROuterRadius");
-  } else {
+  if (m_isPhi) {
     m_outerRadius = param<double>("PhiOuterRadius");
+  } else {
+    m_outerRadius = param<double>("ROuterRadius");
   }
   m_isLeft       = 0 != param<int>("Left");
   m_isDownstream = 0 != param<int>("Downstream");

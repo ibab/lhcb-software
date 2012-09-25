@@ -117,7 +117,6 @@ StatusCode DeVLPhiSensor::initialize() {
 StatusCode DeVLPhiSensor::initSensor() {
 
   MsgStream msg(msgSvc(), "DeVLPhiSensor");
-
   // Number of zones
   m_numberOfZones = param<int>("PhiNbZones");
   // Number of strips in each zone
@@ -226,8 +225,6 @@ StatusCode DeVLPhiSensor::initSensor() {
       const double dy = y2 - y1;
       const double length = sqrt(dx * dx + dy * dy);
       m_strips[stripIndex].zone = zone;
-      m_strips[stripIndex].gradient = gradient;
-      m_strips[stripIndex].intercept = intercept;
       m_strips[stripIndex].length = length;
       if (m_debug) {
         stripfile << stripIndex << "  " << x1 << "  " << y1 << "  "

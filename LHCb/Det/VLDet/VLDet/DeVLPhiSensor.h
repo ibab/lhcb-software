@@ -25,8 +25,6 @@ namespace VLDet {
   
   struct phiStrip {
     int zone;
-    double gradient;
-    double intercept;
     double length;
   };
   
