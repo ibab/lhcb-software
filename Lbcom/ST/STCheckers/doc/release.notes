@@ -3,6 +3,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2012-09-25 - Jianchun Wang
+ - Add UT detector.
+ - Enable ST detector switch in STDigitMonitor.
+
 !========================= STCheckers v3r4 2012-03-26 =========================
 ! 2012-03-20 Mark Tobin
  - Fix histogram names in active fraction algorithm as they appear 

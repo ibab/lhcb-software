@@ -38,7 +38,7 @@ StatusCode STDigitMonitor::initialize()
   if( "" == histoTopDir() ) setHistoTopDir(detType()+"/");
 
   // Initialize GaudiHistoAlg
-  StatusCode sc = GaudiHistoAlg::initialize();
+  StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
      
   return StatusCode::SUCCESS;

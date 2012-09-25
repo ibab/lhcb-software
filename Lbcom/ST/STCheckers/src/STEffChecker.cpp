@@ -292,7 +292,8 @@ int STEffChecker::findHistoId(unsigned int aLayerId)
 
 int STEffChecker::uniqueHistoID(const STChannelID aChan) const
 {
-  return detType() == "TT" ? aChan.station()*100 + aChan.layer()  :
+  return ( detType() == "TT" || detType() == "UT") ?
+    aChan.station()*100 + aChan.layer()  :
     aChan.station()*100 + aChan.detRegion()*10 + aChan.layer();
 } 
 

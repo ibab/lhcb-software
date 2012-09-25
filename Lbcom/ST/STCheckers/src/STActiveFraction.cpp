@@ -10,6 +10,7 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 #include "STDet/DeTTSector.h"
+#include "STDet/DeUTSector.h"
 
 #include "TH2D.h"
 #include "TGraph.h"
