@@ -19,7 +19,7 @@ use GENSER            v*     Gen
 use GenEvent          v*     Event
 # The following is needed to ensure that the interfaces are put in the 
 # install area before building this package
-use Generator         v*     Gen  
+use Generators        v*     Gen  
 
 # Packages needed to resolve external dependencies at run time
 use Python            v*     LCG_Interfaces -no_auto_imports
