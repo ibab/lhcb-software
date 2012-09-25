@@ -77,5 +77,7 @@ private:
   // OT Detector information
   DeOTDetector* m_otDet;
   
+  bool m_utForTT; // UT for TT detector in upgrade
+  std::string m_ttLocation;
 };
 #endif // BUILDMCTRACKINFO_H

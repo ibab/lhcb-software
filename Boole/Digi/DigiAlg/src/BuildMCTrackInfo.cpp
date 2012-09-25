@@ -43,6 +43,7 @@ BuildMCTrackInfo::BuildMCTrackInfo( const std::string& name,
   , m_itDet(0)
   , m_otDet(0)
 {
+  declareProperty( "UTForTT",     m_utForTT = false );
 }
 //=============================================================================
 // Destructor
@@ -59,12 +60,19 @@ StatusCode BuildMCTrackInfo::initialize() {
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   m_velo  = getDet<DeVelo>( DeVeloLocation::Default );
-  m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );  
+
+  if ( m_utForTT ) m_ttLocation = DeSTDetLocation::UT;
+  else             m_ttLocation = DeSTDetLocation::TT;
+  m_ttDet = getDet<DeSTDetector>(m_ttLocation.c_str());
+
   m_itDet = getDet<DeSTDetector>(DeSTDetLocation::IT );
   m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
 
   if(msgLevel(MSG::DEBUG)) {
-    debug() << "Number of TT layers " << m_ttDet->layers().size() << endmsg;
+    if ( m_utForTT )
+      debug() << "Number of UT layers " << m_ttDet->layers().size() << endmsg;
+    else
+      debug() << "Number of TT layers " << m_ttDet->layers().size() << endmsg;
     debug() << "Number of IT layers " << m_itDet->layers().size() << endmsg;
     debug() << "Number of OT layers " << m_otDet->layers().size() << endmsg;
   }
@@ -83,10 +91,12 @@ StatusCode BuildMCTrackInfo::execute() {
   
   LinkedTo<LHCb::MCParticle, LHCb::VeloCluster> veloLink( eventSvc(), msgSvc(), 
                                        LHCb::VeloClusterLocation::Default );
-  if( veloLink.notFound() ) return StatusCode::FAILURE;
+  if( veloLink.notFound() ) return StatusCode::FAILURE;  
   
-  LinkedTo<LHCb::MCParticle, LHCb::STCluster> ttLink( eventSvc(), msgSvc(), 
-                                     LHCb::STClusterLocation::TTClusters );
+  if ( m_utForTT ) m_ttLocation = LHCb::STClusterLocation::UTClusters;
+  else             m_ttLocation = LHCb::STClusterLocation::TTClusters;
+  LinkedTo<LHCb::MCParticle, LHCb::STCluster> ttLink( eventSvc(), msgSvc(), m_ttLocation.c_str());
+
   if( ttLink.notFound() ) return StatusCode::FAILURE;
   
   LinkedTo<LHCb::MCParticle, LHCb::STCluster> itLink( eventSvc(), msgSvc(), 
@@ -151,7 +161,9 @@ StatusCode BuildMCTrackInfo::execute() {
   }
 
   //== TT cluster -> particle associaton
-  LHCb::STClusters* TTDig = get<LHCb::STClusters>( LHCb::STClusterLocation::TTClusters);
+  if ( m_utForTT ) m_ttLocation = LHCb::STClusterLocation::UTClusters;
+  else             m_ttLocation = LHCb::STClusterLocation::TTClusters;
+  LHCb::STClusters* TTDig = get<LHCb::STClusters>( m_ttLocation.c_str() );
   for ( LHCb::STClusters::const_iterator tIt = TTDig->begin() ;
         TTDig->end() != tIt ; tIt++ ) {
     int sta   = (*tIt)->channelID().station() - 1;  // 0-1 from 1-2
@@ -296,7 +308,9 @@ void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
   }
   //== TT
   
-  LHCb::MCHits* ttHits = get<LHCb::MCHits>( LHCb::MCHitLocation::TT );
+  if ( m_utForTT ) m_ttLocation = LHCb::MCHitLocation::UT;
+  else             m_ttLocation = LHCb::MCHitLocation::TT;
+  LHCb::MCHits* ttHits = get<LHCb::MCHits>( m_ttLocation.c_str() );
   for ( LHCb::MCHits::const_iterator tHit = ttHits->begin();
         ttHits->end() != tHit; tHit++ ) {
     unsigned int MCNum = (*tHit)->mcParticle()->key();
