@@ -5,6 +5,9 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2012-09-25 - Paul Szczypka
+ - Rename of VeloPix to VP preserving backwards compatability
+
 !========================= LoKiTracks v2r8 2012-06-28 =========================
 
 ( Missing entry for tag v2r7)

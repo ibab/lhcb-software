@@ -64,9 +64,9 @@ LoKi::Tracks::CountIDs::CountIDs
   else if ( &LHCb::LHCbID::isVeloR      == m_pmf ) { m_nick = "isVeloR"      ; }
   else if ( &LHCb::LHCbID::isVeloPhi    == m_pmf ) { m_nick = "isVeloPhi"    ; }
   else if ( &LHCb::LHCbID::isVeloPileUp == m_pmf ) { m_nick = "isVeloPileUp" ; }
-  else if ( &LHCb::LHCbID::isVeloPix    == m_pmf ) { m_nick = "isVeloPix"    ; }
-  else if ( &LHCb::LHCbID::isVeloPixX   == m_pmf ) { m_nick = "isVeloPixX"   ; }
-  else if ( &LHCb::LHCbID::isVeloPixY   == m_pmf ) { m_nick = "isVeloPixY"   ; }
+  else if ( &LHCb::LHCbID::isVP         == m_pmf ) { m_nick = "isVP"         ; }
+  else if ( &LHCb::LHCbID::isVPX        == m_pmf ) { m_nick = "isVPX"        ; }
+  else if ( &LHCb::LHCbID::isVPY        == m_pmf ) { m_nick = "isVPY"        ; }
   else if ( &LHCb::LHCbID::isTT         == m_pmf ) { m_nick = "isTT"         ; }
   else if ( &LHCb::LHCbID::isIT         == m_pmf ) { m_nick = "isIT"         ; }
   else if ( &LHCb::LHCbID::isST         == m_pmf ) { m_nick = "isST"         ; }
@@ -90,9 +90,9 @@ LoKi::Tracks::CountIDs::CountIDs
   else if ( "isVeloR"        == m_nick ) { m_pmf = &LHCb::LHCbID::isVeloR      ; }
   else if ( "isVeloPhi"      == m_nick ) { m_pmf = &LHCb::LHCbID::isVeloPhi    ; }
   else if ( "isVeloPileUp"   == m_nick ) { m_pmf = &LHCb::LHCbID::isVeloPileUp ; }
-  else if ( "isVeloPix"      == m_nick ) { m_pmf = &LHCb::LHCbID::isVeloPix    ; }
-  else if ( "isVeloPixX"     == m_nick ) { m_pmf = &LHCb::LHCbID::isVeloPixX   ; }
-  else if ( "isVeloPixY"     == m_nick ) { m_pmf = &LHCb::LHCbID::isVeloPixY   ; }
+  else if ( "isVP"           == m_nick ) { m_pmf = &LHCb::LHCbID::isVP         ; }
+  else if ( "isVPX"          == m_nick ) { m_pmf = &LHCb::LHCbID::isVPX        ; }
+  else if ( "isVPY"          == m_nick ) { m_pmf = &LHCb::LHCbID::isVPY        ; }
   else if ( "isTT"           == m_nick ) { m_pmf = &LHCb::LHCbID::isTT         ; }
   else if ( "isIT"           == m_nick ) { m_pmf = &LHCb::LHCbID::isIT         ; }
   else if ( "isOT"           == m_nick ) { m_pmf = &LHCb::LHCbID::isOT         ; }
@@ -100,6 +100,10 @@ LoKi::Tracks::CountIDs::CountIDs
   else if ( "isRich"         == m_nick ) { m_pmf = &LHCb::LHCbID::isRich       ; }
   else if ( "isCalo"         == m_nick ) { m_pmf = &LHCb::LHCbID::isCalo       ; }
   else if ( "isMuon"         == m_nick ) { m_pmf = &LHCb::LHCbID::isMuon       ; }
+  // Backwards compatability
+  else if ( "isVeloPix"      == m_nick ) { m_pmf = &LHCb::LHCbID::isVP         ; }
+  else if ( "isVeloPixX"     == m_nick ) { m_pmf = &LHCb::LHCbID::isVPX        ; }
+  else if ( "isVeloPixY"     == m_nick ) { m_pmf = &LHCb::LHCbID::isVPY        ; }
   
   if ( 0 == m_pmf ) 
   { Exception ( "Invalid LHCb::LHCbID member function: '" + m_nick + "'" ) ; }
