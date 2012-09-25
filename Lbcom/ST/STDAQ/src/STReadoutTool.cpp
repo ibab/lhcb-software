@@ -153,7 +153,6 @@ std::string STReadoutTool::serviceBox(const LHCb::STChannelID& aChan) const{
       ++iBoard;
     }
   } // iBoard
-
   return(  isFound ? m_boards[iBoard]->serviceBoxes()[waferIndex] : InValidBox);
 } 
 
@@ -184,7 +183,7 @@ STDAQ::chanPair STReadoutTool::offlineChanToDAQ(const STChannelID aOfflineChan,
   } // iBoard
 
   if (isFound == false){
-    return(std::make_pair(STTell1ID(STTell1ID::nullBoard),0));
+    return(std::make_pair(STTell1ID(STTell1ID::nullBoard, false),0));
   }
   else {
     return (std::make_pair(m_boards[iBoard]->boardID(),
@@ -287,7 +286,7 @@ StatusCode STReadoutTool::validate() const{
   for (; iter != dSectors.end() && valid; ++iter) {
     STChannelID chan = (*iter)->elementID();
     STDAQ::chanPair chanPair = offlineChanToDAQ(chan,0.0);
-    if (chanPair.first == STTell1ID(STTell1ID::nullBoard)) valid = false; 
+    if (chanPair.first == STTell1ID(STTell1ID::nullBoard, false)) valid = false; 
   } // iter 
   
   return valid;

@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2012-09-25 - Jianchun Wang
+ - Add UT as a ST detector.
+
 !========================= STDAQ v3r28 2012-06-25 =========================
 ! 2012-06-18 - Marco Cattaneo
  - Fix unprotected debug()

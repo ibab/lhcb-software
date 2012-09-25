@@ -134,7 +134,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
     ++counter("# banks found");
     // get the board and data
-    STTell1ID tell1ID = STTell1ID((unsigned int)(*iterBank)->sourceID()); 
+    STTell1ID tell1ID = STTell1ID((unsigned int)(*iterBank)->sourceID(), (bool)(detType()=="UT"));
     const STTell1Board* aBoard =  readoutTool()->findByBoardID(tell1ID); 
 
     if (!aBoard && !m_skipErrors){

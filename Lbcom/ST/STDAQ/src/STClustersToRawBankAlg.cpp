@@ -197,7 +197,7 @@ StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
        iterClus != clusCont->end(); ++iterClus ){
 
     // find the online channel and board
-    ClusterMap::iterator iterMap = m_clusMap.find(STTell1ID((*iterClus)->sourceID()));
+    ClusterMap::iterator iterMap = m_clusMap.find(STTell1ID((*iterClus)->sourceID(), detType()=="UT"));
     if (iterMap != m_clusMap.end() ){
       STClustersOnBoard* tVec = iterMap->second;
       tVec->addCluster(*iterClus);

@@ -78,7 +78,7 @@ StatusCode STRawBankMonitor::execute(){
  
   // init counters  
   unsigned int maxBoardSize = 0;
-  STTell1ID hotBoard(0);
+  STTell1ID hotBoard(0, detType()=="UT");
   unsigned int eventDataSize = 0; 
  
   // get banks and loop
@@ -99,7 +99,7 @@ StatusCode STRawBankMonitor::execute(){
 
     // board info....  
     size_t bankSize = (*iterBank)->size()/sizeof(char);  
-    STTell1ID aBoard((*iterBank)->sourceID());
+    STTell1ID aBoard((*iterBank)->sourceID(), detType()=="UT");
 
     // event counters
     if (bankSize > maxBoardSize){

@@ -132,7 +132,7 @@ StatusCode STFullDecoding::execute()
     }
     
     // Check if the board is valid
-    STTell1ID tell1ID = STTell1ID((unsigned int)p->sourceID()); 
+    STTell1ID tell1ID = STTell1ID((unsigned int)p->sourceID(), detType()=="UT"); 
     const STTell1Board* aBoard =  readoutTool()->findByBoardID(tell1ID);
     if ( !aBoard ) { // not a valid b
       std::string invalidSource = "Invalid source ID --> skip bank "+
