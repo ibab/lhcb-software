@@ -1,0 +1,36 @@
+// time of flight vector - always check that correct number stations defined
+MCUTDepositCreator.TofVector = {7.8, 8.8};
+
+MCUTDepositCreator.SpillVector = {"/"};
+MCUTDepositCreator.SpillTimes = {0.};
+
+// charge sharing function  for UT
+MCUTDepositCreator.ChargeSharerTypes = { "250" };
+MCUTDepositCreator.STChargeSharingTool250.Thickness = 0.250*mm;
+MCUTDepositCreator.STChargeSharingTool250.UseAnalyticErf = true;
+MCUTDepositCreator.STChargeSharingTool250.ErfWidth = 0.005;
+
+
+// beetle response
+MCUTDepositCreator.ResponseTypes = { "30signal", "30capCoupling" };
+
+MCUTDepositCreator.Response30signal.times = {
+  -80.0, -60.0, -50.0, -40.0, -28.0, -20.0, -16.0, -12.0, -8.0, -4.0,  0.0, 4.0,  8.0, 12.0, 20.0, 24.0, 99.0};
+MCUTDepositCreator.Response30signal.values = {
+  0.00,   0.12,  0.85,  0.95,  0.99,  1.00,  1.00, 1.00, 1.00, 1.00, 1.00, 0.95, 0.50, 0.05, 0.00, 0.00, 0.00};
+MCUTDepositCreator.Response30signal.capacitance = 30.0*picofarad;
+
+MCUTDepositCreator.Response30capCoupling.times = {
+  -80.0, -60.0, -50.0, -40.0, -28.0, -20.0, -16.0, -12.0, -8.0, -4.0,  0.0, 4.0,  8.0, 12.0, 20.0, 24.0, 99.0};
+MCUTDepositCreator.Response30capCoupling.values = {
+  0.00,   0.12,  0.85,  0.95,  0.99,  1.00,  1.00, 1.00, 1.00, 1.00, 1.00, 0.95, 0.50, 0.05, 0.00, 0.00, 0.00};
+MCUTDepositCreator.Response30capCoupling.capacitance = 30.0*picofarad;
+MCUTDepositCreator.Response30capCoupling.type = "capCoupling";
+
+MCUTDepositCreator.XTalkParamsLeftOdd   = [0,0];
+MCUTDepositCreator.XTalkParamsLeftEven  = [0,0];
+MCUTDepositCreator.XTalkParamsRightOdd  = [0,0];
+MCUTDepositCreator.XTalkParamsRightEven = [0,0];
+
+ToolSvc.STSignalToNoiseToolUT.DetType = "UT";
+ToolSvc.UTKiller.Selector.DetType = "UT";
