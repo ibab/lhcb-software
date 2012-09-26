@@ -24,10 +24,25 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
 // ============================================================================
+namespace 
+{
+  // ==========================================================================
+  inline bool noHead ( const Decays::Parsers::Tree& t ) 
+  { 
+    if ( t.head().valid () ) { return false ; }
+    //
+    const Decays::iNode* inode = &(t.head())  ;
+    //
+    return !inode->valid() && 
+      0 != dynamic_cast<const Decays::Nodes::Invalid*> ( inode ) ;  
+  }
+  // ==========================================================================
+}
+// ============================================================================
 // default constructor 
 // ============================================================================
 Decays::Parsers::Tree::Tree()
-  : m_head ( Decays::Nodes::Invalid() ) 
+  : m_head  ( Decays::Nodes::Invalid() ) 
   , m_or    ()
   , m_and   ()
   , m_arrow      ( Decays::Trees::Single    )
@@ -45,7 +60,7 @@ Decays::Parsers::Tree::Tree()
 Decays::Parsers::Tree::Tree
 ( const Decays::iNode& head   , 
   const bool           stable ) 
-  : m_head ( head ) 
+  : m_head  ( head ) 
   , m_or    ()
   , m_and   ()
   , m_arrow      ( Decays::Trees::Single    )
@@ -153,9 +168,10 @@ Decays::Parsers::Tree::operator%= ( const Decays::iNode& tree )
 Decays::Parsers::Tree& 
 Decays::Parsers::Tree::operator|= ( const Decays::Parsers::Tree& tree ) 
 {
-  if  ( m_children.empty() && m_optional.empty() && m_and.empty() 
+  if  ( noHead ( *this ) 
+        && m_children.empty() && m_optional.empty() && m_and.empty() 
         && !m_negated && !m_marked ) 
-  { m_or .push_back ( tree ) ; return *this ; }                       // RETURN 
+  { m_or .push_back ( tree ) ; return *this ; }                       // RETURN
   // make temporary tree 
   Tree tmp ;
   tmp |= *this ;
@@ -186,7 +202,8 @@ Decays::Parsers::Tree::operator|=( const Decays::Parsers::Tree::Trees& trees )
 Decays::Parsers::Tree& 
 Decays::Parsers::Tree::operator&= ( const Decays::Parsers::Tree& tree ) 
 {
-  if  ( m_children.empty() && m_optional.empty() && m_or.empty() 
+  if  ( noHead ( *this ) 
+        && m_children.empty() && m_optional.empty() && m_or.empty() 
         && !m_negated && !m_marked ) 
   { m_and .push_back ( tree ) ; return *this ; }                       // RETURN 
   // make temporary tree 
