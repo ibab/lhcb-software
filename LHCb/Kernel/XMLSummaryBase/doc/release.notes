@@ -4,6 +4,9 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+! 2012-09-26 - Marco Clemencic
+ - Removed transient QMTest directory.
+
 ! 2012-08-08 - Marco Clemencic
  - Added python/XMLSummaryBase/__init__.py.
 

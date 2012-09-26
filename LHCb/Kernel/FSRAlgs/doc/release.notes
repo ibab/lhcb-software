@@ -6,6 +6,7 @@
 
 ! 2012-09-26 - Marco Clemencic
  - Added empty __init__.py in the top Python module.
+ - Removed transient QMTest directory.
 
 ! 2012-09-20 - Marco Cattaneo
  - Adapt test reference to options printout format change in Gaudi v23r4
