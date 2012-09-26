@@ -120,6 +120,7 @@ class Boole(LHCbConfigurableUser):
             detListSim += ['PuVeto'] # Add also PU Veto hits
         if 'VeloPix' in self.getProp('DetectorDigi')['VELO'] : detListSim += ['VeloPix']
         if 'TT'      in self.getProp('DetectorDigi')['TT']   : detListSim += ['TT']
+        if 'UT'      in self.getProp('DetectorDigi')['TT']   : detListSim += ['UT']
         if 'IT'      in self.getProp('DetectorDigi')['IT']   : detListSim += ['IT']
         if 'OT'      in self.getProp('DetectorDigi')['OT']   : detListSim += ['OT']
         if 'Rich'    in self.getProp('DetectorDigi')['RICH'] : detListSim += ['Rich']
@@ -165,6 +166,11 @@ class Boole(LHCbConfigurableUser):
             detListDigi += ['TT']
             if 'TT' in self.getProp('DetectorLink')['TT'] : detListLink += ['TT']
             if 'TT' in self.getProp('DetectorMoni')['TT'] : detListMoni += ['TT']
+
+        if 'UT' in self.getProp('DetectorDigi')['TT']   :
+            detListDigi += ['UT']
+            if 'UT' in self.getProp('DetectorLink')['TT'] : detListLink += ['UT']
+            if 'UT' in self.getProp('DetectorMoni')['TT'] : detListMoni += ['UT']
 
         if 'IT' in self.getProp('DetectorDigi')['IT']   :
             detListDigi += ['IT']
@@ -305,6 +311,7 @@ class Boole(LHCbConfigurableUser):
         if "Velo"    in digiDets : self.configureDigiVelo(    GaudiSequencer("DigiVeloSeq"), "" )
         if "VeloPix" in digiDets : self.configureDigiVeloPix( GaudiSequencer("DigiVeloPixSeq"), "" )
         if "TT"      in digiDets : self.configureDigiST(      GaudiSequencer("DigiTTSeq"), "TT", "" )
+        if "UT"      in digiDets : self.configureDigiST(      GaudiSequencer("DigiUTSeq"), "UT", "" )
         if "IT"      in digiDets : self.configureDigiST(      GaudiSequencer("DigiITSeq"), "IT", "" )
         if "OT"      in digiDets : self.configureDigiOT(      GaudiSequencer("DigiOTSeq"), "" )
         if "Rich"    in digiDets : self.configureDigiRich(    GaudiSequencer("DigiRichSeq"), "" )
@@ -315,13 +322,13 @@ class Boole(LHCbConfigurableUser):
     def configureDigiVelo(self, seq, tae ):
         # Velo digitisation and clustering (also for PuVeto and trigger)
         if tae == "":
-            from Configurables import (VeloSim, PuVetoFillRawBuffer)
+            from Configurables import VeloSim
             importOptions("$VELOSIMULATIONROOT/options/VeloSim.opts")
             seq.Members += [ VeloSim("VeloSim") ]
             seq.Members += [ VeloSim("VeloPUSim") ]
             if True != self.getProp("VeloTell1Processing"):
                 from Configurables import (VeloDataProcessor, VeloClusterMaker,
-                                           PrepareVeloRawBuffer )
+                                           PrepareVeloRawBuffer)
                 importOptions("$VELOALGORITHMSROOT/options/VeloAlgorithms.opts")
                 seq.Members += [ VeloDataProcessor("VeloDataProcessor") ]
                 if self.getProp("DataType") == "Upgrade" :
@@ -340,7 +347,6 @@ class Boole(LHCbConfigurableUser):
                 from Configurables import VeloTell1DataProcessor, VeloSimTell1ClusterMaker
                 seq.Members += [ VeloTell1DataProcessor() ]
                 seq.Members += [ VeloSimTell1ClusterMaker() ]
-            seq.Members += [ PuVetoFillRawBuffer() ]
         else:
             raise RuntimeError("TAE not implemented for VELO")
 
@@ -367,6 +373,8 @@ class Boole(LHCbConfigurableUser):
                 importOptions("$STDIGIALGORITHMSROOT/options/itDigi.opts")
             elif det == "TT":
                 importOptions("$STDIGIALGORITHMSROOT/options/ttDigi.opts")
+            elif det == "UT":
+                importOptions("$STDIGIALGORITHMSROOT/options/utDigi.opts")
             else:
                 raise RuntimeError("Unknown ST detector '%s'"%det)
 
@@ -520,13 +528,19 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [VeloPixCluster2MCHitLinker("VeloPixCluster2MCHitLinker") ]
             seq.Members += [VeloPixCluster2MCParticleLinker("VeloPixCluster2MCParticleLinker") ]
 
-        if "TT" in linkDets or "IT" in linkDets or "TT" in moniDets or "IT" in moniDets or "Tr" in linkDets:
+        if "TT" in linkDets or "IT" in linkDets or "UT" in linkDets or "TT" in moniDets or "IT" in moniDets or "UT" in monitDets or "Tr" in linkDets:
             from Configurables import STDigit2MCHitLinker, STCluster2MCHitLinker, STCluster2MCParticleLinker
             if "TT" in linkDets or "TT" in moniDets:
                 seq = GaudiSequencer("LinkTTSeq")
                 seq.Members += [ STDigit2MCHitLinker("TTDigitLinker") ]
                 seq.Members += [ STCluster2MCHitLinker("TTClusterLinker") ]
                 seq.Members += [ STCluster2MCParticleLinker("TTTruthLinker") ]
+
+            if "UT" in linkDets or "UT" in moniDets:
+                seq = GaudiSequencer("LinkUTSeq")
+                seq.Members += [ STDigit2MCHitLinker("UTDigitLinker", DetType = "UT") ]
+                seq.Members += [ STCluster2MCHitLinker("UTClusterLinker", DetType = "UT") ]
+                seq.Members += [ STCluster2MCParticleLinker("UTTruthLinker", DetType = "UT") ]
 
             if "IT" in linkDets or "IT" in moniDets:
                 seq = GaudiSequencer("LinkITSeq")
@@ -543,7 +557,11 @@ class Boole(LHCbConfigurableUser):
         if "Tr" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkTrSeq")
             if "VeloPix" in linkDets: seq.Members += [ "BuildMCTrackWithVeloPixInfo" ]
-            else : seq.Members += [ "BuildMCTrackInfo" ]
+            else :
+                seq.Members += [ "BuildMCTrackInfo" ]
+            if "UT" in linkDets:
+                from Configurables import BuildMCTrackInfo
+                BuildMCTrackInfo().UTForTT = True
 
         if "Rich" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkRichSeq")
@@ -623,6 +641,8 @@ class Boole(LHCbConfigurableUser):
                 self.configureDigiVeloPix( GaudiSequencer("Digi%sVeloPixSeq"%taeSlot), taeSlot )
             if "TT" in taeDets:
                 self.configureDigiST( GaudiSequencer("Digi%sTTSeq"%taeSlot), "TT", taeSlot )
+            if "UT" in taeDets:
+                self.configureDigiST( GaudiSequencer("Digi%sUTSeq"%taeSlot), "UT", taeSlot )
             if "IT" in taeDets:
                 self.configureDigiST( GaudiSequencer("Digi%sITSeq"%taeSlot), "IT", taeSlot )
             if "OT" in taeDets:
@@ -769,7 +789,7 @@ class Boole(LHCbConfigurableUser):
                 GaudiSequencer("MoniVeloSeq").Members.remove( VeloDigit2MCHitLinker() )
                 GaudiSequencer("MoniVeloSeq").Members.remove( VeloDigiMoni() )
 
-        if "IT" in moniDets or "TT" in moniDets:
+        if "IT" in moniDets or "TT" in moniDets or "UT" in moniDets:
             from Configurables import ( MCSTDepositMonitor, MCSTDigitMonitor, STDigitMonitor,
                       ST__STClusterMonitor, STEffChecker, MCParticle2MCHitAlg, MCParticleSelector )
             from GaudiKernel.SystemOfUnits import GeV
@@ -814,6 +834,34 @@ class Boole(LHCbConfigurableUser):
             if self.getProp("DataType") == "Upgrade" :
                 from Configurables import STSpilloverSubtrMonitor
                 GaudiSequencer("MoniTTSeq").Members += [ STSpilloverSubtrMonitor("TTSpilloverSubtrMonitor",DetType="TT") ]
+            if histOpt == "Expert":
+                mcDepMoni.FullDetail   = True
+                mcDigitMoni.FullDetail = True
+                clusMoni.FullDetail    = True
+                effCheck.FullDetail    = True
+
+        if "UT" in moniDets:
+            mcDepMoni   = MCSTDepositMonitor(  "MCUTDepositMonitor", DetType="UT" )
+            mcDigitMoni = MCSTDigitMonitor(    "MCUTDigitMonitor",   DetType="UT" )
+            digitMoni   = STDigitMonitor(      "UTDigitMonitor",     DetType="UT" )
+            clusMoni    = ST__STClusterMonitor("UTClusterMonitor",   DetType="UT" )
+            mcp2MCHit   = MCParticle2MCHitAlg( "MCP2UTMCHitAlg", MCHitPath = "MC/UT/Hits",
+                                               OutputData = "/Event/MC/Particles2MCUTHits" )
+            effCheck    = STEffChecker(        "UTEffChecker",       DetType="UT" )
+            effCheck.addTool(MCParticleSelector)
+            effCheck.MCParticleSelector.zOrigin = 50.0
+            effCheck.MCParticleSelector.pMin = 1.0*GeV
+            effCheck.MCParticleSelector.betaGammaMin = 1.0
+            clusMoni.DetType = "UT"
+            clusMoni.ClusterLocation = "Raw/UT/Clusters"
+            effCheck.DetType = "UT"
+            effCheck.InputData = "Raw/UT/Clusters"
+            effCheck.HistoTopDir = "UT"
+            GaudiSequencer("MoniUTSeq").Members += [ mcDepMoni, mcDigitMoni, digitMoni, clusMoni,
+                                                     mcp2MCHit, effCheck ]
+            if self.getProp("DataType") == "Upgrade" :
+                from Configurables import STSpilloverSubtrMonitor
+                GaudiSequencer("MoniUTSeq").Members += [ STSpilloverSubtrMonitor("UTSpilloverSubtrMonitor",DetType="UT") ]
             if histOpt == "Expert":
                 mcDepMoni.FullDetail   = True
                 mcDigitMoni.FullDetail = True
