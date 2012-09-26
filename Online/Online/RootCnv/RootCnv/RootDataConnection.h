@@ -61,14 +61,6 @@ namespace Gaudi  {
     int          cacheSize;
     /// RootCnvSvc Property: ROOT cache learn entries
     int          learnEntries;
-    /// RootCnvSvc Property: AutoFlush parameter for ROOT TTree (Number of events between auto flushes)
-    int          autoFlush;
-    /// RootCnvSvc Property: Basket optimization parameter for ROOT TTree (total basket size)
-    int          basketSize;
-    /// RootCnvSvc Property: Buffer size optimization parameter for ROOT TTree
-    int			 bufferSize;
-    /// RootCnvSvc Property: Split level optimization parameter for ROOT TTree
-    int			 splitLevel;
 
     /// Standard constructor
     RootConnectionSetup();
@@ -278,9 +270,9 @@ namespace Gaudi  {
     { return m_tool->loadRefs(section,cnt,entry,refs); }
 
     /// Save object of a given class to section and container
-    std::pair<int,unsigned long> saveObj(const std::string& section,const std::string& cnt, TClass* cl, DataObject* pObj,bool fill_missing=false);
+    std::pair<int,unsigned long> saveObj(const std::string& section,const std::string& cnt, TClass* cl, DataObject* pObj, int buff_siz, int split_lvl,bool fill_missing=false);
     /// Save object of a given class to section and container
-    std::pair<int,unsigned long> save(const std::string& section,const std::string& cnt, TClass* cl, void* pObj,bool fill_missing=false);
+    std::pair<int,unsigned long> save(const std::string& section,const std::string& cnt, TClass* cl, void* pObj, int buff_siz, int split_lvl,bool fill_missing=false);
 
 
     /// Open data stream in read mode
@@ -303,7 +295,7 @@ namespace Gaudi  {
     TBranch* getBranch(const std::string& section,const std::string& branch_name)
     { return m_tool->getBranch(section,branch_name); }
     /// Access data branch by name: Get existing branch in write mode
-    TBranch* getBranch(const std::string& section, const std::string& branch_name, TClass* cl, void* ptr);
+    TBranch* getBranch(const std::string& section, const std::string& branch_name, TClass* cl, void* ptr, int buff_siz, int split_lvl);
 
     /// Create reference object from registry entry
     void makeRef(IRegistry* pA, RootRef& ref);

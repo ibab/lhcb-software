@@ -58,18 +58,20 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("ShareFiles",       m_shareFiles          = "NO");
   declareProperty("EnableIncident",   m_incidentEnabled     = true);
   declareProperty("RecordsName",      m_recordName          = "/FileRecords");
-
-  declareProperty("BasketSize",       m_setup->basketSize   = 2*MBYTE);
-  declareProperty("CacheSize",        m_setup->cacheSize    = 10*MBYTE);
-  declareProperty("AutoFlush",        m_setup->autoFlush    = 100);
-  declareProperty("LearnEntries",     m_setup->learnEntries = 10);
   declareProperty("LoadSection",      m_setup->loadSection  = "Event");
-  declareProperty("CacheBranches",    m_setup->cacheBranches);
-  declareProperty("VetoBranches",     m_setup->vetoBranches);
+
+  // ROOT Write parameters
+  declareProperty("AutoFlush",        m_autoFlush    = 100);
+  declareProperty("BasketSize",       m_basketSize   = 2*MBYTE);
+  declareProperty("BufferSize",	      m_bufferSize   = 2*kBYTE);
+  declareProperty("SplitLevel",       m_splitLevel   = 0);
   declareProperty("GlobalCompression",m_compression); // empty: do nothing
 
-  declareProperty("BufferSize",	      m_setup->bufferSize   = 2*kBYTE);
-  declareProperty("SplitLevel",       m_setup->splitLevel   = 0);
+  // ROOT Read parameters: must be shared for the entire file!
+  declareProperty("CacheSize",        m_setup->cacheSize    = 10*MBYTE);
+  declareProperty("LearnEntries",     m_setup->learnEntries = 10);
+  declareProperty("CacheBranches",    m_setup->cacheBranches);
+  declareProperty("VetoBranches",     m_setup->vetoBranches);
 }
 
 // Standard destructor
@@ -92,8 +94,9 @@ StatusCode RootCnvSvc::error(CSTR msg)  {
 StatusCode RootCnvSvc::initialize()  {
   string cname;
   StatusCode status = ConversionSvc::initialize();
-  if ( !status.isSuccess() )
+  if ( !status.isSuccess() ) {
     return error("Failed to initialize ConversionSvc base class.");
+  }
   m_log = new MsgStream(msgSvc(),name());
   if ( !m_compression.empty() ) {
     log() << MSG::INFO << "Setting global ROOT compression to:" << m_compression << endmsg;
@@ -347,19 +350,19 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
 
       b->GetTree()->SetEntries(evt);
       if ( evt == 1 )  {
-	b->GetTree()->OptimizeBaskets(m_setup->basketSize,1.1,"");
+	b->GetTree()->OptimizeBaskets(m_basketSize,1.1,"");
       }
-      if ( evt > 0 && (evt%m_setup->autoFlush)==0 ) {
-        if ( evt == m_setup->autoFlush ) {
-          b->GetTree()->SetAutoFlush(m_setup->autoFlush);
-          b->GetTree()->OptimizeBaskets(m_setup->basketSize,1.,"");
+      if ( evt > 0 && (evt%m_autoFlush)==0 ) {
+        if ( evt == m_autoFlush ) {
+          b->GetTree()->SetAutoFlush(m_autoFlush);
+          b->GetTree()->OptimizeBaskets(m_basketSize,1.,"");
         }
         else   {
           b->GetTree()->FlushBaskets();
         }
       }
       log() << MSG::DEBUG << "Set section entries of " << m_currSection
-        << " to " << long(evt) << " entries." << endmsg;
+	    << " to " << long(evt) << " entries." << endmsg;
     }
     else {
       return error("commitOutput> Failed to update entry numbers on "+dsn);
@@ -389,7 +392,7 @@ StatusCode RootCnvSvc::createAddress(long  typ,
 StatusCode RootCnvSvc::createNullRep(const std::string& path) {
   size_t len = path.find('/',1);
   string section = path.substr(1,len==string::npos ? string::npos : len-1);
-  m_current->saveObj(section,path,0,0);
+  m_current->saveObj(section,path,0,0,m_bufferSize,m_splitLevel);
   return S_OK;
 }
 
@@ -398,7 +401,8 @@ StatusCode RootCnvSvc::createNullRef(const std::string& path) {
   RootObjectRefs* refs = 0;
   size_t len = path.find('/',1);
   string section = path.substr(1,len==string::npos ? string::npos : len-1);
-  pair<int,unsigned long> ret = m_current->save(section,path+"#R",0,refs);
+  pair<int,unsigned long> ret = 
+    m_current->save(section,path+"#R",0,refs,m_bufferSize,m_splitLevel);
   log() << MSG::VERBOSE << "Writing object:" << path << " "
     << ret.first << " " << hex << ret.second << dec << " [NULL]" << endmsg;
   return S_OK;
@@ -414,7 +418,8 @@ StatusCode RootCnvSvc::i__createRep(DataObject* pObj, IOpaqueAddress*& refpAddr)
     TClass*    cl   = (clid == CLID_DataObject) ? m_classDO : getClass(pObj);
     size_t     len  = p[1].find('/',1);
     string     sect = p[1].substr(1,len==string::npos ? string::npos : len-1);
-    pair<int,unsigned long> ret = m_current->saveObj(sect,p[1],cl,pObj,true);
+    pair<int,unsigned long> ret = 
+      m_current->saveObj(sect,p[1],cl,pObj,m_bufferSize,m_splitLevel,true);
     if ( ret.first > 1 || (clid == CLID_DataObject && ret.first==1) ) {
       unsigned long ip[2] = {0,ret.second};
       if ( m_currSection.empty() ) m_currSection = p[1];
@@ -453,7 +458,8 @@ StatusCode RootCnvSvc::i__fillRepRefs(IOpaqueAddress* /* pA */, DataObject* pObj
 	  int link_id = m_current->makeLink(lnk->path());
 	  refs.links.push_back(link_id);
 	}
-	pair<int,unsigned long> ret = m_current->save(sect,id+"#R",m_classRefs,&refs,true);
+	pair<int,unsigned long> ret = 
+	  m_current->save(sect,id+"#R",m_classRefs,&refs,m_bufferSize,m_splitLevel,true);
 	if ( ret.first > 1 ) {
 	  log() << MSG::DEBUG << "Writing object:" << id << " "
 		<< ret.first << " " << hex << ret.second << dec << endmsg;

@@ -79,6 +79,16 @@ namespace Gaudi {
     std::string                 m_ioPerfStats;
     /// Property: Compression-algorithm:compression-level
     std::string                 m_compression;
+
+    /// Property: AutoFlush parameter for ROOT TTree (Number of events between auto flushes)
+    int                         m_autoFlush;
+    /// Property: Basket optimization parameter for ROOT TTree (total basket size)
+    int                         m_basketSize;
+    /// Property: Buffer size optimization parameter for ROOT TTree
+    int		                m_bufferSize;
+    /// Property: Split level optimization parameter for ROOT TTree
+    int		                m_splitLevel;
+
     /// Set with bad files/tables
     std::set<std::string>       m_badFiles;
 

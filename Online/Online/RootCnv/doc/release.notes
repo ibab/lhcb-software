@@ -4,6 +4,10 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
+! 2012-09-24 - Markus Frank
+ - Change optimization options to be part of the RootCnvSvc and not part of 
+   the RootDataConnection + adapt all called functions to use these.
+
 !========================= RootCnv v1r17 2012-09-16 ========================
 ! 2012-09-16 - Markus Frank
  - Add developments from Ivan Valencik for memory optimization.

@@ -410,14 +410,13 @@ TTree* RootDataConnection::getSection(CSTR section, bool create) {
 }
 
 // Access data branch by name: Get existing branch in write mode
-TBranch* RootDataConnection::getBranch(CSTR section, CSTR branch_name, TClass* cl, void* ptr) {
+TBranch* RootDataConnection::getBranch(CSTR section, CSTR branch_name, TClass* cl, void* ptr, int buff_siz, int split_lvl) {
   string n = branch_name+".";
   for(int i=0, m=n.length()-1; i<m; ++i) if ( !isalnum(n[i]) ) n[i]='_';
   TTree* t = getSection(section,true);
   TBranch* b = t->GetBranch(n.c_str());
   if ( !b && cl && m_file->IsWritable() ) {
-    b = t->Branch(n.c_str(),cl->GetName(),(void*)(ptr ? &ptr : 0),
-    		m_setup->bufferSize, m_setup->splitLevel);
+    b = t->Branch(n.c_str(),cl->GetName(),(void*)(ptr ? &ptr : 0),buff_siz,split_lvl);
   }
   if ( !b ) {
     b = t->GetBranch(branch_name.c_str());
@@ -455,15 +454,15 @@ CSTR RootDataConnection::empty() const {
 
 // Save object of a given class to section and container
 pair<int,unsigned long>
-RootDataConnection::saveObj(CSTR section, CSTR cnt, TClass* cl, DataObject* pObj,bool fill) {
+RootDataConnection::saveObj(CSTR section, CSTR cnt, TClass* cl, DataObject* pObj, int buff_siz, int split_lvl,bool fill) {
   DataObjectPush push(pObj);
-  return save(section,cnt,cl,pObj,fill);
+  return save(section,cnt,cl,pObj,fill,buff_siz,split_lvl);
 }
 
 // Save object of a given class to section and container
 pair<int,unsigned long>
-RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, bool fill_missing) {
-  TBranch* b = getBranch(section, cnt, cl, (void*)(pObj ? &pObj : 0));
+RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, int buff_siz, int split_lvl, bool fill_missing) {
+  TBranch* b = getBranch(section, cnt, cl, (void*)(pObj ? &pObj : 0),buff_siz,split_lvl);
   if ( b ) {
     Long64_t evt = b->GetEntries();
     if ( fill_missing ) {
