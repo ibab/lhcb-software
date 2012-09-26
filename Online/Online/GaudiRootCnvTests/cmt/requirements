@@ -9,9 +9,9 @@ use GaudiPolicy        v*
 apply_pattern QMTest
 
 private
-use GaudiExamples      v*
 use RootCnv            v* Online
 use GaudiCheckpointing v* Online
+use GaudiExamples      v*
 use ROOT               v* LCG_Interfaces
 
 macro_append ROOT_linkopts " -lCintex -lTreePlayer -lMathCore " \
