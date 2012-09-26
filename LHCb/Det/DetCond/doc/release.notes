@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-09-26 - Marco Clemencic
+ - Removed comments from __init__.py
+
 ! 2012-09-21 - Marco Clemencic
  - Temporary hack to compile with -std=c++11 (-std=c++0x).
 
