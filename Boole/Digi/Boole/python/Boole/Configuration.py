@@ -542,6 +542,10 @@ class Boole(LHCbConfigurableUser):
                 seq.Members += [ STCluster2MCHitLinker("UTClusterLinker", DetType = "UT") ]
                 seq.Members += [ STCluster2MCParticleLinker("UTTruthLinker", DetType = "UT") ]
 
+            if "UT" in linkDets:
+                from Configurables import BuildMCTrackInfo
+                BuildMCTrackInfo().UTForTT = True
+
             if "IT" in linkDets or "IT" in moniDets:
                 seq = GaudiSequencer("LinkITSeq")
                 seq.Members += [ STDigit2MCHitLinker("ITDigitLinker", DetType   = "IT") ]
@@ -559,9 +563,6 @@ class Boole(LHCbConfigurableUser):
             if "VeloPix" in linkDets: seq.Members += [ "BuildMCTrackWithVeloPixInfo" ]
             else :
                 seq.Members += [ "BuildMCTrackInfo" ]
-            if "UT" in linkDets:
-                from Configurables import BuildMCTrackInfo
-                BuildMCTrackInfo().UTForTT = True
 
         if "Rich" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkRichSeq")

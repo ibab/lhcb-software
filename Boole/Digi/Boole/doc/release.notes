@@ -3,6 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Added missing corrections from JC
  - Added UT to Configuration.py - Paul Szczypka
 
 </PRE><H1><A NAME=v25r1>2012-09-18 Boole v25r1</A></H1><PRE>
