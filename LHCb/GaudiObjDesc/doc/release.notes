@@ -5,6 +5,11 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2012-09-26 - Marco Clemencic
+ - Allow for generation of "private" headers when using CMake.
+   Note: those headers are not copied anywhere, so they will not be available
+         in Doxygen.
+
 ! 2012-09-20 - Stefan Roiser
  - Added the possibility of declaring typedefs in the scope of the namespace
    surrounding the class (i.e. just outside the class).

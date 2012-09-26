@@ -24,14 +24,20 @@ find_path(GOD_DATA_DIR templates/header.tpl
 # GaudiObjDesc functions
 #-------------------------------------------------------------------------------
 # god_build_headers(pattern1 pattern2 ...
-#                   [DESTINATION dirname])
+#                   [DESTINATION dirname | PRIVATE])
 #
 # Generate header files from XML descriptions and put them in the directory
-# 'dirname' (default: 'Event').
+# 'dirname' (default: 'Event'). If the option 'PRIVATE' is used instead of
+# 'DESTINATION' (or none), the headers are generated in a directory in the
+# include path of the package, but not installed.
 #-------------------------------------------------------------------------------
 function(god_build_headers)
-  CMAKE_PARSE_ARGUMENTS(ARG "" "DESTINATION" "" ${ARGN})
-  if(NOT ARG_DESTINATION)
+  CMAKE_PARSE_ARGUMENTS(ARG "PRIVATE" "DESTINATION" "" ${ARGN})
+  if(ARG_DESTINATION AND ARG_PRIVATE)
+    message(FATAL_ERROR "Invalid arguments: the options 'PRIVATE' and 'DESTINATION' cannot be used at the same time")
+  endif()
+
+  if(NOT ARG_DESTINATION AND NOT ARG_PRIVATE)
     set(ARG_DESTINATION Event) # default value
   endif()
 
@@ -46,8 +52,12 @@ function(god_build_headers)
     endif()
   endforeach()
 
-  set(dest ${CMAKE_BINARY_DIR}/include/${ARG_DESTINATION})
-  file(MAKE_DIRECTORY ${dest})
+  if(ARG_DESTINATION)
+    set(dest ${CMAKE_BINARY_DIR}/include/${ARG_DESTINATION})
+    file(MAKE_DIRECTORY ${dest})
+  else()
+    set(dest ${CMAKE_CURRENT_BINARY_DIR})
+  endif()
   set(stamps)
   foreach(xmlfile ${xmlfiles})
     get_filename_component(fname ${xmlfile} NAME_WE)
@@ -78,7 +88,9 @@ function(god_build_headers)
     add_custom_target(AllObj2doth DEPENDS ${package}Obj2doth)
   endif()
 
-  gaudi_install_headers(${dest})
+  if(ARG_DESTINATION)
+    gaudi_install_headers(${dest})
+  endif()
 endfunction()
 
 #-------------------------------------------------------------------------------
