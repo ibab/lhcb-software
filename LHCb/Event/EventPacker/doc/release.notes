@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-09-26 - Paul Szczypka
+ - Added FT to Packers, Checkers and Unpackers
+
 ! 2012-09-21 - Jianchun Wang
  - Add UT detector as one of the ST detetors
 

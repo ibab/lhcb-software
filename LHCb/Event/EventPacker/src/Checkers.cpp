@@ -111,3 +111,7 @@ DECLARE_ALGORITHM_FACTORY( Q )
 template class DataPacking::Check<LHCb::CaloClusterPacker>;
 typedef DataPacking::Check<LHCb::CaloClusterPacker> R;
 DECLARE_ALGORITHM_FACTORY( R )
+
+template class DataPacking::Check<LHCb::MCFTHitPacker>;
+typedef DataPacking::Check<LHCb::MCFTHitPacker> S;
+DECLARE_ALGORITHM_FACTORY( S )
