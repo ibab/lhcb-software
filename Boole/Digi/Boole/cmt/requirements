@@ -52,8 +52,6 @@ use RichMCAssociators  v*    Rich   -no_auto_imports
 use RichDigiSys        v*    Rich   -no_auto_imports
 use STDigiAlgorithms   v*    ST     -no_auto_imports
 use BooleUMC           v*    Digi   -no_auto_imports
-use VeloPixAlgorithms  v*    VeloPix  -no_auto_imports
-use VeloPixAssociators v*    VeloPix  -no_auto_imports
 
 # ========================= Install configurable ============================
 apply_pattern install_python_modules
