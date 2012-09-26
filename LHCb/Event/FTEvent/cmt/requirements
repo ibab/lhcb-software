@@ -6,7 +6,7 @@ package           FT/FTEvent
 version           v1r0
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc dict Event xml
 #============================================================================
@@ -14,12 +14,14 @@ branches          cmt doc dict Event xml
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use EventBase    v*      Event
+use MCEvent      v*      Event
 
-include_dirs      $(FTEVENTROOT)
 #============================================================================
 #---- Produce Header-Files from XML description
 private
-document obj2doth FTEventObj2Doth ../xml/*.xml
-document obj2dict FTEventObj2Dict ../xml/*.xml
-
 use GaudiObjDesc v*
+
+apply_pattern god_headers files=../xml/*.xml
+apply_pattern god_dictionary files=../xml/*.xml
+
+apply_pattern install_more_includes more=Event

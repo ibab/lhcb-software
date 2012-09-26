@@ -3,6 +3,9 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2012-09-26 - Marco Clemencic
+  - Minor changes to requirements for a smoother migration to CMake.
+
 !========================= GenEvent v6r3 2011-12-14 =========================
 ! 2011-11-30 - Marco Clemencic
  - Fixed the previous fix to work on 32bits too.

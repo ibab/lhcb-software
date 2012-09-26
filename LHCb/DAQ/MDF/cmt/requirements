@@ -10,6 +10,7 @@ use GaudiKernel    v*
 use GaudiAlg       v*            -no_auto_imports
 use GaudiUtils     v*            -no_auto_imports
 use DAQEvent       v* Event      -no_auto_imports
+use ROOT           v* LCG_Interfaces -no_auto_imports
 # ==================== libraries ==================================
 apply_pattern install_more_includes more=MDF
 library MDFLib *.cpp -import=DAQEvent -import=ROOT

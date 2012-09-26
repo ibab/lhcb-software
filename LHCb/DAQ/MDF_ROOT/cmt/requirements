@@ -16,3 +16,7 @@ include_path none
 library MDF_ROOT *.cpp -import=MDF -import=ROOT
 apply_pattern ld_library_path
 apply_pattern linker_library library=MDF_ROOT
+
+private
+macro_append ROOT_linkopts " $(ROOT_linkopts_RIO)"
+end_private

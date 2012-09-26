@@ -6,7 +6,9 @@ branches cmt doc src xml Event
 use HepMC        v*	LCG_Interfaces
 use EventBase    v*     Event
 private
-use GaudiObjDesc v* -no_auto_imports
+use GaudiObjDesc v*
+use ROOT         v* LCG_Interfaces
+macro_append ROOT_linkopts " $(ROOT_linkopts_GenVector)"
 end_private
 
 # Produce Header-Files from XML description

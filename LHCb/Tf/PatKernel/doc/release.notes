@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-09-26 - Marco Clemencic
+  - Minor changes to requirements for a smoother migration to CMake.
+
 !========================= PatKernel v2r4p1 2011-11-07 =========================
 ! 2011-10-03 - Marco Cattaneo
  - Fix icc remarks

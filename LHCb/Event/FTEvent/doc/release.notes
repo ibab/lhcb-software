@@ -4,6 +4,9 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-09-26 - Marco Clemencic
+  - Minor changes to requirements for a smoother migration to CMake.
+
 ! 2012-08-23 - Olivier Callot
  - Create a static method to sort MCFTDigit
 

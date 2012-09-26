@@ -1,6 +1,6 @@
 #============================================================================
 # Created    : 2007-09-06
-# Maintainer : Stephanie Hansmann-Menzemer 
+# Maintainer : Stephanie Hansmann-Menzemer
 #============================================================================
 package           PatKernel
 version           v2r4p1
@@ -14,9 +14,12 @@ branches          cmt dict doc src PatKernel
 # Used packages.
 #============================================================================
 
-use  OTDet       v*  Det  
+use  OTDet       v*  Det
 use  STDet       v*  Det
 use  TfKernel    v*  Tf
+
+use  VeloDet     v*  Det
+use  TrackEvent  v*  Event
 
 #============================================================================
 # Install includes
@@ -26,7 +29,7 @@ apply_pattern install_more_includes more=PatKernel
 #============================================================================
 # Component library building rule
 #============================================================================
-library PatKernel ../src/*.cpp 
+library PatKernel ../src/*.cpp
 
 #============================================================================
 # define component library link options

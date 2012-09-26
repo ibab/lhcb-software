@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2012-09-26 - Marco Clemencic
+  - Minor changes to requirements for a smoother migration to CMake.
+
 !========================= MDF v3r34 2012-09-13 =========================
 ! 2012-09-13 - Markus Frank
  - No real code change. Mainly reformatting some code.

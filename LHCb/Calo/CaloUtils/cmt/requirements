@@ -1,19 +1,19 @@
 # =============================================================================
 # Created    : 02/11/2001
-# Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
+# Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package           CaloUtils
 version           v9r4
 
 # ================= structure =================================================
-branches            cmt doc src python CaloUtils 
+branches            cmt doc src python CaloUtils
 
 # ================= dependencies ==============================================
 use GaudiAlg         v*
-use CaloInterfaces   v*      Calo 
+use CaloInterfaces   v*      Calo
 use TrackInterfaces  v*      Tr
-use CaloDet          v*      Det 
+use CaloDet          v*      Det
 use LHCbMath         v*      Kernel
 use PhysEvent        v*      Event
 use RecEvent         v*      Event
@@ -21,10 +21,11 @@ use TrackEvent       v*      Event
 use MCEvent          v*      Event
 use DigiEvent        v*      Event
 use L0Event          v*      Event
+use AIDA             v*      LCG_Interfaces -no_auto_imports
 
 # ================= own includes ==============================================
 apply_pattern install_more_includes  more=CaloUtils
-apply_pattern install_python_modules 
+apply_pattern install_python_modules
 
 # ================= constituents: linker library ==============================
 library             CaloUtils  -import=AIDA  *.cpp
@@ -42,5 +43,5 @@ apply_pattern       linker_library library=CaloUtils
 macro_append CaloUtils_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib libGraf.lib libRIO.lib"
 
 # ============================================================================
-# The END 
+# The END
 # ============================================================================
