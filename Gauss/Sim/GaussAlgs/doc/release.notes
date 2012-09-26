@@ -3,6 +3,9 @@
 ! Purpose     : General Gauss algorithms
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
+!2012-09-26 - Sajan Easo
+
+ -Added FT detector paths in GiGaGetHitsAlg
 
 ! 2012-08-30 - Paul Szczypka
  - Remove confusing info() relating to spillover slots, restrict to main slot
