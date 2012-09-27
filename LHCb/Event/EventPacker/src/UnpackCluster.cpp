@@ -110,7 +110,8 @@ StatusCode UnpackCluster::execute()
       }
       catch ( const GaudiException & excpt )
       {
-        Error( excpt.message() ).ignore();
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << excpt.message() << endmsg;
         delete vCl;
       }
     }
@@ -146,7 +147,8 @@ StatusCode UnpackCluster::execute()
         }
         catch ( const GaudiException & excpt )
         {
-          Error( excpt.message() ).ignore();
+          if ( msgLevel(MSG::VERBOSE) )
+            verbose() << excpt.message() << endmsg;
           delete sCl;
         }
       }

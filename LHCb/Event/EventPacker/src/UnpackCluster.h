@@ -18,7 +18,8 @@ class UnpackCluster : public GaudiAlgorithm
 public:
 
   /// Standard constructor
-  UnpackCluster( const std::string& name, ISvcLocator* pSvcLocator );
+  UnpackCluster( const std::string& name, 
+                 ISvcLocator* pSvcLocator );
 
   virtual ~UnpackCluster( ); ///< Destructor
 

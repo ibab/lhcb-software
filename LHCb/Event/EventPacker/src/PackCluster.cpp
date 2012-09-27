@@ -59,8 +59,9 @@ StatusCode PackCluster::execute()
       allIds.push_back( *itI );
     }
   }
-
+ 
   // Sort and remove duplicate LHCbIDs
+  std::sort( allIds.begin(), allIds.end() );
   allIds.erase( std::unique(allIds.begin(),allIds.end()), allIds.end() );
 
   // Load the clusters

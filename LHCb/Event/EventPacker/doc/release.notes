@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-09-27 - Chris Jones
+ - Add back a call to std::sort that went AWOL in PackCluster
+
+! 2012-09-27 - Chris Jones
  - Add some 'band-aid' protection to UnpackCluster to catch exceptions thrown
    when an attempt is made to insert an object into a KeyedContainer with an 
    existing key 
