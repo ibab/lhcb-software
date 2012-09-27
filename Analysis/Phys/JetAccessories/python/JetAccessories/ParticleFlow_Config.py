@@ -74,8 +74,8 @@ class ParticleFlowConf:
                           'CandidateToBanLocation':'','PFProtoParticlesOutputLocation':"Rec/ProtoP/PF",
                           'PFOutputLocation': "Phys/PFParticles/Particles",'PFBannedOutputLocation':"Phys/PFBannedParticles/Particles",
                           'PFHiddenNeutralOutputLocation':"Phys/PFNeutralParticles/Particles",
-                          "CalibECAL_EovP": 0.1,"CalibHCAL_EovP": 0.9,"NSigmaForCaloRecovery": 3.,
-                          "MinECALE_NeutralRecovery": 0.,"MinHCALE_NeutralRecovery": 0.,'UseVelo':False
+                          "CalibECAL_EovP": 0.1,"CalibHCAL_EovP": 0.9,"NSigmaForCaloRecovery": 0.,
+                          "MinECALE_NeutralRecovery": 1000.,"MinHCALE_NeutralRecovery": 2000.,'UseVelo':False
                           }
 ##          self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. ,
 ##                           'Chi2MaxDown': 7. , 'Chi2MaxUp': 7. , 'PtMinUp': 0. , 'UseTTHits':True ,'MaxChi2NoTT': 3.,
