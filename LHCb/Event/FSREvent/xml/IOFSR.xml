@@ -15,16 +15,12 @@
       author="Rob lambert"
       desc="Class to store IO information about a job, upgraded EventAccountFSR, needs a special FSRWriter to add file-by-file"
       stdVectorTypeDef="TRUE"
-      keyedContTypeDef="TRUE"
       id="13506"
       serializers="TRUE"
       >
-<!--
-      <base name='DataObject'/>
--->
-      <base name="KeyedObject&lt;int&gt;"/>
-      &KeyedObject;
 
+      <base name='DataObject'/>
+      
       <enum
         desc="FSR status, is the accounting OK"
         name="StatusFlag"
@@ -51,22 +47,64 @@
         access="PUBLIC"
 	/> 
 
+      <typedef
+        type="std::map&lt; std::string, std::vector&lt; std::string &gt; &gt;"
+        def="ProvenanceMap"
+        desc="File Provenance, {GUID:&lt;GUIDs&gt;}"
+        access="PUBLIC"
+	/> 
+      
       <attribute
         desc="Number of events this output file should contain"
-        name="output"
+        name="eventsOutput"
         type="ulonglong"
         init="0"
        />
-
+      
       <attribute
-        desc="Map of input files and event counts"
-        name="input"
+        desc="Number of events read over to produce this file"
+        name="eventsSeen"
+        type="ulonglong"
+        init="0"
+       />
+      
+      <attribute
+        desc="list of parent files at this level"
+        name="filesRead"
+        type="std::vector&lt; std::string &gt;"
+        init="0"
+       />
+      
+      <attribute
+        desc="maps of ancestor files below this level"
+        name="provenance"
+        type="ProvenanceMap"
+        init=""
+       />
+      
+      <attribute
+        desc="Map of input files and events written to those files"
+        name="eventsWrittenTo"
         type="FileEventMap"
         init=""
        />
-
+      
       <attribute
-        desc="Only used after merging, should be filled with file GUID"
+        desc="Map of input files and events read in creating those files"
+        name="eventsSeenBy"
+        type="FileEventMap"
+        init=""
+       />
+      
+      <attribute
+        desc="Map of input files and events read from those files"
+        name="eventsReadFrom"
+        type="FileEventMap"
+        init=""
+       />
+      
+      <attribute
+        desc="May be filled with this file's GUID if it is known, almost never known"
         name="FID"
         type="std::string"
         init=""
@@ -74,7 +112,7 @@
 
 
       <attribute
-        desc="Is the FSR reliable? This time, OK wrt streaming. Fill only during merging."
+        desc="Is the FSR reliable? This time, OK wrt streaming. Fill during merging."
         name="statusFlag"
         type="LHCb::IOFSR::StatusFlag"
         init="LHCb::IOFSR::UNCHECKED"
