@@ -23,7 +23,11 @@ DECLARE_ALGORITHM_FACTORY( UnpackCluster )
   UnpackCluster::UnpackCluster( const std::string& name,
                                 ISvcLocator* pSvcLocator )
     : GaudiAlgorithm ( name, pSvcLocator ),
-      m_running      ( false             )
+      m_running      ( false             ),
+      m_vClus        ( NULL              ),
+      m_ttClus       ( NULL              ),
+      m_utClus       ( NULL              ),
+      m_itClus       ( NULL              )
 {
   declareProperty( "InputName" , m_inputName = LHCb::PackedClusterLocation::Default );
   declareProperty( "Extension",  m_extension = "" );
@@ -60,15 +64,17 @@ StatusCode UnpackCluster::execute()
     return StatusCode::SUCCESS;
   }
 
-  // Create the cluster containers
-  LHCb::VeloClusters* vClus = new LHCb::VeloClusters();
-  put( vClus,  LHCb::VeloClusterLocation::Default  + m_extension );
-  LHCb::STClusters*  ttClus = new LHCb::STClusters();
-  put( ttClus, LHCb::STClusterLocation::TTClusters + m_extension );
-  LHCb::STClusters*  utClus = new LHCb::STClusters();
-  put( utClus, LHCb::STClusterLocation::UTClusters + m_extension );
-  LHCb::STClusters*  itClus = new LHCb::STClusters();
-  put( itClus, LHCb::STClusterLocation::ITClusters + m_extension );
+  // Reset cluster pointers, to force new ones to be creatd when needed next time
+  m_vClus  = NULL;
+  m_ttClus = NULL;
+  m_utClus = NULL;
+  m_itClus = NULL;
+
+  // Force creation of non-upgrade locatons. 
+  // Temporary, need to check if all works fine with these removed.
+  vClus();
+  ttClus();
+  itClus();
 
   // Get the packed data
   const LHCb::PackedClusters* dst =
@@ -106,7 +112,7 @@ StatusCode UnpackCluster::execute()
         verbose() << " Unpacked " << vCl->channelID() << endmsg;
       try 
       {
-        vClus->insert( vCl, vCl->channelID() );
+        vClus()->insert( vCl, vCl->channelID() );
       }
       catch ( const GaudiException & excpt )
       {
@@ -138,11 +144,11 @@ StatusCode UnpackCluster::execute()
         {
           if ( 2 == det )
           {
-            ttClus->insert( sCl, sCl->channelID() );
+            ttClus()->insert( sCl, sCl->channelID() );
           }
           else
           {
-            itClus->insert( sCl, sCl->channelID() );
+            itClus()->insert( sCl, sCl->channelID() );
           }
         }
         catch ( const GaudiException & excpt )
@@ -169,7 +175,7 @@ StatusCode UnpackCluster::execute()
   {
 
     LHCb::VeloClusters* vRef = get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
-    for ( LHCb::VeloClusters::iterator itV = vClus->begin(); vClus->end() != itV; ++itV )
+    for ( LHCb::VeloClusters::iterator itV = vClus()->begin(); vClus()->end() != itV; ++itV )
     {
       LHCb::VeloCluster* vCl = *itV;
       LHCb::VeloCluster* vOld = vRef->object( vCl->key() );
@@ -186,7 +192,7 @@ StatusCode UnpackCluster::execute()
     }
 
     LHCb::STClusters* ttRef = get<LHCb::STClusters>(LHCb::STClusterLocation::TTClusters);
-    for ( LHCb::STClusters::iterator itT = ttClus->begin(); ttClus->end() != itT; ++itT )
+    for ( LHCb::STClusters::iterator itT = ttClus()->begin(); ttClus()->end() != itT; ++itT )
     {
       LHCb::STCluster* sCl = *itT;
       LHCb::STCluster* sOld = ttRef->object( sCl->key() );
@@ -203,7 +209,7 @@ StatusCode UnpackCluster::execute()
     }
 
     LHCb::STClusters* utRef = get<LHCb::STClusters>(LHCb::STClusterLocation::UTClusters);
-    for ( LHCb::STClusters::iterator itU = utClus->begin(); utClus->end() != itU; ++itU )
+    for ( LHCb::STClusters::iterator itU = utClus()->begin(); utClus()->end() != itU; ++itU )
     {
       LHCb::STCluster* sCl = *itU;
       LHCb::STCluster* sOld = utRef->object( sCl->key() );
@@ -220,7 +226,7 @@ StatusCode UnpackCluster::execute()
     }
 
     LHCb::STClusters* itRef = get<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters);
-    for ( LHCb::STClusters::iterator itI = itClus->begin(); itClus->end() != itI; ++itI )
+    for ( LHCb::STClusters::iterator itI = itClus()->begin(); itClus()->end() != itI; ++itI )
     {
       LHCb::STCluster* sCl = *itI;
       LHCb::STCluster* sOld = itRef->object( sCl->key() );
@@ -236,8 +242,8 @@ StatusCode UnpackCluster::execute()
       }
     }
 
-    info() << "Decoded " << vClus->size() << " Velo, " << ttClus->size()
-           << " TT and " << utClus->size() << " UT, " << itClus->size() << " IT clusters;" << endmsg;
+    info() << "Decoded " << vClus()->size() << " Velo, " << ttClus()->size()
+           << " TT and " << utClus()->size() << " UT, " << itClus()->size() << " IT clusters;" << endmsg;
   }
 
   m_running = false;
