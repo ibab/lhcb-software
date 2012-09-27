@@ -90,12 +90,16 @@ bool DaughtersInLHCbAndWithDaughAndBCuts::passCuts( const HepMC::GenParticle * t
   HepMC::GenVertex * EV = theSignal -> end_vertex() ;
   if ( 0 == EV ) return true ;
 
-double fakeSum(0.);
+  double fakeSum(0.);
+  debug() << "New event" << endmsg ;
+
   //B signal cuts
   bool pass = flightCut(theSignal, m_minBFD );
   if (!pass) return false;
+
   pass = momentumCut(theSignal, m_minBP,fakeSum );
   if (!pass) return false;
+
   pass = transverseMomentumCut(theSignal, m_minBPT,fakeSum );
   if (!pass) return false;
   
@@ -118,14 +122,13 @@ double fakeSum(0.);
   double sumPt( 0. );
   double firstpz = stables.front() -> momentum().pz() ;
   
-  debug() << "New event" << endmsg ;
 
   //KS and Lambda cuts
   for ( Particles::const_iterator it = unstables.begin() ; it != unstables.end() ;
         ++it ) {
     
     // look for KS or Lambda
-    if ( ( 310 == abs( (*it) -> pdg_id() ) ) || (3122 == abs( (*it) -> pdg_id() ) ) ) continue;
+    if ( ! ( 310 == abs( (*it) -> pdg_id() ) ) || (3122 == abs( (*it) -> pdg_id() ) ) ) continue;
     
     angle = (*it) -> momentum().theta() ;
     
@@ -134,11 +137,11 @@ double fakeSum(0.);
       return false ;
     if ( fabs( sin( angle ) ) < fabs( sin( m_llThetaMin ) ) )
       return false ;
-    
+   
     // momentum cut
     pass = momentumCut((*it), m_minLongLivedP, sumP );
     if (!pass) return false;
-      
+    
     //transerve momentum cut
     pass = transverseMomentumCut((*it), m_minLongLivedPT, sumPt );
     if (!pass) return false;
@@ -157,33 +160,34 @@ double fakeSum(0.);
          ( 14 == abs( (*it) -> pdg_id() ) ) || 
          ( 16 == abs( (*it) -> pdg_id() ) ) ) continue ;
  
-    // Specific use of daughters of Lambda and KS:
     HepMC::GenParticle * theParent ;
-    theParent = 
+    theParent =
       *( (*it) -> production_vertex() -> particles_in_const_begin() ) ;
-    if ( 3122 == abs( theParent -> pdg_id() ) || 310 == theParent -> pdg_id() ) {
 
-    // momentum cut
-    bool pass = momentumCut((*it), m_minLongLivedDaughP, fakeSum );
-    if (!pass) return false;
-  
-    //transerve momentum cut
-    pass = transverseMomentumCut((*it), m_minLongLivedDaughPT,fakeSum );
-    if (!pass) return false;
-
-    continue;
-   }
-
-
-    // Consider only gammas from pi0 and eta
+   // Consider only gammas from pi0 and eta
     if ( 22 == (*it) -> pdg_id() ) {
       if ( ( 111 != theParent -> pdg_id() ) &&
            ( 221 != theParent -> pdg_id() ) ) continue ;
     }
-
+    
     // All particles in same direction
     if ( 0 > ( firstpz * ( (*it) -> momentum().pz() ) ) ) return false ;
+      
+    // Specific use of daughters of Lambda and KS:
+    if ( 3122 == abs( theParent -> pdg_id() ) || 310 == theParent -> pdg_id() ) {
+    
+      // momentum cut
+      bool pass = momentumCut((*it), m_minLongLivedDaughP, fakeSum );
+      if (!pass) return false;
 
+      //transerve momentum cut
+      pass = transverseMomentumCut((*it), m_minLongLivedDaughPT,fakeSum );
+      if (!pass) return false;
+      
+      continue;
+    } 
+    
+ 
     // check angle
     angle = (*it) -> momentum().theta() ;
     LHCb::ParticleID pid( (*it) -> pdg_id() ) ;
@@ -205,7 +209,7 @@ double fakeSum(0.);
     if ( 13 == abs( (*it) -> pdg_id() ) )  pass = momentumCut((*it), m_minMuonP, sumP );
     else   pass = momentumCut((*it), m_minTrackP, sumP );
     if (!pass) return false;
-
+ 
     //check transverse momentum
     if ( 13 == abs( (*it) -> pdg_id() ) )  pass = transverseMomentumCut((*it), m_minMuonPT, sumPt );
     else   pass = transverseMomentumCut((*it), m_minTrackPT, sumPt );
@@ -213,11 +217,11 @@ double fakeSum(0.);
 
   }
 
-debug() << sumP << " vs " << m_minSumP << " " << sumPt << " " << m_minSumPT << endmsg;
-
   if (sumP < m_minSumP) return false;
+
   if (sumPt < m_minSumPT) return false;
-  
+
+
   debug() << "Event passed !" << endmsg ;
   
   return true ;
@@ -269,6 +273,7 @@ bool DaughtersInLHCbAndWithDaughAndBCuts::momentumCut( const HepMC::GenParticle 
        if ( pp < pmin ) pass = false ;
        sumP += pp;
    }
+
       
    return pass;
 }
@@ -294,6 +299,8 @@ bool DaughtersInLHCbAndWithDaughAndBCuts::flightCut( const HepMC::GenParticle *p
   double FD = sqrt(pow(dx-px,2)+pow(dy-py,2)+pow(dz-pz,2));
   if (FD<fdmin)
     pass = false;
+  
+
 
   return pass;
 }

@@ -4,6 +4,9 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-09-27 - Aurelien Martens
+ - Added a bug fix for DaughtersInLHCbAndWithDaughAndBCuts
+
 !========================== GenCuts v3r0 2012-07-24 ========================== 
 ! 2012-07-24 - Gloria Corti
  - Changes for adapt to LHCb::ParticlePropertySvc that was leftover
