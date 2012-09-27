@@ -12,6 +12,10 @@
 //=============================================================================
 std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   switch ( e ) {
+    //
+    // Important note:
+    // Keep the order exactly as in the RawEvent header file!
+    //
   case LHCb::RawBank::L0Calo          : return  "L0Calo";
   case LHCb::RawBank::L0DU            : return  "L0DU";            
   case LHCb::RawBank::PrsE            : return  "PrsE";            
@@ -23,7 +27,6 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::Velo            : return  "Velo";            
   case LHCb::RawBank::Rich            : return  "Rich";            
   case LHCb::RawBank::TT              : return  "TT";              
-  case LHCb::RawBank::UT              : return  "UT";
   case LHCb::RawBank::IT              : return  "IT";              
   case LHCb::RawBank::OT              : return  "OT";              
   case LHCb::RawBank::Muon            : return  "Muon";            
@@ -79,7 +82,11 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::VP              : return  "VP";
   case LHCb::RawBank::FTCluster       : return  "FTCluster";  
   case LHCb::RawBank::VL              : return  "VL"; 
-  default                             : return  "Undefined name";
+  case LHCb::RawBank::UT              : return  "UT";
+  case LHCb::RawBank::UTFull          : return  "UTFull";
+  case LHCb::RawBank::UTError         : return  "UTError";
+  case LHCb::RawBank::UTPedestal      : return  "UTPedestal";
+  default                             : return  "Undefined_name";
   };
 }  
 

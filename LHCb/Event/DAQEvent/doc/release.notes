@@ -4,6 +4,14 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2012-09-27 - Markus Frank
+ - Add missing bank types to LHCb::RawBank::typeName(...)
+   Folks, if you add new bank types do it consistently!
+   Update all locations which need to be changed!
+   Also: in quite a number of algorithms loops over bank types
+   are done - these do not perform any better if the number
+   of bank types continuously increases...
+
 ! 2012-09-21 - Jianchun Wang
  - Add UT to RawBank types
 
