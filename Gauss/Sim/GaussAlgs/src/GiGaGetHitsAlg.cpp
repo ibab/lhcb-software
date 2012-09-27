@@ -50,7 +50,7 @@ GiGaGetHitsAlg::GiGaGetHitsAlg( const std::string& name,
   declareProperty( "ITHits",     m_ithits = LHCb::MCHitLocation::IT );
   declareProperty( "OTHits",     m_othits = LHCb::MCHitLocation::OT );
   declareProperty( "FTHits",     m_fthits = LHCb::MCHitLocation::FT );
-  // declareProperty( "UTHits",     m_uthits = LHCb::MCHitLocation::UT );
+  declareProperty( "UTHits",     m_uthits = LHCb::MCHitLocation::UT );
   declareProperty( "CaloHits",   m_caloHits );
   declareProperty( "MuonHits",   m_muonhits = LHCb::MCHitLocation::Muon );
   declareProperty( "RichHits",   m_richhits = LHCb::MCRichHitLocation::Default );

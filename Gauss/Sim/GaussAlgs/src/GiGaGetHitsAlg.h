@@ -40,7 +40,7 @@ private:
   std::string    m_tthits      ;      ///< TES path where to look for TT hits
   std::string    m_ithits      ;      ///< TES path where to look for IT hits
   std::string    m_fthits      ;      ///< TES path where to look for FT hits
-  //std::string    m_uthits      ;      ///< TES path where to look for UT hits
+  std::string    m_uthits      ;      ///< TES path where to look for UT hits
   std::string    m_velohits    ;      ///< TES path where to look for Velo hits
   std::string    m_puvelohits  ;      ///< TES path where to look for PileUp Veto hits
   std::string    m_muonhits    ;      ///< TES path where to look for Muon hits
