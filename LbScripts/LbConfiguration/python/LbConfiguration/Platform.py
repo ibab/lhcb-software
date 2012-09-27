@@ -283,7 +283,7 @@ flavor_runtime_equivalence = {
 
 supported_compilers = {
                        "slc6"   : ["gcc46","gcc45", "gcc44"],
-                       "slc5"   : ["gcc43", "gcc46", "gcc45", "icc11"] ,
+                       "slc5"   : ["gcc46", "gcc43", "gcc45", "icc11"] ,
                        "slc4"   : ["gcc34"],
                        "slc3"   : ["gcc323"],
                        "win32"  : ["vc71", "vc9"],
