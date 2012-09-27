@@ -295,7 +295,7 @@ StatusCode LoKi::JetMaker::analyse   ()
     {
       LHCb::Particle* jet = jets.back() ;
       if(m_runJetID) this->appendJetIDInfo(jet);
-      if (m_applyJetID && m_runJetID && ( mtf(jet)>0.8 || n90(jet)<4 || nPVInfo(jet)<3 )){
+      if (m_applyJetID && m_runJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 )){
           jets.pop_back() ;
           delete jet ;
           continue;

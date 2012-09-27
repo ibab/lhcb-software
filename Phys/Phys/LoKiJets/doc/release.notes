@@ -9,6 +9,9 @@
 
 !========================= LoKiJets v6r7 2012-09-26 =========================
 
+! 2012-09-27 - Murilo Rangel
+- JetID cuts Updated also for noPVassociation
+
 ! 2012-09-26 - Murilo Rangel
 - Updated jec.root file and JetID cuts
 
