@@ -83,49 +83,58 @@ StatusCode UnpackCluster::execute()
         dst->clusters().end() != itC; ++itC )
   {
 
-    // CRJ : Add a try / catch to prevent exceptions terminating the processing
-    try
+    const int det = (*itC).id >> 29;
+    int id        = (*itC).id & 0x1FFFFFFF;
+    LHCb::VeloCluster::ADCVector adcs;
+    for ( unsigned int kk = (*itC).begin; (*itC).end != kk; ++kk )
     {
-      const int det = (*itC).id >> 29;
-      int id        = (*itC).id & 0x1FFFFFFF;
-      LHCb::VeloCluster::ADCVector adcs;
-      for ( unsigned int kk = (*itC).begin; (*itC).end != kk; ++kk )
+      adcs.push_back( std::pair<int,unsigned int>( dst->strips()[kk],
+                                                   dst->adcs()[kk]  ) );
+    }
+    if ( 1 == det )
+    {
+      LHCb::VeloChannelID vId( id & 0xFFFFFF );
+      id = id >> 24;
+      const double frac = 0.125 * ( id & 7 );
+      int size = 1;
+      if ( 0 != frac ) size = 2;
+      if ( ( id & 8 ) != 0 ) size = 3;
+      bool high = ( id & 0x10 ) != 0;
+      const LHCb::VeloLiteCluster vl( vId, frac, size, high );
+      LHCb::VeloCluster* vCl = new LHCb::VeloCluster( vl, adcs );
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " Unpacked " << vCl->channelID() << endmsg;
+      try 
       {
-        adcs.push_back( std::pair<int,unsigned int>( dst->strips()[kk], 
-                                                     dst->adcs()[kk]  ) );
-      }
-      if ( 1 == det )
-      {
-        LHCb::VeloChannelID vId( id & 0xFFFFFF );
-        id = id >> 24;
-        const double frac = 0.125 * ( id & 7 );
-        int size = 1;
-        if ( 0 != frac ) size = 2;
-        if ( ( id & 8 ) != 0 ) size = 3;
-        bool high = ( id & 0x10 ) != 0;
-        const LHCb::VeloLiteCluster vl( vId, frac, size, high );
-        LHCb::VeloCluster* vCl = new LHCb::VeloCluster( vl, adcs );
-        if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " Unpacked " << vCl->channelID() << endmsg;
         vClus->insert( vCl, vCl->channelID() );
       }
-      else if ( 2 == det || 3 == det )
+      catch ( const GaudiException & excpt )
       {
-        LHCb::STChannelID sId( id & 0xFFFFFF );
-        id = id >> 24;
-        const double frac = 0.25 * ( id & 3 );
-        int size = 1;
-        if ( 0 != frac ) size = 2;
-        if ( ( id & 4 ) != 0 ) size = 3;
-        bool high = ( id & 8 ) != 0;
-        LHCb::STLiteCluster sl( sId, frac, size, high );
-        if ( 0 == (*itC).spill )
+        Error( excpt.message() ).ignore();
+        delete vCl;
+      }
+    }
+    else if ( 2 == det || 3 == det )
+    {
+      LHCb::STChannelID sId( id & 0xFFFFFF );
+      id = id >> 24;
+      const double frac = 0.25 * ( id & 3 );
+      int size = 1;
+      if ( 0 != frac ) size = 2;
+      if ( ( id & 4 ) != 0 ) size = 3;
+      bool high = ( id & 8 ) != 0;
+      LHCb::STLiteCluster sl( sId, frac, size, high );
+      if ( 0 == (*itC).spill )
+      {
+        LHCb::STCluster* sCl = new LHCb::STCluster( sl, adcs,
+                                                    double( (*itC).sum ),
+                                                    (*itC).sourceID,
+                                                    (*itC).tell1Channel,
+                                                    LHCb::STCluster::Central );
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " Unpacked " << sCl->channelID() << endmsg;
+        try 
         {
-          LHCb::STCluster* sCl = new LHCb::STCluster( sl, adcs,
-                                                      double( (*itC).sum ), 
-                                                      (*itC).sourceID,
-                                                      (*itC).tell1Channel, 
-                                                      LHCb::STCluster::Central );
           if ( 2 == det )
           {
             ttClus->insert( sCl, sCl->channelID() );
@@ -134,23 +143,21 @@ StatusCode UnpackCluster::execute()
           {
             itClus->insert( sCl, sCl->channelID() );
           }
-          if ( msgLevel(MSG::VERBOSE) )
-            verbose() << " Unpacked " << sCl->channelID() << endmsg;
         }
-        else
+        catch ( const GaudiException & excpt )
         {
-          Warning( "ST cluster from non central spill !" ).ignore();
+          Error( excpt.message() ).ignore();
+          delete sCl;
         }
       }
       else
       {
-        Warning( "Unknown detector for a cluster !").ignore();
+        Warning( "ST cluster from non central spill !" ).ignore();
       }
-
     }
-    catch ( const GaudiException & excpt )
+    else
     {
-      Error( excpt.message() );
+      Warning( "Unknown detector for a cluster !").ignore();
     }
 
   } // end loop over clusters

@@ -8,6 +8,9 @@
  - Add some 'band-aid' protection to UnpackCluster to catch exceptions thrown
    when an attempt is made to insert an object into a KeyedContainer with an 
    existing key 
+ - Fix a problem in PackCLuster introducted in the commit below, to add UT 
+   support. The commit did not take into account the fact UT clusters might 
+   not be available ...
 
 ! 2012-09-26 - Paul Szczypka
  - Added FT to Packers, Checkers and Unpackers
