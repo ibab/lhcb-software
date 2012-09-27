@@ -5,6 +5,10 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2012-09-27 - Patrick Robbe
+ - Added an option to switch off the reinitialization of the pile-up
+   production in the Special method.
+
 ! 2012-09-11 - John Back
  - Added the use of the namespace Photospp for src/component/ApplyPhotos.cpp,
    which is required for Photos++ version 3.5.

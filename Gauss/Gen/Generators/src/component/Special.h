@@ -65,6 +65,9 @@ private:
   /// production tool which generates pile-up interactions
   IProductionTool * m_pileUpProductionTool ;
 
+  /// flag to reinitialize the pile up generator
+  bool m_reinitialize ;
+
   /// Name of the production tool for pile-up
   std::string m_pileUpProductionToolName ;
 

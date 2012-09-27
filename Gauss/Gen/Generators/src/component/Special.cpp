@@ -41,6 +41,8 @@ Special::Special( const std::string & type , const std::string & name ,
   declareProperty( "PileUpProductionTool" , 
                    m_pileUpProductionToolName = 
                    "PythiaProduction/MinimumBiasPythiaProduction" ) ;
+  declareProperty( "ReinitializePileUpGenerator" ,
+                   m_reinitialize = true ) ;
 }
 
 //=============================================================================
@@ -179,7 +181,8 @@ void Special::generatePileUp() {
   }
 
   // initialize the production tool for pile up generation
-  m_pileUpProductionTool -> initializeGenerator() ;
+  if ( m_reinitialize ) 
+    m_pileUpProductionTool -> initializeGenerator() ;
   
   // generate given number of events
   for ( unsigned int i = 0 ; i < m_maxInteractions ; ++i ) {
@@ -193,7 +196,8 @@ void Special::generatePileUp() {
   }
 
   // now initialize the production tool for the "signal"
-  m_productionTool -> initializeGenerator() ;
+  if ( m_reinitialize )
+    m_productionTool -> initializeGenerator() ;
   //TODO : add finalize function to delete remaining events
 }
 
