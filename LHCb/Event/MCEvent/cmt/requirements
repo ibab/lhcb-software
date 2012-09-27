@@ -7,7 +7,7 @@ branches          cmt doc src xml Event dict
 
 # Used packages. 
 #============================================================================
-use LHCbKernel   v13r12      Kernel
+use LHCbKernel   v*      Kernel
 use PartProp     v*      Kernel
 use EventBase    v*      Event
 private

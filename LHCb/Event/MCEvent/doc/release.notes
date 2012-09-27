@@ -3,6 +3,9 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
 
+! 2012-09-27 - Paul Szczypka
+ - Correct mistake in requirements file (required specific version of LHCbKernel).
+
 ! 2012-09-21 - Jianchun Wang
  - add locations of UT hits, digits, and deposits
 
