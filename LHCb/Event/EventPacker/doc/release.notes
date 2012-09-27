@@ -4,6 +4,11 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-09-27 - Chris Jones
+ - Add some 'band-aid' protection to UnpackCluster to catch exceptions thrown
+   when an attempt is made to insert an object into a KeyedContainer with an 
+   existing key 
+
 ! 2012-09-26 - Paul Szczypka
  - Added FT to Packers, Checkers and Unpackers
 
