@@ -5,14 +5,14 @@ version v1r9
 branches  cmt tests
 
 use GaudiPolicy        v*
+use RootCnv            v* Online
+use ROOT               v* LCG_Interfaces
 
 apply_pattern QMTest
 
 private
-use RootCnv            v* Online
 use GaudiCheckpointing v* Online
 use GaudiExamples      v*
-use ROOT               v* LCG_Interfaces
 
 macro_append ROOT_linkopts " -lCintex -lTreePlayer -lMathCore " \
              target-winxp  " libCintex.lib libTreePlayer.lib libMathCore.lib "
