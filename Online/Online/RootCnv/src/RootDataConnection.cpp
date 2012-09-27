@@ -456,15 +456,18 @@ CSTR RootDataConnection::empty() const {
 pair<int,unsigned long>
 RootDataConnection::saveObj(CSTR section, CSTR cnt, TClass* cl, DataObject* pObj, int buff_siz, int split_lvl,bool fill) {
   DataObjectPush push(pObj);
-  return save(section,cnt,cl,pObj,fill,buff_siz,split_lvl);
+  return save(section,cnt,cl,pObj,buff_siz,split_lvl,fill);
 }
 
 // Save object of a given class to section and container
 pair<int,unsigned long>
 RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, int buff_siz, int split_lvl, bool fill_missing) {
+  split_lvl = 0;
   TBranch* b = getBranch(section, cnt, cl, (void*)(pObj ? &pObj : 0),buff_siz,split_lvl);
   if ( b ) {
     Long64_t evt = b->GetEntries();
+    //msgSvc() << MSG::DEBUG << cnt.c_str() << " Obj:" << (void*)pObj
+    //         << " Split:" << split_lvl << " Buffer size:" << buff_siz << endl;
     if ( fill_missing ) {
       Long64_t num, nevt = b->GetTree()->GetEntries();
       if ( nevt > evt )   {

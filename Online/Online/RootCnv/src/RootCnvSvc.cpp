@@ -404,7 +404,7 @@ StatusCode RootCnvSvc::createNullRef(const std::string& path) {
   pair<int,unsigned long> ret = 
     m_current->save(section,path+"#R",0,refs,m_bufferSize,m_splitLevel);
   log() << MSG::VERBOSE << "Writing object:" << path << " "
-    << ret.first << " " << hex << ret.second << dec << " [NULL]" << endmsg;
+	<< ret.first << " " << hex << ret.second << dec << " [NULL]" << endmsg;
   return S_OK;
 }
 
