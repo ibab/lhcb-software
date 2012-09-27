@@ -126,6 +126,15 @@ TObject* ZooEv::perJobObject(const std::string& key) const
     return objref->GetObject();
 }
 
+ZooDLL::ZooDLL() : 
+     m_DLLe(0.f),
+     m_DLLk(0.f),
+     m_DLLmu(0.f),
+     m_DLLp(0.f),
+     m_isMuon(0),
+     m_isMuonLoose(0),
+     m_hasRich(0) {};
+
 ZooP::~ZooP() { }
 ZooMCP::~ZooMCP() { }
 ZooEv::~ZooEv() { }
