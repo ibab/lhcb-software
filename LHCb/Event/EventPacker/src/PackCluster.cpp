@@ -26,7 +26,8 @@ DECLARE_ALGORITHM_FACTORY( PackCluster )
 {
   declareProperty( "InputName" , m_inputName  = LHCb::TrackLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::PackedClusterLocation::Default );
-  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
+  declareProperty( "AlwaysCreateOutput", m_alwaysOutput = false );
+  setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -43,17 +44,22 @@ StatusCode PackCluster::execute()
 
   // If input does not exist, and we aren't making the output regardless, just return
   if ( !m_alwaysOutput && !exist<LHCb::Tracks>(m_inputName) ) return StatusCode::SUCCESS;
-  const LHCb::Tracks* tracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_inputName );
+
+  // Create and save the output container
   LHCb::PackedClusters* out = new LHCb::PackedClusters();
   put( out, m_outputName );
 
+  // Load the input. If not existing just return
+  const LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>( m_inputName );
+  if ( !tracks ) return StatusCode::SUCCESS;
+
+  // Select LHCbIDs from the input tracks
   std::vector<LHCb::LHCbID> allIds;
   allIds.reserve( tracks->size() * 40 );
   for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT; ++itT ) 
   {
-    const LHCb::Track* track = *itT;
-    for ( std::vector<LHCb::LHCbID>::const_iterator itI = track->lhcbIDs().begin();
-          track->lhcbIDs().end() != itI; ++itI )
+    for ( std::vector<LHCb::LHCbID>::const_iterator itI = (*itT)->lhcbIDs().begin();
+          (*itT)->lhcbIDs().end() != itI; ++itI )
     {
       if ( (*itI).isOT() ) continue;
       allIds.push_back( *itI );
@@ -74,13 +80,13 @@ StatusCode PackCluster::execute()
   for ( std::vector<LHCb::LHCbID>::const_iterator itI = allIds.begin();
         allIds.end() != itI; ++itI ) 
   {
+    if ( msgLevel(MSG::VERBOSE) ) { verbose() << "Packing " << *itI << endmsg; }
+
+    // Pack by type
     if ( (*itI).isVelo() )
     {
       const LHCb::VeloCluster* cl = ( vClus ? vClus->object((*itI).veloID()) : NULL );
-      if ( cl ) 
-      {
-        out->addVeloCluster( cl );
-      }
+      if ( cl ) { out->addVeloCluster( cl ); }
       else 
       {
         std::ostringstream mess;
@@ -91,10 +97,7 @@ StatusCode PackCluster::execute()
     else if ( (*itI).isTT() )
     {
       const LHCb::STCluster* cl = ( ttClus ? ttClus->object((*itI).stID()) : NULL );
-      if ( cl ) 
-      {
-        out->addTTCluster( cl );
-      }
+      if ( cl ) { out->addTTCluster( cl ); }
       else 
       {
         std::ostringstream mess;
@@ -105,10 +108,7 @@ StatusCode PackCluster::execute()
     else if ( (*itI).isUT() )
     {
       const LHCb::STCluster* cl = ( utClus ? utClus->object((*itI).stID()) : NULL );
-      if ( cl ) 
-      {
-        out->addUTCluster( cl );
-      }
+      if ( cl ) { out->addUTCluster( cl ); }
       else 
       {
         std::ostringstream mess;
@@ -119,10 +119,7 @@ StatusCode PackCluster::execute()
     else if ( (*itI).isIT() ) 
     {
       const LHCb::STCluster* cl = ( itClus ? itClus->object((*itI).stID()) : NULL );
-      if ( cl ) 
-      {
-        out->addITCluster( cl );
-      }
+      if ( cl ) { out->addITCluster( cl ); }
       else
       {
         std::ostringstream mess;
@@ -133,7 +130,7 @@ StatusCode PackCluster::execute()
     else 
     {
       std::ostringstream mess;
-      mess << "Unknown LHCb ID on track : " << *itI;
+      mess << "Unknown LHCbID type : " << *itI;
       Warning( mess.str() ).ignore();
     }
   }
