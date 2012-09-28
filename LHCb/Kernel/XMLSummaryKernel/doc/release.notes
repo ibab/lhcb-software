@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r8 2012-09-28 =========================
 ! 2012-09-26 - Marco Clemencic
  - Removed transient QMTest directory.
 
