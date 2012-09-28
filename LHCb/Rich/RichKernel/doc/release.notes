@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-------------------------------------------------------------------------------
 
+!========================= RichKernel v7r50 2012-09-28 =========================
 ! 2012-08-08 - Marco Clemencic
  - Added python/RichKernel/__init__.py.
 
