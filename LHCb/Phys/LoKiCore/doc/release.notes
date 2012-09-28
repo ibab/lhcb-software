@@ -13,6 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r9p1 2012-09-28 =========================
+! 2012-09-26 - Vanya Belyaev
+ - fix the bug with decay tree parsing. 
+   Many thanks to Francesco Dettory for reporting the problem
+
 !========================= LoKiCore v11r9 2012-06-25 =========================
 ! 2012-06-21 - Vanya Belyaev
  - fix ICC compiler warning
