@@ -4,9 +4,12 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================= DigiEvent v3r0 2012-09-28 =========================
 ! 2012-09-21 - Jianchun Wang
  - Add UT as one of ST & Si detector, add its digits & clusters
  - Number of bits to address Si cluster is increased from 24 to 25.
+   !!!!! ABOVE CHANGE TO BE REVIEWED, MAKES ANY EXISTING PERSISTENT !!!!!!
+   !!!!! LiteClusters UNREADABLE!                                   !!!!!!
 
 ! 2012-09-13 Paul Szczypka
  - Rename EVERYTHING from VeloPix to VP or corresponding string.
