@@ -89,29 +89,30 @@ StatusCode TisTos::initialize() {
     }
   }
 
-  if( ! m_noHitTypes ){
-    
-  if( m_TOSFrac[kVelo]<=0.0 ){
-    info()<< " TOSFracVelo " <<  m_TOSFrac[kVelo] << " TISFracVelo " << m_TISFrac[kVelo] << " thus Velo hits not used " << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    if( ! m_noHitTypes ){
+      
+      if( m_TOSFrac[kVelo]<=0.0 ){
+        debug()<< "TOSFracVelo " <<  m_TOSFrac[kVelo] << " TISFracVelo " << m_TISFrac[kVelo] << " thus Velo hits not used " << endmsg;
+      }
+      if( m_TOSFrac[kOTIT]<=0.0  && m_nHitTypes>1 ){
+        debug()<< "TOSFracOTIT " <<  m_TOSFrac[kOTIT] << " TISFracOTIT " << m_TISFrac[kOTIT] << " thus OTIT hits not used " << endmsg;
+      }
+      if( m_TOSFrac[kTT]<=0.0 && m_nHitTypes>2 ){
+        debug()<< "TOSFracTT   " <<  m_TOSFrac[kTT] <<   " TISFracTT   " << m_TISFrac[kTT] << " thus TT hits not used " << endmsg;
+      }
+      if( m_TOSFrac[kMuon]<=0.0 && m_nHitTypes>3 ){
+        debug()<< "TOSFracMuon " <<  m_TOSFrac[kMuon] << " TISFracMuon " << m_TISFrac[kMuon] << " thus Muon hits not used " << endmsg;
+      }
+      if( m_TOSFrac[kEcal]<=0.0  && m_nHitTypes>4 ){
+        debug()<< "TOSFracEcal " <<  m_TOSFrac[kEcal] << " TISFracEcal " << m_TISFrac[kEcal] << " thus Ecal hits not used " << endmsg;
+      }
+      if( m_TOSFrac[kHcal]<=0.0  && m_nHitTypes>5 ){
+        debug()<< "TOSFracHcal " <<  m_TOSFrac[kHcal] << " TISFracHcal " << m_TISFrac[kHcal] << " thus Hcal hits not used " << endmsg;
+      }
+    }
   }
-  if( m_TOSFrac[kOTIT]<=0.0  && m_nHitTypes>1 ){
-    info()<< " TOSFracOTIT " <<  m_TOSFrac[kOTIT] << " TISFracOTIT " << m_TISFrac[kOTIT] << " thus OTIT hits not used " << endmsg;
-  }
-  if( m_TOSFrac[kTT]<=0.0 && m_nHitTypes>2 ){
-    info()<< " TOSFracTT   " <<  m_TOSFrac[kTT] <<   " TISFracTT   " << m_TISFrac[kTT] << " thus TT hits not used " << endmsg;
-  }
-  if( m_TOSFrac[kMuon]<=0.0 && m_nHitTypes>3 ){
-    info()<< " TOSFracMuon " <<  m_TOSFrac[kMuon] << " TISFracMuon " << m_TISFrac[kMuon] << " thus Muon hits not used " << endmsg;
-  }
-  if( m_TOSFrac[kEcal]<=0.0  && m_nHitTypes>4 ){
-    info()<< " TOSFracEcal " <<  m_TOSFrac[kEcal] << " TISFracEcal " << m_TISFrac[kEcal] << " thus Ecal hits not used " << endmsg;
-  }
-  if( m_TOSFrac[kHcal]<=0.0  && m_nHitTypes>5 ){
-    info()<< " TOSFracHcal " <<  m_TOSFrac[kHcal] << " TISFracHcal " << m_TISFrac[kHcal] << " thus Hcal hits not used " << endmsg;
-  }
-  
-  }
-  
  
   setSignal();
 

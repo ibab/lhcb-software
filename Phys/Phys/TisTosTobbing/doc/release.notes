@@ -3,11 +3,15 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2012-09-28 - Chris Jones
+ - Downgrade some info() messages in TisTos.cpp to debug(), to prevent excessive
+   printout spamming in the stripping
+
 !========================= TisTosTobbing v7r8 2012-08-31 =========================
 
 ! 2012-08-31 - Tomasz Skwarnicki
- - change defaults in TisTos.cpp: switch use of TT off, set Muon TOS threshold extra low
-   will affect all TisTos tools
+ - change defaults in TisTos.cpp: switch use of TT off, set Muon TOS threshold 
+   extra low will affect all TisTos tools
 
 !========================= TisTosTobbing v7r7 2012-07-09 =========================
 
