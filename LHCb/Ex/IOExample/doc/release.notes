@@ -4,6 +4,7 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+!========================= IOExample v4r7 2012-09-28 =========================
 ! 2012-09-19 - Marco Cattaneo
  - Add tests to copy and read Reco12Stripping17 and Reco14Stripping20 dst+mdst
 
