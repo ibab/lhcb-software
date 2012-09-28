@@ -4,6 +4,7 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
+!========================= RootCnv v1r18 2012-09-28 =========================
 ! 2012-09-24 - Markus Frank
  - Change optimization options to be part of the RootCnvSvc and not part of 
    the RootDataConnection + adapt all called functions to use these.
