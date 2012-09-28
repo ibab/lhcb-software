@@ -1,3 +1,7 @@
+2012-09-28 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v4r8
+
 2012-09-27 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* scripts/add_DN_LFC: Fixed to incoke csh instead of sh script
