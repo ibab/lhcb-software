@@ -4,6 +4,7 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!========================= PackedEvent v4r12 2012-09-28 =========================
 ! 2012-09-21 - Jianchun Wang
  - add UT hits & clusters
 
