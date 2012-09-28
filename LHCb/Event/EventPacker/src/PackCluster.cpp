@@ -27,7 +27,7 @@ DECLARE_ALGORITHM_FACTORY( PackCluster )
   declareProperty( "InputName" , m_inputName  = LHCb::TrackLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::PackedClusterLocation::Default );
   declareProperty( "AlwaysCreateOutput", m_alwaysOutput = false );
-  setProperty( "OutputLevel", 1 );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
