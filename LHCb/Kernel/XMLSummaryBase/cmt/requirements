@@ -1,11 +1,10 @@
-# $Id: requirements,v 1.3 2010-04-28 02:35:17 rlambert Exp $
 # Created    : 07/07/2009
 # Maintainer : R. Lambert
 #
 
 #============================================================================
 package XMLSummaryBase 
-version v1r2
+version           v1r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
