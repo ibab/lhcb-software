@@ -4,6 +4,7 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= FSRAlgs v1r0 2012-09-28 =========================
 ! 2012-09-26 - Marco Clemencic
  - Added empty __init__.py in the top Python module.
  - Removed transient QMTest directory.
