@@ -137,7 +137,7 @@ use TfKernel              v2r22   Tf      # Stephanie Hansmann-Menzemer
 use TsaKernel             v3r6p1  Tf      # Matt Needham
 
 use CondDBEntityResolver  v5r3    Tools   # Marco Clemencic
-use CondDBUI              v3r17   Tools   # Marco Clemencic
+use CondDBUI              v3r18   Tools   # Marco Clemencic
 use FileStager            v1r9    Tools   # Roel Aaij
 use XmlTools              v6r6    Tools   # Marco Clemencic
 
