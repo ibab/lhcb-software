@@ -1,3 +1,28 @@
+2012-09-28 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r2
+
+	LbConfiguration
+	* python/LbConfiguration/Platform.py: gcc46 new default for slc5 instead of gcc43
+	* python/LbConfiguration/Package.py: Added new package InstallAreaPatch 
+	* python/LbConfiguration/SetupProject.py: fixes to the platform check
+	* python/LbConfiguration/SetupProject.py: check if the requested project
+	was built for the requested platform (CMTCONFIG).
+	* python/LbConfiguration/Project.py: Set all defaults volume sizes to 15GB
+
+	LbLegacy
+	* scripts/mkproject: Set core factor to 2 to give priority to release
+	builds over the nightlies.
+	* scripts/mkLCGCMTtar: Fix code to only include the list of effectively
+	used top directories in the tar command.
+	
+	LbRelease
+	* scripts/add_DN_LFC: Fixed to incoke csh instead of sh script
+	* python/LbRelease/rcs.py:
+	  - fixed a problem with detection of empty directories (reported as not existent)
+	* scripts/add_DN_LFC: change the version of AFS UI
+	* scripts/genXMLCatalog: added the option --no=user to the call to SetupProjec
+
 2012-06-25 Ben Couturier <Ben.Couturier@cern.ch>
 	
 	* cmt/requirements: release of version v7r1
