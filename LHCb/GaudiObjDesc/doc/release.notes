@@ -5,6 +5,7 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+!========================= GaudiObjDesc v11r16 2012-09-28 =========================
 ! 2012-09-26 - Marco Clemencic
  - Allow for generation of "private" headers when using CMake.
    Note: those headers are not copied anywhere, so they will not be available
