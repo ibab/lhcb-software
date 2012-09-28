@@ -4,6 +4,9 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+! 2012-09-28 - Paul Szczypka
+ - Change requirements to pick up VPDet rather than VeloPixDet
+
 ! 2012-08-30 - Paul Szczypka
  - Modify BuildMCTrackInfoUpgrade to use renamed VP (VeloPix)
  - Modify BuildMCTrackWithVeloPixInfo to use renamed VP (VeloPix)
