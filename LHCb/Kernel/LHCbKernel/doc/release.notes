@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v13r13 2012-09-28 =========================
 ! 2012-09-24 - Jianchun Wang
  - Small modification in STChannelID.xml to avoid warnings
 
