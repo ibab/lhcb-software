@@ -1,9 +1,10 @@
 -----------------------------------------------------------------------------
-! Package     : Det/VeloPixDet
-! Responsible : Victor Coco
+! Package     : Det/VPDet
+! Responsible : Paul Szczypka
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================= VPDet v2r0 2012-09-28 =========================
 ! 2012-09-13 - Paul Szczypka
  - Rename EVERYTHING from VeloPix to VP including veloPix to vP, VELOPIX to VP
 

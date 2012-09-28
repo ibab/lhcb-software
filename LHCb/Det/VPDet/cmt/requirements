@@ -1,11 +1,10 @@
-# $Id: requirements,v 1.7 2010-04-13 10:09:43 cocov Exp $
 # =========================================================================
 
-# Maintained by : Victor Coco
+# Maintained by : Paul Szczypka
 
 # =============== structure ===============================================
 package VPDet
-version           v1r10
+version           v2r0
 branches         src cmt doc VPDet dict
 
 # =============== used packages ===========================================
