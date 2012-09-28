@@ -8,6 +8,8 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! 2012-09-27 - Patrick Robbe
  - Added an option to switch off the reinitialization of the pile-up
    production in the Special method.
+ - Fix the bug that events are not smeared (vertex) when there is no
+   decay tool.
 
 ! 2012-09-11 - John Back
  - Added the use of the namespace Photospp for src/component/ApplyPhotos.cpp,

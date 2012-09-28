@@ -222,13 +222,15 @@ StatusCode Generation::execute() {
       GenCounters::AddTo( m_intC , theIntCounter ) ;
 
       // Decay the event if it is a good event
-      if ( ( goodEvent ) && ( 0 != m_decayTool ) ) {
+      if ( goodEvent ) {
         unsigned short iPile( 0 ) ;
         for ( itEvents = theEvents->begin() ; itEvents != theEvents->end() ;
               ++itEvents ) {
-          sc = decayEvent( *itEvents ) ;
+          if ( 0 != m_decayTool ) {
+            sc = decayEvent( *itEvents ) ;
+            if ( ! sc.isSuccess() ) goodEvent = false ;
+          }
           (*itEvents) -> pGenEvt() -> set_event_number( ++iPile ) ;
-          if ( ! sc.isSuccess() ) goodEvent = false ;
           sc = m_vertexSmearingTool -> smearVertex( *itEvents ) ;
           if ( ! sc.isSuccess() ) return sc ;
         }
