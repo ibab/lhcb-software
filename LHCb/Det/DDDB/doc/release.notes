@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2012-09-28 - Marco Cattaneo
+ - Update database tags for latest global tags:
+   . LHCBCOND, 2012: cond-20120917
+   . DQFLAGS, 2012,2011: dq-20120910
+
 ! 2012-09-13 - Marco Clemencic
  - Removed dependencies on CORAL LFCReplicaSvc (dropped in LCGCMT 64).
 
