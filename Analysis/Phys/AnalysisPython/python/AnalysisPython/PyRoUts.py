@@ -3426,6 +3426,65 @@ def _h_scale_ ( histo , val = 1.0 ) :
 
     return histo
 
+# =============================================================================
+## simple shift of the histogram
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h1_shift_ ( h , bias ) :
+    """
+    Simple shift of the historgam :
+    
+    >>> h = ... # the histogram
+    >>> h2 = h.shift ( -5 * MeV )
+    
+    """
+    #
+    if not h     .GetSumw2()  : h    .Sumw2()
+    result = h.Clone( hID() ) ;
+    result.Reset() ;
+    if not result.GetSumw2() : result.Sumw2()
+    #
+    for i,x,y in result.iteritems() :
+        
+        y         += bias
+        result[i]  = h ( y )
+        
+    return result      
+
+# =============================================================================
+## simple shift of the histogram
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h1_ishift_ ( h , ibias ) :
+    """
+    Simple shift of the historgam :
+    
+    >>> h = ...      # the histogram
+    >>> h2 = h >> 5  # shift for 5 bins right 
+    >>> h2 = h << 5  # shift for 3 bins left
+    
+    """
+    #
+    if not h     .GetSumw2()  : h    .Sumw2()
+    result = h.Clone( hID() ) ;
+    result.Reset() ;
+    if not result.GetSumw2() : result.Sumw2()
+    #
+    for i in result :
+        j = i - ibias
+        if j in h :  result[i] = h[ j ] 
+        
+    return result      
+
+
+ROOT.TH1F .   shift    = _h1_shift_
+ROOT.TH1D .   shift    = _h1_shift_
+ROOT.TH1D . __rshift__ = _h1_ishift_
+ROOT.TH1F . __rshift__ = _h1_ishift_
+ROOT.TH1D . __lshift__ = lambda s,i : _h1_ishift_ ( s , -1 * i ) 
+ROOT.TH1F . __lshift__ = lambda s,i : _h1_ishift_ ( s , -1 * i ) 
+
+
 # =============================================================================    
 for t in ( ROOT.TH1F , ROOT.TH1D ) :    
     t . accumulate = _h1_accumulate_ 
@@ -3736,6 +3795,218 @@ def _h_Fit_ ( self                              ,
 
 ROOT.TH1F. hFit = _h_Fit_ 
 ROOT.TH1D. hFit = _h_Fit_ 
+
+# =============================================================================
+
+# =============================================================================
+logger.info ( 'Some useful decorations for TMinuit objects')
+# ==============================================================================
+## get the parameter form minuit 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-28
+def _mn_par_ ( self , i ) :
+    """
+    Get the paraeter fomr minuit
+
+    >>> mn = ...             # TMinuit object
+    >>> p1 = mn[0]           # get the parameter 
+    >>> p1 = mn.par(0)       # ditto 
+    >>> p1 = mn.parameter(0) # ditto 
+    """
+    if not i in self : raise IndexError
+    #
+    ip  = ROOT.Long   ( i )
+    val = ROOT.Double ( 0 )
+    err = ROOT.Double ( 0 )
+    #
+    res = self.GetParameter ( ip , val , err )
+    #
+    return VE ( val , err*err )
+
+ROOT.TMinuit . __contains__ = lambda s,i : isinstance(i,(int,long,ROOT.Long)) and 0<=i<s.GetNumPars() 
+ROOT.TMinuit . __len__      = lambda s : s.GetNumPars() 
+
+ROOT.TMinuit . par         = _mn_par_
+ROOT.TMinuit . parameter   = _mn_par_
+ROOT.TMinuit . __getitem__ = _mn_par_
+
+# =============================================================================
+## set the parameter 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-28
+def _mn_set_par_ ( self , i , val , fix = False ) :
+    """
+    Set MINUIT parameter for some value
+    """
+    if not i in self : raise IndexError
+    #
+    ip = ROOT.Long ( i )
+    if hasattr ( val , 'value' ) : val = val.value()
+    #
+    import array
+    arglist = array.array('d',2*[0.])
+    ierr    = ROOT.Long  ( -1 )
+    #
+    arglist[0] = i+1 
+    arglist[1] = val
+    self.mnexcm ( "SET PAR" , arglist , 2 , ierr )
+    #
+    if fix : self.FixParameter ( ip ) 
+    #
+    return ierr 
+
+ROOT.TMinuit . setPar       = _mn_set_par_
+ROOT.TMinuit . setParameter = _mn_set_par_
+
+ROOT.TMinuit . fixPar       = lambda s,i,v: _mn_set_par_ ( s , i , v , True )
+ROOT.TMinuit . fixParameter = lambda s,i,v: _mn_set_par_ ( s , i , v , True )
+
+ROOT.TMinuit . __setitem__ = _mn_set_par_ 
+
+# ===========================================================
+## set the parameter 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-28
+def _mn_min_ ( self                  ,
+               maxcalls  = 500       ,
+               tolerance = 0.1       ,
+               method    = 'MIGRADE' ) :
+    """
+    Perform the actual MINUIT minimization:
+
+    >>> m = ... #
+    >>> m.fit()       ## run migrade! 
+    >>> m.migrade ()  ## ditto
+    >>> m.fit ( method = 'MIN' ) 
+    
+    """
+    #
+    import array
+    arglist = array.array ( 'd' , 2*[0.] )
+    ierr    = ROOT.Long   (  -1          )
+    #
+    arglist[0] = maxcalls
+    arglist[1] = tolerance
+    #
+    self.mnexcm ( method , arglist , 2 , ierr )
+    #
+    return ierr
+
+ROOT.TMinuit . migrade  = _mn_min_
+ROOT.TMinuit . fit      = _mn_min_
+       
+# =============================================================================
+## set the parameter 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-28
+def _mn_str_ ( self , l = 3 , v = 0.0 ) :
+    """
+    Print MINUIT information:
+
+    >>> m = ...
+    >>> print m
+    
+    """
+    #
+    self.mnprin ( l , v )
+    return '\n'
+
+ROOT.TMinuit . Print     =  _mn_str_ 
+ROOT.TMinuit . __str__   =  _mn_str_ 
+ROOT.TMinuit . __repr__  =  _mn_str_ 
+
+# =============================================================================
+## define/add parameter to TMinuit 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-28
+def _mn_add_par_ ( self    , name      ,
+                   start   , step = -1 ,
+                   low = 0 , high = 0  ) :
+    """
+    Define/add parameter to MUNUIT
+
+    >>> m.addPar ( 'ququ' , 10 , 0.1 )
+    
+    """
+    if hasattr ( start , 'value' ) : start = start . value()
+    if hasattr ( step  , 'value' ) : step  = step  . value()
+    ## 
+    if step < 0 : step = abs ( 0.01 * start ) 
+    ##
+    import array
+    starts  = array.array ( 'd' , 1 * [ start ] )
+    steps   = array.array ( 'd' , 1 * [ step  ] )
+    #
+    ipar    = len ( self ) 
+    ierr    = ROOT.Long   ( 0 )
+    self.mnparm ( ipar , name ,  start , step , low , high , ierr )
+    #
+    return ierr 
+
+ROOT.TMinuit . addpar = _mn_add_par_
+ROOT.TMinuit . addPar = _mn_add_par_
+ROOT.TMinuit . defpar = _mn_add_par_
+ROOT.TMinuit . defPar = _mn_add_par_
+ROOT.TMinuit . newpar = _mn_add_par_
+ROOT.TMinuit . newPar = _mn_add_par_
+
+
+# =============================================================================
+## get MINOS errors
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-28 
+def _mn_minerr_ ( self , i ) :
+    """
+    Get MINOS errors for parameter:
+
+    >>> m = ...       # TMinuit object
+    >>> pos,neg = m.minosErr( 0 )
+    
+    """
+    #
+    if not i in self : raise IndexError
+    #
+    eplus  = ROOT.Double ( 0 ) 
+    eminus = ROOT.Double ( 0 ) 
+    epara  = ROOT.Double ( 0 ) 
+    gcc    = ROOT.Double ( 0 ) 
+    #
+    self.mnerrs ( i , eplus , eminus , epara , gcc )
+    #
+    return eplus,eminus 
+
+ROOT.TMinuit .   minErr  = _mn_minerr_ 
+ROOT.TMinuit . minosErr  = _mn_minerr_ 
+ROOT.TMinuit .   minErrs = _mn_minerr_ 
+ROOT.TMinuit . minosErrs = _mn_minerr_ 
+
+# =============================================================================
+## Run MINOS
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-28 
+def _mn_minos_ ( self , *args ) :
+    """
+    Get MINOS errors for parameter:
+    
+    >>> m = ...       # TMinuit object
+    >>> pos,neg = m.minosErr( 0 )
+    
+    """
+    ipars  = []
+    for i in args :
+        if not i in self : raise IndexError
+        ipars.append ( i )
+    #
+    import array
+    arglist = array.array ( 'd' , [ 200 ] + ipars  )
+    ierr    = ROOT.Long   ( 0 )
+    #
+    self.mnexcm ( "MINOS" , arglist , len(arglist) , ierr )
+    #
+    return ierr
+
+ROOT.TMinuit . minos = _mn_minos_
+
 
 # =============================================================================
 logger.info ( 'Some useful decorations for RooFit objects')
