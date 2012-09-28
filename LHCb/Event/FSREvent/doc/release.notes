@@ -4,6 +4,7 @@
 ! Purpose     : FSRs common to applications
 !---------------------------------------------------------------------------
 
+!========================= FSREvent v1r0 2012-09-28 =========================
 ! 2012-09-27 - Rob Lambert
  - IOFSR expanded contents to hold flattened provenance tree.
  - Prototype mostly completed here, requires testing.
