@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v2r19 2012-09-28 =========================
 ! 2012-09-27 - Chris Jones
  - Add back a call to std::sort that went AWOL in PackCluster
 
