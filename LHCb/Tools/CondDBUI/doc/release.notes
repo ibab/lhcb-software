@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!========================= CondDBUI v3r18 2012-09-28 =========================
 ! 2012-09-13 - Marco Clemencic
  - Removed dependencies on CORAL LFCReplicaSvc (dropped in LCGCMT 64).
    Note: the script CreateDBLookupFiles.py should be removed.
