@@ -23,5 +23,8 @@ use GaudiObjDesc v*
 
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern god_dictionary files=../xml/*.xml
+macro_append FTEventDict_cppflags "" \
+                       target-icc " -wd191"
+
 
 apply_pattern install_more_includes more=Event
