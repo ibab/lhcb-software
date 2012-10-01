@@ -79,6 +79,8 @@ C...For reading grid files for different center of mass energy
         ENERGYNAME='14TeV/'
       ELSE IF( ABS(ECM-10000).LE.1. )THEN
         ENERGYNAME='10TeV/'
+      ELSE IF( ABS(ECM-8000).LE.1. )THEN
+        ENERGYNAME='8TeV/'
       ELSE IF( ABS(ECM-7000).LE.1. )THEN
         ENERGYNAME='7TeV/'
       ELSE

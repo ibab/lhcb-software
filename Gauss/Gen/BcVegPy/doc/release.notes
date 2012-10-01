@@ -2,6 +2,11 @@
 ! Package     : Gen/BcVegPy
 ! Responsible : 
 
+! 2012-10-01 - Jibo He
+ - Added 8 TeV as it is supported now
+   . src/bcvegpy_upinit.f
+   . src/bcvegpy_upevnt.f
+
 !========================= BcVegPy v3r0 2011-07-15 ===========================
 ! 2011-07-15 - Gloria Corti
  - Apply pattern not to build on windows, so that conditional use can be
