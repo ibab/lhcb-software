@@ -1,5 +1,5 @@
 package RecoUpgrade
-version           v2r2
+version           v3r0
 
 branches cmt src doc options python
 

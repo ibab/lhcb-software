@@ -4,6 +4,7 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+!========================= RecoUpgrade v3r0 2012-10-01 =========================
 ! 2012-09-20 - Paul Szczypka
  - Rename VeloPix to VP
 
