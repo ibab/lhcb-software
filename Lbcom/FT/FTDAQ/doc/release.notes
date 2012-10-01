@@ -4,6 +4,7 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+!========================= FTDAQ v1r0 2012-10-01 =========================
 ! 2012-07-30 - Olivier Callot
  - Change the number of bits for fraction, form 3 to 2.
  - Adjust the coding code accordingly: Use this number correcty for coding too.
