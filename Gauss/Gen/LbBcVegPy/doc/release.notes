@@ -3,6 +3,9 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2012-10-01 - Jibo He
+ - Removed ecm from BcVegPy.py(.opts) to avoid confusion
+
 !========================= LbBcVegPy v4r3 2012-07-23 =========================
 ! 2012-07-23 - Gloria Corti
  - Remove include of old ParticlePropertySvc that is not needed

@@ -11,7 +11,6 @@ BcVegPyListOfCommands = [
   "loggrade igenerate 1",
   "loggrade ivegasopen 0",
   "loggrade igrade 1",
-  "upcom ecm 7000.0",
   "usertran idpp 1" 
 ]
 
