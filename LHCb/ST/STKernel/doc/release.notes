@@ -3,6 +3,9 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+! 2012-10-01 - Jianchun Wang
+ - Fix multiple returns in inline functions.
+
 !========================= STKernel v2r9 2012-09-28 =========================
 ! 2012-09-24 - Marco Clemencic
  - Fixed compilation with -std=c++11 (-std=c++0x) for the new code.
