@@ -4,6 +4,9 @@
 ! Purpose     : Provides the grade data required by BcVegPy
 !-----------------------------------------------------------------------------
 
+! 2012-10-01 - Jibo He
+ - Added grade data for 8 TeV
+
 !======================== BcVegPyData v2r0 2009-10-05 ========================
 ! 2009-09-30 - Jibo He
  - Tagged as v2r0 to distinguish from v1r0 which is not in CVS.
