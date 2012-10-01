@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v1r0 2012-10-01 =========================
 ! 2012-09-21 - Paul Szczypka
  - Rename of VeloPix to VP (and combinations vP, vp etc.)
 
