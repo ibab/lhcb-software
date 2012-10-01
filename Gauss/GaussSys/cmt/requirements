@@ -11,9 +11,10 @@ branches cmt doc
 use Gauss               v42r1   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
-use LCG_Settings        v64r0                 
-use thepeg              v64r0   LCG_GeneratorsInterfaces
-use herwigpp            v64r0   LCG_GeneratorsInterfaces      
+use LCG_Settings        v64r1p1 
+use thepeg              v64r1p1 LCG_GeneratorsInterfaces
+use herwigpp            v64r1p1 LCG_GeneratorsInterfaces
+use rivet               v64r1p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
 use GenCuts             v3r0    Gen
@@ -74,8 +75,8 @@ use BlsMoniSim          v1r1      Bls
 use VLMoniSim           v1r0      VL
 use GaussUMC            v1r1      Sim
 
-# Packages for MC generator tuning - off for now
-#use GenTune             v*        Gen  
+# Packages for MC generator tuning
+use GenTune             v1r0      Gen  
 
 # GMDL
 use LbGDML              v1r0      Sim
