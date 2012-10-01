@@ -5,19 +5,202 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-- Package added Det/VPDet to replace Det/VeloPixDet that has been removed
-    o classes for description of Velo Pixel for Upgrade
 
-- Packages added: Det/FTDet v1r0     - Detector description for Fibre Tracker
-                  Event/FTEvent v1r0 - Event classes for Fibre Tracker
-                  Event/FSREvent v1r0 - FSR-specific classes not really lumi-related
+</PRE><H1><A NAME=v35r2>2012-10-01 LHCbSys v35r2</A></H1><PRE>
+This version uses Gaudi v23r4 and LCG_64a
+
+- Packages added: Det/FTDet v1r0      - Detector description for Fibre Tracker
+                  Det/VPDet v2r0      - Description of Velo Pixel for Upgrade
+                                        Replaces Det/VeloPixDet
+                  Event/FTEvent v1r0  - Event classes for Fibre Tracker
+                  Event/FSREvent v1r0 - FSR-specific classes not lumi-related
+                  Online/RootCnv      - Over-ride Gaudi version
+
+- Packages removed: Det/VeloPixDet
+
+- Packages modified: Calo/CaloDAQ v4r30, Calo/CaloUtils v9r5, DAQ/MDF v3r35,
+   DAQ/MDF_ROOT v1r8, Det/DDDB v1r58, Det/DetCond v12r27, Det/DetDescChecks v5r8,
+   Det/OTDet v8r8, Det/RichDet v16r13, Det/STDet v4r28, Det/VLDet v1r2,
+   Event/DAQEvent v9r11, Event/DigiEvent v3r0, Event/EventPacker v2r19,
+   Event/GenEvent v6r4, Event/L0Event v19r7, Event/MCEvent v2r23,
+   Event/PackedEvent v4r12, Event/PhysEvent v11r18, Event/RecEvent v2r43,
+   Event/TrackEvent v5r19, Ex/IOExample v4r7, GaudiConf v16r3,
+   GaudiObjDesc v11r16, Kernel/HltInterfaces v4r7, Kernel/LHCbAlgs v2r52,
+   Kernel/LHCbKernel v13r13, Kernel/LHCbMath v3r35, Kernel/XMLSummaryBase v1r3,
+   Kernel/XMLSummaryKernel v1r8, L0/L0MuonKernel v9r8, Muon/MuonDAQ v4r15,
+   Online/RootCnv v1r18, OT/OTDAQ v7r15, Phys/LoKiCore v11r9p1,
+   Rich/RichKernel v7r50, Rich/RichRecBase v4r14, Sim/SimComponents v2r22,
+   ST/STKernel v2r9, Tf/PatKernel v2r5, Tools/CondDBUI v3r18,
+   Tools/FileStager v1r9, Tr/TrackInterfaces v4r21
+
+- In CaloDAQ v4r30
+  . CaloBankHandler.opts : remove bank conversion - just decode Xcal digits and
+    produce ProcStatus from ReadoutStatus
+  .  fix typo in CaloDigitFilterAlg properties
+
+- In DDDB v1r58
+  . Update database tags for latest global tags:
+    o DDDB, 2012: dddb-20120831
+    o LHCBCOND, 2012: cond-20120917
+    o LHCBCOND, 2011: cond-20120829
+    o DQFLAGS, 2012,2011: dq-20120910
+  . Removed dependencies on CORAL LFCReplicaSvc (dropped in LCGCMT 64).
+
+- In DetCond v12r27
+  . Workaround for bug #96673 (spurious warnings in GenConfUser)
+
+- In VLDet v1r2
+  . Phi strip line parameters in global frame
+  . Removed halfbox frame functions
+
+- In DAQEvent v9r11
+  . Added missing bank types to LHCb::RawBank::typeName(...)
+
+- In DigiEvent v3r0
+  . Number of bits to address Si cluster is increased from 24 to 25
+    (NB above change makes any existing persstent LiteClusters unreadable)
+
+- In EventPacker v2r19
+  . Added some 'band-aid' protection to UnpackCluster to catch exceptions thrown
+    when an attempt is made to insert an object into a KeyedContainer with an
+    existing key
+  . Added FT to Packers, Checkers and Unpackers
+
+- In L0Event v19r7
+  . Fixed minor (syntax) errors in some XML files.
+
+- In PhysEvent v11r18
+  . Updated enums in Particle.h related to cone variables to match what is
+    written by DaVinciTools/ConeVariables
+
+- In TrackEvent v5r18
+  . Reset the ghost prob and likelihood values back to 999, in Track::reset()
+  . Add likelihood and ghost probability to LHCb::Track::fillStream printout.
+  . Properly set the ghost prob and likelihood values in LHCb::Track::copy
+  . Add a proper copy constructor for LHCb::Track
+
+- In IOExample v4r7
+  . Add tests to copy and read Reco12Stripping17 and Reco14Stripping20 dst+mdst
+  . Fix references to follow change in options printout format in Gaudi v23r4
+  . Follow fix to Track copy method, r144539
+
+- In GaudiConf v16r3, v16r2
+  . Added options for FT and VL in Sim and DigiConf.
+  . Reordered imports in Sim and DigiConf to be as-needed (protection against
+    upgrade code failure).
+
+- In GaudiObjDesc v11r16, v11r15
+  . Added CMake configuration and module (to be used by other packages).
+  . Allow for generation of "private" headers when using CMake.
+  . Added the possibility of declaring typedefs in the scope of the namespace
+    surrounding the class (i.e. just outside the class).
+  . Added a special target to just generate all the headers files (AllObj2doth).
+  . Added tests for the XML parser.
+  . Removed some dead code: parsing of GODsClassDB.xml (not supported by DTD).
+  . Added test for entities and comment handling in xparser.
+  . Re-implemented GaudiObjDesc.xparser on lxml (instead of the embedded pyxml).
+  . Added support for 'ORDERED' allocators:
+    o Switched on by setting the allocator to 'ORDERED' on the command line
+    o Uses ordered_malloc() instead of malloc() and ordered_free(p) instead of
+      free(p) in boost pool allocations and de-allocations.
+    o Includes a "release_pool" method and registers the class to a static
+      object that allow the release of all the pools.
+    o Added a linker library to host the function required by
+      MemoryPoolAllocatorReleaser.
+  . Minor improvements to the command line option test.
+  . Rewritten the option parsing using the 'optparse' module instead of the
+    obsolete 'getopt'.
+  . Added a test submodule (using nosetests) with some tests in preparation of
+    the consolidation of the Python code.
+  . Renamed the directory 'test' to 'tests' to conform to the convention.
+
+- In LHCbAlgs v2r52, v2r51
+  . Use getIfExists in ODINDecodeTool
+  . src/RateFromCondDB, src/OfflineRateLimiter, src/RateFromTCK:
+    o Allow to deal with rates and prescales to fix bug #94262
+  . Modify EmptyEventNodeCleaner to have a configurable EventDataSvc
+  . Add FSRCleaner derived from EmptyEventNodeCleaner to use after FSR merging
+    (see bug #96471)
+
+- In LHCbKernel v13r13
+  . Minor fix to RichRadiatorType.cpp to match the RichRadiatorType.h
+  . Expand IRateFromTCK.h to deal with prescales. See bug #94262
+  . Moved MemoryPoolAllocatorReleaser source and test to GaudiObjDesc, changing
+    the namespace to Gaudi.
+  . Modified LbAppInit for the change in the namespace of
+    MemoryPoolAllocatorReleaser.
+
+- In LHCbMath v3r35
+  . Fix the bug in Bugg23L function
+  . Add Gounaris-Sakurai function
+  . Access amplitudes
+  . Add three-body phase space
+
+- In L0MuonKernel v9r8
+  . Minor change the #ifdef for the compatibility with XercesC 3 (use Xerces
+    macro instead of the one set by LCGCMT).
+
+- In RootCnv v1r18, v1r17
+  . Change optimization options to be part of the RootCnvSvc and not part of
+    the RootDataConnection + adapt all called functions to use these.
+  . Add developments from Ivan Valencik for memory optimization.
+    o Options to modify the default behaviour:
+      RootCnvSvc.BasketSize = 2*MBYTE
+      RootCnvSvc.BufferSize = 2*kBYTE
+      RootCnvSvc.SplitLevel = 0
+    o Ivan also developed a small component to measure process quantities
+      such as the memory usage and cpu consumption.
+
+- In LoKiCore v11r9p1
+  . Fix a bug with decay tree parsing.
+
+- In SimComponents v2r22
+  . PrintMCDecayTreeTool: Add PID field (optional)
+  . MCDecayFinder : Ignore particles not in ParticleTable (bug #96768)
+
+- In CondDBUI v3r18
+  . Removed dependencies on CORAL LFCReplicaSvc (dropped in LCGCMT 64).
+
+- In FileStager v1r9
+  . Added protection to finding of a file's size from dedicated command output.
+  . Print extra error information when staging has failed.
+  . Fixed handling of file:// PFNs (such as used at CNAF). Unless the StageLocal
+    property is set, they are not staged.
+  . Added extra protection to the use of KeepFiles. If there is an environment
+    variable set which ends in JOBID, files will never be kept.
+
+- In STDet v4r28, DAQEvent v9r11, DigiEvent v3r0, EventPacker v2r19,
+     MCEvent v2r23, PackedEvent v4r12, RecEvent v2r43, GaudiConf v16r3,
+     LHCbKernel v13r13, STKernel v2r9
+  . Added UT detector classes and UT related changes
+
+- In DigiEvent v3r0, EventPacker v2r19, MCEvent v2r23, PackedEvent v4r12,
+     TrackEvent v5r19, GaudiConf v16r3, LHCbKernel v13r13, TrackInterfaces v4r21
+  . Renamed VeloPix to VP
+
+- In CaloUtils v9r5, MDF v3r35, MDF_ROOT v1r8, DetDescChecks v5r8, GenEvent v6r4,
+     PatKernel v2r5, FileStager v1r9
+  . Minor changes to requirements for a smoother migration to CMake.
+
+- In DDDB v1r58, DetCond v12r27, IOExample v4r7, LHCbAlgs v2r52,
+     LHCbKernel v13r13, XMLSummaryBase v1r3, XMLSummaryKernel v1r8,
+     RichKernel v7r50 ,FileStager v1r9
+  . Added __init__.py in python/<package> directory
+
+- In DetCond v12r27, OTDet v8r8, RichDet v16r13, STDet v4r28, MCEvent v2r23,
+     HltInterfaces v4r7, LHCbAlgs v2r52, LHCbKernel v13r13, MuonDAQ v4r15,
+     OTDAQ v7r15, RichRecBase v4r14, SimComponents v2r22, STKernel v2r9
+  . Fixed compilation with -std=c++11 (-std=c++0x).
+
+- In XMLSummaryBase v1r3, XMLSummaryKernel v1r8
+  . Removed transient QMTest directory.
 
 </PRE><H1><A NAME=v35r1p1>2012-07-31 LHCbSys v35r1p1</A></H1><PRE>
 This version uses Gaudi v23r3 and LCG_64
 Production version for 2012 data taking
 
 - Packages modified: Det/DDDB v1r57, GaudiObjDesc v11r14, OT/OTDAQ v7r14,
-    Tools/CondDBUI v7r14
+    Tools/CondDBUI v3r17
 
 - In DDDB v1r57
   . Update database tags for latest global tags:
