@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include "TDirectory.h"
+
 using namespace std;
 using namespace MINT;
 

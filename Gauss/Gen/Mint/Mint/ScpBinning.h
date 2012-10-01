@@ -44,6 +44,8 @@ protected:
 			 , int maxPerBin
 			 ) const;
   int mergeBoxes(ScpBoxSet& boxes, int minPerBin);
+//  int mergeAdjacentBoxes(IDalitzEventList* events,
+//		  	  	  	  	  ScpBoxSet& boxes, int maxPerBin, int minPerBin);
 
  public:
   ScpBinning();
@@ -74,6 +76,7 @@ protected:
   int numBins() const;
   double NormDiff_ofBin(unsigned int i) const;
   double Err_ofBin(unsigned int i) const;
+  double Entries_ofBin(unsigned int i) const;
 
   double getScp_perBin() const;
   double getScpErr_perBin(double mean) const;

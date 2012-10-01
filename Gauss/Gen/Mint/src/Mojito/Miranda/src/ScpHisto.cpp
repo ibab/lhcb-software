@@ -33,7 +33,7 @@ int ScpHisto::LargestDiff()
 	return largestDiff;
 }
 
-void ScpHisto::MakeGraph()
+void ScpHisto::MakeRatioGraph()
 {
 
 	unsigned int nbins = NBins();
@@ -52,7 +52,7 @@ void ScpHisto::MakeGraph()
 	MakePull();
 }
 
-void ScpHisto::MakeNormGraph()
+void ScpHisto::MakeNormRatioGraph()
 {
 
 	unsigned int nbins = NBins();
@@ -80,7 +80,7 @@ void ScpHisto::SaveAs(const char* name, const char* Options)
 	lowerPad->Draw();
 	upperPad->Draw();
 	upperPad->cd();
-//	gr->SetMarkerStyle(15);
+	//	gr->SetMarkerStyle(15);
 	gr->Draw(Options);
 	lowerPad->cd();
 	pulls->SetTitle("");
@@ -90,7 +90,7 @@ void ScpHisto::SaveAs(const char* name, const char* Options)
 	pulls->GetYaxis()->SetLabelSize(0.1);
 	pulls->GetYaxis()->SetRangeUser(-5,5);
 	pulls->SetMarkerStyle(11);
-//	pulls->Draw("B");
+	//	pulls->Draw("B");
 	pulls->Draw(Options);
 	c1->SaveAs(name);
 	delete upperPad;
@@ -116,7 +116,7 @@ void ScpHisto::MakeNormPull()
 		y[i] =  NormDiff_ofbin(i)/Err_ofbin(i);
 	}
 	pulls = new TGraph(bins,x,y);
-//	return pull;
+	//	return pull;
 }
 
 void ScpHisto::MakePull()
@@ -130,7 +130,26 @@ void ScpHisto::MakePull()
 		y[i] =  (Double_t)(Diff_ofbin(i))/Err_ofbin(i);
 	}
 	pulls = new TGraph(bins,x,y);
-//	return pull;
+	//	return pull;
+}
+
+TGraphErrors* ScpHisto::GraphTotalEntriesPerBin()
+{
+	unsigned int nbins = NBins();
+	Double_t x[nbins+1];
+	Double_t y[nbins+1];
+	Double_t ex[nbins+1];
+	Double_t ey[nbins+1];
+
+	for (unsigned int i = 0; i < nbins; ++i)
+	{
+		x[i] = (double)i;
+		y[i] = _scp->Entries_ofBin(i);
+		ex[i] = 0;
+		ey[i] = Err_ofbin(i);
+	}
+	TGraphErrors* gr1 = new TGraphErrors(nbins,x,y,ex,ey);
+	return gr1;
 }
 
 

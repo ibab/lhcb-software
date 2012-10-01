@@ -17,6 +17,8 @@ public:
 	ScpHisto(ScpBinning* scp)
 	{
 		_scp = scp;
+		pulls = new TGraph();
+		gr = new TGraphErrors();
 	}
 	~ScpHisto()
 	{
@@ -25,15 +27,16 @@ public:
 	}
 	unsigned int NBins();
 	int Diff_ofbin(unsigned int i);
-	void MakeGraph();
+	void MakeRatioGraph();
 	int LargestDiff();
 	void SaveAs(const char* name, const char* Options = "AP");
 	void Write(const char* fileName, const char* name);
-	void MakeNormGraph();
+	void MakeNormRatioGraph();
 	double NormDiff_ofbin(unsigned int i);
 	double Err_ofbin(unsigned int i);
 	void MakePull();
 	void MakeNormPull();
+	TGraphErrors* GraphTotalEntriesPerBin();
 
 
 

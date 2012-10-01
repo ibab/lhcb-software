@@ -82,7 +82,7 @@ class DDTree{
   template<typename SORTERTYPE> void sortAllBy(){
     sortDaughtersBy<SORTERTYPE>();
     for(unsigned int i=0; i<daughters.size(); i++){
-      daughters[i]->sortDaughtersBy<SORTERTYPE>();
+      daughters[i]->template sortDaughtersBy<SORTERTYPE>();
     }
   }
 
@@ -165,7 +165,7 @@ class DDTree{
     
     top->setDgtrSize(daughters.size());
     for(unsigned int i=0; i < daughters.size(); i++){
-      top->setDgtr(i, daughters[i]->CloneVariableType<COMPATIBLE_TYPE>(top.get()));
+      top->setDgtr(i, daughters[i]->template CloneVariableType<COMPATIBLE_TYPE>(top.get()));
     }
     return top;
   }
@@ -180,7 +180,7 @@ class DDTree{
     _thisVal = (ValueType) (other.getVal());
     daughters.resize(other.nDgtr());
     for(int i=0; i < other.nDgtr(); i++){
-      daughters[i] = other.getDgtrTreePtr(i)->CloneVariableType<ValueType>(this);
+      daughters[i] = other.getDgtrTreePtr(i)->template CloneVariableType<ValueType>(this);
     }
     return;
   }
