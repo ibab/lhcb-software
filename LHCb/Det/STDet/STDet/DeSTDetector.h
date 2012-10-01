@@ -252,15 +252,15 @@ private:
 };
 
 inline const std::string& DeSTDetLocation::location(const std::string& type){
-  if ( type == "TT" ) return DeSTDetLocation::TT;
-  if ( type == "IT" ) return DeSTDetLocation::IT;
-  return DeSTDetLocation::UT;
+  return ( type == "TT" ? DeSTDetLocation::TT :
+           type == "IT" ? DeSTDetLocation::IT :
+                          DeSTDetLocation::UT );
 }
 
 inline unsigned int DeSTDetLocation::detType(const std::string& type){
-  if ( type == "TT" ) return LHCb::STChannelID::typeTT;
-  if ( type == "IT" ) return LHCb::STChannelID::typeIT;
-  return LHCb::STChannelID::typeUT;
+  return ( type == "TT" ? LHCb::STChannelID::typeTT :
+           type == "IT" ? LHCb::STChannelID::typeIT :
+                          LHCb::STChannelID::typeUT );
 }
 
 #include "STDet/DeSTSector.h"
