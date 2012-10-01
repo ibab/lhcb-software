@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2012-10-01 - Aurelien Martens
+ - Update handling of Pythia8-HepMC momentum unit conversion for pythia8.170
+
 !========================= LbPythia8 v4r0 2012-07-27 =========================
 ! 2012-07-27 - Aurelien Martens
  - Fix bug for new ParticlePropertySvc

@@ -235,8 +235,7 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   
   m_engCM = (sqrt(pBeam1.Dot(pBeam1)+mass1*mass1) +  
              sqrt(pBeam2.Dot(pBeam2) + mass2*mass2))/Gaudi::Units::GeV;
-  
-  
+
   //Initializing the settings for the generator
   //First cut all processes in case of user settings for processes
   for (unsigned int count = i; count<m_commandVector.size(); ++count) {	 
@@ -284,9 +283,9 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   
   if (!success) sc = StatusCode::FAILURE;
 
-  info() << " will INIT" << endmsg;
+  debug() << " will INIT" << endmsg;
   m_pythia->init(m_id1, m_id2, m_engCM) ;
-  info() << " FINISHED INIT" << endmsg;
+  debug() << " FINISHED INIT" << endmsg;
   return sc;
 }
 
@@ -331,7 +330,7 @@ void Pythia8Production::updateParticleProperties( const LHCb::ParticleProperty *
       lifetime = 0. ;
     
     m_pythia -> particleData.m0(pdgId, thePP -> mass() / Gaudi::Units::GeV) ;
-    
+
     // For Higgs, top, Z and W: update only masses
     if ( ( 6 != pdgId ) && ( 23 != pdgId ) && ( 24 != pdgId ) 
          && ( 25 != pdgId ) ) {
@@ -547,7 +546,8 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
   
   //Convert from Pythia8 format to HepMC format
   HepMC::I_Pythia8 conversion ;
-
+  debug() << "momentum unit is " << theEvent->momentum_unit() << endmsg;
+  
   // Force the verification of the HEPEVT  record 
   if ( m_validate_HEPEVT ) 
   { 
@@ -585,32 +585,37 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
   
     int status = (*p) -> status() ;
 
-     if (status>3 && status<20)
-	(*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle );
+    if (status>3 && status<20)
+      (*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle );
     else if (status>19 && status<80)
-        (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
+      (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
     else if (status==91 || status==92 || (status>99 && status<110)) {
-        if ((*p) -> end_vertex()!=0)
-           (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
+      if ((*p) -> end_vertex()!=0)
+        (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
         else
-           (*p) -> set_status( LHCb::HepMCEvent::StableInProdGen );
+          (*p) -> set_status( LHCb::HepMCEvent::StableInProdGen );
     }
     else if (status==93 || status==94)
-	(*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
+      (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
     else if (status==99)
-	(*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle );
+      (*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle );
     else if (status!=LHCb::HepMCEvent::DecayedByProdGen
-	  && status!=LHCb::HepMCEvent::StableInProdGen
-          && status!=LHCb::HepMCEvent::DocumentationParticle)
-        warning() << "Unknown status rule " << status << " for particle" << (*p)->pdg_id() << endmsg;
+             && status!=LHCb::HepMCEvent::StableInProdGen
+             && status!=LHCb::HepMCEvent::DocumentationParticle)
+      warning() << "Unknown status rule " << status << " for particle" << (*p)->pdg_id() << endmsg;
+    
 
-    (*p) -> set_momentum( HepMC::FourVector( 
+    /* (*p) -> set_momentum( HepMC::FourVector( 
                            (*p) -> momentum().px() * Gaudi::Units::GeV ,
                            (*p) -> momentum().py() * Gaudi::Units::GeV , 
                            (*p) -> momentum().pz() * Gaudi::Units::GeV , 
                            (*p) -> momentum().e() * Gaudi::Units::GeV )
                          );
+    verbose() << "generated mass " << (*p)-> generated_mass() << " " << (*p)-> generated_mass() * Gaudi::Units::GeV << endmsg;
+    
     (*p) -> set_generated_mass( (*p)-> generated_mass() * Gaudi::Units::GeV ) ;
+    */
+
   }
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
