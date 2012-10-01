@@ -1,6 +1,6 @@
 
 ## @file
-#  Configuration of Hlt Lines which accept only 1 PV events
+#  Configuration of Hlt1 Lines which accept only 1 PV events
 #  @author Marcin Kucharczyk
 #  @date 2012-01-18
 # =============================================================================
@@ -18,17 +18,15 @@ class Hlt1HighPtJetsSinglePVLinesConf(HltLinesConfigurableUser):
 
     def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line
-        from Configurables import PatPV3D
-        myPV3D = PatPV3D('SinglePVAlg')
-        myPV3D.OutputVerticesName = "SinglePVCont"
+        from HltTracking.HltPVs import PV3D
         from Configurables import LoKi__VoidFilter as VoidFilter
-        algCheckVtcs = VoidFilter('SinglePVCont', Code = "CONTAINS('SinglePVCont') == 1" )
+        algCheckVtcs = VoidFilter('PV3D', Code = "CONTAINS('Hlt/Vertex/PV3D') == 1" )
         channel = self.getProp('L0Channel')
         Hlt1Line('HighPtJetsSinglePV',
                  prescale  = self.prescale,
                  postscale = self.postscale,
                  L0DU = "L0_CHANNEL('%s')" % channel,
-                 algos = [myPV3D,algCheckVtcs]
+                 algos = [PV3D(),algCheckVtcs]
                  )
 
 

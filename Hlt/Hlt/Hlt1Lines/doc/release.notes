@@ -9,7 +9,10 @@
 ! 2012-09-11 - Johannes Albrecht
  - fix preambulo in pALines
 
-!========================= Hlt1Lines v6r27 2012-08-30 =========================
+! 2012-10-01 - Marcin Kucharczyk
+ - fix the bug in HighPtJetsSinglePVLines
+
+!======================= Hlt1Lines v6r27 2012-08-30 =========================
 ! 2012-08-29 - Johannes Albrecht
  - Hlt1GEC: add settings for Activity trigger
  - add Hlt1pALines
