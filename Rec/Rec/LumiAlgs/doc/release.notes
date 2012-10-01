@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v8r0 2012-10-01 =========================
 ! 2012-09-24 - Marco Cattaneo
  - Fix reference files to follow format change in options printout of Gaudi v23r4
 
