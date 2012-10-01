@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2012-10-01 - Jianchun Wang
+ - Fix multiple returns in inline functions.
+
 !========================= DigiEvent v3r0 2012-09-28 =========================
 ! 2012-09-21 - Jianchun Wang
  - Add UT as one of ST & Si detector, add its digits & clusters

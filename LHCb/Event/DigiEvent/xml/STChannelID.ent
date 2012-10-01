@@ -85,12 +85,9 @@
    virtual = "FALSE"
    const = "TRUE">
      <code >
-      if ( isTT() )
-        return TTNames().UniqueSectorToString(&channelIDFunction;);
-      else if ( isIT() )
-        return ITNames().UniqueSectorToString(&channelIDFunction;);
-      else
-        return UTNames().UniqueSectorToString(&channelIDFunction;);
+      return ( isTT() ? TTNames().UniqueSectorToString(&channelIDFunction;) :
+               isIT() ? ITNames().UniqueSectorToString(&channelIDFunction;) :
+                        UTNames().UniqueSectorToString(&channelIDFunction;) );
      </code>
 </method>
 
@@ -101,12 +98,9 @@
    virtual = "FALSE"
    const = "TRUE">
      <code >
-      if ( isTT() ) 
-        return TTNames().UniqueLayerToString(&channelIDFunction;);
-      else if ( isIT() )
-        return ITNames().UniqueLayerToString(&channelIDFunction;);
-      else
-        return UTNames().UniqueLayerToString(&channelIDFunction;);
+      return ( isTT() ? TTNames().UniqueLayerToString(&channelIDFunction;) :
+               isIT() ? ITNames().UniqueLayerToString(&channelIDFunction;) :
+                        UTNames().UniqueLayerToString(&channelIDFunction;) );
      </code>
 </method>
 
@@ -118,12 +112,9 @@
    virtual = "FALSE"
    const = "TRUE">
      <code >
-      if ( isTT() )
-        return TTNames().UniqueRegionToString(&channelIDFunction;);
-      else if ( isIT() )
-        return ITNames().UniqueBoxToString(&channelIDFunction;);
-      else
-        return UTNames().UniqueRegionToString(&channelIDFunction;);
+      return ( isTT() ? TTNames().UniqueRegionToString(&channelIDFunction;) :
+               isIT() ? ITNames().UniqueBoxToString(&channelIDFunction;) :
+                        UTNames().UniqueRegionToString(&channelIDFunction;) );
      </code>
 </method>
 
@@ -135,11 +126,8 @@
    virtual = "FALSE"
    const = "TRUE">
      <code >
-      if ( isTT() )
-        return TTNames().StationToString(&channelIDFunction;);
-      else if ( isIT() )
-        return ITNames().StationToString(&channelIDFunction;);
-      else
-        return UTNames().StationToString(&channelIDFunction;);
+      return ( isTT() ? TTNames().StationToString(&channelIDFunction;) :
+               isIT() ? ITNames().StationToString(&channelIDFunction;) :
+                        UTNames().StationToString(&channelIDFunction;) );
      </code>
 </method>
