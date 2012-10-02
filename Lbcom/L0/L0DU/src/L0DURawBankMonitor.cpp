@@ -123,7 +123,7 @@ StatusCode L0DURawBankMonitor::execute() {
     if( NULL == rawEvt )return Warning("rawEvent points to NULL",StatusCode::SUCCESS);
     const std::vector<LHCb::RawBank*>* mBanks = &rawEvt->banks(   LHCb::RawBank::L0Muon );
     const std::vector<LHCb::RawBank*>* cBanks = &rawEvt->banks(   LHCb::RawBank::L0Calo );
-    const std::vector<LHCb::RawBank*>* pBanks = &rawEvt->banks(   LHCb::RawBank::L0PUFull );
+    const std::vector<LHCb::RawBank*>* pBanks = &rawEvt->banks(   LHCb::RawBank::L0PU   );
     if( mBanks->size() > 0 )mOk = true;
     if( cBanks->size() > 0 )cOk = true;
     if( pBanks->size() > 0 )pOk = true;
