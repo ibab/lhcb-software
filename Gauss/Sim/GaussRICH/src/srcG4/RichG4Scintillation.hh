@@ -174,9 +174,14 @@ public: // With description
 
         void AddSaturation(G4EmSaturation* sat) { emSaturation = sat; }
         // Adds Birks Saturation to the process.
+        void RemoveSaturation() { emSaturation = NULL; }
+        // Removes the Birks Saturation from the process.
 
         G4EmSaturation* GetSaturation() const { return emSaturation; }
         // Returns the Birks Saturation.
+        void SetScintillationByParticleType(const G4bool );
+        G4bool GetScintillationByParticleType() const
+        { return scintillationByParticleType; }
 
   //modif by SE
        G4bool GetRichVerboseInfoTag(){return  fRichVerboseInfoTag;}
@@ -209,6 +214,7 @@ protected:
         G4double YieldFactor;
 
         G4double ExcitationRatio;
+        G4bool scintillationByParticleType;
 
 private:
 

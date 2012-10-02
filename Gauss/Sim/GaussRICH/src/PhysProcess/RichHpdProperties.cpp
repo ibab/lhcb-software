@@ -451,7 +451,7 @@ double RichHpdProperties::getHpdCorrectedQEFromPhotonEnergy(double photonenergy,
         G4MaterialPropertyVector* RindexPC=
                       aMatPC->GetMaterialPropertiesTable()->GetProperty("RINDEX");
           if(   RindexPC ) {
-            thisPCRI= RindexPC->GetProperty(photonenergy);
+            thisPCRI= RindexPC->Value(photonenergy); //G4.95 onwards
           } 
           matafound=true;    
       }      
@@ -464,7 +464,7 @@ double RichHpdProperties::getHpdCorrectedQEFromPhotonEnergy(double photonenergy,
         G4MaterialPropertyVector* RindexQW=
                       aMatQW->GetMaterialPropertiesTable()->GetProperty("RINDEX");
         if(   RindexQW ) {
-            thisQWRI= RindexQW->GetProperty(photonenergy);
+          thisQWRI= RindexQW->Value(photonenergy); //G4.95 onwards
         } 
 
         matbfound=true;        

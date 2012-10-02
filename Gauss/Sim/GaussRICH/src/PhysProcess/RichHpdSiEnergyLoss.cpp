@@ -67,7 +67,9 @@ RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName,
 
   }
   if(iMat >= numberOfMat ) {
-    G4Exception("Invalid material Name in RichHpdSiEnergyLoss constructor" );
+    
+    G4Exception("RichHpdSiEnergyLoss: RichHpdSiEnergyLoss", "RichHpdSiEnergyLoss001",FatalException, 
+                "Invalid material Name for HpdAnode in RichHpdSiEnergyLoss constructor" );
   }
 
   for(iMatk=0;iMatk<numberOfMat;++iMatk) {
@@ -82,7 +84,8 @@ RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName,
 
   }
   if(iMatk >= numberOfMat ) {
-    G4Exception("Invalid material Name in RichHpdSiEnergyLoss constructor" );
+    G4Exception( "RichHpdSiEnergyLoss: RichHpdSiEnergyLoss", "RichHpdSiEnergyLoss002",FatalException, 
+               "Invalid material Name for HpdEnvelope in RichHpdSiEnergyLoss constructor" );
   }
    
   //     G4cout<<GetProcessName() <<" is created "<<G4endl;

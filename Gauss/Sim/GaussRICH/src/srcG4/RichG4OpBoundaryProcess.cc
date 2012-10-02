@@ -181,7 +181,8 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 	}
 
         if (Rindex) {
-		Rindex1 = Rindex->GetProperty(thePhotonMomentum);
+          //	Rindex1 = Rindex->GetProperty(thePhotonMomentum);
+		Rindex1 = Rindex->Value(thePhotonMomentum);
 	}
 	else {
 	        theStatus = NoRINDEX;
@@ -244,7 +245,8 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
                   theFinish == groundbackpainted ) {
                   Rindex = aMaterialPropertiesTable->GetProperty("RINDEX");
 	          if (Rindex) {
-                     Rindex2 = Rindex->GetProperty(thePhotonMomentum);
+              //Rindex2 = Rindex->GetProperty(thePhotonMomentum);
+                     Rindex2 = Rindex->Value(thePhotonMomentum);
                   }
                   else {
 		     theStatus = NoRINDEX;
@@ -259,7 +261,8 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 	      aMaterialPropertiesTable->GetProperty("REFLECTIVITY");
 	      if (PropertyPointer) { 
                       theReflectivity =
-		      PropertyPointer->GetProperty(thePhotonMomentum);
+                        //   PropertyPointer->GetProperty(thePhotonMomentum);
+		      PropertyPointer->Value(thePhotonMomentum);
               } else {
                       theReflectivity = 1.0;
               }
@@ -268,7 +271,8 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 	      aMaterialPropertiesTable->GetProperty("EFFICIENCY");
 	      if (PropertyPointer) {
                       theEfficiency =
-		      PropertyPointer->GetProperty(thePhotonMomentum);
+                        // PropertyPointer->GetProperty(thePhotonMomentum);
+		      PropertyPointer->Value(thePhotonMomentum);
               } else {
                       theEfficiency = 0.0;
               }
@@ -278,7 +282,8 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 		aMaterialPropertiesTable->GetProperty("SPECULARLOBECONSTANT");
 	        if (PropertyPointer) {
                          prob_sl =
-			 PropertyPointer->GetProperty(thePhotonMomentum);
+                           //PropertyPointer->GetProperty(thePhotonMomentum);
+			 PropertyPointer->Value(thePhotonMomentum);
                 } else {
                          prob_sl = 0.0;
                 }
@@ -287,7 +292,8 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 		aMaterialPropertiesTable->GetProperty("SPECULARSPIKECONSTANT");
 	        if (PropertyPointer) {
                          prob_ss =
-			 PropertyPointer->GetProperty(thePhotonMomentum);
+                           //PropertyPointer->GetProperty(thePhotonMomentum);
+			 PropertyPointer->Value(thePhotonMomentum);
                 } else {
                          prob_ss = 0.0;
                 }
@@ -296,7 +302,8 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 		aMaterialPropertiesTable->GetProperty("BACKSCATTERCONSTANT");
 	        if (PropertyPointer) {
                          prob_bs =
-			 PropertyPointer->GetProperty(thePhotonMomentum);
+                           //PropertyPointer->GetProperty(thePhotonMomentum);
+			 PropertyPointer->Value(thePhotonMomentum);
                 } else {
                          prob_bs = 0.0;
                 }
@@ -321,7 +328,8 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
               if (aMaterialPropertiesTable)
                  Rindex = aMaterialPropertiesTable->GetProperty("RINDEX");
               if (Rindex) {
-                 Rindex2 = Rindex->GetProperty(thePhotonMomentum);
+                // Rindex2 = Rindex->GetProperty(thePhotonMomentum);
+                 Rindex2 = Rindex->Value(thePhotonMomentum);
               }
               else {
 		 theStatus = NoRINDEX;
