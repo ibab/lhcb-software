@@ -1,0 +1,1056 @@
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r151/options/Gauss/Beam3500GeV-md100-MC11-nu2.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r151/options/Gauss/Beam3500GeV-md100-MC11-nu2.py'
+# --> Including file '/afs/cern.ch/user/a/amartens/cmtuser/Gauss_v42r1/Gen/DecFiles/options/10000000.py'
+# <-- End of file '/afs/cern.ch/user/a/amartens/cmtuser/Gauss_v42r1/Gen/DecFiles/options/10000000.py'
+# --> Including file '/afs/cern.ch/user/a/amartens/cmtuser/Gauss_v42r1/Gen/LbPythia8/options/Pythia8.py'
+# <-- End of file '/afs/cern.ch/user/a/amartens/cmtuser/Gauss_v42r1/Gen/LbPythia8/options/Pythia8.py'
+# --> Including file '/afs/cern.ch/user/a/amartens/cmtuser/Gauss_v42r1/Sim/Gauss/options/GenStandAlone.py'
+# <-- End of file '/afs/cern.ch/user/a/amartens/cmtuser/Gauss_v42r1/Sim/Gauss/options/GenStandAlone.py'
+# --> Including file '/afs/cern.ch/user/a/amartens/cmtuser/Gauss_v42r1/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# <-- End of file '/afs/cern.ch/user/a/amartens/cmtuser/Gauss_v42r1/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# --> Including file '/afs/cern.ch/user/a/amartens/cmtuser/Gauss_v42r1/Sim/Gauss/tests/options/testGauss-gen-100evts-defaults.py'
+# <-- End of file '/afs/cern.ch/user/a/amartens/cmtuser/Gauss_v42r1/Sim/Gauss/tests/options/testGauss-gen-100evts-defaults.py'
+# applying configuration of Gauss
+# WARNING: No simulation phase.
+# WARNING: No event data output produced
+# WARNING: No histograms produced
+# /***** User Gauss/Gauss ****************************************************************************
+# |-DatasetName         = 'Gauss'
+# |-DetectorGeo         = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
+# |                     (default: {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'TT': ['TT'], 'OT': ['OT'], 'IT': ['IT']})
+# |-Histograms          = 'NONE'  (default: 'DEFAULT')
+# |-BeamEmittance       = 0.0022000000000000001  (default: 0.0022000000000000001)
+# |-Phases              = ['Generator']  (default: ['Generator', 'Simulation'])
+# |-Production          = 'PHYS'
+# |-TotalCrossSection   = 9.1099999999999988e-24  (default: 9.1099999999999988e-24)
+# |-BeamCrossingAngle   = -0.00052000000000000006  (default: -0.00052000000000000006)
+# |-InteractionPosition = [0.0, 0.0, 0.90000000000000002]  (default: [0.0, 0.0, 0.0])
+# |-BeamLineAngles      = [-7.4999999999999993e-05, 3.5000000000000004e-05]
+# |                     (default: [-7.4999999999999993e-05, 3.5000000000000004e-05])
+# |-PhysicsList         = {'Em': 'NoCuts', 'GeneralPhys': True, 'Other': '', 'Hadron': 'LHEP', 'LHCbPhys': True}
+# |                     (default: {'Em': 'NoCuts', 'GeneralPhys': True, 'Other': '', 'Hadron': 'LHEP', 'LHCbPhys': True})
+# |-DetectorMoni        = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
+# |                     (default: {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'TT': ['TT'], 'OT': ['OT'], 'IT': ['IT']})
+# |-DeltaRays           = True
+# |-EnablePack          = True
+# |-BeamBetaStar        = 3000.0  (default: 3000.0)
+# |-Luminosity          = 2.47e+18  (default: 2.47e+18)
+# |-DataPackingChecks   = True
+# |-InteractionSize     = [0.029999999999999999, 0.029999999999999999, 57.0]
+# |                     (default: [0.029999999999999999, 0.029999999999999999, 57.0])
+# |-Persistency         = None
+# |-Output              = 'NONE'  (default: 'SIM')
+# |-BeamMomentum        = 3500000.0  (default: 3500000.0)
+# |-DataType            = ''
+# |-WriteFSR            = True
+# |-DetectorSim         = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
+# |                     (default: {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'TT': ['TT'], 'OT': ['OT'], 'IT': ['IT']})
+# |-SpilloverPaths      = []  (default: [])
+# \----- (End of User Gauss/Gauss) -------------------------------------------------------------------
+# GaussTape.ItemList    = ['/Event/Gen/Header#1', '/Event/Gen/Collisions#1', '/Event/Gen/HepMCEvents#1', '/Event/Gen/BeamParameters#1']
+# GaussTape.OptItemList = []
+# WARNING: Using default tag head-20120413 for partition DDDB
+# WARNING: Using default tag head-20120607 for partition LHCBCOND
+# WARNING: Using default tag dq-20120322 for partition DQFLAGS
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to Gauss version v42r1
+                                          running on lxplus254.cern.ch on Tue Oct  2 19:06:09 2012
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersistencySvc     INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc         SUCCESS Detector description database: conddb:/lhcb.xml
+RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
+RndmGenSvc.Engine          INFO This is the GEANT4 engine!
+RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+TimingAuditor.TIMER        INFO This machine has a speed about   1.90 times the speed of a 2.8 GHz Xeon.
+GaussSequencer             INFO Member list: GaudiSequencer/Generator
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.91 times the speed of a 2.8 GHz Xeon.
+Generator                  INFO Member list: GaudiSequencer/GeneratorSlotMainSeq
+GeneratorSlotMainSeq       INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
+GaussGen                SUCCESS ==================================================================
+GaussGen                SUCCESS Requested to process 100 events
+GaussGen                SUCCESS ==================================================================
+RootHistSvc                INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
+HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
+GaussGen                   INFO Beam Parameters :
+GaussGen                   INFO Energy = 3.5 TeV
+GaussGen                   INFO Bunch length RMS = 57 mm
+GaussGen                   INFO Normalized emittance = 0.0022 mm
+GaussGen                   INFO Revolution frequency = 11.245 kHz
+GaussGen                   INFO Total cross-section assumed = 91.1 mb
+GaussGen                   INFO Horizontal crossing angle = -0.52 mrad
+GaussGen                   INFO Vertical crossing angle = 0 mrad
+GaussGen                   INFO Horizontal beam line angle = -0.075 mrad
+GaussGen                   INFO Vertical beam line angle = 0.035 mrad
+GaussGen                   INFO beta star = 3 m
+GaussGen                   INFO Bunch spacing = 50 ns
+GaussGen                   INFO Beam spot = (0,0,0.9) mm
+GaussGen                   INFO Luminosity = 2.47e+29 /cm2/s
+GaussGen                   INFO Nu = 2.00104
+GaussGen                   INFO emittance = 5.89771e-07
+GaussGen                   INFO Luminous region = ( 0.0297432, 0.0297432, 40.3051 ), mm
+GaussGen                   INFO Create BeamForInitialization
+COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                       INFO Using TAG "head-20120413"
+ToolSvc.EvtGenDecay.P...SUCCESS ==================================================================
+ToolSvc.EvtGenDecay.P...SUCCESS Using as production engine  PythiaProduction
+ToolSvc.EvtGenDecay.P...SUCCESS ==================================================================
+Generation.Inclusive....SUCCESS =============================================================
+Generation.Inclusive....SUCCESS Using as production engine  Pythia8Production
+Generation.Inclusive....SUCCESS =============================================================
+
+ *------------------------------------------------------------------------------------*
+ |                                                                                    |
+ |  *------------------------------------------------------------------------------*  |
+ |  |                                                                              |  |
+ |  |                                                                              |  |
+ |  |   PPP   Y   Y  TTTTT  H   H  III    A      Welcome to the Lund Monte Carlo!  |  |
+ |  |   P  P   Y Y     T    H   H   I    A A     This is PYTHIA version 8.170      |  |
+ |  |   PPP     Y      T    HHHHH   I   AAAAA    Last date of change: 21 Sep 2012  |  |
+ |  |   P       Y      T    H   H   I   A   A                                      |  |
+ |  |   P       Y      T    H   H  III  A   A    Now is 02 Oct 2012 at 19:06:34    |  |
+ |  |                                                                              |  |
+ |  |   Torbjorn Sjostrand;  Department of Astronomy and Theoretical Physics,      |  |
+ |  |      Lund University, Solvegatan 14A, SE-223 62 Lund, Sweden;                |  |
+ |  |      phone: + 46 - 46 - 222 48 16; e-mail: torbjorn@thep.lu.se               |  |
+ |  |   Stefan Ask;  Department of Physics, University of Cambridge,               |  |
+ |  |      Cavendish Laboratory, JJ Thomson Ave., Cambridge CB3 0HE, UK;           |  |
+ |  |      phone: + 41 - 22 - 767 6707; e-mail: Stefan.Ask@cern.ch                 |  |
+ |  |   Richard Corke;  Niels Bohr Institute, University of Copenhagen,            |  |
+ |  |      Blegdamsvej 17, 2100 Copenhagen, Denmark;                               |  |
+ |  |      e-mail: richard.corke@thep.lu.se                                        |  |
+ |  |   Stephen Mrenna;  Computing Division, Simulations Group,                    |  |
+ |  |      Fermi National Accelerator Laboratory, MS 234, Batavia, IL 60510, USA;  |  |
+ |  |      phone: + 1 - 630 - 840 - 2556; e-mail: mrenna@fnal.gov                  |  |
+ |  |   Stefan Prestel;  Department of Astronomy and Theoretical Physics,          |  |
+ |  |      Lund University, Solvegatan 14A, SE-223 62 Lund, Sweden;                |  |
+ |  |      phone: + 46 - 46 - 222 06 64; e-mail: stefan.prestel@thep.lu.se         |  |
+ |  |   Peter Skands;  Theoretical Physics, CERN, CH-1211 Geneva 23, Switzerland;  |  |
+ |  |      phone: + 41 - 22 - 767 2447; e-mail: peter.skands@cern.ch               |  |
+ |  |                                                                              |  |
+ |  |   The main program reference is the 'Brief Introduction to PYTHIA 8.1',      |  |
+ |  |   T. Sjostrand, S. Mrenna and P. Skands, Comput. Phys. Comm. 178 (2008) 85   |  |
+ |  |   [arXiv:0710.3820]                                                          |  |
+ |  |                                                                              |  |
+ |  |   The main physics reference is the 'PYTHIA 6.4 Physics and Manual',         |  |
+ |  |   T. Sjostrand, S. Mrenna and P. Skands, JHEP05 (2006) 026 [hep-ph/0603175]. |  |
+ |  |                                                                              |  |
+ |  |   An archive of program versions and documentation is found on the web:      |  |
+ |  |   http://www.thep.lu.se/~torbjorn/Pythia.html                                |  |
+ |  |                                                                              |  |
+ |  |   This program is released under the GNU General Public Licence version 2.   |  |
+ |  |   Please respect the MCnet Guidelines for Event Generator Authors and Users. |  |
+ |  |                                                                              |  |
+ |  |   Disclaimer: this program comes without any guarantees.                     |  |
+ |  |   Beware of errors and use common sense when interpreting results.           |  |
+ |  |                                                                              |  |
+ |  |   Copyright (C) 2012 Torbjorn Sjostrand                                      |  |
+ |  |                                                                              |  |
+ |  |                                                                              |  |
+ |  *------------------------------------------------------------------------------*  |
+ |                                                                                    |
+ *------------------------------------------------------------------------------------*
+
+
+ PYTHIA Warning: input string not found in settings databases; skip:
+   Main:inCMFrame = on
+
+ *-------  PYTHIA Process Initialization  --------------------------*
+ |                                                                  |
+ | We collide p+ with p+ at a CM energy of 7.000e+03 GeV            |
+ |                                                                  |
+ |------------------------------------------------------------------|
+ |                                                    |             |
+ | Subprocess                                    Code |   Estimated |
+ |                                                    |    max (mb) |
+ |                                                    |             |
+ |------------------------------------------------------------------|
+ |                                                    |             |
+ | minimum bias                                   101 |   5.091e+01 |
+ | A B -> A B elastic                             102 |   1.937e+01 |
+ | A B -> X B single diffractive                  103 |   6.190e+00 |
+ | A B -> A X single diffractive                  104 |   6.190e+00 |
+ | A B -> X X double diffractive                  105 |   8.105e+00 |
+ | A B -> A X B central diffractive               106 |   0.000e+00 |
+ |                                                                  |
+ *-------  End PYTHIA Process Initialization -----------------------*
+
+ *-------  PYTHIA Multiparton Interactions Initialization  ---------*
+ |                                                                  |
+ |            minbias,   sigmaNonDiffractive =   50.91 mb           |
+ |                                                                  |
+ |    pT0 =  2.88 gives sigmaInteraction =  176.98 mb: accepted     |
+ |                                                                  |
+ *-------  End PYTHIA Multiparton Interactions Initialization  -----*
+
+ *-------  PYTHIA Multiparton Interactions Initialization  ---------*
+ |                                                                  |
+ |                          diffraction XB                          |
+ |                                                                  |
+ |    diffractive mass = 1.000e+01 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  0.61 gives sigmaInteraction =   35.03 mb: accepted     |
+ |    diffractive mass = 5.144e+01 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  0.89 gives sigmaInteraction =   25.92 mb: accepted     |
+ |    diffractive mass = 2.646e+02 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  1.32 gives sigmaInteraction =   19.09 mb: accepted     |
+ |    diffractive mass = 1.361e+03 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  1.95 gives sigmaInteraction =   22.20 mb: accepted     |
+ |    diffractive mass = 7.000e+03 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  2.88 gives sigmaInteraction =   32.99 mb: accepted     |
+ |                                                                  |
+ *-------  End PYTHIA Multiparton Interactions Initialization  -----*
+ PYTHIA Warning in MultipartonInteractions::init: maximum increased by factor 4.935
+
+ *-------  PYTHIA Multiparton Interactions Initialization  ---------*
+ |                                                                  |
+ |                          diffraction AX                          |
+ |                                                                  |
+ |    diffractive mass = 1.000e+01 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  0.61 gives sigmaInteraction =   34.90 mb: accepted     |
+ |    diffractive mass = 5.144e+01 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  0.89 gives sigmaInteraction =   26.03 mb: accepted     |
+ |    diffractive mass = 2.646e+02 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  1.32 gives sigmaInteraction =   19.06 mb: accepted     |
+ |    diffractive mass = 1.361e+03 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  1.95 gives sigmaInteraction =   22.18 mb: accepted     |
+ |    diffractive mass = 7.000e+03 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  2.88 gives sigmaInteraction =   32.71 mb: accepted     |
+ |                                                                  |
+ *-------  End PYTHIA Multiparton Interactions Initialization  -----*
+
+ *-------  PYTHIA Multiparton Interactions Initialization  ---------*
+ |                                                                  |
+ |                          diffraction AXB                         |
+ |                                                                  |
+ |    diffractive mass = 1.000e+01 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  0.61 gives sigmaInteraction =    6.48 mb: rejected     |
+ |    pT0 =  0.55 gives sigmaInteraction =   10.06 mb: rejected     |
+ |    pT0 =  0.49 gives sigmaInteraction =   15.59 mb: accepted     |
+ |    diffractive mass = 5.144e+01 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  0.89 gives sigmaInteraction =    2.70 mb: rejected     |
+ |    pT0 =  0.80 gives sigmaInteraction =    3.77 mb: rejected     |
+ |    pT0 =  0.72 gives sigmaInteraction =    5.22 mb: rejected     |
+ |    pT0 =  0.65 gives sigmaInteraction =    7.48 mb: rejected     |
+ |    pT0 =  0.59 gives sigmaInteraction =   10.80 mb: rejected     |
+ |    pT0 =  0.53 gives sigmaInteraction =   16.05 mb: accepted     |
+ |    diffractive mass = 2.646e+02 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  1.32 gives sigmaInteraction =    2.44 mb: rejected     |
+ |    pT0 =  1.19 gives sigmaInteraction =    3.01 mb: rejected     |
+ |    pT0 =  1.07 gives sigmaInteraction =    3.67 mb: rejected     |
+ |    pT0 =  0.96 gives sigmaInteraction =    4.49 mb: rejected     |
+ |    pT0 =  0.87 gives sigmaInteraction =    5.55 mb: rejected     |
+ |    pT0 =  0.78 gives sigmaInteraction =    6.98 mb: rejected     |
+ |    pT0 =  0.70 gives sigmaInteraction =    8.94 mb: rejected     |
+ |    pT0 =  0.63 gives sigmaInteraction =   11.69 mb: accepted     |
+ |    diffractive mass = 1.361e+03 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  1.95 gives sigmaInteraction =    3.65 mb: rejected     |
+ |    pT0 =  1.76 gives sigmaInteraction =    4.35 mb: rejected     |
+ |    pT0 =  1.58 gives sigmaInteraction =    5.12 mb: rejected     |
+ |    pT0 =  1.42 gives sigmaInteraction =    6.04 mb: rejected     |
+ |    pT0 =  1.28 gives sigmaInteraction =    6.99 mb: rejected     |
+ |    pT0 =  1.15 gives sigmaInteraction =    8.03 mb: rejected     |
+ |    pT0 =  1.04 gives sigmaInteraction =    9.30 mb: rejected     |
+ |    pT0 =  0.93 gives sigmaInteraction =   10.68 mb: rejected     |
+ |    pT0 =  0.84 gives sigmaInteraction =   12.31 mb: accepted     |
+ |    diffractive mass = 7.000e+03 GeV and sigmaNorm = 10.000 mb    |
+ |    pT0 =  2.88 gives sigmaInteraction =    5.02 mb: rejected     |
+ |    pT0 =  2.59 gives sigmaInteraction =    6.08 mb: rejected     |
+ |    pT0 =  2.33 gives sigmaInteraction =    7.14 mb: rejected     |
+ |    pT0 =  2.10 gives sigmaInteraction =    8.40 mb: rejected     |
+ |    pT0 =  1.89 gives sigmaInteraction =   10.01 mb: rejected     |
+ |    pT0 =  1.70 gives sigmaInteraction =   11.50 mb: accepted     |
+ |                                                                  |
+ *-------  End PYTHIA Multiparton Interactions Initialization  -----*
+
+ *-------  PYTHIA Flag + Mode + Parm + Word Settings (changes only)  ----------------------------------------------*
+ |                                                                                                                 |
+ | Name                                          |                      Now |      Default         Min         Max |
+ |                                               |                          |                                      |
+ | BeamRemnants:primordialKThard                 |                  1.00000 |      2.00000         0.0             |
+ | BeamRemnants:reconnectRange                   |                  1.50000 |     10.00000         0.0    10.00000 |
+ | Beams:eCM                                     |                 7000.001 |    14000.000    10.00000             |
+ | Main:showAllSettings                          |                       on |          off                         |
+ | MultipartonInteractions:alphaSvalue           |                  0.13500 |      0.12700   0.0600000     0.25000 |
+ | MultipartonInteractions:ecmPow                |                  0.23800 |      0.24000         0.0     0.50000 |
+ | MultipartonInteractions:ecmRef                |                 7000.000 |     1800.000     1.00000             |
+ | MultipartonInteractions:expPow                |                  2.00000 |      1.00000     0.40000    10.00000 |
+ | MultipartonInteractions:pT0Ref                |                  2.88000 |      2.15000     0.50000    10.00000 |
+ | ParticleDecays:mixB                           |                      off |           on                         |
+ | PDF:LHAPDFset                                 |            cteq6ll.LHpdf | MRST2004FF4lo.LHgrid                 |
+ | PDF:pSet                                      |                        8 |            2           1          12 |
+ | PDF:useLHAPDF                                 |                       on |          off                         |
+ | SigmaDiffractive:dampen                       |                       on |          off                         |
+ | SigmaDiffractive:maxAX                        |                 65.00000 |     15.00000         0.0             |
+ | SigmaDiffractive:maxXB                        |                 65.00000 |     15.00000         0.0             |
+ | SigmaDiffractive:maxXX                        |                 65.00000 |     15.00000         0.0             |
+ | SigmaProcess:alphaSorder                      |                        2 |            1           0           2 |
+ | SigmaProcess:alphaSvalue                      |                  0.13500 |      0.12650   0.0600000     0.25000 |
+ | SigmaProcess:renormMultFac                    |                  0.10000 |      1.00000     0.10000    10.00000 |
+ | SigmaTotal:zeroAXB                            |                       on |          off                         |
+ | SoftQCD:all                                   |                       on |          off                         |
+ | SpaceShower:rapidityOrder                     |                       on |          off                         |
+ | StringFlav:etaPrimeSup                        |                  0.40000 |      0.12000         0.0     1.00000 |
+ | StringFlav:etaSup                             |                  1.00000 |      0.63000         0.0     1.00000 |
+ | StringFlav:mesonBL1S0J1                       |                0.0990000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonBL1S1J0                       |                0.0657000 |          0.0         0.0     1.00000 |
+ | StringFlav:mesonBL1S1J1                       |                  0.29860 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonBL1S1J2                       |                  0.29860 |          0.0         0.0     5.00000 |
+ | StringFlav:mesonCL1S0J1                       |                0.0990000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonCL1S1J0                       |                0.0657000 |          0.0         0.0     1.00000 |
+ | StringFlav:mesonCL1S1J1                       |                  0.29860 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonCL1S1J2                       |                  0.29860 |          0.0         0.0     5.00000 |
+ | StringFlav:mesonCvector                       |                  3.00000 |      1.06000         0.0     3.00000 |
+ | StringFlav:mesonSL1S0J1                       |                0.0989000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonSL1S1J0                       |                0.0132000 |          0.0         0.0     1.00000 |
+ | StringFlav:mesonSL1S1J1                       |                0.0597000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonSL1S1J2                       |                0.0597000 |          0.0         0.0     5.00000 |
+ | StringFlav:mesonSvector                       |                  0.60000 |      0.72500         0.0     3.00000 |
+ | StringFlav:mesonUDL1S0J1                      |                0.0989000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonUDL1S1J0                      |                0.0132000 |          0.0         0.0     1.00000 |
+ | StringFlav:mesonUDL1S1J1                      |                0.0597000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonUDL1S1J2                      |                0.0597000 |          0.0         0.0     5.00000 |
+ | StringFlav:mesonUDvector                      |                  0.60000 |      0.62000         0.0     3.00000 |
+ | StringFlav:probQQ1toQQ0                       |                0.0500000 |    0.0270000         0.0     1.00000 |
+ | StringFlav:probQQtoQ                          |                  0.10000 |    0.0900000         0.0     1.00000 |
+ | StringFlav:probSQtoQQ                         |                  0.40000 |      1.00000         0.0     1.00000 |
+ | StringFlav:probStoUD                          |                  0.30000 |      0.19000         0.0     1.00000 |
+ | StringFragmentation:stopMass                  |                  0.40000 |      1.00000         0.0     2.00000 |
+ | StringPT:sigma                                |                  0.36000 |      0.30400         0.0     1.00000 |
+ | StringZ:bLund                                 |                  0.58000 |      0.80000     0.20000     2.00000 |
+ | StringZ:rFactB                                |                  1.00000 |      0.67000         0.0     2.00000 |
+ |                                                                                                                 |
+ *-------  End PYTHIA Flag + Mode + Parm + Word Settings  ---------------------------------------------------------*
+
+ --------  PYTHIA Particle Data Table (changed only)  ------------------------------------------------------------------------------
+
+      id   name            antiName         spn chg col      m0        mWidth      mMin       mMax       tau0    res dec ext vis wid
+             no onMode   bRatio   meMode     products
+
+ no particle data has been changed from its default value
+
+ --------  End PYTHIA Particle Data Table  -----------------------------------------------------------------------------------------
+
+
+ *-------  PYTHIA Flag + Mode + Parm + Word Settings (changes only)  ----------------------------------------------*
+ |                                                                                                                 |
+ | Name                                          |                      Now |      Default         Min         Max |
+ |                                               |                          |                                      |
+ | BeamRemnants:primordialKThard                 |                  1.00000 |      2.00000         0.0             |
+ | BeamRemnants:reconnectRange                   |                  1.50000 |     10.00000         0.0    10.00000 |
+ | Beams:eCM                                     |                 7000.001 |    14000.000    10.00000             |
+ | Main:showAllSettings                          |                       on |          off                         |
+ | MultipartonInteractions:alphaSvalue           |                  0.13500 |      0.12700   0.0600000     0.25000 |
+ | MultipartonInteractions:ecmPow                |                  0.23800 |      0.24000         0.0     0.50000 |
+ | MultipartonInteractions:ecmRef                |                 7000.000 |     1800.000     1.00000             |
+ | MultipartonInteractions:expPow                |                  2.00000 |      1.00000     0.40000    10.00000 |
+ | MultipartonInteractions:pT0Ref                |                  2.88000 |      2.15000     0.50000    10.00000 |
+ | ParticleDecays:mixB                           |                      off |           on                         |
+ | PDF:LHAPDFset                                 |            cteq6ll.LHpdf | MRST2004FF4lo.LHgrid                 |
+ | PDF:pSet                                      |                        8 |            2           1          12 |
+ | PDF:useLHAPDF                                 |                       on |          off                         |
+ | SigmaDiffractive:dampen                       |                       on |          off                         |
+ | SigmaDiffractive:maxAX                        |                 65.00000 |     15.00000         0.0             |
+ | SigmaDiffractive:maxXB                        |                 65.00000 |     15.00000         0.0             |
+ | SigmaDiffractive:maxXX                        |                 65.00000 |     15.00000         0.0             |
+ | SigmaProcess:alphaSorder                      |                        2 |            1           0           2 |
+ | SigmaProcess:alphaSvalue                      |                  0.13500 |      0.12650   0.0600000     0.25000 |
+ | SigmaProcess:renormMultFac                    |                  0.10000 |      1.00000     0.10000    10.00000 |
+ | SigmaTotal:zeroAXB                            |                       on |          off                         |
+ | SoftQCD:all                                   |                       on |          off                         |
+ | SpaceShower:rapidityOrder                     |                       on |          off                         |
+ | StringFlav:etaPrimeSup                        |                  0.40000 |      0.12000         0.0     1.00000 |
+ | StringFlav:etaSup                             |                  1.00000 |      0.63000         0.0     1.00000 |
+ | StringFlav:mesonBL1S0J1                       |                0.0990000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonBL1S1J0                       |                0.0657000 |          0.0         0.0     1.00000 |
+ | StringFlav:mesonBL1S1J1                       |                  0.29860 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonBL1S1J2                       |                  0.29860 |          0.0         0.0     5.00000 |
+ | StringFlav:mesonCL1S0J1                       |                0.0990000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonCL1S1J0                       |                0.0657000 |          0.0         0.0     1.00000 |
+ | StringFlav:mesonCL1S1J1                       |                  0.29860 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonCL1S1J2                       |                  0.29860 |          0.0         0.0     5.00000 |
+ | StringFlav:mesonCvector                       |                  3.00000 |      1.06000         0.0     3.00000 |
+ | StringFlav:mesonSL1S0J1                       |                0.0989000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonSL1S1J0                       |                0.0132000 |          0.0         0.0     1.00000 |
+ | StringFlav:mesonSL1S1J1                       |                0.0597000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonSL1S1J2                       |                0.0597000 |          0.0         0.0     5.00000 |
+ | StringFlav:mesonSvector                       |                  0.60000 |      0.72500         0.0     3.00000 |
+ | StringFlav:mesonUDL1S0J1                      |                0.0989000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonUDL1S1J0                      |                0.0132000 |          0.0         0.0     1.00000 |
+ | StringFlav:mesonUDL1S1J1                      |                0.0597000 |          0.0         0.0     3.00000 |
+ | StringFlav:mesonUDL1S1J2                      |                0.0597000 |          0.0         0.0     5.00000 |
+ | StringFlav:mesonUDvector                      |                  0.60000 |      0.62000         0.0     3.00000 |
+ | StringFlav:probQQ1toQQ0                       |                0.0500000 |    0.0270000         0.0     1.00000 |
+ | StringFlav:probQQtoQ                          |                  0.10000 |    0.0900000         0.0     1.00000 |
+ | StringFlav:probSQtoQQ                         |                  0.40000 |      1.00000         0.0     1.00000 |
+ | StringFlav:probStoUD                          |                  0.30000 |      0.19000         0.0     1.00000 |
+ | StringFragmentation:stopMass                  |                  0.40000 |      1.00000         0.0     2.00000 |
+ | StringPT:sigma                                |                  0.36000 |      0.30400         0.0     1.00000 |
+ | StringZ:bLund                                 |                  0.58000 |      0.80000     0.20000     2.00000 |
+ | StringZ:rFactB                                |                  1.00000 |      0.67000         0.0     2.00000 |
+ |                                                                                                                 |
+ *-------  End PYTHIA Flag + Mode + Parm + Word Settings  ---------------------------------------------------------*
+Generation.Inclusive       INFO Generating Inclusive events of Omega_b~+ Xi'_b~0 Xi'_b~+ Xi_b~0 Sigma_b~- Sigma_b~0 Xi_b~+ Lambda_b~0 Sigma_b~+ B_c- B_s~0 B- B~0 B0 B+ B_s0 B_c+ Sigma_b- Lambda_b0 Xi_b- Sigma_b0 Sigma_b+ Xi_b0 Xi'_b- Xi'_b0 Omega_b-
+Generation.BeamSpotSm...   INFO Smearing of interaction point with Gaussian distribution
+Generation              SUCCESS ==================================================================
+Generation              SUCCESS Requested to generate EventType 10000000
+Generation              SUCCESS ==================================================================
+GenMonitor                 INFO Member list: GenMonitorAlg
+GenMonitorAlg              INFO Monitor will be applied to all events in container /Event/Gen/HepMCEvents
+EventLoopMgr            WARNING Unable to locate service "EventSelector"
+EventLoopMgr            WARNING No events will be processed from external input.
+ApplicationMgr             INFO Application Manager Initialized successfully
+ApplicationMgr             INFO Application Manager Started successfully
+GaussGen                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 2119103972, 0]
+
+ --------  PYTHIA Info Listing  ----------------------------------------
+
+ Beam A: id =   2212, pz =  3.500e+03, e =  3.500e+03, m =  9.383e-01.
+ Beam B: id =   2212, pz = -3.500e+03, e =  3.500e+03, m =  9.383e-01.
+
+ Process A B -> A X single diffractive with code 104 is 2 -> 2.
+ It has s =  4.900e+07,    t = -1.443e-01,    u = -4.867e+07,
+       pT =  3.785e-01,   m3 =  9.383e-01,   m4 =  5.779e+02,
+    theta =  1.089e-04,  phi =  3.648e+00.
+
+ Diffractive system on side B:
+ In 1: id =   21, x =  8.554e-01, pdf =  3.024e-01 at Q2 =  6.496e+00.
+ In 2: id =    1, x =  9.527e-05, pdf =  8.819e-01 at same Q2.
+ Subprocess q g -> q g with code 113 is 2 -> 2.
+ It has sHat =  2.722e+01,    tHat = -1.071e+01,    uHat = -1.652e+01,
+       pTHat =  2.549e+00,   m3Hat =  0.000e+00,   m4Hat =  0.000e+00,
+    thetaHat =  1.356e+00,  phiHat =  5.232e+00.
+     alphaEM =  7.530e-03,  alphaS =  3.125e-01    at Q2 =  9.124e+00.
+
+ --------  End PYTHIA Info Listing  ------------------------------------
+
+ --------  PYTHIA Event Listing  (hard process)  -----------------------------------------------------------------------------------
+
+    no        id   name            status     mothers   daughters     colours      p_x        p_y        p_z         e          m
+     0        90   (system)           -11     0     0     0     0     0     0      0.000      0.000      0.000   7000.001   7000.001
+     1      2212   (p+)               -12     0     0     3     0     0     0      0.000      0.000   3500.000   3500.001      0.938
+     2      2212   (p+)               -12     0     0     4     0     0     0      0.000      0.000  -3500.000   3500.001      0.938
+     3      2212   p+                  14     1     0     0     0     0     0     -0.331     -0.184   3476.142   3476.142      0.938
+     4   9902210   (p_diffr+)         -15     2     0     5     6     0     0      0.331      0.184  -3476.142   3523.859    577.945
+     5       990   (Pomeron)          -13     4     0     7     0     0     0      0.331      0.184     23.857     23.860      0.000
+     6      2212   (p+)               -13     4     0     8     0     0     0      0.000      0.000  -3499.999   3499.999      0.938
+     7        21   (g)                -31     5     0     9    10   102   101      0.283      0.157     20.408     20.411      0.000
+     8         1   (d)                -31     6     0     9    10   101     0     -0.000     -0.000     -0.333      0.333      0.000
+     9        21   g                   33     7     8     0     0   102   103     -2.032      1.356     12.212     12.454      0.000
+    10         1   d                   33     7     8     0     0   103     0      2.315     -1.199      7.862      8.290      0.330
+                                   Charge sum:  0.667           Momentum sum:     -0.048     -0.027   3496.216   3496.886     68.431
+
+ --------  End PYTHIA Event Listing  -----------------------------------------------------------------------------------------------
+
+ --------  PYTHIA Event Listing  (complete event)  ---------------------------------------------------------------------------------
+
+    no        id   name            status     mothers   daughters     colours      p_x        p_y        p_z         e          m
+     0        90   (system)           -11     0     0     0     0     0     0      0.000      0.000      0.000   7000.001   7000.001
+     1      2212   (p+)               -12     0     0     3     0     0     0      0.000      0.000   3500.000   3500.001      0.938
+     2      2212   (p+)               -12     0     0     4     0     0     0      0.000      0.000  -3500.000   3500.001      0.938
+     3      2212   p+                  14     1     0     0     0     0     0     -0.331     -0.184   3476.142   3476.142      0.938
+     4   9902210   (p_diffr+)         -15     2     0     5     6     0     0      0.331      0.184  -3476.142   3523.859    577.945
+     5       990   (Pomeron)          -13     4     0    73     0     0     0      0.331      0.184     23.857     23.860      0.000
+     6      2212   (p+)               -13     4     0    74     0     0     0      0.000      0.000  -3499.999   3499.999      0.938
+     7        21   (g)                -31    73    73     9    10   102   101      0.283      0.157     20.408     20.411      0.000
+     8         1   (d)                -31    74    74     9    10   101     0     -0.000     -0.000     -0.333      0.333      0.000
+     9        21   (g)                -33     7     8    45    45   102   103     -2.032      1.356     12.212     12.454      0.000
+    10         1   (d)                -33     7     8    43    44   103     0      2.315     -1.199      7.862      8.290      0.330
+    11        21   (g)                -31    15     0    13    14   104   105      0.000      0.000      0.006      0.006      0.000
+    12        21   (g)                -31    16    16    13    14   106   104     -0.000     -0.000   -627.438    627.438      0.000
+    13        21   (g)                -33    11    12    17    17   106   107     -1.852      0.706   -347.389    347.394      0.000
+    14        21   (g)                -33    11    12    18    18   107   105      1.853     -0.706   -280.043    280.050      0.000
+    15        21   (g)                -41    20    20    19    11   104   108      0.006      0.004      0.456      0.456      0.000
+    16        21   (g)                -42    21     0    12    12   106   104     -0.000     -0.000   -627.438    627.438      0.000
+    17        21   (g)                -44    13    13    22    22   106   107     -2.123     -0.012   -334.925    334.932      0.000
+    18        21   (g)                -44    14    14    23    23   107   105      1.517     -1.597   -290.849    290.858      0.000
+    19        21   (g)                -43    15     0    24    24   105   108      0.611      1.612     -1.207      2.105      0.000
+    20        21   (g)                -42    29    29    15    15   104   108      0.006      0.004      0.456      0.456      0.000
+    21        21   (g)                -41    30     0    25    16   109   104     -0.000     -0.000   -669.248    669.248      0.000
+    22        21   (g)                -44    17    17    31    31   106   107     -1.568     -0.129   -348.729    348.733      0.000
+    23        21   (g)                -44    18    18    28    28   107   105      1.999     -1.699   -302.834    302.845      0.000
+    24        21   (g)                -44    19    19    26    27   105   108      0.614      1.612     -1.293      2.155      0.000
+    25        21   (g)                -43    21     0    34    34   109   106     -1.038      0.219    -15.936     15.972      0.000
+    26        21   (g)                -51    24     0    33    33   110   108      0.810      1.247     -0.855      1.715      0.000
+    27        21   (g)                -51    24     0    35    35   105   110     -0.093      0.277    -16.067     16.070      0.000
+    28        21   (g)                -52    23    23    32    32   107   105      1.895     -1.611   -287.204    287.215      0.000
+    29        21   (g)                -42    48    48    20    20   104   108      0.006      0.004      0.456      0.456      0.000
+    30        21   (g)                -41    82    82    36    21   111   104     -0.000     -0.000   -698.438    698.438      0.000
+    31        21   (g)                -44    22    22    39    39   106   107     -1.720     -0.480   -354.932    354.936      0.000
+    32        21   (g)                -44    28    28    69    69   107   105      1.771     -1.900   -292.312    292.324      0.000
+    33        21   (g)                -44    26    26    46    47   110   108      0.810      1.246     -0.886      1.730      0.000
+    34        21   (g)                -44    25    25    37    38   109   106     -1.045      0.203    -16.220     16.255      0.000
+    35        21   (g)                -44    27    27    51    51   105   110     -0.100      0.261    -16.353     16.355      0.000
+    36        21   (g)                -43    30     0    40    41   111   109      0.290      0.674    -17.278     17.294      0.000
+    37        21   (g)                -51    34     0    42    42   109   112     -1.226     -0.455    -30.298     30.326      0.000
+    38        21   (g)                -51    34     0    89    89   112   106     -0.010      0.604    -25.455     25.462      0.000
+    39        21   (g)                -52    31    31    70    71   106   107     -1.528     -0.426   -315.399    315.403      0.000
+    40         1   (d)                -51    36     0    88    88   111     0      0.209     -0.024     -3.535      3.557      0.330
+    41        -1   (dbar)             -51    36     0    90    90     0   109     -0.674      0.418    -32.408     32.419      0.330
+    42        21   (g)                -52    37    37    86    86   109   112     -0.471     -0.175    -11.633     11.644      0.000
+    43         1   (d)                -51    10     0    52    53   113     0      2.235     -0.659      7.437      7.801      0.330
+    44        21   (g)                -51    10     0    54    54   103   113     -0.055     -0.450      1.238      1.318      0.000
+    45        21   (g)                -52     9     9    60    60   102   103     -1.897      1.266     11.399     11.625      0.000
+    46        21   (g)                -51    33     0    49    50   110   114      0.659      1.066     -0.045      1.254      0.000
+    47        21   (g)                -51    33     0    63    63   114   108      0.154      0.181     -0.637      0.680      0.000
+    48        21   (g)                -53    81    81    29    29   104   108      0.009      0.005      0.660      0.661      0.000
+    49        21   (g)                -51    46     0    61    62   115   114      0.365      0.441      0.327      0.659      0.000
+    50        21   (g)                -51    46     0    55    56   110   115      0.290      0.635     -0.980      1.203      0.000
+    51        21   (g)                -52    35    35    57    57   105   110     -0.097      0.251    -15.745     15.747      0.000
+    52         1   (d)                -51    43     0    76    76   116     0      1.172     -0.939      4.957      5.190      0.330
+    53        21   (g)                -51    43     0    66    66   113   116      1.036      0.060      3.087      3.257      0.000
+    54        21   (g)                -52    44    44    58    59   103   113     -0.028     -0.230      0.632      0.673      0.000
+    55        21   (g)                -51    50     0    92    92   117   115      0.348     -0.067     -0.471      0.590      0.000
+    56        21   (g)                -51    50     0    93    93   110   117     -0.070      0.735     -2.538      2.643      0.000
+    57        21   (g)                -52    51    51    67    68   105   110     -0.084      0.219    -13.716     13.718      0.000
+    58        21   (g)                -51    54     0    64    65   118   113     -0.629     -0.093      1.718      1.831      0.000
+    59        21   (g)                -51    54     0    79    79   103   118     -0.328      0.483      4.497      4.534      0.000
+    60        21   (g)                -52    45    45    75    75   102   103     -0.968      0.646      5.817      5.932      0.000
+    61        21   (g)                -51    49     0    85    85   115   120      0.346      0.722      0.142      0.813      0.000
+    62        21   (g)                -51    49     0    94    94   120   114      0.131     -0.148     -0.282      0.345      0.000
+    63        21   (g)                -52    47    47    91    91   114   108      0.041      0.048     -0.170      0.181      0.000
+    64         2   (u)                -51    58     0    77    77   118     0     -0.355     -0.276      1.322      1.435      0.330
+    65        -2   (ubar)             -51    58     0    80    80     0   113      0.054      0.203      1.373      1.428      0.330
+    66        21   (g)                -52    53    53    78    78   113   116      0.708      0.041      2.109      2.225      0.000
+    67        21   (g)                -51    57     0    87    87   121   110      0.447      0.057    -74.563     74.564      0.000
+    68        21   (g)                -51    57     0    95    95   105   121     -0.065     -0.339    -16.199     16.203      0.000
+    69        21   (g)                -52    32    32    72    72   107   105      1.304     -1.399   -215.266    215.274      0.000
+    70        21   (g)                -51    39     0    83    83   106   122     -1.371     -0.386   -217.029    217.034      0.000
+    71        21   (g)                -51    39     0    96    96   122   107     -0.031     -0.175   -119.085    119.085      0.000
+    72        21   (g)                -52    69    69    84    84   107   105      1.179     -1.265   -194.550    194.558      0.000
+    73        21   (g)                -61     5     0     7     7   117   101      0.993      0.855     18.869     18.914      0.000
+    74         1   (d)                -61     6     0     8     8   101     0     -1.028     -0.950      1.270      1.890      0.000
+    75        21   (g)                -62    60    60   104     0   102   103     -0.915      0.704      6.447      6.549      0.000
+    76         1   (d)                -62    52    52   111   111   116     0      0.986     -1.100      4.800      5.033      0.330
+    77         2   (u)                -62    64    64   137   137   118     0     -0.441     -0.356      2.502      2.587      0.330
+    78        21   (g)                -62    66    66   102     0   113   116      0.563     -0.085      1.110      1.247      0.000
+    79        21   (g)                -62    59    59   104     0   103   118     -0.233      0.580      4.216      4.262      0.000
+    80        -2   (ubar)             -62    65    65   102     0     0   113      0.005      0.161      1.064      1.125      0.330
+    81        21   (g)                -61     5     0    48    48   104   104     -0.184     -0.212      0.631      0.690      0.000
+    82        21   (g)                -61     6     0    30    30   108   108     -0.131      0.585   -698.453    698.453      0.000
+    83        21   (g)                -62    70    70   117   117   106   112     -1.413     -0.205   -217.298    217.303      0.000
+    84        21   (g)                -62    72    72   120   120   107   121      1.141     -1.103   -194.590    194.597      0.000
+    85        21   (g)                -62    61    61   139   139   115   102      0.206      0.565      0.288      0.667      0.000
+    86        21   (g)                -62    42    42   106     0   109   105     -0.475     -0.166    -11.731     11.742      0.000
+    87        21   (g)                -62    67    67   119   119   121   122      0.433      0.119    -74.489     74.491      0.000
+    88         1   (d)                -62    40    40   115   115   111     0      0.205     -0.024     -3.509      3.531      0.330
+    89        21   (g)                -62    38    38   116   116   112   111     -0.016      0.624    -25.358     25.366      0.000
+    90        -1   (dbar)             -62    41    41   141   141     0   110     -0.682      0.443    -32.439     32.451      0.330
+    91        21   (g)                -62    63    63   103     0   114   115      0.039      0.047     -0.156      0.168      0.000
+    92        21   (g)                -62    55    55   105     0   117   120      0.330     -0.086     -0.434      0.553      0.000
+    93        21   (g)                -62    56    56   103     0   110   114     -0.086      0.720     -2.430      2.535      0.000
+    94        21   (g)                -62    62    62   105     0   120   109      0.122     -0.158     -0.289      0.351      0.000
+    95        21   (g)                -62    68    68   106     0   105   107     -0.068     -0.326    -16.265     16.268      0.000
+    96        21   (g)                -62    71    71   118   118   122   106     -0.054     -0.075   -119.121    119.121      0.000
+    97         2   (u)                -63     5     0   153   153   101     0     -0.297     -0.031      2.398      2.439      0.330
+    98        -2   (ubar)             -63     5     0   123   123     0   117     -0.203     -0.440      0.029      0.587      0.330
+    99         2   (u)                -63     6     0   107   107   125     0      0.723      0.247  -1239.482   1239.482      0.330
+   100      2101   (ud_0)             -63     6     0   154   154     0   101      0.162      0.123  -1224.602   1224.602      0.579
+   101        -1   (dbar)             -63     6     0   108   108     0   125      0.295      0.007   -336.802    336.802      0.330
+   102        -2   (ubar)             -73    78    80   112   112     0   116      0.568      0.076      2.174      2.373      0.759
+   103        21   (g)                -73    91    93   140   140   110   115     -0.047      0.766     -2.586      2.703      0.176
+   104        21   (g)                -73    75    79   138   138   102   118     -1.148      1.284     10.663     10.811      0.475
+   105        21   (g)                -73    92    94   122   122   117   109      0.453     -0.245     -0.723      0.904      0.171
+   106        21   (g)                -73    86    95   121   121   109   107     -0.543     -0.493    -27.996     28.010      0.507
+   107         2   (u)                -71    99    99   109   110   125     0      0.723      0.247  -1239.482   1239.482      0.330
+   108        -1   (dbar)             -71   101   101   109   110     0   125      0.295      0.007   -336.802    336.802      0.330
+   109       211   pi+                 82   107   108     0     0     0     0      0.870      0.313   -806.878    806.878      0.140
+   110       111   pi0                 82   107   108     0     0     0     0      0.148     -0.059   -769.406    769.406      0.135
+   111         1   (d)                -71    76    76   113   114   116     0      0.986     -1.100      4.800      5.033      0.330
+   112        -2   (ubar)             -71   102   102   113   114     0   116      0.568      0.076      2.174      2.373      0.759
+   113       111   pi0                 83   111   112     0     0     0     0      1.304     -1.401      6.271      6.558      0.135
+   114      -211   pi-                 84   111   112     0     0     0     0      0.250      0.378      0.703      0.848      0.140
+   115         1   (d)                -71    88    88   124   136   111     0      0.205     -0.024     -3.509      3.531      0.330
+   116        21   (g)                -71    89    89   124   136   112   111     -0.016      0.624    -25.358     25.366      0.000
+   117        21   (g)                -71    83    83   124   136   106   112     -1.413     -0.205   -217.298    217.303      0.000
+   118        21   (g)                -71    96    96   124   136   122   106     -0.054     -0.075   -119.121    119.121      0.000
+   119        21   (g)                -71    87    87   124   136   121   122      0.433      0.119    -74.489     74.491      0.000
+   120        21   (g)                -71    84    84   124   136   107   121      1.141     -1.103   -194.590    194.597      0.000
+   121        21   (g)                -71   106   106   124   136   109   107     -0.543     -0.493    -27.996     28.010      0.507
+   122        21   (g)                -71   105   105   124   136   117   109      0.453     -0.245     -0.723      0.904      0.171
+   123        -2   (ubar)             -71    98    98   124   136     0   117     -0.203     -0.440      0.029      0.587      0.330
+   124       311   K0                  83   115   123     0     0     0     0     -0.328      0.395    -45.622     45.628      0.498
+   125      -311   Kbar0               83   115   123     0     0     0     0      0.315      0.214    -17.145     17.156      0.498
+   126      -211   pi-                 83   115   123     0     0     0     0     -0.593     -0.497    -22.257     22.271      0.140
+   127       221   eta                 83   115   123     0     0     0     0     -0.189     -0.079    -87.608     87.610      0.548
+   128       323   K*+                 83   115   123     0     0     0     0      0.803     -0.065   -217.350    217.354      0.972
+   129      -313   K*bar0              83   115   123     0     0     0     0     -0.392      0.047    -99.663     99.668      0.868
+   130      2112   n0                  84   115   123     0     0     0     0     -0.832     -0.435    -41.200     41.221      0.940
+   131     -2212   pbar-               84   115   123     0     0     0     0      0.973     -0.866    -60.722     60.744      0.938
+   132       323   K*+                 84   115   123     0     0     0     0      0.716      0.748    -61.170     61.185      0.883
+   133       221   eta                 84   115   123     0     0     0     0     -0.781     -1.107     -4.355      4.594      0.548
+   134    -20313   K_1(1400)bar0       84   115   123     0     0     0     0      0.489     -0.145     -5.282      5.530      1.557
+   135       111   pi0                 84   115   123     0     0     0     0     -0.382      0.004     -0.426      0.588      0.135
+   136      -211   pi-                 84   115   123     0     0     0     0      0.205     -0.057     -0.257      0.362      0.140
+   137         2   (u)                -71    77    77   142   152   118     0     -0.441     -0.356      2.502      2.587      0.330
+   138        21   (g)                -71   104   104   142   152   102   118     -1.148      1.284     10.663     10.811      0.475
+   139        21   (g)                -71    85    85   142   152   115   102      0.206      0.565      0.288      0.667      0.000
+   140        21   (g)                -71   103   103   142   152   110   115     -0.047      0.766     -2.586      2.703      0.176
+   141        -1   (dbar)             -71    90    90   142   152     0   110     -0.682      0.443    -32.439     32.451      0.330
+   142      2224   Delta++             83   137   141     0     0     0     0     -0.670      0.739      6.387      6.584      1.250
+   143      -213   rho-                83   137   141     0     0     0     0     -0.454      0.081      2.799      2.957      0.835
+   144     -2212   pbar-               83   137   141     0     0     0     0     -0.306      0.145      2.141      2.362      0.938
+   145       223   omega               83   137   141     0     0     0     0     -0.046      0.105      0.421      0.889      0.775
+   146       211   pi+                 84   137   141     0     0     0     0      0.231     -0.410      0.107      0.502      0.140
+   147       113   rho0                84   137   141     0     0     0     0     -0.477      1.105      0.325      1.400      0.636
+   148      -211   pi-                 84   137   141     0     0     0     0      0.557     -0.345     -0.300      0.734      0.140
+   149       211   pi+                 84   137   141     0     0     0     0     -0.272      0.429     -0.572      0.778      0.140
+   150      -213   rho-                84   137   141     0     0     0     0     -0.205      0.259     -3.344      3.447      0.766
+   151       211   pi+                 84   137   141     0     0     0     0     -0.419      0.143     -9.416      9.427      0.140
+   152       223   omega               84   137   141     0     0     0     0     -0.050      0.451    -20.119     20.140      0.786
+   153         2   (u)                -71    97    97   155   163   101     0     -0.297     -0.031      2.398      2.439      0.330
+   154      2101   (ud_0)             -71   100   100   155   163     0   101      0.162      0.123  -1224.602   1224.602      0.579
+   155      2212   p+                  83   153   154     0     0     0     0      0.218      0.097      1.528      1.809      0.938
+   156     -2212   pbar-               83   153   154     0     0     0     0     -0.287     -0.091     -1.096      1.474      0.938
+   157       211   pi+                 83   153   154     0     0     0     0      0.141      0.277     -0.855      0.921      0.140
+   158       311   K0                  84   153   154     0     0     0     0     -0.597     -0.361     -0.040      0.858      0.498
+   159      -321   K-                  84   153   154     0     0     0     0      0.128      0.246     -1.430      1.538      0.494
+   160       213   rho+                84   153   154     0     0     0     0     -0.029     -0.331     -3.896      3.980      0.738
+   161       331   eta'                84   153   154     0     0     0     0      0.262      0.364    -37.414     37.429      0.958
+   162       331   eta'                84   153   154     0     0     0     0     -0.038      0.093    -14.232     14.264      0.958
+   163      2112   n0                  84   153   154     0     0     0     0      0.068     -0.201  -1164.768   1164.769      0.940
+                                   Charge sum:  2.000           Momentum sum:      0.000      0.000      0.000   7000.001   7000.001
+
+ --------  End PYTHIA Event Listing  -----------------------------------------------------------------------------------------------
+ PYTHIA Warning in SpaceShower::pT2nextQCD: weight above unity
+GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
+ PYTHIA Error in BeamRemnants::setKinematics: kinematics construction failed
+ PYTHIA Error in Pythia::next: partonLevel failed; try again
+GaussGen                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 645125023, 0]
+GaussGen                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 1010630449, 0]
+ PYTHIA Error in StringFragmentation::fragment: stuck in joining
+ PYTHIA Error in Pythia::next: hadronLevel failed; try again
+GaussGen                   INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 1094777801, 0]
+GaussGen                   INFO Evt 6,  Run 1082,  Nr. in job = 6 with seeds [1082, 6, 856514402, 0]
+GaussGen                   INFO Evt 7,  Run 1082,  Nr. in job = 7 with seeds [1082, 7, 1402449382, 0]
+GaussGen                   INFO Evt 8,  Run 1082,  Nr. in job = 8 with seeds [1082, 8, 1642482307, 0]
+ PYTHIA Warning in StringFragmentation::fragmentToJunction: bad convergence junction rest frame
+
+ Pythia::next(): 1000 events have been generated
+GaussGen                   INFO Evt 9,  Run 1082,  Nr. in job = 9 with seeds [1082, 9, 129275425, 0]
+GaussGen                   INFO Evt 10,  Run 1082,  Nr. in job = 10 with seeds [1082, 10, 606355924, 0]
+GaussGen                   INFO Evt 11,  Run 1082,  Nr. in job = 11 with seeds [1082, 11, 900588775, 0]
+GaussGen                   INFO Evt 12,  Run 1082,  Nr. in job = 12 with seeds [1082, 12, 1359158161, 0]
+
+ Pythia::next(): 2000 events have been generated
+GaussGen                   INFO Evt 13,  Run 1082,  Nr. in job = 13 with seeds [1082, 13, 1660010350, 0]
+GaussGen                   INFO Evt 14,  Run 1082,  Nr. in job = 14 with seeds [1082, 14, 1820316298, 0]
+GaussGen                   INFO Evt 15,  Run 1082,  Nr. in job = 15 with seeds [1082, 15, 2118350353, 0]
+GaussGen                   INFO Evt 16,  Run 1082,  Nr. in job = 16 with seeds [1082, 16, 1600370414, 0]
+GaussGen                   INFO Evt 17,  Run 1082,  Nr. in job = 17 with seeds [1082, 17, 617468275, 0]
+
+ Pythia::next(): 3000 events have been generated
+GaussGen                   INFO Evt 18,  Run 1082,  Nr. in job = 18 with seeds [1082, 18, 923039200, 0]
+GaussGen                   INFO Evt 19,  Run 1082,  Nr. in job = 19 with seeds [1082, 19, 932144966, 0]
+GaussGen                   INFO Evt 20,  Run 1082,  Nr. in job = 20 with seeds [1082, 20, 633455531, 0]
+ PYTHIA Error in HadronLevel::traceFromCol: colour tracing failed
+ PYTHIA Warning in MultipartonInteractions::pTnext: weight above unity
+
+ Pythia::next(): 4000 events have been generated
+GaussGen                   INFO Evt 21,  Run 1082,  Nr. in job = 21 with seeds [1082, 21, 163846944, 0]
+GaussGen                   INFO Evt 22,  Run 1082,  Nr. in job = 22 with seeds [1082, 22, 2070576747, 0]
+GaussGen                   INFO Evt 23,  Run 1082,  Nr. in job = 23 with seeds [1082, 23, 1705988853, 0]
+GaussGen                   INFO Evt 24,  Run 1082,  Nr. in job = 24 with seeds [1082, 24, 1356736851, 0]
+
+ Pythia::next(): 5000 events have been generated
+GaussGen                   INFO Evt 25,  Run 1082,  Nr. in job = 25 with seeds [1082, 25, 753488442, 0]
+GaussGen                   INFO Evt 26,  Run 1082,  Nr. in job = 26 with seeds [1082, 26, 81105227, 0]
+GaussGen                   INFO Evt 27,  Run 1082,  Nr. in job = 27 with seeds [1082, 27, 1998648800, 0]
+GaussGen                   INFO Evt 28,  Run 1082,  Nr. in job = 28 with seeds [1082, 28, 1733383745, 0]
+GaussGen                   INFO Evt 29,  Run 1082,  Nr. in job = 29 with seeds [1082, 29, 1368664775, 0]
+
+ Pythia::next(): 6000 events have been generated
+GaussGen                   INFO Evt 30,  Run 1082,  Nr. in job = 30 with seeds [1082, 30, 321494703, 0]
+ PYTHIA Error in SpaceShower::pT2nearQCDthreshold: stuck in loop
+GaussGen                   INFO Evt 31,  Run 1082,  Nr. in job = 31 with seeds [1082, 31, 560151330, 0]
+GaussGen                   INFO Evt 32,  Run 1082,  Nr. in job = 32 with seeds [1082, 32, 1839883347, 0]
+GaussGen                   INFO Evt 33,  Run 1082,  Nr. in job = 33 with seeds [1082, 33, 191537109, 0]
+GaussGen                   INFO Evt 34,  Run 1082,  Nr. in job = 34 with seeds [1082, 34, 421411644, 0]
+
+ Pythia::next(): 7000 events have been generated
+GaussGen                   INFO Evt 35,  Run 1082,  Nr. in job = 35 with seeds [1082, 35, 1875826332, 0]
+GaussGen                   INFO Evt 36,  Run 1082,  Nr. in job = 36 with seeds [1082, 36, 1568682495, 0]
+GaussGen                   INFO Evt 37,  Run 1082,  Nr. in job = 37 with seeds [1082, 37, 1110576483, 0]
+GaussGen                   INFO Evt 38,  Run 1082,  Nr. in job = 38 with seeds [1082, 38, 1340582094, 0]
+GaussGen                   INFO Evt 39,  Run 1082,  Nr. in job = 39 with seeds [1082, 39, 647316522, 0]
+GaussGen                   INFO Evt 40,  Run 1082,  Nr. in job = 40 with seeds [1082, 40, 345546801, 0]
+
+ Pythia::next(): 8000 events have been generated
+GaussGen                   INFO Evt 41,  Run 1082,  Nr. in job = 41 with seeds [1082, 41, 307207071, 0]
+
+ Pythia::next(): 9000 events have been generated
+GaussGen                   INFO Evt 42,  Run 1082,  Nr. in job = 42 with seeds [1082, 42, 1271046360, 0]
+DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
+GaussGen                   INFO Evt 43,  Run 1082,  Nr. in job = 43 with seeds [1082, 43, 1032520809, 0]
+GaussGen                   INFO Evt 44,  Run 1082,  Nr. in job = 44 with seeds [1082, 44, 954465055, 0]
+GaussGen                   INFO Evt 45,  Run 1082,  Nr. in job = 45 with seeds [1082, 45, 697785478, 0]
+GaussGen                   INFO Evt 46,  Run 1082,  Nr. in job = 46 with seeds [1082, 46, 348467938, 0]
+
+ Pythia::next(): 10000 events have been generated
+GaussGen                   INFO Evt 47,  Run 1082,  Nr. in job = 47 with seeds [1082, 47, 119773087, 0]
+GaussGen                   INFO Evt 48,  Run 1082,  Nr. in job = 48 with seeds [1082, 48, 1707004844, 0]
+GaussGen                   INFO Evt 49,  Run 1082,  Nr. in job = 49 with seeds [1082, 49, 309996848, 0]
+GaussGen                   INFO Evt 50,  Run 1082,  Nr. in job = 50 with seeds [1082, 50, 17009219, 0]
+GaussGen                   INFO Evt 51,  Run 1082,  Nr. in job = 51 with seeds [1082, 51, 1844667425, 0]
+GaussGen                   INFO Evt 52,  Run 1082,  Nr. in job = 52 with seeds [1082, 52, 1552531790, 0]
+
+ Pythia::next(): 11000 events have been generated
+GaussGen                   INFO Evt 53,  Run 1082,  Nr. in job = 53 with seeds [1082, 53, 608124998, 0]
+GaussGen                   INFO Evt 54,  Run 1082,  Nr. in job = 54 with seeds [1082, 54, 974220266, 0]
+GaussGen                   INFO Evt 55,  Run 1082,  Nr. in job = 55 with seeds [1082, 55, 921826847, 0]
+
+ Pythia::next(): 12000 events have been generated
+GaussGen                   INFO Evt 56,  Run 1082,  Nr. in job = 56 with seeds [1082, 56, 623137412, 0]
+GaussGen                   INFO Evt 57,  Run 1082,  Nr. in job = 57 with seeds [1082, 57, 2136798844, 0]
+GaussGen                   INFO Evt 58,  Run 1082,  Nr. in job = 58 with seeds [1082, 58, 1392258615, 0]
+
+ Pythia::next(): 13000 events have been generated
+GaussGen                   INFO Evt 59,  Run 1082,  Nr. in job = 59 with seeds [1082, 59, 1688818065, 0]
+GaussGen                   INFO Evt 60,  Run 1082,  Nr. in job = 60 with seeds [1082, 60, 1406377830, 0]
+GaussGen                   INFO Evt 61,  Run 1082,  Nr. in job = 61 with seeds [1082, 61, 1095207630, 0]
+
+ Pythia::next(): 14000 events have been generated
+GaussGen                   INFO Evt 62,  Run 1082,  Nr. in job = 62 with seeds [1082, 62, 434158593, 0]
+GaussGen                   INFO Evt 63,  Run 1082,  Nr. in job = 63 with seeds [1082, 63, 798091107, 0]
+GaussGen                   INFO Evt 64,  Run 1082,  Nr. in job = 64 with seeds [1082, 64, 50560747, 0]
+
+ Pythia::next(): 15000 events have been generated
+GaussGen                   INFO Evt 65,  Run 1082,  Nr. in job = 65 with seeds [1082, 65, 438287195, 0]
+
+ Pythia::next(): 16000 events have been generated
+GaussGen                   INFO Evt 66,  Run 1082,  Nr. in job = 66 with seeds [1082, 66, 668391113, 0]
+GaussGen                   INFO Evt 67,  Run 1082,  Nr. in job = 67 with seeds [1082, 67, 1534832606, 0]
+GaussGen                   INFO Evt 68,  Run 1082,  Nr. in job = 68 with seeds [1082, 68, 1147375586, 0]
+GaussGen                   INFO Evt 69,  Run 1082,  Nr. in job = 69 with seeds [1082, 69, 1359554861, 0]
+GaussGen                   INFO Evt 70,  Run 1082,  Nr. in job = 70 with seeds [1082, 70, 1586381879, 0]
+GaussGen                   INFO Evt 71,  Run 1082,  Nr. in job = 71 with seeds [1082, 71, 1953784267, 0]
+GaussGen                   INFO Evt 72,  Run 1082,  Nr. in job = 72 with seeds [1082, 72, 1689305668, 0]
+GaussGen                   INFO Evt 73,  Run 1082,  Nr. in job = 73 with seeds [1082, 73, 1473685648, 0]
+
+ Pythia::next(): 17000 events have been generated
+GaussGen                   INFO Evt 74,  Run 1082,  Nr. in job = 74 with seeds [1082, 74, 1965613864, 0]
+GaussGen                   INFO Evt 75,  Run 1082,  Nr. in job = 75 with seeds [1082, 75, 302521576, 0]
+GaussGen                   INFO Evt 76,  Run 1082,  Nr. in job = 76 with seeds [1082, 76, 442448870, 0]
+GaussGen                   INFO Evt 77,  Run 1082,  Nr. in job = 77 with seeds [1082, 77, 196714139, 0]
+
+ Pythia::next(): 18000 events have been generated
+GaussGen                   INFO Evt 78,  Run 1082,  Nr. in job = 78 with seeds [1082, 78, 897315359, 0]
+GaussGen                   INFO Evt 79,  Run 1082,  Nr. in job = 79 with seeds [1082, 79, 663443006, 0]
+GaussGen                   INFO Evt 80,  Run 1082,  Nr. in job = 80 with seeds [1082, 80, 846078960, 0]
+GaussGen                   INFO Evt 81,  Run 1082,  Nr. in job = 81 with seeds [1082, 81, 1301371921, 0]
+GaussGen                   INFO Evt 82,  Run 1082,  Nr. in job = 82 with seeds [1082, 82, 1540880542, 0]
+
+ Pythia::next(): 19000 events have been generated
+GaussGen                   INFO Evt 83,  Run 1082,  Nr. in job = 83 with seeds [1082, 83, 1787237884, 0]
+GaussGen                   INFO Evt 84,  Run 1082,  Nr. in job = 84 with seeds [1082, 84, 2033824134, 0]
+GaussGen                   INFO Evt 85,  Run 1082,  Nr. in job = 85 with seeds [1082, 85, 587106024, 0]
+GaussGen                   INFO Evt 86,  Run 1082,  Nr. in job = 86 with seeds [1082, 86, 826811259, 0]
+GaussGen                   INFO Evt 87,  Run 1082,  Nr. in job = 87 with seeds [1082, 87, 1333419999, 0]
+ PYTHIA Error in StringFragmentation::fragmentToJunction: caught in junction flavour loop
+GaussGen                   INFO Evt 88,  Run 1082,  Nr. in job = 88 with seeds [1082, 88, 1541208228, 0]
+GaussGen                   INFO Evt 89,  Run 1082,  Nr. in job = 89 with seeds [1082, 89, 603948819, 0]
+
+ Pythia::next(): 20000 events have been generated
+GaussGen                   INFO Evt 90,  Run 1082,  Nr. in job = 90 with seeds [1082, 90, 510655460, 0]
+GaussGen                   INFO Evt 91,  Run 1082,  Nr. in job = 91 with seeds [1082, 91, 262299209, 0]
+GaussGen                   INFO Evt 92,  Run 1082,  Nr. in job = 92 with seeds [1082, 92, 236182819, 0]
+GaussGen                   INFO Evt 93,  Run 1082,  Nr. in job = 93 with seeds [1082, 93, 480934480, 0]
+GaussGen                   INFO Evt 94,  Run 1082,  Nr. in job = 94 with seeds [1082, 94, 960278913, 0]
+
+ Pythia::next(): 21000 events have been generated
+GaussGen                   INFO Evt 95,  Run 1082,  Nr. in job = 95 with seeds [1082, 95, 713692188, 0]
+GaussGen                   INFO Evt 96,  Run 1082,  Nr. in job = 96 with seeds [1082, 96, 712511544, 0]
+GaussGen                   INFO Evt 97,  Run 1082,  Nr. in job = 97 with seeds [1082, 97, 1018606773, 0]
+
+ Pythia::next(): 22000 events have been generated
+GaussGen                   INFO Evt 98,  Run 1082,  Nr. in job = 98 with seeds [1082, 98, 1710788779, 0]
+ PYTHIA Error in HadronLevel::traceFromAcol: colour tracing failed
+GaussGen                   INFO Evt 99,  Run 1082,  Nr. in job = 99 with seeds [1082, 99, 431091388, 0]
+GaussGen                   INFO Evt 100,  Run 1082,  Nr. in job = 100 with seeds [1082, 100, 467237978, 0]
+ApplicationMgr             INFO Application Manager Stopped successfully
+GaussGen                SUCCESS ==================================================================
+GaussGen                SUCCESS 100 events processed
+GaussGen                SUCCESS ==================================================================
+Generation                 INFO **************************************************
+Generation.FixedLumin...   INFO ***********   Luminosity counters   **************
+Number of all events (including empty events) : 11342
+Number of events with 0 interaction : 1522
+
+Generation                 INFO ***********   Generation counters   **************
+Number of generated events : 9820
+Number of generated interactions : 22596
+Number of generated interactions with >= 1b : 121
+Number of generated interactions with >= 3b : 1
+Number of generated interactions with 1 prompt B : 2
+Number of generated interactions with >= 1c : 1690
+Number of generated interactions with >= 3c : 177
+Number of generated interactions with >= prompt C : 56
+Number of generated interactions with b and c : 22
+Number of accepted events : 100
+Number of interactions in accepted events : 280
+Number of accepted interactions with >= 1b : 101
+Number of accepted interactions with >= 3b : 1
+Number of accepted interactions with 1 prompt B : 0
+Number of accepted interactions with >= 1c : 27
+Number of accepted interactions with >= 3c : 7
+Number of accepted interactions with >= prompt C : 0
+Number of accepted interactions with b and c : 17
+
+Generation.Inclusive       INFO ************   Inclusive counters   **************
+Number of events for generator level cut, before : 120, after : 53
+Efficiency of the generator level cut : 0.44167 +/- 0.045332
+Number of z-inverted events : 47
+
+Number of generated B0 : 59 [fraction : 0.4876 +/- 0.045441]
+Number of generated B+ : 45 [fraction : 0.3719 +/- 0.043937]
+Number of generated Bs0 : 12 [fraction : 0.099174 +/- 0.027172]
+Number of generated b-Baryon : 5 [fraction : 0.041322 +/- 0.018094]
+Number of generated Bc+ : 0 [fraction : 0 +/- 0]
+Number of generated anti-B0 : 54 [fraction : 0.44628 +/- 0.045191]
+Number of generated B- : 51 [fraction : 0.42149 +/- 0.044891]
+Number of generated anti-Bs0 : 9 [fraction : 0.07438 +/- 0.023854]
+Number of generated anti-b-Baryon : 7 [fraction : 0.057851 +/- 0.021224]
+Number of generated Bc- : 0 [fraction : 0 +/- 0]
+Number of generated (bb) : 0
+
+Number of generated D0 : 92 [fraction : 0.54118 +/- 0.038218]
+Number of generated D+ : 37 [fraction : 0.21765 +/- 0.031649]
+Number of generated Ds+ : 27 [fraction : 0.15882 +/- 0.028033]
+Number of generated c-Baryon : 14 [fraction : 0.082353 +/- 0.021084]
+Number of generated anti-D0 : 73 [fraction : 0.47097 +/- 0.040093]
+Number of generated D- : 50 [fraction : 0.32258 +/- 0.037548]
+Number of generated Ds- : 21 [fraction : 0.13548 +/- 0.027489]
+Number of generated anti-c-Baryon : 11 [fraction : 0.070968 +/- 0.020624]
+Number of generated (cc) : 9
+
+Number of accepted B0 : 47 [fraction : 0.46535 +/- 0.049632]
+Number of accepted B+ : 40 [fraction : 0.39604 +/- 0.048665]
+Number of accepted Bs0 : 10 [fraction : 0.09901 +/- 0.029719]
+Number of accepted b-Baryon : 4 [fraction : 0.039604 +/- 0.019406]
+Number of accepted Bc+ : 0 [fraction : 0 +/- 0]
+Number of accepted anti-B0 : 46 [fraction : 0.45545 +/- 0.049554]
+Number of accepted B- : 41 [fraction : 0.40594 +/- 0.048864]
+Number of accepted anti-Bs0 : 8 [fraction : 0.079208 +/- 0.026872]
+Number of accepted anti-b-Baryon : 6 [fraction : 0.059406 +/- 0.023521]
+Number of accepted Bc- : 0 [fraction : 0 +/- 0]
+Number of accepted (bb) : 0
+
+Number of accepted D0 : 75 [fraction : 0.53571 +/- 0.04215]
+Number of accepted D+ : 32 [fraction : 0.22857 +/- 0.035489]
+Number of accepted Ds+ : 21 [fraction : 0.15 +/- 0.030178]
+Number of accepted c-Baryon : 12 [fraction : 0.085714 +/- 0.023659]
+Number of accepted anti-D0 : 58 [fraction : 0.44961 +/- 0.043798]
+Number of accepted D- : 45 [fraction : 0.34884 +/- 0.041962]
+Number of accepted Ds- : 17 [fraction : 0.13178 +/- 0.029782]
+Number of accepted anti-c-Baryon : 9 [fraction : 0.069767 +/- 0.02243]
+Number of accepted (cc) : 0
+
+Number of generated B(L=0,J=0) : 56 [fraction : 0.24348 +/- 0.028299]
+Number of generated B* (L=0, J=1) : 139 [fraction : 0.60435 +/- 0.032243]
+Number of generated B** (L=1, J=0,1,2) : 35 [fraction : 0.15217 +/- 0.023684]
+Number of accepted B(L=0,J=0) : 48 [fraction : 0.25 +/- 0.03125]
+Number of accepted B* (L=0, J=1) : 117 [fraction : 0.60938 +/- 0.03521]
+Number of accepted B** (L=1, J=0,1,2) : 27 [fraction : 0.14062 +/- 0.025088]
+
+Number of generated D(L=0,J=0) : 81 [fraction : 0.26214 +/- 0.025019]
+Number of generated D* (L=0, J=1) : 186 [fraction : 0.60194 +/- 0.027847]
+Number of generated D** (L=1, J=0,1,2) : 42 [fraction : 0.13592 +/- 0.019496]
+Number of accepted D(L=0,J=0) : 70 [fraction : 0.27344 +/- 0.027858]
+Number of accepted D* (L=0, J=1) : 151 [fraction : 0.58984 +/- 0.030741]
+Number of accepted D** (L=1, J=0,1,2) : 35 [fraction : 0.13672 +/- 0.021472]
+
+GenMonitorAlg              INFO
+======================== Generators Statistics ====================
+=                                                                 =
+= Number of particles generated: 173285
+= Number of events: 100
+= Mean multiplicity: 1732.85
+=                                                                 =
+= Number of pseudo stable particles generated: 84919
+= Number of events: 100
+= Mean pseudo stable multiplicity: 849.19
+=                                                                 =
+= Number of charged stable particles generated: 25288
+= Number of events: 100
+= Mean charged stable multiplicity: 252.88
+=                                                                 =
+= Number of charged stable particles in LHCb eta 5921
+= Number of events: 100
+= Mean charged stable multiplicity in LHCb eta: 59.21
+=                                                                 =
+===================================================================
+GenMonitorAlg           SUCCESS Booked 21 Histogram(s) : 1D=19 2D=2
+RootHistSvc             WARNING no ROOT output file name, Histograms cannot be persistified
+EventLoopMgr               INFO Histograms converted successfully according to request.
+ToolSvc                    INFO Removing all tools created by ToolSvc
+Generation.Inclusive    WARNING Inclusive:: releaseSvc(IInterface):: IInterface* is not active StatusCode=FAILURE
+Generation.Inclusive    SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+Generation.Inclusive    SUCCESS  #WARNINGS   = 1        Message = 'releaseSvc(IInterface):: IInterface* is not active'
+GaussGen.GaussGenMemory SUCCESS Booked 4 Histogram(s) : 1D=4
+GaussGen.GaussGenMemory SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Delta Memory/MB"                               |        90 |     65.332 |    0.72591 |     6.6298 |     -1.7320 |      63.160 |
+ | "Total Memory/MB"                               |       100 |   84126.74 |     841.27 |     32.486 |      800.52 |      868.91 |
+GaussGen.GaussGenMemory SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/2/0
+GaussGen.GaussGenMemory SUCCESS  #WARNINGS   = 2        Message = 'Delta Memory for the event exceeds 3*sigma'
+GaussGen.GaussGenMemory SUCCESS  #WARNINGS   = 5        Message = 'Total Memory for the event exceeds 3*sigma'
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.91 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+
+ *-------  PYTHIA Event and Cross Section Statistics  -------------------------------------------------------------*
+ |                                                                                                                 |
+ | Subprocess                                    Code |            Number of events       |      sigma +- delta    |
+ |                                                    |       Tried   Selected   Accepted |     (estimated) (mb)   |
+ |                                                    |                                   |                        |
+ |-----------------------------------------------------------------------------------------------------------------|
+ |                                                    |                                   |                        |
+ | minimum bias                                   101 |       12749      12749      12749 |   5.091e+01  0.000e+00 |
+ | A B -> A B elastic                             102 |        4782       4782       4782 |   1.937e+01  0.000e+00 |
+ | A B -> X B single diffractive                  103 |        1504       1504       1504 |   6.190e+00  1.340e-08 |
+ | A B -> A X single diffractive                  104 |        1494       1494       1494 |   6.190e+00  1.344e-08 |
+ | A B -> X X double diffractive                  105 |        2067       2067       2067 |   8.105e+00  0.000e+00 |
+ |                                                    |                                   |                        |
+ | sum                                                |       22596      22596      22596 |   9.076e+01  1.898e-08 |
+ |                                                                                                                 |
+ *-------  End PYTHIA Event and Cross Section Statistics ----------------------------------------------------------*
+
+ *-------  PYTHIA Error and Warning Messages Statistics  ----------------------------------------------------------*
+ |                                                                                                                 |
+ |  times   message                                                                                                |
+ |                                                                                                                 |
+ |    420   Error in BeamRemnants::setKinematics: kinematics construction failed                                   |
+ |      1   Error in HadronLevel::traceFromAcol: colour tracing failed                                             |
+ |      2   Error in HadronLevel::traceFromCol: colour tracing failed                                              |
+ |     47   Error in Pythia::next: hadronLevel failed; try again                                                   |
+ |      6   Error in Pythia::next: partonLevel failed; try again                                                   |
+ |     10   Error in SpaceShower::pT2nearQCDthreshold: stuck in loop                                               |
+ |     43   Error in StringFragmentation::fragment: stuck in joining                                               |
+ |      1   Error in StringFragmentation::fragmentToJunction: caught in junction flavour loop                      |
+ |      3   Warning in MultipartonInteractions::init: maximum increased                                            |
+ |      2   Warning in MultipartonInteractions::pTnext: weight above unity                                         |
+ |    224   Warning in SpaceShower::pT2nextQCD: weight above unity                                                 |
+ |     18   Warning in StringFragmentation::fragmentToJunction: bad convergence junction rest frame                |
+ |                                                                                                                 |
+ *-------  End PYTHIA Error and Warning Messages Statistics  ------------------------------------------------------*
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO This machine has a speed about   1.90 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO EVENT LOOP                    |  2086.313 |  2097.589 |   59.513    8953.9 |     100 |   209.759 |
+TimingAuditor.TIMER        INFO  GaussSequencer               |  2086.263 |  2097.484 |   59.474    8953.9 |     100 |   209.748 |
+TimingAuditor.TIMER        INFO   Generator                   |  2086.263 |  2097.480 |   59.471    8953.9 |     100 |   209.748 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |  2086.253 |  2097.477 |   59.467    8953.8 |     100 |   209.748 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.460 |     1.049 |    0.149      56.9 |     100 |     0.105 |
+TimingAuditor.TIMER        INFO     Generation                |  2085.263 |  2095.772 |   58.712    8953.1 |     100 |   209.577 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.530 |     0.640 |    0.096      16.0 |     100 |     0.064 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.530 |     0.636 |    0.091      16.0 |     100 |     0.064 |
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+ApplicationMgr             INFO Application Manager Finalized successfully
+ApplicationMgr             INFO Application Manager Terminated successfully
+ ==== PYTHIA WILL USE LHAPDF ====
+ *************************************
+ *       LHAPDF Version 5.8.5        *
+ *   Configured for the following:   *
+ *             All PDFs              *
+ *          LOW MEMORY option        *
+ *    Maximum  3 concurrent set(s)   *
+ *************************************
+
+ >>>>>> PDF description: <<<<<<
+ CTEQ6L1 - LO with LO alpha_s
+ Reference:
+ J. Pumplin, D.R. Stump, J. Huston, H.L. Lai, P. Nadolsky,
+ W.K. Tung
+ hep-ph/0201195
+ >>>>>>                   <<<<<<
+
+ Parametrization: CTEQ6
+
+ ==============================================
+ PDFset name /afs/cern.ch/sw/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/share/lhapdf
+ with          1 members
+ ====  initialized. ===========================
+ Strong coupling at Mz for PDF is:  0.12978
+ Warning: requested subprocess 484 has vanishing cross-section.
+ Process switched off!
+1********* PYSTAT:  Statistics on Number of Events and Cross-sections *********
+
+ ==============================================================================
+ I                                  I                            I            I
+ I            Subprocess            I      Number of points      I    Sigma   I
+ I                                  I                            I            I
+ I----------------------------------I----------------------------I    (mb)    I
+ I                                  I                            I            I
+ I N:o Type                         I    Generated         Tried I            I
+ I                                  I                            I            I
+ ==============================================================================
+ I                                  I                            I            I
+ I   0 All included subprocesses    I            0             0 I  0.000D+00 I
+ I  11 f + f' -> f + f' (QCD)       I            0             0 I  0.000D+00 I
+ I  12 f + fbar -> f' + fbar'       I            0             0 I  0.000D+00 I
+ I  13 f + fbar -> g + g            I            0             0 I  0.000D+00 I
+ I  28 f + g -> f + g               I            0             0 I  0.000D+00 I
+ I  53 g + g -> f + fbar            I            0             0 I  0.000D+00 I
+ I  68 g + g -> g + g               I            0             0 I  0.000D+00 I
+ I  91 Elastic scattering           I            0             0 I  0.000D+00 I
+ I  92 Single diffractive (XB)      I            0             0 I  0.000D+00 I
+ I  93 Single diffractive (AX)      I            0             0 I  0.000D+00 I
+ I  94 Double  diffractive          I            0             0 I  0.000D+00 I
+ I  95 Low-pT scattering            I            0             0 I  0.000D+00 I
+ I 421 g + g  -> cc~[3S1(1)] + g    I            0             0 I  0.000D+00 I
+ I 422 g + g  -> cc~[3S1(8)] + g    I            0             0 I  0.000D+00 I
+ I 423 g + g  -> cc~[1S0(8)] + g    I            0             0 I  0.000D+00 I
+ I 424 g + g  -> cc~[3PJ(8)] + g    I            0             0 I  0.000D+00 I
+ I 425 g + q  -> q + cc~[3S1(8)]    I            0             0 I  0.000D+00 I
+ I 426 g + q  -> q + cc~[1S0(8)]    I            0             0 I  0.000D+00 I
+ I 427 g + q  -> q + cc~[3PJ(8)]    I            0             0 I  0.000D+00 I
+ I 428 q + q~ -> g + cc~[3S1(8)]    I            0             0 I  0.000D+00 I
+ I 429 q + q~ -> g + cc~[1S0(8)]    I            0             0 I  0.000D+00 I
+ I 430 q + q~ -> g + cc~[3PJ(8)]    I            0             0 I  0.000D+00 I
+ I 431 g + g  -> cc~[3P0(1)] + g    I            0             0 I  0.000D+00 I
+ I 432 g + g  -> cc~[3P1(1)] + g    I            0             0 I  0.000D+00 I
+ I 433 g + g  -> cc~[3P2(1)] + g    I            0             0 I  0.000D+00 I
+ I 434 q + g  -> q + cc~[3P0(1)]    I            0             0 I  0.000D+00 I
+ I 435 q + g  -> q + cc~[3P1(1)]    I            0             0 I  0.000D+00 I
+ I 436 q + g  -> q + cc~[3P2(1)]    I            0             0 I  0.000D+00 I
+ I 437 q + q~ -> g + cc~[3P0(1)]    I            0             0 I  0.000D+00 I
+ I 438 q + q~ -> g + cc~[3P1(1)]    I            0             0 I  0.000D+00 I
+ I 439 q + q~ -> g + cc~[3P2(1)]    I            0             0 I  0.000D+00 I
+ I 461 g + g  -> bb~[3S1(1)] + g    I            0             0 I  0.000D+00 I
+ I 462 g + g  -> bb~[3S1(8)] + g    I            0             0 I  0.000D+00 I
+ I 463 g + g  -> bb~[1S0(8)] + g    I            0             0 I  0.000D+00 I
+ I 464 g + g  -> bb~[3PJ(8)] + g    I            0             0 I  0.000D+00 I
+ I 465 g + q  -> q + bb~[3S1(8)]    I            0             0 I  0.000D+00 I
+ I 466 g + q  -> q + bb~[1S0(8)]    I            0             0 I  0.000D+00 I
+ I 467 g + q  -> q + bb~[3PJ(8)]    I            0             0 I  0.000D+00 I
+ I 468 q + q~ -> g + bb~[3S1(8)]    I            0             0 I  0.000D+00 I
+ I 469 q + q~ -> g + bb~[1S0(8)]    I            0             0 I  0.000D+00 I
+ I 470 q + q~ -> g + bb~[3PJ(8)]    I            0             0 I  0.000D+00 I
+ I 471 g + g  -> bb~[3P0(1)] + g    I            0             0 I  0.000D+00 I
+ I 472 g + g  -> bb~[3P1(1)] + g    I            0             0 I  0.000D+00 I
+ I 473 g + g  -> bb~[3P2(1)] + g    I            0             0 I  0.000D+00 I
+ I 474 q + g  -> q + bb~[3P0(1)]    I            0             0 I  0.000D+00 I
+ I 475 q + g  -> q + bb~[3P1(1)]    I            0             0 I  0.000D+00 I
+ I 476 q + g  -> q + bb~[3P2(1)]    I            0             0 I  0.000D+00 I
+ I 477 q + q~ -> g + bb~[3P0(1)]    I            0             0 I  0.000D+00 I
+ I 478 q + q~ -> g + bb~[3P1(1)]    I            0             0 I  0.000D+00 I
+ I 479 q + q~ -> g + bb~[3P2(1)]    I            0             0 I  0.000D+00 I
+ I 480 g + g  -> Psi(2S) + g        I            0             0 I  0.000D+00 I
+ I 481 g + g  -> Upsilon(2S) + g    I            0             0 I  0.000D+00 I
+ I 482 g + g  -> Upsilon(3S) + g    I            0             0 I  0.000D+00 I
+ I 483 g + g  -> Upsilon(4S) + g    I            0             0 I  0.000D+00 I
+ I 485 g + g  -> psi(3770) + g      I            0             0 I  0.000D+00 I
+ I                                  I                            I            I
+ ==============================================================================
+
+ ********* Total number of errors, excluding junctions =        0 *************
+ ********* Total number of errors, including junctions =        0 *************
+ ********* Total number of warnings =                           0 *************
+ ********* Fraction of events that fail fragmentation cuts =  1.00000 *********
+

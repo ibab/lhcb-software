@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-02 - Aurelien Martens
+ - Added few qmtests for pythia8
+
 ! 2012-10-02 - Paul Szczypka
  - Removed most debug statements from Configuration.
  - Added Debug flag to Configuration.
