@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-02 - Paul Szczypka
+ - Removed most debug statements from Configuration.
+ - Added Debug flag to Configuration.
+
 ! 2012-09-24 - Gloria Corti
  - Remove use of LbHerwing that is obsolete since v42r1. 
    Put use of LbAlpGen and LbHerwigpp that are new

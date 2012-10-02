@@ -82,35 +82,40 @@ class Gauss(LHCbConfigurableUser):
         "Histograms"        : "DEFAULT"
         ,"DatasetName"       : "Gauss"
         ,"DataType"          : ""
-# Simple lists of sub detectors
+        # Simple lists of sub detectors
         ,"DetectorGeo"       : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
         ,"DetectorSim"       : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
         ,"DetectorMoni"      : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-#       ,"DetectorGeo"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
-#       ,"DetectorSim"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
-#       ,"DetectorMoni"      : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
-       ,"SpilloverPaths"    : []
-       ,"PhysicsList"       : {"Em":'NoCuts', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
-       ,"DeltaRays"         : True
-       ,"Phases"            : ["Generator","Simulation"] # The Gauss phases to include in the SIM file
-       ,"BeamMomentum"      : 3.5*SystemOfUnits.TeV
-       ,"BeamCrossingAngle" : -0.520*SystemOfUnits.mrad
-       ,"BeamEmittance"     : 0.0022*SystemOfUnits.mm
-       ,"BeamBetaStar"      : 3.0*SystemOfUnits.m
-       ,"BeamLineAngles"    : [ -0.075*SystemOfUnits.mrad, 0.035*SystemOfUnits.mrad ]
-       ,"InteractionPosition" : [ 0.0*SystemOfUnits.mm, 0.0*SystemOfUnits.mm,
-                                  0.0*SystemOfUnits.mm ]
-       ,"InteractionSize"   : [ 0.030*SystemOfUnits.mm, 0.030*SystemOfUnits.mm,
-                                5.7*SystemOfUnits.cm ]
-       ,"Luminosity"        : 0.247*(10**30)/(SystemOfUnits.cm2*SystemOfUnits.s)
-       ,"TotalCrossSection" : 91.1*SystemOfUnits.millibarn
-       ,"Output"            : 'SIM'
-       ,"Production"        : 'PHYS'
-       ,"EnablePack"        : True
-       ,"DataPackingChecks" : True
-       ,"WriteFSR"          : True
-       ,"Persistency"      : None
-       ,"BeamPipe" : "BeamPipeOn" # _beamPipeSwitch = 1
+        #       ,"DetectorGeo"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
+        #       ,"DetectorSim"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
+        #       ,"DetectorMoni"      : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
+        ,"SpilloverPaths"    : []
+        ,"PhysicsList"       : {"Em":'NoCuts', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
+        ,"DeltaRays"         : True
+        ,"Phases"            : ["Generator","Simulation"] # The Gauss phases to include in the SIM file
+        ,"BeamMomentum"      : 3.5*SystemOfUnits.TeV
+        ,"BeamCrossingAngle" : -0.520*SystemOfUnits.mrad
+        ,"BeamEmittance"     : 0.0022*SystemOfUnits.mm
+        ,"BeamBetaStar"      : 3.0*SystemOfUnits.m
+        ,"BeamLineAngles"    : [ -0.075*SystemOfUnits.mrad, 0.035*SystemOfUnits.mrad ]
+        ,"InteractionPosition" : [ 0.0*SystemOfUnits.mm,
+                                   0.0*SystemOfUnits.mm,
+                                   0.0*SystemOfUnits.mm
+                                   ]
+        ,"InteractionSize"   : [ 0.030*SystemOfUnits.mm,
+                                 0.030*SystemOfUnits.mm,
+                                 5.7*SystemOfUnits.cm
+                                 ]
+        ,"Luminosity"        : 0.247*(10**30)/(SystemOfUnits.cm2*SystemOfUnits.s)
+        ,"TotalCrossSection" : 91.1*SystemOfUnits.millibarn
+        ,"Output"            : 'SIM'
+        ,"Production"        : 'PHYS'
+        ,"EnablePack"        : True
+        ,"DataPackingChecks" : True
+        ,"WriteFSR"          : True
+        ,"Persistency"       : None
+        ,"Debug"             : False
+        ,"BeamPipe" : "BeamPipeOn" # _beamPipeSwitch = 1
         #,"BeamPipe" : "BeamPipeOff"  # _beamPipeSwitch = 0
         #,"BeamPipe" : "BeamPipeInDet"  # _beamPipeSwitch = -1
       }
@@ -325,14 +330,11 @@ class Gauss(LHCbConfigurableUser):
     def defineBeamPipeGeo ( self, geo, basePieces, detPieces ):
         # Add all BeamPipe Elements in the BeamPipeElements dictionary
 
-        print "DataType: %s" %(self.getProp('DataType'))
-
         # Here commences a hack to deal with daft DDDB structure
         ignoreList = ['ut', 'tt']
         # decide if TT or UT in dets to simulate
         ttDetectorList = [det for det in ['UT', 'TT'] if det in self.getProp('DetectorGeo')['Detectors']]
         # lower strings
-        print "ttDetectorList: %s" %(ttDetectorList)
         if ttDetectorList:
             # lower everything in ttDetectorList
             ttDetectorList = [det.lower() for det in ttDetectorList]
@@ -341,10 +343,8 @@ class Gauss(LHCbConfigurableUser):
 
         for region in self._beamPipeElements.keys():
             if region in ignoreList:
-                print "IGNORED %s" %region
                 continue
             for element in self._beamPipeElements[region]:
-                print "ADDING in %s: %s" %(region, element)
                 geo.StreamItems.append(element)
 
         # Finally add in the TT or UT beampipe if we're not defining the detectors but want the BP anyway depending on DataType
@@ -356,17 +356,11 @@ class Gauss(LHCbConfigurableUser):
             ):
             if self.getProp("DataType") not in ["Upgrade"]:
                 for element in self._beamPipeElements["tt"]:
-                    print "ADDING in tt: %s" %(element)
                     geo.StreamItems.append(element)
             else:
                 for element in self._beamPipeElements["ut"]:
-                    print "ADDING in ut: %s" %(element)
                     geo.StreamItems.append(element)
 
-
-        # PSZ
-        for item in geo.StreamItems:
-            print item
 
         # Upstream
         #geo.StreamItems.append("/dd/Structure/LHCb/UpstreamRegion/PipeUpstream")
@@ -990,14 +984,12 @@ class Gauss(LHCbConfigurableUser):
 
 
     def defineUTGeo( self , detPieces ):
-        print "1111111111111111111111111111111111"
         self.removeBeamPipeElements( "ut" )
         if 'UT' not in detPieces['BeforeMagnetRegion']:
             detPieces['BeforeMagnetRegion']+=['UT']
 
 
     def configureUTSim( self, slot, detHits ):
-        print "222222222222222222222222222222222"
         region   = "BeforeMagnetRegion"
         det = "UT"
         moni = GetTrackerHitsAlg(
@@ -1010,11 +1002,8 @@ class Gauss(LHCbConfigurableUser):
 
 
     def configureUTMoni( self, slot, packCheckSeq, detMoniSeq, checkHits ):
-        print "33333333333333333333333333333333"
-
         # reinstate checkHits default value
         checkHits.UTHits = 'MC/UT/Hits'
-        #checkHits.TTHits = 'MC/UT/Hits'
 
         myZStations = [
             2350.0*SystemOfUnits.mm,
@@ -1037,7 +1026,7 @@ class Gauss(LHCbConfigurableUser):
             packCheckSeq = GaudiSequencer( "DataUnpackTest"+slot )
 
             from Configurables import DataPacking__Unpack_LHCb__MCUTHitPacker_
-            from Configurables import DataPacking__Check_LHCb__MCUTHitPacker_ ###
+            from Configurables import DataPacking__Check_LHCb__MCUTHitPacker_
             upUT   = DataPacking__Unpack_LHCb__MCUTHitPacker_("UnpackUTHits"+slot,
                                                               OutputName = "MC/UT/HitsTest" )
             cUT   = DataPacking__Check_LHCb__MCUTHitPacker_("CheckUTHits"+slot )
@@ -1669,9 +1658,6 @@ class Gauss(LHCbConfigurableUser):
     def checkIncompatibleDetectors ( self ) :
         for section in self._incompatibleDetectors.keys():
             incompatList = self._incompatibleDetectors[section]
-            #print "incompatList[%s]: %s" %(section, incompatList)
-            #print "Detectors: %s" %(self.getProp('DetectorGeo')['Detectors'])
-            #print "myList: %s" %(myList)
             myList = [det for det in self.getProp("DetectorGeo")['Detectors'] if det in incompatList]
             if len(myList) > 1:
                 raise RuntimeError ( "Incompatible detectors: %s in %s section." %(myList, section) )
@@ -2287,7 +2273,7 @@ class Gauss(LHCbConfigurableUser):
         if [det for det in ['Spd', 'Prs', 'Ecal', 'Hcal'] if det in self.getProp('DetectorGeo')['Detectors']]:
             importOptions("$GAUSSCALOROOT/options/Calo.opts")
 
-        if False:
+        if self.getProp("Debug"):
             print "\nDEBUG Detector Geometry Elements:"
             print "\nkey : detPieces[key]"
             for key in detPieces.keys():
@@ -2348,7 +2334,7 @@ class Gauss(LHCbConfigurableUser):
             self.configureOTSim( slot, detHits )
         elif det == "muon":
             self.configureMuonSim( slot, detHits )
-        elif (det == "rich1") or (det == "rich2"):
+        elif det in ['rich1', 'rich2']:
             if not configuredRichSim[0]:
                 self.configureRichSim( slot, detHits )
                 configuredRichSim[0] = True
@@ -2369,11 +2355,10 @@ class Gauss(LHCbConfigurableUser):
             self.configureTorchSim( slot, detHits )
         elif det == "ft":
             self.configureFTSim( slot, detHits )
-        elif (det == "rich1pmt") or (det == "rich2pmt"):
+        elif det in ['rich1pmt', 'rich2pmt']:
             if not configuredRichSim[0]:
                 self.configureRichMaPmtSim( slot, detHits )
                 configuredRichSim[0] = True
-                #self._configuredRichSim_ = True
         elif det == "ut":
             self.configureUTSim( slot, detHits )
 
