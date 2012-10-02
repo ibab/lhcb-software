@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-10-02 - Vanya Belyaev
+ - add tiny shift in X
+
 ! 2012-09-28 - Vanya Belyaev
  - add few decorators for TMinuit&Co
 

@@ -2967,8 +2967,18 @@ def hToGraph ( h1                   ,
     Convert  1D-histogram into graph 
     """
     #
-    ## book graph 
+    ## book graph
+    #
     graph = ROOT.TGraphErrors( len( h1 )  )
+    
+    #
+    ## copy attributes
+    #
+    graph.SetLineColor   ( h1.GetLineColor   () )
+    graph.SetLineWidth   ( h1.GetLineWidth   () )
+    graph.SetMarkerColor ( h1.GetMarkerColor () )
+    graph.SetMarkerStyle ( h1.GetMarkerStyle () )
+    graph.SetMarkerSize  ( h1.GetMarkerSize  () )
 
     for i in h1.iteritems () :
 
@@ -2979,7 +2989,6 @@ def hToGraph ( h1                   ,
         graph [ i[0] - 1 ] = (x,v)  
         
     return graph
-
 
 
 # =============================================================================
@@ -3069,6 +3078,65 @@ ROOT.TH1F.asGraph = hToGraph
 ROOT.TH1D.asGraph = hToGraph
 ROOT.TH1F.toGraph = hToGraph
 ROOT.TH1D.toGraph = hToGraph
+
+# =============================================================================
+## convert histogram to graph
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def hToGraph2 ( h1 , bias  ) :
+    """
+    Convert  1D-histogram into graph with small shift in x
+    Useful for overlay of very similar plots
+
+    >>> h1 = ....
+    >>> g2 = h1.asGraph2 ( 0.1 ) ## shift for 10% of bin width
+    
+    """
+    #
+    ## book graph
+    #
+    graph = ROOT.TGraphAsymmErrors( len( h1 )  )
+    
+    #
+    ## copy attributes
+    #
+    graph.SetLineColor   ( h1.GetLineColor   () )
+    graph.SetLineWidth   ( h1.GetLineWidth   () )
+    graph.SetMarkerColor ( h1.GetMarkerColor () )
+    graph.SetMarkerStyle ( h1.GetMarkerStyle () )
+    graph.SetMarkerSize  ( h1.GetMarkerSize  () )
+
+    if abs ( bias ) > 1 :
+        raise VaueErorr, ' Illegal valeu for "bias" parameter '
+    
+    for i in h1.iteritems () :
+
+        
+        ip = i[0] - 1 ## different convention for TH1 and TGraph
+        x  = i[1] 
+        y  = i[2]
+
+        b = abs ( x.error() ) * bias
+        
+        graph.SetPoint      ( ip ,
+                              x  . value () + b ,
+                              y  . value ()     )
+        graph.SetPointError ( ip ,
+                              x  . error () + b ,
+                              x  . error () - b ,
+                              y  . error ()     , 
+                              y  . error ()     ) 
+        
+    return graph
+
+ROOT.TGraphAsymmErrors.__len__       = ROOT.TGraphAsymmErrors . GetN 
+ROOT.TGraphAsymmErrors.__contains__  = lambda s,i : i in range(0,len(s))
+ROOT.TGraphAsymmErrors.__iter__      = _gr_iter_ 
+
+ROOT.TH1F.asGraph2 = hToGraph2
+ROOT.TH1D.asGraph2 = hToGraph2
+ROOT.TH1F.toGraph2 = hToGraph2
+ROOT.TH1D.toGraph2 = hToGraph2
 
 # =============================================================================
 ## get edges from the axis:
