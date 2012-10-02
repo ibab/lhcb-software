@@ -32,7 +32,7 @@ use PrMCTools            v1r0    Pr   # Olivier Callot
 use ChargedProtoANNPID   v1r8    Rec  # Chris Jones
 use GlobalReco           v6r42   Rec  # Chris Jones
 use LumiAlgs             v8r0    Rec  # Jaap Panman
-use RecAlgs              v2r9    Rec  # Marco Cattaneo
+use RecAlgs              v2r10   Rec  # Marco Cattaneo
 use RecConf              v2r9    Rec  # Rob Lambert
 use RecInterfaces        v1r0    Rec  # Chris Jones
 
