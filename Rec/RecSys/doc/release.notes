@@ -14,8 +14,9 @@ This version uses Gaudi v23r4 and LHCb v35r2
                   Pr/PrKernel v1r0     - Basic tools for pattern for the upgrade
                   Pr/PrMCTools v1r0    - MC tools for pattern for the upgrade
 - Packages updated: Muon/MuonTrackRec v3r7, Rec/ChargedProtoANNPID v1r8,
-    Rec/LumiAlgs v8r0, Rec/RecAlgs v2r10, Rec/RecConf v2r9, Rec/RecoUpgrade v3r0,
-    Rec/RecoUpgradeMC v2r0, Tf/PatVeloTT v3r20, Tf/TrackSys v7r7,
+    Rec/GlobalReco v6r43, Rec/LumiAlgs v8r0, Rec/RecAlgs v2r10, Rec/RecConf v2r9,
+    Rec/RecoUpgrade v3r0, Rec/RecoUpgradeMC v2r0,
+    Rich/RichHPDImageAnalysis v1r12, Tf/PatVeloTT v3r20, Tf/TrackSys v7r7,
     Tr/TrackCheckers v4r13, Tr/TrackFitEvent v5r18, Tr/TrackMCTools v3r2,
     Tr/TrackProjectors v2r32, Tr/TrackTools v4r19, Velo/VeloRecMonitors v2r21
 
@@ -30,6 +31,12 @@ This version uses Gaudi v23r4 and LHCb v35r2
     preliminary sample of 2012 B inclusive MC processed with Reco13d.
   . Explicitly cast variables to float when filling the training tuple
   . Improvements to the training job scripts
+
+- In GlobalReco v6r43
+  . Update ROOT scripts
+  . Add an option to the GlobalRecoChecks Configurable to control the output
+    ROOT tuple file locations.
+  . Add some additional tracking variables to ChargedProtoParticleTupleAlg
 
 - In LumiAlgs v8r0, v7r8
   . Split this package up into Kernel/FSRAlgs and Rec/LumiAlgs, see task #33139
@@ -53,6 +60,9 @@ This version uses Gaudi v23r4 and LHCb v35r2
      TrackFitEvent v5r18, TrackMCTools v3r2, TrackProjectors v2r32, 
      TrackTools v4r19
   . Rename VeloPix to VP
+
+- In RichHPDImageAnalysis
+  . Various updates to the image analysis code and scripts
 
 - In TrackSys v7r7, v7r6
   . No net change with respect to v7r5

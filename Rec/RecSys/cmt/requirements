@@ -30,7 +30,7 @@ use PrMCTools            v1r0    Pr   # Olivier Callot
 
 # Non sub-detector specific components
 use ChargedProtoANNPID   v1r8    Rec  # Chris Jones
-use GlobalReco           v6r42   Rec  # Chris Jones
+use GlobalReco           v6r43   Rec  # Chris Jones
 use LumiAlgs             v8r0    Rec  # Jaap Panman
 use RecAlgs              v2r10   Rec  # Marco Cattaneo
 use RecConf              v2r9    Rec  # Rob Lambert
@@ -44,7 +44,7 @@ use RecoUpgradeMC        v2r0    Rec  # Victor Coco
 use RichAlignment        v1r7    Rich # Chris Jones, Antonis Papanestis
 use RichENNRingFinder    v1r4    Rich # Chris Jones, Ulrich Kerzel
 use RichGlobalPID        v3r18   Rich # Chris Jones
-use RichHPDImageAnalysis v1r11   Rich # Thomas Blake, Chris Jones
+use RichHPDImageAnalysis v1r12   Rich # Thomas Blake, Chris Jones
 use RichIFBAnalysis      v1r2    Rich # Ross Young, Chris Jones
 use RichParticleSearch   v1r10   Rich # Matt Coombes
 use RichPIDMerge         v2r9p2  Rich # Chris Jones
