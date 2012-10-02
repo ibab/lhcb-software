@@ -858,7 +858,6 @@ class Boole(LHCbConfigurableUser):
             clusMoni.ClusterLocation = "Raw/UT/Clusters"
             effCheck.DetType = "UT"
             effCheck.InputData = "Raw/UT/Clusters"
-            effCheck.HistoTopDir = "UT"
             GaudiSequencer("MoniUTSeq").Members += [ mcDepMoni, mcDigitMoni, digitMoni, clusMoni,
                                                      mcp2MCHit, effCheck ]
             if self.getProp("DataType") == "Upgrade" :
