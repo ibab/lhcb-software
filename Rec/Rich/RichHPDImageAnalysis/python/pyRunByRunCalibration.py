@@ -47,7 +47,7 @@ def initialise():
 
         DDDBConf(DataType = "2012")
         LHCbApp().DDDBtag   = "dddb-20120831"
-        LHCbApp().CondDBtag = "cond-20120831"
+        LHCbApp().CondDBtag = "cond-20120917"
 
         # Move HPD Occs
         #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
@@ -621,9 +621,9 @@ def runToFill(run):
     return fill
 
 def runAll(files='2012-RootFiles.txt'):
-    #hpdImageShiftsFollow(files)
+    hpdImageShiftsFollow(files)
     #hpdImageShiftsAverage(files)
-    hpdOccupancies(files)
+    #hpdOccupancies(files)
 
 def hpdOccupancies(files='2012-RootFiles.txt'):
     calibrationByRuns(rootfiles=files,followType="Smoothed",
@@ -1374,7 +1374,9 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
         # End of 2011
         #stopTime = getUNIXTime( datetime.datetime( 2011, 12, 31, 23, 59, 59 ) )
         # End of Run 126261
-        stopTime = getUNIXTime( datetime.datetime( 2012, 8, 22, 17, 55, 32 ) )
+        #stopTime = getUNIXTime( datetime.datetime( 2012, 8, 22, 17, 55, 32 ) )
+        # End of Run 128492
+        stopTime = getUNIXTime( datetime.datetime( 2012, 9, 17,  7, 0, 0 ) )
         # Long way away ...
         #stopTime = getUNIXTime( datetime.datetime( 2100, 12, 31, 23, 59, 59 ) )
 
