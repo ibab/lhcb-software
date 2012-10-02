@@ -59,8 +59,7 @@ bool GlobalPID::passBasicPIDDet() const
 bool GlobalPID::passTrackSelection() const
 {
   // Get the MC type
-  const PIDType mcType = getMcType();
-  
+  const PIDType mcType = getMcType();  
 
   // skip particles without MC
   if ( mcType == NoMCInfo || mcType == UnknownParticle ) return false;
