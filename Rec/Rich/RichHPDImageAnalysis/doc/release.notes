@@ -4,6 +4,10 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!========================= RichHPDImageAnalysis v1r12 2012-10-02 =========================
+! 2012-10-02 Chris Jones
+ - Various updates to the image analysis code and scripts
+
 !========================= RichHPDImageAnalysis v1r11 2011-12-15 =============
 
 ! 2011-11-18 - Chris Jones
