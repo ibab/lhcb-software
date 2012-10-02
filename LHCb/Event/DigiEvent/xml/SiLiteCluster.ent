@@ -26,34 +26,55 @@
 
      <constructor desc="Constructor" 
        argList='&channelIDName; &amp; chan, double fracStrip, 
-                unsigned int size, bool secondThres'>
+                unsigned int size, bool secondThres, bool moreBitsInChannelID=false'>
        <code>
+  unsigned int tFrac;
+  if ( moreBitsInChannelID )
+    tFrac = LHCb::Math::round(fracStrip * (1&lt;&lt;(size1Bits - interStripFraction1Bits)));
+  else
+    tFrac = LHCb::Math::round(fracStrip * (1&lt;&lt;(size0Bits - interStripFraction0Bits)));
 
- unsigned int tFrac = LHCb::Math::round(fracStrip * (1&lt;&lt;(sizeBits - interStripFractionBits)));
- unsigned int pseudoSize;
- size &lt; 3 ? pseudoSize = 0 : pseudoSize = 1;
- unsigned int tThres;
- secondThres == true ? tThres = 1: tThres = 0;
+  unsigned int pseudoSize;
+  size &lt; 3 ? pseudoSize = 0 : pseudoSize = 1;
+  unsigned int tThres;
+  secondThres == true ? tThres = 1: tThres = 0;
 
- m_liteCluster = (chan &lt;&lt; channelIDBits) +
-                 (tFrac &lt;&lt; interStripFractionBits) +
-                 (pseudoSize &lt;&lt; sizeBits)+
-                 (tThres &lt;&lt; highThresholdBits)
-                 ;
+  if ( moreBitsInChannelID )
+    m_liteCluster = (chan &lt;&lt; channelID1Bits) +
+                    (tFrac &lt;&lt; interStripFraction1Bits) +
+                    (pseudoSize &lt;&lt; size1Bits) +
+                    (tThres &lt;&lt; highThreshold1Bits) +
+                    moreBitsInChannelIDMask
+                    ;
+  else
+    m_liteCluster = (chan &lt;&lt; channelID0Bits) +
+                    (tFrac &lt;&lt; interStripFraction0Bits) +
+                    (pseudoSize &lt;&lt; size0Bits)+
+                    (tThres &lt;&lt; highThreshold0Bits)
+                    ;
        </code>
       </constructor>
 
 
     <constructor desc="Constructor" 
        argList='unsigned int fracStrip, unsigned int pseudoSize, 
-                bool secondThres, &channelIDName; &amp; chan'>
+                bool secondThres, &channelIDName; &amp; chan, bool moreBitsInChannelID=false'>
        <code>
- unsigned int tThres;
- secondThres == true ? tThres = 1: tThres = 0;
- m_liteCluster = (chan &lt;&lt; channelIDBits) +
-                 (fracStrip &lt;&lt; interStripFractionBits) +
-                 (pseudoSize &lt;&lt; sizeBits)+
-                 (tThres &lt;&lt; highThresholdBits);
+  unsigned int tThres;
+  secondThres == true ? tThres = 1: tThres = 0;
+  if ( moreBitsInChannelID )
+    m_liteCluster = (chan &lt;&lt; channelID1Bits) +
+                    (fracStrip &lt;&lt; interStripFraction1Bits) +
+                    (pseudoSize &lt;&lt; size1Bits) +
+                    (tThres &lt;&lt; highThreshold1Bits) +
+                    moreBitsInChannelIDMask
+                    ;
+  else
+    m_liteCluster = (chan &lt;&lt; channelID0Bits) +
+                    (fracStrip &lt;&lt; interStripFraction0Bits) +
+                    (pseudoSize &lt;&lt; size0Bits)+
+                    (tThres &lt;&lt; highThreshold0Bits)
+                    ;
        </code>
       </constructor>
 
@@ -79,7 +100,9 @@
       desc="position within a strip of cluster centre"
       const="TRUE">
      <code>
- return (fractionUnits()/double(1&lt;&lt;(sizeBits - interStripFractionBits)));
+ return ( moreBitsInChannelID() ?
+          (fractionUnits()/double(1&lt;&lt;(size1Bits - interStripFraction1Bits))) :
+          (fractionUnits()/double(1&lt;&lt;(size0Bits - interStripFraction0Bits))) );
      </code>
      </method>
 
@@ -89,7 +112,9 @@
       desc="number of strips in cluster, 3 means 3 or more"
       const="TRUE">
      <code>
-  unsigned int cSize= 1 + ((m_liteCluster &amp; sizeMask) &gt;&gt; sizeBits);
+  unsigned int cSize= ( moreBitsInChannelID() ?
+                        1 + ((m_liteCluster &amp; size1Mask) &gt;&gt; size1Bits) :
+                        1 + ((m_liteCluster &amp; size0Mask) &gt;&gt; size0Bits) );
   if (cSize == 1){
     if (fractionUnits() != 0) cSize = 2;
   }
@@ -107,7 +132,10 @@
       desc="number between 0 and 7 /8ths of a strip"
       const="TRUE"
       >
-      <code> return ((m_liteCluster &amp; interStripFractionMask) &gt;&gt; interStripFractionBits); 
+      <code>
+ return ( moreBitsInChannelID() ?
+          ( (m_liteCluster &amp; interStripFraction1Mask) &gt;&gt; interStripFraction1Bits ) :
+          ( (m_liteCluster &amp; interStripFraction0Mask) &gt;&gt; interStripFraction0Bits ) );
      </code>
      </method>
 
@@ -118,20 +146,67 @@
       desc="The Channel"
       const="TRUE"
       >
-      <code> return &channelIDName;((m_liteCluster &amp; channelIDMask) &gt;&gt; channelIDBits); 
+      <code>
+ return ( moreBitsInChannelID() ?
+          &channelIDName;((m_liteCluster &amp; channelID1Mask) &gt;&gt; channelID1Bits) : 
+          &channelIDName;((m_liteCluster &amp; channelID0Mask) &gt;&gt; channelID0Bits) );
      </code>
      </method>
 
-     
+      <method
+      access="PUBLIC"
+      name="highThreshold"
+      type="bool"
+      desc="High Threshold"
+      const="TRUE"
+      >
+      <code>
+ return ( moreBitsInChannelID() ?
+          ( 0 != ((m_liteCluster &amp; highThreshold1Mask) >> highThreshold1Bits) ) :
+          ( 0 != ((m_liteCluster &amp; highThreshold0Mask) >> highThreshold0Bits) ) );
+     </code>
+     </method>     
+
+      <method
+      access="PUBLIC"
+      name="moreBitsInChannelID"
+      type="bool"
+      desc="Retrieve whether it is with 25-bits for channelID or not"
+      const="TRUE"
+      >
+      <code> return 0 != ((m_liteCluster &amp; moreBitsInChannelIDMask) >> moreBitsInChannelIDBits);</code>
+     </method>     
 
 
      <attribute type='bitfield' name='liteCluster' desc='lite Cluster' setMeth="FALSE" getMeth="FALSE">
-        <bitfield name='channelID' length='25' desc='channelID' 
+        <bitfield name='channelID0' length='24' desc='channelID' 
          setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='interStripFraction' length='&posBits;' desc='interStripFractionBits'
+        <bitfield name='interStripFraction0' length='&posBits;' desc='interStripFractionBits'
          setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='size' length='1' desc='size'
+        <bitfield name='size0' length='1' desc='size'
          setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='highThreshold' length='1' desc='high threshold'
-         setMeth="FALSE" getMeth="TRUE"/>
+        <bitfield name='highThreshold0' length='1' desc='high threshold'
+         setMeth="FALSE" getMeth="FALSE"/>
       </attribute>
+
+      <enum
+         desc   = "Offsets of bitfield liteCluster with 25 bits for channelID"
+         name   = "liteCluster1Bits"
+         value  = "channelID1Bits          = 0,
+                   interStripFraction1Bits = 25,
+                   size1Bits               = 27,
+                   highThreshold1Bits      = 28,
+                   moreBitsInChannelIDBits = 31"
+         access = 'PRIVATE'
+      />
+
+      <enum
+         desc   = "Bitmasks for bitfield liteCluster with 25 bits for channelID"
+         name   = "liteCluster1Masks"
+         value  = "channelID1Mask          = 0x1ffffffL,
+                   interStripFraction1Mask = 0x6000000L,
+                   size1Mask               = 0x8000000L,
+                   highThreshold1Mask      = 0x10000000L,
+                   moreBitsInChannelIDMask = 0x80000000L"
+         access = 'PRIVATE'
+      />

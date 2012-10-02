@@ -39,7 +39,9 @@
     name = "s" />
      <code >
        s &lt;&lt; "{ STLiteCluster: " &lt;&lt; (int) channelID() &lt;&lt; " channel: " &lt;&lt; sectorName() &lt;&lt; " strip " &lt;&lt; strip()     
-         &lt;&lt; " Pseudo size " &lt;&lt; pseudoSize() &lt;&lt; " high threshold :" &lt;&lt; highThreshold() &lt;&lt; " interStripFraction " &lt;&lt; interStripFraction()  &lt;&lt;  std::endl &lt;&lt; " }";
+         &lt;&lt; " Pseudo size " &lt;&lt; pseudoSize() &lt;&lt; " high threshold :" &lt;&lt; highThreshold()
+         &lt;&lt; " interStripFraction " &lt;&lt; interStripFraction()  &lt;&lt; " moreBitsInChannelID " &lt;&lt; moreBitsInChannelID()
+         &lt;&lt; std::endl &lt;&lt; " }";
       return s;
      </code>
   </method>
