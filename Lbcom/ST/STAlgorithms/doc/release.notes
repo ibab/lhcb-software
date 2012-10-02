@@ -2,6 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2012-10-02 - Jianchun Wang
+ - In STClustercreator, length of cluster channelID is 25 bits for UT, 24 bits
+   for TT/IT.
+
 !========================= STAlgorithms v4r4 2010-10-25 =========================
 ! 2010-09-29 M Needham
  - Add the missing STClusterContainerCopy .cpp

@@ -157,8 +157,9 @@ StatusCode STClusterCreator::createClusters( const STDigits* digitCont,
 
         // make cluster +set things
         const STLiteCluster clusterLite(measValue.strip, measValue.fractionalPosition,
-                                  clusteredDigits.size(),
-                                  hasHighThreshold(totCharge,aSector) );
+                                        clusteredDigits.size(),
+                                        hasHighThreshold(totCharge,aSector),
+                                        (detType() == "UT") );
 
         // link to the tell
         STDAQ::chanPair aPair = readoutTool()->offlineChanToDAQ(measValue.strip,
