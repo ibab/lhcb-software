@@ -3,7 +3,9 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
-
+-2012-10-01 - Sajan Easo
+- Adapations for Geant4.95 version in different physics processes,
+  mainly for G4MaterialPropertyVector.
 !========================= GaussRICH v12r1 2012-07-23 ========================
 ! 2012-07-23 - Gloria Corti
  - Remove include of ParticleProperty related header since they are not needed
