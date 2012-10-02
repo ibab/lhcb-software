@@ -5,9 +5,74 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v14r2>2012-10-03 RecSys v14r2</A></H1><PRE>
+This version uses Gaudi v23r4 and LHCb v35r2
+
+- Development release
+
 - Packages added: Pr/PrAlgorithms v1r0 - Pattern recognition for the upgrade
                   Pr/PrKernel v1r0     - Basic tools for pattern for the upgrade
                   Pr/PrMCTools v1r0    - MC tools for pattern for the upgrade
+- Packages updated: Muon/MuonTrackRec v3r7, Rec/ChargedProtoANNPID v1r8,
+    Rec/LumiAlgs v8r0, Rec/RecAlgs v2r10, Rec/RecConf v2r9, Rec/RecoUpgrade v3r0,
+    Rec/RecoUpgradeMC v2r0, Tf/PatVeloTT v3r20, Tf/TrackSys v7r7,
+    Tr/TrackCheckers v4r13, Tr/TrackFitEvent v5r18, Tr/TrackMCTools v3r2,
+    Tr/TrackProjectors v2r32, Tr/TrackTools v4r19, Velo/VeloRecMonitors v2r21
+
+- In MuonTrackRec v3r7
+  . Protect debug() print statements behind if check.
+  . Modified MuonHitDecode to cope with the new raw locations, per default only
+    the central location is now looked for. Number of prev/next locations to look
+    for is now a configurable option.
+
+- In ChargedProtoANNPID v1r8
+  . Update the default tuning for 2012 and 2011 to MC12TuneV1, trained on a
+    preliminary sample of 2012 B inclusive MC processed with Reco13d.
+  . Explicitly cast variables to float when filling the training tuple
+  . Improvements to the training job scripts
+
+- In LumiAlgs v8r0, v7r8
+  . Split this package up into Kernel/FSRAlgs and Rec/LumiAlgs, see task #33139
+  . Fix references to follow format change in options printout of Gaudi v23r4
+  . Fix older lumi8merger test reference file
+  . Add tests for new merging sensitive to file size and Vmem.
+  . Add CMT requirements dependency on LHCbAlgs, due to python dependency on
+    FSRCleaner in that package.
+  . Add FSRCleaner to the merge sequence, see bug #96471.
+  . Fix segfault, see bug #96471, edit two lines in FSRNavigator.cpp
+
+- In RecAlgs v2r10
+  . Use getIfExists in RecSummaryAlg
+
+- In RecConf v2r9, v2r8
+  . GlobalReco PROTO checks need to run in Check sequence if MC is enabled
+  . No other net change with respect to v2r7
+    (temporary hack in v2r8, removed in v2r9, needed for Reco13e/Reco13f/Reco14)
+
+- In RecoUpgrade v3r0, RecoUpgradeMC v2r0, PatVeloTT v3r20, TrackCheckers v4r13,
+     TrackFitEvent v5r18, TrackMCTools v3r2, TrackProjectors v2r32, 
+     TrackTools v4r19
+  . Rename VeloPix to VP
+
+- In TrackSys v7r7, v7r6
+  . No net change with respect to v7r5
+    (temporary fix in v7r6, removed in v7r7, needed for Reco13e/Reco13f/Reco14)
+
+- In TrackMCTools v3r2
+  . New tool PatPixelDebugTool to debug the Velo Pixel tracking (upgrade)
+  . Modifications in DebugTrackingLosses to debug Velo Pixel tracking losses
+
+- In TrackTools v4r19, v4r18, v4r17, v4r16
+  . TrackNNGhostID + TMVA weight file: 
+    + Add tuning for MC2012, only for long tracks, add switch to chose tuning.
+    + Add tuning for Reco14, for use in postReco14 or in DaVinci on Reco14 data.
+  . TrackNNGhostID:
+    + Fix NN output value to range 0-1
+    + Add an interpolator to provide a smooth flattening function
+    + Various code cleanups
+
+- In VeloRecMonitors v2r21
+  . Added PU only average occupancy histogram.
 
 </PRE><H1><A NAME=v14r1p1>2012-07-31 RecSys v14r1p1</A></H1><PRE>
 This version uses Gaudi v23r3 and LHCb v35r1p1
