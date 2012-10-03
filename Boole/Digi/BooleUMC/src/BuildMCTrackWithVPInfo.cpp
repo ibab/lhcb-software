@@ -1,4 +1,3 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.10 2009-04-06 09:53:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +6,7 @@
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
 #include "Event/VeloCluster.h"
-#include "Event/VeloPixCluster.h"
+#include "Event/VPCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h" /// Needed for path of table
 #include "Event/MCOTTime.h"
@@ -16,14 +15,14 @@
 #include "Event/MCProperty.h"
 
 // Det
-#include "VeloPixDet/DeVeloPix.h"
+#include "VPDet/DeVP.h"
 #include "STDet/DeSTDetector.h"
 #include "OTDet/DeOTStation.h"
 #include "OTDet/DeOTDetector.h"
 #include "OTDet/DeOTLayer.h"
 
 // local
-#include "BuildMCTrackWithVeloPixInfo.h"
+#include "BuildMCTrackWithVPInfo.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : BuildMCTrackInfo
@@ -32,12 +31,12 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( BuildMCTrackWithVeloPixInfo );
+DECLARE_ALGORITHM_FACTORY( BuildMCTrackWithVPInfo );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-BuildMCTrackWithVeloPixInfo::BuildMCTrackWithVeloPixInfo( const std::string& name,
+BuildMCTrackWithVPInfo::BuildMCTrackWithVPInfo( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
@@ -46,19 +45,19 @@ BuildMCTrackWithVeloPixInfo::BuildMCTrackWithVeloPixInfo( const std::string& nam
 //=============================================================================
 // Destructor
 //=============================================================================
-BuildMCTrackWithVeloPixInfo::~BuildMCTrackWithVeloPixInfo() {}; 
+BuildMCTrackWithVPInfo::~BuildMCTrackWithVPInfo() {}; 
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode BuildMCTrackWithVeloPixInfo::initialize() {
+StatusCode BuildMCTrackWithVPInfo::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
 
 
-  m_veloPix = getDet<DeVeloPix>( DeVeloPixLocation::Default );
+  m_vpDet = getDet<DeVP>( DeVPLocation::Default );
 
   m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );
   debug() << "Number of TT layers " << m_ttDet->layers().size() << endmsg;
@@ -75,15 +74,15 @@ StatusCode BuildMCTrackWithVeloPixInfo::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode BuildMCTrackWithVeloPixInfo::execute() {
+StatusCode BuildMCTrackWithVPInfo::execute() {
   const bool isDebug   = msgLevel(MSG::DEBUG);
   const bool isVerbose = msgLevel(MSG::VERBOSE);
 
   if(isDebug) debug() << "==> Execute" << endmsg;
   
-  LinkedTo<LHCb::MCParticle, LHCb::VeloPixCluster> veloPixLink( eventSvc(), msgSvc(),
-                                     LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
-  if( veloPixLink.notFound() ) return StatusCode::FAILURE;
+  LinkedTo<LHCb::MCParticle, LHCb::VPCluster> vpLink( eventSvc(), msgSvc(),
+                                     LHCb::VPClusterLocation::VPClusterLocation );
+  if( vpLink.notFound() ) return StatusCode::FAILURE;
   
   LinkedTo<LHCb::MCParticle, LHCb::STCluster> ttLink( eventSvc(), msgSvc(), 
                                      LHCb::STClusterLocation::TTClusters );
@@ -112,35 +111,35 @@ StatusCode BuildMCTrackWithVeloPixInfo::execute() {
 
   if(isDebug) debug() << "Highest MCParticle number " << nbMcPart << endmsg;
 
-  std::vector<int> lastVeloPix ( nbMcPart+1, -1 );
-  std::vector<int> veloPix ( nbMcPart+1, 0 );
+  std::vector<int> lastVP ( nbMcPart+1, -1 );
+  std::vector<int> vp ( nbMcPart+1, 0 );
   std::vector<int> station ( nbMcPart+1, 0 );
   
   LHCb::MCParticle* part;
   unsigned int MCNum;
   
   //== particle-> VeloDigit links
-  LHCb::VeloPixClusters* veloPixClus = get<LHCb::VeloPixClusters>( LHCb::VeloPixClusterLocation::VeloPixClusterLocation);
-  std::sort( veloPixClus->begin(), veloPixClus->end(), increasingSensor);
-  for ( LHCb::VeloPixClusters::const_iterator vIt = veloPixClus->begin() ;
-        veloPixClus->end() != vIt ; vIt++ ) {
+  LHCb::VPClusters* vpClus = get<LHCb::VPClusters>( LHCb::VPClusterLocation::VPClusterLocation);
+  std::sort( vpClus->begin(), vpClus->end(), increasingSensor);
+  for ( LHCb::VPClusters::const_iterator vIt = vpClus->begin() ;
+        vpClus->end() != vIt ; vIt++ ) {
     int sensor = (*vIt)->channelID().sensor();
-    const DeVeloPixSensor* sens=m_veloPix->sensor(sensor);
-    part = veloPixLink.first( *vIt );
+    const DeVPSensor* sens=m_vpDet->sensor(sensor);
+    part = vpLink.first( *vIt );
     while ( NULL != part ) {
       if ( mcParts == part->parent() ) {
         MCNum = part->key();
-        if ( veloPix.size() > MCNum ) {
-          if ( sensor != lastVeloPix[MCNum] ) {  // Count only once per sensor a given MCParticle
-            lastVeloPix[MCNum] = sensor;
+        if ( vp.size() > MCNum ) {
+          if ( sensor != lastVP[MCNum] ) {  // Count only once per sensor a given MCParticle
+            lastVP[MCNum] = sensor;
             if ( sens->isSquare() ) {
-              veloPix[MCNum]++;
-              if(isVerbose)  verbose() << "MC " << MCNum << " VeloPix sensor " << sensor << " nbVeloPix " << veloPix[MCNum] << endmsg;
+              vp[MCNum]++;
+              if(isVerbose)  verbose() << "MC " << MCNum << " VP sensor " << sensor << " nbVP " << vp[MCNum] << endmsg;
             }
           }
         }
       }
-      part = veloPixLink.next() ;
+      part = vpLink.next() ;
     }
   }
 
@@ -217,17 +216,17 @@ StatusCode BuildMCTrackWithVeloPixInfo::execute() {
         mcParts->end() != itP; itP++ ) {
     MCNum = (*itP)->key();    
     int mask = station[MCNum];
-    if ( 2 < veloPix[MCNum] )    mask |= MCTrackInfo::maskHasVelo;
-    if ( 15 < veloPix[MCNum]   ) veloPix[MCNum]   = 15;
+    if ( 2 < vp[MCNum] )    mask |= MCTrackInfo::maskHasVelo;
+    if ( 15 < vp[MCNum]   ) vp[MCNum]   = 15;
     
-    mask |= (veloPix[MCNum]  <<MCTrackInfo::multVeloR );
+    mask |= (vp[MCNum]  <<MCTrackInfo::multVeloR );
     
     if ( 0 != mask ) {
       trackInfo->setProperty( *itP, mask );
       if(isDebug) debug() << format( "Track %4d mask %8x nR %2d nPhi %2d ", 
-                                     MCNum, mask, veloPix[MCNum], 0 );
+                                     MCNum, mask, vp[MCNum], 0 );
       if ( MCTrackInfo::maskHasVelo == (mask & MCTrackInfo::maskHasVelo ) )
-        if(isDebug) debug() << " hasVeloPix ";
+        if(isDebug) debug() << " hasVP ";
       if ( MCTrackInfo::maskHasTT   == (mask & MCTrackInfo::maskHasTT ) )
         if(isDebug) debug() << " hasTT ";
       if ( MCTrackInfo::maskHasT    == (mask & MCTrackInfo::maskHasT   ) )
@@ -242,7 +241,7 @@ StatusCode BuildMCTrackWithVeloPixInfo::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode BuildMCTrackWithVeloPixInfo::finalize() {
+StatusCode BuildMCTrackWithVPInfo::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
@@ -251,17 +250,17 @@ StatusCode BuildMCTrackWithVeloPixInfo::finalize() {
 
 
 //=========================================================================
-//  Process the MC(VeloPix)Hits to get the 'acceptance'
+//  Process the MC(VP)Hits to get the 'acceptance'
 //=========================================================================
-void BuildMCTrackWithVeloPixInfo::computeAcceptance ( std::vector<int>& station ) {
+void BuildMCTrackWithVPInfo::computeAcceptance ( std::vector<int>& station ) {
 
   const bool isDebug = msgLevel(MSG::DEBUG);
-  std::vector<int> nVeloPix( station.size(), 0 );
+  std::vector<int> nVP( station.size(), 0 );
   
-  LHCb::MCHits* veloPixHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP);
-  //LHCb::MCHits* veloPixHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VeloPix);
-  for ( LHCb::MCHits::const_iterator vHit = veloPixHits->begin();
-        veloPixHits->end() != vHit; vHit++ ) {
+  LHCb::MCHits* vpHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP);
+  //LHCb::MCHits* vpHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP);
+  for ( LHCb::MCHits::const_iterator vHit = vpHits->begin();
+        vpHits->end() != vHit; vHit++ ) {
     unsigned int MCNum = (*vHit)->mcParticle()->key();
     if ( station.size() <= MCNum ) continue;
     
@@ -273,13 +272,13 @@ void BuildMCTrackWithVeloPixInfo::computeAcceptance ( std::vector<int>& station 
     }
     
     int staNr = (*vHit)->sensDetID();
-    const DeVeloPixSensor* sens=m_veloPix->sensor(staNr);   
+    const DeVPSensor* sens=m_vpDet->sensor(staNr);   
     if ( sens->isSquare() ) {
-      nVeloPix[MCNum]++;
+      nVP[MCNum]++;
     }
   }
   for ( unsigned int MCNum = 0; station.size() > MCNum; MCNum++ ){
-    if ( 2 < nVeloPix[MCNum] ) station[MCNum] |= MCTrackInfo::maskAccVelo;
+    if ( 2 < nVP[MCNum] ) station[MCNum] |= MCTrackInfo::maskAccVelo;
   }
   //== TT
   

@@ -4,6 +4,9 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+! 2012-10-03 - Marco Cattaneo
+ - Rename VeloPix -> VP everywhere
+
 ! 2012-09-28 - Paul Szczypka
  - Change requirements to pick up VPDet rather than VeloPixDet
 

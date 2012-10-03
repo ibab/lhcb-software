@@ -1,6 +1,5 @@
-// $Id: BuildMCTrackWithVeloPixInfo.h,v 1.4 2007-04-30 08:27:10 mneedham Exp $
-#ifndef BUILDMCTRACKWITHVELOPIXINFO_H 
-#define BUILDMCTRACKWITHVELOPIXINFO_H 1
+#ifndef BUILDMCTRACKWITHVPINFO_H 
+#define BUILDMCTRACKWITHVPINFO_H 1
 
 // Include files
 // from Gaudi
@@ -8,22 +7,22 @@
 
 #include "Event/MCTrackInfo.h"
 
-class DeVeloPix;
+class DeVP;
 class DeSTDetector;
 class DeOTStation;
 
-/** @class BuildMCTrackWithVeloPixInfo BuildMCTrackWithVeloPixInfo.h
+/** @class BuildMCTrackWithVPInfo BuildMCTrackWithVPInfo.h
  *  Build the Reconstructable MCProperty table.
  *
  *  @author Olivier Callot
  *  @date   2004-01-08
  */
-class BuildMCTrackWithVeloPixInfo : public GaudiAlgorithm {
+class BuildMCTrackWithVPInfo : public GaudiAlgorithm {
 public: 
   /// Standard constructor
-  BuildMCTrackWithVeloPixInfo( const std::string& name, ISvcLocator* pSvcLocator );
+  BuildMCTrackWithVPInfo( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~BuildMCTrackWithVeloPixInfo( ); ///< Destructor
+  virtual ~BuildMCTrackWithVPInfo( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -69,18 +68,15 @@ protected:
   void computeAcceptance ( std::vector<int>& station ) ;
 
   struct increasingSensor {
-     bool operator() ( LHCb::VeloPixCluster* clust1, LHCb::VeloPixCluster* clust2 ) const{
+     bool operator() ( LHCb::VPCluster* clust1, LHCb::VPCluster* clust2 ) const{
        return clust1->channelID().sensor() < clust2->channelID().sensor();
      }
   }  increasingSensor;
 
 private:
-  DeVeloPix*       m_veloPix;
-
+  DeVP*         m_vpDet;
   DeSTDetector* m_ttDet;
   DeSTDetector* m_itDet;
-
-  // OT Detector information
   DeOTDetector* m_otDet;
   
 };

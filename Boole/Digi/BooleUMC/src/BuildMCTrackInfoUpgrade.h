@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef BUILDMCTRACKINFOUPGRADE_H 
 #define BUILDMCTRACKINFOUPGRADE_H 1
 
@@ -9,7 +8,7 @@
 #include "Event/MCTrackInfo.h"
 
 class DeVelo;
-class DeVeloPix;
+class DeVP;
 class DeSTDetector;
 class DeOTDetector;
 class DeFTDetector;
@@ -69,9 +68,9 @@ protected:
   
   void computeAcceptance ( std::vector<int>& station ) ;
 
-  ///< method for sorting the VeloPix clusters. Should be in the VeloPixCluster class!
+  ///< method for sorting the VP clusters. Should be in the VPCluster class!
   struct increasingSensor {
-     bool operator() ( LHCb::VeloPixCluster* clust1, LHCb::VeloPixCluster* clust2 ) const{
+     bool operator() ( LHCb::VPCluster* clust1, LHCb::VPCluster* clust2 ) const{
        return clust1->channelID().sensor() < clust2->channelID().sensor();
      }
   };
@@ -86,7 +85,7 @@ private:
 
   DeVelo*       m_velo;
   DeVL*         m_vlDet;
-  DeVeloPix*    m_veloPix;
+  DeVP*         m_vpDet;
 
   DeSTDetector* m_ttDet;
   DeSTDetector* m_itDet;
