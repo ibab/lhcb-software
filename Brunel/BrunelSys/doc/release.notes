@@ -3,24 +3,52 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-- New Tuning
+</PRE><H1><A NAME=v44r0>2012-10-04 Brunel v44r0</A></H1><PRE>
+This version uses projects LCG 64a, Gaudi v23r4, LHCb v35r2, Lbcom v13r2,
+ Rec v14r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development release, post Reco14
+
+- Changes to configuration
+  . If MC Checking is enabled, run the expert Proto monitors in the 
+    check sequence
+
+- Persistency changes
+  . Remove conversion of Calo raw banks from 'packed' to '0-suppressed'
+    (CaloDAQ v4r30)
+
+- New tuning
+  . Update default DDDB tags (DDDB v1r58)
+    o DDDB, 2012: dddb-20120831: new modelling of RF foil
+    o LHCBCOND, 2012: cond-20120917: Reco14 calibrations to June 2012
   . New TrackNNGhostID tuning now runs in standard tracking sequence and is
-    picked up by default as input to ANNPID (RecConf, TrackSys)
+    picked up by default as input to ANNPID (RecConf v2r9, TrackSys v7r7)
+  . TrackNNGhostID updated on Reco14, for use in postReco14 (TrackTools v4r19)
+  . Use new getIfExists TES access rather than if exists() {get();}
+  . Memory optimization for Root output buffers (RootCnv v1r18, v1r17)
+      RootCnvSvc().BasketSize = 2*MBYTE
+      RootCnvSvc().BufferSize = 2*kBYTE
+      RootCnvSvc().SplitLevel = 0
+
+- Monitoring changes
+  . Fixed bug #95733: GaudiKernel::ToStream truncates numbers &lt; 1e-8
+    Use ios::showpoint instead of ios::fixed (GaudiKernel v28r3)
+  . Patch #5518: save TimingHistograms in job histograms (GaudiAlg v14r3)
 
 </PRE><H1><A NAME=v43r2p1>2012-08-28 Brunel v43r2p1</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1,
  Rec v14r1p1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
-Patch release built on v43r1p2b branch, for Reco13e/Reco14.
+Patch release built on v43r1p2b branch, for Reco13e/Reco13f/Reco14.
 
 - Bug fixes
-  . TrackNNGhostId: fix NN output value to range 0-1 (TrackTools v4r16)
+  . TrackNNGhostId: fix NN output value to range 0-1 (TrackTools v4r17)
 
 </PRE><H1><A NAME=v43r2>2012-08-16 Brunel v43r2</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1,
  Rec v14r1p1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
-Patch release built on v43r1p2b branch, for Reco13e/Reco14.
+Patch release built on v43r1p2b branch, for Reco13e/Reco13f/Reco14.
 
 - New Tuning
   . Added a second instance of TrackAddNNGhostId, running after ProtoParticle
