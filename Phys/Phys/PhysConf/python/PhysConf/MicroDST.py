@@ -84,6 +84,23 @@ def uDstConf ( rootInTes ) :
     #
 
     #
+    ## 0. Kill Event/DAQ
+    #
+    def killDAQ ()  : 
+        from Configurables import EventNodeKiller
+        killer = EventNodeKiller ( "KillDAQ" )
+        killer.Nodes += [ '/Event/DAQ' ]
+        try : 
+            from Gaudi.Configuration import getConfigurable
+            conf   = getConfigurable ( 'DaVinciEventInitSeq' ) 
+            conf.Members.insert ( 0 , killer ) 
+        except:
+            print "Failed to add killer agent for", killer.Nodes
+            
+    from Gaudi.Configuration import appendPostConfigAction
+    appendPostConfigAction ( killDAQ )
+ 
+    #
     ## 1. Copy/Link ODIN, RawEvent and RecSummary
     #
     from Configurables import Gaudi__DataLink as Link
@@ -111,11 +128,12 @@ def uDstConf ( rootInTes ) :
     from Configurables import OdinTimeDecoder, ODINDecodeTool
     odinDec = OdinTimeDecoder ( )
     odinDec.addTool( ODINDecodeTool, 'ODINDecodeTool' )
-    odinDec.ODINDecodeTool.RawEventLocation = rootInTes + 'DAQ/RawEvent'
+    odinDec.ODINDecodeTool.RawEventLocations = [
+        rootInTes + 'DAQ/RawEvent' ] + odinDec.ODINDecodeTool.RawEventLocations
     
     from Configurables import DecodePileUpData
     pileupDec = DecodePileUpData()
-    pileupDec.RawEventLocation              = rootInTes + 'DAQ/RawEvent' 
+    pileupDec.RawEventLocation = rootInTes + 'DAQ/RawEvent' 
     
     
 # =============================================================================
