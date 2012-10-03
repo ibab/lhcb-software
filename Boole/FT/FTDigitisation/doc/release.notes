@@ -4,6 +4,7 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+!========================= FTDigitisation v1r0 2012-10-03 =========================
 ! 2012-08-23 - Olivier Callot
  - Change the sorting function for MCFTDigit. No longer need for the functor class...
 
