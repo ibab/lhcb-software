@@ -3,17 +3,21 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2012-08-14 - Chris Jones
- - If MC Checking is enabled, run the expert Proto monitors in the 
-   check sequence
+</PRE><H1><A NAME=v43r2>2012-10-04 Brunel v43r2</A></H1><PRE>
+This version uses projects LCG 64a, Gaudi v23r4, LHCb v35r2, Lbcom v13r2,
+ Rec v14r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Changes to configurable
+  . If MC Checking is enabled, run the expert Proto monitors in the 
+    check sequence
 
 - Changes to references to reflect changes since v43r1p2
   . Remove conversion of Calo raw banks from 'packed' to '0-suppressed'
-    (CaloDAQ)
-  . Update default DDDB tags (DDDB)
+    (CaloDAQ v4r30)
+  . Update default DDDB tags (DDDB v1r58)
   . Follow changes in format of options printout in Gaudi v23r4
   . New TrackNNGhostID tuning now runs in standard tracking sequence and is
-    picked up by default as input to ANNPID (RecConf, TrackSys)
+    picked up by default as input to ANNPID (RecConf v2r9, TrackSys v7r7)
 
 </PRE><H1><A NAME=v43r1p2>2012-08-10 Brunel v43r1p2</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1,
