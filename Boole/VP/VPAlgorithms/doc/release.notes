@@ -3,8 +3,9 @@
 ! Responsible : Tomasz Skwarnicki, Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+!========================= VPAlgorithms v3r0 2012-10-03 =========================
 ! 2012-09-24 - Paul Szczypka
- - Rename VeloPix to VO in filenames and code.
+ - Rename VeloPix to VP in filenames and code.
 
 ! 2012-09-12 - Marco Cattaneo
  - Fix unused variable warning in previous commit
@@ -12,7 +13,7 @@
 ! 2012-08-31 - Pawel Jalocha
  - Change VeloPix to VP in containers
  - DEBUG_HISTO (in .h files) to activate debug histograms
- - quick but dirthy bug fix for clustering algorithm which occasionally outputs
+ - quick but dirty bug fix for clustering algorithm which occasionally outputs
    same ChannelID (which crashes KeyedContainer)
 
 !======================== VeloPixAlgorithms v2r2 2012-08-14 ===================
