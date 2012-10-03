@@ -94,19 +94,20 @@ void CherenkovG4HitRecon::RichG4GetOccupancies( const G4Event* anEvent,
   //  RichG4Counters* aRichCounter =  RichG4Counters::getInstance();
 
   const std::vector<int> aNumPmtInRich =  m_RichG4CkvRec->NumPmtRich();
-  int irichdet=-1;
+  // int irichdet=-1;
 
   G4HCofThisEvent * HCE;
   G4int NumRichCollection= NumRichColl;
   int Current_RichG4CollectionID=0;
   for (int ihcol=0; ihcol<NumRichCollection; ihcol++) {
-    if(ihcol ==0 || ihcol == 1 ){
-      irichdet=0;
-    }else if ( ihcol ==2 || ihcol == 3 ){
-      irichdet =1;
-
-    }
-
+    //if(ihcol ==0 || ihcol == 1 ){
+    //  irichdet=0;
+    // }else if ( ihcol ==2 || ihcol == 3 ){
+    //  irichdet =1;
+    // }
+    // CherenkovG4HitReconlog<<MSG::VERBOSE
+    //  <<"CherenkovG4HitRecon Current Rich for the hit "<<irichdet<<endmsg;
+    
     Current_RichG4CollectionID =RichG4CollectionID[ihcol];
     if(Current_RichG4CollectionID >=0 ) {
       HCE = anEvent->GetHCofThisEvent();
@@ -205,7 +206,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
   
 
   const std::vector<int> aNumPmtInRich =  m_RichG4CkvRec->NumPmtRich();
-  int irichdet=-1;
+  //  int irichdet=-1;
 
 
 
@@ -213,12 +214,11 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
   G4int NumRichCollection= NumRichColl;
   int Current_RichG4CollectionID=0;
   for (int ihcol=0; ihcol<NumRichCollection; ihcol++) {
-    if(ihcol ==0 || ihcol == 1 ){
-      irichdet=0;
-    }else if ( ihcol ==2 || ihcol == 3 ){
-      irichdet =1;
-
-    }
+    // if(ihcol ==0 || ihcol == 1 ){
+    //  irichdet=0;
+    //  }else if ( ihcol ==2 || ihcol == 3 ){
+    //  irichdet =1;
+    //    }
 
     Current_RichG4CollectionID =RichG4CollectionID[ihcol];
     if(Current_RichG4CollectionID >=0 ) {
@@ -708,7 +708,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
             
             Gaudi::XYZPoint aDetPointFromPixelNumInPhDet = aPhDetGlobalToLocal*aDetPointFromPixelNum;
             
-            Gaudi::XYZPoint aDetPointFromTrueLocalHitInPhDet = aPhDetGlobalToLocal*aDetPointFromTrueLocalHit;
+            //Gaudi::XYZPoint aDetPointFromTrueLocalHitInPhDet = aPhDetGlobalToLocal*aDetPointFromTrueLocalHit;
             Gaudi::XYZPoint  aDetPointFromGlobalPhCathodeInPhDet = aPhDetGlobalToLocal*aDetPointFromGlobalPhCathode;
             m_RichG4HitCoordResult->setDetPtInPhDetFromPixelNum(aDetPointFromPixelNumInPhDet);
             m_RichG4HitCoordResult->setDetPtInPhDetFromTrueLocalHit(aDetPointFromGlobalPhCathodeInPhDet);

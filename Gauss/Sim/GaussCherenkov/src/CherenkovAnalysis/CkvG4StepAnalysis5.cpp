@@ -110,7 +110,7 @@ void CkvG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
         int aCurrentCopyNum=  aPostStepPoint->GetPhysicalVolume()->GetCopyNo();        
         int aCurrentCopyNumPreVol=  aPreStepPoint->GetPhysicalVolume()->GetCopyNo();        
 
-        int CurrentRichDetnum=0;
+        //  int CurrentRichDetnum=0;
         
         
         // now for rich1.        
@@ -152,7 +152,7 @@ void CkvG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
            //           G4cout<<"step analysis5  rich2 post vol name "<< aPostVolName<<G4endl;
            // G4cout<<"step analysis5  rich2 pre vol name "<< aPreVolName<<G4endl;
 
-           CurrentRichDetnum=1;
+           // CurrentRichDetnum=1;
            G4String  aPreVolNameM2 =std::string(aPreVolName,0,57);
            G4String  aPostVolNameM2 =std::string(aPostVolName,0,53);
            std::string::size_type aPreVolNameSubStrSize=0;

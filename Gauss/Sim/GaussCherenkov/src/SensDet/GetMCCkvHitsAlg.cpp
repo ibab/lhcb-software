@@ -239,13 +239,13 @@ StatusCode GetMCCkvHitsAlg::execute()
         // const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(mchit->entry()) );
         // test smartid val
         // const LHCb::RichSmartID detID_test( m_richDets[rich]->sensitivePhDetVolumeID(mchit->entry()) );
-         const LHCb::RichSmartID detID_test( m_richDets[rich]->sensitiveVolumeID(mchit->entry()) );
-         int aM_test = detID_test.pdNumInCol();
-         int aP_test = detID_test.pdCol();
-         int PixX_test =detID_test.pixelCol();
-         int PixY_test =detID_test.pixelRow();
+        // const LHCb::RichSmartID detID_test( m_richDets[rich]->sensitiveVolumeID(mchit->entry()) );
+        //  int aM_test = detID_test.pdNumInCol();
+        // int aP_test = detID_test.pdCol();
+        // int PixX_test =detID_test.pixelCol();
+        // int PixY_test =detID_test.pixelRow();
 
-         // info()<<" SmartId_test  rich side  aM_test aP_test PixX_test   PixY_test "    << detID_test.rich() <<"   "
+         // verbose()<<" SmartId_test  rich side  aM_test aP_test PixX_test   PixY_test "    << detID_test.rich() <<"   "
          //     <<detID_test.panel()<<"   "<<aM_test <<"   "<<aP_test<<"   "<<PixX_test<<"   "<< PixY_test<<endmsg;
         // end test smartid val
         // info()<<" SmartID test Hit coord "<<mchit->entry()<<endmsg;

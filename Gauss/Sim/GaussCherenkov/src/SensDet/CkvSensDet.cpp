@@ -475,10 +475,10 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
     int NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit );
 
 
-    //    log << MSG::VERBOSE
-    //    << "CkvSensdet: Current collection set AuxSet and Hit number stored = "
-    //    << CurrentRichCollectionSet << "  " 
-    //    <<NumHitsInCurHC << "   " <<endreq;
+        log << MSG::VERBOSE
+        << "CkvSensdet: Current collection set AuxSet and Hit number stored = "
+        << CurrentRichCollectionSet << "  " 
+        <<NumHitsInCurHC << "   " <<endreq;
 
   }
 

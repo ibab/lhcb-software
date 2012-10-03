@@ -630,13 +630,13 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2B( )
   const std::vector<int> & NumRich2GasFullAcceptSatSignalHit =
     aRichCounter->NumSignalHitFullAcceptSatPerTrackR2Gas();
   
-  
-  const std::vector<G4ThreeVector> & NumRich1GasFullAcceptTrackMom =
-    aRichCounter->TrackMomFullAcceptRich1Gas();
-  const std::vector<G4ThreeVector> & NumRich1AgelFullAcceptTrackMom =
-    aRichCounter->TrackMomFullAcceptRich1Agel() ;
-  const std::vector<G4ThreeVector> & NumRich2GasFullAcceptTrackMom =
-    aRichCounter->TrackMomFullAcceptRich2Gas();
+  // The following not used for now and hence commented out.
+  //  const std::vector<G4ThreeVector> & NumRich1GasFullAcceptTrackMom =
+  //  aRichCounter->TrackMomFullAcceptRich1Gas();
+  //  const std::vector<G4ThreeVector> & NumRich1AgelFullAcceptTrackMom =
+  //  aRichCounter->TrackMomFullAcceptRich1Agel() ;
+  // const std::vector<G4ThreeVector> & NumRich2GasFullAcceptTrackMom =
+  //  aRichCounter->TrackMomFullAcceptRich2Gas();
 
 
   int NumSatTrajFullAcceptRich1Gas =  (int) NumRich1GasFullAcceptSatHit.size();
