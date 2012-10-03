@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================= DigiAlg v4r22 2012-10-03 =========================
 ! 2012-09-25 - Jianchun Wang
  - Add UT in BuildMCTrackInfo, it is controlled by boolean UTForTT
 
