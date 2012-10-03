@@ -4,9 +4,11 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+!========================= STDigiAlgorithms v2r3 2012-10-03 =========================
 ! 2012-09-25 - Jianchun Wang
  - Add utDigi.opts to control UT boole simulation
 
+!========================= STDigiAlgorithms v2r2 2012-05-31 =========================
 ! 2012-05-31 - Marco Cattaneo
  - Use stable_sort in STDigitCreator::genRanNoiseStrips, fixes tiny differences
    between gcc43 and gcc46
