@@ -3,6 +3,52 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v10r2>2012-10-04 Analysis v10r2 </A></H1><PRE>
+
+New development release, built against Phys v16r2.
+
+Updated Packages : AnalysisPython, DaVinciMCTools, DecayTreeTuple,
+                   FlavourTagging, FlavourTaggingChecker,
+                   JetAccessories
+
+In AnalysisPython :
+ . Add tiny shift in X
+ . Add a few decorators for TMinuit&Co
+ . Few minor fixes in PyRoUts 
+ . Add smearing of the histograms according to the Gaussian resolutions
+
+In DaVinciMCTools :
+ . Background category : Improved treatment for non-standard configurations
+  . Calorimetric-gamma/gamma conversion : photon is assumed to be a stable 
+    final state 
+  . Specific treatment for gamma->ee conversion
+  . Merged/resolved pi0 issue : merged is a basic particle while resolved have 
+    photons daughter - improved treatment
+
+In DecayTreeTuple :
+ . Clean up base classes, making things private that have no reason to be protected
+ . Rework printout so it uses MsgStream and doesn't send any "\n" characters that
+   screw up Message Service indenting.
+ . Update various tools to use getIfExists
+ . Remove nPVs from TupleToolEventInfo. Implementation would not work on a uDST,
+   variable is available from TupleToolRecoStats (where it is better at home anyway)
+   in a way that is uDST friendly.
+
+In FlavourTagging and FlavourTaggingChecker :
+ . Updated FINAL SSpi calibration for Stripping 17
+ . Added SSpi cuts from calibration
+ . Added ghost probability
+ 
+In JetAccessories :
+ . Fix bug in the Neutral recovery 
+ . Add the possibility of using Velo Track with infinitely low momenta
+ . Upstream tracks with poor momentum measurement are turned to infinitely low momenta
+   particle (based on sigma(q/p)/(q/p)) but still kept for vertex association
+ . Add option to the Neutral recovery: MinECALE_NeutralRecovery and
+   MinHCALE_NeutralRecovery are the minimal remaining energy needed to take into account
+   in the neutral recovery (until now was only compared to the sigma E of the cluster
+   which was said to be badly evaluated)
+
 </PRE><H1><A NAME=v10r1>2012-07-26 Analysis v10r1 </A></H1><PRE>
 
 New Production release, built against Phys v16r1.

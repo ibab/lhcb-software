@@ -1,5 +1,5 @@
 package AnalysisSys
-version v10r1
+version v10r2
 
 branches doc cmt
 
@@ -9,7 +9,7 @@ use  AnalysisConf               v2r2     Phys   # Patrick Koppenburg
 use  DSTWriters                 v4r7     Phys   # Chris Jones
 use  DSTWriterTests             v2r4p1   Phys   # Juan Palacios
 
-use  FlavourTagging             v12r9p1  Phys   # Marc Grabalosa
+use  FlavourTagging             v12r10   Phys   # Marc Grabalosa
 
 use  DaVinciMonitors            v1r19p1  Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r7     Rich   # Chris Jones
@@ -17,7 +17,7 @@ use  KaliCalo                   v4r13    Phys   # Vanya Belyaev
 
 ####################################################################
 
-use  DaVinciMCTools     	v10r5    Phys   # Juan Palacios
+use  DaVinciMCTools     	v10r6    Phys   # Juan Palacios
 use  LoKiAlgoMC                 v9r5     Phys   # Vanya Belyaev
 use  LoKiGenMC                  v9r1p1   Phys   # Vanya Belyaev
 use  LoKiPhysMC                 v9r5     Phys   # Vanya Belyaev
@@ -25,11 +25,11 @@ use  DaVinciAssociators         v9r4p2   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r4p1   Phys   # Juan Palacios
 use  VertexFitCheck             v1r8     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v6r11    Phys   # Marc Grabalosa
+use  FlavourTaggingChecker      v6r12    Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r5     Phys   # Chris Jones
 use  DisplVerticesMC            v1r4p1   Phys   # Victor Coco
-use  DecayTreeTuple             v3r24p1  Phys   # Rob Lambert
-use  JetAccessories		v1r6p1   Phys   # Victor Coco, Cedric Potterat
+use  DecayTreeTuple             v3r26    Phys   # Rob Lambert
+use  JetAccessories		v1r7     Phys   # Victor Coco, Cedric Potterat
 use  JetAccessoriesMC		v1r4	 Phys   # Victor Coco, Cedric Potterat
 
 ####################################################################
@@ -38,7 +38,7 @@ use  HltSelChecker              v12r1p1  Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r15    Phys
+use  AnalysisPython             v2r16    Phys
 use  PyAna                      v1r3     Analysis
 
 ####################################################################
