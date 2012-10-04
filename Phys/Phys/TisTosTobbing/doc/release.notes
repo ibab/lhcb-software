@@ -3,6 +3,8 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+!========================= TisTosTobbing v7r8p1 2012-10-04 =========================
+
 ! 2012-09-28 - Chris Jones
  - Downgrade some info() messages in TisTos.cpp to debug(), to prevent excessive
    printout spamming in the stripping
