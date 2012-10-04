@@ -4,14 +4,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= TrackSmearing v1r4 2012-10-04 =========================
+
 ! 2012-09-14 Sascha Stahl
  - Switched from DVAlgorithm to DaVinciAlgorithm
- - Added option to set 2012 data - MC12 tuning, on by default
-	 Set Settings to something different than "2012" to switch it off
-
+ - Added option to set 2012 data - MC12 tuning, on by default.
+   Set Settings to something different than "2012" to switch it off
 
 !========================= TrackSmearing v1r3 2012-06-28 =========================
-
 
 ! 2012-05-23
  - Realized that I screwed up the commit in March. I had committed an old version.
