@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r17 2012-10-04 =========================
+
 ! 2012-10-03 - Chris Jones
  - Update MicroDST.py module to match what is in Bender
 
