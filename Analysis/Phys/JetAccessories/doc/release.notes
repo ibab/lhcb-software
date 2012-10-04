@@ -7,6 +7,8 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v1r7 2012-10-04 =========================
+
 ! 2012-09-26 - Murilo Rangel
 - changed PF input default parameters
 
@@ -18,13 +20,14 @@
 
 ! 2012-08-29 - Victor Coco
  - Fix bug in the Neutral recovery (in case of HCAL, typo using the ECAL sigmaE instead)
- - Add the possibilty of using Velo Track with infinitely low momenta 
-   ( intresting for vertex association )
- - Upstream tracks with poor momentum measurement are turned to infinitely low momenta particle
-   (based on sigma(q/p)/(q/p)) but still kept for vertex association
- - Add option to the Neutral recovery: MinECALE_NeutralRecovery and MinHCALE_NeutralRecovery
-	 are the minimal remainig energy needed to take into account in the neutral recovery 
-	(till now was only compared to the sigma E of the cluster which was said to be badly evaluated)
+ - Add the possibility of using Velo Track with infinitely low momenta 
+   (interesting for vertex association )
+ - Upstream tracks with poor momentum measurement are turned to infinitely low momenta
+   particle (based on sigma(q/p)/(q/p)) but still kept for vertex association
+ - Add option to the Neutral recovery: MinECALE_NeutralRecovery and
+   MinHCALE_NeutralRecovery are the minimal remaining energy needed to take into account
+   in the neutral recovery (until now was only compared to the sigma E of the cluster
+   which was said to be badly evaluated)
 
 !========================= JetAccessories v1r6p1 2012-07-26 =========================
 
