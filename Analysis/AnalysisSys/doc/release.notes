@@ -9,7 +9,7 @@ New development release, built against Phys v16r2.
 
 Updated Packages : AnalysisPython, DaVinciMCTools, DecayTreeTuple,
                    FlavourTagging, FlavourTaggingChecker,
-                   JetAccessories
+                   JetAccessories, TrackSmearing, LoKiPhysMC 
 
 In AnalysisPython :
  . Add tiny shift in X
@@ -48,6 +48,14 @@ In JetAccessories :
    MinHCALE_NeutralRecovery are the minimal remaining energy needed to take into account
    in the neutral recovery (until now was only compared to the sigma E of the cluster
    which was said to be badly evaluated)
+
+In TrackSmearing :
+ . Added option to set 2012 data - MC12 tuning, on by default.
+   Set Settings to something different than "2012" to switch it off
+
+In LoKiPhysMC :
+ . Adapted HepMCParticleMaker so that you can exclude particles from a particle 
+   mother.
 
 </PRE><H1><A NAME=v10r1>2012-07-26 Analysis v10r1 </A></H1><PRE>
 

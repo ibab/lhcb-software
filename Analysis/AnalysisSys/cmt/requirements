@@ -20,7 +20,7 @@ use  KaliCalo                   v4r13    Phys   # Vanya Belyaev
 use  DaVinciMCTools     	v10r6    Phys   # Juan Palacios
 use  LoKiAlgoMC                 v9r5     Phys   # Vanya Belyaev
 use  LoKiGenMC                  v9r1p1   Phys   # Vanya Belyaev
-use  LoKiPhysMC                 v9r5     Phys   # Vanya Belyaev
+use  LoKiPhysMC                 v9r6     Phys   # Vanya Belyaev
 use  DaVinciAssociators         v9r4p2   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r4p1   Phys   # Juan Palacios
 use  VertexFitCheck             v1r8     Phys   # Yuehong Xie
@@ -57,7 +57,7 @@ use  MicroDSTExample            v2r14   Ex         # Juan Palacios
 
 ####################################################################
 
-use  TrackSmearing              v1r3    Phys   # Alex Shires
+use  TrackSmearing              v1r4    Phys   # Alex Shires
 use  DaVinciTrackRefitting      v1r0    Phys   # Matt Needham
 
 ####################################################################
