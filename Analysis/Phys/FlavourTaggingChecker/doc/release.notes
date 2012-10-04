@@ -6,6 +6,8 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTaggingChecker v6r12 2012-10-04 =========================
+
 ! 2012-09-07 - Marc Grabalosa
  - In /root
   . Fix sweight fill histo
