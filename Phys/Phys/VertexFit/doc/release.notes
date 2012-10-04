@@ -4,6 +4,8 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================= VertexFit v6r13 2012-10-04 =========================
+
 ! 2012-07-27 - Chris Jones
  - Patch the OfflineVertexFitter to prevent negative mass errors being saved.
    Also declare such fits where something has obviously gone wrong a failure.
