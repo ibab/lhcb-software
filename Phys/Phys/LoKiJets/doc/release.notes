@@ -7,10 +7,10 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
-!========================= LoKiJets v6r7 2012-09-26 =========================
+!========================= LoKiJets v6r7 2012-10-04 =========================
 
 ! 2012-09-27 - Murilo Rangel
-- JetID cuts Updated also for noPVassociation
+- JetID cuts Updated also for no PV association
 
 ! 2012-09-26 - Murilo Rangel
 - Updated jec.root file and JetID cuts
