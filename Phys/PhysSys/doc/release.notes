@@ -3,6 +3,35 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v16r2>2012-10-04 Phys v16r2 </A></H1><PRE>
+Development release, based on Rec v14r2, LHCb v35r2.
+
+- Packages updated : DaVinciTools, LoKiJets, LoKiTracks,
+                     ParticleMaker, PhysConf, Swimming,
+                     TisTosTobbing, VertexFit
+
+In DaVinciTools :
+. Use enums from Particle.h in ConeVariables instead of hardcoded indices.
+ 
+In LoKiJets :
+ . Updated JetID cuts
+
+In ParticleMaker :
+ . Fixing a memory leak in DiElectronMaker
+
+In PhysConf :
+ . Update MicroDST.py module to match what is in Bender
+
+In Swimming :
+ . Changed a few lines in EventLoop.py to deal with NULL pointers due to
+	 event packing on DSTs from stripping 18 onwards
+ . Removed .__dev__. DST writers as they are now obosolete
+ . Removed "copyProtoParticles = True" option as this is also obsolete
+
+In VertexFit :
+ . Patch the OfflineVertexFitter to prevent negative mass errors being saved.
+   Also declare such fits where something has obviously gone wrong a failure.
+
 </PRE><H1><A NAME=v16r1>2012-07-26 Phys v16r1 </A></H1><PRE>
 Production release, based on Rec v14r1, LHCb v35r1
 
