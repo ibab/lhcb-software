@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-05 - Paul Szczypka
+ - Added Gauss-Debug.py option file.
+
 ! 2012-10-02 - Aurelien Martens
  - Added few qmtests for pythia8
 
