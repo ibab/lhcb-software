@@ -4,6 +4,16 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-05 - Gloria Corti
+ - Merge changes from the branch v42b
+   . Remove spill-over from Gauss-MC11a.py
+   . Modify Gauss-Upgrade.py to pick up beam conditions as in the upgrade for
+     nu=2.6 (and show how to pick others) but remove spill-over explicitely and
+     use the new Upgrade Database (DDDB and SIMCOND). 
+ - Update upgrade example options to use latest global tags
+ - Remove use of GaudiPartProp from Gauss() since all code has been migrated 
+   to the LHCb::ParticlePropertySvc 
+
 ! 2012-10-05 - Paul Szczypka
  - Added Gauss-Debug.py option file.
 
@@ -15,7 +25,7 @@
  - Added Debug flag to Configuration.
 
 ! 2012-09-24 - Gloria Corti
- - Remove use of LbHerwing that is obsolete since v42r1. 
+ - Remove use of LbHerwig that is obsolete since v42r1. 
    Put use of LbAlpGen and LbHerwigpp that are new
    Change version of DecFiles to v26r* for compatibility with new LHCb
    ParticlePropertySvc and remove use of the Gaudi old one. 

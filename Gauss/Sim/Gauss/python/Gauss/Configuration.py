@@ -1622,11 +1622,6 @@ class Gauss(LHCbConfigurableUser):
         # May be needed by some options
         importOptions("$STDOPTS/PreloadUnits.opts")
 
-        # TEMPORARILY until migration to new particle propertysvc set the
-        # options to read table from database. Before it was done by DDDB
-        from Configurables import Gaudi__ParticlePropertySvc
-        Gaudi__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt'
-
 
 
 #"""

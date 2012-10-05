@@ -7,7 +7,7 @@
 ##############################################################################
 
 from Gaudi.Configuration import *
-importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-MC11-nu2-50ns.py")
+importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-MC11-nu2.py")
 
 ##############################################################################
 # Database tags must be set and are defined in a separate file
