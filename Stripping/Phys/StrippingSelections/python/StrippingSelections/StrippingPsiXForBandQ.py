@@ -1,4 +1,4 @@
-##!/usr/bin/env python
+#!/usr/bin/env python
 # =============================================================================
 # $Id:$
 # =============================================================================
@@ -132,8 +132,9 @@ _default_configuration_ = {
     'B2Psi4KPiPrescale' : 1.0 ,
     'B2Psi4KPrescale'   : 1.0 ,
     #
-    'B2Psi5PiPrescale'  : 1.0 ,
+    'B2Psi5PiPrescale'  : 1.0 , 
     'B2Psi5KPiPrescale' : 1.0 ,
+    'B2Psi5KPrescale'   : 1.0 ,
     #
     'B2Psi6PiPrescale'  : 1.0 ,
     'B2Psi6KPiPrescale' : 1.0 ,
@@ -388,6 +389,16 @@ class PsiX_BQ_Conf(LineBuilder) :
             HLT             = self ['L0DU'   ]            ,
             algos           = [ self.psi_5Kpi ()       ]  ) ,
             #
+            StrippingLine (
+            "B2Psi5KFor  "  + self.name()                 ,
+            prescale        = self ['B2Psi5KPrescale'   ] , 
+            checkPV         = self ['CheckPV']            ,
+            FILTER          = self ['FILTER' ]            ,
+            ODIN            = self ['ODIN'   ]            ,
+            L0DU            = self ['L0DU'   ]            ,
+            HLT             = self ['L0DU'   ]            ,
+            algos           = [ self.psi_5K ()         ]  ) ,
+            #
             ## 6h
             #
             StrippingLine (
@@ -398,7 +409,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             ODIN            = self ['ODIN'   ]           ,
             L0DU            = self ['L0DU'   ]           ,
             HLT             = self ['L0DU'   ]           ,
-            algos           = [ self.psi_5pi ()       ]  ) ,
+            algos           = [ self.psi_6pi ()       ]  ) ,
             ##
             StrippingLine (
             "B2Psi6KPiFor"  + self.name()                 ,
@@ -408,7 +419,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             ODIN            = self [ 'ODIN'    ]          ,
             L0DU            = self [ 'L0DU'    ]          ,
             HLT             = self [ 'L0DU'    ]          ,
-            algos           = [ self.psi_5Kpi ()       ]  ) ,
+            algos           = [ self.psi_6Kpi ()       ]  ) ,
             ##
             # =================================================================
             # Helper line to study gamma/pi0 reconstruction efficiency
@@ -1163,7 +1174,44 @@ class PsiX_BQ_Conf(LineBuilder) :
             
             )
         
-        return self._add_selection( 'Psi5KPi_Selection' , sel ) 
+        return self._add_selection( 'Psi5KPi_Selection' , sel )
+    
+    # B -> psi(') 5K
+    def psi_5K  ( self ) :
+        """
+        B -> psi(') 5K
+        
+        """
+        sel = self._selection ( 'Psi5K_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "[B+ -> J/psi(1S) K+ K+ K+ K-  K- ]cc" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            mbc_acut         &
+            ADOCACHI2CUT ( 9 , '') 
+            """ ,
+            ## 
+            MotherCut = """
+            mbc_cut            &
+            ( chi2vx    < 64 ) &
+            ( ctau      > %s ) 
+            """ % min ( self['CTAU'] , self['CTAU_BC'] ) 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsi5KFor"    + self.name()    ,
+            Algorithm          =   alg           ,
+            RequiredSelections = [ self.kaonsTight () ]
+            
+            )
+        
+        return self._add_selection( 'Psi5K_Selection' , sel ) 
     
     # B -> psi(') 6pi
     def psi_6pi ( self ) :
