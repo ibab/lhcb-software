@@ -25,6 +25,12 @@ DECLARE_ALGORITHM_FACTORY( CaloElectronNtp )
 CaloElectronNtp::CaloElectronNtp( const std::string& name,
                                                     ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
+  , m_extrapolator(NULL)
+  , m_caloElectron(NULL)
+  , m_toSpd(NULL)
+  , m_toPrs(NULL)
+  , m_calo(NULL)
+  , m_odin(NULL)
 {
 
   declareProperty("ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;

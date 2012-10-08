@@ -63,7 +63,11 @@ protected:
    *  @param   pSvcLocator pointer to service locator
    */
   CaloPi0Monitor( const std::string &name, ISvcLocator *pSvcLocator )
-    : CaloMoniAlg( name, pSvcLocator ){ 
+    : CaloMoniAlg( name, pSvcLocator )
+    , m_calo(NULL)
+    , m_toSpd(NULL)
+    , m_toPrs(NULL)
+  { 
     declareProperty( "PhotonPtFilter"   , m_ptPhoton = 250 * Gaudi::Units::MeV );
     declareProperty( "IsolationFilter"  , m_isol = 4 );
     declareProperty( "AllowConverted"   , m_conv = false);
@@ -97,7 +101,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( CaloPi0Monitor );
+DECLARE_ALGORITHM_FACTORY( CaloPi0Monitor )
 
 // ============================================================================
 // standard execution method

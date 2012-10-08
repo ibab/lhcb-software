@@ -49,7 +49,9 @@ protected:
    *  @param   pSvcLocator pointer to service locator
    */
   L0CaloScale( const std::string &name, ISvcLocator *pSvcLocator )
-    : CaloMoniAlg( name, pSvcLocator ){
+    : CaloMoniAlg( name, pSvcLocator )
+    , m_ecal(NULL)
+  {
     declareProperty("RatioMin" ,m_ratMin = 0.2);
     declareProperty("RatioMax" ,m_ratMax = 1.7);
     declareProperty("RatioBin" ,m_ratBin = 150);
@@ -74,7 +76,7 @@ private:
   DeCalorimeter* m_ecal;
   std::string m_clLoc;
 };
-DECLARE_ALGORITHM_FACTORY( L0CaloScale );
+DECLARE_ALGORITHM_FACTORY( L0CaloScale )
 
 // ============================================================================
 // standard execution method

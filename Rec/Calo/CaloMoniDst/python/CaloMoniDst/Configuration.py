@@ -1,11 +1,11 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-## Confurable for Calorimeter Monitoring
+## Configurable for Calorimeter Monitoring
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
 #  @date 2008-07-17
 # =============================================================================
 """
-Confurable for Calorimeter Monitoring
+Configurable for Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
@@ -48,7 +48,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
     __slots__ = {
         ##
         "Context"              : "Offline"   # The context within which to run
-        , "MeasureTime"        : True        # Measure the time for sequencers
+        , "MeasureTime"        : False       # Measure the time for sequencers
         , "OutputLevel"        : INFO        # The global output level
         ##
         , 'Sequence'           : None        # The sequencer to add the CALO reconstruction algorithms to

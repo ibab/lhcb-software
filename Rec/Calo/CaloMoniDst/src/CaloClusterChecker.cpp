@@ -89,7 +89,7 @@ private:
 
 
  
-DECLARE_ALGORITHM_FACTORY( CaloClusterChecker );
+DECLARE_ALGORITHM_FACTORY( CaloClusterChecker )
 
 // ============================================================================
 // standard execution method

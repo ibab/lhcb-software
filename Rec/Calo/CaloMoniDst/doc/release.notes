@@ -4,8 +4,14 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2012-10-08 - Marco Cattaneo
+ - In Configuration.py, remove setting of MeasureTime=true in sequencers,
+   should not be the default, and should in any case use TimingAuditor.
+ - Fix UNINIT_CTOR defects
+ - Fix trivial icc remarks
+
 ! 2012-10-08 - Olivier Deschamps
-  - fix coverity problems
+ - Fix coverity problems
 
 !========================= CaloMoniDst v5r12 2012-06-25 =========================
 ! 2012-05-13 - Olivier Deschamps

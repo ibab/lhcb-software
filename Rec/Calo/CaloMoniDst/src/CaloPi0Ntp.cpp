@@ -1,5 +1,5 @@
-#include "GaudiKernel/AlgFactory.h" 
- #include <vector>
+#include "GaudiKernel/AlgFactory.h"
+#include <vector>
 #include "Event/CaloHypo.h"
 #include "CaloUtils/CaloMomentum.h"
 #include "CaloDet/DeCalorimeter.h"
@@ -12,7 +12,12 @@ DECLARE_ALGORITHM_FACTORY( CaloPi0Ntp )
 
 
 CaloPi0Ntp::CaloPi0Ntp( const std::string &name, ISvcLocator *pSvcLocator )
-  : GaudiTupleAlg( name, pSvcLocator ){ 
+  : GaudiTupleAlg( name, pSvcLocator )
+  , m_odin(NULL)
+  , m_calo(NULL)
+  , m_toSpd(NULL)
+  , m_toPrs(NULL)
+{ 
   declareProperty( "PhotonPt"      , m_ppt      = std::make_pair(250. , 15000.) );
   declareProperty( "Isolation"     , m_isol     = std::make_pair(4.   , 9999. ) );
   declareProperty( "Conversion"    , m_conv     = std::make_pair(1    , 1 ) );
@@ -33,8 +38,9 @@ CaloPi0Ntp::CaloPi0Ntp( const std::string &name, ISvcLocator *pSvcLocator )
   declareProperty( "Trend"    , m_trend = false);
   declareProperty( "VertexLoc", m_vertLoc = "");
   declareProperty( "UsePV3D", m_usePV3D = false);
-};
-CaloPi0Ntp::~CaloPi0Ntp(){};
+}
+
+CaloPi0Ntp::~CaloPi0Ntp(){}
 
 
 StatusCode CaloPi0Ntp::initialize(){

@@ -57,6 +57,10 @@ CaloPhotonChecker::CaloPhotonChecker
   , m_nMCPhotons( 0 )
   , m_nWrongs   ( 0 )
 
+  , m_ecal(NULL)
+  , m_spd(NULL)
+  , m_prs(NULL)
+
   , m_IDTableName   ( LHCb::CaloIdLocation::PhotonID )
   , m_TrTableName   ( LHCb::CaloIdLocation::ClusterMatch )
   , m_MCTableName   ("Relations/" + LHCb::CaloClusterLocation::Default )
@@ -120,7 +124,7 @@ CaloPhotonChecker::CaloPhotonChecker
 
   // set the appropriate default values for input data
   setInputData    ( LHCb::CaloHypoLocation::Photons ) ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -251,7 +255,7 @@ StatusCode CaloPhotonChecker::initialize()
     m_split = false;
   }    
   return StatusCode::SUCCESS;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -316,7 +320,7 @@ StatusCode CaloPhotonChecker::finalize()
 
 
   return CaloMoniAlg::finalize() ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -501,7 +505,7 @@ StatusCode CaloPhotonChecker::execute()
        LHCb::ClusterFunctors::locateDigit( cluster->entries().begin() ,
                                            cluster->entries().end  () ,
                                            LHCb::CaloDigitStatus::SeedCell  ) ;
-     if( iseed == cluster->entries().end() ){Warning(" *SeedCell* not found ");continue;}
+     if( iseed == cluster->entries().end() ){Warning(" *SeedCell* not found ").ignore();continue;}
      
      const LHCb::CaloDigit* seed = iseed->digit();
      if( 0 == seed ){Warning( " SeedCell *Digit* points to NULL! ").ignore();continue;}

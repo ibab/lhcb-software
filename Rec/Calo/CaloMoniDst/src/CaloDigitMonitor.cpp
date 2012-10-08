@@ -50,8 +50,9 @@ protected:
    *  @param   pSvcLocator pointer to service locator
    */
   CaloDigitMonitor( const std::string &name, ISvcLocator *pSvcLocator )
-    : CaloMoniAlg( name, pSvcLocator ){
-    
+    : CaloMoniAlg( name, pSvcLocator )
+    , m_calo(NULL)
+  { 
     declareProperty( "Spectrum", m_spectrum = false); // activate spectrum per channel histogramming
 
     setInputData( LHCb::CaloAlgUtils::CaloDigitLocation( name ) );
@@ -71,7 +72,7 @@ private:
 //
 };
 
-DECLARE_ALGORITHM_FACTORY( CaloDigitMonitor );
+DECLARE_ALGORITHM_FACTORY( CaloDigitMonitor )
 
 // ============================================================================
 // standard initialize method

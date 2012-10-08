@@ -37,7 +37,10 @@ public:
 protected:
   SpdMonitor ( const std::string& name, ISvcLocator* pSvc )
     : CaloMoniAlg ( name , pSvc )
-    , m_nEvents   ( 0 ) {
+    , digitsSpd(NULL)
+    , m_nEvents(0)
+    , m_detSpd(NULL)
+ {
     m_split=true;  // Area splitting is the default !
   };
   virtual ~SpdMonitor() {};
@@ -49,7 +52,7 @@ private:
   CaloVector<int> m_neighN; 
   
 };    
-DECLARE_ALGORITHM_FACTORY( SpdMonitor );
+DECLARE_ALGORITHM_FACTORY( SpdMonitor )
   
 // ============================================================================
 
@@ -83,7 +86,7 @@ StatusCode SpdMonitor::finalize()
   info() << "Number of Events Analyzed : " << m_nEvents << endmsg;
 
   return CaloMoniAlg::finalize() ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -121,7 +124,4 @@ StatusCode SpdMonitor::execute()
   }
   m_nEvents++;
   return StatusCode::SUCCESS;
-};
-
-
-
+}

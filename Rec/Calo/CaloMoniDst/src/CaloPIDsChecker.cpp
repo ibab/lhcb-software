@@ -124,6 +124,7 @@ protected:
    */
   CaloPIDsChecker( const std::string &name, ISvcLocator *isvc )
     : CaloMoniAlg( name, isvc )
+    , m_track2MCLink(NULL)
     , m_pid( 11 )
     , m_cut( 0 )
     , m_pNorm( 50 * Gaudi::Units::GeV )
@@ -172,7 +173,7 @@ private:
 
 };
 
-DECLARE_ALGORITHM_FACTORY( CaloPIDsChecker );
+DECLARE_ALGORITHM_FACTORY( CaloPIDsChecker )
 
 // ============================================================================
 // standard execution method

@@ -16,7 +16,11 @@ DECLARE_ALGORITHM_FACTORY( CaloHypoNtp )
 
 
 CaloHypoNtp::CaloHypoNtp( const std::string &name, ISvcLocator *pSvcLocator )
-  : GaudiTupleAlg( name, pSvcLocator ){ 
+  : GaudiTupleAlg( name, pSvcLocator )
+  , m_estimator(NULL)
+  , m_odin(NULL)
+  , m_2MC(NULL)
+{ 
   declareProperty( "RangePt"      , m_et      = std::make_pair(100. , 15000.) );
   declareProperty( "RangeE"       , m_e       = std::make_pair(0.   , 5000000) );
   declareProperty( "RangeSpdM"    , m_spdM    = std::make_pair(0.   , 5000000.) );
@@ -37,10 +41,9 @@ CaloHypoNtp::CaloHypoNtp( const std::string &name, ISvcLocator *pSvcLocator )
   m_hypos.push_back("Electrons");
   m_hypos.push_back("Photons");
   m_hypos.push_back("MergedPi0s");
-  
+}
 
-};
-CaloHypoNtp::~CaloHypoNtp(){};
+CaloHypoNtp::~CaloHypoNtp(){}
 
 
 StatusCode CaloHypoNtp::initialize(){

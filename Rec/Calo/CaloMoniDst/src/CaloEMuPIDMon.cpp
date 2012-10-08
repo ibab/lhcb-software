@@ -64,7 +64,7 @@ private:
 private:
 };
 
-DECLARE_ALGORITHM_FACTORY( CaloEMuPIDMon );
+DECLARE_ALGORITHM_FACTORY( CaloEMuPIDMon )
 
 // ============================================================================
 // standard execution method

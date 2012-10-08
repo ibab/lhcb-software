@@ -25,6 +25,7 @@ DECLARE_ALGORITHM_FACTORY( CaloEFlowAlg )
 CaloEFlowAlg::CaloEFlowAlg( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : CaloMoniAlg ( name, pSvcLocator )
+  , m_calo(NULL)
   , m_pidKplus (321)
   , m_pidKminus (-321)
   , m_pidPiplus (211) 

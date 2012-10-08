@@ -1,4 +1,3 @@
-// $Id: CaloAlignmentNtp.cpp,v 1.1 2010/05/20 09:55:38 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloAlignmentNtp );
+DECLARE_ALGORITHM_FACTORY( CaloAlignmentNtp )
 
 
 //=============================================================================
@@ -24,6 +23,7 @@ DECLARE_ALGORITHM_FACTORY( CaloAlignmentNtp );
 CaloAlignmentNtp::CaloAlignmentNtp( const std::string& name,
                                                     ISvcLocator* pSvcLocator)
   : CaloNtpBase ( name , pSvcLocator )
+  , m_estimator(NULL)
 {
 
   // base properties default

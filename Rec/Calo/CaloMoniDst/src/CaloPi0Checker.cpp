@@ -119,7 +119,7 @@ std::string                            m_pi0Name;
 };
 
 
-DECLARE_ALGORITHM_FACTORY( CaloPi0Checker );
+DECLARE_ALGORITHM_FACTORY( CaloPi0Checker )
 
 // ============================================================================
 // standard execution method

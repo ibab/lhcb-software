@@ -117,7 +117,7 @@ private:
   std::string m_clLoc;
   
 };
-DECLARE_ALGORITHM_FACTORY( CaloHypoMonitor );
+DECLARE_ALGORITHM_FACTORY( CaloHypoMonitor )
 
 // ============================================================================
 // standard execution method

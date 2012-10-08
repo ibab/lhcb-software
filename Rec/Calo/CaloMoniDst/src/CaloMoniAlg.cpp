@@ -25,6 +25,7 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
       , m_inputs()        // no default value
       , m_detData( "" )   // no default value
       , m_nAreas()
+      , m_count(0)
 {
 
   declareProperty( "Input",    m_inputData );

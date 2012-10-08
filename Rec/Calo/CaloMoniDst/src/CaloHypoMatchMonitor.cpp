@@ -93,7 +93,7 @@ private:
   CaloHypoMatchMonitor &operator=( const CaloHypoMatchMonitor& );
 };
 
-DECLARE_ALGORITHM_FACTORY( CaloHypoMatchMonitor );
+DECLARE_ALGORITHM_FACTORY( CaloHypoMatchMonitor )
 
 // ============================================================================
 // standard execution method

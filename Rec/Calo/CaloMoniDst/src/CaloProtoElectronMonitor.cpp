@@ -23,6 +23,8 @@ DECLARE_ALGORITHM_FACTORY( CaloProtoElectronMonitor )
 CaloProtoElectronMonitor::CaloProtoElectronMonitor( const std::string& name,
                                                     ISvcLocator* pSvcLocator)
   : CaloMoniAlg ( name , pSvcLocator )
+  , m_extrapolator(NULL)
+  , m_caloElectron(NULL)
 {
 
   declareProperty("HistoEoPMin" , m_eOpMin = 0.); 
@@ -186,7 +188,7 @@ StatusCode CaloProtoElectronMonitor::execute() {
       LHCb::State st2 = t2->firstState();
 
       if( NULL == extrapolator() ){
-        Warning("No extrapolator defined");
+        Warning("No extrapolator defined").ignore();
         continue;
       }
       StatusCode sc = extrapolator()->propagate(st1, 0.);
