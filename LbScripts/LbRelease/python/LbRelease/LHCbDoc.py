@@ -823,8 +823,8 @@ class Doc(object):
             if "viewBox" in attrib:
                 _, _, width, height = attrib["viewBox"].split()
                 # convert to pixels assuming 96dpi (default resolution in graphviz)
-                width = int(float(width) / 72 * 96)
-                height = int(float(height) / 72 * 96)
+                width = int(round(float(width) / 72 * 96))
+                height = int(round(float(height) / 72 * 96))
         return (width, height) # return the size in pixels of the image
 
     def _buildDox(self, conf, workdir, version = None):
