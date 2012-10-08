@@ -159,7 +159,6 @@ class RichRecSysConf(RichConfigurableUser):
         # Initialisation
         #-----------------------------------------------------------------------------
         initSeq = self.makeRichAlg(GaudiSequencer,"RichRecInit"+cont+"Seq")
-        initSeq.MeasureTime = True
         sequence.Members += [ initSeq ]
 
         if self.getProp("CheckProcStatus") :
@@ -169,7 +168,6 @@ class RichRecSysConf(RichConfigurableUser):
         if self.getProp("InitPixels") :
             # Make a pixel sequence
             pixelSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"PixelsSeq")
-            pixelSeq.MeasureTime = True
             initSeq.Members += [ pixelSeq ]
             # Raw decoding algorithm
             decodeRich = self.makeRichAlg( Rich__DAQ__RawBufferToRichDigitsAlg, "DecodeRawRich"+cont )
@@ -194,7 +192,6 @@ class RichRecSysConf(RichConfigurableUser):
         if self.getProp("InitTracks") :
             # Make a track sequence
             trackSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"TracksSeq")
-            trackSeq.MeasureTime = True
             initSeq.Members += [ trackSeq ]
             
             # Calo tracks
@@ -213,7 +210,6 @@ class RichRecSysConf(RichConfigurableUser):
         if self.getProp("InitPhotons") :
             # Make a photon sequence
             photonSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"PhotonsSeq")
-            photonSeq.MeasureTime = True
             initSeq.Members += [ photonSeq ]
 
              # Make RichRecPhotons
@@ -229,7 +225,6 @@ class RichRecSysConf(RichConfigurableUser):
 
         if "ENN" in ringalgs :
             ennfinderSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"ENNRingFinderSeq")
-            ennfinderSeq.MeasureTime               = True
             sequence.Members                      += [ ennfinderSeq ]
             ennConf = self.getRichCU(RichENNRingFinderConf)
             self.setOtherProps(ennConf,["Context","OutputLevel"])
@@ -238,7 +233,6 @@ class RichRecSysConf(RichConfigurableUser):
            
         if "Template" in ringalgs :
             tfinderSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"TemplateRingFinderSeq")
-            tfinderSeq.MeasureTime               = True
             sequence.Members                    += [ tfinderSeq ]
             tempConf = self.getRichCU(RichTemplateRingFinderConf)
             self.setOtherProps(tempConf,["Context","OutputLevel"])
@@ -252,14 +246,12 @@ class RichRecSysConf(RichConfigurableUser):
         if pidMode != "None" :
 
             pidSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"PIDSeq")
-            pidSeq.MeasureTime = True
             sequence.Members += [ pidSeq ]
             
             if pidMode == "FullGlobal" or pidMode == "FastGlobal":
                 pidConf = self.gpidConfig()
                 if pidMode == "FastGlobal": pidConf.Mode = "Fast"
                 gpidSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDSeq")
-                gpidSeq.MeasureTime = True
                 pidSeq.Members += [ gpidSeq ]
                 pidConf.PidSequencer = gpidSeq
             else:
