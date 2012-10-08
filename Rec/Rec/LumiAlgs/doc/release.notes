@@ -4,6 +4,12 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-10-08 - Marco Cattaneo
+ - In Configuration.py, remove setting of MeasureTime=true in sequencers,
+   should not be the default, and should in any case use TimingAuditor.
+ - Fix UNINIT_CTOR defects
+ - Fix trivial icc remark
+
 !========================= LumiAlgs v8r0 2012-10-01 =========================
 ! 2012-09-24 - Marco Cattaneo
  - Fix reference files to follow format change in options printout of Gaudi v23r4

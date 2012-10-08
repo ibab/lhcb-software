@@ -8,14 +8,17 @@
 #include <boost/iostreams/filter/bzip2.hpp>
 #include <sstream>
 
-DECLARE_ALGORITHM_FACTORY(DumpLumiEvents);
+DECLARE_ALGORITHM_FACTORY(DumpLumiEvents)
 
 inline bool hasEnding(const std::string& s, const std::string& ending);
 inline double round(double x, double factor);
 inline bool comparePairs(const KeyLocationPair& x, const KeyLocationPair& y);
 
 DumpLumiEvents::DumpLumiEvents(const std::string& name, ISvcLocator* pSvcLocator) :
-    GaudiAlgorithm(name, pSvcLocator) {
+    GaudiAlgorithm(name, pSvcLocator)
+    , m_intermediateStream(NULL)
+    , m_outputStream(NULL)
+{
   declareProperty("Sort", m_sort=true);
   declareProperty("OutputFileName", m_outputFileName);
   declareProperty("RecVerticesLocation", m_recVerticesLocation);

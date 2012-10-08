@@ -134,8 +134,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
             BXMembers.append( GaudiSequencer('Lumi'+i+'Seq', 
                                              Members = seqMembers,
                                              ModeOR = False,
-                                             ShortCircuit = True,
-                                             MeasureTime = True,
+                                             ShortCircuit = True
                                              ))
             if self.getProp('InputType') == 'DST':
                     decoder.OutputContainerName='LumiSummaries'
@@ -177,8 +176,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
             BXMembers.append( GaudiSequencer('LumiLow'+i+'Seq', 
                                              Members = seqMembers,
                                              ModeOR = False,
-                                             ShortCircuit = True,
-                                             MeasureTime = True,
+                                             ShortCircuit = True
                                              ))
             if self.getProp('InputType') == 'DST':
                     decoder.OutputContainerName='LumiSummaries'
@@ -204,8 +202,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
         seq =  GaudiSequencer('TimeSpanSeq', 
                               Members = seqMembers,
                               ModeOR = False,
-                              ShortCircuit = True,
-                              MeasureTime = True,
+                              ShortCircuit = True
                               )
         
         return [seq]
@@ -294,7 +291,6 @@ class LumiAlgsConf(LHCbConfigurableUser):
                 sequence.Members += self.mergeFSR()
         
         #finally configure the sequence
-        sequence.MeasureTime = True
         sequence.ModeOR = True
         sequence.ShortCircuit = False
         sequence.IgnoreFilterPassed = True
