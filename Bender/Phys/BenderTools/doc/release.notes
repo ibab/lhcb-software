@@ -5,6 +5,14 @@
 ! Purpose     : colelctoon of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+
+! ==================== Phys/BenderTools v21r2p2 2012-10-08 ====================
+
+! 2012-10-08 - Vanya Belyaev
+
+ - add possibiilty to read EOS files (needed for Stripping 20) 
+
+
 ! ==================== Phys/BenderTools v21r2p1 2012-10-04 ====================
 
 ! 2012-10-04 - Vanya Belyaev
