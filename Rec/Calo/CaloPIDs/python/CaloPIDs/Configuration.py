@@ -42,7 +42,7 @@ class CaloPIDsConf(LHCbConfigurableUser):
     __slots__ = {
         ##
         "Context"              : ''   # The context within which to run
-        , "MeasureTime"        : True        # Measure the time for sequencers
+        , "MeasureTime"        : False       # Measure the time for sequencers
         , "OutputLevel"        : INFO        # The global output level
         ##
         , 'Sequence'           : ''          # The sequencer to add the CALO reconstruction algorithms to

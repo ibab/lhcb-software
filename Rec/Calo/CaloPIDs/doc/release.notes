@@ -4,6 +4,10 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2012-10-08 - Marco Cattaneo
+ - In Configuration.py, remove setting of MeasureTime=true in sequencers,
+   should not be the default, and should in any case use TimingAuditor.
+
 !========================= CaloPIDs v5r12 2012-03-27 =========================
 ! 2012-03-15 - Marco Cattaneo
  - Fix unprotected debug() MsgStreams
