@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-08 - Gloria Corti
+ - Put r* in requirements file for generator and LHCb data packages
+
 ! 2012-10-08 - Paul Szczypka
  - Corrected a bug in the Configuration whereby all detectors defined in the
    "T" volume would be loaded irrespective of detector choice if any of the
