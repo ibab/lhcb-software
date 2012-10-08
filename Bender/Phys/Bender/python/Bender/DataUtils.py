@@ -50,7 +50,8 @@ __version__ = "$Revision$"
 __all__     = ( 'extendfile1' ,
                 'extendfile2' ,
                 'extendfile'  ,
-                'inCastor'    ) 
+                'inCastor'    ,
+                'inEOS'       ) 
 # =============================================================================
 ## logging
 # =============================================================================
@@ -127,6 +128,80 @@ def inCastor ( fname            ,
 
 
 # =============================================================================
+_eos    = 'root://eoslhcb.cern.ch//eos'
+_eosls  = 'eos_ls %s '
+# =============================================================================
+## check the presence of the file in (CERN) EOS
+#
+#  @code
+#
+#   >>> lfn = '/lhcb/Collisons11/......'
+#   >>> ok = inEOS ( lfn ) ## check CERN EOS storage 
+#
+#  @endcode
+#
+#  @code
+#
+#   >>> fname = '/eos/...'
+#   >>> ok = inCastor ( fname , '' ) ## check the explicit location
+#
+#  @endcode
+#
+#  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+#  @date 2012-10-08
+#
+#  @param fname   filename
+#  @param prefix  prefix to be used
+#
+def inEOS ( fname             ,
+            prefix = _eos     ,
+            eosls  = _eosls   ) :
+    """
+    check if the file is accessible from castor:
+    
+    >>> lfn = '/lhcb/Collisons11/......'
+    >>> ok = inEOS ( lfn ) ## check CERN Grid Castor storage 
+    
+    >>> fname = '/eos/...'
+    >>> ok = inEOS ( fname ) ## check the explicit location
+    
+    """
+    # remove full
+    if 0 == fname.find ( prefix ) : fname = fname [ prefix.size() : ]
+    # check short prefix
+    if 0 != fname.find ( '/eos' ) : fname = '/eos' + fname 
+    ##
+    
+    ## use eosls command to check the file existence 
+    cmd = eosls % fname  
+    
+    try:
+
+        ## 
+        from subprocess import Popen, PIPE
+        p   = Popen( cmd                 ,
+                     shell     = True    ,
+                     stdin     = PIPE    ,
+                     stdout    = PIPE    ,
+                     stderr    = PIPE    ,
+                     close_fds = True    )
+        stdin, stdout, stderr = p.stdin, p.stdout, p.stderr
+
+        ## require empty stder
+        for l in stderr : return False   ## RETURN 
+        
+        ## Require non-empty std-out: 
+        for l in stdout : return True    ##  RETURN 
+
+    except :
+        
+        logger.error('inEOS: failure to use Popen, return False')
+        pass
+    
+    return False 
+
+
+# =============================================================================
 ## Helper function to 'extend' the short file name
 #
 #  @thanks Philippe Charpentier for extremly clear explanation of
@@ -186,12 +261,18 @@ def extendfile1 ( filename , castor = False ) :
          0 == filename.find ( '/lhcb/user/'       ) or \
          0 == filename.find ( '/lhcb/validation/' ) :
 
-        if castor and inCastor ( filename ) :
+        if   castor and inCastor ( filename ) :
             filename = extendfile1 ( '/castor/cern.ch/grid' + filename , castor ) 
+        elif castor and inEOS    ( filename ) :
+            filename = 'PFN:' + _eos + filename 
         else : 
             filename = 'LFN:' + filename
 
-            
+    elif 0 == filename.find ( 'eos/lhcb/data/'       ) : 
+        
+        if castor and inEOS  ( filename ) :
+            filename = 'PFN:' + _eos + filename[4: ]  
+        
     ##
     return filename
 
