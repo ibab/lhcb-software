@@ -59,7 +59,7 @@ class CaloRecoConf(LHCbConfigurableUser):
     __slots__ = {
         ##
         "Context"              : ''   # The context to run (default = offline)
-        , "MeasureTime"        : True        # Measure the time for sequencers
+        , "MeasureTime"        : False       # Measure the time for sequencers
         , "OutputLevel"        : INFO        # The global output level
         ##
         , 'Sequence'           : None        # The sequencer to add the CALO reconstruction algorithms to

@@ -4,11 +4,14 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2012-10-08 - Marco Cattaneo
+ - In Brunel.opts, remove setting of MeasureTime=true in sequencers,
+   should not be the default, and should in any case use TimingAuditor.
+
 ! 2012-10-08 - Olivier Deschamps
   - fix coverity problems
 
 !========================= CaloReco v5r15 2012-06-25 ========================= 
-
 ! 2012-06-24 - Olivier Deschamps
   - ClusterCovarianceMatrixTool : get covariance parameters from condDB when
     available
