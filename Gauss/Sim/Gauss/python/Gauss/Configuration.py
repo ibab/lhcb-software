@@ -1050,7 +1050,7 @@ class Gauss(LHCbConfigurableUser):
         self.removeBeamPipeElements( "t" )
         region = "AfterMagnetRegion"
         if 'T' not in detPieces[region]:
-            detPieces[region]+=['T']
+            detPieces[region]+=['T/IT']
 
 
 
@@ -1121,7 +1121,7 @@ class Gauss(LHCbConfigurableUser):
         self.removeBeamPipeElements( "t" )
         region = "AfterMagnetRegion"
         if 'T' not in detPieces[region]:
-            detPieces[region]+=['T']
+            detPieces[region]+=['T/FT']
 
 
     def configureFTSim( self, slot, detHits ):
@@ -1183,7 +1183,7 @@ class Gauss(LHCbConfigurableUser):
         self.removeBeamPipeElements( "t" )
         region = "AfterMagnetRegion"
         if 'T' not in detPieces[region]:
-            detPieces[region]+=['T']
+            detPieces[region]+=['T/OT']
 
 
 

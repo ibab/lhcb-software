@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-08 - Paul Szczypka
+ - Corrected a bug in the Configuration whereby all detectors defined in the
+   "T" volume would be loaded irrespective of detector choice if any of the
+   IT, OT or FT detectors were chosen.
+
 ! 2012-10-05 - Gloria Corti
  - Merge changes from the branch v42b
    . Remove spill-over from Gauss-MC11a.py
