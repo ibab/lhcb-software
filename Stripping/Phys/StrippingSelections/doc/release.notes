@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-10-08 - Vanya Belyaev
+
+ - improve CPU performance for PsiX
+
 ! 2012-10-07 - Vanya Belyaev
 
  - minor fix in PsiXForBandQ 

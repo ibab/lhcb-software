@@ -108,11 +108,11 @@ _default_configuration_ = {
     "ctau_9    = BPVLTIME (  9 ) * c_light "                   ,
     "APT23     = LoKi.AParticles.TransverseMomentum ( 2 , 3 )" ,
     ## Combination mass-cut for neutral beauty particles 
-    "mb0_acut  = in_range ( 5.100 * GeV , AM , 5.550 * GeV ) " ,
-    "mbc_acut  = in_range ( 5.100 * GeV , AM , 6.550 * GeV ) " ,
+    "mb0_acut  = in_range ( 5.100 * GeV , AM , 5.500 * GeV ) " ,
+    "mbc_acut  = in_range ( 5.100 * GeV , AM , 5.500 * GeV ) | in_range ( 6.150 * GeV , AM , 6.500 * GeV ) " ,
     ## mass-cut for beauty particles 
-    "mb0_cut   = in_range ( 5.150 * GeV ,  M , 5.500 * GeV ) " ,
-    "mbc_cut   = in_range ( 5.150 * GeV ,  M , 6.500 * GeV ) " ,
+    "mb0_cut   = in_range ( 5.150 * GeV ,  M , 5.450 * GeV ) " ,
+    "mbc_cut   = in_range ( 5.150 * GeV ,  M , 5.450 * GeV ) | in_range ( 6.150 * GeV ,  M , 6.500 * GeV ) " ,
     ] ,
     # =========================================================================
     ## Prescales 
@@ -645,7 +645,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mbc_cut            &
             ( chi2vx    < 16 ) &
             ( ctau      > %s ) 
-            """ % min ( self['CTAU'] , self['CTAU_BC'] ) 
+            """ % min ( self['CTAU'] , self['CTAU_BC'] ) , 
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -682,9 +684,11 @@ class PsiX_BQ_Conf(LineBuilder) :
             mbc_cut            &
             ( chi2vx    < 16 ) &
             ( ctau      > %s ) 
-            """ % min ( self['CTAU'] , self['CTAU_BC'] ) 
+            """ % min ( self['CTAU'] , self['CTAU_BC'] ) ,
+            ##  
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
-            )
+           )
         
         sel  = Selection (
             "SelPsiKFor"      + self.name()     ,
@@ -782,7 +786,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mb0_cut            &
             ( chi2vx    < 25 ) &
             ( ctau      > %s ) 
-            """ % self['CTAU'] 
+            """ % self['CTAU'] , 
+            ## 
+            ParticleCombiners = {'' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -818,7 +824,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mb0_cut & 
             ( chi2vx    < 25 ) &
             ( ctau      > %s ) 
-            """ % self['CTAU'] 
+            """ % self['CTAU'] ,
+            ## 
+            ParticleCombiners = {'' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -855,7 +863,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mb0_cut & 
             ( chi2vx    < 25 ) &
             ( ctau      > %s ) 
-            """ % self['CTAU'] 
+            """ % self['CTAU']  ,
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -893,7 +903,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mbc_cut            &
             ( chi2vx    < 36 ) &
             ( ctau      > %s ) 
-            """ % min ( self['CTAU'] , self['CTAU_BC'] ) 
+            """ % min ( self['CTAU'] , self['CTAU_BC'] ) ,
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -930,7 +942,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mbc_cut            &
             ( chi2vx    < 36 ) &
             ( ctau      > %s ) 
-            """ % min ( self['CTAU'] , self['CTAU_BC'] ) 
+            """ % min ( self['CTAU'] , self['CTAU_BC'] ) ,
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -968,7 +982,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mbc_cut            &
             ( chi2vx    < 36 ) &
             ( ctau      > %s ) 
-            """ % min ( self['CTAU'] , self['CTAU_BC'] ) 
+            """ % min ( self['CTAU'] , self['CTAU_BC'] ) ,
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -1004,7 +1020,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mb0_cut            &
             ( chi2vx    < 49 ) &
             ( ctau      > %s ) 
-            """ % self['CTAU'] 
+            """ % self['CTAU'] , 
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -1039,7 +1057,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mb0_cut            &
             ( chi2vx    < 49 ) &
             ( ctau      > %s ) 
-            """ % self['CTAU'] 
+            """ % self['CTAU'] ,
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -1078,7 +1098,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mb0_cut            &
             ( chi2vx    < 49 ) &
             ( ctau      > %s ) 
-            """ % self['CTAU'] 
+            """ % self['CTAU'] ,
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -1118,7 +1140,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mbc_cut            &
             ( chi2vx    < 64 ) &
             ( ctau      > %s ) 
-            """ % min ( self['CTAU'] , self['CTAU_BC'] ) 
+            """ % min ( self['CTAU'] , self['CTAU_BC'] ) ,
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -1161,7 +1185,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mbc_cut            &
             ( chi2vx    < 64 ) &
             ( ctau      > %s ) 
-            """ % min ( self['CTAU'] , self['CTAU_BC'] ) 
+            """ % min ( self['CTAU'] , self['CTAU_BC'] ) ,
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -1200,7 +1226,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mbc_cut            &
             ( chi2vx    < 64 ) &
             ( ctau      > %s ) 
-            """ % min ( self['CTAU'] , self['CTAU_BC'] ) 
+            """ % min ( self['CTAU'] , self['CTAU_BC'] ),
+            ##             
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -1237,7 +1265,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mb0_cut            &
             ( chi2vx    < 64 ) &
             ( ctau      > %s ) 
-            """ % self['CTAU'] 
+            """ % self['CTAU'] ,
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
@@ -1279,7 +1309,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             mb0_cut            &
             ( chi2vx    < 64 ) &
             ( ctau      > %s ) 
-            """ % self['CTAU'] 
+            """ % self['CTAU'] ,
+            ## 
+            ParticleCombiners = { '' : "LoKi::VertexFitter" }
             ## 
             )
         
