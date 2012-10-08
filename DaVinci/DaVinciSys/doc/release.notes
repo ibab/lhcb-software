@@ -3,6 +3,44 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v33r0>2012-10-08 DaVinci v33r0</A></H1><PRE>
+
+New development release based on the LHCb v35r2 stack.
+
+Executive Summary :-
+
+- Swimming :-
+ . Various updates to support the latest 2012 productions.
+
+- ParticleMakers :-
+ . Fix a memory leak in DiElectronMaker
+ . Adapted HepMCParticleMaker so that you can exclude particles from a particle 
+   mother.
+
+- VertexFit :-
+ . Patch the OfflineVertexFitter to prevent negative mass errors being saved.
+   Also declare such fits where something has obviously gone wrong a failure.
+ 
+- DecayTreeTuple :-
+ . Remove nPVs from TupleToolEventInfo. Implementation would not work on a uDST,
+   variable is available from TupleToolRecoStats in a way that is uDST friendly.
+
+- MC :-
+ . Background category : Improved treatment for non-standard configurations
+  . Calorimetric-gamma/gamma conversion : photon is assumed to be stable 
+  . Specific treatment for gamma->ee conversion
+  . Merged/resolved pi0 improved treatment
+
+- Flavour Tagging :-
+ . Updated FINAL SSpi calibration for Stripping 17
+
+- Jets :-
+ . Fix bug in the Neutral recovery 
+ . Add the possibility of using Velo Track with infinitely low momenta
+
+- Track Smearing :-
+ . Added option to set 2012 data - MC12 tuning, on by default.
+
 </PRE><H1><A NAME=v32r2p1>2012-09-14 DaVinci v32r2p1</A></H1><PRE>
 
 Another patch release on top of v32r2, for Stripping20.

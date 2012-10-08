@@ -1,21 +1,10 @@
 package DaVinciSys
-version v32r2p1
+version v33r0
 
 branches doc cmt
 
-use  DaVinci         v32r2p1  Phys
+use  DaVinci         v33r0  Phys
 use  DaVinciTests    v2r14
-
-# Temporary packages
-use LHCbKernel      v13r12p1  Kernel
-use TrackEvent      v5r18     Event
-use LHCbAlgs        v2r51p2   Kernel
-use LumiAlgs        v7r8      Rec
-use MuonTrackRec    v3r7      Muon
-use ParticleMaker   v6r6      Phys
-use DaVinciMCTools  v10r6     Phys
-use DecayTreeTuple  v3r25     Phys
-use TisTosTobbing   v7r8      Phys
 
 # Declare this as a container package
 apply_pattern container_package
