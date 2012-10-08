@@ -54,11 +54,12 @@ double EvtDecayAngleChi(const EvtVector4R& p4_p,const EvtVector4R& p4_d1,
   
 
   // boost all vectors parent restframe
-
-  p4_d1p=boostTo(p4_d1,p4_p);
-  p4_d2p=boostTo(p4_d2,p4_p);
-  p4_h1p=boostTo(p4_h1,p4_p);
-  p4_h2p=boostTo(p4_h2,p4_p);
+  // This does not boost particle to parent rest frame !!!
+  // It goes from parents rest frame to frame where parent has given momentum.
+  p4_d1p=boostTo(p4_d1,p4_p,true);
+  p4_d2p=boostTo(p4_d2,p4_p,true);
+  p4_h1p=boostTo(p4_h1,p4_p,true);
+  p4_h2p=boostTo(p4_h2,p4_p,true);
   
 
   EvtVector4R d1_perp,d1_prime,h1_perp;

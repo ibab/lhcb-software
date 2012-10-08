@@ -8,11 +8,16 @@
 //
 // Modification history:
 //
+//  10/07/2012  MK   Fix calculation of N1, N2; based on hep-ph/021144
 //  09/02/2009  PR   Commented check for (anti-)Lambda0 names
 //  15/09/2004  PR   Module created according to PHSP model
 //  20/02/2005  PR   Added parameters, created matrix element (without polarization)
 //  04/03/2005  PR   LD contrib., corrected WC eff. according to Chen. Geng.
 //
+// Todo list:
+//
+//   - Properly handle antiparticles, needs change of u, ubar to v, vbar in
+//     hadronic current, or other way of putting that in
 //----------------------------------------------------------------------------------
 
 #ifdef WIN32
@@ -481,11 +486,12 @@ void EvtLb2Lll::calcAmp(EvtAmp *amp,EvtParticle *parent){
   E2 = 0.5*(C_RR-C_RL)*(f_2-g_2) + 0.5*(C_LRtot-C_LLtot)*(f_2+g_2);
   E3 = 0.5*(C_RR-C_RL)*(f_3-g_3) + 0.5*(C_LRtot-C_LLtot)*(f_3+g_3);
 
-  N1 = (f_1*(M_Lb+M_L)+f_3*q2)/M_b*(C_LRLR+C_RLLR+C_LRRL+C_RLRL);
-  N2 = (f_1*(M_Lb+M_L)+f_3*q2)/M_b*(C_LRLR+C_RLLR-C_LRRL-C_RLRL);
+  N1 = (f_1*(M_Lb-M_L)+f_3*q2)/M_b*(C_LRLR+C_RLLR+C_LRRL+C_RLRL);  // Should be mLb - mL
+  N2 = (f_1*(M_Lb-M_L)+f_3*q2)/M_b*(C_LRLR+C_RLLR-C_LRRL-C_RLRL);
 
   H1 = (g_1*(M_Lb+M_L)-g_3*q2)/M_b*(C_LRLR-C_RLLR+C_LRRL-C_RLRL);
   H2 = (g_1*(M_Lb+M_L)-g_3*q2)/M_b*(C_LRLR-C_RLLR-C_LRRL+C_RLRL);
+
 
   for(i=0;i<4;i++){
     lbar_Gmu_l   [i/2][i%2] = EvtLeptonVCurrent(parent->getDaug(1)->spParent(i/2),parent->getDaug(2)->spParent(i%2));

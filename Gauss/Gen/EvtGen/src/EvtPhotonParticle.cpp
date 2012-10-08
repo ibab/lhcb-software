@@ -28,6 +28,9 @@
 #include "EvtGenBase/EvtReport.hh"
 using std::endl;
 
+EvtPhotonParticle::EvtPhotonParticle() {
+}
+
 EvtPhotonParticle::~EvtPhotonParticle(){}
 
 void EvtPhotonParticle::init(EvtId part_n,const EvtVector4R& p4){

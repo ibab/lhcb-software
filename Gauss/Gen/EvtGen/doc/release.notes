@@ -4,6 +4,17 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-10-08 - John Back
+ - Provide default constructors for EvtVector4R and EvtPhotonParticle.
+   Corrected the t3 vector form factor values for the Ball-Zwicky '05 model 
+   (modelId = 6) in EvtbTosllBallFF::getVectorFF(), which were set to t3tilde 
+   instead.
+
+   From Michal Kreps: fixed the calculation of the angle between decay planes 
+   in the function EvtKine::EvtDecayAngleChi. Fixed typo in the EvtLb2Lll 
+   decay model. Only some NP scenarios could be affected, SM one is definitely 
+   unaffected.
+
 ! 2012-09-11 - John Back
  - Added missing EvtBCVFF class. Updated photos++ and tauola++ required 
    versions to be 3.51 and 1.0.7, respectively. Added the use of the 

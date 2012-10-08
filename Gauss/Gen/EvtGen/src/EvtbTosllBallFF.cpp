@@ -24,7 +24,7 @@
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenModels/EvtbTosllBallFF.hh"
-#include <math.h>
+#include <cmath>
 
 EvtbTosllBallFF::EvtbTosllBallFF(int ffmodel)
 {
@@ -290,8 +290,12 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
     t1 = (0.823 / (1. - (t/(5.32*5.32)))) + 
       (-0.491 / (1 - (t/46.31)));
     t2 = 0.333 / (1. - (t/41.41));
-    t3 = (-0.036 / (1. - (t/48.10))) + 
+    double t3tilde = (-0.036 / (1. - (t/48.10))) + 
       (0.368 / (1. - (t/48.10)) / (1. - (t/48.10)));
+    t3 = 0.0;
+    if (fabs(t) > 1e-10) {
+      t3 = (m*m - md*md)*(t3tilde - t2)/t;
+    }
   }
  }
  else if (daught == EvtPDL::getId(std::string("rho+")) ||
@@ -321,8 +325,13 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
        t1 = (0.897 / (1. - (t/(5.32*5.32)))) + 
 	 (-0.629 / (1 - (t/38.04)));
        t2 = 0.267 / (1. - (t/38.59));
-       t3 = (0.022 / (1. - (t/40.88))) + 
+       double t3tilde = (0.022 / (1. - (t/40.88))) + 
 	 (0.246 / (1. - (t/40.88)) / (1. - (t/40.88)));
+       t3 = 0.0;
+       if (fabs(t) > 1e-10) {
+	 t3 = (m*m - md*md)*(t3tilde - t2)/t;
+       }
+
      }
    }
   else if (daught == EvtPDL::getId(std::string("omega"))
@@ -350,8 +359,12 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
        t1 = (0.865 / (1. - (t/(5.32*5.32)))) + 
 	 (-0.622 / (1 - (t/37.19)));
        t2 = 0.242 / (1. - (t/37.95));
-       t3 = (0.023 / (1. - (t/40.87))) + 
+       double t3tilde = (0.023 / (1. - (t/40.87))) + 
 	 (0.220 / (1. - (t/40.87)) / (1. - (t/40.87)));
+       t3 = 0.0;
+       if (fabs(t) > 1e-10) {
+	 t3 = (m*m - md*md)*(t3tilde - t2)/t;
+       }
      }
     }
   else if (daught == EvtPDL::getId(std::string("phi"))
@@ -369,8 +382,12 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
        t1 = (1.303 / (1. - (t/(5.32*5.32)))) + 
 	 (-0.954 / (1 - (t/38.28)));
        t2 = 0.349 / (1. - (t/37.21));
-       t3 = (0.027 / (1. - (t/45.56))) + 
+       double t3tilde = (0.027 / (1. - (t/45.56))) + 
 	 (0.321 / (1. - (t/45.56)) / (1. - (t/45.56)));
+       t3 = 0.0;
+       if (fabs(t) > 1e-10) {
+	 t3 = (m*m - md*md)*(t3tilde - t2)/t;
+       }
      }
     }
 

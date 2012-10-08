@@ -28,7 +28,9 @@
 
 using std::ostream;
 
-
+EvtVector4R::EvtVector4R() {
+  v[0] = 0.0; v[1] = 0.0; v[2] = 0.0; v[3] = 0.0;
+}
 
 EvtVector4R::EvtVector4R(double e,double p1,double p2, double p3){
   
@@ -58,19 +60,19 @@ EvtVector4R rotateEuler(const EvtVector4R& rs,
 }
 
 EvtVector4R boostTo(const EvtVector4R& rs,
-		    const EvtVector4R& p4){
+		    const EvtVector4R& p4, bool inverse){
 
   EvtVector4R tmp(rs);
-  tmp.applyBoostTo(p4);
+  tmp.applyBoostTo(p4, inverse);
   return tmp;
 
 }
 
 EvtVector4R boostTo(const EvtVector4R& rs,
-		    const EvtVector3R& boost){
+		    const EvtVector3R& boost, bool inverse){
 
   EvtVector4R tmp(rs);
-  tmp.applyBoostTo(boost);
+  tmp.applyBoostTo(boost, inverse);
   return tmp;
 
 }
@@ -104,19 +106,19 @@ ostream& operator<<(ostream& s, const EvtVector4R& v){
 
 }
 
-void EvtVector4R::applyBoostTo(const EvtVector4R& p4){
+void EvtVector4R::applyBoostTo(const EvtVector4R& p4, bool inverse){
 
   double e=p4.get(0);
 
   EvtVector3R boost(p4.get(1)/e,p4.get(2)/e,p4.get(3)/e);
 
-  applyBoostTo(boost);
+  applyBoostTo(boost, inverse);
 
   return;
 
 }
 
-void EvtVector4R::applyBoostTo(const EvtVector3R& boost){
+void EvtVector4R::applyBoostTo(const EvtVector3R& boost, bool inverse){
 
   double bx,by,bz,gamma,b2;
 
@@ -149,14 +151,24 @@ void EvtVector4R::applyBoostTo(const EvtVector3R& boost){
     double py2=v[2];
     double pz2=v[3];
 
-    v[0]=gamma*e2+gbx*px2+gby*py2+gbz*pz2;
-    
-    v[1]=gbx*e2+gb2*bxx*px2+px2+gb2xy*py2+gb2xz*pz2;
-
-    v[2]=gby*e2+gb2*byy*py2+py2+gb2xy*px2+gb2yz*pz2;
-
-    v[3]=gbz*e2+gb2*bzz*pz2+pz2+gb2yz*py2+gb2xz*px2;
-
+    if ( inverse ) {
+      v[0]=gamma*e2-gbx*px2-gby*py2-gbz*pz2;
+      
+      v[1]=-gbx*e2+gb2*bxx*px2+px2+gb2xy*py2+gb2xz*pz2;
+ 
+      v[2]=-gby*e2+gb2*byy*py2+py2+gb2xy*px2+gb2yz*pz2;
+ 
+      v[3]=-gbz*e2+gb2*bzz*pz2+pz2+gb2yz*py2+gb2xz*px2;
+    }
+    else {
+      v[0]=gamma*e2+gbx*px2+gby*py2+gbz*pz2;
+      
+      v[1]=gbx*e2+gb2*bxx*px2+px2+gb2xy*py2+gb2xz*pz2;
+ 
+      v[2]=gby*e2+gb2*byy*py2+py2+gb2xy*px2+gb2yz*pz2;
+ 
+      v[3]=gbz*e2+gb2*bzz*pz2+pz2+gb2yz*py2+gb2xz*px2;
+    }
   }
 
 }
