@@ -24,6 +24,9 @@ CaloFillPrsSpdRawBuffer::CaloFillPrsSpdRawBuffer( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_calo(NULL)
+  , m_totDataSize(0)
+  , m_totTrigSize(0)
+  , m_nbEvents(0)
 {
   m_inputBank        = LHCb::CaloAdcLocation::Prs;
   m_prsBank          = LHCb::L0PrsSpdHitLocation::Prs;

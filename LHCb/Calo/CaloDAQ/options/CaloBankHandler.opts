@@ -4,6 +4,7 @@
 
 
 //ApplicationMgr.TopAlg += {"GaudiSequencer/CaloBanksHandler"};
+//CaloBanksHandler.MeasureTime=true;
 
 CaloBanksHandler.Members = {"GaudiSequencer/PrsBanksHandler",
                             "GaudiSequencer/EcalBanksHandler",
@@ -15,8 +16,6 @@ CaloBanksHandler.IgnoreFilterPassed = true; // the 3 sequences have to run indep
 EcalBanksHandler.Members = { "CaloZSupAlg/EcalZSup"         , "RawBankReadoutStatusConverter/EcalProcStatus"};
 HcalBanksHandler.Members = { "CaloZSupAlg/HcalZSup"         , "RawBankReadoutStatusConverter/HcalProcStatus"};
 PrsBanksHandler.Members  = { "CaloDigitsFromRaw/PrsFromRaw" , "RawBankReadoutStatusConverter/PrsProcStatus" };
-
-CaloBanksHandler.MeasureTime=true;
 
 // Readout Status   -> ProcStatus
 EcalProcStatus.System="Ecal";

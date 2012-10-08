@@ -23,6 +23,7 @@ DECLARE_ALGORITHM_FACTORY( CaloTriggerBitsFromRawAlg )
 CaloTriggerBitsFromRawAlg::CaloTriggerBitsFromRawAlg( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_l0BitTool(NULL)
 {
   declareProperty("OutputData"  , m_outputData  );  
   declareProperty( "Extension"  ,  m_extension = "" );

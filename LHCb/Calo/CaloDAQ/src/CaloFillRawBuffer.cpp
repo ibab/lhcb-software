@@ -23,6 +23,9 @@ CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_calo(NULL)
+  , m_totDataSize(0)
+  , m_totTrigSize(0)
+  , m_nbEvents(0)
 {
   //=== Default values according to the name of the algorithm !
   if ( "Ecal" == name.substr( 0, 4 ) ) {

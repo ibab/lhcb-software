@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2012-10-08 - Marco Cattaneo
+ - In CaloBankHandler.opts, remove setting of CaloBanksHandler.MeasureTime=true,
+   should not be the default, and should in any case use TimingAuditor.
+ - Fix some more UNINIT_CTOR defects
+ 
 !========================= CaloDAQ v4r30 2012-09-28 =========================
 ! 2012-08-09 - Olivier Deschamps
   - CaloBankHandler.opts : remove bank conversion - just decode Xcal digits and

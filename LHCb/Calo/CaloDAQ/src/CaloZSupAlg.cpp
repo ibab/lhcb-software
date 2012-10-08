@@ -21,8 +21,12 @@ DECLARE_ALGORITHM_FACTORY( CaloZSupAlg )
 //=============================================================================
 CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm       ( name , pSvcLocator            )
+  , m_zsup2D(false)
+  , m_adcOnTES(false)
+  , m_digitOnTES(false)
   , m_calo(NULL)
   , m_adcTool(NULL)
+  , m_numberOfCells(0)
 {
   //** Declare the algorithm's properties which can be set at run time and
   //** their default values
@@ -36,14 +40,6 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty( "Extension"      ,  m_extension = "" );
   declareProperty( "StatusOnTES"    , m_statusOnTES = true);
 
-
-
-  m_digitOnTES =false  ;
-  m_adcOnTES =false  ;
-  
-    
-
-
   //=== Default values according to the name of the algorithm !
   m_inputToolType = "CaloEnergyFromRaw";
   m_inputToolName = name + "Tool";
@@ -52,6 +48,7 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     m_outputADCData    = LHCb::CaloAdcLocation::Ecal;
     m_outputDigitData  = LHCb::CaloDigitLocation::Ecal;
     m_zsupMethod       = "2D";
+    m_zsup2D           = true;
     m_zsupThreshold    = 20;
     m_zsupNeighbor     = -5; // reject large negative noise
   } else if ( "Hcal" == name.substr( 0 , 4 ) ) {
