@@ -268,7 +268,6 @@ class RichRecQCConf(RichConfigurableUser):
     ## Check a new sequence and add to main sequence
     def newSeq(self,sequence,name):
         seq = GaudiSequencer(name)
-        seq.MeasureTime = True
         if self.isPropertySet("OutputLevel") : seq.OutputLevel = self.getProp("OutputLevel")
         sequence.Members += [seq]
         return seq
