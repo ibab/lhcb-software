@@ -108,7 +108,7 @@ StatusCode ClusterCovarianceMatrixTool::initialize (){
   std::string fi=std::string(" from options");  
   // get parameters from DB if available
   if( m_useDB ){
-    double a = m_det->stochasticTerm();
+    double a  = m_det->stochasticTerm();
     double gE = m_det->gainError();
     double In = m_det->incoherentNoise();
     double cN = m_det->coherentNoise();

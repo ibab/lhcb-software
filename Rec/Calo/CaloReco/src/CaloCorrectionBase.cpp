@@ -237,8 +237,8 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
   // polynomial functions
   if (pars.first == CaloCorrection::Polynomial || 
       pars.first == CaloCorrection::InversPolynomial || 
-      CaloCorrection::ExpPolynomial ||
-      CaloCorrection::ReciprocalPolynomial ){
+      pars.first == CaloCorrection::ExpPolynomial ||
+      pars.first == CaloCorrection::ReciprocalPolynomial ){
     double v = 1.;
     cor = 0.;
     for( std::vector<double>::iterator i = temp.begin() ; i != temp.end() ; ++ i){

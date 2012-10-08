@@ -611,18 +611,20 @@ StatusCode CaloMergedPi0Alg::execute()
     if ( msgLevel ( MSG::DEBUG ) ){
       debug() << " -----> Iterative reconstruction " << endmsg;
     }
-    double SubSize[2],SubX[2],SubY[2],SubZ[2] ;
+    double SubSize[2];
+    double SubX[2]={0.,0.};
+    double SubY[2]={0.,0.};
+    double SubZ[2]={0.,0.};
 
     long mxiter = m_mX_Iter;
     // long mxiter=16;
 
     long iter=0;
+    double Ene3x3[2];
     for( long iterat = 0 ; iterat < mxiter ; ++iterat){
       // SubClusters X/Y/Z barycenter
       iter++;
       double Etemp[3][3];
-      double Ene3x3[2];
-
       for(int is=0;is<2;++is){
         const LHCb::CaloDigit* digit   = SubClus[is][1][1];
         if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
@@ -715,7 +717,6 @@ StatusCode CaloMergedPi0Alg::execute()
     }
 
     // energy
-    double Ene3x3[2];
     //    double PosX[2];
     //    double PosY[2];
 
