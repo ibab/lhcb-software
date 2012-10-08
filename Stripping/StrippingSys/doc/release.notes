@@ -3,6 +3,8 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v6r2p2 2012-10-08 =========================
+
 ! 2012-10-03 - Marco Cattaneo
  - Fix strippingsys.configurables test
 
@@ -23,7 +25,8 @@ Purpose     : LHCb stripping packages
 
 ! 2012-09-01 - Anton Poluektov 
   Preliminary release for Stripping20 preparation
-   - StrippingSelections, StrippingSettings - new lines, updates to reduce timing and retention (including usage of ghost probability cut)
+   - StrippingSelections, StrippingSettings - new lines, updates to reduce timing and 
+     retention (including usage of ghost probability cut)
    - CommonParticles
       - fix typo in StdVeryLooseAllPhotons name
       - Removed StdVeryLooseKs.py

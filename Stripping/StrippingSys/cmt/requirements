@@ -1,11 +1,11 @@
-package StrippingSys
-version           v6r2p1
+package  StrippingSys
+version  v6r2p2
 
 branches doc cmt tests
 
 ####################################################################
 # Framework
-use  CommonParticles             v8r10     Phys   # Patrick Koppenburg, WGs
+use  CommonParticles             v8r10    Phys   # Patrick Koppenburg, WGs
 use  StandardParticles           v2r1     Phys   # Juan Palacios
 
 ####################################################################
