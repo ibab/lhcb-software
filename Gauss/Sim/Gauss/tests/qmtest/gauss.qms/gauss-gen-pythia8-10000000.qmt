@@ -9,6 +9,19 @@
     LineSkipper([&quot;INFO Using TAG&quot;, &quot;TimingAuditor.T&quot;, &quot;ToolSvc.SequencerTime&quot;, &quot;Gauss-&quot;]) + \
     LineSkipper([&quot;INFO Connected to database&quot;]) + \
     LineSkipper([&quot;INFO Disconnect from database after being idle&quot;]) + \
+    LineSkipper([&quot;GaussGen                   INFO Evt &quot;]) + \
+    LineSkipper([&quot;Pythia::next():&quot;]) + \
+    LineSkipper([&quot;PYTHIA Error in Pythia::next: partonLevel failed; try again&quot;]) + \
+    LineSkipper([&quot;PYTHIA Warning in SpaceShower::pT2nextQCD: small daughter PDF&quot;]) + \
+    LineSkipper([&quot;PYTHIA Error in BeamRemnants::setKinematics: kinematics construction failed&quot;]) + \
+    LineSkipper([&quot;PYTHIA Error in HadronLevel::traceFromAcol: colour tracing failed&quot;]) + \
+    LineSkipper([&quot;PYTHIA Error in SpaceShower::pT2nearQCDthreshold: stuck in loop&quot;]) + \
+    LineSkipper([&quot;PYTHIA Warning in MultipartonInteractions::pTnext: weight above unity&quot;]) + \
+    LineSkipper([&quot;PYTHIA Error in StringFragmentation::fragmentToJunction: caught in junction flavour loop&quot;]) + \
+    LineSkipper([&quot;PYTHIA Warning in MultipartonInteractions::pTnext: weight above unity&quot;]) + \
+    LineSkipper([&quot;Efficiency of&quot;]) + \
+    LineSkipper([&quot;Mean&quot;]) + \
+    LineSkipper([&quot;Number of&quot;]) + \
     LineSkipper([&quot;Generation.FixedLumi&quot;]) + \
     LineSkipper([&quot;GaussGen.GaussGenMemory&quot;]) + \
     LineSkipper([&quot;PDFset&quot;]) + \

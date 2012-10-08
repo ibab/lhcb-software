@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-08 - Aurelien Martens 
+ - Update qmtests for pythia8
+
 ! 2012-10-08 - Gloria Corti
  - Put r* in requirements file for generator and LHCb data packages
 
