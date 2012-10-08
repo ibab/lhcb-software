@@ -5,8 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-10-08 - Marco Cattaneo
- - In Configuration.py, remove setting of MeasureTime=True in sequencers,
-   should not be the default, and should in any case use TimingAuditor.
+ - In Configuration.py and RichGlobalPID_.py, remove setting of MeasureTime=True
+   in sequencers, should not be the default, and should in any case use
+   TimingAuditor.
 
 !========================= RichRecSys v4r6 2012-06-25 =========================
 ! 2012-06-03 - Chris Jones

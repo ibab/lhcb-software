@@ -117,7 +117,6 @@ class RichGlobalPIDConfig(RichConfigurableUser):
 
         # Initialisation
         initSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDInitSeq")
-        initSeq.MeasureTime = True
         sequence.Members += [ initSeq ]
         gInit   = self.makeRichAlg(Rich__Rec__GlobalPID__Initialize,"Rich"+cont+"GPIDInit")
         gPixSel = self.makeRichAlg(Rich__Rec__GlobalPID__DigitSel,"Rich"+cont+"GPIDDigSel")
@@ -138,7 +137,6 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         
         # Likelihood minimisation
         likSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDLLSeq")
-        likSeq.MeasureTime = True
         sequence.Members += [ likSeq ]
         for it in range(0,self.getProp("NIterations")):
 
