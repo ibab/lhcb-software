@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-10-08 - Marco Cattaneo
+ - In Configuration.py, remove setting of MeasureTime=True in sequencers,
+   should not be the default, and should in any case use TimingAuditor.
+
 !========================= RichRecQC v2r60 2012-07-30 =========================
 ! 2012-07-25 - Chris Jones
  - Fix an issue in RawDataSize where the RawEvent object was not found, when
