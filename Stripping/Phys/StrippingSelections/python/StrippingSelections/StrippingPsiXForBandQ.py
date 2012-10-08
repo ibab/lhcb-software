@@ -442,7 +442,7 @@ class PsiX_BQ_Conf(LineBuilder) :
     ## get the selections
     def _selections_private ( self ) :
         
-        sel = self._selections ( 'Selections' )
+        sel = self._selection ( 'Selections' )
         if sel : return sel
         
         sel =  [
