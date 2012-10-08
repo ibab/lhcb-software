@@ -418,9 +418,9 @@ StatusCode Pythia8Production::hadronize( HepMC::GenEvent * theEvent ,
 // Debug print out to be printed after all initializations
 //=============================================================================
 void Pythia8Production::printRunningConditions( ) { 
-  if (m_nEvents==0 && m_listAllParticles==true) m_pythia->particleData.listAll();
-  if (msgLevel(MSG::DEBUG)) m_pythia->settings.listAll();
-  else m_pythia->settings.listChanged();
+  if (m_nEvents==0 && m_listAllParticles==true && msgLevel(MSG::DEBUG)) m_pythia->particleData.listAll();
+  if (msgLevel(MSG::VERBOSE)) m_pythia->settings.listAll();
+  else if (msgLevel(MSG::DEBUG)) m_pythia->settings.listChanged();
 }
 
 //=============================================================================
