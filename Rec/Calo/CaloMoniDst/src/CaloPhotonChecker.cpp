@@ -459,9 +459,12 @@ StatusCode CaloPhotonChecker::execute()
   if ( exist<LHCb::Calo2Track::IHypoEvalTable>( m_IDTableName ) )   
     idTable = get<LHCb::Calo2Track::IHypoEvalTable> ( m_IDTableName ) ;
   
-  // get the relation table
+  // get the relation tables
   MCTable *gtable = get<MCTable> ( m_MCTableName );
-  if ( 0 == gtable ) info() << "No Relation Table" << endmsg;
+  if ( 0 == gtable ) return Error( "No MC Relation Table");
+  
+  const Table* table = get<Table> ( m_TrTableName );
+  if( 0 == table)return Error("Table* points to NULL!");
 
   // loop over hypos
   for(Hypos::const_iterator iter=hypos->begin(); hypos->end()!=iter;++iter){
@@ -473,9 +476,8 @@ StatusCode CaloPhotonChecker::execute()
      }
      
      LHCb::CaloHypo    *hypo = *iter;
-     if ( 0 == hypo ) return Warning( "*CaloHypo* points to NULL",StatusCode::SUCCESS );
+     if ( 0 == hypo ){Warning( "*CaloHypo* points to NULL").ignore();continue;}
      LHCb::CaloMomentum momentum( hypo );
-
      m_nCandidates++;
 
 // Transverse Momentum
@@ -490,22 +492,19 @@ StatusCode CaloPhotonChecker::execute()
      
      const SmartRef<LHCb::CaloCluster> cluster=hypo->clusters().front();
      if ( 0 == cluster )
-     { continue; return Warning( " *CaloCluster* points to NULL ",StatusCode::SUCCESS ); }
+     { Warning( " *CaloCluster* points to NULL ").ignore();continue; }
 
      std::vector<LHCb::CaloClusterEntry> entries = cluster->entries();
-     if( cluster->entries().empty() )
-     { return Warning( " *CaloCluster* empty ",StatusCode::SUCCESS );}
+     if( cluster->entries().empty() ){Warning( " *CaloCluster* empty ").ignore();continue;}
      
      LHCb::CaloCluster::Entries::const_iterator iseed =
        LHCb::ClusterFunctors::locateDigit( cluster->entries().begin() ,
                                            cluster->entries().end  () ,
                                            LHCb::CaloDigitStatus::SeedCell  ) ;
-     if( iseed == cluster->entries().end() )
-     { return Warning(" *SeedCell* not found ",StatusCode::SUCCESS);}
+     if( iseed == cluster->entries().end() ){Warning(" *SeedCell* not found ");continue;}
      
      const LHCb::CaloDigit* seed = iseed->digit();
-     if( 0 == seed )
-     { return Warning( " SeedCell *Digit* points to NULL! ",StatusCode::SUCCESS);}
+     if( 0 == seed ){Warning( " SeedCell *Digit* points to NULL! ").ignore();continue;}
 
      // seed cell area
      m_area = seed->cellID().area() ;
@@ -517,8 +516,6 @@ StatusCode CaloPhotonChecker::execute()
 
      // Chi2
      double chi2;
-     const Table* table = get<Table> ( m_TrTableName );
-     if( 0 == table     ) { return Error("Table* points to NULL!");} // RETURN
 
      const Range range = table->relations( cluster ) ;
      if( range.empty() )  { chi2=1.e+6; }            // bad match -> large value !
