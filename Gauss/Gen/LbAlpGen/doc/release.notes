@@ -5,6 +5,11 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+! 2012-10-09 - Stephane Tourneur
+ - Added (dummy interface) classes AlpGenProdutionzqq and AlpGenProdution4q inherited from AlpGenProduction to provide the user one tool per 
+alpgen 
+process (these are useless now because LbAlpGen still works with only one process at a time)
+ - Changed the way AlpgenProduction handles the MC seeds to adapt to the alpgen random generation
 
 ! 2012-09-21 - Stephane Tourneur
  - Parameterized the alpgen options in a way they can be tuned in a standard lhcb job option file

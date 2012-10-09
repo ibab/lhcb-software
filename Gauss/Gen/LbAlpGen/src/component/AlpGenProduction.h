@@ -18,13 +18,13 @@ class IRndmEngine ;
  */
 
 
-//new job option cuts communicated to fortran:
-  extern "C" {
-    struct {
-      float letamin,  betamin, letamin1, betamin1;
+// //new job option cuts communicated to fortran:
+//   extern "C" {
+//     struct {
+//       float letamin,  betamin, letamin1, betamin1;
       
-    } etacut_;    
-  }
+//     } etacut_;    
+//   }
 
 
 class AlpGenProduction : public PythiaProduction {

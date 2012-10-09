@@ -38,6 +38,15 @@
 // 
 //-----------------------------------------------------------------------------
 
+//new job option cuts communicated to fortran:
+  extern "C" {
+    struct {
+      float letamin,  betamin, letamin1, betamin1;
+      
+    } etacut_;    
+  }
+
+
 // Declaration of the Tool Factory
 
 DECLARE_TOOL_FACTORY( AlpGenProduction );
@@ -351,12 +360,14 @@ StatusCode AlpGenProduction::generateWeightedEvents( ) {
     }
     std::vector< long > theSeeds ;
     m_engine -> seeds( theSeeds ) ;
-
-    g << "iseed1 " << theSeeds[ 0 ] << std::endl
-      << "iseed2 " << theSeeds[ 1 ] << std::endl
-      << "iseed3 " << theSeeds[ 0 ] << std::endl
-      << "iseed4 " << theSeeds[ 1 ] << std::endl ;
-
+      
+    int iseed1 = (theSeeds[ 0 ]*10+theSeeds[ 2 ]) - 100000*((theSeeds[ 0 ]*10+theSeeds[ 2 ])/100000);
+    g << "iseed1 " << iseed1 << std::endl;
+    int iseed2 = theSeeds[ 1 ] - 100000*(theSeeds[ 1 ]/100000);
+    g << "iseed2 " << iseed2 << std::endl
+      << "iseed3 " << iseed1 << std::endl
+      << "iseed4 " << iseed2 << std::endl ;  
+    
     release( m_randSvc ) ;
     m_randSvc = 0 ;
     m_engine = 0 ;

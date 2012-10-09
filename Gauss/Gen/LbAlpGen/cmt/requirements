@@ -25,7 +25,8 @@ use               Boost        v* LCG_Interfaces -no_auto_import
 macro alpgen_author_dir $(alpgen_path)/share/alpgen-author
 
 # =============== constituents ================================================
-library           LbAlpGen       component/*.cpp
+#library           LbAlpGen       component/*.cpp
+library           LbAlpGen       component/AlpGenProduction.cpp
 library           LbAlpGenLib    Lib/*.cpp Lib/*.F $(alpgen_author_dir)/zqqlib/zqq.f zqq/*.F
 application       AlpGenFragm Read/AlpGenFragm.cpp \
                               Read/upevnt.F        \
