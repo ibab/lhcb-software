@@ -250,7 +250,8 @@ class Brunel(LHCbConfigurableUser):
         ApplicationMgr().ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
         ApplicationMgr().AuditAlgorithms = True
         AuditorSvc().Auditors += [ 'TimingAuditor' ]
-        SequencerTimerTool().OutputLevel = 4
+        if not SequencerTimerTool().isPropertySet( "OutputLevel" ):
+            SequencerTimerTool().OutputLevel = 4
 
     def configureSequences(self, withMC, handleLumi, vetoHltErrorEvents):
         brunelSeq = GaudiSequencer("BrunelSequencer")
