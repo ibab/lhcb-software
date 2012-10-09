@@ -297,7 +297,8 @@ def RecoTracking(exclude=[]):
          from Configurables import TrackBuildCloneTable, TrackCloneCleaner
          trackClones = GaudiSequencer("TrackClonesSeq")
          GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackClones ]
-         trackClones.MeasureTime = True
+         if TrackSys().timing() :
+            trackClones.MeasureTime = True
          cloneTable = TrackBuildCloneTable("FindTrackClones")
          cloneTable.maxDz   = 500*mm
          cloneTable.zStates = [ 0*mm, 990*mm, 9450*mm ]
