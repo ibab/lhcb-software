@@ -1538,7 +1538,7 @@ class Gauss(LHCbConfigurableUser):
         det = "PuVeto"
         # This is still awful - PSZ
         detextra, detextra1 = 'VeloPu', 'Velo'
-        if not [det for det in ['VP', 'VL'] if det in self.getProp('DetectorSim')['Detectors']]:
+        if not [vdet for vdet in ['VP', 'VL'] if vdet in self.getProp('DetectorSim')['Detectors']]:
             moni = GetTrackerHitsAlg(
                 'Get' + det + 'Hits' + slot,
                 MCHitsLocation = 'MC/' + det  + '/Hits',

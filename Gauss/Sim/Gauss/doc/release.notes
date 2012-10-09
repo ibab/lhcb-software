@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-09 - Paul Szczypka
+ - Corrected a bug in the PuVeto configuration whereby the test used to check
+   if either the VL or VP was also requested meant that it would configure
+   whichever detector it found instead.
+   
 ! 2012-10-08 - Aurelien Martens 
  - Update qmtests for pythia8
 
