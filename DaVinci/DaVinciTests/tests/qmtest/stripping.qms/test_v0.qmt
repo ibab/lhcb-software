@@ -10,21 +10,22 @@
 findReferenceBlock("""
 CountParticles                                              SUCCESS Number of counters : 15
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# /Event/Strip/Phys/StrippingK0S"              |      7612 |       1499 |    0.19693 |    0.50455 |      0.0000 |      5.0000 |
- | "# /Event/Strip/Phys/StrippingK0S_noPV"         |      2388 |       3067 |     1.2843 |     1.8188 |      0.0000 |      18.000 |
- | "# /Event/Strip/Phys/StrippingK0S_noPV_ws"      |      2388 |       2681 |     1.1227 |     1.8293 |      0.0000 |      29.000 |
- | "# /Event/Strip/Phys/StrippingK0S_ws"           |      7612 |       1105 |    0.14517 |    0.44900 |      0.0000 |      5.0000 |
- | "# /Event/Strip/Phys/StrippingKSAllGeoLineCombin|      7612 |      18648 |     2.4498 |     2.6708 |      0.0000 |      34.000 |
- | "# /Event/Strip/Phys/StrippingLambda0"          |      7612 |       3237 |    0.42525 |    0.79181 |      0.0000 |      9.0000 |
- | "# /Event/Strip/Phys/StrippingLambda0_noPV"     |      2388 |       2584 |     1.0821 |     1.6988 |      0.0000 |      17.000 |
- | "# /Event/Strip/Phys/StrippingLambda0_noPV_ws"  |      2388 |       2361 |    0.98869 |     1.7578 |      0.0000 |      31.000 |
- | "# /Event/Strip/Phys/StrippingLambda0_ws"       |      7612 |       2679 |    0.35194 |    0.71598 |      0.0000 |      8.0000 |
- | "# /Event/Strip/Phys/StrippingLambdaAllGeoLineCo|      7612 |      13672 |     1.7961 |     2.1879 |      0.0000 |      21.000 |
+ | "# /Event/Strip/Phys/StrippingK0S"              |      1216 |       1499 |     1.2327 |    0.56278 |      1.0000 |      5.0000 |
+ | "# /Event/Strip/Phys/StrippingK0S_noPV"         |      1485 |       3067 |     2.0653 |     1.9253 |      1.0000 |      18.000 |
+ | "# /Event/Strip/Phys/StrippingK0S_noPV_ws"      |      1315 |       2681 |     2.0388 |     2.0516 |      1.0000 |      29.000 |
+ | "# /Event/Strip/Phys/StrippingK0S_ws"           |       883 |       1105 |     1.2514 |    0.59460 |      1.0000 |      5.0000 |
+ | "# /Event/Strip/Phys/StrippingKSAllGeoLineCombin|      6489 |      18648 |     2.8738 |     2.6738 |      1.0000 |      34.000 |
+ | "# /Event/Strip/Phys/StrippingLambda0"          |      2281 |       3237 |     1.4191 |    0.82575 |      1.0000 |      9.0000 |
+ | "# /Event/Strip/Phys/StrippingLambda0_noPV"     |      1262 |       2584 |     2.0475 |     1.8666 |      1.0000 |      17.000 |
+ | "# /Event/Strip/Phys/StrippingLambda0_noPV_ws"  |      1179 |       2361 |     2.0025 |     2.0562 |      1.0000 |      31.000 |
+ | "# /Event/Strip/Phys/StrippingLambda0_ws"       |      1952 |       2679 |     1.3724 |    0.77362 |      1.0000 |      8.0000 |
+ | "# /Event/Strip/Phys/StrippingLambdaAllGeoLineCo|      5459 |      13672 |     2.5045 |     2.2138 |      1.0000 |      21.000 |
  | "# input particles"                             |     10000 |      51533 |     5.1533 |     5.7808 |      1.0000 |      82.000 |
  |*"#accept"                                       |     10000 |      10000 |(  100.000 +- 0.0100000)%|   -------   |   -------   |
  | "KS0"                                           |     27000 |      27000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Lambda0"                                       |     12751 |      12751 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Lambda~0"                                      |     11782 |      11782 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
-""", stdout, result, causes, signature_offset = 0, id = "Ks")
+""", stdout, result, causes, 
+signature_offset = 0, id = "Ks")
 </text></argument>
 </extension>

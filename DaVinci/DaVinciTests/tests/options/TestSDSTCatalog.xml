@@ -103,4 +103,18 @@
     <logical/>
   </File>
 
+  <File ID="EEA8805A-7511-E211-8B27-00242179EFBA">
+    <physical>
+      <pfn filetype="ROOT" name="000000.Leptonic.mdst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="928EC45A-7511-E211-8B27-00242179EFBA">
+    <physical>
+      <pfn filetype="ROOT" name="000000.PID.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-10-09 - Anton Poluektov 
+ - Update tests references 
+
 ! 2012-08-09 - Rob Lambert
  - clone merger test from Rec/LumiAlgs, and add a check using CheckFSRs from AppConfig
  - davinci-merge-small-files.qmt
