@@ -41,7 +41,7 @@ class CaloDigitConf(LHCbConfigurableUser):
     __slots__ = {
         ##
         "Context"                : "Offline"   # The context to run
-        , "MeasureTime"          : True        # Measure the time for sequencers
+        , "MeasureTime"          : False       # Measure the time for sequencers
         , "OutputLevel"          : INFO        # The global output level
         ##
         , 'CreateADCs'           : False       # Create ADCs ? 

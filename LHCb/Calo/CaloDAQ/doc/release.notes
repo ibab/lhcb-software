@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-10-08 - Marco Cattaneo
- - In CaloBankHandler.opts, remove setting of CaloBanksHandler.MeasureTime=true,
+ - In CaloBankHandler.opts and Configuration.py, remove setting MeasureTime=True,
    should not be the default, and should in any case use TimingAuditor.
  - Fix some more UNINIT_CTOR defects
  
