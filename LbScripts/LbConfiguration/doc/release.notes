@@ -1,3 +1,7 @@
+2012-10-09 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: Added new package BandQConfig 
+
 2012-09-28 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r2
