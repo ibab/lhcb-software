@@ -5,6 +5,9 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+! 2012-09-26 - Alex Grecu
+ - included QMTests with references for i686- and x86-64- slc5-gcc43 platforms
+
 ! 2012-09-25 - Alex Grecu
  - few minor patches to eliminate compilation warnings
  - a fully working plugin example in options/

@@ -8,7 +8,7 @@ version           v1r0
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src scripts options
+branches          cmt doc src
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
@@ -46,4 +46,9 @@ library          GenTune     ../src/*.cpp -import=AIDA
 #============================================================================
 apply_pattern    component_library library=GenTune
 
+# Allow to run the QMTests
+apply_pattern QMTest
+
+# Allow the generation of QMTest summary
+apply_pattern QMTestSummarize
 
