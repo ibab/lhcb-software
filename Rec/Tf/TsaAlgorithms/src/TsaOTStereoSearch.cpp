@@ -28,7 +28,8 @@ DECLARE_TOOL_FACTORY( OTStereoSearch )
 OTStereoSearch::OTStereoSearch(const std::string& type,
                                const std::string& name,
                                const IInterface* parent):
-  StereoBase(type, name, parent)
+  StereoBase(type, name, parent),
+  m_hitMan(NULL)
 {
   declareProperty("otDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
   declareProperty("otDataSvcName", m_dataSvcName = "TsaDataManager");

@@ -1,4 +1,3 @@
-// $Id: TsaSeedSelector.h,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
 #ifndef _TsaSeedSelector_H
 #define _TsaSeedSelector_H
 
@@ -33,10 +32,6 @@ namespace Tf
       virtual StatusCode execute(std::vector<SeedTrack*>& seeds,  std::vector<SeedHit*> hits[6] = 0);
 
       virtual StatusCode execute(LHCb::State& hint,std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6] = 0 ) ;
-
-    private:
-
-      ITsaSeedStep* m_finalSelection;
 
     };
 

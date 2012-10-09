@@ -14,7 +14,8 @@ DECLARE_ALGORITHM_FACTORY( SeedTrackCnv )
 
 SeedTrackCnv::SeedTrackCnv(const std::string& name,
                            ISvcLocator* pSvcLocator):
-  BaseAlg(name, pSvcLocator)
+  BaseAlg(name, pSvcLocator),
+  m_Tsa2TrackCnv(NULL)
 {
   // constructor
   declareProperty("LikCut", m_likCut = -40.);

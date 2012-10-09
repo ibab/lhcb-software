@@ -4,6 +4,10 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2012-10-09 - Marco Cattaneo
+ - Do not MeasureTime by default in TsaSeed
+ - Fix UNINIT_CTOR defects
+
 !========================= TsaAlgorithms v3r26 2012-03-27 =========================
 ! 2012-03-07 - Marco Cattaneo
  - Use std:stable_sort instead of std::sort everywhere, fixes differences 

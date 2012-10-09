@@ -36,7 +36,8 @@ DECLARE_ALGORITHM_FACTORY( TTGenericTracking )
 
 TTGenericTracking::TTGenericTracking( const std::string& name, 
                                       ISvcLocator* pSvcLocator ) :
-  GaudiAlgorithm(name, pSvcLocator )
+  GaudiAlgorithm(name, pSvcLocator ),
+  m_tracker(NULL)
 {
   // constructer
   declareProperty("InputData", m_clusterLocation=STClusterLocation::TTClusters);

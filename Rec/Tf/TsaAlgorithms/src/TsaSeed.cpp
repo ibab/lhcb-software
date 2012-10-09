@@ -33,7 +33,16 @@ DECLARE_ALGORITHM_FACTORY( Seed )
 
 Seed::Seed(const std::string& name,
            ISvcLocator* pSvcLocator):
-  BaseAlg(name, pSvcLocator)
+  BaseAlg(name, pSvcLocator),
+  m_xSelection(NULL),
+  m_finalSelection(NULL),
+  m_likelihood(NULL),
+  m_addHits(NULL),
+  m_stubFind(NULL),
+  m_stubLinker(NULL),
+  m_extendStubs(NULL),
+  m_rawBankDecoder(NULL),
+  m_timerTool(NULL)
 {
 
   declareProperty("addHits", m_addHitsInITOverlap = true);
@@ -47,7 +56,7 @@ Seed::Seed(const std::string& name,
   declareProperty( "maxITHits" ,  m_maxNumberITHits = 3000);
   declareProperty( "maxOTHits" , m_maxNumberOTHits = 10000 );
   declareProperty("ITLiteClusters", m_clusterLocation = LHCb::STLiteClusterLocation::ITClusters);
-  declareProperty( "TimingMeasurement", m_doTiming = true);
+  declareProperty( "TimingMeasurement", m_doTiming = false);
 
 }
 

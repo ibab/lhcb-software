@@ -35,7 +35,8 @@ DECLARE_TOOL_FACTORY( ITXSearch )
 ITXSearch::ITXSearch(const std::string& type,
                      const std::string& name,
                      const IInterface* parent):
-  XSearchBase(type, name, parent)
+  XSearchBase(type, name, parent),
+  m_hitMan(NULL)
 {
   declareProperty("itDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
   declareProperty("itDataSvcName", m_dataSvcName = "TsaDataManager");
