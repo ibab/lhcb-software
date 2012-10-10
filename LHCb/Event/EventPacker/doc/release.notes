@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-10-10 - Chris Jones
+ - Sort the unpacked cluster containers in UnpackCluster. Workaround for an
+   issue in Stripping20 where the clusters are not sorted prior to packing.
+
 !========================= EventPacker v2r19 2012-09-28 =========================
 ! 2012-09-27 - Chris Jones
  - Add back a call to std::sort that went AWOL in PackCluster

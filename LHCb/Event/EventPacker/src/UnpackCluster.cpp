@@ -170,6 +170,12 @@ StatusCode UnpackCluster::execute()
 
   } // end loop over clusters
 
+  // Sort any filled containers.
+  if ( m_vClus  ) { std::sort( m_vClus->begin(),  m_vClus->end()  ); }
+  if ( m_ttClus ) { std::sort( m_ttClus->begin(), m_ttClus->end() ); }
+  if ( m_utClus ) { std::sort( m_utClus->begin(), m_utClus->end() ); }
+  if ( m_itClus ) { std::sort( m_itClus->begin(), m_itClus->end() ); }
+
   //== If we stored in a different location, compare...
   if ( !m_extension.empty() )
   {
