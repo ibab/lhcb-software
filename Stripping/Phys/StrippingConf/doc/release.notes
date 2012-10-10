@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2012-10-10 - Anton Poluektov 
+ - Change default TES prefix for DecReports from None (=stream-dependent) to 'Strip'
+
 !========================= StrippingConf v4r7 2012-09-01 =========================
 
 ! 2012-08-28 - Anton Poluektov 

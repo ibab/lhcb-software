@@ -19,7 +19,7 @@ class StrippingConf ( object ) :
 
     def __init__( self,
                   name = "",
-                  TESPrefix = None, 
+                  TESPrefix = 'Strip', 
                   HDRLocation = 'Phys/DecReports', 
                   Streams = [], 
                   BadEventSelection = None, 
