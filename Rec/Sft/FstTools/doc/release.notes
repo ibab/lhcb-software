@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Sft/FstTools
+! Responsible : Olivier Callot
+! Purpose     : First Software Trigger tools for teh upgrade
+!-----------------------------------------------------------------------------
+
+! 2012-10-10 - Olivier Callot
+ - Creation: Dedicated sequencer, and two algorithms for track filtering
