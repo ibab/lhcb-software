@@ -16,7 +16,7 @@ use  DetCond             v12r26      Det
 
 # Hlt
 use  HltSettings         v5r56       Hlt
-use  Hlt1Lines           v6r29       Hlt
+use  Hlt1Lines           v6r30       Hlt
 
 # Declare this as a container package
 apply_pattern container_package
