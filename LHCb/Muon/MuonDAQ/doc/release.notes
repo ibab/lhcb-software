@@ -4,6 +4,9 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-10-11 - Marco Clemencic
+ - Fixed warning: extra ';' [-pedantic].
+
 !========================= MuonDAQ v4r15 2012-09-28 =========================
 ! 2012-09-21 - Marco Clemencic
  - Fixed compilation with -std=c++11 (-std=c++0x).

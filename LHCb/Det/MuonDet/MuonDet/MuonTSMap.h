@@ -1,5 +1,5 @@
 // $Id: MuonTSMap.h,v 1.3 2009-07-08 12:42:47 cattanem Exp $
-#ifndef MUONDET_MUONTSMAP_H 
+#ifndef MUONDET_MUONTSMAP_H
 #define MUONDET_MUONTSMAP_H 1
 #include <vector>
 #include "GaudiKernel/DataObject.h"
@@ -9,15 +9,15 @@
 // Include files
 #include "MuonDet/CLID_MuonTSMap.h"
 /** @class MuonTSMap MuonTSMap.h MuonDet/MuonTSMap.h
- *  
+ *
  *
  *  @author Alessia Satta
  *  @date   2004-01-05
  */
 class MuonTSMap:public Condition {
-public: 
+public:
   /// Standard constructor
-  MuonTSMap( ); 
+  MuonTSMap( );
 
   virtual ~MuonTSMap( ); ///< Destructor
   /// Class ID of this class
@@ -29,16 +29,11 @@ public:
 
   StatusCode initialize(long num, long gridx[2],long gridy[2]);
 
-#ifdef __INTEL_COMPILER         // Disable ICC warning
-  #pragma warning(disable:1125) // virtual function is hidden, override intended?
-  #pragma warning(push)
-#endif
+  using Condition::update;
   StatusCode update(long output,std::vector<long> lay,
                     std::vector<long> gridx,std::vector<long> gridy,
                     std::vector<long> synch);
-#ifdef __INTEL_COMPILER // Re-enable ICC warning
-  #pragma warning(pop)
-#endif
+
   inline long numberOfLayout(){return m_NumberLogLayout;};
   inline long gridXLayout(int i){return m_GridXLayout[i];};
   inline long gridYLayout(int i){return m_GridYLayout[i];};

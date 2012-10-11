@@ -39,7 +39,7 @@ MuonDigitToRawBuffer::MuonDigitToRawBuffer( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonDigitToRawBuffer::~MuonDigitToRawBuffer() {};
+MuonDigitToRawBuffer::~MuonDigitToRawBuffer() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -73,7 +73,7 @@ StatusCode MuonDigitToRawBuffer::initialize() {
 
 
   return StatusCode::SUCCESS;
-};
+}
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -93,7 +93,7 @@ StatusCode MuonDigitToRawBuffer::execute() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<" exit "<<endmsg;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -745,7 +745,7 @@ StatusCode MuonDigitToRawBuffer::ProcessPads()
   }
    return StatusCode::SUCCESS;
 
-};
+}
 
 
 StatusCode MuonDigitToRawBuffer::ProcessDigitV1()

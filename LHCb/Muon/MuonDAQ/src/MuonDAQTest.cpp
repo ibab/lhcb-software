@@ -27,7 +27,7 @@ MuonDAQTest::MuonDAQTest( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonDAQTest::~MuonDAQTest() {}; 
+MuonDAQTest::~MuonDAQTest() {}
 
 //=============================================================================
 // Initialization
@@ -42,7 +42,7 @@ StatusCode MuonDAQTest::initialize() {
     return sc;
   else
     return Error("Could not instantiate MuonRawBuffer tool");
-};
+}
 
 //=============================================================================
 // Main execution

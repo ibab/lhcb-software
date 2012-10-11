@@ -25,7 +25,7 @@ const unsigned int second )const
 MuonHLTBaseDC06::ShiftAddress) 
     <(( second & MuonHLTBaseDC06::MaskAddress ) 
 >>MuonHLTBaseDC06::ShiftAddress);
-  };
+  }
 
 
 

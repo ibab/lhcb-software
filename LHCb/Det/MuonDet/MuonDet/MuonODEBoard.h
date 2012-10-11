@@ -1,5 +1,5 @@
 // $Id: MuonODEBoard.h,v 1.3 2008-04-02 11:47:48 asatta Exp $
-#ifndef MUONDET_MUONODEBOARD_H 
+#ifndef MUONDET_MUONODEBOARD_H
 #define MUONDET_MUONODEBOARD_H 1
 
 // Include files
@@ -12,15 +12,15 @@
 #include "MuonKernel/MuonTile.h"
 
 /** @class MuonODEBoard MuonODEBoard.h MuonDet/MuonODEBoard.h
- *  
+ *
  *
  *  @author Alessia Satta
  *  @date   2004-01-12
  */
 class MuonODEBoard:public Condition {
-public: 
+public:
   /// Standard constructor
-  MuonODEBoard( ); 
+  MuonODEBoard( );
 
   virtual ~MuonODEBoard( ); ///< Destructor
   inline static  const CLID& classID() {
@@ -29,18 +29,13 @@ public:
   /// Workaround to prevent hidden base class function
   inline StatusCode initialize() { return Condition::initialize(); }
 
-  void initialize(long number,long region);  
+  void initialize(long number,long region);
 
-#ifdef __INTEL_COMPILER         // Disable ICC warning
-  #pragma warning(disable:1125) // virtual function is hidden, override intended?
-  #pragma warning(push)
-#endif
-  StatusCode update(long tslayx,long tslayy, long tsnumb, 
+  using Condition::update;
+  StatusCode update(long tslayx,long tslayy, long tsnumb,
                     std::vector<long> gridx, std::vector<long> gridy,
-                    std::vector<long> quadrant);  
-#ifdef __INTEL_COMPILER // Re-enable ICC warning
-  #pragma warning(pop)
-#endif
+                    std::vector<long> quadrant);
+
   StatusCode addTSName(std::string name);
   inline long getODESerialNumber(){return m_ODENumber;};
   inline long getTSLayoutX(){return m_TSLayoutX;};
@@ -51,20 +46,20 @@ public:
   inline long getTSQuadrant(int i) {return m_TSQuadrant[i];};
   inline std::string getTSName(int i)  {return m_TSName[i];}
   inline void setRegion(long i)  {  m_region=i;};
-  inline long region(){ return m_region;};    
+  inline long region(){ return m_region;};
   void setQuadrants();
   bool isQuadrantContained(long quadrant);
-  bool isTSContained(LHCb::MuonTileID TSTile);	 
+  bool isTSContained(LHCb::MuonTileID TSTile);
   void setECSName(std::string name){m_ECSName=name;};
-  
+
   inline std::string ECSName()  {return m_ECSName;}
-  
+
 protected:
 
 private:
 
   long m_region;
-  long m_ODENumber;  
+  long m_ODENumber;
   long m_TSLayoutX;
   long m_TSLayoutY;
   long m_TSNumber;
@@ -72,7 +67,7 @@ private:
   std::vector<long> m_TSGridY;
   std::vector<long> m_TSQuadrant;
   std::vector<std::string> m_TSName;
-  std::string m_ECSName;  
+  std::string m_ECSName;
   long m_quadrant[4];
 };
 #endif // MUONDET_MUONODEBOARD_H

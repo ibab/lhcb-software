@@ -64,7 +64,7 @@ StatusCode MagFieldReader::initialize() {
 
   info() << "MagFieldReader initialized with service ==> " <<  m_FieldServiceName << endmsg;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -128,13 +128,11 @@ StatusCode MagFieldReader::execute() {
 
 
 StatusCode MagFieldReader::finalize() {
-
   StatusCode sc = GaudiTupleAlg::finalize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-if ( sc.isSuccess() )
-    info() << "Service finalized successfully" << endmsg;
+  info() << "Service finalized successfully" << endmsg;
   return StatusCode::SUCCESS;
-};
+}
 
 
 void MagFieldReader::TestBdl() 

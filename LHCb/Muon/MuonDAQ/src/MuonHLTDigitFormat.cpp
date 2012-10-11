@@ -22,12 +22,12 @@ m_type=type;
 MuonHLTDigitFormat::MuonHLTDigitFormat(unsigned int num ,unsigned int type){
 m_data=num;
 m_type=type;
-};
+}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonHLTDigitFormat::~MuonHLTDigitFormat() {}; 
+MuonHLTDigitFormat::~MuonHLTDigitFormat() {}
 
 //=============================================================================
 void MuonHLTDigitFormat::setAddress(unsigned int num)
@@ -45,7 +45,7 @@ void MuonHLTDigitFormat::setAddress(unsigned int num)
    tmp2 = m_data & ~MuonHLTBaseV1::MaskAddress ;
  }
  m_data = ( tmp1 | tmp2 ) ;
-};
+}
 
 void MuonHLTDigitFormat::setTime(unsigned int num)
 {
@@ -61,7 +61,7 @@ void MuonHLTDigitFormat::setTime(unsigned int num)
   
   
   m_data = ( tmp1 | tmp2 ) ;
-};
+}
 
 unsigned int MuonHLTDigitFormat::getTime()
 {
@@ -76,7 +76,7 @@ unsigned int MuonHLTDigitFormat::getTime()
   }
   else
     return 0;
-};
+}
 
 unsigned int MuonHLTDigitFormat::getAddress()
 {
@@ -92,7 +92,7 @@ unsigned int MuonHLTDigitFormat::getAddress()
   else
     return 0;
 
-};
+}
 
 unsigned int  MuonHLTDigitFormat::getWord()
 {

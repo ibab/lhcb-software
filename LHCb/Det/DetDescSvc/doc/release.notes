@@ -4,6 +4,10 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+! 2012-10-11 - Marco Clemencic
+ - Fixed warning: extra ';' [-pedantic].
+
+!========================= DetDescSvc v3r5 2012-01-31 =========================
 ! 2012-01-09 - Marco Clemencic
  - Modified UpdateMgrSvc to use the special "update mode" OVERRIDE for the
    conditions used to override existing ones (property ConditionsOverride).

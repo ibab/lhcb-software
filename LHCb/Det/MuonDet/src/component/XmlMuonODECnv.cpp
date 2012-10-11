@@ -1,5 +1,5 @@
 // $Id: XmlMuonODECnv.cpp,v 1.10 2010-03-17 16:19:10 cattanem Exp $
-// Include files 
+// Include files
 
 #include <vector>
 
@@ -11,8 +11,8 @@
 #include "GaudiKernel/RegistryEntry.h"
 
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>   
-#include <xercesc/dom/DOMNode.hpp>   
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMNode.hpp>
 
 #include "GaudiKernel/IOpaqueAddress.h"
 
@@ -41,10 +41,7 @@ public:
 
 protected:
 
-#ifdef __INTEL_COMPILER         // Disable ICC warning
-  #pragma warning(disable:1125) // virtual function is hidden, override intended?
-  #pragma warning(push)
-#endif
+  using XmlUserConditionCnv<MuonODEBoard>::i_fillSpecificObj;
   /** This fills the current object for specific child.
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here
@@ -55,19 +52,16 @@ protected:
   virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,
                                         MuonODEBoard* dataObj,
                                         IOpaqueAddress* address);
-#ifdef __INTEL_COMPILER // Re-enable ICC warning
-  #pragma warning(pop)
-#endif
 
 private:
 StatusCode splitList( std::string &stringList,
                      std::vector<long>& vectorList);
-  
+
 
 private:
  const XMLCh* ODEString;
  const XMLCh* ODENumberString;
- const XMLCh* ODEECSNameString;            
+ const XMLCh* ODEECSNameString;
  const XMLCh* RegionString;
  const XMLCh* TSLayoutXString;
  const XMLCh* TSLayoutYString;
@@ -77,7 +71,7 @@ private:
  const XMLCh* TSQuadrantListString;
  const XMLCh* TSMapString;
  const XMLCh* TSMapRefString;
-}; 
+};
 
 // -----------------------------------------------------------------------
 // Instantiation of a static factory class used by clients to create
@@ -99,17 +93,17 @@ XmlMuonODECnv::XmlMuonODECnv(ISvcLocator* svc):
   XmlUserConditionCnv<MuonODEBoard> (svc)
 {
 
-ODEString=xercesc::XMLString::transcode("ODEBoard");             
-ODENumberString=xercesc::XMLString::transcode("ODESerialNumber");       
-ODEECSNameString=xercesc::XMLString::transcode("ODEECSName");       
-RegionString=xercesc::XMLString::transcode("RegionNumber"); 
-TSLayoutXString=xercesc::XMLString::transcode("TSLayoutX");       
-TSLayoutYString=xercesc::XMLString::transcode("TSLayoutY");       
-TSNumberString=xercesc::XMLString::transcode("TSNumber");        
-TSGridXListString=xercesc::XMLString::transcode("TSGridXList");     
-TSGridYListString=xercesc::XMLString::transcode("TSGridYList");     
-TSQuadrantListString=xercesc::XMLString::transcode("TSQuadrantList");  
-TSMapString=xercesc::XMLString::transcode("conditionref");           
+ODEString=xercesc::XMLString::transcode("ODEBoard");
+ODENumberString=xercesc::XMLString::transcode("ODESerialNumber");
+ODEECSNameString=xercesc::XMLString::transcode("ODEECSName");
+RegionString=xercesc::XMLString::transcode("RegionNumber");
+TSLayoutXString=xercesc::XMLString::transcode("TSLayoutX");
+TSLayoutYString=xercesc::XMLString::transcode("TSLayoutY");
+TSNumberString=xercesc::XMLString::transcode("TSNumber");
+TSGridXListString=xercesc::XMLString::transcode("TSGridXList");
+TSGridYListString=xercesc::XMLString::transcode("TSGridYList");
+TSQuadrantListString=xercesc::XMLString::transcode("TSQuadrantList");
+TSMapString=xercesc::XMLString::transcode("conditionref");
 TSMapRefString=xercesc::XMLString::transcode("href");
 }
 
@@ -117,22 +111,22 @@ TSMapRefString=xercesc::XMLString::transcode("href");
 // Destructor
 //=============================================================================
 XmlMuonODECnv::~XmlMuonODECnv() {
-  xercesc::XMLString::release((XMLCh**)&ODEString);           
-  xercesc::XMLString::release((XMLCh**)&RegionString); 
-  xercesc::XMLString::release((XMLCh**)&ODENumberString);     
-  xercesc::XMLString::release((XMLCh**)&ODEECSNameString);     
-  xercesc::XMLString::release((XMLCh**)&TSLayoutXString);     
-  xercesc::XMLString::release((XMLCh**)&TSLayoutYString);     
-  xercesc::XMLString::release((XMLCh**)&TSNumberString);      
-  xercesc::XMLString::release((XMLCh**)&TSGridXListString);   
-  xercesc::XMLString::release((XMLCh**)&TSGridYListString);   
+  xercesc::XMLString::release((XMLCh**)&ODEString);
+  xercesc::XMLString::release((XMLCh**)&RegionString);
+  xercesc::XMLString::release((XMLCh**)&ODENumberString);
+  xercesc::XMLString::release((XMLCh**)&ODEECSNameString);
+  xercesc::XMLString::release((XMLCh**)&TSLayoutXString);
+  xercesc::XMLString::release((XMLCh**)&TSLayoutYString);
+  xercesc::XMLString::release((XMLCh**)&TSNumberString);
+  xercesc::XMLString::release((XMLCh**)&TSGridXListString);
+  xercesc::XMLString::release((XMLCh**)&TSGridYListString);
   xercesc::XMLString::release((XMLCh**)&TSQuadrantListString);
-  xercesc::XMLString::release((XMLCh**)&TSMapString);         
+  xercesc::XMLString::release((XMLCh**)&TSMapString);
   xercesc::XMLString::release((XMLCh**)&TSMapRefString);
 }
 
 
-StatusCode 
+StatusCode
 XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
                                           MuonODEBoard* dataObj,
                                           IOpaqueAddress*          ){
@@ -151,11 +145,11 @@ XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     const std::string regionNumberString =
       dom2Std (childElement->getAttribute (RegionString));
     long regionNumberValue=atol(regionNumberString.c_str());
-    dataObj->initialize(ODENumberValue,regionNumberValue);    
+    dataObj->initialize(ODENumberValue,regionNumberValue);
     //if(sc.isFailure())return sc;
     dataObj->setECSName(ODEECSNameValue);
     //msg<<MSG::INFO<<" ECS Name "<<ODEECSNameValue<<endmsg;
-    
+
     const std::string tsLayoutXString =
       dom2Std (childElement->getAttribute (TSLayoutXString));
     long tsLayoutXValue=atol(tsLayoutXString.c_str());
@@ -180,38 +174,38 @@ XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     std::vector<long> tsQuadrantValue;
     sc=splitList(tsQuadrantListString,tsQuadrantValue);
     if(sc.isFailure())return sc;
-    sc=dataObj->update(tsLayoutXValue,tsLayoutYValue,tsNumberValue, 
+    sc=dataObj->update(tsLayoutXValue,tsLayoutYValue,tsNumberValue,
                     tsGridXValue, tsGridYValue,
                     tsQuadrantValue);
     if(sc.isFailure())return sc;
 
     dataObj->setQuadrants();
-    
+
     xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
     unsigned int i;
     for(i=0; i < nodeChildren->getLength(); ++i){
-      if(dom2Std(nodeChildren->item(i)->getNodeName()) == 
+      if(dom2Std(nodeChildren->item(i)->getNodeName()) ==
          dom2Std(TSMapString)){
-        xercesc::DOMNamedNodeMap* attributes =      
+        xercesc::DOMNamedNodeMap* attributes =
           nodeChildren->item(i)->getAttributes();
         xercesc::DOMNode* TSNode = attributes->
           getNamedItem(TSMapRefString);
-        std::string  TSReference = dom2Std (TSNode->getNodeValue());  
+        std::string  TSReference = dom2Std (TSNode->getNodeValue());
         unsigned int poundPosition = TSReference.find_last_of('#');
         // std::string entryName = "/" + TSReference.substr(poundPosition + 1);
-        sc=dataObj->addTSName(TSReference.substr(poundPosition + 1));    
+        sc=dataObj->addTSName(TSReference.substr(poundPosition + 1));
         if(sc.isFailure())return sc;
 
-      }      
-    }    
+      }
+    }
   }
-  return StatusCode::SUCCESS;  
+  return StatusCode::SUCCESS;
 }
 
-StatusCode 
+StatusCode
 XmlMuonODECnv::splitList( std::string &stringList,
                              std::vector<long>& vectorList){
-  
+
   std::string::size_type cPos = stringList.find(',');
   std::string sCurr;
   while( cPos != std::string::npos ){ // found a comma in string
@@ -220,7 +214,7 @@ XmlMuonODECnv::splitList( std::string &stringList,
     stringList.erase( 0, cPos+1); // erase up to and including comma
     cPos = stringList.find(','); // find next comma
   }
-  vectorList.push_back(atol(stringList.c_str())); 
+  vectorList.push_back(atol(stringList.c_str()));
 return StatusCode::SUCCESS;
 }
 

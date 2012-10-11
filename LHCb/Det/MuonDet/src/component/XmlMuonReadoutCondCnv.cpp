@@ -30,10 +30,7 @@ public:
 
 protected:
 
-#ifdef __INTEL_COMPILER         // Disable ICC warning
-  #pragma warning(disable:1125) // virtual function is hidden, override intended?
-  #pragma warning(push)
-#endif
+  using XmlUserConditionCnv<MuonReadoutCond>::i_fillSpecificObj;
   /** This fills the current object for specific child.
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here
@@ -44,9 +41,6 @@ protected:
   virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,
                                         MuonReadoutCond* dataObj,
                                         IOpaqueAddress* address);
-#ifdef __INTEL_COMPILER // Re-enable ICC warning
-  #pragma warning(pop)
-#endif
 
 private:
   /// fills the X and Y cluster sizes and probabilities
@@ -55,8 +49,8 @@ private:
                             std::string &clPrX,
                             std::string &clSzY,
                             std::string &clPrY);
-  
-  /// filles the time jitter PDF 
+
+  /// filles the time jitter PDF
   StatusCode setJitterVector(MuonReadoutCond* dataObj,
                              const int &index,
                              const std::string &jitterMin,
@@ -104,7 +98,7 @@ XmlMuonReadoutCondCnv::XmlMuonReadoutCondCnv(ISvcLocator* svc) :
   XmlUserConditionCnv<MuonReadoutCond> (svc)
 {
 MsgStream log (msgSvc(), "XmlMuonReadoutCondCnv");
- 
+
   ReadoutString = xercesc::XMLString::transcode("Readout");
   ReadoutTypeString = xercesc::XMLString::transcode("ReadoutType");
   EfficiencyString = xercesc::XMLString::transcode("Efficiency");
@@ -207,7 +201,7 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
                           ClusterSizeY  CDATA "1"
                           ClusterProbY  CDATA "0.0"
                           JitterMin     CDATA #REQUIRED
-                          JitterMax     CDATA #REQUIRED 
+                          JitterMax     CDATA #REQUIRED
                           JitterValues  CDATA #REQUIRED>
   */
 
@@ -253,8 +247,8 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
       dom2Std (childElement->getAttribute (JitterMaxString));
     std::string jitterValues =
       dom2Std (childElement->getAttribute (JitterValuesString));
-    
-    
+
+
     if ( !((rType == "Anode") || (rType == "Cathode")) ) {
       log << MSG::WARNING << "Readout type claimed to be "
           << rType << endmsg;
@@ -283,7 +277,7 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
     dataObj->setMeanDeadTime( atof(meanDead.c_str()), index);
     dataObj->setRMSDeadTime(  atof(rmsDead.c_str()), index);
     dataObj->setTimeGateStart(atof(timeOffset.c_str()), index);
-    
+
     dataObj->setPadEdgeSizeX( atof(padESX.c_str()), index);
     dataObj->setPadEdgeSigmaX(atof(padESigX.c_str()), index);
     dataObj->setPadEdgeSizeY( atof(padESY.c_str()), index);
@@ -307,7 +301,7 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
   return StatusCode::SUCCESS;
 }
 
-StatusCode 
+StatusCode
 XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
                                       const int &index,
                                       std::string &clSzX,
@@ -316,14 +310,14 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
                                       std::string &clPrY){
 
   MsgStream log (msgSvc(), "XmlMuonReadoutCondCnv");
-  // need to split clSzX and clPrX into component parts 
+  // need to split clSzX and clPrX into component parts
   // should be a comma seperated list
-  
+
   if( UNLIKELY( log.level() <= MSG::DEBUG ) ) {
     log << MSG::DEBUG << "Cluster size (X) " << clSzX << endmsg;
     log << MSG::DEBUG << "Cluster Prob (X) " << clPrX << endmsg;
   }
-  
+
   std::string::size_type cPos = clSzX.find(',');
   std::string sCurr;
   std::vector<int> clSize;
@@ -334,7 +328,7 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
     cPos = clSzX.find(',');
   }
   clSize.push_back(atol(clSzX.c_str()));
-  
+
   cPos = clPrX.find(',');
   std::vector<double> clProb;
   while( cPos != std::string::npos ){
@@ -344,9 +338,9 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
     cPos = clPrX.find(',');
   }
   clProb.push_back(atof(clPrX.c_str()));
-  
+
   if(clProb.size() != clSize.size()){
-    log << MSG::ERROR << "Found "<< clProb.size() 
+    log << MSG::ERROR << "Found "<< clProb.size()
         << " probabilities and " << clSize.size() << " sizes (X)" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -357,7 +351,7 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
       log << MSG::DEBUG << "Clusters (X) " << clSize[i]
           << ","<< clProb[i] << endmsg;
   }
-  
+
   clSize.clear();
   clProb.clear();
 
@@ -365,7 +359,7 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
     log << MSG::DEBUG << "Cluster size (Y) " << clSzY << endmsg;
     log << MSG::DEBUG << "Cluster Prob (Y) " << clPrY << endmsg;
   }
-  
+
   cPos = clSzY.find(',');
   while( cPos != std::string::npos ){
     sCurr = clSzY.substr( 0, cPos);
@@ -374,7 +368,7 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
     cPos = clSzY.find(',');
   }
   clSize.push_back(atol(clSzY.c_str()));
-  
+
   cPos = clPrY.find(',');
   while( cPos != std::string::npos ){
     sCurr = clPrY.substr(0,cPos);
@@ -383,9 +377,9 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
     cPos = clPrY.find(',');
   }
   clProb.push_back(atof(clPrY.c_str()));
-  
+
   if(clProb.size() != clSize.size()){
-    log << MSG::ERROR << "Found "<< clProb.size() 
+    log << MSG::ERROR << "Found "<< clProb.size()
         << " probabilities and " << clSize.size() << " sizes (X)" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -399,22 +393,22 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
 }
 
 
-StatusCode 
+StatusCode
 XmlMuonReadoutCondCnv::setJitterVector(MuonReadoutCond* dataObj,
                                        const int &index,
                                        const std::string &jitterMin,
                                        const std::string &jitterMax,
                                        std::string &jitterValues){
 
-  MsgStream log (msgSvc(), "XmlMuonReadoutCondCnv"); 
-  // need to split clSzX and clPrX into component parts 
+  MsgStream log (msgSvc(), "XmlMuonReadoutCondCnv");
+  // need to split clSzX and clPrX into component parts
   // should be a comma seperated list
-  
+
   if( UNLIKELY( log.level() <= MSG::DEBUG ) ) {
     log << MSG::DEBUG << "Jitter Min " << jitterMin << endmsg;
     log << MSG::DEBUG << "jitter Max " << jitterMax << endmsg;
   }
-  
+
   std::string::size_type cPos = jitterValues.find(',');
   std::string sCurr;
   std::vector<double> jitterVector;
@@ -425,7 +419,7 @@ XmlMuonReadoutCondCnv::setJitterVector(MuonReadoutCond* dataObj,
     cPos = jitterValues.find(','); // find next comma
   }
   jitterVector.push_back(atof(jitterValues.c_str()));
-  
+
   dataObj->setTimeJitter(jitterVector,atof(jitterMin.c_str()),
                          atof(jitterMax.c_str()),index);
 

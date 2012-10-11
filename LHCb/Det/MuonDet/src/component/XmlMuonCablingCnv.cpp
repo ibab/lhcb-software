@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 #include <string>
 #include <vector>
@@ -7,8 +7,8 @@
 #include "MuonDet/MuonStationCabling.h"
 
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>   
-#include <xercesc/dom/DOMNode.hpp>   
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMNode.hpp>
 
 #include "GaudiKernel/IOpaqueAddress.h"
 
@@ -45,10 +45,7 @@ public:
 
 protected:
 
-#ifdef __INTEL_COMPILER         // Disable ICC warning
-  #pragma warning(disable:1125) // virtual function is hidden, override intended?
-  #pragma warning(push)
-#endif
+  using XmlUserConditionCnv<MuonStationCabling>::i_fillSpecificObj;
   /** This fills the current object for specific child.
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here
@@ -59,26 +56,23 @@ protected:
   virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,
                                         MuonStationCabling* dataObj,
                                         IOpaqueAddress* address);
-#ifdef __INTEL_COMPILER // Re-enable ICC warning
-  #pragma warning(pop)
-#endif
 
 virtual StatusCode updateRep (IOpaqueAddress *pAddress, DataObject *pObject);
 
 private:
 StatusCode splitList( std::string &stringList,
                      std::vector<long>& vectorList);
-  
 
-  
+
+
 private:
   const XMLCh* CablingString;
   const XMLCh* SupportString;
   const XMLCh* L1ListString;
   const XMLCh* L1ListRefString;
   const XMLCh* L1NumberString;
-  
-}; 
+
+};
 
 // -----------------------------------------------------------------------
 // Instantiation of a static factory class used by clients to create
@@ -93,9 +87,9 @@ XmlMuonCablingCnv::XmlMuonCablingCnv(ISvcLocator* svc):
 XmlUserConditionCnv<MuonStationCabling> (svc)
  {
     MsgStream msg(msgSvc(), "XmlMuonCablingCnv");
-    if( UNLIKELY( msg.level() <= MSG::VERBOSE ) ) 
+    if( UNLIKELY( msg.level() <= MSG::VERBOSE ) )
       msg<<MSG::VERBOSE<<" start muon cabling"<<endmsg;
-    
+
     CablingString= xercesc::XMLString::transcode("MuonStationCabling");
     SupportString= xercesc::XMLString::transcode("SupportPath");
     L1ListString= xercesc::XMLString::transcode("conditionref");
@@ -129,7 +123,7 @@ StatusCode XmlMuonCablingCnv::updateRep (IOpaqueAddress* /* pAddress */,
 // -----------------------------------------------------------------------
 // Fill an object with a new specific child element
 // ------------------------------------------------------------------------
-StatusCode 
+StatusCode
 XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
                                      MuonStationCabling* dataObj,
                                      IOpaqueAddress* /* address */){
@@ -143,7 +137,7 @@ XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
       dom2Std (childElement->getAttribute (L1NumberString));
     long l1NumberValue=atol(l1NumberString.c_str());
     StatusCode sc=dataObj->update(l1NumberValue);
-    if(sc.isFailure())return sc;	
+    if(sc.isFailure())return sc;
     if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
       msg<<MSG::DEBUG<<" number of L1 "<<l1NumberValue<<endmsg;
     xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
@@ -152,30 +146,30 @@ XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
       if(dom2Std(nodeChildren->item(i)->getNodeName()) ==
          dom2Std(L1ListString)){
         xercesc::DOMNamedNodeMap* attributes =
-          nodeChildren->item(i)->getAttributes();   
+          nodeChildren->item(i)->getAttributes();
         xercesc::DOMNode* L1Node = attributes->
           getNamedItem(L1ListRefString);
         std::string  L1Reference = dom2Std (L1Node->getNodeValue());
         unsigned int poundPosition = L1Reference.find_last_of('#');
         // std::string entryName = "/" + L1Reference.substr(poundPosition + 1);
         sc=dataObj->addL1Name(L1Reference.substr(poundPosition + 1));
-        if(sc.isFailure())return sc;	
+        if(sc.isFailure())return sc;
         if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
-          msg<<MSG::DEBUG<<"name of L1 "<<L1Reference.substr(poundPosition + 1)<<endmsg;        
+          msg<<MSG::DEBUG<<"name of L1 "<<L1Reference.substr(poundPosition + 1)<<endmsg;
       }
     }
-    
-    
-    
-  }  
+
+
+
+  }
   return StatusCode::SUCCESS;
-  
+
 }
 
 
 
 
-StatusCode 
+StatusCode
 XmlMuonCablingCnv::splitList( std::string &stringList,
                              std::vector<long>& vectorList){
 
@@ -187,7 +181,7 @@ XmlMuonCablingCnv::splitList( std::string &stringList,
     stringList.erase( 0, cPos+1); // erase up to and including comma
     cPos = stringList.find(','); // find next comma
   }
-  vectorList.push_back(atol(stringList.c_str())); 
+  vectorList.push_back(atol(stringList.c_str()));
 return StatusCode::SUCCESS;
 }
 

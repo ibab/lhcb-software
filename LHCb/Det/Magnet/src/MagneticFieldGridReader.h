@@ -11,7 +11,7 @@ struct GridQuadrant ;
 
 namespace LHCb {
   class MagneticFieldGrid ;
-} ;
+}
 
 class MagneticFieldGridReader
 {

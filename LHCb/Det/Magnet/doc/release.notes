@@ -4,6 +4,9 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2012-10-11 - Marco Clemencic
+ - Fixed warning: extra ';' [-pedantic].
+
 !========================= Magnet v7r5 2011-12-14 =========================
 ! 2011-11-10 - Chris Jones
  - Various tidy ups to the last commit to the MagneticFieldSvc

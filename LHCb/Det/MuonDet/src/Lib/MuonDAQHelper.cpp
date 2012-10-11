@@ -140,7 +140,7 @@ StatusCode MuonDAQHelper::initDAQMaps()
 
   //unsigned int countL1=0;
   m_TotTell1=0;
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" step 1 "<<endmsg;
   //init Tell1 Number and link in Tell1
   for(int station=0;station<5;station++){
@@ -157,7 +157,7 @@ StatusCode MuonDAQHelper::initDAQMaps()
 
 
   }
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" step 2 "<<endmsg;
 
   if(m_TotTell1>MuonDAQHelper_maxTell1Number){
@@ -175,16 +175,16 @@ StatusCode MuonDAQHelper::initDAQMaps()
       std::string L1path=cablingBasePath+
         cabling->getL1Name(L1Board);
       SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
-      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
         msgStream()<<MSG::DEBUG<<" tell1 "<<L1path<<endmsg;
       m_tellPerStation[station].push_back(l1->L1Number());
 
       for(unsigned int i=0;i<MuonDAQHelper_linkNumber;i++){
-        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
           msgStream()<<MSG::DEBUG<<" link "<<i<<" "<<l1->getLinkConnection(i)<<endmsg;
 
         (m_linkInTell1[Tell1Counter]).push_back(l1->getLinkConnection(i));
-        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
           msgStream()<<MSG::DEBUG<<" test Tell1Counter "<<
             (m_linkInTell1[Tell1Counter])[i]<<endmsg;
 
@@ -196,7 +196,7 @@ StatusCode MuonDAQHelper::initDAQMaps()
   //check the ODE board number
   unsigned int ODENumber=0;
   for(int station=0;station<5;station++){
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
       msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
     std::string cablingBasePath=getBasePath(station);
     std::string cablingPath=cablingBasePath+"Cabling";
@@ -209,7 +209,7 @@ StatusCode MuonDAQHelper::initDAQMaps()
 
     }
   }
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" step 3 "<<endmsg;
 
   if(ODENumber>MuonDAQHelper_maxODENumber){
@@ -220,27 +220,27 @@ StatusCode MuonDAQHelper::initDAQMaps()
   }
 
   StatusCode sc=initTELL1Maps();
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" step 4 "<<endmsg;
 
   if(sc.isFailure())return sc;
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" step 5 "<<endmsg;
   sc=initODEMaps();
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" step 6 "<<endmsg;
   if(sc.isFailure())return sc;
   sc=initODENames();
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" step odename "<<endmsg;
   if(sc.isFailure())return sc;
 
   sc=initializeLUTCrossing();
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" step 7 "<<endmsg;
   if(sc.isFailure())return sc;
   sc=initReverseMaps() ;
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" step 8 "<<endmsg;
   if(sc.isFailure())return sc;
   //  sc=checkMapConsistency();
@@ -249,7 +249,7 @@ StatusCode MuonDAQHelper::initDAQMaps()
     return sc;
   }else
   {
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
       msgStream()<<MSG::DEBUG<<" test sucessful"<<endmsg;
   }
 
@@ -263,7 +263,7 @@ StatusCode MuonDAQHelper::initTELL1Maps()
 
   int Tell1Number=0;
   for(int station=0;station<5;station++){
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
       msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
     std::string cablingBasePath=getBasePath(station);
     std::string cablingPath=cablingBasePath+"Cabling";
@@ -277,7 +277,7 @@ StatusCode MuonDAQHelper::initTELL1Maps()
     for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
 
 
-      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
         msgStream()<<MSG::DEBUG<<"L1 number "<<cabling->getL1Name(0)<<endmsg;
       std::string L1path=cablingBasePath+
         cabling->getL1Name(L1Board);
@@ -314,12 +314,12 @@ StatusCode MuonDAQHelper::initTELL1Maps()
           unsigned int digitOffSetY=0;
           SmartDataPtr<MuonTSMap>  TSMap(m_detSvc,TSPath);
           int i=0;
-          if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+          if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
             msgStream()<<MSG::DEBUG<<TSPath<<endmsg;
           m_TUSize[station][region]=TSMap->synchChSize();
 
           for(int isynch=0;isynch<TSMap->synchChSize();isynch++){
-            if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+            if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
               msgStream()<<MSG::DEBUG<<" TS "<<isynch<<" "<<
                 TSMap->synchChUsed(isynch)<<endmsg;
             ODE_channels++;
@@ -386,7 +386,7 @@ StatusCode MuonDAQHelper::initODEMaps()
 
   unsigned int countL1=0;
   for(int station=0;station<5;station++){
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
       msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
     std::string cablingBasePath=getBasePath(station);
     std::string cablingPath=cablingBasePath+"Cabling";
@@ -396,10 +396,10 @@ StatusCode MuonDAQHelper::initODEMaps()
       return StatusCode::FAILURE;
     }
 
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
       msgStream()<<MSG::DEBUG<<" station "<<station<<endmsg;
     for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
-      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
         msgStream()<<MSG::DEBUG<<"L1 number "<<cabling->getL1Name(0)<<endmsg;
       std::string L1path=cablingBasePath+
         cabling->getL1Name(L1Board);
@@ -409,7 +409,7 @@ StatusCode MuonDAQHelper::initODEMaps()
       for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
         std::string ODEpath=cablingBasePath
           +l1->getODEName(ODEBoard);
-        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
           msgStream()<<MSG::DEBUG<<"ODE number "<<L1Board<<
           " "<<l1->getODEName(ODEBoard)<<endmsg;
         SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
@@ -452,7 +452,7 @@ StatusCode MuonDAQHelper::initODEMaps()
               MuonTileID muontile(station,lay,region,
                                   quadrant,digitX,digitY);
               m_mapTileInODE[odenum-1].push_back(muontile);
-              if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+              if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
                 msgStream()<<MSG::DEBUG<<m_mapTileInODE[odenum-1].size()<<" "<<
                   muontile<<endmsg;
 
@@ -466,7 +466,7 @@ StatusCode MuonDAQHelper::initODEMaps()
         }
       }
       m_ODENumberInTell1[countL1]=totODE;
-      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
         msgStream()<<MSG::DEBUG<<" number "<<countL1<<" "<<totODE<<endmsg;
 
       countL1++;
@@ -487,11 +487,11 @@ StatusCode MuonDAQHelper::initReverseMaps()
 
   unsigned int L1Count=0;
   m_TotODEBoard=0;
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" qui "<<endmsg;
 
   for(int station=0;station<5;station++){
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
       msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
 
     std::string cablingBasePath=getBasePath(station);
@@ -520,7 +520,7 @@ StatusCode MuonDAQHelper::initReverseMaps()
       for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
         std::string ODEpath=cablingBasePath
           +l1->getODEName(ODEBoard);
-        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
           msgStream()<<MSG::DEBUG<<L1Board<<" ode "<<ODEBoard<<" "<<ODEpath<<endmsg;
 
         SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
@@ -591,7 +591,7 @@ StatusCode MuonDAQHelper::initReverseMaps()
         ODEEnd=ODEStart+numODE;
         m_ODENameEnd[station][region][quadrant]=ODEEnd;
         ODEStart=ODEEnd;
-        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
           msgStream()<<MSG::DEBUG<<" ff "<<m_ODENameStart[0][0][0]<<" "<<
             station<<" "<<region<<" "<<quadrant<<endmsg;
       }
@@ -600,7 +600,7 @@ StatusCode MuonDAQHelper::initReverseMaps()
     }
   }
 
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" exit "<<endmsg;
 
   return StatusCode::SUCCESS;
@@ -834,7 +834,7 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<LHCb::
   bool wrongFirmware=false;
   if(station==3&&region==0)wrongFirmware=true;
   if(station==4&&region==0)wrongFirmware=true;
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" st reg wrong "<<station<<" "<<region<<" "<<
       wrongFirmware<<endmsg;
 
@@ -878,13 +878,13 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<LHCb::
     }
     std::stable_sort(doubleList.begin(),doubleList.end(),SortPairTileInTU());
     list_of_pads.clear();
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
       msgStream()<<MSG::DEBUG<<" after reordering "<<endmsg;
 
     std::vector<std::pair<LHCb::MuonTileID,LHCb::MuonTileID> >::iterator iPair;
     for(iPair=doubleList.begin();iPair!=doubleList.end();iPair++){
       std::pair<LHCb::MuonTileID,LHCb::MuonTileID> tilePair=*iPair;
-      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
         msgStream()<<MSG::DEBUG<<tilePair.second<<endmsg;
 
       list_of_pads.push_back(tilePair.second);
@@ -1186,7 +1186,7 @@ long MuonDAQHelper::channelsInL1BeforeODE(std::string L1Path,
   SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1Path);
   //  long station=l1->getStation();
 
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<L1Path<<" "<<ODENumber<<" "<<hole<<endmsg;
 
   return  192*(findODEPosition(L1Path, ODENumber,hole));
@@ -1202,11 +1202,11 @@ unsigned int MuonDAQHelper::DAQaddressInL1(LHCb::MuonTileID digitTile,
   ODEAdd=DAQaddressInODE(digitTile,L1Number,ODENumber,hole);
   std::string L1Path=findL1(digitTile);
   //  unsigned int ODEPos=findODEPosition(L1Path,ODENumber,hole);
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" check "<<hole<<" "<<L1Path<<" "<<ODENumber<<endmsg;
 
   unsigned int chToAdd=channelsInL1BeforeODE(L1Path,ODENumber,false);
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" ch add "<<chToAdd+ODEAdd<<endmsg;
   return chToAdd+ODEAdd;
 
@@ -1217,7 +1217,7 @@ unsigned int MuonDAQHelper::DAQaddressInODE(LHCb::MuonTileID digitTile,
                                             long& L1Number,
                                             long& ODENumber,bool hole){
 
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<"************** start coding a digit "<<endmsg;
   bool print=false;
 
@@ -1330,7 +1330,7 @@ std::vector<unsigned int> MuonDAQHelper::padsinTS(
       else hvert[Msub].push_back(*it);
       // debug()<<" horizontal ? "<<     horizontal<<endmsg;
     }
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
       msgStream()<<MSG::DEBUG<<" after h/v "<<endmsg;
 
 
@@ -1340,7 +1340,7 @@ std::vector<unsigned int> MuonDAQHelper::padsinTS(
       std::vector<unsigned int>::iterator itx;
       std::vector<unsigned int>::iterator ity;
       //debug
-      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
         msgStream()<<MSG::DEBUG<<" sub matrix "<<i<<endmsg;
       //debug()<<" horizontal sequence ";
 
@@ -1420,7 +1420,7 @@ StatusCode MuonDAQHelper::checkMapConsistency()
       for(int ilay=0;ilay<num_lay;ilay++){
         MuonLayout lay(m_layoutX[ilay][station*4+region],
                        m_layoutY[ilay][station*4+region]);
-        if( UNLIKELY( msgStream().level() <= MSG::VERBOSE ) ) 
+        if( UNLIKELY( msgStream().level() <= MSG::VERBOSE ) )
           msgStream()<<MSG::VERBOSE<<num_lay<<" "<<lay<<" "<<station<<" "<<region<<endmsg;
 
         for(int quadrant=0;quadrant<4;quadrant++){
@@ -1435,7 +1435,7 @@ StatusCode MuonDAQHelper::checkMapConsistency()
               MuonTileID muontile3(station,lay,region,
                                    quadrant,x+m_layoutX[ilay][station*4+region],
                                    y+m_layoutY[ilay][station*4+region]);
-              if( UNLIKELY( msgStream().level() <= MSG::VERBOSE ) ) 
+              if( UNLIKELY( msgStream().level() <= MSG::VERBOSE ) )
                 msgStream()<<MSG::VERBOSE<<
                   muontile1<<" "<<muontile2<<" "<<muontile3<<endmsg;
 
@@ -1624,7 +1624,7 @@ StatusCode MuonDAQHelper::findStrips(LHCb::MuonTileID pad,
       strips[1]=null;
       return StatusCode::SUCCESS;
     }
-   
+
     strips[ilay]=pad.containerID (lay);
   }
   return StatusCode::SUCCESS;
@@ -1759,8 +1759,7 @@ StatusCode  MuonDAQHelper::initODENames()
     }
   }
 
-  return StatusCode::SUCCESS;;
-
+  return StatusCode::SUCCESS;
 }
 
 StatusCode  MuonDAQHelper::findL0Number(LHCb::MuonTileID digit,
@@ -1826,25 +1825,25 @@ LHCb::MuonTileID MuonDAQHelper::getPadTileInODE(std::string ODEName, int firstCh
 
    const char *pq;
    pq=sCurr.c_str();
-   sscanf(pq, "%d", &quadrant);
+   sscanf(pq, "%u", &quadrant);
 
    sCurr = ODEName.substr(3,4); // get up to the end
 
    const char *ps;
 
    ps=sCurr.c_str();
-   sscanf(ps, "%d", &station);
+   sscanf(ps, "%u", &station);
    sCurr = ODEName.substr(5,6); // get up to the end
 
    const char *pr;
 
    pr=sCurr.c_str();
-   sscanf(pr, "%d", &region);
+   sscanf(pr, "%u", &region);
 
    region--;
    station--;
-   quadrant--; 
-   if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+   quadrant--;
+   if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
      msgStream()<<MSG::DEBUG<<" debug "<<station<<" "<<region<<" "<<quadrant<<endmsg;
 
   int odeStart=m_ODENameStart[station][region][quadrant];
@@ -1853,16 +1852,16 @@ LHCb::MuonTileID MuonDAQHelper::getPadTileInODE(std::string ODEName, int firstCh
 	  //verbose()<<station<<" "<<region<<" "<<quadrant<<endmsg;
   //verbose()<<odeStart<<" "<<odeEnd<<" "<<m_ODEName[odeStart]<<endmsg;
   int odeNumber=-1;
-  
+
   for(int ode=odeStart+1;ode<odeEnd+1;ode++){
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
       msgStream()<<MSG::DEBUG<<ODEName<<" debug ode "<<m_ODENameInECS[ode]<<endmsg;
     if(m_ODENameInECS[ode]==ODEName){
-      odeNumber=ode;      
-      break;      
-    }    
+      odeNumber=ode;
+      break;
+    }
   }
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" debug ode "<<odeNumber<<endmsg;
 
   MuonTileID firstTile;
@@ -1872,4 +1871,4 @@ LHCb::MuonTileID MuonDAQHelper::getPadTileInODE(std::string ODEName, int firstCh
   if(!secondTile.isValid())return firstTile;
   return firstTile.intercept(secondTile);
 }
- 
+

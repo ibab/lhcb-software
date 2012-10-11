@@ -51,7 +51,7 @@ inline bool  TransportSvc::goodLocalGI
   return ( 2 == nInt && tickMin == *(m_local_ticks.begin() ) 
            && tickMax == *(m_local_ticks.rbegin()) ) ? true : false ; 
   ///
-};
+}
 
 // ============================================================================
 // The End 

@@ -30,7 +30,7 @@ MuonTell1Config::MuonTell1Config( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonTell1Config::~MuonTell1Config() {} ;
+MuonTell1Config::~MuonTell1Config() {}
 //=============================================================================
 StatusCode MuonTell1Config::initialize()
 {
@@ -64,7 +64,7 @@ StatusCode MuonTell1Config::initialize()
   
 
   return StatusCode::SUCCESS ;
-};
+}
 StatusCode MuonTell1Config::finalize()
 {
   StatusCode sc = GaudiTool::finalize() ;
@@ -72,7 +72,7 @@ StatusCode MuonTell1Config::finalize()
  
 
   return StatusCode::SUCCESS ;
-};
+}
 
 
 
@@ -136,5 +136,5 @@ StatusCode  MuonTell1Config::configTell1(int Tell1){
   return sc;
   
 
-};
+}
 

@@ -74,7 +74,7 @@ inline double TransportSvc::distanceInRadUnits
   
   return RadLength * TickLength ;  
   ///  
-};
+}
 
 // ============================================================================
 // The End 

@@ -95,7 +95,7 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const Gaudi::XYZPoint& point1 ,
   ///
   return  goodGI; 
 
-};
+}
 
 // ============================================================================
 // The End 

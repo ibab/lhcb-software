@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2012-10-11 - Marco Clemencic
+ - Fixed warning: format '%d' expects argument of type 'int*', but argument 3
+                  has type 'unsigned int*' [-Wformat].
+ 
 !========================= MuonDet v9r8 2012-01-31 =========================
 ! 2012-01-02 - Alessia Satta
  - Fix coverity warnings in DeMuonChamber

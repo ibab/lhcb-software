@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PreloadGeometryTool );
+DECLARE_TOOL_FACTORY( PreloadGeometryTool )
 
 
 //=============================================================================

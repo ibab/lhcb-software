@@ -46,7 +46,7 @@ MuonRawBuffer::MuonRawBuffer( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonRawBuffer::~MuonRawBuffer() {}; 
+MuonRawBuffer::~MuonRawBuffer() {}
 
 //=============================================================================
 
@@ -93,7 +93,7 @@ StatusCode MuonRawBuffer::initialize()
   }
 
   return StatusCode::SUCCESS ;
-};
+}
 
 
 void MuonRawBuffer::handle ( const Incident& incident )
@@ -124,7 +124,7 @@ void MuonRawBuffer::clearData(){
   for (unsigned int i=0;i<MuonDAQHelper_maxODENumber;i++){
     m_ODEData[i].resetODEData();    
   }
-};
+}
 
 
 StatusCode MuonRawBuffer::finalize() {
@@ -239,7 +239,7 @@ StatusCode MuonRawBuffer::finalize() {
 
   clearData();  
   return GaudiTool::finalize() ;
-};
+}
 
 
 StatusCode MuonRawBuffer::getTile(std::vector<LHCb::MuonTileID>& storage)
@@ -370,7 +370,7 @@ StatusCode  MuonRawBuffer::decodeTileAndTDCDC06(const RawBank* rawdata){
   
   return StatusCode::SUCCESS;
 
-};
+}
 
 
 
@@ -498,7 +498,7 @@ StatusCode  MuonRawBuffer::decodeTileAndTDCV1(const RawBank* rawdata){
   
   return StatusCode::SUCCESS;
 
-};
+}
 
 
 
@@ -620,7 +620,7 @@ StatusCode MuonRawBuffer::getTile(const LHCb::RawBank* r,std::vector<LHCb::MuonT
   }
   return StatusCode::SUCCESS;
   
-};
+}
 
 StatusCode MuonRawBuffer::getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& storage,std::string offset)
 { 
@@ -740,7 +740,7 @@ StatusCode MuonRawBuffer::getTileAndTDC(const LHCb::RawBank* r,std::vector<std::
   }
   return StatusCode::SUCCESS;
   
-};
+}
 
 
 
@@ -896,7 +896,7 @@ StatusCode MuonRawBuffer::decodeNZSupp(unsigned int tell1Number)
   }
   return sc;
   
-};
+}
 
 
 
@@ -962,7 +962,7 @@ StatusCode  MuonRawBuffer::decodeNZSupp(const LHCb::RawBank* r){
     m_ODEData[tell1Num*24+i].setData(data[i]);
   }
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode MuonRawBuffer::dumpNZSupp(const LHCb::RawBank* r,unsigned int ode_num)
 {
@@ -1049,7 +1049,7 @@ MuonPPEventInfo MuonRawBuffer::getPPInfo(const LHCb::RawBank* r,unsigned int pp_
   } 
   return m_PPEventInfo[tell1Number*4+pp_num];
   
-};
+}
 
 MuonPPEventInfo MuonRawBuffer::getPPInfo(unsigned int tell1Number,unsigned int pp_num){
   if(!m_ODEAlreadyDecoded[tell1Number]){
@@ -1062,7 +1062,7 @@ MuonPPEventInfo MuonRawBuffer::getPPInfo(unsigned int tell1Number,unsigned int p
   return m_PPEventInfo[tell1Number*4+pp_num];
   
 
-};
+}
 
 MuonODEData MuonRawBuffer::getODEData(const LHCb::RawBank* r,
                                       unsigned int link){

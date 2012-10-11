@@ -202,7 +202,7 @@ unsigned long TransportSvc::intersections
 
   return intersept.size() ;
   ///
-};
+}
 
 // ============================================================================
 // The End 

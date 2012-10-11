@@ -33,16 +33,10 @@ public:
   /// Copy constructor
   MuonReadoutCond( MuonReadoutCond& obj );
 
-#ifdef __INTEL_COMPILER         // Disable ICC warning
-  #pragma warning(disable:1125) // virtual function is hidden, override intended?
-  #pragma warning(push)
-#endif
+  using Condition::update;
   /// Update using another MuonReadoutCond: deep copy all contents,
   /// except for the properties of a generic DataObject
   virtual void update ( MuonReadoutCond& obj );
-#ifdef __INTEL_COMPILER // Re-enable ICC warning
-  #pragma warning(pop)
-#endif
 
   /// Destructor
   ~MuonReadoutCond();

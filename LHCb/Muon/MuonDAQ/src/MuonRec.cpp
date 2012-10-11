@@ -33,7 +33,7 @@ MuonRec::MuonRec( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonRec::~MuonRec() {}; 
+MuonRec::~MuonRec() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -80,7 +80,7 @@ StatusCode MuonRec::initialize() {
     debug()<<" station number "<<m_NStation<<" "<<m_NRegion <<endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -137,7 +137,7 @@ StatusCode MuonRec::execute() {
   
   put( coords, LHCb::MuonCoordLocation::MuonCoords );
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
