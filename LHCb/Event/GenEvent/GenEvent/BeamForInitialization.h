@@ -4,7 +4,7 @@
 
 namespace LHCb {
   class BeamParameters ;
-};
+}
 
 /** @class BeamForInitialization BeamForInitialization.h GenEvent/BeamForInitialization.h
  *  Simple class to hold beam parameters for initialization of generators
