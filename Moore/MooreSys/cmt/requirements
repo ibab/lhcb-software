@@ -1,12 +1,12 @@
 package MooreSys
-version v14r8
+version v14r9
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v14r8       Hlt
+use  Moore               v14r9       Hlt
 use  IndependenceTests   v1r3        Hlt
 
 
@@ -15,7 +15,8 @@ use  RichDet             v16r11      Det
 use  DetCond             v12r26      Det
 
 # Hlt
-use  HltSettings         v5r55       Hlt
+use  HltSettings         v5r56       Hlt
+use  Hlt1Lines           v6r29       Hlt
 
 # Declare this as a container package
 apply_pattern container_package

@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v14r9>2012-10-11 Moore v14r9</A></H1><PRE>
+As v14r8. Tighter cuts on charm lines. Hlt1HighPtJets added.
+
 </PRE><H1><A NAME=v14r8>2012-09-19 Moore v14r8</A></H1><PRE>
 Uses Hlt v15r5 (V0 LT cut as in june, no DOCA cuts)
 
