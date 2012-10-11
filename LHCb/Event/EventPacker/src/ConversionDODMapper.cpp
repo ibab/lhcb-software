@@ -46,6 +46,8 @@ DECLARE_TOOL_FACTORY(ConversionDODMapper)
   declareProperty("AlgorithmsOutputLevels", m_algOutLevels,
                   "Dictionary string->MsgLevel to change the message level "
                   "of a specific converter algorithm type");
+  declareProperty( "InputOptionName",  m_inputOptionName  = "InputName"  );
+  declareProperty( "OutputOptionName", m_outputOptionName = "OutputName" );
   //setProperty( "OutputLevel", 1 );
 }
 
@@ -130,8 +132,8 @@ ConversionDODMapper::algorithmForPath(const std::string & path)
       std::replace( algName.begin(), algName.end(), '/', '_' );
 
       // Add the configuration of algorithm instance to the JobOptionsSvc
-      joSvc()->addPropertyToCatalogue(algName, StringProperty("InputName", src));
-      joSvc()->addPropertyToCatalogue(algName, StringProperty("OutputName", path));
+      joSvc()->addPropertyToCatalogue( algName, StringProperty(m_inputOptionName,src)   );
+      joSvc()->addPropertyToCatalogue( algName, StringProperty(m_outputOptionName,path) );
       // ... including the output level
       OutLevelsMap::iterator level = m_algOutLevels.find(algType);
       if ( level != m_algOutLevels.end() )

@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-10-11 - Chris Jones
+ - Extend ConversionDODMapper with new job options to allow the property name
+   for the input and output data locations to be configurable
+
 ! 2012-10-10 - Chris Jones
  - Sort the unpacked cluster containers in UnpackCluster. Workaround for an
    issue in Stripping20 where the clusters are not sorted prior to packing.

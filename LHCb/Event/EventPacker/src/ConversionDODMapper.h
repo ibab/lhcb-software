@@ -100,6 +100,9 @@ private:
 
   typedef std::map<std::string, unsigned int> OutLevelsMap;
   OutLevelsMap m_algOutLevels; ///!< AlgorithmsOutputLevels
+
+  std::string m_inputOptionName;  ///< Job option name for inputs
+  std::string m_outputOptionName; ///< Job option name for outputs
   /// @}
 
 private:
