@@ -5,6 +5,9 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2012-10-11 - Marco Clemencic
+ - Fixed warning: extra ';' [-pedantic].
+
 !========================= DetDescChecks v5r8 2012-09-28 =========================
 ! 2012-09-12 - Marco Clemencic
  - Minor change to simplify translation to CMake.

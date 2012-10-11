@@ -491,7 +491,7 @@ StatusCode DetDesc::CheckOverlap::finalize   ()
 }
 // ============================================================================
 /// the factory, nesessary for instantiation 
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(DetDesc,CheckOverlap);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(DetDesc,CheckOverlap)
 // ============================================================================
 
 // ============================================================================
