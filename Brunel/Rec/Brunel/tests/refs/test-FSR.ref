@@ -29,14 +29,14 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x2123970>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x1ed75b50>  (default: None)
 # |-IgnoreDQFlags     = False
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of DDDBConf
 # WARNING: Using default tag dddb-20120831 for partition DDDB
-# WARNING: Using default tag cond-20120831 for partition LHCBCOND
-# WARNING: Using default tag dq-20120831 for partition DQFLAGS
+# WARNING: Using default tag cond-20120917 for partition LHCBCOND
+# WARNING: Using default tag dq-20120910 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2012'
 # |-DbRoot     = 'conddb:/lhcb.xml'
@@ -74,7 +74,7 @@ ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v43r1p2
-                                          running on lxbuild163.cern.ch on Tue Sep 25 10:00:32 2012
+                                          running on lxbuild163.cern.ch on Wed Oct 10 15:47:41 2012
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -136,7 +136,7 @@ LumiSequence        DEBUG could not locate CounterSummarySvc, no counter summary
 LumiSequence        DEBUG List of ALL properties of GaudiSequencer/LumiSequence  #properties = 38
 LumiSequence        DEBUG Property ['Name': Value] =  'ShortCircuit':False
 LumiSequence        DEBUG Property ['Name': Value] =  'ReturnOK':False
-LumiSequence        DEBUG Property ['Name': Value] =  'MeasureTime':True
+LumiSequence        DEBUG Property ['Name': Value] =  'MeasureTime':False
 LumiSequence        DEBUG Property ['Name': Value] =  'IgnoreFilterPassed':True
 LumiSequence        DEBUG Property ['Name': Value] =  'ModeOR':True
 LumiSequence        DEBUG Property ['Name': Value] =  'Members':[ 'EventAccounting/EventAccount' ]
@@ -231,8 +231,10 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.34 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.40 times the speed of a 2.8 GHz Xeon.
 LumiSequence        DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
+LumiSequence        DEBUG Releasing tool 'ToolSvc.SequencerTimerTool'
+LumiSequence        DEBUG The tool 'ToolSvc.SequencerTimerTool' of type 'SequencerTimerTool' is released
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount      VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -454,9 +456,7 @@ EventAccount        DEBUG Releasing service 'FileRecordDataSvc'
 EventAccount        DEBUG Releasing service 'IncidentSvc'
 LumiSequence        DEBUG ==> Finalize
 LumiSequence        DEBUG Finalize base class GaudiAlgorithm
-LumiSequence        DEBUG Tools to release : ToolSvc.SequencerTimerTool
-LumiSequence        DEBUG Releasing tool 'ToolSvc.SequencerTimerTool'
-LumiSequence        DEBUG The tool 'ToolSvc.SequencerTimerTool' of type 'SequencerTimerTool' is released
+LumiSequence        DEBUG Tools to release :
 LumiSequence        DEBUG Services to release :
 IncidentSvc         DEBUG Removing [AbortEvent] listener '<unknown>'
 EventLoopMgr         INFO Histograms converted successfully according to request.
@@ -482,11 +482,9 @@ ToolSvc             DEBUG Will finalize tools with refCount <= 1
 ToolSvc             DEBUG   Performing finalization of EventSelector.DataStreamTool (refCount 1)
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.34 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.40 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     0.000 |     0.020 |    0.015       0.0 |       4 |     0.000 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.005 |    0.001       0.0 |       4 |     0.000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
@@ -499,7 +497,7 @@ ToolSvc             DEBUG   Performing deletion of ToolSvc.SequencerTimerTool
 ToolSvc             DEBUG   Performing deletion of ToolSvc.CondDBEntityResolver
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.6499(+-2.83285)/0/12.998[ms] Total:0.012998[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.59995(+-2.61512)/0/11.999[ms] Total:0.011999[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 ServiceManager      DEBUG Finalizing service RootCnvSvc
