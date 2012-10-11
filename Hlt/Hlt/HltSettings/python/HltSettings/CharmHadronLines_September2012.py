@@ -130,6 +130,12 @@ class CharmHadronLines :
 
         d = { }
 
+        from Hlt2Lines.Hlt2CharmHadD02HHXDstLines import Hlt2CharmHadD02HHXDstLinesConf
+        d.update( { Hlt2CharmHadD02HHXDstLinesConf : {
+                      'PT_Dstar_MIN'                : 3850.0 * MeV
+                    , 'DeltaM_MAX'                  : 250.0 * MeV
+                    , 'DeltaM_MAXwide'              : 500.0 * MeV } } ) 
+
         from Hlt2Lines.Hlt2CharmHadD02HHLines   import Hlt2CharmHadD02HHLinesConf
         d.update( { Hlt2CharmHadD02HHLinesConf       : {
                         ## Cut values for basic D0 -> hh signal lines
@@ -143,9 +149,9 @@ class CharmHadronLines :
                         , 'D0_BPVDIRA_MIN'           : 0.99985    # neuter
                         , 'D0_VCHI2PDOF_MAX'         : 10.0       # neuter
                         , 'D0_PT_MIN'                : 2000.0 * MeV
-                        , 'Sig_M_MIN'                : 1740.0 * MeV
+                        , 'Sig_M_MIN'                : 1790.0 * MeV
                         , 'Sig_M_MAX'                : 1950.0 * MeV
-                        , 'WideMass_M_MIN'           : 1665.0 * MeV
+                        , 'WideMass_M_MIN'           : 1715.0 * MeV
                         , 'WideMass_M_MAX'           : 2085.0 * MeV
                         ## 2-body inclusive!
                         , 'Inc_Trk_PT_MIN'           : 500.0 * MeV
