@@ -3,6 +3,11 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-10-11 - Chris Jones
+ - Extend the automatic unpacking options for stripping in DstConf to
+   automatically create on demand the stream dependent 'Lite' clusters from
+   the original full versions
+
 !========================= GaudiConf v16r3 2012-09-28 =========================
 ! 2012-09-21 - Jianchun Wang
  - Add UT in Sim and DigiConf

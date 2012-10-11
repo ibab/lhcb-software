@@ -456,15 +456,12 @@ class DstConf(LHCbConfigurableUser):
         from Configurables import ( ConversionDODMapper,
                                     ParticlesAndVerticesMapper,
                                     TrackClustersMapper )
-                                    
-        mapper     = ConversionDODMapper("UnpackRecPhysMapper")
-        pvmapper   = ParticlesAndVerticesMapper("UnpackPsAndVsMapper")
-        clusmapper = TrackClustersMapper("UnpackTkClustersMapper")
 
+        # General unpacking mapping
+        mapper     = ConversionDODMapper("UnpackRecPhysMapper")
         # The input <-> output mappings
         mapper.Transformations = [ ( '(.*)/Rec(.*)',  '$1/pRec$2'  ),
                                    ( '(.*)/Phys(.*)', '$1/pPhys$2' ) ]
-
         # algorithm types from source ClassIDs
         mapper.Algorithms[1550] = "UnpackTrack"
         mapper.Algorithms[1552] = "UnpackProtoParticle"
@@ -477,8 +474,25 @@ class DstConf(LHCbConfigurableUser):
         mapper.Algorithms[1559] = "UnpackDecReport"
         mapper.Algorithms[1541] = "DataPacking::Unpack<LHCb::CaloClusterPacker>"
 
+        # Packed Particles and Vertices
+        pvmapper = ParticlesAndVerticesMapper("UnpackPsAndVsMapper")
+
+        # Cluster upacking
+        clusmapper = TrackClustersMapper("UnpackTkClustersMapper")
+        # Lite cluster creation
+        lclusmapper = ConversionDODMapper("LiteClusterMapper")
+        lclusmapper.InputOptionName  = "inputLocation"
+        lclusmapper.OutputOptionName = "outputLocation"
+        lclusmapper.Transformations = [ ( '(.*)/Raw/Velo/LiteClusters','$1/Raw/Velo/Clusters' ),
+                                        ( '(.*)/Raw/IT/LiteClusters',  '$1/Raw/IT/Clusters'   ),
+                                        ( '(.*)/Raw/TT/LiteClusters',  '$1/Raw/TT/Clusters'   ),
+                                        ( '(.*)/Raw/UT/LiteClusters',  '$1/Raw/UT/Clusters'   )
+                                        ]
+        lclusmapper.Algorithms[397222] = "VeloClustersToLite"
+        lclusmapper.Algorithms[402220] = "STClustersToLite"
+        
         # Add the tools to the DOD service tools lists
-        tools = [clusmapper,pvmapper,mapper]
+        tools = [clusmapper,lclusmapper,pvmapper,mapper]
         DataOnDemandSvc().NodeMappingTools += tools
         DataOnDemandSvc().AlgMappingTools  += tools
 
