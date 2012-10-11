@@ -2,8 +2,12 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/BenderTools
 ! Responsible : Vanya Belyaev
-! Purpose     : colelctoon of Bender-based scripts 
+! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
+
+! 2012-10-11 - Vanya Belyaev
+
+ - MicroDST.py:  add killer agent for /Event/pRec
 
 
 ! ==================== Phys/BenderTools v21r2p2 2012-10-08 ====================

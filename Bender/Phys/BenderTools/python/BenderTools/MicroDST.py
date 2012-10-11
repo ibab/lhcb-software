@@ -96,7 +96,7 @@ def uDstConf ( rootInTes ) :
     def killDAQ ()  : 
         from Configurables import EventNodeKiller
         killer = EventNodeKiller ( "KillDAQ" )
-        killer.Nodes += [ '/Event/DAQ' ]
+        killer.Nodes += [ '/Event/DAQ' , '/Event/pRec' ]
         try : 
             from Gaudi.Configuration import getConfigurable
             conf   = getConfigurable ( 'DaVinciEventInitSeq' ) 
