@@ -5,6 +5,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-10-11 - Eric van Herwijnen
+ - Back to L0 44 in Physics_September2012
+
 ! 2012-10-11 - V. Gligorov
  - Change thresholds in CharmhadronLines_Spetember2012 to lower rate of D2HH and
    inclusive lines.
