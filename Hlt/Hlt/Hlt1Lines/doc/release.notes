@@ -5,12 +5,13 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v6r29 2012-10-11 =========================
+! 2012-10-01 - Marcin Kucharczyk
+ - fix the bug in HighPtJetsSinglePVLines
+
 !========================= Hlt1Lines v6r28 2012-09-12 =========================
 ! 2012-09-11 - Johannes Albrecht
  - fix preambulo in pALines
-
-! 2012-10-01 - Marcin Kucharczyk
- - fix the bug in HighPtJetsSinglePVLines
 
 !======================= Hlt1Lines v6r27 2012-08-30 =========================
 ! 2012-08-29 - Johannes Albrecht
