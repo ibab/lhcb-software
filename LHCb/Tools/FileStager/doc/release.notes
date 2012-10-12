@@ -4,6 +4,9 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed warnings (-pedantic and Eclipse).
+
 !========================= FileStager v1r9 2012-09-28 =========================
 ! 2012-09-20 - Roel Aaij
  - Added protection to the finding of a file's size from dedicated command output.

@@ -124,13 +124,13 @@ StatusCode FileStagerSvc::initialize()
 
    // Check if the base dir exists.
    if ( !fs::exists( m_tmpdir ) && !fs::create_directories( m_tmpdir ) ) {
-      error() << "Base temp dir " << m_tmpdir << " does not exist and could not be created." 
+      error() << "Base temp dir " << m_tmpdir << " does not exist and could not be created."
               << endmsg;
       sc = StatusCode::FAILURE;
       return sc;
    }
 
-   // Check if there is an environment variable which ends in JOBID set. 
+   // Check if there is an environment variable which ends in JOBID set.
    // If so, always switch off keep file mode.
    if (checkJobID()) {
       m_keepFiles = false;
@@ -660,8 +660,10 @@ StatusCode FileStagerSvc::garbage()
 
       // The setsid() function creates a new session;
       if( setsid() < 0 ) {
-         write( pipefds[ 1 ], &errno, sizeof( int ) );
-         _exit( 0 );
+         if (write( pipefds[ 1 ], &errno, sizeof( int ) ) == sizeof(int))
+           _exit( 0 );
+         else
+           _exit( 1 );
       }
 
       execvp( command.string().c_str(), args );
@@ -672,8 +674,10 @@ StatusCode FileStagerSvc::garbage()
       delete[] args;
 
       // send what we go to the parent.
-      write( pipefds[ 1 ], &errno, sizeof( int ) );
-      _exit( 0 );
+      if (write( pipefds[ 1 ], &errno, sizeof( int ) ) == sizeof(int))
+        _exit( 0 );
+      else
+        _exit( 1 );
    } else {
       // delete memory reserved for args
       for ( size_t i = 0; i < n; ++i ) delete[] args[ i ];
@@ -694,8 +698,8 @@ StatusCode FileStagerSvc::garbage()
          return StatusCode::FAILURE;
       }
       close( pipefds[ 0 ] );
-      return StatusCode::SUCCESS;
    }
+   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -706,12 +710,12 @@ File* FileStagerSvc::createFile( const string& filename )
    string command;
    bool success = false;
    boost::iterator_range< string::iterator > result;
-   if ( result = ba::find_first( file, "LFN:" ) ) {
+   if ( (result = ba::find_first( file, "LFN:" )) ) {
       // convert LFN to lowercase
       ba::erase_range( file, result );
       remote = file;
       success = FileStager::createLFN( remote, command );
-   } else if ( result = ba::find_first( file, "PFN:" ) ) {
+   } else if ( (result = ba::find_first( file, "PFN:" )) ) {
       // strip PFN
       ba::erase_range( file, result );
       remote = file;
@@ -730,7 +734,7 @@ File* FileStagerSvc::createFile( const string& filename )
    fs::path p( remote );
    stringstream temp;
    string extension = p.extension().string();
-   if ( result = ba::find_first( extension, "?" ) ) {
+   if ( (result = ba::find_first( extension, "?" )) ) {
       boost::iterator_range< string::iterator > range( result.begin(), extension.end() );
       ba::erase_range( extension, range );
    }
@@ -751,7 +755,7 @@ void FileStagerSvc::keepFilesHandler( Property& property )
 
    // printout message
    if ( msgLevel( MSG::DEBUG ) ) {
-      debug() << "Property update for " << property.name() << " : new value = " 
+      debug() << "Property update for " << property.name() << " : new value = "
               << keepFiles() << endmsg;
    }
 }
@@ -759,7 +763,7 @@ void FileStagerSvc::keepFilesHandler( Property& property )
 //=============================================================================
 bool FileStagerSvc::checkJobID() const
 {
-   // Check if there is an environment variable which ends in JOBID set. 
+   // Check if there is an environment variable which ends in JOBID set.
    // If so, always switch off keep file mode.
    typedef map<string, string> s_map_t;
    s_map_t variables;
@@ -783,7 +787,7 @@ bool FileStagerSvc::checkJobID() const
       const string& name = entry.first;
       if ( regex_match( name.begin(), name.end(), matches, re_jobid, flags ) ) {
          warning() << "Keep files mode has been switched of since the presence of the "
-                   << "environment variable " << name << " indicates that this job is " 
+                   << "environment variable " << name << " indicates that this job is "
                    << "running on a batch system" << endmsg;
          job = true;
       }
