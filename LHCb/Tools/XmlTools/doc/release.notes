@@ -4,6 +4,9 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed warnings (-pedantic and Eclipse).
+
 !========================= XmlTools v6r6 2011-08-30 =========================
 ! 2011-08-01 - Marco Cattaneo
  - Fix UNINIT_CTOR coverity bug 19530
