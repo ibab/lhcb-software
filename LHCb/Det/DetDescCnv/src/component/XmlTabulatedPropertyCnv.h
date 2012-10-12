@@ -1,7 +1,7 @@
 // $Id: XmlTabulatedPropertyCnv.h,v 1.4 2005-03-24 16:21:18 cattanem Exp $
 
 #ifndef     DETDESCCNV_XMLTABULATEDPROPERTYCNV_H
-#define     DETDESCCNV_XMLTABULATEDPROPERTYCNV_H 1 
+#define     DETDESCCNV_XMLTABULATEDPROPERTYCNV_H 1
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -12,14 +12,14 @@ template <class TYPE> class CnvFactory;
 
 
 /** @class XmlTabulatedPropertyCnv
- *   
+ *
  * Xml converter for TabulatedProperties
  *
  * @author Sebastien Ponce
  * @author  Vanya Belyaev
  */
 class XmlTabulatedPropertyCnv : public XmlGenericCnv {
-  
+
   /// Friend needed for instantiation
   friend class CnvFactory<XmlTabulatedPropertyCnv>;
 
@@ -77,20 +77,14 @@ class XmlTabulatedPropertyCnv : public XmlGenericCnv {
                                 DataObject* refpObject,
                                 IOpaqueAddress* address);
 
-#ifdef __INTEL_COMPILER         // Disable ICC warning
-  #pragma warning(disable:1125) // virtual function is hidde, override intended?
-  #pragma warning(push)
-#endif
   /** This processes the current object.
    * Overrides the default method in XmlGenericCnv
    * @param refpObject the object to be processed
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_processObj (DataObject* refpObject);
-#ifdef __INTEL_COMPILER // Re-enable ICC warning
-  #pragma warning(pop)
-#endif
-  
+  virtual StatusCode i_processObj (DataObject* refpObject,
+                                      IOpaqueAddress* address);
 
  private:
 

@@ -4,6 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed 'virtual function is hidden' warning.
+
 !========================= DetDescCnv v4r15 2012-06-25 =========================
 ! 2012-05-13 - Sajan Easo
  - Modification of XmlConverter for RICH upgrade DB
@@ -54,7 +57,7 @@
  - If the file name ends with '.xml[' + something + ']' then the part between
    bracket is removed to get the file, and in the file itself the string '--KEY--'
    is replaced by the string which was between brackets. This '--KEY--' string must be
-   at the end of the names. This works ONLY for geometry, i.e. logical and physical 
+   at the end of the names. This works ONLY for geometry, i.e. logical and physical
    volumes. This avoids re-parsing the file and is intended for RICH hpd.
 
 ! 2009-04-17 - Marco Cattaneo
@@ -79,7 +82,7 @@
 !================ DetDescCnv v4r7 2008-06-30 ==================================
 ! 2008-06-11 - Marco Clemencic
  - Modified the XmlGenericCnv to allow generic URLs in the href attributes (like
-   "http://" etc.). 
+   "http://" etc.).
 
 !================ DetDescCnv v4r6 2008-05-20 ==================================
 ! 2008-05-20 - Stephanie Hansmann-Menzemer
@@ -87,11 +90,11 @@
 
 !================ DetDescCnv v4r5 2008-01-28 ==================================
 ! 2008-01-21 - Marco Clemencic
- - Modified XmlMixtureCnv to correctly set the name of the mixture from XML. 
+ - Modified XmlMixtureCnv to correctly set the name of the mixture from XML.
 
 ! 2008-01-07 - Marco Clemencic
  - Changed the tag name for elements of maps inside conditions (even if it is
-   not used) to be consistent with the changes in SQLDDDB (>= v4r0). 
+   not used) to be consistent with the changes in SQLDDDB (>= v4r0).
 
 !================ DetDescCnv v4r4 2007-11-12 ==================================
 ! 2007-11-09 - Marco Clemencic
@@ -123,7 +126,7 @@
  - Fixed a bug in the handling of hrefs occurring in very special cases.
  - Implemented the changes needed for the changes in IXmlParserSvc.
  - Added implementetation of XmlGenericCnv::updateObj.
- 
+
 ! 2007-02-02 - Marco Cattaneo
  - Remove dependency on LHCbDefinitions from an include file
 
@@ -191,7 +194,7 @@
       and use new MathCore Rho-Z-Phi vector for RPhiZ translation.
 
 ! 2005-12-05 - Juan PALACIOS
- - Changes to XmlLVomumeCnv for migration from CLHEP HepGeom to 
+ - Changes to XmlLVomumeCnv for migration from CLHEP HepGeom to
    MathCore classes. CLHEP dependencies dropped.
 
 !================ DetDescCnv v2r10 2005-11-17 ==========================
@@ -212,13 +215,13 @@
 
 !================ DetDescCnv v2r9 2005-09-19 ===========================
 ! 2005-09-19 M. Needham
- - Add calculation of radiation length and interaction length to 
+ - Add calculation of radiation length and interaction length to
    element convertor
 
 ! 2005-09-18 - Marco Clemencic
  - Improved the conddb address. Now it is not compulsory to specify the name,
    of the object: if the name is not specified, the folder name is used.
- - Better handling of self-referring XML: it works also for strings (using 
+ - Better handling of self-referring XML: it works also for strings (using
    the 3rd string of the XML address as original source of the XML string)
 
 ! 2005-08-31 - Marco Clemencic
@@ -256,15 +259,15 @@
  - Change OutputLevel of many DEBUG messages to VERBOSE
 
 ! 2005-06-03 - Juan Palacios
- - Modified src/Lib/XmlBaseDetElemCnv.cpp to pass condition path to 
+ - Modified src/Lib/XmlBaseDetElemCnv.cpp to pass condition path to
    DetectorElement::createGeometryInfo calls.
 
- - Added src/component/XmlAlignmentConditionCnv.cpp to 
+ - Added src/component/XmlAlignmentConditionCnv.cpp to
    generate AlignmentConditions
 
  - Modified src/component/DetDescCnv_load.cpp to add XmlAlignmentConditionCnv
    to components
- 
+
  - cmt/requirements version to v2r6
 
 !================ DetDescCnv v2r5 2005-05-24 ===========================
@@ -290,14 +293,14 @@
 !================= DetDescCnv v2r3 2003-12-15 ==========================
 ! 2003-12-15 - Marco Cattaneo
  - Move to Gaudi v14
-   . In XmlElementCnv.cpp: include TabulatedProperty.h 
+   . In XmlElementCnv.cpp: include TabulatedProperty.h
 
 !================= DetDescCnv v2r2 2003-12-08 ==========================
 ! 2003-12-08 - Marco Cattaneo
  - Move to Gaudi v13
    . in requirements: use DetDesc v14r*, XmlTools v3r*
    . in XmlGenericCnv.h: change StorageType() to long, add repSvcType()
-   . In XmlDetectorElementCnv.cpp,XmlMixtureCnv.cpp: include TabulatedProperty.h 
+   . In XmlDetectorElementCnv.cpp,XmlMixtureCnv.cpp: include TabulatedProperty.h
 
 !================ DetDescCnv v2r1p1 2003-11-24 =========================
 ! 2003-11-24 - Marco Cattaneo

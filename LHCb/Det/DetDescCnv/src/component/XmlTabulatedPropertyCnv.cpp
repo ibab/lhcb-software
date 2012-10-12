@@ -77,7 +77,7 @@ StatusCode XmlTabulatedPropertyCnv::i_createObj (xercesc::DOMElement* element,
   TabulatedProperty* dataObj = new TabulatedProperty (elementName);
   refpObject = dataObj;
 
-  /// get all attributes           
+  /// get all attributes
   dataObj->table().clear()   ;
   const std::string Type = dom2Std (element->getAttribute (typeString));
   dataObj->setType(Type) ;
@@ -111,7 +111,7 @@ XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMElement* childElement,
                                     DataObject* refpObject,
                                     IOpaqueAddress* /*address*/) {
   MsgStream log(msgSvc(), "TabulatedPropertyCnv" );
-  
+
   // gets the object
   TabulatedProperty* dataObj = dynamic_cast<TabulatedProperty*> (refpObject);
   // gets the element's name
@@ -122,14 +122,14 @@ XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMElement* childElement,
     if (xAttribute.empty()) {
       throw XmlCnvException
         ("XmlTabulatedPropertyCnv: 'x' attribute for tag='entry'"
-         " could bot be omitted! ");
+         " could not be omitted! ");
     }
     const double vx = xmlSvc()->eval(xAttribute ,false) * m_xunit;
     std::string yAttribute = dom2Std (childElement->getAttribute (yString));
     if (yAttribute.empty()) {
       throw XmlCnvException
         ("XmlTabulatedPropertyCnv: 'y' attribute for tag='entry'"
-         " could bot be omitted! ");
+         " could not be omitted! ");
     }
     const double vy = xmlSvc()->eval(yAttribute ,false) * m_yunit;
     dataObj->table().push_back(TabulatedProperty::Entry(vx, vy));
@@ -165,7 +165,7 @@ XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMText* childText,
   while (cstr >> x >> y) {
     const double vx = xmlSvc()->eval (x, false) * m_xunit;
     const double vy = xmlSvc()->eval (y, false) * m_yunit;
-    /// add a new entry to the table 
+    /// add a new entry to the table
     dataObj->table().push_back (TabulatedProperty::Entry (vx, vy));
     x.erase();
     y.erase();
@@ -173,7 +173,7 @@ XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMText* childText,
   xercesc::XMLString::release(&textValue);
   if (!x.empty() || !y.empty()) {
     throw XmlCnvException
-      ("XmlTabulatedPropertyCnv: Currupted Data #x does not match #y! ");
+      ("XmlTabulatedPropertyCnv: Corrupted Data #x does not match #y! ");
   }
   // returns
   return StatusCode::SUCCESS;
@@ -183,13 +183,14 @@ XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMText* childText,
 // -----------------------------------------------------------------------
 // Process an object
 // -----------------------------------------------------------------------
-StatusCode XmlTabulatedPropertyCnv::i_processObj (DataObject* refpObject) {
+StatusCode XmlTabulatedPropertyCnv::i_processObj (DataObject* refpObject,
+                                                 IOpaqueAddress* /*address*/) {
   // gets the object
   TabulatedProperty* dataObj = dynamic_cast<TabulatedProperty*> (refpObject);
   // sorts the table
   std::sort (dataObj->table().begin(), dataObj->table().end());
   m_xunit = 1;
-  m_yunit = 1; 
+  m_yunit = 1;
   // returns
   return StatusCode::SUCCESS;
 } // end i_processObj
