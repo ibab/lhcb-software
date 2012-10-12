@@ -4,6 +4,9 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed warning: extra ';' [-pedantic].
+
 !========================= ProcessorKernel v7r0 2011-12-14 =========================
 ! 2011-11-16 - Marco Cattaneo
  - Fix an include for gcc 4.6
@@ -41,12 +44,12 @@
 
 !======================== ProcessorKernel v5r1p1 2008-07-17 ==================
 ! 2008-07-17 - Julien Cogan
- - Fix compilation warning (RegisterFactory.cpp) 
+ - Fix compilation warning (RegisterFactory.cpp)
 
 !======================== ProcessorKernel v5r1 2007-10-09 ===================
 ! 2007-10-09 - Julien Cogan
  - Move implementation of static selectInstance to .cpp to avoid a problem on
-   Windows 
+   Windows
 
 !======================== ProcessorKernel v5r0 2007-08-27 ===================
 ! 2007-08-27 - Julien Cogan
@@ -54,7 +57,7 @@
    factory. The instance is selected with the selectInstance static method.
  - Unit : delete the sub units in the destructor
  - TileRegister: handle register with duplicated tiles (yields a new attribute
-   stored in the XML). 
+   stored in the XML).
 
 !======================== ProcessorKernel v4r0 2006-12-14 ===================
 ! 2006-12-06 - Florence RANJARD
@@ -63,15 +66,15 @@
 !======================== ProcessorKernel v3r3 2006-09-18 ====================
 ! 2006-09-14 - Julien Cogan
  - Reorganize the loop inside the getVectorOf... methods of the class Property
-   in order to avoid valgrind complaint. Remove unnecessary initialization 
-   introduced on the 2006-08-08. 
+   in order to avoid valgrind complaint. Remove unnecessary initialization
+   introduced on the 2006-08-08.
 
 !======================== ProcessorKernel v3r2 2006-08-30 ====================
 ! 2006-08-21 - Julien Cogan
  - Add a reset method to RegisterFactory
 
 ! 2006-08-08 - Julien Cogan
- - Initialize pointers in Property.cpp to please valgrind. 
+ - Initialize pointers in Property.cpp to please valgrind.
 
 !======================== ProcessorKernel v3r1 2006-06-02 ====================
 ! 2006-06-02 - Marco Cattaneo
@@ -83,11 +86,11 @@
 !======================== ProcessorKernel v3r0 2006-01-19 ====================
 ! 2006-03-03 - Marco Cattaneo
  - Fixes to remove Windows compilation warnings
- 
+
 ! 2006-03-03 - Julien Cogan
- - BUG FIX. In RegisterFactory: objects created with the XMLString::transcode 
+ - BUG FIX. In RegisterFactory: objects created with the XMLString::transcode
    method of xerces were not deleted (causing memory leak)
- - BUG FIX. In Register: the method set(bitset) was not properly implemented. 
+ - BUG FIX. In Register: the method set(bitset) was not properly implemented.
  - small changes in the print/dump methods of TileRegister.
  - add the clear and resize methods in Register
 ! 2006-02-10 - Julien Cogan
@@ -105,11 +108,11 @@
  - Add new methods to the Register to manipulate a subset of the bitset
  - Add a new method to the RegisterFactory to return a existing register
  - Add methods to the Unit to release input and output registers
- - Remove the Unit method to look for a child unit 
+ - Remove the Unit method to look for a child unit
  - Change the setDebugMode method of Unit to be virtual
 
 ! 2005-11-10 - Julien Cogan
- - Add methods to the Register to add and retrieve bitsets of a given length 
+ - Add methods to the Register to add and retrieve bitsets of a given length
    and at a given position
  - Add methods to build an XML representation for the Unit and for the Register
 
@@ -124,5 +127,5 @@
  - Fix a doxygen warning
 
 ! 2005-04-04 A. Tsaregorodtsev
- - First release of the package  
+ - First release of the package
 

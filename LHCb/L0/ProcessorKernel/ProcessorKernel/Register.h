@@ -22,27 +22,27 @@ namespace L0Muon {
 
   /** @class Register Register.h L0MuonKernel/Register.h
 
-  Class representing a level-0 muon  trigger 
+  Class representing a level-0 muon  trigger
   abstract unit of data
-  
+
   @author  Andrei Tsaregorodtsev
   @date  12 January 2002
-  */ 
+  */
   class Register  {
 
   public:
 
-    /// Default constructor 
+    /// Default constructor
     Register();
 
     /** Constructor
-      
+
     @param bits : number of bits
     */
     Register(int bits);
 
     /** Constructor
-      
+
     @param bits : number of bits
     @param pattern : bits pattern
     */
@@ -50,7 +50,7 @@ namespace L0Muon {
 
     /// Destructor
     virtual ~Register();
-  
+
     /// Unset the register and reset the bits
     void unset();
 
@@ -62,17 +62,17 @@ namespace L0Muon {
 
     /// Set the bits pattern
     void set (unsigned long pattern);
-    
+
     /// Set the nbits wide pattern at the position shift
     void set (unsigned long pattern,unsigned int nbits,unsigned  int shift);
     void set (boost::dynamic_bitset<> pattern,unsigned int nbits, unsigned int shift);
 
     /// Return the number of bits
     int size() { return m_bitset.size(); }
-  
+
     /// Resize the bit set
     void resize(int n) { m_bitset.resize(n); }
-  
+
     /// Test if the register is empty
     bool empty() { return m_bitset.none(); }
 
@@ -117,27 +117,27 @@ namespace L0Muon {
     unsigned long getulong(int nbits, int shift) {
       nbits = nbits<int(8*sizeof(unsigned long)) ? nbits : (8*sizeof(unsigned long));
       boost::dynamic_bitset<> pattern = getBitset(nbits, shift);
-      return pattern.to_ulong(); 
+      return pattern.to_ulong();
     }
-    
+
 
     void print_words(FILE *file, int nwords_per_line=1);
 
     virtual std::string toXML(std::string tab="");
-    
+
   protected:
 
     boost::dynamic_bitset<> m_bitset;
     std::string m_name;    // register symbolic name
     bool m_set;            // flag to show if the register is set or not
-  
+
     L0Muon::Link* m_wlink;  // write link
-    L0Muon::Link* m_rlink;  // read  link 
+    L0Muon::Link* m_rlink;  // read  link
     std::string m_type;
   };
 
   std::ostream& operator<<(std::ostream, L0Muon::Register& r);
 
-};  // namespace L0Muon
+}  // namespace L0Muon
 
-#endif      // PROCESSORKERNEL_REGISTER_H  
+#endif      // PROCESSORKERNEL_REGISTER_H
