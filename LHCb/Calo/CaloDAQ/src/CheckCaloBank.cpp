@@ -122,6 +122,6 @@ StatusCode CheckCaloBank::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
