@@ -22,7 +22,7 @@ std::string LHCb::TTNames::UniqueSectorToString(const LHCb::STChannelID& chan)
 
 std::string LHCb::TTNames::SectorToString(const LHCb::STChannelID& chan)
 {
-  return "Sector"+ boost::lexical_cast<std::string>(chan.sector());;
+  return "Sector"+ boost::lexical_cast<std::string>(chan.sector());
 }
 
 std::vector<std::string> LHCb::TTNames::stations()
