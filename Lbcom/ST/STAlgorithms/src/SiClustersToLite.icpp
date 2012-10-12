@@ -15,26 +15,24 @@ inline SiClustersToLite<TYPE>::~SiClustersToLite()
 template <class TYPE>
 inline StatusCode SiClustersToLite<TYPE>::execute()
 {
- 
- 
-  // get the input data
-  typedef typename SiClusterTraits<TYPE>::CLUSCONT Container;
-  const Container* clusterCont = GaudiAlgorithm::template get<Container>(m_inputLocation);
-
-
-
-  // output
-  typedef typename SiClusterTraits<TYPE>::LITECONT LiteCont; 
+  // output (always make)
+  typedef typename SiClusterTraits<TYPE>::LITECONT LiteCont;
   LiteCont* fCont = new LiteCont();
-  fCont->reserve(clusterCont->size()); 
   GaudiAlgorithm::put(fCont, m_outputLocation);
 
-  typename Container::const_iterator iterC = clusterCont->begin();
-  for (; iterC != clusterCont->end() ; ++iterC){
-    fCont->push_back((*iterC)->liteCluster()); 
-  } // loop clusters
-  
+  // get the input data
+  typedef typename SiClusterTraits<TYPE>::CLUSCONT Container;
+  const Container* clusterCont = 
+    GaudiAlgorithm::template getIfExists<Container>(m_inputLocation);
+  if ( clusterCont )
+  {
+    fCont->reserve(clusterCont->size());
+    for ( typename Container::const_iterator iterC = clusterCont->begin();
+          iterC != clusterCont->end() ; ++iterC ) 
+    {
+      fCont->push_back((*iterC)->liteCluster());
+    } // loop clusters
+  }
+
   return StatusCode::SUCCESS;
 }
-
-

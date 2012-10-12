@@ -2,6 +2,11 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Chris Jones
+ - Update SiClustersToLite.icpp to work better with the automatic DoD service.
+   Output clusters are now always created, and no exception is thrown if the
+   input does not exist.
+
 ! 2012-10-02 - Jianchun Wang
  - In STClustercreator, length of cluster channelID is 25 bits for UT, 24 bits
    for TT/IT.
