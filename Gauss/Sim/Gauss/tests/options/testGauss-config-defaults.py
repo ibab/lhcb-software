@@ -3,6 +3,11 @@ from Configurables import Gauss
 from Configurables import MessageSvc
 # Set output level for various algos
 
+#--Number of events
+nEvts = 1
+LHCbApp().EvtMax = nEvts
+
+
 # Main Algo
 gaussSeq = GaudiSequencer("GaussSequencer");
 gaussSeq.OutputLevel = DEBUG
@@ -18,6 +23,10 @@ genSlotMainSeq.OutputLevel = 2
 from Configurables import GenInit
 gaussGen = GenInit("GaussGen")
 gaussGen.OutputLevel = 2
+
+gaussGen.FirstEventNumber = 1
+gaussGen.RunNumber        = 1082
+
 
 from Configurables import Generation
 generation = Generation("Generation")

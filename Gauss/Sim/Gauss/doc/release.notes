@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-10-12 - Paul Szczypka
+ - Added limit of one event to:
+   Sim/Gauss/tests/options/testGauss-config-defaults.py
+   and changed reference file accordingly.
+
+
+! 2012-10-12 - Paul Szczypka
  - Added first version of configuration qmtest, files:
    Sim/Gauss/tests/qmtest/gauss.qms/gauss-config-MC11a.qmt
    Sim/Gauss/tests/refs/testGauss-config-10000000.ref.x86_64-slc5-gcc43-opt
