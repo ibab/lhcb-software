@@ -298,7 +298,7 @@ class Physics_September2012( object ):
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                  , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
-                 , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV','Hlt1NoPVPassThrough' ]
+                 , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
         
         from Hlt1TechnicalLines import Hlt1TechnicalLines 
         lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )

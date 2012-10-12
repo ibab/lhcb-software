@@ -5,6 +5,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Eric van Herwijnen
+ - Remove Hlt1NoPVPassThrough from Physics_September2012 as it is already in
+   Hlt1TechnicalLines.
+
 !========================= HltSettings v5r56 2012-10-11 =========================
 ! 2012-10-11 - Eric van Herwijnen
  - Back to L0 44 in Physics_September2012
