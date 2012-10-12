@@ -483,14 +483,10 @@ class DstConf(LHCbConfigurableUser):
         lclusmapper = ConversionDODMapper("LiteClusterMapper")
         lclusmapper.InputOptionName  = "inputLocation"
         lclusmapper.OutputOptionName = "outputLocation"
-        lclusmapper.Transformations = [ ( '(.*)/Raw/Velo/LiteClusters','$1/Raw/Velo/Clusters' ),
-                                        ( '(.*)/Raw/IT/LiteClusters',  '$1/Raw/IT/Clusters'   ),
-                                        ( '(.*)/Raw/TT/LiteClusters',  '$1/Raw/TT/Clusters'   ),
-                                        ( '(.*)/Raw/UT/LiteClusters',  '$1/Raw/UT/Clusters'   )
-                                        ]
+        lclusmapper.Transformations = [ ('(.*)/Raw/(.*)/LiteClusters','$1/Raw/$2/Clusters') ]
         lclusmapper.Algorithms[397222] = "VeloClustersToLite"
         lclusmapper.Algorithms[402220] = "STClustersToLite"
-        
+       
         # Add the tools to the DOD service tools lists
         tools = [clusmapper,lclusmapper,pvmapper,mapper]
         DataOnDemandSvc().NodeMappingTools += tools
