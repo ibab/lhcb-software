@@ -64,32 +64,9 @@ StatusCode DeRichRadiator::initialize()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Starting initialisation" << endmsg;
 
-  if ( std::string::npos != name().find("Rich2") ) 
-  {
-    m_radiatorID = Rich::Rich2Gas;
-    m_rich = Rich::Rich2;
-  }
-  else 
-  {
-    if ( std::string::npos != name().find("Aerogel") ) 
-    {
-      m_radiatorID = Rich::Aerogel;
-      m_rich = Rich::Rich1;
-    }
-    else 
-    {
-      if ( std::string::npos != name().find("Rich1Gas") ) 
-      {
-        m_radiatorID = Rich::Rich1Gas;
-        m_rich = Rich::Rich1;
-      }
-      else 
-      {
-        error() << "Cannot find radiator type for " << name() << endmsg;
-        return StatusCode::FAILURE;
-      }
-    }
-  }
+  StatusCode setRad = setRadiatorID();
+  if ( !setRad.isSuccess() )
+    return setRad;
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Initializing Radiator : " << rich() << " " << radiatorID() << endmsg;
@@ -158,6 +135,45 @@ const Rich::TabulatedProperty1D* DeRichRadiator::generateHltRefIndex() const
   // return normal refractive index
   m_hltRefIndex = m_refIndex;
   return m_hltRefIndex;
+}
+
+//=========================================================================
+// Set RichDetector and name
+//=========================================================================
+StatusCode DeRichRadiator::setRadiatorID()
+{
+  if ( exists("IDVector") )
+  {
+    const std::vector<int> radID = paramVect<int>("IDVector");
+    m_rich = Rich::DetectorType(radID[0]);
+    m_radiatorID = Rich::RadiatorType(radID[1]);
+  }
+  else
+  {
+
+    if ( std::string::npos != name().find("Rich2") )
+    {
+      m_radiatorID = Rich::Rich2Gas;
+      m_rich = Rich::Rich2;
+    }
+    else if ( std::string::npos != name().find("Aerogel") )
+    {
+      m_radiatorID = Rich::Aerogel;
+      m_rich = Rich::Rich1;
+    }
+    else if ( std::string::npos != name().find("Rich1Gas") )
+    {
+      m_radiatorID = Rich::Rich1Gas;
+      m_rich = Rich::Rich1;
+    }
+    else
+    {
+      error() << "Cannot find radiator type for " << name() << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

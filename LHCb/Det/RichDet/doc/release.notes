@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Antonis Papanestis
+ - Updated DeRichRadiator to set correctly the rich() and radiatorID() for
+   the upgrade to a signle Rich detector
+
 !========================= RichDet v16r13 2012-09-28 =========================
 ! 2012-09-21 - Marco Clemencic
  - Fixed compilation with -std=c++11 (-std=c++0x).

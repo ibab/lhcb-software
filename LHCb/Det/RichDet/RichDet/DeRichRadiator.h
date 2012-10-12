@@ -208,7 +208,7 @@ public:
    *  @param hlt Return the HLT refractive index if true
    *  @return The refractive index at that energy
    */
-  virtual double refractiveIndex( const double energy, 
+  virtual double refractiveIndex( const double energy,
                                   const bool hlt = false ) const = 0;
 
 protected:
@@ -232,7 +232,7 @@ protected:
   {
     if ( !m_refIndex )
     {
-      throw GaudiException( "Invalid refractive index", 
+      throw GaudiException( "Invalid refractive index",
                             "DeRichRadiator", StatusCode::FAILURE );
     }
     return m_refIndex;
@@ -242,6 +242,8 @@ protected:
 
   Rich::RadiatorType m_radiatorID;  ///< The radiator id (Aerogel, CF4, C4F10)
   Rich::DetectorType m_rich;        ///< The Rich detector of this radiator
+
+  StatusCode setRadiatorID();       ///< Set rich and radiator ID
 
   /// pointer to the refractive index of the material
   Rich::TabulatedProperty1D* m_refIndex;
