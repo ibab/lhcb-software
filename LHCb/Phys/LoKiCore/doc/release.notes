@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed warning for duplicated definition of _POSIX_C_SOURCE.
+
 !========================= LoKiCore v11r9p1 2012-09-28 =========================
 ! 2012-09-26 - Vanya Belyaev
  - fix the bug with decay tree parsing. 
