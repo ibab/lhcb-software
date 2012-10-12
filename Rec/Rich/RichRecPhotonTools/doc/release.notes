@@ -4,6 +4,11 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Chris Jones
+ - Update PhotonRecoUsingQuarticSoln to include an optional  test for Aerogel 
+   photons to see if they intersect with the beampipe, and if they do reject
+   those photons.
+
 !========================= RichRecPhotonTools v1r9 2011-12-15 ================
 ! 2011-12-02 - Chris Jones
  - Adapt to changes in Rich::Rec::PhotonKey

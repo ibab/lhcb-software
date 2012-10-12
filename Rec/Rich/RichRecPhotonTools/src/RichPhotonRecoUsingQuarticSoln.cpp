@@ -167,7 +167,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 {
 
   // the geometrical track segment
-  const LHCb::RichTrackSegment & trSeg = segment->trackSegment();
+  const LHCb::RichTrackSegment & trSeg  = segment->trackSegment();
 
   // detection point
   const Gaudi::XYZPoint& detectionPoint = pixel->globalPosition();
@@ -279,7 +279,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       if ( !beamTestOK )
       {
         // both start and end points failed beam pipe test -> reject
-        //return Warning( Rich::text(radiator)+" : Failed beam pipe intersection checks" );
+        //return Warning( Rich::text(radiator) + 
+        //                " : Failed ambiguous photon beampipe intersection checks" );
         return StatusCode::FAILURE;
       }
       // -------------------------------------------------------------------------------
@@ -477,6 +478,23 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   {
     //return Warning( Rich::text(radiator)+" : Photon cross between detector sides" );
     return StatusCode::FAILURE;
+  }
+  // --------------------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------------------
+  // For aerogel, and gas radiators if ambiguous photon checks are disabled (since this is
+  // already done for these photons during those checks), check if the photon would have 
+  // intersected with the beampipe
+  // --------------------------------------------------------------------------------------
+  if ( m_checkBeamPipe[radiator] &&
+       ( radiator == Rich::Aerogel || !m_testForUnambigPhots[radiator] ) )
+  {
+    if ( deBeam(rich)->testForIntersection( emissionPoint,
+                                            sphReflPoint-emissionPoint ) )
+    {
+      //return Warning( Rich::text(radiator)+" : Failed final beampipe intersection checks" );
+      return StatusCode::FAILURE;
+    }
   }
   // --------------------------------------------------------------------------------------
 
