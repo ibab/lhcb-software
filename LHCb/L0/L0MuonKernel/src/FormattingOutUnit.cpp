@@ -6,18 +6,18 @@
    Constructor.
 */
 L0Muon::FormattingOutUnit::FormattingOutUnit(){
-};
+}
 /**
    Constructor.
 */
 L0Muon::FormattingOutUnit::FormattingOutUnit(LHCb::MuonTileID id):L0MUnit(id){
-};
+}
 
 /**
    Constructor.
 */
 L0Muon::FormattingOutUnit::FormattingOutUnit(DOMNode* pNode):L0MUnit(pNode){
-};
+}
 
 
 /**
@@ -27,7 +27,7 @@ L0Muon::FormattingOutUnit::~FormattingOutUnit(){
 }
 
 
-void L0Muon::FormattingOutUnit::execute() {  
+void L0Muon::FormattingOutUnit::execute() {
 
   // Get a pointer to the output register
   std::map<std::string,L0Muon::Register*>::iterator irout = m_outputs.begin() ;
@@ -35,8 +35,8 @@ void L0Muon::FormattingOutUnit::execute() {
   if (m_debug) std::cout <<"L0Muon::FormattingOutUnit::execute input register is : "
                          <<irout->first
                          <<" size= "<<itrout->size()<<std::endl;
-  
-  // Loop over the input registers 
+
+  // Loop over the input registers
   std::map<std::string,Register*>::iterator ir;
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
@@ -48,11 +48,11 @@ void L0Muon::FormattingOutUnit::execute() {
       itrout->setTile(*ittile);
     } // End of Loop over the fired tiles
 
-  } // End of Loop over the input registers 
+  } // End of Loop over the input registers
 
-  L0MUnit::execute();  
+  L0MUnit::execute();
 
-  
+
 }
 
 

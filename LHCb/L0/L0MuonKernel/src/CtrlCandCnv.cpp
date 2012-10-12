@@ -10,17 +10,22 @@
 /**
    Constructor.
 */
-L0Muon::CtrlCandCnv::CtrlCandCnv(){
-  m_side=0;
-};
+L0Muon::CtrlCandCnv::CtrlCandCnv():
+  m_side(0),
+  m_ref_l0_B_Id(0),
+  m_ref_l0EventNumber(0)
+{
+}
 /**
    Constructor.
 */
-L0Muon::CtrlCandCnv::CtrlCandCnv(int side){
-  m_side=side;
-
+L0Muon::CtrlCandCnv::CtrlCandCnv(int side):
+  m_side(side),
+  m_ref_l0_B_Id(0),
+  m_ref_l0EventNumber(0)
+{
   char buf[4096];
-  
+
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
   for (int iq = 0; iq<2 ; ++iq){
@@ -33,7 +38,7 @@ L0Muon::CtrlCandCnv::CtrlCandCnv(int side){
       m_candRegHandlerBCSU[iq][iboard] = CandRegisterHandler(reg) ;
     }
   }
-};
+}
 
 
 /**
@@ -56,7 +61,7 @@ LHCb::MuonTileID L0Muon::CtrlCandCnv::mid_BCSU(int iq, int ib){
 void L0Muon::CtrlCandCnv::release(){
   for (int iq = 0; iq<2 ; ++iq) {
     m_candRegHandler[iq].clear();
-    for (int ib = 0; ib<12 ; ++ib) 
+    for (int ib = 0; ib<12 ; ++ib)
       m_candRegHandlerBCSU[iq][ib].clear();
   }
 }
@@ -72,9 +77,9 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::CtrlCandCnv::muonCandidates(){
     int ncand= m_candRegHandler[iq].numberOfCandidates();
     for (int icand = 0;icand<ncand;icand++) {
       cands.push_back(m_candRegHandler[iq].getMuonCandidate(icand));
-    }    
+    }
   }
-  
+
   return cands;
 }
 std::vector<L0Muon::PMuonCandidate>  L0Muon::CtrlCandCnv::muonCandidates(int iq){
@@ -83,7 +88,7 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::CtrlCandCnv::muonCandidates(int iq)
   for (int icand = 0;icand<ncand;icand++) {
     cands.push_back(m_candRegHandler[iq].getMuonCandidate(icand));
   }
-  
+
   return cands;
 }
 
@@ -94,10 +99,10 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::CtrlCandCnv::muonCandidatesBCSU(){
       int ncand= m_candRegHandlerBCSU[iq][ib].numberOfCandidates();
       for (int icand = 0;icand<ncand;icand++) {
         cands.push_back(m_candRegHandlerBCSU[iq][ib].getMuonCandidate(icand));
-      }    
+      }
     }
   }
-  
+
   return cands;
 }
 std::vector<L0Muon::PMuonCandidate>  L0Muon::CtrlCandCnv::muonCandidatesBCSU(int iq){
@@ -106,9 +111,9 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::CtrlCandCnv::muonCandidatesBCSU(int
     int ncand= m_candRegHandlerBCSU[iq][ib].numberOfCandidates();
     for (int icand = 0;icand<ncand;icand++) {
       cands.push_back(m_candRegHandlerBCSU[iq][ib].getMuonCandidate(icand));
-    }    
+    }
   }
-  
+
   return cands;
 }
 
@@ -117,15 +122,15 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::CtrlCandCnv::muonCandidatesBCSU(int
   int ncand= m_candRegHandlerBCSU[iq][ib].numberOfCandidates();
   for (int icand = 0;icand<ncand;icand++) {
     cands.push_back(m_candRegHandlerBCSU[iq][ib].getMuonCandidate(icand));
-  }    
-  
+  }
+
   return cands;
 }
 
 int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int bankVersion, int mode)
 {
 
-  /// Decode the L0MuonCtrlCand bank version 2 
+  /// Decode the L0MuonCtrlCand bank version 2
   ///
   /// This banks contains 2 parts :
   /// - 1st part : final candidates selected by the controller boards of 1 side (2 quarters)
@@ -143,7 +148,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
   if (bankVersion<2) return 0;
 
   bool decodingError=false;
-  
+
   // Clear the registers first
   release();
 
@@ -173,7 +178,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
   for (int iq = 0; iq <2 ; iq++) { // Loop over quarters (1st part)
     m_errors[iq].present.set(1);
     unsigned int empty=0;
-    
+
     // first line : Event counters
     if (iwd>=raw.size()) return 0;
     int l0EventNumber = ( (raw[iwd]>> 0)& 0xFFF );
@@ -186,7 +191,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
     m_errors[iq].errJ.set( (raw[iwd]>>28)& 0x1 );
     empty|=((raw[iwd])& 0xE000E000);
     ++iwd;
-    
+
     // second line : BCIDs & Status
     if (iwd>=raw.size()) return 0;
     int status=((raw[iwd]>>0)& 0xF);
@@ -200,7 +205,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
     m_errors[iq].ctrl_bcid[0].set(bcidCU,m_ref_l0_B_Id);
     m_errors[iq].ctrl_bcid[1].set(bcidSU,m_ref_l0_B_Id);
     empty|=((raw[iwd])& 0x7F007F00);
-    m_candRegHandler[iq].setStatus(status);    
+    m_candRegHandler[iq].setStatus(status);
     ++iwd;
 
     // Next lines : candidates
@@ -215,7 +220,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
     }
     m_errors[iq].decoding.set(empty);
     decodingError=(empty>0);
-    
+
   } // End of loop over quarters (1st part)
 
   // Do not try to decode the 2nd part of the bank
@@ -223,7 +228,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
     if (decodingError) return -1;
     return 1;
   }
-  
+
 
   // Second part of the bank (if present)
   for (int iq = 0; iq <2 ; iq++) { // Loop over quarters (2nd part)
@@ -256,7 +261,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
         ncand= ncand>2 ? 2 : ncand;
         if (!compression) ncand=2;
         bcsu_ncand[iboard]=ncand;
-        m_candRegHandlerBCSU[iq][iboard].setStatus( status );    
+        m_candRegHandlerBCSU[iq][iboard].setStatus( status );
         if (status>2) m_errors[iq].bcsu_status[iboard].set(status);
         else m_errors[iq].bcsu_status[iboard].set(0);
         ++iboard;
@@ -264,7 +269,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
       empty|=((raw[iwd])& 0x7F000000);
       ++iwd;
     } // End of loop over the 2 words with the status
-      
+
     // BCIDs (2 words)
     iboard=0;
     for (int i=0; i<2; ++i){ // Loop over the 2 words with the bcids
@@ -289,12 +294,12 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
     } // End of loop over the candidates of the 12 processing boards
     m_errors[iq].decoding.set(empty);
     decodingError|=(empty>0);
-    
+
   } // End of loop over quarters (2nd part)
-    
+
   if (decodingError) return -2;
   return 2;
-  
+
 }
 
 int L0Muon::CtrlCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int bankVersion, int mode, bool compression){
@@ -305,19 +310,19 @@ int L0Muon::CtrlCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int b
   int event_number = ievt;
   int l0_bid = ievt;
   int bcid   = l0_bid&0xF;
-  
+
   // -- 1st part
 
   // Loop over controller boards
   for (int iq = 0; iq <2 ; iq++) {
     unsigned int word;
-    
+
     // Event numbers
     word = ( (l0_bid<<16)&0xFFF0000 )+ ( event_number&0xFFF );
     raw.push_back(word);
 
     // Status & BCIDs
-    word = m_candRegHandler[iq].getStatus();   
+    word = m_candRegHandler[iq].getStatus();
     word|=((bcid<<4)&0xF0);
     word|=((bcid<<16)&0x0F0000);
     word|=((bcid<<20)&0xF00000);
@@ -333,23 +338,23 @@ int L0Muon::CtrlCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int b
     for (int icand=0; icand<ncand; icand++){
       word = L0Muon::readCandFromRegister(&m_candRegHandler[iq], icand, bankVersion);
       raw.push_back(word);
-    } 
-    
+    }
+
   }
 
   unsigned int header=raw.size()*2;
   raw.insert(raw.begin(),header);
-  
-  // 1st part of the bank is done - 
+
+  // 1st part of the bank is done -
   if (mode<2) return 1;
-  
+
   // -- 2nd part
 
   // Loop over controller boards
   for (int iq = 0; iq <2 ; iq++) {
     unsigned int word=0;
     for (int i=0; i<3; ++i) raw.push_back(word); // error fields (empty in MC)
-    
+
     // Status processing boards
     for (int i=0; i<2; ++i) {
       word=0;
@@ -371,7 +376,7 @@ int L0Muon::CtrlCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int b
       }
       raw.push_back(word);
     }
-    
+
     // Candidates
     for (int ib = 0; ib <12 ; ib++) {
       int ncand=2;
@@ -382,25 +387,25 @@ int L0Muon::CtrlCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int b
       for (int icand=0; icand<ncand; icand++){
         word = L0Muon::readCandFromRegister(&m_candRegHandlerBCSU[iq][ib], icand, bankVersion);
         raw.push_back(word);
-      } 
+      }
     }
   }
 
   return 2;
-  
+
 }
 
 int L0Muon::CtrlCandCnv::decodeBankFinalCandidates(const std::vector<unsigned int> &raw, int bankVersion){
   if (bankVersion!=1) return 0;
-  
+
   int iwd = 0;
   for (int iq=0; iq<2; ++iq) {
-    int status       = (raw[iwd+2]    )&  0xF; // raw[2],raw[ncand(iq)+2],  
+    int status       = (raw[iwd+2]    )&  0xF; // raw[2],raw[ncand(iq)+2],
     int ncand = status&0x3;
     ncand = ncand>2 ? 2 : ncand;
     for (int icand=0; icand<ncand; ++icand){
-      L0Muon::writeCandInRegister(&m_candRegHandler[iq],raw[iwd+3+icand],icand,bankVersion);  //raw[3], 
-      m_candRegHandler[iq].setCandQuarter(m_side*2+iq,icand); 
+      L0Muon::writeCandInRegister(&m_candRegHandler[iq],raw[iwd+3+icand],icand,bankVersion);  //raw[3],
+      m_candRegHandler[iq].setCandQuarter(m_side*2+iq,icand);
     }
     m_candRegHandler[iq].setStatus(status);
     iwd+=2+ncand;
@@ -428,16 +433,16 @@ int L0Muon::CtrlCandCnv::decodeBankBcsuCandidates(const std::vector<unsigned int
         cursor=0;
         iwd=1;
       }
-      
+
     } // End of 1st loop over processing boards
 
     // 2nd loop over processing boards
     for (int ib = 0; ib <12 ; ++ib) {
       // Loop over the candidates of the processing board
       for (int icand =0;icand<ncand[ib];++icand){
-        L0Muon::writeCandInRegister(&m_candRegHandlerBCSU[iq][ib],raw[iwd+3+icand],icand,bankVersion);  
-        m_candRegHandlerBCSU[iq][ib].setCandQuarter(m_side*2+iq,icand); 
-        m_candRegHandlerBCSU[iq][ib].setCandBoard(ib,icand); 
+        L0Muon::writeCandInRegister(&m_candRegHandlerBCSU[iq][ib],raw[iwd+3+icand],icand,bankVersion);
+        m_candRegHandlerBCSU[iq][ib].setCandQuarter(m_side*2+iq,icand);
+        m_candRegHandlerBCSU[iq][ib].setCandBoard(ib,icand);
       } // End of loop over the candidates of the processing board
     } // End of 2nd loop over processing boards
 
@@ -468,7 +473,7 @@ int L0Muon::CtrlCandCnv::rawBankFinalCandidates(std::vector<unsigned int> &raw, 
       if (m_candRegHandler[iq].isEmpty(icand)) break;
       word = L0Muon::readCandFromRegister(&m_candRegHandler[iq], icand, bankVersion);
       raw.push_back(word&0x3FFFFFFF);// raw[3(,4)] & raw[...+3] // mask the quarter
-    } 
+    }
   }
   return 1;
 
@@ -489,7 +494,7 @@ int L0Muon::CtrlCandCnv::rawBankBcsuCandidates(std::vector<unsigned int> &raw){
       if (cursor==32) { // next word
         cursor=0;
         raw.push_back(word);
-      }  
+      }
     } // End of 1st loop over processing boards
     raw.push_back(word);
     // 2nd loop over processing boards
@@ -505,17 +510,17 @@ int L0Muon::CtrlCandCnv::rawBankBcsuCandidates(std::vector<unsigned int> &raw){
   } // End of loop over controller boards
 
   return 1;
-  
+
 }
 
 
 int L0Muon::CtrlCandCnv::decodeBankDC06(const std::vector<unsigned int> &raw, int bankVersion){
   if (bankVersion!=0) return 0;
-  
+
 
   static int size    = 31;
   static int max     = 32;
-  
+
   int qcand[2] = {0,0};
 
   int status =( (raw[1]>>4)& 0xF);
@@ -553,7 +558,7 @@ int L0Muon::CtrlCandCnv::decodeBankDC06(const std::vector<unsigned int> &raw, in
   for (int ir=0;ir<2;++ir) m_candRegHandler[ir].setStatus(qcand[ir]);
 
   return 1;
-  
+
 }
 
 int L0Muon::CtrlCandCnv::rawBankDC06(std::vector<unsigned int> &raw){
@@ -564,9 +569,9 @@ int L0Muon::CtrlCandCnv::rawBankDC06(std::vector<unsigned int> &raw){
       if (m_candRegHandler[i].isEmpty(icand)) break;
       unsigned int word = L0Muon::readCandFromRegister(&m_candRegHandler[i], icand, bankVersion);
       raw.push_back(word);
-    } 
+    }
   }
-  
+
   return 1;
 
 }

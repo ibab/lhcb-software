@@ -1,5 +1,5 @@
 #ifndef L0MUONKERNEL_CTRLRAWCNV_H
-#define L0MUONKERNEL_CTRLRAWCNV_H 
+#define L0MUONKERNEL_CTRLRAWCNV_H
 
 #include "L0MuonKernel/CandRegisterHandler.h"
 #include "L0MuonKernel/CtrlRawErrors.h"
@@ -10,9 +10,9 @@
 
 namespace L0Muon {
 
-  
+
   /** @class CtrlRawCnv CtrlRawCnv.h  L0MuonKernel/CtrlRawCnv.h
-      
+
       Class to interface the data in L0MuonRaw bank (written by the controller boards) with the L0Muon Register.
 
       As there is one L0MuonCtrlCand per side (i.e. for 2 quarters), this class handle a side (index stored in #m_side).
@@ -20,7 +20,7 @@ namespace L0Muon {
       - side A (m_side=0) : Q1 (iq=0) and Q2 (iq=1)
       - side C (m_side=1) : Q3 (iq=0) and Q4 (iq=1)
 
-      It holds pointers to the @link Register registers @endlink containing the data written in the L0MuonRaw bank 
+      It holds pointers to the @link Register registers @endlink containing the data written in the L0MuonRaw bank
       from the TELL1 linked to the controller board :
       - CAND_CTRLQ<q>, where q(=0,...,3) is the quarter : candidates selected by the controller board in quarter q
       - BOARDCAND_Q<q>_<ib>, where q(=0,...,3) is the quarter and ib(=0,...,11) is the board index in the quarter :
@@ -28,10 +28,10 @@ namespace L0Muon {
 
       @author Julien Cogan
       @date 2007-09-03
-      
+
   */
   class CtrlRawCnv  {
-    
+
   private:
 
     /// Size in words of the full frame sent by 1 controller board on 1 channel (optical link)
@@ -59,14 +59,14 @@ namespace L0Muon {
 
     /// Destructor
     ~CtrlRawCnv();
-    
+
     /** Returns the MuonTileID of the board (BCSU) defined by its quarter and board index
 
         @param iq : index of the quarter in the side (0 to 1)
         @param ib : index of the board (0 to 11)
     */
     LHCb::MuonTileID mid_BCSU(int iq, int ib);
-    
+
     /// Clear the registers
     void release();
 
@@ -88,12 +88,12 @@ namespace L0Muon {
         @param ib : index of the board (0 to 11)
     */
     int status_BCSU(int i,int ib){return m_candRegHandlerBCSU[i][ib].getStatus();}
-    
+
     /** Decode the L0MuonRaw bank related to the controller board.
 
         From the data in the bank, it :
         - fills the registers with the candidates selected by controller board
-        - fills the registers with the candidates sent by the processing board 
+        - fills the registers with the candidates sent by the processing board
         - fills the CtrlRawErrors errors with the error encountered in the decoding
 
         Return values :
@@ -117,18 +117,18 @@ namespace L0Muon {
     void dumpErrorHeader(int ib, std::string tab="") {std::cout<<m_errors[ib].header(tab)<<std::endl;}
     void dumpErrorField(int ib, std::string tab="") {std::cout<<tab<<m_errors[ib]<<std::endl;}
     void dumpErrorCounters(std::string &os);
-    
+
     bool isActiv(){return m_activ;}
-    
+
     int numberOfDecodedBanks() {return m_n_decoded_banks;}
 
   private:
-    
+
     void decodeBank_v1(const std::vector<unsigned int> &raw, int &RefL0EventNumber, int &RefL0_B_Id);
     void decodeBank_v2(const std::vector<unsigned int> &raw, int &RefL0EventNumber, int &RefL0_B_Id);
 
     bool m_activ;
-    int m_n_decoded_banks;    
+    int m_n_decoded_banks;
     int m_side;
 
     enum fpgas {CU,SU};
@@ -138,9 +138,9 @@ namespace L0Muon {
     CandRegisterHandler m_candRegHandlerBCSU[2][12];
 
     CtrlRawErrors m_errors[2];
-    
-    
+
+
   };
-}; // namespace L0Muon
- 
+} // namespace L0Muon
+
 #endif    // L0MUONKERNEL_CTRLRAWCNV_H

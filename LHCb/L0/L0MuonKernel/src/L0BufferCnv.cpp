@@ -4,9 +4,11 @@
 /**
    Constructor.
 */
-L0Muon::L0BufferCnv::L0BufferCnv(LHCb::MuonTileID id){
-  m_mid=id;
-};
+L0Muon::L0BufferCnv::L0BufferCnv(LHCb::MuonTileID id):
+  m_mid(id),
+  m_valid(false)
+{
+}
 
 /**
    Destructor

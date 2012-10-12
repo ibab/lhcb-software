@@ -8,35 +8,35 @@
 #include "L0MuonKernel/MuonCandidate.h"
 
 namespace L0Muon {
-  
+
   /** @file ProcUtilities. ProcUtilities.h L0MuonKernel/ProcUtilities.h
-      
-  Functions used in the processing with behaviour that depends on the processor version.
-  
+
+  Functions used in the processing with behavior that depends on the processor version.
+
   @author Julien Cogan
   @date 2007 August the 27th
-  
+
   */
 
   /// Used to search hits in M1 (Tower::processTower).
   int pendulumM1(int icol, int procVersion);
-  
+
   /// Used to search hits in M2 (Tower::processTower).
   int pendulumM2(int icol, int procVersion);
-  
+
   /// Used for ordering candidate (Tower). The first and the last are selected in CoreUnit.
   void candidatesOrdering(std::vector<L0Muon::PMuonCandidate> *cands, int procVersion);
 
-  /** Used when looking for a candididate (Tower::processTower) and at decoding stage 
-      when retrieving the pads of a candididate (MuonCandidate::pads).
+  /** Used when looking for a candidate (Tower::processTower) and at decoding stage
+      when retrieving the pads of a candidate (MuonCandidate::pads).
   */
   int extrapolationM1(int i,int procVersion=-1);
 
-  /// Used when looking for a candididate (Tower::processTower). 
+  /// Used when looking for a candidate (Tower::processTower).
   int offsetM1(int offM1, int procVersion=-1);
 
   /// Used for retrieving pads (L0MuonOutputs::l0muoncandidate).
-  std::vector<LHCb::MuonTileID> add2pads(int quarter,int board, int pu, 
+  std::vector<LHCb::MuonTileID> add2pads(int quarter,int board, int pu,
                                          int colM3, int rowM3, int offM2, int offM1,
                                          int procVersion, bool debug=false);
 
@@ -51,10 +51,10 @@ namespace L0Muon {
   std::vector<double> kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2,int procVersion=-1, bool debug=false,\
                            double x1=0., double y1=0., double z1=0., double x2=0., double y2=0., double z2=0.);
   std::vector<double> kineV0(LHCb::MuonTileID p1, LHCb::MuonTileID p2, bool debug=false);
-  
+
   /// Used to encode PT (Tower::processTower).
   int encodePT(double pt, int procVersion=-1, bool debug=false);
 
-}; // namespace L0Muon
+} // namespace L0Muon
 
 #endif      // L0MUONKERNEL_PROCUTILITIESH_H

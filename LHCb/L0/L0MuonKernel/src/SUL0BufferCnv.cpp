@@ -26,25 +26,25 @@ L0Muon::SUL0BufferCnv::SUL0BufferCnv(LHCb::MuonTileID id):L0BufferCnv(id){
     m_candRegHandlerBCSU[iboard] = CandRegisterHandler(reg) ;
   }
 
-  
-};
+
+}
 
 /**
    Destructor
 */
 L0Muon::SUL0BufferCnv::~SUL0BufferCnv(){
- 
+
 }
 
 void L0Muon::SUL0BufferCnv::write(int ievt)
 {
-  
+
   if (!m_valid) return;
 
-  int bid =  (ievt&0xF); 
+  int bid =  (ievt&0xF);
 
   unsigned int iword;
-  
+
   iword = 0x8000+(ievt&0xFFF);
   m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // L0EventNumber (l.0)
   iword = (ievt&0xFFF);
@@ -56,7 +56,7 @@ void L0Muon::SUL0BufferCnv::write(int ievt)
     iword|=( ( m_candRegHandler.getCandOffM2(icand)<< 4) & 0x00F0 );
     iword|=( ( m_candRegHandler.getCandPU(   icand)<< 8) & 0x0300 );
     iword|=( ( m_candRegHandler.getCandBoard(icand)<<12) & 0xF000 );
-    m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Candidate  
+    m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Candidate
   }
   int status = m_candRegHandler.getStatus();
   int c1     = m_candRegHandler.getCandCharge(0);
@@ -64,7 +64,7 @@ void L0Muon::SUL0BufferCnv::write(int ievt)
   iword = (  ((c1<<12)&0x3000) + ((c2<<8)&0x300) + ((status<<4)&0xF0) + bid)  & 0x33FF;
   m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // bid
 
-  iword = ( bid + (bid<<4) ); 
+  iword = ( bid + (bid<<4) );
   m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // bid
 
   for (int i=0; i<3; ++i) m_file<<std::setw(4)<<std::setfill('0')<<0<<" \n"; // (l.2, l.3 & l.4) serial link errors
@@ -76,7 +76,7 @@ void L0Muon::SUL0BufferCnv::write(int ievt)
         iword|=( ( m_candRegHandlerBCSU[iboard].getCandOffM2( icand)<< 4) & 0x00F0 );
         iword|=( ( m_candRegHandlerBCSU[iboard].getCandPU(    icand)<< 8) & 0x0300 );
         iword|=( ( m_candRegHandlerBCSU[iboard].getCandCharge(icand)<<12) & 0x1000 );
-        m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Candidate  
+        m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Candidate
       }
       int status = m_candRegHandlerBCSU[iboard].getStatus();
       iword = (  (((m_mid.quarter())<<12)&0x3000) + ((status<<4)&0xF0) + bid)  & 0x30FF;
@@ -86,7 +86,7 @@ void L0Muon::SUL0BufferCnv::write(int ievt)
     }
   }
 
-  
+
   m_file<<"----\n";
 
 }

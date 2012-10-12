@@ -11,7 +11,7 @@
 
 namespace L0Muon {
 
-  typedef unsigned int   ContentType ; 
+  typedef unsigned int   ContentType ;
 
 
   /** @class CandRegisterHandler CandRegisterHandler.h L0MuonKernel/CandRegisterHandler.h
@@ -23,7 +23,7 @@ namespace L0Muon {
 
   */
   class CandRegisterHandler  {
-  
+
   private:
     static const ContentType BitsCandOffM1   = 4 ;
     static const ContentType BitsCandOffM2   = 4 ;
@@ -35,9 +35,9 @@ namespace L0Muon {
     static const ContentType BitsCandBoard   = 4 ;
     static const ContentType BitsCandPU      = 2 ;
     static const ContentType BitsCandQuarter = 2 ;
-                                             
+
     static const ContentType BitsStatus      = 4 ;
-    
+
     static const ContentType ShiftCandOffM1  = 0;                                                  //  0
     static const ContentType ShiftCandOffM2  = ShiftCandOffM1  + BitsCandOffM1  ;                  //  4
     static const ContentType ShiftCandColM3  = ShiftCandOffM2  + BitsCandOffM2  ;                  //  8
@@ -45,25 +45,25 @@ namespace L0Muon {
     static const ContentType ShiftCandPT     = ShiftCandRowM3  + BitsCandRowM3  + BitsCandPadding; // 16
     static const ContentType ShiftCandCharge = ShiftCandPT     + BitsCandPT     ;                  // 23
     static const ContentType ShiftCandBoard  = ShiftCandCharge + BitsCandCharge ;                  // 24
-    static const ContentType ShiftCandPU     = ShiftCandBoard  + BitsCandBoard  ;                  // 28   
+    static const ContentType ShiftCandPU     = ShiftCandBoard  + BitsCandBoard  ;                  // 28
     static const ContentType ShiftCandQuarter= ShiftCandPU     + BitsCandPU     ;                  // 30
 
     static const ContentType BitsCandTot     = ShiftCandQuarter+ BitsCandQuarter;                  // 32
     static const ContentType BitsCandRegTot  = 2*BitsCandTot + BitsStatus;
-    
+
     static const ContentType ShiftStatus     = 2*BitsCandTot;
 
-    static const ContentType BitsCandAddM3   = BitsCandColM3 + BitsCandRowM3; 
+    static const ContentType BitsCandAddM3   = BitsCandColM3 + BitsCandRowM3;
     static const ContentType ShiftCandAddM3  = ShiftCandColM3;
 
   public:
-    
 
-    /// Default Constructor 
+
+    /// Default Constructor
     CandRegisterHandler();
-      
+
     /// Constructor with a pattern
-    CandRegisterHandler(Register * candRegister);    
+    CandRegisterHandler(Register * candRegister);
 
     /// Clear the candidate register
     void clear(){
@@ -77,75 +77,75 @@ namespace L0Muon {
     }
 
     /// Candidate register size in bits
-    static int size() {return BitsCandRegTot;}   
+    static int size() {return BitsCandRegTot;}
 
     //
     // Set the candidate's properties from the register
     //
 
     /** Set in the register the candidate's adress in M3 (column)
-        
+
         @param candColM3 : column index of the candidate in M3
         @param icand : index of the candidate (0,1)
     */
     void setCandColM3 (int candColM3 , int icand){
       m_candRegister->set(candColM3  ,BitsCandColM3  ,ShiftCandColM3 +icand*BitsCandTot);
-    }  
+    }
 
     /** Set in the register the candidate's adress in M3 (row)
-        
+
         @param candRowM3 : row index of the candidate in M3
         @param icand : index of the candidate (0,1)
     */
     void setCandRowM3 (int candRowM3 , int icand){
       m_candRegister->set(candRowM3  ,BitsCandRowM3  ,ShiftCandRowM3 +icand*BitsCandTot);
-    }  
+    }
 
     /** Set in the register the candidate's adress in M3
-        
+
         @param candAddM3 : adress of the candidate in M3 (row and column)
         @param icand : index of the candidate (0,1)
     */
     void setCandAddM3 (int candAddM3 , int icand){
       m_candRegister->set(candAddM3  ,BitsCandAddM3  ,ShiftCandAddM3 +icand*BitsCandTot);
-    }  
+    }
 
     /** Set in the register the candidate's offset in M2
-        
+
         @param candOffM2 : offset of the candidate in M2
         @param icand : index of the candidate (0,1)
     */
     void setCandOffM2 (int candOffM2 , int icand){
       m_candRegister->set(candOffM2  ,BitsCandOffM2  ,ShiftCandOffM2 +icand*BitsCandTot);
-    }  
+    }
 
     /** Set in the register the candidate's offset in M1
-        
+
         @param candOffM1 : offset of the candidate in M1
         @param icand : index of the candidate (0,1)
     */
     void setCandOffM1 (int candOffM1 , int icand){
       m_candRegister->set(candOffM1  ,BitsCandOffM1  ,ShiftCandOffM1 +icand*BitsCandTot);
-    }  
+    }
 
     /** Set in the register the candidate's pt (absolute value)
-        
+
         @param candPT : absolute value of the candidate pt
         @param icand : index of the candidate (0,1)
     */
     void setCandPT    (int candPT    , int icand){
       m_candRegister->set(candPT     ,BitsCandPT     ,ShiftCandPT    +icand*BitsCandTot);
-    }  
+    }
 
     /** Set in the register the candidate's charge (0 for negative, 1 for positive)
-        
+
         @param candCharge : candidate's charge (0 for negative, 1 for positive)
         @param icand : index of the candidate (0,1)
     */
     void setCandCharge(int candCharge, int icand){
       m_candRegister->set(candCharge ,BitsCandCharge ,ShiftCandCharge+icand*BitsCandTot);
-    } 
- 
+    }
+
     /** Set in the register the candidate's PU index (0 to 3)
 
         @param candPU : candidate's PU index (0 to 3)
@@ -153,8 +153,8 @@ namespace L0Muon {
     */
     void setCandPU    (int candPU    , int icand){
       m_candRegister->set(candPU     ,BitsCandPU     ,ShiftCandPU    +icand*BitsCandTot);
-    }  
- 
+    }
+
     /** Set in the register the candidate's board index (0 to 11)
 
         @param candBoard : candidate's board index (0 to 11)
@@ -162,8 +162,8 @@ namespace L0Muon {
     */
     void setCandBoard (int candBoard , int icand){
       m_candRegister->set(candBoard  ,BitsCandBoard  ,ShiftCandBoard +icand*BitsCandTot);
-    }  
- 
+    }
+
     /** Set in the register the candidate's quarter (0 to 3)
 
         @param candQuarter : candidate's quarter (0 to 3)
@@ -171,7 +171,7 @@ namespace L0Muon {
     */
     void setCandQuarter (int candQuarter , int icand){
       m_candRegister->set(candQuarter  ,BitsCandQuarter  ,ShiftCandQuarter +icand*BitsCandTot);
-    }  
+    }
 
     /** Set in the register the status bits
 
@@ -180,7 +180,7 @@ namespace L0Muon {
     */
     void setStatus(int status ){
       m_candRegister->set(status ,BitsStatus ,ShiftStatus);
-    }  
+    }
 
     /** Set in the register the full candidate information
 
@@ -194,12 +194,12 @@ namespace L0Muon {
     //
 
     /** Get from the register the candidate's adress in M3 (column)
-        
+
         @param icand : index of the candidate (0,1)
     */
     int getCandColM3(int icand){
       return m_candRegister->getulong(BitsCandColM3  ,ShiftCandColM3 +icand*BitsCandTot);
-    }  
+    }
 
     /** Get from the register the candidate's adress in M3 (row)
 
@@ -207,7 +207,7 @@ namespace L0Muon {
     */
     int getCandRowM3(int icand){
       return m_candRegister->getulong(BitsCandRowM3  ,ShiftCandRowM3 +icand*BitsCandTot);
-    }  
+    }
 
     /** Get from the register the candidate's adress in M3
 
@@ -215,7 +215,7 @@ namespace L0Muon {
     */
     int getCandAddM3(int icand){
       return m_candRegister->getulong(BitsCandAddM3  ,ShiftCandAddM3 +icand*BitsCandTot);
-    }  
+    }
 
     /** Get from the register the candidate's offset in M2
 
@@ -223,7 +223,7 @@ namespace L0Muon {
     */
     int getCandOffM2(int icand){
       return m_candRegister->getulong(BitsCandOffM2  ,ShiftCandOffM2 +icand*BitsCandTot);
-    }  
+    }
 
     /** Get from the register the candidate's offset in M1
 
@@ -231,7 +231,7 @@ namespace L0Muon {
     */
     int getCandOffM1(int icand){
       return m_candRegister->getulong(BitsCandOffM1  ,ShiftCandOffM1 +icand*BitsCandTot);
-    }  
+    }
 
     /** Get from the register the candidate's pt (absolute value)
 
@@ -239,7 +239,7 @@ namespace L0Muon {
     */
     int getCandPT(int icand){
       return m_candRegister->getulong(BitsCandPT     ,ShiftCandPT    +icand*BitsCandTot);
-    }  
+    }
 
     /** Get from the register the candidate's pt (signed value)
 
@@ -247,7 +247,7 @@ namespace L0Muon {
     */
     int getCandPTCharged(int icand){
       return m_candRegister->getulong(BitsCandPT+BitsCandCharge ,ShiftCandPT    +icand*BitsCandTot);
-    }  
+    }
 
     /** Get from the register the candidate's charge (0 for negative, 1 for positive)
 
@@ -255,7 +255,7 @@ namespace L0Muon {
     */
     int getCandCharge(int icand){
       return m_candRegister->getulong(BitsCandCharge ,ShiftCandCharge+icand*BitsCandTot);
-    }  
+    }
 
     /** Get from the register the candidate's PU index (0 to 3)
 
@@ -263,7 +263,7 @@ namespace L0Muon {
     */
     int getCandPU    (int icand){
       return m_candRegister->getulong(BitsCandPU     ,ShiftCandPU    +icand*BitsCandTot);
-    }  
+    }
 
     /** Get from the register the candidate's board index (0 to 11)
 
@@ -288,7 +288,7 @@ namespace L0Muon {
     */
     int getStatus(){
       return m_candRegister->getulong(BitsStatus ,ShiftStatus  );
-    }  
+    }
 
     /** Get from the register the PMuonCandidate representing the candidate the full information
 
@@ -296,32 +296,32 @@ namespace L0Muon {
     */
     PMuonCandidate getMuonCandidate(int icand);
 
-    /** Get the number of candidates in the Register 
-        
+    /** Get the number of candidates in the Register
+
         @param useStatus : if true the number of candidates is extracted from the status bits,
         otherwise it is guessed from the content of the candidate address and PT
-                        
+
     */
     int numberOfCandidates(bool useStatus=true) ;
-    
+
     /// Return true if the cand is empty (no bit set)
     bool isEmpty(int icand)
     {
       boost::dynamic_bitset<> cand = m_candRegister->getBitset(BitsCandTot,icand*BitsCandTot);
       return cand.none();
     }
-    
+
     /// Dump the candidate to the standard output
     void dump(int icand=-1,std::string tab="") ;
-    
- 
+
+
   private:
     Register * m_candRegister; ///< Register where the candidates information is stored
-    
+
   };
 
 
 
-}; // namespace L0Muon
+} // namespace L0Muon
 
 #endif      // L0MUONKERNEL_CANDREGISTERHANDLER_H

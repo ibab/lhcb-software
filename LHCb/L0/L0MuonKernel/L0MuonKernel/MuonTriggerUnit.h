@@ -17,21 +17,21 @@ namespace L0Muon {
   It is the 'Top Unit' containing the 4 CrateUnit of the L0muon processor (if fully configured).
 
   Contains also methods to get the trigger parameters. They are propagated to the Tower via the CoreUnit.
- 
+
   Otherwise, this unit is essentialy a container. It does not have any input nor output registers.
   It triggers the initialize, execute, ... methods of its daughters.
-  
+
   @author  Luisanna Tocco, Julien Cogan
   @date  24 September 2003
-  */ 
+  */
   class MuonTriggerUnit : public L0MUnit {
-     
+
   public:
 
-    /// Constructor 
+    /// Constructor
     MuonTriggerUnit();
 
-    /// Constructor 
+    /// Constructor
     MuonTriggerUnit(DOMNode* pNode);
 
     /// Destructor
@@ -44,6 +44,6 @@ namespace L0Muon {
 
 
   };
-};  // namespace L0Muon
+}  // namespace L0Muon
 
-#endif      // L0MUONKERNEL_MUONTRIGGERPROCESSORUNIT_H  
+#endif      // L0MUONKERNEL_MUONTRIGGERPROCESSORUNIT_H

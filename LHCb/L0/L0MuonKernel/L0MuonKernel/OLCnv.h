@@ -1,16 +1,16 @@
 #ifndef L0MUONKERNEL_OLCNV_H
-#define L0MUONKERNEL_OLCNV_H 
+#define L0MUONKERNEL_OLCNV_H
 
 
 #include "L0MuonKernel/L0BufferCnv.h"
 #include <string>
 
 namespace L0Muon {
-  
+
   /** @class OLCnv OLCnv.h  L0MuonKernel/OLCnv.h
-    
+
   Class to write out the optical link in input of the PU in the format required for the high stat test.
-  
+
     It inherits from L0BufferCnv. There is one such converter per PU.
 
   As input , it uses :
@@ -19,7 +19,7 @@ namespace L0Muon {
 
   @author Julien Cogan
   @date 2008-08-22
-  
+
   */
   class OLCnv : public L0BufferCnv {
 
@@ -34,7 +34,7 @@ namespace L0Muon {
 
     /// Destructor
     ~OLCnv();
-    
+
     /// Give a static type name to the unit : OLDumpUnit
     std::string type() {
       return "OLDumpUnit";
@@ -45,12 +45,12 @@ namespace L0Muon {
         @param ievt : current event number
     */
     void write(int ievt);
-    
+
   private:
 
     TileRegister* m_ol; ///< TileRegister with the optical links at the PU input (formatted as requested by the high stat test).
 
   };
-}; // namespace L0Muon
- 
+} // namespace L0Muon
+
 #endif    // L0MUONKERNEL_OLCNV_H

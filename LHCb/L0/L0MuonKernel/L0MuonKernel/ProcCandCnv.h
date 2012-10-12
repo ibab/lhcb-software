@@ -1,5 +1,5 @@
 #ifndef L0MUONKERNEL_PROCCANDCNV_H
-#define L0MUONKERNEL_PROCCANDCNV_H 
+#define L0MUONKERNEL_PROCCANDCNV_H
 
 #include "L0MuonKernel/CandRegisterHandler.h"
 #include <string>
@@ -8,9 +8,9 @@
 #include "L0MuonKernel/ProcCandErrors.h"
 
 namespace L0Muon {
-  
+
   /** @class ProcCandCnv ProcCandCnv.h  L0MuonKernel/ProcCandCnv.h
-      
+
       Class to interface the data in L0MuonProcCand bank with the L0Muon Register.
 
       @author Julien Cogan
@@ -34,7 +34,7 @@ namespace L0Muon {
 
     void release();
     void setDecodingMode();
-    
+
     std::vector<PMuonCandidate> muonCandidatesPU();
     std::vector<PMuonCandidate> muonCandidatesBCSU();
     std::vector<PMuonCandidate> muonCandidatesPU(int ib);
@@ -48,14 +48,14 @@ namespace L0Muon {
     int rawBank(std::vector<unsigned int> &raw, int ievt, int version, bool compression);
     int rawBank_v1(std::vector<unsigned int> &raw, int ievt);
     int rawBank_v2(std::vector<unsigned int> &raw, int ievt, bool compression);
-    
+
     void dump(std::string tab=""){
-      for (int ib=0; ib<12; ++ib) 
+      for (int ib=0; ib<12; ++ib)
       {
         m_candRegHandlerBCSU[ib].dump(-1,tab);
         for (int ip=0; ip<4; ++ip) {
           m_candRegHandlerPU[ib][ip].dump(-1,tab+" ");
-        }      
+        }
       }
     }
 
@@ -73,7 +73,7 @@ namespace L0Muon {
     int  statusError(int ib,int ipu) const { return m_errors[ib].statusError(ipu);}
     int  bcidError(int ib) const { return m_errors[ib].bcidError();}
     int  bcidError(int ib,int ipu) const { return m_errors[ib].bcidError(ipu);}
-    
+
     const ProcCandErrors * errors(int ib) const {return &m_errors[ib];}
 
   private:
@@ -90,6 +90,6 @@ namespace L0Muon {
     int m_ref_l0EventNumber;
 
   };
-}; // namespace L0Muon
- 
+} // namespace L0Muon
+
 #endif    // L0MUONKERNEL_PROCCANDCNV_H

@@ -24,12 +24,12 @@ namespace L0Muon {
 
   author  Luisanna Tocco, Julien Cogan
   date  24 September 2003
-  */ 
+  */
   class SelectionUnit : public L0MUnit {
-     
+
   public:
 
-    /// Default Constructor 
+    /// Default Constructor
     SelectionUnit();
 
     /// Constructor with a MuonTileID
@@ -40,7 +40,7 @@ namespace L0Muon {
 
     /// Destructor
     ~SelectionUnit();
-     
+
     /// Select the 2 best candidates and fill the output register
     void select();
 
@@ -48,13 +48,13 @@ namespace L0Muon {
     void postexecute();
 
   protected:
-     
+
     std::map<int,CandRegisterHandler> m_candRegHandlerIn; ///< input candidates
-    CandRegisterHandler m_candRegHandlerOut;              ///< output candidates 
+    CandRegisterHandler m_candRegHandlerOut;              ///< output candidates
 
   };
 
 
-};  // namespace L0Muon
+}  // namespace L0Muon
 
-#endif      // L0MUONKERNEL_SELECTIONUNIT_H  
+#endif      // L0MUONKERNEL_SELECTIONUNIT_H

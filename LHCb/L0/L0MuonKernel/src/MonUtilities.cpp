@@ -1,5 +1,5 @@
 // $Id: MonUtilities.cpp,v 1.6 2009-10-13 08:10:57 jucogan Exp $
-// Include files 
+// Include files
 
 #include <sstream>
 
@@ -34,7 +34,7 @@ void L0Muon::MonUtilities::filterTilesWithStation(std::vector<LHCb::MuonTileID>&
                                             std::vector<LHCb::MuonTileID>& filtered, unsigned int station)
 {
   filtered.clear();
-  
+
   std::vector<LHCb::MuonTileID>::iterator it;
   for (it=original.begin();it<original.end();++it){
     if (it->station()==station) filtered.push_back(*it);
@@ -45,113 +45,113 @@ void L0Muon::MonUtilities::filterTilesWithStation(std::vector<LHCb::MuonTileID>&
 
 void L0Muon::MonUtilities::flipCoord(int &x, int&y, const int qua)
 {
-  switch ( qua ) {   
-  case 0: 
+  switch ( qua ) {
+  case 0:
     break;
-  case 1: 
+  case 1:
     y=-y;
     break;
-  case 2: 
+  case 2:
     x=-x;
     y=-y;
     break;
-  case 3: 
+  case 3:
     x=-x;
     break;
   };
 }
-  
+
 void L0Muon::MonUtilities::offsetCoord(double &x, double&y, const int qua)
 {
-  switch ( qua ) {   
-  case 0: 
+  switch ( qua ) {
+  case 0:
     x+=0.5;
     y+=0.5;
     break;
-  case 1: 
+  case 1:
     x+=0.5;
     y-=0.5;
     break;
-  case 2: 
+  case 2:
     x-=0.5;
     y-=0.5;
     break;
-  case 3: 
+  case 3:
     x-=0.5;
     y+=0.5;
     break;
   };
 }
-  
+
 std::string  L0Muon::MonUtilities::channelTypeName(Channel_type e)
-{ 
-  switch ( e ) {   
+{
+  switch ( e ) {
   case Pad    : return "Pad";
   case StripH : return "StripH";
   case StripV : return "StripV";
   default : return "Unknown";
-  };
-};
-  
+  }
+}
+
 std::string  L0Muon::MonUtilities::quarterName(int qua)
-{ 
-  switch ( qua ) {   
+{
+  switch ( qua ) {
   case 0    : return "Q1";
   case 1    : return "Q2";
   case 2    : return "Q3";
   case 3    : return "Q4";
   default : return "Unknown";
-  };
-};
+  }
+}
 std::string  L0Muon::MonUtilities::boardName(int board)
 {
   std::stringstream name("");
   name<<"PB";
   name<<board;
   return name.str();
-};
-  
+}
+
 std::string  L0Muon::MonUtilities::puName(int pu)
-{ 
+{
   std::stringstream name("");
   name<<"PU";
   name<<pu;
   return name.str();
-};
-  
+}
+
 std::string  L0Muon::MonUtilities::regionName(int reg)
-{ 
-  switch ( reg ) {   
+{
+  switch ( reg ) {
   case 0    : return "R1";
   case 1    : return "R2";
   case 2    : return "R3";
   case 3    : return "R4";
   default : return "Unknown";
-  };
-};
-  
+  }
+}
+
 std::string  L0Muon::MonUtilities::stationName(int sta)
-{ 
-  switch ( sta ) {   
+{
+  switch ( sta ) {
   case 0    : return "M1";
   case 1    : return "M2";
   case 2    : return "M3";
   case 3    : return "M4";
   case 4    : return "M5";
   default : return "Unknown";
-  };
-};
+  }
+}
 
 std::string  L0Muon::MonUtilities::errorName(int type)
-{ 
-  switch ( type ) {   
+{
+  switch ( type ) {
   case 0 : return "Overflow";
   case 1 : return "Internal";
   case 2 : return "Decoding";
   case 3 : return "Decoding_data";
   default : return "Unknown";
-  };
-};
+  }
+}
 
 std::string  L0Muon::MonUtilities::timeSlot(int bx)
 {
@@ -173,13 +173,13 @@ std::string  L0Muon::MonUtilities::timeSlot(int bx)
   case  6 : return "Next6/";
   case  7 : return "Next7/";
   default : return "Unknown";
-  };
-};
+  }
+}
 
 L0Muon::MonUtilities::Channel_type operator++( L0Muon::MonUtilities::Channel_type &rs, int )
 {
   return rs = (L0Muon::MonUtilities::Channel_type)(rs + 1);
-};
+}
 
 
 std::string L0Muon::MonUtilities::hname_info_error(std::string toolname)  {return toolname+"Error_and_overflow";}

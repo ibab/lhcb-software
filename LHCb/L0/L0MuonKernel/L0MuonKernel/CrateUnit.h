@@ -20,11 +20,11 @@ namespace L0Muon {
 
   @author  Luisanna Tocco, Julien Cogan
   @date  24 September 2003
-  */ 
+  */
   class CrateUnit : public L0MUnit {
-    
+
   public:
-    
+
     /// Default Constructor
     CrateUnit();
 
@@ -33,16 +33,16 @@ namespace L0Muon {
 
     /// Destructor
     ~CrateUnit();
- 
+
     /// Give a static type name to the unit
     std::string type() {
       return "CrateUnit";
     }
-    
+
   private:
 
   };
 
-};  // namespace L0Muon
+}  // namespace L0Muon
 
-#endif      // L0MUONKERNEL_CRATEUNIT_H  
+#endif      // L0MUONKERNEL_CRATEUNIT_H

@@ -1,8 +1,13 @@
 !------------------------------------------------------------------------------
 ! Package     : L0/L0MuonKernel
 ! Responsible : Julien Cogan, Andrei Tsaregorodtsev
-! Purpose     : 
+! Purpose     :
 !------------------------------------------------------------------------------
+
+! 2012-10-12 - Marco Clemencic
+ - Fixed warnings:
+   - extra ‘;’ [-pedantic]
+   - Eclipse static analyzer
 
 !========================= L0MuonKernel v9r8 2012-09-28 =========================
 ! 2012-08-08 - Marco Clemencic
@@ -13,7 +18,7 @@
 ! 2012-04-24 - Julien Cogan
  - Manage Look Up Table for pt computation :
   - new class to handle Pt Look Up Table (L0MPtLUT)
-  - L0MUnit (generic Unit): new data member holding a pointer to the LUT, 
+  - L0MUnit (generic Unit): new data member holding a pointer to the LUT,
     plus corresponding set and get methods
   - CoreUnit : retrieve the pointer from MuonTriggerUnit (in constructor)
   - Tower : in constructor, store the pointer to the LUT; in process_tower, use
@@ -32,61 +37,61 @@
 
 !============================ L0MuonKernel v9r4 2010-08-25 ====================
 ! 2010-07-21 - Julien Cogan
- - Bug fix : m_ignoreM1 variable was not initialized in CoreUnit 
+ - Bug fix : m_ignoreM1 variable was not initialized in CoreUnit
 
-!============================ L0MuonKernel v9r3 2010-07-19 ==================== 
+!============================ L0MuonKernel v9r3 2010-07-19 ====================
 ! 2010-07-12 - Julien Cogan
  - L0MuonKernelFromXML.cpp : Adapt to Xerces 3.1
 
-!============================ L0MuonKernel v9r2 2010-05-21 ==================== 
+!============================ L0MuonKernel v9r2 2010-05-21 ====================
 ! 2010-05-19 - Julien Cogan
  - Fix to match harware behaviour : topology of tile exchange for M2 has been
    modified. It affects exchanges across different regions (in practise R2->R3).
    If a metatiles (sum of StripH or sum of StripV) contains a fired tile, it
-   is passed to the neighouring PU. The receiving PU may then make a pad from 
-   these meta-Strips. Originally, only strips which were used to make pads in 
-   the thinner granularity were passed to the neighouring PU. 
+   is passed to the neighouring PU. The receiving PU may then make a pad from
+   these meta-Strips. Originally, only strips which were used to make pads in
+   the thinner granularity were passed to the neighouring PU.
 
-!============================ L0MuonKernel v9r1 2010-03-17 ==================== 
+!============================ L0MuonKernel v9r1 2010-03-17 ====================
 ! 2010-02-24 - Julien Cogan
  - Add 2 bits in the hardware error word of ProcCand and CtrlCand data to
    flag L0_B_Id and L0EventNumber inconsistency
  - Change convention for the CtrlCand hardware error word to match the one
    of ProcCand (swap J & K)
 
-!============================ L0MuonKernel v9r0 2010-02-12 ==================== 
+!============================ L0MuonKernel v9r0 2010-02-12 ====================
 ! 2010-02-04 - Julien Cogan
  - Changes to use configure the emulator with the CondDB :
-   - Handling of trigger parameters moved from MuonTriggerUnit to CoreUnits 
-	 using the unit's properties mechanism. 
-   - CoreUnit : trigger parameters applied in the setProperty rather than in 
+   - Handling of trigger parameters moved from MuonTriggerUnit to CoreUnits
+	 using the unit's properties mechanism.
+   - CoreUnit : trigger parameters applied in the setProperty rather than in
    initialize to allow change during job execution
  - CoreUnit : remove unused ignoreM2 property
 
-!============================ L0MuonKernel v8r9 2009-11-27 ==================== 
+!============================ L0MuonKernel v8r9 2009-11-27 ====================
 ! 2009-11-24 - Julien Cogan
  - Modification of the error field format in the PU L0Buffer specification.
-   Update ProcDataErrors.cpp and ProcDataCnv.cpp accordingly 
+   Update ProcDataErrors.cpp and ProcDataCnv.cpp accordingly
 
-!============================ L0MuonKernel v8r8 2009-10-16 ==================== 
+!============================ L0MuonKernel v8r8 2009-10-16 ====================
 ! 2009-10-13 - Julien Cogan
  - Change to decode bank v3
  - Add new histo name (for virtual hit maps)
 
-!============================ L0MuonKernel v8r7 2009-07-13 ==================== 
+!============================ L0MuonKernel v8r7 2009-07-13 ====================
 ! 2009-07-10 - Julien Cogan
  - Fix bug in emulator without M1
 
-!============================ L0MuonKernel v8r6p1 2009-06-29 ================== 
+!============================ L0MuonKernel v8r6p1 2009-06-29 ==================
 ! 2009-06-17 - Julien Cogan
  - ErrorHandler : fix warnings for Windows
 
-!============================ L0MuonKernel v8r6 2009-06-16 ==================== 
+!============================ L0MuonKernel v8r6 2009-06-16 ====================
 ! 2009-05-28 - Julien Cogan
- - MonUtilities : function depending on the quarter 
-	to offset coordinate for 2D histos 
+ - MonUtilities : function depending on the quarter
+	to offset coordinate for 2D histos
 
-!============================ L0MuonKernel v8r5 2009-01-08 ==================== 
+!============================ L0MuonKernel v8r5 2009-01-08 ====================
 ! 2008-12-18 - Julien Cogan
  - Implement new L0Buffer frame for the CU/SU L0buffer converter
 
@@ -102,32 +107,32 @@
 ! 2008-11-19 - Julien Cogan
  - Implement compression algorithm for L0MuonProcData Bank
 
-!============================ L0MuonKernel v8r4 2008-11-17 ==================== 
+!============================ L0MuonKernel v8r4 2008-11-17 ====================
 ! 2008-11-04 - Julien Cogan
  - Add documentation for doxygen
  - Remove pt encoding parameters : they are fixed by the version number
 
-!============================ L0MuonKernel v8r3 2008-09-30 ==================== 
+!============================ L0MuonKernel v8r3 2008-09-30 ====================
 ! 2008-09-21 - Julien Cogan
  - MonUtilities : add new names for histograms
 
 ! 2008-09-15 - Julien Cogan
  - MonUtilities : add new names for histograms
  - ProcDataCnv : bug fix in the decoding of PU errors
- - CtrlCanCnv : bug fix in the decoding of bank header 
+ - CtrlCanCnv : bug fix in the decoding of bank header
 
-!============================ L0MuonKernel v8r2 2008-08-04 =================== 
+!============================ L0MuonKernel v8r2 2008-08-04 ===================
 ! 2008-09-04 - Julien Cogan
- - Decoding of the L0Muon compressed mode + transparent mode v2 
+ - Decoding of the L0Muon compressed mode + transparent mode v2
 
 ! 2008-08-01 - Julien Cogan
  - Fix compilation warning
 
 ! 2008-07-31 - Julien Cogan
- - Bug fix in the handling of status error 
+ - Bug fix in the handling of status error
  - Minor bug fix in the handling of decoding error counter
 
-!============================ L0MuonKernel v8r1 2008-07-27 =================== 
+!============================ L0MuonKernel v8r1 2008-07-27 ===================
 ! 2008-07-25 - Julien Cogan
  - Add new functions in MonUtilities
 
@@ -135,10 +140,10 @@
  - Add MonUtilities : contains functions usefull for the monitoring
 
 ! 2008-07-23 - Julien Cogan
- - Bug fix : correct a bug introduced in the previous release affecting 
-   the decoding of the DC06 banks  
+ - Bug fix : correct a bug introduced in the previous release affecting
+   the decoding of the DC06 banks
 
-!============================ L0MuonKernel v8r0 2008-07-16 ============== 
+!============================ L0MuonKernel v8r0 2008-07-16 ==============
 ! 2008-07-16 - Julien Cogan
  - Bug fixes
  - Encoding of L0MuonProcData part 1 without compression
@@ -153,7 +158,7 @@
 
 ! 2008-07-11 - Julien Cogan
  - Improve the error managment when decoding the bank v2
- - Fix some compilation warnings	
+ - Fix some compilation warnings
 
 ! 2008-06-30 - Marco Cattaneo
  - Add a cmt/version.cmt file to make cmt happy when running without
@@ -165,19 +170,19 @@
 
 ! 2008-06-05 - Julien Cogan
  - Decoding of the bank version 2 without Zero suppression
- - Possibility to run witout M1 or M2 
+ - Possibility to run witout M1 or M2
 
-!============================ L0MuonKernel v7r4 2008-04-11 ============== 
+!============================ L0MuonKernel v7r4 2008-04-11 ==============
 ! 2008-04-11 - Julien Cogan
  - Upgrade in the decoding of the transparent mode 'a la RICH'
 ! 2008-02-21 - Julien Cogan
  - Fix bug in decoding PU muon candidate charge in ProcRawCnv
 
-!============================ L0MuonKernel v7r3 2008-02-19 ============== 
+!============================ L0MuonKernel v7r3 2008-02-19 ==============
 ! 2008-02-08 - Julien Cogan
  - Upgrade decoding of transparent mode with ProcRawCnv and CtrlRawCnv
    o decodes the format used at the pit during the commissioning
-   o allow error handling 
+   o allow error handling
 
 !============================ L0MuonKernel v7r2 2007-11-30 ===============
 ! 2007-11-30
@@ -189,13 +194,13 @@
 ! 2007-09-03 - Julien Cogan
  - Introduction of converter to write raw bank
 !============================ L0MuonKernel v7r0 2007-08-27 ===============
-! 2007-08-27 - Julien Cogan 
+! 2007-08-27 - Julien Cogan
  - Major changes in the algorithm to match the hardware
    o modify the extrapolation table
    o modify the direction to start to look for hits
-   o modify addM3 encoding 
-   o modify offM1 encoding (given in M1 granularity) 
- - Major changes in the architecture to write the Raw and L0 buffers 
+   o modify addM3 encoding
+   o modify offM1 encoding (given in M1 granularity)
+ - Major changes in the architecture to write the Raw and L0 buffers
    (units replaced by converters)
    o L0Buffer have been tested against the hardware.
 
@@ -204,9 +209,9 @@
  - apply_pattern install_more_includes
 
 ! 2006-08-22 - Julien Cogan
- - Add a new unit: OLDumpUnit to write out the OL link content to feed the 
+ - Add a new unit: OLDumpUnit to write out the OL link content to feed the
    PU injection buffer (test mode)
- - CoreUnit: add 2 new methods to allow partial replay of the events 
+ - CoreUnit: add 2 new methods to allow partial replay of the events
    (search of candidates with new FOI)
  - MuonCandidate: add copy constructor
 
@@ -229,7 +234,7 @@
    o implement inheritance relations:
      L0BufferCtrlUnit, L0BufferSlaveUnit, L0BufferBCSUnit, LOBufferProcUnit
      now inherites from L0BufferUnit
-   o implement the execute method for the L0BufferXXXUnit to build their 
+   o implement the execute method for the L0BufferXXXUnit to build their
      L0Buffers
 !========================= L0MuonKernel v5r0 2006-01-19 ====================
 ! 2006-01-18 - Julien Cogan
@@ -238,10 +243,10 @@
 !========================= L0MuonKernel v4r0 2005-12-19 ====================
 ! 2005-12-18 - Julien Cogan
  - Decouple the building of the MuonKernel.xml (done once) and the reading
-   (done at running time); remove dependance in L0mConf; the building 
-   functionnality has been externalized in a new package: L0MuonKernelBuild  
+   (done at running time); remove dependance in L0mConf; the building
+   functionnality has been externalized in a new package: L0MuonKernelBuild
 ! 2005-12-15 - Julien Cogan
- - Candidates are put in registers to be passed between units 
+ - Candidates are put in registers to be passed between units
  - Add the possibility to write L0 & RAW buffers
  - Simplify the candidate search inside towers
 
@@ -250,7 +255,7 @@
  - Fix some doxygen warnings
 
 ! 2005-04-14 A. Tsaregorodtsev
- - Fix in the L0mProcuUnit::l0bufferTileList(...) to always define all the 
+ - Fix in the L0mProcuUnit::l0bufferTileList(...) to always define all the
    elements in the returned list of L0MTile's.
 
 !========================== L0MuonKernel v3r0 2005-04-05 ===================
@@ -265,13 +270,13 @@
 ! 2005-01-03 - P. Koppenburg
  - Deleted tags v2r4 v2r5 and v2r6
  - cmt/requirements
-   . increment to version v2r4. 
- 
+   . increment to version v2r4.
+
 ! 2004-12-21 - Luisanna Tocco
  - Comments for doxygen documentation
  - Cleaning for compilation warnings (remaining warnings concerns L0mConf)
  - Some obsolete methods eliminated in CablingUnit
- - Dependency from Event/L0Muon.h eliminated 
+ - Dependency from Event/L0Muon.h eliminated
 
 !======================= L0MuonKernel v2r3 2004-12-01 ========================
 ! 2004-12-01 - Luisanna Tocco
@@ -289,7 +294,7 @@
 ! 2004-03-24 - Luisanna Tocco
  - bug fixed in data flow management (XBan, YCorner, YBand):
 	 Modified files: L0mProcUnit, FormattingUnit, CablingUnit, TileRegister
- - Added functions for analysis 
+ - Added functions for analysis
 
 !======================= L0MuonKernel v1r1 2004-03-24 ========================
 ! 2004-03-24 - Luisanna Tocco

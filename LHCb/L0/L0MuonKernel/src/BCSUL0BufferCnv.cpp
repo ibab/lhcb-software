@@ -24,8 +24,8 @@ L0Muon::BCSUL0BufferCnv::BCSUL0BufferCnv(LHCb::MuonTileID id):L0BufferCnv(id){
     L0Muon::Register* reg = rfactory->searchRegister(buf);
     m_candRegHandlerPU[ipu] = CandRegisterHandler(reg) ;
   }
-  
-};
+
+}
 
 /**
    Destructor
@@ -39,12 +39,12 @@ void L0Muon::BCSUL0BufferCnv::write(int ievt)
   if (!m_valid) return;
 
   unsigned int iword;
-  
+
   iword = 0x8000+(ievt&0xFFF);
   m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // L0EventNumber (l.0)
   iword = (ievt&0xFFF);
   m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // L0_B_Id (l.1)
-  
+
   int pt1 = m_candRegHandler.getCandPT(0) | ( (m_candRegHandler.getCandCharge(0)<<7) & 0x80) ;
   int pt2 = m_candRegHandler.getCandPT(1) | ( (m_candRegHandler.getCandCharge(1)<<7) & 0x80) ;
   iword  = ( (pt1<<8) & 0xFF00) | ( pt2 & 0x00FF);
@@ -58,7 +58,7 @@ void L0Muon::BCSUL0BufferCnv::write(int ievt)
     m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // addresses  (l.3 & l.4)
   }
 
-  int bid    =  (ievt&0xF); 
+  int bid    =  (ievt&0xF);
   int status = m_candRegHandler.getStatus();
   int pu1    = m_candRegHandler.getCandPU(0);
   int pu2    = m_candRegHandler.getCandPU(1);
@@ -80,7 +80,7 @@ void L0Muon::BCSUL0BufferCnv::write(int ievt)
         m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // addresses  (l.3 & l.4)
       }
 
-      int bid =  (ievt&0xF); 
+      int bid =  (ievt&0xF);
       int status = m_candRegHandlerPU[ipu].getStatus();
       iword = (  ((status<<4)&0xF0) + bid)  & 0x00FF;
       m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Status and bid (l.5)
@@ -88,9 +88,9 @@ void L0Muon::BCSUL0BufferCnv::write(int ievt)
       for (int i=0; i<4; ++i) m_file<<std::setw(4)<<std::setfill('0')<<0<<" \n"; // empty
     }
   }
-  
+
   m_file<<"----\n";
-  
+
 }
 
 

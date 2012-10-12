@@ -26,8 +26,8 @@ L0Muon::CUL0BufferCnv::CUL0BufferCnv(LHCb::MuonTileID id):L0BufferCnv(id){
     m_candRegHandlerBCSU[iboard] = CandRegisterHandler(reg) ;
   }
 
-  
-};
+
+}
 
 /**
    Destructor
@@ -40,10 +40,10 @@ void L0Muon::CUL0BufferCnv::write(int ievt)
 {
   if (!m_valid) return;
 
-  int bid =  (ievt&0xF); 
+  int bid =  (ievt&0xF);
 
   unsigned int iword;
-  
+
   iword = 0x8000+(ievt&0xFFF);
   m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // L0EventNumber (l.0)
   iword = (ievt&0xFFF);
@@ -54,13 +54,13 @@ void L0Muon::CUL0BufferCnv::write(int ievt)
     iword =( ( m_candRegHandler.getCandPT(   icand)    ) & 0x007F );
     iword|=( ( m_candRegHandler.getCandColM3(icand)<< 8) & 0x1F00 );
     iword|=( ( m_candRegHandler.getCandRowM3(icand)<<13) & 0x6000 );
-    m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; 
+    m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n";
   }
   m_file<<std::setw(4)<<std::setfill('0')<<bid<<" \n"; // bid
 
   iword = 0;
   m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Empty word
-  
+
   for (int i=0; i<3; ++i) m_file<<std::setw(4)<<std::setfill('0')<<0<<" \n"; // (l.2, l.3 & l.4) serial link errors
 
   // Candidates from processing boards
@@ -70,7 +70,7 @@ void L0Muon::CUL0BufferCnv::write(int ievt)
         iword =( ( m_candRegHandlerBCSU[iboard].getCandPT(   icand)    ) & 0x007F );
         iword|=( ( m_candRegHandlerBCSU[iboard].getCandColM3(icand)<< 8) & 0x1F00 );
         iword|=( ( m_candRegHandlerBCSU[iboard].getCandRowM3(icand)<<13) & 0x6000 );
-        m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Candidate  
+        m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Candidate
       }
       iword = (  (((m_mid.quarter())<<12)&0x3000)+ bid)  & 0x300F;
       m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // bid

@@ -1,5 +1,5 @@
 // $Id: L0BufferCnvContainer.h,v 1.2 2008-11-07 16:23:38 jucogan Exp $
-#ifndef L0MUONKERNEL_L0BUFFERCNVCONTAINER_H 
+#ifndef L0MUONKERNEL_L0BUFFERCNVCONTAINER_H
 #define L0MUONKERNEL_L0BUFFERCNVCONTAINER_H 1
 
 // Include files
@@ -11,8 +11,8 @@
 namespace L0Muon {
 
   /** @class L0BufferCnvContainer L0BufferCnvContainer.h L0MuonKernel/L0BufferCnvContainer.h
-     
-  Class to hold a set of pointers to L0BufferCnv. 
+
+  Class to hold a set of pointers to L0BufferCnv.
 
   Used to binds the various L0Buffer converters in python (see L0MuonPyTools/L0MuonKernelWrapper).
 
@@ -21,15 +21,15 @@ namespace L0Muon {
   */
   class L0BufferCnvContainer {
 
-  public: 
+  public:
     /// Standard constructor
-    L0BufferCnvContainer( ); 
-    L0BufferCnvContainer(std::vector<LHCb::MuonTileID> lpus ); 
+    L0BufferCnvContainer( );
+    L0BufferCnvContainer(std::vector<LHCb::MuonTileID> lpus );
 
     virtual ~L0BufferCnvContainer( ); ///< Destructor
 
     void open(std::string path);
-    void close();  
+    void close();
     void write(int ievt);
 
   protected:
@@ -39,5 +39,5 @@ namespace L0Muon {
 
   };
 
-}; // namespace L0Muon
+} // namespace L0Muon
 #endif // L0MUONKERNEL_L0BUFFERCNVCONTAINER_H

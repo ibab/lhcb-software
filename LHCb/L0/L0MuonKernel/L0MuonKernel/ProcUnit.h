@@ -19,9 +19,9 @@ namespace L0Muon {
   It contains :
   - 1 FormattingUnit (performs data exchange between Processing Units)
   - 1 CoreUnit (candidate search)
-  - 1 FormattingOutUnit (formats the data for output) 
-  
-  This unit is essentialy a container. It does not have any input nor output registers.
+  - 1 FormattingOutUnit (formats the data for output)
+
+  This unit is essentially a container. It does not have any input nor output registers.
   It triggers the initialize, execute, ... methods of its daughters.
 
   @author  Luisanna Tocco, Julien Cogan
@@ -42,16 +42,16 @@ namespace L0Muon {
     ~ProcUnit();
 
     /// Return the MuonTileID of the PU
-    LHCb::MuonTileID puId(){return m_mid;} 
- 
+    LHCb::MuonTileID puId(){return m_mid;}
+
     /// Give a static type name to the unit
     std::string type() {
       return "ProcUnit";
-    }  
+    }
 
   private:
   };
 
-};  // namespace L0Muon
+}  // namespace L0Muon
 
-#endif      // L0MUONKERNEL_PROCUNIT_H  
+#endif      // L0MUONKERNEL_PROCUNIT_H
