@@ -32,7 +32,10 @@ using namespace LHCb;
 //=============================================================================
 MuonDigitToRawBuffer::MuonDigitToRawBuffer( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_muonDet(NULL),
+    m_TotL1Board(0),
+    m_M1Tell1(0)
 {
   declareProperty("VType" , m_vtype=2) ;
 }

@@ -4,6 +4,9 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed Eclipse warnings.
+
 ! 2012-10-11 - Marco Clemencic
  - Fixed warning: extra ';' [-pedantic].
 
