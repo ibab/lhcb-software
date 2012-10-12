@@ -23,7 +23,8 @@ BdlTool::BdlTool( const std::string& type,
                   const std::string& name,
                   const IInterface* parent)
   : GaudiTool( type, name, parent ),
-    m_BdlTrack(0.0), m_zHalfBdlTrack(0.0), m_magFieldSvc(0)
+    m_BdlTrack(0.0), m_zHalfBdlTrack(0.0), m_magFieldSvc(0),
+    m_lutBdl(0), m_lutZHalfBdl(0)
 {
   declareInterface<IBdlTool>(this);
 
@@ -31,7 +32,7 @@ BdlTool::BdlTool( const std::string& type,
 
 }
 //=========================================================================
-//  
+//
 //=========================================================================
 StatusCode BdlTool::initialize() {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
@@ -40,7 +41,7 @@ StatusCode BdlTool::initialize() {
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   // retrieve pointer to magnetic field service
-  m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true ); 
+  m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
 
   info() << "Start generation of L1 LUT tables" << endmsg;
   // prepare table with Bdl integrations
@@ -51,7 +52,7 @@ StatusCode BdlTool::initialize() {
   //  zVeloEnd   - z of the track at which slopeY is given
   //
   //                     slopeY zOrigin                 zVeloEnd
-  int nBinVar[3]      = {   30,   10,                    10    }; 
+  int nBinVar[3]      = {   30,   10,                    10    };
   double  leftVar[3]  = { -0.3, -250.*Gaudi::Units::mm,   0.*Gaudi::Units::mm};
   double  rightVar[3] = {  0.3,  250.*Gaudi::Units::mm, 800.*Gaudi::Units::mm};
   m_lutBdl      = new LutForBdlFunction(nVarLut, nBinVar, leftVar, rightVar);
@@ -85,7 +86,7 @@ BdlTool::~BdlTool() {}
 //=========================================================================
 //  Finalization
 //=========================================================================
-StatusCode BdlTool::finalize() {  
+StatusCode BdlTool::finalize() {
   delete m_lutBdl;
   delete m_lutZHalfBdl;
   return GaudiTool::finalize();
@@ -111,7 +112,7 @@ double BdlTool::zBdlMiddle(double ySlopeVelo, double zOrigin, double zVelo) {
 
 
 //****************************************************************************
-void BdlTool::f_bdl( double slopeY, double zOrigin, 
+void BdlTool::f_bdl( double slopeY, double zOrigin,
                      double zStart, double zStop){
 
     m_BdlTrack=0.0;
@@ -124,7 +125,7 @@ void BdlTool::f_bdl( double slopeY, double zOrigin,
 
    // vectors to calculate z of half Bdl
     m_bdlTmp.clear();
-    m_zTmp.clear(); 
+    m_zTmp.clear();
 
     // prepare m_zBdlHalf;
     Gaudi::XYZPoint  aPoint(0.,0.,0.);
@@ -142,7 +143,7 @@ void BdlTool::f_bdl( double slopeY, double zOrigin,
     double bdl = 0.;
 
     while( z<zStop ) {
-      
+
       aPoint.SetY( y );
       aPoint.SetZ( z );
 
@@ -165,7 +166,7 @@ void BdlTool::f_bdl( double slopeY, double zOrigin,
         zHalfBdl = m_zTmp[i-1]+dz*zrat;
         break;
       }
-    } 
+    }
 
     m_BdlTrack = Bdl;
     m_zHalfBdlTrack = zHalfBdl;

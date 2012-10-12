@@ -4,6 +4,9 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed Eclipse warnings.
+
 ! 2012-10-11 - Marco Clemencic
  - Fixed warning: extra ';' [-pedantic].
 
@@ -44,7 +47,7 @@
 ! 2010-04-13 - Wouter Hulsbergen
  - Fix definition of polarity and scaleFactor in MagneticFielsSvc
    interface. These calls should be depricated.
- - Make sure that if fieldmap is specified by property, it is still 
+ - Make sure that if fieldmap is specified by property, it is still
    read when using ConDB.
 
 !====================== Magnet v5r7 2010-02-12 ===============================
@@ -55,8 +58,8 @@
 
 !====================== Magnet v5r6 2009-12-11 ===============================
 ! 2009-12-10 - Marco Cattaneo
- - Add implementation of new ILHCbMagneticFieldSvc::polarity() member to 
-   MagneticFieldSvc and MultipleMagneticFieldSvc. Note that in latter, the 
+ - Add implementation of new ILHCbMagneticFieldSvc::polarity() member to
+   MagneticFieldSvc and MultipleMagneticFieldSvc. Note that in latter, the
    methods returns the polarity only if all the fields have the same polarity,
    otherwise it throws an exception
 
@@ -73,7 +76,7 @@
  - Remove obsolete file Magnet_dll.cpp
 
 ! 2009-09-01 - Wouter Hulsbergen
- - Magnetic field grid is now stored in class DetDesc/MagneticFieldGrid. 
+ - Magnetic field grid is now stored in class DetDesc/MagneticFieldGrid.
    New utility 'MagneticFieldGridReader' reads the field from a file (thereby
    replacing the IMagFieldTools)
 
@@ -84,7 +87,7 @@
 
 ! 2009-06-10 - Magnus Lieng
  - Added MultipleMagneticFieldSvc. This service takes other magnetic field
-   services as input and calculated the vector sum of the fields when 
+   services as input and calculated the vector sum of the fields when
    fieldVector() is called. To be used when MBXW fields are needed.
 
 !====================== Magnet v5r2 2009-02-18 ===============================
@@ -122,7 +125,7 @@
 ! 2008-07-31 - Marco Cattaneo
  - Fix uninitialised pointer to Real field map tools
  - Clean up dependencies in requirements
- - Remove unneccessary TestMagnet.exe. Test can be run with 
+ - Remove unneccessary TestMagnet.exe. Test can be run with
    "Gaudi.exe ../options/job.opts" or  "gaudirun.py ../options/job.opts"
  - Improve messages when scaling factor changes
 
@@ -138,7 +141,7 @@
      fieldmap type and polarity. If polarity changes during the job, a second
      tool is instantiated, and service dispatches fieldVector calls to the
      appropriate tool.
-   . If scaling factor changes during the job, cached map in the tool is 
+   . If scaling factor changes during the job, cached map in the tool is
      rescaled. Scaling factor can either be set by job options or calculated
      from condDB data as follows:
      scaleFactor = Coeff[0] + Coeff[1] * (Measured current)/(Nominal Current)
@@ -162,14 +165,14 @@
  - Move registration of condition to *before* parsing of field maps, so that
    scaling factor is correctly intialised from CondDB. NB, it's not enough to
    apply scale factor in file parsing, any change in conditions after parsing
-   is not taken into account! 
+   is not taken into account!
 
 ! 2008-07-16 - Adlene Hicheur
- - Add possibility not to read conditions 
+ - Add possibility not to read conditions
 ! 2008-07-14 - Adlene Hicheur
- - Clean up warning 
+ - Clean up warning
  - Fix sources of windows compilation errors
- - Some form editing + return scale factor on demand 
+ - Some form editing + return scale factor on demand
 ! 2008-07-07 - Adlene Hicheur
  - Remove warnings sources
 ! 2008-07-03 - Adlene Hicheur
@@ -237,7 +240,7 @@
  - Adapt requirements to run test application with cmt v1r18p*
  - Use DECLARE_xxx_FACTORY macro everywhere
  - Use units from GaudiKernel
- - Remove default name for field map file: 
+ - Remove default name for field map file:
    MagneticFieldSvc.FieldMapFile option must be provided
 
 !====================== Magnet v3r3 2006-08-21 ===============================
@@ -247,7 +250,7 @@
 
 !====================== Magnet v3r2 2006-07-20 ===============================
 ! 2006-07-20 - Marco Cattaneo
- - Add possibilities to have a zero field, a constant non-zero field, or a 
+ - Add possibilities to have a zero field, a constant non-zero field, or a
    scale factor applied to the field map. Job options are:
 
 // Set zero field - default is false
@@ -263,7 +266,7 @@
 ! 2006-07-20 - Marco Cattaneo
  - Fix requirements so that debug build does not require existence of non-debug
    libraries
- - Fix syntax error in job options of test program, for new options parser 
+ - Fix syntax error in job options of test program, for new options parser
 
 !====================== Magnet v3r1 2006-01-20 ===============================
 ! 2006-01-20 - Marco Cattaneo
@@ -336,12 +339,12 @@
 !======================== Magnet v1r1 update 2002-05-31 ======================
 ! 2002-05-31 - Edgar De Oliveira
  - Fix a Bug pointed by Rutger Hierck: When position y was set to zero
-   the service was returning zero for By component of the field, what is not 
+   the service was returning zero for By component of the field, what is not
 	 true.
 
  - Some float were changed to double and the internal function fieldGrid
-   now returns void instead of a StatusCode that was not tested in any 
-   circunstance. 
+   now returns void instead of a StatusCode that was not tested in any
+   circunstance.
 
 !======================== Magnet v1r0 release 2002-05-23 =====================
 ! 2002-05-23 - Olivier Callot
@@ -352,7 +355,7 @@
 ! 2002-05-21 - Edgar De Oliveira
  - New version of MagneticFieldSvc (originally in SicbCnv).
    This version does not make use anymore of SICB utilities.
-   The fortran interpolation of the grid has been replaced by a C++ 
+   The fortran interpolation of the grid has been replaced by a C++
    translation of the code.
    This version has as property the name of the field map file
    (property "FieldMapFile"). The default name of the field map will be

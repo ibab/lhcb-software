@@ -1,8 +1,8 @@
-// Include files 
+// Include files
 // -------------
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
@@ -32,14 +32,14 @@ BIntegrator::BIntegrator( const std::string& type,
 {
   declareInterface<IBIntegrator>(this);
 
-  declareProperty( "NSteps", m_nSteps = 101 ); 
+  declareProperty( "NSteps", m_nSteps = 101 );
   declareProperty( "FirstZ", m_firstZ =  0.1*Gaudi::Units::mm );
   declareProperty( "LastZ",  m_lastZ = 9400.*Gaudi::Units::mm );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-BIntegrator::~BIntegrator() {}; 
+BIntegrator::~BIntegrator() {}
 
 //=============================================================================
 // Initialization
@@ -51,22 +51,22 @@ StatusCode BIntegrator::initialize()
 
   // Retrieve a pointer to the magnetic field service
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
- 
+
   sc = calculateBdlCenter();
   info() << "Center of the field is at the z positions "
          << m_centerZ << endmsg;
-  
+
   return sc;
 }
 
 //=============================================================================
 // Get the z of center and the total Bdl
 //=============================================================================
-StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint, 
+StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint,
                                                const Gaudi::XYZPoint& endPoint,
                                                const double tX,
-                                               const double tY, 
-                                               double& zCenter, 
+                                               const double tY,
+                                               double& zCenter,
                                                Gaudi::XYZVector& Bdl ) const
 {
   // Point where field should be calculated
@@ -78,7 +78,7 @@ StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint,
   double zCen = m_centerZ.x();  // the Bdlx is the important component
   double xCen = endPoint.x() + tX*(zCen-endPoint.z());
   double yCen = endPoint.y() + tY*(zCen-endPoint.z());
-  if (xCen/zCen>0.3) { 
+  if (xCen/zCen>0.3) {
     xCen = 0.3*zCen;
   }
   else if (xCen/zCen< -0.3) {
@@ -87,7 +87,7 @@ StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint,
   if( yCen/zCen>0.25) {
     yCen = 0.25*zCen;
   }
-  else if (yCen/zCen< -0.25){ 
+  else if (yCen/zCen< -0.25){
     yCen = -0.25*zCen;
   }
 
@@ -111,11 +111,11 @@ StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint,
     sc = m_pIMF->fieldVector(point,bField);
     if( !sc.isSuccess() ) warning() << "field vector not calculated" << endmsg;
 
-    //Cacluate the Bdl 
+    //Cacluate the Bdl
     Bdl.SetX( Bdl.x() + dY* bField.z()- dZ*bField.y() );
     Bdl.SetY( Bdl.y() + dZ*bField.x() -dX*bField.z());
     Bdl.SetZ( Bdl.z() + dX*bField.y() -dY*bField.x());
-    
+
   } // iStep
 
   /// Now do the steps again but find the half of the magnetic field....
@@ -123,9 +123,9 @@ StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint,
   double Bdlx_half =0.5*Bdl.x();
   double Bdly_half =0.5*Bdl.y();
   double Bdlz_half =0.5*Bdl.z();
-  
+
   Bdl.SetXYZ( 0., 0., 0. );
-  
+
   double min_Bdlx =10000.;
   double min_Bdly =10000.;
   double min_Bdlz =10000.;
@@ -149,7 +149,7 @@ StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint,
     sc = m_pIMF->fieldVector(point,bField);
     if( !sc.isSuccess() ) warning() << "field vector not calculated" << endmsg;
 
-    //Cacluate the Bdl 
+    //Cacluate the Bdl
     Bdl.SetX( Bdl.x() + dY* bField.z()- dZ*bField.y() );
     Bdl.SetY( Bdl.y() + dZ*bField.x() -dX*bField.z());
     Bdl.SetZ( Bdl.z() + dX*bField.y() -dY*bField.x());
@@ -176,7 +176,7 @@ StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint,
 }
 
 //=============================================================================
-// 
+//
 //=============================================================================
 StatusCode BIntegrator::calculateBdlCenter()
 {
@@ -197,7 +197,7 @@ StatusCode BIntegrator::calculateBdlCenter()
     sc = m_pIMF -> fieldVector( position,bField );
     if( !sc.isSuccess() ) warning() << "field vector not calculated" << endmsg;
 
-    //Calculate the Bdl 
+    //Calculate the Bdl
     BdlTotal.SetX( BdlTotal.x() - stepSize*bField.y() );
     BdlTotal.SetY( BdlTotal.y() + stepSize*bField.x() );
     BdlTotal.SetZ( BdlTotal.z() + 0.);
@@ -206,9 +206,9 @@ StatusCode BIntegrator::calculateBdlCenter()
   double Bdlx_half = 0.5*BdlTotal.x();
   double Bdly_half = 0.5*BdlTotal.y();
   double Bdlz_half = 0.5*BdlTotal.z();
-  
+
   BdlTotal.SetXYZ( 0., 0., 0. );
-  
+
   double min_Bdlx = 10000.;
   double min_Bdly = 10000.;
   double min_Bdlz = 10000.;
@@ -219,7 +219,7 @@ StatusCode BIntegrator::calculateBdlCenter()
     position.SetXYZ( 0.1, 0.1, z );
     sc = m_pIMF -> fieldVector( position,bField );
     if( !sc.isSuccess() ) warning() << "field vector not calculated" << endmsg;
-    //Cacluate the Bdl 
+    //Cacluate the Bdl
     BdlTotal.SetX( BdlTotal.x() - stepSize*bField.y() );
     BdlTotal.SetY( BdlTotal.y() + stepSize*bField.x() );
     BdlTotal.SetZ( BdlTotal.z() + 0.);
@@ -236,7 +236,7 @@ StatusCode BIntegrator::calculateBdlCenter()
       m_centerZ.SetZ(z);
     }
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
