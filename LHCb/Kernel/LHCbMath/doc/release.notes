@@ -6,86 +6,91 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed warnings:
+   - comma at end of enumerator list [-pedantic]
+   - extra ‘;’ [-pedantic]
+
 !========================= LHCbMath v3r35 2012-09-28 =========================
 ! 2012-09-05 - Vanya Belyaev
  - fix the bug in Bugg23L function
-   many thanks to Liming Zhang! 
- - add Gounaris-Sakurai function 
+   many thanks to Liming Zhang!
+ - add Gounaris-Sakurai function
 
 ! 2012-08-23 - Vanya Belyaev
- - access amplitudes 
+ - access amplitudes
 
 ! 2012-08-23 - Vanya Belyaev
- - add three-body phase space 
+ - add three-body phase space
 
 !========================= LHCbMath v3r34 2012-07-24 =========================
 ! 2012-07-21 - Vanya Belyaev
- - improve Bernstein & positive polynomials 
+ - improve Bernstein & positive polynomials
 
 ! 2012-07-18 - Vanya Belyaev
- - add Bernstein & positive polynomials 
+ - add Bernstein & positive polynomials
 
 !========================= LHCbMath v3r33 2012-06-25 =========================
 ! 2012-06-07 - Vanya Belyaev
- - minor fix 
+ - minor fix
 
 ! 2012-06-04 - Vanya Belyaev
  - fix ICC warnings/remarks
-   fix some Coverity reports 
+   fix some Coverity reports
 
 ! 2012-05-28 - Vanya Belyaev
- - add hfit 
+ - add hfit
 
 ! 2012-05-28 - Vanya Belyaev
  - add the code for hfits
 
 !========================= LHCbMath v3r32 2012-05-24 =========================
 ! 2012-05-24 - Vanya Belyaev
- - add Flatte's function properly corrected for phase space factors 
+ - add Flatte's function properly corrected for phase space factors
 
 ! 2012-05-23 - Vanya Belyaev
  - add Bugg' function for low mass S-wave dipion system ("sigma")
      *
-     *  The parameterization of sigma pole by 
+     *  The parameterization of sigma pole by
      *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
      *
      *
 !========================= LHCbMath v3r31 2012-05-19 =========================
 ! 2012-05-13 - Vanya Belyaev
- - add Needham function for J/psi 
+ - add Needham function for J/psi
 
 !========================= LHCbMath v3r30 2012-05-02 =========================
 ! 2012-04-29 - Vanya Belyaev
- - minor polishing 
+ - minor polishing
 
 ! 2012-04-28 - Vanya Belyaev
  - fix Bifurcated gaussian,
    extend the generic solution for Chi2-problem,
    add the dictionary
-   extend random-module with asymmetric gaussian 
+   extend random-module with asymmetric gaussian
 
 ! 2012-04-27 - Vanya Belyaev
  - add generic solved for N-dimensional Chi2-problem with R-constraint
 
 ! 2012-04-02 - Vanya Belyaev
- - add LASS shape for S-wave Kpi 
+ - add LASS shape for S-wave Kpi
 
 ! 2012-04-01 - Vanya Belyaev
  - add phase space function for 2-from-3 decays with orbital momentum
 
 !========================= LHCbMath v3r29 2012-01-31 =========================
 ! 2012-01-18 - Vanya Belyaev
- - minor fix in Gaudi::Math::trace function 
+ - minor fix in Gaudi::Math::trace function
 
 !========================= LHCbMath v3r28 2011-12-14 =========================
 ! 2011-12-04 - Vanya Belyaev
- - more functions 
+ - more functions
 
 ! 2011-12-03 - Vanya Belyaev
- - few minor fixes with ValueWithError 
+ - few minor fixes with ValueWithError
 
 ! 2011-12-01 - Vanya Belyaev
- - add few useful functions 
+ - add few useful functions
 
 !========================= LHCbMath v3r27p1 2011-11-07 =========================
 ! 2011-10-07 - Marco Cattaneo
