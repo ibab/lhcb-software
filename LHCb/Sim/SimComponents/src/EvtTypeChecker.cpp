@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -42,7 +42,7 @@ EvtTypeChecker::EvtTypeChecker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-EvtTypeChecker::~EvtTypeChecker() {}; 
+EvtTypeChecker::~EvtTypeChecker() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -56,7 +56,7 @@ StatusCode EvtTypeChecker::initialize() {
 
   // Retrieve the EvtTypeSvc here so that it is always done at initialization
   m_evtTypeSvc = svc<IEvtTypeSvc>( "EvtTypeSvc", true );
-  
+
   // Check that EvtType code has been set with appropriate value
   // if it will not be read from data
   if( !m_fromData ) {
@@ -65,7 +65,7 @@ StatusCode EvtTypeChecker::initialize() {
               << endmsg;
       return StatusCode::FAILURE;
     }
- 
+
     // Set the decay descriptor to pass to the MCDecayFinder if using evtCode
     if( (setDecayToFind( m_evtCode )).isFailure() ) {
       fatal() << " 'setDecayToFind' failed in 'initialize' "
@@ -82,14 +82,14 @@ StatusCode EvtTypeChecker::initialize() {
 // after checking it exists
 //=============================================================================
 StatusCode EvtTypeChecker::setDecayToFind( const int evtCode ) {
- 
+
   // Check if code exist
   if( !(m_evtTypeSvc->typeExists( evtCode )) ) {
     fatal() << "EvtCode " << evtCode << "is not known by the EvtTypeSvc"
             << endmsg;
     return StatusCode::FAILURE;
   }
-   
+
   // Retrieve tool and set decay descriptor
   m_mcFinder = tool<IMCDecayFinder>( "MCDecayFinder", this );
   std::string sdecay = m_evtTypeSvc->decayDescriptor( evtCode );
@@ -97,10 +97,10 @@ StatusCode EvtTypeChecker::setDecayToFind( const int evtCode ) {
     fatal() << "Unable to set decay for EvtCode " << evtCode << endmsg;
     return StatusCode::FAILURE;
   }
-   
+
   m_setDecay = true;
   m_evtCode  = evtCode;   // in case called when reading data
-     
+
   return StatusCode::SUCCESS;
 }
 
@@ -117,7 +117,7 @@ StatusCode EvtTypeChecker::execute() {
   // If reading event type from data retrieve event header and set decay
   // unless already done (do it only for first time)
   if( m_fromData && !m_setDecay ) {
-    LHCb::GenHeader* header = 
+    LHCb::GenHeader* header =
       get<LHCb::GenHeader>( evtSvc(), LHCb::GenHeaderLocation::Default );
     if( (setDecayToFind( header->evType() ).isFailure()) ) {
       fatal() << " 'setDecayToFind' failed in 'execute' "
@@ -125,11 +125,11 @@ StatusCode EvtTypeChecker::execute() {
       return StatusCode::FAILURE;
     }
   }
-       
+
   if( m_mcFinder->hasDecay() ) {
     m_nMCFound++;
-  } 
-  
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -143,7 +143,7 @@ StatusCode EvtTypeChecker::finalize() {
   std::string decayAnalyzed = "Unknown";
   if( 0 != m_mcFinder ) {
     decayAnalyzed =  m_mcFinder->decay();
-  }  
+  }
   double multiplicity = double(m_nMCFound)/double(m_nEvents);
   info() << endmsg
          << " EvtType analyzed = " << m_evtCode
@@ -160,7 +160,7 @@ StatusCode EvtTypeChecker::finalize() {
          << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-  
+
 }
 
 //=============================================================================

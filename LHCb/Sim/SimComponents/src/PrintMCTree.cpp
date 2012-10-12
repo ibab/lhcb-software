@@ -1,7 +1,7 @@
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // from PartProp
 #include "Kernel/IParticlePropertySvc.h"
@@ -39,7 +39,7 @@ PrintMCTree::PrintMCTree( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrintMCTree::~PrintMCTree() {}; 
+PrintMCTree::~PrintMCTree() {}
 
 //=============================================================================
 // Initialization
@@ -54,17 +54,17 @@ StatusCode PrintMCTree::initialize() {
     fatal() << "You need to give a list of particles" << endmsg;
     return StatusCode::FAILURE ;
   }
-  
+
   m_printMCTree = tool<IPrintMCDecayTreeTool>( "PrintMCDecayTreeTool", this );
 
-  const LHCb::IParticlePropertySvc *ppSvc = 
+  const LHCb::IParticlePropertySvc *ppSvc =
     svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
 
   std::vector<std::string>::iterator PN;
   for (PN=m_particleNames.begin() ; PN!=m_particleNames.end() ; ++PN ){
     const LHCb::ParticleProperty *pp = ppSvc->find(*PN);
     if (!pp) {
-      fatal() << " Unable to retrieve particle property for " 
+      fatal() << " Unable to retrieve particle property for "
               << *PN << endmsg;
       return StatusCode::FAILURE;
     }
@@ -103,13 +103,13 @@ StatusCode PrintMCTree::execute() {
         m_printMCTree->printTree( (*MCP), m_depth ) ;
         printed = true ;
         break ;
-      }  
+      }
     }
   }
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     if (!printed) debug() << "No MC particles found to print in a tree" << endmsg;
-  
+
   setFilterPassed(printed);
 
   return StatusCode::SUCCESS;
