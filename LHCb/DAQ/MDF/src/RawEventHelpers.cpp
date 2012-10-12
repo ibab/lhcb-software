@@ -77,15 +77,15 @@ unsigned int LHCb::hash32Checksum(const void* ptr, size_t len) {
     hash += (hash << 10);
     hash ^= (hash >> 6);
   }
-  hash += (hash << 3); 
+  hash += (hash << 3);
   hash ^= (hash >> 11);
   hash += (hash << 15);
   return hash;
 }
 
 /* ========================================================================= */
-unsigned int LHCb::adler32Checksum(unsigned int adler, 
-				   const char* buf, 
+unsigned int LHCb::adler32Checksum(unsigned int adler,
+				   const char* buf,
 				   size_t len)
 {
 #define DO1(buf,i)  {s1 +=(unsigned char)buf[i]; s2 += s1;}
@@ -100,9 +100,9 @@ unsigned int LHCb::adler32Checksum(unsigned int adler,
   unsigned int s1 = adler & 0xffff;
   unsigned int s2 = (adler >> 16) & 0xffff;
   int k;
-  
+
   if (buf == NULL) return 1;
-  
+
   while (len > 0) {
     k = len < NMAX ? (int)len : NMAX;
     len -= k;
@@ -153,12 +153,12 @@ public:
 };
 
 // Only works for word aligned data and assumes that the data is an exact number of words
-// Copyright  1993 Richard Black. All rights are reserved. 
-static unsigned int crc32Checksum(const char *data, size_t len)    {  
+// Copyright  1993 Richard Black. All rights are reserved.
+static unsigned int crc32Checksum(const char *data, size_t len)    {
   static CRC32Table table;
   const unsigned int *crctab = table.data();
   const unsigned int *p = (const unsigned int *)data;
-  const unsigned int *e = (const unsigned int *)(data + len);   
+  const unsigned int *e = (const unsigned int *)(data + len);
   if ( len < 4 || (size_t(data)%sizeof(unsigned int)) != 0 ) return ~0x0;
   unsigned int result = ~*p++;
   while( p < e )  {
@@ -225,7 +225,7 @@ static unsigned short crc16Checksum (const char *data, size_t len) {
 }
 
 static char crc8Checksum(const char *data, int len) {
-  static unsigned char crc8_table[] = 
+  static unsigned char crc8_table[] =
   { 0, 94,188,226, 97, 63,221,131,194,156,126, 32,163,253, 31, 65,
     157,195, 33,127,252,162, 64, 30, 95,  1,227,189, 62, 96,130,220,
     35,125,159,193, 66, 28,254,160,225,191, 93,  3,128,222, 60, 98,
@@ -283,12 +283,12 @@ unsigned int LHCb::genChecksum(int flag,const void* ptr, size_t len)  {
   ....
   compress = 9 maximal compression level but slow.
 */
-StatusCode LHCb::compressBuffer(int           algtype, 
-                                char*         tar, 
-                                size_t        tar_len, 
-                                char*         src, 
-                                size_t        src_len, 
-                                size_t&       new_len)  
+StatusCode LHCb::compressBuffer(int           algtype,
+                                char*         tar,
+                                size_t        tar_len,
+                                char*         src,
+                                size_t        src_len,
+                                size_t&       new_len)
 {
   int in_len, out_len, res_len = 0;
   switch(algtype)  {
@@ -330,12 +330,12 @@ StatusCode LHCb::compressBuffer(int           algtype,
 }
 
 /// Decompress opaque data buffer
-StatusCode LHCb::decompressBuffer(int           algtype, 
-                                  char*         tar, 
-                                  size_t        tar_len, 
-                                  const char*   src, 
-                                  size_t        src_len, 
-                                  size_t&       new_len)  
+StatusCode LHCb::decompressBuffer(int           algtype,
+                                  char*         tar,
+                                  size_t        tar_len,
+                                  const char*   src,
+                                  size_t        src_len,
+                                  size_t&       new_len)
 {
   int in_len, out_len, res_len = 0;
   switch(algtype)  {
@@ -482,14 +482,14 @@ bool LHCb::checkRawBank(const RawBank* b, bool throw_exc, bool print_cout)  {
       return true;
     }
     char txt1[255];
-    ::sprintf(txt1,"%s Unknown Bank type in Tell1 bank %p: %s",s_checkLabel,b,_P::bankHeader(b).c_str());
+    ::sprintf(txt1,"%s Unknown Bank type in Tell1 bank %p: %s", s_checkLabel, reinterpret_cast<const void*>(b), _P::bankHeader(b).c_str());
     if ( print_cout ) cout << txt1 << endl;
     if ( throw_exc  ) throw runtime_error(txt1);
     return false;
   }
   // Error: Bad magic pattern; needs handling
   char txt0[255];
-  ::sprintf(txt0,"%s Bad magic pattern in Tell1 bank %p: %s",s_checkLabel,b,_P::bankHeader(b).c_str());
+  ::sprintf(txt0,"%s Bad magic pattern in Tell1 bank %p: %s", s_checkLabel, reinterpret_cast<const void*>(b), _P::bankHeader(b).c_str());
   if ( print_cout ) cout << txt0 << endl;
   if ( throw_exc  ) throw runtime_error(txt0);
   return false;
@@ -525,7 +525,7 @@ bool LHCb::checkFragment(const MEPFragment* f, bool exc, bool prt)  {
   }
   char txt[255];
   ::sprintf(txt,"%s MEP fragment error at %p: EID_l:%d Size:%ld %ld",
-            s_checkLabel,f,f->eventID(),long(f->size()),long(e-s));
+            s_checkLabel,reinterpret_cast<const void*>(f),f->eventID(),long(f->size()),long(e-s));
   if ( prt ) cout << txt << endl;
   if ( exc ) throw runtime_error(txt);
   return false;
@@ -545,7 +545,7 @@ bool LHCb::checkMultiFragment(const MEPMultiFragment* mf, bool exc, bool prt)  {
   }
 Error:  // Anyhow only end up here if no exception was thrown...
   ::sprintf(txt,"%s MEP multi fragment error at %p: EID_l:%u Size:%ld %ld",
-            s_checkLabel,mf,mf->eventID(),long(siz),long(s-e));
+            s_checkLabel,reinterpret_cast<const void*>(mf),mf->eventID(),long(siz),long(s-e));
   if ( prt ) cout << txt << endl;
   if ( exc ) throw runtime_error(txt);
   return false;
@@ -563,7 +563,7 @@ bool LHCb::checkMEPEvent (const MEPEvent* me, bool exc, bool prt)  {
     return true;
   }
 Error:  // Anyhow only end up here if no exception was thrown...
-  ::sprintf(txt,"%s MEP event error at %p: Size:%ld",s_checkLabel,me,long(me->size()));
+  ::sprintf(txt,"%s MEP event error at %p: Size:%ld",s_checkLabel,reinterpret_cast<const void*>(me),long(me->size()));
   if ( prt ) cout << txt << endl;
   if ( exc ) throw runtime_error(txt);
   return false;
@@ -577,12 +577,12 @@ bool LHCb::checkMDFRecord(const MDFHeader* h, int opt_len, bool exc,bool prt)   
     const char *start, *end;
     if ( h->size0() != h->size1() || h->size0() != h->size2() )  {
       ::sprintf(txt,"%s Inconsistent MDF header size: %u <-> %u <-> %u at %p",
-		s_checkLabel,h->size0(),h->size1(),h->size2(),h);
+		s_checkLabel,h->size0(),h->size1(),h->size2(),reinterpret_cast<const void*>(h));
       goto Error;
     }
     if ( opt_len != ~0x0 && size_t(opt_len) != h->size0() )  {
       ::sprintf(txt,"%s Wrong MDF header size: %u <-> %d at %p",
-		s_checkLabel,h->size0(),opt_len,h);
+		s_checkLabel,h->size0(),opt_len,reinterpret_cast<const void*>(h));
       goto Error;
     }
     compress  = h->compression()&0xF;
@@ -696,7 +696,7 @@ StatusCode LHCb::encodeRawBanks(const RawEvent* evt, char* const data, size_t si
 }
 
 /// Copy RawEvent data from bank vectors to sequential buffer
-StatusCode LHCb::encodeRawBanks(const vector<RawBank*>& banks, char* const data, 
+StatusCode LHCb::encodeRawBanks(const vector<RawBank*>& banks, char* const data,
                                 size_t size, bool skip_hdr_bank, size_t* length) {
   typedef vector<RawBank*> _BankV;
   RawBank* fid = 0;
@@ -774,8 +774,8 @@ StatusCode LHCb::encodeFragment(const vector<RawBank*>& banks, MEPFragment* f)  
 
 /// Encode entire mep from map of events
 StatusCode
-LHCb::encodeMEP(const map<unsigned int, RawEvent*>& events, 
-                unsigned int partID, 
+LHCb::encodeMEP(const map<unsigned int, RawEvent*>& events,
+                unsigned int partID,
                 void*        alloc_ctxt,
                 void*       (*alloc)(void* ctxt, size_t len),
                 MEPEvent**   mep_event)
@@ -832,8 +832,8 @@ LHCb::encodeMEP(const map<unsigned int, RawEvent*>& events,
 }
 
 // Decode MEP into bank collections
-StatusCode LHCb::decodeMEP( const MEPEvent* me, 
-                            unsigned int&   partitionID, 
+StatusCode LHCb::decodeMEP( const MEPEvent* me,
+                            unsigned int&   partitionID,
                             map<unsigned int,vector<RawBank*> >& events)
 {
   typedef vector<RawBank*> _Banks;
@@ -858,7 +858,6 @@ StatusCode LHCb::decodeMEP( const MEPEvent* me,
 	}
       }
     }
-    return StatusCode::SUCCESS;
   }
   catch(const exception& e) {
     print_previous_bank(prev);
@@ -868,12 +867,13 @@ StatusCode LHCb::decodeMEP( const MEPEvent* me,
     print_previous_bank(prev);
     throw runtime_error("Unknown error while checking banks.");
   }
+  return StatusCode::SUCCESS;
 }
 
 // Decode MEP into RawEvents
-StatusCode LHCb::decodeMEP( const MEPEvent* me, 
+StatusCode LHCb::decodeMEP( const MEPEvent* me,
                             bool            copyBanks,
-                            unsigned int&   partitionID, 
+                            unsigned int&   partitionID,
                             map<unsigned int, RawEvent*>& events)
 {
   typedef vector<RawBank*> _Banks;
@@ -893,9 +893,9 @@ StatusCode LHCb::decodeMEP( const MEPEvent* me,
 }
 
 // Decode MEP into fragments event by event
-StatusCode 
-LHCb::decodeMEP2EventFragments( const MEPEvent* me, 
-                            unsigned int&   partitionID, 
+StatusCode
+LHCb::decodeMEP2EventFragments( const MEPEvent* me,
+                            unsigned int&   partitionID,
                             map<unsigned int, vector<MEPFragment*> >& events)
 {
   typedef map<unsigned int, vector<MEPFragment*> > Events;
@@ -918,9 +918,9 @@ LHCb::decodeMEP2EventFragments( const MEPEvent* me,
 }
 
 // Decode MEP into banks event by event
-StatusCode 
-LHCb::decodeMEP2EventBanks( const MEPEvent* me, 
-                            unsigned int&   partitionID, 
+StatusCode
+LHCb::decodeMEP2EventBanks( const MEPEvent* me,
+                            unsigned int&   partitionID,
                             map<unsigned int, vector<RawBank*> >& events)
 {
   typedef map<unsigned int, vector<MEPFragment*> > Events;
@@ -944,7 +944,6 @@ LHCb::decodeMEP2EventBanks( const MEPEvent* me,
 	}
       }
     }
-    return StatusCode::SUCCESS;
   }
   catch(const exception& e) {
     print_previous_bank(prev);
@@ -954,11 +953,12 @@ LHCb::decodeMEP2EventBanks( const MEPEvent* me,
     print_previous_bank(prev);
     throw runtime_error("Unknown error while checking banks.");
   }
+  return StatusCode::SUCCESS;
 }
 
 /// Decode single fragment into a list of pairs (event id,bank)
-StatusCode 
-LHCb::decodeFragment2Banks(const MEPFragment* f, 
+StatusCode
+LHCb::decodeFragment2Banks(const MEPFragment* f,
                            unsigned int event_id_high,
                            vector<pair<unsigned int,RawBank*> >& banks)
 {
@@ -986,9 +986,9 @@ LHCb::decodeFragment2Banks(const MEPFragment* f,
 }
 
 /// Decode multi fragment into a list of pairs (event id,bank)
-StatusCode 
-LHCb::decodeMultiFragment2Banks(const MEPMultiFragment* mf, 
-                                unsigned int&   partitionID, 
+StatusCode
+LHCb::decodeMultiFragment2Banks(const MEPMultiFragment* mf,
+                                unsigned int&   partitionID,
                                 vector<pair<unsigned int,RawBank*> >& banks)
 {
   unsigned int eid_h = 0;
@@ -1000,7 +1000,7 @@ LHCb::decodeMultiFragment2Banks(const MEPMultiFragment* mf,
       StatusCode sc = decodeFragment2Banks(f,eid_h,banks);
       if ( !sc.isSuccess() )  {
         char txt[132];
-        sprintf(txt,"%s Failed to decode MEP fragment at %p",s_checkLabel,mf);
+        sprintf(txt,"%s Failed to decode MEP fragment at %p",s_checkLabel,reinterpret_cast<const void*>(mf));
         throw runtime_error(txt);
       }
     }
@@ -1009,17 +1009,17 @@ LHCb::decodeMultiFragment2Banks(const MEPMultiFragment* mf,
   return StatusCode::FAILURE;
 }
 
-// Decode MEP into a list of banks 
-StatusCode 
-LHCb::decodeMEP2Banks( const MEPEvent* me, 
-                       unsigned int&   partitionID, 
+// Decode MEP into a list of banks
+StatusCode
+LHCb::decodeMEP2Banks( const MEPEvent* me,
+                       unsigned int&   partitionID,
                        vector<pair<unsigned int,RawBank*> >& banks)
 {
   for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf)) {
     StatusCode sc = decodeMultiFragment2Banks(mf,partitionID,banks);
     if ( !sc.isSuccess() )  {
       char txt[132];
-      sprintf(txt,"%s Failed to decode MEP multi fragment at %p",s_checkLabel,mf);
+      sprintf(txt,"%s Failed to decode MEP multi fragment at %p",s_checkLabel,reinterpret_cast<void*>(mf));
       throw runtime_error(txt);
     }
   }
@@ -1034,7 +1034,7 @@ StatusCode LHCb::decodeDescriptors(const RawEventDescriptor* dsc, RawEvent* raw)
   return StatusCode::SUCCESS;
 }
 
-/// read MEP record from input stream 
+/// read MEP record from input stream
 StatusCode LHCb::readMEPrecord(StreamDescriptor& dsc, const StreamDescriptor::Access& con)  {
   unsigned int len = 0;
   dsc.setLength(0);
