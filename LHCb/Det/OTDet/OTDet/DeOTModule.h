@@ -24,22 +24,22 @@ namespace LHCb
 
 /** @class DeOTModule DeOTModule.h "OTDet/DeOTModule.h"
  *
- *  This is the detector element class for a Outer Tracker Module. It 
+ *  This is the detector element class for a Outer Tracker Module. It
  *  gets the geometry from the XML.
  *  An OT station (e.g. T1) contains 4 layers (x,u,v,x). The layers
  *  contain 4 quarters each. The quarters have 9 modules each.
- *  The long modules are split in an upper and 
- *  lower side. In total this makes 36 modules per layer. 
+ *  The long modules are split in an upper and
+ *  lower side. In total this makes 36 modules per layer.
  *
- *  This class has the calculateHits-method which calculates the closest 
- *  wires (=channels) and the distances from an entry- and exit-point. 
- *  Another method, distanceAlongWire, calculates the distance 
- *  between the hit and the read-out. These and some other functions 
+ *  This class has the calculateHits-method which calculates the closest
+ *  wires (=channels) and the distances from an entry- and exit-point.
+ *  Another method, distanceAlongWire, calculates the distance
+ *  between the hit and the read-out. These and some other functions
  *  are used by the OT digitization as well as the track reconstruction.
  *  The numbering scheme for the OT modules in the digitization is:
- *  
+ *
  *  @verbatim
-                                                                ^ Y 
+                                                                ^ Y
           Quarter 3                      Quarter 2              |
      __________________________     _________________________   |
     |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
@@ -66,7 +66,7 @@ namespace LHCb
 
  *  @endverbatim
  *
- *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
+ *  @author Jeroen van Tilburg jtilburg@nikhef.nl
  *  @date   05-03-2003
  */
 
@@ -77,55 +77,55 @@ static const CLID CLID_DeOTModule = 8105;
 class DeOTModule : public DetectorElement {
 
 public:
-  
+
   /// some handy typedefs
   typedef std::vector<DeOTModule*> Container;
   typedef std::vector<unsigned int> Straws;
   enum { MAXNUMCHAN = 128 } ;
   enum ChannelStatus { Good = 0, Dead = 1, Noisy = 2, Unknown = 99 } ;
-  
+
   /** Constructor */
   DeOTModule(const std::string& name = "");
-  
+
   /** Destructor */
   ~DeOTModule();
-  
+
   /** Retrieves reference to class identifier
    * @return the class identifier for this class
    */
   const CLID& clID() const;
-  
+
   /** Another reference to class identifier
    * @return the class identifier for this class
    */
   static const CLID& classID() { return CLID_DeOTModule; };
-    
-  /** Initialization method 
+
+  /** Initialization method
    * @return Status of initialisation
-   */ 
+   */
   virtual StatusCode initialize();
 
   /** @return moduleID */
   unsigned int moduleID() const;
-  
+
   /** @return quarterID */
   unsigned int quarterID() const;
-  
+
   /** @return  layerID */
   unsigned int layerID() const;
-  
+
   /** @return stationID */
   unsigned int stationID() const;
-  
+
   /** Element id */
   LHCb::OTChannelID elementID() const;
-  
+
   /** Set element id */
   void setElementID(const LHCb::OTChannelID& chanID);
 
   /** @return unique moduleID */
   unsigned int uniqueModule() const;
-  
+
   /** Check contains channel
    *  @param aChannel The channel to check
    *  @return bool
@@ -134,7 +134,7 @@ public:
 
   /** Check if module is top module
    * @return bool
-   */ 
+   */
   bool topModule() const;
 
   /** Check if module is bottom module
@@ -146,7 +146,7 @@ public:
    * @return bool
    */
   bool longModule() const;
-  
+
   /** Check if module is S1 module (8)
    * @return bool
    */
@@ -156,7 +156,7 @@ public:
    * @return bool
    */
   bool s2Module() const;
-  
+
   /** Check if module is S3 module (9 right)
    * @return bool
    */
@@ -173,7 +173,7 @@ public:
    * @return bool
    */
   bool monoLayerA(const unsigned int aStraw) const;
-  
+
   /** Check if straw is in monolayer B
    * @param aStraw the straw to check
    * @return bool
@@ -182,13 +182,13 @@ public:
 
   /** @return the straw to the left of a given straw */
   unsigned int nextLeftStraw(const unsigned int aStraw) const;
-  
+
   /** @return the straw to the right of a given straw */
-  unsigned int nextRightStraw(const unsigned int aStraw) const;  
+  unsigned int nextRightStraw(const unsigned int aStraw) const;
 
   /** @return thickness of sensitive volume */
   double sensThickness() const;
-  
+
   /** @return wire length */
   double wireLength(const LHCb::OTChannelID aChan) const;
 
@@ -216,7 +216,7 @@ public:
   /** @return global point from xyz */
   Gaudi::XYZPoint globalPoint(const double x, const double y, const double z) const;
 
-  /** Calculate straws which are hit 
+  /** Calculate straws which are hit
    * @param  entryPoint  entry point
    * @param  exitPoint   exit point
    * @param  chanAndDist vector of pairs of channel and drift distance
@@ -225,28 +225,28 @@ public:
   void calculateHits(const Gaudi::XYZPoint& entryPoint,
 		     const Gaudi::XYZPoint& exitPoint,
 		     std::vector<std::pair<LHCb::OTChannelID, double> >& chanAndDist) const;
-  
-  /** Calculate the distance from a given vector in space to the straw 
+
+  /** Calculate the distance from a given vector in space to the straw
    * @param aStraw straw
    * @param aPoint point
    * @param tx     dx/dz
    * @param ty     dy/dz
    * @return distance
    */
-  double distanceToWire(const unsigned int aStraw, 
-                        const Gaudi::XYZPoint& aPoint, 
+  double distanceToWire(const unsigned int aStraw,
+                        const Gaudi::XYZPoint& aPoint,
                         const double tx, const double ty) const;
-  
+
   /** Calculate the coordinate in the mono-layer plane in terms of the
    * pitch. The z-coordinate is the middle of the mono-layer.
    */
-  void monoLayerIntersection(int monolayer, 
-			     const Gaudi::XYZPoint& aPoint, 
+  void monoLayerIntersection(int monolayer,
+			     const Gaudi::XYZPoint& aPoint,
 			     const double tx, const double ty,
 			     double& straw, double& yfrac) const ;
-  
+
   /** @return distance to electronics along the wire */
-  double distanceAlongWire(const double xHit, 
+  double distanceAlongWire(const double xHit,
                            const double yHit) const;
 
   /** @return Global XYZ of the center of a given straw */
@@ -257,33 +257,33 @@ public:
 
   /** @return the global z-coordinate of a module */
   double z() const;
-  
+
     /** plane corresponding to the module
-  * @return the plane 
+  * @return the plane
   */
-  Gaudi::Plane3D plane() const; 
+  Gaudi::Plane3D plane() const;
 
   /** plane corresponding to the module entrance
-  * @return the plane 
+  * @return the plane
   */
-  Gaudi::Plane3D entryPlane() const; 
+  Gaudi::Plane3D entryPlane() const;
 
 
   /** plane corresponding to the module exit
-  * @return the plane 
+  * @return the plane
   */
-  Gaudi::Plane3D exitPlane() const; 
+  Gaudi::Plane3D exitPlane() const;
 
   /** Get trajectory representing the most left wire in (first=0) monolayer
    * @return trajectory
    */
   std::auto_ptr<LHCb::Trajectory> trajectoryFirstWire(int monolayer=0) const;
-  
+
   /** Get trajectory representing the most right wire in (second=1) monolayer
    * @return trajectory
    */
   std::auto_ptr<LHCb::Trajectory> trajectoryLastWire(int monolayer=1) const;
-  
+
   /** Get trajectory representing the wire identified by the LHCbID.
    * The offset is zero for all OT Trajectories
    * @return trajectory
@@ -293,23 +293,23 @@ public:
 
 
   /** Trajectory parameterized along y-axis */
-  void trajectory(unsigned int aStraw, double& dxdy, double& dzdy, 
+  void trajectory(unsigned int aStraw, double& dxdy, double& dzdy,
 		  double& xAtYEq0, double& zAtYEq0, double& ybegin, double& yend) const ;
 
   /** Set the status flags for all straws in this module. The vector
       can have 3 different lengths:
-      - if the length is nChannels() or MAXNUMCHANNELS, then it contains one status 
+      - if the length is nChannels() or MAXNUMCHANNELS, then it contains one status
         flag per channel
       - if the length is 2 or 4, then it contains 1 status flag per otis
       - if the length is 1, it contains one satus flag for the entire module.
-      Note: the flags are actually internally stored as 'unsigned chars', 
+      Note: the flags are actually internally stored as 'unsigned chars',
       so don't use more than 8 bits.
   */
   StatusCode setStrawStatus( const std::vector< int >& statusflags );
 
   /** Get the vector of straw status flags from the condition */
   const std::vector< int >& strawStatus() const;
-  
+
   /** Status flag for a straw */
   int strawStatus(unsigned int istraw) const { return m_strawStatus[istraw-1] ; }
 
@@ -318,7 +318,7 @@ public:
 
   /** Get the vector of straw t0s from the condition */
   const std::vector< double >& getStrawT0s() const;
-  
+
   /** Time offset correction for a straw */
   double strawT0(unsigned int iStraw) const ;
 
@@ -343,16 +343,16 @@ public:
       time is outside [tmin,tmax]. Usefull for pattern recognition,
       but kind of slow. */
   double untruncatedDriftRadius( double drifttime ) const ;
-  
+
   /** Drift time plus resolution for given drift radius */
   OTDet::DriftTimeWithError driftTimeWithError( double radius ) const ;
 
   /** Maximum drift time */
   double maxDriftTime() const ;
 
-  /** Drifttime resolution for given drift time */ 
+  /** Drifttime resolution for given drift time */
   double driftTimeResolution( double radius ) const ;
-  
+
   /** Propagation velocity */
   double propagationVelocity() const ;
 
@@ -368,37 +368,37 @@ public:
   /** @return pointer to Status condition. !! Only for experts or people who think
        they know what their doing. !! */
   const Condition* statusCondition() const;
-  
+
   /// return pitch of straws in one mono layer
   double xPitch() const { return m_xPitch ; }
 
   /// Private member methods
 private:
-  
+
   /// Not allowed to copy
   DeOTModule(const DeOTModule&);
   DeOTModule& operator=(const DeOTModule&);
-  
+
   void clear();
-  
+
   StatusCode cacheInfo();
-  
+
   StatusCode calibrationCallback();
-  
+
   StatusCode statusCallback();
 
   /** Only for backwards compatibility with DC06 */
   void fallbackDefaults();
-  
+
   /** Return range of hit straws for a given local entry and exit point.
    * @param entryPoint local entry point
    * @param exitPoint  local exit point
    * @param straws     hit straws
    */
-  void findStraws(const Gaudi::XYZPoint& entryPoint, 
+  void findStraws(const Gaudi::XYZPoint& entryPoint,
                   const Gaudi::XYZPoint& exitPoint,
                   Straws& straws) const;
-    
+
   /** Return distance of closest approach to wire i.e. drift distance
    * @param doca
    * @return ambiguity*doca
@@ -407,15 +407,15 @@ private:
 
   /** @return local Z of a given straw */
   double localZOfStraw(const unsigned int aStraw) const;
-  
+
   /** @return local U (=X) of a given straw */
   double localUOfStraw(const unsigned int aStraw) const;
-  
-  /** @return the straw in monolayer A closest to the hit */ 
+
+  /** @return the straw in monolayer A closest to the hit */
   unsigned int hitStrawA(const double u) const;
-  
+
   /** @return the straw in monolayer B closest to the hit */
-  unsigned int hitStrawB(const double u) const;  
+  unsigned int hitStrawB(const double u) const;
 
   /** Check if Y is inside efficient region of monolayer A
    * @param  y    Y coordinate to check
@@ -429,9 +429,9 @@ private:
    */
   bool isEfficientB(const double y) const;
 
-  /** Calculates zc,uc of the center of a circle and radius 
+  /** Calculates zc,uc of the center of a circle and radius
       rc of the circle (special assumptions) */
-  void sCircle(const double z1, const double u1, const double z2, 
+  void sCircle(const double z1, const double u1, const double z2,
                const double u2, const double dz,
                double& zc, double& uc, double& rc) const;
 
@@ -458,7 +458,7 @@ private :
   double m_xMaxLocal;                           ///< local x max of module
   double m_yMinLocal;                           ///< local y min of module
   double m_yMaxLocal;                           ///< local y max of module
-  bool m_xInverted;                             ///< swap x min and x max 
+  bool m_xInverted;                             ///< swap x min and x max
   bool m_yInverted;                             ///< swap y min and y max
   std::pair<double,double> m_range[2];          ///< range -> wire length
   std::auto_ptr<LHCb::Trajectory> m_midTraj[2]; ///< traj of middle of module
@@ -466,10 +466,10 @@ private :
   Gaudi::Plane3D m_plane;                       ///< plane through center of module
   Gaudi::Plane3D m_entryPlane;                  ///< entry plane
   Gaudi::Plane3D m_exitPlane;                   ///< exit plane
-  Gaudi::XYZPoint m_centerModule;               ///< center of module 
+  Gaudi::XYZPoint m_centerModule;               ///< center of module
   double m_dxdy ;                               ///< dx/dy along straw
   double m_dzdy ;                               ///< dx/dz along straw
-  double m_dy[2] ;                              ///< difference in y coordinates of straw end points 
+  double m_dy[2] ;                              ///< difference in y coordinates of straw end points
   Gaudi::XYZVector m_dp0di ;                    ///< vector with change in straw position in units of pitch
   Gaudi::XYZPoint  m_p0[2] ;                    ///< position of first straw
   double m_strawt0[MAXNUMCHAN] ;                ///< vector with t0 for every straw
@@ -478,7 +478,7 @@ private :
   double m_propagationVelocity ;                ///< propagation velocity
   double m_propagationVelocityY ;               ///< propagation velocity in y-direction (cached for speed)
   double m_halfXPitch;                          ///< Half of the pitch in x (needed for staggering)
-  double m_monoAXZero;                          ///< offset of staggering in first monolayer  
+  double m_monoAXZero;                          ///< offset of staggering in first monolayer
   double m_monoBXZero;                          ///< offset of staggering in second monolayer
   // Calibration and status CONDDB stuff
   std::string           m_calibrationName;      ///< Name of calibration condition
@@ -598,7 +598,7 @@ inline double DeOTModule::wireLength(const LHCb::OTChannelID aChan) const {
 
   double wireLength = m_ySizeModule;
 
-  /// check if it is a long module goes from 1 to 7 
+  /// check if it is a long module goes from 1 to 7
   if ( aChan.module() < 8u) {
     /// check if it is top module
     if (aChan.quarter() > 1u) {
@@ -610,7 +610,7 @@ inline double DeOTModule::wireLength(const LHCb::OTChannelID aChan) const {
       wireLength = ((aChan.straw() <= m_nStraws)?m_ySizeModule:m_ySizeModule-m_inefficientRegion);
     }
   }
-    
+
   return wireLength;
 }
 
@@ -639,8 +639,8 @@ inline Gaudi::XYZPoint DeOTModule::toLocal(const Gaudi::XYZPoint& aPoint) const 
   return this->geometry()->toLocal(aPoint);
 }
 
-inline Gaudi::XYZPoint DeOTModule::localPoint(const double x, 
-					      const double y, 
+inline Gaudi::XYZPoint DeOTModule::localPoint(const double x,
+					      const double y,
 					      const double z) const {
   return toLocal(Gaudi::XYZPoint(x, y, z));
 }
@@ -649,8 +649,8 @@ inline Gaudi::XYZPoint DeOTModule::toGlobal(const Gaudi::XYZPoint& aPoint) const
   return this->geometry()->toGlobal(aPoint);
 }
 
-inline Gaudi::XYZPoint DeOTModule::globalPoint(const double x, 
-					       const double y, 
+inline Gaudi::XYZPoint DeOTModule::globalPoint(const double x,
+					       const double y,
 					       const double z) const {
   return toGlobal(Gaudi::XYZPoint(x, y, z));
 }
@@ -660,7 +660,7 @@ inline double DeOTModule::localUOfStraw(const unsigned int aStraw) const {
   unsigned int tmpStraw = (!monoLayerB(aStraw)?aStraw-1u:aStraw-m_nStraws-1u);
   //double uLeftStraw = (!monoLayerB(aStraw)?(-(0.5*m_nStraws-0.25)+0.5)
   //                     :-(0.5*m_nStraws-0.25))*m_xPitch;
-  double uLeftStraw = ( !monoLayerB( aStraw ) ? double( m_nStraws ) + m_monoAXZero : 
+  double uLeftStraw = ( !monoLayerB( aStraw ) ? double( m_nStraws ) + m_monoAXZero :
                         double( m_nStraws ) + m_monoBXZero )*-m_halfXPitch;
   return uLeftStraw + tmpStraw * m_xPitch;
 }
@@ -669,10 +669,10 @@ inline double DeOTModule::localZOfStraw(const unsigned int aStraw) const {
   return (monoLayerA(aStraw) ? -0.5: 0.5)*m_zPitch;
 }
 
-inline double DeOTModule::distanceAlongWire(const double xHit, 
+inline double DeOTModule::distanceAlongWire(const double xHit,
 					    const double yHit) const {
   // For the upper modules of the station the readout is above.
-  return ((m_quarterID > 1u)?m_yMaxLocal-localPoint(xHit, yHit, 0).y() 
+  return ((m_quarterID > 1u)?m_yMaxLocal-localPoint(xHit, yHit, 0).y()
 	  :m_yMaxLocal+localPoint(xHit, yHit, 0).y());
 }
 
@@ -684,7 +684,7 @@ inline Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int aStraw) cons
 
 inline Gaudi::XYZPoint DeOTModule::centerOfModule() const {
   /// get the global coordinate of the middle of the module
-  return m_centerModule;;
+  return m_centerModule;
 }
 
 inline double DeOTModule::z() const {
@@ -721,7 +721,7 @@ inline unsigned int DeOTModule::hitStrawB(const double u) const {
 /// See LHCb note: 2003-019
 inline bool DeOTModule::isEfficientA(const double y) const {
   // check if hit is not inside the inefficient region
-//   return !((m_moduleID < 8u) && (m_quarterID > 1u) && 
+//   return !((m_moduleID < 8u) && (m_quarterID > 1u) &&
 //           ((m_yMaxLocal + y) < m_inefficientRegion));
   /// In local frame
   bool topeven   = ( m_quarterID > 1u && m_layerID%2 == 0 ) && ( ( m_yMaxLocal + y ) < m_inefficientRegion );
@@ -732,7 +732,7 @@ inline bool DeOTModule::isEfficientA(const double y) const {
 
 inline bool DeOTModule::isEfficientB(const double y) const {
   // check if hit is not inside the inefficient region
-//   return !((m_moduleID < 8u) && (m_quarterID < 2u) && 
+//   return !((m_moduleID < 8u) && (m_quarterID < 2u) &&
 //   	   ((m_yMaxLocal - y) < m_inefficientRegion));
   bool bottomeven = ( m_quarterID < 2u && m_layerID%2 == 0 ) && ( ( m_yMaxLocal - y ) < m_inefficientRegion );
   bool topodd     = ( m_quarterID > 1u && m_layerID%2 != 0 ) && ( ( m_yMaxLocal + y ) < m_inefficientRegion );
@@ -740,8 +740,8 @@ inline bool DeOTModule::isEfficientB(const double y) const {
 }
 
 inline void DeOTModule::trajectory(unsigned int aStraw,
-				   double& dxdy, double& dzdy, 
-				   double& xAtYEq0, double& zAtYEq0, 
+				   double& dxdy, double& dzdy,
+				   double& xAtYEq0, double& zAtYEq0,
 				   double& ybegin, double& yend) const
 {
   unsigned int mono     = monoLayerA(aStraw) ? 0u : 1u ;
