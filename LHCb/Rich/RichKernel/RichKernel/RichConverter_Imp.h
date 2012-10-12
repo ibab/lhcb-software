@@ -127,15 +127,9 @@ namespace Rich
       return s;
     }
 
-#ifdef __INTEL_COMPILER         // Disable ICC warning
- #pragma warning(disable:1125) // virtual function is hidden, override intended?
- #pragma warning(push)
-#endif
+    using Converter::release;
     /// Release tools and services
     StatusCode release ( const IInterface* interface ) const;
-#ifdef __INTEL_COMPILER // Re-enable ICC warning
- #pragma warning(pop)
-#endif
 
     // ============================================================================
     // Add the given tool to the list of active tools
@@ -201,7 +195,7 @@ namespace Rich
     /// Delete the current messaging object
     inline void resetMsgStream() const
     {
-      delete m_msgStream; 
+      delete m_msgStream;
       m_msgStream = NULL;
     }
 
@@ -274,7 +268,7 @@ namespace Rich
   protected:
 
     /** 'Dummy' implementation of property setting method
-     *  @todo Extend to a full implementation if needed 
+     *  @todo Extend to a full implementation if needed
      */
     template < class TYPE >
     void declareProperty ( const std::string & /* name */,

@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !-------------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed warning: virtual function is hidden.
+
 !========================= RichKernel v7r50 2012-09-28 =========================
 ! 2012-08-08 - Marco Clemencic
  - Added python/RichKernel/__init__.py.
@@ -15,12 +18,12 @@
 
 !========================= RichKernel v7r48 2012-01-31 =========================
 ! 2012-01-26 - Chris Jones
- - Add some protection against calling primaryID() on an empty 
+ - Add some protection against calling primaryID() on an empty
    HPDPixelCluster object.
 
 ! 2012-01-04 - Chris Jones
- - Add an option to the RichTools Configurable to use the new detailed 
-   track segment creator that uses the tracking State provider tool, 
+ - Add an option to the RichTools Configurable to use the new detailed
+   track segment creator that uses the tracking State provider tool,
    instead of the extrapolators.
 
 !===================== RichKernel v7r47 2011-12-14 =====================
@@ -60,9 +63,9 @@
 !=================== RichKernel v7r42 2011-02-22 =======================
 ! 2011-02-18 - Chris Jones
  - Fix some icc warnings/remarks without pragmas
- - Update RichTools to include configuration option 
-   "RawBufferWithPanelFlip" which reconstructs the Rich pixels as per 
-    normal, but flips the HPD panel. 
+ - Update RichTools to include configuration option
+   "RawBufferWithPanelFlip" which reconstructs the Rich pixels as per
+    normal, but flips the HPD panel.
     So for RICH1 up <-> down and for RICH2 left <-> right
 
 ! 2011-02-10 - Chris Jones
@@ -88,7 +91,7 @@
  - Add a new method to RichCommonBase to propagate job options
 
 ! 2010-11-11 - Chris Jones
- - Add a new class for L1 'Copy Number'. Just a number that starts at 0 
+ - Add a new class for L1 'Copy Number'. Just a number that starts at 0
    in RICH1 and increments through the boards.
 
 !==================== RichKernel v7r39 2010-10-25 ======================
@@ -109,7 +112,7 @@
 
 !====================== RichKernel v7r38 2010-08-25 ====================
 ! 2010-08-19 - Chris Jones
- - Extend SmartID decoding tool interface with methods to return the 
+ - Extend SmartID decoding tool interface with methods to return the
    total number of hits in the event
 
 !====================== RichKernel v7r37 2010-07-19 ====================
@@ -118,20 +121,20 @@
    labels.
 
 ! 2010-06-24 - Chris Jones
- - Add a new method to IRichDetParameters.h to return the S.D. of the 
-   (n-1) distribution for observable photons. Moved here from 
+ - Add a new method to IRichDetParameters.h to return the S.D. of the
+   (n-1) distribution for observable photons. Moved here from
    IRichRefractiveIndex.h
- - Add a new method to IRichRefractiveIndex to return the standard 
+ - Add a new method to IRichRefractiveIndex to return the standard
    deviation for a given set of radiator intersections.
 
 !====================== RichKernel v7r36 2010-06-20 ====================
 ! 2010-06-20 - Chris Jones
- - Add a new method to python Configurable to return track expected 
+ - Add a new method to python Configurable to return track expected
    signal tool Configurable
 
 !====================== RichKernel v7r35 2010-05-21 ====================
 ! 2010-05-19 - Ulrich Kerzel
- - HPDdisableTool: add function "ReportHPD" to report HPDs with errors 
+ - HPDdisableTool: add function "ReportHPD" to report HPDs with errors
    which are not necessarily severe (ie. don't have to lead to disable)
 
 !====================== RichKernel v7r34 2010-04-26 ====================
@@ -149,7 +152,7 @@
 !====================== RichKernel v7r33 2010-04-09 ====================
 ! 2010-04-01 - Chris Jones
  - Make the histogramming methods in RichHistoBase const
- - Make the 'Functional' CK resolution tool the Offline default. HLT 
+ - Make the 'Functional' CK resolution tool the Offline default. HLT
    still using the binned implementation, awaiting testing of the
    Functional tool.
 
@@ -192,7 +195,7 @@
 ! 2009-10-12 - Christopher Rob Jones
  - Add the method L1IngressHeader::inactiveHPDInputs which returns the
    list of inactive (i.e. missing HPDs) in a given decoded L1 ingress.
- - Add L1IngressHeader::numInactiveHPDs() to return the number of 
+ - Add L1IngressHeader::numInactiveHPDs() to return the number of
    inactive HPDs
  - A a faster implementation of L1IngressHeader::numActiveHPDs() using
    bitset.
@@ -227,7 +230,7 @@
  - Slight simplification of the booking methods in RichHistoBase.icpp
 
 ! 2009-08-07 - Ross Young
- - globalPixelX() and globalPixelY() in RichSmartIDCnv.h updated to display 
+ - globalPixelX() and globalPixelY() in RichSmartIDCnv.h updated to display
 	 correct hitmaps
 
 ! 2009-08-05 - Chris Jones
@@ -245,12 +248,12 @@
  - Add new common base class (RichHistoBase) for all histogramming
    components that implement some common methods. In particular methods
    that make pre-booking histograms during initialise more convenient by
-   implementing various RICH convections on the naming structure for 
-   histograms and the path in which they are stored in the persistent 
+   implementing various RICH convections on the naming structure for
+   histograms and the path in which they are stored in the persistent
    output ROOT file.
 
 ! 2009-07-23 - Chris Jones
- - Downgrade warning messages about changed tool types to Info in 
+ - Downgrade warning messages about changed tool types to Info in
    RichToolRegistry.
 
 ! 2009-07-15 - Chris Jones
@@ -264,7 +267,7 @@
 ! 2009-07-07 - Chris Jones
  - Add new Rich::Converter base class that extends the basic Converter
    class adding various additional RICH functionality as implemented in
-   Rich::CommonBase. Needed to eventually remove code duplication in 
+   Rich::CommonBase. Needed to eventually remove code duplication in
    various Panoramix packages.
 
 !====================== RichKernel v7r23 2009-06-29 ====================
@@ -279,7 +282,7 @@
  - Suppress WIN32 warning 4661 (incomplete explicit templates)
 
 ! 2009-06-10 - Chris Jones
- - Add properties to all 'Histo' and 'Tuple' classes to set the number 
+ - Add properties to all 'Histo' and 'Tuple' classes to set the number
    of histogram bins.
 
 ! 2009-06-03 - Chris Jones
@@ -290,7 +293,7 @@
  - Add nickname mapping for cluster finding tool
 
 ! 2009-03-27 - Chris Jones
- - Add a new photon predictor type to RichTools() python configuration, 
+ - Add a new photon predictor type to RichTools() python configuration,
    that use MC information to selet photons.
 
 !====================== RichKernel v7r20 2009-03-09 ====================
@@ -299,7 +302,7 @@
 
 !====================== RichKernel v7r19 2009-01-08 ====================
 ! 2008-11-30 - Chris Jones
- - Extend tool interface IRichRefractiveIndex with new methods to 
+ - Extend tool interface IRichRefractiveIndex with new methods to
    calculate the effective index for a set of radiator intersections.
  - Add new tool mapping to RichToolRegistry.
  - Set custom NTuple LUN in tupling base classes.
@@ -334,7 +337,7 @@
 
 !====================== RichKernel v7r17 2008-09-30 ====================
 ! 2008-09-30 - Christopher Rob JONES
- - (G. Rogers) Added functions to return the maximum local coordinates in 
+ - (G. Rogers) Added functions to return the maximum local coordinates in
    the x and y axis.
 
 ! 2008-09-23 - Christopher Rob JONES
@@ -344,7 +347,7 @@
 
 !====================== RichKernel v7r16 2008-09-21 ====================
 ! 2008-09-21 - Christopher Rob JONES
- - Add missing include in RichDAQDefinitions.h for ulonglong typedef 
+ - Add missing include in RichDAQDefinitions.h for ulonglong typedef
    (GaudiKernel/Kernel.h)
 
 ! 2008-09-11 - Chris Jones
@@ -363,7 +366,7 @@
 
 ! 2008-08-07 - Chris Jones
  - Add python configuration files
- - Change ToolRegistry names from Offline.XXX to Offline_XXX to avoid 
+ - Change ToolRegistry names from Offline.XXX to Offline_XXX to avoid
    problems with python configurables
 
 !====================== RichKernel v7r14 2008-07-27 ====================
@@ -386,7 +389,7 @@
  - Fix doxygen warnings
 
 ! 2008-06-03 - Chris Jones
- - Minor change to decoded data structures, to allow storage of 
+ - Minor change to decoded data structures, to allow storage of
    inhibited HPDs (unknown RichSmartID).
 
 !====================== RichKernel v7r11p1 2008-04-15 ==================
@@ -401,7 +404,7 @@
 
 ! 2008-02-17 - Chris Jones
  - Update Ray Tracing interface to pass back booleans instead of
-   StatusCodes. Slightly improves CPU performance (due to StatusCode 
+   StatusCodes. Slightly improves CPU performance (due to StatusCode
    checks).
  - Add method RichTrackSegment::vectorAtCosSinThetaPhi
 
@@ -412,10 +415,10 @@
  - Clean up some includes
 
 ! 2008-02-15 - Chris Jones
- - Update RichGeomPhoton to store a pointer to the associated 
+ - Update RichGeomPhoton to store a pointer to the associated
    DeRichSphMirror for the primary and secondary mirrors, instead of just
    the mirror number.
- - Update RichTrackSegment to have more reasonable guesses for the 
+ - Update RichTrackSegment to have more reasonable guesses for the
    average photon energy in each radiator (previously was set to 0).
 
 ! 2008-02-07 - Chris Jones
@@ -437,7 +440,7 @@
  - Update various cluster objects to allow clustering of ALICE mode data
 
 ! 2007-11-27 - Chris Jones
- - Add a new method to the IRawBufferToSmartIDsTool interface to return 
+ - Add a new method to the IRawBufferToSmartIDsTool interface to return
    the hits for a requested HPD
 
 ! 2007-11-26 - Marco Cattaneo
@@ -457,17 +460,17 @@
    here was never used. Removing it speeds things up a little.
 
 ! 2007-08-09 - Chris Jones
- - Add to IRichParticleProperties a method to return the list of all 
+ - Add to IRichParticleProperties a method to return the list of all
    mass hypothesis to be considered.
  - Extend IRichRayTracing to return ray tracing summary result object.
 
 ! 2007-08-03 - Chris Jones
- - Add == and != operators for EventID and BXID that check the correct 
+ - Add == and != operators for EventID and BXID that check the correct
    number of bits
 
 ! 2007-07-20 - Chris Jones
- - Add two new methods, anodeGlobalPosition, which return the position 
-   for a given RichSmartID or Rich::HPDPixelCluster on the anode 
+ - Add two new methods, anodeGlobalPosition, which return the position
+   for a given RichSmartID or Rich::HPDPixelCluster on the anode
    pixel chip.
 
 !====================== RichKernel v7r7 2007-07-09 ====================
@@ -505,7 +508,7 @@
  - First bug in postfix ++ and -- operators in RichDAQDefinitions.h
  - Import various DAQ related class from RichDAQ and RichDet
    Needed to allow access to headers/footers etc outside RichDAQ
- - Move content of RichEvent directory into RichKernel and 
+ - Move content of RichEvent directory into RichKernel and
    remove RichEvent
  - Some doxygen fixes
  - Update IRichRawDataFormatTool for new decoded RICH data object
@@ -520,7 +523,7 @@
 
 ! 2007-03-09 - Chris Jones
  - Remove namespace doxygen comments (now in standalone file)
- - Add new pixel cluster class Rich::HPDPixelCluster to represent 
+ - Add new pixel cluster class Rich::HPDPixelCluster to represent
    a group of channels (RichSmartIDs)
  - Update RichGeomPhoton to use Rich::HPDPixelCluster
  - Update RichSmartIDTool interface to add new method to return
@@ -554,7 +557,7 @@
 ! 2006-10-20 - Chris Jones
  - Update RichTrackSegment to use RichRadIntersection class
  - Update to RichradiatorTool interface for new RichRadIntersection
- - Add some protection in RichGeomFunctions for when calculating the 
+ - Add some protection in RichGeomFunctions for when calculating the
    angle between two vectors
 
 ! 2006-09-27 - Chris Jones
@@ -572,8 +575,8 @@
  - Make joSvc() method protected
 
 ! 2006-08-09 - Chris Jones
- - Update to RayTracing interface to remove the "withoutEff" ray tracing 
-   method. Instead tracing decides what to do based on the configuration 
+ - Update to RayTracing interface to remove the "withoutEff" ray tracing
+   method. Instead tracing decides what to do based on the configuration
    object RichTraceMode.
 
 !======================= RichKernel v6r5 2006-07-31 =======================
@@ -655,7 +658,7 @@
 
 ! 2005-12-13 - Chris Jones
  - Update DAQ related definitions
- - Switch RichHashMap to using Gaudi provided hash map and move into  
+ - Switch RichHashMap to using Gaudi provided hash map and move into
    Rich namespace
 
 ! 2005-12-12 - Antonis Papanestis
@@ -679,7 +682,7 @@
  - Add RichHistoID class
 
 ! 2005-10-25 - Chris Jones
- - Improve doxygen comments for RichCondition tools plus tidy up 
+ - Improve doxygen comments for RichCondition tools plus tidy up
    their interfaces a little more
 
 ! 2005-10-17 - Chris Jones
@@ -730,7 +733,7 @@
 
 !======================= RichKernel v5r3 2005-02-08 =======================
 ! 2005-02-08 - Marco Cattaneo
- - Adapt to backward incompatible changes in RichSmartID accessors, due to 
+ - Adapt to backward incompatible changes in RichSmartID accessors, due to
    GaudiObjDesc v7r*
 
 !======================= RichKernel v5r2 2005-01-25 =======================
@@ -798,7 +801,7 @@
 
 ! 2004-06-18 - Chris Jones
  - Clean up interfaces to remove the need for explicit includes from
-   RichEvent or RichDet. (One RichDet include remains in IRichRayTracing.h, 
+   RichEvent or RichDet. (One RichDet include remains in IRichRayTracing.h,
    which will be removed in an upcoming update)
 
 ! 2004-06-16 - Marco Cattaneo
@@ -806,7 +809,7 @@
  - Add base classes previously in RichUtils
    Above changes introduce dependencies on GSL, GaudiAlg, DetDesc
  - Remove dummy includes RichDetectorType.h, RichRadiatorType.h, RichSide.h,
-   to use directly the versions in LHCbKernel 
+   to use directly the versions in LHCbKernel
 
 !======================= RichKernel v4r6 2004-06-30 =======================
 ! 2004-06-03 - Chris Jones
@@ -889,8 +892,8 @@
 ! 2002-06-18 C.Jones
   - Reshuffle enumerations into seperate files for ease of maintainence
   - Add additional functionality to ParticleIDType
-  - Merge Rich1Side and Rich2Side into single Side enum 
-    (Rich1Side and Rich2Side files retained for the moment for backwards 
+  - Merge Rich1Side and Rich2Side into single Side enum
+    (Rich1Side and Rich2Side files retained for the moment for backwards
      compaticbility)
 
 ! ==================== RichKernel v1r1 2002-06-14 =====================
