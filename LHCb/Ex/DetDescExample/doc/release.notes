@@ -1,9 +1,12 @@
 !$Id: release.notes,v 1.44 2008-11-17 15:14:27 cattanem Exp $
 !Package: DetDescExample
 !Package Manager: Marco Clemencic
-!Purpose: Demonstrate how to access detector elements, their geometry 
+!Purpose: Demonstrate how to access detector elements, their geometry
 !         parameters and materials from detector description XML database.
 !------------------------------------------------------------------------
+
+! 2012-10-12 - Marco Clemencic
+ - Fixed warning: extra ';' [-pedantic].
 
 !==================DetDescExample v7r7p1 2008-11-17 =====================
 ! 2008-10-28 - Marco Cattaneo
@@ -145,7 +148,7 @@
  - take into account changes in Det/DetDesc, so use DOM parsing.
  - changes in the names of materials, following the new convention in the
  xml code : no more underscore in element name, as in CO2 (was CO2).
- 
+
 !20010222 Pere Mato
  - Changed SimpleAlgorithm.cpp to use Velo instead of Vertex.
 

@@ -4,7 +4,7 @@
 #include <vector>
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 /// Gaudi interfaces
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -26,7 +26,7 @@
 
 using namespace Gaudi::Units;
 
-DECLARE_ALGORITHM_FACTORY( SimpleAlgorithm );
+DECLARE_ALGORITHM_FACTORY( SimpleAlgorithm )
 
 /////////////////////////
 // Default constructor //
@@ -40,7 +40,7 @@ SimpleAlgorithm::SimpleAlgorithm (const std::string& name,
 // Initialize //
 ////////////////
 StatusCode SimpleAlgorithm::initialize() {
-  
+
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -60,17 +60,17 @@ StatusCode SimpleAlgorithm::initialize() {
   info() << "LHCb detector is made of " << stvol->materialName() << endmsg;
 
   dumpPVs (stvol, cave->name());
-    
+
   info() << "/////////////////////////" << endmsg;
   info() << "// Usage of parameters //" << endmsg;
   info() << "/////////////////////////" << endmsg;
-  info() << "This is the list of parameters " 
+  info() << "This is the list of parameters "
          << "defined on the Ecal detector element : \n";
 
   IDetectorElement* ecal = getDet<IDetectorElement>( DeCalorimeterLocation::Ecal );
 
   info() << ecal->params()->printParams() << endmsg;
-  
+
   info()
       << "/////////////////////////////////////////////////////////////////"
       << endmsg;
@@ -98,7 +98,7 @@ StatusCode SimpleAlgorithm::initialize() {
   info() <<
     "///////////////////////////////////////////////////////////////////////////"
          << endmsg;
- 
+
   info() << "///////////////////////" << endmsg;
   info() << "// Testing Materials //" << endmsg;
   info() << "///////////////////////" << endmsg;
@@ -114,7 +114,7 @@ StatusCode SimpleAlgorithm::initialize() {
   info() << "X0      : " << elO->radiationLength()/(cm) << " cm" << endmsg;
   info() << "Lambda  : " << elO->absorptionLength()/(cm) << " cm" << endmsg;
   info() << endmsg;
-  
+
   info() << "Material composed of several isotopes : Boron" << endmsg;
   Material* elB = getDet<Material>( "/dd/Materials/Boron" );
 
@@ -126,7 +126,7 @@ StatusCode SimpleAlgorithm::initialize() {
   info() << "X0      : " << elB->radiationLength()/(cm) << " cm" << endmsg;
   info() << "Lambda  : " << elB->absorptionLength()/(cm) << " cm" << endmsg;
   info() << endmsg;
-  
+
   info() << "Mixture of simple elements : Water" << endmsg;
   Material* mWater = getDet<Material>( "/dd/Materials/Water" );
 
@@ -138,7 +138,7 @@ StatusCode SimpleAlgorithm::initialize() {
   info() << "X0      : " << mWater->radiationLength()/(cm) << " cm"  << endmsg;
   info() << "Lambda  : " << mWater->absorptionLength()/(cm) << " cm"  << endmsg;
   info() << endmsg;
-  
+
   info() << "Mixture of mixtures : Argon_CF4_CO2" << endmsg;
   Material* mArCF4CO2 = getDet<Material>( "/dd/Materials/Argon_CF4_CO2" );
 
@@ -207,6 +207,6 @@ void SimpleAlgorithm::dumpPVs (const ILVolume* lv, std::string de) {
   for (ppvc = 0; ppvc < noppv; ppvc++) {
     info() << lv->pvolume(ppvc)->name() << " ";
   }
-  
+
   info() << endmsg;
 }
