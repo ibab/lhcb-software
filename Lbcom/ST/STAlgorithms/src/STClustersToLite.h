@@ -28,8 +28,9 @@ inline SiClustersToLite<LHCb::STCluster>::SiClustersToLite( const std::string& n
                                     ISvcLocator* pSvcLocator):
   SiClusterTraits<LHCb::STCluster>::BASEALG(name, pSvcLocator){
  
-  declareSTConfigProperty("inputLocation", m_inputLocation, LHCb::STClusterLocation::TTClusters); 
-  declareSTConfigProperty("outputLocation", m_outputLocation , LHCb::STLiteClusterLocation::TTClusters);
+  // These cannot be STConfig properties due to DoD service requirements.
+  declareProperty("inputLocation", m_inputLocation=  LHCb::STClusterLocation::TTClusters); 
+  declareProperty("outputLocation", m_outputLocation = LHCb::STLiteClusterLocation::TTClusters);
 
 }
 
