@@ -30,10 +30,11 @@ using namespace LHCb;
 MuonRawBuffer::MuonRawBuffer( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent ), m_muonDet(0),
+  : GaudiTool ( type, name , parent ),
     m_M1Tell1(0),
-    m_checkTell1HeaderResult(false),
+    m_muonDet(0),
     m_checkTell1HeaderPerformed(false),
+    m_checkTell1HeaderResult(false),
     m_statusCreated(false)
 {
   declareInterface<IMuonRawBuffer>(this);
