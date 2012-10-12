@@ -5,6 +5,15 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+! 2012-10-12 - Stephane Tourneur
+
+ - Main change: We have now four new Production tools available that enable to select the alpgen hard process in the job option file 
+    -> AlpGenProduction4q,  AlpGenProductionzbb, AlpGenProductionwqq, AlpGenProductiontop
+    -> AlpGenProduction is deprecated
+ - requirements adapted by Patrick to compile all pythia processes together
+ - WQQ and Top processes added
+ - New user cuts on eta and pt defined in alpgen's user code  
+
 ! 2012-10-09 - Stephane Tourneur
  - Added (dummy interface) classes AlpGenProdutionzqq and AlpGenProdution4q inherited from AlpGenProduction to provide the user one tool per 
 alpgen 

@@ -1,7 +1,7 @@
 // Include files 
 //
 // local
-#include "AlpGenProductionzbb.h"
+#include "AlpGenProductiontop.h"
 
 // STL 
 #include <fstream>
@@ -40,13 +40,13 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( AlpGenProductionzbb );
+DECLARE_TOOL_FACTORY( AlpGenProductiontop );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-AlpGenProductionzbb::AlpGenProductionzbb( const std::string& type,
+AlpGenProductiontop::AlpGenProductiontop( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
   : AlpGenProduction ( type, name , parent )
@@ -60,12 +60,12 @@ AlpGenProductionzbb::AlpGenProductionzbb( const std::string& type,
 //=============================================================================
 // Destructor 
 //=============================================================================
-AlpGenProductionzbb::~AlpGenProductionzbb( ) { ; }
+AlpGenProductiontop::~AlpGenProductiontop( ) { ; }
 
 //=============================================================================
 // Initialize method
 //=============================================================================
-StatusCode AlpGenProductionzbb::initialize( ) 
+StatusCode AlpGenProductiontop::initialize( ) 
 {
   return AlpGenProduction::initialize( ) ;
 }
@@ -73,7 +73,7 @@ StatusCode AlpGenProductionzbb::initialize( )
 //=============================================================================
 // Finalize
 //=============================================================================
-StatusCode AlpGenProductionzbb::finalize( ) {
+StatusCode AlpGenProductiontop::finalize( ) {
  
   return AlpGenProduction::finalize() ;
 }
@@ -81,7 +81,7 @@ StatusCode AlpGenProductionzbb::finalize( ) {
 //=============================================================================
 //   Function called to generate one event with Pythia --> AlpGen
 //=============================================================================
-StatusCode AlpGenProductionzbb::generateEvent( HepMC::GenEvent * theEvent , 
+StatusCode AlpGenProductiontop::generateEvent( HepMC::GenEvent * theEvent , 
                                             LHCb::GenCollision * theCollision )
 {
   

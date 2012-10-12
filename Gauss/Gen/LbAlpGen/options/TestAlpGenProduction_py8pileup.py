@@ -3,18 +3,18 @@
 
 from Gaudi.Configuration import *
 importOptions( "$DECFILESROOT/options/SwitchOffAllPythiaProcesses.opts" )
-from Configurables import Generation, Special, FixedNInteractions, Pythia8Production, ToolSvc, EvtGenDecay, AlpGenProduction, MinimumBias
+from Configurables import Generation, Special, FixedNInteractions, Pythia8Production, ToolSvc, EvtGenDecay, AlpGenProduction4q, MinimumBias
 gen = Generation()
 
 gen.SampleGenerationTool = "Special"
 gen.addTool( Special )
-gen.Special.ProductionTool = "AlpGenProduction"
-gen.Special.addTool( AlpGenProduction )
-alpgen=gen.Special.AlpGenProduction
+gen.Special.ProductionTool = "AlpGenProduction4q"
+gen.Special.addTool( AlpGenProduction4q )
+alpgen=gen.Special.AlpGenProduction4q
 alpgen.nevxiter = 10000
 alpgen.niter = 2
 alpgen.nwgtev = 100000
-alpgen.FileLabel = "Zbb"
+alpgen.FileLabel = "4q"
 alpgen.njets = 0  ##number of light jets
 alpgen.etalmin = 1.5
 alpgen.etalmax = 10
@@ -30,6 +30,8 @@ alpgen.etabmax = 10
 alpgen.mllmin = 80
 alpgen.mllmax = 120
 alpgen.ndns=9
+
+alpgen.ihrd=7
 
 
 

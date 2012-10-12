@@ -26,32 +26,49 @@ macro alpgen_author_dir $(alpgen_path)/share/alpgen-author
 
 # =============== constituents ================================================
 #library           LbAlpGen       component/*.cpp
-library           LbAlpGen       component/AlpGenProduction.cpp
-library           LbAlpGenLib    Lib/*.cpp Lib/*.F $(alpgen_author_dir)/zqqlib/zqq.f zqq/*.F
-application       AlpGenFragm Read/AlpGenFragm.cpp \
-                              Read/upevnt.F        \
-                              Read/upinit.F        \
-                              Main/dummy.F         \
-                              Main/pyr.F 
-application       AlpGen4Q    Main/AlpGen.cpp      \
-                              Main/alpgen_main.F   \
-                              Main/pyr.F           \
-                              Main/dummy.F         \
-                              4Q/*.F               \
-                              $(alpgen_author_dir)/4Qlib/4Q.f
+library           LbAlpGenzbb       component/AlpGenProduction.cpp component/AlpGenProductionzbb.cpp
+library           LbAlpGenLibzbb    Lib/*.cpp Lib/*.F $(alpgen_author_dir)/zqqlib/zqq.f zqq/*.F
+library           LbAlpGen4q        component/AlpGenProduction.cpp component/AlpGenProduction4q.cpp
+library           LbAlpGenLib4q     Lib/*.cpp Lib/*.F $(alpgen_author_dir)/4Qlib/4Q.f 4Q/*.F
+library           LbAlpGenwqq       component/AlpGenProduction.cpp component/AlpGenProductionwqq.cpp
+library           LbAlpGenLibwqq    Lib/*.cpp Lib/*.F $(alpgen_author_dir)/wqqlib/wqq.f wqq/*.F
+library           LbAlpGentop       component/AlpGenProduction.cpp component/AlpGenProductiontop.cpp
+library           LbAlpGenLibtop     Lib/*.cpp Lib/*.F $(alpgen_author_dir)/toplib/top.f top/*.F
 
-application       AlpGenZbb   Main/AlpGen.cpp      \
-                              Main/alpgen_main.F   \
-                              Main/pyr.F           \
-                              Main/dummy.F         \
-                              zqq/*.F \
-                              $(alpgen_author_dir)/zqqlib/zqq.f
-
+##application       AlpGenFragm Read/AlpGenFragm.cpp \
+##                              Read/upevnt.F        \
+##                              Read/upinit.F        \
+##                              Main/dummy.F         \
+##                              Main/pyr.F 
+##application       AlpGen4Q    Main/AlpGen.cpp      \
+##                              Main/alpgen_main.F   \
+##                              Main/pyr.F           \
+##                              Main/dummy.F         \
+##                              4Q/*.F               \
+##                              $(alpgen_author_dir)/4Qlib/4Q.f
+##
+##application       AlpGenZbb   Main/AlpGen.cpp      \
+##                              Main/alpgen_main.F   \
+##                              Main/pyr.F           \
+##                              Main/dummy.F         \
+##                              zqq/*.F \
+##                              $(alpgen_author_dir)/zqqlib/zqq.f
+##
 # =============== standard patterns ===========================================
-apply_pattern     component_library library=LbAlpGen
-apply_pattern     linker_library    library=LbAlpGenLib
-apply_pattern     library_stamps    library=LbAlpGenLib
-apply_pattern     application_path 
+apply_pattern     component_library library=LbAlpGenzbb
+apply_pattern     linker_library    library=LbAlpGenLibzbb
+apply_pattern     library_stamps    library=LbAlpGenLibzbb
+apply_pattern     component_library library=LbAlpGen4q
+apply_pattern     linker_library    library=LbAlpGenLib4q
+apply_pattern     library_stamps    library=LbAlpGenLib4q
+apply_pattern     component_library library=LbAlpGenwqq
+apply_pattern     linker_library    library=LbAlpGenLibwqq
+apply_pattern     library_stamps    library=LbAlpGenLibwqq
+apply_pattern     component_library library=LbAlpGentop
+apply_pattern     linker_library    library=LbAlpGenLibtop
+apply_pattern     library_stamps    library=LbAlpGenLibtop
+apply_pattern     application_pattern
+
 
 macro_prepend GENSER_linkopts " $(alpgen_linkopts) -latopyt "
 
@@ -61,16 +78,34 @@ path_append PATH ${LBALPGENROOT}/scripts
 
 # =============================================================================
 private           
-macro_append  AlpGenFragmlinkopts  $(Boost_linkopts_program_options)
+##macro_append  AlpGenFragmlinkopts  $(Boost_linkopts_program_options)
 macro_append  Boost_linkopts " $(Boost_linkopts_filesystem) $(Boost_linkopts_system) "
-macro_prepend LbAlpGen_linkopts " -Wl,--no-as-needed "
+macro LbAlpGen_linkopts " -Wl,--no-as-needed "
+macro_remove LbAlpGen_linkopts "-lLbAlpGenLibzbb"
+macro_remove LbAlpGen_linkopts "-lLbAlpGenLib4q"
+macro_remove LbAlpGen_linkopts "-lLbAlpGenLibwqq"
+macro_remove LbAlpGen_linkopts "-lLbAlpGenLibtop"
 
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir) "
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir)/alplib "
 
-macro_append AlpGenFragm_dependencies LbAlpGenLib 
-macro_append AlpGen4Q_dependencies LbAlpGenLib 
-macro_append AlpGenZbb_dependencies LbAlpGenLib 
+##macro_append AlpGenFragm_dependencies LbAlpGenLibzbb 
+##macro_append AlpGen4Q_dependencies LbAlpGenLib4q
+##macro_append AlpGenZbb_dependencies LbAlpGenLibzbb
+
+macro LbAlpGenzbb_dependencies LbAlpGenLibzbb
+macro LbAlpGen4q_dependencies  LbAlpGenLib4q
+macro LbAlpGenwqq_dependencies LbAlpGenLibwqq
+macro LbAlpGentop_dependencies  LbAlpGenLibtop
+
+macro_append LbAlpGenzbb_use_linkopts " -lLbAlpGenLibzbb "
+macro_append LbAlpGen4q_use_linkopts " -lLbAlpGenLib4q "
+macro_append LbAlpGenwqq_use_linkopts " -lLbAlpGenLibwqq "
+macro_append LbAlpGentop_use_linkopts " -lLbAlpGenLibtop "
+
+##macro_append AlpGenFragm_use_linkopts " -lLbAlpGenLibzbb "
+##macro_append AlpGen4Q_use_linkopts " -lLbAlpGenLib4q "
+##macro_append AlpGenZbb_use_linkopts " -lLbAlpGenLibzbb "
 
 end_private
 # =============================================================================

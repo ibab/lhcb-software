@@ -43,9 +43,9 @@ class AlpGenProduction : public PythiaProduction {
   virtual StatusCode generateEvent( HepMC::GenEvent * theEvent , 
                                     LHCb::GenCollision * theCollision ) ;
 
- protected:
+  // protected:
 
- private:
+  // private:
   StatusCode generateWeightedEvents( ) ;
   void generateUnweightedEvents( ) ;
   void Makelink2pdftable(int ndns);
@@ -60,7 +60,6 @@ class AlpGenProduction : public PythiaProduction {
   int  m_nevxiter; //number of events per iteration to generate alpgen's phase space grid in alpgen mode 1. Do tests!"
   int m_niter; //number of iterations to generate alpgen's phase space grid in alpgen mode 1.
   int m_nwgtev; //number of weighted events to generate by alpgen in mode 1.  Do tests!
-  unsigned short int m_ihrd; //Hard process code : 1:WQQ - 2:ZQQ - 7:QQQQ 13:top 
   int m_ndns; //parton density set (cf alpgen for codes) 5: CTEQ5L
   unsigned short int m_iqopt; //scale option (process dependent)
   float m_qfac; // Q scale rescaling factor
@@ -84,6 +83,10 @@ class AlpGenProduction : public PythiaProduction {
   float m_etabmin; //New cut: min eta for b quarks
   float m_eta1lmin; //New cut: min eta for 1 charged lepton
   float m_eta1bmin; //New cut: min eta for 1 b quark
+  float m_eta2bmin; //New cut: min eta for 2 b quarks
+  float m_pt1lmin; //New cut: min pt for 1 charged lepton
+  float m_pt1bmin; //New cut: min pt for 1 b quark
+  float m_pt2bmin; //New cut: min pt for 2 b quarks
   float m_drjmin; // min deltaR(j-j), deltaR(Q-j) [j=light jet, Q=c/b]
   float m_drbmin; //min deltaR(b-b) (procs with explicit b)
   float m_drcmin; //min deltaR(c-c) (procs with explicit c)
@@ -91,14 +94,7 @@ class AlpGenProduction : public PythiaProduction {
   //unsigned short int m_ilep; //Z*/gamma fin state: 0=lept (1 family) 1=nu (3 fam)
   float m_mllmin; //min dilepton inv mass
   float m_mllmax; //max dilepton inv mass
-  //Selection of single-top process:
-  //For imode=0,1:
-  //4 single-top processes can be selected:
-  //itopprc=1: t+q (njets=0)
-  //itopprc=2: t+b (njets=0)
-  //itopprc=3: t+W(W->f fbar")+jets (njets=0,1)
-  //itopprc=4: t+b+W(W->f fbar')+jets (njets=0,1)
-  unsigned short int m_itopprc;
+  unsigned short int m_itopprc;// single top process
   unsigned short int m_iwdecmode; //W decay modes, in imode=2 - 1:electron 2: muon
   unsigned short int m_itdecmode; //top (or t-tbar) decay modes, in imode=2
   unsigned short int m_izdecmode; //Z decay modes, in imode=2 - 1:electron 2: muon

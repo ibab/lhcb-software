@@ -1,6 +1,6 @@
-c-----------------------------------------------------------------
+c-------------------------------------------------------------------
       subroutine usrcut(lnot,wusr)
-c-----------------------------------------------------------------
+c-------------------------------------------------------------------
 c PRIMARY CUTS ALREADY APPLIED TO PHASE-SPACE GENERATION:
 c     ptjmin < pt(jet) < ptjmax for all light jets
 c     -etajmax < eta(jet) < etajmax for all light jets
@@ -9,24 +9,19 @@ c     delta R(bj) > drjmin for all (heavy quark, light jet) pairs
 c     ptbmin < pt(b) < ptbmax for all heavy quarks
 c     -etabmax < eta(b) < etabmax for all heavy quarks 
 c     delta R(bb) > drjmin for all (heavy quark, heavy quark) pairs
-c     mllmin < m(l+l-) < mllmax for charged leptons
-c     etmiss > etmiss_min for neutrinos
 c
-c USE THIS ROUTINE TO ENFORCE OTHER CUTS    
-c
-      
-
+c USE THIS ROUTINE TO ENFORCE LEPTON CUTS, OR OTHER CUTS    
       implicit none
       include 'alplib/alpgen.inc'
-      include 'zqqlib/zqq.inc'
- 
+      include 'wqqlib/wqq.inc'
+
 c new options settable in python and communicated to fortran:
       real letamin, betamin, letamin1, betamin1, betamin2
       common /alpgenetacut/ letamin, betamin, 
      + letamin1, betamin1, betamin2
       real lptmin1, bptmin1, bptmin2
       common /alpgenptcut/ lptmin1, bptmin1, bptmin2
-    
+
       double precision wusr
       integer lnot,i
 c bb-jet declarations
@@ -34,21 +29,22 @@ c bb-jet declarations
 c initialize output parameters
       lnot=0
       wusr=1d0
+c
 
 c LHCb code for LbAlpGen - Enforce new etamin and ptmin cuts:
-c      write (6,*) 'letamin = ', letamin
-c      write (6,*) 'betamin = ', betamin
+
       if (min(etab, etabb).lt.betamin) goto 10
-      if (min(etalp, etalm).lt.letamin) goto 10
-      if (max(etalp, etalm).lt.letamin1) goto 10
+      if (etalep.lt.letamin) goto 10
+      if (etalep.lt.letamin1) goto 10
       if (max(etab, etabb).lt.betamin1) goto 10
       if (min(etab, etabb).lt.betamin2) goto 10
       
-      if (max(ptlp, ptlm).lt.lptmin1) goto 10
+      if (ptlep.lt.lptmin1) goto 10
       if (max(ptb, ptbb).lt.bptmin1) goto 10
       if (min(ptb, ptbb).lt.bptmin2) goto 10
 
-c
+
+
       return
 c     the following cuts allow to select events where just 1 b-jet is
 c     reconstructed. To activate remove previous "return" statement
@@ -103,39 +99,27 @@ c     if outside jet cone, only stiff one can define the jet:
 c     
  5    return
  10   lnot= 1
-      return
       end
-
-
 
 c-------------------------------------------------------------------
       subroutine alshis
 c-------------------------------------------------------------------
-      implicit none
-      include 'alplib/alpgen.inc'
-      include 'zqqlib/zqq.inc'
-      real ptbin,ptmax,xmbin,xmmax
       ptbin=2e0
       ptmax=200e0
       xmbin=4e0
       xmmax=400e0
-c
       call mbook(1,'pt_1',2.*ptbin,0e0,2.*ptmax)
       call mbook(2,'pt_2',ptbin,0e0,ptmax)
       call mbook(3,'pt_3',ptbin,0e0,ptmax)
       call mbook(4,'pt_4',ptbin,0e0,ptmax)
       call mbook(5,'pt_5',ptbin,0e0,ptmax)
       call mbook(6,'pt_6',ptbin,0e0,ptmax)
-      if(ilep.eq.0) call mbook(7,'pt_min(lept)',ptbin,0e0,ptmax)
-      if(ilep.eq.1) call mbook(7,'etmiss',ptbin,0e0,ptmax)
+      call mbook(7,'ptel',ptbin,0e0,ptmax)
       call mbook(8,'pt_b',ptbin,0e0,ptmax)
       call mbook(9,'dR(b-bbar)',0.2,0e0,6e0)
       call mbook(10,'mbb ',xmbin,0e0,xmmax)
       call mbook(11,'dR(b-jetmax)',0.2,0e0,6e0)
       call mbook(12,'dR(b-jetmin)',0.2,0e0,6e0)
-      call mbook(13,'ptjet(incl)',ptbin,0e0,ptmax)
-c
-      if(ilep.eq.0) call mbook(15,'m(ll)',2e0,0e0,200e0)
       end
 
 c-------------------------------------------------------------------
@@ -143,11 +127,15 @@ c-------------------------------------------------------------------
 c-------------------------------------------------------------------
       implicit none
       include 'alplib/alpgen.inc'
-      include 'zqqlib/zqq.inc'
+      include 'wqqlib/wqq.inc'
       integer i
       real  xnorm
       character *1 jet(9)
       data jet/'1','2','3','4','5','6','7','8','9'/
+c debug
+      integer idbg
+      double precision fcount
+      common/fldbg/fcount(16),idbg
 c
       open(unit=99,file=topfile,err=101,status='unknown')
       if(imode.le.1) then
@@ -159,24 +147,28 @@ c
          stop
       endif
 c
+c dbg:
+c      if(idbg.eq.1) then
+c        write(*,*) 'quarks: ',(fcount(i)*xnorm,i=1,4)
+c        write(*,*) 'leptons: ',(fcount(i)*xnorm,i=11,16)
+c        call mfinal(100)
+c        call mtop(100,99,'rn',' ','LIN')
+c        stop
+c      endif
+
       do i=1,200
          if(i.ne.61) call mopera(i,'F',i,i,xnorm,1.)
          call mfinal(i)
       enddo 
-c
-      do i=1,njets
+      do i=1,njets+2
          call mtop(i,99,'pt'//jet(i),' ','LOG')
       enddo
-      if(ilep.eq.0) call mtop(7,99,'pt_min(lept)',' ','LOG')
-      if(ilep.eq.1) call mtop(7,99,'etmiss',' ','LOG')
+      call mtop(7,99,'pt(lept)',' ','LOG')
       call mtop(8,99,'pt(b,bbar)',' ','LOG')
       call mtop(9,99,'dR(b-bbar)',' ','LIN')
       call mtop(10,99,'m(b-bbar)',' ','LOG')
       call mtop(11,99,'dR(b-jetmax)',' ','LIN')
       call mtop(12,99,'dR(b-jetmin)',' ','LIN')
-      call mtop(13,99,'pt(jet)',' ','LOG')
-      if(ilep.eq.0) call mtop(15,99,'m(ll)',' ','LOG')
-c
  100  close(99)
  101  return
       end
@@ -189,12 +181,12 @@ c     fname, where partial cross-sections and and generation
 c     efficiencies have already been printed by default
       implicit none
       include 'alplib/alpgen.inc'
-      include 'zqqlib/zqq.inc'
+      include 'wqqlib/wqq.inc'
       integer n
-      character *50 mon_fname
+      character*50 mon_fname
 c
       if(evgen) then
-         if(mod(n,100000).eq.0) then
+         if(mod(n,1000000).eq.0) then
 c     save histograms' contents
             call msave
 c     print out histograms
@@ -210,10 +202,10 @@ c     analyse event, fill histograms
 c-------------------------------------------------------------------
       implicit none
       include 'alplib/alpgen.inc'
-      include 'zqqlib/zqq.inc'
-      real*8 mbb,mll,wgt,tmp,ptlep,etmiss
+      include 'wqqlib/wqq.inc'
+      real*8 mbb,wgt,tmp
       real rwgt
-      integer i,j,jproc,ord(10)
+      integer i,jproc,ord(10)
 c
       rwgt=real(wgt)
       if(rwgt.lt.0e0) then
@@ -224,56 +216,37 @@ c
       endif 
 c
 c     reordering according to pt
-      if(njets.ge.2) then
-        call alusor(ptj,njets,ord,2)              
-        do i=1,njets
-          call mfill(i,real(ptj(ord(njets+1-i))),rwgt)
-          call mfill(13,real(ptj(ord(njets+1-i))),rwgt)
-        enddo
-        if(ilep.eq.0) then
-          ptlep=min(ptlm,ptlp)
-          call mfill(7,real(ptlep),rwgt)
-        elseif(ilep.eq.1) then
-          etmiss=sqrt((pnu(1)+pnub(1))**2+(pnu(2)+pnub(2))**2)
-          call mfill(7,real(etmiss),rwgt)
-        endif
-        call mfill(8,real(ptb),rwgt)
-        call mfill(8,real(ptbb),rwgt)
-        
-        call mfill(9,real(drbb),rwgt)
+      call alusor(ptj,njets+2,ord,2)              
+      do i=1,njets+2
+         call mfill(i,real(ptj(ord(njets+3-i))),rwgt)
+      enddo
+      call mfill(7,real(ptlep),rwgt)
+      call mfill(8,real(ptb),rwgt)
+      call mfill(8,real(ptbb),rwgt)
+
+      call mfill(9,real(drbb),rwgt)
 c     dR(b-jetmax)
-        tmp=drbj(ord(njets))
-        if(tmp.eq.0) tmp=drbj(ord(njets-1))
-        call mfill(11,real(tmp),rwgt)
+      tmp=drbj(ord(njets+2))
+      if(tmp.eq.0) tmp=drbj(ord(njets+1))
+      call mfill(11,real(tmp),rwgt)
 c     dR(bbar-jetmax)
-        tmp=drbbj(ord(njets))
-        if(tmp.eq.0) tmp=drbbj(ord(njets-1))
-        call mfill(11,real(tmp),rwgt)
+      tmp=drbbj(ord(njets+2))
+      if(tmp.eq.0) tmp=drbbj(ord(njets+1))
+      call mfill(11,real(tmp),rwgt)
 c     dR(b-jetmin)
-        tmp=drbj(ord(1))
-        if(tmp.eq.0) tmp=drbj(ord(2))
-        call mfill(12,real(tmp),rwgt)
+      tmp=drbj(ord(1))
+      if(tmp.eq.0) tmp=drbj(ord(2))
+      call mfill(12,real(tmp),rwgt)
 c     dR(bbar-jetmin)
-        tmp=drbbj(ord(1))
-        if(tmp.eq.0) tmp=drbbj(ord(2))
-        call mfill(12,real(tmp),rwgt)
+      tmp=drbbj(ord(1))
+      if(tmp.eq.0) tmp=drbbj(ord(2))
+      call mfill(12,real(tmp),rwgt)
 c     b-bbar mass
-        mbb=(pbott(4)+pbbar(4))**2
-        do i=1,3
-          mbb=mbb-(pbott(i)+pbbar(i))**2
-        enddo
-        mbb=sqrt(mbb)
-        call mfill(10,real(mbb),rwgt)
-c     dilepton mass
-        if(ilep.eq.0) then
-          mll=(plp(4)+plm(4))**2
-          do i=1,3
-            mll=mll-(plp(i)+plm(i))**2
-          enddo
-          mll=sqrt(mll)
-          call mfill(15,real(mll),rwgt)
-        endif
-c     
-      endif
+      mbb=(pbott(4)+pbbar(4))**2
+      do i=1,3
+         mbb=mbb-(pbott(i)+pbbar(i))**2
+      enddo
+      mbb=sqrt(mbb)
+      call mfill(10,real(mbb),rwgt)
       end
 

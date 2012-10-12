@@ -33,15 +33,52 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       implicit none
       include 'alplib/alpgen.inc'
       include '4Qlib/4Q.inc'
-      integer lnot, i
+
+c new options settable in python and communicated to fortran:
+      real letamin, betamin, letamin1, betamin1, betamin2
+      common /alpgenetacut/ letamin, betamin, 
+     + letamin1, betamin1, betamin2
+      real lptmin1, bptmin1, bptmin2
+      common /alpgenptcut/ lptmin1, bptmin1, bptmin2
+
+      integer lnot, i, countbeta1, countbeta2, countbpt1, countbpt2
       double precision weight
 
       weight= 1.d0
-      lnot= 0
+      lnot= 0 
+      
+c      write (6,*) 'you are in 4Qusr.F'
+c      write (6,*) 'etab1 = ', etab(1)
+c      write (6,*) 'etab2 = ', etab(2)
+c      write (6,*) 'etab3 = ', etab(3)
+c      write (6,*) 'etabb1 = ', etabb(1)
+c      write (6,*) 'etabb1 = ', etabb(2)
+c      write (6,*) 'etabb1 = ', etabb(3)
+      
+      countbeta1=0
+      countbeta2=0
+      countbpt1=0
+      countbpt2=0
+     
       do 30 i = 3, 6
-       if(eta(i).LT.1.5) goto 10
+c        write (6,*) 'eta', i, ' = ', eta(i)
+c       write (6,*) 'pT(', i , ') = ', pt(i)
+       if(eta(i).LT.betamin) goto 10
+
+       if(eta(i).GE.betamin1) countbeta1=countbeta1+1
+       if(eta(i).GE.betamin2) countbeta2=countbeta2+1
+       if(pt(i).GE.bptmin1) countbpt1=countbpt1+1
+       if(pt(i).GE.bptmin2) countbpt2=countbpt2+1
 c      if(cuts not passed) goto 10
- 30		continue
+ 30   continue
+
+      if (countbeta1.lt.1) goto 10
+      if (countbeta2.lt.2) goto 10
+      if (countbpt1.lt.1) goto 10
+      if (countbpt2.lt.2) goto 10
+
+
+     
 
  20   return
  10   lnot= 1
