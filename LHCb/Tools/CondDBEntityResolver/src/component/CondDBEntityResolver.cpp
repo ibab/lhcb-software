@@ -52,7 +52,7 @@ CondDBEntityResolver::CondDBEntityResolver( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBEntityResolver::~CondDBEntityResolver() {};
+CondDBEntityResolver::~CondDBEntityResolver() {}
 
 
 //=========================================================================

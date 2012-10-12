@@ -5,10 +5,13 @@
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed warning: extra ';' [-pedantic].
+
 !========================= CondDBEntityResolver v5r3 2011-07-25 ==============
 ! 2011-07-21 - Marco Cattaneo
  - Create MSG::VERBOSE and MSG::DEBUG messages only when output level requires
-   it, also using UNLIKELY macro 
+   it, also using UNLIKELY macro
 
 !================ Tools/CondDBEntityResolver v5r2 2010-06-18 ===============
 ! 2010-06-10 - Marco Clemencic
