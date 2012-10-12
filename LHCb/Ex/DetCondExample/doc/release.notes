@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed warning: virtual function is hidden.
+
 !========================= DetCondExample v11r11 2012-07-24 ===================
 ! 2012-07-13 - Marco Clemencic
  - Minor fix in the requirements branches.
