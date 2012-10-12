@@ -1,8 +1,8 @@
-// Include files 
+// Include files
 #include "Event/RawEvent.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "Event/CaloAdc.h"
 #include "Event/L0PrsSpdHit.h"
 
@@ -40,7 +40,7 @@ CaloFillPrsSpdRawBuffer::CaloFillPrsSpdRawBuffer( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-CaloFillPrsSpdRawBuffer::~CaloFillPrsSpdRawBuffer() {}; 
+CaloFillPrsSpdRawBuffer::~CaloFillPrsSpdRawBuffer() {}
 
 //=============================================================================
 // Initialization
@@ -77,7 +77,7 @@ StatusCode CaloFillPrsSpdRawBuffer::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -85,7 +85,7 @@ StatusCode CaloFillPrsSpdRawBuffer::initialize() {
 StatusCode CaloFillPrsSpdRawBuffer::execute() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
- 
+
   for ( int kk = 0 ; m_numberOfBanks > kk ; kk++ ) {
     m_banks[kk].clear( );
     m_trigBanks[kk].clear( );
@@ -96,9 +96,9 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
   if ( 3 == m_dataCodingType ) {
     fillPackedBank( );
   } else {
-    fillDataBankShort( ); 
+    fillDataBankShort( );
   }
-  
+
   //== Build the trigger banks
 
   if ( 1 == m_dataCodingType ) {
@@ -106,7 +106,7 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
   } else if ( 2 == m_dataCodingType ) {
     fillTriggerBankShort( );
   }
-  
+
   int totDataSize = 0;
   int totTrigSize = 0;
 
@@ -115,17 +115,17 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
   for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
     int version = m_dataCodingType;
     if ( 2 == version ) version = 1;
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "Data bank coding type : " << m_dataCodingType << endmsg;
     rawEvent->addBank( board, m_bankType, version, m_banks[kk] );
     totDataSize += m_banks[kk].size();
     m_dataSize[kk] += m_banks[kk].size();
     if ( 3 > m_dataCodingType ) {
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
         debug() << "Trigger bank coding type : " << m_dataCodingType << endmsg;
       rawEvent->addBank( board, m_triggerBankType, m_dataCodingType , m_trigBanks[kk] );
       totTrigSize += m_trigBanks[kk].size();
-    } 
+    }
     board++;
   }
 
@@ -151,13 +151,13 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
       verbose() << "DATA bank : " << board << endmsg;
       int kl = 0;
       std::vector<unsigned int>::const_iterator itW;
-      
+
       for ( itW = m_banks[kk].begin(); m_banks[kk].end() != itW; itW++ ){
         verbose() << format ( " %8x %11d   ", (*itW), (*itW) );
         kl++;
         if ( 0 == kl%4 ) verbose() << endmsg;
       }
-      
+
       verbose() << endmsg <<  "TRIGGER bank size=" << m_trigBanks[kk].size() << "  "
                 << endmsg;
       kl = 0;
@@ -170,9 +170,9 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
       board++;
     }
   }
- 
+
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -182,7 +182,7 @@ StatusCode CaloFillPrsSpdRawBuffer::finalize() {
   if ( 0 < m_nbEvents ) {
     m_totDataSize /= m_nbEvents;
     m_totTrigSize /= m_nbEvents;
-    info() << "Average event size : " 
+    info() << "Average event size : "
            << format( "%7.1f words, %7.1f for trigger", m_totDataSize, m_totTrigSize );
     double meanSize = 0.;
     double maxSize  = 0.;
@@ -192,10 +192,10 @@ StatusCode CaloFillPrsSpdRawBuffer::finalize() {
       if ( maxSize < m_dataSize[kk] ) maxSize = m_dataSize[kk];
     }
     meanSize /= m_dataSize.size();
-    info() << format ( "  Mean bank size %7.1f, maximum size %7.1f", 
+    info() << format ( "  Mean bank size %7.1f, maximum size %7.1f",
                        meanSize, maxSize ) << endmsg;
   }
-  
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 //=========================================================================
@@ -211,7 +211,7 @@ void CaloFillPrsSpdRawBuffer::fillDataBankShort ( ) {
     int cellIndex = id.all();
     unsigned int word = (cellIndex << 16) + (adc & 0xFFFF );
     m_banks[0].push_back( word );
-    
+
     if ( MSG::VERBOSE >= msgLevel() ) {
       verbose() << id << format( "adc %4d", adc ) << endmsg;
     }
@@ -250,7 +250,7 @@ void CaloFillPrsSpdRawBuffer::fillTriggerBank ( ) {
     }
     words[cellIndex] |= ( 1 << bitNum );
   }
-  for ( std::vector<int>::const_iterator itW = words.begin() ; 
+  for ( std::vector<int>::const_iterator itW = words.begin() ;
         words.end() != itW ; ++itW ) {
     if ( 0 == (*itW) ) continue;
     LHCb::CaloCellID id( 8 * (itW-words.begin() ) );
@@ -274,7 +274,7 @@ void CaloFillPrsSpdRawBuffer::fillTriggerBankShort ( ) {
   for ( itT = prs->begin(); prs->end() != itT; ++itT ) {
     LHCb::CaloCellID id = (*itT)->cellID();
     int cellIndex = id.all() & 0x3FFF;
-    tag[cellIndex] |= 1;    
+    tag[cellIndex] |= 1;
   }
 
   for ( itT = spd->begin(); spd->end() != itT; ++itT ) {
@@ -285,7 +285,7 @@ void CaloFillPrsSpdRawBuffer::fillTriggerBankShort ( ) {
 
   unsigned int word = 0;
 
-  for ( std::vector<int>::const_iterator itW = tag.begin() ; 
+  for ( std::vector<int>::const_iterator itW = tag.begin() ;
         tag.end() != itW ; ++itW ) {
     if ( 0 == (*itW) ) continue;
     int temp = ( (itW-tag.begin()) << 2 ) + (*itW);
@@ -308,7 +308,7 @@ void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
   LHCb::L0PrsSpdHits* prs = get<LHCb::L0PrsSpdHits>( m_prsBank );
   LHCb::L0PrsSpdHits* spd = get<LHCb::L0PrsSpdHits>( m_spdBank );
 
-  
+
   for ( int kTell1 = 0 ; m_numberOfBanks > kTell1 ; kTell1++ ) {
     std::vector<int> feCards = m_calo->tell1ToCards( kTell1 );
     for ( std::vector<int>::iterator iFe = feCards.begin(); feCards.end() != iFe; ++iFe ) {
@@ -326,12 +326,12 @@ void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
       int offset = 0;
       int nTrigWord = 0;
       int word   = 0;
-      
+
       for ( std::vector<LHCb::CaloCellID>::const_iterator itId = ids.begin();
             ids.end() != itId; ++itId ) {
         LHCb::CaloCellID id = *itId;
         LHCb::CaloCellID id2( 0, id.area(), id.row(), id.col() );
-        int  mask = 0;        
+        int  mask = 0;
         if ( 0 != prs->object( id.all()  ) ) mask |= 0x40;
         if ( 0 != spd->object( id2.all() ) ) mask |= 0x80;
         if ( 0 != mask ) {
@@ -347,9 +347,9 @@ void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
           }
           sizeTrig += 1;
         }
-        num++;  
+        num++;
       }
-      
+
       if ( 0 != word ) {
         m_banks[kTell1].push_back( word );
         word = 0;
@@ -357,7 +357,7 @@ void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
       }
 
       // Then the Prs ADCs
-      
+
       num = 0;
       for ( std::vector<LHCb::CaloCellID>::const_iterator itId = ids.begin();
             ids.end() != itId; ++itId ) {
@@ -375,7 +375,7 @@ void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
           }
           sizeAdc += 1;
         }
-        num++;  
+        num++;
       }
       if ( 0 != word ) {
         m_banks[kTell1].push_back( word );
@@ -387,7 +387,7 @@ void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
       m_banks[kTell1][sizeIndex] |= (sizeAdc << 7) + sizeTrig;
       m_totTrigSize += nTrigWord;
     }
-  }  
+  }
 }
 
 //=============================================================================

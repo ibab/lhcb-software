@@ -1,8 +1,8 @@
 // $Id: CaloMergeTAE.cpp,v 1.6 2009-11-24 19:53:42 odescham Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "CaloMergeTAE.h"
@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloMergeTAE );
+DECLARE_ALGORITHM_FACTORY( CaloMergeTAE )
 
 
 //=============================================================================
@@ -39,18 +39,18 @@ CaloMergeTAE::CaloMergeTAE( const std::string& name,
 
   // set default detectorName
   int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
-  m_detectorName = name.substr( index, 4 ); 
+  m_detectorName = name.substr( index, 4 );
   if ( name.substr(index,3) == "Prs" ) m_detectorName = "Prs";
   if ( name.substr(index,3) == "Spd" ) m_detectorName = "Spd";
 
 
-  
+
 
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CaloMergeTAE::~CaloMergeTAE() {} 
+CaloMergeTAE::~CaloMergeTAE() {}
 
 //=============================================================================
 // Initialization
@@ -75,7 +75,7 @@ StatusCode CaloMergeTAE::initialize() {
     m_locDigit     = LHCb::CaloDigitLocation::Prs + m_inExt;
     m_locAdc     = LHCb::CaloAdcLocation::Prs + m_inExt;
   } else if ( "Spd" == m_detectorName ) {
-    m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd ); 
+    m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
     m_locDigit     = LHCb::CaloDigitLocation::Spd + m_inExt;
     m_locAdc     = LHCb::CaloAdcLocation::Spd + m_inExt;
   } else {
@@ -85,12 +85,12 @@ StatusCode CaloMergeTAE::initialize() {
   //
   if( "" != m_outputDataLoc ) {
     m_outDigit = m_outputDataLoc;
-    m_outAdc   = m_outputDataLoc;  
-  }else{    
+    m_outAdc   = m_outputDataLoc;
+  }else{
     m_outDigit     = "TAE/" + m_locDigit;
     m_outAdc       = "TAE/" + m_locAdc;
   }
-  
+
 
   //
   if(m_slots.size() == 0){
@@ -107,9 +107,9 @@ StatusCode CaloMergeTAE::initialize() {
   }  else {
     Error("Unknown data type " + m_data).ignore();
     return StatusCode::FAILURE;
-  }  
+  }
   info() << "Will merge " << m_data << " from " << m_slots << " into " << loc << endmsg;
-  return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -149,7 +149,7 @@ void CaloMergeTAE::mergeDigits(){
     if( exist<LHCb::CaloDigits>( slot + m_locDigit ))
       digitsMap[*islot] =  get<LHCb::CaloDigits>( slot + m_locDigit , false );
     else
-      Warning("No CaloDigits found in " + slot + m_locDigit ).ignore();      
+      Warning("No CaloDigits found in " + slot + m_locDigit ).ignore();
 
   }
   //
@@ -172,7 +172,7 @@ void CaloMergeTAE::mergeDigits(){
       sum += e;
       if ( msgLevel( MSG::DEBUG) )txt += (*imap).first + " : " + Gaudi::Utils::toString(e) + " | " ;
     }
-    
+
     if(  sum > m_threshold ){
       LHCb::CaloDigit* newDigit = new LHCb::CaloDigit(id, sum);
       newDigits->insert( newDigit);
@@ -191,7 +191,7 @@ void CaloMergeTAE::mergeAdcs(){
     if( exist<LHCb::CaloAdcs>( slot + m_locAdc ))
       adcsMap[*islot] =  get<LHCb::CaloAdcs>( slot + m_locAdc , false );
     else
-      Warning("No CaloAdcs found in " + slot + m_locAdc ).ignore();      
+      Warning("No CaloAdcs found in " + slot + m_locAdc ).ignore();
 
   }
   //
@@ -214,7 +214,7 @@ void CaloMergeTAE::mergeAdcs(){
       sum += val;
       if ( msgLevel( MSG::DEBUG) )txt += (*imap).first + " : " + Gaudi::Utils::toString( val ) +  " | " ;
     }
-    
+
     if(  (double) sum > m_threshold ){
       LHCb::CaloAdc* newAdc = new LHCb::CaloAdc(id, sum);
       newAdcs->insert( newAdc );

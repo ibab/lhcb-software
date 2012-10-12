@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloTriggerBitsFromRaw );
+DECLARE_TOOL_FACTORY( CaloTriggerBitsFromRaw )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -25,26 +25,26 @@ CaloTriggerBitsFromRaw::CaloTriggerBitsFromRaw( const std::string& type,
 {
   declareInterface<ICaloTriggerBitsFromRaw>(this);
   clear();
-};
+}
 
 
 //=============================================================================
 // Destructor
 //=============================================================================
-CaloTriggerBitsFromRaw::~CaloTriggerBitsFromRaw() {};
+CaloTriggerBitsFromRaw::~CaloTriggerBitsFromRaw() {}
 
 //=========================================================================
 //  Initialisation
 //=========================================================================
 StatusCode CaloTriggerBitsFromRaw::finalize ( ) {
-  return CaloReadoutTool::finalize(); 
+  return CaloReadoutTool::finalize();
 }
 
 StatusCode CaloTriggerBitsFromRaw::initialize ( ) {
   StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << "==> Initialize " << name() << endmsg;
 
   m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
@@ -72,13 +72,13 @@ void CaloTriggerBitsFromRaw::cleanData(int feb ) {
   LHCb::Calo::FiredCells tempPrs ;
   LHCb::Calo::FiredCells tempSpd ;
   for(LHCb::Calo::FiredCells::iterator ispd = spd.begin();ispd != spd.end();++ispd){
-    if( m_calo->cellParam( *ispd ).cardNumber() == feb)continue;  
+    if( m_calo->cellParam( *ispd ).cardNumber() == feb)continue;
     tempSpd.push_back( *ispd );
-  }  
+  }
   for(LHCb::Calo::FiredCells::iterator iprs = prs.begin();iprs!=prs.end();++iprs){
-    if( m_calo->cellParam( *iprs ).cardNumber() == feb)continue;  
+    if( m_calo->cellParam( *iprs ).cardNumber() == feb)continue;
     tempPrs.push_back( *iprs );
-  }  
+  }
   clear();
   m_data = std::make_pair(tempPrs,tempSpd);
 }
@@ -88,7 +88,7 @@ void CaloTriggerBitsFromRaw::cleanData(int feb ) {
 
 //=========================================================================
 //  Return prs or spd cells independently
-//  Warning if both method are invoqued consecutively 
+//  Warning if both method are invoqued consecutively
 //  the FULL decoding is run twice
 //  --> in this case it's better to invoque prsSpdCells() method
 //=========================================================================
@@ -97,7 +97,7 @@ const LHCb::Calo::FiredCells& CaloTriggerBitsFromRaw::prsCells () {
   return allCells.first;
 }
 const LHCb::Calo::FiredCells& CaloTriggerBitsFromRaw::spdCells () {
-  const LHCb::Calo::PrsSpdFiredCells& allCells = prsSpdCells();  
+  const LHCb::Calo::PrsSpdFiredCells& allCells = prsSpdCells();
   return allCells.second;
 }
 //=========================================================================
@@ -118,9 +118,9 @@ const LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int sou
   int sourceID     ;
   if(m_getRaw)getBanks();
   if( NULL == m_banks || 0 == m_banks->size() ){
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "The banks container is empty" << endmsg;
-  }else{    
+  }else{
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); itB != m_banks->end() ; ++itB ) {
       sourceID       = (*itB)->sourceID();
       if( source >= 0 && source != sourceID )continue;
@@ -128,14 +128,14 @@ const LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int sou
       if(checkSrc( sourceID ))continue;
       decoded = getData ( *itB );
       if( !decoded ){
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-          debug() << "Error when decoding bank " << Gaudi::Utils::toString(sourceID)   
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "Error when decoding bank " << Gaudi::Utils::toString(sourceID)
                   << " -> incomplete data - May be corrupted" << endmsg;
       }
-    } 
+    }
   }
   if( !found ){
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "rawBank sourceID : " << Gaudi::Utils::toString(source) << " has not been found"<<endmsg;
   }
   return m_data;
@@ -165,15 +165,15 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
 
   if(0 == size)m_status.addStatus( sourceID, LHCb::RawBankReadoutStatus::Empty);
 
-  if ( msgLevel( MSG::DEBUG) )debug() << "Decode bank " << bank << " source " << sourceID 
+  if ( msgLevel( MSG::DEBUG) )debug() << "Decode bank " << bank << " source " << sourceID
                                       << " version " << version << " size " << size << endmsg;
-  
+
 
 
   // -----------------------------------------------
-  // skip detector specific header line 
+  // skip detector specific header line
   if(m_extraHeader){
-    ++data ; 
+    ++data ;
     --size;
   }
   // -----------------------------------------------
@@ -192,8 +192,8 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
           LHCb::CaloCellID spdId( (lastID+kk) & 0x3FFF );
 
           if ( spdData & 1 ) m_data.second.push_back( spdId);
-          if ( prsData & 1 ) m_data.first.push_back( id ); 
- 
+          if ( prsData & 1 ) m_data.first.push_back( id );
+
 
           //event dump
           if ( msgLevel( MSG::VERBOSE) ) {
@@ -225,8 +225,8 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
                     << " |  valid ? " << m_calo->valid( prsId )
                     << " |  Prs/Spd  = " << (item&1) << "/" << (item&2) << endmsg;
         }
-        
-        
+
+
         if( 0 != spdId ){
           if ( 0 != (item & 2) ) {
             LHCb::CaloCellID id ( spdId );   // SPD
@@ -246,9 +246,9 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
-    if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : " 
+    if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : "
                                         << feCards << " in Tell1 bank " << sourceID << endmsg;
-    
+
     int offset   = 0;
     int lenAdc   = 0;
     int lenTrig  = 0;
@@ -267,8 +267,8 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
       int code  = (word >>14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
       checkCtrl(ctrl,sourceID);
-      
-      if ( msgLevel( MSG::DEBUG) )debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endmsg;      
+
+      if ( msgLevel( MSG::DEBUG) )debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endmsg;
       // access chanID via condDB
       std::vector<LHCb::CaloCellID> chanID  ;
       // look for the FE-Card in the Tell1->cards vector
@@ -277,7 +277,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        Error(" FE-Card w/ [code : " + Gaudi::Utils::toString(code) + " ] is not associated with TELL1 bank sourceID : " 
+        Error(" FE-Card w/ [code : " + Gaudi::Utils::toString(code) + " ] is not associated with TELL1 bank sourceID : "
               +Gaudi::Utils::toString(sourceID)
               + " in condDB :  Cannot read that bank").ignore();
         Error("Warning : previous data may be corrupted").ignore();
@@ -289,7 +289,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
       prevCard = card;
 
       // Process FE-data decoding
-      offset   = 32;      
+      offset   = 32;
       while ( 0 < lenTrig ) {
         if ( 32 == offset ) {
           lastData = *data++;
@@ -309,7 +309,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
         // event dump
         if ( msgLevel( MSG::VERBOSE) ) {
           verbose() << " |  SourceID : " << sourceID
-                    << " |  FeBoard : " << code 
+                    << " |  FeBoard : " << code
                     << " |  Channel : " << num
                     << " |  CaloCell " << id
                     << " |  valid ? " << m_calo->valid(id)
@@ -325,7 +325,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
           }
         }
       }
-      
+
       int nSkip = (lenAdc+1 ) / 2;  // Length in number of words
       size     -= nSkip;
       data     += nSkip;
@@ -333,8 +333,8 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
     // Check All cards have been read
     if(!checkCards(nCards,feCards))m_status.addStatus(sourceID, LHCb::RawBankReadoutStatus::Incomplete);
   } //== versions
-  
-  
+
+
   return true;
 }
 //=============================================================================

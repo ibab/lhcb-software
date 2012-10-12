@@ -4,11 +4,14 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2012-10-12 - Marco Clemencic
+ - Fixed warning: extra ‘;’ [-pedantic].
+
 ! 2012-10-08 - Marco Cattaneo
  - In CaloBankHandler.opts and Configuration.py, remove setting MeasureTime=True,
    should not be the default, and should in any case use TimingAuditor.
  - Fix some more UNINIT_CTOR defects
- 
+
 !========================= CaloDAQ v4r30 2012-09-28 =========================
 ! 2012-08-09 - Olivier Deschamps
   - CaloBankHandler.opts : remove bank conversion - just decode Xcal digits and
@@ -21,14 +24,14 @@
  - Fix UNINIT_CTOR defects
 
 !========================= CaloDAQ v4r28 2012-06-25 =========================
-! 2012-06-23 - Deschamps Olivier 
+! 2012-06-23 - Deschamps Olivier
    - CaloDigitFilterTool : prepare for spd-dependent pile-up subtraction
 
 ! 2012-06-15 - Marco Cattaneo
  - Replace RawEventLocation::Other with RawEventLocation::Calo
 
 ! 2012-06-08 - Marco Cattaneo
- - Add RawEventLocations property to decoder to allow to specify a search 
+ - Add RawEventLocations property to decoder to allow to specify a search
    list of locations. Default is to look for
    RawEventLocation::Other followed by RawEventLocation::Default.
  - RawLocation property is declared obsolete. If set, it is prepended
@@ -41,7 +44,7 @@
 
 !========================= CaloDAQ v4r26 2012-01-31 =========================
 ! 2012-01-16 - Marco Cattaneo
- - Do not cache pedestalShift at initialize, get it from detector element 
+ - Do not cache pedestalShift at initialize, get it from detector element
    whenever it's needed, since it can change during the job.
 
 !========================= CaloDAQ v4r25 2011-12-14 =========================
@@ -83,7 +86,7 @@
 !========================= CaloDAQ v4r21 2011-02-22 =========================
 ! 2011-08-02 - Olivier Deschamps
   - add ICaloDigitFilterTool to the dictionary
-  - reduce statistics verbosity 
+  - reduce statistics verbosity
 
 ! 2011-07-02 - Olivier Deschamps
 	- CaloDigitFilterTool/CaloDigitFilterAlg : new tool/alg for digit masking and energy offset
@@ -93,7 +96,7 @@
 !========================== CaloDAQ v4r20 2010-04-26 =========================
 ! 2010-03-22 - Olivier Deschamps
  - (I)Calo(L0)DataProvider : implement user-defined default value in adc
-   (id,default=0) and digit(id,default=0) methods 
+   (id,default=0) and digit(id,default=0) methods
 
 !========================== CaloDAQ v4r19 2010-03-17 =========================
 ! 2010-03-02 - Olivier Deschamps
@@ -109,23 +112,23 @@
    in offline format
 
 !========================== CaloDAQ v4r16 2009-11-27 =========================
-! 2009-11-25 
+! 2009-11-25
  - CaloZSupAlg/CaloDigitsFromRaw : fix location extension settings
 
 !========================== CaloDAQ v4r15 2009-11-13 =========================
 ! 2009-10-29 - Vanya Belyaev
  - CaloDAQ/CaloDigits.py
-     remove the excessive debug printout 
+     remove the excessive debug printout
 
 ! 2009-10-27 - Olivier Deschamps
   - CaloDigitFromRaw : add missing statusOnTES when output = ADC
 
 ! 2009-10-27 - Vanya Belyaev
- - new configurable to decode CaloDigits 
+ - new configurable to decode CaloDigits
 
 ! 2009-10-26 - Olivier Deschamps
   - new options file : CaloDigitsSeq.opts (to be imported everywhere it is needed)
-  - protect CaloDataProviderFromTES against missing adc/digit 
+  - protect CaloDataProviderFromTES against missing adc/digit
   - protect CheckCaloBank against missing RawEvent
   - CaloDigitFromRaw : remove duplicate property !
   - CaloXXFromRaw    : clear read sourceID in clear() method (not really useful but ...)
@@ -135,7 +138,7 @@
  - CaloReadoutTool.cpp : bug fix : initialise m_packed in constructor
 
 ! 2009-10-10 - Olivier Deschamps
-  - Calo decoding tools (I)Calo(L0)DataProvider/(I)CaloEnergyFromRaw/(I)CaloTriggerXXXFromRaw : 
+  - Calo decoding tools (I)Calo(L0)DataProvider/(I)CaloEnergyFromRaw/(I)CaloTriggerXXXFromRaw :
     - add protections with const qualifier
     - remove usage of stringstream (slow)
     - change signature of adcs() methods
@@ -157,7 +160,7 @@
  - CaloReadoutTool : fix problem with IncidentSvc handling for getBanks() (problem in Boole when RawBanks does not exist at BeginEvent)
 
 ! 2009-09-16 - Olivier Deschamps
- - CaloReadoutTool : 
+ - CaloReadoutTool :
     - implement BeginEvent update via IncidentService : the getBanks() method no longer need to be externally invoked at each event
     - implement initialize()/finalize() method
     - adapt all iheriting readout tools accordingly
@@ -167,7 +170,7 @@
  - Remove CaloReCreateMCLinks.cpp (moved to CaloAssociators)
  - Remove MCEvent dependency (no longer needed after above change)
  - Replace all endreq by endmsg
- - Remove hack for Gaudi v21r1 to link dictionary on Windows 
+ - Remove hack for Gaudi v21r1 to link dictionary on Windows
  - Remove obsolete file CaloDAQ_dll.cpp
 
 !========================== CaloDAQ v4r12p1 2009-09-03 =========================
@@ -182,14 +185,14 @@
 
 !========================== CaloDAQ v4r11p1 2009-06-02 =======================
 ! 2009-06-02 - Marco Cattaneo
- - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows
 
 !========================== CaloDAQ v4r11 2009-05-06 =========================
 ! 2009-04-06 - Olivier Deschamps
   - adapt to change in CaloDet
 
 ! 2009-03-13 - Olivier Deschamps
-  - CaloReadoutTool : reduce verbosity 
+  - CaloReadoutTool : reduce verbosity
 
 !========================== CaloDAQ v4r10 2009-02-20 =========================
 ! 2009-02-20 - Olivier Deschamps
@@ -261,7 +264,7 @@
  - minor change in CaloReadoutTool.cpp (better handling of ReadoutStatus)
 
 ! 2008-01-22 - Olivier Deschamps
- - Add new status ("NonUnique") when several banks with identical sourceID in the same rawEvent  
+ - Add new status ("NonUnique") when several banks with identical sourceID in the same rawEvent
 
 ! 2008-01-10 - Olivier Deschamps
  - Add a protection against events pile-up in the same rawEvent  (actually, several banks with same sourceID)
@@ -284,25 +287,25 @@
  - Add dictionary for CAloDAQ interfaces
 
 ! 2007-12-04 - Olivier Deschamps
- - Fix bug in decoding Prs/Spd TELL1 format. Related to the treatment of 
-   'half-board' (i.e. 32 valid channels/64). DOES NOT affect MC data simulated 
-    so far where non-valid channels are not simulated anyway 
+ - Fix bug in decoding Prs/Spd TELL1 format. Related to the treatment of
+   'half-board' (i.e. 32 valid channels/64). DOES NOT affect MC data simulated
+    so far where non-valid channels are not simulated anyway
       -> only visible on real TELL1 data
  - add a new decoding tool & interface : (I)CaloL0DataProvider (same as
    CaloDataProvider for 8-bit L0-Adc)
- - better handling of corrupted/missing bank : 
+ - better handling of corrupted/missing bank :
       - additional checks and improved printout in decoding tools
       - No longer clear the whole data container in case of partial inconsistency
-        of data with the readout structure defined in condDB 
-      - Add the possibility to only remove the most likely corrupted data, 
+        of data with the readout structure defined in condDB
+      - Add the possibility to only remove the most likely corrupted data,
         i.e. the latest readout FEB data, via options
           default : keep the doubtful data
-      - Fill DAQEvent/RawBankReadoutStatus objects in decoding tools 
+      - Fill DAQEvent/RawBankReadoutStatus objects in decoding tools
         (new version of ICaloReadout interface)
       - Put RawBankReadoutStatus on TES for later usage in decoding algorithms
         (property StatusOnTES - default = true)
 
- - CaloFillRawBuffer : add PIN-FEB data only when requested 
+ - CaloFillRawBuffer : add PIN-FEB data only when requested
    (FillWithPin new property - default=false)
     -> No longer PIN-FEB header in Bank when no PIN data
 
@@ -334,7 +337,7 @@
    (needs Gaudi >= v19r4)
 
 ! 2004-05-01 Olivier Deschamps
-  - CaloReadoutTool and decoding tools : add property to allow skipping 
+  - CaloReadoutTool and decoding tools : add property to allow skipping
     the Detector Specific Header when present
 
 !========================== CaloDAQ v3r2 2007-04-25 ==========================
@@ -350,7 +353,7 @@
   - protect from non-existent rawEvent in CaloReadoutTool
 
 ! 2007-04-10 Olivier Deschamps
-- CaloDataProviderPatched : 
+- CaloDataProviderPatched :
   . remove the patch related to adcLength and trigLength
    (corrected in TELL1 firmware)
   . remains : patch for OPG data (can be activated via options)
@@ -363,7 +366,7 @@
 ! 2007-04-05 Olivier Deschamps
  - Add a patched implementation of CaloDataProvider : CaloDataProviderPatched
  - The patches allow to deal with the current Calo TELL1 firmware (April 2007)
- - Temporary implementation will be removed 
+ - Temporary implementation will be removed
 
 !========================== CaloDAQ v3r1 2007-03-05 ==========================
 ! 2007-03-05 - Marco Cattaneo
@@ -377,10 +380,10 @@
 
 ! 2007-02-22 - Olivier Deschamps
  - Implement the readout of PIN-diode data (using DeCalorimeter)
- - Remove CaloReadoutTool.{h,cpp} (was containing FECard and Tell1 description 
+ - Remove CaloReadoutTool.{h,cpp} (was containing FECard and Tell1 description
    now implemented in CaloDet)
- - Add a base class with the same name (CaloReadoutTool)from which 
-	 inherit all the decoding tools (CaloEnergyFromRaw, 
+ - Add a base class with the same name (CaloReadoutTool)from which
+	 inherit all the decoding tools (CaloEnergyFromRaw,
 	 CaloTriggerAdcFromRaw and CaloTriggerBitsFromRaw)
 
 !========================== CaloDAQ v3r0 2007-01-12 ==========================
@@ -400,17 +403,17 @@
 ! 2006-09-29 - Olivier Deschamps
   - Adapt CaloTriggerAdcsFromRaw to please L0Calo
   - Adapt CaloEnergyFromRaw to be uniform
-  
+
 ! 2006-09-26 - Olivier Deschamps
   - Add CheckCaloBank.{cpp,h} algorithm
-  - Adapt options/CaloBankHandler.opts : 
+  - Adapt options/CaloBankHandler.opts :
       - Handling separatly Prs/Ecal & Hcal banks
       - Check if 'Short' banks exist at the begining of the sequence
       - If only 'Packed'  -> create 'Shorts' and remove 'Packed'
-      - If 'Short' is already there (e.g. from real Data) -> sequence stop.  
+      - If 'Short' is already there (e.g. from real Data) -> sequence stop.
   - add the property 'PackedIsDefault' in the tools CaloEnergyFromRaw, CaloTriggerBitsFromRaw and CaloTriggerADCsFromRaw.
-      - allow to force the packed banks to be the default input banks in case 
-        of both 'packed' and 'short' exist.(default is false, i.e short when exist else packed). 
+      - allow to force the packed banks to be the default input banks in case
+        of both 'packed' and 'short' exist.(default is false, i.e short when exist else packed).
         Should be usefull at start-up when both bank will be stored
   - adapt CaloZSupAlg, CaloDigitFromRaw, CaloTriggerAdcsFromRawAlg and CaloTriggerBitsFromRawAlg algorithms
 
@@ -435,7 +438,7 @@
 !========================== CaloDAQ v2r1 2006-03-15 ==========================
 ! 2006-03-15 - Olivier Deschamps
  - CaloZSupAlg.{cpp,h} algorithm added (moved from CaloDigit)
- 
+
 !========================== CaloDAQ v2r0 2006-03-07 ==========================
 ! 2006-02-24 - Olivier Callot
  - Remove the detection of 'same event' in CaloTriggerBitsFromRaw as ODIN bank
@@ -443,7 +446,7 @@
  - Put proper parenthesese to fix precedence problem in CaloTriggerBitsFromRaw
 
 ! 2006-02-23 - Vanya BELYAEV
- - change the default options for CaloReCreateMCLinks algorithm 
+ - change the default options for CaloReCreateMCLinks algorithm
 
 ! 2006-02-16 - Olivier Callot
  - Use ODIN bank to get the event number for CaloTriggerBitsFromRaw.
@@ -464,7 +467,7 @@
  - Use definitions from CaloDet for detector locations, instead of raw strings
 
 ! 2006-01-10 - Marco Cattaneo
- - Remove BankType property from CaloFillRawBuffer, because an enum cannot be 
+ - Remove BankType property from CaloFillRawBuffer, because an enum cannot be
    a property
 
 ! 2005-12-20 - Olivier Callot
@@ -495,12 +498,12 @@
  - New tool CaloReadoutTool for a description of the cards and readout, 1 MHz version
  - Implementation of the proposed 1 MHz coding, with packing instead of
    zero suppression. Starts from EcalFull and HcalFull digit containers
-   Affects CaloFillRawBuffer and CaloFillPrsSpdRawBuffer. Note that this coding is 
+   Affects CaloFillRawBuffer and CaloFillPrsSpdRawBuffer. Note that this coding is
    NOT the default, one has to add the options :
     EcalFillRawBuffer.DataCodingType = 2;
     HcalFillRawBuffer.DataCodingType = 2;
     CaloFillPrsSpdRawBuffer.DataCodingType = 3;
- - Process the new format in the decoding algorithms CaloEnergyFromRaw, CaloTriggerFromRaw, 
+ - Process the new format in the decoding algorithms CaloEnergyFromRaw, CaloTriggerFromRaw,
    CaloPrsBitFromRaw and CaloSpdBitFromRaw,
 
  - Adjust the comparison algorithm. New option 'packedRawBuffer' to be set to
@@ -515,15 +518,15 @@
 !========================== CaloDAQ v1r1 2005-05-10 ==========================
 ! 2005-05-11 - Vanya BELYAEV
  - src/CaloReCreateMCLinks.cpp
-     1) add new property "IgnoreMode" 
+     1) add new property "IgnoreMode"
         (the defualt value is "false" )
-        to ignore the absence of MC-containers 
+        to ignore the absence of MC-containers
         (a warning is printed at the end of the job, but processing is continued)
-     2) some consmetics changes 
-     3) improve Doxygen comments 
+     2) some consmetics changes
+     3) improve Doxygen comments
  - src/CaloReCreateMcLinks.h
-     remove the file 
- 
+     remove the file
+
 ! 2005-05-10 - Olivier Callot
  - Initialize the base class of CaloEnergyFromRaw, was forgotten.
 
@@ -546,7 +549,7 @@
 ! 2005-01-10 - Olivier Callot
  - Tools to decode the Raw buffer: One interface for the trigger and one for
    the energies:
-     interface ICaloTriggerFromRaw: 
+     interface ICaloTriggerFromRaw:
         CaloPrsBitFromRaw
         CaloSpdBitFromRaw
         CaloTriggerFromRaw
@@ -554,16 +557,16 @@
         CaloEnergyFromRaw
  - Algorithm CaloDigitsFromRaw (was in CaloEvent) to decode the Raw buffer and
    re-create the CaloDigits
- - Algorithm CompareCaloDigits (was in CaloEvent) to test two codings of the 
-   CaloDigits. 
+ - Algorithm CompareCaloDigits (was in CaloEvent) to test two codings of the
+   CaloDigits.
  - Algorithm CaloReCreateMCLinks (was in CaloEvent) to re-create the MCLink for
    the CaloDigit containers.
- - Compared to version in CaloEvent, data coding of Prs/Ecal/Hcal energies is 
-   more compact (-1.5 kbyte/event), but thanks to versioning of the RawBuffer 
+ - Compared to version in CaloEvent, data coding of Prs/Ecal/Hcal energies is
+   more compact (-1.5 kbyte/event), but thanks to versioning of the RawBuffer
    banks, the decoding is handling properly the old and new data formats
 
 ! 2004-12-17 - Olivier Callot
- - Creation of CaloFillRawBuffer from CaloZSup in CaloDigit package, to code 
+ - Creation of CaloFillRawBuffer from CaloZSup in CaloDigit package, to code
    Ecal and Hcal data and trigger banks, from CaloDigits and L0CaloAdcs.
  - Creation of CaloFillPrsSpdRawBuffer to code the Prs data and the Prs+Spd
    trigger banks, from CaloDigits (Prs) and L0PrsSpdHits (Prs and Spd).

@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -22,18 +22,18 @@ CaloEnergyFromRaw::CaloEnergyFromRaw( const std::string& type,
   : CaloReadoutTool ( type, name , parent )
 {
   declareInterface<ICaloEnergyFromRaw>(this);
-  
+
   // set default detectorName
   int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
-  
+
   m_detectorName = name.substr( index, 4 );
-  if ( name.substr(index,3) == "Prs" ) m_detectorName = "Prs";  
+  if ( name.substr(index,3) == "Prs" ) m_detectorName = "Prs";
   clear();
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CaloEnergyFromRaw::~CaloEnergyFromRaw() {};
+CaloEnergyFromRaw::~CaloEnergyFromRaw() {}
 
 
 //=========================================================================
@@ -46,7 +46,7 @@ StatusCode CaloEnergyFromRaw::finalize ( ) {
 StatusCode CaloEnergyFromRaw::initialize ( ) {
   StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << "==> Initialize " << name() << " Det = "<< m_detectorName << endmsg;
 
   if ( "Ecal" == m_detectorName ) {
@@ -68,13 +68,13 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
     error() << "Unknown detector name " << m_detectorName << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   long nCells = m_calo->numberOfCells();
   long nPins  = m_calo->numberOfPins();
   m_pinData.reserve( nPins );
   m_data.reserve( nCells );
   m_digits.reserve( nCells );
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << "Got detector element for " << m_detectorName << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -97,9 +97,9 @@ void CaloEnergyFromRaw::cleanData(int feb ) {
 
   if(m_calo->isPinCard(feb)){
     for(std::vector<LHCb::CaloAdc>::iterator iadc = m_pinData.begin();iadc!=m_pinData.end();++iadc){
-      if( m_calo->cellParam( (*iadc).cellID() ).cardNumber() == feb)continue;  
+      if( m_calo->cellParam( (*iadc).cellID() ).cardNumber() == feb)continue;
       tempP.push_back( *iadc );
-    }  
+    }
     m_pinData.clear();
     for(std::vector<LHCb::CaloAdc>::iterator iadc = tempP.begin();iadc!=tempP.end();++iadc){
       m_pinData.push_back( *iadc );
@@ -107,11 +107,11 @@ void CaloEnergyFromRaw::cleanData(int feb ) {
 
   }else{
     for(std::vector<LHCb::CaloAdc>::iterator iadc = m_data.begin();iadc!=m_data.end();++iadc){
-      if( m_calo->cellParam( (*iadc).cellID() ).cardNumber() == feb)continue;  
+      if( m_calo->cellParam( (*iadc).cellID() ).cardNumber() == feb)continue;
       temp.push_back( *iadc );
-    }  
+    }
     for(std::vector<LHCb::CaloDigit>::iterator idig = m_digits.begin();idig!=m_digits.end();++idig){
-      if( m_calo->cellParam( (*idig).cellID() ).cardNumber() == feb)continue;  
+      if( m_calo->cellParam( (*idig).cellID() ).cardNumber() == feb)continue;
       tempD.push_back( *idig );
     }
     m_data.clear();
@@ -122,7 +122,7 @@ void CaloEnergyFromRaw::cleanData(int feb ) {
     for(std::vector<LHCb::CaloDigit>::iterator idig = tempD.begin();idig!=tempD.end();++idig){
       m_digits.push_back( *idig );
     }
-  } 
+  }
 }
 
 
@@ -151,10 +151,10 @@ const std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
   bool found   = false;
   if(m_getRaw)getBanks();
   if( NULL == m_banks || 0 == m_banks->size() ){
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "The banks container is empty"<< endmsg;
   }else{
-    for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
+    for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin();
          itB != m_banks->end() ; ++itB ) {
       sourceID       = (*itB)->sourceID();
       if( source >= 0 && source != sourceID )continue;
@@ -165,19 +165,19 @@ const std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
 
       decoded = getData ( *itB );
       if( !decoded ){
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-          debug() <<"Error when decoding bank " << Gaudi::Utils::toString(sourceID)   
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() <<"Error when decoding bank " << Gaudi::Utils::toString(sourceID)
                   << " -> incomplete data - May be corrupted"<< endmsg;
       }
-    } 
+    }
   }
   if( !found ){
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() <<"rawBank sourceID : " << Gaudi::Utils::toString(source) << " has not been found"<<endmsg;
   }
-  
+
   return m_data ;
-} 
+}
 //=========================================================================
 //  Decode the adcs of a single bank (given by bank pointer)
 //=========================================================================
@@ -230,25 +230,25 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
   int sourceID       = bank->sourceID();
 
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug() << "Decode bank " << bank << " source " << sourceID 
-            << " version " << version << " size " << size << endmsg;  
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "Decode bank " << bank << " source " << sourceID
+            << " version " << version << " size " << size << endmsg;
 
 
   if(0 == size)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Empty );
 
   // -----------------------------------------------
-  // skip detector specific header line 
+  // skip detector specific header line
   if(m_extraHeader){
-    ++data ; 
+    ++data ;
     --size;
   }
   // -----------------------------------------------
 
 
   if ( 1 > version || 3 < version ) {
-    warning() << "Bank type " << bank->type() << " sourceID " << sourceID 
-              << " has version " << version 
+    warning() << "Bank type " << bank->type() << " sourceID " << sourceID
+              << " has version " << version
               << " which is not supported" << endmsg;
 
   } else if ( 1 == version ) {
@@ -278,7 +278,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
           m_pinData.push_back( temp );
         }
       }
-      
+
       ++data;
       --size;
     }
@@ -290,12 +290,12 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-      debug() << nCards << " FE-Cards are expected to be readout : " 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << nCards << " FE-Cards are expected to be readout : "
               << feCards << " in Tell1 bank " << sourceID << endmsg;
     int prevCard = -1;
     while( 0 != size ) {
-      // Skip 
+      // Skip
       unsigned int word = *data++;
       size--;
       // Read bank header
@@ -311,14 +311,14 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        Error(" FE-Card w/ [code : " +  Gaudi::Utils::toString(code) + " ] is not associated with TELL1 bank sourceID : " 
+        Error(" FE-Card w/ [code : " +  Gaudi::Utils::toString(code) + " ] is not associated with TELL1 bank sourceID : "
               + Gaudi::Utils::toString(sourceID)
               + " in condDB :  Cannot read that bank").ignore();
         Error("Warning : previous data may be corrupted").ignore();
         if(m_cleanCorrupted)cleanData(prevCard);
         m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Incomplete);
         m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Corrupted );
-        return false; 
+        return false;
       }
       prevCard = card;
 
@@ -343,14 +343,14 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
           adc = ( ( lastData >> offset ) & 0xF ) - 8;
           offset += 4;
         } else {
-          adc =  ( ( lastData >> offset ) & 0xFFF ); 
+          adc =  ( ( lastData >> offset ) & 0xFFF );
           if ( 24 == offset ) adc &= 0xFF;
           if ( 28 == offset ) adc &= 0xF;  //== clean-up extra bits
           offset += 12;
           if ( 32 < offset ) {  //.. get the extra bits on next word
             lastData = *data++;
             size--;
-            offset -= 32;        
+            offset -= 32;
             int temp = (lastData << (12-offset) ) & 0xFFF;
             adc += temp;
           }
@@ -371,7 +371,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
                     << " |  valid ? " << m_calo->valid(id)
                     << " |  ADC value = " << adc << endmsg;
         }
-        
+
         //== Keep only valid cells
         if ( 0 != id.index() ) {
           LHCb::CaloAdc temp( id, adc);
@@ -394,8 +394,8 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-      debug() << nCards << " FE-Cards are expected to be readout : " 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << nCards << " FE-Cards are expected to be readout : "
               << feCards << " in Tell1 bank " << sourceID << endmsg;
     int prevCard = -1;
     while( 0 != size ) {
@@ -416,7 +416,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        Error(" FE-Card w/ [code : " + Gaudi::Utils::toString( code ) + " ] is not associated with TELL1 bank sourceID : " 
+        Error(" FE-Card w/ [code : " + Gaudi::Utils::toString( code ) + " ] is not associated with TELL1 bank sourceID : "
               +Gaudi::Utils::toString(sourceID)
               + " in condDB :  Cannot read that bank").ignore();
         Error("Warning : previous data may be corrupted").ignore();
@@ -425,7 +425,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
         return false;
       }
       prevCard = card;
-        
+
       // Read the FE-Board
       // skip the trigger bits
       int nSkip = (lenTrig+3)/4;  //== Length in byte, with padding
@@ -436,7 +436,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
       // read data
       int offset   = 32;  //== force read the first word, to have also the debug for it.
       unsigned int lastData = 0;
-      
+
       while ( 0 < lenAdc ) {
         if ( 32 == offset ) {
           lastData =  *data++;
@@ -469,7 +469,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
             m_pinData.push_back( temp );
           }
         }
-        
+
         lenAdc--;
         offset += 16;
       }
@@ -482,7 +482,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
 }
 
 //=========================================================================
-//  Main method to convert ADCs to CaloDigits 
+//  Main method to convert ADCs to CaloDigits
 //  This is just a gain calibration (+ped shift) of the adc values.
 //=========================================================================
 bool CaloEnergyFromRaw::getDigits ( ) {

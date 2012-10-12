@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -23,17 +23,17 @@ CaloL0DataProvider::CaloL0DataProvider( const std::string& type,
   , m_adcs(), m_tell1s(0) {
 
   declareInterface<ICaloL0DataProvider>(this);
-  
+
   // set default detectorName
   int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
-  m_detectorName = name.substr( index, 4 ); 
+  m_detectorName = name.substr( index, 4 );
   if ( name.substr(index,3) == "Prs" ) m_detectorName = "Prs";
   if ( name.substr(index,3) == "Spd" ) m_detectorName = "Spd";
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CaloL0DataProvider::~CaloL0DataProvider() {};
+CaloL0DataProvider::~CaloL0DataProvider() {}
 
 
 //=========================================================================
@@ -46,7 +46,7 @@ StatusCode CaloL0DataProvider::finalize ( ) {
 StatusCode CaloL0DataProvider::initialize ( ) {
   StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << "==> Initialize " << name() << endmsg;
 
   if ( "Ecal" == m_detectorName ) {
@@ -57,7 +57,7 @@ StatusCode CaloL0DataProvider::initialize ( ) {
   } else if ( "Hcal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
     m_packedType = LHCb::RawBank::HcalPacked;
-    m_shortType  = LHCb::RawBank::HcalTrig;    
+    m_shortType  = LHCb::RawBank::HcalTrig;
     m_errorType = LHCb::RawBank::HcalPackedError;
   } else if ( "Prs" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
@@ -73,12 +73,12 @@ StatusCode CaloL0DataProvider::initialize ( ) {
     error() << "Unknown detector name " << m_detectorName << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   long nCells = m_calo->numberOfCells();
   long nPins  = m_calo->numberOfPins();
   m_adcs.reserve( nCells + nPins  );
   clear();
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << " Initialisation OK" << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -102,9 +102,9 @@ void CaloL0DataProvider::cleanData(int feb ) {
   if(feb<0)return;
   CaloVector<LHCb::L0CaloAdc> temp;
   for(CaloVector<LHCb::L0CaloAdc>::iterator iadc = m_adcs.begin();iadc!=m_adcs.end();++iadc){
-    if( m_calo->cellParam( (*iadc).cellID() ).cardNumber() == feb)continue;  
+    if( m_calo->cellParam( (*iadc).cellID() ).cardNumber() == feb)continue;
     temp.addEntry( *iadc, (*iadc).cellID() );
-  }  
+  }
   m_adcs.clear();
   for(CaloVector<LHCb::L0CaloAdc>::iterator iadc = temp.begin();iadc!=temp.end();++iadc){
     m_adcs.addEntry(*iadc, (*iadc).cellID() );
@@ -151,19 +151,19 @@ bool CaloL0DataProvider::decodeCell(LHCb::CaloCellID id ){
     int card = m_calo->cardNumber (id)   ; // Fe-Card from cellId
     if(card<0)return false;
     tell1 = m_calo->cardToTell1(card); // Tell1 from FE-Card
-    if(tell1<0)return false;    
+    if(tell1<0)return false;
     for(std::vector<int>::iterator it = m_readSources.begin() ; it != m_readSources.end() ; ++it){
       if( tell1 == *it){
         read = true;
         break;
-      }    
+      }
     }
   }else{
     for(std::vector<int>::iterator it = m_readSources.begin() ; it != m_readSources.end() ; ++it){
       if( 0 == *it){
         read = true;
         break;
-      }    
+      }
     }
   }
   if(read )return true;
@@ -178,7 +178,7 @@ bool CaloL0DataProvider::decodeTell1 (int source) {
   if(NULL == m_banks) return false;
   int sourceID  ;
 
-  for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
+  for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin();
        itB != m_banks->end() ; ++itB ) {
     sourceID       = (*itB)->sourceID();
     if( source >= 0 && source != sourceID )continue;
@@ -192,20 +192,20 @@ bool CaloL0DataProvider::decodeTell1 (int source) {
       decoded = decodeBank ( *itB );
     }
     if( !decoded ){
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-        debug() << "Error when decoding bank " << Gaudi::Utils::toString(sourceID)   
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Error when decoding bank " << Gaudi::Utils::toString(sourceID)
                 << " -> incomplete data - May be corrupted"<<endmsg;
     }
     m_tell1s++; // count the number of decoded TELL1
   }
   if( !found ){
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() <<"rawBank sourceID : " + Gaudi::Utils::toString(source) + " has not been found"<< endmsg;
   }
   return decoded;
 }
 //==================================
-// Main method to decode the rawBank 
+// Main method to decode the rawBank
 //==================================
 bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
   if(NULL == bank)return false;
@@ -220,17 +220,17 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
   if(0 == size)m_status.addStatus( sourceID, LHCb::RawBankReadoutStatus::Empty);
 
   if ( msgLevel( MSG::DEBUG) )
-    debug() << "Decode bank " << bank << " source " << sourceID 
+    debug() << "Decode bank " << bank << " source " << sourceID
             << " version " << version << " size " << size << endmsg;
 
   // -----------------------------------------------
-  // skip detector specific header line 
+  // skip detector specific header line
   if(m_extraHeader){
-    ++data ; 
+    ++data ;
     --size;
   }
   // -----------------------------------------------
-  
+
 
 
   //=== Offline coding
@@ -244,7 +244,7 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
 
       LHCb::CaloCellID id1( lastID );
       if ( 0 != adc1 )fillL0ADC( id1, adc1, sourceID);
-      
+
       //event dump
       if ( msgLevel( MSG::VERBOSE) ) {
         verbose() << " |  SourceID : " << sourceID
@@ -256,8 +256,8 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
 
       LHCb::CaloCellID id2( ++lastID );
       if ( 0 != adc2 )fillL0ADC(id2,adc2,sourceID);
-      
- 
+
+
       //event dump
       if ( msgLevel( MSG::VERBOSE) ) {
         verbose() << " |  SourceID : " << sourceID
@@ -265,14 +265,14 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
                 << " |  CaloCell " << id2
                 << " |  valid ? " << m_calo->valid(id2)
                 << " |  ADC value = " << adc2 << endmsg;
-      }      
+      }
     }
   } else if ( 2 == version ) {
     //==== Codage for 1 MHz
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
-    if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : " 
+    if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : "
                                         << feCards << " in Tell1 bank " << sourceID << endmsg;
     int lenAdc   = 0;
     int lenTrig  = 0;
@@ -285,7 +285,7 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
       lenTrig = word & 0x3F;
       lenAdc  = (word >> 7 ) & 0x3F;
       //lenAdc += 4; //PATCH FOR COMMISSIONING DATA WITH TELL1 F/W v2.3
-      
+
       int code  = (word >> 14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
       checkCtrl( ctrl,sourceID );
@@ -296,7 +296,7 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        Error(" FE-Card w/ [code : " + Gaudi::Utils::toString(code) 
+        Error(" FE-Card w/ [code : " + Gaudi::Utils::toString(code)
               + " ] is not associated with TELL1 bank sourceID : " +Gaudi::Utils::toString(sourceID)
               + " in condDB :  Cannot read that bank").ignore();
         Error("Warning : previous data may be corrupted").ignore();
@@ -306,7 +306,7 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
         return false;
       }
       prevCard = card;
-      
+
       // Start readout of the FE-board (trigger data)
       if ( 0 < lenTrig ) {
         int pattern  = *data++;
@@ -323,27 +323,27 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
             }
 
             if( offset == 0)
-              if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+              if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
                 debug() << "Data word : " << lastData << endmsg;
 
             LHCb::CaloCellID id = LHCb::CaloCellID();
             if(bitNum < chanID.size())id= chanID[ bitNum ];
-            
+
 
             int adc = ( lastData >> offset ) & 0xFF;
-            
+
             // event dump
             if ( msgLevel( MSG::VERBOSE) ) {
               verbose() << " |  SourceID : " << sourceID
-                        << " |  FeBoard : " << code 
+                        << " |  FeBoard : " << code
                         << " |  Channel : " << bitNum
                         << " |  CaloCell " << id
                         << " |  valid ? " << m_calo->valid(id)
                         << " |  ADC value = " << adc << endmsg;
             }
-            
+
             if ( 0 != id.index() )fillL0ADC(id,adc,sourceID);
-            
+
             offset += 8;
           }
         }
@@ -354,7 +354,7 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
       size     -= nSkip;
     } // another card
     // Check All cards have been read
-    if(!checkCards(nCards,feCards))m_status.addStatus(sourceID, LHCb::RawBankReadoutStatus::Incomplete);   } // version 
+    if(!checkCards(nCards,feCards))m_status.addStatus(sourceID, LHCb::RawBankReadoutStatus::Incomplete);   } // version
   return true;
 }
 
@@ -376,14 +376,14 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
   m_status.addStatus( sourceID, LHCb::RawBankReadoutStatus::OK);
 
   if ( msgLevel( MSG::DEBUG) )
-    debug() << "Decode Prs bank " << bank << " source " << sourceID 
+    debug() << "Decode Prs bank " << bank << " source " << sourceID
             << " version " << version << " size " << size << endmsg;
 
 
   // -----------------------------------------------
-  // skip detector specific header line 
+  // skip detector specific header line
   if(m_extraHeader){
-    ++data ; 
+    ++data ;
     --size;
   }
   // -----------------------------------------------
@@ -402,13 +402,13 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
 
           LHCb::CaloCellID id( lastID+kk );
           LHCb::CaloCellID spdId( (lastID+kk) & 0x3FFF );
-          
+
 
           if ( "Spd" == m_detectorName)
             fillL0ADC(spdId,(spdData&1),sourceID);
-          else 
+          else
             fillL0ADC(id,(prsData&1),sourceID);
-          
+
 
           //event dump
           if ( msgLevel( MSG::VERBOSE) ) {
@@ -441,14 +441,14 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
                     << " |  valid ? " << m_calo->valid( prsId )
                     << " |  Prs/Spd  = " << (item&1) << "/" << (item&2) << endmsg;
         }
-        
+
 
         if( 0 != spdId ){
           if ( "Spd" == m_detectorName) {
             if( (item&2) != 0 ){
               LHCb::CaloCellID id ( spdId );   // SPD
               fillL0ADC(id,1,sourceID);
-            } 
+            }
           }
           else {
             if( (item&1) != 0 ){
@@ -459,15 +459,15 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
       }
       ++data;
       --size;
-    }  
+    }
     //==== Codage for 1 MHz
-  } else if ( 3 == version ) {  
+  } else if ( 3 == version ) {
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
-    if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : " 
+    if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : "
                                         << feCards << " in Tell1 bank " << sourceID << endmsg;
-    
+
     int offset   = 0;
     int lenAdc   = 0;
     int lenTrig  = 0;
@@ -487,8 +487,8 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
       int code  = (word >>14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
       checkCtrl( ctrl,sourceID );
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-        debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endmsg;      
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endmsg;
       // access chanID via condDB
       std::vector<LHCb::CaloCellID> chanID  ;
       // look for the FE-Card in the Tell1->cards vector
@@ -497,7 +497,7 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        Error(" FE-Card w/ [code : " + Gaudi::Utils::toString(code) 
+        Error(" FE-Card w/ [code : " + Gaudi::Utils::toString(code)
               + " ] is not associated with TELL1 bank sourceID : " +Gaudi::Utils::toString(sourceID)
               + " in condDB :  Cannot read that bank").ignore();
         Error("Warning : previous data may be corrupted").ignore();
@@ -506,9 +506,9 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         return false;
       }
       prevCard = card;
-      
+
       // Process FE-data decoding
-      offset   = 32;      
+      offset   = 32;
       while ( 0 < lenTrig ) {
         if ( 32 == offset ) {
           lastData = *data++;
@@ -528,7 +528,7 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         // event dump
         if ( msgLevel( MSG::VERBOSE) ) {
           verbose() << " |  SourceID : " << sourceID
-                    << " |  FeBoard : " << code 
+                    << " |  FeBoard : " << code
                     << " |  Channel : " << num
                     << " |  CaloCell " << id
                     << " |  valid ? " << m_calo->valid(id)
@@ -546,13 +546,13 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
           }
         }
       }
-      
+
       int nSkip = (lenAdc+1 ) / 2;  // Length in number of words
       size     -= nSkip;
       data     += nSkip;
     } //== DataSize
     // Check All cards have been read
-    if(!checkCards(nCards,feCards))m_status.addStatus(sourceID, LHCb::RawBankReadoutStatus::Incomplete); 
+    if(!checkCards(nCards,feCards))m_status.addStatus(sourceID, LHCb::RawBankReadoutStatus::Incomplete);
   } //== versions
   return true;
 }

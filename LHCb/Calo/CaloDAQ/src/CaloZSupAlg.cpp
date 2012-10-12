@@ -58,12 +58,12 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     m_zsupMethod       = "1D";
     m_zsupThreshold    = 4;
   }
-};
+}
 
 //=============================================================================
 // Standard destructor
 //=============================================================================
-CaloZSupAlg::~CaloZSupAlg() {};
+CaloZSupAlg::~CaloZSupAlg() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -77,32 +77,32 @@ StatusCode CaloZSupAlg::initialize() {
   std::string out( m_outputType );
   std::transform( m_outputType.begin() , m_outputType.end() , out.begin () , ::toupper ) ;
   m_outputType = out;
-  if( m_outputType == "DIGITS" ||  m_outputType == "CALODIGITS" || 
-      m_outputType == "DIGIT"  ||  m_outputType == "CALODIGIT"  || 
+  if( m_outputType == "DIGITS" ||  m_outputType == "CALODIGITS" ||
+      m_outputType == "DIGIT"  ||  m_outputType == "CALODIGIT"  ||
       m_outputType == "BOTH") m_digitOnTES = true;
-  if(m_outputType == "ADCS" ||  m_outputType == "CALOADCS" || 
-     m_outputType == "ADC"  ||  m_outputType == "CALOADC"  || 
+  if(m_outputType == "ADCS" ||  m_outputType == "CALOADCS" ||
+     m_outputType == "ADC"  ||  m_outputType == "CALOADC"  ||
      m_outputType == "BOTH")m_adcOnTES = true;
   if( !m_adcOnTES && !m_digitOnTES ){
     error() << "CaloZSupAlg configured to produce ** NO ** output (outputType = '" << m_outputType <<"')" << endmsg;
     return StatusCode::FAILURE;
-  }  
+  }
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
-    if( m_digitOnTES )debug() <<  "CaloZSupAlg will produce CaloDigits on TES" 
+    if( m_digitOnTES )debug() <<  "CaloZSupAlg will produce CaloDigits on TES"
                               << rootInTES() + m_outputDigitData + m_extension
                               << endmsg;
-    if( m_adcOnTES )debug() <<  "CaloZSupAlg will produce CaloAdcs on TES" 
+    if( m_adcOnTES )debug() <<  "CaloZSupAlg will produce CaloAdcs on TES"
                             << rootInTES() + m_outputADCData + m_extension
                             << endmsg;
      debug() << " get DeCalorimeter from " << m_detectorName << endmsg;
   }
   // Retrieve the calorimeter we are working with.
-  m_calo = getDet<DeCalorimeter>( m_detectorName );  
+  m_calo = getDet<DeCalorimeter>( m_detectorName );
   m_numberOfCells = m_calo->numberOfCells();
-  
+
   //*** A few check of the parameters
-  if ( "NO" != m_zsupMethod && 
-       "1D" != m_zsupMethod && 
+  if ( "NO" != m_zsupMethod &&
+       "1D" != m_zsupMethod &&
        "2D" != m_zsupMethod) {
     error() << "Unknown Z-sup mode" << m_zsupMethod
             << " (must be NO,1D or 2D)" << endmsg;
@@ -119,14 +119,14 @@ StatusCode CaloZSupAlg::initialize() {
   }
 
   info() << "Calorimeter has " <<  m_numberOfCells
-         << " cells. Zsup method "  << m_zsupMethod 
+         << " cells. Zsup method "  << m_zsupMethod
          << " Threshold " << m_zsupThreshold << endmsg;
 
   m_adcTool = tool<ICaloEnergyFromRaw>( m_inputToolType , m_inputToolName,this);
 
-  
+
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -135,7 +135,7 @@ StatusCode CaloZSupAlg::execute() {
 
   bool isDebug   = msgLevel() <= MSG::DEBUG;
   bool isVerbose = msgLevel() <= MSG::VERBOSE;
-  
+
   //*** some trivial printout
 
   if ( isDebug ) {
@@ -144,7 +144,7 @@ StatusCode CaloZSupAlg::execute() {
     if ( m_digitOnTES) debug() << "Perform zero suppression - return CaloDigits on TES at "
                                << rootInTES() + m_outputDigitData  + m_extension << endmsg;
   }
-  
+
 
   //*** get the input data
 
@@ -161,8 +161,8 @@ StatusCode CaloZSupAlg::execute() {
     newDigits = new LHCb::CaloDigits();
     put( newDigits, m_outputDigitData + m_extension );
   }
-  
-  if ( isDebug ) debug() << "Processing " << adcs.size() 
+
+  if ( isDebug ) debug() << "Processing " << adcs.size()
                          << " Digits." << endmsg;
 
   enum {
@@ -174,7 +174,7 @@ StatusCode CaloZSupAlg::execute() {
   std::vector<int> caloFlags    ( m_numberOfCells, DefaultFlag ) ;
 
   int index;
-  
+
   // == Apply the threshold. If 2DZsup, tag also the neighbours
   for( anAdc = adcs.begin(); adcs.end() != anAdc ; ++anAdc ) {
 
@@ -184,12 +184,12 @@ StatusCode CaloZSupAlg::execute() {
     int    digAdc = (*anAdc).adc();
     if( m_zsupThreshold <= digAdc ) {
       if( isVerbose ) {
-        verbose() << id 
+        verbose() << id
                 << format( " Energy adc %4d", digAdc );
         if (  m_zsupThreshold <= digAdc ) debug() << " seed";
         verbose() << endmsg;
       }
-      
+
       caloFlags[index] = SeedFlag ;
       if( m_zsup2D ) {
         CaloNeighbors::const_iterator neighbor =  m_calo->neighborCells( id ).begin() ;
@@ -205,20 +205,20 @@ StatusCode CaloZSupAlg::execute() {
   }
 
   //** write tagged data as CaloAdc or CaloDigits according to m_digitsOutput
-  
+
   double pedShift = m_calo->pedestalShift();
   for( anAdc = adcs.begin(); adcs.end() != anAdc ; ++anAdc ) {
     LHCb::CaloCellID id = (*anAdc).cellID();
     index         = m_calo->cellIndex( id );
     if( DefaultFlag == caloFlags[index] ) { continue; }
     if( NeighborFlag == caloFlags[index] && (*anAdc).adc() < m_zsupNeighbor)continue;
-    
+
     if(m_adcOnTES){
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( id, (*anAdc).adc() );
       try{
         newAdcs->insert( adc ) ;
       }
-      catch(GaudiException &exc) { 
+      catch(GaudiException &exc) {
         counter("Duplicate ADC") += 1;
         std::ostringstream os("");
         os << "Duplicate ADC for channel " << id << endmsg;
@@ -228,7 +228,7 @@ StatusCode CaloZSupAlg::execute() {
         LHCb::RawBankReadoutStatus& status = m_adcTool->status();
         status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
         delete adc;
-      }      
+      }
     }
 
     if(m_digitOnTES){
@@ -237,7 +237,7 @@ StatusCode CaloZSupAlg::execute() {
       try{
         newDigits->insert( digit ) ;
       }
-      catch(GaudiException &exc) { 
+      catch(GaudiException &exc) {
         counter("Duplicate Digit") += 1;
         std::ostringstream os("");
         os << "Duplicate Digit for channel " << id << endmsg;
@@ -247,17 +247,17 @@ StatusCode CaloZSupAlg::execute() {
         LHCb::RawBankReadoutStatus& status = m_adcTool->status();
         status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
         delete digit;
-      }      
+      }
 
     }
-    
+
     if( isVerbose ) {
       if ( NeighborFlag == caloFlags[index] ) {
         verbose() << id << " added as Neighbor." << endmsg;
       } else {
         verbose() << id << " added as Seed.    " << endmsg;
       }
-    }    
+    }
   }
 
   if(isDebug) {
@@ -270,6 +270,6 @@ StatusCode CaloZSupAlg::execute() {
   if(m_statusOnTES)m_adcTool->putStatusOnTES();
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

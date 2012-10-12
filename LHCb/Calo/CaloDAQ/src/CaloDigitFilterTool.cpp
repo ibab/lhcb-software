@@ -1,7 +1,7 @@
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 // local
 #include "CaloDigitFilterTool.h"
 
@@ -64,7 +64,7 @@ CaloDigitFilterTool::CaloDigitFilterTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-CaloDigitFilterTool::~CaloDigitFilterTool() {} 
+CaloDigitFilterTool::~CaloDigitFilterTool() {}
 
 //=============================================================================
 
@@ -77,7 +77,7 @@ StatusCode CaloDigitFilterTool::initialize() {
   // check
   for(std::map<std::string,int>::iterator i = m_maskMap.begin() ; m_maskMap.end() != i ; ++i){
     if( (i->second & CaloCellQuality::OfflineMask) == 0)
-      Warning("OfflineMask flag is disabled for " + i->first + " - Are you sure ?",StatusCode::SUCCESS).ignore();  
+      Warning("OfflineMask flag is disabled for " + i->first + " - Are you sure ?",StatusCode::SUCCESS).ignore();
   }
   // subscribe to incident Svc
   IIncidentSvc* inc = incSvc() ;
@@ -91,13 +91,13 @@ StatusCode CaloDigitFilterTool::initialize() {
 //-----------------------
 bool CaloDigitFilterTool::setDet(std::string det){
   if(m_caloName == det)return true;
-  m_caloName = LHCb::CaloAlgUtils::CaloNameFromAlg(det); 
+  m_caloName = LHCb::CaloAlgUtils::CaloNameFromAlg(det);
   m_calo = getDet<DeCalorimeter>( LHCb::CaloAlgUtils::DeCaloLocation( m_caloName ) );
   if(NULL == m_calo)return false;
   m_mask     = getMask( m_caloName );
   getOffsetMap( m_caloName );
   return true;
-  
+
 }
 
 //-----------------------
@@ -106,7 +106,7 @@ void CaloDigitFilterTool::getOffsetMap(std::string det){
   m_offsetsRMS.clear();
   m_offsetsSPD.clear();
   m_offsetsSPDRMS.clear();
-  if( m_useCondDB ){ 
+  if( m_useCondDB ){
     m_scalingMethod=m_calo->pileUpSubstractionMethod();
     m_scalingMin = m_calo->pileUpSubstractionMin();
     m_scalingBin = m_calo->pileUpSubstractionBin();
@@ -115,10 +115,10 @@ void CaloDigitFilterTool::getOffsetMap(std::string det){
     for( CaloVector<CellParam>::const_iterator ic = cells.begin();cells.end() != ic ; ++ic){
       LHCb::CaloCellID id = ic->cellID();
       if( !m_calo->valid( id ) || id.isPin() )continue;
-      m_offsets[id] = ic->pileUpOffset();  
-      m_offsetsRMS[id] = ic->pileUpOffsetRMS();  
-      m_offsetsSPD[id] = ic->pileUpOffsetSPD();  
-      m_offsetsSPDRMS[id] = ic->pileUpOffsetSPDRMS();  
+      m_offsets[id] = ic->pileUpOffset();
+      m_offsetsRMS[id] = ic->pileUpOffsetRMS();
+      m_offsetsSPD[id] = ic->pileUpOffsetSPD();
+      m_offsetsSPDRMS[id] = ic->pileUpOffsetSPDRMS();
     }
    }else{
     if( det == "Ecal" ){
@@ -138,7 +138,7 @@ void CaloDigitFilterTool::getOffsetMap(std::string det){
       m_offsetsRMS = m_prsOffsetRMS;
       m_offsetsSPD = m_prsOffsetSPD;
       m_offsetsSPDRMS = m_prsOffsetSPDRMS;
-    }    
+    }
   }
 }
 
@@ -173,11 +173,11 @@ int  CaloDigitFilterTool::getMask(std::string det){
    }
   return it->second;
 }
- 
+
 //-----------------------
-void CaloDigitFilterTool::setMaskMap(std::map<std::string,int> maskMap){  
-  m_maskMap = maskMap; 
-}  
+void CaloDigitFilterTool::setMaskMap(std::map<std::string,int> maskMap){
+  m_maskMap = maskMap;
+}
 
 //-----------------------
 int CaloDigitFilterTool::getScale(){
@@ -211,11 +211,11 @@ double CaloDigitFilterTool::offsetRMS(LHCb::CaloCellID id,bool spd){
 //-----------------------
 bool CaloDigitFilterTool::cleanDigits(std::string det, bool substr, bool mask,bool spd){
   if( !setDet( det ) )return false;
-  
+
   std::string container =  LHCb::CaloAlgUtils::CaloDigitLocation( det );
   m_digits = getIfExists<LHCb::CaloDigits>( evtSvc(), container );
   if( NULL == m_digits )return false;
-  
+
   //
   int scale = getScale();
   counter("offset scale (" + m_scaling +")") += scale;
@@ -268,7 +268,7 @@ unsigned int CaloDigitFilterTool::nVertices(){
   if( !m_usePV3D){
     LHCb::RecVertices* verts= getIfExists<LHCb::RecVertices>(evtSvc(),m_vertLoc);
     if( NULL != verts){
-      nVert = verts->size();   
+      nVert = verts->size();
       return nVert;
     }
   }
@@ -284,7 +284,7 @@ unsigned int CaloDigitFilterTool::nSpd(){
   std::string loc =   LHCb::CaloAlgUtils::CaloDigitLocation( "SPD" );
   const LHCb::CaloDigits* digits = getIfExists<LHCb::CaloDigits> (evtSvc(),loc );
   return (NULL != digits) ? digits->size() : 0;
-};
+}
 
 
 
@@ -293,5 +293,5 @@ StatusCode CaloDigitFilterTool::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   IIncidentSvc* inc = incSvc() ;
   if ( 0 != inc ) { inc -> removeListener  ( this ) ; }
-  return GaudiTool::finalize();  // must be called after all other actions  
+  return GaudiTool::finalize();  // must be called after all other actions
 }
