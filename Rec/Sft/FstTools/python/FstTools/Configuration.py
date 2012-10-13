@@ -19,10 +19,12 @@ class FstConf(LHCbConfigurableUser):
         ,"MinPt"           : 1500.  # MeV
         ,"MinIP"           : 0.100  # mm
         ,"MaxIP"           : 3.000  # mm
+        ,"MaxChi2Ndf"      : 3.0  # mm
         ,"MinVeloClusters" : 9
         ,"VeloType"        : "Velo"
         ,"TTType"          : "ValidateTT"
         ,"TStationType"    : "IT+OT"
+        ,"TrackFit"        : "HltFit"
         }
 
     def applyConf(self):
@@ -70,7 +72,7 @@ class FstConf(LHCbConfigurableUser):
 
         ## Forward tracking on selected tracks
         if "IT+OT" == self.getProp( "TStationType" ):
-            from Configurables import ParForward, ParForwardTool
+            from Configurables import PatForward, PatForwardTool
             FstSequencer( "RecoFstSeq" ).Members += [ "RawBankToSTLiteClusterAlg/CreateTTLiteClusters",
                                                       "RawBankToSTLiteClusterAlg/CreateITLiteClusters",
                                                       "PatForward/FstForward" ]
@@ -89,6 +91,17 @@ class FstConf(LHCbConfigurableUser):
             log.warning( "Unknown TStationType option '%s' !"%self.getProp( "TStationType" ) )
             exit(0)
 
+        if "HltFit" == self.getProp ( "TrackFit" ):
+            from Configurables import TrackEventFitter, TrackMasterFitter
+            HltFastFit_name    = 'FastFit'
+            HltFastFit           = TrackEventFitter(HltFastFit_name)
+            HltFastFit.TracksInContainer    = self.getProp( "RootInTES") + "Track/Forward" 
+            #HltFastFit.TracksOutContainer    = self.getProp( "RootInTES") + "Track/FittedForward"  
+            HltFastFit.addTool(TrackMasterFitter, name = 'Fitter')
+            from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
+            fitter = ConfiguredHltFitter( getattr(HltFastFit,'Fitter'))
+            FstSequencer( "RecoFstSeq" ).Members +=[ HltFastFit ]
+
         ## Selection after measuring momentum
         FstSequencer( "RecoFstSeq" ).Members += [ "FstSelectForwardTracks" ]
         FstSelectForwardTracks().InputTracksName  = self.getProp( "RootInTES") + "Track/Forward"
@@ -97,4 +110,8 @@ class FstConf(LHCbConfigurableUser):
         FstSelectForwardTracks().MinIP            = self.getProp( "MinIP" )
         FstSelectForwardTracks().MaxIP            = self.getProp( "MaxIP" )
         FstSelectForwardTracks().MinPt            = self.getProp( "MinPt" )
+        if "" == self.getProp ( "TrackFit" ):
+            FstSelectForwardTracks().MaxChi2Ndf            = -1.
+        else:
+            FstSelectForwardTracks().MaxChi2Ndf            = self.getProp( "MaxChi2Ndf" )
 

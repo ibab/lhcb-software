@@ -4,6 +4,7 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
+#include "Event/KalmanFitResult.h"
 
 // local
 #include "FstSelectForwardTracks.h"
@@ -30,7 +31,10 @@ FstSelectForwardTracks::FstSelectForwardTracks( const std::string& name,
   declareProperty( "OutputTracksName",       m_outputTracksName = "Sft/Track/ForwardFst" );
   declareProperty( "MinIP",                  m_minIP            = 0.100 * Gaudi::Units::mm );
   declareProperty( "MaxIP",                  m_maxIP            = 3.000 * Gaudi::Units::mm );
+  declareProperty( "MinIPChi2",              m_minIPChi2        = 9. );
+  declareProperty( "MaxIPChi2",              m_maxIPChi2        = 100000. );
   declareProperty( "MinPt",                  m_minPt            = 1.500 * Gaudi::Units::GeV );
+  declareProperty( "MaxChi2Ndf",             m_maxChi2Ndf            = 2.0 ); // set negative to deactivate
 }
 //=============================================================================
 // Destructor
@@ -53,7 +57,10 @@ StatusCode FstSelectForwardTracks::initialize() {
          << "Output tracks   : " << m_outputTracksName << endmsg
          << "MinIP           : " << m_minIP << endmsg
          << "MaxIP           : " << m_maxIP << endmsg
-         << "MinPt           : " << m_minPt << endmsg;
+         << "MinIPChi2       : " << m_minIPChi2 << endmsg
+         << "MaxIPChi2       : " << m_maxIPChi2 << endmsg
+         << "MinPt           : " << m_minPt << endmsg
+         << "MaxChi2Ndf      : " << m_maxChi2Ndf << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -75,6 +82,16 @@ StatusCode FstSelectForwardTracks::execute() {
     if ( track->checkFlag( LHCb::Track::Invalid ) ) continue;
 
     if ( m_minPt > track->pt() ) continue;
+
+    if ( m_maxChi2Ndf > 0 ){
+      const LHCb::KalmanFitResult* kalfit =static_cast<const LHCb::KalmanFitResult*>(track->fitResult()) ;
+      if( kalfit ) {
+        if (track->chi2()/track->nDoF() > m_maxChi2Ndf) continue;
+      }else{
+        continue;
+      }
+    }
+
 
     float bestIP2 = 1.e9;
     Gaudi::XYZPoint pos = track->position();
@@ -101,7 +118,7 @@ StatusCode FstSelectForwardTracks::execute() {
   }
   setFilterPassed( 0 != selected->size() );
   
-  debug() << "Selected " << selected->size() << " Velo tracks from " << pvs->size() << " PV." << endmsg;
+  debug() << "Selected " << selected->size() << " Forward tracks from " << pvs->size() << " PV." << endmsg;
 
   return StatusCode::SUCCESS;
 }

@@ -33,6 +33,11 @@ private:
   float  m_maxIP;
   float  m_minIP2;
   float  m_maxIP2;
+  float  m_minIPChi2;
+  float  m_maxIPChi2;
+  
   float  m_minPt;
+  float  m_maxChi2Ndf;
+  
 };
 #endif // FSTSELECTFORWARDTRACKS_H
