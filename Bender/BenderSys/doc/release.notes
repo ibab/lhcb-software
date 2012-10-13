@@ -23,12 +23,19 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v22r2>2012-10-13 Bender v22r0 based on the DaVinci v33r0</A>
+
+<PRE>		
+Indentical to v21r2p2
+</PRE>
+
 <A NAME=v21r2p2>2012-10-08 Bender v21r2p2 based on the DaVinci v32r2p1</A>
 
 <PRE>		
-Similar to v21r2, but with direct access to EOS files (==Stirpping20)
-
+Similar to v21r2p1, but with direct access to EOS files (==Stirpping20)
 </PRE>
+
+
 
 <A NAME=v21r2p1>2012-10-04 Bender v21r2p1 based on the DaVinci v32r2p1</A>
 
