@@ -4,11 +4,15 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-15 - Gloria Corti
+ - Rename qmtest gauss-config-MC11a.qmt to gauss-config-2011.qmt otherwise it
+   is not run.
+ - Put latest CondDb tags as in Sim05d for MC2011 (aka MC11a)
+
 ! 2012-10-12 - Paul Szczypka
  - Added limit of one event to:
    Sim/Gauss/tests/options/testGauss-config-defaults.py
    and changed reference file accordingly.
-
 
 ! 2012-10-12 - Paul Szczypka
  - Added first version of configuration qmtest, files:
