@@ -35,7 +35,9 @@ namespace Rich
     {
       InvalidDetector = -1, ///< Unspecified Detector
       Rich1           = 0,  ///< RICH1 detector
-      Rich2           = 1   ///< RICH2 detector
+      Rich2           = 1,  ///< RICH2 detector
+      Rich            = 2,  ///< Single RICH detector
+      TRID            = 2   ///< In case the name TRID catches on
     };
 
   /** Text conversion for DetectorType enumeration

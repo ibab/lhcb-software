@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2012-10-15 - Antonis Papanestis
+ - Added one more Rich DetectorType for the upgrade with a single Rich/TRID
+
 ! 2012-10-12 - Marco Clemencic
  - Fixed Eclipse warnings.
 

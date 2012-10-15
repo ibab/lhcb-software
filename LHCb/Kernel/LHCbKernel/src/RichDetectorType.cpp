@@ -24,6 +24,7 @@ std::string Rich::text( const Rich::DetectorType detector )
   {
   case Rich::Rich1:              return "Rich1";
   case Rich::Rich2:              return "Rich2";
+  case Rich::Rich :              return "Single Rich";
   case Rich::InvalidDetector:    return "Invalid Detector";
   default:                       return "SHOULD NEVER SEE THIS";
   }
