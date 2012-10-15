@@ -32,42 +32,41 @@ else
     remote_id=$(cd $git_root ; git log -1 --format=%H master)
 fi
 
+version_file=$rootdir/gaudi_cmake.version
+notes_file=$rootdir/../doc/gaudi_cmake.notes
+
 # Check if we do have a commit hash of a local copy.
-if [ ! -r $rootdir/env_script.version ] ; then
+if [ ! -r $version_file ] ; then
     echo "Importing the files from commit ${remote_id}"
     # clean checkout
-    git archive --remote=$git_root ${remote_id} cmake/env.py | \
-	tar -x -v -C $rootdir/../scripts --strip-components=1 -f -
-    git archive --remote=$git_root ${remote_id} cmake/EnvConfig | \
-	tar -x -v -C $rootdir/../python --strip-components=1 -f -
+    git archive --remote=$git_root ${remote_id} cmake | \
+	tar -x -v -C $rootdir/.. -f -
     # create release notes
     (
 	cd /afs/cern.ch/sw/Gaudi/git/Gaudi.git
-	git log ${remote_id} -- cmake/env.py cmake/EnvConfig
-    ) > $rootdir/../doc/env_script.notes
+	git log ${remote_id} -- cmake
+    ) > $notes_file
     # Remember the version of the latest update
-    echo ${remote_id} > $rootdir/env_script.version
+    echo ${remote_id} > $version_file
 else
-    local_id=$(cat $rootdir/env_script.version)
+    local_id=$(cat $version_file)
     if [ "${remote_id}" == "${local_id}" ] ; then
 	echo "Already at the latest version."
     else
 	echo "Applying differences for ${local_id}..${remote_id}"
         # apply patches
-	(cd $git_root ; git diff ${local_id}..${remote_id} -- cmake/env.py ) | \
-	    (cd $rootdir/../scripts ; patch -p2)
-	(cd $git_root ; git diff ${local_id}..${remote_id} -- cmake/EnvConfig ) | \
-	    (cd $rootdir/../python ; patch -p2)
+	(cd $git_root ; git diff ${local_id}..${remote_id} -- cmake ) | \
+	    (cd $rootdir/.. ; patch -p1)
 	# update release notes
-	mv $rootdir/../doc/env_script.notes $rootdir/../doc/env_script.notes.tmp
+	mv $notes_file $notes_file.tmp
 	(
 	    cd /afs/cern.ch/sw/Gaudi/git/Gaudi.git
-	    git log ${local_id}..${remote_id} -- cmake/env.py cmake/EnvConfig
-	) > $rootdir/../doc/env_script.notes
-	cat $rootdir/../doc/env_script.notes.tmp >> $rootdir/../doc/env_script.notes
-	rm $rootdir/../doc/env_script.notes.tmp
+	    git log ${local_id}..${remote_id} -- cmake
+	) > $notes_file
+	cat $notes_file.tmp >> $notes_file
+	rm $notes_file.tmp
     # Remember the version of the latest update
-    echo ${remote_id} > $rootdir/env_script.version
+    echo ${remote_id} > $version_file
     fi
 fi
 
