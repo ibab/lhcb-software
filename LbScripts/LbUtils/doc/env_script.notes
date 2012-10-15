@@ -1,3 +1,20 @@
+commit 9ad4ae627d6d3b7c409427eb02c1b4bcf5906793
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Oct 15 17:56:35 2012 +0200
+
+    avoid normalization of paths if they look like URLs ('://')
+
+commit 28f254aa79f8f9c97ce070b744bd77277de55edc
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Oct 15 17:19:25 2012 +0200
+
+    Remove portability to Windows of env.py (broken and not tested).
+
+commit a8d1f048d787a30f4fa49b4f8e6aa9bf64fe023d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Oct 15 12:04:43 2012 +0200
+
+    add meaningful error message for wrong options
 commit 83237fc34361fde9bd2fefefa60b1da4a4aaf3d4
 Author: Marco Clemencic <marco.clemencic@cern.ch>
 Date:   Wed Oct 10 13:57:11 2012 +0200
