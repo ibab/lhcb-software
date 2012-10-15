@@ -3,6 +3,11 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-10-15 - Rob Lambert
+ - Add tuning for BufferSize to FSR service (512 Bytes)
+ - for optimization, see Core Soft meeting, 
+ - indico.cern.ch/conferenceDisplay?confId=207776
+
 ! 2012-10-11 - Chris Jones
  - Extend the automatic unpacking options for stripping in DstConf to
    automatically create on demand the stream dependent 'Lite' clusters from

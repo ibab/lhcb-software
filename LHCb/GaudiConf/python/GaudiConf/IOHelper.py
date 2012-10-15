@@ -189,7 +189,7 @@ class IOHelper(object):
                            EnableFaultHandler = True,
                            RootCLID           = 1, #was the next line missed accidentally?
                            PersistencySvc     = "PersistencySvc/FileRecordPersistencySvc")
-
+                
         fileSvc.ShareFiles = "YES"
         ApplicationMgr().ExtSvc                                += [ fileSvc ]
         PersistencySvc("FileRecordPersistencySvc").CnvServices += [ fileSvc ]
@@ -483,7 +483,7 @@ class IOHelper(object):
         # Set up the IO
         ApplicationMgr().ExtSvc += [ "Gaudi::MultiFileCatalog/FileCatalog",
                                      "Gaudi::IODataManager/IODataManager"  ]
-
+        
         # Set up the persistency
         if self._inputPersistency == 'ROOT' or self._outputPersistency == 'ROOT':
             from Configurables import Gaudi__RootCnvSvc
@@ -496,8 +496,12 @@ class IOHelper(object):
             ApplicationMgr().ExtSvc           += [ rootSvc ]
 
             fileSvc = Gaudi__RootCnvSvc( "FileRecordCnvSvc" )
+            #optimization, see Core Soft meeting, indico.cern.ch/conferenceDisplay?confId=207776
+            if hasattr(fileSvc,"BufferSize"):
+                fileSvc.BufferSize=512
+            
             self._doConfFileRecords(fileSvc)
-
+        
         if self._inputPersistency == 'POOL' or self._outputPersistency == 'POOL':
             from Configurables import (PoolDbCnvSvc, PoolDbCacheSvc)
             evtSvc  = PoolDbCnvSvc( "PoolRootEvtCnvSvc",     DbType = "POOL_ROOT",     EnableIncident = 1 )
