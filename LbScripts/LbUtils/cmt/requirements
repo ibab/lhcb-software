@@ -18,4 +18,15 @@ apply_pattern python_alias script=change-svn-wc-format
 # apply_pattern python_alias script=expandTarBall
 apply_pattern python_alias script=cmtwhich
 
+# It should be
+#   apply_pattern install_custom_python_modules source=cmake/EnvConfig offset=EnvConfig
+# but it doesn't work... and anyway it's overkilling.
+document install_python LbUtils_EnvConfig_python source=cmake/EnvConfig offset=EnvConfig
 
+action install_env_script "$(install_command) ../cmake/env.py $(CMTINSTALLAREA)/scripts"
+macro_append constituents " install_env_script"
+macro_remove cmt_actions_constituents "install_env_script"
+
+path_prepend CMAKE_PREFIX_PATH "${LBUTILSROOT}/cmake"
+path_prepend GAUDI_CMAKE_MODULE_PATH "${LBUTILSROOT}/cmake/modules"
+set          HEPTOOLS_DIR "${LBUTILSROOT}/cmake/toolchain"
