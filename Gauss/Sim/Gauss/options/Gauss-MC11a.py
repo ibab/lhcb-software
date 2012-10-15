@@ -13,5 +13,5 @@ importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-MC11-nu2.py")
 # Database tags must be set and are defined in a separate file
 ##############################################################################
 from Configurables import LHCbApp
-LHCbApp().DDDBtag   = "MC11-20111102"
-LHCbApp().CondDBtag = "sim-20111111-vc-md100"
+LHCbApp().DDDBtag   = "MC2011-20120727"
+LHCbApp().CondDBtag = "MC2011-20120727-vc-md100"
