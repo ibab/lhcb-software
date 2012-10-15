@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2012-10-15 - Olivier Callot
+ - New algorithm FastVeloDecoding.cpp to decode the Velo Lite clusters.
+
 !========================= FastVelo v1r11 2012-07-24 =========================
 ! 2012-07-06 - Wouter Hulsbergen
  - fix problem with FastVeloFitLHCbIDs in case pattern reco is not running
