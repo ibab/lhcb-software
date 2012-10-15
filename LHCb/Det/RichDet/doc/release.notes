@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-10-15 - Antonis Papanestis
+ - Bug fix in previous commit of DeRichRadiator
+
 ! 2012-10-12 - Antonis Papanestis
  - Updated DeRichRadiator to set correctly the rich() and radiatorID() for
    the upgrade to a signle Rich detector
