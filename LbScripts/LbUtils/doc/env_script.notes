@@ -1,0 +1,162 @@
+commit 83237fc34361fde9bd2fefefa60b1da4a4aaf3d4
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Oct 10 13:57:11 2012 +0200
+
+    improved LD_LIBRARY_PATH translation on non Linux systems
+
+commit 863f28c8fe946616f69a55c6d0b7fb1f3450d4f5
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Sep 28 17:57:40 2012 +0200
+
+    improvements to env.py
+    
+    - Added the possibility of printing the environment as a shell script
+      (sh or csh) or as a Python dictionary.
+    - Added a 'hints' attribute to the 'env:include' tag to specify default
+      search paths for the inclusion.
+    - Fixed infinite recursion in case of XML files including themselves.
+
+commit 88c4baf0077fbc3529c0e8b407603d239806f548
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Sep 28 11:45:22 2012 +0200
+
+    fixed a type and added asmall improvement
+
+commit c5ab0ae8fc0cc393e52ce0fe87711adbb4550e06
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Sep 27 21:17:44 2012 +0200
+
+    added the possibility to declare a default value for a variable
+    
+    It is possible to declare the value to be assigned to a variable if it
+    is not available in the environment.
+
+commit 099eca3065d061d3d7a0a69ed9b0d986dc8f03de
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Sep 27 14:01:35 2012 +0200
+
+    Allow for relocatable environments via the special variable ${.}
+    
+    Use the special local transient variable ${.} to identify the directory
+    where the XML file is, allowing the production of relocatable
+    environments.
+
+commit 5694bd827726ed909435b5e6a63f950ebe0cc871
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Sep 26 15:39:16 2012 +0200
+
+    Improvements of env.py and EnvConfig.
+    
+    - Clean up and refactoring.
+    - Added submodule to run the tests with nosetests.
+      (EnvConfig._runtests.py)
+    - Added the possibility of including other XML files looking for it in
+      a search path (ENVXMLPATH).
+    - Minor fix and improvement to the script 'env.py'.
+    
+    (taken from SVN repository)
+
+commit eb82d8a48112965097efd27e4804995d6ece1cba
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun Aug 26 21:04:59 2012 +0200
+
+    Improved EnvConfig performance using a preparsed XML (a la pyc).
+    
+    When loading the XML environment file, it checks for the existence of a
+    corresponding preparsed version (.xmlc, cPickle with protocol 2) and if
+    the checksum (md5) matches, use the data from there instead of parsing.
+
+commit cfa7aba3019e3d4c680052f2cfc06201c96b0404
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun Aug 26 20:34:15 2012 +0200
+
+    Fixed performance regression in EnvConfig.
+
+commit 226e2849b3887b4a686cd3a3cc48cb9dbf573953
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun Aug 26 14:37:01 2012 +0200
+
+    Try to improve performances of env.py (with some clean up).
+
+commit d6f2e8409f2b9d8a1a6c986004e6e193ec30d130
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jul 27 16:09:31 2012 +0000
+
+    rationalized the permissions of files
+    
+    Random file permissions was the legacy of commits started
+    from Windows and the correct promissions simplify the
+    testing from the build directory.
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6979 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 3ec2378d42f73e5e0dedafc503838011e348885a
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Jul 11 08:21:25 2012 +0200
+
+    minor fix for when DYLD_LIBRARY_PATH is not set
+
+commit cdca1339fd1c07818e131ebfb8aa1dbf5dac6563
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Jul 11 08:17:03 2012 +0200
+
+    hacks to compile on MacOSX
+
+commit 96a88ea3ad72d231c9c5bf9e6f8afa2040b610e9
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed May 2 19:18:25 2012 +0200
+
+    fixed a problem in EnvConfig prepend
+    
+    the order was not modified if the entry was already present
+
+commit 1ecce7a4f9848a8f3513904d35aa08fed6bc33bf
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Apr 26 13:54:09 2012 +0200
+
+    modified env.py to use cmd line settings to override XML
+    
+    This is needed to ensure that the current build directories are
+    prepended to the paths defined in the XML (to override libraries).
+
+commit 710b994adff3bc7164507100db7a0bcc3e7b6773
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Apr 24 10:01:29 2012 +0200
+
+    avoid creation of log file for EnvConfig
+    
+    disabled the default file-based logging in EnvConfig/log.conf
+
+commit b94db12bf0db0f87ac8a7f561ec30d87e0a61c04
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Mar 29 11:00:51 2012 +0200
+
+    changed the rule to declare an env variable as scalar or list
+
+commit c05215790473fd50197c8742f56a5ebf2fde065d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 27 21:16:11 2012 +0200
+
+    Use correct runtime environment for commands and tests.
+    
+    Imported the Python code from the LHCb package EnvConfig.
+commit 1797588b20b3aa0132e674783192cfccc2903a31
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 15 13:56:18 2011 +0100
+
+    improved append/prepend support in env.py
+    moved the definition of the variable 'ld_library_path' to GaudiProject
+
+commit 08fbd73c1ec95683eda5082e90e6f470a7dd1356
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 15 09:11:37 2011 +0100
+
+    Added support for append and prepend to env.py
+commit cf9a664a8dd3b232ab2be7cba9a723767bf0a689
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 14 21:12:36 2011 +0100
+
+    testing a way to pass environment variables to commands
