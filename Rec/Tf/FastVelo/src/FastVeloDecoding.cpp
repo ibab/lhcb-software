@@ -24,7 +24,7 @@ DECLARE_ALGORITHM_FACTORY( FastVeloDecoding )
                                       ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "OutputLocation",    m_outputLocation  = LHCb::VeloLiteClusterLocation::Default + "Test" );
+  declareProperty( "OutputLocation",    m_outputLocation  = LHCb::VeloLiteClusterLocation::Default );
   declareProperty( "MaxVeloClusters",   m_maxVeloClusters = 10000  );
   declareProperty( "ErrorCount",        m_errorCount      = 0      );
   declareProperty( "IgnoreErrors",      m_ignoreErrors    = false  );
