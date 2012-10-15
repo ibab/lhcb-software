@@ -4,12 +4,6 @@ Small script to execute a command in a modified environment (see man 1 env).
 """
 import os
 
-class EnvError(RuntimeError):
-    '''
-    Simple class to wrap errors in the environment configuration.
-    '''
-    pass
-
 def set_env(env, set = [], unset = [], append = [], prepend = []): #@ReservedAssignment
     """
     Manipulate the dictionary-like object 'env' according to the prescriptions in
@@ -20,8 +14,6 @@ def set_env(env, set = [], unset = [], append = [], prepend = []): #@ReservedAss
     def parse(x):
         """split the "NAME=VALUE" string into the tuple ("NAME", "VALUE")
         replacing '[:]' with os.pathsep in VALUE"""
-        if '=' not in x:
-            raise EnvError("Invalid variable argument '%s'." % x)
         n, v = x.split('=', 1)
         return n, v.replace('[:]', os.pathsep)
     def dictlist(l):
@@ -58,8 +50,7 @@ def parse_args():
                           usage = "Usage: %prog [OPTION]... [NAME=VALUE]... [COMMAND [ARG]...]",
                           description = "Set each NAME to VALUE in the environment and run COMMAND.",
                           epilog = "The operations are performed in the order: unset, set, append, "
-                                   "prepend, xml. If no COMMAND is provided, print the resulting "
-                                   "environment." )
+                                   "prepend. If no COMMAND, print the resulting environment." )
     parser.add_option("-i", "--ignore-environment",
                       action = "store_true",
                       help = "start with an empty environment")
@@ -134,7 +125,7 @@ def main():
     cmd = args[i:]
 
     if opts.shell and cmd:
-        print >> sys.stderr, "Invalid arguments: --%s cannot be used with a command." % opts.shell
+        print >> sys.stderr, "Invalid arguments: --%s cannot be used with a command" % opts.shell
         return 2
 
     # prepare initial dictionary
@@ -146,13 +137,9 @@ def main():
     if opts.xml:
         env = envFromXML(env, opts.xml)
 
-    try:
-        env = set_env(env,
-                      set = opts.set, unset = opts.unset,
-                      append = opts.append, prepend = opts.prepend)
-    except EnvError, x:
-        print >> sys.stderr, x, 'Check command line.'
-        return 2
+    env = set_env(env,
+                  set = opts.set, unset = opts.unset,
+                  append = opts.append, prepend = opts.prepend)
 
     if "LD_LIBRARY_PATH" in env:
         # replace LD_LIBRARY_PATH with the corresponding one on other systems

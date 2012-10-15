@@ -5,6 +5,7 @@ Created on Jun 27, 2011
 '''
 import re
 import os
+import platform
 
 class List():
     '''
@@ -41,10 +42,13 @@ class List():
     def value(self, asString=False, separator=':'):
         '''Returns values of the List. Either as a list or string with desired separator.'''
         if asString:
-            return separator.join(self.val)
+            return separator.join(self.val).replace(']', ':')
         else:
-            # clone the list
-            return list(self.val)
+            lis = self.val[:]
+            if platform.system() != 'Linux':
+                for item in lis:
+                    item.replace(']',':')
+            return lis
 
     def remove_regexp(self, value, separator = ':'):
         self.remove(value, separator, True)
@@ -102,7 +106,7 @@ class List():
         self.val = new_value
 
     def search(self, expr, regExp):
-        '''Searches in List's values for a match
+        '''Searches in List`s values for a match
 
         Use string value or set regExp to True.
         In the first case search is done only for an exact match for one of List`s value ('^' and '$' added).
@@ -143,7 +147,19 @@ class List():
 
     def _changeSlashes(self, value):
         '''Changes slashes depending on operating system.'''
-        return map(os.path.normpath, filter(None, value))
+        i = 0
+        while i < len(value):
+            if len(value[i]) == 0:
+                del value[i]
+                continue
+            if value[i][0] == '[':
+                if platform.system() != 'Linux':
+                    value[i] = value[i][1:]
+                else:
+                    value[i] = value[i][3:]
+            value[i] = os.path.normpath(value[i])
+            i+=1
+        return value
 
 
     def _remDuplicates(self, seq, idfun=None):
@@ -161,6 +177,8 @@ class List():
             seen[marker] = 1
             result.append(item)
         return result
+
+
 
     def __getitem__(self, key):
         return self.val[key]
@@ -212,7 +230,7 @@ class Scalar():
             self.val = ""
 
     def unset(self, value, separator=':', environment=None):# pylint: disable=W0613
-        '''Sets the value of the variable to empty. Any previous value is overwritten.'''
+        '''Sets the value of the varaible to empty. Any previous value is overwritten.'''
         self.val = ''
 
     def value(self, asString=False, separator=':'):# pylint: disable=W0613
@@ -262,9 +280,12 @@ class Scalar():
 
     def _changeSlashes(self):
         '''Changes slashes depending on operating system.'''
-        # we do the change only if it does not look like a URL
-        if '://' not in self.val:
-            self.val = os.path.normpath(self.val)
+        if self.val == '[':
+            if platform.system() != 'Linux':
+                self.val = self.val[1:]
+            else:
+                self.val = self.val[3:]
+        self.val = os.path.normpath(self.val)
 
     def __str__(self):
         return self.val

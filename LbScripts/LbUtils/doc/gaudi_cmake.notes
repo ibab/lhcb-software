@@ -1,0 +1,1947 @@
+commit d07fef35ba55fda98eb3ac1b774b9449c88d57a8
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Oct 11 17:47:31 2012 +0200
+
+    added icc to the known compilers and fixed duplicated function
+
+commit d4750afc41a7190b82e02c2c39fdf4f2b4790e58
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Oct 11 09:39:39 2012 +0200
+
+    pick up the lcg compilers from the path instead of fixing a location
+
+commit d3be1ce831f02dd5fb83a14541156507721186ae
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Oct 10 19:41:54 2012 +0200
+
+    added platform ids to the manifest.xml
+
+commit 212983c61cb5679310d41a1a8247c7e71f281ba0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Oct 10 19:15:59 2012 +0200
+
+    added creation of a manifest.xml stating dependencies, etc.
+    
+    The small manifest.xml that is generated and installed, contains basic
+    dependency informations for the project, like project name and version,
+    used projects and data packages... enough metadata to allow external
+    tools to produce environment configurations, dependency graphs, etc.
+
+commit 83237fc34361fde9bd2fefefa60b1da4a4aaf3d4
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Oct 10 13:57:11 2012 +0200
+
+    improved LD_LIBRARY_PATH translation on non Linux systems
+
+commit 2c38296671a2821d8036411f2cee9493d388a0c3
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Oct 9 14:52:03 2012 +0200
+
+    added support for data packages in cmt2cmake
+
+commit 00c0fb612dadf2a70f6954e7bb532208caf2b267
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Oct 9 10:01:55 2012 +0200
+
+    added support for data packages
+    
+    Data packages can be declared in the 'DATA' list of the arguments to
+    gaudi_project(), with or without version pattern, For example:
+    
+      gaudi_project(MyProject v1r0
+                    DATA SomeDataPkg
+                         AnotherDataPkg VERSION v3r*)
+    
+    The be found, the data package must contain an environment XML file
+    called <name>Environment.xml, where <name> is the name of the package
+    (with '/'s replaced by '_'s).
+    
+    The search path for data packages is CMTPROJECTPATH + CMAKE_PREFIX_PATH,
+    with the suffixes declared in the (cached) variable GAUDI_DATA_SUFFIXES.
+    For example, if GAUDI_DATA_SUFFIXES contains "D1;D2", the packages are
+    searched for in:
+      <prefix>/
+      <prefix>/D1
+      <prefix>/D2
+    
+    By default GAUDI_DATA_SUFFIXES is set to "DBASE;PARAM;EXTRAPACKAGES"
+    (LHCb convention).
+
+commit 466cbfb8927c439957633761d06346670b009403
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Oct 9 10:12:06 2012 +0200
+
+    removed redundant setting of CMAKE_MODULE_PATH
+
+commit ee9091ccb87919c07303141874cdf00472b54109
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Oct 8 14:36:20 2012 +0200
+
+    replaced custom parsing of args to gaudi_project()
+    
+    Use the standard CMAKE_PARSE_ARGUMENTS, to allow for more flexibility.
+
+commit a589a84e9b03f0f744d35595750e2fb0120820c9
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Oct 5 17:38:01 2012 +0200
+
+    improvements and fixes in the import of packages
+    
+    - added a progress counter when adding subdirectories
+    - fixed a problem reporting the version of imported subdirs
+    - added a hook to override subdirectories (i.e. do not import them) with
+      subdirectories of different names (e.g. Online/RootCnv overrides
+      RootCnv). It is enough to declare them in the variable
+      'override_subdirs' before calling 'gaudi_project()'
+
+commit 673f604d57bd0b730557dfea2031f9cc7423755c
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Oct 5 16:16:55 2012 +0200
+
+    updates and fixed to the CMake configuration README
+
+commit a0852ec0f6f8910b7b72776a29d37c3b64099068
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Oct 5 15:40:30 2012 +0200
+
+    added initial instructions for CMake
+    
+    It's a file that I started some time ago, but I forgot to commit.
+
+commit 501ee61103cfe32c3c8d2674e5eba3cf1844a386
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Oct 5 15:39:50 2012 +0200
+
+    removed few obsolete files
+
+commit b67f538ba67d7164e3ad6c548718573c2258ed45
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Oct 5 12:10:05 2012 +0200
+
+    enable tests by default
+
+commit ed03115d25697ab3ca203dce50357da5c07e47c4
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Oct 4 11:17:13 2012 +0200
+
+    dropped CMAKEPROJECTPATH because CMAKE_PREFIX_PATH works too
+
+commit a1369a8d5acf5bdb12b1097c699dfbf732039f7d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Oct 4 11:13:10 2012 +0200
+
+    use env. CMAKEPROJECTPATH and CMTPROJECTPATH to locate projects
+
+commit 6d82ce6c720c7ac16bd8efb549cee9d2eb745058
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Oct 3 14:59:52 2012 +0200
+
+    cmt2cmake: support optional apply_pattern and 'copy_relax_rootmap'
+
+commit 8af11ba9de214848236e63bad3a033acad4beb94
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Oct 3 09:58:20 2012 +0200
+
+    updated cmt2cmake documentation
+
+commit c6bbcca452c40fc43a265749ba40ce813a5c587f
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Oct 3 09:29:01 2012 +0200
+
+    cmt2cmake: support for local settings (data packages names, etc.)
+    
+    A JSON files containing the local settings placed at the top level
+    directory of the converted project is automatically loaded.
+
+commit a0940b0203babe1e81ce0771aaf655f908890def
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Oct 3 08:55:41 2012 +0200
+
+    added initial support for conversion of environment settings
+
+commit 4a07e05dc6eef05c680da851b4d3339377b9fd42
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Oct 2 15:14:58 2012 +0200
+
+    added copy of pyparsing.py (not available on lxbuild)
+
+commit fc71e63e779d240d6c4f06d2d82f0af7a075eec2
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Oct 2 12:21:41 2012 +0200
+
+    fixed a problem with gaudi_env(APPEND ...) not working
+
+commit c38643bb0d00c5a1964e0ac6fd0877b3ceb16f1f
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Oct 1 15:47:37 2012 +0200
+
+    renamed a few Find*.cmake modules
+
+commit 911417c5e213f89748fb26237ae675d51b920909
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Oct 1 15:13:39 2012 +0200
+
+    fixed minor issue with environment variable set twice
+    
+    If a package had an uppercase name and was setting and environment
+    variable, it was set twice (e.g. ROOT setting ROOTSYS).
+
+commit f74de8e56a513316b871799dd63cbcfc6fc962f6
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Oct 1 14:07:10 2012 +0200
+
+    include the env. XML of used projects (instead of repeat it)
+    
+    Instead of taking the environment description of used projects and
+    repeat it in the current environment XML, just include the one exported
+    by the used project.
+
+commit 9f44610d53824d36b0443aface652efab7aab1b0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Oct 1 14:03:22 2012 +0200
+
+    allow declaration of build-time environment
+    
+    Added a function to declare environment settings to be used only from
+    the build directory.
+
+commit 863f28c8fe946616f69a55c6d0b7fb1f3450d4f5
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Sep 28 17:57:40 2012 +0200
+
+    improvements to env.py
+    
+    - Added the possibility of printing the environment as a shell script
+      (sh or csh) or as a Python dictionary.
+    - Added a 'hints' attribute to the 'env:include' tag to specify default
+      search paths for the inclusion.
+    - Fixed infinite recursion in case of XML files including themselves.
+
+commit 88c4baf0077fbc3529c0e8b407603d239806f548
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Sep 28 11:45:22 2012 +0200
+
+    fixed a type and added asmall improvement
+
+commit 02de0e19c6492b60b17c45882fd224218f12a6f4
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Sep 27 21:35:22 2012 +0200
+
+    fixed a typo
+
+commit 93023f6c9fc1e859a68f1df41711c37f224b81f8
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Sep 27 21:28:19 2012 +0200
+
+    use the 'default' tag to define LCG_releases and LCG_external
+
+commit c5ab0ae8fc0cc393e52ce0fe87711adbb4550e06
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Sep 27 21:17:44 2012 +0200
+
+    added the possibility to declare a default value for a variable
+    
+    It is possible to declare the value to be assigned to a variable if it
+    is not available in the environment.
+
+commit 8a8f953af43336b0862cf689c6fac44669854c02
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Sep 27 16:30:25 2012 +0200
+
+    improved modularity and relocatability of the env. XML
+
+commit 099eca3065d061d3d7a0a69ed9b0d986dc8f03de
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Sep 27 14:01:35 2012 +0200
+
+    Allow for relocatable environments via the special variable ${.}
+    
+    Use the special local transient variable ${.} to identify the directory
+    where the XML file is, allowing the production of relocatable
+    environments.
+
+commit e4303405b970b6c2494cdcdbd31985027bc99922
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Sep 27 13:37:57 2012 +0200
+
+    change the build env. XML to include the runtime one
+    
+    Modified the generation of XML environment files so that the build one
+    includes the runtime one instead of duplicating the content.
+
+commit 5694bd827726ed909435b5e6a63f950ebe0cc871
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Sep 26 15:39:16 2012 +0200
+
+    Improvements of env.py and EnvConfig.
+    
+    - Clean up and refactoring.
+    - Added submodule to run the tests with nosetests.
+      (EnvConfig._runtests.py)
+    - Added the possibility of including other XML files looking for it in
+      a search path (ENVXMLPATH).
+    - Minor fix and improvement to the script 'env.py'.
+    
+    (taken from SVN repository)
+
+commit 92fa5edfda390ba54617baaf44ea24239d1989f0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Sep 25 10:12:14 2012 +0200
+
+    cmt2cmake: fixed a problem with '\' followed by empty lines
+
+commit 573a5f1acb1d84a117895f5a2a1d62bdd4518fa6
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Sep 25 09:43:31 2012 +0200
+
+    added data packages and support for "PRIVATE" G.O.D. headers
+
+commit 83fbc826386bd5c234c127b7fbeb72196ff0e290
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Sep 24 19:03:51 2012 +0200
+
+    added option --update to cmt2cmake.py
+    
+    When called with --update, the scripts overwrites the CMakeLists.txt
+    that are older then the corresponding requirements.
+
+commit 19ce0c0da90744dde0cdd206b6085f0f662e4615
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Sep 24 16:48:30 2012 +0200
+
+    removed dead testing code
+
+commit 27e58a9d90ad4e8fe700c85ebdb223a6ac60267c
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun Sep 23 00:48:12 2012 +0200
+
+    added NeuroBayesExpert
+
+commit 8031d07cc27d3b37e7e3c2d8cfbbde4e843e2ff0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sat Sep 22 20:01:44 2012 +0200
+
+    generate *Config.cmake files in a dedicated directory
+    
+    If the source and the build directories are sibling, the lookup
+    performed in dependent projects may be confused.
+
+commit 5dfef080bfd0e74665647625483c205d4e9d7a57
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sat Sep 22 20:00:51 2012 +0200
+
+    added LHCb to projectCase
+
+commit f05ebc9357242237f41a087106ed472d21423ba4
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Sep 20 13:56:54 2012 +0200
+
+    check compatibility of LCG_SYSTEM across projects
+
+commit a2f025bf2e682b4791b976c247cea7c0b7d76195
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Sep 19 10:04:31 2012 +0200
+
+    fixed incorrect cmt2cmake warning
+    
+    The warning about '-import=' without 'use' was triggered on all the
+    libraries.
+
+commit e3ed9315572f2f9f9da8f64e87b2e3c4cbfeb190
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Sep 19 07:05:40 2012 +0000
+
+    minor fixes in compiler flags
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7028 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 44b340080b673148e0e543ab54469df0dea8c7dc
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Sep 18 15:00:12 2012 +0200
+
+    Improved info messages about the platform.
+
+commit 960e79fb6842857143bcea1d556c12c6175cef91
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Sep 18 14:44:46 2012 +0200
+
+    Fixed compiler lookup when cross-compiling on exotic platforms.
+
+commit 4814c1be3db38f2cea645f5903cdb85f456164bd
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Sep 18 12:03:37 2012 +0200
+
+    Further improvements to the toolchain.
+    
+    Now it allows to keep the system BINARY_TAG and use the LCG binaries
+    build for ${LCG_SYSTEM}-opt (or -dbg).
+
+commit 1421b59b1ac3ff64b5c7e1e1be5f54de26623437
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Sep 17 18:10:46 2012 +0200
+
+    improved toolchain for cross compilation
+
+commit 6671b37afba72237085a61f10c7de130b2829b6a
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Sep 13 13:25:25 2012 +0000
+
+    Removed a debug message used for testing.
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7011 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit c48b55183d33959fc6570ad52c59f2a6283caf40
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Sep 12 17:11:53 2012 +0200
+
+    Added toolchain for LCGCMT 64a.
+
+commit c52e709cbcf7aa553febc040f7429db1da229de0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Sep 10 18:47:39 2012 +0200
+
+    Do not use static libs to compute the LD_LIBRARY_PATH.
+    
+    The internal function gaudi_get_required_library_dirs will use only
+    shared libraries to guess which directories have to be added to the
+    LD_LIBRARY_PATH.
+
+commit b143ea60a6c26d650b68246695a73a9ed7916259
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Sep 5 18:13:12 2012 +0200
+
+    Fixes for the runtime environment (for LHCb).
+
+commit cc3d139fddda7108bbf5cfbc4976816e75f57e42
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Sep 5 17:43:52 2012 +0200
+
+    removed obsolete genCMake.py
+
+commit fc02ac5a6be58ca55c15db61935819f3f856fab1
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Sep 5 17:43:11 2012 +0200
+
+    cmt2cmake: extended the list of pkgs not liking -pedantic
+
+commit db955c805d385f9fd9e99288b3acb2353b2686c0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Sep 5 12:22:15 2012 +0200
+
+    Fixed a problem with generation of ConfUser DB.
+
+commit 5a8b17588a5df18269c5546489283724dfc180dc
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Sep 4 16:00:49 2012 +0200
+
+    cmt2cmake: added support for 'imports' option in reflex_dictionary
+
+commit 631a55a4883ebb93bd7f6b4fce4b746f66c66444
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Sep 4 15:25:49 2012 +0200
+
+    cmt2cmake: added support for PyQt* patterns
+
+commit daff6fd4288b2a7800ce191c36ebdeec17140a50
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Sep 4 13:47:04 2012 +0200
+
+    Added another data-package to the list of known ones.
+
+commit 6e72719ac45959f1f095f18121672efe8762e2df
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Sep 4 11:45:03 2012 +0200
+
+    Do not cache LCG search path in CMake
+
+commit 01a5fb9b2b3cc041e3d2cf1e7bcc43f035ccc221
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Sep 4 11:44:01 2012 +0200
+
+    Fixed LFC lookup with CMake
+
+commit eb82d8a48112965097efd27e4804995d6ece1cba
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun Aug 26 21:04:59 2012 +0200
+
+    Improved EnvConfig performance using a preparsed XML (a la pyc).
+    
+    When loading the XML environment file, it checks for the existence of a
+    corresponding preparsed version (.xmlc, cPickle with protocol 2) and if
+    the checksum (md5) matches, use the data from there instead of parsing.
+
+commit cfa7aba3019e3d4c680052f2cfc06201c96b0404
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun Aug 26 20:34:15 2012 +0200
+
+    Fixed performance regression in EnvConfig.
+
+commit 226e2849b3887b4a686cd3a3cc48cb9dbf573953
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun Aug 26 14:37:01 2012 +0200
+
+    Try to improve performances of env.py (with some clean up).
+
+commit 6ea9ab93442aac1e4b5d43b5114c1bdefadf8c18
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sat Aug 25 11:35:27 2012 +0200
+
+    Added dependencies of 'ConfUserDB' targets.
+    
+    Created a target <package>ConfAll to group all the configurables
+    generation of a package and modified the <package>ConfUserDB targets to
+    depend on all the configurable (regular and user) of the packages
+    declared as dependencies.
+
+commit 06e066552693bc50ef7d0197e48fc73f15c9b18e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 22 23:34:36 2012 +0200
+
+    Clean up use of build-time environment in CMake configuration.
+
+commit 17612d1db75124fb7fd172a3d40402c336e0e171
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 22 13:59:03 2012 +0200
+
+    Set QMTEST_CLASS_PATH from GaudiPolicy.
+    
+    The location of QMTest extensions have to be defined in the package that
+    provides them (but it should be installed).
+
+commit 6ae9bbcbb70d8c84559128166a340877d9901620
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 22 13:16:21 2012 +0200
+
+    Added support for non-default modules containing ConfigurableUser.
+
+commit 4298ccd546919403b8ccb7db056594674af1cde1
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 22 12:00:54 2012 +0200
+
+    Fixed search path for CASTOR.
+
+commit 7ca7d98b34bd80c3fc9810688ac56d19e4cc50fa
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 22 12:00:28 2012 +0200
+
+    Added FindXrootd.cmake and FindCASTOR.cmake.
+
+commit 011da9813713a69c1a72eb505c751c8d41a5072b
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 22 11:01:00 2012 +0200
+
+    Fix to the special __init__.py used to run from build dir.
+    
+    Fixed the generation of the special __init__.py for running from the
+    build directory to correctly take into account the 'hats' of the
+    packages.
+
+commit cd29a3b5d2c43e9f72647828ac96fe27f130599c
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 22 11:02:32 2012 +0200
+
+    Improvements to FindRELAX.cmake.
+    
+    Modified to set the variable RELAX_ROOTMAPS to contain the rootmap files
+    corresponding to the components required.
+
+commit 9594fab1a56282c8ce71bb0649260d80340f64ed
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Aug 21 20:31:16 2012 +0200
+
+    Allow .hpp headers.
+    
+    Allow headers files with extension .hpp to be installed (a few are
+    found in LHCb).
+
+commit 8212d667486bb9c5584f92a4c309cf6f17ff1b8e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Aug 21 20:27:03 2012 +0200
+
+    Added support for 'customdict' document in cmt2cmake.
+
+commit 09d58fd72c613448b632890d04ac8b11346295fe
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Aug 21 01:15:51 2012 +0200
+
+    Added functions to process files with pyrcc and pyuic.
+    
+    The functions gen_pyqt_resource and gen_pyqt_uic convert, respectively,
+    .rc and .ui files in importable Python module for PtQt applications.
+
+commit c9edb46ffe5c21b6e336fe214a6d6554f1d4c519
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Aug 21 01:13:50 2012 +0200
+
+    Fixed the 'native_version's depending on Python.
+
+commit 4619db76c0eda1d8e65472c1d65c9d9f70d89ebd
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Aug 9 14:29:57 2012 +0200
+
+    added the tool to convert from CMT to CMake
+    
+    This version is still preliminary, but can transalte 98% of LHCb
+    (i.e. everything except GaudiObjDesc and Tools/CondDBUI).
+
+commit 4dbb9778289d18e35844167f7f774520ace9833d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Aug 9 09:59:44 2012 +0200
+
+    enhanced FindRELAX.cmake and removed FindPOOL.cmake
+
+commit 4e53bfecd7064e28009e1471d47d1c28916920b3
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Aug 9 09:39:04 2012 +0200
+
+    fixed the generation of rootmap files (removed abs. paths)
+    
+    The genrated rootmap files contained the absolute path to the libraries
+    in the build directory, while they should contain only library names.
+
+commit 8b78b3879cbedae341d0534a1d6a5d6b4cb6e5dd
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 8 21:02:22 2012 +0200
+
+    fixed Qt search path
+
+commit f73d4407fd54a78c899506f583d3f125199fd38b
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 8 19:22:18 2012 +0200
+
+    fixed the search path for the build tools (like env.py)
+
+commit 2509ca259787cc4dfb3027f07f0c4ee482a85fda
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 8 09:45:50 2012 +0200
+
+    fixes to GaudiProjectConfig.cmake to build LHCb
+
+commit 98bb97605a460b56df3f2e6d6e8c81277e804fbc
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Aug 8 09:44:27 2012 +0200
+
+    improvements to few Find*.cmake modules
+
+commit ffbef0648fe72056bd34307940ea7e296361c2f0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Aug 7 17:16:49 2012 +0000
+
+    added a couple of Find*.cmake modules (pygraphics and lfc)
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6987 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 9914b759236f2a27a26896fc35c2e170ca0216f0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Aug 7 17:16:47 2012 +0000
+
+    Improved propagation of configuration via dependency.
+    
+    Added a body to gaudi_depends_on_subdir, i.e. the code that should be
+    executed only if the subdir does have dependencies:
+    - add the subdirs installing headers to include_directories
+    - moved here the code to handle the targets that generate headers
+    
+    Moved the
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6986 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit f26be2a8548911662c65cc514fee000abfbe6507
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Aug 7 17:16:44 2012 +0000
+
+    Added the possibility to declare targets that generate headers.
+    
+    If a subdir has targets that produce headers that may be used by other
+    subdirs, it must declare them in the property GENERATED_HEADERS_TARGETS
+    of the directory. The 'gaudi_add_' family of functions will collect
+    those targets from all the dependencies and declare the correct
+    dependency on the generated target.
+    
+    It is also possible to use the variable required_local_genheader_targets
+    to enable the mechanism within a package.
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6985 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit a8c3ffbcb8d55754111933fb7d924543cf6369db
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Aug 7 17:16:42 2012 +0000
+
+    correctly reduce the list of link libraries
+    
+    Remove duplicates when resolving the list of link libraries (e.g. from
+    external packages), taking into account the special options: debug,
+    optimized, general.
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6984 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 31423588887cab5aa051eb1535bc0d072debc40c
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Aug 7 17:16:39 2012 +0000
+
+    improved warning for missing __init__.py and exclude '.svn'
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6983 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit d6f2e8409f2b9d8a1a6c986004e6e193ec30d130
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jul 27 16:09:31 2012 +0000
+
+    rationalized the permissions of files
+    
+    Random file permissions was the legacy of commits started
+    from Windows and the correct promissions simplify the
+    testing from the build directory.
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6979 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit eb81854b805410cee27149a99bbccaca8c458839
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jul 27 16:09:02 2012 +0000
+
+    Added the possibility of running ctest without installing.
+    
+    Modified GaudiProjectConfig.cmake to produce two environment XML files:
+    one to use the build directory, and the other for the installation.
+    
+    Special care was needed for the Python modules, because the same package
+    can be found in several places in the PYTHONPATH.
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6976 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 014b3d8a201459f8e9f4ca5ddea0273360d99c35
+Author: Benedikt Hegner <benedikt.hegner@cern.ch>
+Date:   Thu Jul 26 16:58:53 2012 +0000
+
+    enable C++11 support
+    
+    From: Benedikt Hegner <benedikt.hegner@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6974 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 383df0527291139fabc098385778f3a5a4567f89
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jul 20 17:53:44 2012 +0200
+
+    Modified FindROOT.cmake to find deps between components on Mac
+    
+    The difference between Linux and MacOSX builds require that we
+    add to the link statement more ROOT components that the ones
+    strictly needed.
+    With this patch, FindROOT.cmake detects automatically the required
+    dependencies and adds them.
+
+commit afcb025f4442b1473a338412aae443ee32cdbbc8
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jul 20 13:36:18 2012 +0200
+
+    modified MacOSX link flags to match CMT builds
+
+commit 3ec2378d42f73e5e0dedafc503838011e348885a
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Jul 11 08:21:25 2012 +0200
+
+    minor fix for when DYLD_LIBRARY_PATH is not set
+
+commit cdca1339fd1c07818e131ebfb8aa1dbf5dac6563
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Jul 11 08:17:03 2012 +0200
+
+    hacks to compile on MacOSX
+
+commit bd9d860aea733d8fcc56132554c4ee1c3b27087c
+Author: Pere Mato <pere.mato@cern.ch>
+Date:   Fri Jul 20 10:44:34 2012 +0000
+
+    Added ENV variables to FindXXX modules
+    
+    From: Pere Mato <pere.mato@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6968 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit ad02e14ccc2b7709b838726fe22a4963b8bd361b
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Jul 12 16:56:42 2012 +0000
+
+    improved lookup for LCGCMT in heptools-common.cmake
+    
+    Now it can understand the 'preview' version, to be able to use
+    the nightlies.
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6962 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 34aed5e8d164ac03adf85b26f65f671c485b8dcb
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Jun 19 16:41:16 2012 +0000
+
+    Added toolchain heptools-64.cmake
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6919 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit ec6a0ea3e2b0045a560447b0c740e33eb14b2d78
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Jun 19 16:41:13 2012 +0000
+
+    Modified CMake toolchains to work with "heptools" (LCG) >= 63
+    
+    Starting from LCGCMT 63, the Application Area projects are deployed in
+    the directory 'app/releases' both on AFS and on local installations
+    (e.g. CVMFS), while before they were in 'externals' for local
+    installations.
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6918 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit ed98409540388565ac3b778f8366f3144a6ba9a1
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Jun 14 15:05:32 2012 +0000
+
+    Disable (again) uuid on SLC6
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6917 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit acd4a4a88ca2f2fcbacb57090193a303ee243a46
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Jun 11 17:45:39 2012 +0000
+
+    Preparing for LCG 63
+    
+    From: Marco Clemencic <marco.clemencic@cern.ch>
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@6914 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit fdc77617e7df601847d20b3d719bacd08dee2d23
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jun 8 18:04:24 2012 +0200
+
+    Added support for coverage builds.
+
+commit 18b02cf844fb44667f80eb777e0640da134d69e5
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jun 8 12:16:33 2012 +0200
+
+    cleanup and tuning of warnings
+
+commit c4f8794bedb9e9bbc270df9c12b221424b3cd295
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jun 8 12:15:36 2012 +0200
+
+    Allow GCCXML global compile flags (GCCXML_CXX_FLAGS)
+
+commit 0a4e7ee2b4c8ac3e2ade1fd8f96ff11e279929bb
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jun 8 11:29:04 2012 +0200
+
+    Preliminary heptools-63.cmake (based on nightly builds)
+
+commit e60cbcb7969d42a8f79cefd063a37ac13a461ca2
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jun 8 11:27:31 2012 +0200
+
+    Added support for Clang, gccmax and gcc 4.7
+
+commit 2ce89622692a547d2963f4ec0c69f8b1a7152d92
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Jun 8 11:23:18 2012 +0200
+
+    Allow override of GCCXML compiler (via GCCXML_CXX_COMPILER)
+
+commit f11e1beef57bf57422bf606d5a7f79dad2db9e5c
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Jun 5 16:25:06 2012 +0200
+
+    export subdir version if defined
+
+commit 0f7b1fb51eb8346edb1252d2f2508558fc483eda
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Jun 5 16:23:47 2012 +0200
+
+    Added the creation of the export file for packages with cmake and deps.
+    
+    - added a function to install CMake modules
+    - export subdirs with dependencies on others
+
+commit be368ae507605e2e317428cbb2f2eb52ca0f2c7e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Jun 4 19:15:09 2012 +0200
+
+    Ensure that the generated headers can be found during compilation.
+
+commit 9aabcb87f6136c2e4fa383f1704fd1f64f1565da
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Jun 4 19:00:47 2012 +0200
+
+    Moved generation of <PROJECT>_VERSION.h to configure time.
+
+commit 9b54210f144091fb37d4d743137b663b4ff47e9e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue May 29 12:37:36 2012 +0200
+
+    renamed depends_on_subdirs into gaudi_depends_on_subdirs
+
+commit b4992084fbf0d52b36c94f52d5a753aaf43f706a
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri May 25 10:57:28 2012 -0400
+
+    Added function to declare subdir name and version
+
+commit d4d61a4427602bcc8a2cba7eae3dc870b90dfd3d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri May 25 09:59:03 2012 -0400
+
+    Install the Python modules for environment configuration
+
+commit d251fc0a4e2d301ade22ae477362bac63be6f06e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu May 3 12:37:13 2012 +0200
+
+    made CMake compile flags closer to the CMT ones
+
+commit 96a88ea3ad72d231c9c5bf9e6f8afa2040b610e9
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed May 2 19:18:25 2012 +0200
+
+    fixed a problem in EnvConfig prepend
+    
+    the order was not modified if the entry was already present
+
+commit 22628c6f15879c8b1712bb055361fd095811a18e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed May 2 16:04:30 2012 +0200
+
+    fixed problem with the changed C++ flags
+
+commit ef3595ec2d18dcc09ba2a746e7ecab69faea8a28
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed May 2 11:45:43 2012 +0200
+
+    modified build flags to be closer to the CMT ones
+
+commit 044b1ac2f3762c916c4395e18fb4a5ebc3866d35
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Apr 27 17:54:07 2012 +0200
+
+    avoid that Boost libraries are picked up from the system
+
+commit 366f34285fb223536c7f6f2eae4bb4ce6d80752a
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Apr 27 14:24:55 2012 +0200
+
+    fixed an issue in setting the test-specific runtime environment
+
+commit b356b9863a15f8684651e411bb9eb4c10e513edc
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Apr 27 12:30:37 2012 +0200
+
+    fixed a bug in 'gaudi_resolve_link_libraries'
+    
+    To simplify, I was removing duplicated, from the list, but this screws
+    up the special options of the target_link_libraries command (e.g.
+    release/debug libraries, as used by Boost).
+    This was causing a double link of boost libraries, one from heptools and
+    the other from the system.
+
+commit 66ca6393613888e7547fc77728ac85a0ff368cf2
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Apr 26 18:28:35 2012 +0200
+
+    print only the name to the env XML file (instead of full path)
+
+commit 0627b33d9fbc1cb2d535b1397e530d8aa18de1e8
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Apr 26 18:25:37 2012 +0200
+
+    modified the subdirectory dependency declaration to work across projects
+    
+    Reviewed the dummy function to declare the dependencies and export the
+    collected dependencies to the client projects.
+
+commit 42d749946501582ceb0002a3f1c38d201f027735
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Apr 26 16:07:39 2012 +0200
+
+    export also module targets to ensure that we do not have conflicts
+    
+    If a subdirectory in a derived project tries to create the same module
+    as another subdirectory in the used project, the configuration will stop
+    with an error.
+
+commit 2d2a59034b736c1d204361722ab7ede9a1e359b1
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Apr 26 15:44:32 2012 +0200
+
+    added consistency check on the toolchain version of used projects
+
+commit 42cb7934da0001212b4d5362a131e12cead72758
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Apr 26 15:40:19 2012 +0200
+
+    commented out debug output
+
+commit 83b5e5255247cf3be02344b590eab2a2c28429fc
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Apr 26 14:03:57 2012 +0200
+
+    implemented dependencies on other projects (with recursion)
+
+commit 0962f47f8ce397cc4ce0a4f4848883f57a8e111f
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Apr 26 14:01:37 2012 +0200
+
+    propagate custom (external) and project env to user projects
+
+commit 1ecce7a4f9848a8f3513904d35aa08fed6bc33bf
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Apr 26 13:54:09 2012 +0200
+
+    modified env.py to use cmd line settings to override XML
+    
+    This is needed to ensure that the current build directories are
+    prepended to the paths defined in the XML (to override libraries).
+
+commit e74a47b94fb8c9b720ee462542ea9266d21c856b
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Apr 25 18:13:41 2012 +0200
+
+    prototype infrastructure to chain projects with subdir override
+    
+    The regular "export" mechanism of CMake cannot be used because it
+    prevents the overriding of subdirs and it doesn't allow transitivity of
+    include directories.
+    
+    The choice is to implement our own export mechanism that allow overrides
+    and exports all the special properties the framework is using
+    (transitive includes and libraries).
+    
+    The main disadvantage is that the implicit transitive link has to be
+    reimplemented within our framework and thus we are bound to the
+    framework to create libraries, modules and executables.
+    
+    TODO:
+    - the import of other projects (CMT 'use') has to be implemented and
+      made recursive (the prototype uses hard-coded Gaudi to test)
+
+commit 37e48ce4102cf1e38b839b49ef04067f29227841
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Apr 24 18:23:42 2012 +0200
+
+    revert to single export file
+
+commit 51fdbd9fbe47d4195f450e47a768b891593d7840
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Apr 24 12:52:02 2012 +0200
+
+    create one export file per package (if needed)
+
+commit 790a658bccc65140dc7d27ac99c20f1f1e6f5656
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Apr 24 12:08:11 2012 +0200
+
+    clean up of GaudiProjectConfig.cmake
+
+commit 710b994adff3bc7164507100db7a0bcc3e7b6773
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Apr 24 10:01:29 2012 +0200
+
+    avoid creation of log file for EnvConfig
+    
+    disabled the default file-based logging in EnvConfig/log.conf
+
+commit 4522803552b20dcc4c9941f6b0cf0a804063b8c0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 30 11:46:48 2012 +0200
+
+    updated make_heptools.py and added heptools-62b.cmake
+
+commit 4b281761b97eac2b9c606bf823fbc60efe7eb08b
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 30 10:47:30 2012 +0200
+
+    added the gcc C++ library dir to LD_LIBRARY_PATH
+
+commit b94db12bf0db0f87ac8a7f561ec30d87e0a61c04
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Mar 29 11:00:51 2012 +0200
+
+    changed the rule to declare an env variable as scalar or list
+
+commit 6b5f2567cf8f9db3078aabd69f226dc8d3dd62d7
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 27 22:28:39 2012 +0200
+
+    modified Findtcmalloc.cmake to propagate the library path
+    
+    The tcmalloc package is special, because we do not link against the
+    library, but we need the LD_LIBRARY_PATH set to find it anyway.
+
+commit c05215790473fd50197c8742f56a5ebf2fde065d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 27 21:16:11 2012 +0200
+
+    Use correct runtime environment for commands and tests.
+    
+    Imported the Python code from the LHCb package EnvConfig.
+
+commit e3ca916e52161d498d751cadb33a5456c963087b
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 27 17:33:06 2012 +0200
+
+    new way of declaring and setting the environment
+    
+    generate an XML file with description of the changes
+
+commit a66d0ca128efb781f6205bebd48035acc43c0e85
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 26 19:21:40 2012 +0200
+
+    cleaned and generalized GAUDI_MERGE_TARGET, now gaudi_merge_files
+    
+    Simplified the creation of custom global targets with two the macros
+      - gaudi_global_target_append
+      - gaudi_global_target_get_info
+
+commit df842ff8c95b131a36f7cf62b7a62a31fbe5c65d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 26 17:44:01 2012 +0200
+
+    more clean up in CMake functions
+
+commit 860473a628c4057e05c854eece9ca7f464159de0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 23 16:51:47 2012 +0100
+
+    removed the generation of the setup script
+    
+    It has to be re-implemented using the EnvConfig package written
+    by the LHCb Summer Student.
+
+commit e446bdee533819a86eeecf15fa1379d98c880792
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 23 15:18:07 2012 +0100
+
+    Disabled automatic zipping of Python modules in CMake (ordering problem)
+    
+    It's not possible to fix the order in which install steps are done, so
+    we cannot ensure that the zipping is executed _after_ the installation
+    of all Python files.
+    
+    I added a custom target (python.zip) as a short-cut to call the command,
+    but it has to be run by hand.
+    
+    See http://public.kitware.com/Bug/view.php?id=8438
+
+commit efef07e630390fce7a58b004a031f8c41e6075a2
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 23 14:50:22 2012 +0100
+
+    more clean up gaudi_install_python_modules and fixed duplicated install
+    
+    resolved conflict in installation of __init__.py
+    removed duplicate install of unit tests
+
+commit e62aedb654a868ef0997d2ee06c371969ca04657
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 23 09:54:24 2012 +0100
+
+    clean up gaudi_install_python_modules
+    
+    Modified the way __init__.py are created.
+
+commit 7fd213be0ad9d15a024bb460ffadfb7c76400df9
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Mar 21 18:16:03 2012 +0100
+
+    removed the function GAUDI_USE_PACKAGE
+
+commit 9d07b1f13661d5296c861f1d45110a5b7096728f
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 20 22:20:00 2012 +0100
+
+    replaced GAUDI_*_TEST with gaudi_add_test
+    
+    The QMTest are executed as a single CTest and always succeed,
+    even if the tests inside fail (limit of the wrapper we use).
+    
+    The environment is forced and only partially dynamic (to be fixed).
+
+commit f98870fa0130dae75e1b50f390ad9ce92d9c817f
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 20 14:50:00 2012 +0100
+
+    modified gaudi_add_library to require the PUBLIC_HEADERS to install
+    
+    (and cleaned up gaudi_install_headers)
+
+commit 7dd22df2f6387180873c7e9e9244f194c373a2bd
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 19 18:36:41 2012 +0100
+
+    removed cmake_policy calls (not needed with minimum version 2.8.5)
+
+commit d6d5f1bb9947e6c6ccb817e4a6026f48fea9817e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 19 18:35:10 2012 +0100
+
+    cleaned up a few gaudi_* functions
+    
+    - gaudi_get_packages
+    - gaudi_add_python_module (was GAUDI_PYTHON_MODULE)
+    - gaudi_add_executable (was GAUDI_EXECUTABLE)
+    - gaudi_add_unit_test (was GAUDI_UNIT_TEST)
+
+commit 324b71e90c0c3b2dd836fe84b1e5fdbfbbc106d5
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 19 17:27:54 2012 +0100
+
+    factored out common code in gaudi_add_* functions
+
+commit 1b55ccc6d70c02f7b8e81975966a8c6e71e186cf
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 19 14:56:53 2012 +0100
+
+    clean up of gaudi_generate_confuserdb
+
+commit 3961882c7f03aa0d7a30a65e453862a263a4e593
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 19 14:48:15 2012 +0100
+
+    clean up of gaudi_generate_configurables
+
+commit 6dcac1a0144ce9147ab215d489cc4886381df9a4
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 19 13:53:06 2012 +0100
+
+    modified gaudi_add_* to allow package names as LINK_LIBRARIES arguments
+
+commit 36ce829363de31aad14f7c37681c90e2af53c676
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 19 12:38:13 2012 +0100
+
+    Improved parsing (regex) of the project version string
+
+commit 17c8a90135091e55cf4d72171e54a90664efd094
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 19 12:37:03 2012 +0100
+
+    Modified FindROOT.cmake to support COMPONENTS and build dictionaries
+    
+    Removed the build of the dictionaries from GaudiContrib and added
+    functions to in GaudiProjectConfig to extend the dictionary builds.
+
+commit 1b221cfa01b794c33b1e3e174b0a0fd4e56e236d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 13 20:15:07 2012 +0100
+
+    Fixed a copy-paste error in Findsqlite.cmake
+
+commit f6a0fa5c107e97f4de4371748ec700df91a213d3
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun Mar 11 12:40:55 2012 +0100
+
+    initial support for COMPONENTS options in FindROOT.cmake
+
+commit c646e927039c4d1ba5a86e6e7111335bff2fdc44
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun Mar 11 11:51:39 2012 +0100
+
+    clean-up and rename
+    
+    Modified the names of the functions GAUDI_{LINKER,COMPONENT}_LIBRARY to
+    use CMake naming conventions: gaudi_add_{library,module}.
+    The options have been renamed too:
+     - LIBRARIES -> LINK_LIBRARIES
+     - USE_HEADERS -> INCLUDE_DIRS
+    
+    Factored out the code to expand the list of source patterns as a macro
+    (gaudi_expand_sources).
+    
+    Removed some useless code and code that needs to be re-added.
+
+commit ec6d32fb7bcaea339653c9de1ceee78c4ec835a9
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Feb 24 11:57:06 2012 +0100
+
+    Allow generation of executables without .exe extension (in CMake).
+
+commit 14e82c751485bc79be447966104e11a7623dea9e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Feb 24 11:55:17 2012 +0100
+
+    Updated GaudiProjectConfig.cmake to require CMake 2.8.5
+
+commit 272485280cc63c5d3ed4ba19275c1f69d2d99473
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Feb 23 12:32:50 2012 +0100
+
+    Fixed compilation of GaudiProfiling after patch #4852
+    
+    https://savannah.cern.ch/patch/?4852
+
+commit 9e8bb37007aed12772b4dd3b4ea6bbccfef4041d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Feb 17 10:10:34 2012 +0100
+
+    fixed a (dependencies) problem in parallel build
+    
+    The generation of the reflex dictionary was producing 2 files (.cpp
+    and .rootmap), and 2 targets (Dict and MergedDict) were depending
+    independently on the two files from two different Makefile levels, so
+    the generation could be run twice at the same time, producing an error.
+
+commit 9f3cb56916b9b42faf8dca550d9e6b45124169c9
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Feb 16 16:36:58 2012 +0100
+
+    Renamed FindQMtest.cmake into FindQMTest.cmake
+
+commit aec1a9fe86538cb09f9fe3d565f79942a087f4b2
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Feb 16 16:34:22 2012 +0100
+
+    improved FindQMtest.cmake to find the 'qm' module on the system path
+
+commit 58dee36089c6275e7b5482328c676bf1a25ba587
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Feb 16 15:37:20 2012 +0100
+
+    Set the mimimum required version of CMake to 2.8.5
+    
+    The local copy of FindPython*.cmake files have been removed because the
+    version in 2.8.5 is good enough.
+
+commit 98c0875d25782b2626fef93ab96b77d611b76088
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Feb 15 14:43:38 2012 +0100
+
+    fixed python path problem in ConfUserDB generation
+
+commit 20906334d8495675cc68803051e8ae44f74a79e2
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Feb 15 14:06:13 2012 +0100
+
+    added the CMake function GAUDI_PACKAGE_VERSION_HEADER
+
+commit a4f3c8e3612a07a56f8805578244621dd1c77f74
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Feb 15 14:05:07 2012 +0100
+
+    fixed an external for heptools-62a and slc6
+
+commit acf2fa7dc2a7884b5d0f74ed7a68861fb4f40e01
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Feb 14 17:43:23 2012 +0100
+
+    added toolchain for LCG 62a
+
+commit ec51df219f784422eee435dd0ffbf0af5f924031
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Feb 14 17:42:44 2012 +0100
+
+    fixed make_heptools.py to use the tag 'target-slc', if present
+
+commit 57d4c8ff2cd00df6727ea1f3882f4a7a1dc2babd
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Feb 14 15:21:10 2012 +0100
+
+    added a small script to generate the heptools toolchain from LCGCMT
+    
+    To be noted that the script is a development version: it doesn't take
+    into account special cases and tags, so the output is not directly
+    usable.
+
+commit c3c0422a298b7153121d0c29f7f962b4c178179b
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Dec 16 18:18:40 2011 +0100
+
+    fixed to compile the head version with CMake
+
+commit 2993fce9ef1e1af83ffdd4f50be8d8dd118786a0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Feb 14 12:38:00 2012 +0100
+
+    update cmake lcg toolchain (from CORAL, lcg 61b)
+    
+    with the new configuration style, the Find*.cmake modules
+    are independent from the toolchain and the version of the
+    toolchain has to be specified on the command line:
+    
+    cmake -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/heptools-61b.cmake .
+
+commit 8daebfe17075a6062c07b211e8c37b4d4d3d3857
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri May 27 21:20:50 2011 +0200
+
+    fixes and improvements in the generated .cmake files
+
+commit 7157ba739bab3c282cba9faf5a6f4ebd7784ecf1
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri May 27 20:15:54 2011 +0200
+
+    use regular case in CMAKE_PROJECT_NAME, add CMAKE_PROJECT_VERSION
+
+commit 7f99f146973442859de3088098d7be69ccee5d73
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri May 27 17:55:19 2011 +0200
+
+    added platform specific cmake config file
+    
+    Install a platform-specific configuration file including details
+    about the linker and component libraries of the project.
+    
+    Improved the platform-independent configuration file to present
+    the right variables (<project>_LIBRARY_DIRS etc.)
+
+commit 627318d6b640d894ece1e3baa6ffa53cf7dbbb61
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu May 26 17:48:08 2011 +0200
+
+    testing generation of <project>Config[Version].cmake
+
+commit 94b9f8669e7579a214a00cb6f509957b49fa2fdb
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu May 26 17:13:40 2011 +0200
+
+    minor simplification of GAUDI_GENERATE_ROOTMAP
+
+commit f91bbcea698e30c0a9d539275b5cf01ad03b267d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed May 25 18:56:49 2011 +0200
+
+    attempt to propagate the environment with cmake
+
+commit ed54ed9ea3da73b5dbb1614c08be7f412545910c
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed May 25 17:50:45 2011 +0200
+
+    Changed LCG Configuration.cmake to always set _home variables.
+    
+    Note that LCG_PREFIX_PATH is cached so it will not be recomputed.
+
+commit bf9b3402f31f8f363ba2450845be2f0a7fe876da
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed May 25 14:51:18 2011 +0200
+
+    Added ccache and distcc support to cmake configuration (>=2.8)
+
+commit ab438989fa31848af76f4cf2a47532ac0268f326
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed May 25 13:54:33 2011 +0200
+
+    CMake: collect the list of library dirs that are needed by targets
+
+commit d9120c4715e97f8d0b566c2307260928bd99de38
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed May 25 13:51:31 2011 +0200
+
+    implemented propagation of include directories
+
+commit 63cab8a39a9c727f342baf336f18075e143a0c0b
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue May 24 20:59:09 2011 +0200
+
+    re-introduced sorting of subdirectories in CMake
+    
+    Use the special function "require" to declare the subdirectories
+    that need to be processed first.
+
+commit 2d626dc41795c1ef2666bc9bf3c003c9b7989589
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue May 24 16:15:03 2011 +0200
+
+    CMake: replaced include_directories wth handling in GAUDI_* functions
+
+commit 80678a763251bd09d52940ba0454390d3889d27c
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue May 24 10:01:05 2011 +0200
+
+    Changed the cmake find modules to use uppercase variable names
+    
+    This makes them closer to the standard implementations.
+
+commit 766c8c55e19950f0a24664499999b1ca8c4c7dfb
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun May 22 20:46:15 2011 +0200
+
+    Set 'CMAKE_include_directories_BEFORE' to ON
+
+commit c087ee5b54a90cd321debeef1c8863b08e46224f
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun May 22 20:45:29 2011 +0200
+
+    Replaced 'dl' with ${CMAKE_DL_LIBS}
+
+commit f143c04a5b9f18720fea2064fc9ac99be8cf1d77
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun May 22 20:39:53 2011 +0200
+
+    Findpytools.cmake is still a fake, but does not import Configuration
+
+commit 2ef07b6e91727f02356506c4ef985cfece02075b
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun May 22 20:39:00 2011 +0200
+
+    CMake: improved Find modules for fftw and RELAX.
+
+commit c4b69443f8292beccca77b5ceede4e56a2639050
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun May 22 19:20:47 2011 +0200
+
+    CMake: First attempt to locate ROOT
+
+commit 48228c8a19d1532a0520b7c37bfcdb00293b491f
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun May 22 19:20:17 2011 +0200
+
+    CMake: First attempt to locate QMTest
+
+commit 788fd0b72e9ff16f1a93d860d679f890f22fedee
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun May 22 17:53:06 2011 +0200
+
+    CMake: fixed visibility of some cached variables
+
+commit 959cb2f51b4478e93898322a6d7cf6886f7038fb
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun May 22 17:40:55 2011 +0200
+
+    CMake: automatic Python and Boost derived version variables
+
+commit 6e31dea8de470e99df23bb200c4144ed6ca8538e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Sun May 22 17:35:54 2011 +0200
+
+    Imported FindPython*.cmake from CMake 2.8.4
+
+commit 731f7c16c5f26d4779bc49a41baf6ec5fe8899ae
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri May 20 22:30:02 2011 +0200
+
+    CMake: added preliminary support for MYSITEROOT
+
+commit 2a70b02f234610deafd158d8f2201b5bd7fedd9a
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri May 20 22:24:55 2011 +0200
+
+    CMake: fixed FindAIDA and selection of Python
+
+commit 954e194ce914af489cf182ee54a9bd88910b0eb4
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri May 20 22:22:39 2011 +0200
+
+    CMake: imported FindPython*.cmake from Debian.
+    
+    The Debian versions include a bugfix that allows
+    the explicit selection of the version of Python
+    (the standard ones pick up the latest).
+
+commit 65269e0d2b5c987f6094ccd97bac969a0aaa7ff6
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri May 20 21:00:29 2011 +0200
+
+    CMake: new way to find external libraries
+    
+    Switched to a model where LCG versions of the libraries can be found
+    by the standard CMake FindXYZ.cmake modules.
+    
+    Few contributed modules have still to be upgraded to generic.
+
+commit d643be6f6d615e21888073bbcbfa1cd459ae5ca6
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu May 19 11:09:46 2011 +0200
+
+    CMake: Fixed a problem with the path to genconf.exe
+
+commit 07c2b7e8afff7d9f2b4604d6831f399bb5941167
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed May 18 19:30:55 2011 +0200
+
+    Initial implementation of a LCG toolchain for CMake
+
+commit 1de7a2301a900228254d94006ac1d2efab524933
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon May 16 20:07:37 2011 +0200
+
+    Re-organized GaudiProjectConfig.cmake and GaudiPolicy.cmake
+
+commit 274129ad56a9afc68b79951b737eddcb7739ee32
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Apr 20 15:26:01 2011 +0200
+
+    Updated external versions to LCG 60b.
+
+commit 364608fc9237057776408ef8c7945169c4011220
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 25 11:33:50 2011 +0100
+
+    Introduced the option HIDE_WARNINGS (default: ON).
+    Used to turn on and off the special options meant to hide warnings
+    that cannot be fixed (yet).
+
+commit 19106b9575e4cdd6931430cae7e6521f260b0a7e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 18 12:22:25 2011 +0100
+
+    use BUILD_OUTPUT_PREFIX to define the location of generated files
+
+commit f5ed79d78fcc3843f1075e0996f14b8e5b1936e0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 15 19:41:41 2011 +0100
+
+    moved rootmap merging to project level + cleanup
+
+commit ab8372105e6d879203c4474086e4f20a1933c0c8
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 15 17:28:39 2011 +0100
+
+    removed the option BUILD_DLLEXPORT_LIBS (use G21_HIDE_SYMBOLS)
+
+commit 56ec196c598a08f8c62833aa6a4ff80b62aac61d
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 15 14:24:01 2011 +0100
+
+    removed cmdwrap.bat
+
+commit 1797588b20b3aa0132e674783192cfccc2903a31
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 15 13:56:18 2011 +0100
+
+    improved append/prepend support in env.py
+    moved the definition of the variable 'ld_library_path' to GaudiProject
+
+commit 08fbd73c1ec95683eda5082e90e6f470a7dd1356
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Mar 15 09:11:37 2011 +0100
+
+    Added support for append and prepend to env.py
+
+commit cf9a664a8dd3b232ab2be7cba9a723767bf0a689
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 14 21:12:36 2011 +0100
+
+    testing a way to pass environment variables to commands
+
+commit 74c8e5087175086703858aa4e4ddfc03ddda1492
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Mon Mar 14 14:17:14 2011 +0100
+
+    Fixed a problem with the dependencies on genconf.
+
+commit a417bf8cfa6d1d007f4a8583dee09b7157e2b9e9
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 11 20:17:59 2011 +0100
+
+    added minimal CPack configuration, fixed install of merged confDb
+
+commit ab0d8f30100434d7aba9331da6a2deeef91a1314
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 11 19:33:47 2011 +0100
+
+    moved common project config to GAUDI_PROJECT, improved merge_files
+
+commit d8a147b654a6a604a513a2533ab4fb232d95cefd
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 11 18:20:48 2011 +0100
+
+    minor changes in in configurables generation
+
+commit a1bfd1b23a9f312e5858cc1d6e977ad76ce49fb0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 11 10:49:25 2011 +0100
+
+    combined merging of Conf and ConfUser DBs, and cleanup
+
+commit a00082cfed2aaaeb450a59b8d98298716a1319f2
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Mar 10 19:26:01 2011 +0100
+
+    Added generation of ConfigurableUser DB.
+    Each package concerned creates the file in the <package>ConfUserDB
+    target and pass the filename to the project via a global property. The
+    project uses the property to merge the generated files at build time.
+    
+    TODO:
+     - the way to use the genconfuser command has to be improved
+     - the Python modules (GaudiKernel) should be accessible from the
+       build area without having to set the PYTHONPATH in the command
+     - the merge is done with 'cat', to be changed
+
+commit 95b55fbbcb3c1be9b066e333a3c6cc8d10bde6af
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Mar 9 11:09:08 2011 +0100
+
+    Modified the FindPython.cmake module according to the standard one.
+    Splitted in two (Interp and Libs).
+
+commit 307624ab028d193d79491fae53312956a3ed63d6
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 4 18:07:40 2011 +0100
+
+    Add the directory containing GaudiProjectConfig to the search path
+
+commit 99105b859de7f8491dc292e3fe83ea216d27561a
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Fri Mar 4 16:35:01 2011 +0100
+
+    Changed the way to bootstrap the project CMake configuration
+
+commit a3edc70f87fd146f8d8505f194686461033afe64
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Mar 9 12:01:25 2011 +0100
+
+    Externals versions aligned with LCG 60a
+
+commit b7992d6daafb0f179f2f101184367aa2f5fe1834
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Feb 3 19:19:46 2011 +0100
+
+    enabled support for G21_* macros in CMake configuration
+
+commit 169f6488fd8c0654dded3fe4d009de93a745e8eb
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Feb 3 15:45:49 2011 +0100
+
+    re-enable VC9 security warnings
+
+commit 680e2bca1242f45aa6cb5339e45a3dda62359ac0
+Author: Marco Clemencic <marco.clemenciccern.ch>
+Date:   Thu Feb 3 15:27:10 2011 +0100
+
+    fixed compilation problems (mainly win32)
+
+commit c803d469c383fb95b62b8fe5f8f6c57921c7bc5e
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Thu Feb 3 10:39:58 2011 +0100
+
+    Updated configuration to LCG 60
+
+commit baf0741d6d9624a1501219970de4f1b874710dd0
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Wed Feb 2 15:43:40 2011 +0100
+
+    Added configuration for new packages and libunwind
+
+commit 3593a3266a65796e707f2cb6c14a8fc320d84190
+Merge: 0376d17 5183c21
+Author: Marco Clemencic <marco.clemencic@cern.ch>
+Date:   Tue Feb 1 14:08:28 2011 +0100
+
+    Merge branch 'master' into dev/cmake
+    
+    Conflicts:
+    
+    	Gaudi/cmt/requirements
+    	Gaudi/cmt/version.cmt
+    	Gaudi/doc/release.notes
+    	GaudiAlg/cmt/requirements
+    	GaudiAlg/doc/release.notes
+    	GaudiExamples/cmt/requirements
+    	GaudiExamples/doc/release.notes
+    	GaudiExamples/home/FastContainers.ref
+    	GaudiExamples/src/PartProp/PartPropExa.cpp
+    	GaudiExamples/src/Selections/SelCreate.cpp
+    	GaudiExamples/src/testing/TestingAlgs.cpp
+    	GaudiGSL/cmt/requirements
+    	GaudiGSL/doc/release.notes
+    	GaudiKernel/cmt/requirements
+    	GaudiKernel/doc/release.notes
+    	GaudiKernel/src/Lib/PathResolver.cpp
+    	GaudiMonitor/cmt/requirements
+    	GaudiMonitor/doc/release.notes
+    	GaudiPolicy/cmt/requirements
+    	GaudiPolicy/doc/release.notes
+    	GaudiPolicy/scripts/run_qmtest.py
+    	GaudiPython/cmt/requirements
+    	GaudiPython/doc/release.notes
+    	GaudiPython/python/GaudiPython/Parallel.py
+    	GaudiRelease/cmt/requirements
+    	GaudiRelease/doc/release.notes
+    	GaudiRelease/doc/release.notes.html
+    	GaudiSvc/cmt/requirements
+    	GaudiSvc/doc/release.notes
+    	GaudiSys/cmt/requirements
+    	GaudiSys/doc/release.notes
+    	GaudiUtils/cmt/requirements
+    	GaudiUtils/doc/release.notes
+    	PartPropSvc/cmt/requirements
+    	PartPropSvc/doc/release.notes
+    	PartPropSvc/share/PartPropSvc.py
+    	PartPropSvc/src/PartPropSvc.cpp
+    	RootHistCnv/cmt/requirements
+    	RootHistCnv/doc/release.notes
+    	cmt/project.cmt
+
+commit 0376d17ed739dd419eb2bc96af83edfcc0fe70cf
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Tue Dec 21 16:31:18 2010 +0000
+
+    Third iteration for Windows. Introduced a new  build option BUILD_DLLEXPORT_LIBS to force the build using the ddlimport/dllexport declarations. The default is building the libraries exporting all symbols (as it has been the case with CMT). Added an utility program genwindef.exe in GaudiKernel to generate the symbols from a given static library.
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6364 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 686060d2c7cd795bc18416141534578eb4b4306c
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Mon Dec 6 17:51:41 2010 +0000
+
+    Second iteration for Windows. It fixes a number of problems that prevented dependent projects to work properly.
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6347 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 3137a7fc9183d1ba66245246db959df5f40f18bf
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Fri Nov 19 17:05:50 2010 +0000
+
+    minor changes to make it work again on SL5
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6324 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit bb940e7b311fcd46ad9fceaafa1118caeb3c0a07
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Fri Nov 19 12:46:40 2010 +0000
+
+    Changes needed to port the build to Windows (VC9). The main difference being that cmake does require to have the proper import and export of symbols.
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6323 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 9ad947013366986ee33e711a94ac1686535e9fce
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Mon Nov 1 17:33:45 2010 +0000
+
+    synchornized with trunk and changed the location for the installation. Added python zip files
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6319 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 8deaef07b10a971ff3f15ad69856166961e7d97d
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Mon Oct 4 15:23:47 2010 +0000
+
+    Adapted to include CTest tests. Three type of tests defined: GAUDI_UNIT_TEST(), GAUDI_FRAMEWORK_TEST() and GAUDI_QMTEST_TEST(). Building and runing the tests is enabled with option BUILD_TEST
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6316 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit a0bdb2d348fcf042b68aa6f231e40b5f1fcef438
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Mon Sep 20 07:07:25 2010 +0000
+
+    Using CMakeMacroParseArguments to parse macro and function arguments. Added top level target for the dictionary generation to force a chnage of order in the build. Improved genCMake.py to handle better library dependencies. Make use of the export/import capabilities between CMake projects.
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6301 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 54ab9426c36bf852c031db78b4ebf9d25862a29a
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Fri Sep 10 10:01:56 2010 +0000
+
+    fixed some minor problems: executables with suffix .exe, avoid installations of unexisting directories
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6293 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 85b57113e3bbcc9cec9717180652836ab3c13470
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Tue Sep 7 16:53:18 2010 +0000
+
+    Some minor changes required to build REC
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6291 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit a046280ba3924635d6eba233aa929ff59086b868
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Tue Aug 24 17:31:52 2010 +0000
+
+    added script to generate CMakeLists.txt files for the packages. Added new versions of the CMakeLists.txt files using the script.
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6281 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 5aee7dc1eeaa5da6eb0ba535bb854fcdd88ee146
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Fri Jul 30 17:34:16 2010 +0000
+
+    Fixed a number of problems to be able to build dependent projects (LHCb)
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6267 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 1da30c95108adc80d866bf5832e773aa744fe1d8
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Wed Jul 28 12:59:13 2010 +0000
+
+    Introduced GAUDI_USE_PACKAGE with recursivity. This avoids to set global variables to be carried around between packages
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6263 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 284d887b7fea7282568a73790fa15e9342c632ad
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Tue Jul 27 14:29:29 2010 +0000
+
+    Adapted to support MacOSX
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6260 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit ac3c737241cc5c2d387254be0d8d37be04852cc5
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Fri Jul 23 13:00:50 2010 +0000
+
+    Completed the build of Gaudi. All tests in GaudiExamples run successfully (gaudiexamples.errorlog reports differences in output related to relative vs. absolute path in backtrace errors
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6259 53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+commit 8ca1cd23809fe2be4f5a073f4c6211ae9d194470
+Author: mato <mato@53ecefc3-a64d-0410-9bdf-b8581fa3287e>
+Date:   Fri Jul 23 10:53:31 2010 +0000
+
+    initial version of cmake files needed to build Gaudi
+    
+    
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/branches/GAUDI/GAUDI_cmake@6258 53ecefc3-a64d-0410-9bdf-b8581fa3287e
