@@ -4,6 +4,9 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-10-16 - Marco Cattaneo
+ - Update merge-small-files reference following changed input files
+
 !========================= FSRAlgs v1r0 2012-09-28 =========================
 ! 2012-09-26 - Marco Clemencic
  - Added empty __init__.py in the top Python module.
