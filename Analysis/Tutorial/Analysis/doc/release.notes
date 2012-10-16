@@ -9,6 +9,17 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-10-16 - Patrick Koppenburg
+ - Review for October 2012 tutorials.
+ - Added Stripping20 2012 data
+ - solutions/DaVinci?/*.py : use 2012 data
+ - solutions/DaVinci[1-3]/TutorialAlgorithm.cpp
+   . Bug fix: IPchi2 is no IP error
+ - solutions/DaVinci6/DVTutorial_6.py
+   . By default do not fill MC 
+ - solutions/DaVinci8/DVReadStrippedDst.py
+   . Use BetaSJpsi2MuMuDetachedLine
+
 !========================= Analysis v10r3 2012-03-29 =========================
 
 ! 2012-03-09 - Patrick Koppenburg
