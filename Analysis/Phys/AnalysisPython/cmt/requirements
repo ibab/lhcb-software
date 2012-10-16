@@ -26,7 +26,7 @@ apply_pattern      reflex_dictionary_src                                       \
                    dictionary=AnalysisPython                                   \
                    headerfiles=$(ANALYSISPYTHONROOT)/dict/AnalysisPythonDict.h \
                    selectionfile=$(ANALYSISPYTHONROOT)/dict/AnalysisPython.xml \
-                   options=" -U__MINGW32__ --split=classdef "                                        
+                   options=" -U__MINGW32__ --split=classdef "
                    
 # ================ constituents ===============================================
 library            AnalysisPythonLib  ../src/*.cpp  \
@@ -52,6 +52,10 @@ apply_pattern      install_more_includes more=Analysis
 apply_pattern      install_python_modules
 apply_pattern      install_scripts
 
-#============================================================================
-apply_pattern install_python_modules
-#============================================================================
+# ================= aliases ===================================================
+alias pypaw        "pyroot -i "
+
+# ============================================================================
+# The END 
+# ============================================================================
+

@@ -50,7 +50,8 @@ __all__     = (
     'h2_axes'        , ## book 2D-histogram from axes
     'h1_axis'        , ## book 1D-histogram from axis 
     'axis_bins'      , ## convert list of bin edges to axis
-    've_adjust'      , ## adjust the efficiency to be in physical range 
+    've_adjust'      , ## adjust the efficiency to be in physical range
+    #
     )
 # =============================================================================
 import ROOT
@@ -101,33 +102,6 @@ def hID     () : return histoID ( )
 # =============================================================================
 # temporary trick, to be removed 
 # =============================================================================
-if not hasattr ( VE , 'isnan' ) :
-    from math  import isnan 
-    def _is_nan_ ( s ) :
-        """
-        Check if value 'isnan'
-        """
-        return isnan ( s.value() ) or isnan ( s.cov2 () )
-    _is_nan_ .__doc__ += '\n' + isnan. __doc__
-    VE.isnan = _is_nan_
-    
-if not hasattr ( VE , 'isfinite' ) :
-    from numpy import isfinite
-    def _is_finite_ ( s ) :
-        """
-        Check if value 'isfinite'
-        """
-        return isfinite ( s.value () )  and isfinite ( s.cov2 () )     
-    _is_finite_ .__doc__ += '\n' + isfinite. __doc__
-    VE.isfinite = _is_finite_
-
-if not hasattr ( VE , '__float__' ) :
-    def _float_ ( self ) :
-        """
-        Conversion to float 
-        """
-        return s.value ()
-    VE.__float__ = _float_
 
 SE.__repr__ = lambda s : 'Stat: '+ s.toString()
 SE.__str__  = lambda s : 'Stat: '+ s.toString()
@@ -148,6 +122,26 @@ def _int ( ve , precision = 1.e-5 ) :
     #
     return True 
 
+# =============================================================================
+## get the B/S estimate from the formula 
+#  \f$ \sigma  = \fras{1}{S}\sqrt{1+\frac{B}{S}}\f$
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2012-10-15
+def _b2s_ ( s )  :
+    """
+    Get B/S estimate from the formular error(S) = 1/sqrt(S) sqrt ( 1 + B/S)
+
+    >>> v = ...
+    >>> b2s = v.b2s() ## get B/S estimate
+    
+    """
+    #
+    v = s.value () 
+    c = s.cov2  ()
+    #
+    if v <= 0  or c <= 0 : return -1
+    #
+    return c/v - 1
 
 # =============================================================================
 # Decorate histogram axis and iterators 
@@ -4240,9 +4234,6 @@ ROOT.RooRealVar   . fix     = _fix_par_
 ROOT.RooRealVar   . Fix     = _fix_par_
 ROOT.RooRealVar   . release = _rel_par_
 ROOT.RooRealVar   . Release = _rel_par_
-
-
-
 
 
 # =============================================================================
