@@ -8,6 +8,7 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #######################################################################
 #
 # 1) Let's define a sequence
@@ -32,8 +33,8 @@ jpsi2mumu.MaxChi2 = 100
 #
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_2.root"    # Histogram file
-DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2011"                    # Default is "DC06"
+DaVinci().EvtMax = 10000                        # Number of events
+DaVinci().DataType = "2012"                    # Default is "DC06"
 #
 # Add our own stuff
 #

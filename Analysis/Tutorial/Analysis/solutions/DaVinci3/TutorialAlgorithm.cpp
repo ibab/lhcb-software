@@ -181,12 +181,12 @@ StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::
   const LHCb::RecVertex::Range prims = this->primaryVertices() ;
   for ( LHCb::RecVertex::Range::const_iterator ipv = prims.begin() ;
         ipv != prims.end() ; ++ipv ){
-    double IP, IPE;
+    double IP, IPchi2;
     if (msgLevel(MSG::DEBUG)) debug() << (*ipv)->position() << endmsg ;
-    StatusCode sc = distanceCalculator()->distance(da, (*ipv), IP, IPE);
+    StatusCode sc = distanceCalculator()->distance(da, (*ipv), IP, IPchi2);
     if (sc){
       plot(IP, head+"IP", head+" Daughter IP", 0., 10.*mm);
-      if (IPE>0.) plot(IP/IPE, head+"IPS",  head+" Daughter IP/error", 0., 10.);
+      plot(IPchi2, head+"IPchi2",  head+" Daughter IPchi2", 0., 10.);
     } 
   }
 

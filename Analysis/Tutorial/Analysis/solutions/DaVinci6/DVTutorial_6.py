@@ -7,6 +7,7 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #######################################################################
 #
 # Load the sequencer from Ex 4 
@@ -16,6 +17,9 @@ from DaVinci4.solutions.Bs2JpsiPhi import SeqBs2JpsiPhi
 # get the GaudiSequencer with everything we need
 seq = SeqBs2JpsiPhi.sequence()
 #######################################################################
+# now tell if you want MC or not
+simulation = False 
+#######################################################################
 #
 # DecayTreeTuple
 #
@@ -23,17 +27,15 @@ from DecayTreeTuple.Configuration import *
 tuple = DecayTreeTuple() 
 tuple.Inputs = [ SeqBs2JpsiPhi.outputLocation() ]
 tuple.ToolList +=  [
-#      "TupleToolTrigger"
-     "TupleToolMCTruth"
-    , "TupleToolMCBackgroundInfo"
-    , "TupleToolGeometry"
+      "TupleToolGeometry"
     , "TupleToolKinematic"
     , "TupleToolPropertime"
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
     , "TupleToolTrackInfo"
-#    , "TupleToolTISTOS"
     , "TupleToolTagging" ]
+if (simulation): tuple.ToolList +=  [ "TupleToolMCTruth", "TupleToolMCBackgroundInfo" ]
+    
 tuple.Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
 #######################################################################
 #
@@ -48,11 +50,11 @@ etuple.ToolList = [ "TupleToolEventInfo", "TupleToolGeneration", "TupleToolTrigg
 # Configure the application
 #
 from Configurables import DaVinci
-#DaVinci().TupleFile = "Tutorial6.root"         # Ntuple
-DaVinci().TupleFile = "DVNtuples.root"         # Ntuple
+DaVinci().TupleFile = "Tutorial6.root"         # Ntuple
 DaVinci().HistogramFile='DVHistos.root'
-DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2011"                    # 
+DaVinci().EvtMax = 10000                      # Number of events
+DaVinci().DataType = "2012"                    # 
+DaVinci().Simulation = simulation
 #
 # Add our own stuff
 #

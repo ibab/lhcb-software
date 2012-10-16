@@ -46,7 +46,7 @@ StatusCode TupleToolTutorial::fill( const LHCb::Particle*
     //fill some information here!
     if(m_abs) test &= tuple->column( head+"_Q", fabs(P->charge()) );
     else test &= tuple->column( head+"_Q", P->charge() );
-    test &= tuple->column( head+"_eta", P->momentum().Rapidity() );
+    test &= tuple->column( head+"_eta", P->momentum().eta() );
 
   }
   else 

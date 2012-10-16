@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+
+  <File ID="C692CD01-580A-E211-8467-002481E1026A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000277_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000277_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="ACC337A1-320A-E211-B3EA-0030487D5EA7">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000183_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000183_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1EB5702D-1E0A-E211-9D8E-0025901D4AF0">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000163_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000163_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="30E55A2B-4E0A-E211-8BF5-00266CFFA7A8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000251_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000251_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B6FB0FC7-9507-E211-8E61-003048C68A80">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000097_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000097_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="40C34664-680A-E211-AEE8-00259073E38A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000291_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000291_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FE1E93BE-9107-E211-94BB-003048C64787">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000090_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000090_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A6114366-B50A-E211-B866-001E6739689C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000347_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000347_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D297A659-8E0A-E211-B06E-00259020093C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000308_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000308_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="46B45460-4E0A-E211-ACA1-00266CFFA6DC">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000254_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000254_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9803293F-180A-E211-A530-0025901D4926">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000143_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000143_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6C1C35BF-A30A-E211-B342-003048C690A0">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000341_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000341_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="26A5623D-9007-E211-81AE-00266CF32F00">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000076_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000076_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="42016BBA-530A-E211-BB5F-00266CFFA7BC">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000269_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000269_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CE6E7B02-2F0A-E211-B4CC-002481E0D2E8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000178_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000178_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="942F02B4-4C0A-E211-B103-003048F0E18A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000247_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000247_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F6955172-3A0A-E211-98DF-0025901D4C98">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000193_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000193_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6E08FC37-2B0A-E211-930F-0025904B130E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000151_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000151_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C0253C80-290A-E211-AEBC-003048D462BE">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000144_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000144_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="ECE46D71-4D0A-E211-A1A5-0030487F1731">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000249_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000249_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F6EB9252-220A-E211-A023-003048D3CD6C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000170_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000170_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0430EEA3-C30A-E211-9F30-00266CF25878">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000391_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000391_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AE2CF69C-990A-E211-AA64-0030487D5EA9">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000320_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000320_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CA880610-3A0A-E211-BA1E-0025901D4090">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000174_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000174_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1090774B-220A-E211-AA1E-0025904B578E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000165_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000165_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4CE4FE84-8A0A-E211-AF1E-001EC9D7F673">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000305_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000305_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="94BBCBB8-510A-E211-858F-0030487D858D">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000253_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000253_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="563CA125-9109-E211-98B2-002481E7636A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000124_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000124_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C2072155-360A-E211-9784-0030487F1A55">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000203_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000203_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BEC55E2E-4507-E211-9E6E-003048C693D8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000033_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000033_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7211CBB1-480A-E211-83DF-002481E7628E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000235_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000235_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AE7A95D5-B509-E211-A25B-0030487F92B3">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000132_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000132_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="56E3F0BC-C50A-E211-A739-003048670B64">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000389_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000389_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FC39A9A9-560A-E211-8B94-0030487FA607">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000280_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000280_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="00FE022D-340A-E211-9872-0025904B12DE">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000195_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000195_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="949283AC-560A-E211-B61C-0030487D5EB5">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000274_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000274_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B0401C64-6707-E211-8FD0-0030487E9881">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000046_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000046_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="02F3503A-C30A-E211-A3D2-0024E87663C7">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000387_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000387_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3C4F9C37-6F07-E211-8FD5-003048D4DFA8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000059_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000059_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BE1ACA04-B50A-E211-8CBE-00261834B580">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000355_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000355_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0A35B1ED-150A-E211-AE0B-00266CF32CD0">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000138_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000138_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="78CB548D-690A-E211-BFF6-E0CB4E29C4C9">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000295_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000295_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1CA45C70-8A09-E211-B8FE-002481E0D50C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000118_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000118_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="52204400-5B0A-E211-A14F-00259073E50A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000275_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000275_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="12A284AB-BE0A-E211-A8FF-003048C6929C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000377_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000377_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="2E683533-9109-E211-B4A1-0025904B1026">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000126_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000126_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="06F7C421-9007-E211-BE27-003048C6903A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000069_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000069_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F286CDBC-7C0A-E211-9941-0030487F92B1">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000300_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000300_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1AAEE589-8A09-E211-9756-0030487F907F">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000120_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000120_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="48ED4B9A-3007-E211-A129-003048C68FEC">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000020_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000020_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="049FCA24-9B07-E211-87CB-0030487D5E99">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000105_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000105_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8AB77CE5-BD0A-E211-AD4D-00259073E382">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000375_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000375_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="20AEDABE-BD0A-E211-AEE9-20CF305616CC">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000381_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000381_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6CDED249-500A-E211-B4C9-002481E14D72">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000265_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000265_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1C46A5B1-2B0A-E211-8468-002481E0D974">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000148_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000148_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5488BE27-900A-E211-B4AB-E0CB4E29C50A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000312_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000312_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A8427DBF-670A-E211-9FD7-20CF305B0572">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000293_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000293_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A24CE1AA-FE06-E211-AE8C-0030487D5D8D">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000007_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000007_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E475F8AD-430A-E211-AF61-002481E102C6">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000213_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000213_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D2E1A505-4E0A-E211-84C4-0025904B0FE4">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000240_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000240_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="028B72B7-8D09-E211-99FB-003048C693D0">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000122_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000122_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B68D48CB-320A-E211-A0D3-0025904B1420">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000189_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000189_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9C03C0D1-BC0A-E211-8923-00266CF9BF5C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000383_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000383_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="427E01C5-4E0A-E211-926C-0030487F9295">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000257_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000257_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="34068A87-0C0A-E211-A530-0025901D4926">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000153_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000153_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5469533F-8F0A-E211-9206-00259074AE6A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000309_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000309_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F848E648-4C0A-E211-A473-0030487D5DB7">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000223_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000223_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="2EBC03BC-3A0A-E211-A468-002481E0DE08">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000199_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000199_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C4D42440-550A-E211-A25B-0030487F92B3">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000245_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000245_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F6F51B26-430A-E211-B548-0025901D4D54">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000209_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000209_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9AE9650B-BD0A-E211-A8C0-003048C662BC">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000380_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000380_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C452E15C-530A-E211-A1ED-0025901D4138">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000272_1.dimuon.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/DIMUON.DST/00020241/0000/00020241_00000272_1.dimuon.dst"/>
+     </logical>
+   </File>
+
+</POOLFILECATALOG>

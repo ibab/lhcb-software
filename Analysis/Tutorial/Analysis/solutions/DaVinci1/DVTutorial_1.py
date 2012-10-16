@@ -8,6 +8,7 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #######################################################################
 #
 # 1) Let's define a sequence
@@ -29,7 +30,7 @@ tutalg.Inputs = [ "Phys/StdLooseMuons/Particles" ]
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_1.root"    # Histogram file
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2011"                    # 
+DaVinci().DataType = "2012"                    # 
 DaVinci().Simulation   = True                  # It's MC
 #
 # Add our own stuff

@@ -90,7 +90,7 @@ StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::Range& muons)con
       if(sc)
       {
         plot(IP, "IP", "Muon IP", 0., 10.*Gaudi::Units::mm);
-        plot(IP/IPchi2, "IPchi2", "Muon chi2 IP", 0., 10.);
+        plot(IPchi2, "IPchi2", "Muon chi2 IP", 0., 10.);
         if( (*im)->pt()>2*Gaudi::Units::GeV )
         {
           plot(IP, "IP_2", "Muon IP for PT>2GeV", 0., 10.*Gaudi::Units::mm);

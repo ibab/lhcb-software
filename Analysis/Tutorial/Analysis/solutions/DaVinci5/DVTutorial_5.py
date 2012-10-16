@@ -50,7 +50,7 @@ DaVinci().MoniSequence += [ tree ]      # The monitoring stuff
 DaVinci().UserAlgorithms = [ seq ]             # The selection sequence
 DaVinci().HistogramFile = "DVHistos_5.root"    # Histogram file
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2011"                    # 
+DaVinci().DataType = "2012"                    # 
 #
 # Add our own stuff
 #

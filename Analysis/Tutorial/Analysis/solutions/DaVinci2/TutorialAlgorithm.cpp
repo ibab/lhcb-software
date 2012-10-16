@@ -170,12 +170,15 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
   for ( LHCb::RecVertex::Range::const_iterator ipv = prims.begin() ; 
         ipv != prims.end() ; ++ipv )
   {
-    double IP, IPE;
+    double IP, IPchi2;
     if (msgLevel(MSG::DEBUG)) debug() << (*ipv)->position() << endmsg ;
-    sc = distanceCalculator()->distance(mu, (*ipv), IP, IPE);
+    sc = distanceCalculator()->distance(mu, (*ipv), IP, IPchi2);
     if (sc){
       plot(IP, head+"MuIP", head+" Muon IP", 0., 10.*mm);
-      if (IPE>0.) plot(IP/IPE, head+"MuIPS",  head+" Muon IP/error", 0., 10.);
+      if (IPchi2>0.) plot(IPchi2, head+"MuIPchi2",  head+" Muon IP chi2", 0., 10.);
+      //====================================================================
+      //
+      //====================================================================
     } 
   }
 

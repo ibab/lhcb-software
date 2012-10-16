@@ -7,6 +7,7 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #######################################################################
 #
 # Load the sequencer from Ex 4 and catch it
@@ -85,9 +86,9 @@ tuple.OutputLevel=3
 #
 from Configurables import DaVinci
 DaVinci().TupleFile = "Tutorial7.root"         # Ntuple
-DaVinci().HistogramFile='DVHistos.root'
+DaVinci().HistogramFile='DVHistos7.root'
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2011"                    # Default is "MC09"
+DaVinci().DataType = "2012"                    # Default is "MC09"
 #
 # Add our own stuff
 #
