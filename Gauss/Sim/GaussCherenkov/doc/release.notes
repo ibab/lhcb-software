@@ -3,6 +3,9 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
+!2012-10-16 - Sajan Easo
+- Added couple of Step Analysis actions for verifying modified RICH optics. They are all
+  deactivated by default and are for special studies only.
 ! 2012-10-03 - Sajan Easo
  - Made adaptations for Geant 4.95. 
    These are backward incompatible changes for Geant4 and won't work with
