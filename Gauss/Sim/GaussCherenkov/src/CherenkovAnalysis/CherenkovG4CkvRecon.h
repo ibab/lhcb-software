@@ -196,6 +196,7 @@ private:
   std::vector<RichG4TransformPhDet*>  m_PhDetTransforms;
   
   std::vector<std::vector<double> > m_SphMirrCC;
+  std::vector<double> m_SphMirrR1CCX;
   std::vector<double> m_SphMirrRad;
   RichG4ReconPmt* m_RichG4ReconPmt;
 

@@ -56,6 +56,7 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
    m_Rich2_PmtTransforms(std::vector<RichG4ReconTransformPmt*> (2000)),
    m_PhDetTransforms(std::vector<RichG4TransformPhDet*> (4)),
    m_SphMirrCC(4,std::vector<double>(3)),
+   m_SphMirrR1CCX(std::vector<double> (4)),
    m_SphMirrRad( std::vector<double>(2)),
    m_RichG4ReconPmt(0),
    m_curLocalHitCoord(-10000.,-10000.,-10000.0), m_curEmisPt(0,0,0),
@@ -138,13 +139,42 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
     
     //    std::vector<double> r1NominalCoC = Rich1DE->param<std::vector<double> >("Rich1NominalCoC");
     std::vector<double> r1NominalCoC = Rich1DE->param<std::vector<double> >("NominalSphMirrorCoC");
+    std::vector<double> r1NominalCoCXCoord (4);
+    if( Rich1DE-> exists ("NominalSphMirrorXCOC") ){
+                
+         r1NominalCoCXCoord = Rich1DE->param<std::vector<double> >("NominalSphMirrorXCOC");
+         m_SphMirrCC [0] [0]= r1NominalCoCXCoord[0];
+         m_SphMirrCC [1] [0]= r1NominalCoCXCoord[1];
 
+         m_SphMirrR1CCX[0]= r1NominalCoCXCoord[0];
+         m_SphMirrR1CCX[1]= r1NominalCoCXCoord[1];
+         m_SphMirrR1CCX[2]= r1NominalCoCXCoord[2];
+         m_SphMirrR1CCX[3]= r1NominalCoCXCoord[3];
+
+    } else {
+         
+        m_SphMirrCC [0] [0]= r1NominalCoC[0];
+        m_SphMirrCC [1] [0]= r1NominalCoC[0];
+
+        m_SphMirrR1CCX[0]=0.0;
+        m_SphMirrR1CCX[1]=0.0;
+        m_SphMirrR1CCX[2]=0.0;
+        m_SphMirrR1CCX[3]=0.0;
+        
+    }
     
-    m_SphMirrCC [0] [0]= r1NominalCoC[0];
+       
+       
+    
+       //    m_SphMirrCC [0] [0]= r1NominalCoC[0];
     m_SphMirrCC [0] [1]= r1NominalCoC[1];
     m_SphMirrCC [0] [2]= r1NominalCoC[2];
+
+    
+
     m_SphMirrRad [0] =
       Rich1DE->param<double>( "Rich1Mirror1NominalRadiusC");
+
 
     CherenkovG4CkvReconlog << MSG::DEBUG
          << "Rich1 Spherical Mirror1 top  COC and Rad "<< m_SphMirrCC [0] [0]<<"  "<< m_SphMirrCC [0] [1]
@@ -163,7 +193,7 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
     //  Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalRadiusC");
 
     
-    m_SphMirrCC [1] [0]= m_SphMirrCC [0] [0];
+       //    m_SphMirrCC [1] [0]= m_SphMirrCC [0] [0];
     m_SphMirrCC [1] [1]= -1.0* m_SphMirrCC [0] [1];
     m_SphMirrCC [1] [2]=   m_SphMirrCC [0] [2];
 
@@ -603,10 +633,35 @@ Gaudi::XYZPoint CherenkovG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
 
   Gaudi::XYZPoint ReflPt = Gaudi::XYZPoint (0.0,0.0,0.0);
   const Gaudi::XYZPoint & aEmisPt = m_curEmisPt;
-  const Gaudi::XYZPoint aMirrCC (m_SphMirrCC[m_CurrentRichSector][0],
+
+  const Gaudi::XYZPoint & aDetPt = m_curDetPoint ;
+
+  // use  best coc if the rich1 sph mirror has rotated wrt Y axis by large amount.
+  double aMirrCCX = m_SphMirrCC[m_CurrentRichSector][0];
+  
+  if( (m_CurrentRichSector==0) ||( m_CurrentRichSector==1 ) ){
+    
+    if(m_SphMirrR1CCX[0] != 0.0  && m_SphMirrR1CCX[1] != 0.0  ) {
+      
+      if (( m_CurrentRichSector==0) && (aDetPt.x() > 0.0) )  aMirrCCX =  m_SphMirrR1CCX [1];
+      if (( m_CurrentRichSector==0) && (aDetPt.x() <= 0.0) )  aMirrCCX =  m_SphMirrR1CCX [0];
+ 
+      if (( m_CurrentRichSector==1) && (aDetPt.x() > 0.0) )  aMirrCCX =  m_SphMirrR1CCX [2];
+      if (( m_CurrentRichSector==1) && (aDetPt.x() <= 0.0) )  aMirrCCX =  m_SphMirrR1CCX [3];
+      
+    }
+    
+    
+  }
+  
+  const Gaudi::XYZPoint aMirrCC (aMirrCCX,
                             m_SphMirrCC[m_CurrentRichSector][1],
                             m_SphMirrCC[m_CurrentRichSector][2]) ;
-  const Gaudi::XYZPoint & aDetPt = m_curDetPoint ;
+
+  
+
+
+
 
   Gaudi::XYZVector evec =  aEmisPt -  aMirrCC;
   const double e2 = evec.Mag2();

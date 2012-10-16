@@ -14,6 +14,8 @@
 #include "G4SDManager.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
+#include "G4ThreeVector.hh"
+
 /// GaudiKernel
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/DataObject.h"
@@ -80,10 +82,18 @@ void CherenkovG4HistoFillSet5::FillRichG4HistoSet5Coord( CkvG4Hit* adHit, Gaudi:
   SmartDataPtr<IHistogram2D> hXYHitLocationRich1Gas (CurrentHistoSvc, "RICHG4HISTOSET5/361");
   SmartDataPtr<IHistogram2D> hXYHitLocationRich2Gas (CurrentHistoSvc, "RICHG4HISTOSET5/381");
   SmartDataPtr<IHistogram2D> hXYHitLocationNoScintRich2Gas (CurrentHistoSvc, "RICHG4HISTOSET5/382");
+
+  SmartDataPtr<IHistogram2D> hXYHitLocationRich1Mirror1 (CurrentHistoSvc, "RICHG4HISTOSET5/366");
+  SmartDataPtr<IHistogram2D> hXYHitLocationRich1Mirror2 (CurrentHistoSvc, "RICHG4HISTOSET5/368");
    
   int curRdet =   adHit-> GetCurRichDetNum();
   int curRichSect=  adHit-> GetCurSectorNum();
   int curHitProc= adHit-> PhotonSourceProcessInfo();
+  const G4ThreeVector curHitMirror1= adHit->Mirror1PhotonReflPosition();
+  const G4ThreeVector curHitMirror2= adHit->Mirror2PhotonReflPosition();
+  double Rich1Mirror2XC=curHitMirror2.x();
+  double Rich1Mirror2YC=curHitMirror2.y();
+  
   
   if( curRdet == 0 ) {
     SmartDataPtr<IHistogram1D> hHitOccpR1(CurrentHistoSvc, "RICHG4HISTOSET5/365");
@@ -92,13 +102,31 @@ void CherenkovG4HistoFillSet5::FillRichG4HistoSet5Coord( CkvG4Hit* adHit, Gaudi:
     m_TotNumHitR1InCurEv++;
 
       if( curRichSect ==0 ) {
-        yC += 450.0;
+        //yC += 650.0;
+        //yC += 450.0;
+        //yC += 400.0;
+        //yC += 200.0;
+        yC += 400.0;
+        Rich1Mirror2YC -= 345.0;
+        
       }else if (curRichSect ==1 ) {
-        yC -= 450.0;  
+
+        yC -= 400.0;
+
+
+            //    yC -= 200.0;  
+            //    yC -= 400.0;  
+        //    yC -= 450.0;  
+        //yC -= 650.0;  
+        Rich1Mirror2YC += 345.0;
       }      
       if(hXYHitLocationRich1Gas) {
         hXYHitLocationRich1Gas->fill (xC,yC);
       }
+
+      if(hXYHitLocationRich1Mirror1) hXYHitLocationRich1Mirror1->fill(curHitMirror1.x(),  curHitMirror1.y());
+      if(hXYHitLocationRich1Mirror2) hXYHitLocationRich1Mirror2->fill(Rich1Mirror2XC, Rich1Mirror2YC);
+      
     
     
   }else if (curRdet == 1 ) {

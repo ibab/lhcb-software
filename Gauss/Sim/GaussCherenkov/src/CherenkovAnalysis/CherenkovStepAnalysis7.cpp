@@ -1,6 +1,5 @@
 // $Id: $
 // Include files 
-
 #include "G4Track.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4DynamicParticle.hh"
@@ -9,7 +8,10 @@
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Step.hh"
+#include "G4TransportationManager.hh"
+#include "G4Navigator.hh"
 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -23,6 +25,8 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/IToolSvc.h"
+
 
 // GiGa
 #include <math.h>
@@ -30,36 +34,42 @@
 #include "RichG4GaussPathNames.h"
 #include "CkvG4GaussPathNames.h"
 #include "CkvG4AnalysisConstGauss.h"
- 
+
+#include "RichG4SvcLocator.h"
+
+#include "AIDA/IHistogram1D.h"
+#include "globals.hh"
+
+
 // local
-#include "CherenkovG4PmtReflTag.h"
-#include "CherenkovG4StepAnalysis6.h"
+#include "CherenkovStepAnalysis7.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : CherenkovG4StepAnalysis6
+// Implementation file for class : CherenkovStepAnalysis7
 //
-// 2011-04-19 : Sajan Easo
+// 2012-06-10 : Sajan Easo
 //-----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(CherenkovG4StepAnalysis6);
-
+DECLARE_TOOL_FACTORY(CherenkovStepAnalysis7);
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CherenkovG4StepAnalysis6::CherenkovG4StepAnalysis6
-( const std::string& type   ,
+CherenkovStepAnalysis7::CherenkovStepAnalysis7(const std::string& type   ,
   const std::string& name   ,
-  const IInterface*  parent ): GiGaStepActionBase ( type , name , parent ) {
+  const IInterface*  parent )
+  : GiGaStepActionBase ( type , name , parent ) {
+
 
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CherenkovG4StepAnalysis6::~CherenkovG4StepAnalysis6() {} 
+CherenkovStepAnalysis7::~CherenkovStepAnalysis7() {} 
 
 //=============================================================================
-void CherenkovG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
+void CherenkovStepAnalysis7::UserSteppingAction( const G4Step* aStep )
 {
+
   G4StepPoint* aPreStepPoint = aStep->GetPreStepPoint();
   G4StepPoint* aPostStepPoint = aStep->GetPostStepPoint();
    if(aPostStepPoint->GetStepStatus() == fGeomBoundary ) {
@@ -73,37 +83,56 @@ void CherenkovG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
       if(   aParticleKE > 0.0 ) {
         const G4ThreeVector & prePos=aPreStepPoint->GetPosition();
         const G4ThreeVector & postPos=aPostStepPoint->GetPosition();
-        const G4ThreeVector & PhotCurDir = aTrack->GetMomentumDirection();
-
+        const G4ThreeVector & PhotCurDir = aTrack->GetMomentumDirection().unit();
 
         if( ( prePos.z() >= ZUpsRich1Analysis &&
-            postPos.z() <= ZDnsRich1Analysis )  ||
-            ( prePos.z() >= ZUpsRich2Analysis &&
-              postPos.z() <= ZDnsRich2Analysis )) {
+            postPos.z() <= ZDnsRich1Analysis ) ) {
+             
              const G4String & aPreVolName=
                               aPreStepPoint->GetPhysicalVolume()->
                               GetLogicalVolume()->GetName();
              const G4String & aPostVolName=
                               aPostStepPoint->GetPhysicalVolume()->
                               GetLogicalVolume()->GetName();
-             //const G4Material* Material1 = aPreStepPoint  -> GetMaterial();
-             // const G4Material* Material2 = aPostStepPoint -> GetMaterial();
-             //const G4String & aMaterial1Name =  Material1 ->GetName();
-             // const G4String & aMaterial2Name =  Material2 ->GetName();
-             std::string::size_type iPmtSMStrPrePos0=
-                      aPreVolName.find(LogVolPmtSMasterNameAnalysisListStrPrefix[0]);
-             if( (aPreVolName == LogVolPmtSMasterNameAnalysis || iPmtSMStrPrePos0 != std::string::npos )  &&
-               aPostVolName ==  LogVolPmtQWindowNameAnalysis ){
+             // G4cout<<"UserStepSeven Pre Post vol "<<aPreVolName<<"  "
+             //      << aPostVolName<<G4endl;
+             
 
-               if(PhotCurDir.z() > 0.0 ) {
+             if( (aPreVolName == LogVolRich1MagShH0NameAnalysis  )  && 
+                   aPostVolName == LogVolRich1PhDetSupFrameH0NameAnalysis ) {
+                    G4Navigator* theNavigator =
+                       G4TransportationManager::GetTransportationManager()->
+                                                    GetNavigatorForTracking();                     
+                  G4bool valid;
+                  G4ThreeVector theLocalNormal = theNavigator->GetLocalExitNormal(&valid);
+                  
+                  G4ThreeVector theGlobalNormal = theNavigator->GetLocalToGlobalTransform().
+                                               TransformAxis(theLocalNormal);
+                  G4double PdotN=  PhotCurDir * theGlobalNormal;
 
-                  RichG4PmtQWIncidentTag((* aTrack), postPos );
-                
-               }}}}
-    }}}
-   
+                  IHistogramSvc* CurrentHistoSvc = RichG4SvcLocator::RichG4HistoSvc();
+                  SmartDataPtr<IHistogram1D> m_hHistoPhotDirInPhDetFrame(CurrentHistoSvc,"RICHG4HISTOSET5/601");
+                  if(!m_hHistoPhotDirInPhDetFrame) {
+                    m_hHistoPhotDirInPhDetFrame=CurrentHistoSvc->book("RICHG4HISTOSET5/601", "PhdetPhotonDir",
+                                                                      300,-1.0,1.0);
+                    
+                  }
 
-   
+                  // G4cout<<" PhDet dir PdotN "<<  PhotCurDir <<"  "<<  theGlobalNormal <<"  "<<PdotN<<G4endl;
+                  
+                  if(m_hHistoPhotDirInPhDetFrame) m_hHistoPhotDirInPhDetFrame->fill(acos(PdotN));
+                  
+                  
+             }
+             
+             
+             
+        }
+        
+      }
+      
+    }
+    }
+   }
 }
-
 
