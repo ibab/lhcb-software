@@ -16,13 +16,13 @@ class Hlt2HighPtJetsLinesConf(HltLinesConfigurableUser) :
     __slots__ = {            
            'MinWeightSeedCut' : 6
         ,  'ConeExtFactorCut' : 4.0
-        ,  'MaxDeltaPhiCut'   : 6.5
+        ,  'MaxDeltaPhiCut'   : 15.0
         ,  'MaxDeltaEtaCut'   : 0.35
         ,  'Min1stJetPtCut'   : 10.0
         ,  'Min2ndJetPtCut'   : 0.0
         ,  'JetMultCut'       : 1
         ,  'NrPVsCut'         : 1
-        ,  'MinSumEtCut'      : 17.0
+        ,  'MinSumEtCut'      : 0.0
         ,  'PostScale'        : 1.0
     }
                 
@@ -43,6 +43,7 @@ class Hlt2HighPtJetsLinesConf(HltLinesConfigurableUser) :
         Hlt2TrkFinder = TrackClusterFinder("Hlt2TrkFinder")
         DVSeq.append(Hlt2TrkFinder)
         Hlt2TrkFinder.InputTracks = [hlt2Tracking.outputSelection()]
+        Hlt2TrkFinder.InputPVs = "Hlt/Vertex/PV3D"
         Hlt2TrkFinder.MinWeightSeed = self.getProp('MinWeightSeedCut')
         Hlt2TrkFinder.ConeExtFactor = self.getProp('ConeExtFactorCut')
         Hlt2TrkFinder.MaxDeltaPhi = self.getProp('MaxDeltaPhiCut')
