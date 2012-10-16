@@ -38,6 +38,12 @@ private:
   
   float  m_minPt;
   float  m_maxChi2Ndf;
-  
+
+  //== Counters
+  int m_nTracks;
+  int m_nPtOK;
+  int m_nChi2OK;
+  int m_nIPOK;
+  int m_nIPSOK;
 };
 #endif // FSTSELECTFORWARDTRACKS_H

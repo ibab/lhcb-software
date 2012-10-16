@@ -4,6 +4,10 @@
 ! Purpose     : First Software Trigger tools for teh upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-10-16 - Olivier Callot
+ - Added computation of IPS and cut on it in Forward selector
+ - Allow usage (default) of FastVeloDecoding (new in Tf/FastVelo package)
+
 ! 2012-10-13 - Sascha Stahl
  - Added TrackFit to the sequence and the selector
 

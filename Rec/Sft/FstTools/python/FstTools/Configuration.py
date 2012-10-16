@@ -24,6 +24,7 @@ class FstConf(LHCbConfigurableUser):
         ,"VeloType"        : "Velo"
         ,"TTType"          : "ValidateTT"
         ,"TStationType"    : "IT+OT"
+        ,"FastDecoding"    : True
         ,"TrackFit"        : "HltFit"
         }
 
@@ -33,8 +34,11 @@ class FstConf(LHCbConfigurableUser):
         ## Velo configuration
         if "Velo" == self.getProp( "VeloType" ):
             from Configurables import FastVeloTracking
-            FstSequencer( "RecoFstSeq" ).Members = [ "DecodeVeloRawBuffer/DecodeVeloClusters",
-                                                     "FastVeloTracking/FstVeloTracking" ]
+            if self.getProp( "FastDecoding" ):
+                FstSequencer( "RecoFstSeq" ).Members = [ "FastVeloDecoding"]
+            else:
+                FstSequencer( "RecoFstSeq" ).Members = [ "DecodeVeloRawBuffer/DecodeVeloClusters" ]
+            FstSequencer( "RecoFstSeq" ).Members += [ "FastVeloTracking/FstVeloTracking" ]
             FastVeloTracking( "FstVeloTracking" ).OutputTracksName = self.getProp( "RootInTES") + "Track/Velo"
             FastVeloTracking( "FstVeloTracking" ).ResetUsedFlags = True
             FastVeloTracking( "FstVeloTracking" ).HLT1Only = True
