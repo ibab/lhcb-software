@@ -48,7 +48,6 @@ DECLARE_TOOL_FACTORY( TupleToolDecayTreeFitter )
   declareProperty("daughtersToConstrain", m_massConstraints , "List of particles to contrain to mass");
   declareProperty("constrainToOriginVertex", m_constrainToOriginVertex = false,
                   "Do a refit constraining to Origin Vertex (could be PV)");
-  declareProperty("MaxPV", m_maxPV = 10  , "Maximal number of PVs considered");
   declareProperty( "Substitutions" ,m_map, "PID-substitutions :  { ' decay-component' : 'new-pid' }" ) ;
   declareProperty( "StoreRefittedPVsTwice" ,m_storeAnyway = false, 
                    "Store PV even if a refitted version is already the best PV (i.e store twice)" ) ;
@@ -315,7 +314,7 @@ StatusCode TupleToolDecayTreeFitter::fillTuple(const TupleMap& tMap, Tuples::Tup
     std::vector<double> data = t->second;
     if (msgLevel(MSG::DEBUG))
       debug() << "Filling leaf ``" << leaf << "'' with vector of size " << data.size() << endmsg ;
-    if (m_maxPV<data.size()) Exception("Seeing data with too many PVs. This should never happen. E-mail P. Koppenburg.");
+    if (m_maxPV<data.size()) Exception("Seeing data with too many PVs. Have you set MaxPVs?");
     test &= tuple->farray( leaf, data, prefix+"_nPV", m_maxPV);
   }
   return StatusCode(test);

@@ -195,7 +195,6 @@ public:
   LHCb::IParticlePropertySvc* m_ppSvc ;
   IParticleDescendants* m_particleDescendants;
 
-  unsigned int m_maxPV ; ///< maximum number of PVs
   /// mapping : { 'decay-component' : "new-pid" } (property)
   ISubstitutePID::SubstitutionMap  m_map  ; // mapping : { 'decay-component' : "new-pid" }
   /// Substitute Tool

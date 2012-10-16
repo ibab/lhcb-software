@@ -56,7 +56,6 @@ StatusCode TupleToolPrimaries::initialize()
 StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName();
-  const unsigned int maxPV = 100 ;
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Storing PVs with prefix ``" << prefix << "''" << endmsg ;
 
@@ -73,7 +72,7 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
   if (0!=PV)
   {
 
-    if( PV->size() > maxPV )
+    if( PV->size() > m_maxPV )
     {
       Warning("More than 100 primaries, no PVs will be stored.");
     } else {
@@ -102,17 +101,17 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
 
 
   bool test=true;
-  test &= tuple->farray( prefix+"PVX", pvx, prefix+"nPV",  maxPV );
-  test &= tuple->farray( prefix+"PVY", pvy, prefix+"nPV",  maxPV );
-  test &= tuple->farray( prefix+"PVZ", pvz, prefix+"nPV",  maxPV );
-  test &= tuple->farray( prefix+"PVXERR", epvx, prefix+"nPV",  maxPV );
-  test &= tuple->farray( prefix+"PVYERR", epvy, prefix+"nPV",  maxPV );
-  test &= tuple->farray( prefix+"PVZERR", epvz, prefix+"nPV",  maxPV );
+  test &= tuple->farray( prefix+"PVX", pvx, prefix+"nPV",  m_maxPV );
+  test &= tuple->farray( prefix+"PVY", pvy, prefix+"nPV",  m_maxPV );
+  test &= tuple->farray( prefix+"PVZ", pvz, prefix+"nPV",  m_maxPV );
+  test &= tuple->farray( prefix+"PVXERR", epvx, prefix+"nPV",  m_maxPV );
+  test &= tuple->farray( prefix+"PVYERR", epvy, prefix+"nPV",  m_maxPV );
+  test &= tuple->farray( prefix+"PVZERR", epvz, prefix+"nPV",  m_maxPV );
 
-  test &= tuple->farray( prefix+"PVCHI2", pvchi2, prefix+"nPV",  maxPV );
-  test &= tuple->farray( prefix+"PVNDOF", pvndof, prefix+"nPV",  maxPV );
-  test &= tuple->farray( prefix+"PVNTRACKS", pvntracks, prefix+"nPV",  maxPV );
-  if (isVerbose()) test &= tuple->farray( prefix+"PVsumPT", pvsumpt, prefix+"nPV",  maxPV );
+  test &= tuple->farray( prefix+"PVCHI2", pvchi2, prefix+"nPV",  m_maxPV );
+  test &= tuple->farray( prefix+"PVNDOF", pvndof, prefix+"nPV",  m_maxPV );
+  test &= tuple->farray( prefix+"PVNTRACKS", pvntracks, prefix+"nPV",  m_maxPV );
+  if (isVerbose()) test &= tuple->farray( prefix+"PVsumPT", pvsumpt, prefix+"nPV",  m_maxPV );
 
   return StatusCode(test);
   //  return StatusCode::SUCCESS;

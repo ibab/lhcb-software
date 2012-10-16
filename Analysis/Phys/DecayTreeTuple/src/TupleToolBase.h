@@ -32,6 +32,7 @@ public:
                     "prepend the name of any variable with this string");
     declareProperty("Verbose",m_verbose=false,
                     "add extra variables for this tool");
+    declareProperty("MaxPV", m_maxPV = 100  , "Maximal number of PVs considered");
   }
 
   virtual ~TupleToolBase( ) { } ///< Destructor
@@ -88,6 +89,7 @@ protected:
 
   std::string m_extraName; ///<Extra title to add to head
   bool m_verbose;///<Add extra items to the tuple
+  unsigned int m_maxPV ; ///< max number of PVs (constant)
 
 };
 

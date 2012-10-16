@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-10-16 - Patrick Koppenburg
+ - Move MaxPV property to TupleToolBase. Use it in TupleToolDecayTreeFitter, TupleToolPrimaries
+    and TupleToolGeometry
+ - TupleToolGeometry: new fields (verbose) AllIP and and AllIPchi2.
+
 !========================= DecayTreeTuple v3r26 2012-10-04 =========================
 
 ! 2012-09-11 - Chris Jones

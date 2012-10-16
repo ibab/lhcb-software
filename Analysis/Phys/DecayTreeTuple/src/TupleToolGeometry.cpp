@@ -265,6 +265,7 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
   if(msgLevel(MSG::VERBOSE)) verbose() << "Looking for Min IP"  << endmsg  ;
   const RecVertex::Range PV = m_dva->primaryVertices();
   if(msgLevel(MSG::VERBOSE)) verbose() << "PV size: "  << PV.size() << endmsg  ;
+  std::vector<double>  ips, ipchi2s;
   if ( !PV.empty() )
   {
     if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP : "
@@ -285,6 +286,8 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
 
       LHCb::VertexBase* newPVPtr = (LHCb::VertexBase*)&newPV;
       StatusCode test2 = m_dist->distance ( P, newPVPtr, ip, chi2 );
+      ips.push_back(ip);
+      ipchi2s.push_back(chi2);
       if( test2 )
       {
         if ((ip<ipmin) || (ipmin<0.))
@@ -326,6 +329,8 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
   test &= tuple->column( prefix + "_MINIPNEXTBEST", ipminnextbest );
   test &= tuple->column( prefix + "_MINIPCHI2NEXTBEST", minchi2nextbest );
 
+  test &= tuple->farray( prefix + "_AllIP", ips, "nPV", m_maxPV );
+  test &= tuple->farray( prefix + "_AllIPchi2", ipchi2s, "nPV", m_maxPV );
   // --------------------------------------------------
   if(msgLevel(MSG::VERBOSE)) verbose() << "Return from fillMinIP: " << prefix  << " " << test << endmsg  ;
   if (!test)  Warning("Error in fillMinIP",1,StatusCode::FAILURE);
