@@ -93,8 +93,12 @@ def rootID ( prefix = 'o_') :
 def funcID  () : return rootID  ( 'f_' )
 ## global ROOT identified for function obejcts 
 def funID   () : return funcID  ( )
+## global ROOT identified for function obejcts 
+def fID     () : return funcID  ( )
 ## global ROOT identified for histogram objects 
 def histoID () : return rootID  ( 'h_' )
+## global ROOT identified for histogram objects 
+def histID  () : return histoID ( )
 ## global ROOT identified for histogram objects 
 def hID     () : return histoID ( )
 
@@ -109,16 +113,19 @@ SE.__str__  = lambda s : 'Stat: '+ s.toString()
 # =============================================================================
 def _int ( ve , precision = 1.e-5 ) :
     #
-    if isinstance ( ve ,  ( int , long ) ) : return true
+    if isinstance  ( ve , ( int , long ) ) : return True
     #
+    if isinstance  ( ve , float ) :
+        if Gaudi.Math.isint ( ve ) or Gaudi.Math.islong ( ve ) : return True 
+        
     if not hasattr ( ve , 'value' ) :
         return _int ( VE ( ve , abs ( ve ) ) , precision )  
     #
     diff = max ( 1 , abs ( ve.value() ) ) * precision 
     diff = min ( 0.1 , diff ) 
     # 
-    if abs ( ve.value() - long ( ve.value() ) ) > diff : return False 
-    if abs ( ve.value() -        ve.cov2 ()   ) > diff : return False
+    if abs ( ve.value () - long ( ve.value () ) ) > diff : return False 
+    if abs ( ve.value () -        ve.cov2  ()   ) > diff : return False
     #
     return True 
 
@@ -129,7 +136,9 @@ def _int ( ve , precision = 1.e-5 ) :
 #  @date   2012-10-15
 def _b2s_ ( s )  :
     """
-    Get B/S estimate from the formular error(S) = 1/sqrt(S) sqrt ( 1 + B/S)
+    Get B/S estimate from the equation:
+    
+       error(S) = 1/sqrt(S) * sqrt ( 1 + B/S)
 
     >>> v = ...
     >>> b2s = v.b2s() ## get B/S estimate
@@ -142,6 +151,35 @@ def _b2s_ ( s )  :
     if v <= 0  or c <= 0 : return -1
     #
     return c/v - 1
+
+# =============================================================================
+## get the precision 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2012-10-15
+def _prec_ ( s )  :
+    """
+    Get precision 
+
+    >>> v = ...
+    >>> p = v.precision() 
+    
+    """
+    if not hasattr ( s , 'value' ) :
+        return _prec_ ( VE ( s , 0 ) )
+    #
+    c =       s.error ()
+    v = abs ( s.value () ) 
+    #
+    if     c <  0 or v == 0  : return -1
+    elif   c == 0            : return  0
+    #
+    return c/v
+
+
+VE . b2s       = _b2s_
+VE . prec      = _prec_
+VE . precision = _prec_
+
 
 # =============================================================================
 # Decorate histogram axis and iterators 
@@ -425,10 +463,11 @@ def interpolate_1D ( x       ,
 ## bilinear interpolation 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def interpolate_2D ( x   , y  ,
-                     x0  , x1 , 
-                     y0  , y1 ,
-                     v00 , v01 , v10 , v11 ) : 
+def interpolate_2D ( x   , y   ,
+                     x0  , x1  , 
+                     y0  , y1  ,
+                     v00 , v01 ,
+                     v10 , v11 ) : 
     
     """
     bi-linear interpolation 
@@ -1836,7 +1875,7 @@ ROOT.TH1 . maxv    = _h_maxv_
 ROOT.TH1 . minmax  = _h_minmax_
 
 # ============================================================================
-## get the minimum valeu for X-axis 
+## get the minimum value for X-axis 
 def _ax_min_ ( self ) :
     """
     Get the minimum value for X-axis
@@ -3077,14 +3116,10 @@ ROOT.TH1D.toGraph = hToGraph
 ## convert histogram to graph
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def hToGraph2 ( h1 , bias  ) :
+def hToGraph_ ( h1 , funcx , funcy ) :
     """
-    Convert  1D-histogram into graph with small shift in x
-    Useful for overlay of very similar plots
+    Convert  1D-histogram into TGraphAsymmErorr 
 
-    >>> h1 = ....
-    >>> g2 = h1.asGraph2 ( 0.1 ) ## shift for 10% of bin width
-    
     """
     #
     ## book graph
@@ -3100,9 +3135,6 @@ def hToGraph2 ( h1 , bias  ) :
     graph.SetMarkerStyle ( h1.GetMarkerStyle () )
     graph.SetMarkerSize  ( h1.GetMarkerSize  () )
 
-    if abs ( bias ) > 1 :
-        raise VaueErorr, ' Illegal valeu for "bias" parameter '
-    
     for i in h1.iteritems () :
 
         
@@ -3111,17 +3143,60 @@ def hToGraph2 ( h1 , bias  ) :
         y  = i[2]
 
         b = abs ( x.error() ) * bias
-        
-        graph.SetPoint      ( ip ,
-                              x  . value () + b ,
-                              y  . value ()     )
-        graph.SetPointError ( ip ,
-                              x  . error () + b ,
-                              x  . error () - b ,
-                              y  . error ()     , 
-                              y  . error ()     ) 
-        
+
+        x0 , xep , xen = funcx ( x , y )
+        y0 , yep , yen = funcy ( x , y )
+            
+        graph.SetPoint      ( ip , xn , yn  ) 
+        graph.SetPointError ( ip , xep , xen , yep , yen ) 
+
     return graph
+
+
+# =============================================================================
+## convert histogram to graph
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def hToGraph2 ( h1 , bias ) :
+    """
+    Convert  1D-histogram into graph with small shift in x
+    Useful for overlay of very similar plots
+
+    >>> h1 = ....
+    >>> g2 = h1.asGraph2 ( 0.1 ) ## shift for 10% of bin width
+    
+    """
+    if abs ( bias ) > 1 :
+        raise ValueErorr, ' Illegal value for "bias" parameter '
+    
+    funcx = lambda x,y : x.value() , x.error()*(1+bias) , x.error()*(1-bias)
+    funcy = lambda x,y : y.value() , y.error()          , y.error()
+        
+    return hToGraph_ ( h1 , funcx , funcy ) 
+
+
+# =============================================================================
+## convert histogram to graph
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def hToGraph3 ( h1 , bias ) :
+    """
+    Convert  1D-histogram into graph with small shift in x
+    Useful for overlay of very similar plots
+
+    >>> h1 = ....
+    >>> g2 = h1.asGraph2 ( 0.1 ) ## shift for 10% of bin width
+    
+    """
+    for p in h1.iteritems() :
+        x = p[1]
+        if x.error() < abs ( bias ) :
+            raise ValueErorr, ' Illegal value for "bias" parameter '
+        
+    funcx = lambda x,y : x.value() , x.error()+bias , x.error()-bias
+    funcy = lambda x,y : y.value() , y.error()      , y.error()
+        
+    return hToGraph_ ( h1 , funcx , funcy ) 
 
 ROOT.TGraphAsymmErrors.__len__       = ROOT.TGraphAsymmErrors . GetN 
 ROOT.TGraphAsymmErrors.__contains__  = lambda s,i : i in range(0,len(s))
@@ -3131,6 +3206,10 @@ ROOT.TH1F.asGraph2 = hToGraph2
 ROOT.TH1D.asGraph2 = hToGraph2
 ROOT.TH1F.toGraph2 = hToGraph2
 ROOT.TH1D.toGraph2 = hToGraph2
+ROOT.TH1F.asGraph3 = hToGraph3
+ROOT.TH1D.asGraph3 = hToGraph3
+ROOT.TH1F.toGraph3 = hToGraph3
+ROOT.TH1D.toGraph3 = hToGraph3
 
 # =============================================================================
 ## get edges from the axis:
@@ -3930,7 +4009,7 @@ ROOT.TMinuit . __setitem__ = _mn_set_par_
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-09-28
 def _mn_min_ ( self                  ,
-               maxcalls  = 500       ,
+               maxcalls  = 5000      ,
                tolerance = 0.1       ,
                method    = 'MIGRADE' ) :
     """
@@ -4011,7 +4090,6 @@ ROOT.TMinuit . defpar = _mn_add_par_
 ROOT.TMinuit . defPar = _mn_add_par_
 ROOT.TMinuit . newpar = _mn_add_par_
 ROOT.TMinuit . newPar = _mn_add_par_
-
 
 # =============================================================================
 ## get MINOS errors

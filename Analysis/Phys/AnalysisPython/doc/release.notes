@@ -6,6 +6,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-10-16 - Vanya Belyaev
+ - tiny addition to VE 
+
+! 2012-10-16 - Vanya Belyaev
+ - more conversions to tgraph 
+
+! 2012-10-16 - Vanya Belyaev
  - add getLumi function 
 
 !========================= AnalysisPython v2r16 2012-10-04 =========================
