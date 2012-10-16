@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-10-16 - Marco Cattaneo
+ - Update merge-small-files reference following changed input files
+
 ! 2012-10-08 - Marco Cattaneo
  - In Configuration.py, remove setting of MeasureTime=true in sequencers,
    should not be the default, and should in any case use TimingAuditor.
