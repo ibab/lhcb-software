@@ -1,4 +1,3 @@
-// $Id: $
 // ============================================================================
 #ifndef LOKI_DUMPER_H 
 #define LOKI_DUMPER_H 1
@@ -27,16 +26,8 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2012-01-28
- *  
- *                    $Revision: 130709 $
- *  Last modification $Date: 2011-10-30 19:29:40 +0100 (Sun, 30 Oct 2011) $
- *                 by $Author: ibelyaev $
  */
 // ============================================================================
 namespace LoKi 

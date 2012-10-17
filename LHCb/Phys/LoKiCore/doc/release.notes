@@ -13,6 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-10-17 - Marco Cattaneo
+ - Fix an unprotected debug
+ - Remove unnecessary disclaimers from file documentation blocks
+ - Remove obsolete CVS control strings from file documentation blocks
+
 ! 2012-10-12 - Marco Clemencic
  - Fixed warning for duplicated definition of _POSIX_C_SOURCE.
 

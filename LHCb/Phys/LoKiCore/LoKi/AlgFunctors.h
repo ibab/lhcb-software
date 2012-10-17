@@ -1,4 +1,3 @@
-// $Id$
 // ============================================================================
 #ifndef LOKI_ALGFUNCTORS_H 
 #define LOKI_ALGFUNCTORS_H 1
@@ -32,19 +31,12 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @see IAlgorithm
  *  @see  Algorithm
  *  @see IAlgManager
  * 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-010-14 
- *
- *  $Revision$
- *  Last Modi
  */
 // ============================================================================
 namespace LoKi 

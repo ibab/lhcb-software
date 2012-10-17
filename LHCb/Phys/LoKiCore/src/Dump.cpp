@@ -1,4 +1,3 @@
-// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,7 +9,6 @@
 // ============================================================================
 #include "boost/integer_traits.hpp"
 #include "boost/static_assert.hpp"
-// ============================================================================
 // ============================================================================
 /** @file 
  *  Implementation fiel for class LoKi::Dump
@@ -24,16 +22,8 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date 2010-11-18
- *  
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
  */
 // ============================================================================
 LoKi::Dump::Dump

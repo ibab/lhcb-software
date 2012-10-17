@@ -1,4 +1,3 @@
-// $Id$
 // ============================================================================
 #ifndef LOKI_FILTERS_H 
 #define LOKI_FILTERS_H 1
@@ -44,13 +43,8 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2007-10-30
  */
 // ============================================================================
 namespace LoKi 
@@ -67,16 +61,8 @@ namespace LoKi
    *  contributions and advices from G.Raven, J.van Tilburg, 
    *  A.Golutvin, P.Koppenburg have been used in the design.
    *
-   *  By usage of this code one clearly states the disagreement 
-   *  with the campain of Dr.O.Callot et al.: 
-   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
-   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-10-30
-   *
-   *                    $Revision$
-   *  Last modification $Date$
-   *                 by $Author$
    */
   namespace Functors
   {
