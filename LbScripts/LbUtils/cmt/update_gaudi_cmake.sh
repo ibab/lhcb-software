@@ -43,7 +43,7 @@ if [ ! -r $version_file ] ; then
 	tar -x -v -C $rootdir/.. -f -
     # create release notes
     (
-	cd /afs/cern.ch/sw/Gaudi/git/Gaudi.git
+	cd $git_root
 	git log ${remote_id} -- cmake
     ) > $notes_file
     # Remember the version of the latest update
@@ -60,7 +60,7 @@ else
 	# update release notes
 	mv $notes_file $notes_file.tmp
 	(
-	    cd /afs/cern.ch/sw/Gaudi/git/Gaudi.git
+	    cd $git_root
 	    git log ${local_id}..${remote_id} -- cmake
 	) > $notes_file
 	cat $notes_file.tmp >> $notes_file

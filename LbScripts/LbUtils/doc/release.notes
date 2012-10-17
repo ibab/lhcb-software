@@ -1,3 +1,7 @@
+2012-10-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmt/update_gaudi_env_script.sh: minor fix
+
 2012-10-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmt/update_gaudi_env_script.sh: script to import/update the script env.py
