@@ -1,5 +1,11 @@
 2012-10-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* scripts/cern-lxdistcc-wrappers.sh: imported the shell wrapper for the LCG
+	compilers from the package cern-lxdistcc-wrappers-1-11.slc6.x86_64.rpm, with
+	some changes, and created the symlinks for a few known versions.
+
+2012-10-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* cmt/update_gaudi_env_script.sh: modified to always use 'archive', so that
 	we can have git keyword replacements, and changed the format of the log.
 	* cmake: updated to the latest version in Gaudi.
