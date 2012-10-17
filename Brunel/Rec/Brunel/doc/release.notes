@@ -7,6 +7,7 @@ Purpose: LHCb reconstruction program
   . Do not use SequencerTimerTool to MeasureTime
   . New default global tag for LHCBCOND, 2012: cond-20121008
   . Updates to Aerogel Rich photon reconstruction (RichRecPhotonTools)
+  . Fix unprotected debugs (LoKiCore, LumiEvent)
 
 </PRE><H1><A NAME=v44r0>2012-10-04 Brunel v44r0</A></H1><PRE>
 This version uses projects LCG 64a, Gaudi v23r4, LHCb v35r2, Lbcom v13r2,
