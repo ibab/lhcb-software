@@ -186,7 +186,8 @@ function(lcg_get_target_platform)
   elseif(LCG_OS STREQUAL "slc" OR LCG_OS STREQUAL "ubuntu")
     set(CMAKE_SYSTEM_NAME Linux PARENT_SCOPE)
   else()
-    message(FATAL_ERROR "OS ${LCG_OS} is not supported.")
+    set(CMAKE_SYSTEM_NAME ${CMAKE_HOST_SYSTEM_NAME})
+    message(WARNING "OS ${LCG_OS} is not a known platform, assuming it's a ${CMAKE_SYSTEM_NAME}.")
   endif()
 
   # set default platform ids
@@ -261,6 +262,15 @@ macro(LCG_AA_project name version)
   if(${name} STREQUAL ROOT)
     # ROOT is special
     set(ROOT_home ${ROOT_home}/root)
+  endif()
+  if(NOT LCG_platform STREQUAL LCG_system)
+    # For AA projects we want to be able to fall back on non-debug builds.
+    if(NOT ${name} STREQUAL ROOT)
+      set(${name}_home ${${name}_home} ${${name}_base}/${LCG_system})
+    else()
+      # ROOT is special
+      set(ROOT_home ${ROOT_home} ${ROOT_base}/${LCG_system}/root)
+    endif()
   endif()
   list(APPEND LCG_projects ${name})
 endmacro()
@@ -368,9 +378,12 @@ macro(LCG_prepare_paths)
 
   foreach(name ${LCG_projects})
     list(APPEND LCG_PREFIX_PATH ${${name}_home})
+    list(APPEND LCG_INCLUDE_PATH ${${name}_base}/include)
     # We need to add python to the include path because it's the only
     # way to search for a (generic) file.
-    list(APPEND LCG_INCLUDE_PATH ${${name}_base}/include ${${name}_home}/python)
+    foreach(h ${${name}_home})
+      list(APPEND LCG_INCLUDE_PATH ${h}/python)
+    endforeach()
   endforeach()
   # Add the LCG externals dirs to the search paths.
   foreach(name ${LCG_externals})

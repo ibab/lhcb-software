@@ -66,7 +66,8 @@ def makeParser(patterns=None):
     return Optional(statement) + Optional(comment) + StringEnd()
 
 # record of known subdirs with their libraries
-# {'subdir': {'libraries': [...]}}
+# {'<subdir>': {'libraries': [...]}}
+# it contains some info about the projects too, under the keys like repr(('<project>', '<version>'))
 _shelve_file = os.environ.get('CMT2CMAKECACHE',
                               os.path.join(os.path.dirname(__file__), 'known_subdirs.cache'))
 known_subdirs = shelve.open(_shelve_file)
@@ -669,6 +670,22 @@ class Package(object):
         self.reflex_dictionaries = dict([(unquote(l['dictionary']), l.get('options', ''))
                                          for l in self.reflex_dictionary])
 
+toolchain_template = '''# Special wrapper to load the declared version of the heptools toolchain.
+set(heptools_version {0})
+
+find_file(toolchain_file
+          NAMES heptools-${{heptools_version}}.cmake
+          HINTS ENV CMTPROJECTPATH
+          PATHS ${{CMAKE_CURRENT_LIST_DIR}}/cmake/toolchain
+          PATH_SUFFIXES toolchain)
+
+if(NOT toolchain_file)
+  message(FATAL_ERROR "Cannot find heptools-${{heptools_version}}.cmake.")
+endif()
+
+include(${{toolchain_file}})
+'''
+
 class Project(object):
     def __init__(self, path):
         """
@@ -733,6 +750,38 @@ class Project(object):
             l = l.split()
             if l and l[0] == "use" and l[1] != "LCGCMT" and len(l) == 3:
                 yield (projectCase(l[1]), l[2].rsplit('_', 1)[-1])
+
+    def heptools(self):
+        '''
+        Return the version of heptools (LCGCMT) used by this project.
+        '''
+
+        def updateCache(value):
+            '''
+            helper function to update the cache and return the value
+            '''
+            k = repr((self.name, self.version))
+            d = known_subdirs.get(k, {})
+            d['heptools'] = value
+            known_subdirs[k] = d
+            return value
+
+        # check for a direct dependency
+        exp = re.compile(r'^\s*use\s+LCGCMT\s+LCGCMT[_-](\S+)')
+        for l in open(self.requirements):
+            m = exp.match(l)
+            if m:
+                return updateCache(m.group(1))
+
+        # try with the projects we use (in the cache),
+        # including ourselves (we may already be there)
+        for u in list(self.uses()) + [(self.name, self.version)]:
+            u = repr(u)
+            if u in known_subdirs and 'heptools' in known_subdirs[u]:
+                return updateCache(known_subdirs[u]['heptools'])
+
+        # we cannot guess the version of heptools
+        return None
 
     @property
     def data_packages(self):
@@ -800,18 +849,32 @@ class Project(object):
         data.append(l)
         return "\n".join(data) + "\n"
 
+    def generateToolchain(self):
+        heptools_version = self.heptools()
+        if heptools_version:
+            return toolchain_template.format(heptools_version)
+        return None
+
     def process(self, overwrite=None):
         # Prepare the project configuration
-        cml = os.path.join(self.path, "CMakeLists.txt")
-        if ((overwrite == 'force')
-            or (not os.path.exists(cml))
-            or ((overwrite == 'update')
-                and (os.path.getmtime(cml) < os.path.getmtime(self.requirements)))):
-            # write the file
-            data = self.generate()
-            writeToFile(cml, data, logging)
-        else:
-            logging.warning("file %s already exists", cml)
+        def produceFile(name, generator):
+            cml = os.path.join(self.path, name)
+            if ((overwrite == 'force')
+                or (not os.path.exists(cml))
+                or ((overwrite == 'update')
+                    and (os.path.getmtime(cml) < os.path.getmtime(self.requirements)))):
+                # write the file
+                data = generator()
+                if data:
+                    writeToFile(cml, data, logging)
+                else:
+                    logging.info("file %s not generated (empty)", cml)
+            else:
+                logging.warning("file %s already exists", cml)
+
+        produceFile("CMakeLists.txt", self.generate)
+        produceFile("toolchain.cmake", self.generateToolchain)
+
         # Recurse in the packages
         for p in sorted(self.packages):
             self.packages[p].process(overwrite)
@@ -856,6 +919,7 @@ def main(args=None):
 
     if opts.cache_only:
         root.packages # the cache is updated by instantiating the packages
+        root.heptools() # this triggers the caching of the heptools_version
         # note that we can get here only if root is a project
     else:
         root.process(opts.overwrite)

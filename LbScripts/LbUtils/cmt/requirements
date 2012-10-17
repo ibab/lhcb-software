@@ -28,5 +28,4 @@ macro_append constituents " install_env_script"
 macro_remove cmt_actions_constituents "install_env_script"
 
 path_prepend CMAKE_PREFIX_PATH "${LBUTILSROOT}/cmake"
-path_prepend GAUDI_CMAKE_MODULE_PATH "${LBUTILSROOT}/cmake/modules"
-set          HEPTOOLS_DIR "${LBUTILSROOT}/cmake/toolchain"
+#path_prepend GAUDI_CMAKE_MODULE_PATH "${LBUTILSROOT}/cmake/modules"

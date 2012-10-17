@@ -1,3 +1,9 @@
+2012-10-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmt/update_gaudi_env_script.sh: modified to always use 'archive', so that
+	we can have git keyword replacements, and changed the format of the log.
+	* cmake: updated to the latest version in Gaudi.
+
 2012-10-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmt/update_gaudi_env_script.sh: minor fix

@@ -5,6 +5,8 @@ import re
 
 # use a private cache for the tests
 os.environ['CMT2CMAKECACHE'] = 'test.cache'
+if os.path.exists('test.cache'):
+    os.remove('test.cache')
 
 import cmt2cmake
 
@@ -19,6 +21,9 @@ cmt2cmake.known_subdirs['SomeSubdir'] = {'libraries': ['SubdirLib'],
                                          'includes': False}
 cmt2cmake.known_subdirs['JustHeaders'] = {'libraries': [],
                                           'includes': True}
+cmt2cmake.known_subdirs[repr(('Baseproject', 'v1r0'))] = {'heptools': '65'}
+cmt2cmake.known_subdirs[repr(('TestProjectHT', 'v3r0'))] = {'heptools': '23'}
+
 
 cmt2cmake.data_packages = set(['DataPack', 'Another/DtPkg', 'SpecialThing'])
 
@@ -96,7 +101,7 @@ def getCalls(function, cmakelists):
     '''
     extracts the arguments to all the calls to a cmake function
     '''
-    exp = re.compile(r'\b{}\s*\(([^)]*)\)'.format(function), flags=re.MULTILINE)
+    exp = re.compile(r'\b{0}\s*\(([^)]*)\)'.format(function), flags=re.MULTILINE)
     return [m.group(1) for m in exp.finditer(cmakelists)]
 
 #
@@ -1309,6 +1314,97 @@ use DtPkg v1r0 Another
     assert l == ['TestProject', 'v1r0', 'DATA',
                  'Another/DtPkg', 'VERSION', 'v1r0',
                  'DataPack', 'VERSION', 'v7r*']
+
+def test_heptools_1():
+    # check the case of LCGCMT in the project.cmt
+    proj_cmt = '''
+project TestProjectHT
+
+use LCGCMT LCGCMT_64a
+    '''
+    files = {"TestProjectHTSys": {"cmt": {"requirements": "version v1r0"}}}
+    proj = ProjWrap("TestProjectHT", proj_cmt, files=files)
+
+    k = repr(('TestProjectHT', 'v1r0'))
+    assert k not in cmt2cmake.known_subdirs
+
+    toolchain = proj.generateToolchain()
+    print toolchain
+
+    calls = getCalls("set", toolchain)
+    assert len(calls) == 1, "set wrong count %d" % len(calls)
+
+    l = calls[0].strip().split()
+    assert l == ['heptools_version', '64a']
+
+    assert k in cmt2cmake.known_subdirs
+    assert cmt2cmake.known_subdirs[k] == {'heptools': '64a'}
+
+def test_heptools_2():
+    # check the case of LCGCMT in a used project (already in the cache)
+    proj_cmt = '''
+project TestProjectHT
+
+use BASEPROJECT BASEPROJECT_v1r0
+    '''
+    files = {"TestProjectHTSys": {"cmt": {"requirements": "version v2r0"}}}
+    proj = ProjWrap("TestProjectHT", proj_cmt, files=files)
+
+    k = repr(('TestProjectHT', 'v2r0'))
+    assert k not in cmt2cmake.known_subdirs
+
+    toolchain = proj.generateToolchain()
+    print toolchain
+
+    calls = getCalls("set", toolchain)
+    assert len(calls) == 1, "set wrong count %d" % len(calls)
+
+    l = calls[0].strip().split()
+    assert l == ['heptools_version', '65']
+
+    assert k in cmt2cmake.known_subdirs
+    assert cmt2cmake.known_subdirs[k] == {'heptools': '65'}
+
+def test_heptools_3():
+    # check the case of LCGCMT not declared, but in the cache for us
+    proj_cmt = '''
+project TestProjectHT
+    '''
+    files = {"TestProjectHTSys": {"cmt": {"requirements": "version v3r0"}}}
+    proj = ProjWrap("TestProjectHT", proj_cmt, files=files)
+
+    k = repr(('TestProjectHT', 'v3r0'))
+    assert k in cmt2cmake.known_subdirs
+
+    toolchain = proj.generateToolchain()
+    print toolchain
+
+    calls = getCalls("set", toolchain)
+    assert len(calls) == 1, "set wrong count %d" % len(calls)
+
+    l = calls[0].strip().split()
+    assert l == ['heptools_version', '23']
+
+    assert k in cmt2cmake.known_subdirs
+    assert cmt2cmake.known_subdirs[k] == {'heptools': '23'}
+
+def test_heptools_4():
+    # check the case of LCGCMT not found
+    proj_cmt = '''
+project TestProjectHT
+    '''
+    files = {"TestProjectHTSys": {"cmt": {"requirements": "version v4r0"}}}
+    proj = ProjWrap("TestProjectHT", proj_cmt, files=files)
+
+    k = repr(('TestProjectHT', 'v4r0'))
+    assert k not in cmt2cmake.known_subdirs
+
+    toolchain = proj.generateToolchain()
+    assert toolchain is None
+
+    assert k not in cmt2cmake.known_subdirs
+
+
 
 from nose.core import main
 main()
