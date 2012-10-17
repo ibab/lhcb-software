@@ -84,7 +84,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v43r1p2
-                                          running on lxbuild163.cern.ch on Wed Oct 17 15:13:49 2012
+                                          running on lxbuild163.cern.ch on Wed Oct 17 17:43:59 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -93,7 +93,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.78 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -668,7 +668,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.78 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1096,16 +1096,11 @@ Listing sources of Unprotected and Unseen messages
  EtaMon                                                 |   DEBUG |        1
  FileRecordCnvSvc                                       | VERBOSE |       16
  FileRecordCnvSvc                                       |   DEBUG |       16
- FilterBeam1                                            |   DEBUG |        1
- FilterBeam2                                            |   DEBUG |        1
- FilterBeamCrossing                                     |   DEBUG |        1
- FilterNoBeam                                           |   DEBUG |        1
  HcalDigitMon                                           |   DEBUG |        1
  HcalE                                                  |   DEBUG |        6
  HcalE.HcalE                                            |   DEBUG |        1
  HcalPIDe                                               |   DEBUG |       18
  HcalPIDmu                                              |   DEBUG |       18
- HltErrorFilter                                         |   DEBUG |        1
  InBREM                                                 |   DEBUG |        4
  InBREM.InBrem                                          |   DEBUG |        4
  InECAL                                                 |   DEBUG |        4
@@ -1137,8 +1132,6 @@ Listing sources of Unprotected and Unseen messages
  RichAlignMoniR1Gas                                     |   DEBUG |        5
  RichAlignMoniR2Gas                                     |   DEBUG |        5
  RichHPDIFBMoni.RichHPDPixelClusterFinder               |   DEBUG |        1
- RichHlt1Filter                                         |   DEBUG |        1
- RichL0Filter                                           |   DEBUG |        1
  RichOfflineGPIDDigSel                                  |   DEBUG |        1
  RichOfflineGPIDFin                                     |   DEBUG |        1
  RichOfflineGPIDInit                                    |   DEBUG |        2
@@ -1155,9 +1148,7 @@ Listing sources of Unprotected and Unseen messages
  SpdE.SpdE                                              |   DEBUG |        4
  SpdMon                                                 |   DEBUG |        1
  SplitPhotonMon                                         |   DEBUG |        1
- TimeSpanFilter                                         |   DEBUG |        1
  TimingAuditor.TIMER                                    |   DEBUG |        1
- ToolSvc.FastVeloHitManager                             |   DEBUG |        1
  ToolSvc.Offline_GPIDTrackCreator                       |   DEBUG |        1
  ToolSvc.Offline_RichCherenkovAngle                     |   DEBUG |        4
  ToolSvc.Offline_RichCherenkovResolution                |   DEBUG |        2
