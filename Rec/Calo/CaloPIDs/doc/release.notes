@@ -6,7 +6,7 @@
 
 ! 2012-10-17 - Marco Cattaneo
  - In CaloTrack2IDAlg, return Error from initialize if undefined Input, removes
-   need for Assert in execute (also fixes untested StatusCode)
+   need for Assert in execute
  - Fix trivial icc remarks
 
 ! 2012-10-08 - Marco Cattaneo
