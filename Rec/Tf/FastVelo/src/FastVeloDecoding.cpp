@@ -23,6 +23,7 @@ DECLARE_ALGORITHM_FACTORY( FastVeloDecoding )
   FastVeloDecoding::FastVeloDecoding( const std::string& name,
                                       ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
+    , m_velo(NULL)
 {
   declareProperty( "OutputLocation",    m_outputLocation  = LHCb::VeloLiteClusterLocation::Default );
   declareProperty( "MaxVeloClusters",   m_maxVeloClusters = 10000  );

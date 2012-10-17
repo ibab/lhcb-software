@@ -45,7 +45,7 @@ private:
 /** @class FastVeloHit FastVeloHit.h
  *  This defines the Velo hits (R, Phi) to be used in the fast pattern.
  *
- * The internal represenattion is FLOAT to decrease the amount of memory,
+ * The internal representation is FLOAT to decrease the amount of memory,
  * and keep it in cache. This speeds up the FastVelo tracking by 10% on certain 
  * processors. The interface is only double, to be LHCb standard.
  *
@@ -57,12 +57,11 @@ class FastVeloHit {
 public:
   /// Standard constructor
   FastVeloHit( ):
-    m_zone( 0 ), m_z(0.), m_rLocal( 0. ), m_weight( 0. ), m_nbUsed( 0 ) {
-    m_sensor = 0;
-    m_a      = 0.;
-    m_b      = 0.;
-    m_c      = 999.;
-  };
+    m_zone( 0 ), m_z(0.), m_rLocal( 0. ), m_global( 0. ), m_xGlobal( 0. ),
+    m_yGlobal( 0. ), m_weight( 0. ), m_phiWeight( 0. ), m_nbUsed( 0 ),
+    m_sensor( 0 ), m_a( 0.), m_b( 0. ), m_c( 999. ), m_xStripCentre( 0. ),
+    m_yStripCentre( 0. ), m_xCentre( 0. ), m_yCentre( 0. )
+  { };
 
   virtual ~FastVeloHit( ) {}; ///< Destructor
 

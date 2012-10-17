@@ -25,6 +25,7 @@ DECLARE_ALGORITHM_FACTORY( FastValidateWithTT )
 FastValidateWithTT::FastValidateWithTT( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_validationTool(NULL)
 {
   declareProperty( "InputName"     , m_inputName      = LHCb::TrackLocation::Velo );
 }

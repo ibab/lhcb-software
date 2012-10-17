@@ -86,8 +86,9 @@ StatusCode FastVeloHitManager::rebuildGeometry ( ) {
   double xBeam = .5 * ( m_velo->halfBoxOffset(0).x() + m_velo->halfBoxOffset(1).x() );
   double yBeam = .5 * ( m_velo->halfBoxOffset(0).y() + m_velo->halfBoxOffset(1).y() );
   
-  debug() << "Updating the geometry... Beam at x=" << xBeam << " y=" << yBeam 
-         << " opening " << m_velo->halfBoxOffset(1).x()  - m_velo->halfBoxOffset(0).x() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Updating the geometry... Beam at x=" << xBeam << " y=" << yBeam 
+            << " opening " << m_velo->halfBoxOffset(1).x()  - m_velo->halfBoxOffset(0).x() << endmsg;
 
   for ( std::vector<FastVeloSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
     if ( NULL != *itS ) delete *itS;

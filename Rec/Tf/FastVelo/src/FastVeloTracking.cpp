@@ -26,6 +26,9 @@ DECLARE_ALGORITHM_FACTORY( FastVeloTracking )
 FastVeloTracking::FastVeloTracking( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_debugTool(NULL)
+  , m_timerTool(NULL)
+  , m_hitManager(NULL)
 {
   declareProperty( "OutputTracksName" , m_outputLocation = LHCb::TrackLocation::Velo );
   declareProperty( "HitManagerName"   , m_hitManagerName = "FastVeloHitManager" );

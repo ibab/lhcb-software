@@ -4,6 +4,10 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2012-10-17 - Marco Cattaneo
+ - Fix unprotected debug
+ - Fix UNINIT_CTOR defects
+
 ! 2012-10-15 - Olivier Callot
  - New algorithm FastVeloDecoding.cpp to decode the Velo Lite clusters.
 
