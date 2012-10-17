@@ -3,6 +3,8 @@ RI!-----------------------------------------------------------------------------
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+-2012-10-17 - Sajan Easo
+  Message verbosity level in RichSensdet changed for print statements.
 -2012-10-02 - Sajan Easo
 - Adapations for Geant4.95 version in different physics processes,
   mainly for the methods of G4MaterialPropertyVector. These are backward incompatible with
