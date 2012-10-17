@@ -25,7 +25,7 @@
 // ============================================================================
 /// Declaration of the Algorithm Factory
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( CaloTrack2IDAlg );
+DECLARE_ALGORITHM_FACTORY( CaloTrack2IDAlg )
 // ============================================================================
 /// Standard protected constructor
 // ============================================================================
@@ -68,11 +68,11 @@ StatusCode CaloTrack2IDAlg::initialize ()
   StatusCode sc = CaloTrackAlg::initialize () ;
   if ( sc.isFailure() ) { return sc ; }
   //
-  m_tool = tool<ICaloTrackIdEval> ( m_toolName , this ) ;
-  //
-  if ( m_inputs.empty() ) { Warning ( "empty 'Inputs'-list"  ).ignore() ; }
+  if ( m_inputs.empty() ) { return Error( "No input data specified!" ); }
   if ( m_output.empty() ) { Warning ( "empty 'Output'-value" ).ignore() ; }
   if ( m_filter.empty() ) { Warning ( "empty 'Filter'-value" ).ignore() ; }
+  //
+  m_tool = tool<ICaloTrackIdEval> ( m_toolName , this ) ;
   //
   return StatusCode::SUCCESS ;
 }
@@ -97,8 +97,6 @@ StatusCode CaloTrack2IDAlg::execute ()
   Filter* filter  = 0 ;
   if ( !m_filter.empty() ) { filter = get<Filter> ( m_filter ) ; }
   
-  Assert ( !m_inputs.empty() , "No input data specified!" ) ;
-
   size_t nTracks = 0 ;
   // loop over input containers 
   for ( Inputs::const_iterator input = m_inputs.begin() ;

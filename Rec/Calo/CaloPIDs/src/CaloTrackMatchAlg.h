@@ -108,7 +108,7 @@ namespace
     const double             weight  )
   {
     table->i_push( cluster , track , (float) weight ) ; // NB: i_push here 
-  } ;
+  }
   template <class TABLE> 
   inline void i_push 
   ( TABLE*                   table   , 

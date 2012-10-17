@@ -4,6 +4,11 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2012-10-17 - Marco Cattaneo
+ - In CaloTrack2IDAlg, return Error from initialize if undefined Input, removes
+   need for Assert in execute (also fixes untested StatusCode)
+ - Fix trivial icc remarks
+
 ! 2012-10-08 - Marco Cattaneo
  - In Configuration.py, remove setting of MeasureTime=true in sequencers,
    should not be the default, and should in any case use TimingAuditor.

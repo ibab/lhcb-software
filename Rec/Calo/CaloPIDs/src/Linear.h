@@ -1,4 +1,3 @@
-// $Id: Linear.h,v 1.4 2008-06-26 13:07:04 jpalac Exp $
 // ============================================================================
 #ifndef CALOPIDS_LINEAR_H 
 #define CALOPIDS_LINEAR_H 1
@@ -109,7 +108,7 @@ namespace Utils
       s2 = s1 ;
       // propagate it 
       return propagate ( s2 , newZ ) ;
-    } ;
+    }
     /** make a linear extrapolation of the state to a certain 3D-plane 
      *  @param state (input/output) state to be extrapolated 
      *  @param plane (input) plane 
@@ -129,7 +128,7 @@ namespace Utils
       { return StatusCode::FAILURE ; }
       // propagate to a certain Z 
       return propagate ( state , point.Z() ) ;
-    } ;
+    }
     /** make a linear extrapolation of the state to a certain 3D-plane 
      *  @param s1 (input) state to be extrapolated 
      *  @param pl (input) plane 
@@ -145,7 +144,7 @@ namespace Utils
       s2 = s1 ;
       // propagate it 
       return propagate ( s2 , pl ) ;
-    } ;
+    }
   }
 }
 
