@@ -110,7 +110,7 @@ def patchBrunel(true_online_version):
   
   if true_online_version:
     brunel.OutputLevel       = 999
-    #brunel.OutputLevel       = MSG_INFO
+#    brunel.OutputLevel       = MSG_INFO
     brunel.PrintFreq         = -1
 
   if processingType == 'Reprocessing':
