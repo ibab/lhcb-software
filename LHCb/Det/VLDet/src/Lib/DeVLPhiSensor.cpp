@@ -255,7 +255,7 @@ StatusCode DeVLPhiSensor::pointToChannel(const Gaudi::XYZPoint& point,
                                          double& pitch) const {
 
   // Transform to the local frame.                                         
-  Gaudi::XYZPoint localPoint = this->geometry()->toLocal(point);
+  Gaudi::XYZPoint localPoint = localToGlobal(point);
   // Check boundaries.
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
@@ -268,7 +268,7 @@ StatusCode DeVLPhiSensor::pointToChannel(const Gaudi::XYZPoint& point,
   const double strip = m_zones[zone].firstStrip + phi / m_zones[zone].pitch;
   int closestStrip = LHCb::Math::round(strip);
   fraction = strip - closestStrip;
-  pitch = phiPitch(radius);
+  pitch = phiPitchOfRadius(radius);
 
   const unsigned int sensor = sensorNumber();
   // Set the VLChannelID.
@@ -338,18 +338,16 @@ StatusCode DeVLPhiSensor::isInActiveArea(const Gaudi::XYZPoint& point) const {
   }
         
   // Work out if x/y is outside first/last strip in zone.
-  unsigned int endStrip = m_zones[zone].firstStrip;
-  if (y > 0) endStrip += m_zones[zone].nbStrips - 1;
-  const double phiStrip = phiOfStrip(endStrip, 0., radius);
   const double phi = atan2(y, x);
-  if (y < 0) {
-    if (phiStrip > phi) {
-      return StatusCode::FAILURE;
-    }
+  const double tol = 0.05;
+  if (y > 0) {
+    unsigned int strip = m_zones[zone].firstStrip + m_zones[zone].nbStrips -1;
+    const double phiStrip = phiOfStrip(strip, tol, radius);
+    if (phiStrip < phi) return StatusCode::FAILURE;
   } else {
-    if (phiStrip < phi) {
-      return StatusCode::FAILURE;
-    }
+    unsigned int strip = m_zones[zone].firstStrip;
+    const double phiStrip = phiOfStrip(strip, -tol, radius);
+    if (phiStrip > phi) return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
   
@@ -424,7 +422,7 @@ StatusCode DeVLPhiSensor::residual(const Gaudi::XYZPoint& point,
   if (point.phi() < globalNear.phi()) residual *= -1.;
 
   const double radius = localPoint.Rho();
-  const double sigma = m_resolution.first * phiPitch(radius) - 
+  const double sigma = m_resolution.first * phiPitchOfRadius(radius) - 
                        m_resolution.second;
   chi2 = pow(residual / sigma, 2);
 
@@ -544,20 +542,10 @@ StatusCode DeVLPhiSensor::updateStripCache() {
   m_stripsCache.resize(m_numberOfStrips);
   for (unsigned int zone = 0; zone < m_numberOfZones; ++zone) {
     unsigned int firstStrip = m_zones[zone].firstStrip;
-    std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> limits = localStripLimits(firstStrip);
-    Gaudi::XYZPoint begin = localToGlobal(limits.first);
-    Gaudi::XYZPoint end   = localToGlobal(limits.second);
-    const double r0 = (begin.rho() + end.rho()) / 2.0;
-    Gaudi::XYZVector dx = end - begin;
-    Gaudi::XYZPoint center = begin + 0.5 * dx;
-    const double d0 = r0 * sin(center.phi() - dx.phi());
-    m_zonesCache[zone].globalDistToOrigin = d0;
-    m_zonesCache[zone].globalOffsetAtR0 = asin(d0 / r0);
-
     for (unsigned int i = 0; i < m_zones[zone].nbStrips; ++i) {
       const unsigned int strip = firstStrip + i;
-      begin = m_geometry->toGlobal(m_stripLimits[strip].first);
-      end = m_geometry->toGlobal(m_stripLimits[strip].second);
+      Gaudi::XYZPoint begin = localToGlobal(m_stripLimits[strip].first);
+      Gaudi::XYZPoint end = localToGlobal(m_stripLimits[strip].second);
       const double dx = begin.x() - end.x();
       const double dy = begin.y() - end.y();
       const double d = sqrt(dx * dx + dy * dy);
@@ -618,7 +606,7 @@ StatusCode DeVLPhiSensor::updateZoneCache() {
     }
 
     // Extend the phi ranges by half a strip pitch
-    const double pitch = fabs(phiPitch(minStrip));
+    const double pitch = fabs(phiPitchOfStrip(minStrip));
     m_zonesCache[zone].globalPhiLimits.first   -= pitch / 2.;
     m_zonesCache[zone].globalPhiLimits.second  += pitch / 2.;
   }

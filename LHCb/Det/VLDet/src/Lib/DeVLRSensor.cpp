@@ -16,16 +16,8 @@
 
 namespace VLDet {
 
-  /** These functions simply provide access to local static
-   *  data which are used to initialize references in each instance
-   *  of DeVeloRType.
-   *  The purpose of these functions is to work around
-   *  a Microsoft(tm) specific extension in VC++ that makes
-   *  awkward to have static data members accessed by inline
-   *  functions.
-   *
-   *  @see DeVeloRType
-   */
+  // These functions simply provide access to local static
+  // data which are used to initialize references in each instance.
   static std::vector<rStrip>& deVLRSensorStaticRStrips() {
     static std::vector<rStrip> s_strips;
     return s_strips;
@@ -337,7 +329,7 @@ StatusCode DeVLRSensor::pointToChannel(const Gaudi::XYZPoint& point,
   channel.setStrip(closestStrip);
   channel.setType(LHCb::VLChannelID::RType);
   // Calculate the pitch.
-  pitch = rPitch(channel.strip());
+  pitch = rPitchOfStrip(channel.strip());
   return StatusCode::SUCCESS;
   
 }
@@ -457,12 +449,12 @@ StatusCode DeVLRSensor::residual(const Gaudi::XYZPoint& point,
   if (!sc.isSuccess()) return sc;
 
   const unsigned int strip = channel.strip();
-  const double offset = interStripFraction * rPitch(strip);
+  const double offset = interStripFraction * rPitchOfStrip(strip);
 
   const double rPoint = localPoint.Rho();
   const double rStrip = rOfStrip(strip);
   residual = rStrip + offset - rPoint;
-  const double sigma = m_resolution.first * rPitch(strip) - m_resolution.second;
+  const double sigma = m_resolution.first * rPitchOfStrip(strip) - m_resolution.second;
   chi2 = pow(residual / sigma, 2);
   return StatusCode::SUCCESS;
 
@@ -535,7 +527,7 @@ std::auto_ptr<LHCb::Trajectory> DeVLRSensor::trajectory(const LHCb::VLChannelID&
   double phiMin = phiMinStrip(strip);
   double phiMax = phiMaxStrip(strip);
   // Offset is offset on R
-  radius += rPitch(strip) * offset;
+  radius += rPitchOfStrip(strip) * offset;
 
   // Start with coordinates of center and both ends in local frame
   Gaudi::XYZPoint lOrigin(0., 0., 0.);
@@ -585,15 +577,12 @@ StatusCode DeVLRSensor::updateStripCache() {
 
     double dphi  = (phiMax - phiMin) / 10.0;
     double num   = 0.;
-    double hbden = 0.;
     double gden  = 0.;
     double phiLocal = phiMin;
     // Integrate over strip
     for (; phiLocal < phiMax; phiLocal += dphi) {
       Gaudi::XYZPoint lp(rLocal * cos(phiLocal), rLocal * sin(phiLocal), 0.);
       num += dphi;
-      Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
-      hbden += dphi / hbp.rho();
       Gaudi::XYZPoint gp = localToGlobal(lp);
       gden += dphi / gp.rho();
     }
@@ -601,8 +590,6 @@ StatusCode DeVLRSensor::updateStripCache() {
     dphi = phiMax - phiLocal + dphi;
     num += dphi;
     Gaudi::XYZPoint lp(rLocal * cos(phiMax), rLocal * sin(phiMax), 0.);
-    Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
-    hbden += dphi / hbp.rho();
     Gaudi::XYZPoint gp = localToGlobal(lp);
     gden += dphi / gp.rho();
     // Store the results.
@@ -653,8 +640,8 @@ StatusCode DeVLRSensor::updateZoneCache() {
     }
 
     // R limits are the radii of the outer strip + local pitch / 2 and the inner strip - local pitch / 2
-    m_zonesCache[zone].globalRLimits.first   = globalROfStrip(minStrip)  - rPitch(minStrip) / 2.;
-    m_zonesCache[zone].globalRLimits.second  = globalROfStrip(maxStrip)  + rPitch(maxStrip) / 2.;
+    m_zonesCache[zone].globalRLimits.first   = globalROfStrip(minStrip)  - rPitchOfStrip(minStrip) / 2.;
+    m_zonesCache[zone].globalRLimits.second  = globalROfStrip(maxStrip)  + rPitchOfStrip(maxStrip) / 2.;
   }
   return StatusCode::SUCCESS;
   

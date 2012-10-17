@@ -18,25 +18,25 @@
  *
  */
 
-// ============================================================================
+//============================================================================
 /// Constructor
-// ============================================================================
+//============================================================================
 DeVLSensor::DeVLSensor(const std::string& name) : DetectorElement(name) {
 
 }
 
-// ============================================================================
+//============================================================================
 /// Object identification
-// ============================================================================
+//============================================================================
 const CLID& DeVLSensor::clID() const {
 
   return DeVLSensor::classID();
   
 }
 
-// ============================================================================
+//============================================================================
 /// Initialisation method
-// ============================================================================
+//============================================================================
 StatusCode DeVLSensor::initialize() {
 
   // Set the output level.
@@ -75,17 +75,6 @@ StatusCode DeVLSensor::initialize() {
     msg << MSG::ERROR << "Failed to cache geometry." << endmsg;
     return sc;
   }
-  // Get parent half box for pattern recognition alignment purposes.
-  // Hierarchy should be sensor -> R/Phi Pair -> Module -> VeloLite(Left|Right)
-  IDetectorElement* halfBox = 
-    this->parentIDetectorElement()->parentIDetectorElement()->parentIDetectorElement();
-  if (m_debug) {
-    msg << MSG::DEBUG
-        << "Great grandparent of " << this->name() << " is "
-        << halfBox->name() << endmsg;
-  }
-  m_halfBoxGeom = halfBox->geometry();
-
   sc = registerConditionCallBacks();
   if (sc.isFailure()) {
     msg << MSG::ERROR
@@ -146,24 +135,13 @@ StatusCode DeVLSensor::initSensor() {
   }
   m_isLeft       = 0 != param<int>("Left");
   m_isDownstream = 0 != param<int>("Downstream");
-  m_fullType = m_type;
-  if (m_isDownstream) {
-    m_fullType += "DnStrm";
-  } else {
-    m_fullType += "UpStrm";
-  }
-  if (m_isLeft) {
-    m_fullType += "Left";
-  } else {
-    m_fullType += "Right";
-  }
   return StatusCode::SUCCESS;
 
 }
 
-// ============================================================================
+//=============================================================================
 /// Members related to condition caching
-// ============================================================================
+//=============================================================================
 StatusCode DeVLSensor::registerConditionCallBacks() {
 
   // Geometry conditions (z position)
@@ -179,12 +157,17 @@ StatusCode DeVLSensor::registerConditionCallBacks() {
   
 }
 
-// ============================================================================
+//=============================================================================
 /// Cache geometry parameters
-// ============================================================================
+//=============================================================================
 StatusCode DeVLSensor::cacheGeometry() {
 
-  m_z = m_geometry->toGlobal(Gaudi::XYZPoint(0, 0, 0)).z();
+  m_centre = localToGlobal(Gaudi::XYZPoint(0., 0., 0.));
+  m_z = m_centre.z();
+  Gaudi::XYZPoint tmpX = localToGlobal(Gaudi::XYZPoint(10., 0., 0.));
+  m_dzDx = (tmpX.z() - m_centre.z()) / (tmpX.x() - m_centre.x());
+  Gaudi::XYZPoint tmpY = localToGlobal(Gaudi::XYZPoint(0., 10., 0.));
+  m_dzDy = (tmpY.z() - m_centre.z()) / (tmpY.y() - m_centre.y()); 
   return StatusCode::SUCCESS;
 
 }

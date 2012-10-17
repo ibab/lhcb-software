@@ -150,15 +150,15 @@ public:
   }  
   /// Radius of a strip + interstrip fraction * pitch in the local frame
   virtual double rOfStrip(unsigned int strip, double fraction) const {
-    return m_strips[strip].r + fraction * rPitch(strip);
+    return m_strips[strip].r + fraction * rPitchOfStrip(strip);
   }
   /// Radius of the centre of strip plus interstrip fraction * pitch in the global frame
   virtual double globalROfStrip(unsigned int strip, double fraction) const {
-    return m_stripsCache[strip].globalR + fraction * rPitch(strip);
+    return m_stripsCache[strip].globalR + fraction * rPitchOfStrip(strip);
   }
   
   /// Local pitch at a given strip
-  virtual double rPitch(unsigned int strip) const {
+  virtual double rPitchOfStrip(unsigned int strip) const {
     return m_strips[strip].pitch;
   }
   /// Local pitch at a given radius 
@@ -246,7 +246,7 @@ private:
   std::vector<rZoneCache> m_zonesCache;
 
   struct rStripCache {
-    double globalR;
+    float globalR;
   };
   std::vector<rStripCache> m_stripsCache;
 

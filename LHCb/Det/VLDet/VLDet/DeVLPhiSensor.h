@@ -132,41 +132,21 @@ public:
     const double effectiveStrip = fraction + strip - m_zones[zone].firstStrip;
     return effectiveStrip * m_zones[zone].pitch + phiOffset(radius); 
   }
-
   /// Phi pitch in radians for a given strip
   virtual double phiPitchOfStrip(unsigned int strip) const {
     const unsigned int zone = zoneOfStrip(strip);
     return m_zones[zone].pitch;
   }
-  /// Phi pitch in radians for a given strip (with correct sign) in the global frame  
-  virtual double globalPhiPitchOfStrip(unsigned int strip) const {
-    return isDownstream() ? -phiPitchOfStrip(strip) : phiPitchOfStrip(strip);
-  }
   /// Phi pitch in mm at a given radius
-  virtual double phiPitch(const double radius) const {
+  virtual double phiPitchOfRadius(const double radius) const {
     const unsigned int zone = zoneOfRadius(radius);
     return m_zones[zone].pitch * radius;
-  }
-  /// Phi pitch in mm at a given radius (with correct sign) in the global frame
-  virtual double globalPhiPitch(double radius) const {
-    return isDownstream() ? -phiPitch(radius) : phiPitch(radius);
-  }
-  
-  /// Phi offset in the global frame at a given radius in a given zone 
-  virtual double globalPhiOffset(unsigned int zone, double radius) const {
-    const double c0 = m_zonesCache[zone].globalOffsetAtR0;
-    const double d0 = m_zonesCache[zone].globalDistToOrigin;
-    return safePhiOffset(c0, d0, radius);
   }
   
   /// Phi distance to the origin in the local frame
   virtual double distToOrigin(unsigned int strip) const {
     const unsigned int zone = zoneOfStrip(strip);
     return m_zones[zone].distToOrigin;
-  }
-  /// Phi distance to origin in the global frame
-  virtual double globalDistToOrigin(unsigned int zone) const {
-    return m_zonesCache[zone].globalDistToOrigin;
   }
   
   /// Calculate the angle of the strip wrt to the x axis in the local frame
@@ -213,7 +193,6 @@ public:
   /// Set the Phi sensor on the previous station.
   void setPreviousPhiSensor(const DeVLPhiSensor* ps) {m_previousPhiSensor = ps;}
 
-
 private:
 
   /// Initialisation from XML
@@ -246,8 +225,6 @@ private:
   std::pair<double, double> m_resolution;
 
   struct phiZoneCache {
-    double globalDistToOrigin;
-    double globalOffsetAtR0;
     std::pair<double, double> globalPhiLimits;
     std::pair<double, double> globalRLimits;
   };

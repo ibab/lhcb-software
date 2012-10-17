@@ -2,6 +2,9 @@
 ! Package     : VLDet
 !-------------------------------------------------------------------------
 
+! 2012-10-16 - Heinrich Schindler
+ - removed unused functions, added functions for pattern recognition
+
 !========================= VLDet v1r2 2012-09-28 =========================
 ! 2012-07-31 - Heinrich Schindler
  - phi strip line parameters in global frame

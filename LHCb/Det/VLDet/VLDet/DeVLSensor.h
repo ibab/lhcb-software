@@ -95,31 +95,13 @@ public:
   virtual double stripLength(const unsigned int strip) const = 0;
 
   /// Convert local position to global position.
-  /// Local from is +ve x (and Upstream for phi sensors)
+  /// Local from is +ve x (and Upstream for Phi sensors)
   Gaudi::XYZPoint localToGlobal(const Gaudi::XYZPoint& localPos) const {
     return m_geometry->toGlobal(localPos);
   }
   /// Convert global position to local position.
   Gaudi::XYZPoint globalToLocal(const Gaudi::XYZPoint& globalPos) const {
     return m_geometry->toLocal(globalPos);
-  }
-  /// Convert local position to position inside Velo half-box
-  Gaudi::XYZPoint localToVeloHalfBox(const Gaudi::XYZPoint& localPos) const {
-    const Gaudi::XYZPoint globalPos = m_geometry->toGlobal(localPos);
-    return m_halfBoxGeom->toLocal(globalPos);
-  }
-  /// Convert position inside Velo half-box to local position
-  Gaudi::XYZPoint veloHalfBoxToLocal(const Gaudi::XYZPoint& boxPos) const {
-    Gaudi::XYZPoint globalPos = m_halfBoxGeom->toGlobal(boxPos);
-    return m_geometry->toLocal(globalPos);
-  }
-  /// Convert position inside Velo half-box to global position
-  Gaudi::XYZPoint veloHalfBoxToGlobal(const Gaudi::XYZPoint& boxPos) const {
-    return m_halfBoxGeom->toGlobal(boxPos);
-  }
-  /// Convert global position to position inside Velo half-box
-  Gaudi::XYZPoint globalToVeloHalfBox(const Gaudi::XYZPoint& globalPos) const {
-    return m_halfBoxGeom->toLocal(globalPos);
   }
 
   /// Pair of points defining start and end points of a strip in the local frame
@@ -142,15 +124,19 @@ public:
 
   /// Z position of the sensor in the global frame
   double z() const {return m_z;}
+  double z(const double x, const double y) const {
+    return m_z + x * m_dzDx + y * m_dzDy;
+  }
+  // Centre of the sensor in the global frame
+  double xCentre() const {return m_centre.x();}
+  double yCentre() const {return m_centre.y();}
 
   /// Station number, station contains 2 modules (right and left)
   unsigned int station() const {return (m_sensorNumber & 0x3E) >> 1;}
-
   /// Right side is x < 0 side of the detector
   bool isRight() const {return !m_isLeft;}
   bool isLeft() const {return m_isLeft;}
   bool isDownstream() const {return m_isDownstream;}
-  bool isPileUp() const {return m_isPileUp;}
   bool isR() const {return m_isR;}
   bool isPhi() const {return m_isPhi;}
 
@@ -178,7 +164,6 @@ public:
     return ParamValidDataObject::type(name);
   }
   std::string type() const {return m_type;}
-  std::string fullType() const {return m_fullType;}
 
   /// Set/get the sensor number
   void sensorNumber(unsigned int sensor) {m_sensorNumber = sensor;}
@@ -203,22 +188,21 @@ protected:
 
   /// Geometry info of the sensor
   IGeometryInfo* m_geometry;
-  /// Geometry info of the parent half box
-  IGeometryInfo* m_halfBoxGeom; 
 
 private:
 
   std::string m_module;
   std::string m_type;
-  std::string m_fullType;
   bool m_isLeft;
   bool m_isDownstream;
   bool m_isR;
   bool m_isPhi;
-  bool m_isPileUp;
   unsigned int m_sensorNumber;
   double m_siliconThickness;
+  Gaudi::XYZPoint m_centre;
   double m_z;
+  double m_dzDx;
+  double m_dzDy;
   double m_innerRadius;
   double m_outerRadius; 
   double m_boundingBoxX;

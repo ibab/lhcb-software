@@ -19,16 +19,16 @@
  *
  */
 
-// ============================================================================
+//============================================================================
 /// Constructor
-// ============================================================================
+//============================================================================
 DeVL::DeVL(const std::string& name) : DetectorElement(name) {
 
 }
 
-// ============================================================================
+//============================================================================
 /// Object identification
-// ============================================================================
+//============================================================================
 const CLID& DeVL::clID() const { 
   
   return DeVL::classID();
@@ -36,9 +36,9 @@ const CLID& DeVL::clID() const {
 }
 
 
-// ============================================================================
+//============================================================================
 /// Initialisation method
-// ============================================================================
+//============================================================================
 StatusCode DeVL::initialize() {
 
   // Set the output level.
@@ -136,7 +136,7 @@ StatusCode DeVL::initialize() {
       msg << MSG::DEBUG 
           << "Module " << std::setw(4) << m_vpSensors[index]->module()
           << ", sensor " << std::setw(3) << m_vpSensors[index]->sensorNumber()
-          << " (type " << std::setw(15) << m_vpSensors[index]->fullType() 
+          << " (type " << std::setw(15) << m_vpSensors[index]->type() 
           << "): z = " << std::setw(8) << m_vpSensors[index]->z()
           << endmsg;
     }
@@ -244,9 +244,9 @@ StatusCode DeVL::initialize() {
   
 }
 
-// ============================================================================
+//============================================================================
 /// Recursive navigation through DeVelo detector element tree
-// ============================================================================
+//============================================================================
 void DeVL::findSensors(IDetectorElement* detElem,
                        std::vector<DeVLSensor*>& sensors) {
                                  
@@ -267,27 +267,25 @@ void DeVL::findSensors(IDetectorElement* detElem,
   
 }
 
-// ============================================================================
+//============================================================================
 /// Return the sensor number for a point in the global frame. 
-// ============================================================================
+//============================================================================
 const DeVLSensor* DeVL::sensor(const Gaudi::XYZPoint& point) const {
 
   return sensor(sensitiveVolumeID(point));
 
 }
 
-// ============================================================================
+//============================================================================
 /// Return the sensitive volume ID for a point in the global frame.
-// ============================================================================
+//============================================================================
 int DeVL::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
 
   std::vector<DeVLSensor*>::const_iterator it; 
   for (it = m_vpSensors.begin(); it != m_vpSensors.end(); ++it) {
     Gaudi::XYZPoint localPoint = (*it)->globalToLocal(point);
     const double z = localPoint.z();
-    if (m_sensVolCut > fabs(z)) {
-      return ((*it)->sensorNumber());
-    }
+    if (m_sensVolCut > fabs(z)) return ((*it)->sensorNumber());
   }
   MsgStream msg(msgSvc(), "DeVL");
   msg << MSG::ERROR
@@ -325,8 +323,13 @@ StatusCode DeVL::registerConditionCallBacks() {
 
 StatusCode DeVL::updateLeftHalfBoxOffset() {
 
+  // Get the half-box detector element. 
+  IDetectorElement* pair = m_vpLeftSensors.front()->parentIDetectorElement();
+  IDetectorElement* module = pair->parentIDetectorElement();
+  IDetectorElement* halfbox = module->parentIDetectorElement();
+  // Get the half-box centre in the global frame.
   Gaudi::XYZPoint localZero(0., 0., 0.);
-  Gaudi::XYZPoint globalZero = m_vpLeftSensors.front()->veloHalfBoxToGlobal(localZero);
+  Gaudi::XYZPoint globalZero = halfbox->geometry()->toGlobal(localZero);
   m_halfBoxOffsets[LeftHalf] = globalZero - localZero;
   return StatusCode::SUCCESS;
 
@@ -334,8 +337,13 @@ StatusCode DeVL::updateLeftHalfBoxOffset() {
 
 StatusCode DeVL::updateRightHalfBoxOffset() {
 
+  // Get the half-box detector element. 
+  IDetectorElement* pair = m_vpRightSensors.front()->parentIDetectorElement();
+  IDetectorElement* module = pair->parentIDetectorElement();
+  IDetectorElement* halfbox = module->parentIDetectorElement();
+  // Get the half-box centre in the global frame.
   Gaudi::XYZPoint localZero(0., 0., 0.);
-  Gaudi::XYZPoint globalZero = m_vpRightSensors.front()->veloHalfBoxToGlobal(localZero);
+  Gaudi::XYZPoint globalZero = halfbox->geometry()->toGlobal(localZero);
   m_halfBoxOffsets[RightHalf] = globalZero - localZero;
   return StatusCode::SUCCESS;
 
