@@ -716,7 +716,6 @@ void PrVLTracking::findSpaceTracks(PrVLTrack& seed) {
   }
   double signOfSolution = 1.;
   if (seed.zone() < 1 || seed.zone() > m_nZonesR) signOfSolution = -1.;
-  unsigned int keyR = m_debugTool->getKey(seed.rHits().front()->lhcbID());
 
   // Store the phi hits in the range.
   unsigned int nStations = (m_det->numberRSensors() + 
@@ -744,7 +743,6 @@ void PrVLTracking::findSpaceTracks(PrVLTrack& seed) {
       }
       double minR = sensor->rMin(j);
       for (ith = m_hits[i][j].begin(); ith != m_hits[i][j].end(); ++ith) {
-        unsigned int keyPhi = m_debugTool->getKey((*ith)->lhcbID());
         if (m_debug && matchKey(*ith)) {
           printHit(*ith, "");
         }
