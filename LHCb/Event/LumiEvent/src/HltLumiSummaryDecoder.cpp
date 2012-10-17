@@ -1,4 +1,3 @@
-// $Id: HltLumiSummaryDecoder.cpp,v 1.2 2009-04-15 16:01:13 cattanem Exp $
 // Include files
 #include <algorithm>
 
@@ -23,6 +22,7 @@ DECLARE_ALGORITHM_FACTORY( HltLumiSummaryDecoder )
 HltLumiSummaryDecoder::HltLumiSummaryDecoder( const std::string& name,
 					      ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_HltLumiSummary(NULL)
 {
   declareProperty( "RawEventLocation"    , m_rawEventLocation    = LHCb::RawEventLocation::Default );
   declareProperty( "OutputContainerName" , m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
@@ -41,7 +41,7 @@ StatusCode HltLumiSummaryDecoder::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Initialize" << endmsg;
 
   m_nbEvents    = 0;
   m_totDataSize = 0;
@@ -55,7 +55,7 @@ StatusCode HltLumiSummaryDecoder::initialize()
 //=============================================================================
 StatusCode HltLumiSummaryDecoder::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Execute" << endmsg;
   
   // ------------------------------------------
   // get (existing) container  >>>>>>>>>>>>>>>>>>>> later: if exists: return!!!!!!!!!!
@@ -64,11 +64,13 @@ StatusCode HltLumiSummaryDecoder::execute() {
     m_HltLumiSummary = new LHCb::HltLumiSummary();
     // locate them in the TES
     put(m_HltLumiSummary, m_OutputContainerName); 
-    debug() << m_OutputContainerName << " not found, made a new one" << endmsg ;
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << m_OutputContainerName << " not found, made a new one" << endmsg ;
   }
   else {
     // in this case should just do nothing!!!
-    debug() << m_OutputContainerName << " found, do nothing" << endmsg ;
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << m_OutputContainerName << " found, do nothing" << endmsg ;
     return StatusCode::SUCCESS;
   }
   
@@ -82,7 +84,6 @@ StatusCode HltLumiSummaryDecoder::execute() {
   // Get the buffers associated with the HltLumiSummary
   const std::vector<RawBank*>& banks = event->banks( RawBank::HltLumiSummary );
   // Now copy the information from all banks (normally there should only be one)
-  bool decodingerror(false) ;
   for (std::vector<RawBank*>::const_iterator  ibank = banks.begin();
        ibank != banks.end() ; ++ibank) {
     // get now the raw data
@@ -96,8 +97,8 @@ StatusCode HltLumiSummaryDecoder::execute() {
       int iKey = (*itW >> 16);
       int iVal = (*itW & 0xFFFF);
       if ( MSG::VERBOSE >= msgLevel() ) {
-	verbose() << format ( " %8x %11d %11d %11d ", *itW, *itW, iKey, iVal ) 
-		  << endmsg;
+        verbose() << format ( " %8x %11d %11d %11d ", *itW, *itW, iKey, iVal ) 
+                  << endmsg;
       }
       // add this counter
       m_HltLumiSummary->addInfo( iKey, iVal);
@@ -116,7 +117,7 @@ StatusCode HltLumiSummaryDecoder::execute() {
     }
   }
 
-  return decodingerror ? StatusCode::FAILURE : StatusCode::SUCCESS ;
+  return StatusCode::SUCCESS ;
 }
 
 //=============================================================================

@@ -4,6 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2012-10-17 - Marco Cattaneo
+ - Fix unprotected debug()
+ - Fix trivial Coverity defects
+
 !========================= LumiEvent v3r2 2011-08-30 =========================
 ! 2011-08-11 - Jaap Panman
  - Add Vertex and PoissonVertex values to counterKey enum
