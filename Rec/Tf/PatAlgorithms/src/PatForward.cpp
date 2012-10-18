@@ -24,8 +24,13 @@ DECLARE_ALGORITHM_FACTORY( PatForward )
 //=============================================================================
 PatForward::PatForward( const std::string& name,
                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_fwdTime(0)
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_fwdTime(0)
+  , m_rawBankDecoder(NULL)
+  , m_tHitManager(NULL)
+  , m_trackSelector(NULL)
+  , m_forwardTool(NULL)
+  , m_timerTool(NULL)
 { 
   declareProperty( "InputTracksName",    m_inputTracksName    = LHCb::TrackLocation::Velo );
   declareProperty( "OutputTracksName",   m_outputTracksName   = LHCb::TrackLocation::Forward);

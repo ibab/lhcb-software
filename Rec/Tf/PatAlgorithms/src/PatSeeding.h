@@ -1,4 +1,4 @@
-// $Id: PatSeeding.h,v 1.2 2008-05-14 17:22:18 mschille Exp $
+
 #ifndef PATSEEDING_H
 #define PATSEEDING_H 1
 

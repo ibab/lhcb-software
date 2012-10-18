@@ -2408,13 +2408,12 @@ void PatSeedingTool::processForwardTracks ( const std::string& location,
                                             std::vector<LHCb::Track*>& outputTracks ) const
 {
   if ( m_measureTime ) m_timer->start(m_timeReuseTracks);
-  if ( !exist<LHCb::Tracks>( location ) ) {
+  LHCb::Tracks* inputTracks = getIfExists<LHCb::Tracks>( location );
+  if ( NULL == inputTracks ) {
     if ( m_measureTime ) m_timer->stop(m_timeReuseTracks);
     return;
   }
 
-  LHCb::Tracks::const_iterator itT;
-  LHCb::Tracks* inputTracks  = get<LHCb::Tracks>( location );
   outputTracks.reserve(outputTracks.size() + inputTracks->size());
   std::vector<LHCb::LHCbID> ids;
   ids.reserve(64);

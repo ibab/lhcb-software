@@ -27,8 +27,10 @@ DECLARE_ALGORITHM_FACTORY( PatSeeding )
 //=============================================================================
 PatSeeding::PatSeeding( const std::string& name,
                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_seedTime(0)
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_seedingTool(NULL)
+  , m_timerTool(NULL)
+  , m_seedTime(0)
 {
   declareProperty( "OutputTracksName",  m_outputTracksName = LHCb::TrackLocation::Seed     );
   declareProperty( "TimingMeasurement", m_doTiming = false);
@@ -84,7 +86,7 @@ StatusCode PatSeeding::execute()
 //=============================================================================
 StatusCode PatSeeding::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

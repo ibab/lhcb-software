@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2012-10-18 - Marco Cattaneo
+ - Fix an untested debug()
+ - Fix UNINIT_CTOR defects
 
 !========================= PatAlgorithms v4r24 2012-06-28 =========================
 ! 2012-06-27 - Manuel Tobias Schiller

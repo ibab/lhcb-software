@@ -21,6 +21,7 @@ DECLARE_ALGORITHM_FACTORY( PatMatch )
 PatMatch::PatMatch( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_matchTool(NULL)
 {
   declareProperty( "VeloInput"       , m_veloLocation  = LHCb::TrackLocation::Velo );
   declareProperty( "SeedInput"       , m_seedLocation  = LHCb::TrackLocation::Seed );

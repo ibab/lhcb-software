@@ -49,7 +49,12 @@ PatDownstream::PatDownstream( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_downTime( 0 ),
     m_printing( false ),
-    m_magnetOff( false )
+    m_magnetOff( false ),
+    m_magFieldSvc(NULL),
+    m_ttHitManager(NULL),
+    m_debugTool(NULL),
+    m_ttDet(NULL),
+    m_timerTool(NULL)    
 {
   declareProperty( "InputLocation" , m_inputLocation  = ""    );
   declareProperty( "OutputLocation", m_outputLocation = LHCb::TrackLocation::Downstream );
@@ -368,8 +373,8 @@ StatusCode PatDownstream::finalize() {
 //  Cleanup already used T-Seeds
 //=========================================================================
 void PatDownstream::prepareSeeds(LHCb::Tracks* inTracks, std::vector<LHCb::Track*>& myInTracks){
-  if ( exist<LHCb::Tracks>( m_matchLocation ) ) {
-    LHCb::Tracks* match = get<LHCb::Tracks>( m_matchLocation );
+  LHCb::Tracks* match = getIfExists<LHCb::Tracks>( m_matchLocation );
+  if ( NULL != match ) {
     if (!m_removeUsed) {
       myInTracks.insert( myInTracks.end(), inTracks->begin(), inTracks->end() );
     } else {
