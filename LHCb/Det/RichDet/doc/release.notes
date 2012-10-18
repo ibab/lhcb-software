@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-10-18 - Marco Cattaneo
+ - Fix an unprotected verbose message
+ - Fix an UNINIT_CTOR
+
 ! 2012-10-15 - Antonis Papanestis
  - Bug fix in previous commit of DeRichRadiator
 

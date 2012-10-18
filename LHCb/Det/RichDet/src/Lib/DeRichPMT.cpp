@@ -1,4 +1,3 @@
-// $Id: $
 // Include files
 
 #include <sstream>
@@ -32,6 +31,7 @@ const CLID CLID_DeRichPMT = 12025;  // User defined
 //=============================================================================
 DeRichPMT::DeRichPMT( const std::string & name )
   : DeRichPD ( name )
+  , m_dePmtAnode(NULL)
 {
 }
 

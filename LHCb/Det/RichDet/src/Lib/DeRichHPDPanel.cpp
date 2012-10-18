@@ -1,4 +1,3 @@
-
 //----------------------------------------------------------------------------
 /** @file DeRichHPDPanel.cpp
  *
@@ -677,25 +676,24 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
   const Gaudi::XYZPoint pointC( deHPD(nPDs()-nPDsPerCol()/2)->windowCentreInIdeal() );
 
   m_detectionPlane = Gaudi::Plane3D(pointA,pointB,pointC);
-  if ( msgLevel(MSG::VERBOSE,msg) )
-    msg << MSG::VERBOSE << "Detection plane        " << m_detectionPlane << endmsg;
-
   m_localPlane = geometry()->toLocalMatrix() * m_detectionPlane;
-  if ( msgLevel(MSG::VERBOSE,msg) )
-    msg << MSG::VERBOSE << "Detection plane local  " << m_localPlane << endmsg;
   m_localPlaneNormal = m_localPlane.Normal();
 
   // store the z coordinate of the detection plane
   m_detPlaneZ = geometry()->toLocal(pointA).z();
-  if ( msgLevel(MSG::VERBOSE,msg) )
-    msg << MSG::VERBOSE << "Local z coord of det plane " << m_detPlaneZ << endmsg;
 
   // localPlane2 is used when trying to locate the HPD row/column from
   // a point in the panel.
   m_localPlaneZdiff = winR - std::sqrt( winR*winR - m_activeRadiusSq );
   m_localPlane2 = Gaudi::Transform3D(Gaudi::XYZVector(0.0,0.0,m_localPlaneZdiff))(m_localPlane);
-  msg << MSG::VERBOSE << "Detection plane local2 " << m_localPlane2 << endmsg;
 
+  if ( msgLevel(MSG::VERBOSE,msg) ) {
+    msg << MSG::VERBOSE << "Detection plane        " << m_detectionPlane << endmsg;
+    msg << MSG::VERBOSE << "Detection plane local  " << m_localPlane << endmsg;
+    msg << MSG::VERBOSE << "Local z coord of det plane " << m_detPlaneZ << endmsg;
+    msg << MSG::VERBOSE << "Detection plane local2 " << m_localPlane2 << endmsg;
+  }
+  
   if ( msgLevel(MSG::DEBUG,msg) )
     msg << MSG::DEBUG << "Found " << m_DeHPDs.size() << " DeRichHPDs" << endmsg;
 
