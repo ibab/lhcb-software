@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-10-18 - Paul Szczypka
+ - tinkering with the qmtest config
+
+! 2012-10-18 - Paul Szczypka
  - Added expected err stream for config qmtest.
  - Edited config qmtest to refer to the expected error stream.
 
