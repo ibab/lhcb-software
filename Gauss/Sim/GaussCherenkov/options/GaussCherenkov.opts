@@ -14,8 +14,10 @@ GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichApplyMaxNumCkvPhotPerStepPerRadiator
 GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichMaxPhotonsPerCherenkovStepInRich1Gas=40;
 GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichMaxPhotonsPerCherenkovStepInRich2Gas=40;
 GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichMaxNumPhotPerCherenkovStep=40;
-GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyScintillationYieldScaleFactor=true;
-GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.1; 
+GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichApplyScintillationYieldScaleFactor=true;
+GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichScintillationYieldScaleFactor=0.07; 
+GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichActivateCF4Scintillation= true;
+
 // used reduced scintillation assuming CO2 is added to CF4. So the scale factor is set to small value 
 // corresponding to about 1/10 of the normal scintillation.
 
