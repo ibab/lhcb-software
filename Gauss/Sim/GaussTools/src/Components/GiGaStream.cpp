@@ -51,7 +51,7 @@ GiGaStream::GiGaStream( const std::string& StreamName     ,
   : Algorithm( StreamName , ServiceLocator ) 
   /// 
   , m_executeOnce           ( false                     )     
-  , m_execute               ( true                      ) 
+  , m_execute               ( true                      )
   ///
   , m_nameOfCnvSvc          ( IGiGaCnvSvcLocation::Kine )  
   , m_cnvSvc                (  0                        )  
@@ -79,8 +79,11 @@ GiGaStream::GiGaStream( const std::string& StreamName     ,
 StatusCode GiGaStream::initialize()
 {
   ///
-  MsgStream log( msgSvc() , name() ); 
-  log << MSG::VERBOSE << "Initialize::start" << endreq; 
+  MsgStream msg( msgSvc() , name() ); 
+  if (outputLevel() == MSG::VERBOSE) {    
+    msg << MSG::VERBOSE << "Initialize::start" << endmsg; 
+  }
+  
   ///
   StatusCode status = StatusCode::SUCCESS; 
   ///
@@ -121,7 +124,14 @@ StatusCode GiGaStream::initialize()
       m_items.push_back( item ); 
     }   
   ///
-  log << MSG::VERBOSE << "Initialize::end" << endreq; 
+  // properties will be printed if asked for or in "MSG::DEBUG" mode
+  if ( outputLevel() == MSG::DEBUG || outputLevel() == MSG::VERBOSE ) { 
+    printProps(); 
+  }
+  if ( outputLevel() == MSG::VERBOSE ) {
+    msg << MSG::VERBOSE << "Initialize::end" << endmsg; 
+  }
+
   ///
   return StatusCode::SUCCESS; 
   ///
@@ -228,8 +238,8 @@ StatusCode GiGaStream::LoadObject( const IRegistry*     registry ,
 StatusCode GiGaStream::Error( const std::string& message , 
                               const StatusCode&  status  ) 
 {
-  MsgStream log( msgSvc() , name() ); 
-  log <<  MSG::ERROR  <<  message  <<  endreq; 
+  MsgStream msg( msgSvc() , name() ); 
+  msg <<  MSG::ERROR  <<  message  <<  endmsg; 
   return status;  
 };  
 
@@ -254,6 +264,31 @@ StatusCode GiGaStream::finalize()
   return StatusCode::SUCCESS;
   ///
 };
+
+// ============================================================================
+/** perform the printout of properties
+ */
+// ============================================================================
+long GiGaStream::printProps ( ) const
+{
+
+  // print ALL properties
+  MsgStream msg( msgSvc() , name() ); 
+  typedef std::vector<Property*> Properties;
+  const Properties& properties = this->getProperties() ;
+  msg << MSG::DEBUG << "List of ALL properties of "
+      << System::typeinfoName( typeid( *this ) ) << "/" << this->name()
+      << "  #properties = " << properties.size() << endmsg ;
+  for ( Properties::const_reverse_iterator property
+          = properties.rbegin() ;
+        properties.rend() != property ; ++property )
+  {
+    msg << MSG::DEBUG << "Property ['Name': Value] = "
+        << ( **property)
+        << endmsg ;
+  }
+  return properties.size() ;
+}
 
 // ============================================================================
 // The End 

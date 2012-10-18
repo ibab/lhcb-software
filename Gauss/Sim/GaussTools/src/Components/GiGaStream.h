@@ -74,7 +74,13 @@ public:
    *  @return status code 
    */ 
   virtual StatusCode finalize  () ; 
-  
+
+  /** perform the actual printout of properties
+   *  @param  level The message level to print at
+   *  @return number of properties
+   */
+  long printProps ( ) const ;
+
 protected: 
   
   /** Load objects pointed by Item  and put it into Selector 
@@ -106,7 +112,8 @@ protected:
   
   bool                        m_executeOnce         ; 
   bool                        m_execute             ;  
-  
+
+protected:
   std::string                 m_nameOfCnvSvc        ; 
   IConversionSvc*             m_cnvSvc              ; 
   

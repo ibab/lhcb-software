@@ -4,6 +4,11 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-10-18 - Gloria Corti
+ - Put printout of properties in GiGaStream when in debug mode. This allows
+   debugging of Geo.Streams. Needed because GiGaStream inherit from Algorithm 
+   and not GaudiAlgorithm
+
 !======================== GaussTools v18r0 2012-07-23 ========================
 ! 2012-07-23 - Gloria Corti
  - Adapt code to use LHCb::ParticlePropertySvc instead of the one from Gaudi
