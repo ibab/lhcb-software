@@ -4,6 +4,10 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2012-10-18 - Pieter David
+ - Added scripts to make plots comparing tracking alignments
+   see also https://twiki.cern.ch/twiki/bin/view/LHCb/DBVisualisationTool
+
 ! 2012-09-20 - Maurizio Martinelli
  - updated Escher scripts for running 2012 alignment
 
