@@ -84,7 +84,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v43r1p2
-                                          running on lxbuild163.cern.ch on Wed Oct 17 17:43:59 2012
+                                          running on lxbuild163.cern.ch on Thu Oct 18 17:44:12 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -93,7 +93,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.78 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -668,7 +668,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.78 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1075,8 +1075,6 @@ Listing sources of Unprotected and Unseen messages
  ChargedProtoANNPIDMoni                                 |   DEBUG |        1
  ClusChi22ID                                            |   DEBUG |        5
  ClusterMatch                                           |   DEBUG |        7
- ConfigTarFileAccessSvc                                 |   DEBUG |        1
- DeRichHPDPanel                                         | VERBOSE |        4
  DecodeRawRichOffline                                   |   DEBUG |        1
  ENNRingMoniAll                                         |   DEBUG |        1
  ENNRingMoniBest                                        |   DEBUG |        1
@@ -1112,13 +1110,11 @@ Listing sources of Unprotected and Unseen messages
  InSPD                                                  |   DEBUG |        4
  InSPD.InSpd                                            |   DEBUG |        5
  MergedPi0Mon                                           |   DEBUG |        1
- NeutralProtoPMaker                                     |   DEBUG |        1
  ONLINE                                                 | VERBOSE |        9
  OfflineENNFinderR1GasBottom                            |   DEBUG |        1
  OfflineENNFinderR1GasTop                               |   DEBUG |        1
  OfflineENNFinderR2GasLeft                              |   DEBUG |        1
  OfflineENNFinderR2GasRight                             |   DEBUG |        1
- PatSeeding                                             |   DEBUG |        1
  PhotonMatchMon                                         |   DEBUG |        1
  PhotonMon                                              |   DEBUG |        1
  ProtoElectronMon                                       |   DEBUG |        1
