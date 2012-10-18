@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-18 - Paul Szczypka
+ - Remove some upstream and downstream parts of the beampipe which aren't
+   normally simulated in GeoStream.
+ - Add T/PipeInT beampipe section to GeoStream.
+ - Only list Velo once in GeoStream.
+
 ! 2012-10-15 - Gloria Corti
  - Rename qmtest gauss-config-MC11a.qmt to gauss-config-2011.qmt otherwise it
    is not run.

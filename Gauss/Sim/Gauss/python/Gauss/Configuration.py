@@ -164,13 +164,14 @@ class Gauss(LHCbConfigurableUser):
     #    "Muon"     : [ "Moun", ["MuonNoM1", "Torch"] ]
     #    }
 
-    _beamPipeElements = { "upstreamregion" : [
-            "/dd/Structure/LHCb/UpstreamRegion/PipeUpstream" , 
-            "/dd/Structure/LHCb/UpstreamRegion/MBXWHUp" ],
-                         "beforemagnetregion" : [
-            "/dd/Structure/LHCb/BeforeMagnetRegion/PipeJunctionBeforeVelo",
-            "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeBeforeVelo",
-            "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeSupportBeforeVelo" ],
+    _beamPipeElements = {
+        #"upstreamregion" : [
+        #"/dd/Structure/LHCb/UpstreamRegion/PipeUpstream" , 
+        #"/dd/Structure/LHCb/UpstreamRegion/MBXWHUp" ],
+        #"beforemagnetregion" : [
+        #    "/dd/Structure/LHCb/BeforeMagnetRegion/PipeJunctionBeforeVelo",
+        #    "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeBeforeVelo",
+        #    "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeSupportBeforeVelo" ],
                          "velo" : [
             "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamWakeFieldCone",
             "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamWakeFieldCone",
@@ -198,10 +199,10 @@ class Gauss(LHCbConfigurableUser):
                          "downstreamregion" : [
             "/dd/Structure/LHCb/DownstreamRegion/PipeDownstream",
             "/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream",
-            "/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream" ],
-                         "aftermuon" : [
-            "/dd/Structure/LHCb/DownstreamRegion/AfterMuon/PipeAfterMuon",
-            "/dd/Structure/LHCb/DownstreamRegion/AfterMuon/MBXWSDown" ]
+            "/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream" ]
+                         #"aftermuon" : [
+                         #"/dd/Structure/LHCb/DownstreamRegion/AfterMuon/PipeAfterMuon",
+            #"/dd/Structure/LHCb/DownstreamRegion/AfterMuon/MBXWSDown" ]
         }
 
     
@@ -546,7 +547,7 @@ class Gauss(LHCbConfigurableUser):
         if (VeloP==1 or VeloP==2):
             basePieces['BeforeMagnetRegion']=[]
 
-        detPieces['BeforeMagnetRegion']+=['Velo']
+        #detPieces['BeforeMagnetRegion']+=['Velo']
 
         # Also sort out mis-alignment
         if self.getProp("DataType") != "Upgrade" :
@@ -1051,7 +1052,8 @@ class Gauss(LHCbConfigurableUser):
         region = "AfterMagnetRegion"
         if 'T' not in detPieces[region]:
             detPieces[region]+=['T/IT']
-
+        if 'T/PipeInT' not in detPieces[region]:
+            detPieces[region]+=['T/PipeInT']
 
 
     def configureITSim( self, slot, detHits ):
@@ -1122,6 +1124,8 @@ class Gauss(LHCbConfigurableUser):
         region = "AfterMagnetRegion"
         if 'T' not in detPieces[region]:
             detPieces[region]+=['T/FT']
+        if 'T/PipeInT' not in detPieces[region]:
+            detPieces[region]+=['T/PipeInT']
 
 
     def configureFTSim( self, slot, detHits ):
@@ -1184,6 +1188,8 @@ class Gauss(LHCbConfigurableUser):
         region = "AfterMagnetRegion"
         if 'T' not in detPieces[region]:
             detPieces[region]+=['T/OT']
+        if 'T/PipeInT' not in detPieces[region]:
+            detPieces[region]+=['T/PipeInT']
 
 
 
