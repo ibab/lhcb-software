@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-10-18 - Paul Szczypka
+ - Added expected err stream for config qmtest.
+ - Edited config qmtest to refer to the expected error stream.
+
+! 2012-10-18 - Paul Szczypka
  - Remove some upstream and downstream parts of the beampipe which aren't
    normally simulated in GeoStream.
  - Add T/PipeInT beampipe section to GeoStream.

@@ -15,6 +15,9 @@
 <argument name="reference">
 	<text>$GAUSSROOT/tests/refs/testGauss-config-10000000.ref</text>
 </argument>
+<argument name="error_reference">
+	<text>$GAUSSROOT/tests/refs/testGauss-config-10000000-err.ref</text>
+</argument>
 <argument name="stdout">
 	<text/>
 </argument>
@@ -36,9 +39,6 @@
 </argument>
 <argument name="use_temp_dir">
 	<enumeral>false</enumeral>
-</argument>
-<argument name="error_reference">
-	<text/>
 </argument>
 <argument name="environment">
 	<set/>
