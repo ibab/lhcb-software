@@ -580,7 +580,7 @@ StatusCode ConfigTarFileAccessSvc::queryInterface(const InterfaceID& riid,
 // Initialization
 //=============================================================================
 StatusCode ConfigTarFileAccessSvc::initialize() {
-  debug() << "Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Initialize" << endmsg;
   StatusCode status = Service::initialize();
   if ( !status.isSuccess() )   return status;
   status = setProperties();
@@ -637,9 +637,9 @@ template <typename T>
 boost::optional<T>
 ConfigTarFileAccessSvc::read(const std::string& path) const {
   stringstream content(stringstream::in | stringstream::out);
-  debug() << "trying to read " << path << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "trying to read " << path << endmsg;
   if (file()==0 || !file()->dump(path,content)) {
-    debug() << "file " << path << " not found" << endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << "file " << path << " not found" << endmsg;
     return boost::optional<T>();
   }
   T c;
@@ -680,7 +680,7 @@ ConfigTarFileAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias
   stringstream content(stringstream::in | stringstream::out);
   std::string fnam = configTreeNodeAliasPath(alias);
   if (file()==0 || !file()->dump(fnam,content)) {
-    debug() << "file " << fnam << " does not exist" << endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << "file " << fnam << " does not exist" << endmsg;
     return boost::optional<ConfigTreeNode>();
   }
   std::string sref;
@@ -704,7 +704,7 @@ ConfigTarFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_t
 
   for (std::vector<std::string>::const_iterator i  = aliases.begin(); i!=aliases.end(); ++i ) {
     //TODO: this can be more efficient...
-    debug() << " configTreeNodeAliases: adding file " << *i << endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << " configTreeNodeAliases: adding file " << *i << endmsg;
     std::string ref;
     stringstream content(stringstream::in | stringstream::out);
     file()->dump(*i,content);
@@ -714,7 +714,7 @@ ConfigTarFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_t
     str << "Ref: " << ref << '\n' << "Alias: " << _alias << std::endl;
     ConfigTreeNodeAlias a;
     str >> a;
-    debug() << " configTreeNodeAliases: content:" << a << endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << " configTreeNodeAliases: content:" << a << endmsg;
     x.push_back(a);
   }
   return x;

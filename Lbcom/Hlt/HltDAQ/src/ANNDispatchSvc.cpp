@@ -176,7 +176,8 @@ void ANNDispatchSvc::faultHandler() const {
   }
 
   if (!rawEvent) {
-    verbose() << " No RawEvent found! We will get ANN info from HltInit instead." << endmsg;
+    if( msgLevel(MSG::VERBOSE) ) 
+      verbose() << " No RawEvent found! We will get ANN info from HltInit instead." << endmsg;
     m_uptodate = true;
     m_currentTCK = tck;
     return;    
@@ -184,14 +185,16 @@ void ANNDispatchSvc::faultHandler() const {
   //Now we get the TCK only from the raw event
   const std::vector<RawBank*> hltdecreportsRawBanks = rawEvent->banks( RawBank::HltDecReports );
   if( hltdecreportsRawBanks.size() == 0) {
-    verbose() << " No HltDecReports RawBank in RawEvent. We will get ANN info from HltInit instead." << endmsg;
+    if( msgLevel(MSG::VERBOSE) ) 
+      verbose() << " No HltDecReports RawBank in RawEvent. We will get ANN info from HltInit instead." << endmsg;
     m_uptodate = true;
     m_currentTCK = tck;
     return; 
   } else {
     const RawBank* hltdecreportsRawBank = hltdecreportsRawBanks.front();
     if (!hltdecreportsRawBank) {
-      verbose() << "Corrupted HltDecReport in the RawBank, we will get ANN info from HltInit instead" << endmsg; 
+      if( msgLevel(MSG::VERBOSE) ) 
+        verbose() << "Corrupted HltDecReport in the RawBank, we will get ANN info from HltInit instead" << endmsg; 
       m_uptodate = true;
       m_currentTCK = tck;
       return; 
@@ -205,20 +208,21 @@ void ANNDispatchSvc::faultHandler() const {
   }
   if (tck == 0) {
     // if there is no TCK, do not dispatch
-    verbose() << "No TCK was found in the RawBank, we will get ANN info from HltInit instead" << endmsg;
+    if( msgLevel(MSG::VERBOSE) ) 
+      verbose() << "No TCK was found in the RawBank, we will get ANN info from HltInit instead" << endmsg;
     m_uptodate = true;
     m_currentTCK = tck;
     return;
   }
   if (tck!=m_currentTCK || !m_currentDigest.valid()) {
-    verbose() << "Entering this loop" << endmsg;
+     if( msgLevel(MSG::VERBOSE) ) verbose() << "Entering this loop" << endmsg;
     TCK _tck(tck); _tck.normalize();
     ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") +  _tck.str()  );
     // grab properties of child from config database...
     const ConfigTreeNode* tree = m_propertyConfigSvc->resolveConfigTreeNode(alias);
     if (!tree) {
       //If we could not resolve the (non-zero) TCK we have a problem
-      verbose() << "Obtained TCK " << _tck << 
+       if( msgLevel(MSG::VERBOSE) ) verbose() << "Obtained TCK " << _tck << 
         " from the Hlt DecReports which could not be resolved. We will get ANN info from HltInit instead." << endmsg;
       m_uptodate = true;
       m_currentTCK = tck;

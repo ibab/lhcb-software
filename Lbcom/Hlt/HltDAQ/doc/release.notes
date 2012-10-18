@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2012-10-18 - Marco Cattaneo
+ - Fix unprotected debug() and verbose()
+
 !========================= HltDAQ v2r15 2012-06-25 =========================
 ! 2012-05-21 - Gerhard Raven
  - specify access mode when creating lockfile

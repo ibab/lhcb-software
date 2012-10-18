@@ -460,10 +460,10 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
         }
 
         if ( current == m_configPushed.end() ||  current->second != *i ) {  // not present, or different; needs to be pushed
-             debug() << " " << config->name()
-                      << " current: " <<  current->second
-                      << " requested: " << *i << endmsg;
-            *newConfigs = config;
+          if(msgLevel(MSG::DEBUG)) debug() << " " << config->name()
+                                           << " current: " <<  current->second
+                                           << " requested: " << *i << endmsg;
+          *newConfigs = config;
         }
     }
     return StatusCode::SUCCESS;
@@ -479,7 +479,7 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
 StatusCode
 PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool callSetProperties) const
 {
-    debug() << " configuring using " << configID << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << " configuring using " << configID << endmsg;
     if (!configID.valid()) return StatusCode::FAILURE;
     setTopAlgs(configID); // do this last instead of first?
     vector<const PropertyConfig*> configs;
@@ -487,7 +487,7 @@ PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool c
     if (sc.isFailure()) return sc;
     for (vector<const PropertyConfig*>::const_iterator i = configs.begin(); i!=configs.end();++i) {
         string name = (*i)->name();
-        debug() << " configuring " << name << " using " << (*i)->digest() << endmsg;
+        if(msgLevel(MSG::DEBUG)) debug() << " configuring " << name << " using " << (*i)->digest() << endmsg;
         const PropertyConfig::Properties& map = (*i)->properties();
 
         //TODO: make sure that online this cannot be done...
@@ -545,7 +545,7 @@ PropertyConfigSvc::findTopKind(const ConfigTreeNode::digest_type& configID,
     // we (should) have a leaf ! get it and use it!!!
     const PropertyConfig *config = resolvePropertyConfig(id);
     if ( config == 0 ) {
-        debug() << " could not find " << id << endmsg;
+        if(msgLevel(MSG::DEBUG)) debug() << " could not find " << id << endmsg;
         error() << " could not find a configuration ID" << endmsg;
         return StatusCode::FAILURE;
     }
@@ -562,7 +562,7 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
     if ( appProps->getProperty(&topAlgs).isFailure() ) {
         error() << " problem getting StringArrayProperty \"TopAlg\"" << endmsg;
     }
-    debug() << " current TopAlgs: " << topAlgs.toString() << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << " current TopAlgs: " << topAlgs.toString() << endmsg;
 
     if (m_initialTopAlgs.get()==0) {
         m_initialTopAlgs.reset( new vector<string>( topAlgs.value() ) );
@@ -623,7 +623,7 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
         }
         info() << " updated TopAlgs: " << topAlgs.toString() << endmsg;
     } else {
-        debug() << " TopAlgs remain unchanged: " << topAlgs.toString() << endmsg;
+        if(msgLevel(MSG::DEBUG)) debug() << " TopAlgs remain unchanged: " << topAlgs.toString() << endmsg;
     }
     return StatusCode::SUCCESS;
 }
@@ -668,9 +668,13 @@ PropertyConfigSvc::validateConfig(const ConfigTreeNode::digest_type& ref) const 
            // DO NOTHING
        }
    }
-   for (map<string,PropertyConfig::digest_type>::const_iterator j = inv.begin(); j!= inv.end(); ++j) {
-        debug() << j->first << " -> " << j->second << endl;
+
+   if(msgLevel(MSG::DEBUG)) {
+     for (map<string,PropertyConfig::digest_type>::const_iterator j = inv.begin(); j!= inv.end(); ++j) {
+       debug() << j->first << " -> " << j->second << endl;
+     }
    }
+   
    return StatusCode::SUCCESS;
 }
 
@@ -705,7 +709,7 @@ PropertyConfigSvc::resolvePropertyConfig(const PropertyConfig::digest_type& ref)
 {
    PropertyConfigMap_t::const_iterator i = m_configs.find(ref);
    if (i!=m_configs.end()) {
-        debug() << "already have an entry for id " << ref << endl;
+        if(msgLevel(MSG::DEBUG)) debug() << "already have an entry for id " << ref << endl;
         return &(i->second);
    }
    boost::optional<PropertyConfig> config = m_accessSvc->readPropertyConfig(ref);
@@ -732,10 +736,10 @@ PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNodeAlias::alias_type& 
 const ConfigTreeNode*
 PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const
 {
-   debug() << " resolving nodeRef " << ref << endmsg;
+   if(msgLevel(MSG::DEBUG)) debug() << " resolving nodeRef " << ref << endmsg;
    ConfigTreeNodeMap_t::const_iterator i = m_nodes.find(ref);
    if (i!=m_nodes.end()) {
-        debug() << "already have an entry for id " << ref << endl;
+        if(msgLevel(MSG::DEBUG)) debug() << "already have an entry for id " << ref << endl;
         return &(i->second);
    }
    assert(m_accessSvc!=0);
