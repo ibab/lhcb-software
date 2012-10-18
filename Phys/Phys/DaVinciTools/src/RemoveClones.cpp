@@ -27,8 +27,8 @@ DECLARE_ALGORITHM_FACTORY( RemoveClones )
 //=============================================================================
   RemoveClones::RemoveClones( const std::string& name,
                               ISvcLocator* pSvcLocator)
-    :
-    DaVinciAlgorithm ( name , pSvcLocator )
+    : DaVinciAlgorithm ( name , pSvcLocator )
+    , m_checkOverlap(NULL)
     , m_NpartIn(0)
     , m_NpartOut(0)
 {
@@ -45,9 +45,8 @@ DECLARE_ALGORITHM_FACTORY( RemoveClones )
    * will be removed.
    */
   declareProperty( "FilterByAbsPid", m_byAbsPID = false );
-
-
 }
+
 //=============================================================================
 /// Destructor
 //=============================================================================
@@ -56,14 +55,11 @@ RemoveClones::~RemoveClones() {}
 //#############################################################################
 /// Initialization
 //#############################################################################
-StatusCode RemoveClones::initialize() {
+StatusCode RemoveClones::initialize()
+{
 
   StatusCode sc = DaVinciAlgorithm::initialize();
   if (!sc) return sc;
-
-  if (msgLevel(MSG::DEBUG)) {
-    debug() << "==> Initialize" << endmsg;
-  }
 
   m_checkOverlap = tool<ICheckOverlap>(m_findCloneTool, this ) ;
 
@@ -73,39 +69,45 @@ StatusCode RemoveClones::initialize() {
 //#############################################################################
 /// Execution
 //#############################################################################
-StatusCode RemoveClones::execute() {
+StatusCode RemoveClones::execute() 
+{
 
-  StatusCode sc=StatusCode::SUCCESS;
+  StatusCode sc = StatusCode::SUCCESS;
 
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
 
-  //define vectors of particles
+  // define vectors of particles
   const LHCb::Particle::ConstVector& particles=this->i_particles();
   std::vector< LHCb::Particle::ConstVector > particlesbyPID;
   LHCb::Particle::ConstVector accepted;
 
-  //filter into classes
-  if(m_byPID || m_byAbsPID) sc=FilterById(particles,particlesbyPID);
-  else particlesbyPID.push_back(particles);
-
+  // filter into classes
+  if ( m_byPID || m_byAbsPID ) 
+  {
+    sc=FilterById(particles,particlesbyPID);
+  }
+  else 
+  {
+    particlesbyPID.push_back(particles);
+  }
   if (msgLevel(MSG::VERBOSE)) verbose() << particles.size() << " particles"
                                         << "split into : " << particlesbyPID.size()
                                         << " different PID groups" << endmsg ;
 
   if(!sc) return sc;
-  int NpartIn=0;
-  int NpartOut=0;
+  unsigned long long NpartIn(0), NpartOut(0);
 
   //find out which are clones
-  for(std::vector< LHCb::Particle::ConstVector >::iterator i=particlesbyPID.begin(); i<particlesbyPID.end();i++ )
+  for ( std::vector< LHCb::Particle::ConstVector >::iterator i = particlesbyPID.begin();
+        i != particlesbyPID.end(); ++i )
   {
-    NpartIn+=i->size();
+    NpartIn += i->size();
 
-    sc=m_checkOverlap->removeOverlap(*i);
+    sc = m_checkOverlap->removeOverlap(*i);
     //i should now be smaller, and not include any clones
     if(!sc) return sc;
 
-    NpartOut+=i->size();
+    NpartOut += i->size();
 
     //add these unique particles back to a vector for cloning to local storage
     for(LHCb::Particle::ConstVector::const_iterator j=i->begin(); j!=i->end();j++)
@@ -123,8 +125,8 @@ StatusCode RemoveClones::execute() {
 
   if(!sc) return sc;
 
-  m_NpartIn+=NpartIn;
-  m_NpartOut+=NpartOut;
+  m_NpartIn  += NpartIn;
+  m_NpartOut += NpartOut;
 
   setFilterPassed(NpartOut>0);
   return sc;
@@ -133,33 +135,34 @@ StatusCode RemoveClones::execute() {
 //#############################################################################
 /// Finalization
 //#############################################################################
-StatusCode RemoveClones::finalize() {
-
+StatusCode RemoveClones::finalize() 
+{
   if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
   info() << "Filtered " << m_NpartIn << " to " << m_NpartOut
          << ", removing " << m_NpartIn-m_NpartOut << " clones" << endmsg ;
-
-  return DaVinciAlgorithm::finalize() ;
+  return DaVinciAlgorithm::finalize();
 }
 //#############################################################################
 /// FilterById
 //#############################################################################
-StatusCode RemoveClones::FilterById(const LHCb::Particle::ConstVector & parts,
-                                    std::vector< LHCb::Particle::ConstVector > & particlesbyPID) const
+StatusCode
+RemoveClones::FilterById(const LHCb::Particle::ConstVector & parts,
+                         std::vector< LHCb::Particle::ConstVector > & particlesbyPID) const
 {
-  if(parts.size()==0) return StatusCode::SUCCESS;
+  if ( parts.empty() ) return StatusCode::SUCCESS;
 
   //just want to make sure I don't have any dead pointers
   //and to function correctly if the alg is called twice
   particlesbyPID.clear();
   std::vector<int> IDs;
 
-  for(LHCb::Particle::ConstVector::const_iterator i=parts.begin(); i!=parts.end(); i++)
+  for ( LHCb::Particle::ConstVector::const_iterator i = parts.begin(); 
+        i != parts.end(); ++i )
   {
     //if the ID is in the list push it into the same ID
     //otherwise push the ID back and make a new vector
     bool found=false;
-    for(unsigned int j=0; !found && j<IDs.size() && j<particlesbyPID.size();j++)
+    for ( unsigned int j=0; !found && j<IDs.size() && j<particlesbyPID.size(); ++j )
     {
       if(m_byAbsPID && abs((*i)->particleID().pid())==abs(IDs[j]) )
       {
@@ -175,14 +178,13 @@ StatusCode RemoveClones::FilterById(const LHCb::Particle::ConstVector & parts,
     }
     if(!found)
     {
-      //if it hasn't been added to the list, make a new list
+      // if it hasn't been added to the list, make a new list
       LHCb::Particle::ConstVector newvector;
       newvector.push_back(*i);
       IDs.push_back((*i)->particleID().pid());
       particlesbyPID.push_back(newvector);
 
     }
-
 
   }
 
@@ -191,7 +193,6 @@ StatusCode RemoveClones::FilterById(const LHCb::Particle::ConstVector & parts,
     err() << "error in RemoveClones::FilterById, Vectors are not the same size" << endmsg;
     return StatusCode::FAILURE;
   }
-
 
   return StatusCode::SUCCESS;
 }
