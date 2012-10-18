@@ -108,7 +108,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   test &= tuple->column( prefix+"BCID",         odin->bunchId() );
   test &= tuple->column( prefix+"BCType",       odin->bunchCrossingType() );
   test &= tuple->column( prefix+"OdinTCK",      odin->triggerConfigurationKey() );
-  test &= tuple->column( prefix+"L0DUTCK",      report ? report->tck() : 0 );
+  test &= tuple->column( prefix+"L0DUTCK",      report    ? report->tck() : 0 );
   test &= tuple->column( prefix+"HLTTCK",       decreport ? decreport->configuredTCK() : 0 );
   test &= tuple->column( prefix+"GpsTime",      odin->gpsTime() );
 
@@ -120,7 +120,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
     test &= tuple->column( prefix+"GpsDay", gtime.day(false) );
     test &= tuple->column( prefix+"GpsHour", gtime.hour(false) );
     test &= tuple->column( prefix+"GpsMinute", gtime.minute(false) );
-    test &= tuple->column( prefix+"GpsSecond", gtime.second(false)+gtime.nsecond()/1000000000. );
+    test &= tuple->column( prefix+"GpsSecond", gtime.second(false) + (gtime.nsecond()/1e9) );
     test &= tuple->column( prefix+"TriggerType", odin->triggerType() );
   }
 

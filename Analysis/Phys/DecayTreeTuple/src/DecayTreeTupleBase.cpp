@@ -311,18 +311,18 @@ bool DecayTreeTupleBase::fillOnePart( Decays::OnePart* op
                                       , const MCParticle* pp )
 {
   bool test = true;
-  if (msgLevel(MSG::DEBUG)) 
+  if (msgLevel(MSG::DEBUG))
     debug() << "FillOnePart MC " << pp->particleID().pid() << " " << op->headName() << endmsg ;
   for( std::vector< IMCParticleTupleTool* >::iterator it = op->mctools().begin();
        op->mctools().end()!=it; ++it )
   {
-    if (msgLevel(MSG::DEBUG)) 
+    if (msgLevel(MSG::DEBUG))
       debug() << "FillOnePart MC " << pp->particleID().pid() << " in " << (*it)->type() << endmsg ;
     const bool localTest = (*it)->fill( mother, pp, op->headName(), tuple );
     test &= localTest;
     if ( !localTest )
     {
-      Warning( "Tool '" + (*it)->type() + "' acting on particle '" + 
+      Warning( "Tool '" + (*it)->type() + "' acting on particle '" +
                op->headName() + "' returned a failure status." ).ignore();
     }
   }

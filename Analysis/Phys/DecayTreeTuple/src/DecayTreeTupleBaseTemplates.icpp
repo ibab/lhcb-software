@@ -159,7 +159,8 @@ bool sizeCheckOrInit( const std::vector<const PARTICLE*> & row )
     if (msgLevel(MSG::VERBOSE)) verbose() << "Matched sub decays" << *mit << endmsg ;
   }
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Going to re-recreate daughter-mother relationship" << endmsg ;
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << "Going to re-recreate daughter-mother relationship" << endmsg ;
 
   // re-creating mother->daughter relationship,
   // allows better printout later on
@@ -171,7 +172,8 @@ bool sizeCheckOrInit( const std::vector<const PARTICLE*> & row )
     typename std::vector<const PARTICLE*>::const_iterator dauit, f ;
     for( dauit=dau.begin(); dau.end()!=dauit; ++dauit )
     {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Looping over daughter " << (*dauit)->particleID().pid() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) 
+        verbose() << "Looping over daughter " << (*dauit)->particleID().pid() << endmsg ;
       // am I in the search decay ?
       f = std::find( row.begin(), row.end(), *dauit );
       if( f==row.end() ) continue;
@@ -194,13 +196,15 @@ void findAssociatedOneParts(  PARTICLEVECTOR& buffer, const PARTICLEVECTOR& row,
   const int size=buffer.size();
   for( int k=0; k<size; ++k )
   {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Looping on " << buffer[k]->particleID().pid() << " with " << mit->name() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) 
+      verbose() << "Looping on " << buffer[k]->particleID().pid() << " with " << mit->name() 
+                << endmsg ;
     // loop on the matched particles and find the associated Decays::OnePart* object
     int off = getOffset( buffer[k], row, false );
-    if( off == (int)row.size() )
+    if ( off == (int)row.size() )
     {
-      Error("The decay descriptor \n'" + mit->getInfo()
-            +"'\n returned a match which is not also matched by your main decay descriptor. Ignoring it.");
+      Error( "The decay descriptor '" + mit->getInfo() +
+             "' returned a match which is not also matched by your main decay descriptor. Ignoring it.");
       break;
     }
     if( m_tupleNameAsToolName )
@@ -217,26 +221,34 @@ void findAssociatedOneParts(  PARTICLEVECTOR& buffer, const PARTICLEVECTOR& row,
 //=============================================================================
 /// Initialize all Particle tools
 template<class ITUPLETOOL>
-void initializeStufferTools(std::vector< ITUPLETOOL* >& pTools){
-  if(msgLevel(MSG::VERBOSE)) verbose() << "input tool list " << m_toolList << " size " << m_toolList.size() << endmsg;
+void initializeStufferTools(std::vector< ITUPLETOOL* >& pTools)
+{
+  if(msgLevel(MSG::VERBOSE)) 
+    verbose() << "input tool list " << m_toolList << " size " << m_toolList.size() 
+              << endmsg;
 
   std::sort( m_toolList.begin(), m_toolList.end() );
   m_toolList.erase( std::unique(m_toolList.begin(),m_toolList.end()), m_toolList.end() );
-
-  if(msgLevel(MSG::VERBOSE)) verbose() << "unique tool list " << m_toolList << " size " << m_toolList.size() << endmsg;
+  
+  if(msgLevel(MSG::VERBOSE)) 
+    verbose() << "unique tool list " << m_toolList << " size " << m_toolList.size() 
+              << endmsg;
 
   // base instantiation:
-  std::vector<std::string>::const_iterator it = m_toolList.begin();
-  for( ; m_toolList.end()!=it ; ++it ){
-    if (msgLevel(MSG::VERBOSE)) verbose() << (*it) << " " << (*it).find("TupleToolDecay",0)  << endmsg ;
-    if (0==(*it).find("TupleToolDecay",0)){ // ignore TupleToolDecay
+  for ( std::vector<std::string>::const_iterator it = m_toolList.begin(); 
+        m_toolList.end() != it; ++it )
+  {
+    if (msgLevel(MSG::VERBOSE)) 
+      verbose() << (*it) << " " << (*it).find("TupleToolDecay",0)  << endmsg ;
+    if ( 0 == (*it).find("TupleToolDecay",0) )
+    { // ignore TupleToolDecay
       if (msgLevel(MSG::DEBUG)) debug() << "Ignoring " << (*it) << endmsg ;
       continue;
     }     
     IAlgTool* tt = tool<IAlgTool>( *it, this );
     if( !tt )
     {
-      Error("Not AlgTool: Can't get the tool '" + *it + "', check your syntax" ).ignore();
+      Error("Not AlgTool: Cannot get the tool '" + *it + "', check your syntax" ).ignore();
       continue;
     }
     // splitting in the correct list.
@@ -250,10 +262,11 @@ void initializeStufferTools(std::vector< ITUPLETOOL* >& pTools){
       pTools.push_back( test2 );
 
       // inherit by default: give all the tools to the particles:
-      std::vector<Decays::OnePart*>::iterator op;
-      for( op=m_parts.begin(); op!=m_parts.end(); ++op )
+      for( std::vector<Decays::OnePart*>::iterator op = m_parts.begin(); 
+           op != m_parts.end(); ++op )
       {
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Adding " << test2->type() << " to " << (*op)->headName() << endmsg ;
+        if (msgLevel(MSG::VERBOSE)) 
+          verbose() << "Adding " << test2->type() << " to " << (*op)->headName() << endmsg ;
         (*op)->addTool( test2 );
       }
     }
@@ -302,23 +315,24 @@ void initializeOnePartsStufferTools( Decays::OnePart* P
   if (msgLevel(MSG::VERBOSE)) 
   {
     verbose() << "Stuffers are " ;
-    for ( std::vector<std::string>::const_iterator i = locTools.begin() ; i!=locTools.end() ; ++i) verbose() << *i << " " ;
+    for ( std::vector<std::string>::const_iterator i = locTools.begin() ; 
+          i != locTools.end() ; ++i ) { verbose() << *i << " " ; }
     verbose() << endmsg ;
   }
 
-  std::insert_iterator<std::vector<std::string> > ii( remainTools
-                                                      , remainTools.begin() );
-  std::set_difference( globalTools.begin(), globalTools.end()
-                       , locTools.begin(), locTools.end()
-                       , ii );
+  std::insert_iterator<std::vector<std::string> > ii( remainTools, remainTools.begin() );
+  std::set_difference( globalTools.begin(), globalTools.end(),
+                       locTools.begin(), locTools.end(),
+                       ii );
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Remains " << remainTools.size() << " to inherit" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) 
+    verbose() << "Remains " << remainTools.size() << " to inherit" << endmsg;
 
   // inherit again the remaining global tools:
-  std::vector<std::string>::const_iterator it = remainTools.begin();
   if( m->inheritTools() )
   {
-    for( ; remainTools.end() != it ; ++it )
+    for( std::vector<std::string>::const_iterator it = remainTools.begin(); 
+         remainTools.end() != it ; ++it )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "Remaining tool " << *it << endmsg ;
       // find the right tool:
@@ -327,8 +341,9 @@ void initializeOnePartsStufferTools( Decays::OnePart* P
       {
         if( *it == pTools[k]->type() )
         {
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Found! Part " << P->info() << " inherits "
-                                                << pTools[k]->type() << endreq;
+          if (msgLevel(MSG::VERBOSE)) 
+            verbose() << "Found! Part " << P->info() << " inherits "
+                      << pTools[k]->type() << endreq;
           P->addTool( pTools[k] );
           flag = true;
           break;
@@ -341,13 +356,15 @@ void initializeOnePartsStufferTools( Decays::OnePart* P
   }
 
   // now instanciate the specific tools from the TupleToolDecay:
-  for( it=locTools.begin(); locTools.end()!=it; ++it )
+  for( std::vector<std::string>::const_iterator it = locTools.begin(); 
+       locTools.end() != it; ++it )
   {
-    if (msgLevel(MSG::DEBUG)) debug() << "locTools: Creating tool " << *it << " for " << P->headName() << endmsg ;
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "locTools: Creating tool " << *it << " for " << P->headName() << endmsg ;
     ITUPLETOOL* tt = tool<ITUPLETOOL>( *it, m );
     if( !tt )
     {
-      Error("Can't instanciate the tool '" + *it + "', check your syntax").ignore();
+      Error("Cannot instanciate the tool '" + *it + "', check your syntax").ignore();
       continue;
     }
     if (msgLevel(MSG::VERBOSE)) verbose() << "locTools: Part " << P->info() << " inherits "
