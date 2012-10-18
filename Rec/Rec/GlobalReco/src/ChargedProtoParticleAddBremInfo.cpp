@@ -70,12 +70,13 @@ StatusCode ChargedProtoParticleAddBremInfo::execute()
   }
 
   // ProtoParticle container
-  if ( !exist<LHCb::ProtoParticles>(m_protoPath) )
+  LHCb::ProtoParticles *protos = getIfExists<LHCb::ProtoParticles>(m_protoPath);
+  if( NULL == protos )
   {
-    debug()<< "No existing ProtoParticle container at " <<  m_protoPath<<" thus do nothing."<<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << "No existing ProtoParticle container at "
+                                       <<  m_protoPath<<" thus do nothing."<<endmsg;
     return StatusCode::SUCCESS;  
   }
-  LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>(m_protoPath);
 
   // Loop over proto particles
   for ( LHCb::ProtoParticles::iterator iProto = protos->begin();
@@ -102,7 +103,7 @@ bool ChargedProtoParticleAddBremInfo::getBremData()
   const bool sc4 = loadCaloTable(m_dlleBremTable, m_bremPIDePath);
 
   const bool sc  = sc1 && sc2 && sc3 && sc4;
-  if ( sc ) debug() << "BREM PID SUCCESSFULLY LOADED" << endmsg;
+  if ( sc && msgLevel(MSG::DEBUG) ) debug() << "BREM PID SUCCESSFULLY LOADED" << endmsg;
 
   return sc;
 }

@@ -55,18 +55,15 @@ protected:
   template < typename TYPE >
   inline bool loadCaloTable( TYPE *& table, const std::string & location ) const
   {
-    const bool ok = exist<TYPE>(location);
-    if ( !ok )
+    table = getIfExists<TYPE>( location );
+    if ( NULL == table )
     {
-      table = NULL;
       Warning("No CALO "+System::typeinfoName(typeid(TYPE))+
               " table at '"+location+"'", StatusCode::SUCCESS ).ignore();
+      return false;
     }
-    else 
-    {
-      table = get<TYPE>( location );
-    }
-    return ok;
+
+    return true;
   }
 
   // Add extra info from CaloDigits (Spd+Prs)

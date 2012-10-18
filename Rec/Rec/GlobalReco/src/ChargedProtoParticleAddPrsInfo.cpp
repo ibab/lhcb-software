@@ -67,12 +67,13 @@ StatusCode ChargedProtoParticleAddPrsInfo::execute()
   }
 
   // ProtoParticle container
-  if ( !exist<LHCb::ProtoParticles>(m_protoPath) )
+  LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>(m_protoPath);
+  if ( NULL == protos )
   {
-    debug()<< "No existing ProtoParticle container at " <<  m_protoPath<<" thus do nothing."<<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << "No existing ProtoParticle container at "
+                                       <<  m_protoPath<<" thus do nothing."<<endmsg;
     return StatusCode::SUCCESS;  
   }
-  LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>(m_protoPath);
 
   // Loop over proto particles
   for ( LHCb::ProtoParticles::iterator iProto = protos->begin();
@@ -97,7 +98,7 @@ bool ChargedProtoParticleAddPrsInfo::getPrsData()
   const bool sc2 = loadCaloTable(m_PrsETable   , m_prsEPath);
   const bool sc3 = loadCaloTable(m_dllePrsTable, m_prsPIDePath);
   const bool sc  = sc1 && sc2 && sc3;
-  if ( sc ) debug() << "PRS PID SUCCESSFULLY LOADED" << endmsg;
+  if ( sc && msgLevel(MSG::DEBUG) ) debug() << "PRS PID SUCCESSFULLY LOADED" << endmsg;
   return sc;
 }
 

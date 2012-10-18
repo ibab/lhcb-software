@@ -65,12 +65,12 @@ StatusCode ChargedProtoParticleAddVeloInfo::execute()
 {
 
   // ProtoParticle container
-  if ( !exist<LHCb::ProtoParticles>(m_protoPath) )
+  LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>(m_protoPath);
+  if ( NULL == protos )
   {
     return Warning( "No existing ProtoParticle container at " +  m_protoPath + " thus do nothing.",
                     StatusCode::SUCCESS );
   }
-  LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>(m_protoPath);
 
   // Loop over proto particles
   for ( LHCb::ProtoParticles::iterator iProto = protos->begin();

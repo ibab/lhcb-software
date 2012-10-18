@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2012-10-18 - Marco Cattaneo
+ - Fix unprotected debug()'s
+ - Use getIfExists where appropriate
+
 !========================= GlobalReco v6r43 2012-10-02 =========================
 ! 2012-08-15 - Chris Jones
  - Update ROOT scripts

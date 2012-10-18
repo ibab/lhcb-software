@@ -1,4 +1,3 @@
-// $Id: NeutralProtoPAlg.h,v 1.9 2010-03-08 01:46:40 odescham Exp $
 // ============================================================================
 #ifndef GLOBALRECO_NEUTRALPROTOPALG_H 
 #define GLOBALRECO_NEUTRALPROTOPALG_H 1
@@ -72,7 +71,6 @@ private:// data
   double                    m_photonID_bad      ;
   /// flag to indicate "light/calibration" mode 
   bool  m_light_mode ;
-  bool  m_first;
   ICaloHypoEstimator* m_estimator ;
 };
 #endif // GLOBALRECO_NEUTRALPROTOPALG_H

@@ -64,12 +64,13 @@ StatusCode ChargedProtoParticleAddSpdInfo::execute()
   }
 
   // ProtoParticle container
-  if ( !exist<LHCb::ProtoParticles>(m_protoPath) )
+  LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>(m_protoPath);
+  if ( NULL == protos )
   {
-    debug()<< "No existing ProtoParticle container at " <<  m_protoPath<<" thus do nothing."<<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << "No existing ProtoParticle container at "
+                                       <<  m_protoPath<<" thus do nothing."<<endmsg;
     return StatusCode::SUCCESS;  
   }
-  LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>(m_protoPath);
 
   // Loop over proto particles
   for ( LHCb::ProtoParticles::iterator iProto = protos->begin();
@@ -93,7 +94,7 @@ bool ChargedProtoParticleAddSpdInfo::getSpdData()
   const bool sc1 = loadCaloTable(m_InSpdTable , m_inSpdPath);
   const bool sc2 = loadCaloTable(m_SpdETable  , m_spdEPath );
   const bool sc  = sc1 && sc2;
-  if ( sc ) debug() << "SPD PID SUCCESSFULLY LOADED" << endmsg;
+  if ( sc && msgLevel(MSG::DEBUG) ) debug() << "SPD PID SUCCESSFULLY LOADED" << endmsg;
   return sc;
 }
 

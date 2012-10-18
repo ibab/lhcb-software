@@ -92,7 +92,7 @@ StatusCode ChargedProtoParticleMaker::execute()
   // check if output data already exists
   if ( exist<LHCb::ProtoParticles>(m_protoPath) )
   {
-    // Get existing container, clear, and reuse
+    // ProtoParticles already exist, do nothing
     return Warning( "Existing ProtoParticle container at " + m_protoPath +
                     " found -> Will do nothing" );
   }
@@ -109,15 +109,15 @@ StatusCode ChargedProtoParticleMaker::execute()
     // track location
     const std::string& loc = *c;
 
-    // Load the Track objects (manditory - should be there for each event)
-    if ( !exist<LHCb::Tracks>(loc) )
+    // Load the Track objects (mandatory - should be there for each event)
+    const LHCb::Tracks * tracks = getIfExists<LHCb::Tracks>( loc );
+    if ( NULL == tracks )
     {
       Warning( "No Tracks at '"+loc+"'", StatusCode::SUCCESS ).ignore();
       continue;
     }
 
     setFilterPassed(true);
-    const LHCb::Tracks * tracks = get<LHCb::Tracks>( loc );
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Successfully loaded " << tracks->size() << " Tracks from " << loc << endmsg;
 

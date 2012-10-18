@@ -4,11 +4,7 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/Vector3DTypes.h"
-#include "GaudiKernel/Vector4DTypes.h"
 // ============================================================================
-#include "CaloUtils/Calo2Track.h"
-#include "CaloDet/DeCalorimeter.h"
 #include "NeutralProtoPAlg.h"
 // ============================================================================
 /** @file
@@ -32,7 +28,6 @@ DECLARE_ALGORITHM_FACTORY( NeutralProtoPAlg )
   , m_clusterMass_bad   ( -1.e+6 )
   , m_photonID_bad      ( -1.e+6 )
   , m_light_mode        ( false )
-  , m_first(true)
   , m_estimator(0) {
 
   // declare the properties
@@ -60,7 +55,7 @@ StatusCode NeutralProtoPAlg::initialize(){
   const StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   for ( std::vector<std::string>::const_iterator loc = m_hyposLocations.begin() ; m_hyposLocations.end() != loc ; ++loc )
     info() << " Hypothesis loaded from " << *loc << endmsg;
@@ -86,10 +81,7 @@ StatusCode NeutralProtoPAlg::execute(){
   // create and register the output container
   LHCb::ProtoParticles* protos = NULL;
   if ( !lightMode() && exist<LHCb::ProtoParticles>(m_protoLocation) ){
-    if( m_first ){
-      Warning( "Existing ProtoParticle container at " + m_protoLocation + " found -> Will replace", StatusCode::SUCCESS).ignore();
-      m_first = false;
-    }
+    Warning( "Existing ProtoParticle container at " +m_protoLocation+ " found -> Will replace", StatusCode::SUCCESS, 1).ignore();
     counter("Replaced Proto")+=1;
     protos = get<LHCb::ProtoParticles>(m_protoLocation);
     protos->clear();
@@ -107,13 +99,13 @@ StatusCode NeutralProtoPAlg::execute(){
   for ( std::vector<std::string>::const_iterator loc = m_hyposLocations.begin() ; m_hyposLocations.end() != loc ; ++loc ) {
 
     // Load the CaloHypo objects if the container exists
-    if ( !exist<LHCb::CaloHypos>( *loc )){
-      debug()<< "No CaloHypo at '" << (*loc) + "'"<<endmsg ;
+    const LHCb::CaloHypos* hypos = getIfExists<LHCb::CaloHypos>( *loc );
+    if ( NULL == hypos ){
+      if( msgLevel(MSG::DEBUG) ) debug()<< "No CaloHypo at '" << (*loc) + "'"<<endmsg ;
       counter("No " + (*loc) + " container") += 1;
       continue;
     }
 
-    const LHCb::CaloHypos* hypos = get<LHCb::CaloHypos>( *loc );
     if ( msgLevel(MSG::DEBUG) )debug() << "CaloHypo loaded at " << *loc << " (# " << hypos->size()<<")"<< endmsg;
     int count = 0 ;
     for ( LHCb::CaloHypos::const_iterator ihypo = hypos->begin() ; hypos->end() != ihypo  ; ++ihypo ){
