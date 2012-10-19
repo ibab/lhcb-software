@@ -6,7 +6,7 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "VeloEffChecker.h"
-#include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // BOOST
 #include <boost/lexical_cast.hpp>
@@ -26,7 +26,7 @@
 using namespace LHCb;
 using namespace Gaudi::Units;
 
-DECLARE_ALGORITHM_FACTORY( VeloEffChecker );
+DECLARE_ALGORITHM_FACTORY( VeloEffChecker )
 
 VeloEffChecker::VeloEffChecker(const std::string& name,
                        ISvcLocator* pSvcLocator):

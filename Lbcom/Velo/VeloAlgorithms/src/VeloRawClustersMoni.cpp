@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloRawClustersMoni );
+DECLARE_ALGORITHM_FACTORY( VeloRawClustersMoni )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -55,7 +55,7 @@ StatusCode VeloRawClustersMoni::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   //
   setHistoTopDir("Velo/");
   m_feTypeTool=tool<IMCVeloFEType>("MCVeloFEType");
@@ -68,10 +68,10 @@ StatusCode VeloRawClustersMoni::initialize() {
 //=============================================================================
 StatusCode VeloRawClustersMoni::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   //
   m_numberOfEvents++;
-  debug()<< " number of evts: " << m_numberOfEvents <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " number of evts: " << m_numberOfEvents <<endmsg;
   StatusCode dataStatus=getData();
   StatusCode moniStatus;
   if(dataStatus.isSuccess()){
@@ -90,7 +90,7 @@ StatusCode VeloRawClustersMoni::execute() {
 //=============================================================================
 StatusCode VeloRawClustersMoni::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   // set value if there is no event processed
   if(m_numberOfEvents==0) m_numberOfEvents=1;
   //
@@ -159,38 +159,38 @@ StatusCode VeloRawClustersMoni::finalize() {
 //=============================================================================
 StatusCode VeloRawClustersMoni::getData()
 {
-  debug()<< " ==> getData() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> getData() " <<endmsg;
   //
-  if(!exist<LHCb::MCVeloFEs>(m_VeloFECont)){
+  m_VeloFEs=getIfExists<LHCb::MCVeloFEs>(m_VeloFECont);
+  if( NULL == m_VeloFEs ){
     return Error( " ==> There is no VeloFEs in TES " );
-  }else{
-    m_VeloFEs=get<LHCb::MCVeloFEs>(m_VeloFECont);
   }
   //
-  if(!exist<LHCb::VeloClusters>(m_clusterCont)){
+  m_rawClusters=getIfExists<LHCb::VeloClusters>(m_clusterCont);
+  if( NULL == m_rawClusters ){
     return Error( " ==> There is no VeloClusters in TES " );
-  }else{
-    m_rawClusters=get<LHCb::VeloClusters>(m_clusterCont);
   }
   //
-  debug()<< " ==> Number of VeloFE found in TES at: "
-         << m_VeloFECont << " is:"
-         << m_VeloFEs->size() <<endmsg;
-  //
-  debug()<< " ==> Number of clusters found in TES at: "
-         << m_clusterCont << " is: " 
-         << m_rawClusters->size() <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) {
+    debug()<< " ==> Number of VeloFE found in TES at: "
+           << m_VeloFECont << " is:"
+           << m_VeloFEs->size() <<endmsg;
+    //
+    debug()<< " ==> Number of clusters found in TES at: "
+           << m_clusterCont << " is: " 
+           << m_rawClusters->size() <<endmsg;
+  }
   //
   return ( StatusCode::SUCCESS );
 }
 //==============================================================================
 StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
 {
-  debug()<< " ==> rawVeloClusterMonitor() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> rawVeloClusterMonitor() " <<endmsg;
   //
   int contSize=m_rawClusters->size();
   if(!contSize){
-    debug() <<"Empty cluster container! - Skiping monitor" << endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() <<"Empty cluster container! - Skiping monitor" << endmsg;
     return StatusCode::SUCCESS;
   }
   m_nRawClusters+=double(contSize);
@@ -206,17 +206,19 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
     LHCb::VeloCluster* cluster=(*cluIt);
     // cluster size - number of strips in cluster
     unsigned int clusterSize=cluster->size();
-    debug()<< " ==> Cluster size: " << clusterSize <<endmsg;
-    // adc values
-    debug()<< " The given cluster has: " << clusterSize << " strip(s) "
-          << " the ADC value(s) is/are: " <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) {
+      debug()<< " ==> Cluster size: " << clusterSize <<endmsg;
+      // adc values
+      debug()<< " The given cluster has: " << clusterSize << " strip(s) "
+             << " the ADC value(s) is/are: " <<endmsg;
+    }
     //
     switch(int(clusterSize)){
     case 1: m_nOneStr++; break;
     case 2: m_nTwoStr++; break;
     case 3: m_nThreeStr++; break;
     case 4: m_nFourStr++; break;
-    default : debug()<< " ==> Cluster has more than four strips! " <<endmsg;
+    default : if( msgLevel(MSG::DEBUG) ) debug()<< " ==> Cluster has more than four strips! " <<endmsg;
     }
     // find type of given cluster
     bool signal=false, noise=false, other=false;
@@ -230,11 +232,13 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
     // from given strip, adcValue() calls stripValues() method which
     // returns ADCVector of pairs (stripNumber, adcValue)
     //
-    for(unsigned int i=0; i<clusterSize; i++){
-      debug()<< " Strip from cluster [" << i 
-             << "] = " << cluster->adcValue(i) 
-             << ", number of the strip on sensor: " 
-             << cluster->strip(i) <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) {
+      for(unsigned int i=0; i<clusterSize; i++){
+        debug()<< " Strip from cluster [" << i 
+               << "] = " << cluster->adcValue(i) 
+               << ", number of the strip on sensor: " 
+               << cluster->strip(i) <<endmsg;
+      }
     }
     //
     // channelID info (this channel is used to create VeloLightCluster)
@@ -249,18 +253,20 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
            "Z position and sensor number of the cluster",
            -50., 100., 0, 135, 150, 135);
     //
-    debug()<< " Central channel of given cluster: " 
-          << channel << ", sensor number: " << sensNumber
-          << ", strip: " << channel.strip() <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<< " Central channel of given cluster: " 
+                                      << channel << ", sensor number: " << sensNumber
+                                      << ", strip: " << channel.strip() <<endmsg;
     //
     // total charge colected on the strips
     double tCharge=cluster->totalCharge();
-    if(tCharge>126.&&tCharge<128.){
-      debug()<< "clusters ADC: " << tCharge
-            << "this clu strip: " << cluster->channelID().strip()
-            << "and sensor: " << cluster->channelID().sensor() <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) {
+      if(tCharge>126.&&tCharge<128.){
+        debug()<< "clusters ADC: " << tCharge
+               << "this clu strip: " << cluster->channelID().strip()
+               << "and sensor: " << cluster->channelID().sensor() <<endmsg;
+      }
+      debug()<< " Total charge of the cluster: " << tCharge <<endmsg;
     }
-    debug()<< " Total charge of the cluster: " << tCharge <<endmsg;
     plot(tCharge, 102,
          "ADC sum for all clusters",
          -0.5, 260.5, 261);
@@ -312,21 +318,21 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
     //
     // fractional position of the centre of the given cluster
     double fracPos=cluster->interStripFraction();
-    debug()<< " Fractional position: " << fracPos <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<< " Fractional position: " << fracPos <<endmsg;
     plot(fracPos, 114,
          "Inter strip position of cluster centre",
          0., 1., 100);
     //
     // pseudo size of the cluster
     unsigned int pseudoSize=cluster->pseudoSize();
-    debug()<< " Pseudo size: " << pseudoSize <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<< " Pseudo size: " << pseudoSize <<endmsg;
     plot(pseudoSize, 115,
          "Cluster pseudo size",
          -0.5, 5.5, 6);
     //
     // high threshold bit
     bool thresholdBit=cluster->highThreshold();
-    debug()<< " Signal bit: " << thresholdBit <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<< " Signal bit: " << thresholdBit <<endmsg;
     plot(thresholdBit, 116, 
          "Cluster high threshold",
          -1., 2., 30);
@@ -334,26 +340,29 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
     // first and last channels
     LHCb::VeloChannelID firstChan=cluster->firstChannel();
     LHCb::VeloChannelID lastChan=cluster->lastChannel();
-    debug()<< " First channel info: strip - " << firstChan.strip()
-          << ", sensor - " << firstChan.sensor() <<endmsg;
-    debug()<< " Last channel info: strip - " << lastChan.strip()
-          << ", sensor - " << lastChan.sensor() <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) {
+      debug()<< " First channel info: strip - " << firstChan.strip()
+             << ", sensor - " << firstChan.sensor() <<endmsg;
+      debug()<< " Last channel info: strip - " << lastChan.strip()
+             << ", sensor - " << lastChan.sensor() <<endmsg;
+    }
     // channels vector
     std::vector<LHCb::VeloChannelID> channels=cluster->channels();
-    debug()<< " Number of VeloChannelIDs inside the channel vector: "
-          << channels.size() <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<< " Number of VeloChannelIDs inside the channel vector: "
+                                      << channels.size() <<endmsg;
     // type of the cluster
     if(cluster->isRType()) debug()<< " RType cluster " <<endmsg;
     if(cluster->isPhiType()) debug()<< " PhiType cluster " <<endmsg;
     if(cluster->isPileUp()) debug()<< " PileUpType cluster" <<endmsg;
     // ADC signals
-    LHCb::VeloCluster::ADCVector localADC;
-    localADC=cluster->stripValues();
-    for(unsigned int i=0; i<localADC.size(); i++){
-      int stripNum=localADC[i].first;
-      unsigned int adcValue=localADC[i].second;
-      debug()<< " ADC value of the strip " << stripNum << " is: "
-             << adcValue <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) {
+      LHCb::VeloCluster::ADCVector localADC=cluster->stripValues();
+      for(unsigned int i=0; i<localADC.size(); i++){
+        int stripNum=localADC[i].first;
+        unsigned int adcValue=localADC[i].second;
+        debug()<< " ADC value of the strip " << stripNum << " is: "
+               << adcValue <<endmsg;
+      }
     }
   }
   //
@@ -363,7 +372,7 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
 StatusCode VeloRawClustersMoni::clusterType(LHCb::VeloCluster* clu,
                                             bool& s, bool& n, bool& o)
 {
-  debug()<< " ==> clusterType() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> clusterType() " <<endmsg;
   //
   LHCb::MCVeloFE* myFE=0;
   int feType=0;
@@ -372,15 +381,17 @@ StatusCode VeloRawClustersMoni::clusterType(LHCb::VeloCluster* clu,
   for(int iStrip=0; iStrip<strips; iStrip++){
     LHCb::MCVeloFE* anFE=m_VeloFEs->object(channels[iStrip]);
     if(anFE==0){
-      debug()<< " ==> Not found FE object for given cluster with channel:" 
-             << channels[iStrip].strip() << ", " 
-             << channels[iStrip].sensor() <<endmsg; 
-      LHCb::VeloChannelID cch=clu->channelID();
-      debug()<< " -> cluster description: "
-            << " size: " << (clu->size())
-            << " ADC total: " << (clu->totalCharge())
-            << " centre strip: " << cch.strip()
-            <<endmsg;
+      if( msgLevel(MSG::DEBUG) ) {
+        debug()<< " ==> Not found FE object for given cluster with channel:" 
+               << channels[iStrip].strip() << ", " 
+               << channels[iStrip].sensor() <<endmsg; 
+        LHCb::VeloChannelID cch=clu->channelID();
+        debug()<< " -> cluster description: "
+               << " size: " << (clu->size())
+               << " ADC total: " << (clu->totalCharge())
+               << " centre strip: " << cch.strip()
+               <<endmsg;
+      }
       ++m_associationFailure;
       return ( StatusCode::SUCCESS );
     }else{

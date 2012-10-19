@@ -22,7 +22,7 @@
 #include "VeloClusterMaker.h"
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloClusterMaker );
+DECLARE_ALGORITHM_FACTORY( VeloClusterMaker )
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -53,7 +53,7 @@ VeloClusterMaker::VeloClusterMaker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloClusterMaker::~VeloClusterMaker(){};
+VeloClusterMaker::~VeloClusterMaker(){}
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================

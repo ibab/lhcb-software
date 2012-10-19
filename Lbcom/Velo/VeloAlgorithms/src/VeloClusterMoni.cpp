@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloClusterMoni );
+DECLARE_ALGORITHM_FACTORY( VeloClusterMoni )
 
 
 //=============================================================================
@@ -48,7 +48,7 @@ VeloClusterMoni::VeloClusterMoni( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloClusterMoni::~VeloClusterMoni() {};
+VeloClusterMoni::~VeloClusterMoni() {}
 //=============================================================================
 // Initialization
 //=============================================================================
@@ -56,32 +56,32 @@ StatusCode VeloClusterMoni::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   //
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
   m_feTypeTool=tool<IMCVeloFEType>("MCVeloFEType/feTypeTool");
   setHistoTopDir("Velo/");
   //
   return StatusCode::SUCCESS;
-};
+}
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode VeloClusterMoni::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   //
   m_numberOfEvents++;
   StatusCode sc=getData();
   if(sc) veloClusterMonitor();
   //
   return StatusCode::SUCCESS;
-};
+}
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode VeloClusterMoni::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   // set value if there is no event processed
   if(m_numberOfEvents==0) m_numberOfEvents=1;
   //
@@ -135,28 +135,25 @@ StatusCode VeloClusterMoni::finalize() {
           << m_nFourStrip << " (" << (m_nFourStrip/all)*100 << "%)"
           <<endmsg;
   }else{
-    debug()<< "| ==> No VeloClusters found! " <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<< "| ==> No VeloClusters found! " <<endmsg;
   }
-  debug()<< "======================================================" <<endmsg;
+  info() << "======================================================" <<endmsg;
   //
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================
 StatusCode VeloClusterMoni::getData()
 {
-  debug()<< " ==> getData() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> getData() " <<endmsg;
   //
-  if(!exist<LHCb::InternalVeloClusters>(m_clusterCont)){
-    error()<< " ==> There are no VeloClusters in TES! " <<endmsg;
-    return (StatusCode::FAILURE);
-  }else{
-    m_veloClusters=get<LHCb::InternalVeloClusters>(m_clusterCont);
+  m_veloClusters=getIfExists<LHCb::InternalVeloClusters>(m_clusterCont);
+  if( NULL == m_veloClusters ){
+    return Error( " ==> There are no VeloClusters in TES! " );
   }
-  if(!exist<LHCb::MCVeloFEs>(m_feCont)){
-    error()<< " ==> There are no MCVeloFEs in TES! " <<endmsg;
-    return (StatusCode::FAILURE);
-  }else{
-    m_veloFEs=get<LHCb::MCVeloFEs>(m_feCont);
+
+  m_veloFEs=getIfExists<LHCb::MCVeloFEs>(m_feCont);
+  if( NULL == m_veloFEs ){
+    return Error( " ==> There are no MCVeloFEs in TES! " );
   }
   //
   if(m_printInfo){
@@ -171,7 +168,7 @@ StatusCode VeloClusterMoni::getData()
 //==============================================================================
 StatusCode VeloClusterMoni::veloClusterMonitor()
 {
-  debug()<< " ==> veloClusterMonitor() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> veloClusterMonitor() " <<endmsg;
   //
   int contSize=m_veloClusters->size();
   m_nVeloClusters+=double(contSize);
@@ -188,21 +185,21 @@ StatusCode VeloClusterMoni::veloClusterMonitor()
     case 2: m_nTwoStrip++; break;
     case 3: m_nThreeStrip++; break;
     case 4: m_nFourStrip++; break;
-    default : debug()<< " ==> cluster has more than four strips!" <<endmsg;
+    default : if( msgLevel(MSG::DEBUG) ) debug()<< " ==> cluster has more than four strips!" <<endmsg;
     }
     //
     bool signal=false, noise=false, other=false;
     LHCb::InternalVeloCluster* cluster=(*cluIt);
     clusterType(cluster, signal, noise, other);
     // printout some info about cluster
-    if(m_printInfo){
+    if( msgLevel(MSG::DEBUG) && m_printInfo ){
       debug()<< " ==> VeloCluster: " << " sensor number: "
              << (*cluIt)->sensor() << ", first strip in cluster: "
              << (*cluIt)->strip(0) <<endmsg;
     }
     // printout some info about strips
     int cluSize=(*cluIt)->size();
-    if(m_printInfo){
+    if( msgLevel(MSG::DEBUG) && m_printInfo ){
       for(int iStrip=0; iStrip<cluSize; iStrip++){
         debug()<< " ==> VeloCluster: " << " strip: "
                << (*cluIt)->strip(iStrip) << ", signal on strip: "
@@ -219,9 +216,9 @@ StatusCode VeloClusterMoni::veloClusterMonitor()
     unsigned int sensor=(*cluIt)->sensor();
     const DeVeloSensor* sens=m_veloDet->sensor(sensor);
     if(sens->isPileUp())
-    debug()<< "sensor number: " << sensor <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<< "sensor number: " << sensor <<endmsg;
     double zPosOfClu=sens->z();
-    debug()<< " z pos: " << zPosOfClu <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<< " z pos: " << zPosOfClu <<endmsg;
     //
     plot2D((*cluIt)->sensor(), (*cluIt)->strip(0), 102,
            "Sensor and first strip number",

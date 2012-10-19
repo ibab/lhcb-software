@@ -1,4 +1,3 @@
-// $Id: MCVeloFEType.cpp,v 1.2 2006-02-10 14:02:49 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCVeloFEType );
+DECLARE_TOOL_FACTORY( MCVeloFEType )
 
 
 //=============================================================================
@@ -30,7 +29,7 @@ MCVeloFEType::MCVeloFEType( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCVeloFEType::~MCVeloFEType() {};
+MCVeloFEType::~MCVeloFEType() {}
 //
 void MCVeloFEType::FEType(const LHCb::MCVeloFE* fe, int& feType)
 {

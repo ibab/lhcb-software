@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloSimTell1Algorithm );
+DECLARE_ALGORITHM_FACTORY( VeloSimTell1Algorithm )
 
 using namespace boost::assign;
 using namespace VeloTELL1;
@@ -129,13 +129,13 @@ StatusCode VeloSimTell1Algorithm::getData()
 {
   if(m_isDebug) debug()<< " ==> getData() " <<endmsg;
   //
-  if(!exist<LHCb::VeloTELL1Datas>(m_inputDataLoc)){
+  m_inputData=getIfExists<LHCb::VeloTELL1Datas>(m_inputDataLoc);
+  if( NULL == m_inputData ){
     if(m_isDebug) debug()<< " ==> There is no input data: "
            << m_inputDataLoc <<endmsg;
     return ( StatusCode::FAILURE );
   }else{  
     // get data banks from default TES location
-    m_inputData=get<LHCb::VeloTELL1Datas>(m_inputDataLoc);
     if(m_isDebug) debug()<< " ==> The data have been read-in from location: "
            << m_inputDataLoc
            << ", size of the data container: "

@@ -18,7 +18,7 @@
 #include "Event/VeloDigit.h"
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloDataProcessor );
+DECLARE_ALGORITHM_FACTORY( VeloDataProcessor )
 
 //=========================================================================
 // Standard creator, initializes variables

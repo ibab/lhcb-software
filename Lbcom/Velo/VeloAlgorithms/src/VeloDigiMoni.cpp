@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloDigiMoni );
+DECLARE_ALGORITHM_FACTORY( VeloDigiMoni )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -38,7 +38,7 @@ VeloDigiMoni::VeloDigiMoni( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloDigiMoni::~VeloDigiMoni() {};
+VeloDigiMoni::~VeloDigiMoni() {}
 //=============================================================================
 // Initialization
 //=============================================================================
@@ -46,17 +46,17 @@ StatusCode VeloDigiMoni::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   //
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   setHistoTopDir("Velo/");  
   //
   return (StatusCode::SUCCESS);
-};
+}
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode VeloDigiMoni::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   //
   m_numberOfEvents++;
   StatusCode sc=getData();
@@ -68,14 +68,14 @@ StatusCode VeloDigiMoni::execute() {
   }
   //
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode VeloDigiMoni::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   //
   if(m_numberOfEvents!=0){
   m_nVeloDigits/=m_numberOfEvents;
@@ -98,24 +98,23 @@ StatusCode VeloDigiMoni::finalize() {
 //=============================================================================
 StatusCode VeloDigiMoni::getData()
 {
-  debug()<< " ==> getData() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> getData() " <<endmsg;
   //
-  if(!exist<LHCb::VeloDigits>(m_digitContainer)){
+  m_veloDigits=getIfExists<LHCb::VeloDigits>(m_digitContainer);
+  if( NULL == m_veloDigits ){
     error()<< " There is no VeloDigits at " << m_digitContainer <<endmsg;
     return (StatusCode::FAILURE);
-  }else{
-    m_veloDigits=get<LHCb::VeloDigits>(m_digitContainer);
   }
   //
-  debug()<< " ==> Number of VeloDigits found: "
-        << m_veloDigits->size() <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> Number of VeloDigits found: "
+                                    << m_veloDigits->size() <<endmsg;
   //
   return (StatusCode::SUCCESS);
 }
 //==============================================================================
 StatusCode VeloDigiMoni::testVeloDigit()
 {
-  debug()<< " ==> testVeloDigits() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> testVeloDigits() " <<endmsg;
   //
   double size=double(m_veloDigits->size());
   m_nVeloDigits+=size;
@@ -149,8 +148,8 @@ StatusCode VeloDigiMoni::testVeloDigit()
     Range range1=table->relations(*digIt);
     iterator it;
     if(range1.size()!=0){
-      debug()<< "Hit(s) associated to VeloDigit from strip: "
-            << (*digIt)->strip() <<endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug()<< "Hit(s) associated to VeloDigit from strip: "
+                                        << (*digIt)->strip() <<endmsg;
     }
     for(it=range1.begin(); it!=range1.end(); it++){
       const LHCb::MCHit* aHit=it->to();
@@ -158,7 +157,7 @@ StatusCode VeloDigiMoni::testVeloDigit()
       plot(energy, 203,
            "Energy deposited in Si [eV] from VeloDigit2MCHitLinker",
            0., 300000., 100);
-      debug()<< "energy from hit" << energy <<endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug()<< "energy from hit" << energy <<endmsg;
     }
   }
   //

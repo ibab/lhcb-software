@@ -105,13 +105,12 @@ StatusCode VeloTell1DataProcessor::getData()
 {
   if(m_isDebug) debug()<< " ==> getData() " <<endmsg;
   // get simulated front end signals
-  if(!exist<LHCb::MCVeloFEs>(m_fesContainer)){
+  m_fes=getIfExists<LHCb::MCVeloFEs>(m_fesContainer);
+  if( NULL == m_fes ){
     info()<< " ==> There is no MCVeloFE at: "
            << m_fesContainer <<endmsg;
     return ( StatusCode::FAILURE );
   }else{  
-    // get data banks from default TES location
-    m_fes=get<LHCb::MCVeloFEs>(m_fesContainer);
     if(m_isDebug)
            debug()<< " ==> The simulated FEs have been read-in from: "
            << m_fesContainer

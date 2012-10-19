@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloSimTell1ClusterMaker );
+DECLARE_ALGORITHM_FACTORY( VeloSimTell1ClusterMaker )
 
 using namespace boost::assign;
 using namespace VeloTELL1;
