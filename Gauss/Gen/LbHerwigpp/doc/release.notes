@@ -4,6 +4,10 @@
 ! Purpose     : Adaptor package for Herwig++
 !-----------------------------------------------------------------------------
 
+!========================= LbHerwig v2r0 2012-10-19 ==========================
+! 2012-10-19 - Gloria Corti
+ - Fix bug in naming of ParticlePropertySvc that was stillpointing to Gaudi
+
 ! 2012-09-18 - Gloria Corti
  - Use herwigpp interface set up to also work on bash and adapt to macro set 
    in there, removing include and ld_library path from requirements of this

@@ -149,7 +149,7 @@ StatusCode HerwigppProduction::initialize( ) {
   // Initialize the particle property service.
   LHCb::IParticlePropertySvc* m_ppSvc( 0 ) ;
   try {
-    m_ppSvc = svc< LHCb::IParticlePropertySvc > ("Gaudi::ParticlePropertySvc", true);
+    m_ppSvc = svc< LHCb::IParticlePropertySvc > ("LHCb::ParticlePropertySvc", true);
   }
   catch (const GaudiException &exc) {
     Exception( "Cannot open ParticlePropertySvc", exc);
