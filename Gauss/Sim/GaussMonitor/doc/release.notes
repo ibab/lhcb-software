@@ -4,6 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v6r10 2012-10-19 ========================
+! 2012-07-14 - Christian Elsasser
+ - Change in GeneratorFullMonitor s.t. intermediate particles in the hard
+   process are filled into the Ntuple
+
 !====================== GaussMonitor v6r9 2012-05-14 =========================
 ! 2011-11-18 - Aurelien Martens
  - update on counting of excited states
