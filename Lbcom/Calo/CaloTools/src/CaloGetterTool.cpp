@@ -157,9 +157,9 @@ LHCb::CaloDigits* CaloGetterTool::digits ( const std::string& loc )
   //
   if ( 0 != it->second ) { return it -> second ; } 
   //
-  if ( exist<LHCb::CaloDigits>( loc ) )
+  it -> second = getIfExists<LHCb::CaloDigits>( loc );  
+  if ( NULL != it->second )
   {
-    it -> second = get<LHCb::CaloDigits>( loc );  
     counter ("#Digits   @ " + loc ) += it->second->size() ;
     return it->second ;
   }
@@ -180,9 +180,9 @@ LHCb::CaloClusters* CaloGetterTool::clusters ( const std::string& loc )
   //
   if ( 0 != it->second ) { return it->second ; } 
   //
-  if ( exist<LHCb::CaloClusters>( loc ) )
+  it -> second = getIfExists<LHCb::CaloClusters>( loc );  
+  if ( NULL != it->second )
   {
-    it -> second = get<LHCb::CaloClusters>( loc );  
     counter ("#Clusters @ " + loc  ) += it->second->size() ;
     return it->second ;
   }
@@ -203,9 +203,9 @@ LHCb::CaloHypos*    CaloGetterTool::hypos    ( const std::string& loc )
   //
   if ( 0 != it->second ) { return it->second ; } 
   //
-  if ( exist<LHCb::CaloHypos>( loc ) )
+  it -> second = getIfExists<LHCb::CaloHypos>( loc );  
+  if ( NULL != it->second )
   {
-    it -> second = get<LHCb::CaloHypos>( loc );  
     counter ("#Hypos    @ " + loc  ) += it->second->size() ;
     return it->second ;
   }
@@ -234,9 +234,9 @@ void CaloGetterTool::update()
   {
     for(std::vector<std::string>::iterator iloc = m_clusLoc.begin();m_clusLoc.end() != iloc; ++iloc)
     {
-      if ( exist<LHCb::CaloClusters>(*iloc)) 
+      LHCb::CaloClusters* clusters = getIfExists<LHCb::CaloClusters>( *iloc );  
+      if ( NULL != clusters ) 
       {
-        LHCb::CaloClusters* clusters = get<LHCb::CaloClusters>( *iloc );  
         m_clusters[ *iloc ] = clusters ;
         counter ("#Clusters @ " + (*iloc) ) += clusters->size() ;        
       }
@@ -247,9 +247,9 @@ void CaloGetterTool::update()
   {
     for(std::vector<std::string>::iterator iloc = m_hypoLoc.begin();m_hypoLoc.end() != iloc; ++iloc)
     {
-      if ( exist<LHCb::CaloHypos>(*iloc) ) 
+      LHCb::CaloHypos* hypos = getIfExists<LHCb::CaloHypos>( *iloc );  
+      if ( NULL != hypos ) 
       {
-        LHCb::CaloHypos* hypos = get<LHCb::CaloHypos>( *iloc );  
         m_hypos[ *iloc ] = hypos ;
         counter ("#Hypos    @ " + (*iloc) ) += hypos->size() ;        
       }      

@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -64,8 +63,8 @@ StatusCode CheckCaloHypoRef::execute() {
 
  for (std::vector<std::string>::iterator iloc = m_inputs.begin(); m_inputs.end() != iloc; ++iloc) {
     std::string loc = *iloc;
-    if (exist<LHCb::CaloHypos> (loc)) {
-      const LHCb::CaloHypos* hypos = get<LHCb::CaloHypos> (loc);
+    const LHCb::CaloHypos* hypos = getIfExists<LHCb::CaloHypos> (loc);
+    if ( NULL != hypos ) {
       counter("#Hypos in " + loc) += hypos->size();
       int bLink=0;
       for (LHCb::CaloHypos::const_iterator h = hypos->begin(); hypos->end()!=h;++h){

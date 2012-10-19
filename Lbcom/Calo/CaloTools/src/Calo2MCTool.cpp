@@ -35,7 +35,7 @@ Calo2MCTool::Calo2MCTool( const std::string& type,
   declareProperty ( "Cluster2MCTable" , m_cluster2MCLoc ) ;
   declareProperty ( "Digit2MCTable"   , m_digit2MCLoc = "Relations/" + LHCb::CaloDigitLocation::Default ) ;
   declareProperty ( "Cluster2Digits"  , m_cluster2Digit = false  ); // delegate cluster->digit->MC
-  declareProperty ( "Hypo2Cluster"    , m_hypo2Cluster  = true   ); // Direct hypo->MC relation table does yet not exists
+  declareProperty ( "Hypo2Cluster"    , m_hypo2Cluster  = true   ); // Direct hypo->MC relation table does yet not exist
   declareProperty ( "Merged2Split"    , m_merged2Split  = false  ); // expert usage (merged->split->cluster DOES NOT WORK so far)
   declareProperty ( "DigitStatusFilter"  , m_sFilter    = LHCb::CaloDigitStatus::UseForEnergy       ) ; // for ..->digit->MC
   // cluster2MC table location depends on context()
@@ -336,8 +336,7 @@ StatusCode Calo2MCTool::process(){
     return Error("DIRECT HYPO->MC RELATION IS NOT YET ALLOWED",StatusCode::FAILURE);
     /*  
         // HYPO -> MC TABLE PRODUCTION DOES NO EXISITS
-        if( exist<LHCb::Calo2MC::IHypoTable>(m_hypo2MCLoc ) )
-        m_hypo2MC  = get<LHCb::Calo2MC::IHypoTable>( m_hypo2MCLoc );
+        m_hypo2MC  = getIfExists<LHCb::Calo2MC::IHypoTable>( m_hypo2MCLoc );
         if( 0 == m_hypo2MC ) 
         return Warning(" Hypo <-> MC relation table not found at " + m_hypo2MCLoc , StatusCode::FAILURE);
         // 2 - built (particle,weight) map
@@ -378,9 +377,8 @@ StatusCode Calo2MCTool::process(){
     // process digits matching    
     // 1 - get digit->MC table
     //if( 0 == m_digit2MC )
-    if( exist<LHCb::Calo2MC::IDigitTable>(m_digit2MCLoc ) )
-      m_digit2MC  = get<LHCb::Calo2MC::DigitTable>( m_digit2MCLoc );
-    if( 0 == m_digit2MC ) 
+    m_digit2MC  = getIfExists<LHCb::Calo2MC::DigitTable>( m_digit2MCLoc );
+    if( NULL == m_digit2MC ) 
       return Warning(" Digit <-> MC relation table not found at " + m_digit2MCLoc , StatusCode::FAILURE);
     // 2 - built (particle,weight) map
     m_mcMap.clear();

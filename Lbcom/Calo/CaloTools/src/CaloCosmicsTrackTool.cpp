@@ -91,8 +91,8 @@ StatusCode CaloCosmicsTrackTool::processing() {
   m_run = -1;
   m_evt = -1;
   m_bx  = -1;
-  if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
+  LHCb::ODIN* odin = getIfExists<LHCb::ODIN> (LHCb::ODINLocation::Default);
+  if( NULL != odin ){
     m_run = odin->runNumber();
     m_evt = (long) odin->eventNumber()  ;
     m_bx  = odin->bunchId() ;

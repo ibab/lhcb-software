@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -155,8 +154,8 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
     double chi2e = 9999;
     double trajL = 9999;
     const LHCb::Track* etrack = NULL;
-    if (exist<LHCb::Calo2Track::ITrHypoTable2D> (m_emLoc)) {
-      LHCb::Calo2Track::ITrHypoTable2D* etable = get<LHCb::Calo2Track::ITrHypoTable2D> (m_emLoc);
+    LHCb::Calo2Track::ITrHypoTable2D* etable = getIfExists<LHCb::Calo2Track::ITrHypoTable2D> (m_emLoc);
+    if ( NULL != etable ) {
       const LHCb::Calo2Track::ITrHypoTable2D::InverseType::Range range = etable -> inverse()->relations(hypo);
       if ( !range.empty() ){
         chi2e= range.front().weight();   
@@ -181,8 +180,8 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
     // brem matching
     double chi2b = 9999;
     const LHCb::Track* btrack = NULL;
-    if (exist<LHCb::Calo2Track::ITrHypoTable2D> (m_bmLoc)) {
-      LHCb::Calo2Track::ITrHypoTable2D* btable = get<LHCb::Calo2Track::ITrHypoTable2D> (m_bmLoc);
+    LHCb::Calo2Track::ITrHypoTable2D* btable = getIfExists<LHCb::Calo2Track::ITrHypoTable2D> (m_bmLoc);
+    if ( NULL != btable ) {
       const LHCb::Calo2Track::ITrHypoTable2D::InverseType::Range range = btable -> inverse()->relations(hypo);
       if ( !range.empty() ){
         chi2b= range.front().weight(); 
@@ -396,8 +395,8 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
       clus = LHCb::CaloAlgUtils::ClusterFromHypo( fromHypo , false); // get the main cluster
     double chi2 = 9999;
     const LHCb::Track* ctrack = NULL;
-    if (exist<LHCb::Calo2Track::IClusTrTable> (m_cmLoc)) {
-      LHCb::Calo2Track::IClusTrTable* ctable = get<LHCb::Calo2Track::IClusTrTable> (m_cmLoc);
+    LHCb::Calo2Track::IClusTrTable* ctable = getIfExists<LHCb::Calo2Track::IClusTrTable> (m_cmLoc);
+    if ( NULL != ctable ) {
       const LHCb::Calo2Track::IClusTrTable::Range range = ctable -> relations(clus);
       if ( !range.empty() ){
         chi2= range.front().weight();

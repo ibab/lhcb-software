@@ -25,8 +25,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GammaPi0SeparationTool );
-
+DECLARE_TOOL_FACTORY( GammaPi0SeparationTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
