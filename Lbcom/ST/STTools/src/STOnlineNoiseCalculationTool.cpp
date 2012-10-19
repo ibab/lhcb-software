@@ -1,4 +1,3 @@
-// $Id: STOnlineNoiseCalculationTool.cpp,v 1.2 2009-11-25 11:25:11 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +26,7 @@
 
 // Declaration of the Tool Factory
 namespace ST {
-  DECLARE_TOOL_FACTORY( STOnlineNoiseCalculationTool );
+  DECLARE_TOOL_FACTORY( STOnlineNoiseCalculationTool )
 }
 
 //=============================================================================
@@ -56,7 +55,7 @@ ST::STOnlineNoiseCalculationTool::STOnlineNoiseCalculationTool( const std::strin
 }
 
 StatusCode ST::STOnlineNoiseCalculationTool::initialize() {
-  debug() << "intialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "initialize" << endmsg;
   StatusCode sc = ST::STNoiseToolBase::initialize();
   if (sc.isFailure()) return sc;
 
@@ -72,18 +71,12 @@ ST::STOnlineNoiseCalculationTool::~STOnlineNoiseCalculationTool() {}
 StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
   m_evtNumber++;
   
-  // Skip if there is no Tell1 data
-  if (!exist<LHCb::STTELL1Datas>(m_dataLocation)) {
-    return StatusCode::SUCCESS;
-  }
-
-  // Skip if there is no Tell1 data
-  if (!exist<LHCb::STTELL1Datas>(m_LCMSLocation)) {
-    return StatusCode::SUCCESS;
-  }
-
   // Get the RAW data
-  const LHCb::STTELL1Datas* data = get<LHCb::STTELL1Datas>(m_dataLocation);
+  const LHCb::STTELL1Datas* data = getIfExists<LHCb::STTELL1Datas>(m_dataLocation);
+  if ( NULL == data ) {
+    // Skip if there is no Tell1 data
+    return StatusCode::SUCCESS;
+  }
   if(data->empty()) return Warning("Data is empty "+m_dataLocation, StatusCode::SUCCESS, 10);
   //debug() << "Found " << data->size() << " boards." << endmsg;
 
@@ -93,7 +86,11 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
   //debug() << "Found " << data->size() << " boards." << endmsg;
 
   // Get the LCMS data
-  const LHCb::STTELL1Datas* lcms = get<LHCb::STTELL1Datas>(m_LCMSLocation);
+  const LHCb::STTELL1Datas* lcms = getIfExists<LHCb::STTELL1Datas>(m_LCMSLocation);
+  if ( NULL == data ) {
+    // Skip if there is no Tell1 data
+    return StatusCode::SUCCESS;
+  }
   if(lcms->empty()) return Warning("Data is empty "+m_LCMSLocation, StatusCode::SUCCESS, 10);
   //debug() << "Found " << data->size() << " boards." << endmsg;
 

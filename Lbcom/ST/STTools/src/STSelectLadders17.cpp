@@ -1,5 +1,3 @@
-// $Id: STSelectLadders17.cpp,v 1.1 2009-11-06 12:29:29 mneedham Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -13,7 +11,7 @@
 #include <boost/foreach.hpp>
 
 
-DECLARE_TOOL_FACTORY( STSelectLadders17);
+DECLARE_TOOL_FACTORY( STSelectLadders17)
  
 STSelectLadders17::STSelectLadders17( const std::string& type, 
                                     const std::string& name,

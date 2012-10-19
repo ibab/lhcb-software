@@ -1,5 +1,3 @@
-// $Id: STSelectByCharge.cpp,v 1.2 2009-07-14 11:04:20 lnicolas Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -12,7 +10,7 @@
 #include "STSelectByCharge.h"
 
 
-DECLARE_TOOL_FACTORY( STSelectByCharge);
+DECLARE_TOOL_FACTORY( STSelectByCharge)
  
 STSelectByCharge::STSelectByCharge( const std::string& type, 
                                     const std::string& name,

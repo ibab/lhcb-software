@@ -1,5 +1,3 @@
-// $Id: $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h" 
@@ -20,7 +18,7 @@ using namespace Gaudi;
 
 #include "STSelectChannelIDOnTrack.h"
 
-DECLARE_TOOL_FACTORY( STSelectChannelIDOnTrack);
+DECLARE_TOOL_FACTORY( STSelectChannelIDOnTrack)
  
 STSelectChannelIDOnTrack::STSelectChannelIDOnTrack( const std::string& type, 
                                     const std::string& name,

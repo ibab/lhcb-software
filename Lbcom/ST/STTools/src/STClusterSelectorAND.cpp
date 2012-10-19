@@ -1,4 +1,3 @@
-// $Id: STClusterSelectorAND.cpp,v 1.2 2009-03-14 09:16:34 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +17,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( STClusterSelectorAND );
+DECLARE_TOOL_FACTORY( STClusterSelectorAND )
 
 // ============================================================================
 /** Standard constructor
@@ -40,13 +39,13 @@ STClusterSelectorAND::STClusterSelectorAND
 {
   declareInterface<ISTClusterSelector> (this);
   declareProperty( "SelectorTools" , m_selectorsTypeNames );
-};
+}
 // ============================================================================
 
 // ============================================================================
 /// destructor (virtual and protected)
 // ============================================================================
-STClusterSelectorAND::~STClusterSelectorAND(){} ; 
+STClusterSelectorAND::~STClusterSelectorAND(){}
 // ============================================================================
 
 // ============================================================================
@@ -72,7 +71,7 @@ StatusCode STClusterSelectorAND::initialize ()
   };     
   ///
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -107,7 +106,7 @@ bool STClusterSelectorAND::operator() ( const LHCb::STCluster* cluster ) const
     }
   ///
   return select ;
-};
+}
 // ============================================================================
 
 

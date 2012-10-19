@@ -1,5 +1,3 @@
-// $Id: STOnlinePosition.cpp,v 1.15 2010-02-26 09:08:10 mneedham Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
 #include "LHCbMath/LHCbMath.h"
@@ -20,7 +18,7 @@
 using namespace boost::assign;
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( STOnlinePosition );
+DECLARE_TOOL_FACTORY( STOnlinePosition )
  
 STOnlinePosition::STOnlinePosition( const std::string& type, 
                                     const std::string& name,

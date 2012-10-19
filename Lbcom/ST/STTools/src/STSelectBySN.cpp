@@ -1,5 +1,3 @@
-// $Id: STSelectBySN.cpp,v 1.1 2010-02-01 07:53:57 mneedham Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -15,7 +13,7 @@
 #include "STSelectBySN.h"
 
 
-DECLARE_TOOL_FACTORY( STSelectBySN);
+DECLARE_TOOL_FACTORY( STSelectBySN)
  
 STSelectBySN::STSelectBySN( const std::string& type, 
                                     const std::string& name,

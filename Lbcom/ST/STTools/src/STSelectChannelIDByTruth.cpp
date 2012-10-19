@@ -1,5 +1,3 @@
-// $Id: STSelectChannelIDByTruth.cpp,v 1.1 2009-03-24 15:08:29 mneedham Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -13,7 +11,7 @@
 
 #include "MCInterfaces/IMCParticleSelector.h"
 
-DECLARE_TOOL_FACTORY( STSelectChannelIDByTruth );
+DECLARE_TOOL_FACTORY( STSelectChannelIDByTruth )
  
 STSelectChannelIDByTruth::STSelectChannelIDByTruth( const std::string& type, 
                                     const std::string& name,

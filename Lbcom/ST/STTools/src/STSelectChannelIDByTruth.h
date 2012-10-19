@@ -1,4 +1,3 @@
-// $Id: STSelectChannelIDByTruth.h,v 1.1 2009-03-24 15:08:29 mneedham Exp $
 #ifndef STSelectChannelIDByTruth_H
 #define STSelectChannelIDByTruth_H 1
 
@@ -27,7 +26,7 @@ namespace LHCb{
   class MCParticle;
   class STChannelID;
   class STCluster;
-};
+}
 
 class IMCParticleSelector;
 

@@ -1,5 +1,3 @@
-// $Id:  $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -10,7 +8,7 @@
 
 #include <boost/foreach.hpp>
 
-DECLARE_TOOL_FACTORY( STBeetleStateTransition);
+DECLARE_TOOL_FACTORY( STBeetleStateTransition)
  
 STBeetleStateTransition::STBeetleStateTransition( const std::string& type, 
                                     const std::string& name,

@@ -1,5 +1,3 @@
-// $Id: STRndmChannelIDSelector.cpp,v 1.2 2010-02-26 09:08:10 mneedham Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -13,7 +11,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 
 
-DECLARE_TOOL_FACTORY( STRndmChannelIDSelector);
+DECLARE_TOOL_FACTORY( STRndmChannelIDSelector)
  
 STRndmChannelIDSelector::STRndmChannelIDSelector( const std::string& type, 
                                     const std::string& name,
@@ -43,7 +41,7 @@ StatusCode STRndmChannelIDSelector::initialize()
   if (sc.isFailure()) return Error( "Failed to release RndmGenSvc ", sc);
 
   return StatusCode::SUCCESS; 
-};
+}
 
 
 bool STRndmChannelIDSelector::select( const LHCb::STChannelID& id ) const{

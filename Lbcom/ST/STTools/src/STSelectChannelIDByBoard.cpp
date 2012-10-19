@@ -1,5 +1,3 @@
-// $Id: STSelectChannelIDByBoard.cpp,v 1.1 2009-03-14 09:16:35 mneedham Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -12,7 +10,7 @@
 #include "Kernel/STChannelID.h"
 #include "Kernel/ISTReadoutTool.h"
 
-DECLARE_TOOL_FACTORY( STSelectChannelIDByBoard );
+DECLARE_TOOL_FACTORY( STSelectChannelIDByBoard )
  
 STSelectChannelIDByBoard::STSelectChannelIDByBoard( const std::string& type, 
                                     const std::string& name,

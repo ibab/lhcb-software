@@ -1,5 +1,3 @@
-// $Id: STSelectSpilloverCluster.cpp,v 1.1 2009-04-14 13:08:46 mneedham Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h" 
@@ -9,7 +7,7 @@
 
 #include "STSelectSpilloverCluster.h"
 
-DECLARE_TOOL_FACTORY( STSelectSpilloverCluster);
+DECLARE_TOOL_FACTORY( STSelectSpilloverCluster)
  
 STSelectSpilloverCluster::STSelectSpilloverCluster( const std::string& type, 
                                     const std::string& name,

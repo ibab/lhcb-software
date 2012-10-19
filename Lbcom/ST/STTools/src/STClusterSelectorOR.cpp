@@ -1,4 +1,3 @@
-// $Id: STClusterSelectorOR.cpp,v 1.3 2009-07-14 11:04:20 lnicolas Exp $
 // ============================================================================
 // Include files 
 
@@ -19,7 +18,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( STClusterSelectorOR );
+DECLARE_TOOL_FACTORY( STClusterSelectorOR )
 
 // ============================================================================
 /** StORard constructor
@@ -41,13 +40,13 @@ STClusterSelectorOR::STClusterSelectorOR
 {
   declareInterface<ISTClusterSelector> (this);
   declareProperty( "SelectorTools" , m_selectorsTypeNames );
-};
+}
 // ============================================================================
 
 // ============================================================================
 /// destructor (virtual OR protected)
 // ============================================================================
-STClusterSelectorOR::~STClusterSelectorOR(){} ; 
+STClusterSelectorOR::~STClusterSelectorOR(){}
 // ============================================================================
 
 // ============================================================================
@@ -77,7 +76,7 @@ StatusCode STClusterSelectorOR::initialize ()
   };     
   ///
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 /** "select"/"preselect" method 
@@ -106,12 +105,7 @@ bool STClusterSelectorOR::operator() ( const LHCb::STCluster* cluster ) const
     { select = (**selector)( cluster ); }
   ///
   return select ;
-};
-// ============================================================================
-
-
+}
 // ============================================================================
 // The END 
 // ============================================================================
-
-

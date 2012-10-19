@@ -1,4 +1,3 @@
-// $Id: STNoiseCalculationTool.cpp,v 1.2 2009-11-25 11:25:11 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +26,7 @@
 
 // Declaration of the Tool Factory
 namespace ST {
-  DECLARE_TOOL_FACTORY( STNoiseCalculationTool );
+  DECLARE_TOOL_FACTORY( STNoiseCalculationTool )
 }
 
 //=============================================================================
@@ -43,7 +42,7 @@ ST::STNoiseCalculationTool::STNoiseCalculationTool( const std::string& type,
 }
 
 StatusCode ST::STNoiseCalculationTool::initialize() {
-  debug() << "intialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "initialize" << endmsg;
   StatusCode sc = ST::STNoiseToolBase::initialize();
   if (sc.isFailure()) return sc;
 
@@ -66,13 +65,12 @@ ST::STNoiseCalculationTool::~STNoiseCalculationTool() {}
 StatusCode ST::STNoiseCalculationTool::calculateNoise() {
   m_evtNumber++;
   
-  // Skip if there is no Tell1 data
-  if (!exist<LHCb::STTELL1Datas>(m_dataLocation)) {
+  // Get the data
+  const LHCb::STTELL1Datas* data = getIfExists<LHCb::STTELL1Datas>(m_dataLocation);
+  if ( NULL == data ) {
+    // Skip if there is no Tell1 data
     return StatusCode::SUCCESS;
   }
-
-  // Get the data
-  const LHCb::STTELL1Datas* data = get<LHCb::STTELL1Datas>(m_dataLocation);
   if(data->empty()) return Warning("Data is empty", StatusCode::SUCCESS, 10);
   //debug() << "Found " << data->size() << " boards." << endmsg;
 

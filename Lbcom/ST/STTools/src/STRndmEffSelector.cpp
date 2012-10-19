@@ -1,5 +1,3 @@
-// $Id: $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -15,7 +13,7 @@
 
 #include "STDet/DeSTSector.h"
 
-DECLARE_TOOL_FACTORY( STRndmEffSelector);
+DECLARE_TOOL_FACTORY( STRndmEffSelector)
  
 STRndmEffSelector::STRndmEffSelector( const std::string& type, 
                                     const std::string& name,
@@ -44,7 +42,7 @@ StatusCode STRndmEffSelector::initialize()
   if (sc.isFailure()) return Error( "Failed to release RndmGenSvc ", sc);
 
   return StatusCode::SUCCESS; 
-};
+}
 
 
 bool STRndmEffSelector::select( const LHCb::STChannelID& id ) const{

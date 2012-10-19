@@ -1,5 +1,3 @@
-// $Id: STSmearedPosition.cpp,v 1.1 2010-02-26 09:08:10 mneedham Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -22,7 +20,7 @@
 using namespace boost::assign;
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( STSmearedPosition );
+DECLARE_TOOL_FACTORY( STSmearedPosition )
  
 STSmearedPosition::STSmearedPosition( const std::string& type, 
                                     const std::string& name,
@@ -53,7 +51,7 @@ StatusCode STSmearedPosition::initialize()
   if (sc.isFailure()) return Error( "Failed to release RndmGenSvc ", sc);
 
   return StatusCode::SUCCESS; 
-};
+}
 
 double STSmearedPosition::applySmear(const double value, const unsigned int nStrips) const {
   double corrValue = 0.0;

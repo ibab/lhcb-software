@@ -1,4 +1,3 @@
-// $Id: STChannelIDSelectorOR.cpp,v 1.1 2009-03-14 09:16:34 mneedham Exp $
 // ============================================================================
 // Include files 
 
@@ -21,7 +20,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( STChannelIDSelectorOR );
+DECLARE_TOOL_FACTORY( STChannelIDSelectorOR )
 
 // ============================================================================
 /** StORard constructor
@@ -43,13 +42,13 @@ STChannelIDSelectorOR::STChannelIDSelectorOR
 {
   declareInterface<ISTChannelIDSelector> (this);
   declareProperty( "SelectorTools" , m_selectorsTypeNames );
-};
+}
 // ============================================================================
 
 // ============================================================================
 /// destructor (virtual OR protected)
 // ============================================================================
-STChannelIDSelectorOR::~STChannelIDSelectorOR(){} ; 
+STChannelIDSelectorOR::~STChannelIDSelectorOR(){}
 // ============================================================================
 
 // ============================================================================
@@ -75,7 +74,7 @@ StatusCode STChannelIDSelectorOR::initialize ()
   };     
   ///
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 /** "select"/"preselect" method 
@@ -104,12 +103,10 @@ bool STChannelIDSelectorOR::operator() ( const LHCb::STChannelID& id ) const
     { select = (**selector)( id ); }
   ///
   return select ;
-};
+}
 // ============================================================================
 
 
 // ============================================================================
 // The END 
 // ============================================================================
-
-

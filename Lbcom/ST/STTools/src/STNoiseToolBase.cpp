@@ -1,4 +1,3 @@
-// $Id: STNoiseToolBase.cpp,v 1.3 2009-11-25 11:25:11 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -198,10 +197,10 @@ StatusCode ST::STNoiseToolBase::cacheTELL1Parameters() {
   return StatusCode::SUCCESS;
 }
 void ST::STNoiseToolBase::readTELL1Parameters(const unsigned int TELL1SourceID) {
-  debug() << "----------> Reading TELL1 parameters for " << TELL1SourceID << endmsg;
+  if( m_debug ) debug() << "----------> Reading TELL1 parameters for " << TELL1SourceID << endmsg;
   m_pedestalMaps[TELL1SourceID].resize(1);
   std::string condPath = m_condPath + "/TELL1Board" + boost::lexical_cast<std::string>(TELL1SourceID);
-  debug() << "Getting condition: " << condPath << endmsg;
+  if( m_debug ) debug() << "Getting condition: " << condPath << endmsg;
   Condition* condition = getDet<Condition>(condPath);
   if(condition != 0) {
     if(m_readPedestals) {
@@ -528,7 +527,7 @@ std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::nEventsBegin( con
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
   }
   return m_nEvents.find(TELL1SourceID)->second.begin();
-};
+}
 
 /** Return an iterator corresponding to the number of events used in the calculation of noise (RAW, CMS, pedSub)
     after outlier removal for the last channel of a given TELL1 source ID **/
@@ -537,7 +536,7 @@ std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::nEventsEnd( const
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
   }
   return m_nEvents.find(TELL1SourceID)->second.end();
-};
+}
 
 /// Return an iterator corresponding to the source ID of the first TELL1 in the event containing an NZS bank
 std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::tell1WithNZSBegin( ) const {
@@ -564,4 +563,3 @@ std::vector<bool>::const_iterator ST::STNoiseToolBase::stripStatusEnd( const uns
   }
   return m_statusMap.find(TELL1SourceID)->second.end();
 }
-

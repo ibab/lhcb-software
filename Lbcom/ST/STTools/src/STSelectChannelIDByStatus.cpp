@@ -1,5 +1,3 @@
-// $Id: STSelectChannelIDByStatus.cpp,v 1.3 2009-07-14 11:04:20 lnicolas Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -13,7 +11,7 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/foreach.hpp>
 
-DECLARE_TOOL_FACTORY( STSelectChannelIDByStatus);
+DECLARE_TOOL_FACTORY( STSelectChannelIDByStatus)
  
 STSelectChannelIDByStatus::STSelectChannelIDByStatus( const std::string& type, 
                                     const std::string& name,

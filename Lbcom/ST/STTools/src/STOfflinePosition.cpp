@@ -1,5 +1,3 @@
-// $Id: STOfflinePosition.cpp,v 1.20 2010-04-05 09:57:33 mneedham Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/cbrt.h"  // for cbrt on Windows
@@ -34,7 +32,7 @@ using namespace LHCb;
 using namespace LHCb::Math;
 
 
-DECLARE_TOOL_FACTORY( STOfflinePosition );
+DECLARE_TOOL_FACTORY( STOfflinePosition )
  
 STOfflinePosition::STOfflinePosition(const std::string& type, 
                                      const std::string& name,
@@ -88,7 +86,7 @@ StatusCode STOfflinePosition::initialize()
     m_fieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
   }
   return StatusCode::SUCCESS; 
-};
+}
 
 void STOfflinePosition::handle ( const Incident& incident )
 {

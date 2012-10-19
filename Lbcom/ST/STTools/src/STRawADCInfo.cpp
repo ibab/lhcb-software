@@ -1,5 +1,3 @@
-// Exp $
- 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -21,7 +19,7 @@
 #include <boost/foreach.hpp>
 
 
-DECLARE_TOOL_FACTORY( STRawADCInfo);
+DECLARE_TOOL_FACTORY( STRawADCInfo)
  
 STRawADCInfo::STRawADCInfo( const std::string& type, 
                                     const std::string& name,
@@ -121,8 +119,8 @@ StatusCode STRawADCInfo::link(const LHCb::STChannelID& chan,
   for (unsigned int i = firststrip; i <= laststrip; ++i){ 
     if (sector->isStrip(i)){
       unsigned int val;
-      LHCb::STChannelID chan = sector->stripToChan(i);
-      if (link(chan,val).isSuccess()) {
+      LHCb::STChannelID chanStrip = sector->stripToChan(i);
+      if (link(chanStrip,val).isSuccess()) {
        values.push_back(val);
       }
       else {

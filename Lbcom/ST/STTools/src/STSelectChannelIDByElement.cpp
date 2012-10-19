@@ -1,5 +1,3 @@
-// $Id: STSelectChannelIDByElement.cpp,v 1.3 2009-07-06 12:40:17 mneedham Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -13,7 +11,7 @@
 #include <boost/foreach.hpp>
 
 
-DECLARE_TOOL_FACTORY( STSelectChannelIDByElement);
+DECLARE_TOOL_FACTORY( STSelectChannelIDByElement)
  
 STSelectChannelIDByElement::STSelectChannelIDByElement( const std::string& type, 
                                     const std::string& name,
@@ -37,7 +35,7 @@ StatusCode STSelectChannelIDByElement::initialize() {
       return Error("Failed to find detector element",StatusCode::FAILURE); 
     }
     else {
-      debug() << "Adding " <<  name << " to element list" << endmsg;     
+      if( msgLevel(MSG::DEBUG) ) debug() << "Adding " <<  name << " to element list" << endmsg;     
       m_detElements.push_back(detElement);
     }
   } // for each

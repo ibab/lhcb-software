@@ -1,5 +1,3 @@
-// $Id: STSelectClustersByChannel.cpp,v 1.2 2009-07-14 11:04:20 lnicolas Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
@@ -11,7 +9,7 @@
 #include "Kernel/STChannelID.h"
 #include "Kernel/ISTChannelIDSelector.h"
 
-DECLARE_TOOL_FACTORY( STSelectClustersByChannel);
+DECLARE_TOOL_FACTORY( STSelectClustersByChannel)
  
 STSelectClustersByChannel::STSelectClustersByChannel( const std::string& type, 
                                     const std::string& name,

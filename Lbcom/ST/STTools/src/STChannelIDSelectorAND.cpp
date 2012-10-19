@@ -1,4 +1,3 @@
-// $Id: STChannelIDSelectorAND.cpp,v 1.1 2009-03-14 09:16:34 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -21,7 +20,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( STChannelIDSelectorAND );
+DECLARE_TOOL_FACTORY( STChannelIDSelectorAND )
 
 // ============================================================================
 /** Standard constructor
@@ -43,13 +42,13 @@ STChannelIDSelectorAND::STChannelIDSelectorAND
 {
   declareInterface<ISTChannelIDSelector> (this);
   declareProperty( "SelectorTools" , m_selectorsTypeNames );
-};
+}
 // ============================================================================
 
 // ============================================================================
 /// destructor (virtual and protected)
 // ============================================================================
-STChannelIDSelectorAND::~STChannelIDSelectorAND(){} ; 
+STChannelIDSelectorAND::~STChannelIDSelectorAND(){}
 // ============================================================================
 
 // ============================================================================
@@ -75,7 +74,7 @@ StatusCode STChannelIDSelectorAND::initialize ()
   };     
   ///
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -107,7 +106,7 @@ bool STChannelIDSelectorAND::operator() ( const LHCb::STChannelID& id ) const
     { select = (**selector)( id ); }
   ///
   return select ;
-};
+}
 // ============================================================================
 
 

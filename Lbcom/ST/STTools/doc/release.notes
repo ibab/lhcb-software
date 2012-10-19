@@ -3,6 +3,12 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix gcc -pedentic warnings
+ - Fix coverity defect
+ - Fix unprotected debug()
+ - Use getIfExists instead of separate exist and get calls.
+
 !========================= STTools v4r13 2012-06-25 =========================
 ! 2012-06-12 - Mark Tobin
  - Fix bug in resetting of noise counters.
