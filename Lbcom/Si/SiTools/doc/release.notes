@@ -2,6 +2,9 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+
 !============================ SiTools v1r8 2010-07-20 =========================
 ! 2010-07-20 - Marco Cattaneo
  - Remove obsolete file SiTools_dll.cpp

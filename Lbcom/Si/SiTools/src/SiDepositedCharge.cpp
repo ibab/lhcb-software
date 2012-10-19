@@ -1,5 +1,3 @@
-// $Id: SiDepositedCharge.cpp,v 1.5 2007-12-11 10:14:25 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -18,7 +16,7 @@
 using namespace LHCb;
 using namespace Gaudi::Units;
 
-DECLARE_TOOL_FACTORY( SiDepositedCharge );
+DECLARE_TOOL_FACTORY( SiDepositedCharge )
 
 SiDepositedCharge::SiDepositedCharge(const std::string& type, 
                                      const std::string& name, 

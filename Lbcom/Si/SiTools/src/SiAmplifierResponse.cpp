@@ -1,5 +1,3 @@
-// $Id: SiAmplifierResponse.cpp,v 1.4 2009-01-15 10:02:19 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -7,7 +5,7 @@
 // local
 #include "SiAmplifierResponse.h"
 
-DECLARE_TOOL_FACTORY( SiAmplifierResponse );
+DECLARE_TOOL_FACTORY( SiAmplifierResponse )
 
 SiAmplifierResponse::SiAmplifierResponse( const std::string& type, 
                                           const std::string& name, 

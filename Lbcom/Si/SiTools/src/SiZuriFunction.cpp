@@ -1,5 +1,3 @@
-// $Id: SiZuriFunction.cpp,v 1.3 2009-06-03 11:32:57 cattanem Exp $
-
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -10,7 +8,7 @@
 // gsl
 #include "gsl/gsl_math.h"
 
-DECLARE_TOOL_FACTORY( SiZuriFunction );
+DECLARE_TOOL_FACTORY( SiZuriFunction )
 
 SiZuriFunction::SiZuriFunction( const std::string& type, 
                                           const std::string& name, 

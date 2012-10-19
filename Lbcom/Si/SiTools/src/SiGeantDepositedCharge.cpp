@@ -1,5 +1,3 @@
-// $Id: SiGeantDepositedCharge.cpp,v 1.7 2009-01-27 08:40:10 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -15,7 +13,7 @@
 #include "SiGeantDepositedCharge.h"
 
 
-DECLARE_TOOL_FACTORY( SiGeantDepositedCharge );
+DECLARE_TOOL_FACTORY( SiGeantDepositedCharge )
 
 SiGeantDepositedCharge::SiGeantDepositedCharge(const std::string& type, 
                                                const std::string& name, 
