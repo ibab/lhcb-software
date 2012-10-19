@@ -93,13 +93,13 @@ def richSystem():
     return iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem"]
 
 def loadRichDet():
-    iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich1"]
+    iDataSvc()["Structure/LHCb/BeforeMagnetRegion/Rich1"]
     iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich2"]
-    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel0"]
-    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1"]
-    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich2/PDPanel0"]
-    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich2/PDPanel1"]
-    richSystem()
+    #print iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel0"]
+    #print iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1"]
+    #print iDataSvc()["/dd/Structure/LHCb/AfterMagnetRegion/Rich2/PDPanel0"]
+    #print iDataSvc()["/dd/Structure/LHCb/AfterMagnetRegion/Rich2/PDPanel1"]
+    print richSystem()
     
 def rootFileListFromTextFile(rootFileList):
 
@@ -1376,7 +1376,9 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
         # End of Run 126261
         #stopTime = getUNIXTime( datetime.datetime( 2012, 8, 22, 17, 55, 32 ) )
         # End of Run 128492
-        stopTime = getUNIXTime( datetime.datetime( 2012, 9, 17,  7, 0, 0 ) )
+        #stopTime = getUNIXTime( datetime.datetime( 2012, 9, 17,  7, 0, 0 ) )
+        # End of Run 128268 (pA pilot run)
+        #stopTime = getUNIXTime( datetime.datetime( 2012, 9, 17,  7, 0, 0 ) )
         # Long way away ...
         #stopTime = getUNIXTime( datetime.datetime( 2100, 12, 31, 23, 59, 59 ) )
 

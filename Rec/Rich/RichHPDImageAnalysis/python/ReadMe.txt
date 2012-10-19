@@ -1,6 +1,8 @@
 
 Use the following environment
 
+export COOL_IGNORE_LFC=1
+
 > SetupProject LHCbDirac
 > SetupProject Brunel pytools --nightly lhcb-head --use LCG_Interfaces/COOL --tag_add NEEDS_PYCOOL --runtime LHCbDirac --use LHCbDiracSys
 #> SetupProject Brunel pytools --nightly lhcb-head --use LCG_Interfaces/COOL --tag_add NEEDS_PYCOOL
