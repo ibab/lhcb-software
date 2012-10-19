@@ -4,6 +4,332 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v42r2">2012-10-19 - GaussSys v42r2</A></H1><PRE>
+<H2><A NAME="Note">Release for first productions for 2012 data and upgrade.
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v35r2 (and Gaudi v23r4)</b>
+   AppConfig v3r*,
+   <b>DecFiles v26r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   pythia 6.425.2, photos 215.4, lhapdf 5.8.5 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.06.05 (via LCG_Interfaces)
+   <b>Geant4 v94r2p5 (based on geant4.9.4.p02)</b> and Geant4Files v94r0
+   <b>XmlVis v1r15</b>,
+   hijing 1.36.a.2 (via LCG_GeneratorsInterfaces),
+   <b>pythia8 170</b> (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   EvtGen v12r11, <b>BcVegPy v3r1</b>, HidValley and GenXicc private 
+   LHCb versions 
+</A></H3>
+
+! 2012-10-19 - Gloria Corti
+ - Introduce use of LCG_Setting private copy to allow private versions of the
+   LCG_Generators_Interfaces
+ - Introduce private copy of thepeg and rivet generators interface to fix 
+   problems in those in LCG
+ - Introduce private copy of herwigpp generators interface to replace the
+   herwig++ one in LCG that does not work on bash because of the ++
+ - Reinstate LbHerwigpp (pb on bash should be fine) 
+ - Reintrouduce LbAlpGen for hard processes with Pythia6
+ - Introduce new packages 
+   . Gen/GenTune: for generator tuning against published data
+   . Sim/LbGDML: interface to write/read gmld (g4 native) format detector 
+     description
+   . VL/VLMoniSim: monitoring for Velo Lite Strips for Upgrade 
+
+!========================= Gauss v42r2 2012-10-19 ============================
+! 2012-10-18 - Paul Szczypka
+ - tinkering with the qmtest config
+
+! 2012-10-18 - Paul Szczypka
+ - Added expected err stream for config qmtest.
+ - Edited config qmtest to refer to the expected error stream.
+
+! 2012-10-18 - Paul Szczypka
+ - Remove some upstream and downstream parts of the beampipe which aren't
+   normally simulated in GeoStream.
+ - Add T/PipeInT beampipe section to GeoStream.
+ - Only list Velo once in GeoStream.
+
+! 2012-10-15 - Gloria Corti
+ - Rename qmtest gauss-config-MC11a.qmt to gauss-config-2011.qmt otherwise it
+   is not run.
+ - Put latest CondDb tags as in Sim05d for MC2011 (aka MC11a)
+
+! 2012-10-12 - Paul Szczypka
+ - Added limit of one event to:
+   Sim/Gauss/tests/options/testGauss-config-defaults.py
+   and changed reference file accordingly.
+
+! 2012-10-12 - Paul Szczypka
+ - Added first version of configuration qmtest, files:
+   Sim/Gauss/tests/qmtest/gauss.qms/gauss-config-MC11a.qmt
+   Sim/Gauss/tests/refs/testGauss-config-10000000.ref.x86_64-slc5-gcc43-opt
+   Sim/Gauss/tests/options/testGauss-config-defaults.py
+
+! 2012-10-09 - Paul Szczypka
+ - Corrected a bug in the PuVeto configuration whereby the test used to check
+   if either the VL or VP was also requested meant that it would configure
+   whichever detector it found instead.
+
+! 2012-10-08 - Aurelien Martens
+ - Update qmtests for pythia8
+
+! 2012-10-08 - Gloria Corti
+ - Put r* in requirements file for generator and LHCb data packages
+
+! 2012-10-08 - Paul Szczypka
+ - Corrected a bug in the Configuration whereby all detectors defined in the
+   "T" volume would be loaded irrespective of detector choice if any of the
+   IT, OT or FT detectors were chosen.
+
+! 2012-10-05 - Gloria Corti
+ - Merge changes from the branch v42b
+   . Remove spill-over from Gauss-MC11a.py
+   . Modify Gauss-Upgrade.py to pick up beam conditions as in the upgrade for
+     nu=2.6 (and show how to pick others) but remove spill-over explicitely and
+     use the new Upgrade Database (DDDB and SIMCOND).
+ - Update upgrade example options to use latest global tags
+ - Remove use of GaudiPartProp from Gauss() since all code has been migrated
+   to the LHCb::ParticlePropertySvc
+
+! 2012-10-05 - Paul Szczypka
+ - Added Gauss-Debug.py option file.
+
+! 2012-10-02 - Aurelien Martens
+ - Added few qmtests for pythia8
+
+! 2012-10-02 - Paul Szczypka
+ - Removed most debug statements from Configuration.
+ - Added Debug flag to Configuration.
+
+! 2012-09-24 - Gloria Corti
+ - Remove use of LbHerwig that is obsolete since v42r1.
+   Put use of LbAlpGen and LbHerwigpp that are new
+   Change version of DecFiles to v26r* for compatibility with new LHCb
+   ParticlePropertySvc and remove use of the Gaudi old one.
+
+! 2012-09-23 - Paul Szczypka
+ - Minor edits to BeamPipe code fixing typos.
+
+! 2012-09-21 - Paul Szczypka
+ - Minor edits to BeamPipe configuration for UT
+
+! 2012-09-20 - Paul Szczypka
+ - Temporary fix in Configurable.py for non-schema VL path in DDDB
+
+! 2012-09-20 - Paul Szczypka
+ - Modifications to Configurable.py to fix FT typo
+
+! 2012-08-30 - Paul Szczypka
+ - Modifications to Configurable.py to accommodate VP and VL
+
+! 2012-07-23 - Gloria Corti
+ - Remove use of GaudiPartProp from Gauss() since all code has been migrated
+   to the LHCb::ParticlePropertySvc
+
+! 2012-07-11 - Paul Szczypka
+  - Rewrite of python/Gauss/Configurable.py in order to more easily replace
+    detectors with upgrade versions.
+
+! 2012-06-06 - Gloria Corti
+ - Introduce new script by Emmanouil Kiagias to make qmtest files from a
+   template. The script is added as a make action so that they will be made
+   in the nighlty and used to check newly committed event types in DecFiles
+   . cmt/makeQMTests.py
+
+! 2012-05-21 - Paul Szczypka
+ - Small corrections to RunTimeError execptions in Configuration.py
+
+!========================== GenCuts v3r1 2012-10-19 ==========================
+! 2012-09-27 - Aurelien Martens
+ - Added a bug fix for DaughtersInLHCbAndWithDaughAndBCuts
+
+!========================== GENSER v10r2 2012-10-19 ==========================
+ - on v9r3b branch
+
+! 2012-09-27 - Gloria Corti
+ - Change version of pythia8 to latest release 170
+
+! 2012-09-18 - Gloria Corti
+ - Add macro to pick up rivet for the first time, with native version 1.8.0.b
+
+!=========================== Mint v1r5 2012-10-19 ============================
+! 01-10-2012 - Matt Coombes
+ - Fixed some compiler errors on Mountain Lion. Use of Key word template in DDTree.h
+
+! 19-06-2012 - Matt Coombes
+ - Updates to ReadNTuple to allow MINT generated formats to be read
+
+!======================= EvtGenExtras v3r4 2012-10-19 ========================
+! 2012-09-24 - Nikolai Nikitin
+ - Memory distribution optimization in the matrix elements fo the decays B -> (P,V,Gamma) l+l-
+
+! 2012-08-03 - Nikolai Nikitin
+ - Optimization of the maximum matrix element calculation for Bq -> 4 leptons and ff calculations
+   for the Bs -> f0(980) transitions.
+
+!======================= Generators v12r2 2012-10-19 =========================
+ - on v12b branch with the following changes ported from the trunk
+! 2012-09-27 - Patrick Robbe
+ - Added an option to switch off the reinitialization of the pile-up
+   production in the Special method.
+ - Fix the bug that events are not smeared (vertex) when there is no
+   decay tool.
+
+!========================== LbAlpGen v3r0 2012-10-19 ==========================
+
+! 2012-10-12 - Stephane Tourneur
+ - Main change: We have now four new Production tools available that enable to select the alpgen hard process in the job option file
+    -> AlpGenProduction4q,  AlpGenProductionzbb, AlpGenProductionwqq, AlpGenProductiontop
+    -> AlpGenProduction is deprecated
+ - requirements adapted by Patrick to compile all pythia processes together
+ - WQQ and Top processes added
+ - New user cuts on eta and pt defined in alpgen's user code
+
+! 2012-10-09 - Stephane Tourneur
+ - Added (dummy interface) classes AlpGenProdutionzqq and AlpGenProdution4q inherited from AlpGenProduction to provide the user one tool per
+alpgen
+process (these are useless now because LbAlpGen still works with only one process at a time)
+ - Changed the way AlpgenProduction handles the MC seeds to adapt to the alpgen random generation
+
+! 2012-09-21 - Stephane Tourneur
+ - Parameterized the alpgen options in a way they can be tuned in a standard lhcb job option file
+                ->the changes are in AlpgenProduction
+- Added options to alpgen to generate partons inside the LHCb acceptance
+                ->the changes are in zqqusr.f and AlpgenProduction
+- Added the possibility to use pdf libraries other that cteq5l
+                ->the changes are in AlpgenProduction and requirements
+
+!========================== LbAlpGen v2r0 2012-07-23 ==========================
+! 2012-07-23 - Patrick Robbe
+ - Add AlpGenProduction Tool to perform in Gauss the generation of
+   fully hadronized events in one go.
+
+! 2012-07-10 - Stephane Tourneur
+ - Add the condition njets>1 to execute the aleana function in zqqusr.F
+   (This fixes the bug of AlpGen crashing for Z+QQ + 0 or 1 jet)
+
+! 2011-10-14 - Gloria Corti
+ - Use alpgen from LCG_GeneratorsInterfaces
+
+!========================= BcVegPy v3r1 2012-10-19 ===========================
+! 2012-10-01 - Jibo He
+ - Added 8 TeV as it is supported now
+   . src/bcvegpy_upinit.f
+   . src/bcvegpy_upevnt.f
+
+!======================== LbBcVegPy v4r3p1 2012-10-19 ========================
+! 2012-10-01 - Jibo He
+ - Removed ecm from BcVegPy.py(.opts) to avoid confusion
+
+!========================= LbPythia8 v5r0 2012-10-19 =========================
+! 2012-10-08 - Aurelien Martens
+ - Reduce verbosity
+
+! 2012-10-01 - Aurelien Martens
+ - Update handling of Pythia8-HepMC momentum unit conversion for pythia8.170
+
+!========================= LbHerwig v2r0 2012-10-19 ==========================
+! 2012-10-19 - Gloria Corti
+ - Fix bug in naming of ParticlePropertySvc that was stillpointing to Gaudi
+
+! 2012-09-18 - Gloria Corti
+ - Use herwigpp interface set up to also work on bash and adapt to macro set
+   in there, removing include and ld_library path from requirements of this
+   package
+ - Use environment variable HERWIGPPHOME for location of heriwg repository for
+   loading, instead of HERWIGPPROOT that is now set by cmt to point to the
+   interface package
+
+! 2012-05-30 - Patrick Robbe
+ - HerwigProduction.cpp: adapt to new particle property service
+
+!========================= GaussKine v6r1 2012-10-19 =========================
+! 2012-09-08 - Patrick Robbe
+ - GenerationToSimulation.cpp: transfer correctly particles for Higgs events
+
+!======================== GaussAlgs v6r1 2012-10-19 ===========================
+! 2012-09-27 - Sajan Easo
+ -Added UT detector paths in GiGaGetHitsAlg
+
+! 2012-09-26 - Sajan Easo
+ -Added FT detector paths in GiGaGetHitsAlg
+
+! 2012-08-30 - Paul Szczypka
+ - Remove confusing info() relating to spillover slots, restrict to main slot
+ - Seting of beam parameters now uses private createBeam var as switch
+   . src/GenInit.cpp
+
+!======================= GaussTools v18r0p1 2012-10-19 =======================
+! 2012-10-18 - Gloria Corti
+ - Put printout of properties in GiGaStream when in debug mode. This allows
+   debugging of Geo.Streams. Needed because GiGaStream inherit from Algorithm
+   and not GaudiAlgorithm
+
+!====================== GaussPhysics v9r1 2012-10-19 =========================
+! 2012-07-25 - Patrick Robbe
+ - Correct name for anti-xi_b+
+ - Correct spin of Xi_cc+ and anti-Xi_cc-
+
+!====================== GaussMonitor v6r10 2012-10-19 ========================
+! 2012-07-14 - Christian Elsasser
+ - Change in GeneratorFullMonitor s.t. intermediate particles in the hard
+   process are filled into the Ntuple
+
+!========================= GaussUMC v2r0 2012-10-19 ==========================
+! 2012-10-19 - Gloria Corti
+ - Remove obolete files GaussUMC_{dll,load}.cpp
+
+! 2012-09-13 - Paul Szczypka
+ - Rename EVERYTHING from VeloPix to VP or corresponding string.
+ - Moved *VeloPix* files to *VP*
+
+! 2012-08-28 - Paul Szczypka / Pawel Jalocha
+ - change from VeloPix to VP in container names
+
+!========================== GenTune v1r0 2012-10-19 ==========================
+! 2012-09-26 - Alex Grecu
+ - included QMTests with references for i686- and x86-64- slc5-gcc43 platforms
+
+! 2012-09-25 - Alex Grecu
+ - few minor patches to eliminate compilation warnings
+ - a fully working plugin example in options/
+
+! 2012-09-24 - Gloria Corti
+ - introduce use of Gen/Generators to ensure header of interfaces from this
+   package are made available before the build of GenTune
+
+! 2012-08-17 - Alex Grecu
+ - beta release under temporary name Gen/GenAnalysis
+
+! 2012-06-20 - Gloria Corti
+ - cmt configuration cleaned; package renamed
+
+! 2012-07-12 - Alex Grecu
+ - alpha release; only official Rivet plugins work; user plugins may crash!
+
+!========================= LbGDML v1r0 2012-10-19 ============================
+
+! 2012-10-19 - Gloria Corti
+ - Based on code from GDMLG4Writer package. Code has been ported to GDML
+   as now distributed by G4. It requires Geant4 v95r2p4 or higher, since the
+   import of this features in the LHCb build has been only introduce from
+   this version onwards.
+ - New code from Matt Reid and Heinrich Schindler to read a GDML file and
+   combine it with the LHCb geometry.
+
+!=========================== XmlVis v1r15 ====================================
+! 2012-09-14 - Thomas Ruf
+
+!2012-08-18 - Sajan Easo
+ - Visualization for Torch Testbeam
+
+
+!=============================================================================
 </PRE><H1><A NAME="v42r1">2012-07-24 - GaussSys v42r1</A></H1><PRE>
 <H2><A NAME="Note">Release for first productions for 2012 data.</A></H2>
 <H3><A NAME="Use">This version uses:
@@ -18,8 +344,8 @@ Purpose: LHCb Simulation program
    <b>Geant4 v94r2p4 (based on geant4.9.4.p02)</b> and Geant4Files v94r0
    XmlVis v1r14,
    hijing 1.36.a.2 (via LCG_GeneratorsInterfaces),
-   pythia8 163 (via LCG_GeneratorsInterfaces),
-   <b>alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   <b>pythia8 165</b> (via LCG_GeneratorsInterfaces),
+   <b>alpgen 2.1.4</b> (via LCG_GeneratorsInterfaces),
    <b>EvtGen v12r11</b>, BcVegPy, HidValley and GenXicc private LHCb versions 
 </A></H3>
 
