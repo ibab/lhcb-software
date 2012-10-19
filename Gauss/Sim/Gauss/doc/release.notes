@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v42r2 2012-10-19 ============================
 ! 2012-10-18 - Paul Szczypka
  - tinkering with the qmtest config
 
