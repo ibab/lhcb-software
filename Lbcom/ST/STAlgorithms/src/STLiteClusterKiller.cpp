@@ -1,5 +1,3 @@
-// $Id: STLiteClusterKiller.cpp,v 1.2 2009-07-03 13:43:54 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -15,7 +13,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STLiteClusterKiller );
+DECLARE_ALGORITHM_FACTORY( STLiteClusterKiller )
 
 STLiteClusterKiller::STLiteClusterKiller( const std::string& name,
                                     ISvcLocator* pSvcLocator):

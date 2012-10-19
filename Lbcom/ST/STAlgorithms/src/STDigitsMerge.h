@@ -1,4 +1,3 @@
-// $Id: STDigitsMerge.h,v 1.1 2009-03-14 09:18:49 mneedham Exp $
 #ifndef STDIGITSMERGE_H
 #define STDIGITSMERGE_H 1
 
@@ -43,6 +42,6 @@ inline void SiDigitsMerge<LHCb::STCluster>::updateCharge(SiClusterTraits<LHCb::S
   digit1->setDepositedCharge(newvalue);
 }
 
-DECLARE_NAMED_ALGORITHM_FACTORY( STDigitsMerge , STDigitsMerge );
+DECLARE_NAMED_ALGORITHM_FACTORY( STDigitsMerge , STDigitsMerge )
 
 #endif // STDigitsMerge

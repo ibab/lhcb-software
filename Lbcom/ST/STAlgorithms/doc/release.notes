@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+
 ! 2012-10-12 - Chris Jones
  - Update SiClustersToLite.icpp to work better with the automatic DoD service.
    Output clusters are now always created, and no exception is thrown if the

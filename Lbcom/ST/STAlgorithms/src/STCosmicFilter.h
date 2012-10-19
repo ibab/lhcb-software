@@ -1,4 +1,3 @@
-// $Id: STCosmicFilter.h,v 1.1 2009-07-03 13:43:54 mneedham Exp $
 #ifndef STCosmicFilter_H
 #define STCosmicFilter_H 1
 
@@ -6,7 +5,7 @@
 
 namespace LHCb{
   class STCluster;
-};
+}
 
 /** @class STCosmicFilter STCosmicFilter.h
  *

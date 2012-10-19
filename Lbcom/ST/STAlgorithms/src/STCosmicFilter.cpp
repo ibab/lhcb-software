@@ -1,5 +1,3 @@
-// $Id: STCosmicFilter.cpp,v 1.2 2010-04-07 09:46:40 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -25,7 +23,7 @@
 #include "Event/RawEvent.h"
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STCosmicFilter );
+DECLARE_ALGORITHM_FACTORY( STCosmicFilter )
 
 //--------------------------------------------------------------------
 //

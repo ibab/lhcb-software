@@ -1,4 +1,3 @@
-// $Id: VeloClustersToLite.h,v 1.2 2009-02-20 10:46:08 mneedham Exp $
 #ifndef VELOCLUSTERSTOLITE_H
 #define VELOCLUSTERSTOLITE_H 1
 
@@ -33,6 +32,6 @@ inline SiClustersToLite<LHCb::VeloCluster>::SiClustersToLite( const std::string&
 
 }
 
-DECLARE_NAMED_ALGORITHM_FACTORY( VeloClustersToLite , VeloClustersToLite );
+DECLARE_NAMED_ALGORITHM_FACTORY( VeloClustersToLite , VeloClustersToLite )
 
 #endif // VeloClustersToLite

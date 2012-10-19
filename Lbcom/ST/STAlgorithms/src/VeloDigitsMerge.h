@@ -1,4 +1,3 @@
-// $Id: VeloDigitsMerge.h,v 1.1 2009-03-14 09:18:49 mneedham Exp $
 #ifndef STDIGITSMERGE_H
 #define STDIGITSMERGE_H 1
 
@@ -41,6 +40,6 @@ inline void SiDigitsMerge<LHCb::VeloCluster>::updateCharge(SiClusterTraits<LHCb:
   digit1->setADCValue((unsigned short)(newValue));
 }
 
-DECLARE_NAMED_ALGORITHM_FACTORY( VeloDigitsMerge , VeloDigitsMerge );
+DECLARE_NAMED_ALGORITHM_FACTORY( VeloDigitsMerge , VeloDigitsMerge )
 
 #endif // STDigitsMerge

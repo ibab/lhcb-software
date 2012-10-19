@@ -1,4 +1,3 @@
-// $Id: VeloClustersToDigits.h,v 1.1 2009-03-14 09:18:49 mneedham Exp $
 #ifndef VELOCLUSTERSTODIGITS_H
 #define VELOCLUSTERSTODIGITS_H 1
 
@@ -50,6 +49,6 @@ inline void SiClustersToDigits<LHCb::VeloCluster>::addNeighbours(
   // do nothing
 }
 
-DECLARE_NAMED_ALGORITHM_FACTORY( VeloClustersToDigits , VeloClustersToDigits );
+DECLARE_NAMED_ALGORITHM_FACTORY( VeloClustersToDigits , VeloClustersToDigits )
 
 #endif // VeloClustersToDigits

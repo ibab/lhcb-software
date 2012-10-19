@@ -1,5 +1,3 @@
-// $Id: WriteSTNoiseConditions.cpp,v 1.3 2009-10-28 15:46:05 jluisier Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -14,7 +12,7 @@
 // STKernel
 #include "Kernel/STXMLUtils.h"
 
-DECLARE_ALGORITHM_FACTORY( WriteSTNoiseConditions );
+DECLARE_ALGORITHM_FACTORY( WriteSTNoiseConditions )
 
 //--------------------------------------------------------------------
 //

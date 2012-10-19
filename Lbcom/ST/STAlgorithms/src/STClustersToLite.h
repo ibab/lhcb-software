@@ -1,4 +1,3 @@
-// $Id: STClustersToLite.h,v 1.4 2009-02-20 10:46:08 mneedham Exp $
 #ifndef STCLUSTERSTOLITE_H
 #define STCLUSTERSTOLITE_H 1
 
@@ -34,6 +33,6 @@ inline SiClustersToLite<LHCb::STCluster>::SiClustersToLite( const std::string& n
 
 }
 
-DECLARE_NAMED_ALGORITHM_FACTORY( STClustersToLite , STClustersToLite );
+DECLARE_NAMED_ALGORITHM_FACTORY( STClustersToLite , STClustersToLite )
 
 #endif // STClustersToLite

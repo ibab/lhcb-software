@@ -1,4 +1,3 @@
-// $Id: STClustersToDigits.h,v 1.1 2009-03-14 09:18:49 mneedham Exp $
 #ifndef STCLUSTERSTODIGITS_H
 #define STCLUSTERSTODIGITS_H 1
 
@@ -78,6 +77,6 @@ inline void SiClustersToDigits<LHCb::STCluster>::addNeighbours(
   }
 }
 
-DECLARE_NAMED_ALGORITHM_FACTORY( STClustersToDigits , STClustersToDigits );
+DECLARE_NAMED_ALGORITHM_FACTORY( STClustersToDigits , STClustersToDigits )
 
 #endif // STClustersToDigits

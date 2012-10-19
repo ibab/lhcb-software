@@ -1,4 +1,3 @@
-// $Id: STStripChecker.cpp,v 1.1 2009-10-28 15:06:55 jluisier Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +26,7 @@ using namespace AIDA;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( STStripChecker );
+DECLARE_ALGORITHM_FACTORY( STStripChecker )
 
 
 //=============================================================================

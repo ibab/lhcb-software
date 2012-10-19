@@ -1,5 +1,3 @@
-// $Id: STEventMerge.cpp,v 1.4 2008-10-16 13:09:50 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -12,7 +10,7 @@
 #include "Kernel/STDataFunctor.h"
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STEventMerge );
+DECLARE_ALGORITHM_FACTORY( STEventMerge )
 
 STEventMerge::STEventMerge( const std::string& name,
                                     ISvcLocator* pSvcLocator):

@@ -1,5 +1,3 @@
-// $Id: WriteSTStatusConditions.cpp,v 1.3 2009-08-21 17:15:14 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -14,7 +12,7 @@
 // STKernel
 #include "Kernel/STXMLUtils.h"
 
-DECLARE_ALGORITHM_FACTORY( WriteSTStatusConditions );
+DECLARE_ALGORITHM_FACTORY( WriteSTStatusConditions )
 
 //--------------------------------------------------------------------
 //

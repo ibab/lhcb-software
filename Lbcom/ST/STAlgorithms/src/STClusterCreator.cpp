@@ -1,5 +1,3 @@
-// $Id: STClusterCreator.cpp,v 1.20 2010-04-08 08:02:07 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -22,7 +20,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STClusterCreator );
+DECLARE_ALGORITHM_FACTORY( STClusterCreator )
 
 STClusterCreator::STClusterCreator( const std::string& name,
                                     ISvcLocator* pSvcLocator):

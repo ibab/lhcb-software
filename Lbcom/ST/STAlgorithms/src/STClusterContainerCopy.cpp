@@ -1,5 +1,3 @@
-// $Id: STClusterContainerCopy.cpp,v 1.6 2009-07-03 13:43:54 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -12,7 +10,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STClusterContainerCopy );
+DECLARE_ALGORITHM_FACTORY( STClusterContainerCopy )
 
 STClusterContainerCopy::STClusterContainerCopy( const std::string& name,
                                     ISvcLocator* pSvcLocator):
