@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussTools v18r0p1 2012-10-19 =======================
 ! 2012-10-18 - Gloria Corti
  - Put printout of properties in GiGaStream when in debug mode. This allows
    debugging of Geo.Streams. Needed because GiGaStream inherit from Algorithm 
