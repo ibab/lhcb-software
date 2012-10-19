@@ -1,5 +1,3 @@
-// $Id: STCluster2MCHitLinker.cpp,v 1.13 2009-01-16 08:39:37 mneedham Exp $
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -15,7 +13,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STCluster2MCHitLinker );
+DECLARE_ALGORITHM_FACTORY( STCluster2MCHitLinker )
 
 STCluster2MCHitLinker::STCluster2MCHitLinker( const std::string& name,
                                               ISvcLocator* pSvcLocator) : 
@@ -41,7 +39,7 @@ STCluster2MCHitLinker::STCluster2MCHitLinker( const std::string& name,
 STCluster2MCHitLinker::~STCluster2MCHitLinker() 
 {
   // destructer
-}; 
+}
 
 StatusCode STCluster2MCHitLinker::execute() 
 {
@@ -86,7 +84,7 @@ StatusCode STCluster2MCHitLinker::execute()
   } // loop iterClus
 
   return StatusCode::SUCCESS;
-};
+}
 
 void STCluster2MCHitLinker::refsToRelate( std::vector<HitPair>& selRefs,
                                           const HitMap& hitMap,

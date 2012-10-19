@@ -1,5 +1,3 @@
-// $Id: STDigit2MCHitLinker.cpp,v 1.7 2009-01-16 08:39:37 mneedham Exp $
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -17,7 +15,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STDigit2MCHitLinker );
+DECLARE_ALGORITHM_FACTORY( STDigit2MCHitLinker )
 
 STDigit2MCHitLinker::STDigit2MCHitLinker( const std::string& name,
                                           ISvcLocator* pSvcLocator) :

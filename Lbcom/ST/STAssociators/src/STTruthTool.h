@@ -1,4 +1,3 @@
-// $Id: STTruthTool.h,v 1.4 2009-02-02 15:37:40 mneedham Exp $
 #ifndef STTRUTHTOOL_H
 #define STTRUTHTOOL_H 1
 
@@ -17,7 +16,7 @@ namespace LHCb{
   class MCParticle;
   class MCHit;
   class STDigit;
-};
+}
 
 namespace STTruthTool{
 
@@ -33,6 +32,6 @@ namespace STTruthTool{
 
   const static double drayTol = 0.02 * Gaudi::Units::mm;
 
-}; 
+}
 
 #endif // STTRUTHTOOL_H

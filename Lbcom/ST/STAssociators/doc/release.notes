@@ -2,6 +2,10 @@
 ! Package manager : J. van Tilburg
 !------------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Remove obsolete file STAssociators_dll.cpp
+
 !======================= STAssociators v1r6 2009-02-20 ========================
 ! 2009-02-03 M Needham
  - Remove -g from cppflags

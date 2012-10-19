@@ -1,5 +1,3 @@
-// $Id: STDigit2MCParticleLinker.cpp,v 1.7 2009-01-16 08:39:37 mneedham Exp $
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -17,7 +15,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STDigit2MCParticleLinker );
+DECLARE_ALGORITHM_FACTORY( STDigit2MCParticleLinker )
 
 STDigit2MCParticleLinker::STDigit2MCParticleLinker( const std::string& name,
                                                     ISvcLocator* pSvcLocator) :
@@ -78,7 +76,7 @@ StatusCode STDigit2MCParticleLinker::execute()
   } // loop iterDigit
    
   return StatusCode::SUCCESS;
-};
+}
 
 
 double STDigit2MCParticleLinker::totalCharge(const ParticleMap& partMap) const

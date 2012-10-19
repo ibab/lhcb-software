@@ -1,5 +1,3 @@
-// $Id: STCluster2MCParticleLinker.cpp,v 1.11 2009-01-16 08:39:37 mneedham Exp $
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -17,7 +15,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STCluster2MCParticleLinker );
+DECLARE_ALGORITHM_FACTORY( STCluster2MCParticleLinker )
 
 STCluster2MCParticleLinker::STCluster2MCParticleLinker(const std::string& name,
                                                        ISvcLocator* pSvcLocator)
@@ -83,7 +81,7 @@ StatusCode STCluster2MCParticleLinker::execute()
   } // loop iterClus
   
   return StatusCode::SUCCESS;
-};
+}
 
 void STCluster2MCParticleLinker::refsToRelate(std::vector<PartPair>& selRefs,
                                               const ParticleMap& partMap,
