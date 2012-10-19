@@ -23,7 +23,7 @@
 // Boost
 #include <boost/assign/list_of.hpp>
 
-DECLARE_ALGORITHM_FACTORY( TrackerMCParticle2MCHitAlg );
+DECLARE_ALGORITHM_FACTORY( TrackerMCParticle2MCHitAlg )
 
 using namespace LHCb;
 
@@ -42,7 +42,7 @@ TrackerMCParticle2MCHitAlg::TrackerMCParticle2MCHitAlg(const std::string& name,
 TrackerMCParticle2MCHitAlg::~TrackerMCParticle2MCHitAlg()
 {
   // Destructor
-}; 
+}
 
 
 StatusCode TrackerMCParticle2MCHitAlg::execute()
@@ -81,7 +81,7 @@ StatusCode TrackerMCParticle2MCHitAlg::execute()
     } // iterDet
   } // iterP
   
-  debug() << "Linker table stored at " << m_outputData << endreq;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Linker table stored at " << m_outputData << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}

@@ -19,7 +19,7 @@
 // local
 #include "MCParticle2MCHitAlg.h"
 
-DECLARE_ALGORITHM_FACTORY( MCParticle2MCHitAlg );
+DECLARE_ALGORITHM_FACTORY( MCParticle2MCHitAlg )
 
 using namespace LHCb;
 
@@ -38,13 +38,13 @@ MCParticle2MCHitAlg::MCParticle2MCHitAlg(const std::string& name,
 MCParticle2MCHitAlg::~MCParticle2MCHitAlg()
 {
   // Destructor
-}; 
+}
 
 
 StatusCode MCParticle2MCHitAlg::execute()
 {
   // Main execution
-  debug() << "==> Execute" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // get MCHits
   MCHits* mcHits = get<MCHits>( m_inputData );
@@ -62,7 +62,7 @@ StatusCode MCParticle2MCHitAlg::execute()
     myLink.link( mcHit, mcHit->mcParticle() );
   }
   
-  debug() << "Linker table stored at " << m_outputData << endreq;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Linker table stored at " << m_outputData << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}

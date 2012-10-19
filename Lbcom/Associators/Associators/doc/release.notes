@@ -2,6 +2,12 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Remove obsolete file Associators_dll.cpp
+ - Fix unprotected debug()
+ - Replace endreq by endmsg
+
 !====================== Associators v3r7 2009-01-12 ========================
 ! 2008-12-04 - Marco Cattaneo
  - Add MCParticleToMCHit.py, python options to replace Brunel.opts
