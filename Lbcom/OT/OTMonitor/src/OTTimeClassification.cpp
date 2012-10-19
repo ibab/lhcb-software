@@ -115,7 +115,7 @@ StatusCode  OTTimeClassification::finalize()
   unsigned int spillover = total - eventSpill - m_infoMap["noise"];
 
   info() << "--- OTTimeClassification ---------------" << endmsg;
-  if( total > 0. ) {
+  if( total > 0 ) {
     info() << "Event Spill " << eventSpill / double(total) << endmsg;
     info() << "   |---> Primary " << m_infoMap["primary"] / double(total) << endmsg;
     info() << "   |---> Secondary " << m_infoMap["secondary"] / double(total) << endmsg;
