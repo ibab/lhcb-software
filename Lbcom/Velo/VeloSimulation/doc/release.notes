@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Use getIfExists
+ - Fix UNINIT_CTOR defect
+
 !========================= VeloSimulation v3r12 2012-01-31 ===================
 ! 2012-01-24 - David Hutchcroft
  - Fix case where no rad damage in DB at all (2010 tests) causing (harmless)

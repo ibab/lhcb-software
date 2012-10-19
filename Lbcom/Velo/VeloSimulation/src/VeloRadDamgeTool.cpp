@@ -18,7 +18,7 @@
 // 2011-03-31 : David Hutchcroft
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( VeloRadDamageTool );
+DECLARE_TOOL_FACTORY( VeloRadDamageTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -124,11 +124,10 @@ void VeloSimMoni::getData()
 {
   debug()<< " ==> VeloSimMoni::getData" <<endmsg;
   // 
-  if(!exist<LHCb::MCVeloFEs>(LHCb::MCVeloFELocation::Default)){
+  m_mcVFEsCont=getIfExists<LHCb::MCVeloFEs>(LHCb::MCVeloFELocation::Default);
+  if( NULL == m_mcVFEsCont ){
     error()<< "There is no VeloFEs in TES!" <<endmsg;
     m_veloFEMoni=false;
-  }else{
-    m_mcVFEsCont=get<LHCb::MCVeloFEs>(LHCb::MCVeloFELocation::Default);
   }
   return;
 }

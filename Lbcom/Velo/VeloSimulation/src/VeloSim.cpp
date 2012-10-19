@@ -40,7 +40,7 @@
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloSim );
+DECLARE_ALGORITHM_FACTORY( VeloSim )
 
 
 //===========================================================================
@@ -49,7 +49,10 @@ DECLARE_ALGORITHM_FACTORY( VeloSim );
 VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
+    m_MCHitContainerToLink(NULL),
     m_veloDet ( 0 ),
+    m_FEs(NULL),
+    m_FEs_coupling(NULL),
     m_thresholdADC(0.),
     m_threshold(0.),
     m_thresholdADCSingle(0.),
@@ -57,9 +60,12 @@ VeloSim::VeloSim( const std::string& name,
     m_noiseTailProb(0.),
     m_noiseTailProbSingle(0.),
     m_baseDiffuseSigma(0.),
+    m_SiTimeTool(NULL),
+    m_depositedCharge(NULL),
     m_totalFEs( 0 ),
     m_killedFEsRandom( 0 ),
     m_killedFEsBadStrips( 0 ),
+    m_radTool(NULL),
     m_isDebug(false),
     m_isVerbose(false)
 {
@@ -114,7 +120,7 @@ VeloSim::VeloSim( const std::string& name,
 //===========================================================================
 // Destructor
 //===========================================================================
-VeloSim::~VeloSim() {};
+VeloSim::~VeloSim() {}
 //===========================================================================
 // Initialisation. Check parameters
 //===========================================================================
@@ -180,7 +186,7 @@ StatusCode VeloSim::initialize() {
     tool<IRadDamageTool>(m_radToolType,"RadDamage",this);
 
   return StatusCode::SUCCESS;
-};
+}
 //===========================================================================
 // Main execution
 //===========================================================================
@@ -204,13 +210,13 @@ StatusCode VeloSim::execute() {
 	iCont != m_inputContainers.end() ; ++ iCont ){
     unsigned int timeIndex = iCont - m_inputContainers.begin();
     
-    if( !exist<LHCb::MCHits>( *iCont ) ){
+    LHCb::MCHits * veloHits=getIfExists<LHCb::MCHits>( *iCont );
+    if( NULL == veloHits ){
       if(m_isDebug) debug() << "Could not find container " 
 			    << *iCont << endmsg;
       continue;
     }
     
-    LHCb::MCHits * veloHits=get<LHCb::MCHits>( *iCont );
     if(m_isDebug) debug()<< "Input " << *iCont
 			 << " has " << veloHits->size() 
 			 << " MCHits" << endmsg;
@@ -1136,19 +1142,18 @@ StatusCode VeloSim::storeOutputData(){
     if(m_isDebug) debug() 
       << "Writing " << m_FEs->size() << " MCVeloFEs to " << *iCont << endmsg;
 
-    LHCb::MCVeloFEs *outputCont;
-    if(exist<LHCb::MCVeloFEs>(*iCont)){
-      outputCont = get<LHCb::MCVeloFEs>(*iCont);
+    LHCb::MCVeloFEs *outputCont = getIfExists<LHCb::MCVeloFEs>(*iCont);
+    if( NULL != outputCont ){
       if(m_isVerbose) verbose() 
-	<< "Size of " << *iCont << " before update " << outputCont->size()
-	<< endmsg;      	
+        << "Size of " << *iCont << " before update " << outputCont->size()
+        << endmsg;      	
       LHCb::MCVeloFEs::const_iterator feIt;
       for(feIt=m_FEs->begin(); feIt!=m_FEs->end(); ++feIt){
-	outputCont->insert(*feIt);
+        outputCont->insert(*feIt);
       }
       if(m_isVerbose) verbose() 
-	<< "Size of " << *iCont << " after update " << outputCont->size()
-	<< endmsg;  
+        << "Size of " << *iCont << " after update " << outputCont->size()
+        << endmsg;  
     }else{
       put(m_FEs, *iCont); //push local container into TES
     }
