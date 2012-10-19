@@ -3,6 +3,7 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+!======================== LbBcVegPy v4r3p1 2012-10-19 ========================
 ! 2012-10-01 - Jibo He
  - Removed ecm from BcVegPy.py(.opts) to avoid confusion
 
