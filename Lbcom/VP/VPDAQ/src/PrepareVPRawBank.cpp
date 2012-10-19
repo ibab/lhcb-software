@@ -1,4 +1,3 @@
-// $Id: PrepareVPRawBank.cpp,v 1.2 2010-01-25 10:06:48 marcin Exp $
 // Include files:
 // GSL
 #include "gsl/gsl_math.h"
@@ -28,7 +27,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(PrepareVPRawBank);
+DECLARE_ALGORITHM_FACTORY(PrepareVPRawBank)
 
 //=============================================================================
 // Constructor
@@ -36,6 +35,7 @@ DECLARE_ALGORITHM_FACTORY(PrepareVPRawBank);
 PrepareVPRawBank::PrepareVPRawBank(const std::string& name,
                                              ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
+  , m_vPelDet(NULL)
 {
   declareProperty("ClusterLocation", m_clusterLocation = 
                   LHCb::VPClusterLocation::VPClusterLocation );
@@ -46,7 +46,7 @@ PrepareVPRawBank::PrepareVPRawBank(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrepareVPRawBank::~PrepareVPRawBank(){};
+PrepareVPRawBank::~PrepareVPRawBank(){}
 
 //=============================================================================
 // Initialisation
@@ -69,7 +69,7 @@ StatusCode PrepareVPRawBank::initialize() {
   std::sort(m_sensorNumbers.begin(),m_sensorNumbers.end());
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Execution
@@ -77,21 +77,17 @@ StatusCode PrepareVPRawBank::initialize() {
 StatusCode PrepareVPRawBank::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
   // Get input containers of clusters
-  const VPClusters* clusters = 0;
-  if(!exist<VPClusters>(m_clusterLocation)) {
-    error() << " ==> There are no VPClusters in TES! " << endmsg;
-    return StatusCode::FAILURE;
-  } else {
-    clusters = get<VPClusters>(m_clusterLocation);
+  const VPClusters* clusters = getIfExists<VPClusters>(m_clusterLocation);
+  if( NULL == clusters ) {
+    return Error( " ==> There are no VPClusters in TES! " );
   }
-  RawEvent* rawEvent;
+
   // Check if RawEvent exits
-  if(exist<RawEvent>(m_rawEventLocation)) {
-    rawEvent = get<RawEvent>(m_rawEventLocation);
-  } else {
+  RawEvent* rawEvent = getIfExists<RawEvent>(m_rawEventLocation);
+  if( NULL == rawEvent ) {
     // Create RawEvent
     rawEvent = new LHCb::RawEvent();
-    eventSvc()->registerObject(m_rawEventLocation,rawEvent);
+    put(rawEvent,m_rawEventLocation);
   }
   m_sortedClusters.clear();
   m_sortedClusters.resize(clusters->size());
@@ -129,8 +125,7 @@ StatusCode PrepareVPRawBank::execute() {
   }
 
   return StatusCode::SUCCESS;
-};       
-
+}
 
 //=============================================================================
 // Store RawBank
@@ -144,7 +139,7 @@ void PrepareVPRawBank::storeBank(int sensor,
   makeBank(begin,end);
   m_bankVersion = 1;
   if(m_vPelDet->sensor(sensor)) {
-    debug() << "Sensor = " << sensor << endmsg;
+    if(m_isDebug) debug() << "Sensor = " << sensor << endmsg;
     LHCb::RawBank* newBank =
           rawEvent->createBank(static_cast<SiDAQ::buffer_word>(sensor),
                                LHCb::RawBank::VP,

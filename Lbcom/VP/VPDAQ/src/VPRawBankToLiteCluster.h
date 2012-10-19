@@ -1,4 +1,3 @@
-// $Id: VPRawBankToLiteCluster.h,v 1.1.1.1 2010-01-21 13:16:41 marcin Exp $
 #ifndef VPRAWBANKTOLITECLUSTER_H 
 #define VPRAWBANKTOLITECLUSTER_H 1
 #include <vector>
@@ -52,8 +51,6 @@ private:
   std::string m_rawEventLocation;
   bool m_isDebug; 
   bool m_isVerbose;
-  DeVP* m_vPelDet;
-
 };
 
 #endif // VPRAWBANKTOLITECLUSTER_H

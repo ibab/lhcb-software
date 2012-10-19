@@ -1,4 +1,3 @@
-// $Id: VPRawBankToLiteCluster.cpp,v 1.2 2010-03-01 10:51:28 cocov Exp $
 // Include files:
 // GSL
 #include "gsl/gsl_math.h"
@@ -26,7 +25,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPRawBankToLiteCluster);
+DECLARE_ALGORITHM_FACTORY(VPRawBankToLiteCluster)
 
 //=============================================================================
 // Constructor
@@ -44,7 +43,7 @@ VPRawBankToLiteCluster::VPRawBankToLiteCluster(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPRawBankToLiteCluster::~VPRawBankToLiteCluster(){};
+VPRawBankToLiteCluster::~VPRawBankToLiteCluster(){}
 
 //=============================================================================
 // Initialisation
@@ -56,32 +55,37 @@ StatusCode VPRawBankToLiteCluster::initialize() {
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Execution
 //=============================================================================
 StatusCode VPRawBankToLiteCluster::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
+
   // Make new clusters container
   VPLiteCluster::VPLiteClusters* clusCont =
                       new VPLiteCluster::VPLiteClusters();
+  put(clusCont, m_clusterLocation);
   //clusCont->reserve()//could be good to eval that...
+
   // Retrieve the RawEvent
-  if(!exist<RawEvent>(m_rawEventLocation)){
+  RawEvent* rawEvt = getIfExists<RawEvent>(m_rawEventLocation);
+  if( NULL == rawEvt ){
     return Warning("Failed to find raw data", StatusCode::SUCCESS,1);
   }
-  RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation);
+
   // Decode RawBanks
   StatusCode sc = decodeRawBanks(rawEvt,clusCont);
   if(sc.isFailure()){
-    return Error("Problems in decoding, event skipped", sc);
+    return Error("Problems in decoding, event skipped", StatusCode::SUCCESS );
   }
+
   std::sort(clusCont->begin(),clusCont->end(),SiDataFunctor::Less_by_Channel< LHCb::VPLiteCluster >());
-  put(clusCont, m_clusterLocation);
+
   return sc;
 
-};
+}
 
 
 //=============================================================================
@@ -108,7 +112,7 @@ StatusCode VPRawBankToLiteCluster::decodeRawBanks(RawEvent* rawEvt,
     VPRawBankDecoder<VPClusterWord> decoder((*iterBank)->data());
     // Get version of the bank
     unsigned int bankVersion = (*iterBank)->version();
-    debug() << "Decoding bank version " << bankVersion << endmsg;
+    if(m_isDebug) debug() << "Decoding bank version " << bankVersion << endmsg;
     // Decode lite clusters
     VPRawBankDecoder<VPClusterWord>::pos_iterator iterClu =
                                                             decoder.posBegin();

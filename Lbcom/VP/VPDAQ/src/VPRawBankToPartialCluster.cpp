@@ -1,4 +1,3 @@
-// $Id: VPRawBankToPartialCluster.cpp,v 1.2 2010-03-30 08:20:40 cocov Exp $
 // Include files:
 // GSL
 #include "gsl/gsl_math.h"
@@ -27,7 +26,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPRawBankToPartialCluster);
+DECLARE_ALGORITHM_FACTORY(VPRawBankToPartialCluster)
 
 //=============================================================================
 // Constructor
@@ -35,6 +34,7 @@ DECLARE_ALGORITHM_FACTORY(VPRawBankToPartialCluster);
 VPRawBankToPartialCluster::VPRawBankToPartialCluster(const std::string& name,
                                                  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
+  , m_vPelDet(NULL)
 {
   declareProperty("RawEventLocation", m_rawEventLocation =
                   LHCb::RawEventLocation::Default);
@@ -45,7 +45,7 @@ VPRawBankToPartialCluster::VPRawBankToPartialCluster(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPRawBankToPartialCluster::~VPRawBankToPartialCluster(){};
+VPRawBankToPartialCluster::~VPRawBankToPartialCluster(){}
 
 //=============================================================================
 // Initialisation
@@ -58,22 +58,25 @@ StatusCode VPRawBankToPartialCluster::initialize() {
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
   m_vPelDet = getDet<DeVP>(DeVPLocation::Default);
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Execution
 //=============================================================================
 StatusCode VPRawBankToPartialCluster::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
+
   // Make new clusters container
   VPCluster::Container* clusCont =
                       new VPCluster::Container();
   put(clusCont, m_clusterLocation);
+
   // Retrieve the RawEvent
-  if(!exist<RawEvent>(m_rawEventLocation)){
+  RawEvent* rawEvt = getIfExists<RawEvent>(m_rawEventLocation);
+  if( NULL == rawEvt ){
     return Warning("Failed to find raw data", StatusCode::SUCCESS,1);
   }
-  RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation);
+
   // Decode RawBanks
   StatusCode sc = decodeRawBanks(rawEvt,clusCont);
   if(sc.isFailure()){
@@ -81,8 +84,7 @@ StatusCode VPRawBankToPartialCluster::execute() {
   }
 
   return sc;
-};
-
+}
 
 //=============================================================================
 // Decode RawBanks
@@ -108,7 +110,7 @@ StatusCode VPRawBankToPartialCluster::decodeRawBanks(RawEvent* rawEvt,
     VPRawBankDecoder<VPClusterWord> decoderCluster((*iterBank)->data());
     // Get version of the bank
     unsigned int bankVersion = (*iterBank)->version();
-    debug() << "Decoding bank version " << bankVersion << endmsg;
+    if(m_isDebug) debug() << "Decoding bank version " << bankVersion << endmsg;
     // Decode lite clusters
     VPRawBankDecoder<VPClusterWord>::pos_iterator iterClu =
                                                             decoderCluster.posBegin();

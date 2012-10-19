@@ -4,6 +4,14 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix potential memory leak in VPRawBankToLiteCluster and do not return 
+   StatusCode::FAILURE from execute
+ - Use getItExists
+ - Fix UNINIT_CTOR defects
+ - Fix unprotected debug()
+ - Fix gcc -pedantic warnings 
+
 !========================= VPDAQ v2r0 2012-10-01 =========================
 ! 2012-09-24 - Paul Szczypka
  - Rename Package to VPDAQ
