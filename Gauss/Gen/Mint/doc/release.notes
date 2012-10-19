@@ -5,6 +5,8 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
+
+!=========================== Mint v1r5 2012-10-19 ============================
 ! 01-10-2012 - Matt Coombes
  - Fixed some compiler errors on Mountain Lion. Use of Key word template in DDTree.h
 
