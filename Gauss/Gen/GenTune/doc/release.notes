@@ -5,6 +5,7 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+!========================== GenTune v1r0 2012-10-19 ==========================
 ! 2012-09-26 - Alex Grecu
  - included QMTests with references for i686- and x86-64- slc5-gcc43 platforms
 
@@ -24,3 +25,4 @@
 
 ! 2012-07-12 - Alex Grecu
  - alpha release; only official Rivet plugins work; user plugins may crash!
+!============================================================================
