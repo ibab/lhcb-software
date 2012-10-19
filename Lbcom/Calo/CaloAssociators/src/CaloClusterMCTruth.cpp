@@ -1,4 +1,3 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.12 2010-06-10 07:44:30 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -120,7 +119,7 @@ private:
   // ==========================================================================
 };
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY(CaloClusterMCTruth);
+DECLARE_ALGORITHM_FACTORY(CaloClusterMCTruth)
 // ============================================================================
 // algorithm execution 
 // ============================================================================
@@ -154,13 +153,12 @@ StatusCode CaloClusterMCTruth::execute    ()
   {
     
     // get the container of clusters 
-    if( !exist<Clusters>( *container))  
+    Clusters* clusters = getIfExists<Clusters> ( *container ) ;
+    if( NULL == clusters )  
     {
       Warning ( "No clusters at '" + (*container) + "'", StatusCode::SUCCESS ) ;
       continue ;                                                    // CONTINUE 
     }
-    
-    Clusters* clusters = get<Clusters> ( *container ) ;
     
     // loop over all clusters in the container  
     for ( Clusters::const_iterator icluster = clusters->begin() ; 

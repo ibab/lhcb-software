@@ -1,4 +1,3 @@
-// $Id: CaloHypoMCTruth.cpp,v 1.13 2009-09-02 13:31:31 cattanem Exp $
 // ============================================================================
 // Include files 
 #include "Relations/RelationWeighted1D.h"
@@ -31,13 +30,13 @@ CaloHypoMCTruth::CaloHypoMCTruth( const std::string& name ,ISvcLocator*       pS
   m_inputs.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , MergedPi0s   ) ) ;
   m_inputs.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , SplitPhotons ) ) ;
 
-};
+}
 // ============================================================================
 
 // ============================================================================
 // declare algorithm factory
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY(CaloHypoMCTruth);
+DECLARE_ALGORITHM_FACTORY(CaloHypoMCTruth)
 // ============================================================================
 
 // ============================================================================
@@ -45,9 +44,7 @@ DECLARE_ALGORITHM_FACTORY(CaloHypoMCTruth);
 // ============================================================================
 StatusCode CaloHypoMCTruth::execute    (){
   //--- load cluster->MC
-  const LHCb::Calo2MC::IClusterTable* cluster2MC = NULL;
-  if( exist<LHCb::Calo2MC::IClusterTable>(m_cluster2MCLoc ) )
-    cluster2MC  = get<LHCb::Calo2MC::IClusterTable>( m_cluster2MCLoc );
+  const LHCb::Calo2MC::IClusterTable* cluster2MC  = getIfExists<LHCb::Calo2MC::IClusterTable>( m_cluster2MCLoc );
   if( NULL == cluster2MC ) 
     return Warning(" Cluster <-> MC relation table not found at " + m_cluster2MCLoc , StatusCode::FAILURE);
   
@@ -57,12 +54,11 @@ StatusCode CaloHypoMCTruth::execute    (){
     std::string container = *c;
     LHCb::Calo2MC::HypoLink linker ( eventSvc () , msgSvc () , container );
     int links=0;
-    if( !exist<LHCb::CaloHypos>( container ) ){
+    const LHCb::CaloHypos* hypos = getIfExists<LHCb::CaloHypos>(container);
+    if( NULL == hypos ){
       counter("No container " + container)+=1;
       continue;
     }
-    const LHCb::CaloHypos* hypos = get<LHCb::CaloHypos>(container);
-    if( hypos == NULL )continue;
     for( LHCb::CaloHypos::const_iterator h = hypos->begin() ;hypos->end()!=h ; ++h){
       const LHCb::CaloHypo* hypo = *h;
       const LHCb::CaloCluster* cluster = LHCb::CaloAlgUtils::ClusterFromHypo( hypo );
@@ -79,6 +75,5 @@ StatusCode CaloHypoMCTruth::execute    (){
   }
   return StatusCode::SUCCESS ;
   
-};
+}
 // ============================================================================
-
