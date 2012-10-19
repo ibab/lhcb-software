@@ -1,4 +1,3 @@
-// $Id: MuonCoord2MCParticleLink.cpp,v 1.4 2008-04-11 10:21:59 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MuonCoord2MCParticleLink );
+DECLARE_ALGORITHM_FACTORY( MuonCoord2MCParticleLink )
 
 using namespace LHCb;
 
@@ -26,13 +25,15 @@ using namespace LHCb;
 MuonCoord2MCParticleLink::MuonCoord2MCParticleLink( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_digitLink(NULL)
+  , m_muonBuffer(NULL)
 {
   // declareProperty("AssociateAll" , m_associateAll=true) ;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonCoord2MCParticleLink::~MuonCoord2MCParticleLink() {}; 
+MuonCoord2MCParticleLink::~MuonCoord2MCParticleLink() {}
 
 //=============================================================================
 // Initialization
@@ -41,18 +42,18 @@ StatusCode MuonCoord2MCParticleLink::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode MuonCoord2MCParticleLink::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   LinkerWithKey<LHCb::MCParticle,LHCb::MuonCoord> myLink(eventSvc(),
                                              msgSvc(),
@@ -82,7 +83,7 @@ StatusCode MuonCoord2MCParticleLink::execute() {
 
     StatusCode sc=associateToTruth(*iCoord,partMap);
     if( sc.isFailure() ) {
-      debug() << "Invalid layer/region" << endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug() << "Invalid layer/region" << endmsg;
       continue;
     }
     
@@ -94,14 +95,14 @@ StatusCode MuonCoord2MCParticleLink::execute() {
     
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode MuonCoord2MCParticleLink::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

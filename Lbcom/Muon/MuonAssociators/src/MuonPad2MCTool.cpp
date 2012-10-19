@@ -1,4 +1,3 @@
-// $Id: MuonPad2MCTool.cpp,v 1.3 2010-03-02 09:51:26 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -19,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MuonPad2MCTool );
+DECLARE_TOOL_FACTORY( MuonPad2MCTool )
 
 using namespace LHCb;
 
@@ -119,7 +118,7 @@ MCParticle* MuonPad2MCTool::Pad2MC(LHCb::MuonTileID tile)
   if(strips[0].isValid())
   {
     pplink = myLink.first( strips[0] );
- //info()<<" find the digit corresponding to tile "<<pplink<<endreq;
+ //info()<<" find the digit corresponding to tile "<<pplink<<endmsg;
     if(pplink!=NULL){
       if(pplink->particleID().abspid()==13)return pplink;
     }      
@@ -139,7 +138,7 @@ bool MuonPad2MCTool::isXTalk(LHCb::MuonTileID tile,MCParticle*& pp){
      if(pp!=NULL) xt=true;
    }else if(tile.station()==3&&tile.region()==0){
      XtalkPad(tile,pp);
-     // if(pp!=NULL)info()<<"found a muon "<<pp->particleID().pid()<<endreq;
+     // if(pp!=NULL)info()<<"found a muon "<<pp->particleID().pid()<<endmsg;
      if(pp!=NULL) xt=true;
      
    }else if(tile.station()==4&&tile.region()==0){
@@ -160,13 +159,13 @@ StatusCode MuonPad2MCTool::XtalkPad(MuonTileID tile,MCParticle*& pp)
 {
   IntLink* link=get<IntLink>(LHCb::MCMuonDigitLocation::MCMuonDigit + "Info");
   if(link){
-    // info()<<" link found"<<endreq;
+    // info()<<" link found"<<endmsg;
     int  stored=link->link(tile);
-    //info()<<stored<<endreq;
+    //info()<<stored<<endmsg;
     MCMuonDigitInfo mc;
     mc.setDigitInfo(stored);
     if(mc.isXTalkHit()){
-      //info()<<" cross talk hits !!!"<<endreq;
+      //info()<<" cross talk hits !!!"<<endmsg;
       MuonTileID top=tile.neighbourID(0,1);
       MuonTileID bottom=tile.neighbourID(0,-1);
       MuonTileID left=tile.neighbourID(-1,0);
@@ -211,13 +210,13 @@ StatusCode MuonPad2MCTool::XtalkStrip(MuonTileID tile,MCParticle*& pp)
   uno=tile.containerID(layoutone);
   IntLink* link=get<IntLink>(LHCb::MCMuonDigitLocation::MCMuonDigit + "Info");
   if(link){
-//    info()<<" link found"<<endreq;
+//    info()<<" link found"<<endmsg;
     int  storedone=link->link(uno);
-//    info()<<storedone<<endreq;
+//    info()<<storedone<<endmsg;
     MCMuonDigitInfo mcone;
     mcone.setDigitInfo(storedone);
     if(mcone.isXTalkHit()){
-//      info()<<" cross talk hits !!!"<<endreq;
+//      info()<<" cross talk hits !!!"<<endmsg;
       MuonTileID top=uno.neighbourID(0,1);
       MuonTileID bottom=uno.neighbourID(0,-1);
       MuonTileID left=uno.neighbourID(-1,0);
@@ -240,11 +239,11 @@ StatusCode MuonPad2MCTool::XtalkStrip(MuonTileID tile,MCParticle*& pp)
       }
     }
     int  storeddue=link->link(due);
-//    info()<<storeddue<<endreq;
+//    info()<<storeddue<<endmsg;
     MCMuonDigitInfo mcdue;
     mcdue.setDigitInfo(storeddue);
     if(mcdue.isXTalkHit()){
-//      info()<<" cross talk hits !!!"<<endreq;
+//      info()<<" cross talk hits !!!"<<endmsg;
       MuonTileID top=due.neighbourID(0,1);
       MuonTileID bottom=due.neighbourID(0,-1);
       MuonTileID left=due.neighbourID(-1,0);

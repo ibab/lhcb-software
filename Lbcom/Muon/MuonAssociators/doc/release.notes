@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.28 2010-03-18 14:29:04 cattanem Exp $
 ! Package     : MuonAssociators
 ! Responsible : Alessia Satta
 !---------------------------------------------------------------------------
+
+! 2012-10-19 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Fix UNINIT_CTOR defects
+ - Protect unprotected debug()
+ - Replace endreq by endmsg
 
 !==================== MuonAssociators v3r3 2010-03-18 ======================
 ! 2010-03-02 - Alessia Satta

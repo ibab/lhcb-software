@@ -1,4 +1,3 @@
-// $Id: MuonTileDigitInfo.cpp,v 1.4 2006-02-23 07:45:51 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MuonTileDigitInfo );
+DECLARE_ALGORITHM_FACTORY( MuonTileDigitInfo )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -29,7 +28,7 @@ MuonTileDigitInfo::MuonTileDigitInfo( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonTileDigitInfo::~MuonTileDigitInfo() {}; 
+MuonTileDigitInfo::~MuonTileDigitInfo() {}
 
 //=============================================================================
 // Initialization
@@ -38,10 +37,10 @@ StatusCode MuonTileDigitInfo::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================
@@ -49,7 +48,7 @@ StatusCode MuonTileDigitInfo::initialize() {
 //=============================================================================
 StatusCode MuonTileDigitInfo::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   LHCb::IntLink * myIntLink = new LHCb::IntLink();
   std::map<int,int> mylink; ///< list of linked ints
 
@@ -67,7 +66,7 @@ StatusCode MuonTileDigitInfo::execute() {
     LHCb::MCMuonDigit * mcDigit = mcDigits->object((*iDigit)->key());
     if(!mcDigit) {
       error() << "Could not find the match for " << (*iDigit)->key()
-	      << " in " << LHCb::MCMuonDigitLocation::MCMuonDigit << endreq;
+	      << " in " << LHCb::MCMuonDigitLocation::MCMuonDigit << endmsg;
       return StatusCode::FAILURE;
     }
     
@@ -83,7 +82,7 @@ StatusCode MuonTileDigitInfo::execute() {
     
   put(myIntLink,path.data());
   return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================
@@ -91,7 +90,7 @@ StatusCode MuonTileDigitInfo::execute() {
 //=============================================================================
 StatusCode MuonTileDigitInfo::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
