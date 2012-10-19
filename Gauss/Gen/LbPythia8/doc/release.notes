@@ -4,6 +4,7 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v5r0 2012-10-19 =========================
 ! 2012-10-08 - Aurelien Martens
  - Reduce verbosity
 
