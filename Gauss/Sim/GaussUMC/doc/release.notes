@@ -6,6 +6,10 @@
 !               present detector simulation
 !-----------------------------------------------------------------------------
 
+!========================= GaussUMC v2r0 2012-10-19 ==========================
+! 2012-10-19 - Gloria Corti
+ - Remove obolete files GaussUMC_{dll,load}.cpp
+
 ! 2012-09-13 - Paul Szczypka
  - Rename EVERYTHING from VeloPix to VP or corresponding string.
  - Moved *VeloPix* files to *VP*
