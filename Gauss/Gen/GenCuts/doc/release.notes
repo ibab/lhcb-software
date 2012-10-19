@@ -4,6 +4,7 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+!========================== GenCuts v3r1 2012-10-19 ========================== 
 ! 2012-09-27 - Aurelien Martens
  - Added a bug fix for DaughtersInLHCbAndWithDaughAndBCuts
 
