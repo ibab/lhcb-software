@@ -4,6 +4,7 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v9r1 2012-10-19 =========================
 ! 2012-07-25 - Patrick Robbe
  - Correct name for anti-xi_b+
  - Correct spin of Xi_cc+ and anti-Xi_cc-
