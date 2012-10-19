@@ -29,7 +29,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( VPClusterPosition );
+DECLARE_TOOL_FACTORY( VPClusterPosition )
 
 using namespace boost::assign;
 
@@ -64,12 +64,11 @@ VPClusterPosition::VPClusterPosition(const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPClusterPosition::~VPClusterPosition(){
-};
+VPClusterPosition::~VPClusterPosition(){}
 //=============================================================================
 StatusCode VPClusterPosition::initialize()
 {
-  debug()<< " ==> initialize() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> initialize() " <<endmsg;
   //
   StatusCode sc=GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
@@ -84,7 +83,7 @@ StatusCode VPClusterPosition::initialize()
 //=============================================================================
 StatusCode VPClusterPosition::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   return ( GaudiTool::finalize() );  // must be called after all other actions
 }
