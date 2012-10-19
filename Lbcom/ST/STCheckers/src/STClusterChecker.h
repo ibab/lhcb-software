@@ -1,4 +1,3 @@
-// $Id: STClusterChecker.h,v 1.8 2010-04-05 09:49:18 mneedham Exp $
 #ifndef STClusterChecker_H
 #define STClusterChecker_H 1
 
@@ -22,7 +21,7 @@ namespace LHCb{
   class MCHit;
   class STCluster;
   class MCParticle;
-};
+}
 
 class IMCParticleSelector;
 
