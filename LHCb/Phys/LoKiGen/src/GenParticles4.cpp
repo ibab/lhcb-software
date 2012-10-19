@@ -208,7 +208,7 @@ LoKi::GenParticles::FourMomentum::momentum
       Error ( "daughter HepMC::GenParticle* points to NULL, skip it" ) ;
       continue ;
     } 
-    result += LoKi::LorentzVector ( p->momentum () ) ;
+    result += LoKi::LorentzVector ( c->momentum () ) ;
   }
   //
   return result ;

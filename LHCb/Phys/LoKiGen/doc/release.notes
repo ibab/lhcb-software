@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-10-19 - Vanya Belyaev
+ - bug fix in 4-vector-functors
+   many tahnks to Regis Lefevre for problem report 
+
 !========================= LoKiGen v10r8 2012-06-25 =========================
 ! 2012-06-18 - Vanya Belyaev
  - redesign kinematical functors 
