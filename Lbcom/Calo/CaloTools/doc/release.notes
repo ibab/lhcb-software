@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Use getItExists where appropriate
+
 !========================= CaloTools v6r4 2012-06-25 =========================
 ! 2012-05-29 - Marco Cattaneo
  - Fix unused variable in previous commit
