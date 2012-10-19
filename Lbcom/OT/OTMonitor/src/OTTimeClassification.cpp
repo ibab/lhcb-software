@@ -115,21 +115,26 @@ StatusCode  OTTimeClassification::finalize()
   unsigned int spillover = total - eventSpill - m_infoMap["noise"];
 
   info() << "--- OTTimeClassification ---------------" << endmsg;
-  info() << "Event Spill " << eventSpill / double(total) << endmsg;
-  info() << "   |---> Primary " << m_infoMap["primary"] / double(total) << endmsg;
-  info() << "   |---> Secondary " << m_infoMap["secondary"] / double(total) << endmsg;
-  info() << "   |---> Unknown " << m_infoMap["unknown"] / double(total) << endmsg;
-  info() << "Noise " << m_infoMap["noise"] / double(total) << endmsg ;
-  info() << "Spillover " << spillover / double(total) << endmsg;
+  if( total > 0. ) {
+    info() << "Event Spill " << eventSpill / double(total) << endmsg;
+    info() << "   |---> Primary " << m_infoMap["primary"] / double(total) << endmsg;
+    info() << "   |---> Secondary " << m_infoMap["secondary"] / double(total) << endmsg;
+    info() << "   |---> Unknown " << m_infoMap["unknown"] / double(total) << endmsg;
+    info() << "Noise " << m_infoMap["noise"] / double(total) << endmsg ;
+    info() << "Spillover " << spillover / double(total) << endmsg;
 
-  for(InfoIter it = m_infoMap.begin(); it != m_infoMap.end(); it++)
-  {
-    if(it->first != "noise" && it->first != "primary" && it->first != "unknown" && it->first != "secondary")
+    for(InfoIter it = m_infoMap.begin(); it != m_infoMap.end(); it++)
     {
-      info() << it->first << " " << it->second / double(total) << endmsg;
+      if(it->first != "noise" && it->first != "primary" && it->first != "unknown" && it->first != "secondary")
+      {
+        info() << it->first << " " << it->second / double(total) << endmsg;
+      }
     }
   }
-
+  else {
+    info() << "No OTTimes found, classification not posible" << endmsg;
+  }
+  
   info() << "----------------------------------------" << endmsg;
 
   return  GaudiHistoAlg::finalize();

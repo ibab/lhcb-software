@@ -38,7 +38,11 @@ OTTimeMonitor::OTTimeMonitor(const std::string& name,
 			     ISvcLocator* pSvcLocator) :
   GaudiHistoAlg(name, pSvcLocator),
   m_decoder("OTRawBankDecoder"),
-  m_nEvents(0)
+  m_tracker(NULL),
+  m_nEvents(0),
+  m_nTimesHisto(NULL),
+  m_occPerModuleHisto(NULL),
+  m_calTimePerModulePr(NULL)
 {
   // constructor
   declareProperty( "RawBankDecoder", m_decoder ) ;

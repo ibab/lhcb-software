@@ -3,6 +3,10 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix Coverity defects
+ - Fix gcc -pedantic warning
+
 !========================= OTMonitor v3r3p1 2012-01-31 =====================
 ! 2012-01-17 - Marco Cattaneo
  - Fix UNINIT_CTOR warnings

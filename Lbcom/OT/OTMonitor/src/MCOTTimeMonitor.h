@@ -1,4 +1,3 @@
-// $Id: MCOTTimeMonitor.h,v 1.1 2009-04-27 16:58:56 janos Exp $
 #ifndef MCOTTIMEMONITOR_H 
 #define MCOTTIMEMONITOR_H 1
 
@@ -42,5 +41,5 @@ private:
 void MCOTTimeMonitor::scale( const HistoID& histoID, const double& weight ) const {
   AIDA::IHistogram1D* h =  histo1D( histoID );
   h->scale( weight );
-};
+}
 
