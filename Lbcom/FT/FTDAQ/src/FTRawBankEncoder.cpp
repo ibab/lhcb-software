@@ -27,7 +27,9 @@ FTRawBankEncoder::FTRawBankEncoder( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-
+  //== These parameters should eventually come from the Detector Element
+  m_nbBanks = 48;
+  m_nbSipmPerTELL40 = 128;
 }
 //=============================================================================
 // Destructor
@@ -42,10 +44,6 @@ StatusCode FTRawBankEncoder::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  //== These parameters should eventually come from the Detector Element
-  m_nbBanks = 48;
-  m_nbSipmPerTELL40 = 128;
 
   //== create the vector of vectors of vectors with the proper size...
   std::vector<std::vector<unsigned int> > temp(m_nbSipmPerTELL40);

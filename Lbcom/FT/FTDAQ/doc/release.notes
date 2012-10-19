@@ -4,6 +4,11 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Fix UNINIT_CTOR defect
+ - Fix unprotected debugs
+
 !========================= FTDAQ v1r0 2012-10-01 =========================
 ! 2012-07-30 - Olivier Callot
  - Change the number of bits for fraction, form 3 to 2.

@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef FTRAWBANKPARAMS_H 
 #define FTRAWBANKPARAMS_H 1
 
@@ -18,7 +17,6 @@ namespace FTRawBank {
     sizeMaximum     = 7,
     chargeMaximum   = 15 
   };
-};
-
+}
 
 #endif // FTRAWBANKPARAMS_H

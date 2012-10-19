@@ -1,4 +1,3 @@
-// $Id: $
 // Include files
 
 // from Gaudi
@@ -61,14 +60,16 @@ StatusCode FTRawBankDecoder::execute() {
   put( clus, LHCb::FTRawClusterLocation::Default );
 
   const std::vector<LHCb::RawBank*>& banks = event->banks( LHCb::RawBank::FTCluster );
-  debug() << "Number of raw banks " << banks.size() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Number of raw banks " << banks.size() << endmsg;
   for ( std::vector <LHCb::RawBank*>::const_iterator itB = banks.begin(); banks.end() != itB; ++itB ) {
     int source  = (*itB)->sourceID();
     int layer   = source/4;
     int quarter = source & 3;
     int size    = (*itB)->size(); // in bytes, multiple of 4
     short int* pt = (short int*)(*itB)->data();
-    debug() << "source " << source << " layer " << layer << " quarter " << quarter << " size " << size << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "source " << source << " layer "
+                                        << layer << " quarter "
+                                        << quarter << " size " << size << endmsg;
     if ( 0 == (*itB)->version()  ) {
       size /= 2;   // in short int
       while( size > 0 ) {
@@ -77,7 +78,9 @@ StatusCode FTRawBankDecoder::execute() {
         if ( 0 == size && 0 == sipmHeader ) continue;  // padding at the end...
         int mySiPM = sipmHeader >> FTRawBank::sipmShift;
         int nClus  = sipmHeader &  FTRawBank::nbClusMaximum;
-        if ( 0 < nClus ) debug() << "   SiPM " << mySiPM << " nClus " << nClus << " size " << size << endmsg;
+        if ( 0 < nClus && msgLevel(MSG::DEBUG) )
+          debug() << "   SiPM " << mySiPM << " nClus " << nClus
+                  << " size " << size << endmsg;
         while ( nClus > 0 ) {
           int fraction = ( (*pt) >> FTRawBank::fractionShift ) & FTRawBank::fractionMaximum;
           int cell     = ( (*pt) >> FTRawBank::cellShift     ) & FTRawBank::cellMaximum;
