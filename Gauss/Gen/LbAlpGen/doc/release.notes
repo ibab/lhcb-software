@@ -5,8 +5,9 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
-! 2012-10-12 - Stephane Tourneur
+!========================== LbAlpGen v3r0 2012-10-19 ==========================
 
+! 2012-10-12 - Stephane Tourneur
  - Main change: We have now four new Production tools available that enable to select the alpgen hard process in the job option file 
     -> AlpGenProduction4q,  AlpGenProductionzbb, AlpGenProductionwqq, AlpGenProductiontop
     -> AlpGenProduction is deprecated
