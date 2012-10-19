@@ -3,11 +3,13 @@
 ! Purpose     : General Gauss algorithms
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
-!2012-09-27 - Sajan Easo
 
+
+!======================== GaussAlgs v6r1 2012-10-19 ===========================
+! 2012-09-27 - Sajan Easo
  -Added UT detector paths in GiGaGetHitsAlg
-!2012-09-26 - Sajan Easo
 
+! 2012-09-26 - Sajan Easo
  -Added FT detector paths in GiGaGetHitsAlg
 
 ! 2012-08-30 - Paul Szczypka
