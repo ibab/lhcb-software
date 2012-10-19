@@ -1,4 +1,3 @@
-// $Id: BitReader.h,v 1.1 2009-08-10 08:51:25 szumlat Exp $
 #ifndef KERNEL_BITREADER_H 
 #define KERNEL_BITREADER_H 1
 
@@ -32,5 +31,5 @@ namespace VeloTELL1{
     std::cout<<std::endl;
   }
 
-};
+}
 #endif // KERNEL_BITREADER_H

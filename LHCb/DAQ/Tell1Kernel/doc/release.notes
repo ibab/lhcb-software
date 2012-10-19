@@ -3,6 +3,9 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
+! 2012-10-19 - Marco Cattaneo
+ - Fix a gcc -pedantic warning
+
 !========================= Tell1Kernel v1r12p1 2012-01-31 ================
 ! 2011-12-20 - Marco Cattaneo
  - Fix trivial icc remark
