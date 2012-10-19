@@ -890,7 +890,7 @@ void PatMakeV0::computeParamRichVelo_Ks() const {
 
 
   double vectPar[55];  // third degree max in phase space var's.
-  int jpar;
+  int jpar = 0;
   int idegp;
 
   idegp=m_ideg_x_Rich1_Ks+1;
@@ -926,7 +926,7 @@ void PatMakeV0::computeParamRichVelo_Ks_Der() const {
   */
 
   double vectPar[55];  // third degree max in phase space var's.
-  int jpar;
+  int jpar = 0;
   int idegp;
 
   idegp=m_ideg_x_Rich1_Ks_Der+1;

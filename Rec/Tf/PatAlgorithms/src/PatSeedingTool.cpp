@@ -1089,8 +1089,8 @@ void PatSeedingTool::collectITOT(
 	otTypMin = 0, otTypMax = m_nOTReg;
 
       //== Some data in OT ??
-      for (unsigned ista = 0, sta = stationorder[ITSta][ista]; ista < 3;
-	  sta = stationorder[ITSta][++ista]) {
+      for (unsigned ista = 0; ista < 3; ++ista ) {
+        unsigned sta = stationorder[ITSta][ista];
 	// skip station used to produce the seed (we used all hits there)
 	if ( sta == ITSta ) continue;
 	unsigned nbPlanes = track.nPlanes();

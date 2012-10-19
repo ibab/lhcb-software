@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2012-10-19 - Olivier Callot
+ - fix an unitialized variable it PatMakeV0, unused code.
+ - fix an out-of-bound access in an array in PatSeedingTool
+
 ! 2012-10-18 - Marco Cattaneo
  - Fix an untested debug()
  - Fix UNINIT_CTOR defects
