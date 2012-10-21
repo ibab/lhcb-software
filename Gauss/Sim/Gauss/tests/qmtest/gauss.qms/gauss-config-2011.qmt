@@ -68,9 +68,9 @@
     LineSkipper([&quot;PDFset&quot;]) + \
     LineSkipper([&quot;ChronoStatSvc.f...   INFO  Service finalized succes&quot;])  + \
     LineSkipper([r&quot;GiGaGeo.HpdSiliconSen...  DEBUG Now in ProcessHits().*&quot;]) + \
-    LineSkipper([r&quot;MainEventGaussSim         DEBUG event.*&quot;]) + \
-    LineSkipper([r&quot;GaussGen                  DEBUG event.*&quot;])
-
+    LineSkipper([r&quot;MainEventGaussSim\S*DEBUG event.*&quot;]) + \
+    LineSkipper([r&quot;GaussGen\S*DEBUG event.*&quot;]) + \
+    LineSkipper([r&quot;SimulationSvc\S*INFO Loading simulation attributes file.*&quot;])
 validateWithReference(preproc = preprocessor)</text>
 </argument>
 <argument name="resources">
