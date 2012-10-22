@@ -4,7 +4,7 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
-</PRE><H1><A NAME="v42r2">2012-10-19 - GaussSys v42r2</A></H1><PRE>
+</PRE><H1><A NAME="v42r2">2012-10-22 - GaussSys v42r2</A></H1><PRE>
 <H2><A NAME="Note">Release for first productions for 2012 data and upgrade.
     </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -25,6 +25,10 @@ Purpose: LHCb Simulation program
    LHCb versions 
 </A></H3>
 
+! 2012-10-22 - Gloria Corti
+ - Pick up LoKiGen from LHCb to be able to include fix for bug in GMASS in 
+   LoKi generator level cuts. See savannah task #30285 for details
+
 ! 2012-10-19 - Gloria Corti
  - Introduce use of LCG_Setting private copy to allow private versions of the
    LCG_Generators_Interfaces
@@ -40,7 +44,21 @@ Purpose: LHCb Simulation program
      description
    . VL/VLMoniSim: monitoring for Velo Lite Strips for Upgrade 
 
-!========================= Gauss v42r2 2012-10-19 ============================
+!========================= Gauss v42r2 2012-10-22 ============================
+! 2012-10-22 - Paul Szczypka
+ - Modified (corrected) gauss-config reference file.
+
+! 2012-10-22 - Paul Szczypka
+ - added Upgrade options files:
+ - $GAUSSOPTS/Gauss-Upgrade-VL-UT-FT.py
+ - $GAUSSOPTS/Gauss-Upgrade-VL-UT-FT-noRich1.py
+ - $GAUSSOPTS/Gauss-Upgrade-VP-UT-FT.py
+ - $GAUSSOPTS/Gauss-Upgrade-VP-UT-FT-noRich1.py
+ - $GAUSSOPTS/Gauss-Upgrade-Reference.py
+
+! 2012-10-21 - Paul Szczypka
+ - made corrections to config references and test
+
 ! 2012-10-18 - Paul Szczypka
  - tinkering with the qmtest config
 

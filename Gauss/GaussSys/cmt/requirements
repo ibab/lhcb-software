@@ -6,6 +6,8 @@ branches cmt doc
 #==================================================================
 # Gauss packages
 #==================================================================
+# From LHCb to pick up bug fix
+use LoKiGen             v10r9   Phys
 
 # Gauss application: the application is not built on Win32
 use Gauss               v42r2   Sim
