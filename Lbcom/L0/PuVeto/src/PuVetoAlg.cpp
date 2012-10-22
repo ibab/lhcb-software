@@ -28,7 +28,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PuVetoAlg );
+DECLARE_ALGORITHM_FACTORY( PuVetoAlg )
 
 
 //=============================================================================
@@ -42,6 +42,14 @@ PuVetoAlg::PuVetoAlg( const std::string& name,
   , m_maskingWindow       (    9      )
   , m_binFile             (    ""     )
   , m_evtNum              (    0      )
+  , m_velo(NULL)
+  , m_OutputFile(NULL)
+  , m_PUvertices(NULL)
+  , m_PUvertex1Pos(NULL)
+  , m_PUvertex2Pos(NULL)
+  , m_PUvertex1Height(NULL)
+  , m_PUvertex2Height(NULL)
+  , m_multiplicity(NULL)
 {
   declareProperty( "OutputContainer"    , m_outputContainer ); 
   declareProperty( "PeakThreshold"      , m_lowThreshold    );
@@ -57,7 +65,7 @@ PuVetoAlg::PuVetoAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PuVetoAlg::~PuVetoAlg() {}; 
+PuVetoAlg::~PuVetoAlg() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -67,7 +75,7 @@ StatusCode PuVetoAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialise PuVetoAlg" << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialise PuVetoAlg" << endmsg;
 
   DeVelo* m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
@@ -77,7 +85,7 @@ StatusCode PuVetoAlg::initialize() {
   for (std::vector<DeVeloSensor*>::const_iterator iPU=m_velo->pileUpSensorsBegin();
        iPU != m_velo->pileUpSensorsEnd(); ++iPU, ++i) {
     m_zSensor[i] = (*iPU)->z(); 
-    //if (msgLevel(MSG::DEBUG)) debug() << "Sensor " << i << " z = " << m_zSensor[i] << endreq;
+    //if (msgLevel(MSG::DEBUG)) debug() << "Sensor " << i << " z = " << m_zSensor[i] << endmsg;
   }
  
   // Initialize the binning matrix (just in case)
@@ -119,7 +127,7 @@ StatusCode PuVetoAlg::initialize() {
   if (m_binFile != "") {
     std::ifstream binfile(m_binFile.c_str());
     if (!binfile.good()) {
-      fatal() << "Corrupt binning file: " << m_binFile << endreq;
+      fatal() << "Corrupt binning file: " << m_binFile << endmsg;
       return StatusCode::FAILURE;
     }
     
@@ -158,17 +166,17 @@ StatusCode PuVetoAlg::initialize() {
   } 
 
 
-  //if (msgLevel(MSG::DEBUG)) debug() << m_nBins << " bins, starting at z =  " << m_minHistoZ << endreq;
+  //if (msgLevel(MSG::DEBUG)) debug() << m_nBins << " bins, starting at z =  " << m_minHistoZ << endmsg;
   for (int i=0;i<m_nBins;i++) {
     //if (msgLevel(MSG::DEBUG)) debug() << "bin " << i << " starts at " << m_binStart[i] 
-    //        << ", width " << m_binLength[i] << endreq;
+    //        << ", width " << m_binLength[i] << endmsg;
   }
    
   // Set r positions of PU "clusters" (4 strips OR-ed together)
   const DeVeloRType* firstSens=(*(m_velo->pileUpRSensorsBegin()));
   for (int i=0;i<128;i++) {
     m_rCluster[i] = firstSens->rOfStrip(i*4+2); 
-    //if (msgLevel(MSG::DEBUG)) debug() << "Cluster " << i << "  r = " << m_rCluster[i] << endreq;
+    //if (msgLevel(MSG::DEBUG)) debug() << "Cluster " << i << "  r = " << m_rCluster[i] << endmsg;
   }
 
   for (int i=0;i<128;i++) {
@@ -181,13 +189,13 @@ StatusCode PuVetoAlg::initialize() {
   }
   
 
-  if (msgLevel(MSG::DEBUG)) debug() << "Peak low threshold: " << m_lowThreshold << endreq;
-  if (msgLevel(MSG::DEBUG)) debug() << "Masking window: " << m_maskingWindow << endreq;
-  if (msgLevel(MSG::DEBUG)) debug() << "Binning: " << m_binFile << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Peak low threshold: " << m_lowThreshold << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Masking window: " << m_maskingWindow << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Binning: " << m_binFile << endmsg;
 
-  // if (msgLevel(MSG::DEBUG)) debug() << "Peak high threshold: " << m_highThreshold << endreq;
-  //if (msgLevel(MSG::DEBUG)) debug() << "Peak high thr. position: " << m_highPosition << endreq;
-  //if (msgLevel(MSG::DEBUG)) debug() << "Peak position cut: " << m_secondPosition << endreq;
+  // if (msgLevel(MSG::DEBUG)) debug() << "Peak high threshold: " << m_highThreshold << endmsg;
+  //if (msgLevel(MSG::DEBUG)) debug() << "Peak high thr. position: " << m_highPosition << endmsg;
+  //if (msgLevel(MSG::DEBUG)) debug() << "Peak position cut: " << m_secondPosition << endmsg;
   
   // comment in case..
   
@@ -210,7 +218,7 @@ StatusCode PuVetoAlg::initialize() {
 //=============================================================================
 StatusCode PuVetoAlg::execute() {
 
-  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute: " << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute: " << endmsg;
   
   // Clear hit and masked bit patterns
   for (int k=0;k<4;k++) {
@@ -221,26 +229,27 @@ StatusCode PuVetoAlg::execute() {
   }
 
   m_totMult = 0;
-  debug() << "----- TotMult " << m_totMult<< endreq ;
   //*** Get the input data and store them in a map m_PUhitmap[sensor][beetle]
   RawEvent* raw = get<RawEvent>( m_rawEventLoc );
-  if (msgLevel(MSG::DEBUG)) debug() << "Get Raw Event from " << m_rawEventLoc << endmsg;
   const std::vector<LHCb::RawBank*>& bank = raw->banks( LHCb::RawBank::L0PU );
-  debug() << "LHCb::RawBank::L0PU size is " << bank.size() << endmsg;
-  debug() << "----- TotMult " << m_totMult<< endreq ;
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Get Raw Event from " << m_rawEventLoc << endmsg;
+    debug() << "LHCb::RawBank::L0PU size is " << bank.size() << endmsg;
+    debug() << "----- TotMult " << m_totMult<< endmsg ;
+  }
   std::vector<LHCb::RawBank*>::const_iterator itBnk;
   for ( itBnk = bank.begin() ; bank.end() != itBnk ; itBnk++ ) {
     LHCb::RawBank* aBank = *itBnk;
     if( RawBank::MagicPattern != aBank->magic() ) {
-      debug() << "magic number is " << aBank->magic() << "; event skipped!" << endmsg;
+      if (msgLevel(MSG::DEBUG)) debug() << "magic number is " << aBank->magic() << "; event skipped!" << endmsg;
       return Warning( "L0PU RawBank has an unexpected magic number!", StatusCode::SUCCESS, 0 );
     }
     else{
       int version = aBank->version();
-      debug() << "Bank version is " << version << endmsg;
+      if (msgLevel(MSG::DEBUG)) debug() << "Bank version is " << version << endmsg;
     
       if ( version == 2 ){ // current bank format
-        debug() << "----- TotMult " << m_totMult<< endreq ;
+        if (msgLevel(MSG::DEBUG)) debug() << "----- TotMult " << m_totMult<< endmsg ;
         
         unsigned int* data = aBank->data();
         unsigned int d = 2; 
@@ -249,7 +258,8 @@ StatusCode PuVetoAlg::execute() {
 //         m_PUbanksize->Fill(wordTot);
 //       }
         if (wordTot != 34 ) {
-          debug() << "L0PU RawBank has an unexpected size! (size= " << wordTot << ") - event skipped" << endmsg;
+          if (msgLevel(MSG::DEBUG)) 
+            debug() << "L0PU RawBank has an unexpected size! (size= " << wordTot << ") - event skipped" << endmsg;
 	  return Warning( "L0PU RawBank has an unexpected size! Event skipped", StatusCode::SUCCESS, 0 );
         }
         else{
@@ -288,7 +298,7 @@ StatusCode PuVetoAlg::execute() {
             } else {
               //verbose() << " exists.";
             }
-            //verbose() << endreq;
+            //verbose() << endmsg;
 	    //if (msgLevel(MSG::DEBUG)) debug() << "m_PUhitmap[" << sensor << "][ " << indx << "] is " << binary( m_PUhitmap[sensor][indx] )<< endmsg;
           }
         }
@@ -339,18 +349,18 @@ StatusCode PuVetoAlg::execute() {
   
   
   if (msgLevel(MSG::DEBUG)) debug() << " Peak1 : Max " << height1 << " at z= " << pos1 
-          << " integral " << sum1 << " bin " << bin1 << endreq;
+          << " integral " << sum1 << " bin " << bin1 << endmsg;
 
 
   // mask the contributing hits, fill again and find the second peak. 
   if (msgLevel(MSG::DEBUG)) debug() << " Mask around z = " << bin1 
-          << " window " << m_maskingWindow << endreq;
+          << " window " << m_maskingWindow << endmsg;
 
   maskHits(bin1,m_maskingWindow);
   fillHisto( m_maskedPattern );
   pos2 = findPeak2(height2,sum2,bin2);
   if (msgLevel(MSG::DEBUG)) debug() << " 2nd Max " << height2 << " at z= " << pos2
-          << " integral " << sum2 << " bin " << bin2 << endreq;
+          << " integral " << sum2 << " bin " << bin2 << endmsg;
   /*
   if ( m_enablePlots){  
     if ( pos2 != -999 ){  
@@ -395,12 +405,14 @@ StatusCode PuVetoAlg::execute() {
   PuWord2 = PuWord2 | (((tmt >> 2) << L0DUBase::L0Pu::HitsMSB::Shift) & 
                        L0DUBase::L0Pu::HitsMSB::Mask );
 
-  debug() << "====== Decision " << decision << endreq;
-  debug() << " Peak1 z,h,s " << bin1 << " " << height1 << " " << sum1 << endreq;
-  debug() << " Peak2 z,h,s " << bin2 << " " << height2 << " " << sum2 << endreq;
-  debug() << " TotMult " << m_totMult << " Tmt " << tmt << endreq;
-  debug() << " PuWord1 = " << PuWord1 << " PuWord2 = " << PuWord2 << endreq;
-
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "====== Decision " << decision << endmsg;
+    debug() << " Peak1 z,h,s " << bin1 << " " << height1 << " " << sum1 << endmsg;
+    debug() << " Peak2 z,h,s " << bin2 << " " << height2 << " " << sum2 << endmsg;
+    debug() << " TotMult " << m_totMult << " Tmt " << tmt << endmsg;
+    debug() << " PuWord1 = " << PuWord1 << " PuWord2 = " << PuWord2 << endmsg;
+  }
+  
   L0ProcessorData* l0PuData1 = new L0ProcessorData( L0DUBase::Fiber::Pu1 , PuWord1);
   L0ProcessorData* l0PuData2 = new L0ProcessorData( L0DUBase::Fiber::Pu2 , PuWord2);
   L0ProcessorDatas* l0PuDatas = new L0ProcessorDatas();
@@ -411,7 +423,7 @@ StatusCode PuVetoAlg::execute() {
   if (msgLevel(MSG::DEBUG)) debug() << "I put L0PuDatas in " << m_outputContainer << endmsg;
   m_evtNum++;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize 

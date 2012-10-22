@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PuVetoFillRawBuffer );
+DECLARE_ALGORITHM_FACTORY( PuVetoFillRawBuffer )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -29,6 +29,7 @@ PuVetoFillRawBuffer::PuVetoFillRawBuffer( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
    , m_inputContainer      ( LHCb::MCVeloFELocation::PuVeto  )
    , m_threshold           ( 7000.     ) //electrons
+   , m_velo                ( NULL      )
 {
   declareProperty( "InputContainer"     , m_inputContainer  );
   declareProperty( "SignalThreshold"    , m_threshold       );
@@ -46,12 +47,12 @@ StatusCode PuVetoFillRawBuffer::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   m_firstPuSensor = (*(m_velo->pileUpRSensorsBegin()))->sensorNumber();
-  debug() << "First PU sensor is " << m_firstPuSensor << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "First PU sensor is " << m_firstPuSensor << endmsg;
   
   inizializePUcontainer( m_PUcontainerBee ) ;
   
@@ -63,7 +64,7 @@ StatusCode PuVetoFillRawBuffer::initialize() {
 //============================================================================================
 StatusCode PuVetoFillRawBuffer::execute() {
 
-  debug() << "==> Execute " << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute " << endmsg;
   inizializePUcontainer( m_PUcontainerBee ) ;
   
   //*** Get the input data
@@ -76,7 +77,7 @@ StatusCode PuVetoFillRawBuffer::execute() {
     rawDataVec[rawDataVecIt] = emptyWord;
   }
   
-  debug() << "fes size is " << fes->size() << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "fes size is " << fes->size() << endmsg;
   
   int debugit = 0;
   for ( LHCb::MCVeloFEs::const_iterator itFe = fes->begin(); itFe != fes->end() ; itFe++  ) {  
@@ -85,9 +86,9 @@ StatusCode PuVetoFillRawBuffer::execute() {
     
     if ( m_threshold < (*itFe)->charge() ) {      
       if ( ! (*itFe)->channelID().isPileUp() ){
-        debug() << "Unexpected sensor " 
-               << (*itFe)->channelID().sensor()
-               << " in " << m_inputContainer << endreq;
+        if (msgLevel(MSG::DEBUG)) debug() << "Unexpected sensor " 
+                                          << (*itFe)->channelID().sensor()
+                                          << " in " << m_inputContainer << endmsg;
         continue; 
       }
       
@@ -99,11 +100,11 @@ StatusCode PuVetoFillRawBuffer::execute() {
       for (unsigned int bitplace = 0; bitplace < (puChannel); bitplace++ ){
         bit = bit << 1;
       }
-      debug() 	<< "Sensor: " << sensor
-      		<< ", beetle: " << beetle
-		<< ", puChannel: " << puChannel
-		<< " in binary " << binary( bit )
-		<< endmsg;
+      if (msgLevel(MSG::DEBUG)) debug() 	<< "Sensor: " << sensor
+                                          << ", beetle: " << beetle
+                                          << ", puChannel: " << puChannel
+                                          << " in binary " << binary( bit )
+                                          << endmsg;
       
       (m_PUcontainerBee[sensor][beetle]).w += bit; 
     } //  if above threshold    
@@ -124,7 +125,7 @@ StatusCode PuVetoFillRawBuffer::execute() {
 //=============================================================================
 StatusCode PuVetoFillRawBuffer::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
@@ -165,9 +166,10 @@ void PuVetoFillRawBuffer::adjustPUcontainer( Word PUcontainerBee[4][16] )
   for (int sens = 0; sens<4; sens++ ){
     for ( int bee = 0; bee<16; bee++ ){
       if ( (PUcontainerBee[sens][bee]).flag == false ){
-        debug() << "word for s=" << sens <<",bee=" << bee << " was " << binary( PUcontainerBee[sens][bee].w );
-	reverse_bit( PUcontainerBee[sens][bee].w );
-	debug() << " ----> " << binary( PUcontainerBee[sens][bee].w ) << endmsg;
+        if (msgLevel(MSG::DEBUG)) 
+          debug() << "word for s=" << sens <<",bee=" << bee << " was " << binary( PUcontainerBee[sens][bee].w );
+        reverse_bit( PUcontainerBee[sens][bee].w );
+        if (msgLevel(MSG::DEBUG)) debug() << " ----> " << binary( PUcontainerBee[sens][bee].w ) << endmsg;
       }
     }
   }     

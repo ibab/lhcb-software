@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.68 2010-03-02 10:42:05 graven Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
+
+! 2012-10-22 - Marco Cattaneo
+ - Fix UNINIT_CTOR defects
+ - Fix gcc -pedantic warnings
+ - Fix unprotected debug()s
+ - Replace endreq by endmsg
 
 !======================== PuVeto v7r7p1 2010-03-02 =========================
 ! 2010-03-01 - Serena Oggero
