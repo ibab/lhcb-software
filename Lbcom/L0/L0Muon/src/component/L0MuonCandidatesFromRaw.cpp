@@ -1,4 +1,3 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.26 2010-03-08 14:14:40 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -22,12 +21,12 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/DataObject.h"
 
-DECLARE_ALGORITHM_FACTORY( L0MuonCandidatesFromRaw );
+DECLARE_ALGORITHM_FACTORY( L0MuonCandidatesFromRaw )
 
 L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
                                          ISvcLocator* pSvcLocator) 
-  :L0FromRawBase(name, pSvcLocator)
- 
+  : L0FromRawBase(name, pSvcLocator)
+  , m_outputTool(NULL)
 {
 
   declareProperty( "ConfigFile"     , m_configfile= "$PARAMFILESROOT/data/L0MuonKernel.xml" );
@@ -133,9 +132,9 @@ StatusCode L0MuonCandidatesFromRaw::execute()
   // TAE mode
   int tae_size = 0;
   if (m_enableTAE) {
-    if (exist<LHCb::ODIN>(LHCb::ODINLocation::Default,IgnoreRootInTES)) {
+    LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default,IgnoreRootInTES);
+    if ( NULL != odin ) {
       // TAE size from odin
-      LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default,IgnoreRootInTES);
       tae_size = int(odin->timeAlignmentEventWindow());
     } else {
       Warning("ODIN not found at "+LHCb::ODINLocation::Default+", TAE mode requested but not used"
@@ -168,7 +167,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
   
     // Write on TES
     if ( m_writeOnTES) {
-      if( msgLevel(MSG::VERBOSE) ) verbose() << "Write on TES ..." << endreq;
+      if( msgLevel(MSG::VERBOSE) ) verbose() << "Write on TES ..." << endmsg;
       sc = m_outputTool->writeOnTES(m_l0context , taeInTes);
       if ( sc.isFailure() ) { 
         Warning("Error from writeOnTES - skip this time slice"
@@ -184,7 +183,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
   
     // Fill the container for the L0DU (L0ProcessorData)
     if ( m_writeProcData) {
-      if( msgLevel(MSG::VERBOSE) ) verbose() << "Fill L0ProcessorData ..." << endreq;
+      if( msgLevel(MSG::VERBOSE) ) verbose() << "Fill L0ProcessorData ..." << endmsg;
       sc = m_outputTool->writeL0ProcessorData();
       if ( sc.isFailure() ) { 
         Warning("Error from writeL0ProcessorData - skip this time slice"

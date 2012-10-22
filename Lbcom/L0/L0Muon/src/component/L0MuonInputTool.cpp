@@ -1,4 +1,3 @@
-// $Id: L0MuonInputTool.cpp,v 1.1 2010-03-08 14:18:15 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -16,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0MuonInputTool );
+DECLARE_TOOL_FACTORY( L0MuonInputTool )
 
 
 //=============================================================================
@@ -48,10 +47,10 @@ StatusCode L0MuonInputTool::getTiles(std::vector<LHCb::MuonTileID> & tiles, std:
 
   // Data container on TES
   std::string location = LHCb::L0MuonDataLocation::Default + m_l0Context;
-  if (  !exist<LHCb::L0MuonDatas>(location ) ) {
+  LHCb::L0MuonDatas* pdatas = getIfExists<LHCb::L0MuonDatas>( location );
+  if ( NULL == pdatas ) {
     return Warning("L0MuonDatasnot found at "+rootInTes+"/.../"+location,StatusCode::FAILURE,50);
   }
-  LHCb::L0MuonDatas* pdatas = get<LHCb::L0MuonDatas>( location );
   
   // Loop over L0Muon datas
   for (LHCb::L0MuonDatas::const_iterator itdata = pdatas->begin() ; itdata!=pdatas->end() ; ++itdata){
@@ -76,10 +75,10 @@ StatusCode L0MuonInputTool::getPads(std::vector<LHCb::MuonTileID> & pads, std::s
 
   // Data container on TES
   std::string location = LHCb::L0MuonDataLocation::Default + m_l0Context;
-  if (  !exist<LHCb::L0MuonDatas>(location ) ) {
+  LHCb::L0MuonDatas* pdatas = getIfExists<LHCb::L0MuonDatas>( location );
+  if ( NULL == pdatas ) {
     return Warning("L0MuonDatasnot found at "+rootInTes+"/.../"+location,StatusCode::FAILURE,50);
   }
-  LHCb::L0MuonDatas* pdatas = get<LHCb::L0MuonDatas>( location );
 
   // Loop over L0Muon datas
   for (LHCb::L0MuonDatas::const_iterator itdata = pdatas->begin() ; itdata!=pdatas->end() ; ++itdata){

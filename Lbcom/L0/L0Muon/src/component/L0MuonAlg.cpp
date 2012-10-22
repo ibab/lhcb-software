@@ -1,4 +1,3 @@
-// $Id: L0MuonAlg.cpp,v 1.31 2010-03-12 13:59:48 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -26,18 +25,21 @@
 #include "L0MuonKernel/L0MuonKernelFromXML.h"
 #include "L0MuonKernel/MuonTriggerUnit.h"
 
-DECLARE_ALGORITHM_FACTORY( L0MuonAlg );
+DECLARE_ALGORITHM_FACTORY( L0MuonAlg )
 
 L0MuonAlg::L0MuonAlg(const std::string& name,
                      ISvcLocator* pSvcLocator)
   :L0AlgBase(name, pSvcLocator)
+  , m_confTool(NULL)
+  , m_muontriggerunit(NULL)
+  , m_outputTool(NULL)
+  , m_muonBuffer(NULL)
   , m_l0CondCtrl( 0 )
   , m_l0CondProc( 0 )
+  , m_lut(NULL)
 {
 
   declareProperty( "EnableTAE" , m_enableTAE = false  );
-
-  m_muonBuffer = 0;
 
   m_foiXSize.clear();
 
@@ -88,9 +90,6 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   m_totEvent = 0;
   m_totBx = 0;
   m_itck = -1 ;
-
-  m_lut = new L0MPtLUT();
-  
 }
 
 
@@ -98,6 +97,8 @@ StatusCode L0MuonAlg::initialize()
 {
   StatusCode sc = L0AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  m_lut = new L0MPtLUT();
 
   // Instanciate the MuonTrigger Units and Registers
   L0Muon::RegisterFactory::selectInstance(0);
@@ -219,16 +220,16 @@ StatusCode L0MuonAlg::execute()
   L0Muon::RegisterFactory::selectInstance(0);
 
   if( msgLevel(MSG::DEBUG) )  {
-    debug() << "-----------------------------------------------------------------" << endreq;
-    debug() << "-- Start execution:" << endreq;
+    debug() << "-----------------------------------------------------------------" << endmsg;
+    debug() << "-- Start execution:" << endmsg;
   }
   
   StatusCode sc;
 
   if (m_useTCKFromData){
-    if (exist<LHCb::ODIN>(LHCb::ODINLocation::Default,false)) {
+    LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default,false);
+    if ( NULL != odin ) {
       // read tck from odin
-      LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default,false);
       unsigned int odintck = odin->triggerConfigurationKey();
       int itck = int(odintck&0xFFFF);
       if (itck != m_itck) { // if it is a new tck
@@ -255,9 +256,9 @@ StatusCode L0MuonAlg::execute()
 
   int tae_size = 0;
   if (m_enableTAE) {
-    if (exist<LHCb::ODIN>(LHCb::ODINLocation::Default,false)) {
+    LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default,false);
+    if ( NULL != odin ) {
       // TAE size from odin
-      LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default,false);
       tae_size = int(odin->timeAlignmentEventWindow());
     } else {
       Warning("ODIN not found at "+LHCb::ODINLocation::Default+", TAE mode requested but not used"
@@ -303,11 +304,11 @@ StatusCode L0MuonAlg::execute()
     }
 
     // Preexecution phase: data exchange between PUs
-    if( msgLevel(MSG::DEBUG) ) debug() << "Preexecute of MuonKernel units ..." << endreq;
+    if( msgLevel(MSG::DEBUG) ) debug() << "Preexecute of MuonKernel units ..." << endmsg;
     m_muontriggerunit->preexecute();
 
     // Execution phase: search for candidates and fill output registers
-    if( msgLevel(MSG::DEBUG) ) debug() << "Execution of MuonKernel units ..." << endreq;
+    if( msgLevel(MSG::DEBUG) ) debug() << "Execution of MuonKernel units ..." << endmsg;
     m_muontriggerunit->execute();
 
     // Specify the version parameters to the output tool
@@ -315,25 +316,25 @@ StatusCode L0MuonAlg::execute()
 
     // Fill the Raw Event container
     if ( m_writeBanks ) {
-      if( msgLevel(MSG::DEBUG) ) debug() << "Fill RawEvent ..." << endreq;
+      if( msgLevel(MSG::DEBUG) ) debug() << "Fill RawEvent ..." << endmsg;
       sc = m_outputTool->writeRawBanks();
       if ( sc.isFailure() ) return sc;
     }
 
     // Write on TES
     if ( m_writeOnTES) {
-      if( msgLevel(MSG::DEBUG) ) debug() << "Write on TES ..." << endreq;
+      if( msgLevel(MSG::DEBUG) ) debug() << "Write on TES ..." << endmsg;
       sc = m_outputTool->writeOnTES(m_l0context);
       if ( sc.isFailure() ) return sc;
     }
 
     // Fill the container for the L0DU (L0ProcessorData)
-    if( msgLevel(MSG::DEBUG) ) debug() << "Fill L0ProcessorData ..." << endreq;
+    if( msgLevel(MSG::DEBUG) ) debug() << "Fill L0ProcessorData ..." << endmsg;
     sc = m_outputTool->writeL0ProcessorData();
     if ( sc.isFailure() ) return sc;
 
     // Postexecution phase: reset registers
-    if( msgLevel(MSG::DEBUG) ) debug() << "Postexecution of MuonKernel units ..." << endreq;
+    if( msgLevel(MSG::DEBUG) ) debug() << "Postexecution of MuonKernel units ..." << endmsg;
     m_muontriggerunit->postexecute();
 
     ++m_totBx;
@@ -349,8 +350,8 @@ StatusCode L0MuonAlg::execute()
   ++m_totEvent;
 
   if( msgLevel(MSG::DEBUG) ){
-    debug() << "-- Execution done." << endreq;
-    debug() << "-----------------------------------------------------------------" << endreq;
+    debug() << "-- Execution done." << endmsg;
+    debug() << "-----------------------------------------------------------------" << endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -495,9 +496,9 @@ std::map<std::string,L0Muon::Property>  L0MuonAlg::l0MuonProperties()
   prop=buf;
   properties["procVersion"]    = L0Muon::Property(prop);;
 
-  info() << "MuonTriggerUnit properties are:"<<endreq;
+  info() << "MuonTriggerUnit properties are:"<<endmsg;
   for (std::map<std::string,L0Muon::Property>::iterator ip= properties.begin(); ip!=properties.end();ip++){
-    info() << " "<< (*ip).first << " = "<< ((*ip).second).value() <<endreq;
+    info() << " "<< (*ip).first << " = "<< ((*ip).second).value() <<endmsg;
   }
 
   return properties;
@@ -510,11 +511,11 @@ StatusCode L0MuonAlg::getDigitsFromMuon()
   m_digits.clear();
   
   // First try the digits on the TES if there (Boole)
-  if (exist<LHCb::MuonDigits>( LHCb::MuonDigitLocation::MuonDigit ) ) {
+  LHCb::MuonDigits* digits = getIfExists<LHCb::MuonDigits>( LHCb::MuonDigitLocation::MuonDigit );
+  if ( NULL != digits ) {
 
     if( msgLevel(MSG::DEBUG) ) debug() << "fillOLsfromDigits:  Getting hits from muon digits"<<m_muonBuffer<<endmsg;
 
-    LHCb::MuonDigits* digits = get<LHCb::MuonDigits>( LHCb::MuonDigitLocation::MuonDigit );
     LHCb::MuonDigits::const_iterator did;
     for( did = digits->begin() ; did != digits->end() ; did++ ){
       LHCb::MuonTileID mkey = (*did)->key();
@@ -595,7 +596,8 @@ StatusCode L0MuonAlg::getDigitsFromMuonNZS()
 
 StatusCode L0MuonAlg::getDigitsFromL0Muon()
 {
-  if (!exist<LHCb::L0MuonDatas>( LHCb::L0MuonDataLocation::Default) ) {
+  LHCb::L0MuonDatas* pdatas = getIfExists<LHCb::L0MuonDatas>( LHCb::L0MuonDataLocation::Default);
+  if ( NULL == pdatas ) {
     return Error("L0MuonDatas not found",StatusCode::FAILURE,10);
   }
   
@@ -603,7 +605,6 @@ StatusCode L0MuonAlg::getDigitsFromL0Muon()
 
   m_digits.clear();
   
-  LHCb::L0MuonDatas* pdatas = get<LHCb::L0MuonDatas>( LHCb::L0MuonDataLocation::Default);
   LHCb::L0MuonDatas::const_iterator itdata;
   for (itdata = pdatas->begin() ; itdata!=pdatas->end() ; ++itdata){
     LHCb::MuonTileID mkey = (*itdata)->key();

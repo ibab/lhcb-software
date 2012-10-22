@@ -1,4 +1,3 @@
-// $Id: L0MuonOLErrorTool.cpp,v 1.1 2010-03-08 14:18:16 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0MuonOLErrorTool );
+DECLARE_TOOL_FACTORY( L0MuonOLErrorTool )
 
 
 //=============================================================================
@@ -63,10 +62,10 @@ StatusCode L0MuonOLErrorTool::getTiles(std::vector<LHCb::MuonTileID> & ols, std:
 
   // L0Muon error container
   std::string location=LHCb::L0MuonErrorLocation::ProcPU + m_l0Context;
-  if (!exist<LHCb::L0MuonErrors> (location)) {
+  LHCb::L0MuonErrors *perrors = getIfExists<LHCb::L0MuonErrors> (location);
+  if ( NULL == perrors ) {
     return Warning("L0MuonErrors not found at "+rootInTes+"/.../"+location,StatusCode::FAILURE,50);
   }
-  LHCb::L0MuonErrors *perrors = get<LHCb::L0MuonErrors> (location);
 
   // Loop over L0MuonErrors
   for (LHCb::L0MuonErrors::const_iterator iterr=perrors->begin(); iterr!=perrors->end(); ++iterr)

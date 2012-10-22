@@ -19,7 +19,6 @@ std::string SubstituteEnvVarInPath(const std::string& in) {
        ++i;
     }
     return out.string();
-};
+}
 
-
-};
+}

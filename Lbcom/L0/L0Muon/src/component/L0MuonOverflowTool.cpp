@@ -1,4 +1,3 @@
-// $Id: L0MuonOverflowTool.cpp,v 1.1 2010-03-09 16:21:31 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0MuonOverflowTool );
+DECLARE_TOOL_FACTORY( L0MuonOverflowTool )
 
 
 //=============================================================================

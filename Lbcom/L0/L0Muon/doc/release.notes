@@ -3,6 +3,12 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2012-10-22 - Marco Cattaneo
+ - Fix coverity defects
+ - Fix gcc -pedantic warnings
+ - Use getIfExists where appropriate
+ - Replace endreq by endmsg
+
 !========================= L0Muon v9r10 2012-05-02 =========================
 ! 2012-05-02 - Julien Cogan
  - L0MuonAlg (fix) : delete pointer to LUT in finalize
