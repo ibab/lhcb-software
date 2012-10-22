@@ -46,7 +46,7 @@ VeloDataProcessor::VeloDataProcessor( const std::string& name,
 //=========================================================================
 // Destructor
 //=========================================================================
-VeloDataProcessor::~VeloDataProcessor() {};
+VeloDataProcessor::~VeloDataProcessor() {}
 
 // Initialize
 StatusCode VeloDataProcessor::initialize(){
