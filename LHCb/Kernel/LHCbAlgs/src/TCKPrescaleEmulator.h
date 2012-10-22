@@ -3,7 +3,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DaVinciAlgorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "DetDesc/Condition.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "Kernel/IPropertyConfigSvc.h"
@@ -19,7 +19,7 @@ using namespace LHCb;
  *  @author Conor Fitzpatrick
  *  @date   2012-09-13
  */
-class TCKPrescaleEmulator : public DaVinciAlgorithm {
+class TCKPrescaleEmulator : public GaudiAlgorithm {
     public: 
 	/// Standard constructor
 	TCKPrescaleEmulator( const std::string& name, ISvcLocator* pSvcLocator );

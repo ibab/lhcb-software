@@ -26,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY( TCKPrescaleEmulator )
 	//=============================================================================
 TCKPrescaleEmulator::TCKPrescaleEmulator( const std::string& name,
 		ISvcLocator* pSvcLocator)
-: DaVinciAlgorithm ( name , pSvcLocator ),
+: GaudiAlgorithm ( name , pSvcLocator ),
 	m_propertyConfigSvc(0),
 	m_condTrigger(0),
 	m_triggerTCK(0)
@@ -51,7 +51,7 @@ TCKPrescaleEmulator::~TCKPrescaleEmulator() {}
 //=============================================================================
 StatusCode TCKPrescaleEmulator::initialize() {
 	if (UNLIKELY( msgLevel(MSG::VERBOSE))) verbose() << "TCKPrescaleEmulator::initialize() tck=" << std::hex << m_tck << endmsg;
-	StatusCode sc = DaVinciAlgorithm::initialize(); 
+	StatusCode sc = GaudiAlgorithm::initialize(); 
 	if ( sc.isFailure() ) return sc;
 
 
@@ -165,7 +165,7 @@ StatusCode TCKPrescaleEmulator::finalize() {
 
 	if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-	return DaVinciAlgorithm::finalize();
+	return GaudiAlgorithm::finalize();
 }
 
 //============================================================================
