@@ -141,7 +141,7 @@ StatusCode TCKPrescaleEmulator::execute() {
 				}else{
 					//We've found a line that wasn't in the TCK... should this happen? 
 					//We kill it to be safe...
-					Warning("DecReport found for line " + lineName + " but no prescaler found! Killing this line");
+					Warning("DecReport found for line " + lineName + " but no prescaler found! Killing this line").ignore();
 					report.setDecision(false);
 					report.setExecutionStage(6);
 				}
@@ -151,7 +151,7 @@ StatusCode TCKPrescaleEmulator::execute() {
 		decreports->setDecReports(reports->decReports());
 		if(UNLIKELY(msgLevel(MSG::VERBOSE)))  verbose() << *decreports << endmsg;
 	}else{
-		Warning("FAILED TO GET DECREPORTS! CANNOT PRESCALE THIS EVENT!");
+		Warning("FAILED TO GET DECREPORTS! CANNOT PRESCALE THIS EVENT!").ignore();
 	}
 	setFilterPassed(true);  // Mandatory. Set to true if event is accepted. 
 	return sc;
@@ -230,7 +230,7 @@ StatusCode TCKPrescaleEmulator::getPrescalesFromTCK(unsigned int tck, std::map<s
 							std::string str2 = (i->second);
 							scale = std::strtod(str2.c_str(), 0);
 						}catch (const std::exception&){
-							Warning("could not find pre/post scale in " + i->first);
+							Warning("could not find pre/post scale in " + i->first).ignore();
 							scale=-9999.;
 						}
 						if(scale>-9999.){
@@ -249,7 +249,7 @@ StatusCode TCKPrescaleEmulator::getPrescalesFromTCK(unsigned int tck, std::map<s
 									prescales.insert(std::pair<std::string,double>(lineName,-1.0)); //Initialise a prescale if it isn't already there with a nonsense value
 									break;
 								}else{
-									Warning("Found property AcceptFraction not associated to a pre/post scale! " + lineName);
+									Warning("Found property AcceptFraction not associated to a pre/post scale! " + lineName).ignore();
 								}
 							}
 
