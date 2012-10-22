@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-10-22 - Paul Szczypka
+ - Modified (corrected) gauss-config reference file.
+
+! 2012-10-22 - Paul Szczypka
  - added Upgrade options files:
  - $GAUSSOPTS/Gauss-Upgrade-VL-UT-FT.py
  - $GAUSSOPTS/Gauss-Upgrade-VL-UT-FT-noRich1.py
