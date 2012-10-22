@@ -1,3 +1,8 @@
+2012-10-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/cern-lxdistcc-wrappers.sh: fixed bugs: host-OS detection and clean
+	up of LD_LIBRARY_PATH.
+
 2012-10-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/cern-lxdistcc-wrappers.sh: imported the shell wrapper for the LCG

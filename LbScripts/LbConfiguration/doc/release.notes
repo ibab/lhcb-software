@@ -1,6 +1,12 @@
+2012-10-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/External.py: added default version of CMake
+	* python/LbConfiguration/LbLogin.py: set PATH to CMake and LCG_hostos for
+	the 'lcg-' compiler wrappers.
+
 2012-10-09 Ben Couturier <Ben.Couturier@cern.ch>
 
-	* python/LbConfiguration/Package.py: Added new package BandQConfig 
+	* python/LbConfiguration/Package.py: Added new package BandQConfig
 
 2012-09-28 Ben Couturier <Ben.Couturier@cern.ch>
 
@@ -12,7 +18,7 @@
 
 2012-09-24  Ben Couturier <Ben.Couturier@cern.ch>
 
-	* python/LbConfiguration/Package.py: Added new package InstallAreaPatch 
+	* python/LbConfiguration/Package.py: Added new package InstallAreaPatch
 
 2012-09-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

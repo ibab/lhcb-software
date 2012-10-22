@@ -50,7 +50,7 @@ from SetupProject import SetupProject
 from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt
 from LbConfiguration.Platform import getCompiler, getPlatformType, getArchitecture
 from LbConfiguration.Platform import isBinaryDbg, NativeMachine
-from LbConfiguration.External import CMT_version
+from LbConfiguration.External import CMT_version, CMake_version
 from LbConfiguration.Version import sortStrings, ParseSvnVersion
 from LbUtils.Script import SourceScript
 from LbUtils.Path import multiPathGet, multiPathGetFirst, multiPathJoin
@@ -86,6 +86,11 @@ def _setCMTVersionCb(_option, _opt_str, value, parser):
     if parser.values.cmtvers != value :
         parser.values.use_cache = False
         parser.values.cmtvers = value
+
+def _setCMakeVersionCb(_option, _opt_str, value, parser):
+    if parser.values.cmakevers != value :
+        parser.values.use_cache = False
+        parser.values.cmakevers = value
 
 def _noPythonCb(_option, _opt_str, _value, parser):
     parser.values.get_python = False
@@ -169,6 +174,12 @@ class LbLoginScript(SourceScript):
                           callback=_setCMTVersionCb,
                           type="string",
                           help="set CMT version")
+        parser.set_defaults(cmakevers=CMake_version)
+        parser.add_option("--cmakevers",
+                          action="callback",
+                          callback=_setCMakeVersionCb,
+                          type="string",
+                          help="set CMake version")
         parser.set_defaults(scriptsvers=None)
         parser.add_option("--scripts-version",
                           dest="scriptsvers",
@@ -490,6 +501,68 @@ class LbLoginScript(SourceScript):
         ev["CMTVERS"] = opts.cmtvers
         log.debug("The CMT version is %s" % opts.cmtvers)
         self.setCMTInternals()
+
+    def setCMake(self):
+        from os.path import join, pathsep, isdir
+
+        log = self.log
+        opts = self.options
+
+        log.debug("Looking for CMake %s", opts.cmakevers)
+
+        # The subdirectory containing CMake depends on the version and on the platform.
+        if sys.platform == 'darwin':
+            # on MacOSX, the application directory has version 'x.y-z' instead of
+            # 'x.y.z'
+            lastdot = opts.cmakevers.rindex('.')
+            appversion = opts.cmakevers[:lastdot-1] + '-' + opts.cmakevers[lastdot+1:]
+            subdir = "CMake/%s/Darwin/CMake %s.app/Contents/bin" % (opts.cmakevers, appversion)
+        elif sys.platform.startswith('linux'):
+            subdir = "CMake/%s/Linux-i386/bin" % opts.cmakevers
+        else:
+            log.warning('CMake is not provided for platform %s', sys.platform)
+            return
+
+        ev = self.Environment()
+
+        def searchpath():
+            '''
+            Generator for all the possible locations of CMake.
+            '''
+            if opts.mysiteroot:
+                for r in opts.mysiteroot.split(pathsep):
+                    yield join(r, "contrib", subdir)
+            if 'CONTRIBDIR' in ev:
+                for r in ev['CONTRIBDIR'].split(pathsep):
+                    yield join(r, subdir)
+            if 'SITEROOT' in ev:
+                for r in ev['SITEROOT'].split(pathsep):
+                    yield join(r, 'sw', 'lcg', 'contrib', subdir)
+                    yield join(r, 'sw', 'contrib', subdir)
+                    yield join(r, 'contrib', subdir)
+
+        if opts.log_level == 'DEBUG':
+            # wrap the generator to print all the searched directories
+            _searchpath = searchpath
+            def searchpath():
+                for d in _searchpath():
+                    log.debug("... trying %s", d)
+                    yield d
+        try:
+            # look for the CMake directory
+            cmakeDir = (d for d in searchpath() if isdir(d)).next()
+            log.debug('Found %s', cmakeDir)
+            # if found, we remove all previous entries from the PATH...
+            substring = os.sep + 'CMake' + os.sep
+            path = [p for p in ev['PATH'].split(os.pathsep)
+                    if substring not in p]
+            # ... prepend the new one...
+            path.insert(0, cmakeDir)
+            # ... and set the environment variable
+            ev['PATH'] = os.pathsep.join(path)
+        except StopIteration:
+            log.warning('Cannot find CMake %s directory', opts.cmakevers)
+
 #-----------------------------------------------------------------------------------
     def setSoftLocations(self):
         ev = self.Environment()
@@ -838,6 +911,15 @@ class LbLoginScript(SourceScript):
             ev["CMTCONFIG"] = ev["CMTOPT"]
         log.debug("CMTCONFIG is set to %s" % ev["CMTCONFIG"])
 
+    def setLCGhostos(self):
+        '''
+        Set the environment variable LCG_hostos, used by the 'lcg-' compiler wrappers.
+        '''
+        ev = self.Environment()
+        nm = self._nativemachine
+        # we take only the first two elements of the native CMTCONFIG, e.g.
+        #  x86_64-slc5-gcc46-opt -> x86_64-slc5
+        ev['LCG_hostos'] = '-'.join(nm.CMTNativeConfig().split('-')[:2])
 
     def setCMTPath(self):
         ev = self.Environment()
@@ -1022,12 +1104,16 @@ class LbLoginScript(SourceScript):
         self.setCVSEnv()
         self.setSite()
         self.setCMT()
+        self.setCMake()
         self.setSoftLocations()
         self.setSharedArea()
 
         self.setCMTConfig(debug)
         self.setCMTPath()
         self.setupCompat()
+
+        # this is use internally by the 'lcg-' compiler wrapper.
+        self.setLCGhostos()
 
         # return a copy otherwise the environment gets restored
         # at the destruction of the instance
