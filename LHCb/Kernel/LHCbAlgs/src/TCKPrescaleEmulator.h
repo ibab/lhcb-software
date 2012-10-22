@@ -28,7 +28,6 @@ class TCKPrescaleEmulator : public GaudiAlgorithm {
 
 	virtual StatusCode initialize();    ///< Algorithm initialization
 	virtual StatusCode execute   ();    ///< Algorithm execution
-	virtual StatusCode finalize  ();    ///< Algorithm finalization
 
     protected:
 
@@ -67,7 +66,7 @@ class TCKPrescaleEmulator : public GaudiAlgorithm {
 	unsigned int m_triggerTCK;                    ///< tck for these data
 	std::string m_hltDecReportsLocation;	      ///< Location of the DecReports
 	std::vector<std::string> m_linesToKill;	      ///< lines to prescale to zero in MC regardless of existence in TCK or not
-	bool endedWith(std::string lineName, std::string ending);
+	bool endedWith(const std::string &lineName, const std::string &ending);
 	bool firstevent;
 	unsigned int lasttck;
 

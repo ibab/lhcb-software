@@ -23,7 +23,6 @@ use HltInterfaces    v* Kernel -no_auto_imports
 use DDDB             v* Det               # needed for LHCbApp imports 
 use XMLSummaryKernel v* Kernel            # needed for LHCbApp imports
 
-use DaVinciKernel        v*     Phys
 use HltEvent            v*    Event
 use TrackEvent          v*    Event
 use L0Event             v*    Event

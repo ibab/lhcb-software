@@ -82,7 +82,7 @@ StatusCode TCKPrescaleEmulator::initialize() {
 		m_linesToKill.push_back("Hlt2Transparent");
 		info() << "By default the following decisions are killed as they're meaningless in MC: ";
 		for( std::vector<std::string>::iterator i=m_linesToKill.begin(); i!=m_linesToKill.end(); ++i){
-		info() << (*i) << "," << endmsg;
+			info() << (*i) << "," << endmsg;
 		}
 		info() << "To change this behavior fill property LinesToAlwaysKill with your own choice of lines" << endmsg;
 	}else{
@@ -141,7 +141,7 @@ StatusCode TCKPrescaleEmulator::execute() {
 				}else{
 					//We've found a line that wasn't in the TCK... should this happen? 
 					//We kill it to be safe...
-					warning() << "DecReport found for line " << lineName << " but no prescaler found! Killing this line" << endmsg;
+					Warning("DecReport found for line " + lineName + " but no prescaler found! Killing this line");
 					report.setDecision(false);
 					report.setExecutionStage(6);
 				}
@@ -151,21 +151,10 @@ StatusCode TCKPrescaleEmulator::execute() {
 		decreports->setDecReports(reports->decReports());
 		if(UNLIKELY(msgLevel(MSG::VERBOSE)))  verbose() << *decreports << endmsg;
 	}else{
-		fatal() << "FAILED TO GET DECREPORTS! OHNO!" << endmsg;
-		return StatusCode::FAILURE;
+		Warning("FAILED TO GET DECREPORTS! CANNOT PRESCALE THIS EVENT!");
 	}
 	setFilterPassed(true);  // Mandatory. Set to true if event is accepted. 
 	return sc;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TCKPrescaleEmulator::finalize() {
-
-	if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-	return GaudiAlgorithm::finalize();
 }
 
 //============================================================================
@@ -182,6 +171,7 @@ StatusCode TCKPrescaleEmulator::getReports(){
 				return StatusCode::SUCCESS;
 			}else{
 				// If we're already processing events and the TCK changes mid-run, warn the user, update the prescalers
+				// These shouldn't be Warning, as if/when they occur the user needs to know. 
 				warning() << "*************** DANGER ****************" << endmsg;
 				warning() << "THE TCK HAS CHANGED!!!!!!!!!!!!!!" << endmsg;
 				warning() << "PREV TCK: " << std::hex << lasttck << endmsg;
@@ -240,7 +230,7 @@ StatusCode TCKPrescaleEmulator::getPrescalesFromTCK(unsigned int tck, std::map<s
 							std::string str2 = (i->second);
 							scale = std::strtod(str2.c_str(), 0);
 						}catch (const std::exception&){
-							warning() << "could not find pre/post scale " << " in " << i->first << endmsg;
+							Warning("could not find pre/post scale in " + i->first);
 							scale=-9999.;
 						}
 						if(scale>-9999.){
@@ -259,7 +249,7 @@ StatusCode TCKPrescaleEmulator::getPrescalesFromTCK(unsigned int tck, std::map<s
 									prescales.insert(std::pair<std::string,double>(lineName,-1.0)); //Initialise a prescale if it isn't already there with a nonsense value
 									break;
 								}else{
-									warning() << "Found property AcceptFraction not associated to a pre/post scale! " << lineName << endmsg;
+									Warning("Found property AcceptFraction not associated to a pre/post scale! " + lineName);
 								}
 							}
 
@@ -515,6 +505,7 @@ StatusCode TCKPrescaleEmulator::updatePrescalers(){
 					//MC >0 ratio >1 means prescales incompatible (can't accept more than 100% of a decision!) complain, set to 100%
 					sc = StatusCode::FAILURE;
 
+					//These shouldn't be Warning, as if/when they occur the user needs to know. 
 					warning() << "*********************************************************************************" << endmsg;
 					warning() << "THIS TCK IS INCOMPATIBLE WITH MC! PRESCALE FOR " << (*i).first << " IN MC IS " << (*j).second << " IN THE TCK IT IS: " << (*i).second << endmsg;
 					warning() << "NOT PRESCALING, RESULTS WILL BE APPROXIMATE!" << endmsg;
@@ -535,7 +526,7 @@ StatusCode TCKPrescaleEmulator::updatePrescalers(){
 
 				}else{
 					//MC = 0.0, TCK=0.0, prescales are compatible and no events will ever have decisions.  Set to 0%:
-					debug() <<  (*i).first  << " Is prescaled to zero in both TCK and MC" << endmsg;
+					if (msgLevel(MSG::DEBUG)) debug() <<  (*i).first  << " Is prescaled to zero in both TCK and MC" << endmsg;
 					scaleProductsToApply.insert(std::pair<std::string,double>((*i).first,0.0));
 					pre->update(0.0);
 				}
@@ -550,7 +541,7 @@ StatusCode TCKPrescaleEmulator::updatePrescalers(){
 				warning() << "I CANNOT EMULATE THIS LINE!" << endmsg;
 				warning() << "*********************************************************************************" << endmsg;
 			}else{
-				debug() << "TCK, MC Compatible, " << (*i).first << " has a prescale of 0 in TCK and doesn't exist in MC" << endmsg;
+				if (msgLevel(MSG::DEBUG)) debug() << "TCK, MC Compatible, " << (*i).first << " has a prescale of 0 in TCK and doesn't exist in MC" << endmsg;
 			}
 		}
 	}
@@ -559,7 +550,7 @@ StatusCode TCKPrescaleEmulator::updatePrescalers(){
 	for( std::map<std::string,double>::iterator i=scaleProductsInMC.begin(); i!=scaleProductsInMC.end(); ++i){
 		std::map<std::string,double>::iterator j = scaleProductsToApply.find((*i).first);
 		if(j==scaleProductsToApply.end()){
-			debug() << " MC contains a line not in the TCK: "<< (*i).first <<" prescaling it to zero" << endmsg;
+			if (msgLevel(MSG::DEBUG)) debug() << " MC contains a line not in the TCK: "<< (*i).first <<" prescaling it to zero" << endmsg;
 			scaleProductsToApply.insert(std::pair<std::string,double>((*i).first,0.0));
 		}
 	}
@@ -569,7 +560,7 @@ StatusCode TCKPrescaleEmulator::updatePrescalers(){
 //=========================================================================
 // Find out if the lineName ends with a known string 
 //=========================================================================
-bool TCKPrescaleEmulator::endedWith(std::string lineName, std::string ending){
+bool TCKPrescaleEmulator::endedWith(const std::string &lineName, const std::string &ending){
 	if(lineName.length()>ending.length()){
 		if(0 == lineName.compare (lineName.length() - ending.length(), ending.length(), ending)){
 			return true;
