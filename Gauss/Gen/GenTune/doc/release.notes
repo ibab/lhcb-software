@@ -5,7 +5,10 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
-!========================== GenTune v1r0 2012-10-19 ==========================
+!========================== GenTune v1r0 2012-10-22 ==========================
+! 2012-10-22 - Alex Grecu
+ - disable "unused parameter" warnings from Rivet library
+
 ! 2012-09-26 - Alex Grecu
  - included QMTests with references for i686- and x86-64- slc5-gcc43 platforms
 

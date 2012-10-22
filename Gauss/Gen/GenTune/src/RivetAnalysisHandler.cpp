@@ -18,6 +18,8 @@
 #include "HepMC/Units.h"
 #endif
 
+// disable unused parameter warning!
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 // from Rivet (LCG)
 #include "Rivet/Rivet.hh"
 #include "Rivet/AnalysisHandler.hh"
