@@ -21,6 +21,10 @@ public:
   
   StatusCode initialize();
   StatusCode execute();
+  inline void update(double newAccFrac){
+  m_accFrac = newAccFrac;
+  update();
+  }
   
 protected:
   double                  m_accFrac;      // fraction of input events to accept...
@@ -32,6 +36,7 @@ protected:
               : m_accFrac>=1 ? boost::integer_traits<uint32_t>::const_max 
               : boost::uint32_t( m_accFrac*boost::integer_traits<uint32_t>::const_max ) 
               );
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "frac: " << m_accFrac << " acc: 0x" << std::hex << m_acc << endmsg;
   };
   StatEntity*             m_counter;
 
