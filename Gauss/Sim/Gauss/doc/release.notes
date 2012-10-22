@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-22 - Paul Szczypka
+ - added Upgrade options files:
+ - $GAUSSOPTS/Gauss-Upgrade-VL-UT-FT.py
+ - $GAUSSOPTS/Gauss-Upgrade-VL-UT-FT-noRich1.py
+ - $GAUSSOPTS/Gauss-Upgrade-VP-UT-FT.py
+ - $GAUSSOPTS/Gauss-Upgrade-VP-UT-FT-noRich1.py
+ - $GAUSSOPTS/Gauss-Upgrade-Reference.py
+
 ! 2012-10-21 - Paul Szczypka
  - made corrections to config references and test
 
