@@ -1,4 +1,3 @@
-// $Id: L0CaloNtpMonitor.cpp,v 1.2 2008-04-02 11:04:33 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -26,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0CaloNtpMonitor );
+DECLARE_ALGORITHM_FACTORY( L0CaloNtpMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -34,6 +33,8 @@ DECLARE_ALGORITHM_FACTORY( L0CaloNtpMonitor );
 L0CaloNtpMonitor::L0CaloNtpMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
+  , m_ecal(0)
+  , m_hcal(0)
 {
   declareProperty( "InputDataSuffix" , m_inputDataSuffix ="" ) ;  
  }
@@ -50,7 +51,7 @@ StatusCode L0CaloNtpMonitor::initialize( ) {
   StatusCode sc = GaudiTupleAlg::initialize( ) ;
   if ( sc.isFailure() ) return sc ;
   
-  debug() << "==> Initialize" << endmsg ;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg ;
   // Retrieve the ECAL detector element, build cards
   m_ecal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
   // Retrieve the HCAL detector element, build cards
@@ -63,13 +64,13 @@ StatusCode L0CaloNtpMonitor::initialize( ) {
 // Initialization
 //=============================================================================  
 StatusCode L0CaloNtpMonitor::execute( ) {
-  debug() << "==> Execute" << endmsg ;  
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg ;  
 
   Tuple ntp = nTuple( 800 , name() , CLID_ColumnWiseTuple ) ;
   StatusCode sc;
   // Get ODIN 
-  if(exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    LHCb::ODIN* odin = get< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
+  LHCb::ODIN* odin = getIfExists< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
+  if( NULL != odin ){
     sc = ntp -> column( "run"   , odin->runNumber()            );
     sc = ntp -> column( "event" , (double) odin->eventNumber() );
     sc = ntp -> column( "bunch" , odin->bunchId()              );
@@ -77,10 +78,11 @@ StatusCode L0CaloNtpMonitor::execute( ) {
     sc = ntp -> column( "time"  , (double) odin->gpsTime()     );
     sc = ntp -> column( "ttype" , odin->triggerType()          );
     sc = ntp -> column( "btype" , odin->bunchCrossingType()    );
-    debug() <<" ODIN event "<<  odin->eventNumber()  << endreq;
- }
+    if( msgLevel(MSG::DEBUG) ) 
+      debug() <<" ODIN event "<<  odin->eventNumber()  << endmsg;
+  }
   else{
-    info() << " Emtpy location for ODIN " << endreq;
+    info() << " Emtpy location for ODIN " << endmsg;
   }
 
   std::vector< int > etCodeEle, etCodePho, etCodePil, etCodePig, etCodeHad ;
@@ -95,11 +97,9 @@ StatusCode L0CaloNtpMonitor::execute( ) {
   std::vector< int > crateEle, cratePho, cratePil, cratePig, crateHad ;
   std::vector< int > slotEle, slotPho, slotPil, slotPig, slotHad ;
   
-  if ( exist< LHCb::L0CaloCandidates >( LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix ) ) {
-    
-    LHCb::L0CaloCandidates* candidates = 
-      get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix );
-    
+  LHCb::L0CaloCandidates* candidates = 
+    getIfExists<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix );
+  if ( NULL != candidates ) {
     LHCb::L0CaloCandidates::const_iterator cand;
     for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
       int card  = -1 ; 
@@ -118,7 +118,8 @@ StatusCode L0CaloNtpMonitor::execute( ) {
         slot = m_ecal->cardSlot(card); 
         slotEle.push_back(slot) ; 
         crateEle.push_back(crate) ; 
-        debug() << " etCode electron " << (*cand) -> etCode() << " slot = "<<slot<<" crate= "<<crate<<endreq;
+        if( msgLevel(MSG::DEBUG) ) 
+          debug() << " etCode electron " << (*cand) -> etCode() << " slot = "<<slot<<" crate= "<<crate<<endmsg;
         break ;
       case L0DUBase::CaloType::Photon:
         etCodePho.push_back( (*cand) -> etCode() ) ;
@@ -145,7 +146,8 @@ StatusCode L0CaloNtpMonitor::execute( ) {
         slot = m_hcal->cardSlot(card); 
         slotHad.push_back(slot) ; 
         crateHad.push_back(crate) ; 
-        debug() << " etCode hadron " << (*cand) -> etCode() << endreq;
+        if( msgLevel(MSG::DEBUG) ) 
+          debug() << " etCode hadron " << (*cand) -> etCode() << endmsg;
         break ;
       case L0DUBase::CaloType::Pi0Local:
         etCodePil.push_back( (*cand) -> etCode() ) ;
@@ -181,7 +183,7 @@ StatusCode L0CaloNtpMonitor::execute( ) {
     }
   }
 
-  debug()<<" apres decodage FULL"<<endmsg ; 
+  if( msgLevel(MSG::DEBUG) ) debug()<<" apres decodage FULL"<<endmsg ; 
 
   int etCodeEleDef( -999 ) , etCodePhoDef( -999 ) , etCodePilDef( -999 ) , 
     etCodePigDef( -999 ) , etCodeHadDef( -999 ) ;
@@ -231,10 +233,9 @@ StatusCode L0CaloNtpMonitor::execute( ) {
   int cellIdPigDef = -999 ; 
   int cellIdHadDef = -999 ;
   
-  if ( exist< LHCb::L0CaloCandidates >( LHCb::L0CaloCandidateLocation::Default+m_inputDataSuffix ) ) {
-    LHCb::L0CaloCandidates* candidatesDef = 
-      get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+m_inputDataSuffix );
-    
+  LHCb::L0CaloCandidates* candidatesDef =
+    getIfExists<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+m_inputDataSuffix );
+  if ( NULL != candidatesDef ) {
     LHCb::L0CaloCandidates::const_iterator candDef;
     for ( candDef = candidatesDef->begin() ; candidatesDef->end() != candDef ; ++candDef ) {
       switch ( (*candDef)->type() ) {
@@ -390,13 +391,4 @@ StatusCode L0CaloNtpMonitor::execute( ) {
 
   ntp->write(); 
   return StatusCode::SUCCESS ;
-}
-
-//=========================================================================
-// Finalize
-//=========================================================================
-
-StatusCode L0CaloNtpMonitor::finalize() {
-  debug() << "==> Finalize" << endmsg ;
-  return GaudiTupleAlg::finalize() ;
 }

@@ -1,4 +1,3 @@
-// $Id: L0CaloCandidatesFromRawBank.h,v 1.6 2009-10-29 10:51:23 robbep Exp $
 #ifndef L0CALO_L0CALOCANDIDATESFROMRAWBANK_H 
 #define L0CALO_L0CALOCANDIDATESFROMRAWBANK_H 1
 
@@ -13,7 +12,7 @@
 // forward declaration
 namespace LHCb {
   class RawBankReadoutStatus ;
-};
+}
 class DeCalorimeter ;
 
 static const InterfaceID IID_L0CaloCandidatesFromRawBank ( "L0CaloCandidatesFromRawBank", 4, 0 );

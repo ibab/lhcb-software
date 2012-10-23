@@ -1,5 +1,3 @@
-// $Id: $
-
 // local
 #include "L0CaloPRSResetMonitor.h"
 
@@ -14,7 +12,7 @@
 #include "Event/L0DUBase.h"
 
 // Declare Algorithm
-DECLARE_ALGORITHM_FACTORY( L0CaloPRSResetMonitor );
+DECLARE_ALGORITHM_FACTORY( L0CaloPRSResetMonitor )
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0CaloPRSResetMonirot
@@ -42,7 +40,7 @@ L0CaloPRSResetMonitor::L0CaloPRSResetMonitor( const std::string& name,
 //=============================================================================
 // Standard destructor
 //=============================================================================
-L0CaloPRSResetMonitor::~L0CaloPRSResetMonitor() { };
+L0CaloPRSResetMonitor::~L0CaloPRSResetMonitor() { }
 
 //=============================================================================
 // Initialisation. 
@@ -53,7 +51,7 @@ StatusCode L0CaloPRSResetMonitor::initialize() {
 
   if ( sc.isFailure() ) return sc;
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   // Initialize event counters
   m_nEvents = 0 ;
@@ -81,18 +79,14 @@ StatusCode L0CaloPRSResetMonitor::initialize() {
 StatusCode L0CaloPRSResetMonitor::execute() {
 
   // Read input data specified by options
-  debug() << "Execute will read " << m_inputData << endmsg ;
-
-  if ( ! exist< LHCb::L0CaloCandidates >( m_inputData ) ) {
-    Warning( "No data at " + m_inputData ).ignore() ;
-    return StatusCode::SUCCESS ;
-  }
+  if( msgLevel(MSG::DEBUG) ) 
+    debug() << "Execute will read " << m_inputData << endmsg ;
 
   LHCb::L0CaloCandidates * candidates = 
-    get<LHCb::L0CaloCandidates>( m_inputData );
-  LHCb::L0CaloCandidates::iterator cand ;
+    getIfExists<LHCb::L0CaloCandidates>( m_inputData );
+  if ( NULL == candidates ) return Warning( "No data at " + m_inputData, StatusCode::SUCCESS ) ;
 
-  if ( 0 == candidates ) return StatusCode::SUCCESS ;
+  LHCb::L0CaloCandidates::iterator cand ;
 
   int card( 0 ) , crate( 0 ) , slot( 0 ) ;
 

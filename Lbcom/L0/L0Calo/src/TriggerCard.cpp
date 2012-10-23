@@ -1,5 +1,3 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.cpp,v 1.4 2007-07-02 14:00:50 robbep Exp $
-
 #include "TriggerCard.h"
 
 /** Clean up for a new event. Resets all arrays and values
@@ -26,7 +24,7 @@ void TriggerCard::reset( ) {
   m_rowMax = m_detElem -> cardFirstValidRow( m_number ) -
     m_detElem -> cardFirstRow( m_number ) ;
   m_empty  = true;
-};
+}
 
 /**
  * Sets the Et of a cell. Perform the total sum and the computation 
@@ -58,7 +56,7 @@ void TriggerCard::addEt( int col, int row, int digit ) {
       }
     }
   }
-};
+}
 
 void TriggerCard::setPrs( int col, int row ) {
   if (nRowCaloCard > row) {
@@ -69,7 +67,7 @@ void TriggerCard::setPrs( int col, int row ) {
     if (nColCaloCard > col) { prs[col]  [row-1] += 2; }
     if (           0 < col) { prs[col-1][row-1] += 1; }
   }
-};
+}
 
 void TriggerCard::setSpd( int col, int row ) {
   if (nRowCaloCard > row) {
@@ -80,7 +78,7 @@ void TriggerCard::setSpd( int col, int row ) {
       if (nColCaloCard > col) { spd[col]  [row-1] += 2; }
       if (           0 < col) { spd[col-1][row-1] += 1; }
   }
-};
+}
 
 /** Check if the ECAL candidate (current card) matches the HCAL
  *  candidate with the specified row and column
@@ -103,5 +101,5 @@ bool TriggerCard::match_included ( int hCol, int hRow ) {
   if ( (m_rowMax < fRow) || (m_rowMax > lRow) ) return false ;
 
   return true;
-};
+}
 

@@ -1,5 +1,3 @@
-// $Id: L0CaloMonit.cpp,v 1.31 2009-06-04 07:53:00 robbep Exp $
-
 // local
 #include "L0CaloMonit.h"
 
@@ -17,7 +15,7 @@
 #include "Event/ODIN.h"
 
 // Declare Algorithm
-DECLARE_ALGORITHM_FACTORY( L0CaloMonit );
+DECLARE_ALGORITHM_FACTORY( L0CaloMonit )
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0CaloMonit
@@ -31,7 +29,11 @@ DECLARE_ALGORITHM_FACTORY( L0CaloMonit );
 L0CaloMonit::L0CaloMonit( const std::string& name, 
 				ISvcLocator* pSvcLocator ) : 
   Calo2Dview ( name , pSvcLocator ),
-  m_nEvents(0){ 
+  m_ecal(NULL),
+  m_hcal(NULL),
+  m_nEvents(0),
+  m_bcidHist(NULL)
+{ 
   declareProperty( "FullMonitoring"      , m_fullMonitoring  = false ) ;  
   declareProperty( "InputDataSuffix"     , m_inputDataSuffix = ""    ) ;  
   declareProperty( "UpdateFrequency"     , m_updateFrequency = -1    ) ;  
@@ -96,7 +98,7 @@ L0CaloMonit::L0CaloMonit( const std::string& name,
 //=============================================================================
 // Standard destructor
 //=============================================================================
-L0CaloMonit::~L0CaloMonit() { };
+L0CaloMonit::~L0CaloMonit() { }
 
 //=============================================================================
 // Initialisation. 
@@ -107,7 +109,7 @@ StatusCode L0CaloMonit::initialize() {
 
   if ( sc.isFailure() ) return sc;  // error printed already by Calo2Dview
 
-  debug() << "==> Initialize" << endmsg;
+ if( msgLevel(MSG::DEBUG) )  debug() << "==> Initialize" << endmsg;
 
   // Initialize event counters
   m_nEvents       = 0 ;
@@ -118,7 +120,8 @@ StatusCode L0CaloMonit::initialize() {
   m_hcal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );  
 
   // Book all histograms created by monitoring algorithm
-  debug() << "==> Default Monitoring histograms booking " << endmsg;  
+  if( msgLevel(MSG::DEBUG) ) 
+    debug() << "==> Default Monitoring histograms booking " << endmsg;  
 
   // Et and multiplicity spectra histogram first
   m_etHist.reserve( 7 ) ; m_etHist.resize( 7 , 0 ) ;
@@ -151,7 +154,8 @@ StatusCode L0CaloMonit::initialize() {
   // to true
   // Also "Et" spectra histograms for all TVB candidates are booked
   if ( m_fullMonitoring ) {
-    debug() << "==> Full Monitoring histograms booking" << endmsg ;   
+    if( msgLevel(MSG::DEBUG) ) 
+      debug() << "==> Full Monitoring histograms booking" << endmsg ;   
     IHistogram1D * h( 0 ) ;
     std::vector< IHistogram1D* > v( 14 , h ) ;
     m_crateHist.reserve( 7 ) ; m_crateHist.resize( 7 , v ) ;
@@ -177,22 +181,16 @@ StatusCode L0CaloMonit::execute() {
   // Input data suffix is used to select if we read the L0Calo data 
   // (from the L0Calo TELL1) 
   // or the result of the simulation/emulation
-  debug() << "Execute will read " 
-	  << LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix 
+  if( msgLevel(MSG::DEBUG) ) debug() << "Execute will read "
+    << LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix 
 	  << endmsg ;
 
-  if ( ! exist< LHCb::L0CaloCandidates >
-       ( LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix ) ) {
-    Warning( "No data at " + LHCb::L0CaloCandidateLocation::Default + 
-	     m_inputDataSuffix ).ignore() ;
-    return StatusCode::SUCCESS ;
-  }
-
-  LHCb::L0CaloCandidates * candidates = get<LHCb::L0CaloCandidates>
+  LHCb::L0CaloCandidates * candidates = getIfExists<LHCb::L0CaloCandidates>
     ( LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix );
-  LHCb::L0CaloCandidates::iterator cand ;
+  if( NULL == candidates ) return Warning( "No data at " + LHCb::L0CaloCandidateLocation::Default + 
+                                           m_inputDataSuffix, StatusCode::SUCCESS );
 
-  if ( 0 == candidates ) return StatusCode::SUCCESS ;
+  LHCb::L0CaloCandidates::iterator cand ;
 
   m_nEvents++ ; 
 
@@ -200,12 +198,10 @@ StatusCode L0CaloMonit::execute() {
   ulonglong event( 0 ) ; 
   unsigned int BCId( 4000 ) ; 
 
-  if ( exist< LHCb::ODIN >( LHCb::ODINLocation::Default ) ) {
-    LHCb::ODIN * odin = get< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
-    if ( 0 != odin ) {
-      event = odin->eventNumber() ; 
-      BCId = odin->bunchId() ; 
-    }
+  LHCb::ODIN * odin = getIfExists< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
+  if ( NULL != odin ) {
+    event = odin->eventNumber() ; 
+    BCId = odin->bunchId() ; 
   }
 
   // Fill BCId histogram
@@ -216,8 +212,9 @@ StatusCode L0CaloMonit::execute() {
 	++cand ) { 
     LHCb::L0CaloCandidate * theCand = (*cand) ;
 
-    debug() << " Event " << event << " Type  = " << theCand -> type() 
-	    << " Et  = " << theCand -> etCode() << endmsg ;
+    if( msgLevel(MSG::DEBUG) ) 
+      debug() << " Event " << event << " Type  = " << theCand -> type() 
+              << " Et  = " << theCand -> etCode() << endmsg ;
 
     defaultMonitoring( theCand ) ;
   }
@@ -226,7 +223,8 @@ StatusCode L0CaloMonit::execute() {
   if ( ( m_updateFrequency > 0 ) && ( m_lookForHotCells ) ) { 
     int goForCheck = m_nEvents % m_updateFrequency ; 
     if ( 0 == goForCheck ) { 
-      debug() << "m_nEvents = " << m_nEvents << " go for check ..." << endmsg ; 
+      if( msgLevel(MSG::DEBUG) ) 
+        debug() << "m_nEvents = " << m_nEvents << " go for check ..." << endmsg ; 
       printHotCellSummary( ) ;
     }
   }
@@ -234,20 +232,14 @@ StatusCode L0CaloMonit::execute() {
   // Read Full container (ie containing the input of the Selection
   // Boards)
   if ( m_fullMonitoring ) {
-    debug() << "Full Monitoring" << endmsg ;
+    if( msgLevel(MSG::DEBUG) ) debug() << "Full Monitoring" << endmsg ;
 
-    if ( ! exist< LHCb::L0CaloCandidates >
-	 ( LHCb::L0CaloCandidateLocation::Full + m_inputDataSuffix ) ) {
-      Warning( "No data at " + LHCb::L0CaloCandidateLocation::Full + 
-	       m_inputDataSuffix ).ignore() ;
-      return StatusCode::SUCCESS ;
-    } 
-
-    LHCb::L0CaloCandidates* candidatesF = get<LHCb::L0CaloCandidates>
+    LHCb::L0CaloCandidates* candidatesF = getIfExists<LHCb::L0CaloCandidates>
       ( LHCb::L0CaloCandidateLocation::Full + m_inputDataSuffix ) ;
+    if ( NULL == candidatesF ) return Warning( "No data at " + LHCb::L0CaloCandidateLocation::Full + 
+                                               m_inputDataSuffix, StatusCode::SUCCESS ) ;
+
     LHCb::L0CaloCandidates::const_iterator candF ;
-      
-    if ( 0 == candidatesF ) return StatusCode::SUCCESS ;
 
     for ( candF = candidatesF->begin() ; candidatesF->end() != candF ; 
           ++candF ) 
@@ -437,12 +429,12 @@ void L0CaloMonit::SearchForHotCellsAndReset( IHistogram1D * hist ,
       info() << "|     " << data[ (*it) ] << "     |   " << caloCell
              << "    |     " <<crate << "     |     " 
              << cardSlot << "      |  " << "   |   " 
-             << cellChannel << "  |  " << endreq ; 
+             << cellChannel << "  |  " << endmsg ; 
       info() << "-----------------------------------------------------------"
-             << endreq ; 
+             << endmsg ; 
     }  
   } else {
-    info() << " ===> No hot channels for this region " << endreq ;
+    info() << " ===> No hot channels for this region " << endmsg ;
   }
   hist->reset() ; 
 }

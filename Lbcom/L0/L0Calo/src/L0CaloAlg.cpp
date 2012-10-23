@@ -1,5 +1,3 @@
-// $Id: L0CaloAlg.cpp,v 1.65 2010-06-10 11:15:05 cattanem Exp $
-
 /// local
 #include "L0CaloAlg.h"
 
@@ -28,7 +26,7 @@
 //  Compute L0Calo quantities from Calorimeter full information
 //
 
-DECLARE_ALGORITHM_FACTORY( L0CaloAlg ) ;
+DECLARE_ALGORITHM_FACTORY( L0CaloAlg )
 
 // Temporary, to be moved to confDB
 int L0CaloAlg::s_ecalLUT[ 14 ][ 2 ] = {
@@ -66,8 +64,15 @@ L0CaloAlg::L0CaloAlg( const std::string & name , ISvcLocator * pSvcLocator)
   : L0AlgBase( name , pSvcLocator )
   , m_usePsSpd( true )
   , m_addEcalToHcal( true )
+  , m_ecal(NULL)
+  , m_hcal(NULL)
+  , m_prs(NULL)
   , m_validPrs()
   , m_validPrsInner()
+  , m_adcsEcal(NULL)
+  , m_adcsHcal(NULL)
+  , m_bitsFromRaw(NULL)
+  , m_bankToTES(NULL)
   , m_rawOutput  ( 2 )
   , m_totRawSize(0)
   , m_nbEvents(0)
@@ -96,7 +101,7 @@ StatusCode L0CaloAlg::initialize() {
   StatusCode sc = L0AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc; 
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   // Warning m_ecalFE & m_hcalFE  HAVE to contain PIN-diode FEs
   // in order to ensure the card numbering is correct afterward.
@@ -191,7 +196,7 @@ StatusCode L0CaloAlg::initialize() {
       m_hcalFe[ hCard ].addEcalConnectedCard( eCard ) ;
     } else {
       warning() << "Ecal card " << eCard << " not connected to HCAL " 
-                << endreq ;
+                << endmsg ;
     }
   }
 
@@ -219,7 +224,7 @@ StatusCode L0CaloAlg::initialize() {
                         m_ecalFe[eCard].hcalMag(),
                         m_ecalFe[eCard].hcalOffsetRow(),
                         m_ecalFe[eCard].hcalOffsetCol() )
-              << endreq ;
+              << endmsg ;
     }
   
     for ( hCard=0 ;  m_hcal->nCards() > hCard; ++hCard ) {
@@ -240,7 +245,7 @@ StatusCode L0CaloAlg::initialize() {
             ++eCard ) {
         debug() << format( "%4d", m_hcalFe[hCard].ecalCardNumber( eCard ) );
       }
-     debug() << endreq;
+     debug() << endmsg;
    }
   }
 
@@ -303,7 +308,7 @@ StatusCode L0CaloAlg::initialize() {
   }
 
   info() << m_ecal->nCards() << " Ecal and "
-         << m_hcal->nCards() << " Hcal front end cards." << endreq;
+         << m_hcal->nCards() << " Hcal front end cards." << endmsg;
 
   // Numbers for bank size monitoring
   m_totRawSize = 0.;
@@ -731,7 +736,7 @@ void L0CaloAlg::sumEcalData(  ) {
     int down, left, corner  ;
 
     if ( MSG::VERBOSE >= msgLevel() )
-      verbose() << id << format( " adc %3d", adc ) << endreq;
+      verbose() << id << format( " adc %3d", adc ) << endmsg;
 
     m_ecal -> cardAddress(id, card, row, col );          // Get the card #
     m_ecal -> cardNeighbors( card, down, left, corner ); // neighbor.
@@ -814,13 +819,13 @@ void L0CaloAlg::addPrsData( ) {
   std::vector<LHCb::CaloCellID>& ids = m_PrsSpdIds.first;
 
   if ( msgLevel( MSG::DEBUG ) )
-    debug() << "Found " << ids.size() << " PRS bits" << endreq;
+    debug() << "Found " << ids.size() << " PRS bits" << endmsg;
 
   for ( std::vector<LHCb::CaloCellID>::const_iterator itID = ids.begin();
         ids.end() != itID; ++itID ) {
     id = *itID;
 
-    if ( MSG::VERBOSE >= msgLevel() ) verbose() << id << endreq;
+    if ( MSG::VERBOSE >= msgLevel() ) verbose() << id << endmsg;
     
     m_ecal->cardAddress(id, card, row, col );
     m_ecal->cardNeighbors( card, down, left, corner );
@@ -853,13 +858,13 @@ void L0CaloAlg::addSpdData( ) {
 
   std::vector<LHCb::CaloCellID>& ids = m_PrsSpdIds.second;
   if ( msgLevel( MSG::DEBUG ) ) 
-    debug() << "Found " << ids.size() << " SPD bits" << endreq;
+    debug() << "Found " << ids.size() << " SPD bits" << endmsg;
 
   for ( std::vector<LHCb::CaloCellID>::const_iterator itID = ids.begin();
         ids.end() != itID; ++itID ) {
     id = *itID;
 
-    if ( msgLevel( MSG::VERBOSE ) ) verbose() << id << endreq;
+    if ( msgLevel( MSG::VERBOSE ) ) verbose() << id << endmsg;
 
     m_ecal->cardAddress(id, card, row, col );
     m_ecal->cardNeighbors( card, down, left, corner );    
@@ -895,7 +900,7 @@ void L0CaloAlg::saveInRawEvent ( int io , int slave , int mask , int type,
 
   if (type != L0DUBase::CaloType::SpdMult ) {
     warning()<<"Should be of type CaloSpdMult and is of type " 
-             << type << endreq ;
+             << type << endmsg ;
     return ;
   }  
 
@@ -1084,7 +1089,7 @@ void L0CaloAlg::createHCALLut( ) {
 // Callback function to check L0Calo conditions
 //=============================================================================
 StatusCode L0CaloAlg::updateL0Calibration( ) {
-  debug() << "Updating L0Calibration" << endreq ;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Updating L0Calibration" << endmsg ;
 
   if ( ! m_l0Cond -> exists( "AddECALToHCAL" ) ) {
     Warning("AddECALToHCAL parameter does not exist in DB").ignore() ;
@@ -1102,8 +1107,10 @@ StatusCode L0CaloAlg::updateL0Calibration( ) {
     m_usePsSpd      = (m_l0Cond -> param< int >( "UsePSSPD" ))!=0 ;
   }
   
-  debug() << "Add ECAL to HCAL = " << m_addEcalToHcal << endreq ;
-  debug() << "Use PS and SPD = " << m_usePsSpd << endreq ;
+  if( msgLevel(MSG::DEBUG) ) {
+    debug() << "Add ECAL to HCAL = " << m_addEcalToHcal << endmsg ;
+    debug() << "Use PS and SPD = " << m_usePsSpd << endmsg ;
+  }
   
   return StatusCode::SUCCESS ;
 }

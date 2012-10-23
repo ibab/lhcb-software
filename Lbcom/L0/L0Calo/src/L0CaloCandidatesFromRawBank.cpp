@@ -1,4 +1,3 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.15 2009-10-29 10:51:23 robbep Exp $
 // Include files
 // local
 #include "L0CaloCandidatesFromRawBank.h"
@@ -20,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0CaloCandidatesFromRawBank );
+DECLARE_TOOL_FACTORY( L0CaloCandidatesFromRawBank )
 
 struct SortL0CaloByEt { 
   bool operator() (const LHCb::L0CaloCandidate * c1 , 
@@ -113,7 +112,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
 
     if ( msgLevel( MSG::DEBUG ) ) 
       debug() << " L0CaloCandidatesFromRawBank Bank " << itBnk-data.begin() 
-              << " size " << bankSize << " words " << endreq ;
+              << " size " << bankSize << " words " << endmsg ;
 
     while ( 0 < bankSize-- ) {
 
@@ -231,7 +230,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
           center.SetY( center.y() + tol ) ;
         } else {
           if ( 0 == version ) { 
-            debug() << "Non valid CELL Id" << endmsg ;
+            if( msgLevel(MSG::DEBUG) ) debug() << "Non valid CELL Id" << endmsg ;
             LHCb::CaloCellID tmp( id.calo() , id.area() , id.row()+1 , id.col()+1) ;
             center = det -> cellCenter( tmp ) ;
             tol    = det -> cellSize( tmp ) * .5 ;
@@ -267,7 +266,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
               if ( 0 == bestCand[ type ] ) {
                 bestCand[ type ] = myL0Cand ;
               } else {
-                warning() << "Hadron candidate already filled !" << endreq ;
+                warning() << "Hadron candidate already filled !" << endmsg ;
                 delete myL0Cand ;
                 myL0Cand = 0;
                 readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Corrupted ) ;
@@ -331,7 +330,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
             if ( 0 == bestCand[ type ] ) bestCand[ type ] = myL0Cand ;
             else {
               warning() << "Electromagnetic candidate already filled !" 
-                        << endreq ;
+                        << endmsg ;
               readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::Corrupted ) ;
               delete myL0Cand ;
               myL0Cand = 0;
@@ -340,8 +339,8 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
         }
 
         if ( msgLevel( MSG::VERBOSE ) ) {
-          if ( 0 != myL0Cand ) verbose() << *myL0Cand << endreq;
-          else verbose() << "Null L0CaloCandidate" << endreq ;
+          if ( 0 != myL0Cand ) verbose() << *myL0Cand << endmsg;
+          else verbose() << "Null L0CaloCandidate" << endmsg ;
         }
       }
     }
@@ -370,7 +369,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
                                                  cand->posTol() );
           
           if ( msgLevel( MSG::DEBUG ) ) 
-            debug() << "out bestCand type = " << type << *myL0Cand << endreq ;
+            debug() << "out bestCand type = " << type << *myL0Cand << endmsg ;
           temporaryOut.insert( myL0Cand );
         } else {
           temporaryOut.insert( bestCand[ type ] ) ;
@@ -378,7 +377,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
       } else {
         if ( msgLevel( MSG::DEBUG ) ) 
           debug() << "out bestCand type = " << type << " " << *bestCand[type]
-                  << endreq;
+                  << endmsg;
         temporaryOut.insert( bestCand[ type ] ) ;
       }
     }

@@ -3,6 +3,13 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2012-10-22 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Fix unprotected debug() and verbose()
+ - Use getIfExists
+ - Remove unnecessary finalize() methods
+ - Fix Coverity defects
+
 !========================= L0Calo v11r8 2012-06-25 =========================
 ! 2012-05-29 - Patrick Robbe
  - L0CaloCandidatesFromRawBank.cpp: sort the L0CaloCandidates containers 

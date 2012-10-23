@@ -1,4 +1,3 @@
-// $Id: L0CaloToMCParticleAsct.cpp,v 1.9 2007-10-31 14:36:18 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -20,7 +19,7 @@
 // 2002-07-01 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( L0CaloToMCParticleAsct );
+DECLARE_ALGORITHM_FACTORY( L0CaloToMCParticleAsct )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -38,14 +37,14 @@ L0CaloToMCParticleAsct::L0CaloToMCParticleAsct( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-L0CaloToMCParticleAsct::~L0CaloToMCParticleAsct() {}; 
+L0CaloToMCParticleAsct::~L0CaloToMCParticleAsct() {}
 
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode L0CaloToMCParticleAsct::execute() {
 
-  debug() << "==> Execute" << endreq;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   
   LHCb::L0CaloCandidates* candidates = get<LHCb::L0CaloCandidates>( m_inputContainer );
 
@@ -68,7 +67,7 @@ StatusCode L0CaloToMCParticleAsct::execute() {
       mcDigs = mcHcalDigs;
     }
     if ( 0 != mcDigs ) {
-      debug() << "Candidate " << *(*cand) << endreq;
+      if( msgLevel(MSG::DEBUG) ) debug() << "Candidate " << *(*cand) << endmsg;
       std::vector<const LHCb::MCParticle*> parts;
       std::vector<double> energies;
       double eTot = 0.;
@@ -86,8 +85,9 @@ StatusCode L0CaloToMCParticleAsct::execute() {
               const LHCb::MCParticle* part = (*ith)->particle();
               double energy = (*ith)->activeE();
               eTot += energy;
-              verbose() << "  cell " << tmpCell << " Part " << part->key() 
-                        << " e " << energy << endreq;
+              if( msgLevel(MSG::VERBOSE) ) 
+                verbose() << "  cell " << tmpCell << " Part " << part->key() 
+                          << " e " << energy << endmsg;
               bool add = true;
               for ( unsigned int ll = 0; parts.size() > ll; ll++ ) {
                 if ( part == parts[ll] ) {
@@ -108,14 +108,15 @@ StatusCode L0CaloToMCParticleAsct::execute() {
         for ( unsigned int ll = 0; parts.size() > ll; ll++ ) {
           if ( energies[ll] > m_minimalFraction * eTot ) {
             myLink.link( *cand, parts[ll], energies[ll] / eTot );
-            debug() << " .. Relate MC " << parts[ll]->key()
-                    << " with fraction " << energies[ll] / eTot << endreq;
+            if( msgLevel(MSG::DEBUG) ) 
+              debug() << " .. Relate MC " << parts[ll]->key()
+                      << " with fraction " << energies[ll] / eTot << endmsg;
           }
         }
       }
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

@@ -1,5 +1,3 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/DumpL0CaloBanks.cpp,v 1.2 2008-07-16 20:20:17 robbep Exp $
-
 #include <fstream>
 
 // Gaudi
@@ -12,7 +10,7 @@
 // local
 #include "DumpL0CaloBanks.h"
 
-DECLARE_ALGORITHM_FACTORY( DumpL0CaloBanks );
+DECLARE_ALGORITHM_FACTORY( DumpL0CaloBanks )
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DumpL0CaloBanks
@@ -24,6 +22,7 @@ DECLARE_ALGORITHM_FACTORY( DumpL0CaloBanks );
 DumpL0CaloBanks::DumpL0CaloBanks( const std::string& name, 
                                   ISvcLocator* pSvcLocator )  
   : GaudiAlgorithm( name , pSvcLocator ) , m_event( 0 ) 
+  , m_file(NULL)
 { 
   declareProperty( "FileName"  , m_fileName  = "l0calobanks.txt" ) ;  
   declareProperty( "NZSBanks" , m_nzsBanks = false ) ;
@@ -33,7 +32,7 @@ DumpL0CaloBanks::DumpL0CaloBanks( const std::string& name,
 //=============================================================================
 // Standard destructor
 //=============================================================================
-DumpL0CaloBanks::~DumpL0CaloBanks() {};
+DumpL0CaloBanks::~DumpL0CaloBanks() {}
 
 //=============================================================================
 // Finalize.
@@ -51,12 +50,12 @@ StatusCode DumpL0CaloBanks::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   
   m_file = new std::ofstream( m_fileName.c_str() ) ;
   
   return StatusCode::SUCCESS; 
-};
+}
 
 //=============================================================================
 // Main execution
@@ -66,21 +65,21 @@ StatusCode DumpL0CaloBanks::execute() {
   (*m_file) << "---------------------------------------------" 
             << ++m_event << std::endl ;
   
-  if ( exist< LHCb::ODIN >( LHCb::ODINLocation::Default ) ) {
-    LHCb::ODIN * odin = get< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
+  LHCb::ODIN * odin = getIfExists< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
+  if ( NULL != odin ) {
     (*m_file) << "event = " << odin -> eventNumber() 
               << " BCId = " << odin -> bunchId() 
               << std::endl ;
   }
   
-  LHCb::RawEvent * rawEvt( 0 ) ;
   LHCb::RawBank::BankType bankType = LHCb::RawBank::L0Calo ;
   if ( m_nzsBanks ) 
     bankType = LHCb::RawBank::L0CaloFull ;
   else if ( m_errorBanks ) 
     bankType = LHCb::RawBank::L0CaloError ;
-  if ( exist< LHCb::RawEvent >( LHCb::RawEventLocation::Default ) ) {
-    rawEvt = get< LHCb::RawEvent >( LHCb::RawEventLocation::Default ) ;
+
+  LHCb::RawEvent* rawEvt = getIfExists< LHCb::RawEvent >( LHCb::RawEventLocation::Default ) ;
+  if ( NULL != rawEvt ) {
     const std::vector< LHCb::RawBank * > & banks = 
       rawEvt -> banks( bankType ) ;
   

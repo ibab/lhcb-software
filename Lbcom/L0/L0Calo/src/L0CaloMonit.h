@@ -1,4 +1,3 @@
-// $Id: L0CaloMonit.h,v 1.6 2009-06-03 18:04:18 robbep Exp $
 #ifndef L0CALOMONIT_H 
 #define L0CALOMONIT_H 1
 
@@ -14,7 +13,7 @@ class IHistogram2D ;
 class DeCalorimeter ;
 namespace LHCb {
   class L0CaloCandidate ;
-};
+}
 
 /** @class L0CaloMonit L0CaloMonit.h
  *  Monitoring algorithm for the L0 Calorimeter trigger

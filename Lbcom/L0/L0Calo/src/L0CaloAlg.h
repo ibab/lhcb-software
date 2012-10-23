@@ -1,5 +1,3 @@
-// $Id: L0CaloAlg.h,v 1.32 2010-01-22 13:48:42 robbep Exp $
-
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
 
@@ -184,5 +182,5 @@ namespace L0Calo {
 
     return false ;
   }
-};
+}
 #endif //   L0CALO_L0CALOALG_H

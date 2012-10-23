@@ -1,4 +1,3 @@
-// $Id: L0CaloCheckCalibCte.cpp,v 1.4 2010-01-22 18:09:23 robbep Exp $
 // Include files 
 
 // local
@@ -19,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0CaloCheckCalibCte );
+DECLARE_ALGORITHM_FACTORY( L0CaloCheckCalibCte )
 
 
 //=============================================================================
@@ -27,7 +26,11 @@ DECLARE_ALGORITHM_FACTORY( L0CaloCheckCalibCte );
 //=============================================================================
 L0CaloCheckCalibCte::L0CaloCheckCalibCte( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : Calo2Dview( name , pSvcLocator ) {
+  : Calo2Dview( name , pSvcLocator )
+  , m_calo(NULL)
+  , m_daq(NULL)
+  , m_l0daq(NULL)
+{
   declareProperty( "Detector"      , m_detectorName = "Ecal" ) ;
   declareProperty( "ReadoutTool"   , m_readoutTool = "CaloDataProvider" ) ;
   declareProperty( "L0ReadoutTool" , m_l0readoutTool = "CaloL0DataProvider" ) ;
@@ -51,7 +54,7 @@ StatusCode L0CaloCheckCalibCte::initialize() {
   else if ( "Hcal" == m_detectorName ) 
     m_calo = getDet< DeCalorimeter >( DeCalorimeterLocation::Hcal ) ;
   else {
-    error() << "Unknown detector name " << m_detectorName << endreq ;
+    error() << "Unknown detector name " << m_detectorName << endmsg ;
     return StatusCode::FAILURE ;
   }
 
@@ -95,13 +98,14 @@ StatusCode L0CaloCheckCalibCte::execute() {
     if ( l0adcFromAdc( (*itAdcMap).second , (*itAdcMap).first ) != 
          m_l0daq -> l0Adc( (*itAdcMap).first ) ) { 
       LHCb::CaloCellID id = (*itAdcMap).first ;
-      debug() << "Mismatch ADC / L0ADC " 
-              << (*itAdcMap).first 
-              << " " << m_l0daq -> l0Adc( (*itAdcMap).first )
-              << " " << (*itAdcMap).second 
-              << " " << l0adcFromAdc((*itAdcMap).second , (*itAdcMap).first )
-              << endreq ;
-      debug() << "Calib constant should be = " 
+      if( msgLevel(MSG::DEBUG) ) {
+        debug() << "Mismatch ADC / L0ADC " 
+                << (*itAdcMap).first 
+                << " " << m_l0daq -> l0Adc( (*itAdcMap).first )
+                << " " << (*itAdcMap).second 
+                << " " << l0adcFromAdc((*itAdcMap).second , (*itAdcMap).first )
+                << endmsg ;
+        debug() << "Calib constant should be = " 
                 << m_calo -> cellParam( id ).l0Constant()
                 << " Row = " << m_calo -> cellParam( id ).cardRow()
                 << " Column = " << m_calo -> cellParam( id ).cardColumn()
@@ -109,7 +113,8 @@ StatusCode L0CaloCheckCalibCte::execute() {
                 << m_calo -> cardCrate( m_calo -> cellParam( id ).cardNumber() ) 
                 << " Slot = " 
                 << m_calo -> cardSlot( m_calo -> cellParam( id ).cardNumber() ) 
-                << endreq ;
+                << endmsg ;
+      }
       
       // Plot the location of the error
       fillCalo2D( "L0CteComp" + m_detectorName ,(*itAdcMap).first , 1. ,

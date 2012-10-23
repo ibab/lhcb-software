@@ -1,4 +1,3 @@
-// $Id: L0CaloCandidatesFromRaw.h,v 1.4 2009-10-29 10:50:58 robbep Exp $
 #ifndef L0CALOCANDIDATESFROMRAW_H 
 #define L0CALOCANDIDATESFROMRAW_H 1
 
@@ -29,7 +28,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   

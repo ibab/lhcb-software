@@ -1,5 +1,3 @@
-// $Id: L0CaloCompare.cpp,v 1.14 2010-05-20 16:45:14 robbep Exp $
-
 // local
 #include "L0CaloCompare.h"
 
@@ -16,7 +14,7 @@
 #include "Event/L0DUBase.h"
 #include "Event/ODIN.h"
 
-DECLARE_ALGORITHM_FACTORY( L0CaloCompare );
+DECLARE_ALGORITHM_FACTORY( L0CaloCompare )
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0CaloCompare
@@ -27,6 +25,15 @@ DECLARE_ALGORITHM_FACTORY( L0CaloCompare );
 L0CaloCompare::L0CaloCompare( const std::string& name, 
                               ISvcLocator* pSvcLocator )  
   : Calo2Dview ( name , pSvcLocator ) 
+  , m_histSpdMult_Comp(NULL) 
+  , m_histSumEt_Comp(NULL)
+  , m_histEleErrorC(NULL)
+  , m_histPhoErrorC(NULL)
+  , m_histHadErrorC(NULL)
+  , m_histPilErrorC(NULL)
+  , m_histPigErrorC(NULL)
+  , m_histTotalCount(NULL)
+  , m_histErrorCount(NULL)
 { 
   m_idleBCIdVector.push_back( 3561 ) ;
   m_idleBCIdVector.push_back( 3562 ) ;
@@ -89,7 +96,7 @@ L0CaloCompare::L0CaloCompare( const std::string& name,
 //=============================================================================
 // Standard destructor
 //=============================================================================
-L0CaloCompare::~L0CaloCompare() {};
+L0CaloCompare::~L0CaloCompare() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -98,9 +105,11 @@ StatusCode L0CaloCompare::initialize() {
   StatusCode sc = Calo2Dview::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
-  debug() << "==> Monitoring histograms booking " << endmsg;
-
+  if( msgLevel(MSG::DEBUG) ) {
+    debug() << "==> Initialize" << endmsg;
+    debug() << "==> Monitoring histograms booking " << endmsg;
+  }
+  
   std::string det( "" ) ;
   for ( int i = 0 ; i <= L0DUBase::CaloType::Pi0Global ; ++i ) {
     det = "Ecal" ;
@@ -140,20 +149,14 @@ StatusCode L0CaloCompare::execute() {
   // Read ODIN bank to obtain BCId and event number
   unsigned int bcId( 4000 ) ; 
 
-  if ( exist< LHCb::ODIN >( LHCb::ODINLocation::Default ) ) {
-    LHCb::ODIN * odin = get< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
-    if ( 0 != odin ) bcId = odin -> bunchId() ;
-  }
+  LHCb::ODIN * odin = getIfExists< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
+  if ( NULL != odin ) bcId = odin -> bunchId() ;
   
   if ( std::binary_search( m_idles.begin() , m_idles.end() , bcId ) ) 
     return StatusCode::SUCCESS ;
 
-  LHCb::L0CaloCandidates* candidatesRef  ; 
-  LHCb::L0CaloCandidates* candidatesDefaultRef( 0 ) ;
   LHCb::L0CaloCandidates::const_iterator candRef;
 
-  LHCb::L0CaloCandidates* candidatesCheck  ; 
-  LHCb::L0CaloCandidates* candidatesDefaultCheck( 0 ) ;
   LHCb::L0CaloCandidates::const_iterator candCheck;
 
   std::string inputLocationReference( "" ) ;
@@ -171,47 +174,33 @@ StatusCode L0CaloCompare::execute() {
       LHCb::L0CaloCandidateLocation::Default + m_checkDataSuffix ;
   }
 
-  debug() << "Execute will read " << inputLocationReference 
-          << " as a reference" << endreq ;
-  debug() << "Execute will read " << inputLocationCheck
-          << " to be checked " << endreq;
-
-  if ( exist<LHCb::L0CaloCandidates>( inputLocationReference ) ) 
-    candidatesRef = 
-      get<LHCb::L0CaloCandidates>( inputLocationReference );
-  else { 
-    Warning( "REF Not found" ).ignore() ;
-    return StatusCode::SUCCESS ;
+  if( msgLevel(MSG::DEBUG) ) {
+    debug() << "Execute will read " << inputLocationReference 
+            << " as a reference" << endmsg ;
+    debug() << "Execute will read " << inputLocationCheck
+            << " to be checked " << endmsg;
   }
+    
+  LHCb::L0CaloCandidates* candidatesRef  = getIfExists<LHCb::L0CaloCandidates>( inputLocationReference );
+  if ( NULL == candidatesRef ) return Warning( "REF Not found", StatusCode::SUCCESS );
 
-  if ( exist<LHCb::L0CaloCandidates>( inputLocationCheck ) ) 
-    candidatesCheck = 
-      get<LHCb::L0CaloCandidates>( inputLocationCheck );
-  else { 
-    Warning( "CHECK Not found" ).ignore() ;
-    return StatusCode::SUCCESS ;
-  }
+  LHCb::L0CaloCandidates* candidatesCheck = getIfExists<LHCb::L0CaloCandidates>( inputLocationCheck );
+  if ( NULL == candidatesCheck ) return Warning( "CHECK Not found", StatusCode::SUCCESS );
 
+  LHCb::L0CaloCandidates* candidatesDefaultRef(0);
+  LHCb::L0CaloCandidates* candidatesDefaultCheck(0);
+  
   if ( m_fullMonitoring ) {
     inputLocationReference = 
       LHCb::L0CaloCandidateLocation::Default + m_referenceDataSuffix ;
     inputLocationCheck = 
       LHCb::L0CaloCandidateLocation::Default + m_checkDataSuffix ;    
-    if ( exist<LHCb::L0CaloCandidates>( inputLocationReference ) ) 
-      candidatesDefaultRef = 
-        get<LHCb::L0CaloCandidates>( inputLocationReference );
-    else { 
-      Warning( "Default REF Not found" ).ignore() ;
-      return StatusCode::SUCCESS ;
-    }
+
+    candidatesDefaultRef = getIfExists<LHCb::L0CaloCandidates>( inputLocationReference );
+    if( NULL == candidatesDefaultRef ) return Warning( "Default REF Not found", StatusCode::SUCCESS );
     
-    if ( exist<LHCb::L0CaloCandidates>( inputLocationCheck ) ) 
-      candidatesDefaultCheck = 
-        get<LHCb::L0CaloCandidates>( inputLocationCheck );
-    else { 
-      Warning( "Default CHECK Not found" ).ignore() ;
-      return StatusCode::SUCCESS ;
-    }
+    candidatesDefaultCheck = getIfExists<LHCb::L0CaloCandidates>( inputLocationCheck );
+    if( NULL == candidatesDefaultCheck ) return Warning( "Default CHECK Not found", StatusCode::SUCCESS );
   }
 
   // First fill a map for each type ... for the reference L0 candidates
@@ -239,9 +228,10 @@ StatusCode L0CaloCompare::execute() {
     case L0DUBase::CaloType::Pi0Local:
     case L0DUBase::CaloType::Pi0Global:
     case L0DUBase::CaloType::Hadron:
-      debug() << "Type= " << type << " cellID = " << caloCell 
-              << " etCode = " << (*candRef)->etCode() 
-              << " rawId= " << rawId << endreq;
+      if( msgLevel(MSG::DEBUG) )
+        debug() << "Type= " << type << " cellID = " << caloCell 
+                << " etCode = " << (*candRef)->etCode() 
+                << " rawId= " << rawId << endmsg;
       mapRef[type].insert(std::pair<int,LHCb::L0CaloCandidate *>( rawId , 
                                                                   *candRef ) ) ;
       m_errorCounterHisto[type]->fill(0.5) ;
@@ -250,16 +240,18 @@ StatusCode L0CaloCompare::execute() {
       // in full monitoring mode, ignore SpdMult candidates which are 
       // partial multiplicities
       if ( m_fullMonitoring ) break ;
-      debug() << " SpdMult (1) : etCode = " << (*candRef)->etCode() 
-              << " rawId= " << rawId << endreq ;
+      if( msgLevel(MSG::DEBUG) ) 
+        debug() << " SpdMult (1) : etCode = " << (*candRef)->etCode() 
+                << " rawId= " << rawId << endmsg ;
       SpdMultRef = *candRef ;
       break ; 
     case L0DUBase::CaloType::SumEt:
       // in full monitoring mode, ignore SumEt candidates which are 
       // partial multiplicities
       if ( m_fullMonitoring ) break ;
-      debug() << " SumEt : etCode = " << (*candRef)->etCode() 
-              << " rawId= " << rawId << endreq;
+      if( msgLevel(MSG::DEBUG) ) 
+        debug() << " SumEt : etCode = " << (*candRef)->etCode() 
+                << " rawId= " << rawId << endmsg;
       SumEtRef = *candRef ;
       break ; 
     default:
@@ -276,13 +268,15 @@ StatusCode L0CaloCompare::execute() {
       
       switch ( type ) {
       case L0DUBase::CaloType::SpdMult:
-        debug() << " SpdMult (2) : etCode = " << (*candRef)->etCode() 
-                << " rawId= " << rawId << endreq ;
+        if( msgLevel(MSG::DEBUG) ) 
+          debug() << " SpdMult (2) : etCode = " << (*candRef)->etCode() 
+                  << " rawId= " << rawId << endmsg ;
         SpdMultRef = *candRef ;
         break ; 
       case L0DUBase::CaloType::SumEt:
-        debug() << " SumEt : etCode = " << (*candRef)->etCode() 
-                << " rawId= " << rawId << endreq;
+        if( msgLevel(MSG::DEBUG) ) 
+          debug() << " SumEt : etCode = " << (*candRef)->etCode() 
+                  << " rawId= " << rawId << endmsg;
         SumEtRef = *candRef ;
         break ; 
       default:
@@ -308,8 +302,9 @@ StatusCode L0CaloCompare::execute() {
     case L0DUBase::CaloType::Pi0Global:
     case L0DUBase::CaloType::Hadron:
 
-      debug() << "Type= " << type << " cellID to check = " << caloCell 
-              << " etCode = " << etCodeCheck << " rawId= " << rawId << endreq ;
+      if( msgLevel(MSG::DEBUG) ) 
+        debug() << "Type= " << type << " cellID to check = " << caloCell 
+                << " etCode = " << etCodeCheck << " rawId= " << rawId << endmsg ;
 
       fillCalo2D( m_mapAllName[ type ] , caloCell , 1. , 
                   m_mapAllTitle[ type ] ) ;
@@ -323,8 +318,9 @@ StatusCode L0CaloCompare::execute() {
       
       iterMap = mapRef[ type ].find( rawId ) ; 
       if ( iterMap == mapRef[ type ].end() ) {
-        debug() << "          " << candidateTypeName( type ) 
-                << " L0cand not found ! " << endreq ; 
+        if( msgLevel(MSG::DEBUG) ) 
+          debug() << "          " << candidateTypeName( type ) 
+                  << " L0cand not found ! " << endmsg ; 
         fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , 
                     m_mapCompareTitle[ type ] ) ;
         m_errorCounterHisto[type]->fill(1.5) ;
@@ -347,8 +343,9 @@ StatusCode L0CaloCompare::execute() {
           if ( etCodeCheck == etCodeRef ) found = true ;
         }
         if ( ! found ) {
-          debug() << " Same cell but different etCode : ref = " << etCodeRef  
-                  << " check = " << etCodeCheck << endreq ;
+          if( msgLevel(MSG::DEBUG) ) 
+            debug() << " Same cell but different etCode : ref = " << etCodeRef  
+                    << " check = " << etCodeCheck << endmsg ;
           fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , 
                       m_mapCompareTitle[ type ] ) ; 
           m_errorCounterHisto[type]->fill(1.5) ; 
@@ -369,7 +366,8 @@ StatusCode L0CaloCompare::execute() {
       // partial multiplicities
       if ( m_fullMonitoring ) break ;
       {
-        debug() << " SumEt : etCode = " << etCodeCheck << endreq ;
+        if( msgLevel(MSG::DEBUG) ) 
+          debug() << " SumEt : etCode = " << etCodeCheck << endmsg ;
 
         // m_histTotalCount -> fill( 3.5 ) ;
 
@@ -377,14 +375,15 @@ StatusCode L0CaloCompare::execute() {
         int diff_SumEt( 0 ) ;
         if ( 0 != SumEtRef ) {
           sumRef = SumEtRef -> etCode() ;
-          debug() << "SumEtRef etCode = " << sumRef  << endreq ;
+          if( msgLevel(MSG::DEBUG) ) 
+            debug() << "SumEtRef etCode = " << sumRef  << endmsg ;
         }
         diff_SumEt = etCodeCheck - sumRef ;
         if ( diff_SumEt > 100.  ) diff_SumEt = 100 ; 
         else if ( diff_SumEt < -100. ) diff_SumEt = -100 ; 
         m_histSumEt_Comp -> fill( diff_SumEt ) ; 
         if ( etCodeCheck != sumRef ) { 
-          debug() << " SumEt ... Pb " <<endreq;  
+          if( msgLevel(MSG::DEBUG) ) debug() << " SumEt ... Pb " <<endmsg;  
           // m_histErrorCount -> fill( 3.5 ) ;
         }
       }
@@ -394,7 +393,8 @@ StatusCode L0CaloCompare::execute() {
       // partial multiplicities
       if ( m_fullMonitoring ) break ;
       { 
-        debug() << "SpdMult (3) : etCode = " << etCodeCheck << endreq ;
+        if( msgLevel(MSG::DEBUG) ) 
+          debug() << "SpdMult (3) : etCode = " << etCodeCheck << endmsg ;
         m_histTotalCount -> fill( 3.5 ) ;
 
         int spdRef( 0 ) ;
@@ -405,7 +405,7 @@ StatusCode L0CaloCompare::execute() {
         else if (diff_SpdMult < -100.) diff_SpdMult = -100 ; 
         m_histSpdMult_Comp -> fill( diff_SpdMult ) ; 
         if ( etCodeCheck != spdRef ) { 
-          debug() << " SpdMult ... Pb (1) " <<endreq;
+          if( msgLevel(MSG::DEBUG) ) debug() << " SpdMult ... Pb (1) " <<endmsg;
           m_histErrorCount -> fill( 3.5 ) ;
         }
       }
@@ -424,7 +424,8 @@ StatusCode L0CaloCompare::execute() {
       switch ( type ) {
       case L0DUBase::CaloType::SumEt:
         {
-          debug() << " SumEt : etCode = " << etCodeCheck << endreq ;
+          if( msgLevel(MSG::DEBUG) ) 
+            debug() << " SumEt : etCode = " << etCodeCheck << endmsg ;
 
           // m_histTotalCount -> fill( 3.5 ) ;
 
@@ -432,14 +433,15 @@ StatusCode L0CaloCompare::execute() {
           int diff_SumEt( 0 ) ;
           if ( 0 != SumEtRef ) {
             sumRef = SumEtRef -> etCode() ;
-            debug() << "SumEtRef etCode = " << sumRef  << endreq ;
+            if( msgLevel(MSG::DEBUG) ) 
+              debug() << "SumEtRef etCode = " << sumRef  << endmsg ;
           }
           diff_SumEt = etCodeCheck - sumRef ;
           if ( diff_SumEt > 100.  ) diff_SumEt = 100 ; 
           else if ( diff_SumEt < -100. ) diff_SumEt = -100 ; 
           m_histSumEt_Comp -> fill(diff_SumEt) ; 
           if ( etCodeCheck != sumRef ) { 
-            debug() << " SumEt ... Pb " <<endreq;  
+            if( msgLevel(MSG::DEBUG) ) debug() << " SumEt ... Pb " <<endmsg;  
             // m_histErrorCount -> fill( 3.5 ) ;
           }  
         }
@@ -447,7 +449,8 @@ StatusCode L0CaloCompare::execute() {
       break ; 
       case L0DUBase::CaloType::SpdMult:
         { 
-          debug() << "SpdMult (4) : etCode = " << etCodeCheck << endreq ;
+          if( msgLevel(MSG::DEBUG) ) 
+            debug() << "SpdMult (4) : etCode = " << etCodeCheck << endmsg ;
           
           m_histTotalCount -> fill( 3.5 ) ;
 
@@ -459,7 +462,7 @@ StatusCode L0CaloCompare::execute() {
           else if (diff_SpdMult < -100.) diff_SpdMult = -100 ; 
           m_histSpdMult_Comp -> fill( diff_SpdMult ) ; 
           if ( etCodeCheck != spdRef ) {
-            debug() << " SpdMult ... Pb (2) " <<endreq;
+            if( msgLevel(MSG::DEBUG) ) debug() << " SpdMult ... Pb (2) " <<endmsg;
             m_histErrorCount -> fill( 3.5 ) ;
           } 
         }

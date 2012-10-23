@@ -1,4 +1,3 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.20 2010-03-02 10:04:18 robbep Exp $
 // Include files 
 // local
 #include "L0CaloCandidatesFromRaw.h"
@@ -20,7 +19,7 @@
 // 2003-12-15 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( L0CaloCandidatesFromRaw ) ;
+DECLARE_ALGORITHM_FACTORY( L0CaloCandidatesFromRaw )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -28,14 +27,15 @@ DECLARE_ALGORITHM_FACTORY( L0CaloCandidatesFromRaw ) ;
 L0CaloCandidatesFromRaw::L0CaloCandidatesFromRaw( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : L0FromRawBase ( name , pSvcLocator ) 
+  , m_convertTool(NULL)
 { 
   
-} ;
+}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-L0CaloCandidatesFromRaw::~L0CaloCandidatesFromRaw() {};
+L0CaloCandidatesFromRaw::~L0CaloCandidatesFromRaw() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -44,7 +44,7 @@ StatusCode L0CaloCandidatesFromRaw::initialize() {
   StatusCode sc = L0FromRawBase::initialize(); 
   if ( sc.isFailure() ) return sc;  
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_convertTool = 
     tool< L0CaloCandidatesFromRawBank >( "L0CaloCandidatesFromRawBank" ) ;
@@ -62,18 +62,6 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   std::string name = dataLocation( LHCb::L0CaloCandidateLocation::Default ) ;
   std::string nameFull = dataLocation( LHCb::L0CaloCandidateLocation::Full ) ;
 
-  LHCb::L0CaloCandidates * outFull = new LHCb::L0CaloCandidates( ) ;
-  LHCb::L0CaloCandidates * out = new LHCb::L0CaloCandidates() ;
-
-  if ( writeOnTES() ) {
-    put( outFull , nameFull , IgnoreRootInTES ) ;
-    put( out, name , IgnoreRootInTES ) ;
-    if ( msgLevel( MSG::DEBUG ) ) 
-      debug() << "L0CaloCandidatesFromRawBank Registered output in TES" 
-              << endmsg ;
-  }
-
-  LHCb::RawEvent * rawEvt = 0 ;
   int version = -1 ;
   std::vector<std::vector<unsigned int> > data;
 
@@ -85,10 +73,21 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   std::string rawEventLocation;
   if ( selectRawEventLocation(rawEventLocation).isFailure() ) 
     return Error("No valid raw event location found",StatusCode::SUCCESS,50);
-  
-  if ( exist< LHCb::RawEvent >( rawEventLocation , m_useRootInTES ) ) {
 
-    rawEvt = get<LHCb::RawEvent>(  rawEventLocation  , m_useRootInTES ) ;
+  LHCb::L0CaloCandidates * outFull = new LHCb::L0CaloCandidates( ) ;
+  LHCb::L0CaloCandidates * out = new LHCb::L0CaloCandidates() ;
+
+  if ( writeOnTES() ) {
+    put( outFull , nameFull , IgnoreRootInTES ) ;
+    put( out, name , IgnoreRootInTES ) ;
+    if ( msgLevel( MSG::DEBUG ) ) 
+      debug() << "L0CaloCandidatesFromRawBank Registered output in TES" 
+              << endmsg ;
+  }
+  
+  LHCb::RawEvent* rawEvt = getIfExists<LHCb::RawEvent>(  rawEventLocation  , m_useRootInTES ) ;
+  if ( NULL != rawEvt ) {
+
     const std::vector<LHCb::RawBank*>& banks = 
       rawEvt -> banks( LHCb::RawBank::L0Calo );
     
@@ -163,7 +162,7 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
     } else {
       // merge both status if already exists
       if ( status -> status() != readoutStatus.status() ) {
-        std::map< int , long >::iterator it ;
+        std::map< int const, long >::iterator it ;
         for ( it = readoutStatus.statusMap().begin() ; 
               it != readoutStatus.statusMap().end() ; ++it ) {
           status -> addStatus( (*it).first , (*it).second ) ;
@@ -185,15 +184,11 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
     }    
   }
 
+  if ( !writeOnTES() ) {
+    delete outFull;
+    delete out;
+  }
+
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode L0CaloCandidatesFromRaw::finalize() {
-  debug() << "==> Finalize" << endmsg;
-
-  return L0FromRawBase::finalize(); 
 }
 //=============================================================================
