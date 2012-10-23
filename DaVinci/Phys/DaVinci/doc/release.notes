@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-10-23 - Rob Lambert
+ - Added DaVinci-Simplest.py, 
+ - the simplest options file which reads some data and creates an ntuple.
+
 !========================= DaVinci v33r0 2012-10-08     =======================
 
 ! 2012-10-08 - Chris Jones
