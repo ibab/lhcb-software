@@ -98,27 +98,27 @@ def getLumi ( data , *args ) :
     if isinstance ( data , ROOT.TTree ) :
         try:
             h = ROOT.TH1F( hID() , '' , 10, -1, 4 ) ; h.Sumw2()
-            l1 = VE() 
-            # print 'l1 ',l1 
+            l1 = VE()
+            #
             data.Project ( h.GetName() , " 1 " ,  '1.0*IntegratedLuminosity' ) 
             l1 = h.accumulate()
-            # print 'l1 ',l1 
+            #
             data.Project ( h.GetName() , " 1 " ,
                            '1.0*IntegratedLuminosity+0.0*IntegratedLuminosityErr' ) 
             l1 = h.accumulate()
-            # print 'l1 ',l1 
+            # 
             data.Project ( h.GetName() , " 1 " ,
                            '1.0*IntegratedLuminosity+1.0*IntegratedLuminosityErr' ) 
             l2 = h.accumulate()
-            # print 'l2 ',l2 
+            # 
             data.Project ( h.GetName() , " 1 " ,
                            '1.0*IntegratedLuminosity-1.0*IntegratedLuminosityErr' ) 
             l3 = h.accumulate()
-            # print 'l3 ',l3 
+            # 
             #
-            l1.setError ( l2.value() - l1.value() )
+            l1.setError ( 0.5 * abs( l2.value () - l3.value () ) )
             #
-            # print ' lumi : ', l1, l2  
+            # 
             return l1
         except :
             logger.error('Unable to get lumi(3) for %s' % data.GetName() )
