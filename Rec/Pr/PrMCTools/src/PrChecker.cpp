@@ -29,7 +29,11 @@ DECLARE_ALGORITHM_FACTORY( PrChecker )
 //=============================================================================
 PrChecker::PrChecker( const std::string& name,
                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_velo(NULL),
+    m_forward(NULL),
+    m_tTrack(NULL),
+    m_best(NULL)
 {
   declareProperty( "VeloTracks",        m_veloTracks      = LHCb::TrackLocation::Velo    );
   declareProperty( "ForwardTracks",     m_forwardTracks   = LHCb::TrackLocation::Forward );
@@ -48,7 +52,7 @@ StatusCode PrChecker::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_velo = tool<PrCounter>( "PrCounter", "Velo", this );
   m_velo->setContainer( m_veloTracks );
@@ -105,7 +109,7 @@ StatusCode PrChecker::initialize() {
 //=============================================================================
 StatusCode PrChecker::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   for ( std::vector<PrCounter*>::iterator itC = m_allCounters.begin();
         m_allCounters.end() != itC; ++itC ) {
@@ -153,7 +157,7 @@ StatusCode PrChecker::execute() {
   for ( itP = mcParts->begin(); mcParts->end() != itP; ++itP ) {
     LHCb::MCParticle* part = *itP;
     if ( 0 == trackInfo.fullInfo( part ) ) continue;
-    verbose() << "checking MCPart " << part->key() << endreq;
+    if( msgLevel(MSG::VERBOSE) ) verbose() << "checking MCPart " << part->key() << endmsg;
 
     bool isLong  = trackInfo.hasVeloAndT( part );
     isLong = isLong && ( abs( part->particleID().pid() ) != 11 ); // and not electron
@@ -204,7 +208,7 @@ StatusCode PrChecker::execute() {
       }
     }
     
-    verbose() << "MCPart " << part->key() << " has " << ids.size() << " LHCbIDs " <<endmsg;
+    if( msgLevel(MSG::VERBOSE) ) verbose() << "MCPart " << part->key() << " has " << ids.size() << " LHCbIDs " <<endmsg;
     
     std::vector<bool> flags;
     flags.push_back( isInVelo );
@@ -255,7 +259,7 @@ StatusCode PrChecker::execute() {
 //=============================================================================
 StatusCode PrChecker::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   for ( std::vector<PrCounter*>::iterator itC = m_allCounters.begin();
         m_allCounters.end() != itC; ++itC ) {

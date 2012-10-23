@@ -32,7 +32,9 @@ DECLARE_ALGORITHM_FACTORY( PrLHCbID2MCParticle )
   PrLHCbID2MCParticle::PrLHCbID2MCParticle( const std::string& name,
                                               ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator ),
-      m_othitcreator("Tf::OTHitCreator")
+      m_othitcreator("Tf::OTHitCreator"),
+      m_linker(NULL),
+      m_detectorLink(NULL)
 {
   declareProperty( "TargetName",  m_targetName = "Pr/LHCbID" );
 }
@@ -48,7 +50,8 @@ StatusCode PrLHCbID2MCParticle::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  m_debug = msgLevel( MSG::DEBUG );
+  if( m_debug ) debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -58,8 +61,7 @@ StatusCode PrLHCbID2MCParticle::initialize() {
 //=============================================================================
 StatusCode PrLHCbID2MCParticle::execute() {
 
-  debug() << "==> Execute" << endmsg;
-  m_debug = msgLevel( MSG::DEBUG );
+  if (m_debug) debug() << "==> Execute" << endmsg;
 
   LinkerWithKey<LHCb::MCParticle> lhcbLink( evtSvc(), msgSvc(), m_targetName );
   m_linker = &lhcbLink;

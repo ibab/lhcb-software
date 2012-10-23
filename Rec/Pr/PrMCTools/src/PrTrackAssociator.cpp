@@ -154,14 +154,15 @@ StatusCode PrTrackAssociator::execute() {
               if( mother == (*it2).particle ) {
                 if ( (*it2).nVelo == 0 ) continue;
 
-                debug() << "  *** Particle " << (*it1).particle->key()
-                        << "[" << (*it1).particle->particleID().pid()
-                        << "] (" << (*it1).nVelo << "," << (*it1).nTT << "," << (*it1).nT << ")"
-                        << " is daughter of " << (*it2).particle->key()
-                        << "[" << (*it2).particle->particleID().pid()
-                        << "] (" << (*it2).nVelo << "," << (*it2).nTT << "," << (*it2).nT << ")"
-                       << " type " << vOrigin->type()
-                        << ". Merge hits to tag both." << endreq;
+                if( msgLevel(MSG::DEBUG) ) 
+                  debug() << "  *** Particle " << (*it1).particle->key()
+                          << "[" << (*it1).particle->particleID().pid()
+                          << "] (" << (*it1).nVelo << "," << (*it1).nTT << "," << (*it1).nT << ")"
+                          << " is daughter of " << (*it2).particle->key()
+                          << "[" << (*it2).particle->particleID().pid()
+                          << "] (" << (*it2).nVelo << "," << (*it2).nTT << "," << (*it2).nT << ")"
+                          << " type " << vOrigin->type()
+                          << ". Merge hits to tag both." << endmsg;
 
                 //== Daughter hits are added to mother.
                 (*it2).nVelo += (*it1).nVelo;
@@ -216,12 +217,13 @@ StatusCode PrTrackAssociator::execute() {
         bool ttOK = (*it).nTT > m_total.nTT - 2;
         if( 2 < m_total.nVelo && 2 < m_total.nT ) { ttOK = true; }
 
-        debug() << "Track " << tr->key()
-                << " MC "   << (*it).particle->key()
-                << " Velo " << (*it).nVelo << "/" << m_total.nVelo
-                << " TT "   << (*it).nTT   << "/" << m_total.nTT
-                << " T "    << (*it).nT    << "/" << m_total.nT
-                << endreq;
+        if( msgLevel(MSG::DEBUG) ) 
+          debug() << "Track " << tr->key()
+                  << " MC "   << (*it).particle->key()
+                  << " Velo " << (*it).nVelo << "/" << m_total.nVelo
+                  << " TT "   << (*it).nTT   << "/" << m_total.nTT
+                  << " T "    << (*it).nT    << "/" << m_total.nT
+                  << endmsg;
 
         //=== Decision. Fill Linker
         if( veloOK && tOK && ttOK ) {

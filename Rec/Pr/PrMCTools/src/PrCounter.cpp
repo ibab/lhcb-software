@@ -68,18 +68,18 @@ void PrCounter::addSelection ( std::string name ) {
 //=========================================================================
 void PrCounter::initEvent ( ) {
   m_validData = false;
-  if ( !exist<LHCb::Tracks>( m_container ) ) {
-    debug() << "Track container '" << m_container << "' does not exist" <<endmsg;
+  LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>( m_container );
+  if ( NULL == tracks ) {
+    if( msgLevel(MSG::DEBUG) ) debug() << "Track container '" << m_container << "' does not exist" <<endmsg;
     return;
   }
   if ( NULL == m_link ) m_link = new MyAsct( evtSvc(), m_container );
   m_nbGhost = 0;
 
-  LHCb::Tracks* tracks = get<LHCb::Tracks>( m_container );
   m_nbTrack = tracks->size();
   const Table* table = m_link->direct();
   if ( NULL == table ) { 
-    Warning( "Problem with MC associations for " + m_container );
+    Warning( "Problem with MC associations for " + m_container ).ignore();
     return; 
   }
 
@@ -115,7 +115,8 @@ int PrCounter::count( const LHCb::MCParticle* part, std::vector<bool> flags,
 
   if ( flags.size() > m_name.size() ) {
     Warning("Flag size mismatch").ignore();
-    debug() << "... Flag size " << flags.size() << " >  "
+    if( msgLevel(MSG::DEBUG) )
+      debug() << "... Flag size " << flags.size() << " >  "
               << m_name.size() << " declared selections" << endmsg;
     return -1;
   }

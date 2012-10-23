@@ -28,7 +28,8 @@ DECLARE_ALGORITHM_FACTORY( PrDebugTrackingLosses )
 //=============================================================================
 PrDebugTrackingLosses::PrDebugTrackingLosses( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_ppSvc(NULL)
 {
   declareProperty( "Velo",        m_velo        = false );
   declareProperty( "VP",     m_vP     = false );
@@ -248,7 +249,6 @@ StatusCode PrDebugTrackingLosses::execute() {
 //=========================================================================
 void PrDebugTrackingLosses::printMCParticle ( const LHCb::MCParticle* part ) {
   const LHCb::MCParticle* mother = part;
-  const LHCb::MCVertex*   vert   = part->originVertex();
   double p = double( int(  part->p() ) /1000. );
   info() << "MC: [" << p << " GeV]";
   while ( 0 != mother ) {
@@ -258,7 +258,7 @@ void PrDebugTrackingLosses::printMCParticle ( const LHCb::MCParticle* part ) {
     } else {
       info() << mother->key() << "[" <<  pp->particle() <<"]";
     }
-    vert = mother->originVertex();
+    const LHCb::MCVertex* vert = mother->originVertex();
     if ( 0 == vert ) {
       mother = 0;
     } else {
@@ -266,7 +266,7 @@ void PrDebugTrackingLosses::printMCParticle ( const LHCb::MCParticle* part ) {
       mother = vert->mother();
     }
   }
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
 //  Finalize
