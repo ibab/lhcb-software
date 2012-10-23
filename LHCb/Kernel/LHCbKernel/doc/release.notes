@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2012-10-23 - Marco Cattaneo
+ - Fix a gcc -pedantic warning
+
 ! 2012-10-15 - Antonis Papanestis
  - Added one more Rich DetectorType for the upgrade with a single Rich/TRID
 

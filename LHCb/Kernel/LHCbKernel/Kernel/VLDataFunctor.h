@@ -41,7 +41,8 @@ namespace VLDataFunctor {
        *  @return  result of the comparison
        */
       bool operator()(TYPE1 obj1, TYPE2 obj2) const { 
-        return (!obj1) ? true : (!obj2) ? false : obj1->channelID().sensor() == obj2->channelID().sensor() ? obj1->strip(0) < obj2->strip(0) : obj1->channelID().sensor() < obj2->channelID().sensor(); 
+        return (!obj1) ? true : (!obj2) ? false : obj1->channelID().sensor() == obj2->channelID().sensor() ? 
+          obj1->strip(0) < obj2->strip(0) : obj1->channelID().sensor() < obj2->channelID().sensor(); 
       }
   };
 
@@ -101,5 +102,5 @@ namespace VLDataFunctor {
   };
 
 
-};
+}
 #endif 
