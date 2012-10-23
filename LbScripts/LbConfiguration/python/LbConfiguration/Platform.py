@@ -228,15 +228,15 @@ linux_release_files = [ "/etc/redhat-release" ,
                         "/etc/issue", "/etc/issue.net" ]
 
 linux_flavour_aliases = {
-                         "slc"  : ["Scientific Linux"],
-                         "rhel" : ["Redhat Enterprise", "Red Hat Enterprise"],
-                         "rh"   : ["Redhat", "Red Hat"],
-                         "fc"   : ["Fedora", "Fedora Core"],
-                         "suse" : ["SuSE"],
-                         "co"   : ["CentOS"],
-                         "deb"  : ["Debian"],
-                         "ub"   : ["Ubuntu"],
-                         "ml"   : ["Mandriva Linux"]
+                         "slc"    : ["Scientific Linux"],
+                         "rhel"   : ["Redhat Enterprise", "Red Hat Enterprise"],
+                         "rh"     : ["Redhat", "Red Hat"],
+                         "fc"     : ["Fedora", "Fedora Core"],
+                         "suse"   : ["SuSE"],
+                         "co"     : ["CentOS"],
+                         "deb"    : ["Debian"],
+                         "ubuntu" : ["Ubuntu"],
+                         "ml"     : ["Mandriva Linux"]
                         }
 
 lsb_flavour_aliases   = {
@@ -517,7 +517,7 @@ class NativeMachine:
             for f in linux_flavour_aliases :
                 if self.OSFlavour() == linux_flavour_aliases[f][0] :
                     cmtflavour = f + self.OSVersion(position=1)
-                    if self.OSFlavour() == "SuSE" or self.OSFlavour() == "Redhat" :
+                    if self.OSFlavour() in ("SuSE", "Redhat", "Ubuntu"):
                         cmtflavour = f + self.OSVersion(position=2)
                     if self.OSFlavour() == "SuSE" and int(self.OSVersion(position=1)) > 10 :
                         cmtflavour = f + self.OSVersion(position=1)
