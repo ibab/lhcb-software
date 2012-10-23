@@ -4,6 +4,9 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-10-23 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+
 !========================= PrKernel v1r0 2012-10-01 =========================
 ! 2012-08-01 - Olivier Callot
  - remove the factory declaration for PrHitManager: In fact one uses only derived classes

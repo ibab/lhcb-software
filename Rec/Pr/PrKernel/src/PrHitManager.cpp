@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -22,7 +21,7 @@ PrHitManager::PrHitManager( const std::string& type,
   : GaudiTool ( type, name , parent ) 
 {
   declareInterface<PrHitManager>(this);
-};
+}
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -48,7 +47,7 @@ StatusCode PrHitManager::initialize(){
   m_eventReady = false;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Finalization
@@ -59,5 +58,5 @@ StatusCode PrHitManager::finalize() {
     if ( NULL != *itS ) delete *itS;
   }
   return GaudiTool::finalize();
-};
+}
 //=============================================================================
