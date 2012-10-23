@@ -5,6 +5,12 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-10-23 - Vanya Belyaev
+ - PyRoUts.py: 
+    - add histogram content fransformation and two FoMs: 
+         - S/sqrt(S+alpha*B)
+         - sigma(S)/S 
+
 ! 2012-10-16 - Vanya Belyaev
  - tiny addition to VE 
 

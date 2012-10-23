@@ -2767,8 +2767,126 @@ def _smear_ ( h1 , sigma , addsigmas = 5 ) :
 
     return h2
 
+
 ROOT.TH1F. smear = _smear_
 ROOT.TH1D. smear = _smear_
+
+
+# =============================================================================
+## make transformation of histogram content 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2012-10-23  
+def _transform_ ( h1 , func ) :
+    """
+    
+    Make the transformation of the histogram content 
+    
+    >>> func = lambda x,y: y   ## identical transformation/copy
+    >>> h1 = ...
+    >>> h2 = h1.fransform ( func ) 
+    
+    """
+    #
+    if not h1.GetSumw2() : h1.Sumw2()
+    h2 = h1.Clone( hID() )
+    if not h2.GetSumw2() : h2.Sumw2()
+    #
+    for i,x,y in h1.iteritems() :
+        
+        h2 [ i ] = func ( x, y ) 
+        
+    return h2 
+
+ROOT.TH1F. transform = _transform_ 
+ROOT.TH1F. transform = _transform_ 
+
+# =============================================================================
+## Get the Figure-of-Merit (FoM) for the pure signal distribution,
+#  e.g. from sPlot)
+#  the FoM is defined from the relative precision of the signal yield
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2012-10-23  
+def _fom_2_ ( h1 , increase = True ) :
+    """
+    Get figure-of-merit (FOM) distribution for signal
+
+    >>> h1 = ...  ## signal distribution
+    >>> f1 = h1.FoM2 () 
+    """
+    #
+    h = h1.sumv( increase )
+    #
+    return _transform_ ( h , func = lambda x,y : y.precision() ) 
+
+# =============================================================================
+## Calculate S/sqrt(S+a*B)
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2012-10-23   
+def _sb_ ( s , b  , a = 1 ) :
+    """
+    Calculate S/sqrt(S+a*B) 
+    """
+    #
+    v     = ( s + a * b ).value()
+    if 0 >= v : return VE ( 0 , 0 )
+    #
+    F     = s.value() / pow ( v , 0.5 )
+    #
+    # (dF/dS)**2 
+    dFdS2 = ( 0.5 * s  + a * b ).value() 
+    dFdS2 = dFdS2**2  / v**3
+    #
+    # (dR/dB)**2 
+    dFdB2 = ( -0.5 * a * s  ).value() 
+    dFdB2 = dFdB2**2  / v**3
+    #
+    return VE ( F , dFdS2 * s.cov2() + dFdB2 * b.cov2() ) 
+
+# =============================================================================
+## Get the figure-of-merit (FoM) for the signal and background distributions 
+#  the FoM is defined as S/sqrt(S+alpha*B) 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2012-10-23  
+def _fom_1_ ( s , b , alpha = 1 , increase = True ) :
+    """
+    Get figure-of-merit FoM = S/sqrt(S+a*B)
+    
+    >>> s = ... ## signal distributions
+    >>> b = ... ## background distributions
+    >>> fom = s.FoM1( b , alpha = 1.0 )  
+    
+    """
+    #
+    if not s.GetSumw2() : s.Sumw2()
+    h  = s.Clone( hID() )
+    if not h.GetSumw2() : h.Sumw2()
+    #
+    hs = s.sumv ( increase )
+    hb = b.sumv ( increase )
+    #
+    from math import sqrt, pow 
+    #
+    for i,x,y in hs.iteritems() :
+        
+        ## the signal 
+        si = y
+        
+        ## the background 
+        bi = hb ( x ) 
+        
+        h [i] = _sb_ ( si , bi , alpha ) 
+        
+    return h 
+
+ROOT.TH1D . fom_1 = _fom_1_ 
+ROOT.TH1D . fom_2 = _fom_2_ 
+ROOT.TH1F . fom_1 = _fom_1_ 
+ROOT.TH1F . fom_2 = _fom_2_
+
+ROOT.TH1D . FoM_1 = _fom_1_ 
+ROOT.TH1D . FoM_2 = _fom_2_ 
+ROOT.TH1F . FoM_1 = _fom_1_ 
+ROOT.TH1F . FoM_2 = _fom_2_ 
 
 # =============================================================================
 ## make graph from data 
