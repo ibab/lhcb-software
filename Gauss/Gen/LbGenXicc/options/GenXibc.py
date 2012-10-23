@@ -32,7 +32,7 @@ myOutputLevel = 3
 gen.OutputLevel = myOutputLevel
 gen.Special.OutputLevel = myOutputLevel
 gen.Special.GenXiccProduction.OutputLevel = myOutputLevel
-ToolSvc().XiccDaughtersInLHCb.OutputLevel = myOutputLevel
+gen.Special.XiccDaughtersInLHCb.OutputLevel = myOutputLevel
 
 #temporary patch to ParticlePropertySvc
 from Configurables import LHCb__ParticlePropertySvc
