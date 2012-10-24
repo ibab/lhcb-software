@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-10-24 - Paul Szczypka
+ - Small changes to gauss-config-2011.qmt
+
 !========================= Gauss v42r2 2012-10-24 ============================
 ! 2012-10-24 - Gloria Corti
  - Change options for upgrade detector combination to make them directly
