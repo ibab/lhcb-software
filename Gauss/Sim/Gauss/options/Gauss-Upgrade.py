@@ -28,9 +28,21 @@ Gauss().SpilloverPaths = []
 from Configurables import LHCbApp
 from Configurables import CondDB
 
-CondDB().Upgrade = True
-LHCbApp().DDDBtag   = "dddb-20121001"
-LHCbApp().CondDBtag = "sim-20121001-vc-md100"
+Gauss().DataType     = "Upgrade" 
+CondDB().Upgrade     = True
+LHCbApp().DDDBtag    = "dddb-20121018"
+LHCbApp().CondDBtag  = "simcond-20121001-vc-md100"
+
+## Choose the detector configuration to run selecting the appropriate file
+# Existing detector with MapPMT in RICHes and no Aerogel
+importOptions("$GAUSSOPTS/Gauss-Upgrade-Reference.py") 
+# Upgrade combinations 
+#importOptions("$GAUSSOPTS/Gauss-Upgrade-VL-UT-FT.py")
+#importOptions("$GAUSSOPTS/Gauss-Upgrade-VL-UT-FT-noRich1.py")
+#importOptions("$GAUSSOPTS/Gauss-Upgrade-VP-UT-FT.py")
+#importOptions("$GAUSSOPTS/Gauss-Upgrade-VP-UT-FT-noRich1.py")
+
+
 
 
 

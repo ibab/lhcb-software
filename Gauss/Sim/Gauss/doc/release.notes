@@ -4,6 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v42r2 2012-10-24 ============================
+! 2012-10-24 - Gloria Corti
+ - Change options for upgrade detector combination to make them directly
+   usable in production
+ - Modify example overall stearing options for upgrade, Gauss-Upgrade.py, to
+   pick latest database tags and show how to combine necessary options
+
 ! 2012-10-22 - Paul Szczypka
  - Modified (corrected) gauss-config reference file.
 
@@ -18,7 +25,6 @@
 ! 2012-10-21 - Paul Szczypka
  - made corrections to config references and test
 
-!========================= Gauss v42r2 2012-10-19 ============================
 ! 2012-10-18 - Paul Szczypka
  - tinkering with the qmtest config
 

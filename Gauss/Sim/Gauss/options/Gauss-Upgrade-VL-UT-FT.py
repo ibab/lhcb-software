@@ -8,17 +8,12 @@
 ## ############################################################################
 
 from Gaudi.Configuration import *
-from Configurables import LHCbApp
-from Configurables import DDDBConf
 from Configurables import CondDB
 
 CondDB().Upgrade     = True
 CondDB().AllLocalTagsByDataType=["VL+UT","FT"]
-LHCbApp().DDDBtag    = "dddb-20121018"
-LHCbApp().CondDBtag  = "simcond-20121001-vc-md100"
-LHCbApp().Simulation = True
 
-from Gauss.Configuration import *
+from Configurables import Gauss
 
 Gauss().DetectorGeo  = { "Detectors": ['VL', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }
 Gauss().DetectorSim  = { "Detectors": ['VL', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }
