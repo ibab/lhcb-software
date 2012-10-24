@@ -62,7 +62,7 @@ private:
   enum SplitMethod { Unknown = 0,
                      Middle,
                      VeloHalf,
-                     MiddlePerVeloHalf,
+                     MiddlePerVeloHalf
     };
 
   void clearSplitTracks();

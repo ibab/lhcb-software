@@ -201,8 +201,8 @@ StatusCode TrackTimingMonitor::execute()
   
   theTuple->column("NVeloClusters", m_clusters->size());
   
-  if( exist<LHCb::ODIN> ( LHCb::ODINLocation::Default ) ) { 
-    const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );  
+  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );  
+  if( NULL != odin ) { 
     theTuple->column("RunNb", odin->runNumber());
 
     unsigned long hi_num =  (unsigned long) (odin->eventNumber() >> 32);

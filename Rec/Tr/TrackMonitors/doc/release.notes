@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-10-24 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - One more getIfExists
+
 !========================= TrackMonitors v1r40 2012-07-30 =========================
 ! 2012-07-27 - Marco Cattaneo
  - Replace separate exist<>() + get<>() calls with getIfExists
