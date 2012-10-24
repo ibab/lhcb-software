@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2012-10-24 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Replace endreq by endmsg
+
 !========================= TrackProjectors v2r32 2012-10-01 =========================
 ! 2012-09-20 - Paul Szczypka
  - Rename VeloPix to VP

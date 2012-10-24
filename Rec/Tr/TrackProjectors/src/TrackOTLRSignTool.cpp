@@ -1,5 +1,3 @@
-// $Id: TrackOTClusterPruner.cpp,v 1.1 2010-04-19 22:35:56 wouter Exp $
-
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
@@ -30,7 +28,7 @@ namespace {
     unsigned int numLRSignsSet ;
     OTCluster() : numRemoved(0), numLRSignsSet(0) {}
   } ;
-} ;
+}
 
 /******************************************************************************/
 // Tool to resolve subset of LR signs by exploiting the shape of a
@@ -55,7 +53,7 @@ private:
   bool m_printCounters ;
 };
 
-DECLARE_TOOL_FACTORY(TrackOTLRSignTool) ;
+DECLARE_TOOL_FACTORY(TrackOTLRSignTool)
 
 TrackOTLRSignTool::TrackOTLRSignTool(const std::string& type,
 				     const std::string& name,
@@ -122,7 +120,7 @@ size_t TrackOTLRSignTool::removeHitsInLayer(OTCluster& othits) const
 	// info() << "LRSign before/after max: " 
 	//        << maxXSign << " " << othits[maxX].meas->ambiguity() 
 	//        << " min : " 
-	//        << minXSign << " " << othits[minX].meas->ambiguity() << endreq ;
+	//        << minXSign << " " << othits[minX].meas->ambiguity() << endmsg ;
 	// if( maxXSign * othits[maxX].meas->ambiguity() < 0 ||
 	//     minXSign * othits[minX].meas->ambiguity() <0 ) {
 	//   const LHCb::FitNode* minNode = dynamic_cast<const LHCb::FitNode*>(othits[minX].node) ;
@@ -190,7 +188,7 @@ StatusCode TrackOTLRSignTool::execute(LHCb::Track& track) const
   // first identify all OT nodes. don't forget to set the LR sign to zero
   LHCb::TrackFitResult* fr = track.fitResult() ;
   if( ! fr ) {
-    warning() << "Cannot find a fit result on track" << endreq ;
+    warning() << "Cannot find a fit result on track" << endmsg ;
     return StatusCode::FAILURE;
   } else {
     // now there are two options. if the track was fitted, we'll run
@@ -239,13 +237,13 @@ StatusCode TrackOTLRSignTool::execute(LHCb::Track& track) const
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode TrackOTLRSignTool::finalize()
 {  
   if( m_printCounters ) {
-    info() << counter("Average number of removed OT hits") << endreq ;
-    info() << counter("Fraction of set LR signs") << endreq ;
+    info() << counter("Average number of removed OT hits") << endmsg ;
+    info() << counter("Fraction of set LR signs") << endmsg ;
   }
   return GaudiTool::finalize();
 }

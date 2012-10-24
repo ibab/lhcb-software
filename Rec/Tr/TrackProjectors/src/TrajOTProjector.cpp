@@ -117,11 +117,11 @@ StatusCode TrajOTProjector::initialize()
 {
   StatusCode sc = TrackProjector::initialize();
   if(msgLevel(MSG::DEBUG)) debug() << "Use drifttime           = " 
-                                   << m_useDriftTime << endreq 
+                                   << m_useDriftTime << endmsg 
                                    << "Fit drifttime residuals = " 
-                                   << m_fitDriftTime << endreq 
+                                   << m_fitDriftTime << endmsg 
                                    << "Prefit strategy = " 
-                                   << m_prefitStrategy << endreq ;
+                                   << m_prefitStrategy << endmsg ;
   return sc;
 }
 

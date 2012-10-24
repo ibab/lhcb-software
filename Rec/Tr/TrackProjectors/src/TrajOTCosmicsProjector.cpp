@@ -45,8 +45,8 @@ DECLARE_TOOL_FACTORY( TrajOTCosmicsProjector )
 StatusCode TrajOTCosmicsProjector::initialize()
 {
   StatusCode sc = TrajOTProjector::initialize() ;
-  info() << "Fit event t0 = " << m_fitEventT0 << endreq ;
-  info() << "Use const v_drift = " << m_useConstantDriftVelocity << endreq ;
+  info() << "Fit event t0 = " << m_fitEventT0 << endmsg ;
+  info() << "Use const v_drift = " << m_useConstantDriftVelocity << endmsg ;
   return sc ;
 }
 
