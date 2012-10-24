@@ -40,6 +40,9 @@ alias Dst_Explorer "dst_explorer"
 alias check_trg    "trg_check" 
 alias dump_dst     "dst_dump" 
 alias dst_content  "dst_dump" 
+alias get_dbtags   "get_dbtags.py" 
+alias get_db_tags  "get_dbtags.py" 
+alias db_tags      "get_dbtags.py" 
 
 
 # =============================================================================
