@@ -90,11 +90,11 @@ StatusCode DeRichPMT::initialize ( )
 
   sc = sc &&  getPMTParameters();
 
+
   updMgrSvc()->registerCondition( this, geometry(),
                                   &DeRichPMT::updateGeometry );
   updMgrSvc()->registerCondition( this, m_dePmtAnode->geometry(),
                                   &DeRichPMT::updateGeometry );
-
 
   // Update PMT QE values whenever DeRichSystem updates
   updMgrSvc()->registerCondition( this, deRichSys(), &DeRichPMT::initPMTQuantumEff );
@@ -113,29 +113,42 @@ StatusCode DeRichPMT::getPMTParameters()
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  SmartDataPtr<DetectorElement> deRich1( dataSvc(), DeRichLocations::Rich1 );
-  if ( !deRich1 )
+  SmartDataPtr<DetectorElement> afterMag(dataSvc(),"/dd/Structure/LHCb/AfterMagnetRegion");
+  if ( !afterMag )
   {
-    error() << "Could not load DeRich1 for DePMT" << endmsg;
+    error() << "Could not load AfterMagnetRegion det elem" << endmsg;
     return StatusCode::FAILURE;
   }
 
-  m_PmtQELocation = deRich1->param<std::string> ("RichPmtQETableName");
-  m_PmtAnodeXSize = deRich1->param<double> ("RichPmtAnodeXSize" );
-  m_PmtAnodeYSize = deRich1->param<double> ("RichPmtAnodeYSize" );
-  m_PmtAnodeZSize = deRich1->param<double> ("RichPmtAnodeZSize" );
-  m_PmtAnodeLocationInPmt = deRich1->param<double> ("RichPmtSiliconDetectorLocalZlocation" );
-  m_PmtPixelXSize = deRich1->param<double>( "RichPmtPixelXSize");
-  m_PmtPixelYSize = deRich1->param<double>( "RichPmtPixelYSize");
-  m_PmtPixelGap = deRich1->param<double> ( "RichPmtPixelGap" );
+  std::string firstRichLoc;
+  if ( afterMag->exists("RichDetectorLocations") )
+    firstRichLoc = afterMag->paramVect<std::string>("RichDetectorLocations")[0];
+  else
+    firstRichLoc = DeRichLocations::Rich1;
+
+  SmartDataPtr<DetectorElement> deRich(dataSvc(), firstRichLoc );
+  if ( !deRich )
+  {
+    error() << "Could not load DeRich for DeRichPMTPanel" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  m_PmtQELocation = deRich->param<std::string> ("RichPmtQETableName");
+  m_PmtAnodeXSize = deRich->param<double> ("RichPmtAnodeXSize" );
+  m_PmtAnodeYSize = deRich->param<double> ("RichPmtAnodeYSize" );
+  m_PmtAnodeZSize = deRich->param<double> ("RichPmtAnodeZSize" );
+  m_PmtAnodeLocationInPmt = deRich->param<double> ("RichPmtSiliconDetectorLocalZlocation" );
+  m_PmtPixelXSize = deRich->param<double>( "RichPmtPixelXSize");
+  m_PmtPixelYSize = deRich->param<double>( "RichPmtPixelYSize");
+  m_PmtPixelGap = deRich->param<double> ( "RichPmtPixelGap" );
   m_PmtEffectivePixelXSize =  m_PmtPixelXSize  + m_PmtPixelGap;
   m_PmtEffectivePixelYSize =  m_PmtPixelYSize  + m_PmtPixelGap;
   m_PmtAnodeHalfThickness = m_PmtAnodeZSize/2.0;
-  m_PmtNumPixCol =deRich1->param<int> ("RichPmtNumPixelCol");
+  m_PmtNumPixCol =deRich->param<int> ("RichPmtNumPixelCol");
 
-  m_PmtNumPixRow = deRich1->param<int> ("RichPmtNumPixelRow");
-  m_PmtQwZSize = deRich1->param<double>  ("RichPmtQuartzZSize"  );
-  m_QwToAnodeZDist= deRich1->param<double> ( "RichPmtQWToSiMaxDist" );
+  m_PmtNumPixRow = deRich->param<int> ("RichPmtNumPixelRow");
+  m_PmtQwZSize = deRich->param<double>  ("RichPmtQuartzZSize"  );
+  m_QwToAnodeZDist= deRich->param<double> ( "RichPmtQWToSiMaxDist" );
 
   return sc;
 }
@@ -145,8 +158,10 @@ StatusCode DeRichPMT::getPMTParameters()
 StatusCode DeRichPMT::initPMTQuantumEff()
 {
   delete m_pdQuantumEffFunc;
+
   SmartDataPtr<TabulatedProperty> pmtQuantumEffTabProp( dataSvc(), m_PmtQELocation );
   m_pdQuantumEffFunc = new Rich::TabulatedProperty1D( pmtQuantumEffTabProp );
+
   return  StatusCode::SUCCESS;
 }
 

@@ -114,7 +114,7 @@ private:
   StatusCode setRichPmtSmartID(const std::vector<int>& aPmtHitChannel,
                                LHCb::RichSmartID& ID ) const;
 
-  DetectorElement* getDeRich1() const;
+  DetectorElement* getFirstDeRich() const;
   int getNumModulesInThisPanel() ;
   int getPmtNumFromRowCol(int PRow, int PCol) const;
   bool isInPmtAnodeLateralAcc(const Gaudi::XYZPoint& aPointInPmtAnode ) const;

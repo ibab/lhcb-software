@@ -135,6 +135,12 @@ StatusCode DeRichSphMirror::updateGeometry()
       const std::string::size_type secPos = name().find("SecMirror");
       if ( std::string::npos != secPos ) secondary = true;
     }
+    else if ( "/" == richNum )
+    {
+      rich = Rich::Rich;
+      const std::string::size_type secPos = name().find("SecMirror");
+      if ( std::string::npos != secPos ) secondary = true;
+    }
     else
     {
       fatal() << "Could not identify Rich (1/2==" << richNum << " )" << endmsg;

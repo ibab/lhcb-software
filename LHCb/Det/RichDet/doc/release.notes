@@ -4,6 +4,15 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-10-24 - Antonis Papanestis
+ - Addition of new clas DeHorizRich
+ - Modifications in DeRichSphMirror DeRichPMTPanel DeRichPMT &
+   DeRichBase to be able to run with a single Rich detector
+ - The idea is that the available RICH detectors can be found as a user
+   parameter of detector element AfterMagnetRegion
+ - The location DeRichSystem can be found as a parameter in the first
+   RICH detector in the list of AfterMagnetRegion
+
 ! 2012-10-18 - Marco Cattaneo
  - Fix an unprotected verbose message
  - Fix an UNINIT_CTOR
