@@ -1,4 +1,3 @@
-// $Id: FwdFitParams.cpp,v 1.3 2009-08-19 14:16:15 ocallot Exp $
 // Include files
 #include <string>
 #include <stdio.h>
@@ -30,7 +29,7 @@
 // 13/10/2001 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( FwdFitParams );
+DECLARE_ALGORITHM_FACTORY( FwdFitParams )
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -49,6 +48,7 @@ FwdFitParams::FwdFitParams( const std::string& name,
   , m_tupleName2          ( "Point" )
   , m_zBeforeST2          ( 8200. * Gaudi::Units::mm )
   , m_zBeforeST3          ( 8800. * Gaudi::Units::mm )
+  , m_count()
 {
   declareProperty( "NtupleName"           , m_tupleName     );
   declareProperty( "NtupleName2"          , m_tupleName2    );
@@ -81,7 +81,7 @@ FwdFitParams::FwdFitParams( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-FwdFitParams::~FwdFitParams() {};
+FwdFitParams::~FwdFitParams() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -109,7 +109,7 @@ StatusCode FwdFitParams::initialize() {
 
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -624,7 +624,7 @@ StatusCode FwdFitParams::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -679,7 +679,6 @@ StatusCode FwdFitParams::finalize() {
   }
 
   return GaudiTupleAlg::finalize();
-};
-
+}
 
 //=============================================================================

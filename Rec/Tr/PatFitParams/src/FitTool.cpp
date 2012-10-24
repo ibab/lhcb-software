@@ -1,4 +1,3 @@
-// $Id: FitTool.cpp,v 1.1.1.1 2007-10-09 18:50:43 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( FitTool );
+DECLARE_TOOL_FACTORY( FitTool )
 
 
 //=============================================================================

@@ -1,4 +1,3 @@
-// $Id: FwdParameters.cpp,v 1.3 2009-08-19 14:16:15 ocallot Exp $
 // Include files 
 #include <stdio.h> 
 
@@ -31,8 +30,7 @@ FwdParameters::FwdParameters(  ) {
 //=============================================================================
 // Destructor
 //=============================================================================
-FwdParameters::~FwdParameters() {}; 
-
+FwdParameters::~FwdParameters() {}
 
 //=========================================================================
 //  Initialisation, give the size and the parameters

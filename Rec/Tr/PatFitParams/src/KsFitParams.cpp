@@ -1,4 +1,3 @@
-// $Id: KsFitParams.cpp,v 1.5 2009-08-19 14:24:18 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -20,7 +19,7 @@
 // 2002-11-02 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( KsFitParams );
+DECLARE_ALGORITHM_FACTORY( KsFitParams )
 
 
 //=============================================================================
@@ -28,7 +27,8 @@ DECLARE_ALGORITHM_FACTORY( KsFitParams );
 //=============================================================================
 KsFitParams::KsFitParams( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : GaudiTupleAlg ( name , pSvcLocator )
+  : GaudiTupleAlg ( name , pSvcLocator ),
+    m_fitTool(NULL)
 {
   declareProperty( "NTupleName",     m_tupleName  = "Track" );
   declareProperty( "ZTT1",           m_zTT1       = 2469.0*Gaudi::Units::mm );
@@ -43,7 +43,7 @@ KsFitParams::KsFitParams( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-KsFitParams::~KsFitParams() {}; 
+KsFitParams::~KsFitParams() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -60,7 +60,7 @@ StatusCode KsFitParams::initialize() {
   m_fitTool = tool<FitTool>( "FitTool" );
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -266,7 +266,7 @@ StatusCode KsFitParams::execute() {
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================

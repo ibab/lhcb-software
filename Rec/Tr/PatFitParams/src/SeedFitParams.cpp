@@ -1,4 +1,3 @@
-// $Id: SeedFitParams.cpp,v 1.4 2009-08-19 14:16:15 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -25,7 +24,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( SeedFitParams );
+DECLARE_ALGORITHM_FACTORY( SeedFitParams )
 
 
 //=============================================================================
@@ -33,7 +32,8 @@ DECLARE_ALGORITHM_FACTORY( SeedFitParams );
 //=============================================================================
 SeedFitParams::SeedFitParams( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiTupleAlg ( name , pSvcLocator )
+  : GaudiTupleAlg ( name , pSvcLocator ),
+    m_fitTool(NULL)
 {
   declareProperty( "TupleName",          m_tupleName  = "Track" );
   declareProperty( "ZRef",               m_zRef       = StateParameters::ZMidT );
@@ -242,6 +242,7 @@ StatusCode SeedFitParams::execute() {
       zEst = 0.;
       axt = 0.;
       bxt = 0.;
+      cxt = 0.;
       ayt = 0.;
       byt = 0.;
     }

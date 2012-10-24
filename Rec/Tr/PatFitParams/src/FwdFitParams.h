@@ -1,4 +1,3 @@
-// $Id: FwdFitParams.h,v 1.1.1.1 2007-10-09 18:50:43 smenzeme Exp $
 #ifndef FWDFITPARAMS_H 
 #define FWDFITPARAMS_H 1
 
@@ -37,9 +36,8 @@ private:
   double m_zVelo;                     ///< Z where initial track is defined
   double m_zMag;                      ///< Z of the field center
   double m_zRef;                      ///< Z of a reference plane.
-  double m_zRefY;                     ///< idem for the Y view
   double m_zRefExt;                   ///< Z to define the state for the Muon
-  double m_zRefM;                     ///< Positikon of the Muon test point, i.e. M1
+  double m_zRefM;                     ///< Position of the Muon test point, i.e. M1
   bool   m_veloFromMC;
 
   std::vector<double> m_zMagParams;
