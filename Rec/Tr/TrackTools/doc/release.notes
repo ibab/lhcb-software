@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-10-24 - Paul Seyfert
+ - switch interpolator in TrackNNGhostId from cspline to linear
+
 !========================= TrackTools v4r19 2012-10-01 =========================
 ! 2012-09-24 - Marco Cattaneo
  - Fix trivial untested StatusCode in TrackNNGhostID
