@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // boost
@@ -29,7 +28,7 @@ namespace {
 }
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltMonitorBase );
+DECLARE_ALGORITHM_FACTORY( HltMonitorBase )
 
 //=============================================================================
 HltMonitorBase::HltMonitorBase( const std::string& name,

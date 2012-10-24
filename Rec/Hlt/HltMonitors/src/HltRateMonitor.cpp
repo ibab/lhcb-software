@@ -1,4 +1,3 @@
-// $Id: $
 // stdlib
 #include <iostream>
 #include <string>
@@ -33,7 +32,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltRateMonitor );
+DECLARE_ALGORITHM_FACTORY( HltRateMonitor )
 
 namespace {
    using namespace LHCb;

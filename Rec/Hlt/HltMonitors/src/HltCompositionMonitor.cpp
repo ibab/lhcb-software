@@ -1,4 +1,3 @@
-// $Id: $
 // stdlib
 #include <string>
 
@@ -33,7 +32,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltCompositionMonitor );
+DECLARE_ALGORITHM_FACTORY( HltCompositionMonitor )
 
 namespace {
    using namespace LHCb;

@@ -4,6 +4,10 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
+! 2012-10-24 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Use getIfExists
+
 !========================= HltMonitors v1r5 2012-05-02 =========================
 ! 2012-04-23 - Patrick Koppenburg
  - src/HltCompositionMonitor.cpp : do all Hlt2 lines

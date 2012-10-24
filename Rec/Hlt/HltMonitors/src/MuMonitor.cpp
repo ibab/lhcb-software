@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -22,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MuMonitor );
+DECLARE_ALGORITHM_FACTORY( MuMonitor )
 
 
 //=============================================================================
@@ -77,8 +76,9 @@ StatusCode MuMonitor::execute() {
     const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
     fill(m_bBx,odin->bunchId(),1.);
     unsigned int nv = 0;
-    if (exist<LHCb::Track::Container>(LHCb::TrackLocation::Velo)){
-      nv = (get<LHCb::Track::Container>(LHCb::TrackLocation::Velo))->size() ;
+    const LHCb::Tracks* veloTracks = getIfExists<LHCb::Track::Container>(LHCb::TrackLocation::Velo);
+    if ( NULL != veloTracks ){
+      nv = veloTracks->size() ;
     }
     bool seen = (nv>=2) ; // 
     fill(m_hVelo, seen, 1.);
