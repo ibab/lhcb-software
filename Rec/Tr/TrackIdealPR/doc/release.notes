@@ -4,6 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2012-10-24 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Replace endreq by endmsg
+
 !======================= TrackIdealPR v2r19 2009-10-20 =======================
 ! 2009-10-08 Wouter Hulsbergen
  - adapted to changes in LHCb::Track

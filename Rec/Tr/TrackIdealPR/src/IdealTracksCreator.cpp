@@ -1,4 +1,3 @@
-// $Id: IdealTracksCreator.cpp,v 1.46 2009-10-08 14:58:01 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -31,7 +30,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( IdealTracksCreator );
+DECLARE_ALGORITHM_FACTORY( IdealTracksCreator )
 
 /** @file IdealTracksCreator.cpp
  *
@@ -81,7 +80,7 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   declareProperty("VeloEff", m_veloEff = 1.0);
   declareProperty("smearP", m_smearP = 0.0);
 
-};
+}
 
 //=============================================================================
 // Destructor
@@ -96,7 +95,7 @@ StatusCode IdealTracksCreator::initialize()
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  info() << "==> Initialize" << endreq;
+  info() << "==> Initialize" << endmsg;
 
   m_trackSelector = tool<IMCReconstructible>(m_selectorToolName,"TrackSelectorTool",this);
 
@@ -116,7 +115,7 @@ StatusCode IdealTracksCreator::initialize()
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -126,7 +125,7 @@ StatusCode IdealTracksCreator::execute()
 
   StatusCode sc;
 
-  debug() << "==> Execute" << endreq;
+  debug() << "==> Execute" << endmsg;
 
   // init the linker tables
   sc = initEvent();
@@ -149,7 +148,7 @@ StatusCode IdealTracksCreator::execute()
                                              m_tracksOutContainer );
 
   debug() << "Starting loop over the "
-          << particles -> size() << " MCParticles ... " << endreq;
+          << particles -> size() << " MCParticles ... " << endmsg;
 
   // loop over MCParticles
   // =====================
@@ -190,10 +189,10 @@ StatusCode IdealTracksCreator::execute()
       // Add Velo clusters
       // -----------------
       if ( m_addVeloClusters == true ) {
-        debug() << "... adding VeloXxxClusters" << endreq;
+        debug() << "... adding VeloXxxClusters" << endmsg;
         sc = addVeloClusters( mcParticle, track );
         if ( sc.isFailure() ) {
-          error() << "Unable to add velo R clusters" << endreq;
+          error() << "Unable to add velo R clusters" << endmsg;
           return StatusCode::FAILURE;
         }
       }
@@ -201,10 +200,10 @@ StatusCode IdealTracksCreator::execute()
       // Add TT clusters
       // ---------------
       if ( m_addTTClusters == true ) {
-        debug() << "... adding TTClusters" << endreq;
+        debug() << "... adding TTClusters" << endmsg;
         sc = addTTClusters( mcParticle, track );
         if ( sc.isFailure() ) {
-          error() << "Unable to add TT tracker clusters" << endreq;
+          error() << "Unable to add TT tracker clusters" << endmsg;
           return StatusCode::FAILURE;
         }        
       }
@@ -212,10 +211,10 @@ StatusCode IdealTracksCreator::execute()
       // Add IT clusters
       // ---------------
       if ( m_addITClusters == true ) {
-        debug() << "... adding ITClusters" << endreq;
+        debug() << "... adding ITClusters" << endmsg;
         sc = addITClusters( mcParticle, track );
         if ( sc.isFailure() ) {
-          error() << "Unable to add IT tracker clusters" << endreq;
+          error() << "Unable to add IT tracker clusters" << endmsg;
           return StatusCode::FAILURE;
         }        
       }
@@ -223,10 +222,10 @@ StatusCode IdealTracksCreator::execute()
       // Add OTTimes
       // -----------
       if ( m_addOTTimes == true ) {
-        debug() << "... adding OTTimes" << endreq;
+        debug() << "... adding OTTimes" << endmsg;
         sc = addOTTimes( mcParticle, track );
         if ( sc.isFailure() ) {
-          error() << "Unable to add outer tracker OTTimes" << endreq;
+          error() << "Unable to add outer tracker OTTimes" << endmsg;
           return StatusCode::FAILURE;
         }
       }
@@ -234,10 +233,10 @@ StatusCode IdealTracksCreator::execute()
       // Add Muon hits
       // -----------
       if ( m_addMuonHits == true ) {
-        debug() << "... adding OTTimes" << endreq;
+        debug() << "... adding OTTimes" << endmsg;
         sc = addMuonHits( mcParticle, track );
         if ( sc.isFailure() ) {
-          error() << "Unable to add outer tracker OTTimes" << endreq;
+          error() << "Unable to add outer tracker OTTimes" << endmsg;
           return StatusCode::FAILURE;
         }
       }
@@ -246,7 +245,7 @@ StatusCode IdealTracksCreator::execute()
       // ---------------------------------------
       if ( (int) track -> nLHCbIDs() < m_minNHits) {
         debug() << " -> track deleted. Had only " << track -> nLHCbIDs()
-                << " LHCbID's" << endreq;
+                << " LHCbID's" << endmsg;
         delete track;
         continue; // go to next track
       }
@@ -257,7 +256,7 @@ StatusCode IdealTracksCreator::execute()
         sc = this -> initializeState( mcParticle, track );
         if ( !sc.isSuccess() ) {
           debug() << " -> track deleted as unable to initialize state"
-                  << endreq;
+                  << endmsg;
           delete track;
           continue; // go to next track
         }
@@ -292,20 +291,20 @@ StatusCode IdealTracksCreator::execute()
     } // is selected
   } // looping over MCParticles
 
-  debug() << "Created " << tracksCont -> size() << " tracks." << endreq;
+  debug() << "Created " << tracksCont -> size() << " tracks." << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Finalize
 //=============================================================================
 StatusCode IdealTracksCreator::finalize()
 {
-  debug() << "==> Finalize" << endreq;
+  debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-};
+}
 
 //=============================================================================
 // Add outer tracker clusters
@@ -323,10 +322,10 @@ StatusCode IdealTracksCreator::addOTTimes( const MCParticle* mcPart,
       ++nOTMeas;      
     }
   
-  debug() << "- " << nOTMeas << " OTMeasurements added" << endreq;
+  debug() << "- " << nOTMeas << " OTMeasurements added" << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  
@@ -349,10 +348,10 @@ StatusCode IdealTracksCreator::addTTClusters( const MCParticle* mcPart,
     aCluster = m_ttLinker.next();
   }  // loop cluster
 
-  debug() << "- " << nTTMeas << " STMeasurements in TT added" << endreq;
+  debug() << "- " << nTTMeas << " STMeasurements in TT added" << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  
@@ -374,10 +373,10 @@ StatusCode IdealTracksCreator::addITClusters( const MCParticle* mcPart,
     }
     aCluster = m_itLinker.next();
   }
-  debug() << "- " << nITMeas << " STMeasurements in IT added" << endreq;
+  debug() << "- " << nITMeas << " STMeasurements in IT added" << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  
@@ -403,10 +402,10 @@ StatusCode IdealTracksCreator::addVeloClusters( const MCParticle* mcPart,
   }  // while
  
   debug() << "- " << nVeloMeas << " / " 
-          << " Velo Measurements added" << endreq;
+          << " Velo Measurements added" << endmsg;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  
@@ -425,10 +424,10 @@ StatusCode IdealTracksCreator::addMuonHits( const MCParticle* mcPart,
   }  // while
  
   debug() << "- " << nMuonMeas << " / " 
-          << " Muon Measurements added" << endreq;
+          << " Muon Measurements added" << endmsg;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Initialize seed state
@@ -468,7 +467,7 @@ StatusCode IdealTracksCreator::initializeState( const MCParticle* mcPart,
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode IdealTracksCreator::initEvent() const{
 
@@ -513,53 +512,53 @@ StatusCode IdealTracksCreator::initEvent() const{
 void IdealTracksCreator::printMCParticle(const MCParticle* mcParticle) const{
 
   debug() << "- MCParticle of type "
-	  << " , (key # " << mcParticle -> key() << ")" << endreq
+	  << " , (key # " << mcParticle -> key() << ")" << endmsg
 	  << "    - vertex = " << mcParticle -> originVertex() ->position()
-	  << endreq
+	  << endmsg
 	  << "    - momentum = " << mcParticle -> momentum() << " MeV" 
-	  << endreq
+	  << endmsg
 	  << "    - P        = " << mcParticle -> p()
-	  << " MeV" <<endreq
+	  << " MeV" <<endmsg
 	  << "    - PID   = "
-	  << ( mcParticle -> particleID().pid() ) << endreq
+	  << ( mcParticle -> particleID().pid() ) << endmsg
 	  << "    - charge   = "
-	  << ( mcParticle -> particleID().threeCharge() / double(3) ) << endreq;
+	  << ( mcParticle -> particleID().threeCharge() / double(3) ) << endmsg;
 }
 
 void IdealTracksCreator::printTrack(const Track* track) const{
 
   debug()
-      << "-> Track with key # " << track -> key() << endreq
-      << "  * charge         = " << track -> charge() << endreq
+      << "-> Track with key # " << track -> key() << endmsg
+      << "  * charge         = " << track -> charge() << endmsg
       << "  * is Invalid     = " << track -> checkFlag( Track::Invalid ) 
-      << endreq
+      << endmsg
       << "  * is Unique      = " << !track -> checkFlag( Track::Clone ) 
-      << endreq
-      << "  * is of type     = " << track -> type() << endreq
+      << endmsg
+      << "  * is of type     = " << track -> type() << endmsg
       << "  * is Backward    = " << track -> checkFlag( Track::Backward ) 
-      << endreq
+      << endmsg
       << "  * # LHCbID's     = " << track -> nLHCbIDs()
-      << "  * # measurements = " << track -> nMeasurements() << endreq;
+      << "  * # measurements = " << track -> nMeasurements() << endmsg;
       
   // print the measurements
   LHCb::Track::MeasurementContainer meas = track->measurements();
   for ( LHCb::Track::MeasurementContainer::const_iterator itMeas = meas.begin();
 	itMeas != meas.end(); ++itMeas ) {
-       debug() << "  - measurement of type " << (*itMeas) -> type() << endreq
-              << "  - z        = " << (*itMeas) -> z() << " mm" << endreq
-              << "  - LHCbID   = " << (*itMeas) -> lhcbID()  << endreq;
+       debug() << "  - measurement of type " << (*itMeas) -> type() << endmsg
+              << "  - z        = " << (*itMeas) -> z() << " mm" << endmsg
+              << "  - LHCbID   = " << (*itMeas) -> lhcbID()  << endmsg;
         // continue according to type ...  
     if ( (*itMeas) -> lhcbID().isOT() ) {
           debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().otID() 
-                  << endreq;
+                  << endmsg;
     }
     else if ( (*itMeas) -> lhcbID().isST() ) {
        debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().stID() 
-                  << endreq;
+                  << endmsg;
     }
     else if ( (*itMeas) -> lhcbID().isVelo() ) {    
       debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().veloID() 
-                << endreq;
+                << endmsg;
       }
    }
 }
