@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-10-24 - Alexandra Martin Sanchez
+ - Added TupleToolL0Calo.cpp, TupleToolL0Calo.h to compute 
+    L0 trigger efficiencies from decay tree tuple.
+
 ! 2012-10-16 - Patrick Koppenburg
  - Move MaxPV property to TupleToolBase. Use it in TupleToolDecayTreeFitter, TupleToolPrimaries
     and TupleToolGeometry
