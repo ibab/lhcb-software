@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "v16r0"
+__version__ = "v17r0"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -154,7 +154,7 @@ class DstConf(LHCbConfigurableUser):
                 if sType == "Full":
 
                     writer.ItemList += [
-                        # Links to MCParticles created in Brunel
+                        # Links to from reconstructed objects to MCParticles
                         "/Event/Link/Rec/Track/Best#1",
                         "/Event/Link/Rec/Calo/Photons#1",
                         "/Event/Link/Rec/Calo/Electrons#1",
@@ -173,13 +173,13 @@ class DstConf(LHCbConfigurableUser):
                     DigiConf().addHeaders(writer)
                     # Digitisation summaries
                     DigiConf().addMCDigitSummaries(writer)
-                    # Links to MCParticles
-                    DigiConf().addMCParticleLinks(writer)
 
                     if dType == "XDST":
                         # Add the MCHits (from Gauss) and links to them (from Boole)
                         SimConf().addSubDetSimInfo(writer)
                         DigiConf().addMCHitLinks(writer)
+                        # Links from Digits to MCParticles
+                        DigiConf().addMCParticleLinks(writer)
 
 
     def _doWriteROOT( self, items, optItems ):

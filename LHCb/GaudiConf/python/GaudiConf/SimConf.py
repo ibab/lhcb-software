@@ -1,7 +1,7 @@
 """
 Configurable for Gauss output
 """
-__version__ = "$Id: SimConf.py,v 1.7 2009-12-17 15:16:11 cattanem Exp $"
+__version__ = "v17r0"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 __all__ = [
@@ -24,6 +24,7 @@ class SimConf(LHCbConfigurableUser) :
         ,"Detectors"         : ['Velo','PuVeto','TT','IT','OT','Rich','Muon','Spd','Prs','Ecal','Hcal'] # Active sub-detectors
         ,"PackingSequencers" : { } # The packing sequence to fill for each spillover event
         ,"DataType"          : "" # Flag for backward compatibility with old data
+        ,"SaveHepMC"         : "True" # If False, do not save HepMC on output file
         }
 
     def allEventLocations(self):
@@ -258,13 +259,12 @@ class SimConf(LHCbConfigurableUser) :
             list = []
 
             if "Generator" in self.getProp("Phases") :
-                if self.getProp("DataType") != 'DC06' or slot == '':
-                    list += [ self.tapeLocation( slot, 'Gen', 'Header' ) ]
+                list += [ self.tapeLocation( slot, 'Gen', 'Header' ) ]
 
             if "Simulation" in self.getProp("Phases") or "GenToMCTree" in self.getProp("Phases") :
                 list += [ self.tapeLocation( slot, 'MC', 'Header' ) ]
 
-            # main event is manditory, spillover events optional.
+            # main event is mandatory, spillover events optional.
             if slot != '':
                 tape.OptItemList += list
             else:
@@ -276,20 +276,19 @@ class SimConf(LHCbConfigurableUser) :
         # Add Generator level information
         if "Generator" in self.getProp("Phases") :
 
-            # Event locations
+            # Save HepMC and BeamParameters only for main event
+            if self.getProp("DataType") not in [ '2009', '2010', 'MC09' ]:
+                tape.ItemList += [ '/Event/Gen/BeamParameters' ]
+                # OptItem so that, when used by applications other than Gauss, they are saved if saved by Gauss
+                if self.getProp('SaveHepMC') : tape.OptItemList += [ '/Event/Gen/HepMCEvents' ]
+
             for slot in self.allEventLocations() :
-
-                generatorList = [ self.tapeLocation( slot, 'Gen', 'Collisions' ),
-                                  self.tapeLocation( slot, 'Gen', 'HepMCEvents' ) ]
-
                 # main event is mandatory, spillover events optional.
                 if slot != '':
-                    if self.getProp("DataType") != 'DC06':
-                        tape.OptItemList += generatorList
+                    tape.OptItemList += [ self.tapeLocation( slot , 'Gen' , 'Collisions' ) ]
                 else:
-                    tape.ItemList    += generatorList
-                    if self.getProp("DataType") != '2009' and self.getProp("DataType") != '2010' and self.getProp("DataType") != 'MC09':
-                        tape.ItemList += [ self.tapeLocation( slot , 'Gen' , 'BeamParameters' ) ]
+                    tape.ItemList    += [ self.tapeLocation( slot , 'Gen' , 'Collisions' ) ]
+
 
     def addMCParticles( self, tape, eventLocations ) :
         

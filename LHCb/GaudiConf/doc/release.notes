@@ -3,10 +3,19 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-10-25 - Marco Cattaneo
+ - SimConf.py:
+   . Add slot "SaveHepMC", default True, to switch off saving of HepMCEvents.
+     Should be set to False by Gauss. Downstream applications will save by
+     default if they were saved by Gauss
+   . Never save HepMCEvents for Spillover slots
+   . Remove DC06 support
+ - DstConf.py: do not save Digit to MCParticle linkers on default MC DST,
+   saved only if "Extended" SimType
+
 ! 2012-10-15 - Rob Lambert
- - Add tuning for BufferSize to FSR service (512 Bytes)
- - for optimization, see Core Soft meeting, 
- - indico.cern.ch/conferenceDisplay?confId=207776
+ - Add tuning for BufferSize to FSR service (512 Bytes) for optimization, 
+   see Core Soft meeting, indico.cern.ch/conferenceDisplay?confId=207776
 
 ! 2012-10-11 - Chris Jones
  - Extend the automatic unpacking options for stripping in DstConf to
