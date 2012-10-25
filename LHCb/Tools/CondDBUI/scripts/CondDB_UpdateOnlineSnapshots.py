@@ -171,6 +171,13 @@ from scratch.""")
         log.error("Considered path '%s' doesn't exist." %db_path)
         return 1
 
+    # Check availability of flow control file ".stopUpdatingSnapshots"
+    stopfilepath = os.path.join(dest_sqldddb, ".stopUpdatingSnapshots")
+    isstopfile = os.path.isfile(stopfilepath)
+    if isstopfile:
+        log.info("Updating on ONLINE snapshots canceled due to the existence of stop file under destination directory.")
+        return 0
+
     # Check granularity of ONLINE snapshots in SQLDDDB/db folder
     current_date = datetime.today()
     curr_year = current_date.year
