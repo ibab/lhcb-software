@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-10-26 - Maurizio Martinelli
+ - Added a flag in TupleToolDecayTreeFitter to store the refitted tracks 
+    momentum.
+
 ! 2012-10-24 - Alexandra Martin Sanchez
  - Added TupleToolL0Calo.cpp, TupleToolL0Calo.h to compute 
     L0 trigger efficiencies from decay tree tuple.

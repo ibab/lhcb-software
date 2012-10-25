@@ -162,6 +162,19 @@ public:
                             const LHCb::Particle* P,
                             const std::string& prefix,
                             TupleMap& tMap )const;
+  
+  ///  Fill lifetime information for non stable daughters
+  StatusCode fillStableDaughters( const DecayTreeFitter::Fitter& fitter,
+				  const LHCb::Particle* P,
+				  const std::string& prefix,
+				  TupleMap& tMap )const;
+
+  ///  Fill updated tracks momentum
+  StatusCode fillTracksMomentum(const DecayTreeFitter::Fitter& fitter, 
+				const LHCb::Particle* P,
+				const std::string& prefix, 
+				TupleMap& tMap) const;
+
   /// actual filling of tuple
   StatusCode fillTuple(const TupleMap& tMap, 
                        Tuples::Tuple& tuple, 
@@ -182,7 +195,6 @@ public:
   /// sort tracks into a set
   std::set<const LHCb::Track*> sortedTracks(const LHCb::VertexBase*) const ;
   
-  
   std::string m_pvLocation ; ///<  PV location to be used. If empty, take context-dependent default
 
   IDVAlgorithm* m_dva;
@@ -200,6 +212,7 @@ public:
   /// Substitute Tool
   ISubstitutePID* m_substitute  ; // tool
   bool m_storeAnyway ;///< Store PV even if a refitted version is already the best PV (i.e store twice)
+  bool m_updateDaughters; ///< Store updated momenta of tracks in the decay tree
 
  };
 #endif // TUPLETOOLDECAYTREEFITTER_H

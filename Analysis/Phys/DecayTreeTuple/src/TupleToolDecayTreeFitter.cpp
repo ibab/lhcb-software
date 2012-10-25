@@ -19,6 +19,7 @@
 #include "LoKi/ParticleProperties.h"
 // boost
 #include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
 
 using namespace LHCb;
 
@@ -51,6 +52,8 @@ DECLARE_TOOL_FACTORY( TupleToolDecayTreeFitter )
   declareProperty( "Substitutions" ,m_map, "PID-substitutions :  { ' decay-component' : 'new-pid' }" ) ;
   declareProperty( "StoreRefittedPVsTwice" ,m_storeAnyway = false, 
                    "Store PV even if a refitted version is already the best PV (i.e store twice)" ) ;
+  declareProperty( "UpdateDaughters" ,m_updateDaughters = false, 
+                   "Store updated momenta of tracks in the decay tree" ) ;
   declareInterface<IParticleTupleTool>(this);
 }
 
@@ -135,7 +138,7 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
       if (!fit(fitter, tree.head(), *iv, prefix, tMap)) return StatusCode::FAILURE ;
     }
   } else {
-    if (msgLevel(MSG::DEBUG)) debug() << "Do not contrain the origin vertex" << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "Do not constrain the origin vertex" << endmsg;
     // Get the fitter
     DecayTreeFitter::Fitter fitter(*(tree.head()));
     if (!fit(fitter, tree.head(), 0, prefix, tMap)) return StatusCode::FAILURE;
@@ -171,6 +174,9 @@ StatusCode TupleToolDecayTreeFitter::fit(DecayTreeFitter::Fitter& fitter,
   }
   if (isVerbose()){
     test &= fillDaughters(fitter,P,prefix,tMap );
+  }
+  if (m_updateDaughters) {
+    test &= fillStableDaughters(fitter,P,prefix,tMap );
   }
 
   return StatusCode(test);
@@ -260,7 +266,7 @@ StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitte
                                                     ,TupleMap& tMap )const{
   bool test = true;
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "FillDaghters " << prefix << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "FillDaughters " << prefix << endmsg ;
   LHCb::Particle::ConstVector daughters = m_particleDescendants->descendants(P);
   if (msgLevel(MSG::DEBUG)) debug() << "for id " << P->particleID().pid()
                                     << " daughter size is " << daughters.size() << endmsg;
@@ -283,6 +289,73 @@ StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitte
     test &= fillMomentum(fitter,particle,name,tMap );
     test &= fillLT(fitter,particle,name,tMap);
   }
+  return StatusCode(test);
+}
+//=============================================================================
+// Fill lifetime information for stable daughters
+//=============================================================================
+StatusCode TupleToolDecayTreeFitter::fillStableDaughters( const DecayTreeFitter::Fitter& fitter
+							  ,const LHCb::Particle* P
+							  ,const std::string& prefix
+							  ,TupleMap& tMap )const{
+  bool test = true;
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "FillStableDaughters " << prefix << endmsg ;
+  LHCb::Particle::ConstVector daughters = P->daughtersVector();
+  if (msgLevel(MSG::DEBUG)) debug() << "for id " << P->particleID().pid()
+                                    << " daughter size is " << daughters.size() << endmsg;
+  if ( daughters.empty() ) return test;
+  std::set<std::string> usedNames;
+  unsigned int add = 0;
+  for (LHCb::Particle::ConstVector::iterator it = daughters.begin();it!=daughters.end(); it++) {
+    const LHCb::Particle* particle = *it;
+    if ( ! particle->isBasicParticle()) {
+      unsigned int pid = abs(particle->particleID().pid());
+      std::string name = prefix+"_"+getName(pid) ;
+      while (usedNames.find(name)!=usedNames.end()) { // fix to bug 88702
+	name = name+boost::lexical_cast<std::string>( add );
+	if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name << " trying next " << endmsg ;
+	Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
+	++add;
+      }
+      usedNames.insert(name);
+      test &= fillStableDaughters(fitter, particle, name, tMap);
+    } else {
+      std::string name = prefix+"_P";
+      usedNames.insert(name);
+      while (usedNames.find(name)!=usedNames.end()) { // fix to bug 88702
+	name = name+boost::lexical_cast<std::string>( add );
+	if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name << " trying next " << endmsg ;
+	Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
+	++add;
+      }
+      usedNames.insert(name);
+      test &= fillTracksMomentum(fitter,particle,name,tMap );
+    }
+  }
+  return StatusCode(test);
+}
+//=============================================================================
+// Fill updated tracks momentum
+//=============================================================================
+StatusCode TupleToolDecayTreeFitter::fillTracksMomentum(const DecayTreeFitter::Fitter& fitter,
+							const Particle* P,
+							const std::string& prefix,
+							TupleMap& tMap ) const{
+  bool test = true;
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "FillTracksMomentum " << prefix << endmsg ;
+
+  //Get the fit parameters
+  const Gaudi::Math::ParticleParams* params = fitter.fitParams(P) ;
+  Gaudi::Math::LorentzVectorWithError momentum = params->momentum() ;
+
+  test &= insert( prefix+"_ID",  P->particleID().pid(), tMap  );
+  test &= insert( prefix+"_PX",  momentum.Px(), tMap  );
+  test &= insert( prefix+"_PY",  momentum.Py(), tMap  );
+  test &= insert( prefix+"_PZ",  momentum.Pz(), tMap  );
+  test &= insert( prefix+"_PE",  momentum.E() , tMap  );//MeV
+
   return StatusCode(test);
 }
 
