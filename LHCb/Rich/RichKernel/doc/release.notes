@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !-------------------------------------------------------------------------------
 
+! 2012-10-26 - Antonis Papanestis
+ - Added function deRichDetectors() to RichCommonBase to get the DeRich objects
+ - Added tool interace Rich::IDetectorTool
+
 ! 2012-10-12 - Marco Clemencic
  - Fixed warning: virtual function is hidden.
 

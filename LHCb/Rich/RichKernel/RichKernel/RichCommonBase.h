@@ -14,6 +14,7 @@
 
 // Interfaces
 #include "RichKernel/IRichToolRegistry.h"
+#include "RichKernel/IRichDetectorTool.h"
 
 // Gaudi
 #include "GaudiKernel/ISvcLocator.h"
@@ -23,6 +24,7 @@
 
 // Forward declarations
 class IJobOptionsSvc;
+class DeRich;
 
 namespace Rich
 {
@@ -92,6 +94,18 @@ namespace Rich
       return ( !pObj ? "Null DataObject !" :
                (pObj->registry() ? pObj->registry()->identifier() : "UnRegistered") );
     }
+
+    /** Returns a vector with available Rich detectors
+     *
+     *  @param pObj Data object
+     *
+     *  @return std::vector<DeRich> with Rich detectors
+     */
+    inline const std::vector<DeRich*>& deRichDetectors( ) const
+    {
+      return ( this->richDetectorTool()->deRichDetectors() );
+    }
+
 
     /** @brief Returns a pointer to the tool associated to a given nickname.
      *
@@ -217,6 +231,24 @@ namespace Rich
       return m_toolReg;
     }
 
+
+    /** Returns pointer to RICH detector tool
+     *  
+     *
+     *  @return Pointer to the IRichDetectorTool interface
+     */
+    inline const Rich::IDetectorTool * richDetectorTool() const
+    {
+      if ( !m_deRichTool )
+      {
+        m_deRichTool =
+          this -> template tool < IDetectorTool > ( "Rich::DetectorTool", "RichDetectorTool" );
+      }
+      return m_deRichTool;
+    }
+
+
+
     /// Pointer to Job Options Service
     IJobOptionsSvc* joSvc() const;
 
@@ -302,6 +334,9 @@ namespace Rich
     /// Runtime name for RichToolRegistry
     std::string m_regName;
 
+    /// Pointer to detector too for DeRich objects
+    mutable const IDetectorTool * m_deRichTool;
+    
   };
 
 }

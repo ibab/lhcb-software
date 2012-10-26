@@ -35,6 +35,7 @@ void Rich::CommonBase<PBASE>::initRichCommonConstructor()
   m_jos     = NULL;
   m_regName = ( this->context().empty() ?
                 "RichToolRegistry" : this->context()+"_RichToolRegistry" );
+  m_deRichTool = NULL;
   this->declareProperty( "ToolRegistryName", m_regName, "Tool Registry Name" );
 }
 
