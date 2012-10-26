@@ -1093,7 +1093,7 @@ application MyTestApp app5a.cpp app5b.cpp
     assert l[1:] == ['app5a.cpp', 'app5b.cpp']
 
     calls = getCalls("if", cmakelists)
-    assert calls == ['BUILD_TESTS'] * 4
+    assert calls == ['GAUDI_BUILD_TESTS'] * 4
 
 def test_pyqt_patterns():
     requirements = '''

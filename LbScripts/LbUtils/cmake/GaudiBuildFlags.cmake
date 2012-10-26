@@ -32,27 +32,76 @@ option(GAUDI_CPP11
        OFF)
 
 #--- Compilation Flags ---------------------------------------------------------
-if(MSVC90)
-  add_definitions(/wd4275 /wd4251 /wd4351)
-  add_definitions(-DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)
-  add_definitions(/nologo)
-  set(CMAKE_CXX_FLAGS_DEBUG "/D_NDEBUG /MD /Zi /Ob0 /Od /RTC1")
-  if(GAUDI_CMT_RELEASE)
-    set(CMAKE_CXX_FLAGS_RELEASE "/O2")
-    set(CMAKE_C_FLAGS_RELEASE "/O2")
-  endif()
-else()
+if(NOT GAUDI_FLAGS_SET)
+  if(MSVC90)
 
-  #
-  set(CMAKE_CXX_FLAGS "-fmessage-length=0 -pipe -ansi -Wall -Wextra -Werror=return-type -pthread")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wwrite-strings -Wpointer-arith -Woverloaded-virtual -Wno-long-long")
-  if(GAUDI_CMT_RELEASE)
-    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
-    set(CMAKE_C_FLAGS_RELEASE "-O2 -DNDEBUG")
+    add_definitions(/wd4275 /wd4251 /wd4351)
+    add_definitions(-DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)
+    add_definitions(/nologo)
+    set(CMAKE_CXX_FLAGS_DEBUG "/D_NDEBUG /MD /Zi /Ob0 /Od /RTC1")
+    if(GAUDI_CMT_RELEASE)
+      set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+      set(CMAKE_C_FLAGS_RELEASE "/O2")
+    endif()
+
+  else()
+
+
+    # Common compilation flags
+    set(CMAKE_CXX_FLAGS
+        "-fmessage-length=0 -pipe -ansi -Wall -Wextra -Werror=return-type -pthread -pedantic -Wwrite-strings -Wpointer-arith -Woverloaded-virtual -Wno-long-long"
+        CACHE STRING "Flags used by the compiler during all build types."
+        FORCE)
+    set(CMAKE_C_FLAGS
+        "-fmessage-length=0 -pipe -ansi -Wall -Wextra -Werror=return-type -pthread -pedantic -Wwrite-strings -Wpointer-arith -Woverloaded-virtual -Wno-long-long"
+        CACHE STRING "Flags used by the compiler during all build types."
+        FORCE)
+
+    # Build type compilation flags (if different from default or uknown to CMake)
+    if(GAUDI_CMT_RELEASE)
+      set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG"
+          CACHE STRING "Flags used by the compiler during release builds."
+          FORCE)
+      set(CMAKE_C_FLAGS_RELEASE "-O2 -DNDEBUG"
+          CACHE STRING "Flags used by the compiler during release builds."
+          FORCE)
+    endif()
+
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG"
+        CACHE STRING "Flags used by the compiler during Release with Debug Info builds."
+        FORCE)
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG"
+        CACHE STRING "Flags used by the compiler during Release with Debug Info builds."
+        FORCE)
+
+    set(CMAKE_CXX_FLAGS_COVERAGE "--coverage"
+        CACHE STRING "Flags used by the compiler during coverage builds."
+        FORCE)
+    set(CMAKE_C_FLAGS_COVERAGE "--coverage"
+        CACHE STRING "Flags used by the compiler during coverage builds."
+        FORCE)
+
+    set(CMAKE_CXX_FLAGS_PROFILE "-pg"
+        CACHE STRING "Flags used by the compiler during profile builds."
+        FORCE)
+    set(CMAKE_C_FLAGS_PROFILE "-pg"
+        CACHE STRING "Flags used by the compiler during profile builds."
+        FORCE)
+
+    # The others are already marked as 'advanced' by CMake, these are custom.
+    mark_as_advanced(CMAKE_C_FLAGS_COVERAGE CMAKE_CXX_FLAGS_COVERAGE
+                     CMAKE_C_FLAGS_PROFILE CMAKE_CXX_FLAGS_PROFILE)
+
   endif()
-  set(CMAKE_CXX_FLAGS_COVERAGE "--coverage")
-  set(CMAKE_C_FLAGS_COVERAGE "--coverage")
+
+  set(GAUDI_FLAGS_SET ON
+      CACHE INTERNAL "flag to check if the compilation flags have already been set")
+endif()
+
+
+if(UNIX)
   add_definitions(-D_GNU_SOURCE -Dunix -Df2cFortran)
+
   if (CMAKE_SYSTEM_NAME MATCHES Linux)
     add_definitions(-Dlinux)
   endif()
@@ -60,8 +109,10 @@ endif()
 
 #--- Link shared flags ---------------------------------------------------------
 if (CMAKE_SYSTEM_NAME MATCHES Linux)
-  set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--as-needed -Wl,--no-undefined  -Wl,-z,max-page-size=0x1000")
-  set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--as-needed -Wl,--no-undefined  -Wl,-z,max-page-size=0x1000")
+  set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--as-needed -Wl,--no-undefined  -Wl,-z,max-page-size=0x1000"
+      CACHE STRING "Flags used by the linker during the creation of dll's.")
+  set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--as-needed -Wl,--no-undefined  -Wl,-z,max-page-size=0x1000"
+      CACHE STRING "Flags used by the linker during the creation of modules.")
 endif()
 
 if(APPLE)
@@ -101,7 +152,7 @@ if(NOT GAUDI_V21)
 endif()
 
 #--- Tuning of warnings --------------------------------------------------------
-if(HIDE_WARNINGS)
+if(GAUDI_HIDE_WARNINGS)
   if(LCG_COMP MATCHES clang)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wno-overloaded-virtual -Wno-char-subscripts -Wno-unused-parameter")
   elseif(LCG_COMP STREQUAL gcc AND LCG_COMPVERS MATCHES "4[3-9]|max")
@@ -112,6 +163,6 @@ endif()
 #--- Special flags -------------------------------------------------------------
 add_definitions(-DBOOST_FILESYSTEM_VERSION=3)
 
-if(LCG_COMP STREQUAL gcc AND LCG_COMPVERS MATCHES "47|max")
+if((LCG_COMP STREQUAL gcc AND LCG_COMPVERS MATCHES "47|max") OR GAUDI_CPP11)
   set(GCCXML_CXX_FLAGS "-D__STRICT_ANSI__")
 endif()

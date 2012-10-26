@@ -1,11 +1,9 @@
 # - GaudiProject
-# Define the macros used by Gaudi-based projects, namely:
-#  gaudi_project(project version) : declare a project with it's version number
-#  gaudi_use_project(project version) : declare the dependency on another project
+# Define the macros used by Gaudi-based projects.
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: e2efa1daa93f446535efc53b0ba9fb5f3f1bfb01
+# Commit Id: f0192661517c1aa80110a4286f81027ea0b630da
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -32,6 +30,9 @@ set(CMAKE_INCLUDE_DIRECTORIES_BEFORE ON)
 #set(CMAKE_SKIP_BUILD_RPATH TRUE)
 
 find_program(ccache_cmd ccache)
+find_program(distcc_cmd distcc)
+mark_as_advanced(ccache_cmd distcc_cmd)
+
 if(ccache_cmd)
   option(CMAKE_USE_CCACHE "Use ccache to speed up compilation." OFF)
   if(CMAKE_USE_CCACHE)
@@ -39,7 +40,7 @@ if(ccache_cmd)
     message(STATUS "Using ccache for building")
   endif()
 endif()
-find_program(distcc_cmd distcc)
+
 if(distcc_cmd)
   option(CMAKE_USE_DISTCC "Use distcc to speed up compilation." OFF)
   if(CMAKE_USE_DISTCC)
@@ -50,30 +51,15 @@ if(distcc_cmd)
     endif()
   endif()
 endif()
-mark_as_advanced(ccache_cmd distcc_cmd)
 
-#-------------------------------------------------------------------------------
-# Platform transparency
-#-------------------------------------------------------------------------------
-if(WIN32)
-  set(ld_library_path PATH)
-elseif(APPLE)
-  set(ld_library_path DYLD_LIBRARY_PATH)
+# This option make sense only if we have 'objcopy'
+if(CMAKE_OBJCOPY)
+  option(GAUDI_DETACHED_DEBINFO
+         "When CMAKE_BUILD_TYPE is RelWithDebInfo, save the debug information on a different file."
+         ON)
 else()
-  set(ld_library_path LD_LIBRARY_PATH)
+  set(GAUDI_DETACHED_DEBINFO OFF)
 endif()
-
-set(lib lib)
-set(bin bin)
-
-if(WIN32)
-  set(ssuffix .bat)
-  set(scomment rem)
-else()
-  set(ssuffix .csh)
-  set(scomment \#)
-endif()
-
 
 #---------------------------------------------------------------------------------------------------
 # Programs and utilities needed for the build
@@ -120,10 +106,10 @@ macro(gaudi_project project version)
   set(CMAKE_PROJECT_VERSION_PATCH ${CMAKE_MATCH_4} CACHE INTERNAL "Patch version of project")
 
   #--- Project Options and Global settings----------------------------------------------------------
-  option(BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON)
-  option(BUILD_TESTS "Set to OFF to disable the build of the tests (libraries and executables)" ON)
-  option(HIDE_WARNINGS "Turn on or off options that are used to hide warning messages" ON)
-  option(USE_EXE_SUFFIX "Add the .exe suffix to executables on Unix systems (like CMT)" ON)
+  option(BUILD_SHARED_LIBS "Set to OFF to build static libraries." ON)
+  option(GAUDI_BUILD_TESTS "Set to OFF to disable the build of the tests (libraries and executables)." ON)
+  option(GAUDI_HIDE_WARNINGS "Turn on or off options that are used to hide warning messages." ON)
+  option(GAUDI_USE_EXE_SUFFIX "Add the .exe suffix to executables on Unix systems (like CMT does)." ON)
   #-------------------------------------------------------------------------------------------------
   set(GAUDI_DATA_SUFFIXES DBASE;PARAM;EXTRAPACKAGES CACHE STRING
       "List of (suffix) directories where to look for data packages.")
@@ -144,13 +130,14 @@ macro(gaudi_project project version)
 
   set(env_xml ${CMAKE_BINARY_DIR}/${project}BuildEnvironment.xml
       CACHE STRING "path to the XML file for the environment to be used in building and testing")
-  mark_as_advanced(env_xml)
 
   set(env_release_xml ${CMAKE_BINARY_DIR}/${project}Environment.xml
       CACHE STRING "path to the XML file for the environment to be used once the project is installed")
-  mark_as_advanced(env_release_xml)
 
-  if(BUILD_TESTS)
+  mark_as_advanced(CMAKE_RUNTIME_OUTPUT_DIRECTORY CMAKE_LIBRARY_OUTPUT_DIRECTORY
+                   env_xml env_release_xml)
+
+  if(GAUDI_BUILD_TESTS)
     enable_testing()
   endif()
 
@@ -215,7 +202,7 @@ macro(gaudi_project project version)
   if(TARGET genconf)
     get_target_property(genconf_cmd genconf IMPORTED_LOCATION)
   else()
-    if (NOT USE_EXE_SUFFIX)
+    if (NOT GAUDI_USE_EXE_SUFFIX)
       set(genconf_cmd ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/genconf)
     else()
       set(genconf_cmd ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/genconf.exe)
@@ -225,12 +212,11 @@ macro(gaudi_project project version)
   if(TARGET genwindef)
     get_target_property(genwindef_cmd genwindef IMPORTED_LOCATION)
   else()
-    if (NOT USE_EXE_SUFFIX)
-      set(genwindef_cmd ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/genwindef)
-    else()
-      set(genwindef_cmd ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/genwindef.exe)
-    endif()
+    set(genwindef_cmd ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/genwindef.exe)
   endif()
+
+  mark_as_advanced(env_cmd merge_cmd versheader_cmd genconfuser_cmd
+                   zippythondir_cmd gaudirun_cmd)
 
   #--- Project Installations------------------------------------------------------------------------
   install(DIRECTORY cmake/ DESTINATION cmake
@@ -380,6 +366,19 @@ macro(gaudi_project project version)
   install(FILES ${env_release_xml} DESTINATION .)
   #   build-time version
   gaudi_generate_env_conf(${env_xml} ${project_build_environment})
+  #   add a small wrapper script in the build directory to easily run anything
+  set(_env_cmd_line)
+  foreach(t ${env_cmd}) # transform the env_cmd list in a space separated string
+    set(_env_cmd_line "${_env_cmd_line} ${t}")
+  endforeach()
+  if(UNIX)
+    file(WRITE ${CMAKE_BINARY_DIR}/run
+         "#!/bin/sh\nexec ${_env_cmd_line} --xml ${env_xml} \"$@\"\n")
+    execute_process(COMMAND chmod a+x ${CMAKE_BINARY_DIR}/run)
+  elseif(WIN32)
+    file(WRITE ${CMAKE_BINARY_DIR}/run.bat
+         "${_env_cmd_line} --xml ${env_xml} %1 %2 %3 %4 %5 %6 %7 %8 %9\n")
+  endif() # ignore other systems
 
   #--- Generate config files to be imported by other projects.
   gaudi_generate_project_config_version_file()
@@ -943,26 +942,42 @@ function(gaudi_resolve_link_libraries variable)
         else()
           set(collected ${collected} ${${package}_LIBRARIES})
         endif()
-      elseif(package STREQUAL debug OR package STREQUAL optimized OR package STREQUAL general)
-        # pop the next element
-        list(GET packages 0 lib)
-        list(REMOVE_AT packages 0)
-        if((package STREQUAL general) OR
-           (BUILD_TYPE STREQUAL Debug AND package STREQUAL debug) OR
-           (BUILD_TYPE STREQUAL Release AND package STREQUAL optimized))
-          # we keep it only if corresponds to the build type
-          set(collected ${collected} ${lib})
-        endif()
       else()
         # if it's not a package, we just add it as it is... there are a lot of special cases
         set(collected ${collected} ${package})
       endif()
     endif()
   endforeach()
+  #message(STATUS "gaudi_resolve_link_libraries collected: ${collected}")
   if(collected)
+    #message(STATUS "Stripping build type special libraries.")
+    set(_coll)
+    while(collected)
+      # pop an element (library or qualifier)
+      list(GET collected 0 entry)
+      list(REMOVE_AT collected 0)
+      if(entry STREQUAL debug OR entry STREQUAL optimized OR entry STREQUAL general)
+        # it's a qualifier: pop another one (the library name)
+        list(GET collected 0 lib)
+        list(REMOVE_AT collected 0)
+        # The possible values of CMAKE_BUILD_TYPE are Debug, Release,
+        # RelWithDebInfo and MinSizeRel, plus the LCG/Gaudi special ones
+        # Coverage and Profile. (treat an empty CMAKE_BUILD_TYPE as Release)
+        if((entry STREQUAL general) OR
+           (CMAKE_BUILD_TYPE MATCHES "Debug|Coverage" AND entry STREQUAL debug) OR
+           ((NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES "Rel|Profile") AND entry STREQUAL optimized))
+          # we keep it only if corresponds to the build type
+          set(_coll ${_coll} ${lib})
+        endif()
+      else()
+        # it's not a qualifier: keep it
+        set(_coll ${_coll} ${entry})
+      endif()
+    endwhile()
+    set(collected ${_coll})
     list(REMOVE_DUPLICATES collected)
+    #message(STATUS "gaudi_resolve_link_libraries output: ${collected}")
   endif()
-  #message(STATUS "gaudi_resolve_link_libraries output: ${collected}")
   set(${variable} ${collected} PARENT_SCOPE)
 endfunction()
 
@@ -1320,6 +1335,55 @@ macro(gaudi_add_genheader_dependencies target)
   endif()
 endmacro()
 
+#-------------------------------------------------------------------------------
+# _gaudi_detach_debinfo(<target>)
+#
+# Helper macro to detach the debug information from the target.
+#
+# The debug info of the given target are extracted and saved on a different file
+# with the extension '.dbg', that is installed alongside the binary.
+#-------------------------------------------------------------------------------
+macro(_gaudi_detach_debinfo target)
+  if(CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo AND GAUDI_DETACHED_DEBINFO)
+    # get the type of the target (MODULE_LIBRARY, SHARED_LIBRARY, EXECUTABLE)
+    get_property(_type TARGET ${target} PROPERTY TYPE)
+    #message(STATUS "_gaudi_detach_debinfo(${target}): target type -> ${_type}")
+    if(NOT _type STREQUAL STATIC_LIBRARY) # we ignore static libraries
+      # guess the target file name
+      if(_type MATCHES "MODULE|LIBRARY")
+        #message(STATUS "_gaudi_detach_debinfo(${target}): library sub-type -> ${CMAKE_MATCH_0}")
+        # TODO: the library name may be different from the default.
+        #       see OUTPUT_NAME and LIBRARY_OUPUT_NAME
+        set(_tn ${CMAKE_SHARED_${CMAKE_MATCH_0}_PREFIX}${target}${CMAKE_SHARED_${CMAKE_MATCH_0}_SUFFIX})
+        set(_builddir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+        set(_dest lib)
+      else()
+        set(_tn ${target})
+        if(GAUDI_USE_EXE_SUFFIX)
+          set(_tn ${_tn}.exe)
+        endif()
+        set(_builddir ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+        set(_dest bin)
+      endif()
+    endif()
+    #message(STATUS "_gaudi_detach_debinfo(${target}): target name -> ${_tn}")
+    # From 'man objcopy':
+    #   objcopy --only-keep-debug foo foo.dbg
+    #   objcopy --strip-debug foo
+    #   objcopy --add-gnu-debuglink=foo.dbg foo
+    add_custom_command(TARGET ${target} POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} --only-keep-debug ${_tn} ${_tn}.dbg
+        COMMAND ${CMAKE_OBJCOPY} --strip-debug ${_tn}
+        COMMAND ${CMAKE_OBJCOPY} --add-gnu-debuglink=${_tn}.dbg ${_tn}
+        WORKING_DIRECTORY ${_builddir}
+        COMMENT "Detaching debug infos for ${_tn} (${target}).")
+    # ensure that the debug file is installed on 'make install'...
+    install(FILES ${_builddir}/${_tn}.dbg DESTINATION ${_dest})
+    # ... and removed on 'make clean'.
+    set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${_builddir}/${_tn}.dbg)
+  endif()
+endmacro()
+
 #---------------------------------------------------------------------------------------------------
 # gaudi_add_library(<name>
 #                   source1 source2 ...
@@ -1357,6 +1421,7 @@ function(gaudi_add_library library)
     add_library(${library} ${srcs})
     set_target_properties(${library} PROPERTIES COMPILE_DEFINITIONS GAUDI_LINKER_LIBRARY)
     target_link_libraries(${library} ${ARG_LINK_LIBRARIES})
+    _gaudi_detach_debinfo(${library})
   endif()
 
   # Declare that the used headers are needed by the libraries linked against this one
@@ -1369,7 +1434,7 @@ function(gaudi_add_library library)
   gaudi_add_genheader_dependencies(${library})
 
   #----Installation details-------------------------------------------------------
-  install(TARGETS ${library} EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION  ${lib})
+  install(TARGETS ${library} EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION lib)
   gaudi_export(LIBRARY ${library})
   gaudi_install_headers(${ARG_PUBLIC_HEADERS})
   install(EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION cmake)
@@ -1389,6 +1454,7 @@ function(gaudi_add_module library)
 
   add_library(${library} MODULE ${srcs})
   target_link_libraries(${library} ${ROOT_Reflex_LIBRARY} ${ARG_LINK_LIBRARIES})
+  _gaudi_detach_debinfo(${library})
 
   gaudi_generate_rootmap(${library})
   gaudi_generate_configurables(${library})
@@ -1398,7 +1464,7 @@ function(gaudi_add_module library)
   gaudi_add_genheader_dependencies(${library})
 
   #----Installation details-------------------------------------------------------
-  install(TARGETS ${library} LIBRARY DESTINATION ${lib})
+  install(TARGETS ${library} LIBRARY DESTINATION lib)
   gaudi_export(MODULE ${library})
 endfunction()
 
@@ -1431,6 +1497,7 @@ function(gaudi_add_dictionary dictionary header selection)
 
   reflex_dictionary(${dictionary} ${header} ${selection} LINK_LIBRARIES ${ARG_LINK_LIBRARIES} OPTIONS ${ARG_OPTIONS})
   set_target_properties(${dictionary}Dict PROPERTIES COMPILE_FLAGS "-Wno-overloaded-virtual")
+  _gaudi_detach_debinfo(${dictionary}Dict)
 
   gaudi_add_genheader_dependencies(${dictionary}Gen)
 
@@ -1439,7 +1506,7 @@ function(gaudi_add_dictionary dictionary header selection)
   gaudi_merge_files_append(DictRootmap ${dictionary}Gen ${CMAKE_CURRENT_BINARY_DIR}/${rootmapname})
 
   #----Installation details-------------------------------------------------------
-  install(TARGETS ${dictionary}Dict LIBRARY DESTINATION ${lib})
+  install(TARGETS ${dictionary}Dict LIBRARY DESTINATION lib)
 endfunction()
 
 #---------------------------------------------------------------------------------------------------
@@ -1485,15 +1552,16 @@ function(gaudi_add_executable executable)
 
   add_executable(${executable} ${srcs})
   target_link_libraries(${executable} ${ARG_LINK_LIBRARIES})
+  _gaudi_detach_debinfo(${executable})
 
-  if (USE_EXE_SUFFIX)
+  if (GAUDI_USE_EXE_SUFFIX)
     set_target_properties(${executable} PROPERTIES SUFFIX .exe)
   endif()
 
   gaudi_add_genheader_dependencies(${executable})
 
   #----Installation details-------------------------------------------------------
-  install(TARGETS ${executable} EXPORT ${CMAKE_PROJECT_NAME}Exports RUNTIME DESTINATION ${bin})
+  install(TARGETS ${executable} EXPORT ${CMAKE_PROJECT_NAME}Exports RUNTIME DESTINATION bin)
   install(EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION cmake)
   gaudi_export(EXECUTABLE ${executable})
 
@@ -1509,7 +1577,7 @@ endfunction()
 # on CppUnit.
 #---------------------------------------------------------------------------------------------------
 function(gaudi_add_unit_test executable)
-  if(BUILD_TESTS)
+  if(GAUDI_BUILD_TESTS)
     gaudi_common_add_build(${ARGN})
 
     find_package(CppUnit QUIET REQUIRED)

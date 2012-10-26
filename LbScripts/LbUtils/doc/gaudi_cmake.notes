@@ -1,3 +1,132 @@
+! 2012-10-25 - Marco Clemencic (c9ed5cd)
+
+ - generate wrapper 'run' in the build directory to quickly invoke env.py
+
+   
+
+! 2012-10-23 - Marco Clemencic (b772f32)
+
+ - fixed doc string of option GAUDI_DETACHED_DEBINFO
+
+   
+
+! 2012-10-23 - Marco Clemencic (f0addf1)
+
+ - improved compiler detection/setting in heptools-common.cmake
+
+   
+
+! 2012-10-19 - Marco Clemencic (f79a58b)
+
+ - improved the default toolchain wrapper
+
+   Store the actual toolchain file in the cache variable CMAKE_TOOLCHAIN_FILE,
+   instead of the wrapper.
+
+
+! 2012-10-19 - Marco Clemencic (195a28c)
+
+ - more clean-up in 'advanced' cache variables
+
+   
+
+! 2012-10-19 - Marco Clemencic (b773c28)
+
+ - renamed a few options with the prefix GAUDI_
+
+   BUILD_TESTS    -> GAUDI_BUILD_TESTS HIDE_WARNINGS  -> GAUDI_HIDE_WARNINGS 
+   USE_EXE_SUFFIX -> GAUDI_USE_EXE_SUFFIX
+
+
+! 2012-10-18 - Marco Clemencic (59da586)
+
+ - improved integration with CMake build flags and build types
+
+   
+
+! 2012-10-18 - Marco Clemencic (faf67c8)
+
+ - removed some unused code
+
+   
+
+! 2012-10-18 - Marco Clemencic (1778e4f)
+
+ - use the variable CMAKE_OBJCOPY instead of calling objcopy
+
+   We need the tool 'objcopy' to separate the debug symbols from the libraries. 
+   Now we call it via the variable CMAKE_OBJDUMP (if defined), instead of the
+   hard-coded string.
+
+
+! 2012-10-18 - Marco Clemencic (4abaea4)
+
+ - set few missing CMAKE_* variables required in a toolchain (Linux only)
+
+   A toolchain file should set the CMAKE_* cache variables pointing to a few
+   useful programs, like objcopy, ar, ld. They are not mandatory, but are
+   useful, so we should set them.
+
+   For the moment it is done only for Linux.
+
+! 2012-10-18 - Marco Clemencic (39658b5)
+
+ - mark_as_advanced a few more cached variables
+
+   
+
+! 2012-10-18 - Marco Clemencic (478528c)
+
+ - allow creation of separate debug files
+
+   When the CMAKE_BUILD_TYPE is set to RelWithDebInfo, the produces binaries
+   (libraries, modules and executables) are splitted in two files: the actual
+   code and the debug informations (see 
+   http://sourceware.org/gdb/onlinedocs/gdb/Separate-Debug-Files.html).
+
+   The splitting can be disabled by setting the option GAUDI_DETACHED_DEBINFO
+   to OFF.
+
+! 2012-10-18 - Marco Clemencic (2c1ef42)
+
+ - check also for CMAKE_BUILD_TYPE values RelWithDebInfo and MinSizeRel
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7060
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2012-10-17 - Marco Clemencic (26654b3)
+
+ - fixed handling of library qualifiers debug, optimized and general
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7058
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2012-10-17 - Marco Clemencic (1437540)
+
+ - added Fedora to the known platforms (as 'fc')
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7057
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2012-10-17 - Marco Clemencic (4c672f0)
+
+ - allow setting of ROOTSYS from the cmake command line
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7056
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2012-10-16 - Marco Clemencic (8a0df4f)
 
  - cmt2cmake: generate wrapper toolchain.cmake in projects

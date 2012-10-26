@@ -25,10 +25,9 @@ directory containing the sources (``Gaudi.src``).
 To prepare the build directory, you have to::
 
     $ src=$PWD/Gaudi.src
-    $ moddir=$src/cmake/module
     $ mkdir Gaudi.build
     $ cd Gaudi.build
-    $ cmake -DCMAKE_TOOLCHAIN_FILE=$src/toolchain.cmake -DCMAKE_MODULE_PATH=$moddir \
+    $ cmake -DCMAKE_TOOLCHAIN_FILE=$src/toolchain.cmake \
         -G "Eclipse CDT4 - Unix Makefiles" $src
 
 This will create the required Unix makefiles and the Eclipse project

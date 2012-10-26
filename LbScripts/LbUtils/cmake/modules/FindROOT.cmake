@@ -5,7 +5,7 @@
 # Find ROOTSYS
 #  We assume TROOT.h is in $ROOTSYS/include
 find_path(ROOT_INCLUDE_DIR TROOT.h
-          HINTS $ENV{ROOTSYS}/include)
+          HINTS ${ROOTSYS}/include $ENV{ROOTSYS}/include)
 get_filename_component(ROOTSYS ${ROOT_INCLUDE_DIR} PATH)
 set(ROOTSYS ${ROOTSYS} CACHE PATH "Location of the installation of ROOT")
 
@@ -88,7 +88,7 @@ endforeach()
 # all listed variables are TRUE
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(ROOT DEFAULT_MSG ROOTSYS ROOT_INCLUDE_DIR)
-mark_as_advanced(ROOT_FOUND ROOT_INCLUDE_DIR)
+mark_as_advanced(ROOT_FOUND ROOTSYS ROOT_INCLUDE_DIR)
 
 ######################################################################
 # Report findings
@@ -157,6 +157,7 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
   else()
     set(GCCXML_CXX_COMPILER cl CACHE STRING "Compiler that GCCXML must use.")
   endif()
+  mark_as_advanced(GCCXML_CXX_COMPILER)
   set(gccxmlopts "--gccxml-compiler ${GCCXML_CXX_COMPILER}")
 
   set(rootmapname ${dictionary}Dict.rootmap)
