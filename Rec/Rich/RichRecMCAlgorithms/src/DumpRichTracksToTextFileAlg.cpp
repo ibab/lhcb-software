@@ -95,6 +95,23 @@ StatusCode DumpRichTracksToTextFileAlg::execute()
 
     // Associated MCParticle
     const LHCb::MCParticle * mcP = m_truth->mcParticle(segment);
+
+    // Get the top level MCParticle parent
+    const LHCb::MCParticle * mcPP = ( mcP ? mcP->mother() : NULL );
+    if ( mcPP )
+    {
+      bool goOn = true;
+      unsigned int n(0); // safety against infinite loops
+      while ( goOn && ++n < 999999 ) 
+      {
+        const LHCb::MCParticle * tmpMCP = mcPP->mother();
+        if ( tmpMCP ) { mcPP = tmpMCP; }
+        else          { goOn = false;  }
+      }
+    }
+
+    // Track production vertex
+    const LHCb::MCVertex * mcOriV = ( mcP ? mcP->originVertex() : NULL );
     
     // Are you including this RICH
     if ( !m_detectors[rich] ) continue;
@@ -119,6 +136,16 @@ StatusCode DumpRichTracksToTextFileAlg::execute()
                 << trackSeg.entryMomentum().y() << " "
                 << trackSeg.entryMomentum().z() << " ";
 
+    // Middle point to radiator (x,y,z)
+    *m_textFile << trackSeg.middlePoint().x() << " "
+                << trackSeg.middlePoint().y() << " "
+                << trackSeg.middlePoint().z() << " ";
+
+    // Middle Momentum vector (px,py,pz)
+    *m_textFile << trackSeg.middleMomentum().x() << " "
+                << trackSeg.middleMomentum().y() << " "
+                << trackSeg.middleMomentum().z() << " ";
+
     // Exit point to radiator (x,y,z)
     *m_textFile << trackSeg.exitPoint().x() << " "
                 << trackSeg.exitPoint().y() << " "
@@ -130,7 +157,17 @@ StatusCode DumpRichTracksToTextFileAlg::execute()
                 << trackSeg.exitMomentum().z() << " ";
 
     // MC Info
+
+    // Track PDG code
     *m_textFile << ( mcP ? mcP->particleID().pid() : 0  ) << " ";
+
+    // Top level parent PDG code
+    *m_textFile << ( mcPP ? mcPP->particleID().pid() : 0  ) << " ";
+
+    // Track production vertex
+    *m_textFile << ( mcOriV ? mcOriV->position().x() : 0 ) << " "
+                << ( mcOriV ? mcOriV->position().y() : 0 ) << " "
+                << ( mcOriV ? mcOriV->position().z() : 0 ) << " ";
 
     // Finally end this line in the file
     *m_textFile << std::endl;
