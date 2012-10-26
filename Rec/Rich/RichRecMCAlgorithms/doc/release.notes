@@ -4,6 +4,10 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2012-10-26 - Chris Jones
+ - Add a new algorithm DumpRichTracksToTextFileAlg which dumps basic track
+   information to a text file
+
 !========================= RichRecMCAlgorithms v1r3p3 2011-02-28 =========================
 ! 2011-02-10 - Chris Jones
  - fix various icc warnings

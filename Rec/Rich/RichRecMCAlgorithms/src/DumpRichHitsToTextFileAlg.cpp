@@ -18,9 +18,6 @@
 // namespace
 using namespace Rich::Rec::MC;
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DumpRichHitsToTextFileAlg )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -31,8 +28,9 @@ DumpRichHitsToTextFileAlg::DumpRichHitsToTextFileAlg( const std::string& name,
     m_nEvt             ( 0    ),
     m_detectors        ( Rich::NRiches, true )
 {
-  declareProperty( "UseRedCorrPositions", m_useCorrPos = true );
-  declareProperty( "OneOneMCAssoc",   m_onlyOneMCassoc = true );
+  declareProperty( "UseRedCorrPositions",  m_useCorrPos = true );
+  declareProperty( "OnlyOneMCAssoc",   m_onlyOneMCassoc = true );
+  declareProperty( "Detectors",        m_detectors );
 }
 
 //=============================================================================
@@ -90,7 +88,7 @@ DumpRichHitsToTextFileAlg::dumpToTextfile( const Rich::DetectorType rich,
 
   // Iterate over pixels
   const IPixelCreator::PixelRange range = pixelCreator()->range( rich, panel );
-  debug() << " -> Selected " << range.size() << " hits for " << rich 
+  debug() << " -> Selected " << range.size() << " hits for " << rich
           << " " << Rich::text(rich,panel) << endmsg;
   for ( LHCb::RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
   {
@@ -132,5 +130,10 @@ DumpRichHitsToTextFileAlg::dumpToTextfile( const Rich::DetectorType rich,
 
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( DumpRichHitsToTextFileAlg )
 
 //=============================================================================

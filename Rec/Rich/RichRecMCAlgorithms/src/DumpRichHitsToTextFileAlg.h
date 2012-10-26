@@ -3,9 +3,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::DumpRichHitsToTextFileAlg
  *
- *  CVS Log :-
- *  $Id: DumpRichHitsToTextFileAlg.h,v 1.3 2009-04-30 14:20:49 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2009-02-16
  */
@@ -46,7 +43,8 @@ namespace Rich
       public:
 
         /// Standard constructor
-        DumpRichHitsToTextFileAlg( const std::string& name, ISvcLocator* pSvcLocator );
+        DumpRichHitsToTextFileAlg( const std::string& name, 
+                                   ISvcLocator* pSvcLocator );
 
         virtual ~DumpRichHitsToTextFileAlg( ); ///< Destructor
 
@@ -68,7 +66,7 @@ namespace Rich
         bool m_useCorrPos;
 
         /// Event number
-        unsigned int m_nEvt;
+        unsigned long long m_nEvt;
 
         /// Detectors to write files for
         std::vector<bool> m_detectors;
