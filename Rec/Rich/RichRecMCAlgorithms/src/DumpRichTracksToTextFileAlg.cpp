@@ -132,9 +132,12 @@ StatusCode DumpRichTracksToTextFileAlg::execute()
     // MC Info ?
     if ( mcP )
     {
-
       *m_textFile << mcP->particleID().pid() << " ";
-
+    }
+    else
+    {
+      // fill with blanks
+      *m_textFile << 0 << " ";
     }
 
     // Finally end this line in the file

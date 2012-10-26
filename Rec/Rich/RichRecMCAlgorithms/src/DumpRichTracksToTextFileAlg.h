@@ -55,7 +55,7 @@ namespace Rich
       private:
 
         /// Pointer to RichRecMCTruthTool interface
-        const Rich::Rec::MC::IMCTruthTool*  m_truth;
+        const Rich::Rec::MC::IMCTruthTool* m_truth;
 
         /// Event number
         unsigned long long m_nEvt;
