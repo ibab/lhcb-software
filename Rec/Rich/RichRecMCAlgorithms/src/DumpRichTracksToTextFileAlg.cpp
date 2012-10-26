@@ -119,26 +119,18 @@ StatusCode DumpRichTracksToTextFileAlg::execute()
                 << trackSeg.entryMomentum().y() << " "
                 << trackSeg.entryMomentum().z() << " ";
 
-    // Entry point to radiator (x,y,z)
+    // Exit point to radiator (x,y,z)
     *m_textFile << trackSeg.exitPoint().x() << " "
                 << trackSeg.exitPoint().y() << " "
                 << trackSeg.exitPoint().z() << " ";
 
-    // Entry Momentum vector (px,py,pz)
+    // Exit Momentum vector (px,py,pz)
     *m_textFile << trackSeg.exitMomentum().x() << " "
                 << trackSeg.exitMomentum().y() << " "
                 << trackSeg.exitMomentum().z() << " ";
 
-    // MC Info ?
-    if ( mcP )
-    {
-      *m_textFile << mcP->particleID().pid() << " ";
-    }
-    else
-    {
-      // fill with blanks
-      *m_textFile << 0 << " ";
-    }
+    // MC Info
+    *m_textFile << ( mcP ? mcP->particleID().pid() : 0  ) << " ";
 
     // Finally end this line in the file
     *m_textFile << std::endl;
