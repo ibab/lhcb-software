@@ -186,8 +186,8 @@ class RevisionControlSystem(object):
         return version.lower() == "head" \
             or version in self._retrieveVersions(module, isProject)
 
-    def checkout(self, module, dest = None, vers_dir = False, project = False,
-                 eclipse = False):
+    def checkout(self, module, version = "head", dest = None, vers_dir = False,
+                 project = False, eclipse = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
@@ -1034,7 +1034,8 @@ class SubversionCmd(RevisionControlSystem):
                                          src, versionUrl + '/' + subnode,
                                          stdout = None, stderr = None)
                     # bail out on error
-                    return retcode
+                    if retcode:
+                        return retcode
             return 0
         else:
             _, _, retcode = _svn("copy", "-m", msg,
@@ -1071,11 +1072,13 @@ class SubversionCmd(RevisionControlSystem):
                                          src, versionUrl + '/' + subnode,
                                          stdout = None, stderr = None)
                     # bail out on error
-                    return retcode
+                    if retcode:
+                        return retcode
             return 0
         else:
             _, _, retcode = _svn("copy", "-m", msg,
                                  srcUrl, versionUrl, stdout = None, stderr = None)
+            return retcode
 
     def _updatePath(self, pth, root_dir):
         pthlist = []

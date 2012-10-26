@@ -2,6 +2,7 @@
 
 	* tests/test_rcs.py: tests for the module LbRelease.rcs
 	* tests/data: data for the tests of LbRelease.rcs
+	* python/LbRelease/rcs.py: fixes to LbRelease.rcs
 
 2012-10-08  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
