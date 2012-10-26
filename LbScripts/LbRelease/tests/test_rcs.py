@@ -176,7 +176,9 @@ def test_tag_project():
     assert rep._exists('Proj/branches/PROJ/PROJ_v1b/cmt/project.cmt')
 
     # files expected in the CMake project tag/branch
-    expected_files = ['cmt/project.cmt', 'CMakeLists.txt', 'cmake/SomeCMakeModule.cmake', 'toolchain.cmake']
+    expected_files = ['cmt/project.cmt', 'CMakeLists.txt',
+                      'cmake/SomeCMakeModule.cmake', 'toolchain.cmake',
+                      'configure']
 
     # CMake project
     assert rep.tag('ProjB', 'v1r0', isProject=True) == 0
@@ -237,7 +239,10 @@ def test_checkout_cmake_project():
         def __call__(self, d):
             return exists(join(workdir, self.prefix, d))
 
-    expected_files = ['cmt/project.cmt', 'CMakeLists.txt', 'cmake/SomeCMakeModule.cmake', 'toolchain.cmake']
+    expected_files = ['cmt/project.cmt', 'CMakeLists.txt',
+                      'cmake/SomeCMakeModule.cmake', 'toolchain.cmake',
+                      'configure']
+
     try:
         # plain
         os.chdir(workdir)

@@ -10,7 +10,6 @@ from LbUtils.VCS import cvs_command as _cvs
 from LbUtils.VCS import splitlines
 
 
-
 import logging
 
 import os, re
@@ -439,6 +438,8 @@ class SubversionCmd(RevisionControlSystem):
     SVN_USER     = VCS_USER
     SVN_HOST     = VCS_HOST
     SVN_PATH     = VCS_PATH
+    PROJECT_NODES = ['cmt', 'cmake', 'CMakeLists.txt', 'toolchain.cmake',
+                     'Makefile.cmt', 'configure']
     def __init__(self, repository):
         """
         Initialize the connection to the repository.
@@ -1026,8 +1027,7 @@ class SubversionCmd(RevisionControlSystem):
                 _svn("mkdir", "--parents", "-m", msg, versionUrl)
                 # ignore errors
             # For projects we need to copy a few dirs and files
-            for subnode in ['cmt', 'cmake',
-                            'CMakeLists.txt', 'toolchain.cmake', 'Makefile.cmt']:
+            for subnode in self.PROJECT_NODES:
                 src = srcUrl + '/' + subnode
                 if self._exists(src):
                     _, _, retcode = _svn("copy", "-m", msg,
@@ -1064,8 +1064,7 @@ class SubversionCmd(RevisionControlSystem):
                 _svn("mkdir", "--parents", "-m", msg, versionUrl)
                 # ignore errors
             # For projects we need to copy a few dirs and files
-            for subnode in ['cmt', 'cmake',
-                            'CMakeLists.txt', 'toolchain.cmake', 'Makefile.cmt']:
+            for subnode in self.PROJECT_NODES:
                 src = srcUrl + '/' + subnode
                 if self._exists(src):
                     _, _, retcode = _svn("copy", "-m", msg,
