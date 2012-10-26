@@ -4056,6 +4056,24 @@ ROOT.TH1F. hFit = _h_Fit_
 ROOT.TH1D. hFit = _h_Fit_ 
 
 # =============================================================================
+## fit histo
+#  @see TH1::Fit 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-09-28
+def _f_fit_ ( func , histo , *args ) :
+    """
+    Fit histogram (Actially delegate to TH1::Fit method)
+    
+    >>> func  = ...
+    >>> histo = ...
+    >>> func.Fit ( histo , .... )
+    
+    """
+    return histo.Fit( func , *args )
+
+ROOT.TF1 . Fit      = _f_fit_ 
+ROOT.TF1 . fitHisto = _f_fit_ 
+# =============================================================================
 
 # =============================================================================
 logger.info ( 'Some useful decorations for TMinuit objects')

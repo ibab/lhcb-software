@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-10-26 - Vanya Belyaev
+ - PyRoUts.py: minor decoration  
+
 ! 2012-10-23 - Vanya Belyaev
  - PyRoUts.py: 
     - add histogram content fransformation and two FoMs: 
