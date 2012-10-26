@@ -11,6 +11,7 @@ Purpose: LHCb reconstruction program
     (LoKiCore, LumiEvent, FastVelo, GlobalReco, RichDet, HltDAQ, PatAlgorithms)
   . Switch interpolator in TrackNNGhostId from cspline to linear, fixes negative
     ghost probabilities (TrackTools) 
+  . Removed Boole linkers from default MC DST output (GaudiConf)
 
 </PRE><H1><A NAME=v44r0>2012-10-04 Brunel v44r0</A></H1><PRE>
 This version uses projects LCG 64a, Gaudi v23r4, LHCb v35r2, Lbcom v13r2,
