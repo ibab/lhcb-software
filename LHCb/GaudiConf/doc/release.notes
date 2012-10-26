@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v17r0 2012-10-26 =========================
 ! 2012-10-25 - Marco Cattaneo
  - SimConf.py:
    . Add slot "SaveHepMC", default True, to switch off saving of HepMCEvents.
