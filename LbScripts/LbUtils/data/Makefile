@@ -56,7 +56,7 @@ ifeq ($(platform),windows)
 # we do not have 'find' on Windows, so we stick to at most one level of hats
 packages := $(strip $(subst /cmt/requirements,,$(wildcard */cmt/requirements) $(wildcard */*/cmt/requirements)))
 else
-packages := $(strip $(subst /cmt/requirements,,$(shell find . -name requirements | grep cmt/requirements | sed 's/.\///') ))
+packages := $(strip $(subst /cmt/requirements,,$(shell find . -noleaf -path "*/cmt/requirements" -a -not -path "*/tests/data/*" | sed 's/.\///') ))
 endif
 
 # --- Utility functions and variables

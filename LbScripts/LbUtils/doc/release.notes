@@ -1,3 +1,7 @@
+2012-10-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: modified packages lookup to avoid finding stuff in */test/data/*
+
 2012-10-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/cern-lxdistcc-wrappers.sh: fixed bugs: host-OS detection and clean
