@@ -835,8 +835,6 @@ class SubversionCmd(RevisionControlSystem):
             dst = module
             if vers_dir:
                 dst = os.path.join(dst, version)
-            if isProject and not global_tag: # projects in SVN _are_ the content of the "cmt" directory
-                dst = os.path.join(dst, "cmt")
         else:
             if isProject:
                 root = module
@@ -856,16 +854,12 @@ class SubversionCmd(RevisionControlSystem):
                 if branch:
                     sub = "branches"
                 src = [root, sub, module, versiondir]
-            if isProject and not global_tag: # for projects we check-out only the cmt directory
-                src.append("cmt")
             src = "/".join([self.repository] + src)
             if revId: # Special syntax for revision IDs
                 src += "@" + revId.group(1)
             dst = module
             if vers_dir:
                 dst = os.path.join(dst, versiondir)
-            if isProject: # for projects we check-out only the cmt directory
-                dst = os.path.join(dst, "cmt")
         return src, dst
 
 
@@ -962,7 +956,6 @@ class SubversionCmd(RevisionControlSystem):
                 # there is no svn directory, make a checkout of the project
                 # containing the package
                 psrc, _ = self._computePaths(self.modules[module], "trunk", isProject=True)
-                psrc = psrc.rsplit("/", 1)[0] # _computePaths return the path to cmt for projects
                 _svn("co", "-N", psrc, dest, stdout = None, stderr = None)
                 # top level directory ready
         # - check if we can use the top level directory
@@ -977,8 +970,9 @@ class SubversionCmd(RevisionControlSystem):
                     step = dest
                     while ldst:
                         step = join(step, ldst.pop(0))
-                        if ldst:
+                        if ldst or project:
                             # non-recursive checkout for the intermediate levels
+                            # (for projects we need to get to the last element)
                             if _svn("up", "-N", step)[2]:
                                 break
                         else:
@@ -1000,7 +994,14 @@ class SubversionCmd(RevisionControlSystem):
             # normal case
             sub_cmd = "checkout"
 
-        _svn(sub_cmd, src, dst, stdout = None, stderr = None)
+        if not project:
+            _svn(sub_cmd, src, dst, stdout = None, stderr = None)
+        else: # Projects can come with CMake configuration files
+            _svn(sub_cmd, '-N', src, dst, stdout = None, stderr = None)
+            # List of subdirectories to check-out too
+            for subdir in ['cmt', 'cmake']:
+                if self._exists(src + '/' + subdir):
+                    _svn('up', join(dst, subdir), stdout = None, stderr = None)
 
         if not vers_dir and not project:
             # create version.cmt file
@@ -1021,12 +1022,23 @@ class SubversionCmd(RevisionControlSystem):
                                         False: "package"}[bool(isProject)],
                                        module, version)
         if isProject: # check if the
-            versdir = versionUrl.rsplit("/", 1)[0] # strip the trailing '/cmt'
-            if not self._exists(versdir):
-                _svn("mkdir", "--parents", "-m", msg, versdir)
+            if not self._exists(versionUrl):
+                _svn("mkdir", "--parents", "-m", msg, versionUrl)
                 # ignore errors
-        _, _, retcode = _svn("copy", "-m", msg,
-                             srcUrl, versionUrl, stdout = None, stderr = None)
+            # For projects we need to copy a few dirs and files
+            for subnode in ['cmt', 'cmake',
+                            'CMakeLists.txt', 'toolchain.cmake', 'Makefile.cmt']:
+                src = srcUrl + '/' + subnode
+                if self._exists(src):
+                    _, _, retcode = _svn("copy", "-m", msg,
+                                         src, versionUrl + '/' + subnode,
+                                         stdout = None, stderr = None)
+                    # bail out on error
+                    return retcode
+            return 0
+        else:
+            _, _, retcode = _svn("copy", "-m", msg,
+                                 srcUrl, versionUrl, stdout = None, stderr = None)
         return retcode
 
     def branch(self, module, version, isProject=False, from_tag=None, from_branch=None):
@@ -1046,14 +1058,24 @@ class SubversionCmd(RevisionControlSystem):
         msg = "Branching %s %s as %s" % ({True: "project",
                                           False: "package"}[bool(isProject)],
                                          module, version)
-        if isProject: # check if the
-            versdir = versionUrl.rsplit("/", 1)[0] # strip the trailing '/cmt'
-            if not self._exists(versdir):
-                _svn("mkdir", "--parents", "-m", msg, versdir)
+        if isProject:
+            if not self._exists(versionUrl):
+                _svn("mkdir", "--parents", "-m", msg, versionUrl)
                 # ignore errors
-        _, _, retcode = _svn("copy", "-m", msg,
-                             srcUrl, versionUrl, stdout = None, stderr = None)
-        return retcode
+            # For projects we need to copy a few dirs and files
+            for subnode in ['cmt', 'cmake',
+                            'CMakeLists.txt', 'toolchain.cmake', 'Makefile.cmt']:
+                src = srcUrl + '/' + subnode
+                if self._exists(src):
+                    _, _, retcode = _svn("copy", "-m", msg,
+                                         src, versionUrl + '/' + subnode,
+                                         stdout = None, stderr = None)
+                    # bail out on error
+                    return retcode
+            return 0
+        else:
+            _, _, retcode = _svn("copy", "-m", msg,
+                                 srcUrl, versionUrl, stdout = None, stderr = None)
 
     def _updatePath(self, pth, root_dir):
         pthlist = []
