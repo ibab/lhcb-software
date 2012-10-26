@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-10-26 - Chris Jones
+ - Add new monitoring options for the algs that dump the RICH hit and track
+   information to plain text files.
+
 ! 2012-10-08 - Marco Cattaneo
  - In Configuration.py, remove setting of MeasureTime=True in sequencers,
    should not be the default, and should in any case use TimingAuditor.

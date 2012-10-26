@@ -53,7 +53,8 @@ class RichRecQCConf(RichConfigurableUser):
                            "RichPhotonTrajectory", "RichStereoFitterTests",
                            "RichRayTracingTests", "RichDataObjectChecks",
                            "RichRecoTiming", "RichFuncCKResPlots",
-                           "RichPerfFromData","AerogelMonitoring"
+                           "RichPerfFromData","AerogelMonitoring",
+                           "RichTracksToTextFile","RichHitsToTextFile"
                            ]
 
     ## Added monitors
@@ -843,6 +844,20 @@ class RichRecQCConf(RichConfigurableUser):
             moni.Algorithms = [ moni.TimingName ]
             seq.Members += [moni]
 
+        check = "RichTracksToTextFile"
+        if check in checks:
+
+            from Configurables import Rich__Rec__MC__DumpRichTracksToTextFileAlg as RichTracksToText
+            moni = self.createMonitor(RichTracksToText,"RichTracksToText")
+            sequence.Members += [moni]
+
+        check = "RichHitsToTextFile"
+        if check in checks:
+
+            from Configurables import Rich__Rec__MC__DumpRichHitsToTextFileAlg as RichHitsToText
+            moni = self.createMonitor(RichHitsToText,"RichHitsToText")
+            sequence.Members += [moni]
+            
         check = "RichPerfFromData"
         if check in checks:
             pass
