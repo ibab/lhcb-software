@@ -51,7 +51,8 @@ __all__     = ( 'extendfile1' ,
                 'extendfile2' ,
                 'extendfile'  ,
                 'inCastor'    ,
-                'inEOS'       ) 
+                'inEOS'       ,
+                'inGrid'      ) 
 # =============================================================================
 ## logging
 # =============================================================================
@@ -96,29 +97,21 @@ def inCastor ( fname            ,
     >>> ok = inCastor ( fname , '' ) ## check the explicit location
     
     """
-
     if 0 != fname.find ( prefix ) : fname = prefix + fname
     
-    try:
-
-        ##
-        import os 
-        from subprocess import Popen, PIPE
-        p   = Popen( [ 'nsls' , '-l' , fname ] , 
-                     env    = os.environ       , 
-                     stdout = PIPE             ,
-                     stderr = PIPE             )
-        stdout, stderr = p.stdout, p.stderr
-
-        ## require empty stder
-        for l in stderr : return False   ## RETURN 
-        
-        ## Require non-empty std-out: 
-        for l in stdout : return True    ##  RETURN 
-
-    except :
-        logger.error('inCastor: failure to use Popen, return False')
-        pass
+    import os 
+    from subprocess import Popen, PIPE
+    p   = Popen( [ 'nsls' , '-l' , fname ] , 
+                 env    = os.environ       , 
+                 stdout = PIPE             ,
+                 stderr = PIPE             )
+    stdout, stderr = p.stdout, p.stderr
+    
+    ## require empty stder
+    for l in stderr : return False   ## RETURN 
+    
+    ## Require non-empty std-out: 
+    for l in stdout : return True    ##  RETURN 
     
     return False 
 
@@ -167,28 +160,21 @@ def inEOS ( fname             ,
     # check short prefix
     if 0 != fname.find ( '/eos' ) : fname = '/eos' + fname 
     ##
-    try:
-        ##
-        import os 
-        from subprocess import Popen, PIPE
-        p   = Popen( [ 'eos_ls' , fname ] ,
-                     env    = os.environ  ,
-                     stdout = PIPE        ,
-                     stderr = PIPE        )
-        stdout, stderr = p.stdout, p.stderr
-        #
-        ## require empty stder
-        #
-        for l in stderr : return False   ## RETURN 
-        #
-        ## Require non-empty std-out:
-        #
-        for l in stdout : return True    ##  RETURN 
-
-    except :
-        
-        logger.error('inEOS: failure to use Popen, return False')
-        pass
+    import os 
+    from subprocess import Popen, PIPE
+    p   = Popen( [ 'eos_ls' , fname ] ,
+                 env    = os.environ  ,
+                 stdout = PIPE        ,
+                 stderr = PIPE        )
+    stdout, stderr = p.stdout, p.stderr
+    #
+    ## require empty stder
+    #
+    for l in stderr : return False   ## RETURN 
+    #
+    ## Require non-empty std-out:
+    #
+    for l in stdout : return True    ##  RETURN 
     
     return False 
 
@@ -287,7 +273,7 @@ def extendfile1 ( filename , castor = False , grid = None ) :
 
     elif 0 == filename.find ( '//castor'    ) :
         return extendfile1 ( filename[1:] , castor ) ## RECURSION!
-    
+
     elif os.path.exists ( filename )          : filename = 'PFN:' + filename
     
     elif 0 == filename.find ( '/lhcb/data/'       ) or \
@@ -295,7 +281,7 @@ def extendfile1 ( filename , castor = False , grid = None ) :
          0 == filename.find ( '/lhcb/MC/'         ) or \
          0 == filename.find ( '/lhcb/user/'       ) or \
          0 == filename.find ( '/lhcb/validation/' ) :
-
+        
         if grid :
             #
             ## try to get the connection string from Grid
@@ -304,9 +290,9 @@ def extendfile1 ( filename , castor = False , grid = None ) :
             if res :
                 filename = res
                 return filename                         ## RETURN 
-            
+
         if   castor and inCastor ( filename ) :
-            filename = extendfile1 ( '/castor/cern.ch/grid' + filename , castor , grid ) 
+            filename = extendfile1 ( '/castor/cern.ch/grid' + filename , castor , grid )
         elif castor and inEOS    ( filename ) :
             filename = 'PFN:' + _eos + filename 
         else : 
