@@ -69,24 +69,26 @@ __date__    = "2011-10-24"
 __version__ = '$Revision: 138072 $'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_dump [options] file1 [ file2 [ file3 [ file4 ....'
+__all__     =  ( 'dumpDst' , )
 # =============================================================================
 ## logging
 # =============================================================================
-from Bender.Logger import getLogger 
-logger = getLogger( __name__ )
+from Bender.Logger import getLogger
+if '__main__' == __name__ : logger = getLogger ( 'BenderTools.DstDump' )
+else                      : logger = getLogger ( __name__ )
+    
 # =============================================================================
 from BenderTools.Parser      import makeParser
 from BenderTools.DstExplorer import configure 
 # =============================================================================
-if '__main__' == __name__ :
-    
-    print 120*'*'
-    print ' Author  : ', __author__ 
-    print ' Version : ', __version__ 
-    print ' Date    : ', __date__ 
+## dump it ! 
+#  @date   2011-10-24
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+def dumpDst ( usage   = __usage__   ,
+              version = __version__ ) :
+    ##
+    parser = makeParser  ( usage , version )
 
-    parser = makeParser  ( __usage__ , __version__ )
-    
     parser.add_option (
         '-n'                          ,
         '--events'                    ,
@@ -95,7 +97,7 @@ if '__main__' == __name__ :
         help    = "Number of events to process " ,
         default = -1    
         )
-
+    
     parser.add_option (
         '-z'                         ,
         '--summary'                  ,
@@ -104,7 +106,7 @@ if '__main__' == __name__ :
         type    = 'str'              , 
         default = 'dst_summary.txt'    
         )
-
+    
     parser.add_option (
         '-f'                         ,
         '--follow'                   ,
@@ -116,33 +118,32 @@ if '__main__' == __name__ :
     
     parser.add_option (
         '-d'                         ,
-        '--dod'                   ,
-        dest    = 'DataOnDemand'      ,
+        '--dod'                      ,
+        dest    = 'DataOnDemand'     ,
         help    = "Dump the known DOD-locations (fragile!), (+)" ,
         action  = "store_true"       ,
         default = False    
         )
     
     options , arguments = parser.parse_args() 
-    
+
     print 120*'*'
     if options.Quiet :
         print ' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs '
     else :
-        print __doc__
-
-    
+        print __doc__         
+        
     ## The input files must be specified!
     if not arguments : parser.error ( 'No input files are specified' ) 
     
-    options.Quiet = True 
+    ## options.Quiet = True 
     configure ( options , arguments ) 
-
+    
     from Configurables import MessageSvc, DataOnDemandSvc, ToolSvc 
     from Configurables import Gaudi__RootCnvSvc    as RootCnvSvc 
     from Configurables import Gaudi__IODataManager as IODataManager
     from Configurables import LHCb__RawDataCnvSvc  as RawDataCnvSvc 
-        
+    
     msg = MessageSvc()
     msg.OutputLevel = 5
     
@@ -163,17 +164,17 @@ if '__main__' == __name__ :
                       'IOManagerSvc'        ,
                       'RootHistSvc'         ,
                       'LHCb::RawDataCnvSvc' ]
-    
-    if options.Simulation : from Bender.MainMC   import *
-    else                  : from Bender.Main     import *
 
+    from Bender.Main import appMgr, run, cpp
+    
+    if options.Simulation : import Bender.MainMC
 
 
     root = options.RootInTES
     ## guess a bit about structure 
     ##if not options.RootInTES :
     ##    if hasInFile ( arguments , 'EW.DST' ) :
-            
+    
     #
     ## instantiate the application manager
     #
@@ -187,7 +188,7 @@ if '__main__' == __name__ :
     def addEntry ( dct , key , val ) :
         if not dct.has_key(key) : dct[key] = SE()             
         dct[key] += float(val)
-            
+    
     dodSvc = gaudi.service('DataOnDemandSvc')
     
     nSelEvents = {}
@@ -205,14 +206,14 @@ if '__main__' == __name__ :
         iEvent += 1
         #
         nodes = evtSvc.nodes ( node      = root ,
-                               forceload = True )
+                           forceload = True )
         if not nodes :
             logger.warning ( "No nodes are selected for Root:'%s'" % root  )
 
         nodes = set ( nodes ) 
         links = set ()
         dods  = set ()
-
+    
         #
         ## explore the regular nodes
         #
@@ -238,7 +239,7 @@ if '__main__' == __name__ :
         if options.FollowLinks: 
             links = links - nodes 
             for loc in links:
-
+            
                 if options.RootInTES :
                     if 0 != loc.find ( options.RootInTES ) : continue 
                 
@@ -249,7 +250,7 @@ if '__main__' == __name__ :
                     addEntry ( nObjects   , loc , 0 )
                 elif type( data ) == cpp.DataObject : continue 
                 else :
-                    #
+                #
                     if   hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
                     elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
                     else                             : addEntry ( nObjects , loc , 1            )
@@ -258,7 +259,7 @@ if '__main__' == __name__ :
         ## explore locations known for DOD
         #
         if options.DataOnDemand :
-            
+        
             for k in dodSvc.AlgMap .keys () : dods.add ( k ) 
             for k in dodSvc.NodeMap.keys () :
                 obj = dodSvc.NodeMap[k]
@@ -267,7 +268,7 @@ if '__main__' == __name__ :
             
             dods = dods - nodes 
             dods = dods - links
-            
+        
             for loc in dods :
 
                 if options.RootInTES :
@@ -285,7 +286,7 @@ if '__main__' == __name__ :
                     addEntry ( nObjects   , loc , 0 )
                 elif type( data ) == cpp.DataObject : continue 
                 else :
-                    #
+                #
                     if   hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
                     elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
                     else                             : addEntry ( nObjects , loc , 1            )
@@ -297,18 +298,18 @@ if '__main__' == __name__ :
     length  = 25
     for key in keys : length = max ( length , len  ( key ) ) 
     length += 2-7
-        
+
     _printMessage = []
-    
+
     lline   = ' +' + ( length + 58 ) * '-' + '+'
     _printMessage += [ lline ] 
-    
+
     message = ' | %8s | %15s | %7s | %4s | %6s |' % ( 'Total ' , '     Mean     ' , '  rms  ' ,  'min' , ' max ' ) 
     message = " | %s %s" % ( 'Location'.ljust(length) , message )
-    
+
     _printMessage += [ message ] 
     _printMessage += [ lline   ]
-    
+
     for loc in keys :
         item     = nObjects[loc]
 
@@ -326,13 +327,13 @@ if '__main__' == __name__ :
                                                                 long ( item.mean ()  ) , '' , '' , '', '' ) 
             
         message = " | %s %s" % ( l.ljust(length) , message )
-
+    
         _printMessage += [ message ] 
         
     _printMessage += [ lline ]     
     _printMessage += [ "   Analysed " + str(iEvent) + " events" ] 
 
-    
+
     print '\n\n\n'
     ofile  = open ( options.SummaryFile , 'w' )     
     for line in _printMessage :
@@ -340,7 +341,18 @@ if '__main__' == __name__ :
         print >> ofile, line 
     ofile.close()
     print '\n\n\n'
+
+# =============================================================================
+if '__main__' == __name__ :
+
+    print 120*'*'
+    print ' Author  : ', __author__ 
+    print ' Version : ', __version__ 
+    print ' Date    : ', __date__ 
     
+    dumpDst ()
+
+    print 120*'*'
     
 # =============================================================================
 # The END 

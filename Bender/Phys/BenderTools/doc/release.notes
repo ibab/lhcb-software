@@ -5,10 +5,12 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v22r1 2012-10-27 ======================
+
 ! 2012-10-24 - Vanya Belyaev
 
  - add simple scripts to extract DB-tags form data files 
-   (thanks to Thomas Ruf)
+   (many thanks to Thomas Ruf)
 
 ! ==================== Phys/BenderTools v22r0 2012-10-13 ======================
 

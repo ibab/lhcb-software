@@ -233,8 +233,35 @@ def configure ( options , arguments ) :
                         ## Use Oracle if possible
                         CondDB ( UseOracle = True  )
                         logger.info('Oracle DB will be used')
+
+    if options.Simulation :
+        #
+        ## try to get the tags from Rec/Header
+        from BenderTools.GetDBtags import getDBTags
+        tags = getDBTags (
+            files [ 0 ]       ,
+            options.Castor    ,
+            options.Grid      ,
+            options.OutputLevel < 3 or not options.Quiet )
+        if tags :
+            logger.info( 'Extract tags from DATA : %s' % tags.keys()  )
+            if tags.has_key ( 'DDDB'    ) and tags ['DDDB'   ] : 
+                daVinci.DDDBtag   = tags ['DDDB'  ][0]                 
+                logger.info( ' DDDBtag   : %s ' % daVinci.DDDBtag    )
+            if tags.has_key ( 'CONDDB'  ) and tags ['CONDDB' ] : 
+                daVinci.CondDBtag = tags ['CONDDB'][0]
+                logger.info( ' CondDBtag : %s ' % daVinci.CondDBtag  )
+            if tags.has_key ( 'SIMCOND' ) and tags ['SIMCOND'] :
+                from Configurables import CondDB 
+                db = CondDB()
+                if  db.LocalTags.has_key( 'SIMCOND' ) :                    
+                    db.LocalTags["SIMCOND"] += tags ['SIMCOND']
+                else :
+                    db.LocalTags["SIMCOND"]  = tags ['SIMCOND']
                         
-                    
+                logger.info( ' SIMCOND   : %s ' %  db.LocalTags["SIMCOND"] ) 
+                
+     
     ## Reset all DaVinci sequences 
     def _action ( ) :
         """
@@ -283,7 +310,10 @@ def configure ( options , arguments ) :
     
     ## set input data
     from Bender.Main import setData 
-    setData ( arguments , catalogs , options.Castor  )
+    setData ( arguments       ,
+              catalogs        ,
+              options.Castor  ,
+              options.Grid    )
 
     if not options.Quiet : print daVinci
         

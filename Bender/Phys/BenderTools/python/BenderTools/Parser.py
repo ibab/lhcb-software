@@ -96,14 +96,23 @@ def makeParser ( usage = None ,
         )
     ## 
     parser.add_option (
+        '-g'                       ,
+        '--grid'                   ,
+        type    = 'str'            , 
+        dest    = 'Grid'           ,
+        help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed)" ,
+        default = ''
+        )
+    ## 
+    parser.add_option (
         '-c'                          ,
         '--castor'                    ,
         action  = "store_true"        ,
         dest    = 'Castor'            ,
-        help    = "Enable direct access to Castor Grid Storage to access LFN-files" ,
+        help    = "Enable direct access to Castor/EOS Grid Storage to access LFN-files" ,
         default = True   
         )
-    ## 
+    ##
     parser.add_option (
         '-p'                          ,
         '--print'                     ,
@@ -123,7 +132,7 @@ def makeParser ( usage = None ,
         )
     ##
     parser.add_option (
-        '-x'                          ,
+        '-x'                           ,
         '--xml'                        ,
         dest    = 'XmlCatalogue'       ,
         help    = "``XmlCatalog'' to be transferred to setData-function [default : %default]" ,

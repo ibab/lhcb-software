@@ -34,13 +34,16 @@ else:
 ## except : sys.stderr = stderr
     
 try :
-
     
     import ROOT
-    if os.path.exists ( fn       ) : f = ROOT.TFile       ( fn ) 
-    elif 0<= fn.find  ( 'castor' ) : f = ROOT.TCastorFile ( fn )
+    if os.path.exists ( fn ) : f = ROOT.TFile ( fn ) 
+    elif 0 == fn.find  ( 'root://castorlhcb.cern.ch' ) :
+        fn =  'castor:' + fn[5:] 
+        f  =  ROOT.TCastorFile ( fn )
+    elif 0 == fn.find  ( 'castor://castorlhcb.cern.ch' ) :
+        f  =  ROOT.TCastorFile ( fn )
     else :
-        f   =  ROOT.TFile() ; f.Open ( fn )
+        f  =  ROOT.TFile() ; f.Open ( fn )
         
     print ' FILE: ', f.Print()
     print f.ls()
@@ -56,11 +59,13 @@ try :
         
         lf2 = ev.GetLeaf('_Event_Rec_Header.LHCb::ProcessHeader.m_condDBTags.second')
         lf2.PrintValue(20)
-        
+
+    f.Close()
+            
 except:
     
     pass 
-
+    
 # =============================================================================
 # The END 
 # =============================================================================
