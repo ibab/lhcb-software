@@ -23,7 +23,32 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
-<A NAME=v22r2>2012-10-13 Bender v22r0 based on the DaVinci v33r0</A>
+<A NAME=v22r1>2012-10-27 Bender v22r1 based on the DaVinci v33r0p1</A>
+
+<PRE>		
+Similar to v22r0
+
+<li>	
+All Bender-bases scripts have got the new option "-g" to activate 
+access to data files through Grid-URL, requires valid lhcb-proxy. This
+option has the precedence over "-c" (castor&EOS). 
+</li>	
+
+<li>	
+New scripts to extract DB-tags directly from data  
+(many thanks tpo Thomas RUF).
+I tis very useful for MC-processing.
+Unfortunately it does not work for uDST
+</li>	
+
+<li>	
+All bender-base scripts (explored, check, dump, etc..) for MC data 
+try to set DB-tags directly form the files 
+</li>	
+
+</PRE>
+
+<A NAME=v22r0>2012-10-13 Bender v22r0 based on the DaVinci v33r0</A>
 
 <PRE>		
 Indentical to v21r2p2
