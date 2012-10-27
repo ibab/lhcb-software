@@ -36,19 +36,45 @@ else:
 try :
     
     import ROOT
-    if os.path.exists ( fn ) : f = ROOT.TFile ( fn ) 
+    f = None 
+    if os.path.exists ( fn ) :
+        
+        f = ROOT.TFile ( fn )
+        
+        print ' FILE: ', f.Print()
+        print f.ls()
+        
+        ev  =  f.Get ( 'Event' )
+        
     elif 0 == fn.find  ( 'root://castorlhcb.cern.ch' ) :
         fn =  'castor:' + fn[5:] 
         f  =  ROOT.TCastorFile ( fn )
-    elif 0 == fn.find  ( 'castor://castorlhcb.cern.ch' ) :
-        f  =  ROOT.TCastorFile ( fn )
-    else :
-        f  =  ROOT.TFile() ; f.Open ( fn )
         
-    print ' FILE: ', f.Print()
-    print f.ls()
-    
-    ev  =  f.Get ( 'Event' )
+        print ' FILE: ', f.Print()
+        print f.ls()
+        
+        ev  =  f.Get ( 'Event' )
+        
+    elif 0 == fn.find  ( 'castor://castorlhcb.cern.ch' ) :
+        
+        f  =  ROOT.TCastorFile ( fn )
+        
+        print ' FILE: ', f.Print()
+        print f.ls()
+        ev  =  f.Get ( 'Event' )
+        
+    elif 0 == fn.find  ( 'root://eos' ) :
+        
+        ev = ROOT.TChain('Event' )
+        ev.Add ( fn )
+        
+    else :
+        
+        f  =  ROOT.TFile() ; f.Open ( fn )
+        print ' FILE: ', f.Print()
+        print f.ls()
+        ev  =  f.Get ( 'Event' )
+        
 
     for i in range ( 0 , min ( 1 , ev.GetEntries() ) ) :
 
@@ -60,7 +86,8 @@ try :
         lf2 = ev.GetLeaf('_Event_Rec_Header.LHCb::ProcessHeader.m_condDBTags.second')
         lf2.PrintValue(20)
 
-    f.Close()
+    if f :
+        f.Close()
             
 except:
     
