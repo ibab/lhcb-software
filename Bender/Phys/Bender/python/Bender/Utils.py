@@ -142,7 +142,10 @@ def run ( nEvents     =   -1 ,
 
 # ==============================================================================
 ## define the input data for Bender job
-def setData ( files , catalogs = [] , castor = False ) :
+def setData ( files            ,
+              catalogs = []    ,
+              castor   = False ,
+              grid     = None  ) :
     """
     Define the input data for Bender job:
     
@@ -178,7 +181,7 @@ def setData ( files , catalogs = [] , castor = False ) :
         if files :
             
             from Bender.DataUtils import extendfile2
-            files = [ extendfile2 ( f , castor ) for f in files ]
+            files = [ extendfile2 ( f , castor , grid ) for f in files ]
 
             from Gaudi.Configuration import EventSelector
             EventSelector ( Input = files )

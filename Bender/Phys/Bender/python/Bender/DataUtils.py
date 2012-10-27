@@ -99,20 +99,16 @@ def inCastor ( fname            ,
 
     if 0 != fname.find ( prefix ) : fname = prefix + fname
     
-    ## use nsls command to check the file existence 
-    cmd = nsls % fname
-    
     try:
 
-        ## 
+        ##
+        import os 
         from subprocess import Popen, PIPE
-        p   = Popen( cmd                 ,
-                     shell     = True    ,
-                     stdin     = PIPE    ,
-                     stdout    = PIPE    ,
-                     stderr    = PIPE    ,
-                     close_fds = True    )
-        stdin, stdout, stderr = p.stdin, p.stdout, p.stderr
+        p   = Popen( [ 'nsls' , '-l' , fname ] , 
+                     env    = os.environ       , 
+                     stdout = PIPE             ,
+                     stderr = PIPE             )
+        stdout, stderr = p.stdout, p.stderr
 
         ## require empty stder
         for l in stderr : return False   ## RETURN 
@@ -171,26 +167,22 @@ def inEOS ( fname             ,
     # check short prefix
     if 0 != fname.find ( '/eos' ) : fname = '/eos' + fname 
     ##
-    
-    ## use eosls command to check the file existence 
-    cmd = eosls % fname  
-    
     try:
-
-        ## 
+        ##
+        import os 
         from subprocess import Popen, PIPE
-        p   = Popen( cmd                 ,
-                     shell     = True    ,
-                     stdin     = PIPE    ,
-                     stdout    = PIPE    ,
-                     stderr    = PIPE    ,
-                     close_fds = True    )
-        stdin, stdout, stderr = p.stdin, p.stdout, p.stderr
-
+        p   = Popen( [ 'eos_ls' , fname ] ,
+                     env    = os.environ  ,
+                     stdout = PIPE        ,
+                     stderr = PIPE        )
+        stdout, stderr = p.stdout, p.stderr
+        #
         ## require empty stder
+        #
         for l in stderr : return False   ## RETURN 
-        
-        ## Require non-empty std-out: 
+        #
+        ## Require non-empty std-out:
+        #
         for l in stdout : return True    ##  RETURN 
 
     except :
@@ -202,6 +194,49 @@ def inEOS ( fname             ,
 
 
 # =============================================================================
+## check the presence of file in Grid and get the access URL  
+#  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+#  @date 2012-10-10
+def inGrid ( filename , grid ) :
+    """
+    Check the presence of file in Grid and get the access URL
+    
+    """
+    #
+    ## 1-check lhcb-proxy-info
+    #
+    import os
+    from subprocess import Popen, PIPE
+    p   = Popen (  ['lhcb-proxy-info' , '--checkvalid' ] ,
+                   env       = os.environ ,
+                   stdout    = PIPE       ,
+                   stderr    = None       )
+    (cout,cerr) = p.communicate()
+    if 0 != p.returncode  : return None    ## LHCb-PROXY-INFO is invalid! 
+    #
+    ## 2 - get the files from storage element 
+    #
+    p   = Popen ( [ 'get_grid_url', filename , '-g' , grid.upper() ] ,
+                  env       = os.environ  ,
+                  stdout    = PIPE        ,
+                  stderr    = None        )
+    (stdout,stderr) = p.communicate()
+    if 0 != p.returncode  : return None
+    #
+    try :
+        res = eval ( stdout )
+    except:
+        res = {}
+
+    #
+    if not isinstance  ( res, dict ) : return None
+    if not res.has_key ( filename  ) : return None
+    urls = res [ filename ]
+    if not urls                      : return None 
+    #
+    return urls [ 0 ] 
+
+# =============================================================================
 ## Helper function to 'extend' the short file name
 #
 #  @thanks Philippe Charpentier for extremly clear explanation of
@@ -209,7 +244,7 @@ def inEOS ( fname             ,
 #
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2010-02-12
-def extendfile1 ( filename , castor = False ) :
+def extendfile1 ( filename , castor = False , grid = None ) :
     """
     Helper function to 'extend' the short file name 
 
@@ -261,8 +296,17 @@ def extendfile1 ( filename , castor = False ) :
          0 == filename.find ( '/lhcb/user/'       ) or \
          0 == filename.find ( '/lhcb/validation/' ) :
 
+        if grid :
+            #
+            ## try to get the connection string from Grid
+            #
+            res = inGrid ( filename , grid )
+            if res :
+                filename = res
+                return filename                         ## RETURN 
+            
         if   castor and inCastor ( filename ) :
-            filename = extendfile1 ( '/castor/cern.ch/grid' + filename , castor ) 
+            filename = extendfile1 ( '/castor/cern.ch/grid' + filename , castor , grid ) 
         elif castor and inEOS    ( filename ) :
             filename = 'PFN:' + _eos + filename 
         else : 
@@ -282,7 +326,9 @@ _local_dict_ = {}
 ## Helper function to 'extend' the short file name
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2010-02-12
-def extendfile2 ( filename , castor = False ) :
+def extendfile2 ( filename       ,
+                  castor = False ,
+                  grid   = ''    ) :
     """
     Helper function to 'extend' the short file name 
     """
@@ -293,7 +339,7 @@ def extendfile2 ( filename , castor = False ) :
     if 0 <= filename.find ( 'DATAFILE=' ) : return filename
     ##
     ## @see extendfile1 
-    filename = extendfile1 ( filename , castor ) 
+    filename = extendfile1 ( filename , castor , grid ) 
     ##
     ##
     #
