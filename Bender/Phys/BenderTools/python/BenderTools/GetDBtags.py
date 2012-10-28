@@ -60,8 +60,8 @@ def _lfn_pfn_strip_ ( file_name ) :
     for p in ( 'PFN:' , 'LFN:' , 'pfn:' , 'lfn:' ) :
         if 0 == file_name.find ( p ) : file_name = file_name[4:]
       
-    # p = file_name.find ( '?')
-    # if 0 < p : file_name = file_name [ : p ]
+    p = file_name.find ( '?')
+    if 0 < p : file_name = file_name [ : p ]
     
     return file_name
     

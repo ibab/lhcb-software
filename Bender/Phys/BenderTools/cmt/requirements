@@ -21,7 +21,7 @@
 #
 # =============================================================================
 package             BenderTools
-version             v22r2
+version             v22r2p1
 
 # =============================================================================
 branches            cmt doc python scripts 
@@ -39,14 +39,20 @@ alias dst_Explorer "dst_explorer"
 alias Dst_Explorer "dst_explorer"
 alias check_trg    "trg_check" 
 #
-alias dump_dst     "dst-dump.py" 
+alias dst-dump     "dst-dump.py" 
 alias dst_dump     "dst-dump.py" 
 alias dump-dst     "dst-dump.py" 
-#
-alias dst_content  "dst_dump" 
+alias dump_dst     "dst-dump.py" 
+#       
+alias dst_content  "dst-dump.py" 
+alias dst-content  "dst-dump.py" 
+# 
 alias get_dbtags   "get_dbtags.py" 
+alias get-dbtags   "get_dbtags.py" 
 alias get_db_tags  "get_dbtags.py" 
+alias get-db-tags  "get_dbtags.py" 
 alias db_tags      "get_dbtags.py" 
+alias db-tags      "get_dbtags.py" 
 
 
 # =============================================================================
