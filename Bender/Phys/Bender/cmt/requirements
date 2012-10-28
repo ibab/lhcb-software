@@ -21,7 +21,7 @@
 #
 # =============================================================================
 package             Bender
-version             v22r2
+version             v22r2r1
 
 # =============================================================================
 branches            cmt doc python scripts 
@@ -40,7 +40,7 @@ apply_pattern       install_scripts
 # ================= aliases ===================================================
 alias bender_mc    "benderMc"
 alias bender_MC    "benderMc"
-
+alias get-grid-url "get_grid_url"
 
 # =============================================================================
 # The END
