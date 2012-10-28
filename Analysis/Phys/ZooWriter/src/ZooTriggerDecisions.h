@@ -19,7 +19,7 @@ class ZooWriter;
 /// namespace to hold all trigger decisions
 namespace TriggerDecisions {
     /// size of trigger decision words array
-    const unsigned NTriggerDecisionWords = 10;
+    const unsigned NTriggerDecisionWords = 11;
     /// basic struct to hold all trigger decision bits for writing them out in batch
     class AllTriggerDecisions {
 	protected:
