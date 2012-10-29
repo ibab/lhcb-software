@@ -17,6 +17,8 @@
 #include "DecayTreeFitter/Fitter.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "LoKi/ParticleProperties.h"
+#include "TrackInterfaces/ITrackStateProvider.h"
+
 // boost
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
@@ -44,7 +46,7 @@ DECLARE_TOOL_FACTORY( TupleToolDecayTreeFitter )
     , m_particleDescendants()
     , m_map ()
     , m_substitute()
-
+    , m_stateprovider( "TrackStateProvider" )
 {
   declareProperty("daughtersToConstrain", m_massConstraints , "List of particles to contrain to mass");
   declareProperty("constrainToOriginVertex", m_constrainToOriginVertex = false,
@@ -54,6 +56,7 @@ DECLARE_TOOL_FACTORY( TupleToolDecayTreeFitter )
                    "Store PV even if a refitted version is already the best PV (i.e store twice)" ) ;
   declareProperty( "UpdateDaughters" ,m_updateDaughters = false, 
                    "Store updated momenta of tracks in the decay tree" ) ;
+  declareProperty( "StateProvider", m_stateprovider ) ;
   declareInterface<IParticleTupleTool>(this);
 }
 
@@ -78,6 +81,11 @@ StatusCode TupleToolDecayTreeFitter::initialize()
 
   m_particleDescendants = tool<IParticleDescendants> ( "ParticleDescendants");
 
+  if( !m_stateprovider.empty() ) {
+    sc = m_stateprovider.retrieve() ;
+    if ( sc.isFailure() ) return sc ;
+  }
+
   if ( m_extraName.empty() ){
     std::string en = name() ; // use tool name as prepended name
     unsigned int d = en.find_last_of(".");
@@ -91,6 +99,13 @@ StatusCode TupleToolDecayTreeFitter::initialize()
     sc = m_substitute->decodeCode( m_map );
   }
   return sc;
+}
+
+StatusCode TupleToolDecayTreeFitter::finalize()
+{
+  if( !m_stateprovider.empty() )
+    m_stateprovider.release().ignore() ;
+  return TupleToolBase::finalize() ;
 }
 
 //=============================================================================
@@ -107,7 +122,8 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
     return StatusCode::FAILURE;
   }
   const std::string prefix=fullName(head);
-
+  const ITrackStateProvider* stateprovider = m_stateprovider.empty() ? 0 : &(*m_stateprovider) ;
+  
   TupleMap tMap ; // the temporary data map
 
   // get origin vertices
@@ -133,14 +149,14 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
          iv != originVtx.end() ; iv++){
       if (msgLevel(MSG::DEBUG)) debug() << "Creating DecayTreeFitter on "
                                         <<  tree.head() << " " << *iv << endmsg;
-      DecayTreeFitter::Fitter fitter(*(tree.head()), *(*iv));
+      DecayTreeFitter::Fitter fitter(*(tree.head()), *(*iv), stateprovider ) ;
       if (msgLevel(MSG::DEBUG)) debug() << "Created DecayTreeFitter" << endmsg;
       if (!fit(fitter, tree.head(), *iv, prefix, tMap)) return StatusCode::FAILURE ;
     }
   } else {
     if (msgLevel(MSG::DEBUG)) debug() << "Do not constrain the origin vertex" << endmsg;
     // Get the fitter
-    DecayTreeFitter::Fitter fitter(*(tree.head()));
+    DecayTreeFitter::Fitter fitter(*(tree.head()), stateprovider ) ;
     if (!fit(fitter, tree.head(), 0, prefix, tMap)) return StatusCode::FAILURE;
   }
 

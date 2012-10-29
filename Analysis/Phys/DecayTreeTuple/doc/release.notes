@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-10-29 - Wouter Hulsbergen
+ - Make sure TTDecayTreeFitter uses TrackStateProvider to improve Ks tracks in 2012 dsts.
+
 ! 2012-10-26 - Maurizio Martinelli
  - Added a flag in TupleToolDecayTreeFitter to store the refitted tracks 
     momentum.

@@ -78,6 +78,7 @@ tuple.B.addTool(subDTF.clone("SubLambdabar",Substitutions={ 'Beauty -> Meson (St
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/ToolHandle.h"
 #include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"
 #include "Kernel/ISubstitutePID.h"
@@ -88,6 +89,7 @@ tuple.B.addTool(subDTF.clone("SubLambdabar",Substitutions={ 'Beauty -> Meson (St
 
 typedef std::map<std::string,std::string> SubstitutionMap ;
 class IParticleDescendants;
+class ITrackStateProvider ;
 // pid
 namespace LHCb{
   class ParticleID;
@@ -120,6 +122,7 @@ public:
   
   StatusCode initialize();
 
+  StatusCode finalize();
 
   virtual StatusCode fill( const LHCb::Particle*
                            , const LHCb::Particle*
@@ -213,6 +216,7 @@ public:
   ISubstitutePID* m_substitute  ; // tool
   bool m_storeAnyway ;///< Store PV even if a refitted version is already the best PV (i.e store twice)
   bool m_updateDaughters; ///< Store updated momenta of tracks in the decay tree
+  ToolHandle<ITrackStateProvider> m_stateprovider ;
 
  };
 #endif // TUPLETOOLDECAYTREEFITTER_H
