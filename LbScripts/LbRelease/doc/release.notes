@@ -1,3 +1,8 @@
+2012-10-29 Ben Couturier <ben.couturier@cern.ch>
+
+	* scripts/install_cmake: Added script that allows downloading and installing 
+	Cmake
+
 2012-10-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/rcs.py: add 'configure' to the project files to be checked

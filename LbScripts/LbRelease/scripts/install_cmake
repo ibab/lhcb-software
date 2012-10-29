@@ -1,0 +1,91 @@
+#!/usr/bin/env python
+""" Script to install Cmake for the platform """
+
+import commands
+import logging
+import os
+import sys
+import time
+
+# Importing basic methods from install_project
+# This is not a satisfactory method to implement the functionality,
+# but is at the date of writing this code, the only way to avoid duplicating
+# the functionality.
+#
+# This should be removed when moving to RPM package management
+from LbLegacy.install_project import getFile, unTarFileInTmp, url_dist
+from LbLegacy.install_project import createBaseDirs, checkMySiteRoot, checkWriteAccess
+
+def getCmake(version=0):
+    """ Actual implementation of the CMake download """
+    log = logging.getLogger()
+    log.debug('install CMake')
+    here = os.getcwd()
+
+    siteroot = os.environ["MYSITEROOT"]
+    this_contrib_dir = os.path.join(siteroot, "contrib")
+    this_targz_dir = os.path.join(siteroot, "targz")
+
+    # get the CMT version number from ExtCMT
+    if version == 0:
+        try :
+            import LbConfiguration.External
+            cmakevers = LbConfiguration.External.CMake_version
+            log.debug("Extracting CMake version from LbConfiguration.External: %s" % cmakevers)
+        except ImportError :
+            cmakevers = "2.8.9"
+            log.debug("Using CMake version %s" % cmakevers)
+        except AttributeError:
+            cmakevers = "2.8.9"
+            log.debug("Using CMake version %s" % cmakevers)
+    # get the cmt version number from the argument
+    else:
+        cmakevers = version
+        log.debug('get CMake version from argument %s ' % cmakevers)
+
+    log.info('CMake version %s ' % cmakevers)
+
+    # choose the binary name
+    platform = sys.platform
+    if sys.platform.find('linux') != -1:
+        platform = 'linux'
+
+    # Tar ball name
+    fname = 'CMake_' + cmakevers + '_' + platform + '.tar.gz'
+
+    # Moving to contrib where teh tar ball has to be extracted
+    os.chdir(this_contrib_dir)
+
+    # get the tar file
+    log.info('get %s' % os.path.join(this_contrib_dir, 'CMake', cmakevers, platform))
+    getFile(url_dist + 'source/', 'CMake_' + cmakevers + '_' + platform + '.tar.gz')
+
+    # untar it
+    checkWriteAccess(this_contrib_dir)
+    rc = unTarFileInTmp(os.path.join(this_targz_dir, fname), os.getcwd(), overwrite=True)
+    if rc != 0 :
+        log.info('Error installing')
+        sys.exit("getCMake: Exiting ...\n")
+
+    # And back in the initial directory
+    os.chdir(here)
+
+
+#---------------------------------------------------------------------
+def main():
+    """ Main method for the script """
+
+    # Setting up the environment
+    logging.basicConfig()
+    log = logging.getLogger()
+    log.setLevel(logging.INFO)
+
+    # Checking that the siteroot is there and has appropriate directories
+    checkMySiteRoot()
+    lognm = createBaseDirs(None, None)
+
+    # Now getting CMake
+    getCmake()
+
+if __name__ == "__main__":
+    main()
