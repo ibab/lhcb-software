@@ -9,7 +9,7 @@ Python_version     = "2.5"
 CMT_version        = "v1r20p20090520"
 CMake_version      = "2.8.9"
 tbroadcast_version = "v2.0.5"
-doxygen_version    = "1.7.2"
+doxygen_version    = "1.8.2"
 
 
 external_projects  = ['LCGCMT', 'GENSER', 'OpenScientist']
