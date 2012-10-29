@@ -3,6 +3,12 @@
 
 #include "GaudiKernel/Vector3DTypes.h"
 #include "RecoParticle.h"
+#include "Configuration.h"
+
+class ITrackStateProvider ;
+namespace LHCb {
+  class TrackTraj ;
+}
 
 namespace DecayTreeFitter
 {
@@ -10,7 +16,8 @@ namespace DecayTreeFitter
   class RecoTrack : public RecoParticle
   {
   public:
-    RecoTrack(const LHCb::Particle& bc, const ParticleBase* mother) ;
+    RecoTrack(const LHCb::Particle& bc, const ParticleBase* mother,
+	      const Configuration& config) ;
     virtual ~RecoTrack() ;
 
     virtual ErrCode initPar2(FitParams*) ;
@@ -35,6 +42,9 @@ namespace DecayTreeFitter
   private:
     const Gaudi::XYZVector m_bfield ;
     const LHCb::Track* m_track ;
+    const ITrackStateProvider* m_stateprovider ;
+    bool m_useTrackTraj ;
+    const LHCb::TrackTraj* m_tracktraj ;
     bool m_cached ;
     double m_flt ;
     LHCb::State m_state ;

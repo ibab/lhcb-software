@@ -4,6 +4,7 @@
 #include "RecoTrack.h"
 #include "FitParams.h"
 #include "TrackKernel/TrackTraj.h"
+#include "TrackInterfaces/ITrackStateProvider.h"
 
 namespace {
   void applyBremCorrection( LHCb::State& state,
@@ -26,9 +27,13 @@ namespace DecayTreeFitter
   extern int vtxverbose ;
 
   RecoTrack::RecoTrack(const LHCb::Particle& cand, 
-		       const ParticleBase* mother)
+		       const ParticleBase* mother,
+		       const Configuration& config)
     : RecoParticle(cand,mother),
       m_track(cand.proto()->track()),
+      m_stateprovider( config.stateProvider() ),
+      m_useTrackTraj( config.useTrackTraj() ),
+      m_tracktraj(0),
       m_cached(false),
       m_flt(0),
       m_bremEnergy(0),
@@ -92,35 +97,69 @@ namespace DecayTreeFitter
   ErrCode
   RecoTrack::updCache(const FitParams& fitparams)
   {
-    // we'll do this properly another time
-    double z = fitparams.par()(mother()->posIndex() + 3 ) ;
-    m_state = m_track->closestState(z) ;
-
-    // temporary hack: inside RecoTrack we only use linear
-    // extrapolation. for V0 this is not good enough. so, if the
-    // closest state is not 'ClosestToBeamLine' or if we are
-    // extrapolating far or are far away from the beam line, we'll use
-    // tracktraj.  why not use TrackTraj always? actually there isn't
-    // a really good reason, but you would slightly overestimate the
-    // errors for prompt tracks in between the first-measurement state
-    // and the closest-to-beam state.
+    ErrCode rc ;
+    // declare some constants 
+    const double ztolerance = 1*Gaudi::Units::cm ;
     const double maxR = 1 * Gaudi::Units::cm ;
-    const double maxDeltaZ = 10 * Gaudi::Units::cm ;
-    double dz = z - m_state.z() ;
-    double x = m_state.x() + dz * m_state.tx() ;
-    double y = m_state.y() + dz * m_state.ty() ;
-    double r = std::sqrt( x*x + y*y ) ;
-    if( m_state.location() != LHCb::State::ClosestToBeam || r > maxR || std::abs(dz) > maxDeltaZ ) {
-      LHCb::TrackTraj traj( *m_track ) ;
-      m_state = traj.state( z ) ;
-    }
+    // The logic is a bit non-trivial. Above all, we need to make sure
+    // we don't apply the bremcorrection more than once on an existing
+    // state. States that we get from the track do not have brem
+    // correction applied.
 
-    //deal with bremstrahlung
-    if( m_bremEnergyCov > 0 ) 
-      applyBremCorrection(m_state,m_bremEnergy,m_bremEnergyCov) ;
+    // If we stay close to the existing state, don't change anything.
+    double prevstatez = m_state.z() ;
+    double z = fitparams.par()(mother()->posIndex() + 3 ) ;
+    double dz = z - m_state.z() ;
+    if( std::abs( dz ) > ztolerance ) {
+      // first just look for the closest state on the track
+      const LHCb::State& state = m_track->closestState ( z ) ;
+      if( std::abs( state.z() - z ) < std::abs( dz ) ) {
+	//std::cout << "Found a closer state! "
+	//	  << name() << " " << z << " "
+	//	  << m_state.z() << " " << m_state.location() << " " 
+	//	  << state.z() << " " << state.location() << std::endl ;
+	m_state = state ;
+	dz = z - m_state.z() ;
+      }
+    
+      // if that didn't work, try something else
+      if( std::abs( dz ) > ztolerance ) {
+	// if the existing state is closest to beam, and if we stay
+	// inside the beampipe, then don't change anything as well.
+	double x = m_state.x() + dz * m_state.tx() ;
+	double y = m_state.y() + dz * m_state.ty() ;
+	double r = std::sqrt( x*x + y*y ) ;
+	if( m_state.location() != LHCb::State::ClosestToBeam || r > maxR ) {
+	  //std::cout << "Updating state for: " 
+	  //	    << name() << " " << z << " " << prevstatez << " " << m_state.z() << " "
+	  //	    << m_stateprovider << " " << m_tracktraj << std::endl ;
+	  if( m_stateprovider ) {
+	    if( !m_useTrackTraj ) {
+	      StatusCode sc = m_stateprovider->state( m_state,*m_track,z,ztolerance) ;
+	      if( !sc.isSuccess() ) rc = ErrCode::badsetup ;
+	    } else {
+	      // cache the tracktraj
+	      if( m_tracktraj==0 ) m_tracktraj = m_stateprovider->trajectory(*m_track) ;
+	      // if nothing failed, use it.
+	      if(m_tracktraj)
+		m_state = m_stateprovider->trajectory(*m_track)->state(z) ;
+	      else rc = ErrCode::badsetup ;
+	    }
+	  } else {
+	    // create a trajectory on the fly
+	    LHCb::TrackTraj traj( *m_track ) ;
+	    m_state = traj.state( z ) ;	  
+	  }
+	}
+      }
+      
+      // deal with bremstrahlung
+      if( m_state.z() != prevstatez && m_bremEnergyCov > 0 ) 
+	applyBremCorrection(m_state,m_bremEnergy,m_bremEnergyCov) ;
+    }
     
     m_cached = true ;
-    return ErrCode() ;
+    return rc ;
   }
 
   HepVector symdiag(const HepSymMatrix& m) {
@@ -135,6 +174,7 @@ namespace DecayTreeFitter
   {
     ErrCode status ;
     assert(m_cached) ;
+    (const_cast<RecoTrack*>(this))->updCache(fitparams) ;
 
     int posindex = mother()->posIndex() ;
     Gaudi::XYZPoint motherpos(fitparams.par()(posindex+1),

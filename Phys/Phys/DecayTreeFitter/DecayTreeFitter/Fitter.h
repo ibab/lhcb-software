@@ -15,7 +15,7 @@
 // ============================================================================
 // Track interfaces 
 // ============================================================================
-#include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/ITrackStateProvider.h"
 // ============================================================================
 // LHCbMath 
 // ============================================================================
@@ -58,20 +58,20 @@ namespace DecayTreeFitter
     /// constructor from the particle (decay head) 
     Fitter ( const LHCb::Particle&   bc                  , 
              const bool              forceFitAll  = true , 
-             ITrackExtrapolator*     extrapolator = 0    ) ;
+             const ITrackStateProvider* extrapolator = 0    ) ;
     /// constructor from the particle (decay head) 
     Fitter ( const LHCb::Particle&   bc                  , 
-             ITrackExtrapolator*     extrapolator        ,
+             const ITrackStateProvider* extrapolator        ,
              const bool              forceFitAll  = true ) ;
     /// constructor from the particle (decay head) and primary vertex
     Fitter ( const LHCb::Particle&   bc                  , 
              const LHCb::VertexBase& pv                  , 
              const bool              forceFitAll  = true ,
-             ITrackExtrapolator*     extrapolator = 0    ) ;
+             const ITrackStateProvider* extrapolator = 0    ) ;
     /// constructor from the particle (decay head) and primary vertex
     Fitter ( const LHCb::Particle&   bc                  , 
              const LHCb::VertexBase& pv                  , 
-             ITrackExtrapolator*     extrapolator        ,
+             const ITrackStateProvider* extrapolator        ,
              const bool              forceFitAll  = true ) ;
     /// destructor
     ~Fitter() ;                                                   // destructor
@@ -146,9 +146,9 @@ namespace DecayTreeFitter
   public:
     // ========================================================================
     /// get the extrapolator
-    ITrackExtrapolator*  extrapolator() const { return m_extrapolator ; }
+    const ITrackStateProvider* extrapolator() const { return m_extrapolator ; }
     /// set the track extrapolator 
-    void setExtrapolator ( ITrackExtrapolator* extrapolator ) ;
+    void setStateProvider ( const ITrackStateProvider* extrapolator ) ;
     // ========================================================================
   protected:
     // ========================================================================
@@ -201,7 +201,7 @@ namespace DecayTreeFitter
     mutable Map m_map ;
     // ========================================================================
     /// track extrapolator (if needed) 
-    SmartIF<ITrackExtrapolator> m_extrapolator ; // track extrapolator 
+    SmartIF<ITrackStateProvider> m_extrapolator ; // track extrapolator 
     // ========================================================================
   } ;
   // ==========================================================================

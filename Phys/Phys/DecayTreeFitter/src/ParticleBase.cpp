@@ -129,7 +129,7 @@ namespace DecayTreeFitter
       bool hascalo  = proto && !(proto->calo().empty()) ;
 
       if( hastrack )
-        rc = new RecoTrack(particle,mother) ;  // reconstructed track
+        rc = new RecoTrack(particle,mother,config) ;  // reconstructed track
       else if( hascalo )
         rc = new RecoPhoton(particle,mother) ; // reconstructed photon
       else if( validfit ) {  // fitted composites w/o daughters?

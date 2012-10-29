@@ -8,6 +8,9 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2012-10-29 - Wouter Hulsbergen
+- Use ITrackStateProvider in RecoTrack
+
 !========================= DecayTreeFitter v1r13 2012-07-26 =========================
 
 ! 2012-07-12 - Vanya Belyaev

@@ -25,7 +25,7 @@ namespace DecayTreeFitter
   Fitter::Fitter
   ( const LHCb::Particle& bc           ,
     const bool            forceFitAll  ,
-    ITrackExtrapolator*   extrapolator )
+    const ITrackStateProvider*   extrapolator )
     : m_particle   (&bc)
     , m_decaychain (0)
     , m_fitparams  (0)
@@ -33,9 +33,7 @@ namespace DecayTreeFitter
     , m_chiSquare  (-1)
     , m_niter      (-1)
     , m_errCode    (0)
-  //
-    , m_extrapolator ( extrapolator )
-  //
+    , m_extrapolator( const_cast<ITrackStateProvider*>(extrapolator) )
   {
     Configuration config(forceFitAll,extrapolator) ;
     // build the tree
@@ -48,7 +46,7 @@ namespace DecayTreeFitter
   // ==========================================================================
   Fitter::Fitter
   ( const LHCb::Particle& bc           ,
-    ITrackExtrapolator*   extrapolator ,
+    const ITrackStateProvider*   extrapolator ,
     const bool            forceFitAll  )
     : m_particle   (&bc)
     , m_decaychain (0)
@@ -57,9 +55,7 @@ namespace DecayTreeFitter
     , m_chiSquare  (-1)
     , m_niter      (-1)
     , m_errCode    (0)
-  //
-    , m_extrapolator ( extrapolator )
-  //
+    , m_extrapolator ( const_cast<ITrackStateProvider*>(extrapolator) )
   {
     Configuration config(forceFitAll,extrapolator) ;
     // build the tree
@@ -74,7 +70,7 @@ namespace DecayTreeFitter
   ( const LHCb::Particle&   bc           ,
     const LHCb::VertexBase& pv           ,
     const bool              forceFitAll  ,
-    ITrackExtrapolator*     extrapolator )
+    const ITrackStateProvider*     extrapolator )
     : m_particle   ( &bc )
     , m_decaychain ( 0   )
     , m_fitparams  ( 0   )
@@ -83,7 +79,7 @@ namespace DecayTreeFitter
     , m_niter      ( -1  )
     , m_errCode    (  0  )
   //
-    , m_extrapolator ( extrapolator )
+    , m_extrapolator ( const_cast<ITrackStateProvider*>(extrapolator) )
   //
   {
     Configuration config(forceFitAll,extrapolator) ;
@@ -96,7 +92,7 @@ namespace DecayTreeFitter
   Fitter::Fitter
   ( const LHCb::Particle&   bc           ,
     const LHCb::VertexBase& pv           ,
-    ITrackExtrapolator*     extrapolator ,
+    const ITrackStateProvider* extrapolator ,
     const bool              forceFitAll  )
     : m_particle   ( &bc )
     , m_decaychain ( 0   )
@@ -106,7 +102,7 @@ namespace DecayTreeFitter
     , m_niter      ( -1  )
     , m_errCode    (  0  )
   //
-    , m_extrapolator ( extrapolator )
+    , m_extrapolator ( const_cast<ITrackStateProvider*>(extrapolator) )
   //
   {
     Configuration config(forceFitAll,extrapolator) ;
@@ -116,8 +112,8 @@ namespace DecayTreeFitter
   // ==========================================================================
   // set the track extrapolator
   // ==========================================================================
-  void Fitter::setExtrapolator ( ITrackExtrapolator* extrapolator )
-  { m_extrapolator = extrapolator ; }
+  void Fitter::setStateProvider ( const ITrackStateProvider* extrapolator )
+  { m_extrapolator = const_cast<ITrackStateProvider*>(extrapolator) ; }
 
 
   void Fitter::setVerbose(int i) { vtxverbose = i ; }
