@@ -23,7 +23,7 @@
 // ============================================================================
 // TrackInterfaces 
 // ============================================================================
-#include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/ITrackStateProvider.h"
 // ============================================================================
 // DaVinciInterfaces 
 // ============================================================================
@@ -394,13 +394,13 @@ namespace LoKi
       , m_global_mass      (   ) 
       , m_locals_mass      (   )
     //
-      , m_extrapolatorName (   )
+      , m_extrapolatorName ( "TrackStateProvider" )
       , m_constraints      (   ) 
       , m_masses           (   ) 
     {
       //
       declareProperty 
-        ( "TrackExtrapolator"                        , 
+        ( "TrackStateProvider"                        , 
           m_extrapolatorName                         ,
           "Track Extrapolator to be used"            ) 
         -> declareUpdateHandler 
@@ -479,18 +479,18 @@ namespace LoKi
   protected:
     // ========================================================================
     /// get track extrapolator 
-    inline ITrackExtrapolator* extrapolator() const 
+    inline const ITrackStateProvider* extrapolator() const 
     {
       if ( 0 != m_extrapolator        ) { return m_extrapolator ; } // RETURN 
       if ( m_extrapolatorName.empty() ) { return              0 ; } // REUTRN
-      m_extrapolator = tool<ITrackExtrapolator> ( m_extrapolatorName , this ) ;
+      m_extrapolator = tool<ITrackStateProvider> ( m_extrapolatorName ) ;
       return m_extrapolator ;
     }
     // ========================================================================
   private:
     // ========================================================================
     /// track extrapolator 
-    mutable ITrackExtrapolator*    m_extrapolator ;   // the track extrapolator 
+    mutable const ITrackStateProvider* m_extrapolator ;   // the track extrapolator 
     // ========================================================================
     ///  the actual fitter 
     mutable std::auto_ptr<Fitter>  m_fitter       ;   //      the actual fitter 
@@ -574,8 +574,8 @@ StatusCode LoKi::DecayTreeFit::fit                     // fit the decay tree
   // initialize fitter 
   m_fitter.reset 
     ( 0 == origin ? 
-      new Fitter ( *decay           ) : 
-      new Fitter ( *decay , *origin ) ) ;
+      new Fitter ( *decay , extrapolator() ) : 
+      new Fitter ( *decay , *origin, extrapolator() ) ) ;
   //
   // apply "global" constraints (if needed)
   //

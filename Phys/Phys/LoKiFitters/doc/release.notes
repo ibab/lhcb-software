@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2012-10-29 - Wouter Hulsbergen
+ - LoKi::DecayTreeFit : Pass TrackStateProvider to DTF to improve Ks tracks in 2012 dsts.
+
 !========================= LoKiFitters v4r3 2012-07-26 =========================
 
 ! 2012-07-12 - Vanya Belyaev
