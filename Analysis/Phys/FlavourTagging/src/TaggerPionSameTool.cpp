@@ -23,19 +23,19 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "CombTech", m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName  = "NNetTool_MLP" );
 
-  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.6 *GeV );
-  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 4.0 *GeV );
-  declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 9. );
-  declareProperty( "PionSame_lcs_cut",   m_lcs_cut       = 5.0 );
+  declareProperty( "PionSame_Pt_cut",     m_Pt_cut_pionS  = 0.6 *GeV );
+  declareProperty( "PionSame_P_cut",      m_P_cut_pionS   = 4.0 *GeV );
+  declareProperty( "PionSame_IPs_cut",    m_IPs_cut_pionS = 9. );
+  declareProperty( "PionSame_lcs_cut",    m_lcs_cut       = 5.0 );
   declareProperty( "PionSame_deta_max_cut", m_eta_max_cut_pionS   = 0.35);
   declareProperty( "PionSame_deta_min_cut", m_eta_min_cut_pionS   = -0.5);
-  declareProperty( "PionSame_dphi_cut", m_phi_cut_pionS   = 0.75);
-  declareProperty( "PionSame_dR_cut", m_dR_cut_pionS   = 0.75);
-  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 2.5 *GeV);
+  declareProperty( "PionSame_dphi_cut",   m_phi_cut_pionS   = 0.75);
+  declareProperty( "PionSame_dR_cut",     m_dR_cut_pionS   = 0.75);
+  declareProperty( "PionSame_dQ_cut",     m_dQcut_pionS   = 2.5 *GeV);
   declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1.2 *GeV);
   declareProperty( "PionSame_ghost_cut",  m_ghost_cut     = -999.0);
-  declareProperty( "PionSame_ipPU_cut", m_ipPU_cut_pS      = 6.0 );
-  declareProperty( "PionSame_distPhi_cut", m_distPhi_cut_pS= 0.005 );
+  declareProperty( "PionSame_ipPU_cut",   m_ipPU_cut_pS      = 6.0 );
+  declareProperty( "PionSame_distPhi_cut",m_distPhi_cut_pS= 0.005 );
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 4.3);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 14.0);
   // 1fb-1 paper tuning
@@ -44,8 +44,8 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -2.06 ); 
   declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.361 );
  
-  declareProperty( "PionSame_AverageOmega",   m_AverageOmega   = 0.40 );
-  declareProperty( "PionSame_ProbMin",     m_PionProbMin   = 0.56);
+  declareProperty( "PionSame_AverageOmega",  m_AverageOmega   = 0.40 );
+  declareProperty( "PionSame_ProbMin",       m_PionProbMin   = 0.56);
 
   m_nnet = 0;
   m_util = 0;
@@ -131,14 +131,18 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(tsa < m_ghost_cut) continue;
     verbose() << " Pion lcs="<< lcs <<" tsa="<<tsa<<endmsg;
 
+
     double IP, IPerr;
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
     if(IPsig > m_IPs_cut_pionS)  continue;
 
-    double ippu=(*ipart)->info(1,100000.);
+
+    double ippu=(*ipart)->info(1,100000.); // retrieve the stored information of IP significance wrt PU, saved in BTaggingTool.cpp    
     if(ippu < m_ipPU_cut_pS) continue;
+
+    
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distPhi_cut_pS ) continue;

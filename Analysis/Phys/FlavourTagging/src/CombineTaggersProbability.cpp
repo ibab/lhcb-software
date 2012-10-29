@@ -43,7 +43,7 @@ StatusCode CombineTaggersProbability::finalize()   { return StatusCode::SUCCESS;
 
 //=============================================================================
 int CombineTaggersProbability::combineTaggers(FlavourTag& theTag, 
-                                              std::vector<Tagger*>& vtg ){
+                                              std::vector<Tagger*>& vtg , int signalType){
   if( vtg.empty() ) return 0;
 
   double tagdecision=0;
@@ -102,7 +102,8 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   double SSeOS_pnsum_b= ((1+tagdecision)/2 - tagdecision*pnsum );;  //hypothesis of truetag=-1
   for( int i = 0; i != vtgsize; i++ ) { //multiply all probabilities
     if(! vtg.at(i)) continue;
-    if( vtg.at(i)->type() == (Tagger::SS_Pion) || vtg.at(i)->type() == (Tagger::SS_Kaon) ) {
+    if( (signalType == 1 && vtg.at(i)->type() == (Tagger::SS_Pion)) || 
+        (signalType == 2 && vtg.at(i)->type() == (Tagger::SS_Kaon)) ) {
       double mtagss = vtg.at(i)->decision();
       if(!mtagss) continue;
       double pnss   = 1-(vtg.at(i))->omega(); //probability of 'right'

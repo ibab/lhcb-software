@@ -26,9 +26,14 @@ StatusCode CombineTaggersTDR::finalize() { return StatusCode::SUCCESS; }
 
 //=======================================================================
 int CombineTaggersTDR::combineTaggers(FlavourTag& theTag, 
-				      std::vector<Tagger*>& vtg ){
+                                      std::vector<Tagger*>& vtg , int signalType){
+
   if( vtg.empty() ) return 0;
   debug()<<"entering TDR/PID type combination"<<endreq;
+  fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "<<endmsg;
+  ///////////////////////////////////////////////////////////////////////////
+  // WARNING: update the code according to the new variable signalType !!!!!!
+  ///////////////////////////////////////////////////////////////////////////
 
   int category=0;
   double tagdecision=0;

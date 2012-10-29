@@ -1,9 +1,14 @@
 ! $Id: release.notes,v 1.172 2010-07-02 08:10:16 mgrabalo Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
-! Responsible : Marco Musy (marco.musy@cern.ch)
+! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2012-10-28 - Stefania Vecchi
+ - changed in BTaggingTool.cpp to run always SSpion and SSKaon
+ - modified CombineTaggersProbability to run the combination only with one SS tagger
+ - fixed typo in Tuning.py for SSpi IPPU cut (6 instead of 3) 
 
 !========================= FlavourTagging v12r10 2012-10-04 =========================
 

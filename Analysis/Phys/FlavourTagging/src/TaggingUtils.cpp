@@ -125,8 +125,8 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
 
     if( sc ) {
       if( ipx < ipmin ) {
-	ipmin = ipx;
-	ipminerr = ipex;
+        ipmin = ipx;
+        ipminerr = ipex;
       } 
     } else lastsc = sc;
   }
@@ -171,13 +171,13 @@ bool TaggingUtils::isinTree(const Particle* axp,
     double dphi = fabs(phi_axp-(*ip)->momentum().phi()); 
     if(dphi>3.1416) dphi=6.283-dphi;
     dist_phi= std::min(dist_phi, dphi);
-
+    
     if( (    fabs(p_axp -(*ip)->p()) < 0.1 
              && fabs(pt_axp-(*ip)->pt())< 0.01 
              && fabs(phi_axp-(*ip)->momentum().phi())< 0.1 )
         || axp->proto()==(*ip)->proto() ) {
       if (msgLevel(MSG::VERBOSE)) 
-        verbose() << "isinTree part: " << axp->particleID().pid() 
+        verbose() << " isinTree part: " << axp->particleID().pid() 
                   << " with p="<<p_axp/Gaudi::Units::GeV 
                   << " pt="<<pt_axp/Gaudi::Units::GeV 
                   << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endreq;

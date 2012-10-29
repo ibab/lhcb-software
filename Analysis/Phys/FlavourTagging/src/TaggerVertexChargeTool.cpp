@@ -107,7 +107,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   debug()<<" -- likelihood seed "<<maxprobf<<endreq;
   Vertex seedvtx;
 
-  const Gaudi::XYZPoint BoppDir = vvec.at(0).position();
+  const Gaudi::XYZPoint BoppDir = vvec.at(0).position();  // SV-PV !!!
   debug()<<"BoppDir: "<<BoppDir<<endreq;
 
   //calculate vertex charge and other variables for NN
@@ -131,7 +131,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     const Track* iptrack = (*ip)->proto()->track();
     if( iptrack->type()== Track::Long ) Vflaglong++;
     double docaSV, docaErrSV;
-    m_util->calcDOCAmin( *ip, Pfit.at(0), Pfit.at(1), docaSV, docaErrSV);
+    m_util->calcDOCAmin( *ip, Pfit.at(0), Pfit.at(1), docaSV, docaErrSV); //DOCA wrt the seeds
     Vdocamax += docaSV;
     debug()<<"docaSV:"<<docaSV<<endreq;
   }
@@ -146,7 +146,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   debug()<<"Vch: "<<Vch<<endreq;
   if( Vch==0 ) return tVch;
 
-  //Variables of the SV                                                                                                                                               
+  //Variables of the SV (Seed Vertex)                                                                                                                                         
   double SVP = SVmomentum.P()/1000;
   double SVM = SVmomentum.M()/1000;
   double SVGP = SVP/(0.16*SVM+0.12);

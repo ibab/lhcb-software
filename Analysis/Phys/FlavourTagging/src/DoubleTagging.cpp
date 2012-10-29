@@ -113,7 +113,7 @@ StatusCode DoubleTagging::execute() {
       debug() << "Running tagging on candidate with PID = " << (*icandB)->particleID() << endmsg;
       FlavourTag* Tag   = new FlavourTag;
       FlavourTag* OSTag = new FlavourTag;
-
+      
       if(flavourTagging()->tag(*Tag,*icandB) != 1 ){
         debug() << "All Tagging failed" << endmsg;
         delete Tag;        
@@ -128,29 +128,31 @@ StatusCode DoubleTagging::execute() {
         std::vector<Tagger*> ptaggers;
         std::vector<Tagger> taggers = Tag->taggers();
         debug() << "Total number of taggers ran in BTaggingTool = " 
-		<< taggers.size() << endmsg;
+                << taggers.size() << endmsg;
         
         for(size_t i=0;i<taggers.size();++i){
           debug() << "Type of taggers ran in BTaggingTool =        " 
-		  << taggers[i].type() << endmsg;
+                  << taggers[i].type() << endmsg;
           if(taggers[i].type() == Tagger::SS_Kaon){
             sskaondec = taggers[i].decision(); 
             debug() << "SS Kaon decision = " << sskaondec << endmsg;
           }
           else ptaggers.push_back( &(taggers[i]) );
         }
+        int signalType=1;
+        fatal()<<" WARNING: make combination assuming Bu or Bd (with SSpion!!) fix it!!!"<<endmsg;
         
-        unsigned int category = m_oscombine->combineTaggers(*OSTag,ptaggers);
+        unsigned int category = m_oscombine->combineTaggers(*OSTag,ptaggers,signalType);
         const std::vector<Tagger> OStaggers = OSTag->taggers();
         
         /*
           debug() << "Total number of taggers ran in OS combiner  = " 
-	  << taggers.size() << endmsg;
+          << taggers.size() << endmsg;
           for(std::vector<Tagger>::const_iterator itag = OStaggers.begin(); 
-	  itag != OStaggers.end(); ++itag){
+          itag != OStaggers.end(); ++itag){
           debug() << "Type of taggers ran in OS combiner =         " 
-	  << itag->type() << endmsg;
-	  }
+          << itag->type() << endmsg;
+          }
         */
         
         if( sskaondec == 0 || category == 0 ) continue;

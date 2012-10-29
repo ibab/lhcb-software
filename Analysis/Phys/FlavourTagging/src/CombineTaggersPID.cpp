@@ -123,9 +123,14 @@ StatusCode CombineTaggersPID::initialize() {
 StatusCode CombineTaggersPID::finalize() { return StatusCode::SUCCESS; }
 
 //=============================================================================
-int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& vtg){
+int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& vtg, int signalType){
 
   debug() << "Running CombineTaggersPID::combineTaggers" << endmsg;
+  fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "<<endmsg;
+  ///////////////////////////////////////////////////////////////////////////
+  // WARNING: update the code according to the new variable signalType !!!!!!
+  ///////////////////////////////////////////////////////////////////////////
+
 
   std::vector<Tagger*> ostaggers;
   std::vector<int> itag;

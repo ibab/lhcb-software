@@ -4,7 +4,8 @@
 //--------------------------------------------------------------------------
 // Implementation file for class : BTaggingTool
 //
-// Author: Marco Musy
+//  First Author: Marco Musy
+//  maintainers: Miriam Calvo, Marc Grabalosa, Stefania Vecchi
 //--------------------------------------------------------------------------
 
 using namespace LHCb ;
@@ -42,7 +43,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "EnableJetSameTagger",     m_EnableJetSame = false );
   
   declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, Bs
-  declareProperty( "UseVtxChargeWithoutOS", m_UseVtxOnlyWithoutOS = false ); //use vtcxch only when no other OS tagger is active
+  declareProperty( "UseVtxChargeWithoutOS",   m_UseVtxOnlyWithoutOS = false ); //use vtcxch only when no other OS tagger is active
   
   m_util    = 0;
   m_descend = 0;
@@ -140,7 +141,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   const RecVertex::Range verts=get<RecVertex::Range>(RecVertexLocation::Primary);
   if(msgLevel(MSG::DEBUG)) debug()<<" Nr Vertices: "<< verts.size() 
                                   <<" Nr Particles: "<<parts.size()<<endreq;
-
+  
   Vertex::ConstVector allVtx;
   RecVertex::Range::const_iterator iv;
   for(iv=verts.begin(); iv!=verts.end(); iv++) {
@@ -173,6 +174,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   theTag.setTaggedB( AXB );
   if(vtags.empty()) vtags = chooseCandidates(AXB, parts, PileUpVtx);
   
+  
   //AXB is the signal B from selection
   bool isBd = false; if( AXB->particleID().hasDown() )   isBd = true;
   bool isBs = false; if( AXB->particleID().hasStrange()) isBs = true;
@@ -185,15 +187,15 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   ///Choose Taggers ------------------------------------------------------ 
   if (msgLevel(MSG::DEBUG)) debug() <<"evaluate taggers" <<endreq;
-  Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS;
 
+  Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS;
   if(m_EnableMuon)     muon = m_taggerMu   -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableElectron) elec = m_taggerEle  -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableKaonOS)   kaon = m_taggerKaon -> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnableKaonSS) if(isBs)  
-    kaonS= m_taggerKaonS-> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnablePionSS) if(isBd || isBu)
-    pionS= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableKaonSS) //if(isBs)  
+    kaonS= m_taggerKaonS-> tag(AXB, RecVert, allVtx, vtags);    
+  if(m_EnablePionSS) //if(isBd || isBu)
+    pionS= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);    
   if(m_EnableJetSame)  jetS = m_taggerJetS -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableVertexCharge){ 
     Particle::ConstVector vtagsPlusOS(0);
@@ -221,8 +223,10 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   taggers.push_back(&muon);
   taggers.push_back(&elec);
   taggers.push_back(&kaon);
-  if( isBs ) taggers.push_back(&kaonS);
-  if( isBu || isBd ) taggers.push_back(&pionS);
+  //  if( isBs ) 
+  taggers.push_back(&kaonS);
+  //if( isBu || isBd ) 
+  taggers.push_back(&pionS);
   taggers.push_back(&vtxCh);
 
   //----------------------------------------------------------------------
@@ -231,16 +235,21 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   //can be made and categorised in two ways: the "PID" 
   //approach is based on the particle type, while the 
   //"Prob" approach is based on the wrong tag fraction
+  int signalType =0;
+  if(isBu || isBd ) signalType=1;
+  else if(isBs) signalType=2;
+  
 
   if (msgLevel(MSG::DEBUG)) debug() <<"combine taggers "<< taggers.size() <<endreq;
-  m_combine -> combineTaggers( theTag, taggers );
+  m_combine -> combineTaggers( theTag, taggers , signalType);
   debug()<<"omega: "<<theTag.omega()<<endreq;
   debug()<<"omegaOS: "<<theTag.omegaOS()<<endreq;
 
   ///OUTPUT to Logfile ---------------------------------------------------
+  /*
   int sameside = kaonS.decision();
   if(!sameside) sameside = pionS.decision();
-
+  */
   RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
   if (msgLevel(MSG::DEBUG)) debug() << "BTAGGING TAG   " 
                                     << std::setw(9) << evt->runNumber()
@@ -252,7 +261,9 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
                                     << std::setw(5) << muon.decision()
                                     << std::setw(3) << elec.decision()
                                     << std::setw(3) << kaon.decision()
-                                    << std::setw(3) << sameside
+                                    << std::setw(3) << kaonS.decision()
+                                    << std::setw(3) << pionS.decision()
+    //<< std::setw(3) << sameside
                                     << std::setw(3) << vtxCh.decision()
                                     << endmsg;
 
@@ -431,11 +442,19 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
     //eliminate from vtags all parts coming from a pileup vtx
+
+    
     if(ippuerr) {
       if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
       Particle* c = const_cast<Particle*>(*ip);
       c->addInfo(1, ippu/ippuerr);
-    }
+      verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
+    }else debug()<<"particle p="<<(*ip)->p()<<" ippu NAN ****"<<endmsg;
+
+
+
+      
+    
     
     bool dup=false;
     Particle::ConstVector::const_iterator ik;

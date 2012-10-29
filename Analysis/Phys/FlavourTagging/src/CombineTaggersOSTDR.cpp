@@ -24,7 +24,7 @@ StatusCode CombineTaggersOSTDR::initialize() { return StatusCode::SUCCESS; }
 StatusCode CombineTaggersOSTDR::finalize() { return StatusCode::SUCCESS; }
 
 //=============================================================================
-int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& vtg){
+int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& vtg, int signalType){
 
   debug() << "Running CombineTaggersOSTDR::combineTaggers" << endmsg;
 

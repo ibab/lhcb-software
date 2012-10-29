@@ -29,7 +29,7 @@ public:
 
   /// Finalize
   StatusCode finalize();
-  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& );
+  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& , int);
 
 private:
   
