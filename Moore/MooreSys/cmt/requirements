@@ -17,10 +17,10 @@ use  DetCond             v12r26      Det
 # Hlt
 use  HltSettings         v5r56       Hlt
 use  Hlt1Lines           v6r30       Hlt
-use  Hlt1Lines           v8r28       Hlt
+use  Hlt2Lines           v8r28       Hlt
 
 #for MC
-use  GaudiConf 		 v17r0       LHCb
+use  GaudiConf 		 v17r0        
 use  L0DU                v10r23      L0
 use  L0Base              v2r1        L0
 
