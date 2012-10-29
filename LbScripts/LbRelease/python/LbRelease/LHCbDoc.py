@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from subprocess import Popen, PIPE
 from stat import ST_SIZE
 from LbUtils.afs.directory import isAFSDir, isMountPoint
+from LbConfiguration.External import doxygen_version as doxygen_default_version
 
 import __builtin__
 if "set" not in dir(__builtin__):
@@ -546,7 +547,7 @@ class Doc(object):
         page += "\\endhtmlonly\n*/\n"
         return page
 
-    def _generateDoxyConf(self):
+    def _generateDoxyConf(self, doxygen_versions=(None, None)):
         """
         Generate the doxygen configuration file for the current doc directory.
         """
@@ -554,6 +555,11 @@ class Doc(object):
             self._log.warning("Cannot generate Doxygen configuration in a locked directory")
             return
         self._log.info("Generate Doxygen configuration")
+        # Get the doxygen versions from the arguments, using the default if not defined
+        cpp_version, py_version = map(lambda x: x or doxygen_default_version,
+                                      doxygen_versions)
+        if cpp_version != py_version:
+            self._log.warning("Different versions of Doxygen for C++ and Python. Generating configuration for %s", cpp_version)
 
         # get externals versions (used for the tag files)
         gaudipath = os.path.join(self.path, "GAUDI_%s" % self.getVersion("GAUDI"), "GaudiRelease", "cmt")
@@ -739,7 +745,7 @@ class Doc(object):
         open(os.path.join(confdir, "DoxyFilePy.cfg"), "w").write(str(doxycfg))
 
         # Create the auxiliary files in the conf directory
-        import _LHCbDocResources
+        from _LHCbDocResources import getString
         #  generate the dependency graph
         depgraphsize = self._genDepGraph(confdir)
         mp_data = self._generateDoxygenMainPage(depgraphsize = depgraphsize)
@@ -753,11 +759,11 @@ class Doc(object):
             open(os.path.join(confdir, "MainPagePy.doxygen"), "w").write(mp_data %
                  {"subtitle": ""}) # {"subtitle": "Python Code"})
         #  layout file
-        open(os.path.join(confdir, 'DoxygenLayout.xml'), 'w').write(_LHCbDocResources.layout)
+        open(os.path.join(confdir, 'DoxygenLayout.xml'), 'w').write(getString('layout.xml', cpp_version))
         #  CSS file
-        open(os.path.join(confdir, 'lhcb_doxygen.css'), 'w').write(_LHCbDocResources.stylesheet)
+        open(os.path.join(confdir, 'lhcb_doxygen.css'), 'w').write(getString('stylesheet.css', cpp_version))
         #  class locator PHP script
-        open(os.path.join(confdir, 'class.php'), 'w').write(_LHCbDocResources.class_php)
+        open(os.path.join(confdir, 'class.php'), 'w').write(getString('class_php', cpp_version))
 
     def _projectDeps(self, project, recursive = False):
         """
@@ -923,7 +929,7 @@ class Doc(object):
             pytempdir = os.path.join(tempdir, "py")
             os.makedirs(pytempdir)
 
-            self._generateDoxyConf()
+            self._generateDoxyConf(doxygen_versions)
 
             self._log.info("Running doxygen")
             self._log.debug(_which("doxygen"))

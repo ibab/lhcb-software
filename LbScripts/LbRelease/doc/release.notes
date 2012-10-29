@@ -1,3 +1,9 @@
+2012-10-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc.py:
+	* python/LbRelease/_LHCbDocResources: added Doxygen configuration resources
+	in a dedicated module as files instead of strings.
+
 2012-10-29 Ben Couturier <ben.couturier@cern.ch>
 
 	* scripts/install_cmake: Added script that allows downloading and installing 
