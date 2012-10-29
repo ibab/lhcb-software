@@ -6,7 +6,7 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v14r9       Hlt
+use  Moore               v14r10       Hlt
 use  IndependenceTests   v1r3        Hlt
 
 
@@ -17,6 +17,12 @@ use  DetCond             v12r26      Det
 # Hlt
 use  HltSettings         v5r56       Hlt
 use  Hlt1Lines           v6r30       Hlt
+use  Hlt1Lines           v8r28       Hlt
+
+#for MC
+use  GaudiConf 		 v17r0       LHCb
+use  L0DU                v10r23      L0
+use  L0Base              v2r1        L0
 
 # Declare this as a container package
 apply_pattern container_package
