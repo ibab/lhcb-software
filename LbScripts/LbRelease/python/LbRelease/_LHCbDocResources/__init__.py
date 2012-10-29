@@ -31,10 +31,11 @@ def _getVersion(resource_name):
         # we get here if the string does not end with a dot-separated list of numbers
         pass
 
-def getString(name, version):
+def getString(name, version=None):
     '''
     Return the content of the resource identified by 'name' and compatible with
-    the specified version of Doxygen.
+    the specified version of Doxygen. If no version is specified, the latest is
+    returned.
 
     The possible values of 'name' are: ['layout.xml', 'stylesheet.css', 'class.php'].
 
@@ -51,9 +52,16 @@ def getString(name, version):
                         for r in pkg_resources.resource_listdir(__name__, '.')
                         if r.startswith(name)], reverse=True)
 
-    vers = _versionTuple(version)
+    if resources:
+        # default on the latest version if none is specified
+        if version is None:
+            return resources[0]
 
-    for v, r in resources:
-        if v <= vers: # note that None is smaller than any tuple
-            return pkg_resources.resource_string(__name__, r)
+        # look for a compatible version
+        vers = _versionTuple(version)
+        for v, r in resources:
+            if v <= vers: # note that None is smaller than any tuple
+                return pkg_resources.resource_string(__name__, r)
+
+    # No resource found
     raise ValueError('Cannot find resource %r for version %s' % (r, vers))
