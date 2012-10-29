@@ -98,8 +98,8 @@ StatusCode BTaggingChecker::execute() {
         case Tagger::OS_Electron: (taggdec==truetag ? ++nrtag[2] : ++nwtag[2]); break;
         case Tagger::OS_Kaon    : (taggdec==truetag ? ++nrtag[3] : ++nwtag[3]); break;
         case Tagger::SS_Kaon    : (taggdec==truetag ? ++nrtag[4] : ++nwtag[4]); break;
-        case Tagger::SS_Pion    : (taggdec==truetag ? ++nrtag[4] : ++nwtag[4]); break;
-        case Tagger::VtxCharge  : (taggdec==truetag ? ++nrtag[5] : ++nwtag[5]); break;
+        case Tagger::SS_Pion    : (taggdec==truetag ? ++nrtag[5] : ++nwtag[5]); break;
+        case Tagger::VtxCharge  : (taggdec==truetag ? ++nrtag[6] : ++nwtag[6]); break;
         }
       }
     
@@ -183,8 +183,9 @@ StatusCode BTaggingChecker::finalize(){
     if(it==13) { cats =  "  OS muons"; rtag = nrtag[1]; wtag = nwtag[1]; }
     if(it==14) { cats =  "  OS elect"; rtag = nrtag[2]; wtag = nwtag[2]; }
     if(it==15) { cats =  "  OS kaons"; rtag = nrtag[3]; wtag = nwtag[3]; }
-    if(it==16) { cats =  "  SS k/pi "; rtag=  nrtag[4]; wtag= nwtag[4]; }
-    if(it==17) { cats =  "  VertexCh"; rtag = nrtag[5]; wtag = nwtag[5]; }
+    if(it==16) { cats =  "  SS kaon "; rtag=  nrtag[4]; wtag = nwtag[4]; }
+    if(it==17) { cats =  "  SS pion "; rtag=  nrtag[5]; wtag = nwtag[5]; }
+    if(it==18) { cats =  "  VertexCh"; rtag = nrtag[6]; wtag = nwtag[6]; }
     if(it<13) cats =  "  NNet ";
     else if(it==13)
       info()<<"---------------------------------------------------------"<<endreq;
@@ -230,6 +231,7 @@ StatusCode BTaggingChecker::finalize(){
           <<" "<<std::setw(7)<< (int) wtag
           << endreq;
   }
+  
 
   
   //calculate global tagging performances -------------------------------

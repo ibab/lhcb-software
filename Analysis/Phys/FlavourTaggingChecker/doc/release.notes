@@ -6,6 +6,11 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2012-10-29 - Stefania Vecchi
+ - In /root
+  . Fix several things related to the sweight (performance computation)
+  . Modified code to account for SSK and SSpi every event 
+
 !========================= FlavourTaggingChecker v6r12 2012-10-04 =========================
 
 ! 2012-09-07 - Marc Grabalosa

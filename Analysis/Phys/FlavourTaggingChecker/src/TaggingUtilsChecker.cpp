@@ -119,8 +119,8 @@ StatusCode TaggingUtilsChecker::calcIP( const Particle* axp,
     if(ipChi2) { ipx=ipC; ipex=ipC/sqrt(ipChi2); }
     if( sc ) {
       if( ipx < ipmin ) {
-	ipmin = ipx;
-	ipminerr = ipex;
+        ipmin = ipx;
+        ipminerr = ipex;
       } 
     } else lastsc = sc;
 
@@ -162,13 +162,13 @@ StatusCode TaggingUtilsChecker::calcIPPU( const Particle* axp,
         yerrpos = (*iv)->covMatrix().At(1,1);
         zpos = (*iv)->position().z()/mm;
         zerrpos = (*iv)->covMatrix().At(2,2);
-	ntracks = (*iv)->tracks().size(); 
-	double ipp=0, ipchi2p=0;
-	StatusCode sc2 = m_Dist->distance (AXBS, *iv, ipp, ipchi2p);
-	if (sc2) {
-	  ipBS=ipp;
-	  ipChi2BS=ipchi2p;
-	}
+        ntracks = (*iv)->tracks().size(); 
+        double ipp=0, ipchi2p=0;
+        StatusCode sc2 = m_Dist->distance (AXBS, *iv, ipp, ipchi2p);
+        if (sc2) {
+          ipBS=ipp;
+          ipChi2BS=ipchi2p;
+        }
       } 
     } else lastsc = sc;
   }
@@ -180,7 +180,7 @@ StatusCode TaggingUtilsChecker::calcIPPU( const Particle* axp,
 }
 //=========================================================================
 int TaggingUtilsChecker::countTracks( Particle::ConstVector& vtags ) {
-
+  
   int nr = 0;
   Particle::ConstVector::const_iterator ipart, jpart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {

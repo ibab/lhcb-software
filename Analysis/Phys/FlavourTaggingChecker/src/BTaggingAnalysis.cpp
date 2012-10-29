@@ -1300,8 +1300,11 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
                                     const Particle *&SVpart2 ) { 
 			   
   //look for a secondary Vtx due to opposite B (inclusive sec vertex)
-  std::vector<float> pSecVtx_x(0), pSecVtx_y(0), pSecVtx_z(0), pSecVtx_chi2(0),
-    pSecVtx_pt1(0), pSecVtx_pt2(0), pSecVtx_zerr(0);
+  std::vector<float> 
+    pBOVtx_x(0),  pBOVtx_y(0), pBOVtx_z(0),   pBOVtx_chi2(0),  pBOVtx_zerr(0),
+    pSecVtx_x(0), pSecVtx_y(0), pSecVtx_z(0), pSecVtx_chi2(0), pSecVtx_zerr(0),
+    pSecVtx_pt1(0), pSecVtx_pt2(0);
+  
 
   svertices.clear();
   SVpart1=0;
@@ -1313,7 +1316,7 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   debug() << "  Look seed vertex position " <<endreq;
   debug() << "  vertices: " <<svertices.size()<<endreq;
 
-  Vertex tmpseed;
+  Vertex tmpseed, tmp_BOvtx;
   int seeds=0;
   //save NEW seed vertex positions
   for (isv=svertices.begin(); isv!=svertices.end(); ++isv) {
@@ -1353,6 +1356,13 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
     pSecVtx_pt1.push_back(Pfit.at(0)->pt()/GeV);
     pSecVtx_pt2.push_back(Pfit.at(1)->pt()/GeV);
     svertices.at(0)=tmpseed;
+
+    m_fitter->fit(tmp_BOvtx, Pfit);
+    pBOVtx_x.push_back(tmp_BOvtx.position().x()/mm);
+    pBOVtx_y.push_back(tmp_BOvtx.position().y()/mm);
+    pBOVtx_z.push_back(tmp_BOvtx.position().z()/mm);
+    pBOVtx_zerr.push_back(tmp_BOvtx.covMatrix().At(2,2));
+    pBOVtx_chi2.push_back(tmp_BOvtx.chi2PerDoF());
     break;
   }
 
@@ -1363,6 +1373,13 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   tuple -> farray ("SecVtx_z",   pSecVtx_z, "V", 100);
   tuple -> farray ("SecVtx_zerr",pSecVtx_zerr, "V", 100);
   tuple -> farray ("SecVtx_chi2",pSecVtx_chi2, "V", 100);
+
+  // fill the info of the BO opposite vertex (seed + additional tracks)
+  tuple -> farray ("BOVtx_x",    pBOVtx_x, "V", 100);
+  tuple -> farray ("BOVtx_y",    pBOVtx_y, "V", 100);
+  tuple -> farray ("BOVtx_z",    pBOVtx_z, "V", 100);
+  tuple -> farray ("BOVtx_zerr", pBOVtx_zerr, "V", 100);
+  tuple -> farray ("BOVtx_chi2", pBOVtx_chi2, "V", 100);
 }
 
 //=============================================================================
