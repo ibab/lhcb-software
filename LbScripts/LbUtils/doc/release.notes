@@ -1,3 +1,9 @@
+2012-10-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbUtils/_helpers/pkg_resources.py: Copy of the module from Distribute (0.6.30)
+	to allow extraction of resource files from directories or .zip/.egg, modules.
+	See http://pypi.python.org/pypi/distribute
+
 2012-10-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: modified packages lookup to avoid finding stuff in */test/data/*
