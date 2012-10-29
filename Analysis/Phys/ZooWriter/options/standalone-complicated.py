@@ -216,12 +216,14 @@ if "Data" in MyOptions:
 		sys.exit(1)
 	# setup for data [FIXME: What databases do I have to run in any case?]
 	DaVinci().Simulation = False
+	# if you know which tag to use
 	#DaVinci().DDDBtag = "head-20100119"
 	#DaVinci().CondDBtag = "head-20100303"
-  # on the Grid you might want to use
+	# to get the grid's default tag
   #from Configurables import CondDB
-  #CondDB(UseOracle = True)
   #CondDB().UseLatestTags = ["2011"]
+  # NB: 29th Oct 2012: here was an instruction to use Oracle. Marco Cat. announced that this is deprecated from now on.
+
 
 
 elif "MC" in MyOptions:
