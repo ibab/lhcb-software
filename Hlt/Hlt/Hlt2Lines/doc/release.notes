@@ -8,9 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
-!========================= Hlt2Lines v8r27 2012-09-19 =========================
+!========================= Hlt2Lines v8r28 2012-10-29 =========================
 ! 2012-10-16 - M. Kucharczyk
  - Fix the problems with Hlt2HighPtJets line
+
+!========================= Hlt2Lines v8r27 2012-09-19 =========================
 
 ! 2012-09-19 - E. van Herwijnen for M. Williams
  - Replaced Hlt2TopologicalLines.py by the one from v8r25, going back to 
