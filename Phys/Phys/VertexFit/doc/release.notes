@@ -4,6 +4,9 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2012-10-29 - Chris Jones
+ - Minor CPU optimisations in PropertimeFitter
+
 !========================= VertexFit v6r13 2012-10-04 =========================
 
 ! 2012-07-27 - Chris Jones
