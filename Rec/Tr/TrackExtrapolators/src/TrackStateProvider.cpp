@@ -90,7 +90,8 @@ public:
   virtual void handle( const Incident& incident ) ;
 
 protected:
-  const LHCb::State* addState( TrackCache& tc, double z) const ;
+  const LHCb::State* addState( TrackCache& tc, double z,
+			       LHCb::State::Location loc = LHCb::State::LocationUnknown ) const ;
   TrackCache* cache( const LHCb::Track& track ) const ;
 
 private :
@@ -145,6 +146,13 @@ namespace {
 
     /// because the pointer to the track is not good enough, for paranoia we compute a sort of uniqueID
     static size_t trackID(const LHCb::Track& track) { 
+      // create a hash from 3 lhcbids (3 should definitely be enough:-)
+      //std::size_t seed = track.lhcbIDs().front() ;
+      //boost::hash_combine( seed, 
+      //std::size_t seed = 0 ;
+      //using namespace boost ;
+      //for ( _LHCbIDs::const_iterator i = ids.begin() ; ids.end() != i ; ++i ) 
+      //{ hash_combine ( seed , i->channelID () ) ; }
       return size_t(&track) + track.lhcbIDs().front().lhcbID() + track.lhcbIDs().back().lhcbID() ; }
     
     /// return z position of state at first measurement
@@ -326,9 +334,9 @@ StatusCode TrackStateProvider::state( LHCb::State& thestate,
 // add a state to the cache of a given track
 //=============================================================================
 
-const LHCb::State* TrackStateProvider::addState( TrackCache& tc, double z) const
+const LHCb::State* TrackStateProvider::addState( TrackCache& tc, double z, LHCb::State::Location loc) const
 {
-  LHCb::State* state = new LHCb::State( LHCb::State::Vertex ) ;
+  LHCb::State* state = new LHCb::State( loc ) ;
   state->setZ( z ) ;
   LHCb::TrackTraj::StateContainer& refstates = tc.states() ;
   LHCb::TrackTraj::StateContainer::iterator it = 
@@ -355,10 +363,9 @@ const LHCb::State* TrackStateProvider::addState( TrackCache& tc, double z) const
       *state = std::abs( (**it).z() - z ) < std::abs( (**prev).z() - z ) ? **it : **prev ;
     }
 
-    // for all states, except those extrapolated from ClosestToBeam,
-    // we'll use 'Vertex'
-    if( state->location() != LHCb::State::ClosestToBeam) state->setLocation( LHCb::State::Vertex ) ;
-    
+    // extrapolator may overwrite location field
+    state->setLocation( loc ) ;
+
     if( applyMaterialCorrections ) {
       sc = m_extrapolator->propagate( *state, z ) ;
     } else {
@@ -392,6 +399,16 @@ TrackCache* TrackStateProvider::cache( const LHCb::Track& track ) const
     // create a new entry in the cache
     tc = new TrackCache( track ) ;
     m_trackcache[key] = tc ;
+    // make sure downstream tracks have a few ref states before the first measurement.
+    if( track.type()==LHCb::Track::Downstream ) {
+      if( track.stateAt( LHCb::State::EndRich1 ) == 0 ) 
+	addState( *tc, StateParameters::ZEndRich1,LHCb::State::EndRich1) ;
+      if( track.stateAt( LHCb::State::BegRich1 ) == 0 ) 
+	addState( *tc, StateParameters::ZBegRich1,LHCb::State::BegRich1) ;
+      if( track.stateAt( LHCb::State::EndVelo ) == 0 ) 
+	addState( *tc, StateParameters::ZEndVelo,LHCb::State::EndVelo) ;
+    }
+    
     // make sure all tracks (incl. Downstream) get assigned a state at
     // the beamline. this is useful for the trajectory approximation.
     if( (track.hasVelo() || track.hasTT() ) &&
@@ -407,9 +424,7 @@ TrackCache* TrackStateProvider::cache( const LHCb::Track& track ) const
 	if( dz < -10*Gaudi::Units::cm ) {
 	  double z = track.firstState().z() + dz ;
 	  if(z > -100*Gaudi::Units::cm ) { // beginning of velo
-	    const LHCb::State* stateatbeam = addState( *tc, z ) ;
-	    if( stateatbeam )
-	      const_cast< LHCb::State*>(stateatbeam)->setLocation( LHCb::State::ClosestToBeam ) ;
+	    addState( *tc, z, LHCb::State::ClosestToBeam ) ;
 	  }
 	} 
       }

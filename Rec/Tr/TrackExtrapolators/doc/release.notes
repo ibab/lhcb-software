@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2012-10-29 - Wouter Hulsbergen
+ - Add more states to Downstream tracks in TrackStateProvider
+
 !========================= TrackExtrapolators v2r32p1 2011-12-15 =============
 ! 2011-11-22 - Marco Cattaneo
  - Fix gcc46 warning 
