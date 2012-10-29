@@ -183,7 +183,7 @@ void VLClusterCreator::makeClusters() {
       }
       if (m_clusters->size() >= m_maxClusters) {
         // Too many clusters. Stop clustering after this one.
-        Warning("Too many clusters in this event. Processing incomplete.").ignore();
+        warning() << "Too many clusters in this event." << endmsg;
         info() << "Processing limit is " << m_maxClusters << " clusters." << endmsg;
         info() << "Stopping clusterization while processing sensor " 
                << sensor << endmsg;

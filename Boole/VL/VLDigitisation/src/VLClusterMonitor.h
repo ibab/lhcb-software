@@ -5,6 +5,8 @@
 #include "GaudiAlg/GaudiTupleAlg.h"
 // Event/DigiEvent
 #include "Event/VLCluster.h"
+// Det/VLDet
+#include "VLDet/DeVL.h"
 
 /** @class VLClusterMonitor VLClusterMonitor.h
  *  
@@ -29,6 +31,7 @@ private:
   bool m_detailed;
   bool m_printInfo;
   LHCb::VLClusters* m_clusters;
+  DeVL* m_det;
   double m_nClusters;
   double m_nClusters2;
   double m_nOneStrip;

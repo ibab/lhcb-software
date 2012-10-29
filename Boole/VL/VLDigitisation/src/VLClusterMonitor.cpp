@@ -42,6 +42,7 @@ StatusCode VLClusterMonitor::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc; 
   if (msgLevel(MSG::DEBUG)) debug() << " ==> initialize()" << endmsg;
+  m_det = getDet<DeVL>(DeVLLocation::Default);
   setHistoTopDir("VL/");
   return StatusCode::SUCCESS;
 
@@ -149,7 +150,7 @@ void VLClusterMonitor::monitor() {
       for (int i = 0; i < nstrips; ++i) {
         info() << " ==> VLCluster: strip: "
                 << (*it)->strip(i) << ", signal on strip: "
-                << (*it)->adcValue(i) <<endmsg;
+                << (*it)->adcValue(i) << endmsg;
       }
     }
     double adcSum = 0.;
@@ -165,6 +166,43 @@ void VLClusterMonitor::monitor() {
     plot2D(sensor, (*it)->strip(0), "sensorAndStrip",
            "Sensor and first strip number",
            0., 132., 0., 3000., 132, 50);
+    if ((*it)->isRType()) {
+      double r = m_det->rSensor(sensor)->rOfStrip((*it)->strip(0));
+      plot2D(r, nstrips, "radiusVsSize",
+             "Cluster size as function of radius",
+             0., 40., -0.5, 5.5, 40, 6);
+      plot(adcSum, "adcSumR",
+           "ADC sum",
+           -0.5, 255.5, 256);
+      plot((*it)->interStripFraction(), "ispR",
+           "Inter-strip fraction",
+           0., 1., 50);
+    } else {
+      plot(adcSum, "adcSumPhi",
+           "ADC sum",
+           -0.5, 255.5, 256);
+      plot((*it)->interStripFraction(), "ispPhi",
+           "Inter-strip fraction",
+           0., 1., 50);
+      unsigned int zone = m_det->phiSensor(sensor)->zoneOfStrip((*it)->strip(0));
+      const double angle = m_det->phiSensor(sensor)->angleOfStrip((*it)->strip(0), 0.);
+      plot2D(angle, nstrips, "angleVsSize",
+             "Cluster size as function of strip angle",
+             0., Gaudi::Units::pi, -0.5, 5.5, 90, 6);
+      if (0 == zone) {
+        plot(nstrips, "clusterSizePhiZone0",
+             "Number of strips in cluster (zone 0)",
+             -0.5, 5.5, 6);
+      } else if (1 == zone) {
+        plot(nstrips, "clusterSizePhiZone1",
+             "Number of strips in cluster (zone 1)",
+             -0.5, 5.5, 6);
+      } else if (2 == zone) {
+        plot(nstrips, "clusterSizePhiZone2",
+             "Number of strips in cluster (zone 2)",
+             -0.5, 5.5, 6);
+      }
+    }
   }
 
 }

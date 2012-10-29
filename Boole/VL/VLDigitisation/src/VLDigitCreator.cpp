@@ -51,7 +51,7 @@ VLDigitCreator::VLDigitCreator(const std::string& name,
   declareProperty("CapacitiveCoupling", m_coupling = 0.01);
   declareProperty("StripInefficiency", m_inefficiency = 0.0);
 
-  declareProperty("Threshold", m_threshold = 2400.); 
+  declareProperty("Threshold", m_threshold = 1600.); 
   declareProperty("kT", m_kT = 0.025);
   declareProperty("BiasVoltage", m_biasVoltage = 150.);
   declareProperty("eVPerElectron", m_eVPerElectron = 3.6);
@@ -65,7 +65,7 @@ VLDigitCreator::VLDigitCreator(const std::string& name,
   declareProperty("PulseShapePeakTime", m_peakTime = 30.7848);
   declareProperty("OffPeakSamplingTime", m_offPeakSamplingTime = 0.);
 
-  declareProperty("ElectronsPerADC", m_electronsPerAdc = 1200.);
+  declareProperty("ElectronsPerADC", m_electronsPerAdc = 1600.);
   declareProperty("ADCRange", m_adcRange = 64); 
 
   Rndm::Numbers m_gauss;
@@ -823,10 +823,8 @@ double VLDigitCreator::ranGaussianTail(const double a, const double sigma) {
   if (s < 1) {
     // For small s, use a direct rejection method. 
     // The limit s < 1 can be adjusted to optimise the overall efficiency
-    double x;
-    do {
-      x = m_gauss();
-    } while (x < s);
+    double x = m_gauss();
+    while (x < s) x = m_gauss();
     return x * sigma;
   } 
 
@@ -837,9 +835,8 @@ double VLDigitCreator::ranGaussianTail(const double a, const double sigma) {
   double u, v, x;
   do {
     u = m_uniform();
-    do {
-      v = m_uniform();
-    } while (v == 0.0);
+    v = m_uniform();
+    while (v == 0.) v = m_uniform();
     x = sqrt(s * s - 2 * log(v));
   } while (x * u > s);
   return x * sigma;
