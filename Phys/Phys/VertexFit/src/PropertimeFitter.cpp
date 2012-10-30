@@ -247,6 +247,13 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
 
   const Gaudi::SymMatrix1x1 CovTau = ROOT::Math::Similarity<double,1,10>(JA, cfit);
 
+  if(CovTau(0,0)<0)
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "unexpected negative element CovTau(0,0)" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
   error = std::sqrt(CovTau(0,0));
 
   // convert c*tau to tau
