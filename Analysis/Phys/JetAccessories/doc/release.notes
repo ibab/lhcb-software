@@ -7,6 +7,10 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-2012-10-30 - Albert Bursche
+Added VBVertexRequirement
+Small tool to require jets from Z vertex
+
 !========================= JetAccessories v1r7 2012-10-04 =========================
 
 ! 2012-09-26 - Murilo Rangel
