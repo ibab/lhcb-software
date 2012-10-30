@@ -23,9 +23,25 @@ static const G4String RichPmtSBAUVGlassQeffMatTabPropPath=
                           "/dd/Materials/RichMaterialTabProperties/SBAUVGlassPmtQuantumEff";
 static const G4String RichPmtSBABorosilicateQeffMatTabPropPath=
                           "/dd/Materials/RichMaterialTabProperties/SBABorosilicatePmtQuantumEff";
+static const G4String Rich1PhDetSupFramePathSeg = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1PhDetSupFrameH";
+static const G4String Rich1MagShPathLogSeg =  "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1MagShH";
+static const G4String Rich1QWPathLogSeg = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1GQuartzW";
+static const G4String Rich1PmtModulePathLogSeg= "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1PmtModuleLogList/lvRichPMTModuleMaster";
 
 
 static const G4String RichPmtPsfMatTabPropPath="/dd/Materials/RichMaterialTabProperties/PmtPointSpreadFunction";
+
+
+static const G4String LogVolRich1PhDetSupFrameH0NameAnalysis = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1PhDetSupFrameH0";
+static const G4String LogVolRich1PhDetSupFrameH1NameAnalysis = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1PhDetSupFrameH1";
+static const G4String LogVolRich1MagShH0NameAnalysis = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1MagShH0";
+static const G4String LogVolRich1MagShH1NameAnalysis = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1MagShH1";
+
+
+static const G4String RichPmtModuleSuppressSet3Path="/dd/Materials/RichMaterialTabProperties/Rich1PMTModuleAnnulationSet3";
+static const G4String RichPmtModuleSuppressSet4Path="/dd/Materials/RichMaterialTabProperties/Rich1PMTModuleAnnulationSet4";
+static const G4String RichPmtModuleSuppressSet5Path="/dd/Materials/RichMaterialTabProperties/Rich1PMTModuleAnnulationSet5";
+static const G4String RichPmtModuleSuppressSet6Path="/dd/Materials/RichMaterialTabProperties/Rich1PMTModuleAnnulationSet6";
 
 
 
@@ -58,5 +74,6 @@ static const G4String RichPmtVacName=
 static const G4String RichPmtQwDeSubPathName="/Rich1FirstPmtQW";
 static const G4String RichPmtPhCathDeSubPathname="/Rich1FirstPmtPhCathode";
 static const G4String RichPmtAnodeSensDetNamePrefix="RichPMTAnodeSensDet";
+
 
 #endif // MISC_CKVG4GAUSSPATHNAMES_H
