@@ -225,7 +225,7 @@ class HHBuilder(object):
         '''Makes X -> p+ K- + c.c.'''
         sel = self._makeX2HH('X2PK',['Lambda(1520)0 -> pi+ pi-'],
                              '(AM < 2.5*GeV)',
-                             self.config,[self.lambdaPions])
+                             self.config,[self.pions])
         decays = [['p+','K-'],['K+','p~-']]
         filter = SubPIDMMFilter('X2PKSubPIDBeauty2XGamma',Code='ALL',
                                 MinMM=1000,MaxMM=2500,PIDs=decays)

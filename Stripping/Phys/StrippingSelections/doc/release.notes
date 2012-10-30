@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-10-30 - Ricardo Vazquez Gomez
+ - Bug fix on the lambda(pK) lines in Radiative stream
+
 ! 2012-10-19 - Anton Poluektov 
  - Add Reco14 test sample: 
    * tests/TestMyStrippingLineOn2012Data_Reco14.py    - example job
