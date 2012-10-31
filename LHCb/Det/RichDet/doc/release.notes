@@ -4,6 +4,12 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-10-31 - Antonis Papanestis
+ - Added method rich() to DeRich to return the DetectorType
+ - Added missing converters for DeHorizRich
+ - Added DeHorizRich in the dictionary files.
+
+
 ! 2012-10-24 - Antonis Papanestis
  - Addition of new clas DeHorizRich
  - Modifications in DeRichSphMirror DeRichPMTPanel DeRichPMT &

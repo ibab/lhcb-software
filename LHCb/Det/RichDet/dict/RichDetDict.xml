@@ -3,6 +3,7 @@
   <class name="DeRich"                    />
   <class name="DeRich1"                   />
   <class name="DeRich2"                   />
+  <class name="DeHorizRich"               />
   <class name="DeRichBeamPipe"            />
   <class name="DeRichPD"                  />
   <class name="DeRichHPD"                 />

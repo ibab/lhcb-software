@@ -6,6 +6,7 @@
 #include "RichDet/DeRichBase.h"
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
+#include "RichDet/DeHorizRich.h"
 #include "RichDet/DeRichAerogelRadiator.h"
 #include "RichDet/DeRichBeamPipe.h"
 #include "RichDet/DeRichGasRadiator.h"

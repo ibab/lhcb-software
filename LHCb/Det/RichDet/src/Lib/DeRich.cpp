@@ -68,14 +68,14 @@ StatusCode DeRich::initialize ( )
 {
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Initialize " << name() << endmsg;
-  
+
   if ( exists( "SphMirrorSegRows" ) )
   {
     m_sphMirrorSegRows  = param<int>( "SphMirrorSegRows" );
     m_sphMirrorSegCols  = param<int>( "SphMirrorSegColumns" );
     m_positionInfo      = true;
   }
-  
+
   if ( exists( "SecMirrorSegRows" ) )
   {
     m_secMirrorSegRows = param<int>( "SecMirrorSegRows" );
@@ -89,7 +89,7 @@ StatusCode DeRich::initialize ( )
 
   if ( exists ( "RichPhotoDetectorConfig" ) )
   {
-    m_RichPhotoDetConfig 
+    m_RichPhotoDetConfig
       = (Rich::RichPhDetConfigType) param<int>( "RichPhotoDetectorConfig" );
   }
   else
@@ -97,7 +97,7 @@ StatusCode DeRich::initialize ( )
     // assume HPDs
     m_RichPhotoDetConfig = Rich::HPDConfig;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -109,11 +109,11 @@ void DeRich::loadNominalQuantumEff() const
   delete m_nominalPDQuantumEff;
   m_nominalPDQuantumEff = NULL;
 
-  if      ( m_RichPhotoDetConfig == Rich::HPDConfig ) 
+  if      ( m_RichPhotoDetConfig == Rich::HPDConfig )
   {
     m_nominalPDQuantumEff = loadNominalHPDQuantumEff();
   }
-  else if ( m_RichPhotoDetConfig == Rich::PMTConfig ) 
+  else if ( m_RichPhotoDetConfig == Rich::PMTConfig )
   {
     m_nominalPDQuantumEff = loadNominalPMTQuantumEff();
   }
@@ -257,11 +257,11 @@ RichMirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
 
 //=========================================================================
 
-StatusCode 
+StatusCode
 DeRich::alignMirrors ( const std::vector<const ILVolume*>& mirrorContainers,
                        const std::string& mirrorID,
                        const SmartRef<Condition>& mirrorAlignCond,
-                       const std::string& Rvector ) const 
+                       const std::string& Rvector ) const
 {
 
   if ( msgLevel(MSG::VERBOSE) )
@@ -269,7 +269,7 @@ DeRich::alignMirrors ( const std::vector<const ILVolume*>& mirrorContainers,
 
   std::map<int, IPVolume*> mirrors;
 
-  for ( std::vector<const ILVolume*>::const_iterator contIter = mirrorContainers.begin(); 
+  for ( std::vector<const ILVolume*>::const_iterator contIter = mirrorContainers.begin();
         contIter != mirrorContainers.end(); ++contIter )
   {
     for ( unsigned int i=0; i<(*contIter)->noPVolumes(); ++i )
@@ -367,7 +367,7 @@ DeRichPDPanel * DeRich::pdPanel( const Rich::Side panel ) const
 
     DeRichPDPanel* phdePanel = NULL;
 
-    if      ( RichPhotoDetConfig() == Rich::HPDConfig ) 
+    if      ( RichPhotoDetConfig() == Rich::HPDConfig )
     {
       SmartDataPtr<DeRichHPDPanel> aHpdPanel( dataSvc(), pName );
       phdePanel = aHpdPanel;

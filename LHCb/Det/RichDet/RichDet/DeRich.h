@@ -21,6 +21,7 @@
 #include "GaudiKernel/Plane3DTypes.h"
 
 // LHCbKernel
+#include "Kernel/RichDetectorType.h"
 #include "Kernel/RichSide.h"
 
 // Local
@@ -93,6 +94,26 @@ public:
    * @return The side for this point
    */
   virtual Rich::Side side( const Gaudi::XYZPoint& point ) const = 0;
+
+  /**
+   * Returns the detector type for this Rich
+   *
+   * @return The detector type
+   */
+  inline Rich::DetectorType rich() const
+  {
+    return m_rich;
+  }
+
+  /**
+   * Returns the RichSystem
+   *
+   * @return The DeRichSystem object
+   */
+  inline DeRichSystem* deRichSystem() const
+  {
+    return deRichSys();
+  }
 
   /**
    * Returns the nominal spherical mirror radius for this Rich
@@ -215,6 +236,9 @@ private:
   void loadNominalQuantumEff() const;
 
 protected:
+
+  /// rich type
+  Rich::DetectorType m_rich;
 
   /// The nominal radius of the spherical mirror
   double m_sphMirrorRadius;

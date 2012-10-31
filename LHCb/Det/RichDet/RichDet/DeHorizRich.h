@@ -14,7 +14,7 @@
 #include "RichDet/DeRich.h"
 
 // External declarations
-extern const CLID CLID_DeHorizRich;
+extern const CLID CLID_DEHorizRich;
 
 
 /** @class DeHorizRich RichDet/DeHorizRich.h
@@ -89,6 +89,11 @@ public:
    */
   virtual Rich::Side side( const Gaudi::XYZPoint& point ) const;
 
+  /// Align the primary mirrors
+  virtual StatusCode alignSphMirrors();
+
+  /// Align the secondary mirrors
+  virtual StatusCode alignSecMirrors();
 
 private:
 
@@ -111,6 +116,12 @@ private:
 
   /// The nominal normal vector of the flat mirror plane (positive side)
   Gaudi::XYZVector m_nominalNormalLeft;
+
+  /// Condition for the alignment of the spherical mirrors
+  SmartRef<Condition> m_sphMirAlignCond;
+
+  /// Condition for the alignment of the secondary mirrors
+  SmartRef<Condition> m_secMirAlignCond;
 
 };
 

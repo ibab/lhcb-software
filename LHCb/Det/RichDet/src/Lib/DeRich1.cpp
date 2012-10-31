@@ -27,8 +27,9 @@ const CLID CLID_DERich1 = 12001;  // User defined
 // Standard Constructors
 DeRich1::DeRich1(const std::string & name)
   : DeRich ( name )
-{ 
-  setMyName("DeRich1"); 
+{
+  m_rich = Rich::Rich1;
+  setMyName("DeRich1");
 }
 
 // Standard Destructor
@@ -49,7 +50,7 @@ StatusCode DeRich1::initialize()
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
- 
+
   const std::vector<double>& nominalCoC = param<std::vector<double> >("NominalSphMirrorCoC");
   m_nominalCentreOfCurvatureTop    =
     Gaudi::XYZPoint( nominalCoC[0],  nominalCoC[1], nominalCoC[2] );
@@ -87,12 +88,12 @@ StatusCode DeRich1::initialize()
     pvGasWindow = pvRich1SubMaster->lvolume()->pvolume("pvRich1MagShH0:0")->
       lvolume()->pvolume("pvRich1GQuartzWH0:0");
   }
-  if ( pvGasWindow ) 
+  if ( pvGasWindow )
   {
     const Material::Tables& quartzWinTabProps = pvGasWindow->lvolume()->
       material()->tabulatedProperties();
     Material::Tables::const_iterator matIter;
-    for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter) 
+    for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter)
     {
       if( (*matIter) )
       {
@@ -119,7 +120,7 @@ StatusCode DeRich1::initialize()
         }
       }
     }
-  } 
+  }
   else
   {
     error() << "Could not find gas window properties" << endmsg;
@@ -128,7 +129,7 @@ StatusCode DeRich1::initialize()
 
   // get the nominal reflectivity of the spherical mirror
   const std::string sphCondname("NominalSphericalMirrorReflectivityLoc");
-  const std::string sphMirrorReflLoc = 
+  const std::string sphMirrorReflLoc =
     ( exists             ( sphCondname ) ?
       param<std::string> ( sphCondname ) :
       "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT" );
@@ -154,7 +155,7 @@ StatusCode DeRich1::initialize()
 
   // get the nominal reflectivity of the secondary mirror
   const std::string secCondName("NominalSecondaryMirrorReflectivityLoc");
-  const std::string secMirrorReflLoc = 
+  const std::string secMirrorReflLoc =
     ( exists             ( secCondName ) ?
       param<std::string> ( secCondName ) :
       "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT" );
@@ -189,7 +190,7 @@ StatusCode DeRich1::initialize()
     alignMirros = true;
     updMgrSvc()->registerCondition(this,m_sphMirAlignCond.path(),&DeRich1::alignSphMirrors);
   }
-  else 
+  else
   {
     m_sphMirAlignCond = NULL;
   }
@@ -204,7 +205,7 @@ StatusCode DeRich1::initialize()
     m_secMirAlignCond = NULL;
   }
 
-  const StatusCode upsc = 
+  const StatusCode upsc =
     ( alignMirros ? updMgrSvc()->update(this) : StatusCode::SUCCESS );
 
   // initialize all child detector elements. This triggers the update
@@ -255,10 +256,10 @@ StatusCode DeRich1::alignSecMirrors()
 //=========================================================================
 //  nominalCentreOfCurvature
 //=========================================================================
-const Gaudi::XYZPoint& 
+const Gaudi::XYZPoint&
 DeRich1::nominalCentreOfCurvature(const Rich::Side side) const
 {
-  return ( Rich::bottom == side ? 
+  return ( Rich::bottom == side ?
            m_nominalCentreOfCurvatureBottom :
            m_nominalCentreOfCurvatureTop   );
 }
@@ -298,32 +299,32 @@ const std::string DeRich1::panelName( const Rich::Side panel ) const
                         DeRichLocations::Rich1Panel1 );
   // info()<<"DeRich1 Panel: Rich Config panelname config"<<pname
   //      <<"  "<<RichPhotoDetConfig()<<endmsg;
-  
+
 
   if(  RichPhotoDetConfig() == Rich::HPDConfig ) {
-    
-      if ( exists("Rich1HPDPanelDetElemLocations") )
-       {
-        const std::vector<std::string>& panelLoc 
-          = paramVect<std::string>("Rich1HPDPanelDetElemLocations");
-        pname = panelLoc[panel];
-       }else if (  exists("HPDPanelDetElemLocations") ) {  //kept for backward compatibility
-        const std::vector<std::string>& panelLoc 
-          = paramVect<std::string>("HPDPanelDetElemLocations");
-        pname = panelLoc[panel];        
-      }
-      
+
+    if ( exists("Rich1HPDPanelDetElemLocations") )
+    {
+      const std::vector<std::string>& panelLoc
+        = paramVect<std::string>("Rich1HPDPanelDetElemLocations");
+      pname = panelLoc[panel];
+    }else if (  exists("HPDPanelDetElemLocations") ) {  //kept for backward compatibility
+      const std::vector<std::string>& panelLoc
+        = paramVect<std::string>("HPDPanelDetElemLocations");
+      pname = panelLoc[panel];
+    }
+
   }else if ( RichPhotoDetConfig() == Rich::PMTConfig ) {
-    
-      if ( exists("Rich1PMTPanelDetElemLocations") )
-       {
-        const std::vector<std::string>& panelLoc 
-          = paramVect<std::string>("Rich1PMTPanelDetElemLocations");
-        pname = panelLoc[panel];
-       }    
+
+    if ( exists("Rich1PMTPanelDetElemLocations") )
+    {
+      const std::vector<std::string>& panelLoc
+        = paramVect<std::string>("Rich1PMTPanelDetElemLocations");
+      pname = panelLoc[panel];
+    }
   }
 
-  
+
   return pname;
 }
 

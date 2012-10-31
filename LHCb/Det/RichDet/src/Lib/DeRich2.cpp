@@ -26,9 +26,12 @@
 const CLID CLID_DERich2 = 12002;  // User defined
 
 // Standard Constructors
-DeRich2::DeRich2(const std::string & name) 
+DeRich2::DeRich2(const std::string & name)
   : DeRich ( name )
-{ setMyName("DeRich2"); }
+{
+  m_rich = Rich::Rich2;
+  setMyName("DeRich2");
+}
 
 // Standard Destructor
 DeRich2::~DeRich2() { }
@@ -47,7 +50,7 @@ StatusCode DeRich2::initialize()
     debug() << "Initialize " << name() << endmsg;
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
-  
+
 
   const std::vector<double>& nominalCoC = param<std::vector<double> >("NominalSphMirrorCoC");
   m_nominalCentreOfCurvatureLeft  =
@@ -85,7 +88,7 @@ StatusCode DeRich2::initialize()
     const Material::Tables& quartzWinTabProps = pvGasWindow->lvolume()->
       material()->tabulatedProperties();
     Material::Tables::const_iterator matIter;
-    for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter) 
+    for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter)
     {
       if( (*matIter) )
       {
@@ -112,7 +115,7 @@ StatusCode DeRich2::initialize()
       }
     }
   }
-  else 
+  else
   {
     error() << "Could not find gas window properties" << endmsg;
     return StatusCode::FAILURE;
@@ -120,7 +123,7 @@ StatusCode DeRich2::initialize()
 
   // get the nominal reflectivity of the spherical mirror
   const std::string sphCondName("NominalSphericalMirrorReflectivityLoc");
-  const std::string sphMirrorReflLoc = 
+  const std::string sphMirrorReflLoc =
     ( exists            ( sphCondName ) ?
       param<std::string>( sphCondName ) :
       "/dd/Geometry/AfterMagnetRegion/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT" );
@@ -199,9 +202,9 @@ StatusCode DeRich2::initialize()
     m_secMirAlignCond = 0;
   }
 
-  const StatusCode upsc = 
+  const StatusCode upsc =
     ( needUpdate ? updMgrSvc()->update(this) : StatusCode::SUCCESS );
- 
+
   return upsc;
 }
 
@@ -261,10 +264,10 @@ StatusCode DeRich2::alignSecMirrors()
 //=========================================================================
 //  nominalCentreOfCurvature
 //=========================================================================
-const Gaudi::XYZPoint& 
+const Gaudi::XYZPoint&
 DeRich2::nominalCentreOfCurvature(const Rich::Side side) const
 {
-  return ( Rich::right == side ? 
+  return ( Rich::right == side ?
            m_nominalCentreOfCurvatureRight :
            m_nominalCentreOfCurvatureLeft );
 }
@@ -307,26 +310,26 @@ const std::string DeRich2::panelName( const Rich::Side panel ) const
 
   if(  RichPhotoDetConfig() == Rich::HPDConfig ) {
 
-      if ( exists("Rich2HPDPanelDetElemLocations") )
-       {
-        const std::vector<std::string>& panelLoc 
-          = paramVect<std::string>("Rich2HPDPanelDetElemLocations");
-        pname = panelLoc[panel];
-       }else if (  exists("HPDPanelDetElemLocations") ) {  //kept for backward compatibility
-        const std::vector<std::string>& panelLoc 
-          = paramVect<std::string>("HPDPanelDetElemLocations");
-        pname = panelLoc[panel];        
-      }
-      
-      
+    if ( exists("Rich2HPDPanelDetElemLocations") )
+    {
+      const std::vector<std::string>& panelLoc
+        = paramVect<std::string>("Rich2HPDPanelDetElemLocations");
+      pname = panelLoc[panel];
+    }else if (  exists("HPDPanelDetElemLocations") ) {  //kept for backward compatibility
+      const std::vector<std::string>& panelLoc
+        = paramVect<std::string>("HPDPanelDetElemLocations");
+      pname = panelLoc[panel];
+    }
+
+
   }else if ( RichPhotoDetConfig() == Rich::PMTConfig ) {
-    
-      if ( exists("Rich2PMTPanelDetElemLocations") )
-       {
-        const std::vector<std::string>& panelLoc 
-          = paramVect<std::string>("Rich2PMTPanelDetElemLocations");
-        pname = panelLoc[panel];
-       }    
+
+    if ( exists("Rich2PMTPanelDetElemLocations") )
+    {
+      const std::vector<std::string>& panelLoc
+        = paramVect<std::string>("Rich2PMTPanelDetElemLocations");
+      pname = panelLoc[panel];
+    }
   }
 
   return pname;
