@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2012-10-31 - Matt Coombes
+ - Updated line 143 in RichAlignmentEventSelection.cpp as suggested by coverity.
+ 
 !========================= RichAlignment v1r7 2012-07-24 =========================
 ! 2012-07-13 - Antonis Papanestis
  - Limit the number of photons per HPD when producing NTuples. 

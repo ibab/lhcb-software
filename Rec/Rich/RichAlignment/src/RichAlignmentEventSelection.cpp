@@ -140,7 +140,7 @@ StatusCode EventSelection::execute()
       if ( !unAmbiguousPhoton ) { continue; }
 
       // mirror combination number
-      const unsigned long long key = (100000*sphMirNum) + flatMirNum;
+      const unsigned long long key = (100000*(unsigned long long)sphMirNum) + flatMirNum;
 
       // count the photons in each of the mirror combinations
       ++m_combiMap[key];
