@@ -249,9 +249,8 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
 
   if(CovTau(0,0)<0)
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "unexpected negative element CovTau(0,0)" << endmsg;
-    return StatusCode::FAILURE;
+    if ( msgLevel(MSG::DEBUG) )  debug() << "unexpected negative element CovTau(0,0)" << endmsg;
+    return Warning("unable to estimate time error: covariance element is negative ",StatusCode::FAILURE,0);
   }
 
   error = std::sqrt(CovTau(0,0));

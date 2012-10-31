@@ -4,7 +4,10 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
-! 2012-10-29 - Yuehong Xie
+! 2012-10-31 - Yuehong Xie
+ - Add warnign message in PropertimeFitter
+
+! 2012-10-30 - Yuehong Xie
  - Protection against square root of negative value in PropertimeFitter
 
 ! 2012-10-29 - Chris Jones
