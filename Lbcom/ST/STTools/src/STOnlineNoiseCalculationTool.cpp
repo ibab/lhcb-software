@@ -87,7 +87,7 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
 
   // Get the LCMS data
   const LHCb::STTELL1Datas* lcms = getIfExists<LHCb::STTELL1Datas>(m_LCMSLocation);
-  if ( NULL == data ) {
+  if ( NULL == lcms ) {
     // Skip if there is no Tell1 data
     return StatusCode::SUCCESS;
   }
