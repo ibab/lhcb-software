@@ -75,10 +75,7 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
   const Gaudi::XYZPoint& BPosition  = B.referencePoint();
   const Gaudi::LorentzVector& BLmom = B.momentum();
 
-  const double BMeasuredMass = std::sqrt( BLmom.T()*BLmom.T() - 
-                                          BLmom.X()*BLmom.X() - 
-                                          BLmom.Y()*BLmom.Y() - 
-                                          BLmom.Z()*BLmom.Z() );
+  const double BMeasuredMass = BLmom.M();
 
   const Gaudi::SymMatrix7x7& CovB = B.covMatrix();
 

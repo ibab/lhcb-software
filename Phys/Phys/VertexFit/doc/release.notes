@@ -6,6 +6,7 @@
 
 ! 2012-10-31 - Yuehong Xie
  - Add warnign message in PropertimeFitter
+ - Avoid recalculating mass
 
 ! 2012-10-30 - Yuehong Xie
  - Protection against square root of negative value in PropertimeFitter
