@@ -1,5 +1,6 @@
 2012-11-01  Ben Couturier  <ben.couturier@cern.ch>
 
+	* cmt/requirements: release of version v3r9
 	* python/LbUtils/HTMLDependencyManager.py: Fixed problem with empty HTML files. 
 
 2012-10-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
