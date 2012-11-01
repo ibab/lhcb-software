@@ -4,6 +4,12 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2012-11-01 - Antonis Papanestis
+ - Added new tool to find the existing Rich detectors from a variable
+   in the xml of teh AfterMagnetRegion
+ - Changed RichSmartID tool to use the new RichDetectorTool and to work 
+   with only  asingle RICH 
+
 !========================= RichTools v2r40 2012-06-25 =========================
 ! 2012-06-14 - Chris Jones
  - Add an option to RichRadiatorTool to allow certain Aerogel tile IDs to

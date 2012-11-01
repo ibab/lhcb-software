@@ -23,6 +23,7 @@
 // from RichKernel
 #include "RichKernel/RichSmartIDSorter.h"
 #include "RichKernel/RichPixelCluster.h"
+#include "RichKernel/RichMap.h"
 
 // RichDet
 #include "RichDet/DeRich.h"
@@ -97,7 +98,7 @@ namespace Rich
     typedef std::vector<const DeRichPDPanel*> PDPanelsPerRich;
 
     /// typedef for photodetector for each rich
-    typedef std::vector<PDPanelsPerRich> RichPDPanels;
+    typedef Rich::Map<Rich::DetectorType, PDPanelsPerRich> RichPDPanels;
 
   private:
 

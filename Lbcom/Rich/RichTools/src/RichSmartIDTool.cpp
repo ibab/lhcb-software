@@ -23,9 +23,7 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, SmartIDTool )
   Rich::SmartIDTool::SmartIDTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-    : Rich::ToolBase   ( type, name, parent ),
-      m_photoDetPanels ( Rich::NRiches,
-                         PDPanelsPerRich(Rich::NPDPanelsPerRICH,NULL) )
+    : Rich::ToolBase   ( type, name, parent )
 {
   // Interface
   declareInterface<ISmartIDTool>(this);
@@ -46,23 +44,21 @@ StatusCode Rich::SmartIDTool::initialize()
   const StatusCode sc = Rich::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_richS = getDet<DeRichSystem>(DeRichLocations::RichSystem);
+  // Get the Riches and Rich System
+  const std::vector<DeRich*> deRiches = deRichDetectors();
+  m_richS = deRiches[0]->deRichSystem();
 
-  // Get the Riches
-  const DeRich * deRich[Rich::NRiches] =
-    { getDet<DeRich>(DeRichLocations::Rich1),
-      getDet<DeRich>(DeRichLocations::Rich2) };
-  
   // loop over riches and photo detector panels
-  for ( unsigned int rich = 0; rich < m_photoDetPanels.size(); ++rich )
+  for ( unsigned int r = 0; r < deRiches.size(); ++r )
   {
-    for ( unsigned int panel = 0; panel < m_photoDetPanels[rich].size(); ++panel )
+    m_photoDetPanels[deRiches[r]->rich()] = PDPanelsPerRich(Rich::NPDPanelsPerRICH,NULL);
+    for ( unsigned int panel = 0; panel < Rich::NPDPanelsPerRICH; ++panel )
     {
-      m_photoDetPanels[rich][panel] = deRich[(Rich::DetectorType)rich]->pdPanel((Rich::Side)panel);
+      (m_photoDetPanels[deRiches[r]->rich()])[panel] = deRiches[r]->pdPanel( (Rich::Side)panel );
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Stored photodetector panel "
-                << m_photoDetPanels[rich][panel]->name()
-                << " offset=" << m_photoDetPanels[rich][panel]->localOffset()
+                << m_photoDetPanels[deRiches[r]->rich()][panel]->name()
+                << " offset=" << m_photoDetPanels[deRiches[r]->rich()][panel]->localOffset()
                 << endmsg;
     }
   }
@@ -110,7 +106,8 @@ StatusCode
 Rich::SmartIDTool::globalPosition ( const LHCb::RichSmartID smartID,
                                     Gaudi::XYZPoint& detectPoint ) const
 {
-  return m_photoDetPanels[smartID.rich()][smartID.panel()]->
+  RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(smartID.rich());
+  return richIndex->second[smartID.panel()]->
     detectionPoint(smartID, detectPoint, m_hitPhotoCathSide);
 }
 
@@ -122,7 +119,8 @@ Rich::SmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPoint,
                                     const Rich::DetectorType rich,
                                     const Rich::Side side ) const
 {
-  return m_photoDetPanels[rich][side]->PDPanelToGlobalMatrix()*localPoint;
+  RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(rich);
+  return richIndex->second[side]->PDPanelToGlobalMatrix()*localPoint;
 }
 
 //=============================================================================
@@ -175,7 +173,8 @@ Rich::SmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
       smartid.setRich  ( Rich::Rich2 );
       smartid.setPanel ( globalPoint.x() > 0.0 ? Rich::left : Rich::right );
     }
-    return m_photoDetPanels[smartid.rich()][smartid.panel()]->smartID(globalPoint,smartid);
+    RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(smartid.rich());
+    return richIndex->second[smartid.panel()]->smartID(globalPoint,smartid);
   }
 
   // Catch any GaudiExceptions thrown
@@ -205,12 +204,16 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
     if (globalPoint.y() > 0.0)
     {
       // top side
-      return m_photoDetPanels[Rich::Rich1][Rich::top]->globalToPDPanelMatrix()*globalPoint;
+      RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(Rich::Rich1);
+      return richIndex->second[Rich::top]->globalToPDPanelMatrix()*globalPoint;
+
+      // return m_photoDetPanels[Rich::Rich1][Rich::top]->globalToPDPanelMatrix()*globalPoint;
     }
     else
     {
       // bottom side
-      return m_photoDetPanels[Rich::Rich1][Rich::bottom]->globalToPDPanelMatrix()*globalPoint;
+      RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(Rich::Rich1);
+      return richIndex->second[Rich::bottom]->globalToPDPanelMatrix()*globalPoint;
     }
   }
   else   // Rich2
@@ -218,12 +221,14 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
     if (globalPoint.x() > 0.0)
     {
       // left side
-      return m_photoDetPanels[Rich::Rich2][Rich::left]->globalToPDPanelMatrix()*globalPoint;
+      RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(Rich::Rich2);
+      return richIndex->second[Rich::left]->globalToPDPanelMatrix()*globalPoint;
     }
     else
     {
       // right side
-      return m_photoDetPanels[Rich::Rich2][Rich::right]->globalToPDPanelMatrix()*globalPoint;
+      RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(Rich::Rich2);
+      return richIndex->second[Rich::right]->globalToPDPanelMatrix()*globalPoint;
     }
   }
 
@@ -245,13 +250,15 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
     StatusCode sc = StatusCode::SUCCESS;
 
     // Fill for RICH1
-    sc = m_photoDetPanels[Rich::Rich1][Rich::top]->readoutChannelList(m_readoutChannels);
-    sc = sc && m_photoDetPanels[Rich::Rich1][Rich::bottom]->readoutChannelList(m_readoutChannels);
+    RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(Rich::Rich1);
+    sc = richIndex->second[Rich::top]->readoutChannelList(m_readoutChannels);
+    sc = richIndex->second[Rich::bottom]->readoutChannelList(m_readoutChannels);
     const unsigned int nRich1 = m_readoutChannels.size();
 
     // Fill for RICH2
-    sc = sc && m_photoDetPanels[Rich::Rich2][Rich::left]->readoutChannelList(m_readoutChannels);
-    sc = sc && m_photoDetPanels[Rich::Rich2][Rich::right]->readoutChannelList(m_readoutChannels);
+    richIndex = m_photoDetPanels.find(Rich::Rich2);
+    sc = richIndex->second[Rich::left]->readoutChannelList(m_readoutChannels);
+    sc = richIndex->second[Rich::right]->readoutChannelList(m_readoutChannels);
     const unsigned int nRich2 = m_readoutChannels.size() - nRich1;
 
     if ( sc.isFailure() ) Exception( "Problem reading readout channel lists from DeRichPDPanels" );
