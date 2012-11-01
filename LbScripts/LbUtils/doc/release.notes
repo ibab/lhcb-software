@@ -1,3 +1,7 @@
+2012-11-01  Ben Couturier  <ben.couturier@cern.ch>
+
+	* python/LbUtils/HTMLDependencyManager.py: Fixed problem with empty HTML files. 
+
 2012-10-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbUtils/_helpers/pkg_resources.py: Copy of the module from Distribute (0.6.30)

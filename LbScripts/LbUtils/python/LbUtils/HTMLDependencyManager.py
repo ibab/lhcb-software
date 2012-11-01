@@ -162,7 +162,11 @@ class ProjectFile(object):
         fileContent = [line for line in fileContent if line != None and line != ""]
         #for l in fileContent:
         #    print l
-        obj.parseDepFile(fileContent)
+        try:
+            obj.parseDepFile(fileContent)
+        except:
+            print "Error parsing: %s - ignoring" % filename
+
         return obj
 
     @classmethod
