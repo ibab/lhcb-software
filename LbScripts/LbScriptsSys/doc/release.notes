@@ -1,3 +1,48 @@
+2012-11-01 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r3
+
+	LbConfiguration
+	* python/LbConfiguration/Extenal.py: changed the version of Doxygen
+	* python/LbConfiguration/Platform.py: changed the Ubuntu platform ID
+	* python/LbConfiguration/External.py: added default version of CMake
+	* python/LbConfiguration/LbLogin.py: set PATH to CMake and LCG_hostos for
+	the 'lcg-' compiler wrappers.
+	* python/LbConfiguration/Package.py: Added new package BandQConfig
+
+	LbRelease
+	* scripts/lb-project-deps: fix bug when dealing with empty HTML files
+	* python/LbRelease/LHCbDoc.py:
+	* python/LbRelease/_LHCbDocResources: added Doxygen configuration resources
+	in a dedicated module as files instead of strings.
+	* scripts/install_cmake: Added script that allows downloading and installing 
+	Cmake
+	* python/LbRelease/rcs.py: add 'configure' to the project files to be checked
+	out and tagged
+	* tests/test_rcs.py: tests for the module LbRelease.rcs
+	* tests/data: data for the tests of LbRelease.rcs
+	* python/LbRelease/rcs.py: fixes to LbRelease.rcs
+	* python/LbRelease/LHCbDoc.py: use rounding instead of truncating for the
+	dimensions of the dependencies graph (chrome didn't like it).
+
+	LbUtils
+	* python/LbUtils/HTMLDependencyManager.py: Fixed problem with empty HTML files. 
+	* python/LbUtils/_helpers/pkg_resources.py: Copy of the module from Distribute (0.6.30)
+	to allow extraction of resource files from directories or .zip/.egg, modules.
+	See http://pypi.python.org/pypi/distribute
+	* data/Makefile: modified packages lookup to avoid finding stuff in */test/data/*
+	* scripts/cern-lxdistcc-wrappers.sh: fixed bugs: host-OS detection and clean
+	up of LD_LIBRARY_PATH.
+	* scripts/cern-lxdistcc-wrappers.sh: imported the shell wrapper for the LCG
+	compilers from the package cern-lxdistcc-wrappers-1-11.slc6.x86_64.rpm, with
+	some changes, and created the symlinks for a few known versions.
+	* cmt/update_gaudi_env_script.sh: modified to always use 'archive', so that
+	we can have git keyword replacements, and changed the format of the log.
+	* cmake: updated to the latest version in Gaudi.
+	* cmt/update_gaudi_env_script.sh: minor fix
+	* cmt/update_gaudi_env_script.sh: script to import/update the script env.py
+	from the Gaudi repository. A first import has been performed too.
+
 2012-09-28 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r2
