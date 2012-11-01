@@ -27,7 +27,7 @@ class Deps(ProjectTool):
 
         desc = """ Check the dependencies for the LHCb project
         The actions can be:
-        - reload: Parse all files in the HTLM dir to reload the DB
+        - reloaddb: Parse all files in the HTLM dir to reload the DB
         - checkMissing: Iterate through the DB to see if any tar file is missing """
 
         ProjectTool.__init__(self, usage = "%prog [options] action [project version])",
@@ -118,6 +118,8 @@ class Deps(ProjectTool):
         # Now iterating on the list
         for pf in deps.projectFiles:
             # In any case checking who's referenced
+            if pf == None:
+                continue
             if pf.filename in iniList:
                   refList[pf.filename] = 'refd'
             else:
@@ -222,7 +224,7 @@ class Deps(ProjectTool):
         functions_list = [ (o[0].replace("command", "").upper(), o[1])  \
                           for o in getmembers(self, predicate=ismethod) \
                           if o[0].startswith("command")]
-
+        print functions_list
         match = filter( lambda x: x[0] == self.action, functions_list)
         if len(match) != 1:
             self.log.error("problem finding command: %s" % self.action)

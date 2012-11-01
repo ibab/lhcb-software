@@ -1,3 +1,8 @@
+2012-11-01 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v4r9
+	* scripts/lb-project-deps: fix bug when dealing with empty HTML files
+
 2012-10-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc.py:
