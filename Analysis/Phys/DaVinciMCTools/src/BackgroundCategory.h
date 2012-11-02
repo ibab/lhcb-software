@@ -69,7 +69,7 @@ public:
   /// Standard constructor
   BackgroundCategory( const std::string& type,
                       const std::string& name,
-                      const IInterface* parent);
+                      const IInterface* parent );
 
   StatusCode initialize();
 
@@ -122,10 +122,10 @@ private:
   DaughterAndPartnerVector m_daughtersAndPartners;
 
 
-  int m_inclusiveDecay; //are we studying an inclusive decay?
-  int m_semileptonicDecay; //are we studying a semileptnoic decay?
+  bool m_inclusiveDecay; //are we studying an inclusive decay?
+  bool m_semileptonicDecay; //are we studying a semileptnoic decay?
   int m_numNeutrinos; //How many neutrinos expected in our decay chain?
-  int m_useSoftPhotonCut ; //whether to use the ignore soft photons cut
+  bool m_useSoftPhotonCut ; //whether to use the ignore soft photons cut
   double m_softPhotonCut ; //ignore soft photons cut
   double m_lowMassCut ; /// cut applied to low-mass background
   double m_override; //see .cpp file for explanation

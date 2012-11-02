@@ -14,10 +14,6 @@
 //
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-
-DECLARE_TOOL_FACTORY( BackgroundCategory );
-
 using namespace Gaudi::Units;
 
 //=============================================================================
@@ -27,11 +23,11 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_ppSvc(0)
-  , m_particleDescendants(0)
-  , m_smartAssociator(0)
-  , m_printDecay(0)
-  , m_commonMother(0)
+  , m_ppSvc(NULL)
+  , m_particleDescendants(NULL)
+  , m_smartAssociator(NULL)
+  , m_printDecay(NULL)
+  , m_commonMother(NULL)
 {
   IBackgroundCategory::m_cat[-1]   = "Undefined";
   IBackgroundCategory::m_cat[0]    = "Signal";
@@ -52,13 +48,13 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   IBackgroundCategory::m_cat[1000] = "LastGlobal";
 
   declareInterface<IBackgroundCategory>(this);
-  declareProperty("LowMassBackgroundCut", m_lowMassCut = 100.*MeV) ;
-  declareProperty("SoftPhotonCut", m_softPhotonCut = 300.*MeV) ;
-  declareProperty("UseSoftPhotonCut", m_useSoftPhotonCut = 1) ;
-  declareProperty("InclusiveDecay", m_inclusiveDecay = 0);
-  declareProperty("SemileptonicDecay", m_semileptonicDecay = 0);
-  declareProperty("NumNeutrinos", m_numNeutrinos = 0);
-  declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 0.0);
+  declareProperty("LowMassBackgroundCut", m_lowMassCut     = 100.*MeV );
+  declareProperty("SoftPhotonCut", m_softPhotonCut         = 300.*MeV );
+  declareProperty("UseSoftPhotonCut", m_useSoftPhotonCut   = true     );
+  declareProperty("InclusiveDecay", m_inclusiveDecay       = false    );
+  declareProperty("SemileptonicDecay", m_semileptonicDecay = false    );
+  declareProperty("NumNeutrinos", m_numNeutrinos           = 0        );
+  declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 0.0  );
   declareProperty("Calo2MCWeight", m_caloWeight=0.5); // equivalent of m_ovverride for neutral calorimetric objects
   declareProperty("ResonanceCut", m_rescut = 10.e-6);
   declareProperty("MCminWeight", m_minWeight = 0.);
@@ -78,13 +74,16 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
 {
 
   //Check if the tool was actually given a particle to categorise
-  if (!reconstructed_mother) {
+  if ( !reconstructed_mother )
+  {
     Exception("Given nothing to classify. Bye!");
   }
-  //Initialize the value of  the common mother to zero
-  m_commonMother = 0;
 
-  if (m_smartAssociator == NULL) {
+  //Initialize the value of the common mother to zero
+  m_commonMother = NULL;
+
+  if ( !m_smartAssociator )
+  {
     Exception("Something failed when making the associators. Bye!");
   }
 
@@ -100,10 +99,13 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
   ParticleVector particles_in_decay = m_particleDescendants->descendants(reconstructed_mother);
   if (msgLevel(MSG::VERBOSE)) verbose() << "Back from ParticleDescendants with the daughters"
                                         << endmsg ;
-  if (particles_in_decay.empty()) {
+  if (particles_in_decay.empty()) 
+  {
     Warning("No descendants for Particle!");
     return Undefined;
-  } else {
+  }
+  else 
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Descendents are "
                                           << particles_in_decay
                                           << endreq;
@@ -116,7 +118,8 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
   //First of all check for ghosts
   if ( areAnyFinalStateParticlesGhosts(mc_particles_linked_to_decay,
                                        particles_in_decay)
-       ) {
+       ) 
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "It is a ghost background" << endmsg;
     //This is a ghost
     return Ghost;
@@ -124,7 +127,8 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
 
   //Next check if two Particles are associated to the same particle,
   //if so this is a clone type background
-  if (foundClones(mc_particles_linked_to_decay)) {
+  if (foundClones(mc_particles_linked_to_decay)) 
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "This is a clone background" << endmsg;
     return Clone;
   }
@@ -134,7 +138,8 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
   //In this case we have combined something with its own mother to
   //create a new particle which is clearly unphysical. We'll
   //call this 'hierarchy' background until someone complains.
-  if (hierarchyProblem(mc_particles_linked_to_decay)) {
+  if ( hierarchyProblem(mc_particles_linked_to_decay) ) 
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "This is a hierarchy background" << endmsg;
     return Hierarchy;
   }
@@ -145,9 +150,10 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
   //First we test if the final state particles have a common mother;if it succeeds,
   //we have signal or 'physics backgrounds', else 'combinatorics'
   //For a list of what the conditions are, see the respective test functions
-  if (doAllFinalStateParticlesHaveACommonMother(mc_mothers_final,
-                                                mc_particles_linked_to_decay,
-                                                particles_in_decay) ) {
+  if ( doAllFinalStateParticlesHaveACommonMother(mc_mothers_final,
+                                                 mc_particles_linked_to_decay,
+                                                 particles_in_decay) ) 
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Checked if all have common mother"
                                           << endmsg;
     // We are in the territory of signal decays and
@@ -179,9 +185,12 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
         //This is a reflection
         return Reflection;
       }
-    } else {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Is it an an inclusive decay?" << endmsg;
-      if (m_inclusiveDecay == 1) {
+    } 
+    else
+    {
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Is it an inclusive decay?" << endmsg;
+      if ( m_inclusiveDecay ) 
+      {
         if (msgLevel(MSG::VERBOSE)) verbose() << "Inclusive decay type" << endmsg;
         if (areAllFinalStateParticlesCorrectlyIdentified(particles_in_decay,
                                                          mc_particles_linked_to_decay) &&
@@ -211,7 +220,7 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
       //A pileup
       return FromDifferentPV;
     } else {
-      int numFromPV = areAnyFinalStateParticlesFromAPrimaryVertex(mc_particles_linked_to_decay);
+      const int numFromPV = areAnyFinalStateParticlesFromAPrimaryVertex(mc_particles_linked_to_decay);
       if ( numFromPV > 0) {
         if (msgLevel(MSG::VERBOSE)) verbose() << "This is primary vertex background" << endmsg;
         if (numFromPV == 1) return FromPV;
@@ -242,19 +251,21 @@ BackgroundCategory::getDaughtersAndPartners( const LHCb::Particle* reconstructed
 //Returns the daughters of the particle being associated and their MC associated partners; this is a sort
 //of 'hidden' method.
 {
-  if ( NULL==reconstructed_mother){
+  if ( !reconstructed_mother )
+  {
     Exception("Got NULL pointer");
   }
 
-  DaughterAndPartnerVector::const_iterator iP;
-  int backcategory = category(reconstructed_mother);
+  const int backcategory = category(reconstructed_mother);
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Event is category "
                                         << backcategory
                                         << endmsg;
 
-  for (iP = m_daughtersAndPartners.begin(); iP != m_daughtersAndPartners.end(); ++iP){
-
+  for ( DaughterAndPartnerVector::const_iterator iP = m_daughtersAndPartners.begin(); 
+        iP != m_daughtersAndPartners.end(); ++iP )
+  {
+    
     if (msgLevel(MSG::VERBOSE)) verbose() << "Reconstructed particle has PID"
                                           << ((*iP).first)->particleID().pid()
                                           << endmsg;
@@ -275,18 +286,27 @@ const LHCb::MCParticle* BackgroundCategory::origin(const LHCb::Particle* reconst
 //Note that the candidate may still be background even if this MCParticle has the same
 //PID as your composite particle!
 {
-  if ( NULL==reconstructed_mother){
+  if ( !reconstructed_mother )
+  {
     Exception("Got NULL pointer");
   }
 
-  int backcategory = category(reconstructed_mother);
+  const int backcategory = category(reconstructed_mother);
 
-  if (backcategory < 60) {
+  if ( backcategory < 60 ) 
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Getting the common mother"
                                           << endmsg;
-    if (m_commonMother) return m_commonMother;
-    else return 0;
-  } else return 0;
+    if ( m_commonMother ) 
+    {
+      return m_commonMother; 
+    }
+    else { return NULL; }
+  } 
+  else
+  {
+    return NULL;
+  }
 }
 //=============================================================================
 bool BackgroundCategory::isStable(int pid)
@@ -340,11 +360,10 @@ int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
   int sumofpids = 0;
   bool isitstable = false;
 
-  SmartRefVector<LHCb::MCParticle>::const_iterator iP;
   //Check for an MCMother with a null endvertex -- really shouldn't happen
   //here though, but the Cat is often betrayed by other pieces of code...
-  SmartRefVector<LHCb::MCVertex> motherEndVertices = topmother->endVertices();
-  if (motherEndVertices.size() ==0)
+  const SmartRefVector<LHCb::MCVertex>& motherEndVertices = topmother->endVertices();
+  if ( motherEndVertices.empty() )
     Exception("The Cat found a common MC mother but it has no daughters, please report this as a bug.");
   //Assuming all went well...
   SmartRefVector<LHCb::MCVertex>::const_iterator iV = motherEndVertices.begin();
@@ -356,9 +375,9 @@ int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
   if (msgLevel(MSG::VERBOSE)) verbose() << topmother->endVertices()
                                         << endmsg;
 
-  for (iP = (*iV)->products().begin(); iP != (*iV)->products().end(); ++iP) {
-
-
+  for ( SmartRefVector<LHCb::MCParticle>::const_iterator iP = (*iV)->products().begin();
+        iP != (*iV)->products().end(); ++iP )
+  {
 
     if ( m_useSoftPhotonCut &&
          (*iP)->particleID().abspid() == 22 &&
@@ -366,8 +385,8 @@ int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
 
     //Need to protect against MCParticles with null endVertices,
     //which are assumed to be stable
-    SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
-    if (VV.size() != 0) isitstable = (*(VV.begin()))->products().empty();
+    const SmartRefVector<LHCb::MCVertex>& VV = (*iP)->endVertices();
+    if ( !VV.empty() ) isitstable = (*(VV.begin()))->products().empty();
     else isitstable = true;
 
     //Print out some debug messages
@@ -419,13 +438,14 @@ int BackgroundCategory::topologycheck(const LHCb::Particle* topmother)
   int sumofpids = 0;
 
   ParticleVector particles_in_decay = m_particleDescendants->descendants(topmother);
-  ParticleVector::const_iterator iP = particles_in_decay.begin();
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Mother is a "
                                         << topmother->particleID().pid()
                                         << endmsg;
 
-  for (iP = particles_in_decay.begin(); iP != particles_in_decay.end(); ++iP) {
+  for ( ParticleVector::const_iterator iP = particles_in_decay.begin();
+        iP != particles_in_decay.end(); ++iP ) 
+  {
 
     if (msgLevel(MSG::VERBOSE)) verbose() << "Daughter is a "
                                           << (*iP)->particleID().pid()
@@ -433,7 +453,8 @@ int BackgroundCategory::topologycheck(const LHCb::Particle* topmother)
 
     //Here we just need to protect against adding photons (again the resolved/merged pi0 issue)
     //We never reconstruct neutrions so no need to worry abut them.
-    if ((*iP) != 0) {
+    if ( (*iP) != 0 ) 
+    {
 
       // merged pi0 : add the 2 unreconstructed photons to the sum
       if((*iP)->particleID().abspid() == 111 && (*iP)->isBasicParticle() )sumofpids += 44;
@@ -469,11 +490,10 @@ BackgroundCategory::create_finalstatedaughterarray_for_mcmother(const LHCb::MCPa
   MCParticleVector finalstateproducts;
   MCParticleVector tempfinalstateproducts;
 
-  SmartRefVector<LHCb::MCParticle>::const_iterator iP;
   //Check for an MCMother with a null endvertex -- really shouldn't happen
   //here though, but the Cat is often betrayed by other pieces of code...
-  SmartRefVector<LHCb::MCVertex> motherEndVertices = topmother->endVertices();
-  if (motherEndVertices.size() ==0)
+  const SmartRefVector<LHCb::MCVertex>& motherEndVertices = topmother->endVertices();
+  if (motherEndVertices.empty() )
     Exception("The Cat found a common MC mother but it has no daughters, please report this as a bug.");
   //Assuming all went well...
   SmartRefVector<LHCb::MCVertex>::const_iterator iV = motherEndVertices.begin();
@@ -485,15 +505,18 @@ BackgroundCategory::create_finalstatedaughterarray_for_mcmother(const LHCb::MCPa
                                         << " daughters"
                                         << endmsg;
 
-  for (iP = (*iV)->products().begin(); iP != (*iV)->products().end(); ++iP) {
+  for ( SmartRefVector<LHCb::MCParticle>::const_iterator iP = (*iV)->products().begin(); 
+        iP != (*iV)->products().end(); ++iP )
+  {
 
     //Need to protect against MCParticles with null endVertices,
     //which are assumed to be stable
-    SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
-    if (VV.size() != 0){ isitstable = (*(VV.begin()))->products().empty();}
+    const SmartRefVector<LHCb::MCVertex>& VV = (*iP)->endVertices();
+    if ( !VV.empty() ) { isitstable = (*(VV.begin()))->products().empty();}
     else{ isitstable = true;}
 
-    if (msgLevel(MSG::VERBOSE)){
+    if (msgLevel(MSG::VERBOSE))
+    {
       verbose() << (*iP)->particleID().abspid()
                 << " stable: "
                 << isStable( (*iP)->particleID().abspid() );
@@ -506,12 +529,15 @@ BackgroundCategory::create_finalstatedaughterarray_for_mcmother(const LHCb::MCPa
 
     if ( isitstable ||
          isStable( (*iP)->particleID().abspid() )
-         ) {
+         ) 
+    {
 
       //If it is a stable, add it to the final state array
       finalstateproducts.push_back(*iP);
 
-    } else {
+    }
+    else 
+    {
 
       //Otherwise recurse
       tempfinalstateproducts = create_finalstatedaughterarray_for_mcmother(*iP);
@@ -530,7 +556,8 @@ BackgroundCategory::create_finalstatedaughterarray_for_mcmother(const LHCb::MCPa
   return finalstateproducts;
 }
 //=============================================================================
-const LHCb::MCParticle* BackgroundCategory::get_top_mother_of_MCParticle(const LHCb::MCParticle* candidate)
+const LHCb::MCParticle* 
+BackgroundCategory::get_top_mother_of_MCParticle(const LHCb::MCParticle* candidate)
 //Gets the 'final' non-zero mother of an MCParticle as we go up the decay tree
 {
 
@@ -544,13 +571,14 @@ const LHCb::MCParticle* BackgroundCategory::get_top_mother_of_MCParticle(const L
                                         << candidate
                                         << endmsg;
 
-  do {
+  do 
+  {
 
     //go through all mothers until you find the final one
     finalmother = tmpmother;
     tmpmother = finalmother->mother();
 
-  } while (tmpmother != 0 );
+  } while ( tmpmother != NULL );
 
   return finalmother;
 
@@ -594,9 +622,10 @@ BackgroundCategory::get_lowest_common_mother(const MCParticleVector & mc_particl
                                           << tempmother->particleID().pid()
                                           << endmsg;
 
-    for (iMCP = mc_particles_to_compare.begin() + 1;
-         iMCP != mc_particles_to_compare.end();
-         ++iMCP) {
+    for ( iMCP = mc_particles_to_compare.begin() + 1;
+          iMCP != mc_particles_to_compare.end();
+          ++iMCP )
+    {
 
       carryon = true;
       if (!(*iMCP))
@@ -653,8 +682,10 @@ BackgroundCategory::get_lowest_common_mother(const MCParticleVector & mc_particl
 
   //First we isolate only those MC particles valid for this comparison,
   //i.e. only the ones matching to a stable final state particle
-  do{
-    if(*iPP) {
+  do
+  {
+    if ( *iPP )
+    {
 
       if (msgLevel(MSG::VERBOSE)) verbose() << "Looking at Particle "
                                             << (*iPP)
@@ -664,7 +695,8 @@ BackgroundCategory::get_lowest_common_mother(const MCParticleVector & mc_particl
 
       if ( isStable((*iPP)->particleID().abspid()) ||
            (*iPP)->isBasicParticle()
-           ) {
+           ) 
+      {
         //it is a stable so push back its associated MCP
         if (!(*iMCP)) return 0; //stable associated to nothing, so return 0
         mc_particles_to_compare.push_back(*iMCP);
@@ -678,12 +710,10 @@ BackgroundCategory::get_lowest_common_mother(const MCParticleVector & mc_particl
       ++iMCP; ++iPP;
     } else Exception("Your reconstructed particle had a null daughter, please report the bug."); //something went wrong
 
-  }while(iMCP != mc_particles_linked_to_decay.end() &&
-         iPP != particles_in_decay.end()
-         );
+  } while ( iMCP != mc_particles_linked_to_decay.end() &&
+            iPP != particles_in_decay.end()            );
 
   return get_lowest_common_mother(mc_particles_to_compare);
-
 }
 //=============================================================================
 bool BackgroundCategory::doAllFinalStateParticlesHaveACommonMother(MCParticleVector mc_mothers_final,
@@ -989,7 +1019,7 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
           if (msgLevel(MSG::VERBOSE)) verbose() << "The MC-associated particle has pid : "
                                                 << (*iP)->particleID().pid()
                                                 << endmsg;
-          SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
+          const SmartRefVector<LHCb::MCVertex>& VV = (*iP)->endVertices();
           if (VV.size() != 0) isitstable = (*(VV.begin()))->products().empty();
           else isitstable = true;
           if ( isitstable || isStable( (*iP)->particleID().abspid() )  ) {
@@ -1019,8 +1049,9 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
   return carryon;
 }
 //=============================================================================
-bool BackgroundCategory::areAllFinalStateParticlesCorrectlyIdentified(ParticleVector particles_in_decay,
-                                                                      MCParticleVector mc_particles_linked_to_decay)
+bool 
+BackgroundCategory::areAllFinalStateParticlesCorrectlyIdentified(ParticleVector particles_in_decay,
+                                                                 MCParticleVector mc_particles_linked_to_decay)
 //This condition checks if all the final state particles used to make the candidate particle are correctly
 //identified (according to PID).
 {
@@ -1522,7 +1553,6 @@ StatusCode BackgroundCategory::initialize()
     verbose() << "Starting to initialise Background Categorisation"
               << endmsg;
 
-  m_ppSvc = NULL;
   sc = service("LHCb::ParticlePropertySvc", m_ppSvc);
   if ( sc.isFailure() ) return sc;
 
@@ -1538,3 +1568,9 @@ StatusCode BackgroundCategory::initialize()
 
   return sc;
 }
+//=============================================================================
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( BackgroundCategory )
+
+//=============================================================================
