@@ -1,8 +1,12 @@
-!-------------------------------------------------------------------------------
+!------------------------------------------------------------------------------
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
-!-------------------------------------------------------------------------------
+!------------------------------------------------------------------------------
+
+! 2012-11-02 - Antonis Papanestis
+ - Adapted HPDIdentifier class to accept also numbering schemes for MaPMTs
+	 Scheme is RPMMMNN for Rich, Panel, Module (column) and Number
 
 ! 2012-10-26 - Antonis Papanestis
  - Added function deRichDetectors() to RichCommonBase to get the DeRich objects

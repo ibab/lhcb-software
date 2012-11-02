@@ -37,28 +37,51 @@ namespace Rich
        *  @param data The HPD information in a human readable form.
        *              The format is ABCCDD where A is the Rich number (1,2),
        *              B is the panel number (0,1), CC is the column number
-       *              and DD is the number in column
+       *              and DD is the number in column.
+       *              For the PMT case RPMMMNN is Rich, Panel, Module and Number
        */
       explicit HPDIdentifier( const int data = -1 ) : m_data(data) { }
 
       /// Constructor from a RichSmartID
       explicit HPDIdentifier( const LHCb::RichSmartID id )
-        : m_data ( id.isValid() ? 
-                   (int)(100000*(1+(int)id.rich()) + 10000*((int)id.panel()) +
-                         100*id.pdCol() + id.pdNumInCol()) : -1 )
-      { }
+        : m_data ( -1 )
+      {
+        if ( LHCb::RichSmartID::HPDID == id.idType() )
+        {
+          m_data = ( id.isValid() ?
+                     (int)(100000*(1+(int)id.rich()) + 10000*((int)id.panel()) +
+                           100*id.pdCol() + id.pdNumInCol()) : -1 );
+        }
+        else  // MaPMT
+        {
+          m_data = ( id.isValid() ?
+                     (int)(1000000*(1+(int)id.rich()) + 100000*((int)id.panel()) +
+                           100*id.pdCol() + id.pdNumInCol()) : -1 );
+        }
+      }
 
     public:
 
-      /// Return a RichSmartID 
+      /// Return a RichSmartID
       inline LHCb::RichSmartID smartID() const
       {
-        return ( m_data == -1 ?
-                 LHCb::RichSmartID() :
-                 LHCb::RichSmartID( (Rich::DetectorType)((m_data/100000)-1),
-                                    (Rich::Side)((m_data/10000)%10),
+        if ( m_data > 999999 ) // MaPMT
+        {
+          return LHCb::RichSmartID( (Rich::DetectorType)((m_data/1000000)-1),
+                                    (Rich::Side)((m_data/100000)%10),
                                     m_data%100,
-                                    (m_data/100)%100 ) );
+                                    (m_data/100)%1000,
+                                    LHCb::RichSmartID::MaPMTID);
+        }
+        else
+        {
+          return ( m_data == -1 ?
+                   LHCb::RichSmartID() :
+                   LHCb::RichSmartID( (Rich::DetectorType)((m_data/100000)-1),
+                                      (Rich::Side)((m_data/10000)%10),
+                                      m_data%100,
+                                      (m_data/100)%100 ) );
+        }
       }
 
       /// Implicit conversion into a RichSmartID
