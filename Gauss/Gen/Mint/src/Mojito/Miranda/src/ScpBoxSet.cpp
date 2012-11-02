@@ -64,19 +64,19 @@ void ScpBoxSet::resetEventCounts(){
     (*this)[i].resetEventCounts();
   }
 }
-bool ScpBoxSet::addData(const IDalitzEvent& evt){
+bool ScpBoxSet::addData(const IDalitzEvent& evt, double weight){
   for(unsigned int i=0; i < this->size(); i++){
-    if ((*this)[i].addData(evt)){
-      _histoData.addEvent(&evt);
+    if ((*this)[i].addData(evt, weight)){
+      _histoData.addEvent(&evt, weight);
       return true;
     }
   }
   return false;
 }
-bool ScpBoxSet::addData(const IDalitzEvent* evt){
+bool ScpBoxSet::addData(const IDalitzEvent* evt, double weight){
   for(unsigned int i=0; i < this->size(); i++){
-    if ((*this)[i].addData(evt)){
-      _histoData.addEvent(evt);
+    if ((*this)[i].addData(evt, weight)){
+      _histoData.addEvent(evt, weight);
       return true;
     }
   }
@@ -151,6 +151,13 @@ int ScpBoxSet::nData() const{
   int sum=0;
   for(unsigned int i=0; i < this->size(); i++){
     sum += (*this)[i].nData();
+  }
+  return sum;
+}
+double ScpBoxSet::weightedData() const{
+  double sum=0;
+  for(unsigned int i=0; i < this->size(); i++){
+    sum += (*this)[i].weightedData();
   }
   return sum;
 }
@@ -238,8 +245,8 @@ std::ostream& operator<<(std::ostream& os, const ScpBoxSet& c2bs){
 double ScpBoxSet::scp(double normFactorPassed) const{
 
 
-  int n_data =  this->nData();
-  double n_dataCC = this->nMC(); //replaced with weighted data
+  int n_data =  this->weightedData();
+  double n_dataCC = this->weightedMC(); //replaced with weighted data
 
   bool db = false;
 

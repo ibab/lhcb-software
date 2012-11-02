@@ -5,34 +5,38 @@
 using namespace std;
 
 ScpBox::ScpBox()
-  : _area()
-  , _nData(0)
-  , _nMC(0)
-  , _nWeightedMC(0.0)
-  , _weightMC_Squared(0.0)
+: _area()
+, _nData(0)
+, _nMC(0)
+, _nWeightedMC(0.0)
+, _nWeightedData(0.0)
+, _weightMC_Squared(0.0)
 {}
 ScpBox::ScpBox(const DalitzEventPattern& pat)
-  : _area(pat)
-  , _nData(0)
-  , _nMC(0)
-  , _nWeightedMC(0.0)
-  , _weightMC_Squared(0.0)
+: _area(pat)
+, _nData(0)
+, _nMC(0)
+, _nWeightedMC(0.0)
+, _nWeightedData(0.0)
+, _weightMC_Squared(0.0)
 {
   enclosePhaseSpace();
 }
 ScpBox::ScpBox(const DalitzArea& area)
-  : _area(area)
-  , _nData(0)
-  , _nMC(0)
-  , _nWeightedMC(0.0)
-  , _weightMC_Squared(0.0)
+: _area(area)
+, _nData(0)
+, _nMC(0)
+, _nWeightedMC(0.0)
+, _nWeightedData(0.0)
+, _weightMC_Squared(0.0)
 {}
 ScpBox::ScpBox(const ScpBox& other)
-  : _area(other._area)
-  , _nData(other._nData)
-  , _nMC(other._nMC)
-  , _nWeightedMC(other._nWeightedMC)
-  , _weightMC_Squared(other._weightMC_Squared)
+: _area(other._area)
+, _nData(other._nData)
+, _nMC(other._nMC)
+, _nWeightedMC(other._nWeightedMC)
+, _nWeightedData(other._nWeightedData)
+, _weightMC_Squared(other._weightMC_Squared)
 {}
 
 void ScpBox::enclosePhaseSpace(double safetyFactor){
@@ -43,13 +47,13 @@ void ScpBox::enclosePhaseSpace(double safetyFactor){
 }
 
 std::vector<ScpBox> ScpBox::split(int n){
-  
+
   std::vector<DalitzArea> va= _area.split_in_all_dimensions(n);
   std::vector<ScpBox> vb(va.size());
 
   for(unsigned int i=0; i < va.size(); i++){
-    ScpBox b(va[i]);
-    vb[i]=b;
+      ScpBox b(va[i]);
+      vb[i]=b;
   }
   return vb;
 }
@@ -58,6 +62,7 @@ void ScpBox::resetEventCounts(){
   _nData = 0;
   _nMC = 0;
   _nWeightedMC=0.0;
+  _nWeightedData=0.0;
   _weightMC_Squared = 0.0;
 }
 void ScpBox::resetAll(){
@@ -65,27 +70,30 @@ void ScpBox::resetAll(){
   resetEventCounts();
 }
 
-bool ScpBox::addData(const IDalitzEvent& evt){
+bool ScpBox::addData(const IDalitzEvent& evt, double weight){
   if(! _area.isInside(evt)) return false;
   _nData++;
+  _nWeightedData += weight;
+
   return true;
 }
 
 bool ScpBox::thisBox(const IDalitzEvent* evt)
 {
-	if(! _area.isInside(*evt)) return false;
-	return true;
+  if(! _area.isInside(*evt)) return false;
+  return true;
 }
-bool ScpBox::addData(const IDalitzEvent* evt){
+bool ScpBox::addData(const IDalitzEvent* evt, double weight){
   bool dbThis=false;
   if(0 == evt) return false;
   if(dbThis) cout << "ScpBox::addData for pointers called" << endl;
   if(! _area.isInside(*evt)) return false;
   if(dbThis){
-    cout << "found data event inside area. This is the event:" << endl;
-    evt->print();
+      cout << "found data event inside area. This is the event:" << endl;
+      evt->print();
   }
   _nData++;
+  _nWeightedData += weight;
   return true;
 }
 
@@ -111,8 +119,8 @@ bool ScpBox::addMC(const IDalitzEvent* evt, double weight){
   if(dbThis) cout << "ScpBox::addMC for pointers called" << endl;
   if(0 == evt) return false;
   if(dbThis){
-    cout << "...area inside for this event:" << endl;
-    evt->print();
+      cout << "...area inside for this event:" << endl;
+      evt->print();
   }
   if(! _area.isInside(*evt)) return false;
   _nMC++;
@@ -132,6 +140,9 @@ int ScpBox::nMC() const{
 double ScpBox::weightedMC() const{
   return _nWeightedMC;
 }
+double ScpBox::weightedData() const{
+  return _nWeightedData;
+}
 double ScpBox::weightedMC2() const{
   return _weightMC_Squared;
 }
@@ -149,7 +160,7 @@ double ScpBox::rmsMC(int Ntotal) const{
 	 << endl;
   }
   return (msq - m*m) * dN;
-  */
+   */
 }
 
 
@@ -164,8 +175,8 @@ bool ScpBox::subtractData(const IDalitzEvent* evt){
   if(dbThis) cout << "ScpBox::subtractData for pointers called" << endl;
   if(! _area.isInside(*evt)) return false;
   if(dbThis){
-    cout << "found data event inside area. This is the event:" << endl;
-    evt->print();
+      cout << "found data event inside area. This is the event:" << endl;
+      evt->print();
   }
 
   _nData--;
@@ -182,8 +193,8 @@ bool ScpBox::subtractMC(const IDalitzEvent* evt, double weight){
   if(dbThis) cout << "ScpBox::subtractMC for pointers called" << endl;
   if(0 == evt) return false;
   if(dbThis){
-    cout << "...area inside for this event:" << endl;
-    evt->print();
+      cout << "...area inside for this event:" << endl;
+      evt->print();
   }
   if(! _area.isInside(*evt)) return false;
   _nMC--;
@@ -196,16 +207,16 @@ bool ScpBox::subtractMC(const IDalitzEvent* evt, double weight){
 
 double ScpBox::scp(double normFactorPassed) const{
 
-  int n_data =  this->nData();
-  double n_dataCC = this->nMC();
+  int n_data =  this->weightedData();
+  double n_dataCC = this->weightedMC();
   double scp;
   double alpha = (normFactorPassed);
   if (n_data == 0 || n_dataCC == 0 )
-  {
-	  scp = 0;
-  }
+    {
+      scp = 0;
+    }
   else{
-	  scp = (n_data-(alpha*n_dataCC))/sqrt(n_data+(alpha*alpha*n_dataCC));
+      scp = (n_data-(alpha*n_dataCC))/sqrt(n_data+(alpha*alpha*n_dataCC));
   }
   return scp;
 
@@ -213,28 +224,28 @@ double ScpBox::scp(double normFactorPassed) const{
 
 DalitzArea ScpBox::area()
 {
-	return _area;
+  return _area;
 }
 
 
 void ScpBox::print(std::ostream& os) const{
 
-//  std::map<DalitzCoordKey, DalitzCoordinate*>::iterator it;
-//  std::map<DalitzCoordKey, DalitzCoordinate*> Coord = _area._coords;
-//  std::vector<int>::iterator vecit;
-//
+  //  std::map<DalitzCoordKey, DalitzCoordinate*>::iterator it;
+  //  std::map<DalitzCoordKey, DalitzCoordinate*> Coord = _area._coords;
+  //  std::vector<int>::iterator vecit;
+  //
   os << "box: with area " << _area;
-//  os << "box: with cordinates " << _area._t01;
-//  _area._t01.print();
-//  _area._t01.nameFileSave();
-//  for (it = Coord.begin(); it != Coord.end(); it++)
-//  {
-//	  std::vector<int> vec = (*it).first;
-//	  for (vecit = vec.begin(); vecit != vec.end(); vecit++)
-//	  {
-//		  os << "Corodinates" << (*vecit) << " " << *((*it).second);
-//	  }
-//  }
+  //  os << "box: with cordinates " << _area._t01;
+  //  _area._t01.print();
+  //  _area._t01.nameFileSave();
+  //  for (it = Coord.begin(); it != Coord.end(); it++)
+  //  {
+  //	  std::vector<int> vec = (*it).first;
+  //	  for (vecit = vec.begin(); vecit != vec.end(); vecit++)
+  //	  {
+  //		  os << "Corodinates" << (*vecit) << " " << *((*it).second);
+  //	  }
+  //  }
 }
 
 std::ostream& operator<<(std::ostream& os, const ScpBox& box){

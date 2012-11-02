@@ -174,7 +174,7 @@ void PhaseDiffBinning::fillData(IDalitzEventList* data){
     {
     	if (phaseDiff > (2*3.14159265/(_nbins))*i && phaseDiff < (2*3.14159265/(_nbins))*(i+1))
        		{
-       			_boxSets[i].addData(data->getEvent());
+       			_boxSets[i].addData(data->getEvent(),data->getEvent()->getWeight());
        			_nData++;
        			foundBox=true;
        		}
@@ -189,7 +189,7 @@ void PhaseDiffBinning::fillData(IDalitzEventList* data){
 //      data->getREvent(0)->print();
       ScpBox box(data->getEvent()->eventPattern());
       cout << "would have fit into large? "
-	   << box.addData(data->getEvent()) << endl;
+	   << box.addData(data->getEvent(),data->getEvent()->getWeight()) << endl;
     }
   }
 }
@@ -290,7 +290,7 @@ void PhaseDiffBinning::fillDataCC(IDalitzEventList* data){
     {
     	if (phaseDiff > (2*3.14159265/(_nbins))*i && phaseDiff < (2*3.14159265/(_nbins))*(i+1))
     	{
-    		_boxSets[i].addMC((data->getEvent()),1.0);
+    		_boxSets[i].addMC((data->getEvent()),data->getEvent()->getWeight());
     		_nDataCC++;
     		foundBox=true;
     	}

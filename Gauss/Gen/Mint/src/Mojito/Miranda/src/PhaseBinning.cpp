@@ -120,7 +120,7 @@ void PhaseBinning::fillData(IDalitzEventList* data){
     	   {
 			if (phase > MinPhase(i) && phase < MaxPhase(i))
 			{
-				_boxSets[i].addData(data->getEvent());
+				_boxSets[i].addData(data->getEvent(),data->getEvent()->getWeight());
 				_nData++;
 				foundBox=true;
 			}
@@ -207,7 +207,7 @@ void PhaseBinning::fillDataCC(IDalitzEventList* data){
     	{
 			if (phase > MinPhase(i) && phase < MaxPhase(i))
 			{
-				_boxSets[i].addMC((data->getEvent()),1.0);
+				_boxSets[i].addMC((data->getEvent()),data->getEvent()->getWeight());
 				_nDataCC++;
 				foundBox=true;
 			}
