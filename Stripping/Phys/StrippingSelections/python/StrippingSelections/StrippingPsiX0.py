@@ -130,9 +130,9 @@ _default_configuration_ = {
     ## use the embedded cut for chi2(LifetimeFit)<16
     "ctau      = BPVLTIME ( 25 ) * c_light "                  ,
     ## Combination mass-cut for beauty particles 
-    "mb_acut   = in_range ( 4.95 * GeV , AM , 5.65 * GeV ) "  ,
+    "mb_acut   = in_range ( 4.70 * GeV , AM , 5.90 * GeV ) "  ,
     ## mass-cut for beauty particles 
-    "mb_cut    = in_range ( 5.00 * GeV , M  , 5.60 * GeV ) "  ,
+    "mb_cut    = in_range ( 4.75 * GeV , M  , 5.85 * GeV ) "  ,
     ] ,
     # =========================================================================
     ## Prescales 
