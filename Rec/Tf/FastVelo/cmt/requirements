@@ -14,6 +14,8 @@ branches          cmt doc src
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use     VeloDet         v*      Det
+use     STDet           v*      Det
+use     STKernel        v*      ST
 use     DigiEvent       v*      Event
 use     TrackEvent      v*      Event
 use     PatKernel       v*      Tf
