@@ -115,6 +115,9 @@ protected:
   int NData();
   int NDataCC();
 
+  double weightedData() const;
+  double weightedMC() const;
+
   int SetBinning(const char*);
 
   void saveBinning(const char*);

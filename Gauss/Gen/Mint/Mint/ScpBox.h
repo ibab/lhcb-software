@@ -13,6 +13,7 @@ class ScpBox{
   int _nData;
   int _nMC;
   double _nWeightedMC;
+  double _nWeightedData;
 
   double _weightMC_Squared;
 
@@ -28,8 +29,8 @@ class ScpBox{
   void resetAll(); // changes box size!!
   void enclosePhaseSpace(double safetyFactor=1.2);
 
-  bool addData(const IDalitzEvent& evt);
-  bool addData(const IDalitzEvent* evt);
+  bool addData(const IDalitzEvent& evt, double weight = 1.0);
+  bool addData(const IDalitzEvent* evt, double weight = 1.0);
   bool addData(int entries);
 
   bool addMC(const IDalitzEvent& evt, double weight);
@@ -44,6 +45,7 @@ class ScpBox{
   double scp(double normFactorPassed=1) const;
 
   int nData() const;
+  double weightedData() const;
 
   int nMC() const;  
   double weightedMC() const;
