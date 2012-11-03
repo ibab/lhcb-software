@@ -28,7 +28,6 @@ DECLARE_ALGORITHM_FACTORY( FastSTDecoding )
     , m_readoutTool( NULL )
     , m_bankType( LHCb::RawBank::IT )
     , m_compareLocation("")
-    , m_outputIndex(0)
 {
   declareProperty( "DetectorName",      m_detectorName    = "IT"   );
   declareProperty( "OutputLocation",    m_outputLocation  = LHCb::STLiteClusterLocation::ITClusters );
@@ -67,10 +66,6 @@ StatusCode FastSTDecoding::initialize() {
   std::string readoutToolName = m_detectorName + "ReadoutTool";
   m_readoutTool = tool<ISTReadoutTool>( readoutToolName );
 
-  info() << "Context = " << context() << endmsg;
-
-  if ( "FastTES" == context() ) m_outputIndex = containerIndex( m_outputLocation );
-
   return StatusCode::SUCCESS;
 }
 
@@ -85,11 +80,7 @@ StatusCode FastSTDecoding::execute() {
   const std::vector<LHCb::RawBank*>& banks = rawEvent->banks( m_bankType );
 
   LHCb::STLiteCluster::FastContainer* fastCont = new LHCb::STLiteCluster::FastContainer();
-  if ( "FastTES" == context() ) {
-    put( fastCont, m_outputIndex );
-  } else {
-    put( fastCont, m_outputLocation );
-  }
+  put( fastCont, m_outputLocation );
   
   debug() << "Number of ST banks : " << banks.size() << endmsg;
 
