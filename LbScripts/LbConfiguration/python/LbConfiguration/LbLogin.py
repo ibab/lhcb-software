@@ -561,7 +561,7 @@ class LbLoginScript(SourceScript):
             # ... and set the environment variable
             ev['PATH'] = os.pathsep.join(path)
         except StopIteration:
-            log.warning('Cannot find CMake %s directory', opts.cmakevers)
+            log.debug('Cannot find CMake %s directory', opts.cmakevers)
 
 #-----------------------------------------------------------------------------------
     def setSoftLocations(self):
