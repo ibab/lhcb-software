@@ -34,14 +34,16 @@ public:
   bool keepAdding(LHCb::MCFTDigits::const_iterator clusCandIter);///< Check conditions before adding another digit to the cluster
 
 private:
-
+  // Location
   std::string m_inputLocation;       ///< MCFTDigit input Container
   std::string m_outputLocation;      ///< FTCluster output Container
 
   int m_adcThreshold;   ///<Minimal ADC value for cluster definition
+  unsigned int m_clusterMinWidth;   ///< Minimal Width for clusters
   unsigned int m_clusterMaxWidth;   ///< Maximal Width for clusters
 
-  unsigned int m_clusterMinCharge;   ///<Minimal total ADC to store the cluster
+  unsigned int m_clusterMinCharge;   ///<Minimal total ADC for clusters
+  unsigned int m_clusterMinADCPeak;   ///<Minimal ADC for cluster peaks
 };
 #endif // FTCLUSTERCREATOR_H
 

@@ -37,8 +37,11 @@ DECLARE_ALGORITHM_FACTORY( FTClusterCreator )
   declareProperty("InputLocation" ,    m_inputLocation    = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
   declareProperty("OutputLocation" ,   m_outputLocation   = LHCb::FTClusterLocation::Default, "Path to output Clusters");
   declareProperty("ADCThreshold" ,     m_adcThreshold     = 1 , "Minimal ADC Count to be added in cluster");
+  declareProperty("ClusterMinWidth" ,  m_clusterMinWidth  = 2
+ , "Minimal allowed width for clusters");
   declareProperty("ClusterMaxWidth" ,  m_clusterMaxWidth  = 8 , "Maximal allowed width for clusters");
   declareProperty("ClusterMinCharge" , m_clusterMinCharge = 2 , "Minimal charge to keep cluster");
+  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 2 , "Minimal ADC for cluster peaks");
 }
 //=============================================================================
 // Destructor
@@ -160,8 +163,11 @@ StatusCode FTClusterCreator::execute() {
       meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
 
 
-      // Checks that total ADC charge of the cluster is over threshold
-      if( totalCharge > m_clusterMinCharge ) {
+      // Checks :
+      // - total ADC charge of the cluster is over threshold and
+      // - number of cells above the minimal allowed value      
+      if( ( totalCharge > m_clusterMinCharge) 
+          && (clusterADCDistribution.size() > m_clusterMinWidth) ) {
         
         // Define Cluster(channelID, fraction, width, charge)  and save it
         int meanChanPosition = std::floor(meanPosition);

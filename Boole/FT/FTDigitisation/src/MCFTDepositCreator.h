@@ -51,10 +51,14 @@ public:
                                   FTDoublePairs& fibreenergy);
 
 private:
-
+  // Locations
   std::string m_inputLocation;     ///< FT MCHits Location
   std::string m_outputLocation;    ///< FT energy deposit Location
-  double      m_attenuationLength; ///< Attenuation lengh of the light along the fibre
+
+  // Fibre properties
+  double      m_shortAttenuationLength; ///< Attenuation lengh of the light along the fibre : short component
+  double      m_longAttenuationLength; ///< Attenuation lengh of the light along the fibre : long component
+  double      m_reflexionCoefficient; ///< reflexion coefficient of the mirror at the y=0 side of the fibre
 
   DeFTDetector* m_deFT; ///< pointer to FT detector description  
 };

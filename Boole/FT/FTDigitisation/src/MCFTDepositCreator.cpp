@@ -37,8 +37,12 @@ MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
 {
   declareProperty("InputLocation" ,  m_inputLocation  = LHCb::MCHitLocation::FT, "Path to input MCHits");
   declareProperty("OutputLocation" , m_outputLocation = LHCb::MCFTDepositLocation::Default, "Path to output MCDeposits");
-  declareProperty("AttenuationLength" , m_attenuationLength = 3300 * Gaudi::Units::mm, 
-                  "Distance along the fibre to divide the light amplitude by a factor e");
+  declareProperty("ShortAttenuationLength" , m_shortAttenuationLength = 1000 * Gaudi::Units::mm, 
+                  "Distance along the fibre to divide the light amplitude by a factor e : short component");
+  declareProperty("LongAttenuationLength" , m_longAttenuationLength = 7000 * Gaudi::Units::mm, 
+                  "Distance along the fibre to divide the light amplitude by a factor e : long component");
+  declareProperty("ReflexionCoefficient" , m_reflexionCoefficient = 1, 
+                  "Reflexion coefficient of the fibre mirrored side, from 0 to 1");
 }
 //=============================================================================
 // Destructo
@@ -172,9 +176,11 @@ StatusCode MCFTDepositCreator::finalize() {
 void MCFTDepositCreator::applyAttenuationAlongFibre( const double fibreLength, 
                                                      const double fibreFraction, 
                                                      FTDoublePairs& fibreEnergy){
-  double attenuation = fibreLength / m_attenuationLength;
-  double attCoeff = .5 * ( exp( - attenuation * fibreFraction ) + exp( - attenuation * ( 2 - fibreFraction )));
-  for( FTDoublePairs::iterator i = fibreEnergy.begin(); i != fibreEnergy.end(); ++i){
+  double ShortAttenuation = fibreLength / m_shortAttenuationLength;
+  double LongAttenuation  = fibreLength / m_longAttenuationLength;
+  double attCoeff = .5 * ( (exp( - ShortAttenuation * fibreFraction )+exp( - LongAttenuation * fibreFraction )) //direct
+                           + m_reflexionCoefficient* (exp( - ShortAttenuation * ( 2 - fibreFraction )) + exp( - LongAttenuation * ( 2 - fibreFraction )))); // reflected
+  for( FTDoublePairs::iterator i = fibreEnergy.begin(); i != fibreEnergy.end(); ++i){ 
     i->second *= attCoeff;
   }
 }
