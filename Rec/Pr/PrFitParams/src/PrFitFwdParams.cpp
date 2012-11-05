@@ -474,8 +474,6 @@ StatusCode PrFitFwdParams::execute() {
     m_XsPar.setFun( 0, dSlope );
     double xSlopePred = slope.x() + m_XsPar.sum();
     double mcXSlope = myMCPart->momentum().x() / myMCPart->momentum().z();
-
-    double yPred = origin.y() + slope.y() * ( m_zRef - origin.z() );
     double slopeYPred = slope.y();
 
     m_byPar.setFun( 0, slope.y() * dSlope * dSlope );
