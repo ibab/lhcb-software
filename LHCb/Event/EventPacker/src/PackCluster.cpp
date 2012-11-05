@@ -70,11 +70,11 @@ StatusCode PackCluster::execute()
   std::sort( allIds.begin(), allIds.end() );
   allIds.erase( std::unique(allIds.begin(),allIds.end()), allIds.end() );
 
-  // Load the clusters
-  const LHCb::VeloClusters* vClus = getIfExists<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
-  const LHCb::STClusters*  ttClus = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::TTClusters);
-  const LHCb::STClusters*  utClus = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::UTClusters);
-  const LHCb::STClusters*  itClus = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters);
+  // Cluster pointers. Only loaded when really needed.
+  const LHCb::VeloClusters* vClus = NULL;
+  const LHCb::STClusters*  ttClus = NULL;
+  const LHCb::STClusters*  utClus = NULL;
+  const LHCb::STClusters*  itClus = NULL;
 
   // pack the clusters
   for ( std::vector<LHCb::LHCbID>::const_iterator itI = allIds.begin();
@@ -85,6 +85,7 @@ StatusCode PackCluster::execute()
     // Pack by type
     if ( (*itI).isVelo() )
     {
+      if ( !vClus ) { vClus = getIfExists<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default); }
       const LHCb::VeloCluster* cl = ( vClus ? vClus->object((*itI).veloID()) : NULL );
       if ( cl ) { out->addVeloCluster( cl ); }
       else 
@@ -96,6 +97,7 @@ StatusCode PackCluster::execute()
     } 
     else if ( (*itI).isTT() )
     {
+      if ( !ttClus ) { ttClus = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::TTClusters); }
       const LHCb::STCluster* cl = ( ttClus ? ttClus->object((*itI).stID()) : NULL );
       if ( cl ) { out->addTTCluster( cl ); }
       else 
@@ -107,6 +109,7 @@ StatusCode PackCluster::execute()
     } 
     else if ( (*itI).isUT() )
     {
+      if ( !utClus ) { utClus = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::UTClusters); }
       const LHCb::STCluster* cl = ( utClus ? utClus->object((*itI).stID()) : NULL );
       if ( cl ) { out->addUTCluster( cl ); }
       else 
@@ -118,6 +121,7 @@ StatusCode PackCluster::execute()
     } 
     else if ( (*itI).isIT() ) 
     {
+      if ( !itClus ) { itClus = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters); }
       const LHCb::STCluster* cl = ( itClus ? itClus->object((*itI).stID()) : NULL );
       if ( cl ) { out->addITCluster( cl ); }
       else
