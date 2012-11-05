@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Pr/PrFitParams
+! Responsible : Olivier Callot
+! Purpose     : Fit parameters for the pattern
+!-----------------------------------------------------------------------------
+
+! 2012-11-05 - Olivier Callot
+ - First version, based on Tf/PatFitParams.
