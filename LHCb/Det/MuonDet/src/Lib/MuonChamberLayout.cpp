@@ -47,7 +47,8 @@ MuonChamberLayout::MuonChamberLayout(MuonLayout R1,
                                      MuonLayout R2,
                                      MuonLayout R3,
                                      MuonLayout R4,
-                                     IDataProviderSvc* detSvc,IMessageSvc * msgSvc)
+                                     IDataProviderSvc* detSvc,
+                                     IMessageSvc *msgSvc)
   : m_msgStream(NULL)
 {
 
@@ -72,6 +73,15 @@ StatusCode MuonChamberLayout::initialize( ) {
       endmsg;
     return sc ;
   }
+
+  SmartDataPtr<DeMuonDetector> 
+    MuonDe(m_detSvc,DeMuonLocation::Default);
+  bool  isM1defined = MuonDe->isM1defined();
+  if (debug)
+    msgStream()<<MSG::INFO<< "Retrieved M1 definition status: " << isM1defined <<endmsg;
+
+  m_isM1defined = isM1defined;
+
 
   //Grid initialization
   int iDd;
@@ -186,12 +196,12 @@ void MuonChamberLayout::returnChambers(int sta, float st_x, float st_y, int x_di
 void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
                                   int reg, std::vector<int> &chamberNumber)const {
 
-  int vSize(0); int chN = -1;  bool debug = false;
+  int vSize(0); int chN = -1;  bool debug = true;
   int fx = sx + shx;
   int fy = sy + shy;
 
   if(debug){
-    msgStream()<<MSG::DEBUG<<" Chamber XY. Reg: "<<reg<<" "<<m_cgX.at(reg)<<
+    msgStream()<<MSG::INFO<<" Chamber XY. Reg: "<<reg<<" "<<m_cgX.at(reg)<<
       " "<<m_cgY.at(reg)<<" "<<fx<<" "<<fy<<" "<<sx<<" "<<sy<<
       " "<<shx<<" "<<shy<<endmsg;
   }
@@ -201,6 +211,7 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
   if(fx<0 || fy<0 || fx >= 4*(int)m_cgX.at(reg)
      || fy >= 4*(int)m_cgY.at(reg)) {
 
+    msgStream()<<MSG::INFO<<" Inside Protection IF "<<chN<<endmsg;
     //Starting point in the new (larger) grid
     sy = sy + 2*m_cgY.at(reg);
     if(reg<2) {
@@ -216,29 +227,36 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
     } else {
       //Exits [chamber outside the R4 grid]
       if(debug){
-        msgStream()<<MSG::DEBUG<<" Chamber not Found (>3) "<<chN<<endmsg;
+        msgStream()<<MSG::INFO<<" Chamber not Found (>3) "<<chN<<endmsg;
       }
 
       chamberNumber.push_back(-1);
+      msgStream()<<MSG::INFO<<" RETURNING "<<chN<<endmsg;
       return;
     }
     //Fix the chamber number for chambers in region != from starting one
     vSize = chamberNumber.size();
     if(vSize>0) {
       if(debug){
-        msgStream()<<MSG::DEBUG<<" Encode and chamber in first call: "<<chN<<
+        msgStream()<<MSG::INFO<<" Encode and chamber in first call: "<<chN<<
           " :: "<<chamberNumber.at(vSize-1)<<" "<<chamberNumber.size()
                    <<" "<<reg+1<<endmsg;
       }
 
+      msgStream()<<MSG::INFO<<" RETURNING after FIXING ?"<<endmsg;
+
+      if(chamberNumber.at(vSize-1)>-1) 
+        msgStream()<<MSG::INFO<<" yes "<<endmsg;
       if(chamberNumber.at(vSize-1)>-1) return;
     }
   } else {
     //Look inside the grid
+
+    msgStream()<<MSG::INFO<<" Look inside the grid "<<chN<<endmsg;
     int enc = fx+4*m_cgX.at(reg)*fy+m_offSet.at(reg);
     chN = m_chamberGrid.at(enc);
     if(debug) {
-      msgStream()<<MSG::DEBUG<<" Encode and chamber in first call: "<<chN<<" "<<
+      msgStream()<<MSG::INFO<<" Encode and chamber in first call: "<<chN<<" "<<
         enc<<" "<<reg<<" "<<fx<<" "<<fy<<endmsg;
     }
 
@@ -250,6 +268,7 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
   if(chN<0 && shouldLowReg(fx,fy,reg)) {
     //Found a -1 chamber: need to low
     //the region number (if > 1) to look in inside inner region
+    msgStream()<<MSG::INFO<<" chamber number is <0  , REGION : "<< reg<< endmsg;
     if(reg-1>=0) {
       //When dropping down the region number
       if(reg < 3){
@@ -268,16 +287,17 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
     } else {
       //lowest (inner) region. Exiting
       if(debug){
-        msgStream()<<MSG::DEBUG<<" Chamber not Found (<0) "<<chN<<endmsg;
+        msgStream()<<MSG::INFO<<" Chamber not Found (<0) "<<chN<<endmsg;
       }
 
       chamberNumber.push_back(-1);
       return;
     }
     vSize = chamberNumber.size();
+     msgStream()<<MSG::INFO<<"chamberStack size: "<< vSize <<endmsg;
     if(vSize>0) {
       if(debug) {
-        msgStream()<<MSG::DEBUG<<" Encode and chamber in second call: "<<chN<<" :: "
+        msgStream()<<MSG::INFO<<" Encode and chamber in second call: "<<chN<<" :: "
                    <<chamberNumber.at(vSize-1)<<" "<<chamberNumber.size()
                    <<" "<<endmsg;
       }
@@ -294,12 +314,12 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
       if((sy/m_cgY.at(reg) < 1) || (sy/m_cgY.at(reg) > 2)) {
         if(reg-1>0) {
           if(debug) {
-            msgStream()<<MSG::DEBUG<<" Third call "<<endmsg;
+            msgStream()<<MSG::INFO<<" Third call "<<endmsg;
           }
           chamberXY(fx,fy,0,0-m_cgY.at(reg),reg-1,chamberNumber);
         } else {
           if(debug){
-            msgStream()<<MSG::DEBUG<<" Chamber not Found "<<endmsg;
+            msgStream()<<MSG::INFO<<" Chamber not Found "<<endmsg;
           }
 
           chamberNumber.push_back(-1);
@@ -308,7 +328,7 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
         vSize = chamberNumber.size();
         if(vSize) {
           if(debug) {
-            msgStream()<<MSG::DEBUG<<" Encode and chamber in third call: "<<chN<<
+            msgStream()<<MSG::INFO<<" Encode and chamber in third call: "<<chN<<
               " :: "<<chamberNumber.at(vSize-1)<<" "<<
               chamberNumber.size()<<" "<<endmsg;
           }
@@ -321,7 +341,7 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
     //Need a +1 to avoid skipping chamber n.1 (idx 0)
     chamberNumber.push_back(chN+m_offSet.at(reg)+1);
     if(debug){
-      msgStream()<<MSG::DEBUG<< "Closing Chamber " << chN
+      msgStream()<<MSG::INFO<< "Closing Chamber " << chN
                  << " in R" << reg
                  << " xIndex " << fx
                  << " yIndex " << fy <<endmsg;
@@ -539,7 +559,7 @@ void MuonChamberLayout::gridPosition(float x, float y, int iS, int &idx,
 void MuonChamberLayout::setGridStep(){
   float dimX[5] = {240.f,301.363f,325.155f,348.947f,372.739f};
   float dimY[5] = {200.f,251.136f,270.962f,290.789f,310.615f};
-  for(int iDum = 0; iDum<5; iDum++) {
+  for(int iDum = (m_isM1defined?0:1); iDum<5; iDum++) {
     m_xS.push_back(dimX[iDum]);  m_yS.push_back(dimY[iDum]);
   }
 }
@@ -578,6 +598,10 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
 
     //Are there any void Stations?
     std::string name=((*itSt)->name()).c_str();
+
+    if (name.find("/MF") != name.npos) //if it finds a filter, it skips to
+      continue;                           // the next element
+
     int len=name.size();
     int start=(DeMuonLocation::Default).size();
     std::string substring;
@@ -588,8 +612,11 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
       msgStream()<<MSG::INFO <<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<endmsg;
     }
 
-    while(iS != obtIS-1) {
-      msgStream()<<MSG::INFO <<"There is/are void stations. "<<endmsg;
+
+    while(iS != obtIS-(m_isM1defined?1:2)) {
+      msgStream() << MSG::INFO << "iS number " << iS << " obtIS number " <<
+        obtIS << " isM1defined: " << m_isM1defined << endmsg;
+      msgStream()<<MSG::INFO <<"There is/are void stations! "<<endmsg;
       for(int ire = 0; ire<4; ire++) {
         for(int ich = 0; ich<MaxRegions[ire]; ich++) {
           m_ChVec.at(encode) = (DeMuonChamber*)0;

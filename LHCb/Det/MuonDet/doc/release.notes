@@ -3,6 +3,15 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2012-11-05 - Lucio Anderlini
+ - src/Lib/DeMuonDetector.cpp, MuonDet/DeMuonDetector.h
+   added m_isM1defined flag to DeMuonDetector class, automatically set 
+   according to DDDB, read through DeMuonDetector::isM1defined().
+   Added DeMuonDetector::testForFilter(const IDetectorElement *f) function
+   to test if f is a Muon filter.
+ - src/Lib/MuonChamberLayout.{cpp,h} 
+   reads DeMuonDetector::isM1defined() and initialize m_ChVec properly
+
 ! 2012-10-12 - Marco Clemencic
  - Fixed Eclipse warnings.
 

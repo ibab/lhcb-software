@@ -27,7 +27,7 @@ public:
                     MuonLayout R3,
                     MuonLayout R4,
                     IDataProviderSvc* detSvc,
-                    IMessageSvc * msgSvc); 
+                    IMessageSvc * msgSvc);
   
   // Void constructor: calls the previous one
   // with dummy DataProvider and default grid Layout
@@ -239,6 +239,10 @@ private:
   // size of pads
   std::vector<unsigned int> m_padGridX;
   std::vector<unsigned int> m_padGridY;
+
+  // definition of M1 according to DB, filled in DeMuonDetector::initialize()
+  bool m_isM1defined;
+
 
 };
 

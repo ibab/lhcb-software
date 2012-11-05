@@ -22,7 +22,9 @@
  */
 
 /// Standard Constructor
-DeMuonDetector::DeMuonDetector() : m_msgStream(NULL) {
+DeMuonDetector::DeMuonDetector() : m_msgStream(NULL),
+                                   m_isM1defined(true)     
+{
 
   bool debug = false;
   if(debug) std::cout<< "Building the Detector !!!" <<std::endl;
@@ -52,13 +54,45 @@ StatusCode DeMuonDetector::initialize()
   if( UNLIKELY( msgStream().level() <= MSG::VERBOSE ) ) 
     msgStream() << MSG::VERBOSE << "Initializing the detector" <<endmsg;
 
+
+  // Retrieve m_isM1defined from DB
+  const ILVolume* lv = geometry()->lvolume();
+  const std::string aMuonPvName = "MuonSubsystem";
+  const IPVolume* aMuonPv = lv->pvolume(aMuonPvName);
+  const std::string aMyM1 = "pvM1";
+
+//  for(ILVolume::PVolumes::const_iterator pviter = lv->pvBegin();
+//      pviter != lv->pvEnd(); ++pviter){
+//    const std::string mypvVolName = (*pviter)->name();
+//    if(mypvVolName.find(aMyM1)) m_isM1defined = true;
+//    else m_isM1defined=false;
+//
+//    msgStream() << MSG::INFO  << "Is M1 defined? Comparing " << 
+//      mypvVolName << 
+//      " with " <<
+//      aMyM1 << endmsg;
+//
+//  }
+
+//  m_isM1defined = false;
+
+  m_detSvc = this->dataSvc();
+
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) {
     msgStream() << MSG::ERROR << "Failure to initialize DetectorElement" << endmsg;
     return sc ;
   }
 
-  m_detSvc = this->dataSvc();
+  SmartDataPtr<DetectorElement> muonSys (m_detSvc,DeMuonLocation::Default);
+  //Getting stations
+  m_isM1defined = false;
+  IDetectorElement::IDEContainer::iterator itSt=muonSys->childBegin();
+  for(itSt=muonSys->childBegin(); itSt<muonSys->childEnd(); itSt++){
+    std::string name=((*itSt)->name()).c_str();
+    // Test if M1 is defined in the DB
+    m_isM1defined |= (name.find("/M1") != name.npos);
+  }
 
   //Initialize the maximum number of allowed chambers per region
   int myDum[4] = {12,24,48,192};
@@ -66,7 +100,8 @@ StatusCode DeMuonDetector::initialize()
 
   //Initializing the Layout
   MuonLayout R1(1,1), R2(1,2), R3(1,4), R4(2,8);
-  MuonChamberLayout * tLay = new MuonChamberLayout(R1,R2,R3,R4,m_detSvc,msgSvc());
+  MuonChamberLayout * tLay = new
+    MuonChamberLayout(R1,R2,R3,R4,m_detSvc,msgSvc());
   m_chamberLayout = tLay;
 
   m_ChmbPtr =  m_chamberLayout->fillChambersVector(m_detSvc);
@@ -251,6 +286,9 @@ if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
     //Getting stations
     IDetectorElement::IDEContainer::const_iterator itSt;
     for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
+      if (testForFilter(*itSt) == true)
+        continue;
+
       if(msta == station) {
         //Getting regions
         IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
@@ -439,6 +477,7 @@ void DeMuonDetector::CountDetEls() {
   //Getting stations
   IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
+    if (testForFilter(*itSt)) continue;
     IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
     myDet = *itSt;
     if(myDet) msta++;
@@ -477,6 +516,11 @@ DeMuonChamber* DeMuonDetector::getChmbPtr(const int station, const int region,
     while(re >= 1) {encode += MaxRegions[re-1]; re--;}
   }
   myPtr = m_ChmbPtr.at(encode);
+
+  if (myPtr == NULL)
+    msgStream() << MSG::WARNING << "DeMuonDetector::getChmbPtr"
+      "is returning NULL pointer" << endmsg;
+
   return myPtr;
 }
 
@@ -760,10 +804,18 @@ void DeMuonDetector::fillGeoInfo()
   int Side=0;
   int region=0;
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
+    //Check if the "station" isn't actually a filter
+    if (testForFilter(*itSt) == true)
+      continue;
 
     IGeometryInfo*  geoSt=(*itSt)->geometry();
     Gaudi::XYZPoint globSt= geoSt->toGlobal(Gaudi::XYZPoint(0,0,0));
     m_stationZ[station] = globSt.z();
+//    msgStream()<<MSG::INFO<<"STATION: "<<station << " --> z: " <<
+//      m_stationZ[station]  <<endmsg;
+
+
+
     IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
     Side=0;
     for(itSide=(*itSt)->childBegin(); itSide<(*itSt)->childEnd(); itSide++){
@@ -1068,6 +1120,12 @@ void DeMuonDetector::fillGeoArray()
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
     //get the dimensions of the inner rectangular
     if(debug)msgStream()<<MSG::INFO<<" inside loop "<<endmsg;
+
+    msgStream()<<MSG::INFO<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
+    if (testForFilter(*itSt) == true)
+      continue;
+    msgStream()<<MSG::INFO<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
+
     double minX=100000;
     double minY=100000;
     for(unsigned int nx=0;nx<layoutInner.xGrid();nx++){
@@ -1228,6 +1286,9 @@ int DeMuonDetector::sensitiveVolumeID(const Gaudi::XYZPoint &myPoint) const
   StatusCode sc = StatusCode::FAILURE;
   nsta=getStation(myPoint.z());
 
+  msgStream() << MSG::INFO << "DeMuonDetector::sensitiveVolumeID station: " <<
+    nsta << endmsg;
+
 
   sc = Hit2GapNumber(myPoint,nsta,ngap,nchm,nreg);
   if(sc.isFailure())return -1;
@@ -1291,7 +1352,7 @@ DetectorElement* DeMuonDetector::Hit2Station(Gaudi::XYZPoint myPoint)
   char stationName[10];
 
   unsigned int istat = getStation(myPoint.z());
-  sprintf(stationName,"/M%u",istat+1);
+  sprintf(stationName,"/M%u",istat+(m_isM1defined?1:2));
   std::string stationPath = DeMuonLocation::Default+stationName;
 
   SmartDataPtr<DetectorElement> station(m_detSvc, stationPath);

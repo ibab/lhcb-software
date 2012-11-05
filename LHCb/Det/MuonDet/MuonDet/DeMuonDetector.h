@@ -126,6 +126,7 @@ public:
   
   unsigned int quadrantID( int sensDetID );
   
+  bool isM1defined();
 
   //Returns the list of physical channels for a given chamber  
   std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
@@ -291,6 +292,9 @@ private:
     return *m_msgStream;
   }
 
+  //Answer the question: is "station" a filter?
+  inline bool testForFilter(const IDetectorElement *station) const;
+
 private:
 
   mutable MsgStream * m_msgStream;
@@ -340,6 +344,7 @@ private:
   MuonDAQHelper m_daqHelper;
   int   m_hitNotInGap;
 
+  bool m_isM1defined;
 };
 
 // -----------------------------------------------------------------------------
@@ -350,10 +355,19 @@ inline int DeMuonDetector::getStation(const double z) const
 {
   //station index starting from z position (in mm)
   int idX = 0; double s_size(400.);
-  double s_off[5] = {12100,15200,16400,17600,18800};
+//  double s_off[5] = {12100,15200,16400,17600,18800};
+  double offset = /* DDDB cords - s_off = */ 70; //Shouldn't be zero?
+
+
   for(idX = 0; idX<5; idX++) {
-    if(fabs(z-s_off[idX])<s_size) break;
+    if(fabs(z-m_stationZ[idX]+offset)<s_size) break;
   }
+
+
+  //If M1 is not defined (post upgrade) shift the index back
+//  if (m_isM1defined == false) 
+//    idX--;
+
   return idX;
 }
 
@@ -428,7 +442,22 @@ inline unsigned int DeMuonDetector::quadrantID(int sensDetID)
   
 }
 
+inline bool DeMuonDetector::isM1defined()
+{
+    return m_isM1defined;
+}
 
 
+// Answer the question, is "station" a muon filter?
+inline bool DeMuonDetector::testForFilter(const IDetectorElement *station) const
+{
+    std::string stationName = station->name();
+
+    //Check if the "station" isn't actually a filter
+    if (stationName.find("/MF") != stationName.npos)
+      return true;
+
+    return false;
+}
 
 #endif    // MUONDET_DEMUONDETECTOR_H
