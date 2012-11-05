@@ -1,3 +1,44 @@
+! 2012-11-05 - Marco Clemencic (fe87789)
+
+ - fixes and improvements to CMake README
+
+   
+
+! 2012-11-05 - Marco Clemencic (447808b)
+
+ - use consistently source file globs rooted at the package dir
+
+   Use glob patterns like 'src/*.cpp' instead of '*.cpp'.
+
+
+! 2012-11-05 - Marco Clemencic (ca92786)
+
+ - renamed the cmt2cmake cache and allowed use of the home directory
+
+   
+
+! 2012-11-05 - Marco Clemencic (68a6848)
+
+ - fixed expansion of source file patterns
+
+   Expand patterns starting from 'src' or the current source dir.
+
+
+! 2012-11-05 - Marco Clemencic (edea004)
+
+ - minor fix to cmt2cmake tests
+
+   
+
+! 2012-11-05 - Marco Clemencic (684e522)
+
+ - explicitly set the property FIND_LIBRARY_USE_LIB64_PATH in the toolchain
+
+   FIND_LIBRARY_USE_LIB64_PATH tell CMake to look for libraries in 'lib64' as
+   well as in 'lib' (when building x86_64). It should be set automatically, but
+   it may fail when using a toolchain, so we set it because it's needed on
+   RedHat-derived platforms.
+
 ! 2012-10-25 - Marco Clemencic (c9ed5cd)
 
  - generate wrapper 'run' in the build directory to quickly invoke env.py

@@ -68,9 +68,18 @@ def makeParser(patterns=None):
 # record of known subdirs with their libraries
 # {'<subdir>': {'libraries': [...]}}
 # it contains some info about the projects too, under the keys like repr(('<project>', '<version>'))
-_shelve_file = os.environ.get('CMT2CMAKECACHE',
-                              os.path.join(os.path.dirname(__file__), 'known_subdirs.cache'))
-known_subdirs = shelve.open(_shelve_file)
+try:
+    # First we try the environment variable CMT2CMAKECACHE and the directory
+    # containing this file...
+    _shelve_file = os.environ.get('CMT2CMAKECACHE',
+                                  os.path.join(os.path.dirname(__file__),
+                                               '.cmt2cmake.cache'))
+    cache = shelve.open(_shelve_file)
+except:
+    # ... otherwise we use the user home directory
+    _shelve_file = os.path.join(os.path.expanduser('~'), '.cmt2cmake.cache')
+    #logging.info("Using cache file %s", _shelve_file)
+    cache = shelve.open(_shelve_file)
 
 config = {}
 for k in ['ignored_packages', 'data_packages', 'needing_python', 'no_pedantic',
@@ -211,11 +220,11 @@ class Package(object):
             print "Processing %s" % self.requirements
             raise
         # update the known subdirs
-        known_subdirs[self.name] = {# list of linker libraries provided by the package
-                                    'libraries': list(self.linker_libraries),
-                                    # true if it's a headers-only package
-                                    'includes': bool(self.install_more_includes and
-                                                     not self.linker_libraries)}
+        cache[self.name] = {# list of linker libraries provided by the package
+                            'libraries': list(self.linker_libraries),
+                            # true if it's a headers-only package
+                            'includes': bool(self.install_more_includes and
+                                             not self.linker_libraries)}
 
     def generate(self):
         # header
@@ -234,7 +243,7 @@ class Package(object):
         inc_dirs = []
         if subdirs:
             # check if we are missing info for a subdir
-            missing_subdirs = set([s.rsplit('/')[-1] for s in subdirs]) - set(known_subdirs)
+            missing_subdirs = set([s.rsplit('/')[-1] for s in subdirs]) - set(cache)
             if missing_subdirs:
                 self.log.warning('Missing info cache for subdirs %s', ' '.join(sorted(missing_subdirs)))
             # declare inclusion order
@@ -243,7 +252,7 @@ class Package(object):
             # consider header-only subdirs
             #  for each required subdir that comes with only headers, add its
             #  location to the call to 'include_directories'
-            inc_only = lambda s: known_subdirs.get(s.rsplit('/')[-1], {}).get('includes')
+            inc_only = lambda s: cache.get(s.rsplit('/')[-1], {}).get('includes')
             inc_dirs = filter(inc_only, subdirs)
 
 
@@ -397,7 +406,7 @@ class Package(object):
             # # collection of link libraries. #
             # Externals and subdirs are treated differently:
             # - externals: just use the package name
-            # - subdirs: find the exported libraries in the global var known_subdirs
+            # - subdirs: find the exported libraries in the global var cache
             # We also have to add the local linker libraries.
 
             # separate external and subdir explicit imports
@@ -418,8 +427,8 @@ class Package(object):
 
             # add subdirs...
             for s in subdir_imports + subdir_local_imports:
-                if s in known_subdirs:
-                    links.extend(known_subdirs[s]['libraries'])
+                if s in cache:
+                    links.extend(cache[s]['libraries'])
             # ... and local libraries
             links.extend(local_links)
             if 'AIDA' in links:
@@ -440,9 +449,11 @@ class Package(object):
                 data.append('# only for the applications\nfind_package(Boost COMPONENTS program_options)\n')
 
             # write command
-            sources = [s.replace('../src/', '') for s in sources]
+            if not (isGODDict or isRflxDict):
+                # dictionaries to not need to have the paths fixed
+                sources = [os.path.normpath('src/' + s) for s in sources]
             # FIXME: special case
-            sources = [s.replace('$(GAUDICONFROOT)', '${CMAKE_SOURCE_DIR}/GaudiConf') for s in sources]
+            sources = [s.replace('src/$(GAUDICONFROOT)', '${CMAKE_SOURCE_DIR}/GaudiConf') for s in sources]
             libdata = callStringWithIndent(cmd, [name] + sources + args)
 
             # FIXME: wrap the test libraries in one if block (instead of several)
@@ -769,9 +780,9 @@ class Project(object):
             helper function to update the cache and return the value
             '''
             k = repr((self.name, self.version))
-            d = known_subdirs.get(k, {})
+            d = cache.get(k, {})
             d['heptools'] = value
-            known_subdirs[k] = d
+            cache[k] = d
             return value
 
         # check for a direct dependency
@@ -785,8 +796,8 @@ class Project(object):
         # including ourselves (we may already be there)
         for u in list(self.uses()) + [(self.name, self.version)]:
             u = repr(u)
-            if u in known_subdirs and 'heptools' in known_subdirs[u]:
-                return updateCache(known_subdirs[u]['heptools'])
+            if u in cache and 'heptools' in cache[u]:
+                return updateCache(cache[u]['heptools'])
 
         # we cannot guess the version of heptools
         return None

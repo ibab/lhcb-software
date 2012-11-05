@@ -361,6 +361,9 @@ macro(LCG_prepare_paths)
   string(REGEX MATCH "[0-9]+\\.[0-9]+" Boost_config_version_twodigit ${Boost_config_version})
   set(Boost_ADDITIONAL_VERSIONS ${Boost_config_version} ${Boost_config_version_twodigit})
 
+  # Useful for RedHat-derived platforms
+  set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS TRUE)
+
   #===============================================================================
   # Special cases that require a special treatment
   #===============================================================================

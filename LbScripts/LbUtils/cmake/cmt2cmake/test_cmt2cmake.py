@@ -11,18 +11,18 @@ if os.path.exists('test.cache'):
 import cmt2cmake
 
 # prepare the cache for the tests
-cmt2cmake.known_subdirs['GaudiKernel'] = {'libraries': ['GaudiKernel'],
-                                          'includes': False}
-cmt2cmake.known_subdirs['GaudiUtils'] = {'libraries': ['GaudiUtilsLib'],
-                                         'includes': False}
-cmt2cmake.known_subdirs['LHCbKernel'] = {'libraries': ['LHCbKernel'],
-                                         'includes': False}
-cmt2cmake.known_subdirs['SomeSubdir'] = {'libraries': ['SubdirLib'],
-                                         'includes': False}
-cmt2cmake.known_subdirs['JustHeaders'] = {'libraries': [],
-                                          'includes': True}
-cmt2cmake.known_subdirs[repr(('Baseproject', 'v1r0'))] = {'heptools': '65'}
-cmt2cmake.known_subdirs[repr(('TestProjectHT', 'v3r0'))] = {'heptools': '23'}
+cmt2cmake.cache['GaudiKernel'] = {'libraries': ['GaudiKernel'],
+                                  'includes': False}
+cmt2cmake.cache['GaudiUtils'] = {'libraries': ['GaudiUtilsLib'],
+                                 'includes': False}
+cmt2cmake.cache['LHCbKernel'] = {'libraries': ['LHCbKernel'],
+                                 'includes': False}
+cmt2cmake.cache['SomeSubdir'] = {'libraries': ['SubdirLib'],
+                                 'includes': False}
+cmt2cmake.cache['JustHeaders'] = {'libraries': [],
+                                  'includes': True}
+cmt2cmake.cache[repr(('Baseproject', 'v1r0'))] = {'heptools': '65'}
+cmt2cmake.cache[repr(('TestProjectHT', 'v3r0'))] = {'heptools': '23'}
 
 
 cmt2cmake.data_packages = set(['DataPack', 'Another/DtPkg', 'SpecialThing'])
@@ -469,26 +469,41 @@ apply_pattern linker_library library="Lib4"
     assert re.match(r' *Lib4\b', l)
     assert re.search(r'\bNO_PUBLIC_HEADERS', l)
 
-def test_libraries_strip_src():
+def test_libraries_fix_src_path():
     requirements = '''
 package Test
 version v1r0
 
-library TestLib ../src/subdir/*.cpp
-apply_pattern linker_library library=TestLib
+library TestLib1 ../src/subdir/*.cpp
+apply_pattern linker_library library=TestLib1
+
+library TestLib2 ../tests/src/subdir/*.cpp
+apply_pattern linker_library library=TestLib2
+
+library TestLib3 subdir/*.cpp
+apply_pattern linker_library library=TestLib3
     '''
     pkg = PackWrap("Test", requirements, files={'TestIncludes': {}})
 
-    assert pkg.linker_libraries == set(['TestLib'])
+    assert pkg.linker_libraries == set(['TestLib1', 'TestLib2', 'TestLib3'])
 
     cmakelists = pkg.generate()
     print cmakelists
 
     calls = getCalls("gaudi_add_library", cmakelists)
-    assert len(calls) == 1, "gaudi_add_library wrong count %d" % len(calls)
+    assert len(calls) == 3, "gaudi_add_library wrong count %d" % len(calls)
+
     l = calls[0].strip().split()
-    assert l[0] == 'TestLib'
-    assert l[1] == 'subdir/*.cpp'
+    assert l[0] == 'TestLib1'
+    assert l[1] == 'src/subdir/*.cpp'
+
+    l = calls[1].strip().split()
+    assert l[0] == 'TestLib2'
+    assert l[1] == 'tests/src/subdir/*.cpp'
+
+    l = calls[2].strip().split()
+    assert l[0] == 'TestLib3'
+    assert l[1] == 'src/subdir/*.cpp'
 
 def test_subdir_links():
     requirements = '''
@@ -609,8 +624,8 @@ apply_pattern component_library library=Lib1
     # FIXME: we should test the warning
 
 def test_subdir_links_update():
-    if 'GaudiDummy' in cmt2cmake.known_subdirs:
-        del cmt2cmake.known_subdirs['GaudiDummy']
+    if 'GaudiDummy' in cmt2cmake.cache:
+        del cmt2cmake.cache['GaudiDummy']
 
     requirements = '''
 package GaudiDummy
@@ -623,12 +638,12 @@ apply_pattern linker_library library=Dummy
     '''
     PackWrap("GaudiDummy", requirements, files={'Dummy':{}})
 
-    assert cmt2cmake.known_subdirs['GaudiDummy']['libraries'] == ['Dummy']
-    assert cmt2cmake.known_subdirs['GaudiDummy']['includes'] == False
+    assert cmt2cmake.cache['GaudiDummy']['libraries'] == ['Dummy']
+    assert cmt2cmake.cache['GaudiDummy']['includes'] == False
 
 def test_subdir_headers():
-    if 'GaudiDummy' in cmt2cmake.known_subdirs:
-        del cmt2cmake.known_subdirs['GaudiDummy']
+    if 'GaudiDummy' in cmt2cmake.cache:
+        del cmt2cmake.cache['GaudiDummy']
 
     requirements = '''
 package GaudiDummy
@@ -655,8 +670,8 @@ apply_pattern linker_library library=Dummy
     assert links == set(['JustHeaders', 'Hat/JustHeaders'])
 
 def test_subdir_headers_update():
-    if 'GaudiDummy' in cmt2cmake.known_subdirs:
-        del cmt2cmake.known_subdirs['GaudiDummy']
+    if 'GaudiDummy' in cmt2cmake.cache:
+        del cmt2cmake.cache['GaudiDummy']
 
     requirements = '''
 package GaudiDummy
@@ -666,8 +681,8 @@ apply_pattern install_more_includes more=Dummy
     '''
     PackWrap("GaudiDummy", requirements, files={'Dummy':{}})
 
-    assert cmt2cmake.known_subdirs['GaudiDummy']['includes'] == True
-    assert not cmt2cmake.known_subdirs['GaudiDummy']['libraries']
+    assert cmt2cmake.cache['GaudiDummy']['includes'] == True
+    assert not cmt2cmake.cache['GaudiDummy']['libraries']
 
 def test_write_file():
     requirements = '''
@@ -1074,23 +1089,23 @@ application MyTestApp app5a.cpp app5b.cpp
 
     l = calls[0].strip().split()
     assert l[0] == 'MyApp1'
-    assert l[1:] == ['app1/*.cpp']
+    assert l[1:] == ['src/app1/*.cpp']
 
     l = calls[1].strip().split()
     assert l[0] == 'MyApp2'
-    assert l[1:] == ['app2/*.cpp']
+    assert l[1:] == ['src/app2/*.cpp']
 
     l = calls[2].strip().split()
     assert l[0] == 'MyApp3'
-    assert l[1:] == ['app3/*.cpp']
+    assert l[1:] == ['src/app3/*.cpp']
 
     l = calls[3].strip().split()
     assert l[0] == 'MyApp4'
-    assert l[1:] == ['../tests/src/app4.cpp']
+    assert l[1:] == ['tests/src/app4.cpp']
 
     l = calls[4].strip().split()
     assert l[0] == 'MyTestApp'
-    assert l[1:] == ['app5a.cpp', 'app5b.cpp']
+    assert l[1:] == ['src/app5a.cpp', 'src/app5b.cpp']
 
     calls = getCalls("if", cmakelists)
     assert calls == ['GAUDI_BUILD_TESTS'] * 4
@@ -1326,19 +1341,19 @@ use LCGCMT LCGCMT_64a
     proj = ProjWrap("TestProjectHT", proj_cmt, files=files)
 
     k = repr(('TestProjectHT', 'v1r0'))
-    assert k not in cmt2cmake.known_subdirs
+    assert k not in cmt2cmake.cache
 
     toolchain = proj.generateToolchain()
     print toolchain
 
     calls = getCalls("set", toolchain)
-    assert len(calls) == 1, "set wrong count %d" % len(calls)
+    assert len(calls) == 2, "set wrong count %d" % len(calls)
 
     l = calls[0].strip().split()
     assert l == ['heptools_version', '64a']
 
-    assert k in cmt2cmake.known_subdirs
-    assert cmt2cmake.known_subdirs[k] == {'heptools': '64a'}
+    assert k in cmt2cmake.cache
+    assert cmt2cmake.cache[k] == {'heptools': '64a'}
 
 def test_heptools_2():
     # check the case of LCGCMT in a used project (already in the cache)
@@ -1351,19 +1366,19 @@ use BASEPROJECT BASEPROJECT_v1r0
     proj = ProjWrap("TestProjectHT", proj_cmt, files=files)
 
     k = repr(('TestProjectHT', 'v2r0'))
-    assert k not in cmt2cmake.known_subdirs
+    assert k not in cmt2cmake.cache
 
     toolchain = proj.generateToolchain()
     print toolchain
 
     calls = getCalls("set", toolchain)
-    assert len(calls) == 1, "set wrong count %d" % len(calls)
+    assert len(calls) == 2, "set wrong count %d" % len(calls)
 
     l = calls[0].strip().split()
     assert l == ['heptools_version', '65']
 
-    assert k in cmt2cmake.known_subdirs
-    assert cmt2cmake.known_subdirs[k] == {'heptools': '65'}
+    assert k in cmt2cmake.cache
+    assert cmt2cmake.cache[k] == {'heptools': '65'}
 
 def test_heptools_3():
     # check the case of LCGCMT not declared, but in the cache for us
@@ -1374,19 +1389,19 @@ project TestProjectHT
     proj = ProjWrap("TestProjectHT", proj_cmt, files=files)
 
     k = repr(('TestProjectHT', 'v3r0'))
-    assert k in cmt2cmake.known_subdirs
+    assert k in cmt2cmake.cache
 
     toolchain = proj.generateToolchain()
     print toolchain
 
     calls = getCalls("set", toolchain)
-    assert len(calls) == 1, "set wrong count %d" % len(calls)
+    assert len(calls) == 2, "set wrong count %d" % len(calls)
 
     l = calls[0].strip().split()
     assert l == ['heptools_version', '23']
 
-    assert k in cmt2cmake.known_subdirs
-    assert cmt2cmake.known_subdirs[k] == {'heptools': '23'}
+    assert k in cmt2cmake.cache
+    assert cmt2cmake.cache[k] == {'heptools': '23'}
 
 def test_heptools_4():
     # check the case of LCGCMT not found
@@ -1397,12 +1412,12 @@ project TestProjectHT
     proj = ProjWrap("TestProjectHT", proj_cmt, files=files)
 
     k = repr(('TestProjectHT', 'v4r0'))
-    assert k not in cmt2cmake.known_subdirs
+    assert k not in cmt2cmake.cache
 
     toolchain = proj.generateToolchain()
     assert toolchain is None
 
-    assert k not in cmt2cmake.known_subdirs
+    assert k not in cmt2cmake.cache
 
 
 

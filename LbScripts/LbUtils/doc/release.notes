@@ -4,6 +4,7 @@
 	* cmt/update_gaudi_cmake.sh: add a dummy __init__.py to cmake/cmt2cmake
 	* scripts/cmt2cmake: simple wrapper script to call cmt2cmake.py
 	* scripts/cern-icc-wrapper.sh: shell wrapper to call the Intel compiler
+	* cmake: updated to the latest version in Gaudi
 
 2012-11-01  Ben Couturier  <ben.couturier@cern.ch>
 

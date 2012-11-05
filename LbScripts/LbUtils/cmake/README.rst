@@ -6,13 +6,15 @@ Requirements
 The CMake configuration of Gaudi is based on the version 2.8.5 or later of
 CMake. On lxplus (SLC5 and SLC6) you need to call::
 
-    $ export PATH=/afs/cern.ch/sw/lcg/external/CMake/2.8.6/x86_64-slc5-gcc43-opt/bin:$PATH
+    $ export PATH=/afs/cern.ch/sw/lcg/contrib/CMake/2.8.9/Linux-i386/bin:$PATH
 
 You also need to ensure that the compiler you want to use is configured and
 available on the PATH, for example with::
 
     $ . /afs/cern.ch/sw/lcg/contrib/gcc/4.6.2/$CMTCONFIG/setup.sh
 
+.. note:: If you use the LHCb environment (as of LbScripts v7r3), you do not
+   need to prepare the environment for the compiler (except for ICC and Clang).
 
 Build
 -----
@@ -80,4 +82,18 @@ defined above)::
 or, to have a sub-shell with the right environment::
 
     $ $src/cmake/env.py --xml $src/InstallArea/$CMTCONFIG/GaudiEnvironment.xml bash
+
+
+Run from the build directory
+----------------------------
+For testing and debugging (as already mentioned) there is no need to install.
+
+To run an application using the build directory, you can use the script
+``env.py`` with the XML file ``GaudBuildEnvironment.xml`` located in the build
+directory, or the convenience script ``run`` (always in the build directory),
+for example like this::
+
+    $ cd Gaudi.build
+    $ ./run gaudirun.py --help
+    $ ./run bash
 
