@@ -50,7 +50,7 @@ StatusCode TupleToolL0Calo::initialize( )
 }
 
 //=============================================================================
-StatusCode TupleToolL0Calo::fill( const LHCb::Particle* mother,
+StatusCode TupleToolL0Calo::fill( const LHCb::Particle* /* mother */,
                                   const LHCb::Particle* P,
                                   const std::string& head,
                                   Tuples::Tuple& tuple )
