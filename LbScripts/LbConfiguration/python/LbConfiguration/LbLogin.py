@@ -520,7 +520,7 @@ class LbLoginScript(SourceScript):
         elif sys.platform.startswith('linux'):
             subdir = "CMake/%s/Linux-i386/bin" % opts.cmakevers
         else:
-            log.warning('CMake is not provided for platform %s', sys.platform)
+            log.debug('CMake is not provided for platform %s', sys.platform)
             return
 
         ev = self.Environment()
