@@ -70,7 +70,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   debug() << " OS pn="<< pnsum <<" w="<<1-pnsum<<endreq;
 
   //throw away poorly significant tags
-  if(pnsum < m_ProbMin_OS) {
+  if(pnsum < m_ProbMin_OS || tagdecision == 0) {
     pnsum = 0.50;
     tagdecision = 0;
   }
@@ -117,7 +117,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   double SSeOS_pnsum = std::max(SSeOS_pnsum_a,SSeOS_pnsum_b) /(SSeOS_pnsum_a + SSeOS_pnsum_b);
     
   //throw away poorly significant tags
-  if(SSeOS_pnsum < m_ProbMin) {
+  if(SSeOS_pnsum < m_ProbMin ||  SSeOS_tagdecision == 0) {
     SSeOS_pnsum = 0.50;
     SSeOS_tagdecision = 0;
   }

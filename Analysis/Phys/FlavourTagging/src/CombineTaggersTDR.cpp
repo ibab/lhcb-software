@@ -30,7 +30,7 @@ int CombineTaggersTDR::combineTaggers(FlavourTag& theTag,
 
   if( vtg.empty() ) return 0;
   debug()<<"entering TDR/PID type combination"<<endreq;
-  fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "<<endmsg;
+  fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "<<signalType<<endmsg;
   ///////////////////////////////////////////////////////////////////////////
   // WARNING: update the code according to the new variable signalType !!!!!!
   ///////////////////////////////////////////////////////////////////////////

@@ -140,7 +140,7 @@ StatusCode DoubleTagging::execute() {
           else ptaggers.push_back( &(taggers[i]) );
         }
         int signalType=1;
-        fatal()<<" WARNING: make combination assuming Bu or Bd (with SSpion!!) fix it!!!"<<endmsg;
+        fatal()<<" WARNING: make combination assuming Bu or Bd (with SSpion!!) fix it!!!"<<signalType<<endmsg;
         
         unsigned int category = m_oscombine->combineTaggers(*OSTag,ptaggers,signalType);
         const std::vector<Tagger> OStaggers = OSTag->taggers();

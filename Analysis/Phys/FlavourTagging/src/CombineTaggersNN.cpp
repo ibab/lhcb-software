@@ -39,7 +39,7 @@ StatusCode CombineTaggersNN::finalize()   { return StatusCode::SUCCESS; }
 int CombineTaggersNN::combineTaggers(FlavourTag& theTag, 
                                      std::vector<Tagger*>& vtg , int signalType){
   if( vtg.empty() ) return 0;
-  fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "<<endmsg;
+  fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "<<signalType<<endmsg;
   ///////////////////////////////////////////////////////////////////////////
   // WARNING: update the code according to the new variable signalType !!!!!!
   ///////////////////////////////////////////////////////////////////////////

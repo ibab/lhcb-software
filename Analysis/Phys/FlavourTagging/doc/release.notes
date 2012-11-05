@@ -5,6 +5,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2012-11-05 - Stefania Vecchi
+ - fixed compilation warnings
 ! 2012-10-28 - Stefania Vecchi
  - changed in BTaggingTool.cpp to run always SSpion and SSKaon
  - modified CombineTaggersProbability to run the combination only with one SS tagger

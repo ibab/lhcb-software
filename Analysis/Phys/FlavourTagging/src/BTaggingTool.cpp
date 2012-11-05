@@ -425,16 +425,15 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
   for ( ip = parts.begin(); ip != parts.end(); ip++ ){
 
     const ProtoParticle* proto = (*ip)->proto();
-    if( (*ip)->p()/GeV < 2.0 ) continue;               
+    if( !proto )                                 continue;
+    if( !proto->track() )                        continue;
+    if( proto->track()->type() < 3 )             continue; 
+    if( proto->track()->type() > 4 )             continue;
+    if( (*ip)->p()/GeV < 2.0 )                   continue;               
     if( (*ip)->momentum().theta() < m_thetaMin ) continue;
-    if( (*ip)->charge() == 0 ) continue;               
-    if( !proto )               continue;
-    if( !proto->track() ) continue;
-    if( proto->track()->type() < 3 )   continue; 
-    if( proto->track()->type() > 4 )   continue; 
-    //    if( (proto->track()->type()!=3) and (proto->track()->type()!=4) and  (proto->track()->type()!=7) )   continue;
-    if( (*ip)->p()/GeV  > 200 ) continue;
-    if( (*ip)->pt()/GeV >  10 ) continue;
+    if( (*ip)->charge() == 0 )                   continue;               
+    if( (*ip)->p()/GeV  > 200 )                  continue;
+    if( (*ip)->pt()/GeV >  10 )                  continue;
     if( m_util->isinTree( *ip, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distphi_cut ) continue;
 
@@ -445,14 +444,11 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
 
     
     if(ippuerr) {
-      if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
+      if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts 
       Particle* c = const_cast<Particle*>(*ip);
       c->addInfo(1, ippu/ippuerr);
       verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
-    }else debug()<<"particle p="<<(*ip)->p()<<" ippu NAN ****"<<endmsg;
-
-
-
+    }else debug()<<"particle p="<<(*ip)->p()<<" ippu NAN ****"<<endmsg; // happens only when there is 1 PV 
       
     
     

@@ -26,7 +26,7 @@ StatusCode CombineTaggersOSTDR::finalize() { return StatusCode::SUCCESS; }
 //=============================================================================
 int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& vtg, int signalType){
 
-  debug() << "Running CombineTaggersOSTDR::combineTaggers" << endmsg;
+  debug() << "Running CombineTaggersOSTDR::combineTaggers signalTpye" <<signalType<< endmsg;
 
   //Want to combine opposite side muon, electron, kaon, vertex  
   int catt=0;
