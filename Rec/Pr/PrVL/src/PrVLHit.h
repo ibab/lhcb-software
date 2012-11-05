@@ -15,7 +15,7 @@ class PrVLHit {
 public:
   /// Constructor
   PrVLHit() : 
-      m_zone(0), m_sensor(0), m_strip(0), m_z(0.), 
+      m_sensor(0), m_strip(0), m_zone(0), m_z(0.), 
       m_rLocal(0.), m_rGlobal(0.), 
       m_xGlobal(0.), m_yGlobal(0.), m_dGlobal(0.), 
       m_weight(0.), m_phiWeight(0.), m_nUsed(0),
@@ -29,9 +29,10 @@ public:
 
   void setHit(const LHCb::VLLiteCluster cluster, const unsigned int zone, 
               const double z, const double r, const double weight) {
-    m_cluster = cluster;
+    m_id = cluster.channelID();
     m_sensor = cluster.channelID().sensor();
     m_strip = cluster.channelID().strip();
+    m_interStripFraction = cluster.interStripFraction();
     m_zone = zone;
     m_z = float(z);
     m_rLocal = m_rGlobal = float(r);
@@ -45,8 +46,7 @@ public:
     m_xSensorCentre = m_ySensorCentre = 0.;
   }
 
-  LHCb::LHCbID lhcbID() const {return m_cluster.channelID();}
-  LHCb::VLLiteCluster cluster() const {return m_cluster;}
+  LHCb::LHCbID lhcbID() const {return m_id;}
   double rLocal() const {return m_rLocal;}
   double rGlobal() const {return m_rGlobal;}
   double xGlobal() const {return m_xGlobal;}
@@ -57,6 +57,7 @@ public:
   unsigned int sensor() const {return m_sensor;}
   unsigned int strip() const {return m_strip;}
   unsigned int zone() const {return m_zone;}
+  double interStripFraction() const {return m_interStripFraction;}
   unsigned int nUsed() const {return m_nUsed;}
 
   void setUsed()   {++m_nUsed;}
@@ -135,10 +136,11 @@ public:
 
 private:
 
-  LHCb::VLLiteCluster m_cluster;
-  unsigned int m_zone;
+  LHCb::LHCbID m_id;
   unsigned int m_sensor;
   unsigned int m_strip;
+  unsigned int m_zone;
+  float m_interStripFraction;
   float m_z;
   float m_rLocal;
   float m_rGlobal;

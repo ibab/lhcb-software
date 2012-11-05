@@ -49,6 +49,13 @@ public:
   }
   double rInterpolated(double z);
 
+  void setSpaceParametersFromR(const double cphi, const double sphi) {
+    m_x0 = m_r0 * cphi;
+    m_y0 = m_r0 * sphi;
+    m_tx = m_tr * cphi;
+    m_ty = m_tr * sphi;
+  }
+
   void addRHit(PrVLHit* hit);
   void removeRHit(PrVLHit* hit);
 

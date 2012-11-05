@@ -706,7 +706,7 @@ void PrVLTracking::findSpaceTracks(PrVLTrack& seed) {
             << first->sensorNumber() << " - " << last->sensorNumber() << endmsg;
   }
   const bool inOverlap = nLeftR > 2 && nRightR > 2;
-  double dphi = Gaudi::Units::pi / double(m_nZonesR);
+  const double dphi = Gaudi::Units::pi / double(m_nZonesR);
   double phi = -0.5 * Gaudi::Units::pi + (0.5 + seed.zone()) * dphi;
   double cphi = cos(phi);
   double sphi = sin(phi);
@@ -1204,13 +1204,11 @@ void PrVLTracking::mergeSpaceClones() {
     PrVLHits::const_iterator ith;
     for (ith = (*it1).rHits().begin(); ith != (*it1).rHits().end(); ++ith) {
       const int sensor = (*ith)->sensor();
-      const int strip = (*ith)->cluster().channelID().strip();
-      if (sensor < 128) strip1[sensor] = strip;
+      if (sensor < 128) strip1[sensor] = (*ith)->strip();
     }
     for (ith = (*it1).phiHits().begin(); ith != (*it1).phiHits().end(); ++ith) {
       const int sensor = (*ith)->sensor();
-      const int strip = (*ith)->cluster().channelID().strip();
-      if (sensor < 128) strip1[sensor] = strip;
+      if (sensor < 128) strip1[sensor] = (*ith)->strip();
     }
     const double zMid = 0.5 * ((*it1).rHits().front()->z() + 
                                (*it1).rHits().back()->z());
@@ -1239,13 +1237,11 @@ void PrVLTracking::mergeSpaceClones() {
       std::vector<int> strip2(128, -1);
       for (ith = (*it2).rHits().begin(); ith != (*it2).rHits().end(); ++ith) {
         const int sensor = (*ith)->sensor();
-        const int strip  = (*ith)->cluster().channelID().strip();
-        if (sensor < 128) strip2[sensor] = strip;
+        if (sensor < 128) strip2[sensor] = (*ith)->strip();
       }
       for (ith = (*it2).phiHits().begin(); ith != (*it2).phiHits().end(); ++ith) {
         const int sensor = (*ith)->sensor();
-        const int strip  = (*ith)->cluster().channelID().strip();
-        if (sensor < 128) strip2[sensor] = strip;
+        if (sensor < 128) strip2[sensor] = (*ith)->strip();
       }
 
       // Count how many sensors have hits on both, and how many are in commmon.
@@ -1527,7 +1523,7 @@ void PrVLTracking::buildHits() {
       const DeVLPhiSensor* phiSensor = m_det->phiSensor(sensor);
       zone = phiSensor->globalZoneOfStrip(strip);
       const double pitch = phiSensor->phiPitchOfStrip(strip);
-      double weight = 12. / (pitch * pitch);
+      const double weight = 12. / (pitch * pitch);
       hit->setHit(*it, zone, phiSensor->z(), 0, weight);
       double a, b, c;
       double xs, ys;
@@ -1749,10 +1745,8 @@ void PrVLTracking::printHit(const PrVLHit* hit, const std::string title) {
   if (!m_debug) return;
   debug() << title 
           << format("sensor %3d z %7.1f zone %1d strip %4d frac %3.2f radius %8.3f dsin %5.3f used %2d ",
-                    hit->sensor(), hit->z(), hit->zone(), 
-                    hit->cluster().channelID().strip(), 
-                    hit->cluster().interStripFraction(), 
-                    hit->rGlobal(), hit->dGlobal(),
+                    hit->sensor(), hit->z(), hit->zone(), hit->strip(), 
+                    hit->interStripFraction(), hit->rGlobal(), hit->dGlobal(),
                     hit->nUsed());
   LHCbID id = hit->lhcbID();
   if (m_debugTool) {
