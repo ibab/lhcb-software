@@ -43,6 +43,9 @@ echo "Importing the files from ${remote_id}"
 git archive --remote=$git_root ${remote_id} cmake | \
     tar -x -v -C $rootdir/.. -f -
 
+echo "Creating dummy __init__.py"
+touch $rootdir/../cmake/cmt2cmake/__init__.py
+
 # create release notes
 (
     cd $git_root

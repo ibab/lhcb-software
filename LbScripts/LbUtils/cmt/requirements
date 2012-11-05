@@ -18,10 +18,14 @@ apply_pattern python_alias script=change-svn-wc-format
 # apply_pattern python_alias script=expandTarBall
 apply_pattern python_alias script=cmtwhich
 
-# It should be
+# It should be something like
 #   apply_pattern install_custom_python_modules source=cmake/EnvConfig offset=EnvConfig
 # but it doesn't work... and anyway it's overkilling.
 document install_python LbUtils_EnvConfig_python source=cmake/EnvConfig offset=EnvConfig
+
+# Install the cmt2cmake modules.
+#apply_pattern install_custom_python_modules source=cmake/cmt2cmake offset=cmt2cmake
+document install_python LbUtils_CMT2CMake_python source=cmake/cmt2cmake offset=LbUtils/cmt2cmake
 
 action install_env_script "$(install_command) ../cmake/env.py $(CMTINSTALLAREA)/scripts"
 macro_append constituents " install_env_script"
