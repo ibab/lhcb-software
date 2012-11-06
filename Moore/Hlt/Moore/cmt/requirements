@@ -6,7 +6,7 @@
 
 #============================================================================
 package Moore
-version           v14r10
+version           v14r11
 
 branches doc cmt options python
 
