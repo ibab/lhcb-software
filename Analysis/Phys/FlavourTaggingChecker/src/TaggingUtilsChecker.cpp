@@ -234,7 +234,8 @@ bool TaggingUtilsChecker::isinTree( const Particle* axp,
 
     if( (    fabs(p_axp -(*ip)->p()) < 0.1 
              && fabs(pt_axp-(*ip)->pt())< 0.01 
-             && fabs(phi_axp-(*ip)->momentum().phi())< 0.1 )
+             && fabs(dphi)< 0.1 )
+             //&& fabs(phi_axp-(*ip)->momentum().phi())< 0.1 )
         || axp->proto()==(*ip)->proto() ) {
       debug() << "excluding signal part: " << axp->particleID().pid() 
               << " with p="<<p_axp/Gaudi::Units::GeV 

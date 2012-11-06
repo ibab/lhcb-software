@@ -860,13 +860,13 @@ BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
   for ( ip = parts.begin(); ip != parts.end(); ip++){
     
     const ProtoParticle* proto = (*ip)->proto();
-    if( ! (*ip)->proto() )  continue;
-    if( (*ip)->p() < 2000 ) continue;  
+    if( !proto )                                  continue;
+    if( ! proto->track() )                        continue;
+    if( proto->track()->type() < 3 )              continue; 
+    if( proto->track()->type() > 4 )              continue; 
+    if( (*ip)->p() < 2000 )                       continue;  
     if( (*ip)->momentum().theta()  < m_thetaMin ) continue;   
-    if( (*ip)->charge() == 0 ) continue;                
-    if( ! proto->track() )     continue;
-    if( proto->track()->type() < 3 ) continue; 
-    if( proto->track()->type() > 4 ) continue; 
+    if( (*ip)->charge() == 0 )                    continue;                
     if( (*ip)->p()  > 200000 ) continue;
     if( (*ip)->pt() >  10000 ) continue;
     if( m_util->isinTree(*ip, axdaugh, distphi) ) continue ; 
@@ -875,7 +875,7 @@ BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
     //calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
-    if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //preselection (eliminate from vtags all parts coming from a pileup vtx)
+    if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //eliminate  all parts coming from a pileup vtx
 
     bool dup=false;
     double partp= (*ip)->p();
