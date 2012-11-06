@@ -200,9 +200,14 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(7) = dQ/GeV;
     NNinputs.at(8) = allVtx.size();
 
+    //    std::cout<<" NNet inputs BC "<<NNinputs.at(0)<<" "<<NNinputs.at(1)<<" "<<NNinputs.at(3)<<" "<<NNinputs.at(4)<<" "<<NNinputs.at(5)<<" "<<NNinputs.at(7)<<" "<<NNinputs.at(8)<<" "<<std::endl;
+
     pn = m_nnet->MLPpS( NNinputs );
     verbose() << " Pion pn="<< pn <<endmsg;
-
+    
+    //    std::cout<<" NNet inputs AC "<<NNinputs.at(0)<<" "<<NNinputs.at(1)<<" "<<NNinputs.at(3)<<" "<<NNinputs.at(4)<<" "<<NNinputs.at(5)<<" "<<NNinputs.at(7)<<" "<<NNinputs.at(8)<<" "<<pn<<std::endl;
+    
+    
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     //pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ( (1-pn)-m_Eta_Cal_pionS);
     pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) - m_P2_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) * ((1-pn)-m_Eta_Cal_pionS);

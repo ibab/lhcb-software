@@ -202,7 +202,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
     Particle::ConstVector::const_iterator i, j;
     for ( i=vtags.begin(); i!=vtags.end(); i++ ){
       const ProtoParticle* iproto = (*i)->proto();
-      for ( j=i+1; j!=vtags.end(); j++) if(iproto==(*j)->proto()) continue;
+      //for ( j=i+1; j!=vtags.end(); j++) if(iproto==(*j)->proto()) continue;
       if( m_UseVtxOnlyWithoutOS ) {
         if(muon.type()!=0) 
           if(muon.taggerParts().at(0)->proto() == iproto ) 
