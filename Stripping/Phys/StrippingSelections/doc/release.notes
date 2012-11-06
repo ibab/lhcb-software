@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-11-06 - Anton Poluektov 
+ - Add 2011 test sample with Reco14: 
+   * tests/TestMyStrippingLineOn2011Data_Reco14.py - Test script
+   * tests/data/Reco14_2011Data_MagDn.py - Test sample (MagDown)
+   * tests/data/Reco14_2011Data_MagUp.py - Test sample (MagUp)
+
 ! 2012-11-02 - Daria Savrina
  - Increased a mass window for the B-mesons in PsiX0 stripping
 
