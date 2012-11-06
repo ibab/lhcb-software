@@ -4,6 +4,12 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-09-27 - Rob Lambert
+ - Add FSRIOSvc, which polls data to fill the FSR and fills it for you.
+ - Needs testing, might need an interface.
+ - New writer will simply need to call buildIOFSR, and register it to the TES
+ - At least it compiles at the moment...
+
 ! 2012-10-16 - Marco Cattaneo
  - Update merge-small-files reference following changed input files
 
