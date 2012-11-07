@@ -430,6 +430,8 @@ StatusCode IOFSRSvc::mergeIOFSRs()
   for ( iofsr = ioFSRs.begin(); iofsr != ioFSRs.end(); ++iofsr ) 
   {
     std::string GUID=address2GUID(iofsr->first);
+    log << MSG::DEBUG << " +- merging " << GUID << " from address " << iofsr->first;
+    
     m_seenByMap[GUID]=iofsr->second->eventsSeen();
     m_writtenToMap[GUID]=iofsr->second->eventsOutput();
   }
@@ -477,9 +479,19 @@ std::string IOFSRSvc::address2GUID(const std::string& address)
   
 }
 
+//Does the accounting all add up OK?
+bool IOFSRSvc::traceCounts() 
+{ 
+  if (traceCountsFlag()==LHCb::IOFSR::VERIFIED) return true;
+  MsgStream log( msgSvc(), name() );
+  log << MSG::WARNING << "IOFSRs don't add up, " << traceCountsFlag() << endmsg;
+  return false;
+
+}
+ 
 //determine event count reliability, following down the tree 
 //of input/output until something doesn't match
-LHCb::IOFSR::StatusFlag IOFSRSvc::traceCounts()
+LHCb::IOFSR::StatusFlag IOFSRSvc::traceCountsFlag()
 {
   if (m_overrideStatus) return m_defaultStatus;
   
@@ -565,8 +577,20 @@ LHCb::IOFSR* IOFSRSvc::buildIOFSR(const std::string & outputName)
   ioFSR->setEventsWrittenTo(eventsWrittenTo());
   ioFSR->setEventsReadFrom(eventsReadFrom());
   ioFSR->setEventsSeenBy(eventsSeenBy());
-  ioFSR->setStatusFlag(traceCounts());
+  ioFSR->setStatusFlag(traceCountsFlag());
   
   return ioFSR;
+  
+}
+
+///////////////////////////////////////////////////////////////////////////
+// Create the IOFSR, and register on the TES
+///////////////////////////////////////////////////////////////////////////
+
+//Create a new IOFSR, and register on the TES
+StatusCode IOFSRSvc::storeIOFSR(const std::string & outputName)
+{
+  LHCb::IOFSR* iofsr=buildIOFSR(outputName);
+  return m_fileRecordSvc->registerObject(LHCb::IOFSRLocation::Default,iofsr);
   
 }

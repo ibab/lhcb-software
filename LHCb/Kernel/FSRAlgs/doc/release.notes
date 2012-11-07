@@ -4,6 +4,14 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-07 - Rob Lambert
+ - Add IIOFSRSvc, the interface for this new service.
+ - Clone OutputStreamAgent, OutputStream, RecordStream and write a new class on top
+ - Add LHCbFSRStream, derived from LHCbRecordStream
+ - If the IOFSR and services are moved to Gaudi this would be simpler.
+ - TODO: clean FSR tree automatically before writing.
+ - TODO: needs testing
+
 ! 2012-09-27 - Rob Lambert
  - Add FSRIOSvc, which polls data to fill the FSR and fills it for you.
  - Needs testing, might need an interface.

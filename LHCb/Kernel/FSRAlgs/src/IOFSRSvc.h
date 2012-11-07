@@ -8,11 +8,11 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/StatEntity.h"
 #include "GaudiKernel/Stat.h"
-#include "GaudiKernel/ICounterSummarySvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/AppReturnCode.h"
 #include "GaudiUtils/IFileCatalog.h"
+#include "IIOFSRSvc.h"
 
 #include "FSRNavigator.h"
 
@@ -40,10 +40,8 @@ template <class TYPE> class SvcFactory;
  *  @date   2012-09-27
  */
 class IOFSRSvc
-  : public extends1<Service,IIncidentListener>
-{
-  
-    //  , public virtual IIncidentListener {
+  : public extends1<Service,IIOFSRSvc>
+  , public virtual IIncidentListener {
 
 public:
 
@@ -103,18 +101,23 @@ public:
   
   
   //merge existing IOFSRs into the maps of this service
-  StatusCode mergeIOFSRs();
+  virtual StatusCode mergeIOFSRs();
   
   //remove any IOFSR at the top level. To be called before requesting a new FSR.
-  StatusCode cleanTopFSR();
+  virtual StatusCode cleanTopFSR();
   
   //Create a new IOFSR, pass it back so the requesting alg can store as needed
   LHCb::IOFSR* buildIOFSR(const std::string & outputName);
   
   //determine event count reliability, following down the tree 
   //of input/output until something doesn't match
-  LHCb::IOFSR::StatusFlag traceCounts();
+  LHCb::IOFSR::StatusFlag traceCountsFlag();
   
+  
+  //Create a new IOFSR, store in the TES
+  virtual StatusCode storeIOFSR(const std::string & outputName);
+  //Does the accounting all add up OK?
+  virtual bool traceCounts();
   
   
 private:
