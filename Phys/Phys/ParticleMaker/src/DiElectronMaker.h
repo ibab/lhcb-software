@@ -9,6 +9,7 @@
 #include "CaloUtils/ICaloElectron.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "TrackInterfaces/ITrackSelector.h"
+#include "Kernel/IParticleTransporter.h"
 
 /** @class DiElectronMaker DiElectronMaker.h
  *  
@@ -38,6 +39,7 @@ private:
   std::pair<double,double> getY(const LHCb::ProtoParticle* proto, double zcalo);
   Gaudi::XYZPoint getPoCA(LHCb::Particle* particle, const Gaudi::XYZPoint PVpos);
   void clear(LHCb::Particle::Vector & vector);
+  StatusCode combinepair(LHCb::Particle* ele1, LHCb::Particle* ele2, LHCb::Particle & mother, LHCb::Vertex & vertex);
 
 private:
   
@@ -76,7 +78,10 @@ private:
   double m_gid;
   double m_zcalo;
   bool m_addBrem;
-
+  bool m_combpair;
+  double m_maxdistpair;
+  IParticleTransporter* m_transporter;
+  std::string m_transporterName;
 };
 
 #endif // DIELECTRONMAKER_H

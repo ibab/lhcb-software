@@ -4,6 +4,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "CaloUtils/CaloTrackTool.h"
 #include "Kernel/IRelatedPVFinder.h"
+#include "Kernel/IParticleTransporter.h"
 // local
 #include "DiElectronMaker.h"
 #include "CaloUtils/CaloParticle.h"
@@ -19,7 +20,9 @@
 DiElectronMaker::DiElectronMaker( const std::string& name,
                                   ISvcLocator* pSvcLocator )
   : ChargedParticleMakerBase ( name , pSvcLocator ),
-    m_trSel   ( NULL )
+    m_trSel   ( NULL ),
+    m_transporter()
+  , m_transporterName ("ParticleTransporter:PUBLIC")
 {
   declareProperty("ProtoFilter"        , m_toolType = "ProtoParticleCALOFilter");
   declareProperty("ProtoFilterName"    , m_toolName = "Electron"); // Electron PID filter is the default (for ProtoP Input only)
@@ -44,6 +47,9 @@ DiElectronMaker::DiElectronMaker( const std::string& name,
   declareProperty("UseEcalEnergy"          , m_ecalE=40*Gaudi::Units::GeV);
   declareProperty("VeloCnvThreshold"       , m_vc=1.5);
   declareProperty("AddBrem"                , m_addBrem=true);
+  declareProperty("DistMaxpair",             m_maxdistpair= 10*Gaudi::Units::mm);
+  declareProperty("TransporterDie", m_transporterName);
+  declareProperty("UseCombinePair", m_combpair= true);
   m_pid = "gamma";
 }
 
@@ -66,6 +72,8 @@ StatusCode DiElectronMaker::initialize()
   m_caloElectron= tool<ICaloElectron>("CaloElectron","CaloElectron",this);
   m_trSel       = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
   m_calo        = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ) ;
+  m_transporter = tool<IParticleTransporter>(m_transporterName, this);
+  //  m_transporter = tool<IParticleTransporter>("ParticleTransporter","ParticleTransporter", this);
 
   // get zcalo
   const Gaudi::Plane3D plane = m_calo->plane(CaloPlane::ShowerMax);
@@ -262,18 +270,56 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       if( da.M() > m_mmax*m_aFactor || da.M() < m_mmin/m_aFactor)continue;
       if( da.pt() < m_ptmin) continue;
 
+      if (msgLevel(MSG::DEBUG))debug() << "DiElectron sum: "<<da.px()<<" , "<<da.py()<<" , "<<da.pz()<<" , "
+                                       << da.E()<<" , "<<da.M()<<endmsg;
+
       //========== create local mother
       LHCb::Particle mother ( m_gPps->particleID() );
       LHCb::Particle::ConstVector epair ;
       epair.push_back( ele1 );
       epair.push_back( ele2 );
       LHCb::Vertex vertex;
+      double mom1=ele1->p();
       const StatusCode combSc = particleCombiner()->combine( epair, mother, vertex );
-      if ( combSc.isFailure() )
-      {
-        Warning( "ParticleCombiner returned failure" ).ignore();
-        continue;
+      if ( combSc.isFailure() ){
+        StatusCode combSc2=StatusCode::FAILURE;
+        if ( msgLevel(MSG::DEBUG) )debug()<< "ParticleCombiner returned failure"<<endmsg;
+        counter("ParticleCombiner failure")+=1;
+        if ( bremAdder()->removeBrem( ele1 ) || bremAdder()->removeBrem( ele2 )){
+          const bool b2 = ( m_addBrem ? bremAdder()->addBrem2Pair(ele2,ele1) : false );
+          if (b2 && mom1 != ele1->p()){
+            combSc2 = particleCombiner()->combine( epair, mother, vertex );
+            if ( combSc2.isSuccess() ){
+              if ( msgLevel(MSG::DEBUG) )debug()<<"ParticleCombiner 2nd try succeeded, created mother: momentum="
+                                                << mother.momentum()<<", mass= "<<mother.measuredMass()<<endmsg;
+            }
+          }
+        }
+        if ( combSc2.isFailure() ){
+          if ( msgLevel(MSG::DEBUG) )debug()<< "ParticleCombiner returned failure 2nd try" <<endmsg;
+          counter("ParticleCombiner 2nd try failure")+=1;
+          if (m_combpair  && m_pid == "gamma"){
+            StatusCode sc = combinepair(ele1, ele2, mother, vertex);
+            if ( msgLevel(MSG::DEBUG) ) debug() <<"Created mother: momentum="
+                                                <<mother.momentum()<<", mass= "<<mother.measuredMass()<<endmsg;
+            if ( sc.isFailure() ){
+              if ( msgLevel(MSG::DEBUG) )debug()<< "PairCombiner returned failure" <<endmsg;
+              counter("PairCombiner failure")+=1;
+              continue;
+            }else{
+              if ( msgLevel(MSG::DEBUG) ) debug() <<"Created mother: momentum="
+                                                  <<mother.momentum()<<", mass= "<<mother.measuredMass()<<endmsg;
+              counter("PairCombiner success")+=1;
+            }            
+          }
+        }else{
+          counter("ParticleCombiner 2nd try success")+=1;
+        }        
+      }else{
+        counter("ParticleCombiner success")+=1;
       }
+      
+
       const double Mgamma_comb = mother.momentum().M();
       mother.setMeasuredMass(Mgamma_comb);
       mother.setConfLevel( gCL );
@@ -347,7 +393,7 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
         //--- CREATE THE DIELECTRON
         //const LHCb::Particle* dielectron = this->cloneAndMarkTree( &mother ); // memory leak !!
         // memory leak hack 
-        
+
         mother.removeFromDaughters(ele1);
         mother.removeFromDaughters(ele2);
         LHCb::Vertex* vtx=mother.endVertex();
@@ -367,7 +413,7 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       else
       {
         if (msgLevel(MSG::DEBUG))
-          debug() << "DiElectron fit failed: "<<da.px()<<" , "<<da.py()<<" , "
+          debug() << "DiElectron fit failed: "<<da.px()<<" , "<<da.py()<<" , "<<da.pz()<<" , "
                   << da.E()<<" , "<<da.M()<<endmsg;
       }
     }
@@ -457,6 +503,94 @@ Gaudi::XYZPoint DiElectronMaker::getPoCA(LHCb::Particle* particle, const Gaudi::
   const double y=pref.Y()+mom.py()*scal;
   const double z=pref.Z()+mom.pz()*scal;
   return Gaudi::XYZPoint(x,y,z);
+}
+
+StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1, LHCb::Particle* ele2, LHCb::Particle & mother, LHCb::Vertex & vertex ){
+
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"in combinepair" <<endmsg;
+
+  StatusCode sc = StatusCode::SUCCESS;
+  LHCb::Particle transele1 = *ele1;
+  LHCb::Particle transele2 = *ele2;
+  LHCb::Particle transParticle1;
+  LHCb::Particle transParticle2;
+  Gaudi::XYZPoint refPoint;
+  double dz=100;
+  double distmin=9999,distY=0, distX=0,distYmin=0, distXmin=0;
+  double z1=transele1.referencePoint().Z();
+  double z2=transele2.referencePoint().Z();
+  double znew=z1;
+  if (z2 > z1) znew=z2;
+  double dist12=distmin;
+  for (int i=0 ; (znew>0 && dist12==distmin); i++){
+    znew-=dz;
+    sc = m_transporter->transport(&transele1, znew, transParticle1);
+    if ( sc.isFailure() ) { 
+      Warning( "Transporter returned failure",StatusCode::SUCCESS ).ignore();
+      counter("Transporter ele1 failure") += 1;       
+      continue; 
+    } 
+    sc = m_transporter->transport(&transele2, znew, transParticle2);
+    if ( sc.isFailure() ) { 
+      Warning( "Transporter returned failure",StatusCode::SUCCESS ).ignore();
+      counter("Transporter ele2 failure") += 1;
+      continue;
+    }
+    const Gaudi::XYZPoint& pos1=transParticle1.referencePoint();
+    const Gaudi::XYZPoint& pos2=transParticle2.referencePoint();
+    //    dist12 = sqrt((pos1.X()-pos2.X())*(pos1.X()-pos2.X())+(pos1.Y()-pos2.Y())*(pos1.Y()-pos2.Y()));
+    distY =fabs(pos1.Y()-pos2.Y()); 
+    distX =fabs(pos1.X()-pos2.X());
+    dist12 = sqrt(distX*distX + distY*distY);
+    if ( msgLevel(MSG::DEBUG) ) debug() <<"Transport to "<<znew<<" dist= "<<dist12<<endmsg;
+    if (dist12<distmin){
+      distmin = dist12;
+      distYmin=distY;
+      distXmin=distX;
+      transele1 = transParticle1;
+      transele2 = transParticle2;
+      refPoint = Gaudi::XYZPoint((pos1.X()+pos2.X())/2,(pos1.Y()+pos2.Y())/2,pos1.Z());
+    }
+  }
+
+  if (distmin> m_maxdistpair || distYmin >m_maxdistpair/2) {  return StatusCode::FAILURE ;}
+
+  Gaudi::SymMatrix3x3 posCov;
+  posCov[0][0]=(distXmin/2)*(distXmin/2); posCov[1][1]=(distYmin/2)*(distYmin/2); posCov[2][2]= (dz/2)*(dz/2);
+  posCov[0][1]=0; posCov[0][2]=0; posCov[1][0]=0; posCov[1][2]=0; posCov[2][0]=0; posCov[2][1]=0;
+  vertex.clearOutgoingParticles();
+  vertex.setChi2(0.0);
+  vertex.setNDoF(0);
+  vertex.setPosition(refPoint);
+  vertex.setCovMatrix(posCov);
+  mother.clearDaughters();
+  mother.setEndVertex(&vertex);
+  vertex.addToOutgoingParticles(ele1);
+  vertex.addToOutgoingParticles(ele2);
+  mother.addToDaughters(ele1);
+  mother.addToDaughters(ele2);
+  Gaudi::LorentzVector momentum =transele1.momentum()+transele2.momentum()   ;
+  Gaudi::SymMatrix4x4  covariance = transele1.momCovMatrix()+transele2.momCovMatrix() ;
+  Gaudi::Matrix4x3  posMomcov = transele1.posMomCovMatrix()+transele2.posMomCovMatrix() ;
+  mother.setReferencePoint(refPoint);
+  mother.setMomentum(momentum);
+  const double mass = momentum.M();
+  mother.setMomCovMatrix( covariance );
+  mother.setPosMomCovMatrix( posMomcov );
+  mother.setMeasuredMass( mass);
+
+  Gaudi::Vector4 vct
+    ( - momentum.Px () , - momentum.Py () , - momentum.Pz () , momentum.E  () ) ;
+  vct /= mass ;
+  
+  const double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
+  mother.setMeasuredMassErr ( sqrt( massErr2 ) );
+
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"Created mother: momentum="<<mother.momentum()<<", mass= "<<mother.measuredMass()<<endmsg;
+
+  //  warning() <<"Created mother: momentum="<<mother.momentum()<<", mass= "<<mother.measuredMass()<<endmsg;
+
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
