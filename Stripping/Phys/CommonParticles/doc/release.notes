@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-11-07 - Olivier Deschamps for Edwige Tournefier
+  - improve diElectron vertexing for DD configuration (new settings comes with updated DiElectronMaker)
+
 !========================= CommonParticles v8r10 2012-09-01 =========================
 
 ! 2012-09-01 - Anton Poluektov 

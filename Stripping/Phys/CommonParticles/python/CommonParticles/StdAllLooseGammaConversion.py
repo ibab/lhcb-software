@@ -48,6 +48,17 @@ dieDD.DeltaY = 3.
 dieDD.DeltaYmax = 200 * mm
 dieDD.DiElectronMassMax = 100.*MeV
 dieDD.DiElectronPtMin = 200.*MeV
+#-- improved vertex fitter settings
+from Configurables import OfflineVertexFitter,ParticleTransporter
+dieDD.UseCombinePair = True
+dieDD.addTool(ParticleTransporter('TransporterDie'))
+dieDD.TransporterDie.TrackExtrapolator = "TrackRungeKuttaExtrapolator"
+dieDD.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+dieDD.addTool( OfflineVertexFitter )
+dieDD.OfflineVertexFitter.addTool(ParticleTransporter('Transporter'))
+dieDD.OfflineVertexFitter.Transporter.TrackExtrapolator = "TrackRungeKuttaExtrapolator"
+dieDD.OfflineVertexFitter.maxDeltaZ = 100 * mm
+
 locations.update( updateDoD ( dieDD ))
 StdAllLooseGammaDD=dieDD
 
