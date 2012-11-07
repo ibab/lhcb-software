@@ -24,7 +24,7 @@ namespace Gaudi {
 
     /// Convert TES object identifier to ROOT tree name
     string _treeName(string t) {
-      for(string::iterator j = t.begin(); j != t.end(); ++j ) 
+      for(string::iterator j = t.begin(); j != t.end(); ++j )
         if ( *j == '/' ) *j = '_';
       return t;
     }
@@ -62,8 +62,8 @@ namespace Gaudi {
                 r = m_poolLinks[oid.first];
                 r.entry = oid.second;
                 r.link  = c->makeLink(loc);
-                msg << "Add leaf:" << oid.first << "->" << loc << " from " << c->getDb(r.dbase) 
-                  << "#" << c->getCont(r.container) 
+                msg << "Add leaf:" << oid.first << "->" << loc << " from " << c->getDb(r.dbase)
+                  << "#" << c->getCont(r.container)
                   << " Link:" << c->getLink(r.link)
                   << " CLID:" << hex << r.clid
                   << " Typ:" << hex << int(r.svc)
@@ -100,7 +100,7 @@ namespace Gaudi {
           sections()[branch_name] = t;
           return b;
         }
-        msgSvc() << MSG::ERROR << "Failed to access POOL branch:" 
+        msgSvc() << MSG::ERROR << "Failed to access POOL branch:"
           << branch_name << " [" << tname << "]" << endmsg;
         t->Print();
       }
@@ -171,15 +171,15 @@ namespace Gaudi {
             }
             else if ( ::strncmp("[OID=", p1, 5) == 0 )  {
               *p3 = 0;
-              ::sscanf(p1+5,"%08X,%08X",&ipar[0],&ipar[1]);
+              ::sscanf(p1+5,"%08X,%08X",(unsigned int*)&ipar[0],(unsigned int*)&ipar[1]);
             }
             else if ( ::strncmp("[CLID=", p1, 6) == 0 )  {
               *p3 = 0;
-              ::sscanf(p1+6,"%08X",&clid);
+              ::sscanf(p1+6,"%08X",(unsigned int*)&clid);
             }
             else if ( ::strncmp("[TECH=", p1, 6) == 0 )  {
               *p3 = 0;
-              ::sscanf(p1+6,"%08X",&technology);
+              ::sscanf(p1+6,"%08X",(unsigned int*)&technology);
             }
             else    {
               *p3 = *p2 = 0;
@@ -190,7 +190,7 @@ namespace Gaudi {
         }
         c->makeRef("",clid,technology,db,container,-1,m_poolLinks[i+2]);
         RootRef& r = m_poolLinks[i];
-        msgSvc() << "Add link[" << i << "]:" << db << container << " [" << r.dbase << "," << r.container << "] " 
+        msgSvc() << "Add link[" << i << "]:" << db << container << " [" << r.dbase << "," << r.container << "] "
           << " tech:" << hex << setw(8) << r.svc << " CLID:" << setw(8) << r.clid << dec << endmsg;
       }
       return StatusCode::SUCCESS;

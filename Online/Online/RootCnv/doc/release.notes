@@ -4,9 +4,13 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
+! 2012-11-07 - Marco Clemencic
+ - Fixed warning: format '%X' expects argument of type 'unsigned int*',
+                  but argument N has type 'int*' [-Wformat]
+
 !========================= RootCnv v1r18 2012-09-28 =========================
 ! 2012-09-24 - Markus Frank
- - Change optimization options to be part of the RootCnvSvc and not part of 
+ - Change optimization options to be part of the RootCnvSvc and not part of
    the RootDataConnection + adapt all called functions to use these.
 
 !========================= RootCnv v1r17 2012-09-16 ========================
