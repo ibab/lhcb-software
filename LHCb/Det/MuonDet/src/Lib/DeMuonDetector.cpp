@@ -1121,10 +1121,10 @@ void DeMuonDetector::fillGeoArray()
     //get the dimensions of the inner rectangular
     if(debug)msgStream()<<MSG::INFO<<" inside loop "<<endmsg;
 
-    msgStream()<<MSG::INFO<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
+    msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
     if (testForFilter(*itSt) == true)
       continue;
-    msgStream()<<MSG::INFO<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
+    msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
 
     double minX=100000;
     double minY=100000;
