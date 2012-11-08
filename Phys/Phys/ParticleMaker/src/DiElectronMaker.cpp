@@ -522,8 +522,7 @@ StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1, LHCb::Particle* el
   double znew=z1;
   if (z2 > z1) znew=z2;
   double dist12=distmin;
-  for (int i=0 ; (znew>0 && dist12==distmin); i++){
-    znew-=dz;
+  for (int i=0 ; (znew>-dz && dist12==distmin); i++){
     sc = m_transporter->transport(&transele1, znew, transParticle1);
     if ( sc.isFailure() ) { 
       Warning( "Transporter returned failure",StatusCode::SUCCESS ).ignore();
@@ -551,6 +550,7 @@ StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1, LHCb::Particle* el
       transele2 = transParticle2;
       refPoint = Gaudi::XYZPoint((pos1.X()+pos2.X())/2,(pos1.Y()+pos2.Y())/2,pos1.Z());
     }
+    znew-=dz;
   }
 
   if (distmin> m_maxdistpair || distYmin >m_maxdistpair/2) {  return StatusCode::FAILURE ;}
