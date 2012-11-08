@@ -10,6 +10,7 @@
  - Improvements to P2MCPFromProtoP to better support uDSTs.
  - Update BackgroundCategoryViaRelations to be a little more efficient, and to 
    work with the improved MC uDST format.
+ - Suppress warning of Particles with no descendants from BackgroundCategory
 
 ! 2012-11-05 - Chris Jones
  - Do not print a warning if a missing of empty Particle location is found by

@@ -1,5 +1,4 @@
 // $Id: BackgroundCategory.cpp,v 1.61 2010-03-01 22:07:05 gligorov Exp $
-// Include files
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -66,7 +65,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
 BackgroundCategory::~BackgroundCategory() {}
 
 //=============================================================================
-IBackgroundCategory::categories 
+IBackgroundCategory::categories
 BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
                               const LHCb::Particle* )
 //The big "what is it?" switch. hopefully commented enough downstairs. For additional help with what
@@ -99,12 +98,11 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
   ParticleVector particles_in_decay = m_particleDescendants->descendants(reconstructed_mother);
   if (msgLevel(MSG::VERBOSE)) verbose() << "Back from ParticleDescendants with the daughters"
                                         << endmsg ;
-  if (particles_in_decay.empty()) 
+  if (particles_in_decay.empty())
   {
-    Warning("No descendants for Particle!");
     return Undefined;
   }
-  else 
+  else
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Descendents are "
                                           << particles_in_decay
@@ -112,13 +110,12 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
   }
 
   //Now we have to associate each one of them to an MCParticle if possible
-  MCParticleVector mc_particles_linked_to_decay =
+  const MCParticleVector mc_particles_linked_to_decay =
     associate_particles_in_decay(particles_in_decay,reconstructed_mother);
 
   //First of all check for ghosts
   if ( areAnyFinalStateParticlesGhosts(mc_particles_linked_to_decay,
-                                       particles_in_decay)
-       ) 
+                                       particles_in_decay) )
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "It is a ghost background" << endmsg;
     //This is a ghost
@@ -127,7 +124,7 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
 
   //Next check if two Particles are associated to the same particle,
   //if so this is a clone type background
-  if (foundClones(mc_particles_linked_to_decay)) 
+  if (foundClones(mc_particles_linked_to_decay))
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "This is a clone background" << endmsg;
     return Clone;
@@ -138,7 +135,7 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
   //In this case we have combined something with its own mother to
   //create a new particle which is clearly unphysical. We'll
   //call this 'hierarchy' background until someone complains.
-  if ( hierarchyProblem(mc_particles_linked_to_decay) ) 
+  if ( hierarchyProblem(mc_particles_linked_to_decay) )
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "This is a hierarchy background" << endmsg;
     return Hierarchy;
@@ -152,7 +149,7 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
   //For a list of what the conditions are, see the respective test functions
   if ( doAllFinalStateParticlesHaveACommonMother(mc_mothers_final,
                                                  mc_particles_linked_to_decay,
-                                                 particles_in_decay) ) 
+                                                 particles_in_decay) )
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Checked if all have common mother"
                                           << endmsg;
@@ -185,11 +182,11 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
         //This is a reflection
         return Reflection;
       }
-    } 
+    }
     else
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "Is it an inclusive decay?" << endmsg;
-      if ( m_inclusiveDecay ) 
+      if ( m_inclusiveDecay )
       {
         if (msgLevel(MSG::VERBOSE)) verbose() << "Inclusive decay type" << endmsg;
         if (areAllFinalStateParticlesCorrectlyIdentified(particles_in_decay,
@@ -262,10 +259,10 @@ BackgroundCategory::getDaughtersAndPartners( const LHCb::Particle* reconstructed
                                         << backcategory
                                         << endmsg;
 
-  for ( DaughterAndPartnerVector::const_iterator iP = m_daughtersAndPartners.begin(); 
+  for ( DaughterAndPartnerVector::const_iterator iP = m_daughtersAndPartners.begin();
         iP != m_daughtersAndPartners.end(); ++iP )
   {
-    
+
     if (msgLevel(MSG::VERBOSE)) verbose() << "Reconstructed particle has PID"
                                           << ((*iP).first)->particleID().pid()
                                           << endmsg;
@@ -293,16 +290,16 @@ const LHCb::MCParticle* BackgroundCategory::origin(const LHCb::Particle* reconst
 
   const int backcategory = category(reconstructed_mother);
 
-  if ( backcategory < 60 ) 
+  if ( backcategory < 60 )
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Getting the common mother"
                                           << endmsg;
-    if ( m_commonMother ) 
+    if ( m_commonMother )
     {
-      return m_commonMother; 
+      return m_commonMother;
     }
     else { return NULL; }
-  } 
+  }
   else
   {
     return NULL;
@@ -406,7 +403,7 @@ int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
          ((*iP)->particleID().abspid() != 14) &&
          ((*iP)->particleID().abspid() != 16)
          ) sumofpids += (*iP)->particleID().abspid();
-      
+
       if (msgLevel(MSG::VERBOSE)) verbose() << "MC sum having added a neutral is now "
                                             << sumofpids
                                             << endmsg;
@@ -444,7 +441,7 @@ int BackgroundCategory::topologycheck(const LHCb::Particle* topmother)
                                         << endmsg;
 
   for ( ParticleVector::const_iterator iP = particles_in_decay.begin();
-        iP != particles_in_decay.end(); ++iP ) 
+        iP != particles_in_decay.end(); ++iP )
   {
 
     if (msgLevel(MSG::VERBOSE)) verbose() << "Daughter is a "
@@ -453,12 +450,12 @@ int BackgroundCategory::topologycheck(const LHCb::Particle* topmother)
 
     //Here we just need to protect against adding photons (again the resolved/merged pi0 issue)
     //We never reconstruct neutrions so no need to worry abut them.
-    if ( (*iP) != 0 ) 
+    if ( (*iP) != 0 )
     {
 
       // merged pi0 : add the 2 unreconstructed photons to the sum
       if((*iP)->particleID().abspid() == 111 && (*iP)->isBasicParticle() )sumofpids += 44;
-      // gamma->ee : do not add gamma (pid=22) but add the 2 rec'ed electrons (11*2=22) 
+      // gamma->ee : do not add gamma (pid=22) but add the 2 rec'ed electrons (11*2=22)
       // -> transparent as gamma is considered to stable in the MC side (photon pid is added but not electrons !!)
       if( (*iP)->particleID().abspid() == 22 && !(*iP)->isBasicParticle() )continue;
 
@@ -472,7 +469,7 @@ int BackgroundCategory::topologycheck(const LHCb::Particle* topmother)
   }
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Final sum is " << sumofpids << endmsg;
- 
+
   return sumofpids;
 }
 //=============================================================================
@@ -505,7 +502,7 @@ BackgroundCategory::create_finalstatedaughterarray_for_mcmother(const LHCb::MCPa
                                         << " daughters"
                                         << endmsg;
 
-  for ( SmartRefVector<LHCb::MCParticle>::const_iterator iP = (*iV)->products().begin(); 
+  for ( SmartRefVector<LHCb::MCParticle>::const_iterator iP = (*iV)->products().begin();
         iP != (*iV)->products().end(); ++iP )
   {
 
@@ -529,14 +526,14 @@ BackgroundCategory::create_finalstatedaughterarray_for_mcmother(const LHCb::MCPa
 
     if ( isitstable ||
          isStable( (*iP)->particleID().abspid() )
-         ) 
+         )
     {
 
       //If it is a stable, add it to the final state array
       finalstateproducts.push_back(*iP);
 
     }
-    else 
+    else
     {
 
       //Otherwise recurse
@@ -556,7 +553,7 @@ BackgroundCategory::create_finalstatedaughterarray_for_mcmother(const LHCb::MCPa
   return finalstateproducts;
 }
 //=============================================================================
-const LHCb::MCParticle* 
+const LHCb::MCParticle*
 BackgroundCategory::get_top_mother_of_MCParticle(const LHCb::MCParticle* candidate)
 //Gets the 'final' non-zero mother of an MCParticle as we go up the decay tree
 {
@@ -571,7 +568,7 @@ BackgroundCategory::get_top_mother_of_MCParticle(const LHCb::MCParticle* candida
                                         << candidate
                                         << endmsg;
 
-  do 
+  do
   {
 
     //go through all mothers until you find the final one
@@ -584,7 +581,7 @@ BackgroundCategory::get_top_mother_of_MCParticle(const LHCb::MCParticle* candida
 
 }
 //=============================================================================
-const LHCb::MCParticle* 
+const LHCb::MCParticle*
 BackgroundCategory::get_lowest_common_mother(const MCParticleVector & mc_particles_to_compare)
 //Gets the lowest common mother for an array of MCParticles
 //The method is, take the first mother of the first particle, check if it is common to all
@@ -663,7 +660,7 @@ BackgroundCategory::get_lowest_common_mother(const MCParticleVector & mc_particl
   return tempmother;
 }
 //=============================================================================
-const LHCb::MCParticle* 
+const LHCb::MCParticle*
 BackgroundCategory::get_lowest_common_mother(const MCParticleVector & mc_particles_linked_to_decay,
                                              const ParticleVector & particles_in_decay)
 //Gets the lowest common mother for an array of MCParticles, with associated particles.
@@ -695,7 +692,7 @@ BackgroundCategory::get_lowest_common_mother(const MCParticleVector & mc_particl
 
       if ( isStable((*iPP)->particleID().abspid()) ||
            (*iPP)->isBasicParticle()
-           ) 
+           )
       {
         //it is a stable so push back its associated MCP
         if (!(*iMCP)) return 0; //stable associated to nothing, so return 0
@@ -1049,7 +1046,7 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
   return carryon;
 }
 //=============================================================================
-bool 
+bool
 BackgroundCategory::areAllFinalStateParticlesCorrectlyIdentified(ParticleVector particles_in_decay,
                                                                  MCParticleVector mc_particles_linked_to_decay)
 //This condition checks if all the final state particles used to make the candidate particle are correctly
@@ -1063,12 +1060,12 @@ BackgroundCategory::areAllFinalStateParticlesCorrectlyIdentified(ParticleVector 
   do {
     if ( *iPmc && *iP) {
       if( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ){
-        
+
         if( (*iP)->particleID().abspid() != 22 || m_calo2MC->isPureNeutralCalo( *iP ) ){ // gamma->ee is considered as composite
 
           carryon = ( (*iP)->particleID().pid() == (*iPmc)->particleID().pid() );
         }
-        
+
       }
     }
     ++iP; ++iPmc;
@@ -1448,20 +1445,19 @@ BackgroundCategory::associate_particles_in_decay(const ParticleVector & particle
 
   //Now write the array of ''daughter--associated partner'' pairs
   iPP = associated_mcparts.begin();
-  for (iP = particles_in_decay.begin() ; iP != particles_in_decay.end() ; ++iP){
-
+  for (iP = particles_in_decay.begin() ; iP != particles_in_decay.end() ; ++iP)
+  {
     temp_pair = DaughterAndPartnerPair(*iP,*iPP);
     tempDaughtersAndPartners.push_back(temp_pair);
-
     ++iPP;
-
   }
 
   m_daughtersAndPartners = tempDaughtersAndPartners;
 
   DaughterAndPartnerVector::const_iterator iDAP;
 
-  for (iDAP = m_daughtersAndPartners.begin(); iDAP != m_daughtersAndPartners.end(); ++iDAP){
+  for ( iDAP = m_daughtersAndPartners.begin(); iDAP != m_daughtersAndPartners.end(); ++iDAP )
+  {
 
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << "Reconstructed particle has PID "
