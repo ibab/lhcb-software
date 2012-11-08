@@ -40,10 +40,10 @@ public:
                                   const std::string& name,
                                   const IInterface* parent);
 
-  IBackgroundCategory::categories category(const LHCb::Particle* reconstructed_mother ,
-                                           const LHCb::Particle* headP = NULL );
+public:
 
-  StatusCode initialize();
+  IBackgroundCategory::categories category( const LHCb::Particle* reconstructed_mother ,
+                                            const LHCb::Particle* headP = NULL );
 
 public:
 
