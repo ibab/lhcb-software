@@ -10,12 +10,16 @@
 // GaudiAlg
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
+// ============================================================================
 namespace Gaudi
 {
   // ==========================================================================
   /** @class DataRemove
-   *  Trivial algorithm to remove data in TES
+   *  Trivial algorithm to remove data in the TES
+   *  @author Chris Jones Christopher.Rob.Jones@cern.ch
+   *  @date 2012-11-08
    */
+  // ==========================================================================
   class DataRemove : public GaudiAlgorithm
   {
     // ========================================================================
@@ -30,9 +34,9 @@ namespace Gaudi
     // ========================================================================
     /// standard constructor 
     DataRemove ( const std::string& name ,
-                 ISvcLocator*       pSvc ) ;            // standard constructor 
+                 ISvcLocator*       pSvc ) ;
     /// virtual destructor 
-    virtual ~DataRemove() ;                             // virtual destructor 
+    virtual ~DataRemove() ;              
     // ========================================================================
   private:
     std::string m_dataLocation;
