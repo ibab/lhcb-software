@@ -27,6 +27,7 @@ use MuonTrackRec         v3r7    Muon # Giacomo Graziani
 use PrAlgorithms         v1r0    Pr   # Olivier Callot
 use PrKernel             v1r0    Pr   # Olivier Callot
 use PrMCTools            v1r0    Pr   # Olivier Callot
+use PrVL                 v1r0    Pr   # Heinrich Schindler
 
 # Non sub-detector specific components
 use ChargedProtoANNPID   v1r8    Rec  # Chris Jones

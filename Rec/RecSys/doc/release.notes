@@ -5,6 +5,8 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+- Packages added: Pr/PrVL v1r0 - Pattern recognition for the Velo Light upgrade
+
 </PRE><H1><A NAME=v14r2>2012-10-03 RecSys v14r2</A></H1><PRE>
 This version uses Gaudi v23r4 and LHCb v35r2
 
