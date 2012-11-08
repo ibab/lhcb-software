@@ -31,7 +31,7 @@ FSRCleaner::~FSRCleaner() {}
 //=============================================================================
 StatusCode FSRCleaner::finalize()
 {
-  //clean performed in execute of EmptyEventNodeCleaner... so let's call it!
+  // Clean performed in execute of EmptyEventNodeCleaner... so let's call it!
   const StatusCode sc = EmptyEventNodeCleaner::execute();
 
   // return, try to avoid shortcutting the usual finalize

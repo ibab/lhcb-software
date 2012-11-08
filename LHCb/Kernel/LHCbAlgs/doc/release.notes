@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-11-08 - Chris Jones
+ - Add a trivial new algorithm DataRemove that just removes a TES location. 
+   Useful in the stripping packing options.
+
 ! 2012-10-12 - Marco Clemencic
  - Fixed warning 'virtual function override'.
 
