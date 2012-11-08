@@ -47,7 +47,7 @@ def initialise():
 
         DDDBConf(DataType = "2012")
         LHCbApp().DDDBtag   = "dddb-20120831"
-        LHCbApp().CondDBtag = "cond-20120917"
+        LHCbApp().CondDBtag = "cond-20121008"
 
         # Move HPD Occs
         #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
@@ -99,7 +99,7 @@ def loadRichDet():
     #print iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1"]
     #print iDataSvc()["/dd/Structure/LHCb/AfterMagnetRegion/Rich2/PDPanel0"]
     #print iDataSvc()["/dd/Structure/LHCb/AfterMagnetRegion/Rich2/PDPanel1"]
-    print richSystem()
+    richSystem()
     
 def rootFileListFromTextFile(rootFileList):
 
