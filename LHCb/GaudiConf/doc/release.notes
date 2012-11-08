@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-11-08 - Chris Jones
+ - Add support for automatic unpacking of stripping MC information
+
 !========================= GaudiConf v17r0 2012-10-26 =========================
 ! 2012-10-25 - Marco Cattaneo
  - SimConf.py:

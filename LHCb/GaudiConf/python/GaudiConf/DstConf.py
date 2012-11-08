@@ -461,7 +461,8 @@ class DstConf(LHCbConfigurableUser):
         mapper     = ConversionDODMapper("UnpackRecPhysMapper")
         # The input <-> output mappings
         mapper.Transformations = [ ( '(.*)/Rec(.*)',  '$1/pRec$2'  ),
-                                   ( '(.*)/Phys(.*)', '$1/pPhys$2' ) ]
+                                   ( '(.*)/Phys(.*)', '$1/pPhys$2' ),
+                                   ( '(.*)/MC(.*)',   '$1/pMC$2'   ) ]
         # algorithm types from source ClassIDs
         mapper.Algorithms[1550] = "UnpackTrack"
         mapper.Algorithms[1552] = "UnpackProtoParticle"
@@ -473,6 +474,8 @@ class DstConf(LHCbConfigurableUser):
         mapper.Algorithms[1581] = "UnpackParticlesAndVertices"
         mapper.Algorithms[1559] = "UnpackDecReport"
         mapper.Algorithms[1541] = "DataPacking::Unpack<LHCb::CaloClusterPacker>"
+        mapper.Algorithms[1510] = "UnpackMCParticle"
+        mapper.Algorithms[1511] = "UnpackMCVertex"
 
         # Packed Particles and Vertices
         pvmapper = ParticlesAndVerticesMapper("UnpackPsAndVsMapper")
