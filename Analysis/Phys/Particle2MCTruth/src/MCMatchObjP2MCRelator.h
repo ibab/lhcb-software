@@ -42,8 +42,10 @@ public:
 
   virtual StatusCode finalize() ;
 
-  virtual bool isMatched(const LHCb::Particle* particle,
-                         const LHCb::MCParticle* mcParticle) const ;
+public:
+
+  virtual bool isMatched( const LHCb::Particle* particle,
+                          const LHCb::MCParticle* mcParticle ) const ;
 
 public :
 
@@ -88,12 +90,11 @@ private:
 
   LoKi::IReporter* m_reporter;
   LoKi::MCMatchObj* m_matcher;
+
   typedef std::vector<std::string> Addresses ;
   Addresses m_tables;
-  IIncidentSvc* m_incSvc;
 
-  mutable bool m_loaded ;
-
+  mutable bool m_loaded;
   mutable std::map<std::string,bool> m_pLocDoneMap;
 
 };

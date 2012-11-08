@@ -1,8 +1,6 @@
 // $Id: P2MCRelatorAlg.cpp,v 1.6 2010-05-28 12:15:07 jpalac Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "P2MCRelatorAlg.h"
@@ -17,20 +15,18 @@
 // Standard constructor, initializes variables
 //=============================================================================
 P2MCRelatorAlg::P2MCRelatorAlg( const std::string& name,
-                                ISvcLocator* pSvcLocator)
-  :
-  GaudiAlgorithm ( name , pSvcLocator ),
-  m_particleLocations(),
-  m_mcpLocation(LHCb::MCParticleLocation::Default),
-  m_p2mcp(0),
-  m_p2mcpType("MCMatchObjP2MCRelator"),
-  m_table()
+                                ISvcLocator* pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_mcpLocation(LHCb::MCParticleLocation::Default),
+    m_p2mcp(NULL),
+    m_p2mcpType("MCMatchObjP2MCRelator")
 {
-  m_particleLocations.clear();
-  declareProperty("ParticleLocations", m_particleLocations);
-  declareProperty("MCParticleLocation", m_mcpLocation);
-  declareProperty("IP2MCP", m_p2mcpType);
+  declareProperty( "ParticleLocations",  m_particleLocations );
+  declareProperty( "MCParticleLocation", m_mcpLocation       );
+  declareProperty( "IP2MCP",             m_p2mcpType         );
+  //setProperty( "OutputLevel", 2 );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -39,83 +35,74 @@ P2MCRelatorAlg::~P2MCRelatorAlg() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode P2MCRelatorAlg::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+StatusCode P2MCRelatorAlg::initialize()
+{
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  m_p2mcp = tool<IP2MCP>( m_p2mcpType, "MCMatcherForP2MCRelatorAlg" );
 
-  m_p2mcp = tool<IP2MCP>( m_p2mcpType, this );
-
-  return (m_p2mcp) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  return sc;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode P2MCRelatorAlg::execute() {
-
+StatusCode P2MCRelatorAlg::execute()
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  m_mcParticles = get<LHCb::MCParticle::Container>( m_mcpLocation );
-  if (0==m_mcParticles) {
-    return Warning("Found no MCParticles in "+ m_mcpLocation,
-                   StatusCode::SUCCESS, 0);
+  m_mcParticles = getIfExists<LHCb::MCParticle::Container>( m_mcpLocation, false );
+  if ( !m_mcParticles )
+  {
+    return Warning( "Found no MCParticles in "+ m_mcpLocation,
+                    StatusCode::SUCCESS, 0 );
   }
+
+  // Clear the tables
+  m_tables.clear();
+
+  // Create and fill the tables
   typedef std::vector<std::string> StringVector;
-  StringVector::const_iterator _begin = m_particleLocations.begin();
-  StringVector::const_iterator _end = m_particleLocations.end();
-
-  for (StringVector::const_iterator iLoc = _begin; iLoc!=_end; ++iLoc) {
-
-    m_table.clear();
-    if (exist<LHCb::Particle::Range>(*iLoc) ) {
-      const LHCb::Particle::Range particles = get<LHCb::Particle::Range>(*iLoc);
-      if (!particles.empty()) {
-        i_particleLoop( particles.begin(), particles.end() );
-        m_table.i_sort();
-      } else {
-        Warning("Empty Particle::Range in "+ *iLoc,
-                StatusCode::SUCCESS, 0).ignore();
-      }
-
-
-      Particle2MCParticle::Table* table = new Particle2MCParticle::Table(m_table);
-      const std::string outputLocation =
-        trunkLocation(*iLoc) + "/P2MCPRelations";
-
-      put(table, outputLocation);
-    } else {
-      Warning("Found no Particles in "+ *iLoc,
-              StatusCode::SUCCESS, 0).ignore();
+  for ( StringVector::const_iterator iLoc = m_particleLocations.begin();
+        iLoc != m_particleLocations.end(); ++iLoc )
+  {
+    const LHCb::Particle::Range particles = getIfExists<LHCb::Particle::Range>(*iLoc);
+    if ( !particles.empty() )
+    {
+      i_particleLoop( particles.begin(), particles.end() );
     }
+  }
 
+  // Loop over the final saved tables and save them
+  for ( Tables::iterator iT = m_tables.begin(); iT != m_tables.end(); ++iT )
+  {
+    (*iT).second.i_sort();
+    Particle2MCParticle::Table * table = new Particle2MCParticle::Table( (*iT).second );
+    put( table, (*iT).first );
   }
 
   return StatusCode::SUCCESS;
 }
+
 //=============================================================================
-std::string P2MCRelatorAlg::trunkLocation(const std::string& location) const
+
+std::string P2MCRelatorAlg::relationsLocation( const DataObject * pObj ) const
 {
-  const std::string::size_type pos = location.rfind("/");
-  if ( pos != std::string::npos ) {
-    return std::string(location, 0, pos);
-  } else {
-    return std::string(location);
-  }
+  // Get the parent container TES location
+  std::string pLoc = objectLocation( pObj );
+  if ( pLoc.empty() ) { return pLoc; }
 
-}
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode P2MCRelatorAlg::finalize() {
+  // Form the relations TES location for this location
+  boost::replace_all( pLoc, "/Particles", "/P2MCPRelations" );
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  // return the new location
+  return pLoc;
 }
 
 //=============================================================================
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( P2MCRelatorAlg )
+
+//=============================================================================

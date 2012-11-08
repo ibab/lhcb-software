@@ -6,6 +6,9 @@
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2012-11-08 - Chris Jones
+ - Improvements to the MC association tools to better support uDSTs
+
 !========================= Particle2MCTruth v2r4p1 2012-02-09 =========================
 
 ! 2012-02-09 - Chris Jones
