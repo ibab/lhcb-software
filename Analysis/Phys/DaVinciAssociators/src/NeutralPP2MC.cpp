@@ -119,7 +119,6 @@ StatusCode NeutralPP2MC::execute()
   // input locations
   typedef std::vector<std::string>                              Inputs   ;
 
-
   // create protoP<->MC output relation table
   Table* table = 0 ;
   if ( !outputTable().empty() )
@@ -128,16 +127,15 @@ StatusCode NeutralPP2MC::execute()
     put( table, outputTable() );
   }
   // get cluster<->MC input relation table
-  const MCTable* mcTable = get<MCTable> ( m_mcTable ) ;
-  if ( 0 == mcTable ) { return StatusCode::FAILURE ; }       // RETURN
+  const MCTable* mcTable = getIfExists<MCTable> ( m_mcTable ) ;
+  if ( 0 == mcTable ) { return StatusCode::SUCCESS ; }       // RETURN
 
   // Loop on all input containers of ProtoParticles
-  for ( Inputs::const_iterator inp = m_inputData.begin(); m_inputData.end()!= inp; inp++)  
+  for ( Inputs::const_iterator inp = m_inputData.begin(); m_inputData.end() != inp; ++inp )  
   {
     // get the protoparticles from TES
-    if ( !exist<ProtoParticles>(*inp) ) continue;
-    const ProtoParticles* protos = get<ProtoParticles> ( *inp ) ;
-    if ( 0 == protos ) { return StatusCode::FAILURE ; }       // RETURN
+    const ProtoParticles* protos = getIfExists<ProtoParticles> ( *inp ) ;
+    if ( 0 == protos ) { continue; }
 
     // Create a linker table
     const std::string linkContainer = (*inp) + Particle2MCMethod::extension[Particle2MCMethod::NeutralPP];

@@ -23,24 +23,40 @@
 static const std::string&
 ChargedPP2MCAsctLocation = LHCb::ProtoParticle2MCLocation::Charged;
 
-class ChargedPP2MC : public AsctAlgorithm {
+class ChargedPP2MC : public AsctAlgorithm 
+{
 
   friend class AlgFactory<ChargedPP2MC>;
 
 public:
+
   /// Standard constructor
   ChargedPP2MC( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~ChargedPP2MC( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
+  
+  /// Create on demand the linker object
+  Object2MCLinker<LHCb::Track>* track2MCLink() const
+  {
+    if ( !m_track2MCLink )
+    {
+      m_track2MCLink = new Object2MCLinker<LHCb::Track>( this,
+                                                         "", "",
+                                                         m_trackLocations);
+    }
+    return m_track2MCLink;
+  }
 
-  Object2MCLinker<LHCb::Track>* m_track2MCLink;
+private:
+
+  mutable Object2MCLinker<LHCb::Track>* m_track2MCLink;
   std::vector<std::string> m_trackLocations ; ///< location for tracks
+
 };
 
 using namespace LHCb;
@@ -55,46 +71,30 @@ typedef RelationWeighted1D<ProtoParticle,MCParticle,double>  Table;
 //-----------------------------------------------------------------------------
 
 #define _verbose if( msgLevel(MSG::VERBOSE) ) verbose()
-#define _debug if( msgLevel(MSG::DEBUG) ) debug()
-#define _info if( msgLevel(MSG::INFO) ) info()
+#define _debug   if( msgLevel(MSG::DEBUG)   ) debug()
+#define _info    if( msgLevel(MSG::INFO)    ) info()
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 ChargedPP2MC::ChargedPP2MC( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : AsctAlgorithm ( name , pSvcLocator )
+  : AsctAlgorithm  ( name , pSvcLocator ),
+    m_track2MCLink ( NULL )
 {
   m_inputData.push_back( ProtoParticleLocation::Charged );
   m_inputData.push_back( ProtoParticleLocation::Upstream );
   m_inputData.push_back( ProtoParticleLocation::HltCharged );
-  m_outputTable = ChargedPP2MCAsctLocation;
-
+  declareProperty("InputData", m_inputData );
   m_trackLocations.push_back(TrackLocation::Default);
   declareProperty("TrackLocations", m_trackLocations );
-  declareProperty("InputData", m_inputData );
-
+  m_outputTable = ChargedPP2MCAsctLocation;
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
 ChargedPP2MC::~ChargedPP2MC() {};
-
-//=============================================================================
-// Initialisation. Check parameters
-//=============================================================================
-StatusCode ChargedPP2MC::initialize() 
-{
-  const StatusCode sc = GaudiAlgorithm::initialize();
-  if ( !sc.isSuccess() ) return sc;
-  
-  // Get a Linker class for Tr2MCP
-  m_track2MCLink = new Object2MCLinker<LHCb::Track>( this,
-                                                     "", "",
-                                                     m_trackLocations);
-  return sc;
-}
 
 //=============================================================================
 // Main execution
@@ -164,7 +164,7 @@ StatusCode ChargedPP2MC::execute()
         _verbose
           << " from track " << track->key();
         double weight = 0.;
-        const MCParticle* mcPart = m_track2MCLink->first(track, weight);
+        const MCParticle* mcPart = track2MCLink()->first(track, weight);
         if ( NULL == mcPart )
         {
           _verbose << " not associated to an MCPart";
@@ -181,7 +181,7 @@ StatusCode ChargedPP2MC::execute()
             if( NULL != linkerTable )
               linkerTable->link( *pIt, mcPart, weight);
             ++nrel;
-            mcPart = m_track2MCLink->next();
+            mcPart = track2MCLink()->next();
           } while( NULL != mcPart );
         }
       } 
