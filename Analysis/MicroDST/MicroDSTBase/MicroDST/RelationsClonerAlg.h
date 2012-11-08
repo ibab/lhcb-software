@@ -32,7 +32,7 @@ namespace MicroDST
    */
 
   template <typename TABLE>
-  class RelationsClonerAlg : public MicroDSTAlgorithm 
+  class RelationsClonerAlg : public MicroDSTAlgorithm
   {
 
   private:
@@ -49,12 +49,13 @@ namespace MicroDST
     RelationsClonerAlg( const std::string& name, ISvcLocator* pSvcLocator )
       :
       MicroDSTAlgorithm ( name , pSvcLocator ),
-      m_cloner(0),
+      m_cloner(NULL),
       m_clonerType(DEFAULTS::clonerType),
-      m_tableCloner(boost::bind(&RelationsClonerAlg<TABLE>::cloneFrom, &(*this), _1),
-                    boost::bind(&RelationsClonerAlg<TABLE>::cloneTo, &(*this), _1))
+      m_tableCloner( boost::bind(&RelationsClonerAlg<TABLE>::cloneFrom, &(*this), _1),
+                     boost::bind(&RelationsClonerAlg<TABLE>::cloneTo,   &(*this), _1) )
     {
       declareProperty("ClonerType", m_clonerType);
+      //setProperty( "OutputLevel", 2 );
     }
 
     //===========================================================================
@@ -63,19 +64,19 @@ namespace MicroDST
 
     //===========================================================================
 
-    StatusCode initialize()
+    virtual StatusCode initialize()
     {
-      StatusCode sc = MicroDSTAlgorithm::initialize(); 
-      if ( sc.isFailure() ) return sc;  
+      StatusCode sc = MicroDSTAlgorithm::initialize();
+      if ( sc.isFailure() ) return sc;
 
-      if ( inputTESLocations().empty() ) 
+      if ( inputTESLocations().empty() )
       {
         setInputTESLocation(LOCATION::Default);
       }
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
-      if ( m_clonerType=="NONE" ) 
+      if ( m_clonerType.empty() || m_clonerType == "NONE" )
       {
         if ( msgLevel(MSG::DEBUG) )
           debug() <<"ClonerType set to NONE. No cloning of To performed." << endmsg;
@@ -83,13 +84,13 @@ namespace MicroDST
       else
       {
         m_cloner = tool<CLONER>(m_clonerType, this);
-        if ( m_cloner ) 
+        if ( m_cloner )
         {
           if ( msgLevel(MSG::DEBUG) )
             debug() << "Found cloner " << m_clonerType << endmsg;
           sc = StatusCode::SUCCESS;
-        } 
-        else 
+        }
+        else
         {
           sc = Error( "Failed to find cloner " + m_clonerType );
         }
@@ -100,14 +101,14 @@ namespace MicroDST
 
     //=========================================================================
 
-    StatusCode execute()
+    virtual StatusCode execute()
     {
       if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
       setFilterPassed(true);
-      
+
       for ( std::vector<std::string>::const_iterator inputLoc = this->inputTESLocations().begin();
-            inputLoc != this->inputTESLocations().end(); ++inputLoc)
+            inputLoc != this->inputTESLocations().end(); ++inputLoc )
       {
         copyTableFromLocation(*inputLoc);
       }
@@ -116,13 +117,15 @@ namespace MicroDST
 
     //=========================================================================
 
-    void copyTableFromLocation(const std::string& inputLocation)
+  protected:
+
+    void copyTableFromLocation( const std::string& inputLocation )
     {
 
       const std::string outputLocation =
         this->outputTESLocation( inputLocation );
 
-      if ( msgLevel(MSG::VERBOSE) ) 
+      if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "Going to clone relations from "
                   << inputLocation
@@ -138,23 +141,23 @@ namespace MicroDST
 
       if (exist<TABLE>(inputLocation) )
       {
-        if ( msgLevel(MSG::VERBOSE) ) 
+        if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "Retrieving relations table from "
                     << inputLocation << endmsg;
         }
         const TABLE* table = get<TABLE>(inputLocation);
-        if ( table && !table->relations().empty() ) 
+        if ( table && !table->relations().empty() )
         {
 
-          if ( msgLevel(MSG::VERBOSE) ) 
+          if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "found table with "<< table->relations().size()
                       << " entries!" << endmsg;
           }
           TABLE* cloneTable = m_tableCloner(table);
           DaVinci::Utils::DataObjectGuard guard(cloneTable);
-          if ( msgLevel(MSG::VERBOSE) ) 
+          if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "Going to store relations table from "
                       << inputLocation
@@ -162,24 +165,24 @@ namespace MicroDST
             verbose() << "Number of relations in cloned table: "
                       << cloneTable->relations().size() << endmsg;
           }
-          if (!cloneTable->relations().empty()) 
+          if ( !cloneTable->relations().empty() )
           {
             put( cloneTable, outputLocation );
           }
-        } 
+        }
         else
         {
-          if ( msgLevel(MSG::VERBOSE) ) 
+          if ( msgLevel(MSG::VERBOSE) )
           {
             this->Warning("Found no table at "+inputLocation,
                           StatusCode::FAILURE, 0).ignore();
           }
         }
 
-      } 
+      }
       else
       {
-        if ( msgLevel(MSG::VERBOSE) ) 
+        if ( msgLevel(MSG::VERBOSE) )
         {
           this->Warning("Found no table at "+inputLocation,
                         StatusCode::FAILURE, 0).ignore();
@@ -201,12 +204,12 @@ namespace MicroDST
 
     inline typename TABLE::From cloneFrom(const typename TABLE::From from)
     {
-      if ( !from ) 
+      if ( ! from )
       {
         error() << "FROM is NULL !!!!" << endmsg;
         return 0;
       }
-      if ( ! from->parent() ) 
+      if ( ! from->parent() )
       {
         Warning("From is not in TES. Cannot clone!", StatusCode::FAILURE,0).ignore();
         return 0;
@@ -216,13 +219,13 @@ namespace MicroDST
 
     inline typename TABLE::To cloneTo(const typename TABLE::To to)
     {
-      if ( ! to->parent() ) 
+      if ( ! m_cloner ) return to;
+
+      if ( ! to->parent() )
       {
         Warning("To is not in TES. Cannot clone!", StatusCode::FAILURE,0).ignore();
         return 0;
       }
-
-      if ( !m_cloner ) return to;
 
       const typename TABLE::To storedTo = getStoredClone< TO_TYPE >(to);
       return ( storedTo ? storedTo : (*m_cloner)( to ) );

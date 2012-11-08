@@ -1,9 +1,9 @@
 
-#ifndef MICRODST_RelationsFromParticleLocationsClonerAlg_H
-#define MICRODST_RelationsFromParticleLocationsClonerAlg_H 1
+#ifndef MICRODST_RelationsFromParticleLocationsFromClonerAlg_H
+#define MICRODST_RelationsFromParticleLocationsFromClonerAlg_H 1
 
 // From MicroDST
-#include "MicroDST/RelationsClonerAlg.h"
+#include "MicroDST/RelationsFromClonerAlg.h"
 
 // Event
 #include "Event/Particle.h"
@@ -14,16 +14,16 @@
 namespace MicroDST
 {
 
-  /** @class RelationsFromParticleLocationsClonerAlg MicroDST/RelationsFromParticleLocationsClonerAlg.h
+  /** @class RelationsFromParticleLocationsFromClonerAlg MicroDST/RelationsFromParticleLocationsFromClonerAlg.h
    *
-   *  Extension to RelationsClonerAlg that dynamically finds the relations to clone from Particles
+   *  Extension to RelationsClonerFromAlg that dynamically finds the relations to clone from Particles
    *
    *  @author Juan PALACIOS juan.palacios@nikhef.nl
    *  @date   2009-04-14
    */
 
   template <typename TABLE>
-  class RelationsFromParticleLocationsClonerAlg : public RelationsClonerAlg<TABLE>
+  class RelationsFromParticleLocationsFromClonerAlg : public RelationsFromClonerAlg<TABLE>
   {
 
   private:
@@ -34,9 +34,9 @@ namespace MicroDST
 
     //===========================================================================
     /// Standard constructor
-    RelationsFromParticleLocationsClonerAlg( const std::string& name,
+    RelationsFromParticleLocationsFromClonerAlg( const std::string& name,
                                              ISvcLocator* pSvcLocator )
-      : RelationsClonerAlg<TABLE> ( name , pSvcLocator )
+      : RelationsFromClonerAlg<TABLE> ( name , pSvcLocator )
     {
       this->declareProperty( "RemoveOriginals", m_removeOriginals = false );
       this->declareProperty( "RelationsBaseName",
@@ -46,7 +46,7 @@ namespace MicroDST
 
     //===========================================================================
 
-    ~RelationsFromParticleLocationsClonerAlg( ) {} ///< Destructor
+    ~RelationsFromParticleLocationsFromClonerAlg( ) {} ///< Destructor
 
     //===========================================================================
 
@@ -161,4 +161,4 @@ namespace MicroDST
 
 }
 
-#endif // MICRODST_RelationsFromParticleLocationsClonerAlg_H
+#endif // MICRODST_RelationsFromParticleLocationsFromClonerAlg_H

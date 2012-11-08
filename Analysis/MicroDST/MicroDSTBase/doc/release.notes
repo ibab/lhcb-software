@@ -6,6 +6,11 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2012-11-08 - Chris Jones
+ - Add a new algorithm RelationsFromParticleLocationsFromClonerAlg that 
+   recursively searchs the configured Particle locations to search for related 
+   relation tables to clone
+
 !========================= MicroDSTBase v3r2p1 2012-05-03 =========================
 
 ! 2012-04-14 - Chris Jones

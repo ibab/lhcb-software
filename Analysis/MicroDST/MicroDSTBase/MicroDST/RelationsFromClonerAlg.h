@@ -43,10 +43,9 @@ namespace MicroDST
     //===========================================================================
     /// Standard constructor
     RelationsFromClonerAlg( const std::string& name, ISvcLocator* pSvcLocator )
-      :
-      MicroDSTAlgorithm ( name , pSvcLocator ),
-      m_tableCloner(boost::bind(&RelationsFromClonerAlg<TABLE>::cloneFrom, &(*this), _1),
-                    boost::bind(&RelationsFromClonerAlg<TABLE>::cloneTo, &(*this), _1))
+      : MicroDSTAlgorithm ( name , pSvcLocator ),
+        m_tableCloner(boost::bind(&RelationsFromClonerAlg<TABLE>::cloneFrom, &(*this), _1),
+                      boost::bind(&RelationsFromClonerAlg<TABLE>::cloneTo,   &(*this), _1) )
     {
     }
 
@@ -62,11 +61,13 @@ namespace MicroDST
 
       if ( inputTESLocation().empty() )
       {
-        verbose() << "Setting input TES location to default: "
-                  << LOCATION::Default << endmsg;
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << "Setting input TES location to default: "
+                    << LOCATION::Default << endmsg;
         setInputTESLocation(LOCATION::Default);
       }
-      verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
       return sc;
     }
@@ -114,7 +115,7 @@ namespace MicroDST
                     << inputLocation << endmsg;
         }
         const TABLE* table = get<TABLE>(inputLocation);
-        if (table && !table->relations().empty() )
+        if ( table && !table->relations().empty() )
         {
           if ( msgLevel(MSG::VERBOSE) )
           {
@@ -131,7 +132,7 @@ namespace MicroDST
             verbose() << "Number of relations in cloned table: "
                       << cloneTable->relations().size() << endmsg;
           }
-          if (!cloneTable->relations().empty())
+          if ( !cloneTable->relations().empty() )
           {
             put( cloneTable, outputLocation );
           }
@@ -167,12 +168,12 @@ namespace MicroDST
 
     inline typename TABLE::From cloneFrom(const typename TABLE::From from)
     {
-      if (NULL==from)
+      if ( ! from )
       {
         error() << "FROM is NUL!!!!" << endmsg;
         return 0;
       }
-      if (NULL==from->parent())
+      if ( ! from->parent() )
       {
         Warning("From is not in TES. Cannot clone!", StatusCode::FAILURE,0).ignore();
         return 0;
