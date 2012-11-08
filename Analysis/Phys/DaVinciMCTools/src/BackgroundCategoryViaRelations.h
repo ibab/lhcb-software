@@ -77,11 +77,8 @@ private:
 private:
 
   typedef LHCb::Relation1D<LHCb::Particle,int> TableP2BC;
-  typedef std::vector<TableP2BC*> TablesP2BC;
 
   std::vector<std::string> m_P2BCLocation;
-
-  TablesP2BC m_catRelations;
 
 };
 

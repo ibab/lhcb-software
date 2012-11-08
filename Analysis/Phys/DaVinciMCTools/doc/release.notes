@@ -8,7 +8,8 @@
  - Improvements to Particle2BackgroundCategoryRelationsAlg to save the relations
    for each Particle location at the same level in the TES structure.
  - Improvements to P2MCPFromProtoP to better support uDSTs.
- - Clean up BackgroundCategoryViaRelations a little
+ - Update BackgroundCategoryViaRelations to be a little more efficient, and to 
+   work with the improved MC uDST format.
 
 ! 2012-11-05 - Chris Jones
  - Do not print a warning if a missing of empty Particle location is found by

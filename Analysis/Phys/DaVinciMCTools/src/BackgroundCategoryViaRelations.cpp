@@ -38,7 +38,9 @@ BackgroundCategoryViaRelations( const std::string& type,
   IBackgroundCategory::m_cat[1000] = "LastGlobal";
 
   declareInterface<IBackgroundCategory>(this);
-  declareProperty("inputTable", m_P2BCLocation);
+  declareProperty( "inputTable", m_P2BCLocation );
+
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -50,70 +52,62 @@ BackgroundCategoryViaRelations::~BackgroundCategoryViaRelations() {}
 IBackgroundCategory::categories
 BackgroundCategoryViaRelations::category( const LHCb::Particle* reconstructed_mother,
                                           const LHCb::Particle* headP )
-//In this implementation just a) checks if the relation table exists and b) returns the category of the requested particle
 {
-
-  m_catRelations.clear();
 
   // locations in JOs
   std::vector<std::string> locs = m_P2BCLocation;
 
   // add particle dependent locations
-  if ( headP && headP != reconstructed_mother ) 
-  {
-    locs.push_back( b2cLocation(headP->parent()) );
-  }
-  if ( reconstructed_mother ) 
+  if ( reconstructed_mother )
   {
     locs.push_back( b2cLocation(reconstructed_mother->parent()) );
   }
+  if ( headP && headP != reconstructed_mother )
+  {
+    locs.push_back( b2cLocation(headP->parent()) );
+  }
 
-  std::sort( locs.begin(),locs.end() );
-  locs.erase( std::unique(locs.begin(),locs.end()), locs.end() );
+  //std::sort( locs.begin(), locs.end() );
+  //locs.erase( std::unique(locs.begin(),locs.end()), locs.end() );
 
-  for ( std::vector<std::string>::const_iterator item = locs.begin(); 
+  // Loop over the relations locations and try and find a match
+  for ( std::vector<std::string>::const_iterator item = locs.begin();
         item != locs.end(); ++item )
   {
+    // Try and load the table
     const std::string & address = *item;
-    TableP2BC * table = getIfExists<TableP2BC>(address);
-    if ( table ) 
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Trying to find table '" << address << "'" << endmsg;
+    const TableP2BC * table = getIfExists<TableP2BC>(address,false);
+    if ( !table ) { table = getIfExists<TableP2BC>(address); }
+    if ( table )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "Adding table " << address << endmsg;
-      m_catRelations.push_back(table);
+        verbose() << " -> Found table ... " << endmsg;
+
+      // Try and use it ...
+      const TableP2BC::Range range = table->relations(reconstructed_mother);
+
+      // For the moment we only allow one category per particle so if more than one category is
+      // related return undefined, else just return the category we find
+      if ( range.empty() || range.size() > 1 )
+      {
+        continue; // to next table
+      }
+      else
+      {
+        // Found so return
+        const IBackgroundCategory::categories cat = 
+          (IBackgroundCategory::categories)range.begin() -> to();
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << "  -> Found match ... " << cat << endmsg;
+        return cat;
+      }
+
     }
   }
-  
-  // If the location provided is rubbish complain
-  if ( m_catRelations.empty() )
-  {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "There is no valid data at the locations provided, returning category Undefined"
-              << endmsg;
-    //Warning( "There is no valid data at the locations provided, returning category Undefined",
-    //         StatusCode::SUCCESS, 0 ).ignore() ;
-    return Undefined;
-  }
-  
-  // Else we are OK so find the particle and return its category
-  for ( TablesP2BC::const_iterator iTableP2BC = m_catRelations.begin();
-        iTableP2BC != m_catRelations.end(); ++iTableP2BC ) 
-  {
-    TableP2BC::Range range = (*iTableP2BC)->relations(reconstructed_mother);
-    //For the moment we only allow one category per particle so if more than one category is
-    //related return undefined, else just return the category we find
-    if ( range.empty() || range.size() > 1 ) 
-    {
-      continue;
-    }
-    else
-    {
-      return (IBackgroundCategory::categories) range.begin() -> to();
-    }
-  }
-  
-  //If we have not found anything else to return yet we return undefined,
-  //the user probably supplied the tables for the wrogn particles
+
+  // If we have not found anything else to return yet we return undefined,
   return Undefined;
 }
 
