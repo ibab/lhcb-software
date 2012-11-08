@@ -1,4 +1,5 @@
 #include "IOFSRSvc.h"
+#include <algorithm>
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -58,6 +59,7 @@ IOFSRSvc::IOFSRSvc(const std::string& name, ISvcLocator* svc )
   declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"   );
   declareProperty( "FSRName"            , m_FSRName           = "/IOFSR"       );
   declareProperty("OverrideStatus", m_overrideStatus=false);
+  declareProperty("PrintIOFSR", m_printIOFSR=false);
   //The status to start with if nothing else is known
   declareProperty("DefaultStatus",m_defaultStatusStr="UNCHECKED");
   
@@ -132,9 +134,9 @@ StatusCode IOFSRSvc::initialize()
 
 StatusCode IOFSRSvc::finalize()
 {
-
+  
   MsgStream log( msgSvc(), name() );
-
+  
   log << MSG::DEBUG << "finalize" << endmsg;
   log << MSG::DEBUG << "handled " << m_handled << " incidents" << endmsg;
   
@@ -145,9 +147,12 @@ StatusCode IOFSRSvc::finalize()
   if(!sc.isSuccess()) return StatusCode::FAILURE;
   m_navigatorTool=0;
   
+  log << MSG::DEBUG << "preparing to print" << endmsg;
+  if (m_printIOFSR) print();
   
+  log << MSG::DEBUG << "finalized" << endmsg;
   return Service::finalize();
-
+  
 }
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 StatusCode IOFSRSvc::stop()
@@ -486,7 +491,6 @@ bool IOFSRSvc::traceCounts()
   MsgStream log( msgSvc(), name() );
   log << MSG::WARNING << "IOFSRs don't add up, " << traceCountsFlag() << endmsg;
   return false;
-
 }
  
 //determine event count reliability, following down the tree 
@@ -494,6 +498,8 @@ bool IOFSRSvc::traceCounts()
 LHCb::IOFSR::StatusFlag IOFSRSvc::traceCountsFlag()
 {
   if (m_overrideStatus) return m_defaultStatus;
+  if (!m_hasinput) return LHCb::IOFSR::VERIFIED;
+  
   
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "Tracing IOFSRs" << endmsg;
@@ -511,7 +517,11 @@ LHCb::IOFSR::StatusFlag IOFSRSvc::traceCountsFlag()
     //check if FSR for that was found ...
     LHCb::IOFSR::FileEventMap::iterator j = m_readFromMap.find(it->first);
     //perhaps the FSR never existed
-    if (j == m_readFromMap.end() ) m_trace=LHCb::IOFSR::ERROR;
+    if (j == m_readFromMap.end() ) 
+    {
+      log << MSG::ERROR << "Cannot find read record to verify all events read from " << it->first << endmsg;
+      m_trace=LHCb::IOFSR::ERROR;
+    }
     else if (it->second == j->second) continue;
     else if (it->second > j->second) m_trace=LHCb::IOFSR::EVENTSKIPPED;
     else if (it->second < j->second) m_trace=LHCb::IOFSR::EVENTDOUBLED;
@@ -526,26 +536,68 @@ LHCb::IOFSR::StatusFlag IOFSRSvc::traceCountsFlag()
   
   ulonglong expected=0;
   
-  for (std::vector< std::string >::iterator it=parents().begin(); it!=parents().end();++it)
+  if(m_writtenToMap.size()==0)
   {
-    //check if FSR for that was found ...
-    LHCb::IOFSR::FileEventMap::iterator j = m_writtenToMap.find(*it);
-    if (j == m_writtenToMap.end() ) 
-    {
-      m_trace=LHCb::IOFSR::ERROR;
-      break;
-    }
+    m_trace=LHCb::IOFSR::ERROR;
+    log << MSG::ERROR << "No writtenToMap, implies no IOFSRs found on parent files" << endmsg;
+    return m_trace;
     
-    else expected+=j->second;
+  }
+  else
+  {
+    std::vector<std::string> pp=parents();
+    //check only for immediate parents
+    for (unsigned int it=0;it<=pp.size(); ++it)
+    {
+      log << MSG::DEBUG << "loop" << endmsg;
+      log << MSG::DEBUG << pp[it] << endmsg;
+      //check if FSR for that was found ...
+      LHCb::IOFSR::FileEventMap::iterator j = m_writtenToMap.find(pp[it]);
+      if (j == m_writtenToMap.end() ) 
+      {
+        m_trace=LHCb::IOFSR::ERROR;
+        log << MSG::ERROR << "Cannot find write record to verify all events read from " << pp[it] << endmsg;
+        break;
+      }
+      
+      else expected+=j->second;
+    }
   }
   
   if (m_trace!=LHCb::IOFSR::UNCHECKED) return m_trace;
   log << MSG::DEBUG << "Traced parents, OK" << endmsg;
   
-  if (expected==m_eventCount) m_trace=LHCb::IOFSR::VERIFIED;
-  else if (expected > m_eventCount) m_trace=LHCb::IOFSR::EVENTSKIPPED;
+  if (expected > m_eventCount) m_trace=LHCb::IOFSR::EVENTSKIPPED;
   else if (expected < m_eventCount) m_trace=LHCb::IOFSR::EVENTDOUBLED;
   
+  if (m_trace!=LHCb::IOFSR::UNCHECKED) return m_trace;
+  log << MSG::DEBUG << "Event count OK" << endmsg;
+  
+  //check for input file duplication, double loop
+  for(LHCb::IOFSR::ProvenanceMap::iterator it=m_provenanceMap.begin(); it!=m_provenanceMap.end(); ++it)
+  {
+    std::vector<std::string> pp=it->second;
+    if (pp.size()==0) continue;
+    LHCb::IOFSR::ProvenanceMap::iterator jt=it;
+    ++jt;
+    for(; jt!=m_provenanceMap.end(); ++jt)
+    {
+      for(unsigned int itp=0;itp<=pp.size(); ++itp)
+      {
+        std::vector<std::string>::iterator itpj=std::find(jt->second.begin(), jt->second.end(), pp[itp]);
+        if (itpj==jt->second.end()) continue;
+        log << MSG::WARNING << "A file was processed twice." << endmsg;
+        log << MSG::WARNING << pp[itp] << " was used to create both [" 
+            << it->first << "," << jt->first << "]" << endmsg;
+        m_trace=LHCb::IOFSR::FILEDOUBLED;
+      }
+      
+    }
+    
+  }
+  if (m_trace!=LHCb::IOFSR::UNCHECKED) return m_trace;
+  log << MSG::DEBUG << "File duplication checked" << endmsg;
+  m_trace=LHCb::IOFSR::VERIFIED;
   
   log << MSG::DEBUG << "Final result " << m_trace << endmsg;
   
@@ -556,7 +608,11 @@ LHCb::IOFSR::StatusFlag IOFSRSvc::traceCountsFlag()
 //remove any IOFSR at the top level. To be called before requesting a new FSR.
 StatusCode IOFSRSvc::cleanTopFSR()
 {
-  return m_fileRecordSvc->unlinkObject( LHCb::IOFSRLocation::Default);
+  MsgStream log( msgSvc(), name() );
+  StatusCode sc=m_fileRecordSvc->unlinkObject( LHCb::IOFSRLocation::Default);
+  if (sc.isSuccess()) log << MSG::DEBUG << "Removed existing FSR at " << LHCb::IOFSRLocation::Default << endmsg;
+  else log << MSG::DEBUG << "No IOFSR to remove from " << LHCb::IOFSRLocation::Default << endmsg;
+  return sc;
   
 }
 
@@ -569,15 +625,30 @@ LHCb::IOFSR* IOFSRSvc::buildIOFSR(const std::string & outputName)
 {
   mergeIOFSRs().ignore();
   
+  
   LHCb::IOFSR* ioFSR = new LHCb::IOFSR;
   ioFSR->setEventsOutput(jobOutput(outputName));
   ioFSR->setEventsSeen(eventsSeen());
-  ioFSR->setFilesRead(parents());
+  ioFSR->setParents(parents());
   ioFSR->setProvenance(provenanceMap());
   ioFSR->setEventsWrittenTo(eventsWrittenTo());
   ioFSR->setEventsReadFrom(eventsReadFrom());
   ioFSR->setEventsSeenBy(eventsSeenBy());
   ioFSR->setStatusFlag(traceCountsFlag());
+  
+  //print outs in debug mode, will look a little like the xmlsummary
+  MsgStream log( msgSvc(), name() );
+  log << MSG::DEBUG << "Created IOFSR for " << outputName << ": " << endmsg;
+  log << MSG::DEBUG << " +- eventsSeen " << ioFSR->eventsSeen() << endmsg;
+  log << MSG::DEBUG << " +- eventsOutput " << ioFSR->eventsOutput() << endmsg;
+  log << MSG::DEBUG << " +- statusFlag " << ioFSR->statusFlag() << endmsg;
+  log << MSG::DEBUG << " +- number of parents " << ioFSR->parents().size() << endmsg;
+  log << MSG::DEBUG << " +- number of ancestors " << ioFSR->provenance().size() << endmsg;
+  for(unsigned int i=0; i<ioFSR->parents().size(); ++i)
+  {
+    log << MSG::DEBUG << "- " << i << " -> "<< ioFSR->parents()[i] 
+        << " : " << ioFSR->eventsSeenBy().find(ioFSR->parents()[i])->second << endmsg;
+  }
   
   return ioFSR;
   
@@ -592,5 +663,69 @@ StatusCode IOFSRSvc::storeIOFSR(const std::string & outputName)
 {
   LHCb::IOFSR* iofsr=buildIOFSR(outputName);
   return m_fileRecordSvc->registerObject(LHCb::IOFSRLocation::Default,iofsr);
+  
+}
+
+///////////////////////////////////////////////////////////////////////////
+// Print my contained information
+///////////////////////////////////////////////////////////////////////////
+void IOFSRSvc::print()
+{
+  MsgStream log( msgSvc(), name() );
+  log << MSG::DEBUG << "preparing to print" << endmsg;
+  log << MSG::INFO << "+- Merged? " << m_merged << endmsg;
+  log << MSG::INFO << "+- Input Read? " << m_hasinput << endmsg;
+  log << MSG::INFO << "+- Overide Status? " << m_overrideStatus << endmsg;
+  log << MSG::INFO << "+- Default Status " << m_defaultStatus << endmsg;
+  log << MSG::INFO << "+-+ Job Input Map (" << m_jobInputMap.size() << ")" << endmsg;
+  dumpMap(m_jobInputMap);
+  log << MSG::INFO << "+-+ Job Output Map (" << m_jobOutputMap.size() << ")" <<endmsg;
+  dumpMap(m_jobOutputMap);
+  log << MSG::INFO << "+-+ Written To Map (" << m_writtenToMap.size() << ")" << endmsg;
+  dumpMap(m_writtenToMap);
+  log << MSG::INFO << "+-+ Read From Map (" << m_readFromMap.size() << ")" << endmsg;
+  dumpMap(m_readFromMap);
+  log << MSG::INFO << "+-+ Seen By Map (" << m_seenByMap.size() << ")" << endmsg;
+  dumpMap(m_seenByMap);
+  log << MSG::INFO << "+-+ Provenance (" << parents().size() << ")" << endmsg;
+  for(unsigned int i=0; i<parents().size(); ++i)
+  {
+    std::string buffer="| +-";
+    log << MSG::INFO << buffer << "+" << parents()[i] << endmsg;
+    buffer = "| | ";
+    dumpProvenance(parents()[i],buffer);
+    
+  }
+  log << MSG::INFO << "+- Done!! " << endmsg;
+}
+
+void IOFSRSvc::dumpMap(LHCb::IOFSR::FileEventMap & map)
+{
+  MsgStream log( msgSvc(), name() );
+  for(LHCb::IOFSR::FileEventMap::iterator it=map.begin(); it!=map.end(); ++it)
+  {
+    log << MSG::INFO << "| +-+ " << it->first << " : " << it->second << endmsg;
+  }
+  
+}
+
+void IOFSRSvc::dumpProvenance(const std::string file, const std::string buffer, const unsigned int rec)
+{
+  MsgStream log( msgSvc(), name() ); 
+  //prevent infinite recursion
+  if (rec>100) 
+  {
+    log << MSG::INFO << "Max recursion depth reached"  << endmsg;
+    return;
+  }
+  LHCb::IOFSR::ProvenanceMap::iterator it=m_provenanceMap.find(file);
+  if (it==m_provenanceMap.end()) return;
+  
+  for(unsigned int itj=0; itj<it->second.size(); ++itj)
+  {
+    log << MSG::INFO << buffer << "+-+ " << it->second[itj] << endmsg;
+    std::string newbuffer = buffer + "| ";
+    dumpProvenance(it->second[itj], newbuffer, rec+1);
+  }
   
 }

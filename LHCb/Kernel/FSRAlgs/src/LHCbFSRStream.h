@@ -27,9 +27,17 @@ public:
   /// Runrecords do not get written for each event: Event processing hence dummy....
   virtual StatusCode execute() {  return StatusCode::SUCCESS; }
 
+protected:
+  ///clean up empty nodes before writing
+  void cleanNodes(DataObject * obj,
+                  const std::string & location,
+                  unsigned int nRecCount = 0 );
+
 private:
   IIOFSRSvc* m_ioFsrSvc; ///<reference to IOFSR service
   bool m_doIOFsr; //set to false to skip all the IOFSR stuff
+  bool m_cleanTree; //set to false to skip cleaning the FSR tree
+  std::string m_cleanRoot; //clean from where in the FSR tree
 
 };
 

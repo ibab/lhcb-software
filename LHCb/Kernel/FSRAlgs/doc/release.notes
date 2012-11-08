@@ -4,6 +4,12 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-08 - Rob Lambert
+ - Automatic cleaning is implemented.
+ - Tested IOFSRSvc, seems to work. I get a provenance tree, etc.
+ - Simple options file test is added
+ - TODO: add a test for several use-cases and specific failure modes
+
 ! 2012-11-07 - Rob Lambert
  - Add IIOFSRSvc, the interface for this new service.
  - Clone OutputStreamAgent, OutputStream, RecordStream and write a new class on top

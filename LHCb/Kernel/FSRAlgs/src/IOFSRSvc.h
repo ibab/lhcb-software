@@ -119,6 +119,9 @@ public:
   //Does the accounting all add up OK?
   virtual bool traceCounts();
   
+  //print contained information
+  virtual void print();
+  
   
 private:
 
@@ -197,7 +200,13 @@ private:
   bool m_overrideStatus; ///override status at end of job with default. Set by OverrideStatus.
   std::string m_defaultStatusStr; ///status to start with if nothing else is known, Set by DefaultStatus
   LHCb::IOFSR::StatusFlag m_defaultStatus; ///status to start with if nothing else is known, cast from DefaultStatus
-
+  
+  bool m_printIOFSR; ///print the whole IOFSR data for inspection in finalize
+  
+  void dumpMap(LHCb::IOFSR::FileEventMap & map); //print contents of a map as info
+  
+  void dumpProvenance(const std::string file, const std::string buffer, const unsigned int rec=0); //print contents of a map as info
+  
   
 };
 

@@ -32,6 +32,8 @@ public:
   //Does the accounting all add up OK?
   virtual bool traceCounts()=0;
   
+  //print contained information
+  virtual void print()=0;
   
 
 };
