@@ -1,13 +1,4 @@
-// Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "Relations/Relations.h"
-//LHCb
-#include "Event/Particle.h"
-// DaVinci
-#include "Kernel/IBackgroundCategory.h"
-#include "Kernel/DaVinciStringUtils.h"
 // local
 #include "Particle2BackgroundCategoryRelationsAlg.h"
 
@@ -17,22 +8,18 @@
 // 2009-11-30 : V. Gligorov
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( Particle2BackgroundCategoryRelationsAlg )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  Particle2BackgroundCategoryRelationsAlg::
+Particle2BackgroundCategoryRelationsAlg::
 Particle2BackgroundCategoryRelationsAlg( const std::string& name,
                                          ISvcLocator* pSvcLocator )
-  :
-  GaudiAlgorithm      ( name , pSvcLocator ),
-  m_particleLocations (                    ),
-  m_bkg               ( NULL               )
+  : GaudiAlgorithm      ( name , pSvcLocator ),
+    m_bkg               ( NULL               )
 {
   declareProperty( "Inputs", m_particleLocations );
   declareProperty( "FullTree", m_fullTree = false );
+  //setProperty( "OutputLevel", 2 );
 }
 
 //=============================================================================
@@ -65,12 +52,17 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::execute()
     return Error ( "No particle location(s) provided" ) ;
   }
 
+  // Clear the map of relations
+  m_catMap.clear();
+
   for ( std::vector<std::string>::const_iterator iLoc = m_particleLocations.begin();
         iLoc != m_particleLocations.end(); ++iLoc )
   {
     const StatusCode sc = backCategoriseParticles(*iLoc);
     if ( sc.isFailure() )
+    {
       return Error("Problem BackgroundCategorizing '" + *iLoc + "'",sc );
+    }
   }
 
   return StatusCode::SUCCESS;
@@ -80,52 +72,25 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::execute()
 
 StatusCode
 Particle2BackgroundCategoryRelationsAlg::
-backCategoriseParticles(const std::string& location) const
+backCategoriseParticles( const std::string& location ) const
 {
-
-  //Check that we have an input location
+  // Check that we have an input location
   if ( location.empty() )
   {
     return Error ( "No Particle TES location provided" ) ;
   }
 
-  // Allow for the possibility there is no data at a given TES location
-  // Possible when running on uDSTs
-  if ( !exist<LHCb::Particle::Range>(location) )
-  {
-    return Warning( "No data at '" + location + "'", StatusCode::SUCCESS, 3 );
-  }
-
   // Get the input particles
-  const LHCb::Particle::Range myParticles = get<LHCb::Particle::Range>(location);
+  const LHCb::Particle::Range myParticles = getIfExists<LHCb::Particle::Range>(location);
   // Check that this returns something
-  if ( myParticles.empty() )
-  {
-    // Return success as this can happen and should not abort processing
-    return Warning ( "Empty Particle range from '" + location + "'", StatusCode::SUCCESS, 3 );
-  }
-
-  // Get output locations of P2BC relations
-  std::string outputLocation = location;
-  DaVinci::StringUtils::removeEnding(outputLocation, "/Particles");
-  outputLocation += "/P2BCRelations";
-
-  // Make the relations table
-  CatRelations * catRelations = new CatRelations( myParticles.size() );
-
-  // save to TES
-  put( catRelations, outputLocation );
-
-  // printout
-  if ( msgLevel(MSG::VERBOSE) )
-  { verbose() << "Background Categorising '" << location << "'" << endmsg; }
+  if ( myParticles.empty() ) { return StatusCode::SUCCESS; }
 
   // Loop over the Particles and save the relations
   StatusCode sc = StatusCode::SUCCESS;
   for ( LHCb::Particle::Range::const_iterator iP = myParticles.begin();
         iP != myParticles.end(); ++iP )
   {
-    sc = sc && backCategoriseParticle( *iP, catRelations );
+    sc = sc && backCategoriseParticle( *iP );
   }
 
   // return
@@ -137,7 +102,6 @@ backCategoriseParticles(const std::string& location) const
 StatusCode
 Particle2BackgroundCategoryRelationsAlg::
 backCategoriseParticle( const LHCb::Particle * particle,
-                        CatRelations *         catRelations,
                         const unsigned int     recurCount ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
@@ -155,12 +119,22 @@ backCategoriseParticle( const LHCb::Particle * particle,
   {
 
     // relate this particle
-    const int thisCat = static_cast<int>(m_bkg->category(particle));
-    catRelations->i_relate( particle, thisCat );
+    CatRelations * catRel = catRelations(particle);
+    if ( catRel )
+    {
+      // Get the background category
+      const int thisCat = static_cast<int>(m_bkg->category(particle));
 
-    // printout
-    if ( msgLevel(MSG::VERBOSE) )
-    { verbose() << " -> Particle " << particle->particleID() << " BackCat " << thisCat << endmsg; }
+      // Save it
+      catRel->i_relate( particle, thisCat );
+
+      // printout
+      if ( msgLevel(MSG::VERBOSE) )
+      { verbose() << "Particle key=" << particle->key() 
+                  << " PID=" << particle->particleID() 
+                  << " " << objectLocation(particle->parent())
+                  << " BackCat=" << thisCat << endmsg; }
+    }
 
     // if requested, scan the daughters as well
     if ( m_fullTree )
@@ -168,7 +142,7 @@ backCategoriseParticle( const LHCb::Particle * particle,
       for ( SmartRefVector<LHCb::Particle>::const_iterator iD = particle->daughters().begin();
             iD != particle->daughters().end(); ++iD )
       {
-        sc = sc && backCategoriseParticle( *iD, catRelations, recurCount+1 );
+        sc = sc && backCategoriseParticle( *iD, recurCount+1 );
         if ( sc.isFailure() ) break;
       }
     }
@@ -178,5 +152,44 @@ backCategoriseParticle( const LHCb::Particle * particle,
   // return
   return sc;
 }
+
+//=============================================================================
+
+Particle2BackgroundCategoryRelationsAlg::CatRelations * 
+Particle2BackgroundCategoryRelationsAlg::
+catRelations( const LHCb::Particle * particle ) const
+{
+  // TES location for the Particle
+  const std::string pLocation = objectLocation( particle->parent() );
+
+  // Does a relations object already exist ?
+  CatMap::const_iterator iM = m_catMap.find(pLocation);
+  if ( iM == m_catMap.end() )
+  {
+    // Make a new relations object
+    CatRelations * catRelations = new CatRelations();
+
+    // Form TES location for the new object
+    std::string rLoc = pLocation;
+    boost::replace_all( rLoc, "/Particles", "/P2BCRelations" );
+
+    // Save to the TES
+    put( catRelations, rLoc );
+
+    // Update the map
+    m_catMap[pLocation] = catRelations;
+
+    // return the new object
+    return catRelations;
+  }
+
+  // Return the saved object
+  return iM->second;
+}
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( Particle2BackgroundCategoryRelationsAlg )
 
 //=============================================================================

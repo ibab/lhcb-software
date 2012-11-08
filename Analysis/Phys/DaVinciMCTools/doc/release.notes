@@ -4,6 +4,15 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2012-11-08 - Chris Jones
+ - Improvements to Particle2BackgroundCategoryRelationsAlg to save the relations
+   for each Particle location at the same level in the TES structure.
+ - Improvements to P2MCPFromProtoP to better support uDSTs.
+
+! 2012-11-05 - Chris Jones
+ - Do not print a warning if a missing of empty Particle location is found by
+   Particle2BackgroundCategoryRelationsAlg as this is normal in uDSTs.
+
 ! 2012-11-02 - Chris Jones
  - Clean up BackgroundCategory a little
 
