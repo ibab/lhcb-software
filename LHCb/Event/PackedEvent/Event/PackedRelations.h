@@ -6,28 +6,28 @@
 #include "Kernel/StandardPacker.h"
 
 // Include files
-namespace LHCb {
+namespace LHCb 
+{
 
-
+  /** @class PackedRelation PackedRelations.h Event/PackedRelations.h
+   *
+   *  Packed Relation
+   *  
+   *  @author Olivier Callot
+   *  @date   2012-01-24
+   */
   class PackedRelation 
   {
   public:
 
     PackedRelation() : container(0), start(0), end(0) {}
-
+    
     ~PackedRelation() {}
     
     long long container;
     int start;
     int end;
   };
-    
-  /** @class PackedRelations PackedRelations.h Event/PackedRelations.h
-   *
-   *
-   *  @author Olivier Callot
-   *  @date   2012-01-24
-   */
 
   static const CLID CLID_PackedRelations = 1560;
 
@@ -35,8 +35,17 @@ namespace LHCb {
   namespace PackedRelationsLocation 
   {
     static const std::string& InStream = "/pPhys/Relations";
+    static const std::string& P2MCP    = "/pPhys/P2MCPRelations";
+    static const std::string& P2Int    = "/pPhys/P2IntRelations";
   }
 
+  /** @class PackedRelations PackedRelations.h Event/PackedRelations.h
+   *
+   *  Packed Relations
+   *  
+   *  @author Olivier Callot
+   *  @date   2012-01-24
+   */
   class PackedRelations : public DataObject 
   {
   
@@ -54,8 +63,8 @@ namespace LHCb {
     virtual const CLID& clID() const { return PackedRelations::classID(); }
     
     std::vector<PackedRelation>& relations() { return m_relations; }
-    std::vector<long long>& sources() { return m_source; }
-    std::vector<long long>& dests()   { return m_dest; }
+    std::vector<long long>& sources()        { return m_source; }
+    std::vector<long long>& dests()          { return m_dest; }
 
   private:
 

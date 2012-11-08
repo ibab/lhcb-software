@@ -1,5 +1,8 @@
 // $Id: PackedVertex.cpp,v 1.3 2010-05-19 09:04:09 jonrob Exp $
 
+// STL
+#include <algorithm>
+
 // local
 #include "Event/PackedVertex.h"
 
@@ -191,7 +194,8 @@ StatusCode VertexPacker::check( const Data & dataA,
   // technique
   ok &= dataA.technique() == dataB.technique();
   // Chi^2
-  ok &= ch.compareDoubles( "Chi^2", dataA.chi2(), dataB.chi2(), 1.0e-3 );
+  const double chiTol = std::max( dataA.chi2() * 1.0e-6, 1.0e-3 );
+  ok &= ch.compareDoubles( "Chi^2", dataA.chi2(), dataB.chi2(), chiTol );
   // NDOF
   ok &= ch.compareInts( "nDOF", dataA.nDoF(), dataB.nDoF() );
   // Position

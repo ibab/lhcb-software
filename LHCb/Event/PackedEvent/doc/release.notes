@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-11-08 - Chris Jones
+ - Add some new packed relation locations, for MC uDST support
+
 !========================= PackedEvent v4r12 2012-09-28 =========================
 ! 2012-09-21 - Jianchun Wang
  - add UT hits & clusters

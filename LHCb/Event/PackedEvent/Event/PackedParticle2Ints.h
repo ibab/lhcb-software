@@ -22,6 +22,7 @@ namespace LHCb
 
   /** @class PackedParticle2Ints PackedParticle2Ints.h Event/PackedParticle2Ints.h
    *
+   *  Packed Particle to int(s)
    *
    *  @author Olivier Callot
    *  @date   2012-01-30
@@ -41,9 +42,9 @@ namespace LHCb
   public:
 
     /// Standard constructor
-    PackedParticle2Ints( ){};
+    PackedParticle2Ints( ) { }
 
-    virtual ~PackedParticle2Ints( ){}; ///< Destructor
+    virtual ~PackedParticle2Ints( ) { } ///< Destructor
 
     /// Class ID
     static const CLID& classID() { return CLID_PackedParticle2Ints; }
