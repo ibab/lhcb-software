@@ -26,6 +26,7 @@ DECLARE_ALGORITHM_FACTORY( UnpackMCParticle )
   declareProperty( "InputName" , m_inputName  = LHCb::PackedMCParticleLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::MCParticleLocation::Default );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================

@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-11-08 - Chris Jones
+ - Various changes to better support packing and unpacking of MC related 
+   stripping information.
+
 ! 2012-11-05 - Chris Jones
  - Load the clusters in PackCluster only when really needed. Avoids problems
    with attempts to load UT clusters in non-upgrade detector versions ...

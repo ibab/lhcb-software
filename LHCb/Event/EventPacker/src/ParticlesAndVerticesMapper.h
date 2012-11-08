@@ -16,7 +16,6 @@
 #include "Event/PackedRecVertex.h"
 #include "Event/PackedVertex.h"
 #include "Event/PackedRelations.h"
-#include "Event/PackedParticle2Ints.h"
 
 #include "Kernel/StandardPacker.h"
 

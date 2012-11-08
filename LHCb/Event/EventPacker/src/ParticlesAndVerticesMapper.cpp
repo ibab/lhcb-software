@@ -120,7 +120,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     m_streamsDone[streamR] = true;
     LOG_VERBOSE << "ParticlesAndVerticesMapper::updateNodeTypeMap '" << path << "'" << endmsg;
 
-    int key(0),linkID(0);
+    int key(0), linkID(0);
 
     // Load the packed Particles
     LHCb::PackedParticles* pparts =
@@ -161,7 +161,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
       }
     }
 
-    // relations
+    // Particle 2 Vertex relations
     LHCb::PackedRelations* prels =
       getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::InStream);
     if ( NULL != prels )
@@ -174,16 +174,29 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
       }
     }
 
-    // Particle2LHCbID
-    LHCb::PackedParticle2Ints* pPartIds =
-      getIfExists<LHCb::PackedParticle2Ints>(evtSvc(),streamR+LHCb::PackedParticle2IntsLocation::InStream);
-    if ( NULL != pPartIds )
+    // Particle 2 MCParticle relations
+    LHCb::PackedRelations* prelsMC =
+      getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::P2MCP);
+    if ( NULL != prelsMC )
     {
-      for ( std::vector<LHCb::PackedParticle2Int>::iterator itL = pPartIds->relations().begin();
-            pPartIds->relations().end() != itL; ++itL )
+      for ( std::vector<LHCb::PackedRelation>::iterator itR = prelsMC->relations().begin();
+            prelsMC->relations().end() != itR; ++itR )
       {
-        m_pack.indexAndKey64( (*itL).key, linkID, key );
-        addPath( pPartIds->linkMgr()->link(linkID)->path() );
+        m_pack.indexAndKey64( (*itR).container, linkID, key );
+        addPath( prelsMC->linkMgr()->link(linkID)->path() );
+      }
+    }
+
+    // Particle 2 Int relations
+    LHCb::PackedRelations* prelsInt =
+      getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::P2Int);
+    if ( NULL != prelsInt )
+    {
+      for ( std::vector<LHCb::PackedRelation>::iterator itR = prelsInt->relations().begin();
+            prelsInt->relations().end() != itR; ++itR )
+      {
+        m_pack.indexAndKey64( (*itR).container, linkID, key );
+        addPath( prelsInt->linkMgr()->link(linkID)->path() );
       }
     }
 

@@ -28,6 +28,7 @@ UnpackMCVertex::UnpackMCVertex( const std::string& name,
   declareProperty( "InputName" , m_inputName  = LHCb::PackedMCVertexLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::MCVertexLocation::Default );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
+  //setProperty( "OutputLevel", 1 );
 }
 //=============================================================================
 // Destructor

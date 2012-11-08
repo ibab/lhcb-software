@@ -1,5 +1,5 @@
 // $Id: $
-#ifndef PACKPARTICLESANDVERTICES_H 
+#ifndef PACKPARTICLESANDVERTICES_H
 #define PACKPARTICLESANDVERTICES_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -20,19 +20,19 @@
 #include "Event/PackedRelations.h"
 #include "Event/RecVertex.h"
 #include "Event/PackedRecVertex.h"
-#include "Event/PackedParticle2Ints.h"
+#include "Event/MCParticle.h"
 
 /** @class PackParticlesAndVertices PackParticlesAndVertices.h
- *   
+ *
  *  Packs Particles and Vertices
- *  
+ *
  *  @author Olivier Callot
  *  @date   2012-01-23
  */
-class PackParticlesAndVertices : public GaudiAlgorithm 
+class PackParticlesAndVertices : public GaudiAlgorithm
 {
 
-public: 
+public:
 
   /// Standard constructor
   PackParticlesAndVertices( const std::string& name, ISvcLocator* pSvcLocator );
@@ -43,36 +43,40 @@ public:
 
 private:
 
-  typedef LHCb::Relation1D<LHCb::Particle, LHCb::VertexBase> RELATION;
+  typedef LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> P2VRELATION;
+  typedef LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle> P2MCPRELATION;
+  typedef LHCb::Relation1D<LHCb::Particle,int>              Part2IntRelations;
 
 private:
 
   /// Select the data containers in the TES, of a given type, to write out
   void selectContainers ( DataObject* obj,
-                          std::vector<std::string>& names, 
-                          const unsigned int classID, 
+                          std::vector<std::string>& names,
+                          const unsigned int classID,
                           const bool forceRead=false );
-  
+
   /// Pack a Particle container
-  void packAParticleContainer ( const LHCb::Particles* parts, 
+  void packAParticleContainer ( const LHCb::Particles* parts,
                                 LHCb::PackedParticles& pparts );
-  
+
   /// pack a vertex container
-  void packAVertexContainer ( const LHCb::Vertices* verts, 
+  void packAVertexContainer ( const LHCb::Vertices* verts,
                               LHCb::PackedVertices& pverts );
-  
+
   /// Pack a RecVertex container
-  void packARecVertexContainer ( const LHCb::RecVertices* rverts, 
+  void packARecVertexContainer ( const LHCb::RecVertices* rverts,
                                  LHCb::PackedRecVertices& prverts );
-  
-  /// Pack a relations container
-  void packARelationContainer ( const RELATION* rels, 
-                                LHCb::PackedRelations& prels );
-  
-  /// Pack a Particle to LHCbID map
-  void packAParticleLHCbIDContainer ( const DaVinci::Map::Particle2LHCbIDs* partIds, 
-                                      LHCb::PackedParticle2Ints& pPartIds );
-  
+
+  /// Pack a 'SmartRef to SmartRef' relations container
+  template < typename RELATION >
+  void packAP2PRelationContainer ( const RELATION* rels,
+                                   LHCb::PackedRelations& prels );
+
+  /// Pack a 'SmartRef to int' relations container
+  template < typename RELATION >
+  void packAP2IntRelationContainer ( const RELATION* rels,
+                                     LHCb::PackedRelations& prels );
+
 private:
 
   std::string m_inputStream; ///< Input stream root
@@ -84,12 +88,68 @@ private:
   std::vector<std::string> m_vetoedConts; ///< Vetoed containers. Will not be packed.
   StandardPacker m_pack;
 
+  // Class IDs for all handled types
   unsigned int m_clIdParticles;
   unsigned int m_clIdVertices;
   unsigned int m_clIdRecVertices;
   unsigned int m_clIdPart2Vert;
-  unsigned int m_clIdPart2Ints;
+  unsigned int m_clIdPart2MCPart;
+  unsigned int m_clIdPart2Int;
 
 };
+
+//=========================================================================
+//  Pack a 'SmartRef to SmartRef' relations container
+//=========================================================================
+template < typename RELATION >
+inline void
+PackParticlesAndVertices::packAP2PRelationContainer ( const RELATION* rels,
+                                                      LHCb::PackedRelations& prels )
+{
+  // Make a new packed data object and save
+  prels.relations().push_back( LHCb::PackedRelation() );
+  LHCb::PackedRelation& prel = prels.relations().back();
+  // reference to original container and key
+  prel.container = m_pack.reference64( &prels, rels, 0 );
+  prel.start     = prels.sources().size();
+  typename RELATION::Range all = rels->relations();
+  for ( typename RELATION::Range::iterator itR = all.begin(); all.end() != itR; ++itR )
+  {
+    prels.sources().push_back( m_pack.reference64( &prels,
+                                                   (*itR).from()->parent(),
+                                                   (*itR).from()->key() ) );
+    prels.dests().push_back  ( m_pack.reference64( &prels,
+                                                   (*itR).to()->parent(),
+                                                   (*itR).to()->key()   ) );
+  }
+  prel.end = prels.sources().size();
+  if ( !m_deleteInput ) rels->registry()->setAddress( 0 );
+}
+
+//=========================================================================
+//  Pack a 'SmartRef to int' relations container
+//=========================================================================
+template < typename RELATION >
+inline void
+PackParticlesAndVertices::packAP2IntRelationContainer ( const RELATION* rels,
+                                                        LHCb::PackedRelations& prels )
+{
+  // Make a new packed data object and save
+  prels.relations().push_back( LHCb::PackedRelation() );
+  LHCb::PackedRelation& prel = prels.relations().back();
+  // reference to original container and key
+  prel.container = m_pack.reference64( &prels, rels, 0 );
+  prel.start     = prels.sources().size();
+  typename RELATION::Range all = rels->relations();
+  for ( typename RELATION::Range::iterator itR = all.begin(); all.end() != itR; ++itR )
+  {
+    prels.sources().push_back( m_pack.reference64( &prels,
+                                                   (*itR).from()->parent(),
+                                                   (*itR).from()->key() ) );
+    prels.dests().push_back  ( (*itR).to() );
+  }
+  prel.end = prels.sources().size();
+  if ( !m_deleteInput ) rels->registry()->setAddress( 0 );
+}
 
 #endif // PACKPARTICLESANDVERTICES_H

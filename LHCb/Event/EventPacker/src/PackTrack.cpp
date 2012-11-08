@@ -85,13 +85,16 @@ StatusCode PackTrack::execute()
   // If requested, remove the input data from the TES and delete
   if ( UNLIKELY(m_deleteInput) )
   {
-    StatusCode sc = evtSvc()->unregisterObject( tracks );
-    if( sc.isSuccess() ) {
+    const StatusCode sc = evtSvc()->unregisterObject( tracks );
+    if ( sc.isSuccess() )
+    {
       delete tracks;
       tracks = NULL;
     }
     else
+    {
       return Error("Failed to delete input data as requested", sc );
+    }
   }
   else
   {

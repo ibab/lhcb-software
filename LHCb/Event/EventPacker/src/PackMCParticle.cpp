@@ -1,6 +1,6 @@
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 #include "Event/MCParticle.h"
 #include "Kernel/StandardPacker.h"
@@ -19,13 +19,14 @@ DECLARE_ALGORITHM_FACTORY( PackMCParticle )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PackMCParticle::PackMCParticle( const std::string& name,
-                                ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  PackMCParticle::PackMCParticle( const std::string& name,
+                                  ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputName" , m_inputName  = LHCb::MCParticleLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::PackedMCParticleLocation::Default );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
+  declareProperty( "DeleteInput",                m_deleteInput  = false     );
 }
 
 //=============================================================================
@@ -57,9 +58,9 @@ StatusCode PackMCParticle::execute() {
   if ( msgLevel(MSG::DEBUG) )
     debug() << m_inputName << " contains " << parts->size()
             << " MCParticles to convert." << endmsg;
-  
+
   StandardPacker pack;
-  
+
   LHCb::PackedMCParticles* out = new LHCb::PackedMCParticles();
   put( out, m_outputName );
 
@@ -69,31 +70,48 @@ StatusCode PackMCParticle::execute() {
   {
     LHCb::MCParticle* part = (*itP);
     LHCb::PackedMCParticle newPart;
-    
+
     newPart.key  = part->key();
     newPart.px   = pack.energy( part->momentum().px() );
     newPart.py   = pack.energy( part->momentum().py() );
     newPart.pz   = pack.energy( part->momentum().pz() );
     newPart.mass = (float)part->virtualMass();
     newPart.PID  = part->particleID().pid();
-    newPart.originVertex = pack.reference( out, 
-                                           part->originVertex()->parent(), 
+    newPart.originVertex = pack.reference( out,
+                                           part->originVertex()->parent(),
                                            part->originVertex()->key() );
     for ( SmartRefVector<LHCb::MCVertex>::const_iterator itV = part->endVertices().begin();
           part->endVertices().end() != itV; ++itV ) {
       int ref = pack.reference( out, (*itV)->parent(), (*itV)->key() );
       newPart.endVertices.push_back( ref );
       if ( MSG::VERBOSE >= msgLevel() ) {
-        verbose() << "Reference to endVertex       " 
+        verbose() << "Reference to endVertex       "
                   << format( "%8x",  ref ) << endmsg;
       }
     }
     out->addEntry( newPart );
   }
 
-  // Clear the registry address of the unpacked container, to prevent reloading
-  parts->registry()->setAddress( 0 );
-  
+  // If requested, remove the input data from the TES and delete
+  if ( UNLIKELY(m_deleteInput) )
+  {
+    const StatusCode sc = evtSvc()->unregisterObject( parts );
+    if ( sc.isSuccess() )
+    {
+      delete parts;
+      parts = NULL;
+    }
+    else
+    {
+      return Error("Failed to delete input data as requested", sc );
+    }
+  }
+  else
+  {
+    // Clear the registry address of the unpacked container, to prevent reloading
+    parts->registry()->setAddress( 0 );
+  }
+
   return StatusCode::SUCCESS;
 }
 

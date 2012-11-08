@@ -13,8 +13,11 @@
  *  @author Olivier Callot
  *  @date   2005-03-18
  */
-class PackMCParticle : public GaudiAlgorithm {
+class PackMCParticle : public GaudiAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   PackMCParticle( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -22,8 +25,12 @@ public:
   virtual StatusCode execute();  ///< Algorithm execution
 
 private:
+
   std::string m_inputName;
   std::string m_outputName;  
   bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
+  bool m_deleteInput;       ///< Flag to turn on the removal of the input data after packing
+
 };
+
 #endif // PACKMCPARTICLE_H
