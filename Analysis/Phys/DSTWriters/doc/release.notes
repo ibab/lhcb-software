@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2012-11-05 - Chris Jones
+ - Improve the support for creating MC uDSTs.
+
 !========================= DSTWriters v4r7 2012-06-28 =========================
 
 ! 2012-06-27 - Chris Jones

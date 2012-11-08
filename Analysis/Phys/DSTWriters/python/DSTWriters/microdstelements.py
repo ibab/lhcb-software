@@ -169,17 +169,14 @@ class CloneMCInfo(MicroDSTElement) :
         # This will make a relations table in mainLocation+"/P2MCPRelations"
         p2mcRelator = P2MCRelatorAlg(self.personaliseName(sel,'P2MCRel'))
         p2mcRelator.ParticleLocations = self.dataLocations(sel,'Particles')
-        # Now copy relations table + matched MCParticles to MicroDST
-        cloner = CopyParticle2MCRelations(self.personaliseName(sel,
-                                                               "CopyP2MCRel"))
+        # Move relations to stream dependant location and clone associated MCParticles
+        cloner = CopyParticle2MCRelations(self.personaliseName(sel,"CopyP2MCRel"))
+        cloner.RemoveOriginals = True
         cloner.addTool(MCParticleCloner)
-        cloner.MCParticleCloner.addTool(MCVertexCloner,
-                                        name = 'ICloneMCVertex')
-        cloner.InputLocations = self.dataLocations(sel,"P2MCPRelations")
+        cloner.MCParticleCloner.addTool(MCVertexCloner,name='ICloneMCVertex')
+        cloner.InputLocations = self.dataLocations(sel,'Particles')
         self.setOutputPrefix(cloner)
-        # MC Header
-        #copyMCHeader = 
-        return [p2mcRelator, cloner]
+        return [p2mcRelator,cloner]
 
 class CloneBTaggingInfo(MicroDSTElement) :
     """
@@ -351,10 +348,11 @@ class CloneBackCat(MicroDSTElement) :
         from Configurables import ( Particle2BackgroundCategoryRelationsAlg,
                                     CopyParticle2BackgroundCategory )
         backCatAlg = Particle2BackgroundCategoryRelationsAlg(self.personaliseName(sel,'BackCatAlg'))
-        backCatAlg.Inputs = self.dataLocations(sel,"Particles",True)
+        backCatAlg.Inputs = self.dataLocations(sel,"Particles")
         backCatAlg.FullTree = True
         cloner = CopyParticle2BackgroundCategory(self.personaliseName(sel,'CopyP2BackCat'))
-        cloner.InputLocations = self.dataLocations(sel,"P2BCRelations")
+        cloner.InputLocations = self.dataLocations(sel,"Particles")
+        cloner.RemoveOriginals = True
         self.setOutputPrefix(cloner)
         return [backCatAlg,cloner]
 
@@ -518,7 +516,6 @@ class PackRecObjects(MicroDSTElement) :
 
         # PVs
         from Configurables import PackRecVertex
-        #from Configurables import DataPacking__Pack_LHCb__WeightsVectorPacker_ as PackPVWeights
         algs += [ PackRecVertex( name = self.personaliseName(sel,"PackPVs"),
                                  AlwaysCreateOutput = False,
                                  DeleteInput        = deleteInput,
@@ -542,8 +539,34 @@ class PackRecObjects(MicroDSTElement) :
                              InputName          = self.branch + "/Rec/Track/Muon",
                              OutputName         = self.branch + "/pRec/Track/Muon" )
                   ]
-                
+
+        # Finally return all the packers
         return algs
+
+class PackMCInfo(MicroDSTElement) :
+    """
+    Configurable to pack MC objects
+    """
+    def __call__(self, sel):
+
+        from Configurables import ( PackMCParticle, PackMCVertex,
+                                    Gaudi__DataRemove )
+
+        return [ PackMCParticle( name = self.personaliseName(sel,"PackMCParticles"),
+                                 AlwaysCreateOutput = False,
+                                 DeleteInput        = False,
+                                 InputName          = self.branch + "/MC/Particles",
+                                 OutputName         = self.branch + "/pMC/Particles" ),
+                 PackMCVertex( name = self.personaliseName(sel,"PackMCVertices"),
+                               AlwaysCreateOutput = False,
+                               DeleteInput        = False,
+                               InputName          = self.branch + "/MC/Vertices",
+                               OutputName         = self.branch + "/pMC/Vertices" ),
+                 Gaudi__DataRemove( name = self.personaliseName(sel,"RemoveMCParticles"),
+                                    DataLocation = self.branch + "/MC/Particles" ),
+                 Gaudi__DataRemove( name = self.personaliseName(sel,"RemoveMCVertices"),
+                                    DataLocation = self.branch + "/MC/Vertices" )
+                 ]
 
 class CleanEmptyEventNodes(MicroDSTElement) :
     """
