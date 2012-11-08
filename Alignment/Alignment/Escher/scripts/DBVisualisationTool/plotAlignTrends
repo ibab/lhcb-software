@@ -40,8 +40,8 @@ from CompareAlignmentConstants.AlignmentComparisonPlots import plotAlignmentPara
 plotAlignmentParametersTimeSeries(
         options.outFileName
       , "sqlite_file:%s/LHCBCOND" % args[0]
-      , since="2012-01-01"
-      , until="2013-01-01"
-      , topDirName="trends"
+      , since=options.since
+      , until=options.until
+      , topDirName=options.topDirName
       , refConnectString=refConnStr
       )
