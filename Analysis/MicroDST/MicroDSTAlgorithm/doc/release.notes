@@ -3,6 +3,11 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2012-11-08 - Chris Jones
+ - Update CopyParticle2BackgroundCategory and CopyParticle2MCRelations to 
+   recursively search through the particle trees and to find all associated
+   relations tables and clone them.
+
 !========================= MicroDSTAlgorithm v5r6p2 2012-06-28 =========================
 
 ! 2012-06-28 - Chris Jones

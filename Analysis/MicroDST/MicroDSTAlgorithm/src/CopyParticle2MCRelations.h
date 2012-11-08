@@ -4,7 +4,7 @@
 
 // Include files
 // from MicroDST
-#include "MicroDST/RelationsClonerAlg.h"
+#include "MicroDST/RelationsFromParticleLocationsClonerAlg.h"
 #include <MicroDST/ICloneMCParticle.h>
 #include "MicroDST/BindType2ClonerDef.h"
 // from DaVinci
@@ -62,8 +62,10 @@ template <> struct BindType2Cloner<Particle2MCParticle::Table>
 template<> struct Defaults<Particle2MCParticle::Table>
 {
   const static std::string clonerType;
+  const static std::string relationsName;
 };
-const std::string Defaults<Particle2MCParticle::Table>::clonerType = "MCParticleCloner";
+const std::string Defaults<Particle2MCParticle::Table>::clonerType    = "MCParticleCloner";
+const std::string Defaults<Particle2MCParticle::Table>::relationsName = "/P2MCPRelations";
 //=============================================================================
 template<> struct Location<Particle2MCParticle::Table>
 {
@@ -71,6 +73,6 @@ template<> struct Location<Particle2MCParticle::Table>
 };
 const std::string Location<Particle2MCParticle::Table>::Default = "NO DEFAULT LOCATION";
 //=============================================================================
-typedef MicroDST::RelationsClonerAlg<Particle2MCParticle::Table> CopyParticle2MCRelations;
+typedef MicroDST::RelationsFromParticleLocationsClonerAlg<Particle2MCParticle::Table> CopyParticle2MCRelations;
 DECLARE_NAMED_ALGORITHM_FACTORY( CopyParticle2MCRelations, CopyParticle2MCRelations )
 #endif // COPYPARTICLE2MCRELATIONS_H

@@ -7,7 +7,7 @@
 #include <Relations/Relation1D.h>
 // from MicroDST
 #include <MicroDST/ICloneParticle.h>
-#include "MicroDST/RelationsFromClonerAlg.h"
+#include "MicroDST/RelationsFromParticleLocationsFromClonerAlg.h"
 #include "MicroDST/BindType2ClonerDef.h"
 // from DaVinci
 #include "Event/Particle.h"
@@ -46,12 +46,18 @@ namespace Particle2BackCat
   typedef LHCb::Relation1D<LHCb::Particle, int> Table;
 }
 //=============================================================================
+template<> struct Defaults<Particle2BackCat::Table>
+{
+  const static std::string relationsName;
+};
+const std::string Defaults<Particle2BackCat::Table>::relationsName = "/P2BCRelations";
+//=============================================================================
 template<> struct Location<Particle2BackCat::Table>
 {
   const static std::string Default;
 };
 const std::string Location<Particle2BackCat::Table>::Default = "NO DEFAULT LOCATION";
 //=============================================================================
-typedef MicroDST::RelationsFromClonerAlg<Particle2BackCat::Table> CopyParticle2BackgroundCategory;
+typedef MicroDST::RelationsFromParticleLocationsFromClonerAlg<Particle2BackCat::Table> CopyParticle2BackgroundCategory;
 DECLARE_NAMED_ALGORITHM_FACTORY( CopyParticle2BackgroundCategory, CopyParticle2BackgroundCategory )
 #endif // COPYPARTICLE2BACKGROUNDCATEGORY_H
