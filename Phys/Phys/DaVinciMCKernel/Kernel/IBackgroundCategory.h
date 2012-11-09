@@ -215,7 +215,7 @@ public:
   /// category < 60 it returns the mc_mother of the final state particles
   virtual const LHCb::MCParticle* origin( const LHCb::Particle* ) = 0 ;
 
-  //Method to return the daughters of the candidate Particle as used by BackCat
+  /// Method to return the daughters of the candidate Particle as used by BackCat
   virtual const std::vector<std::pair<const LHCb::Particle*, const LHCb::MCParticle*> >
   getDaughtersAndPartners( const LHCb::Particle* ) = 0 ;
 
