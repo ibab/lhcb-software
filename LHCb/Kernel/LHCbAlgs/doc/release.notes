@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-11-09 - Chris Jones
+ - Use getIfExists in DataObjectVersionFilter + increase default max 
+   version number
+
 ! 2012-11-08 - Chris Jones
  - Add a trivial new algorithm DataRemove that just removes a TES location. 
    Useful in the stripping packing options.

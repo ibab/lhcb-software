@@ -23,8 +23,8 @@ DataObjectVersionFilter::DataObjectVersionFilter( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "MinVersion", m_minV = 0    );
-  declareProperty( "MaxVersion", m_maxV = 9999 );
+  declareProperty( "MinVersion", m_minV = 0       );
+  declareProperty( "MaxVersion", m_maxV = 9999999 );
   declareProperty( "DataObjectLocation", m_loc = "" );
 }
 
@@ -42,13 +42,13 @@ StatusCode DataObjectVersionFilter::execute()
 
   try
   {
-    if ( exist<DataObject>(m_loc) )
+    const DataObject * data = getIfExists<DataObject>(m_loc);
+    if ( data )
     {
-      const DataObject * data = get<DataObject>(m_loc);
       const unsigned int ver = (unsigned int)data->version();
       if ( msgLevel(MSG::DEBUG) )
         debug() << "version = " << ver << endmsg;
-      OK = ver <= m_maxV && ver >= m_minV;
+      OK = ( ver <= m_maxV && ver >= m_minV );
     }
     else
     {
