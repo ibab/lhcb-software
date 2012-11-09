@@ -52,9 +52,15 @@ namespace
   // ==========================================================================
   // check if the double value close to zero
   inline bool _zero  ( const double value ) { return _equal ( value , 0 ) ; }
+  // check if the double value close to zero
+  inline bool _zero  ( const Gaudi::Math::ValueWithError& a ) 
+  { return _zero ( a.value() ) && _zero ( a.cov2() ) ; }  
   // ==========================================================================
   // check if the double value close to one
   inline bool _one   ( const double value ) { return _equal ( value , 1 ) ; }
+  // check if the double value close to one
+  inline bool _one  ( const Gaudi::Math::ValueWithError& a ) 
+  { return _one ( a.value() ) && _zero ( a.cov2() ) ; }  
   // ==========================================================================
   /// helper wrapper
   inline double _pow ( const double v , const int n )
@@ -74,14 +80,16 @@ Gaudi::Math::ValueWithError::ValueWithError
   const double covariance )
   : m_value ( value      )
   , m_cov2  ( covariance )
-{}
+{
+  if ( _zero ( m_cov2 ) ) { m_cov2 = 0 ; }
+}
 // ============================================================================
 // constructor from the (value,error)-pair
 // ============================================================================
 Gaudi::Math::ValueWithError::ValueWithError
 ( const std::pair<double,double>& value )
   : m_value ( value.first )
-  , m_cov2  ()
+  , m_cov2  ( 0 )
 {
   setError ( value.second ) ;
 }
@@ -90,8 +98,8 @@ Gaudi::Math::ValueWithError::ValueWithError
 // ============================================================================
 Gaudi::Math::ValueWithError::ValueWithError
 ( const std::string& value )
-  : m_value ()
-  , m_cov2  ()
+  : m_value ( 0 )
+  , m_cov2  ( 0 )
 {
   StatusCode sc = Gaudi::Parsers::parse ( *this , value ) ;
   if ( sc.isFailure() )
@@ -103,14 +111,25 @@ Gaudi::Math::ValueWithError::ValueWithError
 // ============================================================================
 void Gaudi::Math::ValueWithError::setError ( const double e )
 {
-  m_cov2  = e * e ;
-  if ( 0 > e ) { m_cov2 = -m_cov2 ; }
+  if    ( _zero ( e ) ) { m_cov2 = 0 ; }
+  else 
+  {
+    m_cov2  = e * e ;
+    //
+    if ( 0 > e ) { m_cov2 = -m_cov2 ; }
+    //
+    if ( _zero ( m_cov2 ) ) { m_cov2 = 0 ; }
+  }
 }
 // ============================================================================
 // get the error
 // ============================================================================
 double Gaudi::Math::ValueWithError::error      () const
-{ return 0 <= m_cov2 ? std::sqrt ( m_cov2 ) : -std::sqrt ( -m_cov2 ) ; }
+{ 
+  return 
+    _zero ( m_cov2 ) ? 0.0 : 
+    0 <=    m_cov2   ? std::sqrt ( m_cov2 ) : -std::sqrt ( -m_cov2 ) ; 
+}
 // ============================================================================
 // +=
 // ============================================================================
@@ -128,6 +147,9 @@ Gaudi::Math::ValueWithError::operator+=
   //
   m_value += right.m_value ;
   m_cov2  += right.m_cov2  ;
+  //
+  if ( _zero ( m_cov2 ) ) { m_cov2 = 0 ; }
+  //
   return *this ;
 }
 // ============================================================================
@@ -146,7 +168,10 @@ Gaudi::Math::ValueWithError::operator-=
   }
   //
   m_value -= right.m_value ;
-  m_cov2  += right.m_cov2  ;
+  m_cov2  += right.m_cov2  ;  
+  //
+  if ( _zero ( m_cov2 ) ) { m_cov2 = 0 ; }
+  //
   return *this ;
 }
 // ============================================================================
@@ -161,6 +186,9 @@ Gaudi::Math::ValueWithError::operator*=
     const double a = value() ;
     m_value  =     a * a ;
     m_cov2  *= 4 * a * a ;
+    //
+    if ( _zero ( m_cov2 ) ) { m_cov2 = 0 ; }
+    //
     return  *this ;
   }
   //
@@ -169,6 +197,9 @@ Gaudi::Math::ValueWithError::operator*=
   m_cov2  *= _b2                 ;
   m_cov2  += _a2 * right.m_cov2  ;
   m_value *=      right.m_value ;
+  //
+  if ( _zero ( m_cov2 ) ) { m_cov2 = 0 ; }
+  //
   return *this ;
 }
 // ============================================================================
@@ -192,6 +223,9 @@ Gaudi::Math::ValueWithError::operator/=
   m_cov2  /= _b2 ;
   m_cov2  += ( _a2 / _b4 ) * right.m_cov2 ;
   m_value /= right.m_value ;
+  //
+  if ( _zero ( m_cov2 ) ) { m_cov2 = 0 ; }
+  //
   return *this ;
 }
 // ============================================================================
@@ -202,6 +236,9 @@ Gaudi::Math::ValueWithError::operator*= ( const double v )                // *=
 {
   m_value *= v     ;
   m_cov2  *= (v*v) ;
+  //
+  if ( _zero ( m_cov2 ) ) { m_cov2 = 0 ; }
+  //
   return *this ;
 }
 // ============================================================================
@@ -212,6 +249,9 @@ Gaudi::Math::ValueWithError::operator/= ( const double v )                // /=
 {
   m_value /= v     ;
   m_cov2  /= (v*v) ;
+  //
+  if ( _zero ( m_cov2 ) ) { m_cov2 = 0 ; }
+  //
   return *this ;
 }
 // ============================================================================
@@ -294,7 +334,8 @@ Gaudi::Math::ValueWithError::mean
   else if ( 0 >=   cov2 ()                   ) { return *this ; }
   else if ( 0 >= b.cov2 ()                   ) { return b     ; }
   //
-  const double _cov2 = 1.0/( 1.0/cov2() + 1.0/b.cov2() ) ;
+  double _cov2 = 1.0/( 1.0/cov2() + 1.0/b.cov2() ) ;
+  if ( _zero ( _cov2 ) ) { _cov2 = 0 ; }
   //
   return Gaudi::Math::ValueWithError
     ( _cov2 * ( value()/cov2() + b.value()/b.cov2() ) ,  _cov2 ) ;
@@ -335,7 +376,7 @@ double Gaudi::Math::ValueWithError::kullback
 ( const Gaudi::Math::ValueWithError& b ) const
 {
   //
-  if ( 0 >= cov2() || b.cov2 () >= 0 ) { return -1 ; }
+  if ( 0 >= cov2() || 0 >= b.cov2 () ) { return -1 ; }
   //
   const double c1 =   cov2 () ;
   const double c2 = b.cov2 () ;
@@ -475,6 +516,11 @@ bool Gaudi::Math::ValueWithError::isinf () const
     boost::math::isinf ( m_value ) ||
     boost::math::isinf ( m_cov2  )  ;
 }
+// ============================================================================
+// check for goodness: finite values and non-negative covariance 
+// ============================================================================
+bool Gaudi::Math::ValueWithError::isgood   () const 
+{ return isfinite () &&  ( 0 <= m_cov2 || _zero ( m_cov2 ) ) ; }
 // =============================================================================
 // for easy pythonization
 // =============================================================================
@@ -872,9 +918,199 @@ Gaudi::Math::ValueWithError Gaudi::Math::log
 {
   if ( 0 >= b.cov2 () || _zero ( b.cov2() ) ) { return std::log ( b.value() ) ; }
   //
-  const double v  = std::log ( b.value() ) ;
-  const double e1 = 1.0 / b.value()        ;
+  const double v  = std::log ( b.value () ) ;
+  const double e1 = 1.0 /      b.value ()   ;
+  //
   return Gaudi::Math::ValueWithError ( v , e1 * e1 * b.cov2 () ) ;
+}
+// ============================================================================
+/*  make a sum two elements taking into acocunt the 
+ *  correlation coefficient  
+ *  @param a  (input) the first value 
+ *  @param b  (input) the second value 
+ *  @param c  (input) the correlation coefficient
+ *  @return a+b 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2012-11-09
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::sum 
+( const Gaudi::Math::ValueWithError& a , 
+  const Gaudi::Math::ValueWithError& b , 
+  const double                       c ) 
+{
+  //
+  // the simplest case, ignore correlation  
+  if ( &a == &b ) { return a*2.0 ; }     // RETURN
+  //
+  // few more trivial cases 
+  //
+  if      ( _zero ( a ) ) { return b ; }
+  else if ( _zero ( b ) ) { return a ; }
+  //
+  const double v = a.value() + b.value();
+  //
+  // the second trivial case, no correlation  
+  if ( _zero ( c ) ) { return a + b ; } 
+  //
+  // adjust the correlation coefficient 
+  const double r   = std::max ( -1.0 , std::min ( 1.0 , c ) ) ;
+  //
+  const double ac2 = std::max ( a.cov2 () , 0.0 ) ;
+  const double bc2 = std::max ( b.cov2 () , 0.0 ) ;
+  //
+  if ( _zero ( ac2 ) ) { return ValueWithError ( v , bc2 ) ; }  // RETURN
+  if ( _zero ( bc2 ) ) { return ValueWithError ( v , ac2 ) ; }  // RETURN 
+  //
+  return ValueWithError ( v , ac2 + bc2 + 2 * r * std::sqrt ( ac2 * bc2 ) ) ;    
+}
+// ============================================================================
+/*  make a difference  two elements taking into acocunt the 
+ *  correlation coefficient  
+ *  @param a  (input) the first value 
+ *  @param b  (input) the second value 
+ *  @param c  (input) the correlation coefficient
+ *  @return a-b 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2012-11-09
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::subtract
+( const Gaudi::Math::ValueWithError& a , 
+  const Gaudi::Math::ValueWithError& b , 
+  const double                       c ) 
+{
+  //
+  // the simplest case, ignore correlation  
+  if ( &a == &b ) { return  ValueWithError ( 0 , 0 )  ; }     // RETURN
+  //
+  // few more trivial cases 
+  //
+  if      ( _zero ( a ) ) { return -b ; }
+  else if ( _zero ( b ) ) { return  a ; }
+  //
+  const double v = a.value() - b.value();
+  //
+  // the second trivial case, no correlation  
+  if ( _zero ( c ) ) { return a - b ; } 
+  //
+  // adjust the correlation coefficient 
+  const double r   = std::max ( -1.0 , std::min ( 1.0 , c ) ) ;
+  //
+  const double ac2 = std::max ( a.cov2 () , 0.0 ) ;
+  const double bc2 = std::max ( b.cov2 () , 0.0 ) ;
+  //
+  if ( _zero ( ac2 ) ) { return ValueWithError ( v , bc2 ) ; }  // RETURN
+  if ( _zero ( bc2 ) ) { return ValueWithError ( v , ac2 ) ; }  // RETURN 
+  //
+  return ValueWithError ( v , ac2 + bc2 - 2 * r * std::sqrt ( ac2 * bc2 ) ) ;    
+}
+// ============================================================================
+/*  make a multiplication of two elements taking into acocunt the 
+ *  correlation coefficient  
+ *  @param a  (input) the first value 
+ *  @param b  (input) the second value 
+ *  @param c  (input) the correlation coefficient
+ *  @return a*b 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2012-11-09
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::multiply
+( const Gaudi::Math::ValueWithError& a , 
+  const Gaudi::Math::ValueWithError& b , 
+  const double                       c ) 
+{
+  //
+  // the simplest case, ignore correlation  
+  //
+  if ( &a == &b ) 
+  {
+    const  double v = a.value() * a.value() ;
+    return ValueWithError ( v , 4 * v * a.cov2()  ) ;   // RETURN
+  }
+  //
+  // few more trivial cases 
+  //
+  if      ( _zero ( a ) ) { return ValueWithError ( 0 , 0 ) ; }
+  else if ( _zero ( b ) ) { return ValueWithError ( 0 , 0 ) ; }
+  else if ( _one  ( a ) ) { return b ; }
+  else if ( _one  ( b ) ) { return a ; }
+  //
+  // the second trivial case, no correlation  
+  //
+  if ( _zero ( c ) ) { return a * b ; }                         // RETURN
+  //
+  const double  v   = a.value () * b.value () ;
+  const double av2  = a.value () * a.value () ;
+  const double bv2  = b.value () * b.value () ;
+  //
+  // adjust the correlation coefficient 
+  const double r   = std::max ( -1.0 , std::min ( 1.0 , c ) ) ;
+  //
+  const double ac2 = std::max ( a.cov2 () , 0.0 ) ;
+  const double bc2 = std::max ( b.cov2 () , 0.0 ) ;
+  //
+  if ( _zero ( ac2 ) ) { return ValueWithError ( v , av2 * bc2 ) ; }  // RETURN
+  if ( _zero ( bc2 ) ) { return ValueWithError ( v , bv2 * ac2 ) ; }  // RETURN 
+  //
+  return ValueWithError ( v ,
+                          bv2 * ac2 + 
+                          av2 * bc2 + 
+                          2 * v * r * std::sqrt ( ac2 * bc2 ) ) ;
+}
+// ============================================================================
+/*  make a division of two elements taking into account the 
+ *  correlation coefficient  
+ *  @param a  (input) the first value 
+ *  @param b  (input) the second value 
+ *  @param c  (input) the correlation coefficient
+ *  @return a/b 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2012-11-09
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::divide
+( const Gaudi::Math::ValueWithError& a , 
+  const Gaudi::Math::ValueWithError& b , 
+  const double                       c ) 
+{
+  //
+  // the simplest case, ignore correlation  
+  //
+  if ( &a == &b ) { return ValueWithError ( 1, 0 ) ; }
+  //
+  // few more trivial cases 
+  //
+  if      ( _zero ( a ) ) { return ValueWithError ( 0 , 0 ) ; }
+  else if ( _one  ( a ) ) { return 1./b ; }
+  else if ( _one  ( b ) ) { return a    ; }
+  //
+  // the second trivial case, no correlation  
+  //
+  if ( _zero ( c ) ) { return a / b ; }                         // RETURN
+  //
+  const double  v   = a.value () / b.value () ;
+  const double av2  = a.value () * a.value () ;
+  const double bv2  = b.value () * b.value () ;  
+  //
+  // adjust the correlation coefficient 
+  const double r   = std::max ( -1.0 , std::min ( 1.0 , c ) ) ;
+  //
+  const double ac2 = std::max ( a.cov2 () , 0.0 ) ;
+  const double bc2 = std::max ( b.cov2 () , 0.0 ) ;
+  //
+  const double ac2_n = ac2 / bv2 ;
+  const double bc2_n = bc2 / bv2 ;
+  const double av2_n = av2 / bv2 ;
+  //
+  if ( _zero ( ac2 ) ) { return ValueWithError ( v ,  av2_n * bc2_n ) ; }  // RETURN
+  if ( _zero ( bc2 ) ) { return ValueWithError ( v ,          ac2_n ) ; }  // RETURN 
+  //
+  return ValueWithError ( v ,
+                          ac2_n +  
+                          av2_n * bc2_n - 
+                          2 * v * r * std::sqrt ( ac2_n * bc2_n ) ) ;
 }
 // ============================================================================
 /*  evaluate log(b)

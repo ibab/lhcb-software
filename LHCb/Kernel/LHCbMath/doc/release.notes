@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-11-09 - Vanya Belyaev
+ - add functions for calcualtion of sum/difference/multiplication/division 
+   with correlation 
+
 ! 2012-10-12 - Marco Clemencic
  - Fixed warnings:
    - comma at end of enumerator list [-pedantic]

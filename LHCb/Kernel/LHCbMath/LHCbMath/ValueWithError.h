@@ -189,7 +189,7 @@ namespace Gaudi
     public: // good ?
       // ======================================================================
       /// check for goodness: finite values and non-negative covariance 
-      bool isgood   () const { return isfinite () &&  0 <= m_cov2 ; }
+      bool isgood   () const ;
       /// check for goodness: finite values and non-negative covariance 
       bool good     () const { return isgood   () ; }
       // ======================================================================
@@ -505,6 +505,66 @@ namespace Gaudi
     /// check for goodness 
     inline bool good     ( const ValueWithError& v ) { return v.good     () ; }    
     // ========================================================================    
+    /** make a sum two elements taking into account the 
+     *  correlation coefficient  
+     *  @param a  (input) the first value 
+     *  @param b  (input) the second value 
+     *  @param c  (input) the correlation coefficient
+     *  @return a+b 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2012-11-09
+     */
+    GAUDI_API 
+    ValueWithError  sum 
+    ( const ValueWithError& a     , 
+      const ValueWithError& b     , 
+      const double          c = 0 ) ;
+    // ========================================================================
+    /** make a subtraction of two elements taking into account the 
+     *  correlation coefficient  
+     *  @param a  (input) the first value 
+     *  @param b  (input) the second value 
+     *  @param c  (input) the correlation coefficient
+     *  @return a-b 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2012-11-09
+     */
+    GAUDI_API 
+    ValueWithError  subtract
+    ( const ValueWithError& a     , 
+      const ValueWithError& b     , 
+      const double          c = 0 ) ;
+    // ========================================================================
+    /** make a  multiplication two elements taking into account the 
+     *  correlation coefficient  
+     *  @param a  (input) the first value 
+     *  @param b  (input) the second value 
+     *  @param c  (input) the correlation coefficient
+     *  @return a*b 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2012-11-09
+     */
+    GAUDI_API 
+    ValueWithError  multiply
+    ( const ValueWithError& a     , 
+      const ValueWithError& b     , 
+      const double          c = 0 ) ;
+    // ========================================================================
+    /** make a division of two elements taking into account the 
+     *  correlation coefficient  
+     *  @param a  (input) the first value 
+     *  @param b  (input) the second value 
+     *  @param c  (input) the correlation coefficient
+     *  @return a/b 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2012-11-09
+     */
+    GAUDI_API 
+    ValueWithError  divide
+    ( const ValueWithError& a     , 
+      const ValueWithError& b     , 
+      const double          c = 0 ) ;
+    // ========================================================================
     /** simple linear interpolation 
      *  @param  x  the point to evaluate the function 
      *  @param  x0 the abscissa for the first  point
