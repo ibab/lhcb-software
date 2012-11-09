@@ -1286,9 +1286,6 @@ int DeMuonDetector::sensitiveVolumeID(const Gaudi::XYZPoint &myPoint) const
   StatusCode sc = StatusCode::FAILURE;
   nsta=getStation(myPoint.z());
 
-  msgStream() << MSG::INFO << "DeMuonDetector::sensitiveVolumeID station: " <<
-    nsta << endmsg;
-
 
   sc = Hit2GapNumber(myPoint,nsta,ngap,nchm,nreg);
   if(sc.isFailure())return -1;

@@ -196,7 +196,7 @@ void MuonChamberLayout::returnChambers(int sta, float st_x, float st_y, int x_di
 void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
                                   int reg, std::vector<int> &chamberNumber)const {
 
-  int vSize(0); int chN = -1;  bool debug = true;
+  int vSize(0); int chN = -1;  bool debug = false;
   int fx = sx + shx;
   int fy = sy + shy;
 
@@ -211,7 +211,7 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
   if(fx<0 || fy<0 || fx >= 4*(int)m_cgX.at(reg)
      || fy >= 4*(int)m_cgY.at(reg)) {
 
-    msgStream()<<MSG::INFO<<" Inside Protection IF "<<chN<<endmsg;
+    if(debug) msgStream()<<MSG::INFO<<" Inside Protection IF "<<chN<<endmsg;
     //Starting point in the new (larger) grid
     sy = sy + 2*m_cgY.at(reg);
     if(reg<2) {
@@ -231,7 +231,6 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
       }
 
       chamberNumber.push_back(-1);
-      msgStream()<<MSG::INFO<<" RETURNING "<<chN<<endmsg;
       return;
     }
     //Fix the chamber number for chambers in region != from starting one
@@ -243,16 +242,12 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
                    <<" "<<reg+1<<endmsg;
       }
 
-      msgStream()<<MSG::INFO<<" RETURNING after FIXING ?"<<endmsg;
 
-      if(chamberNumber.at(vSize-1)>-1) 
-        msgStream()<<MSG::INFO<<" yes "<<endmsg;
       if(chamberNumber.at(vSize-1)>-1) return;
     }
   } else {
     //Look inside the grid
 
-    msgStream()<<MSG::INFO<<" Look inside the grid "<<chN<<endmsg;
     int enc = fx+4*m_cgX.at(reg)*fy+m_offSet.at(reg);
     chN = m_chamberGrid.at(enc);
     if(debug) {
@@ -268,7 +263,9 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
   if(chN<0 && shouldLowReg(fx,fy,reg)) {
     //Found a -1 chamber: need to low
     //the region number (if > 1) to look in inside inner region
-    msgStream()<<MSG::INFO<<" chamber number is <0  , REGION : "<< reg<< endmsg;
+    if (debug)
+      msgStream()<<MSG::INFO<<" chamber number is <0  , REGION : "<< reg<< endmsg;
+
     if(reg-1>=0) {
       //When dropping down the region number
       if(reg < 3){
@@ -294,7 +291,7 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
       return;
     }
     vSize = chamberNumber.size();
-     msgStream()<<MSG::INFO<<"chamberStack size: "<< vSize <<endmsg;
+    if (debug) msgStream()<<MSG::INFO<<"chamberStack size: "<< vSize <<endmsg;
     if(vSize>0) {
       if(debug) {
         msgStream()<<MSG::INFO<<" Encode and chamber in second call: "<<chN<<" :: "
@@ -616,7 +613,7 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
     while(iS != obtIS-(m_isM1defined?1:2)) {
       msgStream() << MSG::INFO << "iS number " << iS << " obtIS number " <<
         obtIS << " isM1defined: " << m_isM1defined << endmsg;
-      msgStream()<<MSG::INFO <<"There is/are void stations! "<<endmsg;
+      msgStream()<<MSG::WARNING <<"There is/are void stations! "<<endmsg;
       for(int ire = 0; ire<4; ire++) {
         for(int ich = 0; ich<MaxRegions[ire]; ich++) {
           m_ChVec.at(encode) = (DeMuonChamber*)0;
