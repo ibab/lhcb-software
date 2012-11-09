@@ -34,7 +34,7 @@ from GaudiKernel.SystemOfUnits import *
 dieLL = DiElectronMaker('StdDiElectronFromTracks')
 dieLL.Particle = "J/psi(1S)"
 selector = trackSelector ( dieLL , trackTypes = [ "Long"]) 
-dieLL.addTool( ProtoParticleCALOFilter('Electron'))
+dieLL.addTool( ProtoParticleCALOFilter, name='Electron' )
 dieLL.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
 dieLL.DiElectronMassMax = 5000.*MeV
 dieLL.DiElectronMassMin = 0.*MeV
@@ -49,5 +49,3 @@ if '__main__' == __name__ :
     print __author__
     print __version__
     print locationsDoD ( locations )
-
-

@@ -22,14 +22,14 @@ __all__ = (
 from Gaudi.Configuration   import *
 from CommonParticles.Utils import *
 from GaudiKernel.SystemOfUnits import *
-
+from Configurables import ( DiElectronMaker, ProtoParticleCALOFilter,
+                            OfflineVertexFitter, ParticleTransporter )
 
 ###--- Long pair
-from Configurables import DiElectronMaker,ProtoParticleCALOFilter
 dieLL = DiElectronMaker('StdAllTightGammaLL')
 dieLL.DecayDescriptor = "gamma -> e+ e-"
 selector = trackSelector ( dieLL , trackTypes = [ "Long"]) 
-dieLL.addTool( ProtoParticleCALOFilter('Electron'))
+dieLL.addTool( ProtoParticleCALOFilter, name='Electron' )
 dieLL.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'0.0'"]
 dieLL.DeltaY = 3.
 dieLL.DeltaYmax = 200 * mm
@@ -42,7 +42,7 @@ StdAllTightGammaLL=dieLL
 dieDD = DiElectronMaker('StdAllTightGammaDD')
 dieDD.DecayDescriptor = "gamma -> e+ e-"
 selector = trackSelector ( dieDD , trackTypes = [ "Downstream"]) 
-dieDD.addTool( ProtoParticleCALOFilter('Electron'))
+dieDD.addTool( ProtoParticleCALOFilter, name='Electron' )
 dieDD.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'0.0'"]
 dieDD.DeltaY = 3.
 dieDD.DeltaYmax = 200 * mm
@@ -50,18 +50,16 @@ dieDD.DiElectronMassMax = 100.*MeV
 dieDD.DiElectronPtMin = 200.*MeV
 #-- improved vertex fitter settings
 dieDD.UseCombinePair = True
-dieDD.addTool(ParticleTransporter('TransporterDie'))
+dieDD.addTool( ParticleTransporter, name='TransporterDie' )
 dieDD.TransporterDie.TrackExtrapolator = "TrackRungeKuttaExtrapolator"
 dieDD.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
 dieDD.addTool( OfflineVertexFitter )
-dieDD.OfflineVertexFitter.addTool(ParticleTransporter('Transporter'))
+dieDD.OfflineVertexFitter.addTool( ParticleTransporter, name='Transporter' )
 dieDD.OfflineVertexFitter.Transporter.TrackExtrapolator = "TrackRungeKuttaExtrapolator"
 dieDD.OfflineVertexFitter.maxDeltaZ = 100 * mm
 
 locations.update( updateDoD ( dieDD ) )
 StdAllTightGammaDD=dieDD
-
-
 
 ## ============================================================================
 if '__main__' == __name__ :

@@ -8,8 +8,14 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-11-09 - Chris Jones
+ - Fix some bugs in the last commit for diElectron vertexing
+  + Proper use of the addTool method
+  + Add some missing imports
+
 ! 2012-11-07 - Olivier Deschamps for Edwige Tournefier
-  - improve diElectron vertexing for DD configuration (new settings comes with updated DiElectronMaker)
+  - improve diElectron vertexing for DD configuration (new settings comes with 
+    updated DiElectronMaker)
 
 !========================= CommonParticles v8r10 2012-09-01 =========================
 
@@ -26,8 +32,6 @@
 ! 2012-08-23 - Thomas Blake
  - Added StandardTau and StandardDipion to StandardIntermediate 
 
-
-
 !========================= CommonParticles v8r9 2012-06-28 =========================
 
 ! 2012-05-23 - Olivier Deschamps
@@ -38,13 +42,16 @@
                         called `StdDiElectronFromTracks'
 
 ! 2012-06-12 - Olivier Deschamps for Edwige Tournefier
-  - add StdAllTightSymGammaConversion.py : combinatorial gamma->ee from symmetrized e pT
+  - add StdAllTightSymGammaConversion.py : combinatorial gamma->ee from 
+    symmetrized e pT
 
 ! 2012-06-12 - Olivier Deschamps
-  - StdAllLoose(Tight)GammaConversion.py : produce gamma->ee particle (based on DiElectronMaker)
+  - StdAllLoose(Tight)GammaConversion.py : produce gamma->ee particle 
+    (based on DiElectronMaker)
 
 ! 2012-05-14 - Olivier Deschamps
- - StdVeryLooseAllPhotons.py:  photons with pT threshold down to 100 MeV (for new BremStrahlung recovery)
+ - StdVeryLooseAllPhotons.py:  photons with pT threshold down to 100 MeV 
+   (for new BremStrahlung recovery)
 
 ! 2012-06-8 - P. Koppenburg
   - New StdKsFromV0 that make Ks particles from the V0 Brunel objects. 
