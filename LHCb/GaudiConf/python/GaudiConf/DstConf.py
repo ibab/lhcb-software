@@ -419,14 +419,14 @@ class DstConf(LHCbConfigurableUser):
         unpackNeutrals = UnpackProtoParticle(name       = "UnpackNeutralProtos",
                                              OutputName = neutralLoc,
                                              InputName  = "/Event/pRec/ProtoP/Neutrals")
-        DataOnDemandSvc().AlgMap[neutralLoc]   = unpackNeutrals
+        DataOnDemandSvc().AlgMap[neutralLoc] = unpackNeutrals
 
         # Charged
         # -------
 
         chargedLoc = "/Event/Rec/ProtoP/Charged"
         chargedSeq = GaudiSequencer("UnpackChargedProtosSeq")
-        DataOnDemandSvc().AlgMap[chargedLoc]    = chargedSeq
+        DataOnDemandSvc().AlgMap[chargedLoc] = chargedSeq
 
         # Unpacker
         unpackCharged = UnpackProtoParticle(name       = "UnpackChargedProtos",
@@ -441,10 +441,14 @@ class DstConf(LHCbConfigurableUser):
             # PID calibration
             from Configurables import ( ChargedProtoParticleAddRichInfo,
                                         ChargedProtoParticleAddMuonInfo,
-                                        ChargedProtoCombineDLLsAlg )
+                                        ChargedProtoCombineDLLsAlg,
+                                        DataObjectVersionFilter )
             recalib = GaudiSequencer("ProtoParticleCombDLLs")
-            recalib.IgnoreFilterPassed = True
+            recalib.IgnoreFilterPassed = False
             chargedSeq.Members += [ recalib ]
+            # Filter to check in Protos exist
+            recalib.Members += [DataObjectVersionFilter(name = "CheckChargedProtosExist",
+                                                        DataObjectLocation = chargedLoc)]
             # Add Rich and Muon PID results to protoparticles
             recalib.Members += [ChargedProtoParticleAddMuonInfo("ChargedProtoPAddMuon")]
             recalib.Members += [ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")]
