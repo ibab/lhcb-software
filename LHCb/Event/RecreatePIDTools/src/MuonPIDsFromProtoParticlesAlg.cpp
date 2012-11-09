@@ -85,11 +85,9 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
   put( mpids, m_muonPIDloc );
 
   // Do ProtoParticles exist ?
-  if ( exist<ProtoParticles>(m_protoPloc) )
+  const ProtoParticles * protos = getIfExists<ProtoParticles>( m_protoPloc );
+  if ( protos )
   {
-
-    // load ProtoParticles
-    const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Found " << protos->size() << " ProtoParticles at " << m_protoPloc << endmsg;

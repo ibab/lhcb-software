@@ -81,12 +81,10 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
   RichPIDs * rpids = new RichPIDs();
   put( rpids, m_richPIDloc );
 
-  // Do ProtoParticles exist ?
-  if ( exist<ProtoParticles>(m_protoPloc) )
+  // Do ProtoParticles exist
+  const ProtoParticles * protos = getIfExists<ProtoParticles>( m_protoPloc );
+  if ( protos )
   {
-
-    // load ProtoParticles
-    const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
 
     // loop over protos and re-create RichPIDs
     for ( ProtoParticles::const_iterator iP = protos->begin();

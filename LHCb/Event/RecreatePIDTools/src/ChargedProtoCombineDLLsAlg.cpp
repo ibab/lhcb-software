@@ -145,15 +145,16 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
 //=============================================================================
 StatusCode ChargedProtoCombineDLLsAlg::execute()
 {
+
+  // Load the charged ProtoParticles
+  LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>( m_protoPath );
+
   // If ProtoParticles do not exist, exit cleanly with a warning
-  if ( !exist<LHCb::ProtoParticles>(m_protoPath) )
+  if ( !protos )
   {
     return Warning( "ProtoParticles do not exist at '" + m_protoPath + "'",
                     StatusCode::SUCCESS );
   }
-
-  // Load the charged ProtoParticles
-  LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( m_protoPath );
 
   // Loop over the protos
   for ( LHCb::ProtoParticles::iterator iP = protos->begin();

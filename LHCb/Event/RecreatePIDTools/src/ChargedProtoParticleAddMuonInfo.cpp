@@ -60,13 +60,14 @@ ChargedProtoParticleAddMuonInfo::~ChargedProtoParticleAddMuonInfo() { }
 StatusCode ChargedProtoParticleAddMuonInfo::execute()
 {
   // ProtoParticle container
-  if ( !exist<LHCb::ProtoParticles>(m_protoPath) )
+  LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>(m_protoPath);
+  if ( !protos )
   {
-    return Warning( "No existing ProtoParticle container at " +  m_protoPath + " thus do nothing.",
+    return Warning( "No existing ProtoParticle container at " +  
+                    m_protoPath + " thus do nothing.",
                     StatusCode::SUCCESS );
   }
-  LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>(m_protoPath);
-
+  
   // Load the MuonPIDs
   const bool muonSc = getMuonData();
   if ( !muonSc ) { return StatusCode::SUCCESS; }
@@ -139,9 +140,9 @@ void ChargedProtoParticleAddMuonInfo::updateMuon( LHCb::ProtoParticle * proto ) 
   }
 
   // Store the PID info
-  proto->addInfo( LHCb::ProtoParticle::MuonMuLL,      muonPID->MuonLLMu() );
-  proto->addInfo( LHCb::ProtoParticle::MuonBkgLL,     muonPID->MuonLLBg() );
-  proto->addInfo( LHCb::ProtoParticle::MuonNShared,   muonPID->nShared()  );
+  proto->addInfo( LHCb::ProtoParticle::MuonMuLL,     muonPID->MuonLLMu() );
+  proto->addInfo( LHCb::ProtoParticle::MuonBkgLL,    muonPID->MuonLLBg() );
+  proto->addInfo( LHCb::ProtoParticle::MuonNShared,  muonPID->nShared()  );
 
   // print full ProtoParticle content
   if ( msgLevel(MSG::VERBOSE) ) verbose() << *proto << endmsg;
@@ -157,15 +158,14 @@ bool ChargedProtoParticleAddMuonInfo::getMuonData()
   m_muonMap.clear();
 
   // Do we have any MuonPID results
-  if ( !exist<LHCb::MuonPIDs>(m_muonPath) )
+  const LHCb::MuonPIDs * muonpids = getIfExists<LHCb::MuonPIDs>( m_muonPath );
+  if ( !muonpids )
   {
     Warning( "No MuonPIDs at '" + m_muonPath +
-             "' -> ProtoParticles will not be changed.", StatusCode::SUCCESS, 1 ).ignore();
+             "' -> ProtoParticles will not be changed.", 
+             StatusCode::SUCCESS, 1 ).ignore();
     return false;
   }
-
-  // yes, so load them
-  const LHCb::MuonPIDs * muonpids = get<LHCb::MuonPIDs>( m_muonPath );
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Successfully loaded " << muonpids->size()
             << " MuonPIDs from " << m_muonPath << endmsg;

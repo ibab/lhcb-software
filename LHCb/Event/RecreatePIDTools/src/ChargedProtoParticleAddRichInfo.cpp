@@ -63,13 +63,14 @@ ChargedProtoParticleAddRichInfo::~ChargedProtoParticleAddRichInfo() { }
 StatusCode ChargedProtoParticleAddRichInfo::execute()
 {
   // ProtoParticle container
-  if ( !exist<ProtoParticles>(m_protoPath) )
+  LHCb::ProtoParticles * protos = getIfExists<ProtoParticles>(m_protoPath);
+  if ( !protos )
   {
-    return Warning( "No existing ProtoParticle container at " +  m_protoPath + " thus do nothing.",
+    return Warning( "No existing ProtoParticle container at " +  
+                    m_protoPath + " thus do nothing.",
                     StatusCode::SUCCESS );
   }
-  LHCb::ProtoParticles * protos = get<ProtoParticles>(m_protoPath);
-
+  
   // Load the RichPIDs
   const bool richSc = getRichData();
   if ( !richSc ) { return StatusCode::SUCCESS; }
@@ -139,15 +140,14 @@ bool ChargedProtoParticleAddRichInfo::getRichData()
   m_richMap.clear();
 
   // Do we have any RichPID results
-  if ( !exist<RichPIDs>(m_richPath) )
+  const RichPIDs * richpids = getIfExists<RichPIDs>( m_richPath );
+  if ( !richpids )
   {
     Warning( "No RichPIDs at '" + m_richPath +
-             "' -> ProtoParticles will not be changed.", StatusCode::SUCCESS, 1 ).ignore();
+             "' -> ProtoParticles will not be changed.", 
+             StatusCode::SUCCESS, 1 ).ignore();
     return false;
   }
-
-  // yes, so load them
-  const RichPIDs * richpids = get<RichPIDs>( m_richPath );
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Successfully loaded " << richpids->size()
             << " RichPIDs from " << m_richPath << endmsg;
