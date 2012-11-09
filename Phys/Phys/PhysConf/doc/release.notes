@@ -5,6 +5,9 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2012-11-09 - Chris Jones
+ - Improvements to the MicroDST module
+
 !========================= PhysConf v1r17 2012-10-04 =========================
 
 ! 2012-10-03 - Chris Jones
