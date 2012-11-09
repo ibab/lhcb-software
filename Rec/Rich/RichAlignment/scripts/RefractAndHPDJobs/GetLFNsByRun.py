@@ -22,9 +22,6 @@ database = BookkeepingClient()
 
 exitCode = 0
 
-# Processing pass
-procpass = 'Real Data'
-
 year          = int(args[0])
 startmonth    = int(args[1])
 startday      = int(args[2])
@@ -40,7 +37,7 @@ elif 2010 == year :
 elif 2011 == year :
   ConfigV = ['Collision11','Collision11_25']
 elif 2012 == year :
-  ConfigV = ['Collision12']
+  ConfigV = ['Collision12','Protonion12']
 else:
   print 'Unknown year', year
   DIRAC.exit(2)
@@ -93,9 +90,16 @@ else:
           type = 90000000 # FULL Stream
         if config == 'Collision11_25' : # No express for 2011 25ns tests
           type = 90000000 # FULL Stream
+        if config == 'Protonion12' : # (Currently) no express stream for pA data
+          type = 90000000 # FULL Stream
 
         typeS = "EXPRESS"
         if type == 90000000 : typeS = "FULL"
+
+        # Processing pass. For 2011 express stream data used a Merged location
+        procpass = 'Real Data'
+        if year == 2011 and type != 90000000 :
+          procpass = 'Real Data/Merging'
 
         # Raw files
         bkDict = { 'ConfigName'        : 'LHCb',
@@ -127,6 +131,7 @@ else:
       if run in RunLFNs.keys() : nLFNs = len(RunLFNs[run])
       if nLFNs > 0 :
         print "(", nRun, "of", len(runs), ") Selected", nLFNs, "LFNs for run", run, ConfigV
+        #print RunLFNs[run]
       else:
         print "(", nRun, "of", len(runs), ") No data selected for run", run, ConfigV
 

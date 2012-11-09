@@ -4,10 +4,12 @@ from Configurables import Brunel, UpdateManagerSvc, CondDB, CondDBAccessSvc, LHC
 
 importOptions("CommonOptions.py")
 
-#CondDB().addLayer(CondDBAccessSvc("MDCS",ConnectionString="sqlite_file:databases/MDCS-RICH1-28052012.db/LHCBCOND",DefaultTAG="HEAD"))
-
-#CondDB().PartitionConnectionString["LHCBCOND"] = "sqlite_file:databases/LHCBCOND-2001RePro.db/LHCBCOND"
-#CondDB().PartitionConnectionString["DDDB"] = "sqlite_file:databases/DDDB-2001RePro.db/DDDB"
+CondDB().addLayer(CondDBAccessSvc("2012AerogelCalib-V3-20082012",ConnectionString="sqlite_file:databases/2012AerogelCalib-V3-20082012.db/LHCBCOND",DefaultTAG="HEAD"))
+CondDB().addLayer(CondDBAccessSvc("MDCS-RICH1-26072012",ConnectionString="sqlite_file:databases/MDCS-RICH1-26072012.db/LHCBCOND",DefaultTAG="HEAD"))
+CondDB().addLayer(CondDBAccessSvc("Tracking-v6.0series-15082012",ConnectionString="sqlite_file:databases/Tracking-v6.0series-15082012.db/LHCBCOND",DefaultTAG="HEAD"))
+CondDB().addLayer(CondDBAccessSvc("2012MirrorAlign-20082012",ConnectionString="sqlite_file:databases/2012MirrorAlign-20082012.db/LHCBCOND",DefaultTAG="HEAD"))
+CondDB().addLayer(CondDBAccessSvc("2012-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-06082012",ConnectionString="sqlite_file:databases/2012-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-06082012.db/LHCBCOND",DefaultTAG="HEAD"))
+CondDB().addLayer(CondDBAccessSvc("2012-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-06082012",ConnectionString="sqlite_file:databases/2012-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-06082012.db/LHCBCOND",DefaultTAG="HEAD"))
 
 # For testing only
 #CondDB().IgnoreHeartBeat = True

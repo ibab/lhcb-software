@@ -40,8 +40,7 @@ def initialise():
 
         DDDBConf(DataType = "2012")
         LHCbApp().DDDBtag   = "head-20120413"
-        LHCbApp().CondDBtag = "head-20120420"
-        LHCbApp().CondDBtag = "HEAD"
+        LHCbApp().CondDBtag = "cond-20120730"
         CondDB().addLayer(CondDBAccessSvc("2012Aerogel",
                                           ConnectionString="sqlite_file:2012Aerogel.db/LHCBCOND",
                                           DefaultTAG="HEAD"))
@@ -123,7 +122,7 @@ def xmlFooter():
     return """
 </DDDB>"""
 
-def run(rootFile="2012.root"):
+def run(rootFile="2012-Repro1-V1.root"):
 
     from ROOT import TFile
 
@@ -148,8 +147,9 @@ def run(rootFile="2012.root"):
     newXML = xmlHeader()
 
     # primary tile IDs to use the full sub tile calibration for
-    #fullCalibTiles = [ ]
-    fullCalibTiles = [ 2, 3, 6, 11, 13 ]
+    fullCalibTiles = [ ]
+    #fullCalibTiles += [ 2, 4, 10, 12 ] 
+    fullCalibTiles = [ 2, 3, 6, 11 ]
     #fullCalibTiles = [ 2 ]
     #fullCalibTiles = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
 
@@ -158,6 +158,14 @@ def run(rootFile="2012.root"):
     for t in aerogel.fullTileRadiators() : tiles += [t]
     for t in aerogel.subTileRadiators()  : tiles += [t]
     print "found", len(tiles), "aerogel tiles"
+
+    # Loop over all tiles to save nzero for each
+    tile_nzero = { }
+    for tile in tiles :
+        cond = tile.condition( "AerogelParameters" )
+        tile_nzero[tile.tileID()] = cond.paramAsDouble("CurrentAerogel_nAtFixedLambda")
+        print "Tile", tile.tileID(), "nzero", tile_nzero[tile.tileID()]
+    
     lastPrimaryTile = -999
     for tile in tiles :
 
@@ -183,7 +191,8 @@ def run(rootFile="2012.root"):
         if not OK :
             
             histID = rootHistDir + "tiles/ckResAll-Tile" + str(tile.primaryTileID())
-            print "Full Tile Calibration for", tile.tileID()
+            print "Full Tile", tile.primaryTileID(), "Calibration for", tile.tileID()
+            nzero = tile_nzero[tile.primaryTileID()]
             hist = file.Get(histID)
                     
         print "  -> Using", histID
@@ -199,13 +208,15 @@ def run(rootFile="2012.root"):
         # Manual forced shift list
 ##        forcedList = { }
         forcedList = {
-#             0  : 0.0,
-#             1  : 0.0,
-             4  : 0.0,
-             7  : 0.0,
+            0  : 0.0,
+             1  : 0.002,
+            4  : 0.0,
+             7  : 0.006,
              8  : 0.0,
+             9 : 0.0,
+            10 : 0.0,
              12 : 0.0,
-             15 : 0.0
+             15 : 0.006
              }
         if tile.primaryTileID() in forcedList.keys() :
             shift = forcedList[tile.primaryTileID()]
@@ -218,9 +229,10 @@ def run(rootFile="2012.root"):
         cond.addParam("CurrentAerogel_nAtFixedLambda",N)
         
         # Print
-        print "   -> Shift =", shift, "oldN =", nzero, "newN =", N               
+        print "   -> Shift =", shift, "oldN =", nzero, "newN =", N
 
         # Write out the new condition
+        #print cond.toXml()
         newXML += cond.toXml() + '\n' + '\n' 
 
     # Finish the XML file 

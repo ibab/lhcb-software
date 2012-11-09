@@ -1,7 +1,7 @@
 
  > SetupProject Brunel v43r0
  
-Start ipython (just more conveinent that python, as it remembers history etc.)
+Start ipython (just more convenient that python, as it remembers history etc.)
 
  > ipython 
 

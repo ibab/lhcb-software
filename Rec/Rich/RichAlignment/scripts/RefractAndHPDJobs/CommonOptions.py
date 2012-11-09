@@ -4,11 +4,6 @@ from Configurables import Brunel, LHCbApp, CondDB
 # For L0 filter. To be removed when part of Brunel
 importOptions("$L0TCK/L0DUConfig.opts")
 
-# For 2009 data
-#importOptions("$APPCONFIGOPTS/Brunel/DataType-2009.py")
-#LHCbApp().DDDBtag   = "head-20110303"
-#LHCbApp().CondDBtag = "head-20110622"
-
 # For 2010 data
 #importOptions("$APPCONFIGOPTS/Brunel/DataType-2010.py")
 #LHCbApp().DDDBtag   = "head-20110303"
@@ -16,13 +11,13 @@ importOptions("$L0TCK/L0DUConfig.opts")
 
 # For 2011 data
 #importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
-#LHCbApp().DDDBtag   = "head-20110914"
-#LHCbApp().CondDBtag = "head-20111111"
+#LHCbApp().DDDBtag   = "dddb-20120831"
+#LHCbApp().CondDBtag = "cond-20121017"
 
 # For 2012 data
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2012.py")
-LHCbApp().DDDBtag   = "head-20120413"
-LHCbApp().CondDBtag = "cond-20120710"
+LHCbApp().DDDBtag   = "dddb-20120831"
+LHCbApp().CondDBtag = "cond-20121025"
 
 # Aerogel Sub Tiles
 #CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
@@ -30,10 +25,16 @@ LHCbApp().CondDBtag = "cond-20120710"
 
 # Initial IOV time
 # http://www.onlineconversion.com/unix_time.htm
-#from Configurables import EventClockSvc
+from Configurables import EventClockSvc
 #EventClockSvc( InitialTime = 1306879200000000000 ) # 1st June 2011
 #EventClockSvc( InitialTime = 1317460149000000000 ) # 1st Octo 2011
 #EventClockSvc( InitialTime = 1319155200000000000 ) # 21st Octo 2011
+#EventClockSvc( InitialTime = 1341100800000000000 ) # 1st July 2012
+#EventClockSvc( InitialTime = 1350259200000000000 ) # 15th Octo 2012
+EventClockSvc( InitialTime = 1351123200000000000 ) # 25th Octo 2012
+
+# Timestamps in messages
+LHCbApp().TimeStamp = True
 
 # No output files
 Brunel().OutputType = "None"

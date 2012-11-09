@@ -67,9 +67,14 @@ def fileMD5(file):
 #dbFileName = "Tracking2011Align-v5.3"
 
 # Mirror alignment
-#upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagUp"
-#dnAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagDown"
-#dbFileName = "2012MirrorAlign"
+upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagUp"
+dnAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagDown"
+dbFileName = "2012MirrorAlign"
+
+# Mirror alignment RICH1 only
+#upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors-RICH1/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors-RICH1/MagDown"
+#dbFileName = "2012RICH1MirrorAlign"
 
 # Move HPD Occupancies
 #upAlign = "/usera/jonesc/NFS/DetDB/MoveHPDOccs"
@@ -82,9 +87,9 @@ def fileMD5(file):
 #dbFileName = "DetNumbers"
 
 # MDMS
-upAlign = "/usera/jonesc/NFS/DetDB/MDMS-RICH1"
-dnAlign = "/usera/jonesc/NFS/DetDB/MDMS-RICH1"
-dbFileName = "MDCS-RICH1"
+#upAlign = "/usera/jonesc/NFS/DetDB/MDMS-RICH1"
+#dnAlign = "/usera/jonesc/NFS/DetDB/MDMS-RICH1"
+#dbFileName = "MDCS-RICH1"
 
 # Old HPD Occ values
 #upAlign = "/usera/jonesc/NFS/DetDB/OldHPDOcc"
@@ -94,7 +99,7 @@ dbFileName = "MDCS-RICH1"
 # Aerogel calibration
 #upAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
 #dnAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
-#dbFileName = "2012AerogelCalib-V2"
+#dbFileName = "2012AerogelCalib-V5"
 
 # The following dates are extracted from spreadsheets here
 # http://marwww.in2p3.fr/~legac/LHCb/
@@ -144,10 +149,17 @@ field = { }
 
 # 2012                     Year  Month  Day   Hour  Min  Sec
 field[ datetime.datetime(  2012,   4,    1,    1,    0,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2012,   5,    1,   19,    0,   0  ) ] = upAlign
-#field[ datetime.datetime(  2012,   5,    2,   22,   20,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2012,   5,   16,   20,    0,   0  ) ] = upAlign
-#field[ datetime.datetime(  2012,   6,    1,   13,    0,   0  ) ] = dnAlign
+field[ datetime.datetime(  2012,   5,    1,   19,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2012,   5,    2,   22,   20,   0  ) ] = dnAlign
+field[ datetime.datetime(  2012,   5,   16,   20,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2012,   6,    1,   13,    0,   0  ) ] = dnAlign
+field[ datetime.datetime(  2012,   6,   11,   12,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2012,   7,   26,    2,    0,   0  ) ] = dnAlign
+field[ datetime.datetime(  2012,   8,   12,    1,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2012,   8,   30,   15,   30,   0  ) ] = dnAlign
+field[ datetime.datetime(  2012,   9,   14,   12,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2012,  10,   12,    1,    0,   0  ) ] = dnAlign
+field[ datetime.datetime(  2012,  10,   25,    1,    0,   0  ) ] = upAlign
 
 # Long way away ...
 stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
