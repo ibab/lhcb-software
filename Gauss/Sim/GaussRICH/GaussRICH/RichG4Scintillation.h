@@ -1,0 +1,317 @@
+//
+// ********************************************************************
+// * License and Disclaimer                                           *
+// *                                                                  *
+// * The  Geant4 software  is  copyright of the Copyright Holders  of *
+// * the Geant4 Collaboration.  It is provided  under  the terms  and *
+// * conditions of the Geant4 Software License,  included in the file *
+// * LICENSE and available at  http://cern.ch/geant4/license .  These *
+// * include a list of copyright holders.                             *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.  Please see the license in the file  LICENSE  and URL above *
+// * for the full disclaimer and the limitation of liability.         *
+// *                                                                  *
+// * This  code  implementation is the result of  the  scientific and *
+// * technical work of the GEANT4 collaboration.                      *
+// * By using,  copying,  modifying or  distributing the software (or *
+// * any work based  on the software)  you  agree  to acknowledge its *
+// * use  in  resulting  scientific  publications,  and indicate your *
+// * acceptance of all terms of the Geant4 Software license.          *
+// ********************************************************************
+//
+//
+// $Id: RichG4Scintillation.hh,v 1.16 2009/07/29 23:45:20 gum Exp $
+// GEANT4 tag $Name: geant4-09-03-ref-03 $
+//
+// 
+////////////////////////////////////////////////////////////////////////
+// Scintillation Light Class Definition 
+////////////////////////////////////////////////////////////////////////
+//
+// File:        RichG4Scintillation.hh  
+// Description:	Discrete Process - Generation of Scintillation Photons
+// Version:     1.0
+// Created:     1998-11-07
+// Author:      Peter Gumplinger
+// Updated:     2005-07-28 add G4ProcessType to constructor
+//              2002-11-21 change to user G4Poisson for small MeanNumPotons
+//              2002-11-07 allow for fast and slow scintillation
+//              2002-11-05 make use of constant material properties
+//              2002-05-16 changed to inherit from VRestDiscreteProcess
+//              2002-05-09 changed IsApplicable method
+//              1999-10-29 add method and class descriptors
+//
+// mail:        gum@triumf.ca
+//
+////////////////////////////////////////////////////////////////////////
+
+#ifndef RichG4Scintillation_h
+#define RichG4Scintillation_h 1
+
+/////////////
+// Includes
+/////////////
+
+#include "globals.hh"
+#include "templates.hh"
+#include "Randomize.hh"
+#include "G4Poisson.hh"
+#include "G4ThreeVector.hh"
+#include "G4ParticleMomentum.hh"
+#include "G4Step.hh"
+#include "G4VRestDiscreteProcess.hh"
+#include "G4OpticalPhoton.hh"
+#include "G4DynamicParticle.hh"
+#include "G4Material.hh" 
+#include "G4PhysicsTable.hh"
+#include "G4MaterialPropertiesTable.hh"
+#include "G4PhysicsOrderedFreeVector.hh"
+
+#include "G4EmSaturation.hh"
+
+
+// Class Description:
+// RestDiscrete Process - Generation of Scintillation Photons.
+// Class inherits publicly from G4VRestDiscreteProcess.
+// Class Description - End:
+
+/////////////////////
+// Class Definition
+/////////////////////
+
+class RichG4Scintillation : public G4VRestDiscreteProcess
+{
+
+private:
+
+        //////////////
+        // Operators
+        //////////////
+
+	// RichG4Scintillation& operator=(const RichG4Scintillation &right);
+
+public: // Without description
+
+	////////////////////////////////
+	// Constructors and Destructor
+	////////////////////////////////
+
+	RichG4Scintillation(const G4String& processName = "Scintillation",
+                                 G4ProcessType type = fElectromagnetic);
+
+	// RichG4Scintillation(const RichG4Scintillation &right);
+
+	~RichG4Scintillation();	
+
+        ////////////
+        // Methods
+        ////////////
+
+public: // With description
+
+        // RichG4Scintillation Process has both PostStepDoIt (for energy 
+        // deposition of particles in flight) and AtRestDoIt (for energy
+        // given to the medium by particles at rest)
+
+        G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
+        // Returns true -> 'is applicable', for any particle type except
+        // for an 'opticalphoton' and for short-lived particles
+
+	G4double GetMeanFreePath(const G4Track& aTrack,
+				       G4double ,
+                                       G4ForceCondition* );
+        // Returns infinity; i. e. the process does not limit the step,
+        // but sets the 'StronglyForced' condition for the DoIt to be 
+        // invoked at every step.
+
+        G4double GetMeanLifeTime(const G4Track& aTrack,
+                                 G4ForceCondition* );
+        // Returns infinity; i. e. the process does not limit the time,
+        // but sets the 'StronglyForced' condition for the DoIt to be
+        // invoked at every step.
+
+	G4VParticleChange* PostStepDoIt(const G4Track& aTrack, 
+			                const G4Step&  aStep);
+        G4VParticleChange* AtRestDoIt (const G4Track& aTrack,
+                                       const G4Step& aStep);
+
+        // These are the methods implementing the scintillation process.
+
+	void SetTrackSecondariesFirst(const G4bool state);
+        // If set, the primary particle tracking is interrupted and any
+        // produced scintillation photons are tracked next. When all 
+        // have been tracked, the tracking of the primary resumes.
+
+        G4bool GetTrackSecondariesFirst() const;
+        // Returns the boolean flag for tracking secondaries first.
+	
+        void SetScintillationYieldFactor(const G4double yieldfactor);
+        // Called to set the scintillation photon yield factor, needed when
+        // the yield is different for different types of particles. This
+        // scales the yield obtained from the G4MaterialPropertiesTable.
+
+        G4double GetScintillationYieldFactor() const;
+        // Returns the photon yield factor.
+
+        void SetScintillationExcitationRatio(const G4double excitationratio);
+        // Called to set the scintillation exciation ratio, needed when
+        // the scintillation level excitation is different for different
+        // types of particles. This overwrites the YieldRatio obtained
+        // from the G4MaterialPropertiesTable.
+
+        G4double GetScintillationExcitationRatio() const;
+        // Returns the scintillation level excitation ratio.
+
+        G4PhysicsTable* GetFastIntegralTable() const;
+        // Returns the address of the fast scintillation integral table.
+
+        G4PhysicsTable* GetSlowIntegralTable() const;
+        // Returns the address of the slow scintillation integral table.
+
+        void AddSaturation(G4EmSaturation* sat) { emSaturation = sat; }
+        // Adds Birks Saturation to the process.
+        void RemoveSaturation() { emSaturation = NULL; }
+        // Removes the Birks Saturation from the process.
+
+        G4EmSaturation* GetSaturation() const { return emSaturation; }
+        // Returns the Birks Saturation.
+        void SetScintillationByParticleType(const G4bool );
+        G4bool GetScintillationByParticleType() const
+        { return scintillationByParticleType; }
+
+  //modif by SE
+       G4bool GetRichVerboseInfoTag(){return  fRichVerboseInfoTag;}
+       void SetRichVerboseInfoTag(G4bool aVTagValue)
+             {fRichVerboseInfoTag = aVTagValue;}
+  
+  //end modif by SE
+
+        void DumpPhysicsTable() const;
+        // Prints the fast and slow scintillation integral tables.
+
+protected:
+
+        void BuildThePhysicsTable();
+        // It builds either the fast or slow scintillation integral table; 
+        // or both. 
+
+        ///////////////////////
+        // Class Data Members
+        ///////////////////////
+
+
+        G4PhysicsTable* theSlowIntegralTable;
+        G4PhysicsTable* theFastIntegralTable;
+
+
+
+	G4bool fTrackSecondariesFirst;
+
+        G4double YieldFactor;
+
+        G4double ExcitationRatio;
+        G4bool scintillationByParticleType;
+
+private:
+
+        G4EmSaturation* emSaturation;
+  //modif by SE
+        G4bool fRichVerboseInfoTag;
+        G4int fMatIndexCf4;
+        G4int fMatIndexRich2GasRad;
+
+  //end modif by SE
+};
+
+////////////////////
+// Inline methods
+////////////////////
+
+inline 
+G4bool RichG4Scintillation::IsApplicable(const G4ParticleDefinition& aParticleType)
+{
+       if (aParticleType.GetParticleName() == "opticalphoton") return false;
+       if (aParticleType.IsShortLived()) return false;
+
+       return true;
+}
+
+inline 
+void RichG4Scintillation::SetTrackSecondariesFirst(const G4bool state) 
+{ 
+	fTrackSecondariesFirst = state;
+}
+
+inline
+G4bool RichG4Scintillation::GetTrackSecondariesFirst() const
+{
+        return fTrackSecondariesFirst;
+}
+
+inline
+void RichG4Scintillation::SetScintillationYieldFactor(const G4double yieldfactor)
+{
+        YieldFactor = yieldfactor;
+}
+
+inline
+G4double RichG4Scintillation::GetScintillationYieldFactor() const
+{
+        return YieldFactor;
+}
+
+inline
+void RichG4Scintillation::SetScintillationExcitationRatio(const G4double excitationratio)
+{
+        ExcitationRatio = excitationratio;
+}
+
+inline
+G4double RichG4Scintillation::GetScintillationExcitationRatio() const
+{
+        return ExcitationRatio;
+}
+
+inline
+G4PhysicsTable* RichG4Scintillation::GetSlowIntegralTable() const
+{
+        return theSlowIntegralTable;
+}
+
+inline
+G4PhysicsTable* RichG4Scintillation::GetFastIntegralTable() const
+{
+        return theFastIntegralTable;
+}
+
+inline
+void RichG4Scintillation::DumpPhysicsTable() const
+{
+        if (theFastIntegralTable) {
+           G4int PhysicsTableSize = theFastIntegralTable->entries();
+           G4PhysicsOrderedFreeVector *v;
+
+           for (G4int i = 0 ; i < PhysicsTableSize ; i++ )
+           {
+        	v = (G4PhysicsOrderedFreeVector*)(*theFastIntegralTable)[i];
+        	v->DumpValues();
+           }
+         }
+
+        if (theSlowIntegralTable) {
+           G4int PhysicsTableSize = theSlowIntegralTable->entries();
+           G4PhysicsOrderedFreeVector *v;
+
+           for (G4int i = 0 ; i < PhysicsTableSize ; i++ )
+           {
+                v = (G4PhysicsOrderedFreeVector*)(*theSlowIntegralTable)[i];
+                v->DumpValues();
+           }
+         }
+}
+
+#endif /* RichG4Scintillation_h */
