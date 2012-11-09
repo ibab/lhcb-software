@@ -67,7 +67,7 @@ def filterPhotons(inputs, config):
 
 def filterPhotonsConv(inputs,config):
     ''' Makes converted photons before the magnet '''
-    cuts = ['AM','VCHI2DOF']
+    cuts = ['MM','VCHI2DOF']
     code = LoKiCuts(cuts,config).code()
     return filterSelection("GammaConv", code, inputs)
     #comboCuts = LoKiCuts(cuts,config).code()

@@ -36,14 +36,14 @@ config = { # Cuts made on all charged input particles in all lines
                       'PT_MIN'         : '300*MeV',
                       'P_MIN'          : '1000*MeV',
                       'MIPCHI2DV_MIN'  : 16,
-                      'TRGHP_MAX'      : 0.5},
+                      'TRGHP_MAX'      : 0.4},
            # Cuts made on the photon
            "GAMMA" : { 'PT_MIN'       : '2500*MeV',
                        'CL_MIN'       : 0.25 
                      },
            # Cuts made on the converted photon
-           "GAMMACONV" : { 'MM_MAX'        : '50*MeV',
-                           'VCHI2DOF_MAX'  : 9  ,
+           "GAMMACONV" : { 'VCHI2DOF_MAX' : 9,
+                           'MM_MAX'       : '100*MeV'
                         },   
            # Cuts made on all K shorts
            "KS0" : { 'PT_MIN'        : '1000*MeV',
@@ -71,8 +71,8 @@ config = { # Cuts made on all charged input particles in all lines
            "HH": { 'MASS_WINDOW'      : {'KST':'150*MeV','RHO':'250*MeV','PHI':'15*MeV','OMEGA':'30*MeV'}, 
                    'DAUGHTERS'        : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV'},
                    'piLAMBDADAUGHTERS': {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MAX':'2'},   # only for pH
-                   'pLAMBDADAUGHTERS' : {'PT_MIN':'1200*MeV','P_MIN':'10000*MeV','PIDp_MIN':'5'}, # only for pH
-                   'kLAMBDADAUGHTERS' : {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MIN':'0'},    # only for pH
+                   'pLAMBDADAUGHTERS' : {'PT_MIN':'1200*MeV','P_MIN':'10000*MeV','PIDp_MIN':'10','PIDpK_MIN':'0'}, # only for pH
+                   'kLAMBDADAUGHTERS' : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV','PIDK_MIN':'0','PIDKp_MIN':'-2'},    # only for pH
                    #'AMAXDOCA_MAX'  : '0.5*mm',
                    'VCHI2DOF_MAX'     : 9,
                    'BPVVDCHI2_MIN'    : 81, 
@@ -125,17 +125,13 @@ class Beauty2XGamma(LineBuilder):
         kaons = filterInputs('K', [StdAllNoPIDsKaons], config['ALL'])
         protons = filterInputs('P', [StdAllNoPIDsProtons], config['ALL'])
         # Prefilter KS
-        ks_dd = filterInputs('KS0_DD',
-                             [dataOnDemand("StdLooseKsDD")],
-                             config['KS0']) # KS from Downstream-Dowstream
-        ks_ll = filterInputs('KS0_LL',
-                             [dataOnDemand("StdLooseKsLL")],
-                             config['KS0']) # KS from Long-Long
-        #ks = {"DD": [ks_dd], "LL": [ks_ll]}
-        ks = [ks_dd, ks_ll]
+        mergedKS = MergedSelection('MergedKS0', RequiredSelections = [dataOnDemand("StdLooseKsDD"), dataOnDemand("StdLooseKsLL")])
+        KS_filter = filterInputs('KS0', [mergedKS], config['KS0'])
+        ks = [KS_filter]
         # Prefilter photons
         photons = filterPhotons([StdLooseAllPhotons], config['GAMMA'])
-        photonsConv = filterPhotonsConv([StdAllLooseGammaDD,StdAllLooseGammaLL], config['GAMMACONV'])
+        mergedConvPhotons = MergedSelection('MergedConvPhotons', RequiredSelections = [StdAllLooseGammaDD,StdAllLooseGammaLL])
+        photonsConv = filterPhotonsConv([mergedConvPhotons], config['GAMMACONV'])
         # Prefilter pi0
         pi0_merged   = filterPi0s('Merged', [StdLooseMergedPi0], config['Pi0'])
         pi0_resolved = filterPi0s('Resolved', [StdLooseResolvedPi0], config['Pi0'])

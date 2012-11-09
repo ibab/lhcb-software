@@ -47,6 +47,8 @@ class LoKiCuts(object):
                 'CHILDCL2'  : 'CHILD(CL,2)',
                 'PIDK'      : 'PIDK',
                 'PIDp'      : 'PIDp',
+                'PIDKp'     : 'PIDK-PIDp',
+                'PIDpK'     : 'PIDp-PIDK',
                 'BPVVDRHO'  : 'BPVVDRHO',
                 'BPVVDZ'    : 'BPVVDZ',
                 'DOCAMAX'   : 'DOCAMAX',

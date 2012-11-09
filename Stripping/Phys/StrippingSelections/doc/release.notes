@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-11-09 - Ricardo Vazquez Gomez
+ - Several bug fixes in the radiative lines and tighten cuts:
+   * converted photons are executed independently for DD and LL
+   * KS are executed independently for DD and LL (K*+ line was unaffected)
+   * tight PID cuts on the lambda lines to reduce rate after bug fix
+   * Global GhostProb cut reduced to 0.4
+
 ! 2012-11-06 - Anton Poluektov 
  - Add 2011 test sample with Reco14: 
    * tests/TestMyStrippingLineOn2011Data_Reco14.py - Test script

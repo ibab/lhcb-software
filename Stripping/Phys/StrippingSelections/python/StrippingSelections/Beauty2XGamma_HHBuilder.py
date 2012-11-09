@@ -218,7 +218,9 @@ class HHBuilder(object):
         presel = Selection('X2PPiSubPIDSelBeauty2XGamma',Algorithm=filter,
                            RequiredSelections=[sel])
         filter="INTREE((ABSID=='p+') & (P > %s) & (PT > %s) & (PIDp > %s)) & (( (M < 1130*MeV) & INTREE((ABSID=='pi+')) & (PT > 1500) ))" \
-              % (self.config['pLAMBDADAUGHTERS']['P_MIN'], self.config['pLAMBDADAUGHTERS']['PT_MIN'], self.config['pLAMBDADAUGHTERS']['PIDp_MIN']) 
+              % (self.config['pLAMBDADAUGHTERS']['P_MIN'], \
+                 self.config['pLAMBDADAUGHTERS']['PT_MIN'], \
+                 self.config['pLAMBDADAUGHTERS']['PIDp_MIN']) 
         return [filterSelection('X2PPi',filter,[presel])]
 
     def _makePK(self):
@@ -231,8 +233,15 @@ class HHBuilder(object):
                                 MinMM=1000,MaxMM=2500,PIDs=decays)
         presel = Selection('X2PKSubPIDSelBeauty2XGamma',Algorithm=filter,
                            RequiredSelections=[sel])
-        filter="INTREE((ABSID=='p+') & (P > %s) & (PT > %s) & (PIDp > %s)) & ( ((M < 1565*MeV) & INTREE((ABSID=='K+') & (PT > 800) & (PIDK > %s)) & (PT > 2000) ) | ( (M<2500*MeV) & INTREE((ABSID=='K+') & (PT > 1000) & (PIDK > %s)) & (PT > 2250) )) & (P > 10000) " \
-              % (self.config['pLAMBDADAUGHTERS']['P_MIN'], self.config['pLAMBDADAUGHTERS']['PT_MIN'], self.config['pLAMBDADAUGHTERS']['PIDp_MIN'], self.config['kLAMBDADAUGHTERS']['PIDK_MIN'], self.config['kLAMBDADAUGHTERS']['PIDK_MIN'])
+        filter="INTREE((ABSID=='p+') & (P > %s) & (PT > %s) & (PIDp > %s) & (PIDp-PIDK > %s)) & ( ((M < 1565*MeV) & INTREE((ABSID=='K+') & (PT > 800) & (PIDK > %s) & (PIDK-PIDp > %s)) & (PT > 2000) ) | ( (M<2500*MeV) & INTREE((ABSID=='K+') & (PT > 1000) & (PIDK > %s) & (PIDK-PIDp > %s)) & (PT > 2250) )) & (P > 10000) " \
+              % (self.config['pLAMBDADAUGHTERS']['P_MIN'], \
+                 self.config['pLAMBDADAUGHTERS']['PT_MIN'], \
+                 self.config['pLAMBDADAUGHTERS']['PIDp_MIN'], \
+                 self.config['pLAMBDADAUGHTERS']['PIDpK_MIN'], \
+                 self.config['kLAMBDADAUGHTERS']['PIDK_MIN'], \
+                 self.config['kLAMBDADAUGHTERS']['PIDKp_MIN'], \
+                 self.config['kLAMBDADAUGHTERS']['PIDK_MIN'], \
+                 self.config['kLAMBDADAUGHTERS']['PIDKp_MIN'])
         return [filterSelection('X2PK',filter,[presel])]
 
     def _makePH(self):
