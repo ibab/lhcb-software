@@ -27,7 +27,6 @@ class HeavyBaryonsConf(LineBuilder) :
                                   , "KaonPIDK"
                                   , "DLSForLongLived"
                                   , "XiMassWindow"
-                                  , "XistarMassWindow"
                                   , "OmegaMassWindow"
                                   , "XibminusMassWindow" 
                                   , "XibzeroMassWindow"
@@ -79,7 +78,6 @@ class HeavyBaryonsConf(LineBuilder) :
            
            
            self.XiminusList = self.makeXiminus()
-           self.XistarList = self.makeXistar()
            self.OmegaminusList = self.makeOmegaminus()
            self.makeXibminus2JpsiXi()
            self.makeXibzero2JpsiXistar    ()
@@ -124,15 +122,6 @@ class HeavyBaryonsConf(LineBuilder) :
               
 	      return Ximinus2LambdaPi
 
-       def makeXistar ( self ):
-              '''Make a Xistar candidate'''
-              Xistar2XiPi = self.createCombinationSel(OutputList = "Xistar2XiPi"+ self.name,
-                                                      DecayDescriptor = "[Xi*0 -> Xi- pi+]cc",
-                                                      DaughterLists = [self.PionsList, self.XiminusList],
-                                                      DaughterCuts = {"pi+"      : "(PT>0.1*GeV) & (BPVIPCHI2()>9)"},
-                                                      PreVertexCuts = "(ADAMASS('Xi*0') < %(XistarMassWindow)s*MeV) " %self.config,
-                                                      PostVertexCuts = "(VFASPF(VCHI2/VDOF)<25)  " %self.config)
-              return Xistar2XiPi
 
        def makeOmegaminus( self ): 
                ''' Make an Omega minus candidate '''
@@ -161,8 +150,9 @@ class HeavyBaryonsConf(LineBuilder) :
 
        def makeXibzero2JpsiXistar( self ) :
               Xibzero2JpsiXistar = self.createCombinationSel(OutputList = "Xibzero2JpsiXistar" + self.name,
-                                                             DecayDescriptor = "[Xi_b0 -> Xi*0 J/psi(1S)]cc",
-                                                             DaughterLists = [self.JpsiList, self.XistarList],
+                                                             DecayDescriptor = "[Xi_b0 -> Xi- pi+ J/psi(1S)]cc",
+                                                             DaughterLists = [self.JpsiList, self.XiminusList, self.PionsList],
+                                                             DaughterCuts = {"pi+"      : "(PT>0.1*GeV) & (BPVIPCHI2()>9)"},
                                                              PreVertexCuts = "(ADAMASS('Xi_b0') <600*MeV )" %self.config,
                                                              PostVertexCuts = "(VFASPF(VCHI2/VDOF)<25)  &  (ADMASS('Xi_b0') < %(XibzeroMassWindow)s *MeV) "  % self.config)
               Xibzero2JpsiXistarLine = StrippingLine (self.name + "Xibzero2JpsiXistar",
