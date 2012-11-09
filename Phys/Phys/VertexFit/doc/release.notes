@@ -5,7 +5,7 @@
 !===========================================================================
 
 ! 2012-10-31 - Yuehong Xie
- - Add warnign message in PropertimeFitter
+ - Add warning message in PropertimeFitter for the protection below
  - Avoid recalculating mass
 
 ! 2012-10-30 - Yuehong Xie

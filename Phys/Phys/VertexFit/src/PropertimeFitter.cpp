@@ -68,6 +68,8 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
                                   double& error,
                                   double& chisq ) const
 {
+  // reset values to 0 in case of early return
+  propertime = error = chisq = 0;
 
   const Gaudi::XYZPoint& PVposition = PV.position();
   const Gaudi::SymMatrix3x3& CovPV  = PV.covMatrix();
@@ -230,7 +232,7 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
   //propertime = (xb-xpv)*mb/pxb ;
   propertime = (vfit[3]-vfit[0])*vfit[9]/vfit[6];
 
-  ROOT::Math::SMatrix<double, 1, 10> JA;
+  ROOT::Math::SMatrix<double,1,10> JA;
   JA(0,0) = -vfit[9]/vfit[6];
   JA(0,1) = 0.0;
   JA(0,2) = 0.0;
@@ -244,10 +246,12 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
 
   const Gaudi::SymMatrix1x1 CovTau = ROOT::Math::Similarity<double,1,10>(JA, cfit);
 
-  if(CovTau(0,0)<0)
+  if ( CovTau(0,0) < 0 )
   {
-    if ( msgLevel(MSG::DEBUG) )  debug() << "unexpected negative element CovTau(0,0)" << endmsg;
-    return Warning("unable to estimate time error: covariance element is negative ",StatusCode::FAILURE,0);
+    if ( msgLevel(MSG::DEBUG) )  
+      debug() << "unexpected negative element CovTau(0,0)" << endmsg;
+    return Warning( "Unable to estimate time error: covariance element is negative", 
+                    StatusCode::FAILURE, 3 );
   }
 
   error = std::sqrt(CovTau(0,0));
