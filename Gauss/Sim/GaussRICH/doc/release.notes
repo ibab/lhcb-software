@@ -3,6 +3,10 @@ RI!-----------------------------------------------------------------------------
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+-2012-11-09 - Sajan Easo
+ - Made some suggestions made at the code review so that Gausscherenkov can be built without
+   warnings. Moved some .h files to a newly created GaussRICH subdirectory and the 
+   requirements file updated
 -2012-10-17 - Sajan Easo
   Message verbosity level in RichSensdet changed for print statements.
 -2012-10-02 - Sajan Easo
