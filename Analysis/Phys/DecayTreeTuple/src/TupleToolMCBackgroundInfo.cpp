@@ -28,7 +28,7 @@ using namespace LHCb;
 TupleToolMCBackgroundInfo::TupleToolMCBackgroundInfo( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
+  : TupleToolBase ( type, name, parent )
 {
   declareInterface<IParticleTupleTool>(this);
   m_backCatTypes.push_back( "BackgroundCategoryViaRelations" );

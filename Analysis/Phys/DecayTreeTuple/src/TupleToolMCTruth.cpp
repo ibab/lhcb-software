@@ -39,7 +39,7 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
   // MC associators to try, in order
   m_p2mcAssocTypes.push_back( "DaVinciSmartAssociator" );
   m_p2mcAssocTypes.push_back( "MCMatchObjP2MCRelator"  );
-  declareProperty( "IP2MCPAssociatorType", m_p2mcAssocTypes );
+  declareProperty( "IP2MCPAssociatorTypes", m_p2mcAssocTypes );
 }
 
 //=============================================================================
