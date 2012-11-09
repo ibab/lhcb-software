@@ -4,7 +4,7 @@
 
 // Include files
 #include "G4Event.hh"
-#include "CkvG4Hit.h"
+#include "GaussCherenkov/CkvG4Hit.h"
 #include <vector>
 #include "GaudiKernel/Point3DTypes.h"
 //#include "GaudiKernel/Plane3DTypes.h"

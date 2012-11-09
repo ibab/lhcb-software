@@ -29,10 +29,10 @@
 
 // local
 #include "CkvSensDet.h"
-#include "RichInfo.h"
-#include "RichPEInfo.h"
-#include "RichPhotoElectron.h"
-#include "CkvG4Hit.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPEInfo.h"
+#include "GaussRICH/RichPhotoElectron.h"
+#include "GaussCherenkov/CkvG4Hit.h"
 
 
 

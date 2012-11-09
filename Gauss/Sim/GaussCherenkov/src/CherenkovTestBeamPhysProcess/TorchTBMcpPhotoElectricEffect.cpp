@@ -9,8 +9,8 @@
 #include "G4ProcessManager.hh"
 #include "G4GeometryTolerance.hh"
 #include "TorchTBGaussPathNames.h"
-#include "RichPhotoElectron.h"
-#include "RichPEInfoAttach.h"
+#include "GaussRICH/RichPhotoElectron.h"
+#include "GaussRICH/RichPEInfoAttach.h"
 #
 #include "CLHEP/Units/PhysicalConstants.h"
 #include <math.h>

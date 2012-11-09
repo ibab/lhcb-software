@@ -7,8 +7,8 @@
 #include "GiGa/GiGaSensDetBase.h"
 
 // local
-#include "CkvG4Hit.h"
-#include "RichG4HitCollName.h"
+#include "GaussCherenkov/CkvG4Hit.h"
+#include "GaussRICH/RichG4HitCollName.h"
 #include "CkvG4GeomProp.h"
 
 // forward declarations

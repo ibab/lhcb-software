@@ -34,9 +34,9 @@
 
 // local
 #include "CkvG4StepAnalysis9.h"
-#include "RichG4GaussPathNames.h"
-#include "CkvG4GaussPathNames.h"
-#include "RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussCherenkov/CkvG4GaussPathNames.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CkvG4StepAnalysis9

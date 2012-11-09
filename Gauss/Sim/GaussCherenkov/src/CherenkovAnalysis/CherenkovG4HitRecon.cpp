@@ -16,15 +16,15 @@
 #include "G4TrajectoryPoint.hh"
 #include <vector>
 #include <iterator>
-#include "CkvG4Hit.h"
-#include "RichG4ReconFlatMirr.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4Counters.h"
+#include "GaussCherenkov/CkvG4Hit.h"
+#include "GaussRICH/RichG4ReconFlatMirr.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4Counters.h"
 #include "CherenkovG4Counters.h"
-#include "RichG4HitCoordResult.h"
+#include "GaussRICH/RichG4HitCoordResult.h"
 
 // local
-#include "CkvG4SvcLocator.h"
+#include "GaussCherenkov/CkvG4SvcLocator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CherenkovG4HitRecon

@@ -3,11 +3,11 @@
 
 // local
 #include "CherenkovG4HistoFillSet2.h"
-#include "RichG4Counters.h"
+#include "GaussRICH/RichG4Counters.h"
 // GiGa
 //#include "GiGa/GiGaMACROs.h"
 // local
-#include "CkvG4Hit.h"
+#include "GaussCherenkov/CkvG4Hit.h"
 //GEANT4
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -25,7 +25,7 @@
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
-#include "CkvG4SvcLocator.h"
+#include "GaussCherenkov/CkvG4SvcLocator.h"
 #include <vector>
 //-----------------------------------------------------------------------------
 // Implementation file for class : CherenkovG4HistoFillSet1

@@ -20,9 +20,9 @@
 
 // local
 #include "GiGaPhysConstructorPhotoDetector.h"
-#include "RichPhotoElectron.h"
+#include "GaussRICH/RichPhotoElectron.h"
 
-//#include "RichG4GaussPathNames.h"
+//#include "GaussRICH/RichG4GaussPathNames.h"
 //#include "DetDesc/DetectorElement.h"
 //#include "RichDet/DeRichSystem.h"
 

@@ -15,7 +15,7 @@
 
 // local
 #include "TorchTBG4DefineHistSet6.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TorchTBG4DefineHistSet6

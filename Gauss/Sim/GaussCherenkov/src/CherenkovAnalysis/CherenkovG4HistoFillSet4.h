@@ -7,8 +7,8 @@
 #include "G4Event.hh"
 #include <vector>
 
-#include "CkvG4Hit.h"
-#include "RichG4ReconResult.h"
+#include "GaussCherenkov/CkvG4Hit.h"
+#include "GaussRICH/RichG4ReconResult.h"
 
 /** @class CherenkovG4HistoFillSet4 CherenkovG4HistoFillSet4.h RichAnalysis/CherenkovG4HistoFillSet4.h
  *

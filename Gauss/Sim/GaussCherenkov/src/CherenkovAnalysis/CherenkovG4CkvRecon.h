@@ -23,19 +23,19 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 #include <CLHEP/Vector/ThreeVector.h>
 
 //#include "RichG4ReconTransformHpd.h"
 
 #include "RichG4ReconTransformPmt.h"
-#include "RichG4TransformPhDet.h"
+#include "GaussRICH/RichG4TransformPhDet.h"
 #include "RichG4ReconPmt.h"
-#include "RichG4ReconFlatMirr.h"
-#include "RichG4Hit.h"
+#include "GaussRICH/RichG4ReconFlatMirr.h"
+#include "GaussCherenkov/CkvG4Hit.h"
 #include <complex>
-#include "RichSolveQuarticEqn.h"
+#include "GaussRICH/RichSolveQuarticEqn.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
@@ -118,7 +118,7 @@ public:
 
   Gaudi::XYZPoint GetSiHitCoordFromPixelNum(int aPx, int aPy);
   Gaudi::XYZPoint getPhotAgelExitZ( double ex, double ey, double ez,
-                               RichG4Hit* bHit);
+                               CkvG4Hit* bHit);
 
   std::vector<int> GetPmtModuleNumber(int aPmtNum);
   

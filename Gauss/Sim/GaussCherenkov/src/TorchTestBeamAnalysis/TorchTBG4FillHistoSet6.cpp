@@ -15,7 +15,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 
 // local

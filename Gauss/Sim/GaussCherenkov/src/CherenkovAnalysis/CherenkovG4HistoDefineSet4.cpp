@@ -8,7 +8,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IToolSvc.h"
 //local
-#include "CkvG4SvcLocator.h"
+#include "GaussCherenkov/CkvG4SvcLocator.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"

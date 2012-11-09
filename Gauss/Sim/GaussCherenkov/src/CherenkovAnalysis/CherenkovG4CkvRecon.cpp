@@ -15,17 +15,17 @@
 #include "Math/VectorUtil.h"
 
 // local
-#include "CkvG4SvcLocator.h"
+#include "GaussCherenkov/CkvG4SvcLocator.h"
 #include "CherenkovG4CkvRecon.h"
 //#include "RichG4ReconHpd.h"
 #include "RichG4ReconPmt.h"
 //#include "RichG4ReconTransformHpd.h"
 #include "RichG4ReconTransformPmt.h"
-#include "RichG4TransformPhDet.h"
-#include "RichG4ReconFlatMirr.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
-#include "RichSolveQuarticEqn.h"
+#include "GaussRICH/RichG4TransformPhDet.h"
+#include "GaussRICH/RichG4ReconFlatMirr.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussRICH/RichSolveQuarticEqn.h"
 #include <math.h>
 
 // modification made on 30-8-2004 to make windows compatible.
@@ -525,7 +525,7 @@ Gaudi::XYZPoint CherenkovG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XY
 }
 
 Gaudi::XYZPoint CherenkovG4CkvRecon::getPhotAgelExitZ( double ex, double ey, double ez,
-                                             RichG4Hit* bHit )
+                                             CkvG4Hit* bHit )
 {
   const Gaudi::XYZPoint aPhotTrueEmitPt(ex,ey,ez);
 

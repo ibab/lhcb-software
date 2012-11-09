@@ -30,10 +30,10 @@
 
 // local
 #include "CkvG4StepAnalysis5.h"
-#include "CkvG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
-#include "CkvG4GaussPathNames.h"
-#include "RichG4MirrorReflPointTag.h"
+#include "GaussCherenkov/CkvG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussCherenkov/CkvG4GaussPathNames.h"
+#include "GaussRICH/RichG4MirrorReflPointTag.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CkvG4StepAnalysis5

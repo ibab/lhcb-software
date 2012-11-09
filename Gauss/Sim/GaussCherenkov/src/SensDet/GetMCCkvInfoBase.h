@@ -43,8 +43,8 @@
 
 
 // local
-#include "RichG4HitCollName.h"
-#include "CkvG4Hit.h"
+#include "GaussRICH/RichG4HitCollName.h"
+#include "GaussCherenkov/CkvG4Hit.h"
 
 /** @class GetMCCkvInfoBase GetMCCkvInfoBase.h
  *

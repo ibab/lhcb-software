@@ -9,15 +9,15 @@
 
 // Local
 #include "CkvG4RunAction.h"
-#include "RichG4HistoDefineSet1.h"
+#include "GaussRICH/RichG4HistoDefineSet1.h"
 #include "CherenkovG4HistoDefineSet2.h"
-#include "RichG4HistoDefineSet3.h"
+#include "GaussRICH/RichG4HistoDefineSet3.h"
 #include "CherenkovG4HistoDefineSet4.h"
 #include "CherenkovG4HistoDefineSet5.h"
-#include "RichG4HistoDefineTimer.h"
-#include "RichG4Counters.h"
-#include "RichG4GaussPathNames.h"
-#include "RichG4MatRadIdentifier.h"
+#include "GaussRICH/RichG4HistoDefineTimer.h"
+#include "GaussRICH/RichG4Counters.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4MatRadIdentifier.h"
 
 
 //-----------------------------------------------------------------------------

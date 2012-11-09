@@ -5,10 +5,10 @@
 // Include files
 
 #include "CherenkovG4CkvRecon.h"
-#include "RichG4ReconFlatMirr.h"
+#include "GaussRICH/RichG4ReconFlatMirr.h"
 #include "CherenkovG4HistoFillSet4.h"
 #include "CherenkovG4HistoFillSet5.h"
-#include "RichG4HitCoordResult.h"
+#include "GaussRICH/RichG4HitCoordResult.h"
 
 #include "G4Event.hh"
 

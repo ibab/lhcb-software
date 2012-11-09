@@ -6,7 +6,7 @@
 
 // local
 #include "TorchTBEventAction.h"
-#include "CkvG4Hit.h"
+#include "GaussCherenkov/CkvG4Hit.h"
 
 #include "G4Event.hh"
 #include "G4EventManager.hh"

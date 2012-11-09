@@ -6,7 +6,7 @@
 
 // local
 #include "GetMCCkvHitsAlg.h"
-#include "RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 #include "RichDet/DeRichPMT.h"
 #include "RichDet/DeRich.h"

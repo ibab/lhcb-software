@@ -5,10 +5,10 @@
 
 // local
 #include "CherenkovG4HistoFillSet4.h"
-#include "RichG4Counters.h"
+#include "GaussRICH/RichG4Counters.h"
 // local
-#include "CkvG4Hit.h"
-#include "RichG4ReconResult.h"
+#include "GaussCherenkov/CkvG4Hit.h"
+#include "GaussRICH/RichG4ReconResult.h"
 
 //GEANT4
 #include "G4Event.hh"
@@ -28,7 +28,7 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 //#include "AIDA/IProfile.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 
 //-----------------------------------------------------------------------------

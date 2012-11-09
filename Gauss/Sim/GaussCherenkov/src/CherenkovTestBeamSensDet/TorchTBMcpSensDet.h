@@ -6,7 +6,7 @@
 // from GiGa
 #include "GiGa/GiGaSensDetBase.h"
 
-#include "CkvG4Hit.h"
+#include "GaussCherenkov/CkvG4Hit.h"
 #include "TorchTBHitCollName.h"
 #include "G4Step.hh"
 

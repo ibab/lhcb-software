@@ -23,17 +23,17 @@
 
 // local
 #include "GiGaPhysConstructorOpCkv.h"
-#include "RichPhotoElectron.h"
+#include "GaussRICH/RichPhotoElectron.h"
 #include "G4Electron.hh"
 #include "G4Transportation.hh"
 //#include "G4MultipleScattering.hh"
 #include "G4ProcessVector.hh"
 #include "G4LossTableManager.hh"
 #include <vector>
-#include "RichG4GaussPathNames.h"
-#include "RichG4MatRadIdentifier.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4MatRadIdentifier.h"
 
-// #include "RichG4GaussPathNames.h"
+
 // #include "DetDesc/DetectorElement.h"
 // #include "RichDet/DeRichSystem.h"
 
@@ -229,12 +229,12 @@ void  GiGaPhysConstructorOpCkv::ConstructPeProcess()
 }
 
 //=============================================================================
-#include "RichG4Cerenkov.hh"
+#include "GaussRICH/RichG4Cerenkov.h"
 #include "G4OpAbsorption.hh"
-#include "RichG4OpRayleigh.hh"
-#include "RichG4OpBoundaryProcess.hh"
+#include "GaussRICH/RichG4OpRayleigh.h"
+#include "GaussCherenkov/CkvG4OpBoundaryProcess.h"
 #include "RichPmtPhotoElectricEffect.h"
-#include "RichG4Scintillation.hh"
+#include "GaussRICH/RichG4Scintillation.h"
 #include  "TorchTBMcpPhotoElectricEffect.h"
 
 //=============================================================================
@@ -255,8 +255,8 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
   //  new RichG4OpRayleigh("RichG4OpRayleigh", fOptical);
 
 
-  RichG4OpBoundaryProcess* theBoundaryProcess = 
-    new RichG4OpBoundaryProcess("RichG4OpBoundary", fOptical );
+  CkvG4OpBoundaryProcess* theBoundaryProcess = 
+    new CkvG4OpBoundaryProcess("CkvG4OpBoundary", fOptical );
   
   //  G4cout<<"Now creating Photoelectric  processes"<<G4endl;
   //  RichHpdPhotoElectricEffect* theRichHpdPhotoElectricProcess= 

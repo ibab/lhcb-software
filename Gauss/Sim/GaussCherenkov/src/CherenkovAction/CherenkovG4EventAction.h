@@ -4,20 +4,20 @@
 
 // Include files
 // from Gaudi
-#include "../SensDet/RichG4HitCollName.h"
+#include "GaussRICH/RichG4HitCollName.h"
 
 // GiGa
 #include <vector>
 #include "GiGa/GiGaEventActionBase.h"
 #include "CkvG4HistoFillSet1.h"
 #include "CherenkovG4HistoFillSet2.h"
-#include "RichG4HistoFillSet3.h"
+#include "GaussRICH/RichG4HistoFillSet3.h"
 #include "CherenkovG4HistoFillSet4.h"
 #include "CherenkovG4HistoFillSet5.h"
-#include "RichG4HistoFillTimer.h"
+#include "GaussRICH/RichG4HistoFillTimer.h"
 #include "CkvG4EventHitCount.h"
 #include "CherenkovG4HitRecon.h"
-#include "RichG4InputMon.h"
+#include "GaussRICH/RichG4InputMon.h"
 
 /** @class CherenkovG4EventAction CherenkovG4EventAction.h src/RichActions/CherenkovG4EventAction.h
  *  

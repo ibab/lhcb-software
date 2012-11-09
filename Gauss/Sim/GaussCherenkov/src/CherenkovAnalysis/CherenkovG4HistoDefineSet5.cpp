@@ -10,7 +10,7 @@
 
 // local
 #include "CherenkovG4HistoDefineSet5.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 #include "CherenkovG4Counters.h"
 
 // Histogramming

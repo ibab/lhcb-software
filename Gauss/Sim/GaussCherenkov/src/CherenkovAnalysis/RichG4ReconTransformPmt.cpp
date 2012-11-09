@@ -32,7 +32,7 @@
 
 // local
 #include "RichG4ReconTransformPmt.h"
-#include "CkvG4SvcLocator.h"
+#include "GaussCherenkov/CkvG4SvcLocator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4ReconTransformPmt

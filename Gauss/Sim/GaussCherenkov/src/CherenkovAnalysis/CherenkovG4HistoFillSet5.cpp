@@ -1,7 +1,7 @@
 // $Id: $
 // Include files 
 
-#include "RichG4Counters.h"
+#include "GaussRICH/RichG4Counters.h"
 // local
 
 //GEANT4
@@ -24,7 +24,7 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 //#include "AIDA/IProfile.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 #include "CherenkovG4Counters.h"
 
 

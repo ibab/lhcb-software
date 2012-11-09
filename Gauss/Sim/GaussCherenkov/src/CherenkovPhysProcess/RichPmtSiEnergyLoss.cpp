@@ -4,11 +4,11 @@
 #include "G4Navigator.hh"
 #include "G4TransportationManager.hh"
 #include "G4Electron.hh"
-#include "RichPhotoElectron.h"
-#include "RichPEInfoAttach.h"
-#include "RichG4AnalysisPhotElec.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
+#include "GaussRICH/RichPhotoElectron.h"
+#include "GaussRICH/RichPEInfoAttach.h"
+#include "GaussRICH/RichG4AnalysisPhotElec.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
 #include "Randomize.hh"
 #include <algorithm>
 #include <math.h>

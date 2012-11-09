@@ -11,7 +11,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4Step.hh"
 #include "G4VProcess.hh"
-#include "RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 #include "G4Navigator.hh"
 #include "G4TransportationManager.hh"
 #include "G4ProcessVector.hh"
@@ -41,12 +41,12 @@
 // local
 #include "CherenkovStepAnalysis8.h"
 
-#include "RichG4GaussPathNames.h"
-#include "CkvG4GaussPathNames.h"
-#include "CkvG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussCherenkov/CkvG4GaussPathNames.h"
+#include "GaussCherenkov/CkvG4AnalysisConstGauss.h"
 
 
-#include "CkvG4SvcLocator.h"
+#include "GaussCherenkov/CkvG4SvcLocator.h"
 
 
 // Histogramming

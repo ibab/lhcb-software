@@ -4,7 +4,7 @@
 // local
 #include "CkvG4HistoFillSet1.h"
 // local
-#include "CkvG4Hit.h"
+#include "GaussCherenkov/CkvG4Hit.h"
 //GEANT4
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -20,7 +20,7 @@
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CkvG4HistoFillSet1

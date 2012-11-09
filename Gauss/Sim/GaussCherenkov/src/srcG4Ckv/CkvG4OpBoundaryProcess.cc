@@ -58,19 +58,19 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "G4ios.hh"
-#include "CkvG4OpBoundaryProcess.hh"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
-#include "CkvG4GaussPathNames.h"
+#include "GaussCherenkov/CkvG4OpBoundaryProcess.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussCherenkov/CkvG4GaussPathNames.h"
 #include "TorchTBGaussPathNames.h"
 #include "G4GeometryTolerance.hh"
 
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichInfo.h"
-#include "RichPhotInfo.h"
-#include "RichPhotInfoAttach.h"
-#include "RichG4HpdReflectionFlag.h"
-#include "RichG4HpdReflTag.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
+#include "GaussRICH/RichPhotInfoAttach.h"
+#include "GaussRICH/RichG4HpdReflectionFlag.h"
+#include "GaussRICH/RichG4HpdReflTag.h"
 
 /////////////////////////
 // Class Implementation
@@ -166,8 +166,8 @@ CkvG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 	thePhotonMomentum = aParticle->GetTotalMomentum();
         OldMomentum       = aParticle->GetMomentumDirection();
 	OldPolarization   = aParticle->GetPolarization();
-	   G4cout<<"G4opbondaryProc: Material1 Materil2 : from"<<Material1->GetName()<<" to  "
-                 << Material2->GetName() <<G4endl;
+  //  G4cout<<"G4opbondaryProc: Material1 Materil2 : from"<<Material1->GetName()<<" to  "
+  //               << Material2->GetName() <<G4endl;
 
 	G4MaterialPropertiesTable* aMaterialPropertiesTable;
         G4MaterialPropertyVector* Rindex;
@@ -246,7 +246,7 @@ CkvG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
                   theFinish == groundbackpainted ) {
                   Rindex = aMaterialPropertiesTable->GetProperty("RINDEX");
 	          if (Rindex) {
-                  Rindex2 = Rindex->Value(thePhotonMomentum); //G4.95 onwards
+              Rindex2 = Rindex->Value(thePhotonMomentum); //G4.95 onwards
                   }
                   else {
 		     theStatus = NoRINDEX;
@@ -261,7 +261,7 @@ CkvG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 	      aMaterialPropertiesTable->GetProperty("REFLECTIVITY");
 	      if (PropertyPointer) { 
                       theReflectivity =
-		      PropertyPointer->Value(thePhotonMomentum);
+                        PropertyPointer->Value(thePhotonMomentum); //G4.95 onwards
               } else {
                       theReflectivity = 1.0;
               }
@@ -270,7 +270,7 @@ CkvG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 	      aMaterialPropertiesTable->GetProperty("EFFICIENCY");
 	      if (PropertyPointer) {
                       theEfficiency =
-		      PropertyPointer->Value(thePhotonMomentum);
+		      PropertyPointer->Value(thePhotonMomentum); //G4.95 onwards
               } else {
                       theEfficiency = 0.0;
               }
@@ -280,7 +280,7 @@ CkvG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 		aMaterialPropertiesTable->GetProperty("SPECULARLOBECONSTANT");
 	        if (PropertyPointer) {
                          prob_sl =
-			 PropertyPointer->Value(thePhotonMomentum);
+			 PropertyPointer->Value(thePhotonMomentum); //G4.95 onwards
                 } else {
                          prob_sl = 0.0;
                 }
@@ -289,7 +289,7 @@ CkvG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 		aMaterialPropertiesTable->GetProperty("SPECULARSPIKECONSTANT");
 	        if (PropertyPointer) {
                          prob_ss =
-			 PropertyPointer->Value(thePhotonMomentum);
+			 PropertyPointer->Value(thePhotonMomentum); //G4.95 onwards
                 } else {
                          prob_ss = 0.0;
                 }
@@ -298,7 +298,7 @@ CkvG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 		aMaterialPropertiesTable->GetProperty("BACKSCATTERCONSTANT");
 	        if (PropertyPointer) {
                          prob_bs =
-			 PropertyPointer->Value(thePhotonMomentum);
+			 PropertyPointer->Value(thePhotonMomentum); //G4.95 onwards
                 } else {
                          prob_bs = 0.0;
                 }
@@ -323,7 +323,7 @@ CkvG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
               if (aMaterialPropertiesTable)
                  Rindex = aMaterialPropertiesTable->GetProperty("RINDEX");
               if (Rindex) {
-                 Rindex2 = Rindex->Value(thePhotonMomentum);
+                 Rindex2 = Rindex->Value(thePhotonMomentum); //G4.95 onwards 
               }
               else {
 		 theStatus = NoRINDEX;
@@ -640,10 +640,10 @@ void CkvG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack )
 		// The number of steps the photon travelled is above a large
                 // number like 5000 then the photon is
                 //  killed.
-         G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
-           << Material2->GetName() <<" is  with ref index "<<Rindex1
-              <<"   "<<Rindex2 <<"   Sint1= "<< sint1
-                          << "   Sint2=  "<< sint2 <<G4endl;
+          //  G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
+          //  << Material2->GetName() <<" is  with ref index "<<Rindex1
+          //    <<"   "<<Rindex2 <<"   Sint1= "<< sint1
+          //                 << "   Sint2=  "<< sint2 <<G4endl;
         if( (Material1->GetName() ==  AgelMaterialName) ||
             (Material1->GetName() ==  FilterGenericMaterialName) ||
             (Material1->GetName() ==  FilterD263MaterialName) ||
@@ -757,10 +757,10 @@ void CkvG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack )
        if(Material1->GetName() == RichPmtPhCathMatName   )TransCoeff=1.0;
        if(Material2->GetName() == RichPmtPhCathMatName   )TransCoeff=1.0;
 
-      if((Material1->GetName() == Rich1NitrogenMatName &&
-          Material2->GetName() == Rich1C4F10MatName)  ||
-         (Material1->GetName() ==  Rich1C4F10MatName &&
-          Material2->GetName() == Rich1NitrogenMatName) )TransCoeff=1.0;
+       if( ((Material1->GetName() == Rich1NitrogenMatName) &&
+            ( (Material2->GetName() == Rich1C4F10MatName )|| ( Material2->GetName() == Rich1RadiatorGasMatName)  ))  ||
+           ((( Material1->GetName() ==  Rich1C4F10MatName) ||  ( Material1->GetName() ==  Rich1RadiatorGasMatName) ) &&
+            (Material2->GetName() == Rich1NitrogenMatName)) )TransCoeff=1.0;
 
       if(Material1->GetName() == Rich2NitrogenMatName   &&
          Material2->GetName() == RichHpdVacName   )TransCoeff=1.0;
@@ -875,9 +875,11 @@ void CkvG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack )
               (Material2->GetName() ==  Rich2QuartzMatName)) ||
              ((Material2->GetName() ==  Rich2NitrogenMatName ) &&
               (Material1->GetName() ==  Rich2QuartzMatName))   ||
-             ((Material1->GetName() ==  Rich2CF4MatName )      &&
-              (Material2->GetName() ==  Rich2QuartzMatName))  ||
-             ((Material2->GetName() ==  Rich2CF4MatName )      &&
+             ( ( (Material1->GetName() ==  Rich2CF4MatName ) ||
+                 ( Material1->GetName() == Rich2RadiatorGasMatName ) )     &&
+               (Material2->GetName() ==  Rich2QuartzMatName) )  ||
+            ( ( (Material2->GetName() ==  Rich2CF4MatName )  ||
+                (Material2->GetName() ==  Rich2RadiatorGasMatName ) )   &&
               (Material1->GetName() ==  Rich2QuartzMatName)) )
             {
 

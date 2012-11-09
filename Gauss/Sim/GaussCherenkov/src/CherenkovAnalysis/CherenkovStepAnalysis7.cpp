@@ -31,11 +31,11 @@
 // GiGa
 #include <math.h>
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichG4GaussPathNames.h"
-#include "CkvG4GaussPathNames.h"
-#include "CkvG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussCherenkov/CkvG4GaussPathNames.h"
+#include "GaussCherenkov/CkvG4AnalysisConstGauss.h"
 
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 #include "AIDA/IHistogram1D.h"
 #include "globals.hh"
