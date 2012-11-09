@@ -36,33 +36,10 @@ library          GaussCherenkov    ../src/*.cpp             \
                               ../src/CherenkovTestBeamSensDet/*.cpp \
                               ../src/TorchTestBeamAnalysis/*.cpp
 
-
 # Includes used internally
 #============================================================================
-private 
-include_dirs     $(GAUSSCHERENKOVROOT) \
-                 $(GAUSSCHERENKOVROOT)/src/SensDet \
-                 $(GAUSSCHERENKOVROOT)/src/CherenkovPhysProcess \
-                 $(GAUSSCHERENKOVROOT)/src/srcG4Ckv \
-                 $(GAUSSCHERENKOVROOT)/src/CherenkovAction \
-                 $(GAUSSCHERENKOVROOT)/src/CherenkovAnalysis \
-                 $(GAUSSCHERENKOVROOT)/src/CherenkovMisc \
-                 $(GAUSSCHERENKOVROOT)/src/CherenkovAssoc \
-                 $(GAUSSCHERENKOVROOT)/src/CherenkovTestBeamPhysProcess \
-                 $(GAUSSCHERENKOVROOT)/src/CherenkovTestBeamSensDet  \
-                 $(GAUSSCHERENKOVROOT)/src/TorchTestBeamAnalysis \
-                 $(GAUSSRICHROOT) \
-                 $(GAUSSRICHROOT)/src/SensDet \
-                 $(GAUSSRICHROOT)/src/PhysProcess \
-                 $(GAUSSRICHROOT)/src/RichAction \
-                 $(GAUSSRICHROOT)/src/Misc \
-                 $(GAUSSRICHROOT)/src/RichAnalysis \
-                 $(GAUSSRICHROOT)/src/srcG4 
+include_dirs     $(GAUSSCHERENKOVROOT) 
 
-
-                 
-
-        
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=GaussCherenkov
@@ -74,4 +51,18 @@ macro_append GaussCherenkov_linkopts "-lGaussRICH"
 #============================================================================
 private
 apply_pattern use_genconf_helper_lib pkg=GaussTools 
+
+private 
+include_dirs     $(GAUSSCHERENKOVROOT) \
+                 $(GAUSSCHERENKOVROOT)/src/SensDet \
+                 $(GAUSSCHERENKOVROOT)/src/CherenkovPhysProcess \
+                 $(GAUSSCHERENKOVROOT)/src/srcG4Ckv \
+                 $(GAUSSCHERENKOVROOT)/src/CherenkovAction \
+                 $(GAUSSCHERENKOVROOT)/src/CherenkovAnalysis \
+                 $(GAUSSCHERENKOVROOT)/src/CherenkovMisc \
+                 $(GAUSSCHERENKOVROOT)/src/CherenkovAssoc \
+                 $(GAUSSCHERENKOVROOT)/src/CherenkovTestBeamPhysProcess \
+                 $(GAUSSCHERENKOVROOT)/src/CherenkovTestBeamSensDet  \
+                 $(GAUSSCHERENKOVROOT)/src/TorchTestBeamAnalysis
+
 
