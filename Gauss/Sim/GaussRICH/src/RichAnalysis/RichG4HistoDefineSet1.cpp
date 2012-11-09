@@ -7,8 +7,8 @@
 #include "GaudiKernel/IToolSvc.h"
 //local
 
-#include "RichG4HistoDefineSet1.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4HistoDefineSet1.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"

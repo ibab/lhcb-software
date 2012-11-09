@@ -2,7 +2,7 @@
 // Include files
 
 // local
-#include "RichG4Counters.h"
+#include "GaussRICH/RichG4Counters.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4Counters

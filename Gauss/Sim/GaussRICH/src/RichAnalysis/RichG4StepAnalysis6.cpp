@@ -26,10 +26,10 @@
 #include <math.h>
 #include "GaussTools/GaussTrackInformation.h"
 #include "RichG4StepAnalysis6.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
-#include "RichG4HpdReflectionFlag.h"
-#include "RichG4HpdReflTag.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4HpdReflectionFlag.h"
+#include "GaussRICH/RichG4HpdReflTag.h"
 
 
 //-----------------------------------------------------------------------------

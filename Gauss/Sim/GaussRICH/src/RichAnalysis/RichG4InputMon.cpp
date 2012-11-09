@@ -4,9 +4,9 @@
 
 
 // local
-#include "RichG4InputMon.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4InputMon.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
 #include "G4Material.hh"
 #include <vector>
  

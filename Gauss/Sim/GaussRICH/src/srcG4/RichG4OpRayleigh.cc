@@ -52,11 +52,11 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "G4ios.hh"
-#include "RichG4OpRayleigh.hh"
+#include "GaussRICH/RichG4OpRayleigh.h"
 // Add a flag to tag the photon as rayleigh scattered. SE Oct 2003.
 // this can be done from userstep action, but that will take more
 // cpu time. Here it is switched off for default running mode.
-#include "RichG4RayleighTag.h"
+#include "GaussRICH/RichG4RayleighTag.h"
 
 /////////////////////////
 // Class Implementation

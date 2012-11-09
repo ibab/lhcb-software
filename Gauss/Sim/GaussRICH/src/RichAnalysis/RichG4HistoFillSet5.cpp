@@ -9,8 +9,8 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 //#include "AIDA/IProfile.h"
-#include "RichG4SvcLocator.h"
-#include "RichG4Counters.h"
+#include "GaussRICH/RichG4SvcLocator.h"
+#include "GaussRICH/RichG4Counters.h"
 
 
 // local

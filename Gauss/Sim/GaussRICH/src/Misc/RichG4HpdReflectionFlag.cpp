@@ -4,7 +4,7 @@
 
 
 // local
-#include "RichG4HpdReflectionFlag.h"
+#include "GaussRICH/RichG4HpdReflectionFlag.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4HpdReflectionFlag

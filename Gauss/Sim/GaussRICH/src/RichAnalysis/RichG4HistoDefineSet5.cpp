@@ -10,7 +10,7 @@
 
 // local
 #include "RichG4HistoDefineSet5.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"

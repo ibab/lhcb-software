@@ -1,4 +1,4 @@
-#include "RichHpdPhotoElectricEffect.h"
+#include "GaussRICH/RichHpdPhotoElectricEffect.h"
 #include <gsl/gsl_math.h>
 
 #include "G4TransportationManager.hh"
@@ -11,17 +11,17 @@
 #include <math.h>
 
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "RichPhotoElectron.h"
-#include "RichPEInfoAttach.h"
-#include "RichG4AnalysisPhotElec.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
+#include "GaussRICH/RichPhotoElectron.h"
+#include "GaussRICH/RichPEInfoAttach.h"
+#include "GaussRICH/RichG4AnalysisPhotElec.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "DetDesc/DetectorElement.h"
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichInfo.h"
-#include "RichPhotInfo.h"
-#include "RichPhotInfoAttach.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
+#include "GaussRICH/RichPhotInfoAttach.h"
 
 RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase *  /* gigabase  */,
                                                        const G4String& processName,

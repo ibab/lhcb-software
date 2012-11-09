@@ -4,7 +4,7 @@
 
 
 // local
-#include "RichG4HitCoordResult.h"
+#include "GaussRICH/RichG4HitCoordResult.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4HitCoordResult

@@ -5,10 +5,10 @@
 // Include files
 
 #include "RichG4CkvRecon.h"
-#include "RichG4ReconFlatMirr.h"
+#include "GaussRICH/RichG4ReconFlatMirr.h"
 #include "RichG4HistoFillSet4.h"
 #include "RichG4HistoFillSet5.h"
-#include "RichG4HitCoordResult.h"
+#include "GaussRICH/RichG4HitCoordResult.h"
 
 #include "G4Event.hh"
 

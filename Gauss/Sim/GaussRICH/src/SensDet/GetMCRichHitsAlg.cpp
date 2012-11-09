@@ -6,7 +6,7 @@
 
 // local
 #include "GetMCRichHitsAlg.h"
-#include "RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 // namespaces
 using namespace LHCb;

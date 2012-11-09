@@ -10,12 +10,12 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 
-#include "RichG4MatRadIdentifier.h"
-#include "RichG4RadiatorMaterialIdValues.h"
-#include "RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4MatRadIdentifier.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
 // local
-#include "RichG4QwAnalysis.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4QwAnalysis.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 #include "G4ParticleDefinition.hh"
 #include "G4DynamicParticle.hh"
 #include "G4Material.hh"

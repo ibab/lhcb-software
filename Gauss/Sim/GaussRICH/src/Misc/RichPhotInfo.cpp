@@ -1,4 +1,4 @@
-#include "RichPhotInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
 
 RichPhotInfo::RichPhotInfo() : 
   m_MotherChTrackPDGcode(0),

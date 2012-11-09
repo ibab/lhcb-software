@@ -3,7 +3,7 @@
 
 // local
 #include "RichG4ScintAnalysis.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 #include "G4Track.hh"
 #include "G4Step.hh"
 #include "GaudiKernel/Kernel.h"

@@ -31,11 +31,11 @@
 
 // local
 #include "RichG4StepAnalysis4.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
 #include "RichG4AgelExitTag.h"
-#include "RichG4MatRadIdentifier.h"
-#include "RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichG4MatRadIdentifier.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4StepAnalysis4

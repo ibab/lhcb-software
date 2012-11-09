@@ -6,10 +6,10 @@
 
 // local
 #include "RichG4EventAction.h"
-#include "../SensDet/RichG4Hit.h"
-#include "RichG4Counters.h"
+#include "GaussRICH/RichG4Hit.h"
+#include "GaussRICH/RichG4Counters.h"
 #include "RichG4EventHitCount.h"
-#include "RichG4QwAnalysis.h"
+#include "GaussRICH/RichG4QwAnalysis.h"
 
 // GEANT4
 #include "G4Event.hh"

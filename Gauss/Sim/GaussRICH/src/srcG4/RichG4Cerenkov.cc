@@ -66,13 +66,14 @@
 
 #include "G4ios.hh"
 #include "G4Poisson.hh"
-#include "RichG4Cerenkov.hh"
+#include "GaussRICH/RichG4Cerenkov.h"
 // To tag the info regarding photon production.
-#include "RichG4CherenkovPhotProdTag.h"
-#include "RichG4MatRadIdentifier.h"
+#include "GaussRICH/RichG4CherenkovPhotProdTag.h"
+#include "GaussRICH/RichG4MatRadIdentifier.h"
 // local analysis for RichG4.
 //#include "RichG4CherenkovAnalysis.h"
-#include "RichG4QwAnalysis.h"
+#include "GaussRICH/RichG4QwAnalysis.h"
+
 // end of include localanalysis
 
 using namespace std;

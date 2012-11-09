@@ -3,11 +3,11 @@
 
 
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichInfo.h"
-#include "RichPhotInfo.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
 
 // local
-#include "RichG4MirrorReflPointTag.h"
+#include "GaussRICH/RichG4MirrorReflPointTag.h"
 
 //------------------------------------------------------------------------
 // Implementation file for class : RichG4MirrorReflPointTag

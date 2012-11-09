@@ -42,8 +42,8 @@
 #include "RichDet/DeRichSystem.h"
 
 // local
-#include "RichG4HitCollName.h"
-#include "RichG4Hit.h"
+#include "GaussRICH/RichG4HitCollName.h"
+#include "GaussRICH/RichG4Hit.h"
 
 /** @class GetMCRichInfoBase GetMCRichInfoBase.h
  *

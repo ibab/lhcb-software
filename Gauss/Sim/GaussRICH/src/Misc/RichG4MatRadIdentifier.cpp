@@ -4,9 +4,9 @@
 
 
 // local
-#include "RichG4MatRadIdentifier.h"
-#include "RichG4RadiatorMaterialIdValues.h" 
-#include "RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4MatRadIdentifier.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h" 
+#include "GaussRICH/RichG4GaussPathNames.h"
 // from G4
 #include "G4Material.hh"
 #include <utility>

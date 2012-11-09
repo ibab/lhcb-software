@@ -15,15 +15,15 @@
 #include "Math/VectorUtil.h"
 
 // local
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 #include "RichG4CkvRecon.h"
 #include "RichG4ReconHpd.h"
 #include "RichG4ReconTransformHpd.h"
-#include "RichG4TransformPhDet.h"
-#include "RichG4ReconFlatMirr.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
-#include "RichSolveQuarticEqn.h"
+#include "GaussRICH/RichG4TransformPhDet.h"
+#include "GaussRICH/RichG4ReconFlatMirr.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussRICH/RichSolveQuarticEqn.h"
 #include <math.h>
 
 // modification made on 30-8-2004 to make windows compatible.

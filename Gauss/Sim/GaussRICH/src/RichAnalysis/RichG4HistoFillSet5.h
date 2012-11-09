@@ -3,7 +3,7 @@
 #define RICHANALYSIS_RICHG4HISTOFILLSET5_H 1
 
 // Include files
-#include "RichG4Hit.h"
+#include "GaussRICH/RichG4Hit.h"
 #include "GaudiKernel/Point3DTypes.h"
 
 

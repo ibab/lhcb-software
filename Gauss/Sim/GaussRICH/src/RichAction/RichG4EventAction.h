@@ -4,20 +4,20 @@
 
 // Include files
 // from Gaudi
-#include "../SensDet/RichG4HitCollName.h"
+#include "GaussRICH/RichG4HitCollName.h"
 
 // GiGa
 #include <vector>
 #include "GiGa/GiGaEventActionBase.h"
 #include "../RichAnalysis/RichG4HistoFillSet1.h"
 #include "../RichAnalysis/RichG4HistoFillSet2.h"
-#include "../RichAnalysis/RichG4HistoFillSet3.h"
+#include "GaussRICH/RichG4HistoFillSet3.h"
 #include "../RichAnalysis/RichG4HistoFillSet4.h"
 #include "../RichAnalysis/RichG4HistoFillSet5.h"
-#include "../RichAnalysis/RichG4HistoFillTimer.h"
+#include "GaussRICH/RichG4HistoFillTimer.h"
 #include "../RichAnalysis/RichG4EventHitCount.h"
 #include "../RichAnalysis/RichG4HitRecon.h"
-#include "../RichAnalysis/RichG4InputMon.h"
+#include "GaussRICH/RichG4InputMon.h"
 
 /** @class RichG4EventAction RichG4EventAction.h src/RichActions/RichG4EventAction.h
  *  

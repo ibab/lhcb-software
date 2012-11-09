@@ -5,7 +5,7 @@
 #include "globals.hh"
 
 // local
-#include "RichG4HistoFillTimer.h"
+#include "GaussRICH/RichG4HistoFillTimer.h"
 /// GaudiKernel
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/DataObject.h"
@@ -13,7 +13,7 @@
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4HistoFillTimer

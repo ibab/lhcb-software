@@ -29,7 +29,7 @@
 
 // local
 #include "Rich1G4TrackActionUpstrPhoton.h"
-#include "RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Rich1G4TrackActionUpstrPhoton

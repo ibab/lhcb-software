@@ -16,15 +16,15 @@
 #include "G4TrajectoryPoint.hh"
 #include <vector>
 #include <iterator>
-#include "RichG4Hit.h"
-#include "RichG4ReconFlatMirr.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4Counters.h"
-#include "RichG4HitCoordResult.h"
-#include "RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichG4Hit.h"
+#include "GaussRICH/RichG4ReconFlatMirr.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4Counters.h"
+#include "GaussRICH/RichG4HitCoordResult.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 // local
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4HitRecon

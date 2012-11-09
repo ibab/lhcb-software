@@ -25,16 +25,16 @@
 #include "GiGa/GiGaTrajectory.h"
 #include "DetDesc/DetectorElement.h"
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichInfo.h"
-#include "RichPhotInfo.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
 
 // local
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 #include "RichG4TrackActionAerogelPhoton.h"
-#include "RichG4MatRadIdentifier.h"
-#include "RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichG4MatRadIdentifier.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 
 //-----------------------------------------------------------------------------

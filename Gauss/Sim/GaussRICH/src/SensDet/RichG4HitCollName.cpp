@@ -1,4 +1,4 @@
-#include "RichG4HitCollName.h"
+#include "GaussRICH/RichG4HitCollName.h"
 
 
 RichG4HitCollName::RichG4HitCollName() {

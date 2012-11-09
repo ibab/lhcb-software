@@ -4,7 +4,7 @@
 #include <boost/lexical_cast.hpp>
 
 // local
-#include "RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4RadiatorMaterialIdValues

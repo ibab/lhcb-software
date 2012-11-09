@@ -17,7 +17,7 @@
 #include "GaudiKernel/INTupleSvc.h"
 
 //local
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 IDataProviderSvc* RichG4SvcLocator::RichG4detSvc()
 { 

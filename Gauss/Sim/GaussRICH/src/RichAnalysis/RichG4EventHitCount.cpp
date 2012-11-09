@@ -5,13 +5,13 @@
 
 // local
 #include "RichG4EventHitCount.h"
-#include "RichG4Counters.h"
-#include "RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4Counters.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
 
 // local
-#include "RichG4Hit.h"
-#include "RichG4RadiatorMaterialIdValues.h"
-#include "RichG4HpdReflectionFlag.h"
+#include "GaussRICH/RichG4Hit.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichG4HpdReflectionFlag.h"
 
 //GEANT4
 #include "G4Event.hh"

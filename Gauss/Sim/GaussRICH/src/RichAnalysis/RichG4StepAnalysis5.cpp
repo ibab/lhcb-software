@@ -30,9 +30,9 @@
 
 // local
 #include "RichG4StepAnalysis5.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
-#include "RichG4MirrorReflPointTag.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4MirrorReflPointTag.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4StepAnalysis5

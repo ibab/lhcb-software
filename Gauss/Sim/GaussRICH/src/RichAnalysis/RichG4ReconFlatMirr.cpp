@@ -24,10 +24,10 @@
                                                                                                                     
 
 // local
-#include "RichG4SvcLocator.h"
-#include "RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4SvcLocator.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
 
-#include "RichG4ReconFlatMirr.h"
+#include "GaussRICH/RichG4ReconFlatMirr.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4ReconFlatMirr

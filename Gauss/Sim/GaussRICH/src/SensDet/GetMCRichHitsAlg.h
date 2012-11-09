@@ -13,7 +13,7 @@
 
 // RichKernel
 #include "RichKernel/RichMap.h"
-#include "RichG4HpdReflectionFlag.h"
+#include "GaussRICH/RichG4HpdReflectionFlag.h"
 
 /** @class GetMCRichHitsAlg GetMCRichHitsAlg.h
  *

@@ -32,7 +32,7 @@
 
 // local
 #include "RichG4ReconTransformHpd.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4ReconTransformHpd

@@ -4,10 +4,10 @@
 
 
 // local
-#include "RichG4HistoFillSet3.h"
-#include "RichG4Counters.h"
+#include "GaussRICH/RichG4HistoFillSet3.h"
+#include "GaussRICH/RichG4Counters.h"
 // local
-#include "../SensDet/RichG4Hit.h"
+#include "GaussRICH/RichG4Hit.h"
 //GEANT4
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -25,7 +25,7 @@
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4HistoFillSet1

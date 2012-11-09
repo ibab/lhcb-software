@@ -1,10 +1,10 @@
-#include "RichPEInfoAttach.h"
+#include "GaussRICH/RichPEInfoAttach.h"
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichInfo.h"
-#include "RichPhotInfo.h"
-#include "RichPEInfo.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
+#include "GaussRICH/RichPEInfo.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
 
 int RichPhotTkRadiatorNumber ( const G4Track& aPhotonTrk ){
   int aRadiator=1;

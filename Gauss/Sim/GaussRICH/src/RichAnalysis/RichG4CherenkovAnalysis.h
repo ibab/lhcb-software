@@ -1,5 +1,5 @@
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
 
 //extern void RichG4CherenkovAnalysis1(const G4Step& aStep,
 //                                     G4double CosThCkv, G4double SinThCkv, 

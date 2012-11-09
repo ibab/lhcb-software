@@ -56,19 +56,20 @@
 // mail:        gum@triumf.ca
 //
 ////////////////////////////////////////////////////////////////////////
-
 #include "G4ios.hh"
-#include "RichG4OpBoundaryProcess.hh"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4OpBoundaryProcess.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
 #include "G4GeometryTolerance.hh"
 
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichInfo.h"
-#include "RichPhotInfo.h"
-#include "RichPhotInfoAttach.h"
-#include "RichG4HpdReflectionFlag.h"
-#include "RichG4HpdReflTag.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
+#include "GaussRICH/RichPhotInfoAttach.h"
+#include "GaussRICH/RichG4HpdReflectionFlag.h"
+#include "GaussRICH/RichG4HpdReflTag.h"
+
+
 
 /////////////////////////
 // Class Implementation

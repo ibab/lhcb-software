@@ -4,9 +4,9 @@
 
 
 // local
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4AnalysisPhotElec.h"
-#include "RichG4Counters.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4AnalysisPhotElec.h"
+#include "GaussRICH/RichG4Counters.h"
 #include "G4Track.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4DynamicParticle.hh"
@@ -17,9 +17,9 @@
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichInfo.h"
-#include "RichPhotInfo.h"
-#include "RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 
 /// GaudiKernel

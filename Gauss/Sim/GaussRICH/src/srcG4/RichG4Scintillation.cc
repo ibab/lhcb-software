@@ -64,11 +64,11 @@
 
 #include "G4ios.hh"
 #include "G4EmProcessSubType.hh"
-#include "RichG4CherenkovPhotProdTag.h"
-#include "RichG4GaussPathNames.h"
-#include "RichG4Scintillation.hh"
+#include "GaussRICH/RichG4CherenkovPhotProdTag.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4Scintillation.h"
 //#include "RichG4ScintAnalysis.h"
- 
+
 using namespace std;
 
 /////////////////////////

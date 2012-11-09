@@ -15,7 +15,7 @@
 #include "G4ParticleTable.hh"
 #include "G4DynamicParticle.hh"
 #include "G4Electron.hh"
-#include "RichPhotoElectron.h"
+#include "GaussRICH/RichPhotoElectron.h"
 #include "G4ThreeVector.hh"
 #include "G4OpticalPhoton.hh"
 #include "globals.hh"
@@ -28,7 +28,7 @@
 
 // local
 #include "RichG4TrackAction.h"
-#include "RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4TrackAction

@@ -1,13 +1,13 @@
 // $Id: RichG4HpdReflTag.cpp,v 1.3 2008-01-31 13:53:47 seaso Exp $
 // Include files
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichInfo.h"
-#include "RichPhotInfo.h"
-#include "RichG4HpdReflectionFlag.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
+#include "GaussRICH/RichG4HpdReflectionFlag.h"
 #include <bitset> 
 
 // local
-#include "RichG4HpdReflTag.h"
+#include "GaussRICH/RichG4HpdReflTag.h"
 
 
 extern void RichG4HpdReflectionTag(const G4Track& aPhotonTk,

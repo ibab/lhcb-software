@@ -16,7 +16,7 @@
 #include "GaudiKernel/Vector3DTypes.h"
 
 // local
-#include "RichG4SvcLocator.h"
+#include "GaussRICH/RichG4SvcLocator.h"
 
 // local
 #include "RichG4ReconHpd.h"

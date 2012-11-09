@@ -7,8 +7,8 @@
 #include "G4Event.hh"
 #include <vector>
 
-#include "RichG4Hit.h"
-#include "RichG4ReconResult.h"
+#include "GaussRICH/RichG4Hit.h"
+#include "GaussRICH/RichG4ReconResult.h"
 
 /** @class RichG4HistoFillSet4 RichG4HistoFillSet4.h RichAnalysis/RichG4HistoFillSet4.h
  *

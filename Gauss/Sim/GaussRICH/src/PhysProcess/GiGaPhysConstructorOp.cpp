@@ -23,17 +23,17 @@
 
 // local
 #include "GiGaPhysConstructorOp.h"
-#include "RichPhotoElectron.h"
+#include "GaussRICH/RichPhotoElectron.h"
 #include "G4Electron.hh"
 #include "G4Transportation.hh"
 //#include "G4MultipleScattering.hh"
 #include "G4ProcessVector.hh"
 #include "G4LossTableManager.hh"
 #include <vector>
-#include "RichG4GaussPathNames.h"
-#include "RichG4MatRadIdentifier.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4MatRadIdentifier.h"
 
-// #include "RichG4GaussPathNames.h"
+
 // #include "DetDesc/DetectorElement.h"
 // #include "RichDet/DeRichSystem.h"
 
@@ -243,12 +243,12 @@ void  GiGaPhysConstructorOp::ConstructPeProcess()
 }
 
 //=============================================================================
-#include "RichG4Cerenkov.hh"
+#include "GaussRICH/RichG4Cerenkov.h"
 #include "G4OpAbsorption.hh"
-#include "RichG4OpRayleigh.hh"
-#include "RichG4OpBoundaryProcess.hh"
-#include "RichHpdPhotoElectricEffect.h"
-#include "RichG4Scintillation.hh"
+#include "GaussRICH/RichG4OpRayleigh.h"
+#include "GaussRICH/RichG4OpBoundaryProcess.h"
+#include "GaussRICH/RichHpdPhotoElectricEffect.h"
+#include "GaussRICH/RichG4Scintillation.h"
 
 //=============================================================================
 // ConstructOp

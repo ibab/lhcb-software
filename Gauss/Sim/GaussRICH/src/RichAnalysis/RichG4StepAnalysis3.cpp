@@ -12,7 +12,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4Step.hh"
 #include "G4VProcess.hh"
-#include "RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 //
 /// GaudiKernel
@@ -35,13 +35,13 @@
 
 // local
 #include "RichG4StepAnalysis3.h"
-#include "RichG4AnalysisConstGauss.h"
-#include "RichG4GaussPathNames.h"
-#include "RichG4Counters.h"
-#include "RichInfo.h"
-#include "RichPEInfo.h"
-#include "RichPhotInfo.h"
-#include "RichPhotoElectron.h"
+#include "GaussRICH/RichG4AnalysisConstGauss.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussRICH/RichG4Counters.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPEInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
+#include "GaussRICH/RichPhotoElectron.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4StepAnalysis3

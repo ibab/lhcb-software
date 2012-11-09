@@ -2,9 +2,9 @@
 // Include files
 
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichInfo.h"
-#include "RichPhotInfo.h"
-#include "RichG4RadiatorMaterialIdValues.h"
+#include "GaussRICH/RichInfo.h"
+#include "GaussRICH/RichPhotInfo.h"
+#include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 
 // local

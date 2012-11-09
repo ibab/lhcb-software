@@ -1,4 +1,4 @@
-#include "RichG4Hit.h"
+#include "GaussRICH/RichG4Hit.h"
 #include "G4VVisManager.hh"
 #include "G4Circle.hh"
 #include "G4Colour.hh"

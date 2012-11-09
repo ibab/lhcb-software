@@ -7,8 +7,8 @@
 #include "GiGa/GiGaSensDetBase.h"
 
 // local
-#include "RichG4Hit.h"
-#include "RichG4HitCollName.h"
+#include "GaussRICH/RichG4Hit.h"
+#include "GaussRICH/RichG4HitCollName.h"
 #include "RichG4GeomProp.h"
 #include <map>
 
