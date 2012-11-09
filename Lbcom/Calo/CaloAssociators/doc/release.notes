@@ -5,6 +5,10 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2012-11-09 - Chris Jones
+ - Various small changes to prevent the associators issuing warnings when
+   they are automatically triggered on MC uDSTs.
+
 ! 2012-10-19 - Marco Cattaneo
  - Fix gcc -pedantic warnings
  - Use getIfExists

@@ -187,15 +187,16 @@ StatusCode CaloDigitMCTruth::execute    ()
   typedef MCCaloHistory<LHCb::CaloDigit>             MCHistory ;
   /// auxillary structure for conversion  "CaloCellID" -> "int"
   typedef Containers::key_traits<LHCb::CaloCellID>   Key       ;
+
+  // get digits from TES  
+  Digits*   digits   = getIfExists<Digits>     ( m_input ) ;
+  if ( !digits ) return StatusCode::SUCCESS;
   
   // get the detector from TDS 
   Detector* detector = getDet<Detector>( m_detector ) ;
   
   // scale factor for recalculation of eActive into eTotal 
   const double activeToTotal = detector->activeToTotal() ;
-  
-  // get digits from TES  
-  Digits*   digits   = get<Digits>     ( m_input ) ;
   
   { // check the availability of the global MC truth 
     LHCb::MCCaloDigits* _mc = mcTruth<LHCb::MCCaloDigits>( digits ) ;

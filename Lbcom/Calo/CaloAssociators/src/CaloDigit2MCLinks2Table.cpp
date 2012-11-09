@@ -127,15 +127,18 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
   { return Error ( "No Linker object are specified" ) ; }
   
   // loop over all input linkers 
+  bool foundInput(false);
   for ( Inputs::const_iterator input = m_inputs.begin() ; 
         m_inputs.end() != input ; ++input ) 
   {
     
     // get the container of digits
-    Digits* digits = get<Digits> ( *input ) ;
-    
+    Digits * digits = getIfExists<Digits> ( *input ) ;
+    if ( !digits || digits->empty() ) continue;
+    foundInput = true;
+
     // get linker 
-    LHCb::Calo2MC::DigitLinkTo linker( eventSvc() , msgSvc() , (*input)     ) ;
+    LHCb::Calo2MC::DigitLinkTo linker( eventSvc() , msgSvc() , (*input) ) ;
     
     if ( linker.notFound() ) 
     { return Error ( "No Linker object is Found '" + (*input) + "' " ) ;}
@@ -184,7 +187,8 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
   // mandatory operation after "i_push"!       
   table->i_sort() ;                               // NB !!
   
-  if ( table->relations().empty() ) { Warning ( "Empty Relation table" ) ; }
+  if ( foundInput && 
+       table->relations().empty() ) { Warning ( "Empty Relation table" ) ; }
   
   if ( msgLevel ( MSG::DEBUG ) ) 
   { debug() << "Number of MC-links #" 
