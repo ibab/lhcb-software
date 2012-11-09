@@ -3,6 +3,9 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
+!2012-11-09 - Sajan Easo
+ - Made some of the modifications made in the code review. Moved some .h files to a newly 
+   created GaussCherenkov subdirectory and requirements file also updated 
 !2012-10-18 - Sajan Easo
 - Modified options for scintillation process in RICH2.
 !2012-10-16 - Sajan Easo
