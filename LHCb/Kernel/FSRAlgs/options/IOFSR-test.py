@@ -13,14 +13,17 @@ from Gaudi.Configuration import *
 from GaudiConf import IOHelper
 
 id=InputData
+id=["castor:/castor/cern.ch/user/r/rlambert/smallfiles/R08S14EW/R08S14EW_merged_1.dst", "castor:/castor/cern.ch/user/r/rlambert/smallfiles/R08S14EW/R08S14EW_merged_2.dst"]
+
+outputname = "merged_pah.dst"
 
 ######################
 #choose number of files
 ######################
 
-IOHelper().inputFiles(id[:5])
+IOHelper().inputFiles(id)
 
-myAlgs=IOHelper().outputAlgs("merged.dst","InputCopyStream",writeFSR=False)
+myAlgs=IOHelper().outputAlgs(outputname,"InputCopyStream",writeFSR=False)
 
 IOHelper().setupServices()
 
@@ -31,10 +34,12 @@ ApplicationMgr().TopAlg+=myAlgs
 ##############################
 from Configurables import IOFSRSvc, FSRNavigator
 IOFSRSvc().OutputLevel=DEBUG
-ApplicationMgr().ExtSvc  += [ IOFSRSvc() ]
+#ApplicationMgr().ExtSvc  += [ IOFSRSvc() ]
 IOFSRSvc().addTool(FSRNavigator,name="FSRNavigator")
 IOFSRSvc().FSRNavigator.OutputLevel=INFO
 IOFSRSvc().PrintIOFSR=True
+#IOFSRSvc().DefaultStatus="VERIFIED"
+#IOFSRSvc().OverrideStatus=True
 
 
 ##############################
@@ -54,24 +59,22 @@ XMLSummarySvc("CounterSummarySvc").UpdateFreq=1
 from Configurables import GaudiSequencer
 LumiSeq=GaudiSequencer("LumiSeq")
 from Configurables import FSRCleaner, LumiMergeFSR, EventAccounting
-LumiSeq.Members=[EventAccounting("EventAccount"),LumiMergeFSR("MergeFSR")]
+LumiSeq.Members=[LumiMergeFSR("MergeFSR")]
 ApplicationMgr().TopAlg+=[LumiSeq]
 
 ##############################
 # test adding the new IOFSR writing alg
 ##############################
-from Configurables import LHCbFSRStream
-winstance=IOHelper()._fsrWriter("merged.dst","LHCbFSRStream")
-winstance.OutputLevel=DEBUG
-winstance.CleanTree=True
-winstance.AddIOFSR=True
-ApplicationMgr().TopAlg  += [ winstance ]
+#winstance=IOHelper()._fsrWriter(outputname,"LHCbFSRStream")
+#winstance.OutputLevel=DEBUG
+#winstance.CleanTree=True
+#winstance.AddIOFSR=True
+#ApplicationMgr().TopAlg  += [ winstance ]
 
 ##############################################
 #Debug printout, lists all cleaned directories
 ##############################################
 
-FSRCleaner().OutputLevel=DEBUG
-#FSRCleaner().Enable=False
-
 IOHelper().debugIO()
+
+#IODataManager().AgeLimit=3

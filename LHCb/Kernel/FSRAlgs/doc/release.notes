@@ -4,6 +4,11 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-09 - Rob Lambert
+ - Segfault identified on opening multiple files...
+ - Don't understand this yet, needs investigating
+ - minor other bugfixes to the service following testing
+
 ! 2012-11-08 - Rob Lambert
  - Automatic cleaning is implemented.
  - Tested IOFSRSvc, seems to work. I get a provenance tree, etc.

@@ -435,10 +435,11 @@ StatusCode IOFSRSvc::mergeIOFSRs()
   for ( iofsr = ioFSRs.begin(); iofsr != ioFSRs.end(); ++iofsr ) 
   {
     std::string GUID=address2GUID(iofsr->first);
-    log << MSG::DEBUG << " +- merging " << GUID << " from address " << iofsr->first;
+    log << MSG::DEBUG << " +- merging " << GUID << " from address " << iofsr->first << endmsg;
     
     m_seenByMap[GUID]=iofsr->second->eventsSeen();
     m_writtenToMap[GUID]=iofsr->second->eventsOutput();
+    m_provenanceMap[GUID]=iofsr->second->parents();
   }
     
   log << MSG::DEBUG << "My Maps After Leading Info: prov " << m_provenanceMap.size() 
@@ -477,9 +478,14 @@ StatusCode IOFSRSvc::mergeIOFSRs()
 //find the last GUID in the object address
 std::string IOFSRSvc::address2GUID(const std::string& address)
 {
+  //size_t foundEnd=address.find_last_of("/");
   size_t foundEnd=address.find_last_of("/");
-  size_t foundStart=address.find_last_of("/",foundEnd);
-  return address.substr(foundStart+1,foundEnd-1);
+  size_t foundStart=address.find_last_of("/",foundEnd-1);
+  //oh, it's sometimes terminated with IOFSR
+  //if(address.substr(foundStart+1,foundEnd-1) != "IOFSR") return address.substr(foundStart+1,foundEnd-1);
+  //foundEnd=foundStart;
+  //foundStart=address.find_last_of("/",foundEnd);
+  return address.substr(foundStart+1,foundEnd-foundStart-1);
   
   
 }
@@ -547,7 +553,7 @@ LHCb::IOFSR::StatusFlag IOFSRSvc::traceCountsFlag()
   {
     std::vector<std::string> pp=parents();
     //check only for immediate parents
-    for (unsigned int it=0;it<=pp.size(); ++it)
+    for (unsigned int it=0;it<pp.size(); ++it)
     {
       log << MSG::DEBUG << "loop" << endmsg;
       log << MSG::DEBUG << pp[it] << endmsg;
@@ -578,11 +584,21 @@ LHCb::IOFSR::StatusFlag IOFSRSvc::traceCountsFlag()
   {
     std::vector<std::string> pp=it->second;
     if (pp.size()==0) continue;
-    LHCb::IOFSR::ProvenanceMap::iterator jt=it;
-    ++jt;
-    for(; jt!=m_provenanceMap.end(); ++jt)
+    for(unsigned int itp=0;itp<pp.size(); ++itp)
     {
-      for(unsigned int itp=0;itp<=pp.size(); ++itp)
+      //check that it is not a parent!! Otherwise you've not got a proper tree :S
+      std::vector<std::string>::iterator ppj=std::find(parents().begin(), parents().end(), pp[itp]);
+      if (ppj!=parents().end())
+      {
+        log << MSG::WARNING << "A file was processed twice." << endmsg;
+        log << MSG::WARNING << pp[itp] << " is a parent _and_ was used to create " 
+            << it->first << endmsg;
+        m_trace=LHCb::IOFSR::FILEDOUBLED;
+      }
+      LHCb::IOFSR::ProvenanceMap::iterator jt=it;
+      ++jt;
+      
+      for(; jt!=m_provenanceMap.end(); ++jt)
       {
         std::vector<std::string>::iterator itpj=std::find(jt->second.begin(), jt->second.end(), pp[itp]);
         if (itpj==jt->second.end()) continue;
@@ -639,14 +655,14 @@ LHCb::IOFSR* IOFSRSvc::buildIOFSR(const std::string & outputName)
   //print outs in debug mode, will look a little like the xmlsummary
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "Created IOFSR for " << outputName << ": " << endmsg;
-  log << MSG::DEBUG << " +- eventsSeen " << ioFSR->eventsSeen() << endmsg;
-  log << MSG::DEBUG << " +- eventsOutput " << ioFSR->eventsOutput() << endmsg;
-  log << MSG::DEBUG << " +- statusFlag " << ioFSR->statusFlag() << endmsg;
-  log << MSG::DEBUG << " +- number of parents " << ioFSR->parents().size() << endmsg;
-  log << MSG::DEBUG << " +- number of ancestors " << ioFSR->provenance().size() << endmsg;
+  log << MSG::DEBUG << " +-+ eventsSeen " << ioFSR->eventsSeen() << endmsg;
+  log << MSG::DEBUG << " +-+ eventsOutput " << ioFSR->eventsOutput() << endmsg;
+  log << MSG::DEBUG << " +-+ statusFlag " << ioFSR->statusFlag() << endmsg;
+  log << MSG::DEBUG << " +-+ number of ancestors " << ioFSR->provenance().size() << endmsg;
+  log << MSG::DEBUG << " +-+ number of parents " << ioFSR->parents().size() << endmsg;
   for(unsigned int i=0; i<ioFSR->parents().size(); ++i)
   {
-    log << MSG::DEBUG << "- " << i << " -> "<< ioFSR->parents()[i] 
+    log << MSG::DEBUG << "   +-" << i << " -> "<< ioFSR->parents()[i] 
         << " : " << ioFSR->eventsSeenBy().find(ioFSR->parents()[i])->second << endmsg;
   }
   
@@ -691,7 +707,7 @@ void IOFSRSvc::print()
   for(unsigned int i=0; i<parents().size(); ++i)
   {
     std::string buffer="| +-";
-    log << MSG::INFO << buffer << "+" << parents()[i] << endmsg;
+    log << MSG::INFO << buffer << "+ " << parents()[i] << endmsg;
     buffer = "| | ";
     dumpProvenance(parents()[i],buffer);
     
