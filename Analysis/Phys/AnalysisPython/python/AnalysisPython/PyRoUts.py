@@ -3108,6 +3108,29 @@ for t in ( ROOT.TH2F , ROOT.TH2D ) :
     t.rebinFunction = _rebin_func_2D_
 
 # =============================================================================
+## Create NULL-line fo rthe histogram and (optionally) draw it
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-11-01
+def _h1_null_ ( h1 , draw = False , style = 1 ) :
+    """
+    Create NULL-line for the histogram and (optionally) draw it
+    
+    """
+    axis = h1.GetXaxis()
+    line = ROOT.TLine ( axis.GetXmin() , 0 ,
+                        axis.GetXmax() , 0 )
+    
+    line.SetLineStyle ( style )
+    
+    if draw :
+        line.Draw()
+
+    return line 
+
+ROOT.TH1D.null = _h1_null_
+ROOT.TH1F.null = _h1_null_
+
+# =============================================================================
 ## convert histogram to graph
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
@@ -3254,18 +3277,15 @@ def hToGraph_ ( h1 , funcx , funcy ) :
     graph.SetMarkerSize  ( h1.GetMarkerSize  () )
 
     for i in h1.iteritems () :
-
         
         ip = i[0] - 1 ## different convention for TH1 and TGraph
         x  = i[1] 
         y  = i[2]
 
-        b = abs ( x.error() ) * bias
-
         x0 , xep , xen = funcx ( x , y )
         y0 , yep , yen = funcy ( x , y )
             
-        graph.SetPoint      ( ip , xn , yn  ) 
+        graph.SetPoint      ( ip , x0  , y0  ) 
         graph.SetPointError ( ip , xep , xen , yep , yen ) 
 
     return graph
@@ -3287,8 +3307,8 @@ def hToGraph2 ( h1 , bias ) :
     if abs ( bias ) > 1 :
         raise ValueErorr, ' Illegal value for "bias" parameter '
     
-    funcx = lambda x,y : x.value() , x.error()*(1+bias) , x.error()*(1-bias)
-    funcy = lambda x,y : y.value() , y.error()          , y.error()
+    funcx = lambda x,y : ( x.value() , x.error()*(1+bias) , x.error()*(1-bias) ) 
+    funcy = lambda x,y : ( y.value() , y.error()          , y.error()          ) 
         
     return hToGraph_ ( h1 , funcx , funcy ) 
 
@@ -3311,8 +3331,8 @@ def hToGraph3 ( h1 , bias ) :
         if x.error() < abs ( bias ) :
             raise ValueErorr, ' Illegal value for "bias" parameter '
         
-    funcx = lambda x,y : x.value() , x.error()+bias , x.error()-bias
-    funcy = lambda x,y : y.value() , y.error()      , y.error()
+    funcx = lambda x,y : ( x.value() , x.error()+bias , x.error()-bias )
+    funcy = lambda x,y : ( y.value() , y.error()      , y.error()      ) 
         
     return hToGraph_ ( h1 , funcx , funcy ) 
 
@@ -4356,6 +4376,10 @@ ROOT.RooDataSet . __iter__      = _ras_iter_
 def _rfr_print_ ( self , opts = 'v' ) :
     """
     Easy print of RooFitResult
+
+    >>> result = ...
+    >>> print result
+    
     """
     self.Print( opts )
     return 'RooFitResult'
@@ -4388,11 +4412,48 @@ def _rfr_param_  ( self , pname ) :
     Get Parameter from RooFitResult by name 
 
     >>> result = ...
-    >>> signal = results.param('Signa,')
+    >>> signal = results.param('Signal')
     >>> print signal
     """
     p = self.parameters()[ pname ] 
     return p 
+
+# =============================================================================
+## get the correlation coefficient
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _rfr_corr_  ( self , name1 , name2 ) :
+    """
+    Get correlation coefficient for two parameter 
+
+    >>> result = ...
+    >>> corr = results.corr('Signal', 'Background')
+    >>> print corr
+    """
+    p1 = self.parameters()[ name1 ]
+    p2 = self.parameters()[ name2 ]
+    #
+    return self.correlation ( p1[1] , p2[1] ) 
+
+# =============================================================================
+## get the covariance (sub) matrix 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _rfr_cov_  ( self , name1 , name2 ) :
+    """
+    Get covariance (sub) matrix 
+
+    >>> result = ...
+    >>> cov = results.cov('Signal', 'Background')
+    >>> print corr
+    """
+    p1 = self.parameters()[ name1 ]
+    p2 = self.parameters()[ name2 ]
+    args = ROOT.RooArgList ( p1[1] , p2[1] ) 
+    return self.reducedCovarianceMatrix (  args ) 
+
+
+# =============================================================================
 
 ## some decoration over RooFitResult
 ROOT.RooFitResult . __repr__   = _rfr_print_
@@ -4402,6 +4463,9 @@ ROOT.RooFitResult . parameters = _rfr_params_
 ROOT.RooFitResult . params     = _rfr_params_
 ROOT.RooFitResult . param      = _rfr_param_
 ROOT.RooFitResult . parameter  = _rfr_param_
+ROOT.RooFitResult . corr       = _rfr_corr_
+ROOT.RooFitResult . cor        = _rfr_corr_
+ROOT.RooFitResult . cov        = _rfr_cov_
 ROOT.RooFitResult . parValue   = lambda s,n : s.parameter(n)[0]
 
 # =============================================================================
