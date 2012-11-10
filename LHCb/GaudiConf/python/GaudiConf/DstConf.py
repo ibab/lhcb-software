@@ -442,13 +442,15 @@ class DstConf(LHCbConfigurableUser):
             from Configurables import ( ChargedProtoParticleAddRichInfo,
                                         ChargedProtoParticleAddMuonInfo,
                                         ChargedProtoCombineDLLsAlg,
-                                        DataObjectVersionFilter )
+                                        TESCheck )
             recalib = GaudiSequencer("ProtoParticleCombDLLs")
             recalib.IgnoreFilterPassed = False
             chargedSeq.Members += [ recalib ]
             # Filter to check in Protos exist
-            recalib.Members += [DataObjectVersionFilter(name = "CheckChargedProtosExist",
-                                                        DataObjectLocation = chargedLoc)]
+            recalib.Members += [ TESCheck( name        = "CheckChargedProtosExist",
+                                           Inputs      = [chargedLoc],
+                                           OutputLevel = 5,
+                                           Stop        = False ) ]
             # Add Rich and Muon PID results to protoparticles
             recalib.Members += [ChargedProtoParticleAddMuonInfo("ChargedProtoPAddMuon")]
             recalib.Members += [ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")]
