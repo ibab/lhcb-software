@@ -26,12 +26,13 @@
         name="StatusFlag"
         strTypConv = 'TRUE'
         access="PUBLIC" >
-        <enumval name="Unknown"    value = "-5"  desc="other enum possibilities"/>
-        <enumval name="UNRELIABLE" value = "-4"  desc="The counting in this FSR is known to be suspect"/>
-        <enumval name="EVENTDOUBLED" value = "-3"  desc="Some events have been multiply processed, seen events too large"/>
-        <enumval name="EVENTSKIPPED" value = "-2"  desc="Some events have been skipped, seen events too small"/>
-        <enumval name="UNCHECKED"  value = "-1"  desc="The counting needs to be checked"/>
-        <enumval name="ERROR"      value = "0"   desc="Missing or corrupt FSRs"/>
+        <enumval name="Unknown"    value = "-6"  desc="other enum possibilities"/>
+        <enumval name="FILEDOUBLED" value = "-5"  desc="Some files have been multiply processed, in more than one job"/>
+        <enumval name="EVENTDOUBLED" value = "-4"  desc="Some events have been multiply processed, seen events too large"/>
+        <enumval name="EVENTSKIPPED" value = "-3"  desc="Some events have been skipped, seen events too small"/>
+        <enumval name="UNRELIABLE" value = "-2"  desc="The counting in this FSR is known to be suspect"/>
+        <enumval name="ERROR"      value = "-1"   desc="Missing or corrupt FSRs"/>
+        <enumval name="UNCHECKED"  value = "0"  desc="The counting needs to be checked"/>
         <enumval name="VERIFIED"   value = "1"   desc="The counting in all lower FSRs has been verified OK"/>
       </enum>
 
@@ -70,7 +71,7 @@
       
       <attribute
         desc="list of parent files at this level"
-        name="filesRead"
+        name="parents"
         type="std::vector&lt; std::string &gt;"
         init="0"
        />

@@ -11,10 +11,16 @@ branches          cmt doc xml Event
 # Used packages. 
 #============================================================================
 use LHCbKernel    v* Kernel
+use     Boost  v*  LCG_Interfaces
 use GaudiKernel   v*
 private
 use GaudiObjDesc v* -no_auto_imports
 end_private
+
+# Make custom dictionary. Must be before GOD generation
+#============================================================================
+document customdict FSREventCustomDict ../xml/lcgdict/lcg_selection.h
+macro_append FSREventObj2Dict_dependencies FSREventCustomDict
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
