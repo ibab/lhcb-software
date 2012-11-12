@@ -23,7 +23,7 @@ use GenCuts             v3r1    Gen
 use GENSER              v10r2   Gen
 use EvtGen              v12r11  Gen
 use Mint                v1r5    Gen
-use EvtGenExtras        v3r4    Gen
+#use EvtGenExtras        v3r4    Gen # Temp off for new EvtGen
 use Generators          v12r2   Gen
 use LbPythia            v12r0   Gen
 
