@@ -47,7 +47,7 @@ def initialise():
 
         DDDBConf(DataType = "2012")
         LHCbApp().DDDBtag   = "dddb-20120831"
-        LHCbApp().CondDBtag = "cond-20121008"
+        LHCbApp().CondDBtag = "cond-20121025"
 
         # Move HPD Occs
         #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
@@ -545,7 +545,6 @@ def getRunDBRunInfo(run):
     # Read from the Run DB via the web and convert to python
     import urllib, json
     return json.loads( urllib.urlopen("http://lbrundb.cern.ch/api/run/"+str(run)).read() )
-
 
 def getRunDBFillInfo(fill):
     # Read from the Run DB via the web and convert to python
