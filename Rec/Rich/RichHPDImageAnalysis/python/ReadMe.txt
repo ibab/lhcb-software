@@ -30,13 +30,13 @@ In [2]: pyRunByRunCalibration.initialise()
 
 You can then run whatever calibration you want to run. The list is
 
-hpdImageShiftsFollow - The main method to produce the run by run HPD image
-calibratiions.
+  hpdImageShiftsFollow - The main method to produce the run by run HPD image
+                         calibratiions.
 
-hpdImageShiftsAverage - Similar to the above, but produces a single average
-calibration for each HPD. Useful for prompt processings (i.e. the future).
+  hpdImageShiftsAverage - Similar to the above, but produces a single average
+                          calibration for each HPD. Useful for prompt processings (i.e. the future).
 
-hpdOccupancies - Averatge HPD occupancy values.
+  hpdOccupancies - Averatge HPD occupancy values.
 
 To run, just do
 
