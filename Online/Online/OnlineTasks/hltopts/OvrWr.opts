@@ -7,7 +7,7 @@ ApplicationMgr.Runable               = "LHCb::MEPOverflowWriterSvc/OverflowWr";
 ApplicationMgr.ExtSvc               += { "IncidentSvc", "LHCb::MEPManager/MEPManager" };
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = { "Overflow" };
-OverflowWr.SizeLimit                 = 250;
+OverflowWr.SizeLimit                 = 1000;
 OverflowWr.PrintFreq                 = 1.0;
 OverflowWr.Requirements         = {
 "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
