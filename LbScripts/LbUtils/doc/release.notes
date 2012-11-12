@@ -2,6 +2,7 @@
 
 	* data/Makefile: modified target 'purge' to remove .pyc files
 	See https://savannah.cern.ch/bugs/?65971
+	* data/Makefile-cmake.mk: new generic Makefile for CMake-based projects
 
 2012-11-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

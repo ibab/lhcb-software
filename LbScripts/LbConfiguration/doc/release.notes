@@ -1,3 +1,10 @@
+2012-11-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile-cmt.mk: renamed the old generic CMT Makefile
+	* data/Makefile: switch between CMT or CMake generic makefiles; by default
+	it uses the CMT version, while the CMake version can be enabled with the
+	variable 'USE_CMAKE' (environment or argument) if there is a CMakeLists.txt.
+
 2012-11-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: changed the message level for missing
