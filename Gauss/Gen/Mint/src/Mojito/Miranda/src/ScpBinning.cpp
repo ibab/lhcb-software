@@ -759,7 +759,7 @@ void ScpBinning::SubtractBackgroundData(IDalitzEventList* data){
   while(data->Next()){
       bool foundBox=false;
       for(unsigned int i=0; i < _boxSets.size(); i++){
-          if(_boxSets[i].subtractData(data->getEvent())){
+          if(_boxSets[i].subtractData(data->getEvent(),data->getEvent()->getWeight())){
               foundBox=true;
               _nData--;
               break;
@@ -784,7 +784,7 @@ void ScpBinning::SubtractBackgroundDataCC(IDalitzEventList* data){
   while(data->Next()){
       bool foundBox=false;
       for(unsigned int i=0; i < _boxSets.size(); i++){
-          if(_boxSets[i].subtractMC(data->getEvent(),1.0)){
+          if(_boxSets[i].subtractMC(data->getEvent(),data->getEvent()->getWeight())){
               foundBox=true;
               _nDataCC--;
               break;

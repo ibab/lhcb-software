@@ -164,12 +164,14 @@ double ScpBox::rmsMC(int Ntotal) const{
 }
 
 
-bool ScpBox::subtractData(const IDalitzEvent& evt){
+bool ScpBox::subtractData(const IDalitzEvent& evt, double weight){
   if(! _area.isInside(evt)) return false;
   _nData--;
+  _nWeightedData -= weight;
   return true;
 }
-bool ScpBox::subtractData(const IDalitzEvent* evt){
+
+bool ScpBox::subtractData(const IDalitzEvent* evt, double weight){
   bool dbThis=false;
   if(0 == evt) return false;
   if(dbThis) cout << "ScpBox::subtractData for pointers called" << endl;
@@ -179,15 +181,18 @@ bool ScpBox::subtractData(const IDalitzEvent* evt){
       evt->print();
   }
 
+  _nWeightedData -= weight;
   _nData--;
   return true;
 }
+
 bool ScpBox::subtractMC(const IDalitzEvent& evt, double weight){
   if(! _area.isInside(evt)) return false;
   _nMC--;
   _nWeightedMC -= weight;
   return true;
 }
+
 bool ScpBox::subtractMC(const IDalitzEvent* evt, double weight){
   bool dbThis=false;
   if(dbThis) cout << "ScpBox::subtractMC for pointers called" << endl;
@@ -219,7 +224,6 @@ double ScpBox::scp(double normFactorPassed) const{
       scp = (n_data-(alpha*n_dataCC))/sqrt(n_data+(alpha*alpha*n_dataCC));
   }
   return scp;
-
 }
 
 DalitzArea ScpBox::area()

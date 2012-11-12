@@ -272,17 +272,17 @@ double ScpBoxSet::scp(double normFactorPassed) const{
   return scp;
 }
 
-bool ScpBoxSet::subtractData(const IDalitzEvent& evt){
+bool ScpBoxSet::subtractData(const IDalitzEvent& evt, double weight){
   for(unsigned int i=0; i < this->size(); i++){
-    if ((*this)[i].subtractData(evt)){
+    if ((*this)[i].subtractData(evt, weight)){
       return true;
     }
   }
   return false;
 }
-bool ScpBoxSet::subtractData(const IDalitzEvent* evt){
+bool ScpBoxSet::subtractData(const IDalitzEvent* evt, double weight){
   for(unsigned int i=0; i < this->size(); i++){
-    if ((*this)[i].subtractData(evt)){
+    if ((*this)[i].subtractData(evt, weight)){
       return true;
     }
   }
