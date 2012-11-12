@@ -5,8 +5,9 @@ Purpose: LHCb reconstruction program
 
 - Changes to references to reflect changes since v44r0
   . Do not use SequencerTimerTool to MeasureTime
-  . New default global tag for LHCBCOND, 2012: cond-20121008
+  . New default global tag for LHCBCOND, 2012: cond-20121108
   . Updates to Aerogel Rich photon reconstruction (RichRecPhotonTools)
+  . Add more states to Downstream tracks (TrackExtrapolators) 
   . Fix unprotected debugs
     (LoKiCore, LumiEvent, FastVelo, GlobalReco, RichDet, HltDAQ, PatAlgorithms)
   . Switch interpolator in TrackNNGhostId from cspline to linear, fixes negative
