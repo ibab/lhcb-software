@@ -9,6 +9,7 @@ if os.path.exists('test.cache'):
     os.remove('test.cache')
 
 import cmt2cmake
+cmt2cmake.open_cache()
 
 # prepare the cache for the tests
 cmt2cmake.cache['GaudiKernel'] = {'libraries': ['GaudiKernel'],

@@ -71,48 +71,48 @@ class Test(unittest.TestCase):
 
 
     def testValues(self):
-        '''Test of value appending, prepending, setting, unseting, removing'''
+        '''Test of value appending, prepending, setting, unsetting, removing'''
         control = Control.Environment()
 
-        self.assertFalse('myVar' in control.vars())
-        control.append('myVar', 'newValue')
-        self.assertTrue('myVar' in control.vars())
-        var = control.var('myVar')
+        self.assertFalse('MY_PATH' in control.vars())
+        control.append('MY_PATH', 'newValue')
+        self.assertTrue('MY_PATH' in control.vars())
+        var = control.var('MY_PATH')
 
-        control.append('myVar', 'newValue:secondVal:valval')
+        control.append('MY_PATH', 'newValue:secondVal:valval')
         self.assertTrue(var[len(var)-1] == 'valval')
 
         self.assertTrue('newValue' in var)
-        control.remove('myVar', 'newValue')
+        control.remove('MY_PATH', 'newValue')
         self.assertFalse('newValue' in var)
 
-        control.prepend('myVar', 'newValue')
+        control.prepend('MY_PATH', 'newValue')
         self.assertTrue('newValue' == var[0])
 
-        control.set('myVar', 'hi:hello')
+        control.set('MY_PATH', 'hi:hello')
         self.assertTrue(len(var) == 2)
         self.assertTrue('hi' == var[0])
 
-        control.unset('myVar')
-        self.assertTrue(len(var) == 0)
+        control.unset('MY_PATH')
+        self.assertTrue('MY_PATH' not in control)
 
 
     def testWrite(self):
         """XML file write and load test"""
         control = Control.Environment(useAsWriter = True)
-        control.unset('myVar')
-        control.set('myVar', 'set:toDelete')
-        control.append('myVar', 'appended:toDelete')
-        control.prepend('myVar', 'prepended:toDelete')
-        control.remove('myVar', 'toDelete')
+        control.unset('MY_PATH')
+        control.set('MY_PATH', 'set:toDelete')
+        control.append('MY_PATH', 'appended:toDelete')
+        control.prepend('MY_PATH', 'prepended:toDelete')
+        control.remove('MY_PATH', 'toDelete')
         control.finishXMLinput('testOutputFile.xml')
 
         control = Control.Environment()
-        self.assertFalse('myVar' in control.vars())
+        self.assertFalse('MY_PATH' in control.vars())
         control.loadXML('testOutputFile.xml')
 
-        self.assertTrue('myVar' in control.vars())
-        var = control.var('myVar')
+        self.assertTrue('MY_PATH' in control.vars())
+        var = control.var('MY_PATH')
         self.assertTrue(var[0] == 'prepended')
         self.assertTrue(var[1] == 'set')
         self.assertTrue(var[2] == 'appended')
@@ -124,19 +124,19 @@ class Test(unittest.TestCase):
     def testWriteWithList(self):
         """XML file write and load test"""
         control = Control.Environment(useAsWriter = True)
-        control.unset('myVar')
-        control.set('myVar', ['set','toDelete'])
-        control.append('myVar', ['appended','toDelete'])
-        control.prepend('myVar', ['prepended','toDelete'])
-        control.remove('myVar', ['toDelete'])
+        control.unset('MY_PATH')
+        control.set('MY_PATH', ['set','toDelete'])
+        control.append('MY_PATH', ['appended','toDelete'])
+        control.prepend('MY_PATH', ['prepended','toDelete'])
+        control.remove('MY_PATH', ['toDelete'])
         control.finishXMLinput('testOutputFile.xml')
 
         control = Control.Environment()
-        self.assertFalse('myVar' in control.vars())
+        self.assertFalse('MY_PATH' in control.vars())
         control.loadXML('testOutputFile.xml')
 
-        self.assertTrue('myVar' in control.vars())
-        var = control.var('myVar')
+        self.assertTrue('MY_PATH' in control.vars())
+        var = control.var('MY_PATH')
         self.assertTrue(var[0] == 'prepended')
         self.assertTrue(var[1] == 'set')
         self.assertTrue(var[2] == 'appended')
@@ -149,19 +149,19 @@ class Test(unittest.TestCase):
         """XML file write and load test"""
         control = Control.Environment()
 
-        control.unset('myVar')
-        control.set('myVar', 'set:toDelete')
-        control.append('myVar', 'appended:toDelete')
-        control.prepend('myVar', 'prepended:toDelete')
-        control.remove('myVar', 'toDelete')
+        control.unset('MY_PATH')
+        control.set('MY_PATH', 'set:toDelete')
+        control.append('MY_PATH', 'appended:toDelete')
+        control.prepend('MY_PATH', 'prepended:toDelete')
+        control.remove('MY_PATH', 'toDelete')
         control.writeToXMLFile('testOutputFile.xml')
 
         control = Control.Environment()
-        self.assertFalse('myVar' in control.vars())
+        self.assertFalse('MY_PATH' in control.vars())
         control.loadXML('testOutputFile.xml')
 
-        self.assertTrue('myVar' in control.vars())
-        var = control.var('myVar')
+        self.assertTrue('MY_PATH' in control.vars())
+        var = control.var('MY_PATH')
         self.assertTrue(var[0] == 'prepended')
         self.assertTrue(var[1] == 'set')
         self.assertTrue(var[2] == 'appended')
@@ -189,10 +189,10 @@ class Test(unittest.TestCase):
         '''Testing searching in variables'''
         control = Control.Environment()
 
-        control.append('myVar', 'newValue:mess:something new:aaaabbcc')
+        control.append('MY_PATH', 'newValue:mess:something new:aaaabbcc')
 
         def count(val, regExp = False):
-            return len(control.search('myVar', val, regExp))
+            return len(control.search('MY_PATH', val, regExp))
 
         self.assertEqual(count('new'), 0)
         self.assertEqual(count('newValue'), 1)
@@ -215,9 +215,9 @@ class Test(unittest.TestCase):
         '''Tests variables creation and redeclaration.'''
         control = Control.Environment()
 
-        control.append('myVar', 'newValue')
-        self.assertFalse(control.var('myVar').local)
-        self.assertTrue(isinstance(control.var('myVar'),Variable.List))
+        control.append('MY_PATH', 'newValue')
+        self.assertFalse(control.var('MY_PATH').local)
+        self.assertTrue(isinstance(control.var('MY_PATH'),Variable.List))
 
         control.declare('loc', 'list', True)
         self.assertTrue(control.var('loc').local)
@@ -231,10 +231,10 @@ class Test(unittest.TestCase):
         self.assertTrue(control.var('loc2').local)
         self.assertTrue(isinstance(control.var('loc2'),Variable.Scalar))
 
-        control.declare('myVar', 'list', False)
-        self.failUnlessRaises(Variable.EnvError, control.declare, 'myVar', 'list', True)
-        self.failUnlessRaises(Variable.EnvError, control.declare, 'myVar', 'scalar', True)
-        self.failUnlessRaises(Variable.EnvError, control.declare, 'myVar', 'scalar', True)
+        control.declare('MY_PATH', 'list', False)
+        self.failUnlessRaises(Variable.EnvError, control.declare, 'MY_PATH', 'list', True)
+        self.failUnlessRaises(Variable.EnvError, control.declare, 'MY_PATH', 'scalar', True)
+        self.failUnlessRaises(Variable.EnvError, control.declare, 'MY_PATH', 'scalar', True)
 
         control.declare('loc', 'list', True)
         self.failUnlessRaises(Variable.EnvError, control.declare,'loc', 'list', False)
@@ -255,24 +255,24 @@ class Test(unittest.TestCase):
     def testDelete(self):
         control = Control.Environment()
 
-        control.append('myVar','myVal:anotherVal:lastVal')
-        control.remove('myVar','anotherVal')
+        control.append('MY_PATH','myVal:anotherVal:lastVal')
+        control.remove('MY_PATH','anotherVal')
 
-        self.assertFalse('anotherVal' in control['myVar'])
-        self.assertTrue('myVal' in control['myVar'])
-        self.assertTrue('lastVal' in control['myVar'])
+        self.assertFalse('anotherVal' in control['MY_PATH'])
+        self.assertTrue('myVal' in control['MY_PATH'])
+        self.assertTrue('lastVal' in control['MY_PATH'])
 
-        control.set('myVar','myVal:anotherVal:lastVal:else')
-        control.remove('myVar', '^anotherVal$', False)
-        self.assertTrue('anotherVal' in control['myVar'])
-        control.remove('myVar', '^anotherVal$', True)
-        self.assertFalse('anotherVal' in control['myVar'])
-        self.assertTrue('myVal' in control['myVar'])
-        self.assertTrue('lastVal' in control['myVar'])
-        self.assertTrue('lastVal' in control['myVar'])
-        control.remove('myVar', 'Val', True)
-        self.assertTrue('else' in control['myVar'])
-        self.assertTrue(len(control['myVar']) == 1)
+        control.set('MY_PATH','myVal:anotherVal:lastVal:else')
+        control.remove('MY_PATH', '^anotherVal$', False)
+        self.assertTrue('anotherVal' in control['MY_PATH'])
+        control.remove('MY_PATH', '^anotherVal$', True)
+        self.assertFalse('anotherVal' in control['MY_PATH'])
+        self.assertTrue('myVal' in control['MY_PATH'])
+        self.assertTrue('lastVal' in control['MY_PATH'])
+        self.assertTrue('lastVal' in control['MY_PATH'])
+        control.remove('MY_PATH', 'Val', True)
+        self.assertTrue('else' in control['MY_PATH'])
+        self.assertTrue(len(control['MY_PATH']) == 1)
 
 
         control.declare('myLoc', 'scalar', False)
@@ -284,13 +284,13 @@ class Test(unittest.TestCase):
     def testSystemEnvironment(self):
         control = Control.Environment()
 
-        os.environ['myVar'] = '$myVal'
+        os.environ['MY_PATH'] = '$myVal'
         os.environ['myScal'] = '$myVal'
 
         control.set('ABC','anyValue')
-        control.declare('myVar', 'list', False)
-        control.append('myVar','$ABC')
-        self.assertTrue(control['myVar'].value(True) == '$myVal:anyValue')
+        control.declare('MY_PATH', 'list', False)
+        control.append('MY_PATH','$ABC')
+        self.assertTrue(control['MY_PATH'].value(True) == '$myVal:anyValue')
 
         control.declare('myScal', 'scalar', False)
         control.append('myScal', '$ABC')
@@ -340,7 +340,7 @@ class Test(unittest.TestCase):
 '''<?xml version="1.0" ?>
 <env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema ./EnvSchema.xsd ">
 <env:set variable="main">first</env:set>
-<env:append variable="test">data1</env:append>
+<env:append variable="test_path">data1</env:append>
 <env:include>first_inc.xml</env:include>
 </env:config>''',
                        'second.xml':
@@ -348,13 +348,13 @@ class Test(unittest.TestCase):
 <env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema ./EnvSchema.xsd ">
 <env:set variable="main">second</env:set>
 <env:include>second_inc.xml</env:include>
-<env:append variable="test">data1</env:append>
+<env:append variable="test_path">data1</env:append>
 </env:config>''',
                        'third.xml':
 '''<?xml version="1.0" ?>
 <env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema ./EnvSchema.xsd ">
 <env:set variable="main">third</env:set>
-<env:append variable="test">data1</env:append>
+<env:append variable="test_path">data1</env:append>
 <env:include>subdir/first_inc.xml</env:include>
 </env:config>''',
                        'fourth.xml':
@@ -372,13 +372,13 @@ class Test(unittest.TestCase):
                        'first_inc.xml':
 '''<?xml version="1.0" ?>
 <env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema ./EnvSchema.xsd ">
-<env:append variable="test">data2</env:append>
+<env:append variable="test_path">data2</env:append>
 <env:append variable="derived">another_${main}</env:append>
 </env:config>''',
                        'subdir': {'second_inc.xml':
 '''<?xml version="1.0" ?>
 <env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema ./EnvSchema.xsd ">
-<env:append variable="test">data0</env:append>
+<env:append variable="test_path">data0</env:append>
 <env:set variable="map">this_is_second_inc</env:set>
 </env:config>''',
                                   'first_inc.xml':
@@ -400,22 +400,23 @@ class Test(unittest.TestCase):
         if 'ENVXMLPATH' in os.environ:
             del os.environ['ENVXMLPATH']
         control = Control.Environment(searchPath=[])
+
         #self.assertRaises(OSError, control.loadXML, tmp('first.xml'))
         control.loadXML(tmp('first.xml'))
         self.assertEqual(str(control['main']), 'first')
-        self.assertEqual(str(control['test']), 'data1:data2')
+        self.assertEqual(str(control['test_path']), 'data1:data2')
         self.assertEqual(str(control['derived']), 'another_first')
 
         control = Control.Environment(searchPath=[tmp()])
         control.loadXML(tmp('first.xml'))
         self.assertEqual(str(control['main']), 'first')
-        self.assertEqual(str(control['test']), 'data1:data2')
+        self.assertEqual(str(control['test_path']), 'data1:data2')
         self.assertEqual(str(control['derived']), 'another_first')
 
         control = Control.Environment(searchPath=[tmp()])
         control.loadXML('first.xml')
         self.assertEqual(str(control['main']), 'first')
-        self.assertEqual(str(control['test']), 'data1:data2')
+        self.assertEqual(str(control['test_path']), 'data1:data2')
         self.assertEqual(str(control['derived']), 'another_first')
 
         control = Control.Environment(searchPath=[tmp()])
@@ -424,39 +425,39 @@ class Test(unittest.TestCase):
         control = Control.Environment(searchPath=[tmp(), tmp('subdir')])
         control.loadXML(tmp('second.xml'))
         self.assertEqual(str(control['main']), 'second')
-        self.assertEqual(str(control['test']), 'data0:data1')
+        self.assertEqual(str(control['test_path']), 'data0:data1')
         self.assertEqual(str(control['map']), 'this_is_second_inc')
 
         control = Control.Environment(searchPath=[tmp(), tmp('subdir')])
         control.loadXML(tmp('first.xml'))
         self.assertEqual(str(control['main']), 'first')
-        self.assertEqual(str(control['test']), 'data1:data2')
+        self.assertEqual(str(control['test_path']), 'data1:data2')
         self.assertEqual(str(control['derived']), 'another_first')
 
         control = Control.Environment(searchPath=[tmp('subdir'), tmp()])
         control.loadXML(tmp('first.xml'))
         self.assertEqual(str(control['main']), 'first')
-        self.assertEqual(str(control['test']), 'data1:data2')
+        self.assertEqual(str(control['test_path']), 'data1:data2')
         self.assertEqual(str(control['derived']), 'another_first')
 
         control = Control.Environment(searchPath=[tmp('subdir'), tmp()])
         control.loadXML('first.xml')
         self.assertEqual(str(control['main']), 'first')
-        self.assertEqual(str(control['test']), 'data1:data2')
+        self.assertEqual(str(control['test_path']), 'data1:data2')
         self.assertEqual(str(control['derived']), 'another_first')
 
         os.environ['ENVXMLPATH'] = os.pathsep.join([tmp(), tmp('subdir')])
         control = Control.Environment(searchPath=[])
         control.loadXML(tmp('second.xml'))
         self.assertEqual(str(control['main']), 'second')
-        self.assertEqual(str(control['test']), 'data0:data1')
+        self.assertEqual(str(control['test_path']), 'data0:data1')
         self.assertEqual(str(control['map']), 'this_is_second_inc')
         del os.environ['ENVXMLPATH']
 
         control = Control.Environment(searchPath=[])
         control.loadXML(tmp('third.xml'))
         self.assertEqual(str(control['main']), 'third')
-        self.assertEqual(str(control['test']), 'data1')
+        self.assertEqual(str(control['test_path']), 'data1')
         self.assertEqual(str(control['derived']), 'second_third')
 
         control = Control.Environment(searchPath=[tmp('subdir')])
@@ -478,13 +479,13 @@ class Test(unittest.TestCase):
         tmp = TempDir({'env.xml':
 '''<?xml version="1.0" ?>
 <env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema ./EnvSchema.xsd ">
-<env:set variable="mydir">${.}</env:set>
+<env:set variable="mydirs">${.}</env:set>
 <env:set variable="myparent">${.}/..</env:set>
 </env:config>'''})
 
         control = Control.Environment()
         control.loadXML(tmp('env.xml'))
-        self.assertEqual(str(control['mydir']), tmp())
+        self.assertEqual(str(control['mydirs']), tmp())
         self.assertEqual(str(control['myparent']), os.path.dirname(tmp()))
 
         olddir = os.getcwd()
@@ -492,7 +493,7 @@ class Test(unittest.TestCase):
         try:
             control = Control.Environment()
             control.loadXML('env.xml')
-            self.assertEqual(str(control['mydir']), tmp())
+            self.assertEqual(str(control['mydirs']), tmp())
             self.assertEqual(str(control['myparent']), os.path.dirname(tmp()))
         finally:
             os.chdir(olddir)
@@ -529,6 +530,11 @@ class Test(unittest.TestCase):
         l.append("/another/path")
         assert l.value(asString=True) == "/usr/bin:/some/nice/location:/another/path"
 
+        # duplicates removal
+        l.append("/usr/bin")
+        assert l.value(asString=True) == "/usr/bin:/some/nice/location:/another/path"
+        l.prepend("/another/path")
+        assert l.value(asString=True) == "/another/path:/usr/bin:/some/nice/location"
 
         s = Variable.Scalar('VAR')
 

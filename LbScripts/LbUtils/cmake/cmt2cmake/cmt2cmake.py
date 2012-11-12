@@ -65,21 +65,31 @@ def makeParser(patterns=None):
 
     return Optional(statement) + Optional(comment) + StringEnd()
 
-# record of known subdirs with their libraries
-# {'<subdir>': {'libraries': [...]}}
-# it contains some info about the projects too, under the keys like repr(('<project>', '<version>'))
-try:
-    # First we try the environment variable CMT2CMAKECACHE and the directory
-    # containing this file...
-    _shelve_file = os.environ.get('CMT2CMAKECACHE',
-                                  os.path.join(os.path.dirname(__file__),
-                                               '.cmt2cmake.cache'))
-    cache = shelve.open(_shelve_file)
-except:
-    # ... otherwise we use the user home directory
-    _shelve_file = os.path.join(os.path.expanduser('~'), '.cmt2cmake.cache')
-    #logging.info("Using cache file %s", _shelve_file)
-    cache = shelve.open(_shelve_file)
+
+cache = None
+def open_cache():
+    global cache
+    # record of known subdirs with their libraries
+    # {'<subdir>': {'libraries': [...]}}
+    # it contains some info about the projects too, under the keys like repr(('<project>', '<version>'))
+    try:
+        # First we try the environment variable CMT2CMAKECACHE and the directory
+        # containing this file...
+        _shelve_file = os.environ.get('CMT2CMAKECACHE',
+                                      os.path.join(os.path.dirname(__file__),
+                                                   '.cmt2cmake.cache'))
+        cache = shelve.open(_shelve_file)
+    except:
+        # ... otherwise we use the user home directory
+        _shelve_file = os.path.join(os.path.expanduser('~'), '.cmt2cmake.cache')
+        #logging.info("Using cache file %s", _shelve_file)
+        cache = shelve.open(_shelve_file)
+
+def close_cache():
+    global cache
+    if cache:
+        cache.close()
+        cache = None
 
 config = {}
 for k in ['ignored_packages', 'data_packages', 'needing_python', 'no_pedantic',
@@ -927,6 +937,7 @@ def main(args=None):
 
     loadConfig(os.path.join(top_dir, 'cmt2cmake.cfg'))
 
+    open_cache()
     if isProject(top_dir):
         root = Project(top_dir)
     elif isPackage(top_dir):
@@ -942,7 +953,7 @@ def main(args=None):
         # note that we can get here only if root is a project
     else:
         root.process(opts.overwrite)
-
+    close_cache()
 
 if __name__ == '__main__':
     main()

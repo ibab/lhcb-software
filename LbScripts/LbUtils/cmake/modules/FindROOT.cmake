@@ -2,12 +2,24 @@
 # Components:
 #   Core Cint Reflex RIO Hist Tree TreePlayer Cintex Matrix GenVector MathCore MathMore XMLIO
 
+
+if(ROOT_OVERRIDE_PATH)
+  if(NOT ROOTSYS AND NOT ENV{ROOTSYS})
+    message(FATAL_ERROR "You must specify ROOTSYS in conjunction with ROOT_OVERRIDE_PATH.")
+  endif()
+  #message(STATUS "Overriding CMAKE_PREFIX_PATH looking for ROOT")
+  set(ROOT_OVERRIDE_PATH NO_CMAKE_PATH)
+endif()
+
 # Find ROOTSYS
 #  We assume TROOT.h is in $ROOTSYS/include
-find_path(ROOT_INCLUDE_DIR TROOT.h
-          HINTS ${ROOTSYS}/include $ENV{ROOTSYS}/include)
-get_filename_component(ROOTSYS ${ROOT_INCLUDE_DIR} PATH)
-set(ROOTSYS ${ROOTSYS} CACHE PATH "Location of the installation of ROOT")
+if(NOT ROOT_INCLUDE_DIR)
+  find_path(ROOT_INCLUDE_DIR TROOT.h
+            HINTS ${ROOTSYS}/include $ENV{ROOTSYS}/include
+            ${ROOT_OVERRIDE_PATH})
+  get_filename_component(ROOTSYS ${ROOT_INCLUDE_DIR} PATH)
+  set(ROOTSYS ${ROOTSYS} CACHE PATH "Location of the installation of ROOT" FORCE)
+endif()
 
 set(ROOT_INCLUDE_DIRS ${ROOTSYS}/include)
 set(ROOT_LIBRARY_DIRS ${ROOTSYS}/lib)
@@ -53,7 +65,8 @@ while(ROOT_FIND_COMPONENTS)
   # look for the library if not found yet
   if(NOT ROOT_${component}_LIBRARY)
     find_library(ROOT_${component}_LIBRARY NAMES ${component}
-                 PATHS ${ROOT_LIBRARY_DIRS})
+                 HINTS ${ROOT_LIBRARY_DIRS}
+                 ${ROOT_OVERRIDE_PATH})
     if(ROOT_${component}_LIBRARY)
       mark_as_advanced(ROOT_${component}_LIBRARY)
       set(_found_components ${_found_components} ${component})
@@ -76,7 +89,9 @@ endwhile()
 # Locate the tools
 foreach(component ${ROOT_ALL_TOOLS})
   if(NOT ROOT_${component}_CMD)
-    find_program(ROOT_${component}_CMD ${component} HINT ${ROOTSYS}/bin)
+    find_program(ROOT_${component}_CMD ${component}
+                 HINTS ${ROOTSYS}/bin
+                 ${ROOT_OVERRIDE_PATH})
     if(ROOT_${component}_CMD)
       mark_as_advanced(ROOT_${component}_CMD)
       set(_found_tools ${_found_tools} ${component})

@@ -1,3 +1,77 @@
+! 2012-11-12 - Marco Clemencic (5cf55a9)
+
+ - minor fixes and strip path or use python.zip in a backward-comp. way
+
+   
+
+! 2012-11-11 - Marco Clemencic (b1bb2a3)
+
+ - use a method from Control to preset the variables from the system
+
+   
+
+! 2012-11-11 - Marco Clemencic (d82a83f)
+
+ - minor improvement to the variable processing framework
+
+   
+
+! 2012-11-11 - Marco Clemencic (fbbe900)
+
+ - modified the internal manipulation of the variables to be extensible
+
+   Modified the implementation of variable expansion, duplicates removal, etc.
+   to a more flexible system, for future extension.
+
+! 2012-11-11 - Marco Clemencic (9992895)
+
+ - use the heuristic for the variable type from EnvConfig
+
+   
+
+! 2012-11-11 - Marco Clemencic (4426153)
+
+ - modified the heuristic for implicit variable declaration
+
+   Auto-declare variables as list if the name contains PATH or DIRS (case 
+   insensitive).
+
+! 2012-11-11 - Marco Clemencic (711b54b)
+
+ - increased integration between env.py and EnvConfig
+
+   All the operations on the environment requested to env.py are performed by
+   EnvConfig.Control.
+
+! 2012-11-09 - Marco Clemencic (527f1ec)
+
+ - install <Project>Config*.cmake files in the InstallArea
+
+   Modified the generated "*Config*.cmake" files to work from the InstallArea
+   (or any install prefix) and modified the search for projects to find them
+   there.
+
+
+! 2012-11-09 - Marco Clemencic (d465a99)
+
+ - Allow the special version name "HEAD" for used projects.
+
+   
+
+! 2012-11-07 - Marco Clemencic (3dbe237)
+
+ - modified FindROOT to allow overriding default search path
+
+   Added the option ROOT_OVERRIDE_PATH to use the ROOTSYS hint instead of the
+   CMAKE_PREFIX_PATH as defined in the HEPTools toolchain.
+
+
+! 2012-11-05 - Marco Clemencic (a8c4bf6)
+
+ - fixed an issue with the lifetime of the cmt2cmake cache
+
+   
+
 ! 2012-11-05 - Marco Clemencic (fe87789)
 
  - fixes and improvements to CMake README

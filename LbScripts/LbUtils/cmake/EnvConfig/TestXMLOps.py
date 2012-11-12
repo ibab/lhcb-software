@@ -80,19 +80,19 @@ class Test(unittest.TestCase):
         self.control = Control.Environment(useAsWriter = True)
 
 
-        self.control.set('myVar','delVal')
-        self.control.unset('myVar')
+        self.control.set('MY_PATH','delVal')
+        self.control.unset('MY_PATH')
 
-        self.control.set('myVar','setVal:multVal')
-        self.control.append('myVar','appVal:multVal2')
-        self.control.prepend('myVar','prepVal')
+        self.control.set('MY_PATH','setVal:multVal')
+        self.control.append('MY_PATH','appVal:multVal2')
+        self.control.prepend('MY_PATH','prepVal')
 
         self.control.finishXMLinput('testOutputFile.xml')
 
         self.control.startXMLinput()
-        self.control.append('myVar','appVal2')
-        self.control.prepend('myVar','prepVal2:multVal:multVal2')
-        self.control.remove('myVar','multVal2')
+        self.control.append('MY_PATH','appVal2')
+        self.control.prepend('MY_PATH','prepVal2:multVal:multVal2')
+        self.control.remove('MY_PATH','multVal2')
         self.control.finishXMLinput('testOutputFile2.xml')
 
         self.operations.merge('testOutputFile.xml', 'testOutputFile2.xml', 'testOutputFile.xml')
@@ -100,17 +100,17 @@ class Test(unittest.TestCase):
         self.control = Control.Environment()
         self.control.loadXML('testOutputFile.xml')
 
-        self.assertFalse('delVal' in self.control['myVar'])
+        self.assertFalse('delVal' in self.control['MY_PATH'])
 
-        self.assertTrue('appVal' in self.control['myVar'])
-        self.assertTrue('appVal2' in self.control['myVar'])
-        self.assertTrue('prepVal' in self.control['myVar'])
-        self.assertTrue('prepVal' in self.control['myVar'])
-        self.assertTrue('prepVal2' in self.control['myVar'])
-        self.assertTrue('multVal' in self.control['myVar'])
-        self.assertTrue('setVal' in self.control['myVar'])
+        self.assertTrue('appVal' in self.control['MY_PATH'])
+        self.assertTrue('appVal2' in self.control['MY_PATH'])
+        self.assertTrue('prepVal' in self.control['MY_PATH'])
+        self.assertTrue('prepVal' in self.control['MY_PATH'])
+        self.assertTrue('prepVal2' in self.control['MY_PATH'])
+        self.assertTrue('multVal' in self.control['MY_PATH'])
+        self.assertTrue('setVal' in self.control['MY_PATH'])
 
-        self.assertFalse('multVal2' in self.control['myVar'])
+        self.assertFalse('multVal2' in self.control['MY_PATH'])
 
         os.remove('testOutputFile.xml')
         os.remove('testOutputFile2.xml')
