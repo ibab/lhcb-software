@@ -203,12 +203,14 @@ endif
 # This hack is needed because the stand-alone bash implementation on Windows is very limited (short command line)
 purge: clean $(foreach dep,$(wildcard $(dependency_dir)/*.pack.d),$(dep)_do_purge) $(packages:=/cmt/$(Makefile)_do_purge)
 	$(RM) -r $(dependency_dir)
+	find $(PWD) -name "*.pyc" -exec $(RM) \{} \;
 %_do_purge: clean
 	$(RM) $*
 
 # This should be the actual implementation
 #purge: clean
 #	$(RM) $(dependency_dir)/*.pack.d $(packages:=/cmt/$(Makefile))
+#	find $(PWD) -name "*.pyc" -exec $(RM) \{} \;
 
 build_flags = $(wildcard $(dependency_dir)/*.pack.build)
 remove_build_flags:

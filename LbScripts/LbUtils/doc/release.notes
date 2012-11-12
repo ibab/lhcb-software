@@ -1,3 +1,8 @@
+2012-11-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: modified target 'purge' to remove .pyc files
+	See https://savannah.cern.ch/bugs/?65971
+
 2012-11-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmt/requirements: install cmt2cmake as a subpackage of LbUtils
