@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2012-11-12 - Marco Cattaneo
+ - Fix a compilation warning and an UNINIT_CTOR defect
+
 ! 2012-11-05 - Lucio Anderlini
  - src/Lib/DeMuonDetector.cpp, MuonDet/DeMuonDetector.h
    added m_isM1defined flag to DeMuonDetector class, automatically set 

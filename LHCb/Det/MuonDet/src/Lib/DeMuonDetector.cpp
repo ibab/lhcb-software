@@ -56,10 +56,10 @@ StatusCode DeMuonDetector::initialize()
 
 
   // Retrieve m_isM1defined from DB
-  const ILVolume* lv = geometry()->lvolume();
-  const std::string aMuonPvName = "MuonSubsystem";
-  const IPVolume* aMuonPv = lv->pvolume(aMuonPvName);
-  const std::string aMyM1 = "pvM1";
+  //  const ILVolume* lv = geometry()->lvolume();
+  //  const std::string aMuonPvName = "MuonSubsystem";
+  //  const IPVolume* aMuonPv = lv->pvolume(aMuonPvName);
+  //  const std::string aMyM1 = "pvM1";
 
 //  for(ILVolume::PVolumes::const_iterator pviter = lv->pvBegin();
 //      pviter != lv->pvEnd(); ++pviter){
@@ -136,8 +136,6 @@ StatusCode DeMuonDetector::initialize()
 
   m_daqHelper.initSvc(dataSvc(),msgSvc());
   sc=m_daqHelper.initDAQMaps();
-
-  if(sc.isFailure())return sc;
 
   return sc;
 }

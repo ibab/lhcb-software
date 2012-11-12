@@ -30,7 +30,7 @@
 // Standard constructor, initializes variables
 //=============================================================================
 MuonChamberLayout::MuonChamberLayout()
-  : m_msgStream(NULL)
+  : m_msgStream(NULL), m_msgSvc(NULL),  m_detSvc(NULL)
 {
 
   MuonLayout R1(1,1);
