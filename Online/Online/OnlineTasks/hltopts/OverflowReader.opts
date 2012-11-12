@@ -13,6 +13,7 @@ Runable.Buffer                       = "Events";
 Runable.DeleteFiles                  =  true;
 Runable.Directory                    = "/localdisk/overflow";
 Runable.AllowedRuns                  = @OnlineEnv.DeferredRuns;
+Runable.BrokenHosts                  = "/group/online/dataflow/brokendisks";
 //
 // MEP manager setup:
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
