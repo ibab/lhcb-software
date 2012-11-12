@@ -52,7 +52,7 @@ StatusCode VBVertexRequirement::execute() {
   
   const LHCb::ParticleID pidRequired(23);
   const LHCb::ParticleID pidJet(98);
-  double thesholdD = 1e-3*Gaudi::Units::mm;
+  double thesholdD = 1*Gaudi::Units::mm;
   double thesholdChiq = 1000; 
   if ( msgLevel(MSG::DEBUG) && particles().size() ) 
     debug() << "Looking at " <<  particles().size() << " particles. PID" <<  
