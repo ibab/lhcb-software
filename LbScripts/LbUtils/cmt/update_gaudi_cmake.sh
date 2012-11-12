@@ -4,7 +4,6 @@
 #
 
 git_root=/afs/cern.ch/sw/Gaudi/git/Gaudi.git
-git_root=$WORK/workspace/Gaudi  
 
 # Check if we have all the commands we need.
 for c in git patch ; do
