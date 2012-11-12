@@ -497,7 +497,7 @@ StatusCode LHCbOutputStream::decodeAlgorithms( StringArrayProperty& theNames,
       // Algorithm object.
       const std::string &theName = (*it);
       SmartIF<IAlgorithm> &theIAlg = theAlgMgr->algorithm(theName);
-      Algorithm*  theAlgorithm;
+      Algorithm*  theAlgorithm=NULL;
       if ( theIAlg.isValid() ) {
         result = StatusCode::SUCCESS;
         try{
@@ -506,13 +506,13 @@ StatusCode LHCbOutputStream::decodeAlgorithms( StringArrayProperty& theNames,
           result = StatusCode::FAILURE;
         }
       }
-      if ( result.isSuccess( ) ) {
+      if ( result.isSuccess( ) && theAlgorithm!=NULL) {
         // Check that the specified algorithm doesn't already exist in the list
         std::vector<Algorithm*>::iterator ita;
         std::vector<Algorithm*>::iterator itaend = theAlgs->end( );
         for (ita = theAlgs->begin(); ita != itaend; ++ita) {
           Algorithm* existAlgorithm = (*ita);
-          if ( theAlgorithm == existAlgorithm ) {
+          if ( existAlgorithm!=NULL && theAlgorithm == existAlgorithm ) {
             result = StatusCode::FAILURE;
             break;
           }

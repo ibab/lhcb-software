@@ -4,6 +4,9 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-12 - Rob Lambert
+ - Segfault not fixed, but a coverity problem has been fixed.
+
 ! 2012-11-09 - Rob Lambert
  - Segfault identified on opening multiple files...
  - Don't understand this yet, needs investigating

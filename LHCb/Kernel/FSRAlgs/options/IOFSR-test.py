@@ -13,7 +13,8 @@ from Gaudi.Configuration import *
 from GaudiConf import IOHelper
 
 id=InputData
-id=["castor:/castor/cern.ch/user/r/rlambert/smallfiles/R08S14EW/R08S14EW_merged_1.dst", "castor:/castor/cern.ch/user/r/rlambert/smallfiles/R08S14EW/R08S14EW_merged_2.dst"]
+#id=["castor:/castor/cern.ch/user/r/rlambert/smallfiles/R08S14EW/R08S14EW_merged_1.dst", "castor:/castor/cern.ch/user/r/rlambert/smallfiles/R08S14EW/R08S14EW_merged_2.dst"]
+id=["merged_1A.dst","merged_2A.dst"]
 
 outputname = "merged_pah.dst"
 
@@ -23,7 +24,7 @@ outputname = "merged_pah.dst"
 
 IOHelper().inputFiles(id)
 
-myAlgs=IOHelper().outputAlgs(outputname,"InputCopyStream",writeFSR=False)
+myAlgs=IOHelper().outputAlgs(outputname,"InputCopyStream",writeFSR=True)
 
 IOHelper().setupServices()
 
@@ -38,8 +39,8 @@ IOFSRSvc().OutputLevel=DEBUG
 IOFSRSvc().addTool(FSRNavigator,name="FSRNavigator")
 IOFSRSvc().FSRNavigator.OutputLevel=INFO
 IOFSRSvc().PrintIOFSR=True
-#IOFSRSvc().DefaultStatus="VERIFIED"
-#IOFSRSvc().OverrideStatus=True
+IOFSRSvc().DefaultStatus="VERIFIED"
+IOFSRSvc().OverrideStatus=True
 
 
 ##############################
@@ -59,7 +60,7 @@ XMLSummarySvc("CounterSummarySvc").UpdateFreq=1
 from Configurables import GaudiSequencer
 LumiSeq=GaudiSequencer("LumiSeq")
 from Configurables import FSRCleaner, LumiMergeFSR, EventAccounting
-LumiSeq.Members=[LumiMergeFSR("MergeFSR")]
+LumiSeq.Members=[FSRCleaner(),LumiMergeFSR("MergeFSR")]
 ApplicationMgr().TopAlg+=[LumiSeq]
 
 ##############################
@@ -67,7 +68,7 @@ ApplicationMgr().TopAlg+=[LumiSeq]
 ##############################
 #winstance=IOHelper()._fsrWriter(outputname,"LHCbFSRStream")
 #winstance.OutputLevel=DEBUG
-#winstance.CleanTree=True
+#winstance.CleanTree=False
 #winstance.AddIOFSR=True
 #ApplicationMgr().TopAlg  += [ winstance ]
 

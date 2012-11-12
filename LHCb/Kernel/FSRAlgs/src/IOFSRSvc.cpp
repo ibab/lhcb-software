@@ -140,12 +140,20 @@ StatusCode IOFSRSvc::finalize()
   log << MSG::DEBUG << "finalize" << endmsg;
   log << MSG::DEBUG << "handled " << m_handled << " incidents" << endmsg;
   
-  SmartIF<IToolSvc> toolSvc(serviceLocator()->service<IToolSvc>("ToolSvc"));
-  if (!toolSvc) return StatusCode::FAILURE;
-  
-  StatusCode sc=toolSvc->releaseTool(m_navigatorTool);//m_ToolName
-  if(!sc.isSuccess()) return StatusCode::FAILURE;
-  m_navigatorTool=0;
+  // if(serviceLocator())
+//   {
+    
+//     SmartIF<IToolSvc> toolSvc(serviceLocator()->service<IToolSvc>("ToolSvc"));
+//     if (toolSvc)
+//     {
+//       if(m_navigatorTool)
+//       {  
+//         toolSvc->releaseTool(m_navigatorTool).ignore();//m_ToolName
+//       }
+      
+//       m_navigatorTool=0;
+//     }
+//   }
   
   log << MSG::DEBUG << "preparing to print" << endmsg;
   if (m_printIOFSR) print();
@@ -356,7 +364,8 @@ StatusCode IOFSRSvc::mergeIOFSRs()
   
   // make an inventory of the FileRecord store
   std::string fileRecordRoot = m_FileRecordName; 
-  std::vector< std::string > addresses = m_navigatorTool->navigate(fileRecordRoot, m_FSRName);
+  std::vector< std::string > addresses;
+  if(m_navigatorTool) addresses= m_navigatorTool->navigate(fileRecordRoot, m_FSRName);
   
   std::map<std::string, LHCb::IOFSR* > ioFSRs;
   
@@ -642,7 +651,7 @@ LHCb::IOFSR* IOFSRSvc::buildIOFSR(const std::string & outputName)
   mergeIOFSRs().ignore();
   
   
-  LHCb::IOFSR* ioFSR = new LHCb::IOFSR;
+  LHCb::IOFSR* ioFSR = new LHCb::IOFSR();
   ioFSR->setEventsOutput(jobOutput(outputName));
   ioFSR->setEventsSeen(eventsSeen());
   ioFSR->setParents(parents());
