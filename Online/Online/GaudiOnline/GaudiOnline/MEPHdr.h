@@ -50,8 +50,10 @@ namespace LHCb      {
 #define MEP_REQ_LEN 44
 struct PACKIT MEPReq  
 {
-  u_int8_t nmep;   /* number of meps requested */
-  u_int8_t reserved[MEP_REQ_LEN - 1];
+  u_int8_t nmep;     /* number of meps requested */
+  u_int8_t __pad[3]; /* pad to 32 bit */
+  u_int32_t seqno;   /* sequence number */
+  u_int8_t reserved[MEP_REQ_LEN - 8];
 };
 
 #ifdef _WIN32

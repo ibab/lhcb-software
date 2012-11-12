@@ -786,8 +786,11 @@ StatusCode MEPRxSvc::setupMEPReq(const std::string& odinName)
 
 StatusCode MEPRxSvc::sendMEPReq(int m)
 {
+    static u_int32_t seqno = 0;
+    
     if (m_dynamicMEPRequest) {
         mepreq.nmep = m;
+        mepreq.seqno = seqno++;
         int n = MEPRxSys::send_msg(m_mepSock, m_odinIPAddr, MEP_REQ_TOS, &mepreq,
                                    MEP_REQ_LEN, 0);
         if (n == MEP_REQ_LEN) {
