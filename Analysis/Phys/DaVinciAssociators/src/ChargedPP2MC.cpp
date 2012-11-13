@@ -108,16 +108,19 @@ StatusCode ChargedPP2MC::execute() {
   _debug << "==> Execute" << endreq;
 
   // flag to create a Relations table if needed,
-  const bool createTable = outputTable().empty() ? false : true ;
+  const bool createTable = !outputTable().empty();
 
   ///////////////////////////////////////
   // Loop on ProtoParticles containers //
   ///////////////////////////////////////
 
-  for( std::vector<std::string>::const_iterator inp = m_inputData.begin();
-       m_inputData.end()!= inp; inp++) {
+  for ( std::vector<std::string>::const_iterator inp = m_inputData.begin();
+        m_inputData.end()!= inp; inp++ )
+  {
     // Get ProtoParticles
-    SmartDataPtr<ProtoParticles> protos ( evtSvc(), *inp);
+    SmartDataPtr<ProtoParticles> protos ( evtSvc(), *inp );
+    // Check here to avoid the rest running on uDSTs where Protos are missing
+    if ( 0 == protos ) continue;
 
     // postpone the check for pointer till linker and relations table
     // are cretsaed/locate/registered
@@ -144,7 +147,7 @@ StatusCode ChargedPP2MC::execute() {
     if ( NULL == table && NULL == linkerTable ) continue;
 
     // and only here check the input data
-    if ( 0 == protos                          ) continue;
+    //if ( 0 == protos                          ) continue;
 
     int npp = protos->size();
     _verbose << "    " << npp
