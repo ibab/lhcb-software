@@ -120,7 +120,7 @@ StatusCode ChargedPP2MC::execute() {
     // Get ProtoParticles
     SmartDataPtr<ProtoParticles> protos ( evtSvc(), *inp );
     // Check here to avoid the rest running on uDSTs where Protos are missing
-    if ( 0 == protos ) continue;
+    //if ( 0 == protos ) continue;
 
     // postpone the check for pointer till linker and relations table
     // are cretsaed/locate/registered
@@ -147,7 +147,7 @@ StatusCode ChargedPP2MC::execute() {
     if ( NULL == table && NULL == linkerTable ) continue;
 
     // and only here check the input data
-    //if ( 0 == protos                          ) continue;
+    if ( 0 == protos                          ) continue;
 
     int npp = protos->size();
     _verbose << "    " << npp
