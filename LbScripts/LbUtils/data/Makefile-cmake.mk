@@ -44,6 +44,7 @@
 ################################################################################
 
 # settings
+CMAKE = cmake
 ifneq ($(wildcard $(CURDIR)/toolchain.cmake),)
 override CMAKEFLAGS += -DCMAKE_TOOLCHAIN_FILE=$(CURDIR)/toolchain.cmake
 endif
@@ -85,4 +86,4 @@ $(lastword $(MAKEFILE_LIST)):
 # trigger CMake configuration
 $(BUILDDIR)/Makefile:
 	mkdir -p $(BUILDDIR)
-	cd $(BUILDDIR) && cmake $(CMAKEFLAGS) $(CURDIR)
+	cd $(BUILDDIR) && $(CMAKE) $(CMAKEFLAGS) $(CURDIR)
