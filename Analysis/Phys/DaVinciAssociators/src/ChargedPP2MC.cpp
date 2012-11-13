@@ -1,4 +1,5 @@
 // $Id: ChargedPP2MC.cpp,v 1.15 2009-08-19 14:53:58 pkoppenb Exp $
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -23,13 +24,11 @@
 static const std::string&
 ChargedPP2MCAsctLocation = LHCb::ProtoParticle2MCLocation::Charged;
 
-class ChargedPP2MC : public AsctAlgorithm 
-{
+class ChargedPP2MC : public AsctAlgorithm {
 
   friend class AlgFactory<ChargedPP2MC>;
 
 public:
-
   /// Standard constructor
   ChargedPP2MC( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -39,7 +38,7 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-  
+
   /// Create on demand the linker object
   Object2MCLinker<LHCb::Track>* track2MCLink() const
   {
@@ -70,61 +69,68 @@ typedef RelationWeighted1D<ProtoParticle,MCParticle,double>  Table;
 // 10/07/2002 : Philippe Charpentier
 //-----------------------------------------------------------------------------
 
+// Declaration of the Algorithm Factory
+
+DECLARE_ALGORITHM_FACTORY( ChargedPP2MC )
+
 #define _verbose if( msgLevel(MSG::VERBOSE) ) verbose()
-#define _debug   if( msgLevel(MSG::DEBUG)   ) debug()
-#define _info    if( msgLevel(MSG::INFO)    ) info()
+#define _debug if( msgLevel(MSG::DEBUG) ) debug()
+#define _info if( msgLevel(MSG::INFO) ) info()
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ChargedPP2MC::ChargedPP2MC( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-  : AsctAlgorithm  ( name , pSvcLocator ),
-    m_track2MCLink ( NULL )
+  ChargedPP2MC::ChargedPP2MC( const std::string& name,
+                              ISvcLocator* pSvcLocator)
+    : AsctAlgorithm ( name , pSvcLocator ),
+      m_track2MCLink ( NULL )
 {
   m_inputData.push_back( ProtoParticleLocation::Charged );
   m_inputData.push_back( ProtoParticleLocation::Upstream );
   m_inputData.push_back( ProtoParticleLocation::HltCharged );
-  declareProperty("InputData", m_inputData );
+  m_outputTable = ChargedPP2MCAsctLocation;
+
   m_trackLocations.push_back(TrackLocation::Default);
   declareProperty("TrackLocations", m_trackLocations );
-  m_outputTable = ChargedPP2MCAsctLocation;
+  declareProperty("InputData", m_inputData );
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-ChargedPP2MC::~ChargedPP2MC() {};
+ChargedPP2MC::~ChargedPP2MC() {}
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode ChargedPP2MC::execute()
-{
+StatusCode ChargedPP2MC::execute() {
+
   _debug << "==> Execute" << endreq;
 
   // flag to create a Relations table if needed,
-  const bool createTable = ( outputTable().empty() ? false : true );
+  const bool createTable = outputTable().empty() ? false : true ;
 
   ///////////////////////////////////////
   // Loop on ProtoParticles containers //
   ///////////////////////////////////////
 
   for( std::vector<std::string>::const_iterator inp = m_inputData.begin();
-       m_inputData.end()!= inp; ++inp )
-  {
-  
+       m_inputData.end()!= inp; inp++) {
     // Get ProtoParticles
-    SmartDataPtr<ProtoParticles> protos ( evtSvc(), *inp );
+    SmartDataPtr<ProtoParticles> protos ( evtSvc(), *inp);
 
     // postpone the check for pointer till linker and relations table
-    // are created/locate/registered
+    // are cretsaed/locate/registered
 
     // Create a linker table
     const std::string linkContainer =
       *inp + Particle2MCMethod::extension[Particle2MCMethod::ChargedPP];
-    
-    Table * table = NULL ;
+    // Just a fake helper class
+    Object2MCLinker<LHCb::ProtoParticle> p2MCLink(this);
+    Object2MCLinker<LHCb::ProtoParticle>::Linker*
+      linkerTable = p2MCLink.linkerTable( linkContainer );
+
+    Table* table = 0 ;
     if ( createTable )
     {
       // create new table
@@ -134,89 +140,69 @@ StatusCode ChargedPP2MC::execute()
       if ( 0 == loc.find("/Event/") ) { loc.replace(0,7,"") ;}
       put ( table , "Relations/" + loc );
     }
-    if ( NULL == table ) continue;
 
-    // and only here check the input data, so above table is always made
-    if ( 0 == protos ) continue;
-    
-    // Just a fake helper class
-    Object2MCLinker<LHCb::ProtoParticle> p2MCLink(this);
-    Object2MCLinker<LHCb::ProtoParticle>::Linker*
-      linkerTable = p2MCLink.linkerTable( linkContainer );
-    if ( NULL == linkerTable ) continue;
+    if ( NULL == table && NULL == linkerTable ) continue;
 
-    _verbose << "    " << protos->size()
+    // and only here check the input data
+    if ( 0 == protos                          ) continue;
+
+    int npp = protos->size();
+    _verbose << "    " << npp
              << " ProtoParticles retrieved from "
              << *inp << endreq;
 
     // loop on Protos to match them from their tracks
-    unsigned int nrel(0), nass(0);
-    for ( ProtoParticles::const_iterator pIt = protos->begin() ;
-          protos->end() != pIt; ++pIt )
-    {
+    int nrel = 0 ;
+    int nass = 0;
+    for( ProtoParticles::const_iterator pIt=protos->begin() ;
+         protos->end() != pIt; pIt++) {
       _verbose
         << "    ProtoParticle " << (*pIt)->key();
-      
       // Follow links from this protoParticle via tracks
       const Track* track = (*pIt)->track() ;
-      if( 0 != track )
-      {
+      if( 0 != track ) {
         _verbose
           << " from track " << track->key();
         double weight = 0.;
         const MCParticle* mcPart = track2MCLink()->first(track, weight);
-        if ( NULL == mcPart )
-        {
+        if( NULL == mcPart ) {
           _verbose << " not associated to an MCPart";
-        }
-        else
-        {
+        } else {
           _verbose << " associated to MCParts";
-          ++nass;
-          do 
-          {
+          nass++;
+          do {
             _verbose << " - " << mcPart->key();
             if( NULL != table )
               table->relate( *pIt, mcPart, weight);
             if( NULL != linkerTable )
               linkerTable->link( *pIt, mcPart, weight);
-            ++nrel;
+            nrel++;
             mcPart = track2MCLink()->next();
           } while( NULL != mcPart );
         }
-      } 
-      else
-      {
+      } else {
         _verbose << " not originating from a track";
       }
       _verbose << endreq;
-
-    } // loop over protos
-
+    }
     _debug
-      << "Out of " << protos->size() 
-      << " Charged ProtoParts in " << *inp << ", "
+      << "Out of " << npp << " Charged ProtoParts in " << *inp << ", "
       << nass << " are associated, "
       << nrel << " relations found" << endreq;
   }
 
-  return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS ;
 }
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode ChargedPP2MC::finalize()
-{
+StatusCode ChargedPP2MC::finalize() {
+
   _debug << "==> Finalize" << endreq;
   delete m_track2MCLink;
   m_track2MCLink = NULL;
   return GaudiAlgorithm::finalize();
 }
-
-//=============================================================================
-
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedPP2MC )
 
 //=============================================================================

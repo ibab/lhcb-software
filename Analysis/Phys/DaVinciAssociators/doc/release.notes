@@ -4,6 +4,9 @@
 ! Responsible : Vladimir Gligorov
 !==============================================================================
 
+! 2012-11-13 - Chris Jones
+ - Fix some issue when running on DSTs inadvertently caused by the last changes.
+
 ! 2012-11-08 - Chris Jones
  - Improvements for MC uDSTs.
   + Load the Linker table on demand in ChargedPP2MC, only when needed.
