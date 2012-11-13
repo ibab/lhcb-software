@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-11-13 - Anton Poluektov 
+ - Add Stripping20r1 dictionary, copy from Stripping20 with modifed Beauty2XGamma config
+
 !========================= StrippingSettings v2r18 2012-09-14 =========================
 
 ! 2012-09-14 - Anton Poluektov 
