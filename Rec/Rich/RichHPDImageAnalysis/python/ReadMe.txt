@@ -4,8 +4,8 @@
 
 export COOL_IGNORE_LFC=1 # Probably not needed anymore
 
-> SetupProject LHCbDirac v7r10p11
-> SetupProject Brunel v43r2p2 pytools --use LCG_Interfaces/COOL --tag_add NEEDS_PYCOOL --runtime LHCbDirac --use LHCbDiracSys
+> SetupProject LHCbDirac v7r10p18
+> SetupProject Brunel v44r0 pytools --use LCG_Interfaces/COOL --tag_add NEEDS_PYCOOL --runtime LHCbDirac --use LHCbDiracSys
 
 Just for reference, (and not recommended) to run with the nightlies use.
 
