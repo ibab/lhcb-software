@@ -89,6 +89,7 @@ ScpBinning::ScpBinning()
 , _nDataCC(0)
 , _totalMCWeight(0)
 , m_norm(1.0)
+: m_useWeights(false)
 {
 }
 
@@ -286,13 +287,21 @@ ScpBoxSet ScpBinning::splitBoxes(IDalitzEventList* events
       int failedSet=0, failedBox=0;
       events->Start();
       while(events->Next()){
-//          std::cout << "weight " << events->getEvent()->getWeight() << std::endl;
-          bool added = boxes.addData(events->getEvent(),events->getEvent()->getWeight());
+          //          std::cout << "weight " << events->getEvent()->getWeight() << std::endl;
+
+          double weight(1.0);
+          if (m_useWeights)
+            {
+              weight = events->getEvent()->getWeight();
+            }
+          bool added  = boxes.addData(events->getEvent(),weight);
 
           if(! added) failedSet++;
-          if(! box.addData(events->getEvent(),events->getEvent()->getWeight())){
+
+          if(! box.addData(events->getEvent(),weight)){
               failedBox++;
           }
+
       }
       if(failedSet > 0 || dbThis){
           cout << " ScpBinning::splitBoxes: ERROR split level " << counter
@@ -333,10 +342,17 @@ void ScpBinning::fillData(IDalitzEventList* data){
       bool foundBox=false;
       for(unsigned int i=0; i < _boxSets.size(); i++){
           IDalitzEvent* Evt = data->getEvent();
+          double weight(1.0);
+          if (m_useWeights)
+            {
+              weight = data->getEvent()->getWeight();
+            }
           if (Evt->phaseSpace() != 0)
             //	      if (1 == 1)
             {
-              if(_boxSets[i].addData(data->getEvent(),data->getEvent()->getWeight())){
+
+
+              if(_boxSets[i].addData(data->getEvent(),weight)){
                   //    	  data->getEvent()->print();
                   //    	  TLorentzVector vec = data->getEvent()->p(1);
                   //    	  double Px = vec.Px();
@@ -373,9 +389,16 @@ void ScpBinning::fillDataCC(IDalitzEventList* data){
       bool foundBox=false;
       for(unsigned int i=0; i < _boxSets.size(); i++){
           IDalitzEvent* Evt = data->getEvent();
+
+          double weight(1.0);
+          if (m_useWeights)
+            {
+              weight = data->getEvent()->getWeight();
+            }
+
           if (Evt->phaseSpace() != 0)
             {
-              if(_boxSets[i].addMC(data->getEvent(),data->getEvent()->getWeight())){
+              if(_boxSets[i].addMC(data->getEvent(),weight)){
                   foundBox=true;
                   _nDataCC++;
                   break;
@@ -472,7 +495,7 @@ void ScpBinning::print(std::ostream& os) const{
   }
   os << "\n=========================================================="<< endl;
   os << "scp / nbins = " << scpsum << " / " << numBins()
-    								     << " = " << scpsum/numBins() << endl;
+    								                                     << " = " << scpsum/numBins() << endl;
   os <<	" Number of Boxes "<<  nBoxes
       << " Number of Sets " << _boxSets.size() << endl;
   os << "===========================================================" << endl;
@@ -759,7 +782,13 @@ void ScpBinning::SubtractBackgroundData(IDalitzEventList* data){
   while(data->Next()){
       bool foundBox=false;
       for(unsigned int i=0; i < _boxSets.size(); i++){
-          if(_boxSets[i].subtractData(data->getEvent(),data->getEvent()->getWeight())){
+
+          double weight(1.0);
+          if (m_useWeights)
+            {
+              weight = data->getEvent()->getWeight();
+            }
+          if(_boxSets[i].subtractData(data->getEvent(),weight)){
               foundBox=true;
               _nData--;
               break;
@@ -784,7 +813,12 @@ void ScpBinning::SubtractBackgroundDataCC(IDalitzEventList* data){
   while(data->Next()){
       bool foundBox=false;
       for(unsigned int i=0; i < _boxSets.size(); i++){
-          if(_boxSets[i].subtractMC(data->getEvent(),data->getEvent()->getWeight())){
+          double weight(1.0);
+          if (m_useWeights)
+            {
+              weight = data->getEvent()->getWeight();
+            }
+          if(_boxSets[i].subtractMC(data->getEvent(),1.0)){
               foundBox=true;
               _nDataCC--;
               break;
