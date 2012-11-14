@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-11-14 - Anton Poluektov 
+ - Update test_stream_output_locations to use Stripping20r1
+
 ! 2012-11-09 - Anton Poluektov 
  - Update test_allstreams_instantiation to use Stripping20r1 dictionary
 
