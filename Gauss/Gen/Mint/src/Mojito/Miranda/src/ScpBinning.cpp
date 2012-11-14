@@ -89,7 +89,7 @@ ScpBinning::ScpBinning()
 , _nDataCC(0)
 , _totalMCWeight(0)
 , m_norm(1.0)
-: m_useWeights(false)
+, m_useWeights(false)
 {
 }
 

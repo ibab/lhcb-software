@@ -50,8 +50,8 @@ class ScpBoxSet : public std::vector<ScpBox>{
   bool addMC(IDalitzEvent* evt, double weight);
   bool addMC(int);
 
-  bool subtractData(const IDalitzEvent& evt);
-  bool subtractData(const IDalitzEvent* evt);
+  bool subtractData(const IDalitzEvent& evt, double weight);
+  bool subtractData(const IDalitzEvent* evt, double weight);
   bool subtractMC(IDalitzEvent& evt, double weight);
   bool subtractMC(IDalitzEvent* evt, double weight);
 

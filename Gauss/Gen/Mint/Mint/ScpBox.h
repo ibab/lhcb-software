@@ -37,8 +37,8 @@ class ScpBox{
   bool addMC(const IDalitzEvent* evt, double weight);
   bool addMC(int entries);
 
-  bool subtractData(const IDalitzEvent& evt);
-  bool subtractData(const IDalitzEvent* evt);
+  bool subtractData(const IDalitzEvent& evt, double weight);
+  bool subtractData(const IDalitzEvent* evt, double weight);
   bool subtractMC(const IDalitzEvent& evt, double weight);
   bool subtractMC(const IDalitzEvent* evt, double weight);
 
