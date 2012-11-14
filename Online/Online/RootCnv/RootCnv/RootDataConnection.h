@@ -22,6 +22,7 @@ class TTreePerfStats;
 class MsgStream;
 class IRegistry;
 class DataObject;
+class IIncidentSvc;
 
 /*
  *  Gaudi namespace declaration
@@ -48,19 +49,21 @@ namespace Gaudi  {
     /// Object refrfence count
     int refCount;
     /// Reference to message service
-    MsgStream* m_msgSvc;
+    MsgStream*    m_msgSvc;
+    /// Reference to incident service
+    IIncidentSvc* m_incidentSvc;
 
   public:
     /// Vector of strings with branches to be cached for input files
-    StringVec    cacheBranches;
+    StringVec     cacheBranches;
     /// Vector of strings with branches to NOT be cached for input files
-    StringVec    vetoBranches;
+    StringVec     vetoBranches;
     /// RootCnvSvc Property: Root data cache size
-    std::string  loadSection;
+    std::string   loadSection;
     /// RootCnvSvc Property: Root data cache size
-    int          cacheSize;
+    int           cacheSize;
     /// RootCnvSvc Property: ROOT cache learn entries
-    int          learnEntries;
+    int           learnEntries;
 
     /// Standard constructor
     RootConnectionSetup();
@@ -78,6 +81,11 @@ namespace Gaudi  {
     void setMessageSvc(MsgStream* m);
     /// Retrieve message service
     MsgStream& msgSvc() const {  return *m_msgSvc; }
+
+    /// Set incident service reference
+    void setIncidentSvc(IIncidentSvc* m);
+    /// Retrieve incident service
+    IIncidentSvc* incidentSvc() const {  return m_incidentSvc; }
   };
 
   /** @class RootDataConnection RootDataConnection.h GaudiRootCnv/RootDataConnection.h
@@ -90,6 +98,10 @@ namespace Gaudi  {
     */
   class GAUDI_API RootDataConnection : virtual public Gaudi::IDataConnection  {
   public:
+
+    enum { ROOT_READ_ERROR = 0x2,
+	   ROOT_OPEN_ERROR = 0x4
+    };
 
     /** @class ContainerSection RootDataConnection.h GaudiRootCnv/RootDataConnection.h
      *
@@ -254,6 +266,9 @@ namespace Gaudi  {
     /// Lookup client for this data source
     bool lookupClient(const IInterface* client) const;
 
+    /// Error handler when bad write statements occur
+    void badWriteError(const std::string& msg)  const;
+
     /// Access link section for single container and entry
     std::pair<const RootRef*,const ContainerSection*>  getMergeSection(const std::string& container, int entry) const;
 
@@ -266,8 +281,7 @@ namespace Gaudi  {
     int loadObj(const std::string& section, const std::string& cnt, unsigned long entry, DataObject*& pObj);
 
     /// Load references object
-    int loadRefs(const std::string& section, const std::string& cnt, unsigned long entry, RootObjectRefs& refs)
-    { return m_tool->loadRefs(section,cnt,entry,refs); }
+    int loadRefs(const std::string& section, const std::string& cnt, unsigned long entry, RootObjectRefs& refs);
 
     /// Save object of a given class to section and container
     std::pair<int,unsigned long> saveObj(const std::string& section,const std::string& cnt, TClass* cl, DataObject* pObj, int buff_siz, int split_lvl,bool fill_missing=false);

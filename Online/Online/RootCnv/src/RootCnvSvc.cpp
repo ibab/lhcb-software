@@ -109,6 +109,7 @@ StatusCode RootCnvSvc::initialize()  {
   if( !(status=service("IncidentSvc", m_incidentSvc)).isSuccess() )
     return error("Unable to localize interface from service:IncidentSvc");
   m_setup->setMessageSvc(new MsgStream(msgSvc(),name()));
+  m_setup->setIncidentSvc(m_incidentSvc);
   GaudiRoot::patchStreamers(log());
   cname = System::typeinfoName(typeid(DataObject));
   m_classDO = gROOT->GetClass(cname.c_str());
@@ -333,14 +334,17 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
       TObjArray* a = t->GetListOfBranches();
       Int_t nb = a->GetEntriesFast();
       log() << MSG::DEBUG;
-      /// Fill NULL pointers to all branches, which have less entries than the section branch
+      /// fill NULL pointers to all branches, which have less entries than the section branch
       for(Int_t i=0; i<nb; ++i) {
 	TBranch* br_ptr = (TBranch*)a->UncheckedAt(i);
 	Long64_t br_evt = br_ptr->GetEntries();
 	if ( br_evt < evt ) {
 	  Long64_t num = evt-br_evt;
 	  br_ptr->SetAddress(0);
-	  while(num>0) { br_ptr->Fill(); --num; }
+	  while(num>0) { 
+	    br_ptr->Fill(); 
+	    --num;
+	  }
 	  log() << "commit: Added " << long(evt-br_evt)
 		<< " Section: " << evt << " Branch: " << br_ptr->GetEntries()
 		<< " RefNo: " << br_ptr->GetEntries()-1
@@ -548,6 +552,13 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
           return S_FAIL;
         }
 	return pObj->update();
+      }
+      else if ( nb < 0 )   {
+	string tag = par[0]+":"+par[1];
+	if ( m_badFiles.find(tag) == m_badFiles.end() ) {
+	  m_badFiles.insert(tag);
+	  return error("createObj> Cannot access the object:"+tag+" [Corrupted file]");
+	}
       }
     }
     return S_FAIL;
