@@ -14,6 +14,9 @@ Purpose: LHCb reconstruction program
     ghost probabilities (TrackTools) 
   . Removed Boole linkers from default MC DST output (GaudiConf)
 
+- Changes to test
+  . Update input data for 2011 test to more typical run 103370
+
 </PRE><H1><A NAME=v44r0>2012-10-04 Brunel v44r0</A></H1><PRE>
 This version uses projects LCG 64a, Gaudi v23r4, LHCb v35r2, Lbcom v13r2,
  Rec v14r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
