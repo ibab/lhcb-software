@@ -74,7 +74,7 @@ public:
 			    double z,
 			    double ztolerance ) const ;
 
-  ///
+  /// Compute state using cached trajectory
   virtual StatusCode stateFromTrajectory( LHCb::State& state,
 					  const LHCb::Track& track, 
 					  double z ) const {
@@ -83,9 +83,15 @@ public:
     return traj ? StatusCode::SUCCESS : StatusCode::FAILURE ;
   }
   
-  ///
+  /// Retrieve the cached trajectory
   virtual const LHCb::TrackTraj* trajectory( const LHCb::Track& track ) const ;
+  
+  /// Clear the cache
+  virtual void clearCache() ;
 
+  /// Clear the cache for a particular track
+  virtual void clearCache(const LHCb::Track& track) ;
+  
   /// incident service handle
   virtual void handle( const Incident& incident ) ;
 
@@ -101,6 +107,7 @@ private :
   ToolHandle< ITrackInterpolator > m_interpolator ;
   bool m_applyMaterialCorrections ;
   double m_linearPropagationTolerance ;
+  bool m_debugLevel ;
 };
 
 
@@ -232,7 +239,8 @@ TrackStateProvider::TrackStateProvider( const std::string& type,
 					const IInterface* parent )
   : GaudiTool(type, name, parent),
     m_extrapolator("TrackMasterExtrapolator",this),
-    m_interpolator("TrackInterpolator",this)
+    m_interpolator("TrackInterpolator",this),
+    m_debugLevel(false)
 { 
   declareInterface<ITrackStateProvider>(this);
   declareProperty("Extrapolator",m_extrapolator) ;
@@ -258,6 +266,7 @@ StatusCode TrackStateProvider::initialize()
   // reset pointer to list of clusters at beginevent
   incSvc()->addListener(this, IncidentType::BeginEvent);
   
+  m_debugLevel = msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) ;  
   return sc ;
 }
 
@@ -278,18 +287,43 @@ StatusCode TrackStateProvider::finalize()
 
 void TrackStateProvider::handle ( const Incident& incident )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) {
-    // fill some counters
-    counter("Number of tracks seen") += m_trackcache.size()  ;
-    for(TrackCacheMap::iterator it = m_trackcache.begin() ; 
-	it != m_trackcache.end(); ++it) {
-      counter("Number of states added") += it->second->numOwnedStates() ;
-      delete it->second ;
-    }
-    m_trackcache.clear() ;
+  if ( IncidentType::BeginEvent == incident.type() ) 
+    clearCache() ;
+}
+
+//=============================================================================
+// Clear cache (and update some counters)
+//=============================================================================
+
+void TrackStateProvider::clearCache()
+{
+  if(m_debugLevel) debug() << "Clearing cache. Size is " << m_trackcache.size() << "." << endreq ;
+  counter("Number of tracks seen") += m_trackcache.size()  ;
+  for(TrackCacheMap::iterator it = m_trackcache.begin() ; 
+      it != m_trackcache.end(); ++it) {
+    counter("Number of states added") += it->second->numOwnedStates() ;
+    delete it->second ;
+  }
+  m_trackcache.clear() ;
+}
+
+
+//=============================================================================
+// Clear cache for a given track
+//=============================================================================
+
+void TrackStateProvider::clearCache(const LHCb::Track& track)
+{
+  if(m_debugLevel) debug() << "Clearing cache for track: " << &track << endmsg ;
+  size_t key = TrackCache::trackID(track) ;
+  TrackCacheMap::iterator it = m_trackcache.find( key ) ;
+  if( it != m_trackcache.end() ) {
+    delete it->second ;
+    m_trackcache.erase( it ) ;
   }
 }
-  
+
+
 //=============================================================================
 // get a state at a particular z position, within given tolerance
 //=============================================================================
@@ -396,6 +430,8 @@ TrackCache* TrackStateProvider::cache( const LHCb::Track& track ) const
   size_t key = TrackCache::trackID(track) ;
   TrackCacheMap::iterator it = m_trackcache.find( key ) ;
   if( it == m_trackcache.end() ) {
+    if(m_debugLevel) 
+      debug() << "Creating track cache for track: " << &track << endreq ;
     // create a new entry in the cache
     tc = new TrackCache( track ) ;
     m_trackcache[key] = tc ;

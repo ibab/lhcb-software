@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Wouter Hulsbergen
+ - Add method to clear the cache in TrackStateProvider
+
 ! 2012-10-29 - Wouter Hulsbergen
  - Add more states to Downstream tracks in TrackStateProvider
 
