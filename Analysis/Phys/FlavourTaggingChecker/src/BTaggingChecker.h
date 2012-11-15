@@ -16,7 +16,7 @@
 #include "Event/HltDecReports.h"
 
 // from DaVinci
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 
 // from local
 
@@ -26,7 +26,7 @@
  *  @author Marco Musy
  *  @date   2004-02-15
  */
-class BTaggingChecker : public DVAlgorithm {
+class BTaggingChecker : public DaVinciAlgorithm {
  public:
   /// Standard constructor
   BTaggingChecker( const std::string& , ISvcLocator* );

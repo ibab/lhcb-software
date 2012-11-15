@@ -17,7 +17,7 @@ DECLARE_ALGORITHM_FACTORY( BTaggingAnalysis );
 //=============================================================================
 BTaggingAnalysis::BTaggingAnalysis(const std::string& name, 
                                    ISvcLocator* pSvcLocator):
-  DVAlgorithm(name, pSvcLocator), 
+  DaVinciTupleAlgorithm(name, pSvcLocator), 
   m_debug(0), 
   m_electron(0), 
   m_forcedBtool(0),
@@ -59,7 +59,7 @@ BTaggingAnalysis::~BTaggingAnalysis() {};
 //=============================================================================
 StatusCode BTaggingAnalysis::initialize() {
 
-  StatusCode sc = DVAlgorithm::initialize();
+  StatusCode sc = DaVinciTupleAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   m_assoc = tool<IParticle2MCAssociator>("MCMatchObjP2MCRelator", this);
@@ -1396,5 +1396,5 @@ double BTaggingAnalysis::GetInvariantMass(double MA, Gaudi::LorentzVector PA, do
 
 
 //=============================================================================
-StatusCode BTaggingAnalysis::finalize() {  return DVAlgorithm::finalize(); }
+StatusCode BTaggingAnalysis::finalize() {  return DaVinciTupleAlgorithm::finalize(); }
 

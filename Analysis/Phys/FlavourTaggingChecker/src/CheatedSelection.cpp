@@ -18,7 +18,7 @@ DECLARE_ALGORITHM_FACTORY( CheatedSelection );
 //=============================================================================
 CheatedSelection::CheatedSelection( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : DaVinciAlgorithm ( name , pSvcLocator )
   , m_debug(0), m_linker(0), m_forcedBtool(0)
 {
   declareProperty( "GeneratedBMassWindow", 
@@ -62,7 +62,7 @@ StatusCode CheatedSelection::initialize() {
     return StatusCode::FAILURE;
   }
 
-  return DVAlgorithm::initialize() ;
+  return DaVinciAlgorithm::initialize() ;
 }
 
 //=============================================================================
@@ -150,7 +150,7 @@ StatusCode CheatedSelection::execute() {
 //=============================================================================
 StatusCode CheatedSelection::finalize() {
   if( NULL != m_linker ) delete m_linker;
-  return DVAlgorithm::finalize();
+  return DaVinciAlgorithm::finalize();
 }
 
 //============================================================================

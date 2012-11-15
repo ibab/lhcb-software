@@ -6,7 +6,7 @@
 #include "Event/GenHeader.h"
 
 // from Gaudi
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 #include "MCInterfaces/IForcedBDecayTool.h"
 
@@ -23,7 +23,7 @@
  *  @date   16/11/2004
  */
 
-class CheatedSelection : public DVAlgorithm {
+class CheatedSelection : public DaVinciAlgorithm {
 
  public: 
   /// Standard constructor

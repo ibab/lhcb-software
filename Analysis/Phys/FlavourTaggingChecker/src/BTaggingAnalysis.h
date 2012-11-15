@@ -3,7 +3,7 @@
 #define USER_BTAGGINGANALYSIS_H 1
 
 // from Gaudi
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciTupleAlgorithm.h"
 // from Event 
 #include "Event/FlavourTag.h"
 #include "Event/GenHeader.h"
@@ -45,7 +45,7 @@
 using namespace LHCb;
 using namespace Gaudi::Units;
 
-class BTaggingAnalysis : public DVAlgorithm {
+class BTaggingAnalysis : public DaVinciTupleAlgorithm {
 
 public: 
   /// Standard constructor

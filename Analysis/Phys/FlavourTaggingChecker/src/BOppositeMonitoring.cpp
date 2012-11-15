@@ -25,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( BOppositeMonitoring );
 //=============================================================================
 BOppositeMonitoring::BOppositeMonitoring( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator ),
+  : DaVinciHistoAlgorithm ( name , pSvcLocator ),
     m_forcedBtool(0)
 {
 }
@@ -38,7 +38,7 @@ BOppositeMonitoring::~BOppositeMonitoring() {}
 // Initialization
 //=============================================================================
 StatusCode BOppositeMonitoring::initialize() {
-  StatusCode sc = DVAlgorithm::initialize(); 
+  StatusCode sc = DaVinciHistoAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
@@ -163,7 +163,7 @@ StatusCode BOppositeMonitoring::finalize() {
   info()<<"Barions: "<<nBarion/dmcpb<<endmsg;
   info()<<"#########"<<endreq;
   
-  return DVAlgorithm::finalize();
+  return DaVinciHistoAlgorithm::finalize();
 }
 
 //=============================================================================

@@ -16,7 +16,7 @@ DECLARE_ALGORITHM_FACTORY( BTaggingChecker );
 //==========================================================================
 BTaggingChecker::BTaggingChecker( const std::string& name,
                                   ISvcLocator* pSvcLocator )
-  : DVAlgorithm ( name , pSvcLocator ),
+  : DaVinciAlgorithm ( name , pSvcLocator ),
     m_debug(0)
   , m_forcedBtool(0) 
   , m_bkg(0)
@@ -32,7 +32,7 @@ BTaggingChecker::~BTaggingChecker() {};
 //==========================================================================
 StatusCode BTaggingChecker::initialize() {
 
-  StatusCode sc = DVAlgorithm::initialize() ;
+  StatusCode sc = DaVinciAlgorithm::initialize() ;
 
   m_debug = tool<IPrintDecayTreeTool> ( "PrintDecayTreeTool", this );
   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
@@ -253,6 +253,6 @@ StatusCode BTaggingChecker::finalize(){
          << "     (Total events= "<<std::setw(5) << int(nsele) <<")"<< endreq;
   info() << "=========================================================\n\n";
 
-  return DVAlgorithm::finalize() ; 
+  return DaVinciAlgorithm::finalize() ; 
 }
 

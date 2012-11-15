@@ -4,7 +4,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciHistoAlgorithm.h"
 
 #include "Event/RecHeader.h"
 #include "MCInterfaces/IForcedBDecayTool.h"
@@ -16,7 +16,7 @@
  *  @author Marc Grabalosa Gandara
  *  @date   2009-10-08
  */
-class BOppositeMonitoring : public DVAlgorithm {
+class BOppositeMonitoring : public DaVinciHistoAlgorithm {
 public: 
   /// Standard constructor
   BOppositeMonitoring( const std::string& name, ISvcLocator* pSvcLocator );

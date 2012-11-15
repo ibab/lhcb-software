@@ -25,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( BTaggingInclusive );
 //=============================================================================
 BTaggingInclusive::BTaggingInclusive( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator ), m_forcedBtool(0)
+  : DaVinciAlgorithm ( name , pSvcLocator ), m_forcedBtool(0)
 {
   declareProperty("TagsLocation",m_tagslocation = "/Event/Phys/Tags" );
   declareProperty("OSTagsLocation",m_ostagslocation = "/Event/Phys/OSTags" );

@@ -16,7 +16,7 @@
 #include "MCInterfaces/IForcedBDecayTool.h"
 
 // from DaVinci
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 
 // from local
 
@@ -26,7 +26,7 @@
  *  @author Onuora Awunor
  *  @date   2006-05-11
  */
-class BTaggingInclusive: public DVAlgorithm {
+class BTaggingInclusive: public DaVinciAlgorithm {
 public: 
   /// Standard constructor
   BTaggingInclusive( const std::string& , ISvcLocator* ); 
