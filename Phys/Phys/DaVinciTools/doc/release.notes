@@ -3,8 +3,11 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-11-15 - Chris Jones
+ - Update PrintDecayTree to use DaVinciAlgorithm base class
+
 ! 2012-10-18 - Chris Jones
- - Fix a few minor ceverity issues
+ - Fix a few minor coverity issues
 
 !========================= DaVinciTools v23r3 2012-10-04 =========================
 

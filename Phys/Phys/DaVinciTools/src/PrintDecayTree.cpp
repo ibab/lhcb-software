@@ -8,7 +8,7 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/IPrintDecay.h"
 // ============================================================================
 /** @class PrintDecayTree 
@@ -19,7 +19,7 @@
  *  @author Vanya BELYAEV Ivan.Belayev@nikhef.nl
  *  @date 2008-03-30
  */
-class PrintDecayTree : public DVAlgorithm
+class PrintDecayTree : public DaVinciAlgorithm
 {
   // ==========================================================================
   // the friend factory for instantiation 
@@ -31,7 +31,7 @@ public:
   virtual StatusCode execute() 
   {
     // get the tool 
-    if ( 0 == m_printDecay ) 
+    if ( !m_printDecay ) 
     { m_printDecay = tool<IPrintDecay>( m_printDecayName , this ) ; }
     // get the particles 
     const LHCb::Particle::ConstVector& parts = this->i_particles();
@@ -42,12 +42,6 @@ public:
     //
     return StatusCode::SUCCESS ;
   }
-  /// the standard finalization of the algorithm
-  virtual StatusCode finalize () 
-  {
-    m_printDecay = 0 ;
-    return DVAlgorithm::finalize () ;
-  }
   // ==========================================================================
 protected:
   // ==========================================================================
@@ -55,13 +49,12 @@ protected:
    *  @param name algorithm instance name 
    *  @param pSvc service locator 
    */
-  PrintDecayTree 
-  ( const std::string& name , 
-    ISvcLocator*       pSvc ) 
-    : DVAlgorithm ( name , pSvc ) 
+  PrintDecayTree ( const std::string& name , 
+                   ISvcLocator*       pSvc ) 
+    : DaVinciAlgorithm ( name , pSvc ) 
     , m_printDecayName ( "PrintDecayTreeTool/PrintDecay" )
-    , m_printDecay ( 0 ) 
-    , m_maxDepth   ( 3 )  
+    , m_printDecay     ( NULL ) 
+    , m_maxDepth       ( 3 )  
   {
     declareProperty 
       ( "PrintDecayTool" , m_printDecayName , 
