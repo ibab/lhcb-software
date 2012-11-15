@@ -16,12 +16,12 @@ use GaudiPolicy  v*
 
 #-- LHAPDF
 #============================================================================
-macro lhapdf_native_version "5.8.5"
+macro lhapdf_native_version "5.8.8"
 use lhapdf v* LCG_GeneratorsInterfaces
 set LHAPATH $(lhapdf_path)/share/lhapdf/PDFsets
 
 
-#-- Herwig++ and Jimmy
+#-- Herwig++ and ThePeg
 #============================================================================
 macro herwigpp_native_version "2.6.1a"
 macro thepeg_native_version   "1.8.1"
@@ -29,18 +29,18 @@ macro thepeg_native_version   "1.8.1"
 
 #-- AlpGen (until interface package exist in LCG)
 #============================================================================
-macro alpgen_native_version "2.1.3d"
+macro alpgen_native_version "2.1.4"
 
 #-- Pythia 8
 #============================================================================
-macro pythia8_native_version "163"
+macro pythia8_native_version "170"
 macro_append pythia8_linkopts " -lhepmcinterface "
 #set PYTHIA8DATA $(pythia8_home)/share/xmldoc
 
 
 #-- Pythia 6
 #============================================================================
-macro pythia6_native_version "425.2"
+macro pythia6_native_version "426.2"
 use pythia6  v* LCG_GeneratorsInterfaces -no_auto_imports
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
                         WIN32 " pythia6_pdfdummy.lib "
