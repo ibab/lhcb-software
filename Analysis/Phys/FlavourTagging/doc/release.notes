@@ -5,6 +5,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Stefania Vecchi
+ - fixed deprecated DVAlgorithm
 ! 2012-11-06 - Stefania Vecchi
  - fixed oddities in BTaggingTool.cpp and TaggingUtils.cpp
 ! 2012-11-05 - Stefania Vecchi

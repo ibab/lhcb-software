@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 
 #include "ICombineTaggersTool.h"
 #include "Kernel/IBTaggingTool.h"
@@ -19,7 +19,7 @@
  *  @date   2006-01-28
  */
 
-class DoubleTagging : public DVAlgorithm {
+class DoubleTagging : public DaVinciAlgorithm {
 
 public: 
   /// Standard constructor

@@ -25,7 +25,7 @@
 //
 #include <Kernel/IDVAlgorithm.h>
 #include <Kernel/GetIDVAlgorithm.h>
-class DVAlgorithm;
+class DaVinciAlgorithm;
 
 /** @class BTaggingTool BTaggingTool.h 
  *

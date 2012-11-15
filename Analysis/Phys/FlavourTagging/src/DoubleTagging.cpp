@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( DoubleTagging );
 //=============================================================================
 DoubleTagging::DoubleTagging( const std::string& name,
 			      ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator ) {
+  : DaVinciAlgorithm ( name , pSvcLocator ) {
   declareProperty( "MuonMissTagProb",m_Wm           = 0.32);
   declareProperty( "MuonMissTagProbError",m_SigmaWm = 0.017);
   declareProperty( "ElectronMissTagProb",m_We       = 0.33);  

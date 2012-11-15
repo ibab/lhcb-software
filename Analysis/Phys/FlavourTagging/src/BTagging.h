@@ -2,7 +2,7 @@
 #ifndef USER_BTAGGING_H 
 #define USER_BTAGGING_H 1
 
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/IBTaggingTool.h"
 
 /** @class BTagging BTagging.h 
@@ -13,7 +13,7 @@
  *  @date   02/10/2006
  */
 
-class BTagging : public DVAlgorithm {
+class BTagging : public DaVinciAlgorithm {
 
 public: 
   /// Standard constructor

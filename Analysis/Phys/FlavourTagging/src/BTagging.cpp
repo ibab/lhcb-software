@@ -19,7 +19,7 @@ DECLARE_ALGORITHM_FACTORY( BTagging );
 //=======================================================================
 BTagging::BTagging(const std::string& name,
                    ISvcLocator* pSvcLocator):
-  DVAlgorithm(name, pSvcLocator),
+  DaVinciAlgorithm(name, pSvcLocator),
   m_TagLocation("FlavourTags")
 
 { 
@@ -29,7 +29,7 @@ BTagging::BTagging(const std::string& name,
 //=======================================================================
 StatusCode BTagging::initialize() { 
 
-  return DVAlgorithm::initialize() ; 
+  return DaVinciAlgorithm::initialize() ; 
 
 }
 
@@ -150,7 +150,7 @@ void BTagging::performTagging(const std::string & location)
 
 //=========================================================================
 StatusCode BTagging::finalize() { 
-  return DVAlgorithm::finalize(); 
+  return DaVinciAlgorithm::finalize(); 
 }
 
 //==========================================================================
