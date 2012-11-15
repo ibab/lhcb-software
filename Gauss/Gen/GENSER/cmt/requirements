@@ -22,6 +22,7 @@ set LHAPATH $(lhapdf_path)/share/lhapdf/PDFsets
 
 
 #-- Herwig++ and ThePeg
+# Set native versions of required software.
 #============================================================================
 macro herwigpp_native_version "2.6.1a"
 macro thepeg_native_version   "1.8.1"
@@ -31,11 +32,19 @@ macro thepeg_native_version   "1.8.1"
 #============================================================================
 macro alpgen_native_version "2.1.4"
 
+
+#-- Photos++ and Taula++ 
+#============================================================================
+macro photos++_native_version "3.51"
+macro tauola++_native_version "1.0.7"
+
+
 #-- Pythia 8
+#   PYTHIA8DATA is needed by EvtGen? 
 #============================================================================
 macro pythia8_native_version "170"
 macro_append pythia8_linkopts " -lhepmcinterface "
-#set PYTHIA8DATA $(pythia8_home)/share/xmldoc
+set PYTHIA8DATA $(pythia8_home)/xmldoc
 
 
 #-- Pythia 6
@@ -44,6 +53,11 @@ macro pythia6_native_version "426.2"
 use pythia6  v* LCG_GeneratorsInterfaces -no_auto_imports
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
                         WIN32 " pythia6_pdfdummy.lib "
+
+#-- Rivet for reference analysis with comparison with published data and
+#-- Professor for tuning
+#============================================================================
+macro rivet_native_version "1.8.1"
 
 #-- Redefine symbols of MCGenerators libraries
 #-- Pythia 6
@@ -60,7 +74,6 @@ include_dirs $(GENSERROOT)/src/pythia6
 
 # force the order of link for pythia6
 macro_append GENSER_linkopts " $(pythia6_linkopts) "
-
 
 #-- Hijing
 #============================================================================
