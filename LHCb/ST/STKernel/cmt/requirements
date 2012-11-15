@@ -10,6 +10,7 @@ use DAQEvent    v* Event
 use SiDAQ       v* Si
 use STDet       v* Det
 use Boost       v* LCG_Interfaces
+use AIDA        v* LCG_Interfaces -no_auto_imports
 
 branches Kernel doc cmt src 
 

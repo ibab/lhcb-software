@@ -4,6 +4,9 @@
 ! Purpose     : Various histogram <---> string conversion functions
 ! -----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= HistoStrings v1r3 2011-12-14 =========================
 ! 2011-11-18 - Vanya Belyaev
  - provide parser/conversions functions for TH1F and TH2F classes, 

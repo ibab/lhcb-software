@@ -4,6 +4,9 @@
 ! Purpose     : Event Model classes for persistency of the swimming result
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= SwimmingEvent v1r2 2012-02-28 ========================
 ! 2012-02-28 - Marco Cattaneo
  - Fix requirements to set -DGOD_NOALLOC when tag 'target-dbg' is set, previuosly

@@ -4,6 +4,9 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-12 - Marco Clemencic
  - Fixed warnings (-pedantic and Eclipse).
 

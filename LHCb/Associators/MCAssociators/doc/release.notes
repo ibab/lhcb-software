@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= MCAssociators v1r1 2011-04-26 =========================
 ! 2011-04-20 - Marco Cattaneo
  - Remove unneccessary dependencies on DaVinciInterfaces, LoKiCore, RecEvent

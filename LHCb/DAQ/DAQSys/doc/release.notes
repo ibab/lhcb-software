@@ -4,6 +4,9 @@
 ! Purpose     : Hat package for packages encoding and decoding DAQ buffers
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= DAQSys v6r0 2009-02-18 ============================
 ! 2009-02-18 - Marco Cattaneo
  - Remove explicit versions from requirements

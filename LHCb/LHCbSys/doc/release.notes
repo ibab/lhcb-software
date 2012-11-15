@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 </PRE><H1><A NAME=v35r2>2012-10-01 LHCbSys v35r2</A></H1><PRE>
 This version uses Gaudi v23r4 and LCG_64a
 

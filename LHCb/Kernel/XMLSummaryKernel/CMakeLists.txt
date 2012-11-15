@@ -1,0 +1,23 @@
+################################################################################
+# Package: XMLSummaryKernel
+################################################################################
+gaudi_subdir(XMLSummaryKernel v1r8)
+
+gaudi_depends_on_subdirs(GaudiConf
+                         GaudiKernel
+                         GaudiUtils
+                         Kernel/XMLSummaryBase)
+
+find_package(Boost COMPONENTS regex)
+find_package(PythonLibs)
+find_package(Xrootd) # runtime, only for the tests
+
+gaudi_add_module(XMLSummaryKernel
+                 src/*.cpp
+                 INCLUDE_DIRS Boost PythonLibs
+                 LINK_LIBRARIES Boost PythonLibs GaudiKernel GaudiUtilsLib)
+
+gaudi_install_python_modules()
+
+
+gaudi_add_test(QMTest QMTEST)

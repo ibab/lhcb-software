@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= DetDesc v18r29 2012-01-31 =========================
 ! 2012-01-09 - Marco Clemencic
  - Added a special "update mode" to ValidDataObject to be able to change the

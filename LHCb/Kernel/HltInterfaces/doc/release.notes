@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= HltInterfaces v4r7 2012-09-28 =========================
 ! 2012-09-21 - Marco Clemencic
  - Fixed compilation with -std=c++11 (-std=c++0x).

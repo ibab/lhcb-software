@@ -4,6 +4,9 @@
 ! Purpose     : BCM DetectorElement
 !----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= BcmDet v1r3 2009-05-06 ==========================
 ! 2009-05-04 - Olivier Callot
  - Call the base class constructor in DeBcm and DeBcmSens

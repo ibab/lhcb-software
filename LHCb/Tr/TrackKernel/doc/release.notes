@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= TrackKernel v1r10 2012-06-25 =========================
 ! 2012-06-21 - Wouter Hulsbergen
  - Added adaptive fit to TrackStateVertex

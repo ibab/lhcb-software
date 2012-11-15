@@ -3,6 +3,9 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-19 - Marco Cattaneo
  - Fix a gcc -pedantic warning
 

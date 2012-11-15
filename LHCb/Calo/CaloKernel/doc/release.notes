@@ -6,6 +6,9 @@
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= CaloKernel v6r2p1 2012-02-28 =======================
 ! 2012-02-27 - Marco Cattaneo
  - Fix trivial icc remarks

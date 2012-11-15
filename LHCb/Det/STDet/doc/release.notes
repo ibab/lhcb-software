@@ -3,6 +3,9 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-01 - Jianchun Wang
  - Fix multiple return in inline functions.
 

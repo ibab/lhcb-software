@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-12 - Marco Cattaneo
  - Fix a compilation warning and an UNINIT_CTOR defect
 

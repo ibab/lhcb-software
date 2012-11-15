@@ -2,6 +2,9 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= VeloDet v13r18p1 2012-04-04 =======================
 ! 2012-04-03 - David Hutchcroft
  - Fixed crash in DeVeloRType when getting closest M2 line to points at inner

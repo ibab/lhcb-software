@@ -3,6 +3,9 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= MCEvent v2r23 2012-09-28 =========================
 ! 2012-09-27 - Paul Szczypka
  - Correct mistake in requirements file (required specific version of LHCbKernel).

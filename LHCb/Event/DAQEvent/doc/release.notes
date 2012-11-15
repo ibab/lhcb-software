@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= DAQEvent v9r11 2012-09-28 =========================
 ! 2012-09-27 - Markus Frank
  - Add missing bank types to LHCb::RawBank::typeName(...)

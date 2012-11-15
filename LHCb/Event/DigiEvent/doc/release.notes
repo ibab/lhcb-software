@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-02 - Jianchun Wang
  - Modify SiLiteCluster.xml so that channelID length is 25 when requested,
    otherwise it is 24, compatible with existing data.

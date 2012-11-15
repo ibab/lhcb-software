@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-09 - Vanya Belyaev
  - add functions for calcualtion of sum/difference/multiplication/division 
    with correlation 

@@ -14,6 +14,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= LoKiMC v10r6 2012-06-25 =========================
 ! 2012-06-16 - Vanya Belyaev
  - imporove treatment of children 

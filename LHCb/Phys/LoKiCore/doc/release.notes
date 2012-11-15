@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-17 - Marco Cattaneo
  - Fix an unprotected debug
  - Remove unnecessary disclaimers from file documentation blocks

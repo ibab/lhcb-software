@@ -3,6 +3,9 @@
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !==================== LinkerInstances v3r5 2009-06-02 =========================
 ! 2009-06-02 - Thomas Ruf
  - added support for ContainedObject to dict, required for OTChannelID linking,

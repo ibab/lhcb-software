@@ -18,6 +18,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= LoKiNumbers v10r2 2011-11-07 =========================
 ! 2011-10-30 - Vanya Belyaev
  - update for stream sorting functors 

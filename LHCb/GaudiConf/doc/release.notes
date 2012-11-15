@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-09 - Chris Jones
  - Add a filter to the Charged ProtoParticle unpacking sequence that checks if
    they exist before running the PID recalibration algorithms.

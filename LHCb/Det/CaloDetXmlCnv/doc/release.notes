@@ -4,6 +4,9 @@
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !===================== CaloDetXmlCnv v3r2 2008-07-16 ========================
 ! 2008-06-30 - Olivier Deschamps
  - Adapt to new structure in Calo DDDDB (add src/XmlDeSubSubCalorimeterCnv.cpp)

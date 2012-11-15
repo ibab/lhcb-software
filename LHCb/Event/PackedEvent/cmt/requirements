@@ -34,5 +34,4 @@ apply_pattern linker_library library=PackedEventLib
 apply_pattern reflex_dictionary \
                   dictionary=PackedEvent \
                   headerfiles=$(PACKEDEVENTROOT)/dict/PackedEventDict.h     \
-                  selectionfile=$(PACKEDEVENTROOT)/dict/PackedEventDict.xml \
-                  imports=ROOT
+                  selectionfile=$(PACKEDEVENTROOT)/dict/PackedEventDict.xml

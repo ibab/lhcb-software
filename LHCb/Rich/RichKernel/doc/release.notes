@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-02 - Antonis Papanestis
  - Adapted HPDIdentifier class to accept also numbering schemes for MaPMTs
 	 Scheme is RPMMMNN for Rich, Panel, Module (column) and Number

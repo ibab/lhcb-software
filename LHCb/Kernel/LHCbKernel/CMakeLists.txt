@@ -1,0 +1,39 @@
+################################################################################
+# Package: LHCbKernel
+################################################################################
+gaudi_subdir(LHCbKernel v13r13)
+
+gaudi_depends_on_subdirs(GaudiAlg
+                         GaudiKernel
+                         GaudiObjDesc
+                         Kernel/LHCbMath)
+
+find_package(Boost COMPONENTS system)
+find_package(ROOT)
+
+include(GaudiObjDesc)
+
+god_build_headers(xml/*.xml
+                  DESTINATION Kernel)
+
+gaudi_add_library(LHCbKernel
+                  src/*.cpp
+                  PUBLIC_HEADERS Kernel
+                  INCLUDE_DIRS ROOT Boost
+                  LINK_LIBRARIES ROOT Boost GaudiKernel GaudiObjDescLib LHCbMathLib GaudiAlgLib)
+
+god_build_dictionary(xml/*.xml
+                     HEADERS_DESTINATION Kernel
+                     EXTEND dict/LHCbKernelDict.h
+                     INCLUDE_DIRS ROOT Boost
+                     LINK_LIBRARIES ROOT Boost GaudiKernel GaudiObjDescLib LHCbMathLib LHCbKernel)
+
+if(GAUDI_BUILD_TESTS)
+  gaudi_add_executable(RichSmartIDTest
+                       tests/RichSmartIDTest/*.cpp
+                       INCLUDE_DIRS ROOT Boost
+                       LINK_LIBRARIES ROOT Boost GaudiKernel GaudiObjDescLib LHCbMathLib LHCbKernel)
+endif()
+
+gaudi_install_python_modules()
+

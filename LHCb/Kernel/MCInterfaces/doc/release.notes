@@ -4,6 +4,9 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= MCInterfaces v1r15 2012-05-02 =========================
 ! 2012-04-08 - Vanya Belyaev
  - build dictionatries for IGenCutTool and IFullGenEventCutTool interfaces 

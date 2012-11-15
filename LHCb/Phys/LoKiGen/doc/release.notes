@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= LoKiGen v10r9 2012-10-22 =========================
 ! 2012-10-19 - Vanya Belyaev
  - bug fix in 4-vector-functors

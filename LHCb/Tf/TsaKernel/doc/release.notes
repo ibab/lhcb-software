@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= TsaKernel v3r6p1 2011-11-07 =========================
 ! 2011-10-17 - Marco Cattaneo
  - Fix typo in TsaKernel/SeedTrack.h, coverity bug 22106

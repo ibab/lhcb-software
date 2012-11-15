@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= LinkerEvent v3r8 2011-04-26 =========================
 ! 2011-04-19 - Olivier Callot
  - Fix a warining for Coverity in LinkerTable, uninitialized variable.

@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model
 !---------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= EventBase v3r0 2012-03-26 =========================
 ! 2012-03-22 - Marco Cattaneo
  - Remove ProcessHeader::m_randomSeeds since they are not used anywhere and

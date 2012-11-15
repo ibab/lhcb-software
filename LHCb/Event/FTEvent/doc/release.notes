@@ -4,6 +4,9 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= FTEvent v1r0 2012-09-30 =========================
 ! 2012-09-30 - Marco Cattaneo
   - Suppress icc warning 191 when compiling generated dictionary file

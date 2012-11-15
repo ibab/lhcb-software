@@ -4,6 +4,9 @@
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= L0Base v2r1 2012-07-24 =========================
 ! 2012-07-18 - Olivier Deschamps
  - L0FromRawBase : new method rawEventLocations  returns the vector of possible locations

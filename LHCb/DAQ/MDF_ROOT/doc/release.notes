@@ -4,6 +4,9 @@
 ! Purpose     : ROOT plugin to read MDF files.
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= MDF_ROOT v1r8 2012-09-28 =========================
 ! 2012-09-26 - Marco Clemencic
   - Minor changes to requirements for a smoother migration to CMake.

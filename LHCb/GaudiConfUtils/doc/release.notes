@@ -4,6 +4,9 @@
 ! Purpose     : Helper python modules for Configurable manipulations.
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= GaudiConfUtils v1r0 2011-01-31 =========================
 ! 2011-01-28 - Marco Clemencic
  - Added meta-module GaudiConfUtils.ConfigurableGenerators to provide

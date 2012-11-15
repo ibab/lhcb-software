@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= TfKernel v2r22 2012-02-28 =========================
 ! 2012-02-09 - Manuel Tobias Schiller
  - fix (hopefully once and for all) an issue with std::sort not being stable;

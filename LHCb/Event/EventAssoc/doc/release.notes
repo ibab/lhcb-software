@@ -4,6 +4,9 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= EventAssoc v5r1 2011-01-31 =========================
 ! 2011-01-10 - Marco Cattaneo
  - Fix icc warnings

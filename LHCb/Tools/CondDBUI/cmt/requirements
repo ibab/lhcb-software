@@ -11,6 +11,7 @@ use Python  v* LCG_Interfaces -no_auto_imports
 use COOL    v* LCG_Interfaces -no_auto_imports
 apply_tag    NEEDS_PYCOOL
 use ROOT    v* LCG_Interfaces -no_auto_imports
+use Boost   v* LCG_Interfaces -no_auto_imports
 
 use DDDB       v*    Det -no_auto_imports
 use pytools    v* LCG_Interfaces -no_auto_imports
@@ -50,7 +51,7 @@ use Reflex       v*   LCG_Interfaces
 apply_pattern reflex_dictionary dictionary=CondDBUI \
                                 headerfiles=$(CONDDBUIROOT)/dict/dictionary.h \
                                 selectionfile=$(CONDDBUIROOT)/dict/dictionary.xml \
-                                imports="Python -import=COOL -import=Boost"
+                                imports="Python -import=COOL -import=Boost -import=CORAL"
 macro_append CondDBUI_reflex_options ' $(lib_CondDBUIDict_cppflags) '
 
 # CORAL path

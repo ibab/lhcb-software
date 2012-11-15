@@ -1,0 +1,13 @@
+################################################################################
+# Package: L0Base
+################################################################################
+gaudi_subdir(L0Base v2r1)
+
+gaudi_depends_on_subdirs(Event/DAQEvent
+                         GaudiAlg)
+
+gaudi_add_library(L0Base
+                  src/*.cpp
+                  PUBLIC_HEADERS L0Base
+                  LINK_LIBRARIES DAQEventLib GaudiAlgLib)
+

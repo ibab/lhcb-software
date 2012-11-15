@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= MuonInterfaces v1r2p2 2011-11-07 =========================
 ! 2011-10-11 - Marco Cattaneo
  - Trivial fix to icc remark

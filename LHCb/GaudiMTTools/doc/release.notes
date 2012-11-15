@@ -4,6 +4,9 @@
 ! Purpose     : The package for Gaudi multithreading tools and machinery
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= GaudiMTTools v1r1 2012-07-24 =========================
 ! 2012-07-13 - Marco Clemencic
  - Fixed compilation with Boost 1.50.

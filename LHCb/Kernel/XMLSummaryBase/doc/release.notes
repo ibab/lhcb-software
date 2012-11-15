@@ -4,6 +4,9 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= XMLSummaryBase v1r3 2012-09-28 =========================
 ! 2012-09-26 - Marco Clemencic
  - Removed transient QMTest directory.

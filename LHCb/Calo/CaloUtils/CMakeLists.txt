@@ -1,0 +1,34 @@
+################################################################################
+# Package: CaloUtils
+################################################################################
+gaudi_subdir(CaloUtils v9r5)
+
+gaudi_depends_on_subdirs(Calo/CaloInterfaces
+                         Det/CaloDet
+                         Event/DigiEvent
+                         Event/L0Event
+                         Event/MCEvent
+                         Event/PhysEvent
+                         Event/RecEvent
+                         Event/TrackEvent
+                         GaudiAlg
+                         Kernel/LHCbMath
+                         Tr/TrackInterfaces)
+
+find_package(AIDA)
+
+gaudi_add_library(CaloUtils
+                  src/*.cpp
+                  PUBLIC_HEADERS CaloUtils
+                  INCLUDE_DIRS AIDA Event/DigiEvent Tr/TrackInterfaces
+                  LINK_LIBRARIES CaloInterfaces CaloDetLib L0Event MCEvent PhysEvent RecEvent TrackEvent GaudiAlgLib LHCbMathLib)
+
+gaudi_add_dictionary(CaloUtils
+                     dict/CaloUtilsDict.h
+                     dict/CaloUtils.xml
+                     INCLUDE_DIRS Event/DigiEvent Tr/TrackInterfaces
+                     LINK_LIBRARIES CaloInterfaces CaloDetLib L0Event MCEvent PhysEvent RecEvent TrackEvent GaudiAlgLib LHCbMathLib CaloUtils
+                     OPTIONS " -U__MINGW32__ ")
+
+gaudi_install_python_modules()
+

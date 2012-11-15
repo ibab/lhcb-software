@@ -4,6 +4,9 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= DAQUtils v1r9 2012-07-24 =========================
 ! 2012-07-06 - Marco Cattaneo
  - Use new TES getIfExists function instead of separate exist and get calls

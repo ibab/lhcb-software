@@ -3,6 +3,9 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= CaloDet v10r14 2012-06-25 =========================
 ! 2012-06-24 - Olivier Deschamps
   - DeCalorimeter : get covariance parameters from Gain condition

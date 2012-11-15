@@ -2,6 +2,9 @@
 ! Package     : VLDet
 !-------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-16 - Heinrich Schindler
  - removed unused functions, added functions for pattern recognition
 

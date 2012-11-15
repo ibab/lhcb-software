@@ -3,6 +3,9 @@
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= STTELL1Event v1r10 2011-01-31 =========================
 ! 2011-01-17 - Marco Cattaneo
  - Fix ICC warings and remarks

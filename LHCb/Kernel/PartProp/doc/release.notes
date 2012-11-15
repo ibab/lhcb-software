@@ -4,6 +4,9 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= PartProp v1r13 2012-03-26 =========================
 ! 2012-02-28 - Chris Jones
  - Add some hash functions for ParticleID
