@@ -9,8 +9,8 @@
 <argument name="validator"><text>
 findReferenceBlock("""
 BTaggingChecker                            INFO =======================================================
-BTaggingChecker                            INFO  Summary: EXCLUSIVE TAGGING PERFORMANCE
-BTaggingChecker                            INFO  Category            EFF.          Etag         Wrong TF      r       w
+BTaggingChecker                            INFO  Summary: EXCLUSIVE TAGGING PERFORMANCE 
+BTaggingChecker                            INFO  Category            EFF.          Etag         Wrong TF      r       w       
 BTaggingChecker                            INFO        1  NNet      0.12+-0.49       20+-2.9       46+-8      21      18
 BTaggingChecker                            INFO        2  NNet       2.1+-1.9       12+-2.3       29+-9.3      17       7
 BTaggingChecker                            INFO        3  NNet       4.1+-2.2      7.7+-1.9       13+-8.8      13       2
@@ -19,7 +19,8 @@ BTaggingChecker                            INFO --------------------------------
 BTaggingChecker                            INFO  **   OS muons     -0.2+-0.64      5.1+-1.6       60+-15       4       6
 BTaggingChecker                            INFO  **   OS elect      2.3+-1.6      4.1+-1.4       12+-12       7       1
 BTaggingChecker                            INFO  **   OS kaons     0.39+-0.88       17+-2.7       42+-8.6      19      14
-BTaggingChecker                            INFO  **   SS k/pi       2.9+-2.2       11+-2.2       24+-9.3      16       5
+BTaggingChecker                            INFO  **   SS kaon       2.9+-2.2       11+-2.2       24+-9.3      16       5
+BTaggingChecker                            INFO  **   SS pion     -0.51+-0.98      4.6+-1.5       67+-16       3       6
 BTaggingChecker                            INFO  **   VertexCh      6.4+-3       16+-2.6       19+-6.9      26       6
 BTaggingChecker                            INFO ---------------------------------------------------------
 BTaggingChecker                            INFO Tagging efficiency =     42 +/- 3.5 %
