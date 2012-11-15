@@ -248,7 +248,8 @@ StatusCode RootDataConnection::connectRead()  {
     if ( msgSvc().isActive() ) m_file->Print();
     if ( makeTool() )   {
       sc = m_tool->readRefs();
-      if ( sc == ROOT_READ_ERROR ) {
+      sc.ignore();
+      if ( sc.getCode() == ROOT_READ_ERROR ) {
 	IIncidentSvc* inc = m_setup->incidentSvc();
 	if ( inc ) {
 	  inc->fireIncident(Incident(pfn(),IncidentType::CorruptedInputFile));
@@ -320,7 +321,8 @@ StatusCode RootDataConnection::connectWrite(IoType typ)  {
     if ( m_file && !m_file->IsZombie() )  {
       if ( makeTool() )   {
 	StatusCode sc = m_tool->readRefs();
-	if ( sc == ROOT_READ_ERROR ) {
+	sc.ignore();
+	if ( sc.getCode() == ROOT_READ_ERROR ) {
 	  IIncidentSvc* inc = m_setup->incidentSvc();
 	  if ( inc ) {
 	    inc->fireIncident(Incident(pfn(),IncidentType::CorruptedInputFile));

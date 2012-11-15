@@ -149,6 +149,7 @@ StatusCode RootCnvSvc::finalize()    {
   }
   deletePtr(m_log);
   releasePtr(m_incidentSvc);
+  m_setup->setIncidentSvc(0);
   return ConversionSvc::finalize();
 }
 
