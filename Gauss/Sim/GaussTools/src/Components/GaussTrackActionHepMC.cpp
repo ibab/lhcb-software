@@ -15,6 +15,7 @@
 
 // G4
 #include "G4TrackingManager.hh"
+#include "G4PrimaryParticle.hh"
 
 // GiGa 
 #include "GiGa/IGiGaSvc.h"
