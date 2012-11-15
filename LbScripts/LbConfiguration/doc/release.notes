@@ -1,3 +1,7 @@
+2012-11-15 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: Added new package PRConfig
+
 2012-11-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile-cmt.mk: renamed the old generic CMT Makefile
