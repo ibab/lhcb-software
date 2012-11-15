@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-11-15 - Gloria Corti
+ - Remove macro definitions for native version of photo++ and taula++ that
+   must be located in GENSER for script to make tarball for remove distribution
+   of the code to work
+
 ! 2012-10-08 - John Back
  - Provide default constructors for EvtVector4R and EvtPhotonParticle.
    Corrected the t3 vector form factor values for the Ball-Zwicky '05 model 
