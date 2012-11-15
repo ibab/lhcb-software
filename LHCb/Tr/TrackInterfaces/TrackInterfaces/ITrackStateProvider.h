@@ -54,5 +54,10 @@ public:
   /// stays with the tool. A zero pointer indicates an error.
   virtual const LHCb::TrackTraj* trajectory( const LHCb::Track& track ) const = 0 ;
 
+  /// Clear the cache
+  virtual void clearCache() = 0 ;
+
+  /// Clear the cache for a particular track
+  virtual void clearCache(const LHCb::Track& track) = 0 ;
 };
 #endif // TRACKINTERFACES_ITRACKSTATEPROVIDER_H
