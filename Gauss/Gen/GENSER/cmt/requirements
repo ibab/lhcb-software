@@ -21,16 +21,15 @@ use lhapdf v* LCG_GeneratorsInterfaces
 set LHAPATH $(lhapdf_path)/share/lhapdf/PDFsets
 
 
-#-- Herwig and Jimmy
+#-- Herwig++ and Jimmy
 #============================================================================
-macro herwig_native_version "6.510.3"
-macro jimmy_native_version "4.31.3"
+macro herwigpp_native_version "2.6.1a"
+macro thepeg_native_version   "1.8.1"
 
 
 #-- AlpGen (until interface package exist in LCG)
 #============================================================================
 macro alpgen_native_version "2.1.3d"
-
 
 #-- Pythia 8
 #============================================================================
