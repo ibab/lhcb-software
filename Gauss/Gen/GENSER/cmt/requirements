@@ -3,7 +3,7 @@
 # Maintainer : Patrick ROBBE, Gloria CORTI
 #============================================================================
 package GENSER
-version v10r0
+version v12r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -13,11 +13,6 @@ branches doc cmt src
 #============================================================================
 
 use GaudiPolicy  v*
-
-#-- Photos
-#============================================================================
-#macro photos_native_version "215.4"
-#use photos v* LCG_GeneratorsInterfaces
 
 #-- LHAPDF
 #============================================================================
@@ -67,14 +62,6 @@ include_dirs $(GENSERROOT)/src/pythia6
 # force the order of link for pythia6
 macro_append GENSER_linkopts " $(pythia6_linkopts) "
 
-#-- Photos
-#============================================================================
-#library      photosforgauss   photos/*.F 
-
-#apply_pattern linker_library library=photosforgauss
-
-# force the order of link for photos
-#macro_append GENSER_linkopts " $(photos_linkopts) "
 
 #-- Hijing
 #============================================================================
@@ -91,12 +78,6 @@ macro_append hijingforgauss_shlibflags "$(hijing_home)/lib/hidata.o $(hijing_hom
 # force the order of link for hijing
 macro_append GENSER_linkopts " $(hijing_linkopts) "
 macro_append hijing_linkopts " -lpythia_hijing "
-
-#macro_prepend tauola++_linkopts "-Wl,--no-as-needed "
-#macro_append tauola++_linkopts "-Wl,--as-needed "
-
-#macro_prepend photos++_linkopts "-Wl,--no-as-needed "
-#macro_append photos++_linkopts "-Wl,--as-needed "
 
 
 private
