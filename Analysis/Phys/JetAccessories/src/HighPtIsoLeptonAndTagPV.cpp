@@ -13,7 +13,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiAlg/ITupleTool.h"
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 //#include <Kernel/IGeomDispCalculator.h>
 #include "Kernel/IParticleTransporter.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
@@ -40,7 +40,7 @@ DECLARE_ALGORITHM_FACTORY( HighPtIsoLeptonAndTagPV )
 StatusCode HighPtIsoLeptonAndTagPV::initialize () 
 {
 
-  StatusCode sc = DVAlgorithm::initialize(); 
+  StatusCode sc = DaVinciAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
   if ( 0 == m_pVertexFit ) 
@@ -155,7 +155,7 @@ StatusCode HighPtIsoLeptonAndTagPV::execute()
 
 	if (p->charge() == 0 ){
 	  if ( p->particleID().abspid() != 310 && p->particleID().abspid() != 3122 ) {}
-	    else if ( (DVAlgorithm::bestPV(p))->key() == (*i_pv)->key() ) {}
+	    else if ( (DaVinciAlgorithm::bestPV(p))->key() == (*i_pv)->key() ) {}
 	  else 
 	    continue ;
 	}
@@ -164,12 +164,12 @@ StatusCode HighPtIsoLeptonAndTagPV::execute()
 	  if (( p->particleID().isLepton()) ){
 	    debug()  << "p->particleID().abspid() = " << p->particleID().abspid()<< endmsg;
 
-	    debug()  << "DVAlgorithm::bestPV(p)->position = " << (DVAlgorithm::bestPV(p))->position()<< endmsg;
+	    debug()  << "DaVinciAlgorithm::bestPV(p)->position = " << (DaVinciAlgorithm::bestPV(p))->position()<< endmsg;
 
 	  }
 
 	  if ( LHCb::Track::Downstream == p->proto()->track()->type() ) {}
-	  else if ((DVAlgorithm::bestPV(p))->key() == (*i_pv)->key() ) {}
+	  else if ((DaVinciAlgorithm::bestPV(p))->key() == (*i_pv)->key() ) {}
 	  else {}//continue ;}
 	}
       

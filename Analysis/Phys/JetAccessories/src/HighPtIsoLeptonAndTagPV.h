@@ -16,7 +16,7 @@
 // DaVinci Kernel 
 // ============================================================================
 #include "Kernel/IParticleCombiner.h"
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -38,14 +38,14 @@
 
 class IDistanceCalculator;
 
-class  HighPtIsoLeptonAndTagPV : public DVAlgorithm {
+class  HighPtIsoLeptonAndTagPV : public DaVinciAlgorithm {
 
   // the friend factory fo instantiation 
   friend class AlgFactory<HighPtIsoLeptonAndTagPV> ;
  public:
   HighPtIsoLeptonAndTagPV
     (const std::string& name, ISvcLocator* pSvcLocator)
-    : DVAlgorithm(name,pSvcLocator)
+    : DaVinciAlgorithm(name,pSvcLocator)
  
     ,   m_FilterPart       ( true )
     ,   m_LeptID           ( 10099  )

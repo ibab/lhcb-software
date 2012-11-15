@@ -7,6 +7,10 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-11-15 - Cedric Potterat
+
+ - change DVAlgorithm to DaVinciAlgorithm in HighPtIsoLepton
+
 ! 2012-11-12 - Albert Bursche
 
 Fixed small bug in VBVertexRequirement
