@@ -195,21 +195,21 @@ namespace Gaudi {
     /// Read reference tables
     StatusCode readRefs()  {
       TTree* t = (TTree*)c->file()->Get("Sections");
-      StatusCode sc;
+      StatusCode sc(StatusCode::SUCCESS,true);
       StringVec tmp;
       if ( t && !(sc=readBranch(t,  "Sections",  tmp,       &RootTool::addEntry)).isSuccess() )
         return sc;
       else if ( refs() ) {
         analyzeMergeMap(tmp);
-        if ( !readBranch(refs(),"Databases", dbs(),     &RootTool::addEntry).isSuccess() )
+        if ( !(sc=readBranch(refs(),"Databases", dbs(),     &RootTool::addEntry)).isSuccess() )
           return sc;
-        if ( !readBranch(refs(),"Containers",conts(),   &RootTool::addEntry).isSuccess() )
+        if ( !(sc=readBranch(refs(),"Containers",conts(),   &RootTool::addEntry)).isSuccess() )
           return sc;
-        if ( !readBranch(refs(),"Links",     links(),   &RootTool::addEntry).isSuccess() )
+	if ( !(sc=readBranch(refs(),"Links",     links(),   &RootTool::addEntry)).isSuccess() )
           return sc;
-        if ( !readBranch(refs(),"Params",    params(),  &RootTool::addParam).isSuccess() )
+	if ( !(sc=readBranch(refs(),"Params",    params(),  &RootTool::addParam)).isSuccess() )
           return sc;
-        return StatusCode::SUCCESS;
+        return sc;
       }
       return StatusCode::FAILURE;
     }
