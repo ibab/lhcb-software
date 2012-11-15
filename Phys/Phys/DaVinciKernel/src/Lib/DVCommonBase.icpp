@@ -623,7 +623,7 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
     // Msg number of Particles retrieved
     if ( this->msgLevel(MSG::VERBOSE) )
     {
-      this->verbose() << "    Number of Particles retrieved from "
+      this->verbose() << "Number of Particles retrieved from "
                       << location << " = " << parts.size() << endmsg;
     }
 
@@ -635,17 +635,11 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
       m_inputParts.push_back(*icand);
     }
 
-    if ( this->msgLevel(MSG::VERBOSE) )
-    {
-      this->verbose() << "Number of Particles after adding "
-                      << *iloc << " = " << m_parts.size() << endmsg;
-    }
-
   }
 
   if ( this->msgLevel(MSG::VERBOSE) )
   {
-    this->verbose() << "    Total number of particles " << m_parts.size() << endmsg;
+    this->verbose() << "Total number of input particles " << m_inputParts.size() << endmsg;
   }
 
   // statistics:
