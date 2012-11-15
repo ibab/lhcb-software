@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-11-15 - Anton Poluektov 
+ - Revert the change in BandQ Stripping20, include Xistar window back
+   (Stripping20r1 dict is already correct, no need to change it)
+
 ! 2012-11-13 - Anton Poluektov 
  - Add Stripping20r1 dictionary, copy from Stripping20 with modifed Beauty2XGamma config
 

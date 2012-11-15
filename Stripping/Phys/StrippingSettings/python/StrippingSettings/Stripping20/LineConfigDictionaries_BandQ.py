@@ -741,6 +741,7 @@ HeavyBaryon = {
                           'KaonPIDK'              :      -5.,
                           'DLSForLongLived'       :       5.,
                           'XiMassWindow'          :      30.,
+                          'XistarMassWindow'      :     150., 
                           'OmegaMassWindow'       :      30.,
                           "XibminusMassWindow"    :     300.,
                           "XibzeroMassWindow"     :     500.,
