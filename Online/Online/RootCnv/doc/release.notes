@@ -4,7 +4,10 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
-!========================= RootCnv v1r19 2012-11-14 =========================
+!========================= RootCnv v1r19 2012-11-16 =========================
+! 2012-11-16 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-14 - Markus Frank
  - Add incident "CorruptedInputFile" if the data or reference branch 
    of a given file cannot be read (aka ROOT returns -1 on read).
