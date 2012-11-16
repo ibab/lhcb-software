@@ -151,17 +151,16 @@ Velo::VeloSamplingMonitor::veloClusters( std::string samplingLocation ) {
   if ( m_debugLevel )
     debug() << "Retrieving VeloClusters from " << tesPath << endmsg;
 
-  if ( !exist<LHCb::VeloClusters>( tesPath ) ) {
+  LHCb::VeloClusters* clusters = getIfExists<LHCb::VeloClusters>( tesPath );
+  if ( NULL == clusters ) {
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "No VeloClusters container found for this event !" << endmsg;
-    return 0;
   }
   else {
-    LHCb::VeloClusters* clusters = get<LHCb::VeloClusters>( tesPath );
     if ( m_debugLevel ) debug() << "  -> number of clusters found in TES: "
                                 << clusters->size() <<endmsg;
-    return clusters;
   }
+  return clusters;
 }
 
 //=============================================================================
@@ -178,17 +177,16 @@ Velo::VeloSamplingMonitor::veloTell1Data( std::string samplingLocation ) {
   if ( m_debugLevel )
     debug() << "Retrieving VeloTell1Data from " << tesPath << endmsg;
   
-  if ( !exist<LHCb::VeloTELL1Datas>( tesPath ) ) {
+  LHCb::VeloTELL1Datas* tell1Data = getIfExists<LHCb::VeloTELL1Datas>( tesPath );
+  if ( NULL == tell1Data ) {
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "No VeloTell1Data container found for this event !" << endmsg; 
-    return 0;
   }
   else {
-    LHCb::VeloTELL1Datas* tell1Data = get<LHCb::VeloTELL1Datas>( tesPath );
     if ( m_debugLevel ) debug() << "  -> number of VeloTell1Data found in TES: "
                                 << tell1Data->size() <<endmsg;
-    return tell1Data;
   }
+  return tell1Data;
 }
 
 //=============================================================================

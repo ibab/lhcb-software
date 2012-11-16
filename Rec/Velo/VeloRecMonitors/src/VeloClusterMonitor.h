@@ -1,4 +1,3 @@
-// $Id: VeloClusterMonitor.h,v 1.13 2009-10-14 13:46:41 erodrigu Exp $
 #ifndef VELORECMONITORS_VELOCLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOCLUSTERMONITOR_H 1
 
@@ -38,7 +37,6 @@ namespace Velo
     
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
-    virtual StatusCode finalize  ();    ///< Algorithm finalization
     
   protected:
     

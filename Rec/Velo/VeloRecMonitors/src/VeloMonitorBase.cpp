@@ -1,4 +1,3 @@
-// $Id: VeloMonitorBase.cpp,v 1.3 2009-04-14 15:30:50 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -25,7 +24,8 @@ namespace Velo
 VeloMonitorBase::VeloMonitorBase( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
-    , m_veloDet ( 0 )
+  , m_veloDet ( 0 )
+  , m_debugLevel(false)
 {
   setProperty ( "PropertiesPrint", true ).ignore();
 }

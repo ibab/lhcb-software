@@ -1,4 +1,3 @@
-// $Id: VeloTrackMonitor.h,v 1.10 2009-10-08 17:18:24 krinnert Exp $
 #ifndef VELORECMONITORS_VELOTRACKMONITOR_H 
 #define VELORECMONITORS_VELOTRACKMONITOR_H 1
 
@@ -71,7 +70,6 @@ namespace Velo
     // Data members
     LHCb::Tracks* m_tracks;
     LHCb::VeloClusters* m_clusters;
-    LHCb::VeloClusters*m_rawClusters;
    
     IVeloClusterPosition* m_clusterTool;
     IVeloExpectation* m_expectTool;

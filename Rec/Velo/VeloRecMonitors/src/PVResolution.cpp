@@ -181,7 +181,8 @@ PVResolution::PVResolution( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiTupleAlg( name , pSvcLocator ),
     m_maxDistance(50.),
-    m_maxFineDistance(10.)
+    m_maxFineDistance(10.),
+    m_rsvc(0)
 {
   declareProperty("TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
   declareProperty("VertexLocation", m_MCVertexLocation = LHCb::MCVertexLocation::Default );
@@ -246,8 +247,8 @@ StatusCode PVResolution::execute()
     }
   }
 
-  if ( exist<LHCb::ODIN>( LHCb::ODINLocation::Default )){
-    LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  if( NULL != odin ) {
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "Run "    << odin->runNumber()
               << ", Event " << odin->eventNumber() << endmsg;
@@ -372,8 +373,8 @@ void PVResolution::fill_ntuplePV(std::vector<LHCb::RecVertex> outvec, std::strin
 
   for( std::vector<LHCb::RecVertex>::const_iterator ipv = outvec.begin() ;
        ipv != outvec.end(); ++ipv ) {
-    if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) ){
-      LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+    LHCb::L0DUReport* report = getIfExists<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+    if( NULL != report ) {
       if ( ! tuple->column( "L0Decision", report->decision() ) ) return;
       if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endreq;
       LHCb::L0DUChannel::Map channels = report->configuration()->channels();
@@ -385,7 +386,7 @@ void PVResolution::fill_ntuplePV(std::vector<LHCb::RecVertex> outvec, std::strin
       }
     } else {
       Warning("Can't get LHCb::L0DUReportLocation::Default (" +
-              LHCb::L0DUReportLocation::Default + ")" );
+              LHCb::L0DUReportLocation::Default + ")" ).ignore();
       if ( ! tuple->column( "L0Decision", -1 ) ) return;
     }
     //LHCb::RecVertex* pv = *ipv ;

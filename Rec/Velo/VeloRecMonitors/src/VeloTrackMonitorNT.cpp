@@ -1,6 +1,4 @@
-// $Id: VeloTrackMonitorNT.cpp,v 1.7 2010-03-26 10:26:52 szumlat Exp $
 // Include files 
-
 
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
@@ -60,7 +58,12 @@ Velo::VeloTrackMonitorNT::VeloTrackMonitorNT(const std::string& name,
   m_allString("ALL"),
   m_clusterLoc ( VeloClusterLocation::Default ),
   m_asctLocation ( m_clusterLoc+"2MCHits" ),
-  m_asctTable ( 0 )
+  m_rawClusters(0),
+  m_veloDet(0),
+  m_expectTool(0),
+  m_clusterTool(0),
+  m_asctTable ( 0 ),
+  m_tracksFitter(0)
 {
   declareProperty( "TracksInContainer", m_tracksInContainer = LHCb::TrackLocation::Default );
   declareProperty( "PVContainer", m_pvContainerName = LHCb::RecVertexLocation::Primary ) ;
@@ -81,7 +84,7 @@ Velo::VeloTrackMonitorNT::VeloTrackMonitorNT(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Velo::VeloTrackMonitorNT::~VeloTrackMonitorNT() {}; 
+Velo::VeloTrackMonitorNT::~VeloTrackMonitorNT() {}
 
 //=============================================================================
 // Initialization. Check parameters
@@ -101,7 +104,7 @@ StatusCode Velo::VeloTrackMonitorNT::initialize()
   m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Execute
@@ -110,8 +113,8 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
 {
   
  
-  if ( exist<LHCb::ODIN>( LHCb::ODINLocation::Default )){
-    LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  if ( NULL != odin ){
     if( msgLevel(MSG::DEBUG) ) 
       debug()<< "Run "     << odin->runNumber()
              << ", Event " << odin->eventNumber() << endmsg;
@@ -137,12 +140,12 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
   double pvndof=0.;
   int pvntr=0;
 
-  if (!exist<LHCb::RecVertices>(m_pvContainerName)) {
+  const LHCb::RecVertices* pvcontainer = getIfExists<LHCb::RecVertices>( m_pvContainerName ) ;
+  if ( NULL == pvcontainer ) {
     debug() << "No Vertex container found for this event !" << endmsg;
     //return StatusCode::SUCCESS;
   }
   else{
-    const LHCb::RecVertices* pvcontainer = get<LHCb::RecVertices>( m_pvContainerName ) ;
     n_pv = pvcontainer->size();
     int it_npv=1;
     for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ;
@@ -161,11 +164,11 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
   }
 
   // get the input data
-  if ( !exist<LHCb::Tracks>( m_tracksInContainer ) ) {
+  LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(m_tracksInContainer);
+  if ( NULL == tracks ) {
     debug() << "No VeloTracks container found for this event !" << endmsg;
     return StatusCode::SUCCESS;
   }
-  LHCb::Tracks* tracks = get<LHCb::Tracks>(m_tracksInContainer);
 
   //count number of backward tracks
   int n_back=0;
@@ -180,11 +183,11 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
 
   // histograms per track
 
-  if(!exist<LHCb::VeloClusters>(m_clusterCont)){
+  m_rawClusters = getIfExists<LHCb::VeloClusters>(m_clusterCont);
+  if( NULL == m_rawClusters ){
     return Error( " ==> There is no VeloClusters in TES " );
   }
   else{
-    m_rawClusters=get<LHCb::VeloClusters>(m_clusterCont);
     if (m_allclntuple){
       FillVeloAllClNtuple(tracks); 
     }
@@ -219,7 +222,7 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
 
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,

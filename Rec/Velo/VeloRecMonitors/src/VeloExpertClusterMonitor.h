@@ -1,4 +1,3 @@
-// $Id: VeloExpertClusterMonitor.h,v 1.7 2009-11-22 00:06:02 jmylroie Exp $
 #ifndef VELOEXPERTCLUSTERMONITOR_H 
 #define VELOEXPERTCLUSTERMONITOR_H 1
 
@@ -32,7 +31,7 @@ namespace Velo
     virtual StatusCode finalize  ();    ///< Algorithm finalization
     
   protected:
-    LHCb::Tracks*       tracks;
+    LHCb::Tracks*       m_tracks;
     LHCb::VeloClusters* m_clusters;
 
    

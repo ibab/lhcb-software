@@ -1,4 +1,3 @@
-// $Id: VeloIPResolutionMonitorNT.cpp,v 1.18 2010/04/02 16:09:45 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitorNT.h"
 
@@ -43,7 +42,7 @@ using namespace boost::lambda ;
 // Declaration of the Algorithm Factory
 namespace Velo
 {
-  DECLARE_ALGORITHM_FACTORY( VeloIPResolutionMonitorNT );
+  DECLARE_ALGORITHM_FACTORY( VeloIPResolutionMonitorNT )
 }
 
 
@@ -113,27 +112,26 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
   counter( "Events Analysed" )++;
       
   // Get PVs
-  if( !exist<RecVertices>( m_vertexLocation ) ){
+  const RecVertices* pvs = getIfExists<RecVertices>( m_vertexLocation );  
+  if( NULL == pvs ){
     string counterName = string("No data at ") + m_vertexLocation ;
     counter( counterName )++;
     if ( msgLevel(MSG::DEBUG) )
       debug() << "No data at " << m_vertexLocation << endmsg;
     return StatusCode::SUCCESS;
   }
-  const RecVertices* pvs = get<RecVertices>( m_vertexLocation );  
 
   // select only events with 1 reconstructed PV
   if( pvs->size() != 1 ) return StatusCode::SUCCESS;
 
   // get the tracks
-  if( !exist<Tracks>( m_trackLocation ) )
+  Tracks* tracks = getIfExists<Tracks>(m_trackLocation);
+  if( NULL == tracks )
   {
     string counterName = string("No tracks at ") + m_trackLocation ;
     counter( counterName )++;
     return StatusCode::SUCCESS;
   }
-  
-  Tracks* tracks = get<Tracks>(m_trackLocation);
   
   counter("Events Selected")++;
 

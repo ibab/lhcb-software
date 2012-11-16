@@ -47,6 +47,8 @@ Velo::VeloExpertClusterMonitor::VeloExpertClusterMonitor( const std::string& nam
                         ISvcLocator* pSvcLocator)
   //  : GaudiAlgorithm ( name , pSvcLocator )
   : Velo::VeloMonitorBase ( name , pSvcLocator )//GaudiHistoAlg
+  , m_tracks(0)
+  , m_clusters(0)
 {
   declareProperty( "ExpertMode",   m_Expert = false );
   declareProperty( "RZones",   m_RZones = false );
@@ -124,30 +126,30 @@ StatusCode Velo::VeloExpertClusterMonitor::execute() {
 
   if ( m_debugLevel ) debug() << "==> Execute" << endmsg;
 
-  if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
+  m_clusters = getIfExists<LHCb::VeloClusters>( m_clusterCont );
+  if ( NULL == m_clusters ) {
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "No VeloClusters container found for this event !" << endmsg;
     return StatusCode::FAILURE;
     
   }
   else {
-    m_clusters = get<LHCb::VeloClusters>( m_clusterCont );
     loopClusters ();
     if ( m_debugLevel ) debug() << "  -> number of clusters found in TES: "
                                 << m_clusters->size() <<endmsg;
   }
 
 
-  if ( !exist<LHCb::Tracks>( m_trackCont ) ) {
+  m_tracks = getIfExists<LHCb::Tracks>( m_trackCont );
+  if ( NULL == m_tracks ) {
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "No VeloTracks container found for this event !" << endmsg;
     //    return StatusCode::FAILURE;
   }
   else {
-    tracks = get<LHCb::Tracks>( m_trackCont );
     loopTracks();
     if ( m_debugLevel ) debug() << "  -> number of tracks found in TES: "
-                                << tracks->size() <<endmsg;
+                                << m_tracks->size() <<endmsg;
   }
 
   //  loopTracks ();
@@ -229,7 +231,7 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
   
   // //    loop for the rec track clusters
   std::string dirName;
-  for (itT = tracks->begin();itT != tracks->end(); ++itT ) {
+  for (itT = m_tracks->begin();itT != m_tracks->end(); ++itT ) {
     LHCb::Track* track = *itT;
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "Loop over Tracks" << endmsg;

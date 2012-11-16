@@ -63,7 +63,7 @@ Velo::VeloOccupancyMonitor::VeloOccupancyMonitor(const std::string& name,
   m_nstrips((84 + 4) * 2048),
   m_tell1Map(0), m_timeStamps(0), m_pvssTell1Names(0),
   m_occupancyDenom(0), m_histOccSpectAll(0), m_histOccSpectLow(0),
-  m_fastHistOccSpectAll(0), m_fastHistOccSpectLow(0), m_histAvrgSensor(0),
+  m_fastHistOccSpectAll(0), m_fastHistOccSpectLow(0), m_histAvrgSensor(0), m_histAvrgSensorPU(0),
   m_histBCIDSpec(0), m_inOccAccu(0), m_deadPerSensor(0), m_noisyPerSensor(0),
   m_deadOrNoisyPerSensor(0), m_deadPerSensorAndLink(0),
   m_noisyPerSensorAndLink(0), m_deadOrNoisyPerSensorAndLink(0)
@@ -414,11 +414,10 @@ LHCb::VeloClusters* Velo::VeloOccupancyMonitor::veloClusters()
     debug() << "Retrieving VeloClusters from " << m_clusterCont << endmsg;
   }
 
-  LHCb::VeloClusters* clusters = 0;
-  if (!exist<LHCb::VeloClusters>(m_clusterCont)) {
+  LHCb::VeloClusters* clusters = getIfExists<LHCb::VeloClusters>(m_clusterCont);
+  if ( NULL == clusters ) {
     info() << "No VeloClusters found for this event!" << endmsg;
   } else {
-    clusters = get<LHCb::VeloClusters>(m_clusterCont);
     if (m_debugLevel) {
       debug() << "  -> number of clusters found in TES: "
         << clusters->size() << endmsg;
@@ -433,18 +432,16 @@ LHCb::VeloClusters* Velo::VeloOccupancyMonitor::veloClusters()
 LHCb::ODIN* Velo::VeloOccupancyMonitor::getOdinBank()
 {
   if (m_debugLevel) {
-    debug() << "Rerieving ODIN bank from " << LHCb::ODINLocation::Default
+    debug() << "Retrieving ODIN bank from " << LHCb::ODINLocation::Default
       << endmsg;
   }
 
-  LHCb::ODIN* odin = 0;
-  if (!exist<LHCb::ODIN>(LHCb::ODINLocation::Default)) {
+  LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
+  if ( NULL == odin ) {
     if (UNLIKELY(msgLevel(MSG::DEBUG))) {
       debug() << "No ODIN bank found. Histograms involving bunch "
         "IDs disabled." << endmsg;
     }
-  } else {
-    odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
   }
   return odin;
 }

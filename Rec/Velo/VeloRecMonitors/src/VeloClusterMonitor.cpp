@@ -1,4 +1,3 @@
-// $Id: VeloClusterMonitor.cpp,v 1.24 2010-04-10 07:29:33 erodrigu Exp $
 // Include files 
 // -------------
 // from STL
@@ -38,7 +37,7 @@
 
 // Declaration of the Algorithm Factory
 namespace Velo {
-  DECLARE_ALGORITHM_FACTORY( VeloClusterMonitor );
+  DECLARE_ALGORITHM_FACTORY( VeloClusterMonitor )
 }
 
 //=============================================================================
@@ -169,16 +168,6 @@ StatusCode Velo::VeloClusterMonitor::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode Velo::VeloClusterMonitor::finalize() {
-
-  if ( m_debugLevel ) debug() << "==> Finalize" << endmsg;
-
-  return VeloMonitorBase::finalize(); // must be called after all other actions
-}
-
-//=============================================================================
 // Retrieve the VeloClusters
 //=============================================================================
 StatusCode Velo::VeloClusterMonitor::veloClusters() {
@@ -186,12 +175,12 @@ StatusCode Velo::VeloClusterMonitor::veloClusters() {
   if ( m_debugLevel )
     debug() << "Retrieving VeloClusters from " << m_clusterCont << endmsg;
 
-  if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
+  m_clusters = getIfExists<LHCb::VeloClusters>( m_clusterCont );
+  if ( NULL == m_clusters ) {
     if ( m_debugLevel ) debug() << "No VeloClusters container found for this event !" << endmsg;
     return StatusCode::FAILURE;
   }
   else {
-    m_clusters = get<LHCb::VeloClusters>( m_clusterCont );
     if ( m_debugLevel ) debug() << "  -> number of clusters found in TES: "
       << m_clusters->size() <<endmsg;
   }
@@ -319,9 +308,9 @@ void Velo::VeloClusterMonitor::fillHighMultiplicity(unsigned int nClustersDefaul
   }
   else {
     // Check if there was a processing error
-    if (exist<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ) ) { 
-      LHCb::ProcStatus* procStat = get<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default );  
-      if( ( procStat != 0 ) && procStat->aborted() ) { 
+    LHCb::ProcStatus* procStat = getIfExists<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default );  
+    if ( NULL != procStat ) { 
+      if( procStat->aborted() ) { 
         // Processing was indeed aborted. Decode raw banks
         m_hNClustersHM->fill(getNClustersFromRaw());
       }   
@@ -345,15 +334,13 @@ unsigned int Velo::VeloClusterMonitor::getNClustersFromRaw() {
 
   unsigned int nclusters = 0;
 
-  LHCb::RawEvent* rawEvent = NULL;
+  LHCb::RawEvent* rawEvent = getIfExists<LHCb::RawEvent>(LHCb::RawEventLocation::Other);
+  if( NULL == rawEvent) {
+    rawEvent = getIfExists<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+  }
+
   // Fetch raw VELO banks
-  if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Other) ) {
-    rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Other);
-  }
-  else if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default) ) {
-    rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
-  }
-  if (rawEvent)
+  if ( NULL != rawEvent )
   {
     const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::Velo);
   

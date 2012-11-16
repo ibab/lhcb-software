@@ -245,17 +245,14 @@ StatusCode Velo::VeloTrackMonitor::getVeloClusters ( ) {
   if ( m_debugLevel )
     debug() << "Retrieving VeloClusters from " << m_clusterCont << endmsg;
   
-  if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
+  m_clusters = getIfExists<LHCb::VeloClusters>( m_clusterCont );
+  if ( NULL == m_clusters ) {
     if ( m_debugLevel )
       debug() << "No VeloClusters container found for this event !" << endmsg;
     return StatusCode::FAILURE;
     
   }
   else {
-    m_clusters = get<LHCb::VeloClusters>( m_clusterCont );
-
-    m_rawClusters = get<LHCb::VeloClusters>( m_clusterCont );
-
     if ( m_debugLevel ) debug() << "  -> number of clusters found in TES: "
                                 << m_clusters->size()<<endmsg;
   }
@@ -269,13 +266,13 @@ StatusCode Velo::VeloTrackMonitor::getVeloTracks ( ) {
   if ( m_debugLevel )
     debug() << "Retrieving VeloTracks from " << m_trackCont << endmsg;
   
-  if ( !exist<LHCb::Tracks>( m_trackCont ) ) {
+  m_tracks = getIfExists<LHCb::Tracks>( m_trackCont );
+  if ( NULL == m_tracks ) {
     if ( m_debugLevel )
       debug() << "No VeloTracks container found for this event !" << endmsg;
     return StatusCode::FAILURE;
   }
   else {
-    m_tracks = get<LHCb::Tracks>( m_trackCont );
     if ( m_debugLevel ) debug() << "  -> number of tracks found in TES: "
                                 << m_tracks->size() <<endmsg;    
   }
@@ -329,10 +326,10 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
     const LHCb::TrackFitResult *fitResult = track->fitResult();
     if(!fitResult) return Warning("No fitResult on this track",StatusCode::FAILURE);
     const std::vector<LHCb::Node*> nodes = fitResult->nodes();
-    if(!exist<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default))
-      return Warning("No VELO clusters in default location",StatusCode::FAILURE);
     LHCb::VeloClusters *clusters =
-      get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
+      getIfExists<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
+    if( clusters == NULL )
+      return Warning("No VELO clusters in default location",StatusCode::FAILURE);
     //Loop over all nodes on this track    
     for( std::vector<LHCb::Node*>::const_iterator iNode = nodes.begin();
          iNode != nodes.end(); ++iNode ){
@@ -441,7 +438,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
         
         //evaluation of adcsum for clusters associated to a track
         LHCb::VeloCluster *cluster;
-        cluster = (LHCb::VeloCluster*) m_rawClusters->containedObject( (iter)->channelID() );
+        cluster = (LHCb::VeloCluster*) m_clusters->containedObject( (iter)->channelID() );
         if ( cluster ) {
           double sumadc = cluster ->totalCharge();
           m_track_adcsum->fill(sumadc);

@@ -205,27 +205,26 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
   counter( "Events Analysed" )++;
       
   // Get PVs
-  if( !exist<RecVertices>( m_vertexLocation ) ){
+  const RecVertices* pvs = getIfExists<RecVertices>( m_vertexLocation );  
+  if( NULL == pvs ) {
     string counterName = string("No vertices at ") + m_vertexLocation ;
     counter( counterName )++;
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "No vertices at " << m_vertexLocation << endmsg;
     return StatusCode::SUCCESS;
   }
-  const RecVertices* pvs = get<RecVertices>( m_vertexLocation );  
 
   // select only events with 1 reconstructed PV
   if( pvs->size() != 1 ) return StatusCode::SUCCESS;
 
   // get the tracks
-  if( !exist<Tracks>( m_trackLocation ) )
+  Tracks* tracks = getIfExists<Tracks>(m_trackLocation);
+  if( NULL == tracks )
   {
     string counterName = string("No tracks at ") + m_trackLocation ;
     counter( counterName )++;
     return StatusCode::SUCCESS;
   }
-  
-  Tracks* tracks = get<Tracks>(m_trackLocation);
   
   counter("Events Selected")++;
 
@@ -476,7 +475,7 @@ void Velo::VeloIPResolutionMonitor::rebinHisto( TH1D* h, int nbins )
   else{
     double nentries = h->GetEntries() ;
     double idealBinWidth = nentries > 0 ? 3.*h->GetRMS() / sqrt( nentries ) : 0. ;
-    int nbins = (int)floor( idealBinWidth / h->GetXaxis()->GetBinWidth(1) ) ;
+    nbins = (int)floor( idealBinWidth / h->GetXaxis()->GetBinWidth(1) ) ;
     while( (1.*nbinsX)/nbins != floor( (1.*nbinsX)/nbins ) && nbins > 1 ) nbins -= 1 ;
     if( nbins > 1 ) h->Rebin( nbins ) ;
   }

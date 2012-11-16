@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2012-11-16 - Marco Cattaneo
+ - Fix gcc --pedantic warnings
+ - Fix some Coverity warnings
+ - Use getIfExists
+
 !========================= VeloRecMonitors v2r21 2012-10-01 =========================
 ! 2012-08-17 - Kurt Rinnert
  - added PU only average occupancy histogram. This allows to display these
