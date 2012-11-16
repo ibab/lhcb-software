@@ -1,4 +1,3 @@
-// $Id: TrackAssociator.cpp,v 1.16 2009-10-07 21:15:14 wouter Exp $
 // Include files
 
 // local
@@ -7,33 +6,19 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// from Event/TrackEvent
+// from LHCb
 #include "Event/Track.h"
-
-// from Event/LinkerEvent
 #include "Linker/LinkerWithKey.h"
-
-// from Event/Event
 #include "Event/MCParticle.h"
-
-// from Event/VeloEvent
 #include "Event/VeloCluster.h"
-
-// from Event/STEvent
 #include "Event/STCluster.h"
-
-// from Event/OTEvent
 #include "Event/OTTime.h"
-
-// from Event/MuonEvent
 #include "Event/MuonCoord.h"
-
-// from Event/Event
 #include "Event/MCVertex.h"
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackAssociator );
+DECLARE_ALGORITHM_FACTORY( TrackAssociator )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -41,6 +26,7 @@ DECLARE_ALGORITHM_FACTORY( TrackAssociator );
 TrackAssociator::TrackAssociator( const std::string& name,
                                   ISvcLocator* pSvcLocator ) :
   GaudiAlgorithm( name, pSvcLocator ),
+  m_debugLevel(false),
   m_fractionOK(0.),
   m_nTotVelo(0.),
   m_nTotTT1(0.),
@@ -58,7 +44,7 @@ TrackAssociator::TrackAssociator( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackAssociator::~TrackAssociator() {};
+TrackAssociator::~TrackAssociator() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -363,14 +349,6 @@ StatusCode TrackAssociator::execute() {
   } // End loop over Tracks
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TrackAssociator::finalize() {
-
-  return GaudiAlgorithm::finalize();
 }
 
 //=============================================================================

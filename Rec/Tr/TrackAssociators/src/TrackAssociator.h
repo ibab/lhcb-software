@@ -1,4 +1,3 @@
-// $Id: TrackAssociator.h,v 1.10 2007-07-06 15:25:04 ebos Exp $
 #ifndef TRACKASSOCIATOR_H 
 #define TRACKASSOCIATOR_H 1
 
@@ -48,9 +47,6 @@ public:
 
   // Algorithm execution
   virtual StatusCode execute();
-
-  // Algorithm finalization
-  virtual StatusCode finalize();
 
 private:
 
