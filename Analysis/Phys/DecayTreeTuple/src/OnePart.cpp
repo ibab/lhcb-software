@@ -75,7 +75,7 @@ void Decays::OnePart::printStructure( MsgStream & os, bool verbose ) const
   else 
   {
     std::vector<std::string> l = toolList();
-    os << "  " << i << std::setw( 30-i.size() ) << " :";
+    os << "  " << i << std::setw( 30-i.size() ) << " : ";
     os << Decays::join( l.begin(), l.end(), ", ", "none" ) << endmsg;
   }
   if ( m_daughters.empty() ) return;

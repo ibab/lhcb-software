@@ -80,9 +80,9 @@ StatusCode DecayTreeTupleBase::finalize()
     (*di)->finalize();
     //(*di)->release();
   }
-
   return DaVinciTupleAlgorithm::finalize();
 }
+
 //=============================================================================
 //=============================================================================
 bool DecayTreeTupleBase::initializeDecays( const bool isMC )
