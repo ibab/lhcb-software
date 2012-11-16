@@ -4,6 +4,10 @@
 
 #include "Kernel/DaVinciTupleAlgorithm.h"
 
+#ifndef DAVINCIKERNEL_DVALGORITHM_NOOBSOLETEWARNING
+#warning Including obsolete header DVAlgorithm.h. Use DaVinciAlgorithm, DaVinciHistoAlgorithm or DaVinciTupleAlgorithm instead.
+#endif
+
 /** @class DVAlgorithm Kernel/DVAlgorithm.h
  *
  *  OBSOLETE : Please use DaVinciAlgorithm, DaVinciHistoAlgorithm

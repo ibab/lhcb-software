@@ -4,6 +4,9 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2012-11-16 - Chris Jones
+ - Add a compiler warning when the depreciated DVAlgorithm.h head is included
+
 !========================= DaVinciKernel v11r1 2012-07-26 =========================
 
 ! 2012-07-23 - Chris Jones
