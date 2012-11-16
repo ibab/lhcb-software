@@ -1,14 +1,47 @@
-xs!-----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 ! Package     : Gen/GENSER
 ! Responsible : Gloria CORTI, Patrick ROBBE
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
+
+! 2012-11-16 - Gloria Corti
+ - Use private interface packages for photos++ and tauola++ to replace '++'
+   with 'pp' needed on bash to correctly resolve the paths.
+
+! 2012-11-15 - Gloria Corti
+ - Port by hand changes in v9r2b branches for new versions and new generators
+   . Modify macro to pick native version of alpgen 2.1.4
+   . Add macro to pick up rivet for the first time
+   . Modify macro to pick up pythia8 latest release 170
+     Note from pythia8 release note for 165: 
+     "Bug fix, that 'ParticleDecays:mixB = off' did not switch off B0-B0bar 
+      and Bs0-Bs0bar mixing".
+   . Use interface packages for herwig++ and thepeg privately defined and not
+     from LCG_interfaces to replace '++' with 'pp', needed on bash, and to 
+     redefine linking statements.
+ - Merge change r143057 from v9r3b by Patrick Robbe (2012-07-23)
+   . Add UPVETO function (mainly for ALPGEN)
+ - Remove macros for obsolete generators no longer in use
+   . herwig
+   . jimmy
+ - Remove all linking for photos (fortran)
+ - Modify macros to use latest version of the generators
+   . herwig++ and thepeg native versions 2.6.1a and 1.8.1
+   . rivet native version 1.8.1 (build with fastjet 2.4.4 as in LCGCMT_64a)
+ - Move from EvtGen definition of PYTHIA8DATA
+ - Move from EvtGen macro definitions for tauola++ and photos++
+ - The use of private interfaces to replace those of LCG requires LCG_Settings 
+   that has to be in sync with LCGCMT. The private interfaces will be forwarded
+   to LCG to be included in their release once validated for remote usage
 
 ! 2012-05-04 - John Back
  - Remove old photos (v2) from cmt/requirements file.
 
 ! 2012-05-04 - Gloria Corti
  - Take the latest version of pythia8 163
+
+! 2012-03-28 - Zenwhei Yang
+ - Add two lines for GenChicc in upinit.F, upevnt.F and GaussUserProcesses.inc
 
 ! 2012-01-26 - Gloria Corti
  - Take the latest version of pythia8 160

@@ -35,8 +35,8 @@ macro alpgen_native_version "2.1.4"
 
 #-- Photos++ and Taula++ 
 #============================================================================
-macro photos++_native_version "3.51"
-macro tauola++_native_version "1.0.7"
+macro photospp_native_version "3.51"
+macro tauolapp_native_version "1.0.7"
 
 
 #-- Pythia 8
