@@ -15,8 +15,8 @@ use         GaudiPolicy  v*
 use         CLHEP        v*  LCG_Interfaces
 use         GENSER       v*  Gen
 use         HepMC        v*  LCG_Interfaces
-use         photos++     v*  LCG_GeneratorsInterfaces
-use         tauola++     v*  LCG_GeneratorsInterfaces
+use         photospp     v*  LCG_GeneratorsInterfaces
+use         tauolapp     v*  LCG_GeneratorsInterfaces
 use         pythia8      v*  LCG_GeneratorsInterfaces
 
 include_dirs  $(EVTGENROOT) 

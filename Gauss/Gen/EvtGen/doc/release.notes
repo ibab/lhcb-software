@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-11-16 - Gloria Corti
+ - Use interface packages for photos++ and tauola++ that replace '++'
+   with 'pp' needed on bash to correctly resolve the paths.
+
 ! 2012-11-15 - Gloria Corti
  - Remove macro definitions for native version of photo++ and taula++ that
    must be located in GENSER for script to make tarball for remove distribution
