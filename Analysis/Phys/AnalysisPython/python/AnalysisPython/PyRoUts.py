@@ -3004,6 +3004,8 @@ def _rebin_nums_1D_ ( h1 , template ) :
     >>> h = horig.rebinNumbers ( template ) 
     """
     ##
+    # clone it!
+    h2 = template.Clone( hID() )
     if not h2.GetSumw2() : h2.Sumw2()
     #
     ## reset the histogram 

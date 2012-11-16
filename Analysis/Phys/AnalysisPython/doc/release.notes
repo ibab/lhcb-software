@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-11-16 - 
+ - fix typo in rebin method 
+
 ! 2012-11-10 - Vanya Belyaev
  - add corr&cov methods 
 
