@@ -1,4 +1,3 @@
-// $Id: StateElectronEnergyCorrectionTool.cpp,v 1.5 2008-03-31 07:13:28 mneedham Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -20,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( StateElectronEnergyCorrectionTool );
+DECLARE_TOOL_FACTORY( StateElectronEnergyCorrectionTool )
 
 
 //=============================================================================

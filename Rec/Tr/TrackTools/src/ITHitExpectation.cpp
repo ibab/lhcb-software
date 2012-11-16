@@ -44,9 +44,10 @@ DECLARE_TOOL_FACTORY( ITHitExpectation )
 //=============================================================================
 ITHitExpectation::ITHitExpectation(const std::string& type,
                                          const std::string& name,
-                                         const IInterface* parent):
-  THitExpectation(type, name, parent),
-  m_selector(0)
+                                         const IInterface* parent)
+  : THitExpectation(type, name, parent)
+  , m_itDet(NULL), m_expectedITHits(NULL)
+  , m_selector(NULL)
 { 
   // constructer
   declareProperty( "SelectorType", m_selectorType = "STSelectChannelIDByElement" );

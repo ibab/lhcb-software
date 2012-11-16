@@ -46,16 +46,11 @@ public:
   virtual ~VeloMuonBuilder();
   virtual StatusCode initialize();
   virtual StatusCode execute();
-  virtual StatusCode finalize();
   StatusCode buildVeloMuon(LHCb::Tracks& veloTracks, LHCb::Tracks& muonTracks, LHCb::Tracks* trackvector);
   LHCb::Tracks* buildVeloMuon(LHCb::Tracks& veloTracks, LHCb::Tracks& muonTracks);
 
 private:
   //  Gaudi::XYZPoint VeloMuonBuilder::autoextra(LHCb::Track* muontrack);
-
-
-  LHCb::Tracks* m_velotracks;
-  LHCb::Tracks* m_muontracks;
   float m_distcutmultiplyer;
   float m_fieldfactor;
   bool m_chamberhit;

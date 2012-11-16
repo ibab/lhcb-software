@@ -119,15 +119,6 @@ StatusCode TrackHitCollector::initialize()
 }
 
 //=============================================================================
-// Finalize
-//=============================================================================
-StatusCode TrackHitCollector::finalize()
-{
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiTool::finalize();  // must be called after all other actions
-}
-
 StatusCode TrackHitCollector::execute(
 	const LHCb::Track& tr, std::vector<IDWithResidual>& ids,
 	bool collectVelo, bool collectTT, bool collectIT,

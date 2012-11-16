@@ -1,4 +1,3 @@
-// $Id: TrackHitCollector.h,v 1.2 2010-02-01 15:55:31 mschille Exp $
 #ifndef INCLUDE_TRACKHITCOLLECTOR_H
 #define INCLUDE_TRACKHITCOLLECTOR_H 1
 
@@ -62,7 +61,7 @@ class TrackHitCollector : public GaudiTool, virtual public ITrackHitCollector
 	virtual ~TrackHitCollector(); ///< Destructor
 
 	virtual StatusCode initialize(); ///< Tool initialization
-	virtual StatusCode   finalize(); ///< Tool finalize
+
 	/// collect hits around a track
 	/** collect hits around a track
 	 *

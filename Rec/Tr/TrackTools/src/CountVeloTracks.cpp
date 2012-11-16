@@ -15,7 +15,7 @@
 // local
 #include "CountVeloTracks.h"
 
-DECLARE_TOOL_FACTORY( CountVeloTracks );
+DECLARE_TOOL_FACTORY( CountVeloTracks )
 
 //-----------------------------------------------------------------------------
 

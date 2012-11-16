@@ -22,8 +22,13 @@ DECLARE_ALGORITHM_FACTORY( VeloMuonBuilder )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloMuonBuilder::VeloMuonBuilder( const std::string& name, ISvcLocator* pSvcLocator ) :
-  GaudiTupleAlg( name , pSvcLocator ) {
+VeloMuonBuilder::VeloMuonBuilder( const std::string& name, ISvcLocator* pSvcLocator )
+  : GaudiTupleAlg( name , pSvcLocator )
+  , m_iPosTool(NULL)
+  , m_linearextrapolator(NULL)
+  , m_tracksFitter(NULL)
+
+{
 
   declareProperty( "MuonLocation"    , m_muonpath = "Hlt1/Tracks/MuonSeg" );
   declareProperty( "VeloLocation"    , m_velopath = LHCb::TrackLocation::Velo );
@@ -63,50 +68,35 @@ StatusCode VeloMuonBuilder::initialize() {
 }
 
 
-//=============================================================================
-//  Finalization
-//=============================================================================
-StatusCode VeloMuonBuilder::finalize() {
-  return GaudiTupleAlg::finalize();
-
-}
-
-
 using namespace LHCb;
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode VeloMuonBuilder::execute() {
 
-  if (exist<Tracks>(m_velopath))
-    m_velotracks = get<Tracks>(m_velopath);
-  else {
-    return StatusCode::SUCCESS;
-  }
-  if (m_velotracks->size() > m_maxvelos)
+  LHCb::Tracks* veloTracks = getIfExists<Tracks>(m_velopath);
+  if ( NULL == veloTracks ) return StatusCode::SUCCESS;
+
+  if (veloTracks->size() > m_maxvelos)
     return StatusCode::SUCCESS;
 
-  if (exist<Tracks>(m_muonpath))
-    m_muontracks = get<Tracks>(m_muonpath);
-  else {
-    return StatusCode::SUCCESS;
-  }
-  if (m_muontracks->size() > m_maxmuons)
+  LHCb::Tracks* muonTracks = getIfExists<Tracks>(m_muonpath);
+  if ( NULL == muonTracks ) return StatusCode::SUCCESS;
+
+  if (muonTracks->size() > m_maxmuons)
     return StatusCode::SUCCESS;
 
 
   //  LinkedTo<MCParticle,Track> veloLink( evtSvc(), msgSvc(), m_velopath );
   bool existed = false;
-  Tracks* tracks;
-  if (exist<Tracks>(m_output)) {
+  Tracks* tracks = getIfExists<Tracks>(m_output);
+  if ( NULL != tracks ) {
     existed = true;
-    tracks = get<Tracks>(m_output);
   }  else {
     tracks = new Tracks();
   }
 
-  //  tracks = buildVeloMuon(*m_velotracks, *m_muontracks, &veloLink);
-  buildVeloMuon(*m_velotracks, *m_muontracks, tracks);
+  buildVeloMuon(*veloTracks, *muonTracks, tracks);
 
   if (!existed) {
     put(tracks,m_output);

@@ -1,4 +1,3 @@
-// $Id: PtTransporter.h,v 1.4 2008-05-22 09:55:17 cattanem Exp $
 #ifndef PTTRANSPORTER_H 
 #define PTTRANSPORTER_H 1
 
@@ -29,9 +28,6 @@ public:
                  const IInterface* parent);
 
   virtual ~PtTransporter( ); ///< Destructor
-
-  virtual StatusCode initialize(); ///< Tool initialization
-  virtual StatusCode   finalize(); ///< Tool finalize
 
   virtual double ptAtOrigin(double zref, double xref, double yref,
                             double tx, double ty, double p) const;

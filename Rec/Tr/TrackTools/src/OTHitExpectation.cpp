@@ -46,8 +46,9 @@ DECLARE_TOOL_FACTORY( OTHitExpectation )
 //=============================================================================
 OTHitExpectation::OTHitExpectation(const std::string& type,
                                          const std::string& name,
-                                         const IInterface* parent):
-  THitExpectation(type, name, parent)
+                                         const IInterface* parent)
+  : THitExpectation(type, name, parent)
+  , m_otDet(NULL), m_expectedOTHits(NULL)
 { 
   // constructer
   declareProperty("likPar", m_likPar = boost::assign::list_of(0.261)(5.1)(11.87));

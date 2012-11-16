@@ -234,10 +234,11 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloChannelID &centreChannel,
   double errorPos=0., pitch=0.;
   const DeVeloSensor* sens=m_veloDet->sensor(centreChannel.sensor());
   if(sens==0){
-    Error("No valid pointer to sensor");
+    Error("No valid pointer to sensor").ignore();
     myInfo.strip=LHCb::VeloChannelID(0);
     myInfo.fractionalPosition=0.;
     myInfo.fractionalError=0.;
+    myInfo.clusterSize=0.;
     return ( myInfo );
   }
   if(sens->isR()||sens->isPileUp()){
@@ -298,10 +299,11 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloChannelID &centreChan,
   // get information about sensor form passed cluster
   const DeVeloSensor* sensor=m_veloDet->sensor(centreChan.sensor());
   if(sensor==0){
-    Error("No valid pointer to sensor");
+    Error("No valid pointer to sensor").ignore();
     anInfo.strip=LHCb::VeloChannelID(0);
     anInfo.fractionalPosition=0.;
     anInfo.fractionalError=0.;
+    anInfo.clusterSize=0.;
     return ( anInfo );
   }
   // fill partially the toolInfo structure

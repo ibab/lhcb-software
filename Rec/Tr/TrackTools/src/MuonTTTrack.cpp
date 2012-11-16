@@ -19,9 +19,17 @@ DECLARE_ALGORITHM_FACTORY( MuonTTTrack )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  MuonTTTrack::MuonTTTrack( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-    : GaudiAlgorithm ( name , pSvcLocator )
+MuonTTTrack::MuonTTTrack( const std::string& name,
+                          ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_muonPids(NULL)
+  , m_ttHitAddingTool(NULL)
+  , m_lhcbid2mcparticles(NULL)
+  , m_muonPad2MC(NULL)
+  , m_trackTool(NULL)
+  , m_momentumTool(NULL)
+  , m_extrapolator(NULL)
+  , m_trackFitter(NULL)
 {
   declareProperty( "ToolName",            m_trackToolName     = "MuonNNetRec"             );
   declareProperty( "Extrapolator",        m_extrapolatorName  = "TrackMasterExtrapolator" );
@@ -232,36 +240,25 @@ StatusCode MuonTTTrack::execute() {
 StatusCode MuonTTTrack::fillPVs(std::vector<double>& PVPos){
 
   double zPVmax = 500;
-  LHCb::RecVertices* PVs = NULL;
 
-  if(exist<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary)){
-    PVs = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
-  }else{
-    return StatusCode::FAILURE;
-  }
+  LHCb::RecVertices* PVs = getIfExists<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
+  if( NULL == PVs ) return StatusCode::FAILURE;
 
   // -- Set the PV position (if existing)
-  if(PVs != NULL){
+  for(LHCb::RecVertices::iterator it = PVs->begin(); it != PVs->end() ; ++it){
 
-    for(LHCb::RecVertices::iterator it = PVs->begin(); it != PVs->end() ; ++it){
+    if(*it == NULL) continue;
 
-      if(*it == NULL) continue;
-
-      //-- If more than one PV, take the one closer to 0
-      if( (*it)->position().Z() < zPVmax ){
-        zPVmax = (*it)->position().Z();
-      }
-
-      PVPos[0] = (*it)->position().X();
-      PVPos[1] = (*it)->position().Y();
-      PVPos[2] = (*it)->position().Z();
-
+    //-- If more than one PV, take the one closer to 0
+    if( (*it)->position().Z() < zPVmax ){
+      zPVmax = (*it)->position().Z();
     }
-
-  }else{
-    return StatusCode::FAILURE;
+    
+    PVPos[0] = (*it)->position().X();
+    PVPos[1] = (*it)->position().Y();
+    PVPos[2] = (*it)->position().Z();
+    
   }
-
   return StatusCode::SUCCESS;
 
 }

@@ -4,9 +4,6 @@
  *
  *  Implementation file for reconstruction tool : VeloExpectation
  *
- *  CVS Log :-
- *  $Id: VeloExpectation.cpp,v 1.8 2009-08-06 18:19:10 smenzeme Exp $
- *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @date   11/03/2007
  */
@@ -32,7 +29,7 @@
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_TOOL_FACTORY( VeloExpectation );
+DECLARE_TOOL_FACTORY( VeloExpectation )
 
 //-----------------------------------------------------------------------------
 

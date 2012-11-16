@@ -40,27 +40,6 @@ PtTransporter::~PtTransporter() {}
 
 //=============================================================================
 
-StatusCode PtTransporter::initialize()
-{
-  StatusCode sc = GaudiTool::initialize(); // must be executed first
-  if (sc.isFailure()) return sc;  // error printed already by GaudiTool
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
-
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Finalize
-//=============================================================================
-StatusCode PtTransporter::finalize()
-{
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiTool::finalize();  // must be called after all other actions
-}
-
 double PtTransporter::ptAtOrigin(double zref, double xref, double /* yref */,
                                  double tx, double ty, double p) const
 {

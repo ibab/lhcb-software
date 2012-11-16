@@ -23,9 +23,12 @@ DECLARE_ALGORITHM_FACTORY( VeloCaloBuilder )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloCaloBuilder::VeloCaloBuilder( const std::string& name, ISvcLocator* pSvcLocator ) :
-  GaudiTupleAlg( name , pSvcLocator ){
-
+VeloCaloBuilder::VeloCaloBuilder( const std::string& name, ISvcLocator* pSvcLocator )
+  : GaudiTupleAlg( name , pSvcLocator )
+  , m_caloTracks(NULL)
+  , m_magFieldSvc(NULL)
+  , m_getter(NULL)
+{
   declareProperty( "zcut"      , m_zcut = 100); // whare the first Velo State should be
   declareProperty( "IPcut"     , m_ipcut = 0 ); // min pseudo IP cut
   declareProperty( "quali"     , m_qualimodi = 10); // min matching chi^2
@@ -57,7 +60,7 @@ StatusCode VeloCaloBuilder::initialize()
   if (sc.isFailure() ) { return sc; }
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
-  getter = tool<ICaloGetterTool>("CaloGetterTool");
+  m_getter = tool<ICaloGetterTool>("CaloGetterTool");
 
   return StatusCode::SUCCESS;
 }
@@ -73,16 +76,16 @@ StatusCode VeloCaloBuilder::execute()
   if (true)  { // debuging purpose
     LHCb::Tracks* velotracks = get<LHCb::Tracks>(m_veloTracksName);
 
-    Calotracks = new LHCb::Tracks();
-    Calotracks->reserve(100);
+    m_caloTracks = new LHCb::Tracks();
+    m_caloTracks->reserve(100);
   
-    put(Calotracks,m_outputTracksName);
+    put(m_caloTracks,m_outputTracksName);
 
     if(true) { // debuging purpose
       double mass = 139.57;//pi or k mass
-      getter->update();
+      m_getter->update();
     
-      LHCb::CaloClusters* cluster = getter->clusters(m_clusterlocation);
+      LHCb::CaloClusters* cluster = m_getter->clusters(m_clusterlocation);
       // -- if there are no clusters, there's nothing to do
       if (!cluster) return StatusCode::SUCCESS;
       LHCb::CaloClusters::const_iterator clusterIter;
@@ -219,20 +222,12 @@ StatusCode VeloCaloBuilder::execute()
 }
 
 //=============================================================================
-//  Finalization
-//=============================================================================
-StatusCode VeloCaloBuilder::finalize()
-{
-  return GaudiHistoAlg::finalize();
-}
-
-//=============================================================================
 //  Add tracks to output container and write an additional info
 //=============================================================================
 StatusCode VeloCaloBuilder::TESpush(LHCb::Track* track,  LHCb::Track* ancestor, LHCb::Track* calotrack) {
   track->addInfo(2001,ancestor->key());
   track->addInfo(2002,calotrack->key());
-  Calotracks->add(track);    
+  m_caloTracks->add(track);    
   return StatusCode::SUCCESS;
 }
 

@@ -41,8 +41,6 @@ class VeloCaloBuilder : public GaudiTupleAlg {
   virtual StatusCode initialize();
   /// execution
   virtual StatusCode execute();
-  /// finalization
-  virtual StatusCode finalize();
 
  private:
   // -- Methods
@@ -53,7 +51,7 @@ class VeloCaloBuilder : public GaudiTupleAlg {
   StatusCode TESpush(LHCb::Track* track,  LHCb::Track* ancestor, LHCb::Track* calotrack);
 
   // -- Variables
-  LHCb::Tracks* Calotracks;
+  LHCb::Tracks* m_caloTracks;
   
   std::string m_veloTracksName;
   std::string m_outputTracksName;
@@ -66,7 +64,7 @@ class VeloCaloBuilder : public GaudiTupleAlg {
 
   // -- tools
   ILHCbMagnetSvc* m_magFieldSvc;
-  ICaloGetterTool* getter;
+  ICaloGetterTool* m_getter;
 
   // -- variables from HltVeloEcalMatch
   float 	m_ptkickConstant;

@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-11-16 - Marco Cattaneo
+ - Fix gcc --pedantic warnings
+ - Fix some Coverity defects
+ - Use getIfExists
+ - Remove unneccesary do nothing finalize methods in derived classes
+
 ! 2012-10-24 - Paul Seyfert
  - switch interpolator in TrackNNGhostId from cspline to linear
 
