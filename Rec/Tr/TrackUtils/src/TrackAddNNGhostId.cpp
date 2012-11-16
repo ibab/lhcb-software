@@ -75,13 +75,3 @@ StatusCode TrackAddNNGhostId::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TrackAddNNGhostId::finalize() {
-
-  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

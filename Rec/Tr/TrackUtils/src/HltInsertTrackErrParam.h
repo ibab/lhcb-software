@@ -1,4 +1,3 @@
-// $Id: HltInsertTrackErrParam.h,v 1.1 2009-10-15 11:41:56 pkoppenb Exp $
 #ifndef HLTINSERTTRACKERRPARAM_H 
 #define HLTINSERTTRACKERRPARAM_H 1
 
@@ -26,7 +25,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

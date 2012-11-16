@@ -32,18 +32,6 @@ FilterDownstreamTracks::FilterDownstreamTracks( const std::string& name,
 FilterDownstreamTracks::~FilterDownstreamTracks() {} 
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode FilterDownstreamTracks::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode FilterDownstreamTracks::execute() {
@@ -99,15 +87,3 @@ StatusCode FilterDownstreamTracks::execute() {
     debug() << "After filter, rests " << downstream->size() << " downstream tracks to fit" << endmsg;
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode FilterDownstreamTracks::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

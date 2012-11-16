@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef FILTERSEEDTRACKS_H 
 #define FILTERSEEDTRACKS_H 1
 
@@ -20,9 +19,7 @@ public:
 
   virtual ~FilterSeedTracks( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

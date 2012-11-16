@@ -1,6 +1,3 @@
-// $Id: TrackListRefiner.cpp,v 1.2 2010-01-05 11:43:41 wouter Exp $
-
-
 /** @class TrackListRefiner TrackListRefiner.h
  *
  *  Make a subselection of a track list
@@ -43,7 +40,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( TrackListRefiner );
+DECLARE_ALGORITHM_FACTORY( TrackListRefiner )
 
 TrackListRefiner::TrackListRefiner(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -102,5 +99,4 @@ StatusCode TrackListRefiner::execute()
   }
   
   return StatusCode::SUCCESS;
-};
-
+}

@@ -32,18 +32,6 @@ FilterSeedTracks::FilterSeedTracks( const std::string& name,
 FilterSeedTracks::~FilterSeedTracks() {} 
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode FilterSeedTracks::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode FilterSeedTracks::execute() {
@@ -122,15 +110,3 @@ StatusCode FilterSeedTracks::execute() {
     debug() << "After filter, rests " << seed->size() << " seed tracks to fit" << endmsg;
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode FilterSeedTracks::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

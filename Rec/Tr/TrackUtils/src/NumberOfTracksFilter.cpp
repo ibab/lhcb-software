@@ -69,10 +69,10 @@ StatusCode NumberOfTracksFilter::execute() {
   for ( std::vector<std::string>::const_iterator p = m_tracksPath.begin() ;
         p!=m_tracksPath.end() ; ++p) {
 
-    if ( !exist<LHCb::Track::Container>(*p)){
+    LHCb::Track::Container* inTracks = getIfExists< LHCb::Track::Container>(*p);
+    if ( NULL == inTracks ){
       Warning("No tracks at "+(*p),1).ignore();
     } else {
-      LHCb::Track::Container* inTracks = get< LHCb::Track::Container>(*p);
       if (msgLevel(MSG::VERBOSE)) verbose() << "Container " << *p << " contains "
                                             << inTracks->size() << " Tracks" << endmsg ;
       nT += inTracks->size() ;
@@ -86,15 +86,3 @@ StatusCode NumberOfTracksFilter::execute() {
 
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode NumberOfTracksFilter::finalize() {
-
-  if (msgLevel(MSG::DEBUG)) debug()  << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

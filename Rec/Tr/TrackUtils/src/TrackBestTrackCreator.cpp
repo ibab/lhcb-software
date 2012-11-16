@@ -54,7 +54,7 @@ namespace  {
     // don't allow copies, because ownership too complicated
     TrackData( const TrackData& ) {}
   public:
-    TrackData() : m_track(0), m_owntrack(false) {}
+    TrackData() : m_track(NULL), m_weight(0), m_qOverP(0.), m_owntrack(false) {}
     TrackData(LHCb::Track* atrack, bool owntrack=true)
       : m_track(atrack),
         m_weight(0), 
@@ -212,7 +212,7 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackBestTrackCreator::~TrackBestTrackCreator() {}; 
+TrackBestTrackCreator::~TrackBestTrackCreator() {}
 
 //=============================================================================
 // Initialization
@@ -247,7 +247,7 @@ StatusCode TrackBestTrackCreator::initialize()
 	    << endmsg;
   
   return sc ;
-};
+}
 
 
 namespace {
@@ -457,7 +457,7 @@ StatusCode TrackBestTrackCreator::execute()
     debug() << "Selected " << tracksOutCont -> size() << " out of "
 	    << alltracks.size() << " tracks. " << endmsg ;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Clone a track, fit it, and if it passes the selection, return the
@@ -553,4 +553,4 @@ StatusCode TrackBestTrackCreator::finalize()
   m_stateinittool.release().ignore() ;
   m_fitter.release().ignore() ;
   return GaudiHistoAlg::finalize();  // must be called after all other actions
-};
+}

@@ -98,12 +98,12 @@ StatusCode HltInsertTrackErrParam::execute() {
 
   /// @todo Should use some HltAlgorithm method to get access to tracks anywhere
 
-  if (!exist<LHCb::Tracks>(m_inputLocation)){
+  LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(m_inputLocation);
+  if ( NULL == tracks ){
     setFilterPassed(false);
     Warning("No tracks at "+m_inputLocation).ignore();
     return StatusCode::SUCCESS;
   }
-  LHCb::Tracks* tracks = get<LHCb::Tracks>(m_inputLocation);
   LHCb::Tracks* newTracks =  (  m_newLocation ?  new LHCb::Tracks() 
                                               : (LHCb::Tracks*)0    );
 
@@ -214,12 +214,3 @@ StatusCode HltInsertTrackErrParam::insertParamInState( LHCb::State* state ){
 
   return StatusCode::SUCCESS ;
 }
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltInsertTrackErrParam::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

@@ -110,15 +110,3 @@ StatusCode CreateFastTrackCollection::execute()
 
     return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-// Finalize
-//=============================================================================
-StatusCode CreateFastTrackCollection::finalize()
-{
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-// vim:tw=78:sw=4:ft=cpp

@@ -1,4 +1,3 @@
-// $Id: TrackFromDST.h,v 1.1 2006-09-19 14:19:52 erodrigu Exp $
 #ifndef TRACKFROMDST_H 
 #define TRACKFROMDST_H 1
 
@@ -34,7 +33,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
   bool areSettingsConsistent() const;

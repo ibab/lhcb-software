@@ -147,14 +147,3 @@ void TrackFromDST::outputTracks( const std::vector<LHCb::Track*>& tracks,
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TrackFromDST::finalize() {
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

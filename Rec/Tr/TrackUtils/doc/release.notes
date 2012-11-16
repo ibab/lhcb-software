@@ -4,6 +4,12 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-16 - Marco Cattaneo
+ - Fix gcc --pedantic warnings
+ - Fix Coverity defects
+ - Use getIfExists
+ - Remove 'do nothing' initialize and finalize methods, delegate to base class
+
 ! 2012-09-10 - Paul Seyfert
  - use getIfExists in TrackAddNNGhostId
 

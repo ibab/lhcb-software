@@ -32,18 +32,6 @@ FilterMatchTracks::FilterMatchTracks( const std::string& name,
 FilterMatchTracks::~FilterMatchTracks() {} 
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode FilterMatchTracks::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode FilterMatchTracks::execute() {
@@ -82,15 +70,3 @@ StatusCode FilterMatchTracks::execute() {
 
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode FilterMatchTracks::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

@@ -28,6 +28,11 @@ TrackRemoveDoubleHits::TrackRemoveDoubleHits ( const std::string& name,
   , m_nTTHits(0)
   , m_nITHits(0)
   , m_nOTHits(0)
+  , m_tracks(NULL)
+  , m_ttLiteClusters(NULL)
+  , m_ttClusters(NULL)
+  , m_itLiteClusters(NULL)
+  , m_itClusters(NULL)
 
 {  
   // Location of the tracks container

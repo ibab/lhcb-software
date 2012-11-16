@@ -139,16 +139,6 @@ StatusCode HltTrackConverter::initializeTriggerLists()
 HltTrackConverter::~HltTrackConverter() {} 
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode HltTrackConverter::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  return StatusCode::SUCCESS;
-}
- 
-//=============================================================================
 // Main execution
 //=============================================================================
 LHCb::Track::Types HltTrackConverter::SetTrackType(const LHCb::Track& t) const
@@ -353,16 +343,6 @@ void HltTrackConverter::executeRecursive(LHCb::Track::Vector& tracks, const LHCb
       tracks.push_back(t);
     } 
   }
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltTrackConverter::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

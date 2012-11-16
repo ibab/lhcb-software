@@ -1,4 +1,3 @@
-// $Id: TrackAddNNGhostId.h,v 1.1 2009-10-07 10:44:53 albrecht Exp $
 #ifndef TRACKADDNNGHOSTID_H 
 #define TRACKADDNNGHOSTID_H 1
 
@@ -24,7 +23,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

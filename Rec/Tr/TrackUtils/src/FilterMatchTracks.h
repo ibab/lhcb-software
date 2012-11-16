@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef FILTERMATCHTRACKS_H 
 #define FILTERMATCHTRACKS_H 1
 
@@ -20,9 +19,7 @@ public:
 
   virtual ~FilterMatchTracks( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 
