@@ -62,7 +62,6 @@ protected:
   std::string m_TriggerTisTosName;
   std::string m_L0TriggerTisTosName;
   
-  
 private:
 
   ITriggerTisTos* m_TriggerTisTosTool;
@@ -80,13 +79,15 @@ private:
                                   , const std::string& head
                                   , Tuples::Tuple& tuple );
 
-  std::string getName(std::string);
+  std::string getName(const std::string& mystr);
 
 private:
 
   virtual StatusCode fillBasic( Tuples::Tuple& T );
 
   virtual StatusCode fillVerbose( Tuples::Tuple& T );
+
+private:
 
   std::vector<int> m_pidList; 
   bool checkPID;

@@ -66,15 +66,14 @@ TupleToolTriggerBase::~TupleToolTriggerBase() {}
 //=========================================================================
 StatusCode TupleToolTriggerBase::initialize( )
 {
-  StatusCode sc = TupleToolBase::initialize();
+  const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if(isVerbose()) m_verboseL0=m_verboseHlt1=m_verboseHlt2=m_verboseStripping=true;
-  bool iv=(m_verboseL0||m_verboseHlt1||m_verboseHlt2||m_verboseStripping);
+  if (isVerbose()) m_verboseL0=m_verboseHlt1=m_verboseHlt2=m_verboseStripping=true;
+  const bool iv = (m_verboseL0||m_verboseHlt1||m_verboseHlt2||m_verboseStripping);
 
   if ( !m_triggerList.empty() && !iv )
   {
-
     warning() << "You have set a list of triggers to look for, but not asked for verbose mode ... OK, but this is weird! "
               << endmsg;
   }

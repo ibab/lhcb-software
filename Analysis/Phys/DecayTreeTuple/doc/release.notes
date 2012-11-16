@@ -6,6 +6,8 @@
 
 ! 2012-11-16 - Chris Jones
  - Minor clean up of TupleToolDira
+ - Standardise the Trigger/TISTOS variable names with the rest of the tools
+   to start with <name>_
 
 ! 2012-10-29 - Wouter Hulsbergen
  - Make sure TTDecayTreeFitter uses TrackStateProvider to improve Ks tracks 
