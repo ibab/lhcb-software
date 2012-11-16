@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef ADDTOPROCSTATUS_H 
 #define ADDTOPROCSTATUS_H 1
 
@@ -23,7 +22,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

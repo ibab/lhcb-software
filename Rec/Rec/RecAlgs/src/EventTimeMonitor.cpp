@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -16,8 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( EventTimeMonitor );
-
+DECLARE_ALGORITHM_FACTORY( EventTimeMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -71,20 +69,18 @@ StatusCode EventTimeMonitor::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   // Load the ODIN
-  LHCb::ODIN* odin(NULL);
-  if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default ) )
+  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN>( LHCb::ODINLocation::Default );
+  if( NULL == odin )
   {
-    odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+    odin = getIfExists<LHCb::ODIN>( LHCb::ODINLocation::Default, false );
   }
-  else if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default, false ) )
-  {
-    odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default, false );
-  } 
-  else 
+
+  if( NULL == odin )
   {
     // should always be available ...
     return Error( "Cannot load the ODIN data object", StatusCode::SUCCESS );
   }
+
   const Gaudi::Time gtime = odin->eventTime();
   m_plotY->fill(gtime.year(false));
   m_plotD->fill(m_moffsets[gtime.month(false)]+gtime.day(false));
@@ -92,16 +88,6 @@ StatusCode EventTimeMonitor::execute() {
   m_plotS->fill(60*gtime.minute(false)+gtime.second(false)+gtime.nsecond()/1000000000.);
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode EventTimeMonitor::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

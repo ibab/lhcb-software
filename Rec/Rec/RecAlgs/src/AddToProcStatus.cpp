@@ -79,13 +79,3 @@ StatusCode AddToProcStatus::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode AddToProcStatus::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

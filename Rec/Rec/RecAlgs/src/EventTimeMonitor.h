@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef EVENTTIMEMONITOR_H 
 #define EVENTTIMEMONITOR_H 1
 
@@ -23,7 +22,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

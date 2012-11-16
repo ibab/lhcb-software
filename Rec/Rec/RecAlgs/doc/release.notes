@@ -4,6 +4,11 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-16 - Marco Cattaneo
+ - Fix gcc --pedantic warning
+ - Use getIfExists in RecInit and EventTimeMonitor 
+ - Remove finalize() in derived classes if it only calls the base class
+
 !========================= RecAlgs v2r10 2012-10-01 =========================
 ! 2012-08-17 - Chris Jones
  - Use getIfExists in RecSummaryAlg

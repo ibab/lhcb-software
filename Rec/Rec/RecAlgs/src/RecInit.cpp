@@ -137,14 +137,12 @@ StatusCode RecInit::execute()
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Getting RawEvent" << endmsg;
   LHCb::RawEvent* rawEvent = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      rawEvent = get<LHCb::RawEvent>(*p);
-      break;
-    }
+    rawEvent = getIfExists<LHCb::RawEvent>(*p);
+    if( NULL != rawEvent ) break;
   }
 
   const std::string rawID=event_fname;
-  if ( !rawEvent ) {
+  if ( NULL == rawEvent ) {
     if(m_abortOnFID) return Error("RawEvent cannot be loaded, fileID cannot be found");
     Warning("RawEvent cannot be loaded, fileID cannot be found",StatusCode::SUCCESS).ignore();
     event_fname = "ERROR, RawEvent not found";
