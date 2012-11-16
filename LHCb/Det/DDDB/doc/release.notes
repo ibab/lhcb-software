@@ -4,6 +4,10 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2012-11-16 - Marco Cattaneo
+ - Update database tags for latest global tags:
+   . LHCBCOND, 2012: cond-20121116
+
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
