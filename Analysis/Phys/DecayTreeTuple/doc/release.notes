@@ -4,20 +4,24 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-11-16 - Chris Jones
+ - Minor clean up of TupleToolDira
+
 ! 2012-10-29 - Wouter Hulsbergen
- - Make sure TTDecayTreeFitter uses TrackStateProvider to improve Ks tracks in 2012 dsts.
+ - Make sure TTDecayTreeFitter uses TrackStateProvider to improve Ks tracks 
+   in 2012 dsts.
 
 ! 2012-10-26 - Maurizio Martinelli
  - Added a flag in TupleToolDecayTreeFitter to store the refitted tracks 
-    momentum.
+   momentum.
 
 ! 2012-10-24 - Alexandra Martin Sanchez
  - Added TupleToolL0Calo.cpp, TupleToolL0Calo.h to compute 
-    L0 trigger efficiencies from decay tree tuple.
+   L0 trigger efficiencies from decay tree tuple.
 
 ! 2012-10-16 - Patrick Koppenburg
- - Move MaxPV property to TupleToolBase. Use it in TupleToolDecayTreeFitter, TupleToolPrimaries
-    and TupleToolGeometry
+ - Move MaxPV property to TupleToolBase. Use it in TupleToolDecayTreeFitter, 
+   TupleToolPrimaries and TupleToolGeometry
  - TupleToolGeometry: new fields (verbose) AllIP and and AllIPchi2.
 
 !========================= DecayTreeTuple v3r26 2012-10-04 =========================
