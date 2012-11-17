@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-11-16 - Chris Jones
- - Minor clean up of TupleToolDira
+ - Minor clean up of TupleToolDira and TupleToolPrimaries
  - Standardise the Trigger/TISTOS variable names with the rest of the tools
    to start with <name>_
 

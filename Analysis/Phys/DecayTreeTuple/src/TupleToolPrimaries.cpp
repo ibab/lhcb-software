@@ -33,7 +33,8 @@ DECLARE_TOOL_FACTORY( TupleToolPrimaries )
     : TupleToolBase ( type, name, parent )
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty("InputLocation", m_pvLocation = LHCb::RecVertexLocation::Primary,
+  declareProperty("InputLocation", 
+                  m_pvLocation = LHCb::RecVertexLocation::Primary,
                   "PV location to be used.");
 }
 
@@ -57,26 +58,23 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName();
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Storing PVs with prefix ``" << prefix << "''" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) 
+    verbose() << "Storing PVs with prefix ``" << prefix << "''" << endmsg ;
 
   std::vector<double>  pvx, pvy, pvz;
   std::vector<double>  epvx, epvy, epvz;
   std::vector<double>  pvchi2, pvndof, pvntracks, pvsumpt;
 
-  const RecVertex::Container* PV = 0 ;
-  //if ( ""==m_pvLocation ) PV = m_dva->primaryVertices();   // default
-  if (exist<RecVertex::Container>(m_pvLocation))
-  {     // user given
-    PV = get<RecVertex::Container>(m_pvLocation);
-  }
-  if (0!=PV)
+  const RecVertex::Container* PV = getIfExists<RecVertex::Container>(m_pvLocation);
+  if ( PV )
   {
 
     if( PV->size() > m_maxPV )
     {
-      Warning("More than 100 primaries, no PVs will be stored.");
-    } else {
-
+      Warning("Too many primaries, no PVs will be stored.").ignore();
+    } 
+    else 
+    {
       for(RecVertex::Container::const_iterator i = PV->begin() ; PV->end()!=i ; ++i )
       {
         if (msgLevel(MSG::VERBOSE)) verbose() << "PV: " <<  (*i)->position() << endmsg ;
@@ -96,9 +94,13 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
         if (msgLevel(MSG::VERBOSE)) verbose() << "Tracks: "  << (*i)->tracks().size() << endmsg ;
       }
     }
-    if (msgLevel(MSG::DEBUG)) debug() << "There are " << PV->size() << " PVs at " <<  pvz << endmsg ;
-  } else if (msgLevel(MSG::DEBUG)) debug() << "PV container is empty" << endmsg ;
-
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "There are " << PV->size() << " PVs at " <<  pvz << endmsg ;
+  }
+  else if (msgLevel(MSG::DEBUG)) 
+  {
+    debug() << "PV container is empty" << endmsg ;
+  }
 
   bool test=true;
   test &= tuple->farray( prefix+"PVX", pvx, prefix+"nPV",  m_maxPV );
