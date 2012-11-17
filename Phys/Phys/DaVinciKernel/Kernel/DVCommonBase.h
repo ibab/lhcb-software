@@ -161,7 +161,7 @@ public:
   {
     return this -> template getIfExists<LHCb::RecVertex::Range>(m_PVLocation);
   }
-  
+
   /** Accessor for IDistanceCalculator tools by name/typename/nickname
    *  @see IDistanceCalculator
    *  @param name the tool name/typename/nickname
@@ -360,7 +360,7 @@ public:
    **/
   inline const IRelatedPVFinder* relatedPVFinder() const
   {
-    return this->getTool<IRelatedPVFinder>( m_pvRelatorName, 
+    return this->getTool<IRelatedPVFinder>( m_pvRelatorName,
                                             m_pvRelator, this );
   }
 
@@ -402,7 +402,6 @@ public:
   const LHCb::VertexBase* calculateRelatedPV(const LHCb::Particle* p) const;
 
   /**
-   *
    * Get the related PV from the relations table, or call calculateRelatedPV
    * if it isn't already there.
    *
@@ -415,7 +414,7 @@ public:
    * Relate a VertexBase to a Particle.
    * Overwrites existing relation to that particle.
    *
-   * @param part (INPUT) LHCb::Particle to which an LHCb::VertexBase 
+   * @param part (INPUT) LHCb::Particle to which an LHCb::VertexBase
    *                     will be related
    * @param vert (INPUT) LHCb::VertexBase that will be related to part.
    *
@@ -583,9 +582,9 @@ private:
       t = ifind->second;
       if ( !t )
       {
-        this->Exception ( "getTool<" + 
+        this->Exception ( "getTool<" +
                           System::typeinfoName( typeid ( TYPE ) )
-                          + ">('" + nickName + 
+                          + ">('" + nickName +
                           "'): tool points to NULL" ) ;
       }
     }
@@ -781,7 +780,8 @@ protected:
 
   /// Get the best related PV from the local relations table. Return 0 if
   /// nothing is there. Does not invoke any calculations.
-  inline const LHCb::VertexBase* getStoredBestPV(const LHCb::Particle* particle) const
+  inline const LHCb::VertexBase*
+  getStoredBestPV(const LHCb::Particle* particle) const
   {
     P2PVMap::const_iterator iPV = m_p2PVMap.find(particle);
     return ( iPV != m_p2PVMap.end() ? iPV->second : NULL );
@@ -800,6 +800,24 @@ protected:
   }
 
 private:
+
+  /** Returns the full location of the given object in the Data Store
+   *
+   *  @param pObj Data object
+   *
+   *  @return Location of given data object
+   */
+  inline std::string objectLocation( const DataObject * pObj ) const
+  {
+    return ( !pObj ? "" :
+             (pObj->registry() ? pObj->registry()->identifier() : "") );
+  }
+
+  /** Try and find the related PV by predicting the relations table
+   *  location from the Particle TES container location
+   */
+  const LHCb::VertexBase* 
+  relatePVViaParticleTESLoc(const LHCb::Particle* p) const;
 
   /**
    * Inline access to best PV for a given particle.
@@ -829,7 +847,7 @@ private:
 
   /// Take a range of Particle -> PV relations and store them locally,
   /// overwriting existing relations with the same From.
-  void loadRelations(const Particle2Vertex::Table::Range& relations);
+  void loadRelations(const Particle2Vertex::Table::Range& relations) const;
 
   /// Does the particle have a relation to a PV stored in the local
   /// relations table?
@@ -878,7 +896,7 @@ private:
     for ( typename PARTICLES::const_iterator iHead = heads.begin();
           iHead != heads.end(); ++iHead )
     {
-      DaVinci::Utils::findDecayTree( *iHead, m_parts, 
+      DaVinci::Utils::findDecayTree( *iHead, m_parts,
                                      m_secVerts, &m_inTES );
     }
   }

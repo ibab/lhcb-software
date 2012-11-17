@@ -7,6 +7,7 @@
 // ============================================================================
 #include "boost/lexical_cast.hpp"
 #include "boost/assign/list_of.hpp"
+#include "boost/algorithm/string.hpp"
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -411,8 +412,7 @@ void DVCommonBase<PBASE>::initializeLocations()
   if ( m_particleOutputLocation.empty() )
   {
     m_outputLocation = this->name();
-    DaVinci::StringUtils::expandLocation(m_outputLocation,
-                                         "Phys");
+    DaVinci::StringUtils::expandLocation( m_outputLocation, "Phys" );
     m_particleOutputLocation = m_outputLocation+"/Particles";
   }
   else
@@ -542,7 +542,7 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
   for( std::vector<std::string>::const_iterator iLoc = m_p2PVInputLocations.begin();
        iLoc != m_p2PVInputLocations.end(); ++iLoc )
   {
-    const Particle2Vertex::Table * table = 
+    const Particle2Vertex::Table * table =
       this -> template getIfExists<Particle2Vertex::Table>(*iLoc);
     if ( table )
     {
@@ -567,7 +567,8 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
 //=============================================================================
 
 template <class PBASE>
-void DVCommonBase<PBASE>::loadRelations(const Particle2Vertex::Table::Range& relations)
+void 
+DVCommonBase<PBASE>::loadRelations(const Particle2Vertex::Table::Range& relations) const
 {
   if ( relations.empty() ) return;
 
@@ -580,7 +581,7 @@ void DVCommonBase<PBASE>::loadRelations(const Particle2Vertex::Table::Range& rel
   for ( Particle2Vertex::Table::Range::const_iterator i = relations.begin();
         i != relations.end(); ++i )
   {
-    relate(i->from(), i->to());
+    relate( i->from(), i->to() );
     if ( this->msgLevel(MSG::VERBOSE) )
     {
       this->verbose() << "Reading a " << i->from()->particleID().pid()
@@ -607,7 +608,7 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
     const std::string location = (*iloc)+"/Particles";
 
     // Retrieve the particles:
-    LHCb::Particle::Range parts = 
+    LHCb::Particle::Range parts =
       this -> template getIfExists<LHCb::Particle::Range>(location);
     if ( !parts )
     {
@@ -616,7 +617,7 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
              StatusCode::SUCCESS, 0).ignore() ;
       continue ;
     }
-    
+
     // statistics:
     this->counter ( "# " + (*iloc) ) += parts.size() ;
 
@@ -667,7 +668,7 @@ DVCommonBase<PBASE>::markTree(const LHCb::Particle* particle)
   // copy relations directly from table to avoid triggering any new P->PV
   const LHCb::VertexBase* bestPV = getStoredBestPV(particle);
 
-  if (bestPV) relate(newp, bestPV);
+  if ( bestPV ) { relate(newp, bestPV); }
 
   return newp;
 }
@@ -969,8 +970,8 @@ DVCommonBase<PBASE>::calculateRelatedPV(const LHCb::Particle* p) const
   {
     if (!refitPVs()) return *(PVs.begin());
     LHCb::RecVertex reFittedPV = LHCb::RecVertex(**(PVs.begin()));
-    return ( (fitter->remove(p, &reFittedPV)).isSuccess() ) ?
-      mark(&reFittedPV) : NULL;
+    return ( (fitter->remove(p, &reFittedPV)).isSuccess() ?
+             mark(&reFittedPV) : NULL );
   }
 
   // more than one PV
@@ -1082,12 +1083,18 @@ DVCommonBase<PBASE>::getRelatedPV(const LHCb::Particle* part) const
 
   if ( !hasStoredRelatedPV(part) )
   {
+    // First, see if we can find a relations table from the Particle TES location
+    // and relate the P to PV via that
+    const LHCb::VertexBase* pv = relatePVViaParticleTESLoc(part);
+    if ( pv ) return pv;
+
+    // No, so try to calculate the relation
     if ( this->msgLevel(MSG::VERBOSE) )
     {
       this->verbose() << "particle2Vertices empty. Calling calculateRelatedPV"
                       << endmsg;
     }
-    const LHCb::VertexBase* pv = calculateRelatedPV(part);
+    pv = calculateRelatedPV(part);
     if ( pv )
     {
       if ( this->msgLevel(MSG::VERBOSE) )
@@ -1107,6 +1114,44 @@ DVCommonBase<PBASE>::getRelatedPV(const LHCb::Particle* part) const
   {
     return getStoredBestPV(part);
   }
+}
+
+// ============================================================================
+// Try and find the related PV by predicting the relations table
+//  location from the Particle TES container location
+// ============================================================================
+template <class PBASE>
+const LHCb::VertexBase*
+DVCommonBase<PBASE>::relatePVViaParticleTESLoc(const LHCb::Particle* p) const
+{
+  const LHCb::VertexBase * pv = NULL;
+  if ( p )
+  {
+    // Load Particle container name
+    std::string loc = objectLocation( p->parent() );
+    if ( !loc.empty() )
+    {
+      // Form the relations TES location for this Particles location
+      boost::replace_all( loc, "/Particles", "/Particle2VertexRelations" );
+      
+      // Try and load the relations
+      if ( this->msgLevel(MSG::VERBOSE) )
+        this->verbose() << "Trying to load " << loc << endmsg;
+      const Particle2Vertex::Table * table =
+        this -> template getIfExists<Particle2Vertex::Table>(loc);
+      if ( table )
+      {
+        // Load the relations table
+        loadRelations( table->relations() );
+
+        // See if we have a relation
+        pv = getStoredBestPV(p);
+        if ( this->msgLevel(MSG::VERBOSE) )
+          this->verbose() << " -> Table loaded. Found PV = " << pv << endmsg;
+      }
+    }
+  }
+  return pv;
 }
 
 // ============================================================================
