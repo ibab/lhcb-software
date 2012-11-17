@@ -544,20 +544,22 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
   {
     const Particle2Vertex::Table * table =
       this -> template getIfExists<Particle2Vertex::Table>(*iLoc);
+    if ( !table )
+    {
+      table = this -> template getIfExists<Particle2Vertex::Table>(*iLoc,false);
+    }
     if ( table )
     {
       if ( this->msgLevel(MSG::DEBUG) )
       {
-        this->debug() << "Reading table from " << (*iLoc) << endmsg ;
+        this->debug() << "Pre-loaded table from " << (*iLoc) << endmsg ;
       }
-      const Particle2Vertex::Table::Range& relations = table->relations();
-      loadRelations( relations );
+      loadRelations( table->relations() );
     }
     else
     {
-      Info ( "No P->PV table at " + (*iLoc)  +
-             ( this->rootInTES().empty() ? "" :  (" under "+this->rootInTES() ) ),
-             StatusCode::SUCCESS, 0).ignore() ;
+      this -> Info ( "No P->PV table at " + (*iLoc),
+                     StatusCode::SUCCESS, 0 ).ignore() ;
     }
   }
 
@@ -1135,10 +1137,14 @@ DVCommonBase<PBASE>::relatePVViaParticleTESLoc(const LHCb::Particle* p) const
       boost::replace_all( loc, "/Particles", "/Particle2VertexRelations" );
       
       // Try and load the relations
-      if ( this->msgLevel(MSG::VERBOSE) )
-        this->verbose() << "Trying to load " << loc << endmsg;
+      if ( this->msgLevel(MSG::DEBUG) )
+        this->debug() << "Trying to load " << loc << endmsg;
       const Particle2Vertex::Table * table =
         this -> template getIfExists<Particle2Vertex::Table>(loc);
+      if ( !table )
+      {
+        table = this -> template getIfExists<Particle2Vertex::Table>(loc,false);
+      }
       if ( table )
       {
         // Load the relations table
@@ -1146,8 +1152,8 @@ DVCommonBase<PBASE>::relatePVViaParticleTESLoc(const LHCb::Particle* p) const
 
         // See if we have a relation
         pv = getStoredBestPV(p);
-        if ( this->msgLevel(MSG::VERBOSE) )
-          this->verbose() << " -> Table loaded. Found PV = " << pv << endmsg;
+        if ( this->msgLevel(MSG::DEBUG) )
+          this->debug() << " -> Table loaded. Found PV = " << pv << endmsg;
       }
     }
   }
