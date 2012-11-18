@@ -2798,7 +2798,7 @@ def _transform_ ( h1 , func ) :
     return h2 
 
 ROOT.TH1F. transform = _transform_ 
-ROOT.TH1F. transform = _transform_ 
+ROOT.TH1D. transform = _transform_ 
 
 # =============================================================================
 ## Get the Figure-of-Merit (FoM) for the pure signal distribution,
