@@ -79,6 +79,7 @@ private:
   bool m_withVelo;
   bool m_withVL;
   bool m_withVP;
+  bool m_withUT;
   bool m_withIT;
   bool m_withOT;
   bool m_withFT;
@@ -87,11 +88,12 @@ private:
   DeVL*         m_vlDet;
   DeVP*         m_vpDet;
 
+  DeSTDetector* m_utDet;
   DeSTDetector* m_ttDet;
   DeSTDetector* m_itDet;
-
-  // OT Detector information
   DeOTDetector* m_otDet;
   DeFTDetector* m_ftDet;
+  std::string   m_ttClustersName;
+  std::string   m_ttHitsName;
 };
 #endif // BUILDMCTRACKINFOUPGRADE_H

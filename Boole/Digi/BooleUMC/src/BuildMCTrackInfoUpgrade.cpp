@@ -47,6 +47,7 @@ BuildMCTrackInfoUpgrade::BuildMCTrackInfoUpgrade( const std::string& name,
   , m_velo(0)
   , m_vlDet(0)
   , m_vpDet(0)
+  , m_utDet(0)
   , m_ttDet(0)
   , m_itDet(0)
   , m_otDet(0)
@@ -54,6 +55,7 @@ BuildMCTrackInfoUpgrade::BuildMCTrackInfoUpgrade( const std::string& name,
   declareProperty( "WithVelo",  m_withVelo  = false );
   declareProperty( "WithVP",    m_withVP    = false );
   declareProperty( "WithVL",    m_withVL    = false );
+  declareProperty( "WithUT",    m_withUT    = false );
   declareProperty( "WithIT",    m_withIT    = false );
   declareProperty( "WithOT",    m_withOT    = false );
   declareProperty( "WithFT",    m_withFT    = true  );
@@ -84,13 +86,25 @@ StatusCode BuildMCTrackInfoUpgrade::initialize() {
   if ( m_withVP )   m_vpDet = getDet<DeVP>( DeVPLocation::Default );
   if ( m_withVL   ) m_vlDet = getDet<DeVL>( DeVLLocation::Default );
   if ( m_withVelo ) m_velo  = getDet<DeVelo>( DeVeloLocation::Default );
-  m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );  
+  if ( m_withUT  ) {
+    m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::UT );  
+    m_ttClustersName = LHCb::STClusterLocation::TTClusters;
+    m_ttHitsName     = LHCb::MCHitLocation::TT;
+  } else {
+    m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );  
+    m_ttClustersName = LHCb::STClusterLocation::UTClusters;
+    m_ttHitsName     = LHCb::MCHitLocation::UT;
+  }
   if ( m_withIT ) m_itDet = getDet<DeSTDetector>(DeSTDetLocation::IT );
   if ( m_withOT ) m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   if ( m_withFT ) m_ftDet = getDet<DeFTDetector>(DeFTDetectorLocation::Default );
 
   if(msgLevel(MSG::DEBUG)) {
-    debug() << "Number of TT layers " << m_ttDet->layers().size() << endmsg;
+    if ( m_withUT  ) {
+      debug() << "Number of UT layers " << m_ttDet->layers().size() << endmsg;
+    } else {
+      debug() << "Number of TT layers " << m_ttDet->layers().size() << endmsg;
+    }
     if ( m_withIT ) debug() << "Number of IT layers " << m_itDet->layers().size() << endmsg;
     if ( m_withOT ) debug() << "Number of OT layers " << m_otDet->layers().size() << endmsg;
     if ( m_withFT ) debug() << "Number of FT layers " << m_ftDet->layers().size() << endmsg;
@@ -220,9 +234,8 @@ StatusCode BuildMCTrackInfoUpgrade::execute() {
   }
   
   //== TT cluster -> particle associaton
-  LHCb::STClusters* TTDig = get<LHCb::STClusters>( LHCb::STClusterLocation::TTClusters);
-  LinkedTo<LHCb::MCParticle, LHCb::STCluster> ttLink( eventSvc(), msgSvc(), 
-                                     LHCb::STClusterLocation::TTClusters );
+  LHCb::STClusters* TTDig = get<LHCb::STClusters>( m_ttClustersName );
+  LinkedTo<LHCb::MCParticle, LHCb::STCluster> ttLink( eventSvc(), msgSvc(), m_ttClustersName );
   if( ttLink.notFound() ) return StatusCode::FAILURE;
   
   for ( LHCb::STClusters::const_iterator tIt = TTDig->begin() ;
@@ -412,7 +425,7 @@ void BuildMCTrackInfoUpgrade::computeAcceptance ( std::vector<int>& station ) {
   
   //== TT
   
-  LHCb::MCHits* ttHits = get<LHCb::MCHits>( LHCb::MCHitLocation::TT );
+  LHCb::MCHits* ttHits = get<LHCb::MCHits>( m_ttHitsName );
   for ( LHCb::MCHits::const_iterator tHit = ttHits->begin();
         ttHits->end() != tHit; tHit++ ) {
     unsigned int MCNum = (*tHit)->mcParticle()->key();

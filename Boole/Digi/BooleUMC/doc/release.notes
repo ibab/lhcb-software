@@ -4,6 +4,9 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+! 2012-11-19 - Olivier Callot
+ - Use UT in BuildMCTrackInfoUpgrade, under option "WithUT"
+
 !========================= BooleUMC v2r0 2012-10-03 =========================
 ! 2012-10-03 - Marco Cattaneo
  - Rename VeloPix -> VP everywhere
