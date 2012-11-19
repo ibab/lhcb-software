@@ -13,7 +13,7 @@
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 
-#include "Kernel/DVAlgorithm.h"
+#include "GaudiKernel/Algorithm.h"
 
 #include <boost/lexical_cast.hpp>
 
@@ -38,8 +38,8 @@ DECLARE_TOOL_FACTORY( TupleToolDecay )
     : GaudiTool( type, name , parent )
     , m_hasMatched( false )
     , m_myName(name)
-    , m_dkFinder(0)
-    , m_mcdkFinder(0)
+    , m_dkFinder(NULL)
+    , m_mcdkFinder(NULL)
     , m_isMC(false)
 {
   declareInterface<TupleToolDecay>(this);

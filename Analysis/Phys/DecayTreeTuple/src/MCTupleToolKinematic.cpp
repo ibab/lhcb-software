@@ -56,9 +56,13 @@ MCTupleToolKinematic::~MCTupleToolKinematic() {}
 
 StatusCode MCTupleToolKinematic::initialize()
 {
-  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
-  if(isVerbose()) m_storePT=m_storeVertexes=m_storeKinetic = true;
-  return StatusCode::SUCCESS ;
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return StatusCode::FAILURE;
+  if ( isVerbose() ) 
+  {
+    m_storePT = m_storeVertexes = m_storeKinetic = true;
+  }
+  return sc;
 }
 //=============================================================================
 // Fill
@@ -68,7 +72,7 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
                                        , const std::string& head
                                        , Tuples::Tuple& tuple )
 {
-  const std::string prefix=fullName(head);
+  const std::string prefix = fullName(head);
   bool test = true;
 
   if (msgLevel(MSG::DEBUG)) debug() << "MCTupleToolKinematic::fill " << head << endmsg ;
@@ -80,31 +84,53 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
   Gaudi::LorentzVector trueP;
   bool hasOsc = false ;
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::fill mcp " << mcp << endmsg ;
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << "MCTupleToolKinematic::fill mcp " << mcp << endmsg ;
   // pointer is ready, prepare the values:
-  if( mcp )
+  if ( mcp )
   {
     trueP = mcp->momentum();
     mcPT  = mcp->pt();
     if (msgLevel(MSG::VERBOSE)) verbose() << "      " << trueP << endmsg ;
+
     originVertex = mcp->originVertex()->position();
     if (msgLevel(MSG::VERBOSE)) verbose() << "     origin vertex position " << originVertex << endmsg ;
-    if (!isStable(mcp))
-    {
-      const SmartRefVector< LHCb::MCVertex > & endVertices = mcp->endVertices();
-      if (msgLevel(MSG::VERBOSE)) verbose() << "     vertices " << mcp->endVertices().size() << endmsg ;
-      endVertex = endVertices.front()->position(); // the first item, the other are discarded.
-      if (msgLevel(MSG::VERBOSE)) verbose() << "     origin vertex " << mcp->originVertex() << endmsg ;
 
-      // lifetime
-      if( m_storePT )
+    if ( !isStable(mcp) )
+    {
+      const SmartRefVector<LHCb::MCVertex> & endVertices = mcp->endVertices();
+      if (msgLevel(MSG::VERBOSE)) verbose() << "     vertices " << endVertices.size() << endmsg ;
+
+      const LHCb::MCVertex * mcV = NULL;
+      if ( !endVertices.empty() )
       {
-        Gaudi::XYZVector dist = endVertex - originVertex;
+        mcV = endVertices.front(); // the first item, the other are discarded.
+      }
+      else
+      {
+        Warning( "No end vertices for " + prefix ).ignore();
+      }
+
+      if ( mcV )
+      {
+        endVertex = mcV->position();
+      }
+      else
+      {
+        Warning( "NULL end vertex for " + prefix ).ignore();
+      }
+
+      if (msgLevel(MSG::VERBOSE)) verbose() << "     end vertex " << endVertex << endmsg ;
+      
+      // lifetime
+      if ( mcV && m_storePT )
+      {
+        const Gaudi::XYZVector dist = endVertex - originVertex;
         // copied from DecayChainNTuple //
         mcTau = trueP.M() * dist.Dot( trueP.Vect() ) / trueP.Vect().mag2();
         mcTau /= Gaudi::Units::c_light;  // nanoseconds
         hasOsc = mcp->hasOscillated() ;
-        if (msgLevel(MSG::DEBUG)) {
+        if (msgLevel(MSG::DEBUG)) 
+        {
           debug() << head << " " << mcp->particleID().pid() << " time " << mcTau << " oscil" << hasOsc << endmsg ;
         }
       }
@@ -115,29 +141,27 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
 
   // fill the tuple:
   //test &= tuple->column( head+"_TRUEID", mcPid );
-  if( m_storeKinetic )
+  if ( m_storeKinetic )
   {
     test &= tuple->column( prefix + "_TRUEP_", trueP );
     test &= tuple->column( prefix+"_TRUEPT", mcPT );
   }
 
-  //if (!isStable(mcp)){ //NO!! becuase then the tuple tools might be different each time
-
-  if( m_storeVertexes )
+  if ( m_storeVertexes )
   {
     test &= tuple->column( prefix + "_TRUEORIGINVERTEX_", originVertex );
     test &= tuple->column( prefix + "_TRUEENDVERTEX_", endVertex );
     test &= tuple->column( prefix + "_TRUEISSTABLE",  isStable(mcp));
   }
 
-  if( m_storePT )
+  if ( m_storePT )
   {
     test &= tuple->column( prefix + "_TRUETAU", mcTau );
-    if ( isVerbose() ){
+    if ( isVerbose() )
+    {
       test &= tuple->column( prefix + "_OSCIL", hasOsc );
     }
   }
-  //}
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::fill bye " << prefix << endmsg ;
 

@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-11-19 - Chris Jones
+ - Protect MCTupleToolKinematic against an empty MCVertex container and also 
+   NULL MCVertex pointers
+
 ! 2012-11-16 - Chris Jones
  - Minor clean up of TupleToolDira and TupleToolPrimaries
  - Standardise the Trigger/TISTOS variable names with the rest of the tools
