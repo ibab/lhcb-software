@@ -4,6 +4,9 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Nigel Watson
+ - Added QGSP_FTFP_BERT to GaussPhysics_load.cpp
+
 !====================== GaussPhysics v9r1 2012-10-19 =========================
 ! 2012-07-25 - Patrick Robbe
  - Correct name for anti-xi_b+
