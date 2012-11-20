@@ -18,7 +18,7 @@ __all__ = ( 'CloneRecHeader',
             'CloneParticleTrees',
             'ClonePVs',
             'CloneSwimmingReports',
-            'CloneMCInfo',
+            'CloneParticleMCInfo',
             'CloneBTaggingInfo',
             'ClonePVRelations',
             'CloneTPRelations',
@@ -153,7 +153,18 @@ class ClonePVs(MicroDSTElement) :
             algs += [cloneWeights]
         return algs
 
-class CloneMCInfo(MicroDSTElement) :
+class CloneChargedMCInfo(MicroDSTElement) :
+    """
+    Creates linker tables for Charged Tracks
+    """
+    def __call__(self, sel) :
+        from Configurables import TrackAssociator
+        # Work in progress. Links are to original MCPs,
+        # not the stream dependant ones under self.branch. Needs fixing ....
+        return [ TrackAssociator( name = self.personaliseName(sel,"TrackMCLinks"),
+                                  TracksInContainer = self.branch + "/Rec/Track/Best" ) ]
+
+class CloneParticleMCInfo(MicroDSTElement) :
     """
     Generator returning list of P2MCRelatorAlg and CopyParticle2MCRelations.
     Copies related MC particles and relations table to '/Event/<branch>/...'
@@ -165,17 +176,18 @@ class CloneMCInfo(MicroDSTElement) :
         from Configurables import ( P2MCRelatorAlg, CopyParticle2MCRelations,
                                     MCParticleCloner, MCVertexCloner,
                                     CopyMCHeader )
-        # first, get matches MCParticles for selected candidates.
+        
+        # first, get matches MCParticles for selected Particle candidates.
         # This will make a relations table in mainLocation+"/P2MCPRelations"
         p2mcRelator = P2MCRelatorAlg(self.personaliseName(sel,'P2MCRel'))
         p2mcRelator.ParticleLocations = self.dataLocations(sel,'Particles')
+        
         # Move relations to stream dependant location and clone associated MCParticles
         cloner = CopyParticle2MCRelations(self.personaliseName(sel,"CopyP2MCRel"))
         cloner.RemoveOriginals = True
-        cloner.addTool(MCParticleCloner)
-        cloner.MCParticleCloner.addTool(MCVertexCloner,name='ICloneMCVertex')
         cloner.InputLocations = self.dataLocations(sel,'Particles')
         self.setOutputPrefix(cloner)
+        
         return [p2mcRelator,cloner]
 
 class CloneBTaggingInfo(MicroDSTElement) :

@@ -17,7 +17,8 @@ from microdstelements import ( CloneRecHeader,
                                CloneParticleTrees,
                                ClonePVRelations,
                                CloneBackCat,
-                               CloneMCInfo,
+                               CloneParticleMCInfo,
+                               CloneChargedMCInfo,
                                CloneBTaggingInfo,
                                ReFitAndClonePVs,
                                CloneRawBanks,
@@ -43,7 +44,10 @@ def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False ) :
         ReFitAndClonePVs( RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" )
         ]
     if isMC :
-        elements += [ CloneMCInfo(), CloneBackCat() ]
+        elements += [ CloneParticleMCInfo(),
+                      CloneBackCat()
+                      #CloneChargedMCInfo()
+                      ]
     if pack :
         elements += [ PackStrippingReports() ]
         if saveTrackClusters : elements += [ PackTrackingClusters() ]
