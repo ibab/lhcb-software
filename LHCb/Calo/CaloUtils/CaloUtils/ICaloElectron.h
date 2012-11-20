@@ -45,6 +45,8 @@ public:
   virtual LHCb::CaloHypo*    electron() = 0 ;
   virtual LHCb::CaloHypo*    bremstrahlung() = 0 ;
   virtual LHCb::CaloMomentum bremCaloMomentum() = 0 ;
+
+  using ITrack2Calo::closestState;
   virtual LHCb::State        closestState(std::string toWhat = "hypo") =0;
 
   virtual double             caloTrajectoryZ(CaloPlane::Plane refPlane = CaloPlane::ShowerMax,std::string toWhat = "hypo") =0;

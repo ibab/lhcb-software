@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-11-20 - Marco Clemencic
+ - Fixed a warning.
+
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
