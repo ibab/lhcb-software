@@ -37,10 +37,10 @@ public:
       } else {
         m_links = new LHCb::LinksByKey();
         StatusCode sc = evtSvc->registerObject( name, m_links );
-        if ( !sc ) {
+        if ( !sc && NULL != msgSvc ) {
           MsgStream msg( msgSvc, "LinkerWithKey::"+containerName );
           msg << MSG::ERROR << "*** Link container " << name
-              << " not registered, Status " << sc << endreq;
+              << " cannot be registered, Status " << sc << endreq;
         }
       }
       
