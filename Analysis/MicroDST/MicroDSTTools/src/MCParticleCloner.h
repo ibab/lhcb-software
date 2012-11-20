@@ -53,7 +53,7 @@ private:
 
   inline bool cloneOriginVertex(const LHCb::MCVertex* vertex)
   {
-    return vertex;
+    return ( vertex != NULL );
     //    return vertex && (vertex->isDecay() || vertex->isPrimary() );
   }
 
@@ -63,6 +63,9 @@ private:
 private:
 
   typedef MicroDST::BasicItemCloner<LHCb::MCParticle> BasicMCPCloner;
+  typedef MicroDST::BasicItemCloner<LHCb::MCVertex> BasicVtxCloner;
+
+private:
 
   ICloneMCVertex* m_vertexCloner;
 

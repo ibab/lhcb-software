@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
 
+! 2012-11-20 - Chris Jones
+ - Improve the MCParticle and MCVertex cloners to clone the full tree, leaving
+   no SmartRefs pointing to the originals.
+
 !========================= MicroDSTTools v2r8 2012-06-28 =========================
 
 ! 2012-06-14 - Chris Jones

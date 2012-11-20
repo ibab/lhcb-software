@@ -25,9 +25,10 @@ MCParticleCloner::MCParticleCloner( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
   : base_class ( type, name , parent ),
-    m_vertexClonerName("NONE")
+    m_vertexCloner ( NULL )
 {
-  declareProperty("ICloneMCVertex", m_vertexClonerName);
+  declareProperty("ICloneMCVertex", m_vertexClonerName = "MCVertexCloner" );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -37,82 +38,100 @@ StatusCode MCParticleCloner::initialize()
   const StatusCode sc = base_class::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_vertexCloner = ( m_vertexClonerName != "NONE"      ?
+  m_vertexCloner = ( m_vertexClonerName == "NONE" ? NULL :
                      this->tool<ICloneMCVertex>( m_vertexClonerName,
-                                                 this->parent()    )  :
-                     NULL );
+                                                 this->parent() ) );
 
   return sc;
 }
 
 //=============================================================================
 
-LHCb::MCParticle* MCParticleCloner::clone(const LHCb::MCParticle* mcp)
+LHCb::MCParticle* MCParticleCloner::clone( const LHCb::MCParticle* mcp )
 {
-  if (!mcp) return NULL;
+  if ( !mcp ) return NULL;
 
-  debug() << "clone() called for\n " << *mcp << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "clone() called for\n" << *mcp << endmsg;
 
-  LHCb::MCParticle* clone =
+  LHCb::MCParticle * clone =
     cloneKeyedContainerItem<BasicMCPCloner>(mcp);
+  
+  const LHCb::MCVertex * originVertex = mcp->originVertex();
 
-  const LHCb::MCVertex* originVertex = mcp->originVertex();
-
-  typedef MicroDST::BasicItemCloner<LHCb::MCVertex> BasicVtxCloner;
-
+  // Should we clone the origin vertex ?
   if ( cloneOriginVertex(originVertex) )
   {
+   
+    // Has it already been cloned
     LHCb::MCVertex* originVertexClone = getStoredClone<LHCb::MCVertex>(originVertex);
-    if (!originVertexClone)
+    if ( !originVertexClone )
     {
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Found origin vertex\n " << *originVertex << endmsg;
+        debug() << "Cloning origin vertex \n" << *originVertex << endmsg;
+
       originVertexClone =
         cloneKeyedContainerItem<BasicVtxCloner>(originVertex);
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Cloned originVertex" << endmsg;
+        debug() << "Cloned vertex\n" << *originVertexClone << endmsg;
       originVertexClone->clearProducts();
-      originVertexClone->addToProducts(clone);
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "Now clone mother" << endmsg;
+
+      // Clone the origin vertex mother
       const LHCb::MCParticle* mother = mcp->mother();
-      LHCb::MCParticle* motherClone = (mother) ? (*this)(mother) : 0;
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "Cloned mother" << endmsg;
+      LHCb::MCParticle* motherClone = ( mother ? (*this)(mother) : NULL );
+      if ( motherClone && msgLevel(MSG::DEBUG) )
+        debug() << "Cloned mother\n" << *motherClone << endmsg;
       originVertexClone->setMother(motherClone);
+
     }
+
+    // Add the cloned origin vertex to the cloned MCP
     clone->setOriginVertex( originVertexClone );
+
+    // Add the cloned MCP to the cloned origin vertex, if not already there
+    bool found = false;
+    for ( SmartRefVector<LHCb::MCParticle>::const_iterator i 
+            = originVertexClone->products().begin();
+          i != originVertexClone->products().end(); ++i )
+    {
+      const LHCb::MCParticle * c = *i;
+      if ( c == clone ) { found = true; break; }
+    }
+    if ( !found ) { originVertexClone->addToProducts(clone); }
+
   }
   else
   {
-    clone->setOriginVertex(0);
+    clone->setOriginVertex(NULL);
   }
 
   clone->clearEndVertices();
-
-  cloneDecayVertices(mcp->endVertices(), clone);
+  cloneDecayVertices( mcp->endVertices(), clone );
 
   return clone;
 }
 
 //=============================================================================
 
-void  MCParticleCloner::cloneDecayVertices(const SmartRefVector<LHCb::MCVertex>& endVertices,
-                                           LHCb::MCParticle* clonedParticle)
+void
+MCParticleCloner::cloneDecayVertices( const SmartRefVector<LHCb::MCVertex>& endVertices,
+                                      LHCb::MCParticle* clonedParticle )
 {
   for ( SmartRefVector<LHCb::MCVertex>::const_iterator iEndVtx = endVertices.begin();
         iEndVtx!=endVertices.end(); ++iEndVtx )
   {
-    if ((*iEndVtx)->isDecay() && !((*iEndVtx)->products().empty()) )
+    if ( (*iEndVtx)->isDecay() && !((*iEndVtx)->products().empty()) )
     {
-      if (m_vertexCloner)
+      if ( m_vertexCloner )
       {
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << "Cloning Decay Vertex\n" << *(*iEndVtx)
                     << "\n with " << (*iEndVtx)->products().size()
                     << " products!"<< endmsg;
+
         LHCb::MCVertex* decayVertexClone = (*m_vertexCloner)(*iEndVtx);
         clonedParticle->addToEndVertices(decayVertexClone);
+
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << "Cloned it!\n" <<  *(*iEndVtx) << endmsg;
       }
@@ -128,11 +147,11 @@ void  MCParticleCloner::cloneDecayVertices(const SmartRefVector<LHCb::MCVertex>&
 
 //=============================================================================
 
-LHCb::MCParticle* MCParticleCloner::operator() (const LHCb::MCParticle* mcp)
+LHCb::MCParticle* MCParticleCloner::operator() ( const LHCb::MCParticle* mcp )
 {
-  if (!mcp) return NULL;
+  if ( !mcp ) return NULL;
   LHCb::MCParticle* clone = getStoredClone<LHCb::MCParticle>(mcp);
-  return clone ? clone : this->clone(mcp);
+  return ( clone ? clone : this->clone(mcp) );
 }
 
 //=============================================================================
@@ -144,3 +163,5 @@ MCParticleCloner::~MCParticleCloner() { }
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( MCParticleCloner )
+
+//=============================================================================
