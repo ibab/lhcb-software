@@ -323,18 +323,16 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Tune initialisation 
         """
-        if hasattr(self, "Persistency"):
+        if hasattr(self,"Persistency"):
             self.setOtherProps(LHCbApp(),["Persistency"])
             self.setOtherProps(DstConf(),["Persistency"])
 
-        #no longer required, done by LHCbApp
-        # POOL Persistency
-        #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+        # Input data type
+        inputType = self.getProp( "InputType" ).upper()
+
         # Get the event time (for CondDb) from ODIN
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
-        
-        inputType = self.getProp( "InputType" ).upper()
         
         # if property set explcicitly - use it! 
         if self.isPropertySet('EnableUnpack') :
