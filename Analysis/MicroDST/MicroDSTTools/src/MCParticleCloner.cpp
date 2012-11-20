@@ -54,12 +54,8 @@ LHCb::MCParticle* MCParticleCloner::clone( const LHCb::MCParticle* mcp )
   if ( msgLevel(MSG::DEBUG) )
     debug() << "clone() called for " << *mcp << endmsg;
 
-  // Has it already been cloned ?
-  LHCb::MCParticle * clone = getStoredClone<LHCb::MCParticle>(mcp);
-  if ( clone ) { return clone; }
-
-  // Not cloned, so do it now.
-  clone = cloneKeyedContainerItem<BasicMCPCloner>(mcp);
+  // Clone the MCParticle
+  LHCb::MCParticle * clone = cloneKeyedContainerItem<BasicMCPCloner>(mcp);
   
   // Original origin vertex
   const LHCb::MCVertex * originVertex = mcp->originVertex();
@@ -109,6 +105,7 @@ LHCb::MCParticle* MCParticleCloner::clone( const LHCb::MCParticle* mcp )
     clone->setOriginVertex(NULL);
   }
 
+  // Clone the end vertices
   clone->clearEndVertices();
   cloneDecayVertices( mcp->endVertices(), clone );
 
