@@ -52,11 +52,16 @@ LHCb::MCParticle* MCParticleCloner::clone( const LHCb::MCParticle* mcp )
   if ( !mcp ) return NULL;
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "clone() called for\n" << *mcp << endmsg;
+    debug() << "clone() called for " << *mcp << endmsg;
 
-  LHCb::MCParticle * clone =
-    cloneKeyedContainerItem<BasicMCPCloner>(mcp);
+  // Has it already been cloned ?
+  LHCb::MCParticle * clone = getStoredClone<LHCb::MCParticle>(mcp);
+  if ( clone ) { return clone; }
+
+  // Not cloned, so do it now.
+  clone = cloneKeyedContainerItem<BasicMCPCloner>(mcp);
   
+  // Original origin vertex
   const LHCb::MCVertex * originVertex = mcp->originVertex();
 
   // Should we clone the origin vertex ?
@@ -68,21 +73,20 @@ LHCb::MCParticle* MCParticleCloner::clone( const LHCb::MCParticle* mcp )
     if ( !originVertexClone )
     {
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Cloning origin vertex \n" << *originVertex << endmsg;
+        debug() << "Cloning origin vertex " << *originVertex << endmsg;
 
       originVertexClone =
         cloneKeyedContainerItem<BasicVtxCloner>(originVertex);
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Cloned vertex\n" << *originVertexClone << endmsg;
+        debug() << "Cloned vertex " << *originVertexClone << endmsg;
       originVertexClone->clearProducts();
 
       // Clone the origin vertex mother
       const LHCb::MCParticle* mother = mcp->mother();
       LHCb::MCParticle* motherClone = ( mother ? (*this)(mother) : NULL );
       if ( motherClone && msgLevel(MSG::DEBUG) )
-        debug() << "Cloned mother\n" << *motherClone << endmsg;
+        debug() << "Cloned mother " << *motherClone << endmsg;
       originVertexClone->setMother(motherClone);
-
     }
 
     // Add the cloned origin vertex to the cloned MCP
@@ -125,15 +129,15 @@ MCParticleCloner::cloneDecayVertices( const SmartRefVector<LHCb::MCVertex>& endV
       if ( m_vertexCloner )
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "Cloning Decay Vertex\n" << *(*iEndVtx)
-                    << "\n with " << (*iEndVtx)->products().size()
+          verbose() << "Cloning Decay Vertex " << *(*iEndVtx)
+                    << " with " << (*iEndVtx)->products().size()
                     << " products!"<< endmsg;
 
         LHCb::MCVertex* decayVertexClone = (*m_vertexCloner)(*iEndVtx);
         clonedParticle->addToEndVertices(decayVertexClone);
 
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "Cloned it!\n" <<  *(*iEndVtx) << endmsg;
+          verbose() << "Cloned it! " <<  *(*iEndVtx) << endmsg;
       }
       else
       {
