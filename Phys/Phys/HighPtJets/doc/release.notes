@@ -3,6 +3,9 @@
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
 
+! 2012-11-20 - Chris Jones
+ - Use DaVinciAlgorithm instead of DVAlgorithm
+
 !========================= HighPtJets v1r7p1 2012-06-28 =========================
 
 ! 2012-06-27 - Chris Jones

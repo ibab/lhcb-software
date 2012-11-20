@@ -1,13 +1,13 @@
 #ifndef USER_bJetSeeds_H 
 #define USER_bJetSeeds_H 1
-// Include files:
-// from Gaudi
-#include "Kernel/IDVAlgorithm.h"
+// from Kernel
 #include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
 // from Event
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
+//from Kernel
+#include "Kernel/DaVinciAlgorithm.h"
 
 /** @class bJetSeeds bJetSeeds.h 
  *  
@@ -20,7 +20,7 @@ using namespace LHCb;
 typedef Gaudi::XYZVector EVector;
 typedef Gaudi::XYZPoint EPoint;
 
-class bJetSeeds : public DVAlgorithm {
+class bJetSeeds : public DaVinciAlgorithm {
 
 public: 
   /// Standard constructor
@@ -28,17 +28,20 @@ public:
   virtual ~bJetSeeds( ); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
+
   // Functions
-  std::vector<Vertex> build3PartSV(Particle::ConstVector&);
+  std::vector<Vertex> build3PartSV(const Particle::ConstVector&);
   StatusCode partIPwrtPV(const LHCb::Particle* prt,
                          const LHCb::VertexBase* vBase,
                          double& ip, 
                          double& ipErr);
   int filterSV3Chi2(std::vector<Vertex> sds,
                     std::vector<Vertex>* purgedSeeds);
+
+private:
+
   // Variables
   std::string m_inputPVsName;
   LHCb::RecVertices* m_inputPVs;

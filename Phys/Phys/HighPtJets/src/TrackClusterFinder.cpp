@@ -7,8 +7,6 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
-//from Kernel
-#include "Kernel/DVAlgorithm.h"
 // from Event
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
@@ -32,7 +30,7 @@ DECLARE_ALGORITHM_FACTORY(TrackClusterFinder);
 //=============================================================================
 TrackClusterFinder::TrackClusterFinder(const std::string& name,
                                        ISvcLocator* pSvcLocator)
-  : DVAlgorithm(name,pSvcLocator)
+  : DaVinciAlgorithm(name,pSvcLocator)
 {
   declareProperty("InputTracks",   m_inputTracks);
   declareProperty("InputPVs",
@@ -58,7 +56,7 @@ TrackClusterFinder::~TrackClusterFinder() {};
 // Initialisation
 //=============================================================================
 StatusCode TrackClusterFinder::initialize() {
-  StatusCode sc = DVAlgorithm::initialize();
+  StatusCode sc = DaVinciAlgorithm::initialize();
   if (!sc) return sc;
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
   m_maxDeltaPhi = m_maxDeltaPhi * (M_PI / 180.0);
@@ -202,13 +200,4 @@ void TrackClusterFinder::getPeak(std::vector<tmpTrack> tmpTracks, int& index,
       index = trk.index;
     }  
   }
-}
-
-
-//=============================================================================
-// Finalization
-//=============================================================================
-StatusCode TrackClusterFinder::finalize() {
-  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
-  return DVAlgorithm::finalize();
 }

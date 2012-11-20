@@ -2,8 +2,7 @@
 #define TrackClusterFinder_H 1
 // Include files:
 // from Gaudi
-#include "Kernel/DVAlgorithm.h"
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 // from Event
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
@@ -17,8 +16,11 @@ using namespace LHCb;
  *  @date   2010-04-03
  */
 
-class TrackClusterFinder : public DVAlgorithm {
+class TrackClusterFinder : public DaVinciAlgorithm 
+{
+
 public:
+
   TrackClusterFinder(const std::string& name, ISvcLocator* pSvcLocator);
   // Destructor
   virtual ~TrackClusterFinder();
@@ -26,8 +28,8 @@ public:
   virtual StatusCode initialize();
   // Algorithm execution
   virtual StatusCode execute();
-  // Algorithm finalization
-  virtual StatusCode finalize();
+
+private:
 
   class tmpTrack {
   public:
@@ -44,6 +46,7 @@ public:
   };
 
 private:
+
   void getPeak(std::vector<tmpTrack> tmpTracks, int& index, int& multPeak);
   std::vector<std::string> m_inputTracks;
   std::string m_inputPVsName;
