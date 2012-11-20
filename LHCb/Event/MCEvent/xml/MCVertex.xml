@@ -29,8 +29,9 @@
        <constructor 
            desc     = "Copy Constructor" 
            argList  = "const LHCb::MCVertex* right"
-           initList = "KeyedObject&lt;int&gt;(), m_position ( right->position() ), m_time( right->time()), m_type(right->type()) ,m_mother(right->mother()), m_products(right->products())  " 
-           > <code/> </constructor>
+           initList = "KeyedObject&lt;int&gt;(), m_position(right->position()), m_time(right->time()), m_type(right->type()), m_mother(right->mother()), m_products(right->products())" 
+           > <code/> 
+       </constructor>
 
       <method
         name="clone"
@@ -120,6 +121,16 @@
          <code> 
   return ( this->isPrimary() ? this : ( m_mother!=0 ? m_mother->primaryVertex() : NULL ) ); 
          </code>
+       </method>
+       <method
+          name    = "fillStream"
+          desc    = "Print this MCVertex in a human readable way"
+          type    = "std::ostream&amp;"
+          virtual = "FALSE"
+          const   = "TRUE">
+          <arg
+            type = "std::ostream"
+            name = "s"/>
        </method>
      </class>
   </package>

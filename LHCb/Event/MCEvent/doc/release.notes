@@ -3,6 +3,13 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
 
+! 2012-11-20 - Chris Jones
+ - Improve the fillstream methods for MCParticle and MCVertex to also include
+   information on their associated SmartRefs. Added two new cpp files for
+   these classes to implement the new methods, as they are unlikely to be
+   properly inlined anyway (too long). Moved MCParticle::hasOscillated() to 
+   the cpp file, as to was also unlikely to be inlined.
+
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 

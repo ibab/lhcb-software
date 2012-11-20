@@ -29,7 +29,7 @@
        <constructor 
            desc     = "Copy Constructor" 
            argList  = "const LHCb::MCParticle* right"
-           initList = "KeyedObject&lt;int&gt;(), m_momentum ( right->momentum() ) , m_particleID( right->particleID()), m_originVertex(right->originVertex()) ,m_endVertices(right->endVertices())  " 
+           initList = "KeyedObject&lt;int&gt;(), m_momentum(right->momentum()), m_particleID(right->particleID()), m_originVertex(right->originVertex()), m_endVertices(right->endVertices())" 
            > <code/> </constructor>
 
       <method
@@ -50,8 +50,8 @@
         const="TRUE"
         >
         <code>
-           LHCb::MCParticle *clone = new LHCb::MCParticle(this);
-           clone -> setKey(this->key());
+          LHCb::MCParticle *clone = new LHCb::MCParticle(this);
+          clone -> setKey(this->key());
           return clone;
         </code>
       </method>
@@ -68,13 +68,6 @@
         name="hasOscillated"
         type="bool"
        >
-         <code>  ; 
-  for ( SmartRefVector &lt; LHCb::MCVertex &gt;::const_iterator v = this->endVertices().begin() ;
-         v != this->endVertices().end() ; ++v){
-    if ( (*v)->type() == LHCb::MCVertex::OscillatedAndDecay ) return true ;
-  }
-  return false ;
-         </code>
        </method>
        <method
         const="TRUE"
@@ -107,7 +100,7 @@
         type="const LHCb::MCParticle*"
        >
          <code>
-  return ( originVertex() ? originVertex()->mother() :0 ) ;
+  return ( originVertex() ? originVertex()->mother() : NULL ) ;
          </code>
        </method>
        <method
@@ -175,16 +168,27 @@
         type="const LHCb::MCVertex*"
        >
          <code> 
-  return ( originVertex() ? originVertex()->primaryVertex() : 0 ) ;
+  return ( originVertex() ? originVertex()->primaryVertex() : NULL ) ;
          </code>
        </method>
 
-        <typedef
+       <typedef
          type='KeyedContainer&lt;const MCParticle, Containers::HashMap&gt;'
          def='ConstContainer'
          desc='const MCParticle keyed container'
          access='PUBLIC'
-        />
+       />
+
+       <method
+          name    = "fillStream"
+          desc    = "Print this MCParticle in a human readable way"
+          type    = "std::ostream&amp;"
+          virtual = "FALSE"
+          const   = "TRUE">
+          <arg
+            type = "std::ostream"
+            name = "s"/>
+       </method>
 
      </class>
   </package>
