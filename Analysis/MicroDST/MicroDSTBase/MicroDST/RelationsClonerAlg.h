@@ -83,7 +83,7 @@ namespace MicroDST
       }
       else
       {
-        m_cloner = tool<CLONER>(m_clonerType, this);
+        m_cloner = tool<CLONER>( m_clonerType, this );
         if ( m_cloner )
         {
           if ( msgLevel(MSG::DEBUG) )
@@ -139,46 +139,28 @@ namespace MicroDST
         return;
       }
 
-      if (exist<TABLE>(inputLocation) )
+      const TABLE* table = getIfExists<TABLE>(inputLocation);
+      if ( table && !table->relations().empty() )
       {
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << "Retrieving relations table from "
-                    << inputLocation << endmsg;
+          verbose() << "found table with "<< table->relations().size()
+                    << " entries!" << endmsg;
         }
-        const TABLE* table = get<TABLE>(inputLocation);
-        if ( table && !table->relations().empty() )
+        TABLE * cloneTable = m_tableCloner(table);
+        DaVinci::Utils::DataObjectGuard guard(cloneTable);
+        if ( msgLevel(MSG::VERBOSE) )
         {
-
-          if ( msgLevel(MSG::VERBOSE) )
-          {
-            verbose() << "found table with "<< table->relations().size()
-                      << " entries!" << endmsg;
-          }
-          TABLE* cloneTable = m_tableCloner(table);
-          DaVinci::Utils::DataObjectGuard guard(cloneTable);
-          if ( msgLevel(MSG::VERBOSE) )
-          {
-            verbose() << "Going to store relations table from "
-                      << inputLocation
-                      << " into " << outputLocation << endmsg;
-            verbose() << "Number of relations in cloned table: "
-                      << cloneTable->relations().size() << endmsg;
-          }
-          if ( !cloneTable->relations().empty() )
-          {
-            put( cloneTable, outputLocation );
-          }
+          verbose() << "Going to store relations table from "
+                    << inputLocation
+                    << " into " << outputLocation << endmsg;
+          verbose() << "Number of relations in cloned table: "
+                    << cloneTable->relations().size() << endmsg;
         }
-        else
+        if ( !cloneTable->relations().empty() )
         {
-          if ( msgLevel(MSG::VERBOSE) )
-          {
-            this->Warning("Found no table at "+inputLocation,
-                          StatusCode::FAILURE, 0).ignore();
-          }
+          this->put( cloneTable, outputLocation );
         }
-
       }
       else
       {

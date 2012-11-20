@@ -14,9 +14,10 @@
 namespace MicroDST
 {
 
-  /** @class RelationsFromParticleLocationsFromClonerAlg MicroDST/RelationsFromParticleLocationsFromClonerAlg.h
+  /** @class MicroDST/RelationsFromParticleLocationsFromClonerAlg.h
    *
-   *  Extension to RelationsClonerFromAlg that dynamically finds the relations to clone from Particles
+   *  Extension to RelationsClonerFromAlg that dynamically finds 
+   *  the relations to clone from Particles
    *
    *  @author Juan PALACIOS juan.palacios@nikhef.nl
    *  @date   2009-04-14
@@ -26,13 +27,20 @@ namespace MicroDST
   class RelationsFromParticleLocationsFromClonerAlg : public RelationsFromClonerAlg<TABLE>
   {
 
+    //===========================================================================
+
   private:
 
+    //===========================================================================
+
     typedef Defaults<TABLE> DEFAULTS;
+
+    //===========================================================================
 
   public:
 
     //===========================================================================
+
     /// Standard constructor
     RelationsFromParticleLocationsFromClonerAlg( const std::string& name,
                                              ISvcLocator* pSvcLocator )
@@ -43,8 +51,6 @@ namespace MicroDST
                              m_relationsBaseName = DEFAULTS::relationsName );
       //this->setProperty( "OutputLevel", 2 );
     }
-
-    //===========================================================================
 
     ~RelationsFromParticleLocationsFromClonerAlg( ) {} ///< Destructor
 
@@ -108,6 +114,8 @@ namespace MicroDST
 
   private:
 
+    //===========================================================================
+
     template <class Iter>
     void particleLoop( const Iter begin, const Iter end )
     {
@@ -132,10 +140,11 @@ namespace MicroDST
      */
     inline std::string objectLocation( const DataObject * pObj ) const
     {
+      
       return ( !pObj ? "" : (pObj->registry() ? pObj->registry()->identifier() : "") );
     }
 
-    std::string relationsLocation( const DataObject * pObj ) const
+    inline std::string relationsLocation( const DataObject * pObj ) const
     {
       // Get the parent container TES location
       std::string pLoc = objectLocation( pObj );
@@ -152,10 +161,13 @@ namespace MicroDST
 
   private:
 
+    //===========================================================================
+
     bool m_removeOriginals;
     std::string m_relationsBaseName;
-
     std::set<std::string> m_relationLocations;
+
+    //===========================================================================
 
   };
 
