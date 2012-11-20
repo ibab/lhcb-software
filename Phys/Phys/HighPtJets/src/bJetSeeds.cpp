@@ -212,10 +212,9 @@ StatusCode bJetSeeds::partIPwrtPV(const Particle* prt,
 // Filter 3-track SV by min SV chi2
 //=============================================================================
 struct vcsSV3CompChi2 {
-  bool operator()(const Vertex &a, const Vertex &b) const {
-    const Vertex& A = (Vertex) a;
-    const Vertex& B = (Vertex) b;
-    return(A.chi2PerDoF() < B.chi2PerDoF());
+  bool operator()(const Vertex &a, const Vertex &b) const 
+  {
+    return(a.chi2PerDoF() < b.chi2PerDoF());
   }
 } vcsSV3CompChi2_;
 //----------
