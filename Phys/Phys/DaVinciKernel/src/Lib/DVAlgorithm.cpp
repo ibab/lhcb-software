@@ -4,13 +4,25 @@
 
 #include "Kernel/DVAlgorithm.h"
 
-StatusCode DVAlgorithm::initialize ()
+StatusCode DVAlgorithm::initialize()
 {
   const StatusCode sc = DaVinciTupleAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
-  warning() << "======================================================================================"
+  warning() << "====================================================================================="
             << endmsg
-            << "TAKE NOTE - '" << System::typeinfoName(typeid(*this)) << "'"
+            << endmsg
+            << "           ##      ##    ###    ########  ##    ## #### ##    ##  ######"    << endmsg
+            << "           ##  ##  ##   ## ##   ##     ## ###   ##  ##  ###   ## ##    ##"   << endmsg
+            << "           ##  ##  ##  ##   ##  ##     ## ####  ##  ##  ####  ## ##"         << endmsg
+            << "           ##  ##  ## ##     ## ########  ## ## ##  ##  ## ## ## ##   ####"  << endmsg
+            << "           ##  ##  ## ######### ##   ##   ##  ####  ##  ##  #### ##    ##"   << endmsg
+            << "           ##  ##  ## ##     ## ##    ##  ##   ###  ##  ##   ### ##    ##"   << endmsg
+            << "            ###  ###  ##     ## ##     ## ##    ## #### ##    ##  ######"    << endmsg
+            << endmsg
+            << "====================================================================================="
+            << endmsg
+            << endmsg
+            << "'" << System::typeinfoName(typeid(*this)) << "'"
             << " is using the depreciated DVAlgorithm base class."
             << endmsg
             << "Please move to DaVinciAlgorithm, DaVinciHistoAlgorithm or DaVinciTupleAlgorithm."
@@ -19,7 +31,8 @@ StatusCode DVAlgorithm::initialize ()
             << endmsg
             << "will NO LONGER COMPILE."
             << endmsg
-            << "======================================================================================"
+            << endmsg
+            << "====================================================================================="
             << endmsg;
   return sc;
 }
