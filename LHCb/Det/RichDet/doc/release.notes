@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-11-20 - Antonis Papanestis
+ - Check the list of inactive Photo-Detectors for possible errors in 
+   DeRichSystem
+
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 

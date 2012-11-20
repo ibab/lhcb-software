@@ -253,7 +253,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   CondData inacts;
   const bool inactivePDListInSmartIDs( numbers->exists(str_InactivePDListInSmartIDs) );
   if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Condition " << str_InactivePDListInSmartIDs 
+    verbose() << "Condition " << str_InactivePDListInSmartIDs
               << " exists = " << inactivePDListInSmartIDs << endmsg;
   if ( inactivePDListInSmartIDs )
   {
@@ -266,7 +266,12 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
           inpd != inactsHuman.end(); ++inpd )
     {
       const LHCb::RichSmartID ID( Rich::DAQ::HPDIdentifier(*inpd).smartID() );
-      if ( ID.isValid() ) { inacts.push_back( ID ); }
+      if ( ID.isValid() )
+      {
+        inacts.push_back( ID );
+        if ( std::find( softIDs.begin(), softIDs.end(), ID) == softIDs.end() )
+          warning() << "Invalid smartID in list of inactive PDs: " << *inpd << endmsg;
+      }
       else
       {
         error() << "Invalid smartID in the list of inactive PDs " << *inpd << endmsg;
