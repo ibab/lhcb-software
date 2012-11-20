@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2012-11-20 - Olivier Callot
+ - In LinkerWithKey, make it dummy if the specified container name is empty. Needed 
+   by the DaVinci associators as a dummy one is created.
+
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 

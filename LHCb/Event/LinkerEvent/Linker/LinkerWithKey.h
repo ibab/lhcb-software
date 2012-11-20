@@ -22,29 +22,31 @@ public:
   /// Standard constructor
   LinkerWithKey( IDataProviderSvc* evtSvc,
                  IMessageSvc* msgSvc,
-                 std::string containerName ) {
-    std::string name = "Link/" + containerName;
-    if ( "/Event/" == containerName.substr(0,7) ) {
-      name = "Link/" + containerName.substr(7);
-    }
-
-    //== If it exists, just append to it.
-
-    SmartDataPtr<LHCb::LinksByKey> links( evtSvc, name );
-    if ( 0 != links ) {
-      m_links = links;
-    } else {
-      m_links = new LHCb::LinksByKey();
-      StatusCode sc = evtSvc->registerObject( name, m_links );
-      if ( !sc ) {
-        MsgStream msg( msgSvc, "LinkerWithKey::"+containerName );
-        msg << MSG::ERROR << "*** Link container " << name
-            << " not registered, Status " << sc << endreq;
+                 std::string containerName ) : m_links( NULL ) {
+    if ( "" != containerName ) {
+      std::string name = "Link/" + containerName;
+      if ( "/Event/" == containerName.substr(0,7) ) {
+        name = "Link/" + containerName.substr(7);
       }
+      
+      //== If it exists, just append to it.
+      
+      SmartDataPtr<LHCb::LinksByKey> links( evtSvc, name );
+      if ( 0 != links ) {
+        m_links = links;
+      } else {
+        m_links = new LHCb::LinksByKey();
+        StatusCode sc = evtSvc->registerObject( name, m_links );
+        if ( !sc ) {
+          MsgStream msg( msgSvc, "LinkerWithKey::"+containerName );
+          msg << MSG::ERROR << "*** Link container " << name
+              << " not registered, Status " << sc << endreq;
+        }
+      }
+      
+      m_links->setTargetClassID( TARGET::classID() );
+      m_links->setSourceClassID( SOURCE::classID() );
     }
-
-    m_links->setTargetClassID( TARGET::classID() );
-    m_links->setSourceClassID( SOURCE::classID() );
   }; 
 
   virtual ~LinkerWithKey( ) {}; ///< Destructor
@@ -54,9 +56,9 @@ public:
   void link( const SOURCE* source,
              const TARGET* dest, 
              double weight = 1. ) {
-    if ( NULL == source ) return;
-    if ( NULL == dest   ) return;
-    
+    if ( NULL == source  ) return;
+    if ( NULL == dest    ) return;
+    if ( NULL == m_links ) return;
     int srcIndex   = source->index ();
     int srcLinkID  = m_links->linkID( source->parent() );
     int destIndex  = dest->index();
@@ -66,14 +68,15 @@ public:
   }
   
   void link( int key , const TARGET* dest , double weight = 1. ) {
-    if ( NULL == dest   ) return;
+    if ( NULL == dest    ) return;
+    if ( NULL == m_links ) return;
     int destIndex  = dest->index ();
     int destLinkID = m_links->linkID( dest->parent() );
     m_links->addReference( key, -1, destIndex, destLinkID, weight );
   }
   
-  void setIncreasingWeight() { m_links->setIncreasing(); }
-  void setDecreasingWeight() { m_links->setDecreasing(); }
+  void setIncreasingWeight() { if ( NULL != m_links ) m_links->setIncreasing(); }
+  void setDecreasingWeight() { if ( NULL != m_links ) m_links->setDecreasing(); }
   
 protected:
   
