@@ -45,7 +45,9 @@ def uDstConf ( rootInTes ) :
     def killMissingNodes ()  : 
         from Configurables import EventNodeKiller
         killer = EventNodeKiller ( "KillMissingNodes" )
-        killer.Nodes += [ '/Event/DAQ', '/Event/pRec', 'Event/Link' ]
+        killer.Nodes += [ '/Event/DAQ', '/Event/pRec',
+                          'Event/Link', '/Event/pSim' # For MC uDSTs
+                          ]
         try : 
             from Gaudi.Configuration import getConfigurable
             conf   = getConfigurable ( 'DaVinciEventInitSeq' ) 
@@ -55,7 +57,7 @@ def uDstConf ( rootInTes ) :
             
     from Gaudi.Configuration import appendPostConfigAction
     appendPostConfigAction ( killMissingNodes )
- 
+
     #
     ## 1. Copy/Link ODIN, RawEvent and RecSummary
     #
