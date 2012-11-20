@@ -228,7 +228,7 @@ int bJetSeeds::filterSV3Chi2(std::vector<Vertex> sds,
   else if(sds.size() == 1) {(*purgedSeeds).push_back(sds.at(0)); return 0;}
   else {
     // Sort seeds vector according to VCS
-    std::sort(sds.begin(),sds.end(),vcsSV3CompChi2_);
+    std::stable_sort(sds.begin(),sds.end(),vcsSV3CompChi2_);
     // Save best seed
     (*purgedSeeds).push_back(sds.at(0));
     Vertex bestSeed = sds.at(0);
