@@ -4,6 +4,9 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+~ 2012-11-21 - Paul Szczypka
+ - Correct typos in UT/TT code and set FT default property to false.
+
 ! 2012-11-19 - Olivier Callot
  - Use UT in BuildMCTrackInfoUpgrade, under option "WithUT"
 

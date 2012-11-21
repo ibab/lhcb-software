@@ -58,7 +58,7 @@ BuildMCTrackInfoUpgrade::BuildMCTrackInfoUpgrade( const std::string& name,
   declareProperty( "WithUT",    m_withUT    = false );
   declareProperty( "WithIT",    m_withIT    = false );
   declareProperty( "WithOT",    m_withOT    = false );
-  declareProperty( "WithFT",    m_withFT    = true  );
+  declareProperty( "WithFT",    m_withFT    = false );
 }
 //=============================================================================
 // Destructor
@@ -88,12 +88,12 @@ StatusCode BuildMCTrackInfoUpgrade::initialize() {
   if ( m_withVelo ) m_velo  = getDet<DeVelo>( DeVeloLocation::Default );
   if ( m_withUT  ) {
     m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::UT );  
-    m_ttClustersName = LHCb::STClusterLocation::TTClusters;
-    m_ttHitsName     = LHCb::MCHitLocation::TT;
-  } else {
-    m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );  
     m_ttClustersName = LHCb::STClusterLocation::UTClusters;
     m_ttHitsName     = LHCb::MCHitLocation::UT;
+  } else {
+    m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );  
+    m_ttClustersName = LHCb::STClusterLocation::TTClusters;
+    m_ttHitsName     = LHCb::MCHitLocation::TT;
   }
   if ( m_withIT ) m_itDet = getDet<DeSTDetector>(DeSTDetLocation::IT );
   if ( m_withOT ) m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
