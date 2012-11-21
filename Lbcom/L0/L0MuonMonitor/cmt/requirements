@@ -8,6 +8,7 @@ branches src cmt doc
 # =========== dependencies ====================================================
 
 use L0MuonKernel  v*    L0
+use DAQEvent      v*    Event
 use L0Event       v*    Event
 use MuonDAQ       v*    Muon
 use MuonDet       v*    Det
@@ -19,7 +20,7 @@ use GaudiUtils    v*
 
 library L0MuonMonitor     ../src/component/*.cpp
 
-# =========== standard patterns (the order is essential!) ====================== 
+# =========== standard patterns (the order is essential!) ======================
 
 apply_pattern component_library library=L0MuonMonitor
 

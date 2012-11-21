@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= RichDAQ v3r38 2012-07-30 =========================
 ! 2012-07-25 - Chris Jones
  - Do not perform level1HardwareID DB update if associated check is disabled.

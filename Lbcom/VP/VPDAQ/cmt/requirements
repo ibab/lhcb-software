@@ -23,6 +23,7 @@ use  VPDet         v*  Det
 use  GSL           v*  LCG_Interfaces
 use  DAQEvent      v*  Event
 use  SiDAQ         v*  Si
+use  AIDA          v*  LCG_Interfaces -no_auto_imports
 
 # Component library building rule
 #============================================================================

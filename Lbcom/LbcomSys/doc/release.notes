@@ -6,6 +6,9 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 </PRE><H1><A NAME=v13r2>2012-10-02 LbcomSys v13r2</A></H1><PRE>
 This version uses Gaudi v23r4 and LHCb v35r2
 

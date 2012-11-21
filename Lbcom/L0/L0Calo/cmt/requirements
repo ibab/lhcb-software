@@ -13,6 +13,7 @@ use L0Base      v*      L0
 use LinkerEvent	v*	Event
 use CaloDAQ	v*	Calo
 use CaloUtils   v*      Calo
+use AIDA        v* LCG_Interfaces -no_auto_imports
 
 # ================ component library =====================================
 library		L0Calo	../src/*.cpp -import=AIDA

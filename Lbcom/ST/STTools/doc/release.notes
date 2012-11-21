@@ -3,6 +3,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-19 - Marco Cattaneo
  - Fix gcc -pedentic warnings
  - Fix coverity defect

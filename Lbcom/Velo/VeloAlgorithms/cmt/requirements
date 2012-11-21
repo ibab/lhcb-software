@@ -21,6 +21,7 @@ use  GaudiAlg        v*
 use  LinkerEvent     v*  Event
 use  Tell1Kernel     v*  DAQ
 use  Boost           v*  LCG_Interfaces -no_auto_imports
+use  AIDA            v*  LCG_Interfaces -no_auto_imports
 use  DAQEvent        v*  Event
 
 # Component library building rule

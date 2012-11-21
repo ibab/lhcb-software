@@ -3,6 +3,9 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= VeloDAQ v6r7 2012-06-25 =========================
 ! 2012-06-08 - Marco Cattaneo
  - Add RawEventLocations property to decoders, to allow to specify a 

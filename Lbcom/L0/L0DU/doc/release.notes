@@ -3,6 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= L0DU v10r24 2012-10-01 =========================
 ! 2012-10-01 - Olivier Deschamps
   - L0DURawBankMonitor : add L0PUFull to the list of banks

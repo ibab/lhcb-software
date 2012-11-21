@@ -5,6 +5,8 @@ branches cmt doc src options
 
 include_path none
 
+use AIDA        v* LCG_Interfaces -no_auto_imports
+
 use GaudiAlg    v*
 use OTDet       v*      Det
 use MCEvent     v*      Event

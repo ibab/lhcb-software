@@ -3,6 +3,9 @@
 ! Package manager : H.Schindler
 !------------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= VLDAQ v1r1 2012-07-24 =========================
 ! 2012-07-21 - Heinrich Schindler
  - bugfix in VLRawBankDecoder

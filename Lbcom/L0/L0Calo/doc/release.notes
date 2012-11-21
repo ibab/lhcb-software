@@ -3,6 +3,10 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 ! 2012-10-22 - Marco Cattaneo
  - Fix gcc -pedantic warnings
  - Fix unprotected debug() and verbose()

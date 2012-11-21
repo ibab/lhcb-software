@@ -4,6 +4,10 @@
 ! Purpose     : Monitors for DAQ event objects
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 !========================= DAQMonitors v1r7 2012-07-24 =========================
 ! 2012-07-17 - Marco Clemencic
  - Added dependency on LHCbKernel, required by event model headers to use the new

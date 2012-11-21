@@ -4,6 +4,10 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 ! 2012-10-19 - Marco Cattaneo
  - Fix potential memory leak in VPRawBankToLiteCluster and do not return 
    StatusCode::FAILURE from execute

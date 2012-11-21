@@ -2,6 +2,9 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-19 - Marco Cattaneo
  - Fix gcc -pedantic warnings
  - Remove obsolete file Associators_dll.cpp

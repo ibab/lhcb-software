@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= RichMCTools v3r17 2011-12-14 =========================
 ! 2011-11-18 - Chris Jones
  - Adapt to changes in RichSmartID

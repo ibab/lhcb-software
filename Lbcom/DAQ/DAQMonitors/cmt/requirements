@@ -11,6 +11,7 @@ use ROOT       v* LCG_Interfaces
 use DAQEvent   v* Event
 use GaudiAlg   v*
 use LHCbKernel v* Kernel
+use AIDA       v* LCG_Interfaces -no_auto_imports
 
 include_path      none
 

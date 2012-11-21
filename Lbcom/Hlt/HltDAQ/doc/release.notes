@@ -5,6 +5,8 @@
 !-------------------------------------------------------------------------------
 
 ! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
  - Fixed a warning (-pedantic).
 
 ! 2012-10-18 - Marco Cattaneo

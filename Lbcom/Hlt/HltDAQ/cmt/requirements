@@ -6,7 +6,7 @@ package           HltDAQ
 version           v2r15
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src xml
 #============================================================================
@@ -15,11 +15,13 @@ branches          cmt doc src xml
 #============================================================================
 # use   Package      v1r*    Hat
 
-use GaudiKernel         v*    
+use GaudiKernel         v*
 private
 use GaudiObjDesc v* -no_auto_imports
 end_private
 
+use Boost               v*    LCG_Interfaces
+use AIDA                v*    LCG_Interfaces -no_auto_imports
 
 use GaudiAlg            v*
 use HltInterfaces       v*    Kernel
@@ -42,12 +44,12 @@ use HltTCK              v*    TCK         -no_auto_imports
 apply_pattern god_headers files=../xml/*.xml
 
 macro HltDAQObj2Doth_GODflags " -s ../src/ " \
-      WIN32                   " -s ..\src\ " 
+      WIN32                   " -s ..\src\ "
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library          HltDAQ    ../src/*.cpp -import=AIDA 
+library          HltDAQ    ../src/*.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================

@@ -9,8 +9,9 @@ include_path none
 use L0Base          v*   L0
 use L0MuonKernel    v*   L0
 use ProcessorKernel v*   L0
-use L0Interfaces    v*    L0
+use L0Interfaces    v*   L0
 use MuonKernel      v*   Muon
+use DetDesc         v*   Det
 use L0Event         v*   Event
 use DAQEvent        v*   Event
 use DigiEvent       v*   Event
