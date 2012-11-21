@@ -394,8 +394,7 @@ StatusCode PrFitFwdParams::execute() {
       m_ZmPar.setFun( 0, 1. );
       m_ZmPar.setFun( 1, 0. );
       m_ZmPar.setFun( 2, slopeX2 );
-      m_ZmPar.setFun( 3, xSeed * xSeed );
-      m_ZmPar.setFun( 4, slopeY2 );
+      m_ZmPar.setFun( 3, slopeY2 );
 
       dSlope  = 0.;
       double tax     = 0.;

@@ -56,9 +56,9 @@ PrFitSeedParams().yCorrectionParams   = [ 1.25e-14 ]
 PrFitFwdParams().ZVelo      = 1640 ;
 PrFitFwdParams().ZReference = 8520 ;
 
-PrFitFwdParams().zMagnetParams = [ 5210.43, 327.616, -1260.22, 7.77955e-06, -477.349 ]
-PrFitFwdParams().xParams = [ 14.2212, -4.97991 ]
-PrFitFwdParams().byParams = [ -0.658409 ]
-PrFitFwdParams().cyParams = [ -3.60662e-05 ]
-PrFitFwdParams().momentumParams = [ 1.20987, 0.62302, -0.205371, 0.474479, 3.22058, -26.9298 ]
+PrFitFwdParams().zMagnetParams = [ 5212.38, 406.609, -1102.35, -498.039 ]
+PrFitFwdParams().xParams = [ 18.6195, -5.55793 ]
+PrFitFwdParams().byParams = [ -0.667996 ]
+PrFitFwdParams().cyParams = [ -3.68424e-05 ]
+PrFitFwdParams().momentumParams = [ 1.21014, 0.637339, -0.200292, 0.632298, 3.23793, -27.0259 ]
 
