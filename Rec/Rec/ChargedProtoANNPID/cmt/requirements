@@ -15,6 +15,7 @@ branches          cmt doc src python
 #============================================================================
 use  GaudiAlg                  v*
 use  RecEvent                  v*   Event
+use  MCEvent                   v*   Event
 use  ChargedProtoANNPIDParam   v* 
 use  RecInterfaces             v*   Rec
 # NB is currently only supported on linux GCC (WIN32 libs in preparation)
