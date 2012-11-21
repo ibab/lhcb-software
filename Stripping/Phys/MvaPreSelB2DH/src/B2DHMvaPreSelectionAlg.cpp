@@ -27,7 +27,7 @@ DECLARE_ALGORITHM_FACTORY( B2DHMvaPreSelectionAlg );
 //=============================================================================
 B2DHMvaPreSelectionAlg::B2DHMvaPreSelectionAlg( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator ),
+  : DaVinciHistoAlgorithm ( name , pSvcLocator ),
     m_activateHistograms(false),
     m_activateL0Selection(false) ,
     m_activatedPVRefit(true),
@@ -60,7 +60,7 @@ B2DHMvaPreSelectionAlg::~B2DHMvaPreSelectionAlg() {}
 // Initialization
 //=============================================================================
 StatusCode B2DHMvaPreSelectionAlg::initialize() {
-  StatusCode sc = DVAlgorithm::initialize(); 
+  StatusCode sc = DaVinciHistoAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
@@ -174,7 +174,7 @@ StatusCode B2DHMvaPreSelectionAlg::finalize() {
 
   PrintEvSelCounters();
 
-  return DVAlgorithm::finalize();
+  return DaVinciHistoAlgorithm::finalize();
 }
 //=============================================================================
 

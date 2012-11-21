@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Anton Poluektov 
+ - Make B2DHMvaPreSelectionAlg a DaVinciHistoAlgorithm, instead of 
+   deprecated DVAlgorithm
+
 !=========================== MvaPreSelB2DH v1r3 2012-06-28 ===================
 
 ! 2012-06-22 - Chris Jones

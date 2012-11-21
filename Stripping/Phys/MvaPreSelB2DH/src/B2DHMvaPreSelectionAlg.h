@@ -4,7 +4,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciHistoAlgorithm.h"
 #include "IB2DHPreselMvaUtilityTool.h"
 #include "IB2DHMvaPreSelectionParamTool.h"
 #include "IB2DHMvaPreSelectionCutsTool.h"
@@ -17,7 +17,7 @@
  *  @author Sajan EASO
  *  @date   2010-07-19
  */
-class B2DHMvaPreSelectionAlg : public DVAlgorithm {
+class B2DHMvaPreSelectionAlg : public DaVinciHistoAlgorithm {
 public: 
   /// Standard constructor
   B2DHMvaPreSelectionAlg( const std::string& name, ISvcLocator* pSvcLocator );
