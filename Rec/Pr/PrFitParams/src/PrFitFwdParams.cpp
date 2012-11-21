@@ -61,11 +61,11 @@ PrFitFwdParams::PrFitFwdParams( const std::string& name,
   declareProperty( "ZRefExt"              , m_zRefExt       );
 
   declareProperty( "zMagnetParams"        , m_zMagParams    );
-  declareProperty( "xParams"              , m_xParams      );
+  declareProperty( "xParams"              , m_xParams       );
   declareProperty( "byParams"             , m_byParams      );
   declareProperty( "cyParams"             , m_cyParams      );
+  declareProperty( "momentumParams"       , m_momParams     );
 
-  declareProperty( "MomentumParams"       , m_momParams );
   declareProperty( "XsParams"             , m_XsParams      );
 
   declareProperty( "ZbeforeST2"           , m_zBeforeST2    );
@@ -561,13 +561,13 @@ StatusCode PrFitFwdParams::finalize() {
 
     std::cout << std::endl;
 
-    m_ZmPar.printPythonParams( name() );
-    m_xPar.printPythonParams( name() );
-    m_byPar.printPythonParams( name() );
-    m_cyPar.printPythonParams( name() );
-
-    m_momPar.printPythonParams(name() );
-    m_XsPar.printPythonParams( name() );
+    std::string myName = name() + "()";
+    m_ZmPar.printPythonParams( myName );
+    m_xPar.printPythonParams(  myName );
+    m_byPar.printPythonParams( myName );
+    m_cyPar.printPythonParams( myName );
+    m_momPar.printPythonParams(myName );
+    m_XsPar.printPythonParams( myName );
 
     std::string toolName = "ToolSvc().PrGeometryTool";
     std::cout << std::endl;
