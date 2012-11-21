@@ -25,7 +25,7 @@
 //            : + Simone Brusa, Silvia Pozzi, Stefania Vecchi 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( AlignMuonRec );
+DECLARE_ALGORITHM_FACTORY( AlignMuonRec )
 
 using namespace LHCb; 
 using namespace Gaudi::Units;
@@ -54,7 +54,7 @@ AlignMuonRec::AlignMuonRec( const std::string& name, ISvcLocator* pSvcLocator)
 //=============================================================================
 // Destructor
 //=============================================================================
-AlignMuonRec::~AlignMuonRec() {}; 
+AlignMuonRec::~AlignMuonRec() {}
 
 //=============================================================================
 // Initialization
@@ -203,7 +203,7 @@ StatusCode AlignMuonRec::initialize() {
   }  
   m_maxMuonFound=10; 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -444,7 +444,7 @@ StatusCode AlignMuonRec::execute() {
   debug()<<" stored candidates "<<m_countMuonCandidates<<endreq; 
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -458,7 +458,7 @@ StatusCode AlignMuonRec::finalize() {
           << double(m_countMuCandidates)/double(m_countEvents) << endreq;
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-};
+}
 
 
 //=============================================================================
@@ -602,7 +602,7 @@ StatusCode AlignMuonRec::muonSearch() {
   debug()<<"number of muon Tracks "<<m_muonTracks.size()<<endreq;
   return StatusCode::SUCCESS;
   
-};
+}
 
 
 StatusCode AlignMuonRec::detectClone()
@@ -655,7 +655,7 @@ StatusCode AlignMuonRec::detectClone()
   }
   return StatusCode::SUCCESS;
   
-};
+}
 
 
 StatusCode AlignMuonRec::strongCloneKiller()
@@ -710,7 +710,7 @@ StatusCode AlignMuonRec::strongCloneKiller()
   }
   return StatusCode::SUCCESS;
   
-};
+}
 
 StatusCode AlignMuonRec::printOut()
 {
@@ -727,7 +727,7 @@ StatusCode AlignMuonRec::printOut()
   }  
   return StatusCode::SUCCESS;
   
-};
+}
 
 StatusCode AlignMuonRec::createCoords()
 {

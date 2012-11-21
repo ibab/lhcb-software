@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Fixed -pedantic warnings.
+
 !========================= TrackMatching v2r33p1 2011-12-15 ==================
 ! 2011-11-22 - Marco Cattaneo
  - Fix trivial gcc46 warning and icc remarks

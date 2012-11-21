@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Fixed -pedantic warnings.
+
 !========================= TrackCheckers v4r13 2012-10-01 =========================
 ! 2012-09-21 - Paul Szczypka
  - Rename VeloPix to VP

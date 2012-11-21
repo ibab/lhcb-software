@@ -22,7 +22,7 @@
 // local
 #include "TrackMatchChecker.h"
 
-DECLARE_ALGORITHM_FACTORY( TrackMatchChecker );
+DECLARE_ALGORITHM_FACTORY( TrackMatchChecker )
 
 /** @file TrackMatchChecker.cpp 
  *

@@ -5,6 +5,9 @@
 !               classes
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Fixed -pedantic warnings.
+
 !========================= RecoUpgradeMC v2r0 2012-10-01 =========================
 ! 2012-09-20 - Paul Szczypka
  - Rename of VeloPix to VP

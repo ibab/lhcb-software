@@ -35,6 +35,7 @@ namespace Tf
       /// initialize
       StatusCode initialize();
 
+      using Tf::Tsa::StereoBase::execute;
       // execute method
       virtual StatusCode execute(std::vector<SeedTrack*>& seeds,  std::vector<SeedHit*> hits[6] = 0);
 

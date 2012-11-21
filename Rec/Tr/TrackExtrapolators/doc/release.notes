@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Fixed -pedantic warnings.
+
 ! 2012-11-15 - Wouter Hulsbergen
  - Add method to clear the cache in TrackStateProvider
 

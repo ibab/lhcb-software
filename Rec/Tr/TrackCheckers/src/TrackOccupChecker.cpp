@@ -113,7 +113,7 @@ StatusCode TrackOccupChecker::execute()
   occupInfo();
 
   return StatusCode::SUCCESS;
-};
+}
 
 void TrackOccupChecker::occupInfo() {
 

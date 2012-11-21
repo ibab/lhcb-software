@@ -18,7 +18,7 @@
 #include "Map.h"
 
 #include "AIDA/IHistogram1D.h"
-DECLARE_ALGORITHM_FACTORY( TrackEffChecker );
+DECLARE_ALGORITHM_FACTORY( TrackEffChecker )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -35,7 +35,7 @@ TrackEffChecker::TrackEffChecker(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackEffChecker::~TrackEffChecker() {};
+TrackEffChecker::~TrackEffChecker() {}
 
 StatusCode TrackEffChecker::initialize()
 {
@@ -95,7 +95,7 @@ StatusCode TrackEffChecker::execute()
   counter("nTracksInThisEvent") = 0;
 
   return StatusCode::SUCCESS;
-};
+}
 
 void TrackEffChecker::ghostInfo(const LHCb::Tracks* tracks) {
 

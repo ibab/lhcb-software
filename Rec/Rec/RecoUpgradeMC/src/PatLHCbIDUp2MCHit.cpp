@@ -50,7 +50,7 @@ StatusCode PatLHCbIDUp2MCHit::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution

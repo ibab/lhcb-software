@@ -40,7 +40,7 @@ TrackCheckerBase::TrackCheckerBase( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackCheckerBase::~TrackCheckerBase() {}; 
+TrackCheckerBase::~TrackCheckerBase() {}
 
 //=============================================================================
 // Initialization. Check parameters
@@ -75,7 +75,7 @@ StatusCode TrackCheckerBase::initialize()
   m_recCat = theMap.find(m_selectionCriteria)->second;
 
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode TrackCheckerBase::execute(){
   

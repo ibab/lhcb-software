@@ -26,7 +26,7 @@ using namespace Gaudi;
 using namespace Gaudi::Units;
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( ExtrapolatorChecker );
+DECLARE_ALGORITHM_FACTORY( ExtrapolatorChecker )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -43,7 +43,7 @@ ExtrapolatorChecker::ExtrapolatorChecker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-ExtrapolatorChecker::~ExtrapolatorChecker() {}; 
+ExtrapolatorChecker::~ExtrapolatorChecker() {} 
 
 
 //=============================================================================
@@ -181,7 +181,7 @@ StatusCode ExtrapolatorChecker::execute()
   } // End loop over MCParticles
 
   return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================

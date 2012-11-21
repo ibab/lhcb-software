@@ -54,6 +54,8 @@ public:
   /// finalize
   virtual StatusCode finalize();
 
+  using TrackExtrapolator::propagate;
+
   /// Propagate a state vector from zOld to zNew
   /// Transport matrix is calulated when transMat pointer is not NULL
   virtual StatusCode propagate( Gaudi::TrackVector& stateVec,

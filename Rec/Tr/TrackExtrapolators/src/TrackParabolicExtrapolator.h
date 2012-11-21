@@ -34,6 +34,8 @@ public:
   
   /// Destructor
   virtual ~TrackParabolicExtrapolator();
+
+  using TrackExtrapolator::propagate;
   
   /// Propagate a state vector from zOld to zNew
   /// Transport matrix is calulated when transMat pointer is not NULL

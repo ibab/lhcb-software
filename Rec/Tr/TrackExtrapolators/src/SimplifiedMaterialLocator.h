@@ -37,7 +37,8 @@ public:
   /// intialize
   virtual StatusCode initialize() ;
   virtual StatusCode finalize() ;
-  
+
+  using MaterialLocatorBase::intersect;
   /// Intersect a line with volumes in the geometry
   virtual size_t intersect( const Gaudi::XYZPoint& p, const Gaudi::XYZVector& v, 
 			    ILVolume::Intersections& intersepts ) const ;

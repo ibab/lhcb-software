@@ -81,7 +81,7 @@ debug()<<" arrivato qui "<<coords->size()<< endmsg;
   return StatusCode::SUCCESS;
   
 
-};
+}
 
 StatusCode  MuonClusterTool::initClusterVector(LHCb::MuonCoords* coords)
 {

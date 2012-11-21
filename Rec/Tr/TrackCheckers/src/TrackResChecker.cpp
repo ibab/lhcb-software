@@ -24,7 +24,7 @@
 #include "TrackInterfaces/ITrackProjector.h"
 
 
-DECLARE_ALGORITHM_FACTORY( TrackResChecker );
+DECLARE_ALGORITHM_FACTORY( TrackResChecker )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -43,7 +43,7 @@ TrackResChecker::TrackResChecker(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackResChecker::~TrackResChecker() {}; 
+TrackResChecker::~TrackResChecker() {} 
 
 StatusCode TrackResChecker::initialize(){
 
@@ -72,7 +72,7 @@ const IHistoTool* TrackResChecker::createHistoTool( const std::string& name) con
   if( pos != std::string::npos) histodir.erase(0,pos+1) ;
   ghtool->setHistoDir(histodir) ;
   return htool ;
-} ;
+}
 
 //=============================================================================
 // Execute

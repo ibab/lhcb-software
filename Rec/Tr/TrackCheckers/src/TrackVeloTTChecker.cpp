@@ -26,7 +26,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackVeloTTChecker );
+DECLARE_ALGORITHM_FACTORY( TrackVeloTTChecker )
 
 /// Standard constructor, initializes variables
 TrackVeloTTChecker::TrackVeloTTChecker( const std::string& name,
@@ -38,7 +38,7 @@ TrackVeloTTChecker::TrackVeloTTChecker( const std::string& name,
 }
 
 /// Default destructor
-TrackVeloTTChecker::~TrackVeloTTChecker() {}; 
+TrackVeloTTChecker::~TrackVeloTTChecker() {}
 
 /// Initialization
 StatusCode TrackVeloTTChecker::initialize() {
@@ -52,7 +52,7 @@ StatusCode TrackVeloTTChecker::initialize() {
   m_TTDet = getDet<DeSTDetector>( DeSTDetLocation::location("TT") );
 
   return StatusCode::SUCCESS;
-};
+}
 
 /// Main execution
 StatusCode TrackVeloTTChecker::execute() {
@@ -322,7 +322,7 @@ StatusCode TrackVeloTTChecker::execute() {
     return Error( "Cannot fill ntuple" );
 
   return StatusCode::SUCCESS;
-};
+}
 
 ///  Finalize
 StatusCode TrackVeloTTChecker::finalize() {

@@ -50,7 +50,7 @@ using namespace Gaudi;
 using namespace Gaudi::Units;
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackCheckerNT );
+DECLARE_ALGORITHM_FACTORY( TrackCheckerNT )
 
 typedef std::vector<float> Array;
 typedef std::vector<Array> Matrix;

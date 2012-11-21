@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Fixed -pedantic warnings.
+
 ! 2012-10-24 - Marco Cattaneo
  - Fix gcc -pedantic warnings
  - Replace endreq by endmsg

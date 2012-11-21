@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Fixed -pedantic warnings.
+
 ! 2012-10-09 - Marco Cattaneo
  - Do not MeasureTime by default in TsaSeed
  - Fix UNINIT_CTOR defects

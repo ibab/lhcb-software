@@ -33,6 +33,8 @@ public:
   /// destructor
   virtual ~TrackLinearExtrapolator();
 
+  using TrackExtrapolator::propagate;
+
   /// Propagate a state vector from zOld to zNew
   /// Transport matrix is calulated when transMat pointer is not NULL
   StatusCode propagate( Gaudi::TrackVector& stateVec,

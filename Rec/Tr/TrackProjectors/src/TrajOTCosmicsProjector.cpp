@@ -29,6 +29,7 @@ public:
   virtual ~TrajOTCosmicsProjector();
   StatusCode initialize() ;
 
+  using TrajOTProjector::project;
   /// The only overloaded call
   StatusCode project( const LHCb::StateVector& state, const LHCb::Measurement& meas);
 

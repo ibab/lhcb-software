@@ -64,7 +64,7 @@ namespace TrackMatchingDataFunctor {
     }
   };
   
-};
+}
 
 
 #endif // TRACKMATCHING_TRACKMATCHINGDATAFUNCTOR_H

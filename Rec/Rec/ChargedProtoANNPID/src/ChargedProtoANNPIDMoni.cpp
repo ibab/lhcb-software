@@ -16,7 +16,7 @@
 using namespace ANNGlobalPID;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDMoni );
+DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDMoni )
 
 //=============================================================================
 // Standard constructor, initializes variables

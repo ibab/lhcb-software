@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Fixed -pedantic warnings.
+
 ! 2012-11-21 - Chris Jones
  - Add missing dependency on Event/MCEvent
  - Add back some 'event size' variables previously removed, as they are useful 

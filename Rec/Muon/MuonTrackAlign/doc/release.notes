@@ -4,6 +4,9 @@
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Fixed -pedantic warnings.
+
 !=================== MuonTrackAlign v1r8p1 2010-03-24 ==================
 ! 2010-03-22 - Rob Lambert
  - Fixes for windows warnings about casting to floats savannah 64668

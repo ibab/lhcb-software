@@ -28,6 +28,7 @@ public:
   /// 
   enum PrefitStrategy { NoPrefit, SkipDriftTime, TjeerdKetel } ;
 
+  using TrackProjector::project;
   /// Project a state-vector onto a measurement
   StatusCode project( const LHCb::StateVector& state, const LHCb::Measurement& meas );
   

@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MuonRead );
+DECLARE_ALGORITHM_FACTORY( MuonRead )
 
 
 //=============================================================================
@@ -346,5 +346,4 @@ StatusCode MuonRead::searchNature(LHCb::MuonTileID tile,LHCb::MCParticle*& pp)
 
            
   return StatusCode::SUCCESS;
-};
-  
+}

@@ -2,6 +2,9 @@
 ! Responsible : E. Polycarpo, H. Lopes    
 !----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Fixed -pedantic warnings.
+
 !========================= MuonPIDChecker v5r3 2012-05-02 =========================
 ! 2012-04-20 - Helder Lopes
  - Added protection when retrieving MuonPID and Muon track containers

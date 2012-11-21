@@ -21,7 +21,7 @@
 
 // Declaration of the Tool Factory
 namespace Tf{
-  DECLARE_TOOL_FACTORY( PatVPFitLHCbIDs );
+  DECLARE_TOOL_FACTORY( PatVPFitLHCbIDs )
 }
 
 //=============================================================================
