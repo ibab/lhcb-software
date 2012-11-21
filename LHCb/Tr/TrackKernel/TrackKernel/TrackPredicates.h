@@ -34,4 +34,4 @@ namespace TrackPredicates
     bool operator()(const LHCb::Track* track) const { 
       return track->chi2PerDoF() <m_maxchisq  ; }
   } ;
-};
+}
