@@ -24,6 +24,7 @@ use  L0Event         v*   Event
 use  HltEvent        v*   Event
 use  TrackFitEvent   v*   Tr
 use  LinkerEvent     v*   Event
+use  MCEvent         v*   Event
 
 include_path      none
 

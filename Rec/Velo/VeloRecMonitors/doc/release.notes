@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Chris Jones
+ - Add missing dependency on Event/MCEvent
+
 ! 2012-11-16 - Marco Cattaneo
  - Fix gcc --pedantic warnings
  - Fix some Coverity warnings
