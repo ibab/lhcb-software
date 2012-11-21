@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-11-21 - Chris Jones
+ - Update CountParticles to use DaVinciAlgorithm base class
+
 ! 2012-11-15 - Chris Jones
  - Update PrintDecayTree to use DaVinciAlgorithm base class
 

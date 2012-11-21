@@ -8,14 +8,14 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 // ============================================================================
 /** @class CountParticles 
  *  Count particles per PID. Useful for tests.
  *  @author Patrick Koppenburg
  *  @date 2010-01-06
  */
-class CountParticles : public DVAlgorithm
+class CountParticles : public DaVinciAlgorithm
 {
   // ==========================================================================
   // the friend factory for instantiation 
@@ -32,18 +32,13 @@ public:
     setFilterPassed ( !parts.empty() ) ;
     //
     for ( LHCb::Particle::ConstVector::const_iterator i = parts.begin() ; 
-          i!= parts.end() ; ++i){
-      const LHCb::ParticleProperty* pp = ppSvc()->find((*i)->particleID());
-      counter(pp->name())++;
+          i!= parts.end(); ++i )
+    {
+      const LHCb::ParticleProperty * pp = ppSvc()->find((*i)->particleID());
+      if ( pp ) { ++counter(pp->name()); }
     }
-
     //
     return StatusCode::SUCCESS ;
-  }
-  /// the standard finalization of the algorithm
-  virtual StatusCode finalize () 
-  {
-    return DVAlgorithm::finalize () ;
   }
   // ==========================================================================
 protected:
@@ -52,12 +47,10 @@ protected:
    *  @param name algorithm instance name 
    *  @param pSvc service locator 
    */
-  CountParticles 
-  ( const std::string& name , 
-    ISvcLocator*       pSvc ) 
-    : DVAlgorithm ( name , pSvc ) 
-  {
-  }
+  CountParticles ( const std::string& name , 
+                   ISvcLocator*       pSvc ) 
+    : DaVinciAlgorithm ( name , pSvc ) 
+  { }
   /// virtual & protected destructor 
   virtual ~CountParticles () {}
   // ==========================================================================
