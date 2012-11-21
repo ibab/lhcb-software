@@ -339,6 +339,18 @@ bool CondDBTimeSwitchSvc::isFolderSet(const std::string &path) {
 }
 
 //=========================================================================
+// Force disconnection from database.
+//=========================================================================
+void CondDBTimeSwitchSvc::disconnect() {
+  // loop over all readers
+  ReadersType::const_iterator reader;
+  for ( reader = m_readers.begin(); reader != m_readers.end(); ++reader ) {
+    if (reader->second.loaded())
+      reader->second.reader(serviceLocator())->disconnect();
+  }
+}
+
+//=========================================================================
 // Collect the list of used tags and databases
 //=========================================================================
 void CondDBTimeSwitchSvc::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags ) const {

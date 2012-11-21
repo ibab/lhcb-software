@@ -265,6 +265,15 @@ bool CondDBLayeringSvc::isFolderSet(const std::string &path) {
   return false;
 }
 
+//=========================================================================
+// Force disconnection from database.
+//=========================================================================
+void CondDBLayeringSvc::disconnect() {
+  std::vector<ICondDBReader*>::const_iterator layer;
+  for ( layer = m_layers.begin(); layer != m_layers.end(); ++layer ) {
+    (*layer)->disconnect();
+  }
+}
 
 //=========================================================================
 // Collect the list of used tags and databases

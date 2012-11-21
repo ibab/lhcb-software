@@ -91,6 +91,9 @@ public:
   /// Tells if the path (if it exists) is a folderset.
   virtual bool isFolderSet(const std::string &path) = 0;
 
+  /// Disconnect from the database.
+  virtual void disconnect() = 0;
+
 protected:
 
 private:

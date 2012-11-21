@@ -265,6 +265,19 @@ bool CondDBDispatcherSvc::isFolderSet(const std::string &path) {
 }
 
 //=========================================================================
+// Force disconnection from database.
+//=========================================================================
+void CondDBDispatcherSvc::disconnect() {
+  // loop over alternatives
+  std::map<std::string,ICondDBReader*>::const_iterator alt;
+  for ( alt = m_alternatives.begin(); alt != m_alternatives.end(); ++alt ) {
+    alt->second->disconnect();
+  }
+  if (m_mainDB)
+    m_mainDB->disconnect();
+}
+
+//=========================================================================
 // Collect the list of used tags and databases
 //=========================================================================
 void CondDBDispatcherSvc::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags ) const {

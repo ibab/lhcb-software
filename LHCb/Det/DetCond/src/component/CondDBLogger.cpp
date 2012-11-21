@@ -229,6 +229,16 @@ bool CondDBLogger::isFolderSet(const std::string &path) {
 }
 
 //=========================================================================
+// Force disconnection from database.
+//=========================================================================
+void CondDBLogger::disconnect() {
+  if ( m_loggedReader ) {
+    (*m_logFile) << "DIS: " << Gaudi::Time::current().ns() << std::endl;
+    m_loggedReader->disconnect();
+  }
+}
+
+//=========================================================================
 // Collect the list of used tags and databases
 //=========================================================================
 void CondDBLogger::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags ) const {

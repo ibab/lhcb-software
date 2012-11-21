@@ -89,6 +89,9 @@ public:
   /// Tells if the path (if it exists) is a folderset.
   virtual bool isFolderSet(const std::string &path);
 
+  /// Disconnect from the database.
+  virtual void disconnect();
+
   // --------- ICondDBInfo implementation
 
   /** Get the current default database tags

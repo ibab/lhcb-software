@@ -23,6 +23,9 @@ public:
   /// Finalize Service
   virtual StatusCode finalize();
 
+  /// Disconnect from the database.
+  virtual void disconnect();
+
   // --------- ICondDBReader implementation
 
   /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,

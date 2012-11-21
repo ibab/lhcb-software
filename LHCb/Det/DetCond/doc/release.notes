@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Modified the ICondDBReader interface to allow explicit disconnection from
+   databases (useful after a fork).
+
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 

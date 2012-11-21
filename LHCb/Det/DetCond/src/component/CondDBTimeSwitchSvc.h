@@ -62,6 +62,9 @@ public:
   /// Tells if the path (if it exists) is a folderset.
   virtual bool isFolderSet(const std::string &path);
 
+  /// Disconnect from the database.
+  virtual void disconnect();
+
   // --------- ICondDBInfo implementation
 
   /** Get the current default database tags
@@ -138,6 +141,10 @@ private:
     }
     /// convert to a string
     std::string toString() const;
+    /// tell if the reader has already been instantiated
+    bool loaded() const {
+      return m_reader;
+    }
   private:
     /// Pointer to the CondDBReader instance
     mutable ICondDBReader *m_reader;

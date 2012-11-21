@@ -1305,6 +1305,20 @@ bool CondDBAccessSvc::isFolderSet(const std::string &path) {
 }
 
 //=========================================================================
+// Disconnect from the database.
+//=========================================================================
+void CondDBAccessSvc::disconnect() {
+  boost::mutex::scoped_lock busy_lock(m_busy);
+  if ( database() && database()->isOpen() ) {
+    if ( UNLIKELY( msgLevel() <= MSG::DEBUG ) ) {
+      debug() << "Forced disconnect from database (will reconnect automatically)" << endmsg;
+    }
+    database()->closeDatabase();
+  } else if ( UNLIKELY( msgLevel() <= MSG::DEBUG ) ) {
+    debug() << "Database already disconnected" << endmsg;
+  }
+}
+//=========================================================================
 // Add database name and TAG to the passed vector.
 //=========================================================================
 void CondDBAccessSvc::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags ) const {
