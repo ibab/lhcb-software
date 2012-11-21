@@ -13,7 +13,7 @@ include_path      none
 #============================================================================
 # Used packages.
 #============================================================================
-use GSL                 v*    LCG_Interfaces
+use   GSL               v*    LCG_Interfaces
 use   GaudiAlg        	v*
 use   GaudiUtils        v*
 use   RecEvent		v*	Event
@@ -24,7 +24,8 @@ use   TrackKernel	v*	Tr
 use   STKernel          v*      ST
 use   PartProp          v*      Kernel
 use   CaloDet           v*      Det
-use PhysEvent           v*      Event
+use   PhysEvent         v*      Event
+use   MCEvent           v*      Event
 
 #============================================================================
 # Component library building rule

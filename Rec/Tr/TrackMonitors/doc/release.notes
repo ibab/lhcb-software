@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Chris Jones
+ - Add missing dependency on Event/MCEvent
+
 ! 2012-10-24 - Marco Cattaneo
  - Fix gcc -pedantic warnings
  - One more getIfExists
