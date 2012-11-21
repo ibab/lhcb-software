@@ -25,7 +25,8 @@ public:
   
   virtual ~Part2Calo( ); ///< Destructor
   virtual StatusCode initialize();
-  
+
+  using Track2Calo::match;
   bool match(const  LHCb::ProtoParticle* proto,
                      std::string det = DeCalorimeterLocation::Ecal,
                      CaloPlane::Plane plane = CaloPlane::ShowerMax, 

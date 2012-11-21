@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2012-11-21 - Marco Clemencic
+ - Fixed a warning (-pedantic).
+
 ! 2012-10-19 - Marco Cattaneo
  - Fix gcc -pedantic warnings
  - Use getItExists where appropriate

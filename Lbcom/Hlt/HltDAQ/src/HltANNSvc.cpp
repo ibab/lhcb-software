@@ -15,14 +15,8 @@ public:
     {
         declareProperty("allowUndefined",m_allowUndefined=true,"do we allow undefined, on-demand generated, key/value pairs?");
     }
-#ifdef __INTEL_COMPILER
-  #pragma warning(disable:654) // overloaded virtual function only partially overriden
-  #pragma warning(push)
-#endif
+    using ANNSvc::handleUndefined;
     virtual boost::optional<minor_value_type> handleUndefined(const major_key_type& major, const std::string& minor) const;
-#ifdef __INTEL_COMPILER
-  #pragma warning(pop)
-#endif
 private:
     bool              m_allowUndefined;
 };

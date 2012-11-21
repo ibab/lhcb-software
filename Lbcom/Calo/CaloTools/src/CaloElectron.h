@@ -46,6 +46,7 @@ public:
   LHCb::CaloMomentum bremCaloMomentum();
   double ecalE();
   double eOverP();
+  using ICaloElectron::closestState;
   LHCb::State closestState(std::string toWhat = "hypo");
   double caloTrajectoryZ(CaloPlane::Plane refPlane = CaloPlane::ShowerMax ,std::string toWhat = "hypo");
   double caloTrajectoryL(CaloPlane::Plane refPlane = CaloPlane::ShowerMax ,std::string toWhat = "hypo");

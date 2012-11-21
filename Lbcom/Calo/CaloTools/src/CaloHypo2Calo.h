@@ -30,18 +30,22 @@ public:
 
   StatusCode initialize();
   // cellIDs
+  using Calo2Calo::cellIDs;
   const std::vector<LHCb::CaloCellID>& cellIDs(const LHCb::CaloHypo    &fromHypo,    const std::string &toCalo);
   const std::vector<LHCb::CaloCellID>& cellIDs(const LHCb::CaloCluster &fromCluster, const std::string &toCalo);
   const std::vector<LHCb::CaloCellID>& cellIDs(){return m_cells;};
   // digits
+  using Calo2Calo::digits;
   const std::vector<LHCb::CaloDigit*>& digits(const LHCb::CaloCluster &fromCluster, const std::string &toCalo);
   const std::vector<LHCb::CaloDigit*>& digits(const LHCb::CaloHypo    &fromHypo,    const std::string &toCalo);
   const std::vector<LHCb::CaloDigit*>& digits(){return m_digits;};
   // energy
+  using Calo2Calo::energy;
   double energy(const LHCb::CaloCluster &fromCluster, const std::string &toCalo);
   double energy(const LHCb::CaloHypo    &fromHypo,    const std::string &toCalo);
   double energy(){return m_energy;};
   // multiplicity
+  using Calo2Calo::multiplicity;
   int multiplicity(const LHCb::CaloCluster &fromCluster, const std::string &toCalo);
   int multiplicity(const LHCb::CaloHypo    &fromHypo,    const std::string &toCalo);
   int multiplicity(){return m_count;};
