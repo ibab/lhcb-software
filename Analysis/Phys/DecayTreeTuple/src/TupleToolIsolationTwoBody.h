@@ -2,14 +2,9 @@
 #ifndef TUPLETOOLISOLATIONTWOBODY_H
 #define TUPLETOOLISOLATIONTWOBODY_H 1
 
-// Include files
-// from Gaudi
-//#include "GaudiAlg/GaudiTupleTool.h"
-//#include "Kernel/IParticleIsolation.h"            // Interface
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IParticleTupleTool.h"
 #include "TupleToolBase.h"
-#include "Kernel/DVAlgorithm.h"
 #include "Kernel/IRelatedPVFinder.h"
 #include "Event/RecVertex.h"
 
@@ -38,9 +33,12 @@ class IDVAlgorithm;
  *  @author Fatima Soomro, based on the code by Giampiero Mancinelli giampi@cppm.in2p3.fr in DaVinciTools
  *  @date   2012-03-17
  */
-class TupleToolIsolationTwoBody  : public TupleToolBase, public virtual IParticleTupleTool{
+class TupleToolIsolationTwoBody  : public TupleToolBase, 
+                                   public virtual IParticleTupleTool
+{
 
 public:
+
   /// Standard constructor
   TupleToolIsolationTwoBody(const std::string& type,
                             const std::string& name,
@@ -48,6 +46,15 @@ public:
 
   /// Standard initialization
   StatusCode initialize();
+
+  virtual ~TupleToolIsolationTwoBody( ); ///< Destructor
+
+public:
+
+  virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*,
+                           const std::string & head, Tuples::Tuple& tuple );
+
+private:
 
   /** The method for the evaluation of the degree of isolation ("number
    *  of non-isolating tracks") of the input set of particles.
@@ -84,16 +91,10 @@ public:
   /*                             const LHCb::VertexBase* PV,  */
   /*                             const LHCb::VertexBase* SV) const ; */
 
-
-  virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*,
-                           const std::string & head, Tuples::Tuple& tuple   );
-
   virtual StatusCode getIso(const LHCb::Particle*, std::string, Tuples::Tuple& );
+
   StatusCode MuChi2( const LHCb::Particle* P, const std::string& head, Tuples::Tuple& tuple);
 
-  virtual ~TupleToolIsolationTwoBody( ); ///< Destructor
-
-private:
   /** Defines whether or not a particle is not isolating according to the
       BsMuMu Roadmap, using an Hlt criterium
   */
@@ -145,7 +146,7 @@ private:
 
 private:
 
-  IDistanceCalculator*  m_Geom;
+  const IDistanceCalculator* m_Geom;
   std::string m_ParticlePath;
 
   bool m_MuChi2;
@@ -180,7 +181,7 @@ private:
   //  bool m_tuple;
   bool m_isMC;
   IParticle2MCAssociator* m_p2mcAssoc;
-  IParticleCombiner* m_combiner;
+  const IParticleCombiner* m_combiner;
   IDVAlgorithm* m_dva;
 
   std::string m_p2mcAssocType;

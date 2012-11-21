@@ -103,49 +103,41 @@ DECLARE_TOOL_FACTORY(TupleToolIsolationTwoBody)
 //=============================================================================
 StatusCode TupleToolIsolationTwoBody::initialize()
 {
-  StatusCode sc = TupleToolBase::initialize();
+  const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // LoKi::VertexFitter/VertexFitter
-  m_p2mcAssoc = tool<IParticle2MCAssociator>(m_p2mcAssocType,
-                                             this);
-  m_combiner = tool<IParticleCombiner>("LoKi::VertexFitter");
-
-  m_Geom = tool<IDistanceCalculator> ("LoKi::DistanceCalculator");
-  if ( ! m_Geom ) {
-    fatal() << "DistanceCalculator could not be found" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
-  if (0==m_dva){ return Error("Couldn't get parent DVAlgorithm",
-                              StatusCode::FAILURE);
-  }
+  if ( !m_dva ) { return Error( "Couldn't get parent DVAlgorithm",
+                                StatusCode::FAILURE ); }
 
-  info()<<"initialized"<<endmsg;
+  m_p2mcAssoc = tool<IParticle2MCAssociator>( m_p2mcAssocType, this );
+  m_combiner  = m_dva->particleCombiner();
+  m_Geom      = m_dva->distanceCalculator();
+
   return sc;
 }
-
-
 
 //=============================================================================
 // Fill
 //=============================================================================
-StatusCode TupleToolIsolationTwoBody::fill( const LHCb::Particle * /* top */, 
+StatusCode TupleToolIsolationTwoBody::fill( const LHCb::Particle * /* top */,
                                             const LHCb::Particle *part,
                                             const std::string &   head,
-                                            Tuples::Tuple &   tuple   ) 
+                                            Tuples::Tuple &   tuple   )
 {
 
   const std::string prefix=fullName(head);
-  debug()<<"filling tuple for "<<prefix<< endmsg;
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug()<<"filling tuple for "<<prefix<< endmsg;
 
   StatusCode sc;
   if( part->isBasicParticle() && m_MuChi2){ sc = MuChi2(part, prefix, tuple); }
 
   if( part->isBasicParticle() || part->daughtersVector().size()!=2 ){
 
-    debug()<<"not filling for "<< fullName(head)<<endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug()<<"not filling for "<< fullName(head)<<endmsg;
     return StatusCode::SUCCESS;
   }
   else  {
@@ -155,8 +147,9 @@ StatusCode TupleToolIsolationTwoBody::fill( const LHCb::Particle * /* top */,
 
     for (  Particle::ConstVector::const_iterator ip_part = parts.begin(); ip_part != parts.end(); ip_part++) {
       if( !((*ip_part)->isBasicParticle()) )  shdBeTrue=false;
-      if(!shdBeTrue)
-        debug()<<"Found compositle particle "<< (*ip_part)->particleID().pid()<<" in the daughters of"<< fullName(head)<<endmsg;
+      if ( !shdBeTrue && msgLevel(MSG::DEBUG) )
+        debug()<<"Found compositle particle "<< (*ip_part)->particleID().pid()
+               <<" in the daughters of"<< fullName(head)<<endmsg;
 
     }
 
@@ -167,8 +160,7 @@ StatusCode TupleToolIsolationTwoBody::fill( const LHCb::Particle * /* top */,
 
   //   const LHCb::VertexBase* PV = m_dva->bestPV(part);
   //   const LHCb::VertexBase* SV = part->endVertex();
-
-  debug()<<" calling getiso "<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<" calling getiso "<<endmsg;
   sc = getIso( part, prefix, tuple);
 
   //  sc  &= tuple->column( prefix+"_test", massiso[0]);
@@ -202,7 +194,8 @@ StatusCode TupleToolIsolationTwoBody::MuChi2( const LHCb::Particle* P
 
   double  muchi2 = -1;
 
-  debug()<<"checking for muonpids at "<<LHCb::MuonPIDLocation::Default<<endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug()<<"checking for muonpids at "<<LHCb::MuonPIDLocation::Default<<endmsg;
   LHCb::MuonPIDs* pMuids =NULL;
   if(exist<LHCb::MuonPIDs>(LHCb::MuonPIDLocation::Default)) pMuids=get<LHCb::MuonPIDs>(LHCb::MuonPIDLocation::Default);
   if (!pMuids){
@@ -210,14 +203,15 @@ StatusCode TupleToolIsolationTwoBody::MuChi2( const LHCb::Particle* P
     return StatusCode::FAILURE;
   }
 
-  debug()<<" found it, the size is "<<pMuids->size()<<endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug()<<" found it, the size is "<<pMuids->size()<<endmsg;
   const LHCb::Track *mutrack=NULL;
   LHCb::MuonPIDs::const_iterator ip;
   for( ip = pMuids->begin(); ip != pMuids->end() ; ip++){
     if ((*ip)->idTrack() == track){
       mutrack = (*ip)->muonTrack();
       if (!mutrack) continue;
-      debug()<<"found a mutrack "<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"found a mutrack "<<endmsg;
     }
   } // end of muonIDs loop
 
@@ -226,10 +220,12 @@ StatusCode TupleToolIsolationTwoBody::MuChi2( const LHCb::Particle* P
   }
 
   else{
-    debug()<<"didnt find any mutrack! "<<endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug()<<"didnt find any mutrack! "<<endmsg;
   }
 
-  debug()<<"muchi2 was "<<muchi2<<endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug()<<"muchi2 was "<<muchi2<<endmsg;
   test += tuple->column( prefix+"_MuonChi2DOF", muchi2);
 
   if(test) return StatusCode::SUCCESS;
@@ -250,18 +246,19 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
                                              Tuples::Tuple& tuple )
 {
 
-  debug() <<"Now get the Isolation level"<< endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() <<"Now get the Isolation level"<< endreq;
   StatusCode sc = StatusCode::SUCCESS;
 
   const LHCb::Particle::ConstVector & parts = P->daughtersVector();
-  debug() <<"daughters vector "<< endreq;
-  float massiso[2]; 
-  float chi2iso[2]; 
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"daughters vector "<< endreq;
+  float massiso[2];
+  float chi2iso[2];
   //int iso[2];
-  debug() <<"the floats "<< endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"the floats "<< endreq;
   const LHCb::VertexBase *PV = m_dva->bestVertex(P);
   const LHCb::VertexBase *SV = P->endVertex();
-  debug() <<" PV and SV "<< endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<" PV and SV "<< endreq;
 
   LHCb::Particles* allparts = get<LHCb::Particles>(m_ParticlePath);
   if (!allparts) {
@@ -270,7 +267,8 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
     return StatusCode::SUCCESS;
   }
 
-  debug() <<" have all_parts  with size  "<< allparts->size()<< endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() <<" have all_parts  with size  "<< allparts->size()<< endreq;
 
   Assert( m_p2mcAssoc
           , "The DaVinci smart associator hasn't been initialized!");
@@ -290,7 +288,7 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
   */
   const Gaudi::XYZPoint& PosPV = PV->position();
   const Gaudi::XYZPoint& PosSV = SV->position();
-  debug() <<" PV and SV position "<< endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<" PV and SV position "<< endreq;
 
   int i = 0;
   ROOT::Math::SVector<int, 2> iso5;
@@ -303,7 +301,7 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
   //Loop over input particles, get their simple kinematics
   Particle::ConstVector::const_iterator ip_part;
 
-  debug () <<"=========== 1"<< endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug () <<"=========== 1"<< endreq;
   //    IParticle2MCAssociator* m_p2mcAssoc;
   Particle::ConstVector iso_parts_0;
   Particle::ConstVector iso_parts_1;
@@ -315,8 +313,8 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
   {
     const LHCb::Particle* part = *(ip_part);
     //if (m_isMC) {
-      //if (i==0) mclink1 = m_p2mcAssoc->relatedMCP(part);
-      //if (i==1) mclink2 = m_p2mcAssoc->relatedMCP(part);
+    //if (i==0) mclink1 = m_p2mcAssoc->relatedMCP(part);
+    //if (i==1) mclink2 = m_p2mcAssoc->relatedMCP(part);
     //}
 
     if (i==0) iso_parts_0.push_back(part) ;
@@ -346,12 +344,12 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
   LHCb::Particle* bestpart_0(0) ;
   LHCb::Particle* bestpart_1(0) ;
 
-  debug () <<"=========== 2"<< endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug () <<"=========== 2"<< endreq;
   //Loop over all particles
   LHCb::Particles::const_iterator ip;
   for ( ip = allparts->begin(); ip != allparts->end() ; ++ip) {
 
-    debug() <<" looping over all parts "<< endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() <<" looping over all parts "<< endreq;
     j++;
     const LHCb::ProtoParticle * proto =  (*ip)->proto();
     const LHCb::Track* track = proto->track();
@@ -363,14 +361,14 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
     //double ptot = p.R();
 
     // skip if other particle is in input list
-    debug() <<" check isInList "<< endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() <<" check isInList "<< endreq;
     if (ratio(pt, ptmu[0]) < 0.0001 || ratio(pt,ptmu[1]) <0.0001) {
       isInList = 1;
-      debug() <<"isInList is found to be "<<isInList<< endreq;
+      if ( msgLevel(MSG::DEBUG) ) debug() <<"isInList is found to be "<<isInList<< endreq;
     }
 
     if (!isInList) {
-      debug() <<"part inNOTinlist"<< endreq;
+      if ( msgLevel(MSG::DEBUG) ) debug() <<"part inNOTinlist"<< endreq;
 
       int i2=0;
       //bool fromB = false;
@@ -379,26 +377,28 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
       //float MCmothID(0);
       const MCParticle* mclink = 0;
 
-      debug() <<"=========== 3"<< endreq;
-      if (m_isMC) {
-        debug() <<"=========== 4"<< endreq;
-        debug() <<"=========== 4a"<< endreq;
-        mclink = m_p2mcAssoc->relatedMCP(cand);
-        if(mclink) {
-          debug() <<"=========== 5"<< endreq;
-          //fromB = ancestor(mclink)->particleID().hasBottom();
-          //fromD = ancestor(mclink)->particleID().hasCharm();
-          //MCID = mclink->particleID().pid();
-          debug() <<"=========== 6"<< endreq;
-          const MCParticle*mc_mom = mclink->mother();
-          if(mc_mom) {
-            debug() <<"=========== 7"<< endreq;
-            //MCmothID = mc_mom->particleID().pid();
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() <<"=========== 3"<< endreq;
+        if (m_isMC) {
+          debug() <<"=========== 4"<< endreq;
+          debug() <<"=========== 4a"<< endreq;
+          mclink = m_p2mcAssoc->relatedMCP(cand);
+          if(mclink) {
+            debug() <<"=========== 5"<< endreq;
+            //fromB = ancestor(mclink)->particleID().hasBottom();
+            //fromD = ancestor(mclink)->particleID().hasCharm();
+            //MCID = mclink->particleID().pid();
+            debug() <<"=========== 6"<< endreq;
+            const MCParticle*mc_mom = mclink->mother();
+            if(mc_mom) {
+              debug() <<"=========== 7"<< endreq;
+              //MCmothID = mc_mom->particleID().pid();
+            }
           }
+          debug() <<"=========== 4b"<< endreq;
         }
-        debug() <<"=========== 4b"<< endreq;
       }
-
 
       //Loop over input particles (2)
       for ( i2 = 0; i2 < 2; i2++) {
@@ -415,7 +415,7 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
         Gaudi::XYZVector pmu(p_mu(0,i2),p_mu(1,i2),p_mu(2,i2));
         // find roadmap isolation (only long tracks)
         IsHltGood(o, p, omu, pmu ,PosPV, hltgood, fc);
-        debug() <<"=========== 8"<< endreq;
+        if ( msgLevel(MSG::DEBUG) ) debug() <<"=========== 8"<< endreq;
 
         // find doca and angle between input and other tracks
         Gaudi::XYZPoint vtx(0.,0.,0.);
@@ -443,7 +443,7 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
           if (impchi2<ips) ips = impchi2;
         }
         ips=std::sqrt(ips);
-        debug() <<"=========== 9"<< endreq;
+        if ( msgLevel(MSG::DEBUG) ) debug() <<"=========== 9"<< endreq;
 
         //double deltaZvtx = (vtx.z()-PosPV.z());
 
@@ -464,7 +464,7 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
           if (i2==0) iso_parts_0.push_back(cand) ;
           if (i2==1) iso_parts_1.push_back(cand) ;
           iso5[i2] += 1;
-          debug()<<"isiso "<< i2 << iso5[i2]<< endreq;
+          if ( msgLevel(MSG::DEBUG) ) debug()<<"isiso "<< i2 << iso5[i2]<< endreq;
         }
 
 
@@ -482,7 +482,7 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
   LHCb::Particle mother0  ;
   LHCb::Vertex   vertex1   ;
   LHCb::Particle mother1  ;
-  debug() <<"=========== 11"<< endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"=========== 11"<< endreq;
 
   if (iso_parts_0.size()>1) {
 
@@ -497,7 +497,7 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
 
   else {
     iso_parts_0.push_back(bestpart_0);
-    debug()<<"trying to get to this stage "<<endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug()<<"trying to get to this stage "<<endreq;
     StatusCode sc0a = StatusCode::SUCCESS;
     sc0a = m_combiner->combine(iso_parts_0,mother0,vertex0 ) ;
     if(sc0a==StatusCode::SUCCESS) {
@@ -527,7 +527,7 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
     }
   }
 
-  debug()<<"NTRACKS "<<j<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"NTRACKS "<<j<<endreq;
 
   // this is idiotic, but oh well...
 
@@ -535,8 +535,11 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
   //iso[1] = iso5[1];
 
   //    fatima, fill here
-  debug()<<"massiso " << massiso[0]<<"  "<<massiso[1]<<" chi2iso " << chi2iso[0]<<"  "<<chi2iso[1]<<endmsg;
-  debug()<<" Usual iso5 " << iso5[0]<<"  "<< iso5[1]<<endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug()<<"massiso " << massiso[0]<<"  "<<massiso[1]<<" chi2iso " << chi2iso[0]<<"  "<<chi2iso[1]<<endmsg;
+    debug()<<" Usual iso5 " << iso5[0]<<"  "<< iso5[1]<<endmsg;
+  }
 
   bool test = tuple->column( prefix+"_P1_massiso", massiso[0]);
   test  &= tuple->column( prefix+"_P2_massiso", massiso[1]);
@@ -695,10 +698,13 @@ void TupleToolIsolationTwoBody::closest_point(Gaudi::XYZPoint o,Gaudi::XYZVector
 const LHCb::MCParticle* TupleToolIsolationTwoBody::ancestor(const LHCb::MCParticle*imc) const {
   if (imc->mother()) {
     const LHCb::MCParticle*mc_mom = imc->mother();
-    debug()<<"iso c "<< mc_mom << endreq;
-    debug()<<"iso c "<< mc_mom->momentum() << endreq;
-    debug()<<"iso c "<< mc_mom->particleID() << endreq;
-    debug()<<"iso c "<< mc_mom->mother() << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug()<<"iso c "<< mc_mom << endreq;
+      debug()<<"iso c "<< mc_mom->momentum() << endreq;
+      debug()<<"iso c "<< mc_mom->particleID() << endreq;
+      debug()<<"iso c "<< mc_mom->mother() << endreq;
+    }
     return ancestor(mc_mom);
   }
   else {

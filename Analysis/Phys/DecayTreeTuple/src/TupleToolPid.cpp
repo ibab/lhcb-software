@@ -89,7 +89,7 @@ StatusCode TupleToolPid::fill( const Particle*
       test &= tuple->column( prefix+"_hasCalo", !proto->calo().empty() );
 
       // The kitchen sink ...
-      if ( isVerbose() )
+      if ( UNLIKELY(isVerbose()) )
       {
 
         // RICH variables
@@ -109,23 +109,31 @@ StatusCode TupleToolPid::fill( const Particle*
                                richPID ? richPID->kaonHypoAboveThres()     : false );
         test &= tuple->column( prefix+"_RichAbovePrThres",
                                richPID ? richPID->protonHypoAboveThres()   : false );
-        test &= tuple->column( prefix+"_RichDLLe",  proto->info(LHCb::ProtoParticle::RichDLLe,-1000) );
-        test &= tuple->column( prefix+"_RichDLLmu", proto->info(LHCb::ProtoParticle::RichDLLmu,-1000) );
-        test &= tuple->column( prefix+"_RichDLLpi", proto->info(LHCb::ProtoParticle::RichDLLpi,-1000) );
-        test &= tuple->column( prefix+"_RichDLLk",  proto->info(LHCb::ProtoParticle::RichDLLk,-1000) );
-        test &= tuple->column( prefix+"_RichDLLp",  proto->info(LHCb::ProtoParticle::RichDLLp,-1000) );
-        test &= tuple->column( prefix+"_RichDLLbt", proto->info(LHCb::ProtoParticle::RichDLLbt,-1000) );
+        test &= tuple->column( prefix+"_RichDLLe",  
+                               proto->info(LHCb::ProtoParticle::RichDLLe,-1000) );
+        test &= tuple->column( prefix+"_RichDLLmu",
+                               proto->info(LHCb::ProtoParticle::RichDLLmu,-1000) );
+        test &= tuple->column( prefix+"_RichDLLpi",
+                               proto->info(LHCb::ProtoParticle::RichDLLpi,-1000) );
+        test &= tuple->column( prefix+"_RichDLLk",
+                               proto->info(LHCb::ProtoParticle::RichDLLk,-1000) );
+        test &= tuple->column( prefix+"_RichDLLp", 
+                               proto->info(LHCb::ProtoParticle::RichDLLp,-1000) );
+        test &= tuple->column( prefix+"_RichDLLbt",
+                               proto->info(LHCb::ProtoParticle::RichDLLbt,-1000) );
 
         // Muon variables
-        test &= tuple->column( prefix+"_InAccMuon", proto->info(LHCb::ProtoParticle::InAccMuon,false)>0.5 );
+        test &= tuple->column( prefix+"_InAccMuon", 
+                               proto->info(LHCb::ProtoParticle::InAccMuon,false)>0.5 );
         test &= tuple->column( prefix+"_isMuonLoose", muonPID ? muonPID->IsMuonLoose() : false );
-        test &= tuple->column( prefix+"_MuonMuLL",  muonPID ? muonPID->MuonLLMu() : -1000 );
-        test &= tuple->column( prefix+"_MuonBkgLL", muonPID ? muonPID->MuonLLBg() : -1000 );
-        test &= tuple->column( prefix+"_MuonNShared", muonPID ? muonPID->nShared()  : -1 );
+        test &= tuple->column( prefix+"_MuonMuLL",    muonPID ? muonPID->MuonLLMu()    : -1000 );
+        test &= tuple->column( prefix+"_MuonBkgLL",   muonPID ? muonPID->MuonLLBg()    : -1000 );
+        test &= tuple->column( prefix+"_MuonNShared", muonPID ? muonPID->nShared()     : -1    );
 
 
         // ECAL variables
-        test &= tuple->column( prefix+"_InAccEcal", proto->info(LHCb::ProtoParticle::InAccEcal,false)>0.5 );
+        test &= tuple->column( prefix+"_InAccEcal", 
+                               proto->info(LHCb::ProtoParticle::InAccEcal,false)>0.5 );
         test &= tuple->column( prefix+"_CaloEcalE",
                                proto->info(LHCb::ProtoParticle::CaloEcalE,-10000.));
         test &= tuple->column( prefix+"_EcalPIDe",
@@ -134,7 +142,8 @@ StatusCode TupleToolPid::fill( const Particle*
                                proto->info(LHCb::ProtoParticle::EcalPIDmu,-10000.));
 
         // HCAL
-        test &= tuple->column( prefix+"_InAccHcal", proto->info(LHCb::ProtoParticle::InAccHcal,false)>0.5 );
+        test &= tuple->column( prefix+"_InAccHcal", 
+                               proto->info(LHCb::ProtoParticle::InAccHcal,false)>0.5 );
         test &= tuple->column( prefix+"_CaloHcalE",
                                proto->info(LHCb::ProtoParticle::CaloHcalE,-10000.));
         test &= tuple->column( prefix+"_HcalPIDe",
@@ -143,19 +152,23 @@ StatusCode TupleToolPid::fill( const Particle*
                                proto->info(LHCb::ProtoParticle::HcalPIDmu,-10000.));
 
         // PRS
-        test &= tuple->column( prefix+"_InAccPrs", proto->info(LHCb::ProtoParticle::InAccPrs,false)>0.5 );
+        test &= tuple->column( prefix+"_InAccPrs", 
+                               proto->info(LHCb::ProtoParticle::InAccPrs,false)>0.5 );
         test &= tuple->column( prefix+"_PrsPIDe",
                                proto->info(LHCb::ProtoParticle::PrsPIDe,-10000.));
+        test &= tuple->column( prefix+"_CaloPrsE", 
+                               proto->info(LHCb::ProtoParticle::CaloPrsE,-999) );
 
-	test &= tuple->column( prefix+"_CaloPrsE",  proto->info(LHCb::ProtoParticle::CaloPrsE, -999 ));
-	
 
         // SPD
-        test &= tuple->column( prefix+"_InAccSpd", proto->info(LHCb::ProtoParticle::InAccSpd,false)>0.5 );
-	test &= tuple->column( prefix+"_CaloSpdE",  proto->info(LHCb::ProtoParticle::CaloSpdE, -999 ));
-	
+        test &= tuple->column( prefix+"_InAccSpd", 
+                               proto->info(LHCb::ProtoParticle::InAccSpd,false)>0.5 );
+        test &= tuple->column( prefix+"_CaloSpdE", 
+                               proto->info(LHCb::ProtoParticle::CaloSpdE,-999) );
+
         // BREM
-        test &= tuple->column( prefix+"_InAccBrem", proto->info(LHCb::ProtoParticle::InAccBrem,false)>0.5 );
+        test &= tuple->column( prefix+"_InAccBrem", 
+                               proto->info(LHCb::ProtoParticle::InAccBrem,false)>0.5 );
         test &= tuple->column( prefix+"_BremPIDe",
                                proto->info(LHCb::ProtoParticle::BremPIDe,-10000.));
 
@@ -173,5 +186,4 @@ StatusCode TupleToolPid::fill( const Particle*
 }
 
 // Declaration of the Tool Factory
-// actually acts as a using namespace TupleTool
 DECLARE_TOOL_FACTORY( TupleToolPid )
