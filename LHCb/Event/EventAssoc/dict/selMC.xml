@@ -1,4 +1,4 @@
-<!-- * $Id: selMC.xml,v 1.2 2009-11-13 10:10:30 jpalac Exp $ 
+<!-- * $Id: Rels.py,v 1.2 2008-11-02 16:44:38 ibelyaev Exp $ 
      * ========================================================================
      * $CVS tag:$, version $Revision: 1.2 $ 
      * ========================================================================
@@ -7,8 +7,8 @@
 <!-- * @file
      *
      * The basic selection file to build the Reflex dictionaries
-     * @author jpalac 
-     * @date  2009-11-13 11:10:08.809021 
+     * @author ibelyaev 
+     * @date  2012-11-22 20:29:42.407589 
      * ========================================================================
 --> 
 
@@ -48,6 +48,9 @@
 
     <class name="LHCb::RelationWeighted1D<LHCb::MCParticle,LHCb::CaloCluster,float>" 
            id="EE61581B-0000-0000-0000-000000000000" />
+
+    <class name="LHCb::RelationWeighted1D<LHCb::MCParticle,LHCb::ProtoParticle,double>" 
+           id="D01143F3-0000-0000-0000-000000000000" />
 
     <class name="LHCb::RelationWeighted1D<LHCb::Particle,LHCb::MCParticle,double>" 
            id="ED51D6FC-0000-0000-0000-000000000000" />
@@ -115,6 +118,7 @@
  <class name="IRelationWeighted<LHCb::MCParticle,LHCb::CaloCluster,float>" /> 
  <class name="IRelationWeighted<LHCb::MCParticle,LHCb::L0CaloCandidate,double>" /> 
  <class name="IRelationWeighted<LHCb::MCParticle,LHCb::Particle,double>" /> 
+ <class name="IRelationWeighted<LHCb::MCParticle,LHCb::ProtoParticle,double>" /> 
  <class name="IRelationWeighted<LHCb::MCParticle,LHCb::Track,double>" /> 
  <class name="IRelationWeighted<LHCb::MCVertex,LHCb::RecVertex,std::pair<unsigned int,float> >" /> 
  <class name="IRelationWeighted<LHCb::Particle,LHCb::MCParticle,double>" /> 
@@ -182,6 +186,10 @@
     <field name="m_end"   transient="true" />
  </class> 
  <class name="Relations::Range_<std::vector<Relations::WEntry_<LHCb::MCParticle,LHCb::Particle,double> > >" >
+    <field name="m_begin" transient="true" />
+    <field name="m_end"   transient="true" />
+ </class> 
+ <class name="Relations::Range_<std::vector<Relations::WEntry_<LHCb::MCParticle,LHCb::ProtoParticle,double> > >" >
     <field name="m_begin" transient="true" />
     <field name="m_end"   transient="true" />
  </class> 
@@ -310,6 +318,9 @@
  <class name="Relations::RelationWeighted<LHCb::MCParticle,LHCb::Particle,double>" >
     <field name="m_inverse_aux" transient="true" />
  </class> 
+ <class name="Relations::RelationWeighted<LHCb::MCParticle,LHCb::ProtoParticle,double>" >
+    <field name="m_inverse_aux" transient="true" />
+ </class> 
  <class name="Relations::RelationWeighted<LHCb::MCParticle,LHCb::Track,double>" >
     <field name="m_inverse_aux" transient="true" />
  </class> 
@@ -338,6 +349,7 @@
  <class name="Relations::RelationWeightedBase<LHCb::MCParticle,LHCb::CaloCluster,float>" /> 
  <class name="Relations::RelationWeightedBase<LHCb::MCParticle,LHCb::L0CaloCandidate,double>" /> 
  <class name="Relations::RelationWeightedBase<LHCb::MCParticle,LHCb::Particle,double>" /> 
+ <class name="Relations::RelationWeightedBase<LHCb::MCParticle,LHCb::ProtoParticle,double>" /> 
  <class name="Relations::RelationWeightedBase<LHCb::MCParticle,LHCb::Track,double>" /> 
  <class name="Relations::RelationWeightedBase<LHCb::MCVertex,LHCb::RecVertex,std::pair<unsigned int,float> >" /> 
  <class name="Relations::RelationWeightedBase<LHCb::Particle,LHCb::MCParticle,double>" /> 
@@ -352,6 +364,7 @@
  <class name="Relations::WEntry_<LHCb::MCParticle,LHCb::CaloCluster,float>" /> 
  <class name="Relations::WEntry_<LHCb::MCParticle,LHCb::L0CaloCandidate,double>" /> 
  <class name="Relations::WEntry_<LHCb::MCParticle,LHCb::Particle,double>" /> 
+ <class name="Relations::WEntry_<LHCb::MCParticle,LHCb::ProtoParticle,double>" /> 
  <class name="Relations::WEntry_<LHCb::MCParticle,LHCb::Track,double>" /> 
  <class name="Relations::WEntry_<LHCb::MCVertex,LHCb::RecVertex,std::pair<unsigned int,float> >" /> 
  <class name="Relations::WEntry_<LHCb::Particle,LHCb::MCParticle,double>" /> 
@@ -373,6 +386,7 @@
  <class name="std::vector<Relations::WEntry_<LHCb::MCParticle,LHCb::CaloCluster,float> >" /> 
  <class name="std::vector<Relations::WEntry_<LHCb::MCParticle,LHCb::L0CaloCandidate,double> >" /> 
  <class name="std::vector<Relations::WEntry_<LHCb::MCParticle,LHCb::Particle,double> >" /> 
+ <class name="std::vector<Relations::WEntry_<LHCb::MCParticle,LHCb::ProtoParticle,double> >" /> 
  <class name="std::vector<Relations::WEntry_<LHCb::MCParticle,LHCb::Track,double> >" /> 
  <class name="std::vector<Relations::WEntry_<LHCb::MCVertex,LHCb::RecVertex,std::pair<unsigned int,float> > >" /> 
  <class name="std::vector<Relations::WEntry_<LHCb::Particle,LHCb::MCParticle,double> >" /> 

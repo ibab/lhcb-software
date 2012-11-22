@@ -13,10 +13,12 @@ import Relations.Rels as Rels
 classes  = []
 includes = []
     
-classes += [ Rels.RelW1D( 'LHCb::ProtoParticle' , 'LHCb::MCParticle'  , 'double' ) ]
-classes += [ Rels.RelW1D( 'LHCb::CaloDigit'     , 'LHCb::MCParticle'  , 'float'  ) ]
-classes += [ Rels.RelW1D( 'LHCb::CaloCluster'   , 'LHCb::MCParticle'  , 'float'  ) ]
-classes += [ Rels.RelW1D( 'LHCb::MCParticle'    , 'LHCb::CaloCluster' , 'float'  ) ]
+classes += [ Rels.RelW1D( 'LHCb::ProtoParticle' , 'LHCb::MCParticle'    , 'double' ) ]
+classes += [ Rels.RelW1D( 'LHCb::MCParticle'    , 'LHCb::ProtoParticle' , 'double' ) ]
+
+classes += [ Rels.RelW1D( 'LHCb::CaloDigit'     , 'LHCb::MCParticle'    , 'float'  ) ]
+classes += [ Rels.RelW1D( 'LHCb::CaloCluster'   , 'LHCb::MCParticle'    , 'float'  ) ]
+classes += [ Rels.RelW1D( 'LHCb::MCParticle'    , 'LHCb::CaloCluster'   , 'float'  ) ]
 
 # $DAVINCIMCKERNELROOT/Kernel/HepMC2MC.h:
 classes += [ Rels.Rel2D  ( 'HepMC::GenParticle*' , 'LHCb::MCParticle'   ) ]

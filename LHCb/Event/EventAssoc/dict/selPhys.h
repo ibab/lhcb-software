@@ -1,4 +1,4 @@
-// $Id: selPhys.h,v 1.2 2009-11-13 10:10:30 jpalac Exp $
+// $Id: Rels.py,v 1.2 2008-11-02 16:44:38 ibelyaev Exp $
 // ====================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ====================================================================
@@ -31,8 +31,8 @@
 /** @file 
   *       
   * Helper file for building Reflex dictionaries for Relations 
-   * @author jpalac 
-  * @date  2009-11-13 11:10:08.761439 
+   * @author ibelyaev 
+  * @date  2012-11-22 20:29:42.356188 
   *       
   */      
 

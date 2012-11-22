@@ -4,6 +4,10 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Vanya Belyaev
+
+ - add the dictionary for MCParticle -> ProtoParticle for Philippe Ghez 
+
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
