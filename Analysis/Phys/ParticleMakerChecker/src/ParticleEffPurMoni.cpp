@@ -24,7 +24,7 @@ DECLARE_ALGORITHM_FACTORY( ParticleEffPurMoni )
 //=============================================================================
 ParticleEffPurMoni::ParticleEffPurMoni( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : DVAlgorithm      ( name , pSvcLocator ),
+  : DaVinciAlgorithm ( name , pSvcLocator ),
     m_truthTool      ( NULL ),
     m_trSel          ( NULL ),
     m_mcRec          ( NULL ),
@@ -55,7 +55,7 @@ ParticleEffPurMoni::~ParticleEffPurMoni() {}
 //=============================================================================
 StatusCode ParticleEffPurMoni::initialize()
 {
-  const StatusCode sc = DVAlgorithm::initialize();
+  const StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   // get an instance of the track selector
@@ -1037,7 +1037,7 @@ StatusCode ParticleEffPurMoni::finalize()
         iLC != m_protoLinker.end(); ++iLC )
   { delete iLC->second; iLC->second = NULL; }
   // finalize base class
-  return DVAlgorithm::finalize();
+  return DaVinciAlgorithm::finalize();
 }
 
 //=============================================================================
