@@ -129,7 +129,7 @@ class Gauss(LHCbConfigurableUser):
        ,"DetectorSim"    : """ Dictionary specifying the detectors to simulated (should be in geometry): """
        ,"DetectorMoni"   : """ Dictionary specifying the detectors to monitor (should be simulated) :"""
        ,'SpilloverPaths' : """ Spillover paths to fill: [] means no spillover, otherwise put ['Next', 'Prev', 'PrevPrev'] """
-       ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3','NoCuts','LHCb', 'LHCbNoCuts', 'LHCbOldForE', 'LHCbNoCutsOldForE', 'LHCbTest', 'LHCbTestNoCut' ], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','QGSP_BERT_CHIPS','FTFP_BERT'], 'LHCbPhys': [True,False], 'Other': [''] """
+       ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3','NoCuts','LHCb', 'LHCbNoCuts', 'LHCbOldForE', 'LHCbNoCutsOldForE', 'LHCbTest', 'LHCbTestNoCut' ], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','QGSP_BERT_CHIPS','QGSP_FTFP_BERT','FTFP_BERT'], 'LHCbPhys': [True,False], 'Other': [''] """
        ,"DeltaRays"      : """ Simulation of delta rays enabled (default True) """
        ,'Phases'         : """ List of phases to run (Generator, Simulation, GenToMCTree) """
        ,'Output'         : """ Output: [ 'NONE', 'SIM'] (default 'SIM') """
@@ -3023,6 +3023,11 @@ class Gauss(LHCbConfigurableUser):
         elif(hadronPhys == "QGSP_BERT_CHIPS"):
             addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
             addConstructor("HadronPhysicsQGSP_BERT_CHIPS", "QGSP_BERT_CHIPSPhysics")
+            addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
+            addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")            
+        elif(hadronPhys == "QGSP_FTFP_BERT"):
+            addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
+            addConstructor("HadronPhysicsQGSP_FTFP_BERT", "QGSP_FTFP_BERTPhysics")
             addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
             addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")            
         elif(hadronPhys == "FTFP_BERT"):

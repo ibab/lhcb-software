@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Nigel Watson
+ - Updated python/Gauss/Configuration.py for QGSP_FTFP_BERT.
+
 ! 2012-11-20 - Nigel Watson
  - Added options for new hadronic list, G4PL_QGSP_FTFP_BERT.py
 
