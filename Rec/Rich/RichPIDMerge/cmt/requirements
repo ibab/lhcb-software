@@ -17,6 +17,7 @@ include_path none
 
 # ================ dependencies =============================================
 use RichGlobalPID     v*  Rich
+use RichRecBase       v*  Rich
 
 # ================ component library=========================================
 library           RichPIDMerge   ../src/*.cpp

@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= RichRecAlgorithms v2r19 2011-08-31 =========================
 ! 2011-08-25 - Chris Jones
  - Load the background tool privately.

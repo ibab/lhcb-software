@@ -8,6 +8,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= MuonTrackRec v3r7 2012-08-31 =========================
 
 ! 2012-08-29 - Chris Jones

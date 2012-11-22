@@ -3,6 +3,9 @@
 ! Purpose     : Track reconstruction for VL
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-16 - Heinrich Schindler
  - first version
  

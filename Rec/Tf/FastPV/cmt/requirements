@@ -6,13 +6,15 @@ package           FastPV
 version           v1r0p1
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
+use     DetCond         v*      Det
+use     RecEvent        v*      Event
 use     TrackEvent      v*      Event
 use     PatKernel       v*      Tf
 use     GaudiAlg        v*
@@ -21,7 +23,7 @@ include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library          FastPV    ../src/*.cpp 
+library          FastPV    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================

@@ -6,7 +6,7 @@ package           PatAlgorithms
 version           v4r24
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src options python
 include_path      none
@@ -16,15 +16,17 @@ include_path      none
 #============================================================================
 use     PatKernel       v*      Tf
 use     TfKernel        v*      Tf
-use     TrackTools  v*      Tr
+use     TrackTools      v*      Tr
 use     STDet           v*      Det
 use     OTDet           v*      Det
+use     RecEvent        v*      Event
+use     TrackEvent      v*      Event
 use     OTDAQ           v*      OT
 use     PartProp        v*      Kernel
 #============================================================================
 # Component library building rule
 #============================================================================
-library          PatAlgorithms    ../src/*.cpp 
+library          PatAlgorithms    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================

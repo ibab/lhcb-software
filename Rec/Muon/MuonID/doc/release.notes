@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= MuonID v9r4p1 2012-07-24 =========================
 ! 2012-06-29 - LANGENBRUCH, Christoph
  - fixed access out of array bounds

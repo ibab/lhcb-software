@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 !========================= TfTools v1r15p1 2011-11-08 =========================
 ! 2011-10-12 - Marco Cattaneo
  - Mask an icc warning, fix icc remarks

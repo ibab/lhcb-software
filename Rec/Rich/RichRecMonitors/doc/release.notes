@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= RichRecMonitors v2r33 2011-12-15 ==================
 ! 2011-12-02 - Chris Jones
  - Use long long instead of long

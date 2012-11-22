@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruction interfaces
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= RecInterfaces v1r0 2011-02-28 =========================
 ! 2011-02-13 - Chris Jones
  - New package for sub-det non-specific reconstruction interfaces.

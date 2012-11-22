@@ -17,6 +17,7 @@ use     VeloDet         v*      Det
 use     STDet           v*      Det
 use     STKernel        v*      ST
 use     DigiEvent       v*      Event
+use     RecEvent        v*      Event
 use     TrackEvent      v*      Event
 use     PatKernel       v*      Tf
 use     GaudiAlg        v*

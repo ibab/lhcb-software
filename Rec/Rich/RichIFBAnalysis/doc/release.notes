@@ -4,6 +4,9 @@
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= RichIFBAnalysis v1r2 2011-12-15 ===================
 ! 2011-12-02 - Chris Jones
  - Use long long instead of long

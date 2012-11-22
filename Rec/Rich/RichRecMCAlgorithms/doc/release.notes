@@ -4,6 +4,9 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-26 - Chris Jones
  - Add a new algorithm DumpRichTracksToTextFileAlg which dumps basic track
    information to a text file

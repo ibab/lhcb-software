@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= RichRecTools v4r20 2011-12-15 ======================
 ! 2011-11-18 - Chris Jones
  - Adapt to changes in method names to make things PD neutral

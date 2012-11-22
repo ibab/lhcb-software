@@ -4,6 +4,9 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-21 - Marco Clemencic
  - Fixed -pedantic warnings.
 

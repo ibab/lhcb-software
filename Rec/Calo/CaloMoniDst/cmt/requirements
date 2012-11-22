@@ -21,6 +21,7 @@ use PhysEvent       v*    Event
 use TrackInterfaces v*    Tr
 use DAQEvent        v*    Event
 use L0Event         v*    Event
+use LinkerEvent     v*    Event
 #
 use MCAssociators   v*    Associators
 

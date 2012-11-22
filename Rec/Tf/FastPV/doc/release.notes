@@ -4,6 +4,10 @@
 ! Purpose     : Reconstruct the PV in a fast way
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 !========================= FastPV v1r0p1 2012-03-27 =========================
 ! 2012-03-05 - Marco Cattaneo
  - Remove unused variable in TrackForPV.h, fixes UNINIT_CTOR Coverity warning

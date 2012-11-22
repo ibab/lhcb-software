@@ -17,6 +17,7 @@ use   GSL               v*    LCG_Interfaces
 use   GaudiAlg        	v*
 use   GaudiUtils        v*
 use   RecEvent		v*	Event
+use   MCEvent		v*	Event
 use   TrackEvent       	v*	Event
 use   TrackFitEvent     v*	Tr
 use   TrackInterfaces 	v*	Tr

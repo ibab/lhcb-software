@@ -4,6 +4,9 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-17 - Marco Cattaneo
  - In CaloTrack2IDAlg, return Error from initialize if undefined Input, removes
    need for Assert in execute

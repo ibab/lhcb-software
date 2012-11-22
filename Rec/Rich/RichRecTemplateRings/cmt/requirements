@@ -13,6 +13,7 @@ include_path none
 # ================ dependencies =============================================
 use RichRecBase    v*  Rich
 use MCInterfaces   v*  Kernel
+use MCEvent        v*  Event
 use AIDA           v*  LCG_Interfaces
 use fftw           v*  LCG_Interfaces
 private
@@ -32,12 +33,12 @@ apply_pattern install_python_modules
 # ================ component library=========================================
 library RichRecTemplateRings  ../src/*.cpp  \
                               ../src/base/*.cpp \
-                              ../src/TargetData/*.cpp \  
+                              ../src/TargetData/*.cpp \
                               ../src/TemplateData/*.cpp \
                               ../src/Utility/*.cpp \
                               ../src/FFPlan/*.cpp \
                               ../src/HistoMonitor/*.cpp \
-                              ../src/RingFit/*.cpp \          
+                              ../src/RingFit/*.cpp \
                               ../src/MCTruth/*.cpp
 apply_pattern component_library library=RichRecTemplateRings
 

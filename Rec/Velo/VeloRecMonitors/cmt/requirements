@@ -6,18 +6,20 @@ package           VeloRecMonitors
 version           v2r21
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src python
 
 #============================================================================
 # Used packages
 #============================================================================
-use  AIDA         v*   LCG_Interfaces 
+use  AIDA         v*   LCG_Interfaces
 
 use  GaudiAlg     v*
 
 use  VeloDet         v*   Det
+use  DAQEvent        v*   Event
+use  MCEvent         v*   Event
 use  DigiEvent       v*   Event
 use  TrackEvent      v*   Event
 use  L0Event         v*   Event
@@ -31,7 +33,7 @@ include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library          VeloRecMonitors    ../src/*.cpp 
+library          VeloRecMonitors    ../src/*.cpp
 
 #============================================================================
 # define component library link options

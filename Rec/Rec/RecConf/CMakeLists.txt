@@ -1,0 +1,63 @@
+################################################################################
+# Package: RecConf
+################################################################################
+gaudi_subdir(RecConf v2r9)
+
+gaudi_depends_on_subdirs(Calo/CaloMoniDst
+                         Calo/CaloPIDs
+                         Calo/CaloReco
+                         Hlt/HltMonitors
+                         Kernel/LHCbKernel
+                         Muon/MuonID
+                         Muon/MuonPIDChecker
+                         Muon/MuonTools
+                         Muon/MuonTrackAlign
+                         Muon/MuonTrackMonitor
+                         Muon/MuonTrackRec
+                         Rec/GlobalReco
+                         Rec/LumiAlgs
+                         Rec/RecAlgs
+                         Rec/RecoUpgrade
+                         Rec/RecoUpgradeMC
+                         Rich/RichENNRingFinder
+                         Rich/RichGlobalPID
+                         Rich/RichHPDImageAnalysis
+                         Rich/RichIFBAnalysis
+                         Rich/RichPIDMerge
+                         Rich/RichRecAlgorithms
+                         Rich/RichRecMCAlgorithms
+                         Rich/RichRecMCTools
+                         Rich/RichRecMonitors
+                         Rich/RichRecPhotonTools
+                         Rich/RichRecQC
+                         Rich/RichRecStereoTools
+                         Rich/RichRecSys
+                         Rich/RichRecTemplateRings
+                         Rich/RichRecTools
+                         Rich/RichRecTrackTools
+                         Tf/PatAlgorithms
+                         Tf/PatVelo
+                         Tf/PatVeloTT
+                         Tf/TfTools
+                         Tf/TrackMatching
+                         Tf/TrackSeeding
+                         Tf/TrackSys
+                         Tf/TsaAlgorithms
+                         Tr/PatChecker
+                         Tr/PatFitParams
+                         Tr/PatPV
+                         Tr/TrackAssociators
+                         Tr/TrackCheckers
+                         Tr/TrackExtrapolators
+                         Tr/TrackFitEvent
+                         Tr/TrackFitter
+                         Tr/TrackIdealPR
+                         Tr/TrackMCTools
+                         Tr/TrackMonitors
+                         Tr/TrackProjectors
+                         Tr/TrackTools
+                         Tr/TrackUtils
+                         Velo/VeloRecMonitors)
+
+gaudi_install_python_modules()
+

@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-12 - Chris Jones
  - Update PhotonRecoUsingQuarticSoln to include an optional  test for Aerogel 
    photons to see if they intersect with the beampipe, and if they do reject

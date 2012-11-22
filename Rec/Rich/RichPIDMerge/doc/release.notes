@@ -4,6 +4,10 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 !========================= RichPIDMerge v2r9p2 2011-02-28 =========================
 ! 2011-02-10 - Chris Jones
  - Fix various icc warnings 

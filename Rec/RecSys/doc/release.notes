@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 - Packages added: Pr/PrVL v1r0 - Pattern recognition for the Velo Light upgrade
 
 </PRE><H1><A NAME=v14r2>2012-10-03 RecSys v14r2</A></H1><PRE>

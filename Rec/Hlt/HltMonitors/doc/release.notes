@@ -4,6 +4,9 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-24 - Marco Cattaneo
  - Fix gcc -pedantic warnings
  - Use getIfExists

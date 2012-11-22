@@ -4,6 +4,9 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= PatChecker v3r12 2012-05-07 =========================
 ! 2012-05-03 - Marco Cattaneo
   - In PrimaryVertexChecker, fix more missing initialisations in RecPVInfo and

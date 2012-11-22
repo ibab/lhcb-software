@@ -4,6 +4,10 @@
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 !========================= RichRecTemplateRings v1r5 2011-08-31 ==============
 ! 2011-07-08 - Sajan Easo
  - Added factory declaration in 

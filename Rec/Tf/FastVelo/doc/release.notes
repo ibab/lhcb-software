@@ -4,6 +4,10 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 ! 2012-11-02 - Olivier Callot
  - New algorithm FastSTDecoding.cpp to decode ST Lite clusters.
  - Minor fix in FastVeloDecoding.cpp

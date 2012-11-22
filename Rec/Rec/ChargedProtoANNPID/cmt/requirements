@@ -6,7 +6,7 @@ package           ChargedProtoANNPID
 version           v1r8
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src python
 
@@ -14,18 +14,18 @@ branches          cmt doc src python
 # Used packages.
 #============================================================================
 use  GaudiAlg                  v*
+use  PhysEvent                 v*   Event
+use  MCEvent                   v*   Event
 use  RecEvent                  v*   Event
 use  MCEvent                   v*   Event
-use  ChargedProtoANNPIDParam   v* 
+use  ChargedProtoANNPIDParam   v*
 use  RecInterfaces             v*   Rec
-# NB is currently only supported on linux GCC (WIN32 libs in preparation)
-macro use_NB_expert "neurobayes_expert v* LCG_Interfaces" WIN32 ""
-use $(use_NB_expert)
+use  neurobayes_expert         v*   LCG_Interfaces
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library          ChargedProtoANNPID    ../src/*.cpp 
+library          ChargedProtoANNPID    ../src/*.cpp
 apply_pattern    component_library library=ChargedProtoANNPID
 
 # Setup Python Configurables

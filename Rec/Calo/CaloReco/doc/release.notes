@@ -4,6 +4,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-08 - Marco Cattaneo
  - In Brunel.opts, remove setting of MeasureTime=true in sequencers,
    should not be the default, and should in any case use TimingAuditor.

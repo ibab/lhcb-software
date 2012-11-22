@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= RichGlobalPID v3r18 2011-12-15 =========================
 ! 2011-12-03 - Chris Jones
  - Fix various compilation warnings

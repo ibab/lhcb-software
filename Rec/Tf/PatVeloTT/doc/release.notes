@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= PatVeloTT v3r20 2012-10-02 =========================
 ! 2012-09-21 - Paul Szczypka
  - Rename of VeloPix to VP

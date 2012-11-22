@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= PrAlgorithms v1r0 2012-10-01 =========================
 ! 2012-09-12 - Marco Cattaneo
  - Fix an i686 compilation warning in PrForwardTool.cpp

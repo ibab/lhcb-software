@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-16 - Marco Cattaneo
  - Fix gcc --pedantic warnings
  - Fix some Coverity defects

@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-08 - Marco Cattaneo
  - In Configuration.py and RichGlobalPID_.py, remove setting of MeasureTime=True
    in sequencers, should not be the default, and should in any case use

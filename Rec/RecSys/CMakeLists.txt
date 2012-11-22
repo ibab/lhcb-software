@@ -1,0 +1,73 @@
+################################################################################
+# Package: RecSys
+################################################################################
+gaudi_subdir(RecSys v14r2)
+
+gaudi_depends_on_subdirs(Calo/CaloMoniDst
+                         Calo/CaloPIDs
+                         Calo/CaloReco
+                         Hlt/HltMonitors
+                         Muon/MuonID
+                         Muon/MuonPIDChecker
+                         Muon/MuonTools
+                         Muon/MuonTrackAlign
+                         Muon/MuonTrackMonitor
+                         Muon/MuonTrackRec
+                         Pr/PrAlgorithms
+                         Pr/PrKernel
+                         Pr/PrMCTools
+                         Pr/PrVL
+                         Rec/ChargedProtoANNPID
+                         Rec/GlobalReco
+                         Rec/LumiAlgs
+                         Rec/RecAlgs
+                         Rec/RecConf
+                         Rec/RecInterfaces
+                         Rec/RecoUpgrade
+                         Rec/RecoUpgradeMC
+                         Rich/RichAlignment
+                         Rich/RichENNRingFinder
+                         Rich/RichGlobalPID
+                         Rich/RichHPDImageAnalysis
+                         Rich/RichIFBAnalysis
+                         Rich/RichPIDMerge
+                         Rich/RichParticleSearch
+                         Rich/RichRecAlgorithms
+                         Rich/RichRecMCAlgorithms
+                         Rich/RichRecMCTools
+                         Rich/RichRecMonitors
+                         Rich/RichRecPhotonTools
+                         Rich/RichRecQC
+                         Rich/RichRecStereoTools
+                         Rich/RichRecSys
+                         Rich/RichRecTemplateRings
+                         Rich/RichRecTools
+                         Rich/RichRecTrackTools
+                         Tf/FastPV
+                         Tf/FastVelo
+                         Tf/PatAlgorithms
+                         Tf/PatVelo
+                         Tf/PatVeloTT
+                         Tf/TfTools
+                         Tf/TrackMatching
+                         Tf/TrackSeeding
+                         Tf/TrackSys
+                         Tf/TsaAlgorithms
+                         Tr/PatChecker
+                         Tr/PatFitParams
+                         Tr/PatPV
+                         Tr/TrackAssociators
+                         Tr/TrackCheckers
+                         Tr/TrackExtrapolators
+                         Tr/TrackFitEvent
+                         Tr/TrackFitter
+                         Tr/TrackIdealPR
+                         Tr/TrackMCTools
+                         Tr/TrackMonitors
+                         Tr/TrackProjectors
+                         Tr/TrackTools
+                         Tr/TrackUtils
+                         Velo/VeloRecMonitors)
+
+
+gaudi_add_test(QMTest QMTEST)

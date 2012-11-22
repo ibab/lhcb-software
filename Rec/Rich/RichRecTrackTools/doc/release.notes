@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= RichRecTrackTools v1r33 2012-01-31 =========================
 ! 2012-01-04 - Chris Jones
  - Add new implementation of the "detailed" track segment creator that uses

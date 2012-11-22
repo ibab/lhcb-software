@@ -1,0 +1,29 @@
+################################################################################
+# Package: LumiAlgs
+################################################################################
+gaudi_subdir(LumiAlgs v8r0)
+
+gaudi_depends_on_subdirs(Det/DetDesc
+                         Event/DAQEvent
+                         Event/EventBase
+                         Event/LumiEvent
+                         Event/RecEvent
+                         GaudiAlg
+                         GaudiConf
+                         Kernel/FSRAlgs
+                         Kernel/HltInterfaces
+                         Kernel/LHCbAlgs
+                         Kernel/LHCbKernel)
+
+find_package(Boost COMPONENTS iostreams)
+find_package(RELAX)
+
+gaudi_add_module(LumiAlgs
+                 src/*.cpp
+                 INCLUDE_DIRS Boost RELAX Event/EventBase Event/LumiEvent Kernel/FSRAlgs
+                 LINK_LIBRARIES Boost RELAX DetDescLib DAQEventLib RecEvent GaudiAlgLib HltInterfaces LHCbKernel)
+
+gaudi_install_python_modules()
+
+
+gaudi_add_test(QMTest QMTEST)

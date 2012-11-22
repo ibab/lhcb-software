@@ -11,6 +11,7 @@ use MuonDAQ     v*    Muon
 use MuonDet     v*    Det
 use MCEvent     v*    Event
 use LinkerEvent v*    Event
+use TrackEvent  v*    Event
 use GaudiAlg    v*
 use AIDA        v*    LCG_Interfaces
 
