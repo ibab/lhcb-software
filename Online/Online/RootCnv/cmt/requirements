@@ -26,8 +26,9 @@ macro_append RootCnv_pp_cppflags ' -D__POOL_COMPATIBILITY -D$(GaudiPolicy_projec
 apply_pattern component_library library=RootCnv
 macro_append  RootCnv_dependencies  " RootCnvLib "
 
-application gaudi_merge ../merge/merge.cpp
+application  gaudi_merge ../merge/merge.cpp
 macro_append gaudi_merge_dependencies  " RootCnvLib "
+application  extract_event ../merge/extractEvt.cpp
 
 macro RootCnv_ext_linkopts  ' -lRootCnvLib ' WIN32 ' RootCnvLib.lib '
 
