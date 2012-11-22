@@ -28,9 +28,19 @@ use  MCStandardParticles        v1r3     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v6r12    Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r5     Phys   # Chris Jones
 use  DisplVerticesMC            v1r4p1   Phys   # Victor Coco
-use  DecayTreeTuple             v3r26    Phys   # Rob Lambert
 use  JetAccessories		v1r7     Phys   # Victor Coco, Cedric Potterat
 use  JetAccessoriesMC		v1r4	 Phys   # Victor Coco, Cedric Potterat
+
+####################################################################
+
+use  DecayTreeTuple             v4r0     Phys   # Rob Lambert
+use  DecayTreeTupleBase         v1r0     Phys
+use  DecayTreeTupleReco         v1r0     Phys   
+use  DecayTreeTupleDalitz       v1r0     Phys
+use  DecayTreeTupleJets         v1r0     Phys
+use  DecayTreeTupleMC           v1r0     Phys
+use  DecayTreeTupleTrigger      v1r0     Phys
+use  DecayTreeTupleMuonCalib    v1r0     Phys
 
 ####################################################################
 
