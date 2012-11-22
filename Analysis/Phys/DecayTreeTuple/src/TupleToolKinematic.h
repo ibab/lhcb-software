@@ -4,7 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "TupleToolBase.h"
+#include "DecayTreeTupleBase/TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 /** @class TupleToolKinematic TupleToolKinematic.h jborel/TupleToolKinematic.h
@@ -21,12 +21,12 @@
  * if Verbose:
  *
  * - head_REFP[X|Y|Z]: one point the particle momentum extrapolation
-     goes through
+ goes through
  * - head_PreFitMass: Mass of 4-vectors of daughters, not yet extrapolated
  *   to the head decay vertex (only for composites). This is the quantity
  *   used in ADAMASS or AM in CombineParticles.CombinationCut
- * - prefix_AtVtx_P[X|Y|Z]: momentum information of basic particles at 
- *   origin vertex position  
+ * - prefix_AtVtx_P[X|Y|Z]: momentum information of basic particles at
+ *   origin vertex position
  *
  * \sa DecayTreeTuple
  *
@@ -38,16 +38,16 @@ class TupleToolKinematic : public TupleToolBase, virtual public IParticleTupleTo
 public:
   /// Standard constructor
   TupleToolKinematic( const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent);
+                      const std::string& name,
+                      const IInterface* parent);
 
   virtual ~TupleToolKinematic(){}; ///< Destructor
 
   virtual StatusCode fill( const LHCb::Particle*
-			   , const LHCb::Particle*
-			   , const std::string&
-			   , Tuples::Tuple& );
-  
+                           , const LHCb::Particle*
+                           , const std::string&
+                           , Tuples::Tuple& );
+
   double preFitMass(const LHCb::Particle*) const ;
 
   StatusCode initialize();

@@ -26,11 +26,11 @@ DECLARE_TOOL_FACTORY( TupleToolP2VV )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolP2VV::TupleToolP2VV( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
-  , m_angleTool()
+  TupleToolP2VV::TupleToolP2VV( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
+    , m_angleTool()
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty( "Calculator", m_calculator = "Bd2KstarMuMuAngleCalculator" );
@@ -71,8 +71,7 @@ StatusCode TupleToolP2VV::fill( const LHCb::Particle*
                                 , const std::string& head
                                 , Tuples::Tuple& tuple )
 {
-  std::string prefix=fullName(head);
-
+  std::string prefix = fullName(head);
 
   bool test = true;
   if( P ){
@@ -94,7 +93,8 @@ StatusCode TupleToolP2VV::fill( const LHCb::Particle*
       test &= tuple->column( prefix+"_Phi",    phi  );
     }
 
-    if ( m_trans ){
+    if ( m_trans )
+    {
       double Theta_tr = -1000.;
       double Phi_tr = -1000.;
       double Theta_V = -1000.;

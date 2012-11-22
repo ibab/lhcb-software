@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DecayTreeTupleMuonCalib
+! Responsible : Chris Jones
+! Purpose     : tuple tools for Muon PID calibration
+!-----------------------------------------------------------------------------
+
+! 2012-11-22 - Chris Jones
+ - First version. Split of from monolithic Phys/DecayTreeTuple package.
+   Contains the tools for Muon PID calibration.

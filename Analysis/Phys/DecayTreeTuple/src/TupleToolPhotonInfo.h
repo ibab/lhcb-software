@@ -4,28 +4,26 @@
 
 // Include files
 // from Gaudi
-#include "TupleToolBase.h"
-     // Interface
+#include "DecayTreeTupleBase/TupleToolBase.h"
+// Interface
 #include "Kernel/IParticleTupleTool.h"
 
 #include "CaloUtils/CaloParticle.h"
 
-
-
 //============================================================================
 class TupleToolPhotonInfo : public TupleToolBase, virtual public IParticleTupleTool {
-//==========================================================================
+  //==========================================================================
 public:
- // Standard constructor
+  // Standard constructor
   TupleToolPhotonInfo( const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent);
-  
+                       const std::string& name,
+                       const IInterface* parent);
+
   virtual ~TupleToolPhotonInfo( ){}; ///< Destructor
-  
-  virtual StatusCode fill(const LHCb::Particle*, const LHCb::Particle* 
-			  ,  const std::string& ,Tuples::Tuple& );
-private: 
+
+  virtual StatusCode fill(const LHCb::Particle*, const LHCb::Particle*
+                          ,  const std::string& ,Tuples::Tuple& );
+private:
   int m_PhotonID;
 };
 #endif // _TUPLETOOLEPHOTONINFO_H

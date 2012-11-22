@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DecayTreeTupleDalitz
+! Responsible : Chris Jones
+! Purpose     : Dalitz tools
+!-----------------------------------------------------------------------------
+
+! 2012-11-22 - Chris Jones
+ - First version. Split of from monolithic Phys/DecayTreeTuple package.
+   Contains the 'Dalitz' tools, that share code.

@@ -4,7 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "TupleToolBase.h"
+#include "DecayTreeTupleBase/TupleToolBase.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
 
 /** @class TupleToolSelResults TupleToolSelResults.h

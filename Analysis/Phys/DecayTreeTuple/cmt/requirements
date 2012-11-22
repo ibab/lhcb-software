@@ -3,46 +3,55 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           DecayTreeTuple
-version           v3r26
+version           v4r0
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure
 #============================================================================
 branches          cmt doc src python
-#============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
-#============================================================================
-use   DaVinciKernel      v*    Phys
-use   DaVinciMCKernel    v*    Phys
-use   DaVinciAssociators v*    Phys
-use   MCInterfaces       v*    Kernel
-use   HltInterfaces      v*    Kernel
-use   DecFiles           v*    Gen     --no_auto_imports
-use   DAQEvent           v*    Event
-use   L0Event            v*    Event
-use   HltEvent           v*    Event
-use   DecayTreeFitter    v*    Phys
-use   Boost              v*    LCG_Interfaces
-use   LoKiPhysMC         v*    Phys
-use   LoKiArrayFunctors  v*    Phys
-use   MuonDet            v*    Det
-use   Python             v*    LCG_Interfaces
-use   ROOT               v*    LCG_Interfaces -no_auto_imports
 
-include_path      none
+#============================================================================
+# Used packages.
+#============================================================================
+use   DecayTreeTupleBase        v*    Phys
+use   DecayTreeFitter           v*    Phys
+# Depend on the various component packages, so they get built before the
+# python stuff below.
+use   DecayTreeTupleReco        v*    Phys
+use   DecayTreeTupleDalitz      v*    Phys
+use   DecayTreeTupleJets        v*    Phys
+use   DecayTreeTupleMC          v*    Phys
+use   DecayTreeTupleTrigger     v*    Phys
+use   DecayTreeTupleMuonCalib   v*    Phys
+
+# Old dependencies. Kept for a while for reference
+#use   DaVinciAssociators  v*    Phys
+#use   HltInterfaces       v*    Kernel
+#use   DecFiles            v*    Gen     --no_auto_imports
+#use   DAQEvent            v*    Event
+#use   L0Event             v*    Event
+#use   HltEvent            v*    Event
+#use   LoKiArrayFunctors   v*    Phys
+#use   MuonDet             v*    Det
+#use   ROOT                v*    LCG_Interfaces -no_auto_imports
+#use   Python              v*    LCG_Interfaces
+
+#============================================================================
+# Python
+#============================================================================
+apply_pattern    install_python_modules
+macro_append DecayTreeTupleGenConfUser_dependencies DecayTreeTupleConfDbMerge
+
 #============================================================================
 # Component library building rule
 #============================================================================
-library          DecayTreeTuple    ../src/*.cpp 
+library          DecayTreeTuple     ../src/*.cpp 
+apply_pattern    component_library  library=DecayTreeTuple
 
 #============================================================================
-# define component library link options
+# Private stuff
 #============================================================================
-private
-macro_append   ROOT_linkopts   " -lMLP -lTMVA -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d" \
-               WIN32   " libMLP.lib libTMVA.lib libGraf.lib libHist.lib libMatrix.lib libTreePlayer.lib libGpad.lib libGraf3d.lib"
-end_private
-macro_append DecayTreeTupleGenConfUser_dependencies DecayTreeTupleConfDbMerge
-apply_pattern    component_library library=DecayTreeTuple
-apply_pattern    install_python_modules
+#private
+# Not sure why this was added. Doesn't seem to be needed ...
+#macro_append ROOT_linkopts " -lMLP -lTMVA -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d "
+#end_private

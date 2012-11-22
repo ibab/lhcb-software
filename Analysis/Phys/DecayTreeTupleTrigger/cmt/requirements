@@ -1,0 +1,26 @@
+#============================================================================
+# Created    : 2007-12-05
+# Maintainer : Patrick Koppenburg
+#============================================================================
+package           DecayTreeTupleTrigger
+version           v1r0
+
+#============================================================================
+# Structure
+#============================================================================
+branches          cmt doc src
+
+#============================================================================
+# Used packages.
+#============================================================================
+use   DecayTreeTupleBase  v*    Phys
+use   HltInterfaces       v*    Kernel
+use   HltEvent            v*    Event
+use   DAQEvent            v*    Event
+use   L0Event             v*    Event
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          DecayTreeTupleTrigger    ../src/*.cpp 
+apply_pattern    component_library  library=DecayTreeTupleTrigger

@@ -4,7 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "TupleToolBase.h"
+#include "DecayTreeTupleBase/TupleToolBase.h"
      // Interface
 #include "Kernel/IParticleTupleTool.h"  
 

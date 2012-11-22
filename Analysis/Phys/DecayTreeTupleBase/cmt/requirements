@@ -1,0 +1,36 @@
+#============================================================================
+# Created    : 2007-12-05
+# Maintainer : Patrick Koppenburg
+#============================================================================
+package           DecayTreeTupleBase
+version           v1r0
+
+#============================================================================
+# Structure
+#============================================================================
+branches          cmt doc src
+
+#============================================================================
+# Used packages.
+#============================================================================
+use   DaVinciKernel       v*    Phys
+use   MCInterfaces        v*    Kernel
+use   Boost               v*    LCG_Interfaces
+use   CaloUtils           v*    Calo
+
+#============================================================================
+# Environment
+#============================================================================
+apply_pattern install_more_includes more=DecayTreeTupleBase
+
+#============================================================================
+# Linker library building rule
+#============================================================================
+library          DecayTreeTupleBaseLib     ../src/lib/*.cpp 
+apply_pattern    linker_library     library=DecayTreeTupleBaseLib
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          DecayTreeTupleBase     ../src/component/*.cpp 
+apply_pattern    component_library  library=DecayTreeTupleBase

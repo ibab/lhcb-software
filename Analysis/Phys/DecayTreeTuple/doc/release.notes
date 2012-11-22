@@ -4,6 +4,18 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-11-22 - Chris Jones
+ - Major restructuring.
+  + Move the base classes and core components to a new package called
+    Phys/DecayTreeTupleBase.
+  + Move some components to various seperate new packages
+   . DecayTreeTupleDalitz    - 'Dalitz' tools
+   . DecayTreeTupleJets      - Jet tools
+   . DecayTreeTupleMC        - MC tools
+   . DecayTreeTupleMuonCalib - Muon PID calibration
+   . DecayTreeTupleReco      - Reconstruction information tools
+   . DecayTreeTupleTrigger   - Trigger and stripping tools
+
 ! 2012-11-19 - Chris Jones
  - Protect MCTupleToolKinematic against an empty MCVertex container and also 
    NULL MCVertex pointers

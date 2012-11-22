@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DecayTreeTupleTrigger
+! Responsible : Chris Jones
+! Purpose     : Trigger and stripping related tuple tools
+!-----------------------------------------------------------------------------
+
+! 2012-11-22 - Chris Jones
+ - First version. Split of from monolithic Phys/DecayTreeTuple package.
+   Contains trigger and stripping related tuple tools.

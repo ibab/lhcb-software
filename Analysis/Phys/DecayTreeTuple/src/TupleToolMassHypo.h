@@ -4,7 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "TupleToolBase.h"
+#include "DecayTreeTupleBase/TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Event/Particle.h"
 
@@ -18,21 +18,21 @@ typedef std::vector< possDecay > possDecayVec ;
  *
  * An example for Ks0:
  * \verbatim
-from configurables import TupleToolMassHypo
-Tuple.addTool(TupleToolMassHypo)
-Tuple.TupleToolMassHypo.PIDReplacements = { "pi+" : "p+" }
-Tuple.TupleToolMassHypo.CC = True 
-\endverbatim
- * 
- * will create 4 new entries in the nTuple called KS0_M_with_piplus_piminus, 
+ from configurables import TupleToolMassHypo
+ Tuple.addTool(TupleToolMassHypo)
+ Tuple.TupleToolMassHypo.PIDReplacements = { "pi+" : "p+" }
+ Tuple.TupleToolMassHypo.CC = True
+ \endverbatim
+ *
+ * will create 4 new entries in the nTuple called KS0_M_with_piplus_piminus,
  * KS0_M_with_piplus_p~minus, KS0_M_with_pplus_piminus, KS0_M_with_pplus_p~minus.
  *
  * Cases with 3 or more daughters are possible but not tested.
  *
- * Warnings: 
+ * Warnings:
  *
- * 1) PIDReplacement is a python dictionary. To test two mass hypthesis replacements 
- *   for the same daughter you must used 2 tool instances. 
+ * 1) PIDReplacement is a python dictionary. To test two mass hypthesis replacements
+ *   for the same daughter you must used 2 tool instances.
  *
  * 2) When CC = True (default), PIDReplacements implies cc.
  *
@@ -46,17 +46,17 @@ class TupleToolMassHypo : public TupleToolBase, virtual public IParticleTupleToo
 public:
   /// Standard constructor
   TupleToolMassHypo( const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent);
+                     const std::string& name,
+                     const IInterface* parent);
 
   virtual ~TupleToolMassHypo(){}; ///< Destructor
 
-  virtual StatusCode initialize(); ///< initialisation  
+  virtual StatusCode initialize(); ///< initialisation
 
   virtual StatusCode fill( const LHCb::Particle*
-			   , const LHCb::Particle*
-			   , const std::string&
-			   , Tuples::Tuple& );
+                           , const LHCb::Particle*
+                           , const std::string&
+                           , Tuples::Tuple& );
 
 private :
   double recalculateMass(const possDecay&, const Gaudi::XYZPoint&, std::string& combname);

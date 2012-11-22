@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DecayTreeTupleReco
+! Responsible : Chris Jones
+! Purpose     : Reconstruction related tuple tools
+!-----------------------------------------------------------------------------
+
+! 2012-11-22 - Chris Jones
+ - First version. Split of from monolithic Phys/DecayTreeTuple package.
+   Contains the tools that provide reconstruction information.

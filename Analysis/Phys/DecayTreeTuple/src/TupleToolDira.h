@@ -3,23 +3,19 @@
 
 // Include files
 // from Gaudi
-#include "TupleToolBase.h"
+#include "DecayTreeTupleBase/TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Math/SMatrix.h"
 
+#include <Kernel/IDVAlgorithm.h>
 #include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
 
-class IDVAlgorithm;
-class IDistanceCalculator;
+#include "Event/Vertex.h"
+#include "Event/RecVertex.h"
+#include "Event/Particle.h"
 
-namespace LHCb
-{
-  class Particle;
-  class VertexBase;
-}
-
-class TupleToolDira : public TupleToolBase, 
+class TupleToolDira : public TupleToolBase,
                       virtual public IParticleTupleTool
 {
 

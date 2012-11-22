@@ -4,7 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "TupleToolBase.h"
+#include "DecayTreeTupleBase/TupleToolBase.h"
 // Interfaces
 #include "Kernel/IParticleTupleTool.h"
 #include "Kernel/IBremAdder.h"
@@ -13,7 +13,7 @@
 
 //============================================================================
 class TupleToolBremInfo : public TupleToolBase, virtual public IParticleTupleTool {
-//==========================================================================
+  //==========================================================================
 
 public:
 
@@ -25,7 +25,7 @@ public:
   StatusCode initialize();
   virtual ~TupleToolBremInfo( ) {}; ///< Destructor
 
-  virtual StatusCode fill( const LHCb::Particle*, 
+  virtual StatusCode fill( const LHCb::Particle*,
                            const LHCb::Particle*,
                            const std::string&,
                            Tuples::Tuple& );

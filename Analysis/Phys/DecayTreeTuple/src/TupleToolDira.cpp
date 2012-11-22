@@ -6,16 +6,8 @@
 // local
 #include "TupleToolDira.h"
 
-#include <Kernel/DVAlgorithm.h>
-//#include <Kernel/IContextTool.h>
-//#include <Kernel/IPhysDesktop.h>
-
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
-
-#include "Event/Vertex.h"
-#include "Event/RecVertex.h"
-#include "Event/Particle.h"
 
 using namespace LHCb;
 
@@ -24,10 +16,6 @@ using namespace LHCb;
 //
 // 2010-09-06 : Fatima Soomro
 //-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-// actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolDira )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -108,6 +96,7 @@ StatusCode TupleToolDira::fillDIRAError( const VertexBase* primVtx
   return StatusCode(test);
 }
 
+//=========================================================================
 
 void TupleToolDira::calculateDIRAError( const Particle* P, 
                                         const VertexBase* primVtx, 
@@ -172,7 +161,8 @@ void TupleToolDira::calculateDIRAError( const Particle* P,
     gradVec(i+7,0) = -gd/(magp*magd*magd*magd);
   }
 
-  Gaudi::SymMatrix1x1 diraErrSq = ROOT::Math::SimilarityT<double, 10, 1>(gradVec, Cov);
+  const Gaudi::SymMatrix1x1 diraErrSq = 
+    ROOT::Math::SimilarityT<double, 10, 1>(gradVec, Cov);
 
   diraerr = std::sqrt(diraErrSq(0,0));
   
@@ -180,3 +170,10 @@ void TupleToolDira::calculateDIRAError( const Particle* P,
 
   return;
 }
+
+//=========================================================================
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( TupleToolDira )
+
+//=========================================================================

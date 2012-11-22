@@ -4,7 +4,7 @@
 
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IParticleTupleTool.h"
-#include "TupleToolBase.h"
+#include "DecayTreeTupleBase/TupleToolBase.h"
 #include "Kernel/IRelatedPVFinder.h"
 #include "Event/RecVertex.h"
 
@@ -33,7 +33,7 @@ class IDVAlgorithm;
  *  @author Fatima Soomro, based on the code by Giampiero Mancinelli giampi@cppm.in2p3.fr in DaVinciTools
  *  @date   2012-03-17
  */
-class TupleToolIsolationTwoBody  : public TupleToolBase, 
+class TupleToolIsolationTwoBody  : public TupleToolBase,
                                    public virtual IParticleTupleTool
 {
 

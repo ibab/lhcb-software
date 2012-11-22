@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DecayTreeTupleBase
+! Responsible : Chris Jones
+! Purpose     : Base classes for the DecayTreeTuples
+!-----------------------------------------------------------------------------
+
+! 2012-11-22 - Chris Jones
+ - First version. Split off the base classes from Phys/DecayTreeTuple
+   into a linker library here. Also builds a component library with a few core
+   components.
+
