@@ -22,7 +22,7 @@
 #include "GaudiUtils/Aida2ROOT.h"
 
 // base class
-#include "Kernel/DaVinciAlgorithm.h"
+#include "Kernel/DaVinciHistoAlgorithm.h"
 
 // interfaces
 #include "TrackInterfaces/ITrackSelector.h"
@@ -57,7 +57,7 @@
  */
 //-----------------------------------------------------------------------------
 
-class ParticleEffPurMoni : public DaVinciAlgorithm
+class ParticleEffPurMoni : public DaVinciHistoAlgorithm
 {
 
 public:

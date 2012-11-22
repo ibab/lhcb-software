@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-11-22 - Chris Jones
- - Update to use DaVinciAlgorithm base class
+ - Update to use DaVinciHistoAlgorithm base class
 
 !========================= ParticleMakerChecker v1r5 2012-02-09 =============
 
