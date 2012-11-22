@@ -4,6 +4,9 @@
 ! Purpose     : General purposes templated relations between classes
 !------------------------------------------------------------------------------
 
+! 2012-11-22 - Vanya Belyaev
+ - fix the length of guid (needed for 64-bit platform)
+
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 

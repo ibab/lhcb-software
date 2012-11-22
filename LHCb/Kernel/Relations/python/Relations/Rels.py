@@ -127,7 +127,7 @@ class Rel1D ( Rel ) :
     def __init__ ( self , From , To ) :
         self.From = From
         self.To   = To
-    def related ( self ) : return [] # Rel1D( self.To , self.From ) ] 
+    def related ( self ) : return [] ##  Rel1D( self.To , self.From ) ] 
     def types ( self ) :
         pair = ( self.From , self.To ) 
         table   = _fmt_type_ ( "LHCb::Relation1D<%s,%s>"         , pair    ) 
@@ -170,7 +170,7 @@ class RelW1D ( Rel ) :
         self.From   = From
         self.To     = To
         self.Weight = Weight
-    def related ( self ) : return [] # RelW1D( self.To , self.From , self.Weight ) ]
+    def related ( self ) : return [] ##  RelW1D( self.To , self.From , self.Weight ) ]
     def types   ( self ) :
         triplet = ( self.From , self.To , self.Weight ) 
         table   = _fmt_type_ ( "LHCb::RelationWeighted1D<%s,%s,%s>"        , triplet )

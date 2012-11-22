@@ -73,8 +73,8 @@ CLID        Relations::clid
 std::string Relations::guid ( const CLID& clID ) 
 {
   char clid_txt[64];
-  sprintf ( clid_txt ,"%08X-0000-0000-0000-000000000000", (int) clID );
-  return std::string ( clid_txt , 64  ) ;
+  sprintf ( clid_txt ,"%08X-0000-0000-0000-000000000000", (unsigned int) clID );
+  return std::string ( clid_txt , 36  ) ;
 }
 // ============================================================================
 /** Simple function to convers CLID (Gaudi unique class identifier) 
