@@ -9,25 +9,17 @@ static int usage() {
 	   "   -output      Specify output file name.\n"
 	   "   -input       Specify input file name.\n"
 	   "   -event       Specify the event entry number.\n"
-	   "   -debug       Switch debug flag on.\n"
 	   );
   return 1;
 }
 
 int main(int argc, char** argv) {
-  bool dbg = false, fixup=true;
   string input;
   string output;
   int evt_num = -1;
   for(int i=1; i < argc; ++i) {
     if ( *argv[i] == '-' ) {
       switch(::toupper(*(argv[i]+1))) {
-      case 'N':
-	fixup = false;
-	break;
-      case 'D':
-	dbg = true;
-	break;
       case 'E':
 	if ( 1 != ::sscanf(argv[i+1],"%d",&evt_num) )  {
 	  ::printf("\nERROR: No valid event identifier given.\n\n");

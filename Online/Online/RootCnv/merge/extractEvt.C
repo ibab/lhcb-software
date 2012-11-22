@@ -1,18 +1,21 @@
-// $Id: RootRefs.h,v 1.4 2010-08-24 23:30:32 frankb Exp $
+// $Id:
 //====================================================================
-// Dictionary classes for internal classes used to write ROOT files.
-//--------------------------------------------------------------------
 //
-//  Author     : M.Frank
+//  Author     : M.Frank  CERN/LHCb
 //
 //====================================================================
-#ifndef GAUDIROOTCNV_ROOTREFS_H
-#define GAUDIROOTCNV_ROOTREFS_H
+// ROOT include files
+#include "TUUID.h"
+#include "TFile.h"
+#include "TBranch.h"
+#include "TTree.h"
+#include "TClass.h"
+#include "TROOT.h"
+#include "TSystem.h"
+#include "TInterpreter.h"
 
-// Framework include files
-//#include "GaudiKernel/Kernel.h"
-
-// C++ include files
+// Standad C/C++ include files
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -108,28 +111,6 @@ namespace Gaudi {
     /// Standard destructor
     virtual ~RootNTupleDescriptor() {}
   };
-}
-
-#endif // GAUDIROOTCNV_ROOTREFS_H
-
-// ROOT include files
-#include "TUUID.h"
-#include "TFile.h"
-#include "TBranch.h"
-#include "TTree.h"
-#include "TClass.h"
-#include "TROOT.h"
-#include "TSystem.h"
-#include "TInterpreter.h"
-
-// Standad C/C++ include files
-#include <stdexcept>
-
-
-/*
- * Gaudi namespace declaration
- */
-namespace Gaudi {
 
   typedef int ExtractStatus;
   enum ExtractStatusEnum { 
