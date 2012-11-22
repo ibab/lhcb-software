@@ -58,7 +58,7 @@ BuildMCTrackInfoUpgrade::BuildMCTrackInfoUpgrade( const std::string& name,
   declareProperty( "WithUT",    m_withUT    = false );
   declareProperty( "WithIT",    m_withIT    = false );
   declareProperty( "WithOT",    m_withOT    = false );
-  declareProperty( "WithFT",    m_withFT    = false );
+  declareProperty( "WithFT",    m_withFT    = false  );
 }
 //=============================================================================
 // Destructor
@@ -89,11 +89,15 @@ StatusCode BuildMCTrackInfoUpgrade::initialize() {
   if ( m_withUT  ) {
     m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::UT );  
     m_ttClustersName = LHCb::STClusterLocation::UTClusters;
+    //m_ttClustersName = LHCb::STClusterLocation::TTClusters;
     m_ttHitsName     = LHCb::MCHitLocation::UT;
+    //m_ttHitsName     = LHCb::MCHitLocation::TT;
   } else {
     m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );  
     m_ttClustersName = LHCb::STClusterLocation::TTClusters;
+    //m_ttClustersName = LHCb::STClusterLocation::UTClusters;
     m_ttHitsName     = LHCb::MCHitLocation::TT;
+    //m_ttHitsName     = LHCb::MCHitLocation::UT;
   }
   if ( m_withIT ) m_itDet = getDet<DeSTDetector>(DeSTDetLocation::IT );
   if ( m_withOT ) m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
@@ -210,9 +214,9 @@ StatusCode BuildMCTrackInfoUpgrade::execute() {
   } else if ( m_withVP ) {
     LHCb::VPClusters* veloPixClus = get<LHCb::VPClusters>( LHCb::VPClusterLocation::VPClusterLocation);
     LinkedTo<LHCb::MCParticle, LHCb::VPCluster> veloPixLink( eventSvc(), msgSvc(),
-                                                                  LHCb::VPClusterLocation::VPClusterLocation );
+                                                             LHCb::VPClusterLocation::VPClusterLocation );
     if( veloPixLink.notFound() ) return StatusCode::FAILURE;
-  
+    
     std::sort( veloPixClus->begin(), veloPixClus->end(), increasingSensor() );  //== Sorting not done in decoding!
     for ( LHCb::VPClusters::const_iterator vIt = veloPixClus->begin() ;
           veloPixClus->end() != vIt ; vIt++ ) {
@@ -221,15 +225,18 @@ StatusCode BuildMCTrackInfoUpgrade::execute() {
       while ( NULL != part ) {
         if ( mcParts == part->parent() ) {
           MCNum = part->key();
-          if ( sensor != lastVelo[MCNum] ) {  // Count only once per sensor a given MCParticle
-            lastVelo[MCNum] = sensor;
-            veloPix[MCNum]++;
-            if(isVerbose)  
-              verbose() << "MC " << MCNum << " VP sensor " << sensor << " nbVP " << veloPix[MCNum] << endmsg;
+          // PSZ - clone code from BuildMCTrackWithVPInfo
+          if (veloPix.size() > MCNum ) {
+            if ( sensor != lastVelo[MCNum] ) {  // Count only once per sensor a given MCParticle
+              lastVelo[MCNum] = sensor;
+              veloPix[MCNum]++;
+              if(isVerbose)  
+                verbose() << "MC " << MCNum << " VP sensor " << sensor << " nbVP " << veloPix[MCNum] << endmsg;
             }
           }
         }
-      part = veloPixLink.next() ;
+        part = veloPixLink.next() ;
+      }
     }
   }
   
