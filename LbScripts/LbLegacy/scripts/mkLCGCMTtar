@@ -300,8 +300,8 @@ def get_native_versions(native_version, binary):
 
     # We first lookup the releases and external paths to be able to compare
     # this is dirty but we have no netter solution for the moment
-    LCG_external = get_macro_value(None, "LCG_external", getCMTExtraTags(binary))
-    LCG_releases = get_macro_value(None, "LCG_releases", getCMTExtraTags(binary))
+    LCG_external = os.path.normpath(get_macro_value(None, "LCG_external", getCMTExtraTags(binary)))
+    LCG_releases = os.path.normpath(get_macro_value(None, "LCG_releases", getCMTExtraTags(binary)))
 
 
     # Iterate over package to check whether they should be kept in external
@@ -309,7 +309,7 @@ def get_native_versions(native_version, binary):
     for pak in packages_versions.keys() :
         print "get_native_version - Checking home for package: %s" %  pak
         macro = pak+ "_home"
-        value = get_macro_value(None, macro, getCMTExtraTags(binary))
+        value = os.path.normpath(get_macro_value(None, macro, getCMTExtraTags(binary)))
         if debug_flag == 1:
             print "get_native_version - %s = %s" % ( macro, value)
 
