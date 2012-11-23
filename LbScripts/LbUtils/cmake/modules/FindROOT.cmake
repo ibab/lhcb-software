@@ -175,6 +175,10 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
   mark_as_advanced(GCCXML_CXX_COMPILER)
   set(gccxmlopts "--gccxml-compiler ${GCCXML_CXX_COMPILER}")
 
+  if(GCCXML_CXX_FLAGS)
+    set(gccxmlopts "${gccxmlopts} --gccxml-cxxflags ${GCCXML_CXX_FLAGS}")
+  endif()
+
   set(rootmapname ${dictionary}Dict.rootmap)
   set(rootmapopts --rootmap=${rootmapname})
   if (NOT WIN32)
@@ -197,12 +201,13 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
   if(gccxmlopts)
     set(gccxmlopts "--gccxmlopt=${gccxmlopts}")
   endif()
+
   get_filename_component(GCCXML_home ${GCCXML} PATH)
   add_custom_command(
     OUTPUT ${gensrcdict} ${rootmapname}
     COMMAND ${ROOT_genreflex_CMD}
-    ARGS ${headerfiles} -o ${gensrcdict} ${gccxmlopts} ${rootmapopts} --select=${selectionfile}
-         --gccxmlpath=${GCCXML_home} ${ARG_OPTIONS} ${include_dirs} ${definitions} ${GCCXML_CXX_FLAGS}
+         ${headerfiles} -o ${gensrcdict} ${gccxmlopts} ${rootmapopts} --select=${selectionfile}
+         --gccxmlpath=${GCCXML_home} ${ARG_OPTIONS} ${include_dirs} ${definitions}
     DEPENDS ${headerfiles} ${selectionfile})
 
   # Creating this target at ALL level enables the possibility to generate dictionaries (genreflex step)

@@ -33,19 +33,27 @@ option(GAUDI_CPP11
 
 #--- Compilation Flags ---------------------------------------------------------
 if(NOT GAUDI_FLAGS_SET)
+  #message(STATUS "Setting cached build flags")
+
   if(MSVC90)
 
-    add_definitions(/wd4275 /wd4251 /wd4351)
-    add_definitions(-DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)
-    add_definitions(/nologo)
-    set(CMAKE_CXX_FLAGS_DEBUG "/D_NDEBUG /MD /Zi /Ob0 /Od /RTC1")
+    set(CMAKE_CXX_FLAGS_DEBUG "/D_NDEBUG /MD /Zi /Ob0 /Od /RTC1"
+        CACHE STRING "Flags used by the compiler during debug builds."
+        FORCE)
+    set(CMAKE_C_FLAGS_DEBUG "/D_NDEBUG /MD /Zi /Ob0 /Od /RTC1"
+        CACHE STRING "Flags used by the compiler during debug builds."
+        FORCE)
+
     if(GAUDI_CMT_RELEASE)
-      set(CMAKE_CXX_FLAGS_RELEASE "/O2")
-      set(CMAKE_C_FLAGS_RELEASE "/O2")
+      set(CMAKE_CXX_FLAGS_RELEASE "/O2"
+          CACHE STRING "Flags used by the compiler during release builds."
+          FORCE)
+      set(CMAKE_C_FLAGS_RELEASE "/O2"
+          CACHE STRING "Flags used by the compiler during release builds."
+          FORCE)
     endif()
 
   else()
-
 
     # Common compilation flags
     set(CMAKE_CXX_FLAGS
@@ -94,6 +102,27 @@ if(NOT GAUDI_FLAGS_SET)
 
   endif()
 
+  #--- Link shared flags -------------------------------------------------------
+  if (CMAKE_SYSTEM_NAME MATCHES Linux)
+    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--as-needed -Wl,--no-undefined  -Wl,-z,max-page-size=0x1000"
+        CACHE STRING "Flags used by the linker during the creation of dll's."
+        FORCE)
+    set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--as-needed -Wl,--no-undefined  -Wl,-z,max-page-size=0x1000"
+        CACHE STRING "Flags used by the linker during the creation of modules."
+        FORCE)
+  endif()
+
+  if(APPLE)
+    # special link options for MacOSX
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -flat_namespace -undefined dynamic_lookup"
+        CACHE STRING "Flags used by the linker during the creation of dll's."
+        FORCE)
+    set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -flat_namespace -undefined dynamic_lookup"
+        CACHE STRING "Flags used by the linker during the creation of modules."
+        FORCE)
+  endif()
+
+  # prevent resetting of the flags
   set(GAUDI_FLAGS_SET ON
       CACHE INTERNAL "flag to check if the compilation flags have already been set")
 endif()
@@ -107,21 +136,16 @@ if(UNIX)
   endif()
 endif()
 
-#--- Link shared flags ---------------------------------------------------------
-if (CMAKE_SYSTEM_NAME MATCHES Linux)
-  set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--as-needed -Wl,--no-undefined  -Wl,-z,max-page-size=0x1000"
-      CACHE STRING "Flags used by the linker during the creation of dll's.")
-  set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--as-needed -Wl,--no-undefined  -Wl,-z,max-page-size=0x1000"
-      CACHE STRING "Flags used by the linker during the creation of modules.")
+if(MSVC90)
+  add_definitions(/wd4275 /wd4251 /wd4351)
+  add_definitions(-DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)
+  add_definitions(/nologo)
 endif()
 
 if(APPLE)
-   # special link options for MacOSX
-   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -flat_namespace -undefined dynamic_lookup")
-   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -flat_namespace -undefined dynamic_lookup")
-   # by default, CMake uses the option -bundle for modules, but we need -dynamiclib for them too
-   string(REPLACE "-bundle" "-dynamiclib" CMAKE_SHARED_MODULE_CREATE_C_FLAGS "${CMAKE_SHARED_MODULE_CREATE_C_FLAGS}")
-   string(REPLACE "-bundle" "-dynamiclib" CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS "${CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS}")
+  # by default, CMake uses the option -bundle for modules, but we need -dynamiclib for them too
+  string(REPLACE "-bundle" "-dynamiclib" CMAKE_SHARED_MODULE_CREATE_C_FLAGS "${CMAKE_SHARED_MODULE_CREATE_C_FLAGS}")
+  string(REPLACE "-bundle" "-dynamiclib" CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS "${CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS}")
 endif()
 
 #--- Special build flags -------------------------------------------------------
@@ -151,6 +175,14 @@ if(NOT GAUDI_V21)
   endforeach()
 endif()
 
+if (LCG_HOST_ARCH STREQUAL x86_64 AND LCG_ARCH STREQUAL i686)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+  set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+  set(GCCXML_CXX_FLAGS "${GCCXML_CXX_FLAGS} -m32")
+elseif(NOT LCG_HOST_ARCH STREQUAL LCG_ARCH)
+  message(FATAL_ERROR "Cannot build for ${LCG_ARCH} on ${LCG_HOST_ARCH}.")
+endif()
+
 #--- Tuning of warnings --------------------------------------------------------
 if(GAUDI_HIDE_WARNINGS)
   if(LCG_COMP MATCHES clang)
@@ -165,4 +197,10 @@ add_definitions(-DBOOST_FILESYSTEM_VERSION=3)
 
 if((LCG_COMP STREQUAL gcc AND LCG_COMPVERS MATCHES "47|max") OR GAUDI_CPP11)
   set(GCCXML_CXX_FLAGS "-D__STRICT_ANSI__")
+endif()
+
+if(LCG_COMP STREQUAL gcc AND LCG_COMPVERS STREQUAL 43)
+  # The -pedantic flag gives problems on GCC 4.3.
+  string(REPLACE "-pedantic" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  string(REPLACE "-pedantic" "" CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}")
 endif()

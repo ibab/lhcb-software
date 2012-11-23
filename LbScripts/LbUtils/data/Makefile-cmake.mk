@@ -60,12 +60,12 @@ purge:
 
 # delegate any target to the build directory (except 'purge')
 ifneq ($(MAKECMDGOALS),purge)
-%: $(BUILDDIR)/Makefile
+%: $(BUILDDIR)/Makefile FORCE
 	$(MAKE) -C build.$(CMTCONFIG) $*
 endif
 
 # aliases
-.PHONY: configure tests
+.PHONY: configure tests FORCE
 ifneq ($(wildcard $(BUILDDIR)/Makefile),)
 configure: rebuild_cache
 else
@@ -76,6 +76,10 @@ endif
 tests: all
 	-$(MAKE) -C build.$(CMTCONFIG) test
 	$(MAKE) -C build.$(CMTCONFIG) QMTestSummary
+
+# ensure that the target are always passed to the CMake Makefile
+FORCE:
+	@ # dummy target
 
 # Special trick to allow a non-standard makefile name
 #  If the makefile is not called 'Makefile', we get its update delegated to

@@ -97,16 +97,13 @@ class Environment():
     def vars(self, strings=True):
         '''returns dictionary of all variables optionally converted to string'''
         if strings:
-            variables = self.variables.copy()
-            for item in variables:
-                variables[item] = self.var(item).value(True)
-            return variables
+            return dict([(n, v.value(True)) for n, v in self.variables.items()])
         else:
             return self.variables
 
     def var(self, name):
         '''Gets a single variable. If not available then tries to load from system.'''
-        if name in self.variables.keys():
+        if name in self.variables:
             return self.variables[name]
         else:
             return os.environ[name]

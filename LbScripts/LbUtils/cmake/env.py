@@ -33,17 +33,18 @@ def parse_args():
             try:
                 value = splitNameValue(value)
             except EnvError:
-                raise EnvOptionValueError("Invalid value for option %s: '%s', it requires NAME=VALUE." % (opt, value))
+                raise OptionValueError("Invalid value for option %s: '%s', it requires NAME=VALUE." % (opt, value))
         else:
             value = (value,)
         parser.values.actions.append((action, value))
 
-    parser = OptionParser(prog = "env",
+    parser = OptionParser(prog = "env.py",
                           usage = "Usage: %prog [OPTION]... [NAME=VALUE]... [COMMAND [ARG]...]",
                           description = "Set each NAME to VALUE in the environment and run COMMAND.",
-                          epilog = "The operations are performed in the order: unset, set, append, "
-                                   "prepend, xml. If no COMMAND is provided, print the resulting "
-                                   "environment." )
+                          epilog = "The operations are performed in the order they appear on the "
+                                   "command line. If no COMMAND is provided, print the resulting "
+                                   "environment. (Note: this command is modeled after the Unix "
+                                   "command 'env', see \"man env\")" )
 
     parser.add_option("-i", "--ignore-environment",
                       action="store_true",
@@ -158,10 +159,10 @@ def main():
             from pprint import pprint
             pprint(env)
         else:
-            format = {'sh':  "export %s='%s'",
-                      'csh': "setenv %s '%s'"}.get(opts.shell, "%s=%s")
+            template = {'sh':  "export %s='%s'",
+                        'csh': "setenv %s '%s'"}.get(opts.shell, "%s=%s")
             for nv in sorted(env.items()):
-                print format % nv
+                print template % nv
         return 0
     else:
         from subprocess import Popen

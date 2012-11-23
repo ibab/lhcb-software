@@ -16,6 +16,30 @@ available on the PATH, for example with::
 .. note:: If you use the LHCb environment (as of LbScripts v7r3), you do not
    need to prepare the environment for the compiler (except for ICC and Clang).
 
+Quick Start
+-----------
+To quickly get started, you can use the Makefile ``Makefile-cmake.mk``, which
+will take care of the main details (except the value of ``CMTCONFIG``)::
+
+    $ make -f Makefile-cmake.mk -j 8
+    $ make -f Makefile-cmake.mk test
+
+The main targets are:
+
+    ``configure``
+        just run CMake to generate the build directory (or reconfigure)
+
+    ``all``
+        build everything (implies ``configure``)
+
+    ``test``
+        run the tests, note that it does not imply the build and does not
+        require installation
+
+    ``install``
+        populate the ``InstallArea`` directory, `required for runtime`
+
+
 Build
 -----
 I suggest to use the off-source build, which means that the files required by

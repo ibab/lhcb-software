@@ -11,6 +11,11 @@ from tempfile import mkdtemp
 from EnvConfig import Variable
 from EnvConfig import Control
 
+# Keep only some Variable processors.
+saved_processors = Variable.processors
+Variable.processors = [Variable.EnvExpander,
+                       Variable.PathNormalizer,
+                       Variable.DuplicatesRemover]
 
 def buildDir(files, rootdir=os.curdir):
     '''
