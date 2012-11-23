@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v13r0 2012-11-23 ==========================
+! 2012-11-23 - John Back
+ - Created new tag incorporating all changes below.
+
 ! 2012-11-16 - Gloria Corti
  - Use interface packages for photos++ and tauola++ that replace '++'
    with 'pp' needed on bash to correctly resolve the paths.
