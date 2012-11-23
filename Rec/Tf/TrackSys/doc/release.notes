@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2012-11-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-09 - Marco Cattaneo
  - Do not set TrackClones sequencer MeasureTime=True by default
 

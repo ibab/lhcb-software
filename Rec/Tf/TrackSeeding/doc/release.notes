@@ -4,6 +4,9 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+! 2012-11-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= TrackSeeding v1r6 2012-03-27 =========================
 ! 2012-03-05 - Marco Cattaneo
  - Fix UNINIT_CTOR warnings

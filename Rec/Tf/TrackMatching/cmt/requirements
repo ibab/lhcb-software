@@ -6,7 +6,7 @@ package           TrackMatching
 version           v2r33p1
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src python
 
@@ -24,6 +24,7 @@ use   GaudiAlg         v*
 
 use   STDet            v*      Det
 use   DigiEvent        v*      Event
+use   RecEvent         v*      Event
 use   TrackEvent       v*      Event
 use   TrackFitEvent    v*      Tr
 use   TrackKernel      v*      Tr
@@ -32,7 +33,7 @@ use   TrackInterfaces  v*      Tr
 #============================================================================
 # Component library building rule
 #============================================================================
-library          TrackMatching    ../src/*.cpp 
+library          TrackMatching    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2012-11-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= RichRecStereoTools v1r8p1 2011-12-15 ==============
 ! 2011-11-19 - Chris Jones
  - Fix gcc 4.6 warning

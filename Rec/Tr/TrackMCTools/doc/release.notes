@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-11-23 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 !========================= TrackMCTools v3r2 2012-10-01 =========================
 ! 2012-09-21 - Paul Szczypka
  - Rename of VeloPix to VP and corresponding combinations (vP, vp)

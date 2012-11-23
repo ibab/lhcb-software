@@ -6,7 +6,7 @@ package           TrackMCTools
 version           v3r2
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src
 include_path      none
@@ -19,6 +19,8 @@ use   GaudiAlg          v*
 use   MCEvent           v*   Event
 use   TrackEvent        v*   Event
 use   LinkerEvent       v*   Event
+use   LinkerEvent       v*   Event
+use   RecEvent          v*   Event
 
 use   TrackInterfaces   v*   Tr
 use   PatKernel         v*   Tf
@@ -31,7 +33,7 @@ use   VeloDet           v*   Det
 #============================================================================
 # Component library building rule
 #============================================================================
-library          TrackMCTools    ../src/*.cpp 
+library          TrackMCTools    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================

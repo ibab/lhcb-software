@@ -4,6 +4,10 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2012-11-23 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 !========================= RichHPDImageAnalysis v1r12 2012-10-02 =========================
 ! 2012-10-02 Chris Jones
  - Various updates to the image analysis code and scripts

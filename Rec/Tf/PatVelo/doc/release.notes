@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2012-11-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= PatVelo v3r26 2012-03-27 =========================
 ! 2012-03-05 - Marco Cattaneo
  - Fix UNINIT_CTOR and FORWARD_NULL Coverity warnings

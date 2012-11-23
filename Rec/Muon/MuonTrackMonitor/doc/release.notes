@@ -4,6 +4,9 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-11-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= MuonTrackMonitor v2r6 2012-02-28 =========================
 ! 2012-02-28 - Wouter Hulsbergen
  - remove line that sets "NodeFitter.BiDirectionalFit" inconfiguration.
