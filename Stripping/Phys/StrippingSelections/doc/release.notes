@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-11-23 - Vanya Belyaev
+
+ - update B2PsiX for B&Q 
+
 ! 2012-11-14 - Anton Poluektov 
  - Update test_stream_output_locations to use Stripping20r1
 
