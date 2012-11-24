@@ -422,17 +422,23 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         self.__MakeB0d2DstarTauNu__()
         self.__MakeB0d2DstarTauNuWS__()
+        self.__MakeB0d2DstarTauNuNonPhysTau__()
         self.__MakeB0d2DTauNu__()
         self.__MakeB0d2DTauNuWS__()
+        self.__MakeB0d2DTauNuNonPhysTau__()
         self.__MakeBu2D0TauNu__()
         self.__MakeBu2D0TauNuWS__()
+        self.__MakeBu2D0TauNuNonPhysTau__()
         self.__MakeBc2JpsiTauNu__()
+        self.__MakeBc2JpsiTauNuNonPhysTau__()
         self.__MakeB0s2DsTauNu__()
         self.__MakeB0s2DsTauNuWS__()
+        self.__MakeB0s2DsTauNuNonPhysTau__()
 
         self.__MakeDdoubleStar2DstarPi__()
         self.__MakeB0d2DdoubleStarTauNu__()
         self.__MakeB0d2DdoubleStarTauNuWS__()
+        self.__MakeB0d2DdoubleStarTauNuNonPhysTau__()
         
         from StrippingConf.StrippingLine import StrippingLine
         from PhysSelPython.Wrappers import SelectionSequence
@@ -452,6 +458,14 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                           algos = [ self.B0d2DstarTauNuSelWS ]
                                           )
         self.registerLine(Bd2DstarTauNuWSLine)
+
+
+        Bd2DstarTauNuNonPhysTauLine=StrippingLine("Bd2DstarTauNuNonPhysTauFor"+self._name,
+                                          prescale = config['Prescale_B0d2DstarTauNu'],
+                                          postscale = config['Postscale'],
+                                          algos = [ self.B0d2DstarTauNuSelNonPhysTau ]
+                                          )
+        self.registerLine(Bd2DstarTauNuNonPhysTauLine)
         
         
         Bd2DTauNuLine=StrippingLine("Bd2DTauNuFor"+self._name,
@@ -468,6 +482,14 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                       algos = [ self.B0d2DTauNuSelWS ]
                                       )
         self.registerLine(Bd2DTauNuWSLine)
+
+        Bd2DTauNuNonPhysTauLine=StrippingLine("Bd2DTauNuNonPhysTauFor"+self._name,
+                                      prescale = config['Prescale_B0d2DTauNu'],
+                                      postscale = config['Postscale'],
+                                      algos = [ self.B0d2DTauNuSelNonPhysTau ]
+                                      )
+        self.registerLine(Bd2DTauNuNonPhysTauLine)
+
         
         Bu2D0TauNuLine=StrippingLine("Bu2D0TauNuFor"+self._name,
                                      prescale = config['Prescale_Bu2D0TauNu'],
@@ -482,6 +504,13 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                        algos = [ self.Bu2D0TauNuSelWS ]
                                        )
         self.registerLine(Bu2D0TauNuWSLine)
+
+        Bu2D0TauNuNonPhysTauLine=StrippingLine("Bu2D0TauNuNonPhysTauFor"+self._name,
+                                       prescale = config['Prescale_Bu2D0TauNu'],
+                                       postscale = config['Postscale'],
+                                       algos = [ self.Bu2D0TauNuSelNonPhysTau ]
+                                       )
+        self.registerLine(Bu2D0TauNuNonPhysTauLine)
         
         
         Bc2JpsiTauNuLine=StrippingLine("Bc2JpsiTauNuFor"+self._name,
@@ -490,6 +519,13 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                        algos = [ self.Bc2JpsiTauNuSel ]
                                        )
         self.registerLine(Bc2JpsiTauNuLine)
+
+        Bc2JpsiTauNuNonPhysTauLine=StrippingLine("Bc2JpsiTauNuNonPhysTauFor"+self._name,
+                                       prescale = config['Prescale_Bc2JpsiTauNu'],
+                                       postscale = config['Postscale'],
+                                       algos = [ self.Bc2JpsiTauNuSelNonPhysTau ]
+                                       )
+        self.registerLine(Bc2JpsiTauNuNonPhysTauLine)
         
         
         Bs2DsTauNuLine=StrippingLine("Bs2DsTauNuFor"+self._name,
@@ -506,6 +542,13 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                        )
         self.registerLine(Bs2DsTauNuWSLine)
 
+        Bs2DsTauNuNonPhysTauLine=StrippingLine("Bs2DsTauNuNonPhysTauFor"+self._name,
+                                       prescale = config['Prescale_B0s2DsTauNu'],
+                                       postscale = config['Postscale'],
+                                       algos = [ self.B0s2DsTauNuSelNonPhysTau ]
+                                       )
+        self.registerLine(Bs2DsTauNuNonPhysTauLine)
+
 
         Bd2DdoubleStarTauNuLine=StrippingLine("Bd2DdoubleStarTauNuFor"+self._name,
                                         prescale = config['Prescale_B0d2DdoubleStarTauNu'],
@@ -520,6 +563,13 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                           algos = [ self.B0d2DdoubleStarTauNuSelWS ]
                                           )
         self.registerLine(Bd2DdoubleStarTauNuWSLine)
+
+        Bd2DdoubleStarTauNuNonPhysTauLine=StrippingLine("Bd2DdoubleStarTauNuNonPhysTauFor"+self._name,
+                                          prescale = config['Prescale_B0d2DdoubleStarTauNu'],
+                                          postscale = config['Postscale'],
+                                          algos = [ self.B0d2DdoubleStarTauNuSelNonPhysTau ]
+                                          )
+        self.registerLine(Bd2DdoubleStarTauNuNonPhysTauLine)
         
         
         ### Collect them all together in a nice way ###
@@ -528,13 +578,18 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         self.Line=Bd2DstarTauNuWSLine
         self.Selections=[self.DstarSel, self.B0d2DstarTauNuSelWS]
-        
 
+        self.Line=Bd2DstarTauNuNonPhysTauLine
+        self.Selections=[self.DstarSel, self.B0d2DstarTauNuSelNonPhysTau]
+        
         self.Line=Bd2DTauNuLine
         self.Selections=[self.DplusSel, self.B0d2DTauNuSel]
 
         self.Line=Bd2DTauNuWSLine
         self.Selections=[self.DplusSel, self.B0d2DTauNuSelWS]
+
+        self.Line=Bd2DTauNuNonPhysTauLine
+        self.Selections=[self.DplusSel, self.B0d2DTauNuSelNonPhysTau]
         
 
         self.Line=Bu2D0TauNuLine
@@ -542,10 +597,16 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         self.Line=Bu2D0TauNuWSLine
         self.Selections=[self.D0Sel, self.Bu2D0TauNuSelWS]
+
+        self.Line=Bu2D0TauNuNonPhysTauLine
+        self.Selections=[self.D0Sel, self.Bu2D0TauNuSelNonPhysTau]
         
 
         self.Line=Bc2JpsiTauNuLine
         self.Selections=[self.JpsiSel, self.Bc2JpsiTauNuSel]
+
+        self.Line=Bc2JpsiTauNuNonPhysTauLine
+        self.Selections=[self.JpsiSel, self.Bc2JpsiTauNuSelNonPhysTau]
         
 
         self.Line=Bs2DsTauNuLine
@@ -554,12 +615,18 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.Line=Bs2DsTauNuWSLine
         self.Selections=[self.DsSel, self.B0s2DsTauNuSelWS]
 
+        self.Line=Bs2DsTauNuNonPhysTauLine
+        self.Selections=[self.DsSel, self.B0s2DsTauNuSelNonPhysTau]
+
 
         self.Line=Bd2DdoubleStarTauNuLine
         self.Selections=[self.DdoubleStar2DstarPiSel, self.B0d2DdoubleStarTauNuSel]
 
         self.Line=Bd2DdoubleStarTauNuWSLine
         self.Selections=[self.DdoubleStar2DstarPiSel, self.B0d2DdoubleStarTauNuSelWS]
+
+        self.Line=Bd2DdoubleStarTauNuNonPhysTauLine
+        self.Selections=[self.DdoubleStar2DstarPiSel, self.B0d2DdoubleStarTauNuSelNonPhysTau]
 
         
     ############ Functions to make Selections #######################
@@ -712,6 +779,31 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         self.B0d2DstarTauNuSelWS=SelBd2DstarTauNuWS
 
+
+
+    def __MakeB0d2DstarTauNuNonPhysTau__(self):
+        """
+        B0d selection:
+        [B0 -> D*- tau+++]cc, [B0 -> D*- tau---]cc
+        non-physical tau+ -> pi+ pi+ pi+ which serves as an independent background source
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
+        
+        CombBd2DstarTauNuNonPhysTau = CombineParticles(        
+            DecayDescriptors = ["[B0 -> D*(2010)- tau+]cc", "[B0 -> D*(2010)+ tau+]cc"],
+            CombinationCut = self.B0CombCut,
+            MotherCut      = self.BCut,
+            )
+        
+        SelBd2DstarTauNuNonPhysTau = Selection("SelBd2DstarTauNuNonPhysTau", Algorithm=CombBd2DstarTauNuNonPhysTau,
+                                    RequiredSelections = [self.DstarSel,MyStdLooseDetachedTau])
+        
+        self.B0d2DstarTauNuSelNonPhysTau=SelBd2DstarTauNuNonPhysTau
+
         
     def __MakeB0d2DTauNu__(self):
         """
@@ -761,6 +853,31 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                     RequiredSelections = [self.DplusSel,MyStdLooseDetachedTau])
         
         self.B0d2DTauNuSelWS=SelBd2DTauNuWS
+
+
+    def __MakeB0d2DTauNuNonPhysTau__(self):
+        """
+        B0d selection:
+        [B0 -> D+ tau+++]cc, [B0 -> D+ tau---]cc 
+        use of non-physical tau+++ is useful as an independent background source
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
+        
+        CombBd2DTauNuNonPhysTau = CombineParticles(        
+            DecayDescriptors = ["[B0 -> D- tau+]cc", "[B0 -> D+ tau+]cc"],
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            CombinationCut = self.B0CombCut,
+            MotherCut      = self.BCut,
+            )
+        
+        SelBd2DTauNuNonPhysTau = Selection("SelBd2DTauNuNonPhysTau", Algorithm=CombBd2DTauNuNonPhysTau,
+                                    RequiredSelections = [self.DplusSel,MyStdLooseDetachedTau])
+        
+        self.B0d2DTauNuSelNonPhysTau=SelBd2DTauNuNonPhysTau
 
 
 
@@ -814,6 +931,31 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.Bu2D0TauNuSelWS=SelBu2D0TauNuWS
 
 
+    def __MakeBu2D0TauNuNonPhysTau__(self):
+        """
+        Bu selection:
+        [B- -> D0 tau+++]cc, [B- -> D0 tau---]cc 
+        use of non-physical tau+++ is useful as an independent background source
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
+        
+        CombBu2D0TauNuNonPhysTau = CombineParticles(        
+            DecayDescriptors = ["[B- -> D0 tau+]cc", "[B- -> D0 tau-]cc" ],
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            CombinationCut = self.BplusCombCut,
+            MotherCut      = self.BCut,
+            )
+        
+        SelBu2D0TauNuNonPhysTau = Selection("SelBu2D0TauNuNonPhysTau", Algorithm=CombBu2D0TauNuNonPhysTau,
+                                    RequiredSelections = [self.D0Sel,MyStdLooseDetachedTau])
+        
+        self.Bu2D0TauNuSelNonPhysTau=SelBu2D0TauNuNonPhysTau
+
+
         
     def __MakeBc2JpsiTauNu__(self):
         """
@@ -836,6 +978,29 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                     RequiredSelections = [self.JpsiSel,MyStdLooseDetachedTau])
         
         self.Bc2JpsiTauNuSel=SelBc2JpsiTauNu
+
+
+    def __MakeBc2JpsiTauNuNonPhysTau__(self):
+        """
+        Bc selection:
+        [B_c+ -> J/psi(1S) tau+++]cc, [B_c+ -> J/psi(1S) tau---]cc
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
+        
+        CombBc2JpsiTauNuNonPhysTau = CombineParticles(        
+            DecayDescriptors = ["[B_c+ -> J/psi(1S) tau+]cc", "[B_c+ -> J/psi(1S) tau-]cc"],
+            CombinationCut = self.BcCombCut,
+            MotherCut      = self.BCut,
+            )
+        
+        SelBc2JpsiTauNuNonPhysTau = Selection("SelBc2JpsiTauNuNonPhysTau", Algorithm=CombBc2JpsiTauNuNonPhysTau,
+                                    RequiredSelections = [self.JpsiSel,MyStdLooseDetachedTau])
+        
+        self.Bc2JpsiTauNuSelNonPhysTau=SelBc2JpsiTauNuNonPhysTau
 
 
     def __MakeB0s2DsTauNu__(self):
@@ -888,6 +1053,31 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.B0s2DsTauNuSelWS=SelBs2DsTauNuWS
 
 
+    def __MakeB0s2DsTauNuNonPhysTau__(self):
+        """
+        B0s selection:
+        [B_s0 -> D_s+ tau+++]cc,  [B_s0 -> D_s+ tau---]cc
+        use of non-physical tau+++ is useful as a background source
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
+        
+        CombBs2DsTauNuNonPhysTau = CombineParticles(        
+            DecayDescriptors = ["[B_s0 -> D_s+ tau+]cc", "[B_s0 -> D_s+ tau-]cc" ],
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            CombinationCut = self.BsCombCut,
+            MotherCut      = self.BCut,
+            )
+        
+        SelBs2DsTauNuNonPhysTau = Selection("SelBs2DsTauNuNonPhysTau", Algorithm=CombBs2DsTauNuNonPhysTau,
+                                    RequiredSelections = [self.DsSel,MyStdLooseDetachedTau])
+        
+        self.B0s2DsTauNuSelNonPhysTau=SelBs2DsTauNuNonPhysTau
+
+
     def __MakeB0d2DdoubleStarTauNu__(self):
         """
         B0d selection:
@@ -934,6 +1124,31 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                     RequiredSelections = [self.DdoubleStar2DstarPiSel,MyStdLooseDetachedTau])
         
         self.B0d2DdoubleStarTauNuSelWS=SelBd2DdoubleStarTauNuWS
+
+
+    def __MakeB0d2DdoubleStarTauNuNonPhysTau__(self):
+        """
+        B0d selection:
+        [B~0 -> (D_1(2420)~0 -> D*- pi+) tau---]cc, [B~0 -> (D*_2(2460)~0 -> D*- pi+) tau---]cc,
+        [B~0 -> (D_1(2420)~0 -> D*- pi+) tau+++]cc, [B~0 -> (D*_2(2460)~0 -> D*- pi+) tau+++]cc
+        useful for studying WS background in B0 -> D* tau nu when pi+ from D** decay is missed
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
+        
+        CombBd2DdoubleStarTauNuNonPhysTau = CombineParticles(        
+            DecayDescriptors = ["[B~0 -> D_1(2420)~0 tau-]cc", "[B~0 -> D*_2(2460)~0 tau-]cc", "[B~0 -> D_1(2420)~0 tau+]cc", "[B~0 -> D*_2(2460)~0 tau+]cc" ],
+            CombinationCut = self.B0CombCut,
+            MotherCut      = self.BCut,
+            )
+        
+        SelBd2DdoubleStarTauNuNonPhysTau = Selection("SelBd2DdoubleStarTauNuNonPhysTau", Algorithm=CombBd2DdoubleStarTauNuNonPhysTau,
+                                    RequiredSelections = [self.DdoubleStar2DstarPiSel,MyStdLooseDetachedTau])
+        
+        self.B0d2DdoubleStarTauNuSelNonPhysTau=SelBd2DdoubleStarTauNuNonPhysTau
 
 
     
