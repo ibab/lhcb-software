@@ -2698,7 +2698,8 @@ def _smear_ ( h1 , sigma , addsigmas = 5 ) :
     #
     ## clone the input histogram
     #
-    h2  = h1.Clone ( hID () ) ; h2.Reset() ; h2.Sumw2()
+    h2  = h1.Clone ( hID () ) ; h2.Reset() ;
+    if not h2.GetSumw2() : h2.Sumw2()
 
     first_bin = None
     last_bin  = None
