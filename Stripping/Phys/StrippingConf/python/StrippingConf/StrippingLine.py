@@ -160,13 +160,13 @@ class bindMembers (object) :
         self._handleSelectionType( line, sel )
         
     def _handle_PassThroughSelection(self, line, alg) :
-        if alg.outoutLocation() != '' :
+        if alg.outputLocation() != '' :
             from PhysSelPython.Wrappers import MergedSelection
             alg = MergedSelection(line, RequiredSelections = [alg])       
             self._handleSelectionType( line, alg )
 
     def _handle_VoidEventSelection(self, line, alg) :
-        if alg.outoutLocation() != '' :
+        if alg.outputLocation() != '' :
             from PhysSelPython.Wrappers import MergedSelection
             alg = MergedSelection(line, RequiredSelections = [alg])       
             self._handleSelectionType( line, alg )

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2012-11-24 - Anton Poluektov 
+ - Fix typos in StrippingLine
+
 ! 2012-10-10 - Anton Poluektov 
  - Change default TES prefix for DecReports from None (=stream-dependent) to 'Strip'
 
