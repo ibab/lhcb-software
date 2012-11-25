@@ -14,9 +14,10 @@
 DECLARE_ALGORITHM_FACTORY( TracksFromParticles );
 
 TracksFromParticles::TracksFromParticles(const std::string& name, ISvcLocator* pSvc)
-  :DVAlgorithm(name,pSvc)
+  :DaVinciAlgorithm(name,pSvc)
 {
   declareProperty("inputLocation",m_outputLocation = "/Event/Rec/MyTracks");
+///@fixme: "inputLocation" as property for m_outputLocation ???
 }
 
 
@@ -30,19 +31,18 @@ StatusCode TracksFromParticles::execute(){
  LoKi::Extract::getTracks(inputParticles.begin(), inputParticles.end(), std::back_inserter(tracks));
  
 
- verbose() << " Found  " << tracks.size() << endreq;
+ if ( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
+   verbose() << " Found  " << tracks.size() << endmsg;
+ }
 
  // now clone the tracks and output
  LHCb::Tracks* outputCont = new LHCb::Tracks();
  std::vector<LHCb::Track*>::iterator iterT = tracks.begin();
  for (; iterT != tracks.end(); ++iterT ){
-   LHCb::Track* newTrack = (*iterT)->cloneWithKey();
-   if (!outputCont->object(newTrack->key())) {
+   if (!outputCont->object((*iterT)->key())) {
+     // clone track only if it's not a duplicate from another candidate
+     LHCb::Track* newTrack = (*iterT)->cloneWithKey();
      outputCont->insert(newTrack);
-   }
-   else {
-     // duplicate from another candidate
-     delete newTrack;
    }
  } // iterT
 

@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+! 2012-11-25 - Paul Seyfert
+ - converted TracksFromParticles from DVAlgorithm to DaVinciAlgorithm
+
 !=================== DaVinciTrackRefitting v1r0 2012-05-03 ===================
 
 ! 2012-27-04 - M Needham

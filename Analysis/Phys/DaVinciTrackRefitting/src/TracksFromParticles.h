@@ -1,7 +1,7 @@
 #ifndef TracksFromParticles_H_
 #define TracksFromParticles_H_
 
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 #include "Event/TrackTypes.h"
 
 /** @class TracksFromParticles TracksFromParticles.h
@@ -17,7 +17,7 @@ namespace LHCb{
 }
 
 
-class TracksFromParticles: public DVAlgorithm{
+class TracksFromParticles: public DaVinciAlgorithm{
 
  public:
 
