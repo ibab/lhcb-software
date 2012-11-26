@@ -1,6 +1,6 @@
 # =========================================================================
 package           MuonDet
-version           v9r8
+version           v9r9
 
 # =============== structure ===============================================
 branches         src cmt doc MuonDet dict

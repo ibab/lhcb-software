@@ -6,6 +6,7 @@
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
+!========================= MuonDet v9r9 2012-11-26 =========================
 ! 2012-11-12 - Marco Cattaneo
  - Fix a compilation warning and an UNINIT_CTOR defect
 
