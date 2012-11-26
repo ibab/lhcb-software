@@ -25,7 +25,6 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
   void smearStates(  const std::vector< LHCb::State * > & states );
-  ROOT::Math::Plane3D::Vector Ip_vector(const LHCb::State *state, const LHCb::VertexBase* vtx );
     
 protected:
   
