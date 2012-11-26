@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-11-26 - Paul Szczypka
+ - Correct writer locations for FT.
+
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
