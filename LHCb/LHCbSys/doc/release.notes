@@ -98,6 +98,7 @@ This version uses Gaudi v23r5 and LCG_64b
   . Fix references to follow changes in DstConf
 
 - In GaudiConf v17r0, v17r1
+  . Edit FT settings in DigiConf.py
   . Add a filter to the Charged ProtoParticle unpacking sequence that checks if
     they exist before running the PID recalibration algorithms.
   . Add support for automatic unpacking of stripping MC information
