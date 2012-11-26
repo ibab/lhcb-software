@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LumiEvent
 ################################################################################
-gaudi_subdir(LumiEvent v3r2)
+gaudi_subdir(LumiEvent v3r3)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/EventBase
