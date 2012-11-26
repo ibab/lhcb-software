@@ -4,6 +4,7 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= FTEvent v1r1 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
