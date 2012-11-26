@@ -4,6 +4,9 @@
 ! Purpose     : BCM DetectorElement
 !----------------------------------------------------------------------------
 
+! 2012-11-26 - Marco Cattaneo
+ - Remove obsolete file BcmDet_dll.cpp
+
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
