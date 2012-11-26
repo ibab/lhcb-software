@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PackedEvent
 ################################################################################
-gaudi_subdir(PackedEvent v4r12)
+gaudi_subdir(PackedEvent v4r13)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Event/PhysEvent
