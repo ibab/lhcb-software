@@ -7,6 +7,10 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-11-26 - Victor Coco
+ - LoKiFastJetWithAreaMaker now compatible with fastjet 3.0. 
+   TODO: implement more easy config of the aera type
+
 !========================= LoKiJets v6r7 2012-10-04 =========================
 
 ! 2012-09-27 - Murilo Rangel

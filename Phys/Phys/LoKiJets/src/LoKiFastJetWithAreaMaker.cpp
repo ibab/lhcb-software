@@ -8,8 +8,7 @@
 // ============================================================================
 // fastjet
 // ============================================================================
-#include "fastjet/ClusterSequenceWithArea.hh"
-#include "fastjet/ClusterSequenceActiveArea.hh"
+#include "fastjet/ClusterSequenceArea.hh"
 // ============================================================================
 namespace LoKi
 {
@@ -100,7 +99,8 @@ namespace LoKi
       const std::string& name   ,
       const IInterface*  parent )
       : LoKi::FastJetMaker ( type , name , parent )
-      //
+      // area type
+      , m_area_type       (  20   ) ///< the type of area method
       // the maximal pseudorapidity for ghosts
       , m_ghost_etamax        ( 8       ) ///< the maximal pseudorapidity for ghosts
       // number of repetitions for active area evaluation
@@ -114,10 +114,16 @@ namespace LoKi
       // the kt for ghosts
       , m_mean_ghost_kt       ( 1.e-100 ) ///< the kt for ghosts
       // pt/area strategy
-      , m_ptarea_strategy     ( fastjet::ClusterSequenceActiveArea::median )
+      , m_ptarea_strategy     ( 0 ) /// deprecated... to put back
       // pt/area strategy
       , m_ptarea_range        ( 2 ) ///< pt/area range
+      , m_effRfact       ( 1. )
     {
+      //
+      declareProperty
+        ( "AreaType"  ,
+          m_area_type ,
+          "The method to get the area calculation" ) ;
       //
       declareProperty
         ( "GhostEtaMax"  ,
@@ -159,6 +165,11 @@ namespace LoKi
           m_ptarea_range   ,
           "The range for pt/unit area evaluation" ) ;
       //
+      declareProperty
+        ( "VoronoiEffectiveRFactor"   ,
+          m_effRfact  ,
+          "Effective R Factor for Voronoi area determination" ) ;
+      //
     } ;
     /// destructor
     virtual ~FastJetWithAreaMaker( ){};
@@ -170,6 +181,8 @@ namespace LoKi
     // the assignement operator is disabled
     FastJetWithAreaMaker& operator=( const  FastJetWithAreaMaker& )  ;
   private:  
+    // the method to get the area
+    int      m_area_type       ; ///< the method to get the area
     // the maximal pseudorapidity for ghosts
     double       m_ghost_etamax        ; ///< the maximal pseudorapidity for ghosts
     // number of repetitions for active area evaluation
@@ -186,6 +199,9 @@ namespace LoKi
     unsigned int m_ptarea_strategy     ; ///< pt/area strategy
     // pt/area range
     double       m_ptarea_range        ; ///< pt/area range
+    // effective R factor for voronoi area
+    double       m_effRfact     ; ///< effective R factor for voronoi area
+
   };
 } // End of namespace LoKi
 // ============================================================================
@@ -223,18 +239,41 @@ StatusCode LoKi::FastJetWithAreaMaker::makeJets
   // Jets found
   Jets_ jets ;
  
-  // specify the active area
-  fastjet::ActiveAreaSpec active_area
-    ( m_ghost_etamax        ,
-      m_active_area_repeats ,
-      m_ghost_area          ,
-      m_grid_scatterer      ,
-      m_kt_scatterer        ,
-      m_mean_ghost_kt       ) ;
+  fastjet::AreaDefinition area_def;
+  
+  if ( m_area_type == -1 ){
+     return Error ( "Invalid configurtaion of area type in fastjet") ;
+  }
+  else if (m_area_type < 11 ){    
+    // specify the active area
+    fastjet::GhostedAreaSpec active_area
+      ( m_ghost_etamax        ,
+        m_active_area_repeats ,
+        m_ghost_area          ,
+        m_grid_scatterer      ,
+        m_kt_scatterer        ,
+        m_mean_ghost_kt       ) ;
+    fastjet::AreaDefinition myarea_def( fastjet::active_area , active_area );
+    area_def = myarea_def;
+    
+  }
+  else if ( m_area_type == 20   ){    
+    fastjet::VoronoiAreaSpec vor_area(  m_effRfact ) ;
+    fastjet::AreaDefinition myarea_def( fastjet::voronoi_area ,vor_area ); 
+    area_def = myarea_def; 
+  }
+  else{
+    fastjet::AreaDefinition myarea_def(m_area_type);
+    area_def = myarea_def;
+  }
+  
+  
+
+
  
   // clusterisation sequence
-  fastjet::ClusterSequenceActiveArea clusters  // fastjet::ClusterSequenceWithArea   clusters
-    ( inputs , jet_def , active_area ) ;
+  fastjet::ClusterSequenceArea clusters  // fastjet::ClusterSequenceWithArea   clusters
+    ( inputs , jet_def , area_def ) ;
  
   switch ( m_sort )
   {
@@ -265,9 +304,9 @@ StatusCode LoKi::FastJetWithAreaMaker::makeJets
   LoKi::Point3D    point  = LoKi::Point3D( 0 , 0 , 0 ) ;
  
   // get the "pt per unit area" estimate
-  const double ptPerUnitArea = clusters.pt_per_unit_area
-    ( (fastjet::ClusterSequenceActiveArea::mean_pt_strategies) m_ptarea_strategy ,
-      m_ptarea_range ) ;
+  //const double ptPerUnitArea = clusters.parabolic_pt_per_unit_area
+  //  ( (fastjet::ClusterSequenceArea::mean_pt_strategies) m_ptarea_strategy ,
+  //    m_ptarea_range ) ;
  
   for ( Jets_::iterator ijet = jets.begin() ; jets.end() != ijet ; ++ijet )
   {
@@ -295,7 +334,7 @@ StatusCode LoKi::FastJetWithAreaMaker::makeJets
     pJet.addInfo ( LHCb::Particle::JetActiveAreaPy    , area.py ()    ) ;
     pJet.addInfo ( LHCb::Particle::JetActiveAreaPz    , area.pz ()    ) ;
     pJet.addInfo ( LHCb::Particle::JetActiveAreaE     , area.e  ()    ) ;
-    pJet.addInfo ( LHCb::Particle::JetPtPerUnitArea   , ptPerUnitArea ) ;
+    pJet.addInfo ( LHCb::Particle::JetPtPerUnitArea   , 0. ) ;
    
     for ( Constituents::const_iterator ic = constituents.begin() ;
           constituents.end() != ic ; ++ic )
