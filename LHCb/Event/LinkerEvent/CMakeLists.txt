@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LinkerEvent
 ################################################################################
-gaudi_subdir(LinkerEvent v3r8)
+gaudi_subdir(LinkerEvent v3r9)
 
 gaudi_depends_on_subdirs(GaudiObjDesc
                          Kernel/LHCbKernel)
