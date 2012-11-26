@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaudiMTTools
 ################################################################################
-gaudi_subdir(GaudiMTTools v1r1)
+gaudi_subdir(GaudiMTTools v1r2)
 
 gaudi_depends_on_subdirs(GaudiAlg)
 
