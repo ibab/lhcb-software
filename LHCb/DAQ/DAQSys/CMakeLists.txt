@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DAQSys
 ################################################################################
-gaudi_subdir(DAQSys v6r0)
+gaudi_subdir(DAQSys v6r1)
 
 gaudi_depends_on_subdirs(Calo/CaloDAQ
                          Muon/MuonDAQ
