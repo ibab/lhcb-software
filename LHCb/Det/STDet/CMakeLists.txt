@@ -1,7 +1,7 @@
 ################################################################################
 # Package: STDet
 ################################################################################
-gaudi_subdir(STDet v4r28)
+gaudi_subdir(STDet v4r29)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Det/DetDescCnv
