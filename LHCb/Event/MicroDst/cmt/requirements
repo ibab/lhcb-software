@@ -3,7 +3,7 @@
 # Maintainer : ??
 #============================================================================
 package           MicroDst
-version           v1r0
+version           v1r1
 
 branches          cmt doc src Kernel python
 
