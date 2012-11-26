@@ -5,6 +5,7 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+!========================= DetDescChecks v5r9 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
