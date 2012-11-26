@@ -1,6 +1,6 @@
 #============================================================================
 package           Magnet
-version           v7r5
+version           v7r6
 
 branches          cmt doc src 
 
