@@ -1,5 +1,5 @@
 package SiDAQ
-version v2r1p1
+version           v2r2
 
 branches cmt doc SiDAQ
 
