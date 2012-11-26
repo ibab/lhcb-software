@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.17 2008-07-16 19:44:52 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloDetXmlCnv
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2012-11-26 - Marco Cattaneo
+ - Remove obsolete file CaloDetXmlCnv_dll.cpp
 
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
