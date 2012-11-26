@@ -29,7 +29,6 @@ class RichTrackCreatorConfig(RichConfigurableUser):
        ,"SpecialData"    : []   # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"InputTracksLocation" : "" # The input location for tracks
        ,"OutputLevel"    : INFO    # The output level to set all algorithms and tools to use
-        # CRJ : Defaults pre-data cuts "CloneDistCut" : [-1e10,1e300] "Likelihood"   : [-100,1e300]
        ,"TrackCuts"      : None
        ,"MaxInputTracks" : None
        ,"MaxUsedTracks"  : None
@@ -48,6 +47,8 @@ class RichTrackCreatorConfig(RichConfigurableUser):
                                 "Seed"    : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] },
                                 "VeloTT"  : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] },
                                 "KsTrack" : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] } } )
+        # If a ghost prob cut is needed, add "GhostProbCut" : [-999,0.5]
+        
         self.setRichDefault ( "TrackCuts", "HLT",
                               { "Forward" : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
                                 "Match"   : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },

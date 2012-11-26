@@ -123,6 +123,9 @@ class RichRecSysConf(RichConfigurableUser):
                 self.trackConfig().MaxUsedTracks = 500
             else:
                 self.trackConfig().MaxUsedTracks = 400
+
+        # Pass some settings to used configurables
+        self.setOtherProps( self.photonConfig(), ["DataType"] )
         
         # Tools. (Should make this automatic in the base class somewhere)
         self.setOtherProps(self.richTools(),["Context","OutputLevel"])

@@ -20,6 +20,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
     ## Default options
     __slots__ = {
         "Context"       : "Offline" # The context within which to run
+       ,"DataType"      : ""        # Type of data, propagated from application
        ,"Radiators"     : []        # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
        ,"SelectionMode" : "Tight"
        ,"SpecialData"   : []
@@ -46,6 +47,8 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
 
         # Context
         context = self.getProp("Context")
+        # DataType
+        dType = self.getProp("DataType")
 
         # Photon selection criteria
         selMode = self.getProp("SelectionMode")
@@ -120,7 +123,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # Photon Creator cuts
             # ================================================================
             # Allow all photon CK theta values
-            creator.MinAllowedCherenkovTheta = [ 0.200, 0.005, 0.005 ]
+            creator.MinAllowedCherenkovTheta = [ 0.150, 0.005, 0.005 ]
             creator.MaxAllowedCherenkovTheta = [ 0.310, 0.075, 0.035 ]
             # No # sigma cut
             creator.NSigma                   = [ 9.0,   5.25,  5.0   ]
@@ -144,7 +147,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # Photon Creator cuts
             # ================================================================
             # Allow all photon CK theta values
-            creator.MinAllowedCherenkovTheta = [ 0.200, 0.005, 0.005 ]
+            creator.MinAllowedCherenkovTheta = [ 0.150, 0.005, 0.005 ]
             creator.MaxAllowedCherenkovTheta = [ 0.340, 0.075, 0.035 ]
             # No # sigma cut
             creator.NSigma                   = [ 30,    25,   12   ]

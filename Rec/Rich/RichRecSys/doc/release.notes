@@ -4,6 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2012-11-26 - Chris Jones
+ - Add 'DataType' option to PhotonCreator configurable. 
+   Setting is propagated down from higher level Configurable.
+ - Loosen of a little the Aerogel photon selection cuts, as the lower edge
+   was a little too tight and cutting into low momentum Protons.
+
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
