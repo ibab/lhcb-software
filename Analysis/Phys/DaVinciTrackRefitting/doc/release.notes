@@ -6,6 +6,7 @@
 
 ! 2012-11-25 - Paul Seyfert
  - converted TracksFromParticles from DVAlgorithm to DaVinciAlgorithm
+ - added RefitParticleTracks algorithm and example file in options
 
 !=================== DaVinciTrackRefitting v1r0 2012-05-03 ===================
 
