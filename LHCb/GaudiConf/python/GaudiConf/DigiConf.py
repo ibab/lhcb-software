@@ -139,35 +139,39 @@ class DigiConf(LHCbConfigurableUser):
         if 'OT' in dets :
                     writer.ItemList += ["/Event/Link/Raw/OT/Times#1"]
         if 'FT' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/FT/Clusters#1"]
+            writer.ItemList += ["/Event/Link/Raw/FT/Clusters#1"]
+
         if 'Calo' in dets :
                     writer.ItemList += ["/Event/Link/Raw/Ecal/Digits#1"]
                     writer.ItemList += ["/Event/Link/Raw/Hcal/Digits#1"]
         if 'Muon' in dets :
                     writer.ItemList += ["/Event/Link/Raw/Muon/Digits#1"]
         if 'Tr' in dets :
-                    writer.ItemList += ["/Event/MC/TrackInfo#1"]
+            writer.ItemList += ["/Event/MC/TrackInfo#1"]
 
+
+                    
     def addMCHitLinks( self, writer ):
 
         # Links to MCHits
         dets = self.getProp("Detectors")
         if 'Velo' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/Velo/Clusters2MCHits#1"]
+            writer.ItemList += ["/Event/Link/Raw/Velo/Clusters2MCHits#1"]
         if 'VP' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/VP/Clusters2MCHits#1"]
+            writer.ItemList += ["/Event/Link/Raw/VP/Clusters2MCHits#1"]
         if 'VL' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/VL/Clusters2MCHits#1"]
+            writer.ItemList += ["/Event/Link/Raw/VL/Clusters2MCHits#1"]
         if 'TT' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/TT/Clusters2MCHits#1"]
+            writer.ItemList += ["/Event/Link/Raw/TT/Clusters2MCHits#1"]
         if 'UT' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/UT/Clusters2MCHits#1"]
+            writer.ItemList += ["/Event/Link/Raw/UT/Clusters2MCHits#1"]
         if 'IT' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/IT/Clusters2MCHits#1"]
+            writer.ItemList += ["/Event/Link/Raw/IT/Clusters2MCHits#1"]
         if 'OT' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/OT/Times2MCHits#1"]
+            writer.ItemList += ["/Event/Link/Raw/OT/Times2MCHits#1"]
         if 'FT' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/FT/Clusters2MCHits#1"]
+            pass
+            
 
     def _defineOutputData( self, dType, writer ):
         """
