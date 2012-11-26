@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloEvent
 ################################################################################
-gaudi_subdir(VeloEvent v16r10)
+gaudi_subdir(VeloEvent v16r11)
 
 gaudi_depends_on_subdirs(DAQ/Tell1Kernel
                          GaudiObjDesc

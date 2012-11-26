@@ -1,9 +1,8 @@
-# $Id: requirements,v 1.50 2010-02-24 15:26:16 cattanem Exp $
 # Maintainer: Chris Parkes, Tomasz Szumlak
 #
 package VeloEvent
 
-version           v16r10
+version           v16r11
 
 branches cmt doc xml VeloEvent
 
