@@ -1,7 +1,7 @@
 ################################################################################
 # Package: FSRAlgs
 ################################################################################
-gaudi_subdir(FSRAlgs v1r0)
+gaudi_subdir(FSRAlgs v1r1)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/DAQEvent
