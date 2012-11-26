@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot, Chris Jones
 #============================================================================
 package           EventPacker
-version           v2r19
+version           v2r20
 
 #============================================================================
 # Structure, i.e. directories to process.
