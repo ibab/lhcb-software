@@ -41,5 +41,7 @@ private:
   LinkerWithKey<LHCb::MCParticle>* m_linker;
   LinkedTo<LHCb::MCParticle>*      m_detectorLink;
   bool m_debug;
+  std::vector<std::string>         m_stClusterNames;
+  std::vector<std::string>         m_stLiteClusterNames;
 };
 #endif // PRLHCBID2MCPARTICLE_H

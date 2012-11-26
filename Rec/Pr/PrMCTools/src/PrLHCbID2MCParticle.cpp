@@ -7,6 +7,7 @@
 
 // includes from DigiEvent
 #include "Event/VeloCluster.h"
+#include "Event/VeloLiteCluster.h"
 #include "Event/VLCluster.h"
 #include "Event/VPCluster.h"
 #include "Event/STCluster.h"
@@ -53,6 +54,13 @@ StatusCode PrLHCbID2MCParticle::initialize() {
   m_debug = msgLevel( MSG::DEBUG );
   if( m_debug ) debug() << "==> Initialize" << endmsg;
 
+  m_stClusterNames.push_back( LHCb::STClusterLocation::TTClusters );
+  m_stClusterNames.push_back( LHCb::STClusterLocation::ITClusters );
+  m_stClusterNames.push_back( LHCb::STClusterLocation::UTClusters );
+  m_stLiteClusterNames.push_back(  LHCb::STClusterLocation::TTClusters );
+  m_stLiteClusterNames.push_back(  LHCb::STClusterLocation::ITClusters );
+  m_stLiteClusterNames.push_back(  LHCb::STClusterLocation::UTClusters );
+
   return StatusCode::SUCCESS;
 }
 
@@ -77,6 +85,18 @@ StatusCode PrLHCbID2MCParticle::execute() {
       LHCb::LHCbID myId = LHCb::LHCbID( (*iClus)->channelID() );
       int id            = myId.veloID();
       int size          = (*iClus)->pseudoSize();
+      linkAll( myId, id, size );
+    }
+  } else if ( exist<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default) ) {    
+    LinkedTo<LHCb::MCParticle> veloLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
+    m_detectorLink = &veloLink;    
+    LHCb::VeloLiteCluster::VeloLiteClusters* clusters = 
+      get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default);
+    LHCb::VeloLiteCluster::VeloLiteClusters::const_iterator iClus;
+    for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
+      LHCb::LHCbID myId = LHCb::LHCbID( (*iClus).channelID() );
+      int id            = myId.veloID();
+      int size          = (*iClus).pseudoSize();
       linkAll( myId, id, size );
     }
   }
@@ -109,50 +129,52 @@ StatusCode PrLHCbID2MCParticle::execute() {
     }
   }
 
-  //== TT
+  //== TT, IT, UT (All ST-like detectors)
 
-  if ( exist<LHCb::STCluster::Container>(LHCb::STClusterLocation::TTClusters) ) {
-    LinkedTo<LHCb::MCParticle> ttLink( evtSvc(), msgSvc(),LHCb::STClusterLocation::TTClusters );
-    m_detectorLink = &ttLink;
-    const LHCb::STCluster::Container* cont = get<LHCb::STCluster::Container>(LHCb::STClusterLocation::TTClusters);
-    for(  LHCb::STCluster::Container::const_iterator iclus = cont->begin();
-          iclus != cont->end(); ++iclus) {
-      LHCb::LHCbID myId = LHCb::LHCbID((*iclus)->channelID());
-      int size          = (*iclus)->size();
-      int id            = myId.stID();
-      linkAll( myId, id, size );
+  for ( unsigned int kk = 0; m_stClusterNames.size() > kk; ++kk ) {
+    std::string clusterName = m_stClusterNames[kk];
+    std::string liteName    = m_stLiteClusterNames[kk];
+    if ( exist<LHCb::STCluster::Container>( clusterName ) ) {
+      LinkedTo<LHCb::MCParticle> ttLink( evtSvc(), msgSvc(), clusterName );
+      m_detectorLink = &ttLink;
+      const LHCb::STCluster::Container* cont = get<LHCb::STCluster::Container>( clusterName );
+      for(  LHCb::STCluster::Container::const_iterator iclus = cont->begin();
+            iclus != cont->end(); ++iclus) {
+        LHCb::LHCbID myId = LHCb::LHCbID((*iclus)->channelID());
+        int size          = (*iclus)->size();
+        int id            = myId.stID();
+        linkAll( myId, id, size );
+      }
+    } else if ( exist<LHCb::STLiteCluster::STLiteClusters>( liteName ) ) {    
+      LinkedTo<LHCb::MCParticle> ttLink( evtSvc(), msgSvc(), clusterName );
+      m_detectorLink = &ttLink;    
+      LHCb::STLiteCluster::STLiteClusters* clusters = get<LHCb::STLiteCluster::STLiteClusters>( liteName );
+      LHCb::STLiteCluster::STLiteClusters::const_iterator iClus;
+      for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
+        LHCb::LHCbID myId = LHCb::LHCbID( (*iClus).channelID() );
+        int id            = myId.stID();
+        int size          = (*iClus).pseudoSize();
+        linkAll( myId, id, size );
+      }
     }
   }
 
-  //== IT coordinates
 
-  if ( exist<LHCb::STCluster::Container>(LHCb::STClusterLocation::ITClusters) ) {
-    LinkedTo<LHCb::MCParticle> itLink( evtSvc(), msgSvc(),LHCb::STClusterLocation::ITClusters );
-    m_detectorLink = &itLink;
-    const LHCb::STCluster::Container* cont = get<LHCb::STCluster::Container>(LHCb::STClusterLocation::ITClusters);
-    for(  LHCb::STCluster::Container::const_iterator iclus = cont->begin();
-          iclus != cont->end(); ++iclus) {
-      LHCb::LHCbID myId = LHCb::LHCbID((*iclus)->channelID());
-      int size          = (*iclus)->size();
-      int id            = myId.stID();
-      linkAll( myId, id, size );
+  //== OT coordinates
+  if ( exist<LHCb::LinksByKey>( "Link/" + LHCb::OTTimeLocation::Default ) ) {
+    LinkedTo<LHCb::MCParticle> otLink( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
+    if ( !otLink.notFound() ) {
+      m_detectorLink = &otLink;
+      Tf::OTHitRange othits = m_othitcreator->hits();
+      for (Tf::OTHitRange::const_iterator otSTH = othits.begin();
+           otSTH < othits.end();otSTH++){
+        LHCb::LHCbID myId = (*otSTH)->lhcbID();
+        int id            = myId.otID();
+        linkAll( myId, id );
+      }
     }
   }
-
-  //== OT coordinates  *** Problem if does not exist: error message!
-  /*
-  LinkedTo<LHCb::MCParticle> otLink( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
-  if ( !otLink.notFound() ) {
-    m_detectorLink = &otLink;
-    Tf::OTHitRange othits = m_othitcreator->hits();
-    for (Tf::OTHitRange::const_iterator otSTH = othits.begin();
-         otSTH < othits.end();otSTH++){
-      LHCb::LHCbID myId = (*otSTH)->lhcbID();
-      int id            = myId.otID();
-      linkAll( myId, id );
-    }
-  }
-  */
+  
   //== FT
   if ( exist<FastClusterContainer<LHCb::FTRawCluster,int> >(LHCb::FTRawClusterLocation::Default) ) {
     LinkedTo<LHCb::MCParticle> ftLink( evtSvc(), msgSvc(),LHCb::FTClusterLocation::Default );
