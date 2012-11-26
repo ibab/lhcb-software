@@ -1,7 +1,7 @@
 ################################################################################
 # Package: L0Event
 ################################################################################
-gaudi_subdir(L0Event v19r7)
+gaudi_subdir(L0Event v19r8)
 
 gaudi_depends_on_subdirs(GaudiObjDesc
                          Kernel/LHCbKernel)
