@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonInterfaces
 ################################################################################
-gaudi_subdir(MuonInterfaces v1r2p2)
+gaudi_subdir(MuonInterfaces v1r3)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/DAQEvent

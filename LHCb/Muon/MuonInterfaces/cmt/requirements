@@ -1,6 +1,6 @@
 # =============================================================================
 package           MuonInterfaces
-version           v1r2p2
+version           v1r3
 
 # =============== structure ===================================================
 branches          cmt doc MuonInterfaces src
