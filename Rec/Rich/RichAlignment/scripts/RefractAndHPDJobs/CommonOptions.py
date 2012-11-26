@@ -17,7 +17,7 @@ importOptions("$L0TCK/L0DUConfig.opts")
 # For 2012 data
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2012.py")
 LHCbApp().DDDBtag   = "dddb-20120831"
-LHCbApp().CondDBtag = "cond-20121025"
+LHCbApp().CondDBtag = "cond-20121116"
 
 # Aerogel Sub Tiles
 #CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
@@ -31,7 +31,9 @@ from Configurables import EventClockSvc
 #EventClockSvc( InitialTime = 1319155200000000000 ) # 21st Octo 2011
 #EventClockSvc( InitialTime = 1341100800000000000 ) # 1st July 2012
 #EventClockSvc( InitialTime = 1350259200000000000 ) # 15th Octo 2012
-EventClockSvc( InitialTime = 1351123200000000000 ) # 25th Octo 2012
+#EventClockSvc( InitialTime = 1351123200000000000 ) # 25th Octo 2012
+#EventClockSvc( InitialTime = 1351645200000000000 ) # 31st Octo 2012
+EventClockSvc( InitialTime = 1352764800000000000 ) # 13th Nov 2012
 
 # Timestamps in messages
 LHCbApp().TimeStamp = True

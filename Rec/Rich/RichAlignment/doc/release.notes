@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2012-11-26 - Chris Jones
+ - Update calibration scripts.
+
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 

@@ -131,7 +131,7 @@ else:
       if run in RunLFNs.keys() : nLFNs = len(RunLFNs[run])
       if nLFNs > 0 :
         print "(", nRun, "of", len(runs), ") Selected", nLFNs, "LFNs for run", run, ConfigV
-        #print RunLFNs[run]
+        print RunLFNs[run]
       else:
         print "(", nRun, "of", len(runs), ") No data selected for run", run, ConfigV
 

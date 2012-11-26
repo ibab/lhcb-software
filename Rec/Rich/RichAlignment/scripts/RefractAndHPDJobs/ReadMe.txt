@@ -36,13 +36,23 @@ For testing, I suggest editing the dates to a short period with only a few runs.
 2. RichCKCalibrate.py
 
 This is a python module for use with ganga. So start ganga (clean terminal) in
-the same dir as this file and import it 
+the same dir as this file and import it
 
  > SetupProject Ganga
  > lhcb-proxy-init -g lhcb_calibration
  > ganga
  ...
  > import RichCKCalibrate
+
+If you are going to use the calibration role, its useful to use a different gangadir and
+proxy location to your normal work, to isolate it. You can do this with
+
+ - Set X509_USER_PROXY to put your calibration proxy in a different place
+    > export X509_USER_PROXY=/usera/jonesc/.grid.proxy.calibration
+   You must run 'SetupProject Ganga' after this, to pick up the new setting
+
+ - Start ganga using something like
+    > ganga -o[Configuration]gangadir=/r02/lhcb/jonesc/gangadir-calibration
 
 The file has a series of methods to submit the calibration jobs, and analyse the
 results. For submission just run at the ganga prompt 

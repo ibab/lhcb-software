@@ -177,7 +177,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     #dbFiles += ["MDCS-RICH1-26092012"]
 
     # Mirror alignment
-    dbFiles += ["2012MirrorAlign-26102012"]
+    #dbFiles += ["2012MirrorAlign-09112012"]
 
     # HPD image calibration
     #dbFiles += ["2012-RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-02102012"]
@@ -230,7 +230,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                 # is this job already submitted ?
                 if jobExists(jobname):
 
-                    print "Job", jobname, "already submitted ( #", nJob, "of", len(sortedRuns), ")"
+                    print "Job", jobname, "already exists ( #", nJob, "of", len(sortedRuns), ")"
 
                 else:
 
@@ -243,7 +243,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     # Make a job object
                     j = Job( application = Brunel( version = BrunelVer ),
                              name        = jobname )
-                    j.application.args += ['-T'] # Enable tcmalloc
+                    #j.application.args += ['-T'] # Enable tcmalloc (now done by default)
 
                     # Custom options for this job
                     tmpOptsFile = createTempOptsFile(j.name)

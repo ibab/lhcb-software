@@ -160,6 +160,7 @@ field[ datetime.datetime(  2012,   8,   30,   15,   30,   0  ) ] = dnAlign
 field[ datetime.datetime(  2012,   9,   14,   12,    0,   0  ) ] = upAlign
 field[ datetime.datetime(  2012,  10,   12,    1,    0,   0  ) ] = dnAlign
 field[ datetime.datetime(  2012,  10,   25,    1,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2012,  11,    9,    0,    1,   0  ) ] = dnAlign
 
 # Long way away ...
 stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
