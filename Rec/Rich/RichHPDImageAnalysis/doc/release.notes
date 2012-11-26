@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2012-11-26 - Chris Jones
+ - Update HPD image alignment scripts.
+
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.
  - Modified requirements to simplify auto conversion to CMake.
