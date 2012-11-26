@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r14 2012-11-26 =========================
 ! 2012-11-20 - Antonis Papanestis
  - Check the list of inactive Photo-Detectors for possible errors in 
    DeRichSystem
