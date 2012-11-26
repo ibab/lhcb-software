@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BcmDet
 ################################################################################
-gaudi_subdir(BcmDet v1r3)
+gaudi_subdir(BcmDet v1r4)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Det/DetDescCnv

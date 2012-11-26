@@ -4,6 +4,7 @@
 ! Purpose     : BCM DetectorElement
 !----------------------------------------------------------------------------
 
+!========================= BcmDet v1r4 2012-11-26 =========================
 ! 2012-11-26 - Marco Cattaneo
  - Remove obsolete file BcmDet_dll.cpp
 

@@ -1,9 +1,7 @@
-# $Id: requirements,v 1.4 2009-04-17 12:32:10 cattanem Exp $
-# =========================================================================
-
+#====================================================================
 # Maintained by : Magnus Lieng
 package  BcmDet 
-version  v1r3
+version           v1r4
 
 # =============== structure ===============================================	
 branches         src cmt doc BcmDet dict
