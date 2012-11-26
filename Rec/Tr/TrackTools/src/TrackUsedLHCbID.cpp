@@ -28,8 +28,8 @@ m_configured(false)
   declareProperty("inputContainers", m_inputs);
   declareProperty("selectorNames", m_names);
 
-  m_inputs = list_of("Rec/Track/Forward");
-  m_names = list_of("ForwardSelector");
+  m_inputs = std::vector<std::string>(1, "Rec/Track/Forward");
+  m_names = std::vector<std::string>(1, "ForwardSelector");
 
   declareInterface<IUsedLHCbID>(this);
   m_usedCont.reserve(5000);

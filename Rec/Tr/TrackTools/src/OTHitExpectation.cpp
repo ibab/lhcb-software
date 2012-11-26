@@ -51,7 +51,8 @@ OTHitExpectation::OTHitExpectation(const std::string& type,
   , m_otDet(NULL), m_expectedOTHits(NULL)
 { 
   // constructer
-  declareProperty("likPar", m_likPar = boost::assign::list_of(0.261)(5.1)(11.87));
+  std::vector<double> tmp = boost::assign::list_of(0.261)(5.1)(11.87);
+  declareProperty("likPar", m_likPar = tmp);
 
 }
 

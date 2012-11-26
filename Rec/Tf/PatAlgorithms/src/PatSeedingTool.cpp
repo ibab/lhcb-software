@@ -58,8 +58,10 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "reusePatSeeding",		m_reusePatSeeding	= true );
   declareProperty( "UseForward",		m_useForward		= false       );
   declareProperty( "InputTracksName",		m_inputTracksName	= LHCb::TrackLocation::Forward  );
-  declareProperty( "DriftRadiusRange",		m_driftRadiusRange	=
-                   boost::assign::list_of(-0.6 * Gaudi::Units::mm)(2.8 * Gaudi::Units::mm) );
+  {
+    std::vector<double> tmp = boost::assign::list_of(-0.6 * Gaudi::Units::mm)(2.8 * Gaudi::Units::mm);
+    declareProperty( "DriftRadiusRange",		m_driftRadiusRange	= tmp );
+  }
 
   //------------------------------------------------------------------------
   // track model
@@ -87,7 +89,10 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "CloneMaxXDistIT",		m_cloneMaxXDistIT	=    3. * Gaudi::Units::mm );
   declareProperty( "CloneMaxXDistOT",		m_cloneMaxXDistOT	=    7. * Gaudi::Units::mm );
   declareProperty( "CommonXFraction",		m_commonXFraction	=    0.7                   );
-  declareProperty( "QualityWeights",		m_qualityWeights	= boost::assign::list_of(1.0)(-0.2) );
+  {
+    std::vector<double> tmp = boost::assign::list_of(1.0)(-0.2);
+    declareProperty( "QualityWeights",		m_qualityWeights	= tmp );
+  }
   // demands that NDblOTHitsInXSearch out of three layers used for the initial
   // parabola have a hits in both monolayers
   declareProperty( "NDblOTHitsInXSearch",	m_nDblOTHitsInXSearch	= 0 );
@@ -149,9 +154,11 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "StateErrorTX2",		m_stateErrorTX2		= 6e-5 );
   declareProperty( "StateErrorTY2",		m_stateErrorTY2		= 1e-4 );
   declareProperty( "MomentumToolName",	        m_momentumToolName	= "FastMomentumEstimate" );
-  declareProperty( "ZOutput",			m_zOutputs		=
-                   boost::assign::list_of(StateParameters::ZBegT)(StateParameters::ZMidT)(StateParameters::ZEndT));
-
+  {
+    std::vector<double> tmp = boost::assign::list_of(StateParameters::ZBegT)(StateParameters::ZMidT)(StateParameters::ZEndT);
+    declareProperty( "ZOutput",			m_zOutputs		= tmp);
+  }
+  
   //------------------------------------------------------------------------
   // options concerning copying the T station part of forward tracks
   //------------------------------------------------------------------------

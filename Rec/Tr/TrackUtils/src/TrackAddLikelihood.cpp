@@ -26,12 +26,12 @@ TrackAddLikelihood::TrackAddLikelihood(const std::string& name,
  declareProperty("LikelihoodTool", m_likelihoodToolName = "TrackLikelihood");
 
 
-
- declareProperty("types", m_types = boost::assign::list_of(Track::PatVelo )(Track::PatVeloTT )
+ std::vector<unsigned int> tmp = boost::assign::list_of(Track::PatVelo )(Track::PatVeloTT )
                                            (Track::PatForward )(Track::TrackMatching )
                                            (Track::PatMatch )(Track::PatSeeding )
                                            (Track::PatDownstream)(Track::TsaTrack)(Track::PatVeloGeneral)
-                                           (Track::PatFastVelo));
+                                           (Track::PatFastVelo);
+ declareProperty("types", m_types = tmp);
 }
 
 TrackAddLikelihood::~TrackAddLikelihood()

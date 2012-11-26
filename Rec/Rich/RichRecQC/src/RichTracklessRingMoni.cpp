@@ -29,17 +29,30 @@ TracklessRingMoni::TracklessRingMoni( const std::string& name,
 {
   using namespace boost::assign;
   declareProperty( "RingLocation", m_ringLoc = LHCb::RichRecRingLocation::ENNRings+"All" );
-  declareProperty( "ChThetaRecHistoLimitMin",
-                   m_ckThetaMin = list_of(0.1)(0.025)(0.02) );
-  declareProperty( "ChThetaRecHistoLimitMax",
-                   m_ckThetaMax = list_of(0.3)(0.06)(0.035) );
-  declareProperty( "RingRadiiHistoLimitMin",
-                   m_radiiMin = list_of(200.0)(20.0)(60.0) );
-  declareProperty( "RingRadiiHistoLimitMax",
-                   m_radiiMax = list_of(400.0)(100.0)(175.0) );
-  declareProperty( "MaxFitVariance",
-                   m_maxFitVariance = list_of(100)(100)(100) );
-  declareProperty( "CKThetaRes", m_ckThetaRes = list_of(0.2)(0.0075)(0.0075) );
+  {
+    std::vector<double> tmp = list_of(0.1)(0.025)(0.02);
+    declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of(0.3)(0.06)(0.035);
+    declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of(200.0)(20.0)(60.0);
+    declareProperty( "RingRadiiHistoLimitMin",  m_radiiMin = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of(400.0)(100.0)(175.0);
+    declareProperty( "RingRadiiHistoLimitMax",  m_radiiMax = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of(100)(100)(100);
+    declareProperty( "MaxFitVariance", m_maxFitVariance = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of(0.2)(0.0075)(0.0075);
+    declareProperty( "CKThetaRes", m_ckThetaRes = tmp);
+  }
   declareProperty( "MCAssocFrac", m_mcAssocFrac = 0.75 );
 }
 

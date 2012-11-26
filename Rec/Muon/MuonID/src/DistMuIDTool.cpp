@@ -55,7 +55,7 @@ StatusCode DistMuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
   if (m_applyIsmuonHits){  
     if(p>m_PreSelMomentum && p<m_MomentumCuts[0]){
       //M2 &&M3 && M4
-      sts_used  = boost::assign::list_of(1)(1)(1)(0);
+      sts_used[3] = 0;
     }
   }
   if (msgLevel(MSG::DEBUG) ) debug()<< "applyIsMuonHits"<< m_applyIsmuonHits 

@@ -56,7 +56,8 @@ SeedTrackCnvTool::SeedTrackCnvTool( const std::string& type,
   declareProperty("pFromPtKick", m_pFromPtKick = false);
   declareProperty("pFromCurvature", m_pFromCurvature = false);
   using namespace StateParameters;
-  declareProperty("zStates", m_zStates = boost::assign::list_of(ZBegT)(ZMidT)(ZEndT));
+  std::vector<double> tmp = boost::assign::list_of(ZBegT)(ZMidT)(ZEndT);
+  declareProperty("zStates", m_zStates = tmp);
   
 }
 //=============================================================================

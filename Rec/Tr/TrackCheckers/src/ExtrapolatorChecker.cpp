@@ -35,9 +35,9 @@ ExtrapolatorChecker::ExtrapolatorChecker( const std::string& name,
                             ISvcLocator* pSvcLocator ) :
   TrackCheckerBase( name , pSvcLocator )
 {
- 
-  declareProperty("Detectors" , 
-                  m_dets = boost::assign::list_of("IT")("OT")("TT")("Velo"));
+
+  std::vector<std::string> tmp = boost::assign::list_of("IT")("OT")("TT")("Velo");
+  declareProperty("Detectors" , m_dets = tmp);
 }
 
 //=============================================================================

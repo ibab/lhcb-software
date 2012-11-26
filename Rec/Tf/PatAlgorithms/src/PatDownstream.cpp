@@ -75,12 +75,18 @@ PatDownstream::PatDownstream( const std::string& name,
   declareProperty( "minTTx"        , m_minTTx        = 35. *  Gaudi::Units::mm );
   declareProperty( "minTTy"        , m_minTTy        = 35. *  Gaudi::Units::mm );
   // Define parameters for MC09 field, zState = 9410
-  declareProperty( "zMagnetParams" , m_zMagnetParams =
-		  boost::assign::list_of(5376.8)(-3895.12)(309.877)(85527.9) );
-  declareProperty( "momentumParams", m_momentumParams=
-		  boost::assign::list_of(1148.65)(961.786)(5326.81) );
-  declareProperty( "yParams"       , m_yParams       =
-		  boost::assign::list_of(5.)(2000.) );
+  {
+    std::vector<double> tmp = boost::assign::list_of(5376.8)(-3895.12)(309.877)(85527.9);
+    declareProperty( "zMagnetParams" , m_zMagnetParams  = tmp);
+  }
+  {
+    std::vector<double> tmp = boost::assign::list_of(1148.65)(961.786)(5326.81);
+    declareProperty( "momentumParams", m_momentumParams = tmp);
+  }
+  {
+    std::vector<double> tmp =  boost::assign::list_of(5.)(2000.);
+    declareProperty( "yParams"       , m_yParams        = tmp);
+  }
 
   declareProperty( "zTT"           , m_zTT           = 2485.* Gaudi::Units::mm );
   declareProperty( "zTTa"          , m_zTTa          = 2350.* Gaudi::Units::mm );

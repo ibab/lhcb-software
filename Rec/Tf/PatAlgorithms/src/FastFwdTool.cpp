@@ -37,16 +37,17 @@ FastFwdTool::FastFwdTool( const std::string& type,
   declareInterface<FastFwdTool>(this);
 
   declareProperty( "ZReference"      , m_zReference      = StateParameters::ZMidT);
-  declareProperty( "ZOutput"          ,m_zOutputs        = boost::assign::list_of(StateParameters::ZBegT)
-                   (StateParameters::ZMidT)(StateParameters::ZEndT));
-  declareProperty( "ZMagnetParams"   , m_zMagnetParams   = boost::assign::list_of
-                   (0.0));
-  declareProperty( "xParams"         , m_xParams         = boost::assign::list_of
-                   (0.0));
-  declareProperty( "yParams"         , m_yParams         = boost::assign::list_of
-                   (0.0));
-  declareProperty( "momentumParams"  , m_momentumParams  = boost::assign::list_of
-                   (0.0));
+
+  std::vector<double> tmp1 = boost::assign::list_of(StateParameters::ZBegT)
+    (StateParameters::ZMidT)(StateParameters::ZEndT);
+  declareProperty( "ZOutput"          ,m_zOutputs        = tmp1);
+  
+  std::vector<double> tmp2 = boost::assign::list_of(0.0);
+  declareProperty( "ZMagnetParams"   , m_zMagnetParams   = tmp2);
+  declareProperty( "xParams"         , m_xParams         = tmp2);
+  declareProperty( "yParams"         , m_yParams         = tmp2);
+  declareProperty( "momentumParams"  , m_momentumParams  = tmp2);
+
   declareProperty( "xMagnetTol"      , m_xMagnetTol      = 3. );
   declareProperty( "xMagnetTolSlope" , m_xMagnetTolSlope = 40. );
   declareProperty( "withoutBField"   , m_withoutBField = false);
@@ -75,17 +76,26 @@ StatusCode FastFwdTool::initialize ( ) {
     m_xParams.clear();
     m_yParams.clear();
 
-
     if (m_magFieldSvc->useRealMap()){
-      m_zMagnetParams   = boost::assign::list_of (5208.05) (318.502) (-1223.87) (9.80117e-06) (-304.272);
-      m_xParams         = boost::assign::list_of (17.5815) (-5.94803);
-      m_yParams         = boost::assign::list_of (-979.0) (-0.684947);
-      m_momentumParams  = boost::assign::list_of (1.21174) (0.634127) (-0.242116) (0.412728) (2.82916) (-20.6599);
+      std::vector<double>
+        t1 = boost::assign::list_of (5208.05) (318.502) (-1223.87) (9.80117e-06) (-304.272),
+        t2 = boost::assign::list_of (17.5815) (-5.94803),
+        t3 = boost::assign::list_of (-979.0) (-0.684947),
+        t4 = boost::assign::list_of (1.21174) (0.634127) (-0.242116) (0.412728) (2.82916) (-20.6599);
+      m_zMagnetParams   = t1;
+      m_xParams         = t2;
+      m_yParams         = t3;
+      m_momentumParams  = t4;
     } else {
-      m_zMagnetParams   = boost::assign::list_of (5199.31) (334.725) (-1283.86) (9.59486e-06) (-413.281);
-      m_xParams         = boost::assign::list_of (16.8238) (-6.35556);
-      m_yParams         = boost::assign::list_of (-970.89) (-0.686028);
-      m_momentumParams  = boost::assign::list_of (1.21909) (0.627841) (-0.235216) (0.433811) (2.92798) (-21.3909);
+      std::vector<double>
+        t1 = boost::assign::list_of (5199.31) (334.725) (-1283.86) (9.59486e-06) (-413.281),
+        t2 = boost::assign::list_of (16.8238) (-6.35556),
+        t3 = boost::assign::list_of (-970.89) (-0.686028),
+        t4 = boost::assign::list_of (1.21909) (0.627841) (-0.235216) (0.433811) (2.92798) (-21.3909);
+      m_zMagnetParams   = t1;
+      m_xParams         = t2;
+      m_yParams         = t3;
+      m_momentumParams  = t4;
     }
   }
 

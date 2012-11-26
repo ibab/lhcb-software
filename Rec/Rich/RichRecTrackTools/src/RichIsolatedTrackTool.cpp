@@ -39,27 +39,31 @@ IsolatedTrackTool::IsolatedTrackTool( const std::string& type,
   // Define interface for this tool
   declareInterface<IIsolatedTrack>(this);
 
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+#define  init_vect(A, B, C) {A, B, C}
+#else
   using namespace boost::assign;
-
+#define  init_vect(A, B, C) list_of(A)(B)(C)
+#endif
   //Default cut values.  Can change in options file.
 
-  //                                                                     Aero  C4F10  CF4
-  declareProperty( "SizeMomCut", m_sizemomcut                 = list_of  (5)   (10)  (20)  );
-  declareProperty( "SizeGeoCut", m_sizegeocut                 = list_of  (0.3) (0.3) (0.3) ); // geometric efficiency
-  declareProperty( "SizeSepCut", m_sizesepcut                 = list_of  (260) (150) (260) ); // track hit point separation
-  declareProperty( "SizeXposnCut", m_sizeXexit                = list_of  (0)   (0)   (100) ); // RICH X discontinuity
-  declareProperty( "SizeYposnCut", m_sizeYexit                = list_of  (50)  (50)  (0)   ); // RICH Y discontinuity
-  declareProperty( "SizePhotonAssocCut", m_sizephotonassoccut = list_of  (0.8) (0.8) (0.8) ); // min fraction not assoc with another track
-  declareProperty( "SizeRingWidth", m_sizeringwidth           = list_of  (0.01)(0.01)(0.00944) );// theta band width
-  declareProperty( "SizePhiCut",    m_sizephicut              = list_of  (0.2125) (0.2125) (0.2125)  );// max fraction of photons in one phi region
-  declareProperty( "SizeHitRegionCut", m_sizehitregioncut     = list_of  (0.8) (0.8) (0.8) ); // min fraction of photons lying in theta band
-  declareProperty( "MaxTrackROI", m_maxROI                    = list_of  (390) (86)  (200) ); // Pixel hit regions
-  declareProperty( "CKthetaMax", m_ckThetaMax                 = list_of  (0.24)(0.052) (0.03) );
-  declareProperty( "SepGMax", m_sepGMax                       = list_of  (342) (75) (130) );
-  declareProperty( "NPhiRegions", m_nPhiRegions               = list_of  (8)   (8)  (8)   ); // Number of phi regions
-  declareProperty( "MinSegPhotons", m_minSegPhotons           = list_of  (2)   (2)  (2)   );
+  //                                                                       Aero    C4F10   CF4
+  declareProperty( "SizeMomCut", m_sizemomcut                 = init_vect( 5     , 10    , 20      ));
+  declareProperty( "SizeGeoCut", m_sizegeocut                 = init_vect( 0.3   , 0.3   , 0.3     )); // geometric efficiency
+  declareProperty( "SizeSepCut", m_sizesepcut                 = init_vect( 260   , 150   , 260     )); // track hit point separation
+  declareProperty( "SizeXposnCut", m_sizeXexit                = init_vect( 0     , 0     , 100     )); // RICH X discontinuity
+  declareProperty( "SizeYposnCut", m_sizeYexit                = init_vect( 50    , 50    , 0       )); // RICH Y discontinuity
+  declareProperty( "SizePhotonAssocCut", m_sizephotonassoccut = init_vect( 0.8   , 0.8   , 0.8     )); // min fraction not assoc with another track
+  declareProperty( "SizeRingWidth", m_sizeringwidth           = init_vect( 0.01  , 0.01  , 0.00944 )); // theta band width
+  declareProperty( "SizePhiCut",    m_sizephicut              = init_vect( 0.2125, 0.2125, 0.2125  )); // max fraction of photons in one phi region
+  declareProperty( "SizeHitRegionCut", m_sizehitregioncut     = init_vect( 0.8   , 0.8   , 0.8     )); // min fraction of photons lying in theta band
+  declareProperty( "MaxTrackROI", m_maxROI                    = init_vect( 390   , 86    , 200     )); // Pixel hit regions
+  declareProperty( "CKthetaMax", m_ckThetaMax                 = init_vect( 0.24  , 0.052 , 0.03    ));
+  declareProperty( "SepGMax", m_sepGMax                       = init_vect( 342   , 75    , 130     ));
+  declareProperty( "NPhiRegions", m_nPhiRegions               = init_vect( 8     , 8     , 8       )); // Number of phi regions
+  declareProperty( "MinSegPhotons", m_minSegPhotons           = init_vect( 2     , 2     , 2       ));
   declareProperty( "AbortEarly", m_abortEarly = true );
-
+#undef init_vect
   setProperty( "UseEfficiencyRowFormat", true );
 }
 

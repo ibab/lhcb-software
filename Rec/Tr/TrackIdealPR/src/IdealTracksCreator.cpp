@@ -72,7 +72,8 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   declareProperty( "TrackSelectorTool",
                    m_selectorToolName =  "MCReconstructible"        );
   declareProperty( "MinNHits", m_minNHits = 6                            );
-  declareProperty( "TrackTypes", m_tracktypes = boost::assign::list_of(1)(3)(4)(5)(6));
+  std::vector<int> tmp = boost::assign::list_of(1)(3)(4)(5)(6);
+  declareProperty( "TrackTypes", m_tracktypes = tmp);
 
   declareProperty("ITEff", m_itEff = 1.0);
   declareProperty("OTEff", m_otEff = 1.0);

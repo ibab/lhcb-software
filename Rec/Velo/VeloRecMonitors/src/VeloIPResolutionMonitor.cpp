@@ -12,13 +12,19 @@
 #include <TF1.h> 
 #include <TFile.h>
 
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+#include <functional>
+using std::bind;
+using namespace std::placeholders;
+#else
 #include <boost/lambda/bind.hpp>
+using namespace boost::lambda;
+#endif
 
 using namespace LHCb;
 using namespace Gaudi::Utils;
 using namespace Gaudi::Units;
 using namespace std ;
-using namespace boost::lambda ;
 
 #ifdef _WIN32 
 #pragma warning ( disable : 4244 ) // Conversion of double to float, done in Root 

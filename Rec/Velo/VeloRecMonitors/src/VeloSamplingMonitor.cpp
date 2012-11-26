@@ -32,12 +32,12 @@ Velo::VeloSamplingMonitor::VeloSamplingMonitor( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
   : Velo::VeloMonitorBase ( name , pSvcLocator )
 {
-  m_samplingLocations =
+  std::vector<std::string> tmp =
     boost::assign::list_of("Prev7")("Prev6")("Prev5")("Prev4")("Prev3")
                           ("Prev2")("Prev1")("")("Next1")("Next2")("Next3")
                           ("Next4")("Next5")("Next6")("Next7");
   
-  declareProperty( "SamplingLocations", m_samplingLocations );
+  declareProperty( "SamplingLocations", m_samplingLocations = tmp);
   declareProperty( "UseNZS", m_useNZS=true );
 }
 

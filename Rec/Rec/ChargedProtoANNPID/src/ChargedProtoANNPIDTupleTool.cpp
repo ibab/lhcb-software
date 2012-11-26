@@ -30,8 +30,7 @@ ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& typ
   declareInterface<IChargedProtoANNPIDTupleTool>(this);
 
   // Job options
-  declareProperty( "Variables",
-                   m_variablesS = boost::assign::list_of
+  std::vector<std::string> tmp = boost::assign::list_of
                    // General event variables
                    ("NumProtoParticles")("NumCaloHypos")
                    ("NumLongTracks")("NumDownstreamTracks")("NumUpstreamTracks")
@@ -66,8 +65,8 @@ ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& typ
                    ("InAccBrem")("CaloNeutralSpd")("CaloNeutralPrs")("CaloNeutralEcal")
                    ("CaloBremMatch")("CaloBremChi2")("BremPIDe")
                    // VELO
-                   ("VeloCharge")
-                   );
+                   ("VeloCharge");
+  declareProperty( "Variables", m_variablesS = tmp);
 
   // Turn off Tuple printing during finalize
   setProperty( "NTuplePrint", false );

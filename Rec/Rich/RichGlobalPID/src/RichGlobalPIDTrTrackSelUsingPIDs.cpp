@@ -35,8 +35,10 @@ TrackSelUsingPIDs::TrackSelUsingPIDs( const std::string& name,
 {
   declareProperty( "RichPIDLocation",
                    m_richPIDLocation = LHCb::RichPIDLocation::Default );
-  declareProperty( "DLLCuts",                  //     El   Mu   Pi   Ka   Pr
-                   m_dllCuts = boost::assign::list_of(9e9)(9e9)(9e9)(000)(000) );
+  
+  //                                               El   Mu   Pi   Ka   Pr
+  std::vector<double> tmp = boost::assign::list_of(9e9)(9e9)(9e9)(000)(000);
+  declareProperty( "DLLCuts", m_dllCuts = tmp);
 }
 
 // Destructor

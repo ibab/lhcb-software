@@ -22,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( TrackToDST )
                          m_inputLocation = TrackLocation::Default );
   this->declareProperty( "StoreAllStates", m_storeAllStates = false );
 
-  m_theMap = map_list_of("ClosestToBeam", State::ClosestToBeam)
+  StateMap tmp = map_list_of("ClosestToBeam", State::ClosestToBeam)
     ("FirstMeasurement", State::FirstMeasurement )
     ("EndVelo",State::EndVelo)
     ("AtTT",State::AtTT)
@@ -41,7 +41,8 @@ DECLARE_ALGORITHM_FACTORY( TrackToDST )
     ("EndHCal",State::EndHCal)
     ("Muon",State::Muon)
     ("V0Vertex",State::V0Vertex);
-
+  m_theMap = tmp;
+  
   // CRJ : Orignal list
 //   m_veloStrings = list_of("ClosestToBeam");
 //   m_longStrings = list_of("ClosestToBeam")("FirstMeasurement")("BegRich1")("BegRich2")("V0Vertex");
@@ -51,19 +52,19 @@ DECLARE_ALGORITHM_FACTORY( TrackToDST )
 //   m_muonStrings     = list_of("ClosestToBeam")("BegRich1")("BegRich2")("Muon");
 
   // (Slightly) reduced list
-  m_veloStrings = list_of("ClosestToBeam");
-  m_longStrings = list_of("ClosestToBeam")("FirstMeasurement")("BegRich2")("V0Vertex");
-  m_tStrings    = list_of("FirstMeasurement")( "BegRich2");
-  m_downstreamStrings = list_of("FirstMeasurement")("BegRich2")("V0Vertex");
-  m_upstreamStrings   = list_of("ClosestToBeam")("FirstMeasurement");
-  m_muonStrings       = list_of("FirstMeasurement");
+  std::vector<std::string> t1 = list_of("ClosestToBeam");
+  std::vector<std::string> t2 = list_of("ClosestToBeam")("FirstMeasurement")("BegRich2")("V0Vertex");
+  std::vector<std::string> t3 = list_of("FirstMeasurement")( "BegRich2");
+  std::vector<std::string> t4 = list_of("FirstMeasurement")("BegRich2")("V0Vertex");
+  std::vector<std::string> t5 = list_of("ClosestToBeam")("FirstMeasurement");
+  std::vector<std::string> t6 = list_of("FirstMeasurement");
 
-  declareProperty("veloStates", m_veloStrings);
-  declareProperty("longStates", m_longStrings);
-  declareProperty("TTrackStates", m_tStrings);
-  declareProperty("downstreamStates", m_downstreamStrings);
-  declareProperty("upstreamStates", m_upstreamStrings);
-  declareProperty("muonStates", m_muonStrings);
+  declareProperty("veloStates",       m_veloStrings       = t1);
+  declareProperty("longStates",       m_longStrings       = t2);
+  declareProperty("TTrackStates",     m_tStrings          = t3);
+  declareProperty("downstreamStates", m_downstreamStrings = t4);
+  declareProperty("upstreamStates",   m_upstreamStrings   = t5);
+  declareProperty("muonStates",       m_muonStrings       = t6);
 
 }
 

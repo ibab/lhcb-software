@@ -39,9 +39,10 @@ GetArrival::GetArrival( const std::string& type,
   declareProperty("useFunct", m_useFunct=false);
   //use fitted functions instead of histograms
   if (msgLevel(MSG::DEBUG) ) debug()<< "useFunct="<<m_useFunct<<endmsg;
-    
+
+  std::vector<double> tmp = boost::assign::list_of(-1.);
   //moms for all 4 stations
-  declareProperty("moms", m_moms = boost::assign::list_of (-1.));
+  declareProperty("moms", m_moms = tmp);
   if (msgLevel(MSG::DEBUG) ) debug()<< "moms="<<m_moms<<endmsg;
 
   //probs corresponding to those moms in each station
@@ -49,11 +50,11 @@ GetArrival::GetArrival( const std::string& type,
   if (msgLevel(MSG::DEBUG) ) debug()<< "probs="<<m_probs<<endmsg;
   
   //parameter alpha in fitted curves
-  declareProperty("alpha", m_alpha = boost::assign::list_of (-1.));
+  declareProperty("alpha", m_alpha = tmp);
   if (msgLevel(MSG::DEBUG) ) debug()<< "alpha="<<m_alpha<<endmsg;
   
   ////parameter beta in fitted curves
-  declareProperty("beta", m_beta = boost::assign::list_of (-1.));
+  declareProperty("beta", m_beta = tmp);
   if (msgLevel(MSG::DEBUG) ) debug()<< "beta="<<m_beta<<endmsg;
 
   ////eff of muon chambers

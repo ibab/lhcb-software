@@ -46,22 +46,25 @@ CKthetaBandsPhotonPredictor( const std::string& type,
   // interface
   declareInterface<IPhotonPredictor>(this);
 
-  // default values          Aero    R1Gas   R2Gas
-  m_minROI     =    list_of  (110)   (0)     (0)     ;
-  m_maxROI     =    list_of  (390)   (86)    (165)   ;
-  m_ckThetaMax =    list_of  (0.24)  (0.052) (0.03)  ;
-  m_sepGMax    =    list_of  (342)   (75)    (130)   ;
-  m_minXlocal  =    list_of  (-1*mm) (-1*mm) (-1*mm) ;
-  m_minYlocal  =    list_of  (-1*mm) (-1*mm) (-1*mm) ;
-  if ( contextContains("HLT") )
-  {
-    m_nSigma   =    list_of  (4.5)   (4.5)   (10.5)  ;
-  }
-  else // Offline
-  {
-    m_nSigma   =    list_of  (5.5)   (5.5)   (11.5)  ;
-  }
-
+  std::vector<double>
+    // default values    Aero    R1Gas   R2Gas
+    t1 =        list_of  (110)   (0)     (0)     ,
+    t2 =        list_of  (390)   (86)    (165)   ,
+    t3 =        list_of  (0.24)  (0.052) (0.03)  ,
+    t4 =        list_of  (342)   (75)    (130)   ,
+    t5 =        list_of  (-1*mm) (-1*mm) (-1*mm) ,
+    t6 =        list_of  (-1*mm) (-1*mm) (-1*mm) ,
+    t7 = (contextContains("HLT"))
+         ?      list_of  (4.5)   (4.5)   (10.5)    // Online
+         :      list_of  (5.5)   (5.5)   (11.5)  ; // Offline
+  m_minROI     = t1;
+  m_maxROI     = t2;
+  m_ckThetaMax = t3;
+  m_sepGMax    = t4;
+  m_minXlocal  = t5;
+  m_minYlocal  = t6;
+  m_nSigma     = t7;
+  
   // job options
   declareProperty( "MinTrackROI", m_minROI );
   declareProperty( "MaxTrackROI", m_maxROI );

@@ -33,15 +33,42 @@ TracklessRingIsolationAlg( const std::string& name,
                    m_inputRings = LHCb::RichRecRingLocation::MarkovRings+"All" );
   declareProperty( "OutputRings",
                    m_outputRings = LHCb::RichRecRingLocation::MarkovRings+"Isolated" );
-  declareProperty( "SizeSepCut",           m_sizesepcut = list_of (150)(150)(260) );
-  declareProperty( "MaxPixSearchWin",        m_pixelWin = list_of (200)(100)(200) );
-  declareProperty( "SizeRingWidth",     m_sizeringwidth = list_of (0.01)(0.01)(0.00944) );
-  declareProperty( "MaxFracOutsideRing", m_sizepixelcut = list_of (0.20001)(0.20001)(0.20001) );
-  declareProperty( "CKthetaMax",           m_ckThetaMax = list_of (0.24)(0.052)(0.03) );
-  declareProperty( "SepGMax",                 m_sepGMax = list_of (342)(75)(130) );
-  declareProperty( "NPhiRegions",         m_nPhiRegions = list_of (8)(8)(8)   );
-  declareProperty( "SizePhiCut",           m_sizephicut = list_of (0.2)(0.5)(0.5)   );
-  declareProperty( "MaxFitVariance",   m_maxFitVariance = list_of (100)(100)(100) );
+  {
+    std::vector<double> tmp = list_of (150)(150)(260);
+    declareProperty( "SizeSepCut",           m_sizesepcut = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of (200)(100)(200);
+    declareProperty( "MaxPixSearchWin",        m_pixelWin = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of (0.01)(0.01)(0.00944);
+    declareProperty( "SizeRingWidth",     m_sizeringwidth = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of (0.20001)(0.20001)(0.20001);
+    declareProperty( "MaxFracOutsideRing", m_sizepixelcut = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of (0.24)(0.052)(0.03);
+    declareProperty( "CKthetaMax",           m_ckThetaMax = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of (342)(75)(130);
+    declareProperty( "SepGMax",                 m_sepGMax = tmp);
+  }
+  {
+    std::vector<unsigned int> tmp = list_of (8)(8)(8);
+    declareProperty( "NPhiRegions",         m_nPhiRegions = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of (0.2)(0.5)(0.5);
+    declareProperty( "SizePhiCut",           m_sizephicut = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of (100)(100)(100);
+    declareProperty( "MaxFitVariance",   m_maxFitVariance = tmp);
+  }
   declareProperty( "AbortEarly",           m_abortEarly = false );
 }
 

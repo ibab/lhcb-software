@@ -64,8 +64,8 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty( "MaxDeltaYSlope"        , m_maxDeltaYSlope        =  300.      );
   declareProperty( "MaxXCandidateSize"     , m_maxXCandidateSize     =  50       );
 
-  declareProperty( "MagnetKickParams"      , m_magnetKickParams      =  
-                   boost::assign::list_of(1255 * Gaudi::Units::MeV)(175 * Gaudi::Units::MeV));
+  std::vector<double> tmp = boost::assign::list_of(1255 * Gaudi::Units::MeV)(175 * Gaudi::Units::MeV);
+  declareProperty( "MagnetKickParams"      , m_magnetKickParams      =  tmp);
 
   declareProperty( "UseMomentumEstimate", m_useMomentumEstimate = false );
   declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.5 );

@@ -47,17 +47,26 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "MaxBeta", m_maxBeta );
 
   // Ch Theta Rec histogram limits: low, high -> aerogel, Rich1Gas, Rich2Gas
-  declareProperty( "ChThetaRecHistoLimitMin",
-                   m_ckThetaMin = list_of(0.150)(0.030)(0.010) );
-  declareProperty( "ChThetaRecHistoLimitMax",
-                   m_ckThetaMax = list_of(0.325)(0.065)(0.036) );
-  declareProperty( "CKResHistoRange",
-                   m_ckResRange = list_of(0.025)(0.005)(0.0025) );
+  {
+    std::vector<double> tmp = list_of(0.150)(0.030)(0.010);
+    declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of(0.325)(0.065)(0.036);
+    declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = tmp);
+  }
+  {
+    std::vector<double> tmp = list_of(0.025)(0.005)(0.0025);
+    declareProperty( "CKResHistoRange", m_ckResRange = tmp);
+  }
 
-  declareProperty( "Radiators", m_rads = list_of(true)(true)(true) );
+  {
+    std::vector<bool> tmp = list_of(true)(true)(true);
+    declareProperty( "Radiators", m_rads = tmp);
+  }
 
-  declareProperty( "MinRadSegs", m_minRadSegs = list_of (0)       (0)       (0)       );
-  declareProperty( "MaxRadSegs", m_maxRadSegs = list_of (9999999) (9999999) (9999999) );
+  declareProperty( "MinRadSegs", m_minRadSegs = std::vector<unsigned int>(3,       0) );
+  declareProperty( "MaxRadSegs", m_maxRadSegs = std::vector<unsigned int>(3, 9999999) );
 
   declareProperty( "EnableAerogelTilePlots", m_aeroTilePlots = false );
 

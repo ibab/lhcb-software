@@ -62,13 +62,25 @@ FunctionalCKResForRecoTracks ( const std::string& type,
   m_asmpt[Rich::Rich2Gas] = std::vector<double>( Rich::Rec::Track::NTrTypes, 0.0 );
   declareProperty( "Rich2GasAsymptopicErr", m_asmpt[Rich::Rich2Gas] );
 
-  declareProperty( "HPDErrors",           m_hpdErr = list_of(0.0005)(0.0006)(0.0002) );
+  {
+    std::vector<double> tmp = list_of(0.0005)(0.0006)(0.0002);
+    declareProperty( "HPDErrors",           m_hpdErr = tmp);
+  }
 
-  declareProperty( "MaxCKThetaRes",       m_maxRes = list_of(0.003)(0.0025)(0.001) );
+  {
+    std::vector<float> tmp = list_of(0.003)(0.0025)(0.001);
+    declareProperty( "MaxCKThetaRes",       m_maxRes = tmp);
+  }
 
-  declareProperty( "UseLastMeasPoint", m_useLastMP = list_of(false)(false)(false) );
+  {
+    std::vector<bool> tmp = list_of(false)(false)(false);
+    declareProperty( "UseLastMeasPoint", m_useLastMP = tmp);
+  }
 
-  declareProperty( "ScaleFactor",          m_scale = list_of(1.0)(1.0)(1.0) );
+  {
+    std::vector<double> tmp = list_of(1.0)(1.0)(1.0);
+    declareProperty( "ScaleFactor",          m_scale = tmp);
+  }
 
   // default to having histograms disabled
   setProduceHistos ( false             );

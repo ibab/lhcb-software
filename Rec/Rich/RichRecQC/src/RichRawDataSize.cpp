@@ -37,9 +37,10 @@ DECLARE_ALGORITHM_FACTORY( RawDataSize )
   declareProperty( "FillDetailedL1IngressPlots", m_detailedL1IngressPlots = false );
   declareProperty( "FillDetailedHPDPlots",       m_detailedHPDPlots       = false );
   declareProperty( "WriteTextFile",              m_writeTextFile          = false );
-  declareProperty( "RawEventLocations", m_rawEvLocs = boost::assign::list_of
+  std::vector<std::string> tmp = boost::assign::list_of
                    ( LHCb::RawEventLocation::Rich    )
-                   ( LHCb::RawEventLocation::Default ) );
+                   ( LHCb::RawEventLocation::Default );
+  declareProperty( "RawEventLocations", m_rawEvLocs = tmp );
   setProperty( "HistoPrint", false );
 }
 

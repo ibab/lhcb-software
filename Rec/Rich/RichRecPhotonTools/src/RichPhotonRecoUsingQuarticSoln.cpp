@@ -54,7 +54,7 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots         );
   declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs         );
   declareProperty( "AssumeFlatSecondaries",     m_forceFlatAssumption = false );
-  declareProperty( "NQuarticIterationsForSecMirrors", m_nQits = list_of(3)(3)(3) );
+  declareProperty( "NQuarticIterationsForSecMirrors", m_nQits = std::vector<int>(3, 3) );
   declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
   declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots         );
   declareProperty( "CheckBeamPipe", m_checkBeamPipe );
@@ -67,7 +67,8 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   declareProperty( "MinSphMirrTolIt", m_minSphMirrTolIt );
 
   // default fudge factors for this impl.
-  m_ckFudge = list_of (-0.000358914) (-0.000192933) (-3.49182e-05) ;
+  std::vector<double> tmp = list_of (-0.000358914) (-0.000192933) (-3.49182e-05);
+  m_ckFudge = tmp;
 
 }
 

@@ -28,9 +28,7 @@ TracklessRingSegmentAssociationAlg( const std::string& name,
 {
   using namespace boost::assign;
   declareProperty( "InputRings", m_inputRings = LHCb::RichRecRingLocation::MarkovRings+"All" );
-  declareProperty( "MaxDistance", 
-                   m_maxDist   = list_of(50*Gaudi::Units::mm)
-                   (50*Gaudi::Units::mm)(50*Gaudi::Units::mm) );
+  declareProperty( "MaxDistance", m_maxDist   = std::vector<double>(3, 50*Gaudi::Units::mm) );
 }
 
 // Destructor

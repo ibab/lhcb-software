@@ -50,7 +50,7 @@ MuonPIDChecker::MuonPIDChecker( const std::string& name,
   // Swap between real and MC data   
   declareProperty( "RunningMC", m_RunningMC = false );
 
-  declareProperty( "MonitorCutValues", m_monitCutValues = boost::assign::list_of(-1.)(-1.)(-1.)(-1.)(-1.)(-1.)(-1.)(-1.) );
+  declareProperty( "MonitorCutValues", m_monitCutValues = std::vector<double>(8, -1.) );
 
   // Limits for the DLL histos
   declareProperty( "DLLlower", m_DLLlower = -1. ); // -10 for DLLFlag = 0

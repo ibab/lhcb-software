@@ -89,7 +89,8 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorY"         , m_errorY  = 20.0*Gaudi::Units::mm );
   declareProperty( "ErrorTx"        , m_errorTx = 0.1                    );
   declareProperty( "ErrorTy"        , m_errorTy = 0.1                    );
-  declareProperty( "ErrorQoP"       , m_errorQoP = boost::assign::list_of(0.0)(0.01) );
+  std::vector<double> tmp = boost::assign::list_of(0.0)(0.01);
+  declareProperty( "ErrorQoP"       , m_errorQoP = tmp);
   declareProperty( "MakeNodes"      , m_makeNodes = false                   );
   declareProperty( "MakeMeasurements", m_makeMeasurements = false           );
   declareProperty( "MaterialLocator", m_materialLocator);

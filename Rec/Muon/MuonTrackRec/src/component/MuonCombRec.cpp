@@ -61,18 +61,23 @@ MuonCombRec::MuonCombRec( const std::string& type,
   declareProperty( "StrongCloneKiller", m_optStrongCloneKiller = true );
   declareProperty( "SkipStation"      , m_optSkipStation = -1 );
   declareProperty( "SeedStation"      , m_optSeedStation = 4); // default seed: M5
+
+  std::vector<float> tmp1 = list_of
   //                 R1     R2    R3    R4
-  declareProperty( "xFOIs"          , m_xFOIs = list_of
                    (100.0F)(200.0F)(300.0F)(400.0F)   // M1
                    (100.0F)(200.0F)(300.0F)(400.0F)   // M2
                    (100.0F)(200.0F)(300.0F)(400.0F)   // M3
-                   (400.0F)(400.0F)(400.0F)(400.0F)); // M4
+                   (400.0F)(400.0F)(400.0F)(400.0F);  // M4
+  declareProperty( "xFOIs"          , m_xFOIs = tmp1); // M4
+
+  std::vector<float> tmp2 = list_of
   //                 R1     R2    R3    R4
-  declareProperty( "yFOIs"          , m_yFOIs = list_of
                    ( 30.0F)( 60.0F)(100.0F)(150.0F)   // M1
                    ( 60.0F)(120.0F)(180.0F)(240.0F)   // M2
                    ( 60.0F)(120.0F)(240.0F)(480.0F)   // M3
-                   ( 60.0F)(120.0F)(240.0F)(480.0F)); // M4
+                   ( 60.0F)(120.0F)(240.0F)(480.0F);  // M4
+  declareProperty( "yFOIs"          , m_yFOIs = tmp2);
+  
   declareProperty( "PhysicsTiming"    , m_physicsTiming = true );
   declareProperty( "AssumeCosmics"    , m_assumeCosmics = false );
   declareProperty( "AssumePhysics"    , m_assumePhysics = true );

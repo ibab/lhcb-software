@@ -39,12 +39,17 @@ RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
   // JOs
   if ( contextContains("HLT") )
   {
-    //                    Aero   R1Gas  R2Gas           
-    m_nBailout = list_of  (10)   (15)   (20) ;
+    //               Aero   R1Gas  R2Gas
+    std::vector<unsigned int>
+      tmp = list_of  (10)   (15)   (20);
+    m_nBailout = tmp;
   }
   else
   {
-    m_nBailout = list_of  (50)   (50)   (50) ;
+    //               Aero   R1Gas  R2Gas
+    std::vector<unsigned int>
+      tmp = list_of  (50)   (50)   (50);
+    m_nBailout = tmp;
   }
   declareProperty( "BailoutTries", m_nBailout );
 }

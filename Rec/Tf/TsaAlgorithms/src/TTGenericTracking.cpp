@@ -47,7 +47,7 @@ TTGenericTracking::TTGenericTracking( const std::string& name,
   declareProperty("MergeNeighbours",m_mergeNeighbours = true     );
   declareProperty("ToleranceY",     m_toleranceY      = 1.0 * mm );
   declareProperty("DistCut",        m_distCut         = 1.0 * mm );
-  declareProperty("WindowCenter",   m_winCenter       = list_of(0.0)(0.0)(0.0));
+  declareProperty("WindowCenter",   m_winCenter       = std::vector<double>(3, 0.0));
   declareProperty("HalfWindowXSize",m_windowX         =-1.0 * mm );
   declareProperty("HalfWindowYSize",m_windowY         =-1.0 * mm );
   declareProperty("AddRich1State",  m_addRich1State   = true     );  

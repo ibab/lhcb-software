@@ -37,25 +37,33 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_extrapFromRef      ( false                        ),
     m_minZmove           ( 1 * Gaudi::Units::mm         )
 {
-  using namespace boost::assign;
   using namespace Gaudi::Units;
+
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+#define  init_vect(A, B, C) {A, B, C}
+#define  init_vect2(A, B) {A, B}
+#else
+  using namespace boost::assign;
+#define  init_vect(A, B, C) list_of(A)(B)(C)
+#define  init_vect2(A, B) list_of(A)(B)
+#endif
 
   // context specific defaults
   if ( contextContains("HLT") )
   {
     m_trExt1Name   = "TrackParabolicExtrapolator";
     m_trExt2Name   = "TrackLinearExtrapolator";
-    // Rads                  Aerogel   Rich1Gas  Rich2Gas
-    m_zTolerance   = list_of (3000*mm) (3000*mm) (4000*mm) ;
-    m_minRadLength = list_of (0*mm)    (500*mm)  (1500*mm) ;
+    // Rads                    Aerogel   Rich1Gas  Rich2Gas
+    m_zTolerance   = init_vect(3000*mm , 3000*mm , 4000*mm) ;
+    m_minRadLength = init_vect(0*mm    , 500*mm  , 1500*mm) ;
   }
   else // offline
   {
     m_trExt1Name   = "TrackRungeKuttaExtrapolator";
     m_trExt2Name   = "TrackParabolicExtrapolator";
-    // Rads                  Aerogel   Rich1Gas  Rich2Gas
-    m_zTolerance   = list_of (800*mm)  (2000*mm) (3000*mm) ;
-    m_minRadLength = list_of (0*mm)    (500*mm)  (1500*mm) ;
+    // Rads                    Aerogel   Rich1Gas  Rich2Gas
+    m_zTolerance   = init_vect(800*mm  , 2000*mm , 3000*mm) ;
+    m_minRadLength = init_vect(0*mm    , 500*mm  , 1500*mm) ;
   }
 
   // job options
@@ -77,10 +85,10 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "ZTolerances", m_zTolerance );
 
   // sanity checks on state information
-  declareProperty( "ZSanityChecks", m_minStateDiff = list_of(1*mm)(25*mm)(50*mm) );
+  declareProperty( "ZSanityChecks", m_minStateDiff = init_vect(1*mm, 25*mm, 50*mm) );
 
   // shifts for mirror correction
-  declareProperty( "MirrorShiftCorr", m_mirrShift = list_of(35*cm)(150*cm) );
+  declareProperty( "MirrorShiftCorr", m_mirrShift = init_vect2(35*cm, 150*cm) );
 
   // Type of track segments to create
   declareProperty( "SegmentType", m_trSegTypeJO = "AllStateVectors" );
@@ -88,6 +96,8 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   // min path length
   declareProperty( "MinRadiatorPathLength", m_minRadLength );
 
+#undef init_vect
+#undef init_vect2
 }
 
 //=============================================================================

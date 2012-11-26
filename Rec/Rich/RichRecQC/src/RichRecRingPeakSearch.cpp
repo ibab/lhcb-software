@@ -32,7 +32,7 @@ RingPeakSearch::RingPeakSearch( const std::string& name,
   declareProperty( "RingLocation", m_ringLoc = "Rec/Rich/Markov/RingsIsolated",
                    "The TES location of RichRecRings" );
   declareProperty( "MaxFitVariance",
-                   m_maxFitVariance = list_of(100)(100)(100) );
+                   m_maxFitVariance = std::vector<double>(3, 100) );
 
 }
 

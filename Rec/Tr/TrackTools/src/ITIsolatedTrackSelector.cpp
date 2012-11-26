@@ -22,12 +22,20 @@
 #include "LoKi/select.h"
 #include "TrackInterfaces/ISTClusterCollector.h"
 // Boost
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+#include <functional>
+using std::bind;
+using namespace std::placeholders;
+#else
 #include <boost/lambda/bind.hpp>
+using namespace boost::lambda;
+#endif
+
 #include <boost/lambda/lambda.hpp>
+
 #include <boost/foreach.hpp>
 #include <boost/assign/list_of.hpp>
 
-using namespace boost::lambda;
 using namespace boost::assign;
 using namespace LHCb;
 using namespace Gaudi;

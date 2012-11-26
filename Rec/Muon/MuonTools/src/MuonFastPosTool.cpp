@@ -46,8 +46,10 @@ StatusCode MuonFastPosTool::initialize() {
   m_stationNumber=basegeometry.getStations();
   m_regionNumber=basegeometry.getRegions();
 
-  m_padGridX = boost::assign::list_of(24)(48)(48)(12)(12);
-  m_padGridY = boost::assign::list_of( 8)( 8)( 8)( 8)( 8);
+  std::vector<unsigned int> tmp1 = boost::assign::list_of(24)(48)(48)(12)(12);
+  std::vector<unsigned int> tmp2 = boost::assign::list_of( 8)( 8)( 8)( 8)( 8);
+  m_padGridX = tmp1;
+  m_padGridY = tmp2;
 
   m_padSizeX.resize(20);
   m_padSizeY.resize(20);

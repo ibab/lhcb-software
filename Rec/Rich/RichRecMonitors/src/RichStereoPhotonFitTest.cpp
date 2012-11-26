@@ -32,12 +32,13 @@ StereoPhotonFitTest::StereoPhotonFitTest( const std::string& name,
     m_ckRes             ( NULL ),
     m_richRecMCTruth    ( NULL )
 {
-  declareProperty( "ChThetaRecHistoLimitMin",
-                   m_ckThetaMin = boost::assign::list_of(0.1)(0.03)(0.01) );
-  declareProperty( "ChThetaRecHistoLimitMax",
-                   m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
-  declareProperty( "CKResHistoRange",
-                   m_ckResRange = boost::assign::list_of(0.01)(0.004)(0.002) );
+  std::vector<double> t1 = boost::assign::list_of(0.1)(0.03)(0.01);
+  std::vector<double> t2 = boost::assign::list_of(0.3)(0.08)(0.05);
+  std::vector<double> t3 = boost::assign::list_of(0.01)(0.004)(0.002);
+  
+  declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = t1 );
+  declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = t2 );
+  declareProperty( "CKResHistoRange",         m_ckResRange = t3 );
 }
 
 // Destructor

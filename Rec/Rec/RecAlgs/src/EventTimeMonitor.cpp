@@ -57,7 +57,8 @@ StatusCode EventTimeMonitor::initialize() {
     m_plotD  = book    ( m_histoD      ) ; 
     m_plotY  = book    ( m_histoY      ) ; 
   }
-  m_moffsets = boost::assign::list_of(0)(21)(60)(91)(121)(152)(182)(213)(244)(274)(305)(335);
+  std::vector<unsigned int> tmp = boost::assign::list_of(0)(21)(60)(91)(121)(152)(182)(213)(244)(274)(305)(335);
+  m_moffsets = tmp;
   
   return StatusCode::SUCCESS;
 }

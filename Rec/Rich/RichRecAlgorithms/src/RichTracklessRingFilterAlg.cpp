@@ -30,8 +30,8 @@ TracklessRingFilterAlg::TracklessRingFilterAlg( const std::string& name,
                    m_inputRings  = LHCb::RichRecRingLocation::MarkovRings+"All"  );
   declareProperty( "OutputRings", 
                    m_outputRings = LHCb::RichRecRingLocation::MarkovRings+"Best" );
-  declareProperty( "MinNumPixels",        m_minNumHits = list_of(5)  (5)  (5)   );
-  declareProperty( "MinAveragePixelProb", m_minAvProb  = list_of(0.7)(0.7)(0.7) );
+  declareProperty( "MinNumPixels",        m_minNumHits = std::vector<unsigned int>(3, 5  ) );
+  declareProperty( "MinAveragePixelProb", m_minAvProb  = std::vector<double>      (3, 0.7) );
 }
 
 // Destructor

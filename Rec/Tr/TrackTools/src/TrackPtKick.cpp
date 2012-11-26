@@ -42,12 +42,13 @@ TrackPtKick::TrackPtKick( const std::string& type,
 {
   declareInterface<ITrackMomentumEstimate>(this);
 
- declareProperty( "resParams",  
-                  m_resParams =  boost::assign::list_of(0.015)(0.29) );
+  std::vector<double> tmp1 = boost::assign::list_of(0.015)(0.29);
+  declareProperty( "resParams", m_resParams = tmp1);
+  
+  std::vector<double> tmp2 = boost::assign::list_of(1.04)(0.14);
+  declareProperty( "ParabolicCorrection", m_ParabolicCorrection = tmp2);
 
- declareProperty( "ParabolicCorrection", 
-                  m_ParabolicCorrection =   boost::assign::list_of(1.04)(0.14));
- declareProperty( "ConstantCorrection",  m_Constant = 0.*Gaudi::Units::MeV );
+  declareProperty( "ConstantCorrection",  m_Constant = 0.*Gaudi::Units::MeV );
 }
 
 //=============================================================================

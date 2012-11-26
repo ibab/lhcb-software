@@ -72,8 +72,8 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty( "DetType"         , m_detType =  "IT" );
   declareProperty( "ExpectedHitsTool", m_expectedHitsTool =
                    "ITHitExpectation" );
-  declareProperty( "Cut"             , m_spacialCut =
-                   list_of( 500. * Gaudi::Units::um )( 700. * Gaudi::Units::um ) );
+  std::vector<double> tmp = list_of( 500. * Gaudi::Units::um )( 700. * Gaudi::Units::um );
+  declareProperty( "Cut"             , m_spacialCut = tmp );
   declareProperty( "TrackSelName"    , m_trackSelectorName =
                    "ITIsolatedTrackSelector" );
   declareProperty( "MinExpectedHits" , m_minHits = 10 );
@@ -82,7 +82,7 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty( "ChargeCut"       , m_chargeCut = 0. );
   declareProperty( "CollectorPrefix" , m_collectorPrefix = "" );
   declareProperty( "MinExpectedNbr"  , m_minExpected = 100 );
-  declareProperty( "Types"           , m_wantedTypes = list_of( 3 ) );
+  declareProperty( "Types"           , m_wantedTypes = std::vector<unsigned int>(1, 3) );
   declareProperty( "TakeEveryHit"    , m_everyHit = true );
   declareProperty( "MinDistToEdge"   , m_minDistToEdge = -1. );
 

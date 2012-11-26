@@ -52,10 +52,12 @@ CLTool::CLTool( const std::string& type,
     m_init(StatusCode::FAILURE)
 {
   declareInterface<ICLTool>(this);
+
+  std::vector<double> tmp = boost::assign::list_of(-1.);
   //Get momentum bins for signal distributions 
-  declareProperty("Range", m_range= boost::assign::list_of (-1.));
+  declareProperty("Range", m_range= tmp);
   //Get momentum bins for background distributions 
-  declareProperty("RangeNmuons", m_rangeNmuons= boost::assign::list_of (-1.));  
+  declareProperty("RangeNmuons", m_rangeNmuons= tmp);  
   //Decide wether to integrate to right or left
   declareProperty("LeftRight", m_leftRight);
   //Get distributions for signal

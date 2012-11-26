@@ -31,14 +31,11 @@ FastMomentumEstimate::FastMomentumEstimate( const std::string& type,
 
   declareInterface<ITrackMomentumEstimate>(this);
   
-  declareProperty( "ParamsTCubic", m_paramsTCubic 
-		   = boost::assign::list_of(0.0)); 
-  declareProperty( "ParamsTParabola", m_paramsTParab  
-		   = boost::assign::list_of(0.0));
-  declareProperty( "ParamsVeloTCubic", m_paramsVeloTCubic 
-		   = boost::assign::list_of(0.0)); 
-  declareProperty( "ParamsVeloTParabola", m_paramsVeloTParab 
-		   = boost::assign::list_of(0.0));
+  std::vector<double> tmp(1, 0.0);
+  declareProperty( "ParamsTCubic", m_paramsTCubic = tmp);
+  declareProperty( "ParamsTParabola", m_paramsTParab = tmp);
+  declareProperty( "ParamsVeloTCubic", m_paramsVeloTCubic = tmp);
+  declareProperty( "ParamsVeloTParabola", m_paramsVeloTParab = tmp);
   declareProperty( "TResolution", m_tResolution = 0.025);
   declareProperty( "VeloPlusTResolution", m_veloPlusTResolution = 0.015);
 }
@@ -66,16 +63,26 @@ StatusCode FastMomentumEstimate::initialize()
     m_paramsTCubic.clear();
     m_paramsVeloTCubic.clear();
 
-    if (m_magFieldSvc->useRealMap()){ 
-      m_paramsTParab      = boost::assign::list_of (-6.30991) (-4.83533) (-12.9192) (4.23025e-08);
-      m_paramsVeloTParab  = boost::assign::list_of (1.20812) (0.636694) (-0.251334) (0.414017) (2.87247) (-20.0982);
-      m_paramsTCubic      = boost::assign::list_of (-6.34025) (-4.85287) (-12.4491) (4.25461e-08);
-      m_paramsVeloTCubic  = boost::assign::list_of (1.21174) (0.634127) (-0.242116) (0.412728) (2.82916) (-20.6599);
+    if (m_magFieldSvc->useRealMap()){
+      std::vector<double>
+        t1 = boost::assign::list_of (-6.30991) (-4.83533) (-12.9192) (4.23025e-08),
+        t2 = boost::assign::list_of (1.20812) (0.636694) (-0.251334) (0.414017) (2.87247) (-20.0982),
+        t3 = boost::assign::list_of (-6.34025) (-4.85287) (-12.4491) (4.25461e-08),
+        t4 = boost::assign::list_of (1.21174) (0.634127) (-0.242116) (0.412728) (2.82916) (-20.6599);      
+      m_paramsTParab      = t1;
+      m_paramsVeloTParab  = t2;
+      m_paramsTCubic      = t3;
+      m_paramsVeloTCubic  = t4;
     } else {
-      m_paramsTParab      = boost::assign::list_of (-6.3453)(-4.77725)(-14.9039)(3.13647e-08);
-      m_paramsVeloTParab  = boost::assign::list_of (1.21909)(0.627841)(-0.235216)(0.433811)(2.92798)(-21.3909);
-      m_paramsTCubic      = boost::assign::list_of (-6.31652)(-4.46153)(-16.694)(2.55588e-08);
-      m_paramsVeloTCubic  = boost::assign::list_of (1.21485)(0.64199)(-0.27158)(0.440325)(2.9191)(-20.4831);
+      std::vector<double>
+        t1 = boost::assign::list_of (-6.3453)(-4.77725)(-14.9039)(3.13647e-08),
+        t2 = boost::assign::list_of (1.21909)(0.627841)(-0.235216)(0.433811)(2.92798)(-21.3909),
+        t3 = boost::assign::list_of (-6.31652)(-4.46153)(-16.694)(2.55588e-08),
+        t4 = boost::assign::list_of (1.21485)(0.64199)(-0.27158)(0.440325)(2.9191)(-20.4831);
+      m_paramsTParab      = t1;
+      m_paramsVeloTParab  = t2;
+      m_paramsTCubic      = t3;
+      m_paramsVeloTCubic  = t4;
     }
   }
 

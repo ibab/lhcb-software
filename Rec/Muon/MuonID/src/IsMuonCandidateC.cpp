@@ -34,7 +34,8 @@ IsMuonCandidateC::IsMuonCandidateC( const std::string& type,
   
   
   //Mom Range for IsMuon
-  declareProperty("MomRangeIsMuon",m_MomRangeIsMuon=boost::assign::list_of(3000.)(6000.)(10000.));
+  std::vector<double> tmp = boost::assign::list_of(3000.)(6000.)(10000.);
+  declareProperty("MomRangeIsMuon", m_MomRangeIsMuon = tmp);
   
   //IsMuon used: 
   //- 1 IsMuonCandidate

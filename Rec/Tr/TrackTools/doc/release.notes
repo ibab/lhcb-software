@@ -1,8 +1,11 @@
------------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 ! Package     : Tr/TrackTools
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2012-11-26 - Marco Clemencic
+ - Fixed build with C++11.
 
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.

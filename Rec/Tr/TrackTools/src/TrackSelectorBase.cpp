@@ -25,10 +25,10 @@ TrackSelectorBase::TrackSelectorBase( const std::string& type,
   // interface
   declareInterface<ITrackSelector>(this);
   // JOs
-  m_trTypes = boost::assign::list_of
+  std::vector<std::string> tmp = boost::assign::list_of
     ("Velo")("VeloR")("Long")("Upstream")
     ("Downstream")("Ttrack")("Backward")("TT");
-  declareProperty( "TrackTypes", m_trTypes );
+  declareProperty( "TrackTypes", m_trTypes = tmp);
 }
 
 TrackSelectorBase::~TrackSelectorBase() { }

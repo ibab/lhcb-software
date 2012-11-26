@@ -75,11 +75,14 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty("referenceT", m_refT = 7500.);
   declareProperty("maxStepSize" , m_maxStepSize = 1500.);
   declareProperty("chi2TCut", m_chi2TCut = 200);
-  declareProperty("yTParams", m_yTParams = boost::assign::list_of(gsl_pow_2(1.6))
-                                                         (gsl_pow_2(6.9e4)));
-  declareProperty("tyTParams", m_tyTParams = boost::assign::list_of(gsl_pow_2(1.6e-3))
-                                                           (gsl_pow_2(20)));
-
+  {
+    std::vector<double> tmp = boost::assign::list_of(gsl_pow_2(1.6))(gsl_pow_2(6.9e4));
+    declareProperty("yTParams", m_yTParams = tmp);
+  }
+  {
+    std::vector<double> tmp = boost::assign::list_of(gsl_pow_2(1.6e-3))(gsl_pow_2(20));
+    declareProperty("tyTParams", m_tyTParams = tmp);
+  }
   declareProperty( "ExtrapolatorVelo",
                    m_extrapolatorVeloName = "TrackLinearExtrapolator" );
   declareProperty( "ExtrapolatorSeed",

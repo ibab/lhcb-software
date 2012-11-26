@@ -43,14 +43,19 @@ MassHypothesisRingCreator( const std::string& type,
   // context specific defaults
   if ( contextContains("HLT") )
   {
-    //                    Aero   R1Gas  R2Gas
-    m_maxPoint = list_of  (50)   (50)   (50)  ;
-    m_minPoint = list_of  (50)   (50)   (50)  ;
+    //               Aero   R1Gas  R2Gas
+    std::vector<unsigned int>
+      tmp = list_of  (50)   (50)   (50);
+    m_maxPoint = tmp;
+    m_minPoint = tmp;
   }
   else // offline
   {
-    m_maxPoint = list_of  (100)  (100)  (100) ;
-    m_minPoint = list_of  (100)  (100)  (100) ;
+    //               Aero   R1Gas  R2Gas
+    std::vector<unsigned int>
+      tmp = list_of  (100)  (100)  (100);
+    m_maxPoint = tmp;
+    m_minPoint = tmp;
   }
   declareProperty( "RingsLocation",
                    m_ringLocation = contextSpecificTES(LHCb::RichRecRingLocation::SegmentHypoRings) );

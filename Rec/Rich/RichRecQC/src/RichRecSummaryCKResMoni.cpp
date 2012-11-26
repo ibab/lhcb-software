@@ -35,8 +35,8 @@ SummaryCKResMoni::SummaryCKResMoni( const std::string& name,
                    m_summaryLoc = contextSpecificTES(LHCb::RichSummaryTrackLocation::Default) );
   declareProperty( "MinBeta",           m_minBeta    );
   // histo ranges
-  declareProperty( "CKResHistoRange",
-                   m_ckResRange = boost::assign::list_of(0.01)(0.005)(0.0025) );
+  std::vector<double> tmp = boost::assign::list_of(0.01)(0.005)(0.0025);
+  declareProperty( "CKResHistoRange", m_ckResRange = tmp);
 }
 
 // Destructor

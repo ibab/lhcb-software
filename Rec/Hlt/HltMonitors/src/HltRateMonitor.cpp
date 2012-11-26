@@ -55,7 +55,7 @@ HltRateMonitor::HltRateMonitor( const std::string& name,
                     HltDecReportsLocation::Default );
    declareProperty( "ODINLocation", m_ODINLocation =
                     ODINLocation::Default );
-   declareProperty( "Regexes", m_regexes = assign::list_of( "Hlt2Express.*Decision" ) );
+   declareProperty( "Regexes", m_regexes = std::vector<std::string>(1, "Hlt2Express.*Decision" ) );
    declareProperty( "RunParameterLocation", m_runParameterLocation 
                     = "Conditions/Online/LHCb/RunParameters" );
    declareProperty( "ForceEnable", m_forceEnable = false );

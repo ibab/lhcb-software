@@ -47,11 +47,10 @@ IdealStateCreator::IdealStateCreator( const std::string& type,
   declareProperty( "ErrorTy2", m_eTy2 = 0.0                   );
   declareProperty( "ErrorP",   m_eP   = 0.0                   );  // dp/p
   declareProperty( "CorrectSlopes",   m_correctSlopes = false );
-  //declareProperty( "Detectors" , 
-  //                m_dets = boost::assign::list_of("Velo")("IT")("TT")("OT"));
 
-  declareProperty("Detectors" , 
-                  m_dets = boost::assign::list_of("Tracker"));
+  //std::vector<std::string> tmp = boost::assign::list_of("Velo")("IT")("TT")("OT");
+  std::vector<std::string> tmp = boost::assign::list_of("Tracker");
+  declareProperty("Detectors", m_dets = tmp);
 }
 
 //=============================================================================

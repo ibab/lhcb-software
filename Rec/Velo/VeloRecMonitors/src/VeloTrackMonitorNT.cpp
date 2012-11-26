@@ -34,13 +34,19 @@
 
                                                                                 
 // Boost
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+#include <functional>
+using std::bind;
+using namespace std::placeholders;
+#else
 #include <boost/lambda/bind.hpp>
+using namespace boost::lambda;
+#endif
 #include <boost/lambda/lambda.hpp>
 
 
 #include "VeloTrackMonitorNT.h"
 
-using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
 using namespace std;

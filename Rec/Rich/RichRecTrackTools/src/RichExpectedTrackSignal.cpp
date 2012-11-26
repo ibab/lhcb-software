@@ -43,12 +43,18 @@ DECLARE_TOOL_FACTORY( ExpectedTrackSignal )
   declareProperty( "MinNumPhotonsPerRad",
                    m_minPhotonsPerRad,
                    "Minimum number of photons in each radiator for a radiator segment to be considered as having RICH information" );
-  declareProperty( "MinRadiatorMomentum", m_minPbyRad = boost::assign::list_of(0)(0)(0) );
-  declareProperty( "MaxRadiatorMomentum", m_maxPbyRad = boost::assign::list_of
+  {
+    std::vector<double> tmp = boost::assign::list_of(0)(0)(0);
+    declareProperty( "MinRadiatorMomentum", m_minPbyRad = tmp);
+  }
+  {
+    std::vector<double> tmp = boost::assign::list_of
                    (15*Gaudi::Units::GeV)                        // Aerogel
                    (boost::numeric::bounds<double>::highest())   // Rich1 Gas
                    (boost::numeric::bounds<double>::highest())   // Rich2 Gas
-                   );
+                   ;
+    declareProperty( "MaxRadiatorMomentum", m_maxPbyRad = tmp);
+  }
 }
 
 StatusCode ExpectedTrackSignal::initialize()
