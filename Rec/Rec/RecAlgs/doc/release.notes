@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-11-26 - Marco Cattaneo
+ - Fix bug in RecInit, introduced in v2r9, whereby RecHeader::rawID is filled
+   with an empty string rather than name of the raw file. Affects Reco12
+
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 

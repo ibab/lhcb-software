@@ -141,7 +141,6 @@ StatusCode RecInit::execute()
     if( NULL != rawEvent ) break;
   }
 
-  const std::string rawID=event_fname;
   if ( NULL == rawEvent ) {
     if(m_abortOnFID) return Error("RawEvent cannot be loaded, fileID cannot be found");
     Warning("RawEvent cannot be loaded, fileID cannot be found",StatusCode::SUCCESS).ignore();
@@ -159,6 +158,7 @@ StatusCode RecInit::execute()
       Warning("Registry cannot be loaded from Event, fileID cannot be found",StatusCode::SUCCESS).ignore();
     }
   }
+  const std::string rawID=event_fname;
   
   // Create the Reconstruction event header
   LHCb::RecHeader* header = new LHCb::RecHeader();
