@@ -47,7 +47,7 @@ ST::STTAEClusterMonitor::STTAEClusterMonitor( const std::string& name,
   , m_2d_ADCsVsSample(0)
 {
   // Ordered list of cluster locations
-  m_clusterLocations =
+  std::vector<std::string> tmp =
     boost::assign::list_of("Event/Prev7/Raw/TT/Clusters")
     ("Event/Prev6/Raw/TT/Clusters")
     ("Event/Prev5/Raw/TT/Clusters") 
@@ -63,7 +63,8 @@ ST::STTAEClusterMonitor::STTAEClusterMonitor( const std::string& name,
     ("Event/Next5/Raw/TT/Clusters")
     ("Event/Next6/Raw/TT/Clusters")
     ("Event/Next7/Raw/TT/Clusters");
-  declareProperty( "ClusterLocations", m_clusterLocations);
+  declareProperty( "ClusterLocations", m_clusterLocations=tmp);
+  
   // Cuts
   declareProperty("BunchID",       m_bunchID               );// BunchID 
   declareProperty("ChargeCut", m_chargeCut=12);
@@ -111,8 +112,11 @@ StatusCode ST::STTAEClusterMonitor::initialize() {
   m_maxSample = (m_nSamples+1)/2 - 1 + 0.5;
 
   // Loop over input locations and fill label vector
-  m_spills = boost::assign::list_of("Prev7")("Prev6")("Prev5") ("Prev4")("Prev3")("Prev2")("Prev1")
-    ("Default")("Next1")("Next2")("Next3")("Next4")("Next5")("Next6")("Next7");
+  std::vector<std::string> tmp = boost::assign::list_of
+    ("Prev7")("Prev6")("Prev5")("Prev4")("Prev3")("Prev2")("Prev1")
+    ("Default")
+    ("Next1")("Next2")("Next3")("Next4")("Next5")("Next6")("Next7");
+  m_spills = tmp;
   
   unsigned int diff=m_spills.size()-m_clusterLocations.size();
   m_spills.erase(m_spills.begin(),m_spills.begin()+diff/2);

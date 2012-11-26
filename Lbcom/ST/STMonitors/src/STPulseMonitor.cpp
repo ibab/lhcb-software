@@ -48,12 +48,15 @@ STPulseMonitor::STPulseMonitor( const std::string& name,
   declareSTConfigProperty("ClusterLocation", m_clusterLocation, 
                           LHCb::STClusterLocation::TTClusters);
   declareSTConfigProperty("InputData" , m_dataLocation, "Raw/TT/LCMSADCs");
-  declareProperty("Spills",        m_spills         = 
-                  list_of("Prev2")("Prev1")("Central")("Next1")("Next2")) ;
+  
+  std::vector<std::string> tmp1 =
+    list_of("Prev2")("Prev1")("Central")("Next1")("Next2") ;
+  declareProperty("Spills",        m_spills         = tmp1 );
   declareProperty("ChargeCut",     m_chargeCut      = -1.0 );// ADC counts
   declareProperty("BunchID",       m_bunchID               );// BunchID 
   declareProperty("SkipShortThick",m_skipShortThick = true );
-  declareProperty("DirNames",      m_dirNames       = list_of("all") );
+  std::vector<std::string> tmp2 = list_of("all") ;
+  declareProperty("DirNames",      m_dirNames       = tmp2 );
   declareProperty("UseNZSdata",    m_useNZSdata     = true );
   
 }

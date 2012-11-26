@@ -795,7 +795,13 @@ StatusCode parse(std::map<std::string, std::map<std::string,
                  std::map< std::string, std::string> > >& result,
                  const std::string& input )
 {
+#if (defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L) \
+    && ((__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__) < 40702)
+#warning parser for map<string, map<string, map<string, string> > > not produced for a problem with Spirit
+  return StatusCode::FAILURE;
+#else
   return parse_(result, input);
+#endif
 }
 // ============================================================================
 // END of parser

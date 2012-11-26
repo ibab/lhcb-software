@@ -19,7 +19,8 @@ STSelectChannelIDByStatus::STSelectChannelIDByStatus( const std::string& type,
   ST::ToolBase(type, name, parent)
 {
   setForcedInit();
-  declareProperty("allowedStatus", m_statusNames = boost::assign::list_of("OK"));
+  std::vector<std::string> tmp = boost::assign::list_of("OK");
+  declareProperty("allowedStatus", m_statusNames = tmp);
   declareInterface<ISTChannelIDSelector>(this);
 }
 

@@ -212,7 +212,7 @@ void VLRawBankDecoder::decode(const RawBank* rb) {
       // Check if this is the strip used in the lite cluster. 
       if (aw.centralStrip()) firstStrip = stripNumber - nStrips;
       const unsigned int adc = aw.adc();
-      strips.push_back(std::make_pair<int, unsigned int>(nStrips, adc)); 
+      strips.push_back(std::make_pair(static_cast<int>(nStrips), adc)); 
       ++nADCs;
       ++nStrips;
     }

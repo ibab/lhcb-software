@@ -20,7 +20,8 @@ STSelectChannelIDByTruth::STSelectChannelIDByTruth( const std::string& type,
   m_links(0,0,""),
   m_configured(false)
 {
-  declareProperty("Types",m_types = boost::assign::list_of(Spillover)(Real)); 
+  std::vector<int> tmp = boost::assign::list_of(Spillover)(Real);
+  declareProperty("Types",m_types = tmp); 
   declareSTConfigProperty("InputData" , m_clusterLocation  , LHCb::STClusterLocation::TTClusters);
   declareInterface<ISTChannelIDSelector>(this);
 }

@@ -43,11 +43,9 @@ HltRoutingBitsFilter::HltRoutingBitsFilter( const std::string& name,
     m_inputRawEventLocation("")
 {
 
-
-  declareProperty("VetoMask", m_v = boost::assign::list_of(0x0)(0x0)(0x0));
-  declareProperty("RequireMask", m_r = boost::assign::list_of(0xFFFF)(0xFFFF)(0xFFFF));
+  declareProperty("VetoMask", m_v = std::vector<unsigned int>(3, 0x0));
+  declareProperty("RequireMask", m_r = std::vector<unsigned int>(3, 0xFFFF));
   declareProperty("RawEventLocation", m_inputRawEventLocation);
-
 
 }
 //=============================================================================

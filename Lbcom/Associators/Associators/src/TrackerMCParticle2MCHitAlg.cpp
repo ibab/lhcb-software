@@ -35,8 +35,8 @@ TrackerMCParticle2MCHitAlg::TrackerMCParticle2MCHitAlg(const std::string& name,
   
   declareProperty( "OutputData",  m_outputData = 
                    "/Event/MC/Particles2MCTrackerHits" );
-  declareProperty("Detectors" , 
-                  m_dets = boost::assign::list_of("Velo")("IT")("TT")("OT")("Muon"));
+  std::vector<std::string> tmp = boost::assign::list_of("Velo")("IT")("TT")("OT")("Muon");
+  declareProperty("Detectors", m_dets = tmp);
 }
 
 TrackerMCParticle2MCHitAlg::~TrackerMCParticle2MCHitAlg()

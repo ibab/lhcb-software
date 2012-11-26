@@ -54,8 +54,7 @@ MCCKPhotonYieldAlg::MCCKPhotonYieldAlg( const std::string& name,
                    m_mcRichHitsLoc = LHCb::MCRichHitLocation::Default );
 
   // Min MCParticle momentum
-  m_minP = boost::assign::list_of(80*Gaudi::Units::GeV)(80*Gaudi::Units::GeV)(80*Gaudi::Units::GeV);
-  declareProperty( "MinParticleMomentum", m_minP );
+  declareProperty( "MinParticleMomentum", m_minP = std::vector<double>(3, 80*Gaudi::Units::GeV));
 
   // Max MCParticle momentum
   declareProperty( "MaxParticleMomentum", m_maxP );

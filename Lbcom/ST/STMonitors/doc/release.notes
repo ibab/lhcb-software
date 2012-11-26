@@ -4,6 +4,9 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2012-11-26 - Marco Clemencic & Ben Couturier
+ - Fixed build with C++11.
+
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
 

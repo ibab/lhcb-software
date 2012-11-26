@@ -17,7 +17,8 @@ DECLARE_SERVICE_FACTORY(ConfigStackAccessSvc)
 ConfigStackAccessSvc::ConfigStackAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
   : Service ( name , pSvcLocator )
 {
-    declareProperty("ConfigAccessSvcs", s_svcs = boost::assign::list_of("ConfigDBAccessSvc"));
+  std::vector<std::string> tmp = boost::assign::list_of("ConfigDBAccessSvc");
+  declareProperty("ConfigAccessSvcs", s_svcs = tmp);
 }
 
 //=============================================================================
