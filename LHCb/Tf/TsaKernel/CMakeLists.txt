@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TsaKernel
 ################################################################################
-gaudi_subdir(TsaKernel v3r6p1)
+gaudi_subdir(TsaKernel v3r7)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet
