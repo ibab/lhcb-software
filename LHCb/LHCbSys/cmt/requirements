@@ -84,7 +84,7 @@ use GaudiConfUtils        v1r1
 use GaudiMTTools          v1r2
 
 # Maintainer S.Roiser
-use GaudiObjDesc          v11r16
+use GaudiObjDesc          v11r17
 
 #use GaudiPatches          v1r2
 #use HepMCBack             v1r1    Gen     # Obsolete, was for DC06
