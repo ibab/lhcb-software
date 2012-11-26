@@ -1,8 +1,8 @@
-! $Id: release.notes,v 1.38 2010-05-18 22:15:48 cattanem Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
 
+!========================= STTELL1Event v1r11 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
