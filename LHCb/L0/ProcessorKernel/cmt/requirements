@@ -1,6 +1,6 @@
 package ProcessorKernel
 
-version           v7r0
+version           v7r1
 
 branches cmt doc src ProcessorKernel
 
