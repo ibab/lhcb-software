@@ -5,9 +5,177 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v35r3>2012-11-27 LHCbSys v35r3</A></H1><PRE>
+This version uses Gaudi v23r5 and LCG_64b
 
-! 2012-11-15 - Marco Clemencic
- - Added CMake configuration file.
+- This version introduces support for CMake. All packages have been modified
+  to add CMake configuration files
+
+- Packages removed: Online/RootCnv (pick up latest version v1r19 from Gaudi)
+ 
+- Packages with modifications other than CMake support: Calo/CaloDAQ v4r31,
+    DAQ/MDF v3r36, DAQ/Tell1Kernel v1r13, Det/BcmDet v1r4,
+    Det/CaloDetXmlCnv v3r3, Det/DDDB v1r59, Det/DetDescChecks v5r9,
+    Det/DetDescCnv v4r16, Det/DetDescSvc v3r6, Det/Magnet v7r6,
+    Det/MuonDet v9r9, Det/OTDet v8r9, Det/RichDet v16r14, Det/STDet v4r29,
+    Det/VLDet v1r3, Event/DigiEvent v3r1, Event/EventAssoc v5r2,
+    Event/EventPacker v2r20, Event/FSREvent v1r1, Event/GenEvent v6r5,
+    Event/LinkerEvent v3r9, Event/LumiEvent v3r3, Event/MCEvent v2r24,
+    Event/RecreatePIDTools v1r6, Ex/DetCondExample v11r12, Ex/IOExample v1r8,
+    GaudiConf v16r4, Kernel/FSRAlgs v1r1, Kernel/LHCbAlgs v2r53, 
+    Kernel/LHCbKernel v13r14, Kernel/LHCbMath v3r36, L0/L0MuonKernel v9r9,
+    L0/ProcessorKernel v7r1, Muon/MuonDAQ v4r16, Phys/LoKiCore v11r10,
+    Phys/LoKiGen v10r10, Rich/RichKernel v7r51, Sim/SimComponents v2r23,
+    ST/STKernel v2r10, Tools/CondDBEntityResolver v5r4, Tools/FileStager v1r10,
+    Tools/XmlTools v6r7, Tr/TrackInterfaces v4r22, Tr/TrackKernel v1r11 
+
+- In CaloDAQ v4r31
+  . In CaloBankHandler.opts, Configuration.py: remove setting MeasureTime=True,
+    should not be the default, and should in any case use TimingAuditor.
+
+- In Det/DDDB v1r59
+ - Update database tags for latest global tags:
+   . LHCBCOND, 2012: cond-20121116
+   . LHCBCOND, 2011: cond-20120724 (was cond-20120829, which is only for 2012)
+   . DQFLAGS,  2012: dq-20121016
+
+- In MuonDet v9r9
+  . Added m_isM1defined flag to DeMuonDetector class, automatically set
+    according to DDDB, read through DeMuonDetector::isM1defined().
+  . Added DeMuonDetector::testForFilter(const IDetectorElement *f) function
+    to test if f is a Muon filter.
+  . src/Lib/MuonChamberLayout.{cpp,h}
+    reads DeMuonDetector::isM1defined() and initialize m_ChVec properly
+
+- In RichDet v16r14
+  . Check the list of inactive Photo-Detectors for possible errors in
+    DeRichSystem
+  . Added method rich() to DeRich to return the DetectorType
+  . Addition of new class DeHorizRich
+  . Modifications in DeRichSphMirror DeRichPMTPanel DeRichPMT &
+    DeRichBase to be able to run with a single Rich detector
+  . Updated DeRichRadiator to set correctly the rich() and radiatorID() for
+    the upgrade to a single Rich detector
+
+- In VLDet v1r3
+  . Removed unused functions, added functions for pattern recognition
+
+- In DigiEvent v3r1
+  . Modify SiLiteCluster.xml so that channelID length is 25 when requested,
+    otherwise it is 24, compatible with existing data.
+
+- In EventAssoc v5r2
+  . Add the dictionary for MCParticle -> ProtoParticle
+
+- In EventPacker v2r20
+  . Various changes to better support packing and unpacking of MC related
+    stripping information.
+  . Load the clusters in PackCluster only when really needed. Avoids problems
+    with attempts to load UT clusters in non-upgrade detector versions ...
+  . Extend ConversionDODMapper with new job options to allow the property name
+    for the input and output data locations to be configurable
+  . Sort the unpacked cluster containers in UnpackCluster. Workaround for an
+    issue in Stripping20 where the clusters are not sorted prior to packing.
+
+- In FSREvent v1r1
+  . Rename some variables for clarity in IOFSR
+
+- In LinkerEvent v3r9
+  . In LinkerWithKey, make it dummy if the specified container name is empty.
+    Needed by the DaVinci associators as a dummy one is created.
+
+- In MCEvent v2r24
+  . Improve the fillstream methods for MCParticle and MCVertex to also include
+    information on their associated SmartRefs. Added two new cpp files for
+    these classes to implement the new methods, as they are unlikely to be
+    properly inlined anyway (too long). Moved MCParticle::hasOscillated() to
+    the cpp file, as to was also unlikely to be inlined.
+
+- In RecreatePIDTools v1r6
+  . Replace exist/get calls with getIfExists
+
+- In IOExample v1r8
+  . Fix references to follow changes in DstConf
+
+- In GaudiConf v17r0, v17r1
+  . Add a filter to the Charged ProtoParticle unpacking sequence that checks if
+    they exist before running the PID recalibration algorithms.
+  . Add support for automatic unpacking of stripping MC information
+  . SimConf.py:
+    o Add slot "SaveHepMC", default True, to switch off saving of HepMCEvents.
+      Should be set to False by Gauss. Downstream applications will save by
+      default if they were saved by Gauss
+    o Never save HepMCEvents for Spillover slots
+    o Remove DC06 support
+  . DstConf.py: do not save Digit to MCParticle linkers on default MC DST,
+    saved only if "Extended" SimType
+  . Add tuning for BufferSize to FSR service (512 Bytes) for optimization,
+    see Core Soft meeting, indico.cern.ch/conferenceDisplay?confId=207776
+  . Extend the automatic unpacking options for stripping in DstConf to
+    automatically create on demand the stream dependent 'Lite' clusters from
+    the original full versions
+
+- In Kernel/FSRAlgs v1r1
+  . Segfault identified on opening multiple files, not yet understood...
+  . Automatic cleaning is implemented.
+  . Simple options file test is added
+  . Clone OutputStreamAgent, OutputStream, RecordStream and write a new class
+    on top
+  . Add LHCbFSRStream, derived from LHCbRecordStream
+  . Add FSRIOSvc, which polls data to fill the FSR and fills it for you.
+  . Update merge-small-files reference following changed input files
+
+- In Kernel/LHCbAlgs v2r53
+  . Use getIfExists in DataObjectVersionFilter + increase default max
+    version number
+  . Add a trivial new algorithm DataRemove that just removes a TES location.
+    Useful in the stripping packing options.
+
+- In LHCbKernel v13r14
+  . Added one more Rich DetectorType for the upgrade with a single Rich/TRID
+
+- In LHCbMath v3r36
+  . Add functions for calculation of sum/difference/multiplication/division
+    with correlation
+
+- In LoKiCore v11r10
+  . Remove unnecessary disclaimers from file documentation blocks
+  . Remove obsolete CVS control strings from file documentation blocks
+  . Fixed warning for duplicated definition of _POSIX_C_SOURCE.
+
+- In LoKiGen v10r9, v10r10,
+  . Bug fix in 4-vector-functors
+
+- In RichKernel v7r51
+  . Adapted HPDIdentifier class to accept also numbering schemes for MaPMTs
+    Scheme is RPMMMNN for Rich, Panel, Module (column) and Number
+  . Added function deRichDetectors() to RichCommonBase to get the DeRich objects
+  . Added tool interace Rich::IDetectorTool
+
+- In TrackInterfaces v4r22
+  . Add method to clear the cache in ITrackStateProvider
+
+- In DetDescCnv v4r16, DetCondExample v11r12, LHCbAlgs v2r53, RichKernel v7r51
+  . Fixed 'virtual function is hidden' warning.
+
+- In STDet v4r29, DigiEvent v3r1, STKernel v2r10
+  . Fix multiple return in inline functions.
+
+- In BcmDet v1r4, CaloDetXmlCnv v3r3
+  . Remove obsolete file <package>_dll.cpp
+
+- In CaloDAQ v4r31, MuonDet v9r9, RichDet v16r14, LumiEvent v3r3, FSRAlgs v1r1
+  . Fix Coverity defects
+
+- In CaloDAQ v4r31, MDF v3r36, Tell1Kernel v1r13, DetDescChecks v5r9,
+     DetDescSvc v3r6, Magnet v7r6, MuonDet v9r9, OTDet v8r9, GenEvent v6r5,
+     LHCbKernel v13r14, LHCbMath v3r36, L0MuonKernel v9r9, ProcessorKernel v7r1,
+     MuonDAQ v4r16, SimComponents v2r23, STKernel v2r10, 
+     CondDBEntityResolver v5r4, FileStager v1r10, XmlTools v6r7,TrackKernel v1r11
+  . Fix warnings from gcc -pedantic and Eclipse
+
+- In RichDet v16r14, LumiEvent v3r3, LoKiCore v11r10
+  . Fix unprotected verbose(), debug()
 
 </PRE><H1><A NAME=v35r2>2012-10-01 LHCbSys v35r2</A></H1><PRE>
 This version uses Gaudi v23r4 and LCG_64a

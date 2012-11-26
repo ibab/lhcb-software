@@ -1,5 +1,5 @@
 package LHCbSys
-version           v35r2
+version           v35r3
 
 branches doc cmt tests
 
@@ -8,80 +8,80 @@ branches doc cmt tests
 #===============================================================
 
 #                                         Maintainer
-use MCAssociators         v1r1    Associators # V. Gligorov
+use MCAssociators         v1r2    Associators # V. Gligorov
 
-use CaloDAQ               v4r30   Calo    # Olivier Deschamps
-use CaloInterfaces        v8r4    Calo    # Olivier Deschamps
-use CaloKernel            v6r2p1  Calo    # Olivier Deschamps
-use CaloUtils             v9r5    Calo    # Olivier Deschamps
+use CaloDAQ               v4r31   Calo    # Olivier Deschamps
+use CaloInterfaces        v8r5    Calo    # Olivier Deschamps
+use CaloKernel            v6r3    Calo    # Olivier Deschamps
+use CaloUtils             v9r6    Calo    # Olivier Deschamps
 
-use DAQSys                v6r0    DAQ     # Marco Cattaneo
-use DAQUtils              v1r9    DAQ     # Marco Cattaneo
-use MDF                   v3r35   DAQ     # Markus Frank
-use MDF_ROOT              v1r8    DAQ     # Markus Frank
-use Tell1Kernel           v1r12p1 DAQ     # Tomasz Szumlak
+use DAQSys                v6r1    DAQ     # Marco Cattaneo
+use DAQUtils              v1r10   DAQ     # Marco Cattaneo
+use MDF                   v3r36   DAQ     # Markus Frank
+use MDF_ROOT              v1r9    DAQ     # Markus Frank
+use Tell1Kernel           v1r13   DAQ     # Tomasz Szumlak
 
 # Detector description
-use DetSys                v17r1   Det     # Marco Cattaneo
-use BcmDet                v1r3    Det     # Magnus Lieng
-use CaloDet               v10r14  Det     # Olivier Deschamps
-use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
-use DDDB                  v1r58   Det     # Marco Cattaneo
-use DetCond               v12r27  Det     # Marco Clemencic
-use DetDesc               v18r29  Det     # Marco Clemencic
-use DetDescChecks         v5r8    Det     # Marco Clemencic, Ivan Belyaev
-use DetDescCnv            v4r15   Det     # Marco Clemencic
-use DetDescSvc            v3r5    Det     # Marco Clemencic
-use FTDet                 v1r0    Det     # Olivier Callot
-use Magnet                v7r5    Det     # Marco Cattaneo
-use MuonDet               v9r8    Det     # Alessia Satta
-use OTDet                 v8r8    Det     # Alexandr Kozlinskiy
-use RichDet               v16r13  Det     # Chris Jones
-use STDet                 v4r28   Det     # J. van Tilburg
-use VeloDet               v13r18p1 Det    # Mark Tobin, Kurt Rinnert
-use VLDet                 v1r2    Det     # Heinrich Schindler
-use VPDet                 v2r0    Det     # Pawel Jalocha
+use DetSys                v17r2   Det     # Marco Cattaneo
+use BcmDet                v1r4    Det     # Magnus Lieng
+use CaloDet               v10r15  Det     # Olivier Deschamps
+use CaloDetXmlCnv         v3r3    Det     # Olivier Deschamps
+use DDDB                  v1r59   Det     # Marco Cattaneo
+use DetCond               v12r28  Det     # Marco Clemencic
+use DetDesc               v18r30  Det     # Marco Clemencic
+use DetDescChecks         v5r9    Det     # Marco Clemencic, Ivan Belyaev
+use DetDescCnv            v4r16   Det     # Marco Clemencic
+use DetDescSvc            v3r6    Det     # Marco Clemencic
+use FTDet                 v1r1    Det     # Olivier Callot
+use Magnet                v7r6    Det     # Marco Cattaneo
+use MuonDet               v9r9    Det     # Alessia Satta
+use OTDet                 v8r9    Det     # Alexandr Kozlinskiy
+use RichDet               v16r14  Det     # Chris Jones
+use STDet                 v4r29   Det     # J. van Tilburg
+use VeloDet               v13r19  Det    # Mark Tobin, Kurt Rinnert
+use VLDet                 v1r3    Det     # Heinrich Schindler
+use VPDet                 v2r1    Det     # Pawel Jalocha
 
 # Event data model
-use DAQEvent              v9r11   Event   # Marco Cattaneo, Markus Frank
-use EventSys              v25r0   Event   # Marco Cattaneo
-use DigiEvent             v3r0    Event   # Marco Cattaneo and sub-det experts
-use EventAssoc            v5r1    Event   #
-use EventBase             v3r0    Event   # Marco Cattaneo, Gloria Corti
-use EventPacker           v2r19   Event   # Olivier Callot
-use FSREvent              v1r0    Event   # Rob Lambert
-use FTEvent               v1r0    Event   # Olivier Callot
-use GenEvent              v6r4    Event   # Gloria Corti
-use HltEvent              v9r2p1  Event   # Jose Angel Hernando-Morata
-use L0Event               v19r7   Event   # Olivier Deschamps, Julien Cogan
-use LinkerEvent           v3r8    Event   # Olivier Callot
-use LinkerInstances       v3r5    Event   # Thomas Ruf
-use LumiEvent             v3r2    Event   # Jaap Panman
-use MCEvent               v2r23   Event   # Gloria Corti and sub-det experts
-use MicroDst              v1r0    Event   # ??
-use PackedEvent           v4r12   Event   # Marco Cattaneo, Olivier Callot
-use PhysEvent             v11r18  Event   # Patrick Koppenburg
-use RecEvent              v2r43   Event   # Marco Cattaneo and sub-det experts
-use RecreatePIDTools      v1r5    Event   # Chris Jones
-use SwimmingEvent         v1r2    Event   # Roel Aaij, Vava Gligorov
-use TrackEvent            v5r19   Event   # Wouter Hulsbergen
-use VeloEvent             v16r10  Event   # Tomasz Szumlak, Chris Parkes
+use DAQEvent              v9r12   Event   # Marco Cattaneo, Markus Frank
+use DigiEvent             v3r1    Event   # Marco Cattaneo and sub-det experts
+use EventAssoc            v5r2    Event   #
+use EventBase             v3r1    Event   # Marco Cattaneo, Gloria Corti
+use EventPacker           v2r20   Event   # Olivier Callot
+use EventSys              v25r1   Event   # Marco Cattaneo
+use FSREvent              v1r1    Event   # Rob Lambert
+use FTEvent               v1r1    Event   # Olivier Callot
+use GenEvent              v6r5    Event   # Gloria Corti
+use HltEvent              v9r3    Event   # Jose Angel Hernando-Morata
+use L0Event               v19r8   Event   # Olivier Deschamps, Julien Cogan
+use LinkerEvent           v3r9    Event   # Olivier Callot
+use LinkerInstances       v3r6    Event   # Thomas Ruf
+use LumiEvent             v3r3    Event   # Jaap Panman
+use MCEvent               v2r24   Event   # Gloria Corti and sub-det experts
+use MicroDst              v1r1    Event   # ??
+use PackedEvent           v4r13   Event   # Marco Cattaneo, Olivier Callot
+use PhysEvent             v11r19  Event   # Patrick Koppenburg
+use RecEvent              v2r44   Event   # Marco Cattaneo and sub-det experts
+use RecreatePIDTools      v1r6    Event   # Chris Jones
+use SwimmingEvent         v1r3    Event   # Roel Aaij, Vava Gligorov
+use TrackEvent            v5r20   Event   # Wouter Hulsbergen
+use VeloEvent             v16r11  Event   # Tomasz Szumlak, Chris Parkes
 
 # LHCb  Examples
-use DetCondExample        v11r11  Ex      # Marco Clemencic
-use DetDescExample        v7r7p1  Ex      # Marco Clemencic
-use IOExample             v4r7    Ex      # Marco Cattaneo
+use DetCondExample        v11r12  Ex      # Marco Clemencic
+use DetDescExample        v7r8    Ex      # Marco Clemencic
+use IOExample             v4r8    Ex      # Marco Cattaneo
 
 # Packages without Hat, cannot have comment field.
 
 # Maintainer M.Cattaneo
-use GaudiConf             v16r3
+use GaudiConf             v17r1
 
 # Maintainer ??
-use GaudiConfUtils        v1r0
+use GaudiConfUtils        v1r1
 
 # Maintainer I.Shapoval
-use GaudiMTTools          v1r1
+use GaudiMTTools          v1r2
 
 # Maintainer S.Roiser
 use GaudiObjDesc          v11r16
@@ -90,59 +90,59 @@ use GaudiObjDesc          v11r16
 #use HepMCBack             v1r1    Gen     # Obsolete, was for DC06
 
 # Kernel packages
-use FSRAlgs               v1r0    Kernel  # Rob Lambert, Jaap Panman
-use HistoStrings          v1r3    Kernel  # Vanya Belyaev
-use HltInterfaces         v4r7    Kernel  # Patrick Koppenburg
-use KernelSys             v12r1   Kernel  # Marco Cattaneo
-use LHCbAlgs              v2r52   Kernel  # Marco Cattaneo
-use LHCbKernel            v13r13  Kernel  # Marco Cattaneo
-use LHCbMath              v3r35   Kernel  # Vanya Belyaev
-use MCInterfaces          v1r15   Kernel  # Marco Cattaneo et al.
-use PartProp              v1r13   Kernel  # Vanya Belyaev
-use Relations             v6r0p2  Kernel  # Ivan Belyaev
-use XMLSummaryBase        v1r3    Kernel  # Rob Lambert
-use XMLSummaryKernel      v1r8    Kernel  # Rob Lambert
+use FSRAlgs               v1r1    Kernel  # Rob Lambert, Jaap Panman
+use HistoStrings          v1r4    Kernel  # Vanya Belyaev
+use HltInterfaces         v4r8    Kernel  # Patrick Koppenburg
+use KernelSys             v12r2   Kernel  # Marco Cattaneo
+use LHCbAlgs              v2r53   Kernel  # Marco Cattaneo
+use LHCbKernel            v13r14  Kernel  # Marco Cattaneo
+use LHCbMath              v3r36   Kernel  # Vanya Belyaev
+use MCInterfaces          v1r16   Kernel  # Marco Cattaneo et al.
+use PartProp              v1r14   Kernel  # Vanya Belyaev
+use Relations             v6r1    Kernel  # Ivan Belyaev
+use XMLSummaryBase        v1r4    Kernel  # Rob Lambert
+use XMLSummaryKernel      v1r9    Kernel  # Rob Lambert
 
-use L0Base                v2r1    L0      # Julien Cogan
-use L0Interfaces          v2r1    L0      # Olivier Deschamps
-use L0MuonKernel          v9r8    L0      # Julien Cogan
-use ProcessorKernel       v7r0    L0      # Julien Cogan
+use L0Base                v2r2    L0      # Julien Cogan
+use L0Interfaces          v2r2    L0      # Olivier Deschamps
+use L0MuonKernel          v9r9    L0      # Julien Cogan
+use ProcessorKernel       v7r1    L0      # Julien Cogan
 
-use MuonDAQ               v4r15   Muon    # Alessia Satta
-use MuonInterfaces        v1r2p2  Muon    # Alessia Satta
-use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
+use MuonDAQ               v4r16   Muon    # Alessia Satta
+use MuonInterfaces        v1r3    Muon    # Alessia Satta
+use MuonKernel            v4r1    Muon    # Andrei Tsaregorodtsev
 
-use RootCnv               v1r18   Online  # (also in GAUDI and ONLINE projects)
+#use RootCnv               v1r18   Online  # (also in GAUDI and ONLINE projects)
 
-use OTDAQ                 v7r15   OT      # Wouter Hulsbergen
+use OTDAQ                 v7r16   OT      # Wouter Hulsbergen
 
-use LoKiCore              v11r9p1 Phys    # Ivan Belyaev
-use LoKiGen               v10r8   Phys    # Ivan Belyaev
-use LoKiHlt               v3r10   Phys    # Ivan Belyaev
-use LoKiMC                v10r6   Phys    # Ivan Belyaev
-use LoKiNumbers           v10r2   Phys    # Ivan Belyaev
+use LoKiCore              v11r10  Phys    # Ivan Belyaev
+use LoKiGen               v10r10  Phys    # Ivan Belyaev
+use LoKiHlt               v3r11   Phys    # Ivan Belyaev
+use LoKiMC                v10r7   Phys    # Ivan Belyaev
+use LoKiNumbers           v10r3   Phys    # Ivan Belyaev
 
-use RichKernel            v7r50   Rich    # Chris Jones
-use RichRecBase           v4r14   Rich    # Chris Jones
+use RichKernel            v7r51   Rich    # Chris Jones
+use RichRecBase           v4r15   Rich    # Chris Jones
 
-use SiDAQ                 v2r1p1  Si      # Matt Needham
+use SiDAQ                 v2r2    Si      # Matt Needham
 
-use SimComponents         v2r22   Sim     # Gloria Corti, Marco Cattaneo
+use SimComponents         v2r23   Sim     # Gloria Corti, Marco Cattaneo
 
-use STKernel              v2r9    ST      # Mark Tobin
-use STTELL1Event          v1r10   ST      # Matt Needham
+use STKernel              v2r10   ST      # Mark Tobin
+use STTELL1Event          v1r11   ST      # Matt Needham
 
-use PatKernel             v2r5    Tf      # Stephanie Hansmann-Menzemer
-use TfKernel              v2r22   Tf      # Stephanie Hansmann-Menzemer
-use TsaKernel             v3r6p1  Tf      # Matt Needham
+use PatKernel             v2r6    Tf      # Stephanie Hansmann-Menzemer
+use TfKernel              v2r23   Tf      # Stephanie Hansmann-Menzemer
+use TsaKernel             v3r7    Tf      # Matt Needham
 
-use CondDBEntityResolver  v5r3    Tools   # Marco Clemencic
-use CondDBUI              v3r18   Tools   # Marco Clemencic
-use FileStager            v1r9    Tools   # Roel Aaij
-use XmlTools              v6r6    Tools   # Marco Clemencic
+use CondDBEntityResolver  v5r4    Tools   # Marco Clemencic
+use CondDBUI              v3r19   Tools   # Marco Clemencic
+use FileStager            v1r10    Tools   # Roel Aaij
+use XmlTools              v6r7    Tools   # Marco Clemencic
 
-use TrackInterfaces       v4r21   Tr      # Matt Needham
-use TrackKernel           v1r10   Tr      # Wouter Hulsbergen
+use TrackInterfaces       v4r22   Tr      # Matt Needham
+use TrackKernel           v1r11   Tr      # Wouter Hulsbergen
 
 # Declare this as a container package
 apply_pattern container_package
