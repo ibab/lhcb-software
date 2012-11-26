@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MCInterfaces
 ################################################################################
-gaudi_subdir(MCInterfaces v1r15)
+gaudi_subdir(MCInterfaces v1r16)
 
 gaudi_depends_on_subdirs(Event/GenEvent
                          Event/MCEvent
