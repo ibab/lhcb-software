@@ -3,10 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v17r1 2012-11-26 =========================
 ! 2012-11-26 - Paul Szczypka
  - Edit FT settings in DigiConf.py
 
-!========================= GaudiConf v17r1 2012-11-26 =========================
 ! 2012-11-26 - Paul Szczypka
  - Correct writer locations for FT.
 
