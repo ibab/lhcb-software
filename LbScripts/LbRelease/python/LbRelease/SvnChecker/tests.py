@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Tests for SvnChecker
 
@@ -47,6 +48,16 @@ class Test(unittest.TestCase):
     project_tags = [
                     (FakeTransaction({'/Project/tags/PROJECT/PROJECT_v1r0/cmt': ('A', (999, '/Project/trunk/cmt'), 'dir')},
                                      {'/Project/trunk/cmt': 'dir',
+                                      '/Project/trunk/Package': 'dir',
+                                      }),
+                                      True),
+                    (FakeTransaction({'/Project/tags/PROJECT/PROJECT_v1r0/CMakeLists.txt': ('A', (999, '/Project/trunk/CMakeLists.txt'), 'file')},
+                                     {'/Project/trunk/CMakeLists.txt': 'file',
+                                      '/Project/trunk/Package': 'dir',
+                                      }),
+                                      True),
+                    (FakeTransaction({'/Project/tags/PROJECT/PROJECT_v1r0/toolchain.cmake': ('A', (999, '/Project/trunk/toolchain.cmake'), 'file')},
+                                     {'/Project/trunk/toolchain.cmake': 'file',
                                       '/Project/trunk/Package': 'dir',
                                       }),
                                       True),

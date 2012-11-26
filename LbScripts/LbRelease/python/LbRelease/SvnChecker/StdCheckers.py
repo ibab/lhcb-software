@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Common and generic checker implementations.
 
@@ -295,6 +296,10 @@ class ProjectTag(TagCheckerBase):
      - if the project do not match
      - if the version is not valid
      - ...
+
+    Temporarily, it allows, independently:
+     - Proj/trunk/CMakeLists.txt -> Proj/tags/PROJ/PROJ_vXrY/CMakeLists.txt
+     - Proj/trunk/toolchain.cmake -> Proj/tags/PROJ/PROJ_vXrY/toolchain.cmake
     """
     def _validCopy(self, src, dest):
         try:
@@ -308,8 +313,8 @@ class ProjectTag(TagCheckerBase):
             return (# lengths matches
                     ((lss, lds) in [(3, 5), (4, 4), (5, 5)])
                     and (ds[0] == ss[0]) # same project
-                    and ( (lss == 4) # 3 and 5 are acceptable only if we have 'cmt'
-                          or ( ss[-1] == ds[-1] == "cmt" ) )
+                    and ( (lss == 4) # 3 and 5 are acceptable only if we have 'cmt', 'CMakeLists.txt' or 'toolchain.cmake'
+                          or ( ss[-1] == ds[-1] and ss[-1] in ("cmt", "CMakeLists.txt", "toolchain.cmake") ) )
                     # and (ds[1] == "tags") # implicit
                     and (ds[2] == proj) # 'PROJ' subdirectory
                     and ds[3].startswith(proj + "_") # version prefix
