@@ -3,7 +3,7 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package           SimComponents
-version           v2r22
+version           v2r23
 
 #============================================================================
 # Structure, i.e. directories to process. 
