@@ -24,7 +24,7 @@ apply_pattern generate_rootmap library=GaudiOnline
 apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
 apply_pattern generate_configurables library=GaudiOnline
 
-macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) '
+macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) -lrt'
 
 apply_pattern QMTest
 apply_pattern QMTestSummarize

@@ -791,6 +791,8 @@ StatusCode MEPRxSvc::sendMEPReq(int m)
     if (m_dynamicMEPRequest) {
         mepreq.nmep = m;
         mepreq.seqno = seqno++;
+        mepreq.runno = m_runNumber;
+        clock_gettime(CLOCK_REALTIME, &mepreq.txtime);  
         int n = MEPRxSys::send_msg(m_mepSock, m_odinIPAddr, MEP_REQ_TOS, &mepreq,
                                    MEP_REQ_LEN, 0);
         if (n == MEP_REQ_LEN) {
