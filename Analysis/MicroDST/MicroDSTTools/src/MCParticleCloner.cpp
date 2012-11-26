@@ -134,7 +134,7 @@ MCParticleCloner::cloneDecayVertices( const SmartRefVector<LHCb::MCVertex>& endV
         clonedParticle->addToEndVertices(decayVertexClone);
 
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "Cloned it! " <<  *(*iEndVtx) << endmsg;
+          verbose() << "Cloned it! " << *(*iEndVtx) << endmsg;
       }
       else
       {
@@ -151,7 +151,7 @@ MCParticleCloner::cloneDecayVertices( const SmartRefVector<LHCb::MCVertex>& endV
 LHCb::MCParticle* MCParticleCloner::operator() ( const LHCb::MCParticle* mcp )
 {
   if ( !mcp ) return NULL;
-  LHCb::MCParticle* clone = getStoredClone<LHCb::MCParticle>(mcp);
+  LHCb::MCParticle * clone = getStoredClone<LHCb::MCParticle>(mcp);
   return ( clone ? clone : this->clone(mcp) );
 }
 

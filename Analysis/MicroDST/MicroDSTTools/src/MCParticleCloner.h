@@ -63,7 +63,7 @@ private:
 private:
 
   typedef MicroDST::BasicItemCloner<LHCb::MCParticle> BasicMCPCloner;
-  typedef MicroDST::BasicItemCloner<LHCb::MCVertex> BasicVtxCloner;
+  typedef MicroDST::BasicItemCloner<LHCb::MCVertex>   BasicVtxCloner;
 
 private:
 
