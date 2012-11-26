@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Relations
 ################################################################################
-gaudi_subdir(Relations v6r0p2)
+gaudi_subdir(Relations v6r1)
 
 gaudi_depends_on_subdirs(GaudiKernel)
 
