@@ -1,6 +1,5 @@
-# $Id: requirements,v 1.39 2008-10-28 09:55:58 cattanem Exp $
 package DetDescExample
-version v7r7p1
+version           v7r8
 
 branches doc src options cmt
 

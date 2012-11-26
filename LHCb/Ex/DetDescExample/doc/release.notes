@@ -1,10 +1,10 @@
-!$Id: release.notes,v 1.44 2008-11-17 15:14:27 cattanem Exp $
 !Package: DetDescExample
 !Package Manager: Marco Clemencic
 !Purpose: Demonstrate how to access detector elements, their geometry
 !         parameters and materials from detector description XML database.
 !------------------------------------------------------------------------
 
+!========================= DetDescExample v7r8 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
