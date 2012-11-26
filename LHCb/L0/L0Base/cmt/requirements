@@ -3,7 +3,7 @@
 # Maintainer : Julien Cogan
 #============================================================================
 package           L0Base
-version           v2r1
+version           v2r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
