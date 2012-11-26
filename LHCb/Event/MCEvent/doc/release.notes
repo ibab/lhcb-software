@@ -3,6 +3,7 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
 
+!========================= MCEvent v2r24 2012-11-26 =========================
 ! 2012-11-20 - Chris Jones
  - Improve the fillstream methods for MCParticle and MCVertex to also include
    information on their associated SmartRefs. Added two new cpp files for
