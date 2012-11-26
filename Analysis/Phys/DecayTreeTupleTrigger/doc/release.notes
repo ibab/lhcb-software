@@ -4,6 +4,10 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2012-11-26 - Alexandra Martin Sanchez
+ - Small modifications to TupleToolL0Calo. Change name of variable to a more
+   clear one.
+
 ! 2012-11-22 - Chris Jones
  - First version. Split of from monolithic Phys/DecayTreeTuple package.
    Contains trigger and stripping related tuple tools.

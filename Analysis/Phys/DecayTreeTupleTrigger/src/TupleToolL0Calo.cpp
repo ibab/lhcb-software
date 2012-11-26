@@ -36,7 +36,7 @@ DECLARE_TOOL_FACTORY( TupleToolL0Calo )
     : TupleToolBase ( type, name , parent )
 {
   declareInterface<IParticleTupleTool>(this);
-  declareProperty("WhichCalo", m_calo);
+  declareProperty("WhichCalo", m_calo = "HCAL");
 }
 
 //=============================================================================
@@ -46,6 +46,13 @@ StatusCode TupleToolL0Calo::initialize( )
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
   m_part2calo = tool<IPart2Calo>("Part2Calo","Part2Calo",this);
+
+  // Check selected calo is valid
+  if (m_calo != "HCAL" && m_calo != "ECAL") {
+    err() << "TupleToolL0Calo -- Invalid calo: " << m_calo << "." << endmsg ;
+    return StatusCode::FAILURE;
+  }
+
   return sc;
 }
 
@@ -68,15 +75,15 @@ StatusCode TupleToolL0Calo::fill( const LHCb::Particle* /* mother */,
     m_part2calo->match( P, "/dd/Structure/LHCb/DownstreamRegion/Hcal" ); }
   else if (m_calo == "ECAL") {
     m_part2calo->match( P, "/dd/Structure/LHCb/DownstreamRegion/Ecal" ); }
-  else {
-    m_calo = "HCAL";
-    Info("No calorimeter has been set. Projecting particle on HCAL by default.");
-    m_part2calo->match( P, "/dd/Structure/LHCb/DownstreamRegion/Hcal" );
-  }
-  
 
   // Calculate a few observables
-  trackET = TMath::Sqrt(TMath::Power(m_part2calo->caloState().x(),2)+TMath::Power(m_part2calo->caloState().y(),2))/TMath::Sqrt(TMath::Power(m_part2calo->caloState().x(),2)+TMath::Power(m_part2calo->caloState().y(),2)+TMath::Power(m_part2calo->caloState().z(),2))*TMath::Sqrt(TMath::Power(m_part2calo->caloState().p(),2)+TMath::Power(P->measuredMass(),2));
+  trackET = TMath::Sqrt(TMath::Power(m_part2calo->caloState().x(),2)+
+                        TMath::Power(m_part2calo->caloState().y(),2))
+    /TMath::Sqrt(TMath::Power(m_part2calo->caloState().x(),2)+
+                 TMath::Power(m_part2calo->caloState().y(),2)+
+                 TMath::Power(m_part2calo->caloState().z(),2))*
+    TMath::Sqrt(TMath::Power(m_part2calo->caloState().p(),2)+
+                TMath::Power(P->measuredMass(),2));
 
   xProjection = m_part2calo->caloState().x();
   yProjection = m_part2calo->caloState().y();
@@ -85,13 +92,13 @@ StatusCode TupleToolL0Calo::fill( const LHCb::Particle* /* mother */,
   // Fill the tuple
 
   if (m_calo == "HCAL") {
-    test &= tuple->column( prefix+"_L0Calo_HCAL_trueET", trackET );
+    test &= tuple->column( prefix+"_L0Calo_HCAL_realET", trackET );
     test &= tuple->column( prefix+"_L0Calo_HCAL_xProjection", xProjection );
     test &= tuple->column( prefix+"_L0Calo_HCAL_yProjection", yProjection );
     test &= tuple->column( prefix+"_L0Calo_HCAL_region", isinside_HCAL( xProjection , yProjection ) );
   }
   else if (m_calo == "ECAL") {
-    test &= tuple->column( prefix+"_L0Calo_ECAL_trueET", trackET );
+    test &= tuple->column( prefix+"_L0Calo_ECAL_realET", trackET );
     test &= tuple->column( prefix+"_L0Calo_ECAL_xProjection", xProjection );
     test &= tuple->column( prefix+"_L0Calo_ECAL_yProjection", yProjection );
     test &= tuple->column( prefix+"_L0Calo_ECAL_region", isinside_ECAL( xProjection , yProjection ) );
