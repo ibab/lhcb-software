@@ -5,6 +5,7 @@
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
 
+!========================= CondDBEntityResolver v5r4 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
