@@ -3,6 +3,7 @@
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!========================= CaloDetXmlCnv v3r3 2012-11-26 =========================
 ! 2012-11-26 - Marco Cattaneo
  - Remove obsolete file CaloDetXmlCnv_dll.cpp
 
