@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-11-27 - Rob Lambert
+ - Updated FSR test references to reflect new files
+
 ! 2012-11-15 - Stefania Vecchi
  - Update tests references for tagging
 ! 2012-10-09 - Anton Poluektov 
