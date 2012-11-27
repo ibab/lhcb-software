@@ -16,6 +16,9 @@ branches          cmt doc src options
 # use   Package      v1r*    Hat
 
 use   DaVinciKernel   v*     Phys
+use   LinkerEvent        v*    Event
+
+
 
 include_path      none
 #============================================================================
