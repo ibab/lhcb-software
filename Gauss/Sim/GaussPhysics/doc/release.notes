@@ -4,6 +4,7 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v10r0 2012-11-27 =========================
 ! 2012-11-21 - Nigel Watson
  - Added QGSP_FTFP_BERT to GaussPhysics_load.cpp
 
