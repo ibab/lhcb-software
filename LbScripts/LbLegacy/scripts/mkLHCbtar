@@ -207,18 +207,6 @@ def make_tar(pname, pversion, binary=''):
     TARDIR = os.path.join(LHCBTAR, TARSRC)
 
 #
-# ==== clean some directories before making a tar file =============
-#
-    if pname == 'Gaudi':
-        if os.path.exists(os.path.join(here, maindir, 'GaudiExamples', 'home')) :
-            os.chdir(os.path.join(here, maindir, 'GaudiExamples', 'home'))
-        else :
-            v = os.listdir(os.path.join(here, maindir, 'GaudiExamples'))
-            os.chdir(os.path.join(here, maindir, 'GaudiExamples', v[0], 'home'))
-
-        os.chdir(here)
-
-#
 # ==== get the CMTPATH ===========================================
 #
     os.environ['CMTPATH'] = ''

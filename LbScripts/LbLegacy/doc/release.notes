@@ -1,3 +1,7 @@
+2012-11-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/mkLHCbtar: removed obsolete dead code
+
 2012-11-01 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v5r3
