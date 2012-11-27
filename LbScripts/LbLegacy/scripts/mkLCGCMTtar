@@ -43,6 +43,11 @@ from subprocess import Popen, PIPE
 from LbLegacy.install_project import calculateMD5
 version = '091123'
 
+# Constants to deal with gcc/slc6/slc5
+gccName = "gcc"
+gccConfigSlc5 = "x86_64-slc5"
+gccConfigSlc6 = "x86_64-slc6"
+
 
 #---------------------------------------------------------------------------
 def usage() :
@@ -198,7 +203,8 @@ def getPackPrefix(pak, packages_versions, with_version=True):
     nat_version = packages_versions[pak][0]
     pack_path = ""
     if len(packages_versions[pak]) > 3 :
-        full_pack_path = packages_versions[pak][3]
+        full_pack_path = os.path.normpath(packages_versions[pak][3])
+        #print "XXX full_pack_path: ", full_pack_path
         if full_pack_path.startswith(lcg_ext_loc + os.sep) :
             pack_path = full_pack_path.replace(lcg_ext_loc + os.sep, "")
     else :
@@ -248,7 +254,8 @@ def get_native_versions(native_version, binary):
     here = os.getcwd()
 
     packages_versions = {}
-
+    extra_packages_versions = {}
+    
     #build cmtcmd
     if plugins_flag == 1:
         print 'build PLUGINS tar file'
@@ -289,7 +296,7 @@ def get_native_versions(native_version, binary):
             packages_versions[pack] = list(ext_info)
 
     os.remove(natives)
-
+    
     for pak in packages_versions.keys() :
         if not packages_versions[pak][0] :
             print "%s has no version. Removing it from the list" % pak
@@ -575,6 +582,8 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
                 # one for the name of the tarball: create a link.
                 if ext_bin_dir != binary_dir :
                     if not os.path.exists(os.path.join(packpath, binary_dir)):
+                        print "Not exiting %s in %s" % (os.path.join(packpath, binary_dir), os.getcwd())
+                        print "Creating link in %s: %s, %s" % (os.getcwd(), ext_bin_dir, os.path.join(packpath, binary_dir))
                         os.symlink(ext_bin_dir, os.path.join(packpath, binary_dir))
                 # remove doc, test and tests directories if any
                 for dir in ['doc', 'test', 'tests', 'examples', 'tutorial']:
@@ -591,6 +600,66 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
             if not (pack == 'CASTOR' and ((ext_bin_dir.find('win32') != -1) or (ext_bin_dir.find("winxp") != -1) )):
                 print "%s %s %s is missing" % (pack, value, ext_bin_dir)
                 missing.append(os.path.join(pack,value,ext_bin_dir))
+
+        # Special hook to add gcc x86_64-slc6 to x86_64-slc5 tarball
+        if pack == gccName and value.startswith("4.6"):
+            tp = packages_versions.get(gccName)
+            if tp != None:
+                ebin = tp[2]
+                ehome = os.path.normpath(tp[3])
+                if ebin == gccConfigSlc5:
+                    tp6 = [ tp[0], tp[1], gccConfigSlc6, tp[3].replace(gccConfigSlc5, gccConfigSlc6), "external" ]
+                    print "======> gcc slc6 data:",  tp6
+                    packType = tp6[-1]
+                    if debug_flag == 1: print 'get_tar_file Package %s is in %s' % (pack, packType)
+
+                    value = tp6[0]
+                    ext_bin_dir = tp6[2]
+                    tar_dir = lcg_tar_dir
+                    print "-------> ", tar_dir, pack, value, ext_bin_dir
+                    file, dirlist = get_tar_name(tar_dir,pack, value, ext_bin_dir)
+                    if file == None:
+                        tar_dir = lhcbtar
+                        file, dirlist = get_tar_name(tar_dir, pack, value, ext_bin_dir)
+                        if debug_flag == 1: print 'get_tar_files %s %s ' % (file, dirlist)
+                    if file != None:
+                        Ffile = os.path.join(tar_dir,file)
+                        if debug_flag == 1: print Ffile
+
+                        packpath = getPackPrefix(pack, packages_versions)
+                        if debug_flag == 1: print 'get_tar_file packpath= ',packpath
+
+                        # We need to extract in the correct location, either external
+                        # or apps releases, so we need to change directory before the extraction"
+
+                        str = 'tar --extract --ungzip --file '+Ffile
+                        print "=========>Running %s" % str
+                        rc = os.system(str)
+
+                        if rc != 0:
+                            print "Wrong %s %s %s tar file" % (pack, value, ext_bin_dir)
+                            tarko.append(os.path.join(pack,value, ext_bin_dir))
+                        elif len(dirlist) != 0:
+                            # if the external binary directory is not the same as the
+                            # one for the name of the tarball: create a link.
+                            if ext_bin_dir != binary_dir :
+                                if not os.path.exists(os.path.join(packpath, binary_dir)):
+                                    try:
+                                        os.symlink(ext_bin_dir, os.path.join(packpath, binary_dir))
+                                    except Exception, e:
+                                        print "Exception in os.symlink", e
+                                        print "Continuing Nonetheless"
+                            # remove doc, test and tests directories if any
+                            for dir in ['doc', 'test', 'tests', 'examples', 'tutorial']:
+                                if os.path.isdir(os.path.join(packpath,dirlist[0],dir)):
+                                    shutil.rmtree(os.path.join(packpath,dirlist[0],dir))
+                                    if debug_flag == 1:
+                                        print 'remove %s '%(os.path.join(packpath,dirlist[0],dir))
+                    else:
+                        print "%s %s %s is missing" % (pack, value, ext_bin_dir)
+                        missing.append(os.path.join(pack,value,ext_bin_dir))
+                
+
 
 # clean CLHEP directory
     if os.path.isdir('clhep'):
