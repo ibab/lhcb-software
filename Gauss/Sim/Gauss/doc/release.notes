@@ -4,11 +4,15 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v43r3 2012-11-27 ============================
 ! 2012-11-22 - Nigel Watson
  - Updated python/Gauss/Configuration.py for QGSP_FTFP_BERT.
 
 ! 2012-11-20 - Nigel Watson
  - Added options for new hadronic list, G4PL_QGSP_FTFP_BERT.py
+
+! 2012-11-13 - Gloria Corti
+ - Use data package for Geant4 9.5, Geant4Files v95r*
 
 ! 2012-10-24 - Paul Szczypka
  - Small changes to gauss-config-2011.qmt
