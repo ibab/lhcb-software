@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-11-27 - Stefano Perazzini
+ - Creation of StrippingB2HHBDT.py for the BDT-based stripping line of B->hh analysis
+
 ! 2012-11-23 - Vanya Belyaev
 
  - update B2PsiX for B&Q 
