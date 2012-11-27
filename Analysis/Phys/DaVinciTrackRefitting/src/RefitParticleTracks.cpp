@@ -77,6 +77,7 @@ StatusCode RefitParticleTracks::initialize()
 //=============================================================================
 StatusCode RefitParticleTracks::execute()
 {
+  setFilterPassed(false);
   if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> Execute" << endmsg;
 
   const LHCb::Particle::Range inputParticles = particles();
