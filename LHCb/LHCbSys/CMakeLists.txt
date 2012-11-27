@@ -82,7 +82,6 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          Muon/MuonInterfaces
                          Muon/MuonKernel
                          OT/OTDAQ
-                         Online/RootCnv
                          Phys/LoKiCore
                          Phys/LoKiGen
                          Phys/LoKiHlt
