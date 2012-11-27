@@ -5,7 +5,7 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v35r3>2012-11-27 LHCbSys v35r3</A></H1><PRE>
+</PRE><H1><A NAME=v35r3>2012-11-28 LHCbSys v35r3</A></H1><PRE>
 This version uses Gaudi v23r5 and LCG_64b
 
 - This version introduces support for CMake. All packages have been modified
@@ -68,6 +68,7 @@ This version uses Gaudi v23r5 and LCG_64b
   . Add the dictionary for MCParticle -> ProtoParticle
 
 - In EventPacker v2r20
+  . Explicit definition of comparison function for sorting in cluster unpacking.
   . Various changes to better support packing and unpacking of MC related
     stripping information.
   . Load the clusters in PackCluster only when really needed. Avoids problems
