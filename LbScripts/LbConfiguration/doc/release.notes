@@ -1,3 +1,7 @@
+2012-11-27 Ben Couturier <Ben.Couturier@cern.ch>
+	
+	* python/LbConfiguration/Package.py: Added new package B2OCConfig
+
 2012-11-15 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Package.py: Added new package PRConfig

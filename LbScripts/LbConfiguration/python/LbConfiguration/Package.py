@@ -49,7 +49,8 @@ package_names = ['XmlDDDB',
                  'EWConfig',
                  'SemilepConfig',
                  'BandQConfig',
-                 'PRConfig']
+                 'PRConfig',
+                 'B2OCConfig']
 
 class PackageConfException(Exception):
     pass
@@ -332,4 +333,7 @@ BandQConfig.setHat("WG")#IGNORE:E0602$
 BandQConfig.setProject("DBASE")#IGNORE:E0602$
 
 PRConfig.setProject("DBASE")#IGNORE:E0602
+
+B2OCConfig.setHat("WG")#IGNORE:E0602$
+B2OCConfig.setProject("DBASE")#IGNORE:E0602$
 
