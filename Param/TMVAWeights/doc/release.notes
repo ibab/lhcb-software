@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================== TMVAWeights v1r0 2012-02-08 ========================
+! 2012-11-27
+ - Added weights file for B->hh stripping line
+
 ! 2012-02-07 - Jibo He
  - Created the package 
  - Added weights file for Bd->eeKstar 
