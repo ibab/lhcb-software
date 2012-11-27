@@ -4,6 +4,107 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v43r3">2012-11-28 - GaussSys v43r3</A></H1><PRE>
+<H2><A NAME="Note">Development release with Geant4 9.5.p02
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v35r3 (and Gaudi v23r5)</b>
+   AppConfig v3r*,
+   <b>DecFiles v26r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   <b>pythia 6.426.2</b>, photos 215.4, <b>lhapdf 5.8.5</b> 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.06.05 (via LCG_Interfaces)
+   <b>Geant4 v95r2 (based on geant4.9.5.p02) and Geant4Files v94r0 </b>
+   XmlVis v1r15,
+   hijing 1.36.a.2 (via LCG_GeneratorsInterfaces),
+   pythia8 170 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   <b>herwig++ 2.6.1a and thepeg 1.8.1</b> (via LCG_GeneratorsInterfaces),
+   <b>rivet 1.8.1</b> (via LCG_GeneratorsInterfaces),
+   EvtGen v12r11, BcVegPy v3r1, HidValley and GenXicc private LHCb versions 
+</A></H3>
+
+! 2012-11-27 - Gloria Corti
+ - Remove LoKiGen since changes needed are in version in LHCb v35r3
+ - New version of LCG_Setting private copy based on LCGCMT_64b, the version
+   of LCG_Generators_Interfaces are also tagged with the same version. 
+   LCG_Generators_Interfaces/rivet and thepeg did not change while a fix in 
+   a macro was put in herwigpp
+
+!========================= Gauss v43r3 2012-11-27 ============================
+! 2012-11-22 - Nigel Watson
+ - Updated python/Gauss/Configuration.py for QGSP_FTFP_BERT.
+
+! 2012-11-20 - Nigel Watson
+ - Added options for new hadronic list, G4PL_QGSP_FTFP_BERT.py
+
+! 2012-11-13 - Gloria Corti
+ - Use data package for Geant4 9.5, Geant4Files v95r*
+
+! 2012-10-24 - Paul Szczypka
+ - Small changes to gauss-config-2011.qmt
+
+!========================== GENSER v11r0 2012-11-26 ==========================
+ - on v9r3b branch
+
+! 2012-11-13 - Gloria Corti
+ - Use latest version of external generators packages (with builds also
+   available for gcc 4.6
+   . pythia6   426.2
+   . lhapdf    5.8.8
+   . rivet     1.8.1
+   . herwigpp  2.6.1a
+   . thepeg    1.8.1
+
+!======================== GaussTools v18r1 2012-11-27 ========================
+! 2012-11-15 - Nigel Watson
+ - Include G4PrimaryParticle.hh to GaussTrackActionHepMC.cpp, following changes
+   to G4DynamicParticle in G4 9.5.p02.
+
+!========================= GaussRICH v13r0 2012-11-27 ========================
+! 2012-11-09 - Sajan Easo
+ - Made some suggestions made at the code review so that Gausscherenkov can be
+   built without warnings. Moved some .h files to a newly created GaussRICH 
+   subdirectory and the requirements file updated
+
+! 2012-10-17 - Sajan Easo
+ - Message verbosity level in RichSensdet changed for print statements.
+
+! 2012-10-02 - Sajan Easo
+ - Adapations for Geant4.95 version in different physics processes,
+   mainly for the methods of G4MaterialPropertyVector. 
+   These are backward incompatible with previous verisons of Geant4 and 
+   hence with previous versions of Gauss which use them.
+
+!====================== GaussPhysics v10r0 2012-11-27 =========================
+! 2012-11-21 - Nigel Watson
+ - Added QGSP_FTFP_BERT to GaussPhysics_load.cpp
+
+!======================== GaussCherenkov v3r0 2012-11-27 =====================
+! 2012-11-09 - Sajan Easo
+ - Made some of the modifications made in the code review. Moved some .h files
+   to a newly created GaussCherenkov subdirectory and requirements file also 
+   updated 
+
+! 2012-10-18 - Sajan Easo
+ - Modified options for scintillation process in RICH2.
+
+! 2012-10-16 - Sajan Easo
+ - Added couple of Step Analysis actions for verifying modified RICH optics. 
+   They are all deactivated by default and are for special studies only.
+
+! 2012-10-03 - Sajan Easo
+ - Made adaptations for Geant 4.95. 
+   These are backward incompatible changes for Geant4 and won't work with
+   previous versions of Geant4 and Gauss which uses these earlier versions.
+
+!========================= GenTune v1r0p1 2012-11-26 =========================
+! 2012-10-22 - Alex Grecu
+ - disable "unused parameter" warnings from Rivet library
+
+!=============================================================================
 </PRE><H1><A NAME="v42r2">2012-10-22 - GaussSys v42r2</A></H1><PRE>
 <H2><A NAME="Note">Release for first productions for 2012 data and upgrade.
     </A></H2>
@@ -21,6 +122,8 @@ Purpose: LHCb Simulation program
    hijing 1.36.a.2 (via LCG_GeneratorsInterfaces),
    <b>pythia8 170</b> (via LCG_GeneratorsInterfaces),
    alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   <b>herwig++ 2.5.1 and thepeg 1.7.1</b> (via LCG_GeneratorsInterfaces),
+   <b>rivet 1.8.0.b</b> (via LCG_GeneratorsInterfaces),
    EvtGen v12r11, <b>BcVegPy v3r1</b>, HidValley and GenXicc private 
    LHCb versions 
 </A></H3>
