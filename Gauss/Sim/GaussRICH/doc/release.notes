@@ -3,16 +3,22 @@ RI!-----------------------------------------------------------------------------
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
--2012-11-09 - Sajan Easo
- - Made some suggestions made at the code review so that Gausscherenkov can be built without
-   warnings. Moved some .h files to a newly created GaussRICH subdirectory and the 
-   requirements file updated
--2012-10-17 - Sajan Easo
-  Message verbosity level in RichSensdet changed for print statements.
--2012-10-02 - Sajan Easo
-- Adapations for Geant4.95 version in different physics processes,
-  mainly for the methods of G4MaterialPropertyVector. These are backward incompatible with
-  previous verisons of Geant4 and hence with previous versions of Gauss which use them.
+
+!========================= GaussRICH v13r0 2012-11-27 ========================
+! 2012-11-09 - Sajan Easo
+ - Made some suggestions made at the code review so that Gausscherenkov can be
+   built without warnings. Moved some .h files to a newly created GaussRICH 
+   subdirectory and the requirements file updated
+
+! 2012-10-17 - Sajan Easo
+ - Message verbosity level in RichSensdet changed for print statements.
+
+! 2012-10-02 - Sajan Easo
+ - Adapations for Geant4.95 version in different physics processes,
+   mainly for the methods of G4MaterialPropertyVector. 
+   These are backward incompatible with previous verisons of Geant4 and 
+   hence with previous versions of Gauss which use them.
+
 !========================= GaussRICH v12r1 2012-07-23 ========================
 ! 2012-07-23 - Gloria Corti
  - Remove include of ParticleProperty related header since they are not needed
