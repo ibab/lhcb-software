@@ -20,7 +20,6 @@
 // GiGa 
 #include "GiGa/IGiGaSvc.h"
 #include "GiGa/GiGaUtil.h"
-//#include "GiGa/GiGaMACROs.h"
 #include "GiGaCnv/GiGaPrimaryParticleInformation.h"
 
 // LHCb
