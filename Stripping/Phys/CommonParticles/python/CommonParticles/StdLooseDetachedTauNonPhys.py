@@ -8,13 +8,13 @@
 #  @date 2012-08-07
 # =============================================================================
 """
-Configuration file for 'Standard Loose Detached Tau'
+Configuration file for 'Standard Loose Detached Tau Non Physical Tau'
 """
 __author__  = "Donal Hill, Conor Fitzpatrick, Christian Elsasser"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.0 $"
 # =============================================================================
 __all__ = (
-           'StdLooseDetachedTau3pi',
+           'StdLooseDetachedTau3piNonPhys',
            'locations'
            
     )
@@ -24,27 +24,30 @@ from Configurables       import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
-## create the algorithm - physical tau+ -> pi+ pi- pi+
-StdLooseDetachedTau3pi = CombineParticles ( 'StdLooseDetachedTau3pi' )
+## create the algorithm - non-physical tau+++ -> pi+ pi+ pi+
+StdLooseDetachedTau3piNonPhys = CombineParticles ( 'StdLooseDetachedTau3piNonPhys' )
 
-StdLooseDetachedTau3pi.Inputs = [ "Phys/StdLooseDetachedDipion/Particles",
+
+StdLooseDetachedTau3piNonPhys.Inputs = [ "Phys/StdLooseDetachedDipion/Particles",
                                   "Phys/StdLoosePions/Particles" ]
 
 #Build physical tau and tau+++
-StdLooseDetachedTau3pi.DecayDescriptors = ["[tau+ -> rho(770)0 pi+]cc"]
-StdLooseDetachedTau3pi.DaughtersCuts = {
-    "rho(770)0"  : "ALL",
+StdLooseDetachedTau3piNonPhys.DecayDescriptors = ["[tau+ -> rho(770)+ pi+]cc"]
+StdLooseDetachedTau3piNonPhys.DaughtersCuts = {
+    "rho(770)+"  : "ALL",
     "pi+"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.4) & (PIDK < 8)"
     }
 
 #Need an upper mass window of 100 MeV for background estimation
 #and a lower mass window of 200 to catch the D+ and Ds
 
-StdLooseDetachedTau3pi.CombinationCut = "((AM>400.*MeV) & (AM<3500.*MeV)) & (ADOCAMAX('')<0.15*mm)"
-StdLooseDetachedTau3pi.MotherCut = "(M>400.*MeV) & (M < 3500.*MeV) & (BPVDIRA>0.99) & (VFASPF(VCHI2) < 25 )"
+StdLooseDetachedTau3piNonPhys.CombinationCut = "((AM>400.*MeV) & (AM<3500.*MeV)) & (ADOCAMAX('')<0.15*mm)"
+StdLooseDetachedTau3piNonPhys.MotherCut = "(M>400.*MeV) & (M < 3500.*MeV) & (BPVDIRA>0.99) & (VFASPF(VCHI2) < 25 )"
+
+
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseDetachedTau3pi )
+locations = updateDoD ( StdLooseDetachedTau3piNonPhys )
 
 
 ## ============================================================================
@@ -53,7 +56,7 @@ if '__main__' == __name__ :
     print __doc__
     print __author__
     print __version__
-    print locationsDoD ( locations ) 
+    print locationsDoD ( locations )
 
 # =============================================================================
 # The END 
