@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltMonitors
 ################################################################################
-gaudi_subdir(HltMonitors v1r5)
+gaudi_subdir(HltMonitors v1r6)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/HltEvent

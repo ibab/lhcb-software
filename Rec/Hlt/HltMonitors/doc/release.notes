@@ -4,6 +4,7 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
+!========================= HltMonitors v1r6 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
