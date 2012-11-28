@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Associators
 ################################################################################
-gaudi_subdir(Associators v3r7)
+gaudi_subdir(Associators v3r8)
 
 gaudi_depends_on_subdirs(Event/LinkerEvent
                          Event/MCEvent
