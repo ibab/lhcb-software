@@ -1,7 +1,7 @@
 ################################################################################
 # Package: STMonitors
 ################################################################################
-gaudi_subdir(STMonitors v4r0)
+gaudi_subdir(STMonitors v4r1)
 
 gaudi_depends_on_subdirs(Det/DDDB
                          Event/RecEvent
