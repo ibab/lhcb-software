@@ -4,6 +4,7 @@
 ! Purpose     : Find exotic particles with the RICHes. Get Nobel price.
 !-----------------------------------------------------------------------------
 
+!========================= RichParticleSearch v1r11 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
