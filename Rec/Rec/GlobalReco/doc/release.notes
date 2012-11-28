@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================= GlobalReco v6r44 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
