@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-11-28 - Marco Clemencic
+ - Minor changes to requirements to allow automatic conversion to CMake.
+ - Fixed compilation error in IDecayFinder.h with the option '-pedantic'.
+
 !========================= DaVinciInterfaces v2r17 2012-07-26 =========================
 
 ! 2012-07-12 - Vanya Belyaev

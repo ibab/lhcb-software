@@ -65,7 +65,7 @@ public:
   /// Templated hasDecay method working on particle container iterators.
   template <class PARTICLE>
   inline StatusCode  hasDecay( PARTICLE begin,
-                               PARTICLE end  ) const {
+                               PARTICLE end  ) {
     return hasDecay ( LHCb::Particle::ConstVector ( begin , end ));
   }
 
@@ -73,7 +73,7 @@ public:
   template <class PARTICLE>
   inline StatusCode findDecay( PARTICLE begin,
                                PARTICLE end,
-                               const LHCb::Particle*& previous_result ) const {
+                               const LHCb::Particle*& previous_result ) {
     return findDecay ( LHCb::Particle::ConstVector ( begin , end ),
                        previous_result );
   }

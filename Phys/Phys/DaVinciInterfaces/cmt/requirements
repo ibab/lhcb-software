@@ -12,11 +12,12 @@ version           v2r17
 branches          cmt doc dict src Kernel
 #============================================================================
 use      GaudiKernel    v*
+use      GaudiAlg       v*  -no_auto_imports
 use      PhysEvent      v*  Event
 use      DaVinciTypes   v*  Phys
 use      CaloUtils      v*  Calo
 #============================================================================
-apply_pattern install_more_includes more =Kernel
+apply_pattern install_more_includes more=Kernel
 #============================================================================
 # Linker library building rule
 #============================================================================
