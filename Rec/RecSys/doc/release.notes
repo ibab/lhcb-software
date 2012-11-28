@@ -5,10 +5,134 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-! 2012-11-22 - Marco Clemencic
- - Added CMake configuration file.
+</PRE><H1><A NAME=v14r3>2012-11-29 RecSys v14r3</A></H1><PRE>
+This version uses Gaudi v23r5 and LHCb v35r3
+
+- This version introduces support for CMake. All packages have been modified
+  to add CMake configuration files
 
 - Packages added: Pr/PrVL v1r0 - Pattern recognition for the Velo Light upgrade
+- Packages with modifications other than CMake support: Calo/CaloMoniDst v5r13,
+    Calo/CaloPIDs v5r13, Calo/CaloReco v5r16, Hlt/HltMonitors v1r6,
+    Muon/MuonID v9r5, Muon/MuonPIDChecker v5r4, Muon/MuonTools v5r4,
+    Muon/MuonTrackAlign v1r9, Muon/MuonTrackRec v3r8, Pr/PrKernel v1r1,
+    Pr/PrMCTools v1r1, Rec/ChargedProtoANNPID v1r9, Rec/GlobalReco v6r44,
+    Rec/LumiAlgs v8r1, Rec/RecAlgs v2r11, Rec/RecoUpgrade v3r1,
+    Rec/RecoUpgradeMC v2r1, Rich/RichAlignment v1r8, Rich/RichGlobalPID v3r19,
+    Rich/RichHPDImageAnalysis v1r13, Rich/RichRecAlgorithms v2r20,
+    Rich/RichRecMCAlgorithms v1r4, Rich/RichRecMonitors v2r34, 
+    Rich/RichRecPhotonTools v1r10, Rich/RichRecQC v2r61, Rich/RichRecSys v4r7,
+    Rich/RichRecTools v4r21, Rich/RichRecTrackTools v1r34, Tf/FastVelo v1r12,
+    Tf/PatAlgorithms v4r25, Tf/TrackMatching v2r34, Tf/TrackSys v7r8,
+    Tf/TsaAlgorithms v3r27, Tr/PatFitParams v4r2, Tr/TrackAssociators v2r10,
+    Tr/TrackCheckers v4r14, Tr/TrackExtrapolators v2r33, Tr/TrackFitter v4r9,
+    Tr/TrackIdealPR v2r20, Tr/TrackMCTools v3r3, Tr/TrackMonitors v1r41,
+    Tr/TrackProjectors v2r33, Tr/TrackTools v4r20, Tr/TrackUtils v1r49,
+    Velo/VeloRecMonitors v2r22 
+
+- In CaloPIDs v5r13
+  . In CaloTrack2IDAlg, return Error from initialize if undefined Input, removes
+    need for Assert in execute
+
+- In PrMCTools v1r1
+  . use lite clusters also in PrLHCbID2MCParticle, and implement UT.
+  . Fix untested Warning() StatusCode
+
+- In ChargedProtoANNPID v1r9
+  . Add back some 'event size' variables previously removed, as they are useful
+    for monitoring, if nothing else.
+
+- In LumiAlgs v8r1
+  . Update merge-small-files reference following changed input files
+
+- In RecAlgs v2r11
+  . Fix bug in RecInit, introduced in v2r9, whereby RecHeader::rawID is filled
+    with an empty string rather than name of the raw file. Affects Reco14
+
+- In RichAlignment v1r8
+  . Update calibration scripts.
+
+- In RichHPDImageAnalysis v1r13
+  . Update HPD image alignment scripts.
+
+- In RichRecMCAlgorithms v1r4
+  . Add a new algorithm DumpRichTracksToTextFileAlg which dumps basic track
+    information to a text file
+
+- In RichRecPhotonTools v1r10
+  . Update PhotonRecoUsingQuarticSoln to include an optional  test for Aerogel
+    photons to see if they intersect with the beampipe, and if they do reject
+    those photons.
+
+- In RichRecQC v2r61
+  . Add new monitoring options for the algs that dump the RICH hit and track
+    information to plain text files.
+
+- In RichRecSys v4r7
+  . Add 'DataType' option to PhotonCreator configurable.
+    Setting is propagated down from higher level Configurable.
+  . Loosen of a little the Aerogel photon selection cuts, as the lower edge
+    was a little too tight and cutting into low momentum Protons.
+
+- In FastVelo v1r12
+  . New algorithm FastSTDecoding.cpp to decode ST Lite clusters.
+  . New algorithm FastVeloDecoding.cpp to decode the Velo Lite clusters.
+
+- In PatAlgorithms v4r25
+  . fix an unitialized variable it PatMakeV0, unused code.
+  . fix an out-of-bound access in an array in PatSeedingTool
+
+- In TrackExtrapolators v2r33
+  . Add method to clear the cache in TrackStateProvider
+  . Add more states to Downstream tracks in TrackStateProvider
+
+- In CaloMoniDst v5r13, CaloPIDs v5r13, CaloReco v5r16, LumiAlgs v8r1, 
+     RichRecQC v2r61, RichRecSys v4r7, TrackSys v7r8, TsaAlgorithms v3r27
+  . Remove setting of MeasureTime=true
+    Should not be the default, and should in any case use TimingAuditor.
+
+- In HltMonitors v1r6, PrMCTools v1r1, GlobalReco v6r44, RecAlgs v2r11,
+     TrackMonitors v1r41, TrackTools v4r20, TrackUtils v1r49,
+     VeloRecMonitors v2r22 
+  . Use getIfExists instead of separate exist and get calls
+
+- In CaloMoniDst v5r13, CaloPIDs v5r13, HltMonitors v1r6, MuonPIDChecker v5r4, 
+     MuonTools v5r4, MuonTrackAlign v1r9, PrKernel v1r1, PrMCTools v1r1, 
+     ChargedProtoANNPID v1r9, LumiAlgs v8r1, RecAlgs v2r11, RecoUpgrade v3r1,
+     RecoUpgradeMC v2r1, TrackMatching v2r34, TsaAlgorithms v3r27, 
+     PatFitParams v4r2, TrackAssociators v2r10, TrackCheckers v4r14, 
+     TrackExtrapolators v2r33, TrackIdealPR v2r20, TrackMonitors v1r41,
+     TrackProjectors v2r33, TrackTools v4r20, TrackUtils v1r49,
+     VeloRecMonitors v2r22 
+  . Fix gcc -pedantic warnings
+
+- In CaloMoniDst v5r13, CaloReco v5r16, PrMCTools v1r1, LumiAlgs v8r1, 
+     RichAlignment v1r8, FastVelo v1r12, PatAlgorithms v4r25, 
+     TsaAlgorithms v3r27, PatFitParams v4r2, TrackAssociators v2r10,
+     TrackTools v4r20, TrackUtils v1r49, VeloRecMonitors v2r22 
+  . Fix coverity defects
+
+- In HltMonitors v1r6, MuonID v9r5, MuonPIDChecker v5r4, MuonTools v5r4,
+     MuonTrackRec v3r8, ChargedProtoANNPID v1r9, RichGlobalPID v3r19,
+     RichRecAlgorithms v2r20, RichRecMonitors v2r34, RichRecPhotonTools v1r10, 
+     RichRecQC v2r61, RichRecTools v4r21, RichRecTrackTools v1r34, 
+     PatAlgorithms v4r25, TrackMatching v2r34, TsaAlgorithms v3r27, 
+     PatFitParams v4r2, TrackCheckers v4r14, TrackFitter v4r9,
+     TrackIdealPR v2r20, TrackMCTools v3r3, TrackMonitors v1r41,
+     TrackTools v4r20, TrackUtils v1r49, VeloRecMonitors v2r22 
+  . Fix build with C++11
+
+- In PrMCTools v1r1, TrackIdealPR v2r20, TrackProjectors v2r33
+  . Replace endreq by endmsg
+
+- In PrMCTools v1r1, GlobalReco v6r44, FastVelo v1r12, PatAlgorithms v4r25
+  . Fix unprotected debug() and verbose()
+
+- In RecAlgs v2r11, TrackAssociators v2r10, TrackTools v4r20, TrackUtils v1r49
+  . Remove finalize() in derived classes if it only calls the base class
+
+- In ChargedProtoANNPID v1r9, TrackMonitors v1r41, VeloRecMonitors v2r22 
+  . Add missing dependency on Event/MCEvent
 
 </PRE><H1><A NAME=v14r2>2012-10-03 RecSys v14r2</A></H1><PRE>
 This version uses Gaudi v23r4 and LHCb v35r2
