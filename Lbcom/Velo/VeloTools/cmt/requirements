@@ -2,7 +2,7 @@
 # Maintainer : Tomasz Szumlak
 #
 package           VeloTools
-version           v4r1p1
+version           v4r2
 
 # Structure, i.e. directories to process. 
 #============================================================================

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloTools
 ################################################################################
-gaudi_subdir(VeloTools v4r1p1)
+gaudi_subdir(VeloTools v4r2)
 
 gaudi_depends_on_subdirs(DAQ/Tell1Kernel
                          Det/VeloDet
