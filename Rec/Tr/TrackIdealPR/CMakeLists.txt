@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackIdealPR
 ################################################################################
-gaudi_subdir(TrackIdealPR v2r19)
+gaudi_subdir(TrackIdealPR v2r20)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet
