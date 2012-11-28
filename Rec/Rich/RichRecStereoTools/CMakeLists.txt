@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichRecStereoTools
 ################################################################################
-gaudi_subdir(RichRecStereoTools v1r8p1)
+gaudi_subdir(RichRecStereoTools v1r9)
 
 gaudi_depends_on_subdirs(Rich/RichRecBase)
 

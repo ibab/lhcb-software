@@ -4,7 +4,7 @@
 #============================================================================
 
 package           RichRecStereoTools
-version           v1r8p1
+version           v1r9
 
 # ================ structure ================================================
 branches src cmt doc
