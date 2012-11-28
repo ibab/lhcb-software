@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloRecMonitors
 ################################################################################
-gaudi_subdir(VeloRecMonitors v2r21)
+gaudi_subdir(VeloRecMonitors v2r22)
 
 gaudi_depends_on_subdirs(Det/VeloDet
                          Event/DAQEvent
