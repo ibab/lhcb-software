@@ -6,8 +6,78 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-! 2012-11-21 - Marco Clemencic
- - Added CMake configuration file.
+</PRE><H1><A NAME=v13r3>2012-11-29 LbcomSys v13r3</A></H1><PRE>
+This version uses Gaudi v23r5 and LHCb v35r3
+
+- This version introduces support for CMake. All packages have been modified
+  to add CMake configuration files
+
+- Packages with modifications other than CMake support: 
+   Associators/Associators v3r8, Calo/CaloAssociators v6r12, Calo/CaloTools v6r5,
+   FT/FTDAQ v1r1, Hlt/HltDAQ v2r16, L0/L0Calo v11r9, L0/L0DU v10r25,
+   L0/L0Muon v9r11, L0/PuVeto v7r8, Muon/MuonAssociators v3r4,
+   OT/OTAssociators v4r6, OT/OTMonitor v3r4, Rich/RichMCMonitors v1r10,
+   Rich/RichTools v2r41, Si/SiTools v1r9, ST/STAlgorithms v4r5,
+   ST/STAssociators v1r7, ST/STCheckers v4r1, ST/STMonitors v4r1,
+   ST/STTools v4r14, Velo/VeloAlgorithms v5r7, Velo/VeloSimulation v3r13,
+   VL/VLDAQ v1r2, VP/VPDAQ v2r1, VP/VPTools v2r1
+
+- In CaloAssociators v6r12
+  . Various small changes to prevent the associators issuing warnings when
+    they are automatically triggered on MC uDSTs.
+
+- In L0Calo v11r9
+  . Remove unnecessary finalize() methods
+
+- In L0DU v10r25
+  . Fix default L0PU bank name
+
+- In RichTools v2r41
+  . Added new tool to find the existing Rich detectors from a variable
+    in the xml of the AfterMagnetRegion
+  . Changed RichSmartID tool to use the new RichDetectorTool and to work
+    with only a single RICH
+
+- In STAlgorithms v4r5
+  . Update SiClustersToLite.icpp to work better with the automatic DoD service.
+    Output clusters are now always created, and no exception is thrown if the
+    input does not exist.
+  . In STClusterCreator, length of cluster channelID is 25 bits for UT, 24 bits
+    for TT/IT.
+
+- In VPDAQ v2r1
+  . Fix potential memory leak in VPRawBankToLiteCluster and do not return
+    StatusCode::FAILURE from execute
+
+- In CaloAssociators v6r12, CaloTools v6r5, L0Calo v11r9, L0Muon v9r11, 
+     STTools v4r14, VeloAlgorithms v5r7, VeloSimulation v3r13, VPDAQ v2r1
+  . Use getIfExists instead of separate exist and get calls
+
+- In Associators v3r8, HltDAQ v2r16, RichMCMonitors v1r10, STMonitors v4r1,
+     STTools v4r14, VLDAQ v1r2
+  . Fixed build with C++11.
+
+- In Associators v3r8, CaloAssociators v6r12, CaloTools v6r5, FTDAQ v1r1, 
+     HltDAQ v2r16, L0Calo v11r9, L0Muon v9r11, PuVeto v7r8, MuonAssociators v3r4,
+     OTAssociators v4r6, OTMonitor v3r4, SiTools v1r9, STAlgorithms v4r5,
+     STAssociators v1r7, STCheckers v4r1, STTools v4r14, VeloAlgorithms v5r7, 
+     VeloSimulation v3r13, VPDAQ v2r1, VPTools v2r1
+  . Fix gcc -pedantic warnings
+
+- In Associators v3r8, STAssociators v1r7, 
+  . Remove obsolete file <package>_dll.cpp
+
+- In Associators v3r8, FTDAQ v1r1, HltDAQ v2r16, L0Calo v11r9, PuVeto v7r8, 
+     MuonAssociators v3r4, STTools v4r14, VeloAlgorithms v5r7, VPDAQ v2r1, 
+     VPTools v2r1
+  . Fix unprotected debug() and verbose()
+
+- In Associators v3r8, L0Muon v9r11, PuVeto v7r8, MuonAssociators v3r4
+  . Replace endreq by endmsg
+
+- In FTDAQ v1r1, L0Calo v11r9, L0Muon v9r11, PuVeto v7r8, MuonAssociators v3r4,
+     OTMonitor v3r4, STTools v4r14, VeloSimulation v3r13, VPDAQ v2r1
+  . Fix Coverity defects
 
 </PRE><H1><A NAME=v13r2>2012-10-02 LbcomSys v13r2</A></H1><PRE>
 This version uses Gaudi v23r4 and LHCb v35r2
