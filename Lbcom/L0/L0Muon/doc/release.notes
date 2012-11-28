@@ -3,6 +3,7 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+!========================= L0Muon v9r11 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
  - Modified requirements to simplify auto conversion to CMake.

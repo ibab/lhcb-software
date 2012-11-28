@@ -1,5 +1,5 @@
 package           L0Muon
-version           v9r10
+version           v9r11
 
 # ================ structure =============================================
 branches cmt src options doc
