@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichIFBAnalysis
 ################################################################################
-gaudi_subdir(RichIFBAnalysis v1r2)
+gaudi_subdir(RichIFBAnalysis v1r3)
 
 gaudi_depends_on_subdirs(Rich/RichKernel)
 
