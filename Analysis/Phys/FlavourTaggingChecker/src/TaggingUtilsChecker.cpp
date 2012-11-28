@@ -112,7 +112,7 @@ StatusCode TaggingUtilsChecker::calcIP( const Particle* axp,
   StatusCode lastsc=1;
 
   RecVertex::ConstVector::const_iterator iv;
-  for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
+  for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); ++iv){
     double ipx=0, ipex=0;
     double ipC=0, ipChi2=0;
     StatusCode sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
@@ -147,11 +147,11 @@ StatusCode TaggingUtilsChecker::calcIPPU( const Particle* axp,
   xpos=ypos=zpos=xerrpos=yerrpos=zerrpos=100000.0;
   
   RecVertex::ConstVector::const_iterator iv;
-  for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
+  for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); ++iv){
     double ipC=0, ipChi2=0;
     StatusCode sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
     if( sc ) {
-      vtxcount++;
+      ++vtxcount;
       ipsum+=ipC;
       if( (ipC < ipmin) && (ipC > lastipmin) ) {
         ipmin = ipC;
@@ -183,9 +183,9 @@ int TaggingUtilsChecker::countTracks( Particle::ConstVector& vtags ) {
   
   int nr = 0;
   Particle::ConstVector::const_iterator ipart, jpart;
-  for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
+  for( ipart = vtags.begin(); ipart != vtags.end(); ++ipart ) {
     bool duplic=false;
-    for( jpart = ipart+1; jpart != vtags.end(); jpart++ ) {
+    for( jpart = ipart+1; jpart != vtags.end(); ++jpart ) {
       if((*jpart)->proto()==(*ipart)->proto()) { 
         duplic=true; 
         break; 
@@ -200,10 +200,10 @@ const Particle* TaggingUtilsChecker::motherof( const Particle* axp,
                                                const Particle::ConstVector& sons ) {
 
   for( Particle::ConstVector::const_iterator ip = sons.begin(); 
-       ip != sons.end(); ip++ ){
+       ip != sons.end(); ++ip ){
     const Particle::ConstVector daught = (*ip)->daughtersVector();
     for( Particle::ConstVector::const_iterator ip2 = daught.begin(); 
-         ip2 != daught.end(); ip2++ ){
+         ip2 != daught.end(); ++ip2 ){
       if((*ip2)!=(*ip)) if((*ip2) == axp ) return (*ip);
     }
   }
@@ -226,7 +226,7 @@ bool TaggingUtilsChecker::isinTree( const Particle* axp,
   dist_phi=1000.;
 
   for( Particle::ConstVector::iterator ip = sons.begin(); 
-       ip != sons.end(); ip++ ){
+       ip != sons.end(); ++ip ){
 
     double dphi = fabs(phi_axp-(*ip)->momentum().phi()); 
     if(dphi>3.1416) dphi=6.283-dphi;
@@ -257,11 +257,11 @@ Particle::ConstVector TaggingUtilsChecker::FindDaughters( const Particle* axp ) 
   do {
     apv2.clear();
     for( Particle::ConstVector::const_iterator ip=apv.begin(); 
-         ip!=apv.end(); ip++ ) {
+         ip!=apv.end(); ++ip ) {
       if( (*ip)->endVertex() ) {
         Particle::ConstVector tmp= (*ip)->endVertex()->outgoingParticlesVector();
         for( Particle::ConstVector::const_iterator itmp=tmp.begin(); 
-             itmp!=tmp.end(); itmp++) {
+             itmp!=tmp.end(); ++itmp) {
           apv2.push_back(*itmp);
           aplist.push_back(*itmp);
           debug() << " ID daughter= "<< (*itmp)->particleID().pid() 

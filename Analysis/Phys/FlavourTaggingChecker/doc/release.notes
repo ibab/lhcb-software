@@ -5,7 +5,8 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
-
+! 2012-11-28 - Stefania Vecchi
+ - code cleanup in preparation for DaVinci release
 ! 2012-11-15 - Stefania Vecchi
  - fixed deprecated DVAlgorithm
 ! 2012-11-06 - Stefania Vecchi

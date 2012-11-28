@@ -188,7 +188,7 @@ StatusCode BTaggingAnalysis::execute() {
     if(mcColls.empty()) err()<< "No pp mcCollision retrieved" << endreq;
     debug() << "Nr of Collisions = " << mcColls.size() << endreq;
     long kType = 0;
-    for ( unsigned int icoll=0; icoll!=mcColls.size(); icoll++ ) {
+    for ( unsigned int icoll=0; icoll!=mcColls.size(); ++icoll ) {
       if( mcColls.at(icoll)->isSignal() ) {
         kType = mcColls.at(icoll)->processType();
         debug() << "Collision process type: " << kType << endreq;
@@ -315,7 +315,7 @@ StatusCode BTaggingAnalysis::execute() {
   std::vector<float> ptrackxfirst(0), ptrackyfirst(0), ptrackzfirst(0), ptrackp(0);
 
   Particle::ConstVector::const_iterator ip;
-  for( ip = vtags.begin(); ip != vtags.end(); ip++ ) {
+  for( ip = vtags.begin(); ip != vtags.end(); ++ip ) {
 
     const Particle* axp = (*ip);
     const ProtoParticle* proto = axp->proto();
@@ -497,7 +497,7 @@ StatusCode BTaggingAnalysis::execute() {
     // secondary vertex flag
     int vFlag = 0;
     ProtoParticle::ConstVector::iterator prkp;
-    for(prkp = partsInSV.begin(); prkp != partsInSV.end(); prkp++) {
+    for(prkp = partsInSV.begin(); prkp != partsInSV.end(); ++prkp) {
       if( proto == (*prkp) ) {
         vFlag = 1; //Flag as 1 the track in SV from FT package
         break;
@@ -507,7 +507,7 @@ StatusCode BTaggingAnalysis::execute() {
       const SmartRefVector<Particle> partsInSVnew = 
         svertices.at(0).outgoingParticles();
       for(SmartRefVector<Particle>::const_iterator i = 
-            partsInSVnew.begin(); i != partsInSVnew.end(); i++) {
+            partsInSVnew.begin(); i != partsInSVnew.end(); ++i) {
         if( proto == (*i)->proto() ) {
           vFlag += 10;//add 10 if track is in new SV 
           break;
@@ -712,7 +712,7 @@ const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::Range& parts
   if( m_BHypoCriterium == "MaximumPt" ){//need by Cheated Selection
     double maxptB=0;
     Particle::Range::const_iterator ip;
-    for ( ip = parts.begin(); ip != parts.end(); ip++){
+    for ( ip = parts.begin(); ip != parts.end(); ++ip){
       if(!(*ip)->particleID().hasBottom()) continue;
       if(maxptB > (*ip)->pt()) continue; else maxptB=(*ip)->pt();
       AXBS = (*ip);
@@ -720,7 +720,7 @@ const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::Range& parts
   } else if( m_BHypoCriterium == "MinChi2" ){
     double minchi2B=99999;
     Particle::Range::const_iterator jp;
-    for ( jp = parts.begin(); jp != parts.end(); jp++){
+    for ( jp = parts.begin(); jp != parts.end(); ++jp){
       if(!(*jp)->particleID().hasBottom()) continue;
       double chi2 = (*jp)->endVertex()->chi2PerDoF();
       if(minchi2B < chi2) continue; else minchi2B = chi2;
@@ -749,7 +749,7 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
   } else {
     double kdmin = 1000000;
     RecVertex::Range::const_iterator iv;
-    for(iv=verts.begin(); iv!=verts.end(); iv++){
+    for(iv=verts.begin(); iv!=verts.end(); ++iv){
       double var, ip, iperr;
       if(m_ChoosePV == "CheatPV") {//mc vertex
         debug()<<"CheatPV criteria";
@@ -812,7 +812,7 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
   int nPV=0;
   
   RecVertex::Range::const_iterator jv;
-  for(jv=verts.begin(); jv!=verts.end(); jv++){
+  for(jv=verts.begin(); jv!=verts.end(); ++jv){
     double chiPV = sqrt( 
                         pow((RecVert.position().x()-(*jv)->position().x()),2)/RecVert.covMatrix()(0,0) +
                         pow((RecVert.position().y()-(*jv)->position().y()),2)/RecVert.covMatrix()(1,1) +
@@ -823,7 +823,7 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
     
     if(chiPV < 3) {
       the_chiPV = chiPV;      
-      nPV++;      
+      ++nPV;      
       continue;
       
     } else    
@@ -832,7 +832,7 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
   
   if(min_chiPV!=the_chiPV || nPV!=1 ) {
     PileUpVtx.clear();    
-    for(jv=verts.begin(); jv!=verts.end(); jv++){
+    for(jv=verts.begin(); jv!=verts.end(); ++jv){
       double chiPV = sqrt( 
                           pow((RecVert.position().x()-(*jv)->position().x()),2)/RecVert.covMatrix()(0,0) +
                           pow((RecVert.position().y()-(*jv)->position().y()),2)/RecVert.covMatrix()(1,1) +
@@ -857,7 +857,7 @@ BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
   double distphi;
   Particle::ConstVector vtags(0);
   Particle::Range::const_iterator ip, jp;
-  for ( ip = parts.begin(); ip != parts.end(); ip++){
+  for ( ip = parts.begin(); ip != parts.end(); ++ip){
     
     const ProtoParticle* proto = (*ip)->proto();
     if( !proto )                                  continue;
@@ -880,7 +880,7 @@ BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
     bool dup=false;
     double partp= (*ip)->p();
     Particle::Range::const_iterator ik;
-    for ( ik = ip+1; ik != parts.end(); ik++) {
+    for ( ik = ip+1; ik != parts.end(); ++ik) {
       if((*ik)->proto() == proto ) { 
         dup=true; 
         break; 
@@ -930,7 +930,7 @@ const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple,
       }
     
       FlavourTags::const_iterator ti;
-      for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
+      for( ti=tags->begin(); ti!=tags->end(); ++ti ) {
         if((*ti)->taggedB() == AXBS) {
           theTag = (*ti);
           foundb = true;
@@ -984,8 +984,8 @@ const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple,
       tagomega.push_back(itagger.omega());
       Particle::ConstVector::iterator kp;
       if(itagger.type()==Tagger::VtxCharge) {
-        for( unsigned int i=0; i!=itagger.taggerParts().size(); i++){
-          partsInSV.push_back( itagger.taggerParts().at(i)->proto() );
+        for( unsigned int ii=0; ii!=itagger.taggerParts().size(); ++ii){
+          partsInSV.push_back( itagger.taggerParts().at(ii)->proto() );
         }
       }
     }
@@ -1061,7 +1061,7 @@ StatusCode BTaggingAnalysis::FillTrigger (Tuple& tuple, const Particle* AXBS) {
       if(classifiedL0Dec.tos()) L0TisTos +=  1;
 
       std::vector<std::string> l0lines = m_L0TriggerTisTosTool->triggerSelectionNames();
-      for ( unsigned int i=0; i!=l0lines.size(); i++){
+      for ( unsigned int i=0; i!=l0lines.size(); ++i){
         m_L0TriggerTisTosTool->triggerTisTos(l0lines.at(i),decision,tis,tos);
         debug()<<" "<<l0lines.at(i)<<" dec: "<<decision
                <<", tis: "<<tis
@@ -1081,7 +1081,7 @@ StatusCode BTaggingAnalysis::FillTrigger (Tuple& tuple, const Particle* AXBS) {
         std::vector<std::string> hltlines = m_TriggerTisTosTool->triggerSelectionNames();
         bool linehltdecision = false;
         long hltlinetrigger=0;
-        for ( unsigned int i=0; i!=hltlines.size(); i++){
+        for ( unsigned int i=0; i!=hltlines.size(); ++i){
           linehltdecision = m_TriggerTisTosTool->hltObjectSummaries(hltlines.at(i)).size() > 0;
           ITriggerTisTos::TisTosDecision lineHLTDec = m_TriggerTisTosTool
             ->selectionTisTos( m_TriggerTisTosTool->triggerSelectionNames( hltlines.at(i)) );
@@ -1105,7 +1105,7 @@ StatusCode BTaggingAnalysis::FillTrigger (Tuple& tuple, const Particle* AXBS) {
         std::vector<std::string> hlt2lines = m_TriggerTisTosTool->triggerSelectionNames();
         bool linehlt2decision = false;
         long hlt2linetrigger=0;
-        for ( unsigned int i=0; i!=hlt2lines.size(); i++){
+        for ( unsigned int i=0; i!=hlt2lines.size(); ++i){
           linehlt2decision = m_TriggerTisTosTool->hltObjectSummaries(hlt2lines.at(i)).size() > 0;
           ITriggerTisTos::TisTosDecision lineHLT2Dec = 
             m_TriggerTisTosTool->selectionTisTos( m_TriggerTisTosTool
@@ -1139,7 +1139,7 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
   std::vector<float> sigMCID, sigMCMothID, sigMCP, sigMCPt, sigMCPhi;
   
   Particle::ConstVector::const_iterator ip;
-  for ( ip = axdaugh.begin(); ip != axdaugh.end(); ip++){
+  for ( ip = axdaugh.begin(); ip != axdaugh.end(); ++ip){
     sigID.push_back((*ip)->particleID().pid());
     const Particle* mater = m_util->motherof(*ip, axdaugh);
     if(mater) sigMothID.push_back(mater->particleID().pid()); else sigMothID.push_back(0);
@@ -1239,7 +1239,7 @@ StatusCode BTaggingAnalysis::FillMCInfoOfB(Tuple& tuple,
   const MCParticle* BO = 0;
   MCParticles::const_iterator imc;
   double maxBP = -1;
-  for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ) {
+  for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
     if( !(*imc)->particleID().hasBottom() ) continue;
     if( (*imc) == m_BS) continue;
     int aid  = (*imc)->particleID().abspid();
@@ -1329,7 +1329,7 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
     //the svertices.at(0) put the seed, fitted again with the 2 tracks, breaks because is the only one
 
     if (seeds>0) break;//select only first seed
-    seeds++;
+    ++seeds;
 
     Particle::ConstVector Pfit = (*isv).outgoingParticlesVector();
     debug() << "seed 2 tracks, vtx "<< Pfit.size()<<endreq;

@@ -76,7 +76,7 @@ StatusCode CheatedSelection::execute() {
   Particle::ConstVector parts ;
   const Particle::Range ptmp = get<Particle::Range>( m_inputLocation );
   for( Particle::Range::const_iterator ip=ptmp.begin(); 
-       ip!=ptmp.end(); ip++){
+       ip!=ptmp.end(); ++ip){
     const MCParticle* mcp= m_linker->first(*ip);
     if (mcp) debug()<<"part: "<< (*ip)->pt()<< "  mcpart: "<< mcp->pt()<<endreq;
     parts.push_back(*ip);
@@ -99,7 +99,7 @@ StatusCode CheatedSelection::execute() {
 
   Gaudi::LorentzVector ptotmc(0,0,0,0), ptot(0,0,0,0);
   for ( MCParticle::Vector::iterator imcpart = mcdaughter.begin();
-        imcpart != mcdaughter.end(); imcpart++) ptotmc += (*imcpart)->momentum();
+        imcpart != mcdaughter.end(); ++imcpart) ptotmc += (*imcpart)->momentum();
   for( Particle::ConstVector::iterator ip = axdaughter.begin();
        ip != axdaughter.end(); ++ip ) ptot += (*ip)->momentum();
 
@@ -163,7 +163,7 @@ void CheatedSelection::SignalTree(const MCParticle* B0,
   // Get MCParticle container
   MCParticles* mcpart = get<MCParticles>( MCParticleLocation::Default );
   MCParticles::const_iterator imc;
-  for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ) {
+  for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
     if( originof(*imc) == B0 ) {
       Particle* axp = m_linker->firstP( *imc );
       if( axp ) {
