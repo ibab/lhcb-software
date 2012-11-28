@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DAQMonitors
 ################################################################################
-gaudi_subdir(DAQMonitors v1r7)
+gaudi_subdir(DAQMonitors v1r8)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          GaudiAlg
