@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v4r7 2012-11-28 =========================
 ! 2012-11-26 - Chris Jones
  - Add 'DataType' option to PhotonCreator configurable. 
    Setting is propagated down from higher level Configurable.
