@@ -5,6 +5,7 @@
 !               classes
 !-----------------------------------------------------------------------------
 
+!========================= RecoUpgradeMC v2r1 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
  - Modified requirements to simplify auto conversion to CMake.
