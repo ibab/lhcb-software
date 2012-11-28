@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RecInterfaces
 ################################################################################
-gaudi_subdir(RecInterfaces v1r0)
+gaudi_subdir(RecInterfaces v1r1)
 
 gaudi_depends_on_subdirs(Event/PhysEvent
                          Event/RecEvent)
