@@ -1,9 +1,8 @@
-# $Id: requirements,v 1.38 2010-03-02 12:09:23 graven Exp $
 # Created    : 09/12/2009
 # Maintainer : Serena Oggero
 
 package           PuVeto
-version           v7r7p1
+version           v7r8
 
 # Structure, i.e. directories to process. 
 #============================================================================
