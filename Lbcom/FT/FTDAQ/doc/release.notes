@@ -4,6 +4,7 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+!========================= FTDAQ v1r1 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
 
