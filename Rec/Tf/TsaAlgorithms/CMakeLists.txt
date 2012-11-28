@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TsaAlgorithms
 ################################################################################
-gaudi_subdir(TsaAlgorithms v3r26)
+gaudi_subdir(TsaAlgorithms v3r27)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Kernel/Relations
