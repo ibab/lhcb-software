@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v2r16 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic & Ben Couturier
  - Fixed build with C++11.
 
