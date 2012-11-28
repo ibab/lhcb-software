@@ -143,7 +143,7 @@ StatusCode IpImprover::improveTrack(LHCb::Track& aTrack,const LHCb::MCParticle* 
 
   double z = state->z();
   const Gaudi::XYZPoint origin = mcp->originVertex()->position();
-  const Gaudi::LorentzVector momentum = mcp->momentum();
+  //const Gaudi::LorentzVector momentum = mcp->momentum();
 
   double improvement = getImprovement(mcp->momentum().pt());
   if (m_improvement > 0.){
@@ -154,8 +154,8 @@ StatusCode IpImprover::improveTrack(LHCb::Track& aTrack,const LHCb::MCParticle* 
   double tx = mcp->momentum().x()/ mcp->momentum().z();
   double ty = mcp->momentum().y()/ mcp->momentum().z();
   
-  double alpha = atan(tx);
-  double gamma = atan(ty);
+  //double alpha = atan(tx);
+  //double gamma = atan(ty);
   
 
   double trueX = origin.x()+(z-origin.z())*tx;
