@@ -6,10 +6,11 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
-14-11-12 - Matt Coombes
+!=========================== Mint v1r6 2012-11-28 ============================
+! 14-11-12 - Matt Coombes
  - Added background subtraction to Miranda binning.
 
-!+=========================== Mint v1r5 2012-10-19 ============================
+!=========================== Mint v1r5 2012-10-19 ============================
 ! 01-10-2012 - Matt Coombes
  - Fixed some compiler errors on Mountain Lion. Use of Key word template in DDTree.h
 
