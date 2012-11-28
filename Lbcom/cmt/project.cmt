@@ -1,6 +1,6 @@
 project LBCOM
 
-use LHCB	LHCB_v35r2
+use LHCB	LHCB_v35r3
 
 build_strategy	with_installarea
 setup_strategy	root
