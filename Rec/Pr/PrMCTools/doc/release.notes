@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v1r1 2012-11-28 =========================
 ! 2012-11-26 - Olivier Callot
  - use lite clusters also in PrLHCbID2MCParticle, and implement UT.
 
