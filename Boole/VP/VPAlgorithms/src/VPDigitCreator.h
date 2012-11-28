@@ -6,7 +6,7 @@
 #include <string>
 // from Gaudi
 
-// #define	DEBUG_HISTO // fill some histograms while the algorithm	runs
+// #define DEBUG_HISTO // fill some histograms while the algorithm	runs
 #ifdef DEBUG_HISTO
 #include "GaudiAlg/GaudiTupleAlg.h"
 #else

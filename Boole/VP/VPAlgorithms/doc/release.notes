@@ -3,6 +3,11 @@
 ! Responsible : Tomasz Skwarnicki, Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+! 2012-11-28 - Pawel Jalocha
+ - better bug fix for clustering algorithm which occasionally outputs
+   same ChannelID (which crashes KeyedContainer)
+ - some curly brackets missing but under DEBUG_HISTO thus did not break the main line
+
 !========================= VPAlgorithms v3r0 2012-10-03 =========================
 ! 2012-09-24 - Paul Szczypka
  - Rename VeloPix to VP in filenames and code.

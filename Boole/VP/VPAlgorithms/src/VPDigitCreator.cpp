@@ -134,11 +134,10 @@ void VPDigitCreator::createDigits(const MCVPDigits* digitsMC,
 
 #ifdef DEBUG_HISTO
     if(totCharge>=500.0)
-      int Chip    = aChan.chip();
+    { int Chip = aChan.chip();
       plot2D( Station, Chip, "HitsPerChip", "VPDigitCreator: number of hits/chip (all events)",
              -24.0, 24.0, 0.0, 12.0, 49, 12);
-
-    plot(totCharge, "ChargePerPixel", "VPDigitCreator: charge/pixel [e]", 250.0, 25000.0, 99);
+      plot(totCharge, "ChargePerPixel", "VPDigitCreator: charge/pixel [e]", 250.0, 25000.0, 99); }
 #endif
 
     if(totCharge > 0.0 ) {

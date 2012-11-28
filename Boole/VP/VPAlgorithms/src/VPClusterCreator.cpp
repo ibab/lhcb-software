@@ -131,7 +131,6 @@ StatusCode VPClusterCreator::createClusters(VPDigits* digitCont,
     tmpDigit.isUsed = 0;                                                               // mark all as not used by a cluster
     pixDigits.push_back(tmpDigit);
   }
-  LHCb::VPChannelID baryCenterChID_prev = -1; // for quick clustering bug fix
   // Find clusters
   for(std::vector<PixDigit>::iterator id = pixDigits.begin();                          // search for clusters, start with strongest signals
       id != pixDigits.end(); id++) {
@@ -219,9 +218,9 @@ StatusCode VPClusterCreator::createClusters(VPDigits* digitCont,
           VPCluster* newCluster = 
                           new VPCluster(newLiteCluster,totVec);
           // here comes a failure sometimes, because the ChannelID already exists in the KeyedContainer - need to be fixed.
-          if(baryCenterChID!=baryCenterChID_prev)
-          { clusterCont->insert(newCluster, baryCenterChID);
-            baryCenterChID_prev=baryCenterChID; }
+          VPCluster* existCluster = clusterCont->object(baryCenterChID);
+          if(existCluster==0) clusterCont->insert(newCluster, baryCenterChID);
+                         else Warning("Duplicated baryChannelID in cluster container");
           // printf("\n");
       	} 
       } else {
