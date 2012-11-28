@@ -3,6 +3,7 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+!========================= CaloTools v6r5 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
  - Fixed a warning (-pedantic).
