@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PatFitParams
 ################################################################################
-gaudi_subdir(PatFitParams v4r1)
+gaudi_subdir(PatFitParams v4r2)
 
 gaudi_depends_on_subdirs(Event/LinkerEvent
                          Event/MCEvent
