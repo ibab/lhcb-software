@@ -20,7 +20,7 @@ use rivet               v64r2p1 LCG_GeneratorsInterfaces
 use GenCuts             v3r1    Gen
 use GENSER              v11r0   Gen
 use EvtGen              v12r11  Gen
-use Mint                v1r5    Gen
+use Mint                v1r6    Gen
 use EvtGenExtras        v3r4    Gen
 use Generators          v12r2   Gen
 use LbPythia            v12r0   Gen
