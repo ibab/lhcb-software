@@ -1,7 +1,7 @@
 ################################################################################
 # Package: L0MuonMonitor
 ################################################################################
-gaudi_subdir(L0MuonMonitor v2r2p1)
+gaudi_subdir(L0MuonMonitor v2r3)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/DAQEvent
