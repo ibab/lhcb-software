@@ -4,6 +4,7 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================= PatChecker v3r13 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
