@@ -4,6 +4,7 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
+!========================= RichENNRingFinder v1r5 2012-11-28 =========================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.
 
