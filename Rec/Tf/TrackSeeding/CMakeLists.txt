@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackSeeding
 ################################################################################
-gaudi_subdir(TrackSeeding v1r6)
+gaudi_subdir(TrackSeeding v1r7)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet

@@ -4,6 +4,7 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+!========================= TrackSeeding v1r7 2012-11-28 =========================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.
 
