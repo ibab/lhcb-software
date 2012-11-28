@@ -18,12 +18,9 @@ use GaudiKernel         v*
 use GaudiAlg            v*
 use DaVinciKernel       v*  Phys
 use LoKi                v*  Phys
+use LoKiPhys            v*  Phys
 
-# NeuroBayes
-# NB is currently only supported on linux GCC (WIN32 libs in preparation)
-macro use_NB_expert "neurobayes_expert v* LCG_Interfaces" WIN32 ""
-use $(use_NB_expert)
-
+use neurobayes_expert   v*  LCG_Interfaces
 
 
 #============================================================================

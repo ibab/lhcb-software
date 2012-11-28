@@ -14,6 +14,7 @@ use               LoKiPhys      v*    Phys
 use               DaVinciKernel v*    Phys 
 
 private
+use               GaudiAlg      v*    -no_auto_imports
 use               GaudiPython   v*    -no_auto_imports  
 use               Python        v*    LCG_Interfaces 
 

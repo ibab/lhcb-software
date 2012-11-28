@@ -5,6 +5,9 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2012-11-28 - Marco Clemencic
+ - Minor changes to requirements to allow automatic conversion to CMake.
+
 !========================= LoKiAlgo v9r7p1 2012-07-09 =========================
 
 ! 2012-07-01 - Chris Jones

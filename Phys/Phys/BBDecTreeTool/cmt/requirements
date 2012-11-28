@@ -17,6 +17,7 @@ use GaudiKernel         v*
 use GaudiAlg            v*
 use DaVinciKernel       v*  Phys
 use LoKi                v*  Phys
+use LoKiArrayFunctors   v*  Phys
 use Boost               v*  LCG_Interfaces
 use Python              v*  LCG_Interfaces
 
