@@ -44,7 +44,7 @@ Tagger TaggerJetSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   verbose() << " allVtxsize=" << allVtx.size() <<endreq;
   verbose() << " RecVert=" << RecVert->position().z() <<endreq;
   Particle::ConstVector::const_iterator ip;
-  for( ip = vtags.begin(); ip != vtags.end(); ip++ ) {
+  for( ip = vtags.begin(); ip != vtags.end(); ++ip ) {
     const Particle* axp = (*ip);
     double Pt = axp->pt();
     if( Pt < m_Pt_cut_jetS )  continue;
@@ -53,7 +53,7 @@ Tagger TaggerJetSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double etasig= -log(tan(ptotB.Theta())/2);
     double eta   = -log(tan(axp->momentum().Theta()/2));
     double dphi  = fabs(axp->momentum().Phi() - ptotB.Phi()); 
-    if(dphi>3.1416) dphi=6.2832-dphi;
+    if(dphi>M_PI) dphi=2.*M_PI-dphi;
     //cone condition
     double dR = sqrt(pow((eta-etasig),2)+dphi*dphi);
     if ( dR < m_dR_cut_jetS ) {

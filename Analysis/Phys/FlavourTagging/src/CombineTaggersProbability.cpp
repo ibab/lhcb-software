@@ -50,7 +50,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   double pnsum_a= 0.50;  //hypothesis of truetag=+1
   double pnsum_b= 0.50;  //hypothesis of truetag=-1
   int vtgsize = vtg.size();
-  for( int i = 0; i != vtgsize; i++ ) { //multiply all probabilities
+  for( int i = 0; i != vtgsize; ++i ) { //multiply all probabilities
     if(! vtg.at(i)) continue;
     if( vtg.at(i)->type() == (Tagger::SS_Pion) || vtg.at(i)->type() == (Tagger::SS_Kaon) ) continue;  // Just combine the prob of OS
     double mtag = vtg.at(i)->decision();
@@ -64,9 +64,11 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   //normalise probability to the only two possible flavours:
   double pnsum = std::max(pnsum_a,pnsum_b) /(pnsum_a + pnsum_b);
 
-  //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   debug() << " Before pn="<< pnsum <<" w="<<1-pnsum<<endreq;
+
+  //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   pnsum = 1 - m_P0_Cal_OS - m_P1_Cal_OS * ( (1-pnsum)-m_Eta_Cal_OS);
+
   debug() << " OS pn="<< pnsum <<" w="<<1-pnsum<<endreq;
 
   //throw away poorly significant tags
@@ -100,7 +102,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   double SSeOS_tagdecision=tagdecision;
   double SSeOS_pnsum_a= ((1-tagdecision)/2 + tagdecision*pnsum ); //hypothesis of truetag=+1
   double SSeOS_pnsum_b= ((1+tagdecision)/2 - tagdecision*pnsum );;  //hypothesis of truetag=-1
-  for( int i = 0; i != vtgsize; i++ ) { //multiply all probabilities
+  for( int i = 0; i != vtgsize; ++i ) { //multiply all probabilities
     if(! vtg.at(i)) continue;
     if( (signalType == 1 && vtg.at(i)->type() == (Tagger::SS_Pion)) || 
         (signalType == 2 && vtg.at(i)->type() == (Tagger::SS_Kaon)) ) {

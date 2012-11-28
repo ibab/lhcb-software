@@ -26,16 +26,14 @@ SVertexOneSeedTool::SVertexOneSeedTool( const std::string& type,
 { 
   declareInterface<ISecondaryVertexTool>(this);
 
-  declareProperty( "lcs_Long_cut",     m_lcs_Long_cut     = 2.5 );
-  declareProperty( "lcs_Upstream_cut", m_lcs_Upstream_cut = 5.0 );
+  declareProperty( "lcs_Long_cut",       m_lcs_Long_cut     = 2.5 );
+  declareProperty( "lcs_Upstream_cut",   m_lcs_Upstream_cut = 5.0 );
   declareProperty( "lcs_vtxaddedtracks_cut", m_lcs_vtxaddedtracks_cut = 3.0 );
-  declareProperty( "MinSeedPtmin", m_ptmin = 0.1 );
-  declareProperty( "MinSeedIPSmin", m_ipsmin = 2.5 );
-  declareProperty( "MinSeedDphimin", m_dphimin = 0. );
-  //declareProperty( "MinSeedProbability", m_maxprobf = 0.4 );
+  declareProperty( "MinSeedPtmin",       m_ptmin = 0.1 );
+  declareProperty( "MinSeedIPSmin",      m_ipsmin = 2.5 );
+  declareProperty( "MinSeedDphimin",     m_dphimin = 0. );
   declareProperty( "MinSeedProbability", m_maxprobf = 0.42 );
-  declareProperty( "maxprobf", m_maxprobf = 0.42 );
-  declareProperty( "noclones", m_noclones = true );
+  declareProperty( "noclones",           m_noclones = true );
 
 }
 
@@ -82,7 +80,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
   Gaudi::XYZPoint SVpos;
   
   //loop to find seed -----------------------------------
-  for ( jp = vtags.begin(); jp != vtags.end(); jp++ ) {
+  for ( jp = vtags.begin(); jp != vtags.end(); ++jp ) {
 
     //FIRST seed particle ----
     if( !(*jp)->proto() ) continue;
@@ -107,7 +105,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
 
     //SECOND seed particle ---- (remember! harder cuts must be applied on second
     //track, otherwise a nr of combination will be lost.
-    for ( kp = (jp+1) ; kp != vtags.end(); kp++ ) {
+    for ( kp = (jp+1) ; kp != vtags.end(); ++kp ) {
       if( !(*kp)->proto() ) continue;
       if((*kp)->proto()->track()->type()!= Track::Long ) continue; //cut
       if((*kp)->proto()->track()->chi2PerDoF() > m_lcs_Long_cut) continue;
@@ -130,7 +128,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
       if( std::max((*jp)->pt(), (*kp)->pt()) /GeV < 0.3 ) continue;  //cut
  
       double dphi= fabs((*jp)->momentum().phi()-(*kp)->momentum().phi()); 
-      if(dphi>3.1416) dphi= 2*3.1416-dphi;
+      if(dphi>M_PI) dphi= 2.*M_PI-dphi;
       if(dphi<0.001) continue;                                  //cut
 
       sc = fitter->fit( vtx , **jp, **kp );
@@ -227,7 +225,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
   //add iteratively other tracks to the seed ----------------------
   debug()<<" Adding tracks"<<endreq;
   Particle::ConstVector::const_iterator jpp;
-  for ( jpp = vtags.begin(); jpp != vtags.end(); jpp++ ) {
+  for ( jpp = vtags.begin(); jpp != vtags.end(); ++jpp ) {
     if( (*jpp) == p1 ) continue;
     if( (*jpp) == p2 ) continue;
     //no clones on added trakcs

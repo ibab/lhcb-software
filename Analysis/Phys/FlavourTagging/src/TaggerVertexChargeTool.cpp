@@ -116,20 +116,20 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   int vflagged = 0;
   Gaudi::LorentzVector SVmomentum;
   Particle::ConstVector::const_iterator ip;
-  for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) { 
+  for(ip=Pfit.begin(); ip!=Pfit.end(); ++ip) { 
     debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
     SVmomentum += (*ip)->momentum();
     double a = pow((*ip)->pt()/GeV, m_PowerK);
     Vch += (*ip)->charge() * a;
     norm+= a;
-    vflagged++;
+    ++vflagged;
     Vptmean += (*ip)->pt()/GeV;
     double minip, miniperr;
     m_util->calcIP(*ip, RecVert, minip, miniperr);
     minip=fabs(minip);
     Vipsmean += minip/miniperr;
     const Track* iptrack = (*ip)->proto()->track();
-    if( iptrack->type()== Track::Long ) Vflaglong++;
+    if( iptrack->type()== Track::Long ) ++Vflaglong;
     double docaSV, docaErrSV;
     m_util->calcDOCAmin( *ip, Pfit.at(0), Pfit.at(1), docaSV, docaErrSV); //DOCA wrt the seeds
     Vdocamax += docaSV;
@@ -202,7 +202,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   tVch.setDecision( Vch>0 ? -1 : 1 );
   tVch.setOmega( omega );
   tVch.setType( Tagger::VtxCharge ); 
-  for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) {
+  for(ip=Pfit.begin(); ip!=Pfit.end(); ++ip) {
     tVch.addToTaggerParts(*ip);
   }
   

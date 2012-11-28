@@ -89,7 +89,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   const Particle* ikaon=0;
   double ptmaxk = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
-  for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
+  for( ipart = vtags.begin(); ipart != vtags.end(); ++ipart ) {
     
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
 
@@ -133,7 +133,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distPhi_cut_kaon ) continue;
 
-    ncand++;
+    ++ncand;
 	
     if( Pt > ptmaxk ) { 
       ikaon = (*ipart);

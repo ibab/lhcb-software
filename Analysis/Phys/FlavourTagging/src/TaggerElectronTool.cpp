@@ -97,7 +97,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   const Particle* iele=0;
   double ptmaxe = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
-  for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
+  for( ipart = vtags.begin(); ipart != vtags.end(); ++ipart ) {
     
     bool inHcalACC= (*ipart)->proto()->info(ProtoParticle::InAccHcal, false);
     if(!inHcalACC) continue;
@@ -151,7 +151,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
       if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
         verbose() << " Elec veloch=" << veloch << endreq;
         
-        ncand++;
+        ++ncand;
 
         if( Pt > ptmaxe ) { 
           iele = (*ipart);

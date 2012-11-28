@@ -91,7 +91,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   const Particle* imuon=0;
   double ptmaxm = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
-  for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
+  for( ipart = vtags.begin(); ipart != vtags.end(); ++ipart ) {
 
     const Particle* axp = (*ipart);
 
@@ -133,7 +133,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( distphi < m_distPhi_cut_muon ) continue;
     verbose()<<" distPhi="<<distphi<<endreq;
 
-    ncand++;
+    ++ncand;
 
     if( Pt > ptmaxm ) { //Pt ordering
       imuon = axp;

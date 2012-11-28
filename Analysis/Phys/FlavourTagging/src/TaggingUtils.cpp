@@ -67,25 +67,6 @@ StatusCode TaggingUtils::calcDOCAmin( const Particle* axp,
 }
 
 //==========================================================================
-/*
-StatusCode TaggingUtils::calcIP( const Particle* axp, 
-                                 const VertexBase* v, 
-                                 double& ip, double& iperr) {
-  ip   =-100.0;
-  iperr= 0.0;
-
-  double ipC=0, ipChi2=0;
-  StatusCode sc2 = m_Dist->distance (axp, v, ipC, ipChi2);
-  if(sc2 && ipChi2!=0) {
-     ip = ipC;
-     iperr = ipC/sqrt(ipChi2);
-  }
-
-  return sc2;
-}
-*/
-
-//=========================================================================
 StatusCode TaggingUtils::calcIP( const Particle* axp,
                                         const VertexBase* v,
                                         double& ip, double& iperr) 
@@ -100,8 +81,7 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
   debug()<<"ipS: "<<ipC<<", ipV.R: "<<ipV.R()<<endreq;
   if(sc2 && ipChi2!=0) {
     if (sc) zsign = ipV.z()>0? 1:-1;
-    //ip=ipC;
-    ip=ipC*zsign;
+    ip=ipC*zsign;          // IP with sign
     iperr=ipC/sqrt(ipChi2);
   }
   debug()<<"IP: "<<ipC<<", "<<ip<<", (sign = "<<zsign<<" )"<<endreq;
@@ -169,13 +149,12 @@ bool TaggingUtils::isinTree(const Particle* axp,
        ip != sons.end(); ip++ ){
 
     double dphi = fabs(phi_axp-(*ip)->momentum().phi()); 
-    if(dphi>3.1416) dphi=6.283-dphi;
+    if(dphi>M_PI) dphi=2.*M_PI-dphi;
     dist_phi= std::min(dist_phi, dphi);
     
     if( (    fabs(p_axp -(*ip)->p()) < 0.1 
              && fabs(pt_axp-(*ip)->pt())< 0.01 
              && fabs(dphi)< 0.1 )
-             //&& fabs(phi_axp-(*ip)->momentum().phi())< 0.1 )
         || axp->proto()==(*ip)->proto() ) {
       if (msgLevel(MSG::VERBOSE)) 
         verbose() << " isinTree part: " << axp->particleID().pid() 

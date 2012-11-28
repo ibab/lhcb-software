@@ -99,7 +99,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   const Particle* ipionS=0;
   double ptmaxpS = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart, jpart;
-  for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
+  for( ipart = vtags.begin(); ipart != vtags.end(); ++ipart ) {
 
     //PID cuts to select the pion
     const ProtoParticle* proto = (*ipart)->proto();
@@ -149,7 +149,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
     double dphi  = fabs((*ipart)->momentum().Phi() - ptotB.Phi()); 
-    if(dphi>3.1416) dphi=6.2832-dphi;
+    if(dphi>M_PI) dphi=M_PI-dphi;
     double dR = sqrt(deta*deta+dphi*dphi);
     if(deta > m_eta_max_cut_pionS) continue;
     if(deta < m_eta_min_cut_pionS) continue;
@@ -160,7 +160,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
     if(dQ > m_dQcut_pionS ) continue;
 
-    ncand++;
+    ++ncand;
 
     if( Pt <= ptmaxpS ) continue;//equal sign in "<=" is used to kill duplicates
 
