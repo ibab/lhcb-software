@@ -3,6 +3,7 @@
 ! Responsible : Tomasz Szumlak
 !--------------------------------------------------------------------------
 
+!========================= VeloAlgorithms v5r7 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
  - Modified requirements to simplify auto conversion to CMake.
