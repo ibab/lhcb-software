@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloAssociators
 ################################################################################
-gaudi_subdir(VeloAssociators v2r4p1)
+gaudi_subdir(VeloAssociators v2r5)
 
 gaudi_depends_on_subdirs(Event/DigiEvent
                          Event/LinkerEvent
