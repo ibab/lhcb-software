@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonPIDChecker
 ################################################################################
-gaudi_subdir(MuonPIDChecker v5r3)
+gaudi_subdir(MuonPIDChecker v5r4)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/LinkerEvent
