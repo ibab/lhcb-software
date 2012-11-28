@@ -4,6 +4,7 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloMoniDst v5r13 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
  - Modified requirements to simplify auto conversion to CMake.

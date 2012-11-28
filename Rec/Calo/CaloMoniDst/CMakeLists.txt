@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloMoniDst
 ################################################################################
-gaudi_subdir(CaloMoniDst v5r12)
+gaudi_subdir(CaloMoniDst v5r13)
 
 gaudi_depends_on_subdirs(Associators/MCAssociators
                          Calo/CaloInterfaces
