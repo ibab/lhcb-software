@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichRecTrackTools
 ################################################################################
-gaudi_subdir(RichRecTrackTools v1r33)
+gaudi_subdir(RichRecTrackTools v1r34)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          Event/RecEvent
