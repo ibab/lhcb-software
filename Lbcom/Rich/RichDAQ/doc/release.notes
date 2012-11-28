@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================= RichDAQ v3r39 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
 

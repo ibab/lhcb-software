@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichDAQ
 ################################################################################
-gaudi_subdir(RichDAQ v3r38)
+gaudi_subdir(RichDAQ v3r39)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          Event/DAQEvent
