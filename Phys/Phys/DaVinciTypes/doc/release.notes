@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2012-11-28 - Marco Clemencic
+ - Minor changes to requirements to allow automatic conversion to CMake.
+
 !========================= DaVinciTypes v2r6 2012-02-03 =========================
 
 ! 2012-01-31 - Vanya Belyaev

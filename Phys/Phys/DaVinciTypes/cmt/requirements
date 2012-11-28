@@ -21,7 +21,7 @@ private
 use   GaudiAlg v*
 end_private
 # =============================================================================
-apply_pattern install_more_includes more =Kernel
+apply_pattern install_more_includes more=Kernel
 # =============================================================================
 # Linker library building rule
 # =============================================================================
