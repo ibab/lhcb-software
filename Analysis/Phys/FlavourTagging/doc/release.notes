@@ -4,6 +4,8 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2012-11-29 - Stefania Vecchi
+ - fix nightlies
 ! 2012-11-28 - Stefania Vecchi
  - code cleanup and prepare for new DaVinci release
 ! 2012-11-15 - Stefania Vecchi
