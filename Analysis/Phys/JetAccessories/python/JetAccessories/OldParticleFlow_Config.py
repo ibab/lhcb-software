@@ -1,10 +1,9 @@
-
 __version__ = "$Id: ParticleFlow_Config.py,v 1.1 2010-02-04 12:37:55 cocov Exp $"
 __author__  = "Victor Coco <Victor.Coco@cern.ch>"
 
 from LHCbKernel.Configuration import *
 
-from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , CaloClusterMCTruth,CaloDigit2MCLinks2Table,NeutralPP2MC , PVRelatorAlg, ChargedProtoParticleMaker)
+from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow4Jets, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , CaloClusterMCTruth,CaloDigit2MCLinks2Table,NeutralPP2MC , PVRelatorAlg, ChargedProtoParticleMaker)
 
 
 #####################################
@@ -58,7 +57,7 @@ from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelect
 
 
 
-class ParticleFlowConf:
+class OldParticleFlowConf:
     def __init__(self, _name, _InputParticles = ['Photons','NeutralHadrons','Charged','Pi0s','V0s','PFNeutrals'], _MCSeq = False , _params = {} ):
          self.name = _name
          self.InputParticles = _InputParticles
@@ -72,14 +71,11 @@ class ParticleFlowConf:
                           'MinPhotonID4PhotonTtrack': -2. , 'MinPhotonID4Photon': -1. ,'MaxMatchECALTr_T': 16. ,
                           'MinPhotonIDMax4ResolvedPi0':  -2.,'MinPhotonIDMin4ResolvedPi0':-4., 'MinInfMomentumCut':10. ,
                           'VerticesLocation':"Rec/Vertex/Primary",  "PFCaloHypoOutputLocation":"Rec/Calo/Hadrons",
-                          'CandidateToBanLocation':[],'PFProtoParticlesOutputLocation':"Rec/ProtoP/PF",
-                          'PFOutputLocation': "Phys/PFParticles/Particles",#'PFBannedOutputLocation':"Phys/PFBannedParticles/Particles",
-                          #'PFHiddenNeutralOutputLocation':"Phys/PFNeutralParticles/Particles",
-                          'CompositeParticlesLocation':[],
+                          'CandidateToBanLocation':'','PFProtoParticlesOutputLocation':"Rec/ProtoP/PF",
+                          'PFOutputLocation': "Phys/PFParticles/Particles",'PFBannedOutputLocation':"Phys/PFBannedParticles/Particles",
+                          'PFHiddenNeutralOutputLocation':"Phys/PFNeutralParticles/Particles",
                           "CalibECAL_EovP": 0.1,"CalibHCAL_EovP": 0.9,"NSigmaForCaloRecovery": 0.,
-                          "MinECALE_NeutralRecovery": 300.,"MinHCALE_NeutralRecovery": 500.,
-                          "UseVelo": False,
-                          "MC_recovery": False
+                          "MinECALE_NeutralRecovery": 1000.,"MinHCALE_NeutralRecovery": 2000.,'UseVelo':False
                           }
 ##          self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. ,
 ##                           'Chi2MaxDown': 7. , 'Chi2MaxUp': 7. , 'PtMinUp': 0. , 'UseTTHits':True ,'MaxChi2NoTT': 3.,
@@ -127,7 +123,7 @@ class ParticleFlowConf:
         ## List of algorithms to put in the sequencer
         
         ## set the algorithm
-        alg = ParticleFlow ( self.name )
+        alg = ParticleFlow4Jets ( self.name )
 
         ## Definition of cuts to apply to input tracks for inputselection
         
@@ -156,13 +152,13 @@ class ParticleFlowConf:
         ## Neutral related cuts
 
         pLocations = []
-        pCompLocations = []
+        
         alg.UseTTrackBanning       = True
         alg.CandidateToBanLocation = self.CandidateToBanLocation
         alg.VerticesLocation       = self.VerticesLocation
         alg.PFOutputLocation       = self.PFOutputLocation
-        #alg.PFBannedOutputLocation = self.PFBannedOutputLocation
-        #alg.PFHiddenNeutralOutputLocation = self.PFHiddenNeutralOutputLocation
+        alg.PFBannedOutputLocation = self.PFBannedOutputLocation
+        alg.PFHiddenNeutralOutputLocation = self.PFHiddenNeutralOutputLocation
         alg.PFProtoParticlesOutputLocation = self.PFProtoParticlesOutputLocation
         alg.PFCaloHypoOutputLocation = self.PFCaloHypoOutputLocation
         
@@ -208,14 +204,10 @@ class ParticleFlowConf:
                 alg.MinPhotonIDMin4ResolvedPi0 = self.MinPhotonIDMin4ResolvedPi0 
                 
             if t=='V0s':
-                pCompLocations.append("Phys/StdKs2PiPiLL/Particles" )
-                pCompLocations.append("Phys/StdKs2PiPiDD/Particles" )
-                pCompLocations.append("Phys/StdLambda2PPiLL/Particles" )
-                pCompLocations.append("Phys/StdLambda2PPiDD/Particles" )
-                #pCompLocations.append('Phys/StdLooseKsDD/Particles')
-                #pCompLocations.append('Phys/StdLooseKsLL/Particles')
-                #pCompLocations.append('Phys/StdLooseLambdaDD/Particles')
-                #pCompLocations.append('Phys/StdLooseLambdaLL/Particles')
+                pLocations.append('Phys/StdLooseKsDD/Particles')
+                pLocations.append('Phys/StdLooseKsLL/Particles')
+                pLocations.append('Phys/StdLooseLambdaDD/Particles')
+                pLocations.append('Phys/StdLooseLambdaLL/Particles')
 
             if t=='PFNeutrals':
                 alg.NeutralRecovery = True
@@ -223,13 +215,8 @@ class ParticleFlowConf:
                 alg.CalibECAL_EovP = self.CalibECAL_EovP
                 alg.CalibHCAL_EovP = self.CalibHCAL_EovP
                 alg.NSigmaForCaloRecovery = self.NSigmaForCaloRecovery
-
-            if len( self.CompositeParticlesLocation)>0.5:
-                for t in self.CompositeParticlesLocation:
-                    pCompLocations.append(t)
                 
         alg.ParticleLocations = pLocations
-        alg.CompositeParticleLocations = pCompLocations
         #alg.OutputLevel = 0
         self.algorithms.append(alg)
                 

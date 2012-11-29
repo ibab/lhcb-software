@@ -3,36 +3,50 @@ __author__  = "Victor Coco <Victor.Coco@cern.ch>"
 
 from LHCbKernel.Configuration import *
 
-from Configurables import ( GaudiSequencer, LoKi__JetMaker, LoKi__FastJetMaker, HistogramSvc )
-
+from Configurables import ( GaudiSequencer, LoKi__PFJetMaker, LoKi__FastJetMaker, HistogramSvc )
 
 class JetMakerConf:
 
-    def __init__(self, _name, Inputs = ['Phys/PFBannedParticles/Particles','Phys/PFParticles/Particles'], R = 0.5 , PtMin = 5000., AssociateWithPV = False , JetEnergyCorrection = False , JetID = False, jetidnumber=98 , algtype="anti-kt"):
-         jetname_dict = {"kt":0,"Cambridge":1,"anti-kt":2}
-         self.name = _name
-         self.Inputs = Inputs
-         self.AssociateWithPV = AssociateWithPV
-         self.R = R
-         self.PtMin = PtMin
-         self.JetEnergyCorrection = JetEnergyCorrection
-         self.JetID = JetID
-         self.jetMakerTool =  'LoKi__FastJetMaker'
-         #self.jetMakerType =  2
-         self.jetMakerType =  jetname_dict[algtype]
-         self.jetidnumber = jetidnumber
-         self.algorithms = []
-         self.setupJetMaker()
-
+    def __init__(self, _name, Inputs = ['Phys/PFParticles/Particles'],
+                 PFTypes = ['ChargedHadron','Muon','Electron','Photon','Pi0','HCALNeutrals','NeutralRecovery','V0','Charged0Momentum','ChargedInfMomentum','BadPhotonMatchingT','BadPhoton'],
+                 R = 0.5 ,
+                 PtMin = 5000.,
+                 AssociateWithPV = True ,
+                 JetEnergyCorrection = False ,
+                 JetIDCut = False,
+                 jetidnumber=98 ,
+                 algtype="anti-kt"):
+        
+        jetname_dict = {"kt":0,"Cambridge":1,"anti-kt":2}
+        dictOfPFType = {'ChargedHadron':2,'Muon':3,'Electron':4,
+                        'Photon':11,'Pi0':12,'MergedPi0':13,'ResolvedPi0':14,'HCALNeutrals':15,'NeutralRecovery':16,
+                        'V0':101,'D':102,'B':103,
+                        'Charged0Momentum':1001,'ChargedInfMomentum':1002,'BadPhotonMatchingT':1003,'BadPhoton':1004}
+        self.name = _name
+        self.Inputs = Inputs
+        self.AssociateWithPV = AssociateWithPV
+        self.R = R
+        self.PtMin = PtMin
+        self.JetEnergyCorrection = JetEnergyCorrection
+        self.JetIDCut = JetIDCut
+        self.jetMakerTool =  'LoKi__FastJetMaker'
+        self.jetMakerType =  jetname_dict[algtype]
+        self.jetidnumber = jetidnumber
+        self.PFParticleTypes = [ dictOfPFType[k] for k in PFTypes ]
+        if 'Pi0' in PFTypes:
+            self.PFParticleTypes.append(dictOfPFType['MergedPi0'])
+            self.PFParticleTypes.append(dictOfPFType['ResolvedPi0'])
+        self.algorithms = []
+        self.setupJetMaker()
+        
     def setupJetMaker(self):
-        from Configurables         import LoKi__JetMaker, LoKi__FastJetMaker
         jetMakerName = self.name
-        #if self.JetID : jetMakerName+= 'NoJetID'
-        algo =  LoKi__JetMaker ( jetMakerName )
+        algo =  LoKi__PFJetMaker ( jetMakerName )
         algo.JetMaker = self.jetMakerTool
         algo.Associate2Vertex = self.AssociateWithPV
         algo.addTool ( LoKi__FastJetMaker )
         algo.Inputs = self.Inputs
+        algo.PFParticleTypes = self.PFParticleTypes
         tool = getattr ( algo , 'LoKi__FastJetMaker' )
         tool.Type = self.jetMakerType 
         tool.RParameter = self.R
@@ -42,15 +56,6 @@ class JetMakerConf:
         if self.JetEnergyCorrection:
             algo.ApplyJEC = True
             algo.HistoPath = 'JEC/'
-        if self.JetID :
+        if self.JetIDCut :
             algo.ApplyJetID = True
         self.algorithms.append(algo)
-
- ##    def setupJetID(self):
-##         from Configurables      import FilterDesktop
-##         filterPIDJets = FilterDesktop(self.name)
-##         filterPIDJets.Inputs = [ 'Phys/'+self.name+ 'NoJetID'+'/Particles' ]
-##         ##filterPIDJets.Preambul = [ 'n90 = INFO(9002,-1.)','mtf = INFO(9003,1.)','hasPVInfo = INFO(9005,-1.)' ]
-##         filterPIDJets.Code="PT>5500." 
-##         self.algorithms.append(filterPIDJets)
-

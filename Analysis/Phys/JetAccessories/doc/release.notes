@@ -7,6 +7,39 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-11-29 - Victor Coco
+ - 
+! 2012-11-29 - Victor Coco
+ - Refactory of the particle flow code + associated jet finder.
+	 ParticleFlow becomes the main algorithm called by ParticleFlow_Config.py
+	 PFJetMakerAlg becomes the algorithm called by JetMaker_Config.py
+	 Old code is still there and can be accessed via OldParticleFlow_Config.py 
+   and OldJetMaker_Config.py configurables.
+
+ - New Files:
+   Kernel/PFCaloCluster.h
+   Kernel/PFParticle.h
+	 src/PFParticle.cpp
+   src/ParticleFlow.h
+   src/ParticleFlow.cpp
+   src/PFJetMakerAlg.cpp
+	 python/JetAccessories/OldJetMaker_Config.py
+	 python/JetAccessories/OldParticleFlow_Config.py
+
+ - Modified Files
+	 python/JetAccessories/JetMaker_Config.py (use the new jet maker)
+	 python/JetAccessories/ParticleFlow_Config.py (use the new particle flow)
+
+ - New behaviour of the particle flow neutral recovery with E/P parametrisation 
+   as function of P is implemented. Substraction is now done on group of cluster
+   linked by common tracks instead of single cluster.
+
+ - New ParticleFlow algorithm more modular and slightly faster.
+
+ - TODO: cleaning of the options, private members, configurables, default value 
+	 of the options
+
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 

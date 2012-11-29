@@ -7,7 +7,7 @@ package           JetAccessories
 version           v1r7
 
 # =============== structure ===================================================
-branches          cmt doc python src
+branches          cmt doc python src Kernel
 
 # =============== dependencies ================================================
 use               LoKiAlgo         v* Phys 
@@ -26,6 +26,7 @@ library           JetAccessories    ../src/*.cpp
 
 # =============== standard patterns ===========================================
 apply_pattern     component_library library=JetAccessories
+apply_pattern     install_more_includes  more =Kernel
 
 # =============================================================================
 # The END 
