@@ -6,6 +6,9 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-08 - Chris Jones
  - Add a new algorithm RelationsFromParticleLocationsFromClonerAlg that 
    recursively searchs the configured Particle locations to search for related 

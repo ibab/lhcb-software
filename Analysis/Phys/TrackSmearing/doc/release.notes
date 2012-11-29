@@ -7,6 +7,9 @@
  - Added the ip improver tool for upgrade studies.
 
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= TrackSmearing v1r4 2012-10-04 =========================
 
 ! 2012-09-14 Sascha Stahl

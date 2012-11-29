@@ -14,6 +14,11 @@ branches src cmt doc
 # =============== dependencies ================================================
 use MicroDSTInterfaces  v* MicroDST
 use MicroDSTBase        v* MicroDST
+use TrackEvent          v* Event
+use RecEvent            v* Event
+use PhysEvent           v* Event
+use MCEvent             v* Event
+use GSL                 v* LCG_Interfaces
 
 # build a components kibrary
 library MicroDSTTools ../src/*.cpp

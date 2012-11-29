@@ -11,6 +11,7 @@ use             Python      v* LCG_Interfaces -no_auto_imports
 use             LoKi        v* Phys
 use  LoKiGenMC              v*    Phys
 use LoKiAlgoMC              v*     Phys
+use LoKiArrayFunctors       v* Phys
 ##use             HbookCnv    v* 
 use             LHCbMath    v* Kernel  
 

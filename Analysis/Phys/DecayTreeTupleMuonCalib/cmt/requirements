@@ -15,6 +15,7 @@ branches          cmt doc src
 #============================================================================
 use   DecayTreeTupleBase  v*    Phys
 use   MuonDet             v*    Det
+use   HepMC               v*    LCG_Interfaces
 
 #============================================================================
 # Component library building rule

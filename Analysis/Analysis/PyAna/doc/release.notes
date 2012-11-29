@@ -6,6 +6,9 @@
 ! The package is subject to the Lesser GPL, see doc/COPYING and doc/COPYING.LESSER.
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !======================= AnalysisPyAna v1r3 2010-11-02 =======================
 
 ! 2010-10-01 - Juan Palacios

@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= DaVinciMonitors v1r19p1 2012-05-03 =========================
 
 ! 2012-05-02 - Patrizia de Simone

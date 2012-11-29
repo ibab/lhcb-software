@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 ! 2012-11-20 - Chris Jones
  - Improve the MCParticle and MCVertex cloners to clone the full tree, leaving
    no SmartRefs pointing to the originals.

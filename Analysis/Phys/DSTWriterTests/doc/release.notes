@@ -4,6 +4,9 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= DSTWriterTests v2r4p1 2012-02-09 =========================
 
 ! 2012-02-07 - Chris Jones

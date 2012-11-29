@@ -16,6 +16,9 @@
   . Fix several things related to the sweight (performance computation)
   . Modified code to account for SSK and SSpi every event 
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= FlavourTaggingChecker v6r12 2012-10-04 =========================
 
 ! 2012-09-07 - Marc Grabalosa

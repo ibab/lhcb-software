@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-25 - Paul Seyfert
  - converted TracksFromParticles from DVAlgorithm to DaVinciAlgorithm
  - added RefitParticleTracks algorithm and example file in options

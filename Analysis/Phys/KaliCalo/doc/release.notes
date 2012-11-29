@@ -4,6 +4,10 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 !========================= KaliCalo v4r13 2012-07-26 =========================
 
 ! 2012-07-10 - Daria Savrina

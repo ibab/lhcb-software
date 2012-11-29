@@ -7,6 +7,9 @@
 ! $Id: release.notes,v 1.20 2010-08-20 13:36:19 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !===================== MicroDSTinterfaces v1r7 2011-10-24 ===================
 ! 2011-10-11 - Roel Aaij
  - Add ICloneSwimmingReport

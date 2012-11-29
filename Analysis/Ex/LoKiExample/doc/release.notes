@@ -7,6 +7,10 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 !========================= LoKiExample v8r8p1 2012-02-09 =========================
 
 ! 2012-02-09 - Chris Jones

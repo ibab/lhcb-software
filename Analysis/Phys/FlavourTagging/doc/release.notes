@@ -19,6 +19,9 @@
  - modified CombineTaggersProbability to run the combination only with one SS tagger
  - fixed typo in Tuning.py for SSpi IPPU cut (6 instead of 3) 
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= FlavourTagging v12r10 2012-10-04 =========================
 
 ! 2012-08-03 - Stefania Vecchi

@@ -3,6 +3,9 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-08 - Chris Jones
  - Update CopyParticle2BackgroundCategory and CopyParticle2MCRelations to 
    recursively search through the particle trees and to find all associated

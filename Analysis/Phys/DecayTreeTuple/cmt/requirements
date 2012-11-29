@@ -24,6 +24,9 @@ use   DecayTreeTupleMC          v*    Phys
 use   DecayTreeTupleTrigger     v*    Phys
 use   DecayTreeTupleMuonCalib   v*    Phys
 
+use   LoKiPhys                  v*    Phys
+use   HepMC                     v*    LCG_Interfaces
+
 # Old dependencies. Kept for a while for reference
 #use   DaVinciAssociators  v*    Phys
 #use   HltInterfaces       v*    Kernel

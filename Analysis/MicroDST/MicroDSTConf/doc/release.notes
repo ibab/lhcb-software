@@ -5,6 +5,9 @@
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= MicroDSTConf v2r10p1 2011-12-15 =========================
 
 ! 2011-11-15 - Chris Jones

@@ -5,6 +5,9 @@
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !======================= Ex/MicroDSTExample v2r14 2011-03-28 =================
 
 ! 2011-03-28 - Juan Palacios
