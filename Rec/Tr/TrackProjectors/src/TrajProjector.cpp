@@ -48,6 +48,13 @@ struct VP {
 typedef TrajProjector<VP> TrajVPProjector;
 DECLARE_TOOL_FACTORY( TrajVPProjector )
 
+struct FT {
+  static double defaultTolerance() { return 0.002*Gaudi::Units::mm; }
+};
+
+typedef TrajProjector<FT> TrajFTProjector;
+DECLARE_TOOL_FACTORY( TrajFTProjector )
+
 struct Muon {
   static double defaultTolerance() { return 0.002*Gaudi::Units::mm; }
 };
