@@ -53,6 +53,13 @@ class HHBuilder(object):
         # PID filtered selections
         self.pipi_pid = [filterPID('X2PiPiPID',self.pipi,config_pid)]
         self.kpi_pid = [filterPID('X2KPiPID',self.kpi,config_pid)]
+
+        #Different PID filterings for testing with the FULL DST lines
+        self.pipi_pid_tightpi = [filterPID('X2PiPiPIDTIGHTPI',self.pipi,config_pid['TIGHTPI'])]
+        self.kpi_pid_tightpi = [filterPID('X2KPiPIDTIGHTPI',self.kpi,config_pid['TIGHTPI'])]
+        #tighter on the kaon
+        self.kpi_pid_tighter = [filterPID('X2KPiPIDTIGHTER',self.kpi,config_pid['TIGHTER'])]
+        
         self.kk_pid = [filterPID('X2KKPID',self.kk,config_pid)]
         self.hh_ws_pid = [filterPID('X2HHWSPID',self.hh_ws,config_pid)]
         self.ph_pid = [filterPID('X2PHPID',self.ph,config_pid)]

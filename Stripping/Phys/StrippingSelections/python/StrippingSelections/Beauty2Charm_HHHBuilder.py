@@ -19,8 +19,17 @@ class HHHBuilder(object):
                                     config['pDAUGHTERS'])
         self.config = config
         self.pipipi = [self._makePiPiPi()]
+
+        #Different PID filtering for testing the FULL DST lines
+        self.pipipi_tightpi = [filterPID('X2PiPiPiPIDTIGHTPI',self.pipipi,config['PID']['TIGHTPI'])]
+        self.pipipi_tighterpi = [filterPID('X2PiPiPiPIDTIGHTERPI',self.pipipi,config['PID']['TIGHTERPI'])]
+        
         self.kkpi = [self._makeKKPi()]
         self.kpipi = [self._makeKPiPi()]
+
+        #Really tight on the kaon (for FULL DST)
+        self.kpipi_realtightk = [filterPID('X2KPiPiPIDREALTIGHTK',self.kpipi,config['PID']['REALTIGHTK'])]
+        
         self.ppbarpi = [self._makeppbarPi()]
         self.ppbark = [self._makeppbarK()]
         

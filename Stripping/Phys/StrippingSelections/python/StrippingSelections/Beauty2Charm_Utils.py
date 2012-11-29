@@ -24,9 +24,11 @@ class ProtoLine(object):
 
 def dataOnDemand(loc): return DataOnDemand(Location="Phys/%s/Particles"%loc)
 
-def filterSelection(name,code,inputs):
+def filterSelection(name,code,inputs,preambulo=None):
+    alg = FilterDesktop(Code=code)
+    if preambulo is not None : alg.Preambulo = preambulo
     return Selection(name+'Beauty2CharmFilter',
-                     Algorithm=FilterDesktop(Code=code),
+                     Algorithm=alg,
                      RequiredSelections=inputs)
 
 def filterInputs(tag,inputs,config):

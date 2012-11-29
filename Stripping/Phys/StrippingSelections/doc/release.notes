@@ -4,6 +4,23 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-11-29 - Edmund Smith
+ - Added many different lines to Beauty2Charm Stripping to test tighter
+   selections intended for full dst streams.
+    * python/StrippingSelections/Beauty2Charm_DBuilder.py
+			- added different charge combinations of D2hhh
+			- different pid filterings
+    * python/StrippingSelections/Beauty2Charm_Utils.py 
+			- modified filterSelection method to take a Preambulo
+    * python/StrippingSelections/Beauty2Charm_HHBuilder.py
+			- different pid filterings of hh.
+    * python/StrippingSelections/Beauty2Charm_HHHBuilder.py
+			- different pid filterings of hhh.
+    * python/StrippingSelections/StrippingBeauty2Charm.py
+			- new entries in config dictionary for different sets of pid cuts.
+    * python/StrippingSelections/Beauty2Charm_B2DXBuilder.py
+			- added functions/existing function calls to build all lines that were tested.
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 

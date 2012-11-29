@@ -97,6 +97,9 @@ class DBuilder(object):
         self.pi0kpi_resolved = [filterSelection('D2Pi0KPi_Resolved',oneK,
                                                 self.pi0hh_resolved)]
         d_min,d_max,ds_min,ds_max = self._massWindowD2HHHCF()
+
+        #use this below
+        d_cf_noMassWin = d_cf
         d_cf = LoKiCuts.combine([d_cf,"in_range(%s,MM,%s)"%(d_min,d_max)])
         ds_cf = LoKiCuts.combine([ds_cf,"in_range(%s,MM,%s)"%(ds_min,ds_max)])
         cf = '('+d_cf+') | (' + ds_cf + ')'
@@ -107,8 +110,8 @@ class DBuilder(object):
               "((ID=='D-') & (NINTREE(ID=='K-')==1) & (%s)))" % (oneK,oneK)
         ds = LoKiCuts.combine([ds,"in_range(%s,MM,%s)"%(ds_min,ds_max)])
         #print 'ds =', ds
-        self.ds_hhh_pid = [filterSelection('Ds2HHHPIDTIGHT',ds,
-                                           self.hhh_pid_tight)]
+        self.ds_hhh_pid_tight = [filterSelection('Ds2HHHPIDTIGHT',ds,
+                                                 self.hhh_pid_tight)]
         # WS decays
         self.kshh_ll_ws = self._makeD2KShhWS("LL")
         self.kshh_dd_ws = self._makeD2KShhWS("DD")
@@ -118,8 +121,148 @@ class DBuilder(object):
         self.hhhh_ws = self._makeD2hhhhWS()
 
         # phi mu nu
-        self.phimu = self._makeD2PhiMuNu() 
+        self.phimu = self._makeD2PhiMuNu()
+        
+        #######################################################################
+        #Testing different selections for FULL DST lines
+        #######################################################################
+        #Different PID filtering
+        self.hhh_pid_tightpi = [filterPID('D2HHHPIDTIGHTPI',self.hhh_pid,config_pid['TIGHTPI'])]
+        self.hhh_pid_tighter = [filterPID('D2HHHPIDTIGHTER',self.hhh_pid,config_pid['TIGHTER'])]
+        self.hhh_pid_special = [filterPID('D2HHHPIDSPECIAL',self.hhh,config_pid['SPECIAL'])]
+        
+        self.hh_pid_tightpi = [filterPID('D2HHPIDTIGHTPI',self.hh_pid,config_pid['TIGHTPI'])]
+        self.hh_pid_tight = [filterPID('D2HHPIDTIGHT',self.hh_pid,config_pid['TIGHT'])]
+        self.hh_pid_tighter = [filterPID('D2HHPIDTIGHTER',self.hh_pid,config_pid['TIGHTER'])]
 
+        kkpi = "((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1))"
+        self.kkpi_pid_tightpi = [filterSelection('D2KKPiPIDTIGHTPI',kkpi,self.hhh_pid_tightpi)]
+        #filter for d2kkpi (N.B. this doesn't actually work yet)
+        kkpi_Preambulo = ["pi_index = 100",
+                          "Kp_index = 100",
+                          "Km_index = 100",
+                          "if CHILDCUT('pi+'==ABSID, 1) : pi_index = 1",
+                          "elif CHILDCUT('K-'==ID, 1) : Km_index = 1",
+                          "elif CHILDCUT('K+'==ID, 1) : Kp_index = 1",
+                          "if CHILDCUT('pi+'==ABSID, 2) : pi_index = 2",
+                          "elif CHILDCUT('K-'==ID, 2) : Km_index = 2",
+                          "elif CHILDCUT('K+'==ID, 2) : Kp_index = 2",
+                          "if CHILDCUT('pi+'==ABSID, 3) : pi_index = 3",
+                          "elif CHILDCUT('K-'==ID, 3) : Km_index = 3",
+                          "elif CHILDCUT('K+'==ID, 3) : Kp_index = 3",
+
+                          "qPion = CHILD( Q, pi_index )",
+                          "qKaonP = CHILD( Q, Kp_index)",
+                          "qKaonM = CHILD( Q, Km_index)",
+                          
+                          "px_pi = CHILD( PX, pi_index  ) " ,
+                          "py_pi = CHILD( PY, pi_index  ) " ,
+                          "pz_pi = CHILD( PZ, pi_index  ) " ,
+                          "e_pi = CHILD( E, pi_index  ) " ,
+                          
+                          "px_kp = CHILD( PX, Kp_index ) " ,
+                          "py_kp = CHILD( PY, Kp_index ) " ,
+                          "pz_kp = CHILD( PZ, Kp_index ) " ,
+                          "e_kp = CHILD( E, Kp_index ) " ,
+                          "pid_kp = CHILD( PIDK, Kp_index ) " ,
+                          
+                          
+                          "px_km = CHILD( PX, Km_index ) " ,
+                          "py_km = CHILD( PY, Km_index ) " ,
+                          "pz_km = CHILD( PZ, Km_index ) " ,
+                          "e_km = CHILD( E, Km_index ) " ,
+                          "pid_km = CHILD( PIDK, Km_index ) ",
+
+                          "px_KK = px_kp + px_km",
+                          "py_KK = py_kp + py_km ",
+                          "pz_KK = pz_kp + pz_km " ,
+                          "e_KK = e_kp + e_km " ,
+                          "m_KK = sqrt ( e_KK**2 - px_KK**2 - py_KK**2 - pz_KK**2 ) ",
+
+                          "px_Kpi1 = px_kp + px_pi " ,
+                          "py_Kpi1 = py_kp + py_pi " ,
+                          "pz_Kpi1 = pz_kp + pz_pi " ,
+                          "e_Kpi1 = e_kp + e_pi " ,
+                          "m_KpPim = sqrt ( e_Kpi1**2 - px_Kpi1**2 - py_Kpi1**2 - pz_Kpi1**2 ) ",
+
+
+                          "px_Kpi2 = px_km + px_pi " ,
+                          "py_Kpi2 = py_km + py_pi " ,
+                          "pz_Kpi2 = pz_km + pz_pi " ,
+                          "e_Kpi2 = e_km + e_pi " ,
+                          "m_KmPip = sqrt ( e_Kpi2**2 - px_Kpi2**2 - py_Kpi2**2 - pz_Kpi2**2 ) ",
+                          ]
+        kkpi_code = " (pid_km>0 & pid_kp>0) | m_KK<1040 | (qPion*qKaonP<0 & abs(m_KpPim-892)<100) | (qPion*qKaonM<0 & abs(m_KmPip-892)<100) "
+        self.kkpi_custom = [filterSelection('D2KKPiCUSTOM',kkpi_code,self.kkpi_pid_tightpi,kkpi_Preambulo)]
+        
+
+        #for use with the FULL DST B --> Ds 3H lines
+        self.ds_hhh_pid = [filterSelection('Ds2HHHPID',ds,self.hhh_pid)]
+
+        self.ds_hhh_pid_tightpi = [filterSelection('Ds2HHHPIDTIGHTPI',ds,self.hhh_pid_tightpi)]
+        self.ds_hhh_pid_tighter = [filterSelection('Ds2HHHPIDTIGHTER',ds,self.hhh_pid_tighter)]
+
+        #ds non CF selection = (Ds+ --> K+pi+pi-) | (Ds+ --> 3pi)
+        ds_pipipi = "(NINTREE(ABSID=='K+')==0)"
+        ds_kpipi = "((ID=='D+') & (NINTREE(ID=='K+')==1) & (%s)) | "\
+                   "((ID=='D-') & (NINTREE(ID=='K-')==1) & (%s))" % (oneK,oneK)
+        ds_non_cf = "( " + ds_pipipi + " ) | ( " + ds_kpipi + " )"
+        ds_non_cf = LoKiCuts.combine([ds_non_cf,"in_range(%s,MM,%s)"%(ds_min,ds_max)])
+
+        self.ds_hhh_cf_pid_tightpi = [filterSelection('Ds2HHHCFPIDTIGHTPI',ds_cf,self.hhh_pid_tightpi)]
+        self.ds_hhh_noncf_pid_special = [filterSelection('Ds2HHHCSPIDSPECIAL',ds_non_cf,self.hhh_pid_special)]
+        self.ds_hhh_cf_custom = [filterSelection('Ds2HHHCFCUSTOM',"in_range(%s,MM,%s)"%(ds_min,ds_max),self.kkpi_custom)]
+        
+        self.ds_pipipi_pid_tightpi = [filterSelection('Ds2PiPiPiPIDTIGHTPI',ds_pipipi,self.hhh_pid_tightpi)]
+        self.ds_kpipi_pid_special = [filterSelection('Ds2KPiPiPIDSPECIAL',ds_kpipi,self.hhh_pid_special)]
+        
+        self.ds_hhh_pid_combo = [MergedSelection('Ds2HHHPIDCOMBO',
+                                                 RequiredSelections=self.ds_hhh_cf_pid_tightpi+self.ds_hhh_noncf_pid_special)]
+        self.ds_hhh_pid_combo_fix = [MergedSelection('Ds2HHHPIDCOMBOFIX',
+                                                     RequiredSelections=self.ds_pipipi_pid_tightpi+self.ds_kpipi_pid_special+self.ds_hhh_cf_pid_tightpi)]
+        self.ds_hhh_pid_custom = [MergedSelection('Ds2HHHPIDCUSTOM',
+                                                  RequiredSelections=self.ds_pipipi_pid_tightpi+self.ds_kpipi_pid_special+self.ds_hhh_cf_custom)]
+        #for use with the FULL DST B --> DD line
+        #add D+ --> K+K-pi+ to the d_cf selection
+        #remove trailing bracket to add this charge combo in
+        d_cf_plus = d_cf_noMassWin[:-1] + " | ((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1)))"
+        d_cf_plus = LoKiCuts.combine([d_cf_plus,"in_range(%s,MM,%s)"%(d_min,d_max)])
+        d_kkpi_custom = [filterSelection('Dplus2KKPiCUSTOM',"in_range(%s,MM,%s)"%(d_min,d_max),self.kkpi_custom)]
+        self.d_cf_hhh_pid_tightpi = [filterSelection('Dplus2HHHCF',d_cf,self.hhh_pid_tightpi)]
+        self.d_hhh_custom = [MergedSelection('Dplus2HHHCUSTOM',RequiredSelections=d_kkpi_custom+self.d_cf_hhh_pid_tightpi)]
+        #print d_cf_plus
+        
+        self.d_cf_plus_pid = [filterSelection('Dplus2HHHCFPID',d_cf_plus,self.hhh_pid)]
+        self.d_cf_plus_pid_tightpi = [filterSelection('Dplus2HHHCFPIDTIGHTPI',d_cf_plus,self.hhh_pid_tightpi)]
+        self.d_cf_plus_pid_tight = [filterSelection('Dplus2HHHCFPIDTIGHT',d_cf_plus,self.hhh_pid_tight)]
+        self.d_cf_plus_pid_tighter = [filterSelection('Dplus2HHHCFPIDTIGHTER',d_cf_plus,self.hhh_pid_tighter)]
+        
+        self.d_hhh_4_B2DD = [MergedSelection('D2HHH_4_B2DD_Beauty2Charm',
+                                             RequiredSelections=self.ds_hhh_pid+self.d_cf_plus_pid)]
+        self.d_hhh_4_B2DD_pid_tightpi = [MergedSelection('D2HHH_4_B2DD_TIGHTPI_Beauty2Charm',
+                                                         RequiredSelections=self.ds_hhh_pid_tightpi+self.d_cf_plus_pid_tightpi)]
+        self.d_hhh_4_B2DD_pid_tight = [MergedSelection('D2HHH_4_B2DD_TIGHT_Beauty2Charm',
+                                                       RequiredSelections=self.ds_hhh_pid_tight+self.d_cf_plus_pid_tight)]
+        self.d_hhh_4_B2DD_pid_tighter = [MergedSelection('D2HHH_4_B2DD_TIGHTER_Beauty2Charm',
+                                                         RequiredSelections=self.ds_hhh_pid_tighter+self.d_cf_plus_pid_tighter)]
+        self.d_hhh_4_B2DD_pid_combo = [MergedSelection('D2HHH_4_B2DD_PIDCOMBO_Beauty2Charm',
+                                                       RequiredSelections=self.ds_hhh_pid_combo+self.d_cf_plus_pid_tightpi)]
+        self.d_hhh_4_B2DD_pid_combo_fix = [MergedSelection('D2HHH_4_B2DD_PIDCOMBOFIX_Beauty2Charm',
+                                                           RequiredSelections=self.ds_hhh_pid_combo_fix+self.d_cf_plus_pid_tightpi)]
+        self.d_hhh_4_B2DD_custom = [MergedSelection('D2HHH_4_B2DD_CUSTOM_Beauty2Charm',
+                                                    RequiredSelections=self.ds_hhh_pid_custom+self.d_hhh_custom)]
+        #FULL DST D0D0 line
+        self.kpi_pid_tightpi = [filterSelection('D2KPIPIDTIGHTPI',oneK,self.hh_pid_tightpi)]
+        self.k3pi_pid_tightpi = [filterPID('D2K3PIPIDTIGHTPI',self.k3pi,config_pid['TIGHTPI'])]
+        self.d0_cf_pid_tightpi = [MergedSelection('D0CFPIDTIGHTPI',
+                                                  RequiredSelections=self.kpi_pid_tightpi+self.k3pi_pid_tightpi)]
+        self.d0_cf_pid_tight = [filterPID('D0CFPIDTIGHT',
+                                          self.d0_cf_pid_tightpi,config_pid['TIGHT'])]
+        self.d0_cf_pid_tighter = [filterPID('D0CFPIDTIGHTER',
+                                            self.d0_cf_pid_tight,config_pid['TIGHTER'])]
+                
+
+                
     def _makeD2X(self,name,decays,wm,up,config,extrainputs=[]):
         ''' Makes all D -> X selections.'''
         if up:
