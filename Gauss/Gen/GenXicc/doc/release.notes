@@ -1,6 +1,14 @@
 ! Package     : Gen/GenXicc
 ! Responsible : F. Zhang
 
+! 2012-10-23 Feng ZHANG
+- (1) FULLPATHNAME for the grid files modified and new path for different
+  energy point added
+  (2) FIVE source files changed
+  evntinit.F  outerpdf.F  parameter.F  upopenfile.F  vagas.F
+  (3) obsolete some initial values in "setxiccdefaultparameters". All parameters
+  controlled by LBGENXICC now in need.
+
 
 !========================= GenXicc v1r1 2012-04-02 ===========================
 ! 2012-03-29 - G.Graziani
