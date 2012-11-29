@@ -1,22 +1,25 @@
 ! Package     : Gen/GenXicc
 ! Responsible : F. Zhang
 
+!========================= GenXicc v2r0 2012-11-29 ===========================
 ! 2012-10-23 Feng ZHANG
-- (1) FULLPATHNAME for the grid files modified and new path for different
-  energy point added
-  (2) FIVE source files changed
-  evntinit.F  outerpdf.F  parameter.F  upopenfile.F  vagas.F
-  (3) obsolete some initial values in "setxiccdefaultparameters". All parameters
-  controlled by LBGENXICC now in need.
-
+ - (1) FULLPATHNAME for the grid files modified and new path for different
+   energy point added
+   (2) FIVE source files changed
+   evntinit.F  outerpdf.F  parameter.F  upopenfile.F  vagas.F
+   (3) obsolete some initial values in "setxiccdefaultparameters". 
+   All parameters controlled by LBGENXICC now in need.
 
 !========================= GenXicc v1r1 2012-04-02 ===========================
 ! 2012-03-29 - G.Graziani
-- extend changes to colorflow.F to all QQq baryon states (support for Xi_bc, Xi_bb, Omega_bc, Omega_bb)
-- add LHCb-like generator level cut on eta (default is no cut)
-- add user-controllable parameters (via GenXiccProduction options) for eta cut (pscutmin, pscutmax) and maximum weight (xmaxwgt)
-- split initial parameter settings in two parts that should be called before and after user settings in GenXiccProduction
-- put constants to be shared among routines in include/genxicc_constants.h
+ - extend changes to colorflow.F to all QQq baryon states (support for Xi_bc, 
+   Xi_bb, Omega_bc, Omega_bb)
+ - add LHCb-like generator level cut on eta (default is no cut)
+ - add user-controllable parameters (via GenXiccProduction options) for eta 
+   cut (pscutmin, pscutmax) and maximum weight (xmaxwgt)
+ - split initial parameter settings in two parts that should be called before
+   and after user settings in GenXiccProduction
+ - put constants to be shared among routines in include/genxicc_constants.h
 
 
 !========================= GenXicc v1r0 2012-03-09 ===========================
