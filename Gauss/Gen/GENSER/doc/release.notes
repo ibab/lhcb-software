@@ -4,6 +4,7 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v12r0 2012-11-29 ==========================
 ! 2012-11-16 - Gloria Corti
  - Use private interface packages for photos++ and tauola++ to replace '++'
    with 'pp' needed on bash to correctly resolve the paths.
@@ -46,6 +47,12 @@
 ! 2012-01-26 - Gloria Corti
  - Take the latest version of pythia8 160
  - Remove temporary patch to link photos++ and tauola++ with missing links
+
+!========================= GENSER v11r0 on a branch ==========================
+!========================= GENSER v10r2 on a branch ==========================
+!========================= GENSER v10r1 on a branch ==========================
+!========================= GENSER v10r0 on a branch ==========================
+!========================= GENSER v9r3 on a branch ===========================
 
 !========================= GENSER v9r2p1 2011-10-14 ==========================
 ! 2011-10-14 - Gloria Corti
