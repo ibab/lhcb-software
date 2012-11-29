@@ -5,6 +5,9 @@
 ! Purpose     : The suite for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !=========================== LoKi v9r0 2011-02-04 =============================
 
 ! 2011-02-04 - Juan PALACIOS

@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 </PRE><H1><A NAME=v16r2>2012-10-04 Phys v16r2 </A></H1><PRE>
 Development release, based on Rec v14r2, LHCb v35r2.
 

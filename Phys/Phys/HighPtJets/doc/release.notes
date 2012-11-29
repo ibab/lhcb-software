@@ -3,6 +3,9 @@
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-20 - Chris Jones
  - Use DaVinciAlgorithm instead of DVAlgorithm
 

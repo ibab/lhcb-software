@@ -5,6 +5,9 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= DaVinciMCKernel v4r3 2011-12-15 =========================
 
 ! 2011-12-14 - Chris Jones

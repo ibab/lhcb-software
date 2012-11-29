@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-26 - Victor Coco
  - LoKiFastJetWithAreaMaker now compatible with fastjet 3.0. 
    TODO: implement more easy config of the aera type

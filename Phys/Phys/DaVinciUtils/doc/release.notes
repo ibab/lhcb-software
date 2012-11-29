@@ -4,6 +4,9 @@
 ! Purpose     : DaVinci independent functions and classes to help DaVinci life.
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! ========================= DaVinciUtils v1r1 2011-01-18 =====================
 
 ! 2011-01-10 - Juan Palacios

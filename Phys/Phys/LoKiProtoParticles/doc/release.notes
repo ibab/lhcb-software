@@ -7,6 +7,9 @@
 ! -----------------------------------------------------------------------------
 !========================= LoKiProtoParticles v2r1 2012-05-24 =========================
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-05-20 - Vanya Belyaev
  - imporve dictionareis 
 

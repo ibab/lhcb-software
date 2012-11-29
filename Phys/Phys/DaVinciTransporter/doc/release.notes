@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !====================== DaVinciTransporter v3r10 2011-04-21 ===================
 
 ! 2011-04-20 - Juan Palacios

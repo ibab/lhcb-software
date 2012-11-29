@@ -4,6 +4,9 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-10-31 - Yuehong Xie
  - Add warning message in PropertimeFitter for the protection below
  - Avoid recalculating mass

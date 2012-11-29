@@ -4,6 +4,9 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-17 - Chris Jones
  - Extend the related PV finding logic in DVCommonBase to try and predict
    the relations table location from the Particle container TES location.
