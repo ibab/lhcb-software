@@ -48,7 +48,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "IgnoreTT",   m_ignoreTT   = false );
   declareProperty( "IgnoreIT",   m_ignoreIT   = false );
   declareProperty( "IgnoreOT",   m_ignoreOT   = false );
-  declareProperty( "IgnoreFT",   m_ignoreFT   = false );
+  declareProperty( "IgnoreFT",   m_ignoreFT   = true  );
   declareProperty( "IgnoreMuon", m_ignoreMuon = false );
   declareProperty( "InitializeReference", m_initializeReference  = true ) ;
 
