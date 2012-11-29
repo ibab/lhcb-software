@@ -5,6 +5,7 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!======================= Generators v13r0 2012-11-29 =========================
 ! 2012-09-27 - Patrick Robbe
  - Added an option to switch off the reinitialization of the pile-up
    production in the Special method.
@@ -43,6 +44,8 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
       (for some reason, this is still needed here for the initial p-p event)
     c) commented out photos external fortran function calls.
    Branch v11r4b is a copy of the trunk prior to the above changes.
+
+!==================== Generators v12 series on a branch ======================
 
 !======================= Generators v11r4 2012-02-12 =========================
 ! 2012-02-12 - Gloria Corti
