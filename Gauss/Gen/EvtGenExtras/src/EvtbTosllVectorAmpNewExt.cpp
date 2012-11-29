@@ -86,7 +86,7 @@ void EvtbTosllVectorAmpNewExt::CalcAmp( EvtParticle *parent,
                                      double CKM_barrho, double CKM_bareta, 
                                      double ReA7, double ImA7, double ReA10, double ImA10){
 
-  FILE *mytest;
+  //  FILE *mytest;
 
   EvtComplex unit1(1.0,0.0); // real unit
   EvtComplex uniti(0.0,1.0); // imaginary unit

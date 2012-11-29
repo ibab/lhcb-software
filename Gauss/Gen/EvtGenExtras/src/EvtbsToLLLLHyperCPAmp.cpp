@@ -74,7 +74,7 @@ void EvtbsToLLLLHyperCPAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
   EvtComplex unit1(1.0,0.0); // real unit
   EvtComplex uniti(0.0,1.0); // imaginary unit
 
-  double M1 = parent->mass();                // B - meson mass, GeV
+  parent->mass();                // B - meson mass, GeV
   double fb = 0.0;                           // leptonic decay constant of B-meson, GeV
 
   double Cl = 0.0;                           // LPL and LSL - vertexes
@@ -483,15 +483,15 @@ void EvtbsToLLLLHyperCPAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
 //
 double EvtbsToLLLLHyperCPAmp::CalcMaxProb(
                                      EvtId parnum,
-                                     EvtId l1num, EvtId l2num, 
-                                     EvtId l3num, EvtId l4num,
-                                     double mS, double mP, 
-                                     double gammaS, double gammaP, 
-                                     double mLiiLR, 
-                                     double Fc, 
-                                     double mD23LL, double mD23RR, 
-                                     double mD32LL, double mD32RR, 
-                                     double mD13LL, double mD13RR, 
+                                     EvtId l1num, EvtId /*l2num*/,
+                                     EvtId /*l3num*/, EvtId /*l4num*/,
+                                     double mS, double mP,
+                                     double gammaS, double gammaP,
+                                     double mLiiLR,
+                                     double Fc,
+                                     double mD23LL, double mD23RR,
+                                     double mD32LL, double mD32RR,
+                                     double mD13LL, double mD13RR,
                                      double mD31LL, double mD31RR
                                   ){
 
@@ -573,7 +573,7 @@ double EvtbsToLLLLHyperCPAmp::CalcMaxProb(
   }
 
   double M1 = EvtPDL::getMeanMass(parnum);  // B - meson mass
-  double ml = EvtPDL::getMeanMass(l1num);   // leptonic mass
+  EvtPDL::getMeanMass(l1num);   // leptonic mass
 
 
   // We find the maximum amplitude probability
