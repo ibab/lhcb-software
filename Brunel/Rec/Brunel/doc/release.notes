@@ -13,6 +13,7 @@ Purpose: LHCb reconstruction program
   . Switch interpolator in TrackNNGhostId from cspline to linear, fixes negative
     ghost probabilities (TrackTools) 
   . Removed Boole linkers from default MC DST output (GaudiConf)
+  . Loosen Aerogel selection cuts (RichRecSys)
 
 - Changes to test
   . Update input data for 2011 test to more typical run 103370
