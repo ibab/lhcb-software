@@ -4,6 +4,12 @@
 ! Purpose     : Provides the grade data required by GenXicc
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Zhenwei Yang, Feng Zhang
+- add grade files for 7, 8, 13 and 14 TeV for Xi_cc and Xi_bc
+  in new subdirectories (7TeV, 8TeV, ....)
+  The original files (for 7 TeV used in MC11) are kept in the
+  data directory also for the moment.
+
 !======================== BcVegPyData v1r1 2012-04-02 ========================
 ! 2012-03-29 Giacomo Graziani
 - add grade data also for Xi_bc
