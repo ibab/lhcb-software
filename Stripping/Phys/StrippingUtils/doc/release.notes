@@ -4,6 +4,9 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! ===================== StrippingUtils v1r6 2012-03-01 =======================
 
 ! 2012-02-24 - Vanya Belyaev

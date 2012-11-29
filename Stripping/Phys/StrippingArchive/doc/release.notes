@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= StrippingArchive v1r16 2012-09-14 =========================
 
 ! 2012-09-14 - Anton Poluektov 

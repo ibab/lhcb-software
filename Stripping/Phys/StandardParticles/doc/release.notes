@@ -4,6 +4,9 @@
 ! Purpose     : Selection-type instances corresponding to CommonParticles.
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 !====================== StandardParticles v2r1 2012-02-10 ====================
 
 !====================== StandardParticles v2r0 2011-02-21 ====================

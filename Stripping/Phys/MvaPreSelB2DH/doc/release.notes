@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-21 - Anton Poluektov 
  - Make B2DHMvaPreSelectionAlg a DaVinciHistoAlgorithm, instead of 
    deprecated DVAlgorithm

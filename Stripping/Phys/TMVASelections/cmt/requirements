@@ -18,9 +18,11 @@ use GaudiKernel         v*
 use GaudiAlg            v*
 use DaVinciKernel       v*  Phys
 use LoKi                v*  Phys
+use LoKiPhys            v*  Phys
 use TMVAWeights         v* 
 
 private 
+use ROOT                v*  LCG_Interfaces
 macro_append   ROOT_linkopts   " -lMLP -lTMVA -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d" \
  WIN32   " libMLP.lib libTMVA.lib libGraf.lib libHist.lib libMatrix.lib libTreePlayer.lib libGpad.lib libGraf3d.lib"
 

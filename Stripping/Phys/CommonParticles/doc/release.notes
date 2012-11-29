@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-11-09 - Chris Jones
  - Fix some bugs in the last commit for diElectron vertexing
   + Proper use of the addTool method
