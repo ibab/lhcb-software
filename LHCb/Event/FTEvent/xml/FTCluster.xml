@@ -31,7 +31,8 @@
       <method    name   = "channelID"
                  desc   = "Retrieve the FTChannelID, key of the object"
                  type   = "const LHCb::FTChannelID&amp;"
-                 access = "PUBLIC">
+                 access = "PUBLIC"
+		 const  = "TRUE" >
         <code> return key(); </code>
       </method>
 
