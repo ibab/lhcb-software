@@ -160,3 +160,14 @@ const DeFTLayer* DeFTDetector::findLayer(const Gaudi::XYZPoint& point) const {
     return (iL != m_layers.end() ? (*iL) : 0);
   }
 }
+
+//=========================================================================
+//  
+//=========================================================================
+const DeFTLayer* DeFTDetector::findLayer ( const LHCb::FTChannelID id ) const {
+  unsigned int layerId = id.layer();
+  for ( Layers:: const_iterator iL = m_layers.begin(); iL != m_layers.end(); ++iL) {
+    if ( layerId == (*iL)->layerID() ) return *iL;
+  }
+  return NULL;
+}

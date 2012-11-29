@@ -92,7 +92,10 @@ public:
    */
   const DeFTLayer* findLayer(const Gaudi::XYZPoint& point) const;
 
-  //TO-DO (when needed): Similar functions to find S/B/L where an FTChannelID is
+  /** Find the FT Layer where a global point is
+   *  @return Pointer to the relevant Layer
+   */
+  const DeFTLayer* findLayer( const LHCb::FTChannelID id ) const;
 
   /// Make the Test algo a friend so that it can call private methods
   friend class DeFTTestAlg;
