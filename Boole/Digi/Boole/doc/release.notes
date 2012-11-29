@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Rewrite of Configuration.py to accommodate upgrade detectors.
+
  - Added missing corrections from JC
  - Added UT to Configuration.py - Paul Szczypka
 

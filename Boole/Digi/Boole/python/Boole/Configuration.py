@@ -20,37 +20,38 @@ class Boole(LHCbConfigurableUser):
     
     __slots__ = {
         "DetectorInit": {"DATA":['Data'],"MUON":['Muon']}
-       ,"DetectorDigi": {"VELO":['Velo'],"TT":['TT'],"IT":['IT'],"OT":['OT'],"RICH":['Rich'],"CALO":['Calo'],"MUON":['Muon'],"L0":['L0']}
-       ,"DetectorLink": {"VELO":['Velo'],"TT":['TT'],"IT":['IT'],"OT":['OT'],"TR":['Tr'],"RICH":['Rich'],"CALO":['Calo'],"MUON":['Muon'],"L0":['L0']}
-       ,"DetectorMoni": {"VELO":['Velo'],"TT":['TT'],"IT":['IT'],"OT":['OT'],"RICH":['Rich'],"CALO":['Calo'],"MUON":['Muon'],"L0":['L0'],"MC":['MC']}
-       ,"EvtMax"              : -1
-       ,"SkipEvents"          : 0
-       ,"UseSpillover"        : False
-       ,"SpilloverPaths"      : []
-       ,"TAEPrev"             : 0
-       ,"TAENext"             : 0
-       ,"TAESubdets"          : [ "Calo", "Muon" ]
-       ,"Outputs"             : [ "DIGI" ]
-       ,"DigiType"            : "Default"
-       ,"Histograms"          : "Default"
-       ,"NoWarnings"          : False
-       ,"ProductionMode"      : False 
-       ,"OutputLevel"         : INFO 
-       ,"DatasetName"         : "Boole"
-       ,"DataType"            : "2012"
-       ,"DDDBtag"             : ""
-       ,"CondDBtag"           : ""
-       ,"VeloTell1Processing" : True
-       ,"EnableL0"            : False
-       ,"Monitors"            : []
-       ,"MainSequence"        : []
-       ,"InitSequence"        : []
-       ,"DigiSequence"        : []
-       ,"LinkSequence"        : []
-       ,"MoniSequence"        : []
-       ,"FilterSequence"      : []
-       ,"EnablePack"          : True
-       ,"Persistency"         : None
+        ,"DetectorDigi": ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Calo', 'Muon', 'L0']
+        ,"DetectorLink": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0']
+        ,"DetectorMoni": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0', 'MC']
+        ,"EvtMax"              : -1
+        ,"SkipEvents"          : 0
+        ,"UseSpillover"        : False
+        ,"SpilloverPaths"      : []
+        ,"TAEPrev"             : 0
+        ,"TAENext"             : 0
+        ,"TAESubdets"          : [ "Calo", "Muon" ]
+        ,"Outputs"             : [ "DIGI" ]
+        ,"DigiType"            : "Default"
+        ,"Histograms"          : "Default"
+        ,"NoWarnings"          : False
+        ,"ProductionMode"      : False 
+        ,"OutputLevel"         : INFO 
+        ,"DatasetName"         : "Boole"
+        ,"DataType"            : "2012"
+        ,"DDDBtag"             : ""
+        ,"CondDBtag"           : ""
+        ,"VeloTell1Processing" : True
+        ,"EnableL0"            : False
+        ,"Monitors"            : []
+        ,"MainSequence"        : []
+        ,"InitSequence"        : []
+        ,"DigiSequence"        : []
+        ,"LinkSequence"        : []
+        ,"MoniSequence"        : []
+        ,"FilterSequence"      : []
+        ,"EnablePack"          : True
+        ,"Persistency"         : None
+        ,"WithVPInfo"          : False
         }
 
     _propertyDocDct = { 
@@ -89,8 +90,8 @@ class Boole(LHCbConfigurableUser):
         }
 
     KnownFilterSubdets = [ "L0", "ODIN" ]
-    KnownHistOptions = ["","None","Default","Expert"]
-    KnownSpillPaths  = [ "Prev", "PrevPrev", "Next", "NextNext" ]
+    KnownHistOptions   = ["","None","Default","Expert"]
+    KnownSpillPaths    = [ "Prev", "PrevPrev", "Next", "NextNext" ]
     
     __used_configurables__ = [ LHCbApp, L0Conf, DigiConf, SimConf, RichDigiSysConf ]
 
@@ -115,17 +116,19 @@ class Boole(LHCbConfigurableUser):
         self.setOtherProp(DigiConf(),"EnablePack")
         SimConf().setProp("EnableUnpack",self.getProp("EnablePack"))
         detListSim = []
-        if 'Velo'    in self.getProp('DetectorDigi')['VELO'] :
+        if 'Velo'    in self.getProp('DetectorDigi') :
             detListSim += ['Velo']
             detListSim += ['PuVeto'] # Add also PU Veto hits
-        if 'VeloPix' in self.getProp('DetectorDigi')['VELO'] : detListSim += ['VeloPix']
-        if 'TT'      in self.getProp('DetectorDigi')['TT']   : detListSim += ['TT']
-        if 'UT'      in self.getProp('DetectorDigi')['TT']   : detListSim += ['UT']
-        if 'IT'      in self.getProp('DetectorDigi')['IT']   : detListSim += ['IT']
-        if 'OT'      in self.getProp('DetectorDigi')['OT']   : detListSim += ['OT']
-        if 'Rich'    in self.getProp('DetectorDigi')['RICH'] : detListSim += ['Rich']
-        if 'Calo'    in self.getProp('DetectorDigi')['CALO'] : detListSim += ['Spd','Prs','Ecal','Hcal']
-        if 'Muon'    in self.getProp('DetectorDigi')['MUON'] : detListSim += ['Muon']
+        if 'VP'      in self.getProp('DetectorDigi') : detListSim += ['VP']
+        if 'VL'      in self.getProp('DetectorDigi') : detListSim += ['VL']
+        if 'TT'      in self.getProp('DetectorDigi') : detListSim += ['TT']
+        if 'UT'      in self.getProp('DetectorDigi') : detListSim += ['UT']
+        if 'IT'      in self.getProp('DetectorDigi') : detListSim += ['IT']
+        if 'OT'      in self.getProp('DetectorDigi') : detListSim += ['OT']
+        if 'FT'      in self.getProp('DetectorDigi') : detListSim += ['FT']
+        if 'Rich'    in self.getProp('DetectorDigi') : detListSim += ['Rich']
+        if 'Calo'    in self.getProp('DetectorDigi') : detListSim += ['Spd','Prs','Ecal','Hcal']
+        if 'Muon'    in self.getProp('DetectorDigi') : detListSim += ['Muon']
         SimConf().setProp("Detectors",detListSim)
 
     def configurePhases(self):
@@ -152,62 +155,77 @@ class Boole(LHCbConfigurableUser):
 
         if 'Data' in self.getProp('DetectorInit')['DATA'] : detListInit += ['Data']
 
-        if 'Velo' in self.getProp('DetectorDigi')['VELO'] :
+        if 'Velo' in self.getProp('DetectorDigi') :
             detListDigi += ['Velo']
-            if 'Velo' in self.getProp('DetectorLink')['VELO'] : detListLink += ['Velo']
-            if 'Velo' in self.getProp('DetectorMoni')['VELO'] : detListMoni += ['Velo']
-            
-        if 'VeloPix' in self.getProp('DetectorDigi')['VELO'] :
-            detListDigi += ['VeloPix']
-            if 'VeloPix' in self.getProp('DetectorLink')['VELO'] : detListLink += ['VeloPix']
-            if 'VeloPix' in self.getProp('DetectorMoni')['VELO'] : detListMoni += ['VeloPix']
-            
-        if 'TT' in self.getProp('DetectorDigi')['TT']   :
+            if 'Velo' in self.getProp('DetectorLink'): detListLink += ['Velo']
+            if 'Velo' in self.getProp('DetectorMoni'): detListMoni += ['Velo']
+
+        if 'VP' in self.getProp('DetectorDigi') :
+            detListDigi += ['VP']
+            if 'VP' in self.getProp('DetectorLink'): detListLink += ['VP']
+            if 'VP' in self.getProp('DetectorMoni'): detListMoni += ['VP']
+
+        if 'VL' in self.getProp('DetectorDigi') :
+            detListDigi += ['VL']
+            if 'VL' in self.getProp('DetectorLink') : detListLink += ['VL']
+            if 'VL' in self.getProp('DetectorMoni') : detListMoni += ['VL']
+
+        if 'TT' in self.getProp('DetectorDigi') :
             detListDigi += ['TT']
-            if 'TT' in self.getProp('DetectorLink')['TT'] : detListLink += ['TT']
-            if 'TT' in self.getProp('DetectorMoni')['TT'] : detListMoni += ['TT']
+            if 'TT' in self.getProp('DetectorLink') : detListLink += ['TT']
+            if 'TT' in self.getProp('DetectorMoni') : detListMoni += ['TT']
 
-        if 'UT' in self.getProp('DetectorDigi')['TT']   :
+        if 'UT' in self.getProp('DetectorDigi') :
             detListDigi += ['UT']
-            if 'UT' in self.getProp('DetectorLink')['TT'] : detListLink += ['UT']
-            if 'UT' in self.getProp('DetectorMoni')['TT'] : detListMoni += ['UT']
+            if 'UT' in self.getProp('DetectorLink') : detListLink += ['UT']
+            if 'UT' in self.getProp('DetectorMoni') : detListMoni += ['UT']
 
-        if 'IT' in self.getProp('DetectorDigi')['IT']   :
+        if 'IT' in self.getProp('DetectorDigi') :
             detListDigi += ['IT']
-            if 'IT'      in self.getProp('DetectorLink')['IT'] : detListLink += ['IT']
-            if 'IT'      in self.getProp('DetectorMoni')['IT'] : detListMoni += ['IT']
+            if 'IT'      in self.getProp('DetectorLink') : detListLink += ['IT']
+            if 'IT'      in self.getProp('DetectorMoni') : detListMoni += ['IT']
 
-        if 'OT' in self.getProp('DetectorDigi')['OT']   :
+        if 'OT' in self.getProp('DetectorDigi') :
             detListDigi += ['OT']
-            if 'OT' in self.getProp('DetectorLink')['OT'] : detListLink += ['OT']
-            if 'OT' in self.getProp('DetectorMoni')['OT'] : detListMoni += ['OT']
+            if 'OT' in self.getProp('DetectorLink') : detListLink += ['OT']
+            if 'OT' in self.getProp('DetectorMoni') : detListMoni += ['OT']
 
-        if 'Tr' in self.getProp('DetectorLink')['TR']   : detListLink += ['Tr']
-        
-        if 'Rich' in self.getProp('DetectorDigi')['RICH'] :
+        if 'FT' in self.getProp('DetectorDigi') :
+            detListDigi += ['FT']
+            if 'FT' in self.getProp('DetectorLink') :
+                detListLink += ['FT']
+            if 'FT' in self.getProp('DetectorMoni') :
+                detListMoni += ['FT']
+
+
+        if 'Tr' in self.getProp('DetectorLink') : detListLink += ['Tr']
+
+        if 'Rich' in self.getProp('DetectorDigi') :
             detListDigi += ['Rich']
-            if 'Rich' in self.getProp('DetectorLink')['RICH'] : detListLink += ['Rich']
-            if 'Rich' in self.getProp('DetectorMoni')['RICH'] : detListMoni += ['Rich']
+            if 'Rich' in self.getProp('DetectorLink') : detListLink += ['Rich']
+            if 'Rich' in self.getProp('DetectorMoni') : detListMoni += ['Rich']
 
-        if 'Calo' in self.getProp('DetectorDigi')['CALO'] :
+        if 'Calo' in self.getProp('DetectorDigi') :
             detListDigi += ['Calo']
-            if 'Calo' in self.getProp('DetectorLink')['CALO'] : detListLink += ['Calo']
-            if 'Calo' in self.getProp('DetectorMoni')['CALO'] : detListMoni += ['Calo']
+            if 'Calo' in self.getProp('DetectorLink') : detListLink += ['Calo']
+            if 'Calo' in self.getProp('DetectorMoni') : detListMoni += ['Calo']
+
 
         if 'Muon' in self.getProp('DetectorInit')['MUON'] : detListInit += ['Muon']
-        if 'Muon' in self.getProp('DetectorDigi')['MUON'] :
+        if 'Muon' in self.getProp('DetectorDigi') :
             detListDigi += ['Muon']
-            if 'Muon' in self.getProp('DetectorLink')['MUON'] : detListLink += ['Muon']
-            if 'Muon' in self.getProp('DetectorMoni')['MUON'] : detListMoni += ['Muon']
+            if 'Muon' in self.getProp('DetectorLink') : detListLink += ['Muon']
+            if 'Muon' in self.getProp('DetectorMoni') : detListMoni += ['Muon']
 
         if self.getProp("EnableL0"):
-            if 'L0' in self.getProp('DetectorDigi')['L0'] :
+            if 'L0' in self.getProp('DetectorDigi') :
                 detListDigi += ['L0']        
-                if 'L0' in self.getProp('DetectorLink')['L0'] : detListLink += ['L0']
-                if 'L0' in self.getProp('DetectorMoni')['L0'] : detListMoni += ['L0']
+                if 'L0' in self.getProp('DetectorLink') : detListLink += ['L0']
+                if 'L0' in self.getProp('DetectorMoni') : detListMoni += ['L0']
 
-        if 'MC' in self.getProp('DetectorMoni')['MC'] : detListMoni += ['MC']
-                
+        if 'MC' in self.getProp('DetectorMoni') : detListMoni += ['MC']
+
+        # Set the properties of DigiConf
         DigiConf().setProp("Detectors",detListLink)
 
         initDets   = self._setupPhase( "Init",   detListInit )
@@ -304,20 +322,24 @@ class Boole(LHCbConfigurableUser):
                 importOptions( "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-G4.opts" )
 
     def configureDigi(self,digiDets):
+
         """
         Set up the digitization sequence
         """
         importOptions("$STDOPTS/PreloadUnits.opts") # needed by VELO and ST
         if "Velo"    in digiDets : self.configureDigiVelo(    GaudiSequencer("DigiVeloSeq"), "" )
-        if "VeloPix" in digiDets : self.configureDigiVeloPix( GaudiSequencer("DigiVeloPixSeq"), "" )
+        if "VP"      in digiDets : self.configureDigiVP(      GaudiSequencer("DigiVPSeq"), "" )
+        if "VL"      in digiDets : self.configureDigiVL(      GaudiSequencer("DigiVLSeq"), "" )
         if "TT"      in digiDets : self.configureDigiST(      GaudiSequencer("DigiTTSeq"), "TT", "" )
         if "UT"      in digiDets : self.configureDigiST(      GaudiSequencer("DigiUTSeq"), "UT", "" )
         if "IT"      in digiDets : self.configureDigiST(      GaudiSequencer("DigiITSeq"), "IT", "" )
         if "OT"      in digiDets : self.configureDigiOT(      GaudiSequencer("DigiOTSeq"), "" )
+        if "FT"      in digiDets : self.configureDigiFT(      GaudiSequencer("DigiFTSeq"), "" )
         if "Rich"    in digiDets : self.configureDigiRich(    GaudiSequencer("DigiRichSeq"), "" )
         if "Calo"    in digiDets : self.configureDigiCalo(    GaudiSequencer("DigiCaloSeq"), "" )
         if "Muon"    in digiDets : self.configureDigiMuon(    GaudiSequencer("DigiMuonSeq"), "" )
         if "L0"      in digiDets : self.configureDigiL0(      GaudiSequencer("DigiL0Seq"), "" )
+
 
     def configureDigiVelo(self, seq, tae ):
         # Velo digitisation and clustering (also for PuVeto and trigger)
@@ -351,19 +373,32 @@ class Boole(LHCbConfigurableUser):
         else:
             raise RuntimeError("TAE not implemented for VELO")
 
-    def configureDigiVeloPix(self, seq, tae ):
-        #        VeloPix digitisation and clustering
+    def configureDigiVP(self, seq, tae ):
+        # VP digitisation and clustering
         if tae == "":
-            from Configurables import (VeloPixMCDepositCreator,VeloPixMCDigitCreator,VeloPixDigitCreator,
-                                       VeloPixDigitsCreator,VeloPixClusterCreator,PrepareVeloPixRawBank)
-            seq.Members += [VeloPixMCDepositCreator("VeloPixMCDepositCreator") ]
-            seq.Members += [VeloPixMCDigitCreator("VeloPixMCDigitCreator") ]
-            seq.Members += [VeloPixDigitCreator("VeloPixDigitCreator") ]
-            seq.Members += [VeloPixDigitsCreator("VeloPixDigitsCreator") ]
-            seq.Members += [VeloPixClusterCreator("VeloPixClusterCreator") ]
-            seq.Members += [PrepareVeloPixRawBank("PrepareVeloPixRawBank") ]
+            from Configurables import (VPMCDepositCreator,VPMCDigitCreator,VPDigitCreator,
+                                       VPDigitsCreator,VPClusterCreator,PrepareVPRawBank)
+            seq.Members += [VPMCDepositCreator("VPMCDepositCreator") ]
+            seq.Members += [VPMCDigitCreator("VPMCDigitCreator") ]
+            seq.Members += [VPDigitCreator("VPDigitCreator") ]
+            seq.Members += [VPDigitsCreator("VPDigitsCreator") ]
+            seq.Members += [VPClusterCreator("VPClusterCreator") ]
+            seq.Members += [PrepareVPRawBank("PrepareVPRawBank") ]
         else:
-            raise RuntimeError("TAE not implemented for VELOPIX")
+            raise RuntimeError("TAE not implemented for VP")
+
+    def configureDigiVL(self, seq, tae ):
+        # VL digitisation and clustering 
+        if tae == "":
+            from Configurables import VLDigitCreator
+            importOptions("$VLDIGITISATIONROOT/options/VLDigitisation.opts")
+            seq.Members += [VLDigitCreator("VLDigitCreator")]
+            from Configurables import VLClusterCreator
+            seq.Members += [VLClusterCreator("VLClusterCreator")]
+            from Configurables import VLRawBankEncoder
+            seq.Members += [VLRawBankEncoder("VLRawBankEncoder")]
+        else:
+            raise RuntimeError("TAE not implemented for VELO")
 
     def configureDigiST(self, seq, det, tae ):
         # Silicon Tracker digitisation
@@ -428,10 +463,33 @@ class Boole(LHCbConfigurableUser):
             mcOTTimeCreator.numberOfBX = 2
         seq.Members += [ OTFillRawBuffer("OTFillRawBuffer%s"%tae) ]   
 
+
+    def configureDigiFT(self, seq, tae ):
+        # Fibre Tracker digitisation
+        if tae == "":
+            from Configurables import MCFTDepositCreator, MCFTDigitCreator, FTClusterCreator, FTRawBankEncoder
+            seq.Members += [
+                "MCFTDepositCreator",
+                "MCFTDigitCreator",
+                "FTClusterCreator",
+                "FTRawBankEncoder"
+                ]
+            from Configurables import MCFTDepositMonitor
+            seq.Members += [ "MCFTDepositMonitor" ]
+        else:
+            raise RuntimeError("TAE not implemented for RICH")
+
+
     def configureDigiRich(self, seq, tae ):
         if tae == "":
             self.setOtherProp(RichDigiSysConf(),"UseSpillover")
             RichDigiSysConf().Sequencer = GaudiSequencer("DigiRichSeq")
+            RichDigiSysConf().ChargeShareModel = "None"
+            RichDigiSysConf().ResponseModel = "Copy"
+            RichDigiSysConf().OutputLevel = INFO
+            RichDigiSysConf().RawDataFormatVersion = 3
+            from Configurables import DigiConf
+            DigiConf().DigiType = "Extended"
         else:
             raise RuntimeError("TAE not implemented for RICH")
             
@@ -510,7 +568,12 @@ class Boole(LHCbConfigurableUser):
 
         doWriteTruth = ("DIGI" in self.getProp("Outputs")) and (self.getProp("DigiType").capitalize() != "Minimal")
 
-        if "Velo" in linkDets or "Velo" in moniDets or "Tr" in linkDets:
+        if "Velo" in linkDets or "Velo" in moniDets:
+            from Configurables import BuildMCTrackInfoUpgrade
+            BuildMCTrackInfoUpgrade().WithVelo = True
+            BuildMCTrackInfoUpgrade().OutputLevel = 2
+
+
             seq = GaudiSequencer("LinkVeloSeq")
             from Configurables import DecodeVeloRawBuffer
             decodeVelo = DecodeVeloRawBuffer()
@@ -521,15 +584,32 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [ "VeloCluster2MCHitLinker" ]
             seq.Members += [ "VeloCluster2MCParticleLinker" ]
 
-        if "VeloPix" in linkDets or "VeloPix" in moniDets:
-            from Configurables import VeloPixDigit2MCHitLinker, VeloPixDigit2MCParticleLinker, VeloPixCluster2MCHitLinker, VeloPixCluster2MCParticleLinker
-            seq = GaudiSequencer("LinkVeloPixSeq")
-            seq.Members += [VeloPixDigit2MCHitLinker("VeloPixDigit2MCHitLinker") ]
-            seq.Members += [VeloPixDigit2MCParticleLinker("VeloPixDigit2MCParticleLinker") ]
-            seq.Members += [VeloPixCluster2MCHitLinker("VeloPixCluster2MCHitLinker") ]
-            seq.Members += [VeloPixCluster2MCParticleLinker("VeloPixCluster2MCParticleLinker") ]
+        if "VP" in linkDets:
+            from Configurables import BuildMCTrackInfoUpgrade
+            BuildMCTrackInfoUpgrade().WithVP = True
+            BuildMCTrackInfoUpgrade().OutputLevel = 2
 
-        if "TT" in linkDets or "IT" in linkDets or "UT" in linkDets or "TT" in moniDets or "IT" in moniDets or "UT" in monitDets or "Tr" in linkDets:
+        if "VP" in linkDets or "VP" in moniDets:
+            from Configurables import VPDigit2MCHitLinker, VPDigit2MCParticleLinker, VPCluster2MCHitLinker, VPCluster2MCParticleLinker
+            seq = GaudiSequencer("LinkVPSeq")
+            seq.Members += [VPDigit2MCHitLinker("VPDigit2MCHitLinker") ]
+            seq.Members += [VPDigit2MCParticleLinker("VPDigit2MCParticleLinker") ]
+            seq.Members += [VPCluster2MCHitLinker("VPCluster2MCHitLinker") ]
+            seq.Members += [VPCluster2MCParticleLinker("VPCluster2MCParticleLinker") ]
+
+        if "VL" in linkDets:
+            from Configurables import BuildMCTrackInfoUpgrade
+            BuildMCTrackInfoUpgrade().WithVL = True
+            BuildMCTrackInfoUpgrade().OutputLevel = 2
+
+        if "VL" in linkDets or "VL" in moniDets or "Tr" in linkDets:
+            seq = GaudiSequencer("LinkVLSeq")
+
+        if (
+            ( det for det in ["TT", "IT", "UT", "Tr"] if det in linkDets)
+            or
+            ( det for det in ["TT", "IT", "UT"] if det in moniDets)
+             ):
             from Configurables import STDigit2MCHitLinker, STCluster2MCHitLinker, STCluster2MCParticleLinker
             if "TT" in linkDets or "TT" in moniDets:
                 seq = GaudiSequencer("LinkTTSeq")
@@ -544,14 +624,20 @@ class Boole(LHCbConfigurableUser):
                 seq.Members += [ STCluster2MCParticleLinker("UTTruthLinker", DetType = "UT") ]
 
             if "UT" in linkDets:
-                from Configurables import BuildMCTrackInfo
-                BuildMCTrackInfo().UTForTT = True
+                from Configurables import BuildMCTrackInfoUpgrade
+                BuildMCTrackInfoUpgrade().WithUT = True
 
             if "IT" in linkDets or "IT" in moniDets:
                 seq = GaudiSequencer("LinkITSeq")
                 seq.Members += [ STDigit2MCHitLinker("ITDigitLinker", DetType   = "IT") ]
                 seq.Members += [ STCluster2MCHitLinker("ITClusterLinker", DetType   = "IT") ]
                 seq.Members += [ STCluster2MCParticleLinker("ITTruthLinker", DetType   = "IT") ]
+
+            if "FT" in linkDets:
+                from Configurables import BuildMCTrackInfoUpgrade
+                BuildMCTrackInfoUpgrade().WithFT = True
+                BuildMCTrackInfoUpgrade().OutputLevel = 2
+
 
         if "OT" in linkDets or "OT" in moniDets or "Tr" in linkDets:
             seq = GaudiSequencer("LinkOTSeq")
@@ -561,7 +647,10 @@ class Boole(LHCbConfigurableUser):
 
         if "Tr" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkTrSeq")
-            if "VeloPix" in linkDets: seq.Members += [ "BuildMCTrackWithVeloPixInfo" ]
+            if (det for det in ['VL', 'VP', 'FT', 'UT'] if det in linkDets):
+                from Configurables import BuildMCTrackInfoUpgrade
+                seq.Members += [ "BuildMCTrackInfoUpgrade" ]                
+            # Old production code, for temp backwards compatability
             else :
                 seq.Members += [ "BuildMCTrackInfo" ]
 
@@ -639,8 +728,10 @@ class Boole(LHCbConfigurableUser):
             GaudiSequencer( "Digi%sInitSeq"%taeSlot ).Members = [ slotInit ]
             if "Velo" in taeDets:
                 self.configureDigiVelo( GaudiSequencer("Digi%sVeloSeq"%taeSlot), taeSlot )
-            if "VeloPix" in taeDets:
-                self.configureDigiVeloPix( GaudiSequencer("Digi%sVeloPixSeq"%taeSlot), taeSlot )
+            if "VP" in taeDets:
+                self.configureDigiVP( GaudiSequencer("Digi%sVPSeq"%taeSlot), taeSlot )
+            if "VL" in taeDets:
+                self.configureDigiVL( GaudiSequencer("Digi%sVLSeq"%taeSlot), taeSlot )
             if "TT" in taeDets:
                 self.configureDigiST( GaudiSequencer("Digi%sTTSeq"%taeSlot), "TT", taeSlot )
             if "UT" in taeDets:
@@ -720,6 +811,8 @@ class Boole(LHCbConfigurableUser):
 
             writerName = "DigiWriter"
             digiWriter = OutputStream( writerName, Preload=False )
+            
+
             digiWriter.RequireAlgs.append( "Filter" )
             if self.getProp( "NoWarnings" ) and not digiWriter.isPropertySet( "OutputLevel" ):
                 digiWriter.OutputLevel = INFO
@@ -727,6 +820,7 @@ class Boole(LHCbConfigurableUser):
             # Set up the Digi content
             DigiConf().Writer     = writerName
             DigiConf().OutputName = self.outputName()
+            DigiConf().Detectors = self.getProp("DetectorDigi")
             self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover","DataType",])
             if self.getProp("UseSpillover"):
                 self.setOtherProps(DigiConf(),["SpilloverPaths"])
@@ -790,6 +884,11 @@ class Boole(LHCbConfigurableUser):
             if True == self.getProp("VeloTell1Processing"):
                 GaudiSequencer("MoniVeloSeq").Members.remove( VeloDigit2MCHitLinker() )
                 GaudiSequencer("MoniVeloSeq").Members.remove( VeloDigiMoni() )
+
+        if "VL" in moniDets:
+            from Configurables import  VLDigitMonitor ,VLClusterMonitor
+            GaudiSequencer("MoniVeloSeq").Members += [ VLDigitMonitor("VLDigitMonitor"),
+                                                       VLClusterMonitor( "VLClusterMonitor")  ]
 
         if "IT" in moniDets or "TT" in moniDets or "UT" in moniDets:
             from Configurables import ( MCSTDepositMonitor, MCSTDigitMonitor, STDigitMonitor,
@@ -876,6 +975,13 @@ class Boole(LHCbConfigurableUser):
                 from Configurables import OTRawBankDecoder
                 OTRawBankDecoder().RawEventLocations = ["DAQ/RawEvent"]
                 importOptions("$OTMONITORROOT/options/Boole.opts")
+
+        if "FT" in moniDets:
+            from Configurables import MCFTDepositMonitor
+            GaudiSequencer("MoniFTSeq").Members += ["MCFTDepositMonitor"]
+            if histOpt == "Expert":
+                from Configurables import FTRawBankDecoder
+                FTRawBankDecoder().RawEventLocations = ["DAQ/RawEvent"]
 
         if "Rich" in moniDets:
             from Configurables import Rich__MC__Digi__DigitQC
