@@ -1,6 +1,6 @@
 package           Brunel
 # Remember to update the version also in job/valgrind.job, job/Brunel_Ganga.py
-version           v44r0
+version           v44r1
 
 branches doc cmt job options
 
