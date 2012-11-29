@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2012-11-29 - Olivier Callot
+ - Add FTMeasurements (.xml, .cpp)
+
 !========================= TrackFitEvent v5r19 2012-11-28 =========================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.

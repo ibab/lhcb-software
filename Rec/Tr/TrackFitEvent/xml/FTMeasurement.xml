@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd' []>
+<gdd>
+  <package name='TrackFitEvent'>
+
+    <!-- ================ FTMeasurement class definition ================ -->
+
+    <class
+      name        = 'FTMeasurement'
+      author      = 'Olivier Callot'
+      desc        = 'FTMeasurement is a measurement made from a FT cluster.'
+      defaultconstructor ='FALSE'
+      serializers = 'FALSE'>
+
+      <base name='LHCb::Measurement' />
+      <import name='Event/Measurement' />
+      <import name='Event/FTRawCluster'  />
+      <import name='StateVector' soft = 'FORWARDONLY'/>
+      <import name='FTDet/DeFTDetector'  />
+
+      <attribute
+        type = 'const LHCb::FTRawCluster'
+        name = 'cluster'
+        desc = 'the FTRawCluster'
+        getMeth = 'FALSE'
+        setMeth = 'FALSE' />
+
+      <attribute
+        type    = 'unsigned int'
+        name    = 'size'
+        desc    = 'cluster size'
+        setMeth = 'FALSE' />
+
+
+      <method
+        type  = 'const LHCb::FTRawCluster'
+        name  = 'cluster'
+        desc  = 'Retrieve the FTCluster'
+        const = 'TRUE'>
+        <code>
+          return m_cluster;
+        </code>
+      </method>
+
+      <method
+        type  = 'double'
+        name  = 'charge'
+        desc  = 'Retrieve the cluster charge'
+        const = 'TRUE'>
+        <code>
+          return m_cluster.charge();
+        </code>
+      </method>
+
+
+      <constructor
+        desc     = 'Constructor from an FTCluster'
+        argList  = 'LHCb::FTRawCluster ftCluster, DeFTDetector det, LHCb::StateVector /* dum */'
+        initList = 'Measurement( Measurement::FT, LHCbID(ftCluster.channelID()), 0), m_cluster(ftCluster)'>
+        <code>
+          this->init( det );
+        </code>
+      </constructor>
+
+
+      <constructor
+        desc     = 'Constructor from an FTCluster'
+        argList  = 'LHCb::FTRawCluster ftCluster, DeFTDetector det '
+        initList = ' Measurement( Measurement::FT, LHCbID(ftCluster.channelID()), 0), m_cluster(ftCluster)'>
+        <code>
+          this->init( det );
+        </code>
+      </constructor>
+
+
+
+      <method  type    = 'LHCb::FTMeasurement*'
+               name    = 'clone'
+               desc    = 'Clone the FTMeasurement'
+               virtual = 'TRUE'
+               const   = 'TRUE'>
+        <code>
+          return new LHCb::FTMeasurement(*this);
+        </code>
+      </method>
+
+      <method  name   = 'init'
+               desc   = 'Initialize the data members'
+               access = 'PUBLIC'>
+        <arg type='DeFTDetector' name='det' const='TRUE' />
+      </method>
+
+
+      <method  type    = 'LHCb::FTChannelID'
+               name    = 'channelID'
+               desc    = 'channel identifier'
+               const   = 'TRUE'>
+        <code>
+          return m_cluster.channelID() ;
+        </code>
+      </method>
+
+    </class>
+  </package>
+</gdd>
+

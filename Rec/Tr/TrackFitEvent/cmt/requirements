@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           TrackFitEvent
-version           v5r19
+version           v5r20
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -26,7 +26,7 @@ use   VeloDet         v*      Det
 use   MuonDet         v*      Det
 use   VPDet           v*      Det
 use   OTDAQ           v*      OT
-
+use   FTDet           v*      Det
 private
 use GaudiObjDesc v* -no_auto_imports
 end_private

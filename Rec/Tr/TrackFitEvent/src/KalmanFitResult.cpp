@@ -167,6 +167,7 @@ namespace LHCb
 	  case Measurement::OT:
 	  case Measurement::IT:
 	  case Measurement::ITLite:
+    case Measurement::FT:
 	    if( firstT==fitnodes.end()) firstT = it ;
 	    lastT = it ;
 	    break;
