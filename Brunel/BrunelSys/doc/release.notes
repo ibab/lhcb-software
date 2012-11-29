@@ -3,6 +3,50 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v44r1>2012-11-30 Brunel v44r1</A></H1><PRE>
+This version uses projects LCG 64b, Gaudi v23r5, LHCb v35r3, Lbcom v13r3,
+ Rec v14r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development release, post Reco14
+
+- Platform support
+  . Introduces support for CMake and C++11 builds
+
+- Changes to configuration
+  . Do not use SequencerTimerTool to MeasureTime, duplicates measures already
+    done by TimingAuditor
+
+- Persistency changes
+  . Removed Boole linkers from default MC DST output (GaudiConf)
+
+- Physics performance changes
+  . New default global tags (DDDB v1r59)
+    o LHCBCOND, 2012: cond-20121108 (Reco14 calibrations to October 2012)
+    o LHCBCOND, 2011: cond-20120724 (was cond-20120829, which is only for 2012)
+  . Add more states to Downstream tracks (TrackExtrapolators v2r33) 
+  . Switch interpolator in TrackNNGhostId from cspline to linear, fixes negative
+    ghost probabilities (TrackTools v4r20) 
+  . Updates to Aerogel Rich photon reconstruction (RichRecPhotonTools v1r10)
+  . Loosen Aerogel selection cuts (RichRecSys v4r7)
+
+- Computing performance optimisations
+  . Protect many unprotected debug and verbose messages
+  . Use getIfExists wherever possible, instead of separate exist and get calls
+  . Remove finalize() in derived classes if it only calls the base class
+  . New exit code (0x10) to flag corrupted input file
+    (RootCnv v1r19, GaudiKernel v28r4)
+
+- Bug fixes
+  . Fix bug in RecInit, introduced in v2r9, whereby RecHeader::rawID is filled
+    with an empty string rather than name of the raw file. Affects Reco14
+    (RecAlgs v2r11)
+  . Error conditions during initialize (like failure to open a file) are now
+    correctly propagated to application exit code (GaudiCoreSvc v1r3)
+  . Propagate correct exit code after a segfault in C++ (Gaudi v23r5)
+    
+- Changes to tests
+  . Update input data for 2011 test to more typical run 103370
+
 </PRE><H1><A NAME=v44r0>2012-10-04 Brunel v44r0</A></H1><PRE>
 This version uses projects LCG 64a, Gaudi v23r4, LHCb v35r2, Lbcom v13r2,
  Rec v14r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
