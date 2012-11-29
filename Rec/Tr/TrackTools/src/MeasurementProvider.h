@@ -59,6 +59,7 @@ private:
   ToolHandle<IMeasurementProvider> m_ttProvider ;
   ToolHandle<IMeasurementProvider> m_itProvider ;
   ToolHandle<IMeasurementProvider> m_otProvider ;
+  ToolHandle<IMeasurementProvider> m_ftProvider ;
   ToolHandle<IMeasurementProvider> m_muonProvider ;
   
   bool m_ignoreVelo;    ///< Ignore Velo hits
@@ -66,6 +67,7 @@ private:
   bool m_ignoreTT;      ///< Ignore TT hits
   bool m_ignoreIT;      ///< Ignore IT hits
   bool m_ignoreOT;      ///< Ignore OT hits
+  bool m_ignoreFT;      ///< Ignore FT hits
   bool m_ignoreMuon;    ///< Ignore Muon hits
   bool m_initializeReference; ///< Initialize measurement reference vector with closest state on track
 

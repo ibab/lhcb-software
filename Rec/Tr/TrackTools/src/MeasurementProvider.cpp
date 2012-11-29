@@ -39,6 +39,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
     m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider", this ),
     m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider", this ),
     m_otProvider(     "OTMeasurementProvider", this ),
+    m_ftProvider(     "FTMeasurementProvider", this ),
     m_muonProvider(   "MuonMeasurementProvider", this )
 {
   declareInterface<IMeasurementProvider>(this);
@@ -47,6 +48,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "IgnoreTT",   m_ignoreTT   = false );
   declareProperty( "IgnoreIT",   m_ignoreIT   = false );
   declareProperty( "IgnoreOT",   m_ignoreOT   = false );
+  declareProperty( "IgnoreFT",   m_ignoreFT   = false );
   declareProperty( "IgnoreMuon", m_ignoreMuon = false );
   declareProperty( "InitializeReference", m_initializeReference  = true ) ;
 
@@ -56,6 +58,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "TTProvider", m_ttProvider ) ;
   declareProperty( "ITProvider", m_itProvider ) ;
   declareProperty( "OTProvider", m_otProvider ) ;
+  declareProperty( "FTProvider", m_ftProvider ) ;
   declareProperty( "MuonProvider", m_muonProvider ) ;
 }
 
@@ -75,7 +78,7 @@ StatusCode MeasurementProvider::initialize()
   if (sc.isFailure()) return sc;  // error already reported by base class
 
   m_providermap.clear() ;
-  m_providermap.resize(LHCb::Measurement::VPLite+1,0) ;
+  m_providermap.resize(LHCb::Measurement::FT+1,0) ;
 
   if(!m_ignoreVelo) {
     sc = m_veloRProvider.retrieve() ;
@@ -109,6 +112,12 @@ StatusCode MeasurementProvider::initialize()
     sc = m_otProvider.retrieve() ;
     if (sc.isFailure()) return sc; 
     m_providermap[LHCb::Measurement::OT] = &(*m_otProvider) ;
+  }
+
+  if(!m_ignoreFT) {
+    sc = m_ftProvider.retrieve() ;
+    if (sc.isFailure()) return sc; 
+    m_providermap[LHCb::Measurement::FT] = &(*m_ftProvider) ;
   }
 
   if(!m_ignoreMuon) {
@@ -146,6 +155,10 @@ StatusCode MeasurementProvider::finalize()
   }
   if(!m_ignoreOT) {
     sc = m_otProvider.release() ;
+    if (sc.isFailure()) return sc;
+  }
+  if(!m_ignoreFT) {
+    sc = m_ftProvider.release() ;
     if (sc.isFailure()) return sc;
   }
   if(!m_ignoreMuon) {
@@ -223,6 +236,7 @@ inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
   case LHCb::LHCbID::TT:      rc = LHCb::Measurement::TT      ; break ;
   case LHCb::LHCbID::IT:      rc = LHCb::Measurement::IT      ; break ;
   case LHCb::LHCbID::OT:      rc = LHCb::Measurement::OT      ; break ;
+  case LHCb::LHCbID::FT:      rc = LHCb::Measurement::FT      ; break ;
   case LHCb::LHCbID::Muon:    rc = LHCb::Measurement::Muon    ; break ;
   default: {}
   }
