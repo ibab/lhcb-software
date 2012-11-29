@@ -155,7 +155,7 @@ c                             ********************
       implicit double precision (a-h,o-z)
       parameter (isetmax0=6)
       character flnm(isetmax0)*6, nn*3, tablefile*40
-      character BASENAME3*472
+      character BASENAME3*472,ENERGYNAME*472
       character FULLPATHNAME*472
       common/loggrade/ievntdis,igenerate,ivegasopen,igrade,iusecurdir
       data (flnm(i), i=1,isetmax0)
@@ -166,6 +166,8 @@ c                             ********************
       data isethq /21/
       common / valence / mxval
      > /setchange/ isetch
+      common/upcom/ecm,pmxicc,pmb,pmc,fxicc,pmomup(5,8),
+     &  colmat(6,64),bundamp(4),pmomzero(5,8)
       save
 
 c             if data file not initialized, do so.
@@ -212,14 +214,33 @@ c                                                               21
          write(*,*)'I will open the FILE cteq6hq.pds'
          write(*,*)'iu = ',iu
          CALL GETENV( 'GENXICCDATAROOT' , BASENAME3 )
+C----------------------
+C     ! Added by F. ZHANG 11-10-2012
+C.....For reading grid files for different center of mass energy
+      IF( ABS(ECM-14000).LE.1. )THEN
+        ENERGYNAME='data/14TeV/'
+      ELSE IF( ABS(ECM-13000).LE.1. )THEN
+        ENERGYNAME='data/13TeV/'
+      ELSE IF( ABS(ECM-8000).LE.1.  )THEN
+        ENERGYNAME='data/8TeV/'
+      ELSE IF( ABS(ECM-7000).LE.1.  )THEN
+        ENERGYNAME='data/7TeV/'
+      ELSE
+        ENERGYNAME='***Not-Supported-Energy***/'
+        WRITE(*,*) "***************************************************"
+        WRITE(*,*) "The energy " ,ECM," GeV is not supported in GenXicc"
+        WRITE(*,*) "***************************************************"
+      ENDIF
          if(iusecurdir.eq.1) then
          FULLPATHNAME = tablefile(1:LEN_TRIM(tablefile))
          write(*,*)'NOTE: I use the current directory: the file path
      &is  ',FULLPATHNAME, ' iusecurdir = ', iusecurdir
          else
-         FULLPATHNAME = BASENAME3(1:LEN_TRIM(BASENAME3))//'/data/'
+         FULLPATHNAME = BASENAME3(1:LEN_TRIM(BASENAME3))//'/'
+     &                 //ENERGYNAME(1:len_trim(ENERGYNAME))//
+     &                 'data/'
      &                 //tablefile(1:LEN_TRIM(tablefile))
-         write(*,*)'NOTE: I use the current directory: the file path
+         write(*,*)'NOTE: I use system directory: the file path
      &is  ',FULLPATHNAME, ' iusecurdir = ', iusecurdir
          endif
 c         open(iu, file=tablefile, status='old', err=100)

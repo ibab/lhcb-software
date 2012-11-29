@@ -16,16 +16,18 @@ c*******************************************************
 	common/mtypeofxi/mgenxi
       common/wbstate/ratiou,ratiod,ratios,nbound
       common/loggrade/ievntdis,igenerate,ivegasopen,igrade,iusecurdir
+      common/upcom/ecm,pmxicc,pmb,pmc,fxicc,pmomup(5,8),
+     &  colmat(6,64),bundamp(4),pmomzero(5,8)
 
       ! Added by F. Zhang 22-04-2011
       ! for the FULLPATHNAME of the file ".cs" and ".grid"
-      CHARACTER*472 BASENAME1,BASENAME2
+      CHARACTER*472 BASENAME1,BASENAME2,ENERGYNAME
       CHARACTER*472 FULLPATHNAME1,FULLPATHNAME2
 
 	character*23  foname(2)
 	character  fn1*21, fn2*23, dirx*11
 	common/namedir/dirx
-	common/usedbyveg/fn2,BASENAME2 ! F. Zhang 23-04-2011
+	common/usedbyveg/fn2,BASENAME2,ENERGYNAME ! F. Zhang 23-04-2011
 
 	logical gg3s1c3,gc3s1c3,cc3s1c3
 	logical gg1s0c6,gc1s0c6,cc1s0c6
@@ -35,6 +37,23 @@ c----------------------
 c     ! Added by F. Zhang 23-04-2011
       CALL GETENV( 'PWD' , BASENAME1 )
       CALL GETENV( 'GENXICCDATAROOT' , BASENAME2 )
+C----------------------
+C     ! Added by F. ZHANG 11-10-2012
+C.....For reading grid files for different center of mass energy
+      IF( ABS(ECM-14000).LE.1. )THEN
+        ENERGYNAME='data/14TeV/'
+      ELSE IF( ABS(ECM-13000).LE.1. )THEN
+        ENERGYNAME='data/13TeV/'
+      ELSE IF( ABS(ECM-8000).LE.1.  )THEN
+        ENERGYNAME='data/8TeV/'
+      ELSE IF( ABS(ECM-7000).LE.1.  )THEN
+        ENERGYNAME='data/7TeV/'
+      ELSE
+        ENERGYNAME='***Not-Supported-Energy***/'
+        WRITE(*,*) "***************************************************"
+        WRITE(*,*) "The energy " ,ECM," GeV is not supported in GenXicc"
+        WRITE(*,*) "***************************************************"
+      ENDIF
 
 	
 c----------------------
@@ -234,14 +253,18 @@ c...! the path of Files (".cs" and ".grid") modefied by F. Zhang 23-04-2011
       fn2=foname(2)
 
       FULLPATHNAME1 = BASENAME1(1:LEN_TRIM(BASENAME1))//'/'  ! ".cs"
+     &                 //ENERGYNAME(1:len_trim(ENERGYNAME))
      &                 //FN1(1:LEN_TRIM(FN1))
       if(iusecurdir.eq.1) then
+      FULLPATHNAME2 = foname(2)(12:23)
          write(*,*)'NOTE: I use current directory, the FILE name
      &is    ', FULLPATHNAME2, ' iusecurdir = ', iusecurdir
-      FULLPATHNAME2 = foname(2)(12:23)
       else
       FULLPATHNAME2 = BASENAME2(1:LEN_TRIM(BASENAME2))//'/'  ! ".grid"
+     &                 //ENERGYNAME(1:len_trim(ENERGYNAME))
      &                 //FN2(1:LEN_TRIM(FN2))
+         write(*,*)'NOTE: I use SYSTEM  directory, the FILE name
+     &is    ', FULLPATHNAME2, ' iusecurdir = ', iusecurdir
       endif
 
 c      open(unit=3,  file=FULLPATHNAME1,status='unknown') ! ".cs"

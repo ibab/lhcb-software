@@ -71,8 +71,8 @@ c...to get the distribution of an extra factor z=(2(k1+k2).p_bc)/shat.
 	common/subopen/subfactor,subenergy,isubonly
 
       character fn2*23, ffnew*24
-      CHARACTER*472 BASENAME2,FULLPATHNAME
-	common/usedbyveg/fn2,BASENAME2 ! F. Zhang 23-04-2011
+      CHARACTER*472 BASENAME2,FULLPATHNAME,ENERGYNAME
+	common/usedbyveg/fn2,BASENAME2,ENERGYNAME ! F. Zhang 23-04-2011
 
 	dimension nfin(20),alamin(20)
 c...data:lambda and n_f values for parton distributions. this is obtained
@@ -80,6 +80,7 @@ c...from pythia and used for vegas running.
       data alamin/0.177d0,0.239d0,0.247d0,0.2322d0,0.248d0,0.248d0,
      &0.192d0,0.326d0,2*0.2d0,0.2d0,0.2d0,0.29d0,0.2d0,0.4d0,5*0.2d0/,
      &nfin/20*4/
+
 
 c  GG 16/02/2012 protect against nvbin>MAXNVBIN
       if (nvbin .gt. MAXNVBIN) then
@@ -200,8 +201,9 @@ c     &		'using existed grade to generate more precise grade'
             if(iusecurdir.eq.1) then
             FULLPATHNAME = ffnew(12:24)
             else 
-            FULLPATHNAME = BASENAME2(1:LEN_TRIM(BASENAME2))      
-     &                     //FFNEW(1:LEN_TRIM(FFNEW))   
+            FULLPATHNAME = BASENAME2(1:LEN_TRIM(BASENAME2))//'/'      
+     +                 //ENERGYNAME(1:len_trim(ENERGYNAME))
+     +                 //FFNEW(1:LEN_TRIM(FFNEW))   
             endif
 c	     open(unit=29,file=ffnew,status='unknown')
 	     open(unit=29,file=FULLPATHNAME,status='unknown')
@@ -242,8 +244,9 @@ c     &		  'existed grade to generate more precise grade'
              if (iusecurdir.eq.1) then 
              FULLPATHNAME = ffnew(12:24)
           else
-            FULLPATHNAME = BASENAME2(1:LEN_TRIM(BASENAME2))      
-     &                     //FFNEW(1:LEN_TRIM(FFNEW))   
+      FULLPATHNAME = BASENAME2(1:LEN_TRIM(BASENAME2))//'/'
+     &                //ENERGYNAME(1:LEN_TRIM(ENERGYNAME)) 
+     &                //FFNEW(1:LEN_TRIM(FFNEW))
            endif
 c	     open(unit=29,file=ffnew,status='unknown')
 	     open(unit=29,file=FULLPATHNAME,status='unknown')

@@ -154,11 +154,12 @@ c...npdfu=2 ---> lhc=1.40d+4GeV
 c...npdfu=3 ---> selex=33.58GeV
 c---------------------------------------
       npdfu =2      !=1, tevatron; =2, lhc; =3, selex
-
-      if(npdfu.eq.1) ecm= ENERGYOFTEVA  !defined in run.F
-      if(npdfu.eq.2) ecm=0.7d+4 ! F. Zhang 20-04-2011 ENERGYOFLHC   !defined in run.F
-	if(npdfu.eq.3) ecm=ENERGYOFSELEX !defined in run.F
-
+!     This part is useless now. The energy come in from outside
+!     F. ZHANG 12-10-2012
+!
+!      if(npdfu.eq.1) ecm= ENERGYOFTEVA  !defined in run.F
+!c      if(npdfu.eq.2) ecm=0.8d+4 ! F. Zhang 20-04-2011 ENERGYOFLHC   !defined in run.F
+!	if(npdfu.eq.3) ecm=ENERGYOFSELEX !defined in run.F
 
       idpp     =3      !=idwtup: types of pythia generates events
       mstu(111)=1      !setting value of alphas.  pythia parameter
@@ -218,8 +219,8 @@ c                       ! grade, generated under same condition
       end if
 
       if(methodevnt.eq.3) then
-         ivegasopen=0
-         igrade    =1
+!         ivegasopen=0
+!         igrade    =1
          iveggrade =0   ! no use for the case
 	end if
 
