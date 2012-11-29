@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+! 2012-11-29 - Olivier Callot
+ - Add FT in the measurment list
+
 !========================= TrackEvent v5r20 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
