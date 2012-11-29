@@ -75,6 +75,7 @@ PythiaProduction::PythiaProduction( const std::string& type,
     m_particleDataInput  () , 
     // no default value! 
     m_particleDataLevel  ( 0 ) ,
+    m_beamTool   ( 0 ) ,
     // MSTU(1)/MSTU(2) for initialization PYLIST
     m_ini_mstu_1 ( 0 ) , 
     m_ini_mstu_2 ( 0 ) , 
@@ -87,7 +88,6 @@ PythiaProduction::PythiaProduction( const std::string& type,
     // list of particles to be printed using PyList(12) 
     m_pdtlist    (   ) , 
     m_nEvents    ( 0 ) ,
-    m_beamTool   ( 0 ) ,
     m_widthLimit ( 1.5e-6 * Gaudi::Units::GeV ) ,
     m_pdecaylist (   )
   /// boolean flag to force the valiadation of IO_HEPEVT 
