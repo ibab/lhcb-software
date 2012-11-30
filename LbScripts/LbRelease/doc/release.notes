@@ -1,3 +1,7 @@
+2012-11-30 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v4r10
+
 2012-11-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/rcs.py: retry the calls to svn if they fail, and rais an
