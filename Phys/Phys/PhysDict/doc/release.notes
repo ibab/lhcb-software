@@ -4,6 +4,8 @@
 ! Purpose     : REFLEX missing dictionaries for various classes
 !-----------------------------------------------------------------------------
 
+!========================= PhysDict v4r2p3 2012-11-30 =========================
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 

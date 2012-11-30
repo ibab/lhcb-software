@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PhysDict
 ################################################################################
-gaudi_subdir(PhysDict v4r2p2)
+gaudi_subdir(PhysDict v4r2p3)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          Event/RecEvent)
