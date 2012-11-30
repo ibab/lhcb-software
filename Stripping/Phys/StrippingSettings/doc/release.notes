@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-11-30 - Anton Poluektov 
+ - Update Beauty2Charm settings for Stripping20r1
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 

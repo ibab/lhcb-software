@@ -1,18 +1,18 @@
 Beauty2Charm = {
   'BUILDERTYPE' : 'Beauty2CharmConf',
   'CONFIG' : {
-    "ALL" : { # Cuts made on all charged input particles in all lines (expt. upstream)
-    'TRCHI2DOF_MAX' : 3.,
+    "ALL" : { # Cuts made on all charged input particles in all lines (excpt. upstream)
+    'TRCHI2DOF_MAX' : 3,
     'PT_MIN'        : '100*MeV',
     'P_MIN'         : '1000*MeV',
-    'MIPCHI2DV_MIN' : 4., 
-    'TRGHP_MAX'     : 0.3
+    'MIPCHI2DV_MIN' : 4, 
+    'TRGHP_MAX'     : 0.4
     },
     "UPSTREAM" : { # Cuts made on all upstream particles
-    'TRCHI2DOF_MAX' : 3.,
+    'TRCHI2DOF_MAX' : 4,
     'PT_MIN'        : '100*MeV',
     'P_MIN'         : '1000*MeV',
-    'MIPCHI2DV_MIN' : 4.
+    'MIPCHI2DV_MIN' : 4
     },
     "KS0" : { # Cuts made on all K shorts
     'PT_MIN'        : '250*MeV',
@@ -75,7 +75,16 @@ Beauty2Charm = {
     'MIPCHI2DV_MIN' : 0.0,
     'BPVVDRHO_MIN'  : '0.1*mm',
     'BPVVDZ_MIN'    : '2.0*mm',
-    'PTMIN1'       : '300*MeV'
+    'PTMIN1'       : '300*MeV',
+    'PID'           : {'TIGHTPI' : { 'P' : {'PIDp_MIN' : -10},
+                                     'PI': {'PIDK_MAX' : 10},
+                                     'K' : {'PIDK_MIN' : -10}},
+                       'TIGHTERPI' : { 'P' : {'PIDp_MIN' : -10},
+                                       'PI': {'PIDK_MAX' : 8},
+                                       'K' : {'PIDK_MIN' : -10}},
+                       'REALTIGHTK' : { 'P' : {'PIDp_MIN' : -10},
+                                        'PI': {'PIDK_MAX' : 10},
+                                        'K' : {'PIDK_MIN' : 4}}}
     },
     'PID' : {
     'P'  : {'PIDp_MIN' : -10},
@@ -83,8 +92,17 @@ Beauty2Charm = {
     'K'  : {'PIDK_MIN' : -10},
     'TIGHT' : {    'P'  : {'PIDp_MIN' : -5},
                    'PI' : {'PIDK_MAX' : 10},
-                   'K'  : {'PIDK_MIN' : 0}}
-    }, 
+                   'K'  : {'PIDK_MIN' : -5}},
+    'TIGHTER' : {    'P'  : {'PIDp_MIN' : -5},
+                     'PI' : {'PIDK_MAX' : 10},
+                     'K'  : {'PIDK_MIN' : 0}},
+    'TIGHTPI' : { 'P' : {'PIDp_MIN' : -10},
+                  'PI': {'PIDK_MAX' : 10},
+                  'K' : {'PIDK_MIN' : -10}},
+    'SPECIAL' : {    'P'  : {'PIDp_MIN' : -5},
+                     'PI' : {'PIDK_MAX' : 5},
+                     'K'  : {'PIDK_MIN' : 5}}
+    },
     "Prescales" : { # Prescales for individual lines
      'RUN_BY_DEFAULT' : True, # False = lines off by default
     'RUN_RE'         : ['.*'],  
