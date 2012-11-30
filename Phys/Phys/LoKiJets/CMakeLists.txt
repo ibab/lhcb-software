@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiJets
 ################################################################################
-gaudi_subdir(LoKiJets v6r7)
+gaudi_subdir(LoKiJets v6r8)
 
 gaudi_depends_on_subdirs(Kernel/LHCbMath
                          Phys/LoKiAlgo)
