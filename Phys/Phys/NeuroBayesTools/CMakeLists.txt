@@ -1,7 +1,7 @@
 ################################################################################
 # Package: NeuroBayesTools
 ################################################################################
-gaudi_subdir(NeuroBayesTools v1r2)
+gaudi_subdir(NeuroBayesTools v1r2p1)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          GaudiKernel
