@@ -5,6 +5,8 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+!========================= PhysSelPython v9r3p1 2012-11-30 =========================
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
