@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiUtils
 ################################################################################
-gaudi_subdir(LoKiUtils v1r3)
+gaudi_subdir(LoKiUtils v1r3p1)
 
 gaudi_depends_on_subdirs(Phys/DaVinciInterfaces
                          Phys/LoKiCore
