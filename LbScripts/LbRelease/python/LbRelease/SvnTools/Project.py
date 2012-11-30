@@ -12,9 +12,10 @@ url = str(getRepositories(protocol='anonymous')["lbsvn"])
 lbsvn = rcs.connect(url)
 
 def getProjectCmt(path):
-    return callCommand('svn','cat',path+'/project.cmt')[0]
+    return callCommand('svn','cat',path+'/cmt/project.cmt')[0]
     #return commands.getoutput('svn cat '+path+'/project.cmt')
 
+from Package import getCMakeLists
 
 def translateProject(project,version):
     """
@@ -90,10 +91,18 @@ def checkProject(project, version):
     tagpath=lbsvn.url(project,version, isProject=True)
     projcmt=getProjectCmt(tagpath).strip()
     #print projcmt
-    if len(getProjectCmt(tagpath).strip())==0 or "File not found" in projcmt:
+    if len(projcmt)==0 or "File not found" in projcmt:
         return (
             "====================\n" +
             'Error: '+project+' '+version+' does not have a project.cmt file\n' +
+            '====================\n'
+            )
+    cmakelists=getCMakeLists(tagpath).strip()
+    #print projcmt
+    if len(cmakelists)==0 or "File not found" in cmakelists:
+        return (
+            "====================\n" +
+            'Warning: '+project+' '+version+' does not have a CMakeLists.txt file\n' +
             '====================\n'
             )
     return '=== '+project+' '+version+' OK ==='

@@ -2,7 +2,8 @@
 Module specific for interacting with Packages in the SVN repository
 """
 
-__all__=["getRequirements","getNotes","diffNotes","checkOrDiff","diffContainer"]
+__all__=["getRequirements","getNotes","diffNotes","checkOrDiff","diffContainer",
+         "getCMakeLists"]
 
 from LbConfiguration.Repository import getRepositories
 from LbRelease import rcs
@@ -17,6 +18,10 @@ lbsvn = rcs.connect(url)
 
 def getRequirements(path):
     return callCommand('svn','cat',path+'/cmt/requirements')[0]
+    #return commands.getoutput('svn cat '+path+'/cmt/requirements')
+
+def getCMakeLists(path):
+    return callCommand('svn','cat',path+'/CMakeLists.txt')[0]
     #return commands.getoutput('svn cat '+path+'/cmt/requirements')
 
 def getNotes(path):

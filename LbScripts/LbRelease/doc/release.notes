@@ -5,6 +5,8 @@
 	* python/LbRelease/GetPack.py: intercept the exception raised in the rcs
 	module to return a proper error code
 	* script/getpack: fixed the return code propagation
+	* python/LbRelease/SvnTools: fixed a problem with recent changes in rcs and
+	started introduction of CMake configuration checks
 
 2012-11-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
