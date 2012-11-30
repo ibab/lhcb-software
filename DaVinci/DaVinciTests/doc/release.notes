@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTests v2r15 2012-11-30 =========================
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
@@ -12,6 +14,7 @@
 
 ! 2012-11-15 - Stefania Vecchi
  - Update tests references for tagging
+
 ! 2012-10-09 - Anton Poluektov 
  - Update tests references 
 
