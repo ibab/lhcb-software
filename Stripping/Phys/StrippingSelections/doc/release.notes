@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r19 2012-11-30 =========================
+
 ! 2012-11-29 - Edmund Smith
  - Added many different lines to Beauty2Charm Stripping to test tighter
    selections intended for full dst streams.
