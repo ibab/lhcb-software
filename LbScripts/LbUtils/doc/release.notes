@@ -1,3 +1,7 @@
+2012-11-30  Ben Couturier  <ben.couturier@cern.ch>
+
+	* cmt/requirements: release of version v3r10
+
 2012-11-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbUtils/Processes.py: set the default sleeptime of RetryCommand to 0
