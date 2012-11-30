@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltSelChecker
 ################################################################################
-gaudi_subdir(HltSelChecker v12r1p1)
+gaudi_subdir(HltSelChecker v12r1p2)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          Kernel/HltInterfaces
