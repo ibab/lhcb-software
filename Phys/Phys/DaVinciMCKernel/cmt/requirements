@@ -4,7 +4,7 @@
 # Maintainer : J. Palacios
 # =============================================================================
 package           DaVinciMCKernel
-version           v4r3
+version           v4r3p1
 
 #============================================================================
 branches          cmt doc dict src options Kernel
