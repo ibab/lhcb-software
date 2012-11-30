@@ -5,6 +5,7 @@
 // Include files
 // from Pythia8
 #include "BeamShape.h"
+#include "Settings.h"
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -24,10 +25,10 @@ class BeamToolForPythia8 : virtual public Pythia8::BeamShape {
 
 public:
   // Initialize beam parameters.
-  virtual void init();
+  virtual void init(Pythia8::Settings& settings);
 
   /// Constructor
-  BeamToolForPythia8( IBeamTool *i , StatusCode &sc ) ;
+  BeamToolForPythia8( IBeamTool *i , Pythia8::Settings& settings, StatusCode &sc ) ;
 
   /// pick parameterisation for the beam spread and direction
   virtual void pick();

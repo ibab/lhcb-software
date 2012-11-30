@@ -169,10 +169,10 @@ StatusCode Pythia8Production::initialize( ) {
 
   //Initializing the beam tool
   m_beamTool = tool< IBeamTool >( m_beamToolName , this ) ;
-  m_pythiaBeamTool = new BeamToolForPythia8( m_beamTool, sc );
+  m_pythiaBeamTool = new BeamToolForPythia8( m_beamTool, m_pythia->settings, sc );
   if ( ! sc.isSuccess() )
     return Error( "Cannot initialize BeamToolForPythia8" , sc ) ;
-  //  m_pythia -> readString("Beams:allowMomentumSpread = on");
+  m_pythia -> readString("Beams:allowMomentumSpread = on");
   m_pythia -> setBeamShapePtr( m_pythiaBeamTool );
 
   return initializeGenerator() ;
