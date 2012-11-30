@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MicroDSTExample
 ################################################################################
-gaudi_subdir(MicroDSTExample v2r14)
+gaudi_subdir(MicroDSTExample v2r14p1)
 
 gaudi_depends_on_subdirs(MicroDST/MicroDSTAlgorithm
                          MicroDST/MicroDSTConf
