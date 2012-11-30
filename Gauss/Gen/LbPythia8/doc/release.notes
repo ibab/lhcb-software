@@ -7,6 +7,9 @@
 ! 2012-11-30 - Aurelien Martens
  - Reviewed handling of options to pythia8 instance
  - Added interface between LHCb's BeamTool and Pythia8 BeamShape
+ - Cleanup of commented code.
+ - Keep the good old CommandVector as possible option
+ (processed last so that it overwrites any previous setting).
 
 !========================= LbPythia8 v5r0 2012-10-19 =========================
 ! 2012-10-08 - Aurelien Martens

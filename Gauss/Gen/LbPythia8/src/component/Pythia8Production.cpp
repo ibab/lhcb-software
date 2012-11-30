@@ -46,10 +46,6 @@ Pythia8Production::Pythia8Production( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiTool ( type, name , parent ) , 
-    m_defaultSettings() , 
-    m_id1( 0 ) , 
-    m_id2( 0 ) , 
-    m_engCM( 0. ) ,
     m_beamTool( 0 ) ,
     m_pythia( 0 ) ,
     m_nEvents( 0 ) ,
@@ -67,65 +63,6 @@ Pythia8Production::Pythia8Production( const std::string& type,
   declareProperty( "Tuning", m_tuningFile = "LHCbDefault.cmd");
   declareProperty( "UserTuning", m_tuningUserFile = ""); //a default Pythia8 tune using the Tune: 'subrun' would overwrite LHCb defaults, if chosen here...
 
-  // Set the default settings for Pythia8 here:
-  m_defaultSettings.clear() ;
-  //  m_defaultSettings.push_back( "Beam Settings"); 
-  // m_defaultSettings.push_back( "PDG id code for the first incoming particle");
-  //m_defaultSettings.push_back( "PDG id code for the second incoming particle");
-  //m_defaultSettings.push_back( "Mode commands for Pythia8" ); 
-  //In a first time, cutting off all processes remaining
-  //  m_defaultSettings.push_back( "SoftQCD:all = off" );
-  //m_defaultSettings.push_back( "HardQCD:all = off" );
-  //  m_defaultSettings.push_back( "PromptPhoton:all = off" );
-  //m_defaultSettings.push_back("WeakBosonExchange:all = off" );
-  //m_defaultSettings.push_back( "WeakSingleBoson:all = off" );
-  //m_defaultSettings.push_back("WeakDoubleBoson:all = off") ;
-  //m_defaultSettings.push_back( "WeakBosonAndParton:all = off" );
-  //m_defaultSettings.push_back("Charmonium:all = off" );
-  //m_defaultSettings.push_back("Bottomonium:all = off" );
-  // m_defaultSettings.push_back("Top:all = off" );
-  //m_defaultSettings.push_back("Process commands for Pythia8" );
-  //Then, setting the different processes    
-  /* m_defaultSettings.push_back("HardQCD:qq2qq = on");
-  m_defaultSettings.push_back("HardQCD:qqbar2ccbar = on");
-  m_defaultSettings.push_back("HardQCD:qqbar2bbbar = on");
-  m_defaultSettings.push_back("HardQCD:qqbar2qqbarNew = on");
-  m_defaultSettings.push_back("HardQCD:qqbar2gg = on");
-  m_defaultSettings.push_back("HardQCD:qg2qg = on");
-  m_defaultSettings.push_back("HardQCD:gg2qqbar = on");
-  m_defaultSettings.push_back("HardQCD:gg2ccbar = on");
-  m_defaultSettings.push_back("HardQCD:gg2bbbar = on");
-  m_defaultSettings.push_back("HardQCD:gg2gg = on");
-  m_defaultSettings.push_back("SoftQCD:elastic = on");
-  m_defaultSettings.push_back("SoftQCD:singleDiffractive = on");
-  m_defaultSettings.push_back("SoftQCD:doubleDiffractive = on");
-  m_defaultSettings.push_back("Charmonium:gg2QQbar[3S1(1)]g = on");
-  m_defaultSettings.push_back("Charmonium:gg2QQbar[3P0(1)]g = on");
-  m_defaultSettings.push_back("Charmonium:gg2QQbar[3P1(1)]g = on");
-  m_defaultSettings.push_back("Charmonium:gg2QQbar[3P2(1)]g = on");
-  m_defaultSettings.push_back("Charmonium:gg2QQbar[3S1(8)]g = on");
-  m_defaultSettings.push_back("Charmonium:gg2QQbar[1S0(8)]g = on");
-  m_defaultSettings.push_back("Charmonium:gg2QQbar[3S1(1)]g = on");*/
-  //  m_defaultSettings.push_back("SigmaProcess:alphaSorder = 2");
-  // m_defaultSettings.push_back("MultipartonInteractions:Kfactor = 3.0");
-  // m_defaultSettings.push_back("MultipartonInteractions:bProfile = 1");
-  // m_defaultSettings.push_back("MultipartonInteractions:pTmin = 4.28");
-  // m_defaultSettings.push_back("MultipartonInteractions:ecmRef = 14000");
-  // m_defaultSettings.push_back("MultipartonInteractions:ecmPow = 0.162");
-  /*m_defaultSettings.push_back("StringFlav:mesonCL1S0J1 = 0.0405");
-  m_defaultSettings.push_back("StringFlav:mesonCL1S1J0 = 0.0135");
-  m_defaultSettings.push_back("StringFlav:mesonCL1S1J1 = 0.0405");
-  m_defaultSettings.push_back("StringFlav:mesonCL1S1J2 = 0.0675");
-  m_defaultSettings.push_back("StringFlav:mesonBL1S0J1 = 0.0405");
-  m_defaultSettings.push_back("StringFlav:mesonBL1S1J0 = 0.0135");
-  m_defaultSettings.push_back("StringFlav:mesonBL1S1J1 = 0.0405");
-  m_defaultSettings.push_back("StringFlav:mesonBL1S1J2 = 0.0675");*/
-  // m_defaultSettings.push_back("PDF:useLHAPDF = on");
-  //Settings for LHAPDF  
-  // m_defaultSettings.push_back("PDF:LHAPDFset = cteq6l.LHpdf");
-  // m_defaultSettings.push_back("PDF:LHAPDFmember = 1");
-  // m_defaultSettings.push_back("PDF:extrapolateLHAPDF = off");    
-  // m_defaultSettings.push_back("Output commands for Pythia8");
 }
 
 //=============================================================================
@@ -182,54 +119,14 @@ StatusCode Pythia8Production::initialize( ) {
 // Part specific to generator initialization
 //=============================================================================
 StatusCode Pythia8Production::initializeGenerator( ) {
-  //  m_id1 = 2212;
-  // m_id2 = 2212;
   bool success = true ;
-  StatusCode sc = StatusCode::SUCCESS ;
-  // int i = 4 ;
-  // double mass1, mass2;
   
-  // Initializing default settings
-  /*  for (unsigned int count = 4; count<m_defaultSettings.size(); ++count) {
-    if ((!(m_defaultSettings[count]=="Process commands for Pythia8")) 
-        && (!(m_defaultSettings[count]=="Output commands for Pythia8"))) {
-      success = m_pythia->readString(m_defaultSettings[count]);
-    }
-    i = count ;
-  }
-  if (!success) {
-    return Error("CHECK DEFAULT COMMANDS::: Pythia did not find input string in settings databases");
-    }*/
-
-  //m_pythia->readString("Main:inCMFrame = on");
-  /*if ( ! m_commandVector.empty() ) {
-    //Initializing user settings
-    if (!(m_commandVector[0]=="Beam Settings")) {
-      return Error( "Syntax error" ) ;
-    } else {
-      //Initializing settings for the beams
-      if (m_commandVector[2]=="PDG id code for the second incoming particle") {
-        m_id1 = 2212;
-        i = 3;
-      } else {
-        m_id1 = atoi(m_commandVector[2].c_str());
-        i = 4;
-      }
-      if (m_commandVector[i]=="Mode commands for Pythia8") {
-        m_id2 = 2212;     
-        i = 4;
-      } else {
-        m_id2 = atoi(m_commandVector[i].c_str());      
-        i = i + 2;
-      } 
-    }  
-    }*/
-  
+  //set the mean beam momentum to the pythia instance   
+  //pythia beam tool smearing is using difference wrt to nominal beam directions
   Gaudi::XYZVector pBeam1 , pBeam2 ;
   m_beamTool->getMeanBeams( pBeam1 , pBeam2 ) ;
   pBeam1 /= Gaudi::Units::GeV;
   pBeam2 /= Gaudi::Units::GeV;
-  //pass the mean beam momentum to the pythia instance 
   std::ostringstream momProj;
   momProj << pBeam1.X();
   m_pythia->readString("Beams:pxA = " + momProj.str());
@@ -249,88 +146,32 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   momProj << pBeam2.Z();
   m_pythia->readString("Beams:pzB = " + momProj.str());
   momProj.str("");
-    
-  // retrieve Gaudi particle property service
-  //LHCb::IParticlePropertySvc* ppSvc( 0 ) ;
-  //try { ppSvc = svc< LHCb::IParticlePropertySvc > ( "LHCb::ParticlePropertySvc" , true ) ; }
-  //catch ( const GaudiException & exc ) {
-  // Exception( "Cannot open ParticlePropertySvc to fill EvtGen" , exc ) ;
-  // }
-  
-  //mass1 = (ppSvc -> find( LHCb::ParticleID( m_id1 ) ) ) -> mass();
-  //mass2 = (ppSvc -> find( LHCb::ParticleID( m_id2 ) ) ) -> mass();
-  
-  //m_engCM = (sqrt(pBeam1.Dot(pBeam1)+mass1*mass1) +  
-  //           sqrt(pBeam2.Dot(pBeam2) + mass2*mass2))/Gaudi::Units::GeV;
 
-  //Initializing the settings for the generator
-  //First cut all processes in case of user settings for processes
-  /*for (unsigned int count = i; count<m_commandVector.size(); ++count) {	 
-    if (m_commandVector[count]=="Do user change the processes settings ?") {
-      if (m_commandVector[count + 1]=="yes") {  
-        m_pythia->readString("HardQCD:qq2qq = off");
-        m_pythia->readString("HardQCD:qqbar2ccbar = off");
-        m_pythia->readString("HardQCD:qqbar2bbbar = off");
-        m_pythia->readString("HardQCD:qqbar2qqbarNew = off");
-        m_pythia->readString("HardQCD:qqbar2gg = off");
-        m_pythia->readString("HardQCD:qg2qg = off");
-        m_pythia->readString("HardQCD:gg2qqbar = off");
-        m_pythia->readString("HardQCD:gg2ccbar = off");
-        m_pythia->readString("HardQCD:gg2bbbar = off");
-        m_pythia->readString("HardQCD:gg2gg = off");
-        m_pythia->readString("SoftQCD:elastic = off");
-        m_pythia->readString("SoftQCD:singleDiffractive = off");
-        m_pythia->readString("SoftQCD:doubleDiffractive = off");
-        m_pythia->readString("Charmonium:gg2QQbar[3S1(1)]g = off");
-        m_pythia->readString("Charmonium:gg2QQbar[3P0(1)]g = off");
-        m_pythia->readString("Charmonium:gg2QQbar[3P1(1)]g = off");
-        m_pythia->readString("Charmonium:gg2QQbar[3P2(1)]g = off");
-        m_pythia->readString("Charmonium:gg2QQbar[3S1(8)]g = off");
-        m_pythia->readString("Charmonium:gg2QQbar[1S0(8)]g = off");
-        m_pythia->readString("Charmonium:gg2QQbar[3S1(1)]g = off");
-        m_pythia->readString("StringFlav:mesonCL1S0J1 = 0");
-        m_pythia->readString("StringFlav:mesonCL1S1J0 = 0");
-        m_pythia->readString("StringFlav:mesonCL1S1J1 = 0");
-        m_pythia->readString("StringFlav:mesonCL1S1J2 = 0");
-        m_pythia->readString("StringFlav:mesonBL1S0J1 = 0");
-        m_pythia->readString("StringFlav:mesonBL1S1J0 = 0");
-        m_pythia->readString("StringFlav:mesonBL1S1J1 = 0");
-        m_pythia->readString("StringFlav:mesonBL1S1J2 = 0");
-        count = count + 2;
-      }
-      if (m_commandVector[count + 1]=="no")
-        count = count + 2;
-    }
-    //Then initializing user settings for processes and output
-    if ((!(m_commandVector[count]=="Process commands for Pythia8")) 
-        && (!(m_commandVector[count]=="Output commands for Pythia8"))) {
-      success = m_pythia->readString(m_commandVector[count]);
-    }
-  }
-  */  
-  //if (!success) sc = StatusCode::FAILURE;
-
-  
-
-  //debug() << " will INIT" << endmsg;
-  //  m_pythia->init(m_id1, m_id2, m_engCM) ;
-  
+  // set default LHCb tuning options
   std::string optspath = "" ;
   if ( "UNKNOWN" != System::getEnv("LBPYTHIA8ROOT") ) {
     optspath  = System::getEnv( "LBPYTHIA8ROOT" ) ;
-    m_pythia->readFile(optspath+"/options/"+m_tuningFile);
+    success = m_pythia->readFile(optspath+"/options/"+m_tuningFile);
+    if (!success)
+      Warning ( "Cannot find  LBPYTHIA8ROOT/options/"+m_tuningFile+", thus default pythia8 options are parsed" ) ; 
   }
   else 
     Warning ( "Cannot find LBPYTHIA8ROOT/options/"+m_tuningFile+", thus default pythia8 options are parsed" ) ;
   
+  // add user defined tuning options
   if (m_tuningUserFile!="")
     success = m_pythia->readFile(m_tuningUserFile);
   if (!success)
     Warning ( "Cannot find "+m_tuningUserFile+", thus default LHCb tune is not overwritten" ) ;
   
+  // also read a vector of commands if any is provided, for backward compatibility
+  for (unsigned int count = 0; count<m_commandVector.size(); ++count) {  
+    success = m_pythia->readString(m_commandVector[count]);
+  }
+  
   m_pythia->init();
-  //debug() << " FINISHED INIT" << endmsg;
-  return sc;
+  
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -652,18 +493,6 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
              && status!=LHCb::HepMCEvent::DocumentationParticle)
       warning() << "Unknown status rule " << status << " for particle" << (*p)->pdg_id() << endmsg;
     
-
-    /* (*p) -> set_momentum( HepMC::FourVector( 
-                           (*p) -> momentum().px() * Gaudi::Units::GeV ,
-                           (*p) -> momentum().py() * Gaudi::Units::GeV , 
-                           (*p) -> momentum().pz() * Gaudi::Units::GeV , 
-                           (*p) -> momentum().e() * Gaudi::Units::GeV )
-                         );
-    verbose() << "generated mass " << (*p)-> generated_mass() << " " << (*p)-> generated_mass() * Gaudi::Units::GeV << endmsg;
-    
-    (*p) -> set_generated_mass( (*p)-> generated_mass() * Gaudi::Units::GeV ) ;
-    */
-
   }
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;

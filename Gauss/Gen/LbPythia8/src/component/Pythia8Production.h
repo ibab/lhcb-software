@@ -90,13 +90,7 @@ private:
   /// retrieve the processCode
   int processCode( ) ;
     
-  CommandVector m_defaultSettings ;
-  CommandVector m_commandVector ; ///< Commands to setup pythia
-
   std::string m_beamToolName ;
-  
-  int m_id1 , m_id2;
-  double m_engCM ;
   
   IBeamTool * m_beamTool ; ///< Beam tool to use
   
@@ -121,5 +115,8 @@ private:
 
    std::string m_tuningFile;
    std::string m_tuningUserFile;
+
+   //kept for backward compatibilit for the time being
+   CommandVector m_commandVector;
 } ;
 #endif // LBPYTHIA8_PYTHIA8PRODUCTION_H
