@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichPIDQC
 ################################################################################
-gaudi_subdir(RichPIDQC v1r7)
+gaudi_subdir(RichPIDQC v1r7p1)
 
 gaudi_depends_on_subdirs(Phys/DSTWriters
                          Rich/RichKernel)

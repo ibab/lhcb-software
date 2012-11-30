@@ -5,6 +5,8 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+!========================= RichPIDQC v1r7p1 2012-11-30 =========================
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
