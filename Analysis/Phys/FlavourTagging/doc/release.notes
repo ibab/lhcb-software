@@ -4,20 +4,28 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+!========================= FlavourTagging v12r11 2012-11-30 =========================
+
 ! 2012-11-29 - Stefania Vecchi
  - fix nightlies
+
 ! 2012-11-28 - Stefania Vecchi
  - code cleanup and prepare for new DaVinci release
+
 ! 2012-11-15 - Stefania Vecchi
  - fixed deprecated DVAlgorithm
+
 ! 2012-11-06 - Stefania Vecchi
  - fixed oddities in BTaggingTool.cpp and TaggingUtils.cpp
+
 ! 2012-11-05 - Stefania Vecchi
  - fixed compilation warnings
+
 ! 2012-10-28 - Stefania Vecchi
- - changed in BTaggingTool.cpp to run always SSpion and SSKaon
- - modified CombineTaggersProbability to run the combination only with one SS tagger
- - fixed typo in Tuning.py for SSpi IPPU cut (6 instead of 3) 
+ - Changed in BTaggingTool.cpp to run always SSpion and SSKaon
+ - Modified CombineTaggersProbability to run the combination only with one SS tagger
+ - Fixed typo in Tuning.py for SSpi IPPU cut (6 instead of 3) 
 
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
