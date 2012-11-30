@@ -1,3 +1,8 @@
+2012-11-30 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v5r4
+	* python/LbLegacy/install_project.py:  release of LbScripts version v7r4
+
 2012-11-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/mkLHCbtar: removed obsolete dead code
