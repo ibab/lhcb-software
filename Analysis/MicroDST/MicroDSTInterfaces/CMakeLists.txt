@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MicroDSTInterfaces
 ################################################################################
-gaudi_subdir(MicroDSTInterfaces v1r7)
+gaudi_subdir(MicroDSTInterfaces v1r7p1)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Event/PhysEvent

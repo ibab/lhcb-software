@@ -7,6 +7,8 @@
 ! $Id: release.notes,v 1.20 2010-08-20 13:36:19 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTInterfaces v1r7p1 2012-11-30 =========================
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
