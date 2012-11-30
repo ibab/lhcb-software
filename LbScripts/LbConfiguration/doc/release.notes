@@ -1,3 +1,9 @@
+2012-11-30 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Platform.py: Fixed to only check the version
+	of the local g++ (in order to avoid invoking "g++ --version" on the 
+	externals g++ which looks for files on AFS) 
+
 2012-11-27 Ben Couturier <Ben.Couturier@cern.ch>
 	
 	* python/LbConfiguration/Package.py: Added new package B2OCConfig

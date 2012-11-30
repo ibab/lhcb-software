@@ -440,15 +440,20 @@ class NativeMachine:
         if not self._compversion :
             if self._ostype == "Windows" :
                 self._compversion = "vc9"
-            else :
-                if filter(os.path.exists, [os.path.join(d, "g++")
-                                           for d in os.environ["PATH"].split(os.pathsep)]):
-                    compstr = " ".join(os.popen("g++ --version").readlines())[:-1]
-                    vmatch = re.compile("\ +(\d+(?:\.\d+)*)")
-                    m = vmatch.search(compstr)
+            else:
+                try:
+                    gpp = (c for c in
+                           [os.path.join(d, "g++")
+                            for d in os.environ["PATH"].split(os.pathsep)
+                            if d.startswith('/usr')]
+                           if os.path.exists(c)).next()
+                    compstr = " ".join(os.popen(gpp + " --version" ).readlines())[:-1]
+                    m = re.search(r"\ +(\d+(?:\.\d+)*)", compstr)
                     if m :
                         self._compversion = m.group(1)
-                else:
+                    else:
+                        self._compversion = None
+                except StopIteration:
                     self._compversion = None
         ncv = self._compversion
 
