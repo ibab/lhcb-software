@@ -5,13 +5,16 @@
 ! Responsible : Vanya Belyaev Ivan.Belyaev@nikhef.nl
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
-!========================= LoKiProtoParticles v2r1 2012-05-24 =========================
+
+!========================= LoKiProtoParticles v2r1p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
+!========================= LoKiProtoParticles v2r1 2012-05-24 =========================
+
 ! 2012-05-20 - Vanya Belyaev
- - imporve dictionareis 
+ - improve dictionaries 
 
 !========================= LoKiProtoParticles v2r0p1 2011-06-16 =========================
 ! 2011-06-05 - Vanya Belyaev
