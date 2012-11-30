@@ -1,3 +1,59 @@
+! 2012-11-29 - Marco Clemencic (caff664)
+
+ - fixed error in the fix to _gaudi_handle_data_packages
+
+   
+
+! 2012-11-29 - Marco Clemencic (f47ea9b)
+
+ - fixed logic error in _gaudi_handle_data_packages
+
+   
+
+! 2012-11-29 - Marco Clemencic (d72c8b0)
+
+ - minor bugfix in gaudi_collect_subdir_deps (CMake)
+
+   
+
+! 2012-11-28 - Marco Clemencic (9874608)
+
+ - added Findpyanalysis.cmake
+
+   
+
+! 2012-11-28 - Marco Clemencic (596c25a)
+
+ - added FindFastJet.cmake
+
+   
+
+! 2012-11-27 - Marco Clemencic (46774cd)
+
+ - improved recursion in gaudi_resolve_link_libraries
+
+   
+
+! 2012-11-26 - Marco Clemencic (2dfd651)
+
+ - use correct version of gcc43: 4.3.6 (since LCG 64b)
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7095
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2012-11-26 - Marco Clemencic (03c92d3)
+
+ - fixed GCCXML_CXX_FLAGS for i686 & C++11
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7094
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2012-11-23 - Marco Clemencic (afbb002)
 
  - added version 64b of the heptools toolchain and updated to the old ones

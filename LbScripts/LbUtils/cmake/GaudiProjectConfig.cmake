@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: abd36dea0209f9e71ec37e2f9044f2cc8b8609e2
+# Commit Id: caff6649f03f9c65abc5b4beb41e9dbb334ac80a
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -697,6 +697,8 @@ macro(_gaudi_handle_data_packages)
       else()
         set(_data_pkg_vers *) # default version value
       endif()
+    else()
+      set(_data_pkg_vers *) # default version value
     endif()
     if(NOT ${_data_package}_FOUND)
       gaudi_find_data_package(${_data_package} ${_data_pkg_vers} PATH_SUFFIXES ${GAUDI_DATA_SUFFIXES})
@@ -814,6 +816,7 @@ macro(gaudi_collect_subdir_deps)
     foreach(var ${vars})
       # extract the individual subdir names
       string(REGEX REPLACE "gaudi_depends_on_subdirs *\\(([^)]+)\\)" "\\1" __p ${var})
+      string(REGEX REPLACE "(\r?\n)+$" "" ___p "${___p}")
       separate_arguments(__p)
       foreach(___p ${__p})
         # remove newlines in the matched subdir name
@@ -933,6 +936,44 @@ macro(gaudi_get_package_name VAR)
 endmacro()
 
 #-------------------------------------------------------------------------------
+# _gaudi_strip_build_type_libs(VAR)
+#
+# Helper function to reduce the list of linked libraries.
+#-------------------------------------------------------------------------------
+function(_gaudi_strip_build_type_libs variable)
+  set(collected ${${variable}})
+  #message(STATUS "Stripping build type special libraries.")
+  set(_coll)
+  while(collected)
+    # pop an element (library or qualifier)
+    list(GET collected 0 entry)
+    list(REMOVE_AT collected 0)
+    if(entry STREQUAL debug OR entry STREQUAL optimized OR entry STREQUAL general)
+      # it's a qualifier: pop another one (the library name)
+      list(GET collected 0 lib)
+      list(REMOVE_AT collected 0)
+      # The possible values of CMAKE_BUILD_TYPE are Debug, Release,
+      # RelWithDebInfo and MinSizeRel, plus the LCG/Gaudi special ones
+      # Coverage and Profile. (treat an empty CMAKE_BUILD_TYPE as Release)
+      if((entry STREQUAL general) OR
+         (CMAKE_BUILD_TYPE MATCHES "Debug|Coverage" AND entry STREQUAL debug) OR
+         ((NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES "Rel|Profile") AND entry STREQUAL optimized))
+        # we keep it only if corresponds to the build type
+        set(_coll ${_coll} ${lib})
+      endif()
+    else()
+      # it's not a qualifier: keep it
+      set(_coll ${_coll} ${entry})
+    endif()
+  endwhile()
+  set(collected ${_coll})
+  if(collected)
+    list(REMOVE_DUPLICATES collected)
+  endif()
+  set(${variable} ${collected} PARENT_SCOPE)
+endfunction()
+
+#-------------------------------------------------------------------------------
 # gaudi_resolve_link_libraries(variable lib_or_package1 lib_or_package2 ...)
 #
 # Translate the package names in a list of link library options into the
@@ -951,16 +992,14 @@ endmacro()
 function(gaudi_resolve_link_libraries variable)
   #message(STATUS "gaudi_resolve_link_libraries input: ${ARGN}")
   set(collected)
+  set(to_be_resolved)
   foreach(package ${ARGN})
     # check if it is an actual library or a target first
     if(TARGET ${package})
       set(collected ${collected} ${package})
       get_target_property(libs ${package} REQUIRED_LIBRARIES)
-      if(libs)
-        gaudi_resolve_link_libraries(libs ${libs})
-        set(collected ${collected} ${libs})
-      endif()
-    elseif(EXISTS ${package})
+      set(to_be_resolved ${to_be_resolved} ${libs})
+    elseif(EXISTS ${package}) # it's a real file
       set(collected ${collected} ${package})
     else()
       # it must be an available package
@@ -982,36 +1021,14 @@ function(gaudi_resolve_link_libraries variable)
       endif()
     endif()
   endforeach()
-  #message(STATUS "gaudi_resolve_link_libraries collected: ${collected}")
-  if(collected)
-    #message(STATUS "Stripping build type special libraries.")
-    set(_coll)
-    while(collected)
-      # pop an element (library or qualifier)
-      list(GET collected 0 entry)
-      list(REMOVE_AT collected 0)
-      if(entry STREQUAL debug OR entry STREQUAL optimized OR entry STREQUAL general)
-        # it's a qualifier: pop another one (the library name)
-        list(GET collected 0 lib)
-        list(REMOVE_AT collected 0)
-        # The possible values of CMAKE_BUILD_TYPE are Debug, Release,
-        # RelWithDebInfo and MinSizeRel, plus the LCG/Gaudi special ones
-        # Coverage and Profile. (treat an empty CMAKE_BUILD_TYPE as Release)
-        if((entry STREQUAL general) OR
-           (CMAKE_BUILD_TYPE MATCHES "Debug|Coverage" AND entry STREQUAL debug) OR
-           ((NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES "Rel|Profile") AND entry STREQUAL optimized))
-          # we keep it only if corresponds to the build type
-          set(_coll ${_coll} ${lib})
-        endif()
-      else()
-        # it's not a qualifier: keep it
-        set(_coll ${_coll} ${entry})
-      endif()
-    endwhile()
-    set(collected ${_coll})
-    list(REMOVE_DUPLICATES collected)
-    #message(STATUS "gaudi_resolve_link_libraries output: ${collected}")
+  _gaudi_strip_build_type_libs(to_be_resolved)
+  if(to_be_resolved)
+    gaudi_resolve_link_libraries(to_be_resolved ${to_be_resolved})
+    set(collected ${collected} ${to_be_resolved})
   endif()
+  #message(STATUS "gaudi_resolve_link_libraries collected: ${collected}")
+  _gaudi_strip_build_type_libs(collected)
+  #message(STATUS "gaudi_resolve_link_libraries output: ${collected}")
   set(${variable} ${collected} PARENT_SCOPE)
 endfunction()
 
