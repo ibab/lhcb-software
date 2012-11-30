@@ -1,7 +1,7 @@
 ################################################################################
 # Package: SelectionLine
 ################################################################################
-gaudi_subdir(SelectionLine v1r0p1)
+gaudi_subdir(SelectionLine v1r0p2)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          GaudiAlg

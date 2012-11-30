@@ -4,12 +4,15 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
-!======================= SelectionLine v1r0p1 2010-02-27 =====================
-! 2010-02-27 - Gerhard Raven
- - shorten histogram names
+
+!========================= SelectionLine v1r0p2 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
+
+!======================= SelectionLine v1r0p1 2010-02-27 =====================
+! 2010-02-27 - Gerhard Raven
+ - shorten histogram names
 
 !======================= SelectionLine v1r0 2010-01-29 =====================
 
