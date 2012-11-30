@@ -2,10 +2,15 @@
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.23 $ 
 ! -----------------------------------------------------------------------------
-! Package     : Phys/JetAccessories 
+! Package     : Phys/JetAccessoriesMC 
 ! Responsible : Victor Coco victor.coco@cern.ch, Cedric Potterat cedric.potterat@cern.ch
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
+
+!========================= JetAccessoriesMC v2r0 2012-11-30 =========================
+
+! 2012-11-30 - Chris Jones
+ - Bump major version to match Phys/JetAccessories
 
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.

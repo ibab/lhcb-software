@@ -1,7 +1,7 @@
 ################################################################################
 # Package: JetAccessoriesMC
 ################################################################################
-gaudi_subdir(JetAccessoriesMC v1r4)
+gaudi_subdir(JetAccessoriesMC v2r0)
 
 gaudi_depends_on_subdirs(Kernel/LHCbMath
                          Phys/LoKiAlgoMC
