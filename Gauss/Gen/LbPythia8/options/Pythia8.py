@@ -7,6 +7,8 @@ Pythia8ListOfCommands = [
     "skip" ,
     "PDG id code for the second incoming particle",
     "Mode commands for Pythia8" ,
+    # do not smear beams
+    "Beams:allowMomentumSpread = on",
     # control verbosity
     "Init:showAllSettings = off" ,
     "Init:showMultipartonInteractions = off" ,
@@ -14,7 +16,7 @@ Pythia8ListOfCommands = [
     "Init:showChangedSettings = off" ,
     "Next:numberShowInfo = 0" ,
     "Next:numberShowProcess = 0" ,
-    "Next:numberShowEvent = 0" ,
+    "Next:numberShowEvent = 1" ,
     "SoftQCD:all = on",
     "HardQCD:all = off",
     "PDF:useLHAPDF = on" ,
