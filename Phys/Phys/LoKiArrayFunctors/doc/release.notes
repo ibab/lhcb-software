@@ -5,6 +5,8 @@ $Id$
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiArrayFunctors v10r0p2 2012-11-30 =========================
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
