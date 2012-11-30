@@ -1,5 +1,5 @@
 ################################################################################
 # Package: MCStandardParticles
 ################################################################################
-gaudi_subdir(MCStandardParticles v1r3)
+gaudi_subdir(MCStandardParticles v1r3p1)
 
