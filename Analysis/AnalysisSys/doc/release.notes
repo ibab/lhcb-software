@@ -3,6 +3,112 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v10r3>2012-11-30 Analysis v10r3 </A></H1><PRE>
+New development release, built against Phys v16r3.
+
+- This version introduces support for CMake. All packages have been modified
+  to add CMake configuration files
+
+- Packages modified (other than to just support CMake) :
+    MicroDSTAlgorithm, MicroDSTBase, MicroDSTTools, AnalysisPython,
+    DSTWriters, DaVinciAssociators, DaVinciMCTools, DaVinciTrackRefitting,
+    DecayTreeTuple, FlavourTagging, FlavourTaggingChecker, JetAccessories,
+    Particle2MCTruth, TrackSmearing
+
+- Packages added : 
+    DecayTreeTupleBase, DecayTreeTupleReco, DecayTreeTupleDalitz,
+    DecayTreeTupleJets, DecayTreeTupleMC, DecayTreeTupleTrigger,
+    DecayTreeTupleMuonCalib
+
+- In MicroDSTAlgorithm :
+ . Update CopyParticle2BackgroundCategory and CopyParticle2MCRelations to 
+   recursively search through the particle trees and to find all associated
+   relations tables and clone them.
+
+- In MicroDSTBase :
+ . Add a new algorithm RelationsFromParticleLocationsFromClonerAlg that 
+   recursively searchs the configured Particle locations to search for related 
+   relation tables to clone
+
+- In MicroDSTTools :
+ . Improve the MCParticle and MCVertex cloners to clone the full tree, leaving
+   no SmartRefs pointing to the originals.
+
+- In AnalysisPython :
+ . Various improvements. See package release notes.
+
+- In DSTWriters :
+ . Improved support for creating MC uDSTs.
+
+- In DaVinciAssociators :
+ . Fix some issue when running on DSTs inadvertently caused by the last changes.
+ . Improvements for MC uDSTs.
+  + Load the Linker table on demand in ChargedPP2MC, only when needed.
+  + Allow NeutralPP2MC to return gracefully if input tables are missing.
+
+- In DaVinciMCTools :
+ . Improvements to Particle2BackgroundCategoryRelationsAlg to save the relations
+   for each Particle location at the same level in the TES structure.
+ . Improvements to P2MCPFromProtoP to better support uDSTs.
+ . Update BackgroundCategoryViaRelations to be a little more efficient, and to 
+   work with the improved MC uDST format.
+ . Suppress warning of Particles with no descendants from BackgroundCategory
+ . Do not print a warning if a missing of empty Particle location is found by
+   Particle2BackgroundCategoryRelationsAlg as this is normal in uDSTs.
+ . Clean up BackgroundCategory a little
+
+- In DaVinciTrackRefitting :
+ . Converted TracksFromParticles from DVAlgorithm to DaVinciAlgorithm
+ . Added RefitParticleTracks algorithm and example file in options
+
+- In DecayTreeTuple packages :
+ . Major restructuring.
+  + Move the base classes and core components to a new package called
+    Phys/DecayTreeTupleBase.
+  + Move some components to various seperate new packages
+      DecayTreeTupleDalitz    - 'Dalitz' tools
+      DecayTreeTupleJets      - Jet tools
+      DecayTreeTupleMC        - MC tools
+      DecayTreeTupleMuonCalib - Muon PID calibration
+      DecayTreeTupleReco      - Reconstruction information tools
+      DecayTreeTupleTrigger   - Trigger and stripping tools
+ . Other tool changes :
+  . Small modifications to TupleToolL0Calo. Change name of variable to a more
+    clear one.
+  . Protect MCTupleToolKinematic against an empty MCVertex container and also
+    NULL MCVertex pointers
+  . Minor clean up of TupleToolDira and TupleToolPrimaries
+  . Standardise the Trigger/TISTOS variable names with the rest of the tools
+    to start with <name>_
+  . Make sure TTDecayTreeFitter uses TrackStateProvider to improve Ks tracks
+    in 2012 dsts.
+  . Added a flag in TupleToolDecayTreeFitter to store the refitted 
+    tracks momentum
+  . Added TupleToolL0Calo.cpp, TupleToolL0Calo.h to compute 
+    L0 trigger efficiencies from decay tree tuple.
+  . Move MaxPV property to TupleToolBase. Use it in TupleToolDecayTreeFitter, 
+    TupleToolPrimaries and TupleToolGeometry
+  . TupleToolGeometry: new fields (verbose) AllIP and and AllIPchi2.
+
+- In FlavourTagging :
+ . Fixed oddities in BTaggingTool.cpp and TaggingUtils.cpp
+ . Changed in BTaggingTool.cpp to run always SSpion and SSKaon
+ . Modified CombineTaggersProbability to run the combination only with one SS tagger
+ . Fixed typo in Tuning.py for SSpi IPPU cut (6 instead of 3) 
+
+- In FlavourTaggingChecker :
+ . Fix several things related to the sweight (performance computation)
+ . Modified code to account for SSK and SSpi every event 
+
+- In JetAccessories :
+ . Major reworking of the package. See package release notes for details.
+
+- In Particle2MCTruth :
+ . Improvements to the MC association tools to better support uDSTs
+
+- In TrackSmearing :
+ . Added the I.P. improver tool for upgrade studies.
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
