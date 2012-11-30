@@ -6,6 +6,8 @@
                 Based on TCKsh by Gerhard Raven
 !-----------------------------------------------------------------------------
 
+!========================= StrippingTCK v1r4 2012-11-30 =========================
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
