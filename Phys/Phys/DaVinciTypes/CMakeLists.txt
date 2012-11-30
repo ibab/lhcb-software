@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciTypes
 ################################################################################
-gaudi_subdir(DaVinciTypes v2r6)
+gaudi_subdir(DaVinciTypes v2r6p1)
 
 gaudi_depends_on_subdirs(Event/PhysEvent
                          Event/RecEvent
