@@ -121,3 +121,7 @@ for example like this::
     $ ./run gaudirun.py --help
     $ ./run bash
 
+Resources
+-------------
+    * `CMake documentation <http://www.cmake.org/cmake/help/documentation.html>`_
+    * ``FindTBB.cmake`` was taken from https://bitbucket.org/sergiu/tbb-cmake
