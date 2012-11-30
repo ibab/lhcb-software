@@ -1,6 +1,6 @@
 # $Id: requirements,v 1.25 2010-08-26 17:06:22 jpalac Exp $
 package MicroDSTAlgorithm
-version           v5r6p2
+version           v5r7
 
 #############################################################
 # BRANCHES
