@@ -1,3 +1,7 @@
+2012-11-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbUtils/Processes.py: set the default sleeptime of RetryCommand to 0
+
 2012-11-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/lcg-*-4.3.6: added wrapper for gcc 4.3.6

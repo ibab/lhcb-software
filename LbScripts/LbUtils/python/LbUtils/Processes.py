@@ -147,7 +147,7 @@ def callCommand(cmd, *args, **kwargs):
 
 class RetryCommand(object):
     """Small wrapper to add a 're-try' feature to _call_command."""
-    def __init__(self, command, check, retries = 3, sleeptime = 30):
+    def __init__(self, command, check, retries = 3, sleeptime = 0):
         self._command = command
         self._check = check
         self._retries = retries
