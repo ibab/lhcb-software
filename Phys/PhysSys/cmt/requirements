@@ -1,60 +1,60 @@
 package PhysSys
-version v16r2
+version v16r3
 
 branches doc cmt
 
 #===================================================================
 
-use  DaVinciInterfaces          v2r17    Phys    # Juan Palacios
-use  DaVinciTypes               v2r6     Phys    # Juan Palacios
-use  DaVinciUtils               v1r1     Phys    # Juan Palacios
-use  DaVinciKernel              v11r1    Phys    # Juan Palacios
-use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
-use  SelPy                      v4r2p1   Phys    # Juan Palacios
-use  PhysSelPython              v9r3     PhysSel # Juan Palacios
+use  DaVinciInterfaces          v2r17p1  Phys    # Juan Palacios
+use  DaVinciTypes               v2r6p1   Phys    # Juan Palacios
+use  DaVinciUtils               v1r1p1   Phys    # Juan Palacios
+use  DaVinciKernel              v11r2    Phys    # Juan Palacios
+use  SelectionLine              v1r0p2   Kernel  # Gerhard Raven
+use  SelPy                      v4r2p2   Phys    # Juan Palacios
+use  PhysSelPython              v9r3p1   PhysSel # Juan Palacios
 
 #===================================================================
 
-use  PhysConf                   v1r17    Phys    # Patrick Koppenburg
-use  ProtoParticleFilter        v1r7p1   Phys    # Chris Jones
-use  DaVinciTools       	v23r3    Phys    # Juan Palacios
-use  DaVinciTransporter 	v3r10    Phys    # Juan Palacios
-use  ParticleMaker      	v6r6 	 Phys    # Chris Jones
-use  VertexFit			v6r13    Phys    # Yuehong Xie
-use  LoKiFitters                v4r3     Phys    # Vanya Belyaev
-use  DecayTreeFitter            v1r13    Phys    # Wouter Hulsbergen
-use  PhysDict                   v4r2p2   Phys    # Juan Palacios
-use  HighPtJets                 v1r7p1   Phys    # Marcin Kucharczyk
-use  BBDecTreeTool              v1r6     Phys    # Mike Williams
+use  PhysConf                   v1r18    Phys    # Patrick Koppenburg
+use  ProtoParticleFilter        v1r7p2   Phys    # Chris Jones
+use  DaVinciTools       	v23r4    Phys    # Juan Palacios
+use  DaVinciTransporter 	v3r10p1  Phys    # Juan Palacios
+use  ParticleMaker      	v6r7 	 Phys    # Chris Jones
+use  VertexFit			v6r14    Phys    # Yuehong Xie
+use  LoKiFitters                v4r4     Phys    # Vanya Belyaev
+use  DecayTreeFitter            v1r14    Phys    # Wouter Hulsbergen
+use  PhysDict                   v4r2p3   Phys    # Juan Palacios
+use  HighPtJets                 v1r7p2   Phys    # Marcin Kucharczyk
+use  BBDecTreeTool              v1r6p1   Phys    # Mike Williams
 
 #===================================================================
 
-use  LoKiUtils                  v1r3     Phys    # Vanya Belyaev
-use  LoKiJets                   v6r7     Phys    # Vanya Belyaev, Victor Coco
-use  LoKiAlgo                   v9r7p1   Phys    # Vanya Belyaev
-use  LoKiArrayFunctors          v10r0p1  Phys    # Vanya Belyaev
-use  LoKiPhys                   v10r12   Phys    # Vanya Belyaev
-use  LoKiProtoParticles         v2r1     Phys    # Vanya Belyaev
-use  LoKi                       v9r0     Phys    # Vanya Belyaev
-use  LoKiTracks                 v2r8p1   Phys    # Vanya Belyaev
-use  KalmanFilter               v1r4     Phys    # Vanya Belyaev
+use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
+use  LoKiJets                   v6r8     Phys    # Vanya Belyaev, Victor Coco
+use  LoKiAlgo                   v9r7p2   Phys    # Vanya Belyaev
+use  LoKiArrayFunctors          v10r0p2  Phys    # Vanya Belyaev
+use  LoKiPhys                   v10r12p1 Phys    # Vanya Belyaev
+use  LoKiProtoParticles         v2r1p1   Phys    # Vanya Belyaev
+use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
+use  LoKiTracks                 v2r8p2   Phys    # Vanya Belyaev
+use  KalmanFilter               v1r4p1   Phys    # Vanya Belyaev
 
 #===================================================================
 
-use TisTosTobbing		v7r8p1   Phys	 # Tomasz Skwarnicki
+use TisTosTobbing		v7r8p2   Phys	 # Tomasz Skwarnicki
 
 #===================================================================
 
-use NeuroBayesTools             v1r2     Phys    # Ulrich Kerzel
+use NeuroBayesTools             v1r2p1   Phys    # Ulrich Kerzel
 
 #===================================================================
 
-use Swimming                    v2r8     Phys    # Vava Gligorov, Roel Aaij
+use Swimming                    v2r8p1   Phys    # Vava Gligorov, Roel Aaij
 
 #===================================================================
 
 # Temporary MC stuff.
-use DaVinciMCKernel v4r3 Phys
+use DaVinciMCKernel v4r3p1 Phys
 
 # Declare this as a container package
 apply_pattern container_package

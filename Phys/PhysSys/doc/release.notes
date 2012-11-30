@@ -3,6 +3,44 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v16r3>2012-11-30 Phys v16r3 </A></H1><PRE>
+Development release, based on Rec v14r3, LHCb v35r3.
+
+- This version introduces support for CMake. All packages have been modified
+  to add CMake configuration files
+
+- Packages modified (other than to just support CMake):
+    DaVinciKernel, DaVinciTools, DecayTreeFitter, HighPtJets, LoKiFitters,
+    LoKiJets, ParticleMaker, PhysConf
+
+- In DaVinciKernel :
+ . Extend the related PV finding logic in DVCommonBase to try and predict
+   the relations table location from the Particle container TES location.
+   Also, attempt to load with and without respecting the RootInTES setting.
+ . Add a compiler warning when the depreciated DVAlgorithm.h head is included.
+   Make the runtime warning message more noticeable...
+
+- In DaVinciTools :
+ . Update classes to use DaVinciAlgorithm base class
+
+- In DecayTreeFitter :
+ . Use ITrackStateProvider in RecoTrack
+
+- In HighPtJets :
+ . Update classes to use DaVinciAlgorithm base class
+
+- In LoKiFitters :
+ . Pass TrackStateProvider to DTF to improve Ks tracks in 2012 dsts.
+
+- In LoKiJets :
+ . Make compatible with FastJet 3.0
+
+- In ParticleMaker :
+ . DiElectronMaker : Improve the gamma->ee (DD) vertexing 
+
+- In PhysConf :
+ . Improvements to the MicroDST python module
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
@@ -20,7 +58,7 @@ In LoKiJets :
  . Updated JetID cuts
 
 In ParticleMaker :
- . Fixing a memory leak in DiElectronMaker
+ . Fix a memory leak in DiElectronMaker
 
 In PhysConf :
  . Update MicroDST.py module to match what is in Bender
