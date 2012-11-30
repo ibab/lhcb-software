@@ -7,8 +7,8 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
-! 2012-11-29 - Victor Coco
- - 
+!========================= JetAccessories v2r0 2012-11-30 =========================
+
 ! 2012-11-29 - Victor Coco
  - Refactory of the particle flow code + associated jet finder.
 	 ParticleFlow becomes the main algorithm called by ParticleFlow_Config.py
@@ -38,7 +38,6 @@
 
  - TODO: cleaning of the options, private members, configurables, default value 
 	 of the options
-
 
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
