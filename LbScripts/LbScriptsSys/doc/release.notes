@@ -1,3 +1,51 @@
+2012-11-30 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r4
+
+	LbConfiguration
+	* python/LbConfiguration/Platform.py: Fixed to only check the version
+	of the local g++ (in order to avoid invoking "g++ --version" on the 
+	externals g++ which looks for files on AFS) 
+	* python/LbConfiguration/Package.py: Added new package B2OCConfig
+	* python/LbConfiguration/Package.py: Added new package PRConfig
+	* data/Makefile-cmt.mk: renamed the old generic CMT Makefile
+	* data/Makefile: switch between CMT or CMake generic makefiles; by default
+	it uses the CMT version, while the CMake version can be enabled with the
+	variable 'USE_CMAKE' (environment or argument) if there is a CMakeLists.txt.
+	* python/LbConfiguration/LbLogin.py: changed the message level for missing
+	CMake from 'warning' to 'debug'.
+
+	LbRelease
+	* python/LbRelease/rcs.py: retry the calls to svn if they fail, and rais an
+	exception if they keep on failing
+	* python/LbRelease/GetPack.py: intercept the exception raised in the rcs
+	module to return a proper error code
+	* script/getpack: fixed the return code propagation
+	* python/LbRelease/SvnTools: fixed a problem with recent changes in rcs and
+	started introduction of CMake configuration checks
+	* data/DataPkgEnvs: temporary environment files for some data packages to
+	allow testing with CMake
+	* pre-commit-hooks: allow CMake files in project tag
+
+	LbLegacy
+	* scripts/mkLHCbtar: removed obsolete dead code
+	* scripts/mkLCGCMTtar: Fixed for building LCGCMT 64b:
+	Normalize paths before comparison with the external or releases root.
+
+	LbUtils
+	* python/LbUtils/Processes.py: set the default sleeptime of RetryCommand to 0
+	* scripts/lcg-*-4.3.6: added wrapper for gcc 4.3.6
+	* data/Makefile-cmake.mk: improvements
+	* data/Makefile: modified target 'purge' to remove .pyc files
+	See https://savannah.cern.ch/bugs/?65971
+	* data/Makefile-cmake.mk: new generic Makefile for CMake-based projects
+	* cmt/requirements: install cmt2cmake as a subpackage of LbUtils
+	* cmt/update_gaudi_cmake.sh: add a dummy __init__.py to cmake/cmt2cmake
+	* scripts/cmt2cmake: simple wrapper script to call cmt2cmake.py
+	* scripts/cern-icc-wrapper.sh: shell wrapper to call the Intel compiler
+	* cmake: updated to the latest version in Gaudi
+
+
 2012-11-01 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r3
