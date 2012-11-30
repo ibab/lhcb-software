@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKi
 ################################################################################
-gaudi_subdir(LoKi v9r0)
+gaudi_subdir(LoKi v9r0p1)
 
 gaudi_depends_on_subdirs(Phys/LoKiAlgo
                          Phys/LoKiArrayFunctors
