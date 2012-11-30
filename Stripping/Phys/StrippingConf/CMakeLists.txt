@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StrippingConf
 ################################################################################
-gaudi_subdir(StrippingConf v4r7)
+gaudi_subdir(StrippingConf v4r8)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Kernel/SelectionLine
