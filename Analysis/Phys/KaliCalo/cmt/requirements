@@ -3,7 +3,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ============================================================================
 package            KaliCalo
-version            v4r13
+version            v4r13p1
 
 # ================ stucture ==================================================
 branches           cmt doc src python root 
