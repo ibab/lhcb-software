@@ -3,8 +3,39 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
-! 2012-11-29 - Marco Clemencic
- - Added CMake configuration file.
+</PRE><H1><A NAME=v33r1>2012-11-30 DaVinci v33r1</A></H1><PRE>
+
+New development release based on the LHCb v35r3 stack.
+Uses new Gaudi v23r5 release, that uses ROOT v5.34.03
+
+Executive Summary :-
+
+- (Developmetal) Support added for CMake.
+
+- Core changes :-
+ . Extend the related PV finding logic in DVCommonBase to try and predict
+   the relations table location from the Particle container TES location.
+   Also, attempt to load with and without respecting the RootInTES setting.
+ . Add a compiler warning when the depreciated DVAlgorithm.h head is included.
+   Make the runtime warning message more noticeable...
+
+- Micro DST Improvements :-
+ . Better support for creating and reading MC uDSTs
+
+- DecayTreeTuple :-
+ . Move the base classes and core components to a new package called
+    Phys/DecayTreeTupleBase.
+  + Move some components to various seperate new packages
+      DecayTreeTupleDalitz    - 'Dalitz' tools
+      DecayTreeTupleJets      - Jet tools
+      DecayTreeTupleMC        - MC tools
+      DecayTreeTupleMuonCalib - Muon PID calibration
+      DecayTreeTupleReco      - Reconstruction information tools
+      DecayTreeTupleTrigger   - Trigger and stripping tools
+ . Various improvements and bug fixes to the tools.
+
+- FlavourTagging :-
+ . Various new tunings.
 
 </PRE><H1><A NAME=v33r0p1>2012-10-23 DaVinci v33r0p1</A></H1><PRE>
 
