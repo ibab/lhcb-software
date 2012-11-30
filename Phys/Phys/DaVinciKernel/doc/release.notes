@@ -4,16 +4,19 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+!========================= DaVinciKernel v11r2 2012-11-30 =========================
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
 ! 2012-11-17 - Chris Jones
  - Extend the related PV finding logic in DVCommonBase to try and predict
    the relations table location from the Particle container TES location.
- - Also, attempt to load with and without respecting the RootInTES setting.
+   Also, attempt to load with and without respecting the RootInTES setting.
 
 ! 2012-11-16 - Chris Jones
- - Add a compiler warning when the depreciated DVAlgorithm.h head is included
+ - Add a compiler warning when the depreciated DVAlgorithm.h head is included.
+   Make the runtime warning message more noticeable...
 
 !========================= DaVinciKernel v11r1 2012-07-26 =========================
 
