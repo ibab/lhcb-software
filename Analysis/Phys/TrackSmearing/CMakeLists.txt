@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackSmearing
 ################################################################################
-gaudi_subdir(TrackSmearing v1r4)
+gaudi_subdir(TrackSmearing v1r5)
 
 gaudi_depends_on_subdirs(Event/LinkerEvent
                          Phys/DaVinciKernel)
