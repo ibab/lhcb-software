@@ -486,13 +486,13 @@ class GetPack(Script):
             return self.repositories[reps[idx]]
         except KeyError:
             return None
-        
+
     def _switchProtocol(self, local_path, protocol_start, protocol_end):
         ''' use svn switch --relocate to change the repository location from start to end
         local_path: local path to checked-out VCS package
         protocol_start: the protocol which was originally used
         protocol_end: the protocol to go to
-        
+
         '''
         self.log.debug("svn switching: "+local_path+", "+protocol_start+" to "+protocol_end)
         from LbUtils.VCS import svn_command
@@ -513,7 +513,7 @@ class GetPack(Script):
             self.log.warning("cannot switch when using a user repository, specify the protocol directly please and turn of switching")
             return False
         return svn_command("switch","--relocate","%s" % rps[protocol_start],"%s" % rps[protocol_end],local_path)
-    
+
     def _detectProtocol(self, directory):
         """
         detect the short URL used in the protocol of the checked out directory
@@ -529,7 +529,7 @@ class GetPack(Script):
                 self.log.debug(" detected ", protocol)
                 return protocol
         return "default"
-        
+
     def _ifExistsAction(self,directory):
         """
         callback command for inside the repository.checkout command, only used if switch is true
@@ -540,7 +540,7 @@ class GetPack(Script):
         protocol_old=self._detectProtocol(directory)
         self._switchProtocol(directory,protocol_old,self.options.protocol)
         return True
-    
+
     def checkout(self, package, version = "trunk"):
         # Get the repository containing the package
         rep = self._getModuleRepo(package, isProject = False)
@@ -656,8 +656,8 @@ class GetPack(Script):
             createEclipseConfiguration(pkgdir,
                                        os.environ.get("CMTPROJECTPATH",""))
         return (project, version, pkgdir)
-    
-    
+
+
     ## Prepare the repository access objects according to options
     @property
     def repositories(self):
@@ -1202,6 +1202,9 @@ class GetPack(Script):
             self.retval = 1
         except Quit:
             print "Quit!"
+            self.retval = 1
+        except rcs.RcsError, x:
+            print "Unrecoverable error:", x
             self.retval = 1
 
         #from pprint import pprint

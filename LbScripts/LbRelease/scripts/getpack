@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-# $Id: getpack,v 1.1 2009-01-13 13:32:17 hmdegaud Exp $
-
+import sys
 from LbRelease.GetPack import GetPack
 
-GetPack().run()
+sys.exit(GetPack().run())

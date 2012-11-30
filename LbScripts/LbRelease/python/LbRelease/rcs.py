@@ -5,10 +5,24 @@ from LbConfiguration.Repository import getRepositories
 from LbUtils.Temporary import TempDir
 from LbUtils.VCS import svn_repository_rexp, cvs_repository_rexp
 from LbUtils.VCS import VCS_PROTOCOL, VCS_USER, VCS_HOST, VCS_PATH
-from LbUtils.VCS import svn_command as _svn
+from LbUtils.VCS import svn_retry_command
 from LbUtils.VCS import cvs_command as _cvs
 from LbUtils.VCS import splitlines
 
+class RcsError(IOError):
+    pass
+
+class CvsError(RcsError):
+    pass
+
+class SvnError(RcsError):
+    pass
+
+def _svn(*args, **kwargs):
+    out, err, ret = svn_retry_command(*args, **kwargs)
+    if ret:
+        raise SvnError("svn call (%s, %s) failed with retcode %d" % (args, kwargs, ret))
+    return out, err, ret
 
 import logging
 

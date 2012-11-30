@@ -1,3 +1,11 @@
+2012-11-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/rcs.py: retry the calls to svn if they fail, and rais an
+	exception if they keep on failing
+	* python/LbRelease/GetPack.py: intercept the exception raised in the rcs
+	module to return a proper error code
+	* script/getpack: fixed the return code propagation
+
 2012-11-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* pre-commit-hooks: allow CMake files in project tag
@@ -15,7 +23,7 @@
 
 2012-10-29 Ben Couturier <ben.couturier@cern.ch>
 
-	* scripts/install_cmake: Added script that allows downloading and installing 
+	* scripts/install_cmake: Added script that allows downloading and installing
 	Cmake
 
 2012-10-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
