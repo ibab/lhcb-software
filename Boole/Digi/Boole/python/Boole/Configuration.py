@@ -51,7 +51,6 @@ class Boole(LHCbConfigurableUser):
         ,"FilterSequence"      : []
         ,"EnablePack"          : True
         ,"Persistency"         : None
-        ,"WithVPInfo"          : False
         }
 
     _propertyDocDct = { 
@@ -126,7 +125,11 @@ class Boole(LHCbConfigurableUser):
         if 'IT'      in self.getProp('DetectorDigi') : detListSim += ['IT']
         if 'OT'      in self.getProp('DetectorDigi') : detListSim += ['OT']
         if 'FT'      in self.getProp('DetectorDigi') : detListSim += ['FT']
-        if 'Rich'    in self.getProp('DetectorDigi') : detListSim += ['Rich']
+        if (
+            ('Rich' in self.getProp('DetectorDigi') )
+            or
+            ('RichMaPMT' in self.getProp('DetectorDigi') )
+             ) : detListSim += ['Rich']
         if 'Calo'    in self.getProp('DetectorDigi') : detListSim += ['Spd','Prs','Ecal','Hcal']
         if 'Muon'    in self.getProp('DetectorDigi') : detListSim += ['Muon']
         SimConf().setProp("Detectors",detListSim)
@@ -204,6 +207,11 @@ class Boole(LHCbConfigurableUser):
             detListDigi += ['Rich']
             if 'Rich' in self.getProp('DetectorLink') : detListLink += ['Rich']
             if 'Rich' in self.getProp('DetectorMoni') : detListMoni += ['Rich']
+
+        if 'RichMaPMT' in self.getProp('DetectorDigi') :
+            detListDigi += ['RichMaPMT']
+            if 'RichMaPMT' in self.getProp('DetectorLink') : detListLink += ['RichMaPMT']
+            if 'RichMaPMT' in self.getProp('DetectorMoni') : detListMoni += ['RichMaPMT']
 
         if 'Calo' in self.getProp('DetectorDigi') :
             detListDigi += ['Calo']
@@ -336,10 +344,10 @@ class Boole(LHCbConfigurableUser):
         if "OT"      in digiDets : self.configureDigiOT(      GaudiSequencer("DigiOTSeq"), "" )
         if "FT"      in digiDets : self.configureDigiFT(      GaudiSequencer("DigiFTSeq"), "" )
         if "Rich"    in digiDets : self.configureDigiRich(    GaudiSequencer("DigiRichSeq"), "" )
+        if "RichMaPMT"  in digiDets : self.configureDigiRichMaPMT(    GaudiSequencer("DigiRichMaPMTSeq"), "" )
         if "Calo"    in digiDets : self.configureDigiCalo(    GaudiSequencer("DigiCaloSeq"), "" )
         if "Muon"    in digiDets : self.configureDigiMuon(    GaudiSequencer("DigiMuonSeq"), "" )
         if "L0"      in digiDets : self.configureDigiL0(      GaudiSequencer("DigiL0Seq"), "" )
-
 
     def configureDigiVelo(self, seq, tae ):
         # Velo digitisation and clustering (also for PuVeto and trigger)
@@ -482,8 +490,17 @@ class Boole(LHCbConfigurableUser):
 
     def configureDigiRich(self, seq, tae ):
         if tae == "":
+            from Configurables import RichDigiSysConf
             self.setOtherProp(RichDigiSysConf(),"UseSpillover")
             RichDigiSysConf().Sequencer = GaudiSequencer("DigiRichSeq")
+        else:
+            raise RuntimeError("TAE not implemented for RICH")
+
+    def configureDigiRichMaPMT(self, seq, tae ):
+        if tae == "":
+            from Configurables import RichDigiSysConf
+            self.setOtherProp(RichDigiSysConf(),"UseSpillover")
+            RichDigiSysConf().Sequencer = GaudiSequencer("DigiRichMaPMTSeq")
             RichDigiSysConf().ChargeShareModel = "None"
             RichDigiSysConf().ResponseModel = "Copy"
             RichDigiSysConf().OutputLevel = INFO
@@ -491,7 +508,7 @@ class Boole(LHCbConfigurableUser):
             from Configurables import DigiConf
             DigiConf().DigiType = "Extended"
         else:
-            raise RuntimeError("TAE not implemented for RICH")
+            raise RuntimeError("TAE not implemented for RICHMaPMT")
             
     def configureDigiCalo(self, seq, tae ):
         # Calorimeter digitisation
@@ -571,8 +588,6 @@ class Boole(LHCbConfigurableUser):
         if "Velo" in linkDets or "Velo" in moniDets:
             from Configurables import BuildMCTrackInfoUpgrade
             BuildMCTrackInfoUpgrade().WithVelo = True
-            BuildMCTrackInfoUpgrade().OutputLevel = 2
-
 
             seq = GaudiSequencer("LinkVeloSeq")
             from Configurables import DecodeVeloRawBuffer
@@ -587,7 +602,6 @@ class Boole(LHCbConfigurableUser):
         if "VP" in linkDets:
             from Configurables import BuildMCTrackInfoUpgrade
             BuildMCTrackInfoUpgrade().WithVP = True
-            BuildMCTrackInfoUpgrade().OutputLevel = 2
 
         if "VP" in linkDets or "VP" in moniDets:
             from Configurables import VPDigit2MCHitLinker, VPDigit2MCParticleLinker, VPCluster2MCHitLinker, VPCluster2MCParticleLinker
@@ -600,7 +614,6 @@ class Boole(LHCbConfigurableUser):
         if "VL" in linkDets:
             from Configurables import BuildMCTrackInfoUpgrade
             BuildMCTrackInfoUpgrade().WithVL = True
-            BuildMCTrackInfoUpgrade().OutputLevel = 2
 
         if "VL" in linkDets or "VL" in moniDets or "Tr" in linkDets:
             seq = GaudiSequencer("LinkVLSeq")
@@ -636,8 +649,6 @@ class Boole(LHCbConfigurableUser):
             if "FT" in linkDets:
                 from Configurables import BuildMCTrackInfoUpgrade
                 BuildMCTrackInfoUpgrade().WithFT = True
-                BuildMCTrackInfoUpgrade().OutputLevel = 2
-
 
         if "OT" in linkDets or "OT" in moniDets or "Tr" in linkDets:
             seq = GaudiSequencer("LinkOTSeq")
@@ -647,7 +658,7 @@ class Boole(LHCbConfigurableUser):
 
         if "Tr" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkTrSeq")
-            if (det for det in ['VL', 'VP', 'FT', 'UT'] if det in linkDets):
+            if ([det for det in ['VL', 'VP', 'FT', 'UT'] if det in linkDets]):
                 from Configurables import BuildMCTrackInfoUpgrade
                 seq.Members += [ "BuildMCTrackInfoUpgrade" ]                
             # Old production code, for temp backwards compatability
@@ -656,6 +667,10 @@ class Boole(LHCbConfigurableUser):
 
         if "Rich" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkRichSeq")
+            seq.Members += [ "Rich::MC::MCRichDigitSummaryAlg" ]
+
+        if "RichMaPMT" in linkDets and doWriteTruth:
+            seq = GaudiSequencer("LinkRichMaPMTSeq")
             seq.Members += [ "Rich::MC::MCRichDigitSummaryAlg" ]
 
         if "Calo" in linkDets or "Calo" in moniDets:
@@ -742,6 +757,8 @@ class Boole(LHCbConfigurableUser):
                 self.configureDigiOT( GaudiSequencer("Digi%sOTSeq"%taeSlot), taeSlot )
             if "Rich" in taeDets:
                 self.configureDigiRich( GaudiSequencer("Digi%sRichSeq"%taeSlot), taeSlot )
+            if "RichMaPMT" in taeDets:
+                self.configureDigiRichMaPMT( GaudiSequencer("Digi%sRichMaPMTSeq"%taeSlot), taeSlot )
             if "Calo" in taeDets:
                 self.configureDigiCalo( GaudiSequencer("Digi%sCaloSeq"%taeSlot), taeSlot )
             if "Muon" in taeDets:
@@ -986,6 +1003,10 @@ class Boole(LHCbConfigurableUser):
         if "Rich" in moniDets:
             from Configurables import Rich__MC__Digi__DigitQC
             GaudiSequencer("MoniRichSeq").Members += [ Rich__MC__Digi__DigitQC("RiDigitQC") ]
+
+        if "RichMaPMT" in moniDets:
+            from Configurables import Rich__MC__Digi__DigitQC
+            GaudiSequencer("MoniRichMaPMTSeq").Members += [ Rich__MC__Digi__DigitQC("RiDigitQC") ]
 
         if "Calo" in moniDets:
             from Configurables import CaloDigitChecker
