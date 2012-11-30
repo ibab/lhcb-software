@@ -4,6 +4,7 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v12r1 2012-11-30 =========================
 ! 2012-11-29 - Patrick Robbe
  - Add option for Pythia6 to use the CT09MCS PDF from LHAPDF
 
