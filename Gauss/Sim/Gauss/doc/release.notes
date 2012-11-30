@@ -4,7 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!========================= Gauss v43r3 2012-11-27 ============================
+!========================= Gauss v43r3 2012-11-30 ============================
+! 2012-11-30 - Gloria Corti
+ - Pick version v2r* of GenXiccData for support to 8 TeV collisions
+
 ! 2012-11-22 - Nigel Watson
  - Updated python/Gauss/Configuration.py for QGSP_FTFP_BERT.
 
