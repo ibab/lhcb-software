@@ -3,7 +3,7 @@
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           DSTWriterTests
-version           v2r4p1
+version           v2r4p2
 
 #============================================================================
 # Structure, i.e. directories to process. 
