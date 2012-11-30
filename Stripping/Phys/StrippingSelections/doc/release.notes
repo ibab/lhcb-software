@@ -6,6 +6,9 @@
 
 !========================= StrippingSelections v3r19 2012-11-30 =========================
 
+! 2012-11-30 - Zhou Xing	
+ - Creation of StrippingB2DHHHForBXX.py for Kaon and Proton detection efficiency studies	
+
 ! 2012-11-29 - Edmund Smith
  - Added many different lines to Beauty2Charm Stripping to test tighter
    selections intended for full dst streams.
