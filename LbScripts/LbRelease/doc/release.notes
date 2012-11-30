@@ -7,6 +7,8 @@
 	* script/getpack: fixed the return code propagation
 	* python/LbRelease/SvnTools: fixed a problem with recent changes in rcs and
 	started introduction of CMake configuration checks
+	* data/DataPkgEnvs: temporary environment files for some data packages to
+	allow testing with CMake
 
 2012-11-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

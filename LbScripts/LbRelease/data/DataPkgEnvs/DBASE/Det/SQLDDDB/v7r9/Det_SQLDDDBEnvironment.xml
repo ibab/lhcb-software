@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema EnvSchema.xsd ">
+  <env:set variable="SQLDDDBROOT">${LHCBRELEASES}/DBASE/Det/SQLDDDB/v7r9</env:set>
+  <env:default variable="SQLITEDBPATH">${LHCBRELEASES}/SQLite/SQLDDDB/db</env:default>
+  <env:default variable="SQLITEUPGRADEDBPATH">${LHCBRELEASES}/SQLite/SQLDDDB_Upgrade/db</env:default>
+</env:config>

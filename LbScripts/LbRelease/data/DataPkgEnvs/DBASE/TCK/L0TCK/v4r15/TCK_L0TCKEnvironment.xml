@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema EnvSchema.xsd ">
+  <env:set variable="L0TCKROOT">${LHCBRELEASES}/DBASE/TCK/L0TCK/v4r15</env:set>
+  <env:default variable="L0TCK">${L0TCKROOT}/options</env:default>
+</env:config>

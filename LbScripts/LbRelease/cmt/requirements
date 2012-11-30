@@ -4,6 +4,8 @@ version v4r9
 use LbUtils v*
 use LbConfiguration v*
 
+path_prepend CMAKE_PREFIX_PATH "${LBRELEASEROOT}/data/DataPkgEnvs"
+
 apply_pattern python_alias script=showProjects
 apply_pattern python_alias script=usedProjects
 apply_pattern python_alias script=Benchmark
