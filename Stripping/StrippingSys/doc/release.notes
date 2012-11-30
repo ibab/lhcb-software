@@ -3,8 +3,27 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
-! 2012-11-29 - Marco Clemencic
- - Added CMake configuration file.
+!========================= StrippingSys v6r3 2012-11-30 =========================
+
+Development release. 
+
+* Phys/CommonParticles: 
+  Improve diElectron vertexing for DD configuration (new settings comes with
+    updated DiElectronMaker)
+
+* Phys/StrippingAlgs
+  Minor cleanup
+
+* Phys/StrippingConf 
+  Change default TES prefix for DecReports fromstream-dependent to 'Strip', typos fixed.
+
+* Phys/StrippingSelections 
+  Many fixed for Stripping20r1 
+
+* Phys/StrippingSettings
+  Add preliminary Stripping20r1 dictionary
+
+* Added CMake configuration file for all packages.
 
 !========================= StrippingSys v6r2p2 2012-10-08 =========================
 
