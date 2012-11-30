@@ -5,6 +5,9 @@
 !               simulation and digitization
 !-----------------------------------------------------------------------------
 
+! 2012-11-30 - Marco Clemencic
+ - Added environment XML file for future use with CMake.
+
 !======================= ParamFiles v8r7 2012-04-27 ==========================
 ! 2012-04-25 - Julien Cogan
  - add LUT for L0Muon pt computation
