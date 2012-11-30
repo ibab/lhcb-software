@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciAssociators
 ################################################################################
-gaudi_subdir(DaVinciAssociators v9r4p2)
+gaudi_subdir(DaVinciAssociators v9r5)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Event/LinkerEvent
