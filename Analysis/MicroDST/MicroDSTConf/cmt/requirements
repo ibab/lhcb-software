@@ -4,7 +4,7 @@
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           MicroDSTConf
-version           v2r10p1
+version           v2r10p2
 
 use AnalysisConf v* Phys
 #============================================================================

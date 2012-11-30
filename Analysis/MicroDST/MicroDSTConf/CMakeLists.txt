@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MicroDSTConf
 ################################################################################
-gaudi_subdir(MicroDSTConf v2r10p1)
+gaudi_subdir(MicroDSTConf v2r10p2)
 
 gaudi_depends_on_subdirs(Event/EventAssoc
                          MicroDST/MicroDSTAlgorithm
