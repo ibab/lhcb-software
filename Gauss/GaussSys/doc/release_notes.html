@@ -34,6 +34,9 @@ Purpose: LHCb Simulation program
    a macro was put in herwigpp
 
 !========================= Gauss v43r3 2012-11-27 ============================
+! 2012-11-30 - Gloria Corti
+ - Pick version v2r* of GenXiccData for support to 8 TeV collisions
+
 ! 2012-11-22 - Nigel Watson
  - Updated python/Gauss/Configuration.py for QGSP_FTFP_BERT.
 
@@ -61,6 +64,23 @@ Purpose: LHCb Simulation program
 !=========================== Mint v1r6 2012-11-28 ============================
 ! 14-11-12 - Matt Coombes
  - Added background subtraction to Miranda binning.
+
+!========================= LbPythia v12r1 2012-11-30 =========================
+! 2012-11-29 - Patrick Robbe
+ - Add option for Pythia6 to use the CT09MCS PDF from LHAPDF
+
+!========================= GenXicc v2r0 2012-11-29 ===========================
+! 2012-10-23 Feng ZHANG
+ - (1) FULLPATHNAME for the grid files modified and new path for different
+   energy point added
+   (2) FIVE source files changed
+   evntinit.F  outerpdf.F  parameter.F  upopenfile.F  vagas.F
+   (3) obsolete some initial values in "setxiccdefaultparameters".
+   All parameters controlled by LBGENXICC now in need.
+
+!========================= GenTune v1r0p1 2012-11-26 =========================
+! 2012-10-22 - Alex Grecu
+ - disable "unused parameter" warnings from Rivet library
 
 !======================== GaussTools v18r1 2012-11-27 ========================
 ! 2012-11-15 - Nigel Watson
@@ -103,10 +123,6 @@ Purpose: LHCb Simulation program
  - Made adaptations for Geant 4.95. 
    These are backward incompatible changes for Geant4 and won't work with
    previous versions of Geant4 and Gauss which uses these earlier versions.
-
-!========================= GenTune v1r0p1 2012-11-26 =========================
-! 2012-10-22 - Alex Grecu
- - disable "unused parameter" warnings from Rivet library
 
 !=============================================================================
 </PRE><H1><A NAME="v42r2">2012-10-22 - GaussSys v42r2</A></H1><PRE>
