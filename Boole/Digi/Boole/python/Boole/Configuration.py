@@ -20,7 +20,7 @@ class Boole(LHCbConfigurableUser):
     
     __slots__ = {
         "DetectorInit": {"DATA":['Data'],"MUON":['Muon']}
-        ,"DetectorDigi": ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Calo', 'Muon', 'L0']
+        ,"DetectorDigi": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0']
         ,"DetectorLink": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0']
         ,"DetectorMoni": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0', 'MC']
         ,"EvtMax"              : -1
@@ -232,9 +232,6 @@ class Boole(LHCbConfigurableUser):
                 if 'L0' in self.getProp('DetectorMoni') : detListMoni += ['L0']
 
         if 'MC' in self.getProp('DetectorMoni') : detListMoni += ['MC']
-
-        # Set the properties of DigiConf
-        DigiConf().setProp("Detectors",detListLink)
 
         initDets   = self._setupPhase( "Init",   detListInit )
         digiDets   = self._setupPhase( "Digi",   detListDigi )
