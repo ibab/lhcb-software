@@ -740,6 +740,6 @@ TimingAuditor.T...   INFO *     UnpackMCPrsHits         |     1.100 |     2.872 
 TimingAuditor.T...   INFO *     UnpackMCEcalHits        |     1.500 |     3.388 |    0.416      17.7 |      10 |     0.034 |
 TimingAuditor.T...   INFO *     UnpackMCHcalHits        |     0.500 |     2.098 |    0.266      10.0 |      10 |     0.021 |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-DataOnDemandSvc      INFO Handled "DataFault" incidents: 130/40/1090(Alg/Node/Total).
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 130/40/1130(Alg/Node/Total).
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

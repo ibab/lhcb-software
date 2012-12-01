@@ -3,6 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Updates to qmtest reference files
  - Corrections to Configuration.py for Rich{,MaPMT} and use of BuildMCTrackInfoUpgrade
  - Rewrite of Configuration.py to accommodate upgrade detectors.
 
