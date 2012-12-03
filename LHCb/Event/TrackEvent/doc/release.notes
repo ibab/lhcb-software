@@ -4,6 +4,8 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+! 2012-12-03 - Heinrich Schindler
+ - Add VL measurement
 ! 2012-11-29 - Olivier Callot
  - Add FT in the measurment list
 
