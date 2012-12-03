@@ -4,7 +4,7 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
-</PRE><H1><A NAME="v43r3">2012-11-28 - GaussSys v43r3</A></H1><PRE>
+</PRE><H1><A NAME="v43r3">2012-12-04 - GaussSys v43r3</A></H1><PRE>
 <H2><A NAME="Note">Development release with Geant4 9.5.p02
     </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -23,7 +23,8 @@ Purpose: LHCb Simulation program
    alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
    <b>herwig++ 2.6.1a and thepeg 1.8.1</b> (via LCG_GeneratorsInterfaces),
    <b>rivet 1.8.1</b> (via LCG_GeneratorsInterfaces),
-   EvtGen v12r11, BcVegPy v3r1, HidValley and GenXicc private LHCb versions 
+   EvtGen v12r11(private LHCb version),
+   BcVegPy v3r1, <b>GenXicc v2r0</b> and HidValley v3r2 (private LHCb versions)
 </A></H3>
 
 ! 2012-11-27 - Gloria Corti
@@ -68,6 +69,19 @@ Purpose: LHCb Simulation program
 !========================= LbPythia v12r1 2012-11-30 =========================
 ! 2012-11-29 - Patrick Robbe
  - Add option for Pythia6 to use the CT09MCS PDF from LHAPDF
+
+!========================= LbPythia8 v5r1 2012-12-03 =========================
+! 2012-12-03 - Aurelien Martens
+ - update options
+ - cleanup in src file
+ - added new option file for new LHAPDF CT09MCS
+
+! 2012-11-30 - Aurelien Martens
+ - Reviewed handling of options to pythia8 instance
+ - Added interface between LHCb's BeamTool and Pythia8 BeamShape
+ - Cleanup of commented code.
+ - Keep the good old CommandVector as possible option
+ (processed last so that it overwrites any previous setting).
 
 !========================= GenXicc v2r0 2012-11-29 ===========================
 ! 2012-10-23 Feng ZHANG

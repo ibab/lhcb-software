@@ -35,7 +35,7 @@ use LbHidValley         v3r2    Gen
 use LbOniaPairs         v1r2    Gen
 
 # Generators packages: alternative to Pythia6 for pp collisions
-use LbPythia8           v5r0    Gen
+use LbPythia8           v5r1    Gen
 use LbHerwigpp          v2r0    Gen
 
 # Generators packages: alternative to Pythia6 for p-A collisions
