@@ -12,20 +12,15 @@ using namespace Gaudi::Units;
 // 2006-03-15 : Yuehong Xie
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( OfflineVertexFitter )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
-                                            const std::string& name,
-                                            const IInterface* parent )
-    : GaudiTool ( type, name , parent )
-    , m_photonID(22)
-    , m_pi0ID(111)
-    , m_transporter()
-    , m_transporterName ("ParticleTransporter:PUBLIC")
+OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+  : GaudiTool  ( type, name , parent )
+  , m_photonID ( 22                  )
+  , m_pi0ID    ( 111                 )
 {
   declareInterface<IVertexFit>       (this);
   declareInterface<IParticleCombiner>(this);
@@ -39,7 +34,9 @@ DECLARE_TOOL_FACTORY( OfflineVertexFitter )
   declareProperty( "maxIter", m_maxIter = 10);
   declareProperty( "maxDeltaChi2", m_maxDeltaChi2 = 0.001);
   declareProperty( "maxDeltaZ",  m_maxDeltaZ = 1.0 * mm) ;
-  declareProperty( "Transporter", m_transporterName );
+  declareProperty( "Transporter", m_transporterName = "ParticleTransporter:PUBLIC" );
+
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -71,10 +68,9 @@ StatusCode OfflineVertexFitter::initialize()
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
-StatusCode OfflineVertexFitter::fit
-( const LHCb::Particle::ConstVector& parts,
-  LHCb::Vertex&   V ,
-  LHCb::Particle& P ) const
+StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
+                                     LHCb::Vertex&   V ,
+                                     LHCb::Particle& P ) const
 {
   if ( msgLevel(MSG::DEBUG) )
   {
@@ -103,7 +99,7 @@ StatusCode OfflineVertexFitter::fit
 
   if (msgLevel(MSG::DEBUG)) debug() << "starting classifying particles to fit " <<endmsg;
 
-  for ( Particle::ConstVector::const_iterator iPart = parts.begin(); 
+  for ( Particle::ConstVector::const_iterator iPart = parts.begin();
         iPart != parts.end(); ++iPart )
   {
     const Particle* parPointer = *iPart;
@@ -170,7 +166,7 @@ StatusCode OfflineVertexFitter::fit
       return sc;
     }
   }
-  
+
   for ( Particle::ConstVector::const_iterator iterP = Photons.begin();
         iterP != Photons.end(); ++iterP )
   {
@@ -260,7 +256,7 @@ StatusCode OfflineVertexFitter::fit
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
-StatusCode 
+StatusCode
 OfflineVertexFitter::fit( LHCb::Vertex& V ,
                           const LHCb::Particle::ConstVector& parts ) const
 {
@@ -377,41 +373,56 @@ StatusCode OfflineVertexFitter::classify(const LHCb::Particle* part,
 //  method to seed a vertex
 //==================================================================
 
-StatusCode 
+StatusCode
 OfflineVertexFitter::seeding(LHCb::Particle& part,
                              LHCb::Particle::ConstVector& FlyingParticles,
                              LHCb::Particle::ConstVector& VertexedParticles) const
 {
   StatusCode sc = StatusCode::FAILURE;
 
-  if(VertexedParticles.size()<1 && FlyingParticles.size()<2) return StatusCode::FAILURE;
+  if ( VertexedParticles.size() < 1 && 
+       FlyingParticles.size()   < 2 ) 
+  {
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << "seeding:: Input particles error" << endmsg;
+    return StatusCode::FAILURE;
+  }
 
-  if(VertexedParticles.size()>0)
+  if ( !VertexedParticles.empty() )
   {
     const LHCb::Particle* vertpart = VertexedParticles.back();
     VertexedParticles.pop_back();
-    addToOutgoingParticles(*(part.endVertex()),vertpart);
+    addToOutgoingParticles( *(part.endVertex()), vertpart );
 
     Gaudi::Vector7 V7;
     Gaudi::SymMatrix7x7 C7;
-    double chi2 = 0.;
-    int NDoF = 0;
-    getParticleInfo(*vertpart, V7, C7, chi2, NDoF);
-    double nominalMass=0.0;
-    const bool constrainM=requireMassConstraint(vertpart,nominalMass);
-    if(constrainM) {
-      sc=constrainMass(V7, C7, nominalMass);
-      if(sc.isFailure()) return StatusCode::FAILURE;
+    double chi2(0);
+    int NDoF(0);
+    getParticleInfo( *vertpart, V7, C7, chi2, NDoF );
+    double nominalMass(0.0);
+    const bool constrainM = requireMassConstraint(vertpart,nominalMass);
+    if ( constrainM ) 
+    {
+      sc = constrainMass(V7, C7, nominalMass);
+      if ( sc.isFailure() ) 
+      {
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << "seeding:: Failed to constrainMass" << endmsg;
+        return sc;
+      }
     }
-    if(!m_includeDauVertexChi2) {
+    if ( !m_includeDauVertexChi2 )
+    {
       //don't include resonance veretx chi2 and NDoF!
       chi2 = 0.;
       NDoF = 0;
     }
     sc = updateParticle(part, V7, C7, chi2, NDoF);
+    if ( sc.isFailure() && msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "seeding:: VertexedParticles updateParticle failed" << endmsg;
+    }
 
   }
-  else if (FlyingParticles.size()>1)
+  else if ( !FlyingParticles.empty() )
   {
 
     const LHCb::Particle* flypart1 = FlyingParticles.back();
@@ -423,13 +434,21 @@ OfflineVertexFitter::seeding(LHCb::Particle& part,
 
     Gaudi::Vector7 V7;
     Gaudi::SymMatrix7x7 C7;
-    double chi2;
+    double chi2(0);
     const int NDoF(1);
 
-    sc =  fitTwo(flypart1, flypart2, V7, C7, chi2);
-    if(sc.isFailure()) return StatusCode::FAILURE;
+    sc = fitTwo(flypart1, flypart2, V7, C7, chi2);
+    if ( sc.isFailure() )
+    {
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "seeding:: fitTwo failed" << endmsg;
+      return sc;
+    }
 
     sc = updateParticle(part, V7, C7, chi2, NDoF);
+    if ( sc.isFailure() && msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "seeding:: FlyingParticles updateParticle failed" << endmsg;
+    }
 
   }
 
@@ -456,8 +475,8 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
 
   const double z2=Vm7[2];
 
-  double nominalMassDau=0.0;
-  const bool constrainMDau=requireMassConstraint(dau,nominalMassDau);
+  double nominalMassDau    = 0.0;
+  const bool constrainMDau = requireMassConstraint(dau,nominalMassDau);
 
   LHCb::Particle transParticleDau;
   sc = m_transporter->transportAndProject(dau, z2, transParticleDau);
@@ -677,7 +696,7 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
 //  method to add a vertexed particle
 //==================================================================
 StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
-                                            const LHCb::Particle * dau) const 
+                                            const LHCb::Particle * dau) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -700,10 +719,10 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
   int dauNDoF = 0;
   getParticleInfo(*dau, daupara, daucov, dauchi2, dauNDoF);
 
-  if(constrainMDau) 
+  if ( constrainMDau )
   {
-    sc=constrainMass(daupara, daucov, nominalMassDau);
-    if(sc.isFailure()) return StatusCode::FAILURE;
+    sc = constrainMass(daupara, daucov, nominalMassDau);
+    if ( sc.isFailure() ) return StatusCode::FAILURE;
   }
 
   Gaudi::Vector7 daumpara;
@@ -720,7 +739,7 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
   }
 
   SymMatrix14x14 Cx;
-  for(int l1=0;l1<7;++l1) 
+  for(int l1=0;l1<7;++l1)
   {
     for(int l2=0;l2<=l1;++l2)
     {
@@ -769,7 +788,7 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
     ROOT::Math::SVector<double, 3> d = f - D*vfit;
 
     Gaudi::SymMatrix3x3 VD=ROOT::Math::Similarity<double,3,14>(D, Cx);
-    if(!VD.Invert()) 
+    if(!VD.Invert())
     {
       if (msgLevel(MSG::DEBUG))
         debug() << "could not invert matrix VD in addVertexed! " <<endmsg;
@@ -1499,7 +1518,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     Gaudi::SymMatrix7x7 dau2cov;
     double dau2chi2 = 0.;
     int dau2NDoF = 0;
-    getParticleInfo(transParticle2, dau2para, dau2cov, dau2chi2, dau2NDoF);
+    getParticleInfo( transParticle2, dau2para, dau2cov, dau2chi2, dau2NDoF );
     if ( constrainM2 )
     {
       sc = constrainMass(dau2para, dau2cov, nominalM2);
@@ -1572,7 +1591,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     double chi2Previous=9999.;
     chi2=999.;
 
-    while ( !converged && iter< m_maxIter )  
+    while ( !converged && iter< m_maxIter )
     {
       ++iter;
 
@@ -1775,17 +1794,31 @@ StatusCode OfflineVertexFitter::updateParticle( LHCb::Particle& part,
 
   Gaudi::Vector7 Vm7;
   Gaudi::SymMatrix7x7 Cm7;
-  convertE2M(V7,C7,Vm7,Cm7);
+  convertE2M( V7, C7, Vm7, Cm7 );
 
   const double measuredMass = Vm7[6];
   double measuredMassErr    = Cm7(6,6);
 
-  if ( measuredMassErr<0 )
+  if ( msgLevel(MSG::DEBUG) )
   {
-    //warning() << "Negative MeasuredMassError^2 = " <<  measuredMassErr << endmsg;
+    debug() << "Vm7 = " << Vm7 << endmsg;
+    debug() << "Cm7 = " << Cm7 << endmsg;
+  }
+
+  if ( measuredMassErr < -999 )
+  {
+    // 'Very' negative mass error, so declare fit failed ...
     sc = StatusCode::FAILURE;
   }
-  // if ( measuredMassErr>0 )
+  if ( measuredMassErr < 0 )
+  {
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << " -> Negative MeasuredMassError^2 = " <<  measuredMassErr 
+              << " reset to mass^2 = " << std::pow(measuredMass,2)
+              << endmsg;
+    measuredMassErr = std::pow(measuredMass,2);
+  }
+
   // CRJ : Stripping packing cannot handle negative errors,
   //       nor do they really make any physical sense ..
   measuredMassErr = std::sqrt( std::fabs(measuredMassErr) );
@@ -1862,11 +1895,11 @@ void OfflineVertexFitter::convertE2M(const Gaudi::Vector7& V7,
 {
   Gaudi::Matrix7x7 Te2m = ROOT::Math::SMatrixIdentity();
 
-  double px     = V7[3];
-  double py     = V7[4];
-  double pz     = V7[5];
-  double energy = V7[6];
-  double mass   = std::sqrt(energy*energy-px*px-py*py-pz*pz);
+  const double px     = V7[3];
+  const double py     = V7[4];
+  const double pz     = V7[5];
+  const double energy = V7[6];
+  const double mass   = std::sqrt( (energy*energy) - (px*px) - (py*py) - (pz*pz) );
 
   Te2m(6,3) = -px/mass;
   Te2m(6,4) = -py/mass;
@@ -1874,10 +1907,10 @@ void OfflineVertexFitter::convertE2M(const Gaudi::Vector7& V7,
   Te2m(6,6) = energy/mass;
 
   // JPP translation
-  Cm7 = ROOT::Math::Similarity<double,7,7>(Te2m, C7);
+  Cm7 = ROOT::Math::Similarity<double,7,7>( Te2m, C7 );
 
-  Vm7=V7;
-  Vm7[6]= mass;
+  Vm7    = V7;
+  Vm7[6] = mass;
 }
 
 //=============================================================================
@@ -2105,7 +2138,7 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
   const int pid = pi0.particleID().pid();
   if ( pid != m_pi0ID )
   { return Error ( "Particle is not a photon!" ) ; }
-  
+
   const LHCb::ProtoParticle*   proto  = pi0.proto() ;
   if ( !proto )
   { return Error ( "ProtoParticle points to NULL!" ) ; }
@@ -2155,3 +2188,7 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
   return sc;
 }
 
+//=============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( OfflineVertexFitter )
+//=============================================================================
