@@ -166,7 +166,7 @@ StatusCode PrLHCbID2MCParticle::execute() {
     if ( !otLink.notFound() ) {
       m_detectorLink = &otLink;
       if ( !m_otReady ) {
-        m_otHitCreator->initialize();
+        m_otHitCreator.retrieve().ignore();
         m_otReady = true;
       }
       Tf::OTHitRange othits = m_otHitCreator->hits();
