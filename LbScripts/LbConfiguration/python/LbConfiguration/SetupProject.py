@@ -1295,10 +1295,19 @@ class SetupProject:
                 and lhcb_style_version.match(self.project_info.version): # I do not want to record non-standard or no versions
                 dirname = os.environ['LHCB_USERLOGS']
                 if os.path.isdir(dirname):
-                    touchline= 'touch %s/%s_%s_%s >& /dev/null\n'%(dirname,
+                    try:
+                        subdir = os.path.join(dirname, self.project_info.name.upper())
+                        if not os.path.exists(subdir):
+                            os.mkdir(subdir)
+                        touchline= 'touch %s/%s/%s_%s_%s >& /dev/null\n'%(dirname,
+                                                  self.project_info.name.upper(),
                                                   self.project_info.name.upper(),
                                                   self.project_info.version,
                                                   self.environment["USER"])
+                    except OSError:
+                        # if we cannot create the directory, we do not touch the
+                        # file
+                        pass
         return touchline
 
     def _prepare_tmp_local_project(self):

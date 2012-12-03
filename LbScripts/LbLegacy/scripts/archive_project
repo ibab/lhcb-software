@@ -138,9 +138,12 @@ set list = `ls ${LHCBTAR}/html/${PACKAGE}_${VERSION}_*.html`
 if ($status == "0") /bin/rm -i $list
 
 # remove logfile
-echo " remove ${LHCBHOME}/project/logfiles/${VERSION}_* logfiles"
-set list = `ls ${LHCBHOME}/project/logfiles/${VERSION}_*`
-if ($status == "0") rm  $list
+echo " remove ${LHCBHOME}/project/logfiles/${PACKAGE}/${VERSION}_* logfiles"
+foreach logdir ( ${LHCBHOME}/project/logfiles ${LHCBHOME}/project/logfiles/${PACKAGE} )
+  if ( -d ${logdir} )
+    find ${logdir} -noleaf -maxdepth 1 -name "${VERSION}_*" -exec rm \{} \;
+  endif
+end
 
 # remove documentation
 if ( -d  ${LHCBDOC}/${project}/releases/${version} ) then
