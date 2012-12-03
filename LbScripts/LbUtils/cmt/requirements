@@ -31,5 +31,6 @@ action install_env_script "$(install_command) ../cmake/env.py $(CMTINSTALLAREA)/
 macro_append constituents " install_env_script"
 macro_remove cmt_actions_constituents "install_env_script"
 
+path_remove CMAKE_PREFIX_PATH "/LbUtils/"
 path_prepend CMAKE_PREFIX_PATH "${LBUTILSROOT}/cmake"
 #path_prepend GAUDI_CMAKE_MODULE_PATH "${LBUTILSROOT}/cmake/modules"

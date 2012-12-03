@@ -5,6 +5,7 @@
 	without a 'branches' directory, but issuing a warning.
 	Minor improvement in logging.
 	* python/LbRelease/GetPack.py: fixed wrong warning
+	* cmt/requirements: clean CMAKE_PREFIX_PATH before setting it
 
 2012-11-30 Ben Couturier <Ben.Couturier@cern.ch>
 

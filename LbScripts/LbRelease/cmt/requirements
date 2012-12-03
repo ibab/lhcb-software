@@ -4,6 +4,7 @@ version v4r10
 use LbUtils v*
 use LbConfiguration v*
 
+path_remove CMAKE_PREFIX_PATH "/LbRelease/"
 path_prepend CMAKE_PREFIX_PATH "${LBRELEASEROOT}/data/DataPkgEnvs"
 
 apply_pattern python_alias script=showProjects
