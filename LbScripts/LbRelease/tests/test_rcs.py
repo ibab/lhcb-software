@@ -75,7 +75,7 @@ def teardown():
 def test_properties():
     rep = connect(repo_url)
     assert rep.repositoryVersion == ('2', '0'), rep.repositoryVersion
-    assert rep.packages == ['ProjPkgA', 'ProjPkgB', 'ProjSys', 'SomePkg'], rep.packages
+    assert rep.packages == ['Hat/NoBranch', 'ProjPkgA', 'ProjPkgB', 'ProjSys', 'SomePkg'], rep.packages
     assert sorted(rep.projects) == ['BestProj', 'Proj', 'ProjB', 'obs', 'pkgs'], sorted(rep.projects)
 
 def test_tag_package():
@@ -100,6 +100,11 @@ def test_tag_package():
     assert retcode == 0, 'Tagging ProjPkgA v1r1 (from v1b) -> %d' % retcode
     rep = connect(repo_url) # refresh infos
     assert rep._exists('Proj/tags/ProjPkgA/v1r1/cmt/requirements')
+
+    retcode = rep.tag('Hat/NoBranch', 'v1r9')
+    assert retcode == 0, 'Tagging Hat/NoBranch v1r9 -> %d' % retcode
+    rep = connect(repo_url) # refresh infos
+    assert rep._exists('ProjB/tags/Hat/NoBranch/v1r9/cmt/requirements')
 
 def test_checkout_package():
     rep = connect(repo_url)
@@ -268,6 +273,24 @@ def test_checkout_cmake_project():
 
         assert all(map(check('PROJB/PROJB_v1r0'), expected_files))
 
+
+    finally:
+        os.chdir(olddir)
+        rmtree(workdir, ignore_errors=True)
+
+def test_checkout_package_nobranch():
+    rep = connect(repo_url)
+    rep.useBranches = True
+    olddir = os.getcwd()
+    workdir = mkdtemp()
+    def check(d):
+        return exists(join(workdir, d))
+    try:
+        # tag
+        rep.checkout('Hat/NoBranch', 'v1r9', dest=workdir)
+
+        assert all(map(check,['Hat/NoBranch/cmt/requirements', 'Hat/NoBranch/cmt/version.cmt']))
+        assert open(join(workdir, 'Hat/NoBranch/cmt/version.cmt')).read().strip() == 'v1r9'
 
     finally:
         os.chdir(olddir)
