@@ -19,20 +19,20 @@
   + Add some missing imports
 
 ! 2012-11-07 - Olivier Deschamps for Edwige Tournefier
-  - improve diElectron vertexing for DD configuration (new settings comes with 
-    updated DiElectronMaker)
+ - improve diElectron vertexing for DD configuration (new settings comes with 
+   updated DiElectronMaker)
 
 !========================= CommonParticles v8r10 2012-09-01 =========================
 
 ! 2012-09-01 - Anton Poluektov 
-  - fix test_inputlocations_consistency
+ - fix test_inputlocations_consistency
 
 ! 2012-08-30 - Olivier Deschamps
-	- fix typo in StdVeryLooseAllPhotons name
+- fix typo in StdVeryLooseAllPhotons name
 
 ! 2012-08-24 - Susan Haines
-- Removed StdVeryLooseKs.py
-- Removed lines related to StdVeryLooseKs from StandardV0.py
+ - Removed StdVeryLooseKs.py
+ - Removed lines related to StdVeryLooseKs from StandardV0.py
 
 ! 2012-08-23 - Thomas Blake
  - Added StandardTau and StandardDipion to StandardIntermediate 
