@@ -109,7 +109,6 @@ StatusCode Pythia8Production::initialize( ) {
   m_pythiaBeamTool = new BeamToolForPythia8( m_beamTool, m_pythia->settings, sc );
   if ( ! sc.isSuccess() )
     return Error( "Cannot initialize BeamToolForPythia8" , sc ) ;
-  m_pythia -> readString("Beams:allowMomentumSpread = on");
   m_pythia -> setBeamShapePtr( m_pythiaBeamTool );
 
   return initializeGenerator() ;
@@ -165,7 +164,9 @@ StatusCode Pythia8Production::initializeGenerator( ) {
     Warning ( "Cannot find "+m_tuningUserFile+", thus default LHCb tune is not overwritten" ) ;
   
   // also read a vector of commands if any is provided, for backward compatibility
+  // this will overwrite anything that is passed through a user tuning file
   for (unsigned int count = 0; count<m_commandVector.size(); ++count) {  
+    cout << m_commandVector[count] << endl;
     success = m_pythia->readString(m_commandVector[count]);
   }
   
@@ -206,6 +207,9 @@ void Pythia8Production::setStable( const LHCb::ParticleProperty * thePP ) {
 //=============================================================================
 void Pythia8Production::updateParticleProperties( const LHCb::ParticleProperty * 
                                                   thePP ) {
+  
+  //this can probalbly be passed by otpions instead. (and read through the readFile(...))
+  
   int pythiaId = thePP -> pythiaID() ;
   int pdgId = thePP -> pid().pid();
   double pwidth , lifetime ;

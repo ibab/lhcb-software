@@ -22,6 +22,7 @@ Init:showChangedSettings = on
 Next:numberShowInfo = 0 
 Next:numberShowProcess = 0 
 Next:numberShowEvent = 1
+Next:numberCount = 0
 # -------------------------------
 # process selection
 # -------------------------------
@@ -32,6 +33,7 @@ SoftQCD:all = on
 SigmaProcess:alphaSorder = 2
 # -------------------------------
 # pdf selection
+# be carefull it changes (behind the scene) pythia8 settings
 # -------------------------------
 PDF:useLHAPDF = on 
 PDF:LHAPDFset = cteq6ll.LHpdf 
@@ -39,6 +41,7 @@ PDF:LHAPDFmember = 0
 # -------------------------------
 # rough tuning for pythia8 and cteq6L1
 # -------------------------------
+MultipartonInteractions:bProfile = 1 # reset the default bProfile
 MultipartonInteractions:ecmRef = 7000
 MultipartonInteractions:pT0Ref = 2.88
 MultipartonInteractions:ecmPow = 0.238
@@ -73,15 +76,15 @@ StringFlav:mesonBL1S1J2 = 0.2986
 StringFlav:etaSup = 1.
 StringFlav:etaPrimeSup = 0.4
 # -------------------------------
-# cross sections tuning (needs verification)
+# cross sections tuning (as in pythia6 default)
 # -------------------------------
-SigmaProcess:renormMultFac = 0.075 
-BeamRemnants:primordialKThard = 1.0
+#SigmaProcess:renormMultFac = 0.075 
+#BeamRemnants:primordialKThard = 1.0
 # -------------------------------
 # Lund fragmentation tuning (as in pythia6 default)
 # -------------------------------
-StringFragmentation:stopMass = 0.4
-StringZ:aLund = 0.3 
-StringZ:bLund = 0.58 
-StringZ:rFactB = 1.
-StringPT:sigma = 0.36
+#StringFragmentation:stopMass = 0.4
+#StringZ:aLund = 0.3 
+#StringZ:bLund = 0.58 
+#StringZ:rFactB = 1.
+#StringPT:sigma = 0.36

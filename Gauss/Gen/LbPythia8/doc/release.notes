@@ -4,6 +4,10 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2012-12-03 - Aurelien Martens
+ - update options
+ - cleanup in src file
+
 ! 2012-11-30 - Aurelien Martens
  - Reviewed handling of options to pythia8 instance
  - Added interface between LHCb's BeamTool and Pythia8 BeamShape
