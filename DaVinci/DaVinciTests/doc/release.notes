@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-12-03 - Chris Jones
+ - Adapt DVTestWriteDst.py to DSTWriter changes
+
 !========================= DaVinciTests v2r15 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

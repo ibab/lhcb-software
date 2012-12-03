@@ -22,7 +22,7 @@ from Configurables import GaudiSequencer, FilterDesktop, DeterministicPrescaler,
 from PhysSelPython.Wrappers import Selection, DataOnDemand, SelectionSequence
 #from Configurables import SelDSTWriter
 from DSTWriters.Configuration import SelDSTWriter
-from DSTWriters.microdstelements import CloneMCInfo
+from DSTWriters.microdstelements import CloneParticleMCInfo
 
 MyLooseJpsi = DataOnDemand(Location = 'Phys/StdLooseJpsi2MuMu/Particles')
 
@@ -63,7 +63,7 @@ for i in MassRanges :
 dstWriter = SelDSTWriter("JpsiDSTWriter_"+name,
                          SelectionSequences = selections)
 
-dstWriter.MicroDSTElements['default'] += [CloneMCInfo()]
+dstWriter.MicroDSTElements['default'] += [CloneParticleMCInfo()]
 
 seq = dstWriter.sequence()
 
