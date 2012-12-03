@@ -8,7 +8,7 @@
 
 ! 2012-12-03 - Chris Jones
  - Rework the check for negative MeasuredMassError^2 values in OfflineVertexFitter
-   to only decalre the fit a failure if the value is 'very' negative (<-999).
+   to only declare the fit a failure if the value is 'very' negative (<-999).
    Allows for cases where the value is only just negative (-1e-9).
 
 ! 2012-11-29 - Marco Clemencic

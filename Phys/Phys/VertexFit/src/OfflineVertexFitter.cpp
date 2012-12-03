@@ -1814,9 +1814,8 @@ StatusCode OfflineVertexFitter::updateParticle( LHCb::Particle& part,
   {
     if ( msgLevel(MSG::DEBUG) ) 
       debug() << " -> Negative MeasuredMassError^2 = " <<  measuredMassErr 
-              << " reset to mass^2 = " << std::pow(measuredMass,2)
-              << endmsg;
-    measuredMassErr = std::pow(measuredMass,2);
+              << " reset to 0" << endmsg;
+    measuredMassErr = 0;
   }
 
   // CRJ : Stripping packing cannot handle negative errors,
