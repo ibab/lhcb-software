@@ -28,7 +28,7 @@
  - fix test_inputlocations_consistency
 
 ! 2012-08-30 - Olivier Deschamps
-- fix typo in StdVeryLooseAllPhotons name
+ - fix typo in StdVeryLooseAllPhotons name
 
 ! 2012-08-24 - Susan Haines
  - Removed StdVeryLooseKs.py
