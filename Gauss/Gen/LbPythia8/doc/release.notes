@@ -7,6 +7,7 @@
 ! 2012-12-03 - Aurelien Martens
  - update options
  - cleanup in src file
+ - added new option file for new LHAPDF CT09MCS
 
 ! 2012-11-30 - Aurelien Martens
  - Reviewed handling of options to pythia8 instance
