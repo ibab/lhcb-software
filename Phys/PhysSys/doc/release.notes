@@ -11,7 +11,7 @@ Development release, based on Rec v14r3, LHCb v35r3.
 
 - Packages modified (other than to just support CMake):
     DaVinciKernel, DaVinciTools, DecayTreeFitter, HighPtJets, LoKiFitters,
-    LoKiJets, ParticleMaker, PhysConf
+    LoKiJets, ParticleMaker, PhysConf, VertexFit
 
 - In DaVinciKernel :
  . Extend the related PV finding logic in DVCommonBase to try and predict
@@ -31,6 +31,11 @@ Development release, based on Rec v14r3, LHCb v35r3.
 
 - In LoKiFitters :
  . Pass TrackStateProvider to DTF to improve Ks tracks in 2012 dsts.
+
+- In VertexFit :
+ . Rework the check for negative MeasuredMassError^2 values in OfflineVertexFitter
+   to only declare the fit a failure if the value is 'very' negative (<-999).
+   Allows for cases where the value is only just negative (-1e-9).
 
 - In LoKiJets :
  . Make compatible with FastJet 3.0
