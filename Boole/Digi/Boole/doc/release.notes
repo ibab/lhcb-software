@@ -3,13 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- - Ensured DigiConf recieves 'Tr' in it's list of Detectors by only writing to it once
- - Updates to qmtest reference files
- - Corrections to Configuration.py for Rich{,MaPMT} and use of BuildMCTrackInfoUpgrade
- - Rewrite of Configuration.py to accommodate upgrade detectors.
-
- - Added missing corrections from JC
- - Added UT to Configuration.py - Paul Szczypka
+ - Changes to configurable
+   . DetectorDigi, DetectorLink, DetectorMoni slots are now lists, 
+     no longer dictionaries
+   . Added upgrade detectors VL, VP, UT, RichMaPMT (off by default)
+   . Use BuildMCTrackInfoUpgrade instead of BuildMCTrackInfo is upgrade
+     detectors are enabled
+   . Ensured DigiConf receives 'Tr' in list of Detectors
 
  - Changes to references to follow changes in underlying packages
    . Adapt boole-2012-latestdb.ref to new local tags it-20121025, tt-20121025
