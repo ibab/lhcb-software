@@ -69,7 +69,7 @@ def get_native_versions(native_version):
     else:
         GENSERVERSION = value
     packages_versions['GENSER'] = GENSERVERSION
-    
+
     for fdline in os.popen('cmt show macros native').readlines():
         if fdline.find('config_version') == -1:
             pack = fdline.split('_')[0]
@@ -140,7 +140,7 @@ def get_MCGen_base(package_home, genname, genversion):
 def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
 
     if debug_flag == 1: print ' get_tar_files for GENSER %s %s '%(packages_versions['GENSER'],binary_dir)
-    
+
     GENSER_vers = 'GENSER_'+packages_versions['GENSER']
     tarfile = os.path.join(outputdir,GENSER_vers+'_'+binary_dir+'.tar.gz')
     md5file = os.path.join(outputdir,GENSER_vers+'_'+binary_dir+'.md5')
@@ -169,6 +169,9 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
                     print "Running: %s" % str
                 rc = os.system(str)
                 if key == 'lhapdf':
+                    #
+                    # Extraction of PDFs cteq6ll/cteq6l
+                    #
                     str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
                     if debug_flag == 1:
                         print "Running: %s" % str
@@ -190,6 +193,20 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
                     if rc == 0 :
                         print "%s/share/PDFsets/cteq6l.LHpdf found in %s" % (key_value, file)
                         print "%s/share/PDFsets/cteq6ll.LHpdf found in %s" % (key_value, file)
+                    #
+                    # Extra list of PDFs to be added to the Genser release
+                    extra_pdfs = [ '/share/lhapdf/PDFsets/CT09MCS.LHgrid', '/share/lhapdf/PDFsets/CT10nlo.LHgrid',
+                                  '/share/lhapdf/PDFsets/MSTW2008lo68cl.LHgrid', '/share/lhapdf/PDFsets/MSTW2008nlo68cl.LHgrid']
+                    for p in extra_pdfs:
+                        cmd = 'tar --extract --ungzip --file '+file+' '+key_value + p
+                        if debug_flag == 1:
+                            print "Running: %s" % cmd
+                        rc = os.system(cmd)
+                        if rc == 0 :
+                            print "*** Found %s in %s" % (p, file)
+                        else:
+                            print "*** Missing %s in %s" % (p, file)
+
                 os.remove(file)
 
         os.chdir(tmpdir.getName())
