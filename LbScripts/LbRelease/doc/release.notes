@@ -3,6 +3,8 @@
 	* python/LbRelease/tests: added test for packages without branches dir
 	* python/LbRelease/rcs.py: restored the possibility of having packages
 	without a 'branches' directory, but issuing a warning.
+	Minor improvement in logging.
+	* python/LbRelease/GetPack.py: fixed wrong warning
 
 2012-11-30 Ben Couturier <Ben.Couturier@cern.ch>
 

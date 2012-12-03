@@ -1013,7 +1013,7 @@ class GetPack(Script):
                     # revert to initial directory (needed when using GetPack from python)
                     os.chdir(old_cwd)
             except IOError, x:
-                self.log.error("Problems opening the 'project.cmt' file. %s", x)
+                self.log.error("Cannot get data: %s", x)
         print "Checked out project %s %s in '%s'" % proj
 
     def _makeListXML(self, doPackages = False):

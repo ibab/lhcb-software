@@ -25,6 +25,7 @@ def _svn(*args, **kwargs):
     return out, err, ret
 
 import logging
+log = logging.getLogger(__name__)
 
 import os, re
 
@@ -420,8 +421,7 @@ class CVS(RevisionControlSystem):
 
     def move(self, package, project):
         """ Move a package from one project to another """
-        log = logging.getLogger()
-        log.debug("The move action is not supported on CVS repositories")
+        log.error("The move action is not supported on CVS repositories")
         return 1
 
     def _getRequirements(self, module, version = "head"):
@@ -791,7 +791,7 @@ class SubversionCmd(RevisionControlSystem):
                         tag_ls.extend(self._ls("/".join([p,"branches",P])))
                 except SvnError:
                     # ignore missing branches directory
-                    logging.warning('project %s does not have the "branches" directory', p)
+                    log.warning('project %s does not have the "branches" directory', p)
                 for v in [ l[:-1]
                            for l in tag_ls
                            if l.endswith("/") ]:
@@ -809,7 +809,7 @@ class SubversionCmd(RevisionControlSystem):
                             versions.update(self._find("/".join([proj,"branches",module])))
                         except SvnError:
                             # ignore missing branches directory
-                            logging.warning('package %s does not have the "branches" directory', module)
+                            log.warning('package %s does not have the "branches" directory', module)
                     # FIXME: the project tags for the packages are not supported (yet) by GetPack.py
                     #versions.update(self._find("/".join([proj,"tags",proj.upper()]), module))
                     #versions.update(self._find("/".join([proj,"branches",proj.upper()]), module))
@@ -887,7 +887,6 @@ class SubversionCmd(RevisionControlSystem):
 
 
     def _getPackagePath(self, module, key="trunk"):
-        log = logging.getLogger()
         result = None, None
         root = self.modules[module]
         purl = "/".join([self.repository, root, key, module])
@@ -909,7 +908,6 @@ class SubversionCmd(RevisionControlSystem):
 
 
     def _getProjectPath(self, module, key="trunk"):
-        log = logging.getLogger()
         result = None, None
         root = module
         purl = "/".join([self.repository, root, key])
@@ -1130,7 +1128,6 @@ class SubversionCmd(RevisionControlSystem):
 
     def move(self, package, project):
         """ move a package from one project to another """
-        log = logging.getLogger()
         status = 0
         if package not in self.packages :
             status = 1
@@ -1225,7 +1222,6 @@ def connect(repository):
 
 
 def getPackageRepo(package, reps, exclude=None):
-    log = logging.getLogger()
     if exclude is None :
         exclude = []
     for name in reps:
@@ -1239,7 +1235,6 @@ def getPackageRepo(package, reps, exclude=None):
 
 
 def getProjectRepo(project, reps, exclude=None, extended=False):
-    log = logging.getLogger()
     if exclude is None :
         exclude = []
     for name in reps:
@@ -1255,7 +1250,6 @@ def getProjectRepo(project, reps, exclude=None, extended=False):
                 yield repo
 
 def moveSVNPackage(package, project, user_repos):
-    log = logging.getLogger()
     status = 0
     reps = getRepositories(user_repos, protocol="ssh")
     repo_list = list(getPackageRepo(package, reps))
