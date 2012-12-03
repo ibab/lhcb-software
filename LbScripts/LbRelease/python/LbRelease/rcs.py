@@ -785,11 +785,15 @@ class SubversionCmd(RevisionControlSystem):
                 P = p.upper()
                 P_ = P + "_"
                 vers= []
+                tag_ls = self._ls("/".join([p,"tags",P]))
+                try:
+                    if self.useBranches:
+                        tag_ls.extend(self._ls("/".join([p,"branches",P])))
+                except SvnError:
+                    # ignore missing branches directory
+                    logging.warning('project %s does not have the "branches" directory', p)
                 for v in [ l[:-1]
-                           for l in self._ls("/".join([p,"tags",P]))
-                                    + ( self.useBranches
-                                        and self._ls("/".join([p,"branches",P]))
-                                        or [] )
+                           for l in tag_ls
                            if l.endswith("/") ]:
                     if v.startswith(P_):
                         v = v[len(P_):]
@@ -801,7 +805,11 @@ class SubversionCmd(RevisionControlSystem):
                     proj = self.modules[module]
                     versions.update(self._find("/".join([proj,"tags",module])))
                     if self.useBranches:
-                        versions.update(self._find("/".join([proj,"branches",module])))
+                        try:
+                            versions.update(self._find("/".join([proj,"branches",module])))
+                        except SvnError:
+                            # ignore missing branches directory
+                            logging.warning('package %s does not have the "branches" directory', module)
                     # FIXME: the project tags for the packages are not supported (yet) by GetPack.py
                     #versions.update(self._find("/".join([proj,"tags",proj.upper()]), module))
                     #versions.update(self._find("/".join([proj,"branches",proj.upper()]), module))
