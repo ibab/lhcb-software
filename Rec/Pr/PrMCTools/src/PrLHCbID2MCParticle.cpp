@@ -33,7 +33,7 @@ DECLARE_ALGORITHM_FACTORY( PrLHCbID2MCParticle )
   PrLHCbID2MCParticle::PrLHCbID2MCParticle( const std::string& name,
                                               ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator ),
-      m_othitcreator("Tf::OTHitCreator"),
+      m_otHitCreator("Tf::OTHitCreator"),
       m_linker(NULL),
       m_detectorLink(NULL)
 {
@@ -53,7 +53,7 @@ StatusCode PrLHCbID2MCParticle::initialize() {
 
   m_debug = msgLevel( MSG::DEBUG );
   if( m_debug ) debug() << "==> Initialize" << endmsg;
-
+  m_otReady = false;
   m_stClusterNames.push_back( LHCb::STClusterLocation::TTClusters );
   m_stClusterNames.push_back( LHCb::STClusterLocation::ITClusters );
   m_stClusterNames.push_back( LHCb::STClusterLocation::UTClusters );
@@ -165,7 +165,11 @@ StatusCode PrLHCbID2MCParticle::execute() {
     LinkedTo<LHCb::MCParticle> otLink( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
     if ( !otLink.notFound() ) {
       m_detectorLink = &otLink;
-      Tf::OTHitRange othits = m_othitcreator->hits();
+      if ( !m_otReady ) {
+        m_otHitCreator->initialize();
+        m_otReady = true;
+      }
+      Tf::OTHitRange othits = m_otHitCreator->hits();
       for (Tf::OTHitRange::const_iterator otSTH = othits.begin();
            otSTH < othits.end();otSTH++){
         LHCb::LHCbID myId = (*otSTH)->lhcbID();

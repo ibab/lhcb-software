@@ -37,10 +37,11 @@ protected:
 private:
   std::string m_targetName;
   std::vector<const LHCb::MCParticle*> m_partList;
-  ToolHandle<Tf::IOTHitCreator> m_othitcreator;
+  ToolHandle<Tf::IOTHitCreator>    m_otHitCreator;
   LinkerWithKey<LHCb::MCParticle>* m_linker;
   LinkedTo<LHCb::MCParticle>*      m_detectorLink;
   bool m_debug;
+  bool m_otReady;
   std::vector<std::string>         m_stClusterNames;
   std::vector<std::string>         m_stLiteClusterNames;
 };

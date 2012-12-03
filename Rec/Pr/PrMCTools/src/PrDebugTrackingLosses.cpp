@@ -32,7 +32,6 @@ PrDebugTrackingLosses::PrDebugTrackingLosses( const std::string& name,
     m_ppSvc(NULL)
 {
   declareProperty( "Velo",        m_velo        = false );
-  declareProperty( "VP",     m_vP     = false );
   declareProperty( "Forward",     m_forward     = false );
   declareProperty( "Seed",        m_seed        = false );
   declareProperty( "Ghost",       m_ghost       = false );
@@ -41,6 +40,9 @@ PrDebugTrackingLosses::PrDebugTrackingLosses( const std::string& name,
   declareProperty( "FromBeauty",  m_fromBeauty  = false );
   declareProperty( "MinMomentum", m_minMomentum = 5000. );
   declareProperty( "SaveList",    m_saveList    = false );
+  declareProperty( "VeloName",    m_veloName    = LHCb::TrackLocation::Velo    );
+  declareProperty( "ForwardName", m_forwardName = LHCb::TrackLocation::Forward );
+  declareProperty( "SeedName",    m_forwardName = LHCb::TrackLocation::Seed    );
 }
 //=============================================================================
 // Destructor
@@ -67,7 +69,7 @@ StatusCode PrDebugTrackingLosses::initialize() {
 StatusCode PrDebugTrackingLosses::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if ( !m_velo && !m_vP && !m_forward && !m_seed ) return StatusCode::SUCCESS;
+  if ( !m_velo &&  !m_forward && !m_seed ) return StatusCode::SUCCESS;
 
   ++m_eventNumber;
 
@@ -80,9 +82,7 @@ StatusCode PrDebugTrackingLosses::execute() {
     return StatusCode::SUCCESS;
   }
 
-  std::string veloTrack = LHCb::TrackLocation::Velo;
-  if ( m_vP ) veloTrack = LHCb::TrackLocation::VP;
-  LinkedFrom<LHCb::Track,LHCb::MCParticle> veloLinker   ( evtSvc(), msgSvc(), veloTrack    );
+  LinkedFrom<LHCb::Track,LHCb::MCParticle> veloLinker   ( evtSvc(), msgSvc(), m_veloName  );
 
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );
 
@@ -116,17 +116,17 @@ StatusCode PrDebugTrackingLosses::execute() {
     LHCb::Track* veloTr = veloLinker.first(part);
     bool hasVelo = veloTr != NULL;
 
-    if ( (m_velo || m_vP ) && !hasVelo && !m_clone ) {
+    if ( (m_velo ) && !hasVelo && !m_clone ) {
       info() << "Missed Velo for MCParticle " << part->key() << " ";
       printMCParticle( part );
-    } else if ( (m_velo || m_vP ) && m_clone && veloLinker.next() != NULL ) {
+    } else if ( (m_velo ) && m_clone && veloLinker.next() != NULL ) {
       info() << "Velo clone for particle " << part->key() << " ";
       printMCParticle( part );
     }
     
     if ( m_forward && hasVelo ) {
-      LinkedFrom<LHCb::Track,LHCb::MCParticle> forwardLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Forward );
-      if ( forwardLinker.first(part) == NULL ) {
+      LinkedFrom<LHCb::Track,LHCb::MCParticle> forwardLinker( evtSvc(), msgSvc(), m_forwardName );
+      if ( forwardLinker.first(part) != NULL ) {
         if ( !m_clone && !m_ghost ) {
           info() << "Missed Forward (Velo " << veloTr->key() <<") for MCParticle " << part->key() << " ";
           printMCParticle( part );
@@ -146,7 +146,7 @@ StatusCode PrDebugTrackingLosses::execute() {
   
 
     if ( m_seed ) {
-      LinkedFrom<LHCb::Track,LHCb::MCParticle> seedLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Seed );
+      LinkedFrom<LHCb::Track,LHCb::MCParticle> seedLinker( evtSvc(), msgSvc(), m_seedName );
       if ( seedLinker.first(part) == NULL ) {
         if ( !m_clone && !m_ghost ) {
           info() << "Missed Seed for MCParticle " << part->key() << " ";
@@ -168,12 +168,12 @@ StatusCode PrDebugTrackingLosses::execute() {
     
 
   if ( m_ghost ) {
-    LinkedTo<LHCb::MCParticle> vTrLink( evtSvc(), msgSvc(), veloTrack );
+    LinkedTo<LHCb::MCParticle> vTrLink( evtSvc(), msgSvc(), m_veloName );
     LinkedTo<LHCb::MCParticle>  idLink( evtSvc(), msgSvc(), "Pr/LHCbID" );
 
-    std::string   location = LHCb::TrackLocation::Forward;
-    if ( m_velo || m_vP ) location = veloTrack;
-    if ( m_seed ) location = LHCb::TrackLocation::Seed;
+    std::string   location = m_forwardName;
+    if ( m_velo ) location = m_veloName;
+    if ( m_seed ) location = m_seedName;
     LinkedTo<LHCb::MCParticle> trackLinker( evtSvc(), msgSvc(), location );
 
     LHCb::Tracks* tracks = get<LHCb::Tracks>( location );

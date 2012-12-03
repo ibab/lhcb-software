@@ -35,7 +35,6 @@ private:
   mutable LHCb::IParticlePropertySvc* m_ppSvc; ///< Pointer to particle property service
 
   bool m_velo;
-  bool m_vP;
   bool m_forward;
   bool m_seed;
   bool m_clone;
@@ -44,6 +43,9 @@ private:
   bool m_fromBeauty;
   double m_minMomentum;
   bool m_saveList;
+  std::string m_veloName;
+  std::string m_forwardName;
+  std::string m_seedName;
   std::vector<std::vector<int> > m_badGuys;
   int  m_eventNumber;
 
