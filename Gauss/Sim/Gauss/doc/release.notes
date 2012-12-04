@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-12-04 - Patrick Robbe
+ - Configuration.py: add options to pass beam energy to BcVegPy in Pythia8
+
 !========================= Gauss v43r3 2012-11-30 ============================
 ! 2012-11-30 - Gloria Corti
  - Pick version v2r* of GenXiccData for support to 8 TeV collisions

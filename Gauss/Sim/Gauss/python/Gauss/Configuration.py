@@ -1799,7 +1799,7 @@ class Gauss(LHCbConfigurableUser):
     def setBeamParameters( self, CrossingSlots, genInit):
 
         from Configurables import ( MinimumBias , FixedNInteractions , HijingProduction )
-        from Configurables import ( BcVegPyProduction , Special , BcVegPyProduction )
+        from Configurables import ( BcVegPyProduction , Special , Pythia8Production , LbLHAup )
         from Configurables import ( Generation )
 
         #
@@ -1846,6 +1846,10 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.addTool(Special,name="Special")
         gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
         gen_t0.Special.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
+        gen_t0.Special.addTool( Pythia8Production , "Pythia8Production" ) 
+        gen_t0.Special.Pythia8Production.addTool( LbLHAup , "LbLHAup" )
+        gen_t0.Special.Pythia8Production.LbLHAup.addTool( BcVegPyProduction , "BcVegPyProduction" ) 
+        gen_t0.Special.Pythia8Production.LbLHAup.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
 
         # or with Hijing
         txtP = "hijinginit efrm "+str(pInGeV)
