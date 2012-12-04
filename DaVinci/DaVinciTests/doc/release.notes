@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-12-04 - Chris Jones
+ - Update the reference blocks for io.qms/test_decaytreetuple after 
+   VertexFitter fixes
+
 ! 2012-12-03 - Anton Poluektov 
  - Update commonparticles/standardintermediate_run reference
 

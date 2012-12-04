@@ -9,9 +9,9 @@
 findReferenceBlock("""
 Tuple                                                       SUCCESS Number of counters : 4
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Phys/BetaSBd2JpsiKsDetachedLine"             |         9 |          9 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "# input particles"                             |       100 |          9 |   0.090000 |    0.28618 |      0.0000 |      1.0000 |
- |*"#accept"                                       |       100 |          9 |(  9.00000 +- 2.86182  )%|   -------   |   -------   |
+ | "# Phys/BetaSBd2JpsiKsDetachedLine"             |        11 |         11 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |       100 |         11 |    0.11000 |    0.31289 |      0.0000 |      1.0000 |
+ |*"#accept"                                       |       100 |         11 |(  11.0000 +- 3.12890  )%|   -------   |   -------   |
  | "Event"                                         |       100 |        100 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, 
 signature_offset = 0, id="Tuple")

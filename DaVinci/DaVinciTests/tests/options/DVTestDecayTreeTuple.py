@@ -9,7 +9,7 @@
 
 from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits import *
-MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
+MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
 #######################################################################
 #
 # Selection
@@ -100,7 +100,9 @@ DaVinci().DDDBtag="head-20100624"
 from Gaudi.Configuration import * 
 
 EventSelector().Input   = [
-"   DATAFILE='castor:/castor/cern.ch/user/r/rlambert/testfiles/MC2010_BdJPsiKs_00008414_00000106_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+#"DATAFILE='castor:/castor/cern.ch/user/r/rlambert/testfiles/MC2010_BdJPsiKs_00008414_00000106_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/usera/jonesc/NFS/data/MC/test/MC2010_BdJPsiKs_00008414_00000106_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+]
 #FileCatalog().Catalogs = [ 'xmlcatalog_file:Sim2010_Bd2JpsiKs.xml' ]
 
 
