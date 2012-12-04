@@ -740,7 +740,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -764,7 +764,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -789,7 +789,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTauNonPhys
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
@@ -812,7 +812,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -838,7 +838,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -863,7 +863,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTauNonPhys
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
@@ -888,7 +888,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -914,7 +914,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -939,7 +939,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTauNonPhys
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
@@ -964,7 +964,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -987,7 +987,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTauNonPhys
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
@@ -1010,7 +1010,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -1036,7 +1036,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -1061,7 +1061,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTauNonPhys
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
@@ -1086,7 +1086,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -1110,7 +1110,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTau, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTau
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
@@ -1135,7 +1135,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-        from CommonParticles import StdLooseDetachedTauNonPhys, StdLooseDipion
+        from CommonParticles import StdLooseDetachedTauNonPhys
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
