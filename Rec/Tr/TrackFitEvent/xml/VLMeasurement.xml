@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name = 'TrackFitEvent'>
+
+    <class name   = 'VLMeasurement'
+           author = 'H. Schindler'
+           desc   = 'Measurement made from a VLCluster or VLLiteCluster'
+           defaultconstructor = 'FALSE'
+           serializers = 'FALSE'>
+      <base name = 'LHCb::Measurement'/>
+      <import name = 'Event/Measurement'/>
+      <import name = 'Event/VLCluster'/>
+      <import name = 'TrackInterfaces/IVLClusterPosition'/>
+      <import name = 'StateVector' soft = 'FORWARDONLY'/>
+      <import name = 'DeVL' namespace='::' soft = 'FORWARDONLY'/>
+
+      <constructor desc = 'Constructor from VLCluster'>
+        <arg type = 'VLCluster*'         name = 'cluster' const = 'TRUE'/>
+        <arg type = 'DeVL*'              name = 'det'     const = 'TRUE'/> 
+        <arg type = 'IVLClusterPosition' name = 'pos'     const = 'TRUE'/>
+      </constructor>
+      <constructor desc = 'Constructor from VLLiteCluster'>
+        <arg type = 'VLLiteCluster*'     name = 'cluster' const = 'TRUE'/>
+        <arg type = 'DeVL*'              name = 'det'     const = 'TRUE'/> 
+        <arg type = 'IVLClusterPosition' name = 'pos'     const = 'TRUE'/>
+      </constructor>
+      <constructor desc = 'Constructor from VLCluster and ref. vector'>
+        <arg type = 'VLCluster*'         name = 'cluster' const = 'TRUE'/>
+        <arg type = 'DeVL*'              name = 'det'     const = 'TRUE'/>
+        <arg type = 'IVLClusterPosition' name = 'pos'     const = 'TRUE'/>
+        <arg type = 'LHCb::StateVector'  name = 'ref'     const = 'TRUE'/>
+      </constructor>
+      <constructor desc = 'Constructor from VLLiteCluster and ref. vector'>
+        <arg type = 'VLLiteCluster*'     name = 'cluster' const = 'TRUE'/>
+        <arg type = 'DeVL*'              name = 'det'     const = 'TRUE'/>
+        <arg type = 'IVLClusterPosition' name = 'pos'     const = 'TRUE'/>
+        <arg type = 'LHCb::StateVector'  name = 'ref'     const = 'TRUE'/>
+      </constructor>
+ 
+      <attribute type = 'LHCb::VLChannelID' name = 'channel'
+                 desc = 'Channel ID'
+                 access = 'PRIVATE'
+                 getMeth = 'FALSE' setMeth = 'FALSE'/>
+      <attribute type = 'Gaudi::XYZPoint' name = 'origin'
+                 desc = 'Sensor origin'
+                 access = 'PRIVATE'
+	         getMeth = 'FALSE' setMeth = 'FALSE'/>
+
+      <method name = 'init'
+              desc = 'Initialize the data members'
+              access = 'PRIVATE'>
+        <arg type = 'DeVL*' name = 'det' const = 'TRUE'/>
+        <arg type = 'IVLClusterPosition::toolInfo' name = 'info' const = 'TRUE'/>
+      </method>
+
+      <method type = 'double'
+              name = 'resolution'
+              desc = 'Retrieve the measurement error'
+              const = 'TRUE'>
+        <arg type = 'Gaudi::XYZPoint'  name = 'p' const = 'TRUE'/>
+        <arg type = 'Gaudi::XYZVector' name = 'v' const = 'TRUE'/>
+      </method>
+
+      <method type = 'double'
+              name = 'resolution2'
+              desc = 'Retrieve the measurement error squared'
+              const = 'TRUE'>
+        <arg type = 'Gaudi::XYZPoint'  name = 'p' const = 'TRUE'/>
+        <arg type = 'Gaudi::XYZVector' name = 'v' const = 'TRUE'/>
+      </method>
+
+      <method type = 'LHCb::VLMeasurement*'
+              name = 'clone'
+              desc = 'Clone the VLMeasurement'
+              const = 'TRUE'>
+        <code>
+          return new LHCb::VLMeasurement(*this);
+        </code>
+      </method>
+
+    </class>
+  </package>
+</gdd>

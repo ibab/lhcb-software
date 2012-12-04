@@ -151,6 +151,7 @@ namespace LHCb
 	if( (*it)->type() == LHCb::Node::HitOnTrack ) {
 	  switch( (*it)->measurement().type() ) {
 	  case Measurement::VPLite:
+          case Measurement::VL:
 	  case Measurement::VeloR:
 	  case Measurement::VeloPhi:
 	  case Measurement::VeloLiteR:

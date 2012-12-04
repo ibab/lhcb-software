@@ -4,6 +4,8 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2012-12-04 - Heinrich Schindler
+ - Add VLMeasurement
 ! 2012-11-29 - Olivier Callot
  - Add FTMeasurements (.xml, .cpp)
 
