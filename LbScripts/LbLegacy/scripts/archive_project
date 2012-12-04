@@ -54,14 +54,14 @@ endif
 unset noclobber
 #
 
-set package=$1
+set package=`echo $1 | tr '[A-Z]' '[a-z]'`
 set version=$2
 set action = "archive"
 if ($3 == "delete") then
   set action = "delete"
 endif
 
-if ($package == "Gaudi") then
+if ($package == "gaudi") then
   set rel_dir = $GAUDISOFT
   set group = "gaudi"
 else
@@ -86,6 +86,7 @@ endif
 # defreeze
 cd ${rel_dir}/$PACKAGE/$VERSION
 echo " defreeze the project directory"
+afs_admin sq ${rel_dir}/$PACKAGE/$VERSION +10
 # find . -type d -exec fs setacl {} ${group}:librarians all \;
 unlockAFSDir -R ${rel_dir}/$PACKAGE/$VERSION
 touch ${rel_dir}/$PACKAGE/$VERSION/NOT_READY
@@ -93,6 +94,8 @@ touch ${rel_dir}/$PACKAGE/$VERSION/NOT_READY
 # archive the version on /castor/
 if ($action == "archive") then
 #   remove *.o files
+   echo "in following directory:"
+   pwd
    echo " remove *.o files ..."
    rm */*/v*/slc*_dbg/*.o
    rm */*/v*/win32*/*/*.obj
@@ -140,7 +143,7 @@ if ($status == "0") /bin/rm -i $list
 # remove logfile
 echo " remove ${LHCBHOME}/project/logfiles/${PACKAGE}/${VERSION}_* logfiles"
 foreach logdir ( ${LHCBHOME}/project/logfiles ${LHCBHOME}/project/logfiles/${PACKAGE} )
-  if ( -d ${logdir} )
+  if ( -d ${logdir} ) then
     find ${logdir} -noleaf -maxdepth 1 -name "${VERSION}_*" -exec rm \{} \;
   endif
 end
@@ -164,11 +167,21 @@ if ! $?LHCBDIRACSYSROOT then
   endif
 endif
 
-`which lhcb-proxy-init` -g lhcb_admin
-set rc_dirac = $status
-if ($rc_dirac != 0 ) then
-   echo problem to generate the Proxy
+# Checking if the user has a grid proxy with admin rights
+# ask for one if needed
+set pinfo = `which lhcb-proxy-info`
+set isadmin = `$pinfo | grep -c '/lhcb/Role=lcgadmin' `
+if ( $isadmin == 0 ) then
+
+	`which lhcb-proxy-init` -g lhcb_admin
+	set rc_dirac = $status
+	if ($rc_dirac != 0 ) then
+	   	echo problem to generate the Proxy
+	endif
+else
+	echo "Grid proxy found"
 endif
+
 
 `which dirac-lhcb-check-software` $package $version
 if ( $status == 0 ) then
