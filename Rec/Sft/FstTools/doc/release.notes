@@ -4,6 +4,14 @@
 ! Purpose     : First Software Trigger tools for teh upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-12-04 - Olivier Callot
+ - fix IPS computation in FstSelectForwardTracks
+ - Use track fit for FT also
+
+! 2012-11-02 - Olivier Callot
+ - Added fast decoding for ST also.
+ - Option to run both decodings and compare : FastDecoding = False, Compare = True
+
 ! 2012-10-16 - Olivier Callot
  - Added computation of IPS and cut on it in Forward selector
  - Allow usage (default) of FastVeloDecoding (new in Tf/FastVelo package)

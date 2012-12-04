@@ -1,7 +1,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
@@ -36,7 +36,7 @@ FstSequencer::FstSequencer( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-FstSequencer::~FstSequencer() {} 
+FstSequencer::~FstSequencer() {}
 
 //=============================================================================
 // Initialization
@@ -46,7 +46,7 @@ StatusCode FstSequencer::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  
+
   sc = decodeNames();
   if ( !sc.isSuccess() ) return sc;
 
@@ -83,13 +83,13 @@ StatusCode FstSequencer::initialize() {
 // Main execution
 //=============================================================================
 StatusCode FstSequencer::execute() {
- if ( m_measureTime ) m_timerTool->start( m_timer );
+  if ( m_measureTime ) m_timerTool->start( m_timer );
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   bool seqPass = true;
   ++m_nEvent;
-  
+
   std::vector<AlgorithmEntry>::const_iterator itE;
   for ( itE = m_entries.begin(); m_entries.end() != itE; ++itE ) {
     Algorithm* myAlg = itE->algorithm();
@@ -105,14 +105,14 @@ StatusCode FstSequencer::execute() {
     bool passed = myAlg->filterPassed();
     if ( !passed ) {
       seqPass = passed;
-      if (msgLevel(MSG::VERBOSE))
+      if ( msgLevel(MSG::VERBOSE) )
         verbose() << "SeqPass is now " << (seqPass ? "true" : "false") << endmsg;
       break;
     }
   }
   if ( seqPass ) ++m_nAccepted;
-  
-  if (msgLevel(MSG::VERBOSE)) verbose() << "SeqPass is " << (seqPass ? "true" : "false") << endmsg;
+
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << "SeqPass is " << (seqPass ? "true" : "false") << endmsg;
   if ( m_forcePassOK ) seqPass = true;
   if ( !m_entries.empty() ) setFilterPassed( seqPass );
   setExecuted( true );
@@ -133,7 +133,7 @@ StatusCode FstSequencer::finalize() {
                       m_nAccepted, m_nEvent, 100. * float( m_nAccepted) / float( m_nEvent ) );
     info() << endmsg;
   }
-  
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
@@ -158,7 +158,9 @@ StatusCode FstSequencer::decodeNames ( ) {
 
   //== Get the "Context" option if in the file...
   IJobOptionsSvc* jos = svc<IJobOptionsSvc>( "JobOptionsSvc" );
-
+  bool addedContext = false;  //= Have we added the context ?
+  bool addedRootInTES = false;  //= Have we added the rootInTES ?
+ 
   //= Get the Application manager, to see if algorithm exist
   IAlgManager* appMgr = svc<IAlgManager>("ApplicationMgr");
   const std::vector<std::string>& nameVector = m_names.value();
@@ -172,6 +174,41 @@ StatusCode FstSequencer::decodeNames ( ) {
     StatusCode result = StatusCode::SUCCESS;
     SmartIF<IAlgorithm> myIAlg = appMgr->algorithm(typeName, false); // do not create it now
     if ( !myIAlg.isValid() ) {
+
+      //== Set the Context if not in the jobOptions list
+      if ( ""  != context() ||
+           ""  != rootInTES()  ) {
+        bool foundContext = false;
+        bool foundRootInTES = false;
+        const std::vector<const Property*>* properties = jos->getProperties( theName );
+        if ( 0 != properties ) {
+          // Iterate over the list to set the options
+          for ( std::vector<const Property*>::const_iterator itProp = properties->begin();
+                itProp != properties->end();
+                itProp++ )   {
+            const StringProperty* sp = dynamic_cast<const StringProperty*>(*itProp);
+            if ( 0 != sp )    {
+              if ( "Context" == (*itProp)->name() ) {
+                foundContext = true;
+              }
+              if ( "RootInTES" == (*itProp)->name() ) {
+                foundRootInTES = true;
+              }
+            }
+          }
+        }
+        if ( !foundContext && "" != context() ) {
+          StringProperty contextProperty( "Context", context() );
+          jos->addPropertyToCatalogue( theName, contextProperty ).ignore();
+          addedContext = true;
+        }
+        if ( !foundRootInTES && "" != rootInTES() ) {
+          StringProperty rootInTESProperty( "RootInTES", rootInTES() );
+          jos->addPropertyToCatalogue( theName, rootInTESProperty ).ignore();
+          addedRootInTES = true;
+        }
+      }
+
       Algorithm *myAlg = 0;
       result = createSubAlgorithm( theType, theName, myAlg );
       if (result.isSuccess()) myIAlg = myAlg;
@@ -183,7 +220,16 @@ StatusCode FstSequencer::decodeNames ( ) {
         myAlg->addRef();
       }
     }
-
+    //== Remove the property, in case this is not a GaudiAlgorithm...
+    if ( addedContext ) {
+      jos->removePropertyFromCatalogue( theName, "Context" ).ignore();
+      addedContext = false;
+    }
+    if ( addedRootInTES ) {
+      jos->removePropertyFromCatalogue( theName, "RootInTES" ).ignore();
+      addedRootInTES = false;
+    }
+ 
     // propagate the sub-algorithm into own state.
     if ( result.isSuccess () &&
          Gaudi::StateMachine::INITIALIZED <= FSMState() &&
@@ -210,7 +256,7 @@ StatusCode FstSequencer::decodeNames ( ) {
       if (myAlg!=0) {
         // Note: The reference counting is kept by the system of sub-algorithms
         m_entries.push_back( AlgorithmEntry( myAlg ) );
-        if (msgLevel(MSG::DEBUG)) debug () << "Added algorithm " << theName << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug () << "Added algorithm " << theName << endmsg;
       } else {
         warning() << theName << " is not an Algorithm - failed dynamic_cast" << endmsg;
         final = StatusCode::FAILURE;
@@ -238,6 +284,8 @@ StatusCode FstSequencer::decodeNames ( ) {
     }
     if ( itE+1 != m_entries.end() ) msg << ", ";
   }
+  if ( "" != context() ) msg << ", with context '" << context() << "'";
+  if ( "" != rootInTES() ) msg << ", with rootInTES '" << rootInTES() << "'";
   msg << endmsg;
 
   return final;

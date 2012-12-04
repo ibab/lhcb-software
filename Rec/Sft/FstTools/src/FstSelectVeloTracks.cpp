@@ -59,7 +59,11 @@ StatusCode FstSelectVeloTracks::initialize() {
     m_validationTool = tool<ITrackSelector>( "FastTTValidationTool" );
     info() << "ValidateWithTT  is active" << endmsg;
   }
-  
+
+  m_nEvents = 0;
+  m_nTotTracks = 0;
+  m_goodIPTracks = 0;
+  m_nSelTracks = 0;
 
   return StatusCode::SUCCESS;
 }
@@ -70,48 +74,64 @@ StatusCode FstSelectVeloTracks::initialize() {
 StatusCode FstSelectVeloTracks::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
+  ++m_nEvents;
+  
   LHCb::Tracks* velo = get<LHCb::Tracks>( m_inputTracksName );
   LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvName );
   LHCb::Tracks* selected = new LHCb::Tracks();
   put( selected, m_outputTracksName );
+
+  std::vector<LHCb::Track*> largeIP;
   
   for ( LHCb::Tracks::iterator itT = velo->begin();
         velo->end() != itT; ++itT ) {
     LHCb::Track* track = (*itT);
     if ( track->checkFlag( LHCb::Track::Invalid ) ) continue;
     if ( track->checkFlag( LHCb::Track::Backward ) ) continue;
+    ++m_nTotTracks;
     if ( track->nLHCbIDs() < m_minVeloClusters ) continue;
     float bestIP2 = 1.e9;
     Gaudi::XYZPoint pos = track->position();
     float tx = track->slopes().x();
     float ty = track->slopes().y();
+    float x0 = pos.x() - tx * pos.z();
+    float y0 = pos.y() - ty * pos.z();
     float den2 = 1. + tx*tx + ty*ty;
     for ( LHCb::RecVertices::const_iterator itPV = pvs->begin(); pvs->end() > itPV; ++itPV ) {
       float xv = (*itPV)->position().x();
       float yv = (*itPV)->position().y();
       float zv = (*itPV)->position().z();
-      
-      float dx = pos.x() + (zv - pos.z()) * tx - xv;
-      float dy = pos.y() + (zv - pos.z()) * ty - yv;
+      float dx = x0 + zv * tx - xv;
+      float dy = y0 + zv * ty - yv;
       float dist2 = (dx * dx + dy * dy) / den2;
-      if ( dist2 < m_maxIP2 ) {
-        if ( dist2 < bestIP2 ) bestIP2 = dist2;
+      if ( dist2 < bestIP2 ) {
+        bestIP2 = dist2;
+        if ( bestIP2 < m_minIP2 ) break;
       }
     }
     if ( bestIP2 < m_maxIP2 &&
          bestIP2 > m_minIP2 ) {
-      if ( m_validateWithTT ) {
-        if ( !m_validationTool->accept( *track ) ) continue;
-      }
-      LHCb::Track* goodTrack = track->clone();
-      selected->add( goodTrack );
+      largeIP.push_back( track );
+      ++m_goodIPTracks;
     }
   }
+
+  for ( std::vector<LHCb::Track*>::iterator itT1 = largeIP.begin(); largeIP.end() != itT1; ++itT1 ) {
+    if ( m_validateWithTT ) {
+      if ( !m_validationTool->accept( **itT1 ) ) continue;
+    }
+    
+    LHCb::Track* goodTrack = (*itT1)->clone();
+    selected->add( goodTrack );
+    ++m_nSelTracks;
+  }
+
   setFilterPassed( 0 != selected->size() );
   
-  debug() << "Selected " << selected->size() << " Velo tracks from " << pvs->size() << " PV." << endmsg;
-
+  if ( msgLevel( MSG::DEBUG ) ) {
+    debug() << "Selected " << selected->size() << " Velo tracks from " << pvs->size() << " PV." << endmsg;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -119,9 +139,12 @@ StatusCode FstSelectVeloTracks::execute() {
 //  Finalize
 //=============================================================================
 StatusCode FstSelectVeloTracks::finalize() {
-
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
+  info() << format( "From %8d tracks:", m_nTotTracks ) << endmsg;
+  info() << format( "     %8d tracks (%5.1f%%) with large IP",
+                    m_goodIPTracks, 100. * float( m_goodIPTracks)/float( m_nTotTracks) ) << endmsg;
+  info() << format( "     %8d tracks (%5.1f%%) selected",
+                    m_nSelTracks, 100. * float( m_nSelTracks)/float( m_nTotTracks) ) << endmsg;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

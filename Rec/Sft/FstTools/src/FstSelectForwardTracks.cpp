@@ -34,7 +34,7 @@ FstSelectForwardTracks::FstSelectForwardTracks( const std::string& name,
   declareProperty( "MinIPChi2",              m_minIPChi2        = 9. );
   declareProperty( "MaxIPChi2",              m_maxIPChi2        = 100000. );
   declareProperty( "MinPt",                  m_minPt            = 1.500 * Gaudi::Units::GeV );
-  declareProperty( "MaxChi2Ndf",             m_maxChi2Ndf            = 2.0 ); // set negative to deactivate
+  declareProperty( "MaxChi2Ndf",             m_maxChi2Ndf       = 2.0 ); // set negative to deactivate
 }
 //=============================================================================
 // Destructor
@@ -112,22 +112,15 @@ StatusCode FstSelectForwardTracks::execute() {
       float dx = pos.x() + (zv - pos.z()) * tx - xv;
       float dy = pos.y() + (zv - pos.z()) * ty - yv;
       float dist2 = (dx * dx + dy * dy) / den2;
-      if ( dist2 < m_maxIP2 ) {
-        if ( dist2 < bestIP2 ) bestIP2 = dist2;
-      }
+      if ( dist2   < bestIP2  ) bestIP2 = dist2;
+      if ( bestIP2 < m_minIP2 ) break;               //== if one PV with low IP -> reject.
 
-      //== Compute IPChi2 : compute z of best Chi2, error takes into account the PV error
+      //== Compute IPChi2, error takes into account the PV error
       float wx2 = 1. / ( track->firstState().errX2() + (*itPV)->covMatrix()(0,0));
       float wy2 = 1. / ( track->firstState().errY2() + (*itPV)->covMatrix()(1,1));
-      float num = tx * ( pos.x() - xv ) * wx2 + ty * (pos.y() - yv ) * wy2;
-      float den = tx * tx * wx2 + ty * ty * wy2;
-      float zMin = num/den;
-      dx = pos.x() + (zMin - pos.z()) * tx - xv;
-      dy = pos.y() + (zMin - pos.z()) * ty - yv;
       float ipChi2 = dx * dx * wx2 + dy * dy * wy2;
-      if ( ipChi2 < m_maxIPChi2 ) {
-        if ( ipChi2 < bestIPChi2 ) bestIPChi2 = ipChi2;
-      }
+      if ( ipChi2     < bestIPChi2  ) bestIPChi2 = ipChi2;
+      if ( bestIPChi2 < m_minIPChi2 ) break;
     }
     if ( bestIP2 > m_maxIP2 || bestIP2 < m_minIP2 ) continue;
     ++m_nIPOK;

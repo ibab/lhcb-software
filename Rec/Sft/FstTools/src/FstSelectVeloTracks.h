@@ -36,5 +36,10 @@ private:
   float  m_maxIP2;
   bool   m_validateWithTT;
   ITrackSelector* m_validationTool;
+
+  int    m_nEvents;
+  int    m_nTotTracks;
+  int    m_goodIPTracks;
+  int    m_nSelTracks;
 };
 #endif // FSTSELECTVELOTRACKS_H

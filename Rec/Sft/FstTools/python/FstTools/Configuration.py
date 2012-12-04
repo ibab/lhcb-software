@@ -24,7 +24,8 @@ class FstConf(LHCbConfigurableUser):
         ,"VeloType"        : "Velo"
         ,"TTType"          : "ValidateTT"
         ,"TStationType"    : "IT+OT"
-        ,"FastDecoding"    : True
+        ,"FastDecoding"    : True   # if false uses the old official decoding
+        ,"Compare"         : False  # if using the old decoding, can run the new one and compare the containers
         ,"TrackFit"        : "HltFit"
         }
 
@@ -33,11 +34,15 @@ class FstConf(LHCbConfigurableUser):
         FstSequencer( "RecoFstSeq" ).ForcePassOK = True
         ## Velo configuration
         if "Velo" == self.getProp( "VeloType" ):
-            from Configurables import FastVeloTracking
+            from Configurables import FastVeloTracking, FastVeloDecoding
             if self.getProp( "FastDecoding" ):
                 FstSequencer( "RecoFstSeq" ).Members = [ "FastVeloDecoding"]
             else:
                 FstSequencer( "RecoFstSeq" ).Members = [ "DecodeVeloRawBuffer/DecodeVeloClusters" ]
+                if self.getProp( "Compare" ):
+                    FstSequencer( "RecoFstSeq" ).Members += [ "FastVeloDecoding"]
+                    FastVeloDecoding().CompareResult = True
+                    FastVeloDecoding().OutputLocation = "Raw/VeloLite"
             FstSequencer( "RecoFstSeq" ).Members += [ "FastVeloTracking/FstVeloTracking" ]
             FastVeloTracking( "FstVeloTracking" ).OutputTracksName = self.getProp( "RootInTES") + "Track/Velo"
             FastVeloTracking( "FstVeloTracking" ).ResetUsedFlags = True
@@ -56,7 +61,12 @@ class FstConf(LHCbConfigurableUser):
 
         ## Selection of Velo tracks to extend
         if "ValidateTT" == self.getProp( "TTType" ):
-            FstSequencer( "RecoFstSeq" ).Members += [ "RawBankToSTLiteClusterAlg/CreateTTLiteClusters" ]
+            if self.getProp( "FastDecoding" ):
+                from Configurables import FastSTDecoding
+                FstSequencer( "RecoFstSeq" ).Members += [ "FastSTDecoding/FastTTDecoding" ]
+                FastSTDecoding( "FastTTDecoding" ).DetectorName = "TT"
+            else:
+                FstSequencer( "RecoFstSeq" ).Members += [ "RawBankToSTLiteClusterAlg/CreateTTLiteClusters" ]
         FstSequencer( "RecoFstSeq" ).Members += [ "FstSelectVeloTracks" ]
         FstSelectVeloTracks().InputTracksName  = self.getProp( "RootInTES") + "Track/Velo"
         FstSelectVeloTracks().OutputTracksName = self.getProp( "RootInTES") + "Track/VeloFst"
@@ -76,35 +86,55 @@ class FstConf(LHCbConfigurableUser):
 
         ## Forward tracking on selected tracks
         if "IT+OT" == self.getProp( "TStationType" ):
-            from Configurables import PatForward, PatForwardTool
-            FstSequencer( "RecoFstSeq" ).Members += [ "RawBankToSTLiteClusterAlg/CreateTTLiteClusters",
-                                                      "RawBankToSTLiteClusterAlg/CreateITLiteClusters",
-                                                      "PatForward/FstForward" ]
-            
+            from Configurables import PatForward, PatForwardTool, FastSTDecoding
+            if self.getProp( "FastDecoding" ):
+                FstSequencer( "RecoFstSeq" ).Members += [ "FastSTDecoding/FastTTDecoding",
+                                                          "FastSTDecoding/FastITDecoding"]
+                FastSTDecoding( "FastTTDecoding" ).DetectorName = "TT"
+                FastSTDecoding( "FastITDecoding" ).DetectorName = "IT"
+            else:
+                FstSequencer( "RecoFstSeq" ).Members += [ "RawBankToSTLiteClusterAlg/CreateTTLiteClusters",
+                                                          "RawBankToSTLiteClusterAlg/CreateITLiteClusters" ]
+                if self.getProp( "Compare" ):
+                    FstSequencer( "RecoFstSeq" ).Members += [ "FastSTDecoding/FastTTDecoding",
+                                                              "FastSTDecoding/FastITDecoding"]
+                    if self.getProp( "Compare" ):
+                        FastSTDecoding( "FastTTDecoding" ).DetectorName = "TT"
+                        FastSTDecoding( "FastTTDecoding" ).CompareResult = True
+                        FastSTDecoding( "FastITDecoding" ).DetectorName = "IT"
+                        FastSTDecoding( "FastITDecoding" ).CompareResult = True
+            FstSequencer( "RecoFstSeq" ).Members += [ "PatForward/FstForward" ]
+
             PatForward("FstForward").InputTracksName  = self.getProp( "RootInTES") + "Track/VeloFst"
             PatForward("FstForward").OutputTracksName = self.getProp( "RootInTES") + "Track/Forward"
             PatForward("FstForward").addTool( PatForwardTool )
             PatForward("FstForward").PatForwardTool.MinPt = self.getProp( "MinPt" )
         elif "FT" == self.getProp( "TStationType" ):
-            from Configurables import PrForwardTracking
+            from Configurables import PrForwardTracking, PrForwardTool
             FstSequencer( "RecoFstSeq" ).Members += [ "FTRawBankDecoder",
                                                       "PrForwardTracking/FstForward" ]
             PrForwardTracking( "FstForward" ).InputName  = self.getProp( "RootInTES") + "Track/VeloFst"
             PrForwardTracking( "FstForward" ).OutputName = self.getProp( "RootInTES") + "Track/Forward"
+            PrForwardTracking( "FstForward" ).addTool( PrForwardTool )
+            PrForwardTracking( "FstForward" ).PrForwardTool.MinPt = self.getProp( "MinPt" )
         else:
             log.warning( "Unknown TStationType option '%s' !"%self.getProp( "TStationType" ) )
             exit(0)
 
         if "HltFit" == self.getProp ( "TrackFit" ):
-            from Configurables import TrackEventFitter, TrackMasterFitter
+            from Configurables import TrackEventFitter, TrackMasterFitter, MeasurementProvider
             HltFastFit_name    = 'FastFit'
             HltFastFit           = TrackEventFitter(HltFastFit_name)
             HltFastFit.TracksInContainer    = self.getProp( "RootInTES") + "Track/Forward" 
-            #HltFastFit.TracksOutContainer    = self.getProp( "RootInTES") + "Track/FittedForward"  
             HltFastFit.addTool(TrackMasterFitter, name = 'Fitter')
             from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
             fitter = ConfiguredHltFitter( getattr(HltFastFit,'Fitter'))
             FstSequencer( "RecoFstSeq" ).Members +=[ HltFastFit ]
+            HltFastFit.Fitter.addTool( MeasurementProvider )
+            if "FT" == self.getProp( "TStationType" ):                       #ignore IT+OT as it cannot initialize
+                HltFastFit.Fitter.MeasurementProvider.IgnoreIT = True
+                HltFastFit.Fitter.MeasurementProvider.IgnoreOT = True
+                HltFastFit.Fitter.MeasurementProvider.IgnoreFT = False
 
         ## Selection after measuring momentum
         FstSequencer( "RecoFstSeq" ).Members += [ "FstSelectForwardTracks" ]
@@ -114,8 +144,8 @@ class FstConf(LHCbConfigurableUser):
         FstSelectForwardTracks().MinIP            = self.getProp( "MinIP" )
         FstSelectForwardTracks().MaxIP            = self.getProp( "MaxIP" )
         FstSelectForwardTracks().MinPt            = self.getProp( "MinPt" )
-        if "" == self.getProp ( "TrackFit" ):
-            FstSelectForwardTracks().MaxChi2Ndf            = -1.
-        else:
+        if "HltFit" == self.getProp ( "TrackFit" ):
             FstSelectForwardTracks().MaxChi2Ndf            = self.getProp( "MaxChi2Ndf" )
+        else:
+            FstSelectForwardTracks().MaxChi2Ndf            = -1.
 
