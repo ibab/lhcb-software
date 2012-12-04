@@ -101,7 +101,7 @@ void VLMeasurement::init(const DeVL* det, const IVLClusterPosition::toolInfo& cl
 /// Retrieve the measurement error
 //============================================================================
 double VLMeasurement::resolution(const Gaudi::XYZPoint& p,
-                                 const Gaudi::XYZVector& v) const {
+                                 const Gaudi::XYZVector& /*v*/) const {
 
   if (m_channel.isPhiType()) {
     const double radius = (m_origin - p).R();
