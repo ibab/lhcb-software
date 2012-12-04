@@ -13,6 +13,7 @@
 // Forward declaration
 class IBeamTool ;
 class GaudiRandomForPythia8 ;
+class ILHAupFortranTool ;
 
 /** @class Pythia8Production Pythia8Production.h 
  *  
@@ -101,22 +102,24 @@ private:
   int m_nEvents ;
   
   GaudiRandomForPythia8 * m_randomEngine ; ///< Random Generator for Pythia8
+  ILHAupFortranTool *     m_fortranUPTool ; ///< Tool to access Fortran User Processes
+  std::string             m_fortranUPToolName ;
   BeamToolForPythia8 * m_pythiaBeamTool; ///< beam tool for Pythia8
 
-   // ==========================================================================
-   bool m_validate_HEPEVT ; // force the valiadation of IO_HEPEVT 
   // ==========================================================================
-   std::string   m_inconsistencies ; // the file to dump the HEPEVT incinsistencies 
+  bool m_validate_HEPEVT ; // force the valiadation of IO_HEPEVT 
   // ==========================================================================
-   std::ostream* m_HEPEVT_errors ;
-   // ==========================================================================
-
-   bool m_listAllParticles ; ///list particles.
-
-   std::string m_tuningFile;
-   std::string m_tuningUserFile;
-
-   //kept for backward compatibilit for the time being
-   CommandVector m_commandVector;
+  std::string   m_inconsistencies ; // the file to dump the HEPEVT incinsistencies 
+  // ==========================================================================
+  std::ostream* m_HEPEVT_errors ;
+  // ==========================================================================
+  
+  bool m_listAllParticles ; ///list particles.
+  
+  std::string m_tuningFile;
+  std::string m_tuningUserFile;
+  
+  //kept for backward compatibilit for the time being
+  CommandVector m_commandVector;
 } ;
 #endif // LBPYTHIA8_PYTHIA8PRODUCTION_H

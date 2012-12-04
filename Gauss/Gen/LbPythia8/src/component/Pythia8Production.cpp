@@ -26,6 +26,7 @@
 // LbPythia8
 #include "LbPythia8/GaudiRandomForPythia8.h" 
 #include "LbPythia8/BeamToolForPythia8.h"
+#include "LbPythia8/ILHAupFortranTool.h"
 
 // local
 #include "Pythia8Production.h"
@@ -50,6 +51,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
     m_pythia( 0 ) ,
     m_nEvents( 0 ) ,
     m_randomEngine( 0 ) ,
+    m_fortranUPTool( 0 ) ,
     m_validate_HEPEVT ( false ) ,// force the valiadation of I_Pythia8 
     m_inconsistencies ( "HEPEVT_inconsistencies.out" ) ,
     m_HEPEVT_errors ( 0 ) {
@@ -62,7 +64,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
   declareProperty( "ListAllParticles", m_listAllParticles = false ); //list all particles
   declareProperty( "Tuning", m_tuningFile = "LHCbDefault.cmd");
   declareProperty( "UserTuning", m_tuningUserFile = ""); //a default Pythia8 tune using the Tune: 'subrun' would overwrite LHCb defaults, if chosen here...
-
+  declareProperty( "PythiaUserProcessTool" , m_fortranUPToolName = "" ) ;
 }
 
 //=============================================================================
@@ -170,8 +172,14 @@ StatusCode Pythia8Production::initializeGenerator( ) {
     success = m_pythia->readString(m_commandVector[count]);
   }
   
+  // Check if there is a FORTRAN User Process tool
+  if ( "" != m_fortranUPToolName ) {
+    m_fortranUPTool = tool< ILHAupFortranTool >( m_fortranUPToolName , this ) ;
+    m_pythia -> readString( "SoftQCD:all = off" ) ;
+    m_pythia -> readString( "Beams:frameType = 5" ) ;
+    m_pythia -> setLHAupPtr( ( Pythia8::LHAup * ) m_fortranUPTool -> getLHAupPtr() ) ;
+  }
   m_pythia->init();
-  
   return StatusCode::SUCCESS;
 }
 
@@ -254,6 +262,7 @@ StatusCode Pythia8Production::finalize( ) {
   m_pythia -> statistics() ;
   delete m_randomEngine;
   delete m_pythia ;
+  if ( 0 != m_fortranUPTool ) release( m_fortranUPTool ) ;
   return GaudiTool::finalize( ) ;
 }  
 
