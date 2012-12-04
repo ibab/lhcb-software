@@ -3,6 +3,10 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2012-12-04 - Patrick Robbe
+ - Added the option options/BcVegPyPythia8.py to configure BcVegPy
+   in Pythia8
+
 !======================== LbBcVegPy v4r3p1 2012-10-19 ========================
 ! 2012-10-01 - Jibo He
  - Removed ecm from BcVegPy.py(.opts) to avoid confusion

@@ -1,6 +1,14 @@
-# $Id$
+from Configurables import Generation
+from Configurables import Special , LbLHAup, BcVegPyProduction
 
-from Configurables import Generation, Special, BcVegPyProduction
+gen = Generation()
+gen.SampleGenerationTool = "Special"
+gen.addTool( Special , "Special" )
+gen.Special.Pythia8Production.PythiaUserProcessTool = "LbLHAup"
+gen.Special.CutTool = "" 
+gen.Special.Pythia8Production.addTool( LbLHAup , "LbLHAup" )
+gen.Special.Pythia8Production.LbLHAup.UserProcess = "BcVegPyProduction"
+gen.PileUpTool = "FixedNInteractions" 
 
 BcVegPyListOfCommands = [
   "mixevnt imix 1" ,
@@ -14,14 +22,10 @@ BcVegPyListOfCommands = [
   "usertran idpp 1" 
 ]
 
-gen = Generation()
-gen.addTool( Special , name = "Special" )
-gen.Special.ProductionTool = "BcVegPyProduction"
-gen.Special.addTool( BcVegPyProduction , name = "BcVegPyProduction" )
-gen.Special.BcVegPyProduction.BcVegPyCommands += BcVegPyListOfCommands
-gen.PileUpTool = "FixedLuminosityForRareProcess"
+gen.Special.Pythia8Production.LbLHAup.addTool( BcVegPyProduction , "BcVegPyProduction" ) 
+gen.Special.Pythia8Production.LbLHAup.BcVegPyProduction.BcVegPyCommands += BcVegPyListOfCommands
 
-gen.Special.BcVegPyProduction.Commands += [
+gen.Special.Pythia8Production.LbLHAup.BcVegPyProduction.Commands += [
     "pysubs msub 11 0" ,
     "pysubs msub 12 0" ,
     "pysubs msub 13 0" ,
@@ -76,5 +80,7 @@ gen.Special.BcVegPyProduction.Commands += [
     "pysubs msub 482 0" ,
     "pysubs msub 483 0" ,
     "pysubs msub 484 0" ,
-    "pysubs msub 485 0"    
+    "pysubs msub 485 0" ,
+    "pypars mstp 111 0"
     ]
+
