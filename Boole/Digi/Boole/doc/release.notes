@@ -6,7 +6,7 @@ Purpose: LHCb Digitization program
  - Changes to configurable
    . DetectorDigi, DetectorLink, DetectorMoni slots are now lists, 
      no longer dictionaries
-   . Added upgrade detectors VL, VP, UT, RichMaPMT (off by default)
+   . Added upgrade detectors VL, VP, UT, RichPmt (off by default)
    . Use BuildMCTrackInfoUpgrade instead of BuildMCTrackInfo is upgrade
      detectors are enabled
    . Ensured DigiConf receives 'Tr' in list of Detectors
