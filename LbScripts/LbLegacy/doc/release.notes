@@ -1,5 +1,7 @@
 2012-12-04  Ben Couturier  <Ben.Couturier@cern.ch>
 
+	* cmt/requirements: release of version v5r5
+	* python/LbLegacy/install_project.py:  release of LbScripts version v7r5
 	* scripts/archive_project: Extend volume before touching the not ready file.
 	and only call lhcb-proxy-init if needed, fix crash when removing user logs.  
 
