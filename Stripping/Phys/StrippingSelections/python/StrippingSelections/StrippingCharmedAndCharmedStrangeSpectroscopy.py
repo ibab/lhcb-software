@@ -47,14 +47,16 @@ config_params = { 'DpKs_prescale'            : 1,
                   'DzP_prescale'             : 1,
                   'DzPWS_prescale'           : 1,
                   'DpP_prescale'             : 1,
-                  'DpPp_prescale'             : 1,
+                  'DpPp_prescale'            : 1,
                   'DsKs_prescale'            : 1,
                   'DsKm_prescale'            : 1,
                   'DstarD02K3PiKs_prescale'  : 1,
                   'Dstar0K_prescale'         : 1,
                   'Dstar0P_prescale'         : 1,
                   'Dstar0KWS_prescale'       : 1,
-                  'Dstar0PWS_prescale'       : 1
+                  'Dstar0PWS_prescale'       : 1,
+                  'DstarpPp_prescale'        : 1,
+                  'DstarpPm_prescale'        : 1
                   } 
 
 from Gaudi.Configuration import *
@@ -110,7 +112,9 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
                               'Dstar0K_prescale',
                               'Dstar0P_prescale',
                               'Dstar0KWS_prescale',
-                              'Dstar0PWS_prescale' 
+                              'Dstar0PWS_prescale',
+                              'DstarpPp_prescale',
+                              'DstarpPm_prescale' 
                               )
 
     def __init__( self, name, config ) :
@@ -139,7 +143,8 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         name_Dstar0P_line          = name + '_Dstar0P'
         name_Dstar0KWS_line        = name + '_Dstar0KWS'
         name_Dstar0PWS_line        = name + '_Dstar0PWS'
-
+        name_DstarpPp_line        = name + '_DstarpPp'
+        name_DstarpPm_line        = name + '_DstarpPm'
         '''
         make particles
         '''
@@ -188,6 +193,8 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.Dstar0P         = CombineDandTrack( name+"Lam2Dstar0P"     , "[Lambda_c(2625)+ -> D*(2007)0 p+]cc", self.sel_Dstar0D0pi0, self.sel_P )
         self.Dstar0KWS       = CombineDandTrack( name+"Ds2Dstar0KWS"     , "[D_s1(2536)+ -> D*(2007)0 K-]cc", self.sel_Dstar0D0pi0, self.sel_K )
         self.Dstar0PWS       = CombineDandTrack( name+"Lam2Dstar0PWS"     , "[Lambda_c(2625)+ -> D*(2007)0 p~-]cc", self.sel_Dstar0D0pi0, self.sel_P )
+        self.DstarpPp        = CombineDandTrack( name+"Lam2DstarpPp"     , "[Lambda_c(2625)+ -> D*(2010)+ p+]cc", self.sel_Dstarp, self.sel_P )
+        self.DstarpPm        = CombineDandTrack( name+"Lam2DstarpPm"     , "[Lambda_c(2625)+ -> D*(2010)+ p~-]cc", self.sel_Dstarp, self.sel_P )
 
         '''
         Here we construct the stripping lines
@@ -210,6 +217,10 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.Dstar0P_line     = StrippingLine( name_Dstar0P_line  , prescale = config[ 'Dstar0P_prescale' ]      , selection = self.Dstar0P       )
         self.Dstar0KWS_line     = StrippingLine( name_Dstar0KWS_line  , prescale = config[ 'Dstar0KWS_prescale' ]      , selection = self.Dstar0KWS       )
         self.Dstar0PWS_line     = StrippingLine( name_Dstar0PWS_line  , prescale = config[ 'Dstar0PWS_prescale' ]      , selection = self.Dstar0PWS       )
+        self.DstarpPp_line     = StrippingLine( name_DstarpPp_line  , prescale = config[ 'DstarpPp_prescale' ]      , selection = self.DstarpPp       )
+        self.DstarpPm_line     = StrippingLine( name_DstarpPm_line  , prescale = config[ 'DstarpPm_prescale' ]      , selection = self.DstarpPm       )
+
+
         '''
         register stripping lines
         '''
@@ -228,11 +239,12 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         #self.registerLine( self.DsKm_line )
         #self.registerLine( self.DsKs_line )
         self.registerLine( self.DstarD02K3PiKs_line )
-        self.registerLine( self.Dstar0K_line )
-        self.registerLine( self.Dstar0P_line )
-        self.registerLine( self.Dstar0KWS_line )
-        self.registerLine( self.Dstar0PWS_line )
-
+        #self.registerLine( self.Dstar0K_line )
+        #self.registerLine( self.Dstar0P_line )
+        #self.registerLine( self.Dstar0KWS_line )
+        #self.registerLine( self.Dstar0PWS_line )
+        self.registerLine( self.DstarpPp_line )
+        self.registerLine( self.DstarpPm_line )
 
 '''
 we create our particles
@@ -262,7 +274,9 @@ def CombineDandTrack( name,
     if ( name.endswith( "Ds2Dstar0K" ) or name.endswith( "Ds2Dstar0KWS" ) ) :
         basic_cut += ' & (M<3.5*GeV)'
     if( name.endswith( "Lam2Dstar0P" ) or name.endswith( "Lam2Dstar0PWS" ) ):
-        basic_cut += ' & (M<4*GeV)'
+        basic_cut += ' & (M<3.6*GeV)'
+    if( name.endswith( "Lam2DstarpPp" ) or name.endswith( "Lam2DstarpPm" ) ):
+        basic_cut += ' & (M<3.6*GeV) & (LV02>0.)'
 
 
     D = CombineParticles( DecayDescriptor = decay, MotherCut = basic_cut )
