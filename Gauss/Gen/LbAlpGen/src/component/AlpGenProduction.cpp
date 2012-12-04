@@ -115,8 +115,8 @@ AlpGenProduction::AlpGenProduction( const std::string& type,
    - 1:t+q 2:t+b 3:t+W 4:t+bbar+W" );
   declareProperty( "iwdecmode" , m_iwdecmode = 6 , "W decay modes \
    - 1: e nu 2: mu nu 3: tau nu 4: e/mu/tau nu 5: q q''bar' 6: fully inclusive");
-  declareProperty( "itdecmode" , m_itdecmode = 6 , "top (or t-tbar) decay modes \ 
-   - 1: e nu b 2: mu nu b 3: tau nu b 4:l nu b  : 5:q q b 6:fully inclusive");
+  declareProperty( "itdecmode" , m_itdecmode = 6 , 
+                   "top (or t-tbar) decay modes - 1: e nu b 2: mu nu b 3: tau nu b 4:l nu b  : 5:q q b 6:fully inclusive");
   declareProperty( "izdecmode" , m_izdecmode = 4 , "Z decay modes, in imode=2 - 1:electron 2: muon 3:tau 4:e/mu/tau");
   declareProperty( "xlclu" , m_xlclu = -1.0 , "lambda value for ckkw alpha (match shower alpha) - default -1");
   declareProperty( "lpclu" , m_lpclu =  -1.0, "loop order for ckkw alpha (match shower alpha) - default -1");
