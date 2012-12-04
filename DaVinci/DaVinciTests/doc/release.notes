@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-12-04 - Chris Jones
+ - Update commonparticles/standardintermediate_run reference again for Taus
+
+! 2012-12-04 - Chris Jones
  - Update the reference blocks for io.qms/test_decaytreetuple after 
    VertexFitter fixes
 
