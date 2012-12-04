@@ -9,6 +9,9 @@
  */
 //-----------------------------------------------------------------------------
 
+#ifndef RICHRECBASE_RICHRECBASE_ICPP
+#define RICHRECBASE_RICHRECBASE_ICPP 1
+
 // local
 #include "RichRecBase/RichRecBase.h"
 
@@ -53,3 +56,5 @@ StatusCode Rich::Rec::CommonBase<PBASE>::finaliseRichReco()
   return StatusCode::SUCCESS;
 }
 //=============================================================================
+
+#endif // RICHRECBASE_RICHRECBASE_ICPP

@@ -56,6 +56,11 @@ namespace
     Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecRingOnPixel> > obj_6;
     Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecPhoton*> >     obj_7;
     Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecTrack*> >      obj_8;
+    LHCb::RichRecSegments                                          obj_9;
+    LHCb::RichRecTracks                                           obj_10;
+    LHCb::RichRecPixels                                           obj_11;
+    LHCb::RichRecPhotons                                          obj_12;
+    LHCb::RichRecRings                                            obj_13;
   };
 }
 
