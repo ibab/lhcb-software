@@ -125,12 +125,18 @@ class ArchiveFile(ProjectTool):
                 if not ca.pathExists(castor_filename):
                     log.error("Cannot remove % s- Archive does not exist: %s" % (f, castor_filename))
                 else:
+                    print "############################"
+                    print "Size check:"
+                    print
+                    os.system("ls -l %s" % f)
+                    os.system("nsls -l %s" % castor_filename)
+                    print
                     print "Running: rm -i %s (dry-run:%s)" % (f, dryrun)
                     if not dryrun:
                         os.system("rm -i %s" % f)
 
 
-    def archiveFile(self, filename):
+    def archiveFile(self, afilename):
         rc = 1
         log = self.log
         dryrun = self.dryrun
@@ -141,7 +147,7 @@ class ArchiveFile(ProjectTool):
         if archiveTarget == ARCH_CASTOR:
             try:
                 from LbRelease.Archive.CastorArchiver import CastorArchiver
-                castor_filename = CASTOR_DIR + filename
+                castor_filename = CASTOR_DIR + afilename
                 ca = CastorArchiver()
                 if ca.pathExists(castor_filename):
                     log.info("File already exists: %s" % castor_filename)
@@ -152,9 +158,9 @@ class ArchiveFile(ProjectTool):
                         log.info("Creating directory: %s" % castor_dir)
                         if not dryrun:
                             ca.mkdir(castor_dir)
-                    log.info("Archiving file to %s" % castor_filename)
+                    log.info("Archiving %s to %s" % (afilename, castor_filename))
                     if not dryrun:
-                        ca.archiveFile(self.fullfilename, castor_filename)
+                        ca.archiveFile(afilename, castor_filename)
                     log.info("Archived file to %s" % castor_filename)
                     rc = 0
             except Exception, e:
