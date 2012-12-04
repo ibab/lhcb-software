@@ -1,5 +1,5 @@
 package           CondDBUI
-version           v3r19
+version           v3r20
 
 branches cmt doc python scripts qt_resources
 #ignore_pattern package_stamps

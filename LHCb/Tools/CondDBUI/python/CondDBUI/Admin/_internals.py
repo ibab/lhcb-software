@@ -444,6 +444,8 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
                 elif "not a child of" in desc:
                     # tag exists in a folderset not containing the current one
                     _log.info("tag not found in %s", node)
+                elif 'Attempt to access data of NULL attribute "NODE_PARENTID"' in desc:
+                    pass
                 else:
                     raise
         value += 1
