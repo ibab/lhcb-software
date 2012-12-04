@@ -100,6 +100,23 @@ class CastorProjectArchiver(CastorArchiver):
             res.append((f, state))
         return res
 
+    def removeArchivedFiles(self):
+        """ Method that archives all files for a project to DIRAC """
+        p = self.project
+        res = []
+        for f in p.getDistFiles():
+            cfn = f.getCastorFilename()
+            self.log.info("Checking if %s is archived" % f.getDistFileName())
+            if self.pathExists(cfn):
+                self.log.info("File already archived %s - removing" % f.getDistFileName())
+                print "Running: rm -i %s" % f.getDistFileName()
+                os.system("rm -i %s" % f.getDistFileName())
+
+            else:
+                # Checking if the target directory exists...
+                self.log.info("Cannot remove file not archived:%s" % f.getDistFileName())
+
+
     def archiveProject(self):
         """ Method that archives all files for a project to DIRAC """
         p = self.project

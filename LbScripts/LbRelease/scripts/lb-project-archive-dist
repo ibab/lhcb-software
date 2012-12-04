@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """
-Scripts that archives and htnl files and related dependencies
+Scripts that archives a project distribution files
 
-lb-project-archive-htmldep filename
+lb-project-archive-dist project version
 
-As a result files are copied to CASTOR
+As a result files are copied to CASTOR or DIRAC
 
 """
 import sys
@@ -30,6 +30,9 @@ class ArchiveDist(ProjectTool):
                           dest="archiveTarget",
                           choices = ARCHIVES,
                           help="Specify target for archiving (castor|dirac)")
+        parser.add_option("--remove", action="store_true",
+                          dest="remove",
+                          help="Whether to remove the associated files after archive")
         parser.set_defaults(archiveTarget=ARCH_CASTOR)
 
 
@@ -48,6 +51,8 @@ class ArchiveDist(ProjectTool):
                 # Actually create the archiver instance
                 archiver = CastorProjectArchiver(self.projectName, self.version)
                 archiver.archiveProject()
+                if self.options.remove:
+                    archiver.removeArchivedFiles()
                 rc = 0
             except Exception, e:
                 self.log.error("Error while archiving to CASTOR: %s" % str(e))
