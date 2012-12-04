@@ -65,6 +65,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
   declareProperty( "Tuning", m_tuningFile = "LHCbDefault.cmd");
   declareProperty( "UserTuning", m_tuningUserFile = ""); //a default Pythia8 tune using the Tune: 'subrun' would overwrite LHCb defaults, if chosen here...
   declareProperty( "PythiaUserProcessTool" , m_fortranUPToolName = "" ) ;
+  declareProperty( "LHAupOptionFile" , m_LHAupOptionFile = "LHAup.cmd");
 }
 
 //=============================================================================
@@ -165,20 +166,31 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   if (!success)
     Warning ( "Cannot find "+m_tuningUserFile+", thus default LHCb tune is not overwritten" ) ;
   
+
+  // Check if there is a FORTRAN User Process tool
+  if ( "" != m_fortranUPToolName ) {
+    m_fortranUPTool = tool< ILHAupFortranTool >( m_fortranUPToolName , this ) ;
+    if ( "UNKNOWN" != System::getEnv("LBPYTHIA8ROOT") ) {
+      optspath  = System::getEnv( "LBPYTHIA8ROOT" ) ;
+      success = m_pythia->readFile(optspath+"/options/"+m_LHAupOptionFile);
+      if (!success)
+        Warning ( "Cannot find  LBPYTHIA8ROOT/options/"+m_LHAupOptionFile+", thus default pythia8 options are parsed" ) ;
+    }
+    else
+      Warning ( "Cannot find LBPYTHIA8ROOT/options/"+m_LHAupOptionFile+", thus default pythia8 options are parsed" ) ;
+    m_pythia -> setLHAupPtr( ( Pythia8::LHAup * ) m_fortranUPTool -> getLHAupPtr() ) ;
+  }
+
+
   // also read a vector of commands if any is provided, for backward compatibility
   // this will overwrite anything that is passed through a user tuning file
+  // should be done as the last step of the reading of the options,
+  // so that everything can be overwritten by the user.
   for (unsigned int count = 0; count<m_commandVector.size(); ++count) {  
     cout << m_commandVector[count] << endl;
     success = m_pythia->readString(m_commandVector[count]);
   }
   
-  // Check if there is a FORTRAN User Process tool
-  if ( "" != m_fortranUPToolName ) {
-    m_fortranUPTool = tool< ILHAupFortranTool >( m_fortranUPToolName , this ) ;
-    m_pythia -> readString( "SoftQCD:all = off" ) ;
-    m_pythia -> readString( "Beams:frameType = 5" ) ;
-    m_pythia -> setLHAupPtr( ( Pythia8::LHAup * ) m_fortranUPTool -> getLHAupPtr() ) ;
-  }
   m_pythia->init();
   return StatusCode::SUCCESS;
 }

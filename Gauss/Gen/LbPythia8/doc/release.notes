@@ -4,6 +4,11 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2012-12-04 - Aurelien Martens
+ - Reorder the reading of options so that user options are always overwritting
+other options.
+ - add LHAup.cmd to be read when using LHA user processes (see below)
+
 ! 2012-12-03 - Patrick Robbe
  - Add classes to interface to Pythia User Processes written in Fortran
    in the Les Houches accord format. 

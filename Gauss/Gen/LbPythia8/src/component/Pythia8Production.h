@@ -118,7 +118,7 @@ private:
   
   std::string m_tuningFile;
   std::string m_tuningUserFile;
-  
+  std::string m_LHAupOptionFile;
   //kept for backward compatibilit for the time being
   CommandVector m_commandVector;
 } ;
