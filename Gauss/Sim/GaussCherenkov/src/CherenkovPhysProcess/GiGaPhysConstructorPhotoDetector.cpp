@@ -186,13 +186,17 @@ void GiGaPhysConstructorPhotoDetector::ConstructPmtSiEnLoss()
   theRichPmtSiEnergyLossProcess->InitializePmtProcParam();
 
 
+  TorchTBMcpEnergyLoss* theTorchTBMcpEnergyLossProcess =0;
+  
+
+  if( m_ActivateTorchTBMcpEnergyLossProc) {
     
-   TorchTBMcpEnergyLoss* theTorchTBMcpEnergyLossProcess =
-     new TorchTBMcpEnergyLoss("TorchTBMcpEnergyLossProcess", fUserDefined  );
+   theTorchTBMcpEnergyLossProcess =  new TorchTBMcpEnergyLoss("TorchTBMcpEnergyLossProcess", fUserDefined  );
    theTorchTBMcpEnergyLossProcess->setMcpAnodeDetEff(m_TorchTBMcpAnodeEfficiency );
    theTorchTBMcpEnergyLossProcess->setMcpAnodePixelChipEff(m_TorchMcpAnodeReadoutChipEfficiency);
    theTorchTBMcpEnergyLossProcess->InitializeMcpProcParam();
    
+  }
   
   
 
