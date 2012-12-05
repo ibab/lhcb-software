@@ -33,7 +33,7 @@ DECLARE_ALGORITHM_FACTORY( PrLHCbID2MCParticle )
   PrLHCbID2MCParticle::PrLHCbID2MCParticle( const std::string& name,
                                               ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator ),
-      m_otHitCreator("Tf::OTHitCreator"),
+      m_otHitCreator("Tf::OTHitCreator/OTHitCreator"),
       m_linker(NULL),
       m_detectorLink(NULL)
 {
