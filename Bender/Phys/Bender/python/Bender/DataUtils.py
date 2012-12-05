@@ -47,12 +47,13 @@ with the smear campaign of Dr.O.Callot et al.:
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2010-02-12"
 __version__ = "$Revision$"
-__all__     = ( 'extendfile1' ,
-                'extendfile2' ,
-                'extendfile'  ,
-                'inCastor'    ,
-                'inEOS'       ,
-                'inGrid'      ) 
+__all__     = ( 'extendfile1'  ,
+                'extendfile2'  ,
+                'extendfile'   ,
+                'inCastor'     ,
+                'inEOS'        ,
+                'inGrid'       ,
+                'hasGridProxy' ) 
 # =============================================================================
 ## logging
 # =============================================================================
@@ -178,6 +179,26 @@ def inEOS ( fname             ,
     
     return False 
 
+# =============================================================================
+## check the validity of GRID proxy 
+#  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+#  @date 2012-10-10
+def hasGridProxy ( ) : 
+    """
+    Check GRID proxy 
+    """
+    #
+    ## 1-check lhcb-proxy-info
+    #
+    import os
+    from subprocess import Popen, PIPE
+    p   = Popen (  ['lhcb-proxy-info' , '--checkvalid' ] ,
+                   env       = os.environ ,
+                   stdout    = PIPE       ,
+                   stderr    = None       )
+    (cout,cerr) = p.communicate()
+    #
+    return 0 == p.returncode 
 
 # =============================================================================
 ## check the presence of file in Grid and get the access URL  
@@ -191,14 +212,7 @@ def inGrid ( filename , grid ) :
     #
     ## 1-check lhcb-proxy-info
     #
-    import os
-    from subprocess import Popen, PIPE
-    p   = Popen (  ['lhcb-proxy-info' , '--checkvalid' ] ,
-                   env       = os.environ ,
-                   stdout    = PIPE       ,
-                   stderr    = None       )
-    (cout,cerr) = p.communicate()
-    if 0 != p.returncode  : return None    ## LHCb-PROXY-INFO is invalid! 
+    if not hasGridProxy () : return None ## LHCb-PROXY-INFO is invalid! 
     #
     ## 2 - get the files from storage element 
     #
