@@ -331,9 +331,6 @@ namespace Tf
 
   StatusCode OTHitCreator::updateGeometry()
   {
-    IDetDataSvc* detDataSvc(0) ;
-    service("DetectorDataSvc",detDataSvc, true).ignore() ;
-    //if(msgLevel(MSG::DEBUG)) debug() 
     if(m_detectordata) {
       m_detectordata->clearEvent();
       delete m_detectordata ;

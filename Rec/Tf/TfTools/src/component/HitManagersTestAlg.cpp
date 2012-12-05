@@ -27,7 +27,7 @@ DECLARE_ALGORITHM_FACTORY( HitManagersTestAlg )
 //=============================================================================
 HitManagersTestAlg::HitManagersTestAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ) { }
+  : GaudiAlgorithm ( name , pSvcLocator ), m_tMan(NULL), m_ttMan(NULL) { }
 
 //=============================================================================
 // Destructor

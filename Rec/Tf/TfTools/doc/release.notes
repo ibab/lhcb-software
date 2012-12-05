@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2012-12-05 - Marco Cattaneo
+ - Remove unneccessary connection to DetectorDataSvc in OTHitCreator
+ - Fix UNINIT_CTOR coverity defects
+
 ! 2012-12-05 - Olivier Callot
  - Fix unnecessary printouts, test statuscode value, replace endreq by endmsg;
 

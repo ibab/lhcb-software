@@ -10,9 +10,12 @@
 
 DECLARE_ALGORITHM_FACTORY( FlagHitsForPatternReco )
 
-FlagHitsForPatternReco::FlagHitsForPatternReco(const std::string& name,
-	ISvcLocator* pSvcLocator):
-    GaudiAlgorithm(name, pSvcLocator)
+FlagHitsForPatternReco::FlagHitsForPatternReco(const std::string& name, ISvcLocator* pSvcLocator):
+  GaudiAlgorithm(name, pSvcLocator),
+  m_tHitManager(NULL),
+  m_ttHitManager(NULL),
+  m_rHitManager(NULL),
+  m_phiHitManager(NULL)
 {
     declareProperty("EfficiencyCorrections", m_effCorrections );
     declareProperty("MisalignmentCorrections", m_misCorrections );

@@ -81,7 +81,7 @@ namespace Tf
 
     STDetector::STDetector(const DeSTDetector& stdetector, const std::string& clusterlocation,
                            GaudiTool& parent)
-      : m_clusterlocation(clusterlocation), m_parenttool(&parent)
+      : m_clusterlocation(clusterlocation), m_parenttool(&parent), m_clusters(NULL)
     {
       // copy the entire hierarchy
       size_t nummodules(0) ;
