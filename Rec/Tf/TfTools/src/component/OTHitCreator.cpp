@@ -301,20 +301,20 @@ namespace Tf
       info() << "Drift times are not used, drift radius set to " <<
         m_forceDriftRadius / Gaudi::Units::mm <<
         " mm, resolution set to " << m_forceResolution / Gaudi::Units::mm
-             << " mm." << endreq;
+             << " mm." << endmsg;
       info() << "rt relation gives: r(2ns) = " <<
         m_rtrel->radius(2.) / Gaudi::Units::mm << " mm, r(40ns) " <<
-        m_rtrel->radius(40.) / Gaudi::Units::mm << " mm." << endreq;
+        m_rtrel->radius(40.) / Gaudi::Units::mm << " mm." << endmsg;
     } else {
       /* we want a message if we run in debugging mode, just to make
        * sure we're aware of what we're doing */
-      if(msgLevel(MSG::DEBUG)) debug() << "Drift times are used." << endreq;
+      if(msgLevel(MSG::DEBUG)) debug() << "Drift times are used." << endmsg;
     }
 
     // we may need to register to the conditions of all modules instead
     updMgrSvc()->registerCondition( this, const_cast<IGeometryInfo*>(m_otdetector->geometry()),
                                     &OTHitCreator::updateGeometry );
-    updateGeometry();
+    sc = updateGeometry();
     return sc ;
   }
 
@@ -334,7 +334,6 @@ namespace Tf
     IDetDataSvc* detDataSvc(0) ;
     service("DetectorDataSvc",detDataSvc, true).ignore() ;
     //if(msgLevel(MSG::DEBUG)) debug() 
-    info() << "In OTHitCreator::updateGeometry() " << detDataSvc->eventTime() << endreq ;
     if(m_detectordata) {
       m_detectordata->clearEvent();
       delete m_detectordata ;
@@ -374,8 +373,6 @@ namespace Tf
 
   Tf::OTHitRange OTHitCreator::hits() const
   {
-    info() << "m_detectordata = " << m_detectordata << endmsg;
-    
     if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
     return m_detectordata->hits() ;
   }

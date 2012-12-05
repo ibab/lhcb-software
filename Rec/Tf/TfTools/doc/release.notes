@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2012-12-05 - Olivier Callot
+ - Fix unnecessary printouts, test statuscode value, replace endreq by endmsg;
+
 ! 2012-12-04 - Olivier Callot
  - Initialize the geometry in OTHitCreator.
 
