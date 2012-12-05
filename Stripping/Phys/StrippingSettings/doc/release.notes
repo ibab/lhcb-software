@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-05 - Mat Charles
+ - Update charm settings for CharmedAndCharmedStrangeSpectroscopyConf lines for Stripping20r1
+
 !========================= StrippingSettings v2r19 2012-11-30 =========================
 
 ! 2012-11-30 - Anton Poluektov 

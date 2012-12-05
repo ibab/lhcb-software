@@ -475,7 +475,9 @@ CharmedAndCharmedStrangeSpectroscopy = {
       'Dstar0K_prescale'         : 1,
       'Dstar0P_prescale'         : 1,
       'Dstar0KWS_prescale'       : 1,
-      'Dstar0PWS_prescale'       : 1
+      'Dstar0PWS_prescale'       : 1,
+      'DstarpPp_prescale'        : 1,
+      'DstarpPm_prescale'        : 1
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
