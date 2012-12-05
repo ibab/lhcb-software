@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2012-12-05 - Marco Cattaneo
+ - Mask icc11 warnings from auto-generated dict following previous change
+
 ! 2012-12-04 - Chris Jones
  - Add KeyedContainers to python dictionary
 

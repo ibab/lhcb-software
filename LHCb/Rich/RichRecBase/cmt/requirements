@@ -44,7 +44,7 @@ apply_pattern reflex_dictionary                                         \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
 # Disable some compiler warnings in the automatically generated dict code
 macro_append RichRecBaseDict_cppflags "" \
-                           target-icc " -wd873"
+                           target-icc " -wd873 -wd177 -wd191"
 
 
 macro RichRecBaseGen_dependencies RichRecBaseObj2Doth
