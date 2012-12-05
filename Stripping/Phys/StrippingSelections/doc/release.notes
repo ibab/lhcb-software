@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-05 - Nick Torr
+ - StrippingDstarD2KShh
+   - Register D0/D0bar selection as seperate TES location for swimming
+
 ! 2012-12-05 - Jibo He for Yury Shcheglov
  - StrippingBetac2PhiP.py
    . Updated for Stripping v20r1 

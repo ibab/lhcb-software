@@ -9,6 +9,7 @@ The cuts are mostly the same as the code used in late 2010, except:
  * Track fit chi2/NDF cuts tightened quite a bit, but cut on track fit probability
    removed. The probability was too tight before, so this should be a net loosening.
  * All modes share a common proper lifetime cut (but cut value is the same as before)
+ * Separate container for both D0 and D0bar added for KSKK & KSPP (Nick)
 '''
 
 __author__ = ['Mat Charles']
@@ -134,6 +135,32 @@ class DstarD2KShhBuilder(LineBuilder) :
         self.selD0Conj2KSKKDD = Selection('SelConjugateD2KSKKDDFor'+name, Algorithm = _localConj_KKDD, RequiredSelections = [self.selD2KSKKDD])
         self.selD0Conj2KSPPDD = Selection('SelConjugateD2KSPPDDFor'+name, Algorithm = _localConj_PPDD, RequiredSelections = [self.selD2KSPPDD])
 
+        # Register the D0/D0bar selection as StrippingLine objects (Nick)
+        self.lineD2KSPPLL = StrippingLine('StrippingD2KSPPLLFor'+name,
+                                          prescale  = 1.0,
+                                          postscale = 1.0,
+                                          selection = self.selD2KSPPLL)
+        
+        self.lineD2KSPPDD = StrippingLine('StrippingD2KSPPDDFor'+name,
+                                          prescale  = 1.0,
+                                          postscale = 1.0,
+                                          selection = self.selD2KSPPDD)
+        
+        self.lineD2KSKKLL = StrippingLine('StrippingD2KSKKLLFor'+name,
+                                          prescale  = 1.0,
+                                          postscale = 1.0,
+                                          selection = self.selD2KSKKLL)
+        
+        self.lineD2KSKKDD = StrippingLine('StrippingD2KSKKDDFor'+name,
+                                          prescale  = 1.0,
+                                          postscale = 1.0,
+                                          selection = self.selD2KSKKDD)
+        
+        self.registerLine(self.lineD2KSPPLL)
+        self.registerLine(self.lineD2KSPPDD)
+        self.registerLine(self.lineD2KSKKLL)
+        self.registerLine(self.lineD2KSKKDD)
+        
         # Reconstruct D*+ -> D0 pi+ (&cc), using a wide mass window:
         self.selDstar_KKLL = makeDstar('Dstar_KKLLFor'+name, [self.selD2KSKKLL, self.selD0Conj2KSKKLL], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_KK'], config['SoftPionCutPIDe'], config['DstarCutPT_KK'], config['wideDMCutLower'], config['wideDMCutUpper'])
         self.selDstar_KPLL = makeDstar('Dstar_KPLLFor'+name, [self.selD2KSKPLL                       ], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_KP'], config['SoftPionCutPIDe'], config['DstarCutPT_KP'], config['wideDMCutLower'], config['wideDMCutUpper'])
