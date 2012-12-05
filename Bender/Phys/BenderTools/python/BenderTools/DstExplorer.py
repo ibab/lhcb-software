@@ -212,7 +212,16 @@ def configure ( options , arguments ) :
     if options.RootInTES and '/Event' != options.RootInTES  : 
         from BenderTools.MicroDST import uDstConf 
         uDstConf(options.RootInTES)
-   
+
+    #
+    ## check for Grid-access
+    #
+    if options.Grid : 
+        from Bender.DataUtils import hasGridProxy
+        if not hasGridProxy () :
+            logger.warning ( 'GRID proxy is not available, switch off GRID-lookup' )
+            options.Grid = ''  ## SWITCH OFF Grid-lookup
+
     if not options.Simulation and options.DataType in ( '2010' ,
                                                         '2011' ,
                                                         '2012' ) :
@@ -261,12 +270,6 @@ def configure ( options , arguments ) :
                         
                 logger.info( ' SIMCOND   : %s ' %  db.LocalTags["SIMCOND"] ) 
 
-    ## check grid  
-    if options.Grid : 
-        from Bender.DataUtils import hasGridProxy
-        if not hasGridProxy () :
-            logger.info ( ' GRID proxy is not avalaible, switch off GRID-lookup' )
-            options.Grid = ''  ## SWITCH OFF Grid-lookup 
 
     ## Reset all DaVinci sequences 
     def _action ( ) :
