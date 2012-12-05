@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2012-12-05 - Aurelien Martens
+ - fix options for new pdf
+
 ! 2012-12-04 - Aurelien Martens
  - Reorder the reading of options so that user options are always overwritting
 other options.
