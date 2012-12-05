@@ -5,8 +5,8 @@ Adapted to current stripping framework by Y. Shcheglov.
 '''
 
 __author__ = ['Yury Shcheglov', 'Alexey Dzyuba']
-__date__ = '12/04/2012 modified 21/05/2012  by NRS'
-__version__ = '$Revision: 1.0 $'
+__date__ = '12/04/2012 modified 21/05/2012  by NRS  modified 4/12/2012  by Y. Shcheglov'
+__version__ = '$Revision: 2.0 $'
 
 __all__ = ( 'StrippingBetac2PhiPConf',
             'makePhi2KK', 
@@ -140,7 +140,7 @@ def makeBetac2PhiP( name
                "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') < %(Betac_BPVLTIME_MAX)s)" % locals()
      
 
-    _Betacplusplus = CombineParticles(
+    _Betacplus = CombineParticles(
           DecayDescriptors = decDescriptors
         , DaughtersCuts    = {"p+" : pCuts, "phi(1020)" : phiCuts }
         , CombinationCut   = combCuts
@@ -148,7 +148,7 @@ def makeBetac2PhiP( name
     )
 
     return Selection( name,
-                      Algorithm          = _Betacplusplus,
+                      Algorithm          = _Betacplus,
                       RequiredSelections = inputSel
                     )
 
@@ -168,7 +168,7 @@ default_config = {
                   , 'Betac_BPVDIRA_MIN'         : 0.9999    
                   , 'Betac_VCHI2VDOF_MAX'       : 25.0   
                   , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
-                  , 'Betac_BPVLTIME_MAX'        : 0.0012 * ns
+                  , 'Betac_BPVLTIME_MAX'        : 0.06 * ns
                   , 'Hlt2IncPhiDecision'        : "HLT_PASS('Hlt2IncPhiDecision')"
                   , 'PrescaleBetac2PhiP'        : 1.0
                   , 'PostscaleBetac2PhiP'       : 1.0

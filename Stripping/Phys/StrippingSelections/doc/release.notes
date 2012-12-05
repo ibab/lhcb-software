@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-05 - Jibo He for Yury Shcheglov
+ - StrippingBetac2PhiP.py
+   . Updated for Stripping v20r1 
+
 !========================= StrippingSelections v3r19 2012-11-30 =========================
 
 ! 2012-11-30 - Zhou Xing	
