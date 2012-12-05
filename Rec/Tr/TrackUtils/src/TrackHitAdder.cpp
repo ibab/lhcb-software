@@ -67,7 +67,7 @@ TrackHitAdder::TrackHitAdder( const std::string& name,
   : GaudiHistoAlg( name , pSvcLocator ),
     m_ithitcreator("Tf::STHitCreator<Tf::IT>/ITHitCreator"),
     m_tthitcreator("Tf::STHitCreator<Tf::TT>/TTHitCreator"),
-    m_othitcreator("Tf::OTHitCreator"),
+    m_othitcreator("Tf::OTHitCreator/OTHitCreator"),
     m_trackhitcollector("TrackHitCollector",this)
 {
   declareProperty("TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
