@@ -101,7 +101,7 @@ def makeParser ( usage = None ,
         type    = 'str'            , 
         dest    = 'Grid'           ,
         help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed)" ,
-        default = ''
+        default = 'CERN'
         )
     ## 
     parser.add_option (

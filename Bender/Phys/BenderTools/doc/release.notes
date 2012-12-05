@@ -5,6 +5,12 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v22r3   2012-12-05 ====================
+
+! 2012-12-05 - Vanya Belyaev
+
+ - change the default for -g option, not it will lookup files at CERN 
+
 ! ==================== Phys/BenderTools v22r2r1 2012-10-28 ====================
 
 ! 2012-10-28 - Vanya Belyaev

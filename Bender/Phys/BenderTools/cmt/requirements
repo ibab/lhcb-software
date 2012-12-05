@@ -21,7 +21,7 @@
 #
 # =============================================================================
 package             BenderTools
-version             v22r2p1
+version             v22r3
 
 # =============================================================================
 branches            cmt doc python scripts 
@@ -53,7 +53,6 @@ alias get_db_tags  "get_dbtags.py"
 alias get-db-tags  "get_dbtags.py" 
 alias db_tags      "get_dbtags.py" 
 alias db-tags      "get_dbtags.py" 
-
 
 # =============================================================================
 # The END

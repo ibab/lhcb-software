@@ -260,8 +260,14 @@ def configure ( options , arguments ) :
                     db.LocalTags["SIMCOND"]  = tags ['SIMCOND']
                         
                 logger.info( ' SIMCOND   : %s ' %  db.LocalTags["SIMCOND"] ) 
-                
-     
+
+    ## check grid  
+    if options.Grid : 
+        from Bender.DataUtils import hasGridProxy
+        if not hasGridProxy () :
+            logger.info ( ' GRID proxy is not avalaible, switch off GRID-lookup' )
+            options.Grid = ''  ## SWITCH OFF Grid-lookup 
+
     ## Reset all DaVinci sequences 
     def _action ( ) :
         """
