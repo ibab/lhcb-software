@@ -4,6 +4,10 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2012-12-05 - Olivier Callot
+ - Change the name of the OTHitCreator from Tf::OTHitCreator to OTHitCreator in 
+   PatLHCbID2MCParticle
+
 !========================= PatChecker v3r13 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.

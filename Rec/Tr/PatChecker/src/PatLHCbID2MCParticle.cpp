@@ -30,7 +30,7 @@ DECLARE_ALGORITHM_FACTORY( PatLHCbID2MCParticle )
 PatLHCbID2MCParticle::PatLHCbID2MCParticle( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_othitcreator("Tf::OTHitCreator")
+    m_otHitCreator("Tf::OTHitCreator/OTHitCreator")
 {
   m_targetName = "Pat/LHCbID";
   declareProperty( "TargetName", m_targetName );
@@ -53,7 +53,7 @@ StatusCode PatLHCbID2MCParticle::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  if (m_linkOT) m_othitcreator.retrieve().ignore();
+  if (m_linkOT) m_otHitCreator.retrieve().ignore();
  
   return StatusCode::SUCCESS;
 }
@@ -205,7 +205,7 @@ StatusCode PatLHCbID2MCParticle::execute() {
     LinkedTo<LHCb::MCParticle> 
       otLink( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
 
-    OTHitRange othits = m_othitcreator->hits();
+    OTHitRange othits = m_otHitCreator->hits();
 
     for (OTHitRange::const_iterator otSTH = othits.begin();
         otSTH < othits.end();otSTH++){ 

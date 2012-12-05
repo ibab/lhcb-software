@@ -51,7 +51,7 @@
   private:
     std::string m_targetName;
     std::vector<const LHCb::MCParticle*> m_partList;
-    ToolHandle<Tf::IOTHitCreator> m_othitcreator;
+    ToolHandle<Tf::IOTHitCreator> m_otHitCreator;
     bool m_linkOT;
     bool m_linkIT;
     bool m_linkTT;
