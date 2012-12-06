@@ -112,7 +112,7 @@ class DstarD2KShhBuilder(LineBuilder) :
 
         # Now we make the various flavours of D0 decay (KSK+K-, KSpi+pi-, KSK+pi-, KSK-pi+):
         strDecaysPP = [ "D0 -> KS0 pi+ pi-" ]
-        strDecaysKP = [ "D0 -> KS0 K+ pi-", "D0 -> KS0 K- pi+" ]
+        strDecaysKP = [ "[D0 -> KS0 K+ pi-]cc", "[D0 -> KS0 K- pi+]cc" ]
         strDecaysKK = [ "D0 -> KS0 K+ K-" ]
         self.selD2KSKKLL = makeD2KShh('D2KSKKLLFor'+name, strDecaysKK, self.selKSLL, self.selDauKK, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KK'], config['wideDMassCut_KKLL'], config['DCutTau'], config['KSCutZFDFromD'])
         self.selD2KSKPLL = makeD2KShh('D2KSKPLLFor'+name, strDecaysKP, self.selKSLL, self.selDauKP, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KP'], config['wideDMassCut_KPLL'], config['DCutTau'], config['KSCutZFDFromD'])
