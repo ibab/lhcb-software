@@ -15,8 +15,8 @@ j = Job (
     events            = -1             ,
     ) ,
     #
-    outputdata     = [ '*.csv' ] , 
-    outputsandbox  = [ '*.root',
+    outputdata     = [ '*.root' ] , 
+    outputsandbox  = [
                        '*.txt' ,
                        '*.xml' ,
                        '*.db'  ] , 
