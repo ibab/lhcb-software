@@ -5,6 +5,15 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2012-12-05 - V. Gligorov
+ - Add scripts for correcting the VELO acceptance bug to the scripts directory,
+   together with scripts to execute it on Stripping17 KK/KPi/PiPi ntuples.  
+ - Correct bug in VELO acceptance calculation. This now takes into account the
+   possibility of tertiary vertices, e.g. in B->DPi, D->3h.
+ - Rewrite code which calculates the number of VELO hits on a track to take
+   into account more details of the VELO geometry, for example tracks
+   crossing the VELO halves, or tracks starting outside the VELO and going back in. 
+
 !========================= Swimming v2r8p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
