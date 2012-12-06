@@ -4,7 +4,7 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
-</PRE><H1><A NAME="v43r3">2012-12-04 - GaussSys v43r3</A></H1><PRE>
+</PRE><H1><A NAME="v43r3">2012-12-06 - GaussSys v43r3</A></H1><PRE>
 <H2><A NAME="Note">Development release with Geant4 9.5.p02
     </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -26,6 +26,9 @@ Purpose: LHCb Simulation program
    EvtGen v12r11(private LHCb version),
    BcVegPy v3r1, <b>GenXicc v2r0</b> and HidValley v3r2 (private LHCb versions)
 </A></H3>
+
+! 2012-12-06 - Gloria Corti
+ - Take GaudiConf v17r2 to take a fix in SimConf
 
 ! 2012-11-27 - Gloria Corti
  - Remove LoKiGen since changes needed are in version in LHCb v35r3
@@ -70,7 +73,19 @@ Purpose: LHCb Simulation program
 ! 2012-11-29 - Patrick Robbe
  - Add option for Pythia6 to use the CT09MCS PDF from LHAPDF
 
-!========================= LbPythia8 v5r1 2012-12-03 =========================
+!========================= LbPythia8 v5r1 2012-12-06 =========================
+! 2012-12-05 - Aurelien Martens
+ - fix options for new pdf
+
+! 2012-12-04 - Aurelien Martens
+ - Reorder the reading of options so that user options are always overwritting
+other options.
+ - add LHAup.cmd to be read when using LHA user processes (see below)
+
+! 2012-12-03 - Patrick Robbe
+ - Add classes to interface to Pythia User Processes written in Fortran
+   in the Les Houches accord format.
+
 ! 2012-12-03 - Aurelien Martens
  - update options
  - cleanup in src file

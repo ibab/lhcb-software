@@ -7,6 +7,9 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 
+# Temporarily to pick up fix in GaudiConf
+use GaudiConf           v17r2
+
 # Gauss application: the application is not built on Win32
 use Gauss               v43r3   Sim
 
