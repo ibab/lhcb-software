@@ -1,0 +1,2 @@
+   svn import -m "first import of EventIndexer under Tools" svn+ssh://svn.cern.ch/reps/lhcb/LHCb/trunk/Tools/EventIndexer
+   svn mkdir --parents -m "create tags and branches directories for Tools/EventIndexer" svn+ssh://svn.cern.ch/reps/lhcb/LHCb/tags/Tools/EventIndexer svn+ssh://svn.cern.ch/reps/lhcb/LHCb/branches/Tools/EventIndexer
