@@ -269,7 +269,7 @@ def SwimmingEventLoop(gaudi, nEvents):
             runSwimmingStep(myGlobs, mycand, swimLoop)
 
             # Now get the trigger decision for this swimming step
-            HltDec = evaluateTisTos(myGlobs,mycand)
+            HltDec = evaluateTisTos(myGlobs,mycand,swimLoop)
             if DEBUGMODE :
                 print "Retrieved HLT decision",HltDec,"OK for this event" 
 
@@ -380,11 +380,11 @@ def SwimmingEventLoop(gaudi, nEvents):
 
         from Swimming.SwimmingTisTos import appendToFSP
         rel = relations.relations(mycand)
-        particles = [mycand]
-        appendToFSP(mycand, particles)
+        particles = [{"child" : mycand, "parent" : 0}]
+        appendToFSP(0, mycand, particles)
         for particle in particles:
             if rel.empty():
-                relations.relate(particle, report)
+                relations.relate(particle["child"], report)
             elif rel(0).to().key() != report.key():
                 print "There is a relation, but it points to another swimming report, this is very bad!!"
                 return StatusCode(False)

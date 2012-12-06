@@ -27,6 +27,8 @@ def n_mods_z_range( z1, z2, z_positions ):
     if z > z1 and z < z2: n += 1
   return n
 
+# Old function used for swimming 2010 data
+# Now obsolete, should not be used, left for legacy reasons
 def _trackInVELOAcceptance( x, y, z, tx1, ty1, n_min ):
   r = sqrt( x*x+y*y )
   n1 = 0
@@ -44,12 +46,100 @@ def _trackInVELOAcceptance( x, y, z, tx1, ty1, n_min ):
   if n1 >= n_min:
     return 1
   return 0    
+# End obsolete code
+# ---------------------------------------------------------
 
-def trackInVELOAcceptance( parent, track, minhits) :
-  x  = parent.endVertex().position().x()
-  y  = parent.endVertex().position().y()
-  z  = parent.endVertex().position().z()  
+def solve_quad(x0,y0,z0,tx,ty,r1) :
+  coef_a = tx*tx + ty*ty
+  coef_b = 2*(x0 * tx + y0*ty)
+  coef_c = x0*x0 + y0*y0 - r1*r1
+  if (4*coef_a*coef_c > coef_b*coef_b) :
+    return (-99999.,-99999.) 
+  temp = -0.5 * (coef_b + (coef_b/fabs(coef_b))*sqrt(coef_b*coef_b - 4*coef_a*coef_c))
+  x1 = temp
+  if fabs(coef_a) > 0 :
+    x1 /= coef_a
+  else :
+    x1 = -99999.
+  x2 = coef_c/temp
+  if x1 < x2 :
+    return (x1+z0,x2+z0)
+  else : 
+    return (x2+z0,x1+z0) 
+
+def nHitsOnTrackInVELOAcceptance(x, y, z, tx, ty) :
+  r = sqrt( x*x+y*y )
+  z1_min = (0.,0.)
+  z1_max = (0.,0.)
+  n1 = 0.
+  # We need the intercept of the line coming from x, y, z, with slopes m_tx, m_ty
+  # with radii r_min and r_max. There are two solutions for each radius
+  z1_min = solve_quad(x,y,z,tx,ty,r_min)
+  z1_max = solve_quad(x,y,z,tx,ty,r_max)
+  # Now, where are we?
+  if (r > r_max) :
+    # Are the crossing points ahead or behind us? 
+    if (    (z > z1_min[1]) and (z > z1_max[1]) ) : 
+      # Current z value is ahead of both z values where we cross r_min/max
+      # hence no hits on the VELO in the forward direction
+      return n1
+    # Do we cross r_min?
+    if not (fabs(z1_min[0]+z1_min[1] + 2*99999.) > 0.) :
+      # Do we cross the VELO at all?
+      if not (fabs(z1_max[0]+z1_max[1] + 2*99999.) > 0.) :
+        return n1
+      else :
+        # A/C side business is now tricky
+        # For now approximate by averaging
+        n1 =  n_mods_z_range( z1_max[0], z1_max[1], z_strip_A )
+        n1 += n_mods_z_range( z1_max[0], z1_max[1], z_strip_C )
+        n1 /= 2.
+    else :   
+      # We started outside r_max so we must cross r_max to get to r_min 
+      if x > 0 :
+        # From A side to C side
+        n1 += n_mods_z_range( z1_max[0], z1_min[0], z_strip_A )
+        n1 += n_mods_z_range( z1_min[1], z1_max[1], z_strip_C )
+      else :
+        # From C side to A side
+        n1 += n_mods_z_range( z1_max[0], z1_min[0], z_strip_C )
+        n1 += n_mods_z_range( z1_min[1], z1_max[1], z_strip_A )
+  elif (r > r_min) :
+    # Now we begin between r_min and r_max
+    # We can either just cross r_max, or cross r_min, go through the space between
+    # the sensors, cross r_min again, and finally cross r_max again
+    # 
+    # Which direction are we going in?
+    if (x*tx+y*ty > 0) : # Increasing r
+      if x > 0 : 
+        n1 = n_mods_z_range( z, z1_max[1], z_strip_A )
+      else :
+        n_mods_z_range( z, z1_max[1], z_strip_C )
+    else :
+      if x > 0 :
+        # From A side to C side
+        n1 =  n_mods_z_range( z, z1_min[0], z_strip_A )
+        n1 += n_mods_z_range( z1_min[1], z1_max[1], z_strip_C )   
+      else :
+        # From C side to A side
+        n1 =  n_mods_z_range( z, z1_min[0], z_strip_C )
+        n1 += n_mods_z_range( z1_min[1], z1_max[1], z_strip_A )
+  else :
+    # Simplest case, we start inside r_min, we can only cross once ahead of us.
+    # Simplify by ignoring tracks which cross the A/C side
+    if (x+tx*(z1_min[1]-z)) > 0 :
+      n1 = n_mods_z_range( z1_min[1], z1_max[1], z_strip_A )
+    else :
+      n1 = n_mods_z_range( z1_min[1], z1_max[1], z_strip_C )
+  return n1			
+  
+def trackInVELOAcceptance( swimPoint, parent, trackparent, track, minhits) :
+  x  = trackparent.endVertex().position().x() - swimPoint*parent.slopes().Unit().X()
+  y  = trackparent.endVertex().position().y() - swimPoint*parent.slopes().Unit().Y()
+  z  = trackparent.endVertex().position().z() - swimPoint*parent.slopes().Unit().Z() 
   tx = track.slopes().x()
   ty = track.slopes().y()
-  return _trackInVELOAcceptance(x,y,z,tx,ty,minhits)
-
+  if nHitsOnTrackInVELOAcceptance(x,y,z,tx,ty) >= minhits :
+    return 1
+  else :
+    return 0

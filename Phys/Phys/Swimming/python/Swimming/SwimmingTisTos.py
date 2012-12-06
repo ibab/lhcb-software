@@ -22,7 +22,7 @@ def isTob(myGlobs,trigger) :
         return True
     return False 
 
-def evaluateTisTos(myGlobs,mycand):
+def evaluateTisTos(myGlobs,mycand,swimPoint):
     #Evaluate whether or not you TOS-ed on your triggers
     decisions = {}
     if not myGlobs.swimStripping :
@@ -44,13 +44,13 @@ def evaluateTisTos(myGlobs,mycand):
         # which tracks caused HLT1 to fire, and which were
         # reco'd in HLT1 and HLT2
         finalstateparts_mycand = []
-        appendToFSP(mycand,finalstateparts_mycand)
+        appendToFSP(0,mycand,finalstateparts_mycand)
         daughterInfo = defaultdict(dict)
         for fsp in finalstateparts_mycand :
             if globalPass:
                 myGlobs.tistostool.setOfflineInput()
-                myGlobs.tistostool.setOfflineInput(fsp)
-            h = hashParticle(fsp)
+                myGlobs.tistostool.setOfflineInput(fsp["child"])
+            h = hashParticle(fsp["child"])
             # First how many fired HLT1 
             for trigger in myGlobs.triggers[0]:
                 daughterInfo['trTOS_'+trigger][h] = globalPass and (isTos(myGlobs, trigger) or isTob(myGlobs, trigger))
@@ -64,8 +64,8 @@ def evaluateTisTos(myGlobs,mycand):
             daughterInfo['trRec_HLT2'][h] = globalPass and isTos(myGlobs,myGlobs.hlt2recoline)
             # Now the VELO acceptance
             from GetVeloAcceptance import trackInVELOAcceptance
-            iv3 = trackInVELOAcceptance(mycand, fsp.proto().track(), 3)
-            iv5 = trackInVELOAcceptance(mycand, fsp.proto().track(), 5)
+            iv3 = trackInVELOAcceptance(swimPoint, mycand, fsp["parent"], fsp["child"].proto().track(), 3)
+            iv5 = trackInVELOAcceptance(swimPoint, mycand, fsp["parent"], fsp["child"].proto().track(), 5)
             daughterInfo['trRec_VELO_OFF'][h]   = globalPass and iv3
             daughterInfo['trRec_VELO_HLT1'][h]  = globalPass and iv5
                     
@@ -123,11 +123,12 @@ def matchLists(list1,list2) :
 #
 #
 #
-def appendToFSP(daughter,finalstateparticles) :
-    if daughter.isBasicParticle() : finalstateparticles += [daughter]
+def appendToFSP(parent, daughter,finalstateparticles) :
+    if parent and daughter.isBasicParticle() : 
+        finalstateparticles += [{"child" :daughter, "parent" : parent}]
     else :
         for gd in daughter.daughtersVector() :
-            appendToFSP(gd, finalstateparticles)
+            appendToFSP(daughter, gd, finalstateparticles)
 #
 #
 #

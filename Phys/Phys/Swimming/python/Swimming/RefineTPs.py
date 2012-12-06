@@ -24,7 +24,7 @@ def refine(myGlobs, mycand, thisturn, lastGranularity, numberOfRefinements) :
     swimPoint = thisturn[0] - lastGranularity + newGranularity 
     while (swimPoint < (thisturn[0] + newGranularity)) :
         runSwimmingStep(myGlobs, mycand, swimPoint)
-        HltDec = evaluateTisTos(myGlobs, mycand)
+        HltDec = evaluateTisTos(myGlobs, mycand,swimPoint)
         if HltDec != HltDecLast:
             bParams = getBinfo(myGlobs, mycand)
             refinedTurningPoints.append([swimPoint, bParams[0], bParams[1], HltDec, HltDecLast])
