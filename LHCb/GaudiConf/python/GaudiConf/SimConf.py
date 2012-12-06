@@ -278,9 +278,9 @@ class SimConf(LHCbConfigurableUser) :
 
             # Save HepMC and BeamParameters only for main event
             if self.getProp("DataType") not in [ '2009', '2010', 'MC09' ]:
-                tape.ItemList += [ '/Event/Gen/BeamParameters' ]
+                tape.ItemList += [ '/Event/Gen/BeamParameters#1' ]
                 # OptItem so that, when used by applications other than Gauss, they are saved if saved by Gauss
-                if self.getProp('SaveHepMC') : tape.OptItemList += [ '/Event/Gen/HepMCEvents' ]
+                if self.getProp('SaveHepMC') : tape.OptItemList += [ '/Event/Gen/HepMCEvents#1' ]
 
             for slot in self.allEventLocations() :
                 # main event is mandatory, spillover events optional.
