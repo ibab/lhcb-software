@@ -56,3 +56,4 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
+use GaudiConf v17r2

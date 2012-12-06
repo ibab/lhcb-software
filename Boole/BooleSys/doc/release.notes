@@ -6,6 +6,7 @@ Purpose: LHCb Digitization program
 - Change in requirements to VP/VPAssociators and VP/VPAlgorithms
 
 - Add FT/FTDigitisation
+- Add temporarily GaudiConf v17r2 to pick up bug fix in SimConf
  
 </PRE><H1><A NAME=v25r1>2012-09-18 Boole v25r1</A></H1><PRE>
 This version uses projects LCGCMT 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1
