@@ -151,8 +151,8 @@ class Gauss(LHCbConfigurableUser):
         "Velo"       : [ "Velo", "VL", "VP" ],
         "VeloPuVeto" : [ "PuVeto", "VL", "VP" ],
         "TT"         : [ "TT", "UT" ],
-        "Muon"       : [ "Moun", "MuonNoM1" ],
-        "MuonTorch"  : [ "Moun", "Torch" ]
+        "Muon"       : [ "Muon", "MuonNoM1" ],
+        "MuonTorch"  : [ "Muon", "Torch" ]
         }
 
     #_incompatibleDetectors = {
@@ -161,7 +161,7 @@ class Gauss(LHCbConfigurableUser):
     #    "TT"       : [ "TT", "UT" ],
     #    "Tracking" : [ [ "IT", "OT" ], [ "FT" ] ],
     #    "Calo"     : [ "Spd", "Prs", "Ecal", "Hcal" ],
-    #    "Muon"     : [ "Moun", ["MuonNoM1", "Torch"] ]
+    #    "Muon"     : [ "Muon", ["MuonNoM1", "Torch"] ]
     #    }
 
     _beamPipeElements = {
