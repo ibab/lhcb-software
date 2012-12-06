@@ -374,8 +374,8 @@ def ConfigureDaVinci():
     dstWriter = None
     print config.getProp('OutputType')
     if config.getProp('OutputType') == 'MDST':
-        from DSTWriters.Configuration import MicroDSTWriter, microDSTStreamConf
-        from DSTWriters.microdstelements import (CloneRecHeader,
+        from DSTWriters.__dev__.Configuration import MicroDSTWriter, microDSTStreamConf
+        from DSTWriters.__dev__.microdstelements import (CloneRecHeader,
                                                          CloneODIN,
                                                          ClonePVs,
                                                          CloneSwimmingReports,
@@ -403,7 +403,7 @@ def ConfigureDaVinci():
                              CloneODIN(),
                              ClonePVs(),
                              CloneSwimmingReports(),
-                             CloneParticleTrees(),
+                             CloneParticleTrees(copyProtoParticles = True),
                              ClonePVRelations("Particle2VertexRelations", True),
                              CloneTPRelations("P2TPRelations", True),
                              ReFitAndClonePVs(),
@@ -420,8 +420,8 @@ def ConfigureDaVinci():
                                    OutputFileSuffix   = prefix,
                                    SelectionSequences = [selectionSeq])
     elif config.getProp('OutputType') == 'DST':
-        from DSTWriters.streamconf import OutputStreamConf
-        from DSTWriters.Configuration import SelDSTWriter
+        from DSTWriters.__dev__.streamconf import OutputStreamConf
+        from DSTWriters.__dev__.Configuration import SelDSTWriter
 
         # Output
         inputData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
