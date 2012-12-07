@@ -1,4 +1,3 @@
-// $Id: MuonDigitToRawBuffer.h,v 1.6 2008-04-02 11:52:05 asatta Exp $
 #ifndef MUONDIGITTORAWBUFFER_H 
 #define MUONDIGITTORAWBUFFER_H 1
 
@@ -27,7 +26,7 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+
   StatusCode ProcessDC06(); 
   StatusCode ProcessV1();
   StatusCode ProcessDigitDC06();  

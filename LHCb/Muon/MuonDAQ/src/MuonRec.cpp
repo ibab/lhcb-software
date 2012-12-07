@@ -145,10 +145,7 @@ StatusCode MuonRec::execute() {
 StatusCode MuonRec::finalize() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  if(m_forceResetDAQ){
-    release(	m_muonBuffer);
-    
-  }
+
   if(   m_Exccounter>0){
     info()<<" during the reconstruction there were problem with duplicated coords "<<endmsg;
     info()<<"The error occured " <<  m_Exccounter<<endmsg;

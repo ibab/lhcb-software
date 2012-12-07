@@ -1,4 +1,3 @@
-// $Id: MuonPadTest.h,v 1.1 2006-03-21 08:35:23 asatta Exp $
 #ifndef MUONPADTEST_H 
 #define MUONPADTEST_H 1
 
@@ -23,7 +22,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

@@ -1,4 +1,3 @@
-// $Id: MuonTAERec.h,v 1.1 2009-04-28 10:10:12 asatta Exp $
 #ifndef MUONTAEREC_H 
 #define MUONTAEREC_H 1
 
@@ -26,7 +25,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

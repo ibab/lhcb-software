@@ -252,8 +252,8 @@ StatusCode MuonRawBuffer::getTile(std::vector<LHCb::MuonTileID>& storage)
 
   LHCb::RawEvent* raw = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      raw = get<LHCb::RawEvent>(*p);
+    raw = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != raw ){
       break;
     }
   }
@@ -268,8 +268,8 @@ StatusCode MuonRawBuffer::getTileAndTDC(std::vector<std::pair<LHCb::MuonTileID,u
 {
   LHCb::RawEvent* raw = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      raw = get<LHCb::RawEvent>(*p);
+    raw = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != raw ){
       break;
     }
   }
@@ -512,8 +512,8 @@ StatusCode MuonRawBuffer::getPads(std::vector<LHCb::MuonTileID>& storage)
 {
   LHCb::RawEvent* raw = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      raw = get<LHCb::RawEvent>(*p);
+    raw = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != raw ){
       break;
     }
   }
@@ -868,8 +868,8 @@ StatusCode MuonRawBuffer::decodeNZSupp(unsigned int tell1Number)
 {
   LHCb::RawEvent* raw = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      raw = get<LHCb::RawEvent>(*p);
+    raw = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != raw ){
       break;
     }
   }
@@ -1107,8 +1107,8 @@ StatusCode MuonRawBuffer::getNZSupp(std::vector<std::pair<LHCb::MuonTileID,
 {
   LHCb::RawEvent* raw = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      raw = get<LHCb::RawEvent>(*p);
+    raw = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != raw ){
       break;
     }
   }
@@ -1285,8 +1285,8 @@ StatusCode MuonRawBuffer::getPads( int tell1,std::vector<LHCb::MuonTileID>& pads
 {
   LHCb::RawEvent* raw = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      raw = get<LHCb::RawEvent>(*p);
+    raw = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != raw ){
       break;
     }
   }
@@ -1317,8 +1317,8 @@ StatusCode MuonRawBuffer::getPads( int tell1)
 {
   LHCb::RawEvent* raw = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      raw = get<LHCb::RawEvent>(*p);
+    raw = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != raw ){
       break;
     }
   }
@@ -1384,8 +1384,8 @@ std::vector<std::pair<MuonTell1Header, unsigned int> > MuonRawBuffer::getHeaders
 {
   LHCb::RawEvent* raw = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      raw = get<LHCb::RawEvent>(*p);
+    raw = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != raw ){
       break;
     }
   }

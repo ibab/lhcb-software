@@ -99,16 +99,6 @@ StatusCode MuonDigitToRawBuffer::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MuonDigitToRawBuffer::finalize() {
-
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-
-}
-
 /*std::vector<unsigned int> MuonDigitToRawBuffer::padsinTS(
                                                          std::vector<unsigned
                                                          int>& TSDigit,

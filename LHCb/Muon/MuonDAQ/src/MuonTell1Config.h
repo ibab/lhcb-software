@@ -1,4 +1,3 @@
-// $Id: MuonTell1Config.h,v 1.1 2008-04-02 11:53:40 asatta Exp $
 #ifndef MUONTELL1CONFIG_H  
 #define MUONTELL1CONFIG_H 1
 
@@ -25,8 +24,6 @@ public:
 
   virtual ~MuonTell1Config( ); ///< Destructor
   StatusCode initialize();
-  StatusCode finalize();
- 
 
   StatusCode configTell1(int Tell1);
 protected:

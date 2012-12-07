@@ -103,18 +103,14 @@ StatusCode MuonTAERec::execute() {
   std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator it;
 
   for(int i=-m_TAENum;i<=m_TAENum;i++){
-    if (!exist<LHCb::RawEvent>(m_offsetLoc[7+i]  + LHCb::RawEventLocation::Default))
+    LHCb::RawEvent* raw = getIfExists<LHCb::RawEvent>(m_offsetLoc[7+i] +LHCb::RawEventLocation::Default);
+    if ( NULL == raw )
       continue;
   
-    
-    
     // get tiles from the raw buffer
-    LHCb::RawEvent* raw = get<LHCb::RawEvent>(m_offsetLoc[7+i] +LHCb::RawEventLocation::Default);
-   
     StatusCode sc=m_muonBuffer->getTileAndTDC(raw,decoding,m_offsetLoc[7+i] );
     if(sc.isFailure()){
-      error()<<" error in decoding the muon raw data "<<endmsg;
-      return sc;
+      return Error("Error in decoding the muon raw data");
     }
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
       debug()<<decoding.size()<<" digits in input "<<endmsg;
@@ -207,18 +203,6 @@ StatusCode MuonTAERec::execute() {
   
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MuonTAERec::finalize() {
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  release(    m_muonBuffer);
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
 //=============================================================================
 
 // Adding entries to coords 1 to 1 from digits, need to make the references

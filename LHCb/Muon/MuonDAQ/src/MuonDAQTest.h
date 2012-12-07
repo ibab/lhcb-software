@@ -1,4 +1,3 @@
-// $Id: MuonDAQTest.h,v 1.1 2006-01-31 15:22:33 asatta Exp $
 #ifndef MUONDAQTEST_H 
 #define MUONDAQTEST_H 1
 
@@ -25,7 +24,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

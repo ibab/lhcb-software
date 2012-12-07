@@ -65,17 +65,6 @@ StatusCode MuonTell1Config::initialize()
 
   return StatusCode::SUCCESS ;
 }
-StatusCode MuonTell1Config::finalize()
-{
-  StatusCode sc = GaudiTool::finalize() ;
-  if (!sc) return sc;
- 
-
-  return StatusCode::SUCCESS ;
-}
-
-
-
 
 StatusCode  MuonTell1Config::configTell1(int Tell1){
   StatusCode sc=StatusCode::SUCCESS;
