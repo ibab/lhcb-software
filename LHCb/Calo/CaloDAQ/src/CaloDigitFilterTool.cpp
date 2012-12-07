@@ -274,10 +274,9 @@ unsigned int CaloDigitFilterTool::nVertices(){
   }
   // try PV3D if explicitely requested or if RecVertices not found
   if(!m_usePV3D)m_vertLoc = LHCb::RecVertexLocation::Velo3D;
-  if( exist<LHCb::VertexBases>( m_vertLoc ) ){
-    LHCb::VertexBases* verts= get<LHCb::VertexBases>( m_vertLoc );
-    if( NULL != verts)nVert = verts->size();
-  }
+  LHCb::VertexBases* verts= getIfExists<LHCb::VertexBases>( m_vertLoc );
+  if( NULL != verts)nVert = verts->size();
+
   return nVert;
 }
 unsigned int CaloDigitFilterTool::nSpd(){
