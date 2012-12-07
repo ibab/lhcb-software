@@ -4,6 +4,21 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2012-12-07 - Olivier Callot
+ - Multi-parameter attenuation along the fibre in MCFTDepositCreator
+   * Short and Long attenuation length, with their fraction.
+   * Zone affected by radiation: Losange defined by xmax and ymax
+   * Attenuation length at centre of this zone
+   * Refelxion coefficient of the mirror
+   * Cut of in reflexion due to time delay, smoothly between y min and max.
+   The map of attenuation in the fibre is computed at initialization, and then
+   used by interpolation for each deposit
+
+ - Manual implementation of the poisson generation of number of photo electrons,
+   to avoid re-initializing the generator for each deposit. Factor ~10 in speed.
+   Use a gaussian distribution for average > 50.
+
+
 !========================= FTDigitisation v1r0 2012-10-03 =========================
 ! 2012-08-23 - Olivier Callot
  - Change the sorting function for MCFTDigit. No longer need for the functor class...

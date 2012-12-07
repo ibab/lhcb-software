@@ -6,7 +6,6 @@
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/RndmGenerators.h"
 
 // from FTEvent
 #include "Event/MCFTDeposit.h"
@@ -52,7 +51,8 @@ StatusCode MCFTDigitCreator::initialize() {
     debug() << ": InputLocation is " <<m_inputLocation << endmsg;
     debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
   }
-  
+  m_gauss.initialize( randSvc(), Rndm::Gauss( 0., 1. ) );
+  m_flat.initialize( randSvc(), Rndm::Flat( 0., 1. ) );
   return StatusCode::SUCCESS;
 }
 
@@ -108,7 +108,6 @@ StatusCode MCFTDigitCreator::execute() {
 
   // Digits are sorted according to there ChannelID to prepare the clusterisation stage
   // done at this point, before final writing in transient data store
-  //std::stable_sort( digitCont->begin(), digitCont->end(), LHCb::FTSortingFunctor::LessByChannel<MCFTDigit*>());
   std::stable_sort( digitCont->begin(), digitCont->end(), LHCb::MCFTDigit::lowerByChannelID );
   
   // TEST : print Digit content after sorting
@@ -145,11 +144,24 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
 
   // Convert energy sum in adc count
   // Compute the expected number of photoelectron, draw a poisson with that mean, and convert to ADC counts
+  //== For large number of photo-electrons, take a gausian.
+  //== Else compute manually the value, by computing when the sum of terms if greater than a flat random.
 
   double averagePhotoElectrons = energySum * m_photoElectronsPerMeV;
-  Rndm::Numbers poisson;
-  poisson.initialize(randSvc(), Rndm::Poisson( averagePhotoElectrons ) );
-  int photoElectrons = poisson();
+  int photoElectrons = 0;
+  if ( averagePhotoElectrons > 50. ) {
+    photoElectrons = averagePhotoElectrons + sqrt( averagePhotoElectrons ) * m_gauss();
+  } else {
+    double expL = exp( -averagePhotoElectrons );
+    double cumul = expL;
+    double last  = expL;
+    double value = m_flat();
+    while ( value > cumul ) {
+      photoElectrons++;
+      last = last * averagePhotoElectrons / photoElectrons;
+      cumul += last;
+    }
+  }
   int adcCount = int( photoElectrons * m_sipmGain );
   
   if( msgLevel( MSG::DEBUG) ){

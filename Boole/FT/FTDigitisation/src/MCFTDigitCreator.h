@@ -22,6 +22,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 // LHCbKernel
 #include "Kernel/FTChannelID.h"
@@ -50,5 +51,7 @@ private:
   double m_photoElectronsPerMeV; ///< mean number of photoelectrons produced per deposited MeV
   double m_sipmGain; ///< SiPM gain
 
+  Rndm::Numbers m_gauss;
+  Rndm::Numbers m_flat;
 };
 #endif // MCFTDIGITCREATOR_H

@@ -39,16 +39,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-  /** This function apply attenuation factor according to the path of the light through the fibre.
-      @param fibrelengh : full lengh of the fibre
-      @param fibrefraction : relative position of the hit in the fibre wrt the SiPM position
-      @param fibreenergy : energy deposited in the fibre, where the attenuation facor is applied
-  */
-  void applyAttenuationAlongFibre(const double fibrelengh, 
-                                  const double fibrefraction, 
-                                  FTDoublePairs& fibreenergy);
 
 private:
   // Locations
@@ -56,9 +46,21 @@ private:
   std::string m_outputLocation;    ///< FT energy deposit Location
 
   // Fibre properties
-  double      m_shortAttenuationLength; ///< Attenuation lengh of the light along the fibre : short component
-  double      m_longAttenuationLength; ///< Attenuation lengh of the light along the fibre : long component
-  double      m_reflexionCoefficient; ///< reflexion coefficient of the mirror at the y=0 side of the fibre
+  float       m_shortAttenuationLength; ///< Attenuation lengh of the light along the fibre : short component
+  float       m_longAttenuationLength;  ///< Attenuation lengh of the light along the fibre : long component
+  float       m_fractionShort;          ///< Fraction of short attenuation length at SiPM
+  float       m_xMaxIrradiatedZone;     ///< Size in x of the zone where fibres are irradiated
+  float       m_yMaxIrradiatedZone;     ///< Size in y of the zone where fibres are irradiated
+  float       m_irradiatedAttenuationLength;    ///< Attenuation length at 0,0 or irradiated fibres
+  float       m_reflexionCoefficient;   ///< reflexion coefficient of the mirror at the y=0 side of the fibre
+  float       m_beginReflexionLossY;    ///< begin zone where reflexio is too late and lost
+  float       m_endReflexionLossY;      ///< end of this zone
+
+  float       m_xStepMap;
+  float       m_yStepMap;
+  int         m_nXSteps;
+  int         m_nYSteps;
+  std::vector<float> m_transmissionMap;
 
   DeFTDetector* m_deFT; ///< pointer to FT detector description  
 };
