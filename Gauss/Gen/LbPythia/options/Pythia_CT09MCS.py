@@ -3,7 +3,7 @@ command = [ "pypars mstp 51 10770" ]
 
 from Configurables import Generation, MinimumBias, PythiaProduction
 from Configurables import Inclusive, SignalPlain, SignalRepeatedHadronization
-from Configurables import Special
+from Configurables import Special, ToolSvc, EvtGenDecay
 
 gen = Generation()
 gen.addTool( MinimumBias , name = "MinimumBias" )
@@ -30,5 +30,8 @@ gen.addTool( Special , name = "Special" )
 gen.Special.addTool( PythiaProduction , name = "PythiaProduction" )
 gen.Special.PythiaProduction.Commands += command
 
+ToolSvc().addTool( EvtGenDecay )
+ToolSvc().EvtGenDecay.addTool( PythiaProduction , name = "PythiaProduction" )
+ToolSvc().EvtGenDecay.PythiaProduction.Commands += command
 
 
