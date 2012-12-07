@@ -35,7 +35,8 @@ TrackProjectorSelector::TrackProjectorSelector( const std::string& type,
   declareProperty( "VeloLitePhi", m_projNames[Measurement::VeloLitePhi] 
 		   = "TrajProjector<Velo>/TrajVeloLitePhiProjector" );
 
-  declareProperty( "VPLite", m_projNames[Measurement::VPLite] = "TrajProjector<VP>/TrajVPLiteProjector" );
+  declareProperty( "VPLite",  m_projNames[Measurement::VPLite]  = "TrajProjector<VP>/TrajVPLiteProjector" );
+  declareProperty( "VL",      m_projNames[Measurement::VL]      = "TrajProjector<VL>/TrajVLProjector" );
   declareProperty( "TT",      m_projNames[Measurement::TT]      = "TrajProjector<ST>/TrajTTProjector" );
   declareProperty( "IT",      m_projNames[Measurement::IT]      = "TrajProjector<ST>/TrajITProjector" );
   declareProperty( "OT",      m_projNames[Measurement::OT]      = "TrajOTProjector" );

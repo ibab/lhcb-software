@@ -29,6 +29,7 @@ use   OTDet           v*     Det
 use   STDet           v*     Det
 use   VeloDet         v*     Det
 use   VPDet           v*     Det
+use   VLDet           v*     Det
 
 #============================================================================
 # Component library building rule
