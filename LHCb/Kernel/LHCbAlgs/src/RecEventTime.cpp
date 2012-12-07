@@ -18,8 +18,8 @@ RecEventTime::~RecEventTime()
 Gaudi::Time RecEventTime::getTime() const
 {
   // If the rec header is available, return its event time
-  if (exist<LHCb::RecHeader>(evtSvc(), m_recHeaderLoc)) {
-    LHCb::RecHeader *h = get<LHCb::RecHeader>(evtSvc(), m_recHeaderLoc);
+  LHCb::RecHeader *h = getIfExists<LHCb::RecHeader>(evtSvc(), m_recHeaderLoc);
+  if ( NULL != h ) {
     return h->gpsTime() * 1000;
   }
   // Otherwise return '0'

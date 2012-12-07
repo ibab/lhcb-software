@@ -70,9 +70,7 @@ LHCb::ODIN *OdinTimeDecoder::getODIN() const
     // Decode the ODIN bank.
     m_odinDecoder->execute();
     // @FIXME: we must get the ODIN object from where the Tool created it
-    if ( LIKELY(exist<LHCb::ODIN>(LHCb::ODINLocation::Default)) ){
-      return get<LHCb::ODIN>(LHCb::ODINLocation::Default);
-    }
+    return getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
   }
   return 0;
 }

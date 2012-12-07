@@ -39,10 +39,7 @@ public:
   OfflineRateLimiter( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~OfflineRateLimiter( ); ///< Destructor
-
-  //  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode execute ( ); ///< Algorithm execution
 
 protected:
 

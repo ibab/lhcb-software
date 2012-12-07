@@ -1,4 +1,3 @@
-// $Id: PrintHeader.cpp,v 1.5 2009-03-17 10:58:30 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -46,8 +45,8 @@ StatusCode PrintHeader::execute() {
   m_nEvents++;
 
   // Get event number from the ODIN bank
-  if ( exist<LHCb::ODIN>( LHCb::ODINLocation::Default )){
-    LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  if ( NULL != odin ){
     info() << "Run "     << odin->runNumber()
            << ", Event " << odin->eventNumber() << endmsg;
   } else Warning("No ODIN Header").ignore();

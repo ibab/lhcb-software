@@ -29,7 +29,8 @@ TCKPrescaleEmulator::TCKPrescaleEmulator( const std::string& name,
 : GaudiAlgorithm ( name , pSvcLocator ),
 	m_propertyConfigSvc(0),
 	m_condTrigger(0),
-	m_triggerTCK(0)
+	m_triggerTCK(0),
+  decreports(NULL)
 {
 	//TCK we wish to emulate prescales for:
 	declareProperty("TCKtoEmulate",m_tck=0x9c0044);

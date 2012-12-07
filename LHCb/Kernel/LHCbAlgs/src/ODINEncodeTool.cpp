@@ -1,4 +1,3 @@
-// $Id: ODINEncodeTool.cpp,v 1.2 2009-11-09 18:28:15 marcocle Exp $
 // Include files
 #include "ODINCodecBaseTool.h"
 
@@ -98,10 +97,10 @@ StatusCode ODINEncodeTool::initialize() {
 //=============================================================================
 void ODINEncodeTool::execute() {
   // Check if there is an ODIN object
-  if (exist<LHCb::ODIN>(m_odinLocation)) {
+  LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(m_rawEventLocation);
+  if ( NULL != raw ) {
     // Add the raw bank to the raw event
     debug() << "Getting " << m_rawEventLocation << endmsg;
-    LHCb::RawEvent* raw = this->get<LHCb::RawEvent>(m_rawEventLocation);
 
     // pointer for a pre-existing bank
     LHCb::RawBank *old_bank = 0;

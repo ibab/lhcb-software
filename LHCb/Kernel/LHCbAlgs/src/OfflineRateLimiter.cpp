@@ -179,13 +179,3 @@ StatusCode OfflineRateLimiter::execute() {
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode OfflineRateLimiter::finalize() {
-
-  if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "==> Finalize" << endmsg;
-
-  return OfflineDeterministicPrescaler::finalize();  // must be called after all other actions
-}
-
