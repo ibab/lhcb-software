@@ -1,6 +1,16 @@
 // Include files 
 #include "Kernel/PFParticle.h"
 
+
+#include "GaudiKernel/GenericMatrixTypes.h"
+#include "LHCbMath/MatrixManip.h"
+#include "LHCbMath/MatrixTransforms.h"
+
+namespace Gaudi {
+   typedef ROOT::Math::SMatrix<double, 2, 3> Matrix2x3;
+   typedef ROOT::Math::SMatrix<double, 3, 2> Matrix3x2;
+ }
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : PFParticle
 //
@@ -17,8 +27,9 @@ LHCb::PFParticle::PFParticle( std::vector< const LHCb::CaloCluster* > clusters ,
   for (std::vector< const LHCb::CaloCluster* >::iterator iclu = clusters.begin();  
        clusters.end() != iclu ; ++iclu ){
     if ((*iclu)->seed().calo() == 2){
-      //this->addInfo(PFParticle::NSatECAL,(*iclu)->nSat());
-      //this->addECALCluster((*iclu));
+      x =  (*iclu)->position().x();
+      y =  (*iclu)->position().y();
+      z =  (*iclu)->position().z();
       e+=(*iclu)->e();
     }
     else if ((*iclu)->seed().calo() == 3){
@@ -45,7 +56,7 @@ LHCb::PFParticle::PFParticle( std::vector< const LHCb::CaloCluster* > clusters ,
 //=============================================================================
 // Constructor for neutral recovery particles  
 //=============================================================================
-LHCb::PFParticle::PFParticle( Gaudi::Vector6 barycenter ) : Particle() {
+LHCb::PFParticle::PFParticle( Gaudi::Vector6 barycenter , double oldEnergy ) : Particle() {
   // Get the cluster position
   double x(0.),y(0.),z(0.);
   x = barycenter[0];
@@ -60,7 +71,7 @@ LHCb::PFParticle::PFParticle( Gaudi::Vector6 barycenter ) : Particle() {
   // Set the base particle information
   this->addInfo(PFParticle::Type,PFParticle::NeutralRecovery);
   this->addInfo(PFParticle::ClustType,-1.);
-  this->addInfo(PFParticle::ClustE,remainingE);
+  this->addInfo(PFParticle::ClustE,oldEnergy);
   // Set PID
   // TODO: deal with the particleservices
   this->setParticleID( LHCb::ParticleID( 22 ) );
@@ -154,7 +165,7 @@ LHCb::PFParticle::PFParticle( const LHCb::ProtoParticle * pp ,  int trackTag ,
 
     // Start filling particle with orgininating ProtoParticle
     this->setProto(pp);   
-    this -> setMomentum (Gaudi::XYZTVector(pp->track()->momentum().X(), pp->track()->momentum().Y(), pp->track()->momentum().Z(),0.)) ;
+    //this -> setMomentum (Gaudi::XYZTVector(pp->track()->momentum().X(), pp->track()->momentum().Y(), pp->track()->momentum().Z(),0.)) ;
 
     // ParticleID
     if ( pprop ) this->setParticleID( LHCb::ParticleID( pprop->particleID().pid() * (int)(pp->charge())));
@@ -175,14 +186,49 @@ LHCb::PFParticle::PFParticle( const LHCb::ProtoParticle * pp ,  int trackTag ,
       // set the minus sigma momenta
       this -> setPFType( PFParticle::ChargedInfMomentum );
       // TODO: set that as an option...
-      this -> setMomentum ( Gaudi::XYZTVector(this->momentum().X() - this->momCovMatrix()(0,0),
-					      this->momentum().Y() - this->momCovMatrix()(1,1),
-					      this->momentum().Z() - this->momCovMatrix()(2,2),
-					      0.));
+      //this -> setMomentum ( Gaudi::XYZTVector(this->momentum().X() - this->momCovMatrix()(0,0),
+      //					      this->momentum().Y() - this->momCovMatrix()(1,1),
+      //					      this->momentum().Z() - this->momCovMatrix()(2,2),
+      //					      0.));
     }
-    // TODO:  Update the energy from the mass and momenta (sate2Particle does it)
-    const double e = std::sqrt( this->p()*this->p() + this->measuredMass()*this->measuredMass() );
-    this->setMomentum( Gaudi::LorentzVector(this->momentum().X(),this->momentum().Y(),this->momentum().Z(),e) ) ;
+    //Update the energy from the mass and momenta a la sate2Particle
+
+    LHCb::State state = pp->track()->firstState();
+    this->setReferencePoint( state.position() ) ;
+    // momentum
+    const Gaudi::XYZVector mom = state.momentum();
+    const double mass = this->measuredMass();
+    const double p = mom.R() ;
+    const double e = std::sqrt( p*p + mass*mass );
+    this->setMomentum( Gaudi::XYZTVector(mom.X(),mom.Y(),mom.Z(),e) ) ;
+
+    // get the jacobian for dp4/d(tx,ty,qop)
+    Gaudi::Matrix4x3 dP4dMom;
+    Gaudi::Math::JacobdP4dMom(state.stateVector().Sub<Gaudi::Vector3>(2),mass,dP4dMom);
+
+    // now fill the total jacobia, but only nonzero elements
+    ROOT::Math::SMatrix<double,7,5> Jacob ;
+    Jacob(0,0) = Jacob(1,1) = 1 ; 
+    Jacob.Place_at(dP4dMom,3,2) ;
+
+    const Gaudi::SymMatrix7x7 cov =
+      ROOT::Math::Similarity<double,7,5>( Jacob, state.covariance() );
+
+    // error on position
+    Gaudi::SymMatrix3x3& errPos = *(const_cast<Gaudi::SymMatrix3x3*>(&(this->posCovMatrix())));
+    errPos.Place_at(cov.Sub<Gaudi::SymMatrix3x3>( 0, 0 ), 0, 0 );
+    //m_posCovMatrix.Place_at(cov.Sub<Gaudi::SymMatrix3x3>( 0, 0 ), 0, 0 );
+    // error on momentum
+    Gaudi::SymMatrix4x4& errMom = *(const_cast<Gaudi::SymMatrix4x4*>(&(this->momCovMatrix())));
+    errMom.Place_at(cov.Sub<Gaudi::SymMatrix4x4>( 3, 3 ), 0, 0 );
+    // m_momCovMatrix.Place_at(cov.Sub<Gaudi::SymMatrix4x4>( 3, 3 ), 0, 0 );
+    // correlation
+    Gaudi::Matrix4x3& errPosMom = *(const_cast<Gaudi::Matrix4x3*>(&(this->posMomCovMatrix())));
+    errPosMom.Place_at(cov.Sub<Gaudi::Matrix4x3>( 3, 0 ), 0, 0 );
+    //m_posMomCovMatrix.Place_at(cov.Sub<Gaudi::Matrix4x3>( 3, 0 ), 0, 0 );
+    
+    //const double e = std::sqrt( this->p()*this->p() + this->measuredMass()*this->measuredMass() );
+    //this->setMomentum( Gaudi::LorentzVector(this->momentum().X(),this->momentum().Y(),this->momentum().Z(),e) ) ;
     // TODO: Append the clusters and saturation values --> this might be done at the Neutral reco level??? because here we do not have the saturation info anymore
   }
 }

@@ -59,6 +59,7 @@ namespace LHCb {
                          ChargedInfMomentum,
                          BadPhotonMatchingT,
                          BadPhoton,
+                         IsolatedPhoton,
                          // Conmpostie Daughter
                          Daughter = 10000
 			 
@@ -152,7 +153,7 @@ namespace LHCb {
     /// Neutral Hadron Particle Constructor
     PFParticle( std::vector< const CaloCluster* > clusters , const ProtoParticle * pp  );
     /// Neutral Recovery  Particle Constructor
-    PFParticle( Gaudi::Vector6 barycenter );
+    PFParticle( Gaudi::Vector6 barycenter , double oldEnergy );
     /// Charged Particle Constructor
     PFParticle( const LHCb::ProtoParticle * pp ,  int type , 
                 std::map< std::string , std::pair< const IProtoParticleFilter* ,

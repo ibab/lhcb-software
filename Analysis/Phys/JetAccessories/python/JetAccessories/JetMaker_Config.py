@@ -8,7 +8,7 @@ from Configurables import ( GaudiSequencer, LoKi__PFJetMaker, LoKi__FastJetMaker
 class JetMakerConf:
 
     def __init__(self, _name, Inputs = ['Phys/PFParticles/Particles'],
-                 PFTypes = ['ChargedHadron','Muon','Electron','Photon','Pi0','HCALNeutrals','NeutralRecovery','V0','Charged0Momentum','ChargedInfMomentum','BadPhotonMatchingT','BadPhoton'],
+                 PFTypes = ['ChargedHadron','Muon','Electron','Photon','Pi0','HCALNeutrals','NeutralRecovery','V0','Charged0Momentum','ChargedInfMomentum','BadPhotonMatchingT','BadPhoton','IsolatedPhoton'],
                  R = 0.5 ,
                  PtMin = 5000.,
                  AssociateWithPV = True ,
@@ -21,7 +21,7 @@ class JetMakerConf:
         dictOfPFType = {'ChargedHadron':2,'Muon':3,'Electron':4,
                         'Photon':11,'Pi0':12,'MergedPi0':13,'ResolvedPi0':14,'HCALNeutrals':15,'NeutralRecovery':16,
                         'V0':101,'D':102,'B':103,
-                        'Charged0Momentum':1001,'ChargedInfMomentum':1002,'BadPhotonMatchingT':1003,'BadPhoton':1004}
+                        'Charged0Momentum':1001,'ChargedInfMomentum':1002,'BadPhotonMatchingT':1003,'BadPhoton':1004,'IsolatedPhoton':1005}
         self.name = _name
         self.Inputs = Inputs
         self.AssociateWithPV = AssociateWithPV

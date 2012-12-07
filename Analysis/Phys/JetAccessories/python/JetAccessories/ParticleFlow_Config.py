@@ -1,4 +1,3 @@
-
 __version__ = "$Id: ParticleFlow_Config.py,v 1.1 2010-02-04 12:37:55 cocov Exp $"
 __author__  = "Victor Coco <Victor.Coco@cern.ch>"
 
@@ -7,92 +6,58 @@ from LHCbKernel.Configuration import *
 from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , CaloClusterMCTruth,CaloDigit2MCLinks2Table,NeutralPP2MC , PVRelatorAlg, ChargedProtoParticleMaker)
 
 
-#####################################
-# Parameter that induce a loss:
-# 
-# Chi2MaxLong : kill long tracks with chi2Ndof > Chi2MaxLong
-# Chi2MaxDown : kill downstream tracks with chi2Ndof > Chi2MaxDown
-# Chi2MaxUp   : kill upstream tracks with chi2Ndof > Chi2MaxUp
-# PtMinLong   : kill long tracks with pt < PtMinLong
-# PtMinDown   : kill long tracks with pt < PtMinDown
-# PtMinUp     : kill long tracks with pt < PtMinUp
-# UseTTHits   : kill long tracks that should have a TT hit but don't
-# MaxChi2NoTT : kill long tracks that have no TT expectation but a chi2Ndof < MaxChi2NoTT
-# UseHCAL     : if set to false, does not use HCAL clusters
-# MinHCALE    : minimum HCAL energy needed to be taken into account
-# MaxMatchECALTr : kill ECAL cluster that match with a track with chi2 < MaxMatchECALTr (charged clusters)
-# MaxMatchHCALTrSmallE and MaxMatchHCALLowEValue:
-#     kill HCAL clusters with E < MaxMatchHCALLowEValue that match with a track with chi2 < MaxMatchHCALTrSmallE (charged clusters)
-# MaxMatchHCALTrMediumE, MaxMatchHCALLowEValue and MaxMatchHCALHighEValue:
-#     kill HCAL clusters with MaxMatchHCALLowEValue < E < MaxMatchHCALHighEValue  that match with a track with chi2 < MaxMatchHCALTrMediumE (charged clusters)
-# MaxMatchHCALTrHighE and MaxMatchHCALHighEValue:
-#     kill HCAL clusters with E > MaxMatchHCALHighEValue  that match with a track with chi2 < MaxMatchHCALTrHighE (charged clusters)
-# MaxMatchHCALTr_T : kill HCAL clusters matching with a TTrack with chi2 < MaxMatchHCALTr_T (not implemented)
-#
-####################################
-# Parameter that change particle classification (from PFParticles to PFBannedParticles):
-#
-# MinPhotonID4Photon : if photon ID < MinPhotonID4Photon, neutral ECAL goes to PFBannedParticles
-# MaxMatchECALTr_T and MinPhotonID4PhotonTtrack :
-#     if a ECAL cluster match a TTrack with chi2 < MaxMatchECALTr_T, neutral ECAL goes to PFBannedParticles
-#     Nonetheless if photon ID > MinPhotonID4PhotonTtrack and CaloNeutralSpd > 1 it stays in PFParticles
-# MinPhotonIDMax4ResolvedPi0 and MinPhotonIDMin4ResolvedPi0: for resolved pi0 min gammaID > MinPhotonIDMin4ResolvedPi0
-#     and max gammaID > MinPhotonIDMax4ResolvedPi0 (a be neutral ie not matched to a track),
-#     otherwise the photons are considered separatly and should fullfill the previous rules
-# MinInfMomentumCut : if track has qOvp/err_qOvP < MinInfMomentumCut it is passed to PFBannedParticles
-#                     but is still used to separate charged and neutral clusters (unless it does not pass the other cuts)
-#
-###################################
-# Banned tag (stored in extrainfo 951) Relevant for Correction :
-#
-# if p->info(951,-10.)== -10. : NOT BANNED
-# if p->info(951,-10.)== 0    : INFINITE MOMENTUM TRACK                   ---> to be corrected
-# if p->info(951,-10.)== 2    : NEUTRAL ECAL that match TT and do not pass gammaID cut ---> to be corrected
-# if p->info(951,-10.)== 6    : NEUTRAL ECAL that do not match TT and do not pass gammaID cut ---> to be corrected
-
-
-
-
-
-
-
-
-
 class ParticleFlowConf:
-    def __init__(self, _name, _InputParticles = ['Photons','NeutralHadrons','Charged','Pi0s','V0s','PFNeutrals'], _MCSeq = False , _params = {} ):
+    def __init__(self, _name, _InputParticles = ['Photons','NeutralHadrons','Charged','Pi0s','V0s','PFNeutrals'], _MCCor = False, _MCSeq = False , _params = {} ):
          self.name = _name
          self.InputParticles = _InputParticles
          self.MC = _MCSeq
-         ## Default parameter: the closer from what we used before + HCAL
-         self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. , 'TrackType':['Downstream','Long','Upstream'],
-                          'Chi2MaxDown': 10. , 'Chi2MaxUp': 10. , 'PtMinUp': 0. ,'Chi2MaxVelo': 10. ,'UseTTHits':False ,'MaxChi2NoTT': 5.,
-                          'UseHCAL': True ,'MaxMatchECALTr': 4.,'MinHCALE': 1800.,'UsePIDInfo':True,
-                          'MaxMatchHCALLowEValue': 5000.,'MaxMatchHCALHighEValue': 10000.,
-                          'MaxMatchHCALTrSmallE': 25.,'MaxMatchHCALTrMediumE':16. ,'MaxMatchHCALTrLargeE':16. ,'MaxMatchHCALTr_T': 16.,
-                          'MinPhotonID4PhotonTtrack': -2. , 'MinPhotonID4Photon': -1. ,'MaxMatchECALTr_T': 16. ,
-                          'MinPhotonIDMax4ResolvedPi0':  -2.,'MinPhotonIDMin4ResolvedPi0':-4., 'MinInfMomentumCut':10. ,
-                          'VerticesLocation':"Rec/Vertex/Primary",  "PFCaloHypoOutputLocation":"Rec/Calo/Hadrons",
-                          'CandidateToBanLocation':[],'PFProtoParticlesOutputLocation':"Rec/ProtoP/PF",
-                          'PFOutputLocation': "Phys/PFParticles/Particles",#'PFBannedOutputLocation':"Phys/PFBannedParticles/Particles",
-                          #'PFHiddenNeutralOutputLocation':"Phys/PFNeutralParticles/Particles",
-                          'CompositeParticlesLocation':[],
-                          "CalibECAL_EovP": 0.1,"CalibHCAL_EovP": 0.9,"NSigmaForCaloRecovery": 0.,
-                          "MinECALE_NeutralRecovery": 300.,"MinHCALE_NeutralRecovery": 500.,
-                          "UseVelo": False,
-                          "MC_recovery": False
-                          }
-##          self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. ,
-##                           'Chi2MaxDown': 7. , 'Chi2MaxUp': 7. , 'PtMinUp': 0. , 'UseTTHits':True ,'MaxChi2NoTT': 3.,
-##                           'UseHCAL': True ,'MaxMatchECALTr': 4.,'MinHCALE': 1800.,
-##                           'MaxMatchHCALLowEValue': 5000.,'MaxMatchHCALHighEValue': 10000.,
-##                           'MaxMatchHCALTrSmallE': 16.,'MaxMatchHCALTrMediumE':9. ,'MaxMatchHCALTrLargeE':9. ,'MaxMatchHCALTr_T': 9.,
-##                           'MinPhotonID4PhotonTtrack': -2. , 'MinPhotonID4Photon': -1. ,'MaxMatchECALTr_T': 16. ,
-##                           'MinPhotonIDMax4ResolvedPi0':  -2.,'MinPhotonIDMin4ResolvedPi0':-4., 'MinInfMomentumCut':10. ,
-##                           'VerticesLocation':"Rec/Vertex/Primary",  "PFCaloHypoOutputLocation":"Rec/Calo/Hadrons",
-##                           'CandidateToBanLocation':'','PFProtoParticlesOutputLocation':"Rec/ProtoP/PF",
-##                           'PFOutputLocation': "Phys/PFParticles/Particles",'PFBannedOutputLocation':"Phys/PFBannedParticles/Particles"
-##                            }
+         ## Default parameters:
+         self.paramDef = {  ### Location
+             "PFOutputLocation"   : "Phys/PFParticles/Particles" ,
+             "PFProtoParticlesOutputLocation": "Rec/ProtoP/PF" ,
+             "PFCaloHypoOutputLocation": "Rec/Calo/Hadrons",
+             "ParticleLocations": "Phys/PFParticles/Particles",
+             "CompositeParticleLocations": [],
+             "CandidateToBanLocation": [],
+             "VerticesLocation": "Rec/Vertex/Primary" ,
+             ### Tracks selection
+             # For track selector
+             'TrackType':['Downstream','Long','Upstream'],
+             'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False ,
+             'Chi2MaxDown': 10. ,'PtMinDown': 0. ,
+             'Chi2MaxUp': 10. , 'PtMinUp': 0. ,
+             'Chi2MaxVelo': 10. ,
+             "UseTTHits" : False ,
+             "MinInfMomentumCut": 10. ,
+             "MinInfMomentumCutDown": 0. ,
+             "MinInfMomentumCutUp": 10. ,
+             "MaxChi2NoTT": 5. ,
+             "UseVelo": True  ,
+             ## Neutral selection
+             "MinPhotonID4Photon": -1. ,
+             "MinPhotonID4PhotonTtrack": -2. ,
+             "MinPhotonIDMax4ResolvedPi0" : -4. ,
+             "MinPhotonIDMin4ResolvedPi0": -2.,
+             "UseHCAL" : True,
+             "MinHCALE":2000.,
+             "UseTTrackBanning": True,
+             ### Neutral recovery
+             "MaxMatchECALTr" : 25. ,
+             "MaxMatchECALTr_T": 16. ,
+             "MaxMatchHCALLowEValue": 5000.,
+             "MaxMatchHCALHighEValue":10000.,
+             "MaxMatchHCALTrSmallE":25. ,
+             "MaxMatchHCALTrMediumE": 16. ,
+             "MaxMatchHCALTrLargeE" : 16. ,
+             "NeutralRecovery": True ,
+             "MinE": 1000.,
+             "MC_recovery": True,
+             "MaximumFracNeutrReco":1.5,
+             "BanInfMomentumFromNR": False,
+             "OnlyBestCaloMatchForNR": True
+             }
          # set the datafile
+         self.MCCor = _MCCor
          self.algorithms = []
          self.setupParam(_params)
          self.setupPF()
@@ -110,14 +75,16 @@ class ParticleFlowConf:
                 if name.find("Min")>-0.5 or  name.find("Max")>-0.5 or name.find("AcceptClones")>-0.5:
                     ts.setProp(name,cut)
                 else:
-                    print name,cut[0],cut[1]
                     ts.setProp("Min"+name,cut[0])
                     ts.setProp("Max"+name,cut[1])
 
     def setupParam(self,params):
         for key in self.paramDef.keys():
-            if params.has_key(key): self.__dict__[key] = params[key]
-            else: self.__dict__[key] = self.paramDef[key]
+            
+            if params.has_key(key):
+                self.__dict__[key] = params[key]
+            else:
+                self.__dict__[key] = self.paramDef[key]
         if "Velo" in self.TrackType and not self.UseVelo: self.UseVelo=True
 
 
@@ -130,9 +97,7 @@ class ParticleFlowConf:
         alg = ParticleFlow ( self.name )
 
         ## Definition of cuts to apply to input tracks for inputselection
-        
         TrackCuts = {}
-        print '###################################### ',self.TrackType
         if self.UseVelo and not "Velo" in self.TrackType:
             self.TrackType.append("Velo")
         for trtype in self.TrackType:
@@ -154,15 +119,14 @@ class ParticleFlowConf:
                 
         
         ## Neutral related cuts
-
         pLocations = []
         pCompLocations = []
-        alg.UseTTrackBanning       = True
+        alg.MC_recovery = self.MCCor
+
+        alg.UseTTrackBanning       = self.UseTTrackBanning
         alg.CandidateToBanLocation = self.CandidateToBanLocation
         alg.VerticesLocation       = self.VerticesLocation
         alg.PFOutputLocation       = self.PFOutputLocation
-        #alg.PFBannedOutputLocation = self.PFBannedOutputLocation
-        #alg.PFHiddenNeutralOutputLocation = self.PFHiddenNeutralOutputLocation
         alg.PFProtoParticlesOutputLocation = self.PFProtoParticlesOutputLocation
         alg.PFCaloHypoOutputLocation = self.PFCaloHypoOutputLocation
         
@@ -172,7 +136,7 @@ class ParticleFlowConf:
                 alg.MinPhotonID4Photon = self.MinPhotonID4Photon
                 alg.MinPhotonID4PhotonTtrack = self.MinPhotonID4PhotonTtrack
         
-            if t=='NeutralHadrons':
+            elif t=='NeutralHadrons':
                 ## Set the HCAL uses
                 alg.UseHCAL = self.UseHCAL
                 self.setupHCAL()
@@ -183,9 +147,8 @@ class ParticleFlowConf:
                 alg.MaxMatchHCALTrSmallE = self.MaxMatchHCALTrSmallE 
                 alg.MaxMatchHCALTrMediumE = self.MaxMatchHCALTrMediumE 
                 alg.MaxMatchHCALTrLargeE = self.MaxMatchHCALTrLargeE
-                alg.MaxMatchHCALTr_T = self.MaxMatchHCALTr_T 
                 
-            if t=='Charged':
+            elif t=='Charged':
                ## Track selector
                 alg.TrackSelectorType = "DelegatingTrackSelector"
                 alg.addTool( DelegatingTrackSelector, name="TrackSelector" )
@@ -199,38 +162,33 @@ class ParticleFlowConf:
                 alg.UseTTHits = self.UseTTHits 
                 alg.MaxMatchECALTr = self.MaxMatchECALTr 
                 alg.MaxMatchECALTr_T = self.MaxMatchECALTr_T
-                alg.UsePIDInfo = self.UsePIDInfo
                 
-            if t=='Pi0s':               
+            elif t=='Pi0s':               
                 pLocations.append('Phys/StdLooseResolvedPi0/Particles')
                 pLocations.append('Phys/StdLooseMergedPi0/Particles')
                 alg.MinPhotonIDMax4ResolvedPi0 = self.MinPhotonIDMax4ResolvedPi0 
                 alg.MinPhotonIDMin4ResolvedPi0 = self.MinPhotonIDMin4ResolvedPi0 
                 
-            if t=='V0s':
+            elif t=='V0s':
                 pCompLocations.append("Phys/StdKs2PiPiLL/Particles" )
                 pCompLocations.append("Phys/StdKs2PiPiDD/Particles" )
                 pCompLocations.append("Phys/StdLambda2PPiLL/Particles" )
                 pCompLocations.append("Phys/StdLambda2PPiDD/Particles" )
-                #pCompLocations.append('Phys/StdLooseKsDD/Particles')
-                #pCompLocations.append('Phys/StdLooseKsLL/Particles')
-                #pCompLocations.append('Phys/StdLooseLambdaDD/Particles')
-                #pCompLocations.append('Phys/StdLooseLambdaLL/Particles')
 
-            if t=='PFNeutrals':
+            elif t=='PFNeutrals':
                 alg.NeutralRecovery = True
-                alg.UsePIDInfo = True
-                alg.CalibECAL_EovP = self.CalibECAL_EovP
-                alg.CalibHCAL_EovP = self.CalibHCAL_EovP
-                alg.NSigmaForCaloRecovery = self.NSigmaForCaloRecovery
-
-            if len( self.CompositeParticlesLocation)>0.5:
-                for t in self.CompositeParticlesLocation:
+                alg.MinE = self.MinE
+                alg.MaximumFracNeutrReco = self.MaximumFracNeutrReco
+            else :
+                print t,"are not supported!"
+                exit(1)
+                
+            if len( self.CompositeParticleLocations)>0.5:
+                for t in self.CompositeParticleLocations:
                     pCompLocations.append(t)
                 
         alg.ParticleLocations = pLocations
         alg.CompositeParticleLocations = pCompLocations
-        #alg.OutputLevel = 0
         self.algorithms.append(alg)
                 
 

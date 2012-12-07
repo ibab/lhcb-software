@@ -71,8 +71,6 @@ private:
 
   void relate2Vertex(const LHCb::Particle* p , Particle2Vertex::WTable& table);
   
-  int numberOfSaturatedCells( const LHCb::CaloCluster* cluster , const DeCalorimeter* calo );
-  
   StatusCode updatePFCaloClusters( LHCb::PFParticle& theParticle );
 
   StatusCode treatProtoParticles( std::string pptype , LHCb::Particles& PFParticles , Particle2Vertex::WTable& table );
@@ -81,7 +79,7 @@ private:
 
   StatusCode treatPhotons(  LHCb::Particles& PFParticles);
 
-  StatusCode treatNeutralHadrons( LHCb::Particles& PFParticles , LHCb::CaloHypos& PFCaloHypos, LHCb::ProtoParticles& PFProtoParticles );
+  StatusCode treatNeutralHadronsAndIsolatedPhotons( LHCb::Particles& PFParticles , LHCb::CaloHypos& PFCaloHypos, LHCb::ProtoParticles& PFProtoParticles );
 
   StatusCode treatNeutralRecovery( LHCb::Particles& PFParticles );  
 
@@ -92,6 +90,9 @@ private:
   Gaudi::Vector6 expectedEnergy(const LHCb::PFParticle* p );
 
   StatusCode createHiddenNeutral( std::vector < LHCb::PFCaloCluster* > clusters, std::vector < const LHCb::PFParticle*  > particles,  LHCb::Particles& PFParticles);
+
+  int numberOfSaturatedCells( const LHCb::CaloCluster* cluster);
+  
 
 private:
 
@@ -110,9 +111,9 @@ private:
 
   LHCb::Calo2Track::IClusTrTable2D* m_tableTrHCAL ; ///< The Tr 2 HCAL cluster relation table
 
-  IParticle2State* m_p2s;                                     ///< The particle to state tool
+  // IParticle2State* m_p2s;                                     ///< The particle to state tool
 
-  IProtoParticleFilter* m_filterGhost ;
+  //IProtoParticleFilter* m_filterGhost ;
 
   IRelatedPVFinder* m_pvRelator ;
 
@@ -154,41 +155,33 @@ private:
 
   double m_cutInfMomTRVal;
 
+  double m_cutInfMomTRVal_Down;
+
+  double m_cutInfMomTRVal_Up;
+
   double m_photonIDMax4ResolvedPi0 ;
 
   double m_photonIDMin4ResolvedPi0 ;
 
   double m_photonID4Photon ;
 
-  bool m_catchBremFromElectrons ;
+  //bool m_catchBremFromElectrons ;
+  bool m_useHCAL;
 
   bool m_useTTHits ; 
 
-  bool m_usePIDInfo;
-
   bool m_useNNGhost ;
-
-  bool m_useHCAL;
 
   double m_noTTChi2PerDof ;
 
-  bool m_alsoBanClone ;
-
-  double m_alphaECAL ;
-  double m_betaHCAL ;
-
-  std::vector< int > m_electronPPkeys ;
 
   std::map< int , const LHCb::Track* > m_trackKeyToBan ;
 
-
-  bool m_banCandidates ;
-
   double m_minHCALE ;
 
-  double m_minHCALE_NR ;
+  double m_minHCALET_NR ; // to become minET....
 
-  double m_minECALE_NR ;
+  double m_minECALET_NR ;
 
   bool  m_banFromTTrack ;
   
@@ -200,8 +193,6 @@ private:
 
   typedef std::map< std::string , std::pair< const IProtoParticleFilter* , const LHCb::ParticleProperty * > > ProtoMap;
   ProtoMap m_protoMap;
-
-  int m_nSigmaE;
   
   bool m_neutralRecovery;
 
@@ -222,7 +213,8 @@ private:
   double m_MinE;
   double m_maxfractionofE;
   bool m_MC;
-
+  bool m_doNotUseInfMominNR ;
+  bool m_onlyBest  ;
   //-----------------------------------------
 };
 

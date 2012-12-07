@@ -104,7 +104,44 @@ namespace LoKi
     /** standard execution of the algorithm 
      *  @see LoKi::Algo 
      *  @return status code 
-     */
+     */  
+    
+    enum ParticleExtraInfo{ StartJetExtraInfo =9000,
+                            Ntracks = 9001 ,
+                            N90 = 9002 ,
+                            MTF = 9003 ,
+                            NSatCalo = 9004,
+			    NHasPV = 9005,
+                            CPF = 9006,
+			    JetWidth = 9007,
+			    NSatECAL = 9008,
+			    NSatHCAL = 9009,
+			    NIPChi2Inf4 = 9010,
+			    Charged = 9201,
+			    ChargedHadron = 9202,
+			    Muon  = 9203,
+			    Electron = 9204,
+			    Neutral  = 9205,
+			    Photon = 9206,
+			    Pi0 = 9207,
+			    MergedPi0 = 9208,
+			    ResolvedPi0 = 9209,
+			    NeutralHadron = 9210,
+			    NeutralRecovery = 9211 ,
+			    Composite  = 9212  ,
+			    V0 = 9213 ,
+			    D = 9214 ,
+			    B = 9215 ,
+			    BadParticle = 9216  ,
+			    Charged0Momentum = 9217  ,
+			    ChargedInfMomentum = 9218 ,
+			    BadPhotonMatchingT = 9219 ,
+			    BadPhoton = 9220 ,
+			    IsolatedPhoton = 9221 
+    };
+                         
+			    
+
     virtual StatusCode initialize   () ;
     virtual StatusCode analyse   () ;
     // Append the Jet ID variables to the jet extra infos
@@ -177,7 +214,7 @@ StatusCode LoKi::PFJetMaker::initialize ()
     }
   }
   // Give some default values to the types if not defined
-  /*if (m_inputTypes.empty()){
+  if (m_inputTypes.empty()){
     m_inputTypes.push_back(LHCb::PFParticle::ChargedHadron);
     m_inputTypes.push_back(LHCb::PFParticle::Muon);
     m_inputTypes.push_back(LHCb::PFParticle::Electron);
@@ -190,8 +227,9 @@ StatusCode LoKi::PFJetMaker::initialize ()
     m_inputTypes.push_back(LHCb::PFParticle::D);
     m_inputTypes.push_back(LHCb::PFParticle::B);
     m_inputTypes.push_back(LHCb::PFParticle::Charged0Momentum);
-    m_inputTypes.push_back(LHCb::PFParticle::ChargedInfMomentum); 
-    }*/
+    m_inputTypes.push_back(LHCb::PFParticle::ChargedInfMomentum);
+    m_inputTypes.push_back(LHCb::PFParticle::IsolatedPhoton);
+  }
   return StatusCode::SUCCESS ;
 }
 
@@ -222,7 +260,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     LoKi::Types::Fun bestVertexVZ = BPV(VZ);
 
     // Some cuts to select the inputs
-    LoKi::Types::Fun PFType =  LoKi::Cuts::INFO(900,-10.);
+    LoKi::Types::Fun PFType =  LoKi::Cuts::INFO(LHCb::PFParticle::Type,-10.);
     LoKi::Types::Cut GoodInput = fabs( PFType - m_inputTypes[0] ) < 1e-6 ;
     for ( int i = 1 ; i < (int) m_inputTypes.size() ; i++ ){
       GoodInput = GoodInput || fabs(  PFType - m_inputTypes[i] ) < 1e-6 ;
@@ -231,7 +269,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
       || ( PFType > LHCb::PFParticle::Composite  && PFType < LHCb::PFParticle::BadParticle )
       || ( PFType == LHCb::PFParticle::ChargedInfMomentum && LHCb::Track::Downstream != TRTYPE ) || ( PFType == LHCb::PFParticle::Charged0Momentum && LHCb::Track::Downstream != TRTYPE );
     LoKi::Types::Cut AllPVinputs = ( PFType > LHCb::PFParticle::Neutral && PFType < LHCb::PFParticle::Composite )
-      || ( PFType == LHCb::PFParticle::BadPhotonMatchingT ) || ( PFType == LHCb::PFParticle::BadPhoton ) 
+      || ( PFType == LHCb::PFParticle::BadPhotonMatchingT ) || ( PFType == LHCb::PFParticle::BadPhoton )  || ( PFType == LHCb::PFParticle::IsolatedPhoton ) 
       || ( PFType > LHCb::PFParticle::Charged && PFType < LHCb::PFParticle::Neutral &&  LHCb::Track::Downstream == TRTYPE )
       || ( PFType == LHCb::PFParticle::ChargedInfMomentum &&  LHCb::Track::Downstream == TRTYPE )
       || ( PFType == LHCb::PFParticle::Charged0Momentum &&  LHCb::Track::Downstream == TRTYPE );
@@ -248,13 +286,13 @@ StatusCode LoKi::PFJetMaker::analyse   ()
       // Prepare the inputs
       IJetMaker::Input inputs;
       for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){ 
-	if (!GoodInput(*i_p))continue;
-	if ( PerPVinputs(*i_p) && ( std::abs( bestVertexVZ(*i_p) - VZ(pv) ) > 1e-6 
-				    || std::abs( bestVertexVY(*i_p) - VY(pv) ) > 1e-6 
-				    || std::abs( bestVertexVX(*i_p) - VX(pv) ) > 1e-6 ) ){continue;}
-	else if ( PerPVinputs(*i_p) )	inputs.push_back(*i_p); 
-	else if ( AllPVinputs(*i_p) )	inputs.push_back(*i_p); 
-	else continue;
+       	if (!GoodInput(*i_p))continue;
+        if ( PerPVinputs(*i_p) && ( std::abs( bestVertexVZ(*i_p) - VZ(pv) ) > 1e-6 
+                                    || std::abs( bestVertexVY(*i_p) - VY(pv) ) > 1e-6 
+                                    || std::abs( bestVertexVX(*i_p) - VX(pv) ) > 1e-6 ) ){continue;}
+        else if ( PerPVinputs(*i_p) )	inputs.push_back(*i_p); 
+        else if ( AllPVinputs(*i_p) )	inputs.push_back(*i_p); 
+        else continue;
       }
       // ouput container
       IJetMaker::Jets jets ;
@@ -296,7 +334,6 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     // Some definitions for jet ID
     LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
     LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
-    // Some cuts to select the inputs
     LoKi::Types::Fun PFType =  LoKi::Cuts::INFO(900,-10.);
     LoKi::Types::Cut GoodInput = fabs( PFType - m_inputTypes[0] ) < 1e-6 ;
     for ( int i = 1 ; i < (int) m_inputTypes.size() ; i++ ){
@@ -349,8 +386,7 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   double tpx=0, tpy=0;
   std::vector<float> itemspt;
   ntrk=n90=width=0; 
-
-
+  
 
   for (;idaughter != daughtersvector.end() ; ++idaughter){
     const LHCb::Particle * daughter = *idaughter;
@@ -373,19 +409,79 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   float auxptsum = 0; n90=0;
   for(int ii=iitems-1; ii>=0; ii--) {auxptsum+=itemspt[ii]; n90++; if(auxptsum/sumpt>0.9) break; }
 
-  LoKi::Types::Fun NsatCells = LoKi::Cuts::SUMTREE(LoKi::Cuts::INFO(955,0.),LoKi::Cuts::Q==0, 0.);
-  LoKi::Types::Fun N_HasPVInfo = LoKi::Cuts::NINTREE(( LoKi::Cuts::ABSID == 310 ||LoKi::Cuts::ABSID == 3122 ) || 
-                                                     ( LoKi::Cuts::HASTRACK && LHCb::Track::Downstream != LoKi::Cuts::TRTYPE ));
-  
+  LoKi::Types::Fun PFType =  LoKi::Cuts::INFO(LHCb::PFParticle::Type,-10.);
+  // Function to evaluate the saturated cells Number
+  LoKi::Types::Fun NECALsatCells = LoKi::Cuts::SUMTREE( LoKi::Cuts::INFO(NSatECAL,0.),LoKi::Cuts::INFO(NSatECAL,-10.)>0., 0.);
+  LoKi::Types::Fun NHCALsatCells = LoKi::Cuts::SUMTREE( LoKi::Cuts::INFO(NSatHCAL,0.),LoKi::Cuts::INFO(NSatHCAL,-10.)>0., 0.);
+  LoKi::Types::Fun NsatCells = NECALsatCells + NHCALsatCells ;
+  // Function to get the number of particles with PV information
+  LoKi::Types::Fun BestPVIPChi2  = LoKi::Cuts::BPVIPCHI2 ("")  ;
+  LoKi::Types::Fun N_HasPVInfo   = LoKi::Cuts::NINTREE( ( PFType > LHCb::PFParticle::Composite  && PFType < LHCb::PFParticle::BadParticle ) || 
+							( LoKi::Cuts::HASTRACK && LHCb::Track::Downstream != LoKi::Cuts::TRTYPE ) );
+  LoKi::Types::Fun N_HasPVInfoChi24   = LoKi::Cuts::NINTREE(( ( PFType > LHCb::PFParticle::Composite  && PFType < LHCb::PFParticle::BadParticle ) || 
+							      ( LoKi::Cuts::HASTRACK && LHCb::Track::Downstream != LoKi::Cuts::TRTYPE )) && BestPVIPChi2 < 9 );
 
-  jet->addInfo ( 9001 , ntrk );
-  jet->addInfo ( 9002 , n90 );
-  jet->addInfo ( 9003 , mtf );
-  jet->addInfo ( 9006 , cpf );
-  jet->addInfo ( 9007 , width );
-  jet->addInfo ( 9004 , NsatCells(jet) );
-  jet->addInfo ( 9005 , N_HasPVInfo(jet) );
+  jet->addInfo ( Ntracks , ntrk );
+  jet->addInfo ( N90 , n90 );
+  jet->addInfo ( MTF , mtf );
+  jet->addInfo ( NSatCalo , NsatCells(jet) );
+  jet->addInfo ( NHasPV   , N_HasPVInfo(jet) );
+  jet->addInfo ( CPF , cpf );
+  jet->addInfo ( JetWidth , width );
+  jet->addInfo ( NSatECAL , NECALsatCells(jet) );
+  jet->addInfo ( NSatHCAL , NHCALsatCells(jet) );
+  jet->addInfo ( NIPChi2Inf4 , N_HasPVInfoChi24(jet) );
+
+  LoKi::Types::Fun FractionChargedHadron = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::ChargedHadron ) < 1e-6 , 0. );
+  jet->addInfo ( ChargedHadron  , FractionChargedHadron(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionMuon = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::Muon ) < 1e-6 , 0. );
+  jet->addInfo ( Muon  , FractionMuon(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionElectron = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::Electron ) < 1e-6 , 0. );
+  jet->addInfo ( Electron  , FractionElectron(jet)/LoKi::Cuts::E(jet) );
+
+  LoKi::Types::Fun FractionCharged = FractionChargedHadron + FractionMuon + FractionElectron;
+  jet->addInfo ( Charged  , FractionCharged(jet)/LoKi::Cuts::E(jet) );
+
+  LoKi::Types::Fun FractionPhoton = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::Photon ) < 1e-6 , 0. );
+  jet->addInfo (  Photon , FractionPhoton(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionPi0 = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::Pi0 ) < 1e-6 , 0. );
+  jet->addInfo ( Pi0  , FractionPi0(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionMergedPi0 = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::MergedPi0 ) < 1e-6 , 0. );
+  jet->addInfo ( MergedPi0  , FractionMergedPi0(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionResolvedPi0 = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::ResolvedPi0 ) < 1e-6 , 0. );
+  jet->addInfo ( ResolvedPi0  , FractionResolvedPi0(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionNeutralHadron = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::NeutralHadron ) < 1e-6 , 0. );
+  jet->addInfo (  NeutralHadron , FractionNeutralHadron(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionNeutralRecovery = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::NeutralRecovery ) < 1e-6 , 0. );
+  jet->addInfo ( NeutralRecovery  , FractionNeutralRecovery(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionIsolatedPhoton = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::IsolatedPhoton ) < 1e-6 , 0. );
+  jet->addInfo (  IsolatedPhoton , FractionIsolatedPhoton(jet)/LoKi::Cuts::E(jet) );
+
+  LoKi::Types::Fun FractionNeutral = FractionPhoton + FractionPi0 + FractionMergedPi0 + FractionResolvedPi0 + FractionNeutralHadron + FractionNeutralRecovery + FractionIsolatedPhoton;
+  jet->addInfo ( Neutral  , FractionNeutral(jet)/LoKi::Cuts::E(jet) );
+
+  LoKi::Types::Fun FractionV0 = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::V0 ) < 1e-6 , 0. );
+  jet->addInfo ( V0  , FractionV0(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionD = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::D ) < 1e-6 , 0. );
+  jet->addInfo ( D  , FractionD(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionB = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::B ) < 1e-6 , 0. );
+  jet->addInfo ( B  , FractionB(jet)/LoKi::Cuts::E(jet) );
+
+  LoKi::Types::Fun FractionComposite = FractionV0 + FractionD + FractionB ;
+  jet->addInfo ( Composite  , FractionComposite(jet)/LoKi::Cuts::E(jet) );
+
+  LoKi::Types::Fun FractionCharged0Momentum = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::Charged0Momentum ) < 1e-6 , 0. );
+  jet->addInfo ( Charged0Momentum  , FractionCharged0Momentum(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionChargedInfMomentum = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::ChargedInfMomentum ) < 1e-6 , 0. );
+  jet->addInfo ( ChargedInfMomentum  , FractionChargedInfMomentum(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionBadPhotonMatchingT = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::BadPhotonMatchingT ) < 1e-6 , 0. );
+  jet->addInfo ( BadPhotonMatchingT  , FractionBadPhotonMatchingT(jet)/LoKi::Cuts::E(jet) );
+  LoKi::Types::Fun FractionBadPhoton = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::BadPhoton ) < 1e-6 , 0. );
+  jet->addInfo (  BadPhoton , FractionBadPhoton(jet)/LoKi::Cuts::E(jet) );
   
+  LoKi::Types::Fun FractionBadParticle = FractionCharged0Momentum + FractionChargedInfMomentum + FractionBadPhotonMatchingT + FractionBadPhoton;
+  jet->addInfo ( BadParticle  , FractionBadParticle(jet)/LoKi::Cuts::E(jet) );
+
   return SUCCESS;
 }
 
