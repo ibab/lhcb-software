@@ -53,14 +53,17 @@ namespace
     Rich::ObjPtn<std::vector<LHCb::RichRecPhoton*> >               obj_3;
     Rich::HypoData<LHCb::RichRecRing*>                             obj_4;
     Rich::HypoData<float>                                          obj_5;
-    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecRingOnPixel> > obj_6;
-    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecPhoton*> >     obj_7;
-    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecTrack*> >      obj_8;
-    LHCb::RichRecSegments                                          obj_9;
-    LHCb::RichRecTracks                                           obj_10;
-    LHCb::RichRecPixels                                           obj_11;
-    LHCb::RichRecPhotons                                          obj_12;
-    LHCb::RichRecRings                                            obj_13;
+    LHCb::FastAllocVector<LHCb::RichRecRingOnPixel>                obj_6;
+    LHCb::FastAllocVector<LHCb::RichRecPhoton*>                    obj_7;
+    LHCb::FastAllocVector<LHCb::RichRecTrack*>                     obj_8;
+    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecRingOnPixel> > obj_9;
+    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecPhoton*> >    obj_10;
+    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecTrack*> >     obj_11;
+    LHCb::RichRecSegments                                         obj_12;
+    LHCb::RichRecTracks                                           obj_13;
+    LHCb::RichRecPixels                                           obj_14;
+    LHCb::RichRecPhotons                                          obj_15;
+    LHCb::RichRecRings                                            obj_16;
   };
 }
 

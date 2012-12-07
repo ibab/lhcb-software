@@ -7,12 +7,6 @@
   <class name = "LHCb::RichRecRing" />
   <class name = "LHCb::RichRecStatus" />
 
-  <class name = "LHCb::RichRecSegments" />
-  <class name = "LHCb::RichRecTracks" />
-  <class name = "LHCb::RichRecPixels" />
-  <class name = "LHCb::RichRecPhotons" />
-  <class name = "LHCb::RichRecRings" />
-
   <class name = "Rich::Rec::FastRingFitter" />
   <class name = "Rich::Rec::FastRingFitter::Result" />
 
@@ -23,6 +17,7 @@
   <class name = "Rich::ObjPtn&lt;LHCb::RichRecPixel::Tracks&gt;" />
   <class name = "LHCb::RichRecPixel::Photons" />
   <class name = "Rich::ObjPtn&lt;LHCb::RichRecPixel::Photons&gt;" />
+  <class name = "LHCb::RichRecRingOnPixel" />
   <class name = "LHCb::RichRecPixel::RingsOnPixel" />
   <class name = "Rich::ObjPtn&lt;LHCb::RichRecPixel::RingsOnPixel&gt;" />
   <class name = "Rich::ObjPtn&lt;Rich::HPDPixelCluster&gt;" />
@@ -49,6 +44,12 @@
 
   <class name = "Rich::ObjPtn&lt;LHCb::RichGeomPhoton&gt;" />
   <class name = "Rich::ObjPtn&lt;LHCb::RichTrackSegment&gt;" />
+
+  <class name = "LHCb::RichRecSegments" />
+  <class name = "LHCb::RichRecTracks" />
+  <class name = "LHCb::RichRecPixels" />
+  <class name = "LHCb::RichRecPhotons" />
+  <class name = "LHCb::RichRecRings" />
 
   <class name = "Rich::Rec::IBaseTrackSelector" />
   <class name = "Rich::Rec::ICherenkovAngle" />
