@@ -7,7 +7,7 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-Tuple                                                       SUCCESS Number of counters : 4
+Tuple                         SUCCESS Number of counters : 4
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# Phys/BetaSBd2JpsiKsDetachedLine"             |        11 |         11 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "# input particles"                             |       100 |         11 |    0.11000 |    0.31289 |      0.0000 |      1.0000 |
@@ -16,12 +16,12 @@ Tuple                                                       SUCCESS Number of co
 """, stdout, result, causes, 
 signature_offset = 0, id="Tuple")
 findReferenceBlock("""
-EventTuple                                                  SUCCESS Number of counters : 1
+EventTuple                    SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Event"                                         |       100 |        100 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0, id="EventTuple")
 findReferenceBlock("""
-MCTuple                                                     SUCCESS Number of counters : 2
+MCTuple                       SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#accept"                                       |       100 |         99 |(  99.0000 +- 0.994987 )%|   -------   |   -------   |
  | "Event"                                         |       100 |        100 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
