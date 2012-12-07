@@ -55,7 +55,8 @@ private:
   // Handles to actual measurement providers
   ToolHandle<IMeasurementProvider> m_veloRProvider ;
   ToolHandle<IMeasurementProvider> m_veloPhiProvider ;
-  ToolHandle<IMeasurementProvider> m_vPProvider ;
+  ToolHandle<IMeasurementProvider> m_vpProvider ;
+  ToolHandle<IMeasurementProvider> m_vlProvider ;
   ToolHandle<IMeasurementProvider> m_ttProvider ;
   ToolHandle<IMeasurementProvider> m_itProvider ;
   ToolHandle<IMeasurementProvider> m_otProvider ;
@@ -63,7 +64,8 @@ private:
   ToolHandle<IMeasurementProvider> m_muonProvider ;
   
   bool m_ignoreVelo;    ///< Ignore Velo hits
-  bool m_ignoreVP;    ///< Ignore Velo hits
+  bool m_ignoreVP;      ///< Ignore VP hits
+  bool m_ignoreVL;      ///< Ignore VL hits
   bool m_ignoreTT;      ///< Ignore TT hits
   bool m_ignoreIT;      ///< Ignore IT hits
   bool m_ignoreOT;      ///< Ignore OT hits
