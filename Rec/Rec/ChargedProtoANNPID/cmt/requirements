@@ -27,6 +27,10 @@ use  neurobayes_expert         v*   LCG_Interfaces
 #============================================================================
 library          ChargedProtoANNPID    ../src/*.cpp
 apply_pattern    component_library library=ChargedProtoANNPID
+private
+macro_append     ChargedProtoANNPID_cppflags "" \
+                                  target-gcc " -Wno-variadic-macros "
+end_private
 
 # Setup Python Configurables
 #============================================================================
