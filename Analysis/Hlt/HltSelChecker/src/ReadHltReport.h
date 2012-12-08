@@ -1,10 +1,9 @@
 // $Id: ReadHltReport.h,v 1.2 2009-10-16 11:29:32 graven Exp $
-#ifndef READHLTSUMMARY_H 
+#ifndef READHLTSUMMARY_H
 #define READHLTSUMMARY_H 1
 
-// Include files
-// from HLT, this is a specialized DVAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
+
 /** @class ReadHltReport ReadHltReport.h
  *
  *  Reads HltSummary class and prints out various things
@@ -14,20 +13,20 @@
  */
 class IParticlePropertySvc;
 
-class ReadHltReport : public DVAlgorithm {
-public: 
+class ReadHltReport : public GaudiAlgorithm
+{
+
+public:
+
   /// Standard constructor
   ReadHltReport( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~ReadHltReport( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
+
   StatusCode readHltReport(const LHCb::HltDecReports*); ///< main method
   StatusCode printObject(const LHCb::HltObjectSummary*, std::string increment = "");  ///< print summary object (recursive)
 
@@ -38,6 +37,6 @@ private:
   std::string m_hltDecReportsLocation  ; ///< location
   std::string m_hltSelReportsLocation  ; ///< location
   std::map<std::string,std::string> m_infos ; ///< all known info fields
-  
+
 };
 #endif // READHLTSUMMARY_H

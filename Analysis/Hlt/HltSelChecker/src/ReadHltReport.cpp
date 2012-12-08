@@ -4,13 +4,13 @@
 // ============================================================================
 // GaudiKErnel
 // ============================================================================
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 // ============================================================================
 // Kernel/PartProp
 // ============================================================================
-#include "Kernel/ParticleProperty.h" 
-#include "Kernel/IParticlePropertySvc.h" 
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
 // from HLT
 // ============================================================================
@@ -20,7 +20,7 @@
 // ============================================================================
 // local
 // ============================================================================
-#include "ReadHltReport.h" 
+#include "ReadHltReport.h"
 // ============================================================================
 //-----------------------------------------------------------------------------
 // Implementation file for class : ReadHltReport
@@ -34,14 +34,14 @@ DECLARE_ALGORITHM_FACTORY( ReadHltReport );
 // Standard constructor, initializes variables
 //=============================================================================
 ReadHltReport::ReadHltReport( const std::string& name,
-                                ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+                              ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name , pSvcLocator )
   , m_decisionString("Decision")
 {
   declareProperty("PrintParticles", m_printParticles = false, "Print out candidates");
   declareProperty("PrintDecisions", m_printDecisions = false, "Print out decisions");
   declareProperty("HltDecReportsLocation",
-                  m_hltDecReportsLocation = LHCb::HltDecReportsLocation::Default);   
+                  m_hltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
   declareProperty("HltSelReportsLocation",
                   m_hltSelReportsLocation = LHCb::HltSelReportsLocation::Default);
 
@@ -75,17 +75,7 @@ ReadHltReport::ReadHltReport( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-ReadHltReport::~ReadHltReport() {} 
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode ReadHltReport::initialize() {
-  StatusCode sc = DVAlgorithm::initialize(); 
-  if (!sc) return sc;
-  debug() << "==> Initialize" << endmsg;
-  return StatusCode::SUCCESS;
-}
+ReadHltReport::~ReadHltReport() {}
 
 //=============================================================================
 // Main execution
@@ -94,7 +84,7 @@ StatusCode ReadHltReport::execute() {
 
   StatusCode sc = StatusCode::SUCCESS ;
   if (msgLevel(MSG::VERBOSE)) verbose() << "==> Execute" << endmsg;
-  // code goes here  
+  // code goes here
   if( !exist<LHCb::HltDecReports>( m_hltDecReportsLocation ) ){
     return Warning("No Hlt decision",StatusCode::SUCCESS,1);
   }
@@ -117,29 +107,19 @@ StatusCode ReadHltReport::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ReadHltReport::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
-}
-
-//=============================================================================
 //  Get HLT summary
 //=============================================================================
 StatusCode ReadHltReport::readHltReport(const LHCb::HltDecReports* decReports){
-  
+
   StatusCode sc = StatusCode::SUCCESS ;
   std::vector<std::string> decisions;
   const LHCb::HltSelReports* selReports = 0;
-  if ( exist<LHCb::HltSelReports>(m_hltSelReportsLocation )) 
-      selReports = get<LHCb::HltSelReports>( m_hltSelReportsLocation );
+  if ( exist<LHCb::HltSelReports>(m_hltSelReportsLocation ))
+    selReports = get<LHCb::HltSelReports>( m_hltSelReportsLocation );
 
   for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
       it!=decReports->end();++it){
-    if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first  
+    if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first
                                        << " decision= " << it->second.decision() << endmsg;
     if ( it->second.decision() ){
       if (m_printDecisions) decisions.push_back(it->first);
@@ -163,7 +143,7 @@ StatusCode ReadHltReport::readHltReport(const LHCb::HltDecReports* decReports){
     for ( std::vector<std::string>::const_iterator s = decisions.begin() ; s!=decisions.end() ; ++s) always() << *s << " ";
     always() << endmsg;
   }
-return sc ;
+  return sc ;
 }
 
 //=========================================================================
@@ -171,17 +151,17 @@ return sc ;
 //=========================================================================
 StatusCode ReadHltReport::printObject(const LHCb::HltObjectSummary* sum, std::string increment){
   if (0==sum) return StatusCode::SUCCESS ;
-  if (msgLevel(MSG::DEBUG)) debug() << "Summarised obj = " << sum->summarizedObject() 
+  if (msgLevel(MSG::DEBUG)) debug() << "Summarised obj = " << sum->summarizedObject()
                                     << ", vector " << sum->substructure().size() << endmsg ;
   const LHCb::HltObjectSummary::Info info = sum->numericalInfoFlattened() ;
   always() << increment << "Info: " ;
-  for ( LHCb::HltObjectSummary::Info::const_iterator i = info.begin() ; i != info.end() ; ++i){  
-    if ((m_infos.find(i->first))!=m_infos.end()) 
+  for ( LHCb::HltObjectSummary::Info::const_iterator i = info.begin() ; i != info.end() ; ++i){
+    if ((m_infos.find(i->first))!=m_infos.end())
       always() << m_infos[i->first] << " = " << i->second << ", " ;
     else always() << i->first << " = " << i->second << ", " ;
   }
   always() << endmsg ;
-  for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator s = sum->substructure().begin() ; 
+  for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator s = sum->substructure().begin() ;
         s != sum->substructure().end() ; ++s){
     StatusCode sc = printObject(*s,increment+"   ");
     if (!sc) return sc;
