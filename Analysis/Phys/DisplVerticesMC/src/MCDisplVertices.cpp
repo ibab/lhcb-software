@@ -51,60 +51,60 @@ DECLARE_ALGORITHM_FACTORY( MCDisplVertices )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MCDisplVertices::MCDisplVertices( const std::string& name,
-                                  ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
-  , m_pLinker()
-  , m_vFit(0)
-  , m_tisTos(0)
-  , pi(3.1415926)
-  , m_maxunpure(0.1)
-  , m_minmixed(0.7)
-  , m_maxmixed(0.95)
-  , PV(0)
-  , MCPV(0)
-  , m_PreyID(0)
-  , m_MotherPreyID(0)
-  , m_IsPreyFromMother(false){
-  declareProperty("MC", m_MC = false );//if work in a MC gen sample
-  declareProperty("HepMC", m_HepMC = "" );//if work in a HepMC gen sample
-  declareProperty("SaveOnTES", m_SaveonTES = true );
-  declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
-  declareProperty("SaveTrigInfos", m_SaveTrigInfos = false );
-  declareProperty("RemVtxFromAir", m_RemVtxFromAir = false );
-  declareProperty("Prey", m_Prey = "~chi_10" );
-  declareProperty("MotherPrey", m_MotherPrey = "H_10" );
-  //>6.286GeV=Bc+ Mass
-  declareProperty("MinNBCands", m_NbCands = 1 );
-  declareProperty("PreyMinMass", m_PreyMinMass = 6.3*GeV );
-  //Unlimited
-  declareProperty("PreyMaxMass", m_PreyMaxMass = 14.*TeV );
-  declareProperty("PreyMinSumpt", m_SumPt = 0.*GeV );
-  declareProperty("RMin", m_RMin = 0.3*mm );//0.06 in K
-  declareProperty("RMax", m_RMax = 10.*m );
-  declareProperty("DistMax", m_DistMax = 10.* m );//Check value.
-  declareProperty("MaxChi2OvNDoF", m_MaxChi2OvNDoF = 1000. );
-  declareProperty("MuonpT", m_MuonpT = -1*GeV );
-  declareProperty("PurityMin", m_PurityMin = 100 );
-  declareProperty("DocaMax", m_DocaMax = 0.1 * mm);//Simulate resolution
-  declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks 5
-  declareProperty("SigmaZ", m_SigmaZ = 1000. );
-  declareProperty("SigmaR", m_SigmaR = 1000. );
-  declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
-  declareProperty("RemVtxFromDet", m_RemVtxFromDet = 0  );
-  declareProperty("DetDist", m_DetDist = 1*mm );
-  declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
-  declareProperty("MinX", m_MinX = -10.*m );
-  declareProperty("MaxX", m_MaxX = 10.*m );
-  declareProperty("MinY", m_MinY = -10.*m );
-  declareProperty("MaxY", m_MaxY = 10.*m );
-  declareProperty("MinZ", m_MinZ = -10.*m );
-  declareProperty("MaxZ", m_MaxZ = 100*m );
-  declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
-  declareProperty("BeamLineLocation",
-                  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
-  declareProperty("Backtoback", m_Backtoback = -1 );
-}
+  MCDisplVertices::MCDisplVertices( const std::string& name,
+                                    ISvcLocator* pSvcLocator)
+    : DaVinciTupleAlgorithm ( name , pSvcLocator )
+    , m_pLinker()
+    , m_vFit(0)
+    , m_tisTos(0)
+    , pi(3.1415926)
+    , m_maxunpure(0.1)
+    , m_minmixed(0.7)
+    , m_maxmixed(0.95)
+    , PV(0)
+    , MCPV(0)
+    , m_PreyID(0)
+    , m_MotherPreyID(0)
+    , m_IsPreyFromMother(false){
+    declareProperty("MC", m_MC = false );//if work in a MC gen sample
+    declareProperty("HepMC", m_HepMC = "" );//if work in a HepMC gen sample
+    declareProperty("SaveOnTES", m_SaveonTES = true );
+    declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
+    declareProperty("SaveTrigInfos", m_SaveTrigInfos = false );
+    declareProperty("RemVtxFromAir", m_RemVtxFromAir = false );
+    declareProperty("Prey", m_Prey = "~chi_10" );
+    declareProperty("MotherPrey", m_MotherPrey = "H_10" );
+    //>6.286GeV=Bc+ Mass
+    declareProperty("MinNBCands", m_NbCands = 1 );
+    declareProperty("PreyMinMass", m_PreyMinMass = 6.3*GeV );
+    //Unlimited
+    declareProperty("PreyMaxMass", m_PreyMaxMass = 14.*TeV );
+    declareProperty("PreyMinSumpt", m_SumPt = 0.*GeV );
+    declareProperty("RMin", m_RMin = 0.3*mm );//0.06 in K
+    declareProperty("RMax", m_RMax = 10.*m );
+    declareProperty("DistMax", m_DistMax = 10.* m );//Check value.
+    declareProperty("MaxChi2OvNDoF", m_MaxChi2OvNDoF = 1000. );
+    declareProperty("MuonpT", m_MuonpT = -1*GeV );
+    declareProperty("PurityMin", m_PurityMin = 100 );
+    declareProperty("DocaMax", m_DocaMax = 0.1 * mm);//Simulate resolution
+    declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks 5
+    declareProperty("SigmaZ", m_SigmaZ = 1000. );
+    declareProperty("SigmaR", m_SigmaR = 1000. );
+    declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
+    declareProperty("RemVtxFromDet", m_RemVtxFromDet = 0  );
+    declareProperty("DetDist", m_DetDist = 1*mm );
+    declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
+    declareProperty("MinX", m_MinX = -10.*m );
+    declareProperty("MaxX", m_MaxX = 10.*m );
+    declareProperty("MinY", m_MinY = -10.*m );
+    declareProperty("MaxY", m_MaxY = 10.*m );
+    declareProperty("MinZ", m_MinZ = -10.*m );
+    declareProperty("MaxZ", m_MaxZ = 100*m );
+    declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
+    declareProperty("BeamLineLocation",
+                    m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
+    declareProperty("Backtoback", m_Backtoback = -1 );
+  }
 
 //=============================================================================
 // Destructor
@@ -116,7 +116,7 @@ MCDisplVertices::~MCDisplVertices() {}
 //=============================================================================
 StatusCode MCDisplVertices::initialize() {
   //=== The following two lines should be commented for DC04 algorithms ! ===
-  StatusCode sc = DVAlgorithm::initialize();
+  StatusCode sc = DaVinciTupleAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   if( msgLevel( MSG::DEBUG ) )
@@ -580,7 +580,7 @@ StatusCode MCDisplVertices::finalize() {
 
   if( m_RCut !="FromBeamLine" ) delete m_BeamLine;
 
-  if( context() == "HLT" ) return DVAlgorithm::finalize();
+  if( context() == "HLT" ) return DaVinciTupleAlgorithm::finalize();
 
 
   info()<<"-------------------------------------------------------"<< endreq;
@@ -611,10 +611,7 @@ StatusCode MCDisplVertices::finalize() {
   info()<<"-------------------------------------------------------"<< endreq;
 
 
-
-
-
-  return DVAlgorithm::finalize();
+  return DaVinciTupleAlgorithm::finalize();
 }
 
 //============================================================================

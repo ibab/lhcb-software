@@ -4,7 +4,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 
 //To associate a particle to the true one.
 #include "Kernel/Particle2MCLinker.h"
@@ -16,8 +16,11 @@
  *  @date  6 august 2008
  */
 
-class SaveParticlesFrom : public DVAlgorithm {
+class SaveParticlesFrom : public DaVinciAlgorithm
+{
+
 public: 
+
   /// Standard constructor
   SaveParticlesFrom( const std::string& name, ISvcLocator* pSvcLocator );
 

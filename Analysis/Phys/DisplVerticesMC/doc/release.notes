@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! 2012-12-08 - Chris Jones
+ - Remove usage of DVAlgorithm
+
 !========================= DisplVerticesMC v1r4p2 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

@@ -1,5 +1,5 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -22,15 +22,14 @@ using namespace std ;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( SaveParticlesFrom );
-
+DECLARE_ALGORITHM_FACTORY( SaveParticlesFrom )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-SaveParticlesFrom::SaveParticlesFrom( const std::string& name,
-                ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  SaveParticlesFrom::SaveParticlesFrom( const std::string& name,
+                                        ISvcLocator* pSvcLocator)
+    : DaVinciAlgorithm ( name , pSvcLocator )
     , m_pLinker()
     , m_nEvents(0)
 {
@@ -50,26 +49,26 @@ SaveParticlesFrom::~SaveParticlesFrom() {}
 //=============================================================================
 StatusCode SaveParticlesFrom::initialize() {
 
-  StatusCode sc = DVAlgorithm::initialize(); 
+  StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   debug() << "==> Initialize the SaveParticlesFrom algorithm" << endmsg;
 
   //Retrieve MC linker tools
   m_pLinker = new Particle2MCLinker(this,Particle2MCMethod::Links,
-				    vector<string>(1,"") );
+                                    vector<string>(1,"") );
 
   //Sanity checks
   if( m_Preys.size()== 0 ){
     err() <<"Please give at least one particle ID to be able to "
-	  <<"select related particles"<<endmsg;
+          <<"select related particles"<<endmsg;
     return StatusCode::FAILURE;
   }
 
   info() << "--------------------------------------------------------"<<endmsg;
   info() << "SaveParticlesFrom will select ";
-  for( vector<string>::const_iterator i = m_Preys.begin(); 
-       i != m_Preys.end(); i++ ){ 
+  for( vector<string>::const_iterator i = m_Preys.begin();
+       i != m_Preys.end(); i++ ){
     const ParticleProperty* Prey = ppSvc()->find( *i );
     if ( !Prey ) { //
       err() << "Cannot find particle property for " << *i << endmsg ;
@@ -80,7 +79,7 @@ StatusCode SaveParticlesFrom::initialize() {
     m_PreyIDs.push_back( id );
     info()<< *i <<" ("<< id <<"), ";
   }
-  if(m_Dgts){ 
+  if(m_Dgts){
     info()<<"and their ";
     if(m_Charged) info()<<"charged ";
     info()<<"daughters";
@@ -98,40 +97,40 @@ StatusCode SaveParticlesFrom::execute() {
   //See v1r0 for the indirect method.
   ++m_nEvents;
   debug() << "==> Execute the SaveParticlesFrom algorithm, event "
-	  << m_nEvents << endmsg;
+          << m_nEvents << endmsg;
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
 
 
   //Get the MC Particles
   MCParticles* mcparts = get<MCParticles>(MCParticleLocation::Default );
-  if( !mcparts ){ 
+  if( !mcparts ){
     warning() << "Unable to find MC particles at '"
-	      << MCParticleLocation::Default << "'" << endreq;
+              << MCParticleLocation::Default << "'" << endreq;
     return StatusCode::FAILURE;
-  } 
+  }
   debug() << "There are " <<  mcparts->size() << " MC particles" << endmsg;
 
   //Get Particles from TES
   Particle::ConstVector preys = this->i_particles();
   debug() << "There are " << preys.size() <<" parts in TES !" << endmsg;
-  
+
   //Loop over all particles
   for( Particle::ConstVector::const_iterator i = preys.begin();
        i!= preys.end(); i++ ){
     const Particle *p = *i;
     const MCParticle *mcp = m_pLinker->firstMCP( p );
-    if( NULL!=mcp ){ 
+    if( NULL!=mcp ){
       debug() <<"Particle ( id "<< p->particleID().pid() <<", key "<< p->key()
-	      <<" ) associated to MC part ( id " << mcp->particleID().pid() 
-	      <<", key "     << mcp->key() <<" )"<< endmsg; }
-    else { 
+              <<" ) associated to MC part ( id " << mcp->particleID().pid()
+              <<", key "     << mcp->key() <<" )"<< endmsg; }
+    else {
       debug() << "Particle ( id " << p->particleID().pid() <<", key "
-	      << p->key() <<" ) is not associated !"<< endmsg;
+              << p->key() <<" ) is not associated !"<< endmsg;
       continue;
     }
     if( IsaPrey( mcp ) ){
       this->markTree( p );
-      setFilterPassed(true); 
+      setFilterPassed(true);
       debug()<<"Particle will be saved !"<<endmsg;
     }
 
@@ -143,17 +142,17 @@ StatusCode SaveParticlesFrom::execute() {
 
     //Is it from a prey ?
     if( mcp->mother() == NULL ) continue;
-    if( !IsItFromaPrey( mcp, mcp->mother()->endVertices().at(0)->position())) 
+    if( !IsItFromaPrey( mcp, mcp->mother()->endVertices().at(0)->position()))
       continue;
 
     //Save it !
     this->markTree( p );
-    setFilterPassed(true); 
+    setFilterPassed(true);
     debug()<<"Particle will be saved !"<<endmsg;
   }
 
   //Save all particles in the Desktop to the TES
-  // if( !(desktop()->saveDesktop()) ) 
+  // if( !(desktop()->saveDesktop()) )
   //  return Error("Unable to save Particles to the TES !");
 
   return StatusCode::SUCCESS;
@@ -166,9 +165,9 @@ StatusCode SaveParticlesFrom::finalize() {
 
   debug() << "==> Finalize SaveParticlesFrom" << endmsg;
 
-  if (NULL!=m_pLinker) delete m_pLinker ; 
+  delete m_pLinker ;
 
-  return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
+  return DaVinciAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -176,7 +175,7 @@ StatusCode SaveParticlesFrom::finalize() {
 //=============================================================================
 bool SaveParticlesFrom::IsaPrey( const MCParticle * p ) {
   int pid = p->particleID().pid();
-  for( vector<int>::const_iterator i = m_PreyIDs.begin(); 
+  for( vector<int>::const_iterator i = m_PreyIDs.begin();
        i != m_PreyIDs.end(); i++ ){
     if( pid == (*i) ) return true;
   }
@@ -186,17 +185,17 @@ bool SaveParticlesFrom::IsaPrey( const MCParticle * p ) {
 //=============================================================================
 //  Is the MCParticle a descendant of the prey ?
 //=============================================================================
-bool SaveParticlesFrom::IsItFromaPrey( const LHCb::MCParticle * p, 
-				       const Gaudi::XYZPoint &  mcpos ) {
+bool SaveParticlesFrom::IsItFromaPrey( const LHCb::MCParticle * p,
+                                       const Gaudi::XYZPoint &  mcpos ) {
 
   if( !p->mother() ) return false;
   const MCParticle * mother = p->mother();
   if( IsaPrey(mother) ) {
-    
+
     if( m_Vtx ){
       //check that mcp originated from the neut decay vtx
-      double dist = VertDistance( mcpos, 
-				  mother->endVertices().at(0)->position() );
+      double dist = VertDistance( mcpos,
+                                  mother->endVertices().at(0)->position() );
       if( dist < 0.08 ){ return true; } else { return false; }
     } else { return true; }
   } else {
@@ -206,8 +205,8 @@ bool SaveParticlesFrom::IsItFromaPrey( const LHCb::MCParticle * p,
 
 //============================================================================
 // Compute distance between two vertices
-//============================================================================ 
-double SaveParticlesFrom::VertDistance( const Gaudi::XYZPoint & v1, 
-					const Gaudi::XYZPoint & v2){
+//============================================================================
+double SaveParticlesFrom::VertDistance( const Gaudi::XYZPoint & v1,
+                                        const Gaudi::XYZPoint & v2){
   return sqrt(pow(v1.x()-v2.x(),2)+pow(v1.y()-v2.y(),2)+pow(v1.z()-v2.z(),2));
 }
