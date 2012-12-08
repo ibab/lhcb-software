@@ -21,7 +21,7 @@ DECLARE_ALGORITHM_FACTORY( SimplePlots )
 //=============================================================================
 SimplePlots::SimplePlots( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : DaVinciAlgorithm ( name , pSvcLocator )
     , m_plots(0)
 {
   declareProperty( "PlotTool", m_plotTool = "LoKi::Hybrid::PlotTool//Plots"  );
@@ -34,17 +34,18 @@ SimplePlots::~SimplePlots() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode SimplePlots::initialize() {
-
-  StatusCode sc = DVAlgorithm::initialize() ;
+StatusCode SimplePlots::initialize() 
+{
+  StatusCode sc = DaVinciAlgorithm::initialize() ;
   if (!sc) return sc ;
+ 
   m_plots = tool<IPlotTool>(m_plotTool,this);
   if (!m_plots) {
     err() << "Unable to retrieve Plot Tool " << m_plotTool << endmsg;
     return StatusCode::FAILURE;
   }
-  return m_plots->setPath(name());
 
+  return m_plots->setPath(name());
 }
 
 //=============================================================================
@@ -64,14 +65,4 @@ StatusCode SimplePlots::execute() {
   
   setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode SimplePlots::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return DVAlgorithm::finalize() ;
 }

@@ -25,7 +25,6 @@
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile2D.h"
 
-
 // From the MuonDetector:
 #include "Event/MuonCoord.h"
 
@@ -39,7 +38,9 @@ class ISequencerTimerTool;
 class ITriggerTisTos;
 class IMuonFastPosTool;
 
-class MuEffMonitor : public DVAlgorithm {
+class MuEffMonitor : public GaudiHistoAlg 
+{
+
 public: 
   /// Standard constructor
   MuEffMonitor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -48,7 +49,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

@@ -44,46 +44,47 @@ DECLARE_ALGORITHM_FACTORY( MuIDMonitor )
 //=============================================================================
   MuIDMonitor::MuIDMonitor( const std::string& name,
                             ISvcLocator* pSvcLocator)
-    : DVAlgorithm ( name , pSvcLocator ) {
+    : DaVinciHistoAlgorithm ( name , pSvcLocator )
+{
 
-    using namespace boost::assign;
+  using namespace boost::assign;
 
-    // Destination of MuonPID
-    declareProperty("MuonTrackLocation",
-                    m_MuonTracksPath = LHCb::TrackLocation::Muon);
+  // Destination of MuonPID
+  declareProperty("MuonTrackLocation",
+                  m_MuonTracksPath = LHCb::TrackLocation::Muon);
 
-    // Mass Window
-    declareProperty( "MassMean", m_MassMean = 1115.68);
-    declareProperty( "MassWindow", m_MassWin = 100.0);
-    declareProperty( "JpsiAnalysis", m_JPAna = 0);
-    declareProperty( "LambdaAnalysis", m_LMAna = 0);
-    declareProperty( "HitInFoi", m_hitInFoi = 0);
+  // Mass Window
+  declareProperty( "MassMean", m_MassMean = 1115.68);
+  declareProperty( "MassWindow", m_MassWin = 100.0);
+  declareProperty( "JpsiAnalysis", m_JPAna = 0);
+  declareProperty( "LambdaAnalysis", m_LMAna = 0);
+  declareProperty( "HitInFoi", m_hitInFoi = 0);
 
-    declareProperty( "EffMassWin", m_EffWin = 20);
+  declareProperty( "EffMassWin", m_EffWin = 20);
 
-    // Pre-selection momentum
-    declareProperty( "PreSelMomentum", m_PreSelMomentum = 3000.0);
+  // Pre-selection momentum
+  declareProperty( "PreSelMomentum", m_PreSelMomentum = 3000.0);
 
-    // Different depths of stations considered in different momentum ranges
-    declareProperty( "MomentumCuts", m_MomentumCuts = list_of  (6000.)   (10000.)  );
+  // Different depths of stations considered in different momentum ranges
+  declareProperty( "MomentumCuts", m_MomentumCuts = list_of  (6000.)   (10000.)  );
 
-    // function that defines the field of interest size
-    // here momentum is scaled to Gaudi::Units::GeV....
-    // new formula: p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
+  // function that defines the field of interest size
+  // here momentum is scaled to Gaudi::Units::GeV....
+  // new formula: p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
 
-    declareProperty( "XFOIParameter1", m_xfoiParam1 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-    declareProperty( "XFOIParameter2", m_xfoiParam2 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-    declareProperty( "XFOIParameter3", m_xfoiParam3 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-    declareProperty( "YFOIParameter1", m_yfoiParam1 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-    declareProperty( "YFOIParameter2", m_yfoiParam2 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-    declareProperty( "YFOIParameter3", m_yfoiParam3 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "XFOIParameter1", m_xfoiParam1 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "XFOIParameter2", m_xfoiParam2 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "XFOIParameter3", m_xfoiParam3 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "YFOIParameter1", m_yfoiParam1 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "YFOIParameter2", m_yfoiParam2 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "YFOIParameter3", m_yfoiParam3 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
 
-    declareProperty("FOIfactor",m_foifactor = 1.);
+  declareProperty("FOIfactor",m_foifactor = 1.);
 
-    declareProperty("distMuon",m_distMuon = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-    declareProperty("distPion",m_distPion = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty("distMuon",m_distMuon = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty("distPion",m_distPion = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
 
-  }
+}
 
 //=============================================================================
 // Destructor
@@ -96,7 +97,7 @@ MuIDMonitor::~MuIDMonitor() {}
 StatusCode MuIDMonitor::initialize() {
 
   // Sets up various tools and services
-  const StatusCode sc = DVAlgorithm::initialize();
+  const StatusCode sc = DaVinciHistoAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   debug()   << " MuIDMonitor v5r2 " << endmsg;
@@ -530,15 +531,11 @@ StatusCode MuIDMonitor::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode MuIDMonitor::finalize() {
-
-  debug()  << "==> Finalize" << endreq;
-
+StatusCode MuIDMonitor::finalize() 
+{
   debug() <<"Number of tracks that failed extrapolation:: "<<m_extrFail<<endreq;
-
   // Execute base class method
-  return DVAlgorithm::finalize();
-
+  return DaVinciHistoAlgorithm::finalize();
 }
 
 //=============================================================================

@@ -4,7 +4,6 @@
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
-#include "Kernel/DVAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -37,7 +36,7 @@ DECLARE_ALGORITHM_FACTORY( MuEffMonitor )
 //=============================================================================
 MuEffMonitor::MuEffMonitor( const std::string& name,
                       ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator ),
+  : GaudiHistoAlg ( name , pSvcLocator ),
     m_notOnline(true) {
 
   m_nSigmaX.resize(5);
@@ -95,7 +94,7 @@ MuEffMonitor::~MuEffMonitor() { }
 //===========================
 StatusCode MuEffMonitor::initialize() {
   
-  StatusCode sc = DVAlgorithm::initialize();
+  StatusCode sc = GaudiHistoAlg::initialize();
   if ( sc.isFailure() ) { return sc; }
   debug()   << " MuEffMonitor v1r0  ==> Initialize " << endmsg;
   
@@ -258,7 +257,7 @@ StatusCode MuEffMonitor::initialize() {
     m_nReqStations = m_NStation-1;
   m_origReqStations = m_nReqStations; //  keep memory of requested number of stations
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================
@@ -358,15 +357,6 @@ StatusCode MuEffMonitor::execute() {
   if(m_measureTime) m_timer->stop(m_timeFnl);  
   if(m_measureTime) m_timer->stop(m_timeExe);
   return sc;    
-}
-
-//==========================
-//  Finalize
-//==========================
-StatusCode MuEffMonitor::finalize() {
-
-  debug() << "MuEffMonitor ==> Finalize" << endmsg;
-  return DVAlgorithm::finalize();
 }
 
 //==============================

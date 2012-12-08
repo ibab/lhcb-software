@@ -24,7 +24,7 @@ DECLARE_ALGORITHM_FACTORY( ParticleMonitor )
 //=============================================================================
   ParticleMonitor::ParticleMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-    : DVAlgorithm ( name , pSvcLocator )
+    : DaVinciAlgorithm ( name , pSvcLocator )
     ,   m_mother(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ))
     ,   m_peak(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ))
     ,   m_sideband(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( false ))
@@ -52,7 +52,7 @@ ParticleMonitor::~ParticleMonitor() {}
 //=============================================================================
 StatusCode ParticleMonitor::initialize()
 {
-  const StatusCode sc = DVAlgorithm::initialize();
+  const StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory>

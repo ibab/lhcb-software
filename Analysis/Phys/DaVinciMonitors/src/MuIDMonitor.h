@@ -8,11 +8,8 @@
 #include <vector>
 #include "boost/assign/list_of.hpp"
 
-// from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiAlg/GaudiTool.h"
-#include "MuonDet/MuonBasicGeometry.h"
-#include "Kernel/DVAlgorithm.h"
+// DaVinci
+#include "Kernel/DaVinciHistoAlgorithm.h"
 
 // Local
 #include "BasePlotTool.h"
@@ -22,7 +19,9 @@
 #include "Event/Track.h"
 #include "Event/MuonCoord.h"
 
+#include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/DeMuonDetector.h"
+
 #include "TMath.h"
 
 class MuonPID;
@@ -40,7 +39,9 @@ class DeMuonDetector;
  *  
  *  
  */
-class MuIDMonitor : public DVAlgorithm {
+class MuIDMonitor : public DaVinciHistoAlgorithm
+{
+
 public:
   /// Standard constructor
   MuIDMonitor( const std::string& name,
@@ -51,9 +52,6 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
-
 
 private:
 

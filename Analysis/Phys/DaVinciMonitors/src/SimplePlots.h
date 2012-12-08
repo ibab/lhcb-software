@@ -4,7 +4,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/IPlotTool.h"            // Interface
 
 
@@ -20,7 +20,7 @@
  *  @author Patrick KOPPENBURG
  *  @date   2004-10-22
  */
-class SimplePlots : public DVAlgorithm 
+class SimplePlots : public DaVinciAlgorithm
 {
 
 public: 
@@ -32,7 +32,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

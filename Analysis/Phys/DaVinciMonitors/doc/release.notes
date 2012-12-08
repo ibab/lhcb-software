@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-12-08 - Chris Jones
+ - Remove usage of depreciated DVAlgorithm
+
 !========================= DaVinciMonitors v1r19p2 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

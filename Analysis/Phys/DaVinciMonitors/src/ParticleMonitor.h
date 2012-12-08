@@ -4,7 +4,8 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
+
 /** @class ParticleMonitor ParticleMonitor.h
  *  
  *  Plot PID quantities for final state daughters
@@ -12,7 +13,9 @@
  *  @author Patrick Koppenburg
  *  @date   2008-12-04
  */
-class ParticleMonitor : public DVAlgorithm {
+class ParticleMonitor : public DaVinciAlgorithm
+{
+
 public: 
   /// Standard constructor
   ParticleMonitor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -24,7 +27,7 @@ public:
 
 private:
 
-  /// Configure cut tools. That should go to DVAlgorithm
+  /// Configure cut tools.
   StatusCode configureCut( LoKi::IHybridFactory* f, std::string & s, LoKi::Types::Cut& c);
 
   /// Fill plots
