@@ -107,7 +107,7 @@ StatusCode VLMeasurementProvider::initialize() {
 /// Create a measurement
 //=============================================================================
 LHCb::Measurement* VLMeasurementProvider::measurement(const LHCb::LHCbID& id,
-                                                      bool localY) const {
+                                                      bool /*localY*/) const {
 
   if (!id.isVL()) {
     error() << "LHCbID " << id << " is not a VL ID" << endmsg;
@@ -132,7 +132,7 @@ LHCb::Measurement* VLMeasurementProvider::measurement(const LHCb::LHCbID& id,
 //=============================================================================
 LHCb::Measurement* VLMeasurementProvider::measurement(const LHCb::LHCbID& id,  
                                                       const LHCb::ZTrajectory& reftraj,
-                                                      bool localY) const {
+                                                      bool /*localY*/) const {
   
   if (!id.isVL()) {
     error() << "Not a VL measurement" << endmsg;

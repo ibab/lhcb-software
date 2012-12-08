@@ -4,6 +4,8 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-12-08 - Heinrich Schindler
+ - Add VL measurement provider
 ! 2012-11-29 - Olivier Callot
  - Add FT measurement provider
 
