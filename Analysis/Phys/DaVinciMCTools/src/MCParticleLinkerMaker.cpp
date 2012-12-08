@@ -1,8 +1,8 @@
 // $Id: MCParticleLinkerMaker.cpp,v 1.2 2010-04-16 14:17:32 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 // ============================================================================
 // local
 #include "Event/Particle.h"
@@ -18,48 +18,31 @@
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCParticleLinkerMaker );
+DECLARE_ALGORITHM_FACTORY( MCParticleLinkerMaker )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MCParticleLinkerMaker::MCParticleLinkerMaker( const std::string& name,
-                                              ISvcLocator* pSvcLocator) 
-  : DVAlgorithm ( name , pSvcLocator )
+  MCParticleLinkerMaker::MCParticleLinkerMaker( const std::string& name,
+                                                ISvcLocator* pSvcLocator)
+    : DaVinciTupleAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputMCLocation", m_inputMC = LHCb::MCParticleLocation::Default );
-  declareProperty( "InputParticleLocation", m_inputParticle = LHCb::ParticleLocation::User );  
-  declareProperty( "writeTuple", m_writeTuple = false );  
+  declareProperty( "InputParticleLocation", m_inputParticle = LHCb::ParticleLocation::User );
+  declareProperty( "writeTuple", m_writeTuple = false );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-MCParticleLinkerMaker::~MCParticleLinkerMaker() {} 
-
-//=================================w============================================
-// Initialization
-//=============================================================================
-StatusCode MCParticleLinkerMaker::initialize() {
-  //=== The following two lines should be commented for DC04 algorithms ! ===
-  StatusCode sc = DVAlgorithm::initialize(); 
-  if ( sc.isFailure() ) return sc;
-
-  debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
+MCParticleLinkerMaker::~MCParticleLinkerMaker() {}
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode MCParticleLinkerMaker::execute() {
+StatusCode MCParticleLinkerMaker::execute()
+{
 
-  debug() << "==> Execute" << endmsg;
-  Tuple PullTuple = nTuple("MCparticleMakerPull");
   LHCb::MCParticle::Container* mcparticles = get<LHCb::MCParticle::Container>(m_inputMC);
-
-  // code goes here  
-
   const LHCb::Particle::Range particles = get<LHCb::Particle::Range>(m_inputParticle);
 
   if ( (!mcparticles || mcparticles->empty()) || particles.empty() ) {
@@ -74,7 +57,7 @@ StatusCode MCParticleLinkerMaker::execute() {
     if((*ip)->hasKey()) {
       for ( LHCb::MCParticle::Container::const_iterator imc = mcparticles->begin() ;
             imc != mcparticles->end() ; ++imc ){
-        if((*imc)->hasKey()){ 
+        if((*imc)->hasKey()){
           if((*imc)->key()==(*ip)->key()){
             linked=true;
             myLink.link((*ip),(*imc), 1.);
@@ -94,6 +77,8 @@ StatusCode MCParticleLinkerMaker::execute() {
                 sqrt((*ip)->momCovMatrix()(2,2));
               double mom=(*ip)->p()/GeV;
 
+              Tuple PullTuple = nTuple("MCparticleMakerPull");
+
               PullTuple->fill("Pullx",Pullx);
               PullTuple->fill("Pully",Pully);
               PullTuple->fill("Pullz",Pullz);
@@ -104,27 +89,17 @@ StatusCode MCParticleLinkerMaker::execute() {
 
               PullTuple->write();
             }
-            
+
           }
-          
+
         }
-      }      
+      }
     }
     if(!linked) debug() << "Particle not linked to MCparticle"<<endmsg;
   }
-  
+
   setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MCParticleLinkerMaker::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
 }
 
 //=============================================================================

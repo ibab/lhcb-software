@@ -4,6 +4,9 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2012-12-08 - Chris Jones
+ - Convert DVAlgorithm to new base classes.
+
 !========================= DaVinciMCTools v10r7 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

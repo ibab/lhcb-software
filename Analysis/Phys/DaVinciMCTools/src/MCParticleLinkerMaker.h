@@ -4,32 +4,34 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciTupleAlgorithm.h"
 
 /** @class MCParticleLinkerMaker MCParticleLinkerMaker.h
  *
- * This Algorithm creates a Table to link Particles created with MCPArticleMaker tool to the corresponding MCParticle
+ * This Algorithm creates a Table to link Particles created with 
+ * MCPArticleMaker tool to the corresponding MCParticle
  *
  *  @author Stefania Vecchi & Gabriele Balbi
  *  @date   2006-06-09
  */
-class MCParticleLinkerMaker : public DVAlgorithm {
+class MCParticleLinkerMaker : public DaVinciTupleAlgorithm
+{
+
 public: 
+
   /// Standard constructor
   MCParticleLinkerMaker( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~MCParticleLinkerMaker( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
+
   std::string m_inputMC;
   std::string m_inputParticle;
   bool m_writeTuple;
   
 };
+
 #endif // MCPARTICLELINKERMAKER_H

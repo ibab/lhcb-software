@@ -4,8 +4,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
-
+#include "Kernel/DaVinciAlgorithm.h"
 
 /** @class DumpParticle DumpParticle.h
  *  
@@ -14,20 +13,20 @@
  *  @author Patrick Koppenburg
  *  @date   2012-03-14
  */
-class DumpParticle : public DVAlgorithm {
+class DumpParticle : public DaVinciAlgorithm
+{
+
 public: 
+
   /// Standard constructor
   DumpParticle( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~DumpParticle( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
+
   StatusCode dump(const LHCb::Particle*);
 
 };

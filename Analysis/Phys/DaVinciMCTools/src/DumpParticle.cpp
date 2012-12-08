@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "DumpParticle.h"
@@ -14,76 +14,70 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DumpParticle );
-
+DECLARE_ALGORITHM_FACTORY( DumpParticle )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DumpParticle::DumpParticle( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
-{
+  DumpParticle::DumpParticle( const std::string& name,
+                              ISvcLocator* pSvcLocator)
+    : DaVinciAlgorithm ( name , pSvcLocator )
+{ }
 
-}
 //=============================================================================
 // Destructor
 //=============================================================================
-DumpParticle::~DumpParticle() {} 
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode DumpParticle::initialize() {
-  StatusCode sc = DVAlgorithm::initialize(); 
-  if ( sc.isFailure() ) return sc;
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
+DumpParticle::~DumpParticle() {}
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode DumpParticle::execute() {
+StatusCode DumpParticle::execute()
+{
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  // code goes here  
+  // code goes here
   LHCb::Particle::Range parts = particles();
   info() << "Will print out " << parts.size() << " particles" << endmsg ;
-  for ( LHCb::Particle::Range::const_iterator p = parts.begin() ; p!=parts.end() ; ++p){
+  for ( LHCb::Particle::Range::const_iterator p = parts.begin() ; p!=parts.end() ; ++p)
+  {
     if (! dump(*p)) return StatusCode::FAILURE ;
   }
-  
-  setFilterPassed(true);  // Mandatory. Set to true if event is accepted. 
+
+  setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Dumping
 //=============================================================================
-StatusCode DumpParticle::dump(const LHCb::Particle* p) {
+StatusCode DumpParticle::dump(const LHCb::Particle* p)
+{
 
   if (0==p) {
     fatal() << "NULL incoming particle" << endmsg;
     return StatusCode::FAILURE ;
-  }  
-  info() << "############## Particle " << (p)->key() << " in "<< (p)->parent()->registry()->identifier() 
+  }
+  info() << "############## Particle " << (p)->key() << " in "<< (p)->parent()->registry()->identifier()
          << " :\n " << *(p) << endmsg ;
   const LHCb::Vertex* v = (p)->endVertex();
   if (0!=v) {
-    info() << "endVertex " << v->key() << " in "<< v->parent()->registry()->identifier() 
-                   << " :\n " << *v << endmsg ;
+    info() << "endVertex " << v->key() << " in "<< v->parent()->registry()->identifier()
+           << " :\n " << *v << endmsg ;
     const SmartRefVector< LHCb::Particle > dauts = v->outgoingParticles();
     info() << "This vertex has " << dauts.size() << " outgoing Particles" << endmsg ;
     for (SmartRefVector< LHCb::Particle >::const_iterator d = dauts.begin() ; d!=dauts.end() ; ++d){
-      if (0==(*d)) {
+      if (0==(*d))
+      {
         fatal() << "The particle going out of this vertex is " << *d << endmsg ;
         return StatusCode::FAILURE ;
-      } 
-      else info() << " --> Particle " << (*d)->key() << " in "<< (*d)->parent()->registry()->identifier() << endmsg ;
+      }
+      else
+      {
+        info() << " --> Particle " << (*d)->key() << " in "
+               << (*d)->parent()->registry()->identifier() << endmsg ;
+      }
     }
   }
   const LHCb::ProtoParticle* pp = (p)->proto() ;
@@ -96,28 +90,18 @@ StatusCode DumpParticle::dump(const LHCb::Particle* p) {
   }
   const SmartRefVector< LHCb::Particle > dauts = p->daughters();
   info() << "This particle has " << dauts.size() << " daughters" << endmsg ;
-  for (SmartRefVector< LHCb::Particle >::const_iterator d = dauts.begin() ; d!=dauts.end() ; ++d){
+  for (SmartRefVector< LHCb::Particle >::const_iterator d = dauts.begin() ;
+       d != dauts.end(); ++d )
+  {
     if (0==(*d)) {
       fatal() << "The daughter is " << *d << endmsg ;
       return StatusCode::FAILURE ;
-    } 
+    }
     if (!dump(*d)) return StatusCode::FAILURE ;
   }
   info() << "################ End of dump" << endmsg ;
 
   return StatusCode::SUCCESS ;
-  
-
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode DumpParticle::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return DVAlgorithm::finalize();
 }
 
 //=============================================================================
