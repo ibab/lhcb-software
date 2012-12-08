@@ -1,8 +1,8 @@
 // $Id: PhotonChecker.cpp,v 1.2 2008-02-12 14:24:32 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -22,42 +22,28 @@ using namespace Gaudi::Units;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( PhotonChecker );
 // ===========================================================================
-namespace PhotonParametersLocal
-{
-  class IsHypo : public std::unary_function<const CaloHypo*,bool> {
-    public:
-      /// constructor
-      IsHypo( CaloHypo::Hypothesis hypo ): m_hypo ( hypo ) {};
-      /// functor interface
-      bool operator() ( const CaloHypo* hypo ) const
-      { return 0 != hypo && m_hypo == hypo->hypothesis() ? true : false ; }
-    private:
-      IsHypo();
-    private:
-      CaloHypo::Hypothesis m_hypo ;
-  };
-};
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 PhotonChecker::PhotonChecker( const std::string& name,
-                      ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+                              ISvcLocator* pSvcLocator)
+  : DaVinciTupleAlgorithm ( name , pSvcLocator )
 {
-   declareProperty( "ParticlePath", m_particlePath );
-
+  declareProperty( "ParticlePath", m_particlePath );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-PhotonChecker::~PhotonChecker() {} 
+PhotonChecker::~PhotonChecker() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode PhotonChecker::initialize() {
-  StatusCode sc = DVAlgorithm::initialize();
+StatusCode PhotonChecker::initialize()
+{
+  StatusCode sc = DaVinciTupleAlgorithm::initialize();
   if (!sc) return sc;
 
   debug() << "==> Initialize" << endmsg;
@@ -67,7 +53,7 @@ StatusCode PhotonChecker::initialize() {
                                     std::vector<std::string>(1, m_particlePath));
 
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
@@ -77,7 +63,7 @@ StatusCode PhotonChecker::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  setFilterPassed(false); 
+  setFilterPassed(false);
 
   StatusCode sc = StatusCode::SUCCESS ;
 
@@ -89,7 +75,7 @@ StatusCode PhotonChecker::execute() {
   Tuples::Tuple ntuple = GaudiTupleAlg::nTuple( 500, "PhotonChecker");
 
   for ( LHCb::Particle::Range::const_iterator it = parts.begin() ; it!=parts.end() ; ++it){
-    
+
     debug() << " (ID= " <<  (*it)->particleID().pid()
             << ") has momentum " << (*it)->momentum()/GeV
             << " and mass " <<  (*it)->measuredMass()/GeV << " GeV" << endreq;
@@ -107,7 +93,7 @@ StatusCode PhotonChecker::execute() {
     ntuple->column("partE",Part->momentum().T());
     ntuple->column("partEDiff",Part->momentum().T()-MCP->momentum().T());
     ntuple->column("partEPull",(Part->momentum().T()-MCP->momentum().T())
-                                /sqrt(Part->momCovMatrix()(3,3)));
+                   /sqrt(Part->momCovMatrix()(3,3)));
 
     ntuple->column("partPx",Part->momentum().X());
     ntuple->column("partPy",Part->momentum().Y());
@@ -116,11 +102,11 @@ StatusCode PhotonChecker::execute() {
     ntuple->column("partPyDiff",Part->momentum().Y()-MCP->momentum().Y());
     ntuple->column("partPzDiff",Part->momentum().Z()-MCP->momentum().Z());
     ntuple->column("partPxPull",(Part->momentum().X()-MCP->momentum().X())
-                                /sqrt(Part->momCovMatrix()(0,0)));
+                   /sqrt(Part->momCovMatrix()(0,0)));
     ntuple->column("partPyPull",(Part->momentum().Y()-MCP->momentum().Y())
-                                /sqrt(Part->momCovMatrix()(1,1)));
+                   /sqrt(Part->momCovMatrix()(1,1)));
     ntuple->column("partPzPull",(Part->momentum().Z()-MCP->momentum().Z())
-                                /sqrt(Part->momCovMatrix()(2,2)));
+                   /sqrt(Part->momCovMatrix()(2,2)));
 
     double zc=-9999.;
     Gaudi::Vector3 gammapara;
@@ -153,7 +139,7 @@ StatusCode PhotonChecker::execute() {
 
     sc = ntuple->write();
     if( sc.isFailure() )
-    return Error( "Cannot fill ntuple" );
+      return Error( "Cannot fill ntuple" );
 
 
   }
@@ -168,20 +154,17 @@ StatusCode PhotonChecker::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  if( NULL != m_pLinker ) delete m_pLinker;
+  delete m_pLinker;
 
-  return DVAlgorithm::finalize();
+  return DaVinciTupleAlgorithm::finalize();
 }
 
 StatusCode PhotonChecker::getPhotonParameter(const LHCb::Particle& photon,
-                                                   double& zg,
-                                                   Gaudi::Vector3& para ,
-                                                   Gaudi::SymMatrix3x3& cov ) const
+                                             double& zg,
+                                             Gaudi::Vector3& para ,
+                                             Gaudi::SymMatrix3x3& cov ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
-
-  // access to local utilities
-  using namespace PhotonParametersLocal ;
 
   int pid=photon.particleID().pid();
   if(pid!=22) {
@@ -226,4 +209,3 @@ StatusCode PhotonChecker::getPhotonParameter(const LHCb::Particle& photon,
 
   return sc;
 }
-

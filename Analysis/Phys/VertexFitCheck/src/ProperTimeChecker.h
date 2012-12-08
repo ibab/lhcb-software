@@ -1,23 +1,22 @@
 // $Id: ProperTimeChecker.h,v 1.7 2010-01-18 08:45:30 pkoppenb Exp $
-#ifndef PROPERTIMECHECKER_H 
+#ifndef PROPERTIMECHECKER_H
 #define PROPERTIMECHECKER_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciTupleAlgorithm.h"
 
 #include "Kernel/Particle2MCLinker.h"
-
 
 class ILifetimeFitter;
 class IPVReFitter;
 
 /** @class ProperTimeChecker ProperTimeChecker.h
- *  
- *  ProperTimeChecker is an algorithm to check 
+ *
+ *  ProperTimeChecker is an algorithm to check
  *  vertex fit and propertime fit performances
- *  using MC truth. Taking as input the reconstructed 
- *  B (or other) particles, it fills a ntuple with 
+ *  using MC truth. Taking as input the reconstructed
+ *  B (or other) particles, it fills a ntuple with
  *  fitted values, true values and pulls of PV+SV
  *  position, momentum and proper time.
  *
@@ -27,8 +26,10 @@ class IPVReFitter;
  *  @author Yuehong Xie
  *  @date   2006-5-25
  */
-class ProperTimeChecker : public DVAlgorithm {
-public: 
+class ProperTimeChecker : public DaVinciTupleAlgorithm
+{
+
+public:
   /// Standard constructor
   ProperTimeChecker( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -37,8 +38,6 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
 
@@ -56,7 +55,7 @@ private:
   Particle2MCLinker* m_pLinker;
   std::string m_particlePath;
 
-//  Object2MCLinker<LHCb::Track>* m_track2MCLink;
+  //  Object2MCLinker<LHCb::Track>* m_track2MCLink;
 
   int m_pidToCheck;
 
@@ -67,4 +66,4 @@ private:
   std::string m_PVReFitterName;
 
 };
-#endif 
+#endif

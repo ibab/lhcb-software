@@ -1,8 +1,8 @@
 // $Id: PVChecker.cpp,v 1.3 2010-01-18 08:43:10 pkoppenb Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -24,34 +24,20 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PVChecker );
-
+DECLARE_ALGORITHM_FACTORY( PVChecker )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PVChecker::PVChecker( const std::string& name,
-                      ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
-{
+  PVChecker::PVChecker( const std::string& name,
+                        ISvcLocator* pSvcLocator)
+    : DaVinciTupleAlgorithm ( name , pSvcLocator )
+{ }
 
-}
 //=============================================================================
 // Destructor
 //=============================================================================
-PVChecker::~PVChecker() {} 
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode PVChecker::initialize() {
-  StatusCode sc = DVAlgorithm::initialize();
-  if (!sc) return sc;
-
-  debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
+PVChecker::~PVChecker() {}
 
 //=============================================================================
 // Main execution
@@ -60,7 +46,7 @@ StatusCode PVChecker::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  setFilterPassed(false); 
+  setFilterPassed(false);
 
   StatusCode sc = StatusCode::SUCCESS ;
 
@@ -73,75 +59,65 @@ StatusCode PVChecker::execute() {
 
   for( LHCb::RecVertices::const_iterator ipv = PVs->begin();
        ipv != PVs->end(); ipv++ ) {
-      const LHCb::RecVertex* tmppv = *ipv;
+    const LHCb::RecVertex* tmppv = *ipv;
 
-     double x = tmppv->position().x();
-     double y = tmppv->position().y();
-     double z = tmppv->position().z();
+    double x = tmppv->position().x();
+    double y = tmppv->position().y();
+    double z = tmppv->position().z();
 
-     double xerr = sqrt(tmppv->covMatrix()(0,0));
-     double yerr = sqrt(tmppv->covMatrix()(1,1));
-     double zerr = sqrt(tmppv->covMatrix()(2,2));
-     double nTrPV = 1.*tmppv->tracks().size();
- 
-     bool isPVtrue =false;
-     double xmc = -9999.;
-     double ymc = -9999.;
-     double zmc = -9999.;
-     double xpull = -9999.;
-     double ypull = -9999.;
-     double zpull = -9999.;
- 
-     int nTrMatched = 0;  
+    double xerr = sqrt(tmppv->covMatrix()(0,0));
+    double yerr = sqrt(tmppv->covMatrix()(1,1));
+    double zerr = sqrt(tmppv->covMatrix()(2,2));
+    double nTrPV = 1.*tmppv->tracks().size();
+
+    bool isPVtrue =false;
+    double xmc = -9999.;
+    double ymc = -9999.;
+    double zmc = -9999.;
+    double xpull = -9999.;
+    double ypull = -9999.;
+    double zpull = -9999.;
+
+    int nTrMatched = 0;
 
 
-     const LHCb::MCVertex* MCPV = PV2MCVertex(tmppv, nTrMatched);
-     if (MCPV) {
-       isPVtrue = true;
-       xmc = MCPV->position().X();
-       ymc = MCPV->position().Y();
-       zmc = MCPV->position().Z();
-       if(xerr!=0) xpull=(x-xmc)/xerr;
-       if(yerr!=0) ypull=(y-ymc)/yerr;
-       if(zerr!=0) zpull=(z-zmc)/zerr;
-     }
+    const LHCb::MCVertex* MCPV = PV2MCVertex(tmppv, nTrMatched);
+    if (MCPV) {
+      isPVtrue = true;
+      xmc = MCPV->position().X();
+      ymc = MCPV->position().Y();
+      zmc = MCPV->position().Z();
+      if(xerr!=0) xpull=(x-xmc)/xerr;
+      if(yerr!=0) ypull=(y-ymc)/yerr;
+      if(zerr!=0) zpull=(z-zmc)/zerr;
+    }
 
-     ntuple->column("x",x);
-     ntuple->column("y",y);
-     ntuple->column("z",z);
-     ntuple->column("xerr",xerr);
-     ntuple->column("yerr",yerr);
-     ntuple->column("zerr",zerr);
-     ntuple->column("nTrPV",nTrPV);
+    ntuple->column("x",x);
+    ntuple->column("y",y);
+    ntuple->column("z",z);
+    ntuple->column("xerr",xerr);
+    ntuple->column("yerr",yerr);
+    ntuple->column("zerr",zerr);
+    ntuple->column("nTrPV",nTrPV);
 
-     ntuple->column("isPVtrue",isPVtrue);
-     ntuple->column("xmc",xmc);
-     ntuple->column("ymc",ymc);
-     ntuple->column("zmc",zmc);
-     ntuple->column("xpull",xpull);
-     ntuple->column("ypull",ypull);
-     ntuple->column("zpull",zpull);
-     ntuple->column("nTrMatched",nTrMatched);
+    ntuple->column("isPVtrue",isPVtrue);
+    ntuple->column("xmc",xmc);
+    ntuple->column("ymc",ymc);
+    ntuple->column("zmc",zmc);
+    ntuple->column("xpull",xpull);
+    ntuple->column("ypull",ypull);
+    ntuple->column("zpull",zpull);
+    ntuple->column("nTrMatched",nTrMatched);
 
-     ntuple->column("nPV", nPV);
+    ntuple->column("nPV", nPV);
 
-     sc = ntuple->write();
-     if( sc.isFailure() )
-     return Error( "Cannot fill ntuple" );
-   
+    sc = ntuple->write();
+    if( sc.isFailure() )
+      return Error( "Cannot fill ntuple" );
+
   }
 
   return sc;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PVChecker::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return DVAlgorithm::finalize();
 }
 
 //=============================================================================
@@ -170,7 +146,7 @@ const LHCb::MCVertex* PVChecker::PV2MCVertex(const LHCb::RecVertex* pv, int & nT
     }
   }
 
-  nTrMatched = max;  
+  nTrMatched = max;
   return best;
 
 }
@@ -182,7 +158,7 @@ int PVChecker::countMatchedPVTrks(const RecVertex* pv,
   if(!mcPV) return count;
   if(mcPV->type()!=LHCb::MCVertex::ppCollision) return count;
   if(!pv) return count;
-//  if(!(pv->isPrimary()))return count;
+  //  if(!(pv->isPrimary()))return count;
 
   if( mcPV->mother() != NULL ) return count;
 
@@ -194,9 +170,9 @@ int PVChecker::countMatchedPVTrks(const RecVertex* pv,
     LHCb::Track* track = *trIt;
     if(!track) continue;
 
-//    for( LHCb::MCParticle* mcPart = m_track2MCLink->first(track);
-//         NULL != mcPart;
-//         mcPart = m_track2MCLink->next(track) ) {
+    //    for( LHCb::MCParticle* mcPart = m_track2MCLink->first(track);
+    //         NULL != mcPart;
+    //         mcPart = m_track2MCLink->next(track) ) {
     LinkedTo<LHCb::MCParticle,LHCb::Track> directLink( evtSvc(), msgSvc(), TrackLocation::Default );
 
     for( LHCb::MCParticle* mcPart = directLink.first(track);
@@ -230,16 +206,16 @@ const LHCb::RecVertex* PVChecker::MCPV2PV(const LHCb::MCVertex* mcpv, int & nTrM
 
   for( LHCb::RecVertices::const_iterator ipv = PVs->begin();
        ipv != PVs->end(); ipv++ ) {
-      const LHCb::RecVertex* tmppv = *ipv;
-      int same=countMatchedPVTrks(tmppv,mcpv);
-      double diff = fabs(tmppv->position().z() - mcpv->position().z());
-      if( same>max && diff < 5.0*mm ) {
-        max=same;
-        best=tmppv;
-      }
+    const LHCb::RecVertex* tmppv = *ipv;
+    int same=countMatchedPVTrks(tmppv,mcpv);
+    double diff = fabs(tmppv->position().z() - mcpv->position().z());
+    if( same>max && diff < 5.0*mm ) {
+      max=same;
+      best=tmppv;
+    }
   }
 
-  nTrMatched = max; 
+  nTrMatched = max;
   return best;
 
 }

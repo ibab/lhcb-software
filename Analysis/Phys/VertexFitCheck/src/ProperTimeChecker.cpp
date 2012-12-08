@@ -1,9 +1,9 @@
 // $Id: ProperTimeChecker.cpp,v 1.10 2010-06-03 07:23:20 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/PhysicalConstants.h"
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -13,7 +13,7 @@
 #include "Event/MCHeader.h"
 
 #include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IPVReFitter.h"   
+#include "Kernel/IPVReFitter.h"
 
 // local
 #include "ProperTimeChecker.h"
@@ -28,34 +28,34 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ProperTimeChecker );
-
+DECLARE_ALGORITHM_FACTORY( ProperTimeChecker )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ProperTimeChecker::ProperTimeChecker( const std::string& name,
-                      ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  ProperTimeChecker::ProperTimeChecker( const std::string& name,
+                                        ISvcLocator* pSvcLocator)
+    : DaVinciTupleAlgorithm ( name , pSvcLocator )
 {
-   declareProperty( "ParticlePath", m_particlePath );
-   declareProperty( "pidToCheck", m_pidToCheck );
-   declareProperty( "fillNtuplePVReFit", m_reFitPV = true);
-   declareProperty( "fillNtuplePVSignalBRemoval", m_removeBFromPV = true);
-   declareProperty( "fillNtuplePVMCSecondaryRemoval", m_removeMCSecondaryFromPV = true);
-   declareProperty( "PVReFitterName", m_PVReFitterName = "AdaptivePVReFitter");
+  declareProperty( "ParticlePath", m_particlePath );
+  declareProperty( "pidToCheck", m_pidToCheck );
+  declareProperty( "fillNtuplePVReFit", m_reFitPV = true);
+  declareProperty( "fillNtuplePVSignalBRemoval", m_removeBFromPV = true);
+  declareProperty( "fillNtuplePVMCSecondaryRemoval", m_removeMCSecondaryFromPV = true);
+  declareProperty( "PVReFitterName", m_PVReFitterName = "AdaptivePVReFitter");
 
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-ProperTimeChecker::~ProperTimeChecker() {} 
+ProperTimeChecker::~ProperTimeChecker() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode ProperTimeChecker::initialize() {
-  StatusCode sc = DVAlgorithm::initialize();
+StatusCode ProperTimeChecker::initialize()
+{
+  StatusCode sc = DaVinciTupleAlgorithm::initialize();
   if (!sc) return sc;
 
   debug() << "==> Initialize" << endmsg;
@@ -78,7 +78,7 @@ StatusCode ProperTimeChecker::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  setFilterPassed(false); 
+  setFilterPassed(false);
 
   StatusCode sc = StatusCode::SUCCESS ;
 
@@ -93,7 +93,7 @@ StatusCode ProperTimeChecker::execute() {
   Tuples::Tuple ntuple = GaudiTupleAlg::nTuple( 200, "ProperTimeChecker");
 
   for ( LHCb::Particle::Range::const_iterator it = parts.begin() ; it!=parts.end() ; ++it){
-    
+
     debug() << " (ID= " <<  (*it)->particleID().pid()
             << ") has momentum " << (*it)->momentum()/GeV
             << " and mass " <<  (*it)->measuredMass()/GeV << " GeV" << endreq;
@@ -118,11 +118,11 @@ StatusCode ProperTimeChecker::execute() {
     ntuple->column("partVyDiff",Part->referencePoint().Y()-MCP->endVertices().front()->position().Y());
     ntuple->column("partVzDiff",Part->referencePoint().Z()-MCP->endVertices().front()->position().Z());
     ntuple->column("partVxPull",(Part->referencePoint().X()-MCP->endVertices().front()->position().X())
-                                 /sqrt(Part->posCovMatrix()(0,0)));
+                   /sqrt(Part->posCovMatrix()(0,0)));
     ntuple->column("partVyPull",(Part->referencePoint().Y()-MCP->endVertices().front()->position().Y())
-                                 /sqrt(Part->posCovMatrix()(1,1)));
+                   /sqrt(Part->posCovMatrix()(1,1)));
     ntuple->column("partVzPull",(Part->referencePoint().Z()-MCP->endVertices().front()->position().Z())
-                                 /sqrt(Part->posCovMatrix()(2,2)));
+                   /sqrt(Part->posCovMatrix()(2,2)));
 
     ntuple->column("partPx",Part->momentum().X());
     ntuple->column("partPy",Part->momentum().Y());
@@ -131,11 +131,11 @@ StatusCode ProperTimeChecker::execute() {
     ntuple->column("partPyDiff",Part->momentum().Y()-MCP->momentum().Y());
     ntuple->column("partPzDiff",Part->momentum().Z()-MCP->momentum().Z());
     ntuple->column("partPxPull",(Part->momentum().X()-MCP->momentum().X())
-                                /sqrt(Part->momCovMatrix()(0,0)));
+                   /sqrt(Part->momCovMatrix()(0,0)));
     ntuple->column("partPyPull",(Part->momentum().Y()-MCP->momentum().Y())
-                                /sqrt(Part->momCovMatrix()(1,1)));
+                   /sqrt(Part->momCovMatrix()(1,1)));
     ntuple->column("partPzPull",(Part->momentum().Z()-MCP->momentum().Z())
-                                /sqrt(Part->momCovMatrix()(2,2)));
+                   /sqrt(Part->momCovMatrix()(2,2)));
 
     bool selPVOk = false;
     double selPVx = -9999.;
@@ -154,7 +154,7 @@ StatusCode ProperTimeChecker::execute() {
     double time = -9999.;
     double timeErr =-9999.;
 
-//    const LHCb::RecVertex* bestPV = m_relatedPV->bestPV(Part);
+    //    const LHCb::RecVertex* bestPV = m_relatedPV->bestPV(Part);
     const LHCb::RecVertex* bestPV = closestPV(Part);
     if (bestPV) {
       selPVOk = true;
@@ -165,15 +165,15 @@ StatusCode ProperTimeChecker::execute() {
       selPVyErr = sqrt(bestPV->covMatrix()(1,1));
       selPVzErr = sqrt(bestPV->covMatrix()(2,2));
       selPVnTr= bestPV->tracks().size();
-      selPVnDF = bestPV->nDoF(); 
+      selPVnDF = bestPV->nDoF();
       selPVChi2 = bestPV->chi2();
 
       Gaudi::XYZVector tmpL = Part->endVertex()->position() -
-                              bestPV->position();
+        bestPV->position();
       time0 = (1/(picosecond*c_light))*(Part->measuredMass())*
-               tmpL.Dot(Part->momentum().Vect())/Part->momentum().Vect().mag2();
+        tmpL.Dot(Part->momentum().Vect())/Part->momentum().Vect().mag2();
 
-      StatusCode fitsc = m_timeFitter->fit(*bestPV, *Part, time, timeErr, timeFitChi2); 
+      StatusCode fitsc = m_timeFitter->fit(*bestPV, *Part, time, timeErr, timeFitChi2);
       if (fitsc.isSuccess()) timeFitOk = true;
       time/=picosecond;
       timeErr/=picosecond;
@@ -194,7 +194,7 @@ StatusCode ProperTimeChecker::execute() {
       }
     }
 
-    long sigMCPVkey = -1; 
+    long sigMCPVkey = -1;
     double sigMCPVx =-9999.;
     double sigMCPVy =-9999.;
     double sigMCPVz =-9999.;
@@ -207,10 +207,10 @@ StatusCode ProperTimeChecker::execute() {
       sigMCPVy = MCP->originVertex()->position().Y();
       sigMCPVz = MCP->originVertex()->position().Z();
       Gaudi::XYZVector tmp = MCP->endVertices().front()->position() -
-                             MCP->originVertex()->position();
+        MCP->originVertex()->position();
       double  mcL = tmp.R();
       mctime = mcL*MCP->momentum().mass()/
-               MCP->momentum().Vect().R()/(picosecond*c_light);
+        MCP->momentum().Vect().R()/(picosecond*c_light);
 
       const LHCb::RecVertex* recpv =MCPV2PV(MCP->originVertex());
       if(recpv) sigMCPVrec = true;
@@ -463,7 +463,7 @@ StatusCode ProperTimeChecker::execute() {
 
     sc = ntuple->write();
     if( sc.isFailure() )
-    return Error( "Cannot fill ntuple" );
+      return Error( "Cannot fill ntuple" );
 
 
   }
@@ -478,9 +478,9 @@ StatusCode ProperTimeChecker::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  if( NULL != m_pLinker ) delete m_pLinker;
+  delete m_pLinker;
 
-  return DVAlgorithm::finalize();
+  return DaVinciTupleAlgorithm::finalize();
 }
 
 //=============================================================================
@@ -514,13 +514,13 @@ const LHCb::MCVertex* ProperTimeChecker::PV2MCVertex(const LHCb::RecVertex* pv )
 }
 
 int ProperTimeChecker::countMatchedPVTrks(const RecVertex* pv,
-                                  const LHCb::MCVertex* mcPV)
+                                          const LHCb::MCVertex* mcPV)
 {
   int count=0;
   if(!mcPV) return count;
   if(mcPV->type()!=LHCb::MCVertex::ppCollision) return count;
   if(!pv) return count;
-//  if(!(pv->isPrimary()))return count;
+  //  if(!(pv->isPrimary()))return count;
 
   if( mcPV->mother() != NULL ) return count;
 
@@ -565,13 +565,13 @@ const LHCb::RecVertex* ProperTimeChecker::MCPV2PV(const LHCb::MCVertex* mcpv)
 
   for( LHCb::RecVertices::const_iterator ipv = PVs->begin();
        ipv != PVs->end(); ipv++ ) {
-      const LHCb::RecVertex* tmppv = *ipv;
-      int same=countMatchedPVTrks(tmppv,mcpv);
-      double diff = fabs(tmppv->position().z() - mcpv->position().z());
-      if( same>max && diff < 2.0*mm ) {
-        max=same;
-        best=tmppv;
-      }
+    const LHCb::RecVertex* tmppv = *ipv;
+    int same=countMatchedPVTrks(tmppv,mcpv);
+    double diff = fabs(tmppv->position().z() - mcpv->position().z());
+    if( same>max && diff < 2.0*mm ) {
+      max=same;
+      best=tmppv;
+    }
   }
 
   return best;
@@ -589,16 +589,16 @@ const LHCb::RecVertex* ProperTimeChecker::closestPV(const LHCb::Particle* part)
   LHCb::RecVertices* PVs = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
   for( LHCb::RecVertices::const_iterator ipv = PVs->begin();
        ipv != PVs->end(); ipv++ ) {
-      const LHCb::RecVertex* tmppv = *ipv;
-      double tmpip=9999.;
-      double tmpipchi2=1000.;
-      StatusCode sc = distanceCalculator()->distance(part,tmppv,tmpip,tmpipchi2);
-      if(sc.isSuccess()) {
-        if(tmpipchi2<smallest) {
-          bestPV = tmppv;
-          smallest = tmpipchi2;
-        }
+    const LHCb::RecVertex* tmppv = *ipv;
+    double tmpip=9999.;
+    double tmpipchi2=1000.;
+    StatusCode sc = distanceCalculator()->distance(part,tmppv,tmpip,tmpipchi2);
+    if(sc.isSuccess()) {
+      if(tmpipchi2<smallest) {
+        bestPV = tmppv;
+        smallest = tmpipchi2;
       }
+    }
   }
 
   return bestPV;

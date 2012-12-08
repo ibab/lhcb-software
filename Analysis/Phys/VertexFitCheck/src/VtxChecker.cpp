@@ -20,15 +20,14 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VtxChecker );
-
+DECLARE_ALGORITHM_FACTORY( VtxChecker )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 VtxChecker::VtxChecker( const std::string& name,
                       ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : DaVinciTupleAlgorithm ( name , pSvcLocator )
 {
    declareProperty( "ParticlePath", m_particlePath );
    declareProperty( "pidToCheck", m_pidToCheck );
@@ -43,7 +42,7 @@ VtxChecker::~VtxChecker() {}
 // Initialization
 //=============================================================================
 StatusCode VtxChecker::initialize() {
-  StatusCode sc = DVAlgorithm::initialize();
+  StatusCode sc = DaVinciTupleAlgorithm::initialize();
   if (!sc) return sc;
 
   debug() << "==> Initialize" << endmsg;
@@ -139,28 +138,30 @@ StatusCode VtxChecker::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  if( NULL != m_pLinker ) delete m_pLinker;
+  delete m_pLinker;
 
-  return DVAlgorithm::finalize();
+  return DaVinciTupleAlgorithm::finalize();
 }
 
 //=============================================================================
 //  Nicely print a Particle
 //=============================================================================
-StatusCode VtxChecker::printParticle(const LHCb::Particle::ConstVector &parts) const {
-
-  StatusCode sc = StatusCode::SUCCESS ;
+StatusCode 
+VtxChecker::printParticle(const LHCb::Particle::ConstVector &parts) const 
+{
+  StatusCode sc = StatusCode::SUCCESS;
   for ( LHCb::Particle::ConstVector::const_iterator i = parts.begin();
-        i != parts.end() ; ++i) {
-    sc = printParticle(*i) ;
+        i != parts.end(); ++i )
+  {
+    sc = sc && printParticle(*i) ;
   }
-  return sc ;
-  
+  return sc ; 
 }
+
 //=============================================================================
 //  Nicely print a Particle
 //=============================================================================
-StatusCode  VtxChecker::printParticle(const LHCb::Particle* p) const {
+StatusCode VtxChecker::printParticle(const LHCb::Particle* p) const {
   StatusCode sc = StatusCode::SUCCESS ;
   if ( 0==p ) return StatusCode::FAILURE ;
   if (msgLevel(MSG::INFO)){

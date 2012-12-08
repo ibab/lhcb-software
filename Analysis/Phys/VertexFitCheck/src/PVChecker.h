@@ -4,7 +4,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciTupleAlgorithm.h"
 
 #include "Kernel/Particle2MCLinker.h"
 
@@ -18,18 +18,16 @@
  *  @author Yuehong Xie
  *  @date   2006-5-25
  */
-class PVChecker : public DVAlgorithm {
+class PVChecker : public DaVinciTupleAlgorithm
+{
+
 public: 
   /// Standard constructor
   PVChecker( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~PVChecker( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
 
