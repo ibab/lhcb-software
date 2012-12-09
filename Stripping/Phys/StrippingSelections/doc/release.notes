@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-10 - Pieter David
+ - StrippingDisplVertices: adapt HLTPS line to Hlt2 line names during 2011 for stripping 20r1
+
 ! 2012-12-06 - Mat Charles
  - StrippingDstarD2KShh.py
    - Patch to (D0 -> KS K pi) modes to include D0bar

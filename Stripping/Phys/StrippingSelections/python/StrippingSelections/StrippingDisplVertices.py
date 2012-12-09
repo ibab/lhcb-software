@@ -11,11 +11,15 @@ from Gaudi.Configuration import *
 from GaudiKernel import SystemOfUnits as units
 from LHCbKernel.Configuration import DEBUG, VERBOSE
 
-from PhysSelPython.Wrappers import AutomaticData, Selection
+from PhysSelPython.Wrappers import AutomaticData, Selection, PassThroughSelection, EventSelection
 from StrippingConf.StrippingLine import StrippingLine, bindMembers
 from StrippingUtils.Utils import LineBuilder
 
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import GaudiSequencer as GaudiSequenceroid
+from Configurables import GaudiSequencer
+from Configurables import LoKi__HDRFilter  as HltFilter
+from Configurables import LoKi__ODINFilter as ODINFilter
 
 from StrippingSelections.DisplVertices_Utils import SelectionPatPV3DWrapper
 
@@ -28,7 +32,7 @@ config = {
                                       , "MinIP"                : 0.1*units.mm
                                       , "MinIPChi2"            : -1.0
                                       , "MinNumTracks"         : 4
-                                      , "PVLocation"           : "Rec/Vertex/Primary" ## TODO check if this makes sense
+                                      , "PVLocation"           : "Rec/Vertex/Primary"
                                       , "RejectSplashEvents"   : False
                                       , "RemoveBackwardTracks" : True
                                       }
@@ -131,7 +135,12 @@ config = {
 
         #==========     HLT filters for all lines      ==========#
         , "HLT"                     : { "CharmHLT"     : "HLT_PASS('Hlt2CharmHadD02HH_D02KPiDecision')"
-                                      , "HLTPS" : "HLT_PASS_RE('Hlt2DisplVertices(Single|SingleLoose|Double)PSDecision')"
+                                      , "HLTPS"        : [ ( ("0x001c0028", "0x002f002c"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
+                                                         , ( ("0x00340032", "0x00730035"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
+                                                         , ( ("0x00750037", "0x007b0038"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
+                                                         , ( ("0x007e0039", "0x0097003d"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
+                                                         , ( ("0x00990042", "0x40000000"), "HLT_PASS_RE('Hlt2DisplVertices(Single|SingleLoose|Double)PSDecision')" )
+                                                         ]
                                       }
         }
 
@@ -298,6 +307,7 @@ class DisplVerticesLinesConf(LineBuilder):
                            VerticesFromVeloOnly = False
                          , WriteP2PVRelations   = False
                          , ForceP2PVBuild       = False
+                         , VeloProtoParticlesLocation = "Phys/%s/VeloProtoP" % self.name()
                          )
         self.validatedSetProps( "RV2PWithVelo", DisplVerticesLinesConf.recoCuts + DisplVerticesLinesConf.singleCuts, rv2pWithVelo )
 
@@ -465,11 +475,21 @@ class DisplVerticesLinesConf(LineBuilder):
             lShortName = "%sHLTPS" % lAcroName
             lLineName  = "%s%s" % (self.name(), lShortName) # DisplVerticesSingleMedium
 
+            hltSelAlg = GaudiSequenceroid(ModeOR = True, ShortCircuit = False,
+                Members = [ GaudiSequencer( "%sHltFilterTCK%s-%s" % (lLineName, tckBegin, tckEnd),
+                                            Members = [ ODINFilter("%sODINFilterTCK%s-%s" % (lLineName, tckBegin, tckEnd), Code="( ODIN_TCK >= %s ) & ( ODIN_TCK <= %s )" % (tckBegin, tckEnd))
+                                                      , HltFilter("%sHltDecisionFilterTCK%s-%s" % (lLineName, tckBegin, tckEnd), Code=hltFilter) ])
+                            for (tckBegin, tckEnd), hltFilter in self.validatedGetProps("HLT", [lShortName])[lShortName]
+                          ]
+                )
+
+            hltSelection = EventSelection( "%sHltFilter" % lLineName
+                              , Algorithm = hltSelAlg
+                              )
+
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lShortName, ["PreScale"])["PreScale"]
-                     # these lines MUST have an HLT filter
-                     , HLT       = self.validatedGetProps("HLT", [lShortName])[lShortName]
-                     , selection = withVeloCandidates
+                     , selection = hltSelection
                      )
 
             self.registerLine(line)
