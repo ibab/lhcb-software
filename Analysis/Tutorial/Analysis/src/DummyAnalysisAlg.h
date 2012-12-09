@@ -4,17 +4,20 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
-
+#include "Kernel/DaVinciTupleAlgorithm.h"
 
 /** @class DummyAnalysisAlg DummyAnalysisAlg.h
+ * 
  *  Dummy algorithm to allow creation of empty library in Tutorial example
  *
  *  @author Marco Cattaneo
  *  @date   2009-10-02
  */
-class DummyAnalysisAlg : public DVAlgorithm {
+class DummyAnalysisAlg : public DaVinciTupleAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   DummyAnalysisAlg( const std::string& name, ISvcLocator* pSvcLocator );
 

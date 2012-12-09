@@ -14,18 +14,16 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DummyAnalysisAlg );
-
+DECLARE_ALGORITHM_FACTORY( DummyAnalysisAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 DummyAnalysisAlg::DummyAnalysisAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
-{
+  : DaVinciTupleAlgorithm ( name , pSvcLocator )
+{ }
 
-}
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -34,8 +32,9 @@ DummyAnalysisAlg::~DummyAnalysisAlg() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode DummyAnalysisAlg::initialize() {
-  StatusCode sc = DVAlgorithm::initialize(); 
+StatusCode DummyAnalysisAlg::initialize() 
+{
+  StatusCode sc = DaVinciTupleAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
@@ -46,8 +45,8 @@ StatusCode DummyAnalysisAlg::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode DummyAnalysisAlg::execute() {
-
+StatusCode DummyAnalysisAlg::execute()
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // code goes here  
@@ -59,10 +58,10 @@ StatusCode DummyAnalysisAlg::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode DummyAnalysisAlg::finalize() {
-
+StatusCode DummyAnalysisAlg::finalize()
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  return DVAlgorithm::finalize();
+  return DaVinciTupleAlgorithm::finalize();
 }
 //=============================================================================
