@@ -4,7 +4,7 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -24,7 +24,7 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-06-12
    */
-  class TestFunctor : public DVAlgorithm
+  class TestFunctor : public DaVinciAlgorithm
   {
     // ========================================================================
     /// the friend factory for instantiation 
@@ -35,7 +35,7 @@ namespace LoKi
     /// initialization of the algorithm
     virtual StatusCode initialize () 
     {
-      StatusCode sc = DVAlgorithm::initialize() ;
+      StatusCode sc = DaVinciAlgorithm::initialize() ;
       if ( sc.isFailure()  ) { return sc ; }                        // RETURN 
       //
       // locate the factory:
@@ -70,7 +70,7 @@ namespace LoKi
     TestFunctor
     ( const std::string& name , // algorithm instance name 
       ISvcLocator*       pSvc ) // pointer to Service Locator 
-      : DVAlgorithm ( name , pSvc ) 
+      : DaVinciAlgorithm ( name , pSvc ) 
       //
       , m_fun ( LoKi::Constant<const LHCb::Particle*,double>( -1.0e+10 ) ) 
       , m_cut ( LoKi::Constant<const LHCb::Particle*,bool>  ( false    ) )

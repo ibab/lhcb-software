@@ -7,6 +7,9 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+! 2012-12-09 - Chris Jones
+ - Remove use of obsolete DVAlgorithm
+
 !========================= LoKiExample v8r8p2 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
