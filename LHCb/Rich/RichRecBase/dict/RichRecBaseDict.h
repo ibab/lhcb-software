@@ -48,22 +48,32 @@ namespace
 {
   struct _Instantiations 
   {
+    LHCb::RichRecPhoton::Vector                                    obj_0;
+    LHCb::RichRecTrack::Vector                                     obj_0a;
     Rich::ObjPtn<Rich::Rec::RadCorrLocalPositions>                 obj_1;
-    Rich::ObjPtn<std::vector<LHCb::RichRecTrack*> >                obj_2;
-    Rich::ObjPtn<std::vector<LHCb::RichRecPhoton*> >               obj_3;
+    Rich::ObjPtn<LHCb::RichRecTrack::Vector >                      obj_2;
+    Rich::ObjPtn<LHCb::RichRecPhoton::Vector >                     obj_3;
     Rich::HypoData<LHCb::RichRecRing*>                             obj_4;
     Rich::HypoData<float>                                          obj_5;
-    LHCb::FastAllocVector<LHCb::RichRecRingOnPixel>                obj_6;
-    LHCb::FastAllocVector<LHCb::RichRecPhoton*>                    obj_7;
-    LHCb::FastAllocVector<LHCb::RichRecTrack*>                     obj_8;
-    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecRingOnPixel> > obj_9;
-    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecPhoton*> >    obj_10;
-    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecTrack*> >     obj_11;
+    LHCb::RichRecPixel::RingsOnPixel                               obj_6;
+    LHCb::RichRecPixel::Photons                                    obj_7;
+    LHCb::RichRecPixel::Tracks                                     obj_8;
+    Rich::ObjPtn<LHCb::RichRecPixel::RingsOnPixel >                obj_9;
+    Rich::ObjPtn<LHCb::RichRecPixel::Photons >                    obj_10;
+    Rich::ObjPtn<LHCb::RichRecPixel::Tracks >                     obj_11;
     LHCb::RichRecSegments                                         obj_12;
     LHCb::RichRecTracks                                           obj_13;
     LHCb::RichRecPixels                                           obj_14;
     LHCb::RichRecPhotons                                          obj_15;
     LHCb::RichRecRings                                            obj_16;
+    LHCb::RichRecTrack::Segments                                  obj_17;
+    LHCb::RichRecTrack::Pixels                                    obj_18;
+    LHCb::RichRecTrack::Photons                                   obj_19;
+    LHCb::RichRecSegment::PDGeomEffs                              obj_20;
+    LHCb::RichRecSegment::PDGeomEffsVector                        obj_21;
+    LHCb::RichRecSegment::Pixels                                  obj_22;
+    LHCb::RichRecSegment::Photons                                 obj_23;
+    LHCb::RichRecPixelOnRing::Vector                              obj_24;
   };
 }
 
