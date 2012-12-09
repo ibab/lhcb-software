@@ -9,7 +9,7 @@
 
 /** @class TupleToolPid TupleToolPid.h
  *
- * \brief DLL and PID information to be stored in a Tuple
+ * @brief DLL and PID information to be stored in a Tuple
  *
  * \sa DecayTreeTuple
  *
@@ -31,7 +31,7 @@
  * -hasMuon:  proto->muonPID()!=0
  * -isMuon:   proto->muonPID->IsMuon()
  *
- *  @data   2010-03-04
+ *  @date   2010-03-04
  */
 class TupleToolPid : public TupleToolBase,
                      virtual public IParticleTupleTool

@@ -41,60 +41,74 @@ EventTuple::~EventTuple() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode EventTuple::initialize() {
-  StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiTupleAlg
+StatusCode EventTuple::initialize() 
+{
+  const StatusCode sc = GaudiTupleAlg::initialize(); 
+  if ( sc.isFailure() ) return sc;
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   info() << "Tools to be used : " ;
-  for (std::vector<std::string>::const_iterator s = m_toolList.begin() ; s!=m_toolList.end() ; ++s){
+  for ( std::vector<std::string>::const_iterator s = m_toolList.begin(); 
+        s != m_toolList.end(); ++s )
+  {
     m_tools.push_back(tool<IEventTupleTool>(*s,this));
     info() << *s << ", " ;
   }
   info() << endmsg ;
 
-  if (produceEvtCols ()) {
-    if (m_collectionName == ""){
+  if ( produceEvtCols() ) 
+  {
+    if ( m_collectionName.empty() )
+    {
       m_collectionName =  evtColPath() ;
     }
     info() << "Will be writing an ETC with name " << m_collectionName
            << "/" << m_tupleName << endmsg ;
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode EventTuple::execute() {
+StatusCode EventTuple::execute() 
+{
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  counter("Event")++;
+  ++counter("Event");
   StatusCode sc = StatusCode::SUCCESS ;
 
-  Tuple tuple = ( produceEvtCols () ? evtCol(m_tupleName,m_collectionName) : nTuple( m_tupleName ));
+  Tuple tuple = ( produceEvtCols() ? 
+                  evtCol(m_tupleName,m_collectionName) : nTuple( m_tupleName ));
   if (msgLevel(MSG::VERBOSE)) verbose() << "Got tuple" << endmsg ;
-  if (produceEvtCols()){
+  if ( produceEvtCols() ) 
+  {
     // pick up the location of the event --
     // this is what makes the tag collection a collection...
     DataObject* pObject = get<DataObject>("/Event");
-    if (0!=pObject) {
+    if ( pObject ) 
+    {
       if (msgLevel(MSG::VERBOSE)) verbose() << "Filling Address " << endmsg ;
       sc = tuple->column("Address", pObject->registry()->address() );
-      if (!sc) {
+      if (!sc) 
+      {
         err() << "Error writing address" << endmsg ;
         return sc;
       }
     }
-    else {
-      Error("    not able to retrieve IOpaqueAddress");
-      return StatusCode::FAILURE ;
+    else
+    {
+      return Error("    not able to retrieve IOpaqueAddress");
     }
   }
 
-  tuple->column( "EventInSequence", counter("Event").nEntries()).ignore();
-  for ( std::vector<IEventTupleTool*>::iterator i = m_tools.begin() ; i!= m_tools.end() ; ++i){
+  sc = tuple->column( "EventInSequence", counter("Event").nEntries() );
+  if ( sc.isFailure() ) return sc;
+
+  for ( std::vector<IEventTupleTool*>::iterator i = m_tools.begin(); 
+        i != m_tools.end(); ++i )
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Filling " << (*i)->name() << endmsg ;
     sc = (*i)->fill(tuple);
     if (msgLevel(MSG::VERBOSE)) verbose() << (*i)->name() << " returns " << sc << endmsg ;

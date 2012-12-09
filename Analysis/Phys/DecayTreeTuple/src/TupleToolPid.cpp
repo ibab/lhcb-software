@@ -37,10 +37,10 @@ StatusCode TupleToolPid::fill( const Particle*
                                , const std::string& head
                                , Tuples::Tuple& tuple )
 {
-  const std::string prefix = fullName(head);
-
   if ( P )
   {
+    const std::string prefix = fullName(head);
+
     bool test = true;
     test &= tuple->column( prefix+"_ID", P->particleID().pid() );
 

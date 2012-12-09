@@ -68,7 +68,7 @@ StatusCode TupleToolWZJets::fill( const LHCb::Particle *top,
   m_DETA = LoKi::Cuts::DETA(P->momentum().Eta());
   m_DR2  = LoKi::Cuts::DR2(P->momentum());
   bool test = true;
-  LHCb::Particles& myParts =GetParticles();
+  LHCb::Particles& myParts = GetParticles();
 
   // Get particles in decay
   m_decayParticles.clear();
@@ -125,7 +125,7 @@ StatusCode TupleToolWZJets::fill( const LHCb::Particle *top,
 void TupleToolWZJets::SaveDecayChainParticles( const LHCb::Particle *top){
 
   // -- Get the daughters of the top particle
-  const SmartRefVector< LHCb::Particle > daughters = top->daughters();
+  const SmartRefVector<LHCb::Particle>& daughters = top->daughters();
 
   // -- Fill all the daugthers in m_decayParticles
   for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){
@@ -177,7 +177,7 @@ LHCb::Particles& TupleToolWZJets::GetParticles()
     if ( msgLevel(MSG::DEBUG) ) debug() << "Getting particles from: " << *InputContainer << endmsg;
     if (exist<LHCb::Particle::Range>(*InputContainer))
     {
-      LHCb::Particle::Range  addInp = get<LHCb::Particle::Range>(*InputContainer);
+      LHCb::Particle::Range addInp = get<LHCb::Particle::Range>(*InputContainer);
       inputParts.insert(inputParts.begin(),addInp.begin(),addInp.end());
     }
   }
