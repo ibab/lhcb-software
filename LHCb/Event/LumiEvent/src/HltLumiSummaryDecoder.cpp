@@ -22,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( HltLumiSummaryDecoder )
 HltLumiSummaryDecoder::HltLumiSummaryDecoder( const std::string& name,
 					      ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_HltLumiSummary(NULL)
+  , m_totDataSize(0), m_nbEvents(0)
 {
   declareProperty( "RawEventLocation"    , m_rawEventLocation    = LHCb::RawEventLocation::Default );
   declareProperty( "OutputContainerName" , m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
@@ -45,7 +45,6 @@ StatusCode HltLumiSummaryDecoder::initialize()
 
   m_nbEvents    = 0;
   m_totDataSize = 0;
-  m_bankType  = LHCb::RawBank::HltLumiSummary;
   
   return StatusCode::SUCCESS;
 }
@@ -59,11 +58,12 @@ StatusCode HltLumiSummaryDecoder::execute() {
   
   // ------------------------------------------
   // get (existing) container  >>>>>>>>>>>>>>>>>>>> later: if exists: return!!!!!!!!!!
+  LHCb::HltLumiSummary* hltLumiSummary = NULL;
   if ( !exist<LHCb::HltLumiSummary>(m_OutputContainerName) ){
     // create output container on the TES
-    m_HltLumiSummary = new LHCb::HltLumiSummary();
+    hltLumiSummary = new LHCb::HltLumiSummary();
     // locate them in the TES
-    put(m_HltLumiSummary, m_OutputContainerName); 
+    put(hltLumiSummary, m_OutputContainerName); 
     if ( msgLevel( MSG::DEBUG ) )
       debug() << m_OutputContainerName << " not found, made a new one" << endmsg ;
   }
@@ -76,11 +76,10 @@ StatusCode HltLumiSummaryDecoder::execute() {
   
   // Retrieve the RawEvent:
   // get data container
-  if( !exist<RawEvent>(m_rawEventLocation) ){
-    StatusCode sc = Warning("RawBank cannot be loaded",StatusCode::FAILURE);
-    return sc;
+  RawEvent* event = getIfExists<RawEvent>(m_rawEventLocation);
+  if( NULL == event ){
+    return Warning("RawEvent cannot be loaded",StatusCode::FAILURE);
   }
-  RawEvent* event = get<RawEvent>(m_rawEventLocation);
   // Get the buffers associated with the HltLumiSummary
   const std::vector<RawBank*>& banks = event->banks( RawBank::HltLumiSummary );
   // Now copy the information from all banks (normally there should only be one)
@@ -101,7 +100,7 @@ StatusCode HltLumiSummaryDecoder::execute() {
                   << endmsg;
       }
       // add this counter
-      m_HltLumiSummary->addInfo( iKey, iVal);
+      hltLumiSummary->addInfo( iKey, iVal);
     }
     
     // keep statistics
