@@ -7,7 +7,8 @@ gaudi_depends_on_subdirs(Det/CaloDet
                          Event/GenEvent
                          Event/MCEvent
                          GaudiAlg
-                         Kernel/MCInterfaces)
+                         Kernel/MCInterfaces
+                         Gen/DecFiles)
 
 find_package(AIDA)
 find_package(Boost)
