@@ -39,14 +39,15 @@ defaultConfig = {
     , 'LongLivedPT'        : 0.0          # MeV , used to be 500.0 MeV 
     , 'LongLivedTau'        : 2          # ps
     
-    # K1 cuts
-    , 'K1_Comb_MassLow'  :  720.0
-    , 'K1_Comb_MassHigh' : 2450.0
-    , 'K1_MassLow'       :  750.0
-    , 'K1_MassHigh'      : 2400.0
-    , 'K1_MinIPCHI2'     :    4.0
-    , 'K1_FlightChi2'    :   25.0
-    , 'K1_Dau_MaxIPCHI2' : 9.0
+    # HHH cuts
+    # Cuts may need changing.
+    , 'HHH_Comb_MassLow'  :  500.0
+    , 'HHH_Comb_MassHigh' : 6050.0
+    , 'HHH_MassLow'       :  500.0
+    , 'HHH_MassHigh'      : 6000.0
+    , 'HHH_MinIPCHI2'     :    4.0
+    , 'HHH_FlightChi2'    :   25.0
+    , 'HHH_Dau_MaxIPCHI2' : 9.0
     # From Bd2KstarMuMu line 
     ,'UseNoPIDsHadrons'          : True,
     
@@ -125,14 +126,14 @@ class B2XMuMuConf(LineBuilder) :
 
         #, 'UseNoPIDsHadrons',
         
-        # K1 cuts
-        , 'K1_Comb_MassLow'
-        , 'K1_Comb_MassHigh'
-        , 'K1_MassLow'
-        , 'K1_MassHigh'
-        , 'K1_MinIPCHI2'
-        , 'K1_FlightChi2'
-        , 'K1_Dau_MaxIPCHI2',
+        # HHH cuts
+        , 'HHH_Comb_MassLow'
+        , 'HHH_Comb_MassHigh'
+        , 'HHH_MassLow'
+        , 'HHH_MassHigh'
+        , 'HHH_MinIPCHI2'
+        , 'HHH_FlightChi2'
+        , 'HHH_Dau_MaxIPCHI2',
         # Keys taken over from Bd2KstarMuMu line
         # Need to make sure there is no overlap with already existing ones
         'UseNoPIDsHadrons',
@@ -245,7 +246,7 @@ class B2XMuMuConf(LineBuilder) :
         self.Rho = self.__Rho__(self.Pions, config)
         self.Phi = self.__Phi__(self.Rho, config)
         self.Kstar = self.__Kstar__(self.Rho, config)
-        self.K1 = self.__K1__(self.Kaons, self.Pions, config)
+        self.hhh = self.__hhh__(self.Pions, config)
         self.Lambdastar = self.__Lambdastar__(self.Rho, config)
         self.Kstar2KsPi = self.__Kstar2KsPi__(self.Kshort, self.Pions, config)
         self.Kstar2KPi0 = self.__Kstar2KPi0__(self.Kaons, self.Pi0, config)
@@ -253,7 +254,7 @@ class B2XMuMuConf(LineBuilder) :
 
         self.Bs = self.__Bs__(self.Dimuon, self.Protons, self.Kaons, self.Pions, self.Pi0,
                               self.Kshort, self.Lambda, self.Phi, self.Rho, self.Dplus,
-                              self.Kstar, self.K1, self.Lambdastar, self.Kstar2KsPi,
+                              self.Kstar, self.hhh, self.Lambdastar, self.Kstar2KsPi,
                               self.Kstar2KPi0, config)
 
 
@@ -353,25 +354,25 @@ class B2XMuMuConf(LineBuilder) :
                          Algorithm = _filter)
         return _sel
  
-    def __K1CombCut__(self, conf):
+    def __hhhCombCut__(self, conf):
         """
-        Returns the K1 cut string
+        Returns the HHH cut string
         """
-        _K1CombCut = "(AM > %(K1_Comb_MassLow)s * MeV) &"\
-        "(AM < %(K1_Comb_MassHigh)s * MeV) & "\
+        _hhhCombCut = "(AM > %(HHH_Comb_MassLow)s * MeV) &"\
+        "(AM < %(HHH_Comb_MassHigh)s * MeV) & "\
         "(ADOCACHI2CUT(20.,'')) &" \
-        "(AHASCHILD(MIPCHI2DV(PRIMARY) > %(K1_Dau_MaxIPCHI2)s ))" %conf
-        return _K1CombCut
+        "(AHASCHILD(MIPCHI2DV(PRIMARY) > %(HHH_Dau_MaxIPCHI2)s ))" %conf
+        return _hhhCombCut
         
-    def __K1Cut__(self, conf):
+    def __hhhCut__(self, conf):
         """
-        Returns the K1 cut string
+        Returns the HHH cut string
         """
-        _K1Cut = "(M > %(K1_MassLow)s * MeV) &"\
-        "(M < %(K1_MassHigh)s * MeV) & "\
-        "(BPVVDCHI2 > %(K1_FlightChi2)s) & "\
-        "(MIPCHI2DV(PRIMARY) > %(K1_MinIPCHI2)s) " %conf 
-        return _K1Cut
+        _hhhCut = "(M > %(HHH_MassLow)s * MeV) &"\
+        "(M < %(HHH_MassHigh)s * MeV) & "\
+        "(BPVVDCHI2 > %(HHH_FlightChi2)s) & "\
+        "(MIPCHI2DV(PRIMARY) > %(HHH_MinIPCHI2)s) " %conf 
+        return _hhhCut
         
 
     def __KsCuts__(self, conf):
@@ -578,7 +579,7 @@ class B2XMuMuConf(LineBuilder) :
                                                        ' X0 -> ^X+ X+ ' : 'K+',
                                                        ' X0 -> X+ X+ ' : 'K*(892)0',
                                                        ' X0 -> ^X- X- ' : 'K-',
-                                                       ' X0 -> X- X- ' : 'K*(892)~0' }, 
+                                                       ' X0 -> X- X- ' : 'K*(892)~0' },
                                      MaxParticles = 20000,
                                      MaxChi2PerDoF = -666 )
 
@@ -589,7 +590,7 @@ class B2XMuMuConf(LineBuilder) :
                                                        ' X0 -> X+ ^X+ ' : 'K+',
                                                        ' X0 -> X+ X+ ' : 'K*(892)0',
                                                        ' X0 -> X- ^X- ' : 'K-',
-                                                       ' X0 -> X- X- ' : 'K*(892)~0' }, 
+                                                       ' X0 -> X- X- ' : 'K*(892)~0' },
                                      MaxParticles = 20000,
                                      MaxChi2PerDoF = -666 )
 
@@ -608,19 +609,82 @@ class B2XMuMuConf(LineBuilder) :
         return pick
 
 
-    def __K1__(self, Kaons, Pions, conf):
+    def __hhh__(self, Pions, conf): # do not input the Kaons
         """
-        Make a k1
+        Make hhh objects:
+            a_1 - > pi pi pi 
+        Then SubPID:
+            K_1 -> K pi pi
+            K_2 -> K K K
         """      
-        _k12kpipi = CombineParticles()
-        _k12kpipi.DecayDescriptors = [ "[K_1(1270)+ -> K+ pi- pi+]cc" ]
-        _k12kpipi.CombinationCut = self.__K1CombCut__(conf)
-        _k12kpipi.MotherCut = self.__K1Cut__(conf)
+        # First make an a_1(1270)+ selection
+        _a12pipipi = CombineParticles()
+        _a12pipipi.DecayDescriptors = [ "[a_1(1260)+ -> pi+ pi+ pi-]cc" ]
+        _a12pipipi.CombinationCut = self.__hhhCombCut__(conf)
+        _a12pipipi.MotherCut = self.__hhhCut__(conf)
 
-        _selK12KPIPI = Selection( "Selection_"+self.name+"_K1",
-                                     Algorithm = _k12kpipi,
-                                     RequiredSelections = [ Kaons, Pions ] )
-        return _selK12KPIPI
+        _sel_a1 = Selection( "Selection_"+self.name+"_hhh_a1",
+                                     Algorithm=_a12pipipi,
+                                     RequiredSelections=[Pions] )
+                                     #RequiredSelections=[Kaons, Pions])
+        # SubPIDs for K_1 and K_2.
+        _a1k1_SubPID1 = SubstitutePID(self.name+"_hhh_a1k1_SubPID1",
+                Code="(DECTREE('X+ -> X+ X+ X-')) | (DECTREE('X- -> X+ X- X-')) ",
+                Substitutions={'X+ -> X+ X+ X-' : 'K_1(1270)+',
+                               'X+ -> ^X+ X+ X-' : 'K+',
+                               'X- -> X+ X- X-' : 'K_1(1270)-',
+                               'X- -> X+ ^X- X-' : 'K-'},
+                MaxParticles=20000,
+                MaxChi2PerDoF=-666)
+
+        _a1k1_SubPID2 = SubstitutePID(self.name+"_hhh_a1k1_SubPID2",
+                Code="(DECTREE('X+ -> X+ X+ X-')) | (DECTREE('X- -> X+ X- X-')) ",
+                Substitutions={'X+ -> X+ X+ X-' : 'K_1(1270)+',
+                               'X+ -> X+ ^X+ X-' : 'K+',
+                               'X- -> X+ X- X-' : 'K_1(1270)-',
+                               'X- -> X+ X- ^X-' : 'K-'},
+                MaxParticles=20000,
+                MaxChi2PerDoF=-666)
+
+        _a1k2_SubPID = SubstitutePID(self.name+"_hhh_a1k2_SubPID",
+                Code="(DECTREE('X+ -> X+ X+ X-')) | (DECTREE('X- -> X+ X- X-')) ",
+                Substitutions={'X+ -> X+ X+ X-' : 'K_2(1770)+',
+                               'X+ -> ^X+ X+ X-' : 'K+',
+                               'X+ -> X+ ^X+ X-' : 'K+',
+                               'X+ -> X+ X+ ^X-' : 'K-',
+                               'X- -> X+ X- X-' : 'K_2(1770)-',
+                               'X- -> ^X+ X- X-' : 'K+',
+                               'X- -> X+ ^X- X-' : 'K-',
+                               'X- -> X+ X- ^X-' : 'K-'},
+                MaxParticles=20000,
+                MaxChi2PerDoF=-666)
+
+        _sel_k11 =  Selection(self.name+"_hhh_a1k1_SubPIDAlg1",
+                Algorithm = _a1k1_SubPID1,
+                RequiredSelections = [_sel_a1])
+
+        _sel_k12 =  Selection(self.name+"_hhh_a1k1_SubPIDAlg2",
+                Algorithm = _a1k1_SubPID2,
+                RequiredSelections = [_sel_a1])
+
+        _sel_k2 =  Selection(self.name+"_hhh_a1k2_SubPIDAlg",
+                Algorithm = _a1k2_SubPID,
+                RequiredSelections = [_sel_a1])
+
+        algorithm_code = []
+        dec_template = "(DECTREE('%s'))"
+        algorithm_code.append(dec_template % ('a_1(1260)+ -> pi+ pi+ pi-'))
+        algorithm_code.append(dec_template % ('a_1(1260)- -> pi+ pi- pi-'))
+        algorithm_code.append(dec_template % ('K_1(1270)+ -> K+ pi+ pi-'))
+        algorithm_code.append(dec_template % ('K_1(1270)- -> pi+ K- pi-'))
+        algorithm_code.append(dec_template % ('K_2(1770)+ -> K- K+ K+'))
+        algorithm_code.append(dec_template % ('K_2(1770)- -> K+ K- K-'))
+
+        pick = Selection(self.name+"_hhh_PickDecay",
+                 Algorithm=FilterDesktop(Code=' | '.join(algorithm_code)),
+                 RequiredSelections=[_sel_a1, _sel_k11, _sel_k12, _sel_k2])
+
+        return pick
 
     
     def __Lambdastar__(self, Rho, conf):
@@ -673,8 +737,8 @@ class B2XMuMuConf(LineBuilder) :
         """
         Make a Dplus, the D->Kpipi should cover all the Ds we need (no PID requirement)
         """
-        _dplus = AutomaticData(Location = 'Phys/StdLooseDplus2KPiPi/Particles') 
-        _filter_dplus = FilterDesktop(Code = self.__KpiCuts__(conf) +" & "+ self.__DplusCuts__(conf))      
+        _dplus = AutomaticData(Location = 'Phys/StdLooseDplus2KPiPi/Particles')
+        _filter_dplus = FilterDesktop(Code = self.__KpiCuts__(conf) +" & "+ self.__DplusCuts__(conf))
         _seldplus = Selection("Selection_"+self.name+"_dplus",
                              RequiredSelections = [ _dplus ] ,
                              Algorithm = _filter_dplus)
@@ -702,7 +766,7 @@ class B2XMuMuConf(LineBuilder) :
 
 
     
-    def __Bs__(self, Dimuon, Protons, Kaons, Pions, Pi0, Kshort, Lambda, Phi, Rho, Dplus, Kstar, K1, Lambdastar, Kstar2KsPi, Kstar2KPi0, conf):
+    def __Bs__(self, Dimuon, Protons, Kaons, Pions, Pi0, Kshort, Lambda, Phi, Rho, Dplus, Kstar, hhh, Lambdastar, Kstar2KsPi, Kstar2KPi0, conf):
         """
         Make and return a Bs selection
         """      
@@ -720,18 +784,20 @@ class B2XMuMuConf(LineBuilder) :
                                       "[B+ -> J/psi(1S) D*(2010)+]cc",
                                       "[Lambda_b0 -> J/psi(1S) Lambda0]cc",
                                       "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",
-                                      "B0 -> J/psi(1S) pi0"]
-        # "[B+ -> J/psi(1S) K_1(1270)+]cc",
-        # removed K1 for timing reasons
+                                      "B0 -> J/psi(1S) pi0",
+                                      "[B+ -> J/psi(1S) a_1(1260)+]cc",
+                                      "[B+ -> J/psi(1S) K_1(1270)+]cc",
+                                      "[B+ -> J/psi(1S) K_2(1770)+]cc"]
+
         
-        _b2xmumu.CombinationCut = self.BdCombCut 
+        _b2xmumu.CombinationCut = self.BdCombCut
         _b2xmumu.MotherCut = self.BdCut
         
         _sel_Daughters = MergedSelection("Selection_"+self.name+"_daughters",
                                          RequiredSelections = [ Kaons, Pions, Kshort, Lambda, 
                                                                Rho, Phi, Lambdastar, Kstar,
                                                                self.Dzero, Dplus, self.Dstar,
-                                                               Kstar2KsPi, Kstar2KPi0, Pi0])
+                                                               Kstar2KsPi, Kstar2KPi0, Pi0, hhh])
         sel = Selection( "Selection_"+self.name+"_bs2xmumu",
                          Algorithm = _b2xmumu,
                          RequiredSelections = [ Dimuon, _sel_Daughters ])
