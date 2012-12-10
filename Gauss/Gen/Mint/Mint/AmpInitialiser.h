@@ -16,7 +16,7 @@ class AmpInitialiser{
   // knowing the particle types involved.
   // This is for additional options
   // One could be: ALWAYS_BREIT_WIGNER
-  // or USE_XYZMODEL_FOR_RHO. None 
+  // or USE_XYZMODEL_FOR_RHO, or CLEO2012, or None 
 
   bool _autoSwap;
   

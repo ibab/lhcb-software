@@ -21,6 +21,8 @@ class NamedDecayTreeList{
   AmpInitMap _trees;             // all
   AmpInitMap _treesOnlyBgSpinZero; // for background
   AmpInitMap _treesNoBgSpinZero; // for signal
+  AmpInitMap _treesOnlyCLEO2012;
+  AmpInitMap _treesNoCLEO2012;
     
   int make3BodyList();
   int make4BodyList();
@@ -36,9 +38,10 @@ class NamedDecayTreeList{
   int make4PiList();
   // ---------------
 
-  int add_SpinZero_forAll(); // bgTest
-  int add_D_to_CPConjugates_forAll();
-  int add_CPConjugates_forAll();
+  //int add_SpinZero_forAll(); // bgTest
+  //int add_D_to_CPConjugates_forAll();
+  //int add_CPConjugates_forAll();
+  //int add_CLEO2012_forAll();
  public:
   const AmpInitMap& trees(const std::string& opt = "ALL") const;
   // knows options: "ALL", "NoBgSpinZero", "OnlyBgSpinZero"
@@ -54,8 +57,12 @@ class NamedDecayTreeList{
   static NamedDecayTreeList*
     getMe(const std::string& printopt="printNever");
   // possible options: "printNever", "printFirstTime", "printAlways"
-  void  multiAdd(const AmpInitialiser& tree, const std::string& opt="ALL");
   void  add(const AmpInitialiser& tree, const std::string& opt="ALL");
+  void  addSimple(const AmpInitialiser& tree, const std::string& opt="ALL");
+  void  multiAdd(const AmpInitialiser& tree, const std::string& opt="ALL"){
+    return add(tree, opt);}// for backward compatibility, only.
+
+
   const AmpInitialiser& find(const std::string& name
 			, bool& successFlag) const;
   

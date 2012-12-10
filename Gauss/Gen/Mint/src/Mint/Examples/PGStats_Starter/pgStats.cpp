@@ -177,8 +177,8 @@ int main(){
   cout << "chi2 null probability: " << null_chi2Prob << endl;
   cout << "deviation of A probability " 
        << 2*(1.0 - TMath::Freq(fitResult/fitError)) << endl;
-  cout << "LL ratio probability " 
-       << 2*(1.0 -TMath::Freq(sqrt(fabs(logOfLLratio)))) << endl;
+  cout << "LL ratio probability (Chi2-prob, 1 extra parameter)" 
+       << TMath::Prob(-logOfLLratio, 1) << endl;
   cout << " ------------------------- " << endl;
   cout << " magnitude of A p value: " 
        << A_pvalue  <<  " +/- " << A_p_error << endl;
