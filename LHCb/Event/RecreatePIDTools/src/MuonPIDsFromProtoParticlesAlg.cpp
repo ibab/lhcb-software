@@ -94,9 +94,8 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
     }
 
     // Are Muon Tracks available ?
-    const Tracks * muonTracks = ( !exist<Tracks>(m_muonTrackLoc) ? NULL :
-                                  get<Tracks>(m_muonTrackLoc) );
-    if ( !muonTracks )
+    const Tracks * muonTracks = getIfExists<Tracks>(m_muonTrackLoc);
+    if ( NULL == muonTracks )
     {
       Warning( "Muon Tracks unavailable at " + m_muonTrackLoc, StatusCode::SUCCESS ).ignore();
     }

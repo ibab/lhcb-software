@@ -4,6 +4,9 @@
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
 
+! 2012-12-10 - Marco Cattaneo
+ - Replace one more exist/get call with getIfExists
+
 !========================= RecreatePIDTools v1r6 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
