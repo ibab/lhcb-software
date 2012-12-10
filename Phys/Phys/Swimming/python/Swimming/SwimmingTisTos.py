@@ -135,8 +135,8 @@ def appendToFSP(parent, daughter,finalstateparticles) :
 def matchCands(myGlobs,cand1,cand2) :
     finalstateparticles_cand1 = []
     finalstateparticles_cand2 = []
-    appendToFSP(cand1,finalstateparticles_cand1)
-    appendToFSP(cand2,finalstateparticles_cand2)
+    appendToFSP(0,cand1,finalstateparticles_cand1)
+    appendToFSP(0,cand2,finalstateparticles_cand2)
     num_cand1 = finalstateparticles_cand1.__len__()
     num_cand2 = finalstateparticles_cand2.__len__()
     nummatch = 0
