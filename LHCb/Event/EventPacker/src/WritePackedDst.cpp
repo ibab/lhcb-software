@@ -119,11 +119,10 @@ StatusCode WritePackedDst::execute()
   for ( std::vector<std::string>::const_iterator itC = m_containers.begin();
         m_containers.end() != itC; ++itC ) {
     //== Try to get the container, a data object
-    if ( !exist<DataObject>( *itC ) ) {
-      warning() << "Container " << *itC << " does not exist." << endmsg;
-      return StatusCode::FAILURE;
+    DataObject* myObj = getIfExists<DataObject>( *itC );
+    if ( NULL == myObj ) {
+      return Warning( "Container " + *itC + " does not exist." );
     }
-    DataObject* myObj = get<DataObject>( *itC );
     unsigned int myClID = myObj->clID();
 
     if ( LHCb::CLID_PackedTracks  == myClID ) {  //== PackedTracks

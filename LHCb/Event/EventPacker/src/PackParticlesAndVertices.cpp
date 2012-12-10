@@ -47,8 +47,8 @@ StatusCode PackParticlesAndVertices::execute()
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // Only continue if this stream exists for this event
-  if ( !exist<DataObject*>(m_inputStream) ) return StatusCode::SUCCESS;
-  DataObject* root = get<DataObject*>( m_inputStream );
+  DataObject* root = getIfExists<DataObject*>( m_inputStream );
+  if ( NULL == root ) return StatusCode::SUCCESS;
 
   // List of data objects TES locations
   std::vector<std::string> names;

@@ -1,4 +1,3 @@
-// $Id: UnpackRecVertex.cpp,v 1.5 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -72,59 +71,58 @@ StatusCode UnpackRecVertex::execute()
   }
 
   // If the packed version is < 2, we need to manually load the weights vectors and update ...
-  if ( (int)dst->version() < 2 && 
-       exist<LHCb::WeightsVectors>(m_weightsLoc) )
-  {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "Old pre-Weights PVs found. Will load weights vector and update"
-              << endmsg;
-    
-    const LHCb::WeightsVectors * weightsV = get<LHCb::WeightsVectors>(m_weightsLoc);
-
-    // loop over PVs and load the weights for each
-    for ( LHCb::RecVertices::iterator iRV = newRecVertices->begin();
-          iRV != newRecVertices->end(); ++iRV )
+  if ( (int)dst->version() < 2 ) {
+    const LHCb::WeightsVectors * weightsV = getIfExists<LHCb::WeightsVectors>(m_weightsLoc);
+    if( NULL != weightsV )
     {
-      const LHCb::WeightsVector * weights = weightsV->object((*iRV)->key());
-      if ( weights )
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Old pre-Weights PVs found. Will load weights vector and update"
+                << endmsg;
+    
+
+      // loop over PVs and load the weights for each
+      for ( LHCb::RecVertices::iterator iRV = newRecVertices->begin();
+            iRV != newRecVertices->end(); ++iRV )
       {
-
-        // build a map with the new weights for each track
-        std::map<const LHCb::Track*,float> trksWeights;
-        for ( SmartRefVector<LHCb::Track>::const_iterator iTk = (*iRV)->tracks().begin();
-              iTk != (*iRV)->tracks().end(); ++iTk )
+        const LHCb::WeightsVector * weights = weightsV->object((*iRV)->key());
+        if ( weights )
         {
-          // Find the weight for this track
-          float wgt = 1.0;
-          for ( std::vector<std::pair<int,float> >::const_iterator iWW = weights->weights().begin();
-                iWW != weights->weights().end(); ++iWW )
+          
+          // build a map with the new weights for each track
+          std::map<const LHCb::Track*,float> trksWeights;
+          for ( SmartRefVector<LHCb::Track>::const_iterator iTk = (*iRV)->tracks().begin();
+                iTk != (*iRV)->tracks().end(); ++iTk )
           {
-            if ( iWW->first == (*iTk)->key() )
+            // Find the weight for this track
+            float wgt = 1.0;
+            for ( std::vector<std::pair<int,float> >::const_iterator iWW = weights->weights().begin();
+                  iWW != weights->weights().end(); ++iWW )
             {
-              wgt = iWW->second; 
-              break;
+              if ( iWW->first == (*iTk)->key() )
+              {
+                wgt = iWW->second; 
+                break;
+              }
             }
+            // save the weight in the map
+            trksWeights[*iTk] = wgt;
           }
-          // save the weight in the map
-          trksWeights[*iTk] = wgt;
+          
+          // Clear all existing tracks in the PV
+          (*iRV)->clearTracks();
+          
+          // Add the tracks back, with the new weights
+          for ( std::map<const LHCb::Track*,float>::const_iterator iTW = trksWeights.begin();
+                iTW != trksWeights.end(); ++iTW )
+          {
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << " -> Setting Track " << iTW->first->key() << " weight " << iTW->second
+                      << endmsg;
+            (*iRV)->addToTracks( iTW->first, iTW->second );
+          }
         }
-
-        // Clear all existing tracks in the PV
-        (*iRV)->clearTracks();
-
-        // Add the tracks back, with the new weights
-        for ( std::map<const LHCb::Track*,float>::const_iterator iTW = trksWeights.begin();
-              iTW != trksWeights.end(); ++iTW )
-        {
-          if ( msgLevel(MSG::DEBUG) )
-            debug() << " -> Setting Track " << iTW->first->key() << " weight " << iTW->second
-                    << endmsg;
-          (*iRV)->addToTracks( iTW->first, iTW->second );
-        }
-
       }
     }
-
   }
 
   return StatusCode::SUCCESS;

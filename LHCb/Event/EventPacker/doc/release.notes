@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-12-10 - Marco Cattaneo
+ - Use getIfExists wherever possible
+
 !========================= EventPacker v2r20 2012-11-27 =========================
 ! 2012-11-27 - Paul Seyfert
  - Explicit definition of comparison function for sorting in cluster unpacking.
