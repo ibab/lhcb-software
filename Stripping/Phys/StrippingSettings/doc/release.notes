@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-10 - Anton Poluektov 
+ - Update LineConfigDictionaries_QEE (new dict for DisplVertices)
+ - Update dbase/stripping20r1
+
 ! 2012-12-07 - Anton Poluektov 
  - Update dbase/stripping20r1
 
