@@ -158,12 +158,12 @@ StatusCode LumiMergeFSR::merge() {
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed time span address" << timeSpanRecordAddress << endmsg; 
       // read TimeSpanFSR 
       unsigned long n_tsFSR = 0;
-      if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
+      LHCb::TimeSpanFSRs* timeSpanFSRs = getIfExists<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
+      if ( NULL == timeSpanFSRs ) {
         if ( msgLevel(MSG::ERROR) ) error() << timeSpanRecordAddress << " not found" << endmsg ;
       } else {
         //if ( msgLevel(MSG::VERBOSE) ) 
         if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
-        LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
         // look at all TimeSpanFSRs (normally only one)
         LHCb::TimeSpanFSRs::iterator tsfsr;
         for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
@@ -191,10 +191,10 @@ StatusCode LumiMergeFSR::merge() {
         fileRecordAddress.replace( fileRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), bx );
       	if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed address: " << fileRecordAddress << endmsg; 
         // read LumiFSR 
-        if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress) ) {
+        LHCb::LumiFSRs* lumiFSRs = getIfExists<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
+        if ( NULL == lumiFSRs ) {
           if ( msgLevel(MSG::ERROR) ) error() << fileRecordAddress << " not found" << endmsg ;
         } else {
-          LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
           if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
           // look at all FSRs for the BXType (normally only one)
           LHCb::LumiFSRs::iterator fsr;
@@ -243,10 +243,10 @@ StatusCode LumiMergeFSR::merge() {
   for(std::vector< std::string >::iterator a = addresses.begin() ; a!= addresses.end() ; ++a ){  
     // get FSR as keyed object and cleanup the original ones - this only cleans lumiFSRs
     std::string fileRecordAddress = (*a);   
-    if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress) ) {
+    LHCb::LumiFSRs* lumiFSRs = getIfExists<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
+    if ( NULL == lumiFSRs ) {
       if ( msgLevel(MSG::ERROR) ) error() << fileRecordAddress << " not found" << endmsg ;
     } else {
-      LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
       if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
       lumiFSRs->erase(lumiFSRs->begin(), lumiFSRs->end());  // release storage
       m_fileRecordSvc->unlinkObject( *a ).ignore();         // get it out of TS
@@ -257,10 +257,10 @@ StatusCode LumiMergeFSR::merge() {
   for(std::vector< std::string >::iterator a = tsAddresses.begin() ; a!= tsAddresses.end() ; ++a ){  
     // get FSR as keyed object and cleanup the original ones - this only cleans tsFSRs
     std::string fileRecordAddress = (*a);   
-    if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, fileRecordAddress) ) {
+    LHCb::TimeSpanFSRs* tsFSRs = getIfExists<LHCb::TimeSpanFSRs>(m_fileRecordSvc, fileRecordAddress);
+    if ( NULL == tsFSRs ) {
       if ( msgLevel(MSG::ERROR) ) error() << fileRecordAddress << " not found" << endmsg ;
     } else {
-      LHCb::TimeSpanFSRs* tsFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, fileRecordAddress);
       if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
       tsFSRs->erase(tsFSRs->begin(), tsFSRs->end());  // release storage
       m_fileRecordSvc->unlinkObject( *a ).ignore();   // get it out of TS

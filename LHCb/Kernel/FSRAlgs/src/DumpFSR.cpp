@@ -171,12 +171,12 @@ void DumpFSR::dump_file( std::string txt ) {
       info() << "lu address: " << (*iAddr) << endmsg;
       std::string lumiRecordAddress = *iAddr;
       // read LumiFSR 
-      if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
+      LHCb::LumiFSRs* lumiFSRs = getIfExists<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
+      if ( NULL == lumiFSRs ) {
         Warning("A lumi record was not found").ignore();
         if ( msgLevel(MSG::DEBUG) ) debug() << lumiRecordAddress << " not found" << endmsg ;
       } else {
         if ( msgLevel(MSG::VERBOSE) ) verbose() << lumiRecordAddress << " found" << endmsg ;
-        LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
         // look at all LumiFSRs (normally only one)
         LHCb::LumiFSRs::iterator lufsr;
         for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
@@ -194,12 +194,12 @@ void DumpFSR::dump_file( std::string txt ) {
       info() << "lo address: " << (*iAddr) << endmsg;
       std::string lumiRecordAddress = *iAddr;
       // read LumiLowFSR 
-      if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
+      LHCb::LumiFSRs* lumiFSRs = getIfExists<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
+      if ( NULL == lumiFSRs ) {
         Warning("A lumi record was not found").ignore();
         if ( msgLevel(MSG::DEBUG) ) debug() << lumiRecordAddress << " not found" << endmsg ;
       } else {
         if ( msgLevel(MSG::VERBOSE) ) verbose() << lumiRecordAddress << " found" << endmsg ;
-        LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
         // look at all LumiFSRs (normally only one)
         LHCb::LumiFSRs::iterator lufsr;
         for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
@@ -217,12 +217,12 @@ void DumpFSR::dump_file( std::string txt ) {
       info() << "ev address: " << (*iAddr) << endmsg;
       std::string eventCountRecordAddress = *iAddr;
       // read EventCountFSR 
-      if ( !exist<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress) ) {
+      LHCb::EventCountFSR* eventCountFSR = getIfExists<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress);
+      if ( NULL == eventCountFSR ) {
         Warning("An EventCount Record was not found").ignore();
         if ( msgLevel(MSG::DEBUG) ) debug() << eventCountRecordAddress << " not found" << endmsg ;
       } else {
         if ( msgLevel(MSG::VERBOSE) ) verbose() << eventCountRecordAddress << " found" << endmsg ;
-        LHCb::EventCountFSR* eventCountFSR = get<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress);
         // look at the EventCountFSR
         info() << eventCountRecordAddress << ": EventCountFSR: " << *eventCountFSR << endmsg;
       }
@@ -237,12 +237,12 @@ void DumpFSR::dump_file( std::string txt ) {
       info() << "ts address: " << (*iAddr) << endmsg;
       std::string timeSpanRecordAddress = *iAddr;
       // read TimeSpanFSR 
-      if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
+      LHCb::TimeSpanFSRs* timeSpanFSRs = getIfExists<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
+      if ( NULL == timeSpanFSRs ) {
         Warning("A TimeSpan Record was not found").ignore();
         if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " not found" << endmsg ;
       } else {
         if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
-        LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
         // look at all TimeSpanFSRs (normally only one)
         LHCb::TimeSpanFSRs::iterator tsfsr;
         for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
@@ -276,11 +276,11 @@ void DumpFSR::write_file( ) {
           iAddr != addresses.end() ; ++iAddr ){
         std::string lumiRecordAddress = *iAddr;
         // read LumiFSR 
-        if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
+        LHCb::LumiFSRs* lumiFSRs = getIfExists<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
+        if ( NULL == lumiFSRs ) {
           Warning("A lumi record was not found").ignore();
           if ( msgLevel(MSG::DEBUG) ) debug() << lumiRecordAddress << " not found" << endmsg ;
         } else {
-          LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
           LHCb::LumiFSRs::iterator lufsr;
           for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
             outfile << lumiRecordAddress << ": LumiFSR: " << *(*lufsr) << std::endl;
@@ -294,11 +294,11 @@ void DumpFSR::write_file( ) {
           iAddr != addresses.end() ; ++iAddr ){
         std::string lumiRecordAddress = *iAddr;
         // read LumiFSR 
-        if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
+        LHCb::LumiFSRs* lumiFSRs = getIfExists<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
+        if ( NULL == lumiFSRs ) {
           Warning("A lumi record was not found").ignore();
           if ( msgLevel(MSG::DEBUG) ) debug() << lumiRecordAddress << " not found" << endmsg ;
         } else {
-          LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
           LHCb::LumiFSRs::iterator lufsr;
           for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
             outfile << lumiRecordAddress << ": LumiLowFSR: " << *(*lufsr) << std::endl;
@@ -312,11 +312,11 @@ void DumpFSR::write_file( ) {
           iAddr != evAddresses.end() ; ++iAddr ){
         std::string eventCountRecordAddress = *iAddr;
         // read EventCountFSR 
-        if ( !exist<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress) ) {
+        LHCb::EventCountFSR* eventCountFSR = getIfExists<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress);
+        if ( NULL == eventCountFSR ) {
           Warning("An EventCount Record was not found").ignore();
           if ( msgLevel(MSG::DEBUG) ) debug() << eventCountRecordAddress << " not found" << endmsg ;
         } else {
-          LHCb::EventCountFSR* eventCountFSR = get<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress);
           // look at the EventCountFSR
           outfile << eventCountRecordAddress << ": EventCountFSR: " << *eventCountFSR << std::endl;
         }
@@ -328,11 +328,11 @@ void DumpFSR::write_file( ) {
           iAddr != tsAddresses.end() ; ++iAddr ){
         std::string timeSpanRecordAddress = *iAddr;
         // read TimeSpanFSR 
-        if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
+        LHCb::TimeSpanFSRs* timeSpanFSRs = getIfExists<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
+        if ( NULL == timeSpanFSRs ) {
           Warning("A TimeSpan Record was not found").ignore();
           if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " not found" << endmsg ;
         } else {
-          LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
           // look at all TimeSpanFSRs (normally only one)
           LHCb::TimeSpanFSRs::iterator tsfsr;
           for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
@@ -358,10 +358,8 @@ std::string DumpFSR::fileID() {
   std::string event_fname("");
 
   // get ODIN
-  LHCb::ODIN* odin;
-  if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-  }else{
+  LHCb::ODIN* odin = getIfExists<LHCb::ODIN> (LHCb::ODINLocation::Default);
+  if( NULL == odin ){
     // should remain flagged as an error and stop the run
     error() << "ODIN cannot be loaded" << endmsg;
     return event_fname;
@@ -372,20 +370,20 @@ std::string DumpFSR::fileID() {
 
   // registry from raw data - only correct if file catalogue used 
   IOpaqueAddress* eAddr = 0;
-  if( !exist<LHCb::RawEvent>(m_rawEventLocation) ){
+  LHCb::RawEvent* rawEvt = getIfExists<LHCb::RawEvent>(m_rawEventLocation);
+  if( NULL == rawEvt ){
     if ( msgLevel(MSG::VERBOSE) ) verbose() << m_rawEventLocation << " not found" << endmsg ;
     // then try from other bank
-    if ( !exist<DataObject>("/Event") ){
+    DataObject* event = getIfExists<DataObject>("/Event");
+    if ( NULL == event ){
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "/Event" << " not found" << endmsg ;
       eAddr = odin->registry()->address();
     } else {
       // get the container
-      DataObject* event = get<DataObject>("/Event");
       eAddr = event->registry()->address();
     }
   } else {
-    LHCb::RawEvent* event = get<LHCb::RawEvent>(m_rawEventLocation);
-    eAddr = event->registry()->address();
+    eAddr = rawEvt->registry()->address();
   }
 
   // obtain the fileID

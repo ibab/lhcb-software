@@ -158,8 +158,7 @@ std::string PropagateFSRs::AFN2name(const std::string & filename) const
 }
 std::string PropagateFSRs::GUIDinEvent() const
 {
-  if( !exist<LHCb::RawEvent>(m_rawEventLocation) ) return "";
-  LHCb::RawEvent* event = get<LHCb::RawEvent>(m_rawEventLocation);
+  LHCb::RawEvent* event = getIfExists<LHCb::RawEvent>(m_rawEventLocation);
   if(event==NULL || event->registry() == NULL) return "";
   
   IOpaqueAddress* eAddr = event->registry()->address();
