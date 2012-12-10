@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruct the PV in a fast way
 !-----------------------------------------------------------------------------
 
+! 2012-12-09 - Pawel Jalocha
+ - debug histograms added to FastPVMonitor (activate with DEBUG_HISTO)
+
 !========================= FastPV v1r1 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.

@@ -4,8 +4,13 @@
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
 
+// #define DEBUG_HISTO // fill some histograms while the algorithm runs
+#ifdef DEBUG_HISTO
+#include "GaudiAlg/GaudiTupleAlg.h"
+#else
+#include "GaudiAlg/GaudiAlgorithm.h"
+#endif
 
 /** @class FastPVMonitor FastPVMonitor.h
  *  
@@ -13,7 +18,12 @@
  *  @author Olivier Callot
  *  @date   2011-11-22
  */
+#ifdef DEBUG_HISTO
+class FastPVMonitor : public GaudiTupleAlg {
+#else
 class FastPVMonitor : public GaudiAlgorithm {
+#endif
+
 public: 
   /// Standard constructor
   FastPVMonitor( const std::string& name, ISvcLocator* pSvcLocator );

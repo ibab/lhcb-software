@@ -15,6 +15,7 @@ branches          cmt doc src
 #============================================================================
 use     DetCond         v*      Det
 use     RecEvent        v*      Event
+use     MCEvent         v*      Event
 use     TrackEvent      v*      Event
 use     PatKernel       v*      Tf
 use     GaudiAlg        v*

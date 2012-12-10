@@ -30,6 +30,7 @@ DECLARE_ALGORITHM_FACTORY( FastPVFinder )
     : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputLocation",  m_inputLocation  = LHCb::TrackLocation::Velo );
+  // declareProperty( "InputLocation",  m_inputLocation  = LHCb::TrackLocation::VP );
   declareProperty( "OutputLocation", m_outputLocation = LHCb::RecVertexLocation::Primary );
   declareProperty( "MaxIPToBeam",    m_maxIPToBeam    = 0.200 * Gaudi::Units::mm );
   declareProperty( "MaxDeltaZ",      m_maxDeltaZ      = 3.000 * Gaudi::Units::mm );
