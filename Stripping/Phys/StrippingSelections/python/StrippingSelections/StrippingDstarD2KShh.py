@@ -9,7 +9,7 @@ The cuts are mostly the same as the code used in late 2010, except:
  * Track fit chi2/NDF cuts tightened quite a bit, but cut on track fit probability
    removed. The probability was too tight before, so this should be a net loosening.
  * All modes share a common proper lifetime cut (but cut value is the same as before)
- * Separate container for both D0 and D0bar added for KSKK & KSPP (Nick)
+ * Separate container for both D0 and D0bar replaced by []cc selection.
 '''
 
 __author__ = ['Mat Charles']
@@ -111,9 +111,9 @@ class DstarD2KShhBuilder(LineBuilder) :
         self.selDauPP = [ self.selDauP ]
 
         # Now we make the various flavours of D0 decay (KSK+K-, KSpi+pi-, KSK+pi-, KSK-pi+):
-        strDecaysPP = [ "D0 -> KS0 pi+ pi-" ]
+        strDecaysPP = [ "[D0 -> KS0 pi+ pi-]cc" ]
         strDecaysKP = [ "[D0 -> KS0 K+ pi-]cc", "[D0 -> KS0 K- pi+]cc" ]
-        strDecaysKK = [ "D0 -> KS0 K+ K-" ]
+        strDecaysKK = [ "[D0 -> KS0 K+ K-]cc" ]
         self.selD2KSKKLL = makeD2KShh('D2KSKKLLFor'+name, strDecaysKK, self.selKSLL, self.selDauKK, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KK'], config['wideDMassCut_KKLL'], config['DCutTau'], config['KSCutZFDFromD'])
         self.selD2KSKPLL = makeD2KShh('D2KSKPLLFor'+name, strDecaysKP, self.selKSLL, self.selDauKP, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KP'], config['wideDMassCut_KPLL'], config['DCutTau'], config['KSCutZFDFromD'])
         self.selD2KSPPLL = makeD2KShh('D2KSPPLLFor'+name, strDecaysPP, self.selKSLL, self.selDauPP, config['preFitDMassCut_LL'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_PP'], config['wideDMassCut_PPLL'], config['DCutTau'], config['KSCutZFDFromD'])
@@ -121,53 +121,13 @@ class DstarD2KShhBuilder(LineBuilder) :
         self.selD2KSKPDD = makeD2KShh('D2KSKPDDFor'+name, strDecaysKP, self.selKSDD, self.selDauKP, config['preFitDMassCut_DD'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_KP'], config['wideDMassCut_KPDD'], config['DCutTau'], config['KSCutZFDFromD'])
         self.selD2KSPPDD = makeD2KShh('D2KSPPDDFor'+name, strDecaysPP, self.selKSDD, self.selDauPP, config['preFitDMassCut_DD'], config['preFitDCutPT'], config['DCutDIRA'], config['DCutVtxChi2_PP'], config['wideDMassCut_PPDD'], config['DCutTau'], config['KSCutZFDFromD'])
 
-        # ConjugateNeutralPID is needed for decays to self-conjugate final state (KSpi+pi-, KSK+K-)
-        # It takes a D0 and makes a corresponding D0bar (identical except for PDG code)
-        # It's an algorithm and can be wrapped in a Selection:
-        from Configurables import ConjugateNeutralPID
-        _localConj_KKLL = ConjugateNeutralPID('ConjugateD2KSKKLLFor'+name)
-        _localConj_PPLL = ConjugateNeutralPID('ConjugateD2KSPPLLFor'+name)
-        _localConj_KKDD = ConjugateNeutralPID('ConjugateD2KSKKDDFor'+name)
-        _localConj_PPDD = ConjugateNeutralPID('ConjugateD2KSPPDDFor'+name)
-        from PhysSelPython.Wrappers import Selection
-        self.selD0Conj2KSKKLL = Selection('SelConjugateD2KSKKLLFor'+name, Algorithm = _localConj_KKLL, RequiredSelections = [self.selD2KSKKLL])
-        self.selD0Conj2KSPPLL = Selection('SelConjugateD2KSPPLLFor'+name, Algorithm = _localConj_PPLL, RequiredSelections = [self.selD2KSPPLL])
-        self.selD0Conj2KSKKDD = Selection('SelConjugateD2KSKKDDFor'+name, Algorithm = _localConj_KKDD, RequiredSelections = [self.selD2KSKKDD])
-        self.selD0Conj2KSPPDD = Selection('SelConjugateD2KSPPDDFor'+name, Algorithm = _localConj_PPDD, RequiredSelections = [self.selD2KSPPDD])
-
-        # Register the D0/D0bar selection as StrippingLine objects (Nick)
-        self.lineD2KSPPLL = StrippingLine('StrippingD2KSPPLLFor'+name,
-                                          prescale  = 1.0,
-                                          postscale = 1.0,
-                                          selection = self.selD2KSPPLL)
-        
-        self.lineD2KSPPDD = StrippingLine('StrippingD2KSPPDDFor'+name,
-                                          prescale  = 1.0,
-                                          postscale = 1.0,
-                                          selection = self.selD2KSPPDD)
-        
-        self.lineD2KSKKLL = StrippingLine('StrippingD2KSKKLLFor'+name,
-                                          prescale  = 1.0,
-                                          postscale = 1.0,
-                                          selection = self.selD2KSKKLL)
-        
-        self.lineD2KSKKDD = StrippingLine('StrippingD2KSKKDDFor'+name,
-                                          prescale  = 1.0,
-                                          postscale = 1.0,
-                                          selection = self.selD2KSKKDD)
-        
-        self.registerLine(self.lineD2KSPPLL)
-        self.registerLine(self.lineD2KSPPDD)
-        self.registerLine(self.lineD2KSKKLL)
-        self.registerLine(self.lineD2KSKKDD)
-        
         # Reconstruct D*+ -> D0 pi+ (&cc), using a wide mass window:
-        self.selDstar_KKLL = makeDstar('Dstar_KKLLFor'+name, [self.selD2KSKKLL, self.selD0Conj2KSKKLL], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_KK'], config['SoftPionCutPIDe'], config['DstarCutPT_KK'], config['wideDMCutLower'], config['wideDMCutUpper'])
-        self.selDstar_KPLL = makeDstar('Dstar_KPLLFor'+name, [self.selD2KSKPLL                       ], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_KP'], config['SoftPionCutPIDe'], config['DstarCutPT_KP'], config['wideDMCutLower'], config['wideDMCutUpper'])
-        self.selDstar_PPLL = makeDstar('Dstar_PPLLFor'+name, [self.selD2KSPPLL, self.selD0Conj2KSPPLL], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_PP'], config['SoftPionCutPIDe'], config['DstarCutPT_PP'], config['wideDMCutLower'], config['wideDMCutUpper'])
-        self.selDstar_KKDD = makeDstar('Dstar_KKDDFor'+name, [self.selD2KSKKDD, self.selD0Conj2KSKKDD], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_KK'], config['SoftPionCutPIDe'], config['DstarCutPT_KK'], config['wideDMCutLower'], config['wideDMCutUpper'])
-        self.selDstar_KPDD = makeDstar('Dstar_KPDDFor'+name, [self.selD2KSKPDD                       ], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_KP'], config['SoftPionCutPIDe'], config['DstarCutPT_KP'], config['wideDMCutLower'], config['wideDMCutUpper'])
-        self.selDstar_PPDD = makeDstar('Dstar_PPDDFor'+name, [self.selD2KSPPDD, self.selD0Conj2KSPPDD], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_PP'], config['SoftPionCutPIDe'], config['DstarCutPT_PP'], config['wideDMCutLower'], config['wideDMCutUpper'])
+        self.selDstar_KKLL = makeDstar('Dstar_KKLLFor'+name, [self.selD2KSKKLL], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_KK'], config['SoftPionCutPIDe'], config['DstarCutPT_KK'], config['wideDMCutLower'], config['wideDMCutUpper'])
+        self.selDstar_KPLL = makeDstar('Dstar_KPLLFor'+name, [self.selD2KSKPLL], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_KP'], config['SoftPionCutPIDe'], config['DstarCutPT_KP'], config['wideDMCutLower'], config['wideDMCutUpper'])
+        self.selDstar_PPLL = makeDstar('Dstar_PPLLFor'+name, [self.selD2KSPPLL], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_PP'], config['SoftPionCutPIDe'], config['DstarCutPT_PP'], config['wideDMCutLower'], config['wideDMCutUpper'])
+        self.selDstar_KKDD = makeDstar('Dstar_KKDDFor'+name, [self.selD2KSKKDD], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_KK'], config['SoftPionCutPIDe'], config['DstarCutPT_KK'], config['wideDMCutLower'], config['wideDMCutUpper'])
+        self.selDstar_KPDD = makeDstar('Dstar_KPDDFor'+name, [self.selD2KSKPDD], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_KP'], config['SoftPionCutPIDe'], config['DstarCutPT_KP'], config['wideDMCutLower'], config['wideDMCutUpper'])
+        self.selDstar_PPDD = makeDstar('Dstar_PPDDFor'+name, [self.selD2KSPPDD], config['preFitDstarMassCut'], config['DstarCutChi2NDOF_PP'], config['SoftPionCutPIDe'], config['DstarCutPT_PP'], config['wideDMCutLower'], config['wideDMCutUpper'])
 
         self.lineKKLL = StrippingLine(name+'KKLLLine',
                                       prescale = config['KKLLPrescale'],
