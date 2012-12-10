@@ -10,6 +10,9 @@ Purpose: LHCb Digitization program
    . Use BuildMCTrackInfoUpgrade instead of BuildMCTrackInfo is upgrade
      detectors are enabled
    . Ensured DigiConf receives 'Tr' in list of Detectors
+   . Added new Property "SiG4EnergyDeposit", switch for Geant4/in-house
+     energy deposit in Si Detectors (Velo, IT, TT, UT). Default value
+     (False) replicates old behaviour.
 
  - Changes to references to follow changes in underlying packages
    . Adapt boole-2012-latestdb.ref to new local tags it-20121025, tt-20121025

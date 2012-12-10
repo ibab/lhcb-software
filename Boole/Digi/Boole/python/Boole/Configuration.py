@@ -51,6 +51,7 @@ class Boole(LHCbConfigurableUser):
         ,"FilterSequence"      : []
         ,"EnablePack"          : True
         ,"Persistency"         : None
+        ,"SiG4EnergyDeposit"   : False
         }
 
     _propertyDocDct = { 
@@ -86,6 +87,7 @@ class Boole(LHCbConfigurableUser):
        ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
        ,'EnablePack'   : """ Turn on/off packing of the data (where appropriate/available) """
        ,'Persistency'  : """ Overwrite the default persistency with something else. """
+       ,'SiG4EnergyDeposit': """ Modelling of energy loss for silicon trackers from Geant4 or in-house."""
         }
 
     KnownFilterSubdets = [ "L0", "ODIN" ]
@@ -348,9 +350,18 @@ class Boole(LHCbConfigurableUser):
 
     def configureDigiVelo(self, seq, tae ):
         # Velo digitisation and clustering (also for PuVeto and trigger)
+
+
+            
         if tae == "":
             from Configurables import (VeloSim, PuVetoFillRawBuffer)
             importOptions("$VELOSIMULATIONROOT/options/VeloSim.opts")
+            toolName = "SiDepositedCharge" # In house Si deposited energy
+            if self.getProp("SiG4EnergyDeposit"):
+                # use GEANT energy deposit directly
+                toolName = "SiGeantDepositedCharge"
+            VeloSim('VeloSim').DepChargeTool = toolName
+            VeloSim('VeloPUSim').DepChargeTool = toolName
             seq.Members += [ VeloSim("VeloSim") ]
             seq.Members += [ VeloSim("VeloPUSim") ]
             if True != self.getProp("VeloTell1Processing"):
@@ -364,10 +375,12 @@ class Boole(LHCbConfigurableUser):
                     seq.Members += [ VeloDataProcessor("VeloDataProcessorPrev") ]
                     seq.Members += [ VeloSpillSubtraction() ]
                     importOptions("$BOOLEUMCROOT/options/VeloSimPrev.opts")
+                    VeloSim('VeloSimPrev').DepChargeTool = toolName
                     seq.Members += [ VeloSim("VeloSimNext") ]
                     seq.Members += [ VeloDataProcessor("VeloDataProcessorNext") ]
                     seq.Members += [ VeloSpillSubtraction("VeloSpillSubtractionNext") ]
                     importOptions("$BOOLEUMCROOT/options/VeloSimNext.opts")
+                    VeloSim('VeloSimNext').DepChargeTool = toolName
                 seq.Members += [ VeloClusterMaker("VeloClusterMaker") ]
                 seq.Members += [ PrepareVeloRawBuffer("PrepareVeloRawBuffer") ]
             else:
@@ -412,6 +425,7 @@ class Boole(LHCbConfigurableUser):
         if tae == "":
             if det == "IT":
                 importOptions("$STDIGIALGORITHMSROOT/options/itDigi.opts")
+                #MCITDepositCreator.DepChargeTool =  " SiGeantDepositedCharge"
             elif det == "TT":
                 importOptions("$STDIGIALGORITHMSROOT/options/ttDigi.opts")
             elif det == "UT":
@@ -419,9 +433,14 @@ class Boole(LHCbConfigurableUser):
             else:
                 raise RuntimeError("Unknown ST detector '%s'"%det)
 
+            toolName = "SiDepositedCharge"
+            if self.getProp("SiG4EnergyDeposit"):
+                toolName = "SiGeantDepositedCharge"
+            MCSTDepositCreator("MC%sDepositCreator%s"%(det,tae),DetType=det).DepChargeTool = toolName            
             seq.Members += [ MCSTDepositCreator("MC%sDepositCreator%s"%(det,tae),DetType=det) ]
             seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%s"%(det,tae),DetType=det) ]
             seq.Members += [ STDigitCreator("%sDigitCreator%s"%(det,tae),DetType=det) ]
+
             if self.getProp("DataType") == "Upgrade" :
                 from Configurables import STSpilloverSubtraction, TTSpilloverSubtraction 
                 if det == "IT":
