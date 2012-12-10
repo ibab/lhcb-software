@@ -64,17 +64,15 @@ LoKi::TES::HasRecSummary::operator()
   // check the algorithm
   Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
   //
-  if ( !m_algorithm->exist<LHCb::RecSummary> ( location     ()  , 
-                                               useRootInTes () ) )
+  const LHCb::RecSummary* summary = 
+    m_algorithm->getIfExists<LHCb::RecSummary> ( location () , useRootInTes () );
+  if ( NULL == summary ) 
   {
     Error ( "No LHCb::RecSummary is available at '" + location () + "'") ;
     return false ;
   }
   //
-  const LHCb::RecSummary* summary = 
-    m_algorithm->get<LHCb::RecSummary> ( location () , useRootInTes () ) ;
-  //
-  return 0 != summary && summary -> hasInfo ( m_key ) ;
+  return summary -> hasInfo ( m_key ) ;
 }    
 // ============================================================================
 // OPTIONAL: nice printout 
@@ -130,17 +128,13 @@ LoKi::TES::RecSummary::operator()
   // check the algorithm
   Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
   //
-  if ( !m_algorithm->exist<LHCb::RecSummary> ( location     ()  , 
-                                               useRootInTes () ) )
+  const LHCb::RecSummary* summary = 
+    m_algorithm->getIfExists<LHCb::RecSummary> ( location () , useRootInTes () );
+  if ( NULL == summary ) 
   {
     Error ( "No LHCb::RecSummary is available at '" + location () + "'") ;
     return m_bad ;
   }
-  //
-  const LHCb::RecSummary* summary = 
-    m_algorithm->get<LHCb::RecSummary> ( location () , useRootInTes () ) ;
-  //
-  if ( 0 == summary ) { return m_bad ; }
   //
   return summary -> info ( m_key , m_bad ) ;
 }    

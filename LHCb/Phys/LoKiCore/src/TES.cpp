@@ -165,15 +165,10 @@ LoKi::TES::Contains::operator() ( /* LoKi::TES::Contains::argument */ ) const
   // the final check
   Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
   //
-  const bool ok =
-    m_algorithm->exist<ObjectContainerBase>
-    ( m_location , m_useRootInTes )  ;
-  //
-  if ( !ok ) { return -1 ; } // REUTRN
-  //
   const ObjectContainerBase *obj =
-    m_algorithm->get<ObjectContainerBase>
-    ( m_location , m_useRootInTes )  ;
+    m_algorithm->get<ObjectContainerBase>( m_location , m_useRootInTes )  ;
+  //
+  if ( NULL == obj ) { return -1 ; } // REUTRN
   //
   return obj -> numberOfObjects () ;
 }
@@ -246,15 +241,13 @@ LoKi::TES::Counter::operator() ( /* LoKi::TES::Contains::argument */ ) const
   Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
   //
   //
-  if ( !m_algorithm -> exist<Gaudi::Numbers> ( location     () ,
-                                             useRootInTes () ) )
+  const Gaudi::Numbers* data = m_algorithm -> getIfExists<Gaudi::Numbers>
+    ( location() , useRootInTes() ) ;
+  if( NULL == data )
   {
     Error ("No valid object is found for TES location, return 'bad'") ;
     return m_bad ;
   }
-  //
-  const Gaudi::Numbers* data = m_algorithm -> get<Gaudi::Numbers>
-    ( location() , useRootInTes() ) ;
   //
   const Gaudi::Numbers::Map& m = data->counters() ;
   Gaudi::Numbers::Map::const_iterator ifind = m.find ( counter() ) ;
@@ -515,27 +508,24 @@ LoKi::TES::Stat::operator() ( /* LoKi::TES::Contains::argument */ ) const
   Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
   //
   //
-  if ( counter().empty() &&
-       m_algorithm -> exist<Gaudi::Counter>
-       ( location     () ,
-         useRootInTes () ) )
+  if ( counter().empty() )
   {
-    const Gaudi::Counter* cnt = m_algorithm -> get<Gaudi::Counter>
+    const Gaudi::Counter* cnt = m_algorithm -> getIfExists<Gaudi::Counter>
       ( location     () ,
         useRootInTes () ) ;
-
-    return (*m_getter)(cnt->counter());
+    if( NULL != cnt )
+    {
+      return (*m_getter)(cnt->counter());
+    }
   }
   //
-  if ( !m_algorithm -> exist<Gaudi::Counters> ( location     () ,
-                                                useRootInTes () ) )
+  const Gaudi::Counters* data = m_algorithm -> getIfExists<Gaudi::Counters>
+    ( location() , useRootInTes() ) ;
+  if ( NULL == data )
   {
     Error ("No valid object is found for TES location, return 'bad'") ;
     return bad ()  ;
   }
-  //
-  const Gaudi::Counters* data = m_algorithm -> get<Gaudi::Counters>
-    ( location() , useRootInTes() ) ;
   //
   const Gaudi::Counters::Map& m = data->counters() ;
   Gaudi::Counters::Map::const_iterator ifind = m.find ( counter() ) ;
