@@ -58,7 +58,7 @@ bool addDecayTrees(){
   dk= new DecayTree(421);
   dk->addDgtr(321, -321);
   dk->addDgtr(888310)->addDgtr(211,-211);
-  list->multiAdd(*dk, "BgSpinZero");
+  list->add(*dk, "BgSpinZero");
   //  list->add(*dk);
   delete dk;
   
@@ -69,48 +69,48 @@ bool addDecayTrees(){
   //dk->addDgtr(888310)->addDgtr(211,-211);
   //dk->getVal().setL(0);
   //  list->add(AmpInitialiser(*dk, "BgSpinZero"));
-  list->multiAdd(*dk, "BgSpinZero");
+  list->add(*dk, "BgSpinZero");
   delete dk;
   
   dk= new DecayTree(421);  //lauren Kswide a0(1450)
   dk->addDgtr( 10111)->addDgtr( 321, -321);
   dk->addDgtr(888310)->addDgtr(211,-211);
   //dk->getVal().setL(0);
-  list->multiAdd(*dk, "BgSpinZero");
+  list->add(*dk, "BgSpinZero");
   delete dk;
   
   dk= new DecayTree(421);  //lauren  a0(1450)+->K+KsWide
   dk->addDgtr( -321, 10211)->addDgtr( 321, 888310)->addDgtr(211, -211);
   //dk->getVal().setL(0);
-  list->multiAdd(*dk, "BgSpinZero");
+  list->add(*dk, "BgSpinZero");
   delete dk;
   
   dk= new DecayTree(421);  //lauren  a0(980)+->K+KsWide
   dk->addDgtr(  9000211)->addDgtr( 321, 888310)->addDgtr(211, -211);
   dk->addDgtr( -321);
   //dk->getVal().setL(0);
-  list->multiAdd(*dk, "BgSpinZero");
+  list->add(*dk, "BgSpinZero");
   delete dk;
   
   dk= new DecayTree(421);  //lauren  a0(1260)+->K+KsWide
   dk->addDgtr(  20213)->addDgtr( 321, 888310)->addDgtr(211, -211);
   dk->addDgtr( -321);
   //dk->getVal().setL(0);
-  list->multiAdd(*dk, "BgSpinZero");
+  list->add(*dk, "BgSpinZero");
   delete dk;
   
   dk= new DecayTree(421);  //lauren Kswide a0(980)
   dk->addDgtr( 9000111)->addDgtr( 321, -321);
   dk->addDgtr(888310)->addDgtr(211,-211);
   //dk->getVal().setL(0);
-  list->multiAdd(*dk, "BgSpinZero");
+  list->add(*dk, "BgSpinZero");
   delete dk;
   
   dk= new DecayTree(421); //lauren Kswide f0(1370)
   dk->addDgtr( 30221)->addDgtr( 321, -321);
   dk->addDgtr(888310)->addDgtr(211,-211);
   //dk->getVal().setL(0);
-  list->multiAdd(*dk, "BgSpinZero");
+  list->add(*dk, "BgSpinZero");
   delete dk;
   
   return true;
