@@ -4,6 +4,10 @@
 ! Purpose     : Pattern recogintion for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-12-09 - Pawel Jalocha
+ - debug histograms added (activate with DEBUG_HISTO)
+ - added comments, as I understand the code works
+
 ! 2012-01-17 - Olivier Callot
  - Re-implementation of the algorithm, based on finding a pair of consecutive hits
    and extrapolating in both directions.

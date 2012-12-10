@@ -13,7 +13,7 @@ branches          cmt doc src
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use     VeloPixDet      v*      Det
+use     VPDet           v*      Det
 use     DigiEvent       v*      Event
 use     TrackEvent      v*      Event
 use     GaudiAlg        v*

@@ -2,9 +2,17 @@
 #ifndef PATPIXELTRACKING_H 
 #define PATPIXELTRACKING_H 1
 
+// #define DEBUG_HISTO // fill some histograms while the algorithm runs.
+
 // Include files
 // from Gaudi
+
+#ifdef DEBUG_HISTO
+#include "GaudiAlg/GaudiTupleAlg.h"
+#else
 #include "GaudiAlg/GaudiAlgorithm.h"
+#endif
+
 #include "PatKernel/IPatDebugTool.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 
@@ -17,7 +25,12 @@
  *  @author Olivier Callot
  *  @date   2011-12-16
  */
+#ifdef DEBUG_HISTO
+class PatPixelTracking : public GaudiTupleAlg {
+#else
 class PatPixelTracking : public GaudiAlgorithm {
+#endif
+
 public: 
   /// Standard constructor
   PatPixelTracking( const std::string& name, ISvcLocator* pSvcLocator );
@@ -30,9 +43,9 @@ public:
 
 protected:
 
-  void searchByPair();
+  void searchByPair();                            // search for tracks starting from pair of hits on adjacent sensors
 
-  void makeLHCbTracks( LHCb::Tracks* tracks );
+  void makeLHCbTracks( LHCb::Tracks* tracks );    // produce LHCb::Track list understable to other LHCb applications
 
   //== Debugging methods
   bool matchKey( const PatPixelHit* hit ) {
@@ -64,8 +77,11 @@ private:
   double m_maxChi2PerHit;
   double m_maxChi2Short;
 
-  PatPixelTracks m_tracks;
+  PatPixelTracks m_tracks;                  // list of tracks found by searchByPair()
   PatPixelTrack  m_track;
+
+  // double         m_zPrimaryVertex;
+  // double         m_zErrPrimaryVertex;
   
   //== Debug control
   std::string      m_debugToolName;

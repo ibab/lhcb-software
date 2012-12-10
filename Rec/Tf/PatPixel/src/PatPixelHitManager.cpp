@@ -2,7 +2,7 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "Event/VPLiteCluster.h"
 
 // local
 #include "PatPixelHitManager.h"
@@ -42,7 +42,7 @@ StatusCode PatPixelHitManager::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_veloPix      = getDet<DeVeloPix>( DeVeloPixLocation::Default );
+  m_veloPix      = getDet<DeVP>( DeVPLocation::Default );
 
   // make sure we are up-to-date on populated VELO stations
   registerCondition( (*(m_veloPix->leftSensorsBegin()))->geometry(), &PatPixelHitManager::rebuildGeometry );
@@ -89,7 +89,7 @@ StatusCode PatPixelHitManager::rebuildGeometry ( ) {
 
   std::vector<int> previous(2,-1);
 
-  for ( std::vector<DeVeloPixSensor*>::const_iterator itS = m_veloPix->sensorsBegin();
+  for ( std::vector<DeVPSensor*>::const_iterator itS = m_veloPix->sensorsBegin();
         m_veloPix->sensorsEnd() > itS; ++itS ) {
     //== TO BE DONE ===   if ( !(*itS)->isReadOut() ) continue;
     PatPixelSensor* sens = new PatPixelSensor( *itS );
@@ -148,43 +148,42 @@ void PatPixelHitManager::clearHits( ) {
 //=========================================================================
 //  Convert the LiteClusters to PatPixelHit
 //=========================================================================
-void PatPixelHitManager::buildHits ( ) {
-  if ( m_eventReady ) return;
+void PatPixelHitManager::buildHits ( )
+{ if ( m_eventReady ) return;
   m_eventReady = true;
 
-  LHCb::VeloPixLiteCluster::VeloPixLiteClusters * liteClusters =
-    GaudiTool::get<LHCb::VeloPixLiteCluster::VeloPixLiteClusters>(LHCb::VeloPixLiteClusterLocation::Default);
+  LHCb::VPLiteCluster::VPLiteClusters * liteClusters =
+    GaudiTool::get<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default);
 
   if ( liteClusters->size() > m_pool.size() ) {
     m_pool.resize( liteClusters->size() + 100 );
     m_nextInPool = m_pool.begin();
   }
   
-  LHCb::VeloPixLiteCluster::VeloPixLiteClusters::iterator iClus;
+  LHCb::VPLiteCluster::VPLiteClusters::iterator iClus;
   unsigned int lastSensor = 9999;
   PatPixelSensor* mySensor = NULL;
 
-  double dx = 0.050 / sqrt( 12. );
+  double dx = 0.055 / sqrt(12.0);                           // assume sigma on hit position (55x55 um square pixel)
   
-  for ( iClus = liteClusters->begin(); liteClusters->end() != iClus; ++iClus ) {
-    unsigned int sensor = iClus->channelID().sensor();
+  for ( iClus = liteClusters->begin(); liteClusters->end() != iClus; ++iClus ) { // loop over Lite Clusters
+    unsigned int sensor = iClus->channelID().sensor();      // sensor number in Gaudi
     if ( sensor > m_sensors.size() ) break;
-    if ( sensor != lastSensor ) {
-      lastSensor = sensor;
-      mySensor = m_sensors[sensor];
-    }
-    PatPixelHit* hit = &(*(m_nextInPool++));  // get the next object in the pool
+    if ( sensor != lastSensor )                             // if a new Gaudi sensor
+    { lastSensor = sensor;                                  // switch HitManager sensor
+       mySensor = m_sensors[sensor]; }                      // sensor number in HitManager
+    PatPixelHit* hit = &(*(m_nextInPool++));  // get the next object in the pool => here we store the new hit
 
-    Gaudi::XYZPoint point = mySensor->position( (*iClus).channelID(), 
+    Gaudi::XYZPoint point = mySensor->position( (*iClus).channelID(),            // calc. 3-D position for this LiteCluster
                                                 (*iClus).interPixelFractionX(), 
                                                 (*iClus).interPixelFractionY() );
-    hit->setHit( LHCb::LHCbID( (*iClus).channelID() ), point, dx, dx, sensor );
+    hit->setHit( LHCb::LHCbID( (*iClus).channelID() ), point, dx, dx, sensor );  // set our hit data
     mySensor->addHit( hit );
   }
 }
 
 //=========================================================================
-//  
+// Sort hits by X within every sensor to speed up the track search
 //=========================================================================
 void PatPixelHitManager::sortByX ( ) {
   for ( std::vector<PatPixelSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {

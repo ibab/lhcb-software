@@ -10,8 +10,8 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 
-#include "VeloPixDet/DeVeloPix.h"
-#include "Event/VeloPixLiteCluster.h"
+#include "VPDet/DeVP.h"
+#include "Event/VPLiteCluster.h"
 
 #include "PatPixelSensor.h"
 
@@ -63,7 +63,7 @@ public:
 protected:
 
 private:
-  DeVeloPix* m_veloPix;
+  DeVP* m_veloPix;
 
   std::vector<PatPixelHit>  m_pool;
   std::vector<PatPixelHit>::iterator m_nextInPool;
