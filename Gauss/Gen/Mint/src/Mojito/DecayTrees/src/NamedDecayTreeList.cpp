@@ -42,9 +42,10 @@ NamedDecayTreeList::getMe(const std::string& printopt){
 }
 NamedDecayTreeList::NamedDecayTreeList(){
   makeDecayTreeList();       //      D->f
-  add_D_to_CPConjugates_forAll(); // D->fbar
-  add_CPConjugates_forAll(); //      Dbar -> fbar and Dbar ->f
-  add_SpinZero_forAll(); // bgTest (for bg parameterisation)
+  //  add_D_to_CPConjugates_forAll(); // D->fbar
+  //  add_CPConjugates_forAll(); //      Dbar -> fbar and Dbar ->f
+  //  add_SpinZero_forAll(); // bgTest (for bg parameterisation)
+  //  add_CLEO2012_forAll();
 }
 const AmpInitialiser& NamedDecayTreeList::find(const std::string& name
 					       , bool& successFlag
@@ -55,6 +56,8 @@ const AmpInitialiser& NamedDecayTreeList::find(const std::string& name
 const AmpInitMap& NamedDecayTreeList::trees(const std::string& opt) const{
   if(A_is_in_B("NoBgSpinZero", opt)) return _treesNoBgSpinZero;
   else if(A_is_in_B("OnlyBgSpinZero", opt)) return _treesOnlyBgSpinZero;
+  else if(A_is_in_B("NoCLEO2012", opt)) return _treesNoCLEO2012;
+  else if(A_is_in_B("OnlyCLEO2012", opt)) return _treesOnlyCLEO2012;
   else if("" == opt || A_is_in_B("ALL", opt)) return _trees;
   else{
     cout << "WARNING in NamedDecayTreeList::trees : Unrecognises option "
@@ -92,51 +95,90 @@ void NamedDecayTreeList::print(std::ostream& os) const{
   }  
 }
 
-void NamedDecayTreeList::multiAdd(const AmpInitialiser& ai, const std::string& opt){
-  bool isBg=A_is_in_B("BgSpinZero",opt);
-  add(ai, opt);
-  if(! isBg)add(ai, opt + "BgSpinZero");
+void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){ 
+  // formerly "multiAdd"
+  // operation with default option:
+  // For each decay 
+  // D->f 
+  // it also adds:  
+  // Dbar -> f
+  // D -> fbar
+  // Dbar -> fbar
+  //
+  // and all that also in the version "BgSpinZero", and "CLEO2012".
+  // BgSpinZero has a spin-factor of "1" (as if all particles inolved
+  // had spin 0), which is what we usually use to parameterise
+  // non-resonant background. CLEO2012 is uses exactly the lineshapes
+  // uses for Lauren's KKpipi analysis (make sure you also use the
+  // same mass-width file if you want to reproduce the results
+  // exactly!)
 
+  bool isBg=A_is_in_B("BgSpinZero",opt);
+  bool isCLEO2012=A_is_in_B("CLEO2012",opt);
+
+  addSimple(ai, opt);
+  if(! isBg)addSimple(ai, opt + "BgSpinZero");     
+  // if it already is a decay with the BgSpinZero option, then there's not point in adding it again.
+
+  if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
+  // if it already is a decay with the CLEO2012 option, then there's not point in adding it again.
+  
   DecayTree      dt = ai.tree();
   anti(dt);   // CP conjugate
   AmpInitialiser CPai(ai);
   CPai.setTree(dt);
-  add(CPai, opt);
-  if(! isBg) add(CPai, opt + "BgSpinZero");
+  addSimple(CPai, opt);
+  if(! isBg) addSimple(CPai, opt + "BgSpinZero");
+  if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
 
   dt.getVal().antiThis(); // mum back to D0
   AmpInitialiser DtoCPai(ai);
   DtoCPai.setTree(dt);
-  add(DtoCPai, opt);
-  if(! isBg) add(DtoCPai, opt + "BgSpinZero");
+  addSimple(DtoCPai, opt);
+  if(! isBg) addSimple(DtoCPai, opt + "BgSpinZero");
+  if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
 
   anti(dt); // and the CP conjugate of that, i.e. Dbar->original
   AmpInitialiser DbarToOriginal(ai);
   DbarToOriginal.setTree(dt);
-  add(DbarToOriginal, opt);
-  if(! isBg) add(DbarToOriginal, opt + "BgSpinZero");
+  addSimple(DbarToOriginal, opt);
+  if(! isBg) addSimple(DbarToOriginal, opt + "BgSpinZero");
+  if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
 
 }
-void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
+void NamedDecayTreeList::addSimple(const AmpInitialiser& ai, const std::string& opt){ // formerly "add"
   // Note: This will not allow any duplicates - if you try to add a
   // tree that already exits (same unique(!) name), it will replace
   // the previous entry.
   bool dbThis=false;
   
   //if(dbThis) cout << "adding tree with name " << name << endl;
-  if(A_is_in_B("BgSpinZero",opt)){
-    AmpInitialiser nai(ai);
-    nai.addLopt("BgSpinZero");
-    std::string name = nai.uniqueName();
-    if(dbThis) cout << "adding tree with name " << name << endl;
-    _trees[name] = nai;
-    _treesOnlyBgSpinZero[name] = nai;
-  }else{
-    std::string name = ai.uniqueName();
-    _trees[name] = ai;
-    _treesNoBgSpinZero[name] = ai;
+  AmpInitialiser nai(ai);
+  // NOT sure why I'm doing this rather complicated option reading and writng, rather
+  // than simply adding opt to nai.. but maybe there was a reason.
+  if(A_is_in_B("CLEO2012",opt)){
+    nai.addLopt("CLEO2012");
   }
+  if(A_is_in_B("BgSpinZero",opt)){
+    nai.addLopt("BgSpinZero");
+  }
+  std::string name = nai.uniqueName();
+  if(dbThis) cout << "adding tree with name " << name << endl;
+  _trees[name] = nai;
+
+  if(A_is_in_B("BgSpinZero",opt)) _treesOnlyBgSpinZero[name] = nai;
+  else  _treesNoBgSpinZero[name] = nai;
+
+  if(A_is_in_B("CLEO2012",opt))    _treesOnlyCLEO2012[name] = nai;
+  else _treesNoCLEO2012[name]=nai;
 }
+
+/*
+  These have become obsolete because "add" now acts as previously
+  "multiAdd" and automatically adds all possible versions of the
+  decay.  I've kept them here for now in case I need them at some
+  point.
+
 int NamedDecayTreeList::add_SpinZero_forAll(){ // bgTest
   //
   // The same D decaying
@@ -151,7 +193,24 @@ int NamedDecayTreeList::add_SpinZero_forAll(){ // bgTest
     DecayTree      dt = ai.tree();
     dt.getVal().setL(0);
     //ai.setTree(dt);
-    add(ai, "BgSpinZero");
+    addSimple(ai, "BgSpinZero");
+  }
+  return _trees.size();
+}
+
+int NamedDecayTreeList::add_CLEO2012_forAll(){
+  //
+  // The same D decaying
+  // but with spin zero (for background)
+  // Will add spin 0 amplitude with index [S] 
+  // even if orignal decay was s-wave.
+
+  for(AmpInitMap::const_iterator it=_trees.begin();
+      it != _trees.end();
+      it++){
+    AmpInitialiser ai = it->second;
+    DecayTree      dt = ai.tree();
+    addSimple(ai, "CLEO2012");
   }
   return _trees.size();
 }
@@ -184,7 +243,7 @@ int NamedDecayTreeList::add_D_to_CPConjugates_forAll(){
     anti(dt);
     dt.getVal().antiThis(); // mum back to D0
     ai.setTree(dt);
-    add(ai);
+    addSimple(ai);
   }
   return _trees.size();
 }
@@ -208,10 +267,12 @@ int NamedDecayTreeList::add_CPConjugates_forAll(){
     DecayTree      dt = ai.tree();
     anti(dt);
     ai.setTree(dt);
-    add(ai);
+    addSimple(ai);
   }
   return _trees.size();
 }
+
+*/
 
 int NamedDecayTreeList::makeDecayTreeList(){
   make3BodyList();

@@ -2,6 +2,7 @@
 // status:  Mon 9 Feb 2009 19:18:04 GMT
 
 #include "Mint/LineshapeMaker.h"
+#include "Mint/CLEO2012_LineshapeMaker.h"
 #include "Mint/ILineshape.h"
 #include "Mint/Utils.h"
 #include "Mint/AssociatedDecayTree.h"
@@ -25,11 +26,17 @@ using namespace MINT;
    Flatte
    GS
 */
+
 ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
 			   , IDalitzEventAccess* events
 			   , const std::string& lopt
 			   ){
   bool dbThis=false;
+
+  if(A_is_in_B("CLEO2012", lopt)){
+    return CLEO2012_LineshapeMaker(tree, events, lopt);
+  }
+
   if(0 == tree) return 0;
   
   if(dbThis){
