@@ -40,9 +40,12 @@ use MDF                v*    DAQ    -no_auto_imports
 use LbcomSys           v*           -no_auto_imports
 
 # The whole BOOLE project (cannot use BooleSys at it uses Boole...)
+use BcmDigi            v*    Bcm    -no_auto_imports
 use CaloDigit          v*    Calo   -no_auto_imports
 use CaloMoniDigi       v*    Calo   -no_auto_imports
+use BooleUMC           v*    Digi   -no_auto_imports
 use DigiAlg            v*    Digi   -no_auto_imports
+use FTDigitisation     v*    FT     -no_auto_imports
 use MuonAlgs           v*    Muon   -no_auto_imports
 use MuonBackground     v*    Muon   -no_auto_imports
 use MuonMoniDigi       v*    Muon   -no_auto_imports
@@ -50,8 +53,11 @@ use OTSimulation       v*    OT     -no_auto_imports
 use RichDigiQC         v*    Rich   -no_auto_imports
 use RichMCAssociators  v*    Rich   -no_auto_imports
 use RichDigiSys        v*    Rich   -no_auto_imports
+use RichReadout        v*    Rich   -no_auto_imports
 use STDigiAlgorithms   v*    ST     -no_auto_imports
-use BooleUMC           v*    Digi   -no_auto_imports
+use VLDigitisation     v*    VL     -no_auto_imports
+use VPAlgorithms       v*    VP     -no_auto_imports
+use VPAssociators      v*    VP     -no_auto_imports
 
 # ========================= Install configurable ============================
 apply_pattern install_python_modules
