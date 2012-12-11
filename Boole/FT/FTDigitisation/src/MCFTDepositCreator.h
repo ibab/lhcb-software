@@ -51,7 +51,7 @@ private:
   float       m_fractionShort;          ///< Fraction of short attenuation length at SiPM
   float       m_xMaxIrradiatedZone;     ///< Size in x of the zone where fibres are irradiated
   float       m_yMaxIrradiatedZone;     ///< Size in y of the zone where fibres are irradiated
-  float       m_irradiatedAttenuationLength;    ///< Attenuation length at 0,0 or irradiated fibres
+  std::vector<float> m_irradiatedAttenuationLength;    ///< Attenuation length by steps in the zone.
   float       m_reflexionCoefficient;   ///< reflexion coefficient of the mirror at the y=0 side of the fibre
   float       m_beginReflexionLossY;    ///< begin zone where reflexio is too late and lost
   float       m_endReflexionLossY;      ///< end of this zone

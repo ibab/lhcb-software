@@ -35,17 +35,18 @@ MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
+  
   declareProperty( "InputLocation" ,  m_inputLocation  = LHCb::MCHitLocation::FT, "Path to input MCHits");
   declareProperty( "OutputLocation" , m_outputLocation = LHCb::MCFTDepositLocation::Default, "Path to output MCDeposits");
-  declareProperty( "ShortAttenuationLength" ,     m_shortAttenuationLength      = 1000 * Gaudi::Units::mm, 
+  declareProperty( "ShortAttenuationLength" ,     m_shortAttenuationLength      = 200 * Gaudi::Units::mm, 
                    "Distance along the fibre to divide the light amplitude by a factor e : short component");
-  declareProperty( "LongAttenuationLength" ,      m_longAttenuationLength       = 7000 * Gaudi::Units::mm, 
+  declareProperty( "LongAttenuationLength" ,      m_longAttenuationLength       = 4700 * Gaudi::Units::mm, 
                    "Distance along the fibre to divide the light amplitude by a factor e : long component");
-  declareProperty( "FractionShort",               m_fractionShort = 0.50, "Fraction of short attenuation at SiPM" );
-  declareProperty( "XMaxIrradiatedZone",          m_xMaxIrradiatedZone          = 1500. * Gaudi::Units::mm );
+  declareProperty( "FractionShort",               m_fractionShort = 0.18, "Fraction of short attenuation at SiPM" );
+  declareProperty( "XMaxIrradiatedZone",          m_xMaxIrradiatedZone          = 2000. * Gaudi::Units::mm );
   declareProperty( "YMaxIrradiatedZone",          m_yMaxIrradiatedZone          =  500. * Gaudi::Units::mm );
-  declareProperty( "IrradiatedAttenuationLength", m_irradiatedAttenuationLength =  600. * Gaudi::Units::mm );
-  declareProperty( "ReflexionCoefficient" ,       m_reflexionCoefficient = 0.9, 
+  declareProperty( "IrradiatedAttenuationLength", m_irradiatedAttenuationLength);
+  declareProperty( "ReflexionCoefficient" ,       m_reflexionCoefficient = 0.7, 
                    "Reflexion coefficient of the fibre mirrored side, from 0 to 1");
   declareProperty( "BeginReflexionLossY",         m_beginReflexionLossY         = 1000. * Gaudi::Units::mm );
   declareProperty( "EndReflexionLossY",           m_endReflexionLossY           = 1500. * Gaudi::Units::mm );
@@ -70,7 +71,14 @@ StatusCode MCFTDepositCreator::initialize() {
     debug() << ": InputLocation is " <<m_inputLocation << endmsg;
     debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
   }
-  
+  if ( 0 == m_irradiatedAttenuationLength.size() ) {
+    m_irradiatedAttenuationLength.push_back( 3000. * Gaudi::Units::mm );
+    m_irradiatedAttenuationLength.push_back( 3000. * Gaudi::Units::mm );
+    m_irradiatedAttenuationLength.push_back( 3000. * Gaudi::Units::mm );
+    m_irradiatedAttenuationLength.push_back( 1500. * Gaudi::Units::mm );
+    m_irradiatedAttenuationLength.push_back(  300. * Gaudi::Units::mm );
+  }  
+
   /// Retrieve and initialize DeFT (no test: exception in case of failure)
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
 
@@ -91,31 +99,50 @@ StatusCode MCFTDepositCreator::initialize() {
 
   for ( int kx = 0; m_nXSteps > kx; ++kx ) {
     float x = kx * m_xStepMap;
-    float radZoneSize = m_yMaxIrradiatedZone * ( 1 - x / m_xMaxIrradiatedZone );
+    float radZoneSize = 2 * m_yMaxIrradiatedZone * ( 1 - x / m_xMaxIrradiatedZone );
     if ( 0. > radZoneSize ) radZoneSize = 0.;
+    float yBoundaryRadZone = .5 * radZoneSize;
     for ( int ky = 0; m_nYSteps > ky; ++ky ) {
       float y = yMax - ky * m_yStepMap;
       float att = ( m_fractionShort       * exp( -(yMax-y)/m_shortAttenuationLength ) + 
                     ( 1-m_fractionShort ) * exp( -(yMax-y)/m_longAttenuationLength ) );
-      //== transmission of the reflected part.
-      float attR = ( m_fractionShort       * exp( -(yMax+y)/m_shortAttenuationLength ) + 
-                     ( 1-m_fractionShort ) * exp( -(yMax+y)/m_longAttenuationLength ) );
-      if ( y > m_endReflexionLossY ) {
-        attR = 0.;
-      } else if ( y > m_beginReflexionLossY ) {
-        attR = attR * ( m_endReflexionLossY - y ) / (m_endReflexionLossY - m_beginReflexionLossY );
+      if ( y < yBoundaryRadZone ){
+        att = ( m_fractionShort       * exp( -(yMax-yBoundaryRadZone)/m_shortAttenuationLength ) + 
+                ( 1-m_fractionShort ) * exp( -(yMax-yBoundaryRadZone)/m_longAttenuationLength ) );
+        float lInRadiation = yBoundaryRadZone - y;
+        for ( unsigned int kz = 0; m_irradiatedAttenuationLength.size() > kz; ++kz ) {
+          if ( lInRadiation > m_yStepMap ) {
+            att  *= exp( - m_yStepMap / m_irradiatedAttenuationLength[kz] );
+          } else if ( lInRadiation > 0. ) {
+            att  *= exp( - lInRadiation / m_irradiatedAttenuationLength[kz] );
+          } else {
+          }
+          lInRadiation -= m_yStepMap;
+        }
       }
-      float fractionInRadiation = 1 - x / m_xMaxIrradiatedZone - y / m_yMaxIrradiatedZone;
-      if ( 0 < fractionInRadiation ){
-        float lInRadiation = (1 - x / m_xMaxIrradiatedZone - fractionInRadiation ) * m_yMaxIrradiatedZone;
-        att  = att * exp( - lInRadiation / m_irradiatedAttenuationLength );
-        attR = att * exp( ( lInRadiation - radZoneSize ) / m_irradiatedAttenuationLength );
-      } else if ( 0. < radZoneSize ) {
-        attR = attR * exp( - radZoneSize / m_irradiatedAttenuationLength );
-      }
-      att = att + m_reflexionCoefficient * attR;
       m_transmissionMap[ m_nYSteps * (kx+1) - ky - 1 ] = att;
     }
+
+    //== Compute reflexion: This is as if light would come from negative y.
+    //== The attenuation by step is symetric, -> don't recompute, use the first part...
+    //== Linear attenuation up to 0 in the reflexionLoss zone.
+
+    if ( m_reflexionCoefficient > 0. ) {
+      float reflected = m_transmissionMap[ m_nYSteps * kx ] * m_reflexionCoefficient;
+      for ( int kk = 0; m_nYSteps > kk; ++kk ) {
+        float y = kk * m_yStepMap;
+        if ( y > m_endReflexionLossY ) break;
+        int kk = y / m_yStepMap;
+        float att = m_transmissionMap[ m_nYSteps*kx + kk] / m_transmissionMap[ m_nYSteps*kx + kk + 1];
+        if ( y > m_beginReflexionLossY ) {
+          att *= ( m_endReflexionLossY - y ) / ( m_endReflexionLossY - m_beginReflexionLossY );
+        }
+        m_transmissionMap[ m_nYSteps*kx + kk] += reflected;
+        reflected *= att;
+      }
+    }
+
+
     info() << format( "x%7.0f ", x );
     for ( int kk = 0; m_nYSteps > kk ; ++kk ) {
       info() << format( "%6.3f", m_transmissionMap[kx*m_nYSteps+kk] );
