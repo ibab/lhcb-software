@@ -152,7 +152,7 @@ def matchCands(myGlobs,cand1,cand2) :
         try :
             for kid1 in finalstateparticles_cand1 :
                 for kid2 in finalstateparticles_cand2 :
-                    if matchLists(kid1.proto().track().lhcbIDs(),kid2.proto().track().lhcbIDs()) :
+                    if matchLists(kid1["child"].proto().track().lhcbIDs(),kid2["child"].proto().track().lhcbIDs()) :
                         nummatch += 1
         except :
             return False
