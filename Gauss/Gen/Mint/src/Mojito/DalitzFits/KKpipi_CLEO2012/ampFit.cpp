@@ -140,6 +140,7 @@ int ampFit(){
  
   NamedParameter<int>  Nevents("Nevents", 10000);
   NamedParameter<int>  doScan("doScan", 0);
+  NamedParameter<int>  doFit("doFit", 1);
   NamedParameter<double> integPrecision("IntegPrecision", 1.e-4);
 
      
@@ -192,6 +193,8 @@ int ampFit(){
   DalitzPdfNormChecker nc(&amps, pdg);
   nc.checkNorm();
   */
+
+  if(! doFit) return 0;
 
   Minimiser mini(&fcn);
   mini.doFit();
