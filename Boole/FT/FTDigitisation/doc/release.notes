@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2012-12-11 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2012-12-11 - Olivier Callot
  - Better description of the attenuation: List of length by step of 10 cm along the wire
    for the irradiated zone.
