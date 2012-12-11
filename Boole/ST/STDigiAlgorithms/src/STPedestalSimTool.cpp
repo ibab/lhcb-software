@@ -19,7 +19,8 @@ STPedestalSimTool::STPedestalSimTool( const std::string& type,
   GaudiTool(type, name, parent)
 {
   // constructer
-  declareProperty("ParamValues", m_param = boost::assign::list_of(127.8)(2.45e-3)(9.83e-4 )(-3.25e-6));
+  std::vector<double> tmp = boost::assign::list_of(127.8)(2.45e-3)(9.83e-4 )(-3.25e-6);
+  declareProperty("ParamValues", m_param = tmp);
 
   declareInterface<ISTPedestalSimTool>(this);
 }

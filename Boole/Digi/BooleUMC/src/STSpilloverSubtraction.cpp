@@ -20,8 +20,8 @@ STSpilloverSubtraction::STSpilloverSubtraction(const std::string& name,
                                      ISvcLocator* pSvcLocator):
   ST::AlgBase(name, pSvcLocator)
 {
-  declareProperty("SpillVector", m_spillNames = 
-		                 boost::assign::list_of("/")("/Prev/"));   
+  std::vector<std::string> tmp = boost::assign::list_of("/")("/Prev/");
+  declareProperty("SpillVector", m_spillNames = tmp);
   declareSTConfigProperty("InputLocation", m_inputLocation, 
                                            STDigitLocation::TTDigits);
 

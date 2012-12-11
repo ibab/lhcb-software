@@ -58,10 +58,10 @@ VPMCDepositCreator::VPMCDepositCreator(const std::string& name,
                   "MC/VP/Hits");
   declareProperty("OutputLocation", m_outputLocation = 
                   "MC/VP/Deposits");
-  declareProperty("SamplesVector", m_sampleNames = 
-         boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
-  declareProperty("SpillVector", m_spillNames = 
-         boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
+  std::vector<std::string> tmp =
+    boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/");
+  declareProperty("SamplesVector", m_sampleNames = tmp);
+  declareProperty("SpillVector", m_spillNames = tmp);
   declareProperty("SiteSize", m_siteSize = 0.05 * Gaudi::Units::mm);
   declareProperty("MaxNumSites", m_maxNumSites = 150);
   declareProperty("DepChTool", m_depChTool = "SiGeantDepositedCharge");

@@ -47,10 +47,12 @@ VPDigitCreator::VPDigitCreator(const std::string& name,
                   "MC/VP/Digits");
   declareProperty("OutputLocation", m_outputLocation = 
                   "VP/PreDigits");
-  declareProperty("SamplesVector", m_sampleNames = 
-         boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
-  declareProperty("SpillVector", m_spillNames = 
-         boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
+
+  std::vector<std::string> tmp =
+    boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/");
+
+  declareProperty("SamplesVector", m_sampleNames = tmp);
+  declareProperty("SpillVector", m_spillNames = tmp);
 }
 
 //=============================================================================

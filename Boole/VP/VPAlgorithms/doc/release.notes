@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2012-12-11 - Marco Clemencic
+ - Fixes to compile with C++11.
+
 !========================= VPAlgorithms v3r1 2012-12-10 =========================
 ! 2012-11-28 - Pawel Jalocha
  - better bug fix for clustering algorithm which occasionally outputs

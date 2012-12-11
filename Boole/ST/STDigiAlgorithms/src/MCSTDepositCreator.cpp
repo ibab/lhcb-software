@@ -35,6 +35,16 @@ using namespace Gaudi::Units;
 DECLARE_ALGORITHM_FACTORY( MCSTDepositCreator )
 
 
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+#define init_vect1(A) {A}
+#define init_vect2(A, B) {A, B}
+#define init_vect5(A, B, C, D ,E) {A, B, C, D, E}
+#else
+#define init_vect1(A) boost::assign::list_of(A)
+#define init_vect2(A, B) boost::assign::list_of(A)(B)
+#define init_vect5(A, B, C, D, E) boost::assign::list_of(A)(B)(C)(D)(E)
+#endif
+
 MCSTDepositCreator::MCSTDepositCreator( const std::string& name, 
                                         ISvcLocator* pSvcLocator ) :
   ST::AlgBase(name, pSvcLocator)
@@ -43,10 +53,10 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   m_spillTimes.push_back(0.*Gaudi::Units::ns);
 
   declareProperty("TofVector", m_tofVector, "vector of flight times");
-  declareProperty("SamplesVector", m_sampleNames = boost::assign::list_of("/"));
-  declareProperty("SampleTimes", m_sampleTimes = boost::assign::list_of(0.));
-  declareProperty("SpillVector", m_spillNames = boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/")("/LHCBackground/"));
-  declareProperty("SpillTimes", m_spillTimes = boost::assign::list_of(0.0)(-25.0)(-50.0)(25.0)(-3.3));
+  declareProperty("SamplesVector", m_sampleNames = init_vect1("/"));
+  declareProperty("SampleTimes", m_sampleTimes = init_vect1(0.));
+  declareProperty("SpillVector", m_spillNames = init_vect5("/", "/Prev/", "/PrevPrev/", "/Next/", "/LHCBackground/"));
+  declareProperty("SpillTimes", m_spillTimes = init_vect5(0.0, -25.0, -50.0, 25.0, -3.3));
   declareProperty("MinDist", m_minDistance = 5.0e-3*Gaudi::Units::mm);
 
   declareProperty("ChargeSharerName",m_chargeSharerName ="STChargeSharingTool");
@@ -58,13 +68,13 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("MaxNumSites", m_maxNumSites = 150);
 
   declareProperty("XTalkParamsRightEven", m_xTalkParamsRightEven = 
-                  boost::assign::list_of(0.0503)(0.001754/picofarad));
+                  init_vect2(0.0503, 0.001754/picofarad));
   declareProperty("XTalkParamsLeftEven", m_xTalkParamsLeftEven = 
-                  boost::assign::list_of(0.0185)(0.001625/picofarad));
+                  init_vect2(0.0185, 0.001625/picofarad));
   declareProperty("XTalkParamsRightOdd", m_xTalkParamsRightOdd = 
-                    boost::assign::list_of(0.0215)(0.001824/picofarad));
+                  init_vect2(0.0215, 0.001824/picofarad));
   declareProperty("XTalkParamsLeftOdd", m_xTalkParamsLeftOdd = 
-                    boost::assign::list_of(0.0494)(0.001416/picofarad));
+                  init_vect2(0.0494, 0.001416/picofarad));
 
   declareProperty("Scaling", m_scaling = 1.0);
   declareProperty("ApplyScaling", m_applyScaling = true );
@@ -87,6 +97,9 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
 
   setForcedInit();
 }
+#undef init_vect1
+#undef init_vect2
+#undef init_vect5
 
 MCSTDepositCreator::~MCSTDepositCreator() 
 {

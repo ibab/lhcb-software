@@ -24,10 +24,11 @@ STChargeSharingTool::STChargeSharingTool( const std::string& type,
   m_responseSpline(0)
 {
   // constructer
-  declareProperty("SharingFunction", m_sharingFunction = 
-                  boost::assign::list_of(1.0)(1.0)(0.97)(0.935)(0.90)(0.83)
-                  (0.73)(0.5)(0.44)(0.34)(0.20)(0.11)(0.065)(0.038)(0.016)
-                  (0.0)(0.0) );
+  std::vector<double> tmp =
+    boost::assign::list_of(1.0)(1.0)(0.97)(0.935)(0.90)(0.83)
+    (0.73)(0.5)(0.44)(0.34)(0.20)(0.11)(0.065)(0.038)(0.016)
+    (0.0)(0.0);
+  declareProperty("SharingFunction", m_sharingFunction = tmp);
   declareProperty("UseAnalyticErf",  m_useAnalyticErf = true    );
   declareProperty("ErfWidth",        m_erfWidth       = 0.0224   );
   declareProperty("Thickness",       m_thickness      = 0.500*mm );

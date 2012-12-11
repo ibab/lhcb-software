@@ -59,20 +59,20 @@ MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
   m_spillNames()
 {
   // constructor
-  m_spillVector = boost::assign::list_of("/PrevPrev/")
+  std::vector<std::string> tmp1 = boost::assign::list_of("/PrevPrev/")
                                         ("/Prev/")
                                         ("/")
                                         ("/Next/")
                                         ("/NextNext/");
 
-  m_spillTimes = boost::assign::list_of(-50.0*Gaudi::Units::ns)
+  std::vector<double> tmp2 = boost::assign::list_of(-50.0*Gaudi::Units::ns)
                                        (-25.0*Gaudi::Units::ns)
                                        (0.0*Gaudi::Units::ns)
                                        (25.0*Gaudi::Units::ns)
                                        (50.0*Gaudi::Units::ns);
 
-  declareProperty("SpillVector"         , m_spillVector                                       );
-  declareProperty("SpillTimes"          , m_spillTimes                                        );
+  declareProperty("SpillVector"         , m_spillVector            = tmp1                     );
+  declareProperty("SpillTimes"          , m_spillTimes             = tmp2                     );
   declareProperty("AddCrosstalk"        , m_addCrossTalk           = true                     );
   declareProperty("CrossTalkLevel"      , m_crossTalkLevel         = 0.005                    );
   declareProperty("AddNoise"            , m_addNoise               = true                     );

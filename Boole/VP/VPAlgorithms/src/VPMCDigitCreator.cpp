@@ -35,10 +35,12 @@ VPMCDigitCreator::VPMCDigitCreator(const std::string& name,
                   "MC/VP/Deposits");
   declareProperty("OutputLocation", m_outputLocation = 
                   "MC/VP/Digits");
-  declareProperty("SamplesVector", m_sampleNames = 
-         boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
-  declareProperty("SpillVector", m_spillNames = 
-         boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
+
+  std::vector<std::string> tmp =
+    boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/");
+
+  declareProperty("SamplesVector", m_sampleNames = tmp);
+  declareProperty("SpillVector", m_spillNames = tmp);
 }
 
 //=============================================================================

@@ -29,8 +29,8 @@ VPSpilloverSubtraction::VPSpilloverSubtraction(
                              ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
 {
-  declareProperty("SpillVector", m_spillNames = 
-		              boost::assign::list_of("/")("/Prev/")("/PrevPrev/"));   
+  std::vector<std::string> tmp = boost::assign::list_of("/")("/Prev/")("/PrevPrev/");
+  declareProperty("SpillVector", m_spillNames = tmp);   
   declareProperty("InputLocation", m_inputLocation =  
                   "VP/Digits");
   declareProperty("SwitchOn", m_switchOn = true);

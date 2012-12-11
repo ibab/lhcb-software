@@ -20,10 +20,10 @@ VeloSpillSubtraction::VeloSpillSubtraction(const std::string& name,
                                      ISvcLocator* pSvcLocator):
   GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("SpillVector", m_spillNames = 
-		                 boost::assign::list_of("/")("/Prev/"));   
+  std::vector<std::string> tmp = boost::assign::list_of("/")("/Prev/");
+  declareProperty("SpillVector", m_spillNames = tmp);
   declareProperty("InputLocation", m_inputLocation = 
-		  LHCb::VeloDigitLocation::Default ); 
+		  LHCb::VeloDigitLocation::Default );
 
 
   // Do not subtract Spillover if charge in previous crossing below this value

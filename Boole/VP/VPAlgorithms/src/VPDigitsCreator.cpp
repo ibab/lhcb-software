@@ -26,7 +26,9 @@ VPDigitsCreator::VPDigitsCreator( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("SpillVector", m_spillNames = boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
+  std::vector<std::string> tmp =
+    boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/");
+  declareProperty("SpillVector", m_spillNames = tmp);
   declareProperty("InputLocation", m_inputLocation =  "VP/PreDigits");
   declareProperty("OutputLocation", m_outputLocation ="/Event/"+LHCb::VPDigitLocation::VPDigitLocation );
 
