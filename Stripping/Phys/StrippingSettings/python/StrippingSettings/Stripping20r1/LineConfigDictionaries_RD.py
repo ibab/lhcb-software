@@ -116,13 +116,14 @@ B2XMuMu =  {
     , 'LongLivedPT'        : 0.0          # MeV , used to be 500.0 MeV
     , 'LongLivedTau'        : 2          # ps
 
-    , 'K1_Comb_MassLow'  :  720.0
-    , 'K1_Comb_MassHigh' : 2450.0
-    , 'K1_MassLow'	 :  750.0
-    , 'K1_MassHigh'	 : 2400.0
-    , 'K1_MinIPCHI2'     :    4.0
-    , 'K1_FlightChi2'    :   25.0
-    , 'K1_Dau_MaxIPCHI2' : 9.0
+    # HHH cuts
+    , 'HHH_Comb_MassLow'  :    0.0
+    , 'HHH_Comb_MassHigh' : 6050.0
+    , 'HHH_MassLow'       :    0.0
+    , 'HHH_MassHigh'      : 6000.0
+    , 'HHH_MinIPCHI2'     :    4.0
+    , 'HHH_FlightChi2'    :   25.0
+    , 'HHH_Dau_MaxIPCHI2' :    9.0
     
     ,'UseNoPIDsHadrons'          : True,
 
@@ -566,6 +567,10 @@ B2MuMuMuMuLines = {
         'D2MuMuMuMuLinePostscale'   : 1,
         'B2TwoDetachedDimuonLinePrescale'  : 1,
         'B2TwoDetachedDimuonLinePostscale' : 1,
+        'B2JpsiKmumuLinePrescale'  : 1,
+        'B2JpsiKmumuLinePostscale' : 1,
+        'B2JpsiPhimumuLinePrescale'  : 1,
+        'B2JpsiPhimumuLinePostscale' : 1,
         'DetachedDiMuons': {
             'AMAXDOCA_MAX'  : '0.5*mm',
             'ASUMPT_MIN'    : '1000*MeV',
