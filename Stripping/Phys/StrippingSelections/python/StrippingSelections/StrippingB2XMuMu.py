@@ -40,14 +40,13 @@ defaultConfig = {
     , 'LongLivedTau'        : 2          # ps
     
     # HHH cuts
-    # Cuts may need changing.
-    , 'HHH_Comb_MassLow'  :  500.0
+    , 'HHH_Comb_MassLow'  :    0.0
     , 'HHH_Comb_MassHigh' : 6050.0
-    , 'HHH_MassLow'       :  500.0
+    , 'HHH_MassLow'       :    0.0
     , 'HHH_MassHigh'      : 6000.0
     , 'HHH_MinIPCHI2'     :    4.0
     , 'HHH_FlightChi2'    :   25.0
-    , 'HHH_Dau_MaxIPCHI2' : 9.0
+    , 'HHH_Dau_MaxIPCHI2' :    9.0
     # From Bd2KstarMuMu line 
     ,'UseNoPIDsHadrons'          : True,
     
@@ -609,7 +608,7 @@ class B2XMuMuConf(LineBuilder) :
         return pick
 
 
-    def __hhh__(self, Pions, conf): # do not input the Kaons
+    def __hhh__(self, Pions, conf): 
         """
         Make hhh objects:
             a_1 - > pi pi pi 
@@ -626,7 +625,6 @@ class B2XMuMuConf(LineBuilder) :
         _sel_a1 = Selection( "Selection_"+self.name+"_hhh_a1",
                                      Algorithm=_a12pipipi,
                                      RequiredSelections=[Pions] )
-                                     #RequiredSelections=[Kaons, Pions])
         # SubPIDs for K_1 and K_2.
         _a1k1_SubPID1 = SubstitutePID(self.name+"_hhh_a1k1_SubPID1",
                 Code="(DECTREE('X+ -> X+ X+ X-')) | (DECTREE('X- -> X+ X- X-')) ",

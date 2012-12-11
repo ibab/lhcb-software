@@ -4,9 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
-! 2012-12-10 - Sam Hall
+! 2012-12-11 - Sam Hall
  - Addition of B -> hhhmumu to StrippingB2XMuMu.py.
-   * Currently cuts are temporary and may need some tweaking.
+   * Cuts were temporary on 2012-12-10
+   * Finalized on 2012-12-11.
 
 ! 2012-12-10 - Pieter David
  - StrippingDisplVertices: adapt HLTPS line to Hlt2 line names during 2011 for stripping 20r1
