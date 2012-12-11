@@ -64,4 +64,4 @@ def getString(name, version=None):
                 return pkg_resources.resource_string(__name__, r)
 
     # No resource found
-    raise ValueError('Cannot find resource %r for version %s' % (r, vers))
+    raise ValueError('Cannot find resource %r for version %s' % (name, version))

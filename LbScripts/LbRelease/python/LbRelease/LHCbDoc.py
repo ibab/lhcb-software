@@ -763,7 +763,7 @@ class Doc(object):
         #  CSS file
         open(os.path.join(confdir, 'lhcb_doxygen.css'), 'w').write(getString('stylesheet.css', cpp_version))
         #  class locator PHP script
-        open(os.path.join(confdir, 'class.php'), 'w').write(getString('class_php', cpp_version))
+        open(os.path.join(confdir, 'class.php'), 'w').write(getString('class.php', cpp_version))
 
     def _projectDeps(self, project, recursive = False):
         """
