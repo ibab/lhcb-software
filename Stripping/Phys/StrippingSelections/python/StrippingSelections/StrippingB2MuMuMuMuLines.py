@@ -56,6 +56,10 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                               'D2MuMuMuMuLinePostscale',
                               'B2TwoDetachedDimuonLinePrescale',
                               'B2TwoDetachedDimuonLinePostscale',
+                              'B2JpsiKmumuLinePrescale',
+                              'B2JpsiKmumuLinePostscale',
+                              'B2JpsiPhimumuLinePrescale',
+                              'B2JpsiPhimumuLinePostscale',
                               'DetachedDiMuons',
                               'B2DetachedDiMuons'
                               )
@@ -68,6 +72,10 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         'D2MuMuMuMuLinePostscale'   : 1,
         'B2TwoDetachedDimuonLinePrescale'  : 1,
         'B2TwoDetachedDimuonLinePostscale' : 1,
+        'B2JpsiKmumuLinePrescale'  : 1,
+        'B2JpsiKmumuLinePostscale' : 1,
+        'B2JpsiPhimumuLinePrescale'  : 1,
+        'B2JpsiPhimumuLinePostscale' : 1,
         'DetachedDiMuons': {
             'AMAXDOCA_MAX'  : '0.5*mm',
             'ASUMPT_MIN'    : '1000*MeV',
@@ -98,18 +106,29 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         default_name=name+"B24Mu"
         D_name=name+'D24Mu'
 	Dst_name = name+'Dstar2D2MuMuMuMu'
-	Dimuon_name = name+'Dimuon'
+	Jpsi_name = name+'Jpsi'
+	Phi_name = name+'Phi'
+        B2JpsiKmumu_name = name + 'B2JpsiKmumu'
+        B2JpsiPhimumu_name = name + 'B2JpsiPhimumu'
         DetachedDimuons_name = name+'DetachedDimuons'
         B2DetachedDimuons_name = name+'B2DetachedDimuons'
 
-        self.inPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
         self.inMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+        self.inKaons = DataOnDemand(Location = "Phys/StdAllNoPIDsKaons/Particles")
 
-        self.selDefault = makeDefault(default_name,
-						inputSel = [ self.inMuons ])
+        self.BDaughtersCuts = "(TRCHI2DOF < 2.5 ) & (MIPCHI2DV(PRIMARY)> 9.)"
+
+        self.BMotherCuts = "(VFASPF(VCHI2/VDOF)<9)"\
+            "& (BPVDIRA > 0) "\
+            "& (BPVVDCHI2>100)"\
+            "& (BPVIPCHI2()< 25) "
+        
+        self.selDefault = makeDefault(self,
+                                      default_name,
+                                      inputSel = [ self.inMuons ])
 
         self.selD2MuMuMuMu = makeD2MuMuMuMu(D_name,
-						inputSel = [ self.inMuons ])
+                                            inputSel = [ self.inMuons ])
 
         self.inDetachedDimuons=makeDetachedDimuons(DetachedDimuons_name,
                                                    config['DetachedDiMuons'],
@@ -118,6 +137,26 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                                                                 config['B2DetachedDiMuons'],
                                                                 inputSel=[self.inDetachedDimuons ])
         
+        self.selJpsi = makeJpsi(self,
+                                Jpsi_name,
+                                inputSel = [self.inMuons])
+
+        self.selPhi = makePhi(self,
+                              Phi_name,
+                              inputSel = [self.inKaons])
+
+        self.selB2JpsiKmumu = makeB2JpsiKmumu(self,
+                                              B2JpsiKmumu_name,
+                                              inputSel = [self.selJpsi,
+                                                          self.inMuons,
+                                                          self.inKaons])
+
+        self.selB2JpsiPhimumu = makeB2JpsiPhimumu(self,
+                                                  B2JpsiPhimumu_name,
+                                                  inputSel = [self.selJpsi,
+                                                              self.selPhi,
+                                                              self.inMuons])
+
 
         self.defaultLine = StrippingLine(default_name+"Line",
                                             prescale = config['B2MuMuMuMuLinePrescale'],
@@ -136,6 +175,18 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                                                       postscale = config['B2TwoDetachedDimuonLinePostscale'],
                                                       algos = [ self.selB2TwoDetachedDimuons ]
                                                       )
+        self.B2JpsiKmumuLine = StrippingLine(B2JpsiKmumu_name+"Line",
+                                             prescale= config['B2JpsiKmumuLinePrescale'],
+                                             postscale = config['B2JpsiKmumuLinePostscale'],
+                                             algos = [ self.selB2JpsiKmumu ]
+                                             )
+                                                                                                    
+        self.B2JpsiPhimumuLine = StrippingLine(B2JpsiPhimumu_name+"Line",
+                                               prescale = config['B2JpsiPhimumuLinePrescale'],
+                                               postscale = config['B2JpsiPhimumuLinePostscale'],
+                                               algos = [ self.selB2JpsiPhimumu]
+                                               )
+                                                 
 
         self.registerLine( self.defaultLine )
 
@@ -143,7 +194,11 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
 
         self.registerLine( self.B2TwoDetachedDimuonsLine )
 
-def makeDefault(name,inputSel) :
+        self.registerLine( self.B2JpsiKmumuLine )
+
+        self.registerLine( self.B2JpsiPhimumuLine )
+
+def makeDefault(self,name,inputSel) :
     """
     B --> 4 mu selection
     should become     inclusive bb-->4 mu selection  ??
@@ -156,16 +211,11 @@ def makeDefault(name,inputSel) :
     Detached4mu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Detached4mu.OfflineVertexFitter.useResonanceVertex = False
     Detached4mu.ReFitPVs = True
-    Detached4mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 2.5 ) "\
-                                  " & (MIPCHI2DV(PRIMARY)> 9.)"}
+    Detached4mu.DaughtersCuts = { "mu+" : self.BDaughtersCuts}
                                  
     Detached4mu.CombinationCut = "(ADAMASS('B_s0')<1000*MeV) "\
                                    "& (AMAXDOCA('')<0.3*mm)"
-    Detached4mu.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
-                              "& (BPVDIRA > 0) "\
-                              "& (BPVVDCHI2>100)"\
-                              " & (M>4366.3) & (M<6366.3)"\
-                              "& (BPVIPCHI2()< 25) "
+    Detached4mu.MotherCut =  self.BMotherCuts + " & (ADMASS('B_s0')<1000*MeV) "
     
 
     return Selection (name,
@@ -237,4 +287,69 @@ def makeB2TwoDetachedDimuons(name,config,inputSel) :
         
     return Selection(name,
                      Algorithm = B2KSKS,
+                     RequiredSelections = inputSel)
+
+def makeJpsi(self,name,inputSel):
+    """
+    Jpsi->mu+ mu- selection
+    """
+    JpsiMuMu = CombineParticles("Combine"+name)
+    JpsiMuMu.DecayDescriptor='[J/psi(1S) -> mu+ mu-]cc'
+    JpsiMuMu.CombinationCut ="(ADAMASS('J/psi(1S)') < 200*MeV)"\
+        "& (AMAXDOCA('')<0.3*mm)"
+    JpsiMuMu.MotherCut = "(ADMASS('J/psi(1S)') < 200*MeV)"\
+        " & (BPVDIRA > 0) "
+    JpsiMuMu.DaughtersCuts = { "mu+" : self.BDaughtersCuts}
+    
+    return  Selection(name,
+                      Algorithm=JpsiMuMu,
+                      RequiredSelections = inputSel)
+
+def makePhi(self,name,inputSel):
+    """
+    phi->K+ K- selection
+    """
+    Phimumu = CombineParticles("Combine"+name)
+    Phimumu.DecayDescriptor = '[phi(1020) -> K+ K-]cc'
+    Phimumu.CombinationCut = "(ADAMASS('phi(1020)')<200*MeV)"\
+        "& (AMAXDOCA('')<0.3*mm)"
+    Phimumu.MotherCut = "(ADMASS('phi(1020)') < 200*MeV)"\
+        " & (BPVDIRA > 0) "
+    Phimumu.DaughtersCuts = { "K+" : self.BDaughtersCuts}
+
+    return Selection(name,
+                     Algorithm = Phimumu,
+                     RequiredSelections = inputSel)
+
+
+def makeB2JpsiKmumu(self,name,inputSel):
+    """
+    B+ -> (Jpsi->mu+ mu-) K+ mu+ mu- selection
+    """
+    B2JpsiKmumu = CombineParticles("Combine"+name)
+    B2JpsiKmumu.DecayDescriptor = "[B+ -> J/psi(1S) K+ mu+ mu-]cc"
+    B2JpsiKmumu.DaughtersCuts = { "mu+" : self.BDaughtersCuts,
+                                  "K+" : self.BDaughtersCuts}
+    B2JpsiKmumu.CombinationCut  = "(ADAMASS('B+')<1000*MeV)"\
+        "& (AMAXDOCA('')<0.3*mm)"
+    B2JpsiKmumu.MotherCut =  self.BMotherCuts + " & (ADMASS('B+')<1000*MeV) "
+    
+    return Selection (name,
+                      Algorithm = B2JpsiKmumu,
+                      RequiredSelections = inputSel)
+
+def makeB2JpsiPhimumu(self,name,inputSel):
+    """
+    Bs -> (Jpsi->mu+ mu-) (phi -> K+ K-) mu+ mu- selection
+    """
+
+    B2JpsiPhimumu = CombineParticles("Combine"+name)
+    B2JpsiPhimumu.DecayDescriptor =  "[B_s0 -> J/psi(1S) phi(1020) mu+ mu-]cc"
+    B2JpsiPhimumu.DaughtersCuts = { "mu+" : self.BDaughtersCuts }
+    B2JpsiPhimumu.CombinationCut =  "(ADAMASS('B_s0')<1000*MeV)"\
+        "& (AMAXDOCA('')<0.3*mm)"
+    B2JpsiPhimumu.MotherCut = self.BMotherCuts + " & (ADMASS('B_s0')<1000*MeV) "
+    
+    return Selection(name,
+                     Algorithm = B2JpsiPhimumu,
                      RequiredSelections = inputSel)
