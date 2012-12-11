@@ -15,6 +15,21 @@
 "BgSpinZeroDbar0->K*(892)bar-(->K-,pi0),pi+_Amp"                                      	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K*(892)bar-(->K-,pi0),pi+_Phase"                                    	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(0)*(1430)bar-(->K-,pi0),pi+_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)bar-(->K-,pi0),pi+_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(2)*(1430)bar-(->K-,pi0),pi+_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(2)*(1430)bar-(->K-,pi0),pi+_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)bar-(->K-,pi0),pi+_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)bar-(->K-,pi0),pi+_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)bar-(->K-,pi0),pi+_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)bar-(->K-,pi0),pi+_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar-(->K-,pi0),pi+_Amp"                                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar-(->K-,pi0),pi+_Phase"                                      	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(0)*(1430)bar-(->K-,pi0),pi+_Amp"                                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(0)*(1430)bar-(->K-,pi0),pi+_Phase"                                          	 1	0.0	0.0	0.0	0.0
 *
@@ -48,6 +63,24 @@
 "BgSpinZeroDbar0->K-,pi+,pi0_Amp"                                                     	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K-,pi+,pi0_Phase"                                                   	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(0)*(1430)bar0(->K-,pi+),pi0_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)bar0(->K-,pi+),pi0_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(2)*(1430)bar0(->K-,pi+),pi0_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(2)*(1430)bar0(->K-,pi+),pi0_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)bar0(->K-,pi+),pi0_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)bar0(->K-,pi+),pi0_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)bar0(->K-,pi+),pi0_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)bar0(->K-,pi+),pi0_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),pi0_Amp"                                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),pi0_Phase"                                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K-,pi+,pi0_Amp"                                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K-,pi+,pi0_Phase"                                                     	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(0)*(1430)bar0(->K-,pi+),pi0_Amp"                                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(0)*(1430)bar0(->K-,pi+),pi0_Phase"                                          	 1	0.0	0.0	0.0	0.0
 *
@@ -69,6 +102,9 @@
 "LassBgSpinZeroDbar0->K(0)*(1430)bar0(->K-,pi+),pi0_Amp"                              	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroDbar0->K(0)*(1430)bar0(->K-,pi+),pi0_Phase"                            	 1	0.0	0.0	0.0	0.0
 *
+"LassCLEO2012Dbar0->K(0)*(1430)bar0(->K-,pi+),pi0_Amp"                                	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012Dbar0->K(0)*(1430)bar0(->K-,pi+),pi0_Phase"                              	 1	0.0	0.0	0.0	0.0
+*
 "LassDbar0->K(0)*(1430)bar0(->K-,pi+),pi0_Amp"                                        	 1	0.0	0.0	0.0	0.0
 "LassDbar0->K(0)*(1430)bar0(->K-,pi+),pi0_Phase"                                      	 1	0.0	0.0	0.0	0.0
 *
@@ -80,6 +116,15 @@
 *
 "BgSpinZeroDbar0->rho(770)-(->pi-,pi0),K+_Amp"                                        	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->rho(770)-(->pi-,pi0),K+_Phase"                                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(1450)-(->pi-,pi0),K+_Amp"                                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(1450)-(->pi-,pi0),K+_Phase"                                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(1700)-(->pi-,pi0),K+_Amp"                                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(1700)-(->pi-,pi0),K+_Phase"                                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(770)-(->pi-,pi0),K+_Amp"                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(770)-(->pi-,pi0),K+_Phase"                                        	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->rho(1450)-(->pi-,pi0),K+_Amp"                                                 	 1	0.0	0.0	0.0	0.0
 "Dbar0->rho(1450)-(->pi-,pi0),K+_Phase"                                               	 1	0.0	0.0	0.0	0.0
@@ -114,6 +159,30 @@
 "BgSpinZeroDbar0->sigma20(->pi-,pi+),K(S)0_Amp"                                       	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->sigma20(->pi-,pi+),K(S)0_Phase"                                     	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->f(0)(1370)0(->pi-,pi+),K(S)0_Amp"                                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(0)(1370)0(->pi-,pi+),K(S)0_Phase"                                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K(S)0_Amp"                                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K(S)0_Phase"                                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),K(S)0_Amp"                                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),K(S)0_Phase"                                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->omega(782)0(->pi-,pi+),K(S)0_Amp"                                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->omega(782)0(->pi-,pi+),K(S)0_Phase"                                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(1450)0(->pi-,pi+),K(S)0_Amp"                                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(1450)0(->pi-,pi+),K(S)0_Phase"                                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(770)0(->pi-,pi+),K(S)0_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(770)0(->pi-,pi+),K(S)0_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->sigma10(->pi-,pi+),K(S)0_Amp"                                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->sigma10(->pi-,pi+),K(S)0_Phase"                                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->sigma20(->pi-,pi+),K(S)0_Amp"                                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->sigma20(->pi-,pi+),K(S)0_Phase"                                       	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->f(0)(1370)0(->pi-,pi+),K(S)0_Amp"                                             	 1	0.0	0.0	0.0	0.0
 "Dbar0->f(0)(1370)0(->pi-,pi+),K(S)0_Phase"                                           	 1	0.0	0.0	0.0	0.0
 *
@@ -141,6 +210,9 @@
 "FlatteBgSpinZeroDbar0->f(0)(980)0(->pi-,pi+),K(S)0_Amp"                              	 1	0.0	0.0	0.0	0.0
 "FlatteBgSpinZeroDbar0->f(0)(980)0(->pi-,pi+),K(S)0_Phase"                            	 1	0.0	0.0	0.0	0.0
 *
+"FlatteCLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K(S)0_Amp"                                	 1	0.0	0.0	0.0	0.0
+"FlatteCLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K(S)0_Phase"                              	 1	0.0	0.0	0.0	0.0
+*
 "FlatteDbar0->f(0)(980)0(->pi-,pi+),K(S)0_Amp"                                        	 1	0.0	0.0	0.0	0.0
 "FlatteDbar0->f(0)(980)0(->pi-,pi+),K(S)0_Phase"                                      	 1	0.0	0.0	0.0	0.0
 *
@@ -150,6 +222,12 @@
 "GSBgSpinZeroDbar0->rho(770)0(->pi-,pi+),K(S)0_Amp"                                   	 1	0.0	0.0	0.0	0.0
 "GSBgSpinZeroDbar0->rho(770)0(->pi-,pi+),K(S)0_Phase"                                 	 1	0.0	0.0	0.0	0.0
 *
+"GSCLEO2012Dbar0->rho(1450)0(->pi-,pi+),K(S)0_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"GSCLEO2012Dbar0->rho(1450)0(->pi-,pi+),K(S)0_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"GSCLEO2012Dbar0->rho(770)0(->pi-,pi+),K(S)0_Amp"                                     	 1	0.0	0.0	0.0	0.0
+"GSCLEO2012Dbar0->rho(770)0(->pi-,pi+),K(S)0_Phase"                                   	 1	0.0	0.0	0.0	0.0
+*
 "GSDbar0->rho(1450)0(->pi-,pi+),K(S)0_Amp"                                            	 1	0.0	0.0	0.0	0.0
 "GSDbar0->rho(1450)0(->pi-,pi+),K(S)0_Phase"                                          	 1	0.0	0.0	0.0	0.0
 *
@@ -158,6 +236,9 @@
 *
 "RHO_OMEGABgSpinZeroDbar0->rho(770)0(->pi-,pi+),K(S)0_Amp"                            	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0->rho(770)0(->pi-,pi+),K(S)0_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0->rho(770)0(->pi-,pi+),K(S)0_Amp"                              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->rho(770)0(->pi-,pi+),K(S)0_Phase"                            	 1	0.0	0.0	0.0	0.0
 *
 "RHO_OMEGADbar0->rho(770)0(->pi-,pi+),K(S)0_Amp"                                      	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->rho(770)0(->pi-,pi+),K(S)0_Phase"                                    	 1	0.0	0.0	0.0	0.0
@@ -170,6 +251,15 @@
 *
 "BgSpinZeroDbar0->rho(770)+(->pi+,pi0),K-_Amp"                                        	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->rho(770)+(->pi+,pi0),K-_Phase"                                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(1450)+(->pi+,pi0),K-_Amp"                                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(1450)+(->pi+,pi0),K-_Phase"                                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(1700)+(->pi+,pi0),K-_Amp"                                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(1700)+(->pi+,pi0),K-_Phase"                                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(770)+(->pi+,pi0),K-_Amp"                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(770)+(->pi+,pi0),K-_Phase"                                        	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->rho(1450)+(->pi+,pi0),K-_Amp"                                                 	 1	0.0	0.0	0.0	0.0
 "Dbar0->rho(1450)+(->pi+,pi0),K-_Phase"                                               	 1	0.0	0.0	0.0	0.0
@@ -198,6 +288,24 @@
 "BgSpinZeroDbar0->K*(892)bar-(->K(S)0,pi-),pi+_Amp"                                   	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K*(892)bar-(->K(S)0,pi-),pi+_Phase"                                 	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(2)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(2)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(S)0,pi-,pi+_Amp"                                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(S)0,pi-,pi+_Phase"                                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)bar-(->K(S)0,pi-),pi+_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)bar-(->K(S)0,pi-),pi+_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)bar-(->K(S)0,pi-),pi+_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)bar-(->K(S)0,pi-),pi+_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar-(->K(S)0,pi-),pi+_Amp"                                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar-(->K(S)0,pi-),pi+_Phase"                                   	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                                         	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                                       	 1	0.0	0.0	0.0	0.0
 *
@@ -219,6 +327,9 @@
 "LassBgSpinZeroDbar0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                           	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroDbar0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                         	 1	0.0	0.0	0.0	0.0
 *
+"LassCLEO2012Dbar0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                             	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012Dbar0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
 "LassDbar0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                                     	 1	0.0	0.0	0.0	0.0
 "LassDbar0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                                   	 1	0.0	0.0	0.0	0.0
 *
@@ -237,6 +348,21 @@
 "BgSpinZeroDbar0->K*(892)+(->K(S)0,pi+),pi-_Amp"                                      	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K*(892)+(->K(S)0,pi+),pi-_Phase"                                    	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(0)*(1430)+(->K(S)0,pi+),pi-_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)+(->K(S)0,pi+),pi-_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(2)*(1430)+(->K(S)0,pi+),pi-_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(2)*(1430)+(->K(S)0,pi+),pi-_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)+(->K(S)0,pi+),pi-_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)+(->K(S)0,pi+),pi-_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)+(->K(S)0,pi+),pi-_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)+(->K(S)0,pi+),pi-_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)+(->K(S)0,pi+),pi-_Amp"                                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)+(->K(S)0,pi+),pi-_Phase"                                      	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(0)*(1430)+(->K(S)0,pi+),pi-_Amp"                                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(0)*(1430)+(->K(S)0,pi+),pi-_Phase"                                          	 1	0.0	0.0	0.0	0.0
 *
@@ -254,6 +380,9 @@
 *
 "LassBgSpinZeroDbar0->K(0)*(1430)+(->K(S)0,pi+),pi-_Amp"                              	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroDbar0->K(0)*(1430)+(->K(S)0,pi+),pi-_Phase"                            	 1	0.0	0.0	0.0	0.0
+*
+"LassCLEO2012Dbar0->K(0)*(1430)+(->K(S)0,pi+),pi-_Amp"                                	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012Dbar0->K(0)*(1430)+(->K(S)0,pi+),pi-_Phase"                              	 1	0.0	0.0	0.0	0.0
 *
 "LassDbar0->K(0)*(1430)+(->K(S)0,pi+),pi-_Amp"                                        	 1	0.0	0.0	0.0	0.0
 "LassDbar0->K(0)*(1430)+(->K(S)0,pi+),pi-_Phase"                                      	 1	0.0	0.0	0.0	0.0
@@ -276,6 +405,24 @@
 "BgSpinZeroDbar0->K+,pi-,pi0_Amp"                                                     	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K+,pi-,pi0_Phase"                                                   	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(0)*(1430)0(->K+,pi-),pi0_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)0(->K+,pi-),pi0_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(2)*(1430)0(->K+,pi-),pi0_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(2)*(1430)0(->K+,pi-),pi0_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)0(->K+,pi-),pi0_Amp"                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)0(->K+,pi-),pi0_Phase"                                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)0(->K+,pi-),pi0_Amp"                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)0(->K+,pi-),pi0_Phase"                                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)0(->K+,pi-),pi0_Amp"                                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)0(->K+,pi-),pi0_Phase"                                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K+,pi-,pi0_Amp"                                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K+,pi-,pi0_Phase"                                                     	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(0)*(1430)0(->K+,pi-),pi0_Amp"                                               	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(0)*(1430)0(->K+,pi-),pi0_Phase"                                             	 1	0.0	0.0	0.0	0.0
 *
@@ -297,6 +444,9 @@
 "LassBgSpinZeroDbar0->K(0)*(1430)0(->K+,pi-),pi0_Amp"                                 	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroDbar0->K(0)*(1430)0(->K+,pi-),pi0_Phase"                               	 1	0.0	0.0	0.0	0.0
 *
+"LassCLEO2012Dbar0->K(0)*(1430)0(->K+,pi-),pi0_Amp"                                   	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012Dbar0->K(0)*(1430)0(->K+,pi-),pi0_Phase"                                 	 1	0.0	0.0	0.0	0.0
+*
 "LassDbar0->K(0)*(1430)0(->K+,pi-),pi0_Amp"                                           	 1	0.0	0.0	0.0	0.0
 "LassDbar0->K(0)*(1430)0(->K+,pi-),pi0_Phase"                                         	 1	0.0	0.0	0.0	0.0
 *
@@ -314,6 +464,21 @@
 *
 "BgSpinZeroDbar0->K*(892)+(->K+,pi0),pi-_Amp"                                         	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K*(892)+(->K+,pi0),pi-_Phase"                                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(0)*(1430)+(->K+,pi0),pi-_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)+(->K+,pi0),pi-_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(2)*(1430)+(->K+,pi0),pi-_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(2)*(1430)+(->K+,pi0),pi-_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)+(->K+,pi0),pi-_Amp"                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)+(->K+,pi0),pi-_Phase"                                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)+(->K+,pi0),pi-_Amp"                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)+(->K+,pi0),pi-_Phase"                                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)+(->K+,pi0),pi-_Amp"                                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)+(->K+,pi0),pi-_Phase"                                         	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K(0)*(1430)+(->K+,pi0),pi-_Amp"                                               	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(0)*(1430)+(->K+,pi0),pi-_Phase"                                             	 1	0.0	0.0	0.0	0.0
@@ -342,6 +507,18 @@
 "BgSpinZeroD-->kappabar0(->K-,pi+),K+_Amp"                                            	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD-->kappabar0(->K-,pi+),K+_Phase"                                          	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D-->K(0)*(1430)bar0(->K-,pi+),K+_Amp"                                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->K(0)*(1430)bar0(->K-,pi+),K+_Phase"                                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->K(2)*(1430)bar0(->K-,pi+),K+_Amp"                                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->K(2)*(1430)bar0(->K-,pi+),K+_Phase"                                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->K*(892)bar0(->K-,pi+),K+_Amp"                                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->K*(892)bar0(->K-,pi+),K+_Phase"                                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->kappabar0(->K-,pi+),K+_Amp"                                              	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->kappabar0(->K-,pi+),K+_Phase"                                            	 1	0.0	0.0	0.0	0.0
+*
 "D-->K(0)*(1430)bar0(->K-,pi+),K+_Amp"                                                	 1	0.0	0.0	0.0	0.0
 "D-->K(0)*(1430)bar0(->K-,pi+),K+_Phase"                                              	 1	0.0	0.0	0.0	0.0
 *
@@ -357,6 +534,9 @@
 "LassBgSpinZeroD-->K(0)*(1430)bar0(->K-,pi+),K+_Amp"                                  	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroD-->K(0)*(1430)bar0(->K-,pi+),K+_Phase"                                	 1	0.0	0.0	0.0	0.0
 *
+"LassCLEO2012D-->K(0)*(1430)bar0(->K-,pi+),K+_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012D-->K(0)*(1430)bar0(->K-,pi+),K+_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
 "LassD-->K(0)*(1430)bar0(->K-,pi+),K+_Amp"                                            	 1	0.0	0.0	0.0	0.0
 "LassD-->K(0)*(1430)bar0(->K-,pi+),K+_Phase"                                          	 1	0.0	0.0	0.0	0.0
 *
@@ -371,6 +551,18 @@
 *
 "BgSpinZeroD-->phi(1680)0(->K-,K+),pi-_Amp"                                           	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD-->phi(1680)0(->K-,K+),pi-_Phase"                                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->K-,K+,pi-_Amp"                                                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->K-,K+,pi-_Phase"                                                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->a(0)(1450)0(->K-,K+),pi-_Amp"                                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->a(0)(1450)0(->K-,K+),pi-_Phase"                                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->phi(1020)0(->K-,K+),pi-_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->phi(1020)0(->K-,K+),pi-_Phase"                                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->phi(1680)0(->K-,K+),pi-_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->phi(1680)0(->K-,K+),pi-_Phase"                                           	 1	0.0	0.0	0.0	0.0
 *
 "D-->K-,K+,pi-_Amp"                                                                   	 1	0.0	0.0	0.0	0.0
 "D-->K-,K+,pi-_Phase"                                                                 	 1	0.0	0.0	0.0	0.0
@@ -396,6 +588,18 @@
 "BgSpinZeroD-->phi(1680)0(->K-,K+),pi+_Amp"                                           	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD-->phi(1680)0(->K-,K+),pi+_Phase"                                         	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D-->K-,K+,pi+_Amp"                                                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->K-,K+,pi+_Phase"                                                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->a(0)(1450)0(->K-,K+),pi+_Amp"                                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->a(0)(1450)0(->K-,K+),pi+_Phase"                                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->phi(1020)0(->K-,K+),pi+_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->phi(1020)0(->K-,K+),pi+_Phase"                                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->phi(1680)0(->K-,K+),pi+_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->phi(1680)0(->K-,K+),pi+_Phase"                                           	 1	0.0	0.0	0.0	0.0
+*
 "D-->K-,K+,pi+_Amp"                                                                   	 1	0.0	0.0	0.0	0.0
 "D-->K-,K+,pi+_Phase"                                                                 	 1	0.0	0.0	0.0	0.0
 *
@@ -420,6 +624,18 @@
 "BgSpinZeroD-->kappa0(->K+,pi-),K-_Amp"                                               	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD-->kappa0(->K+,pi-),K-_Phase"                                             	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D-->K(0)*(1430)0(->K+,pi-),K-_Amp"                                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->K(0)*(1430)0(->K+,pi-),K-_Phase"                                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->K(2)*(1430)0(->K+,pi-),K-_Amp"                                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->K(2)*(1430)0(->K+,pi-),K-_Phase"                                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->K*(892)0(->K+,pi-),K-_Amp"                                               	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->K*(892)0(->K+,pi-),K-_Phase"                                             	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D-->kappa0(->K+,pi-),K-_Amp"                                                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012D-->kappa0(->K+,pi-),K-_Phase"                                               	 1	0.0	0.0	0.0	0.0
+*
 "D-->K(0)*(1430)0(->K+,pi-),K-_Amp"                                                   	 1	0.0	0.0	0.0	0.0
 "D-->K(0)*(1430)0(->K+,pi-),K-_Phase"                                                 	 1	0.0	0.0	0.0	0.0
 *
@@ -434,6 +650,9 @@
 *
 "LassBgSpinZeroD-->K(0)*(1430)0(->K+,pi-),K-_Amp"                                     	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroD-->K(0)*(1430)0(->K+,pi-),K-_Phase"                                   	 1	0.0	0.0	0.0	0.0
+*
+"LassCLEO2012D-->K(0)*(1430)0(->K+,pi-),K-_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012D-->K(0)*(1430)0(->K+,pi-),K-_Phase"                                     	 1	0.0	0.0	0.0	0.0
 *
 "LassD-->K(0)*(1430)0(->K+,pi-),K-_Amp"                                               	 1	0.0	0.0	0.0	0.0
 "LassD-->K(0)*(1430)0(->K+,pi-),K-_Phase"                                             	 1	0.0	0.0	0.0	0.0
@@ -495,6 +714,18 @@
 "BgSpinZeroD+->phi(1680)0(->K+,K-),pi-_Amp"                                           	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD+->phi(1680)0(->K+,K-),pi-_Phase"                                         	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D+->K+,K-,pi-_Amp"                                                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D+->K+,K-,pi-_Phase"                                                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D+->a(0)(1450)0(->K+,K-),pi-_Amp"                                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D+->a(0)(1450)0(->K+,K-),pi-_Phase"                                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D+->phi(1020)0(->K+,K-),pi-_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D+->phi(1020)0(->K+,K-),pi-_Phase"                                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D+->phi(1680)0(->K+,K-),pi-_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D+->phi(1680)0(->K+,K-),pi-_Phase"                                           	 1	0.0	0.0	0.0	0.0
+*
 "D+->K+,K-,pi-_Amp"                                                                   	 1	0.0	0.0	0.0	0.0
 "D+->K+,K-,pi-_Phase"                                                                 	 1	0.0	0.0	0.0	0.0
 *
@@ -555,6 +786,18 @@
 "BgSpinZeroD+->kappa0(->K+,pi-),K-_Amp"                                               	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD+->kappa0(->K+,pi-),K-_Phase"                                             	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D+->K(0)*(1430)0(->K+,pi-),K-_Amp"                                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D+->K(0)*(1430)0(->K+,pi-),K-_Phase"                                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D+->K(2)*(1430)0(->K+,pi-),K-_Amp"                                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D+->K(2)*(1430)0(->K+,pi-),K-_Phase"                                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D+->K*(892)0(->K+,pi-),K-_Amp"                                               	 1	0.0	0.0	0.0	0.0
+"CLEO2012D+->K*(892)0(->K+,pi-),K-_Phase"                                             	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D+->kappa0(->K+,pi-),K-_Amp"                                                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012D+->kappa0(->K+,pi-),K-_Phase"                                               	 1	0.0	0.0	0.0	0.0
+*
 "D+->K(0)*(1430)0(->K+,pi-),K-_Amp"                                                   	 1	0.0	0.0	0.0	0.0
 "D+->K(0)*(1430)0(->K+,pi-),K-_Phase"                                                 	 1	0.0	0.0	0.0	0.0
 *
@@ -569,6 +812,9 @@
 *
 "LassBgSpinZeroD+->K(0)*(1430)0(->K+,pi-),K-_Amp"                                     	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroD+->K(0)*(1430)0(->K+,pi-),K-_Phase"                                   	 1	0.0	0.0	0.0	0.0
+*
+"LassCLEO2012D+->K(0)*(1430)0(->K+,pi-),K-_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012D+->K(0)*(1430)0(->K+,pi-),K-_Phase"                                     	 1	0.0	0.0	0.0	0.0
 *
 "LassD+->K(0)*(1430)0(->K+,pi-),K-_Amp"                                               	 1	0.0	0.0	0.0	0.0
 "LassD+->K(0)*(1430)0(->K+,pi-),K-_Phase"                                             	 1	0.0	0.0	0.0	0.0
@@ -689,6 +935,15 @@
 *
 "BgSpinZeroD0->rho(770)-(->pi-,pi0),K+_Amp"                                           	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->rho(770)-(->pi-,pi0),K+_Phase"                                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->rho(1450)-(->pi-,pi0),K+_Amp"                                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->rho(1450)-(->pi-,pi0),K+_Phase"                                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->rho(1700)-(->pi-,pi0),K+_Amp"                                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->rho(1700)-(->pi-,pi0),K+_Phase"                                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->rho(770)-(->pi-,pi0),K+_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->rho(770)-(->pi-,pi0),K+_Phase"                                           	 1	0.0	0.0	0.0	0.0
 *
 "D0->rho(1450)-(->pi-,pi0),K+_Amp"                                                    	 1	0.0	0.0	0.0	0.0
 "D0->rho(1450)-(->pi-,pi0),K+_Phase"                                                  	 1	0.0	0.0	0.0	0.0
@@ -849,6 +1104,21 @@
 "BgSpinZeroD0->K*(892)bar-(->K(S)0,pi-),pi+_Amp"                                      	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K*(892)bar-(->K(S)0,pi-),pi+_Phase"                                    	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(2)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(2)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1410)bar-(->K(S)0,pi-),pi+_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1410)bar-(->K(S)0,pi-),pi+_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1680)bar-(->K(S)0,pi-),pi+_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1680)bar-(->K(S)0,pi-),pi+_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(892)bar-(->K(S)0,pi-),pi+_Amp"                                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(892)bar-(->K(S)0,pi-),pi+_Phase"                                      	 1	0.0	0.0	0.0	0.0
+*
 "D0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                                            	 1	0.0	0.0	0.0	0.0
 "D0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                                          	 1	0.0	0.0	0.0	0.0
 *
@@ -866,6 +1136,9 @@
 *
 "LassBgSpinZeroD0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                              	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroD0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                            	 1	0.0	0.0	0.0	0.0
+*
+"LassCLEO2012D0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                                	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012D0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                              	 1	0.0	0.0	0.0	0.0
 *
 "LassD0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Amp"                                        	 1	0.0	0.0	0.0	0.0
 "LassD0->K(0)*(1430)bar-(->K(S)0,pi-),pi+_Phase"                                      	 1	0.0	0.0	0.0	0.0
@@ -951,6 +1224,24 @@
 "BgSpinZeroD0->K+,pi-,pi0_Amp"                                                        	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K+,pi-,pi0_Phase"                                                      	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->K(0)*(1430)0(->K+,pi-),pi0_Amp"                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(0)*(1430)0(->K+,pi-),pi0_Phase"                                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(2)*(1430)0(->K+,pi-),pi0_Amp"                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(2)*(1430)0(->K+,pi-),pi0_Phase"                                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1410)0(->K+,pi-),pi0_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1410)0(->K+,pi-),pi0_Phase"                                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1680)0(->K+,pi-),pi0_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1680)0(->K+,pi-),pi0_Phase"                                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(892)0(->K+,pi-),pi0_Amp"                                              	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(892)0(->K+,pi-),pi0_Phase"                                            	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K+,pi-,pi0_Amp"                                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K+,pi-,pi0_Phase"                                                        	 1	0.0	0.0	0.0	0.0
+*
 "D0->K(0)*(1430)0(->K+,pi-),pi0_Amp"                                                  	 1	0.0	0.0	0.0	0.0
 "D0->K(0)*(1430)0(->K+,pi-),pi0_Phase"                                                	 1	0.0	0.0	0.0	0.0
 *
@@ -972,6 +1263,9 @@
 "LassBgSpinZeroD0->K(0)*(1430)0(->K+,pi-),pi0_Amp"                                    	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroD0->K(0)*(1430)0(->K+,pi-),pi0_Phase"                                  	 1	0.0	0.0	0.0	0.0
 *
+"LassCLEO2012D0->K(0)*(1430)0(->K+,pi-),pi0_Amp"                                      	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012D0->K(0)*(1430)0(->K+,pi-),pi0_Phase"                                    	 1	0.0	0.0	0.0	0.0
+*
 "LassD0->K(0)*(1430)0(->K+,pi-),pi0_Amp"                                              	 1	0.0	0.0	0.0	0.0
 "LassD0->K(0)*(1430)0(->K+,pi-),pi0_Phase"                                            	 1	0.0	0.0	0.0	0.0
 *
@@ -990,6 +1284,21 @@
 "BgSpinZeroD0->K*(892)+(->K+,pi0),pi-_Amp"                                            	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K*(892)+(->K+,pi0),pi-_Phase"                                          	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->K(0)*(1430)+(->K+,pi0),pi-_Amp"                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(0)*(1430)+(->K+,pi0),pi-_Phase"                                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(2)*(1430)+(->K+,pi0),pi-_Amp"                                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(2)*(1430)+(->K+,pi0),pi-_Phase"                                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1410)+(->K+,pi0),pi-_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1410)+(->K+,pi0),pi-_Phase"                                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1680)+(->K+,pi0),pi-_Amp"                                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1680)+(->K+,pi0),pi-_Phase"                                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(892)+(->K+,pi0),pi-_Amp"                                              	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(892)+(->K+,pi0),pi-_Phase"                                            	 1	0.0	0.0	0.0	0.0
+*
 "D0->K(0)*(1430)+(->K+,pi0),pi-_Amp"                                                  	 1	0.0	0.0	0.0	0.0
 "D0->K(0)*(1430)+(->K+,pi0),pi-_Phase"                                                	 1	0.0	0.0	0.0	0.0
 *
@@ -1007,6 +1316,9 @@
 *
 "BgSpinZeroDbar0->K-,pi-,pi+,pi+_Amp"                                                 	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K-,pi-,pi+,pi+_Phase"                                               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K-,pi-,pi+,pi+_Amp"                                                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K-,pi-,pi+,pi+_Phase"                                                 	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K-,pi-,pi+,pi+_Amp"                                                           	 1	0.0	0.0	0.0	0.0
 "Dbar0->K-,pi-,pi+,pi+_Phase"                                                         	 1	0.0	0.0	0.0	0.0
@@ -1121,6 +1433,117 @@
 *
 "BgSpinZeroDbar0[P]->NonResV0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0[P]->NonResV0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(0)*(1430)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(0)*(1430)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(0)*(1430)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(2)*(1430)bar0(->K-,pi+),NonResS0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(2)*(1430)bar0(->K-,pi+),NonResS0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(2)*(1430)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(2)*(1430)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)bar0(->K-,pi+),NonResS0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)bar0(->K-,pi+),NonResS0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)bar0(->K-,pi+),NonResS0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)bar0(->K-,pi+),NonResS0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),omega(782)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),omega(782)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),sigma10(->pi-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),sigma10(->pi-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResS0(->K-,pi+),omega(782)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResS0(->K-,pi+),omega(782)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResS0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResS0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->K-,pi+),omega(782)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->K-,pi+),omega(782)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->K-,pi+),omega(782)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->K-,pi+),omega(782)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K(2)*(1430)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Amp"                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K(2)*(1430)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(1410)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(1410)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(1410)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(1410)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(1680)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(1680)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(1680)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(1680)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(892)bar0(->K-,pi+),omega(782)0(->pi-,pi+)_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(892)bar0(->K-,pi+),omega(782)0(->pi-,pi+)_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResT0(->K-,pi+),omega(782)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResT0(->K-,pi+),omega(782)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResT0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResT0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResV0(->K-,pi+),omega(782)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResV0(->K-,pi+),omega(782)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResV0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResV0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->K*(1410)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->K*(1410)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->K*(1680)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->K*(1680)bar0(->K-,pi+),NonResV0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->K*(892)bar0(->K-,pi+),omega(782)0(->pi-,pi+)_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->K*(892)bar0(->K-,pi+),omega(782)0(->pi-,pi+)_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResV0(->K-,pi+),omega(782)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResV0(->K-,pi+),omega(782)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResV0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResV0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K(0)*(1430)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(0)*(1430)bar0(->K-,pi+),NonResT0(->pi-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
@@ -1242,6 +1665,15 @@
 "RHO_OMEGABgSpinZeroDbar0[P]->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"         	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0[P]->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"       	 1	0.0	0.0	0.0	0.0
 *
+"RHO_OMEGACLEO2012Dbar0->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"            	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0[D]->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"           	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0[D]->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"         	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0[P]->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"           	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0[P]->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"         	 1	0.0	0.0	0.0	0.0
+*
 "RHO_OMEGADbar0->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->K*(892)bar0(->K-,pi+),rho(770)0(->pi-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
@@ -1260,6 +1692,15 @@
 "BgSpinZeroDbar0->K(1)(1400)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Amp"                 	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1400)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Phase"               	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Amp"               	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Phase"             	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1400)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1400)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Amp"                       	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
@@ -1271,6 +1712,9 @@
 *
 "LassBgSpinZeroDbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Amp"         	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroDbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Phase"       	 1	0.0	0.0	0.0	0.0
+*
+"LassCLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Amp"           	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Phase"         	 1	0.0	0.0	0.0	0.0
 *
 "LassDbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Amp"                   	 1	0.0	0.0	0.0	0.0
 "LassDbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Phase"                 	 1	0.0	0.0	0.0	0.0
@@ -1319,6 +1763,51 @@
 *
 "BgSpinZeroDbar0[P]->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Amp"                 	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0[P]->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),K+,pi-_Amp"                                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar0(->K-,pi+),K+,pi-_Phase"                                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResS0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResS0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->K-,pi+),NonResS0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->K-,pi+),NonResS0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->K-,pi+),NonResS0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->K-,pi+),NonResS0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->K-,pi+),NonResT0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->K-,pi+),NonResT0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResT0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResT0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResV0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResV0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResV0(->K-,pi+),NonResT0(->K+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResV0(->K-,pi+),NonResT0(->K+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResV0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResV0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Phase"                 	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K*(892)bar0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                                 	 1	0.0	0.0	0.0	0.0
 "Dbar0->K*(892)bar0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                               	 1	0.0	0.0	0.0	0.0
@@ -1461,6 +1950,102 @@
 "BgSpinZeroDbar0[P]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0[P]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K-,K+,pi-,pi+_Amp"                                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K-,K+,pi-,pi+_Phase"                                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResS0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResS0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->K-,K+),NonResS0(->pi-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->K-,K+),NonResS0(->pi-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->K-,K+),NonResS0(->pi-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->K-,K+),NonResS0(->pi-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->K-,K+),NonResT0(->pi-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->K-,K+),NonResT0(->pi-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->K-,K+),NonResS0(->pi-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->K-,K+),NonResS0(->pi-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->K-,K+),NonResT0(->pi-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->K-,K+),NonResT0(->pi-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(0)(980)0(->K-,K+),pi-,pi+_Amp"                                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(0)(980)0(->K-,K+),pi-,pi+_Phase"                                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),NonResS0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),NonResS0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),NonResT0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),NonResT0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),NonResV0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),NonResV0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),NonResVbar0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),NonResVbar0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),omega(782)0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),omega(782)0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),pi-,pi+_Amp"                                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),pi-,pi+_Phase"                                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResT0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResT0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResV0(->K-,K+),NonResT0(->pi-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResV0(->K-,K+),NonResT0(->pi-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResV0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResV0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResVbar0(->K-,K+),NonResT0(->pi-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResVbar0(->K-,K+),NonResT0(->pi-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResVbar0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResVbar0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->phi(1020)0(->K-,K+),NonResT0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->phi(1020)0(->K-,K+),NonResT0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->phi(1020)0(->K-,K+),NonResV0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->phi(1020)0(->K-,K+),NonResV0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->phi(1020)0(->K-,K+),NonResVbar0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->phi(1020)0(->K-,K+),NonResVbar0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResV0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResV0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResVbar0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResVbar0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->phi(1020)0(->K-,K+),NonResV0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->phi(1020)0(->K-,K+),NonResV0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->phi(1020)0(->K-,K+),NonResVbar0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->phi(1020)0(->K-,K+),NonResVbar0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K-,K+,pi-,pi+_Amp"                                                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->K-,K+,pi-,pi+_Phase"                                                          	 1	0.0	0.0	0.0	0.0
 *
@@ -1560,11 +2145,17 @@
 "FlatteBgSpinZeroDbar0->f(0)(980)0(->K-,K+),pi-,pi+_Amp"                              	 1	0.0	0.0	0.0	0.0
 "FlatteBgSpinZeroDbar0->f(0)(980)0(->K-,K+),pi-,pi+_Phase"                            	 1	0.0	0.0	0.0	0.0
 *
+"FlatteCLEO2012Dbar0->f(0)(980)0(->K-,K+),pi-,pi+_Amp"                                	 1	0.0	0.0	0.0	0.0
+"FlatteCLEO2012Dbar0->f(0)(980)0(->K-,K+),pi-,pi+_Phase"                              	 1	0.0	0.0	0.0	0.0
+*
 "FlatteDbar0->f(0)(980)0(->K-,K+),pi-,pi+_Amp"                                        	 1	0.0	0.0	0.0	0.0
 "FlatteDbar0->f(0)(980)0(->K-,K+),pi-,pi+_Phase"                                      	 1	0.0	0.0	0.0	0.0
 *
 "FocusFlatteBgSpinZeroDbar0->f(0)(980)0(->K-,K+),pi-,pi+_Amp"                         	 1	0.0	0.0	0.0	0.0
 "FocusFlatteBgSpinZeroDbar0->f(0)(980)0(->K-,K+),pi-,pi+_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"FocusFlatteCLEO2012Dbar0->f(0)(980)0(->K-,K+),pi-,pi+_Amp"                           	 1	0.0	0.0	0.0	0.0
+"FocusFlatteCLEO2012Dbar0->f(0)(980)0(->K-,K+),pi-,pi+_Phase"                         	 1	0.0	0.0	0.0	0.0
 *
 "FocusFlatteDbar0->f(0)(980)0(->K-,K+),pi-,pi+_Amp"                                   	 1	0.0	0.0	0.0	0.0
 "FocusFlatteDbar0->f(0)(980)0(->K-,K+),pi-,pi+_Phase"                                 	 1	0.0	0.0	0.0	0.0
@@ -1578,6 +2169,15 @@
 "RHO_OMEGABgSpinZeroDbar0[P]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"           	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0[P]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"         	 1	0.0	0.0	0.0	0.0
 *
+"RHO_OMEGACLEO2012Dbar0->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"              	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0[D]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"             	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0[D]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"           	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0[P]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"             	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0[P]->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"           	 1	0.0	0.0	0.0	0.0
+*
 "RHO_OMEGADbar0->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->phi(1020)0(->K-,K+),rho(770)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
 *
@@ -1590,11 +2190,17 @@
 "BgSpinZeroDbar0->omega(782)0(->rho(770)-(->pi-,pi0),pi+),K(S)0_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->omega(782)0(->rho(770)-(->pi-,pi0),pi+),K(S)0_Phase"                	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->omega(782)0(->rho(770)-(->pi-,pi0),pi+),K(S)0_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->omega(782)0(->rho(770)-(->pi-,pi0),pi+),K(S)0_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->omega(782)0(->rho(770)-(->pi-,pi0),pi+),K(S)0_Amp"                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->omega(782)0(->rho(770)-(->pi-,pi0),pi+),K(S)0_Phase"                          	 1	0.0	0.0	0.0	0.0
 *
 "BgSpinZeroDbar0->K(1)(1270)bar-(->rho(770)-(->pi-,pi0),K(S)0),pi+_Amp"               	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1270)bar-(->rho(770)-(->pi-,pi0),K(S)0),pi+_Phase"             	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->rho(770)-(->pi-,pi0),K(S)0),pi+_Amp"                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->rho(770)-(->pi-,pi0),K(S)0),pi+_Phase"               	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K(1)(1270)bar-(->rho(770)-(->pi-,pi0),K(S)0),pi+_Amp"                         	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)bar-(->rho(770)-(->pi-,pi0),K(S)0),pi+_Phase"                       	 1	0.0	0.0	0.0	0.0
@@ -1652,6 +2258,60 @@
 *
 "BgSpinZeroDbar0[P]->rho(1450)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                 	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0[P]->rho(1450)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResS0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResS0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(0)(1370)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(0)(1370)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),kappabar0(->K-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),kappabar0(->K-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1430)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1430)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(1450)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(1450)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(770)0(->pi-,pi+),kappabar0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(770)0(->pi-,pi+),kappabar0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->sigma20(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->sigma20(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResT0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResT0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResV0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResV0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->f(2)(1270)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->f(2)(1270)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->f(2)(1430)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->f(2)(1430)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->rho(1450)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->rho(1450)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResV0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResV0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->rho(1450)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->rho(1450)0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                 	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->NonResS0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Amp"                                	 1	0.0	0.0	0.0	0.0
 "Dbar0->NonResS0(->pi-,pi+),K*(892)bar0(->K-,pi+)_Phase"                              	 1	0.0	0.0	0.0	0.0
@@ -1764,6 +2424,63 @@
 "BgSpinZeroDbar0[P]->NonResVbar0(->pi-,pi+),NonResVbar0(->K-,K+)_Amp"                 	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0[P]->NonResVbar0(->pi-,pi+),NonResVbar0(->K-,K+)_Phase"               	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(1)(1270)bar-(->omega(782)0(->pi-,pi+),K-),K+_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->omega(782)0(->pi-,pi+),K-),K+_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->pi-,pi+),NonResS0(->K-,K+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->pi-,pi+),NonResS0(->K-,K+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->pi-,pi+),NonResT0(->K-,K+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->pi-,pi+),NonResT0(->K-,K+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->pi-,pi+),NonResV0(->K-,K+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->pi-,pi+),NonResV0(->K-,K+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->pi-,pi+),NonResT0(->K-,K+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->pi-,pi+),NonResT0(->K-,K+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->pi-,pi+),NonResVbar0(->K-,K+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->pi-,pi+),NonResVbar0(->K-,K+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K-,K+_Amp"                                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K-,K+_Phase"                                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),NonResS0(->K-,K+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),NonResS0(->K-,K+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),phi(1020)0(->K-,K+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),phi(1020)0(->K-,K+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->omega(782)0(->pi-,pi+),K-,K+_Amp"                                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->omega(782)0(->pi-,pi+),K-,K+_Phase"                                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(770)0(->pi-,pi+),K-,K+_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(770)0(->pi-,pi+),K-,K+_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResV0(->pi-,pi+),NonResT0(->K-,K+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResV0(->pi-,pi+),NonResT0(->K-,K+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResV0(->pi-,pi+),NonResV0(->K-,K+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResV0(->pi-,pi+),NonResV0(->K-,K+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResVbar0(->pi-,pi+),NonResT0(->K-,K+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResVbar0(->pi-,pi+),NonResT0(->K-,K+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResVbar0(->pi-,pi+),NonResVbar0(->K-,K+)_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResVbar0(->pi-,pi+),NonResVbar0(->K-,K+)_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->f(2)(1270)0(->pi-,pi+),phi(1020)0(->K-,K+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->f(2)(1270)0(->pi-,pi+),phi(1020)0(->K-,K+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResV0(->pi-,pi+),NonResV0(->K-,K+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResV0(->pi-,pi+),NonResV0(->K-,K+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResVbar0(->pi-,pi+),NonResVbar0(->K-,K+)_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResVbar0(->pi-,pi+),NonResVbar0(->K-,K+)_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(1)(1270)bar-(->omega(782)0(->pi-,pi+),K-),K+_Amp"                           	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)bar-(->omega(782)0(->pi-,pi+),K-),K+_Phase"                         	 1	0.0	0.0	0.0	0.0
 *
@@ -1824,6 +2541,9 @@
 "FlatteBgSpinZeroDbar0->f(0)(980)0(->pi-,pi+),K-,K+_Amp"                              	 1	0.0	0.0	0.0	0.0
 "FlatteBgSpinZeroDbar0->f(0)(980)0(->pi-,pi+),K-,K+_Phase"                            	 1	0.0	0.0	0.0	0.0
 *
+"FlatteCLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K-,K+_Amp"                                	 1	0.0	0.0	0.0	0.0
+"FlatteCLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K-,K+_Phase"                              	 1	0.0	0.0	0.0	0.0
+*
 "FlatteDbar0->f(0)(980)0(->pi-,pi+),K-,K+_Amp"                                        	 1	0.0	0.0	0.0	0.0
 "FlatteDbar0->f(0)(980)0(->pi-,pi+),K-,K+_Phase"                                      	 1	0.0	0.0	0.0	0.0
 *
@@ -1832,6 +2552,12 @@
 *
 "RHO_OMEGABgSpinZeroDbar0->rho(770)0(->pi-,pi+),K-,K+_Amp"                            	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0->rho(770)0(->pi-,pi+),K-,K+_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Amp"            	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Phase"          	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0->rho(770)0(->pi-,pi+),K-,K+_Amp"                              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->rho(770)0(->pi-,pi+),K-,K+_Phase"                            	 1	0.0	0.0	0.0	0.0
 *
 "RHO_OMEGADbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Amp"                    	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Phase"                  	 1	0.0	0.0	0.0	0.0
@@ -1872,6 +2598,39 @@
 "BgSpinZeroDbar0[P]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Amp"                   	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0[P]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Phase"                 	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),pi+_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),pi+_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->a(1)(1260)-(->sigma10(->pi-,pi+),pi-),pi+_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->a(1)(1260)-(->sigma10(->pi-,pi+),pi-),pi+_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),pi+_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),pi+_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),NonResV0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),NonResV0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),NonResVbar0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),NonResVbar0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->sigma10(->pi-,pi+),pi-,pi+_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->sigma10(->pi-,pi+),pi-,pi+_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"                                	 1	0.0	0.0	0.0	0.0
 "Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"                              	 1	0.0	0.0	0.0	0.0
 *
@@ -1911,6 +2670,12 @@
 "FlatteBgSpinZeroDbar0->NonResVbar0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"             	 1	0.0	0.0	0.0	0.0
 "FlatteBgSpinZeroDbar0->NonResVbar0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"           	 1	0.0	0.0	0.0	0.0
 *
+"FlatteCLEO2012Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"                  	 1	0.0	0.0	0.0	0.0
+"FlatteCLEO2012Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"FlatteCLEO2012Dbar0->NonResVbar0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"               	 1	0.0	0.0	0.0	0.0
+"FlatteCLEO2012Dbar0->NonResVbar0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"             	 1	0.0	0.0	0.0	0.0
+*
 "FlatteDbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
 "FlatteDbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
 *
@@ -1922,6 +2687,12 @@
 *
 "FocusFlatteBgSpinZeroDbar0->NonResVbar0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"        	 1	0.0	0.0	0.0	0.0
 "FocusFlatteBgSpinZeroDbar0->NonResVbar0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"      	 1	0.0	0.0	0.0	0.0
+*
+"FocusFlatteCLEO2012Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"             	 1	0.0	0.0	0.0	0.0
+"FocusFlatteCLEO2012Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"           	 1	0.0	0.0	0.0	0.0
+*
+"FocusFlatteCLEO2012Dbar0->NonResVbar0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"          	 1	0.0	0.0	0.0	0.0
+"FocusFlatteCLEO2012Dbar0->NonResVbar0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"        	 1	0.0	0.0	0.0	0.0
 *
 "FocusFlatteDbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
 "FocusFlatteDbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
@@ -1935,6 +2706,12 @@
 "BgSpinZeroDbar0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),K+_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),K+_Phase"                	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),K+_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),K+_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Amp"                               	 1	0.0	0.0	0.0	0.0
 "Dbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Phase"                             	 1	0.0	0.0	0.0	0.0
 *
@@ -1944,11 +2721,17 @@
 "RHO_OMEGABgSpinZeroDbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Amp"            	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Phase"          	 1	0.0	0.0	0.0	0.0
 *
+"RHO_OMEGACLEO2012Dbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Amp"              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Phase"            	 1	0.0	0.0	0.0	0.0
+*
 "RHO_OMEGADbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Amp"                      	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
 "BgSpinZeroDbar0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Phase"                  	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Amp"                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Phase"                          	 1	0.0	0.0	0.0	0.0
@@ -2036,6 +2819,90 @@
 *
 "BgSpinZeroDbar0[P]->rho(1450)0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                    	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0[P]->rho(1450)0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->NonResS0(->pi-,pi+),K+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->NonResS0(->pi-,pi+),K+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->NonResVbar0(->pi-,pi+),K+),pi-_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->NonResVbar0(->pi-,pi+),K+),pi-_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->omega(782)0(->pi-,pi+),K+),pi-_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->omega(782)0(->pi-,pi+),K+),pi-_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi-,pi+),K+),pi-_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi-,pi+),K+),pi-_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+[D](->NonResVbar0(->pi-,pi+),K+),pi-_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+[D](->NonResVbar0(->pi-,pi+),K+),pi-_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+[D](->rho(770)0(->pi-,pi+),K+),pi-_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+[D](->rho(770)0(->pi-,pi+),K+),pi-_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar0(->rho(770)0(->pi-,pi+),K+),pi-_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar0(->rho(770)0(->pi-,pi+),K+),pi-_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar0[D](->rho(770)0(->pi-,pi+),K+),pi-_Amp"                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar0[D](->rho(770)0(->pi-,pi+),K+),pi-_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResS0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResS0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(0)(1370)0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(0)(1370)0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(0)(980)0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),kappa0(->K+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1270)0(->pi-,pi+),kappa0(->K+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->f(2)(1430)0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->f(2)(1430)0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(1450)0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(1450)0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->rho(770)0(->pi-,pi+),kappa0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->rho(770)0(->pi-,pi+),kappa0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->sigma20(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->sigma20(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResT0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResT0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResVbar0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResVbar0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->f(2)(1270)0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->f(2)(1270)0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->f(2)(1430)0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->f(2)(1430)0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->rho(1450)0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->rho(1450)0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResVbar0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResVbar0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->rho(1450)0(->pi-,pi+),K*(892)0(->K+,pi-)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->rho(1450)0(->pi-,pi+),K*(892)0(->K+,pi-)_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K(1)(1270)+(->NonResS0(->pi-,pi+),K+),pi-_Amp"                                	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)+(->NonResS0(->pi-,pi+),K+),pi-_Phase"                              	 1	0.0	0.0	0.0	0.0
@@ -2130,6 +2997,15 @@
 "RHO_OMEGABgSpinZeroDbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Amp"         	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Phase"       	 1	0.0	0.0	0.0	0.0
 *
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Amp"            	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Phase"          	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi-,pi+),K+),pi-_Amp"              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi-,pi+),K+),pi-_Phase"            	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Amp"           	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Phase"         	 1	0.0	0.0	0.0	0.0
+*
 "RHO_OMEGADbar0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Amp"                    	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Phase"                  	 1	0.0	0.0	0.0	0.0
 *
@@ -2160,6 +3036,27 @@
 "BgSpinZeroDbar0->K(1)(1400)+[D](->K*(892)0(->pi-,K+),pi+),pi-_Amp"                   	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1400)+[D](->K*(892)0(->pi-,K+),pi+),pi-_Phase"                 	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->K*(892)0(->pi-,K+),pi+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->K*(892)0(->pi-,K+),pi+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->NonResS0(->pi-,K+),pi+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->NonResS0(->pi-,K+),pi+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->NonResVbar0(->pi-,K+),pi+),pi-_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->NonResVbar0(->pi-,K+),pi+),pi-_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+[D](->NonResVbar0(->pi-,K+),pi+),pi-_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+[D](->NonResVbar0(->pi-,K+),pi+),pi-_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1400)+(->K*(892)0(->pi-,K+),pi+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1400)+(->K*(892)0(->pi-,K+),pi+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1400)+[D](->K*(892)0(->pi-,K+),pi+),pi-_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1400)+[D](->K*(892)0(->pi-,K+),pi+),pi-_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Amp"                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Phase"                          	 1	0.0	0.0	0.0	0.0
 *
@@ -2183,6 +3080,9 @@
 *
 "RHO_OMEGABgSpinZeroDbar0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Amp"         	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Phase"       	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Amp"           	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Phase"         	 1	0.0	0.0	0.0	0.0
 *
 "RHO_OMEGADbar0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Amp"                   	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Phase"                 	 1	0.0	0.0	0.0	0.0
@@ -2208,6 +3108,27 @@
 "BgSpinZeroDbar0->K(1)(1400)bar-[D](->K*(892)bar0(->pi+,K-),pi-),pi+_Amp"             	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1400)bar-[D](->K*(892)bar0(->pi+,K-),pi-),pi+_Phase"           	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->pi+,K-),pi-),pi+_Amp"              	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->pi+,K-),pi-),pi+_Phase"            	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->K*(892)bar0(->pi+,K-),pi-),pi+_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->K*(892)bar0(->pi+,K-),pi-),pi+_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->NonResS0(->pi+,K-),pi-),pi+_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->NonResS0(->pi+,K-),pi-),pi+_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->NonResV0(->pi+,K-),pi-),pi+_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->NonResV0(->pi+,K-),pi-),pi+_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-[D](->NonResV0(->pi+,K-),pi-),pi+_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-[D](->NonResV0(->pi+,K-),pi-),pi+_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1400)bar-(->K*(892)bar0(->pi+,K-),pi-),pi+_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1400)bar-(->K*(892)bar0(->pi+,K-),pi-),pi+_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1400)bar-[D](->K*(892)bar0(->pi+,K-),pi-),pi+_Amp"               	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1400)bar-[D](->K*(892)bar0(->pi+,K-),pi-),pi+_Phase"             	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->pi+,K-),pi-),pi+_Amp"                      	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->pi+,K-),pi-),pi+_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
@@ -2231,6 +3152,9 @@
 *
 "RHO_OMEGABgSpinZeroDbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->pi+,K-),pi-),pi+_Amp"   	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->pi+,K-),pi-),pi+_Phase" 	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->pi+,K-),pi-),pi+_Amp"     	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->pi+,K-),pi-),pi+_Phase"   	 1	0.0	0.0	0.0	0.0
 *
 "RHO_OMEGADbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->pi+,K-),pi-),pi+_Amp"             	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->pi+,K-),pi-),pi+_Phase"           	 1	0.0	0.0	0.0	0.0
@@ -2264,6 +3188,36 @@
 *
 "BgSpinZeroDbar0->K(1)(1270)bar-[D](->rho(770)0(->pi+,pi-),K-),pi+_Amp"               	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1270)bar-[D](->rho(770)0(->pi+,pi-),K-),pi+_Phase"             	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K-),pi+_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K-),pi+_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)0(->rho(770)0(->pi+,pi-),K-),pi+_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)0(->rho(770)0(->pi+,pi-),K-),pi+_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)0[D](->rho(770)0(->pi+,pi-),K-),pi+_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)0[D](->rho(770)0(->pi+,pi-),K-),pi+_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->NonResS0(->pi+,pi-),K-),pi+_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->NonResS0(->pi+,pi-),K-),pi+_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->NonResV0(->pi+,pi-),K-),pi+_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->NonResV0(->pi+,pi-),K-),pi+_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->f(0)(1370)0(->pi+,pi-),K-),pi+_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->f(0)(1370)0(->pi+,pi-),K-),pi+_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->omega(782)0(->pi+,pi-),K-),pi+_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->omega(782)0(->pi+,pi-),K-),pi+_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi+,pi-),K-),pi+_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi+,pi-),K-),pi+_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-[D](->NonResV0(->pi+,pi-),K-),pi+_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-[D](->NonResV0(->pi+,pi-),K-),pi+_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-[D](->rho(770)0(->pi+,pi-),K-),pi+_Amp"                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-[D](->rho(770)0(->pi+,pi-),K-),pi+_Phase"               	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K-),pi+_Amp"                               	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K-),pi+_Phase"                             	 1	0.0	0.0	0.0	0.0
@@ -2304,6 +3258,15 @@
 "RHO_OMEGABgSpinZeroDbar0->K(1)(1270)bar-(->rho(770)0(->pi+,pi-),K-),pi+_Amp"         	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0->K(1)(1270)bar-(->rho(770)0(->pi+,pi-),K-),pi+_Phase"       	 1	0.0	0.0	0.0	0.0
 *
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K-),pi+_Amp"              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K-),pi+_Phase"            	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)bar-(->f(0)(1370)0(->pi+,pi-),K-),pi+_Amp"         	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)bar-(->f(0)(1370)0(->pi+,pi-),K-),pi+_Phase"       	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi+,pi-),K-),pi+_Amp"           	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)bar-(->rho(770)0(->pi+,pi-),K-),pi+_Phase"         	 1	0.0	0.0	0.0	0.0
+*
 "RHO_OMEGADbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K-),pi+_Amp"                      	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K-),pi+_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
@@ -2316,6 +3279,9 @@
 "BgSpinZeroDbar0->omega(782)0(->rho(770)0(->pi+,pi-),pi0),K(S)0_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->omega(782)0(->rho(770)0(->pi+,pi-),pi0),K(S)0_Phase"                	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->omega(782)0(->rho(770)0(->pi+,pi-),pi0),K(S)0_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->omega(782)0(->rho(770)0(->pi+,pi-),pi0),K(S)0_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->omega(782)0(->rho(770)0(->pi+,pi-),pi0),K(S)0_Amp"                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->omega(782)0(->rho(770)0(->pi+,pi-),pi0),K(S)0_Phase"                          	 1	0.0	0.0	0.0	0.0
 *
@@ -2325,6 +3291,12 @@
 "BgSpinZeroDbar0->a(1)(1260)+[D](->rho(770)0(->pi+,pi-),pi+),K-_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->a(1)(1260)+[D](->rho(770)0(->pi+,pi-),pi+),K-_Phase"                	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->a(1)(1260)+[D](->rho(770)0(->pi+,pi-),pi+),K-_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->a(1)(1260)+[D](->rho(770)0(->pi+,pi-),pi+),K-_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Amp"                               	 1	0.0	0.0	0.0	0.0
 "Dbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Phase"                             	 1	0.0	0.0	0.0	0.0
 *
@@ -2333,6 +3305,9 @@
 *
 "RHO_OMEGABgSpinZeroDbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Amp"            	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Phase"          	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Amp"              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Phase"            	 1	0.0	0.0	0.0	0.0
 *
 "RHO_OMEGADbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Amp"                      	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Phase"                    	 1	0.0	0.0	0.0	0.0
@@ -2345,6 +3320,15 @@
 *
 "BgSpinZeroDbar0->a(1)(1260)+[D](->rho(770)0(->pi+,pi-),pi+),pi-_Amp"                 	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->a(1)(1260)+[D](->rho(770)0(->pi+,pi-),pi+),pi-_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),pi-_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),pi-_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->a(1)(1260)+(->sigma10(->pi+,pi-),pi+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->a(1)(1260)+(->sigma10(->pi+,pi-),pi+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->a(1)(1260)+[D](->rho(770)0(->pi+,pi-),pi+),pi-_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->a(1)(1260)+[D](->rho(770)0(->pi+,pi-),pi+),pi-_Phase"                 	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),pi-_Amp"                              	 1	0.0	0.0	0.0	0.0
 "Dbar0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),pi-_Phase"                            	 1	0.0	0.0	0.0	0.0
@@ -2361,6 +3345,12 @@
 "BgSpinZeroDbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),K-_Amp"                      	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),K-_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(1)(1270)+(->omega(782)0(->pi+,pi-),K+),K-_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->omega(782)0(->pi+,pi-),K+),K-_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),K-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),K-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(1)(1270)+(->omega(782)0(->pi+,pi-),K+),K-_Amp"                              	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)+(->omega(782)0(->pi+,pi-),K+),K-_Phase"                            	 1	0.0	0.0	0.0	0.0
 *
@@ -2370,17 +3360,26 @@
 "RHO_OMEGABgSpinZeroDbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),K-_Amp"             	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),K-_Phase"           	 1	0.0	0.0	0.0	0.0
 *
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),K-_Amp"               	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),K-_Phase"             	 1	0.0	0.0	0.0	0.0
+*
 "RHO_OMEGADbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),K-_Amp"                       	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),K-_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
 "BgSpinZeroDbar0->omega(782)0(->rho(770)+(->pi+,pi0),pi-),K(S)0_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->omega(782)0(->rho(770)+(->pi+,pi0),pi-),K(S)0_Phase"                	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->omega(782)0(->rho(770)+(->pi+,pi0),pi-),K(S)0_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->omega(782)0(->rho(770)+(->pi+,pi0),pi-),K(S)0_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->omega(782)0(->rho(770)+(->pi+,pi0),pi-),K(S)0_Amp"                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->omega(782)0(->rho(770)+(->pi+,pi0),pi-),K(S)0_Phase"                          	 1	0.0	0.0	0.0	0.0
 *
 "BgSpinZeroDbar0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Phase"                  	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Amp"                            	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Phase"                          	 1	0.0	0.0	0.0	0.0
@@ -2390,6 +3389,12 @@
 *
 "BgSpinZeroDbar0->K(1)(1270)bar-(->K*(892)bar-(->K(S)0,pi-),pi0),pi+_Amp"             	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1270)bar-(->K*(892)bar-(->K(S)0,pi-),pi0),pi+_Phase"           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar-(->K(S)0,pi-),pi0),pi+_Amp"           	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar-(->K(S)0,pi-),pi0),pi+_Phase"         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->K*(892)bar-(->K(S)0,pi-),pi0),pi+_Amp"               	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->K*(892)bar-(->K(S)0,pi-),pi0),pi+_Phase"             	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar-(->K(S)0,pi-),pi0),pi+_Amp"                   	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar-(->K(S)0,pi-),pi0),pi+_Phase"                 	 1	0.0	0.0	0.0	0.0
@@ -2402,6 +3407,12 @@
 *
 "BgSpinZeroDbar0->K*(892)bar-(->K(S)0,pi-),rho(770)+(->pi+,pi0)_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K*(892)bar-(->K(S)0,pi-),rho(770)+(->pi+,pi0)_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(S)0,pi-,pi+,pi0_Amp"                                                	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(S)0,pi-,pi+,pi0_Phase"                                              	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar-(->K(S)0,pi-),rho(770)+(->pi+,pi0)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar-(->K(S)0,pi-),rho(770)+(->pi+,pi0)_Phase"                  	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K(S)0,pi-,pi+,pi0_Amp"                                                        	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(S)0,pi-,pi+,pi0_Phase"                                                      	 1	0.0	0.0	0.0	0.0
@@ -2427,6 +3438,24 @@
 "BgSpinZeroDbar0->K*(892)bar0(->K(S)0,pi0),rho(770)0(->pi-,pi+)_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K*(892)bar0(->K(S)0,pi0),rho(770)0(->pi-,pi+)_Phase"                	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K(S)0,pi0),pi-),pi+_Amp"           	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K(S)0,pi0),pi-),pi+_Phase"         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)bar-(->K*(892)bar0(->K(S)0,pi0),pi-),pi+_Amp"               	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)bar-(->K*(892)bar0(->K(S)0,pi0),pi-),pi+_Phase"             	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)0(->K(S)0,pi0),pi-,pi+_Amp"                                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)0(->K(S)0,pi0),pi-,pi+_Phase"                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)0(->K(S)0,pi0),rho(770)0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)0(->K(S)0,pi0),rho(770)0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar0(->K(S)0,pi0),pi-,pi+_Amp"                                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar0(->K(S)0,pi0),pi-,pi+_Phase"                               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)bar0(->K(S)0,pi0),rho(770)0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)bar0(->K(S)0,pi0),rho(770)0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K(S)0,pi0),pi-),pi+_Amp"                   	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K(S)0,pi0),pi-),pi+_Phase"                 	 1	0.0	0.0	0.0	0.0
 *
@@ -2451,6 +3480,12 @@
 "BgSpinZeroDbar0->K(1)(1270)+(->K*(892)0(->K(S)0,pi0),pi+),pi-_Amp"                   	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1270)+(->K*(892)0(->K(S)0,pi0),pi+),pi-_Phase"                 	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)0(->K(S)0,pi0),pi+),pi-_Amp"                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)0(->K(S)0,pi0),pi+),pi-_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->K*(892)0(->K(S)0,pi0),pi+),pi-_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->K*(892)0(->K(S)0,pi0),pi+),pi-_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(1)(1270)+(->K(0)*(1430)0(->K(S)0,pi0),pi+),pi-_Amp"                         	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)+(->K(0)*(1430)0(->K(S)0,pi0),pi+),pi-_Phase"                       	 1	0.0	0.0	0.0	0.0
 *
@@ -2460,6 +3495,9 @@
 "BgSpinZeroDbar0->K*(892)+(->K(S)0,pi+),rho(770)-(->pi-,pi0)_Amp"                     	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K*(892)+(->K(S)0,pi+),rho(770)-(->pi-,pi0)_Phase"                   	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K*(892)+(->K(S)0,pi+),rho(770)-(->pi-,pi0)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)+(->K(S)0,pi+),rho(770)-(->pi-,pi0)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K*(892)+(->K(S)0,pi+),rho(770)-(->pi-,pi0)_Amp"                               	 1	0.0	0.0	0.0	0.0
 "Dbar0->K*(892)+(->K(S)0,pi+),rho(770)-(->pi-,pi0)_Phase"                             	 1	0.0	0.0	0.0	0.0
 *
@@ -2468,6 +3506,12 @@
 *
 "BgSpinZeroDbar0->K(1)(1270)+(->K*(892)+(->K(S)0,pi+),pi0),pi-_Amp"                   	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1270)+(->K*(892)+(->K(S)0,pi+),pi0),pi-_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)+(->K(S)0,pi+),pi0),pi-_Amp"                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)+(->K(S)0,pi+),pi0),pi-_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->K*(892)+(->K(S)0,pi+),pi0),pi-_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->K*(892)+(->K(S)0,pi+),pi0),pi-_Phase"                   	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K(1)(1270)+(->K(0)*(1430)+(->K(S)0,pi+),pi0),pi-_Amp"                         	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)+(->K(0)*(1430)+(->K(S)0,pi+),pi0),pi-_Phase"                       	 1	0.0	0.0	0.0	0.0
@@ -2516,6 +3560,48 @@
 *
 "BgSpinZeroDbar0[P]->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                 	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0[P]->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)0(->K+,pi-),K-,pi+_Amp"                                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)0(->K+,pi-),K-,pi+_Phase"                                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResS0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResS0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->K+,pi-),NonResS0(->K-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->K+,pi-),NonResS0(->K-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->K+,pi-),NonResS0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->K+,pi-),NonResS0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->K+,pi-),NonResT0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->K+,pi-),NonResT0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResT0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResT0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                 	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResVbar0(->K+,pi-),NonResT0(->K-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResVbar0(->K+,pi-),NonResT0(->K-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                 	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->K*(892)0(->K+,pi-),K-,pi+_Amp"                                                	 1	0.0	0.0	0.0	0.0
 "Dbar0->K*(892)0(->K+,pi-),K-,pi+_Phase"                                              	 1	0.0	0.0	0.0	0.0
@@ -2673,6 +3759,120 @@
 "BgSpinZeroDbar0[P]->NonResVbar0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0[P]->NonResVbar0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(0)*(1430)0(->K+,pi-),NonResT0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)0(->K+,pi-),NonResT0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(0)*(1430)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(0)*(1430)0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(0)*(1430)0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(2)*(1430)0(->K+,pi-),NonResS0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(2)*(1430)0(->K+,pi-),NonResS0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(2)*(1430)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(2)*(1430)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)0(->K+,pi-),NonResS0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)0(->K+,pi-),NonResS0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)0(->K+,pi-),NonResT0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)0(->K+,pi-),NonResT0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1410)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1410)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)0(->K+,pi-),NonResS0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)0(->K+,pi-),NonResS0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)0(->K+,pi-),NonResT0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)0(->K+,pi-),NonResT0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(1680)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(1680)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)0(->K+,pi-),omega(782)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)0(->K+,pi-),omega(782)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K*(892)0(->K+,pi-),sigma10(->pi-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K*(892)0(->K+,pi-),sigma10(->pi-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K+,pi-,pi-,pi+_Amp"                                                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K+,pi-,pi-,pi+_Phase"                                                 	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResS0(->K+,pi-),omega(782)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResS0(->K+,pi-),omega(782)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResS0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResS0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->K+,pi-),omega(782)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->K+,pi-),omega(782)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResT0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResT0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->K+,pi-),omega(782)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->K+,pi-),omega(782)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->NonResVbar0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResVbar0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K(2)*(1430)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Amp"                 	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K(2)*(1430)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(1410)0(->K+,pi-),NonResT0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(1410)0(->K+,pi-),NonResT0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(1410)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(1410)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(1680)0(->K+,pi-),NonResT0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(1680)0(->K+,pi-),NonResT0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(1680)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(1680)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(892)0(->K+,pi-),omega(782)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(892)0(->K+,pi-),omega(782)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResT0(->K+,pi-),omega(782)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResT0(->K+,pi-),omega(782)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResT0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResT0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResVbar0(->K+,pi-),omega(782)0(->pi-,pi+)_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResVbar0(->K+,pi-),omega(782)0(->pi-,pi+)_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[D]->NonResVbar0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[D]->NonResVbar0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->K*(1410)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->K*(1410)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->K*(1680)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->K*(1680)0(->K+,pi-),NonResVbar0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->K*(892)0(->K+,pi-),omega(782)0(->pi-,pi+)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->K*(892)0(->K+,pi-),omega(782)0(->pi-,pi+)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResVbar0(->K+,pi-),omega(782)0(->pi-,pi+)_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResVbar0(->K+,pi-),omega(782)0(->pi-,pi+)_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0[P]->NonResVbar0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0[P]->NonResVbar0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(0)*(1430)0(->K+,pi-),NonResT0(->pi-,pi+)_Amp"                               	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(0)*(1430)0(->K+,pi-),NonResT0(->pi-,pi+)_Phase"                             	 1	0.0	0.0	0.0	0.0
 *
@@ -2796,6 +3996,15 @@
 "RHO_OMEGABgSpinZeroDbar0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"            	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroDbar0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"          	 1	0.0	0.0	0.0	0.0
 *
+"RHO_OMEGACLEO2012Dbar0->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                 	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0[D]->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0[D]->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"            	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012Dbar0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012Dbar0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"            	 1	0.0	0.0	0.0	0.0
+*
 "RHO_OMEGADbar0->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGADbar0->K*(892)0(->K+,pi-),rho(770)0(->pi-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
 *
@@ -2814,6 +4023,15 @@
 "BgSpinZeroDbar0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),K-_Amp"                       	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),K-_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),K-_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),K-_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),K-_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),K-_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012Dbar0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),K-_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),K-_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
 "Dbar0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),K-_Amp"                             	 1	0.0	0.0	0.0	0.0
 "Dbar0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),K-_Phase"                           	 1	0.0	0.0	0.0	0.0
 *
@@ -2825,6 +4043,9 @@
 *
 "LassBgSpinZeroDbar0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),K-_Amp"               	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroDbar0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),K-_Phase"             	 1	0.0	0.0	0.0	0.0
+*
+"LassCLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),K-_Amp"                 	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012Dbar0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),K-_Phase"               	 1	0.0	0.0	0.0	0.0
 *
 "LassDbar0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),K-_Amp"                         	 1	0.0	0.0	0.0	0.0
 "LassDbar0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),K-_Phase"                       	 1	0.0	0.0	0.0	0.0
@@ -2838,6 +4059,15 @@
 "BgSpinZeroD0->K(1)(1400)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Amp"                    	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K(1)(1400)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Phase"                  	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Amp"                  	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1400)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1400)bar-(->K*(892)bar0(->K-,pi+),pi-),K+_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
 "D0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Amp"                          	 1	0.0	0.0	0.0	0.0
 "D0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Phase"                        	 1	0.0	0.0	0.0	0.0
 *
@@ -2849,6 +4079,9 @@
 *
 "LassBgSpinZeroD0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Amp"            	 1	0.0	0.0	0.0	0.0
 "LassBgSpinZeroD0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Phase"          	 1	0.0	0.0	0.0	0.0
+*
+"LassCLEO2012D0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Amp"              	 1	0.0	0.0	0.0	0.0
+"LassCLEO2012D0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Phase"            	 1	0.0	0.0	0.0	0.0
 *
 "LassD0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Amp"                      	 1	0.0	0.0	0.0	0.0
 "LassD0->K(1)(1270)bar-(->K(0)*(1430)bar0(->K-,pi+),pi-),K+_Phase"                    	 1	0.0	0.0	0.0	0.0
@@ -3273,6 +4506,9 @@
 "CLEO2012D0->NonResT0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                               	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->NonResT0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                             	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->NonResT0(->K-,pi+),NonResS0(->K+,pi-)_Amp"                               	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResT0(->K-,pi+),NonResS0(->K+,pi-)_Phase"                             	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0->NonResV0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                               	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->NonResV0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                             	 1	0.0	0.0	0.0	0.0
 *
@@ -3281,6 +4517,9 @@
 *
 "CLEO2012D0->NonResV0(->K-,pi+),NonResT0(->K+,pi-)_Amp"                               	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->NonResV0(->K-,pi+),NonResT0(->K+,pi-)_Phase"                             	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
 *
 "CLEO2012D0[D]->NonResT0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[D]->NonResT0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
@@ -3291,8 +4530,14 @@
 "CLEO2012D0[D]->NonResV0(->K-,pi+),NonResT0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[D]->NonResV0(->K-,pi+),NonResT0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0[D]->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0[P]->NonResV0(->K-,pi+),K*(892)0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[P]->NonResV0(->K-,pi+),K*(892)0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->NonResVbar0(->K-,pi+),NonResVbar0(->K+,pi-)_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
 "D0->K*(892)bar0(->K-,pi+),K+,pi-_Amp"                                                	 1	0.0	0.0	0.0	0.0
 "D0->K*(892)bar0(->K-,pi+),K+,pi-_Phase"                                              	 1	0.0	0.0	0.0	0.0
@@ -3360,6 +4605,12 @@
 "BgSpinZeroD0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Amp"                      	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->K(1)(1270)bar-(->omega(782)0(->pi-,pi+),K-),K+_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)bar-(->omega(782)0(->pi-,pi+),K-),K+_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
 "D0->K(1)(1270)bar-(->omega(782)0(->pi-,pi+),K-),K+_Amp"                              	 1	0.0	0.0	0.0	0.0
 "D0->K(1)(1270)bar-(->omega(782)0(->pi-,pi+),K-),K+_Phase"                            	 1	0.0	0.0	0.0	0.0
 *
@@ -3368,6 +4619,9 @@
 *
 "RHO_OMEGABgSpinZeroD0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Amp"             	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroD0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Phase"           	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012D0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Amp"               	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012D0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Phase"             	 1	0.0	0.0	0.0	0.0
 *
 "RHO_OMEGAD0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Amp"                       	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGAD0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K-),K+_Phase"                     	 1	0.0	0.0	0.0	0.0
@@ -3380,6 +4634,15 @@
 *
 "BgSpinZeroD0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),pi+_Amp"                    	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),pi+_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),pi+_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),pi+_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->a(1)(1260)-(->sigma10(->pi-,pi+),pi-),pi+_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->a(1)(1260)-(->sigma10(->pi-,pi+),pi-),pi+_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),pi+_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),pi+_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
 "D0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),pi+_Amp"                                 	 1	0.0	0.0	0.0	0.0
 "D0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),pi+_Phase"                               	 1	0.0	0.0	0.0	0.0
@@ -3396,6 +4659,12 @@
 "BgSpinZeroD0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),K+_Amp"                     	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),K+_Phase"                   	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),K+_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->a(1)(1260)-[D](->rho(770)0(->pi-,pi+),pi-),K+_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
 "D0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Amp"                                  	 1	0.0	0.0	0.0	0.0
 "D0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Phase"                                	 1	0.0	0.0	0.0	0.0
 *
@@ -3405,11 +4674,17 @@
 "RHO_OMEGABgSpinZeroD0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Amp"               	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroD0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Phase"             	 1	0.0	0.0	0.0	0.0
 *
+"RHO_OMEGACLEO2012D0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Amp"                 	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012D0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Phase"               	 1	0.0	0.0	0.0	0.0
+*
 "RHO_OMEGAD0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Amp"                         	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGAD0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),K+_Phase"                       	 1	0.0	0.0	0.0	0.0
 *
 "BgSpinZeroD0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Amp"                     	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
 "D0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Amp"                               	 1	0.0	0.0	0.0	0.0
 "D0->omega(782)0(->rho(770)0(->pi-,pi+),pi0),K(S)0_Phase"                             	 1	0.0	0.0	0.0	0.0
@@ -3443,6 +4718,36 @@
 *
 "BgSpinZeroD0->K(1)(1270)bar0[D](->rho(770)0(->pi-,pi+),K+),pi-_Amp"                  	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K(1)(1270)bar0[D](->rho(770)0(->pi-,pi+),K+),pi-_Phase"                	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->NonResS0(->pi-,pi+),K+),pi-_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->NonResS0(->pi-,pi+),K+),pi-_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->NonResVbar0(->pi-,pi+),K+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->NonResVbar0(->pi-,pi+),K+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->omega(782)0(->pi-,pi+),K+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->omega(782)0(->pi-,pi+),K+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->rho(770)0(->pi-,pi+),K+),pi-_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->rho(770)0(->pi-,pi+),K+),pi-_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+[D](->NonResVbar0(->pi-,pi+),K+),pi-_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+[D](->NonResVbar0(->pi-,pi+),K+),pi-_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+[D](->rho(770)0(->pi-,pi+),K+),pi-_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+[D](->rho(770)0(->pi-,pi+),K+),pi-_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)bar0(->rho(770)0(->pi-,pi+),K+),pi-_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)bar0(->rho(770)0(->pi-,pi+),K+),pi-_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)bar0[D](->rho(770)0(->pi-,pi+),K+),pi-_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)bar0[D](->rho(770)0(->pi-,pi+),K+),pi-_Phase"                  	 1	0.0	0.0	0.0	0.0
 *
 "D0->K(1)(1270)+(->NonResS0(->pi-,pi+),K+),pi-_Amp"                                   	 1	0.0	0.0	0.0	0.0
 "D0->K(1)(1270)+(->NonResS0(->pi-,pi+),K+),pi-_Phase"                                 	 1	0.0	0.0	0.0	0.0
@@ -3483,6 +4788,15 @@
 "RHO_OMEGABgSpinZeroD0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Amp"            	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroD0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Phase"          	 1	0.0	0.0	0.0	0.0
 *
+"RHO_OMEGACLEO2012D0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Amp"               	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012D0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Phase"             	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012D0->K(1)(1270)+(->rho(770)0(->pi-,pi+),K+),pi-_Amp"                 	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012D0->K(1)(1270)+(->rho(770)0(->pi-,pi+),K+),pi-_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012D0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Amp"              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012D0->K(1)(1270)bar-(->rho(770)0(->pi-,pi+),K+),pi-_Phase"            	 1	0.0	0.0	0.0	0.0
+*
 "RHO_OMEGAD0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Amp"                       	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGAD0->K(1)(1270)+(->f(0)(1370)0(->pi-,pi+),K+),pi-_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
@@ -3513,6 +4827,27 @@
 "BgSpinZeroD0->K(1)(1400)+[D](->K*(892)0(->pi-,K+),pi+),pi-_Amp"                      	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K(1)(1400)+[D](->K*(892)0(->pi-,K+),pi+),pi-_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->K*(892)0(->pi-,K+),pi+),pi-_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->K*(892)0(->pi-,K+),pi+),pi-_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->NonResS0(->pi-,K+),pi+),pi-_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->NonResS0(->pi-,K+),pi+),pi-_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->NonResVbar0(->pi-,K+),pi+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->NonResVbar0(->pi-,K+),pi+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+[D](->NonResVbar0(->pi-,K+),pi+),pi-_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+[D](->NonResVbar0(->pi-,K+),pi+),pi-_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1400)+(->K*(892)0(->pi-,K+),pi+),pi-_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1400)+(->K*(892)0(->pi-,K+),pi+),pi-_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1400)+[D](->K*(892)0(->pi-,K+),pi+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1400)+[D](->K*(892)0(->pi-,K+),pi+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
 "D0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Amp"                               	 1	0.0	0.0	0.0	0.0
 "D0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Phase"                             	 1	0.0	0.0	0.0	0.0
 *
@@ -3536,6 +4871,9 @@
 *
 "RHO_OMEGABgSpinZeroD0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Amp"            	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroD0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Phase"          	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012D0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Amp"              	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012D0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Phase"            	 1	0.0	0.0	0.0	0.0
 *
 "RHO_OMEGAD0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Amp"                      	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGAD0->K(1)(1270)+(->K(0)*(1430)0(->pi-,K+),pi+),pi-_Phase"                    	 1	0.0	0.0	0.0	0.0
@@ -3978,6 +5316,9 @@
 "CLEO2012D0->f(2)(1270)0(->pi+,pi-),NonResV0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->f(2)(1270)0(->pi+,pi-),NonResV0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->f(2)(1270)0(->pi+,pi-),NonResVbar0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->f(2)(1270)0(->pi+,pi-),NonResVbar0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0->rho(770)0(->pi+,pi-),rho(770)0(->pi+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->rho(770)0(->pi+,pi-),rho(770)0(->pi+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
 *
@@ -4029,6 +5370,9 @@
 "FlatteBgSpinZeroD0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Amp"                	 1	0.0	0.0	0.0	0.0
 "FlatteBgSpinZeroD0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Phase"              	 1	0.0	0.0	0.0	0.0
 *
+"FlatteCLEO2012D0->NonResV0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"FlatteCLEO2012D0->NonResV0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
 "FlatteCLEO2012D0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Amp"                  	 1	0.0	0.0	0.0	0.0
 "FlatteCLEO2012D0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Phase"                	 1	0.0	0.0	0.0	0.0
 *
@@ -4043,6 +5387,9 @@
 *
 "FocusFlatteBgSpinZeroD0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Amp"           	 1	0.0	0.0	0.0	0.0
 "FocusFlatteBgSpinZeroD0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Phase"         	 1	0.0	0.0	0.0	0.0
+*
+"FocusFlatteCLEO2012D0->NonResV0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Amp"                	 1	0.0	0.0	0.0	0.0
+"FocusFlatteCLEO2012D0->NonResV0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Phase"              	 1	0.0	0.0	0.0	0.0
 *
 "FocusFlatteCLEO2012D0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Amp"             	 1	0.0	0.0	0.0	0.0
 "FocusFlatteCLEO2012D0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Phase"           	 1	0.0	0.0	0.0	0.0
@@ -4125,6 +5472,12 @@
 "CLEO2012D0->NonResV0(->pi+,pi-),NonResV0(->K+,K-)_Amp"                               	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->NonResV0(->pi+,pi-),NonResV0(->K+,K-)_Phase"                             	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->NonResVbar0(->pi+,pi-),NonResT0(->K+,K-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->pi+,pi-),NonResT0(->K+,K-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResVbar0(->pi+,pi-),NonResVbar0(->K+,K-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->pi+,pi-),NonResVbar0(->K+,K-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0->f(0)(980)0(->pi+,pi-),K+,K-_Amp"                                         	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->f(0)(980)0(->pi+,pi-),K+,K-_Phase"                                       	 1	0.0	0.0	0.0	0.0
 *
@@ -4146,11 +5499,20 @@
 "CLEO2012D0[D]->NonResV0(->pi+,pi-),NonResV0(->K+,K-)_Amp"                            	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[D]->NonResV0(->pi+,pi-),NonResV0(->K+,K-)_Phase"                          	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0[D]->NonResVbar0(->pi+,pi-),NonResT0(->K+,K-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResVbar0(->pi+,pi-),NonResT0(->K+,K-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->NonResVbar0(->pi+,pi-),NonResVbar0(->K+,K-)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResVbar0(->pi+,pi-),NonResVbar0(->K+,K-)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0[D]->f(2)(1270)0(->pi+,pi-),phi(1020)0(->K+,K-)_Amp"                       	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[D]->f(2)(1270)0(->pi+,pi-),phi(1020)0(->K+,K-)_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
 "CLEO2012D0[P]->NonResV0(->pi+,pi-),NonResV0(->K+,K-)_Amp"                            	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[P]->NonResV0(->pi+,pi-),NonResV0(->K+,K-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->NonResVbar0(->pi+,pi-),NonResVbar0(->K+,K-)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->NonResVbar0(->pi+,pi-),NonResVbar0(->K+,K-)_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
 "D0->K(1)(1270)+(->omega(782)0(->pi+,pi-),K+),K-_Amp"                                 	 1	0.0	0.0	0.0	0.0
 "D0->K(1)(1270)+(->omega(782)0(->pi+,pi-),K+),K-_Phase"                               	 1	0.0	0.0	0.0	0.0
@@ -4290,6 +5652,60 @@
 "BgSpinZeroD0[P]->rho(1450)0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0[P]->rho(1450)0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->NonResS0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                              	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResS0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                            	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResT0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                              	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResT0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                            	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResVbar0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->f(0)(1370)0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->f(0)(1370)0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->f(0)(980)0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->f(0)(980)0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->f(2)(1270)0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->f(2)(1270)0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->f(2)(1270)0(->pi+,pi-),kappa0(->K+,pi-)_Amp"                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->f(2)(1270)0(->pi+,pi-),kappa0(->K+,pi-)_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->f(2)(1430)0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->f(2)(1430)0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->rho(1450)0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->rho(1450)0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->rho(770)0(->pi+,pi-),kappa0(->K+,pi-)_Amp"                               	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->rho(770)0(->pi+,pi-),kappa0(->K+,pi-)_Phase"                             	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->sigma20(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                               	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->sigma20(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                             	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->NonResT0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResT0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->NonResVbar0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResVbar0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->f(2)(1270)0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->f(2)(1270)0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->f(2)(1430)0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->f(2)(1430)0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->rho(1450)0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->rho(1450)0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->NonResVbar0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->NonResVbar0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->rho(1450)0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->rho(1450)0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
 "D0->NonResS0(->pi+,pi-),K*(892)0(->K+,pi-)_Amp"                                      	 1	0.0	0.0	0.0	0.0
 "D0->NonResS0(->pi+,pi-),K*(892)0(->K+,pi-)_Phase"                                    	 1	0.0	0.0	0.0	0.0
 *
@@ -4355,6 +5771,9 @@
 *
 "BgSpinZeroD0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Amp"                     	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
 "D0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Amp"                               	 1	0.0	0.0	0.0	0.0
 "D0->K(1)(1270)+(->rho(770)+(->pi+,pi0),K(S)0),pi-_Phase"                             	 1	0.0	0.0	0.0	0.0
@@ -4422,6 +5841,18 @@
 "BgSpinZeroD0->K*(892)bar0(->K(S)0,pi0),rho(770)0(->pi+,pi-)_Amp"                     	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K*(892)bar0(->K(S)0,pi0),rho(770)0(->pi+,pi-)_Phase"                   	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->K(1)(1270)+(->K(0)*(1430)0(->K(S)0,pi0),pi+),pi-_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->K(0)*(1430)0(->K(S)0,pi0),pi+),pi-_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->K*(892)0(->K(S)0,pi0),pi+),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->K*(892)0(->K(S)0,pi0),pi+),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(892)0(->K(S)0,pi0),pi+,pi-_Amp"                                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(892)0(->K(S)0,pi0),pi+,pi-_Phase"                                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(892)0(->K(S)0,pi0),rho(770)0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(892)0(->K(S)0,pi0),rho(770)0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0->K*(892)bar0(->K(S)0,pi0),pi+,pi-_Amp"                                    	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->K*(892)bar0(->K(S)0,pi0),pi+,pi-_Phase"                                  	 1	0.0	0.0	0.0	0.0
 *
@@ -4455,6 +5886,9 @@
 "CLEO2012D0->K(S)0,pi+,pi-,pi0_Amp"                                                   	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->K(S)0,pi+,pi-,pi0_Phase"                                                 	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->K*(892)+(->K(S)0,pi+),rho(770)-(->pi-,pi0)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(892)+(->K(S)0,pi+),rho(770)-(->pi-,pi0)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
 "D0->K(S)0,pi+,pi-,pi0_Amp"                                                           	 1	0.0	0.0	0.0	0.0
 "D0->K(S)0,pi+,pi-,pi0_Phase"                                                         	 1	0.0	0.0	0.0	0.0
 *
@@ -4466,6 +5900,12 @@
 *
 "BgSpinZeroD0->K(1)(1270)+(->K*(892)+(->K(S)0,pi+),pi0),pi-_Amp"                      	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K(1)(1270)+(->K*(892)+(->K(S)0,pi+),pi0),pi-_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->K(0)*(1430)+(->K(S)0,pi+),pi0),pi-_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->K(0)*(1430)+(->K(S)0,pi+),pi0),pi-_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(1)(1270)+(->K*(892)+(->K(S)0,pi+),pi0),pi-_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(1)(1270)+(->K*(892)+(->K(S)0,pi+),pi0),pi-_Phase"                      	 1	0.0	0.0	0.0	0.0
 *
 "D0->K(1)(1270)+(->K(0)*(1430)+(->K(S)0,pi+),pi0),pi-_Amp"                            	 1	0.0	0.0	0.0	0.0
 "D0->K(1)(1270)+(->K(0)*(1430)+(->K(S)0,pi+),pi0),pi-_Phase"                          	 1	0.0	0.0	0.0	0.0
@@ -4590,6 +6030,15 @@
 "CLEO2012D0->NonResV0(->K+,K-),rho(770)0(->pi+,pi-)_Amp"                              	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->NonResV0(->K+,K-),rho(770)0(->pi+,pi-)_Phase"                            	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->NonResVbar0(->K+,K-),NonResS0(->pi+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->K+,K-),NonResS0(->pi+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResVbar0(->K+,K-),NonResT0(->pi+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->K+,K-),NonResT0(->pi+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResVbar0(->K+,K-),rho(770)0(->pi+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->K+,K-),rho(770)0(->pi+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0->f(0)(980)0(->K+,K-),pi+,pi-_Amp"                                         	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->f(0)(980)0(->K+,K-),pi+,pi-_Phase"                                       	 1	0.0	0.0	0.0	0.0
 *
@@ -4601,6 +6050,9 @@
 *
 "CLEO2012D0->phi(1020)0(->K+,K-),NonResV0(->pi+,pi-)_Amp"                             	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->phi(1020)0(->K+,K-),NonResV0(->pi+,pi-)_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->phi(1020)0(->K+,K-),NonResVbar0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->phi(1020)0(->K+,K-),NonResVbar0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
 *
 "CLEO2012D0->phi(1020)0(->K+,K-),omega(782)0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->phi(1020)0(->K+,K-),omega(782)0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
@@ -4620,11 +6072,20 @@
 "CLEO2012D0[D]->NonResV0(->K+,K-),rho(770)0(->pi+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[D]->NonResV0(->K+,K-),rho(770)0(->pi+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0[D]->NonResVbar0(->K+,K-),NonResT0(->pi+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResVbar0(->K+,K-),NonResT0(->pi+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->NonResVbar0(->K+,K-),rho(770)0(->pi+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResVbar0(->K+,K-),rho(770)0(->pi+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0[D]->phi(1020)0(->K+,K-),NonResT0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[D]->phi(1020)0(->K+,K-),NonResT0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
 *
 "CLEO2012D0[D]->phi(1020)0(->K+,K-),NonResV0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[D]->phi(1020)0(->K+,K-),NonResV0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->phi(1020)0(->K+,K-),NonResVbar0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->phi(1020)0(->K+,K-),NonResVbar0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
 "CLEO2012D0[D]->phi(1020)0(->K+,K-),rho(770)0(->pi+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[D]->phi(1020)0(->K+,K-),rho(770)0(->pi+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
@@ -4632,8 +6093,14 @@
 "CLEO2012D0[P]->NonResV0(->K+,K-),rho(770)0(->pi+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[P]->NonResV0(->K+,K-),rho(770)0(->pi+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0[P]->NonResVbar0(->K+,K-),rho(770)0(->pi+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->NonResVbar0(->K+,K-),rho(770)0(->pi+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0[P]->phi(1020)0(->K+,K-),NonResV0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[P]->phi(1020)0(->K+,K-),NonResV0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->phi(1020)0(->K+,K-),NonResVbar0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->phi(1020)0(->K+,K-),NonResVbar0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
 *
 "CLEO2012D0[P]->phi(1020)0(->K+,K-),rho(770)0(->pi+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[P]->phi(1020)0(->K+,K-),rho(770)0(->pi+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
@@ -4830,17 +6297,44 @@
 "CLEO2012D0->K*(892)0(->K+,pi-),K-,pi+_Amp"                                           	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->K*(892)0(->K+,pi-),K-,pi+_Phase"                                         	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->NonResS0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResS0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResT0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResT0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0->NonResT0(->K+,pi-),NonResS0(->K-,pi+)_Amp"                               	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->NonResT0(->K+,pi-),NonResS0(->K-,pi+)_Phase"                             	 1	0.0	0.0	0.0	0.0
 *
 "CLEO2012D0->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Amp"                               	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Phase"                             	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResVbar0(->K+,pi-),NonResS0(->K-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->K+,pi-),NonResS0(->K-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResVbar0(->K+,pi-),NonResT0(->K-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->K+,pi-),NonResT0(->K-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->NonResT0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResT0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0[D]->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[D]->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0[D]->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->NonResVbar0(->K+,pi-),NonResT0(->K-,pi+)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResVbar0(->K+,pi-),NonResT0(->K-,pi+)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0[P]->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Amp"                            	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[P]->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Phase"                          	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->NonResVbar0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                    	 1	0.0	0.0	0.0	0.0
 *
 "D0->K*(892)0(->K+,pi-),K*(892)bar0(->K-,pi+)_Amp"                                    	 1	0.0	0.0	0.0	0.0
 "D0->K*(892)0(->K+,pi-),K*(892)bar0(->K-,pi+)_Phase"                                  	 1	0.0	0.0	0.0	0.0
@@ -5034,6 +6528,117 @@
 "BgSpinZeroD0[P]->NonResVbar0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                     	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0[P]->NonResVbar0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                   	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->K(0)*(1430)0(->K+,pi-),NonResT0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(0)*(1430)0(->K+,pi-),NonResT0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(0)*(1430)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(0)*(1430)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(0)*(1430)0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                         	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(0)*(1430)0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                       	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(2)*(1430)0(->K+,pi-),NonResS0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(2)*(1430)0(->K+,pi-),NonResS0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K(2)*(1430)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K(2)*(1430)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1410)0(->K+,pi-),NonResS0(->pi+,pi-)_Amp"                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1410)0(->K+,pi-),NonResS0(->pi+,pi-)_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1410)0(->K+,pi-),NonResT0(->pi+,pi-)_Amp"                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1410)0(->K+,pi-),NonResT0(->pi+,pi-)_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1410)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1410)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1680)0(->K+,pi-),NonResS0(->pi+,pi-)_Amp"                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1680)0(->K+,pi-),NonResS0(->pi+,pi-)_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1680)0(->K+,pi-),NonResT0(->pi+,pi-)_Amp"                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1680)0(->K+,pi-),NonResT0(->pi+,pi-)_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(1680)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(1680)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(892)0(->K+,pi-),omega(782)0(->pi+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(892)0(->K+,pi-),omega(782)0(->pi+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K*(892)0(->K+,pi-),sigma10(->pi+,pi-)_Amp"                               	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K*(892)0(->K+,pi-),sigma10(->pi+,pi-)_Phase"                             	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResS0(->K+,pi-),omega(782)0(->pi+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResS0(->K+,pi-),omega(782)0(->pi+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResS0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResS0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResT0(->K+,pi-),omega(782)0(->pi+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResT0(->K+,pi-),omega(782)0(->pi+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResT0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                             	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResT0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResVbar0(->K+,pi-),omega(782)0(->pi+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->K+,pi-),omega(782)0(->pi+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->NonResVbar0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResVbar0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->K(2)*(1430)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->K(2)*(1430)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->K*(1410)0(->K+,pi-),NonResT0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->K*(1410)0(->K+,pi-),NonResT0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->K*(1410)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->K*(1410)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->K*(1680)0(->K+,pi-),NonResT0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->K*(1680)0(->K+,pi-),NonResT0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->K*(1680)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->K*(1680)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->K*(892)0(->K+,pi-),omega(782)0(->pi+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->K*(892)0(->K+,pi-),omega(782)0(->pi+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->NonResT0(->K+,pi-),omega(782)0(->pi+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResT0(->K+,pi-),omega(782)0(->pi+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->NonResT0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResT0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->NonResVbar0(->K+,pi-),omega(782)0(->pi+,pi-)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResVbar0(->K+,pi-),omega(782)0(->pi+,pi-)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[D]->NonResVbar0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[D]->NonResVbar0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->K*(1410)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->K*(1410)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->K*(1680)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->K*(1680)0(->K+,pi-),NonResVbar0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->K*(892)0(->K+,pi-),omega(782)0(->pi+,pi-)_Amp"                        	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->K*(892)0(->K+,pi-),omega(782)0(->pi+,pi-)_Phase"                      	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                          	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->NonResVbar0(->K+,pi-),omega(782)0(->pi+,pi-)_Amp"                     	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->NonResVbar0(->K+,pi-),omega(782)0(->pi+,pi-)_Phase"                   	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0[P]->NonResVbar0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                       	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0[P]->NonResVbar0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                     	 1	0.0	0.0	0.0	0.0
+*
 "D0->K(0)*(1430)0(->K+,pi-),NonResT0(->pi+,pi-)_Amp"                                  	 1	0.0	0.0	0.0	0.0
 "D0->K(0)*(1430)0(->K+,pi-),NonResT0(->pi+,pi-)_Phase"                                	 1	0.0	0.0	0.0	0.0
 *
@@ -5154,6 +6759,15 @@
 "RHO_OMEGABgSpinZeroD0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"               	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGABgSpinZeroD0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"             	 1	0.0	0.0	0.0	0.0
 *
+"RHO_OMEGACLEO2012D0->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                    	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012D0->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                  	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012D0[D]->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                 	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012D0[D]->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"               	 1	0.0	0.0	0.0	0.0
+*
+"RHO_OMEGACLEO2012D0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                 	 1	0.0	0.0	0.0	0.0
+"RHO_OMEGACLEO2012D0[P]->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"               	 1	0.0	0.0	0.0	0.0
+*
 "RHO_OMEGAD0->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Amp"                            	 1	0.0	0.0	0.0	0.0
 "RHO_OMEGAD0->K*(892)0(->K+,pi-),rho(770)0(->pi+,pi-)_Phase"                          	 1	0.0	0.0	0.0	0.0
 *
@@ -5165,6 +6779,9 @@
 *
 "BgSpinZeroD0->K+,pi+,pi-,pi-_Amp"                                                    	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->K+,pi+,pi-,pi-_Phase"                                                  	 1	0.0	0.0	0.0	0.0
+*
+"CLEO2012D0->K+,pi+,pi-,pi-_Amp"                                                      	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->K+,pi+,pi-,pi-_Phase"                                                    	 1	0.0	0.0	0.0	0.0
 *
 "D0->K+,pi+,pi-,pi-_Amp"                                                              	 1	0.0	0.0	0.0	0.0
 "D0->K+,pi+,pi-,pi-_Phase"                                                            	 1	0.0	0.0	0.0	0.0
