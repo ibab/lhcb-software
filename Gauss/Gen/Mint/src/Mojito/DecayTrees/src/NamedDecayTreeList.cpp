@@ -129,21 +129,21 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   CPai.setTree(dt);
   addSimple(CPai, opt);
   if(! isBg) addSimple(CPai, opt + "BgSpinZero");
-  if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
+  if(! isCLEO2012)addSimple(CPai, opt + "CLEO2012");
 
   dt.getVal().antiThis(); // mum back to D0
   AmpInitialiser DtoCPai(ai);
   DtoCPai.setTree(dt);
   addSimple(DtoCPai, opt);
   if(! isBg) addSimple(DtoCPai, opt + "BgSpinZero");
-  if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
+  if(! isCLEO2012)addSimple(DtoCPai, opt + "CLEO2012");
 
   anti(dt); // and the CP conjugate of that, i.e. Dbar->original
   AmpInitialiser DbarToOriginal(ai);
   DbarToOriginal.setTree(dt);
   addSimple(DbarToOriginal, opt);
   if(! isBg) addSimple(DbarToOriginal, opt + "BgSpinZero");
-  if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
+  if(! isCLEO2012)addSimple(DbarToOriginal, opt + "CLEO2012");
 
 }
 void NamedDecayTreeList::addSimple(const AmpInitialiser& ai, const std::string& opt){ // formerly "add"
