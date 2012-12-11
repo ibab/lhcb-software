@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema EnvSchema.xsd ">
+  <env:set variable="DECFILESROOT">${LHCBRELEASES}/DBASE/Gen/DecFiles/v26r19</env:set>
+  <env:default variable="DECFILESOPTS">${DECFILESROOT}/options</env:default>
+</env:config>
