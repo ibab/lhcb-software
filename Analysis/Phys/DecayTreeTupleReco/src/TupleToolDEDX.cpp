@@ -62,11 +62,11 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
 
     //NEW CODE:
     //Loop on tracks starts here:
-    int nTracks=tracks->size();
-    int nProtoParticles = protoParticles->size();
+    //int nTracks=tracks->size();
+    //int nProtoParticles = protoParticles->size();
     int TrackCounter=0;
     int ClusterCounter=0;
-    int PID=0;
+    //int PID=0;
     std::string dirName;
 
     const LHCb::ProtoParticle* proto = P->proto();
@@ -90,8 +90,8 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
 
     int trackType = track->type();
     double theta = slope.Theta();
-    double phi = slope.Phi();
-    double trackp = sqrt(momentum.Mag2() )/Gaudi::Units::GeV;
+    //double phi = slope.Phi();
+    // double trackp = sqrt(momentum.Mag2() )/Gaudi::Units::GeV;
     double trackpt = momentum.rho();
     double trackpx = momentum.x();
     double trackpy = momentum.y();
