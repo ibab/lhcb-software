@@ -6,6 +6,7 @@
 
 ! 2012-12-11 - Paul Szczypka
  - Whitespace editing
+ - Added BeamPipe entry to PropertyDocDict
 
 ! 2012-12-06 - Paul Szczypka
  - Typo, Moun -> Muon in Configuration.py

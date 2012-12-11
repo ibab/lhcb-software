@@ -138,6 +138,7 @@ class Gauss(LHCbConfigurableUser):
        ,'DataPackingChecks' : """ Flag to turn on or off the running of some test algorithms to check the quality of the data packing """
        ,"WriteFSR"       : """Add file summary record, default True"""
        ,"Persistency"    : """ROOT or POOL persistency, overwrite the default"""
+       ,"BeamPipe"       : """Switch for beampipe definition; BeamPipeOn: On everywhere, BeamPipeOff: Off everywhere, BeamPipeInDet: Only in named detectors """
        }
     KnownHistOptions     = ['NONE','DEFAULT']
     TrackingSystem       = ['VELO','TT','IT','OT']
