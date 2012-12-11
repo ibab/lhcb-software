@@ -36,11 +36,11 @@ DECLARE_ALGORITHM_FACTORY( FTClusterCreator )
 {
   declareProperty("InputLocation" ,     m_inputLocation     = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
   declareProperty("OutputLocation" ,    m_outputLocation    = LHCb::FTClusterLocation::Default, "Path to output Clusters");
-  declareProperty("ADCThreshold" ,      m_adcThreshold      = 3 , "Minimal ADC Count to be added in cluster");
-  declareProperty("ClusterMinWidth" ,   m_clusterMinWidth   = 2 , "Minimal allowed width for clusters");
+  declareProperty("ADCThreshold" ,      m_adcThreshold      = 2 , "Minimal ADC Count to be added in cluster");
+  declareProperty("ClusterMinWidth" ,   m_clusterMinWidth   = 1 , "Minimal allowed width for clusters");
   declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 8 , "Maximal allowed width for clusters");
   declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 10 , "Minimal charge to keep cluster");
-  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 6 , "Minimal ADC for cluster peaks");
+  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 8  , "Minimal ADC for cluster peaks");
 }
 //=============================================================================
 // Destructor
