@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-12-12 - Vanya Belyaev
+ - Fix Coverity defect 19275
+
 ! 2012-12-10 - Marco Cattaneo
  - Use getIfExists instead of separate exist and get calls
 

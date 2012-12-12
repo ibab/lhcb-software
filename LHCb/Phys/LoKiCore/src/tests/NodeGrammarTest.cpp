@@ -1,6 +1,3 @@
-// $Id$
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -32,10 +29,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2009-05-12
