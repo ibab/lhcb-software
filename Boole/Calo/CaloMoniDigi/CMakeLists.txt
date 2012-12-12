@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloMoniDigi
 ################################################################################
-gaudi_subdir(CaloMoniDigi v2r4)
+gaudi_subdir(CaloMoniDigi v2r5)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Event/DigiEvent
