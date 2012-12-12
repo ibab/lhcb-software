@@ -13,6 +13,7 @@ branches          cmt doc src TrackKernel
 #============================================================================
 # Used packages.
 #============================================================================
+use   DetDesc         v*      Det
 use   LHCbKernel      v*      Kernel
 use   LHCbMath        v*      Kernel
 use   TrackEvent      v*      Event
