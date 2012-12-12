@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichMCAssociators
 ################################################################################
-gaudi_subdir(RichMCAssociators v2r8)
+gaudi_subdir(RichMCAssociators v2r9)
 
 gaudi_depends_on_subdirs(Event/DigiEvent
                          Event/LinkerEvent
