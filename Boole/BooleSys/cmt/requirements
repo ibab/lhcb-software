@@ -1,5 +1,5 @@
 package BooleSys
-version v25r1
+version v26r0
 
 branches cmt doc
  
@@ -8,43 +8,43 @@ branches cmt doc
 #=======================================================
 
 # Boole application                      # Maintainer  
-use Boole               v25r1   Digi     # Marco Cattaneo
-use BooleUMC            v1r3    Digi     # Tomasz Skwarnicki
-use DigiAlg             v4r21   Digi     # Marco Cattaneo
+use Boole               v26r0   Digi     # Marco Cattaneo
+use BooleUMC            v2r1    Digi     # Tomasz Skwarnicki
+use DigiAlg             v4r23   Digi     # Marco Cattaneo
 
 # Bcm
-use BcmDigi             v1r0    Bcm      # Magnus Lieng
+use BcmDigi             v1r1    Bcm      # Magnus Lieng
 
 # Calorimeter
-use CaloMoniDigi        v2r4    Calo     # Olivier Deschamps
-use CaloDigit           v3r2    Calo     # Olivier Callot
+use CaloMoniDigi        v2r5    Calo     # Olivier Deschamps
+use CaloDigit           v3r3    Calo     # Olivier Callot
 
 # Fibre Tracker
-use FTDigitisation      v1r0    FT       # Olivier Callot
+use FTDigitisation      v1r1    FT       # Olivier Callot
 
 # Muon
-use MuonAlgs            v6r10p1 Muon     # Alessia Satta
-use MuonBackground      v2r11p1 Muon     # Alessia Satta
-use MuonMoniDigi        v2r5    Muon     # Alessio Sarti
+use MuonAlgs            v6r11   Muon     # Alessia Satta
+use MuonBackground      v2r12   Muon     # Alessia Satta
+use MuonMoniDigi        v2r6    Muon     # Alessio Sarti
 
 # Outer Tracker
-use OTSimulation        v5r2    OT       # Alexandr Kozlinskiy
+use OTSimulation        v5r3    OT       # Alexandr Kozlinskiy
 
 # Rich
-use RichDigiQC          v3r13   Rich     # Chris Jones
-use RichDigiSys         v1r2    Rich     # Chris Jones
-use RichMCAssociators   v2r8    Rich     # Chris Jones
-use RichReadout         v2r14   Rich     # Chris Jones
+use RichDigiQC          v3r14   Rich     # Chris Jones
+use RichDigiSys         v1r3    Rich     # Chris Jones
+use RichMCAssociators   v2r9    Rich     # Chris Jones
+use RichReadout         v2r15   Rich     # Chris Jones
 
 # Silicon Tracker
-use STDigiAlgorithms    v2r2    ST       # Jeroen van Tilburg
+use STDigiAlgorithms    v2r4    ST       # Jeroen van Tilburg
 
 # VeloPix
-use VPAlgorithms        v1r0    VP       # Marcin Kucharczyk / Paul Szczypka
-use VPAssociators       v1r0    VP       # Marcin Kucharczyk / Paul Szczypka
+use VPAlgorithms        v3r2    VP       # Marcin Kucharczyk / Paul Szczypka
+use VPAssociators       v2r1    VP       # Marcin Kucharczyk / Paul Szczypka
 
 # VeloLite
-use VLDigitisation      v1r1    VL       # Heinrich Schindler
+use VLDigitisation      v1r2    VL       # Heinrich Schindler
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest

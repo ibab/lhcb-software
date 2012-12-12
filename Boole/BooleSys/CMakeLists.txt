@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BooleSys
 ################################################################################
-gaudi_subdir(BooleSys v25r1)
+gaudi_subdir(BooleSys v26r0)
 
 gaudi_depends_on_subdirs(Bcm/BcmDigi
                          Calo/CaloDigit
