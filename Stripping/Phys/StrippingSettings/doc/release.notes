@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-12 - Jibo He
+ - Stripping20r1/LineConfigDictionaries_BandQ.py
+   . Updated conf dict of DiMuon, Betac2PhiP
+
 ! 2012-12-11 - Anton Poluektov 
  - Update LineConfigDictionaries_RD, B2XMuMu and B2MuMuMuMu configs
  - Update dbase

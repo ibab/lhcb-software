@@ -79,7 +79,7 @@ FullDSTDiMuon = {
         'DiMuon_MinMass'                           :  3000.   ,  # MeV
         'DiMuon_MaxMass'                           :  1.0e+8  ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
-        'DiMuon_PT'                                :  3000.   ,  # MeV, no cut now 
+        'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05  ,
@@ -243,7 +243,7 @@ MicroDSTDiMuon = {
         'DiMuon_MinMass'                           :  3000.   ,  # MeV
         'DiMuon_MaxMass'                           :  1.0e+8  ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
-        'DiMuon_PT'                                :  2000.   ,  # MeV
+        'DiMuon_PT'                                : -1000.   ,  # MeV
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05 ,
@@ -1242,7 +1242,7 @@ Betac2PhiP = {
                   , 'Betac_BPVDIRA_MIN'         : 0.9999    
                   , 'Betac_VCHI2VDOF_MAX'       : 25.0   
                   , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
-                  , 'Betac_BPVLTIME_MAX'        : 0.0012 * ns
+                  , 'Betac_BPVLTIME_MAX'        : 0.06 * ns
                   , 'Hlt2IncPhiDecision'        : "HLT_PASS('Hlt2IncPhiDecision')"
                   , 'PrescaleBetac2PhiP'        : 1.0
                   , 'PostscaleBetac2PhiP'       : 1.0
