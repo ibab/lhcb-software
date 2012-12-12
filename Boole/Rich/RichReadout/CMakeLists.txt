@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichReadout
 ################################################################################
-gaudi_subdir(RichReadout v2r14)
+gaudi_subdir(RichReadout v2r15)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          Event/MCEvent
