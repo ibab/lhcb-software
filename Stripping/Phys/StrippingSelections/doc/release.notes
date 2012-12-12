@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-12 - Edmund Smith
+ - Fixed bug in python/StrippingSelections/Beauty2Charm_DBuilder.py
+
 ! 2012-12-12 - Vanya Belyaev
 
  - StrippingPsiBForBandQ 
