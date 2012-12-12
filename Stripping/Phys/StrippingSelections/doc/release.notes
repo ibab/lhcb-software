@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-12 - Vanya Belyaev
+
+ - StrippingPsiBForBandQ 
+   change the names 
+
+
 ! 2012-12-12 - Jibo He
  - StrippingDiMuonNew
    . Removed PT cut on DiMuon in the DiMuonInc line

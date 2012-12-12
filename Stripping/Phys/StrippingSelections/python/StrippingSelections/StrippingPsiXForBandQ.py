@@ -1477,7 +1477,7 @@ class PsiX_BQ_Conf(LineBuilder) :
 
         ## make the selection
         sel = Selection (
-            'B2PsiD0For'       +   self.name () ,
+            'SelB2PsiD0For'    +   self.name () ,
             Algorithm          =   alg          ,
             RequiredSelections = [ self.psi  () ,
                                    self.D0   () ]
@@ -1513,7 +1513,7 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         ## make the selection
         sel = Selection (
-            'B2PsiDpFor'       +   self.name () ,
+            'SelB2PsiDpFor'    +   self.name () ,
             Algorithm          =   alg          ,
             RequiredSelections = [ self.psi  () ,
                                    self.Dp   () ]
@@ -1550,7 +1550,7 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         ## make the selection
         sel = Selection (
-            'B2PsiDsFor'       +   self.name () ,
+            'SelB2PsiDsFor'    +   self.name () ,
             Algorithm          =   alg          ,
             RequiredSelections = [ self.psi  () ,
                                    self.Ds   () ]
@@ -1560,7 +1560,6 @@ class PsiX_BQ_Conf(LineBuilder) :
 
     
 
-
 # =============================================================================
 if '__main__' == __name__ :
 
@@ -1568,6 +1567,15 @@ if '__main__' == __name__ :
     print __doc__
     print ' Author :  %s' % __author__
     print ' Date   :  %s' % __date__
+    print 80*'*'
+    print __doc__
+    print ' Author :  %s' % __author__
+    print ' Date   :  %s' % __date__
+    print ' The output locations for default configuration: '
+    _conf = PsiX_BQ_Conf ( 'PsiX' , config = {}  )
+    for l in _conf.lines() :
+        print ' \t ', l.outputLocation  () , l
+    print 80*'*'
     print 80*'*'
         
 
