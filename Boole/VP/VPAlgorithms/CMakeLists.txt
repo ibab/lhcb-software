@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VPAlgorithms
 ################################################################################
-gaudi_subdir(VPAlgorithms v3r1)
+gaudi_subdir(VPAlgorithms v3r2)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Det/VeloDet
