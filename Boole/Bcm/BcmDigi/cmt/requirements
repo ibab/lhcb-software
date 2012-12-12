@@ -1,12 +1,9 @@
 #============================================================================
 # Created    : 2010-06-15
 # Maintainer : Magnus Lieng
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
-package           BcmDigi
-version           v1r0
+package         BcmDigi
+version           v1r1
 
 #============================================================================
 # This template is an example for a standard Algorithm package
