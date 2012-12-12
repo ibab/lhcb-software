@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonMoniDigi
 ################################################################################
-gaudi_subdir(MuonMoniDigi v2r5)
+gaudi_subdir(MuonMoniDigi v2r6)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/DigiEvent
