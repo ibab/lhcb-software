@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichDigiSys
 ################################################################################
-gaudi_subdir(RichDigiSys v1r2)
+gaudi_subdir(RichDigiSys v1r3)
 
 gaudi_depends_on_subdirs(Rich/RichReadout)
 
