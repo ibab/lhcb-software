@@ -31,6 +31,9 @@ class TrackSys(LHCbConfigurableUser):
        ,"GlobalCuts"  : {}     # global event cuts for tracking
        ,"OldCloneKiller" : False # Switch between old and new (in 2012) clone killers
        ,"Simulation" : False # True if using simulated data/SIMCOND
+       ,"Upgrade" : False 
+       ,"UpgradeDetectors" : [] # List of the upgrade detectors
+       ,"TrackTypes" : [] 
         }
     
     ## Possible expert options
@@ -51,7 +54,10 @@ class TrackSys(LHCbConfigurableUser):
     CosmicPatRecAlgorithms    = ["PatSeed"]
     ## Cosmic expert swithces
     CosmicExpertTracking      = ["noDrifttimes"] 
-
+    ## DefaultTrackTypes
+    DefaultTrackTypes = ["Velo","Upstream","Forward","Seeding","Match","Downstream"]
+    ## Known Upgrade Detectors
+    KnownUpgradeDetectors = ["VP","VL","UT","FT","IT+OT"]
     ## @brief Check the options are sane etc.
     def defineOptions(self):
         
@@ -101,8 +107,12 @@ class TrackSys(LHCbConfigurableUser):
               self.setProp("TrackPatRecAlgorithms",self.CosmicPatRecAlgorithms)
           if len(self.getProp("ExpertTracking")) == 0 :
               self.setProp("ExpertTracking",self.CosmicExpertTracking)
-                                                               
 
+      ### Upgrade Detectors
+      for prop in self.getProp("UpgradeDetectors"):
+          if prop not in self.KnownUpgradeDetectors:
+              raise RuntimeError("Unknown UpgradeDetector '%s'"%prop)
+          
     ## @brief Shortcut to the fieldOff option
     def MC09(self)     : return "MC09" == self.getProp( "DataType" )
     ## @brief Shortcut to the fieldOff option
@@ -123,8 +133,8 @@ class TrackSys(LHCbConfigurableUser):
     def noMaterialCorrections(self) : return "noMaterialCorrections" in self.getProp("ExpertTracking")
     ## @brief Shortcut to the timing option
     def timing(self) : return "timing" in self.getProp("ExpertTracking")
-    ## @brief Shortcut to the upgrade option
-    def upgrade(self): return "upgrade" in self.getProp("SpecialData")
+    ### @brief Shortcut to the upgrade option
+    #def upgrade(self): return "upgrade" in self.getProp("SpecialData")
 
     
 
@@ -137,20 +147,31 @@ class TrackSys(LHCbConfigurableUser):
     ## @brief Apply the configuration
     def __apply_configuration__(self):
         self.defineOptions()
-        if self.getProp( "FilterBeforeFit" ) :
-            from TrackSys import RecoTracking
-            RecoTracking.RecoTracking()
-            if self.upgrade():
-                from RecoUpgrade import RecoTrackingUpgrade
-                RecoTrackingUpgrade.RecoTrackingUpgrade()
-        else :
-            from TrackSys import RecoTrackingOld
-            RecoTrackingOld.RecoTracking()
+        if self.getProp( "Upgrade" ) :
+            from TrackSys import RecoUpgradeTracking
+            RecoUpgradeTracking.RecoUpgradeTracking()
+        else:
+            if self.getProp( "FilterBeforeFit" ) :
+                from TrackSys import RecoTracking
+                RecoTracking.RecoTracking()
+            #if self.upgrade():
+            #    from RecoUpgrade import RecoTrackingUpgrade
+            #    RecoTrackingUpgrade.RecoTrackingUpgrade()
+            else :
+                from TrackSys import RecoTrackingOld
+                RecoTrackingOld.RecoTracking()
 
         if self.getProp( "WithMC" ):
-            from TrackSys import PatChecking
-            PatChecking.PatChecking()
-            if self.upgrade():
-                from RecoUpgrade import PatCheckingUpgrade
+            if self.getProp( "Upgrade" ) :
+                from TrackSys import PatCheckingUpgrade
                 PatCheckingUpgrade.PatCheckingUpgrade()
+            else :
+                from TrackSys import PatChecking
+                PatChecking.PatChecking()
+           
+                
+            #old upgrade configurable
+            #if self.upgrade():
+            #    from RecoUpgrade import PatCheckingUpgrade
+            #    PatCheckingUpgrade.PatCheckingUpgrade()
 

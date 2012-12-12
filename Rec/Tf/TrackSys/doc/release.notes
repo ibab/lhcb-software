@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2012-12-12 - Sascha Stahl
+ - started implementing a sequence for the upgrade
+ - Added a RecoUpgradeTracking.py and a PatCheckingUpgrade.py
+ - Three properties added to TrackSys. Upgrade, UpgradeDetectors, TrackTypes
+
 !========================= TrackSys v7r8 2012-11-28 =========================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.
