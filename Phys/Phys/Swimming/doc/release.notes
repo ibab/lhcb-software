@@ -1,9 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Swimming
-! Responsible : Vladimir Gligorov, Roel Aaij
+! Responsible : Vladimir Gligorov, Roel Aaij, Nick Torr
 ! Purpose     : Scripts for swimming the HLT/Stripping/Offline selections
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
+
+!========================= Swimming v2r9 2012-12-12 ========================
+
+! 2012-12-12 - Nick Torr
+ - Reverted back to __dev__ DST writers as this tag will go on an old DV stack
+   N.B. this will need to be changed for 2012 compatibility.
 
 ! 2012-12-05 - V. Gligorov
  - Add scripts for correcting the VELO acceptance bug to the scripts directory,
