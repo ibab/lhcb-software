@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DigiAlg
 ################################################################################
-gaudi_subdir(DigiAlg v4r22)
+gaudi_subdir(DigiAlg v4r23)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet
