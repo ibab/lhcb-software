@@ -9,6 +9,8 @@ from tempfile import mkdtemp
 from shutil import rmtree
 from subprocess import call
 from os.path import join, exists
+from datetime import datetime as _dt
+from time import sleep
 
 from LbRelease.rcs import connect
 
@@ -25,11 +27,17 @@ repo_url = None
 
 logging.basicConfig(level=logging.DEBUG)
 
+class datetime(_dt):
+    def svn(self):
+        return str(self).rsplit(':', 1)[0]
+
+test_rev_date = None
+
 def setup():
     '''
     Prepare the fake repository for testing.
     '''
-    global svn_repo, repo_url
+    global svn_repo, repo_url, test_rev_date
     if svn_repo is None:
         svn_repo = mkdtemp("_rcstest")
     repo_url = 'file://%s' % svn_repo
@@ -47,6 +55,26 @@ def setup():
     for p in ['packages', 'projects', 'version']:
         call(['svn', 'propset', '-F', join(root_dir, 'data', 'rcs.' + p), p, checkout])
     call(['svn', 'commit', '-m', 'properties', checkout])
+    print 'Removing', checkout
+    rmtree(checkout, ignore_errors=True)
+
+    checkout = mkdtemp()
+    call(['svn', 'checkout', repo_url + '/Proj/trunk/ProjPkgA', checkout])
+    datafilename = join(checkout, 'data.txt')
+    for i in range(10):
+        f = open(datafilename, 'w')
+        f.write('revision %d\n' % (i + 3))
+        f.close()
+        if not i:
+            call(['svn', 'add', datafilename])
+        if i == 7:
+            test_rev_date = old = datetime.now().svn()
+            sys.stderr.write(old + '\n')
+            while test_rev_date == old:
+                sleep(1) # ensure we have enough time between the two commits
+                test_rev_date = datetime.now().svn()
+            sys.stderr.write(test_rev_date + '\n')
+        call(['svn', 'commit', '-m', 'iteration %d' % i], cwd=checkout)
     print 'Removing', checkout
     rmtree(checkout, ignore_errors=True)
 
@@ -134,6 +162,22 @@ def test_checkout_package():
 
         assert all(map(check,['ProjPkgA/cmt/requirements', 'ProjPkgA/cmt/version.cmt']))
         assert open(join(workdir, 'ProjPkgA/cmt/version.cmt')).read().strip() == 'v1r0'
+        assert open(join(workdir, 'ProjPkgA/data.txt')).read().strip() == 'revision 12'
+
+        # specific revision
+        rep.checkout('ProjPkgA', 'r5', dest=workdir)
+
+        assert all(map(check,['ProjPkgA/cmt/requirements', 'ProjPkgA/cmt/version.cmt']))
+        assert open(join(workdir, 'ProjPkgA/cmt/version.cmt')).read().strip() == 'v1r0'
+        assert open(join(workdir, 'ProjPkgA/data.txt')).read().strip() == 'revision 5'
+
+        # specific date
+        #  the date must be without seconds
+        rep.checkout('ProjPkgA', '{%s}' % test_rev_date, dest=workdir)
+
+        assert all(map(check,['ProjPkgA/cmt/requirements', 'ProjPkgA/cmt/version.cmt']))
+        assert open(join(workdir, 'ProjPkgA/cmt/version.cmt')).read().strip() == 'v1r0'
+        assert open(join(workdir, 'ProjPkgA/data.txt')).read().strip() == 'revision 9'
 
         # tag
         rep.checkout('ProjPkgA', 'v1r0', dest=workdir)

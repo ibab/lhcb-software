@@ -1,5 +1,10 @@
 2012-12-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* python/LbRelease/rcs.py: added the possibility of using dates as versions,
+	like '{YYYY-MM-DD}'.
+
+2012-12-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* python/LbRelease/LHCbDoc.py: fix to the new lookup of resources
 	* python/LbRelease/_LHCbDocResources: fix to the new lookup of resources
 

@@ -454,6 +454,10 @@ class SubversionCmd(RevisionControlSystem):
     SVN_PATH     = VCS_PATH
     PROJECT_NODES = ['cmt', 'cmake', 'CMakeLists.txt', 'toolchain.cmake',
                      'Makefile.cmt', 'configure']
+
+    REVID_EXP = re.compile(r'^r([0-9]+)$')
+    DATEID_EXP = re.compile(r'^(\{\d{4}-\d{2}-\d{2}(( \d{2}:\d{2})|(T\d{2}:\d{2}Z?))\})$')
+
     def __init__(self, repository):
         """
         Initialize the connection to the repository.
@@ -838,8 +842,11 @@ class SubversionCmd(RevisionControlSystem):
         self._assertModule(module, isProject)
         if version == "trunk":
             return True
-        m = re.match("^r([0-9]+)$", version)
+        m = self.REVID_EXP.match(version)
         if m and int(m.group(1)) <= self._latestRevision():
+            return True
+        # check if it is a date
+        if self.DATEID_EXP.match(version):
             return True
         return super(SubversionCmd, self).hasVersion(module, version, isProject)
 
@@ -867,7 +874,7 @@ class SubversionCmd(RevisionControlSystem):
                 versiondir = version
                 root = self.modules[module]
             # Compare the version string with the revision ID regexp
-            revId = re.match("^r([0-9]+)$", version)
+            revId = self.REVID_EXP.match(version) or self.DATEID_EXP.match(version)
             if revId or version.lower() in ["head", "trunk"]: # a revId or trunk (or head) are checked out from trunk
                 src = [root, "trunk"]
                 if not isProject:
