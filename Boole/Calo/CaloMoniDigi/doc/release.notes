@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================= CaloMoniDigi v2r5 2012-12-12 =========================
+! 2012-12-12 - Marco Cattaneo
+ - Remove obsolete file CaloMoniDigi_dll.cpp
+
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.
 
