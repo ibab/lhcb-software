@@ -68,7 +68,7 @@ config_default= {
         'DiMuon_MinMass'                           :  3000.   ,  # MeV
         'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
-        'DiMuon_PT'                                :  3000.   ,  # MeV, no cut now 
+        'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05  ,
@@ -227,7 +227,7 @@ config_microDST= {
         'DiMuon_MinMass'                           :  3000.   ,  # MeV
         'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
-        'DiMuon_PT'                                :  3000.   ,  # MeV
+        'DiMuon_PT'                                : -1000.   ,  # MeV
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05 ,
@@ -650,7 +650,7 @@ class DiMuonConf(LineBuilder):
                                                                          'from LoKiNumbers.decorators    import *',
                                                                          'from LoKiCore.functions    import *' ]
                                                         },
-                                             selection = self.SelDiMuonExclusive
+                                             selection = self.SelDiMuonNoPV
                                              )       
         
         """
@@ -859,7 +859,7 @@ class DiMuonConf(LineBuilder):
         if config['MicroDST']:
             self.registerLine( self.DiMuonLine )
             self.registerLine( self.DiMuonSameSignLine )
-            self.registerLine( self.DiMuonPrescaledLine )
+            # self.registerLine( self.DiMuonPrescaledLine )
             self.registerLine( self.Jpsi2MuMuLine )
             self.registerLine( self.Psi2MuMuLine )
 

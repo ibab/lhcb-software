@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-12 - Jibo He
+ - StrippingDiMuonNew
+   . Removed PT cut on DiMuon in the DiMuonInc line
+   . Unregistered DiMuonPrescaledLine, which is not needed 
+   . Fixed DiMuonNoPV line, which was actually DiMuonExclusiveLine
+
 ! 2012-12-11 - Sam Hall
  - Addition of B -> hhhmumu to StrippingB2XMuMu.py.
    * Cuts were temporary on 2012-12-10
