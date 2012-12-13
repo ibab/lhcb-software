@@ -139,6 +139,10 @@ import StrippingD2HHHForXSec
 import StrippingD02HHForXSec
 import StrippingD02KSKS
 
+## the following two module names added December 13, 2013  M. Sokoloff
+import StrippingChargedHyperons
+import StrippingKshort2MuMuPiPi
+
 #import StrippingBu3hFrom2h
 import StrippingB2HHPi0
 import StrippingLb2V0hh
