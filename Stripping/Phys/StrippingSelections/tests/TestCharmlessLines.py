@@ -21,7 +21,7 @@ bhadroncompleteeventLines = []
 #
 from StrippingSelections.StrippingBu2KSh import Bu2KShConf
 #from StrippingSelections.StrippingBu2KSh import default_config as B2KSh
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import Bu2KSh as B2KSh
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import Bu2KSh as B2KSh
 confB2KSh = Bu2KShConf("Bu2KSh",B2KSh['CONFIG'])
 for l in confB2KSh.lines():
   if l.name() in B2KSh['STREAMS']['Bhadron']:
@@ -31,7 +31,7 @@ for l in confB2KSh.lines():
 
 from StrippingSelections.StrippingHb2Charged2Body import Hb2Charged2BodyLines
 #from StrippingSelections.StrippingHb2Charged2Body import default_config as Hb2Charged2Body
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import Hb2Charged2Body as Hb2Charged2Body
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import Hb2Charged2Body as Hb2Charged2Body
 confBhh          = Hb2Charged2BodyLines("Hb2Charged2Body", Hb2Charged2Body['CONFIG'])
 for l in confBhh.lines():
   if l.name() in Hb2Charged2Body['STREAMS']['Bhadron']:
@@ -59,7 +59,7 @@ for l in confDhhBDT.lines():
 
 
 from StrippingSelections.StrippingB2hhLTUnbiased import StrippingB2hhLTUnbiasedConf
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import B2hhLTUnbiased, B2hhLTUnbiasedDetached
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import B2hhLTUnbiased, B2hhLTUnbiasedDetached
 confBhhLTUnbiased = StrippingB2hhLTUnbiasedConf("B2hhLTUnbiased",B2hhLTUnbiased['CONFIG'])
 confBhhLTUnbiasedDetached = StrippingB2hhLTUnbiasedConf("B2hhLTUnbiasedDetached",B2hhLTUnbiasedDetached['CONFIG'])
 for l in confBhhLTUnbiased.lines():
@@ -75,7 +75,7 @@ for l in confBhhLTUnbiasedDetached.lines():
 
 from StrippingSelections.StrippingBu2hhh import Bu2hhhBuilder
 #from StrippingSelections.StrippingBu2hhh import config_params as B2hhh
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import B2hhh as B2hhh
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import B2hhh as B2hhh
 confB2hhh = Bu2hhhBuilder("B2hhh",B2hhh['CONFIG'])
 for l in confB2hhh.lines():
   if l.name() in B2hhh['STREAMS']['Bhadron']:
@@ -84,12 +84,12 @@ for l in confB2hhh.lines():
     bhadroncompleteeventLines.append(l)
 
 #from StrippingSelections.StrippingD02KPiPi0 import StrippingD02KPiPi0Conf
-#from StrippingSettings.Stripping20.LineConfigDictionaries_Calib import D02KPiPi0
+#from StrippingSettings.Stripping20r1.LineConfigDictionaries_Calib import D02KPiPi0
 #confD02KPiPi0 = StrippingD02KPiPi0Conf(D02KPiPi0['BUILDERTYPE'],D02KPiPi0['CONFIG'])
 #stream.appendLines(confD02KPiPi0.lines())
 
 from StrippingSelections.StrippingB2HHPi0 import StrippingB2HHPi0Conf
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import B2HHPi0
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import B2HHPi0
 confB2HHPI0 = StrippingB2HHPi0Conf("B2HHPi0",B2HHPi0['CONFIG'])
 for l in confB2HHPI0.lines():
   if l.name() in B2HHPi0['STREAMS']['Bhadron']:
@@ -99,7 +99,7 @@ for l in confB2HHPI0.lines():
 
 from StrippingSelections.StrippingB2TwoBaryons import B2TwoBaryonLines
 #from StrippingSelections.StrippingB2TwoBaryons import default_config as B2PPbar
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import B2PPbar as B2PPbar
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import B2PPbar as B2PPbar
 confB2PPbar          = B2TwoBaryonLines("B2PPbar", B2PPbar['CONFIG'])
 for l in confB2PPbar.lines():
   if l.name() in B2PPbar['STREAMS']['Bhadron']:
@@ -110,7 +110,7 @@ for l in confB2PPbar.lines():
 
 from StrippingSelections.StrippingB2KShh import B2KShhConf
 #from StrippingSelections.StrippingB2KShh import default_config as B2KShh
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import B2KShh as B2KShh
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import B2KShh as B2KShh
 confB2KShh = B2KShhConf("B2KShh",B2KShh['CONFIG'])
 for l in confB2KShh.lines():
   if l.name() in B2KShh['STREAMS']['Bhadron']:
@@ -120,7 +120,7 @@ for l in confB2KShh.lines():
 
 from StrippingSelections.StrippingLb2V0hh import Lb2V0hhConf
 #from StrippingSelections.StrippingLb2V0hh import default_config as Lb2V0hh
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import Lb2V0hh as Lb2V0hh
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import Lb2V0hh as Lb2V0hh
 confLb2V0hh = Lb2V0hhConf("Lb2V0hh",Lb2V0hh['CONFIG'])
 for l in confLb2V0hh.lines():
   if l.name() in Lb2V0hh['STREAMS']['Bhadron']:
@@ -130,7 +130,7 @@ for l in confLb2V0hh.lines():
 
 from StrippingSelections.StrippingB2Kphiphi import B2KPhiPhiConf
 #from StrippingSelections.StrippingB2Kphiphi import config_params as B2KPhiPhi
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import B2KPhiPhi as B2KPhiPhi
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import B2KPhiPhi as B2KPhiPhi
 confB2Kphiphi = B2KPhiPhiConf("B2KPhiPhi",B2KPhiPhi['CONFIG'])
 for l in confB2Kphiphi.lines():
   if l.name() in B2KPhiPhi['STREAMS']['Bhadron']:
@@ -140,7 +140,7 @@ for l in confB2Kphiphi.lines():
 
 from StrippingSelections.StrippingB2CharmlessQuasi2Body import B2Quasi2BodyConf
 #from StrippingSelections.StrippingB2CharmlessQuasi2Body import config_params as BetaSQ2B
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import BetaSQ2B as BetaSQ2B
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import BetaSQ2B as BetaSQ2B
 confB2CharmlessQuasi2Body = B2Quasi2BodyConf("BetaSQ2B",BetaSQ2B['CONFIG'])
 for l in confB2CharmlessQuasi2Body.lines():
   if l.name() in BetaSQ2B['STREAMS']['Bhadron']:
@@ -150,7 +150,7 @@ for l in confB2CharmlessQuasi2Body.lines():
 
 from StrippingSelections.StrippingBs2PhiKst0 import StrippingBs2PhiKstConf
 #from StrippingSelections.StrippingBs2PhiKst0 import confdict as Bs2PhiKst
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import BetaSBs2PhiKst as Bs2PhiKst
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import BetaSBs2PhiKst as Bs2PhiKst
 confBs2PhiKst = StrippingBs2PhiKstConf("BetaSBs2PhiKst",Bs2PhiKst['CONFIG'])
 for l in confBs2PhiKst.lines():
   if l.name() in Bs2PhiKst['STREAMS']['Bhadron']:
@@ -160,7 +160,7 @@ for l in confBs2PhiKst.lines():
 
 from StrippingSelections.StrippingBs2Kst0Kst0 import StrippingBs2KstKstConf
 #from StrippingSelections.StrippingBs2Kst0Kst0 import __config_default__ as BetaSBs2KstKst
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import BetaSBs2KstKst as BetaSBs2KstKst
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import BetaSBs2KstKst as BetaSBs2KstKst
 confBs2KstKst = StrippingBs2KstKstConf("BetaSBs2KstKst",BetaSBs2KstKst['CONFIG'])
 for l in confBs2KstKst.lines():
   if l.name() in BetaSBs2KstKst['STREAMS']['Bhadron']:
@@ -171,7 +171,7 @@ for l in confBs2KstKst.lines():
 
 from StrippingSelections.StrippingBs2Kst_0Kst_0 import StrippingBs2Kst_0Kst_0Conf
 #from StrippingSelections.StrippingBs2Kst_0Kst_0 import __config_default__ as BetaSBs2K0stK0st
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import BetaSBs2K0stK0st as BetaSBs2K0stK0st
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import BetaSBs2K0stK0st as BetaSBs2K0stK0st
 confBs2Kst_0Kst_0 = StrippingBs2Kst_0Kst_0Conf("BetaSBs2K0stK0st",BetaSBs2K0stK0st['CONFIG'])
 for l in confBs2Kst_0Kst_0.lines():
   if l.name() in BetaSBs2K0stK0st['STREAMS']['Bhadron']:
@@ -181,7 +181,7 @@ for l in confBs2Kst_0Kst_0.lines():
 
 from StrippingSelections.StrippingBs2Q2B import Bs2Q2Body4piConf
 #from StrippingSelections.StrippingBs2Q2B import config_params as BetaSBs2Q2Body4pi
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import BetaSBs2Q2Body4pi as BetaSBs2Q2Body4pi
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import BetaSBs2Q2Body4pi as BetaSBs2Q2Body4pi
 confBs2Q2Body = Bs2Q2Body4piConf("BetaSBs2Q2Body4pi",BetaSBs2Q2Body4pi['CONFIG'])
 for l in confBs2Q2Body.lines():
   if l.name() in BetaSBs2Q2Body4pi['STREAMS']['Bhadron']:
@@ -191,7 +191,7 @@ for l in confBs2Q2Body.lines():
 
 from StrippingSelections.StrippingBs2KKhh import BsPhiRhoConf
 #from StrippingSelections.StrippingBs2KKhh import config_params as BsPhiRho
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import BsPhiRho as BsPhiRho
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import BsPhiRho as BsPhiRho
 confBsPhiRho = BsPhiRhoConf("BsPhiRho",BsPhiRho['CONFIG'])
 for l in confBsPhiRho.lines():
   if l.name() in BsPhiRho['STREAMS']['Bhadron']:
@@ -201,7 +201,7 @@ for l in confBsPhiRho.lines():
 
 from StrippingSelections.StrippingB2FourKHigh import Bs2Q2Body4KConf
 #from StrippingSelections.StrippingB2FourKHigh import config_params as Bs2Q2Body4K
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import Bs2Q2Body4K as Bs2Q2Body4K
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import Bs2Q2Body4K as Bs2Q2Body4K
 confBs2Q2Body4K = Bs2Q2Body4KConf("Bs2Q2Body4K",Bs2Q2Body4K['CONFIG'])
 for l in confBs2Q2Body4K.lines():
   if l.name() in Bs2Q2Body4K['STREAMS']['Bhadron']:
@@ -211,7 +211,7 @@ for l in confBs2Q2Body4K.lines():
 
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf
 #from StrippingSelections.StrippingBs2PhiPhi import config_params as BetaSBs2PhiPhi
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import BetaSBs2PhiPhi as BetaSBs2PhiPhi
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import BetaSBs2PhiPhi as BetaSBs2PhiPhi
 confBs2PhiPhi = StrippingBs2PhiPhiConf("BetaSBs2PhiPhi",BetaSBs2PhiPhi['CONFIG'])
 for l in confBs2PhiPhi.lines():
   if l.name() in BetaSBs2PhiPhi['STREAMS']['Bhadron']:
@@ -221,7 +221,7 @@ for l in confBs2PhiPhi.lines():
 
 from StrippingSelections.StrippingBs2KSKS import Bs2KSKSConf
 #from StrippingSelections.StrippingBs2KSKS import default_config as Bs2KSKS
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import Bs2KSKS as Bs2KSKS
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import Bs2KSKS as Bs2KSKS
 confBs2KSKS = Bs2KSKSConf("Bs2KSKS",Bs2KSKS['CONFIG'])
 for l in confBs2KSKS.lines():
   if l.name() in Bs2KSKS['STREAMS']['Bhadron']:
@@ -231,7 +231,7 @@ for l in confBs2KSKS.lines():
 
 from StrippingSelections.StrippingB2XEta import B2XEtaConf
 #from StrippingSelections.StrippingB2XEta import default_config as B2XEta
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import B2XEta as B2XEta
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import B2XEta as B2XEta
 confB2XEta = B2XEtaConf("B2XEta",B2XEta['CONFIG'])
 for l in confB2XEta.lines():
   if l.name() in B2XEta['STREAMS']['Bhadron']:
