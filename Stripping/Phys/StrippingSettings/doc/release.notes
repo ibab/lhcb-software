@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-13 - Andrea Contu
+ - Added new lines to Charm WG dictionary:StrippingKshort2MuMuPiPi.py, StrippingChargedHyperons.py
+ 
 ! 2012-12-13 - Stefano Perazzini
  - Update Charmless WG dictionary for 2011 reprocessing
 
