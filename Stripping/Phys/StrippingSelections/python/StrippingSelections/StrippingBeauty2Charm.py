@@ -108,10 +108,7 @@ config = {
     'BPVVDRHO_MIN'  : '0.1*mm',
     'BPVVDZ_MIN'    : '2.0*mm',
     'PTMIN1'       : '300*MeV',
-    'PID'           : {'TIGHTPI' : { 'P' : {'PIDp_MIN' : -10},
-                                     'PI': {'PIDK_MAX' : 10},
-                                     'K' : {'PIDK_MIN' : -10}},
-                       'TIGHTERPI' : { 'P' : {'PIDp_MIN' : -10},
+    'PID'           : {'TIGHTERPI' : { 'P' : {'PIDp_MIN' : -10},
                                        'PI': {'PIDK_MAX' : 8},
                                        'K' : {'PIDK_MIN' : -10}},
                        'REALTIGHTK' : { 'P' : {'PIDp_MIN' : -10},
@@ -133,7 +130,10 @@ config = {
                   'K' : {'PIDK_MIN' : -10}},
     'SPECIAL' : {    'P'  : {'PIDp_MIN' : -5},
                      'PI' : {'PIDK_MAX' : 5},
-                     'K'  : {'PIDK_MIN' : 5}}
+                     'K'  : {'PIDK_MIN' : 5}},
+    'SPECIALPI': {'P' : {'PIDp_MIN' : -10},
+                  'PI': {'PIDK_MAX' : 12},
+                  'K' : {'PIDK_MIN' : -10}}
     },
     "Prescales" : { # Prescales for individual lines
     'RUN_BY_DEFAULT' : True, # False = lines off by default

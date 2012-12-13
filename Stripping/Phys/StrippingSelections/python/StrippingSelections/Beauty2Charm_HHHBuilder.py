@@ -21,7 +21,6 @@ class HHHBuilder(object):
         self.pipipi = [self._makePiPiPi()]
 
         #Different PID filtering for testing the FULL DST lines
-        self.pipipi_tightpi = [filterPID('X2PiPiPiPIDTIGHTPI',self.pipipi,config['PID']['TIGHTPI'])]
         self.pipipi_tighterpi = [filterPID('X2PiPiPiPIDTIGHTERPI',self.pipipi,config['PID']['TIGHTERPI'])]
         
         self.kkpi = [self._makeKKPi()]

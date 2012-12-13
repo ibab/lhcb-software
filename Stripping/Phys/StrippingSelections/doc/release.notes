@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-13 - Edmund Smith (LHCb 2010) 
+ - Adding the necessary for the new lines in Beauty2Charm for full DST.
+ - Removing all the code used for testing different selections on these lines.
+
 ! 2012-12-13 - Stefano Perazzini
  - Added StrippingD2HHBDT in the Charm stream and Charmless WG to be used for calibration in B->hh analysis.
  - Modified test/TestCharmlessLines.py for 2011 restripping tests.

@@ -105,7 +105,7 @@ def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
     if name.find('B02') >= 0 or name.find('NoIP') >= 0:
         config['AM_MAX'] = '6000*MeV'
     comboCuts = LoKiCuts(['SUMPT','AM'],config).code()
-    flightCuts = ['BPVLTIME']
+    flightCuts = ['BPVLTIME','DZ1','DZ2']
     if useIP: flightCuts += ['BPVIPCHI2','BPVDIRA']
     momCuts = [LoKiCuts(['VCHI2DOF'],config).code(),has1TrackChild(),
                hasTopoChildren(),LoKiCuts(flightCuts,config).code()]

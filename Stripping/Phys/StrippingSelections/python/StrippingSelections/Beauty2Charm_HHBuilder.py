@@ -56,7 +56,6 @@ class HHBuilder(object):
 
         #Different PID filterings for testing with the FULL DST lines
         self.pipi_pid_tightpi = [filterPID('X2PiPiPIDTIGHTPI',self.pipi,config_pid['TIGHTPI'])]
-        self.kpi_pid_tightpi = [filterPID('X2KPiPIDTIGHTPI',self.kpi,config_pid['TIGHTPI'])]
         #tighter on the kaon
         self.kpi_pid_tighter = [filterPID('X2KPiPIDTIGHTER',self.kpi,config_pid['TIGHTER'])]
         

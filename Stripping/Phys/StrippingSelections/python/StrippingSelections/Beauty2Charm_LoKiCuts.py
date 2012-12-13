@@ -54,9 +54,11 @@ class LoKiCuts(object):
                 'DOCAMAX'   : 'DOCAMAX',
                 'AM'        : 'AM',
                 'CL'        : 'CL', 
-                'TRGHP'     : 'TRGHP'
+                'TRGHP'     : 'TRGHP',
+                'DZ1'       : ' (CHILD(VFASPF(VZ), 1) - VFASPF(VZ))',
+                'DZ2'       : ' (CHILD(VFASPF(VZ), 2) - VFASPF(VZ))'
                 }
-                
+    
     def __init__(self,cuts,config):
         self.cuts = cuts
         self.config = config

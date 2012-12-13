@@ -123,21 +123,19 @@ class DBuilder(object):
         # phi mu nu
         self.phimu = self._makeD2PhiMuNu()
         
-        #######################################################################
-        #Testing different selections for FULL DST lines
-        #######################################################################
+        #Different subsets or selections for FULL DST lines
         #Different PID filtering
         self.hhh_pid_tightpi = [filterPID('D2HHHPIDTIGHTPI',self.hhh_pid,config_pid['TIGHTPI'])]
         self.hhh_pid_tighter = [filterPID('D2HHHPIDTIGHTER',self.hhh_pid,config_pid['TIGHTER'])]
         self.hhh_pid_special = [filterPID('D2HHHPIDSPECIAL',self.hhh,config_pid['SPECIAL'])]
+        self.hhh_pid_specialpi = [filterPID('D2HHHPIDSPECIALPI',self.hhh,config_pid['SPECIALPI'])]
         
-        self.hh_pid_tightpi = [filterPID('D2HHPIDTIGHTPI',self.hh_pid,config_pid['TIGHTPI'])]
         self.hh_pid_tight = [filterPID('D2HHPIDTIGHT',self.hh_pid,config_pid['TIGHT'])]
-        self.hh_pid_tighter = [filterPID('D2HHPIDTIGHTER',self.hh_pid,config_pid['TIGHTER'])]
 
         kkpi = "((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1))"
         self.kkpi_pid_tightpi = [filterSelection('D2KKPiPIDTIGHTPI',kkpi,self.hhh_pid_tightpi)]
-
+        self.kkpi_pid_specialpi = [filterSelection('D2KKPiPIDSPECIALPI',kkpi,self.hhh_pid_specialpi)]
+        
         #filter fo d2kkpi
         myPreAmble = [ "qPion = CHILD(Q,'pi+' == ABSID)",
                        "qKaonP = CHILD(Q, 'K+' == ID)",
@@ -175,33 +173,22 @@ class DBuilder(object):
         
         D1isDs2KKPi = "( ((pid_km>0) & (pid_kp>0)) | (m_KK<1040) | ((qPion*qKaonP<0) & (abs(m_KpPim-892)<100)) | ((qPion*qKaonM<0) & (abs(m_KmPip-892)<100) )  )" 
 
-        self.kkpi_custom = [filterSelection('D2KKPiCUSTOM',D1isDs2KKPi,self.kkpi_pid_tightpi,myPreAmble)]
+        #self.kkpi_custom = [filterSelection('D2KKPiCUSTOM',D1isDs2KKPi,self.kkpi_pid_tightpi,myPreAmble)]        
+        self.kkpi_custom = [filterSelection('D2KKPiCUSTOM',D1isDs2KKPi,self.kkpi_pid_specialpi,myPreAmble)]
         
-
         #for use with the FULL DST B --> Ds 3H lines
-        self.ds_hhh_pid = [filterSelection('Ds2HHHPID',ds,self.hhh_pid)]
-
-        self.ds_hhh_pid_tightpi = [filterSelection('Ds2HHHPIDTIGHTPI',ds,self.hhh_pid_tightpi)]
-        self.ds_hhh_pid_tighter = [filterSelection('Ds2HHHPIDTIGHTER',ds,self.hhh_pid_tighter)]
 
         #ds non CF selection = (Ds+ --> K+pi+pi-) | (Ds+ --> 3pi)
         ds_pipipi = "(NINTREE(ABSID=='K+')==0)"
         ds_kpipi = "((ID=='D+') & (NINTREE(ID=='K+')==1) & (%s)) | "\
                    "((ID=='D-') & (NINTREE(ID=='K-')==1) & (%s))" % (oneK,oneK)
-        ds_non_cf = "( " + ds_pipipi + " ) | ( " + ds_kpipi + " )"
-        ds_non_cf = LoKiCuts.combine([ds_non_cf,"in_range(%s,MM,%s)"%(ds_min,ds_max)])
-
-        self.ds_hhh_cf_pid_tightpi = [filterSelection('Ds2HHHCFPIDTIGHTPI',ds_cf,self.hhh_pid_tightpi)]
-        self.ds_hhh_noncf_pid_special = [filterSelection('Ds2HHHCSPIDSPECIAL',ds_non_cf,self.hhh_pid_special)]
+        
         self.ds_hhh_cf_custom = [filterSelection('Ds2HHHCFCUSTOM',"in_range(%s,MM,%s)"%(ds_min,ds_max),self.kkpi_custom)]
         
         self.ds_pipipi_pid_tightpi = [filterSelection('Ds2PiPiPiPIDTIGHTPI',ds_pipipi,self.hhh_pid_tightpi)]
         self.ds_kpipi_pid_special = [filterSelection('Ds2KPiPiPIDSPECIAL',ds_kpipi,self.hhh_pid_special)]
         
-        self.ds_hhh_pid_combo = [MergedSelection('Ds2HHHPIDCOMBO',
-                                                 RequiredSelections=self.ds_hhh_cf_pid_tightpi+self.ds_hhh_noncf_pid_special)]
-        self.ds_hhh_pid_combo_fix = [MergedSelection('Ds2HHHPIDCOMBOFIX',
-                                                     RequiredSelections=self.ds_pipipi_pid_tightpi+self.ds_kpipi_pid_special+self.ds_hhh_cf_pid_tightpi)]
+        
         self.ds_hhh_pid_custom = [MergedSelection('Ds2HHHPIDCUSTOM',
                                                   RequiredSelections=self.ds_pipipi_pid_tightpi+self.ds_kpipi_pid_special+self.ds_hhh_cf_custom)]
         #for use with the FULL DST B --> DD line
@@ -212,37 +199,12 @@ class DBuilder(object):
         d_kkpi_custom = [filterSelection('Dplus2KKPiCUSTOM',"in_range(%s,MM,%s)"%(d_min,d_max),self.kkpi_custom)]
         self.d_cf_hhh_pid_tightpi = [filterSelection('Dplus2HHHCF',d_cf,self.hhh_pid_tightpi)]
         self.d_hhh_custom = [MergedSelection('Dplus2HHHCUSTOM',RequiredSelections=d_kkpi_custom+self.d_cf_hhh_pid_tightpi)]
-        #print d_cf_plus
         
-        self.d_cf_plus_pid = [filterSelection('Dplus2HHHCFPID',d_cf_plus,self.hhh_pid)]
-        self.d_cf_plus_pid_tightpi = [filterSelection('Dplus2HHHCFPIDTIGHTPI',d_cf_plus,self.hhh_pid_tightpi)]
-        self.d_cf_plus_pid_tight = [filterSelection('Dplus2HHHCFPIDTIGHT',d_cf_plus,self.hhh_pid_tight)]
-        self.d_cf_plus_pid_tighter = [filterSelection('Dplus2HHHCFPIDTIGHTER',d_cf_plus,self.hhh_pid_tighter)]
-        
-        self.d_hhh_4_B2DD = [MergedSelection('D2HHH_4_B2DD_Beauty2Charm',
-                                             RequiredSelections=self.ds_hhh_pid+self.d_cf_plus_pid)]
-        self.d_hhh_4_B2DD_pid_tightpi = [MergedSelection('D2HHH_4_B2DD_TIGHTPI_Beauty2Charm',
-                                                         RequiredSelections=self.ds_hhh_pid_tightpi+self.d_cf_plus_pid_tightpi)]
-        self.d_hhh_4_B2DD_pid_tight = [MergedSelection('D2HHH_4_B2DD_TIGHT_Beauty2Charm',
-                                                       RequiredSelections=self.ds_hhh_pid_tight+self.d_cf_plus_pid_tight)]
-        self.d_hhh_4_B2DD_pid_tighter = [MergedSelection('D2HHH_4_B2DD_TIGHTER_Beauty2Charm',
-                                                         RequiredSelections=self.ds_hhh_pid_tighter+self.d_cf_plus_pid_tighter)]
-        self.d_hhh_4_B2DD_pid_combo = [MergedSelection('D2HHH_4_B2DD_PIDCOMBO_Beauty2Charm',
-                                                       RequiredSelections=self.ds_hhh_pid_combo+self.d_cf_plus_pid_tightpi)]
-        self.d_hhh_4_B2DD_pid_combo_fix = [MergedSelection('D2HHH_4_B2DD_PIDCOMBOFIX_Beauty2Charm',
-                                                           RequiredSelections=self.ds_hhh_pid_combo_fix+self.d_cf_plus_pid_tightpi)]
         self.d_hhh_4_B2DD_custom = [MergedSelection('D2HHH_4_B2DD_CUSTOM_Beauty2Charm',
                                                     RequiredSelections=self.ds_hhh_pid_custom+self.d_hhh_custom)]
-        #FULL DST D0D0 line
-        self.kpi_pid_tightpi = [filterSelection('D2KPIPIDTIGHTPI',oneK,self.hh_pid_tightpi)]
-        self.k3pi_pid_tightpi = [filterPID('D2K3PIPIDTIGHTPI',self.k3pi,config_pid['TIGHTPI'])]
-        self.d0_cf_pid_tightpi = [MergedSelection('D0CFPIDTIGHTPI',
-                                                  RequiredSelections=self.kpi_pid_tightpi+self.k3pi_pid_tightpi)]
+        #for use with FULL DST D0D0 line
         self.d0_cf_pid_tight = [filterPID('D0CFPIDTIGHT',
-                                          self.d0_cf_pid_tightpi,config_pid['TIGHT'])]
-        self.d0_cf_pid_tighter = [filterPID('D0CFPIDTIGHTER',
-                                            self.d0_cf_pid_tight,config_pid['TIGHTER'])]
-                
+                                          self.d0_cf_pid,config_pid['TIGHT'])]
 
                 
     def _makeD2X(self,name,decays,wm,up,config,extrainputs=[]):

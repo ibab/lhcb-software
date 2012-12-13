@@ -33,19 +33,8 @@ class B2DXBuilder(object):
         self._makeB2D0H('D2KPIPID',d.kpi_pid,False) # No IP line!
         self._makeB02D0HH('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
 
-        #some PID cuts on D daughters
-        self._makeB02D0HH('D2HHPIDTIGHTPI',self.d.hh_pid_tightpi) # B0 -> D0(HH with PID) H+H-
-        self._makeB02D0HH('D2HHPIDTIGHT',self.d.hh_pid_tight)
-        self._makeB02D0HH('D2HHPIDTIGHTER',self.d.hh_pid_tighter)
-        #tighter B mass window
-        self._makeB02D0HH_tightB('D2HHPIDTIGHTER',self.d.hh_pid_tighter)
-        #tighter BDT cut = 0.1
-        self._makeB02D0HH_tightB_BDT1('D2HHPIDTIGHTER',self.d.hh_pid_tighter)
-        self._makeB02D0HH_tightB_BDT2('D2HHPIDTIGHTER',self.d.hh_pid_tighter)
-        self._makeB02D0HH_tightB_BDT3('D2HHPIDTIGHTER',self.d.hh_pid_tighter)
-        self._makeB02D0HH_tightB_BDT3('D2HHPIDTIGHT',self.d.hh_pid_tight)
-        #also tighten the upper bound of the mass window to 6000MeV
-        self._makeB02D0HH_tighterB_BDT3('D2HHPIDTIGHT',self.d.hh_pid_tight)
+        #Tighter selection Full DST lines
+        self._makeB02D0HH_FULLDST('D2HHFULLDST',self.d.hh_pid_tight)
         
         self._makeB02D0HH('D2HHWS',self.d.hh_ws) # B0  -> D0(HH)WS  H+ H-
         self.lines[-2].pre = 0.1 # WS D line
@@ -115,77 +104,21 @@ class B2DXBuilder(object):
         self._makeB2D0HHH('D2KSHHLL',self.d.kshh_ll)
         # B -> D(HHH) 3h
         self._makeB02DHHH('D2HHHPID',self.d.hhh_pid)   # B+- -> D(HHH)  H+H-H+
-        # B -> D(HHH) 3h selective for FULL DST
-        self._makeB02DHHHnoKKPi('D2HHHselect',self.d.ds_hhh_pid)
-        #tighter pid cut on pi from D
-        self._makeB02DHHHnoKKPi('D2HHHselectPID',self.d.ds_hhh_pid_tightpi)
-        #tighter on kaons
-        self._makeB02DHHHnoKKPi('D2HHHselectPIDtight',self.d.ds_hhh_pid_tight)
-        #even tighter on kaons from d
-        self._makeB02DHHHnoKKPi('D2HHHselectPIDtighter',self.d.ds_hhh_pid_tighter)
-        #tighter B mass window
-        self._makeB02DHHHnoKKPi_tightB('D2HHHselectPIDtighter',self.d.ds_hhh_pid_tighter)
-        #BDT>0.1
-        self._makeB02DHHHnoKKPi_tightB_BDT1('D2HHHselectPIDtighter',self.d.ds_hhh_pid_tighter)
-        #BDT>0.2
-        self._makeB02DHHHnoKKPi_tightB_BDT2('D2HHHselectPIDtighter',self.d.ds_hhh_pid_tighter)
-        #BDT>0.3
-        self._makeB02DHHHnoKKPi_tightB_BDT3('D2HHHselectPIDtighter',self.d.ds_hhh_pid_tighter)
-        #BDT>0.3 and combination of loose and tight pid cuts on ds daughters
-        self._makeB02DHHHnoKKPi_tightB_BDT3('D2HHHselectPIDcombo',self.d.ds_hhh_pid_combo)
-        #fix to the above loosening pid on Ds+ --> 3pi
-        self._makeB02DHHHnoKKPi_tightB_BDT3('D2HHHselectPIDcombofix',self.d.ds_hhh_pid_combo_fix)
-        #tighten upper B mass bound to 6000MeV
-        self._makeB02DHHHnoKKPi_tighterB_BDT3('D2HHHselectPIDcombofix',self.d.ds_hhh_pid_combo_fix)
-        #custom Ds --> KKpi selection
-        self._makeB02DHHHnoKKPi_tighterB_BDT3('D2HHHselectPIDcustom',self.d.ds_hhh_pid_custom)
+        #Tighter selection Full DST lines
+        self._makeB02DHHH_FULLDST('D2HHHFULLDST',self.d.ds_hhh_pid_custom)
         
         # B+- -> D0(HH)  H+H-H+
         self._makeB02DstHHH('Dstar2D0PiPID',self.dst.d0pi_pid)
         # B -> D D 
         self._makeB02DD()
-        #selective B -> D(hhh)D(hhh) for FULL DST
-        self._makeB02DDselective()
-        self._makeB02DDselectPID()
-        #tighter on kaons
-        self._makeB02DDselectPIDtight()
-        #even tighter on kaons
-        self._makeB02DDselectPIDtighter()
-        #BDT>0.1
-        self._makeB02DDselectPIDtighter_BDT1()
-        #BDT>0.2
-        self._makeB02DDselectPIDtighter_BDT2()
-        #BDT>0.3
-        self._makeB02DDselectPIDtighter_BDT3()
-        #BDT>0.3 with mixture of tight and loose pid on ds daughters
-        #pid tightpi on d+ daughters
-        self._makeB02DDselectPIDcombo_BDT3()
-        #fix to the above loosening the pid to <10 on Ds+ --> 3pi
-        self._makeB02DDselectPIDcombofix_BDT3()
-        #BMass < 6000MeV
-        self._makeB02DDselectPIDcombofix_BDT3_tighterB()
-        #as above with custom D --> KKpi selection
-        self._makeB02DDselectPIDcustom_BDT3_tighterB()
-        
+        #Tighter selection Full DST lines
+        self._makeB02DD_FULLDST()
+ 
         self._makeB2D0D()   
         self._makeB02DstD() 
         self._makeB02D0D0()
-        #made with D0 with tighter cut on pion
-        self._makeB02D0D0selectPID()
-        #tighter on kaons
-        self._makeB02D0D0selectPIDtight()
-        #event tighter on kaons
-        self._makeB02D0D0selectPIDtighter()
-        #BDT>0.1
-        self._makeB02D0D0selectPIDtighter_BDT1()
-        #BDT>0.2
-        self._makeB02D0D0selectPIDtighter_BDT2()
-        #BDT>0.3
-        self._makeB02D0D0selectPIDtighter_BDT3()
-        #BDT>0.3 with tightpi pid on d0 daughters
-        self._makeB02D0D0selectPIDtight_BDT3()
-        #BMass < 6000MeV
-        self._makeB02D0D0selectPIDtight_BDT3_tighterB()
+        #Tighter selection Full DST lines
+        self._makeB02D0D0_FULLDST()
         
         self._makeB2DstD0()
         self._makeB02DstDst()
@@ -406,104 +339,30 @@ class B2DXBuilder(object):
         '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c.'''
         decays = {'B02D0PiPi': ["B0 -> D0 rho(770)0"],
                   'B02D0KPi' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"],
-                  'B02D0KK'  : ["B0 -> D0 phi(1020)"],
-                  'B02D0PiPiPIDTIGHTPI': ["B0 -> D0 rho(770)0"],
-                  'B02D0KPiPIDTIGHTPI' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"]}
+                  'B02D0KK'  : ["B0 -> D0 phi(1020)"]}
         inputs = {'B02D0PiPi': d2x+self.hh.pipi,
                   'B02D0KPi' : d2x+self.hh.kpi,
-                  'B02D0KK'  : d2x+self.hh.kk,
-                  'B02D0PiPiPIDTIGHTPI' : d2x+self.hh.pipi_pid_tightpi,
-                  'B02D0KPiPIDTIGHTPI'  : d2x+self.hh.kpi_pid_tightpi}
+                  'B02D0KK'  : d2x+self.hh.kk}
         b2d0hh = makeB2XSels(decays,dname,inputs,self.config)
         decays = {'B02DHHWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
         inputs = {'B02DHHWS': d2x+self.hh.hh_ws}
         b2d0hh_ws = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2d0hh,1.0))
-        self.lines.append(ProtoLine(b2d0hh_ws,0.1))
+        self.lines.append(ProtoLine(b2d0hh_ws,0.1))        
 
-    def _makeB02D0HH_tightB(self,dname,d2x):
-        '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c.'''
-        config = deepcopy(self.config)
-        config['AM_MIN'] = '4950*MeV'
-        decays = {'B0tight2D0PiPiPIDTIGHTPI': ["B0 -> D0 rho(770)0"],
-                  'B0tight2D0KPiPIDTIGHTPI' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"]}
-        inputs = {'B0tight2D0PiPiPIDTIGHTPI' : d2x+self.hh.pipi_pid_tightpi,
-                  'B0tight2D0KPiPIDTIGHTPI'  : d2x+self.hh.kpi_pid_tightpi}
-        b2d0hh = makeB2XSels(decays,dname,inputs,config)
-        decays = {'B0tight2DHHWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
-        inputs = {'B0tight2DHHWS': d2x+self.hh.hh_ws}
-        b2d0hh_ws = makeB2XSels(decays,dname,inputs,config)
-        self.lines.append(ProtoLine(b2d0hh,1.0))
-        self.lines.append(ProtoLine(b2d0hh_ws,0.1))
-
-    def _makeB02D0HH_tightB_BDT1(self,dname,d2x):
-        '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c.'''
-        config = deepcopy(self.config)
-        config['AM_MIN'] = '4950*MeV'
-        config['B2CBBDT_MIN'] = '0.1'
-        decays = {'B0tightBDT0.1_2D0PiPiPIDTIGHTPI': ["B0 -> D0 rho(770)0"],
-                  'B0tightBDT0.1_2D0KPiPIDTIGHTPI' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"]}
-        inputs = {'B0tightBDT0.1_2D0PiPiPIDTIGHTPI' : d2x+self.hh.pipi_pid_tightpi,
-                  'B0tightBDT0.1_2D0KPiPIDTIGHTPI'  : d2x+self.hh.kpi_pid_tightpi}
-        b2d0hh = makeB2XSels(decays,dname,inputs,config)
-        decays = {'B0tightBDT0.1_2DHHWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
-        inputs = {'B0tightBDT0.1_2DHHWS': d2x+self.hh.hh_ws}
-        b2d0hh_ws = makeB2XSels(decays,dname,inputs,config)
-        self.lines.append(ProtoLine(b2d0hh,1.0))
-        self.lines.append(ProtoLine(b2d0hh_ws,0.1))
-
-    def _makeB02D0HH_tightB_BDT2(self,dname,d2x):
-        '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c.'''
-        config = deepcopy(self.config)
-        config['AM_MIN'] = '4950*MeV'
-        config['B2CBBDT_MIN'] = '0.2'
-        decays = {'B0tightBDT0.2_2D0PiPiPIDTIGHTPI': ["B0 -> D0 rho(770)0"],
-                  'B0tightBDT0.2_2D0KPiPIDTIGHTPI' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"]}
-        inputs = {'B0tightBDT0.2_2D0PiPiPIDTIGHTPI' : d2x+self.hh.pipi_pid_tightpi,
-                  'B0tightBDT0.2_2D0KPiPIDTIGHTPI'  : d2x+self.hh.kpi_pid_tightpi}
-        b2d0hh = makeB2XSels(decays,dname,inputs,config)
-        decays = {'B0tightBDT0.2_2DHHWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
-        inputs = {'B0tightBDT0.2_2DHHWS': d2x+self.hh.hh_ws}
-        b2d0hh_ws = makeB2XSels(decays,dname,inputs,config)
-        self.lines.append(ProtoLine(b2d0hh,1.0))
-        self.lines.append(ProtoLine(b2d0hh_ws,0.1))
-
-    def _makeB02D0HH_tightB_BDT3(self,dname,d2x):
-        '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c.'''
-        config = deepcopy(self.config)
-        config['AM_MIN'] = '4950*MeV'
-        config['B2CBBDT_MIN'] = '0.3'
-        decays = {'B0tightBDT0.3_2D0PiPiPIDTIGHTPI': ["B0 -> D0 rho(770)0"],
-                  'B0tightBDT0.3_2D0KPiPIDTIGHTPI' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"],
-                  'B0tightBDT0.3_2D0KPiPIDTIGHTER' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"]}
-        inputs = {'B0tightBDT0.3_2D0PiPiPIDTIGHTPI' : d2x+self.hh.pipi_pid_tightpi,
-                  'B0tightBDT0.3_2D0KPiPIDTIGHTPI'  : d2x+self.hh.kpi_pid_tightpi,
-                  'B0tightBDT0.3_2D0KPiPIDTIGHTER'  : d2x+self.hh.kpi_pid_tighter}
-        b2d0hh = makeB2XSels(decays,dname,inputs,config)
-        decays = {'B0tightBDT0.3_2DHHWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
-        inputs = {'B0tightBDT0.3_2DHHWS': d2x+self.hh.hh_ws}
-        b2d0hh_ws = makeB2XSels(decays,dname,inputs,config)
-        self.lines.append(ProtoLine(b2d0hh,1.0))
-        self.lines.append(ProtoLine(b2d0hh_ws,0.1))
-
-    def _makeB02D0HH_tighterB_BDT3(self,dname,d2x):
-        '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c.'''
+    def _makeB02D0HH_FULLDST(self,dname,d2x):
+        '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c. (Tighter selection for Full DST)'''
         config = deepcopy(self.config)
         config['AM_MIN'] = '4950*MeV'
         config['AM_MAX'] = '6000*MeV'
         config['B2CBBDT_MIN'] = '0.3'
-        decays = {'B0tighterBDT0.3_2D0PiPiPIDTIGHTPI': ["B0 -> D0 rho(770)0"],
-                  'B0tighterBDT0.3_2D0KPiPIDTIGHTPI' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"],
-                  'B0tighterBDT0.3_2D0KPiPIDTIGHTER' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"]}
-        inputs = {'B0tighterBDT0.3_2D0PiPiPIDTIGHTPI' : d2x+self.hh.pipi_pid_tightpi,
-                  'B0tighterBDT0.3_2D0KPiPIDTIGHTPI'  : d2x+self.hh.kpi_pid_tightpi,
-                  'B0tighterBDT0.3_2D0KPiPIDTIGHTER'  : d2x+self.hh.kpi_pid_tighter}
+        config['DZ1_MIN'] = '-1.5*mm'
+        decays = {'B02D0PiPi': ["B0 -> D0 rho(770)0"],
+                  'B02D0KPi' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"]}
+        inputs = {'B02D0PiPi' : d2x+self.hh.pipi_pid_tightpi,
+                  'B02D0KPi'  : d2x+self.hh.kpi_pid_tighter}
         b2d0hh = makeB2XSels(decays,dname,inputs,config)
-        decays = {'B0tighterBDT0.3_2DHHWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
-        inputs = {'B0tighterBDT0.3_2DHHWS': d2x+self.hh.hh_ws}
-        b2d0hh_ws = makeB2XSels(decays,dname,inputs,config)
         self.lines.append(ProtoLine(b2d0hh,1.0))
-        self.lines.append(ProtoLine(b2d0hh_ws,0.1))
 
     def _makeB02DHHH(self,dname,d2x):
         '''Makes RS and WS B0 -> D + h- + c.c.'''
@@ -523,162 +382,22 @@ class B2DXBuilder(object):
         self.lines.append(ProtoLine(b02dhhh_rs,1.0))
         self.lines.append(ProtoLine(b02dhhh_ws,0.1))
 
-    def _makeB02DHHHnoKKPi(self,dname,d2x):
-        '''Makes RS and WS B0 -> D + h- + c.c.'''
-        pipipi = self.hhh.pipipi
-        kpipi = self.hhh.kpipi
-        pipipi_tightpi = self.hhh.pipipi_tightpi
-        kpipi_realtightk = self.hhh.kpipi_realtightk
-        decays = {'B02DPiPiPi': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B02DKPiPi' : ["[B0 -> D- K_1(1270)+]cc"],
-                  'B02DPiPiPiPIDTIGHTPI': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B02DKPiPiPIDREALTIGHTK' : ["[B0 -> D- K_1(1270)+]cc"]}
-        inputs = {'B02DPiPiPi': d2x+pipipi, 'B02DKPiPi': d2x+kpipi,
-                  'B02DPiPiPiPIDTIGHTPI': d2x+pipipi_tightpi,
-                  'B02DKPiPiPIDREALTIGHTK' : d2x+kpipi_realtightk}
-        b02dhhh_rs = makeB2XSels(decays,dname,inputs,self.config)
-        decays = {'B02DPiPiPiWS': ["[B0 -> D- a_1(1260)-]cc"],
-                  'B02DKPiPiWS' : ["[B0 -> D- K_1(1270)-]cc"]}
-        inputs = {'B02DPiPiPiWS': d2x+pipipi, 'B02DKPiPiWS': d2x+kpipi}
-        b02dhhh_ws = makeB2XSels(decays,dname,inputs,self.config)
-        self.lines.append(ProtoLine(b02dhhh_rs,1.0))
-        self.lines.append(ProtoLine(b02dhhh_ws,0.1))
-
-    def _makeB02DHHHnoKKPi_tightB(self,dname,d2x):
-        '''Makes RS and WS B0 -> D + h- + c.c.'''
-        config = deepcopy(self.config)
-        config['AM_MIN'] = '4950*MeV'
-        pipipi = self.hhh.pipipi
-        kpipi = self.hhh.kpipi
-        pipipi_tightpi = self.hhh.pipipi_tightpi
-        kpipi_realtightk = self.hhh.kpipi_realtightk
-        decays = {'B0tight2DPiPiPi': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B0tight2DKPiPi' : ["[B0 -> D- K_1(1270)+]cc"],
-                  'B0tight2DPiPiPiPIDTIGHTPI': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B0tight2DKPiPiPIDREALTIGHTK' : ["[B0 -> D- K_1(1270)+]cc"]}
-        inputs = {'B0tight2DPiPiPi': d2x+pipipi,
-                  'B0tight2DKPiPi': d2x+kpipi,
-                  'B0tight2DPiPiPiPIDTIGHTPI': d2x+pipipi_tightpi,
-                  'B0tight2DKPiPiPIDREALTIGHTK' : d2x+kpipi_realtightk}
-        b02dhhh_rs = makeB2XSels(decays,dname,inputs,config)
-        decays = {'B0tight2DPiPiPiWS': ["[B0 -> D- a_1(1260)-]cc"],
-                  'B0tight2DKPiPiWS' : ["[B0 -> D- K_1(1270)-]cc"]}
-        inputs = {'B0tight2DPiPiPiWS': d2x+pipipi,
-                  'B0tight2DKPiPiWS': d2x+kpipi}
-        b02dhhh_ws = makeB2XSels(decays,dname,inputs,config)
-        self.lines.append(ProtoLine(b02dhhh_rs,1.0))
-        self.lines.append(ProtoLine(b02dhhh_ws,0.1))
-
-    def _makeB02DHHHnoKKPi_tightB_BDT1(self,dname,d2x):
-        '''Makes RS and WS B0 -> D + h- + c.c.'''
-        config = deepcopy(self.config)
-        config['AM_MIN'] = '4950*MeV'
-        config['B2CBBDT_MIN'] = '0.1'
-        pipipi = self.hhh.pipipi
-        kpipi = self.hhh.kpipi
-        pipipi_tightpi = self.hhh.pipipi_tightpi
-        kpipi_realtightk = self.hhh.kpipi_realtightk
-        decays = {'B0tightBDT0.1_2DPiPiPi': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B0tightBDT0.1_2DKPiPi' : ["[B0 -> D- K_1(1270)+]cc"],
-                  'B0tightBDT0.1_2DPiPiPiPIDTIGHTPI': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B0tightBDT0.1_2DKPiPiPIDREALTIGHTK' : ["[B0 -> D- K_1(1270)+]cc"]}
-        inputs = {'B0tightBDT0.1_2DPiPiPi': d2x+pipipi,
-                  'B0tightBDT0.1_2DKPiPi': d2x+kpipi,
-                  'B0tightBDT0.1_2DPiPiPiPIDTIGHTPI': d2x+pipipi_tightpi,
-                  'B0tightBDT0.1_2DKPiPiPIDREALTIGHTK' : d2x+kpipi_realtightk}
-        b02dhhh_rs = makeB2XSels(decays,dname,inputs,config)
-        decays = {'B0tightBDT0.1_2DPiPiPiWS': ["[B0 -> D- a_1(1260)-]cc"],
-                  'B0tightBDT0.1_2DKPiPiWS' : ["[B0 -> D- K_1(1270)-]cc"]}
-        inputs = {'B0tightBDT0.1_2DPiPiPiWS': d2x+pipipi,
-                  'B0tightBDT0.1_2DKPiPiWS': d2x+kpipi}
-        b02dhhh_ws = makeB2XSels(decays,dname,inputs,config)
-        self.lines.append(ProtoLine(b02dhhh_rs,1.0))
-        self.lines.append(ProtoLine(b02dhhh_ws,0.1))
-
-    def _makeB02DHHHnoKKPi_tightB_BDT2(self,dname,d2x):
-        '''Makes RS and WS B0 -> D + h- + c.c.'''
-        config = deepcopy(self.config)
-        config['AM_MIN'] = '4950*MeV'
-        config['B2CBBDT_MIN'] = '0.2'
-        pipipi = self.hhh.pipipi
-        kpipi = self.hhh.kpipi
-        pipipi_tightpi = self.hhh.pipipi_tightpi
-        kpipi_realtightk = self.hhh.kpipi_realtightk
-        decays = {'B0tightBDT0.2_2DPiPiPi': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B0tightBDT0.2_2DKPiPi' : ["[B0 -> D- K_1(1270)+]cc"],
-                  'B0tightBDT0.2_2DPiPiPiPIDTIGHTPI': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B0tightBDT0.2_2DKPiPiPIDREALTIGHTK' : ["[B0 -> D- K_1(1270)+]cc"]}
-        inputs = {'B0tightBDT0.2_2DPiPiPi': d2x+pipipi,
-                  'B0tightBDT0.2_2DKPiPi': d2x+kpipi,
-                  'B0tightBDT0.2_2DPiPiPiPIDTIGHTPI': d2x+pipipi_tightpi,
-                  'B0tightBDT0.2_2DKPiPiPIDREALTIGHTK' : d2x+kpipi_realtightk}
-        b02dhhh_rs = makeB2XSels(decays,dname,inputs,config)
-        decays = {'B0tightBDT0.2_2DPiPiPiWS': ["[B0 -> D- a_1(1260)-]cc"],
-                  'B0tightBDT0.2_2DKPiPiWS' : ["[B0 -> D- K_1(1270)-]cc"]}
-        inputs = {'B0tightBDT0.2_2DPiPiPiWS': d2x+pipipi,
-                  'B0tightBDT0.2_2DKPiPiWS': d2x+kpipi}
-        b02dhhh_ws = makeB2XSels(decays,dname,inputs,config)
-        self.lines.append(ProtoLine(b02dhhh_rs,1.0))
-        self.lines.append(ProtoLine(b02dhhh_ws,0.1))
-
-    def _makeB02DHHHnoKKPi_tightB_BDT3(self,dname,d2x):
-        '''Makes RS and WS B0 -> D + h- + c.c.'''
-        config = deepcopy(self.config)
-        config['AM_MIN'] = '4950*MeV'
-        config['B2CBBDT_MIN'] = '0.3'
-        pipipi = self.hhh.pipipi
-        kpipi = self.hhh.kpipi
-        pipipi_tightpi = self.hhh.pipipi_tightpi
-        kpipi_realtightk = self.hhh.kpipi_realtightk
-        pipipi_tighterpi = self.hhh.pipipi_tighterpi
-        decays = {'B0tightBDT0.3_2DPiPiPi': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B0tightBDT0.3_2DKPiPi' : ["[B0 -> D- K_1(1270)+]cc"],
-                  'B0tightBDT0.3_2DPiPiPiPIDTIGHTPI': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B0tightBDT0.3_2DKPiPiPIDREALTIGHTK' : ["[B0 -> D- K_1(1270)+]cc"],
-                  'B0tightBDT0.3_2DPiPiPiPIDTIGHTERPI': ["[B0 -> D- a_1(1260)+]cc"]}
-        inputs = {'B0tightBDT0.3_2DPiPiPi': d2x+pipipi,
-                  'B0tightBDT0.3_2DKPiPi': d2x+kpipi,
-                  'B0tightBDT0.3_2DPiPiPiPIDTIGHTPI': d2x+pipipi_tightpi,
-                  'B0tightBDT0.3_2DKPiPiPIDREALTIGHTK' : d2x+kpipi_realtightk,
-                  'B0tightBDT0.3_2DPiPiPiPIDTIGHTERPI': d2x+pipipi_tighterpi}
-        b02dhhh_rs = makeB2XSels(decays,dname,inputs,config)
-        decays = {'B0tightBDT0.3_2DPiPiPiWS': ["[B0 -> D- a_1(1260)-]cc"],
-                  'B0tightBDT0.3_2DKPiPiWS' : ["[B0 -> D- K_1(1270)-]cc"]}
-        inputs = {'B0tightBDT0.3_2DPiPiPiWS': d2x+pipipi,
-                  'B0tightBDT0.3_2DKPiPiWS': d2x+kpipi}
-        b02dhhh_ws = makeB2XSels(decays,dname,inputs,config)
-        self.lines.append(ProtoLine(b02dhhh_rs,1.0))
-        self.lines.append(ProtoLine(b02dhhh_ws,0.1))
-
-    def _makeB02DHHHnoKKPi_tighterB_BDT3(self,dname,d2x):
-        '''Makes RS and WS B0 -> D + h- + c.c.'''
+    def _makeB02DHHH_FULLDST(self,dname,d2x):
+        '''Makes RS and WS B0 -> D + h- + c.c.  (Tighter selection for Full DST)'''
         config = deepcopy(self.config)
         config['AM_MIN'] = '4950*MeV'
         config['AM_MAX'] = '6000*MeV'
         config['B2CBBDT_MIN'] = '0.3'
-        pipipi = self.hhh.pipipi
-        kpipi = self.hhh.kpipi
-        pipipi_tightpi = self.hhh.pipipi_tightpi
+        config['DZ1_MIN'] = '-1.5*mm'
+        
         kpipi_realtightk = self.hhh.kpipi_realtightk
         pipipi_tighterpi = self.hhh.pipipi_tighterpi
-        decays = {'B0tighterBDT0.3_2DPiPiPi': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B0tighterBDT0.3_2DKPiPi' : ["[B0 -> D- K_1(1270)+]cc"],
-                  'B0tighterBDT0.3_2DPiPiPiPIDTIGHTPI': ["[B0 -> D- a_1(1260)+]cc"],
-                  'B0tighterBDT0.3_2DKPiPiPIDREALTIGHTK' : ["[B0 -> D- K_1(1270)+]cc"],
-                  'B0tighterBDT0.3_2DPiPiPiPIDTIGHTERPI': ["[B0 -> D- a_1(1260)+]cc"]}
-        inputs = {'B0tighterBDT0.3_2DPiPiPi': d2x+pipipi,
-                  'B0tighterBDT0.3_2DKPiPi': d2x+kpipi,
-                  'B0tighterBDT0.3_2DPiPiPiPIDTIGHTPI': d2x+pipipi_tightpi,
-                  'B0tighterBDT0.3_2DKPiPiPIDREALTIGHTK' : d2x+kpipi_realtightk,
-                  'B0tighterBDT0.3_2DPiPiPiPIDTIGHTERPI': d2x+pipipi_tighterpi}
+        decays = {'B02DKPiPi' : ["[B0 -> D- K_1(1270)+]cc"],
+                  'B02DPiPiPi': ["[B0 -> D- a_1(1260)+]cc"]}
+        inputs = {'B02DKPiPi' : d2x+kpipi_realtightk,
+                  'B02DPiPiPi': d2x+pipipi_tighterpi}
         b02dhhh_rs = makeB2XSels(decays,dname,inputs,config)
-        decays = {'B0tighterBDT0.3_2DPiPiPiWS': ["[B0 -> D- a_1(1260)-]cc"],
-                  'B0tighterBDT0.3_2DKPiPiWS' : ["[B0 -> D- K_1(1270)-]cc"]}
-        inputs = {'B0tighterBDT0.3_2DPiPiPiWS': d2x+pipipi,
-                  'B0tighterBDT0.3_2DKPiPiWS': d2x+kpipi}
-        b02dhhh_ws = makeB2XSels(decays,dname,inputs,config)
         self.lines.append(ProtoLine(b02dhhh_rs,1.0))
-        self.lines.append(ProtoLine(b02dhhh_ws,0.1))
 
     def _makeB02DstHHH(self,dname,dstar):
         '''Makes RS and WS B0 -> D + h- + c.c.'''
@@ -743,142 +462,17 @@ class B2DXBuilder(object):
         self.lines.append(ProtoLine(b2dd_rs,1.0))
         self.lines.append(ProtoLine(b2dd_ws,0.1))
 
-    def _makeB02DDselective(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
-        decays = {'B02DDselect': ["B0 -> D- D+"] }
-        inputs = {'B02DDselect': self.d.d_hhh_4_B2DD}
-        b2dd_rs = makeB2XSels(decays,'',inputs,self.config)
-        decays = {'B02DDWSselect': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B02DDWSselect': self.d.d_hhh_4_B2DD}
-        b2dd_ws = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
-
-    def _makeB02DDselectPID(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
-        decays = {'B02DDselectPID': ["B0 -> D- D+"] }
-        inputs = {'B02DDselectPID': self.d.d_hhh_4_B2DD_pid_tightpi}
-        b2dd_rs = makeB2XSels(decays,'',inputs,self.config)
-        decays = {'B02DDWSselectPID': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B02DDWSselectPID': self.d.d_hhh_4_B2DD_pid_tightpi}
-        b2dd_ws = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
-
-    def _makeB02DDselectPIDtight(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
-        decays = {'B02DDselectPIDtight': ["B0 -> D- D+"] }
-        inputs = {'B02DDselectPIDtight': self.d.d_hhh_4_B2DD_pid_tight}
-        b2dd_rs = makeB2XSels(decays,'',inputs,self.config)
-        decays = {'B02DDWSselectPIDtight': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B02DDWSselectPIDtight': self.d.d_hhh_4_B2DD_pid_tight}
-        b2dd_ws = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
-
-    def _makeB02DDselectPIDtighter(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
-        decays = {'B02DDselectPIDtighter': ["B0 -> D- D+"] }
-        inputs = {'B02DDselectPIDtighter': self.d.d_hhh_4_B2DD_pid_tighter}
-        b2dd_rs = makeB2XSels(decays,'',inputs,self.config)
-        decays = {'B02DDWSselectPIDtighter': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B02DDWSselectPIDtighter': self.d.d_hhh_4_B2DD_pid_tighter}
-        b2dd_ws = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
-
-    def _makeB02DDselectPIDtighter_BDT1(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
-        config = deepcopy(self.config)
-        config['B2CBBDT_MIN'] = '0.1'
-        decays = {'B0BDT0.1_2DDselectPIDtighter': ["B0 -> D- D+"] }
-        inputs = {'B0BDT0.1_2DDselectPIDtighter': self.d.d_hhh_4_B2DD_pid_tighter}
-        b2dd_rs = makeB2XSels(decays,'',inputs,config)
-        decays = {'B0BDT0.1_2DDWSselectPIDtighter': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B0BDT0.1_2DDWSselectPIDtighter': self.d.d_hhh_4_B2DD_pid_tighter}
-        b2dd_ws = makeB2XSels(decays,'',inputs,config)
-        self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
-
-    def _makeB02DDselectPIDtighter_BDT2(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
-        config = deepcopy(self.config)
-        config['B2CBBDT_MIN'] = '0.2'
-        decays = {'B0BDT0.2_2DDselectPIDtighter': ["B0 -> D- D+"] }
-        inputs = {'B0BDT0.2_2DDselectPIDtighter': self.d.d_hhh_4_B2DD_pid_tighter}
-        b2dd_rs = makeB2XSels(decays,'',inputs,config)
-        decays = {'B0BDT0.2_2DDWSselectPIDtighter': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B0BDT0.2_2DDWSselectPIDtighter': self.d.d_hhh_4_B2DD_pid_tighter}
-        b2dd_ws = makeB2XSels(decays,'',inputs,config)
-        self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
-
-    def _makeB02DDselectPIDtighter_BDT3(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
-        config = deepcopy(self.config)
-        config['B2CBBDT_MIN'] = '0.3'
-        decays = {'B0BDT0.3_2DDselectPIDtighter': ["B0 -> D- D+"] }
-        inputs = {'B0BDT0.3_2DDselectPIDtighter': self.d.d_hhh_4_B2DD_pid_tighter}
-        b2dd_rs = makeB2XSels(decays,'',inputs,config)
-        decays = {'B0BDT0.3_2DDWSselectPIDtighter': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B0BDT0.3_2DDWSselectPIDtighter': self.d.d_hhh_4_B2DD_pid_tighter}
-        b2dd_ws = makeB2XSels(decays,'',inputs,config)
-        self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
-
-    def _makeB02DDselectPIDcombo_BDT3(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
-        config = deepcopy(self.config)
-        config['B2CBBDT_MIN'] = '0.3'
-        decays = {'B0BDT0.3_2DDselectPIDcombo': ["B0 -> D- D+"] }
-        inputs = {'B0BDT0.3_2DDselectPIDcombo': self.d.d_hhh_4_B2DD_pid_combo}
-        b2dd_rs = makeB2XSels(decays,'',inputs,config)
-        decays = {'B0BDT0.3_2DDWSselectPIDcombo': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B0BDT0.3_2DDWSselectPIDcombo': self.d.d_hhh_4_B2DD_pid_combo}
-        b2dd_ws = makeB2XSels(decays,'',inputs,config)
-        self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
-
-    def _makeB02DDselectPIDcombofix_BDT3(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
-        config = deepcopy(self.config)
-        config['B2CBBDT_MIN'] = '0.3'
-        decays = {'B0BDT0.3_2DDselectPIDcombofix': ["B0 -> D- D+"] }
-        inputs = {'B0BDT0.3_2DDselectPIDcombofix': self.d.d_hhh_4_B2DD_pid_combo_fix}
-        b2dd_rs = makeB2XSels(decays,'',inputs,config)
-        decays = {'B0BDT0.3_2DDWSselectPIDcombofix': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B0BDT0.3_2DDWSselectPIDcombofix': self.d.d_hhh_4_B2DD_pid_combo_fix}
-        b2dd_ws = makeB2XSels(decays,'',inputs,config)
-        self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
-
-    def _makeB02DDselectPIDcombofix_BDT3_tighterB(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
+    def _makeB02DD_FULLDST(self):
+        '''Makes RS and WS B0 -> D+D- + c.c.  (Tighter selection for Full DST)'''
         config = deepcopy(self.config)
         config['B2CBBDT_MIN'] = '0.3'
         config['AM_MAX'] = '6000*MeV'
-        decays = {'B0tighterBDT0.3_2DDselectPIDcombofix': ["B0 -> D- D+"] }
-        inputs = {'B0tighterBDT0.3_2DDselectPIDcombofix': self.d.d_hhh_4_B2DD_pid_combo_fix}
+        config['DZ1_MIN'] = '-1.5*mm'
+        config['DZ2_MIN'] = '-1.5*mm'
+        decays = {'B02DDFULLDST': ["B0 -> D- D+"] }
+        inputs = {'B02DDFULLDST': self.d.d_hhh_4_B2DD_custom}
         b2dd_rs = makeB2XSels(decays,'',inputs,config)
-        decays = {'B0tighterBDT0.3_2DDWSselectPIDcombofix': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B0tighterBDT0.3_2DDWSselectPIDcombofix': self.d.d_hhh_4_B2DD_pid_combo_fix}
-        b2dd_ws = makeB2XSels(decays,'',inputs,config)
         self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
-
-    def _makeB02DDselectPIDcustom_BDT3_tighterB(self):
-        '''Makes RS and WS B0 -> D+D- + c.c.'''
-        config = deepcopy(self.config)
-        config['B2CBBDT_MIN'] = '0.3'
-        config['AM_MAX'] = '6000*MeV'
-        decays = {'B0tighterBDT0.3_2DDselectPIDcustom': ["B0 -> D- D+"] }
-        inputs = {'B0tighterBDT0.3_2DDselectPIDcustom': self.d.d_hhh_4_B2DD_custom}
-        b2dd_rs = makeB2XSels(decays,'',inputs,config)
-        decays = {'B0tighterBDT0.3_2DDWSselectPIDcustom': ["[B0 -> D+ D+]cc"] }
-        inputs = {'B0tighterBDT0.3_2DDWSselectPIDcustom': self.d.d_hhh_4_B2DD_custom}
-        b2dd_ws = makeB2XSels(decays,'',inputs,config)
-        self.lines.append(ProtoLine(b2dd_rs,1.0))
-        self.lines.append(ProtoLine(b2dd_ws,0.1))
 
     def _makeB2D0D(self):
         '''Makes B+ -> D+ D0'''
@@ -904,130 +498,19 @@ class B2DXBuilder(object):
         b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0d0,1.0))
 
-    #made with D0 with tighter cut on pion
-    def _makeB02D0D0selectPID(self):
-        '''Makes B0 -> D0 D0'''
-        dec = ["B0 -> D0 D0"]
-        decays = {'B02D0D0selectPID' : dec}
-        inputs = {'B02D0D0selectPID' : self.d.d0_cf_pid_tightpi}
-        #decays = {'B02D0D0_HH_HH'    : dec,
-        #          'B02D0D0_HH_K3Pi'  : dec,
-        #          'B02D0D0_K3Pi_K3Pi': dec}
-        #inputs = {'B02D0D0_HH_HH'  : self.d.hh_pid,
-        #          'B02D0D0_HH_K3Pi':self.d.hh_pid+self.d.k3pi_pid,
-        #          'B02D0D0_K3Pi_K3Pi':self.d.k3pi_pid}
-        b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0d0,1.0))
-
-    def _makeB02D0D0selectPIDtight(self):
-        '''Makes B0 -> D0 D0'''
-        dec = ["B0 -> D0 D0"]
-        decays = {'B02D0D0selectPIDtight' : dec}
-        inputs = {'B02D0D0selectPIDtight' : self.d.d0_cf_pid_tight}
-        #decays = {'B02D0D0_HH_HH'    : dec,
-        #          'B02D0D0_HH_K3Pi'  : dec,
-        #          'B02D0D0_K3Pi_K3Pi': dec}
-        #inputs = {'B02D0D0_HH_HH'  : self.d.hh_pid,
-        #          'B02D0D0_HH_K3Pi':self.d.hh_pid+self.d.k3pi_pid,
-        #          'B02D0D0_K3Pi_K3Pi':self.d.k3pi_pid}
-        b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0d0,1.0))
-
-    def _makeB02D0D0selectPIDtighter(self):
-        '''Makes B0 -> D0 D0'''
-        dec = ["B0 -> D0 D0"]
-        decays = {'B02D0D0selectPIDtighter' : dec}
-        inputs = {'B02D0D0selectPIDtighter' : self.d.d0_cf_pid_tighter}
-        #decays = {'B02D0D0_HH_HH'    : dec,
-        #          'B02D0D0_HH_K3Pi'  : dec,
-        #          'B02D0D0_K3Pi_K3Pi': dec}
-        #inputs = {'B02D0D0_HH_HH'  : self.d.hh_pid,
-        #          'B02D0D0_HH_K3Pi':self.d.hh_pid+self.d.k3pi_pid,
-        #          'B02D0D0_K3Pi_K3Pi':self.d.k3pi_pid}
-        b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0d0,1.0))
-
-    def _makeB02D0D0selectPIDtighter_BDT1(self):
-        '''Makes B0 -> D0 D0'''
-        config = deepcopy(self.config)
-        config['B2CBBDT_MIN'] = '0.1'
-        dec = ["B0 -> D0 D0"]
-        decays = {'B0BDT0.1_2D0D0selectPIDtighter' : dec}
-        inputs = {'B0BDT0.1_2D0D0selectPIDtighter' : self.d.d0_cf_pid_tighter}
-        #decays = {'B02D0D0_HH_HH'    : dec,
-        #          'B02D0D0_HH_K3Pi'  : dec,
-        #          'B02D0D0_K3Pi_K3Pi': dec}
-        #inputs = {'B02D0D0_HH_HH'  : self.d.hh_pid,
-        #          'B02D0D0_HH_K3Pi':self.d.hh_pid+self.d.k3pi_pid,
-        #          'B02D0D0_K3Pi_K3Pi':self.d.k3pi_pid}
-        b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0d0,1.0))
-
-    def _makeB02D0D0selectPIDtighter_BDT2(self):
-        '''Makes B0 -> D0 D0'''
-        config = deepcopy(self.config)
-        config['B2CBBDT_MIN'] = '0.2'
-        dec = ["B0 -> D0 D0"]
-        decays = {'B0BDT0.2_2D0D0selectPIDtighter' : dec}
-        inputs = {'B0BDT0.2_2D0D0selectPIDtighter' : self.d.d0_cf_pid_tighter}
-        #decays = {'B02D0D0_HH_HH'    : dec,
-        #          'B02D0D0_HH_K3Pi'  : dec,
-        #          'B02D0D0_K3Pi_K3Pi': dec}
-        #inputs = {'B02D0D0_HH_HH'  : self.d.hh_pid,
-        #          'B02D0D0_HH_K3Pi':self.d.hh_pid+self.d.k3pi_pid,
-        #          'B02D0D0_K3Pi_K3Pi':self.d.k3pi_pid}
-        b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0d0,1.0))
-
-    def _makeB02D0D0selectPIDtighter_BDT3(self):
-        '''Makes B0 -> D0 D0'''
-        config = deepcopy(self.config)
-        config['B2CBBDT_MIN'] = '0.3'
-        dec = ["B0 -> D0 D0"]
-        decays = {'B0BDT0.3_2D0D0selectPIDtighter' : dec}
-        inputs = {'B0BDT0.3_2D0D0selectPIDtighter' : self.d.d0_cf_pid_tighter}
-        #decays = {'B02D0D0_HH_HH'    : dec,
-        #          'B02D0D0_HH_K3Pi'  : dec,
-        #          'B02D0D0_K3Pi_K3Pi': dec}
-        #inputs = {'B02D0D0_HH_HH'  : self.d.hh_pid,
-        #          'B02D0D0_HH_K3Pi':self.d.hh_pid+self.d.k3pi_pid,
-        #          'B02D0D0_K3Pi_K3Pi':self.d.k3pi_pid}
-        b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0d0,1.0))
-
-    def _makeB02D0D0selectPIDtight_BDT3(self):
-        '''Makes B0 -> D0 D0'''
-        config = deepcopy(self.config)
-        config['B2CBBDT_MIN'] = '0.3'
-        dec = ["B0 -> D0 D0"]
-        decays = {'B0BDT0.3_2D0D0selectPIDtight' : dec}
-        inputs = {'B0BDT0.3_2D0D0selectPIDtight' : self.d.d0_cf_pid_tight}
-        #decays = {'B02D0D0_HH_HH'    : dec,
-        #          'B02D0D0_HH_K3Pi'  : dec,
-        #          'B02D0D0_K3Pi_K3Pi': dec}
-        #inputs = {'B02D0D0_HH_HH'  : self.d.hh_pid,
-        #          'B02D0D0_HH_K3Pi':self.d.hh_pid+self.d.k3pi_pid,
-        #          'B02D0D0_K3Pi_K3Pi':self.d.k3pi_pid}
-        b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0d0,1.0))
-
-    def _makeB02D0D0selectPIDtight_BDT3_tighterB(self):
-        '''Makes B0 -> D0 D0'''
+    def _makeB02D0D0_FULLDST(self):
+        '''Makes B0 -> D0 D0  (Tighter selection for Full DST)'''
         config = deepcopy(self.config)
         config['B2CBBDT_MIN'] = '0.3'
         config['AM_MAX'] = '6000*MeV'
+        config['DZ1_MIN'] = '-1.5*mm'
+        config['DZ2_MIN'] = '-1.5*mm'
         dec = ["B0 -> D0 D0"]
-        decays = {'B0tighterBDT0.3_2D0D0selectPIDtight' : dec}
-        inputs = {'B0tighterBDT0.3_2D0D0selectPIDtight' : self.d.d0_cf_pid_tight}
-        #decays = {'B02D0D0_HH_HH'    : dec,
-        #          'B02D0D0_HH_K3Pi'  : dec,
-        #          'B02D0D0_K3Pi_K3Pi': dec}
-        #inputs = {'B02D0D0_HH_HH'  : self.d.hh_pid,
-        #          'B02D0D0_HH_K3Pi':self.d.hh_pid+self.d.k3pi_pid,
-        #          'B02D0D0_K3Pi_K3Pi':self.d.k3pi_pid}
+        decays = {'B02D0D0FULLDST' : dec}
+        inputs = {'B02D0D0FULLDST' : self.d.d0_cf_pid_tight}
         b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0d0,1.0))
-        
+   
     def _makeB02DstD(self):
         '''Makes the RS and WS B+ -> D*+- D-+ + c.c.'''
         decays = {'B02DstD':["[B0 -> D*(2010)- D+]cc"]}
