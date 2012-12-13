@@ -4,27 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2012-12-13 - Andrea Contu
- - Added new lines to Charm WG dictionary:StrippingKshort2MuMuPiPi.py, StrippingChargedHyperons.py
- 
-! 2012-12-13 - Stefano Perazzini
- - Update Charmless WG dictionary for 2011 reprocessing
-
-! 2012-12-13 - Jibo He
- - Stripping20r1/LineConfigDictionaries_BandQ.py
-  . Added BB2DMuNuX
-
-! - 2012-12-12 - Mika Vesterinen
- - Stripping20r1/LineConfigDictionaries_Semileptonic.py
-   - Added conf dict for B2DHHHForBXX (proton and kaon detection asymmetries)
-
-! 2012-12-12 - Jibo He
- - Stripping20r1/LineConfigDictionaries_BandQ.py
-   . Updated conf dict of DiMuon, Betac2PhiP
-
-! 2012-12-11 - Anton Poluektov 
- - Update LineConfigDictionaries_RD, B2XMuMu and B2MuMuMuMu configs
- - Update dbase
+! 2012-12-13 - Ronan Wallace
+ - Update control line prescale in WMu dict of LineConfigDictionaries_QEE
 
 ! 2012-12-10 - Anton Poluektov 
  - Update LineConfigDictionaries_QEE (new dict for DisplVertices)

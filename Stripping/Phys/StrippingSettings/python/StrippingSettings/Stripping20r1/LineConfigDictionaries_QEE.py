@@ -37,7 +37,7 @@ WMu = {
     'STNB_Prescale' : 0.2,
     'WMu_Postscale'   : 1.0,
     'SingMuon10_Prescale' : 0.01,
-    'SingMuon48_Prescale'  :0.2,
+    'SingMuon48_Prescale'  : 0.4,
     'pT'     : 20.,
     'pTlow'  : 15.,
     'pTvlow' :  5.,
@@ -104,10 +104,10 @@ Z02TauTau = {
 ##     'Z2TauTau_Prong_LinePrescale'  : 1.0,
 ##     'Z2TauTau_Prong_LinePostscale' : 1.0,
 ##     ###
-##     'TAU_MASS_LOW'                 : '400.0',    # MeV/c²
-##     'TAU_MASS_HIGH'                : '1777.0',   # MeV/c²
+##     'TAU_MASS_LOW'                 : '400.0',    
+##     'TAU_MASS_HIGH'                : '1777.0',   
 ##     ###
-##     'Z_MASS_LOW'                   : '10000.0',  # MeV/c²
+##     'Z_MASS_LOW'                   : '10000.0',  
 ##     #'Z_MASS_HIGH'                 : not set
 ##     'VCHI2_Z_MAX'                  : '100',       # dl
 ##     ###
@@ -331,13 +331,14 @@ DisplVertices = {
     
     #==========     HLT filters for all lines      ==========#
     , "HLT"                     : { "CharmHLT"     : "HLT_PASS('Hlt2CharmHadD02HH_D02KPiDecision')"
-                                  , "HLTPS"        : [ ( ("0x001c0028", "0x002f002c"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
-                                                     , ( ("0x00340032", "0x00730035"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
-                                                     , ( ("0x00750037", "0x007b0038"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
-                                                     , ( ("0x007e0039", "0x0097003d"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
-                                                     , ( ("0x00990042", "0x40000000"), "HLT_PASS_RE('Hlt2DisplVertices(Single|SingleLoose|Double)PSDecision')" )
-                                                     ]
-                                  }
+                                    , "HLTPS" :  [ ( ("0x001c0028", "0x002f002c"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
+                    				   , ( ("0x00340032", "0x00730035"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
+                    				   , ( ("0x00750037", "0x007b0038"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
+                                                   , ( ("0x007e0039", "0x0097003d"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
+                    				   , ( ("0x00990042", "0x40000000"), "HLT_PASS_RE('Hlt2DisplVertices(Single|SingleLoose|Double)PSDecision')" )
+                    				   ]
+                                    }
+
     },
     'WGs' : [ 'QEE' ],
     'STREAMS' : [ 'EW' ]
