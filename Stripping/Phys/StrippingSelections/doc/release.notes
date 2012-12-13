@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-14 - Andrea Contu for Tim Head
+ - Uncommented the D0 -> emu line in StrippingDstarD02xx
+
 ! 2012-12-13 - Ronan Wallace
  - Update control line prescale in WMu dict of StrippingWMu.py
 

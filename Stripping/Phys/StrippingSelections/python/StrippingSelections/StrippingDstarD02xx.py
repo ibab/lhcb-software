@@ -204,10 +204,17 @@ class StrippingDstarD02xxConf(LineBuilder):
         # Capitalize particle names to match Hlt2 D*->pi D0-> xx lines
         Xplus  = xplus[0].upper() + xplus[1:]    
         Xminus = xminus[0].upper() + xminus[1:]
-        hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
-        line_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"Box",
-                                 HLT = "HLT_PASS_RE('"+hltname+"')",
-                                 algos = [ _tag_sel ], prescale = config[ pres ])
+
+        if (xplus == "e" and xminus =="mu") or (xplus == "mu" and xminus == "e"):
+            line_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"Box",
+                                     algos = [ _tag_sel ],
+                                     prescale = config[ pres ])
+            
+        else:
+            hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
+            line_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"Box",
+                                     HLT = "HLT_PASS_RE('"+hltname+"')",
+                                     algos = [ _tag_sel ], prescale = config[ pres ])
         
         return line_box
     
@@ -259,7 +266,7 @@ class StrippingDstarD02xxConf(LineBuilder):
         line_Kpi_box  = self.baseLine(name,config,"K",  "pi")
         #line_eK_box   = self.baseLine(name,config,"e",   "K")
         #line_epi_box  = self.baseLine(name,config,"e",   "pi")
-        #line_mue_box  = self.baseLine(name,config,"e",  "mu") #removed in St20
+        line_mue_box  = self.baseLine(name,config,"e",  "mu")
         #line_pimu_box = self.baseLine(name,config,"pi", "mu")
         line_Kmu_box  = self.baseLine(name,config,"K",  "mu")
 
@@ -280,7 +287,7 @@ class StrippingDstarD02xxConf(LineBuilder):
         
         line_Kpi_minbias_treff =  self.baseLine_untagged(name,config,"K",  "pi",   2)
         
-        lines = [line_pipi_box,  line_mumu_box, line_Kpi_box, line_Kmu_box,line_mumu_untagged_box ,line_Kmu_untagged_box, line_pipi_untagged_box,line_Kpi_untagged_box, line_Kpi_minbias,  line_Kpi_minbias_treff]
+        lines = [line_pipi_box,  line_mumu_box, line_Kpi_box, line_mue_box, line_Kmu_box,line_mumu_untagged_box ,line_Kmu_untagged_box, line_pipi_untagged_box,line_Kpi_untagged_box, line_Kpi_minbias,  line_Kpi_minbias_treff]
         
         return lines
     
