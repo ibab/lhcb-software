@@ -257,8 +257,8 @@ class B2XMuMuConf(LineBuilder) :
 
         self.Bs = self.__Bs__(self.Dimuon, self.Protons, self.Kaons, self.Pions, self.Pi0,
                               self.Kshort, self.Lambda, self.Phi, self.Rho, self.Dplus,
-                              self.Kstar, self.A1, self.K1, self.K2, self.Lambdastar, self.Kstar2KsPi,
-                              self.Kstar2KPi0, config)
+                              self.Kstar, self.Lambdastar, self.Kstar2KsPi,
+                              self.Kstar2KPi0, self.A1, self.K1, self.K2, config)
 
 
         self.line = StrippingLine(self.name+"_Line",
