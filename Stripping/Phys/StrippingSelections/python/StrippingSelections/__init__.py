@@ -85,6 +85,7 @@ import StrippingPsiXForBandQ
 import StrippingX2psiPiPi
 import StrippingX2psiGamma
 import StrippingBetac2PhiP
+import StrippingBB2DMuNuX
 
 import StrippingZ02MuMu
 import StrippingZ02ee
