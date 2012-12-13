@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-13 - Stefano Perazzini
+ - Update Charmless WG dictionary for 2011 reprocessing
+
 ! 2012-12-13 - Jibo He
  - Stripping20r1/LineConfigDictionaries_BandQ.py
   . Added BB2DMuNuX

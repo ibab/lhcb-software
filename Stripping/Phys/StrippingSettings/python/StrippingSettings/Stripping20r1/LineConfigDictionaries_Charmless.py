@@ -4,37 +4,37 @@
 Bu2KSh = {
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'Bu2KShConf',
-    'CONFIG'      : {'KSDaug_LTrk_GhostProb' : 0.5,
-                     'Trk_GhostProb'         : 0.5,
-                     'Trk_Chi2'              : 3.0,
-                     'KS_DD_MassWindow'      : 30.0,
-                     'KS_LL_MassWindow'      : 15.0,
-                     'KS_DD_VtxChi2'         : 10.0,
-                     'KS_LL_VtxChi2'         : 10.0,
-                     'KS_DD_FDChi2'          : 50.0,
-                     'KS_LL_FDChi2'          : 100.0,
-                     'KS_DD_Pmin'            : 8000.0,
-                     'KS_LL_Pmin'            : 8000.0,
-                     'KS_DD_Ptmin'           : 1000.0,
-                     'KS_LL_Ptmin'           : 800.0,
-                     'Bach_Ptmin'            : 1000.0,
-                     'BDaug_MaxPT_IP'        : 0.05,
-                     'BDaug_DD_PTsum'        : 4000.0,
-                     'BDaug_LL_PTsum'        : 4000.0,
-                     'B_Mlow'                : 500.0,
-                     'B_Mhigh'               : 500.0,
-                     'B_Pmin'                : 25000.0,
-                     'B_LL_VtxChi2'          : 6.0,
-                     'B_DD_VtxChi2'          : 6.0,
-                     'B_Dira'                : 0.9995,
-                     'B_DD_IPCHI2wrtPV'      : 10.0,
-                     'B_LL_IPCHI2wrtPV'      : 10.0,
-                     'B_FDwrtPV'             : 1.0,
-                     'B_DD_FDChi2'           : 50,
-                     'B_LL_FDChi2'           : 50,
-                     'GEC_MaxTracks'         : 250,
-                     'Prescale'              : 1.0,
-                     'Postscale'             : 1.0
+    'CONFIG'      : { 'KSDaug_LTrk_GhostProb'   : 0.5,
+                      'Trk_GhostProb'           : 0.5,
+                      'Trk_Chi2'                : 3.0,
+                      'KS_DD_MassWindow'        : 30.0,
+                      'KS_LL_MassWindow'        : 15.0,
+                      'KS_DD_VtxChi2'           : 10.0,
+                      'KS_LL_VtxChi2'           : 10.0,
+                      'KS_DD_FDChi2'            : 50.0,
+                      'KS_LL_FDChi2'            : 100.0,
+                      'KS_DD_Pmin'              : 8000.0,
+                      'KS_LL_Pmin'              : 8000.0,
+                      'KS_DD_Ptmin'             : 1000.0,
+                      'KS_LL_Ptmin'             : 800.0,
+                      'Bach_Ptmin'              : 1000.0,
+                      'BDaug_MaxPT_IP'          : 0.05,
+                      'BDaug_DD_PTsum'          : 4000.0,
+                      'BDaug_LL_PTsum'          : 4000.0,
+                      'B_Mlow'                  : 500.0,
+                      'B_Mhigh'                 : 1500.0, # was 500 pushed to 1500 to include B_c
+                      'B_Pmin'                  : 25000.0,
+                      'B_LL_VtxChi2'            : 6.0,
+                      'B_DD_VtxChi2'            : 6.0,
+                      'B_Dira'                  : 0.9995,
+                      'B_DD_IPCHI2wrtPV'        : 10.0,
+                      'B_LL_IPCHI2wrtPV'        : 10.0,
+                      'B_FDwrtPV'               : 1.0,
+                      'B_DD_FDChi2'             : 50,
+                      'B_LL_FDChi2'             : 50,
+                      'GEC_MaxTracks'           : 250,
+                      'Prescale'                : 1.0,
+                      'Postscale'               : 1.0
                     },
     'STREAMS'     : { 'Bhadron' : ['StrippingBu2KSPiDDLine',
                                    'StrippingBu2KSPiLLLine'],
@@ -78,30 +78,60 @@ Hb2Charged2Body = {
                                                  'StrippingHb2Charged2BodyLb2KPlusPMinusLine']
                     }
     }
-
 ##
-## StrippingB2HHBkg.py
+## StrippingB2HHBDT.py
 ##
-B2HHBkg = {
+B2HHBDT = {
     'WGs'         : ['Charmless'],
-    'BUILDERTYPE' : 'B2HHBkgLines',
-    'CONFIG'      : {'PrescaleB2HHBkg' : 0.5,
+    'BUILDERTYPE' : 'B2HHBDTLines',
+    'CONFIG'      : {'PrescaleB2HHBDT' : 1.,
                      'MinPT'           : 1000,
                      'MinIP'           : 0.12,
                      'TrChi2'          : 3,
+                     'TrGhostProb'     : 0.5,
                      'CombMassLow'     : 4600,
                      'CombMassHigh'    : 6000,
                      'DOCA'            : 0.1,
                      'BPT'             : 1200,
                      'BIP'             : 0.12,
-                     'BTAU'            : 0.0003,
+                     'BTAU'            : 0.0006,
                      'MassLow'         : 4800,
-                     'MassHigh'        : 5800 
+                     'MassHigh'        : 5800,
+                     'BDTCut'          : -0.3,
+                     'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml"
                     },
-    'STREAMS'     : { 'Bhadron' : ['StrippingB2HHBkgLine'],
-                      'BhadronCompleteEvent' : []
+    'STREAMS'     : { 'Bhadron' : [],
+                      'BhadronCompleteEvent' : ['StrippingB2HHBDTLine']
                     }
     }
+##
+## StrippingD2HHBDT.py
+##
+D2HHBDT = {
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'D2HHBDTLines',
+    'CONFIG'      : {'PrescaleD2HHBDT' : 1.,
+                     'PrescaleDSt'     : 1.,
+                     'MinPT'           : 1000,
+                     'MinIP'           : 0.12,
+                     'TrChi2'          : 3,
+                     'TrGhostProb'     : 0.5,
+                     'CombMassLow'     : 1000,
+                     'CombMassHigh'    : 2800,
+                     'DOCA'            : 0.1,
+                     'BPT'             : 1200,
+                     'BIP'             : 0.12,
+                     'BTAU'            : 0.,
+                     'MassLow'         : 1800,
+                     'MassHigh'        : 2600,
+                     'BDTCut'          : -0.3,
+                     'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml",
+                     'VertexChi2'      : 64
+                    },
+    'STREAMS'     : { 'Charm' : ['StrippingD2HHBDTLine',
+                                 'StrippingDStD0PiWithD2HHBDTLine']}
+    }
+
 ##
 ## StrippingB2hhLTUnbiased.py
 ##
