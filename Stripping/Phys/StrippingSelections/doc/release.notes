@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-13 - Stefano Perazzini
+ - Added StrippingD2HHBDT in the Charm stream and Charmless WG to be used for calibration in B->hh analysis.
+ - Modified test/TestCharmlessLines.py for 2011 restripping tests.
+
 ! 2012-12-13 - Jibo He for Yury Shcheglov
  - StrippingBB2DMuNuX.py
   . New stripping line for low-x PDFs measurements 

@@ -19,7 +19,6 @@ bhadroncompleteeventLines = []
 #
 # Import your stripping lines
 #
-
 from StrippingSelections.StrippingBu2KSh import Bu2KShConf
 #from StrippingSelections.StrippingBu2KSh import default_config as B2KSh
 from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import Bu2KSh as B2KSh
@@ -40,15 +39,24 @@ for l in confBhh.lines():
   if l.name() in Hb2Charged2Body['STREAMS']['BhadronCompleteEvent']:
     bhadroncompleteeventLines.append(l)
 
-from StrippingSelections.StrippingB2HHBkg import B2HHBkgLines
-#from StrippingSelections.StrippingB2HHBkg import default_config as B2HHBkg
-from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import B2HHBkg as B2HHBkg
-confBhhBkg          = B2HHBkgLines("B2HHBkg", B2HHBkg['CONFIG'])
-for l in confBhhBkg.lines():
-  if l.name() in B2HHBkg['STREAMS']['Bhadron']:
+from StrippingSelections.StrippingB2HHBDT import B2HHBDTLines
+#from StrippingSelections.StrippingB2HHBDT import default_config as B2HHBDT
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import B2HHBDT as B2HHBDT
+confBhhBDT          = B2HHBDTLines("B2HHBDT", B2HHBDT['CONFIG'])
+for l in confBhhBDT.lines():
+  if l.name() in B2HHBDT['STREAMS']['Bhadron']:
     bhadronLines.append(l)
-  if l.name() in B2HHBkg['STREAMS']['BhadronCompleteEvent']:
+  if l.name() in B2HHBDT['STREAMS']['BhadronCompleteEvent']:
     bhadroncompleteeventLines.append(l)
+
+from StrippingSelections.StrippingD2HHBDT import D2HHBDTLines
+#from StrippingSelections.StrippingD2HHBDT import default_config as D2HHBDT
+from StrippingSettings.Stripping20r1.LineConfigDictionaries_Charmless import D2HHBDT as D2HHBDT
+confDhhBDT          = D2HHBDTLines("D2HHBDT", D2HHBDT['CONFIG'])
+for l in confDhhBDT.lines():
+  if l.name() in D2HHBDT['STREAMS']['Charm']:
+    bhadronLines.append(l)
+
 
 from StrippingSelections.StrippingB2hhLTUnbiased import StrippingB2hhLTUnbiasedConf
 from StrippingSettings.Stripping20.LineConfigDictionaries_Charmless import B2hhLTUnbiased, B2hhLTUnbiasedDetached
@@ -259,7 +267,7 @@ DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
-DaVinci().DataType  = "2012"
+DaVinci().DataType  = "2011"
 DaVinci().InputType = "DST"
 
 # change the column size of timing table
@@ -270,10 +278,10 @@ TimingAuditor().TIMER.NameSize = 60
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # database
-DaVinci().DDDBtag  = "head-20120413"
-DaVinci().CondDBtag = "cond-20120710"
+DaVinci().DDDBtag  = "dddb-20120831"
+DaVinci().CondDBtag = "cond-20121025"
 
 # input file
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py")
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13e_Run120535.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagDn.py") # MagDown sample
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagUp.py") # MagUp sample
 
