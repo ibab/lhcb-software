@@ -1,3 +1,16 @@
+B2DHHHForBXX = {
+    'BUILDERTYPE' : 'B2DHHHForBXXLinesConf',
+    'CONFIG' : {
+    "PreScale"      : 1.0   # adimensiional
+    ,"TRCHI2"        : 3.0   # adimensiional
+    ,"KaonPIDK"      : 4.0   # adimensiional
+    ,"PionPIDK"      : 2.0   # adimensiional
+    ,"DDocaChi2Max" : 10   #adimensiional
+    },
+    'STREAMS' : ['BhadronCompleteEvent'],
+    'WGs'    : ['Semileptonic']
+    }
+
 JPsiForSL = {
     'BUILDERTYPE' : 'JPsiForSLAllLinesConf',
     'CONFIG' :  {
