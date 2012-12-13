@@ -1861,3 +1861,72 @@ CharmFromBSemi = {
     'WGs'    : ['Charm']
     }
 
+# Kshort2MuMuPiPi Lines
+# Full-DST, Michael Sokoloff, Laurence Carson
+# Moved to this file in Stripping20r1
+# Lives in StrippingKshort2MuMuPiPi.py
+
+Kshort2MuMuPiPi  = {
+			'BUILDERTYPE' : 'Kshort2PiPiMuMuConf',
+			'CONFIG' : {
+				'MuonP'         : 3000. ,    #MeV
+				'MuonPT'        : 500.  ,    #MeV
+				'MuonMINIPCHI2' : 2     ,    #adminensional
+				'MuonTRCHI2'    : 5     ,    #adminensional
+
+				'PionP'         : 2000. ,    #MeV
+				'PionPT'        : 300.  ,    #MeV
+				'PionMINIPCHI2' : 2     ,    #adminensional
+				'PionTRCHI2'    : 5     ,    #adminensional
+
+				#4body
+				'MINIPCHI2_hhmumu' : 4. ,  #adminensional --  for the individual pions
+				'PT_hhmumu'        : 300 , #MeV
+				'MuonPIDmu_hhmumu' : -1,   #adimensional
+				'DPT_hhmumu'           : 2500.,     #MeV
+				'DVCHI2DOF_hhmumu'     : 8     ,    #adminensional         
+				'DMAXDOCA_hhmumu'      : 0.2  ,    #mm
+				'KsDauMAXIPCHI2_hhmumu' : 15    ,    #adimensinal
+				'DFDCHI2_hhmumu'       : 9     ,   #adimensional
+				'DIPCHI2_hhmumu'       : 20    ,    #adimensional
+				'DDIRA'         : 0.9999,    #adimensional
+				'MaxDimuonMass'    : 260.  ,    #MeV
+				'MaxKsMass'                   : 550.  ,    #MeV, comb mass window
+				'KsMotherMassCut'             : 540.  ,    # MeV, mother mass cut
+				'Kshort2PiPiMuMuLinePrescale'    : 1 ,
+				'Kshort2PiPiMuMuLinePostscale'   : 1
+				},
+			'STREAMS' : ['CharmCompleteEvent'] ,
+			'WGs'    : ['Charm']
+}
+
+# ChargedHyperon Lines
+# Full-DST, Michael Sokoloff, Laurence Carson
+# Moved to this file in Stripping20r1
+# Lives in StrippingChargedHyperons.py
+
+ChargedHyperons  = {
+			'BUILDERTYPE' : 'ChargedHyperonsConf',
+			'CONFIG' : {
+							'TRCHI2DOFMax'    : 3.0
+						, 'PionPIDK'        :  5.0
+						, 'KaonPIDK'        :  -5.0
+						, 'XiMassWindow'    :  20 * MeV
+						, 'OmegaMassWindow' :  20 * MeV
+						, 'LambdaLLMinDecayTime'  :  5.0 ##   (ps)
+						, 'LambdaLLVtxChi2Max'    :   5.0
+						, 'LambdaDDVtxChi2Max'    :   5.0
+						, 'LambdaLLMassWin'  : 5.7 * MeV
+						, 'LambdaDDMassWin'  : 5.7 * MeV
+						, 'LambdaLLMinVZ'    : -100. * mm
+						, 'LambdaLLMaxVZ'    :  500. * mm
+						, 'LambdaDDMinVZ'    :  300. * mm
+						, 'LambdaDDMaxVZ'    : 2275. * mm
+						, 'TrGhostProbMax'   :  0.25
+						, 'ProbNNkMin'       :  0.20
+						, 'ProbNNpMinLL'     :  0.20
+						, 'ProbNNpMinDD'     :  0.05
+				},
+			'STREAMS' : ['CharmCompleteEvent'] ,
+			'WGs'    : ['Charm']
+}
