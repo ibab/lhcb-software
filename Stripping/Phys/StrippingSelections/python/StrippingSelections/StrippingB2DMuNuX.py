@@ -336,7 +336,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                          DSel = self.sel_D0_to_2K2Pi,
                                          BVCHI2DOF = config['BVCHI2DOF'],
                                          BDIRA = config['BDIRA'],
-                                         DZ = config['DZ']
+                                         DZ = config['DZLoose']
                                          )        
 
         self.selb2D0MuX3KPi = makeb2DMuX('b2D0MuX3KPi' + name,
@@ -345,7 +345,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                          DSel = self.sel_D0_to_3KPi,
                                          BVCHI2DOF = config['BVCHI2DOF'],
                                          BDIRA = config['BDIRA'],
-                                         DZ = config['DZ']
+                                         DZ = config['DZLoose']
                                          )        
         
         self.selb2DpMuX = makeb2DMuX('b2DpMuX' + name,
@@ -381,7 +381,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                        DSel = self.selD2KKK,
                                        BVCHI2DOF = config['BVCHI2DOF'],
                                        BDIRA = config['BDIRA'],
-                                       DZ = config['DZ']
+                                       DZ = config['DZLoose']
                                        )
         
         self.selb2DsMuXPhiPi = makeb2DMuX('b2DsMuXPhiPi' + name,

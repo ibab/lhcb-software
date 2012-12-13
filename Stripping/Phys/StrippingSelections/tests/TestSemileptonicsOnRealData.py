@@ -72,6 +72,10 @@ from StrippingSelections import StrippingB2XTauNu
 confB2XTauNu = StrippingB2XTauNu.B2XTauNuAllLinesConf("B2XTauNu",StrippingB2XTauNu.confdict)
 BHad_stream.appendLines( confB2XTauNu.lines() )
 
+from StrippingSelections import StrippingB2DHHHForBXX
+confB2DHHHForBXX =  StrippingB2DHHHForBXX.B2DHHHForBXXLinesConf("B2DHHHForBXX",StrippingB2DHHHForBXX.confdict)
+BHad_stream.appendLines( confB2DHHHForBXX.lines() )
+
 #### PID MICRO DST STREAM ###############
 
 ## MUID calibration
@@ -120,7 +124,7 @@ MakePionsEtc.Code="ALL"
 
 DaVinci().PrintFreq = 10000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 50000
+DaVinci().EvtMax = 100000
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [MakePionsEtc] )
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
@@ -128,8 +132,13 @@ DaVinci().appendToMainSequence( [ sr ] )
 #DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().DataType = "2012"
 DaVinci().InputType = 'SDST'
-DaVinci().DDDBtag  = "head-20120413"
-DaVinci().CondDBtag = "head-20120420"
+#DaVinci().DDDBtag  = "head-20120413"
+#DaVinci().CondDBtag = "head-20120420"
+DaVinci().DDDBtag  = "dddb-20120831"
+DaVinci().CondDBtag = "cond-20121008"
 
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py")
+
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagDn.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
 #importOptions("$STRIPPINGSELECTIONSROOT/Reco13e.py")

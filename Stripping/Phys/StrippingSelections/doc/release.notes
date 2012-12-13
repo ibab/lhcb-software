@@ -4,10 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
-! 2012-12-13 - Mike Sokoloff
- - added python/StrippingSelections/StrippingChargedHyperons.py and
-         python/StrippingSelections/StrippingKshort2MuMuPiPi.py
-         and added "import" statements to __init__.py
+! 2012-12-13 - Mika Vesterinen
+ - TestSemileptonicsOnRealData.py 
+   - include new proton and kaon detection asymmetry lines.
+   - new DB tags
+ - StrippingB2DMuNuX.py
+   - Remove DeltaZ cut on D0->2K2Pi, D0->3KPi, and D->KKK lines. This cut would bias the mass measurements. 
+
 
 ! 2012-12-12 - Edmund Smith
  - Fixed bug in python/StrippingSelections/Beauty2Charm_DBuilder.py
