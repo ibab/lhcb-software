@@ -83,9 +83,20 @@ if !(-r ${rel_dir}/$PACKAGE/$VERSION) then
    exit 0
 endif
 
+# Archiving the distribution files
+echo "===> Archiving the distribution files"
+lb-project-archive-dist $project $version
+
+# Archiving the doc
+echo "===> Archiving the documentation"
+cd $LHCBRELEASES/DOC
+python scripts/gc_archive.py $project $version
+
+
+echo "===> Archiving the release area"
 # defreeze
 cd ${rel_dir}/$PACKAGE/$VERSION
-echo " defreeze the project directory"
+echo " Defreezing the project directory"
 afs_admin sq ${rel_dir}/$PACKAGE/$VERSION +10
 # find . -type d -exec fs setacl {} ${group}:librarians all \;
 unlockAFSDir -R ${rel_dir}/$PACKAGE/$VERSION
@@ -156,7 +167,7 @@ if ( -d  ${LHCBDOC}/${project}/releases/${version} ) then
 endif
 
 #remove the GRID entry if necessary
-echo "Check if the package should be remove from the GRID"
+echo "Check if the package should be removed from the GRID"
 echo " "
 
 if ! $?LHCBDIRACSYSROOT then
