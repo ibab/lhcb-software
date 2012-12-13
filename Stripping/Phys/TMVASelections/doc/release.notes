@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+! 2012-12-13 - Stefano Perazzini
+ - Added D2hhBDTSelection.cpp<h> for StrippingD2HHBDTLine
+
 ! 2012-12-08 - Chris Jones
  - Fix various compilation warnings from B2hhBDTSelection
 
