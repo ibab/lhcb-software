@@ -193,11 +193,22 @@ else
 	echo "Grid proxy found"
 endif
 
-
 `which dirac-lhcb-check-software` $package $version
 if ( $status == 0 ) then
    `which dirac-lhcb-remove-software` $package $version
 endif
+
+echo "===> Checking if the project is installed on CVMFS"
+if ( -d /cvmfs/lhcb.cern.ch) then
+  if (-d /cvmfs/lhcb.cern.ch/lib/lhcb/$PACKAGE/$VERSION) then
+     echo "Project $PACKAGE $VERSION is on CVMFS. Do not forget to remove it !"
+  else
+     echo "Project $PACKAGE $VERSION is not on CVMFS"
+  endif
+else
+  echo "CVMFS Not present could not check"
+endif
+
 
 # send a mail
 echo " ${rel_dir}/$PACKAGE/$VERSION is ${action}d and ${rel_dir}/${package}Env/${version} is removed" > /tmp/$$

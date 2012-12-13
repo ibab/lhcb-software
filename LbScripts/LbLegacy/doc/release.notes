@@ -1,6 +1,7 @@
 2012-12-13  Ben Couturier  <Ben.Couturier@cern.ch>
 
-	* scripts/archive_project: Added archival of doc and dist files 
+	* scripts/archive_project: Added archival of doc and dist files.
+	Added check to see if the project was released to CVMFS.
 
 2012-12-04  Ben Couturier  <Ben.Couturier@cern.ch>
 
