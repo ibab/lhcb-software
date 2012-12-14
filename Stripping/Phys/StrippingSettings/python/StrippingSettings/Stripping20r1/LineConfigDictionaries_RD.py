@@ -757,6 +757,8 @@ B2XTau =  {
     'MASS_LOW_B'                    : '2000', # MeV  
     'MASS_HIGH_B'                   : '7000', # MeV (old value: 5750)
     'MCOR_LOW_B'                    : '4000', # MeV
+    'MCOR_LOW_SB'                   : '2000', # MeV
+    'MCOR_HIGH_SB'                  : '4000', # MeV 
     'MCOR_HIGH_B'                   :'10000', # MeV (old value: 7000)
     'MIPCHI2_B'                     : '150',  # dimensionless 
     'MIPCHI2_B_HIGH'                : '36',   # dimensionless  
@@ -792,10 +794,14 @@ B2XTau =  {
     #
     'B2TauTau_TOSLinePrescale'          : 1,
     'B2TauTau_TOSLinePostscale'         : 1,
+    'B2TauTau_SB_TOSLinePrescale'       : 0.05,
+    'B2TauTau_SB_TOSLinePostscale'      : 1,
     'B2DD_TOSLinePrescale'              : 1,
     'B2DD_TOSLinePostscale'             : 1,
     'B2TauMu_TOSLinePrescale'           : 1,
     'B2TauMu_TOSLinePostscale'          : 1,
+    'B2TauMu_SB_TOSLinePrescale'        : 0.05,
+    'B2TauMu_SB_TOSLinePostscale'       : 1,
     'B2DMu_TOSLinePrescale'             : 0.2,
     'B2DMu_TOSLinePostscale'            : 1,
     'B2TauTau_TISLinePrescale'          : 1,
