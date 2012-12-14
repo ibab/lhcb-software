@@ -1268,7 +1268,7 @@ BB2DMuNuX = {
     ,"D0AMassWin"    : 100.0    # MeV   100
     ,"D0VCHI2DOF"    : 10.0            #6.0
     ,"PIDmu"         : 0.0   
-    ,"BVCHI2DOF"     : 100.0            #6.0    
+    ,"BVCHI2DOF"     : 25.0            #6.0    
     ,"Comb_AM_MIN"   : 0.
     ,"Comb_AM_MAX"   : 90000.0  # MeV
      },
