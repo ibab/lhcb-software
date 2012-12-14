@@ -190,6 +190,10 @@ import StrippingBu2K1MuMu
 import StrippingDstarD2hhpi0
 import StrippingD2XGamma
 
+import StrippingB2HHBDT
+import StrippingD2HHBDT
+import StrippingB2DHHHForBXX
+
 from sys import modules as _modules
 _this = _modules[__name__]
 
