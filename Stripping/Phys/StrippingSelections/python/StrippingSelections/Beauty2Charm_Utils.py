@@ -68,6 +68,22 @@ def has1TrackChild():
     return "INTREE(ISBASIC & (P>10000*MeV) & (PT>1700*MeV) & (TRCHI2DOF<2.5) "\
            "& (MIPCHI2DV(PRIMARY)>16) & (MIPDV(PRIMARY)>0.1*mm))"
 
+def makeTOSFilter(name,specs):
+    from Configurables import TisTosParticleTagger
+    tosFilter = TisTosParticleTagger(name+'TOSFilter')
+    tosFilter.TisTosSpecs = specs
+    tosFilter.ProjectTracksToCalo = False
+    tosFilter.CaloClustForCharged = False
+    tosFilter.CaloClustForNeutral = False
+    tosFilter.TOSFrac = {4:0.0, 5:0.0}
+    return tosFilter
+
+def tosSelection(sel,specs):
+    '''Filters Selection sel to be TOS.'''
+    tosFilter = makeTOSFilter(sel.name(),specs)
+    return Selection(sel.name()+'TOS', Algorithm=tosFilter,
+                     RequiredSelections=[sel])
+            
 def makeTISTOSFilter(name):
     specs = {'Hlt2Topo.*Decision%TOS':0,
              'Hlt2Topo.*Decision%TIS':0,
@@ -95,6 +111,114 @@ def filterPID(name,input,config,level=1):
             "(NINGENERATION(('pi+'==ABSID) & (PIDK > %s), %d) == 0)" \
             % (config['PI']['PIDK_MAX'],level)]
     return filterSelection(name,LoKiCuts.combine(cuts),input)
+
+#\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
+
+def makeTopoAllNBody(n,inputs,sumptcut=-1):
+    decay = [["K*(892)0 -> K+ K+","K*(892)0 -> K+ K-","K*(892)0 -> K- K-"],
+             #["D*(2010)0 -> K*(892)0 K+", "D*(2010)0 -> K*(892)0 K-"],
+             ["Delta0 -> K*(892)0 K+", "Delta0 -> K*(892)0 K-"],
+             #["B0 -> D*(2010)0 K-","B0 -> D*(2010)0 K+"]]
+             ["B0 -> Delta0 K-","B0 -> Delta0 K+"]]
+    comboCuts = "(AM < 7000*MeV) & "
+    if sumptcut > 0:
+        comboCuts += '(ASUM(SUMTREE(PT,(ISBASIC),0.0)) > %d*MeV) & ' % sumptcut
+    comboCuts += '(AALLSAMEBPV |(AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))'
+    comboCuts += " & (AMAXDOCA('LoKi::DistanceCalculator') < 0.2*mm)"
+    momCuts = "(BPVDIRA > 0) & (BPVVDCHI2 > 100)"
+    cp = CombineParticles(DecayDescriptors=decay[n-2],
+                          CombinationCut=comboCuts,
+                          MotherCut=momCuts)
+    return Selection("TopoAll%dBodySel"%n,Algorithm=cp,RequiredSelections=inputs)
+
+def topoNforN(n,inputs,addsumpt):
+    pid = "('K+'==ABSID)"
+    minPtSum = 3000
+    if n > 2: minPtSum = 4000
+    minPtSum += addsumpt
+    cuts = '(SUMTREE(PT,%s,0.0) > %d*MeV)' % (pid,minPtSum)
+    cuts += "&(INTREE(ISBASIC & (MIPCHI2DV(PRIMARY)>16) "\
+            " & (PT > 1500*MeV)))"
+            #" & ((PT > 1500*MeV) | (ISMUON & (PT > 1000*MeV)))))"
+    cuts += '& (MINTREE(HASTRACK & %s,TRCHI2DOF) < 2)' % pid
+    return filterSelection('Topo%dfor%dSel'%(n,n),cuts,[inputs]) 
+
+def topo2for3(all2):
+    return filterSelection('Topo2for3Sel',
+                           '(M < 6000*MeV) & (VFASPF(VCHI2) < 10)',[all2])
+
+def topo3for4(all3):
+    return filterSelection('Topo3for4Sel','(M < 6000*MeV)',[all3]) 
+
+def topoBDT(n,inputs):
+    sel = filterSelection('Topo%dBodyBBDTSel'%n,
+                          "FILTER('BBDecTreeTool/TopoBBDT')",[inputs])
+    from Configurables import BBDecTreeTool as BBDT
+    bbdt = BBDT(sel.name()+'.TopoBBDT')
+    bbdt.Threshold = 0.1
+    bbdt.ParamFile = 'Hlt2Topo%dBody_BDTParams_v1r0.txt' % n
+    return sel
+
+def topoSubPID(name,inputs):
+    sub = SubstitutePID(name+'SubPID',
+                        Code="DECTREE('X0 -> X X')")
+    sub.MaxChi2PerDoF = -666
+    sub.Substitutions = {'X0 -> X X'  : 'B0'}
+    sel = Selection(name+'FinalSel',Algorithm=sub,
+                    RequiredSelections=[inputs])
+    filter = "INTREE(ID=='B0')" 
+    return filterSelection(name,filter,[sel])
+                
+def makeTopoCands(inputs,addsumpt):
+    all2 = makeTopoAllNBody(2,[inputs])
+    topo2 = topoNforN(2,all2,addsumpt)
+    topo2 = topoBDT(2,topo2)
+    topo2 = topoSubPID('Topo2Body',topo2)
+    filt2 = topo2for3(all2)
+    all3 = makeTopoAllNBody(3,[inputs,filt2])
+    topo3 = topoNforN(3,all3,addsumpt)
+    topo3 = topoBDT(3,topo3)
+    topo3 = topoSubPID('Topo3Body',topo3)
+    filt3 = topo3for4(all3)
+    all4 = makeTopoAllNBody(4,[inputs,filt3],4000+addsumpt)
+    topo4 = topoNforN(4,all4,addsumpt)
+    topo4 = topoBDT(4,topo4)
+    return [MergedSelection('PseudoTopoCands',[topo2,topo3,topo4])]
+
+def makeDoubleTopo(inputs,config):
+    topos = makeTopoCands(inputs,config['ADDSUMPT'])
+    preambulo = ['D1 = ACHILD(BPVVD,1)',
+                 'DZ1 = ACHILD(BPVVDZ,1)',
+                 'DR1 = ACHILD(BPVVDR,1)',
+                 'SIN1 = DR1/D1',
+                 'COS1 = DZ1/D1',
+                 'SVX1 = ACHILD(VFASPF(VX),1)',
+                 'SVY1 = ACHILD(VFASPF(VY),1)',
+                 'D2 = ACHILD(BPVVD,2)',
+                 'DZ2 = ACHILD(BPVVDZ,2)',
+                 'DR2 = ACHILD(BPVVDR,2)',
+                 'SIN2 = DR2/D2',
+                 'COS2 = DZ2/D2',
+                 'SVX2 = ACHILD(VFASPF(VX),2)',
+                 'SVY2 = ACHILD(VFASPF(VY),2)',
+                 'DSVX = (SVX1-SVX2)',
+                 'DSVY = (SVY1-SVY2)',
+                 'COSDPHI = (DR1**2 + DR2**2 - DSVX**2 - DSVY**2)/(2*DR1*DR2)',
+                 'COSANGLE = SIN1*SIN2*COSDPHI + COS1*COS2'
+                 ]
+    comboCuts = '(COSANGLE < %f) & (COSDPHI < %f) &(AM > %d*MeV)' \
+                % (config['COSANGLE_MAX'],config['COSDPHI_MAX'],config['M_MIN'])
+    momCuts = 'MAXTREE(ISBASIC,PT) > %d*MeV' % config['MAXPT_MIN']
+    cp = CombineParticles(DecayDescriptor='B_c+ -> B0 B0',
+                          Preambulo=preambulo,
+                          CombinationCut=comboCuts,
+                          MotherCut=momCuts)
+    cp = cp.configurable('PseudoDoubleTopoBeauty2CharmCombiner')    
+    cp.ParticleCombiners.update({'':'MomentumCombiner'})
+    sel = Selection('PseudoDoubleTopoSel',
+                    Algorithm=cp,RequiredSelections=topos)
+    sel = tosSelection(sel,{'Hlt2Topo.*BBDTDecision%TOS':0})
+    return sel
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 

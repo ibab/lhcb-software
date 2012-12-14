@@ -135,23 +135,27 @@ config = {
                   'PI': {'PIDK_MAX' : 12},
                   'K' : {'PIDK_MIN' : -10}}
     },
+    '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
+    'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,'COSDPHI_MAX':0,'M_MIN':0,'MAXPT_MIN': 4000},
+    'D0INC' : {'PT_MIN' : 1000, 'IPCHI2_MIN': 100},
     "Prescales" : { # Prescales for individual lines
-    'RUN_BY_DEFAULT' : True, # False = lines off by default
-    'RUN_RE'         : ['.*PhiMu.*'],#['.*KS.*','.*Lb2LcD.*','.*DoubleTopo.*'],  
+    'RUN_BY_DEFAULT' : False, # False = lines off by default
+    'RUN_RE'         : ['.*DoubleTopo.*','.*D02HHTopoTOS.*'],  
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
-    #'B02D0PiPiD2HHBeauty2CharmLine'      : 1.0,
-    'B02DHHWSD2HHBeauty2CharmLine'       : 0.1,
+    #'B2D0PiD2HHBeauty2CharmLine'      : 1.0,
+    #'B2D0KD2HHBeauty2CharmLine'      : 1.0,
+    #'B02DHHWSD2HHBeauty2CharmLine'       : 0.1,
     #'B2DPiPiD2HHHCFPIDBeauty2CharmLine'  : 1.0,
     #'B2DHHOSD2HHHCFPIDBeauty2CharmLine'  : 1.0,
     #'#B02DPiNoIPDs2HHHPIDBeauty2CharmLine': 1.0,
     #'Lb2XicPiXic2PKPiBeauty2CharmLine' 	 : 1.0,
     #'Lb2XicKXic2PKPiBeauty2CharmLine' 	 : 1.0,
-    'Lb2XicPiWSXic2PKPiBeauty2CharmLine' : 0.1,
-    'Lb2XicKWSXic2PKPiBeauty2CharmLine'  : 0.1,
+    #'Lb2XicPiWSXic2PKPiBeauty2CharmLine' : 0.1,
+    #'Lb2XicKWSXic2PKPiBeauty2CharmLine'  : 0.1,
     #'X2LcLcBeauty2CharmLine'    : 1.0,
-    'X2LcLcWSBeauty2CharmLine'  : 0.1,
-    'B02DKLTUBD2HHHBeauty2CharmLine' : 0.04,
+    #'X2LcLcWSBeauty2CharmLine'  : 0.1,
+    #'B02DKLTUBD2HHHBeauty2CharmLine' : 0.04,
     #'B02D0D0Beauty2CharmLine'   : 1.0,
     #'B02DDWSBeauty2CharmLine'   : 1.0,
     #'B2D0DD02K3PiBeauty2CharmLine' : 1.0
@@ -163,7 +167,7 @@ config = {
 
 class Beauty2CharmConf(LineBuilder):
     __configuration_keys__ = ('ALL','UPSTREAM','KS0','Pi0','D2X','B2X','Dstar','HH','HHH',
-                              'PID','Prescales','GECNTrkMax')
+                              'PID','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
@@ -237,12 +241,29 @@ class Beauty2CharmConf(LineBuilder):
         alg = LoKi__VoidFilter('DoubleTopoLineFilter',Code=code)
         sel = EventSelection('DoubleTopoEventSel',Algorithm=alg)
         dt = DT('DoubleTopoLine_DT')
-        dt.minAngle = 2/57.
-        dt.minMass = 19000
+        dt.minAngle = config['2TOPO']['ANGLE_MIN']
+        dt.minMass = config['2TOPO']['M_MIN']
+        dt.minDPhi = config['2TOPO']['DPHI_MIN']
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine('DoubleTopoLine',1.0,selection=sel,HLT=hlt)
         self.registerLine(sline)
-        
+
+        # pseudo double topo line
+        sline = StrippingLine('PseudoDoubleTopoLine',1.0,
+                              selection=makeDoubleTopo(topoKaons,config['BB']),
+                              HLT=hlt)
+        self.registerLine(sline)
+
+        # B->D0X inclusive line
+        cuts = "(PT > %d*MeV) & (ADMASS('D0') < 25*MeV) & (MIPCHI2DV(PRIMARY)>%d)" \
+               % (config['D0INC']['PT_MIN'],config['D0INC']['IPCHI2_MIN'])
+        sel = filterSelection('D02KPIPIDMTIGHT',cuts,d.kpi_pid_tight)
+        sel = tosSelection(sel,{'Hlt2Topo2BodyBBDTDecision%TOS':0})
+        hlt = "HLT_PASS_RE('Hlt2Topo2BodyBBDTDecision')"
+        sline = StrippingLine('D02HHTopoTOSLine',1.0,selection=sel,HLT=hlt)
+        self.registerLine(sline)
+
+
 
     def _makeLine(self,protoLine,config):
         tag = 'B2CBBDTBeauty2CharmFilter'

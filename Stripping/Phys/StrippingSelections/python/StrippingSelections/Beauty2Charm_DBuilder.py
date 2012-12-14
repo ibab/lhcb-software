@@ -79,6 +79,8 @@ class DBuilder(object):
 
         # PID filtered selections
         self.hh_pid = [filterPID('D2HHPID',self.hh,config_pid)]
+        self.hh_pid_tight = [filterPID('D2HHTIGHTPID',self.hh_pid,
+                                       config_pid['TIGHT'])]
         self.hhh_pid = [filterPID('D2HHHPID',self.hhh,config_pid)]
         self.hhh_pid_tight = [filterPID('D2HHHPIDTIGHT',self.hhh_pid,
                                         config_pid['TIGHT'])]
@@ -88,6 +90,7 @@ class DBuilder(object):
                "((ID=='D-') & (NINTREE(ID=='K+')==1) & (%s)))" % (oneK,oneK)
         ds_cf = "((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1))"
         self.kpi_pid = [filterSelection('D2KPIPID',oneK,self.hh_pid)]
+        self.kpi_pid_tight = [filterSelection('D2KPITIGHTPID',oneK,self.hh_pid_tight)]
         self.k3pi = [filterSelection('D2K3PI',oneK,self.hhhh)]
         self.k3pi_pid = [filterPID('D2K3PIPID',self.k3pi,config_pid)]
         self.d0_cf_pid = [MergedSelection('D0CFPID',
