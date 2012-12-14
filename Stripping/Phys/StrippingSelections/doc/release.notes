@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-14 - Mike Williams
+ - Added 2 new lines to Beauty2Charm
+
 ! 2012-12-14 - Anton Poluektov 
  - Add new builders to __init__.py
 
