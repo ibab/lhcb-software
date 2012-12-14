@@ -1,3 +1,69 @@
+! 2012-12-14 - Marco Clemencic (e03975c)
+
+ - minor additions for FindROOT.cmake
+
+   
+
+! 2012-12-14 - Marco Clemencic (6082594)
+
+ - fixed parsing of arguments of gaudi_depends_on_subdirs
+
+   
+
+! 2012-12-14 - Marco Clemencic (cca66ca)
+
+ - add name alias for LAPACK
+
+   
+
+! 2012-12-14 - Marco Clemencic (66b7b14)
+
+ - allow non-GaudiProject library targets in the LINK_LIBRARIES list
+
+   
+
+! 2012-12-14 - Marco Clemencic (7e415e6)
+
+ - added a test for a special case
+
+   
+
+! 2012-12-13 - Marco Clemencic (68357ef)
+
+ - added function 'gaudi_alias' to create wrapper scripts for commands
+
+   
+
+! 2012-12-13 - Marco Clemencic (66b40a6)
+
+ - minor fix in the permissions of scripts
+
+   
+
+! 2012-12-06 - Marco Clemencic (30afb2f)
+
+ - added code to force merge of files even if the build fails
+
+   In the old system, a partial/failed build produces partial merged files. To
+   reproduce the same behavior, I added a set of new targets
+   (Merged*_force) to trigger this partial generation by hand (for example for
+   a test) and a special install code to force the generation if the output
+   files are not found.
+
+! 2012-12-06 - Marco Clemencic (b4c4dc9)
+
+ - made all the installations depending on build products OPTIONAL
+
+   'make install' will be run only if the build is successful, but we will be
+   able to call the cmake_install.cmake script to install after an incomplete
+   build.
+
+! 2012-12-03 - Marco Clemencic (0e96a1d)
+
+ - minor fix to the handling of python.zip
+
+   
+
 ! 2012-11-30 - Marco Clemencic (87ed06d)
 
  - added FindTBB.cmake

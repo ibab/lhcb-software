@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: 87ed06df10737a384261b404ab8bd8e7e6f54235
+# Commit Id: e03975cfc9d6ecb34c12dcb49d1d0b17bac0b4c4
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -228,9 +228,10 @@ macro(gaudi_project project version)
   #--- Project Installations------------------------------------------------------------------------
   install(DIRECTORY cmake/ DESTINATION cmake
                            FILES_MATCHING PATTERN "*.cmake"
-                           PATTERN ".svn" EXCLUDE )
-  install(PROGRAMS cmake/testwrap.sh cmake/testwrap.csh cmake/testwrap.bat cmake/genCMake.py cmake/env.py DESTINATION scripts OPTIONAL)
-  install(DIRECTORY cmake/EnvConfig DESTINATION scripts FILES_MATCHING PATTERN "*.py" PATTERN "*.conf")
+                           PATTERN ".svn" EXCLUDE)
+  install(PROGRAMS cmake/env.py DESTINATION scripts OPTIONAL)
+  install(DIRECTORY cmake/EnvConfig DESTINATION scripts
+          FILES_MATCHING PATTERN "*.py" PATTERN "*.conf")
 
   #--- Global actions for the project
   #message(STATUS "CMAKE_MODULE_PATH -> ${CMAKE_MODULE_PATH}")
@@ -278,7 +279,9 @@ macro(gaudi_project project version)
   gaudi_merge_files(DictRootmap lib ${CMAKE_PROJECT_NAME}Dict.rootmap)
 
   # FIXME: it is not possible to produce the file python.zip at installation time
-  # because of http://public.kitware.com/Bug/view.php?id=8438
+  # because the install scripts of the subdirectories are executed after those
+  # of the parent project and we cannot have a post-install target because of
+  # http://public.kitware.com/Bug/view.php?id=8438
   # install(CODE "execute_process(COMMAND  ${zippythondir_cmd} ${CMAKE_INSTALL_PREFIX}/python)")
   add_custom_target(python.zip
                     COMMAND ${zippythondir_cmd} ${CMAKE_INSTALL_PREFIX}/python
@@ -816,11 +819,10 @@ macro(gaudi_collect_subdir_deps)
     foreach(var ${vars})
       # extract the individual subdir names
       string(REGEX REPLACE "gaudi_depends_on_subdirs *\\(([^)]+)\\)" "\\1" __p ${var})
-      string(REGEX REPLACE "(\r?\n)+$" "" ___p "${___p}")
+      # (replace space-type chars with spaces)
+      string(REGEX REPLACE "[\t\r\n]+" " " __p "${__p}")
       separate_arguments(__p)
       foreach(___p ${__p})
-        # remove newlines in the matched subdir name
-        string(REGEX REPLACE "(\r?\n)+$" "" ___p "${___p}")
         # check that the declared dependency refers to an existing (known) package
         list(FIND known_packages ${___p} idx)
         if(idx LESS 0)
@@ -996,10 +998,14 @@ function(gaudi_resolve_link_libraries variable)
   foreach(package ${ARGN})
     # check if it is an actual library or a target first
     if(TARGET ${package})
+      #message(STATUS "${package} is a TARGET")
       set(collected ${collected} ${package})
       get_target_property(libs ${package} REQUIRED_LIBRARIES)
-      set(to_be_resolved ${to_be_resolved} ${libs})
+      if(libs)
+        set(to_be_resolved ${to_be_resolved} ${libs})
+      endif()
     elseif(EXISTS ${package}) # it's a real file
+      #message(STATUS "${package} is a FILE")
       set(collected ${collected} ${package})
     else()
       # it must be an available package
@@ -1084,8 +1090,20 @@ function(gaudi_merge_files merge_tgt dest filename)
     add_custom_target(Merged${merge_tgt} ALL DEPENDS ${output})
     # prepare the high level dependencies
     add_dependencies(Merged${merge_tgt} ${deps})
+
+    # target to generate a partial merged file
+    add_custom_command(OUTPUT ${output}_force
+                       COMMAND ${merge_cmd} --ignore-missing ${parts} ${output})
+    add_custom_target(Merged${merge_tgt}_force DEPENDS ${output}_force)
+    # ensure that we merge what we have before installing if the output was not
+    # produced
+    install(CODE "if(NOT EXISTS ${output})
+                  message(WARNING \"creating partial ${output}\")
+                  execute_process(COMMAND ${merge_cmd} --ignore-missing ${parts} ${output})
+                  endif()")
+
     # install rule for the merged DB
-    install(FILES ${output} DESTINATION ${dest})
+    install(FILES ${output} DESTINATION ${dest} OPTIONAL)
   endif()
 endfunction()
 
@@ -1139,7 +1157,7 @@ function(gaudi_generate_configurables library)
   gaudi_merge_files_append(ConfDB ${library}Conf ${outdir}/${library}_confDb.py)
   #----Installation details-------------------------------------------------------
   install(FILES ${outdir}/${library}_confDb.py ${outdir}/${library}Conf.py
-          DESTINATION python/${package})
+          DESTINATION python/${package} OPTIONAL)
 
   # Check if we need to install our __init__.py (i.e. it is not already installed
   # with the python modules).
@@ -1150,7 +1168,7 @@ function(gaudi_generate_configurables library)
     list(FIND python_modules ${package} got_pkg_module)
     if(got_pkg_module LESS 0)
       # we need to install our __init__.py
-      install(FILES ${outdir}/__init__.py DESTINATION python/${package})
+      install(FILES ${outdir}/__init__.py DESTINATION python/${package} OPTIONAL)
     endif()
   endif()
 
@@ -1198,7 +1216,7 @@ function(gaudi_generate_confuserdb)
                   -o ${outdir}/${package}_user_confDb.py
                   ${package} ${modules})
     install(FILES ${outdir}/${package}_user_confDb.py
-            DESTINATION python/${package})
+            DESTINATION python/${package} OPTIONAL)
     gaudi_merge_files_append(ConfDB ${package}ConfUserDB ${outdir}/${package}_user_confDb.py)
 
     # FIXME: dependency on others ConfUserDB
@@ -1346,7 +1364,7 @@ macro(gaudi_common_add_build)
   CMAKE_PARSE_ARGUMENTS(ARG "" "" "LIBRARIES;LINK_LIBRARIES;INCLUDE_DIRS" ${ARGN})
   # obsolete option
   if(ARG_LIBRARIES)
-    message(WARNING "Deprecated option 'LIBRARY', use 'LINK_LIBRARIES' instead")
+    message(WARNING "Deprecated option 'LIBRARIES', use 'LINK_LIBRARIES' instead")
     set(ARG_LINK_LIBRARIES ${ARG_LINK_LIBRARIES} ${ARG_LIBRARIES})
   endif()
 
@@ -1434,7 +1452,7 @@ macro(_gaudi_detach_debinfo target)
         WORKING_DIRECTORY ${_builddir}
         COMMENT "Detaching debug infos for ${_tn} (${target}).")
     # ensure that the debug file is installed on 'make install'...
-    install(FILES ${_builddir}/${_tn}.dbg DESTINATION ${_dest})
+    install(FILES ${_builddir}/${_tn}.dbg DESTINATION ${_dest} OPTIONAL)
     # ... and removed on 'make clean'.
     set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${_builddir}/${_tn}.dbg)
   endif()
@@ -1490,10 +1508,10 @@ function(gaudi_add_library library)
   gaudi_add_genheader_dependencies(${library})
 
   #----Installation details-------------------------------------------------------
-  install(TARGETS ${library} EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION lib)
+  install(TARGETS ${library} EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION lib OPTIONAL)
   gaudi_export(LIBRARY ${library})
   gaudi_install_headers(${ARG_PUBLIC_HEADERS})
-  install(EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION cmake)
+  install(EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION cmake OPTIONAL)
 endfunction()
 
 # Backward compatibility macro
@@ -1520,7 +1538,7 @@ function(gaudi_add_module library)
   gaudi_add_genheader_dependencies(${library})
 
   #----Installation details-------------------------------------------------------
-  install(TARGETS ${library} LIBRARY DESTINATION lib)
+  install(TARGETS ${library} LIBRARY DESTINATION lib OPTIONAL)
   gaudi_export(MODULE ${library})
 endfunction()
 
@@ -1562,7 +1580,7 @@ function(gaudi_add_dictionary dictionary header selection)
   gaudi_merge_files_append(DictRootmap ${dictionary}Gen ${CMAKE_CURRENT_BINARY_DIR}/${rootmapname})
 
   #----Installation details-------------------------------------------------------
-  install(TARGETS ${dictionary}Dict LIBRARY DESTINATION lib)
+  install(TARGETS ${dictionary}Dict LIBRARY DESTINATION lib OPTIONAL)
 endfunction()
 
 #---------------------------------------------------------------------------------------------------
@@ -1590,7 +1608,7 @@ function(gaudi_add_python_module module)
   gaudi_add_genheader_dependencies(${module})
 
   #----Installation details-------------------------------------------------------
-  install(TARGETS ${module} LIBRARY DESTINATION python/lib-dynload)
+  install(TARGETS ${module} LIBRARY DESTINATION python/lib-dynload OPTIONAL)
 endfunction()
 
 #---------------------------------------------------------------------------------------------------
@@ -1617,8 +1635,8 @@ function(gaudi_add_executable executable)
   gaudi_add_genheader_dependencies(${executable})
 
   #----Installation details-------------------------------------------------------
-  install(TARGETS ${executable} EXPORT ${CMAKE_PROJECT_NAME}Exports RUNTIME DESTINATION bin)
-  install(EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION cmake)
+  install(TARGETS ${executable} EXPORT ${CMAKE_PROJECT_NAME}Exports RUNTIME DESTINATION bin OPTIONAL)
+  install(EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION cmake OPTIONAL)
   gaudi_export(EXECUTABLE ${executable})
 
 endfunction()
@@ -1801,10 +1819,37 @@ function(gaudi_install_scripts)
   install(DIRECTORY scripts/ DESTINATION scripts
           FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
                            GROUP_EXECUTE GROUP_READ
+                           WORLD_EXECUTE WORLD_READ
           PATTERN "CVS" EXCLUDE
           PATTERN ".svn" EXCLUDE
           PATTERN "*~" EXCLUDE
           PATTERN "*.pyc" EXCLUDE)
+endfunction()
+
+#---------------------------------------------------------------------------------------------------
+# gaudi_alias(name command...)
+#
+# Create a shell script that wraps the call to the specified command, as in
+# usual Unix shell aliases.
+#---------------------------------------------------------------------------------------------------
+function(gaudi_alias name)
+  if(NOT ARGN)
+    message(FATAL_ERROR "No command specified for wrapper (alias) ${name}")
+  endif()
+  # prepare actual command line
+  set(cmd)
+  foreach(arg ${ARGN})
+    set(cmd "${cmd} \"${arg}\"")
+  endforeach()
+  # create wrapper
+  file(WRITE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${name}
+       "#!/bin/sh
+exec ${cmd} \"\$@\"
+")
+  # make it executable
+  execute_process(COMMAND chmod 755 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${name})
+  # install
+  install(PROGRAMS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${name} DESTINATION scripts)
 endfunction()
 
 #---------------------------------------------------------------------------------------------------
@@ -1961,11 +2006,7 @@ set(${CMAKE_PROJECT_NAME}_INCLUDE_DIRS \${_dir}/include)
 set(${CMAKE_PROJECT_NAME}_LIBRARY_DIRS \${_dir}/lib)
 
 set(${CMAKE_PROJECT_NAME}_BINARY_PATH \${_dir}/bin \${_dir}/scripts)
-if(EXISTS \${_dir}/python.zip)
-  set(${CMAKE_PROJECT_NAME}_PYTHON_PATH \${_dir}/python.zip)
-else()
-  set(${CMAKE_PROJECT_NAME}_PYTHON_PATH \${_dir}/python)
-endif()
+set(${CMAKE_PROJECT_NAME}_PYTHON_PATH \${_dir}/python)
 
 set(${CMAKE_PROJECT_NAME}_COMPONENT_LIBRARIES ${component_libraries})
 set(${CMAKE_PROJECT_NAME}_LINKER_LIBRARIES ${linker_libraries})

@@ -24,10 +24,11 @@ endif()
 set(ROOT_INCLUDE_DIRS ${ROOTSYS}/include)
 set(ROOT_LIBRARY_DIRS ${ROOTSYS}/lib)
 
-# This is the list of all known component libraries
-set(ROOT_ALL_COMPONENTS Core Cint Reflex RIO Hist Tree TreePlayer Cintex Matrix GenVector MathCore MathMore XMLIO)
+# This is the list of some known component libraries
+set(ROOT_ALL_COMPONENTS Core Cint Reflex RIO Hist Tree TreePlayer Cintex Matrix
+                        GenVector MathCore MathMore XMLIO Graf Gui Rint Physics)
 # and build tools
-set(ROOT_ALL_TOOLS genreflex genmap root)
+set(ROOT_ALL_TOOLS genreflex genmap root rootcint)
 
 # Helper macro to discover the dependencies between components needed on Mac)
 macro(_root_get_deps libpath var)

@@ -385,20 +385,24 @@ apply_pattern component_library library=Lib2
 # We do not use variables
 library Lib3 lib3/*.cpp a_variable=some_value
 apply_pattern component_library library=Lib3
+
+# test that we can handle the '-import' before the sources
+library Lib4 -import=XercesC lib4/*.cpp
+apply_pattern component_library library=Lib4
     '''
     pkg = PackWrap("Test", requirements, files={})
 
     print 'components', pkg.component_libraries
     print 'libraries', pkg.libraries
 
-    assert pkg.component_libraries == set(['Lib1', 'Lib2', 'Lib3'])
+    assert pkg.component_libraries == set(['Lib1', 'Lib2', 'Lib3', 'Lib4'])
     assert pkg.libraries
 
     cmakelists = pkg.generate()
     print cmakelists
 
     calls = getCalls("gaudi_add_module", cmakelists)
-    assert len(calls) == 3, "gaudi_add_module wrong count %d" % len(calls)
+    assert len(calls) == 4, "gaudi_add_module wrong count %d" % len(calls)
 
     l = calls[0]
     assert re.match(r' *Lib1\b', l)
@@ -415,6 +419,11 @@ apply_pattern component_library library=Lib3
     assert not re.search(r'\bPUBLIC_HEADERS', l)
     assert re.search(r'\bLINK_LIBRARIES +Boost', l)
     assert re.search(r'\bINCLUDE_DIRS +Boost', l)
+    l = calls[3]
+    assert re.match(r' *Lib4\b', l)
+    assert not re.search(r'\bPUBLIC_HEADERS', l)
+    assert re.search(r'\bLINK_LIBRARIES +Boost +XercesC', l)
+    assert re.search(r'\bINCLUDE_DIRS +Boost +XercesC', l)
 
 def test_libraries_3():
     # some corner cases
@@ -1420,6 +1429,30 @@ project TestProjectHT
 
     assert k not in cmt2cmake.cache
 
+
+
+
+def test_alias():
+    requirements = '''
+package Test
+version v1r0
+
+alias MyCommand "Command"
+alias pypaw "pyroot -i "
+    '''
+    pkg = PackWrap("Test", requirements, files={})
+
+    cmakelists = pkg.generate()
+    print cmakelists
+
+    calls = getCalls("gaudi_alias", cmakelists)
+    assert len(calls) == 2
+
+    calls = sorted([x.strip().split() for x in calls])
+
+    assert calls[0] == ['MyCommand', 'Command'], calls[0]
+
+    assert calls[1] == ['pypaw', 'pyroot', '-i'], calls[1]
 
 
 from nose.core import main

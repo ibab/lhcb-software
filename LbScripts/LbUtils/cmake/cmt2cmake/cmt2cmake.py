@@ -53,6 +53,7 @@ def makeParser(patterns=None):
                    + identifier + ZeroOrMore(constituent_option | source))
     macro = (Keyword('macro') | Keyword('macro_append')) + identifier + values
     setenv = (Keyword('set') | Keyword('path_append') | Keyword('path_prepend')) + identifier + values
+    alias = Keyword('alias') + identifier + values
 
     apply_pattern = Keyword("apply_pattern") + identifier + ZeroOrMore(variable)
     if patterns:
@@ -61,7 +62,7 @@ def makeParser(patterns=None):
         direct_patterns.addParseAction(lambda toks: toks.insert(0, 'apply_pattern'))
         apply_pattern = apply_pattern | (direct_patterns + ZeroOrMore(variable))
 
-    statement = (package | version | use | constituent | macro | setenv | apply_pattern)
+    statement = (package | version | use | constituent | macro | setenv | alias | apply_pattern)
 
     return Optional(statement) + Optional(comment) + StringEnd()
 
@@ -138,6 +139,7 @@ def extName(n):
                'fftw': 'FFTW',
                'uuid': 'UUID',
                'fastjet': 'FastJet',
+               'lapack': 'LAPACK',
                }
     return mapping.get(n, n)
 
@@ -195,6 +197,7 @@ class Package(object):
         self.macros = {}
         self.sets = {}
         self.paths = {}
+        self.aliases = {}
 
         # These are patterns that can appear only once per package.
         # The corresponding dictionary will contain the arguments passed to the
@@ -522,6 +525,11 @@ class Package(object):
             data.extend(installs)
             data.append('') # empty line
 
+        if self.aliases:
+            data.extend(['gaudi_alias({0}\n            {1})'.format(name, ' '.join(alias))
+                         for name, alias in self.aliases.iteritems()])
+            data.append('') # empty line
+
         # environment
         def fixSetValue(s):
             '''
@@ -684,6 +692,12 @@ class Package(object):
                 if name not in ignore_env:
                     value = args[0].strip('"').strip("'")
                     self.sets[name] = value
+
+            elif cmd == 'alias':
+                # FIXME: should handle macro tags
+                name = args.pop(0)
+                value = args[0].strip('"').strip("'").split()
+                self.aliases[name] = value
 
         # classification of libraries in the package
         unquote = lambda x: x.strip('"').strip("'")
