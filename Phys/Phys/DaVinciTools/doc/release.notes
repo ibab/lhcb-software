@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-12-14 - Mike Williams
+ - Added ability to cut on Delta phi in DoubleTopoTool
+
 !========================= DaVinciTools v23r4 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
