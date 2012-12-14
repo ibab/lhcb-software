@@ -147,7 +147,7 @@ def makeKaons (
     K_IPCHI2
     ):
 
-    _code = "(PIDK  - PIDpi > -2.  )  &  (PT>%(K_PT)s*MeV) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)" %locals()
+    _code = "(PIDK  - PIDpi > -2.  )  &  (PT>%(K_PT)s*MeV) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)  & ( TRGHOSTPROB < 0.3 )" %locals()
     _kaonsFilter = FilterDesktop(Code = _code)
     _stdKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
 
