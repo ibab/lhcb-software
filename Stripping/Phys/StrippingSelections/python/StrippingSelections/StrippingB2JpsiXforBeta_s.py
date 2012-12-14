@@ -19,6 +19,7 @@ __all__ = ('B2JpsiXforBeta_sConf')
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from StandardParticles import StdLoosePions
+from StandardParticles import StdLooseKaons
 from StandardParticles import StdAllLoosePions
 from StandardParticles import StdAllNoPIDsKaons
 from StandardParticles import StdAllLooseKaons
@@ -119,6 +120,15 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                  "& (VFASPF(VCHI2/VDOF) < 16)" \
                                                  "& (SUMTREE(PT, ((ABSID=='pi+') | (ABSID=='K+'))) > 900. * MeV)" % self.config)
                                                                                                                                                                  
+        self.DetachedKstarWideList = self.createCombinationsSel( OutputList = "DetachedKstarWideListForBetaS" + self.name,
+                               DaughterLists = [ StdLooseKaons, StdLoosePions ],
+                               DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc", "[K*_0(1430)0 -> K+ pi-]cc"  ],
+                               DaughterCuts = { "pi-" : " (PT > 500 *MeV) & (PIDK < 0) & (TRGHOSTPROB < 0.8)",
+                                                "K+"  : " (PT > 500 *MeV) & (PIDK > 0) & (TRGHOSTPROB < 0.8)"},
+                               PreVertexCuts = "(in_range(750,AM,1900))  & (ADOCACHI2CUT(30, ''))",
+                               PostVertexCuts = "(VFASPF(VCHI2) < 25)",
+                               ReFitPVs = False )
+
         self.f0List = self.createCombinationsSel( OutputList = "f02PiPiForBetaS" + self.name,
                                DaughterLists = [ self.KaonList, StdLoosePions ],
                                DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+", "f_0(980) -> K+ K-"],
@@ -156,6 +166,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 #        self.makeBd2JpsiKsFromV0 ()
         self.makeBs2Jpsif0   ()
         self.makeBs2JpsiKstar()
+        self.makeBs2JpsiKstarWide()
         self.makeLambdab2JpsiLambda() 
 #        self.makeBs2JpsiEta  ()  
         self.makeBd2JpsiPi0  ()  
@@ -397,7 +408,19 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bs2JpsiKstarLine = StrippingLine( self.name + "Bs2JpsiKstarLine", algos = [ Bs2JpsiKstar ])
         
         self.registerLine(Bs2JpsiKstarLine)
-        
+
+    def makeBs2JpsiKstarWide( self ):
+
+        Bs2JpsiKstarWide      = self.createCombinationSel( OutputList = "Bs2JpsiKstarWide" + self.name,
+                                DecayDescriptor = "[B_s~0 -> J/psi(1S) K*(892)0]cc",
+                                DaughterLists  = [ self.JpsiList, self.DetachedKstarWideList ],
+                                PreVertexCuts = "in_range(5100,AM,5700)",
+                                PostVertexCuts = "(VFASPF(VCHI2PDOF) < 10) & (BPVDIRA >0.999) & (BPVVD > 1.5 *mm)" )
+
+        Bs2JpsiKstarWideLine = StrippingLine( self.name + "Bs2JpsiKstarWideLine", algos = [ Bs2JpsiKstarWide ])
+
+        self.registerLine(Bs2JpsiKstarWideLine)
+
         
     def makeLambdab2JpsiLambda( self ):
         Lambdab2JpsiLambda = self.createCombinationSel( OutputList = "Lambdab2JpsiLambda" + self.name,
