@@ -95,10 +95,10 @@ StatusCode TupleToolVeloTrackClusterInfo::fill( const LHCb::Particle*
   test &= tuple->column( prefix+"_TRACK_VELO_TOTALCHARGE", totalChargeOnTrack);
   test &= tuple->column( prefix+"_TRACK_VELO_AVERAGECHARGE", averageCharge);
   test &= tuple->column( prefix+"_TRACK_VELO_CLUSTERSONTRACK", nClustersOnTrack);
-  for (int ii = 0; ii <stations.size(); ii++) info() << "  stations check  " << ii << " " << stations[ii] << endmsg; 
-  test &= tuple->farray( prefix+"_TRACK_VELO_STATION_ADC", stationADC.begin(), stationADC.end(), prefix+"_TRACK_VELO_CLUSTERSONTRACK" , maxStationsInVeloTrack);
-  for (int ii = 0; ii <stationADC.size(); ii++) info() << "  stationsADC check  " << ii << " " << stationADC[ii] << endmsg; 
-  test &= tuple->farray( prefix+"_TRACK_VELO_STATION_VECTOR", stations.begin(), stations.end(), prefix+"_TRACK_VELO_CLUSTERSONTRACK", maxStationsInVeloTrack);
+  //for (int ii = 0; ii <stations.size(); ii++) info() << "  stations check  " << ii << " " << stations[ii] << endmsg; 
+  test &= tuple->farray( prefix+"_TRACK_VELO_STATION_ADC", stationADC.begin(), stationADC.end(), "nClusters" , maxStationsInVeloTrack);
+  //for (int ii = 0; ii <stationADC.size(); ii++) info() << "  stationsADC check  " << ii << " " << stationADC[ii] << endmsg; 
+  test &= tuple->farray( prefix+"_TRACK_VELO_STATION_VECTOR", stations.begin(), stations.end(), "nClusters", maxStationsInVeloTrack);
 
   return StatusCode(test);
 }
