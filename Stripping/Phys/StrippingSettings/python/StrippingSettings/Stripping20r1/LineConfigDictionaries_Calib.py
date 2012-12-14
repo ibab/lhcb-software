@@ -141,11 +141,11 @@ V0ForPID = {
 Jpsi2eeForElectronID = {
     'BUILDERTYPE'       : 'ElectronIDConf',
     'CONFIG'    : {
-        'JpsiLinePrescale'            :   0.5   ,
-        'JpsiLineHltFilter'           : None    ,
+        'JpsiLinePrescale'        :   0.5   ,
+        'JpsiLineHltFilter'       : None    ,
 
-        'Both_PT'                 :  500.   ,  # MeV
-        'Both_P'                  : 3000.   ,  # MeV
+        'Both_PT'                 :  250.   ,  # MeV
+        'Both_P'                  : 2000.   ,  # MeV
         'Both_TRCHI2DOF'          :    5.   ,
         'Both_MIPCHI2'            :    9.   ,
         
@@ -154,8 +154,8 @@ Jpsi2eeForElectronID = {
         'Tag_PIDe'                :    5.   ,
         'Tag_MIPCHI2'             :    9.   ,
 
-        'Probe_PT'                :  500.   ,  # MeV
-        'Probe_P'                 : 3000.   ,  # MeV
+        'Probe_PT'                :  250.   ,  # MeV
+        'Probe_P'                 : 2000.   ,  # MeV
         'Probe_MIPCHI2'           :    9.   ,
         
         'eeCombMinMass'           : 2100.   ,  # MeV         
@@ -168,7 +168,7 @@ Jpsi2eeForElectronID = {
         
         'Bu2JpsieeKLine_Prescale'  :  1,
         'Bu2JpsieeKLine_HltFilter' : None,
-        'Bu2JpsieeKLine_KaonCut'   : "(TRCHI2DOF<4) & (PT>1.0*GeV) & (PIDK >0) & (BPVIPCHI2()>9)",
+        'Bu2JpsieeKLine_KaonCut'   : "(TRCHI2DOF<4) & (TRGHOSTPROB<0.5) & (PT>1.0*GeV) & (PIDK >0) & (BPVIPCHI2()>9)",
         'Bu2JpsieeKLine_JpsiCut'   : "(BPVDLS>5)",
         'Bu2JpsieeKLine_BuComCut'  : "in_range(4.1*GeV,AM,6.1*GeV)",
         'Bu2JpsieeKLine_BuMomCut'  : "in_range(4.2*GeV,M, 6.0*GeV) & (VFASPF(VCHI2PDOF)<9)"
