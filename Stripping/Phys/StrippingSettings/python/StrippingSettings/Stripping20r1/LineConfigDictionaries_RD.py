@@ -116,15 +116,15 @@ B2XMuMu =  {
     , 'LongLivedPT'        : 0.0          # MeV , used to be 500.0 MeV
     , 'LongLivedTau'        : 2          # ps
 
-    # HHH cuts
-    , 'HHH_Comb_MassLow'  :    0.0
-    , 'HHH_Comb_MassHigh' : 6050.0
-    , 'HHH_MassLow'       :    0.0
-    , 'HHH_MassHigh'      : 6000.0
-    , 'HHH_MinIPCHI2'     :    4.0
-    , 'HHH_FlightChi2'    :   25.0
-    , 'HHH_Dau_MaxIPCHI2' :    9.0
-    
+    # A1 cuts
+    , 'A1_Comb_MassLow'  :    0.0
+    , 'A1_Comb_MassHigh' : 6050.0
+    , 'A1_MassLow'       :    0.0
+    , 'A1_MassHigh'      : 6000.0
+    , 'A1_MinIPCHI2'     :    4.0
+    , 'A1_FlightChi2'    :   25.0
+    , 'A1_Dau_MaxIPCHI2' :    9.0
+
     ,'UseNoPIDsHadrons'          : True,
 
     # B cuts
