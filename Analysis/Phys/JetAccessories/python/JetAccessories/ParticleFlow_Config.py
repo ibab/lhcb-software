@@ -32,7 +32,7 @@ class ParticleFlowConf:
              "MinInfMomentumCutDown": 0. ,
              "MinInfMomentumCutUp": 10. ,
              "MaxChi2NoTT": 5. ,
-             "UseVelo": True  ,
+             "UseVelo": False ,
              ## Neutral selection
              "MinPhotonID4Photon": -1. ,
              "MinPhotonID4PhotonTtrack": -2. ,
@@ -95,7 +95,7 @@ class ParticleFlowConf:
         
         ## set the algorithm
         alg = ParticleFlow ( self.name )
-
+        
         ## Definition of cuts to apply to input tracks for inputselection
         TrackCuts = {}
         if self.UseVelo and not "Velo" in self.TrackType:
@@ -123,6 +123,7 @@ class ParticleFlowConf:
         pCompLocations = []
         alg.MC_recovery = self.MCCor
 
+        alg.UseVelo = self.UseVelo
         alg.UseTTrackBanning       = self.UseTTrackBanning
         alg.CandidateToBanLocation = self.CandidateToBanLocation
         alg.VerticesLocation       = self.VerticesLocation

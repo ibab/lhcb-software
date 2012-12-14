@@ -97,10 +97,18 @@ LHCb::PFParticle::PFParticle( const LHCb::ProtoParticle * pp ,  int trackTag ,
     this->setMeasuredMass(protoMap["pi+"].second ->mass());
     this->setMeasuredMassErr(0.);
     //Set the momentum to 0.
-    this -> setMomentum ( Gaudi::XYZTVector(this->momentum().Vect().Unit().x()*1e-9,
-                                this->momentum().Vect().Unit().y()*1e-9,
-                                this->momentum().Vect().Unit().z()*1e-9,
-                                1e-09) );
+    LHCb::State state = pp->track()->firstState();
+    this->setReferencePoint( state.position() ) ;
+    // momentum
+    const Gaudi::XYZVector mom = state.momentum();
+    const double mass = this->measuredMass();
+    const double p = mom.R() ;
+    const double e = std::sqrt( p*p + mass*mass );
+    
+    this -> setMomentum ( Gaudi::XYZTVector(mom.Unit().x()*1.e-6,
+					    mom.Unit().y()*1.e-6,
+					    mom.Unit().z()*1.e-6,
+					    1.e-6) );
     // Set the particle type
     this -> setPFType   (  Charged0Momentum  );
   }
@@ -109,25 +117,6 @@ LHCb::PFParticle::PFParticle( const LHCb::ProtoParticle * pp ,  int trackTag ,
     if ( trackTag == Keep ){
       // TODO: move that to a "best PID function?"
       bool pid_found(false);
-      // test RICH links
-      //TODO check back this test
-      /*if ( pp->hasInfo( LHCb::ProtoParticle::RichPIDStatus ) ){
-	const LHCb::RichPID * rpid = pp->richPID();
-	if ( !rpid ){
-	this = NULL;
-	break;
-	//Error( "ProtoParticle has RICH information but NULL RichPID SmartRef !" ).ignore(); 
-	}
-	}
-	// test MUON links
-	if ( pp->hasInfo( LHCb::ProtoParticle::MuonPIDStatus ) ){
-	const LHCb::MuonPID * mpid = pp->muonPID();
-	if ( !mpid ){
-	//this = NULL;
-	//break;
-	//Error( "ProtoParticle has MUON information but NULL MuonPID SmartRef !" ).ignore(); 
-	}
-	}*/
       //Create a map of PID and ProbNN pairs
       typedef std::map< double , std::string > MapProbNNPID;
       
