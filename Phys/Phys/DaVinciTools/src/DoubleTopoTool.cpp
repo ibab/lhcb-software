@@ -34,6 +34,19 @@ double getHltObjsAngle(const LHCb::HltObjectSummary *obj1,
   return fabs(acos(p41.Vect().Unit().Dot(p42.Vect().Unit())));
 }
 
+double getHltObjsDPhi(const LHCb::HltObjectSummary *obj1,
+		      const LHCb::HltObjectSummary *obj2){
+  Gaudi::LorentzVector p41,p42;
+  getHltObjP4(obj1,p41);
+  getHltObjP4(obj2,p42);
+  //return fabs(p41.DeltaPhi(p42));
+  double dphi = fabs(p41.Vect().Phi() - p42.Vect().Phi());
+  double pi = 3.14159;
+  while(dphi >= pi) dphi -= 2*pi;
+  return fabs(dphi);
+}
+
+
 double getHltObjsMass(const LHCb::HltObjectSummary *obj1,
                       const LHCb::HltObjectSummary *obj2){
   Gaudi::LorentzVector p41,p42;
@@ -128,7 +141,7 @@ private:
   DoubleTopoTool(const DoubleTopoTool&);
   DoubleTopoTool& operator=(const DoubleTopoTool&);
 
-  float m_minAngle;
+  float m_minAngle, m_minDPhi;
   float m_minMass;
   ITriggerTisTos *m_tistostool;
 
@@ -151,6 +164,7 @@ DoubleTopoTool::DoubleTopoTool(const std::string& type,const std::string& name,
                                const IInterface* parent)
   : base_class(type,name,parent), m_tistostool(0) {
   declareProperty("minAngle", m_minAngle = 2/57.);
+  declareProperty("minDPhi", m_minDPhi = 0/57.);
   declareProperty("minMass", m_minMass = 20000.0);
 }
 
@@ -176,7 +190,8 @@ bool DoubleTopoTool::accept() const {
       if(lhcbIDs[j].size() == 0) getLHCbIDs(hltObjs[j],lhcbIDs[j]);
       if(!doLHCbIDsOverlap(lhcbIDs[i],lhcbIDs[j])){
         if(getHltObjsAngle(hltObjs[i],hltObjs[j]) > m_minAngle &&
-           getHltObjsMass(hltObjs[i],hltObjs[j]) > m_minMass) return true;
+           getHltObjsMass(hltObjs[i],hltObjs[j]) > m_minMass &&
+	   getHltObjsDPhi(hltObjs[i],hltObjs[j]) > m_minDPhi) return true;
         //if(getHltObjsMass(hltObjs[i],hltObjs[j]) > m_minMass) return true;
       }
     }
