@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-14 - Konstantinos A. Petridis
+  - addition of B0->PPbarMuMu Line in StrippingB2XMuMu.py
+
 ! 2012-12-14 - Cedric Potterat
  - correction for the radiative stripping lines
 
