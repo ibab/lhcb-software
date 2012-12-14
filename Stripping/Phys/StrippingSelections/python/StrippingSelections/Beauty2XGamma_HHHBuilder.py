@@ -77,15 +77,15 @@ class HHHBuilder(object):
         #massWindow = '(750*MeV < AM < 815*MeV)'
         #massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['OMEGA'])
 
-        r = self._makeX2HHH('Omega2PiPiPi0Resolved',['omega(782) -> pi+ pi- pi0'],'(AM<1200*MeV)',self.config,[self.pions]+self.pi0['Resolved'],True)
-        m = self._makeX2HHH('Omega2PiPiPi0Merged',['omega(782) -> pi+ pi- pi0'],'(AM<1200*MeV)',self.config,[self.pions]+self.pi0['Merged'],True)
+        r = self._makeX2HHH('Omega2PiPiPi0Resolved',['omega(782) -> pi+ pi- pi0'],'(AM<4000*MeV)',self.config,[self.pions]+self.pi0['Resolved'],True)
+        m = self._makeX2HHH('Omega2PiPiPi0Merged',['omega(782) -> pi+ pi- pi0'],'(AM<4000*MeV)',self.config,[self.pions]+self.pi0['Merged'],True)
         mass = self._massWindow('OMEGA','omega(782)').replace('ADAMASS','ADMASS')
         presel = MergedSelection('Omega2PiPiPi0Beauty2XGamma',RequiredSelections=[r,m])
         return [filterSelection('Omega2PiPiPi0',mass,[presel])]
 
     def _makeK1(self):
         '''Makes the K1+ -> K+ pi+ pi- +cc '''
-        k1 = self._makeX2HHH('K1_2Kpipi',['[K_1(1270)+ -> K+ pi- pi+]cc'],'(AM<2500*MeV)',self.config,[self.pions,self.kaons],False)
+        k1 = self._makeX2HHH('K1_2Kpipi',['[K_1(1270)+ -> K+ pi- pi+]cc'],'(AM<4000*MeV)',self.config,[self.pions,self.kaons],False)
         mass = self._massWindow('K1','K_1(1270)+').replace('ADAMASS','ADMASS')
         return [filterSelection('K1_2Kpipi',mass,[k1])]
 

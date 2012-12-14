@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-14 - Cedric Potterat
+ - correction for the radiative stripping lines
+
 ! 2012-12-14 - Francesca Dordei
   - Positive Hlt2DiMuonJPsiDecision trigger decision for the following lines:
        StrippingBetaSBu2JpsiKPrescaledLine

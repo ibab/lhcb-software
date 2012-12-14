@@ -19,7 +19,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 # Standard Particles
 from StandardParticles import StdLooseResolvedPi0, StdLooseMergedPi0, StdLooseAllPhotons, StdAllLooseElectrons
-from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, StdAllNoPIDsProtons
+from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
 from StandardParticles import StdAllLooseGammaLL, StdAllLooseGammaDD
 
 # Builders
@@ -72,7 +72,7 @@ config = { # Cuts made on all charged input particles in all lines
                    'DAUGHTERS'        : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV'},
                    'piLAMBDADAUGHTERS': {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MAX':'2'},   # only for pH
                    'pLAMBDADAUGHTERS' : {'PT_MIN':'1200*MeV','P_MIN':'10000*MeV','PIDp_MIN':'10','PIDpK_MIN':'0'}, # only for pH
-                   'kLAMBDADAUGHTERS' : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV','PIDK_MIN':'0','PIDKp_MIN':'-2'},    # only for pH
+                   'kLAMBDADAUGHTERS' : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV','PIDK_MIN':'5','PIDKp_MIN':'0'},    # only for pH
                    #'AMAXDOCA_MAX'  : '0.5*mm',
                    'VCHI2DOF_MAX'     : 9,
                    'BPVVDCHI2_MIN'    : 81, 
@@ -81,7 +81,7 @@ config = { # Cuts made on all charged input particles in all lines
                    #'pP_MIN'        : '10000*MeV' # for pH only (obviously)
                  },
            # Cuts for omega -> 3 body decay
-           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '150*MeV', 'K1': ['1.0*GeV', '2.0*GeV']},
+           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '2*MeV', 'K1': ['0.8*GeV', '3.5*GeV']},
                     'DAUGHTERS'     : {'PT_MIN':'350*MeV','P_MIN':'2000*MeV'},
                     'AMAXDOCA_MAX'  : '0.50*mm',
                     'VCHI2DOF_MAX'  : 9,
@@ -121,9 +121,9 @@ class Beauty2XGamma(LineBuilder):
         # Prepare the inputs
         ###########################################################################
         # Prefilter input tracks
-        pions = filterInputs('Pi', [StdAllNoPIDsPions], config['ALL'])
-        kaons = filterInputs('K', [StdAllNoPIDsKaons], config['ALL'])
-        protons = filterInputs('P', [StdAllNoPIDsProtons], config['ALL'])
+        pions = filterInputs('Pi', [StdNoPIDsPions], config['ALL'])
+        kaons = filterInputs('K', [StdNoPIDsKaons], config['ALL'])
+        protons = filterInputs('P', [StdNoPIDsProtons], config['ALL'])
         # Prefilter KS
         mergedKS = MergedSelection('MergedKS0', RequiredSelections = [dataOnDemand("StdLooseKsDD"), dataOnDemand("StdLooseKsLL")])
         KS_filter = filterInputs('KS0', [mergedKS], config['KS0'])
