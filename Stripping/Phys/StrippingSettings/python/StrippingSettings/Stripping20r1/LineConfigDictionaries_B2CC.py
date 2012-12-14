@@ -7,7 +7,7 @@ BetaS = {
                  ,       'DaughterPT'            :       1000
                  ,       'VCHI2PDOF'             :       10
                  ,       'Jpsi2MuMuPrescale'     :       0.01
-                 ,       'Bu2JpsiKPrescale'      :       0.05  #0.05
+                 ,       'Bu2JpsiKPrescale'      :       0.1  #0.05
                  ,       'Bd2JpsiKstarPrescale'  :       0.1   #0.03
                  ,       'Bd2JpsiKsPrescale'     :       1.0   #0.3
                  ,       'Bs2JpsiPhiPrescale'    :       0.5   #0.15
