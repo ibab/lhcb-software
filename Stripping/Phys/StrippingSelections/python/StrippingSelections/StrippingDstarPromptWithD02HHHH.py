@@ -3,7 +3,9 @@ Module for construction of D0->hhhh tagged (from prompt D*) selections, where D-
   - D->K3pi Cabibbo Favoured
   - D->K3pi Cabibbo suppressed
   - D->KKpipi
-  - D->4pi.
+  - D->4pi
+  - D->KKKpi Cabibbo Favoured // Paras Naik, October 2012
+  - D->KKKpi Cabibbo Suppressed // Paras Naik, October 2012
 Provides functions to build tagged D->hhhh selections for physics analysis.
 Provides class DstarPromptWithD02HHHHConf, which constructs the selections and stripping lines given a configuration dictionary.
 Exported symbols (use python help):
@@ -12,6 +14,8 @@ Exported symbols (use python help):
   - makeD02K3PiDCS
   - makeD02KKPiPi
   - makeD02FourPi
+  - makeD02Pi3K // Paras Naik, October 2012
+  - makeD02Pi3KDCS // Paras Naik, October 2012
   - makePromptDstar
 '''
 
@@ -24,6 +28,8 @@ __all__ = ('DstarPromptWithD02K3PiConf'
            ,'makeD02K3PiDCS'
            ,'makeD02KKPiPi'
            ,'makeD02FourPi'
+           ,'makeD02Pi3K'
+           ,'makeD02Pi3KDCS'
            ,'makePromptDstar')
 
 from Gaudi.Configuration import *
@@ -297,7 +303,8 @@ def makeD02hhhh (
   ,ghostProbCut
   ):
   """Creates a D0->hhhh Selection object, merging D0->K3pi CF
-  , D0->K3pi DCS, D0->KKpipi and D0->4pi, with cuts for physics analysis.
+  , D0->K3pi DCS, D0->pi3K CF
+  , D0->pi3K DCS, D0->KKpipi and D0->4pi, with cuts for physics analysis.
   Uses StandardParticle objects 'StdAllNoPIDsKaons' and 'StdAllNoPIDsPions'
   for lines without PID cuts, and 'StdAllLooseKaons' and 'StdAllLoosePions'
   for line with PID cuts.
@@ -363,6 +370,8 @@ def makeD02hhhh (
   if applyPionPIDK:
     _pions = StdAllLoosePions
 
+  _conjPID = ConjugateNeutralPID()
+
   _d02k3pi = CombineParticles (DecayDescriptor = "[D0 -> K- pi+ pi- pi+]cc"
                                ,CombinationCut = _prefitCuts
                                ,MotherCut = _motherCuts
@@ -373,11 +382,20 @@ def makeD02hhhh (
                           ,Algorithm=_d02k3pi
                           ,RequiredSelections=[_pions,_kaons])
 
-  _conjPID = ConjugateNeutralPID()
-
   _selD02K3PiConj = Selection('D02K3PiConjFor'+moduleName
                              ,Algorithm=_conjPID
                              ,RequiredSelections=[_selD02K3Pi])
+
+  _d02pi3k = copy(_d02k3pi)
+  _d02pi3k.DecayDescriptor="[D0 -> K+ K- K- pi+]cc"
+
+  _selD02Pi3K = Selection('D02Pi3KFor'+moduleName
+                          ,Algorithm=_d02pi3k
+                          ,RequiredSelections=[_pions,_kaons])
+
+  _selD02Pi3KConj = Selection('D02Pi3KConjFor'+moduleName
+                             ,Algorithm=_conjPID
+                             ,RequiredSelections=[_selD02Pi3K])
 
   _d02kkpipi = copy(_d02k3pi)
   _d02kkpipi.DecayDescriptor="D0 -> K+ K- pi+ pi-"
@@ -408,7 +426,9 @@ def makeD02hhhh (
                                                 ,_selD02KKPiPi
                                                 ,_selD02KKPiPiConj
                                                 ,_selD02FourPi
-                                                ,_selD02FourPiConj]
+                                                ,_selD02FourPiConj
+                                                ,_selD02Pi3K
+                                                ,_selD02Pi3KConj]
                            )
 
   return _d0Sel
