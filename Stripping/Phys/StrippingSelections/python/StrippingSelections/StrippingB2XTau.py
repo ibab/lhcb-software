@@ -1,4 +1,3 @@
-
 __author__ = ['V. Gligorov, Ch. Elsasser']
 __date__ = '24/05/2010,23/08/2012'
 __version__ = '$Revision: 1.2 $'
@@ -34,6 +33,8 @@ config_params =  {  'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
   'MASS_HIGH_B'                   : '7000', # MeV (old value: 5750)
   'MCOR_LOW_B'                    : '4000', # MeV
   'MCOR_HIGH_B'                   :'10000', # MeV (old value: 7000)
+  'MCOR_LOW_SB'                   : '2000', # MeV
+  'MCOR_HIGH_SB'                  : '4000', # MeV 
   'MIPCHI2_B'                     : '150',  # dimensionless 
   'MIPCHI2_B_HIGH'                : '36',   # dimensionless  
   #
@@ -68,10 +69,14 @@ config_params =  {  'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
   #
   'B2TauTau_TOSLinePrescale'          : 1,
   'B2TauTau_TOSLinePostscale'         : 1,
+  'B2TauTau_SB_TOSLinePrescale'          : 0.05,
+  'B2TauTau_SB_TOSLinePostscale'         : 1,
   'B2DD_TOSLinePrescale'              : 1,
   'B2DD_TOSLinePostscale'             : 1,
   'B2TauMu_TOSLinePrescale'           : 1,
   'B2TauMu_TOSLinePostscale'          : 1,
+  'B2TauMu_SB_TOSLinePrescale'          : 0.05,
+  'B2TauMu_SB_TOSLinePostscale'         : 1,
   'B2DMu_TOSLinePrescale'             : 0.2,
   'B2DMu_TOSLinePostscale'            : 1,
   'B2TauTau_TISLinePrescale'          : 1,
@@ -108,7 +113,10 @@ class B2XTauConf(LineBuilder) :
   
   TauTau_TOSLine    = None
   TauTau_SS_TOSLine = None
+  TauTau_SB_TOSLine    = None
+  TauTau_SS_TOSLine = None
   TauMu_TOSLine     = None
+  TauMu_SB_TOSLine    = None
   TauMu_SS_TOSLine  = None
   DMu_TOSLine       = None
   DMu_SS_TOSLine    = None
@@ -149,6 +157,8 @@ class B2XTauConf(LineBuilder) :
                             'MASS_HIGH_B',
                             'MCOR_LOW_B',
                             'MCOR_HIGH_B',
+                             'MCOR_LOW_SB',
+                            'MCOR_HIGH_SB',
                             'MIPCHI2_B',
                             'MIPCHI2_B_HIGH',
                             #   
@@ -183,10 +193,14 @@ class B2XTauConf(LineBuilder) :
                             #
                             'B2TauTau_TOSLinePrescale',
                             'B2TauTau_TOSLinePostscale',
+                            'B2TauTau_SB_TOSLinePrescale',
+                            'B2TauTau_SB_TOSLinePostscale',
                             'B2DD_TOSLinePrescale',
                             'B2DD_TOSLinePostscale',
                             'B2TauMu_TOSLinePrescale',
                             'B2TauMu_TOSLinePostscale',
+                            'B2TauMu_SB_TOSLinePrescale',
+                            'B2TauMu_SB_TOSLinePostscale',
                             'B2DMu_TOSLinePrescale',
                             'B2DMu_TOSLinePostscale',
                             'B2TauTau_TISLinePrescale',
@@ -231,15 +245,27 @@ class B2XTauConf(LineBuilder) :
                                              tauSel  = selTau,
                                              DSel    = selD,    
                                              config  = config)
+    selB2TauTauSB     = self._makeB2XXSB(   name    = name,
+                                                tauSel  = selTau,
+                                                DSel    = selD,    
+                                                config  = config)
     selB2TauTauSS,selB2DDSS = self._makeB2XXSS( name    = name,
                                                tauSel  = selTau,
                                                DSel    = selD,    
                                                config  = config)
+
     selB2TauMu,selB2DMu     = self._makeB2XMu(  name    = name,
                                               tauSel  = selTau,
                                               DSel    = selD,
                                               muonSel = selMuons,
                                               config  = config)
+    
+    selB2TauMuSB         =  self._makeB2XMuSB(  name    = name,
+                                              tauSel  = selTau,
+                                              DSel    = selD,
+                                              muonSel = selMuons,
+                                              config  = config)
+
     selB2TauMuSS,selB2DMuSS = self._makeB2XMuSS(name    = name,
                                                 tauSel  = selTau,
                                                 DSel    = selD,
@@ -258,6 +284,13 @@ class B2XTauConf(LineBuilder) :
                                            postscale   = config['B2TauTau_TOSLinePostscale'],
                                            selection   = self._makeTOS(name+"_TOSForTauTauSS",selB2TauTauSS)
                                            )
+    self.TauTau_SB_TOSLine    = StrippingLine(name+"_TauTau_SB_TOSLine",
+                                           #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
+                                           prescale    = config['B2TauTau_SB_TOSLinePrescale'],
+                                           postscale   = config['B2TauTau_SB_TOSLinePostscale'],
+                                           selection   = self._makeTOS(name+"_TOSForTauTauSB",selB2TauTauSB)
+                                           )
+
     self.DD_TOSLine        = StrippingLine(name+"_DD_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2DD_TOSLinePrescale'],
@@ -281,7 +314,13 @@ class B2XTauConf(LineBuilder) :
                                            prescale    = config['B2TauMu_TOSLinePrescale'],
                                            postscale   = config['B2TauMu_TOSLinePostscale'],
                                            selection   = self._makeTOS(name+"_TOSForTauMuSS",selB2TauMuSS)
-                                           ) 
+                                           )
+    self.TauMu_SB_TOSLine     = StrippingLine(name+"_TauMu_SB_TOSLine",
+                                           #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
+                                           prescale    = config['B2TauMu_SB_TOSLinePrescale'],
+                                           postscale   = config['B2TauMu_SB_TOSLinePostscale'],
+                                           selection   = self._makeTOS(name+"_TOSForTauMuSB",selB2TauMuSB)
+                                           )
     self.DMu_TOSLine       = StrippingLine(name+"_DMu_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2DMu_TOSLinePrescale'],
@@ -345,8 +384,10 @@ class B2XTauConf(LineBuilder) :
                                            )
     #
     self.registerLine( self.TauTau_TOSLine )
+    self.registerLine( self.TauTau_SB_TOSLine )
     self.registerLine( self.DD_TOSLine )
     self.registerLine( self.TauMu_TOSLine )
+    self.registerLine( self.TauMu_SB_TOSLine )
     self.registerLine( self.DMu_TOSLine )    
     self.registerLine( self.TauTau_TISLine )
     self.registerLine( self.DD_TISLine )
@@ -401,7 +442,43 @@ class B2XTauConf(LineBuilder) :
             Selection(name+"_DD",
                       Algorithm          = _CombineD,
                       RequiredSelections = [ DSel ] ))
-  
+    #####################################################
+  def _makeB2XXSB(self, name, tauSel, DSel, config):
+    
+    preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
+                 "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
+    
+    _combcut = "(APT > "                    + config['PT_B_TT']       + "*MeV) & "\
+      "(AM  > "                    + config['MASS_LOW_B']    + "*MeV) & "\
+      "(AM  < "                    + config['MASS_HIGH_B']   + "*MeV)"
+    
+    _bcut    = "(VFASPF(VCHI2PDOF)  <   "   + config['VCHI2_B']       + ") & "\
+      "(BPVDIRA            >   "   + config['DIRA_B']        + ") & "\
+      "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & "\
+      "(BPVIPCHI2()        <   "   + config['MIPCHI2_B']     + ") & "\
+      "((PT                >   "   + config['PT_B_TT_HIGH']  + "*MeV) | \
+      (BPVIPCHI2()       <   "   + config['MIPCHI2_B_HIGH']+ ")) &"\
+      "(INGENERATION((PT   >   "   + config['PT_B_TAU_CHILD_BEST']+ "*MeV),1)) & "\
+      "(INGENERATION((MIPCHI2DV(PRIMARY) >" + config['IPCHI2_B_TAU_CHILD_BEST'] + "),1)) & "\
+      "(INGENERATION((PT   >   "   + config['PT_B_CHILD_BEST']+ "*MeV),2)) & "\
+      "(INGENERATION((P    >   "   + config['P_B_CHILD_BEST'] + "*MeV),2)) & "\
+      "(INGENERATION((MIPCHI2DV(PRIMARY) >" + config['IPCHI2_B_CHILD_BEST'] + "),2)) & "\
+      "(in_range("+config['MCOR_LOW_SB']+"*MeV,MCOR,"+config['MCOR_HIGH_SB']+"*MeV))"      
+    
+    _CombineTau = CombineParticles( DecayDescriptors = ["B0 -> tau+ tau-"],
+                                   CombinationCut   = _combcut,
+                                   MotherCut        = _bcut,
+                                   Preambulo        = preambulo)
+    
+    _CombineD   = CombineParticles( DecayDescriptors = ["B0 -> D+ D-"],
+                                   CombinationCut   = _combcut + " & (AM > 5000)",
+                                   MotherCut        = _bcut,
+                                   Preambulo        = preambulo)
+    
+    return (Selection(name+"_TauTauSB",
+                      Algorithm          = _CombineTau,
+                      RequiredSelections = [ tauSel ] ))
+    
   #####################################################
   def _makeB2XXSS(self, name, tauSel, DSel, config):
     
@@ -476,6 +553,40 @@ class B2XTauConf(LineBuilder) :
             Selection(name+"_DMu",
                       Algorithm          = _CombineD,
                       RequiredSelections = [ DSel, muonSel ] ))
+
+  
+    #####################################################
+  def _makeB2XMuSB(self, name, tauSel, DSel, muonSel, config):
+    
+    preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
+                 "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
+    
+    _combcut = "(APT > " + config['PT_B_TM']       + "*MeV) & "\
+      "(AM  > "          + config['MASS_LOW_B']    + "*MeV) & "\
+      "(AM  < "          + config['MASS_HIGH_B']   + "*MeV)"
+    
+    _bcut    = "(VFASPF(VCHI2PDOF)  <   "   + config['VCHI2_B']       + ") & "\
+      "(BPVDIRA            >   "   + config['DIRA_B']        + ") & "\
+      "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & "\
+      "(BPVIPCHI2()        <   "   + config['MIPCHI2_B']     + ") & "\
+      "((PT                >   "   + config['PT_B_TM_HIGH']  + "*MeV) | \
+       (BPVIPCHI2()        <   "   + config['MIPCHI2_B_HIGH']+ "))&"\
+      "(in_range("+config['MCOR_LOW_SB']+"*MeV,MCOR,"+config['MCOR_HIGH_SB']+"*MeV))"    
+    
+    _CombineTau = CombineParticles( DecayDescriptors = ["[B0 -> tau+ mu-]cc"],
+                                   CombinationCut   = _combcut,
+                                   MotherCut        = _bcut,
+                                   Preambulo        = preambulo)
+    
+    _CombineD   = CombineParticles( DecayDescriptors = ["[B0 -> D+ mu-]cc"],
+                                   CombinationCut   = _combcut,
+                                   MotherCut        = _bcut,
+                                   Preambulo        = preambulo)
+    
+    return (Selection(name+"_TauMuSB",
+                      Algorithm          = _CombineTau,
+                      RequiredSelections = [ tauSel, muonSel ] ))
+ 
   
   #####################################################
   def _makeB2XMuSS(self, name, tauSel, DSel, muonSel, config):
