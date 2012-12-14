@@ -4,6 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-14 - Francesca Dordei
+  - Change the prescale in following lines:
+	StrippingBetaSBs2JpsiPhiPrescaledLine
+	StrippingBetaSBd2JpsiKstarPrescaledLine
+	StrippingBetaSBd2JpsiKsPrescaledLine. 
+
 ! 2012-12-13 - Ronan Wallace
  - Update control line prescale in WMu dict of LineConfigDictionaries_QEE
 
