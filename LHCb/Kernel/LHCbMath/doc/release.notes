@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-12-14 - Vanya Belyaev
+ - fix some issue with Functions.cpp 
+
 !========================= LHCbMath v3r36 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

@@ -968,9 +968,10 @@ namespace
     //
     // attention: normalization factors and phase space are here!
     //
-    const double d = 2 * std::abs ( m0 * gamma  * x ) / M_PI ;
+    // const double d = 2 / M_PI ;
+    // const double d = 2 * std::abs ( m0 * gamma  * x ) / M_PI ;
     //
-    return  std::sqrt ( d ) / v ;
+    return  1.0 / v ;
   }
   // ==========================================================================
   typedef double (*rho_fun) ( double , double , double , double ) ;
@@ -2935,15 +2936,7 @@ Gaudi::Math::BreitWigner::amplitude ( const double x ) const
   const double g  = gamma ( x ) ;
   if ( 0 >= g ) { return 0 ; }
   //
-  static const std::complex<double> s_j ( 0 , 1 ) ;
-  //
-  const std::complex<double> v = m0() * m0 () - x * x - s_j * m0() * g ;
-  //
-  const double q  = Gaudi::Math::PhaseSpace2::q ( x    , m1 () , m2 () ) ;
-  const double q0 = Gaudi::Math::PhaseSpace2::q ( m0() , m1 () , m2 () ) ;
-  //
-  return
-    std::sqrt ( m0 () * gam0 () ) * Gaudi::Math::pow ( q / q0 , m_L ) / v ;
+  return std::sqrt ( m0 () * gam0 () ) * breit_amp ( x , m0() , g ) ;
 }
 // ============================================================================
 /*  calculate the Breit-Wigner shape
@@ -2958,11 +2951,15 @@ double Gaudi::Math::BreitWigner::breit_wigner ( const double x ) const
   const double g  = gamma ( x ) ;
   if ( 0 >= g ) { return 0 ; }
   //
-  const double omega2 = m_m0 * m_m0 ;
-  const double delta = omega2        -          x * x ;
-  const double v     = delta * delta + omega2 * g * g ;
+  std::complex<double> a = amplitude ( x ) ;
   //
-  return 2 * x * m_m0 * g / v / M_PI  ;
+  return 2 * x * std::norm ( a )* g / gam0() / M_PI ;
+  //
+  // const double omega2 = m_m0 * m_m0 ;
+  // const double delta = omega2        -          x * x ;
+  // const double v     = delta * delta + omega2 * g * g ;
+  //
+  // return 2 * x * m_m0 * g / v / M_PI  ;
 }
 // ============================================================================
 /*  calculate the Breit-Wigner shape
@@ -4349,21 +4346,24 @@ double Gaudi::Math::BW23L::operator() ( const double x ) const
 {
   if (  lowEdge() >= x || highEdge()  <= x ) { return 0 ; }
   //
-  const double bw = m_bw ( x ) ;
+  const double bw = std::norm ( m_bw.amplitude ( x ) )   ;
   //
   // get the incomplete phase space factor
   const double ps  =                   // get the incomplete phase space factor
     x / M_PI *
     // =======================================================================
     // the second factor is already in our BW !!!
-    // Gaudi::Math::PhaseSpace2::phasespace ( x   , m_m1 , m_m2 , m_l  ) *
+    Gaudi::Math::PhaseSpace2::phasespace ( x          , 
+                                           m_bw.m1 () , 
+                                           m_bw.m2 () , 
+                                           m_bw.L  () ) *
     // =======================================================================
     Gaudi::Math::PhaseSpace2::phasespace ( m_ps.m  () ,
                                            x          ,
                                            m_ps.m3 () ,
                                            m_ps.L  () ) ;
   //
-  return bw * ps ;
+  return bw * m_ps ( x ) ;
 }
 // ============================================================================
 // get the integral between low and high limits
