@@ -244,6 +244,7 @@ class B2XMuMuConf(LineBuilder) :
         self.Lambda = self.__Lambda__(config)
         self.Pi0 = self.__Pi0__(config)
         self.Rho = self.__Rho__(self.Pions, config)
+        self.RhoProxyForPPbar = self.__RhoProxyForPPbar__(self.Protons, config)
         self.Phi = self.__Phi__(self.Rho, config)
         self.Kstar = self.__Kstar__(self.Rho, config)
         self.A1 = self.__A1__(self.Pions, config)
@@ -256,7 +257,7 @@ class B2XMuMuConf(LineBuilder) :
         self.Dstar = self.__Dstar__(config)
 
         self.Bs = self.__Bs__(self.Dimuon, self.Protons, self.Kaons, self.Pions, self.Pi0,
-                              self.Kshort, self.Lambda, self.Phi, self.Rho, self.Dplus,
+                              self.Kshort, self.Lambda, self.Phi, self.Rho, self.RhoProxyForPPbar,self.Dplus,
                               self.Kstar, self.Lambdastar, self.Kstar2KsPi,
                               self.Kstar2KPi0, self.A1, self.K1, self.K2, config)
 
@@ -552,6 +553,26 @@ class B2XMuMuConf(LineBuilder) :
     
         return pick
 
+    
+    def __RhoProxyForPPbar__(self, Protons, conf):
+        """
+        Make a rho from two protons for proxy
+        """      
+        wsCombinations=conf['HadronWS']
+        _rho2pp = CombineParticles()
+        if wsCombinations == True:
+            _rho2pp.DecayDescriptors = [ "rho(1700)0 -> p+ p~-", "rho(1700)0 -> p+ p+" , "rho(1700)0 -> p~- p~-" ]
+        else:
+            _rho2pp.DecayDescriptors = [ "rho(1700)0 -> p+ p~-"]
+        _rho2pp.CombinationCut = self.KstarCombCut
+        _rho2pp.MotherCut = self.KstarCut
+
+        _selRHO2PP = Selection( "Selection_"+self.name+"_RhoProxyForPPbar",
+                                     Algorithm = _rho2pp,
+                                     RequiredSelections = [ Protons ] )
+        return _selRHO2PP
+
+
     def __Rho__(self, Pions, conf):
         """
         Make a rho
@@ -767,7 +788,7 @@ class B2XMuMuConf(LineBuilder) :
 
 
     
-    def __Bs__(self, Dimuon, Protons, Kaons, Pions, Pi0, Kshort, Lambda, Phi, Rho, Dplus, Kstar, Lambdastar, Kstar2KsPi, Kstar2KPi0, A1, K1, K2, conf):
+    def __Bs__(self, Dimuon, Protons, Kaons, Pions, Pi0, Kshort, Lambda, Phi, Rho, RhoPPbarProxy, Dplus, Kstar, Lambdastar, Kstar2KsPi, Kstar2KPi0, A1, K1, K2, conf):
         """
         Make and return a Bs selection
         """      
@@ -776,6 +797,7 @@ class B2XMuMuConf(LineBuilder) :
         _b2xmumu.DecayDescriptors = [ "B0 -> J/psi(1S) phi(1020)",
                                       "[B0 -> J/psi(1S) K*(892)0]cc",
                                       "B0 -> J/psi(1S) rho(770)0",
+                                      "B0 -> J/psi(1S) rho(1700)0",
                                       "B0 -> J/psi(1S) KS0",
                                       "[B0 -> J/psi(1S) D~0]cc",
                                       "[B+ -> J/psi(1S) K+]cc",
@@ -796,7 +818,7 @@ class B2XMuMuConf(LineBuilder) :
         
         _sel_Daughters = MergedSelection("Selection_"+self.name+"_daughters",
                                          RequiredSelections = [ Kaons, Pions, Kshort, Lambda, 
-                                                               Rho, Phi, Lambdastar, Kstar,
+                                                               Rho, RhoPPbarProxy, Phi, Lambdastar, Kstar,
                                                                self.Dzero, Dplus, self.Dstar,
                                                                Kstar2KsPi, Kstar2KPi0, Pi0, A1, K1, K2])
         sel = Selection( "Selection_"+self.name+"_bs2xmumu",
