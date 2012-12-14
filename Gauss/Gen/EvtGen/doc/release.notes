@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-12-14 - John Back
+ - Changed the EvtGen constructor to use Pythia 8 codes in decay files.
+
 !========================== EvtGen v13r0 2012-11-23 ==========================
 ! 2012-11-23 - John Back
  - Created new tag incorporating all changes below.

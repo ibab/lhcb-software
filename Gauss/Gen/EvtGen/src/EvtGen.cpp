@@ -135,7 +135,7 @@ EvtGen::EvtGen(const char* const decayName,
   // Set the Pythia external generator
   // We are using Pythia 6 physics codes in the decay.dec file(s).
   std::string xmlDir("./xmldoc");
-  bool convertPhysCode(true);
+  bool convertPhysCode(false);
   if (convertPhysCode) {
     report(INFO,"EvtGen") << "Defining the PYTHIA 8 generator: data tables in "
 			  << xmlDir << ".\n Will convert Pythia 6 codes in decayfiles "
