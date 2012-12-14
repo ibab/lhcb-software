@@ -22,21 +22,22 @@ confdict = {
     "TRGHOSTPROB" : 0.5
     ,"MuonGHOSTPROB" : 0.5
     ,"PrescaleD0Mu"    : 1.0
-    ,"MINIPCHI2"     : 9.0 
+    ,"MINIPCHI2"     : 25.0 
     ,"TRCHI2"        : 5.0
     ,"KaonPIDK"      : 4.0 
     ,"PionPIDK"      : 10.0
-    ,"MuonIPCHI2"    : 4.00  
-    ,"MuonPT"        : 500.0    # MeV   800
+    ,"MuonIPCHI2"    : 25.00  
+    ,"MuonPT"        : 800.0    # MeV   800
     ,"KPiPT"         : 300.0    # MeV   300
-    ,"D0FDCHI2"      : 50.0     # 100
+    ,"D0FDCHI2"      : 100.0     # 100
     ,"D0AMassWin"    : 100.0    # MeV   100
-    ,"D0VCHI2DOF"    : 25.0            #6.0
+    ,"D0VCHI2DOF"    : 10.0            #6.0
     ,"PIDmu"         : 0.0   
-    ,"BVCHI2DOF"     : 25.0            #6.0    
+    ,"BVCHI2DOF"     : 100.0            #6.0    
     ,"Comb_AM_MIN"   : 0.
     ,"Comb_AM_MAX"   : 90000.0  # MeV
-    }
+            }
+
 
 class StrippingBB2DMuNuXConf(LineBuilder) :
     """
@@ -96,9 +97,11 @@ class StrippingBB2DMuNuXConf(LineBuilder) :
 
         ################ B CANDIDATES SELECTION #################################
 
+
         self.selb2D0MuX = Selection('b2D0MuX' + name,
                                     Algorithm = self._b2D0MuXFilter(),
-                                    RequiredSelections = [self.seld02kpi, self.selmuon])
+                                    RequiredSelections = [self.selmuon, self.seld02kpi])
+
 
         ################ MAKE THE B CANDIDATES #################################
 
