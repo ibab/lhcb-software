@@ -3,6 +3,21 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-12-13 - Julien Cogan
+ - To allow L0 simulation in Moore :
+  - L0Conf: change the L0SimulationSeq.
+    Do not to write L0 results on TES anymore.
+    The writing on the TES being done by the L0 decoding setup in Moore.
+  - L0DUFromRawTool: For backward compatibility, reintroduce the RawLocation.
+	  Empty by default. 
+    If set, added in first position of the RawLocations list.    
+
+ - Following Savannah bug #99253 : 
+  L0Conf & L0DUFromRawAlg: Add new property (EnsureKnownTCK)
+  - set to True by default in L0Conf
+  - if true, the L0DU decoding (L0DUFromRawAlg) will return an error if the
+    TCK in used is not recognized
+ 
 !========================= L0DU v10r25 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.

@@ -33,6 +33,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"FilterL0FromRaw": False
         ,"MonitorL0"      : False
         ,"TCK"            : None
+        ,"EnsureKnownTCK" : True
         ,"FullPileUpSimulation"     : False
         ,"EnableL0DecodingOnDemand" : False
         ,"FastL0DUDecoding"         : False
@@ -70,6 +71,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"FilterL0FromRaw": """ If True, run the L0DU decoding and filter according to L0 decision."""
         ,"FilterL0"       : """ If True, filter according to L0 decision."""
         ,"TCK"            : """ Specifies the TCK to be used in simulation or emulation."""
+        ,"EnsureKnownTCK" : """ If True, the L0DU decoding will end with an error if the used TCK is not recognized, otherwise the L0DUReport will miss the L0DU configuration ."""
         ,"FullPileUpSimulation"     : """ If True, perform the full pileup simulation, filling raw banks from MC/Velo/PuFEs with PuVetoFillRawBuffer."""
         ,"EnableL0DecodingOnDemand" : """ If True, setup the data on demand service for L0."""
         ,"FastL0DUDecoding"         : """ If True, activate fast decoding for L0DU."""
@@ -245,7 +247,7 @@ class L0Conf(LHCbConfigurableUser) :
                 l0simulationSeq.Members+=[PuVetoFillRawBuffer()]
 
             # Run emulators (L0Calo + L0Muon + PUVeto + L0DU)
-            l0simulationSeq.Members+=[ self.l0emulatorSeq( writeBanks=True, writeOnTes=True ) ]
+            l0simulationSeq.Members+=[ self.l0emulatorSeq( writeBanks=True, writeOnTes=False ) ]
 
             seq.Members+= [l0simulationSeq ]
 
@@ -377,6 +379,10 @@ class L0Conf(LHCbConfigurableUser) :
             l0du.L0DUFromRawTool.Emulate             = False
             l0du.L0DUFromRawTool.StatusOnTES         = False
             l0du.WriteProcData                       = False
+
+        # Ensure that TCK is recognized when decoding the L0DU
+        if self.getProp("EnsureKnownTCK"):
+            decodeL0DU(rootintes).EnsureKnownTCK = self.getProp("EnsureKnownTCK")
 
         # Full decoding of L0Muon    
         if self.getProp("FullL0MuonDecoding"):

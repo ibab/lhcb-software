@@ -38,6 +38,7 @@ L0DUFromRawAlg::L0DUFromRawAlg( const std::string& name,
   declareProperty( "L0DUFromRawToolType"  , m_fromRawTool = "L0DUFromRawTool" );
   declareProperty( "Hlt1"                 , m_hlt1        = false );
   declareProperty( "CompareTools"         , m_compare     = false );
+  declareProperty( "EnsureKnownTCK"       , m_ensureKnownTCK = false );
 }
 
   //=============================================================================
@@ -84,6 +85,11 @@ StatusCode L0DUFromRawAlg::execute() {
   }
   
   if(!m_fromRaw->decodeBank())Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
+
+  if (m_ensureKnownTCK) {
+    if (m_fromRaw->report().configuration() == NULL) 
+      return Error("TCK not recognized. Run with L0Conf().EnsureKnownTCK=False to ignore this error",StatusCode::FAILURE);
+  }
 
   // L0DUReport on TES
   if( m_writeOnTES ){

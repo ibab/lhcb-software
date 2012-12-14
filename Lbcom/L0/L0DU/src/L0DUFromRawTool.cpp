@@ -40,6 +40,7 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   declareInterface<IL0DUFromRawTool>(this);
   
   declareProperty( "RawLocations"           , m_rawLocations  );
+  declareProperty( "RawLocation"             , m_rawLocation = ""   );
   declareProperty( "EmulatorTool"            , m_emulatorType="L0DUEmulatorTool");
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
   declareProperty( "L0DUConfigProviderType"  , m_configType="L0DUMultiConfigProvider");
@@ -67,6 +68,7 @@ L0DUFromRawTool::~L0DUFromRawTool() {}
 
 //=============================================================================
 StatusCode L0DUFromRawTool::initialize(){
+
   if ( msgLevel(MSG::DEBUG) ) debug() << "Initialize" << endmsg;
   StatusCode sc = GaudiTool::initialize();
    if(sc.isFailure())return sc;
@@ -117,8 +119,10 @@ StatusCode L0DUFromRawTool::initialize(){
     warning() << " ========> WARNING : Muons are assumed to be non zero-suppressed : " << endmsg;
   }
 
-
-  
+  if (m_rawLocation.size()>0) {
+    warning()<< "Using obsolete option RawLocation" << endmsg;
+    m_rawLocations.insert(m_rawLocations.begin(),m_rawLocation);
+  }
 
   return sc;
 }

@@ -45,5 +45,6 @@ private:
   IL0DUFromRawTool* m_fromRaw2;
   bool m_hlt1;
   bool m_compare;
+  bool m_ensureKnownTCK;
 };
 #endif // L0DUFROMRAWALG_H
