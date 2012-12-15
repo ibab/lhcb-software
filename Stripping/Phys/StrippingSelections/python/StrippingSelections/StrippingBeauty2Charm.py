@@ -139,8 +139,8 @@ config = {
     'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,'COSDPHI_MAX':0,'M_MIN':0,'MAXPT_MIN': 4000},
     'D0INC' : {'PT_MIN' : 1000, 'IPCHI2_MIN': 100},
     "Prescales" : { # Prescales for individual lines
-    'RUN_BY_DEFAULT' : False, # False = lines off by default
-    'RUN_RE'         : ['.*DoubleTopo.*','.*D02HHTopoTOS.*'],  
+    'RUN_BY_DEFAULT' : True, # False = lines off by default
+    'RUN_RE'         : ['.*'],  
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
     #'B2D0PiD2HHBeauty2CharmLine'      : 1.0,
@@ -155,7 +155,7 @@ config = {
     #'Lb2XicKWSXic2PKPiBeauty2CharmLine'  : 0.1,
     #'X2LcLcBeauty2CharmLine'    : 1.0,
     #'X2LcLcWSBeauty2CharmLine'  : 0.1,
-    #'B02DKLTUBD2HHHBeauty2CharmLine' : 0.04,
+    'B02DKLTUBD2HHHBeauty2CharmLine' : 0.04,
     #'B02D0D0Beauty2CharmLine'   : 1.0,
     #'B02DDWSBeauty2CharmLine'   : 1.0,
     #'B2D0DD02K3PiBeauty2CharmLine' : 1.0

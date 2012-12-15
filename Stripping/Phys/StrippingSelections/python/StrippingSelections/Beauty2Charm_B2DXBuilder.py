@@ -32,6 +32,7 @@ class B2DXBuilder(object):
         self._makeB2D0H('D2HHUP',self.d.hh_up)   # B+- -> D0(HH)  H+-
         self._makeB2D0H('D2KPIPID',d.kpi_pid,False) # No IP line!
         self._makeB02D0HH('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
+        self._makeB02D0PPbar('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
 
         #Tighter selection Full DST lines
         self._makeB02D0HH_FULLDST('D2HHFULLDST',self.d.hh_pid_tight)
@@ -337,18 +338,30 @@ class B2DXBuilder(object):
                                     
     def _makeB02D0HH(self,dname,d2x):
         '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c.'''
-        decays = {'B02D0PiPi': ["B0 -> D0 rho(770)0"],
-                  'B02D0KPi' : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"],
-                  'B02D0KK'  : ["B0 -> D0 phi(1020)"]}
-        inputs = {'B02D0PiPi': d2x+self.hh.pipi,
-                  'B02D0KPi' : d2x+self.hh.kpi,
-                  'B02D0KK'  : d2x+self.hh.kk}
+        decays = {'B02D0PiPi' : ["B0 -> D0 rho(770)0"],
+                  'B02D0KPi'  : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"],
+                  'B02D0KK'   : ["B0 -> D0 phi(1020)"]}
+        inputs = {'B02D0PiPi' : d2x+self.hh.pipi,
+                  'B02D0KPi'  : d2x+self.hh.kpi,
+                  'B02D0KK'   : d2x+self.hh.kk}
         b2d0hh = makeB2XSels(decays,dname,inputs,self.config)
         decays = {'B02DHHWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
         inputs = {'B02DHHWS': d2x+self.hh.hh_ws}
         b2d0hh_ws = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2d0hh,1.0))
         self.lines.append(ProtoLine(b2d0hh_ws,0.1))        
+
+    def _makeB02D0PPbar(self,dname,d2x):
+        '''Makes RS B0 -> D0 p+p~- + c.c.'''
+        decays = { 'B02D0PPbar': ["B0 -> D0 rho(770)0"]}
+        inputs = { 'B02D0PPbar': d2x+self.hh.ppbar_pid}
+        b2d0ppbar = makeB2XSels(decays,dname,inputs,self.config)
+        decays = {'B02D0PPbarWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
+        inputs = {'B02D0PPbarWS': d2x+self.hh.ppbar_ws_pid}
+        b2d0ppbar_ws = makeB2XSels(decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b2d0ppbar,1.0))
+        self.lines.append(ProtoLine(b2d0ppbar_ws,0.1))        
+
 
     def _makeB02D0HH_FULLDST(self,dname,d2x):
         '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c. (Tighter selection for Full DST)'''

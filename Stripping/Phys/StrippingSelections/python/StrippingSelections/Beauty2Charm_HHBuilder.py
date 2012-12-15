@@ -47,9 +47,11 @@ class HHBuilder(object):
         self.rho0 = self._makeRho0(self.pipi)
         self.rhopm = self._makeRhoPM(self.pipi0)
         self.kstarpm = self._makeKstarPM(self.kpi0)
+        self.ppbar = self._makePPbar()
         # WS selections (ie doubly-charged ones)
         self.hh_ws = self._makeHHWS()
         self.ph_ws = self._makePHWS()
+        self.ppbar_ws = self._makePPbarWS()
         # PID filtered selections
         self.pipi_pid = [filterPID('X2PiPiPID',self.pipi,config_pid)]
         self.kpi_pid = [filterPID('X2KPiPID',self.kpi,config_pid)]
@@ -62,6 +64,8 @@ class HHBuilder(object):
         self.kk_pid = [filterPID('X2KKPID',self.kk,config_pid)]
         self.hh_ws_pid = [filterPID('X2HHWSPID',self.hh_ws,config_pid)]
         self.ph_pid = [filterPID('X2PHPID',self.ph,config_pid)]
+        self.ppbar_pid = [filterPID('X2PPbarPID',self.ppbar,config_pid['TIGHT'])]
+        self.ppbar_ws_pid = [filterPID('X2PPbarWSPID',self.ppbar_ws,config_pid['TIGHT'])]
         self.rho0_pid = [filterPID('RHO02PiPiPID',self.rho0,config_pid)]
         self.kstar0_pid = [filterPID('Kstar02KPiPID',self.kstar0,config_pid)]
         self.phi_pid = [filterPID('PHI2KKPID',self.phi,config_pid)]
@@ -213,7 +217,7 @@ class HHBuilder(object):
         filter="INTREE((ABSID=='p+') & (P > %s)) & (M < 5.2*GeV)" \
                 % self.config['pP_MIN']
         psel = filterSelection('X2PHPlusWS',filter,[psel])
-        msel = self._makeX2HH('X2PPiMinusWS',['Lambda0 -> pi+ pi+'],
+        msel = self._makeX2HH('X2PPiMinusWS',['Lambda0 -> pi- pi-'],
                               '(AM < 5*GeV)',
                               self.config,[self.pions])
         decays = [['p~-','pi-'],['pi-','p~-'],['p~-','K-'],['K-','p~-']]
@@ -223,5 +227,44 @@ class HHBuilder(object):
                          RequiredSelections=[msel])
         msel = filterSelection('X2PHMinusWS',filter,[msel])
         return [psel,msel]                                        
+
+    def _makePPbar(self):
+        '''Makes X -> p+ pbar-'''
+        sel = self._makeX2HH('X2PPbar', ['rho(770)0 -> pi+ pi-'],
+                             '(AM < 5*GeV)',
+                             self.config,[self.pions])
+        decays = [['p+','p~-']]
+        filter = SubPIDMMFilter('X2PPbarSubPIDBeauty2Charm',Code='ALL',
+                                MinMM=0,MaxMM=5000,PIDs=decays)
+        presel = Selection('X2PPbarSubPIDSelBeauty2Charm',Algorithm=filter,
+                           RequiredSelections=[sel])
+        filter="INTREE((ABSID=='p+') & (P > %s)) & (M < 5.2*GeV)" \
+                % self.config['pP_MIN']
+        return [filterSelection('X2PPbar',filter,[presel])]
+
+    def _makePPbarWS(self):
+        '''Makes X -> p+ p+ + c.c.'''
+        psel = self._makeX2HH('X2PPbarPlusWS',['rho(770)+ -> pi+ pi+'],
+                             '(AM < 5*GeV)',
+                             self.config,[self.pions])
+        decays = [['p+','p+']]
+        pfilter = SubPIDMMFilter('X2PPbarPlusWSSubPIDBeauty2Charm',Code='ALL',
+                                 MinMM=0,MaxMM=5000,PIDs=decays)
+        psel = Selection('X2PPbarPlusWSSubPIDSelBeauty2Charm',Algorithm=pfilter,
+                         RequiredSelections=[psel])
+        filter="INTREE((ABSID=='p+') & (P > %s)) & (M < 5.2*GeV)" \
+                % self.config['pP_MIN']
+        psel = filterSelection('X2PPbarPlusWS',filter,[psel])
+        msel = self._makeX2HH('X2PPbarMinusWS',['rho(770)- -> pi- pi-'],
+                              '(AM < 5*GeV)',
+                              self.config,[self.pions])
+        decays = [ ['p~-','p~-'] ]
+        mfilter = SubPIDMMFilter('X2PPbarMinusWSSubPIDBeauty2Charm',Code='ALL',
+                                 MinMM=0,MaxMM=5000,PIDs=decays)
+        msel = Selection('X2PPbarMinusWSSubPIDSelBeauty2Charm',Algorithm=mfilter,
+                         RequiredSelections=[msel])
+        msel = filterSelection('X2PPbarMinusWS',filter,[msel])
+        return [psel,msel]                                        
+
                                                             
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
