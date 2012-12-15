@@ -79,7 +79,7 @@ NoPIDDstarWithD02RSKPi = {
     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
     ##
-    , 'Prescale'         : 0.80           ## unitless
+    , 'Prescale'         : 0.89           ## unitless
     , 'Postscale'        : 1.00           ## unitless
     ##
     , 'Monitor'          : False           ## Activate the monitoring?
@@ -127,11 +127,11 @@ V0ForPID = {
     ## define LL-category of K0S 
     "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) "
     ] ,
-    'KS0LL_Prescale'           : 0.020 ,
-    'KS0DD_Prescale'           : 0.024 , 
-    'LamLL_Prescale_LoP'       : 0.140 , 
+    'KS0LL_Prescale'           : 0.022 ,
+    'KS0DD_Prescale'           : 0.027 , 
+    'LamLL_Prescale_LoP'       : 0.180 , 
     'LamLL_Prescale_HiP'       : 1.000 ,
-    'LamDD_Prescale'           : 0.100 , 
+    'LamDD_Prescale'           : 0.140 , 
     'LamLLIsMUON_Prescale_LoP' : 1.000 ,
     'LamLLIsMUON_Prescale_HiP' : 1.000 ,
     'LamDDIsMUON_Prescale'     : 1.000   

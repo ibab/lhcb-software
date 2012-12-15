@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-15 - Andrew Powell
+ - Update Stripping20r1/LineConfigDictionaries_Calib.py
+   - Updated prescales for NoPID DStar and V0 selections
+
 ! 2012-12-14 - Anton Poluektov 
  - Update Stripping20r1/LineConfigDictionaries_B2OC.py - new configuration of Beauty2Charm builder
  - Update Stripping20r1/LineConfigDictionaries_RD.py - Changes in B2XMumu configuration
