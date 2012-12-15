@@ -1,4 +1,3 @@
-// $Id: TupleToolVeloTrackClusterInfo.cpp,v 1.12 2010-04-23 12:01:26 jhe Exp $
 // Include files
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolVeloTrackClusterInfo
 //
-// 2008-03-17 : Stephane Poss
+// 2012-12-12 : Kazu Akiba 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -58,8 +57,6 @@ StatusCode TupleToolVeloTrackClusterInfo::fill( const LHCb::Particle*
   else test &= tuple->column( prefix+"_TRACK_TCHI2NDOF",-1.);
   std::vector<double> stations;
   std::vector<double> stationADC;
-  double averageDEDX= -1000, totalDEDX = -1000;
-  int nVeloClustersOnTrack = -1000;
   double averageCharge =0;
   double totalChargeOnTrack=0;
   double nClustersOnTrack =0;
@@ -91,10 +88,10 @@ StatusCode TupleToolVeloTrackClusterInfo::fill( const LHCb::Particle*
   if (nClustersOnTrack>0) averageCharge/=nClustersOnTrack;
   else averageCharge = -1000;
 
-  nVeloClustersOnTrack = (int) nClustersOnTrack;
+  int nVeloClustersOnTrack = (int) nClustersOnTrack;
   test &= tuple->column( prefix+"_TRACK_VELO_TOTALCHARGE", totalChargeOnTrack);
   test &= tuple->column( prefix+"_TRACK_VELO_AVERAGECHARGE", averageCharge);
-  test &= tuple->column( prefix+"_TRACK_VELO_CLUSTERSONTRACK", nClustersOnTrack);
+  test &= tuple->column( prefix+"_TRACK_VELO_CLUSTERSONTRACK", nVeloClustersOnTrack);
   //for (int ii = 0; ii <stations.size(); ii++) info() << "  stations check  " << ii << " " << stations[ii] << endmsg; 
   test &= tuple->farray( prefix+"_TRACK_VELO_STATION_ADC", stationADC.begin(), stationADC.end(), "nClusters" , maxStationsInVeloTrack);
   //for (int ii = 0; ii <stationADC.size(); ii++) info() << "  stationsADC check  " << ii << " " << stationADC[ii] << endmsg; 

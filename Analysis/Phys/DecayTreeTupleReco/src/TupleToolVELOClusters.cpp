@@ -47,7 +47,7 @@ StatusCode TupleToolVELOClusters::fill( Tuples::Tuple& tup )
   // Fill the tuple
   bool test = true;
   int unusedvelo = TupleToolVELOClusters::unusedVelo();
-  test &= tup->column( prefix+"nUnusedVeloClusters", TupleToolVELOClusters::unusedVelo());
+  test &= tup->column( prefix+"nUnusedVeloClusters", unusedvelo);
   return StatusCode(test);
 }
 int TupleToolVELOClusters::unusedVelo(){
