@@ -4,7 +4,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 
 /** @class RemoveDuplicates RemoveDuplicates.h
  *  
@@ -18,7 +18,7 @@
 
 
 //===========================================================================
-///A public DVAlgorithm using the LHCb-ID hash to remove duplicates.
+///A public DaVinciAlgorithm using the LHCb-ID hash to remove duplicates.
 /** RemoveDuplicates is a useful tool to be called on stripped candidates.
  * The Tool removes duplicates (built from the same final state particles) 
  * within stripped candidates based on LHCb-ID hash.
@@ -27,7 +27,7 @@
  */
 //===========================================================================
 
-class RemoveDuplicates : public DVAlgorithm {
+class RemoveDuplicates : public DaVinciAlgorithm {
 
 public: 
   /// Standard constructor

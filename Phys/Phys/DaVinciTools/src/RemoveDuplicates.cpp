@@ -29,7 +29,7 @@ DECLARE_ALGORITHM_FACTORY( RemoveDuplicates )
 RemoveDuplicates::RemoveDuplicates( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : 
-  DVAlgorithm ( name , pSvcLocator ) 
+  DaVinciAlgorithm ( name , pSvcLocator ) 
   , m_NpartIn(0)
   , m_NpartOut(0)
 { 
@@ -46,7 +46,7 @@ RemoveDuplicates::~RemoveDuplicates() {}
 //#############################################################################
 StatusCode RemoveDuplicates::initialize() {
 
-  StatusCode sc = DVAlgorithm::initialize();
+  StatusCode sc = DaVinciAlgorithm::initialize();
   if (!sc) return sc;
 
   if (msgLevel(MSG::DEBUG)) {
@@ -127,5 +127,5 @@ StatusCode RemoveDuplicates::finalize() {
   info() << "Filtered " << m_NpartIn << " to " << m_NpartOut 
          << ", removing " << m_NpartIn-m_NpartOut << " duplicates" << endmsg ;
 
-  return DVAlgorithm::finalize() ;
+  return DaVinciAlgorithm::finalize() ;
 }
