@@ -194,6 +194,10 @@ import StrippingB2HHBDT
 import StrippingD2HHBDT
 import StrippingB2DHHHForBXX
 
+import StrippingBs2D0KS0
+import StrippingB2LambdaMuLines
+import StrippingTau2LambdaMuLines
+
 from sys import modules as _modules
 _this = _modules[__name__]
 

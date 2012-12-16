@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-16 - Anton Poluektov 
+ - Add 3 new lines to __init__.py
+
 ! 2012-12-15 - Anton Poluektov 
  - Update Beauty2Charm, add B02D0PPbar lines (RS and WS)
 
