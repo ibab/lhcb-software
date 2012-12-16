@@ -23,6 +23,7 @@ use   LinkerEvent	v*	Event
 use   TrackFitEvent   	v*	Tr
 use   TrackInterfaces 	v*	Tr
 use   MCInterfaces      v*      Kernel
+use   TrackKernel       v*      Tr
 
 #============================================================================
 # Component library building rule
