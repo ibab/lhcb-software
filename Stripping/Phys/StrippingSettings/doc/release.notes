@@ -4,6 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-16 - Anton Poluektov 
+ - Update Stripping20r1/LineConfigDictionaries_B2OC.py
+   * Add new lines in Beauty2Charm builder (FULLDST, Topo, D0PPbar)
+   * Add a separate Bs2D0KS0 builder
+ - Update Stripping20r1/LineConfigDictionaries_RD.py
+   * Add B2LambdaMu and Tau2LambdaMu lines
+
 ! 2012-12-15 - Andrew Powell
  - Update Stripping20r1/LineConfigDictionaries_Calib.py
    - Updated prescales for NoPID DStar and V0 selections

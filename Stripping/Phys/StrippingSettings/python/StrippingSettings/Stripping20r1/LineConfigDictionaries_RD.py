@@ -814,3 +814,26 @@ B2XTau =  {
     'B2DMu_TISLinePostscale'            : 1.
     }
     }
+
+# Marcin Chrzaszcz
+B2LambdaMuLines = {
+    'BUILDERTYPE' : 'B2LambdaMuLinesConf',
+    'WGs' : [ 'RD' ],
+    'STREAMS' : [ 'Semileptonic' ],
+    'CONFIG' : {
+        'BPrescale'         :1.,
+        'BPostscale'        :1.,
+        'B2LambdaMuPrescale'  :1.
+    }
+}
+
+Tau2LambdaMuLines = {
+    'BUILDERTYPE' : 'Tau2LambdaMuLinesConf',
+    'WGs' : [ 'RD' ],
+    'STREAMS' : [ 'Semileptonic' ],
+    'CONFIG' : {
+        'TauPrescale'         :1.,
+        'TauPostscale'        :1.,
+        'Tau2LambdaMuPrescale'  :1.
+    }
+}

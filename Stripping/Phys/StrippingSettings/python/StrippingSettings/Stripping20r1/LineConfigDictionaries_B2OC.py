@@ -103,8 +103,11 @@ Beauty2Charm = {
                   'PI': {'PIDK_MAX' : 12},
                   'K' : {'PIDK_MIN' : -10}}
     },
+    '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
+    'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,'COSDPHI_MAX':0,'M_MIN':0,'MAXPT_MIN': 4000},
+    'D0INC' : {'PT_MIN' : 1000, 'IPCHI2_MIN': 100},
     "Prescales" : { # Prescales for individual lines
-     'RUN_BY_DEFAULT' : True, # False = lines off by default
+    'RUN_BY_DEFAULT' : True, # False = lines off by default
     'RUN_RE'         : ['.*'],  
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
@@ -155,7 +158,15 @@ Beauty2Charm = {
     'StrippingB02DPiD2HHHUPBeauty2CharmLine', 
     'StrippingB02DRhoPMD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DKstarPMD2HHHCFPIDBeauty2CharmLine', 
+    'StrippingB02D0PiPiD2HHFULLDSTBeauty2CharmLine', 
+    'StrippingB02D0KPiD2HHFULLDSTBeauty2CharmLine', 
+    'StrippingB02DKPiPiD2HHHFULLDSTBeauty2CharmLine', 
+    'StrippingB02DPiPiPiD2HHHFULLDSTBeauty2CharmLine', 
+    'StrippingB02DDFULLDSTBeauty2CharmLine', 
+    'StrippingB02D0D0FULLDSTBeauty2CharmLine', 
     'StrippingDoubleTopoLine', 
+    'StrippingPseudoDoubleTopoLine', 
+    'StrippingD02HHTopoTOSLine', 
 
     ],  
     'Bhadron' : [
@@ -358,6 +369,8 @@ Beauty2Charm = {
     'StrippingLb2LcDstWSDstar2D0PiPIDBeauty2CharmLine', 
     'StrippingX2LcLcBeauty2CharmLine', 
     'StrippingX2LcLcWSBeauty2CharmLine', 
+    'StrippingB02D0PPbarD2HHBeauty2CharmLine', 
+    'StrippingB02D0PPbarWSD2HHBeauty2CharmLine', 
     'StrippingLb2Lc5PiLc2PKPiPIDBeauty2CharmLine', 
     'StrippingB02DKLTUBD2HHHBeauty2CharmLine', 
 #    'StrippingDstarUPB2D0PiNoIPD2KPIPIDBeauty2CharmLine', 
@@ -967,3 +980,22 @@ B2fourbody = {
     'WGs' : [ 'B2OC' ]
     }    
 
+# Jesse Mesman, Walter Hulsbergen
+
+Bs2D0KS0 = {
+    'BUILDERTYPE' : 'Bs2D0KS0Conf',
+    'CONFIG' : {
+        "BIPCHI2"      : 20.0,         # Maximum Bs IP chi2.
+        "BVCHI2"       : 10.0,         # Maximum Bs vertex chi2 per degree of freedom.
+        "BsCombMassMin" : 5000.,        # Lower mass of D0+Ks combination
+        "BsCombMassMax" : 5650.,        # Upper mass of D0+Ks combination 
+        "BPVDLS"       : 5.,           # Minimum decay length significance
+        "BsMassMin"    : 5100.,        # Lower mass of Bs
+        "BsMassMax"    : 5550.,        # Upper mass of Bs
+        "D0MassMin"    : 1804.,        # Lower mass of D0
+        "D0MassMax"    : 1924.,        # Upper mass of D0
+        "DTF_CHI2NDOF" : 5.            # Minimum vertex chi2 per degree of freedom after decay tree fitter fit
+    }, 
+    'STREAMS' : [ 'Bhadron' ],
+    'WGs' : [ 'B2OC' ]
+    }    
