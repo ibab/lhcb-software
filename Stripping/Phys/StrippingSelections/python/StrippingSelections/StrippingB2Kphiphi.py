@@ -30,26 +30,26 @@ config_params = {
     'Prescale'                : 1.0 ,
     'Postscale'               : 1.0 ,
     #K parameters
-    'K_PT'                    : 400.,          # tutaj sie zgadza z moim davinci
-    'K_IPCHI2'                : 6.25,
-    'K_TRCHI2'                : 3.3,       # tautaj doda??em ciecie na track_chi2
+    'K_PT'                    : 300.,          # tutaj sie zgadza z moim davinci
+    'K_IPCHI2'                : 2.8,
+    'K_TRCHI2'                : 3.,       # tautaj doda??em ciecie na track_chi2
     
     #phi1 parameters
     #tylko raz chyba mo??na dac ciecia wiec wybieram ciasniejsze
     'phi_VDZ'                 : 0.,
-    'phi_PT'                  : 300,             ## tutaj bez zmian
-    'phi_IPCHI2'              : 6.,
+    'phi_PT'                  : 400,             ## tutaj bez zmian
+    'phi_IPCHI2'              : 5.,
     'phi_VCHI2_VDOF'          : 16.,
-    'phi_MM_max'              : 1060., # delta masy(ta zmiana)
-    'phi_MM_min'              : 980.,
+    'phi_MM_max'              : 1045., # delta masy(ta zmiana)
+    'phi_MM_min'              : 995.,
 
  
     #B parameters
-    'B_ADAMASS'              : 500.,
+    'B_ADAMASS'              : 350.,
     'B_DIRA'                 : 0.999, 
-    'B_IPCHI2'               : 12.25,   # tutaj w offline selection jest 25
+    'B_IPCHI2'               : 25,   # tutaj w offline selection jest 25
     'B_VCHI2_VDOF'           : 16.,
-    'B_LTCHI2'               : 64.,
+    'B_LTCHI2'               : 81.,
     'B_VDZ'                  : 0.
 
     }
@@ -147,7 +147,7 @@ def makeKaons (
     K_IPCHI2
     ):
 
-    _code = "(PIDK  - PIDpi > -2.  )  &  (PT>%(K_PT)s*MeV) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)  & ( TRGHOSTPROB < 0.3 )" %locals()
+    _code = "(PIDK  - PIDpi > -2.  )  &  (PT>%(K_PT)s*MeV) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)  & ( TRGHOSTPROB < 0.8 )" %locals()
     _kaonsFilter = FilterDesktop(Code = _code)
     _stdKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
 
@@ -171,8 +171,8 @@ def makePhi2KK (
     ):
     
 
-    _phi1_combinationCuts = "(APT>%(phi_PT)s*MeV) & (AM<%(phi_MM_max)s*MeV)" %locals()
-    _phi1_motherCuts = "(BPVVDZ>%(phi_VDZ)s) & (MIPCHI2DV(PRIMARY)>%(phi_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(phi_VCHI2_VDOF)s)" %locals()
+    _phi1_combinationCuts = "(AM<%(phi_MM_max)s*MeV)" %locals()
+    _phi1_motherCuts = " (MIPCHI2DV(PRIMARY)>%(phi_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(phi_VCHI2_VDOF)s) & (PT>%(phi_PT)s*MeV)" %locals()
     
     _phi2KK_1 = CombineParticles (
         DecayDescriptor = "[phi(1020) -> K+ K-]cc",
@@ -202,7 +202,7 @@ def makeB2KPhiPhi (
     ):
     
     _B_combinationCuts = "(ADAMASS('B+')<%(B_ADAMASS)s*MeV)" %locals()
-    _B_motherCuts = "(BPVVDZ>%(B_VDZ)s) & (BPVDIRA>%(B_DIRA)s) & (MIPCHI2DV(PRIMARY)<%(B_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(B_VCHI2_VDOF)s)" %locals()
+    _B_motherCuts = "(BPVDIRA>%(B_DIRA)s) & (MIPCHI2DV(PRIMARY)<%(B_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(B_VCHI2_VDOF)s) & (BPVVDCHI2>81)" %locals()
     
     _B = CombineParticles (  
         DecayDescriptor = "[B+ -> K+ phi(1020) phi(1020)]cc",
