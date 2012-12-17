@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-17 - Alex Grecu for Florin Maciuc
+ - Minor changes to StrippingStrangeBaryons.py, mass cuts on Lambda modified
+
 ! 2012-12-16 - Anton Poluektov 
  - Add 3 new lines to __init__.py
 

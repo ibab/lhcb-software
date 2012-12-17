@@ -47,7 +47,9 @@ config_default = { #PID cuts
        
                    'minCHI2IPPV_L_LL'     :       9., # > 9
                    'minCHI2IPPV_L'               :       2., # > 2 for the other 5 cases
-                   'Lambda0MassWindow'            :       6., # < 6 for all six cases
+                   'Lambda0MassWindow'            :       30., # < 6 for all six cases
+                   'Lambda0MassWindowPost'            :	  6., # < 6 for all six cases
+
                    
                    #Bachelor cuts
 
@@ -98,6 +100,10 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                   'minCHI2IPPV_L_LL',
                                   'minCHI2IPPV_L',
                                   'Lambda0MassWindow',
+                                  'Lambda0MassWindowPost',
+
+
+
                                   #Bachelor cuts
                                   'minCHI2IPPV_Pi_Bachelor_LLL',
                                   'minCHI2IPPV_Pi_Bachelor_DDD',
@@ -176,15 +182,15 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
            
            
            
-           
            #Create Lambdas
            Lambda2pPiL = createCombinationSel(OutputList = "Lambda2pPiL"+ self.name,
                                               DecayDescriptor = "[Lambda0 -> p+ pi-]cc",
                                               DaughterLists   = [PionsForLambdaLList, ProtonsForLambdaLList],
                                               DaughterCuts    = {},
                                               PreVertexCuts   = "(ADAMASS('Lambda0') < %(Lambda0MassWindow)s*MeV)"% self.config,
+  
                                               PostVertexCuts  = "(BPVIPCHI2() > %(minCHI2IPPV_L_LL)s) & (VFASPF(VCHI2) < %(CHI2VTX_L)s) &"\
-                                              "(BPVVDCHI2 > %(L_FDCHI2_OWNPV_LL)s)" %self.config
+                                              "(BPVVDCHI2 > %(L_FDCHI2_OWNPV_LL)s) & (ADMASS('Lambda0') < %(Lambda0MassWindowPost)s*MeV)" %self.config
                                               #PostVertexCuts  = "(BPVIPCHI2() > %(minCHI2IPPV_L_Loose)s) & (VFASPF(VCHI2) < %(CHI2VTX_L)s)" %self.config
                                               )
 
@@ -196,7 +202,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                               DaughterCuts    = {},
                                               PreVertexCuts   = "(ADAMASS('Lambda0') < %(Lambda0MassWindow)s*MeV)"% self.config,
                                               PostVertexCuts  = "(BPVIPCHI2() > %(minCHI2IPPV_L_LL)s) & (VFASPF(VCHI2) < %(CHI2VTX_L)s) &"\
-                                              "(BPVVDCHI2 > %(L_FDCHI2_OWNPV_LL_Omega)s)" %self.config
+                                              "(BPVVDCHI2 > %(L_FDCHI2_OWNPV_LL_Omega)s) & (ADMASS('Lambda0') < %(Lambda0MassWindowPost)s*MeV)" %self.config
                                               #PostVertexCuts  = "(BPVIPCHI2() > %(minCHI2IPPV_L_Loose)s) & (VFASPF(VCHI2) < %(CHI2VTX_L)s)" %self.config
                                               )
            
@@ -208,7 +214,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                               DaughterCuts    = {},
                                               PreVertexCuts   = "(ADAMASS('Lambda0') < %(Lambda0MassWindow)s*MeV)"% self.config,
                                               PostVertexCuts  = "(BPVIPCHI2() > %(minCHI2IPPV_L)s) & (VFASPF(VCHI2) < %(CHI2VTX_L)s) &"\
-                                              "(BPVVDCHI2 > %(L_FDCHI2_OWNPV)s)" %self.config
+                                              "(BPVVDCHI2 > %(L_FDCHI2_OWNPV)s) & (ADMASS('Lambda0') < %(Lambda0MassWindowPost)s*MeV)" %self.config
                                               #PostVertexCuts  = "(BPVIPCHI2() > %(minCHI2IPPV_L)s) & (VFASPF(VCHI2) < %(CHI2VTX_L)s)" %self.config
                                               )
 
@@ -219,7 +225,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                               DaughterCuts    = {},
                                               PreVertexCuts   = "(ADAMASS('Lambda0') < %(Lambda0MassWindow)s*MeV)"% self.config,
                                               PostVertexCuts  = "(BPVIPCHI2() > %(minCHI2IPPV_L)s) & (VFASPF(VCHI2) < %(CHI2VTX_L)s) &"\
-                                              "(BPVVDCHI2 > %(L_FDCHI2_OWNPV_Omega)s)" %self.config
+                                              "(BPVVDCHI2 > %(L_FDCHI2_OWNPV_Omega)s) & (ADMASS('Lambda0') < %(Lambda0MassWindowPost)s*MeV)" %self.config
                                               #PostVertexCuts  = "(BPVIPCHI2() > %(minCHI2IPPV_L)s) & (VFASPF(VCHI2) < %(CHI2VTX_L)s)" %self.config
                                               )
            
