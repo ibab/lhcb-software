@@ -115,9 +115,9 @@ class Gauss(LHCbConfigurableUser):
         ,"WriteFSR"          : True
         ,"Persistency"       : None
         ,"Debug"             : False
-        ,"BeamPipe" : "BeamPipeOn" # _beamPipeSwitch = 1
-        #,"BeamPipe" : "BeamPipeOff"  # _beamPipeSwitch = 0
-        #,"BeamPipe" : "BeamPipeInDet"  # _beamPipeSwitch = -1
+        ,"BeamPipe" : "BeamPipeOn"
+        #,"BeamPipe" : "BeamPipeOff"
+        #,"BeamPipe" : "BeamPipeInDet"
       }
     
     _detectorsDefaults = {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
@@ -298,17 +298,11 @@ class Gauss(LHCbConfigurableUser):
 # ><<<< ><<    ><<<<      ><< ><<< ><<<  ><  ><< ><<      ><< ><<        ><<<<   
 #                                                ><<          ><<                
 
-    def setBeamPipeSwitch ( self, bpString ):
+    def validateBeamPipeSwitch ( self, bpString ):
         import string
-        bpLower = bpString.lower()
+        bpLower = self.getProp("BeamPipe").lower()
         if bpLower not in self._beamPipeStates:
             raise RuntimeError("ERROR: BeamPipe configuration '%s' not recognised!" %bpString)
-        else:
-            # default is "beampipeon" === 1
-            if bpLower in ["beampipeoff"]:
-                self._beamPipeSwitch = 0
-            elif bpLower in ["beampipeindet"]:
-                self._beamPipeSwitch = -1
 
     def removeBeamPipeElements( self, det ):
         det = det.lower()
@@ -439,8 +433,12 @@ class Gauss(LHCbConfigurableUser):
         VeloLTagLimit2 = VeloLTagLimit2.split('-')[1].strip()
         
         # DDDB global tag used
+        print "LHCbApp().DDDBtag: %s" %(LHCbApp().DDDBtag)
+        print "LHCbApp().getProp('DDDBtag'): %s" %(LHCbApp().getProp("DDDBtag"))
         DDDBDate = LHCbApp().DDDBtag
         DDDBDate = DDDBDate.split('-')[1].strip()
+        print "LHCbApp().DDDBtag: %s" %(LHCbApp().DDDBtag)
+        print "LHCbApp().getProp('DDDBtag'): %s" %(LHCbApp().getProp("DDDBtag"))
 
         # check if/which local tag is used for Velo
         cdb = CondDB()
@@ -2249,8 +2247,8 @@ class Gauss(LHCbConfigurableUser):
         self.defineGeoBasePieces( basePieces )
 
         # Define beampipe 
-        self.setBeamPipeSwitch ( self.getProp("BeamPipe") )
-        if (1 == self._beamPipeSwitch):
+        self.validateBeamPipeSwitch ( self.getProp("BeamPipe") )
+        if ("BeamPipeOn" == self.getProp("BeamPipe")):
             # BeamPipe on - add BP elements
             self.defineBeamPipeGeo ( geo, basePieces, detPieces )
 
@@ -2308,7 +2306,7 @@ class Gauss(LHCbConfigurableUser):
                 print "%s" %(item)
 
         # No BP requested - therefore remove all elements from Geo.StreamItems
-        if (0 == self._beamPipeSwitch):
+        if ("BeamPipeOff" == self.getProp("BeamPipe")):
             self.removeAllBeamPipeElements()
 
 
