@@ -27,14 +27,14 @@
 
 #include "GaudiKernel/IHistogramSvc.h"
 #include <GaudiUtils/Aida2ROOT.h>
-#include "AIDA/IHistogram2D.h"
+#include "AIDA/IHistogram3D.h"
 #include "boost/lexical_cast.hpp"
 
-#include "TH2D.h"
+#include "TH3D.h"
 #include "TMath.h"
 #include "Math/VectorUtil.h"
 
-class TH2D;
+class TH3D;
 // ============================================================================
 namespace LoKi 
 {
@@ -172,7 +172,7 @@ namespace LoKi
     /// append Jet ID
     bool m_applyJetID              ; // append jet ID info
     /// histograms for JEC
-    std::vector<TH2D*> m_histosJEC ;
+    std::vector<TH3D*> m_histosJEC ;
     /// histo path
     std::string m_histo_path ;
     /// input particles to consider
@@ -207,8 +207,8 @@ StatusCode LoKi::PFJetMaker::initialize ()
   if ( m_applyJEC ){ 
     for( int i = 1; i < 4; ++i ) {
       std::string histoname = "JEC_PV"+boost::lexical_cast<std::string>(i);
-      AIDA::IHistogram2D *aida =  get<AIDA::IHistogram2D> (histoSvc(), m_histo_path + histoname);
-      if( 0==aida ) warning()<<"Could not find AIDA::IHistogram2D* "
+      AIDA::IHistogram3D *aida =  get<AIDA::IHistogram3D> (histoSvc(), m_histo_path + histoname);
+      if( 0==aida ) warning()<<"Could not find AIDA::IHistogram3D* "
                              << m_histo_path + histoname<<"."<<endmsg;
       m_histosJEC.push_back( Gaudi::Utils::Aida2ROOT::aida2root(aida) );
     }
@@ -305,8 +305,8 @@ StatusCode LoKi::PFJetMaker::analyse   ()
       while ( !jets.empty() ) 
       {
         LHCb::Particle* jet = jets.back() ;
-        if(m_applyJEC) this->JEC(jet);  
         this->appendJetIDInfo(jet);
+        if(m_applyJEC) this->JEC(jet);  
         // If the jet contain info on PV, assign a PV and update the P2PV relation table
         if ( PVPointingInfo(jet) ){
           jet->setReferencePoint( Gaudi::XYZPoint((*i_pv)->position ()) );
@@ -491,10 +491,16 @@ StatusCode LoKi::PFJetMaker::JEC( LHCb::Particle* jet )
   int PV = this->primaryVertices().size();
   int usePV = PV;
   if (PV > 3)usePV = 3;
-  TH2D* histo = m_histosJEC[usePV-1];
-  int xbin = histo->GetXaxis()->FindBin(LoKi::Cuts::PT(jet)/1000.);
-  int ybin = histo->GetYaxis()->FindBin(LoKi::Cuts::ETA(jet));
-  double cor = histo->GetBinContent(xbin,ybin);
+  TH3D* histo = m_histosJEC[usePV-1];
+  //int xbin = histo->GetXaxis()->FindBin(LoKi::Cuts::PT(jet)/1000.);
+  //int ybin = histo->GetYaxis()->FindBin(LoKi::Cuts::ETA(jet));
+  double jetpt = LoKi::Cuts::PT(jet)/1000.;
+  double jeteta = LoKi::Cuts::ETA(jet);
+  double jetcpf = jet->info(CPF,-1.);
+  if(jetpt>149) jetpt=149;
+  if(jeteta<2.0) jeteta=2.0;
+  if(jeteta>4.2) jeteta=4.2;
+  double cor = histo->Interpolate(jetpt, jeteta, jetcpf);
   // Store the uncorrected kinematics
 
   jet->addInfo ( 9100 , cor );

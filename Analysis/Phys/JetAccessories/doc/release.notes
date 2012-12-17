@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-12-17 - Murilo Rangel
+ - Updated algorithm to apply JEC. JetID and JEC are now TRUE by default in JetMaker
+
 ! 2012-12-14 - Victor Coco
  - Put UseVelo to false as default in the ParticleFlow_Config.py (was not functionnal, this
    is fixed but in order not to affect the jetID, default is equivalent to 2012-12-07 setup)

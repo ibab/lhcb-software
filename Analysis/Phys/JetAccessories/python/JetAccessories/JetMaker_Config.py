@@ -12,8 +12,8 @@ class JetMakerConf:
                  R = 0.5 ,
                  PtMin = 5000.,
                  AssociateWithPV = True ,
-                 JetEnergyCorrection = False ,
-                 JetIDCut = False,
+                 JetEnergyCorrection = True ,
+                 JetIDCut = True,
                  jetidnumber=98 ,
                  algtype="anti-kt"):
         
