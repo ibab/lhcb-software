@@ -426,7 +426,7 @@ StrangeBaryons = {
     'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')",
     'ProtonPIDppi'              :       -5.,  #(PIDp-PIDpi) > -5                   
     'PionPIDpiK'              :       0.,   #(PIDp-PIDK) > 0
-    
+              
     # Lambda Decay
     'TRCHI2DOF'              :       4., # < 4 for all 6 cases
     'minCHI2IPPV_pPi_LL'    :      20., # > 20
@@ -434,22 +434,24 @@ StrangeBaryons = {
     'CHI2VTX_L'                   :      15., # < 15 for all 6 cases
     'L_FDCHI2_OWNPV_LL'    :     150., # > 150
     'L_FDCHI2_OWNPV'              :     100., # > 100 for the other 5 cases
-    
+
     'L_FDCHI2_OWNPV_LL_Omega'    :     70., # > 150
     'L_FDCHI2_OWNPV_Omega'              :     70., # > 100 for the other 5 cases
-    
+       
     'minCHI2IPPV_L_LL'     :       9., # > 9
     'minCHI2IPPV_L'               :       2., # > 2 for the other 5 cases
-    'Lambda0MassWindow'            :       6., # < 6 for all six cases
-    
+    'Lambda0MassWindow'            :       30., # < 6 for all six cases
+    'Lambda0MassWindowPost'            :	  6., # < 6 for all six cases
+
+                   
     #Bachelor cuts
-    
+
     'minCHI2IPPV_Pi_Bachelor_LLL' :      10., # > 10
     'minCHI2IPPV_Pi_Bachelor_DDD' :       4., # > 4
     'minCHI2IPPV_Bachelor'     :       3., # > 3 for the other 3 cases: Tight DDL & DDD + Loose DDL
     'minCHI2IPPV_K_Bachelor_D' :      3., # > 6
     'minCHI2IPPV_K_Bachelor_L' :      3., # should have been 10 but use it for DDL case too , reduced to 3
-    
+                   
     # Xi Decay
     'CHI2VTX_Xi'                  :      25., # < 25 for all 6 cases
     'Xi_FDCHI2_OWNPV_LLL'   :      30., # > 30
@@ -457,13 +459,14 @@ StrangeBaryons = {
     'Xi_FDCHI2_OWNPV'             :       5., # > 5 for the other 4 cases
     'COS_L_Xi'                    :  0.9996, # > 0.9996 for all 6 cases
     'XiMassWindow'              :      50., #?????????
-    
-    
+
+
     # Omega Decay
     'CHI2VTX_Omega'                  :      9., # < 25 for all 6 cases
     'Omega_FDCHI2_OWNPV'             :      10., # > 5 for the other 4 cases
     'COS_L_Omega'                    :      0.9996, # > 0.9996 for all 6 cases
     'OmegaMassWindow'                :      50., #?????????
+
     },
     'WGs' : [ 'QEE' ],
     'STREAMS':[ 'EW' ]
