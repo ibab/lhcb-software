@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to configurable
+   . In L0 monitoring, add explicit decoding of L0 raw banks, since L0Conf
+     no longer saves L0 data in TES during emulation.
+
 </PRE><H1><A NAME=v26r0>2012-12-12 Boole v26r0</A></H1><PRE>
 This version uses projects LCGCMT 64, Gaudi v23r5, LHCb v35r3, Lbcom v13r3
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*

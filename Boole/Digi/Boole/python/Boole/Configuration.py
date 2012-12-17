@@ -1039,6 +1039,8 @@ class Boole(LHCbConfigurableUser):
         if "L0" in moniDets:
             from Configurables import L0Conf
             L0Conf().MoniSequencer = GaudiSequencer("MoniL0Seq")
+            # decode the L0 raw banks (needed by the monitors
+            L0Conf().DecodeL0 = True
 
     def _setupPhase( self, name, knownDets ):
         seq = self.getProp("%sSequence"%name)
