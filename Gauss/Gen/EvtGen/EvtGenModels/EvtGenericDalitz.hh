@@ -44,6 +44,8 @@ public:
 
   void decay(EvtParticle *p); 
 
+  std::string getParamName(int i);
+
 private:
 
   int _d1,_d2,_d3;

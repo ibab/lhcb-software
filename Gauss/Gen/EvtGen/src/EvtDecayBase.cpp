@@ -135,7 +135,36 @@ void EvtDecayBase::command(std::string){
   ::abort();
 }
 
+std::string EvtDecayBase::getParamName(int i) {
+  switch(i) {
+  case 0:
+    return "param00";
+  case 1:
+    return "param01";
+  case 2:
+    return "param02";
+  case 3:
+    return "param03";
+  case 4:
+    return "param04";
+  case 5:
+    return "param05";
+  case 6:
+    return "param06";
+  case 7:
+    return "param07";
+  case 8:
+    return "param08";
+  case 9:
+    return "param09";
+  default:
+      return "";
+  }
+}
 
+std::string EvtDecayBase::getParamDefault(int i) {
+  return "";
+}
 
 void EvtDecayBase::init() {
 

@@ -71,6 +71,10 @@ bool EvtDalitzTable::fileHasBeenRead(const std::string dec_name) {
 
 void EvtDalitzTable::readXMLDecayFile(const std::string dec_name, bool verbose){
 
+  if (verbose) {
+    report(INFO,"EvtGen")<<"EvtDalitzTable: Reading in xml parameter file "<<dec_name<<endl;
+  }
+
   _readFiles.push_back(dec_name);
 
   EvtDalitzDecayInfo* dalitzDecay = 0;

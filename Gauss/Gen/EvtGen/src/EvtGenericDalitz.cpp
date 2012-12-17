@@ -24,6 +24,8 @@
 #include "EvtGenBase/EvtDalitzPoint.hh"
 #include "EvtGenBase/EvtPDL.hh"
 
+#include <cstdlib>
+
 std::string EvtGenericDalitz::getName() {
   return "GENERIC_DALITZ";
 }
@@ -41,7 +43,17 @@ void EvtGenericDalitz::init() {
   EvtId d2=getDaug(1);
   EvtId d3=getDaug(2);
 
-  std::vector<EvtDalitzDecayInfo> decays = EvtDalitzTable::getInstance(getArgStr(0))->getDalitzTable(parnum);
+  // Decay files will usually be proceeded with the DECFILESROOT environment variable.
+  // Expand the string value of DECFILESROOT so that we can pick up the xml parameter file.
+  const char* decFileRoot = std::getenv("DECFILESROOT");
+  std::string baseDir = "";
+  if (decFileRoot != 0) {
+    baseDir = decFileRoot;
+    baseDir += "/xmlfiles/";
+  }
+
+  const std::string xmlParFile = baseDir + getArgStr(0);
+  std::vector<EvtDalitzDecayInfo> decays = EvtDalitzTable::getInstance(xmlParFile)->getDalitzTable(parnum);
 
   std::vector<EvtDalitzDecayInfo>::iterator i = decays.begin();
   for( ; i != decays.end(); i++) {
@@ -111,4 +123,13 @@ void EvtGenericDalitz::decay(EvtParticle *p) {
 
   vertex(amp);
   return;
+}
+
+std::string EvtGenericDalitz::getParamName(int i) {
+  switch(i) {
+  case 0:
+    return "xmlFile";
+  default:
+    return "";
+  }
 }

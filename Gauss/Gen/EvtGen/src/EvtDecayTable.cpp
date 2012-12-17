@@ -808,8 +808,22 @@ void EvtDecayTable::readXMLDecayFile(const std::string dec_name, bool verbose){
           std::istringstream paramStream(paramStr);
 
           std::string param;
-          while(std::getline(paramStream, param, ' ')) {
-            modelArgList.push_back(param);
+
+          if(paramStr=="") {
+            EvtDecayBase* fcn = modelist.getFcn(model);
+            int i(0);
+            std::string paramName = fcn->getParamName(0);
+            while(paramName!="") {
+              param = parser.readAttribute(paramName,fcn->getParamDefault(i));
+              if(param=="") break;
+              modelArgList.push_back(param);
+              ++i;
+              paramName = fcn->getParamName(i);
+            }
+          } else {
+            while(std::getline(paramStream, param, ' ')) {
+              modelArgList.push_back(param);
+            }
           }
           EvtModelAlias newAlias(alias,model,modelArgList);
           modelAliasList.push_back(newAlias);
@@ -1068,15 +1082,36 @@ void EvtDecayTable::readXMLDecayFile(const std::string dec_name, bool verbose){
           int ierr;
           if(modelAlias == -1) {
             std::string param;
-            while(std::getline(paramStream, param, ' ')) {
-              temp_fcn_new_args.push_back(EvtSymTable::get(param,ierr));
-              if (ierr) {
-                report(ERROR,"EvtGen")
-                  <<"Reading arguments near line "<<parser.getLineNumber()<<" and found:"<<
-                  param.c_str()<<endl;
-                report(ERROR,"EvtGen")
-                  << "Will terminate execution!"<<endl;
-                ::abort();
+            if(paramStr == "") {
+              int i(0);
+              std::string paramName = temp_fcn_new->getParamName(0); 
+              while(paramName != "") {
+                param = parser.readAttribute(paramName,temp_fcn_new->getParamDefault(i));
+                if(param == "") break; //params must be added in order so we can't just skip the missing ones
+                temp_fcn_new_args.push_back(EvtSymTable::get(param,ierr));
+                if (ierr) {
+                  report(ERROR,"EvtGen")
+                    <<"Reading arguments near line "<<parser.getLineNumber()<<" and found:"<<
+                    param.c_str()<<endl;
+                  report(ERROR,"EvtGen")
+                    << "Will terminate execution!"<<endl;
+                  ::abort();
+                }
+                ++i;
+                paramName = temp_fcn_new->getParamName(i);
+              }
+
+            } else {//if the params are not set seperately
+              while(std::getline(paramStream, param, ' ')) {
+                temp_fcn_new_args.push_back(EvtSymTable::get(param,ierr));
+                if (ierr) {
+                  report(ERROR,"EvtGen")
+                    <<"Reading arguments near line "<<parser.getLineNumber()<<" and found:"<<
+                    param.c_str()<<endl;
+                  report(ERROR,"EvtGen")
+                    << "Will terminate execution!"<<endl;
+                  ::abort();
+                }
               }
             }
           } else {

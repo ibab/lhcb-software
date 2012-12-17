@@ -145,7 +145,7 @@ std::string EvtParserXml::getParentTagTitle() {
   else return _tagTree.back();
 }
 
-std::string EvtParserXml::readAttribute(std::string attribute) {
+std::string EvtParserXml::readAttribute(std::string attribute, std::string defaultValue) {
   std::string whitespace = " \t\n\v\f\r";
   for(unsigned int i=0; i<whitespace.size(); i++) {
   //find any whitespace followed by the attribute name followed by an '='
@@ -157,7 +157,7 @@ std::string EvtParserXml::readAttribute(std::string attribute) {
       return _tag.substr(startQuote + 1, endQuote - startQuote - 1);
     }
   }
-  return "";
+  return defaultValue;
 }
 
 bool EvtParserXml::readAttributeBool(std::string attribute, bool defaultValue) {

@@ -80,7 +80,7 @@ EvtGen::EvtGen(const char* const decayName,
 
   if (randomEngine==0){
     static EvtSimpleRandomEngine defaultRandomEngine;
-    EvtRandom::setRandomEngine((EvtRandomEngine*)&defaultRandomEngine);
+    EvtRandom::setRandomEngine(&defaultRandomEngine);
     report(INFO,"EvtGen") <<"No random engine given in "
 			  <<"EvtGen::EvtGen constructor, "
 			  <<"will use default EvtSimpleRandomEngine."<<endl;
