@@ -4,7 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-! 2012-12-11 - Paul Szczypka
+! 2012-12-18
+ - Removed debug statements in Configuration.py
+ - Corrected date of previous edit in release.notes
+
+! 2012-12-17 - Paul Szczypka
  - Added Gauss-CaloOnly.py options.
  - Edited BeamPipe configuration method.
 

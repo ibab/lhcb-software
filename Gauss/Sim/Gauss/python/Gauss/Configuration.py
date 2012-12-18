@@ -433,12 +433,8 @@ class Gauss(LHCbConfigurableUser):
         VeloLTagLimit2 = VeloLTagLimit2.split('-')[1].strip()
         
         # DDDB global tag used
-        print "LHCbApp().DDDBtag: %s" %(LHCbApp().DDDBtag)
-        print "LHCbApp().getProp('DDDBtag'): %s" %(LHCbApp().getProp("DDDBtag"))
         DDDBDate = LHCbApp().DDDBtag
         DDDBDate = DDDBDate.split('-')[1].strip()
-        print "LHCbApp().DDDBtag: %s" %(LHCbApp().DDDBtag)
-        print "LHCbApp().getProp('DDDBtag'): %s" %(LHCbApp().getProp("DDDBtag"))
 
         # check if/which local tag is used for Velo
         cdb = CondDB()
