@@ -449,7 +449,7 @@ double DiElectronMaker::veloCnv(LHCb::Particle* p1, LHCb::Particle* p2)
 {
   const LHCb::ProtoParticle* pp1 = p1->proto();
   const LHCb::ProtoParticle* pp2 = p2->proto();
-  if ( !pp1 && !pp2 ) return -1.;
+  if ( !pp1 || !pp2 ) return -1.;
   const double vc1 = pp1->info( LHCb::ProtoParticle::VeloCharge, 0.0 );
   const double vc2 = pp2->info( LHCb::ProtoParticle::VeloCharge, 0.0 );
   if ( vc1*vc2 == 0.0 ) return -1.0;
