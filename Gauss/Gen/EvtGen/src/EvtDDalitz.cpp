@@ -116,34 +116,33 @@ void EvtDDalitz::init(){
     if ( d2==KS && d3==PIP && d1==PIM ) { _flag=3; _d1=1; _d2=0; _d3=2;}
     if ( d3==KS && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}
     if ( d3==KS && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
+    
+    if ( d1==KS && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d1==KS && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d2==KS && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d2==KS && d3==KP && d1==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
+    if ( d3==KS && d1==KP && d2==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d3==KS && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}   
 
-    
-    if ( d1==KS && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
-    if ( d1==KS && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
-    if ( d2==KS && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
-    if ( d2==KS && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
-    if ( d3==KS && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
-    if ( d3==KS && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
-    
-    if ( d1==KL && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
-    if ( d1==KL && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
-    if ( d2==KL && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
-    if ( d2==KL && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
-    if ( d3==KL && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
-    if ( d3==KL && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}    
-    
-    if ( d1==K0 && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
-    if ( d1==K0 && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
-    if ( d2==K0 && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
-    if ( d2==K0 && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
-    if ( d3==K0 && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
-    if ( d3==K0 && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}   
+    if ( d1==KL && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d1==KL && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d2==KL && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d2==KL && d3==KP && d1==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
+    if ( d3==KL && d1==KP && d2==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d3==KL && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}   
+
+    if ( d1==KB && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d1==KB && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d2==KB && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d2==KB && d3==KP && d1==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
+    if ( d3==KB && d1==KP && d2==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d3==KB && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}   
 
     if ( d1==PIM && d2==PIP && d3==PI0 ) { _flag=12;_d1=0;_d2=1;_d3=2;}
     if ( d1==PIM && d3==PIP && d2==PI0 ) { _flag=12;_d1=0;_d2=2;_d3=1;}
     if ( d2==PIM && d1==PIP && d3==PI0 ) { _flag=12;_d1=1;_d2=0;_d3=2;}
-    if ( d2==PIM && d3==PIP && d1==PI0 ) { _flag=12;_d1=1;_d2=2;_d3=0;}
-    if ( d3==PIM && d1==PIP && d2==PI0 ) { _flag=12;_d1=2;_d2=0;_d3=1;}
+    if ( d2==PIM && d3==PIP && d1==PI0 ) { _flag=12;_d1=2;_d2=0;_d3=1;}
+    if ( d3==PIM && d1==PIP && d2==PI0 ) { _flag=12;_d1=1;_d2=2;_d3=0;}
     if ( d3==PIM && d2==PIP && d1==PI0 ) { _flag=12;_d1=2;_d2=1;_d3=0;}
   }
   if ( parnum == D0B ) {
@@ -176,33 +175,34 @@ void EvtDDalitz::init(){
     if ( d3==KS && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
     if ( d3==KS && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}
 
-    if ( d1==KS && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
-    if ( d1==KS && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
-    if ( d2==KS && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
-    if ( d2==KS && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
-    if ( d3==KS && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
-    if ( d3==KS && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
-    
-    if ( d1==KL && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
-    if ( d1==KL && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
-    if ( d2==KL && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
-    if ( d2==KL && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
-    if ( d3==KL && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
-    if ( d3==KL && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}    
-    
-    if ( d1==K0 && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
-    if ( d1==K0 && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
-    if ( d2==K0 && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
-    if ( d2==K0 && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
-    if ( d3==K0 && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
-    if ( d3==K0 && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
+    if ( d1==KS && d2==KM && d3==KP ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d1==KS && d3==KM && d2==KP ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d2==KS && d1==KM && d3==KP ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d2==KS && d3==KM && d1==KP ) {_flag=5;_d1=2;_d2=0;_d3=1;}
+    if ( d3==KS && d1==KM && d2==KP ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d3==KS && d2==KM && d1==KP ) {_flag=5;_d1=2;_d2=1;_d3=0;}
 
-    if ( d1==PIP && d2==PIM && d3==PI0 ) { _flag=12;_d1=1;_d2=0;_d3=2;}
-    if ( d1==PIP && d3==PIM && d2==PI0 ) { _flag=12;_d1=2;_d2=0;_d3=1;}
-    if ( d2==PIP && d1==PIM && d3==PI0 ) { _flag=12;_d1=0;_d2=1;_d3=2;}
-    if ( d2==PIP && d3==PIM && d1==PI0 ) { _flag=12;_d1=2;_d2=1;_d3=0;}
-    if ( d3==PIP && d1==PIM && d2==PI0 ) { _flag=12;_d1=0;_d2=2;_d3=1;}
-    if ( d3==PIP && d2==PIM && d1==PI0 ) { _flag=12;_d1=1;_d2=2;_d3=0;}    
+    if ( d1==KL && d2==KM && d3==KP ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d1==KL && d3==KM && d2==KP ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d2==KL && d1==KM && d3==KP ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d2==KL && d3==KM && d1==KP ) {_flag=5;_d1=2;_d2=0;_d3=1;}
+    if ( d3==KL && d1==KM && d2==KP ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d3==KL && d2==KM && d1==KP ) {_flag=5;_d1=2;_d2=1;_d3=0;}
+
+    if ( d1==K0 && d2==KM && d3==KP ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d1==K0 && d3==KM && d2==KP ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d2==K0 && d1==KM && d3==KP ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d2==K0 && d3==KM && d1==KP ) {_flag=5;_d1=2;_d2=0;_d3=1;}
+    if ( d3==K0 && d1==KM && d2==KP ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d3==K0 && d2==KM && d1==KP ) {_flag=5;_d1=2;_d2=1;_d3=0;}
+
+    if ( d1==PIP && d2==PIM && d3==PI0 ) { _flag=12;_d1=0;_d2=1;_d3=2;}
+    if ( d1==PIP && d3==PIM && d2==PI0 ) { _flag=12;_d1=0;_d2=2;_d3=1;}
+    if ( d2==PIP && d1==PIM && d3==PI0 ) { _flag=12;_d1=1;_d2=0;_d3=2;}
+    if ( d2==PIP && d3==PIM && d1==PI0 ) { _flag=12;_d1=2;_d2=0;_d3=1;}
+    if ( d3==PIP && d1==PIM && d2==PI0 ) { _flag=12;_d1=1;_d2=2;_d3=0;}
+    if ( d3==PIP && d2==PIM && d1==PI0 ) { _flag=12;_d1=2;_d2=1;_d3=0;}
+
   }
 
   if ( parnum == DP ) {

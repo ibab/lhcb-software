@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-12-18 - John Back
+ - Corrected some wrong daughter assignments for EvtDDalitz modes 5 
+   (D0 -> K0 K+ K-) and 12 (D0 -> pi- pi+ pi0).
+
 ! 2012-12-17 - John Back
  - Updated some of the xml generic Dalitz plot code to incorporate extra
    additions from Daniel Craik. 
