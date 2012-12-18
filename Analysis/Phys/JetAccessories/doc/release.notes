@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-12-18 - Chris Jones
+ - Fix compilation warning + other minor optimisations to PFParticle
+
 ! 2012-12-17 - Murilo Rangel
  - Updated algorithm to apply JEC. JetID and JEC are now TRUE by default in JetMaker
 
