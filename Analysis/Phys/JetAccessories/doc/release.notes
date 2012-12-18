@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-12-18 - Victor Coco
+ - Add the call to the JEC root file in the JetMaker_Config.py
+
 ! 2012-12-18 - Chris Jones
  - Fix compilation warning + other minor optimisations to PFParticle
 

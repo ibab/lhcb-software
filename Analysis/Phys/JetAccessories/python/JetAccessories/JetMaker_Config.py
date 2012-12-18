@@ -38,6 +38,8 @@ class JetMakerConf:
             self.PFParticleTypes.append(dictOfPFType['ResolvedPi0'])
         self.algorithms = []
         self.setupJetMaker()
+        hsvc = HistogramSvc ( 'HistogramDataSvc' );
+        hsvc.Input += [ "JEC DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco12.root' TYP='ROOT'" ]
         
     def setupJetMaker(self):
         jetMakerName = self.name
