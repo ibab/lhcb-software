@@ -31,7 +31,7 @@ from Beauty2XGamma_Utils import *
 
 # Configuration dictionary
 moduleName = "Beauty2XGamma"
-config = { # Cuts made on all charged input particles in all lines
+default_config = { # Cuts made on all charged input particles in all lines
            "ALL" : {  'TRCHI2DOF_MAX'  : 3,
                       'PT_MIN'         : '300*MeV',
                       'P_MIN'          : '1000*MeV',
