@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/Transform3DTypes.h"
 #include "TrackInterfaces/IVeloClusterPosition.h"
+#include "TrackInterfaces/ITrackVertexer.h"
 #include "Event/MCHit.h"
 #include<TMath.h>
 // Linker
@@ -26,7 +27,8 @@
 
 class DeVeloRType;
 class DeVeloPhiType;
-                                                           
+class ITrackVertexer ;
+                                                       
 namespace Velo
 {
   class VeloTrackMonitorNT : public GaudiTupleAlg {
@@ -46,6 +48,8 @@ namespace Velo
 
     /** Algorithm initialize */
     virtual StatusCode initialize();
+    /** Algorithm initialize */
+    virtual StatusCode finalize();
 
     // associators
     typedef LinkerTool<LHCb::VeloCluster, LHCb::MCHit> AsctTool;
@@ -58,7 +62,8 @@ namespace Velo
     void FillVeloEvNtuple(LHCb::Tracks* tracks,
                           int n_pv,int n_back, 
                           double pvx, double pvy, double pvz,
-                          double pvchi2, double pvndof, int pvntr );
+                          double pvchi2, double pvndof, int pvntr,
+                          const LHCb::RecVertex* pv );
     StatusCode FillVeloClNtuple(const LHCb::Track& track,
                                 int n_pv,int n_back, 
                                 double pvx, double pvy, double pvz,
@@ -81,7 +86,8 @@ namespace Velo
     bool m_evntuple;
     bool m_allclntuple;
     bool m_runWithMC;
-    
+    bool m_etastudy;
+
     std::string m_allString; 
     std::string m_clusterLoc;
     std::string m_asctLocation; 
@@ -94,6 +100,7 @@ namespace Velo
     IVeloExpectation* m_expectTool;
     IVeloClusterPosition* m_clusterTool;
     const Table* m_asctTable;
+    ITrackVertexer* m_vertexer ;
 
   protected:
 

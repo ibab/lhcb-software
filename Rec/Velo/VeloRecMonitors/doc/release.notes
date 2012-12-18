@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2012-12-18 - Silvia Borghi
+ - Update in VeloTrackMonitorNT: add ntuple for eta study and other small 
+   changes (clean up of the code, delete duplication in the variables)
+
 !========================= VeloRecMonitors v2r22 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.

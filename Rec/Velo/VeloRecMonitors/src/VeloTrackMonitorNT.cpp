@@ -14,9 +14,13 @@
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "VeloDet/DeVelo.h"
+#include "Kernel/VeloChannelID.h"
 #include "Event/RecVertex.h"
 #include "TrackKernel/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackVertexer.h"
+//#include <boost/lambda/bind.hpp>
+//#include <boost/lambda/lambda.hpp>
+#include <boost/foreach.hpp>
 
 //from TrackInterfaces
 #include "TrackInterfaces/IVeloExpectation.h"
@@ -43,7 +47,6 @@ using namespace std::placeholders;
 using namespace boost::lambda;
 #endif
 #include <boost/lambda/lambda.hpp>
-
 
 #include "VeloTrackMonitorNT.h"
 
@@ -83,6 +86,7 @@ Velo::VeloTrackMonitorNT::VeloTrackMonitorNT(const std::string& name,
   declareProperty("ClusterOnTrackNtuple", m_clntuple = true);
   //all clusters
   declareProperty("ClusterNtuple", m_allclntuple = false);
+  declareProperty("EtaStudyNtuple", m_etastudy = false);
   declareProperty("RunWithMC", m_runWithMC=false);
   
 }
@@ -90,7 +94,7 @@ Velo::VeloTrackMonitorNT::VeloTrackMonitorNT(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Velo::VeloTrackMonitorNT::~VeloTrackMonitorNT() {}
+Velo::VeloTrackMonitorNT::~VeloTrackMonitorNT() {} 
 
 //=============================================================================
 // Initialization. Check parameters
@@ -100,6 +104,8 @@ StatusCode Velo::VeloTrackMonitorNT::initialize()
   // Mandatory initialization of GaudiAlgorithm
   StatusCode sc = GaudiTupleAlg::initialize();
   if ( sc.isFailure() ) { return sc; }
+  //sc = m_vertexer.retrieve() ;
+  m_vertexer = tool<ITrackVertexer>( "TrackVertexer" );
 
   m_veloDet = getDet<DeVelo>(  DeVeloLocation::Default ) ;
 
@@ -112,6 +118,65 @@ StatusCode Velo::VeloTrackMonitorNT::initialize()
   return StatusCode::SUCCESS;
 }
 
+ //=============================================================================
+StatusCode Velo::VeloTrackMonitorNT::finalize() 
+{
+  return GaudiTupleAlg::finalize();
+}
+
+
+namespace {
+
+  std::vector<const LHCb::Track*> myconvert( const SmartRefVector<LHCb::Track> & tracks )
+  {
+    std::vector<const LHCb::Track*> rc ;
+    rc.reserve( tracks.size() ) ;
+    BOOST_FOREACH(const LHCb::Track* t, tracks )
+      if( t ) rc.push_back( t ) ;
+    return rc ;
+  }
+  
+  template< class TrackContainer, class Predicate >
+  std::vector<const LHCb::Track*> myselect( const TrackContainer& tracks, Predicate selector) 
+  {
+    std::vector<const LHCb::Track*> rc ;
+    for( typename TrackContainer::const_iterator itrack = tracks.begin() ;
+	 itrack != tracks.end(); ++itrack) 
+      if( selector(*itrack) ) rc.push_back(*itrack) ;
+    return rc ;
+  }
+  
+  struct TrackTypePredicate
+  {
+    int m_type ;
+    TrackTypePredicate(int atype) : m_type(atype) {} 
+    bool operator()(const LHCb::Track* track) const { return track->type()==m_type ; }
+  } ;
+  
+  struct TrackFlagPredicate
+  {
+    LHCb::Track::Flags m_flag ;
+    bool m_positive ;
+    TrackFlagPredicate(LHCb::Track::Flags flag, bool positive=true) : m_flag(flag), m_positive(positive) {} 
+    bool operator()(const LHCb::Track* track) const { return m_positive ? track->checkFlag(m_flag) : !track->checkFlag(m_flag) ; }
+  };
+
+  struct TrackVeloSidePredicate
+  {
+    int m_sign ;
+    TrackVeloSidePredicate(int asign) : m_sign(asign) {}
+    bool operator()(const LHCb::Track* track) const { 
+      return track->firstState().tx()*m_sign*(track->checkFlag(LHCb::Track::Backward)? -1 : 1 )>0 ; }
+  };
+  
+  struct TrackChisqPredicate
+  {
+    double m_maxchisq ;
+    TrackChisqPredicate(double maxChisqPerDof) : m_maxchisq(maxChisqPerDof) {}
+    bool operator()(const LHCb::Track* track) const { return track->chi2PerDoF() < m_maxchisq  ; }
+  };
+}
+
 //=============================================================================
 // Execute
 //=============================================================================
@@ -121,7 +186,7 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
  
   LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
   if ( NULL != odin ){
-    if( msgLevel(MSG::DEBUG) ) 
+     if( msgLevel(MSG::DEBUG) ) 
       debug()<< "Run "     << odin->runNumber()
              << ", Event " << odin->eventNumber() << endmsg;
     m_runodin=odin->runNumber();
@@ -145,18 +210,19 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
   double pvchi2=0.;
   double pvndof=0.;
   int pvntr=0;
-
+  const LHCb::RecVertex* pv;
   const LHCb::RecVertices* pvcontainer = getIfExists<LHCb::RecVertices>( m_pvContainerName ) ;
   if ( NULL == pvcontainer ) {
-    debug() << "No Vertex container found for this event !" << endmsg;
+     debug() << "No Vertex container found for this event !" << endmsg;
     //return StatusCode::SUCCESS;
   }
   else{
     n_pv = pvcontainer->size();
     int it_npv=1;
+
     for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ;
          ipv != pvcontainer->end(); ++ipv ) {
-      const LHCb::RecVertex* pv = *ipv ;
+      pv = *ipv ;
       if ((it_npv==1) || (sqrt(pvx*pvx+pvy*pvy)> pv->position().rho() && it_npv>1)){
         pvx= pv->position().x();
         pvy= pv->position().y();
@@ -213,7 +279,7 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
   }
 
   if (m_evntuple)
-    FillVeloEvNtuple(tracks,n_pv, n_back, pvx,pvy,pvz,pvchi2,pvndof,pvntr);
+    FillVeloEvNtuple(tracks,n_pv, n_back, pvx,pvy,pvz,pvchi2,pvndof,pvntr,pv);
   for (LHCb::Tracks::const_iterator iterT = tracks->begin(); iterT != tracks->end(); ++iterT){
     StatusCode cluNTStatus;
     if(m_clntuple) cluNTStatus=FillVeloClNtuple(**iterT,n_pv, n_back, pvx,pvy,pvz,pvchi2,pvndof,pvntr);
@@ -285,16 +351,14 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
     double theta = track.firstState().slopes().theta();
     double slx = track.firstState().tx();
     double sly = track.firstState().ty();
-    double x0 = track.firstState().x();
-    double y0 = track.firstState().y();
+    //double x0 = track.firstState().x();
+    //double y0 = track.firstState().y();
     double ndof=track.info(LHCb::Track::FitVeloNDoF,0) ;//nDoF();
     float adcpertrack=0.;
     double p=track.p()/Gaudi::Units::GeV ;
     double type=track.type();
     unsigned int m_sideLeft=0, m_sideRight=0;
     Gaudi::XYZVector global3dDir=Gaudi::XYZVector(slx, sly, 1.);
-    //const std::vector< LHCb::LHCbID >& trackIDs = track.lhcbIDs();
-    //std::vector< LHCb::LHCbID >::const_iterator it;
     LHCb::Track::ConstNodeRange nodes = track.nodes();
     for(LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin();
         inode != nodes.end(); ++inode) {
@@ -317,6 +381,7 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
           m_sideRight+=1;
       } 
     }
+    
   
     if(nVeloHits>0) adcpertrack = adcpertrack/nVeloHits;
 
@@ -340,8 +405,10 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
         double f = std::sqrt( (*inode)->errMeasure2()/(*inode)->errResidual2()) ;
         double residual=(*inode)->residual();
         double resolution = f*(*inode)->residual();
+        double fracPosTool=0., fracPos=0.;
         // now get the pitch ...
         double pitch(1) ;
+        double cl=0;
         double pntx=0.,pnty=0.,pntz=0.,pntphi=0.,pntr=0.,pntphi_loc =0.,pntr_loc =0.;;
         double pntx_mc=0.,pnty_mc=0.,pntz_mc=0.,pntphi_mc=0.,pntr_mc=0.;
         double adcsum=0;
@@ -351,19 +418,53 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
         double angleofstriplocalframe = 0;
         double angleoftracklocalframe = 0;
         double pitch_mc=0.;
+        //evaluation of unbiased residual (refitting the track)
+        double unbiasres;
+        double unbiasres_chi2 ;
+        LHCb::LHCbID nodeID = ((*inode)->measurement()).lhcbID();
+        LHCb::VeloCluster *clus=
+          (LHCb::VeloCluster*)m_rawClusters->containedObject((nodeID.channelID()));
+        const DeVeloSensor* sensor = m_veloDet->sensor(clus->channelID().sensor() ); 
+        //define the cluster tool with track information to set properly th`e errors
         SiPositionInfo<LHCb::VeloChannelID> toolInfo;
+        toolInfo=m_clusterTool->position(clus, track.firstState().position(),
+                                         std::pair<double,double>( track.firstState().tx(), track.firstState().ty()));
+        fracPosTool=toolInfo.fractionalPosition;
+        fracPos=clus->interStripFraction();
 
-        double fracPosTool=0., fracPos=0.;
+        const std::vector< LHCb::LHCbID >& trackIDs = track.lhcbIDs();
+        LHCb::Track* tr_clone = track.cloneWithKey();
+        std::vector< LHCb::LHCbID >::const_iterator it;
+        for ( it = trackIDs.begin(); it != trackIDs.end(); it++ ) {
+          if ( it->isVeloR() ) 
+            if (( it->veloID().sensor() == clus->channelID().sensor() ) ||
+                ( it->veloID().sensor() == (clus->channelID().sensor()-64))) 
+              tr_clone->removeFromLhcbIDs( *it );
+          if ( it->isVeloPhi() ) 
+            if (( it->veloID().sensor() == clus->channelID().sensor() ) ||
+                ( it->veloID().sensor() == (clus->channelID().sensor()+64))) 
+              tr_clone->removeFromLhcbIDs( *it );
+        }
+        // fit the remaining track
+        tr_clone->setFitResult(0);
+
+        StatusCode sc = m_tracksFitter -> fit( *tr_clone );
+        if ( !sc.isSuccess() ) {
+          debug() << "Track fit failed. Continuing with next track." << endmsg;
+          continue;
+        }
+      
         double slx_mc=0., sly_mc=0.;
+        Gaudi::XYZPoint trackInterceptGlobal= extrapolateToZ(tr_clone,pntz);
+        sensor->residual( trackInterceptGlobal,tr_clone->slopes(), clus->channelID(), fracPosTool, unbiasres, unbiasres_chi2 );
+
         double err_mc=0.;
         double r_clu=0., r_hit=0., reso_mc=0.;
+        double trfracpos=0.;
         
         if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ){
 
           // this part is using reco info only - Phi clusters
-
-          const LHCb::VeloCluster* clus = static_cast<LHCb::VeloPhiMeasurement&>
-            ((*inode)->measurement()).cluster() ;
           const DeVeloPhiType* phiDet = m_veloDet->phiSensor( clus->channelID().sensor());
           Gaudi::XYZPoint globalPoint = (*inode)->state().position() ;
           pntx=globalPoint.x();
@@ -373,7 +474,15 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
           pntr=globalPoint.Rho();
           Gaudi::XYZPoint localPoint = 
             (*inode)->measurement().detectorElement()->geometry()->toLocal( globalPoint ) ;
-          pitch =  localPoint.Rho() * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
+          pitch =  phiDet->phiPitch( localPoint.Rho() ) ;
+          cl=phiDet->phiOfStrip(unsigned(clus->channelID().strip()),fracPosTool,localPoint.Rho());
+          // work out the fraction wrt the central strip of the cluster
+          // to evaluate the fraction always wrt the same strip
+          double TrPhi=cl*localPoint.Rho()-unbiasres;
+          if ((pnty*localPoint.y())<0) 
+            TrPhi=cl*localPoint.Rho()+unbiasres;
+          double PhiPitch =  phiDet->phiPitch( localPoint.Rho() ) ;
+          trfracpos=(TrPhi-localPoint.Rho()*phiDet->phiOfStrip(unsigned(clus->channelID().strip()),0.,localPoint.Rho()))/PhiPitch;
           adcsum=clus->totalCharge();
           localDirection=localTrackDirection(global3dDir, phiDet);
           unsigned int centreStrip=clus->channelID().strip();
@@ -384,8 +493,7 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
           //define the cluster tool with track information to set properly the errors
           toolInfo=m_clusterTool->position(clus, track.firstState().position(),
                                            std::pair<double,double>( track.firstState().tx(), track.firstState().ty()));
-          fracPosTool=toolInfo.fractionalPosition;
-          fracPos=clus->interStripFraction();
+
           
           //Evaluation of rho angle between tangent of the strip and the track in the local plane of the sensor
           //angle of the strip in the local frame
@@ -404,8 +512,6 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
             pntz_mc=localMidPoint.z();
             pntphi_mc=localMidPoint.Phi();
             pntr_mc=localMidPoint.Rho();            
-            fracPosTool=toolInfo.fractionalPosition;
-            fracPos=clus->interStripFraction();
             double offset=0.;
             StatusCode channelStat;
             VeloChannelID entryChann;
@@ -439,9 +545,6 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
         }else{
 
           // this part is using reco info only - R clusters
-
-          const LHCb::VeloCluster* clus = 
-            static_cast<LHCb::VeloRMeasurement&>((*inode)->measurement()).cluster() ;
           const DeVeloRType* rDet = m_veloDet->rSensor( clus->channelID().sensor() );
           Gaudi::XYZPoint globalPoint = (*inode)->state().position() ;
           pntx=globalPoint.x();
@@ -449,8 +552,19 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
           pntz=globalPoint.z();
           pntphi=globalPoint.Phi();
           pntr=globalPoint.Rho();
-          pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
+          /*//define the cluster tool with track information to set properly the errors
+          toolInfo=m_clusterTool->position(clus, track.firstState().position(),
+                                           std::pair<double,double>( track.firstState().tx(), track.firstState().ty()));
+          fracPosTool=toolInfo.fractionalPosition;
+          fracPos=clus->interStripFraction();*/
+          pitch = rDet->rPitch( unsigned(clus->channelID().strip()),fracPosTool ) ;
+          cl=rDet->rOfStrip(unsigned(clus->channelID().strip()),fracPosTool);
           adcsum=clus->totalCharge();
+          // work out the fraction wrt the central strip of the cluster
+          // to evaluate the fraction always wrt the same strip
+          double TrRadius =cl-unbiasres;
+          unsigned int closestStripTr=clus->channelID().strip();
+          trfracpos = (TrRadius-rDet->rOfStrip(closestStripTr))/pitch;
           Gaudi::XYZPoint localPoint = 
             (*inode)->measurement().detectorElement()->geometry()->toLocal( globalPoint );
           localDirection=localTrackDirection(global3dDir, rDet);
@@ -458,11 +572,6 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
           pntr_loc = localPoint.Rho();
           pntphi_loc  = localPoint.Phi();  
 
-          //define the cluster tool with track information to set properly the errors
-          toolInfo=m_clusterTool->position(clus, track.firstState().position(),
-                                           std::pair<double,double>( track.firstState().tx(), track.firstState().ty()));
-          fracPosTool=toolInfo.fractionalPosition;
-          fracPos=clus->interStripFraction();
           //Evaluation of rho angle between tangent of the strip and the track in the local plane of the sensor
           //angle of the strip in the local frame
           angleofstriplocalframe = pntphi_loc ;
@@ -479,9 +588,7 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
             pnty_mc=localMidPoint.y();
             pntz_mc=localMidPoint.z();
             pntphi_mc=localMidPoint.Phi();
-            pntr_mc=localMidPoint.Rho();            
-            fracPosTool=toolInfo.fractionalPosition;
-            fracPos=clus->interStripFraction();
+            pntr_mc=localMidPoint.Rho();
             double offset=0.;
             StatusCode channelStat;
             VeloChannelID entryChann;
@@ -504,129 +611,155 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
           }
 
         }
-        int clSize =0, sensLeft=-1, SensRtype=-1,SensNumber=-1;
+        int clSize =0, SensNumber=-1;
+        //int sensLeft=-1, SensRtype=-1;
         double zSensPos=0.;
-
-        LHCb::LHCbID nodeID = ((*inode)->measurement()).lhcbID();
-        LHCb::VeloCluster *clus=
-          (LHCb::VeloCluster*)m_rawClusters->containedObject((nodeID.channelID()));
-
 
         if (names[mtype]=="VeloR"){
           clSize=clus->size();
           const DeVeloSensor* sensor = m_veloDet->sensor( clus->channelID().sensor() );
           clSize=clus->size();
           zSensPos = sensor->z();
-          sensLeft = sensor->isLeft();
-          SensRtype=1;
+          //sensLeft = sensor->isLeft();
+          //SensRtype=1;
           SensNumber=clus->channelID().sensor();
         }else if (names[mtype]=="VeloPhi"){
           const DeVeloPhiType* sensor = m_veloDet->phiSensor( clus->channelID().sensor() );
           clSize=clus->size();
           zSensPos = sensor->z();
-          sensLeft = sensor->isLeft();            
-          SensRtype=0;
+          //sensLeft = sensor->isLeft();            
+          //SensRtype=0;
           SensNumber=clus->channelID().sensor();
         }
         
 
-        //evaluation of unbiased residual (refitting the track)
-        double unbiasres;
-        double unbiasres_chi2 ;
 
-        const DeVeloSensor* sensor = m_veloDet->sensor(clus->channelID().sensor() ); 
-        const std::vector< LHCb::LHCbID >& trackIDs = track.lhcbIDs();
-        LHCb::Track* tr_clone = track.cloneWithKey();
-        std::vector< LHCb::LHCbID >::const_iterator it;
-        for ( it = trackIDs.begin(); it != trackIDs.end(); it++ ) {
-          if ( it->isVeloR() ) 
-            if (( it->veloID().sensor() == clus->channelID().sensor() ) ||
-                ( it->veloID().sensor() == (clus->channelID().sensor()-64))) 
-              tr_clone->removeFromLhcbIDs( *it );
-          if ( it->isVeloPhi() ) 
-            if (( it->veloID().sensor() == clus->channelID().sensor() ) ||
-                ( it->veloID().sensor() == (clus->channelID().sensor()+64))) 
-              tr_clone->removeFromLhcbIDs( *it );
-        }
-        // fit the remaining track
-        tr_clone->setFitResult(0);
+        if (!m_etastudy){
+          //event information
+          tuple->column( "run",m_runodin);
+          tuple->column( "evt",m_eventodin);
+          //tuple->column( "bunchid",m_bunchid);
+          tuple->column( "evTimeSec",eventTimeMicroSecGps); //(long) m_evTimeGps));
+          tuple->column( "pvx",      pvx);
+          tuple->column( "pvy",      pvy);
+          tuple->column( "pvz",      pvz);
+          tuple->column( "npv",      n_pv);
+          tuple->column( "pvchi2",      pvchi2);
+          tuple->column( "pvndof",      pvndof);
+          tuple->column( "pvntr",      pvntr);
+          tuple->column( "nbacktr",      n_back);
+          //track information
+          tuple->column( "ndof", ndof);
+          tuple->column( "chi2", chi2);
+          tuple->column( "theta", theta);
+          tuple->column( "slx", slx);
+          tuple->column( "sly", sly);
+          //tuple->column( "x0",      x0);
+          //tuple->column( "y0",      y0);
+          //tuple->column( "nhits", nVeloHits);
+          tuple->column( "nhitsr", m_sideRight);
+          tuple->column( "nhitsl" , m_sideLeft);
+          tuple->column( "p", p);
+          tuple->column( "type", type);
+          //tuple->column( "adcpertrack",adcpertrack);
+          //tuple->column( "side",sensLeft);
+          //cluster information
+          tuple->column( "pitch",pitch);
+          //tuple->column( "Rtype",SensRtype);
+          tuple->column( "clSize",clSize);
+          tuple->column( "adcsum",adcsum);
+          tuple->column( "station", zSensPos);
+          tuple->column( "sensnum", SensNumber );
+          tuple->column( "pntx",pntx);
+          tuple->column( "pnty",pnty);
+          tuple->column( "pntz",pntz);
+          tuple->column( "pntr",pntr);
+          tuple->column( "pntphi",pntphi);
+          tuple->column( "pntr_loc",pntr_loc);
+          tuple->column( "pntphi_loc",pntphi_loc);
+          //tuple->column( "unbiaspntx",trackInterceptGlobal.x());
+          //tuple->column( "unbiaspnty",trackInterceptGlobal.y());
+          //tuple->column( "unbiaspntz",trackInterceptGlobal.z());
+          //tuple->column( "unbiaspntphi",trackInterceptGlobal.Phi());
+          //tuple->column( "unbiaspntr",trackInterceptGlobal.Rho());
+          tuple->column( "projectedAngle", projAngle);
+          tuple->column( "rho", anglerho);
+          tuple->column( "rhostrip", angleofstriplocalframe);
+          tuple->column( "rhotrack", angleoftracklocalframe);
+          tuple->column( "reso",resolution);
+          //kalman unbiased residual
+          //tuple->column( "unres",(*inode)->unbiasedResidual()); 
+          tuple->column( "res",residual); 
+          //tuple->column( "clerr",toolInfo.fractionalError*pitch);
+          tuple->column( "eres",(*inode)->errResidual());
+          //tuple->column( "unbiasres",unbiasres);
+          //tuple->column( "unbiasreschi2",unbiasres_chi2);
 
-        StatusCode sc = m_tracksFitter -> fit( *tr_clone );
-        if ( !sc.isSuccess() ) {
-          debug() << "Track fit failed. Continuing with next track." << endmsg;
-          continue;
+          if(m_runWithMC){
+            tuple->column("reso_mc", reso_mc);
+            tuple->column("fracPos", fracPos);
+            tuple->column("fracPosTool", fracPosTool);
+            tuple->column("pitch_mc", pitch_mc);
+            tuple->column("slx_mc", slx_mc);
+            tuple->column("sly_mc", sly_mc);
+            tuple->column("projectedAngle_mc", projAngle_mc);
+            tuple->column("err_mc", err_mc);
+            tuple->column("pntx_mc", pntx_mc);
+            tuple->column("pnty_mc", pnty_mc);
+            tuple->column("pntz_mc", pntz_mc);
+            tuple->column("pntr_mc", pntr_mc);
+            tuple->column("r_clu", r_clu);
+            tuple->column("pntphi_mc", pntphi_mc);
+          }
+          tuple->write();
         }
-        Gaudi::XYZPoint trackInterceptGlobal= extrapolateToZ(&track,pntz);
-        sensor->residual( trackInterceptGlobal,tr_clone->slopes(), clus->channelID(), fracPosTool, unbiasres, unbiasres_chi2 );
+        else{
+          //ntuple for eta study
+          if (type==3 && p>=1){
+            //track information
+            tuple->column( "ndof", ndof);
+            tuple->column( "chi2", chi2);
+            tuple->column( "theta", theta);
+            tuple->column( "slx", slx);
+            tuple->column( "sly", sly);
+            tuple->column( "nhits", nVeloHits);
+            tuple->column( "nhitsr", m_sideRight);
+            tuple->column( "nhitsl" , m_sideLeft);
+            tuple->column( "p", p);
+            //cluster information
+            tuple->column( "pitch",pitch);
+            tuple->column( "clSize",clSize);
+            tuple->column( "adcsum",adcsum);
+            tuple->column( "sensnum", SensNumber );
+            tuple->column( "pntx",pntx);
+            tuple->column( "pnty",pnty);
+            tuple->column( "pntz",pntz);
+            tuple->column( "pntr",pntr);
+            tuple->column( "pntphi",pntphi);
+            tuple->column( "projectedAngle", projAngle);
+            tuple->column( "reso",resolution);
+            tuple->column( "clerr",toolInfo.fractionalError*pitch);
+            tuple->column( "unbiasres",unbiasres);
+            tuple->column( "unbiasreschi2",unbiasres_chi2);
+            tuple->column( "clpos",cl);
+            tuple->column( "clstripn",clus->channelID().strip());
+            tuple->column( "fracpos",fracPosTool);
+            tuple->column( "Trfracpos",trfracpos);
+            
+            // strip information
+            vector< float > stripADC ;
+            vector< int > stripNum ;
+            for(int strip=0; strip<clSize; ++strip){
+              stripADC.push_back(clus->stripValues()[strip].second);
+              stripNum.push_back(clus->stripValues()[strip].first);
+            }
+            tuple->farray( "stripadc",stripADC,"stripN",4);
+            tuple->farray( "stripNum",stripNum,"stripN",4);
+            tuple->write();
+          }
+        }
+                  
 
-        tuple->column( "run",m_runodin);
-        tuple->column( "evt",m_eventodin);
-        tuple->column( "bunchid",m_bunchid);
-        tuple->column( "evTimeSec",eventTimeMicroSecGps); //(long) m_evTimeGps));
-        tuple->column( "ndof", ndof);
-        tuple->column( "chi2", chi2);
-        tuple->column( "theta", theta);
-        tuple->column( "slx", slx);
-        tuple->column( "sly", sly);
-        tuple->column( "x0",      x0);
-        tuple->column( "y0",      y0);
-        tuple->column( "pvx",      pvx);
-        tuple->column( "pvy",      pvy);
-        tuple->column( "pvz",      pvz);
-        tuple->column( "npv",      n_pv);
-        tuple->column( "pvchi2",      pvchi2);
-        tuple->column( "pvndof",      pvndof);
-        tuple->column( "pvntr",      pvntr);
-        tuple->column( "nbacktr",      n_back);
-        tuple->column( "nhits", nVeloHits);
-        tuple->column( "nhitsr", m_sideRight);
-        tuple->column( "nhitsl" , m_sideLeft);
-        tuple->column( "p", p);
-        tuple->column( "type", type);
-        tuple->column( "adcpertrack",adcpertrack);
-        tuple->column( "side",sensLeft);
-        tuple->column( "reso",resolution);
-        //kalman unbiased residual
-        //tuple->column( "unres",(*inode)->unbiasedResidual()); 
-        tuple->column( "res",residual); 
-        tuple->column( "clerr",toolInfo.fractionalError*pitch);
-        tuple->column( "eres",(*inode)->errResidual());
-        tuple->column( "unbiasres",unbiasres);
-        tuple->column( "unbiasreschi2",unbiasres_chi2);
-        tuple->column( "pitch",pitch);
-        tuple->column( "Rtype",SensRtype);
-        tuple->column( "clSize",clSize);
-        tuple->column( "adcsum",adcsum);
-        tuple->column( "station", zSensPos);
-        tuple->column( "sensnum", SensNumber );
-        tuple->column( "pntx",pntx);
-        tuple->column( "pnty",pnty);
-        tuple->column( "pntz",pntz);
-        tuple->column( "pntr",pntr);
-        tuple->column( "pntphi",pntphi);
-        tuple->column( "pntr_loc",pntr_loc);
-        tuple->column( "pntphi_loc",pntphi_loc);
-        tuple->column( "projectedAngle", projAngle);
-        tuple->column( "rho", anglerho);
-        tuple->column( "rhostrip", angleofstriplocalframe);
-        tuple->column( "rhotrack", angleoftracklocalframe);
-        if(m_runWithMC){
-          tuple->column("reso_mc", reso_mc);
-          tuple->column("fracPos", fracPos);
-          tuple->column("fracPosTool", fracPosTool);
-          tuple->column("pitch_mc", pitch_mc);
-          tuple->column("slx_mc", slx_mc);
-          tuple->column("sly_mc", sly_mc);
-          tuple->column("projectedAngle_mc", projAngle_mc);
-          tuple->column("err_mc", err_mc);
-          tuple->column("pntx_mc", pntx_mc);
-          tuple->column("pnty_mc", pnty_mc);
-          tuple->column("pntz_mc", pntz_mc);
-          tuple->column("pntr_mc", pntr_mc);
-          tuple->column("r_clu", r_clu);
-          tuple->column("pntphi_mc", pntphi_mc);
-        }
-        tuple->write();
         delete tr_clone;
         
       }
@@ -798,9 +931,9 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track,
       double theta = track.firstState().slopes().theta();
       double slx = track.firstState().tx();
       double sly = track.firstState().ty();
-      double x0 = track.firstState().x();
-      double y0 = track.firstState().y();
-      double z0 = track.firstState().z();
+      //double x0 = track.firstState().x();
+      //double y0 = track.firstState().y();
+      //double z0 = track.firstState().z();
       double ndof=track.info(LHCb::Track::FitVeloNDoF,0) ;//nDoF();
       double type=track.type();
       double p=track.p()/Gaudi::Units::GeV ;
@@ -808,15 +941,15 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track,
       tuple->column( "run",m_runodin);
       tuple->column( "evt",m_eventodin);
       tuple->column( "evTimeSec",eventTimeMicroSecGps); //(long) m_evTimeGps));
-      tuple->column( "bunchid",m_bunchid);
+      //tuple->column( "bunchid",m_bunchid);
       tuple->column( "ndof", ndof);
       tuple->column( "chi2", chi2);
       tuple->column( "theta", theta);
       tuple->column( "slx", slx);
       tuple->column( "sly", sly);
-      tuple->column( "x0",      x0);
-      tuple->column( "y0",      y0);
-      tuple->column( "z0",      z0);
+      //tuple->column( "x0",      x0);
+      //tuple->column( "y0",      y0);
+      //tuple->column( "z0",      z0);
       tuple->column( "p", p);
       tuple->column( "type", type);
       tuple->column( "pvx",      pvx);
@@ -831,8 +964,8 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track,
       tuple->column( "nhitsr", m_sideRight);
       tuple->column( "nhitsl" , m_sideLeft);
       tuple->column( "nexpecthits", nExpectedHits);
-      tuple->column( "adcpertrack", m_adcpertrack);
-      tuple->column( "side",    m_side);
+      //tuple->column( "adcpertrack", m_adcpertrack);
+      tuple->column( "Trside",    m_side);
       tuple->column( "Eff", pseudoEff);
       tuple->column( "EffInterp", pseudoEfficiencyInterp);
       tuple->write();
@@ -847,7 +980,8 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track,
 void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks,
                                                 int n_pv,int n_back, 
                                                 double pvx, double pvy, double pvz,
-                                                double pvchi2, double pvndof, int pvntr)
+                                                double pvchi2, double pvndof, int pvntr,
+                                                const LHCb::RecVertex* pv)
 {
   Tuple tuple=nTuple("VeloTrEvNtuple", "Event ntuple",CLID_ColumnWiseTuple );
 
@@ -913,7 +1047,31 @@ void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks,
     }
   }
 
-   
+  double pvlx=0.,pvly=0.,pvlz=0.;
+  double pvrx=0.,pvry=0.,pvrz=0.;
+  int pvlntr=0,pvrntr=0;
+  typedef std::vector<const LHCb::Track*> TrackVector ;
+
+  // now split the primary vertex in left and right tracks
+  TrackVector pvtracks = myconvert(pv->tracks()) ;
+  TrackVector lefttracks = myselect(pvtracks,TrackVeloSidePredicate(+1)) ;
+  TrackVector righttracks =  myselect(pvtracks,TrackVeloSidePredicate(-1)) ;
+  if( lefttracks.size() >= 2 && righttracks.size() >= 2 ) {
+    // fit two vertices
+    LHCb::RecVertex* leftvertex  = m_vertexer->fit( lefttracks ) ;
+    LHCb::RecVertex* rightvertex = m_vertexer->fit( righttracks ) ;
+    if( leftvertex && rightvertex) {
+      pvlx=leftvertex->position().x();
+      pvly=leftvertex->position().y();  
+      pvlz=leftvertex->position().z();
+      pvlntr=lefttracks.size();
+      pvrx=rightvertex->position().x();
+      pvry=rightvertex->position().y();  
+      pvrz=rightvertex->position().z();
+      pvrntr=righttracks.size();
+    }
+  }
+  
   tuple->column( "run",m_runodin);
   tuple->column( "evt",m_eventodin);
   tuple->column( "bunchid",m_bunchid);
@@ -935,6 +1093,14 @@ void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks,
   tuple->column( "pvndof",      pvndof);
   tuple->column( "pvntr",      pvntr);
   tuple->column( "nbacktr",      n_back);
+  tuple->column( "pvlx",      pvlx);
+  tuple->column( "pvly",      pvly);
+  tuple->column( "pvlz",      pvlz);
+  tuple->column( "pvlntr",      pvlntr);
+  tuple->column( "pvrx",      pvrx);
+  tuple->column( "pvry",      pvry);
+  tuple->column( "pvrz",      pvrz);
+  tuple->column( "pvrntr",    pvrntr);
   tuple->write();
 
   if( msgLevel(MSG::DEBUG) )  
@@ -968,16 +1134,15 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloAllClNtuple(LHCb::Tracks* tracks)
     double clphi=0. ;
     int Rtype=cluster->isRType();
     double pitch=0.;
-
     if (Rtype){
       const DeVeloRType* rDet = m_veloDet->rSensor( cluster->channelID().sensor() );
-      pitch = rDet->rPitch( unsigned(cluster->strip(0)) ) ;
-      clr=rDet->globalROfStrip(unsigned(cluster->strip(0)));
+      pitch = rDet->rPitch( unsigned(cluster->channelID().strip()) ) ;
+      clr=rDet->globalROfStrip(unsigned(cluster->channelID().strip()));
      }
     else{
       const DeVeloPhiType* phiDet = m_veloDet->phiSensor( cluster->channelID().sensor());
       if (phiDet)
-        clphi=phiDet->globalPhiOfStrip(unsigned(cluster->strip(0)));
+        clphi=phiDet->globalPhiOfStrip(unsigned(cluster->channelID().strip()));
     }
     
     int sensnum=cluster-> channelID().sensor();
