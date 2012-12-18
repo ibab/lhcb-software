@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-18 - Anton Poluektov 
+ - Update dbase/stripping20r1
+
 ! 2012-12-17 - Ronan Wallace
  -Update of LineConfigDictionaries_QEE.py to reflect patch to StrippingStrangeBaryons.py
 
