@@ -12,6 +12,7 @@ Beams:allowMomentumSpread = on
 # Particle Decays and mixing
 # -------------------------------
 ParticleDecays:mixB = off
+HadronLevel:Decay = off
 # -------------------------------
 # control verbosity
 # -------------------------------
