@@ -9,7 +9,9 @@
    </set></argument>
   <argument name="reference"><text>../refs/boole-mc11-spillover.ref</text></argument>
   <argument name="validator"><text>
-from Boole.QMTest.BooleExclusions import preprocessor
+from Boole.QMTest.BooleExclusions import preprocessor as BoolePreprocessor
+preprocessor = BoolePreprocessor + \
+  LineSkipper(["RiDigitQC            INFO        :   /Event/MC/Rich/Hits           99.70 +- 0.05 % of total, 100.00 +- 0.00 % signal eff."])
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>

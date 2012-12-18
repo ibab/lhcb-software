@@ -29,7 +29,8 @@ preprocessor = BoolePreprocessor + \
   RegexpReplacer(when = "LHCb::RawDataCn...   INFO ", orig = r'ev-Minimal.mdf', repl = r'ev.mdf') + \
   RegexpReplacer(when = "ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics", orig = r'0/0/2/0', repl = r'0/0/1/0') + \
   LineSkipper(["ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 63'"]) + \
-  RegexpReplacer(when = "DataOnDemandSvc      INFO Handled ", orig = r'1090', repl = r'1150')
+  RegexpReplacer(when = "DataOnDemandSvc      INFO Handled ", orig = r'1090', repl = r'1150') + \
+  RegexpReplacer(when = "CaloFillPrsSpdR...   INFO Average event size :   325.2 words,    70.5 for trigger  Mean bank size", orig = r'40.7', repl = r'40.6')
 histPreprocessor = \
   RegexpReplacer(when = "MoniOTSeq            INFO Member list", orig = r'MoniOTSeq            INFO Member list: MCOTDepositMonitor', repl = r'OTTimeMonitor     SUCCESS Booked 9 Histogram(s) : 1D=8 1DProf=1') + \
   RegexpReplacer(when = "LinkRichSeq          INFO Member list", orig = r'LinkRichSeq          INFO Member list:', repl = r'OTTimeChecker     SUCCESS Booked 12 Histogram(s) : 1D=12') + \

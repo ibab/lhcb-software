@@ -10,7 +10,9 @@
    </set></argument>
   <argument name="reference"><text>../refs/boole-mc10.ref</text></argument>
   <argument name="validator"><text>
-from Boole.QMTest.BooleExclusions import preprocessor
+from Boole.QMTest.BooleExclusions import preprocessor as BoolePreprocessor
+preprocessor = BoolePreprocessor + \
+  RegexpReplacer(when = "CaloFillPrsSpdR...   INFO Average event size :   325.2 words,    70.5 for trigger  Mean bank size", orig = r'40.7', repl = r'40.6')
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
