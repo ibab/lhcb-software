@@ -197,8 +197,10 @@ StatusCode FastPVMonitor::execute() {
 
     // here for a given reconstructed track we find the closest reconstructed vertex
     double lowestIP  = 0;
+#ifdef DEBUG_HISTO
     double lowestIPx = 0;
     double lowestIPy = 0;
+#endif
     LHCb::RecVertex* bestVertex = 0;                                                     // best vertex pointer
     for (  itPv = pvs->begin(); pvs->end() != itPv ; ++itPv ) {                          // loop over vertices
       double dx = point.x() + ( (*itPv)->position().z() - point.z() ) * dir.x() - (*itPv)->position().x(); // track position X at vertex Z
@@ -206,8 +208,10 @@ StatusCode FastPVMonitor::execute() {
       double ip2 = dx*dx + dy*dy;                                                        // squared distance vertex-track ?
       if ( (bestVertex==0) || (ip2<lowestIP) )
       { lowestIP   = ip2;
+#ifdef DEBUG_HISTO
         lowestIPx  = dx;
         lowestIPy  = dy;
+#endif
         bestVertex = *itPv;                                                                    // remember the best vertex
       }
     }
