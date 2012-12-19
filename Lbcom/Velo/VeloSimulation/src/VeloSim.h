@@ -1,4 +1,3 @@
-#// $Id: VeloSim.h,v 1.18 2010-03-04 18:28:35 dhcroft Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -210,11 +209,11 @@ private:
   /// Simulate intrasensor crosstalk to 2nd metal routing lines
   bool m_intraSensorCrossTalk;
   /// distance scale for charge to leak to metal 2 lines in R sensor
-  double m_m2ChargeFracWidth;
+  //double m_m2ChargeFracWidth;
   /// max fraction of charge to leak to metal 2 lines in R sensor
-  double m_m2ChargeFracMax;
+  //double m_m2ChargeFracMax;
   /// effective size of mask caused by 1st metal layer
-  double m_m2MaskWidth;
+  //double m_m2MaskWidth;
   /// simulate the metal2 coupling for the mid point or all points
   bool m_m2SinglePoint;
 

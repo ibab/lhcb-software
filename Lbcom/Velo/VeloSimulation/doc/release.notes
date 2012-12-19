@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-12-19 - Marco Cattaneo
+ - Remove unused member variables from VeloSim.h, fixes UNINIT_CTOR defect
+
 !========================= VeloSimulation v3r13 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
