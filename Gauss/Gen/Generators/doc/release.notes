@@ -5,6 +5,9 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2012-12-19 - Aurelien Martens
+ - Fix SignalRH for pythia8 so that it also hadronize pile-up events.
+
 !======================= Generators v13r0 2012-11-29 =========================
 ! 2012-09-27 - Patrick Robbe
  - Added an option to switch off the reinitialization of the pile-up
