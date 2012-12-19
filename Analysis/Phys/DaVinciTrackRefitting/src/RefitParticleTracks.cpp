@@ -91,23 +91,6 @@ StatusCode RefitParticleTracks::execute()
   std::vector<const LHCb::Track*>::const_iterator itercT;
   LoKi::Extract::getTracks(inputParticles.begin(), inputParticles.end(), std::back_inserter(alltracks));
 
-  ///std::vector<const LHCb::Particle*> seekers;
-  ///BOOST_FOREACH(const LHCb::Particle* part, inputParticles) {
-  ///  seekers.clear();
-  ///  seekers.push_back(part);
-  ///  while(seekers.size()) {
-  ///    const LHCb::Particle* s = seekers.back();
-  ///    seekers.pop_back() ;
-  ///    if (s->proto() && s->proto()->track()) {
-  ///      alltracks.push_back(s->proto()->track());
-  ///    } else {
-  ///      BOOST_FOREACH(const LHCb::Particle* ss, s->daughtersVector()) { 
-  ///        seekers.push_back(ss);
-  ///      }
-  ///    }
-  ///  }
-  ///}
-
 
   LHCb::Tracks* uniqueTracks = new LHCb::Tracks();
   if ( UNLIKELY(msgLevel(MSG::DEBUG)) && inputParticles.size()>0 && 0==alltracks.size())
@@ -135,27 +118,27 @@ StatusCode RefitParticleTracks::execute()
   }
 
 
-  /// @todo: check if necessary
-  iterTs = uniqueTracks->begin();
-  for ( ; uniqueTracks->end() != iterTs ; ++iterTs ) {
-    copies.push_back( (*iterTs)->cloneWithKey() );
-  }
 
   if (m_overwrite) {
     toworkwith = &incasts;
   } else {
+    iterTs = uniqueTracks->begin();
+    for ( ; uniqueTracks->end() != iterTs ; ++iterTs ) {
+      copies.push_back( (*iterTs)->cloneWithKey() );
+    }
     toworkwith = &copies;
   }
 
   if (m_fit) fit(toworkwith);
   if (m_manipulate) manipulate(toworkwith);
 
-  if (m_update) { /// if we anyhow overwrite, the property has been switched in initialize
+  if (m_update) { /// if we anyhow overwrite, the property has been switched off in initialize() [3]
     std::vector<LHCb::Track*>::const_iterator iterFrom = copies.begin();
-    std::vector<LHCb::Track*>::const_iterator iterTo   = toworkwith->begin();
+    std::vector<LHCb::Track*>::const_iterator iterTo   = incasts->begin();
     for ( ; copies.end() != iterFrom ; ++iterFrom) {
       ++iterTo;
-      /* do the copying */
+      (*iterTo)->setGhostProbability((*iterFrom)->ghostProbability());
+      ///@todo: what about more general updates?
     }
   }
 
@@ -166,6 +149,11 @@ StatusCode RefitParticleTracks::execute()
       outtracks->add(*iterT);
     }
     put(outtracks,outputLocation());
+  } else {
+    while (copies.size()) {
+      delete copies.back();
+      copies.pop_back();
+    }
   }
 
   setFilterPassed(true);
@@ -191,15 +179,5 @@ StatusCode RefitParticleTracks::manipulate(std::vector<LHCb::Track*> *vec) {
   return StatusCode::SUCCESS;
 }
 
-////=============================================================================
-//// Finalize
-////=============================================================================
-//StatusCode RefitParticleTracks::finalize()
-//{
-//  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> Finalize" << endmsg;
-//
-//
-//  return DaVinciAlgorithm::finalize();  // must be called after all other actions
-//}
 
 
