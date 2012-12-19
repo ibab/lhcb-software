@@ -838,13 +838,14 @@ B2LambdaMuLines = {
     }
 }
 
-Tau2LambdaMuLines = {
-    'BUILDERTYPE' : 'Tau2LambdaMuLinesConf',
-    'WGs' : [ 'RD' ],
-    'STREAMS' : [ 'Semileptonic' ],
-    'CONFIG' : {
-    'TauPrescale'         :1.,
-    'TauPostscale'        :1.,
-    'Tau2LambdaMuPrescale'  :1.
-    }
-}
+
+## Tau2LambdaMuLines = {
+##     'BUILDERTYPE' : 'Tau2LambdaMuLinesConf',
+##     'WGs' : [ 'RD' ],
+##     'STREAMS' : [ 'Semileptonic' ],
+##     'CONFIG' : {
+##     'TauPrescale'         :1.,
+##     'TauPostscale'        :1.,
+##     'Tau2LambdaMuPrescale'  :1.
+##     }
+## }
