@@ -1,4 +1,3 @@
-// $Id: RawBankReadoutStatusMonitor.cpp,v 1.9 2009/04/14 12:12:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -58,7 +57,7 @@ StatusCode RawBankReadoutStatusMonitor::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_first = true;
   info() << "---- Histo bins label : " << endmsg  ;
@@ -75,15 +74,13 @@ StatusCode RawBankReadoutStatusMonitor::initialize() {
 //=============================================================================
 StatusCode RawBankReadoutStatusMonitor::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
 
   // get RawBankReadoutStatus
-  LHCb::RawBankReadoutStatuss* statuss;
-  if( exist<LHCb::RawBankReadoutStatuss>( LHCb::RawBankReadoutStatusLocation::Default ) ){
-    statuss = get<LHCb::RawBankReadoutStatuss>( LHCb::RawBankReadoutStatusLocation::Default );
-  }else{
-    Warning("No  RawBankReadoutStatus container found at " + LHCb::RawBankReadoutStatusLocation::Default );
+  LHCb::RawBankReadoutStatuss* statuss = getIfExists<LHCb::RawBankReadoutStatuss>( LHCb::RawBankReadoutStatusLocation::Default );
+  if( NULL == statuss ){
+    Warning("No  RawBankReadoutStatus container found at " + LHCb::RawBankReadoutStatusLocation::Default ).ignore();
     for(std::vector<std::string>::iterator inam = m_bankTypes.begin() ; inam != m_bankTypes.end() ; ++inam){
       std::string typeName = *inam;
       std::stringstream base("");
@@ -99,7 +96,7 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
   }
   
   if( 0 == statuss->size() ){
-    Warning("The RawBankReadoutStatus container is empty *" + LHCb::RawBankReadoutStatusLocation::Default + ")");
+    Warning("The RawBankReadoutStatus container is empty *" + LHCb::RawBankReadoutStatusLocation::Default + ")").ignore();
     for(std::vector<std::string>::iterator inam = m_bankTypes.begin() ; inam != m_bankTypes.end() ; ++inam){
       std::string typeName = *inam;
       std::stringstream base("");
@@ -138,12 +135,12 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
     AIDA::IHistogram1D* histo1D =
       plot1D( -1., base.str() + "1",  tit1D.str() ,  -1, (double) m_degree , m_degree+1);
     setLabels1D( histo1D  );
-    debug() << "Status " << status->status() << endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << "Status " << status->status() << endmsg;
     for(int i = 0; i < m_degree ; ++i ){
-      int word = status->status() >> i;
-      if( ( 0x1 & word) )plot1D( (double) i , base.str() + "1",  tit1D.str() ,   -1, (double) m_degree , m_degree+1);
-      int isok = (0x1 & word);
-      debug() << i << " -> " <<  isok << endmsg;
+      const int word = status->status() >> i;
+      const int isok = (0x1 & word);
+      if( isok )plot1D( (double) i , base.str() + "1",  tit1D.str() ,   -1, (double) m_degree , m_degree+1);
+      if( msgLevel(MSG::DEBUG) ) debug() << i << " -> " <<  isok << endmsg;
     }
 
 
@@ -180,18 +177,6 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
 }
   
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode RawBankReadoutStatusMonitor::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
-
-
 void RawBankReadoutStatusMonitor::setLabels1D( AIDA::IHistogram1D* histo ){  
   TH1D* th1d = Gaudi::Utils::Aida2ROOT::aida2root( histo );
   int k = 1;

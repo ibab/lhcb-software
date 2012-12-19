@@ -1,4 +1,3 @@
-// $Id: TriggerTypeCounter.cpp,v 1.1 2009/12/03 17:42:35 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -6,6 +5,7 @@
 
 #include <TH1.h>
 #include "GaudiUtils/Aida2ROOT.h"
+#include "Event/ODIN.h"
 // local
 #include "TriggerTypeCounter.h"
 
@@ -24,6 +24,7 @@ DECLARE_ALGORITHM_FACTORY( TriggerTypeCounter )
   TriggerTypeCounter::TriggerTypeCounter( const std::string& name,
                                           ISvcLocator* pSvcLocator)
     : GaudiHistoAlg ( name , pSvcLocator )
+    , m_odin(NULL)
 { }
 //=============================================================================
 // Destructor
@@ -37,7 +38,7 @@ StatusCode TriggerTypeCounter::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
 
   m_odin      = tool<IEventTimeDecoder>("OdinTimeDecoder","OdinDecoder",this);
@@ -111,19 +112,15 @@ void TriggerTypeCounter::hbook(const std::string& name, const std::vector<std::s
 //=============================================================================
 StatusCode TriggerTypeCounter::execute() {
 
-  debug() << "==> Execute" << endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
 
   // get ODIN
   m_odin->getTime(); // trigger the ODIN bank decoding
-  LHCb::ODIN* odin;
-  if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-  }else{
-    Warning("ODIN cannot be loaded",StatusCode::SUCCESS).ignore();
-    return StatusCode::SUCCESS;
+  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN> (LHCb::ODINLocation::Default);
+  if( NULL == odin ){
+    return Warning("ODIN cannot be loaded",StatusCode::SUCCESS);
   }
-
 
   int tt = (int) odin->triggerType();
   fill( histo1D(HistoID("TriggerTypesCounter/1")), tt , 1.);
@@ -145,16 +142,4 @@ StatusCode TriggerTypeCounter::execute() {
 
   return StatusCode::SUCCESS;
 }
-
-
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TriggerTypeCounter::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
-}
-
 //=============================================================================

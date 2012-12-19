@@ -1,4 +1,3 @@
-// $Id: RawBankReadoutStatusMonitor.h,v 1.3 2009/03/05 15:36:36 odescham Exp $
 #ifndef COMPONENT_RAWBANKREADOUTSTATUSMONITOR_H 
 #define COMPONENT_RAWBANKREADOUTSTATUSMONITOR_H 1
 
@@ -25,7 +24,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

@@ -1,4 +1,3 @@
-// $Id: TriggerTypeCounter.h,v 1.1 2009/12/03 17:42:35 odescham Exp $
 #ifndef TRIGGERTYPECOUNTER_H 
 #define TRIGGERTYPECOUNTER_H 1
 
@@ -6,7 +5,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/IEventTimeDecoder.h"
-#include "Event/ODIN.h"
 
 /** @class TriggerTypeCounter TriggerTypeCounter.h
  *  
@@ -23,7 +21,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

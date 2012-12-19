@@ -1,4 +1,3 @@
-// $Id: RawBankSizeMonitor.cpp,v 1.5 2009/04/14 12:12:35 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -26,6 +25,7 @@ DECLARE_ALGORITHM_FACTORY( RawBankSizeMonitor )
   RawBankSizeMonitor::RawBankSizeMonitor( const std::string& name,
                                           ISvcLocator* pSvcLocator)
     : GaudiHistoAlg ( name , pSvcLocator )
+    , m_rawEvt(NULL)
 {
   declareProperty( "bankNames"   , m_bankNames );
   declareProperty( "MaxSizeMap"  , m_max);
@@ -81,11 +81,9 @@ StatusCode RawBankSizeMonitor::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // get RawEvent
-  if( exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default ) ){
-    m_rawEvt= get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-  }else  {
-    Warning( "rawEvent not found at location '" + rootInTES() + LHCb::RawEventLocation::Default ).ignore();
-    return StatusCode::SUCCESS;
+  m_rawEvt= getIfExists<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  if( NULL == m_rawEvt ){
+    return Warning( "rawEvent not found at location '" + rootInTES() + LHCb::RawEventLocation::Default, StatusCode::SUCCESS );
   }
   // Loop over banks
   int index=0;
