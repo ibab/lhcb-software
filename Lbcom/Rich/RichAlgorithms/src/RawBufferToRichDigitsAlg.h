@@ -1,11 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file RawBufferToRichDigitsAlg.h
  *
  *  Header file for RICH DAQ algorithm : Rich::DAQ::RawBufferToRichDigitsAlg
- *
- *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.h,v 1.1.1.1 2008-10-15 12:34:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -54,7 +50,6 @@ namespace Rich
 
       virtual StatusCode initialize();    // Algorithm initialization
       virtual StatusCode execute   ();    // Algorithm execution
-      virtual StatusCode finalize  ();    // Algorithm finalization
 
     private: // data
 

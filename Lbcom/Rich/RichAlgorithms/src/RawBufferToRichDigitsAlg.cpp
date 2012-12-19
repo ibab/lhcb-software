@@ -1,11 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file RawBufferToRichDigitsAlg.cpp
  *
  *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
- *
- *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.2 2009-07-30 12:08:22 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -29,6 +25,7 @@ DECLARE_ALGORITHM_FACTORY( RawBufferToRichDigitsAlg )
 RawBufferToRichDigitsAlg::RawBufferToRichDigitsAlg( const std::string& name,
                                                     ISvcLocator* pSvcLocator )
   : AlgBase ( name , pSvcLocator )
+  , m_decoder(NULL)
 {
   declareProperty( "RichDigitsLocation",
                    m_richDigitsLoc = LHCb::RichDigitLocation::Default );
@@ -104,11 +101,4 @@ StatusCode RawBufferToRichDigitsAlg::execute()
   } // make digits
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode RawBufferToRichDigitsAlg::finalize()
-{
-  // finalise base
-  return AlgBase::finalize();
 }
