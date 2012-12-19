@@ -34,7 +34,7 @@ IODataManager ( "IODataManager" , OutputLevel = 6 , AgeLimit = 1 , UseGFAL = Fal
 ##### DAVINCI CONFIGURATION
 
 from Configurables import DaVinci
-DaVinci().EvtMax = 500000
+DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1
 DaVinci().DataType = "2012"
 DaVinci().InputType = "MDST"
@@ -134,7 +134,6 @@ TracksFromParticles().inputLocation = "Rec/Track/Zeug"
 TracksFromParticles().OutputLevel = 0 
 
 GaudiSequencer("RefitSeq").Members = [#fltr,
-#PaulsClusterUnpacker(),
 RefitParticleTracks(),
 TracksFromParticles() ]
 if "MDST" == DaVinci().InputType:

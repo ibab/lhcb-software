@@ -92,15 +92,15 @@ StatusCode RefitParticleTracks::execute()
   LoKi::Extract::getTracks(inputParticles.begin(), inputParticles.end(), std::back_inserter(alltracks));
 
 
-  LHCb::Tracks* uniqueTracks = new LHCb::Tracks();
+  LHCb::Tracks uniqueTracks;
   if ( UNLIKELY(msgLevel(MSG::DEBUG)) && inputParticles.size()>0 && 0==alltracks.size())
     verbose() << "no tracks from " << inputParticles.size() << " particles " << endmsg;
 
   itercT = alltracks.begin();
-  uniqueTracks->reserve(alltracks.size());
+  uniqueTracks.reserve(alltracks.size());
   for ( ; alltracks.end() != itercT ; ++itercT ) {
-    if (!uniqueTracks->object((*itercT)->key())) {
-      uniqueTracks->add(const_cast<LHCb::Track*>(*itercT));  ///@todo: this is evil
+    if (!uniqueTracks.object((*itercT)->key())) {
+      uniqueTracks.add(const_cast<LHCb::Track*>(*itercT));  ///@todo: this is evil
     }
   }
 
@@ -110,10 +110,10 @@ StatusCode RefitParticleTracks::execute()
   std::vector<LHCb::Track*>* toworkwith;
 
 
-  incasts.reserve(uniqueTracks->size());
+  incasts.reserve(uniqueTracks.size());
   //if (m_overwrite || m_update) 
-  iterTs = uniqueTracks->begin();
-  for ( ; uniqueTracks->end() != iterTs ; ++iterTs ) {
+  iterTs = uniqueTracks.begin();
+  for ( ; uniqueTracks.end() != iterTs ; ++iterTs ) {
     incasts.push_back( const_cast<LHCb::Track*>(*iterTs) );
   }
 
@@ -122,8 +122,8 @@ StatusCode RefitParticleTracks::execute()
   if (m_overwrite) {
     toworkwith = &incasts;
   } else {
-    iterTs = uniqueTracks->begin();
-    for ( ; uniqueTracks->end() != iterTs ; ++iterTs ) {
+    iterTs = uniqueTracks.begin();
+    for ( ; uniqueTracks.end() != iterTs ; ++iterTs ) {
       copies.push_back( (*iterTs)->cloneWithKey() );
     }
     toworkwith = &copies;
@@ -134,7 +134,7 @@ StatusCode RefitParticleTracks::execute()
 
   if (m_update) { /// if we anyhow overwrite, the property has been switched off in initialize() [3]
     std::vector<LHCb::Track*>::const_iterator iterFrom = copies.begin();
-    std::vector<LHCb::Track*>::const_iterator iterTo   = incasts->begin();
+    std::vector<LHCb::Track*>::const_iterator iterTo   = incasts.begin();
     for ( ; copies.end() != iterFrom ; ++iterFrom) {
       ++iterTo;
       (*iterTo)->setGhostProbability((*iterFrom)->ghostProbability());
