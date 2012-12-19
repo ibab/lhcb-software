@@ -1,4 +1,3 @@
-// $Id: MuonPad2MCTool.h,v 1.4 2010-03-02 09:51:26 asatta Exp $
 #ifndef MUONPAD2MCTOOL_H 
 #define MUONPAD2MCTOOL_H 1
 
@@ -25,7 +24,6 @@ public:
 
   virtual ~MuonPad2MCTool( ); ///< Destructor
   StatusCode initialize();
-  StatusCode finalize();
   LHCb::MCParticle* Pad2MC(LHCb::MuonTileID value);
   
   bool isXTalk(LHCb::MuonTileID value,LHCb::MCParticle*& pp);

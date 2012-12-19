@@ -42,21 +42,14 @@ MuonPad2MCTool::~MuonPad2MCTool() {}
 
 StatusCode MuonPad2MCTool::initialize()
 {
- GaudiTool::initialize();  
+  StatusCode sc = GaudiTool::initialize();
+  if( sc.isFailure() ) return sc;
 
   m_muonDetector=getDet<DeMuonDetector>
     ("/dd/Structure/LHCb/DownstreamRegion/Muon");
   return StatusCode::SUCCESS;
   
 }
-
-StatusCode MuonPad2MCTool::finalize() {  
-  return GaudiTool::finalize() ;
-}
- 
-
-
-
 
 MCParticle* MuonPad2MCTool::PadNoXtalk2MC(LHCb::MuonTileID tile)
 {

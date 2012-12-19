@@ -3,9 +3,12 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
+#include "Event/MCHit.h"
+#include "Event/MCMuonDigit.h"
+#include "Linker/LinkerWithKey.h"
+
 // local
 #include "MuonDigit2MCParticleAlg.h"
-#include "Linker/LinkerWithKey.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonDigit2MCParticleAlg
@@ -73,16 +76,6 @@ StatusCode MuonDigit2MCParticleAlg::execute() {
     }
   }
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MuonDigit2MCParticleAlg::finalize() {
-
-  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

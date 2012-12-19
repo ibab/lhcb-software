@@ -73,11 +73,11 @@ StatusCode MuonCoord2MCParticleLink::execute() {
   
   // loop and link MuonDigits to MC truth
   LHCb::MuonCoords::const_iterator iCoord;
-  //debug()<<" qui "<<endreq;
+  //debug()<<" qui "<<endmsg;
   for(iCoord = coords->begin(); iCoord != coords->end(); iCoord++){
-    //info()<<" qui 1 "<<endreq;
+    //info()<<" qui 1 "<<endmsg;
     //const LHCb::MCParticle* mcpart=NULL;
-    //debug()<<" qui 2 "<<endreq;
+    //debug()<<" qui 2 "<<endmsg;
     ///double w=1.0;
     std::map<const LHCb::MCParticle*,double> partMap;
 
@@ -90,21 +90,11 @@ StatusCode MuonCoord2MCParticleLink::execute() {
     std::map<const LHCb::MCParticle*,double>::const_iterator iterMap;
     for( iterMap = partMap.begin(); iterMap!= partMap.end(); iterMap++ ) {
       myLink.link(*iCoord,iterMap->first,iterMap->second);
-    // info()<<" set link "<<iterMap->first<<" "<<iterMap->second<<" "<<iterMap->first->particleID().pid()<<endreq;
+    // info()<<" set link "<<iterMap->first<<" "<<iterMap->second<<" "<<iterMap->first->particleID().pid()<<endmsg;
     }
     
   }
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MuonCoord2MCParticleLink::finalize() {
-
-  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
@@ -123,7 +113,7 @@ StatusCode MuonCoord2MCParticleLink:: associateToTruth(MuonCoord *coord,std::map
   if(station==4)typeLay=1;
   if(station==3&&region==0)typeLay=0;
   if(station==4&&region==0)typeLay=0;
-//info()<<typeLay<<endreq;
+//info()<<typeLay<<endmsg;
   if(typeLay<0)return StatusCode::FAILURE;
   std::vector<LHCb::MuonTileID>::iterator iDigit;
   if(typeLay==0){

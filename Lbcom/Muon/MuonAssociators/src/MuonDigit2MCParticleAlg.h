@@ -1,4 +1,3 @@
-// $Id: MuonDigit2MCParticleAlg.h,v 1.5 2007-01-11 13:12:45 asatta Exp $
 #ifndef MUONDIGIT2MCPARTICLEALG_H 
 #define MUONDIGIT2MCPARTICLEALG_H 1
 
@@ -6,9 +5,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/MuonDigit.h"
-#include "Event/MCMuonDigit.h"
 #include "Event/MCParticle.h"
-#include "Event/MCHit.h"
 
 
 /** @class MuonDigit2MCParticleAlg MuonDigit2MCParticleAlg.h
@@ -26,7 +23,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
   StatusCode associateToTruth(LHCb::MuonDigit* digit,
                               const LHCb::MCParticle*& mcpart);
 protected:

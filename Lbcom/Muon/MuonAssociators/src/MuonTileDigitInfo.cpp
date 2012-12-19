@@ -3,9 +3,12 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
+#include "Event/IntLink.h"
+#include "Event/MuonDigit.h"
+#include "Event/MCMuonDigit.h"
+
 // local
 #include "MuonTileDigitInfo.h"
-#include "Event/IntLink.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonTileDigitInfo
@@ -82,15 +85,4 @@ StatusCode MuonTileDigitInfo::execute() {
     
   put(myIntLink,path.data());
   return StatusCode::SUCCESS;
-}
-
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MuonTileDigitInfo::finalize() {
-
-  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
