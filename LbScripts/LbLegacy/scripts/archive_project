@@ -28,7 +28,7 @@ if (nar != 0) then
   endif
 endif
 #
-if ($1 == "-h") then
+if ($1 == "-h" || $1 == "--help") then
    echo ""
    echo " Usage : archive_project project_name project_version"
    echo "  where :"
@@ -36,17 +36,18 @@ if ($1 == "-h") then
    echo "         version is the version of package_name to be transfered"
    echo " "
    echo " Example1: archive_project LHCb v11r2"
-   echo "           $LHCBRELEASES/LHCB/LHCB_v11r2 will be defreezed"
+   echo "           $LHCBRELEASES/LHCB/LHCB_v11r2 will be defrozen"
    echo "           all *.o file removed"
    echo "           a LHCB_v11r2.tar.gz file produced "
    echo "           and copied onto /castor/cern.ch/lhcb/soft-backup"
    echo "           the LHCB_v11r2 volume deleted"
-   echo "           the LHCbEnv/v11r2 directory removed"
+   echo "           the distribution files will also be copied to CASTOR in:"
+   echo "           - /castor/cern.ch/lhcb/soft-backup/html"
    echo ""
    echo " Example2: archive_project Gauss v12r0 delete"
    echo "           a tar file will NOT be saved onto /castor/"
    echo "           the GAUSS_v12r0 volume will be deleted"
-   echo "           the GaussEnv/v12r0 directory removed"
+
    echo ""
    goto exec_end
 endif
