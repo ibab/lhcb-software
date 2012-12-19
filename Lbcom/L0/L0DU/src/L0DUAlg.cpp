@@ -143,13 +143,5 @@ StatusCode L0DUAlg::execute() {
   return StatusCode::SUCCESS ;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode L0DUAlg::finalize() {
-  if ( msgLevel(MSG::DEBUG) ) debug()<< "==> Finalize" << endmsg;
-  return GaudiAlgorithm::finalize();
-}
-
 
 

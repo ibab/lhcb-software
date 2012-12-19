@@ -143,13 +143,12 @@ StatusCode L0Filter::execute() {
   std::string loc = dataLocation( m_l0Location );
 
 
-  if( !exist<LHCb::L0DUReport>( loc)){
+  const LHCb::L0DUReport* l0 = getIfExists<LHCb::L0DUReport>( loc );
+  if( NULL == l0 ){
     counter("Report not found") += 1;
-    Warning("L0DUReport not found at location : '" + loc + "' - the event is " + rej  ).ignore();
-    return StatusCode::SUCCESS;
+    return Warning("L0DUReport not found at location : '" + loc + "' - the event is " + rej, StatusCode::SUCCESS );
   }
 
-  const  LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( loc );
 
   // current TCK
   int tck = l0->tck();

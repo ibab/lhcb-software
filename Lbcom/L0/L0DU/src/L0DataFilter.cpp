@@ -78,17 +78,15 @@ StatusCode L0DataFilter::execute() {
 
 
   std::string loc = dataLocation( m_l0Location );
-  if( !exist<LHCb::L0DUReport>( loc)){
+  const  LHCb::L0DUReport* l0 = getIfExists<LHCb::L0DUReport>( loc );
+  if( NULL == l0 ){
     counter("Report not found") += 1;
-    Warning("L0DUReport not found at location : '" + loc + "' - the event is rejected"  ).ignore();
-    setFilterPassed( false  ); 
-    return StatusCode::SUCCESS;
+    setFilterPassed( false ); 
+    return Warning("L0DUReport not found at location : '" + loc + "' - the event is rejected", StatusCode::SUCCESS );
   }
 
   
   //===== Processing
-  const  LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( loc );
-
   bool oSel = false;
   bool aSel = true;
   for(std::map<std::string,std::vector<std::string> >::iterator i=m_selection.begin();m_selection.end() != i;++i){
@@ -121,15 +119,6 @@ StatusCode L0DataFilter::execute() {
   setFilterPassed( accept );
 
   return StatusCode::SUCCESS; 
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode L0DataFilter::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  return L0AlgBase::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

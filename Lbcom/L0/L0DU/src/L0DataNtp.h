@@ -1,4 +1,3 @@
-// $Id: L0DataNtp.h,v 1.6 2010-05-26 10:46:21 odescham Exp $
 #ifndef L0DATANTP_H 
 #define L0DATANTP_H 1
 
@@ -25,7 +24,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

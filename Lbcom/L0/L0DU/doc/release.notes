@@ -3,6 +3,11 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-12-19 - Marco Cattaneo
+ - Fix Coverity defects
+ - Use getIfExits
+ - Remove unnecessary finalize and/or initialize methods
+
 ! 2012-12-13 - Julien Cogan
  - To allow L0 simulation in Moore :
   - L0Conf: change the L0SimulationSeq.

@@ -88,20 +88,16 @@ bool L0DUFromRawHlt1Tool::decodeBank( int iBank ) {
   m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
   m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::OK);
 
-
-  std::string loc = "";
+  LHCb::RawEvent* raw = NULL;
   for (std::vector<std::string>::iterator it = m_rawLocations.begin(); it < m_rawLocations.end();++it) {
-    if( exist<LHCb::RawEvent>( *it) ){
-      loc = *it;
-      break;
-    }
+    raw = getIfExists<LHCb::RawEvent>( *it );
+    if( NULL != raw ) break;
   }
-  if( "" == loc){
+  if( NULL == raw ){
     Warning("rawEvent not found in  " + Gaudi::Utils::toString(m_rawLocations) +" locations ",StatusCode::SUCCESS).ignore();
     return false;
   }
   
-  LHCb::RawEvent* raw = get<LHCb::RawEvent>( loc );
 
   //== Any error bank?
   if ( raw->banks( LHCb::RawBank::L0DUError ).size() != 0 ) {

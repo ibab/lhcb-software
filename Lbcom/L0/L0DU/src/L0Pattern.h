@@ -1,4 +1,3 @@
-// $Id: L0Pattern.h,v 1.1 2008-03-27 16:32:14 odescham Exp $
 #ifndef L0PATTERN_H 
 #define L0PATTERN_H 1
 
@@ -28,7 +27,6 @@ public:
   virtual ~L0Pattern( ); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

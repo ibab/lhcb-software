@@ -232,8 +232,8 @@ StatusCode L0DUEmulatorTool::fillData(){
       // get BCID from ODIN
       m_odin->getTime();
       unsigned int odBX = 0;
-      if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default) ){
-        LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+      const LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+      if( NULL != odin ){
         odBX = odin->bunchId();
       }else{
         Warning( "Emtpy location for ODIN '"+ LHCb::ODINLocation::Default +"'" ,StatusCode::SUCCESS).ignore();

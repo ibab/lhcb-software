@@ -132,18 +132,6 @@ std::string L0DataNtp::rename(std::string name){
   return rname;
 }
 
-
-
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode L0DataNtp::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
-}
-
 //=============================================================================
 
 

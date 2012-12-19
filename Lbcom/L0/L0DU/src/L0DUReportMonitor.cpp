@@ -91,11 +91,10 @@ StatusCode L0DUReportMonitor::execute() {
   
   
   std::string loc = dataLocation( m_reportLocation );
-  if( !exist<LHCb::L0DUReport>( loc )){
-    Error("L0DUReport not found at location " + loc ).ignore();
-    return StatusCode::SUCCESS;
+  LHCb::L0DUReport* report = getIfExists<LHCb::L0DUReport>( loc );
+  if( NULL == report ){
+    return Error("L0DUReport not found at location " + loc, StatusCode::SUCCESS );
   }
-  LHCb::L0DUReport* report   = get<LHCb::L0DUReport>( loc );
   LHCb::L0DUConfig* config   = report->configuration();
   unsigned int tck           = report->tck();
   std::stringstream ttck("");
@@ -103,12 +102,10 @@ StatusCode L0DUReportMonitor::execute() {
   
   
   if(config == NULL){
-    Error("NULL L0DUConfig for tck = " + ttck.str() + " -> cannot monitor the report").ignore();
-    return StatusCode::SUCCESS;
+    return Error("NULL L0DUConfig for tck = " + ttck.str() + " -> cannot monitor the report", StatusCode::SUCCESS );
   }
   if( !report->valid() ){
-    Error("Invalid report -> cannot monitor").ignore();
-    return StatusCode::SUCCESS;
+    return Error("Invalid report -> cannot monitor", StatusCode::SUCCESS );
   }
 
   // Initialisation

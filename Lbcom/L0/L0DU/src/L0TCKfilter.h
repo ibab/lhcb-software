@@ -1,4 +1,3 @@
-// $Id: L0TCKfilter.h,v 1.2 2010-01-29 12:49:27 odescham Exp $
 #ifndef L0TCKFILTER_H 
 #define L0TCKFILTER_H 1
 
@@ -20,9 +19,7 @@ public:
 
   virtual ~L0TCKfilter( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

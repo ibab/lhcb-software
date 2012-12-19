@@ -30,6 +30,11 @@ DECLARE_ALGORITHM_FACTORY( L0DUMultiTrends )
 L0DUMultiTrends::L0DUMultiTrends( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ) ,
+    m_config(NULL),
+    m_emulator(NULL),
+    m_fromRaw(NULL),
+    m_datas(NULL),
+    m_odin(NULL),
     m_book(true),
     m_hasOrigin(false),
     m_bin(2),
@@ -164,8 +169,8 @@ StatusCode L0DUMultiTrends::execute() {
   if(m_trendPeriod > 0 && NULL != m_odin){
     // get ODIN time
     unsigned long time = (unsigned long) ( (double) m_odin->getTime().ns()/Gaudi::Units::second);
-    if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default) ){
-      LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+    const LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+    if( NULL != odin ){
       // fix origin
       if( !m_hasOrigin ){
         m_origin = time;

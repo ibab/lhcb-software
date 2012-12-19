@@ -1,4 +1,3 @@
-// $Id: L0DUAlg.h,v 1.4 2010-01-29 07:54:33 graven Exp $
 #ifndef L0DUAlg_H 
 #define L0DUAlg_H 1
 
@@ -30,7 +29,6 @@ public:
   virtual ~L0DUAlg( ); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   

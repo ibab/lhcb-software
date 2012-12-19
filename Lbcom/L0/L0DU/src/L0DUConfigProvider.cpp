@@ -458,8 +458,8 @@ StatusCode L0DUConfigProvider::createData(){
       for(std::vector<std::pair<std::string, unsigned int> >::const_iterator  it2 = s_operators.begin();
           it2!=s_operators.end();it2++){
         info() << "--> " << it2->first << endmsg;
-        return StatusCode::FAILURE;
       } 
+      return StatusCode::FAILURE;
     }
 
 

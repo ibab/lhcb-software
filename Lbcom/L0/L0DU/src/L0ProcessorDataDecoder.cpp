@@ -84,15 +84,15 @@ bool L0ProcessorDataDecoder::setL0ProcessorData(std::vector<std::string> dataLoc
   m_dataContainer->clear();
   m_ok=true;
   for(std::vector<std::string>::iterator it=dataLocs.begin();dataLocs.end()!=it;it++){
-    if( !exist<LHCb::L0ProcessorDatas>( *it ) ){
+    const LHCb::L0ProcessorDatas* datas = getIfExists<LHCb::L0ProcessorDatas>( *it ) ;
+    if( NULL == datas ){
       Warning("L0ProcessorData container not found at " + *it , StatusCode::SUCCESS).ignore();
       m_ok=false;
       break;
     }
     if( msgLevel(MSG::VERBOSE) ) verbose() << "inserting data from " << *it << endmsg;
     
-    LHCb::L0ProcessorDatas* datas = get<LHCb::L0ProcessorDatas>( *it ) ;
-    for(LHCb::L0ProcessorDatas::iterator itt=datas->begin();datas->end()!=itt;itt++){
+    for(LHCb::L0ProcessorDatas::const_iterator itt=datas->begin();datas->end()!=itt;itt++){
           m_dataContainer->insert(*itt);
     } 
   } 

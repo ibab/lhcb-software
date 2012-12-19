@@ -158,15 +158,6 @@ StatusCode L0DUFromRawAlg::execute() {
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode L0DUFromRawAlg::finalize() {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-
 //=========================================================================
 //  Compare the report produced by two versions of the tool
 //=========================================================================

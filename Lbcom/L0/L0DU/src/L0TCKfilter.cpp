@@ -33,18 +33,6 @@ L0TCKfilter::L0TCKfilter( const std::string& name,
 L0TCKfilter::~L0TCKfilter() {} 
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode L0TCKfilter::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode L0TCKfilter::execute() {
@@ -55,12 +43,11 @@ StatusCode L0TCKfilter::execute() {
   //  std::string loc = dataLocation( m_reportLocation );
 
   // get tck from raw
-  if( !exist<LHCb::L0DUReport>( m_reportLocation )){
-    Error("L0DUReport not found at location " + m_reportLocation + " - event rejected").ignore();
+  const LHCb::L0DUReport* report = getIfExists<LHCb::L0DUReport>( m_reportLocation );
+  if( NULL == report ){
     counter("Report not found L0TCKFilter reject") += 1;
-    return StatusCode::SUCCESS;
+    return Error("L0DUReport not found at location " + m_reportLocation + " - event rejected", StatusCode::FAILURE );
   }
-  LHCb::L0DUReport* report   = get<LHCb::L0DUReport>( m_reportLocation );
   unsigned int tck           = report->tck();
   std::stringstream ttck("");
   ttck << format("0x%04X", tck) ;
@@ -85,16 +72,6 @@ StatusCode L0TCKfilter::execute() {
   counter("L0TCKFilter reject") += 1;
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode L0TCKfilter::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

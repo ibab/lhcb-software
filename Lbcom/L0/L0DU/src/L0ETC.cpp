@@ -90,19 +90,19 @@ StatusCode L0ETC::execute() {
   }
   
   // Retrieve informations about event
-  if (exist<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default)){
-    const LHCb::MCHeader *evtHeader = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
+  const LHCb::MCHeader *evtHeader = getIfExists<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
+  if ( NULL != evtHeader ){
     tup->column("event", (int)evtHeader->evtNumber() ).ignore();
     tup->column("run",   (int)evtHeader->runNumber() ).ignore();
   } else {
-    Warning("    not able to retrieve MCHeader");
+    Warning("    not able to retrieve MCHeader").ignore();
     tup->column("event", -1 ).ignore();
     tup->column("run",   -1 ).ignore();
   }
 
   // get L0 result
-  if ( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default)){
-    LHCb::L0DUReport* L0 = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+  const LHCb::L0DUReport* L0 = getIfExists<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+  if ( NULL != L0 ){
     tup->column ( "L0",  L0->decision() ).ignore() ;
     for ( std::vector<std::string>::const_iterator c = m_l0channels.begin();
           c != m_l0channels.end(); ++c){
@@ -111,7 +111,7 @@ StatusCode L0ETC::execute() {
       tup->column ( (*c), L0->channelDecisionByName(*c)  ).ignore() ;
     }
   } else {
-    Warning("    not able to retrieve L0DUReport");
+    Warning("    not able to retrieve L0DUReport").ignore();
     tup->column ( "L0", false ).ignore() ;
     for ( std::vector<std::string>::const_iterator c = m_l0channels.begin();
           c != m_l0channels.end(); ++c){

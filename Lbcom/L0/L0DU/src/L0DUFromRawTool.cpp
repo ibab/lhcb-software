@@ -145,27 +145,23 @@ bool L0DUFromRawTool::decodeBank(int ibank){
 bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
 
   m_banks = NULL;
-  LHCb::RawEvent* rawEvt = NULL ;
-
 
   m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
   m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::OK);
-  std::string loc = "";
+
+  LHCb::RawEvent* rawEvt = NULL ;
   for (std::vector<std::string>::iterator it = m_rawLocations.begin(); it < m_rawLocations.end();++it) {
-    if( exist<LHCb::RawEvent>( *it , m_useRootInTES) ){
-      loc = *it;
-      break;
-    }
+    rawEvt = getIfExists<LHCb::RawEvent>( *it , m_useRootInTES);
+    if( NULL != rawEvt ) break;
   }
   // if not existing complain
-  if( "" == loc){
+  if( NULL == rawEvt ){
     Warning("rawEvent not found in  '" + Gaudi::Utils::toString(m_rawLocations) +"' locations (use RootInTES ? "+Gaudi::Utils::toString(m_useRootInTES)+")",
             StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
   }      
   
-  rawEvt= get<LHCb::RawEvent>( loc , m_useRootInTES);
   m_banks= &rawEvt->banks(   LHCb::RawBank::L0DU );
 
 

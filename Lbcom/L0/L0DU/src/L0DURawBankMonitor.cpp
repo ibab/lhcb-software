@@ -108,19 +108,15 @@ StatusCode L0DURawBankMonitor::execute() {
   bool cOk = false;
   bool pOk = false;
 
-  std::string loc = "";
+  LHCb::RawEvent* rawEvt = NULL;
   for (std::vector<std::string>::iterator it = m_rawLocations.begin(); it < m_rawLocations.end();++it) {
-    if( exist<LHCb::RawEvent>( *it ) ){
-      loc = *it;
-      break;
-    }
+    rawEvt = getIfExists<LHCb::RawEvent>( *it );
+    if( NULL != rawEvt ) break;
   }
 
-  if( "" == loc  ) {
-  Warning("rawEvent not found at locations " + Gaudi::Utils::toString(m_rawLocations),StatusCode::SUCCESS).ignore();
+  if( NULL == rawEvt ) {
+    Warning("rawEvent not found at locations " + Gaudi::Utils::toString(m_rawLocations),StatusCode::SUCCESS).ignore();
   } else {
-    LHCb::RawEvent* rawEvt= get<LHCb::RawEvent>(   loc );
-    if( NULL == rawEvt )return Warning("rawEvent points to NULL",StatusCode::SUCCESS);
     const std::vector<LHCb::RawBank*>* mBanks = &rawEvt->banks(   LHCb::RawBank::L0Muon );
     const std::vector<LHCb::RawBank*>* cBanks = &rawEvt->banks(   LHCb::RawBank::L0Calo );
     const std::vector<LHCb::RawBank*>* pBanks = &rawEvt->banks(   LHCb::RawBank::L0PU   );
@@ -134,13 +130,12 @@ StatusCode L0DURawBankMonitor::execute() {
   // get odin info
   m_odin->getTime();
   unsigned int odBX = 0;
-  if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default) ){
-    LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  if( NULL != odin ){
     odBX = odin->bunchId();
   }else{
     Warning( "Emtpy location for ODIN '"+ LHCb::ODINLocation::Default +"'" ,StatusCode::SUCCESS).ignore();
   }
-
 
   
   bool ok ;
@@ -150,8 +145,7 @@ StatusCode L0DURawBankMonitor::execute() {
     ok = m_fromRaw->report().valid();
   }  
   if(!ok){
-    Error("Readout error : unable to monitor the L0DU rawBank", StatusCode::SUCCESS,StatusCode::SUCCESS).ignore();
-    return StatusCode::SUCCESS;
+    return Error("Readout error : unable to monitor the L0DU rawBank", StatusCode::SUCCESS );
   }
   
 
@@ -435,19 +429,7 @@ StatusCode L0DURawBankMonitor::execute() {
   if(m_first)m_first=false;
   return StatusCode::SUCCESS;}
   
-
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode L0DURawBankMonitor::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return Calo2Dview::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
-
 
 void L0DURawBankMonitor::bookHistos() {
   double caloEt =  m_conv ? m_condDB->caloEtScale() : 1.;

@@ -1,4 +1,3 @@
-// $Id: L0DataFilter.h,v 1.6 2010-05-26 10:46:21 odescham Exp $
 #ifndef L0DATAFILTER_H 
 #define L0DATAFILTER_H 1
 
@@ -21,7 +20,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

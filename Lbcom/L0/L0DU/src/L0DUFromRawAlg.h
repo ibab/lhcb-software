@@ -1,4 +1,3 @@
-// $Id: L0DUFromRawAlg.h,v 1.4 2010-01-20 16:30:58 odescham Exp $
 #ifndef L0DUFROMRAWALG_H 
 #define L0DUFROMRAWALG_H 1
 
@@ -31,7 +30,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

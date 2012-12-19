@@ -188,19 +188,6 @@ StatusCode L0Pattern::execute() {
   return sc ;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode L0Pattern::finalize() {
-  info() << "==> Finalize" << endmsg;
-  return GaudiTupleAlg::finalize() ;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-
-
 void L0Pattern::encode(unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]){
   LHCb::L0ProcessorData* fiber = m_datas->object( base[ L0DUBase::Index::Fiber ]  )  ;
   unsigned int word = fiber->word();  
