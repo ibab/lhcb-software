@@ -132,7 +132,7 @@ private:
   // job option parameters
   std::string        m_inputContainer;
   std::string        m_outputContainer;
-  double             m_threshold;
+  // double             m_threshold;
   unsigned short int m_lowThreshold;
   unsigned short int m_maskingWindow;
   std::string        m_binFile;
@@ -174,7 +174,7 @@ private:
   unsigned int m_totMult;
   TFile*        m_OutputFile;
   std::string   m_OutputFileName;
-  bool  m_enablePlots;
+  //  bool  m_enablePlots;
   TH1D* m_PUvertices;
   TH1D* m_PUvertex1Pos;
   TH1D* m_PUvertex2Pos;

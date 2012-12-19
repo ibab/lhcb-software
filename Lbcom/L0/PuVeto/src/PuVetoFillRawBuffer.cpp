@@ -30,6 +30,7 @@ PuVetoFillRawBuffer::PuVetoFillRawBuffer( const std::string& name,
    , m_inputContainer      ( LHCb::MCVeloFELocation::PuVeto  )
    , m_threshold           ( 7000.     ) //electrons
    , m_velo                ( NULL      )
+   , m_firstPuSensor       ( 0 )
 {
   declareProperty( "InputContainer"     , m_inputContainer  );
   declareProperty( "SignalThreshold"    , m_threshold       );

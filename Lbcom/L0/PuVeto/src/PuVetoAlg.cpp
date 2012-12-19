@@ -60,6 +60,8 @@ PuVetoAlg::PuVetoAlg( const std::string& name,
   // comment for committing
 //   declareProperty("OutputFileName", m_OutputFileName = "PUVetoAlg.root" );
 //   declareProperty("MakePlots", m_enablePlots = false );
+  m_minHistoZ = -150.0;
+  m_maxHistoZ = 150.0;
 }
 
 //=============================================================================
@@ -98,9 +100,6 @@ StatusCode PuVetoAlg::initialize() {
   }
   
   
-  m_minHistoZ = -150.0;
-  m_maxHistoZ = 150.0;
-
   //default bin widths
   double binlens[85] = {1.25,  1.35,  1.35,  1.40,  1.40,
                         1.40,  1.40,  1.45,  1.45,  1.55,
