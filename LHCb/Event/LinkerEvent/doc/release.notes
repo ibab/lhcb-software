@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2012-12-20 - Marco Cattaneo
+ - Fix UNINIT_CTOR coverity defect
+
 !========================= LinkerEvent v3r9 2012-11-26 =========================
 ! 2012-11-20 - Olivier Callot
  - In LinkerWithKey, make it dummy if the specified container name is empty. Needed 

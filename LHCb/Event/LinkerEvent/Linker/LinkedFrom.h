@@ -1,4 +1,3 @@
-// $Id: LinkedFrom.h,v 1.26 2008-12-04 13:41:44 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -65,6 +64,7 @@ public:
     m_links = links;
     m_curReference.setNextIndex( -1 );
     m_curReference.setWeight( 0. );
+    m_wantedKey = -1;
   };  
 
   virtual ~LinkedFrom( ) {}; ///< Destructor
