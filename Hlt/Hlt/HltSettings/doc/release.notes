@@ -5,6 +5,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-12-20 - Jibo He
+ - python/HltSettings/Physics_pA2013.py
+   Added GEC pass through lines  
+ 
 ! 2012-12-19 - Jibo He
  - python/HltSettings/Physics_pA2013.py
    Added Setting for 2013 pA run, MicroBias not included yet

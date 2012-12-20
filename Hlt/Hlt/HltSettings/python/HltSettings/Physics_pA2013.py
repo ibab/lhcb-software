@@ -50,7 +50,11 @@ class Physics_pA2013 :
             #'Hlt1ActivitySPD', 
             #'Hlt1MicroBiasVeloLowMult',
             'Hlt1MBNoBias',
-            'Hlt1Lumi'
+            'Hlt1Lumi',
+            'Hlt1GECPassSPD',
+            'Hlt1GECPassVelo',
+            'Hlt1GECPassIT',
+            'Hlt1GECPassOT'
             ]
 
     def Thresholds(self) :
