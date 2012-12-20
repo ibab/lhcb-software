@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-20 - Anton Poluektov 
+ - Added Stripping20r1, fix test reference
+
 ! 2012-12-20 - Marco Clemencic
  - Improved the message 'Cannot be loaded...' with some information about the exception
    received.

@@ -19,7 +19,8 @@ _known_strippings = [
   "Stripping19",
   "Stripping19b",
   "Stripping19c", 
-  "Stripping20"
+  "Stripping20", 
+  "Stripping20r1"
 ]
 
 #give a dictionary of strippings which use the same line builders
@@ -47,7 +48,8 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping19a": "2012 data processing for data taken from May 2012, with bug fix", 
                  "Stripping19b": "2012 data processing for data taken from June 2012 TS", 
                  "Stripping19c": "2012 data processing for data taken since August 2012", 
-                 "Stripping20" : "2012 and 2011 data reprocessing, promt processing of 2012 data after September TS"
+                 "Stripping20" : "2012 data reprocessing, promt processing of 2012 data after September TS", 
+                 "Stripping20r1" : "2011 data reprocessing with Reco14"
                  }
 
 _strippingKeys = []
