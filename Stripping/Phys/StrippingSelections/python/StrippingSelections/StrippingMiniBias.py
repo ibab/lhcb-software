@@ -11,6 +11,7 @@ Stripping selections or Minimum Bias physics.
 config_params = { "NoBiasLine_RE"       : "(HLT_PASS('Hlt1MBNoBiasDecision'))",
                   "NoBiasLine_Rate" : 1,
                   "NoBiasLine_Limiter" : "Hlt1MBNoBiasODINFilter",
+                  "NoBiasLine_CondDB" : True , # False before 2012
                   "L0AnyRLLine_RE"        : "(HLT_PASS('Hlt1L0AnyRateLimitedDecision'))",
                   "L0AnyRLLine_Rate"  : 1,
                   "L0AnyRLLine_Limiter" : "Hlt1L0AnyRateLimitedPostScaler",
@@ -36,6 +37,7 @@ class MiniBiasConf(LineBuilder) :
         "NoBiasLine_RE",
         "NoBiasLine_Rate" ,
         "NoBiasLine_Limiter",
+        "NoBiasLine_CondDB",
         "L0AnyRLLine_RE",
         "L0AnyRLLine_Rate",
         "L0AnyRLLine_Limiter",
@@ -49,7 +51,7 @@ class MiniBiasConf(LineBuilder) :
                                        config["NoBiasLine_RE"],
                                        config["NoBiasLine_Limiter"],
                                        config["NoBiasLine_Rate"],
-                                       UseConditionDB=True )
+                                       UseConditionDB=config["NoBiasLine_CondDB"] )
       
       self.L0AnyLineRateLimited = self._makeLine("Hlt1L0AnyRateLimited",
                                                  config["L0AnyRLLine_RE"],

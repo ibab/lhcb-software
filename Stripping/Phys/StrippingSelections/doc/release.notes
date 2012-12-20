@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-12-20 - Patrick Koppenburg
+ - Fix bug https://savannah.cern.ch/bugs/index.php?94262 in MB stripping
+
 ! 2012-12-18 - Thomas Blake
  - Updated StrippingBeauty2XGamma to rename default config dictionary. 
 
