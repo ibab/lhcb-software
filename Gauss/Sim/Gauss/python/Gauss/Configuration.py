@@ -86,9 +86,6 @@ class Gauss(LHCbConfigurableUser):
         ,"DetectorGeo"       : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
         ,"DetectorSim"       : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
         ,"DetectorMoni"      : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-        #       ,"DetectorGeo"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
-        #       ,"DetectorSim"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
-        #       ,"DetectorMoni"      : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
         ,"SpilloverPaths"    : []
         ,"PhysicsList"       : {"Em":'NoCuts', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
         ,"DeltaRays"         : True
@@ -144,9 +141,6 @@ class Gauss(LHCbConfigurableUser):
     TrackingSystem       = ['VELO','TT','IT','OT']
     PIDSystem            = ['RICH','CALO','MUON']
     _beamPipeStates = ['beampipeon', 'beampipeoff', 'beampipeindet']
-    # Keep default positive in private var
-    _beamPipeSwitch = 1
-
 
     _incompatibleDetectors = {
         "Velo"       : [ "Velo", "VL", "VP" ],
@@ -155,15 +149,6 @@ class Gauss(LHCbConfigurableUser):
         "Muon"       : [ "Muon", "MuonNoM1" ],
         "MuonTorch"  : [ "Muon", "Torch" ]
         }
-
-    #_incompatibleDetectors = {
-    #    "Velo"     : [ [ "Velo", "PuVeto" ] , "VL", "VP" ],
-    #    "Rich"     : [ [ "Rich1", "Rich2" ], [ "Rich1Pmt", "Rich2Pmt" ] ],
-    #    "TT"       : [ "TT", "UT" ],
-    #    "Tracking" : [ [ "IT", "OT" ], [ "FT" ] ],
-    #    "Calo"     : [ "Spd", "Prs", "Ecal", "Hcal" ],
-    #    "Muon"     : [ "Muon", ["MuonNoM1", "Torch"] ]
-    #    }
 
     _beamPipeElements = {
         #"upstreamregion" : [
@@ -256,29 +241,6 @@ class Gauss(LHCbConfigurableUser):
         return evtType
 
 
-##########################################################################
-##########################################################################
-# Set Geo, Sim, Moni from DataType
-##########################################################################
-##########################################################################
-
-    def detectorModifications ( self ):
-        #should do this with sets.
-        #if (setA union setB) == setA:
-        [det for det in self.getProp("DetectorGeo")["Detectors"] if det in self._defaultDetectors["Detectors"] ]
-        
-        return False
-
-    def setDetectorsFromDataType( self ):
-        
-
-        if self.getProp("DataType") in ["EXAMPLE_UPGRADE_DATATYPE"]:
-            self.__slots__["DetectorGeo"]  = {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-            self.__slots__["DetectorSim"]  = {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-            self.__slots__["DetectorMoni"] = {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-
-
-
 #"""
 ##########################################################################
 ##########################################################################
@@ -356,55 +318,6 @@ class Gauss(LHCbConfigurableUser):
             else:
                 for element in self._beamPipeElements["ut"]:
                     geo.StreamItems.append(element)
-
-
-        # Upstream
-        #geo.StreamItems.append("/dd/Structure/LHCb/UpstreamRegion/PipeUpstream")
-        #geo.StreamItems.append("/dd/Structure/LHCb/UpstreamRegion/MBXWHUp") # not clear what this is
-
-        # Before Magnet
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/PipeJunctionBeforeVelo")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeBeforeVelo")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeSupportBeforeVelo")
-
-        # Velo
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamWakeFieldCone")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamWakeFieldCone")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownstreamPipeSections")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VacTank")
-
-        # Rich 1
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1BeforeSubM")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1SubMaster")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1AfterSubM")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1BeamPipe")
-
-        # TT
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/TT/PipeInTT")
-        
-        # Magnet
-        #geo.StreamItems.append("/dd/Structure/LHCb/MagnetRegion/PipeInMagnet")
-        #geo.StreamItems.append("/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet")
-
-        # After Magnet Region
-        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/PipeAfterT")
-        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/PipeSupportsAfterMagnet")
-
-        # T
-        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/T/PipeInT")
-
-        # Rich 2
-        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2BeamPipe")
-
-        # Downstream Region
-        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/PipeDownstream")
-        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream")
-        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream")
-
-        # After Muon
-        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/AfterMuon/PipeAfterMuon")
-        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/AfterMuon/MBXWSDown")
-
 
 #"""
 #><<         ><<             ><<               ><<<<<     ><<<<<     ><<<<<     ><< ><<   
