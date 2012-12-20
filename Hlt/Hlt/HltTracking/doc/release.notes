@@ -4,11 +4,17 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-12-20 - Jibo He
+ - python/HltTracking/Hlt1TrackUpgradeConf.py
+   . Relaxed (P, PT) cuts of LooseForward to (1000,  300) MeV
+   . Relaxed (P, PT) cuts of TightForward to (1000, 1000) MeV   
+
 !========================= HltTracking v9r25 2012-08-30 =========================
 ! 2012-08-27 - V. Gligorov
  - Add HHHKs, Ks->MuMuHH, and hyperon lines
 
-!========================= HltTracking v9r24 2012-06-27 =========================! 2012-06-27 - E. van Herwijnen
+!========================= HltTracking v9r24 2012-06-27 =========================
+! 2012-06-27 - E. van Herwijnen
  - Configure LooseForward min pt to 500 (from 300)
 
 !========================= HltTracking v9r23 2012-06-21 =========================
