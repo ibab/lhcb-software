@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # =============================================================================
 # @file StrippingBeauty2XGamma.py
 # @author Albert Puig Navarro (albert.puig@cern.ch)

@@ -4,6 +4,13 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-12-20 - Marco Clemencic
+ - Improved the message 'Cannot be loaded...' with some information about the exception
+   received.
+ - Added the encoding declaration to some modules containing non-ASCII chars.
+   See http://www.python.org/peps/pep-0263.html
+   (for some reason the problem is hidden by the zipping)
+
 !========================= StrippingArchive v1r17 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

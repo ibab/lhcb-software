@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ############################################
 # Stripping Lines for                      #
 #     Z->(Tau+ ->n  Prong nu_tau)          #

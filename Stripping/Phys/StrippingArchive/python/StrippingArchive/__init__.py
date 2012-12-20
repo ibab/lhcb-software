@@ -58,8 +58,8 @@ for x in _known_strippings :
     print "Trying to import module", module_name
     try : 
         __import__(module_name)
-    except : 
-	print "  -> Cannot be loaded with this version of DaVinci"
+    except Exception, x: 
+	print "  -> Cannot be loaded with this version of DaVinci (%s)" % str(x)
     else : 
 	_strippingKeys.append(x)
 

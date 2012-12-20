@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## #####################################################################
 # A stripping selection for Downstream J/psi->mu+mu- decays
 # To be used for tracking studies

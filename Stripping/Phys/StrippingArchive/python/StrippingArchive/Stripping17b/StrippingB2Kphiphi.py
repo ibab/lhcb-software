@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 __author__ = ['M.Chrzaszcz']
 __date__ = '27/06/2011'
 __version__ = '$Revision: 1.1 $'
