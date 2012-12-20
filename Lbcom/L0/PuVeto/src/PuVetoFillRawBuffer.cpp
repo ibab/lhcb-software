@@ -29,8 +29,8 @@ PuVetoFillRawBuffer::PuVetoFillRawBuffer( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
    , m_inputContainer      ( LHCb::MCVeloFELocation::PuVeto  )
    , m_threshold           ( 7000.     ) //electrons
-   , m_velo                ( NULL      )
    , m_firstPuSensor       ( 0 )
+   , m_velo                ( NULL      )
 {
   declareProperty( "InputContainer"     , m_inputContainer  );
   declareProperty( "SignalThreshold"    , m_threshold       );
