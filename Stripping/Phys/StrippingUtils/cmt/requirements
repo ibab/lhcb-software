@@ -7,7 +7,7 @@ package           StrippingUtils
 #============================================================================
 version           v1r7
 #============================================================================
-branches          cmt doc python tests
+branches          cmt doc python
 #============================================================================
 use   GaudiPolicy   v*
 use   Python        v*  LCG_Interfaces  -no_auto_imports
@@ -16,6 +16,4 @@ use   PhysSelPython v*  PhysSel         -no_auto_imports
 use   StrippingConf v*  Phys
 #============================================================================
 apply_pattern install_python_modules
-#============================================================================
-apply_pattern QMTest
 #============================================================================

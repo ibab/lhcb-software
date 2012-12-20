@@ -4,6 +4,10 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2012-12-20 - Marco Clemencic
+ - Removed the QMTest pattern (from CMT and CMake configuration) since the
+   package does not provide tests.
+
 !========================= StrippingUtils v1r7 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
