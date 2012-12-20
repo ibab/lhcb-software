@@ -1,4 +1,3 @@
-// $Id: STDumpClusters.h,v 1.1 2010-03-23 09:19:35 mtobin Exp $
 #ifndef STDUMPCLUSTERS_H 
 #define STDUMPCLUSTERS_H 1
 
@@ -54,7 +53,6 @@ namespace ST
     
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
-    virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   protected:
     

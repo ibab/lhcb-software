@@ -235,7 +235,7 @@ void ST::STNoiseMonitor::bookHistograms() {
 StatusCode ST::STNoiseMonitor::execute() { 
   m_evtNumber++;
 
-  if(m_debug) debug() << "execute:\t" << m_evtNumber << endreq;
+  if(m_debug) debug() << "execute:\t" << m_evtNumber << endmsg;
   // Get the time of the first event and convert to a string for the histogram title.
   if(m_evtNumber == 1) {
     if(m_useODINTime) {
@@ -306,7 +306,7 @@ StatusCode ST::STNoiseMonitor::finalize() {
 }
 
 void ST::STNoiseMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle) {
-  if(m_debug) debug() << "updateNoiseHistograms:\t" << m_evtNumber << endreq;
+  if(m_debug) debug() << "updateNoiseHistograms:\t" << m_evtNumber << endmsg;
   // Get the histogram and reset it in case it is already booked. 
   if( m_raw_noiseHistos.find(sourceID) != m_raw_noiseHistos.end() 
       && m_raw_pedestalHistos.find(sourceID) != m_raw_pedestalHistos.end()
@@ -376,7 +376,7 @@ void ST::STNoiseMonitor::updateNoiseHistogram(unsigned int sourceID, bool update
 
 void ST::STNoiseMonitor::updateSummaryHistograms(){
 
-  if(m_debug) debug() << "updateSummaryHistograms:\t" << m_evtNumber << endreq;
+  if(m_debug) debug() << "updateSummaryHistograms:\t" << m_evtNumber << endmsg;
   m_1d_raw_noise->reset();
   m_1d_raw_pedestal->reset();
   m_1d_pedsub_noise->reset();

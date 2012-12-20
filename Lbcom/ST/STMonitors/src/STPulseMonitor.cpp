@@ -78,8 +78,8 @@ StatusCode STPulseMonitor::execute()
   m_evtNumber++;
 
   // Select the correct bunch id
-  if(exist<ODIN> ( ODINLocation::Default ) ) {
-    const ODIN* odin = get<ODIN> ( ODINLocation::Default );
+  const ODIN* odin = getIfExists<ODIN> ( ODINLocation::Default );
+  if( NULL != odin ) {
     if( !m_bunchID.empty() && 
         std::find(m_bunchID.begin(), m_bunchID.end(), 
                   odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
@@ -105,11 +105,12 @@ StatusCode STPulseMonitor::execute()
     
   }
   
+  const LHCb::STClusters* clusters = getIfExists<LHCb::STClusters>(m_clusterLocation);
+
   // Check cluster location exists
-  if(!exist<STClusters>(m_clusterLocation)) return StatusCode::SUCCESS;
+  if( NULL == clusters ) return StatusCode::SUCCESS;
   
   // Loop over the clusters
-  LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
   LHCb::STClusters::const_iterator itClus;
   for(itClus = clusters->begin(); itClus != clusters->end(); ++itClus) {
     
@@ -260,10 +261,4 @@ StatusCode STPulseMonitor::execute()
          -0.5, 100.5, 101, double(clusters->size()) );
 
   return StatusCode::SUCCESS;
-}
-
-
-StatusCode STPulseMonitor::finalize()
-{
-  return ST::HistoAlgBase::finalize();// must be called after all other actions
 }

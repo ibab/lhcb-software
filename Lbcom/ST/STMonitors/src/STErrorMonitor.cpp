@@ -135,11 +135,11 @@ StatusCode STErrorMonitor::execute()
 
   m_1d_evtCounter->fill(1.);
   // Get the error banks
-  if ( !exist<STTELL1BoardErrorBanks>(m_errorLocation) ) {
+  const STTELL1BoardErrorBanks* errors = getIfExists<STTELL1BoardErrorBanks>(m_errorLocation);
+  if ( NULL == errors ) {
     return Error("No STTELL1BoardErrorBanks in TES. Run the STErrorDecoding "
                  "first.", StatusCode::FAILURE);
   }
-  STTELL1BoardErrorBanks* errors = get<STTELL1BoardErrorBanks>(m_errorLocation);
 
   // Number of links with error banks
   unsigned int nErrors = 0;
@@ -201,13 +201,5 @@ StatusCode STErrorMonitor::execute()
   }
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode STErrorMonitor::finalize()
-{
-  return ST::HistoAlgBase::finalize();// must be called after all other actions
 }
 //=============================================================================

@@ -55,11 +55,11 @@ STDQSummaryAlg::~STDQSummaryAlg() { }
 
 StatusCode STDQSummaryAlg::execute(){
 
-  if (!exist<STSummary>(m_summaryLocation) || !exist<STClusters>(m_clusterLocation)) {
+  const STSummary* summary = getIfExists<STSummary>(m_summaryLocation);  
+  const STClusters* clusters = getIfExists<STClusters>(m_clusterLocation); 
+  if ( NULL == summary || NULL == clusters ) {
     return Error("No Data available at given locations.", StatusCode::SUCCESS);
   }
-  const STSummary* summary = get<STSummary>(m_summaryLocation);  
-  const STClusters* clusters = get<STClusters>(m_clusterLocation); 
   
   // odin
   const ODIN* odin = get<ODIN>(ODINLocation::Default);

@@ -69,8 +69,8 @@ StatusCode ST::STDumpClusters::initialize() {
 StatusCode ST::STDumpClusters::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   counter("Number of events") += 1;
-  if(exist<LHCb::STClusters>(m_clusterLocation)){
-    LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
+  const LHCb::STClusters* clusters = getIfExists<LHCb::STClusters>(m_clusterLocation);
+  if( NULL != clusters ){
     
     const unsigned int nClusters = clusters->size();
     if ( msgLevel(MSG::DEBUG) ) debug() << "Number of clusters in " << m_clusterLocation << " is " << nClusters << endmsg;
@@ -99,7 +99,7 @@ StatusCode ST::STDumpClusters::execute() {
     LHCb::STClusters::const_iterator itClus = clusters->begin();
     unsigned int iClus = 0;
     if(nClusters > m_nClusters) debug() << "Number of clusters bigger than buffer size: n=" << nClusters 
-                                        << ",buf=" << m_nClusters << endreq;
+                                        << ",buf=" << m_nClusters << endmsg;
     for(; itClus != clusters->end(); ++itClus, ++iClus) {
       // only fill ntuple for clusters less than tuple array size
       if(iClus < m_nClusters) {
@@ -161,19 +161,9 @@ StatusCode ST::STDumpClusters::execute() {
 
     tuple->write();
 
-  }// end of exist condition
+  }// end of getIfExist condition
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ST::STDumpClusters::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return ST::TupleAlgBase::finalize();  // must be called after all other actions
 }
 
 //==============================================================================

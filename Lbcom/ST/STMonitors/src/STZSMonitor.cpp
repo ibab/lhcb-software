@@ -399,9 +399,8 @@ StatusCode STZSMonitor::execute() {
  
   
   
-  if(exist<STClusters>(m_inputLocation)){
-  
-    STClusters* ClusterContainer = get< STClusters>(m_inputLocation);
+  const STClusters* ClusterContainer = getIfExists< STClusters>(m_inputLocation);
+  if( NULL != ClusterContainer ){
  
     STClusters::const_iterator Begin(ClusterContainer -> begin()), End(ClusterContainer -> end()); 
   
@@ -413,11 +412,6 @@ StatusCode STZSMonitor::execute() {
   
     CLUSTERCOUNT->fill(ClusterContainer->size());
 
- 
-    
-  
-  
-  
   
     for(STClusters::const_iterator it(Begin); it != End; it++){
   
@@ -556,19 +550,5 @@ StatusCode STZSMonitor::execute() {
 
   return StatusCode::SUCCESS;
 } 
-
-
- 
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode STZSMonitor::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize(); 
-  // must be called after all other actions
-}
 
 //=============================================================================

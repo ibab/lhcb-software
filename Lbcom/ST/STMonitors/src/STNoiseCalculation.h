@@ -1,4 +1,3 @@
-// $Id: STNoiseCalculation.h,v 1.1 2009-11-25 13:07:20 mtobin Exp $
 #ifndef STNOISECALCULATION_H 
 #define STNOISECALCULATION_H 1
 
@@ -25,7 +24,6 @@ namespace ST {
     
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
-    virtual StatusCode finalize  ();    ///< Algorithm finalization
     
   protected:
     

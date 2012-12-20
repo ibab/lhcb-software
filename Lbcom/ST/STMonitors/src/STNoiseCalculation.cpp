@@ -63,13 +63,3 @@ StatusCode ST::STNoiseCalculation::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ST::STNoiseCalculation::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

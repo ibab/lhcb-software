@@ -145,8 +145,8 @@ StatusCode ST::STClusterMonitor::execute() {
 
   if(m_debug) debug() << "==> Execute" << endmsg;
 
-  if( exist<LHCb::ODIN> ( LHCb::ODINLocation::Default ) ) {
-    const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  if( NULL != odin ) {
     plot1D(odin->bunchId(),"BCID","BCID",-0.5,2807.5,2808);
   } else return Warning("No ODIN bank found", StatusCode::SUCCESS,1);
 
@@ -159,25 +159,15 @@ StatusCode ST::STClusterMonitor::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ST::STClusterMonitor::finalize() {
-
-  if(m_debug) debug() << "==> Finalize" << endmsg;
-  
-  return ST::HistoAlgBase::finalize(); 
-}
-
-//=============================================================================
 // Look at the clusters histogram
 //=============================================================================
 void ST::STClusterMonitor::monitorClusters() {
 
   // Check location exists
   if(m_debug) debug() << "monitorClusters" << endmsg;
-  if(exist<LHCb::STClusters>(m_clusterLocation)){
+  const LHCb::STClusters* clusters = getIfExists<LHCb::STClusters>(m_clusterLocation);
+  if( NULL != clusters ){
     m_nClustersPerTELL1.assign(m_nTELL1s,0);
-    LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
 
     const unsigned int nClusters = clusters->size();
     if(m_debug) debug() << "Number of clusters in " << m_clusterLocation << " is " << nClusters << endmsg;
@@ -254,7 +244,7 @@ void ST::STClusterMonitor::fillMPVMap(const DeSTSector* sector, double charge) {
                 << ", mean3(binned)=" << mean3
                 << ", full=" << std::accumulate(sectorCharges->begin(), sectorCharges->end(), 0.)/fullRange
                 << ", histo=" << (hSec->GetBinCenter(hSec->GetMaximumBin()))
-                << endreq;
+                << endmsg;
       }
       unsigned int bin = m_sectorBins1D[sectorID];
       m_prof_sectorTruncMean1->fill(bin, mean1);

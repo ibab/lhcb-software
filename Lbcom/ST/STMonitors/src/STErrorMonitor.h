@@ -1,4 +1,3 @@
-// $Id: STErrorMonitor.h,v 1.7 2010-02-12 14:55:33 mtobin Exp $
 #ifndef STERRORMONITOR_H 
 #define STERRORMONITOR_H 1
 
@@ -28,7 +27,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

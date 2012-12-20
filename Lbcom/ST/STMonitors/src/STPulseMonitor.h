@@ -1,4 +1,3 @@
-// $Id: STPulseMonitor.h,v 1.4 2009-12-05 23:16:55 jvantilb Exp $
 #ifndef STPulseMonitor_H
 #define STPulseMonitor_H 1
 
@@ -64,7 +63,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

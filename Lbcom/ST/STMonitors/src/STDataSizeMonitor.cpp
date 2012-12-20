@@ -34,6 +34,8 @@ using namespace LHCb;
 
 ST::STDataSizeMonitor::STDataSizeMonitor(const std::string& name, ISvcLocator* pSvcLocator)
   : ST::HistoAlgBase(name, pSvcLocator)
+  , m_bankType(RawBank::Velo)
+  , m_nTELL1s(0)
   , m_prof_dataSizeVsTELL1(0)
  
 {

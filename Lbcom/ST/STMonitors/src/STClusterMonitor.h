@@ -1,4 +1,3 @@
-// $Id: STClusterMonitor.h,v 1.14 2010/04/12 13:13:24 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -54,7 +53,6 @@ namespace ST
 
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
-    virtual StatusCode finalize  ();    ///< Algorithm finalization
     
   protected:
 

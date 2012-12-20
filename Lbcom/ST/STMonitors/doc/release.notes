@@ -4,6 +4,11 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2012-12-20 - Marco Cattaneo
+ - Fix Coverity defects
+ - Use getIfExists
+ - Remove unnecessary finalize methods
+
 !========================= STMonitors v4r1 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic & Ben Couturier
  - Fixed build with C++11.

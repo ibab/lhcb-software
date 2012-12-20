@@ -57,13 +57,14 @@ StatusCode STSummaryMonitor::initialize()
 
 StatusCode STSummaryMonitor::execute()
 { 
+  // Get the data
+  const STSummary* summary = getIfExists<STSummary>(m_summaryLocation);
+
   // Skip if there is no Tell1 data
-  if( !exist<STSummary>(m_summaryLocation) ) {
+  if( NULL == summary ) {
     return Warning("No data at given location", StatusCode::SUCCESS, 0);
   }
 
-  // Get the data
-  const STSummary* summary = get<STSummary>(m_summaryLocation);
   // debug() << "Found " << data->size() << " boards." << endmsg;
   
   // Filling the histograms
@@ -89,9 +90,4 @@ StatusCode STSummaryMonitor::execute()
   m_1d_dataSize->fill( summary->rawBufferSize()/1024 );
   
   return StatusCode::SUCCESS;
-}
-
-StatusCode STSummaryMonitor::finalize()
-{
-  return ST::HistoAlgBase::finalize();// must be called after all other actions
 }

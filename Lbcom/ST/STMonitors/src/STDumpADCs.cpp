@@ -67,10 +67,10 @@ StatusCode ST::STDumpADCs::execute() {
   // Skip if there is no Tell1 data
   counter("Number of events") += 1; 
   
-  if (exist<LHCb::STTELL1Datas>(m_dataLocation)) {
+  const LHCb::STTELL1Datas* data = getIfExists<LHCb::STTELL1Datas>(m_dataLocation);
+  if ( NULL != data ) {
     Tuple tuple = nTuple( "ADCs", "ADC values from TELL1s" );
     // Get the data
-    const LHCb::STTELL1Datas* data = get<LHCb::STTELL1Datas>(m_dataLocation);
     // loop over the data
     LHCb::STTELL1Datas::const_iterator iterBoard = data->begin(); 
     for (; iterBoard != data->end() ; ++iterBoard){
@@ -110,17 +110,7 @@ StatusCode ST::STDumpADCs::execute() {
     tuple->farray("channels", m_channelNumbers, "channel", 3072 );
     tuple->write();
 
-  } // end of exist condition
+  } // end of getIfExist condition
   //debug() << "Found " << data->size() << " boards." << endmsg;
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ST::STDumpADCs::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return ST::TupleAlgBase::finalize();  // must be called after all other actions
 }

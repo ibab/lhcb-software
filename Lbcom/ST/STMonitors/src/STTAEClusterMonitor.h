@@ -1,4 +1,3 @@
-// $Id: STTAEClusterMonitor.h,v 1.4 2009-12-06 13:28:52 mtobin Exp $
 #ifndef STTAECLUSTERMONITOR_H 
 #define STTAECLUSTERMONITOR_H 1
 
@@ -38,7 +37,6 @@ namespace ST
 
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
-    virtual StatusCode finalize  ();    ///< Algorithm finalization
     
   protected:
 
@@ -61,7 +59,6 @@ namespace ST
     bool m_plotBySvcBox; ///< Plot by Service Box
     bool m_plotByDetRegion; ///< Plot by unique detector region
     bool m_useMean;///< Use mean instead of highest bin as MPV
-    unsigned int m_updateMPV;///< Sets how often the histogram of the MPV is updated
     bool m_debug; ///< true if message service level is debug
     bool m_verbose; ///< true if message service level is verbose
 

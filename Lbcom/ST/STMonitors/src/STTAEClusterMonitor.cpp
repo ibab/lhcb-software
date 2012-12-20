@@ -43,6 +43,10 @@ namespace ST {
 ST::STTAEClusterMonitor::STTAEClusterMonitor( const std::string& name,
                                               ISvcLocator* pSvcLocator)
   : ST::HistoAlgBase ( name , pSvcLocator )
+  , m_nSamples(0)
+  , m_maxSample(0)
+  , m_debug(false)
+  , m_verbose(false)
   , m_prof_clustersVsSample(0)
   , m_2d_ADCsVsSample(0)
 {
@@ -190,8 +194,8 @@ StatusCode ST::STTAEClusterMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;
   // Select the correct bunch id
-  if(exist<LHCb::ODIN> ( LHCb::ODINLocation::Default )) {
-    const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  if( NULL != odin ) {
     if( !m_bunchID.empty() && 
         std::find(m_bunchID.begin(), m_bunchID.end(), 
                   odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
@@ -207,16 +211,6 @@ StatusCode ST::STTAEClusterMonitor::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ST::STTAEClusterMonitor::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return ST::HistoAlgBase::finalize(); 
-}
-
-//=============================================================================
 // Look at the clusters histogram
 //=============================================================================
 void ST::STTAEClusterMonitor::monitorClusters() {
@@ -224,9 +218,9 @@ void ST::STTAEClusterMonitor::monitorClusters() {
   // Loop over input locations
   unsigned int iSample=0;
   for(itCL = m_clusterLocations.begin(); itCL != m_clusterLocations.end(); ++itCL, ++iSample) {
+    const LHCb::STClusters* clusters = getIfExists<LHCb::STClusters>(*itCL);
     // Check location exists
-    if(exist<LHCb::STClusters>(*itCL)){
-      LHCb::STClusters* clusters = get<LHCb::STClusters>(*itCL);
+    if( NULL != clusters ){
       LHCb::STClusters::const_iterator itClus;
       // Loop over clusters
       if(m_debug) {
@@ -261,7 +255,7 @@ void ST::STTAEClusterMonitor::monitorClusters() {
           }
         } // End of cluster condition
       }// End of cluster iterator
-    } else Warning("No clusters found at "+(*itCL), StatusCode::SUCCESS, 0).ignore(); // End of cluster exists
+    } else Warning("No clusters found at "+(*itCL), StatusCode::SUCCESS, 0).ignore(); // End of cluster getIfExist
   }// End loop over cluster locations
 }
 

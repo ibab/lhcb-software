@@ -1,4 +1,3 @@
-// $Id: STSummaryMonitor.h,v 1.3 2009-09-03 10:23:14 mtobin Exp $
 #ifndef STSummaryMonitor_H
 #define STSummaryMonitor_H 1
 
@@ -39,7 +38,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

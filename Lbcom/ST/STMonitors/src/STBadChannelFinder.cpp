@@ -266,13 +266,20 @@ void ST::STBadChannelFinder::calcSlope(std::vector<double>::const_iterator noise
     meanY += (*itNoise);
     meanXY += channel*(*itNoise);
   }
-  meanX /= n;
-  meanX2 /= n;
-  meanY /= n;
-  meanXY /=n;
-  
-  m_slope = (meanXY - meanX*meanY) / (meanX2 - gsl_pow_2(meanX));
-  m_intercept = meanY - m_slope*meanX;
+  if( n > 0 ) {
+    meanX /= n;
+    meanX2 /= n;
+    meanY /= n;
+    meanXY /=n;
+    
+    m_slope = (meanXY - meanX*meanY) / (meanX2 - gsl_pow_2(meanX));
+    m_intercept = meanY - m_slope*meanX;
+  }
+  else {
+    m_slope = 0.;
+    m_intercept = 0.;
+    Warning("calcSlope failed due to zero noisy channels").ignore();
+  }
   
 } 
 
