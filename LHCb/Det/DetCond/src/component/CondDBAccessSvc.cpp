@@ -65,6 +65,7 @@ namespace {
 CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   base_class(name,svcloc),
   m_coolConfSvc(0),
+  m_cache(0),
   m_rndmSvc(0),
   m_latestHeartBeat(0),
   m_timeOutCheckerThread(0)
@@ -183,11 +184,7 @@ StatusCode CondDBAccessSvc::finalize(){
   }
 
   // stop TimeOut thread
-  if (NULL != m_timeOutCheckerThread.get()) {
-    m_timeOutCheckerThread->interrupt(); // tell the thread to stop
-    m_timeOutCheckerThread->join(); // wait for it
-    m_timeOutCheckerThread.reset(); // delete it
-  }
+  i_stopTimeoutChecker();
 
   // release the database
   m_db.reset();
@@ -215,11 +212,7 @@ StatusCode CondDBAccessSvc::i_initializeConnection(){
   if (!sc.isSuccess()) return sc;
 
   // start TimeOut thread
-  if (!m_connectionTimeOut.is_pos_infinity()) {
-    touchLastAccess();
-    TimeOutChecker tc(this);
-    m_timeOutCheckerThread = std::auto_ptr<boost::thread>(new boost::thread(tc));
-  }
+  i_startTimeoutChecker();
 
   return i_validateDefaultTag();
 }
@@ -1317,12 +1310,14 @@ void CondDBAccessSvc::disconnect() {
   } else if ( UNLIKELY( msgLevel() <= MSG::DEBUG ) ) {
     debug() << "Database already disconnected" << endmsg;
   }
+  i_stopTimeoutChecker();
 }
+
 //=========================================================================
 // Add database name and TAG to the passed vector.
 //=========================================================================
 void CondDBAccessSvc::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags ) const {
-  /// @todo This shold be something like
+  /// @todo This should be something like
   /// <quote>
   /// tags.push_back(LHCb::CondDBNameTagPair(database()->dbName(),tag()));
   /// </quote>

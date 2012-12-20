@@ -373,6 +373,24 @@ private:
     return m_lastAccess;
   }
 
+  /// Start the timeout checker thread, if requested.
+  inline void i_startTimeoutChecker() {
+    if ( UNLIKELY( (NULL == m_timeOutCheckerThread.get())
+                   && (!m_connectionTimeOut.is_pos_infinity()) ) ) {
+      TimeOutChecker tc(this);
+      m_timeOutCheckerThread = std::auto_ptr<boost::thread>(new boost::thread(tc));
+    }
+  }
+
+  /// Stop the timeout checker thread if running.
+  inline void i_stopTimeoutChecker() {
+    if ( LIKELY( NULL != m_timeOutCheckerThread.get() ) ) {
+      m_timeOutCheckerThread->interrupt(); // tell the thread to stop
+      m_timeOutCheckerThread->join(); // wait for it
+      m_timeOutCheckerThread.reset(); // delete it
+    }
+  }
+
   /// Class executed in a separate thread to disconnect from the database if
   /// a time-out is reached.
   class TimeOutChecker
@@ -472,6 +490,7 @@ private:
       if (!m_owner->m_db->isOpen()){
         log << MSG::INFO << "Connecting to database" << endmsg;
         m_owner->m_db->openDatabase(); // ensure that the db is open
+        m_owner->i_startTimeoutChecker(); // ensure that the timeout checker is running
       }
     }
 

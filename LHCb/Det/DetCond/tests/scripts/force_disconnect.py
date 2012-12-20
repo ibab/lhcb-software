@@ -8,7 +8,10 @@ DDDBConf()
 #DDDB = CondDBAccessSvc("DDDB")
 #DDDB.ConnectionTimeOut = 5
 
-MessageSvc(OutputLevel=DEBUG)
+partitions = ['DDDB', 'ONLINE_2008', 'LHCBCOND', 'DQFLAGS']
+msg = MessageSvc(OutputLevel=WARNING)
+msg.setDebug.extend(partitions)
+msg.setVerbose.extend([p + '.TimeOutChecker' for p in partitions])
 
 import GaudiPython
 app = GaudiPython.AppMgr()
@@ -20,4 +23,6 @@ app.detSvc()["/dd/Conditions/Online/LHCb"] # access the DB
 print "TEST ===> start"
 reader = app.service('CondDBCnvSvc', GaudiPython.gbl.ICondDBReader)
 reader.disconnect()
+print "TEST ===> reconnect"
+app.detSvc()["/dd/Conditions/Online/LHCb/Tick"] # access the DB
 print "TEST ===> end"
