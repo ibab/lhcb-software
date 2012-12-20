@@ -36,6 +36,7 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ) 
     , m_forcedBankVersion(0) // there is no version 0, so this means bank version is not enforced
+    , m_velo(NULL)
     , m_ignoreErrors(false) 
 {
   declareProperty("DecodeToVeloLiteClusters",m_decodeToVeloLiteClusters=true);
@@ -52,7 +53,8 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("AssumeChipChannelsInRawBuffer",m_assumeChipChannelsInRawBuffer=false);
   declareProperty("ForceBankVersion",m_forcedBankVersion=0);
   declareProperty("ErrorCount",m_errorCount=0);
-  declareProperty("IgnoreErrors",m_ignoreErrors=false,"Decode clusters even if errors are present. Use with care, can cause crashes on corrupted banks.");
+  declareProperty("IgnoreErrors",m_ignoreErrors=false,
+                  "Decode clusters even if errors are present. Use with care, can cause crashes on corrupted banks.");
 
   declareProperty("MaxVeloClusters", m_maxVeloClusters = 10000);
   declareProperty("HideWarnings", m_hideWarnings = true);
@@ -132,8 +134,8 @@ StatusCode DecodeVeloRawBuffer::execute() {
   // Retrieve the RawEvent:
   LHCb::RawEvent* rawEvent = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      rawEvent = get<LHCb::RawEvent>(*p);
+    rawEvent = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != rawEvent ){
       break;
     }
   }
@@ -162,16 +164,6 @@ StatusCode DecodeVeloRawBuffer::execute() {
   }
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Whatever needs to be done at the end
-//=============================================================================
-StatusCode DecodeVeloRawBuffer::finalize() {
-
-  if ( msgLevel( MSG::DEBUG ) ) debug () << "==> Finalise" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

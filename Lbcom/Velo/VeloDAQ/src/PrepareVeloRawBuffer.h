@@ -1,4 +1,3 @@
-// $Id: PrepareVeloRawBuffer.h,v 1.15 2008-12-09 16:26:01 cattanem Exp $
 #ifndef PREPAREVELORAWBUFFER_H 
 #define PREPAREVELORAWBUFFER_H 1
 
@@ -37,7 +36,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize();    ///< Algorithm finalisation
 
 private:
   

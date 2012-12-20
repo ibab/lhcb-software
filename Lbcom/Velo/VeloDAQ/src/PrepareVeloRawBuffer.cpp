@@ -1,5 +1,3 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.26 2009-11-16 07:05:16 cattanem Exp $
-
 #include "GaudiKernel/AlgFactory.h"
 
 #include "Event/RawEvent.h"
@@ -38,7 +36,8 @@ PrepareVeloRawBuffer::PrepareVeloRawBuffer( const std::string& name,
   GaudiAlgorithm (name , pSvcLocator),
   m_clusterLoc(LHCb::InternalVeloClusterLocation::Default),
   m_rawEventLoc(LHCb::RawEventLocation::Default),
-  m_bankVersion(VeloDAQ::v3)
+  m_bankVersion(VeloDAQ::v3),
+  m_velo(NULL)
 {
   declareProperty("InternalVeloClusterLocation",m_clusterLoc=LHCb::InternalVeloClusterLocation::Default);
   declareProperty("RawEventLocation",m_rawEventLoc=LHCb::RawEventLocation::Default);
@@ -98,11 +97,9 @@ StatusCode PrepareVeloRawBuffer::execute() {
 
   // Get the input container
   // Get the InternalVeloClusters from their default location 
-  const LHCb::InternalVeloClusters* clusters = 0;
-  if(!exist<LHCb::InternalVeloClusters>(m_clusterLoc)){
+  const LHCb::InternalVeloClusters* clusters = getIfExists<LHCb::InternalVeloClusters>(m_clusterLoc);
+  if( NULL == clusters ){
     return Error( " ==> There are no InternalVeloClusters in TES! " );
-  } else {
-    clusters=get<LHCb::InternalVeloClusters>(m_clusterLoc);
   }
 
   m_sortedClusters.clear();
@@ -117,15 +114,12 @@ StatusCode PrepareVeloRawBuffer::execute() {
   if (m_dumpInputClusters) dumpInputClusters();
 
 
-  // define the pointer  
-  LHCb::RawEvent* rawEvent;
   // see whether the raw event exits
-  if(exist<LHCb::RawEvent>(m_rawEventLoc)) {
-    rawEvent = get<LHCb::RawEvent>(m_rawEventLoc);
-  } else {
+  LHCb::RawEvent* rawEvent = getIfExists<LHCb::RawEvent>(m_rawEventLoc);
+  if( NULL == rawEvent ) {
     // raw rawEvent doesn't exist. We need to create it 
     rawEvent = new LHCb::RawEvent();
-    eventSvc()->registerObject(m_rawEventLoc, rawEvent);
+    put(rawEvent, m_rawEventLoc);
   } 
 
 
@@ -178,15 +172,6 @@ StatusCode PrepareVeloRawBuffer::execute() {
 }
 
 //=============================================================================
-// Whatever needs to be done at the end
-//=============================================================================
-StatusCode PrepareVeloRawBuffer::finalize() {
-
-  debug() << "==> Finalise" << endmsg;
-
-  return GaudiAlgorithm::finalize(); // must be executed last
-}
-
 
 void PrepareVeloRawBuffer::storeBank(
     int sensor,

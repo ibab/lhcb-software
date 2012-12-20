@@ -1,4 +1,3 @@
-// $Id: DecodeVeloFullRawBuffer.h,v 1.4 2009-09-09 10:32:28 krinnert Exp $
 #ifndef DECODEVELOFULLRAWBUFFER_H 
 #define DECODEVELOFULLRAWBUFFER_H 1
 
@@ -32,7 +31,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   StatusCode getData();
   StatusCode decodeData();

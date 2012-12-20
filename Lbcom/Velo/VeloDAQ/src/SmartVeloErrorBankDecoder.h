@@ -1,4 +1,3 @@
-// $Id: SmartVeloErrorBankDecoder.h,v 1.3 2009-03-12 14:38:50 szumlat Exp $
 #ifndef SMARTVELOERRORBANKDECODER_H 
 #define SMARTVELOERRORBANKDECODER_H 1
 
@@ -54,7 +53,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

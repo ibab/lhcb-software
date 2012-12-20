@@ -1,4 +1,3 @@
-// $Id:  $
 #ifndef VELOCLUSTERSTORAW_H 
 #define VELOCLUSTERSTORAW_H 1
 
@@ -31,7 +30,6 @@ public:
 
   virtual StatusCode initialize();  ///< Algorithm initialization
   virtual StatusCode execute   ();  ///< Algorithm execution
-  virtual StatusCode finalize();    ///< Algorithm finalisation
 
 private:
   
@@ -60,7 +58,6 @@ private:
   std::vector<SiDAQ::buffer_word> m_clusterPosBuffer;
 
   LHCb::RawEvent* m_rawEventOut;
-  LHCb::RawEvent* m_rawEventRef;
 
   // size of raw bank in bytes, inclding the 4 byte header but
   // *without* the padding bytes at the end

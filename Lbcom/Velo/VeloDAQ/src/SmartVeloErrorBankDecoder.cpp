@@ -108,15 +108,6 @@ StatusCode SmartVeloErrorBankDecoder::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode SmartVeloErrorBankDecoder::finalize() {
-
-  if(m_isDebug) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-//=============================================================================
 StatusCode SmartVeloErrorBankDecoder::getRawEvent()
 {
   if(m_isDebug) debug()<< " ==> getRawEvent() " <<endmsg;
@@ -126,8 +117,8 @@ StatusCode SmartVeloErrorBankDecoder::getRawEvent()
   // Retrieve the RawEvent:
   m_rawEvent = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      m_rawEvent = get<LHCb::RawEvent>(*p);
+    m_rawEvent = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != m_rawEvent ){
       if(m_isDebug) 
         debug()<< " ==> The RawEvent has been read-in from location: "
                << (*p) <<endmsg;  
@@ -136,7 +127,7 @@ StatusCode SmartVeloErrorBankDecoder::getRawEvent()
   }
 
   if( m_rawEvent == NULL ) {
-    error()<< " ==> There is no RawEvent at: " 
+    error() << " ==> There is no RawEvent at: " 
            << m_rawEventLocations <<endmsg;
     return ( StatusCode::FAILURE );
   }

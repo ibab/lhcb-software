@@ -22,6 +22,7 @@ DECLARE_ALGORITHM_FACTORY( VeloClusterFilter )
 VeloClusterFilter::VeloClusterFilter( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_velo(NULL)
 {
   declareProperty("InputClusterLocation", m_inputClusterLocation =  LHCb::VeloClusterLocation::Default);
   declareProperty("InputLiteClusterLocation", m_inputLiteClusterLocation =  LHCb::VeloLiteClusterLocation::Default);
@@ -70,15 +71,15 @@ StatusCode VeloClusterFilter::execute()
   int countPhiClusters=0;
   int totalClusters=0;
 
-  if(!exist<LHCb::VeloClusters>(m_inputClusterLocation) &&
-     !exist<LHCb::VeloLiteCluster::FastContainer>(m_inputLiteClusterLocation)){
-    warning() << "No velo clusters or liteClusters on the TES !!!" << endmsg;
-    return StatusCode::FAILURE;
+  const LHCb::VeloClusters* clusters = getIfExists<LHCb::VeloClusters>(m_inputClusterLocation);
+  const LHCb::VeloLiteCluster::FastContainer* liteClusters =
+    getIfExists<LHCb::VeloLiteCluster::FastContainer>(m_inputLiteClusterLocation);
+  if( (NULL==clusters) && (NULL==liteClusters) ) {
+    return Warning( "No velo clusters or liteClusters on the TES !!!" );
   }
 
-  if(exist<LHCb::VeloClusters>(m_inputClusterLocation)){
+  if( NULL != clusters ){
 
-    LHCb::VeloClusters* clusters = get<LHCb::VeloClusters>(m_inputClusterLocation);
     LHCb::VeloClusters* filteredClusters = new LHCb::VeloClusters();
     filteredClusters->reserve(clusters->size());
     
@@ -93,9 +94,8 @@ StatusCode VeloClusterFilter::execute()
     put(filteredClusters,m_outputClusterLocation);
   }
   
-  if(exist<LHCb::VeloLiteCluster::FastContainer>(m_inputLiteClusterLocation)){
+  if( NULL != liteClusters ){
     
-    LHCb::VeloLiteCluster::FastContainer* liteClusters = get<LHCb::VeloLiteCluster::FastContainer>(m_inputLiteClusterLocation);
     LHCb::VeloLiteCluster::FastContainer* filteredLiteClusters = new LHCb::VeloLiteCluster::FastContainer();
     filteredLiteClusters->reserve(liteClusters->size());
     
@@ -123,13 +123,6 @@ StatusCode VeloClusterFilter::execute()
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode VeloClusterFilter::finalize()
-{
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
 void VeloClusterFilter::incrementCounters(LHCb::VeloChannelID id,int& countClusters,int& countRClusters,int& countPhiClusters)
 {
   unsigned int sensorNumber = id.sensor();

@@ -40,6 +40,7 @@ DecodeVeloFullRawBuffer::DecodeVeloFullRawBuffer( const std::string& name,
   m_veloPartialADCs ( 0 ),
   m_veloPeds ( 0 ),
   m_decodedADC ( 0 ),
+  m_decodedPartialADC ( 0 ),
   m_decodedPed ( 0 ),
   m_decodedHeader ( 0 ),
   m_evtInfo ( 0 ),
@@ -133,26 +134,18 @@ StatusCode DecodeVeloFullRawBuffer::execute() {
   //
   return StatusCode::SUCCESS;
 }
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode DecodeVeloFullRawBuffer::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
-  //
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
 //=============================================================================
 StatusCode DecodeVeloFullRawBuffer::getData()
 {
   if (m_isDebug) debug()<< " ==> getData() " <<endmsg;
   //
-  if(!exist<VeloFullBanks>(adcContName())){
+  m_veloADCs = getIfExists<VeloFullBanks>(adcContName());
+  if( NULL == m_veloADCs ){
     if (m_isDebug) debug() << " ==> There is no data banks at: "
       << adcContName() <<endmsg;
   }else{  
     // get the data banks from default TES location
-    m_veloADCs=get<VeloFullBanks>(adcContName());
     if (m_isDebug) debug() << " ==> The data banks have been read-in from location: "
         << adcContName()
         << ", size of data container (number of read-out TELL1s): "
@@ -165,17 +158,17 @@ StatusCode DecodeVeloFullRawBuffer::getData()
     setADCDataFlag();
   }
 
-  if(!exist<VeloFullBanks>(m_veloPartialADCLocation)){
+  m_veloPartialADCs = getIfExists<VeloFullBanks>(m_veloPartialADCLocation);
+  if( NULL ==  m_veloPartialADCs ){
 
     if (m_isDebug) debug() << " ==> There is no data banks at: "
-      << "Raw/Velo/PreparedADCs" <<endmsg;
+      << m_veloPartialADCLocation <<endmsg;
 
   }else{  
 
     // get the partial data banks from default TES location
-    m_veloPartialADCs=get<VeloFullBanks>(m_veloPartialADCLocation);
     if (m_isDebug) debug() << " ==> The data banks have been read-in from location: "
-        << "Raw/Velo/PreparedPartialADCs"
+        << m_veloPartialADCLocation
         << ", size of data container (number of read-out TELL1s): "
         << m_veloPartialADCs->size() <<endmsg;  
 
@@ -185,12 +178,12 @@ StatusCode DecodeVeloFullRawBuffer::getData()
   }
 
   //
-  if(!exist<VeloFullBanks>(pedContName())){
+  m_veloPeds = getIfExists<VeloFullBanks>(pedContName());
+  if( NULL == m_veloPeds ){
     if (m_isDebug) debug()<< " ==> There is no Pedestals at: "
       << pedContName() <<endmsg;
   }else{  
     // get the pedestals banks from Pedestals TES location
-    m_veloPeds=get<VeloFullBanks>(pedContName());
     if (m_isDebug) debug()<< " ==> The ped. banks have been read-in from location: "
       << pedContName()
       << ", size of pedestals container (number of read-out TELL1s): "

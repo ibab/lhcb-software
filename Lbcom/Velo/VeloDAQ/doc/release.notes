@@ -3,6 +3,11 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2012-12-20 - Marco Cattaneo
+ - Fix Coverity defects
+ - Use getIfExists
+ - Remove unnecessary finalize() methods
+
 !========================= VeloDAQ v6r8 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.

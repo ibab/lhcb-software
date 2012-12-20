@@ -109,28 +109,20 @@ StatusCode PrepareVeloFullRawBuffer::execute() {
 
   return ( StatusCode::SUCCESS );
 }
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PrepareVeloFullRawBuffer::finalize() {
 
-  if(m_isDebug) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
 //=============================================================================
 StatusCode PrepareVeloFullRawBuffer::getRawEvent()
 {
-  if(m_isDebug) debug()<< " ==> getRawEvent() " <<endmsg;
-  if(m_isDebug) debug()<< "--------------------" <<endmsg;
+  if(m_isDebug) {
+    debug()<< " ==> getRawEvent() " <<endmsg;
+    debug()<< "--------------------" <<endmsg;
+  }
   //
-  if(!exist<LHCb::RawEvent>(m_rawEventLoc)){
-    error()<< " ==> There is no RawEvent at: "
-           <<  m_rawEventLoc  <<endmsg;
-    return ( StatusCode::FAILURE );
+  // get the RawEvent from default TES location
+  m_rawEvent = getIfExists<LHCb::RawEvent>(m_rawEventLoc);
+  if( NULL == m_rawEvent ){
+    return Error( " ==> There is no RawEvent at: " + m_rawEventLoc );
   }else{  
-    // get the RawEvent from default TES location
-    m_rawEvent=get<LHCb::RawEvent>(m_rawEventLoc);
     if(m_isDebug) debug()<< " ==> The RawEvent has been read-in from location: "
            << m_rawEventLoc  <<endmsg;  
   }

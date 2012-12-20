@@ -36,7 +36,9 @@ VeloClustersToRaw::VeloClustersToRaw( const std::string& name,
   m_clusterLoc(LHCb::VeloClusterLocation::Default),
   m_rawEventLoc(LHCb::RawEventLocation::Default),
   m_bankVersion(VeloDAQ::v3),
-  m_bankSizeInBytes(0)
+  m_rawEventOut(NULL),
+  m_bankSizeInBytes(0),
+  m_velo(NULL)
 {
   declareProperty("VeloClusterLocation",m_clusterLoc="Raw/Velo/ClustersSelected");
   declareProperty("RawEventLocation",m_rawEventLoc="DAQ/RawEventSelected");
@@ -83,11 +85,9 @@ StatusCode VeloClustersToRaw::execute() {
 
   // Get the input container
   // Get the VeloClusters from their default location 
-  const LHCb::VeloClusters* clusters = 0;
-  if(!exist<LHCb::VeloClusters>(m_clusterLoc)){
+  const LHCb::VeloClusters* clusters = getIfExists<LHCb::VeloClusters>(m_clusterLoc);
+  if( NULL == clusters ){
     return Error( " ==> There are no VeloClusters in TES! " );
-  } else {
-    clusters=get<LHCb::VeloClusters>(m_clusterLoc);
   }
 
   m_sortedClusters.clear();
@@ -98,11 +98,10 @@ StatusCode VeloClustersToRaw::execute() {
   std::sort( m_sortedClusters.begin(), m_sortedClusters.end(), 
       VeloDAQ::veloClusterPtrLessThan());
   
-  if(exist<LHCb::RawEvent>(m_rawEventLoc)) {
-    m_rawEventOut = get<LHCb::RawEvent>(m_rawEventLoc);
-  } else {
+  m_rawEventOut = getIfExists<LHCb::RawEvent>(m_rawEventLoc);
+  if( NULL == m_rawEventOut ) {
     m_rawEventOut = new LHCb::RawEvent();
-    eventSvc()->registerObject(m_rawEventLoc, m_rawEventOut);
+    put(m_rawEventOut, m_rawEventLoc);
   } 
 
   // loop over all clusters and write one bank per sensor
@@ -133,13 +132,6 @@ StatusCode VeloClustersToRaw::execute() {
 }
 
 //=============================================================================
-// Whatever needs to be done at the end
-//=============================================================================
-StatusCode VeloClustersToRaw::finalize() {
-  return GaudiAlgorithm::finalize(); // must be executed last
-}
-
-
 StatusCode VeloClustersToRaw::storeBank( const unsigned int sensor,
     std::vector<const LHCb::VeloCluster*>::const_iterator& clusterIter) {
 
@@ -295,7 +287,8 @@ bool VeloClustersToRaw::selfTest()
     int byteCount = 0;
     std::string errMsg;
 
-    VeloDAQ::decodeRawBankToClustersV3(static_cast<SiDAQ::buffer_word*>(outBank->data()), sensor, false, clusters, byteCount, errMsg, false);
+    VeloDAQ::decodeRawBankToClustersV3(static_cast<SiDAQ::buffer_word*>(outBank->data()), 
+                                       sensor, false, clusters, byteCount, errMsg, false);
   }
   
   std::vector<const LHCb::VeloCluster*> decodedClusters(clusters->size());

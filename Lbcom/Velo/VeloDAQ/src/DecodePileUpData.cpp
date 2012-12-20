@@ -55,7 +55,7 @@ StatusCode DecodePileUpData::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  if ( msgLevel(MSG::INFO) ) debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   // Initialise the RawEvent locations
   bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
@@ -86,7 +86,7 @@ StatusCode DecodePileUpData::initialize() {
 //=============================================================================
 StatusCode DecodePileUpData::execute() {
 
-  if ( msgLevel(MSG::INFO) ) debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   StatusCode sc = getRawEvent();
 
@@ -118,25 +118,15 @@ StatusCode DecodePileUpData::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode DecodePileUpData::finalize() {
-
-  if ( msgLevel(MSG::INFO) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
 StatusCode DecodePileUpData::getRawEvent() {
 
-  if ( msgLevel(MSG::INFO) ) debug() << "==> getRawEvent()" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> getRawEvent()" << endmsg;
 
   // Retrieve the RawEvent:
   m_rawEvent = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      m_rawEvent = get<LHCb::RawEvent>(*p);
+    m_rawEvent = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != m_rawEvent ){
       if( msgLevel( MSG::DEBUG ) )
         debug() << "==> RawEvent read-in from location: " << *p << endmsg;
       break;
@@ -156,7 +146,7 @@ StatusCode DecodePileUpData::getRawEvent() {
 //==============================================================================
 StatusCode DecodePileUpData::decode() {
 
-  if ( msgLevel(MSG::INFO) ) debug() << "==> getRawBanks()" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> getRawBanks()" << endmsg;
 
   // NZS PU decode
   LHCb::RawBank::BankType type = LHCb::RawBank::BankType(PuTell1::LOPU_NZS);
@@ -299,7 +289,9 @@ void DecodePileUpData::inizializePUcontainer( PuTell1::DataTable PUcontainerBee 
 }
 
 //=========================================================================
-void DecodePileUpData::Fill( unsigned int wordIt, unsigned int word_Tot, unsigned int* data_Ptr, int step, PuTell1::DataTable PUcontainerBee ){
+void DecodePileUpData::Fill( unsigned int wordIt, unsigned int word_Tot, 
+                             unsigned int* data_Ptr, int step, 
+                             PuTell1::DataTable PUcontainerBee ){
   debug() << "******************** Fill() *********************************" << endmsg;
   while ( wordIt < word_Tot )
   {
@@ -513,8 +505,9 @@ StatusCode DecodePileUpData::findPileUpHitsBee( PuTell1::dataObject OneBeetleDat
       // now append new cluster
       clusters->insert( new LHCb::VeloCluster(lc,adcs), vcid );
 
-      debug() 	<< "findPileUpHitsBee : VeloLiteCluster lc(" << fracStrip << ", " << pseudoSize << ", " << hasHighThre << ", with channelId strip "
-        << (lc.channelID()).strip() << endmsg;
+      debug()	<< "findPileUpHitsBee : VeloLiteCluster lc(" << fracStrip << ", "
+              << pseudoSize << ", " << hasHighThre << ", with channelId strip "
+              << (lc.channelID()).strip() << endmsg;
       debug() << "******************** clusters size is " << clusters->size() << ")*********************************" << endmsg;
 
     } // if checkBee
@@ -536,7 +529,8 @@ StatusCode DecodePileUpData::findPileUpHitsBee( PuTell1::dataObject OneBeetleDat
 
 //==============================================================================
 
-StatusCode DecodePileUpData::findPileUpHitsBeeNZS( PuTell1::dataObject OneBeetleData, int sens, int bee,  VeloClusters * clustersNZS ) 
+StatusCode DecodePileUpData::findPileUpHitsBeeNZS( PuTell1::dataObject OneBeetleData, int sens,
+                                                   int bee,  VeloClusters * clustersNZS ) 
 {
   unsigned int maskBee = 1;
   unsigned int inBee = OneBeetleData.dataWord;
@@ -629,7 +623,7 @@ int DecodePileUpData::SensorId (int s){
 
 StatusCode DecodePileUpData::writePUBanks(  LHCb::VeloClusters * clusters,  LHCb::VeloClusters * clustersNZS )  {
 
-  if ( msgLevel(MSG::INFO) ) debug() << "==> writePUBanks()" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> writePUBanks()" << endmsg;
 
   put(clusters, m_PUClusterLocation);
   //info() << "put clusters in " <<  m_PUClusterLocation << endmsg();

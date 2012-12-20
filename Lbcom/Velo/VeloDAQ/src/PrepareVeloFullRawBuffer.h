@@ -1,4 +1,3 @@
-// $Id: PrepareVeloFullRawBuffer.h,v 1.7 2009-11-17 17:55:01 szumlat Exp $
 #ifndef PREPAREVELOFULLRAWBUFFER_H 
 #define PREPAREVELOFULLRAWBUFFER_H 1
 
@@ -83,7 +82,7 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+
   // fetch the RawEvent
   StatusCode getRawEvent();
   // extract vector of the RawBanks of the type VeloFull (non-zero supp.)

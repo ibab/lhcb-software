@@ -22,7 +22,6 @@ public:
 
   virtual StatusCode initialize();
   virtual StatusCode execute   ();
-  virtual StatusCode finalize  ();
 
   bool passesFilter(LHCb::VeloChannelID id);
   void incrementCounters(LHCb::VeloChannelID, int&, int&, int&);
