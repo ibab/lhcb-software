@@ -29,5 +29,3 @@ gaudi_add_dictionary(LoKiTracks
 
 gaudi_install_python_modules()
 
-
-gaudi_add_test(QMTest QMTEST)

@@ -37,7 +37,6 @@ apply_pattern    reflex_dictionary                                       \
 # ============== patterns =====================================================
 apply_pattern    linker_library    library=LoKiTracksLib
 apply_pattern    component_library library=LoKiTracks
-apply_pattern    QMTest 
 
 macro LoKiTracksDict_use_linkopts $(use_linkopts)
 

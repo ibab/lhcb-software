@@ -5,6 +5,10 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2012-12-20 - Marco Clemencic
+ - Removed the QMTest pattern (from CMT and CMake configuration) since the
+   package does not provide tests.
+
 !========================= LoKiTracks v2r8p2 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
