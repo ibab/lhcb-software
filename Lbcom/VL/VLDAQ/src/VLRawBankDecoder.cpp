@@ -115,16 +115,6 @@ StatusCode VLRawBankDecoder::execute() {
 }
 
 //=============================================================================
-/// Final processing
-//=============================================================================
-StatusCode VLRawBankDecoder::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
-}
-
-
-//=============================================================================
 /// Decode raw data format to clusters and lite clusters 
 //=============================================================================
 void VLRawBankDecoder::decode(const RawBank* rb) {

@@ -23,11 +23,11 @@ using namespace LHCb;
 VLRawBankEncoder::VLRawBankEncoder(const std::string& name,
                                    ISvcLocator* pSvcLocator) : 
     GaudiAlgorithm(name, pSvcLocator),
-    m_clusters(0),
     m_bankVersion(1),
-    m_det(0) {
-
-}
+    m_det(0),
+    m_debug(false),
+    m_verbose(false)
+{}
 
 //=============================================================================
 /// Initialisation
@@ -58,23 +58,21 @@ StatusCode VLRawBankEncoder::execute() {
 
   if (m_debug) debug() << " ==> execute()" << endmsg;
   // Get the clusters.
-  if (!exist<VLClusters>(VLClusterLocation::Default)) {
-    error() << "Cannot retrieve VLClusters from " 
-            << VLClusterLocation::Default << endmsg;
-    return StatusCode::FAILURE;
+  VLClusters* clusters = getIfExists<VLClusters>(VLClusterLocation::Default);
+  if ( NULL == clusters ) {
+    return Error( "Cannot retrieve VLClusters from " + VLClusterLocation::Default );
   } 
-  m_clusters = get<VLClusters>(VLClusterLocation::Default);
   // Sort the clusters by ascending sensor and strip number.
-  std::sort(m_clusters->begin(), m_clusters->end(), 
+  std::sort(clusters->begin(), clusters->end(), 
             VLDataFunctor::LessByStrip<const VLCluster*>());
             
   // Get the raw event.
   RawEvent* rawEvent = getOrCreate<RawEvent, RawEvent>(RawEventLocation::Default);
 
   // Loop over the clusters and write one bank per sensor.
-  VLClusters::const_iterator it = m_clusters->begin();
+  VLClusters::const_iterator it = clusters->begin();
   unsigned int sensorIndex = 0; 
-  while (it != m_clusters->end()) {
+  while (it != clusters->end()) {
     unsigned int sensorNumber = (*it)->channelID().sensor();
     // Check for missing sensor numbers.
     while (sensorNumber != m_sensorNumbers[sensorIndex]) {
@@ -89,7 +87,7 @@ StatusCode VLRawBankEncoder::execute() {
     }
     // Get the last cluster on this sensor.
     VLClusters::const_iterator last = it;
-    while (last != m_clusters->end() && 
+    while (last != clusters->end() && 
            (*last)->channelID().sensor() == sensorNumber) {
       ++last;
     }
@@ -111,16 +109,6 @@ StatusCode VLRawBankEncoder::execute() {
   return StatusCode::SUCCESS;
 
 }
-
-//=============================================================================
-/// Finalisation 
-//=============================================================================
-StatusCode VLRawBankEncoder::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
-}
-
 
 //=============================================================================
 /// Encode the clusters on a given sensor in raw data format 

@@ -33,7 +33,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute();       ///< Algorithm execution
-  virtual StatusCode finalize();      ///< Algorithm finalisation
 
 private:
   
@@ -42,7 +41,6 @@ private:
               LHCb::VLClusters::const_iterator end,
               LHCb::RawEvent* rawEvent);
 
-  LHCb::VLClusters* m_clusters; 
   std::vector<VLDAQ::row> m_rawData;
   std::vector<VLDAQ::row> m_adcRows;
   std::vector<VLDAQ::row> m_clusterRows;
