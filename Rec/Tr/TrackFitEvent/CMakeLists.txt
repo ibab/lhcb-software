@@ -9,6 +9,7 @@ gaudi_depends_on_subdirs(Det/MuonDet
                          Det/VPDet
                          Det/VeloDet
                          Event/DigiEvent
+                         Event/MCEvent
                          Event/TrackEvent
                          GaudiObjDesc
                          Kernel/LHCbKernel
@@ -24,10 +25,10 @@ gaudi_add_library(TrackFitEvent
                   src/*.cpp
                   PUBLIC_HEADERS Event
                   INCLUDE_DIRS Event/DigiEvent OT/OTDAQ Tr/TrackInterfaces
-                  LINK_LIBRARIES MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib TrackEvent LHCbKernel LHCbMathLib)
+                  LINK_LIBRARIES MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib MCEvent TrackEvent LHCbKernel LHCbMathLib)
 
 god_build_dictionary(xml/*.xml
                      EXTEND Event/lcgDict.h
                      INCLUDE_DIRS Event/DigiEvent OT/OTDAQ Tr/TrackInterfaces
-                     LINK_LIBRARIES MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib TrackEvent LHCbKernel LHCbMathLib TrackFitEvent)
+                     LINK_LIBRARIES MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib MCEvent TrackEvent LHCbKernel LHCbMathLib TrackFitEvent)
 
