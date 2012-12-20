@@ -524,11 +524,10 @@ StatusCode STZSMonitor::execute() {
  
  
       // Occupancies
-      if(m_detType=="IT"){
-	OCCUPANCYIT[iStation-1][iBox-1][iLayer-1]->fill((iSector-1)*384+iStrip);
-      }
+      if(m_detType=="IT")	OCCUPANCYIT[iStation-1][iBox-1][iLayer-1]->fill((iSector-1)*384+iStrip);
       if(m_detType=="TT"){
-	OCCUPANCYTT[iStation-1][iBox-1][iLayer-1][iSector-1]->fill(iStrip);
+        if(iBox == 1)	OCCUPANCYTT[iStation-1][iBox-1][iLayer-1][iSector-1]->fill(iStrip);
+        else warning() << "Invalid box for TT: " << iBox << endmsg; 
       }
 
 
