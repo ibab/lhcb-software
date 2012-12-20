@@ -5,6 +5,9 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2012-12-20 - Anton Poluektov 
+ - Widen line name field in StrippingReport
+
 !========================= StrippingAlgs v1r10 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

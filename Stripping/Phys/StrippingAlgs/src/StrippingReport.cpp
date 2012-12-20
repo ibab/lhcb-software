@@ -99,7 +99,7 @@ void StrippingReport::report(bool onlyPositive) {
 
   char str[128];
   
-  sprintf(str," |%51.51s|%8.8s|%10.10s|%7.7s|%8.8s|", "*Decision name*", "*Rate,%*", "*Accepted*", "*Mult*","*ms/evt*");
+  sprintf(str," |%61.61s|%8.8s|%10.10s|%7.7s|%8.8s|", "*Decision name*", "*Rate,%*", "*Accepted*", "*Mult*","*ms/evt*");
 
   info() << "Event " << m_event << ", Good event " << m_goodEvent << "\n" << str << "\n";
 
@@ -120,10 +120,10 @@ void StrippingReport::report(bool onlyPositive) {
       if (i->decisions > 0) mult = (double)i->candidates/(double)i->decisions;
       if (i->decisions > 0 || !onlyPositive) {
         if (i->avgtime > 0) 
-          sprintf(str," |%-51.51s|%8.4f|%10.1d|%7.3f|%8.3f|", outputName.data(), 
+          sprintf(str," |%-61.61s|%8.4f|%10.1d|%7.3f|%8.3f|", outputName.data(), 
                   rate, i->decisions, mult, i->avgtime);
         else 
-          sprintf(str," |%-51.51s|%8.4f|%10.1d|%7.3f|        |", outputName.data(), 
+          sprintf(str," |%-61.61s|%8.4f|%10.1d|%7.3f|        |", outputName.data(), 
                   rate, i->decisions, mult);
         info() << str << "\n";
       }
@@ -132,9 +132,9 @@ void StrippingReport::report(bool onlyPositive) {
 
       // Not a Selection::Line
       if (i->avgtime > 0) 
-        sprintf(str," |%-51.51s|%8.4f|%10.1d|       |%8.3f|", outputName.data(), rate, i->decisions, i->avgtime);
+        sprintf(str," |%-61.61s|%8.4f|%10.1d|       |%8.3f|", outputName.data(), rate, i->decisions, i->avgtime);
       else 
-        sprintf(str," |%-51.51s|%8.4f|%10.1d|       |        |", outputName.data(), rate, i->decisions);
+        sprintf(str," |%-61.61s|%8.4f|%10.1d|       |        |", outputName.data(), rate, i->decisions);
       info() << str << "\n";
     }
       
@@ -150,7 +150,7 @@ void StrippingReport::reportLatex(bool onlyPositive) {
 
   char str[128];
   
-  sprintf(str," %51.51s&%8.8s&%10.10s&%7.7s&%8.8s\\\\ \\hline", "Decision name", "Rate, \\%", "Accepted", "Mult","ms/evt");
+  sprintf(str," %61.61s&%8.8s&%10.10s&%7.7s&%8.8s\\\\ \\hline", "Decision name", "Rate, \\%", "Accepted", "Mult","ms/evt");
 
   info() << "Event " << m_event << ", Good event " << m_goodEvent << "\n" << str << "\n";
 
@@ -171,10 +171,10 @@ void StrippingReport::reportLatex(bool onlyPositive) {
       if (i->decisions > 0) mult = (double)i->candidates/(double)i->decisions;
       if (i->decisions > 0 || !onlyPositive) {
         if (i->avgtime > 0) 
-          sprintf(str," %-51.51s&%8.4f&%10.1d&%7.3f&%8.3f\\\\", outputName.data(), 
+          sprintf(str," %-61.61s&%8.4f&%10.1d&%7.3f&%8.3f\\\\", outputName.data(), 
                   rate, i->decisions, mult, i->avgtime);
         else 
-          sprintf(str," %-51.51s&%8.4f&%10.1d&%7.3f&        \\\\", outputName.data(), 
+          sprintf(str," %-61.61s&%8.4f&%10.1d&%7.3f&        \\\\", outputName.data(), 
                   rate, i->decisions, mult);
         info() << str << "\n";
       }
@@ -183,9 +183,9 @@ void StrippingReport::reportLatex(bool onlyPositive) {
 
       // Not a Selection::Line
       if (i->avgtime > 0) 
-        sprintf(str," %-51.51s&%8.4f&%10.1d&       &%8.3f\\\\", outputName.data(), rate, i->decisions, i->avgtime);
+        sprintf(str," %-61.61s&%8.4f&%10.1d&       &%8.3f\\\\", outputName.data(), rate, i->decisions, i->avgtime);
       else 
-        sprintf(str," %-51.51s&%8.4f&%10.1d&       &       \\\\", outputName.data(), rate, i->decisions);
+        sprintf(str," %-61.61s&%8.4f&%10.1d&       &       \\\\", outputName.data(), rate, i->decisions);
       info() << str << "\n";
     }
       
@@ -211,7 +211,7 @@ StatusCode StrippingReport::execute() {
   char str[128];
 
   if (m_everyEvent) { 
-    sprintf(str,"%-51.51s: %4s %5s", "Decision name", "Decn", "Cands");
+    sprintf(str,"%-61.61s: %4s %5s", "Decision name", "Decn", "Cands");
  
     info() << "----------------------------------------------------------------" << endmsg;
     info() << str << endmsg;
@@ -263,10 +263,10 @@ StatusCode StrippingReport::execute() {
 
     if (m_everyEvent && (passed != 0 || cand < 0 || !m_onlyPositive)) { 
       if (cand >= 0) {
-        sprintf(str,"-- %-48.48s: %4.1d %5.1d", i->name.data(), passed, cand);
+        sprintf(str,"-- %-58.58s: %4.1d %5.1d", i->name.data(), passed, cand);
         info() << str << endmsg;
       } else {  
-        sprintf(str,"%-51.51s: %4.1d", i->name.data(), passed);
+        sprintf(str,"%-61.61s: %4.1d", i->name.data(), passed);
         info() << "----------------------------------------------------------------" << endmsg;
         info() << str << endmsg;
       }
@@ -312,7 +312,7 @@ StatusCode StrippingReport::finalize() {
   // List non-responding lines
   if (m_printNonResponding) {
 
-    sprintf(str,"%-51.51s", "Non-responding lines:");
+    sprintf(str,"%-61.61s", "Non-responding lines:");
 
     warning() << endmsg;
     warning() << "-----------------------------------------------------------------" << endmsg;
@@ -323,7 +323,7 @@ StatusCode StrippingReport::finalize() {
 
       if (i->candidates >= 0) {
         if (i->decisions == 0) {
-          sprintf(str,"-- %-48.48s", strippedName.data());
+          sprintf(str,"-- %-58.58s", strippedName.data());
           warning() << str << endmsg;
         } 
       } 
@@ -334,7 +334,7 @@ StatusCode StrippingReport::finalize() {
   // List hot lines
   if (m_printHot) {
 
-    sprintf(str,"%-51.51s", "Hot lines:");
+    sprintf(str,"%-61.61s", "Hot lines:");
 
     warning() << endmsg;
     warning() << "-----------------------------------------------------------------" << endmsg;
@@ -353,7 +353,7 @@ StatusCode StrippingReport::finalize() {
 
       if (i->candidates >= 0) {
         if (rate > m_hotThreshold) {
-          sprintf(str,"-- %-48.48s %8.6f", strippedName.data(), rate);
+          sprintf(str,"-- %-58.58s %8.6f", strippedName.data(), rate);
           warning() << str << endmsg;
         }
       } 
