@@ -1,6 +1,7 @@
 package           Boole
-version           v26r0
+version           v26r1
 # Remember to change version also in ../job/valgrind.py, ../job/Boole_Ganga.py
+#                                    ../CMakeLists.txt
 
 branches doc cmt job options
 
