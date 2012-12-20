@@ -1,3 +1,9 @@
+2012-12-20  Ben Couturier  <Ben.Couturier@cern.ch>
+	
+	* scripts/mkMCGentar:Fixed to handled distribution problems with
+	packages having '++' in the name (herwigg++, tauola++, photos++),
+	until the Genser team fixes the distribution files.
+
 2012-12-19  Ben Couturier  <Ben.Couturier@cern.ch>
 
 	* scripts/archive_project: Updated doc.

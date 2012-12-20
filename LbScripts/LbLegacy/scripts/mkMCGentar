@@ -128,6 +128,16 @@ def get_MCGen_tar_name(root,gen,native,bin):
             name = gen+'-'+native+'-'+bin+'.tgz'
             return name
 
+    if debug_flag == 1: print ' Did not find file in %s - Replacing pp by ++ just in case...' % rootdef
+    # Try an alternative name if the file was not found
+    if name == None:
+        gen = gen.replace("pp", "++")
+        list = os.listdir(rootdef)
+        for l in list:
+            if l.find(gen) != -1:
+                name = gen+'-'+native+'-'+bin+'.tgz'
+                return name
+
     return name
 
 
@@ -147,7 +157,16 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
 
     os.chdir(tmpdir.getName())
 
+    missing_tars = []
+    missing_pdfs = []
+    
     for key in packages_versions.keys():
+
+
+        print
+        print "Processing %s ================================================================================" % key
+
+        # Seting the global vriables to be able to locate the tarballs
         gen_base = get_MCGen_base(packages_homes[key], key, packages_versions[key])
         gen_root = os.path.basename(gen_base)
         MCGen_tar_dir = os.path.join(lcg_dir,'MCGenerators_hepmc%s' % HepMC_version,'distribution')
@@ -155,50 +174,112 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
             if not os.path.exists(gen_root):
                 os.mkdir(gen_root)
             os.chdir(gen_root)
-        print 'get_tar_files -', os.getcwd()
-
         value = packages_versions[key]
+        
+        # Trick to deal with the packages ending in pp instead of ++
+        orig_key = key
+        if orig_key.endswith("pp"):
+            key = orig_key.replace("pp", "++")
+            
         file = get_MCGen_tar_name(MCGen_tar_dir,key,value,binary_dir)
-        if debug_flag == 1: print 'get_tar_files %s '%(file)
-        if file != None:
+
+        print "-----------------------------------"
+        print " dist dir     : %s" % MCGen_tar_dir
+        print " orig Package : %s" % orig_key
+        print " fixed Package: %s" % key
+        print " Version      : %s" % value
+        print " Binary       : %s" % binary_dir
+        print " Tar file     : %s" % file
+        print "-----------------------------------"
+
+        print 'get_tar_files Processing %s '%(file)
+
+        #
+        # Check that the file file actually exists
+        # FAIL otherwise, we need to know...
+        #
+        if file == None:
+            print "ERROR"
+            print "ERROR *** Tar file for %s %s in %s does NOT exist" % (key, value, MCGen_tar_dir)
+            print "ERROR"
+            missing_tars.append(orig_key)
+
+        
+        if file != None:                
+
             if os.path.exists(os.path.join(MCGen_tar_dir,file)):
-                shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
+
+                # Copying the tar file locally - why ? XXX
+                #if debug_flag == 1:
+                #    print "Copying tar file to local directory %s" % str    
+                #shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
+
+                
+                # Untarring the binary tarball for the project
+                fullfile = os.path.join(MCGen_tar_dir,file)
                 key_value = os.path.join(key,value)
-                str = 'tar --extract --ungzip --file '+file +' '+ os.path.join(key_value,binary_dir)
+                str = 'tar --extract --ungzip --file '+fullfile +' '+ os.path.join(key_value,binary_dir)
                 if debug_flag == 1:
                     print "Running: %s" % str
                 rc = os.system(str)
+
+                # Create link if the original key is different from the effective:
+                # i.e. we had to replace "pp" by "++"
+                if orig_key != key:
+                    os.symlink(key, orig_key)
+                
+                # Extract a few PDFs from lhapdf main tar file
                 if key == 'lhapdf':
+                    
                     #
                     # Extraction of PDFs cteq6ll/cteq6l
                     #
-                    str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
+
+                    # First trying in key_value + "/share/PDFsets/"
+                    print "Looking for PDFs in " + key_value + "/share/PDFsets"
+
+                    str = 'tar --extract --ungzip --file '+fullfile+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
                     if debug_flag == 1:
                         print "Running: %s" % str
                     rc = os.system(str)
+
+                    # First trying in key_value + "/share/lhapdf/PDFsets/"
                     if rc != 0 :
-                        str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/lhapdf/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/lhapdf/PDFsets/cteq6ll.LHpdf'
+                        print "Error getting PDFs - Looking in " + key_value + "/share/lhapdf/PDFsets"
+                        str = 'tar --extract --ungzip --file '+fullfile+' '+key_value+'/share/lhapdf/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/lhapdf/PDFsets/cteq6ll.LHpdf'
                         if debug_flag == 1:
                             print "Running: %s" % str
                         rc = os.system(str)
+
                     if rc != 0 :
-                        os.remove(file)
+                        # Change file altogether...
+                        if os.path.exists(file):
+                            os.remove(file)
                         file = file.replace(binary_dir, "share")
-                        if os.path.exists(os.path.join(MCGen_tar_dir,file)):
-                            shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
-                        str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
+                        fullfile = os.path.join(MCGen_tar_dir,file)
+                        print "Error getting PDFs - Looking in share file %s" %  fullfile
+                        #if os.path.exists(os.path.join(MCGen_tar_dir,file)):
+                        #    shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
+                        str = 'tar --extract --ungzip --file '+fullfile+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
                         if debug_flag == 1:
                             print "Running: %s" % str
                         rc = os.system(str)
                     if rc == 0 :
                         print "%s/share/PDFsets/cteq6l.LHpdf found in %s" % (key_value, file)
                         print "%s/share/PDFsets/cteq6ll.LHpdf found in %s" % (key_value, file)
+                    else:
+                        missing_pdfs.append("cteq6l.LHpdf")
+                        missing_pdfs.append("cteq6ll.LHpdf")
+                        
+
                     #
                     # Extra list of PDFs to be added to the Genser release
+                    #
+                    
                     extra_pdfs = [ '/share/lhapdf/PDFsets/CT09MCS.LHgrid', '/share/lhapdf/PDFsets/CT10nlo.LHgrid',
                                   '/share/lhapdf/PDFsets/MSTW2008lo68cl.LHgrid', '/share/lhapdf/PDFsets/MSTW2008nlo68cl.LHgrid']
                     for p in extra_pdfs:
-                        cmd = 'tar --extract --ungzip --file '+file+' '+key_value + p
+                        cmd = 'tar --extract --ungzip --file '+fullfile+' '+key_value + p
                         if debug_flag == 1:
                             print "Running: %s" % cmd
                         rc = os.system(cmd)
@@ -206,18 +287,45 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
                             print "*** Found %s in %s" % (p, file)
                         else:
                             print "*** Missing %s in %s" % (p, file)
+                            missing_pdfs.append(p)
 
-                os.remove(file)
+                # Removing the local copy if it was done
+                if os.path.exists(file):
+                    os.remove(file)
+                
+                    
 
         os.chdir(tmpdir.getName())
 
+    # Creating directory tar
     str = 'tar zcf '+tarfile+' '+' '.join(os.listdir(tmpdir.getName()))
-    print str
+    if debug_flag == 1:
+        print str
     rc = os.system(str)
+
+    # Creating MD5SUM file
     if rc == 0:
         md5sum = calculateMD5(tarfile)
         mdf = open(md5file,"w")
         mdf.write("%s  %s" % (md5sum,os.path.basename(tarfile)))
+
+
+    # Summary
+    print "Summary ================================================================================"
+    print "tar file: %s" % tarfile
+    print "md5sum  : %s" % md5sum
+
+    if len(missing_tars) > 0:
+        print
+        print "There are missing tar file(s) for package(s):"
+        for f in missing_tars:
+            print "\t- %s" %f
+
+    if len(missing_pdfs) > 0:
+        print
+        print "There are missing PDF file(s) for package(s):"
+        for f in missing_pdfs:
+            print "\t- %s" %f
 
 
 #
