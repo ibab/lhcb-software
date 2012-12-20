@@ -17,11 +17,18 @@ from HltLine.HltLinesConfigurableUser import *
 
 
 class Hlt1pALinesConf(HltLinesConfigurableUser):
+
+    from HltTracking.HltReco import MaxOTHits
     
     __slots__ = { 'pA_SpdMult'       : 30 ,
                   'pA_LowMultSpd'    : 30 ,
-                  'nVeloLowMultMicroBias' : 200 
+                  'nVeloLowMultMicroBias' : 200,
+                  'pA_GECPassSPD'    :  800,
+                  'pA_GECPassVelo'   : 6000,
+                  'pA_GECPassIT'     : 3000,
+                  'pA_GECPassOT'     : MaxOTHits
                   }
+    
     def __apply_configuration__(self):
         
         from HltLine.HltDecodeRaw import DecodeOT
@@ -35,7 +42,7 @@ class Hlt1pALinesConf(HltLinesConfigurableUser):
              L0DU = "( L0_DATA('Spd(Mult)') > %(pA_SpdMult)s )" % self.getProps(), 
              algos     = []   
              )
-
+        
         Line('ActivityTracking',
              prescale  = self.prescale,
              postscale = self.postscale,
@@ -68,3 +75,64 @@ class Hlt1pALinesConf(HltLinesConfigurableUser):
                           ]   
              )
 
+
+        """
+        SPD pass through
+        """
+        Line('GECPassSPD',
+             prescale  = self.prescale,
+             postscale = self.postscale,
+             L0DU = "( L0_DATA('Spd(Mult)') > %(pA_GECPassSPD)s )" % self.getProps(), 
+             algos     = []   
+             )
+
+        
+        from HltLine.HltDecodeRaw import DecodeVELO, DecodeIT, DecodeOT
+        
+        """
+        Velo pass through
+        """
+        Line('GECPassVelo',
+             prescale  = self.prescale,
+             postscale = self.postscale,
+             algos = [ DecodeVELO,
+                       LoKi__VoidFilter ( 'FilterVelo'
+                                          , Preambulo = ['from LoKiPhys.decorators import *',
+                                                         'from LoKiCore.functions import *']
+                                          , Code = "CONTAINS('Raw/Velo/LiteClusters')>%(pA_GECPassVelo)s" % self.getProps()
+                                          )     
+                       ]
+             )
+
+
+        """
+        IT pass through
+        """
+        Line('GECPassIT',
+             prescale  = self.prescale,
+             postscale = self.postscale,
+             algos = [ DecodeIT,
+                       LoKi__VoidFilter ( 'FilterIT'
+                                          , Preambulo = ['from LoKiPhys.decorators import *',
+                                                         'from LoKiCore.functions import *']
+                                          , Code = "CONTAINS('Raw/IT/LiteClusters')>%(pA_GECPassIT)s" % self.getProps()
+                                          )     
+                       ]
+             )
+
+
+      
+        """
+        OT pass through
+        """
+        Line('GECPassOT',
+             prescale  = self.prescale,
+             postscale = self.postscale,
+             algos = [ DecodeOT,
+                       LoKi__VoidFilter ( 'FilterOT'
+                                          , Preambulo = ['from LoKiPhys.decorators import *',
+                                                         'from LoKiCore.functions import *']
+                                          , Code = "CONTAINS('Raw/OT/Times')>%(pA_GECPassOT)s" % self.getProps()
+                                          )     
+                       ]
+             )        
