@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r20 2012-12-20 =========================
+
 ! 2012-12-20 - Patrick Koppenburg
  - Fix bug https://savannah.cern.ch/bugs/index.php?94262 in MB stripping
 
