@@ -22,7 +22,7 @@ class Boole(LHCbConfigurableUser):
         "DetectorInit": {"DATA":['Data'],"MUON":['Muon']}
         ,"DetectorDigi": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0']
         ,"DetectorLink": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0']
-        ,"DetectorMoni": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0', 'MC']
+        ,"DetectorMoni": ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Calo', 'Muon', 'L0', 'MC']
         ,"EvtMax"              : -1
         ,"SkipEvents"          : 0
         ,"UseSpillover"        : False
@@ -844,7 +844,6 @@ class Boole(LHCbConfigurableUser):
 
             writerName = "DigiWriter"
             digiWriter = OutputStream( writerName, Preload=False )
-            
 
             digiWriter.RequireAlgs.append( "Filter" )
             if self.getProp( "NoWarnings" ) and not digiWriter.isPropertySet( "OutputLevel" ):

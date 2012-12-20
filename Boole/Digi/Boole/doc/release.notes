@@ -13,6 +13,7 @@ This version uses projects LCGCMT 64, Gaudi v23r5, LHCb v35r3, Lbcom v13r3
  - Changes to configurable
    . In L0 monitoring, add explicit decoding of L0 raw banks, since L0Conf
      no longer saves L0 data in TES during emulation.
+   . DetectorMoni property no longer contains "Tr" value.
 
  - Changes to tests
    . Tune exclusions so that tests pass also in ia32 platforms
