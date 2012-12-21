@@ -57,3 +57,4 @@ apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
 use GaudiConf v17r3
+use L0DU      v10r26 L0
