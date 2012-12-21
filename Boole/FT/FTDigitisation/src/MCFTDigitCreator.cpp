@@ -32,7 +32,7 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
 {
   declareProperty("InputLocation" ,       m_inputLocation        = LHCb::MCFTDepositLocation::Default );
   declareProperty("OutputLocation" ,      m_outputLocation       = LHCb::MCFTDigitLocation::Default   );
-  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 200. );
+  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 50. );
   declareProperty("SiPMGain",             m_sipmGain             =   1. );
 }
 //=============================================================================

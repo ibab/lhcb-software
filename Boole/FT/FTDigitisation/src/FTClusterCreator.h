@@ -43,7 +43,10 @@ private:
   unsigned int m_clusterMaxWidth;   ///< Maximal Width for clusters
 
   unsigned int m_clusterMinCharge;   ///<Minimal total ADC for clusters
-  unsigned int m_clusterMinADCPeak;   ///<Minimal ADC for cluster peaks
+  int m_clusterMinADCPeak;   ///<Minimal ADC for cluster peaks
+  //=== Sum for some average information
+  int  m_nCluster;
+  float m_sumCharge;
 };
 #endif // FTCLUSTERCREATOR_H
 

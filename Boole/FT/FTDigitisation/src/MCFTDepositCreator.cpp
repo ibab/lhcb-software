@@ -81,7 +81,9 @@ StatusCode MCFTDepositCreator::initialize() {
 
   /// Retrieve and initialize DeFT (no test: exception in case of failure)
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
-
+  m_nHits = 0;
+  m_sumEnergy = 0.;
+  
   //== Generate the transmission map. 
   //== Two attenuation length, then in the radiaton area a different attenuation length
   //== Compute also the transmission of the reflected signal, attenuated by the two length
@@ -198,19 +200,15 @@ StatusCode MCFTDepositCreator::execute() {
     // ( call of calculateHits method from DeFTLayer) 
     const DeFTLayer* pL = m_deFT->findLayer(ftHit->midPoint());
     FTDoublePairs channels;
-    double fibreLength = 0;
-    double fibreLengthfraction = 0;
-   
     if ( pL) {
 
       if( pL->calculateHits( ftHit, channels)){
-        
-        pL->hitPositionInFibre(ftHit, fibreLength, fibreLengthfraction );    
-
         if ( msgLevel( MSG::DEBUG) ) {
           debug() << "--- Hit index: " << ftHit->index() << ", size of vector of channels: "
                   << channels.size() << endmsg;
         }
+        m_nHits += 1;
+        m_sumEnergy += ftHit->energy();
 
         //== Compute attenuation by interpolation in the table
         int kx = fabs( ftHit->midPoint().x() ) / m_xStepMap;
@@ -253,5 +251,13 @@ StatusCode MCFTDepositCreator::execute() {
   }
 
   return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode MCFTDepositCreator::finalize() {
+  info() << "Average energy per MCHit = " << m_sumEnergy / m_nHits << endmsg;
+  return GaudiAlgorithm::finalize();
 }
 //=========================================================================

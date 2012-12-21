@@ -36,11 +36,11 @@ DECLARE_ALGORITHM_FACTORY( FTClusterCreator )
 {
   declareProperty("InputLocation" ,     m_inputLocation     = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
   declareProperty("OutputLocation" ,    m_outputLocation    = LHCb::FTClusterLocation::Default, "Path to output Clusters");
-  declareProperty("ADCThreshold" ,      m_adcThreshold      = 2 , "Minimal ADC Count to be added in cluster");
+  declareProperty("ADCThreshold" ,      m_adcThreshold      = 1 , "Minimal ADC Count to be added in cluster");
   declareProperty("ClusterMinWidth" ,   m_clusterMinWidth   = 1 , "Minimal allowed width for clusters");
   declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 8 , "Maximal allowed width for clusters");
-  declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 10 , "Minimal charge to keep cluster");
-  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 8  , "Minimal ADC for cluster peaks");
+  declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 6 , "Minimal charge to keep cluster");
+  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 3 , "Minimal ADC for cluster peaks");
 }
 //=============================================================================
 // Destructor
@@ -60,6 +60,8 @@ StatusCode FTClusterCreator::initialize() {
     debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
     debug() << ":m_adcThreshold is " <<m_adcThreshold << endmsg;
   }
+  m_nCluster = 0;
+  m_sumCharge = 0.;
   
   return StatusCode::SUCCESS;
 }
@@ -108,7 +110,7 @@ StatusCode FTClusterCreator::execute() {
     MCFTDigit* seedDigit = *seedDigitIter;
 
     if(seedDigit->adcCount() > m_adcThreshold){ // ADC count in  digit is over threshold : start cluster
-
+      bool hasSeed = seedDigit->adcCount() > m_clusterMinADCPeak;
       // vector of ADC count of each cell from the cluster
       std::vector<int> clusterADCDistribution;
 
@@ -129,7 +131,8 @@ StatusCode FTClusterCreator::execute() {
         if ( msgLevel( MSG::DEBUG) ) {
           debug() <<"+Add to Cluster : "<<lastDigit->channelID()<<" (ADC = "<<lastDigit->adcCount() <<" )"<< endmsg;
         }
-    
+        if ( lastDigit->adcCount() > m_clusterMinADCPeak ) hasSeed = true;
+        
         clusterADCDistribution.push_back(lastDigit->adcCount());
 
         // Keep track of MCParticles involved in the cluster definition
@@ -164,9 +167,11 @@ StatusCode FTClusterCreator::execute() {
 
       // Checks :
       // - total ADC charge of the cluster is over threshold and
+      // - A seed has been found and
       // - number of cells above the minimal allowed value      
-      if( ( totalCharge > m_clusterMinCharge) 
-          && (clusterADCDistribution.size() > m_clusterMinWidth) ) {
+      if( ( totalCharge > m_clusterMinCharge) &&
+          hasSeed &&
+          (clusterADCDistribution.size() > m_clusterMinWidth) ) {
         
         // Define Cluster(channelID, fraction, width, charge)  and save it
         int meanChanPosition = std::floor(meanPosition);
@@ -174,6 +179,9 @@ StatusCode FTClusterCreator::execute() {
 
         // Define Cluster(channelID, fraction, width, charge)  and save it
         FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,(lastDigitIter-seedDigitIter),totalCharge);
+
+        ++m_nCluster;
+        m_sumCharge += totalCharge;
 
         clusterCont->insert(newCluster);
 
@@ -220,6 +228,8 @@ StatusCode FTClusterCreator::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
+  info() << "*** Average cluster charge = " << m_sumCharge / m_nCluster << endmsg;
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
@@ -235,10 +245,10 @@ bool FTClusterCreator::keepAdding(LHCb::MCFTDigits::const_iterator clusCandIter)
 
   */
   return (((*clusCandIter)->channelID().sipmId() == ((*(clusCandIter-1))->channelID().sipmId()))
-          &&((*clusCandIter)->channelID() == ((*(clusCandIter - 1))->channelID() + 1))
+          && ((*clusCandIter)->channelID() == ((*(clusCandIter - 1))->channelID() + 1))
           && ((*(clusCandIter - 1 ))->channelID().sipmCell() != 63 )
           && ((*(clusCandIter - 1 ))->channelID().sipmCell() != 127 )
-          &&((*clusCandIter)->adcCount() > m_adcThreshold));
+          && ((*clusCandIter)->adcCount() > m_adcThreshold));
 
 }
 

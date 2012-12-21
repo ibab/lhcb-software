@@ -39,6 +39,7 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
   // Locations
@@ -63,5 +64,8 @@ private:
   std::vector<float> m_transmissionMap;
 
   DeFTDetector* m_deFT; ///< pointer to FT detector description  
+
+  int         m_nHits;
+  float       m_sumEnergy;
 };
 #endif // MCFTDEPOSITCREATOR_H
