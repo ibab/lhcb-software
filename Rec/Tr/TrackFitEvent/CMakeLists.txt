@@ -3,7 +3,8 @@
 ################################################################################
 gaudi_subdir(TrackFitEvent v5r19)
 
-gaudi_depends_on_subdirs(Det/MuonDet
+gaudi_depends_on_subdirs(Det/FTDet
+                         Det/MuonDet
                          Det/OTDet
                          Det/STDet
                          Det/VPDet
@@ -25,10 +26,10 @@ gaudi_add_library(TrackFitEvent
                   src/*.cpp
                   PUBLIC_HEADERS Event
                   INCLUDE_DIRS Event/DigiEvent OT/OTDAQ Tr/TrackInterfaces
-                  LINK_LIBRARIES MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib MCEvent TrackEvent LHCbKernel LHCbMathLib)
+                  LINK_LIBRARIES FTDetLib MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib MCEvent TrackEvent LHCbKernel LHCbMathLib)
 
 god_build_dictionary(xml/*.xml
                      EXTEND Event/lcgDict.h
                      INCLUDE_DIRS Event/DigiEvent OT/OTDAQ Tr/TrackInterfaces
-                     LINK_LIBRARIES MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib MCEvent TrackEvent LHCbKernel LHCbMathLib TrackFitEvent)
+                     LINK_LIBRARIES FTDetLib MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib MCEvent TrackEvent LHCbKernel LHCbMathLib TrackFitEvent)
 
