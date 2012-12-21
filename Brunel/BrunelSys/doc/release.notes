@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+- Changes to tests
+  . Remove configurables test, redundant with those in RecSys and LbcomSys
+
 </PRE><H1><A NAME=v44r1>2012-11-30 Brunel v44r1</A></H1><PRE>
 This version uses projects LCG 64b, Gaudi v23r5, LHCb v35r3, Lbcom v13r3,
  Rec v14r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
@@ -78,6 +81,39 @@ Development release, post Reco14
   . Fixed bug #95733: GaudiKernel::ToStream truncates numbers &lt; 1e-8
     Use ios::showpoint instead of ios::fixed (GaudiKernel v28r3)
   . Patch #5518: save TimingHistograms in job histograms (GaudiAlg v14r3)
+
+</PRE><H1><A NAME=v43r2p3>2012-12-17 Brunel v43r2p3</A></H1><PRE>
+
+Patch release built on v43r1p2b branch.
+Version for Reco14 simulation and Reco14 2011 reprocessing.
+
+- New tuning (GaudiConf v17r0)
+  . Add tuning for BufferSize to FSR service (512 Bytes) for optimization, 
+    see Core Soft meeting, indico.cern.ch/conferenceDisplay?confId=207776
+  . Memory optimization for Root output buffers (RootCnv v1r18, v1r17)
+      RootCnvSvc().BasketSize = 2*MBYTE
+      RootCnvSvc().BufferSize = 2*kBYTE
+      RootCnvSvc().SplitLevel = 0
+
+- Changes to persistency (GaudiConf v17r2)
+  . Make saving of HepMCEvents optional (was mandatory), allows Gauss to create
+    Sim files without HepMCEvents
+  . Never save HepMCEvents for Spillover slots
+  . Do not save Digit to MCParticle linkers on default MC DST,
+    saved only if DstConf().SimType = "Extended"
+
+- Bug fixes
+  . Fix bug in RecInit, introduced in v2r9, whereby RecHeader::rawID is filled
+    with an empty string rather than name of the raw file. Affects Reco14
+    (RecAlgs v2r11)
+
+</PRE><H1><A NAME=v43r2p2>2012-08-28 Brunel v43r2p2</A></H1><PRE>
+
+Patch release built on v43r1p2b branch, for Reco13e/Reco13f/Reco14.
+
+- Bug fixes
+  . TrackNNGhostId: Fix a bug in the last fix, limiting the NN output range
+    to 0-1 (TrackTools v4r18)
 
 </PRE><H1><A NAME=v43r2p1>2012-08-28 Brunel v43r2p1</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1,
