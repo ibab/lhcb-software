@@ -4,12 +4,15 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections 
 !-----------------------------------------------------------------------------
 
+!======================== TMVAWeights v1r1 2012-12-21 ========================
+
 ! 2012-11-30 - Marco Clemencic
  - Added environment XML file for future use with CMake.
 
-!======================== TMVAWeights v1r0 2012-02-08 ========================
 ! 2012-11-27
  - Added weights file for B->hh stripping line
+
+!======================== TMVAWeights v1r0 2012-02-08 ========================
 
 ! 2012-02-07 - Jibo He
  - Created the package 
