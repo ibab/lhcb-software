@@ -271,7 +271,7 @@ unsigned int TTTrackMonitor::histoBin(const LHCb::STChannelID& chan) const {
   // convert layer and station to a flat number
   unsigned int layer;
   chan.station() == 1u ?layer = chan.layer() : layer = chan.layer() + 2;
-  return layer * 100 + chan.sector();
+  return layer * 100 + (chan.detRegion()-1) * 30 + chan.sector();
 }
 
 

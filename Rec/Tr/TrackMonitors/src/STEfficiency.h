@@ -1,4 +1,3 @@
-// $Id: STEfficiency.h,v 1.6 2010-04-06 14:49:53 jluisier Exp $
 #ifndef STEFFICIENCY_H 
 #define STEFFICIENCY_H 1
 
@@ -7,33 +6,32 @@
 
 #include "TrackInterfaces/ISTClusterCollector.h"
 
+#include "Event/STCluster.h"
+
 class ISTClusterCollector;
 class IHitExpectation;
-class ITrackSelector;
 class DeSTDetector;
 class DeSTSector;
 
 #include <map>
 #include <vector>
 
-/** @class STEfficiency STEfficiency.h jluisier/STEfficiency.h
+/** @class STEfficiency STEfficiency.h
  *  
  *
- *  @author Johan Luisier
- *  @date   2009-06-16
+ *  @author Johan Luisier, Frederic Dupertuis
+ *  @date   2009-06-16, 2010-07-27
  */
 class STEfficiency : public TrackMonitorBase {
 public: 
   /// Standard constructor
   STEfficiency( const std::string& name, ISvcLocator* pSvcLocator );
-
+  
   virtual ~STEfficiency( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-  enum Category  {CSide = 1 , ASide =2, Bottom = 3, Top =4 , Mixed =5 };
 
 protected:
 
@@ -44,27 +42,18 @@ private:
 			 const unsigned int testsector,
 			 const double resCut  ) const;
 
-  bool foundHitInLayer( const ISTClusterCollector::Hits& hits,
-			LHCb::Track* const& track,
-			const unsigned int testlayer,
-			const double resCut  ) const;
-
   std::string formatNumber( const double& nbr, const unsigned int& digits = 2u ) const;
 
-  std::string m_collectorName, m_trackSelectorName;
-   /**
-    * Collects the clusters in the wide window, used to get the efficiency
-    */
-  std::vector<ISTClusterCollector* > m_collectors;
+  bool hasMinStationPassed(LHCb::Track* const&) const;
 
-  /**
-   * Collects clean tracks
-   */
-  ITrackSelector  *m_trackSelector;
+  std::string m_clustercollectorName;
+
+  ISTClusterCollector* m_clustercollector;
+  
   /**
    * Name of the expected hits tool
    */
-  std::string m_expectedHitsTool;
+  std::string m_expectedHitsToolName;
   /**
    * Collects all the expeted hits around a track
    */
@@ -73,7 +62,7 @@ private:
   /**
    * Cuts applied to get the scan efficiency vs window
    */
-  std::vector< double > m_spacialCut;
+  std::vector< double > m_spacialCuts;
   double m_xCut, /**< Applied cut to compute X layer efficiencies */
     m_stereoCut; /**< Applied cut to compute stereo layer
 		    efficiencies */
@@ -112,14 +101,12 @@ private:
   CounterMap m_expectedSector, m_expectedLayer;
   std::map<unsigned int , DeSTSector*> m_nameMapSector, m_nameMapLayer;
   
-  Category ITCategory(const std::vector<LHCb::LHCbID>& ids) const;
-
   void filterNameList(std::vector< unsigned int>& vec);
 
   /**
    * Cut applied on the cluster charge, in terms of signal to noise.
    */
-  double m_chargeCut;
+  double m_minCharge;
 
   /**
    * Prefix added to the collector names used to get the hits. Default
@@ -141,8 +128,18 @@ private:
    * Minimum number of expected hits in order to compute an efficiency
    * Default value is 100.
    */
-  unsigned int m_minExpected;
-
+  unsigned int m_minExpSectors;
+  
+  /**
+   * 
+   */
+  int m_maxNbResSectors;
+  
+  /**
+   * 
+   */
+  bool m_singlehitpersector;
+  
   /**
    * List of wanted track types that will be used to compute efficiency.
    * Default is only Long (type 3)
@@ -158,10 +155,24 @@ private:
   bool m_everyHit;
 
   /**
-   * Cut on the active region
+   * Cut on the active region X
    */
-  double m_minDistToEdge;
+  double m_minDistToEdgeX;
 
-  
+  /**
+   * Cut on the active region Y
+   */
+  double m_minDistToEdgeY;
+
+  /**                                                                                                           
+   * Cut on minimum station that the track must passed through
+   */
+  unsigned int m_minStationPassed;
+
+  /**
+   * Plot efficiency plot
+   */
+  bool m_effPlot;
+    
 };
 #endif // STEFFICIENCY_H

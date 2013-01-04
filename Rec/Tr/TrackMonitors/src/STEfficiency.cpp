@@ -4,30 +4,30 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/PhysicalConstants.h"
 
-
 // local
 #include "STEfficiency.h"
 
 // track interfaces
 #include "TrackInterfaces/IHitExpectation.h"
-#include "TrackInterfaces/ITrackSelector.h"
 
 // kernel
 #include "Kernel/ISTChannelIDSelector.h"
 #include "Kernel/STLexicalCaster.h"
 #include "Kernel/ITDetectorPlot.h"
+#include "Kernel/TTDetectorPlot.h"
 
 // detector
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
+#include "STDet/DeTTSector.h"
 #include "STDet/DeSTSensor.h"
 
 // Event
 #include "Event/STCluster.h"
 
-
 // AIDA
 #include "AIDA/IProfile1D.h"
+#include "AIDA/IProfile2D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram1D.h"
 
@@ -41,6 +41,10 @@
 #include <boost/foreach.hpp>
 #include <boost/assign/list_of.hpp>
 
+#include <iostream>
+using namespace std;
+
+
 using namespace LHCb;
 using namespace ST;
 using namespace AIDA;
@@ -51,6 +55,7 @@ using namespace boost::assign;
 // Implementation file for class : STEfficiency
 //
 // 2009-06-16 : Johan Luisier
+// 2010-07-27 : Frederic Dupertuis
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -65,29 +70,23 @@ STEfficiency::STEfficiency( const std::string& name,
   : TrackMonitorBase ( name , pSvcLocator ),
     m_totalExpected( 0u ),
     m_totalFound( 0u ),
-    m_NbrOfCuts( 0u ),
-    m_binSize( 10000. ),
-    m_binNumber( 0u )
+    m_binSize( 10000. )
 {
-  declareProperty( "DetType"         , m_detType =  "IT" );
-  declareProperty( "ExpectedHitsTool", m_expectedHitsTool =
-                   "ITHitExpectation" );
-  std::vector<double> tmp = list_of( 500. * Gaudi::Units::um )( 700. * Gaudi::Units::um );
-  declareProperty( "Cut"             , m_spacialCut = tmp );
-  declareProperty( "TrackSelName"    , m_trackSelectorName =
-                   "ITIsolatedTrackSelector" );
-  declareProperty( "MinExpectedHits" , m_minHits = 10 );
-  declareProperty( "XLayerCut"       , m_xCut = 500. * Gaudi::Units::um );
-  declareProperty( "StereoLayerCut"  , m_stereoCut = 700. * Gaudi::Units::um );
-  declareProperty( "ChargeCut"       , m_chargeCut = 0. );
-  declareProperty( "CollectorPrefix" , m_collectorPrefix = "" );
-  declareProperty( "MinExpectedNbr"  , m_minExpected = 100 );
-  declareProperty( "Types"           , m_wantedTypes = std::vector<unsigned int>(1, 3) );
-  declareProperty( "TakeEveryHit"    , m_everyHit = true );
-  declareProperty( "MinDistToEdge"   , m_minDistToEdge = -1. );
-
-  m_whichCut[0] = 0u;
-  m_whichCut[1] = 0u;
+  declareProperty( "DetType"            , m_detType = "IT" );
+  declareProperty( "ClusterCollector"   , m_clustercollectorName = m_detType+"ClusterCollector");  
+  declareProperty( "HitExpectation"     , m_expectedHitsToolName = m_detType+"HitExpectation");  
+  declareProperty( "Cuts"               , m_spacialCuts = list_of( 300. * Gaudi::Units::um ) );
+  declareProperty( "XLayerCut"          , m_xCut = 300. * Gaudi::Units::um );
+  declareProperty( "StereoLayerCut"     , m_stereoCut = 300. * Gaudi::Units::um );
+  declareProperty( "MinExpectedSectors" , m_minExpSectors = 10 );
+  declareProperty( "MaxNbResSectors"    , m_maxNbResSectors = 0 );
+  declareProperty( "MinDistToEdgeX"     , m_minDistToEdgeX = -1. );
+  declareProperty( "MinDistToEdgeY"     , m_minDistToEdgeY = -1. );
+  declareProperty( "MinStationPassed"   , m_minStationPassed = 3 );
+  declareProperty( "MinCharge"          , m_minCharge = 0. );
+  declareProperty( "EfficiencyPlot"     , m_effPlot = true );
+  declareProperty( "TakeEveryHit"       , m_everyHit = true );
+  declareProperty( "SingleHitPerSector" , m_singlehitpersector = false );
 }
 
 //=============================================================================
@@ -103,42 +102,28 @@ StatusCode STEfficiency::initialize()
   StatusCode sc( TrackMonitorBase::initialize() ); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by TrackMonitorBase
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  std::string name("");
   
-  for (unsigned int i( 0 ) ; i < 5; i++) 
-  {
-    name = "Mixed";
-    if ( i < 4 ) name = ITNames().BoxToString( i + 1 );
-    name += "Collector";
-    name = m_collectorPrefix + name;
-    m_collectors.push_back( tool< ISTClusterCollector >( "STClusterCollector", name ) );
-  }
-
-  m_expectedHits  = tool< IHitExpectation >( "ITHitExpectation",
-                                             m_expectedHitsTool );
-  m_trackSelector = tool< ITrackSelector >( "ITIsolatedTrackSelector",
-                                            m_trackSelectorName );
-
+  m_clustercollectorName = m_detType+"ClusterCollector";
+  m_expectedHitsToolName = m_detType+"HitExpectation";
+  
+  m_clustercollector = tool< ISTClusterCollector >( "STClusterCollector", m_clustercollectorName );
+  m_expectedHits  = tool< IHitExpectation >( m_detType+"HitExpectation", m_expectedHitsToolName );
+  
   m_tracker = getDet< DeSTDetector >( DeSTDetLocation::location( m_detType ) );
-  m_NbrOfCuts = m_spacialCut.size();
+  m_NbrOfCuts = m_spacialCuts.size();
   m_foundSector.resize(m_NbrOfCuts);
-  m_foundLayer.resize(m_NbrOfCuts);
-
+  
   const DeSTDetector::Sectors& sectors = m_tracker->sectors();
   DeSTDetector::Sectors::const_iterator iterS = sectors.begin();
   for ( ; iterS != sectors.end(); ++iterS)
   {
     STChannelID elemID = (*iterS)->elementID();
     m_expectedSector[elemID.uniqueSector()] = 0u;
-    m_expectedLayer[elemID.uniqueDetRegion()] = 0u;
     m_nameMapSector[elemID.uniqueSector()] = *iterS;
-    m_nameMapLayer[elemID.uniqueDetRegion()] = *iterS;
-      
+    
     for (unsigned int i=0 ; i < m_NbrOfCuts; ++i )
     {
       m_foundSector[i][elemID.uniqueSector()] = 0u; 
-      m_foundLayer[i][elemID.uniqueSector()] = 0u;       
     }
       
   } // iterS
@@ -147,23 +132,23 @@ StatusCode STEfficiency::initialize()
 
   for (iCut = 0; iCut < m_NbrOfCuts; ++iCut)
   {
-    if ( std::abs( m_xCut - m_spacialCut[iCut] ) < .005 )
+    if ( std::abs( m_xCut - m_spacialCuts[iCut] ) < .005 )
       m_whichCut[0] = iCut;
-    else if ( std::abs( m_stereoCut -  m_spacialCut[iCut]) < .005 )
+    if ( std::abs( m_stereoCut -  m_spacialCuts[iCut]) < .005 )
       m_whichCut[1] = iCut;
   } // loop cuts
 
   for(iCut = 1; iCut < m_NbrOfCuts; iCut++)
   {
     m_binSize = std::min( m_binSize,
-                          m_spacialCut[ iCut ] - m_spacialCut[ iCut - 1 ] );
+                          m_spacialCuts[ iCut ] - m_spacialCuts[ iCut - 1 ] );
   }
+  
+  //m_binSize = std::min( m_binSize, .01 );
+  //m_binSize = std::max( m_binSize, .01 );
 
-  m_binSize = std::min( m_binSize, .01 );
-  m_binSize = std::max( m_binSize, .01 );
-
-  m_binNumber = static_cast<unsigned int>( (m_spacialCut.back() -
-                                            m_spacialCut.front()) / m_binSize );
+  m_binNumber = static_cast<unsigned int>( (m_spacialCuts.back() -
+                                            m_spacialCuts.front()) / m_binSize );
   m_binNumber++;
   
   return StatusCode::SUCCESS;
@@ -181,137 +166,156 @@ StatusCode STEfficiency::execute()
     End( tracks -> end() );
 
   std::vector<LHCbID> expectedHits;
-  std::vector<unsigned int> expectedSectors, expectedLayers;
-  ISTClusterCollector::Hits output;
+  std::vector<unsigned int> expectedSectors;
+  std::vector<unsigned int> foundSectors;
+  std::vector<unsigned int>::iterator itFoundSectors;
+  ISTClusterCollector::Hits foundHits;
+  StatusCode inSensor;
+  bool inActiveSensor;
+  unsigned int nbFoundHits,nbExpHits,nbExpSectors,nbFoundSectors;
+  int nbResHits,nbResSectors;
+  State trackState;
+  Gaudi::XYZPoint toleranceOnEdge(- std::max(0.,m_minDistToEdgeX), - std::max(0.,m_minDistToEdgeY), 0.);
 
-  Category type;
-  std::vector<LHCb::LHCbID> itHits;
-
-  DeSTSector* sector;
-  DeSTSensor* sensor;
-  XYZPoint trackintersect, lPoint;
-  double distToEdgeX, distToEdgeY, distToEdge;
-
-  std::vector< unsigned int >::const_iterator
-    typeBegin( m_wantedTypes.begin() ),
-    typeEnd( m_wantedTypes.end() );
+  DeSTSector* sector = 0;
+  std::vector<DeSTSensor*> sensors;
   
   // Loop on tracks
   for (It = Begin; It != End; It++)
   {
     // Clearing all the std::vectors !
     expectedHits.clear();
+    foundHits.clear();
     expectedSectors.clear();
-    expectedLayers.clear();
-    itHits.clear();
-    output.clear();
+    foundSectors.clear();
 
-    plot( static_cast<unsigned int>((*It) -> type()),
-          "Control/RawTrackType", "Track type", -.5, 9.5, 10 );
-
-    // Track type selection
-    if ( find( typeBegin, typeEnd,
-               static_cast<unsigned int>((*It) -> type()) ) == typeEnd )
-      continue;
-
-    plot( static_cast<unsigned int>((*It) -> type()),
-          "Control/CutTrackType", "Track type", -.5, 9.5, 10 );
-
+    // ask for tracks crossing enough stations for IT
+    if(m_detType=="IT"){
+      if( ! hasMinStationPassed( (*It) ) )
+        continue;
+    }
+        
     // collect the expected hits
     m_expectedHits -> collect( **It, expectedHits );
-    plot(expectedHits.size(), "expected", "# expected", -0.5, 20.5, 21);
-    if (expectedHits.size() < m_minHits) continue; // no hits to find
 
-    plot( static_cast<unsigned int>((*It) -> type()),
-          "Control/MinHitTrackType", "Track type", -.5, 9.5, 10 );      
+    nbExpHits = expectedHits.size();
+    
+    if(fullDetail())
+      plot(nbExpHits, "Control/NbExpHits","Number of expected hits",-0.5,24.5,25);
+    
+    // remove tracks with too few expected hits
+    if ( nbExpHits < m_minExpSectors ) 
+      continue; 
 
-    if ( ! m_trackSelector -> accept( **It )) continue;
-
-    plot( static_cast<unsigned int>((*It) -> type()),
-          "Control/IsolTrackType", "Track type", -.5, 9.5, 10 );
-      
-    // for processing convert the expected hits to unique sectors
+    // collect the found hits
+    m_clustercollector -> execute( **It, foundHits );
+    
+    nbFoundHits = foundHits.size();
+    
+    if(fullDetail())
+      plot(nbFoundHits, "Control/NbFoundHits","Number of found hits",-0.5,24.5,25);
+    
+    nbResHits = (int)(nbFoundHits) - (int)(nbExpHits);
+    
+    if(fullDetail())
+      plot(nbResHits, "Control/NbResHits","Number of found - expected hits",-5.5,7.5,13);
+    
+    // convert the expected hits into unique sectors cutting sensor edges
     BOOST_FOREACH(LHCbID id, expectedHits)
-      {
+    {
+      if( m_minDistToEdgeX > 0. || m_minDistToEdgeY > 0.){
+        
         sector = m_tracker -> findSector( id.stID() );
-        if ( sector == 0 )
-          continue;
-        // Get the intersection point between track and sector
-        trackintersect = XYZPoint( 0., 0., 0. );
-        extrapolator() -> position( (**It), sector -> globalCentre().z(),
-                                    trackintersect );
-        // Get the coresponding sensor
-        sensor = sector -> findSensor( trackintersect );
-        if ( sensor == 0 )
-          continue;
-        // Get the position in local frame
-        lPoint = sensor -> toLocal( trackintersect );
-        distToEdgeX = sensor -> activeWidth() / 2. - std::abs( lPoint.x() );
-        distToEdgeY = sensor -> activeWidth() / 2. - std::abs( lPoint.x() );
-        distToEdge = std::min( distToEdgeX, distToEdgeY );
-        // Cut on distance to edge
-        if ( distToEdge < m_minDistToEdge )
-        {
-          plot( id.stID().uniqueSector(), "Control/sectorCheck", "Sectors with hit too close from edge",
-                -.5, 8191.5, 8192 );
-          plot( id.stID().uniqueDetRegion(), "Control/layerCheck", "Layers with hit too close from edge",
-                -.5, 255.5, 256 );
+        if ( sector == 0 ){
+          info() << "Should not happen !" << endmsg;
           continue;
         }
-        expectedSectors.push_back(id.stID().uniqueSector());
-        expectedLayers.push_back(id.stID().uniqueDetRegion());
+        
+        sensors = sector -> sensors();
+        inActiveSensor = false;
+        
+        BOOST_FOREACH(DeSTSensor* sensor, sensors)
+        {
+          inSensor = extrapolator() -> propagate( (**It), sensor -> plane(), trackState, sensor -> thickness() );
+          if( inSensor.isSuccess() ){
+            inActiveSensor = sensor -> globalInActive(trackState.position(), toleranceOnEdge) ;
+            if( inActiveSensor ) break;
+          }
+        }
+        
+        if( inActiveSensor )
+        {
+          expectedSectors.push_back(id.stID().uniqueSector());
+        }
       }
-      
-    filterNameList( expectedSectors );
-    filterNameList( expectedLayers );
+    }
 
-    if ( expectedSectors.empty() && expectedLayers.empty() )
+    nbExpSectors = expectedSectors.size();
+
+    if ( nbExpSectors < m_minExpSectors ) 
+      continue; 
+        
+    BOOST_FOREACH(ISTClusterCollector::Hit hit, foundHits)
+    {
+      foundSectors.push_back(hit.cluster->channelID().uniqueSector());
+    }
+    
+    nbFoundSectors = foundSectors.size();
+    nbResSectors = (int)(nbFoundSectors) - (int)(nbExpSectors);
+    
+    if(fullDetail()){
+      plot(nbFoundSectors, "Control/NbFoundSectors","Number of found sectors",-0.5,24.5,25);
+      plot(nbExpSectors, "Control/NbExpSectors","Number of expected sectors",-0.5,24.5,25);
+      plot(nbResSectors, "Control/NbResSectors","Number of found - expected sectors",-5.5,7.5,13);
+    }
+
+    // remove track with too much found - expected sectors
+    if ( nbResSectors > m_maxNbResSectors ) 
       continue;
+    
+    // ask for a track with no more than a hit per unique sector
+    if( m_singlehitpersector ){
+      nbFoundSectors = foundSectors.size();
+      std::sort( foundSectors.begin(), foundSectors.end() );
+      itFoundSectors = std::unique( foundSectors.begin(), foundSectors.end() );
+      foundSectors.resize( itFoundSectors - foundSectors.begin() );
+      if(nbFoundSectors>foundSectors.size())
+        continue;
+    }
 
-    const std::vector<LHCb::LHCbID>& ids = (*It) -> lhcbIDs();
-    itHits.reserve(ids.size());
-    LoKi::select(ids.begin(), ids.end(), back_inserter(itHits),
-                 bind(&LHCbID::isIT,_1));
-
-    type = ITCategory( itHits );
-
-    plot(type, "type", "Type of the track", .5, 5.5, 5);
-
-    // collect hits
-    m_collectors[type - 1] -> execute( **It, output );
-
-    plot(output.size(), "collected", "collected", -0.5, 20.5, 21);
-      
+    nbFoundSectors = foundSectors.size();
+    nbResSectors = (int)(nbFoundSectors) - (int)(nbExpSectors);
+    
+    if(fullDetail()){
+      plot(nbFoundHits, "Control/NbFoundHitsFinal","Number of found hits after full selection",-0.5,24.5,25);
+      plot(nbExpHits, "Control/NbExpHitsFinal","Number of expected hits after full selection",-0.5,24.5,25);
+      plot(nbResHits, "Control/NbResHitsFinal","Number of found - expected hits after full selection",-5.5,7.5,13);
+      plot(nbFoundSectors, "Control/NbFoundSectorsFinal","Number of found sectors after full selection",-0.5,24.5,25);
+      plot(nbExpSectors, "Control/NbExpSectorsFinal","Number of expected sectors after full selection",-0.5,24.5,25);
+      plot(nbResSectors, "Control/NbResSectorsFinal","Number of found - expected sectors after full selection",-5.5,7.5,13);
+    }
+        
+    bool foundHit = false;
     std::vector<unsigned int>::iterator iterExp = expectedSectors.begin();
     for ( ; iterExp != expectedSectors.end(); ++iterExp)
     {
       ++m_expectedSector[*iterExp];
       ++m_totalExpected;
+      foundHit = false;
+      
       for (unsigned int i = 0; i < m_NbrOfCuts; ++i)
 	    {
-	      if (foundHitInSector(output, *It, *iterExp, m_spacialCut[i]))
+	      foundHit = foundHitInSector(foundHits, *It, *iterExp, m_spacialCuts[i]);
+        if (foundHit)
         {
-          DeSTSector* sector = m_nameMapSector[*iterExp];
           if ( sector ->isStereo() && i == m_whichCut[1] )
             ++m_totalFound;
           else if ( ! sector -> isStereo() &&  i == m_whichCut[0] )
             ++m_totalFound;
           ++m_foundSector[i][*iterExp]; 
 	      }
-	    } // loop cuts
-    } // loop expected
-
-    for (iterExp = expectedLayers.begin();
-         iterExp != expectedLayers.end(); ++iterExp)
-    {
-      ++m_expectedLayer[*iterExp];
-      for (unsigned int i = 0; i < m_NbrOfCuts; ++i)
-	    {
-        if (foundHitInLayer(output, *It, *iterExp, m_spacialCut[i]))
-          ++m_foundLayer[i][*iterExp];
       } // loop cuts
     } // loop expected
-
   } // loop tracks
   
   return StatusCode::SUCCESS;
@@ -327,63 +331,24 @@ StatusCode STEfficiency::execute()
  * @return \e true if yes.
  */
 bool STEfficiency::foundHitInSector( const ISTClusterCollector::Hits& hits,
-                                     Track* const& track,
-                                     const unsigned int testsector,
-                                     const double resCut ) const
+                                        Track* const& track,
+                                        const unsigned int testsector,
+                                        const double resCut ) const
 {
-  const DeSTSector*  sector;
-  unsigned int beetle;
-  double sigToNoise;
   BOOST_FOREACH(ISTClusterCollector::Hit aHit, hits)
     {
-      if ( aHit.cluster->channelID().uniqueSector() == testsector &&
-           fabs(aHit.residual) < resCut )
-      {
-        if ( !( m_everyHit || track -> isOnTrack( LHCbID( aHit.cluster -> channelID() ) ) ) )
-          continue;
-        sector     = m_tracker -> findSector( aHit.cluster -> channelID() );
-        beetle     = sector -> beetle( aHit.cluster -> channelID());
-        sigToNoise = aHit.cluster -> totalCharge() / sector->beetleNoise(beetle);
-        if ( sigToNoise < m_chargeCut )
-          continue;
-        else
+      if ( aHit.cluster->channelID().uniqueSector() == testsector ){
+        if(fullDetail()){
+          plot(aHit.residual, "Control/HitResidual","Hit residual",-1.,1.,200);
+          plot(aHit.cluster->totalCharge(), "Control/HitCharge","Hit charge",0.,200.,200);
+        }
+        if( fabs(aHit.residual) < resCut ){
+          if ( !( m_everyHit || track -> isOnTrack( LHCbID( aHit.cluster -> channelID() ) ) ) )
+            continue;
+          if( aHit.cluster->totalCharge() < m_minCharge )
+            continue;
           return true;
-      }
-    } // foreach
-  
-  return false;
-}
-/**
- * Checks whether there is a hit in the given layer.
- *
- * @param hits list of clusters.
- * @param testlayer uniqueID of the wanted layer
- * @param resCut window size
- *
- * @return \e true if yes.
- */
-bool STEfficiency::foundHitInLayer( const ISTClusterCollector::Hits& hits,
-                                    Track* const& track,
-                                    const unsigned int testlayer,
-                                    const double resCut  ) const
-{
-  const DeSTSector*  sector;
-  unsigned int beetle;
-  double sigToNoise;
-  BOOST_FOREACH(ISTClusterCollector::Hit aHit, hits)
-    {
-      if ( aHit.cluster->channelID().uniqueDetRegion() == testlayer &&
-           fabs(aHit.residual) < resCut )
-      {
-        if ( !( m_everyHit || track -> isOnTrack( LHCbID( aHit.cluster -> channelID() ) ) ) )
-          continue;
-        sector     = m_tracker -> findSector( aHit.cluster -> channelID() );
-        beetle     = sector -> beetle( aHit.cluster -> channelID());
-        sigToNoise = aHit.cluster -> totalCharge()/sector->beetleNoise(beetle);
-        if ( sigToNoise < m_chargeCut )
-          continue;
-        else
-          return true;
+        }
       }
     } // foreach
   
@@ -396,7 +361,7 @@ bool STEfficiency::foundHitInLayer( const ISTClusterCollector::Hits& hits,
 StatusCode STEfficiency::finalize()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
+  
   if ( m_totalExpected == 0 )
   {
     warning() << "I'm sorry, but no track was found, please check that"
@@ -407,11 +372,11 @@ StatusCode STEfficiency::finalize()
     warning() << endmsg;
     return TrackMonitorBase::finalize();
   }
-
+  
   std::map<unsigned int, DeSTSector*>::const_iterator iterS = m_nameMapSector.begin();
  
-  std::vector<double>::const_iterator cutBegin( m_spacialCut.begin() ),
-    cutEnd( m_spacialCut.end() ), cutIt;
+  std::vector<double>::const_iterator cutBegin( m_spacialCuts.begin() ),
+    cutEnd( m_spacialCuts.end() ), cutIt;
 
   STChannelID channelID;
   std::string nick, root;
@@ -421,155 +386,162 @@ StatusCode STEfficiency::finalize()
   //  double totExpected = 0; double totFound = 0;
   double nExpected, nFound, err;
   double eff  = 999.0;
+  
+  Histo2DProperties* prop;
+  Histo2DProperties* propSectorStatus;
+  Histo2DProperties* propNbHits;
+  Histo2DProperties* propNbFoundHits;
+  
+  if(m_detType=="IT"){
+    prop = new ST::ITDetectorPlot( "EfficiencyPlot", "Efficiency Plot" );
+    propSectorStatus = new ST::ITDetectorPlot( "SectorStatus", "Sector Status Plot" );
+    propNbHits = new ST::ITDetectorPlot( "NbExpHits", "Number of Expected Hits Plot" );
+    propNbFoundHits = new ST::ITDetectorPlot( "NbFoundHits", "Number of Found Hits Plot" );
+  }else{
+    prop = new ST::TTDetectorPlot( "EfficiencyPlot", "Efficiency Plot" );
+    propSectorStatus = new ST::TTDetectorPlot( "SectorStatus", "Sector Status Plot" );
+    propNbHits = new ST::TTDetectorPlot( "NbExpHits", "Number of Expected Hits Plot" );
+    propNbFoundHits = new ST::TTDetectorPlot( "NbFoundHits", "Number of Found Hits Plot" );
+  }
 
-  ITDetectorPlot prop( "EfficiencyPlot", "Efficiency Plot" );
-
-  IHistogram2D* histo = book2D( prop.name() , prop.title(),
-                                prop.minBinX(), prop.maxBinX(), prop.nBinX(),
-                                prop.minBinY(), prop.maxBinY(), prop.nBinY());
-
+  IHistogram2D* histoEff = 0;
+  if(m_effPlot){
+    histoEff = book2D( prop->name() , prop->title(),
+                       prop->minBinX(), prop->maxBinX(), prop->nBinX(),
+                       prop->minBinY(), prop->maxBinY(), prop->nBinY());
+  }
+  
+  IProfile2D* histoSectorStatus = bookProfile2D( propSectorStatus->name() , propSectorStatus->title(),
+                                                 propSectorStatus->minBinX(), propSectorStatus->maxBinX(), propSectorStatus->nBinX(),
+                                                 propSectorStatus->minBinY(), propSectorStatus->maxBinY(), propSectorStatus->nBinY());
+  
+  IHistogram2D* histoNbHits = book2D( propNbHits->name() , propNbHits->title(),
+                                      propNbHits->minBinX(), propNbHits->maxBinX(), propNbHits->nBinX(),
+                                      propNbHits->minBinY(), propNbHits->maxBinY(), propNbHits->nBinY());
+  
+  IHistogram2D* histoNbFoundHits = book2D( propNbFoundHits->name() , propNbFoundHits->title(),
+                                           propNbFoundHits->minBinX(), propNbFoundHits->maxBinX(), propNbFoundHits->nBinX(),
+                                           propNbFoundHits->minBinY(), propNbFoundHits->maxBinY(), propNbFoundHits->nBinY());
+  
   for (; iterS != m_nameMapSector.end(); ++iterS )
   {
     channelID = iterS -> second -> elementID();
     nick   = iterS -> second -> nickname();
     iterS->second->isStereo() == true ? presentCut = m_whichCut[1]: presentCut = m_whichCut[0] ;
       
-    if (m_detType == "IT")
-      root = ITNames().UniqueBoxToString(channelID);
-
+    root = "perSector";
+    
     // how many were expected ?
     nExpected = static_cast<double>( m_expectedSector[ iterS -> first ] );
-      
-    if (nExpected > 1)
+    
+    if (nExpected >= 1)
     {
-      profile1D(-10., nExpected, root + "/Eff_" + nick,
-                "Efficiency vs cut",
-                m_spacialCut.front() - m_binSize / 2.,
-                m_spacialCut.back() + m_binSize / 2.,
-                m_binNumber);
+      if(fullDetail())
+        plot(-10., root + "/NbFoundHits_" + nick,
+             "Number of Found Hits vs Cut",
+             m_spacialCuts.front() - m_binSize / 2.,
+             m_spacialCuts.back() + m_binSize / 2.,
+             m_binNumber, nExpected);
+      if(fullDetail())
+        plot(-10., root + "/NbExpHits_" + nick,
+             "Number of Found Hits vs Cut",
+             m_spacialCuts.front() - m_binSize / 2.,
+             m_spacialCuts.back() + m_binSize / 2.,
+             m_binNumber, nExpected);
+      if(m_effPlot){
+        if(fullDetail())
+          profile1D(-10., nExpected, root + "/Eff_" + nick,
+                    "Efficiency vs Cut",
+                    m_spacialCuts.front() - m_binSize / 2.,
+                    m_spacialCuts.back() + m_binSize / 2.,
+                    m_binNumber);
+      }
+      if(m_detType=="IT"){
+        ST::ITDetectorPlot::Bins theBins = static_cast<ST::ITDetectorPlot*>(propSectorStatus)->toBins(channelID); 
+        histoSectorStatus -> fill( theBins.xBin, theBins.yBin, 1 );
+      }else{
+        ST::TTDetectorPlot::Bins theBins = 
+          static_cast<ST::TTDetectorPlot*>(propSectorStatus)->toBins(static_cast<DeTTSector*>(iterS->second)); 
+        for(int ybin(theBins.beginBinY);ybin<theBins.endBinY;ybin++){
+          histoSectorStatus -> fill( theBins.xBin, ybin, 1 );
+        }
+      }
+      
       for (i = 0; i < m_NbrOfCuts; ++i)
 	    {
 	      nFound = static_cast<double>( m_foundSector[i][iterS->first] );
 	      eff = 100. * nFound / nExpected;
 	      err = sqrt( eff * (100. - eff) / nExpected );
-	      profile1D(m_spacialCut[i], eff, root + "/Eff_" + nick,
-                  "Efficiency vs cut",
-                  m_spacialCut.front() - m_binSize / 2.,
-                  m_spacialCut.back() + m_binSize / 2.,
-                  m_binNumber);
-	      if ( i == presentCut )
+       
+        if(fullDetail())
+          plot(m_spacialCuts[i], root + "/NbFoundHits_" + nick,
+               "Number of Found Hits vs Cut",
+               m_spacialCuts.front() - m_binSize / 2.,
+               m_spacialCuts.back() + m_binSize / 2.,
+               m_binNumber, nFound);
+        if(fullDetail())
+          plot(m_spacialCuts[i], root + "/NbExpHits_" + nick,
+               "Number of Exp Hits vs Cut",
+               m_spacialCuts.front() - m_binSize / 2.,
+               m_spacialCuts.back() + m_binSize / 2.,
+               m_binNumber, nExpected);
+        if(m_effPlot){
+          if(fullDetail())
+            profile1D(m_spacialCuts[i], eff, root + "/Eff_" + nick,
+                      "Efficiency vs cut",
+                      m_spacialCuts.front() - m_binSize / 2.,
+                      m_spacialCuts.back() + m_binSize / 2.,
+                      m_binNumber);
+        }
+        if ( i == presentCut )
         {
-          if(msgLevel(MSG::VERBOSE)) verbose() << nick << ' ' << eff
-                                             << " +/- " << err << " (found " << nFound
-                                             << " for cut " << m_spacialCut[i] << ")" << endmsg;
-		  
-          ST::ITDetectorPlot::Bins theBins = prop.toBins(channelID); 
-          if ( nExpected > m_minExpected )
-          {
-            histo -> fill( theBins.xBin, theBins.yBin, eff );
-            plot(eff,"sectorEff", "sector eff", 0., 100., 200);
+          verbose() << nick << ' ' << eff
+                    << " +/- " << err << " (found " << nFound
+                    << " for cut " << m_spacialCuts[i] << ")" << endmsg;
+          
+          if(m_detType=="IT"){
+            ST::ITDetectorPlot::Bins theBins = static_cast<ST::ITDetectorPlot*>(propSectorStatus)->toBins(channelID); 
+            if(m_effPlot)
+              histoEff -> fill( theBins.xBin, theBins.yBin, eff );
+            histoNbHits -> fill( theBins.xBin, theBins.yBin, nExpected );
+            histoNbFoundHits -> fill( theBins.xBin, theBins.yBin, nFound );
+          }else{
+            ST::TTDetectorPlot::Bins theBins = 
+              static_cast<ST::TTDetectorPlot*>(propSectorStatus)->toBins(static_cast<DeTTSector*>(iterS->second)); 
+            for(int ybin(theBins.beginBinY);ybin<theBins.endBinY;ybin++){
+              if(m_effPlot)
+                histoEff -> fill( theBins.xBin, ybin, eff );
+              histoNbHits -> fill( theBins.xBin, ybin, nExpected );
+              histoNbFoundHits -> fill( theBins.xBin, ybin, nFound );
+            }
           }
-          else
-            histo -> fill( theBins.xBin, theBins.yBin, 102. );
         }
 	    } // i
     } //nExpected
-  } // iterS
-  
-  for (iterS = m_nameMapLayer.begin(); iterS != m_nameMapLayer.end(); ++iterS )
-  {
-    channelID = iterS -> second -> elementID();
-    iterS->second->isStereo() == true ? presentCut = m_whichCut[1]: presentCut = m_whichCut[0] ;
-    if (m_detType == "IT")
+    else
     {
-      nick  = ITNames().UniqueLayerToString(channelID);
-    }
-      
-    root = "Layers";
-      
-    // how many were expected ?
-    nExpected = m_expectedLayer[ iterS -> first ];
-      
-    if (nExpected > 1)
-    {
-      profile1D(-10., nExpected, root + "/Eff_" + nick,
-                "Efficiency vs cut",
-                m_spacialCut.front() - m_binSize / 2.,
-                m_spacialCut.back() + m_binSize / 2.,
-                m_binNumber);
-      for (i = 0; i < m_NbrOfCuts; ++i)
-	    {
-	      nFound = static_cast<double>( m_foundLayer[i][iterS->first] );
-	      eff = 100. * nFound /  nExpected;
-	      err = sqrt( eff * (100. - eff) / nExpected );
-	      profile1D(m_spacialCut[i], eff, root + "/Eff_" + nick,
-                  "Efficiency vs cut",
-                  m_spacialCut.front() - m_binSize / 2.,
-                  m_spacialCut.back() + m_binSize / 2.,
-                  m_binNumber);
-	      if ( i == presentCut )
-        {
-          plot(eff, "layerEff", "layer eff", 0., 100, 200);
-          info() << std::setw(11) << std::left << nick << ' ' 
-                 << std::setw(4) << std::right << nFound
-                 << " found hits" << " (" << std::setw(4) << std::right
-                 << nExpected << " expected ones), cut = "
-                 << formatNumber( m_spacialCut[i], 1u )
-                 << ' ' << std::setw(6) << formatNumber( eff )
-                 << " +/- "
-                 << std::setw(5) << formatNumber( err )
-                 << endmsg;
+      if(m_detType=="IT"){
+        ST::ITDetectorPlot::Bins theBins = static_cast<ST::ITDetectorPlot*>(propSectorStatus)->toBins(channelID); 
+        if(m_effPlot)
+          histoEff -> fill( theBins.xBin, theBins.yBin, -1 );
+        histoSectorStatus -> fill( theBins.xBin, theBins.yBin, -1 );
+        histoNbHits -> fill( theBins.xBin, theBins.yBin, 0 );
+        histoNbFoundHits -> fill( theBins.xBin, theBins.yBin, 0 );
+      }else{
+        ST::TTDetectorPlot::Bins theBins = 
+          static_cast<ST::TTDetectorPlot*>(propSectorStatus)->toBins(static_cast<DeTTSector*>(iterS->second));
+        for(int ybin(theBins.beginBinY);ybin<theBins.endBinY;ybin++){
+          if(m_effPlot)
+            histoEff -> fill( theBins.xBin, ybin, -1 );
+          histoSectorStatus -> fill( theBins.xBin, ybin, -1 );
+          histoNbHits -> fill( theBins.xBin, ybin, 0 );
+          histoNbFoundHits -> fill( theBins.xBin, ybin, 0 );
         }
-	    } // i
-    } // nExpected
+      }
+    }
   } // iterS
   
-  // total efficency
-  double teff = 999.;
-  if ( m_totalExpected != 0u )
-  {
-    teff = 100. * static_cast<double>(m_totalFound)/static_cast<double>(m_totalExpected);
-    double terror = sqrt( teff * (100. - teff) / static_cast<double>(m_totalExpected ));
-    info() << "Total Eff " << formatNumber( teff ) <<  " +/- "
-           << formatNumber( terror ) << endmsg;
-  }
-  
-  std::string layerEff( "layer eff" );
-  AIDA::IHistogram1D* layerHisto = histo1D( layerEff );
-  if ( layerHisto != 0 )
-    info() << "Layer Eff: " << formatNumber( layerHisto->mean() ) << " rms "
-           << formatNumber( layerHisto->rms() ) << endmsg;  
-  else
-    warning() << "Got an empty histo for \"layer eff\"" << endmsg;
-    
-
-  std::string sectorEff( "sector eff" );
-  IHistogram1D* sectorHisto = histo1D( sectorEff);
-  if ( sectorHisto == 0 )
-    warning() << "Got an empty histo for \"sector eff\"" << endmsg;
-  else
-    info() << "Sector Eff: " << formatNumber( sectorHisto->mean() ) << " rms "
-           << formatNumber( sectorHisto->rms() ) << endmsg;  
-
   return TrackMonitorBase::finalize();  // must be called after all other actions
-}
-
-STEfficiency::Category STEfficiency::ITCategory(const std::vector<LHCb::LHCbID>& ids) const
-{
-  typedef std::map<unsigned int, unsigned int> BoxMap;
-  BoxMap nBox;
-  BOOST_FOREACH(LHCb::LHCbID id, ids)
-    {
-      nBox[ id.stID().detRegion() ] += 1;
-    } // for each
-  
-  return nBox.size() == 1 ? Category(nBox.begin() -> first) : Mixed ;
-}
-
-void STEfficiency::filterNameList(std::vector<unsigned int>& vec)
-{
-  std::sort( vec.begin(), vec.end() );
-  std::unique( vec.begin(), vec.end() );
 }
 
 /**
@@ -589,6 +561,33 @@ std::string STEfficiency::formatNumber(const double& nbr,
   ss.setf(std::ios::fixed, std::ios::floatfield);
   ss << std::setprecision( digits ) << nbr;
   return ss.str();
+}
+
+/**
+ *
+ */
+bool STEfficiency::hasMinStationPassed(LHCb::Track* const& aTrack) const
+{
+  std::set<unsigned int> stations;
+  const std::vector<LHCb::LHCbID>& ids = aTrack -> lhcbIDs();
+
+  for (std::vector<LHCb::LHCbID>::const_iterator iter = ids.begin(); iter != ids.end(); ++iter){
+    if (m_detType == "IT"){
+      if (iter->isIT() == true ) 
+        stations.insert( iter->stID().station() );
+    }else{
+      if (iter->isTT() == true ) 
+        stations.insert( iter->stID().station() );
+    }
+  }
+
+  if(fullDetail())
+    plot(stations.size(), "Control/NbCrossedStation","Number of stations crossed by the track",-0.5,3.5,4);
+
+  if(stations.size() >= m_minStationPassed)
+    return true;
+  
+  return false;
 }
 
 //=============================================================================
