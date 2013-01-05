@@ -5,8 +5,11 @@
 !============================================================================
 
 ! 2013-01-05 - Chris Jones
- - Fix a bug where IgnoreP2PVFromInputLocations in DVCommonBase was not respected.
-   Fixes https://savannah.cern.ch/bugs/?99656
+ - Fix a bug where IgnoreP2PVFromInputLocations in DVCommonBase was not 
+   respected. Fixes https://savannah.cern.ch/bugs/?99656
+ - Disable the preloading of P2PV relations, as this is no longer needed with 
+   the new logic that loads on demand the relations based on the Particle 
+   location in the TES.
 
 !========================= DaVinciKernel v11r2 2012-11-30 =========================
 

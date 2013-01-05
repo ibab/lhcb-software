@@ -107,7 +107,7 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
 
   this->declareProperty( "ReFitPVs", m_refitPVs, "Refit PV" );
 
-  this->declareProperty( "CheckOverlapTool", m_checkOverlapName, "Name of Overlap Tool"  );
+  this->declareProperty( "CheckOverlapTool", m_checkOverlapName, "Name of Overlap Tool" );
   //
   this->declareProperty
     ( "VertexFitters",
@@ -387,20 +387,11 @@ void DVCommonBase<PBASE>::initializeLocations()
                   << endmsg;
   }
 
+  // Strip any ending "/Particles"
   for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
         iloc != m_inputLocations.end(); ++iloc )
   {
     DaVinci::StringUtils::removeEnding(*iloc,"/Particles");
-  }
-
-  if ( !m_ignoreP2PVFromInputLocations )
-  {
-    // load default P->PV locations.
-    for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
-          iloc != m_inputLocations.end(); ++iloc )
-    {
-      m_p2PVInputLocations.push_back((*iloc)+"/Particle2VertexRelations");
-    }
   }
 
   if ( this->msgLevel(MSG::DEBUG) )
@@ -543,7 +534,8 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
        iLoc != m_p2PVInputLocations.end(); ++iLoc )
   {
 
-    this -> info() << "Trying to Preload " << *iLoc << endmsg;
+    if ( this->msgLevel(MSG::VERBOSE) )
+      this -> verbose() << "Trying to Preload " << *iLoc << endmsg;
 
     const Particle2Vertex::Table * table =
       this -> template getIfExists<Particle2Vertex::Table>(*iLoc);
@@ -553,9 +545,9 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
     }
     if ( table )
     {
-      //if ( this->msgLevel(MSG::DEBUG) )
+      if ( this->msgLevel(MSG::VERBOSE) )
       {
-        this->info() << "Pre-loaded table from " << (*iLoc) << endmsg ;
+        this -> verbose() << "Pre-loaded table from " << (*iLoc) << endmsg ;
       }
       loadRelations( table->relations() );
     }
@@ -572,7 +564,7 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
 //=============================================================================
 
 template <class PBASE>
-void 
+void
 DVCommonBase<PBASE>::loadRelations(const Particle2Vertex::Table::Range& relations) const
 {
   if ( relations.empty() ) return;
@@ -858,7 +850,7 @@ StatusCode DVCommonBase<PBASE>::_saveInTES()
 {
   if ( this->msgLevel(MSG::VERBOSE) )
   {
-    this->verbose() << "DVCommonBase::_saveInTES "<< m_parts.size() 
+    this->verbose() << "DVCommonBase::_saveInTES "<< m_parts.size()
                     << " Particles" << endmsg;
   }
 
@@ -1073,6 +1065,7 @@ template <class PBASE>
 const LHCb::VertexBase*
 DVCommonBase<PBASE>::getRelatedPV(const LHCb::Particle* part) const
 {
+  const LHCb::VertexBase* pv = NULL;
 
   if ( this->msgLevel(MSG::VERBOSE) )
     this->verbose() << "getRelatedPV! Getting range" << endmsg;
@@ -1080,42 +1073,55 @@ DVCommonBase<PBASE>::getRelatedPV(const LHCb::Particle* part) const
   if ( !part )
   {
     this->Error( "Input particle is NULL" ).ignore();
-    return NULL;
+    return pv;
   }
 
   if ( !hasStoredRelatedPV(part) )
   {
     // First, see if we can find a relations table from the Particle TES location
     // and relate the P to PV via that
-    const LHCb::VertexBase* pv = relatePVViaParticleTESLoc(part);
-    if ( pv ) return pv;
-
-    // No, so try to calculate the relation
-    if ( this->msgLevel(MSG::VERBOSE) )
+    pv = relatePVViaParticleTESLoc(part);
+    if ( !pv )
     {
-      this->verbose() << "particle2Vertices empty. Calling calculateRelatedPV"
-                      << endmsg;
-    }
-    pv = calculateRelatedPV(part);
-    if ( pv )
-    {
+      // No, so try to calculate the relation
       if ( this->msgLevel(MSG::VERBOSE) )
       {
-        this->verbose() << "Found related vertex. Relating it" << endmsg;
+        this->verbose() << "particle2Vertices empty. Calling calculateRelatedPV"
+                        << endmsg;
       }
-      relate( part, pv );
-      return pv;
-    }
-    else
-    {
-      this->Warning("Found no related vertex", StatusCode::FAILURE, 0).ignore();
-      return NULL;
+      pv = calculateRelatedPV(part);
+      if ( pv )
+      {
+        if ( this->msgLevel(MSG::VERBOSE) )
+        {
+          this->verbose() << "Found related vertex. Relating it" << endmsg;
+        }
+        relate( part, pv );
+      }
+      else
+      {
+        this->Warning("Found no related vertex", StatusCode::FAILURE, 0).ignore();
+      }
     }
   }
   else
   {
-    return getStoredBestPV(part);
+    pv = getStoredBestPV(part);
   }
+
+  if ( UNLIKELY(this->msgLevel(MSG::DEBUG)) )
+  {
+    if ( pv )
+    {
+      this->debug() << "Found related PV " << pv->key() << endmsg;
+    }
+    else
+    {
+      this->debug() << "NO related PV" << endmsg;
+    }
+  }
+
+  return pv;
 }
 
 // ============================================================================
@@ -1135,10 +1141,10 @@ DVCommonBase<PBASE>::relatePVViaParticleTESLoc(const LHCb::Particle* p) const
     {
       // Form the relations TES location for this Particles location
       boost::replace_all( loc, "/Particles", "/Particle2VertexRelations" );
-      
+
       // Try and load the relations
-      //if ( this->msgLevel(MSG::DEBUG) )
-      this->info() << "Trying to load Relations at " << loc << endmsg;
+      if ( this->msgLevel(MSG::DEBUG) )
+        this->debug() << "Trying to load Relations at " << loc << endmsg;
       const Particle2Vertex::Table * table =
         this -> template getIfExists<Particle2Vertex::Table>(loc);
       if ( !table )
@@ -1147,9 +1153,6 @@ DVCommonBase<PBASE>::relatePVViaParticleTESLoc(const LHCb::Particle* p) const
       }
       if ( table )
       {
-
-        this->info() << " -> Found" <<endmsg;
-
         // Load the relations table
         loadRelations( table->relations() );
 
