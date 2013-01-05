@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-01-05 - Vanya Belyaev
+ - add StudentT pdf by Matt Needham 
+
 !========================= AnalysisPython v2r17 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

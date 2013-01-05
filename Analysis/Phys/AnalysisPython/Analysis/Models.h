@@ -996,6 +996,58 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class StudentT 
+     *  Student-T distribution
+     *
+     *  \f[  f(y) = \frac{1}{\sqrt{\pi n}} \frac { \Gamma( \frac{n+1}{2}) } { \Gamma( \frac{n}{2}  ) }
+     *  \left( 1 + \frac{y^2}{n} \right)^{ -\frac{n+1}{2}} \f], 
+     *  where \f$ y = \frac{x - \mu}{\sigma} \f$  
+     * 
+     *  @see Gaudi::Math::StudentT
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2013-01-05
+     */
+    class GAUDI_API StudentT: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::StudentT, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      StudentT ( const char*          name      , 
+                 const char*          title     ,
+                 RooAbsReal&          x         ,
+                 RooAbsReal&          mu        ,
+                 RooAbsReal&          sigma     ,
+                 RooAbsReal&          n         ) ;
+      /// "copy constructor"
+      StudentT ( const StudentT&      right     , 
+                 const char*          name  = 0 )  ;
+      /// destructor 
+      virtual ~StudentT() ;
+      /// clone 
+      virtual  StudentT* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_mu       ;
+      RooRealProxy m_sigma    ;
+      RooRealProxy m_n        ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::StudentT m_stt ;           // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                        end of namespace Analysis::Models
   // ==========================================================================
 } //                                                  end of namespace Analysis 

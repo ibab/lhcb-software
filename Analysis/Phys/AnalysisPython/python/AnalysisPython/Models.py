@@ -90,6 +90,8 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Bugg23L                ,
                Gaudi.Math.BW23L                  ,
                Gaudi.Math.Flatte23L              ,
+               Gaudi.Math.Gounaris23L            ,
+               Gaudi.Math.StudentT               ,
                Gaudi.Math.Voigt                  ) :
     model . tf1 = _tf1_ 
 

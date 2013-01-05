@@ -1492,6 +1492,66 @@ Double_t Analysis::Models::Voigt::evaluate() const
 // ============================================================================
 
   
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::StudentT::StudentT 
+( const char*          name  , 
+  const char*          title ,
+  RooAbsReal&          x     ,
+  RooAbsReal&          mu    ,
+  RooAbsReal&          sigma ,
+  RooAbsReal&          n     )
+  : RooAbsPdf  (name ,title ) 
+//
+  , m_x     ( "x"     , "Observable" , this , x     ) 
+  , m_mu    ( "mu"    , "Peak"       , this , mu    ) 
+  , m_sigma ( "sigma" , "Width"      , this , sigma )
+  , m_n     ( "n"     , "N"          , this , n     )
+//
+  , m_stt   ( 0 , 1 , 1 ) 
+{
+  m_stt.setM     ( m_mu    ) ;
+  m_stt.setSigma ( m_sigma ) ;
+  m_stt.setN     ( m_n     ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::StudentT::StudentT
+( const Analysis::Models::StudentT& right , 
+  const char*                       name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x     ( "x"     , this , right.m_x     ) 
+  , m_mu    ( "mu"    , this , right.m_mu    ) 
+  , m_sigma ( "sigma" , this , right.m_sigma )
+  , m_n     ( "n"     , this , right.m_n     )
+//
+  , m_stt   (               right.m_stt    ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::StudentT::~StudentT(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::StudentT*
+Analysis::Models::StudentT::clone( const char* name ) const 
+{ return new Analysis::Models::StudentT(*this,name) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::StudentT::evaluate() const 
+{
+  m_stt.setM     ( m_mu    ) ;
+  m_stt.setSigma ( m_sigma ) ;
+  m_stt.setN     ( m_n     ) ;
+  //
+  return m_stt   ( m_x ) ;
+}
+// ============================================================================
 
 
 
