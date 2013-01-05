@@ -881,10 +881,6 @@ StatusCode DVCommonBase<PBASE>::_saveInTES()
     // Check if this was already in a Gaudi container (hence in TES)
     if ( !DaVinci::Utils::inTES(*iParticle) )
     {
-      if ( this->msgLevel(MSG::VERBOSE) )
-      {
-        this->verbose() << "  Saving " <<  *iParticle << endmsg;
-      }
       if (*iParticle)
       {
         p_tes->insert(const_cast<LHCb::Particle*>(*iParticle));
@@ -993,8 +989,8 @@ DVCommonBase<PBASE>::calculateRelatedPV(const LHCb::Particle* p) const
     {
       if (pv)
       {
-        this->verbose() << "Returning related vertex\n"
-                        << pv << endmsg;
+        this->verbose() << "Returning related vertex key="
+                        << pv->key() << endmsg;
       }
       else
       {
@@ -1127,7 +1123,7 @@ const LHCb::VertexBase*
 DVCommonBase<PBASE>::relatePVViaParticleTESLoc(const LHCb::Particle* p) const
 {
   const LHCb::VertexBase * pv = NULL;
-  if ( p )
+  if ( p && !m_ignoreP2PVFromInputLocations )
   {
     // Load Particle container name
     std::string loc = objectLocation( p->parent() );

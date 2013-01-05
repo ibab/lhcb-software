@@ -4,6 +4,10 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2013-01-05 - Chris Jones
+ - Fix a bug where IgnoreP2PVFromInputLocations in DVCommonBase was not respected.
+   Fixes https://savannah.cern.ch/bugs/?99656
+
 !========================= DaVinciKernel v11r2 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
