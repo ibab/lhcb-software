@@ -359,7 +359,7 @@ class StrippingPromptCharmConf(LineBuilder) :
 
         for line in self._lines_charm() :
             self.registerLine(line)
-            logger.info ( "Register line: %s" %  line.name () )
+            logger.debug ( "Register line: %s" %  line.name () )
 
     ## get the selections
     def _selections_private ( self ) :

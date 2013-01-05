@@ -254,7 +254,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
 
         for line in self._lines_associative_onia () :
             self.registerLine(line)
-            logger.info ( "Register line: %s" %  line.name () ) 
+            logger.debug ( "Register line: %s" %  line.name () ) 
                         
 
     ## get the common preambulo: 

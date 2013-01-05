@@ -213,7 +213,7 @@ class PsiX0Conf(LineBuilder) :
                 
         for line in self._lines_psiX0 () :
             self.registerLine(line)
-            logger.info ( "Register line: %s" %  line.name () ) 
+            logger.debug ( "Register line: %s" %  line.name () ) 
             
     ## get the selection, associated with some nickname name 
     def _selection ( self , nick ) :
