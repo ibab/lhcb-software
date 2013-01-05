@@ -408,6 +408,7 @@ MINT::counted_ptr<DalitzEvent> ReadNTuple<T,N>::readEntry(unsigned int entry){
 
   int pdgArray[5];
   pdgArray[0] = (int)m_mother_pdg;
+//  std::cout << m_mother_pdg <<
 
   if (dbThis)
     {
@@ -530,7 +531,7 @@ bool ReadNTuple<T,N>::readit(DiskResidentEventList* listPtr, int maxEvents, doub
 
   if (!testEventPattern()) return false;
 
-  float weight(0);
+  double weight(0);
   if (m_useWeights)
     {
       _tree->SetBranchAddress(m_weightName.c_str(),&weight);
@@ -551,6 +552,7 @@ bool ReadNTuple<T,N>::readit(DiskResidentEventList* listPtr, int maxEvents, doub
                         {
                           evtPtr->setWeight(weight);
                         }
+
                       numEvents++;
                       listPtr->Add(*(evtPtr.get()));
                     }
@@ -576,7 +578,7 @@ template <typename T, typename N>
 bool ReadNTuple<T,N>::testEventPattern()
 {
   _tree->GetEntry(0);
-  if (set_pat[0] != m_mother_pdg)
+  if ((int)set_pat[0] != (int)m_mother_pdg)
     {
       cout << "Mother Pattern not the same try CC" << endl;
       cout << " set_pat " << set_pat[0] << " " << set_pat[1];
@@ -588,7 +590,7 @@ bool ReadNTuple<T,N>::testEventPattern()
       m_pat = new DalitzEventPattern(pat);
       set_pat = m_pat->getVectorOfInts();
     }
-  if (set_pat[0] != m_mother_pdg)
+  if ((int)set_pat[0] != (int)m_mother_pdg)
     {
       cerr << " set_pat " << set_pat[0] << std::endl;
       cerr << "Mother Pattern STILL not the same" << endl;

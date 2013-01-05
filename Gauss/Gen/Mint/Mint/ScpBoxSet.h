@@ -66,6 +66,11 @@ class ScpBoxSet : public std::vector<ScpBox>{
   double weightedMC() const;
   double weightedMC2() const;
 
+  double weightedBkg() const;
+  double weightedBkgCC() const;
+
+
+
   double rmsMC(int Ntotal) const;
 
   void setNormFactor(double nf){_normFactor = nf;}

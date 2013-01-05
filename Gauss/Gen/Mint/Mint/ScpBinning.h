@@ -26,7 +26,9 @@ class ScpBinning {
 protected:
   std::vector<ScpBoxSet> _boxSets;
   int _nData;
+  int _nBkg;
   int _nDataCC;
+  int _nBkgCC;
   double _totalMCWeight;
   double m_norm;
 //
@@ -52,7 +54,7 @@ protected:
  public:
   ScpBinning();
 
-  void useWeights(bool weights=1)
+  void useWeights(bool weights)
   {
     m_useWeights = weights;
   }
@@ -84,6 +86,10 @@ protected:
   double NormDiff_ofBin(unsigned int i) const;
   double Err_ofBin(unsigned int i) const;
   double Entries_ofBin(unsigned int i) const;
+
+  double rawAsym_ofBin(unsigned int i) const;
+
+  double rawAsymErr_ofBin(unsigned int i) const;
 
   double getScp_perBin() const;
   double getScpErr_perBin(double mean) const;

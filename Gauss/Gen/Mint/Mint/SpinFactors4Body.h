@@ -44,7 +44,7 @@ class SF_DtoPP0_PtoVP1_VtoP2P3 : public SpinFactor{
       if( ! parseTree()){
 	throw "error in parseTree in constructor of SF_DtoPP0_PtoVP1_VtoP2P3";
       }
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoPP0_PtoVP1_VtoP2P3(){}
@@ -104,7 +104,7 @@ class SF_DtoAP0_AtoVP1_VtoP2P3 : public SF_DtoAP0_AtoVP1_VtoP2P3_BASE{
       if( ! parseTree()){
 	throw "error in parseTree in constructor of SF_DtoAP0_AtoVP1Dwave_VtoP2P3";
       }
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoAP0_AtoVP1_VtoP2P3(){}
@@ -131,7 +131,7 @@ class SF_DtoAP0_AtoVP1Dwave_VtoP2P3 : public SF_DtoAP0_AtoVP1_VtoP2P3_BASE{
       if( ! parseTree()){
 	throw "error in parseTree in constructor of SF_DtoAP0_AtoVP1Dwave_VtoP2P3";
       }
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoAP0_AtoVP1Dwave_VtoP2P3(){}
@@ -165,7 +165,7 @@ class SF_DtoAP0_AtoSP1_StoP2P3 : public SpinFactor{
       if( ! parseTree()){
 	throw "error in parseTree in constructor of SF_DtoAP0_AtoSP1_StoP2P3";
       }
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoAP0_AtoSP1_StoP2P3(){}
@@ -224,7 +224,7 @@ class SF_DtoV1V2_V1toP0P1_V1toP2P3_S : public SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE{
 				, const DecayTree& theDecay)
    : SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(events, theDecay)
     {
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoV1V2_V1toP0P1_V1toP2P3_S(){}
@@ -248,7 +248,7 @@ class SF_DtoV1V2_V1toP0P1_V1toP2P3_P : public SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE{
 				 , const DecayTree& theDecay)
     : SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(events, theDecay)
     {
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoV1V2_V1toP0P1_V1toP2P3_P(){}
@@ -271,7 +271,7 @@ class SF_DtoV1V2_V1toP0P1_V1toP2P3_D : public SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE{
 				 , const DecayTree& theDecay)
     : SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(events, theDecay)
     {
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoV1V2_V1toP0P1_V1toP2P3_D(){}
@@ -304,7 +304,7 @@ class SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1 : public SpinFactor{
       if( ! parseTree()){
 	throw "error in parseTree in constructor of SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1";
       }
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1(){}
@@ -336,7 +336,7 @@ class SF_DtoVS_VtoP0P1_StoP2P3 : public SpinFactor{
       if( ! parseTree()){
 	throw "error in parseTree in constructor of SF_DtoVS_VtoP0P1_StoP2P3";
       }
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoVS_VtoP0P1_StoP2P3(){}
@@ -368,7 +368,7 @@ class SF_DtoVS_VtoP0P1_StoP2P3_nonResV : public SpinFactor{
       if( ! parseTree()){
 	throw "error in parseTree in constructor of SF_DtoVS_VtoP0P1_StoP2P3_nonResV";
       }
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoVS_VtoP0P1_StoP2P3_nonResV(){}
@@ -426,7 +426,7 @@ class SF_DtoVT_VtoP0P1_TtoP2P3_P : public SF_DtoVT_VtoP0P1_TtoP2P3_BASE{
 			    , const DecayTree& theDecay)
    : SF_DtoVT_VtoP0P1_TtoP2P3_BASE(events, theDecay)
     {
-      printYourself();
+//      printYourself();
     }
   
   virtual ~SF_DtoVT_VtoP0P1_TtoP2P3_P(){}
@@ -449,7 +449,7 @@ class SF_DtoVT_VtoP0P1_TtoP2P3_D : public SF_DtoVT_VtoP0P1_TtoP2P3_BASE{
 			    , const DecayTree& theDecay)
    : SF_DtoVT_VtoP0P1_TtoP2P3_BASE(events, theDecay)
     {
-      printYourself();
+//      printYourself();
     }
   
   virtual ~SF_DtoVT_VtoP0P1_TtoP2P3_D(){}
@@ -481,7 +481,7 @@ class SF_DtoTS_TtoP0P1_StoP2P3 : public SpinFactor{
       if( ! parseTree()){
 	throw "error in parseTree in constructor of SF_DtoTS_TtoP0P1_StoP2P3";
       }
-      printYourself();
+//      printYourself();
     }
 
   virtual ~SF_DtoTS_TtoP0P1_StoP2P3(){}
@@ -517,7 +517,7 @@ public:
      if( ! parseTree()){
 	throw "error in parseTree in constructor of SF_DtoV1P0_V1toV2P1_V2toP2P3";
      }
-     printYourself();
+//     printYourself();
    }
 
  virtual ~SF_DtoV1P0_V1toV2P1_V2toP2P3(){}

@@ -12,6 +12,10 @@ class ScpBox{
 
   int _nData;
   int _nMC;
+  int _nBkg;
+  int _nBkgCC;
+  double _nWeightedBkg;
+  double _nWeightedBkgCC;
   double _nWeightedMC;
   double _nWeightedData;
 
@@ -52,6 +56,10 @@ class ScpBox{
   
   double weightedMC2() const;
   double rmsMC(int Ntotal) const;
+
+  double weightedBkg() const;
+  double weightedBkgCC() const;
+
 
   double t01Min() const{return _area._t01.min();} // = s234
   double t01Max() const{return _area._t01.max();}
