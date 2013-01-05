@@ -542,6 +542,9 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
   for( std::vector<std::string>::const_iterator iLoc = m_p2PVInputLocations.begin();
        iLoc != m_p2PVInputLocations.end(); ++iLoc )
   {
+
+    this -> info() << "Trying to Preload " << *iLoc << endmsg;
+
     const Particle2Vertex::Table * table =
       this -> template getIfExists<Particle2Vertex::Table>(*iLoc);
     if ( !table )
@@ -550,9 +553,9 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
     }
     if ( table )
     {
-      if ( this->msgLevel(MSG::DEBUG) )
+      //if ( this->msgLevel(MSG::DEBUG) )
       {
-        this->debug() << "Pre-loaded table from " << (*iLoc) << endmsg ;
+        this->info() << "Pre-loaded table from " << (*iLoc) << endmsg ;
       }
       loadRelations( table->relations() );
     }
@@ -855,7 +858,8 @@ StatusCode DVCommonBase<PBASE>::_saveInTES()
 {
   if ( this->msgLevel(MSG::VERBOSE) )
   {
-    this->verbose() << "DVCommonBase::_saveInTES "<< m_parts.size() << " Particles" << endmsg;
+    this->verbose() << "DVCommonBase::_saveInTES "<< m_parts.size() 
+                    << " Particles" << endmsg;
   }
 
   LHCb::Particle::Container* p_tes = new LHCb::Particle::Container () ;
@@ -1133,8 +1137,8 @@ DVCommonBase<PBASE>::relatePVViaParticleTESLoc(const LHCb::Particle* p) const
       boost::replace_all( loc, "/Particles", "/Particle2VertexRelations" );
       
       // Try and load the relations
-      if ( this->msgLevel(MSG::DEBUG) )
-        this->debug() << "Trying to load " << loc << endmsg;
+      //if ( this->msgLevel(MSG::DEBUG) )
+      this->info() << "Trying to load Relations at " << loc << endmsg;
       const Particle2Vertex::Table * table =
         this -> template getIfExists<Particle2Vertex::Table>(loc);
       if ( !table )
@@ -1143,6 +1147,9 @@ DVCommonBase<PBASE>::relatePVViaParticleTESLoc(const LHCb::Particle* p) const
       }
       if ( table )
       {
+
+        this->info() << " -> Found" <<endmsg;
+
         // Load the relations table
         loadRelations( table->relations() );
 
