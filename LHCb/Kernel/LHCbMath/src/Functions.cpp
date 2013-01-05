@@ -937,6 +937,18 @@ namespace
     return (*f)(x) ;
   }
   // ==========================================================================
+  /** helper function for itegration of StudentT-shape
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2013-01-05
+   */
+  double studentT_GSL ( double x , void* params )
+  {
+    //
+    const Gaudi::Math::StudentT* f = (Gaudi::Math::StudentT*) params ;
+    //
+    return (*f)(x) ;
+  }
+  // ==========================================================================
   /** helper function for itegration of Voigt shape
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
@@ -4348,20 +4360,20 @@ double Gaudi::Math::BW23L::operator() ( const double x ) const
   //
   const double bw = std::norm ( m_bw.amplitude ( x ) )   ;
   //
-  // get the incomplete phase space factor
-  const double ps  =                   // get the incomplete phase space factor
-    x / M_PI *
-    // =======================================================================
-    // the second factor is already in our BW !!!
-    Gaudi::Math::PhaseSpace2::phasespace ( x          , 
-                                           m_bw.m1 () , 
-                                           m_bw.m2 () , 
-                                           m_bw.L  () ) *
-    // =======================================================================
-    Gaudi::Math::PhaseSpace2::phasespace ( m_ps.m  () ,
-                                           x          ,
-                                           m_ps.m3 () ,
-                                           m_ps.L  () ) ;
+  // // get the incomplete phase space factor
+  // const double ps  =                   // get the incomplete phase space factor
+  //   x / M_PI *
+  //   // =======================================================================
+  //   // the second factor is already in our BW !!!
+  //   Gaudi::Math::PhaseSpace2::phasespace ( x          , 
+  //                                          m_bw.m1 () , 
+  //                                          m_bw.m2 () , 
+  //                                          m_bw.L  () ) *
+  //   // =======================================================================
+  //   Gaudi::Math::PhaseSpace2::phasespace ( m_ps.m  () ,
+  //                                          x          ,
+  //                                          m_ps.m3 () ,
+  //                                          m_ps.L  () ) ;
   //
   return bw * m_ps ( x ) ;
 }
@@ -4995,6 +5007,150 @@ bool Gaudi::Math::Positive::updateBernstein ( const unsigned short k )
   //
   return update ;
 }
+
+
+
+
+// ============================================================================
+// StudetnT 
+// ============================================================================
+/*  constructor from mass, resolution and "n"-parameter 
+ *  @param M     mass 
+ *  @param sigma width parameter
+ *  @param N     n-parameter  ( actually  n=1+|N| ) 
+ */
+// ============================================================================
+Gaudi::Math::StudentT::StudentT 
+( const double mass  , 
+  const double sigma ,
+  const double n     ) 
+  : std::unary_function<double,double>  ()
+//
+  , m_M    (      std::abs ( mass  ) )
+  , m_s    (      std::abs ( sigma ) )
+  , m_n    ( -1 )
+  , m_norm ( -1 ) 
+{
+  setN ( n ) ;  
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::StudentT::~StudentT (){}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::StudentT::setM ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_M ) ) { return false ; }
+  //
+  m_M = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::StudentT::setSigma ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_s ) ) { return false ; }
+  //
+  m_s = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::StudentT::setN ( const double x )
+{
+  //
+  const double v = 1 + std::abs ( x ) ;
+  //
+  if ( m_norm < 0 ) 
+  {
+    m_norm  = gsl_sf_gamma ( 0.5 * ( v + 1 ) ) / gsl_sf_gamma ( 0.5 * v ) ;  
+    m_norm /= std::sqrt    ( M_PI * v ) ;
+  }
+  //
+  if ( s_equal ( v , m_n ) ) { return false ; }
+  //
+  m_n = v ;
+  //
+  m_norm  = gsl_sf_gamma ( 0.5 * ( v + 1 ) ) / gsl_sf_gamma ( 0.5 * v ) ;  
+  m_norm /= std::sqrt    ( M_PI * v ) ;
+  //
+  return true ;
+}
+// ==========================================================================
+double Gaudi::Math::StudentT::operator () ( const double x ) const
+{
+  //
+  const double y = ( x - M () ) / sigma() ;
+  //
+  const double f = std::pow (  1 + y * y / n() ,  -0.5 * ( n() + 1 ) ) ;
+  //
+  return m_norm * f / sigma () ; // sigma comes from dx = dy * sigma 
+}
+// ============================================================================
+// get the integral 
+// ============================================================================
+double Gaudi::Math::StudentT::integral() const { return 1 ; }
+// ============================================================================
+// get the integral 
+// ============================================================================
+double Gaudi::Math::StudentT::integral
+( const double low  , 
+  const double high ) const 
+{
+  //
+  if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN
+  if (           low > high   ) { return - integral ( high ,
+                                                      low  ) ; } // RETURN
+  //
+  // split large pieces 
+  if ( high - low > 8 * sigma() ) 
+  {
+    const double split = 0.5 * ( low + high ) ;
+    return integral ( low , split ) + integral ( split , high ) ;  // RETURN
+  }
+  //
+  // use GSL to evaluate the integral
+  //
+  Sentry sentry ;
+  //
+  gsl_function F                   ;
+  F.function             = &studentT_GSL ;
+  const StudentT* _ps    = this  ;
+  F.params               = const_cast<StudentT*> ( _ps ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag
+    ( &F                ,            // the function
+      low   , high      ,            // low & high edges
+      s_PRECISION       ,            // absolute precision
+      s_PRECISION       ,            // relative precision
+      s_SIZE            ,            // size of workspace
+      GSL_INTEG_GAUSS31 ,            // integration rule
+      workspace ( m_workspace ) ,    // workspace
+      &result           ,            // the result
+      &error            ) ;          // the error in result
+  //
+  if ( ierror )
+  {
+    gsl_error ( "Gaudi::Math::StudentT::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ;
+  }
+  //
+  return result ;
+}
+
 // ============================================================================
 // The END
 // ============================================================================

@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-01-05 - Vany aBelyaev 
+ - add StudentT function by Matt Needham 
+
 ! 2012-12-14 - Vanya Belyaev
  - fix some issue with Functions.cpp 
 

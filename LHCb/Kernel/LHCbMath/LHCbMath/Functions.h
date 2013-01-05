@@ -2506,6 +2506,99 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class StudentT
+     *  simple function to parameterize the symmetric peak using 
+     *  Student's ditribution 
+     *  
+     *  \f[  f(y) = \frac{1}{\sqrt{\pi n}} \frac { \Gamma( \frac{n+1}{2}) } { \Gamma( \frac{n}{2}  ) }
+     *  \left( 1 + \frac{y^2}{n} \right)^{ -\frac{n+1}{2}} \f], 
+     *  where \f$ y = \frac{x - \mu}{\sigma} \f$  
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2013-01-05
+     */
+    class GAUDI_API StudentT
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor from mass, resolution and "n"-parameter 
+       *  @param M     mass 
+       *  @param sigma width parameter
+       *  @param N     n-parameter  ( actually  n=1+|N| ) 
+       */
+      StudentT ( const double mass  , 
+                 const double sigma ,
+                 const double n     ) ;
+      /// destructor
+      ~StudentT() ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate StudentT's shape
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // variables
+      // ======================================================================
+      double M      () const  { return m_M      ; }
+      double m0     () const  { return   M   () ; }
+      double mass   () const  { return   M   () ; }
+      double peak   () const  { return   M   () ; }
+      // ======================================================================
+      double sigma  () const  { return m_s      ; }
+      double s      () const  { return sigma () ; }
+      double gamma  () const  { return sigma () ; }
+      double width  () const  { return sigma () ; }
+      // ======================================================================
+      double n      () const  { return m_n      ; }
+      // ======================================================================
+      bool setM     ( const double value  ) ;
+      bool setM0    ( const double value  ) { return setM  ( value ) ; }
+      bool setMass  ( const double value  ) { return setM  ( value ) ; }
+      bool setPeak  ( const double value  ) { return setM  ( value ) ; }
+      // ======================================================================
+      bool setSigma ( const double value  ) ;
+      bool setS     ( const double value  ) { return setSigma ( value ) ; }
+      bool setGamma ( const double value  ) { return setSigma ( value ) ; }
+      bool setWidth ( const double value  ) { return setSigma ( value ) ; }
+      // ======================================================================
+      bool setN     ( const double value  ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral
+      double integral () const ;
+      /// get the integral between low and high limits
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default consytructor is disabled 
+      StudentT() ;  // default consytructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// mass 
+      double m_M  ; // 
+      /// width parameter
+      double m_s ; // width parameter
+      /// n-parameter
+      double m_n ; // n-parameter
+      // ======================================================================
+    private: // normalization 
+      // ======================================================================
+      double m_norm  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace
+      Gaudi::Math::WorkSpace     m_workspace  ;    // integration workspace
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
 } //                                                     end of namespace Gaudi
