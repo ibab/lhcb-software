@@ -12,6 +12,7 @@
            virtual = 'FALSE'>
    <base name='KeyedObject&lt; int &gt; '/>
    <location name="TTError"   place="Raw/TT/Error"   />
+   <location name="UTError"   place="Raw/UT/Error"   />
    <location name="ITError"   place="Raw/IT/Error"   />
 
    <constructor argList = 'const unsigned int word0, const unsigned int word1, 

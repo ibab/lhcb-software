@@ -12,6 +12,7 @@
    <base name='KeyedObject&lt; int &gt; '/>
       <location name="ITEventInfo"   place="Raw/IT/EventInfo"   />
       <location name="TTEventInfo"   place="Raw/TT/EventInfo"   />
+      <location name="UTEventInfo"   place="Raw/UT/EventInfo"   />
       <attribute
        type    = 'bitfield'
        name    = 'word0'

@@ -14,18 +14,25 @@
       <base name='KeyedObject&lt; int &gt; '/>  
       <location name="ITFull"   place="Raw/IT/Full"   />
       <location name="TTFull"   place="Raw/TT/Full"   />
+      <location name="UTFull"   place="Raw/UT/Full"   />
       <location name="ITPedestal"   place="Raw/IT/Pedestal"   />
       <location name="TTPedestal"   place="Raw/TT/Pedestal"   />
+      <location name="UTPedestal"   place="Raw/UT/Pedestal"   />
       <location name="ITProcFull"   place="Raw/IT/ProcFull"   />
       <location name="TTProcFull"   place="Raw/TT/ProcFull"   />
+      <location name="UTProcFull"   place="Raw/UT/ProcFull"   />
       <location name="ITPedSubADCs"   place="Raw/IT/PedSubADCs"   />
       <location name="TTPedSubADCs"   place="Raw/TT/PedSubADCs"   />
+      <location name="UTPedSubADCs"   place="Raw/UT/PedSubADCs"   />
       <location name="ITSubPeds"   place="Raw/IT/SubPeds"   />
       <location name="TTSubPeds"   place="Raw/TT/SubPeds"   />
+      <location name="UTSubPeds"   place="Raw/UT/SubPeds"   />
       <location name="ITLCMSADCs"   place="Raw/IT/LCMSADCs"   />
       <location name="TTLCMSADCs"   place="Raw/TT/LCMSADCs"   />
+      <location name="UTLCMSADCs"   place="Raw/UT/LCMSADCs"   />
       <location name="ITEmulated"   place="Raw/IT/Emulated"   />
       <location name="TTEmulated"   place="Raw/TT/Emulated"   />
+      <location name="UTEmulated"   place="Raw/UT/Emulated"   />
       
       &KeyedContainer;
       <import name='Event/STTELL1EventInfo' />

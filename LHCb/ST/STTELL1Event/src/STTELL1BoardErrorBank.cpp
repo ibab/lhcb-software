@@ -42,6 +42,11 @@ bool LHCb::STTELL1BoardErrorBank::isTT() const {
   return (name.find("TT") != std::string::npos ? true : false);
 }
 
+bool LHCb::STTELL1BoardErrorBank::isUT() const {
+  const std::string name = regName();
+  return (name.find("UT") != std::string::npos ? true : false);
+}
+
 std::ostream& LHCb::STTELL1BoardErrorBank::fillStream(std::ostream& s) const
 {
   unsigned int pp = 0;
@@ -51,6 +56,9 @@ std::ostream& LHCb::STTELL1BoardErrorBank::fillStream(std::ostream& s) const
   } 
   else if (isTT() == true){
     s << STBoardMapping::find(key(), STBoardMapping::TTSourceIDToNumberMap()) << std::endl;
+  }
+  else if (isUT() == true){
+    s << STBoardMapping::find(key(), STBoardMapping::UTSourceIDToNumberMap()) << std::endl;
   }
 
   LHCb::STTELL1BoardErrorBank::ErrorVector::const_iterator iter = m_errorInfo.begin();
