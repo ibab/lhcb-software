@@ -22,6 +22,7 @@ use   TrackEvent       	v*	Event
 use   LinkerEvent	v*	Event
 use   TrackFitEvent   	v*	Tr
 use   TrackInterfaces 	v*	Tr
+use   TrackKernel 	v*	Tr
 use   MCInterfaces      v*      Kernel
 use   TrackKernel       v*      Tr
 

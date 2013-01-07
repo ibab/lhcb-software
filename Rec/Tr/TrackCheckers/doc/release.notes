@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2013-01-07 - Marco Clemencic
+ - Fixed link problem in CMake build.
+
 !========================= TrackCheckers v4r14 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
