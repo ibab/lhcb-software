@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2013-01-07 - Chris Jones
+ - Minor optimisations to TupleToolTrackIsolation
+
 ! 2012-12-11 - Kazu Akiba 
  - Adding TupleToolVeloTrackClusterInfo
  - Adding  TupleToolDEDX and TupleToolVeloClusters. 

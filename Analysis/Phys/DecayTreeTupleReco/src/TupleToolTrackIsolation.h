@@ -1,20 +1,20 @@
 // $Id: TupleToolTrackIsolation.h,v 1.2 2010-01-26 15:48:57 rlambert Exp $
-#ifndef TUPLETOOLTRACKISOLATION_H 
+#ifndef TUPLETOOLTRACKISOLATION_H
 #define TUPLETOOLTRACKISOLATION_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/IParticleTupleTool.h" 
+#include "Kernel/IParticleTupleTool.h"
 #include "DecayTreeTupleBase/TupleToolBase.h"
 
 /** @class TupleToolTrackIsolation TupleToolTrackIsolation.h
- *  
- * \brief Fill track isolation for DecayTreeTuple. 
- *    Open up a cone around head, exclude all tracks 
- *    that are in the decay descriptor 
- *    (i.e. that belong to the decay you are looking for), 
+ *
+ * \brief Fill track isolation for DecayTreeTuple.
+ *    Open up a cone around head, exclude all tracks
+ *    that are in the decay descriptor
+ *    (i.e. that belong to the decay you are looking for),
  *    build the variables with the remaining tracks.
- * 
+ *
  * - head_cmult : Number of tracks inside cone.
  * - head_cp : Summed p inside cone
  * - head_cpt : Summed pt inside cone
@@ -44,32 +44,32 @@
  * - FillAsymmetry: Flag to fill the asymmetry variables (default = false)
  * - FillDeltaAngles: Flag to fill the delta angle variables (default = false)
  * \sa DecayTreeTuple
- * 
+ *
  *  @author Michel De Cian
  *  @date   2009-08-04
  */
 
 
-class TupleToolTrackIsolation : public TupleToolBase, virtual public IParticleTupleTool {
-public: 
+class TupleToolTrackIsolation : public TupleToolBase,
+                                virtual public IParticleTupleTool
+{
+
+public:
+
   /// Standard constructor
-  TupleToolTrackIsolation( const std::string& type, 
-              const std::string& name,
-              const IInterface* parent );
+  TupleToolTrackIsolation( const std::string& type,
+                           const std::string& name,
+                           const IInterface* parent );
+
   /// Loop over differnt conesizes and fill the variables into the tuple
   virtual StatusCode fill( const LHCb::Particle*
                            , const LHCb::Particle*
                            , const std::string&
                            , Tuples::Tuple& );
-  
-  
 
   virtual ~TupleToolTrackIsolation( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
-  
-
-protected:
 
 private:
 
@@ -82,16 +82,19 @@ private:
 
   std::vector<const LHCb::Particle*> m_decayParticles;
 
+private:
+
   /// Save all particles in your decay descriptor in a vector
   void saveDecayParticles( const LHCb::Particle *top);
 
   /// Calculate properties of your remaining tracks inside the cone
-  std::pair< std::vector<double>, int> ConeP(const LHCb::Particle *part, const LHCb::Tracks* tracks, const double rcut);
+  std::pair< std::vector<double>, int> ConeP( const LHCb::Particle *part, 
+                                              const LHCb::Tracks* tracks, 
+                                              const double rcut );
 
   /// Check if your track belongs to your decay or not
   bool isTrackInDecay(const LHCb::Track* track);
+
 };
-
-
 
 #endif // TUPLETOOLTRACKISOLATION_H
