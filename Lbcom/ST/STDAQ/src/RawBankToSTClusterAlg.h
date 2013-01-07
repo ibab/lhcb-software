@@ -78,7 +78,7 @@ inline LHCb::STLiteCluster RawBankToSTClusterAlg::word2LiteCluster(const STClust
                                                              const LHCb::STChannelID chan,
                                                              const unsigned int fracStrip) const
 {
-  return LHCb::STLiteCluster(fracStrip,aWord.pseudoSizeBits(),aWord.hasHighThreshold(), chan);
+  return LHCb::STLiteCluster(fracStrip,aWord.pseudoSizeBits(),aWord.hasHighThreshold(), chan, (detType()=="UT"));
 }
 
 #endif // RAWBUFFERTOSTDIGITALG_H 

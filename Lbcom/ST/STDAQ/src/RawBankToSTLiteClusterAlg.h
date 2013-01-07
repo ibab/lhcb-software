@@ -102,7 +102,8 @@ inline void RawBankToSTLiteClusterAlg::createCluster(const STTell1Board* aBoard,
   LHCb::STLiteCluster liteCluster(chan.second,
                             aWord.pseudoSizeBits(),
                             aWord.hasHighThreshold(),
-                            chan.first);
+                            chan.first,
+                            detType() == "UT");
   fCont->push_back(liteCluster);
 }
 
