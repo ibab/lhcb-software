@@ -2,4 +2,6 @@
   <class name = "IPatDebugTool"   />
   <class name = "IPatDebugTTTool" />
   <class name = "IPatTTCounter"   />
+  <class name = "IPatDebugUTTool" />
+  <class name = "IPatUTCounter"   />
 </lcgdict>
