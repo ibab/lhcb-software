@@ -50,7 +50,8 @@ namespace Tf
         TT=2,       ///< TT sensor
         IT=3,       ///< IT sensor
         OT=4,       ///< OT detector
-        UNKNOWN=5   ///< Unknown type
+        UT=5,       ///< UT sensor
+        UNKNOWN=6   ///< Unknown type
       };
 
   public:
@@ -163,6 +164,23 @@ namespace Tf
         } ;
     } ;
 
+
+    struct UTIndex 
+    {
+      enum 
+        { 
+          kMinStation=0, ///< Minimum valid station number for UT
+          kMaxStation=1, ///< Maximum valid station number for UT
+          kNStations=2,  ///< Number of UT stations
+          MinLayer=0,    ///< Minimum valid layer number for a UT station
+          kMaxLayer=1,   ///< Maximum valid layer number for a UT station
+          kNLayers=2,    ///< Number of UT layers within a station
+          kMinRegion=0,  ///< Minimum valid region number for a UT layer
+          kMaxRegion=11, ///< Maximum valid region number for a UT layer
+          kNRegions=12   ///< Number of UT regions within a layer
+        } ;
+    } ;
+
    /** @struct VeloRIndex RegionID.h TfKernel/RegionID.h
      * Collection of detector information for Velo R sensors
      * @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
@@ -236,11 +254,11 @@ namespace Tf
   { }
 
   inline RegionID::RegionID( const LHCb::STChannelID& id )
-    : m_dettype ( id.isTT() ? TT : IT ), 
+    : m_dettype ( id.isTT() ? TT : id.isIT() ? IT : UT ), 
       m_station ( id.station()-1      ), 
       m_layer   ( id.layer()-1        ),
       // XXX???XXX Would be nice to document the reasoning behind this 'magic conversion' somewhere ?
-      m_region  ( id.isTT() ? (id.detRegion()-1)*4 + (id.sector()-1)%4 : id.detRegion()-1 ) 
+      m_region  ( id.isIT() ? id.detRegion()-1 : (id.detRegion()-1)*4 + (id.sector()-1)%4) 
   { }
 
   inline RegionID::RegionID( const LHCb::VeloChannelID& id, 

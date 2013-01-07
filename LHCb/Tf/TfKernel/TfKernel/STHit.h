@@ -107,7 +107,8 @@ namespace Tf
   // Definition is in the HitBase class
   inline const STHit* HitBase::sthit() const
   {
-    return ( type()==RegionID::IT || type()==RegionID::TT ? static_cast<const STHit*>(this) : NULL ) ;
+    return ( type()==RegionID::IT || type()==RegionID::TT|| type()==RegionID::UT
+             ? static_cast<const STHit*>(this) : NULL ) ;
   }
 
   inline std::ostream& STHit::fillStream(std::ostream& s) const {

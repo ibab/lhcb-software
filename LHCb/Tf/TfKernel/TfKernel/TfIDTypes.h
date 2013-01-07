@@ -98,6 +98,13 @@ namespace Tf
     TTStationID ( const InternalIntType id = 0 ) : NumericType<InternalIntType>(id) { }
   };
 
+  class UTStationID : public NumericType<InternalIntType>
+  {
+  public :
+    /// Constructor
+    UTStationID ( const InternalIntType id = 0 ) : NumericType<InternalIntType>(id) { }
+  };
+
   /** @class TLayerID TfKernel/TfIDTypes.h
    *
    *  Identifier for layers within a T Station.
@@ -134,6 +141,13 @@ namespace Tf
   public :
     /// Constructor
     TTLayerID ( const InternalIntType id = 0 ) : NumericType<InternalIntType>(id) { }
+  };
+
+  class UTLayerID : public NumericType<InternalIntType>
+  {
+  public :
+    /// Constructor
+    UTLayerID ( const InternalIntType id = 0 ) : NumericType<InternalIntType>(id) { }
   };
 
   /** @class ITRegionID TfKernel/TfIDTypes.h
@@ -174,6 +188,13 @@ namespace Tf
   public :
     /// Constructor
     TTRegionID ( const InternalIntType id = 0 ) : NumericType<InternalIntType>(id) { }
+  };
+
+  class UTRegionID : public NumericType<InternalIntType>
+  {
+  public :
+    /// Constructor
+    UTRegionID ( const InternalIntType id = 0 ) : NumericType<InternalIntType>(id) { }
   };
 
   /** @class OTRegionID TfKernel/TfIDTypes.h

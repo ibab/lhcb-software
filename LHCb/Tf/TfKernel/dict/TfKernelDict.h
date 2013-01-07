@@ -13,6 +13,7 @@
 #include "TfKernel/RegionID.h"
 
 #include "TfKernel/ITTHitCreator.h"
+#include "TfKernel/IUTHitCreator.h"
 #include "TfKernel/IITHitCreator.h"
 #include "TfKernel/IOTHitCreator.h"
 #include "TfKernel/ISTHitCleaner.h"

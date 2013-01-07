@@ -144,7 +144,7 @@ namespace Tf
     /** length of the line */
     inline double length() const { return fabs( (yEnd()-yBegin())*sqrt(1 + m_dxdy*m_dxdy + m_dzdy*m_dzdy )) ; }
 
-    inline bool isX() const { if (type()==RegionID::TT ) return (layer()==station());
+    inline bool isX() const { if (type()==RegionID::TT || type()==RegionID::UT) return (layer()==station());
     else return (layer()==0 || layer()==3);}
 
   protected:

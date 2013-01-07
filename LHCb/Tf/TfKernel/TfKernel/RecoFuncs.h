@@ -410,6 +410,16 @@ namespace Tf
     hit->setX( hit->hit()->x(y) ) ;
   }
 
+  template<class Hit>
+  inline void updateUTHitForTrack ( Hit* hit, 
+                                    const double y0, 
+                                    const double dyDz ) 
+  {
+    const double y  = ( y0 + dyDz * hit->hit()->zAtYEq0() ) / ( 1. - hit->hit()->dzDy() * dyDz );
+    hit->setZ( hit->hit()->z(y) ) ;
+    hit->setX( hit->hit()->x(y) ) ;
+  }
+
 
   template<class Hit>
   inline void updateHitForTrack ( Hit* hit, 

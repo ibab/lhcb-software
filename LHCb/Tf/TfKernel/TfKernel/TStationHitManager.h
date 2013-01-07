@@ -25,6 +25,7 @@
 #include "TfKernel/IOTHitCreator.h"
 #include "TfKernel/IITHitCreator.h"
 #include "TfKernel/ITTHitCreator.h"
+#include "TfKernel/IUTHitCreator.h"
 #include "TfKernel/IOTHitCleaner.h"
 #include "TfKernel/ISTHitCleaner.h"
 #include "TfKernel/LineHit.h"
