@@ -27,6 +27,8 @@
       <location name="Muon"       place="Rec/Track/Muon"/>
       <location name="VP"    place="Rec/Track/VP"/>
       <location name="VPTT"     place="Rec/Track/VPTT"/>
+      <location name="VeloUT"     place="Rec/Track/VeloUT"/>
+      <location name="UT"         place="Rec/Track/UT"/>
 
       <location name="CaloCosmicsForward"       place="Calo/Track/Forward"/>
       <location name="CaloCosmicsBackward"      place="Calo/Track/Backward"/>
@@ -77,6 +79,8 @@
 	<enumval name = "HLTImportedTrack" value="20" desc="track imported from HLT to offline"/>
         <enumval name = "PatFastVelo"    value="21" desc="track produced by FastVelo algorithm"/>
         <enumval name = "PatVP"    value="22" desc="track produced by VP algorithm"/>
+        <enumval name = "PatVeloUT"      value="23" desc="track produced with the online Velo-UT pattern recognition"/>
+        <enumval name = "TrackVeloUT"    value="24" desc="track produced with the offline Velo-UT pattern recognition"/>
       </enum>
 
       <enum
@@ -106,6 +110,7 @@
         <enumval name = "Muon"        desc="muon track"/>
         <enumval name = "Calo"        desc="calo cosmics track"/>
         <enumval name = "TT"          desc="TT track"/>
+        <enumval name = "UT"          desc="UT track"/>
       </enum>
 
       <enum
@@ -996,6 +1001,20 @@
   #ifdef __INTEL_COMPILER // End disable ICC remark
     #pragma warning(pop)
   #endif
+        </code>
+      </method>
+
+      <method
+        type    = 'bool'
+        name    = 'hasUT'
+        desc    = 'Check if track is of a type that goes thro UT'
+        const   = 'TRUE'>
+        <code>
+          bool hasUTPart = false;
+          if (type() == Track::Downstream 
+          || type() == Track::Upstream 
+          || type() == Track::Long) hasUTPart = true;
+          return hasUTPart;
         </code>
       </method>
 

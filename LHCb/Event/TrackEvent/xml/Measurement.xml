@@ -32,12 +32,13 @@
    *   Muon     : Muon measurement
    *   VP       : VP x,y measurement
    *   VL       : VL measurement
+   *   UT       : UT measurement
    *
    */
 -->
       <enum
         name    = 'Type'
-        value   = 'Unknown,VeloR,VeloPhi,VeloLiteR,VeloLitePhi,TT,IT,OT,Muon, TTLite, ITLite,VPLite,Calo,Origin,FT,VL'
+        value   = 'Unknown,VeloR,VeloPhi,VeloLiteR,VeloLitePhi,TT,IT,OT,Muon, TTLite, ITLite,VPLite,Calo,Origin,FT,VL,UT,UTLite'
         desc    = 'enumerator for the type of Measurement'
         access  = 'PUBLIC'
         strTypConv = 'TRUE' 
