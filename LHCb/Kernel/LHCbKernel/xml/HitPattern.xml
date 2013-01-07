@@ -128,6 +128,16 @@
 
        <method
          type    = 'size_t'
+         name    = 'numUTHits'
+         const   = 'TRUE'
+         desc    = 'number of UT hits'>
+         <code>
+            return (m_ut.count());
+         </code>
+       </method>
+
+       <method
+         type    = 'size_t'
          name    = 'numVeloStations'
          const   = 'TRUE'
          desc    = 'number of velo stations with one R or phi hit'>
@@ -195,6 +205,7 @@
            m_veloPhiC.reset();
 	
 	   m_tt.reset();
+	   m_ut.reset();
 		  
 	   m_itAC.reset();
            m_itTopBottom.reset();
@@ -284,6 +295,14 @@
         type      = 'std::bitset&lt;LHCb::HitPattern::NumTT&gt;'
         name      = 'tt'
         desc      = 'tt bit pattern'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE'
+        getMeth   = 'TRUE' />  
+
+     <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumTT&gt;'
+        name      = 'ut'
+        desc      = 'ut bit pattern'
         access    = 'PRIVATE'
         setMeth   = 'TRUE'
         getMeth   = 'TRUE' />  
