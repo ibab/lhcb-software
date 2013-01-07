@@ -20,6 +20,7 @@ TrackStateInitTool::TrackStateInitTool( const std::string& type,
   declareInterface<ITrackStateInit>(this);
   declareProperty( "VeloFitterName" , m_veloFitterName = "Tf::PatVeloFitLHCbIDs/FitVelo");
   declareProperty( "ptVelo", m_ptVelo = 400.*Gaudi::Units::MeV);
+  declareProperty( "UseUT", m_useUT = false);
 }
 
 TrackStateInitTool::~TrackStateInitTool() {}
@@ -29,10 +30,13 @@ StatusCode TrackStateInitTool::initialize()
   StatusCode sc = GaudiTool::initialize();
   m_seedFit = tool<IPatSeedFit>( "PatSeedFit" );
   m_veloFitter = tool<ITrackFitter>(m_veloFitterName, this) ;
-  m_veloTTFit = tool<IPatVeloTTFit>("PatVeloTTFit");
+  if ( m_useUT ) m_veloUTFit = tool<IPatVeloUTFit>("PatVeloUTFit");
+  else           m_veloTTFit = tool<IPatVeloTTFit>("PatVeloTTFit");
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator", 
 					    "Extrapolator",this);
-  m_ttdetector = getDet<DeSTDetector>(DeSTDetLocation::location("TT")) ;
+  if ( m_useUT ) m_utdetector = getDet<DeSTDetector>(DeSTDetLocation::location("UT")) ;
+  else           m_ttdetector = getDet<DeSTDetector>(DeSTDetLocation::location("TT")) ;
+
   return sc ;
 }
 
@@ -60,9 +64,16 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
     if( sc.isFailure() ) Warning("TrackStateInitTool fit Velo failed",sc,0).ignore();
     
     // add state in TT, but not for long tracks since the fit is actually rather poor
-    if(sc.isSuccess() && hitpattern.numTTHits()>0 && hitpattern.numTLayers()==0 ) {
-      sc = createVeloTTStates( track );
-      if( sc.isFailure() ) Warning("TrackStateInitTool fit TT failed",sc,0).ignore();
+    if ( m_useUT ) {
+      if(sc.isSuccess() && hitpattern.numUTHits()>0 && hitpattern.numTLayers()==0 ) {
+        sc = createVeloUTStates( track );
+        if( sc.isFailure() ) Warning("TrackStateInitTool fit UT failed",sc,0).ignore();
+      }
+    } else {
+      if(sc.isSuccess() && hitpattern.numTTHits()>0 && hitpattern.numTLayers()==0 ) {
+        sc = createVeloTTStates( track );
+        if( sc.isFailure() ) Warning("TrackStateInitTool fit TT failed",sc,0).ignore();
+      }
     }
   }
 
@@ -71,10 +82,16 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
     // add states in T
     sc = createTStationStates( track ) ;
     if( sc.isFailure() ) Warning("TrackStateInitTool fit T failed",sc,0).ignore();
-    else if( hitpattern.numTTHits()>0 &&  hitpattern.numVeloStations()==0 ) {
-      // add TT state for downstream tracks
-      sc = createTTState( track ) ;
-      if( sc.isFailure() ) Warning("TrackStateInitTool fit TT failed",sc,0).ignore();
+    else {
+      // add TT/UT state for downstream tracks
+      if( ! m_useUT && hitpattern.numTTHits()>0 &&  hitpattern.numVeloStations()==0 ) {
+        sc = createTTState( track ) ;
+        if( sc.isFailure() ) Warning("TrackStateInitTool fit TT failed",sc,0).ignore();
+      }
+      if( m_useUT && hitpattern.numUTHits()>0 &&  hitpattern.numVeloStations()==0 ) {
+        sc = createTTState( track ) ;
+        if( sc.isFailure() ) Warning("TrackStateInitTool fit UT failed",sc,0).ignore();
+      }
     }
   }
 
@@ -122,6 +139,11 @@ StatusCode TrackStateInitTool::createVeloStates( LHCb::Track& track ) const
 StatusCode TrackStateInitTool::createVeloTTStates( LHCb::Track& track) const
 {
     return m_veloTTFit->fitVTT(track);
+}
+
+StatusCode TrackStateInitTool::createVeloUTStates( LHCb::Track& track) const
+{
+    return m_veloUTFit->fitVUT(track);
 }
 
 StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
@@ -260,7 +282,7 @@ namespace {
 
 StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
 {
-  // this routine fits the TT hits to model with only 3 parameters: x, y and tx
+  // this routine fits the TT/UT hits to model with only 3 parameters: x, y and tx
 
   // first get a reference state: if there are velo hits, take the
   // state end velo, otherwise take a T state
@@ -274,11 +296,11 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
   StatusCode sc = m_extrapolator->propagate( statevec, zref, &jacobian );
   
   if( sc.isSuccess() ) {
-    // collect the TT hits
+    // collect the TT/UT hits
     std::vector< LHCb::LHCbID > ttids ;
     std::set<int> ttlayers ;
     BOOST_FOREACH( const LHCb::LHCbID& id, track.lhcbIDs() ) 
-      if( id.isTT() ) {
+      if( id.isTT() || id.isUT() ) {
 	ttids.push_back( id ) ;
 	LHCb::STChannelID stid = id.stID() ;
 	unsigned int uniquelayer = (stid.station()-1)*2 + stid.layer()-1 ;
@@ -330,7 +352,7 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
     
     // now add the TT state
     LHCb::State ttstate(statevec) ;
-    ttstate.setLocation( LHCb::State::AtTT ) ;
+    ttstate.setLocation( LHCb::State::AtTT ) ; // use AtTT for both TT & UT
     ttstate.setCovariance( refstate->covariance() ) ;
     track.addToStates( ttstate ) ;
   }

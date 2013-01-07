@@ -46,11 +46,13 @@ class TrackLikelihood: public GaudiTool,
 
   double addVelo(LHCb::Track& aTrack) const;
   double addTT(LHCb::Track& aTrack) const;
+  double addUT(LHCb::Track& aTrack) const;
   double addOT(LHCb::Track& aTrack) const;
   double addIT(LHCb::Track& aTrack) const;
 
   IVeloExpectation* m_veloExpectation;
   IHitExpectation* m_ttExpectation;
+  IHitExpectation* m_utExpectation;
   IHitExpectation* m_itExpectation;
   IHitExpectation* m_otExpectation;
  
@@ -60,15 +62,18 @@ class TrackLikelihood: public GaudiTool,
   double m_otEff;
   double m_itEff;
   double m_ttEff;
+  double m_utEff;
   double m_veloHighEff1;
   double m_veloHighEff2;
   double m_itHighEff;
   double m_ttHighEff;
+  double m_utHighEff;
 
   bool m_useVelo;
   bool m_useOT;
   bool m_useIT;
   bool m_useTT;
+  bool m_useUT;
   double m_chiWeight;
 
  

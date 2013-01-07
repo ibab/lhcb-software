@@ -38,6 +38,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
     m_vpProvider(     "VPLiteMeasurementProvider", this ),
     m_vlProvider(     "VLMeasurementProvider", this ), 
     m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider", this ),
+    m_utProvider(     "MeasurementProviderT<MeasurementProviderTypes::UT>/UTMeasurementProvider", this ),
     m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider", this ),
     m_otProvider(     "OTMeasurementProvider", this ),
     m_ftProvider(     "FTMeasurementProvider", this ),
@@ -48,6 +49,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "IgnoreVP",   m_ignoreVP   = true ); // VP does not exist in default detector
   declareProperty( "IgnoreVL",   m_ignoreVL   = true ); // VL does not exist in default detector
   declareProperty( "IgnoreTT",   m_ignoreTT   = false );
+  declareProperty( "IgnoreUT",   m_ignoreUT   = true );
   declareProperty( "IgnoreIT",   m_ignoreIT   = false );
   declareProperty( "IgnoreOT",   m_ignoreOT   = false );
   declareProperty( "IgnoreFT",   m_ignoreFT   = true  );
@@ -59,6 +61,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "VPProvider", m_vpProvider ) ;
   declareProperty( "VLProvider", m_vlProvider ) ;
   declareProperty( "TTProvider", m_ttProvider ) ;
+  declareProperty( "UTProvider", m_utProvider ) ;
   declareProperty( "ITProvider", m_itProvider ) ;
   declareProperty( "OTProvider", m_otProvider ) ;
   declareProperty( "FTProvider", m_ftProvider ) ;
@@ -111,6 +114,12 @@ StatusCode MeasurementProvider::initialize()
     m_providermap[LHCb::Measurement::TT] = &(*m_ttProvider) ;
   }
   
+  if(!m_ignoreUT) {
+    sc = m_utProvider.retrieve() ;
+    if (sc.isFailure()) return sc; 
+    m_providermap[LHCb::Measurement::UT] = &(*m_utProvider) ;
+  }
+  
   if(!m_ignoreIT) {
     sc = m_itProvider.retrieve() ;
     if (sc.isFailure()) return sc;    
@@ -160,6 +169,10 @@ StatusCode MeasurementProvider::finalize()
   }
   if(!m_ignoreTT) {
     sc = m_ttProvider.release() ;
+    if (sc.isFailure()) return sc;
+  }
+  if(!m_ignoreUT) {
+    sc = m_utProvider.release() ;
     if (sc.isFailure()) return sc;
   }
   if(!m_ignoreIT) {
@@ -248,6 +261,7 @@ inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
   case LHCb::LHCbID::VP:      rc = LHCb::Measurement::VPLite ; break ;
   case LHCb::LHCbID::VL:      rc = LHCb::Measurement::VL      ; break ;
   case LHCb::LHCbID::TT:      rc = LHCb::Measurement::TT      ; break ;
+  case LHCb::LHCbID::UT:      rc = LHCb::Measurement::UT      ; break ;
   case LHCb::LHCbID::IT:      rc = LHCb::Measurement::IT      ; break ;
   case LHCb::LHCbID::OT:      rc = LHCb::Measurement::OT      ; break ;
   case LHCb::LHCbID::FT:      rc = LHCb::Measurement::FT      ; break ;

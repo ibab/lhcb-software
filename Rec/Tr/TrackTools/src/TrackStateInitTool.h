@@ -12,6 +12,7 @@
 #include "TrackInterfaces/IMaterialLocator.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 #include "TrackInterfaces/IPatVeloTTFit.h"
+#include "TrackInterfaces/IPatVeloUTFit.h"
 
 // from LHCb
 #include "LHCbMath/LHCbMath.h"
@@ -57,8 +58,10 @@ public:
 protected:
   StatusCode createTStationStates(LHCb::Track& track) const;
   StatusCode createTTState(LHCb::Track& track) const;
+  //StatusCode createUTState(LHCb::Track& track) const;
   StatusCode createVeloStates(LHCb::Track& track ) const ;
   StatusCode createVeloTTStates(LHCb::Track& track ) const ;
+  StatusCode createVeloUTStates(LHCb::Track& track ) const ;
   
 private:
   std::string   m_veloFitterName ;  
@@ -66,8 +69,11 @@ private:
   IPatSeedFit* m_seedFit ;
   ITrackFitter* m_veloFitter ;  
   IPatVeloTTFit* m_veloTTFit ;
+  IPatVeloUTFit* m_veloUTFit ;
   const ITrackExtrapolator* m_extrapolator;
   const DeSTDetector* m_ttdetector ;
+  const DeSTDetector* m_utdetector ;
+  bool m_useUT;
 } ;
 
 template<class T>

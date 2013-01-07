@@ -44,6 +44,7 @@ TrackLikelihood::TrackLikelihood(const std::string& type,
   GaudiTool(type, name, parent),
   m_veloExpectation(0),
   m_ttExpectation(0),
+  m_utExpectation(0),
   m_itExpectation(0),
   m_otExpectation(0)
 
@@ -55,14 +56,17 @@ TrackLikelihood::TrackLikelihood(const std::string& type,
   declareProperty("itEff", m_itEff = 0.995);
   declareProperty("otEff", m_otEff = 0.93);
   declareProperty("ttEff", m_ttEff = 0.99);
+  declareProperty("utEff", m_utEff = 0.99);
 
   declareProperty("itHighEff", m_itHighEff = 0.94);
   declareProperty("veloHighEff1", m_veloHighEff1 = 0.99);
   declareProperty("veloHighEff2", m_veloHighEff2 = 0.995);
   declareProperty("ttHighEff", m_ttHighEff = 0.896);
+  declareProperty("utHighEff", m_utHighEff = 0.896);
 
   declareProperty("useVelo", m_useVelo = true);
   declareProperty("useTT", m_useTT = true);
+  declareProperty("useUT", m_useUT = false);
   declareProperty("useIT", m_useIT = true);
   declareProperty("useOT", m_useOT = true);
   declareProperty("chiWeight", m_chiWeight = 1.0);  
@@ -86,6 +90,7 @@ StatusCode TrackLikelihood::initialize() {
 
   if (m_useVelo) m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
   if (m_useTT) m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
+  if (m_useUT) m_utExpectation = tool<IHitExpectation>("UTHitExpectation");
   if (m_useIT) m_itExpectation = tool<IHitExpectation>("ITHitExpectation");
   if (m_useOT) m_otExpectation = tool<IHitExpectation>("OTHitExpectation");
 
@@ -105,6 +110,10 @@ StatusCode TrackLikelihood::execute(LHCb::Track& aTrack) const{
 
   if (m_useTT && aTrack.hasTT()){
     lik += addTT(aTrack);
+  }
+
+  if (m_useUT && aTrack.hasUT()){
+    lik += addUT(aTrack);
   }
 
  if (aTrack.hasT()){
@@ -214,6 +223,42 @@ double TrackLikelihood::addTT(LHCb::Track& aTrack) const{
     }
 
     double spillprob = gsl_ran_binomial_pdf(nHigh, m_ttHighEff, ttHits.size());
+    lik += log(spillprob);
+  }
+
+
+  return lik;
+}
+
+double TrackLikelihood::addUT(LHCb::Track& aTrack) const{
+
+  double lik = 0.0;
+
+  // pick up the LHCbIDs + measurements
+  const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
+  LHCb::Track::MeasurementContainer meas = aTrack.measurements();
+
+   // get the number of expected hits in UT
+  const unsigned int nUTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isUT,_1));
+  const unsigned int nExpectedUT = m_utExpectation->nExpected(aTrack);
+  if (nExpectedUT > 2) {
+
+    lik += binomialTerm(nUTHits, nExpectedUT ,m_utEff);
+    
+    // spillover information for UT
+    std::vector<const LHCb::Measurement*> utHits; utHits.reserve(meas.size());
+    LoKi::select(meas.begin(), meas.end(), std::back_inserter(utHits), 
+                 bind(&Measurement::checkType,_1,Measurement::UT));
+
+    // loop and count # with high threshold
+    unsigned int nHigh = 0; 
+    for (std::vector<const LHCb::Measurement*>::iterator iterM = utHits.begin(); 
+       iterM != utHits.end(); ++iterM){
+      const LHCb::STMeasurement* stMeas = dynamic_cast<const LHCb::STMeasurement*>(*iterM); 
+      if (stMeas->cluster()->highThreshold() == true) ++nHigh;
+    }
+
+    double spillprob = gsl_ran_binomial_pdf(nHigh, m_utHighEff, utHits.size());
     lik += log(spillprob);
   }
 

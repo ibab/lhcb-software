@@ -4,7 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
-! 2013-01-07 - Marco Clemencic
+! 2013-01-07 - Jianchun Wang
+ - Add UT measurement provider and hit expectation
+
+! 2013-01-07 - Marco Clemen provdercic
  - Fixed build with CMake.
 
 ! 2012-12-08 - Heinrich Schindler

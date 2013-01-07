@@ -58,6 +58,7 @@ private:
   ToolHandle<IMeasurementProvider> m_vpProvider ;
   ToolHandle<IMeasurementProvider> m_vlProvider ;
   ToolHandle<IMeasurementProvider> m_ttProvider ;
+  ToolHandle<IMeasurementProvider> m_utProvider ;
   ToolHandle<IMeasurementProvider> m_itProvider ;
   ToolHandle<IMeasurementProvider> m_otProvider ;
   ToolHandle<IMeasurementProvider> m_ftProvider ;
@@ -67,6 +68,7 @@ private:
   bool m_ignoreVP;      ///< Ignore VP hits
   bool m_ignoreVL;      ///< Ignore VL hits
   bool m_ignoreTT;      ///< Ignore TT hits
+  bool m_ignoreUT;      ///< Ignore UT hits
   bool m_ignoreIT;      ///< Ignore IT hits
   bool m_ignoreOT;      ///< Ignore OT hits
   bool m_ignoreFT;      ///< Ignore FT hits

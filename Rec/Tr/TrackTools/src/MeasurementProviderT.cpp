@@ -424,6 +424,109 @@ typedef MeasurementProviderT<MeasurementProviderTypes::TTLite> TTLiteMeasurement
 DECLARE_TOOL_FACTORY( TTLiteMeasurementProvider )
 
 ////////////////////////////////////////////////////////////////////////////////////////
+namespace MeasurementProviderTypes {
+  struct UT {
+    typedef LHCb::STMeasurement      MeasurementType ;
+    typedef ISTClusterPosition       PositionToolType ;
+    typedef LHCb::STCluster          ClusterType ;
+    typedef LHCb::STClusters         ClusterContainerType ;
+    typedef DeSTDetector             DetectorType ;
+    static std::string positionToolName() { return "STOfflinePosition" ; }
+    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("UT") ; }
+    static std::string defaultClusterLocation() { return LHCb::STClusterLocation::UTClusters ; }
+    static LHCb::STChannelID channelId( const LHCb::LHCbID& id ) { return id.stID() ; }
+    static bool checkType(const LHCb::LHCbID& id) { return id.isUT() ; }
+  };
+}
+
+template<>
+double MeasurementProviderT<MeasurementProviderTypes::UT>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  LHCb::STChannelID stid(id.stID()) ;
+  const DeSTSector* sector = const_cast<DeSTDetector*>(m_det)->findSector(stid) ;
+  return sector->globalCentre().z();
+}
+
+typedef MeasurementProviderT<MeasurementProviderTypes::UT> UTMeasurementProvider ;
+DECLARE_TOOL_FACTORY( UTMeasurementProvider )
+
+namespace MeasurementProviderTypes {
+  struct UTLite {
+    typedef LHCb::STLiteMeasurement      MeasurementType ;
+    typedef ISTClusterPosition       PositionToolType ;
+    typedef LHCb::STLiteCluster          ClusterType ;
+    typedef LHCb::STLiteCluster::STLiteClusters  ClusterContainerType ;
+    typedef DeSTDetector             DetectorType ;
+    static std::string positionToolName() { return "STOnlinePosition" ; }
+    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("UT") ; }
+    static std::string defaultClusterLocation() { return LHCb::STLiteClusterLocation::UTClusters ; }
+    static LHCb::STChannelID channelId( const LHCb::LHCbID& id ) { return id.stID() ; }
+    static bool checkType(const LHCb::LHCbID& id) { return id.isUT() ; }
+  };
+}
+
+template<>
+double MeasurementProviderT<MeasurementProviderTypes::UTLite>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  LHCb::STChannelID stid(id.stID()) ;
+  const DeSTSector* sector = const_cast<DeSTDetector*>(m_det)->findSector(stid) ;
+  return sector->globalCentre().z();
+}
+
+template <>
+LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::UTLite>::measurement( const LHCb::LHCbID& id, bool ) const
+{
+
+  using namespace MeasurementProviderTypes;
+
+  LHCb::Measurement* meas(0) ;
+  if ( !UTLite::checkType(id) ) {
+    error() << "Not correct measurement" << endmsg ;
+  } else {
+    UTLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( UTLite::channelId(id) );
+    if (clus != clusters()->end()){
+      meas = new UTLite::MeasurementType( *clus, *m_det, *m_positiontool );
+    }
+    else {
+      error() << "Cannot find cluster for id " << id << endmsg ;
+    }
+  }
+  return meas ;
+}
+
+template <>
+LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::UTLite>::measurement( const LHCb::LHCbID& id, 
+                                                         const LHCb::ZTrajectory& reftraj, 
+                                                         bool localY ) const 
+{
+ 
+  using namespace MeasurementProviderTypes;
+  
+  LHCb::Measurement* meas(0) ;
+  if( !m_useReference ) {
+    meas = measurement( id, localY ) ;
+  } else {
+    if ( !UTLite::checkType(id) ) {
+      error() << "Not correct measurement" << endmsg ;
+    } else {
+      TTLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( TTLite::channelId(id) );     
+      if (clus != clusters()->end()){
+        const double z = nominalZ(id) ;      
+        LHCb::StateVector refvector = reftraj.stateVector(z) ;
+        meas = new UTLite::MeasurementType( *clus, *m_det, *m_positiontool, refvector );
+      }
+      else {
+        error() << "Cannot find cluster for id " << id << endmsg ;
+      }
+    }
+  }
+  return meas ;
+}
+
+typedef MeasurementProviderT<MeasurementProviderTypes::UTLite> UTLiteMeasurementProvider ;
+DECLARE_TOOL_FACTORY( UTLiteMeasurementProvider )
+
+////////////////////////////////////////////////////////////////////////////////////////
 
 namespace MeasurementProviderTypes {
   struct IT {
