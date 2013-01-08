@@ -17,7 +17,7 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 from StrippingConf.Configuration import StrippingConf
 from StrippingArchive.Utils import buildStreams
 
-allStreams = buildStreams('Stripping17')
+allStreams = buildStreams('Stripping20r1')
 
 sc = StrippingConf( Streams = allStreams)
 

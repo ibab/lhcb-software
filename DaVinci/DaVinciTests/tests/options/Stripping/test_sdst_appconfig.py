@@ -10,7 +10,7 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 from StrippingConf.Configuration import StrippingConf, StrippingStream
 from StrippingArchive.Utils import buildStreams, cloneLinesFromStream, cloneStream
 
-streams = buildStreams('Stripping17')
+streams = buildStreams('Stripping20r1')
 
 #
 # Now do some cloning to deal with the charm full/microDST streams

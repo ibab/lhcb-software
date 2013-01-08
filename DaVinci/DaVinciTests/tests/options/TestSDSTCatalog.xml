@@ -117,4 +117,18 @@
     <logical/>
   </File>
 
+  <File ID="AA819693-DF59-E211-BBE2-643150385937">
+    <physical>
+      <pfn filetype="ROOT" name="000000.CharmToBeSwum.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="FE12DC95-DF59-E211-BBE2-643150385937">
+    <physical>
+      <pfn filetype="ROOT" name="000000.BhadronCompleteEvent.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>
