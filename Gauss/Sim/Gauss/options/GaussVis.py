@@ -12,9 +12,9 @@ GiGa().addTool( GiGaRunManager("GiGaMgr") , name="GiGaMgr" )
 GiGa().GiGaMgr.RunTools += [ "GiGaSetVisAttributes" ]
 
 ### When using DAWN swith off some detectors
-Gauss().DetectorGeo = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1','Rich2'], 'CALO': [], 'OT': ['OT']}
-Gauss().DetectorSim = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1','Rich2'], 'CALO': [], 'OT': ['OT']}
-Gauss().DetectorMoni = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1','Rich2'], 'CALO': [], 'OT': ['OT']}
+Gauss().DetectorGeo  = {'Detectors': ['Velo', 'PuVeto', 'Muon', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Magnet'] }
+Gauss().DetectorSim  = {'Detectors': ['Velo', 'PuVeto', 'Muon', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Magnet'] }
+Gauss().DetectorMoni = {'Detectors': ['Velo', 'PuVeto', 'Muon', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Magnet'] }
 
 ## When Switiching off the Rich siwth off also its physics
 #Gauss().PhysicsList = {"Em":'NoCuts', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":False}

@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-01-08 - Paul Szczypka
+ - Correction to GaussVis.py options to use new Detector configuration syntax.
+
 ! 2012-12-20 - Paul Szczypka
  - Removed comments and some unused methods in Configuration.py
 
