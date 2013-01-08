@@ -1,6 +1,8 @@
 // Include files 
 #include "TaggerPionSameTool.h"
 
+#include "dphi.h"
+
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerPionSameTool
 //
@@ -148,8 +150,8 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( distphi < m_distPhi_cut_pS ) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
-    double dphi  = fabs((*ipart)->momentum().Phi() - ptotB.Phi()); 
-    if(dphi>M_PI) dphi=2.*M_PI-dphi;
+    double dphi  = fabs(TaggingHelpers::dphi(
+		(*ipart)->momentum().Phi(), ptotB.Phi()));
     double dR = sqrt(deta*deta+dphi*dphi);
     if(deta > m_eta_max_cut_pionS) continue;
     if(deta < m_eta_min_cut_pionS) continue;
@@ -186,8 +188,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double B0phi= ptotB.Phi();
     double ang = asin((ipionS->pt())/(ipionS->p()));
     double deta= log(tan(B0the/2.))-log(tan(ang/2.));
-    double dphi= std::min(fabs(ipionS->momentum().Phi()-B0phi),
-                          6.283-fabs(ipionS->momentum().Phi()-B0phi));
+    double dphi= fabs(TaggingHelpers::dphi(ipionS->momentum().Phi(), B0phi));
     double dQ  = ((ptotB+ ipionS->momentum() ).M() - B0mass);
     double dR = sqrt(deta*deta+dphi*dphi);
     

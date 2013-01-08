@@ -1,6 +1,8 @@
 // Include files 
 #include "TaggerKaonSameTool.h"
 
+#include "dphi.h"
+
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerKaonSameTool
 //
@@ -139,8 +141,8 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( distphi < m_distPhi_cut_kS ) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
-    double dphi  = fabs((*ipart)->momentum().Phi() - ptotB.Phi()); 
-    if(dphi>M_PI) dphi=2.*M_PI-dphi;
+    double dphi  = fabs(TaggingHelpers::dphi(
+		(*ipart)->momentum().Phi(), ptotB.Phi()));
     double dR = sqrt(deta*deta+dphi*dphi);
 
     if(deta > m_etacut_kaonS) continue;
@@ -176,8 +178,8 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double ang = asin(ikaonS->pt()/ikaonS->p());
     double deta= log(tan(ptotB.Theta()/2))-log(tan(ang/2));
-    double dphi  = fabs(ikaonS->momentum().Phi() - ptotB.Phi());
-    if(dphi>M_PI) dphi=2.*M_PI-dphi;
+    double dphi  = fabs(TaggingHelpers::dphi(
+		ikaonS->momentum().Phi(), ptotB.Phi()));
     double dR = sqrt(deta*deta+dphi*dphi);
 
     std::vector<double> NNinputs(10);

@@ -5,6 +5,12 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-01-08 - Manuel Tobias Schiller
+ - fix the calculation of the difference between two angles which was
+   slightly incorrect in a few places by a new helper routine in src/dphi.h;
+   make sure all code uses this new routine - flavour tagging performance
+   should remain unchanged
+
 !========================= FlavourTagging v12r11 2012-11-30 =========================
 
 ! 2012-11-29 - Stefania Vecchi
@@ -882,7 +888,7 @@ how to run it.
    . writing output to TES in FlavourTag class
  - CheatedSelection (Marco)
    . Don't stop when signal B is not found in event
-	(waiting for Gauss to provide flag of forced B).
+   (waiting for Gauss to provide flag of forced B).
  - VertexChargeTaggingTool.cpp and BTagging.cpp
    . upstream() -> isDownstream()
 

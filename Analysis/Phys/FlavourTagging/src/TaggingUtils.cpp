@@ -5,6 +5,8 @@
 #include <Kernel/IDistanceCalculator.h>
 #include "Kernel/IPVReFitter.h"
 
+#include "dphi.h"
+
 //--------------------------------------------------------------------
 // Implementation file for class : TaggingUtils
 //
@@ -148,13 +150,12 @@ bool TaggingUtils::isinTree(const Particle* axp,
   for( Particle::ConstVector::iterator ip = sons.begin(); 
        ip != sons.end(); ip++ ){
 
-    double dphi = fabs(phi_axp-(*ip)->momentum().phi()); 
-    if(dphi>M_PI) dphi=2.*M_PI-dphi;
+    double dphi = fabs(TaggingHelpers::dphi(phi_axp,(*ip)->momentum().phi()));
     dist_phi= std::min(dist_phi, dphi);
     
     if( (    fabs(p_axp -(*ip)->p()) < 0.1 
              && fabs(pt_axp-(*ip)->pt())< 0.01 
-             && fabs(dphi)< 0.1 )
+             && dphi < 0.1 )
         || axp->proto()==(*ip)->proto() ) {
       if (msgLevel(MSG::VERBOSE)) 
         verbose() << " isinTree part: " << axp->particleID().pid() 

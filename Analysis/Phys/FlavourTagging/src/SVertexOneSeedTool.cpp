@@ -2,6 +2,8 @@
 #include "SVertexOneSeedTool.h"
 #include "Event/RecVertex.h"
 
+#include "dphi.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : SVertexOneSeedTool v1.4
 //
@@ -127,8 +129,8 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
       if( std::min((*jp)->pt(), (*kp)->pt()) /GeV < 0.15) continue;  //cut
       if( std::max((*jp)->pt(), (*kp)->pt()) /GeV < 0.3 ) continue;  //cut
  
-      double dphi= fabs((*jp)->momentum().phi()-(*kp)->momentum().phi()); 
-      if(dphi>M_PI) dphi= 2.*M_PI-dphi;
+      double dphi= fabs(TaggingHelpers::dphi((*jp)->momentum().phi(),
+		  (*kp)->momentum().phi()));
       if(dphi<0.001) continue;                                  //cut
 
       sc = fitter->fit( vtx , **jp, **kp );

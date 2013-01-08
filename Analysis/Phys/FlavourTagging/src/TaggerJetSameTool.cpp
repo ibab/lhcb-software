@@ -1,6 +1,8 @@
 // Include files 
 #include "TaggerJetSameTool.h"
 #include "Event/RecVertex.h"
+
+#include "dphi.h"
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerJetSameTool
 //
@@ -52,8 +54,8 @@ Tagger TaggerJetSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     Gaudi::LorentzVector ptotB = AXB0->momentum();
     double etasig= -log(tan(ptotB.Theta())/2);
     double eta   = -log(tan(axp->momentum().Theta()/2));
-    double dphi  = fabs(axp->momentum().Phi() - ptotB.Phi()); 
-    if(dphi>M_PI) dphi=2.*M_PI-dphi;
+    double dphi  = fabs(
+	    TaggingHelpers::dphi(axp->momentum().Phi(), ptotB.Phi()));
     //cone condition
     double dR = sqrt(pow((eta-etasig),2)+dphi*dphi);
     if ( dR < m_dR_cut_jetS ) {
