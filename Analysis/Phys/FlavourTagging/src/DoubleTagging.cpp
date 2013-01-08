@@ -51,6 +51,8 @@ DoubleTagging::~DoubleTagging() {};
 // Initialization
 //=============================================================================
 StatusCode DoubleTagging::initialize() {
+  StatusCode sc = DaVinciAlgorithm::initialize();
+  if (sc.isFailure()) return sc;
 
   m_ntotal = m_ndt_total = m_nag_total = 0;
   
@@ -210,7 +212,7 @@ StatusCode DoubleTagging::finalize() {
   info() << "Output Wk =       " << calculateWk(m_ndt_total,m_nag_total,m_Wcomb) << endmsg;
   info() << "Output SigmWk =   " << calculateSigmaWk(m_ndt_total,m_nag_total,m_Wcomb,m_SigmaWcomb) << endmsg;
   
-  return  StatusCode::SUCCESS;
+  return DaVinciAlgorithm::finalize();
 }
 
 //================================================================

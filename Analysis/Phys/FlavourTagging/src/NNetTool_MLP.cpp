@@ -59,8 +59,8 @@ NNetTool_MLP::NNetTool_MLP( const std::string& type,
 
 }
 NNetTool_MLP::~NNetTool_MLP(){}
-StatusCode NNetTool_MLP::initialize() { return StatusCode::SUCCESS; }
-StatusCode NNetTool_MLP::finalize()   { return StatusCode::SUCCESS; }
+StatusCode NNetTool_MLP::initialize() { return GaudiTool::initialize(); }
+StatusCode NNetTool_MLP::finalize()   { return GaudiTool::finalize(); }
 
 //=============================================================================
 double NNetTool_MLP::pol2(double x, double a0, double a1) {

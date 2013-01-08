@@ -51,6 +51,8 @@ TaggerElectronTool::~TaggerElectronTool() {};
 
 //=====================================================================
 StatusCode TaggerElectronTool::initialize() { 
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
 
   warning() << "Ele calib ctt: P0_Cal "<<m_P0_Cal_ele<<", P1_Cal "<<m_P1_Cal_ele<<endreq;
   
@@ -198,5 +200,5 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 }
 
 //====================================================================
-StatusCode TaggerElectronTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode TaggerElectronTool::finalize() { return GaudiTool::finalize(); }
 

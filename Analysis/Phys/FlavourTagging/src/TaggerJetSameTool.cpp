@@ -30,7 +30,7 @@ TaggerJetSameTool::TaggerJetSameTool( const std::string& type,
 TaggerJetSameTool::~TaggerJetSameTool() {}; 
 
 //=====================================================================
-StatusCode TaggerJetSameTool::initialize() { return StatusCode::SUCCESS; }
+StatusCode TaggerJetSameTool::initialize() { return GaudiTool::initialize(); }
 
 //=====================================================================
 Tagger TaggerJetSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
@@ -78,5 +78,5 @@ Tagger TaggerJetSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   return tjetS;
 }
 //==========================================================================
-StatusCode TaggerJetSameTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode TaggerJetSameTool::finalize() { return GaudiTool::finalize(); }
 

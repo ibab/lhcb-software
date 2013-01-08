@@ -23,6 +23,8 @@ CombineTaggersPID::~CombineTaggersPID(){}
 
 StatusCode CombineTaggersPID::initialize() { 
 
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
   //Sort the possible combination of particle identification (PID) according to omega
   const unsigned long CvSize = 41;
   const int pid_cats_bs[CvSize] = {
@@ -120,7 +122,7 @@ StatusCode CombineTaggersPID::initialize() {
   return StatusCode::SUCCESS; 
 }
 
-StatusCode CombineTaggersPID::finalize() { return StatusCode::SUCCESS; }
+StatusCode CombineTaggersPID::finalize() { return GaudiTool::finalize(); }
 
 //=============================================================================
 int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& vtg, int signalType){

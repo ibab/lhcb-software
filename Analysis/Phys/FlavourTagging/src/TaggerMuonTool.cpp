@@ -46,10 +46,12 @@ TaggerMuonTool::~TaggerMuonTool() {};
 
 //=====================================================================
 StatusCode TaggerMuonTool::initialize() { 
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
 
   warning() << "Mu calib ctt: P0_Cal "<<m_P0_Cal_muon<<", P1_Cal "<<m_P1_Cal_muon<<endreq;
 
-  StatusCode sc = service("EventDataSvc", m_eventSvc, true);
+  sc = service("EventDataSvc", m_eventSvc, true);
   if( sc.isFailure() ) {
     fatal() << " Unable to locate Event Data Service" << endreq;
     return sc;
@@ -179,5 +181,5 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 }
 
 //====================================================================
-StatusCode TaggerMuonTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode TaggerMuonTool::finalize() { return GaudiTool::finalize(); }
 

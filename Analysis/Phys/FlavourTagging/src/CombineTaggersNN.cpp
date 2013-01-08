@@ -32,8 +32,8 @@ CombineTaggersNN::CombineTaggersNN( const std::string& type,
 
 }
 CombineTaggersNN::~CombineTaggersNN(){}
-StatusCode CombineTaggersNN::initialize() { return StatusCode::SUCCESS; }
-StatusCode CombineTaggersNN::finalize()   { return StatusCode::SUCCESS; }
+StatusCode CombineTaggersNN::initialize() { return GaudiTool::initialize(); }
+StatusCode CombineTaggersNN::finalize()   { return GaudiTool::finalize(); }
 
 //=============================================================================
 int CombineTaggersNN::combineTaggers(FlavourTag& theTag, 

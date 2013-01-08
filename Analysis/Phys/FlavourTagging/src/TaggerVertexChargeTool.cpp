@@ -58,6 +58,8 @@ TaggerVertexChargeTool::~TaggerVertexChargeTool() {};
 
 //=====================================================================
 StatusCode TaggerVertexChargeTool::initialize() {
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
 
   warning() << "Vtx calib ctt: P0_Cal "<<m_P0_Cal_vtx<<", P1_Cal "<<m_P1_Cal_vtx<<endreq;
 
@@ -209,6 +211,6 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   return tVch;
 }
 //====================================================================
-StatusCode TaggerVertexChargeTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode TaggerVertexChargeTool::finalize() { return GaudiTool::finalize(); }
 
 //======================================================================

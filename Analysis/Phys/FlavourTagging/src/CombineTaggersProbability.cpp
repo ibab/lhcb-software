@@ -35,11 +35,14 @@ CombineTaggersProbability::CombineTaggersProbability( const std::string& type,
 
 }
 CombineTaggersProbability::~CombineTaggersProbability(){}
-StatusCode CombineTaggersProbability::initialize() { 
+StatusCode CombineTaggersProbability::initialize() {
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
   warning() << "Comb OS calib ctt: P0_Cal "<<m_P0_Cal_OS<<", P1_Cal "<<m_P1_Cal_OS<<endreq;
-  return StatusCode::SUCCESS; }
+  return StatusCode::SUCCESS;
+}
 
-StatusCode CombineTaggersProbability::finalize()   { return StatusCode::SUCCESS; }
+StatusCode CombineTaggersProbability::finalize()   { return GaudiTool::finalize(); }
 
 //=============================================================================
 int CombineTaggersProbability::combineTaggers(FlavourTag& theTag, 

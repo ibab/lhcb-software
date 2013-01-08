@@ -53,6 +53,8 @@ TaggerKaonSameTool::~TaggerKaonSameTool() {};
 
 //=====================================================================
 StatusCode TaggerKaonSameTool::initialize() { 
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
 
   warning() << "KSS calib ctt: P0_Cal "<<m_P0_Cal_kaonS<<", P1_Cal "<<m_P1_Cal_kaonS<<endreq;
 
@@ -215,5 +217,5 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   return tkaonS;
 }
 //==========================================================================
-StatusCode TaggerKaonSameTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode TaggerKaonSameTool::finalize() { return GaudiTool::finalize(); }
 

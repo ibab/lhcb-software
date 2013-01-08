@@ -46,6 +46,8 @@ SVertexTool::SVertexTool( const std::string& type,
 
 StatusCode SVertexTool::initialize() {
 
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {
     fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
@@ -61,7 +63,7 @@ StatusCode SVertexTool::initialize() {
 };
 
 //=============================================================================
-StatusCode SVertexTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode SVertexTool::finalize() { return GaudiTool::finalize(); }
 
 //=============================================================================
 SVertexTool::~SVertexTool(){}

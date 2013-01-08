@@ -48,6 +48,8 @@ TaggerKaonOppositeTool::~TaggerKaonOppositeTool() {};
 
 //=====================================================================
 StatusCode TaggerKaonOppositeTool::initialize() { 
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
 
   warning() << "KOS calib ctt: P0_Cal "<<m_P0_Cal_kaon<<", P1_Cal "<<m_P1_Cal_kaon<<endreq;
 
@@ -180,5 +182,5 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
 }
 
 //==========================================================================
-StatusCode TaggerKaonOppositeTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode TaggerKaonOppositeTool::finalize() { return GaudiTool::finalize(); }
 

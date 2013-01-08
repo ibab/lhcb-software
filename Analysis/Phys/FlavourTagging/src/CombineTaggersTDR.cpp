@@ -21,8 +21,8 @@ CombineTaggersTDR::CombineTaggersTDR( const std::string& type,
   declareInterface<ICombineTaggersTool>(this);
 }
 CombineTaggersTDR::~CombineTaggersTDR(){}
-StatusCode CombineTaggersTDR::initialize() { return StatusCode::SUCCESS; }
-StatusCode CombineTaggersTDR::finalize() { return StatusCode::SUCCESS; }
+StatusCode CombineTaggersTDR::initialize() { return GaudiTool::initialize(); }
+StatusCode CombineTaggersTDR::finalize() { return GaudiTool::finalize(); }
 
 //=======================================================================
 int CombineTaggersTDR::combineTaggers(FlavourTag& theTag, 

@@ -41,6 +41,8 @@ SVertexOneSeedTool::SVertexOneSeedTool( const std::string& type,
 
 StatusCode SVertexOneSeedTool::initialize() {
 
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {
     fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
@@ -56,7 +58,7 @@ StatusCode SVertexOneSeedTool::initialize() {
 };
 
 //=============================================================================
-StatusCode SVertexOneSeedTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode SVertexOneSeedTool::finalize() { return GaudiTool::finalize(); }
 
 //=============================================================================
 SVertexOneSeedTool::~SVertexOneSeedTool(){}

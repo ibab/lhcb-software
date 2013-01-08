@@ -24,6 +24,8 @@ SVertexNNTool::SVertexNNTool( const std::string& type,
 }
 
 StatusCode SVertexNNTool::initialize() {
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {
@@ -41,7 +43,7 @@ StatusCode SVertexNNTool::initialize() {
 };
 
 //=============================================================================
-StatusCode SVertexNNTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode SVertexNNTool::finalize() { return GaudiTool::finalize(); }
 
 //=============================================================================
 SVertexNNTool::~SVertexNNTool(){}

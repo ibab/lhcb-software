@@ -34,6 +34,8 @@ TaggingUtils::~TaggingUtils() {};
 
 //=====================================================================
 StatusCode TaggingUtils::initialize() { 
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
 
   m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
@@ -169,5 +171,5 @@ bool TaggingUtils::isinTree(const Particle* axp,
 }
 
 //====================================================================
-StatusCode TaggingUtils::finalize() { return StatusCode::SUCCESS; }
+StatusCode TaggingUtils::finalize() { return GaudiTool::finalize(); }
 

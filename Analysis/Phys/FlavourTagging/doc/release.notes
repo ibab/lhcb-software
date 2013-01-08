@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-01-08 - Manuel Tobias Schiller
+ - fix initialize()/finalize() methods to call the parent's implementation the
+   way they're supposed to be called
+
+! 2013-01-08 - Manuel Tobias Schiller
  - fix the calculation of the difference between two angles which was
    slightly incorrect in a few places by a new helper routine in src/dphi.h;
    make sure all code uses this new routine - flavour tagging performance

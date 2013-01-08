@@ -58,6 +58,8 @@ TaggerPionSameTool::~TaggerPionSameTool() {};
 
 //=====================================================================
 StatusCode TaggerPionSameTool::initialize() { 
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
 
   warning() << "PiSS calib ctt: P0_Cal "<<m_P0_Cal_pionS<<", P1_Cal "<<m_P1_Cal_pionS<<endreq;
 
@@ -230,5 +232,5 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   return tpionS;
 }
 //==========================================================================
-StatusCode TaggerPionSameTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode TaggerPionSameTool::finalize() { return GaudiTool::finalize(); }
 

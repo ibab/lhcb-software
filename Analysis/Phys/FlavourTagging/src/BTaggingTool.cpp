@@ -57,6 +57,8 @@ BTaggingTool::~BTaggingTool() {};
 
 //==========================================================================
 StatusCode BTaggingTool::initialize() {
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {
@@ -477,6 +479,9 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
 }
 
 //=========================================================================
-StatusCode BTaggingTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode BTaggingTool::finalize()
+{
+    return GaudiTool::finalize();
+}
 
 

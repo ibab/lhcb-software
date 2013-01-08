@@ -20,8 +20,8 @@ CombineTaggersOSTDR::CombineTaggersOSTDR( const std::string& type,
   declareInterface<ICombineTaggersTool>(this);
 }
 CombineTaggersOSTDR::~CombineTaggersOSTDR(){}
-StatusCode CombineTaggersOSTDR::initialize() { return StatusCode::SUCCESS; }
-StatusCode CombineTaggersOSTDR::finalize() { return StatusCode::SUCCESS; }
+StatusCode CombineTaggersOSTDR::initialize() { return GaudiTool::initialize(); }
+StatusCode CombineTaggersOSTDR::finalize() { return GaudiTool::finalize(); }
 
 //=============================================================================
 int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& vtg, int signalType){
