@@ -210,8 +210,15 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
   double pvchi2=0.;
   double pvndof=0.;
   int pvntr=0;
-  const LHCb::RecVertex* pv;
+  // get the input data
+  LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(m_tracksInContainer);
+  if ( NULL == tracks ) {
+    debug() << "No VeloTracks container found for this event !" << endmsg;
+    return StatusCode::SUCCESS;
+  }
+
   const LHCb::RecVertices* pvcontainer = getIfExists<LHCb::RecVertices>( m_pvContainerName ) ;
+
   if ( NULL == pvcontainer ) {
      debug() << "No Vertex container found for this event !" << endmsg;
     //return StatusCode::SUCCESS;
@@ -222,7 +229,9 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
 
     for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ;
          ipv != pvcontainer->end(); ++ipv ) {
-      pv = *ipv ;
+      const LHCb::RecVertex*pv = *ipv ;
+      if (m_evntuple)
+        FillVeloEvNtuple(tracks,n_pv ,pv);
       if ((it_npv==1) || (sqrt(pvx*pvx+pvy*pvy)> pv->position().rho() && it_npv>1)){
         pvx= pv->position().x();
         pvy= pv->position().y();
@@ -235,12 +244,6 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
     }
   }
 
-  // get the input data
-  LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(m_tracksInContainer);
-  if ( NULL == tracks ) {
-    debug() << "No VeloTracks container found for this event !" << endmsg;
-    return StatusCode::SUCCESS;
-  }
 
   //count number of backward tracks
   int n_back=0;
@@ -278,8 +281,6 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
     debug()<< "asct table exist " << endmsg;
   }
 
-  if (m_evntuple)
-    FillVeloEvNtuple(tracks,n_pv, n_back, pvx,pvy,pvz,pvchi2,pvndof,pvntr,pv);
   for (LHCb::Tracks::const_iterator iterT = tracks->begin(); iterT != tracks->end(); ++iterT){
     StatusCode cluNTStatus;
     if(m_clntuple) cluNTStatus=FillVeloClNtuple(**iterT,n_pv, n_back, pvx,pvy,pvz,pvchi2,pvndof,pvntr);
@@ -977,10 +978,7 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track,
 }
 
 //=============================================================================
-void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks,
-                                                int n_pv,int n_back, 
-                                                double pvx, double pvy, double pvz,
-                                                double pvchi2, double pvndof, int pvntr,
+void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks,int n_pv,
                                                 const LHCb::RecVertex* pv)
 {
   Tuple tuple=nTuple("VeloTrEvNtuple", "Event ntuple",CLID_ColumnWiseTuple );
@@ -1085,14 +1083,13 @@ void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks,
   tuple->column( "totrcl", totrcl);
   tuple->column( "tottrcl", tottrcl);
   tuple->column( "tottrrcl", tottrrcl);
-  tuple->column( "pvx",      pvx);
-  tuple->column( "pvy",      pvy);
-  tuple->column( "pvz",      pvz);
+  tuple->column( "pvx",      pv->position().x());
+  tuple->column( "pvy",      pv->position().y());
+  tuple->column( "pvz",      pv->position().z());
   tuple->column( "npv",      n_pv);
-  tuple->column( "pvchi2",      pvchi2);
-  tuple->column( "pvndof",      pvndof);
-  tuple->column( "pvntr",      pvntr);
-  tuple->column( "nbacktr",      n_back);
+  tuple->column( "pvchi2",      pv->chi2());
+  tuple->column( "pvndof",      pv->nDoF());
+  tuple->column( "pvntr",      pv->tracks().size());
   tuple->column( "pvlx",      pvlx);
   tuple->column( "pvly",      pvly);
   tuple->column( "pvlz",      pvlz);

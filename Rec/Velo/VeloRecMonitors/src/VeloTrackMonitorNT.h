@@ -60,9 +60,7 @@ namespace Velo
   private:
 
     void FillVeloEvNtuple(LHCb::Tracks* tracks,
-                          int n_pv,int n_back, 
-                          double pvx, double pvy, double pvz,
-                          double pvchi2, double pvndof, int pvntr,
+                          int n_pv,
                           const LHCb::RecVertex* pv );
     StatusCode FillVeloClNtuple(const LHCb::Track& track,
                                 int n_pv,int n_back, 
