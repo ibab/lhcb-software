@@ -5,6 +5,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2013-01-09 - Eric van Herwijnen
+ - Added python/HltSettings/Physics_pAJanuary2013.py 
+
 ! 2012-12-20 - Jibo He
  - python/HltSettings/Physics_pA2013.py
    Added GEC pass through lines  
