@@ -57,6 +57,8 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   //------------------------------------------------------------------------
   declareProperty( "reusePatSeeding",		m_reusePatSeeding	= true );
   declareProperty( "UseForward",		m_useForward		= false       );
+  declareProperty( "OnlyGood",			m_onlyGood		= false  );
+  declareProperty( "DiscardChi2",		m_discardChi2		= 1.5      ); 
   declareProperty( "InputTracksName",		m_inputTracksName	= LHCb::TrackLocation::Forward  );
   {
     std::vector<double> tmp = boost::assign::list_of(-0.6 * Gaudi::Units::mm)(2.8 * Gaudi::Units::mm);
@@ -195,8 +197,6 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "MaxOTHits",			   m_maxOTHits        = 10000 );
   declareProperty( "AbortOnVeloAbort", m_abortOnVeloAbort = true );
 
-  declareProperty( "OnlyGood",          m_onlyGood              = false  );
-  declareProperty( "DiscardChi2"         , m_discardChi2    = 1.5      ); 
   declareProperty( "ActivateHltPropertyHack", m_activateHLTPropertyHack = true ); 
 }
 //=============================================================================
@@ -379,7 +379,7 @@ unsigned PatSeedingTool::prepareHits()
   // alternatively mark only those PatFwd hits
   // which come from tracks with bad chi2>m_discardChi2
   if (m_onlyGood) {
-    LHCb::Tracks* fwdTracks  = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
+    LHCb::Tracks* fwdTracks  = get<LHCb::Tracks>( m_inputTracksName );
     BOOST_FOREACH( const LHCb::Track* tF, *fwdTracks) {
       // check for good PatFwd tracks
       // from PatForward fit
