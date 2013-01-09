@@ -106,6 +106,7 @@ EventDataSvc::EventDataSvc(const std::string& name, ISvcLocator* svc)
   declareProperty("DataAccessName",      m_accessName);
   declareProperty("EnableFaultHandler",  m_enableFaultHdlr);
   declareProperty("EnableAccessHandler", m_enableAccessHdlr);
+  m_bits.extend(m_maskWidth);
 }
 
 /// Standard Destructor

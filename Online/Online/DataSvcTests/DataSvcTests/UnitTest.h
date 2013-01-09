@@ -17,6 +17,7 @@
 #include "GaudiKernel/Kernel.h"
 // C/C++ header files
 #include <iostream>
+#include <sys/time.h>
 
 // Forward declarations
 class DataObject;
@@ -26,12 +27,36 @@ class IAppMgrUI;
 
 namespace Tests {
 
-  /** Definition of a small class to test the persistency service.
 
-  @author M.Frank
-  @date   11/2/99
-    
-  */
+  /** Small class to perform timing measurements
+   *
+   *  @author M.Frank
+   *  @date   11/2/99
+   *
+   */
+  struct Timer {
+    struct timeval m_start, m_stop;
+    Timer() {}
+    void start() {
+      struct timezone tz;
+      ::gettimeofday(&m_start,&tz);
+    }
+    void stop() {
+      struct timezone tz;
+      ::gettimeofday(&m_stop,&tz);
+    }
+    double seconds() const {
+      long long int usec = 1000000*(m_stop.tv_sec-m_start.tv_sec)+(m_stop.tv_usec-m_start.tv_usec);
+      return double(usec)/1e6;
+    }
+  };
+
+  /** Small class to test the Gaudi services.
+   *
+   *  @author M.Frank
+   *  @date   11/2/99
+   *
+   */
   class UnitTest  {
   public:
     long m_nerr;

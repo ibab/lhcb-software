@@ -4,6 +4,7 @@ version v0r1
 branches src cmt
 use GaudiPolicy v*
 use GaudiSvc    v*
+use GaudiAlg    v*
 use ROOT        v* LCG_Interfaces
 
 apply_pattern install_more_includes more=DataSvcTests
@@ -12,7 +13,7 @@ private
 library DataSvcTest ../src/*.cpp
 macro_append DataSvcTest_pp_cppflags " -I../src "
 macro_append DataSvcTest_cppflags " -msse2 -msse3 -msse4 -pthread "   WIN32 ""
-
+apply_pattern component_library library=DataSvcTest
 apply_pattern linker_library library=DataSvcTest
 
 application DataSvc_Test ../main/datasvc.cpp

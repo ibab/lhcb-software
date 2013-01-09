@@ -1,0 +1,8 @@
+ApplicationMgr.TopAlg      = { "Tests::EvtDataSvcAlg/Alg" };
+ApplicationMgr.EvtSel      = "NONE"; // do not use any event input
+ApplicationMgr.HistogramPersistency = "NONE";
+ApplicationMgr.EvtMax      = 1000;
+EventDataSvc.RootCLID      = 1;
+MessageSvc.OutputLevel     = 3;
+Alg.SvcName = "EventDataSvc";
+Alg.Commands = "CMDS.data";
