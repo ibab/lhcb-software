@@ -2,7 +2,7 @@
 # Created     : 2013-01-09
 # Maintainer  : Pieter David
 #============================================================================
-package         DBVisualisationTool
+package         AlignmentDBVisualisationTool
 version         v1r0
 #============================================================================
 # Structure, i.e. directories to process. 

@@ -45,7 +45,7 @@ def plotAlignmentParametersTimeSeries( elmGroup, dofs
     # get the time periods
     pSince = parseTimeMin(since)
     pUntil = parseTimeMax(until)
-    timePeriods = list( period for period in statusPeriodsFromTable("$DBVISUALISATIONTOOLROOT/data/LHCbStatus2011.txt") + statusPeriodsFromTable("$DBVISUALISATIONTOOLROOT/data/LHCbStatus2012.txt") if period.startTime < pUntil and period.endTime > pSince )
+    timePeriods = list( period for period in statusPeriodsFromTable("$ALIGNMENTDBVISUALISATIONTOOLROOT/data/LHCbStatus2011.txt") + statusPeriodsFromTable("$ALIGNMENTDBVISUALISATIONTOOLROOT/data/LHCbStatus2012.txt") if period.startTime < pUntil and period.endTime > pSince )
     for p in timePeriods:
         if p.startTime < pSince:
             logging.debug( "Setting start time of %s to %s" % ( p, pSince ) )

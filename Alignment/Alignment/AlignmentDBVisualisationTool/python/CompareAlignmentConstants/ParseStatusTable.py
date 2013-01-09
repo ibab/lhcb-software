@@ -1,5 +1,5 @@
 """
-Module for parsing the status table (eg. Alignment/Escher/scripts/DBVisualisationTool/LHCbStatus2012.txt)
+Module for parsing the status table (eg. Alignment/AlignmentDBVisualisationTool/data/LHCbStatus2012.txt)
 """
 __author__ = "Pieter David <pieter.david@nikhef.nl>"
 __date__   = "November 2012"
