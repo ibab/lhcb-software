@@ -90,7 +90,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         from Configurables import LoKi__HltUnit as HltUnit
         from HltLine.HltLine import Hlt1Line
         from HltTracking.Hlt1TrackUpgradeConf import VeloCandidates
-        properties={'MaxVeloTracks': 11}
+        properties={'MaxVeloTracks': self.getProp('MaxVeloTracks')}
 	name='MBMicroBiasLowMultVelo'
         Hlt1Line ( name
                  , prescale = self.prescale
