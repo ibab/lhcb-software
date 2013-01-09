@@ -4,6 +4,12 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+
+
+! 2013-01-09 - Eric van Herwijnen
+ - python/HltConf/HltInit.py
+  - Added Hlt1MBMicroBiasLowMultVelo line for pA  
+
 ! 2012-12-20 - Jibo He
  - python/HltConf/HltInit.py
   . included GEC pass through lines for pA  

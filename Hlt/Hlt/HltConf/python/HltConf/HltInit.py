@@ -145,6 +145,7 @@ HltANNSvc().Hlt1SelectionID = {
     'Hlt1MBMicroBiasTStationDecision'       :  509,
     'Hlt1MBMiniBiasDecision'                :  510,
     'Hlt1MBNoBiasDecision'                  :  511,
+    'Hlt1MBMicroBiasLowMultVeloDecision'    :  513,
 
     # DV
     "Hlt1VertexDisplVertexDecision"         :  600,
@@ -153,7 +154,8 @@ HltANNSvc().Hlt1SelectionID = {
     #pA
     'Hlt1ActivitySPDDecision'               :  610,
     'Hlt1ActivityTrackingDecision'          :  611,
-    'MicroBiasVeloLowMultDecision'          :  612,
+    'Hlt1ActivityVeloDecision'              :  612,
+
     #pA GEC passThrough
     'Hlt1GECPassSPDDecision'                :  615,
     'Hlt1GECPassVeloDecision'               :  616,
