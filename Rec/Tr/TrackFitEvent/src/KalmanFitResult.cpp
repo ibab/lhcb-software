@@ -162,6 +162,8 @@ namespace LHCb
 	    break;
 	  case Measurement::TT:
 	  case Measurement::TTLite:
+	  case Measurement::UT:
+	  case Measurement::UTLite:
 	    if( firstTT==fitnodes.end()) firstTT = it ;
 	    lastTT = it ;
 	    break;
