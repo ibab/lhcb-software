@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2013-01-09 - Pieter David
+ - move DBVisualisationTool scripts to a separate package
+
 ! 2012-12-03 - Pieter David
  - updated DBVisualisationTool scripts
 
