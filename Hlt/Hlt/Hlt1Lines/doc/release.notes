@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v6r31 2013-01-09 =========================
 ! 2013-01-09 - Eric van Herwijnen
  - python/Hlt1Lines/Hlt1pALines.py
    Added Hlt1ActivityVelo
