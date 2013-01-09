@@ -367,9 +367,7 @@ Object2MCLinker<SOURCE>::linkerTable( const std::string& name, To& test)
   if( NULL == m_myGaudiAlg && NULL == m_myGaudiTool ) return NULL;
 
   if( test.notFound() ) {
-    m_linkerTable = typename Object2MCLinker<SOURCE>::Linker( m_evtSvc, 
-                                                                    m_msgSvc, 
-                                                                    name);
+    m_linkerTable = typename Object2MCLinker<SOURCE>::Linker( m_evtSvc, 0, name);
     if( NULL != m_myGaudiAlg) {
       m_myGaudiAlg->debug() << "Linker table " << name << " created" <<endmsg;
     }

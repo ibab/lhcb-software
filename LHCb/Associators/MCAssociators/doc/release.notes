@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-01-09 - Olivier Callot
+ - Pass a NULL message service to the linker constructor, to remove messages.
+
 !========================= MCAssociators v1r2 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
