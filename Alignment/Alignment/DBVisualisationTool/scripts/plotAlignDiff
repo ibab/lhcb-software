@@ -1,0 +1,47 @@
+#!/usr/bin/env python2
+"""
+Command-line script to make an alignment "diff" root file
+"""
+__author__ = "Pieter David <pieter.david@nikhef.nl>"
+__date__   = "September 2012"
+
+import logging
+
+from optparse import OptionParser
+
+parser = OptionParser()
+parser.usage = "%prog [options] elements dofs dbfile1 ..."
+
+parser.add_option("-r", "--reference", dest="refDbFile",      default=None, metavar="REFERENCE",
+                  help="SQLite file (without IOVs) containing a reference alignment, e.g. survey")
+parser.add_option("-o", "--outdir",    dest="outDirName",     default="AlignmentsCompared", metavar="OUTDIR",
+                  help="Output directory [default: %default]")
+parser.add_option("--binLabelsRegex",  dest="binLabelsRegex", default=".+/Alignment_(?P<label>[0-9]+)\.db/LHCBCOND$",
+                  help="Regular expression for connection strings. The pattern \"label\" is used as bin label [default: %default]")
+parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Turn on verbose messages")
+
+(options, args) = parser.parse_args()
+
+assert len(args) > 2
+elements = args[0]
+dofs = args[1].split(",")
+dbFiles = args[2:]
+
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.ERROR)
+
+refConnStr = options.refDbFile
+if refConnStr is not None:
+    refConnStr = "sqlite_file:%s/LHCBCOND" % refConnStr
+
+from CompareAlignmentConstants.AlignmentComparisonPlots import plotAlignmentParametersComparison
+
+plotAlignmentParametersComparison(
+        elements, dofs
+      , [ ("sqlite_file:%s/LHCBCOND" % dbFile, "HEAD") for dbFile in dbFiles ]
+      , binLabels=options.binLabelsRegex
+      , refConnectString=refConnStr
+      , outputdir=options.outDirName
+      )

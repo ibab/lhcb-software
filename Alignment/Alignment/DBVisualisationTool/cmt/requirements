@@ -1,0 +1,24 @@
+#============================================================================
+# Created     : 2013-01-09
+# Maintainer  : Pieter David
+#============================================================================
+package         DBVisualisationTool
+version         v1r0
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches        doc cmt python scripts
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use Gaudi           v*                     -no_auto_imports
+use Python          v*      LCG_Interfaces -no_auto_imports
+use pyanalysis      v*      LCG_Interfaces -no_auto_imports
+use pytools         v*      LCG_Interfaces -no_auto_imports
+#============================================================================
+# Install python modules and scripts
+#============================================================================
+apply_pattern   install_python_modules
+apply_pattern   install_scripts
+#============================================================================
