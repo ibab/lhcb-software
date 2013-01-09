@@ -1,4 +1,3 @@
-
 # =============================================================================
 ## @file
 #  Cosmics 
@@ -22,7 +21,7 @@ class Hlt1pALinesConf(HltLinesConfigurableUser):
     
     __slots__ = { 'pA_SpdMult'       : 30 ,
                   'pA_LowMultSpd'    : 30 ,
-                  'nVeloLowMultMicroBias' : 200,
+                  'nVeloLowMultMicroBias' : 99999,
                   'pA_GECPassSPD'    :  800,
                   'pA_GECPassVelo'   : 6000,
                   'pA_GECPassIT'     : 3000,
@@ -57,15 +56,16 @@ class Hlt1pALinesConf(HltLinesConfigurableUser):
         
         fltr =  LoKi__VoidFilter ( 'velohits'
                                    , Preambulo = ['from LoKiPhys.decorators import *','from LoKiCore.functions import *']
-                                   , Code = " in_range( 0 , CONTAINS('Raw/Velo/LiteClusters') , %(nVeloLowMultMicroBias)s ) " % self.getProps())
+                                   , Code = " in_range( 5999 , CONTAINS('Raw/Velo/LiteClusters') , %(nVeloLowMultMicroBias)s ) " % self.getProps())
 
-        Line('MicroBiasVeloLowMult',
+        Line('ActivityVelo',
              prescale  = self.prescale,
              postscale = self.postscale,
       #       L0DU = "( L0_DATA('Spd(Mult)') < %(pA_LowMultSpd)s )" % self.getProps(), 
+             ODIN = 'jbit( ODIN_EVTTYP,2 )',
              algos     = [ DecodeVELO
                           , fltr
-                          ,  microBiasVelo
+                          , microBiasVelo
                           , Member( 'Hlt::TrackFilter','All'
                                     , Code = [ 'TrALL' ]
                                     , InputSelection = 'TES:%s' % microBiasVelo.outputSelection()
