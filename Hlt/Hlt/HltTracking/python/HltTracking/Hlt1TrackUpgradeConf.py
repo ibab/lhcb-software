@@ -115,8 +115,8 @@ from Gaudi.Configuration import ToolSvc
 # =============================================================================
 import Hlt1StreamerConf as Conf
 
-ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 1000, 1000 )
-ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 1000,  300 )
+ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 3000, 1250 )
+ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 3000,  500 )
 
 ## Strings for users
 TightForward  = "TightForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"
