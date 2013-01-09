@@ -5,6 +5,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r57 2013-01-09 =========================
 ! 2013-01-09 - Eric van Herwijnen
  - Added python/HltSettings/Physics_pAJanuary2013.py 
 
