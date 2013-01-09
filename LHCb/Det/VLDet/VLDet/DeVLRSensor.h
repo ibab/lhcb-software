@@ -164,8 +164,12 @@ public:
   /// Local pitch at a given radius 
   virtual double rPitchOfRadius(double radius) const {
     double pitch = m_innerPitch;
-    if (radius > m_rLogPitch) {
-      pitch *= pow(radius / m_rLogPitch, m_pitchSlope);
+    if (m_useLogPitch) {
+      if (radius > m_rLogPitch) {
+        pitch *= pow(radius / m_rLogPitch, m_pitchExp);
+      }
+    } else {
+      pitch += m_pitchSlope * (radius - innerRadius());
     }
     return pitch; 
   }
@@ -229,10 +233,11 @@ private:
   StatusCode updateGeometryCache();
   /// Build up map of strip to routing line conversions
   void buildRoutingLineMap();
-  
+  bool m_useLogPitch; 
   double m_innerPitch;
-  double m_rLogPitch;  
+  double m_rLogPitch; 
   double m_pitchSlope;
+  double m_pitchExp;
   int m_numberOfStripsPerEar;
   double m_overhang;
   double m_phiGap;

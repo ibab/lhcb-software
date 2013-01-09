@@ -125,8 +125,17 @@ StatusCode DeVLRSensor::initSensor() {
   m_innerPitch = param<double>("RInnerPitch");
   // Radius up to which the pitch is constant
   m_rLogPitch = param<double>("RConstPitchRadius");
-  // Pitch slope (logarithmic)
-  m_pitchSlope = param<double>("RPitchSlope");
+  // Pitch slope
+  const double slope = param<double>("RPitchSlope");
+  if (slope > 0.) {
+    // Exponential increase of pitch. 
+    m_useLogPitch = true;
+    m_pitchExp = slope;
+  } else {
+    // Linear increase of pitch.
+    m_useLogPitch = false;
+    m_pitchSlope = -slope;
+  }
   // Overhang
   m_overhang = param<double>("ROverhang");
   // Dead region from bias line
@@ -186,11 +195,15 @@ StatusCode DeVLRSensor::initSensor() {
     double radius = m_zones[zone].rMin;
     for (unsigned int strip = 0; strip < m_zones[zone].nbStrips; ++strip) {
       double pitch = m_innerPitch;
-      if (radius > m_rLogPitch) {
-        pitch *= pow(radius / m_rLogPitch, m_pitchSlope);
-        if (m_zones[zone].firstStripLogPitch <= m_zones[zone].firstStrip) {
-          m_zones[zone].firstStripLogPitch = stripIndex;
-        }
+      if (m_useLogPitch) {
+        if (radius > m_rLogPitch) {
+          pitch *= pow(radius / m_rLogPitch, m_pitchExp);
+          if (m_zones[zone].firstStripLogPitch <= m_zones[zone].firstStrip) {
+            m_zones[zone].firstStripLogPitch = stripIndex;
+          }
+        } 
+      } else {
+        pitch *= pow(1. + m_pitchSlope, strip);
       }
       double phiMin = phiMinZone(zone, radius);
       double phiMax = phiMaxZone(zone, radius);
@@ -295,30 +308,38 @@ StatusCode DeVLRSensor::pointToChannel(const Gaudi::XYZPoint& point,
   const unsigned int zone = zoneOfPhiAndR(phi, radius);
   // Work out the closest channel.
   unsigned int closestStrip = 0;
-  if (radius > m_rLogPitch) {
-    int iLo = m_zones[zone].firstStrip;
-    int iUp = m_zones[zone].firstStrip + m_zones[zone].nbStrips - 1;
-    // Special treatment for "ears" in central sector.
-    if (radius > boundingBoxX() && localPoint.y() > 0. && zone == 2) {
-      iUp -= m_numberOfStripsPerEar;
-    }
-    int iM;
-    while (iUp - iLo > 1) {
-      iM = (iUp + iLo) >> 1;
-      if (radius >= m_strips[iM].r) {
-        iLo = iM;
-      } else {
-        iUp = iM;
+  if (m_useLogPitch) {
+    if (radius > m_rLogPitch) {
+      int iLo = m_zones[zone].firstStrip;
+      int iUp = m_zones[zone].firstStrip + m_zones[zone].nbStrips - 1;
+      // Special treatment for "ears" in central sector.
+      if (radius > boundingBoxX() && localPoint.y() > 0. && zone == 2) {
+        iUp -= m_numberOfStripsPerEar;
       }
+      int iM;
+      while (iUp - iLo > 1) {
+        iM = (iUp + iLo) >> 1;
+        if (radius >= m_strips[iM].r) {
+          iLo = iM;
+        } else {
+          iUp = iM;
+        }
+      }
+      double strip = iLo + (radius - m_strips[iLo].r) / m_strips[iLo].pitch;
+      if (radius > boundingBoxX() && localPoint.y() > 0. && zone == 2) {
+        strip += m_numberOfStripsPerEar;
+      }
+      closestStrip = LHCb::Math::round(strip);
+      fraction = strip - closestStrip;
+    } else {
+      const double strip = (radius - innerRadius()) / m_innerPitch;
+      closestStrip = LHCb::Math::round(strip);
+      fraction = strip - closestStrip;
+      closestStrip += m_zones[zone].firstStrip;
     }
-    double strip = iLo + (radius - m_strips[iLo].r) / m_strips[iLo].pitch;
-    if (radius > boundingBoxX() && localPoint.y() > 0. && zone == 2) {
-      strip += m_numberOfStripsPerEar;
-    }
-    closestStrip = LHCb::Math::round(strip);
-    fraction = strip - closestStrip;
   } else {
-    const double strip = (radius - innerRadius()) / m_innerPitch;
+    const double k = (radius - innerRadius()) / m_innerPitch;
+    const double strip = log(1. + k * m_pitchSlope) / log(1. + m_pitchSlope);
     closestStrip = LHCb::Math::round(strip);
     fraction = strip - closestStrip;
     closestStrip += m_zones[zone].firstStrip;
