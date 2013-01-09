@@ -1,12 +1,12 @@
 package MooreSys
-version v14r11
+version v14r12
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v14r11       Hlt
+use  Moore               v14r12      Hlt
 use  IndependenceTests   v1r3        Hlt
 
 
@@ -15,10 +15,11 @@ use  RichDet             v16r11      Det
 use  DetCond             v12r26      Det
 
 # Hlt
-use  HltSettings         v5r56       Hlt
-use  Hlt1Lines           v6r30       Hlt
+use  HltSettings         v5r57       Hlt
+use  Hlt1Lines           v6r31       Hlt
 use  Hlt2Lines           v8r28       Hlt
-
+use  HltConf             v9r22       Hlt
+use  HltTracking         v9r25p1     Hlt
 
 
 # Declare this as a container package
