@@ -3,6 +3,7 @@
 
 #include "TrackInterfaces/ISTClusterCollector.h"
 #include "TrackInterfaces/IAddTTClusterTool.h"
+#include "TrackInterfaces/IAddUTClusterTool.h"
 #include "TrackInterfaces/IFunctionTool.h"
 #include "TrackInterfaces/IHitExpectation.h"
 #include "TrackInterfaces/IHltV0Upgrade.h"
@@ -13,6 +14,7 @@
 #include "TrackInterfaces/IPatSeedingTool.h"
 #include "TrackInterfaces/IPatSeedFit.h"
 #include "TrackInterfaces/IPatVeloTTFit.h"
+#include "TrackInterfaces/IPatVeloUTFit.h"
 #include "TrackInterfaces/IPromoteClusters.h"
 #include "TrackInterfaces/IPtTransporter.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
