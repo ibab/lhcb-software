@@ -7,7 +7,9 @@
 
 ! 2013-01-09 - Eric van Herwijnen
  - python/Hlt1Lines/Hlt1pALines.py
-   Added Hlt1ActivityVelo 
+   Added Hlt1ActivityVelo
+ - python/Hlt1Lines/Hlt1MBLines.py
+   Change velocandidates in_range(1,x,10)
 
 ! 2012-12-20 - Jibo He
  - python/Hlt1Lines/Hlt1pALines.py

@@ -11,7 +11,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'MicroBiasOdin'          : '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
                 , 'MaxNoBiasRate'          : 1000000.
-		, 'MaxVeloTracks'          : 11.
+		, 'MaxVeloTracks'          : 10.
 		, 'Prescale'               : { 'Hlt1MBNoBias' : 0.1,
 		                               'Hlt1MBMicroBiasLowMultVelo'   : 1.0 }
                 , 'Postscale'              : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(500)', 
@@ -99,7 +99,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                  , algos =  [ HltUnit( 'Hlt1'+name+'Unit',
                			       Preambulo = [ VeloCandidates( name ) ],
 				       Code =  """
-				       VeloCandidates  >>  in_range(0, TC_SIZE, %(MaxVeloTracks)s ) 
+				       VeloCandidates  >>  in_range(1, TC_SIZE, %(MaxVeloTracks)s ) 
 				       """  % properties
                                      )
 			    ]
