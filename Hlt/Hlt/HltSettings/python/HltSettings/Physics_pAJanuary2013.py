@@ -41,6 +41,7 @@ class Physics_pAJanuary2013( object ):
         from Hlt1Lines.Hlt1DisplVertexLines    import Hlt1DisplVertexLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
+	from Hlt1Lines.Hlt1pALines             import Hlt1pALinesConf
 
         thresholds = { Hlt1TrackLinesConf :    { 'AllL0Tight_PT'         :  1300
                                                , 'AllL0Tight_P'          :  3000
@@ -127,15 +128,24 @@ class Physics_pAJanuary2013( object ):
                                                    'DiMuonHighMass'   : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ),
                                                    'MultiMuonNoIP'    : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ) }
 
-                                               , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
-                                                                               'Hlt1MultiMuonNoIP'  : 0.0 }
-										
+                                               , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 1.0,
+                                                                                'Hlt1MultiMuonNoIP'  : 0.0,
+									        'Hlt1NoPVPassThrough': 0.0 }
                                                }
                        , Hlt1L0LinesConf :     { 
-		                                 'Prescale' : { 'Hlt1L0Any'    : 0.001}
+		                                 'Prescale' : { 'Hlt1L0Any'                  : 0.0
+						              , 'Hlt1L0AnyNoSPD'             : 0.0 }
 					       }
                        , Hlt1BeamGasLinesConf : {
-                                         'Prescale'  : { 'Hlt1BeamGasCrossingForcedRecoFullZ': 0.001 }
+                                         'Prescale'  : { 'Hlt1BeamGasCrossingForcedRecoFullZ': 0.0
+					               , 'Hlt1BeamGasCrossingParasitic'      : 0.0
+                                                       , 'Hlt1BeamGasCrossingForcedReco'     : 0.0						       
+                                                       , 'Hlt1BeamGasCrossingEnhancedBeam1'  : 0.0
+                                                       , 'Hlt1BeamGasCrossingEnhancedBeam2'  : 0.0                                                       
+						       , 'Hlt1BeamGasHighRhoVertices'        : 0.0
+                                                       , 'Hlt1BeamGasNoBeamBeam1'            : 0.0
+						       , 'Hlt1BeamGasNoBeamBeam2'            : 0.0						       						       
+						       }
                                        , 'Postscale' : { 'Hlt1BeamGasNoBeamBeam1'            : 'RATE(0.5)'
                                                        , 'Hlt1BeamGasNoBeamBeam2'            : 'RATE(0.5)'
                                                        , 'Hlt1BeamGasBeam1'                  : 'RATE(2)'
@@ -170,7 +180,14 @@ class Physics_pAJanuary2013( object ):
                                                       }
                        # micro bias lines switched off for high mu physics running              
                        , Hlt1MBLinesConf :     {  'Prescale' : { 'Hlt1MBMicroBiasVelo'  : 1.0
-		                                               , 'Hlt1MBNoBias'  : 0.001  }							       
+		                                               , 'Hlt1MBNoBias'  : 0.001  
+							       , 'Hlt1CharmCalibrationNoBias' : 0.0
+							       , 'Hlt1MBMicroBiasTStation' : 0.0
+							       }
+				                 , 'MicroBiasOdin' :  'jbit( ODIN_EVTTYP,2 )' 		       							       
+		                               }
+		       , Hlt1pALinesConf :     {   'pA_SpdMult' : 900
+						 , 'nVeloLowMultMicroBias' : 99999
 		                               }
 
                        }
