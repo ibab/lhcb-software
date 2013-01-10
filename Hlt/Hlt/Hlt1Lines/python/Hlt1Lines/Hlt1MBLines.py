@@ -11,7 +11,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'MicroBiasOdin'          : '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
                 , 'MaxNoBiasRate'          : 1000000.
-		, 'MaxVeloTracks'          : 10.
+		, 'MaxVeloTracks'          : 10
 		, 'Prescale'               : { 'Hlt1MBNoBias' : 0.1,
 		                               'Hlt1MBMicroBiasLowMultVelo'   : 1.0 }
                 , 'Postscale'              : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(500)', 
@@ -47,8 +47,8 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                     ) 
     def __create_microbias_line__(self, name, tracking) :
         from HltLine.HltLine import Hlt1Member as Member
-        from HltLine.HltLine import Hlt1Line 
-        return Hlt1Line ( 'MBMicroBias%s' % name 
+        from HltLine.HltLine import Hlt1Line as Line
+        return Line ( 'MBMicroBias%s' % name 
                     , prescale = self.prescale
                     , ODIN = self.getProp('MicroBiasOdin')
                     , algos = [ tracking
@@ -95,7 +95,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         Hlt1Line ( name
                  , prescale = self.prescale
                  , postscale = self.postscale
-                 , ODIN = "jbit( ODIN_EVTTYP,2)"
+                 , ODIN = 'jbit( ODIN_EVTTYP,2)'
                  , algos =  [ HltUnit( 'Hlt1'+name+'Unit',
                			       Preambulo = [ VeloCandidates( name ) ],
 				       Code =  """
