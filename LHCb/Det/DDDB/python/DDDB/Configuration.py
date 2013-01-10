@@ -128,17 +128,28 @@ class DDDBConf(ConfigurableUser):
             log.warning("EventClockSvc().InitialTime already set to %s UTC (requested %s UTC)",
                         t.isoformat(), utcDatetime.isoformat())
 
-    def __2012_conf__(self):
+    def __2013_conf__(self):
         """
-        Default configuration for 2012 data (and MonteCarlo for DDDB)
+        Default configuration for 2013 data (pA run) (and MonteCarlo for DDDB)
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "dddb-20120831")
         self.__set_tag__(["LHCBCOND"], "cond-20121116")
         self.__set_tag__(["DQFLAGS"], "dq-20121016")
         if not self.getProp("Simulation"):
-            # set initialization time to a safe default
-            self.__set_init_time__(datetime(2012, 12, 31, 21, 0))
+           # set initialization time to a safe default
+            self.__set_init_time__(datetime(2013, 2, 28, 21, 0))
+
+    def __2012_conf__(self):
+        """
+        Default configuration for 2012 data, including Jan 2013 pA run (and MonteCarlo for DDDB)
+        """
+        # Set the tags
+        self.__set_tag__(["DDDB"], "dddb-20120831")
+        self.__set_tag__(["LHCBCOND"], "cond-20121116")
+        self.__set_tag__(["DQFLAGS"], "dq-20121016")
+        if not self.getProp("Simulation"):
+            self.__set_init_time__(datetime.utcfromtimestamp(1355694590)) # End of fill 3453
 
     def __2011_conf__(self):
         """
@@ -201,7 +212,8 @@ class DDDBConf(ConfigurableUser):
         # Need also to change connection string to DDDB
         CondDB().PartitionConnectionString = { "DDDB":"sqlite_file:$SQLITEDBPATH/DDDB_upgrade.db/DDDB"}
 
-    __data_types_handlers__ =  { "2012": __2012_conf__,
+    __data_types_handlers__ =  { "2013": __2013_conf__,
+                                 "2012": __2012_conf__,
                                  "2011": __2011_conf__,
                                  "2010": __2010_conf__,
                                  "2009": __2009_conf__,
