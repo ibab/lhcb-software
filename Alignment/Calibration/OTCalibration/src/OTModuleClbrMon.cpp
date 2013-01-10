@@ -31,8 +31,8 @@ using namespace boost::assign;
 DECLARE_ALGORITHM_FACTORY(OTModuleClbrMon);
 
 OTModuleClbrMon::OTModuleClbrMon(const std::string& name, ISvcLocator* pSvcLocator): GaudiTupleAlg(name, pSvcLocator),
-  decoder("OTRawBankDecoder"),
-  projector("TrajOTProjector")
+  projector("TrajOTProjector"),
+  decoder("OTRawBankDecoder")
 {
   stationNames = list_of("T1")("T2")("T3");
   layerNames = list_of("X1")("U")("V")("X2");

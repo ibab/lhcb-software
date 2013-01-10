@@ -31,8 +31,8 @@ DECLARE_ALGORITHM_FACTORY(TrackMon);
              (mubtdrift)(mubdist)(mubtimeResidual)(mubdistResidual)(mubchi2)(muberr2)(muberrmes2)
 
 TrackMon::TrackMon(const std::string& name, ISvcLocator* pSvcLocator): GaudiTupleAlg(name, pSvcLocator),
-  decoder("OTRawBankDecoder"),
   projector("TrajOTProjector"),
+  decoder("OTRawBankDecoder"),
   condReadoutGate(0),
   readoutGateT1(28),
   readoutGateT2(30),
