@@ -30,4 +30,11 @@
     <logical/>
   </File>
 
+  <File ID="742628F5-685A-E211-A99F-001EC9AD0A4E">
+    <physical>
+      <pfn filetype="ROOT" name="someFile.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>
