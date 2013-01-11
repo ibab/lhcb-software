@@ -21,7 +21,7 @@ project_names = [ "Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                   "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes",
                   "Curie", "Vetra", "VetraTB", "Compat", "VanDerMeer", "Ganga",
                   "LHCbDirac", "Integration", "Erasmus", "Feicim",
-                  "Stripping", "LHCbExternals" ]
+                  "Stripping", "LHCbExternals", "Urania" ]
 
 afs_volume_short_names = { "Gaudi"      : "GA",
                            "LHCb"       : "LH",
@@ -57,7 +57,8 @@ afs_volume_short_names = { "Gaudi"      : "GA",
                            "Integration": "IN",
                            "Erasmus"    : "ER",
                            "Feicim"     : "FE",
-                           "Stripping"  : "ST"}
+                           "Stripping"  : "ST",
+                           "Urania"     : "UR"}
 
 # ------------------------------------------------------------------------------------
 
@@ -478,6 +479,8 @@ LHCbDirac.setLCGTarBallName("LCGGrid")#IGNORE:E0602
 # Erasmus
 Erasmus.setAFSVolumeName("ERASM")#IGNORE:E0602
 
+# Urania
+Urania.setAFSVolumeName("URAN")#IGNORE:E0602
 
 # Euler
 Euler.setApplicationPackage("Trig/Euler")#IGNORE:E0602
