@@ -332,6 +332,8 @@ void Tracer::printDataRegistry() {
 	     SEL_CMD(DATAFAULT_FAIL),
 	     SEL_CMD(LOAD),
 	     SEL_CMD(RETRIEVE),
+	     SEL_CMD(RETRIEVE_OK),
+	     SEL_CMD(RETRIEVE_FAIL),
 	     SEL_CMD(CLEAR),
 	     SEL_CMD(CLEAR_ROOT),
 	     SEL_CMD(TRAVERSE),
@@ -422,7 +424,7 @@ void Tracer::i_trace(IService* svc, TracerCommand cmd, IRegistry* pReg, const ch
 }
 
 void Tracer::i_trace(IService* svc, TracerCommand cmd, const std::string& caller, IRegistry* pReg, const char* path) {
-  string trace_cmd;
+  string trace_cmd, obj_present="";
 #define TRACE_CMD(x)  case TRACE_##x: trace_cmd=#x; break
   switch(cmd) {
   TRACE_CMD(REGOBJ);
@@ -432,6 +434,8 @@ void Tracer::i_trace(IService* svc, TracerCommand cmd, const std::string& caller
   TRACE_CMD(DATAFAULT_FAIL);
   TRACE_CMD(LOAD);
   TRACE_CMD(RETRIEVE);
+  TRACE_CMD(RETRIEVE_OK);
+  TRACE_CMD(RETRIEVE_FAIL);
 
   TRACE_CMD(CLEAR);
   TRACE_CMD(CLEAR_ROOT);
@@ -445,11 +449,17 @@ void Tracer::i_trace(IService* svc, TracerCommand cmd, const std::string& caller
   default: trace_cmd="UNKNOWN";
     break;
   }
+
   if ( pReg != 0 ) {
     DataObject* pObj = pReg->object();
     if ( pObj ) {
+      if ( cmd == TRACE_LOAD ) obj_present = "OBJ_LOADED";
+      if ( cmd == TRACE_REGOBJ ) obj_present = "OBJ_REGISTER";
+      if ( cmd == TRACE_RETRIEVE ) obj_present = "OBJ_FOUND";
+      if ( cmd == TRACE_RETRIEVE_OK ) obj_present = "OBJ_FOUND";
+      if ( cmd == TRACE_RETRIEVE_FAIL ) obj_present = "OBJ_MISSING";
       if ( typeid(*pObj) == typeid(DataObject) ) {
-	return;
+	//return;
       }
     }
   }
@@ -460,8 +470,22 @@ void Tracer::i_trace(IService* svc, TracerCommand cmd, const std::string& caller
   string object_path;
   if ( pReg )  {
     object_path = pReg->identifier();
+    if ( object_path[object_path.length()-1] != '/')
+      object_path += "/";
   }
-  if ( path ) object_path += path;
+  else if ( path && *path && *path != '/' ) {
+    object_path = "/Event/";
+  }
+  if ( path )  {
+    if ( object_path.empty() ) object_path = path;
+    else object_path += (*path=='/' ? path+1 : path);
+  }
+  // Ignore object pathes without starting '/':
+  if ( !object_path.empty() && object_path[0] != '/' ) {
+    //return;
+  }
+  if ( object_path[object_path.length()-1] == '/')
+    object_path = object_path.substr(0,object_path.length()-1);
 
   if ( s_print_levels&PRINT_TRACES ) {
     cout << m_nested;
@@ -475,7 +499,11 @@ void Tracer::i_trace(IService* svc, TracerCommand cmd, const std::string& caller
       if ( e.first != caller ) cout << " -- " << e.first;
       cout << " [" << e.second << "]";
     }
-    cout << ") : " << setw(16) << left << trace_cmd << " : " << object_path << endl;
+    else {
+      cout << " [ENV]";
+    }
+    cout << ") : " << setw(16) << left << trace_cmd << " : " << object_path 
+	 << "    " << obj_present << endl;
   }
   AccessEntries::iterator idata=m_data.find(object_path);
   if ( idata == m_data.end() ) {
@@ -570,7 +598,7 @@ void Tracer::makeCode() {
     float delta = e->calls!= 0 ? sqrt(abs(t*t-t2)) : 0e0;
     const set<string>& in = e->get.empty() ? e->aux : e->get;
 
-    if ( e->flags&IS_GAUDISEQUENCER ) continue;
+    //if ( e->flags&IS_GAUDISEQUENCER ) continue;
     ::fprintf(out,"  {\n");
     ::sprintf(text,"const char* daughters[] = {");
     for(std::vector<AlgInfo*>::const_iterator dit=e->daughters.begin(); dit!=e->daughters.end();++dit)

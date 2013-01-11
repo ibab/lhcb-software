@@ -239,7 +239,7 @@ SC DS::unregisterAddress(IRegistry* pParent,const string& objPath) {
 
 /// Register object with the data store.
 SC DS::registerObject (const string& fullPath,DataObject* pObject)   {
-  _TRACE_TES(this,TRACE_REGOBJ,0,fullPath);
+  //_TRACE_TES(this,TRACE_REGOBJ,0,fullPath);
   return registerObject(0, fullPath, pObject);
 }
 
@@ -447,7 +447,7 @@ Obj* DS::handleDataFault(IRegistry* pReg, const string& path)   {
       pLeaf = m_root->findLeaf(p);
     }
     if ( pLeaf )  {
-      _TRACE_TES(this,pLeaf->object() ? TRACE_DATAFAULT_OK : TRACE_DATAFAULT_FAIL,pReg,path);
+      _TRACE_TES(this,pLeaf->object() ? TRACE_DATAFAULT_OK : TRACE_DATAFAULT_FAIL,pLeaf,path);
       return pLeaf->object();
     }
     _TRACE_TES(this,TRACE_DATAFAULT_FAIL,pReg,path);
@@ -540,14 +540,14 @@ SC DS::loadObject(IConversionSvc* pLoader, IRegistry* pRegistry) {
 /// Retrieve object identified by its full path from the data store.
 SC DS::retrieveObject(const string& fullPath,DataObject*& pObject)   {
   IRegistry* nullDir = 0;
-  _TRACE_TES(this,TRACE_RETRIEVE,0, fullPath);
+  //_TRACE_TES(this,TRACE_RETRIEVE,0, fullPath);
   return retrieveObject(nullDir, fullPath, pObject);
 }
 
 /// Retrieve object from data store.
 SC DS::retrieveObject(DataObject* parentObj,const string& path,DataObject*& pObject)  {
   IRegistry* pRegistry = (0==parentObj) ? 0 : parentObj->registry();
-  _TRACE_TES(this,TRACE_RETRIEVE, pRegistry, path);
+  //_TRACE_TES(this,TRACE_RETRIEVE, pRegistry, path);
   return retrieveObject(pRegistry, path, pObject);
 }
 
@@ -555,11 +555,14 @@ SC DS::retrieveObject(DataObject* parentObj,const string& path,DataObject*& pObj
 SC DS::retrieveObject(IRegistry* pRegistry,const string& path,Obj*& pObject)   {
   pObject = 0;
   Reg *result = 0, *parent = CAST_REGENTRY(Reg*,pRegistry);
+  _TRACE_TES(this,TRACE_RETRIEVE,pRegistry,path);
   SC status = retrieveEntry(parent, path, result);
   if ( status.isSuccess() )   {
-    _TRACE_TES(this,TRACE_RETRIEVE,result);
+    _TRACE_TES(this,TRACE_RETRIEVE_OK,result);
     pObject = result->object();
+    return status;
   }
+  { _TRACE_TES(this,TRACE_RETRIEVE_FAIL,pRegistry,path); }
   return status;
 }
 

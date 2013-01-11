@@ -19,9 +19,11 @@ enum TracerCommand  {
   TRACE_DATAFAULT_FAIL =1<<10,
   TRACE_LOAD           =1<<11,
   TRACE_RETRIEVE       =1<<12,
-  TRACE_FIND           =1<<13,
-  TRACE_LINK           =1<<14,
-  TRACE_UNLINK         =1<<15,
+  TRACE_RETRIEVE_OK    =1<<13,
+  TRACE_RETRIEVE_FAIL  =1<<14,
+  TRACE_FIND           =1<<15,
+  TRACE_LINK           =1<<16,
+  TRACE_UNLINK         =1<<17,
   TRACE_NONE,
   LAST
 };

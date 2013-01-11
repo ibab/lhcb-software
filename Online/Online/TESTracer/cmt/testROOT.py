@@ -10,12 +10,12 @@ from GaudiConf import IOHelper;
 ##IOHelper('MDF').inputFiles(['castor://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97114/097114_0000000004.raw?svcClass=lhcbtape'])
 ##IOHelper('MDF').inputFiles(['/castorfs/cern.ch/grid/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97114/097114_0000000004.raw'])
 
-IOHelper('MDF').inputFiles(['/castorfs/cern.ch/grid/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/133586/133586_0000000309.raw'])
+IOHelper('MDF').inputFiles(['castor://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/133586/133586_0000000309.raw'])
 
 from Configurables import Brunel, AuditorSvc, OutputStream;
 ApplicationMgr().ExtSvc.insert(0,AuditorSvc())
 Brunel().EvtMax=10;
-Brunel().OutputType='SDST';
+Brunel().OutputType='DST';
 Brunel().Persistency='ROOT';
 Brunel().OutputLevel = 4;
 MessageSvc().OutputLevel = 4;
