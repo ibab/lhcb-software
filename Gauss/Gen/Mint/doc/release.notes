@@ -6,6 +6,9 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 15-01-13 - Patrick Robbe
+ - Fix compilation problems
+
 !=========================== Mint v1r6 2012-11-28 ============================
 ! 14-11-12 - Matt Coombes
  - Added background subtraction to Miranda binning.

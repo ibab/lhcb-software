@@ -57,12 +57,13 @@ library          Mint    Mint/Events/src/*.cpp           \
                          Mojito/stuff/src/*.cpp \
                          Mojito/Zemach/src/*.cpp \
                          Mojito/Symmetries/src/*.cpp \
-                         Mojito/SpinFactors/src/*.cpp 
+                         Mojito/SpinFactors/src/*.cpp \
+                         Mojito/Lineshapes_CLEO2012/src/*.cpp
 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern component_library    library=Mint
+## apply_pattern component_library    library=Mint
 apply_pattern linker_library   	   library=Mint
 
 private
