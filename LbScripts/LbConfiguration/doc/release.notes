@@ -1,3 +1,7 @@
+2013-01-14 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: Added new package MCStatTools
+
 2013-01-11 Ben Couturier <Ben.Couturier@cern.ch>
 
         * python/LbConfiguration/Project.py: Added project Urania 
