@@ -3,9 +3,9 @@
 # Maintainer  : Pieter David
 #============================================================================
 package         AlignmentDBVisualisationTool
-version           v7r0
+version           v1r0
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches        doc cmt python scripts
 #============================================================================
