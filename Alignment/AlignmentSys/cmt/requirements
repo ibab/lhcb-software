@@ -1,5 +1,5 @@
 package AlignmentSys
-version           v9r0
+version           v9r1
 
 branches cmt doc
  
@@ -8,6 +8,9 @@ branches cmt doc
 #=======================================================
 
 # General purpose components
+
+use AlignmentDBVisualisationTool	v1r0	Alignment # Pieter David
+
 use AlignmentInterfaces	v3r2	Alignment # Johan Blouw
 use AlignmentTools      v3r0p1  Alignment # Sebastien Viret
 use AlignEvent		v1r1    Alignment # Wouter Hulsbergen
@@ -38,4 +41,3 @@ apply_pattern QMTestSummarize
 #============================================================================
 # Install the configurable
 apply_pattern install_python_modules
-

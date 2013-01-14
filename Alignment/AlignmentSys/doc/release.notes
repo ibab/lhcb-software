@@ -1,10 +1,21 @@
 <PRE>
 Package: AlignmentSys
-Package Coordinator: Johan Blouw
+Package Coordinator: Rob Lambert
 Purpose: LHCb Alignment packages.
          This project contains 2 different alignment algorithms
          used by the Gaudi application Escher to align the LHCb detector 
          components.
+
+</PRE><H1><A NAME=v9r1>2013-01-14 AlignmentSys v9r1</A></H1><PRE>
+Depends on: Lbcom v13r3, Rec v14r3, Phys v16r3. For 2012 data.
+
+Latest changes to pick up the most recent Rec release.
+First project dependency on pyanalysis.
+New package, Alignment/AlignmentDBVisualisationTool, for visualizing the alignment database.
+
+
+For other minor changes, see the tag collector:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Alignment&version=v9r1
 
 </PRE><H1><A NAME=v9r0>2011-12-01 AlignmentSys v9r0</A></H1><PRE>
 Depends on: Lbcom v12r2, Rec v13r2, Phys v14r2. For 2012 data.
