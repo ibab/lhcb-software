@@ -1,3 +1,8 @@
+2013-01-14  Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* scripts/mkproject: Remove creation of doc/release.notes links
+	in project directory (parent dir to the version).
+
 2012-12-20  Ben Couturier  <Ben.Couturier@cern.ch>
 	
 	* scripts/mkMCGentar:Fixed to handled distribution problems with

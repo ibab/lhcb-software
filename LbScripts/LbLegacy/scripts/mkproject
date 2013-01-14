@@ -516,13 +516,13 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
             if rc == 0 :
                 log.info('mkLHCbtar of %s %s %s exit code %d' % (pname, pversion, CMTCONFIG, rc))
             else :
-                log.error('mkLHCbtar of %s %s exit code %d' % (pname, pversion, CMTCONFIG, rc))
+                log.error('mkLHCbtar of %s %s %s exit code %d' % (pname, pversion, CMTCONFIG, rc))
             if debug and (rc == 0) :
                 rc = os.system(str + ' -b ' + CMTDEB)
                 if rc == 0 :
                     log.info('mkLHCbtar of %s %s %s exit code %d' % (pname, pversion, CMTCONFIG, rc))
                 else :
-                    log.error('mkLHCbtar of %s %s exit code %d' % (pname, pversion, CMTCONFIG, rc))
+                    log.error('mkLHCbtar of %s %s %s exit code %d' % (pname, pversion, CMTCONFIG, rc))
 
         if rc != 0 :
             sys.exit("Failed to build tarballs")
@@ -616,27 +616,30 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         web.close()
         os.chdir(rel_dir)
 
-    if release :
+
+    # This portion of the code creates the symlinks doc and requirements in the parent directory for the
+    # release. We do not need this any more...
+    #if release :
 # set symlinks in PACK to PACK_v
-        try :
-            os.chdir(os.path.join(rel_dir, PACK))
-            if os.path.islink('doc') :
-                os.remove('doc')
-            os.symlink(os.path.join(PACK + '_' + pversion, 'doc'), 'doc')
-            if os.path.islink('requirements') :
-                os.remove('requirements')
-            os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
-        except OSError :
-            log.warning("Failed to create the top links in %s" % os.path.join(rel_dir, PACK))
-            rw_rel_dir = rel_dir.replace(os.sep+"cern.ch"+os.sep, os.sep+".cern.ch"+os.sep)
-            os.chdir(os.path.join(rw_rel_dir, PACK))
-            log.warning("Trying to create the top links in %s" % os.path.join(rw_rel_dir, PACK))
-            if os.path.islink('doc') :
-                os.remove('doc')
-            os.symlink(os.path.join(PACK + '_' + pversion, 'doc'), 'doc')
-            if os.path.islink('requirements') :
-                os.remove('requirements')
-            os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
+    #    try :
+    #        os.chdir(os.path.join(rel_dir, PACK))
+    #        if os.path.islink('doc') :
+    #            os.remove('doc')
+    #        os.symlink(os.path.join(PACK + '_' + pversion, 'doc'), 'doc')
+    #        if os.path.islink('requirements') :
+    #            os.remove('requirements')
+    #        os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
+    #    except OSError :
+    #        log.warning("Failed to create the top links in %s" % os.path.join(rel_dir, PACK))
+    #        rw_rel_dir = rel_dir.replace(os.sep+"cern.ch"+os.sep, os.sep+".cern.ch"+os.sep)
+    #        os.chdir(os.path.join(rw_rel_dir, PACK))
+    #        log.warning("Trying to create the top links in %s" % os.path.join(rw_rel_dir, PACK))
+    #        if os.path.islink('doc') :
+    #            os.remove('doc')
+    #        os.symlink(os.path.join(PACK + '_' + pversion, 'doc'), 'doc')
+    #        if os.path.islink('requirements') :
+    #            os.remove('requirements')
+    #        os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
 
     if wlock :
         if os.path.exists(not_ready_file) :
