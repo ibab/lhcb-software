@@ -3,5 +3,8 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+!======================= AlignmentDBVisualisationTool v1r0 2013-01-14 =======================
 ! 2012-01-09 - Pieter David
  - Initial commit (code moved from Alignment/Escher)
+ - Package for visualizing database of alignment parameters
+ - First LHCb dependency on pyanalysis (for numpy)
