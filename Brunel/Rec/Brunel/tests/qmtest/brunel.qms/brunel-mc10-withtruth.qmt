@@ -3,9 +3,8 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout"><integer>2400</integer></argument>
   <argument name="args"><set>
-    <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20101026"; LHCbApp().CondDBtag="sim-20101026-vc-mu100"; EventSelector().Input = ["DATAFILE='castor:/castor/cern.ch/user/j/jonrob/data/MC2010Tuning/Boole-v21r8p1.digi' TYP='POOL_ROOTTREE' OPT='READ'"]; Brunel().InputType="DIGI"; Brunel().WithMC=True; Brunel().DataType="2010";</text>
+    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20101026"; LHCbApp().CondDBtag="sim-20101026-vc-mu100"; EventSelector().Input = ["DATAFILE='castor:/castor/cern.ch/user/j/jonrob/data/MC2010Tuning/Boole-v21r8p1.digi' TYP='POOL_ROOTTREE' OPT='READ'"]; Brunel().InputType="DIGI"; Brunel().WithMC=True; Brunel().EvtMax=10; Brunel().Monitors=["SC","FPE","NameAuditor"]; Brunel().DataType="2010";</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunel-MC10-WithTruth.ref</text></argument>
   <argument name="validator"><text>

@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to tests
+  . Add NameAuditor to brunel-mc10-withtruth test to monitor changes in
+    called components, and debug causes of non reproducible Brunel exits
+ 
 </PRE><H1><A NAME=v44r1>2012-11-30 Brunel v44r1</A></H1><PRE>
 This version uses projects LCG 64b, Gaudi v23r5, LHCb v35r3, Lbcom v13r3,
  Rec v14r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
