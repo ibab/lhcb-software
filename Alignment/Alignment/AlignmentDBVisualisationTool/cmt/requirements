@@ -22,3 +22,7 @@ use pytools         v*      LCG_Interfaces -no_auto_imports
 apply_pattern   install_python_modules
 apply_pattern   install_scripts
 #============================================================================
+# Tests
+#============================================================================
+apply_pattern   QMTest
+#============================================================================
