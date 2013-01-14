@@ -3,6 +3,7 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+!========================= TAlignment v5r8 2013-01-14 =========================
 ! 2012-09-20 - Maurizio Martinelli
  - added the 2012 IT survey xmls for Magnet On and Off conditions (Fred didn't.)
 
