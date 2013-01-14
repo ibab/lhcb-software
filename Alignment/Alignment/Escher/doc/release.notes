@@ -4,6 +4,14 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+
+</PRE><H1><A NAME=v4r14>2013-01-14 Escher v4r14</A></H1><PRE>
+
+! 2013-01-14 - Rob Lambert
+ - Minor changes from Mauritxio and Pieter
+ - Adding new package for visualization, the first time
+   any LHCb package depends on pyanalysis
+
 ! 2013-01-09 - Pieter David
  - move DBVisualisationTool scripts to a separate package
 

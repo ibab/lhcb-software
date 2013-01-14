@@ -1,5 +1,5 @@
 package Escher
-version           v4r13
+version           v4r14
 
 branches doc cmt job options tests
 
@@ -46,6 +46,9 @@ use RecSys		v*         -no_auto_imports
 use DaVinciKernel       v*     Phys
 use CommonParticles     v*     Phys
 #-- Alignment packages
+
+use AlignmentDBVisualisationTool	v*    Alignment -no_auto_imports
+
 use AlignmentInterfaces	v*    Alignment -no_auto_imports
 use AlignmentTools      v*    Alignment -no_auto_imports
 use AlignTrTools	v*    Alignment -no_auto_imports
