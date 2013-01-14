@@ -8,3 +8,4 @@
  - Initial commit (code moved from Alignment/Escher)
  - Package for visualizing database of alignment parameters
  - First LHCb dependency on pyanalysis (for numpy)
+ - Added qmtests
