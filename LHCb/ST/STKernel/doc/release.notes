@@ -3,6 +3,10 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+! 2013-01-14 - Frederic Dupertuis
+ - Moving the constructor and destructor of STHisto2DProperties to public
+   and the destructor to virtual.
+
 !========================= STKernel v2r10 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

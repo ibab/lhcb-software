@@ -18,17 +18,17 @@ namespace ST
 {
   class Histo2DProperties {
 
-protected:
+    //protected:
 
+public:
 
     Histo2DProperties(const std::string& name, const std::string& title,
                    const unsigned int nbinx, const unsigned int nbiny,
                    const double xMin, const double xMax,
                    const double yMin, const double yMax);
 
-    ~Histo2DProperties();
+    virtual ~Histo2DProperties();
 
-public:
 
     const double& minBinX() const;
 
