@@ -403,7 +403,7 @@ StatusCode STEfficiency::finalize()
     propNbHits = new ST::TTDetectorPlot( "NbExpHits", "Number of Expected Hits Plot" );
     propNbFoundHits = new ST::TTDetectorPlot( "NbFoundHits", "Number of Found Hits Plot" );
   }
-
+  
   IHistogram2D* histoEff = 0;
   if(m_effPlot){
     histoEff = book2D( prop->name() , prop->title(),
@@ -540,6 +540,24 @@ StatusCode STEfficiency::finalize()
       }
     }
   } // iterS
+  /*
+  if(m_detType=="IT"){
+    delete static_cast<ST::ITDetectorPlot*>(prop);
+    delete static_cast<ST::ITDetectorPlot*>(propSectorStatus);
+    delete static_cast<ST::ITDetectorPlot*>(propNbHits);
+    delete static_cast<ST::ITDetectorPlot*>(propNbFoundHits);
+  }else{
+    delete static_cast<ST::TTDetectorPlot*>(prop);
+    delete static_cast<ST::TTDetectorPlot*>(propSectorStatus);
+    delete static_cast<ST::TTDetectorPlot*>(propNbHits);
+    delete static_cast<ST::TTDetectorPlot*>(propNbFoundHits);
+  }
+  */
+
+  delete prop;
+  delete propSectorStatus;
+  delete propNbHits;
+  delete propNbFoundHits;
   
   return TrackMonitorBase::finalize();  // must be called after all other actions
 }
