@@ -521,8 +521,6 @@ class Boole(LHCbConfigurableUser):
             RichDigiSysConf().ResponseModel = "Copy"
             RichDigiSysConf().OutputLevel = INFO
             RichDigiSysConf().RawDataFormatVersion = 3
-            from Configurables import DigiConf
-            DigiConf().DigiType = "Extended"
         else:
             raise RuntimeError("TAE not implemented for RICHMaPMT")
             
