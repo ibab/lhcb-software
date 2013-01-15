@@ -1,10 +1,8 @@
 from Gaudi.Configuration import EventSelector
-from Configurables import Brunel, RecInit
+from Configurables import Brunel
 
 Brunel().DataType = "2010"
 Brunel().DatasetName = "bigEvents-2010"
-
-RecInit("BrunelInit").OutputLevel = 2
 
 from GaudiConf.IOHelper import IOHelper
 # file of selected large events
