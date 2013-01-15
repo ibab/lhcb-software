@@ -28,8 +28,8 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TorchTBMcpPhotoElectricEffect::TorchTBMcpPhotoElectricEffect( const GiGaBase* gigabase,
-                                                       const G4String& processName,
+TorchTBMcpPhotoElectricEffect::TorchTBMcpPhotoElectricEffect( const GiGaBase * /*gigabase*/,
+                                                              const G4String& processName,
                                                               G4ProcessType   aType )
   :G4VDiscreteProcess(processName, aType ),
    m_numTotMcp(1) 

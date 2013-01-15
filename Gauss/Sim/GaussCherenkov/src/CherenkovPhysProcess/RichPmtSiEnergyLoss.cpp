@@ -159,7 +159,7 @@ G4VParticleChange*  RichPmtSiEnergyLoss::PostStepDoIt(const G4Track& aTrack,
 
 }
 G4VParticleChange* RichPmtSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
-                                                      const G4Step& aStep) {
+                                                      const G4Step& /*aStep*/) {
 
   aParticleChange.Initialize(aTrack);
 

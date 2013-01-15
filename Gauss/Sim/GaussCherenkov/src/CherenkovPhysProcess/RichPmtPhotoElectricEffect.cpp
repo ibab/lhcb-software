@@ -24,7 +24,7 @@
 #include "GaussRICH/RichPhotInfo.h"
 #include "GaussRICH/RichPhotInfoAttach.h"
 
-RichPmtPhotoElectricEffect::RichPmtPhotoElectricEffect(const GiGaBase* gigabase,
+RichPmtPhotoElectricEffect::RichPmtPhotoElectricEffect(const GiGaBase* /*gigabase*/,
                                                        const G4String& processName,
                                                        G4ProcessType   aType)
   : G4VDiscreteProcess(processName, aType ),
