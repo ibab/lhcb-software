@@ -162,7 +162,7 @@ std::string EvtDecayBase::getParamName(int i) {
   }
 }
 
-std::string EvtDecayBase::getParamDefault(int i) {
+std::string EvtDecayBase::getParamDefault(int /*i*/) {
   return "";
 }
 
