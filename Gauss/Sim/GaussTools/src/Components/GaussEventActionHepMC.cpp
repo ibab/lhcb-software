@@ -118,18 +118,13 @@ void GaussEventActionHepMC::DumpTree(HepMC::GenParticle* particle,
     name = p->particle();
   }
 
-#ifndef WIN32
-#warning REMEMBER: remove temporary fix for problem in compilation on slc5 operator<<
-#endif
   std::cout << offset << "--- " << name << " barcode: " << particle->barcode() 
             << " pdg: " << particle->pdg_id() 
             << " energy: " << particle->momentum().e()
-    //        << " ProdVtx " << particle->production_vertex()->position()
             << " ProdVtx x" << particle->production_vertex()->position().x()
             << " ProdVtx y" << particle->production_vertex()->position().y()
             << " ProdVtx z" << particle->production_vertex()->position().z()
             << " ProdVtx t" << particle->production_vertex()->position().t()
-    //        << " EndVtx " << particle->end_vertex()->position() << std::endl;
             << " EndVtx x" << particle->end_vertex()->position().x() 
             << " EndVtx y" << particle->end_vertex()->position().y() 
             << " EndVtx z" << particle->end_vertex()->position().z() 

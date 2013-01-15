@@ -12,9 +12,6 @@
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 
-// LHCb (MathCore)
-#include "ClhepTools/MathCore2Clhep.h"
-
 // local 
 #include "GiGaMagFieldGlobal.h"
 
@@ -97,7 +94,8 @@ void GiGaMagFieldGlobal::GetFieldValue
   const Gaudi::XYZPoint point( Point[0] , Point[1] , Point[2] );
   Gaudi::XYZVector field(0.,0.,0.);
   StatusCode sc = mfSvc()->fieldVector( point , field );
-  m_field = LHCb::math2clhep::vector3D( field );
+  m_field = HepGeom::Vector3D< double >( field.x() , field.y() , 
+                                         field.z() ) ;
 
   if( sc.isFailure() ) 
     { 

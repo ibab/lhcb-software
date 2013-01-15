@@ -267,9 +267,6 @@ void MCTruthManager::PrintEvent()
 
 void MCTruthManager::printTree(HepMC::GenParticle* particle, std::string offset)
 {
-#ifndef WIN32
-#warning REMEMBER: remove temporary fix for problem in compilation on slc5 operator<<
-#endif
   std::cout << offset << "---  barcode: " << particle->barcode() << " pdg: " 
             << particle->pdg_id() << " energy: " << particle->momentum().e() 
     //        << " production vertex: "<< particle->production_vertex()->position() << std::endl;

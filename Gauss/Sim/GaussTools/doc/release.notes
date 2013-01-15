@@ -4,6 +4,9 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-01-15 - Patrick Robbe
+ - Fix compilation warnings
+
 !======================== GaussTools v18r1 2012-11-27 ========================
 ! 2012-11-15 - Nigel Watson
  - Include G4PrimaryParticle.hh to GaussTrackActionHepMC.cpp, following changes
