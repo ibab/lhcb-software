@@ -12,6 +12,7 @@
 // from Generators
 #include "MCInterfaces/IDecayTool.h"
 #include "Generators/GenCounters.h"
+#include "Generators/ICounterLogFile.h"
 #include "GenEvent/HepMCUtils.h"
 
 // Function to test if a HepMC::GenParticle is Particle (or antiParticle) 
@@ -62,7 +63,8 @@ Signal::Signal( const std::string& type,
     m_sigName        ( "" ) ,
     m_sigBarName     ( "" ) ,
     m_cpMixture       ( true ) , 
-    m_signalBr ( 0.0 ) { 
+    m_signalBr ( 0.0 ) ,
+    m_xmlLogTool( 0 ) { 
     declareProperty( "SignalPIDList" , m_pidVector ) ;
     declareProperty( "Clean" , m_cleanEvents = false ) ;    
     
@@ -101,6 +103,9 @@ StatusCode Signal::initialize( ) {
     return Error( "Could not initialize flat random number generator" ) ;
   
   release( randSvc ) ;
+
+  // XML Log file
+  m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;
 
   // Transform vector into set
   for ( std::vector<int>::iterator it = m_pidVector.begin() ; 
@@ -157,44 +162,32 @@ StatusCode Signal::initialize( ) {
 //=============================================================================
 void Signal::printCounters( ) const {
   using namespace GenCounters ;
-
-  info() << "*************   Signal counters   ****************" << std::endl ;
-
-  printEfficiency( info() , "generator level cut" , m_nEventsAfterCut , 
+  printEfficiency( m_xmlLogTool , "generator level cut" , m_nEventsAfterCut , 
                    m_nEventsBeforeCut ) ;
-  printCounter( info() , "z-inverted events" , m_nInvertedEvents ) ;
-  info() << std::endl ;
+  printCounter( m_xmlLogTool , "z-inverted events" , m_nInvertedEvents ) ;
 
-  printEfficiency( info() , "generator particle level cut" , 
+  printEfficiency( m_xmlLogTool , "generator particle level cut" , 
                    m_nParticlesAfterCut ,  m_nParticlesBeforeCut ) ;
-  printEfficiency( info() , "generator anti-particle level cut" ,
+  printEfficiency( m_xmlLogTool , "generator anti-particle level cut" ,
                    m_nAntiParticlesAfterCut , m_nAntiParticlesBeforeCut ) ;
-  info() << std::endl ;
 
-  if ( "" != m_sigName ) printFraction( info() , "signal " + m_sigName + 
+  if ( "" != m_sigName ) printFraction( m_xmlLogTool , "signal " + m_sigName + 
                                         " in sample" , m_nSig , m_nSig + 
                                         m_nSigBar ) ;
-  if ( "" != m_sigBarName ) printFraction( info() , "signal " + m_sigBarName + 
+  if ( "" != m_sigBarName ) printFraction( m_xmlLogTool , "signal " + m_sigBarName + 
                                            " in sample" , m_nSigBar , m_nSig + 
-                                           m_nSigBar ) ;  
+                                           m_nSigBar ) ;
 
-  info() << std::endl ;
-
-  printArray( info() , m_bHadC , m_bHadCNames , "accepted" ) ;
-  printArray( info() , m_antibHadC , m_antibHadCNames , "accepted" ) ;
-  printCounter( info() , "accepted (bb)" , m_bbCounter ) ;
-  info() << std::endl ;
+  printArray( m_xmlLogTool , m_bHadC , m_bHadCNames , "accepted" ) ;
+  printArray( m_xmlLogTool , m_antibHadC , m_antibHadCNames , "accepted" ) ;
+  printCounter( m_xmlLogTool , "accepted (bb)" , m_bbCounter ) ;
   
-  printArray( info() , m_cHadC , m_cHadCNames , "accepted" ) ;
-  printArray( info() , m_anticHadC , m_anticHadCNames , "accepted" ) ;
-  printCounter( info() , "accepted (cc)" , m_ccCounter ) ;
-  info() << std::endl ;
+  printArray( m_xmlLogTool , m_cHadC , m_cHadCNames , "accepted" ) ;
+  printArray( m_xmlLogTool , m_anticHadC , m_anticHadCNames , "accepted" ) ;
+  printCounter( m_xmlLogTool , "accepted (cc)" , m_ccCounter ) ;
   
-  printArray( info() , m_bExcitedC , m_bExcitedCNames , "accepted" ) ;
-  info() << std::endl ;
-  
-  printArray( info() , m_cExcitedC , m_cExcitedCNames , "accepted" ) ;
-  info() << endmsg ;
+  printArray( m_xmlLogTool , m_bExcitedC , m_bExcitedCNames , "accepted" ) ;
+  printArray( m_xmlLogTool , m_cExcitedC , m_cExcitedCNames , "accepted" ) ;
 }
 
 //=============================================================================

@@ -1,10 +1,4 @@
 // $Id: Scale.cpp,v 1.2 2008-07-24 22:05:38 robbep Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2006/10/06 14:11:16  ibelyaev
-//  add (Read,Write)HepMCAsciiFile components
 //
 // ============================================================================
 // Include files 

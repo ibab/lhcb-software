@@ -18,6 +18,8 @@ namespace HepMC {
   class GenParticle ;
 }
 
+class ICounterLogFile ;
+
 /** @class Signal Signal.h "Generators/Signal.h"
  *  
  *  Base class for signal samples generation tools. It contains utility 
@@ -191,5 +193,8 @@ protected:
 
   /// Temporary ector to obtain PIDs from job options.
   std::vector< int > m_pidVector   ;
+
+  /// XML Log file
+  ICounterLogFile * m_xmlLogTool ;
 };
 #endif // GENERATORS_SIGNAL_H
