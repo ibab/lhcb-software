@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v13r2 2013-01-16 ==========================
+! 2013-01-16 - John Back
+ - Removed Pythia 6 decay classes. New tag.
+
 ! 2013-01-15 - Patrick Robbe
  - EvtDecayBase.cpp : fix compilation warning
 
