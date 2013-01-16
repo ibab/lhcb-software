@@ -19,6 +19,7 @@
 #include "Generators/ISampleGenerationTool.h"
 #include "Generators/IPileUpTool.h"
 #include "Generators/IVertexSmearingTool.h"
+#include "Generators/ICounterLogFile.h"
 #include "Generators/GenCounters.h"
 #include "GenEvent/HepMCUtils.h"
 
@@ -46,6 +47,7 @@ Generation::Generation( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ) ,
     m_pileUpTool           ( 0 ) ,
     m_decayTool            ( 0 ) ,
+    m_xmlLogTool           ( 0 ) ,
     m_sampleGenerationTool ( 0 ) ,
     m_vertexSmearingTool   ( 0 ) ,
     m_fullGenEventCutTool  ( 0 ) ,
@@ -133,6 +135,9 @@ StatusCode Generation::initialize() {
   // Retrieve decay tool
   if ( "" != m_decayToolName ) m_decayTool = 
     tool< IDecayTool >( m_decayToolName ) ;
+
+  // Retrieve xml log file tool for generator statistics
+  m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;
 
   // Retrieve generation method tool
   if ( "" == m_sampleGenerationToolName ) 
@@ -319,25 +324,24 @@ StatusCode Generation::finalize() {
   using namespace GenCounters ;
   debug( ) << "==> Finalize" << endmsg ;
   // Print the various counters
-  info() << "**************************************************" << endmsg ;
   if ( 0 != m_pileUpTool ) { m_pileUpTool -> printPileUpCounters( ) ; }
-  info() << "***********   Generation counters   **************" << std::endl ;
-  printCounter( info() , "generated events" , m_nEvents ) ;
-  printCounter( info() , "generated interactions" , m_nInteractions ) ;
+
+  printCounter( m_xmlLogTool , "generated events" , m_nEvents ) ;
+  printCounter( m_xmlLogTool , "generated interactions" , m_nInteractions ) ;
   
   for ( unsigned int i = 0 ; i < m_intC.size() ; ++i )
-    printCounter( info() , m_intCName[ i ] , m_intC[ i ] ) ;
+    printCounter( m_xmlLogTool , m_intCName[ i ] , m_intC[ i ] ) ;
   
-  printCounter( info() , "accepted events" , m_nAcceptedEvents ) ;
-  printCounter( info() , "interactions in accepted events" , 
+  printCounter( m_xmlLogTool , "accepted events" , m_nAcceptedEvents ) ;
+  printCounter( m_xmlLogTool , "interactions in accepted events" , 
                 m_nAcceptedInteractions ) ;
   
   for ( unsigned int j = 0 ; j < m_intCAccepted.size() ; ++j ) 
-    printCounter( info() , m_intCAcceptedName[ j ] , m_intCAccepted[ j ] ) ;
+    printCounter( m_xmlLogTool , m_intCAcceptedName[ j ] , 
+                  m_intCAccepted[ j ] ) ;
 
-  printEfficiency( info() , "full event cut" , m_nAfterFullEvent , 
+  printEfficiency( m_xmlLogTool , "full event cut" , m_nAfterFullEvent , 
                    m_nBeforeFullEvent ) ;
-  info() << endmsg ;
 
   m_sampleGenerationTool -> printCounters() ;
 

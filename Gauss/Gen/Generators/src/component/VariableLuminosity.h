@@ -11,6 +11,7 @@
 
 // Forward declarations
 class IRndmGenSvc ;
+class ICounterLogFile ;
 
 /** @class VariableLuminosity VariableLuminosity.h "VariableLuminosity.h"
  *  
@@ -54,6 +55,9 @@ private:
   double m_fillDuration ; ///< Fill duration (set by options)
 
   double m_beamDecayTime ; ///< Beam decay time (set by options)
+
+  /// XML Log tool
+  ICounterLogFile * m_xmlLogTool ;
 
   /// Counter of empty interactions
   int    m_numberOfZeroInteraction ;

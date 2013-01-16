@@ -37,7 +37,7 @@
  *  
  *  Tool to interface to EvtGen generator. 
  *
- *  @author A;ex Shires, Patrick Robbe
+ *  @author Alex Shires, Patrick Robbe
  *  @date   2011-10-28
  */
 class EvtGenTool : public GaudiTool, virtual public IEvtGenTool {

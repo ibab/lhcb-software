@@ -14,6 +14,7 @@
 
 // From Generators
 #include "Generators/GenCounters.h"
+#include "Generators/ICounterLogFile.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FixedLuminosity
@@ -33,6 +34,7 @@ FixedLuminosity::FixedLuminosity( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent ) ,
+    m_xmlLogTool ( 0 ) ,
     m_numberOfZeroInteraction( 0 ) ,
     m_nEvents( 0 ) ,
     m_randSvc( 0 ) {
@@ -55,6 +57,9 @@ StatusCode FixedLuminosity::initialize( ) {
 
   // Initialize the number generator
   m_randSvc = svc< IRndmGenSvc >( "RndmGenSvc" , true ) ;
+
+  //  XMl log file
+  m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;
 
   return sc ;
 }
@@ -81,11 +86,9 @@ unsigned int FixedLuminosity::numberOfPileUp( ) {
 //=============================================================================
 void FixedLuminosity::printPileUpCounters( ) {
   using namespace GenCounters ;
-  info() << "***********   Luminosity counters   **************" << std::endl ;
-  printCounter( info() , "all events (including empty events)", m_nEvents ) ;
-  printCounter( info() , "events with 0 interaction" , 
+  printCounter( m_xmlLogTool , "all events (including empty events)", m_nEvents ) ;
+  printCounter( m_xmlLogTool , "events with 0 interaction" , 
                 m_numberOfZeroInteraction ) ;
-  info() << endmsg ;
 }
 
 //=============================================================================

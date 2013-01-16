@@ -1,21 +1,5 @@
 // $Id: ReadHepMCAsciiFile.cpp,v 1.5 2009-03-02 12:12:35 robbep Exp $
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2008/07/09 14:37:50  robbep
-// Gaudi Units
-//
-// Revision 1.3  2007/03/08 13:41:06  robbep
-// Adapt to new production tool interface
-//
-// Revision 1.2  2007/01/12 15:17:39  ranjard
-// v7r0 - use GAUDI v19r0
-//
-// Revision 1.1  2006/10/06 14:11:17  ibelyaev
-//  add (Read,Write)HepMCAsciiFile components
-//
-// ===========================================================================
 // Include files 
 // ===========================================================================
 // GaudiKernel

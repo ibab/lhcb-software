@@ -12,6 +12,7 @@ class IPileUpTool ;
 class IDecayTool ;
 class IVertexSmearingTool ;
 class IFullGenEventCutTool ;
+class ICounterLogFile ;
 
 namespace HepMC {
   class GenParticle ;
@@ -84,6 +85,8 @@ private:
   IPileUpTool              * m_pileUpTool             ; ///< Pile-up tool
 
   IDecayTool               * m_decayTool              ; ///< Decay tool
+
+  ICounterLogFile          * m_xmlLogTool             ; ///< Xml Log file tool
 
   ISampleGenerationTool    * m_sampleGenerationTool   ; ///< Sample tool
 

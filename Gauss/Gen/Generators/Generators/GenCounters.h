@@ -4,6 +4,7 @@
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
+#include "Generators/ICounterLogFile.h"
 
 #include <cmath>
 #include <numeric>
@@ -91,10 +92,43 @@ namespace GenCounters {
               << format( "%.5g +/- %.5g" , fraction( after , before ) , 
                          err_fraction( after , before ) ) << std::endl ;
   }
-  
+
+  /** Print efficiency computed with 2 counters.
+   *  @param[in] theLogFile Log file where to print the counters and efficiency
+   *                        after/before.
+   *  @param[in] cutName    Description of the cut
+   *  @param[in] after      Number of events after the cut
+   *  @param[in] before     Number of events before the cut
+   */
+  inline void printEfficiency( ICounterLogFile * theLogFile , 
+                               const std::string & cutName , 
+                               const unsigned int after , 
+                               const unsigned int before ) {
+    if ( 0 == before ) return ;
+    theLogFile -> addEfficiency( cutName , after , before , 
+                                 fraction( after , before ) , 
+                                 err_fraction( after , before ) ) ;
+  }  
+
+  /** Print a simple counter.
+   *  @param[in] theStream  Print facility to print the counter
+   *  @param[in] name       Description of the counter
+   *  @param[in] value      Value of the counter
+   */  
   inline void printCounter( MsgStream & theStream , const std::string & name , 
                             const unsigned int value ) {
     theStream << "Number of " << name << " : " << value << std::endl ; 
+  }
+
+  /** Print a simple counter.
+   *  @param[in] theLogFile Log file to print the counter
+   *  @param[in] name       Description of the cut
+   *  @param[in] after      Number of events after the cut
+   *  @param[in] before     Number of events before the cut
+   */  
+  inline void printCounter( ICounterLogFile * theLogFile , const std::string & name , 
+                            const unsigned int value ) {
+    theLogFile -> addCounter( name , value ) ;
   }
   
   /** Print fraction computed from two counters.
@@ -112,6 +146,21 @@ namespace GenCounters {
     theStream << " [fraction : " 
               << format( "%.5g +/- %.5g]" , fraction( number , total ) ,
                          err_fraction( number , total ) ) << std::endl ;  
+  }
+
+  /** Print fraction computed from two counters.
+   *  @param[in] theLogFile Log file where to print the counters and fraction
+   *                        number/total.
+   *  @param[in] name       Description of the fraction
+   *  @param[in] number     Number of particles contained in the fraction
+   *  @param[in] total      Total number of particles.
+   */
+  inline void printFraction( ICounterLogFile * theLogFile , 
+                             const std::string & name , 
+                             const unsigned int number , 
+                             const unsigned int total ) {
+    theLogFile -> addFraction( name , number , fraction( number , total ) , 
+                               err_fraction( number , total ) ) ; 
   }
 
   /** Utility function to add an array to another one
@@ -136,6 +185,19 @@ namespace GenCounters {
     unsigned int total = std::accumulate( A.begin() , A.end() , 0 ) ;
     for ( unsigned int i = 0 ; i < A.size() ; ++i ) 
       printFraction( theStream , root + " " + AName[ i ] , A[ i ] , total ) ;
+  }
+
+  /** Utility function to print Fractions from a array of counters
+   *  @param[in] 
+   */
+  template< typename T , std::size_t N >
+  inline void printArray( ICounterLogFile * theLogFile ,
+                          boost::array< T , N > A ,
+                          boost::array< std::string , N > AName ,
+                          const std::string & root ) {
+    unsigned int total = std::accumulate( A.begin() , A.end() , 0 ) ;
+    for ( unsigned int i = 0 ; i < A.size() ; ++i ) 
+      printFraction( theLogFile , root + " " + AName[ i ] , A[ i ] , total ) ;
   }
 
   /** Utility function to setup names of B hadron counters 

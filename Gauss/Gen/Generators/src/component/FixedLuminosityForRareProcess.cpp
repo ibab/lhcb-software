@@ -14,6 +14,7 @@
 
 // From Generators
 #include "Generators/GenCounters.h"
+#include "Generators/ICounterLogFile.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FixedLuminosityForRareProcess
@@ -33,6 +34,7 @@ FixedLuminosityForRareProcess::FixedLuminosityForRareProcess( const std::string&
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent ) ,
+    m_xmlLogTool( 0 ) ,
     m_nEvents( 0 ) ,
     m_randSvc( 0 ) {
     declareInterface< IPileUpTool >( this ) ;
@@ -53,7 +55,10 @@ StatusCode FixedLuminosityForRareProcess::initialize( ) {
   if ( sc.isFailure() ) return sc ;
 
   // Initialize the number generator
-  m_randSvc = svc< IRndmGenSvc >( "RndmGenSvc" , true ) ;  
+  m_randSvc = svc< IRndmGenSvc >( "RndmGenSvc" , true ) ;
+
+  // XML file for generator statistics
+  m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;
 
   info() << "Poisson distribution with fixed luminosity. " << endmsg ;
 
@@ -79,9 +84,7 @@ unsigned int FixedLuminosityForRareProcess::numberOfPileUp( ) {
 //=============================================================================
 void FixedLuminosityForRareProcess::printPileUpCounters( ) {
   using namespace GenCounters ;
-  info() << "***********   Luminosity counters   **************" << std::endl ;
-  printCounter( info() , "all events (including empty events)", m_nEvents ) ;
-  info() << endmsg ;
+  printCounter( m_xmlLogTool , "all events (including empty events)", m_nEvents ) ;
 }
 
 //=============================================================================

@@ -1,17 +1,4 @@
 // $Id: WriteHepMCAsciiFile.cpp,v 1.3 2008-07-09 14:39:08 robbep Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
-// Revision 1.3 2011/05/24 00:21:23  agrecu
-// vxry - replace HepMC::IO_Ascii with HepMC::IO_GenEvent
-//
-// Revision 1.2  2007/01/12 15:17:47  ranjard
-// v7r0 - use GAUDI v19r0
-//
-// Revision 1.1  2006/10/06 14:11:17  ibelyaev
-//  add (Read,Write)HepMCAsciiFile components
 // 
 // ============================================================================
 // Include files 
@@ -164,7 +151,6 @@ StatusCode WriteHepMCAsciiFile::execute    ()
     
     // write event to ascii file
     m_file->write_event(evt); 	//also writes HeavyIon and PdfInfo!
-    //*m_file << evt ;          //old code; alternative?!
     
     // rescale back if needed (convert to LHCb units) 
     if ( m_rescale ) 

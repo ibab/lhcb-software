@@ -11,6 +11,7 @@
 
 // forward declaration
 class IRndmGenSvc ;
+class ICounterLogFile ;
 
 /** @class FixedLuminosityForRareProcess FixedLuminosityForRareProcess.h "FixedLuminosityForRareProcess.h"
  *  
@@ -48,6 +49,8 @@ public:
 protected:
 
 private:
+  ICounterLogFile * m_xmlLogTool ; ///< XML File for generator statistics
+  
   std::string m_beamParameters ; ///< Location of beam parameters (set by options)
 
   int    m_nEvents ; ///< Counter of events (including empty events)

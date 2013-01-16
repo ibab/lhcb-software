@@ -37,7 +37,7 @@ class FixedNInteractions : public GaudiTool, virtual public IPileUpTool {
   /// Implementation of IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;
   
- private:
+ private:  
   /// Number of interactions to generate (set by job options)
   int m_nInteractions ;
 };

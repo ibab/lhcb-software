@@ -6,7 +6,6 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-
 #include "GaudiKernel/SystemOfUnits.h"
 
 // from Event 

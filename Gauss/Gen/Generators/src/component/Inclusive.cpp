@@ -15,6 +15,7 @@
 // from Generators
 #include "Generators/IProductionTool.h"
 #include "Generators/GenCounters.h"
+#include "Generators/ICounterLogFile.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Inclusive
@@ -32,6 +33,7 @@ DECLARE_TOOL_FACTORY( Inclusive );
 Inclusive::Inclusive( const std::string& type, const std::string& name,
                       const IInterface* parent )
   : ExternalGenerator  ( type, name , parent ) ,
+    m_xmlLogTool( 0 ) ,
     m_lightestQuark( LHCb::ParticleID::down ) ,
     m_nEventsBeforeCut ( 0 ) , m_nEventsAfterCut ( 0 ) ,
     m_nInvertedEvents  ( 0 ) ,
@@ -97,6 +99,9 @@ StatusCode Inclusive::initialize( ) {
 
   info() << endmsg ;  
   release( ppSvc ) ;
+
+  // XML Log file
+  m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;
 
   return sc ;
 }
@@ -195,40 +200,31 @@ bool Inclusive::generate( const unsigned int nPileUp ,
 void Inclusive::printCounters( ) const {
   using namespace GenCounters ;
   
-  info() << "************   Inclusive counters   **************" << std::endl ;
-  
-  printEfficiency( info() , "generator level cut" , 
+  printEfficiency( m_xmlLogTool , "generator level cut" , 
                    m_nEventsAfterCut - m_nInvertedEvents , 
                    m_nEventsBeforeCut ) ;
-  printCounter( info() , "z-inverted events" , m_nInvertedEvents ) ;
-  info() << std::endl ;
+  printCounter( m_xmlLogTool , "z-inverted events" , m_nInvertedEvents ) ;
 
-  printArray( info() , m_bHadC , m_bHadCNames , "generated" ) ;
-  printArray( info() , m_antibHadC , m_antibHadCNames , "generated" ) ;
-  printCounter( info() , "generated (bb)" , m_bbCounter ) ;
-  info() << std::endl  ;
+  printArray( m_xmlLogTool , m_bHadC , m_bHadCNames , "generated" ) ;
+  printArray( m_xmlLogTool , m_antibHadC , m_antibHadCNames , "generated" ) ;
+  printCounter( m_xmlLogTool , "generated (bb)" , m_bbCounter ) ;
   
-  printArray( info() , m_cHadC , m_cHadCNames , "generated" ) ;
-  printArray( info() , m_anticHadC , m_anticHadCNames , "generated" ) ;
-  printCounter( info() , "generated (cc)" , m_ccCounter ) ;
-  info() << std::endl ;
+  printArray( m_xmlLogTool , m_cHadC , m_cHadCNames , "generated" ) ;
+  printArray( m_xmlLogTool , m_anticHadC , m_anticHadCNames , "generated" ) ;
+  printCounter( m_xmlLogTool , "generated (cc)" , m_ccCounter ) ;
 
-  printArray( info() , m_bHadCAccepted , m_bHadCNames , "accepted" ) ;
-  printArray( info() , m_antibHadCAccepted , m_antibHadCNames , "accepted" ) ;
-  printCounter( info() , "accepted (bb)" , m_bbCounterAccepted ) ;
-  info() << std::endl ;
+  printArray( m_xmlLogTool , m_bHadCAccepted , m_bHadCNames , "accepted" ) ;
+  printArray( m_xmlLogTool , m_antibHadCAccepted , m_antibHadCNames , "accepted" ) ;
+  printCounter( m_xmlLogTool , "accepted (bb)" , m_bbCounterAccepted ) ;
   
-  printArray( info() , m_cHadCAccepted , m_cHadCNames , "accepted" ) ;
-  printArray( info() , m_anticHadCAccepted , m_anticHadCNames , "accepted" ) ;
-  printCounter( info() , "accepted (cc)" , m_ccCounterAccepted ) ;
-  info() << std::endl ;
+  printArray( m_xmlLogTool , m_cHadCAccepted , m_cHadCNames , "accepted" ) ;
+  printArray( m_xmlLogTool , m_anticHadCAccepted , m_anticHadCNames , "accepted" ) ;
+  printCounter( m_xmlLogTool , "accepted (cc)" , m_ccCounterAccepted ) ;
 
-  printArray( info() , m_bExcitedC , m_bExcitedCNames , "generated" ) ;
-  printArray( info() , m_bExcitedCAccepted , m_bExcitedCNames , "accepted" ) ;
-  info() << std::endl ;
+  printArray( m_xmlLogTool , m_bExcitedC , m_bExcitedCNames , "generated" ) ;
+  printArray( m_xmlLogTool , m_bExcitedCAccepted , m_bExcitedCNames , "accepted" ) ;
 
-  printArray( info() , m_cExcitedC , m_cExcitedCNames , "generated" ) ;
-  printArray( info() , m_cExcitedCAccepted , m_cExcitedCNames , "accepted" ) ;
-  info() << endmsg ;
+  printArray( m_xmlLogTool , m_cExcitedC , m_cExcitedCNames , "generated" ) ;
+  printArray( m_xmlLogTool , m_cExcitedCAccepted , m_cExcitedCNames , "accepted" ) ;
 }
 

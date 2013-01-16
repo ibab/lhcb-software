@@ -57,6 +57,7 @@ class RepeatDecay : public GaudiTool ,
  protected:
 
  private:
+  
   /// Name of the tool used to generate the events (set by option)
   std::string m_baseToolName ; 
 

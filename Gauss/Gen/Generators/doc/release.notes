@@ -5,6 +5,11 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2013-01-16 - Patrick Robbe
+ - Add ICounterLogFile and XmlCounterLogFile classes to store in XML 
+   files the counters that allow to compute the generator level cut 
+   efficiencies.
+
 ! 2012-12-19 - Aurelien Martens
  - Fix SignalRH for pythia8 so that it also hadronize pile-up events.
 
