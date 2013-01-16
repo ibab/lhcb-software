@@ -4,6 +4,9 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-01-16 - Marco Clemencic
+ - Fixed segfault during generation of configurables on gcc 4.6.
+
 !========================= GiGaCnv v20r0 2012-07-23 ==========================
 ! 2012-07-23 - Gloria Corti
  - Modification to use LHCb::ParticlePropertySvc instead of the one from Gaudi
@@ -29,7 +32,7 @@
 
 !======================== GiGaCnv v18r7 2009-11-04 =========================
 ! 2009-10-15 - Silvia MIGLIORANZI
- - Fix compilation warnings on slc5 "type qualifiers ignored on function return 
+ - Fix compilation warnings on slc5 "type qualifiers ignored on function return
    type" in:
    - GiGaCatalogCnv.cpp
 	 - GiGaCatalogCnv.h
@@ -49,7 +52,7 @@
    - GiGaSurfaceCnv.h
 	 - GiGaKineRefTableEntry.h
    corrected removing "const" from return type of functions.
- - Fix compilation warning on slc5: include "Event/MCPaticle.h" instead of forward 
+ - Fix compilation warning on slc5: include "Event/MCPaticle.h" instead of forward
    declaration in:
    - Particle2Definition.h
    - Particle2Particle.h
@@ -58,11 +61,11 @@
 ! 2009-06-10 - Gloria CORTI
  - Fix warning of unused variable. At the same time change "log" to "msg"
    and "ednreq" to "endmsg
-   . GiGaInstall.{h,cpp} 
+   . GiGaInstall.{h,cpp}
 
 !========================= GiGaCnv v18r6 2008-12-08 ==========================
 ! 2008-10-20 - Patrick Robbe
- - Add link to generator HepMC mother particle in 
+ - Add link to generator HepMC mother particle in
    GiGaPrimaryParticleInformation.h
 
 !========================= GiGaCnv v18r5 2008-06-09 ==========================
@@ -85,7 +88,7 @@
    in LHCB v22r9)
    . src/component/GiGaDetectorElementCnv.cpp
    . src/component/GiGaLVolumeCnv.cpp
- - Adapt to modification of constructor from int made explicit in ParticleID 
+ - Adapt to modification of constructor from int made explicit in ParticleID
    . src/component/Trajectory2Particle.cpp
  - Remove cvs log and names
    . GiGaCnv/GiGaKineRefTable.h
@@ -97,12 +100,12 @@
  - Introduce (with some modification) what provided by Sajan Easo
    to apply some detector misalignments on parents and childrens as long as
    the children belong to a unique parent logical volume. It is no longer
-   necessary to specify the full list of all detector elements in 
+   necessary to specify the full list of all detector elements in
    GiGaGeo.InputStreams to apply misalignment. See below on options to
    use to activate it.
    It includes code from V.Belyaev and M.Clemencic.
    Modification with respect to what provided are simplification of names
-   of methods and following coding conventions, replacing long list of 
+   of methods and following coding conventions, replacing long list of
    options to switch on misalignment for subdetectors with list of detector
    elements to which to apply misalignment.
    Details of functionality and modifications are:
@@ -113,29 +116,29 @@
      search is launched from the result of the first search. In the second
      search, the physical volume  name is compared with the npath string of
      the detector elements in the list and the matching one is taken.
-     If it still finds multiple matches, a warning is printed and 
-     the default ideal geometry is used. 
+     If it still finds multiple matches, a warning is printed and
+     the default ideal geometry is used.
      This means that misalignemnt CANNOT be applied to both parent and children
      if the parent is a multiple copy of a single detector element.
      When a proper match is found, the misalignment is accessed from
-     IGeometryInfo class and applied by using the resulting matrix to 
+     IGeometryInfo class and applied by using the resulting matrix to
      create the G4Physical volume.
-   . The activation of the use of the CondDB values for alignment is 
-     controllable from options of the GiGaGeo service. 
-     By default the options are set to false as to reproduce the 
+   . The activation of the use of the CondDB values for alignment is
+     controllable from options of the GiGaGeo service.
+     By default the options are set to false as to reproduce the
      "old behaviour" of Gauss, i.e. passing full list in GiGaGeo.InputStream.
      It is possible to activate the use of CondDB values for all subdetectors
      or for some selectively.
      To activate it for all detector set the options:
        GiGaGeo.UseAlignment = true;
        GiGaGeo.AlignAllDetectors = true;
-     while for example only for the VELO set the options: 
+     while for example only for the VELO set the options:
        GiGaGeo.UseAlignment = true;
-       GiGaGeo.AlignDetectors = 
+       GiGaGeo.AlignDetectors =
           {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight"};
    . Code modified:
      - src/component/GiGaLVolumeCnv.{h,cpp}
-       New methods added (look at doxygen for details): 
+       New methods added (look at doxygen for details):
        . transformWithAlignment
        . detElementByLVNameWithAlignment
        . findBestDetElemFromPVName
@@ -164,7 +167,7 @@
    . src/component/GiGaGeo.cpp
    . src/component/GiGaKine.cpp
  - Clean up of CVS directives ($Name and $Log)
-   . src/Lib/GiGaVolumeUtils.cpp  
+   . src/Lib/GiGaVolumeUtils.cpp
    . src/component/GiGaInstall.cpp
 
 !========================= GiGaCnv v18r0 2007-03-16 ==========================
@@ -208,7 +211,7 @@
 ! 2006-07-04 - Gloria CORTI
  - Remove obsolete converters no longer in use for MCParticles and MCVertices
    . GiGaMCVertexCnv.{h,cpp} - REMOVED
-   . GiGaMCParticleCnv.{h,cpp}- REMOVED 
+   . GiGaMCParticleCnv.{h,cpp}- REMOVED
    . GiGaCnv_entries.cpp - removed factories declarations
 
 !======================= GiGaCnv v16r2 2006-04-04 ==========================
@@ -222,8 +225,8 @@
  - Trajectory2Particle: switch to MeV for HepMC
 
 ! 2006-03-20 - Gloria CORTI for Emanuele SANTOVETTI
- - Remove multiplication for g/mole when passing A, similarly as what done 
-   for elements and mixtures, since given already in this unit. 
+ - Remove multiplication for g/mole when passing A, similarly as what done
+   for elements and mixtures, since given already in this unit.
    . GiGaIsotopeCnv.cpp
 
 !======================= GiGaCnv v16r0 2006-02-07 ==========================
@@ -235,7 +238,7 @@
 ! 2006-01-31 - Gloria CORTI
  - Use new Event/MCEvent package instead of Event and HepMC
  - Use new Tools/ClhepTools package for geometry converters
- - Adapt to changes in LHCb geometry which use of MathCore classes. 
+ - Adapt to changes in LHCb geometry which use of MathCore classes.
    Since Geant4 uses CLHEP modification to transform from MathCore to CLHEP
    are introduced making use of MathCore2Clhep.h (in Tools/Clheptool v1r0)
    Try to keep Clhep as close as possible to construction of Geant4 classes.
@@ -255,7 +258,7 @@
    . src/component/Point2Vertex.h
    . src/component/PrimaryVertex2Vertex.h
    . src/component/Trajectory2Particle.{h,cpp}
-   . src/component/Vertex2Vertex.{h,cpp}   
+   . src/component/Vertex2Vertex.{h,cpp}
  - Remove obsolete method filling contents of Collision, now filled in
    Generator phase
    . src/component/GiGaMCParticleCnv.{h.cpp}
@@ -270,7 +273,7 @@
    . GiGaHits.{h,cpp} - Convertion service for hits no longer necessary since
      converters have been replaced by algorithms
    . GiGaCnv_entries.cpp - remove declaration of removed classes
-      
+
 !=========================== GiGaCnv v15r11 =================================
 ! 2005-04-11 - Gloria Corti
  - src/component/GiGaMCVertexCnv.cpp
@@ -279,7 +282,7 @@
 ! 2005-03-31 - Gloria Corti
  - src/component/GiGaMCParticleCnv.cpp
    . remove setting to Collision in MCParticle (data member removed from
-     class see Event/Event v4r7) 
+     class see Event/Event v4r7)
 
 !====================== GiGaCnv v15r10 2005-01-25 ===========================
 ! 2005-01-25 - Gloria CORTI
@@ -290,7 +293,7 @@
 	   convertion, hence compilation problem, and MCVertex gives HepPoint3D)
  - src/component/GiGaInstall.h
    . replace forward declaration with include of HepTransform3D to compile
-     with CLHEP 1.9 
+     with CLHEP 1.9
 
 ! 2005-01-17 - Patrick Robbe
  - src/component/GiGaHepMCCnv.cpp
@@ -303,12 +306,12 @@
 ! 2005-01-13 - Gloria CORTI
  - src/component/GiGaGeo.cpp
    . bug fix for "HepTransform3D::inverse error: zero determinant" appearing
-     on slc3 with the new G4 version due to setting 0.0 elements with test 
+     on slc3 with the new G4 version due to setting 0.0 elements with test
      on abs() instead of fabs()
 
 !====================== GiGaCnv v15r8 2004-08-02 ===========================
 ! 2004-08-02 - Gloria CORTI
- - GiGaCnvSvcBase.h/cpp and GiGaGeo.cpp 
+ - GiGaCnvSvcBase.h/cpp and GiGaGeo.cpp
    . modify to use InterfaceID instead of IID to adapt to Gaudi v16
 
 ! 2004-07-05 - Gloria CORTI
@@ -320,7 +323,7 @@
 !====================== GiGaCnv v15r7 2004-06-17 ===========================
 ! 2004-06-17 - Gloria CORTI
  - src/component/GiGaMCVertexCnv.cpp
-   . handle some cases where an appropriate MCVertex is not found when setting 
+   . handle some cases where an appropriate MCVertex is not found when setting
      references: the tof is identical but the position does not have to
      necessarly be "less", so the second vertex on a trajectory could be the
      previous one that the one provided (BUG# 3783)
@@ -349,11 +352,11 @@
 !===================== GiGaCnv v15r3 2004-04-20 =============================
 ! 2004-04-20 - Vanya BELYAEV
 - src/component/GiGaGeo.cpp
-    fix a finalize method 
+    fix a finalize method
 - src/component/GiGaMCVertexCnv.cpp
-    add warning counter for One-Point trajectories 
-- cmt/requirements 
-    increment the version to v15r3 
+    add warning counter for One-Point trajectories
+- cmt/requirements
+    increment the version to v15r3
 
 !======================= GiGaCnv v15r2 2004-04-07 ==========================
 ! 2004-04-07 - Gloria CORTI
@@ -369,39 +372,39 @@
      an extention of Collision where a pointer to the HardInfo is kept
      The container is still of type Collision
  - src/component/GiGaMCVertexCnv.cpp
-   . add setting of some more vertex types  
+   . add setting of some more vertex types
 
 !======================= GiGaCnv v15r1 =====================================
 ! 2004-03-24 - Florence Ranjard
  - requirements - reorder use statments to please CMT
-                  using Event* just after GaudiAlgs allows CMT to set ppcmd 
+                  using Event* just after GaudiAlgs allows CMT to set ppcmd
                   properly!!!
 
 ! 2004-03-21 - Vanya BELYAEV
  - add "AntiSigmaPlusInelastic", "SigmaPlusInelastic" and "XiMinusInelastic"
-   to the list of known hadronic processes to reduce 
-   the amount of MCVertices with the status/type Unknown 
+   to the list of known hadronic processes to reduce
+   the amount of MCVertices with the status/type Unknown
 
-   after this fix on statistics of 250 event at teh end of the job one gets 
- 
+   after this fix on statistics of 250 event at teh end of the job one gets
+
 GiGaMCVCnv SUCCESS #WARNINGS = 782 Message='GiGaMCVertexCnv: VertexType is still unknown'
 GiGaMCVCnv SUCCESS #WARNINGS = 779 Message='GiGaMcVertexCnv: The process is known 'RichG4Cerenkov', but vertex type is still 'Unknown''
 GiGaMCVCnv SUCCESS #WARNINGS =   3 Message='GiGaMcVertexCnv: The process is known 'phot', but vertex type is still 'Unknown''
 
-   
+
 ! 2004-03-20 - Vanya BELYAEV
- - add "AntiLambdaInelastic" and  "AntiXiZeroInelastic" into the list of known 
-   hadronic processes to reduce the amount of 
+ - add "AntiLambdaInelastic" and  "AntiXiZeroInelastic" into the list of known
+   hadronic processes to reduce the amount of
    MCVertices with status 'Unknown'
 
 ! 2004-03-20 - Vanya BELYAEV
- - src/component/GiGaMCVertexCnv.h,.cpp 
-   fix with definition of MCVertex type 
-   add a warning printout for MCVertex::Unknown (hope it helps to 
+ - src/component/GiGaMCVertexCnv.h,.cpp
+   fix with definition of MCVertex type
+   add a warning printout for MCVertex::Unknown (hope it helps to
    fix the problem)
- - GiGaCnv/GiGaCnvBase.h , src/Lib/GiGaCnvBase.cpp 
-    improve Error/Warning printout 
- - cmt/requirements    - increase the version 
+ - GiGaCnv/GiGaCnvBase.h , src/Lib/GiGaCnvBase.cpp
+    improve Error/Warning printout
+ - cmt/requirements    - increase the version
 
 
 !========================== GiGaCnv v15r0 ===============================
@@ -415,39 +418,39 @@ GiGaMCVCnv SUCCESS #WARNINGS =   3 Message='GiGaMcVertexCnv: The process is know
      B** if needed.
 
 ! 2004-02-20 - Ivan BELYAEV
- - GiGaCnv/IGiGa*.h 
-     1) move IGiGaXXX::~IGiGaXXX() implementations to separate file 
-     2) move IGiGaXXX::interface() implementations to separate file 
- - src/Lib/GiGaCnvInterfaces.cpp 
-     new file with implementations of IGiGaXXX::~IGiGaXXX() and 
-       IGiGaXXX::interfaceID() methods 
+ - GiGaCnv/IGiGa*.h
+     1) move IGiGaXXX::~IGiGaXXX() implementations to separate file
+     2) move IGiGaXXX::interface() implementations to separate file
+ - src/Lib/GiGaCnvInterfaces.cpp
+     new file with implementations of IGiGaXXX::~IGiGaXXX() and
+       IGiGaXXX::interfaceID() methods
  - GiGa/IIDIGiGa*.
-     move into src/Lib directory 
- - src/component/GiGaSurfaceCnv.cpp 
-     fix compilation warning 
- 
+     move into src/Lib directory
+ - src/component/GiGaSurfaceCnv.cpp
+     fix compilation warning
+
 
 ! 2004-02-20 - Vanya BELYAEV
  - GiGaCnv/GiGaPrimaryParticleInformation.h
       updtate for "fast cast"
  - src/Lib/GiGaCnvSvcBase.cpp
-      fix compilation warning 
+      fix compilation warning
  - src/component/GiGaMCVertexCnv.cpp
-      fix compilation warning 
+      fix compilation warning
  - src/component/GiGaMiscGetEventAlg.h,.cpp
-      move files into GaudiAlg package 
- - src/component/GiGaCnv_entries.cpp 
-      remove GiGaMiscGetEventAlg 
+      move files into GaudiAlg package
+ - src/component/GiGaCnv_entries.cpp
+      remove GiGaMiscGetEventAlg
  - src/component/GiGaDataStoreAlgorithm.h,.cpp
-      1) update for new base GaudiAlgorithm 
-      2) remove OTHits 
- - cmt/requirement 
-      1) add dependency on GaudiAlg package 
-      2) incrmement the version to v15r0 
-   
+      1) update for new base GaudiAlgorithm
+      2) remove OTHits
+ - cmt/requirement
+      1) add dependency on GaudiAlg package
+      2) incrmement the version to v15r0
+
 !======================== GiGaCnv v14r2 ==============================
 ! 2004-02-14 - Patrick Robbe
- - GiGaPrimaryParticleInformation : class deriving from 
+ - GiGaPrimaryParticleInformation : class deriving from
    G4VUserPrimaryParticleInformation to pass the information on mixing
    to a G4PrimaryParticle.
  - GiGaHepMCCnv : create a G4PrimaryParticle with mixing information
@@ -473,11 +476,11 @@ GiGaMCVCnv SUCCESS #WARNINGS =   3 Message='GiGaMcVertexCnv: The process is know
 
 !========================== GiGaCnv v13r6 ===========================
 ! 2003-12-08 - Witek Pokorski
- - GiGaGeo.cpp - includes G4MagIntegratorStepper.hh to cope with 
+ - GiGaGeo.cpp - includes G4MagIntegratorStepper.hh to cope with
                  Geant4 5.2.ref06
 
 ! 2003-11-25 - Witek Pokorski
- - GiGaHepMCCnv - added preassigned decay time 
+ - GiGaHepMCCnv - added preassigned decay time
 
 !========================== GiGaCnv v13r5 ===========================
 ! 2003-10-30 - Witek Pokorski
@@ -490,15 +493,15 @@ GiGaMCVCnv SUCCESS #WARNINGS =   3 Message='GiGaMcVertexCnv: The process is know
 
 !========================== GiGaCnv v13r3 ============================
 ! 2003-09-22 - Vanya BELYAEV
-  - cmt/requirements     - increase the version to v13r3 
+  - cmt/requirements     - increase the version to v13r3
  - few fixes for unfinalized or undeleted tools.
    polishing of reference counting techniques.
-   Now ALL tools have proper reference counters 
+   Now ALL tools have proper reference counters
    and finalized properly
 
 !======================= GiGaCnv v13r2 ===============================
 ! 2003-09-08 - Witek Pokorski
- GiGaGeo - fixing bug introduced in v13r1..... 
+ GiGaGeo - fixing bug introduced in v13r1.....
 
 !======================= GiGaCnv v13r1 ===============================
 ! 2003-09-04 - Witek Pokorski
@@ -507,7 +510,7 @@ GiGaMCVCnv SUCCESS #WARNINGS =   3 Message='GiGaMcVertexCnv: The process is know
 !======================= GiGaCnv v13r0 ===============================
 ! 2003-07-14 - Witek Pokorski
  - GiGaCollisionCnv - slight restructurisation, some of the stuff
-                      moved to GiGaMCParticleCnv 
+                      moved to GiGaMCParticleCnv
 
 ! 2003-07-11 - Witek Pokorski
  - added converter for Collision (GiGaCollisionCnv)
@@ -520,15 +523,15 @@ GiGaMCVCnv SUCCESS #WARNINGS =   3 Message='GiGaMcVertexCnv: The process is know
 
 !======================= GiGaCnv v12r2 ================================
 ! 2003-07-03 - Florence RANJARD
- - requirements - use the latest versions available in LHCB 
+ - requirements - use the latest versions available in LHCB
 
 !======================= GiGaCnv v12r1 ==============================
 
 ! 2003-05-30 - Ivan BELYAEV
  - GiGaCnv/GiGaVolumeUtils.h
-   src/Lib/GiGaVolumeUtils.cpp   add 'findRegion' function into the 
+   src/Lib/GiGaVolumeUtils.cpp   add 'findRegion' function into the
                                  namespace GiGaVolumeUtils
- - cmt/requiremewnts             increase the version 
+ - cmt/requiremewnts             increase the version
 
 !======================= GiGaCnv v12r0 ===============================
 
@@ -555,8 +558,8 @@ GiGaMCVCnv SUCCESS #WARNINGS =   3 Message='GiGaMcVertexCnv: The process is know
   - changes to GiGaMCParticleCnv and GiGaMCVertexCnv enabling handling
     of trajectories containing only one TrajectoryPoint
 
-! 2003-01-23 - Vanya Belyaev 
-  - few simple fixes for Win2K 
+! 2003-01-23 - Vanya Belyaev
+  - few simple fixes for Win2K
 
 !========================= GiGaCnv v11r0 ================================
 
@@ -564,70 +567,70 @@ GiGaMCVCnv SUCCESS #WARNINGS =   3 Message='GiGaMcVertexCnv: The process is know
   increased version number to v11r0
 
 ! 2002-12-16 - Ivan Belyaev
-  update for new version of Geant4 (5.0) 
- - src/component/GiGaGeo.cpp        - in "finalize" method DO NOT release 
-                                      any sensitive detector (now they are 
+  update for new version of Geant4 (5.0)
+ - src/component/GiGaGeo.cpp        - in "finalize" method DO NOT release
+                                      any sensitive detector (now they are
                                       deleted explicitely by G4 itself)
                                     - explicitely clear ALL detector stores
-                                      (logical volumes, physical volumes and 
+                                      (logical volumes, physical volumes and
                                        solids)
 
   - cmt/requirements                 - increase minor version.
-                                       Probably it is better to increase 
-                                       the major version 
+                                       Probably it is better to increase
+                                       the major version
 
 !========================= GiGaCnv v10r1 ================================
 
 ! 2002-12-15 - Ivan Belyaev
  - src/component/GiGaGeo.cpp           manualy clear Logical Volumes store and
-   src/component/GiGaGeo.h             Physical Volumes store at the end 
-                                       Solids Store is not cleared. Moreover 
-                                       Geometry is closed again to avoid 
+   src/component/GiGaGeo.h             Physical Volumes store at the end
+                                       Solids Store is not cleared. Moreover
+                                       Geometry is closed again to avoid
                                        crash. It is a temporary fix.
-                                       Warning message is issued. 
-                                       Need to be investigated in details 
+                                       Warning message is issued.
+                                       Need to be investigated in details
                                        somewhen later.
 
 !========================= GiGaCnv v10r0 ================================
 
 ! 2002-12-13 - Ivan Belyaev
- - src/Lib/GiGaCnvBase.cpp           Trivial bug fixes 
+ - src/Lib/GiGaCnvBase.cpp           Trivial bug fixes
    src/Lib/GiGaCnvSvcBase.cpp
    src/component/GiGaGeo.cpp
    src/component/GiGaKine.cpp
 
 ! 2002-12-07 - Ivan Belyaev
- - GiGaCnv/GiGaCnvBase.h,GiGaCnvSvcBase.h   - fix trivial bugs/misprints 
+ - GiGaCnv/GiGaCnvBase.h,GiGaCnvSvcBase.h   - fix trivial bugs/misprints
  - src/component/GiGaMCParticleCnv.cpp      - replace the frequent dynamic_cast
- - src/component/GiGaMCParticleCnv.cpp        to GiGaTrajectory object with 
-                                              explicit calls for 
-                                              gigaTrajectory functions. For 
-                                              non-debug mode it should be more 
-                                              CPU efficient  
+ - src/component/GiGaMCParticleCnv.cpp        to GiGaTrajectory object with
+                                              explicit calls for
+                                              gigaTrajectory functions. For
+                                              non-debug mode it should be more
+                                              CPU efficient
 
 ! 2002-12-07 - Ivan Belyaev
- - GiGaCnv/IGiGaCnvSvcLocation.h    new file with the default names of GiGa 
-                                    conversion services  
+ - GiGaCnv/IGiGaCnvSvcLocation.h    new file with the default names of GiGa
+                                    conversion services
 
  - GiGaCnv/GiGaAssembly.h           instrumented with reference counter
- - GiGaCnv/GiGaCnvBase.h            remove IObjManager 
+ - GiGaCnv/GiGaCnvBase.h            remove IObjManager
                                     remove extra calls for "addRef"
-                                    introduce proper calls for "release" 
- - GiGaCnvBase.h                    remove IObjManager 
+                                    introduce proper calls for "release"
+ - GiGaCnvBase.h                    remove IObjManager
                                     remove extra calls for "addRef"
-                                    introduce proper calls for "release" 
- - GiGaCnv/GiGaKineRefTable.h       add few "const" version of accessors 
- - GiGaCnv/GiGaKineRefTableEntry.h  add few "const" version of accessors 
+                                    introduce proper calls for "release"
+ - GiGaCnv/GiGaKineRefTable.h       add few "const" version of accessors
+ - GiGaCnv/GiGaKineRefTableEntry.h  add few "const" version of accessors
 
- - src/Lib/GiGaAssembly.cpp         induced modifications	 
- - src/Lib/GiGaAssemblyStore.cpp    induced modifications 	
- - src/Lib/GiGaCnvBase.cpp          induced modifications 	
- - src/Lib/GiGaCnvSvcBase.cpp       induced modifications	
-	
- - src/component/                   
+ - src/Lib/GiGaAssembly.cpp         induced modifications
+ - src/Lib/GiGaAssemblyStore.cpp    induced modifications
+ - src/Lib/GiGaCnvBase.cpp          induced modifications
+ - src/Lib/GiGaCnvSvcBase.cpp       induced modifications
+
+ - src/component/
        all converters are modified to remove extra calls of "addRef"
- - src/component/GiGaGeomCnvSvc   is renamed to GiGaGeo 
- - src/component/GiGaHitsCnvSvc   is renamed to GiGaHits 
+ - src/component/GiGaGeomCnvSvc   is renamed to GiGaGeo
+ - src/component/GiGaHitsCnvSvc   is renamed to GiGaHits
  - src/component/GiGaKineCnvSvc   is renamed to GiGaKine
 
 ! 2002-12-05 - Ivan Belyaev
@@ -635,7 +638,7 @@ GiGaMCVCnv SUCCESS #WARNINGS =   3 Message='GiGaMcVertexCnv: The process is know
  - GiGaCnv/GiGaAssembly.h
  - GiGaCnv/GiGaAssemblyStore.h
  - src/Lib/GiGaAssembly.cpp
- - src/Lib/GiGaAssemblyStore.cpp    fir very seriouse bug with Assemblies 
+ - src/Lib/GiGaAssemblyStore.cpp    fir very seriouse bug with Assemblies
 
 
 ! 2002-12-04 - Ivan Belyaev
