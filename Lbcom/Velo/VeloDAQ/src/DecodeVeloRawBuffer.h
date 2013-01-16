@@ -12,6 +12,7 @@ namespace LHCb {
 }
 
 class DeVelo;
+class IIncidentSvc;
 
 /** @class DecodeVeloRawBuffer DecodeVeloRawBuffer.h
  *  Decode the Velo data from the 1MHZ Raw buffer.
@@ -131,6 +132,11 @@ private:
 
   /// if true hide the errors from multiple cluster using the same strip
   bool m_hideWarnings;
+
+  /// Check when decoding lite clusters that the bank length is correct
+  bool m_doLengthCheck;
+
+  IIncidentSvc* m_incidentSvc;  ///< Pointer to the incident service.
 
 };
 #endif // DECODEVELORAWBUFFER_H

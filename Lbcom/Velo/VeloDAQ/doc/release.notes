@@ -3,6 +3,10 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2013-01-16 - David Hutchcroft
+ - Remove check on full bank length from decoding lite clusters by default
+   Should make trigger slightly faster (some TELL1 failure modes could cause problems)
+
 ! 2012-12-20 - Marco Cattaneo
  - Fix Coverity defects
  - Use getIfExists
