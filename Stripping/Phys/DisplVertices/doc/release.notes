@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2012-01-17 - Pieter David
+ - Fixed MatterVetoTool (independence issue due to registering with the
+   UpdateManagerSvc before caching the geometry)
+
 !========================= DisplVertices v7r13 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

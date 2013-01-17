@@ -103,13 +103,15 @@ StatusCode MatterVetoTool::initialize()
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if( !existDet<DataObject>(detSvc(),"Conditions/Online/Velo/MotionSystem") ){
+  if (msgLevel(MSG::DEBUG)) { debug() << " ===> Initialize" << endmsg; }
+
+  if( !exist<Condition>(detSvc(),"/dd/Conditions/Online/Velo/MotionSystem") ){
     Warning("VELO motion system not in conditions DB", 
             StatusCode::SUCCESS).ignore();
     //m_useConditions = false;
   }else{
-    registerCondition("Conditions/Online/Velo/MotionSystem",m_motionSystem,
-                      &MatterVetoTool::i_cacheGeo);
+    if (msgLevel(MSG::DEBUG)) { debug() << "Registering condition to Velo detector" << endmsg; }
+    registerCondition(getDet<DeVelo>(DeVeloLocation::Default), &MatterVetoTool::i_cacheGeo);
     sc = runUpdate();
     if(!sc) return sc;
   }
@@ -123,6 +125,9 @@ StatusCode MatterVetoTool::initialize()
 // Check if particle vertex is in material
 //=============================================================================
 bool MatterVetoTool::isInMatter( const Gaudi::XYZPoint & point ) const {
+
+  if (msgLevel(MSG::DEBUG)) { debug() << " ===> isInMatter" << endmsg; }
+
   Gaudi::XYZPoint posloc;
   bool inMat = false;
   
@@ -147,6 +152,9 @@ bool MatterVetoTool::isInMatter( const Gaudi::XYZPoint & point ) const {
 // Initialize the geometric info
 //=============================================================================
 StatusCode MatterVetoTool::i_cacheGeo(){  
+
+  if (msgLevel(MSG::DEBUG)) { debug() << " ===> i_cacheGeo" << endmsg; }
+
   //get the Velo geometry
   string velostr = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
   const IDetectorElement* lefthalv = getDet<IDetectorElement>( velostr+"Left" );
