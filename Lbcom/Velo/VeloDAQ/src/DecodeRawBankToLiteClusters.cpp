@@ -41,32 +41,3 @@ int VeloDAQ::decodeRawBankToLiteClusters (
   byteCount = cpi.bytesRead();
   return decoder.nClusters();
 }
-
-int VeloDAQ::decodeRawBankToLiteClusters (
-    const SiDAQ::buffer_word* bank, 
-    const DeVeloSensor* sensor,
-    LHCb::VeloLiteCluster::FastContainer* clusters,
-    bool ignoreErrors )
-{
-  // construct new raw decoder, implicitely decodes header
-  VeloRawBankDecoder decoder(bank);
-
-  // only decode banks without errors
-  if ( decoder.hasError() && !ignoreErrors ) { return -1; }
-
-  // decode the clusterpositions, create lite clusters and
-  // append them to the container
-  unsigned int sensorNumber = sensor->sensorNumber();
-   // decode the clusterpositions, create lite clusters and
-  // append them to the container
-  for (VeloRawBankDecoder::pos_iterator cpi = decoder.posBegin();
-       cpi != decoder.posEnd(); 
-       ++cpi) {
-    clusters->push_back(LHCb::VeloLiteCluster(cpi->fracStripBits(),
-                                              cpi->pseudoSizeBits(),
-                                              cpi->hasHighThreshold(),
-                                              LHCb::VeloChannelID(sensorNumber,
-                                                                  cpi->channelID())));
-  }
-  return decoder.nClusters();
-}
