@@ -1795,7 +1795,6 @@ StatusCode OfflineVertexFitter::updateParticle( LHCb::Particle& part,
   Gaudi::Vector7 Vm7;
   Gaudi::SymMatrix7x7 Cm7;
   convertE2M( V7, C7, Vm7, Cm7 );
-
   const double measuredMass = Vm7[6];
   double measuredMassErr    = Cm7(6,6);
 
