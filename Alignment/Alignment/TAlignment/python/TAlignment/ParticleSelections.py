@@ -196,7 +196,7 @@ def defaultHLTDstarSelection():
 
     # if the Escher hlt filter is not set, set it here
     if not hasattr(Escher(),"HltFilterCode") or not Escher().HltFilterCode :
-        Escher().HltFilterCode = "HLT_PASS_RE( 'Hlt2ExpressDstar2D0PiDecision' )"
+        Escher().HltFilterCode = "HLT_PASS_RE( 'Hlt2ExpressDStar2D0PiDecision' )"
 
     # retrieve the trigger lines from the hlt filter code
     TriggerLines = []
