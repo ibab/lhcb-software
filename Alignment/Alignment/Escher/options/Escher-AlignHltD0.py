@@ -11,13 +11,13 @@ from Configurables import Escher
 theApp = Escher()
 theApp.DataType   = "2012"
 theApp.InputType  = "MDF"
-theApp.PrintFreq = 10000
-theApp.EvtMax = 200000
+theApp.PrintFreq = 1000
+theApp.EvtMax = 20000
 theApp.DatasetName = 'AlignHltD0'
 
 # COND DB
 theApp.DDDBtag = 'dddb-20120831'
-theApp.CondDBtag = 'cond-20120831'
+theApp.CondDBtag = 'cond-20130114'
 
 # specify the input to the alignment
 from Configurables import TAlignment

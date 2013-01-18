@@ -15,8 +15,8 @@ Escher().InputType  = "MDF"
 
 # Events from run 87968 from fill 1647, on 24th March 2011
 EventSelector().Input = [
-  "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/EXPRESS/LHCb/COLLISION11/87968/087968_0000000001.raw?svcClass=lhcbdisk' SVC='LHCb::MDFSelector'"
+  "DATAFILE='mdf:srm://srm-lhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/EXPRESS/LHCb/COLLISION11/87968/087968_0000000001.raw?svcClass=lhcbdisk' SVC='LHCb::MDFSelector'"
     ]
 EventSelector().Input = [
-  "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97121/097121_0000000003.raw?svcClass=lhcbdisk' SVC='LHCb::MDFSelector'"
+  "DATAFILE='mdf:srm://srm-lhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97121/097121_0000000003.raw?svcClass=lhcbdisk' SVC='LHCb::MDFSelector'"
     ]

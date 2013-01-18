@@ -11,7 +11,7 @@ theApp = Escher()
 theApp.DataType   = "2011"
 theApp.InputType  = "MDF"
 theApp.PrintFreq = 1
-theApp.EvtMax = -1
+theApp.EvtMax = 100
 theApp.DatasetName = 'AlignCollisions'
 
 # specify the input to the alignment
