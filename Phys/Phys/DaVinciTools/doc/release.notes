@@ -3,6 +3,48 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-01-18 - Vanya Belyaev
+
+ - add TrackScaleState algorithm: 
+   a bit modified verison of original Matt's code to apply 
+   momentum scale calibration. The usage is fairly trivial: 
+   one just needs to execute this algorothm before the analsysi algorithm:
+ 
+  *  @code
+  *  from Configurables import TrackScaleState as SCALER
+  *
+  *  scaler = SCALER( 'Scaler' )  ## default configuration is perfectly fine 
+  *
+  *  daVinci = DaVinci ( ... ) 
+  *  daVinci.UserAlgortithms  = [ scaler ]
+  *  
+  *  seq = ... ## analysis sequence  
+  *  daVinci.UserAlgortithms += [ seq    ]
+  *  
+  *  @endcode
+  *
+
+   for microDST it is essentially the same, one just needs to specify RootInTES:
+
+  *  @code
+  *  from Configurables import TrackScaleState as SCALER
+  *
+  *  rootInTES = "/Event/Leptonic" ## example
+  *
+  *  scaler = SCALER( 'Scaler' , RootInTES = rootInTES ) ## note the difference 
+  *
+  *  daVinci = DaVinci ( ... ) 
+  *  daVinci.UserAlgorithms   = [ scaler ]
+  *  
+  *  seq = ... ## analysis sequence  
+  *  daVinci.UserAlgortithms += [ seq    ]
+  *  
+  *  @endcode
+
+  Algorithm takes the calibration constants from CONDB, 
+  thus be a bit patient and wait for DB-release 
+
+
 ! 2012-12-14 - Mike Williams
  - Added ability to cut on Delta phi in DoubleTopoTool
 
