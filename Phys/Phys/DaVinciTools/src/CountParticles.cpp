@@ -32,7 +32,7 @@ public:
     setFilterPassed ( !parts.empty() ) ;
     //
     for ( LHCb::Particle::ConstVector::const_iterator i = parts.begin() ; 
-          i!= parts.end(); ++i )
+          i != parts.end(); ++i )
     {
       const LHCb::ParticleProperty * pp = ppSvc()->find((*i)->particleID());
       if ( pp ) { ++counter(pp->name()); }
