@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2013-01-18 - Chris Jones
+ - Small clean up and optimisation of TupleToolGeometry
+
 !========================= DecayTreeTuple v4r0 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

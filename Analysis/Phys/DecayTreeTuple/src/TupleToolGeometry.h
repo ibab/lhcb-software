@@ -12,7 +12,8 @@ class IDVAlgorithm;
 
 class IPVReFitter;
 
-namespace LHCb {
+namespace LHCb
+{
   class Particle;
   class VertexBase;
 }
@@ -92,23 +93,38 @@ private:
   /// fill end vertex stuff
   StatusCode fillVertexFull(const LHCb::VertexBase* vtx,
                             const LHCb::Particle* P,
-                            std::string head, std::string vtx_name, Tuples::Tuple&) const ;
+                            const std::string& head, 
+                            const std::string& vtx_name, 
+                            Tuples::Tuple&) const ;
 
   /// origin vertex
-  const LHCb::VertexBase* originVertex( const  LHCb::Particle*
-                                        , const LHCb::Particle* ) const;
+  const LHCb::VertexBase* originVertex( const LHCb::Particle* top,
+                                        const LHCb::Particle* P ) const;
   /// fill related pV stuff
-  StatusCode fillBPV(const LHCb::VertexBase*, const LHCb::Particle*, std::string, Tuples::Tuple&, std::string trail = "") const ;
+  StatusCode fillBPV( const LHCb::VertexBase* primVtx, 
+                      const LHCb::Particle* P, 
+                      const std::string& prefix, 
+                      Tuples::Tuple& tuple, 
+                      const std::string& trail = "") const ;
 
   /// fill min IP
-  StatusCode fillMinIP(const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
+  StatusCode fillMinIP(const LHCb::Particle* P,
+                       const std::string& prefix, 
+                       Tuples::Tuple& tuple) const ;
 
   /// fill end vertex stuff
-  StatusCode fillVertex(const LHCb::VertexBase* vtx, std::string vtx_name, Tuples::Tuple&) const ;
+  StatusCode fillVertex(const LHCb::VertexBase* vtx,
+                        const std::string& vtx_name, 
+                        Tuples::Tuple&) const ;
 
   /// fill flight
-  StatusCode fillFlight(const LHCb::VertexBase* oriVtx, const LHCb::Particle*,
-                        std::string, Tuples::Tuple&, std::string trail = "") const ;
+  StatusCode fillFlight(const LHCb::VertexBase* oriVtx, 
+                        const LHCb::Particle* P,
+                        const std::string& prefix,
+                        Tuples::Tuple& tuple, 
+                        const std::string& trail = "" ) const ;
+
+private:
 
   const IDistanceCalculator* m_dist;
 
