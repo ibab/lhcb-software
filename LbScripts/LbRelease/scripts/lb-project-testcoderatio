@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+"""
+Check the ratio between the number of lines in the tests
+and the number of lines in the code.
+
+lb-project-testcoderatio <project> <version>
+
+"""
+import os
+import sys
+import logging
+
+from LbRelease.Archive.ProjectToolScript import ProjectTool
+from LbConfiguration import Project
+
+exclusions = [".pyc",".ref",".ref.new",".root",".launch","~",".dst",".sim",".raw",".digi",".xml"]
+excluded_dirs = ["InstallArea", ".svn", "CVS"]
+
+
+def isFileExcluded(afile):
+    """ Check whether a file should be excluded """
+    for ex in exclusions:
+        if afile.endswith(ex):
+            return False
+    return True
+
+def countlines(afile):
+    """ Counts the line in a file """
+    i=-1
+    f=open(afile)
+    for i,l in enumerate(f):
+        pass
+    f.close()
+    return i+1
+
+#
+# Main script class
+###############################################################################
+class TestCodeRatioTool(ProjectTool):
+    """  """
+    def __init__(self):
+        """ Main constructor for the script """
+        ProjectTool.__init__(self, usage = "%prog [options] project version)",
+                              description = "Script to evaluate the ratio between "
+                              "the number of lines in the unit tests and the code"
+                              " in a given project")
+
+    def getTestCodeRatio(self, path):
+        """ Given the project directory, evaluate the ratio """
+        self.log.info("release area is: %s" % path)
+
+        testfiles=[]
+        codefiles=[]
+
+        # Iterate over all subdirs...
+        for root, dirnames, filenames in os.walk(path):
+
+            # Ignore InstallArea and version control dirs
+            for e in excluded_dirs:
+                if e in dirnames:
+                    dirnames.remove(e)
+
+            if not len(filenames):
+                continue
+
+            #suppress files
+            filenames=[afile for afile in filenames if isFileExcluded(afile)]
+            filenames=[afile for afile in filenames if "." in afile]
+            if not len(filenames):
+                continue
+
+            if "/test" in root:
+                testfiles=testfiles+[os.path.join(root,afile) for afile in filenames]
+            elif "/src" in root:
+                codefiles=codefiles+[os.path.join(root,afile) for afile in filenames]
+            elif "/python" in root:
+                codefiles=codefiles+[os.path.join(root,afile) for afile in filenames]
+
+        testlines=0
+        codelines=0
+
+        testlines=sum([countlines(afile) for afile in testfiles])
+        codelines=sum([countlines(afile) for afile in codefiles])
+
+        print "LINE TOTAL code : test = ", codelines,":", testlines
+        print "LINE RATIO test / code = ", float(testlines)/float(codelines)
+
+
+    def projectToolMain(self, projectName, version):
+        """ Main function of the script """
+        p = Project.getProject(projectName, svn_fallback=True, raise_exception=False)
+        releaseAreaDir = os.path.join(p.ReleaseArea(), p.releasePrefix(version))
+        if not os.path.exists(releaseAreaDir):
+            raise Exception("Release area %s for project %s/%s does not exist"
+                            % (releaseAreaDir, projectName, version))
+        self.getTestCodeRatio(releaseAreaDir)
+
+if __name__ == '__main__':
+      sys.exit(TestCodeRatioTool().run())
