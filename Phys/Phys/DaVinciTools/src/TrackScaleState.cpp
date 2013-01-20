@@ -352,6 +352,11 @@ namespace
   // ==========================================================================
 }
 // ============================================================================
+// SOME MACROS
+// ============================================================================
+#define ON_DEBUG   if (UNLIKELY(outputLevel() <= MSG::DEBUG))
+#define ON_VERBOSE if (UNLIKELY(outputLevel() <= MSG::VERBOSE))
+// ============================================================================
 // Standard constructor
 // ============================================================================
 TrackScaleState::TrackScaleState 
@@ -549,12 +554,18 @@ StatusCode TrackScaleState::i_updateDATA ()
       return Error ( "Unable to get 'IdpPlus'  from CONDDB" ) ;
     }
     //
+    ON_DEBUG
+    { debug() << "Comment for IdpPlus  : " << m_condition->comment ( "IdpPlus"  ) << endreq ; }
+    //
     h2 = DetDesc::Params::paramAsHisto2D ( m_condition , "IdpMinus"  ) ;
     if ( 0 == h2 ) 
     { 
       ++counter("#CONDB problem") ;
       return Error ( "Unable to get 'IdpMinus' from CONDDB") ; 
     }
+    //
+    ON_DEBUG
+    { debug() << "Comment for IdpMinus : " << m_condition->comment ( "IdpMinus" ) << endreq ; }
     //
     ro = DetDesc::Params::paramAsHisto1D ( m_condition , "Offsets"   ) ;
     if ( 0 == ro ) 
@@ -563,10 +574,17 @@ StatusCode TrackScaleState::i_updateDATA ()
       return Error ( "Unable to get 'Offsets' from CONDDB") ; 
     }
     //
+    ON_DEBUG
+    { debug() << "Comment for Offsets  : " << m_condition->comment ( "Offsets"  ) << endreq ; }
+    //
     if ( m_condition->exists ( "Delta" ) && m_condition->is<double>( "Delta" ) ) 
     { 
       m_delta = m_condition->paramAsDouble ( "Delta" ) ;
       counter("#DELTA update") += m_delta ;
+      //
+      ON_DEBUG
+      { debug() << "Comment for Delta    : " << m_condition->comment ( "Delta"    ) << endreq ; }
+      //
     }
     //
   }
@@ -574,6 +592,13 @@ StatusCode TrackScaleState::i_updateDATA ()
   {
     ++counter("#CONDB problem") ;
     return Error("Unable to get data form CONDDB" , e.code() ) ; // RETURN
+  }
+  //
+  ON_DEBUG { 
+    debug() << " Condition: " << m_condition -> name()    << "   "
+            << ( m_condition ->isValid() ? "  Valid;  " : "Invalid;  " ) 
+            << " Validity: "  << m_condition -> validSince () 
+            << " -> "         << m_condition -> validTill  () << endreq ;
   }
   //
   h1 -> Copy ( m_h1      ) ;
