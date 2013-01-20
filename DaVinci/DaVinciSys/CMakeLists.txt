@@ -1,9 +1,10 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v33r1)
+gaudi_subdir(DaVinciSys v33r1p1)
 
 gaudi_depends_on_subdirs(DaVinciTests
-                         Phys/DaVinci)
+                         Phys/DaVinci
+                         Sim/SimComponents)
 
 gaudi_add_test(QMTest QMTEST)

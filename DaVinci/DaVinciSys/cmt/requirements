@@ -1,10 +1,13 @@
 package DaVinciSys
-version v33r1
+version v33r1p1
 
 branches doc cmt
 
-use  DaVinci         v33r1  Phys
+use  DaVinci         v33r1p1  Phys
 use  DaVinciTests    v2r15
+
+# Temporary packages
+use SimComponents    v2r24    Sim
 
 # Declare this as a container package
 apply_pattern container_package
