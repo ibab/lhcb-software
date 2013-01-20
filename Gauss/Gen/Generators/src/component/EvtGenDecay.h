@@ -27,6 +27,9 @@
 // from STL
 #include <string>
 
+// from boost
+#include "boost/filesystem/path.hpp"
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Vector4DTypes.h"
@@ -39,9 +42,6 @@
 
 // from EvtGen
 #include "EvtGenBase/EvtId.hh"
-
-// from boost
-#include "boost/filesystem/path.hpp"
 
 // forward declarations
 namespace LHCb {
@@ -214,9 +214,6 @@ private:
 
   /// Imaginary part of spin matrix for helicity 1 for charmonium polarization
   double m_imHelOne ;
- 
-  /// Name of the temporary file for PHOTOS output
-  boost::filesystem::path m_photosTempFilename ;  
 };
 
 //#include "EvtGenBase/EvtIncoherentMixing.hh"

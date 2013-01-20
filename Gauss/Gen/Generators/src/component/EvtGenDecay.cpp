@@ -32,7 +32,6 @@
  
 // from EvtGen
 #include "EvtGen/EvtGen.hh"
-#include "EvtGenModels/EvtPythia6.hh"
 #include "EvtGenBase/EvtParticleFactory.hh"
 #include "EvtGenBase/EvtDecayTable.hh"
 #include "EvtGenBase/EvtDecayBase.hh"
@@ -48,21 +47,6 @@
 
 //EvtGen holding tool
 #include "IEvtGenTool.h"
-
-// Calls to FORTRAN routines
-#ifdef WIN32
-extern "C" {
-  //void __stdcall PHOTOS_INIT( const char* filename, int length ) ;
-  void __stdcall PYTHIAOUTPUT_INIT( int * ) ;
-  //void __stdcall PHOTOS_END () ;
-}
-#else
-extern "C" {
-  //void photos_init__( const char* filename , int length ) ;
-  void pythiaoutput_init__( int * ) ;
-  //void photos_end__()  ;
-}
-#endif
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : EvtGenDecay
@@ -90,9 +74,7 @@ EvtGenDecay::EvtGenDecay( const std::string& type,
     m_maxctau( 1.e+16 * Gaudi::Units::mm ) ,
     // Minimum value for Gamma in particle property data.
     // Below, it is set to 0
-    m_minwidth( 1.5e-6 * Gaudi::Units::GeV ) ,
-    // Name of temp output file for PHOTOS
-    m_photosTempFilename( "phtmp001" ) {
+    m_minwidth( 1.5e-6 * Gaudi::Units::GeV ) {
     // Declare IEvtGenDecay interface
     declareInterface<IDecayTool>( this ) ;
     // Declare properties for EvtGen
@@ -110,16 +92,16 @@ EvtGenDecay::EvtGenDecay( const std::string& type,
     declareProperty("RealHelOne"  , m_realHelOne  = 1. ) ;
     declareProperty("ImHelOne"    , m_imHelOne    = 0. ) ;
     declareProperty("RealHelZero" , m_realHelZero = 1. ) ;
-    declareProperty("ImHelOne"    , m_imHelZero   = 0. ) ;
-    
-    
-  // Initialize signalId
-  m_signalId = EvtId( -1, -1 ) ;
+    declareProperty("ImHelOne"    , m_imHelZero   = 0. ) ;   
+    // Initialize signalId
+    m_signalId = EvtId( -1, -1 ) ;
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 EvtGenDecay::~EvtGenDecay( ) { }
+
 //=============================================================================
 // Initialize method
 //=============================================================================
@@ -134,14 +116,11 @@ StatusCode EvtGenDecay::initialize( ) {
   debug() << "Getting EvtGenTool" << endmsg ;
   m_evtgentool = tool<IEvtGenTool>("EvtGenTool") ;
 
-
   // Find Generic DECAY.DEC file
-  // Default location (if not specified in job options is
-  // $DECFILESROOT/dkfiles/DECAY.DEC
+  // Default location (if not specified in job options is  $DECFILESROOT/dkfiles/DECAY.DEC
   if ( m_decayFile.empty() || "empty" == m_decayFile )
     if ( "UNKNOWN" != System::getEnv("DECFILESROOT") ) 
-      m_decayFile  = System::getEnv( "DECFILESROOT" ) + 
-        "/dkfiles/DECAY.DEC" ;
+      m_decayFile  = System::getEnv( "DECFILESROOT" ) + "/dkfiles/DECAY.DEC" ;
   
   // Check if file exists:
   if ( ! boost::filesystem::exists( m_decayFile ) ) 
@@ -149,11 +128,9 @@ StatusCode EvtGenDecay::initialize( ) {
 
   // create temporary evt.pdl file filled with Gaudi ParticlePropertySvc
   boost::filesystem::path evtPdlFile( std::tmpnam(NULL) ) ;
-  if ( boost::filesystem::exists( evtPdlFile ) ) 
-    boost::filesystem::remove( evtPdlFile ) ;
+  if ( boost::filesystem::exists( evtPdlFile ) ) boost::filesystem::remove( evtPdlFile ) ;
   sc = createTemporaryEvtFile( evtPdlFile ) ;
-  if ( m_keepTempEvtFile ) 
-    always() << "Keep the file: " << evtPdlFile << endmsg ;
+  if ( m_keepTempEvtFile ) always() << "Keep the file: " << evtPdlFile << endmsg ;
   if ( ! sc.isSuccess() ) return sc ;
 
   // create random engine for EvtGen
@@ -174,13 +151,11 @@ StatusCode EvtGenDecay::initialize( ) {
   EvtAbsRadCorr* isrEngine = 0;//dummy needed for compile
 
   // create EvtGen engine from decay file, evt.pdl file and random engine
-  if (m_evtgentool->isInit() ) {
-      m_gen = m_evtgentool->getEvtGen() ;
-  }
-  else {
-      m_gen = new EvtGen ( m_decayFile.c_str() , evtPdlFile.string().c_str() ,
-                           m_randomEngine, isrEngine, models.get()) ;
-      m_evtgentool->setEvtGen( m_gen ) ;
+  if ( m_evtgentool -> isInit() )  m_gen = m_evtgentool->getEvtGen() ;
+  else { 
+    m_gen = new EvtGen ( m_decayFile.c_str() , evtPdlFile.string().c_str() ,
+                         m_randomEngine, isrEngine, models.get()) ;
+    m_evtgentool->setEvtGen( m_gen ) ;
   }
   
   // Remove temporary file if not asked to keep it
@@ -192,57 +167,6 @@ StatusCode EvtGenDecay::initialize( ) {
       return Error( "The specified user decay file does not exist" ) ;
     m_gen -> readUDecay( m_userDecay.c_str() ) ; 
   }
-
-  //m_photosTempFilename = std::string( std::tmpnam( NULL ) ) ;
-  //if ( boost::filesystem::exists( m_photosTempFilename ) ) 
-  //  boost::filesystem::remove( m_photosTempFilename ) ;
-  
-  int arg ;
-  if ( msgLevel( MSG::DEBUG ) ) {
-    arg = 0 ;
-#ifdef WIN32
-    PYTHIAOUTPUT_INIT( &arg ) ;
-#else
-    pythiaoutput_init__( &arg ) ;
-#endif
-  } else {
-    arg = 1 ;
-#ifdef WIN32
-    PYTHIAOUTPUT_INIT( &arg ) ;
-    //PHOTOS_INIT( m_photosTempFilename.string().c_str() , 
-    //             strlen( m_photosTempFilename.string().c_str() ) ) ;
-#else
-    pythiaoutput_init__( &arg ) ;
-    //photos_init__( m_photosTempFilename.string().c_str() , 
-    //               strlen( m_photosTempFilename.string().c_str() ) ) ;
-#endif
-  }
-  
-  // Initialize Pythia6
-  EvtPythia6::pythiaInit( 0 ) ;
-
-  // Need to reinitialize Pythia with the LHCb interface to be
-  // sure that the Pythia settings are correct in EvtGen (in 
-  // case Pythia is not the main production generator)
-  // obtain the Production Tool
-  IProductionTool * pythiaTool = 
-    tool< IProductionTool >( "PythiaProduction" , this ) ;
-
-  // update the particle properties of Pythia
-  LHCb::IParticlePropertySvc * ppSvc( 0 ) ;
-  try { ppSvc = 
-      svc< LHCb::IParticlePropertySvc > ( "LHCb::ParticlePropertySvc" , true ) ; }
-  catch ( const GaudiException & exc ) {
-    Exception( "Cannot open ParticlePropertySvc" , exc ) ;
-  }
-  LHCb::IParticlePropertySvc::iterator iter ;
-  for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) {
-    if ( ! pythiaTool -> isSpecialParticle( *iter ) ) 
-      pythiaTool -> updateParticleProperties( *iter ) ;
-  }
-
-  release( pythiaTool ) ;
-  release( ppSvc ) ;
 
   debug() << "EvtGenDecay initialized" << endmsg ;
   
@@ -256,18 +180,8 @@ StatusCode EvtGenDecay::finalize() {
   delete m_randomEngine ;
   
   debug() << "EvtGenDecay finalized" << endmsg ;
-
-  if ( ! msgLevel( MSG::DEBUG ) ) {
-#ifdef WIN32
-    //PHOTOS_END() ;
-#else
-    //photos_end__() ;
-#endif
-  }
  
   release( m_evtgentool ) ;
-
-  //boost::filesystem::remove( m_photosTempFilename ) ;
 	
   delete StreamForGenerator::getStream() ;
   StreamForGenerator::getStream() = 0 ;

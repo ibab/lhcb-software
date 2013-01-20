@@ -236,6 +236,7 @@ StatusCode Generation::execute() {
             if ( ! sc.isSuccess() ) goodEvent = false ;
           }
           (*itEvents) -> pGenEvt() -> set_event_number( ++iPile ) ;
+          
           sc = m_vertexSmearingTool -> smearVertex( *itEvents ) ;
           if ( ! sc.isSuccess() ) return sc ;
         }
