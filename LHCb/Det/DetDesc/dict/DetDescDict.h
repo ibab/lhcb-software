@@ -68,7 +68,6 @@
 // ============================================================================
 #include "DetDesc/ParamAsHisto.h"
 // ============================================================================
-
 /** @file 
  *   
  *  Helper file to generate LCG dictionaries for detector description classes
@@ -77,7 +76,7 @@
  *  @date   2004-03-01
  *  @date   updated 2005-07-07
  */
-
+// ============================================================================
 namespace DetDescPython
 {
   //--- Template instantiations

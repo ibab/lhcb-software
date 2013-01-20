@@ -3,6 +3,12 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+! 2013-01-20 - Vanya Belyaev
+ - DetDesc/HistoAsParam.h
+     add missing protection againts doubel inclusion
+   dict/DetDescDict.xml 
+     fix a typo in function name 
+
 !========================= DetDesc v18r30 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

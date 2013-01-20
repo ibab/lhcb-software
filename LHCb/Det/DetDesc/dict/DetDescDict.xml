@@ -59,7 +59,7 @@
 
   <function pattern="DetDesc::*" />
   <function name="DetDesc::Params::paramAsHisto1D" />
-  <function name="DetDesc::Params::paramAsHisto1D" />
+  <function name="DetDesc::Params::paramAsHisto2D" />
 
   <exclusion>
     <class name="SolidPolycone::CmpZ" />
