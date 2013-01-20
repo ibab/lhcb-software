@@ -28,7 +28,6 @@
 
 // HepMC
 #include "HepMC/IO_HEPEVT.h"
-//#include "HepMC/IO_Ascii.h"
 #include "HepMC/HEPEVT_Wrapper.h"
 
 
@@ -89,15 +88,17 @@ PythiaProduction::PythiaProduction( const std::string& type,
     m_pdtlist    (   ) , 
     m_nEvents    ( 0 ) ,
     m_widthLimit ( 1.5e-6 * Gaudi::Units::GeV ) ,
-    m_pdecaylist (   )
-  /// boolean flag to force the valiadation of IO_HEPEVT 
-  , m_validate_HEPEVT ( false ) // force the valiadation of IO_HEPEVT 
-  /// the file to dump the HEPEVT inconsistencies 
-  , m_inconsistencies ( "HEPEVT_inconsistencies.out" ) 
-  , m_HEPEVT_errors ( 0 )
-  // list of particles whose properties should *always* be taken from 
-                                  // the ParticlePropertySvc
-  , m_updatedParticles (   ) // TODO declare this one: vector<int> m_updatedParticles
+    m_pdecaylist (   ) ,
+    /// boolean flag to force the valiadation of IO_HEPEVT 
+    m_validate_HEPEVT ( false ) , // force the valiadation of IO_HEPEVT
+                                  // the file to dump the HEPEVT inconsistencies
+    m_inconsistencies ( "HEPEVT_inconsistencies.out" ) ,
+    m_HEPEVT_errors ( 0 ) ,
+    // list of particles whose properties should always be taken from 
+    // the ParticlePropertySvc
+    m_updatedParticles (   ) ,
+    // list of PIDs to add to Pythia6
+    m_particlesToAdd( ) 
 {
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;
@@ -109,18 +110,21 @@ PythiaProduction::PythiaProduction( const std::string& type,
   declareProperty( "PDecayList" , m_pdecaylist ) ;
   declareProperty( "SLHASpectrumFile" , m_slhaSpectrumFile = "empty" ) ;
 
-  declareProperty 
-    ( "ValidateHEPEVT"  , 
-      m_validate_HEPEVT ,
-      "The flag to force the validation (mother&daughter) of HEPEVT" ) ;
+  declareProperty( "ValidateHEPEVT"  , m_validate_HEPEVT ,
+                   "The flag to force the validation (mother&daughter) of HEPEVT" ) ;
   
-  declareProperty 
-    ( "Inconsistencies" , 
-      m_inconsistencies , 
-      "The file to dump HEPEVT inconsinstencies" ) ;
+  declareProperty( "Inconsistencies" , m_inconsistencies , 
+                   "The file to dump HEPEVT inconsinstencies" ) ;
 
-  declareProperty( "UpdatedParticles", m_updatedParticles,
-                   "Particles (specified by their pdgID's) whose properties should *always* be taken from the ParticlePropertySvc, regardless of Pythia defaults or other input files" );
+  declareProperty( "UpdatedParticles", m_updatedParticles ) ;
+
+  declareProperty( "ParticlesToAdd" , m_particlesToAdd ) ;
+  
+  // Default for particles to add:
+  m_particlesToAdd.push_back( 30443 ) ;
+  m_particlesToAdd.push_back( 200553 ) ;
+  m_particlesToAdd.push_back( 300553 ) ;
+  m_particlesToAdd.push_back( 9000553 ) ;
   
   // Set the default settings for Pythia here:
   m_defaultSettings.clear() ;
@@ -274,23 +278,7 @@ StatusCode PythiaProduction::initialize( ) {
 
   sc = initializeGenerator() ;
   if ( ! sc.isSuccess() ) return sc ;
-  
-  // Now that Pythia is initialized, update the mass of the special particles
-  // in the particle property service (it is because Pythia may have changed
-  // these masses after computation from its internal parameters)
-  // retrieve the particle property service
-  // LHCb::IParticlePropertySvc * ppSvc = 
-  //  svc< LHCb::IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
-  //LHCb::IParticlePropertySvc::iterator iter ;
-  // for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) {
-  //if ( isSpecialParticle( *iter ) ) {
-      // int pythiaId = (*iter) -> pythiaID() ;
-      // int kc = Pythia::PyComp( pythiaId ) ;
-      //      (*iter) -> setMass( Pythia::pydat2().pmas( kc , 1 ) * Gaudi::Units::GeV ) ;
-      // Not possible anymore with the new particle property service...
-  // }
-  // }
-  //release( ppSvc ) ;
+
   return StatusCode::SUCCESS ;
 }
 
@@ -444,22 +432,54 @@ StatusCode PythiaProduction::initializeGenerator( ) {
                             msgLevel( MSG::INFO ) ) ;
     if ( sc.isFailure() )
       return Error( "Cannot open SLHA decay file" ) ;
-
+    
     Pythia::pymssm().imss(22) = lunUnit2 ;
     int status = 0 ;
     if( m_pdecaylist.size() != 0 ){
       for( std::vector<int>::const_iterator i = m_pdecaylist.begin();
-	   i != m_pdecaylist.end(); i++ ){
-	Pythia::PySlha( 2 , *i , status ) ;
-	debug() << "Updating Particle "<< *i <<", Status " << status <<endreq;
-	if(status != 0) return Error( "Could not update particle " ) ;
+           i != m_pdecaylist.end(); i++ ){
+        Pythia::PySlha( 2 , *i , status ) ;
+        debug() << "Updating Particle "<< *i <<", Status " << status <<endreq;
+        if(status != 0) return Error( "Could not update particle " ) ;
       }
       sc = F77Utils::close( lunUnit2 , msgLevel( MSG::INFO ) ) ;
       if ( sc.isFailure() )
-	return Error( "Cannot close SLHA decay file" ) ;
+        return Error( "Cannot close SLHA decay file" ) ;
     }
   }
   
+  // Add new particles to Pythia (was done in EvtGen before)
+  if ( 0 != m_particlesToAdd.size() ) {
+    LHCb::IParticlePropertySvc* ppSvc = 
+      svc< LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc" , true);
+    
+    for ( std::vector<int>::const_iterator it = m_particlesToAdd.begin(); 
+          it != m_particlesToAdd.end(); ++it ) {
+      if ( 0 != ppSvc->find( LHCb::ParticleID( *it ) ) ) {
+        int pythiaId = ppSvc->find( LHCb::ParticleID( *it ) ) -> pythiaID() ;
+        
+        if ( pythiaId > 0 ) {
+
+          boost::filesystem::path outdecname( std::tmpnam( NULL ) ) ;
+          if ( boost::filesystem::exists( outdecname ) ) 
+            boost::filesystem::remove( outdecname ) ;
+          
+          std::ofstream outdec( outdecname.string().c_str() ) ;
+          
+          writePythiaEntryHeader( outdec , ppSvc->find( LHCb::ParticleID( *it ) ) ) ;
+          
+          StatusCode sc = F77Utils::openOld( 54 , outdecname.string() ) ;
+          Pythia::PyUpda( 3 , 54 ) ;
+          F77Utils::close( 54 ) ;
+          outdec.close( ) ;
+
+          boost::filesystem::remove( outdecname ) ;
+        }
+      }    
+    }
+    release( ppSvc ) ;
+  }
+
   debug () 
     << " initialize PYTHIA with "
     << "  FRAME='"      << m_frame       << "'"
@@ -490,8 +510,10 @@ StatusCode PythiaProduction::initializeGenerator( ) {
 
   // Reset the "updated particles" to their defaults
   if ( m_updatedParticles.size() != 0 ) {
-    LHCb::IParticlePropertySvc* ppSvc = svc< LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc" , true);
-    for ( std::vector<int>::const_iterator it = m_updatedParticles.begin(); it != m_updatedParticles.end(); ++it ) {
+    LHCb::IParticlePropertySvc* ppSvc = 
+      svc< LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc" , true);
+    for ( std::vector<int>::const_iterator it = m_updatedParticles.begin(); 
+          it != m_updatedParticles.end(); ++it ) {
       updateParticleProperties(ppSvc->find( LHCb::ParticleID( *it ) ));
     }
     release(ppSvc);
@@ -569,7 +591,7 @@ void PythiaProduction::updateParticleProperties( const LHCb::ParticleProperty *
   //If MSSM decay file is provided, do not update particles from PDecayList.
   if( m_slhaDecayFile != "empty" ){
     for( std::vector<int>::const_iterator i = m_pdecaylist.begin();
-	 i != m_pdecaylist.end(); i++ ){
+         i != m_pdecaylist.end(); i++ ){
       if( pythiaId == *i ) return;
     }
   }
@@ -611,6 +633,199 @@ void PythiaProduction::updateParticleProperties( const LHCb::ParticleProperty *
   }
 }
 
+//===================================================================================
+// Write particle data in file for PYUPDA call
+//===================================================================================
+void PythiaProduction::writePythiaEntryHeader(std::ofstream &outdec, 
+                                              const LHCb::ParticleProperty * thePP ){
+  if ( "unknown" == thePP -> evtGenName() ) return ;
+
+  char sname[100];
+  char ccsname[100];
+
+  std::string name = thePP -> evtGenName() ;
+  
+  int namelength=16;
+  
+  int i,j;
+
+  double ctau = thePP -> lifetime() * Gaudi::Units::c_light / Gaudi::Units::s ;
+
+  if ( ctau > 1000000.0 ) ctau=0.0;
+  strcpy( sname , name.c_str()) ;
+  i = 0 ; while ( sname[ i ] != 0 ) i++;
+	  
+  if ( i > namelength ) {
+    for ( j = 1 ; j < namelength ; ++j ) 
+      sname[ j ] = sname[ j + i - namelength ] ;
+    sname[ namelength ] = 0 ;
+  }
+  
+  // Special case : chi_b/c
+  if ( i >= 5 ) {
+    if ( ( sname[0] == 'c' ) &&
+         ( sname[1] == 'h' ) && 
+         ( sname[2] == 'i' ) &&
+         ( sname[3] == '_' ) ) {
+      // exchange c/b and 0/1/2
+      char temp ;
+      temp = sname[ 4 ] ;
+      sname[ 4 ] = sname[ 5 ] ;
+      sname[ 5 ] = temp ;
+    }
+  }
+  
+  // RS: copy name for cc particle
+  for ( j = 0 ; j <= namelength ; j++ )
+    ccsname[ j ] = sname[ j ] ;
+  i=0;
+  while (ccsname[i]!=' '){
+    i++;
+    if( 0 == ccsname[i]) break;
+  }
+  if ( sname[i-1] == '+' ) {
+    ccsname[i-1] = '-' ;
+    if ( i >= 2 ) {
+      if ( sname[i-2] == '+' ) {
+        ccsname[i-2] = '-' ;
+      }
+    }
+  }
+  else if ( sname[i-1] == '-' ) {
+    ccsname[i-1] = '+' ;
+    if ( i >= 2 ) {
+      if ( sname[i-2] == '-' ) {
+        ccsname[i-2] = '+' ;
+      }
+    }
+  }
+  else if(i+2<namelength)
+  {
+    if ( sname[i-1] == '0' ) {
+      ccsname[i-1]='b';
+      ccsname[i]='a';
+      ccsname[i+1]='r';
+      ccsname[i+2]='0';
+      ccsname[i+3]=0;
+    }
+    else {
+      ccsname[i]='b';
+      ccsname[i+1]='a';
+      ccsname[i+2]='r';
+      ccsname[i+3]=0;
+    }
+  }
+  
+  // if it is a baryon
+  if ( ( name == "n0" ) || ( name == "p+" ) ||
+       ( name.find("Delta") != std::string::npos ) || 
+       ( name.find("Sigma") != std::string::npos ) ||
+       ( name.find("Lambda") != std::string::npos ) || 
+       ( name.find("Xi") != std::string::npos ) ||
+       ( name.find("Omega") != std::string::npos ) ) {
+    i = 0 ;
+    while ( ccsname[i] != 0 ) {
+      i++ ;
+    }
+    if ( i > 1 ) {
+      if ( ccsname[i-1] == '+' ) {
+        if ( ccsname[i-2] == '+' ) {
+          ccsname[i-2] = 'b' ;
+          ccsname[i-1] = 'a' ;
+          ccsname[i]   = 'r' ;
+          ccsname[i+1] = '+' ;
+          ccsname[i+2] = '+' ;
+          ccsname[i+3] = 0 ;
+        }
+        else {
+          ccsname[i-1] = 'b' ;
+          ccsname[i]   = 'a' ;
+          ccsname[i+1] = 'r' ;
+          ccsname[i+2] = '+' ;
+          ccsname[i+3] = 0 ;
+        }
+      }
+      else if ( ccsname[i-1] == '-' ) {
+        if ( ccsname[i-2] == '-' ) {
+          ccsname[i-2] = 'b' ;
+          ccsname[i-1] = 'a' ;
+          ccsname[i]   = 'r' ;
+          ccsname[i+1] = '-' ;
+          ccsname[i+2] = '-' ;
+          ccsname[i+3] = 0 ;
+        }
+        else {
+          ccsname[i-1] = 'b' ;
+          ccsname[i]   = 'a' ;
+          ccsname[i+1] = 'r' ;
+          ccsname[i+2] = '-' ;
+          ccsname[i+3] = 0 ;
+        }
+      }
+    }
+  }
+  
+  outdec << " " << std::setw(9) << thePP -> pythiaID() ;
+  outdec << "  ";
+  outdec.width( namelength ) ;
+  outdec << std::setiosflags(std::ios::left) << sname;
+
+  // name for cc paricle
+  if ( ( thePP -> pid().pid() >=0) && ( ! thePP -> selfcc() ) )
+  {
+    outdec << "  ";
+    outdec.width(namelength);
+    outdec << ccsname;
+  }else{
+    // 2+16 spaces
+    outdec << "                  ";
+  }
+  
+  outdec << std::resetiosflags(std::ios::left);
+  outdec << std::setw(3) << thePP -> threeCharge() ;
+  outdec << std::setw(3) << 0 ;
+  outdec.width(3);
+  if ( thePP -> pid().pid() >=0 ) {
+    if ( thePP -> selfcc() ) outdec << 0 ;
+    else outdec << 1;
+  }
+  else{
+    outdec << 0;
+  }
+  outdec.setf( std::ios::fixed , std::ios::floatfield ) ;
+  outdec.precision( 5 ) ;
+  outdec << std::setw( 12 ) << ( thePP -> mass() / Gaudi::Units::GeV ) ;
+
+
+  double width = 0. ;
+  if ( 0. != thePP -> lifetime() ) 
+    width = 
+      ( Gaudi::Units::hbarc / ( thePP -> lifetime() * Gaudi::Units::c_light ) ) / Gaudi::Units::GeV ;
+  
+  outdec.setf( std::ios::fixed , std::ios::floatfield ) ;
+  outdec << std::setw( 12 ) << width ;
+  outdec.setf(std::ios::fixed,std::ios::floatfield);
+  outdec.width(12);
+  if ( fabs( width ) < 0.0000000001 ) {
+    outdec << 0.0 ;
+  }
+  else{
+    outdec << ( thePP -> maxWidth() / Gaudi::Units::GeV ) ;
+  }
+  outdec.setf( std::ios::scientific , std::ios::floatfield ) ;
+  outdec << "  " ;
+  outdec << "0.00000e+00" ;
+  // outdec << ( thePP -> lifetime() * Gaudi::Units::c_light /Gaudi::Units::s ) ;
+  outdec.width(3);
+
+  //resonance width treatment
+  outdec.width(3);
+  outdec << 0;
+  outdec.width(3);
+  outdec << 1 ;
+  outdec << std::endl;
+  outdec.width(0);
+}
 
 //=============================================================================
 // Retrieve the Hard scatter information
