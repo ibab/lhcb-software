@@ -40,22 +40,6 @@
 #include "Generators/StreamForGenerator.h"
 #include "Generators/IProductionTool.h"
 
-// Calls to FORTRAN routines
-#ifdef WIN32
-extern "C" {
-  void __stdcall PHOTOS_INIT( const char* filename, int length ) ;
-  void __stdcall PYTHIAOUTPUT_INIT( int * ) ;
-  void __stdcall PHOTOS_END () ;
-}
-#else
-extern "C" {
-  void photos_init__( const char* filename , int length ) ;
-  void pythiaoutput_init__( int * ) ;
-  void photos_end__()  ;
-}
-#endif
-
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : EvtGenInPhSpDecay
 //
