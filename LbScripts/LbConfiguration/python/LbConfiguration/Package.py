@@ -51,7 +51,8 @@ package_names = ['XmlDDDB',
                  'BandQConfig',
                  'PRConfig',
                  'B2OCConfig',
-                 'MCStatTools']
+                 'MCStatTools',
+                 'GDMLData']
 
 class PackageConfException(Exception):
     pass
@@ -339,3 +340,6 @@ B2OCConfig.setHat("WG")#IGNORE:E0602$
 B2OCConfig.setProject("DBASE")#IGNORE:E0602$
 
 MCStatTools.setProject("DBASE")#IGNORE:E0602
+
+GDMLData.setHat("Det")#IGNORE:E0602$
+GDMLData.setProject("DBASE")#IGNORE:E0602$
