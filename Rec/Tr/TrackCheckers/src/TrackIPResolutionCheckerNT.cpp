@@ -1,4 +1,5 @@
 // Include files 
+#include <map>
 
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
@@ -9,6 +10,7 @@
 #include "Event/State.h"
 #include "Kernel/LHCbID.h"
 #include "Event/MCParticle.h"
+#include "Event/MCHit.h"
 #include "Kernel/HitPattern.h"
 #include "Linker/LinkedTo.h"
 
@@ -25,15 +27,15 @@
  *  @date   6-5-2007
  */                 
                                                            
-class PrResCheckerNT : public GaudiTupleAlg {
+class TrackIPResolutionCheckerNT : public GaudiTupleAlg {
                                                                              
  public:
                                                                              
   /** Standard construtor */
-  PrResCheckerNT( const std::string& name, ISvcLocator* pSvcLocator );
+  TrackIPResolutionCheckerNT( const std::string& name, ISvcLocator* pSvcLocator );
                                                                              
   /** Destructor */
-  virtual ~PrResCheckerNT();
+  virtual ~TrackIPResolutionCheckerNT();
 
   /** Algorithm execute */
   virtual StatusCode execute();
@@ -47,12 +49,12 @@ private:
   //std::string m_tracksInContainer;    ///< Input Tracks container location
 };
 
-DECLARE_ALGORITHM_FACTORY( PrResCheckerNT )
+DECLARE_ALGORITHM_FACTORY( TrackIPResolutionCheckerNT )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PrResCheckerNT::PrResCheckerNT(const std::string& name,
+TrackIPResolutionCheckerNT::TrackIPResolutionCheckerNT(const std::string& name,
                            ISvcLocator* pSvcLocator ) :
   GaudiTupleAlg( name , pSvcLocator )
 {
@@ -62,13 +64,14 @@ PrResCheckerNT::PrResCheckerNT(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrResCheckerNT::~PrResCheckerNT() {}
+TrackIPResolutionCheckerNT::~TrackIPResolutionCheckerNT() {}
 
 //=============================================================================
 // Initialization. Check parameters
 //=============================================================================
-StatusCode PrResCheckerNT::initialize()
+StatusCode TrackIPResolutionCheckerNT::initialize()
 {
+  std::cout  << "Pantso check!" << std::endl;
   // Mandatory initialization of GaudiAlgorithm
   StatusCode sc = GaudiTupleAlg::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -76,10 +79,33 @@ StatusCode PrResCheckerNT::initialize()
   return StatusCode::SUCCESS;
 }
 
+namespace
+{  
+    struct ForwardMCHitSorter
+    {
+        // copy constructor & destructor made by default
+        ForwardMCHitSorter(){}
+        bool operator()( const LHCb::MCHit* lhs, const LHCb::MCHit* rhs)
+        {
+            return lhs->entry().z() < rhs->entry().z() ;
+        }
+    } ;
+    struct BackwardMCHitSorter
+    {
+        BackwardMCHitSorter(){}
+        bool operator()( const LHCb::MCHit* lhs, const LHCb::MCHit* rhs)
+        {
+            return rhs->entry().z() < lhs->entry().z() ;
+        }
+    } ;
+
+}
+
+
 //=============================================================================
 // Execute
 //=============================================================================
-StatusCode PrResCheckerNT::execute()
+StatusCode TrackIPResolutionCheckerNT::execute()
 {
 
   std::string m_tracklocation = LHCb::TrackLocation::Velo;
@@ -94,9 +120,23 @@ StatusCode PrResCheckerNT::execute()
   // create the ntuple
   Tuple theTuple = nTuple( "tracks" , "" , CLID_ColumnWiseTuple );
 
+  // create a map from all MCParticles to MCHits
+  typedef std::vector<const LHCb::MCHit*> MCHitVector ;
+  typedef std::map<const LHCb::MCParticle *, MCHitVector > MCHitMap ;  
+  MCHitMap mchitmap ;
+  const std::string mchitlocation = "/Event/MC/VP/Hits" ;
+  const LHCb::MCHits* hits = get<LHCb::MCHits>( mchitlocation ) ;
+  BOOST_FOREACH( const LHCb::MCHit* mchit, *hits ) {
+    if( mchit->mcParticle() )
+        mchitmap[ mchit->mcParticle() ].push_back( mchit ) ;
+  }
+  
+  
   // loop over the tracks
   BOOST_FOREACH(const LHCb::Track* aTrack, *tracks) {
-    
+    double tx = aTrack->firstState().tx() ;
+    double ty = aTrack->firstState().ty() ;
+      
     theTuple->column("p", aTrack->p()/Gaudi::Units::GeV );
     theTuple->column("probChi2", aTrack->probChi2() );
     theTuple->column("chi2",aTrack->chi2() );
@@ -105,8 +145,8 @@ StatusCode PrResCheckerNT::execute()
     theTuple->column("z", aTrack->firstState().z() ) ;
     theTuple->column("x", aTrack->firstState().x() ) ;
     theTuple->column("y", aTrack->firstState().y() ) ;
-    theTuple->column("tx", aTrack->firstState().tx() ) ;
-    theTuple->column("ty", aTrack->firstState().ty() ) ;
+    theTuple->column("tx", tx ) ;
+    theTuple->column("ty", ty ) ;
     theTuple->column("qop", aTrack->firstState().qOverP() ) ;
     theTuple->column("veloChi2", aTrack->info(LHCb::Track::FitVeloChi2,0)) ;
     theTuple->column("veloNdof", aTrack->info(LHCb::Track::FitVeloNDoF,0)) ;
@@ -123,7 +163,8 @@ StatusCode PrResCheckerNT::execute()
     theTuple->column("numTLayers",hitpattern.numTLayers()) ;
     theTuple->column("numVeloStations",hitpattern.numVeloStations()) ;
     theTuple->column("numVeloClusters",hitpattern.numVeloR()+hitpattern.numVeloPhi()) ;
-
+    theTuple->column("numhits",aTrack->lhcbIDs().size()) ;     // latest one implemented
+      
     int waslinked = false ;
     const LHCb::MCParticle* mcparticle = linker.first(aTrack) ;
     if(mcparticle && mcparticle->originVertex()) {
@@ -150,14 +191,55 @@ StatusCode PrResCheckerNT::execute()
       double IPy = (state.y() + dz* state.ty()) - trueorigin.y() ;
       theTuple->column("IPx",IPx) ;
       theTuple->column("IPy",IPy) ;
+      theTuple->column("IP3D",std::sqrt( (IPx*IPx+IPy*IPy)/(1 + tx*tx + ty*ty))) ;
+        
+      // store the z-position of the first MC hit
+      MCHitVector& mchits = mchitmap[mcparticle] ;
+      if( mcparticle->momentum().Pz() > 0)
+          std::sort( mchits.begin(), mchits.end(), ForwardMCHitSorter() ) ;
+      else
+          std::sort( mchits.begin(), mchits.end(), BackwardMCHitSorter() ) ;
+          
+        
+      theTuple->column("nummchits",mchits.size()) ;
+      if( !mchits.empty() ) {
+        const LHCb::MCHit* mchit = mchits.front() ;
+        const LHCb::MCHit* mchitL = mchits.back() ;      // added by me
+        Gaudi::XYZPoint poshit = mchit->entry() ;
+        theTuple->column("firstmchitz",poshit.z()) ;
+        theTuple->column("firstmchitdz",mchit->displacement().z()) ;
+        theTuple->column("lastmchitz",mchitL->entry().z()) ;
+        double dz = poshit.z() - state.z() ;
+        theTuple->column("IPxfirsthit",(state.x() + dz* state.tx()) - poshit.x()) ;
+        theTuple->column("IPyfirsthit",(state.y() + dz* state.ty()) - poshit.y()) ;
+        theTuple->column("truetxfirsthit",mchit->dxdz()) ;
+        theTuple->column("truetyfirsthit",mchit->dydz()) ;
+        theTuple->column("dtxfirsthit",state.tx() -  mchit->dxdz()) ;
+        theTuple->column("dtyfirsthit",state.ty() -  mchit->dydz()) ;
+
+        theTuple->column("truetxlasthit",mchitL->dxdz()) ;
+        theTuple->column("truetylasthit",mchitL->dydz()) ;  
+      
+          
+        // let's now extrapolate the mchit of the first hit to the z position of the vertex, as if there were no scattering
+        dz = trueorigin.z() - poshit.z() ;
+        double extrapolatedmchitx = poshit.x() + dz * mchit->dxdz() ;
+        double extrapolatedmchity = poshit.y() + dz * mchit->dydz() ;
+
+        dz = trueorigin.z() - state.z() ;
+        theTuple->column("IPxfirsthitatvertex",(state.x() + dz* state.tx()) - extrapolatedmchitx) ;        
+        theTuple->column("IPyfirsthitatvertex",(state.y() + dz* state.ty()) - extrapolatedmchity) ;
+        
+
+          
+      }
     }
-    
-    theTuple->column("waslinked",waslinked) ;
-    
+    theTuple->column("waslinked",waslinked) ;    
     theTuple->write();
   }
 
   return StatusCode::SUCCESS ;
   
 }
+
 
