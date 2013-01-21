@@ -27,6 +27,12 @@ public:
 
   virtual void addFraction( const std::string & name , const unsigned int number , 
                             const double fraction , const double err_fraction ) = 0 ;
+
+  /// Add cross section value, in mb
+  virtual void addCrossSection( const std::string & name , 
+                                const unsigned int processId , 
+                                const unsigned int number , 
+                                const double value ) = 0 ;
   
 protected:
 

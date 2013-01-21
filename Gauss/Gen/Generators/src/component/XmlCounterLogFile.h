@@ -42,6 +42,11 @@ public:
   virtual void addFraction( const std::string & name , const unsigned int number , 
                             const double fraction , const double err_fraction ) ;
 
+  virtual void addCrossSection( const std::string & name , 
+                                const unsigned int processId , 
+                                const unsigned int number , 
+                                const double value ) ;
+
 protected:
 
 private:

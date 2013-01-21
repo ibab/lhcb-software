@@ -76,6 +76,21 @@ void XmlCounterLogFile::addFraction( const std::string & name , const unsigned i
 }
 
 //=============================================================================
+// Add cross section value
+//=============================================================================
+void XmlCounterLogFile::addCrossSection( const std::string & name , 
+                                         const unsigned int processId , 
+                                         const unsigned int number , 
+                                         const double value ) 
+{
+  m_file << "  <crosssection id = " << processId << ">" << std::endl 
+         << "    <description> \""<< name << "\" </description>" << std::endl
+         << "    <generated> " << number << " </generated>" << std::endl 
+         << "    <value> " << format( "%.5g" , value ) << " </value>" << std::endl 
+         << "  </crosssection>" << std::endl ;
+}
+
+//=============================================================================
 // Initialize function
 //=============================================================================
 StatusCode XmlCounterLogFile::initialize( ) 

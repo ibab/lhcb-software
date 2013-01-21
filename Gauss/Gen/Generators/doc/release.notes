@@ -7,6 +7,7 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 
 ! 2013-01-21 - Patrick Robbe
  - EvtGenInPhSpDecay.cpp: remove Photos functions
+ - ICounterLogFile, XmlCounterLogFile: add counters for cross-section
 
 ! 2013-01-20 - Patrick Robbe
  - Remove Pythia6 from EvtGenDecay tool
