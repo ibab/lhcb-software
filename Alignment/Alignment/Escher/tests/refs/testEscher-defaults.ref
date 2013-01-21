@@ -1,13 +1,13 @@
-# --> Including file '/afs/cern.ch/user/w/wouter/lhcb/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
-# <-- End of file '/afs/cern.ch/user/w/wouter/lhcb/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# --> Including file '/tmp/mamartin/Alignment_v9r1/Alignment/Escher/tests/options/testEscher-defaults.py'
+# <-- End of file '/tmp/mamartin/Alignment_v9r1/Alignment/Escher/tests/options/testEscher-defaults.py'
 # skipping configuration of SurveyConstraints
 # applying configuration of Escher
 # Initializing sequences!
 # Defining options!
 # Setting up alignment sequence
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Mon/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v35r3/GaudiConf/options/RootHist.opts'
 # ApplicationMgr.HistogramPersistency = "ROOT";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Mon/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v35r3/GaudiConf/options/RootHist.opts'
 # /***** User Escher/Escher **************************************************************************
 # |-Persistency    = None
 # |-SkipEvents     = 0
@@ -16,7 +16,7 @@
 # |-Kalman         = True
 # |-DDDBtag        = ''
 # |-WithMC         = False
-# |-MainSequence   = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x19cab220>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x19cc0960>]
+# |-MainSequence   = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x15f248a0>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x15f0aa00>]
 # |                (default: [])
 # |-OutputType     = 'NONE'
 # |-Incident       = ''
@@ -69,16 +69,18 @@
 # /***** User TrackSys/TrackSys **********************************************************************
 # |-FilterBeforeFit          = True
 # |-GlobalCuts               = {}  (default: {})
-# |-ExpertTracking           = ['simplifiedGeometry']  (default: [])
+# |-TrackPatRecAlgorithms    = []  (default: [])
 # |-ExpertHistos             = False
 # |-TrackExtraInfoAlgorithms = []  (default: [])
 # |-DataType                 = '2011'
 # |-ForceOldSeq              = False
 # |-OutputType               = ''
+# |-Simulation               = False
+# |-OldCloneKiller           = False
 # |-ForceNewSeq              = False
 # |-SpecialData              = []  (default: [])
 # |-WithMC                   = False
-# |-TrackPatRecAlgorithms    = []  (default: [])
+# |-ExpertTracking           = ['simplifiedGeometry']  (default: [])
 # \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
 # /***** User RecMoniConf/RecMoniConf ****************************************************************
 # |-DataType     = '2011'
@@ -97,8 +99,8 @@
 # |-PVSelection                  = None
 # |-LogFile                      = 'alignlog.txt'
 # |-ParticleSelections           = []  (default: [])
-# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x19d1a2d8>]
-# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x19d1a2d8>])
+# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x15f7c368>]
+# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x15f7c368>])
 # |-SolvTool                     = 'DiagSolvTool'
 # |-MinNumberOfHits              = 10
 # |-Precision                    = 16
@@ -123,12 +125,13 @@
 # |-TrackLocation                = ''
 # |-ElementsToAlign              = []  (default: [])
 # |-UseCorrelations              = True
-# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x19cc0960>
-# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x19367f10>)
+# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x15f0aa00>
+# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x15f20270>)
 # |-UsePreconditioning           = True
 # \----- (End of User TAlignment/TAlignment) ---------------------------------------------------------
 # /***** User DstConf/DstConf ************************************************************************
 # |-OutputName          = ''
+# |-WriteFSR            = True
 # |-SimType             = 'None'
 # |-PackType            = 'TES'
 # |-DstType             = 'NONE'
@@ -136,7 +139,7 @@
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
 # |-Persistency         = None
-# |-WriteFSR            = True
+# |-KeepDAQRawEvent     = False
 # |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
@@ -147,13 +150,13 @@
 ****** setting up Kalman type alignment!
 **** setting the main kalman aligment sequence!
 # No Writer defined for DIGI
-# WARNING: Using default tag head-20111102 for partition DDDB
-# WARNING: Using default tag head-20111111 for partition LHCBCOND
-# WARNING: Using default tag tt-20110126 for partition DQFLAGS
+# WARNING: Using default tag dddb-20120727 for partition DDDB
+# WARNING: Using default tag cond-20120724 for partition LHCBCOND
+# WARNING: Using default tag dq-20120910 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Escher version v4r12
-                                          running on lxbsq1343.cern.ch on Tue Mar 13 15:22:30 2012
+                                                   Welcome to Escher version v4r14
+                                          running on lxplus423.cern.ch on Mon Jan 21 12:31:54 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -161,7 +164,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.97 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.36 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/HltFilterSeq, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -202,15 +205,14 @@ DecodeVeloClusters   INFO Cancel processing of events with more than 6000 Velo c
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20111102"
+DDDB                 INFO Using TAG "dddb-20120727"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20111111"
+LHCBCOND             INFO Using TAG "cond-20120724"
 ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
 ONLINE_2011          INFO Using TAG ""
-DeVeloRType       WARNING VELO R sensor M2 routing lines not in conditions DB cond: Routing-R-X-Strip0000 and Routing-R-Y-Strip0000
 RecoVELOSeq          INFO Member list: FastVeloTracking
 RecoTrSeq            INFO Member list: ProcessPhase/Track
-Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq
+Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq
 TrackForwardPatSeq   INFO Member list: PatForward
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56]
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.up.cdf
@@ -248,21 +250,7 @@ ToolSvc.ITClust...   INFO APE set to 0.0758
 ToolSvc.ITClust...   INFO Error Vec 0.253 0.236 0.273 0.185
 PatVeloTT            INFO  InputTracksName    = Rec/Track/Velo
 PatVeloTT            INFO  OutputTracksName   = Rec/Track/VeloTT
-TrackFitSeq          INFO Member list: TrackEventCloneKiller, TrackStateInitAlg/InitBestFit, TrackEventFitter/FitBest, TrackContainerCopy/CopyBest
-TrackEventClone...   INFO
-TrackEventClone...   INFO ============ TrackEventCloneKiller Settings ===========
-TrackEventClone...   INFO TracksInContainers                    : [ 'Rec/Track/Forward' , 'Rec/Track/Seed' , 'Rec/Track/Match' , 'Rec/Track/Downstream' , 'Rec/Track/VeloTT' ]
-TrackEventClone...   INFO TrackOutContainer                     : Rec/Track/AllBest
-TrackEventClone...   INFO IgnoredTrackTypes                     : [  ]
-TrackEventClone...   INFO CloneFinderTool                       : TrackCloneFinder
-TrackEventClone...   INFO StoreCloneTracks                      : False
-TrackEventClone...   INFO SkipSameContainerTracks               : True
-TrackEventClone...   INFO CompareInSameContainerForwardUpstream : False
-TrackEventClone...   INFO =======================================================
-TrackEventClone...   INFO
-FitBest              INFO Rec/Track/AllBest -> Rec/Track/AllBest using FitBest.Fitter
-TrackVeloFitSeq      INFO Member list: TrackPrepareVelo, TrackEventFitter/FitVelo, TrackContainerCopy/CopyVelo
-FitVelo              INFO Rec/Track/PreparedVelo -> Rec/Track/PreparedVelo using FitVelo.Fitter
+TrackFitSeq          INFO Member list: TrackBestTrackCreator
 TrackAddExtraIn...   INFO Member list: GaudiSequencer/TrackClonesSeq, TrackAddLikelihood, TrackAddNNGhostId
 TrackClonesSeq       INFO Member list: TrackBuildCloneTable/FindTrackClones, TrackCloneCleaner/FlagTrackClones
 ToolSvc.TrackHe...   INFO ExtrapolatorID=5
@@ -327,16 +315,12 @@ CreateITLiteClu...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-FitBest              INFO   Fitting performance   :     0.00 %
-FitBest           SUCCESS Number of counters : 1
+TrackBestTrackC...   INFO   Fitting performance   :   100.00 %
+TrackBestTrackC...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-FitVelo              INFO   Fitting performance   :     0.00 %
-FitVelo           SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-VeloClusterMonitorSUCCESS Booked 14 Histogram(s) : 1D=11 2D=3
-VeloTrackMonitor  SUCCESS Booked 36 Histogram(s) : 1D=27 1DProf=9
+ | "FitFailed"                                     |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
+VeloClusterMonitorSUCCESS Booked 15 Histogram(s) : 1D=12 2D=3
+VeloTrackMonitor  SUCCESS Booked 38 Histogram(s) : 1D=27 1DProf=11
 VeloIPResolutio...SUCCESS Booked 21 Histogram(s) : 1D=21
 TrackVertexMonitorSUCCESS Booked 29 Histogram(s) : 1D=15 1DProf=14
 TrackFitMatchMo...SUCCESS Booked 10 Histogram(s) : 1D=5 1DProf=5
@@ -387,7 +371,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.97 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.36 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -421,14 +405,7 @@ TimingAuditor.T...   INFO       PatDownstream           |     0.000 |     0.000 
 TimingAuditor.T...   INFO      TrackVeloTTPatSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       PatVeloTT               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackFitSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackEventCloneKiller   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       InitBestFit             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       FitBest                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       CopyBest                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackVeloFitSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackPrepareVelo        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       FitVelo                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       CopyVelo                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       TrackBestTrackCreator   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackAddExtraInfoSeq     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackClonesSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        FindTrackClones        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |

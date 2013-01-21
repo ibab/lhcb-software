@@ -6,6 +6,9 @@ Purpose : Gaudi application used to perform
 
 </PRE><H1><A NAME=v4r14>2013-01-14 Escher v4r14</A></H1><PRE>
 
+! 2013-01-21 - Maurizio Martinelli
+ - Updated qmtests references. Solved a bug in D0 qmtest.
+
 ! 2013-01-18 - Maurizio Martinelli
  - Updated qmtests and added a test for the Dstar selection
 

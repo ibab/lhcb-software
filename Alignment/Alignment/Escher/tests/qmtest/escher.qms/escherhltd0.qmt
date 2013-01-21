@@ -4,7 +4,7 @@
   <argument name="timeout"><integer>2400</integer></argument>
   <argument name="args"><set>
     <text>$ESCHEROPTS/Escher-AlignHltD0.py</text>
-    <text>$ESCHEROPTS/COLLISION11-Tests.py</text>
+    <text>$ESCHEROPTS/COLLISION12-Tests.py</text>
   </set></argument>
   <argument name="reference"><text>../refs/escherhltd0.ref</text></argument>
   <argument name="validator"><text>
