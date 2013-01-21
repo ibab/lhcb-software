@@ -1,0 +1,11 @@
+      INTEGER*4 FUNCTION PYINT6_ADDRESS() 
+      IMPLICIT NONE
+
+      COMMON/PYINT6/PROC(0:500)
+      CHARACTER PROC*28
+      EXTERNAL PYDATA ! All that is required to force loading of BLOCK DATA
+      INTEGER*4 GETADDR
+
+      PYINT6_ADDRESS = GETADDR( PROC )
+      RETURN
+      END

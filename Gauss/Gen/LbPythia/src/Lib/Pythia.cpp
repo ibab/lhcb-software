@@ -20,6 +20,8 @@ Pydat2 Pythia::s_pydat2 ;
 Pydat3 Pythia::s_pydat3 ; 
 Pydatr Pythia::s_pydatr ; 
 Pyint2 Pythia::s_pyint2 ;
+Pyint5 Pythia::s_pyint5 ;
+Pyint6 Pythia::s_pyint6 ;
 Pymssm Pythia::s_pymssm ;
 
 // SETUSERPROCESS Fortran function

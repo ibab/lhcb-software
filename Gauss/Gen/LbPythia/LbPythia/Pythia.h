@@ -17,6 +17,8 @@
 #include "LbPythia/Pypars.h"
 #include "LbPythia/Pydatr.h"
 #include "LbPythia/Pyint2.h"
+#include "LbPythia/Pyint5.h"
+#include "LbPythia/Pyint6.h"
 #include "LbPythia/Pymssm.h"
 // =====================================================================
 
@@ -42,7 +44,11 @@ public:
   /// Access PYDATR common block
   static Pydatr & pydatr() { return s_pydatr ; }
   /// Access PYINT2 common block
-  static Pyint2 & pyint2() { return s_pyint2 ; }
+  static Pyint2 & pyint2() { return s_pyint2 ; } 
+  /// Access PYINT2 common block
+  static Pyint5 & pyint5() { return s_pyint5 ; }  
+  /// Access PYINT6 common block
+  static Pyint6 & pyint6() { return s_pyint6 ; }
   /// Access PYMSSM common block
   static Pymssm & pymssm() { return s_pymssm ; }
 
@@ -80,6 +86,8 @@ private:
 	static Pydat3 s_pydat3 ; ///< PYDAT3 Common Block data
 	static Pydatr s_pydatr ; ///< PYDATR Common Block data
 	static Pyint2 s_pyint2 ; ///< PYINT2 Common Block data
+	static Pyint5 s_pyint5 ; ///< PYINT5 Common Block data
+	static Pyint6 s_pyint6 ; ///< PYINT6 Common Block data
   static Pymssm s_pymssm ; ///< PYMSSM Common Block data
 };
 #endif // LBPYTHIA_PYTHIA_H
