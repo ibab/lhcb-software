@@ -12,6 +12,7 @@
 // Interface
 #include "L0Interfaces/IL0DUConfigProvider.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
+#include "L0Interfaces/IL0MuonModifyInputTool.h"
 
 #include "L0MuonOutputs.h"
 
@@ -109,6 +110,8 @@ private:
                                       ///<  - 0: from Muon output
                                       ///<  - 1: from the input of the processor (extracted form L0Muon itself) 
 
+  bool m_modify_digits;               ///< Modify the input data for special studies
+  
   // For trigger emulation
   //L0Muon::Unit*  m_muontriggerunit; ///< Top Unit of the L0Muon emulator
   L0Muon::L0MUnit*  m_muontriggerunit; ///< Top Unit of the L0Muon emulator
@@ -134,6 +137,10 @@ private:
   std::string m_lut_version;  ///< Version of LUT to be used (appended to the basename)
   L0MPtLUT * m_lut;             ///< LUT object
 
+  IL0MuonModifyInputTool * m_modifyInputTool;
+  std::string m_modifyInputToolType;
+  std::string m_modifyInputToolName;
+  
   /// Call back function to check the Version condition database content  
   StatusCode updateL0CondVersion() ;
 

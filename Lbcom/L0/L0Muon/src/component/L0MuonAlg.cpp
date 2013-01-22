@@ -86,6 +86,10 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("LUTPath", m_lut_path = "$PARAMFILESROOT/data");
   declareProperty("LUTBaseName", m_lut_basename = "L0MuonM1M2LUT_");
   declareProperty("LUTVersion", m_lut_version = "V3");
+
+  declareProperty("ModifyDigits",m_modify_digits = false);
+  declareProperty("ModifyDigitsToolType", m_modifyInputToolName = "L0MuonModifyInputTool");
+  declareProperty("ModifyDigitsToolName", m_modifyInputToolType = "L0MuonModifyInputTool");
   
   m_totEvent = 0;
   m_totBx = 0;
@@ -208,6 +212,10 @@ StatusCode L0MuonAlg::initialize()
   // L0MuonOutputs tool
   m_outputTool =  tool<L0MuonOutputs>( "L0MuonOutputs" , "OutputTool" , this );
 
+  // 
+  if(m_modify_digits)
+    m_modifyInputTool = tool<IL0MuonModifyInputTool>(m_modifyInputToolName,m_modifyInputToolType,this);
+  
   m_totEvent = 0;
   m_totBx = 0;
 
@@ -296,6 +304,9 @@ StatusCode L0MuonAlg::execute()
       sc = getDigitsFromMuonNZS();
       if ( sc.isFailure() ) return Error( "Failed to get Hits from Muon NZS bank ... abort",StatusCode::SUCCESS,50);
     }
+    
+    if(m_modify_digits)
+      m_modifyInputTool->modifyInput(m_digits);
     
     // Fill the OL register with the input hits
     sc = fillOLsfromDigits();

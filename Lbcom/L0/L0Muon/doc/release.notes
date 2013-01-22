@@ -3,6 +3,13 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2013-01-22 - Julien Cogan
+ - L0MuonModifyInputTool : new tool to allow removal of some hits used in the 
+   L0Muon emulation for special studies (interface is IL0MuonModifyInputTool
+   in L0/L0Interfaces)
+ - L0MuonAlg : modified to use this tool if the new property ModifyDigits
+   is set to True (False by default)
+  
 !========================= L0Muon v9r11 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
