@@ -47,6 +47,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiTool ( type, name , parent ) , 
+    m_xmlLogTool ( 0 ) ,
     m_beamTool( 0 ) ,
     m_pythia( 0 ) ,
     m_nEvents( 0 ) ,
@@ -113,6 +114,9 @@ StatusCode Pythia8Production::initialize( ) {
   if ( ! sc.isSuccess() )
     return Error( "Cannot initialize BeamToolForPythia8" , sc ) ;
   m_pythia -> setBeamShapePtr( m_pythiaBeamTool );
+
+  // XML log file
+  m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;
 
   return initializeGenerator() ;
 }
@@ -208,7 +212,7 @@ StatusCode Pythia8Production::generateEvent( HepMC::GenEvent * theEvent ,
   //maybe this can be moved to somewhere else, since not quite needed if generating MinBias
   //--
   m_event = m_pythia->event;  
-  
+
   // Update event counter
   ++m_nEvents ;
   return toHepMC( theEvent, theCollision ) ;
@@ -258,7 +262,7 @@ void Pythia8Production::updateParticleProperties( const LHCb::ParticleProperty *
 // Retrieve the Hard scatter information
 //=============================================================================
 void Pythia8Production::hardProcessInfo( LHCb::GenCollision * theCollision ) {
-  theCollision -> setProcessType( m_pythia -> info.codeSub() ) ;
+  theCollision -> setProcessType( processCode() ) ;
   theCollision -> setSHat( m_pythia -> info.sHat() );
   theCollision -> setTHat( m_pythia -> info.tHat() );
   theCollision -> setUHat( m_pythia -> info.uHat() );
@@ -272,6 +276,23 @@ void Pythia8Production::hardProcessInfo( LHCb::GenCollision * theCollision ) {
 //=============================================================================
 StatusCode Pythia8Production::finalize( ) {
   m_pythia -> statistics() ;
+
+  // Write in the XML file the cross-sections
+  m_xmlLogTool -> addCrossSection( "",//how to pass the name here ?
+                                   0 , 
+                                   m_pythia -> info.nAccepted(0) , 
+                                   m_pythia -> info.sigmaGen(0) ) ;
+  
+
+  for (int i = 1 ; i <= 500 ; ++i ) {
+    if ( 0 != m_pythia -> info.nAccepted(i) ) {
+      m_xmlLogTool -> addCrossSection( "",//same question have above ?
+				       i ,
+				       m_pythia -> info.nAccepted(i) ,
+				       m_pythia -> info.sigmaGen(i) ) ;
+    }
+  }
+
   delete m_randomEngine;
   delete m_pythia ;
   if ( 0 != m_fortranUPTool ) release( m_fortranUPTool ) ;

@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Generators/IProductionTool.h"
+#include "Generators/ICounterLogFile.h"
 
 // from Pythia8
 #include "Pythia.h"
@@ -87,6 +88,8 @@ protected:
                        LHCb::GenCollision * theCollision ) ;
   
 private:
+
+  ICounterLogFile * m_xmlLogTool ; ///< XML Log file to store cross-sections 
 
   /// retrieve the processCode
   int processCode( ) ;
