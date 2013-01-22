@@ -8,6 +8,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2013-01-22 - Murilo Rangel
+ - mpt cut fixed to MeV
+
+! 2013-01-22 - Murilo Rangel
  - Changed JEC file defaul in the JetMaker_Config.py
 
 ! 2013-01-22 - Murilo Rangel

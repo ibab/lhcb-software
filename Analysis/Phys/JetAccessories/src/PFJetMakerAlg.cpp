@@ -321,7 +321,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
           jet->setEndVertex(vJet.clone());
           this->relate ( jet , *i_pv );
         }
-        if (m_applyJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet)<1.8 )){
+        if (m_applyJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet)<1800 )){
           jets.pop_back() ;
           delete jet ;
           continue;
@@ -356,7 +356,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     {
       LHCb::Particle* jet = jets.back() ;
       this->appendJetIDInfo(jet);
-      if (m_applyJetID  && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet))<1.8){
+      if (m_applyJetID  && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet))<1800){
           jets.pop_back() ;
           delete jet ;
           continue;
