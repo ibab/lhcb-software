@@ -1,3 +1,36 @@
+2013-01-22 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r6
+
+	LbConfiguration
+	* python/LbConfiguration/Package.py: Added new package GDMLData
+	* python/LbConfiguration/Package.py: Added new package MCStatTools
+ 	* python/LbConfiguration/Project.py: Added project Urania 
+
+	LbRelease
+	* scripts/lb-project-testcoderatio: Imported script from R.Lambert. 
+	* python/LbRelease/rcs.py: added the possibility of using dates as versions,
+	like '{YYYY-MM-DD}'.
+	* python/LbRelease/LHCbDoc.py: fix to the new lookup of resources
+	* python/LbRelease/_LHCbDocResources: fix to the new lookup of resources
+	* data/DataPkgEnvs: added environment for Gen/DecFiles v26r19
+
+	LbLegacy
+	* python/LbLegacy/install_project.py:  release of LbScripts version v7r6
+	* scripts/mkproject: Remove creation of doc/release.notes links
+	in project directory (parent dir to the version).
+	* scripts/mkMCGentar:Fixed to handled distribution problems with
+	packages having '++' in the name (herwigg++, tauola++, photos++),
+	until the Genser team fixes the distribution files.
+	* scripts/archive_project: Updated doc.
+	* scripts/mkLCGCMTtar: Fixed to bug  cauising processing to stop 
+	when a package is missing (e.g. uuid on slc6) 
+	* scripts/archive_project: Added archival of doc and dist files.
+	Added check to see if the project was released to CVMFS.
+
+	LbUtils
+	* Updated CMake tools
+
 2012-12-04 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r5
