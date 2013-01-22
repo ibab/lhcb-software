@@ -4,6 +4,10 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2013-01-22 - Aurelien Martens
+ - update for x-sec in xml
+ - uniformize usage of processCode in Pythia8
+
 ! 2012-12-18 - Aurelien Martens
  - fix options to force using EvtGen to decay particles not only for Signal RH...
 
