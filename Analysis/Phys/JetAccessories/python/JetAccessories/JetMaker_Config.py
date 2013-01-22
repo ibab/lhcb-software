@@ -39,7 +39,7 @@ class JetMakerConf:
         self.algorithms = []
         self.setupJetMaker()
         hsvc = HistogramSvc ( 'HistogramDataSvc' );
-        hsvc.Input += [ "JEC DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco12.root' TYP='ROOT'" ]
+        hsvc.Input += [ "JEC DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco12_v1.root' TYP='ROOT'" ]
         
     def setupJetMaker(self):
         jetMakerName = self.name
