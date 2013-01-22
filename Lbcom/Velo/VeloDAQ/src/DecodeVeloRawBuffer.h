@@ -12,6 +12,7 @@ namespace LHCb {
 }
 
 class DeVelo;
+class IIncidentSvc;
 
 /** @class DecodeVeloRawBuffer DecodeVeloRawBuffer.h
  *  Decode the Velo data from the 1MHZ Raw buffer.
@@ -85,6 +86,17 @@ private:
                  AlgStatusType status,
                  bool procAborted);  
 
+  /** Replace the full clusters for a specific sensor with faked 
+   *  clusters from the lite container
+   */
+  StatusCode replaceFullFromLite(LHCb::VeloClusters *clusters,
+                                 unsigned int nSensor,
+                                 const std::vector<LHCb::RawBank*>& banks);
+
+  /// Add a fake lite cluster to the full cluster container
+  void makeFakeCluster(LHCb::VeloLiteCluster const &liteCluster,
+                       LHCb::VeloClusters* fakeClusters);
+
 private:
 
   // configuration
@@ -131,6 +143,11 @@ private:
 
   /// if true hide the errors from multiple cluster using the same strip
   bool m_hideWarnings;
+
+  /// Check when decoding lite clusters that the bank length is correct
+  bool m_doLengthCheck;
+
+  IIncidentSvc* m_incidentSvc;  ///< Pointer to the incident service.
 
 };
 #endif // DECODEVELORAWBUFFER_H
