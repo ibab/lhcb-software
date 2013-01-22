@@ -5,6 +5,9 @@
 !               simulation and digitization
 !-----------------------------------------------------------------------------
 
+! 2013-01-22 - Murilo Rangel
+ - Updated jet energy correction file
+
 !======================= ParamFiles v8r8 2012-12-17 ==========================
 ! 2012-12-17 - Murilo Rangel
  - Added jet energy correction file
