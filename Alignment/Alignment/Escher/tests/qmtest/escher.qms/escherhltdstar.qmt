@@ -8,5 +8,7 @@
   </set></argument>
   <argument name="reference"><text>../refs/escherhltdstar.ref</text></argument>
   <argument name="validator"><text>
+from Escher.QMTest.EscherExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
