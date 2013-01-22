@@ -7,6 +7,7 @@
   <class name    = "IL0MuonOverflowTool"           />
   <class name    = "IL0ProcessorDataDecoder"       />
   <class name    = "IL0MuonPtTool"                 />
+  <class name    = "IL0MuonModifyInputTool"        />
 
 </lcgdict>
 

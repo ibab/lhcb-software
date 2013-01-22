@@ -9,5 +9,6 @@
 #include "L0Interfaces/IL0MuonOverflowTool.h" 
 #include "L0Interfaces/IL0ProcessorDataDecoder.h" 
 #include "L0Interfaces/IL0MuonPtTool.h"
+#include "L0Interfaces/IL0MuonModifyInputTool.h"
 
 #endif //DICT_L0INTERFACESDICT_H 
