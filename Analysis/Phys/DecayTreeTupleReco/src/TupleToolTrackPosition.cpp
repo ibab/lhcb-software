@@ -40,6 +40,7 @@ DECLARE_TOOL_FACTORY( TupleToolTrackPosition )
                    "Which Z-position to propagate the track to, defaults to 2500, the position of the TT-stations");
   declareProperty( "Extrapolator", m_extrapolatorName = "TrackStateProvider",
                    "Which extrapolator to use");
+  declareProperty( "Prefix", m_morePrefix = "TT", "Prefix to be added to tell several instances from each other");
 
 }
 //=============================================================================
@@ -59,6 +60,8 @@ StatusCode TupleToolTrackPosition::initialize()
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
+  info() << "Will extrapolate to z= " << m_Z << " mm and call this " << m_morePrefix << endmsg ;
+
   return sc;
 }
 
@@ -69,7 +72,7 @@ StatusCode TupleToolTrackPosition::fill( const LHCb::Particle *, const LHCb::Par
                                          const std::string &   head, Tuples::Tuple &   tuple )
 {
 
-  const std::string prefix=fullName(head);
+  const std::string prefix=fullName(head)+"_"+m_morePrefix ;
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;
 
   bool test=true;
