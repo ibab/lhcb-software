@@ -117,6 +117,7 @@ namespace LoKi
 			    NSatECAL = 9008,
 			    NSatHCAL = 9009,
 			    NIPChi2Inf4 = 9010,
+                MPT = 9011,
 			    Charged = 9201,
 			    ChargedHadron = 9202,
 			    Muon  = 9203,
@@ -252,6 +253,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
 
     // Some definitions for jet ID
     LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
+    LoKi::Types::Fun mpt = LoKi::Cuts::INFO(9011,-10.);
     LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
     
     // A cut to get the position of the bestPV of input particles (would be better to code a VKEY functor)
@@ -319,7 +321,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
           jet->setEndVertex(vJet.clone());
           this->relate ( jet , *i_pv );
         }
-        if (m_applyJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 )){
+        if (m_applyJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet)<1.8 )){
           jets.pop_back() ;
           delete jet ;
           continue;
@@ -333,6 +335,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
   else{
     // Some definitions for jet ID
     LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
+    LoKi::Types::Fun mpt = LoKi::Cuts::INFO(9011,-10.);
     LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
     LoKi::Types::Fun PFType =  LoKi::Cuts::INFO(900,-10.);
     LoKi::Types::Cut GoodInput = fabs( PFType - m_inputTypes[0] ) < 1e-6 ;
@@ -353,7 +356,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     {
       LHCb::Particle* jet = jets.back() ;
       this->appendJetIDInfo(jet);
-      if (m_applyJetID  && ( mtf(jet)>0.75 || nPVInfo(jet)<2 )){
+      if (m_applyJetID  && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet))<1.8){
           jets.pop_back() ;
           delete jet ;
           continue;
@@ -377,6 +380,7 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   std::vector<const LHCb::Particle *>::iterator idaughter = daughtersvector.begin();
 
   double mtf;    /// Highest pT track / Jet pT
+  double mpt;    /// Highest pT track
   double cpf;    /// charged pT fraction - V0s are not included
   double width;  /// jet width
   int    n90;    /// Number of items responsible for at least 90% of the jet momentum
@@ -402,6 +406,7 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   }
 
   mtf = auxptmax / jet->momentum().Pt(); mtf = 0 > mtf ? 0 : mtf; mtf = 1 < mtf ? 1 : mtf;
+  mpt = auxptmax;
   cpf = TMath::Sqrt(tpx*tpx+tpy*tpy)/jet->momentum().Pt();
   width /= sumpt;
 
@@ -424,6 +429,7 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   jet->addInfo ( Ntracks , ntrk );
   jet->addInfo ( N90 , n90 );
   jet->addInfo ( MTF , mtf );
+  jet->addInfo ( MPT , mpt );
   jet->addInfo ( NSatCalo , NsatCells(jet) );
   jet->addInfo ( NHasPV   , N_HasPVInfo(jet) );
   jet->addInfo ( CPF , cpf );
@@ -497,9 +503,9 @@ StatusCode LoKi::PFJetMaker::JEC( LHCb::Particle* jet )
   double jetpt = LoKi::Cuts::PT(jet)/1000.;
   double jeteta = LoKi::Cuts::ETA(jet);
   double jetcpf = jet->info(CPF,-1.);
-  if(jetpt>149) jetpt=149;
+  if(jetpt>499) jetpt=498;
   if(jeteta<2.0) jeteta=2.0;
-  if(jeteta>4.2) jeteta=4.2;
+  if(jeteta>4.8) jeteta=4.8;
   double cor = histo->Interpolate(jetpt, jeteta, jetcpf);
   // Store the uncorrected kinematics
 

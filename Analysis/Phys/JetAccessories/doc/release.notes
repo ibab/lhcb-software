@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-01-22 - Murilo Rangel
+ - Updated JEC range. Updated JetID cut. Now MPT>1.8 is required.
+
 ! 2012-12-18 - Victor Coco
  - Add the call to the JEC root file in the JetMaker_Config.py
 
