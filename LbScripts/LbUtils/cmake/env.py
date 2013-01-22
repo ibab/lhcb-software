@@ -110,7 +110,7 @@ def makeEnv(actions, ignore_system=False):
     # prepare initial control object
     control = prepareEnv(ignore_system)
 
-    # apply al the actions
+    # apply all the actions
     for action, args in actions:
         apply(getattr(control, action), args)
 

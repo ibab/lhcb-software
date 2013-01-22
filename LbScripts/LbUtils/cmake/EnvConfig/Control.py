@@ -316,7 +316,7 @@ class Environment():
         Call the variable processors on all the variables.
         '''
         for v in self.variables.values():
-            v.val = v.process(val, self.variables)
+            v.val = v.process(v.val, self.variables)
 
     def _concatenate(self, value):
         '''Returns a variable string with separator separator from the values list'''

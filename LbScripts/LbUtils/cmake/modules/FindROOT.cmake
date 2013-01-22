@@ -16,13 +16,18 @@ endif()
 if(NOT ROOT_INCLUDE_DIR)
   find_path(ROOT_INCLUDE_DIR TROOT.h
             HINTS ${ROOTSYS}/include $ENV{ROOTSYS}/include
+            PATH_SUFFIXES root
             ${ROOT_OVERRIDE_PATH})
-  get_filename_component(ROOTSYS ${ROOT_INCLUDE_DIR} PATH)
-  set(ROOTSYS ${ROOTSYS} CACHE PATH "Location of the installation of ROOT" FORCE)
+  if(ROOT_INCLUDE_DIR MATCHES "include$")
+    # ROOTSYS-style installation
+    get_filename_component(ROOTSYS ${ROOT_INCLUDE_DIR} PATH)
+    set(ROOTSYS ${ROOTSYS} CACHE PATH "Location of the installation of ROOT" FORCE)
+  else()
+    set(ROOT_NO_ROOTSYS TRUE CACHE BOOL "ROOT is installed with system packages and not in a ROOTSYS")
+  endif()
 endif()
 
-set(ROOT_INCLUDE_DIRS ${ROOTSYS}/include)
-set(ROOT_LIBRARY_DIRS ${ROOTSYS}/lib)
+set(ROOT_INCLUDE_DIRS ${ROOT_INCLUDE_DIR})
 
 # This is the list of some known component libraries
 set(ROOT_ALL_COMPONENTS Core Cint Reflex RIO Hist Tree TreePlayer Cintex Matrix
@@ -66,7 +71,8 @@ while(ROOT_FIND_COMPONENTS)
   # look for the library if not found yet
   if(NOT ROOT_${component}_LIBRARY)
     find_library(ROOT_${component}_LIBRARY NAMES ${component}
-                 HINTS ${ROOT_LIBRARY_DIRS}
+                 HINTS ${ROOTSYS}/lib
+                 PATH_SUFFIXES root
                  ${ROOT_OVERRIDE_PATH})
     if(ROOT_${component}_LIBRARY)
       mark_as_advanced(ROOT_${component}_LIBRARY)
@@ -103,7 +109,7 @@ endforeach()
 # handle the QUIETLY and REQUIRED arguments and set ROOT_FOUND to TRUE if
 # all listed variables are TRUE
 INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(ROOT DEFAULT_MSG ROOTSYS ROOT_INCLUDE_DIR)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(ROOT DEFAULT_MSG ROOT_INCLUDE_DIR)
 mark_as_advanced(ROOT_FOUND ROOTSYS ROOT_INCLUDE_DIR)
 
 ######################################################################
@@ -261,11 +267,15 @@ macro (ROOT_GENERATE_DICTIONARY INFILES LINKDEF_FILE OUTFILE INCLUDE_DIRS_IN)
   endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 endmacro (ROOT_GENERATE_DICTIONARY)
 
-set(ROOT_ENVIRONMENT SET ROOTSYS ${ROOTSYS})
-set(ROOT_BINARY_PATH ${ROOTSYS}/bin)
 
-if(WIN32)
-  set(ROOT_PYTHON_PATH ${ROOTSYS}/bin)
-else()
-  set(ROOT_PYTHON_PATH ${ROOTSYS}/lib)
+if(ROOTSYS)
+  set(ROOT_ENVIRONMENT SET ROOTSYS ${ROOTSYS})
+  set(ROOT_BINARY_PATH ${ROOTSYS}/bin)
+  set(ROOT_LIBRARY_DIRS ${ROOTSYS}/lib)
+
+  if(WIN32)
+    set(ROOT_PYTHON_PATH ${ROOTSYS}/bin)
+  else()
+    set(ROOT_PYTHON_PATH ${ROOTSYS}/lib)
+  endif()
 endif()
