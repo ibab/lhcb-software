@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-01-22 - Murilo Rangel
+ - reverted the data/JetEnergyCorrections_Reco12.root and 
+   added data/JetEnergyCorrections_Reco12_v1.root
+
+! 2013-01-22 - Murilo Rangel
  - Updated jet energy correction file
 
 !======================= ParamFiles v8r8 2012-12-17 ==========================
