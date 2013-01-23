@@ -62,13 +62,13 @@ EvtExternalGenFactory* EvtExternalGenFactory::getInstance() {
 
 }
 
-void EvtExternalGenFactory::definePythiaGenerator(std::string xmlDir, bool convertPhysCodes) {
+void EvtExternalGenFactory::definePythiaGenerator(std::string xmlDir, bool convertPhysCodes, bool useEvtGenRandom) {
 
   int genId = EvtExternalGenFactory::PythiaGenId;
-
-  EvtAbsExternalGen* pythiaGenerator = new EvtPythiaEngine(xmlDir, convertPhysCodes);
+  
+  EvtAbsExternalGen* pythiaGenerator = new EvtPythiaEngine(xmlDir, convertPhysCodes, useEvtGenRandom);
   _extGenMap[genId] = pythiaGenerator;
-
+  
 }
 
 void EvtExternalGenFactory::definePhotosGenerator(std::string photonType) {

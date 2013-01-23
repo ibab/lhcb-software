@@ -136,6 +136,7 @@ EvtGen::EvtGen(const char* const decayName,
   // We are using Pythia 6 physics codes in the decay.dec file(s).
   std::string xmlDir("./xmldoc");
   bool convertPhysCode(false);
+  bool useEvtGenRandom(true);
   if (convertPhysCode) {
     report(INFO,"EvtGen") << "Defining the PYTHIA 8 generator: data tables in "
 			  << xmlDir << ".\n Will convert Pythia 6 codes in decayfiles "
@@ -145,7 +146,11 @@ EvtGen::EvtGen(const char* const decayName,
 			  << xmlDir << ".\n Decay files must use Pythia 8 physics codes." << endl;
   }
 
-  externalGenerators->definePythiaGenerator(xmlDir, convertPhysCode);
+  if (useEvtGenRandom) {
+    report(INFO,"EvtGen") << "Using EvtGen random number engine also for Pythia 8 decays." << endl;
+  }
+
+  externalGenerators->definePythiaGenerator(xmlDir, convertPhysCode, useEvtGenRandom);
 
   // Set the Tauola external generator
   externalGenerators->defineTauolaGenerator();

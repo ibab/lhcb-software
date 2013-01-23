@@ -21,6 +21,7 @@
 #define EVTPYTHIAENGINE_HH
 
 #include "EvtGenModels/EvtAbsExternalGen.hh"
+#include "EvtGenModels/EvtPythiaRandom.hh"
 
 #include "EvtGenBase/EvtId.hh"
 #include "EvtGenBase/EvtDecayBase.hh"
@@ -38,7 +39,9 @@ class EvtPythiaEngine : public EvtAbsExternalGen {
 
 public:
 
-  EvtPythiaEngine(std::string xmlDir = "./xmldoc", bool convertPhysCodes = false);
+  EvtPythiaEngine(std::string xmlDir = "./xmldoc", 
+		  bool convertPhysCodes = false,
+		  bool useEvtGenRandom = true);
   virtual ~EvtPythiaEngine();
 
   virtual bool doDecay(EvtParticle* theMother);
@@ -76,7 +79,9 @@ private:
   typedef std::map<int, std::vector<int> > PythiaModeMap;
   PythiaModeMap _pythiaModeMap;
 
-  bool _convertPhysCodes, _initialised;
+  bool _convertPhysCodes, _initialised, _useEvtGenRandom;
+
+  EvtPythiaRandom* _evtgenRandom;
 
 };
 

@@ -38,7 +38,7 @@ public:
 
   void initialiseAllGenerators();
 
-  void definePythiaGenerator(std::string xmlDir, bool convertPhysCodes);
+  void definePythiaGenerator(std::string xmlDir, bool convertPhysCodes, bool useEvtGenRandom);
   void definePhotosGenerator(std::string photonType = "gamma");
   void defineTauolaGenerator();
 
