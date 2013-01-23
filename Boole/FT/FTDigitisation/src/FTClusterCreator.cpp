@@ -86,7 +86,7 @@ StatusCode FTClusterCreator::execute() {
   put(clusterCont, m_outputLocation);
 
   // Create a link between the FTCluster and the MCParticle which leave a track
-  LinkerWithKey<LHCb::MCParticle,LHCb::FTCluster> myLink( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default);
+  LinkerWithKey<LHCb::MCParticle,LHCb::FTCluster> mcToClusterLink( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default);
 
   // DEBUG : print Digit content : should be sorted
   if(msgLevel(MSG::DEBUG)){
@@ -188,7 +188,7 @@ StatusCode FTClusterCreator::execute() {
 
         // Define second member of mcContributionMap as the fraction of energy corresponding to each involved MCParticle
         for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i){
-          myLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
+          mcToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
           if ( msgLevel( MSG::DEBUG) ) {
             debug() << "Linked ClusterChannel=" << newCluster->channelID()
                     << " to MCIndex="<<i->first->index()

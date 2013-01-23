@@ -33,7 +33,7 @@ DECLARE_ALGORITHM_FACTORY( MCFTDepositCreator );
 //=============================================================================
 MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator )
 {
   
   declareProperty( "InputLocation" ,  m_inputLocation  = LHCb::MCHitLocation::FT, "Path to input MCHits");
@@ -178,6 +178,11 @@ StatusCode MCFTDepositCreator::execute() {
 
     MCHit* ftHit = *iterHit;     //pointer to the Hit
 
+    plot2D( ftHit->entry().x(), ftHit->entry().y(), "x/y entry",  -500., 500., -500., 500., 100, 100 );
+
+
+    plot(ftHit->energy(),"EnergyOfHit", "Energy of the Hit ; Energy [MeV];Number of hits" , 0 , 10 );
+    plot(ftHit->energy(),"EnergyOfHitZOOM", "Energy of the Hit ; Energy [MeV];Number of hits" , 0 , 1 );
     // DEBUG printing
     if ( msgLevel( MSG::DEBUG) ) {
       debug() << " XYZ=[" << ftHit->entry() << "][" << ftHit->midPoint()
@@ -207,6 +212,15 @@ StatusCode MCFTDepositCreator::execute() {
           debug() << "--- Hit index: " << ftHit->index() << ", size of vector of channels: "
                   << channels.size() << endmsg;
         }
+
+        plot(pL->angle()*180/M_PI,"CheckStereoAngle","Stereo Angle; Stereo Angle [#degree];" ,-10 , 10);
+        plot(pL->layerInnerHoleRadius(),"CheckHoleRadius","Hole Radius ; Hole Radius  [mm];" ,50 , 150);
+        plot(pL->layerMaxY(),"CheckLayerHalfSizeY","Layer Half Size Y ; Layer Half Size Y  [mm];" ,3000 , 3100);
+
+        plot(channels.size(),"CheckNbChannel", 
+             "Number of fired channels per Hit; Number of fired channels; Number of hits" , 
+             0 , 100);
+
         m_nHits += 1;
         m_sumEnergy += ftHit->energy();
 
@@ -225,6 +239,8 @@ StatusCode MCFTDepositCreator::execute() {
                              ftHit->midPoint().x(), ftHit->midPoint().y(), kx, ky, fracX, fracY, att ) << endmsg;
         }
         
+          plot(att,"CheckAttFactor","AttFactorDistrib; Attenuation factor ; Nber of Events" ,0 ,1);
+
         // Fill MCFTDeposit
         FTDoublePairs::const_iterator vecIter;
         for( vecIter = channels.begin(); vecIter != channels.end(); ++vecIter){
@@ -234,7 +250,8 @@ StatusCode MCFTDepositCreator::execute() {
             debug()  << "FTChannel=" << vecIter->first << " EnergyHitFraction="<< EnergyInSiPM << endmsg;
           }
         
-
+           plot(vecIter->second,"EnergyDepositedInCell","EnergyDepositedInCell; Energy Deposited in Cell ; Nber of Channels" ,0. ,10);
+          plot(EnergyInSiPM,"EnergyRecordedInCell","EnergyRecordedInCell; EnergyReachingSiPM ; Nber of Channels" ,0. ,10);
           // if reference to the channelID already exists, just add DepositedEnergy
           if( depositCont->object(vecIter->first) != 0 ){
             (depositCont->object(vecIter->first))->addMCHit(ftHit,EnergyInSiPM);
@@ -258,6 +275,7 @@ StatusCode MCFTDepositCreator::execute() {
 //=========================================================================
 StatusCode MCFTDepositCreator::finalize() {
   info() << "Average energy per MCHit = " << m_sumEnergy / m_nHits << endmsg;
+
   return GaudiAlgorithm::finalize();
 }
 //=========================================================================

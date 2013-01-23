@@ -14,7 +14,7 @@
 
 // Include files
 /// from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 // from Event
 #include "Event/MCHit.h"
@@ -26,7 +26,7 @@
 
 
 
-class MCFTDepositCreator : public GaudiAlgorithm {
+class MCFTDepositCreator : public GaudiHistoAlg {
 
   typedef std::pair<LHCb::FTChannelID, double> FTDoublePair;
   typedef std::vector< FTDoublePair > FTDoublePairs;

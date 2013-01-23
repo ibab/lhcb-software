@@ -13,7 +13,7 @@
 
 // local
 #include "MCFTDigitCreator.h"
-#include "FTSortingFunctor.h"
+//#include "FTSortingFunctor.h"
 
 using namespace LHCb;
 
@@ -28,12 +28,12 @@ DECLARE_ALGORITHM_FACTORY( MCFTDigitCreator );
 //=============================================================================
 MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator )
 {
   declareProperty("InputLocation" ,       m_inputLocation        = LHCb::MCFTDepositLocation::Default );
   declareProperty("OutputLocation" ,      m_outputLocation       = LHCb::MCFTDigitLocation::Default   );
-  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 50. );
-  declareProperty("SiPMGain",             m_sipmGain             =   1. );
+  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 10. );
+  declareProperty("SiPMGain",             m_sipmGain             =  2. );
 }
 //=============================================================================
 // Destructor
@@ -79,9 +79,14 @@ StatusCode MCFTDigitCreator::execute() {
   MCFTDeposits::const_iterator iterDeposit = mcDepositsCont->begin();
   for (; iterDeposit!=mcDepositsCont->end();++iterDeposit){
     MCFTDeposit* mcDeposit = *iterDeposit;
+
     if ( msgLevel( MSG::DEBUG) ) {
       debug() <<"Channel ="<<mcDeposit->channelID()<< " : " << endmsg;
     }
+
+    plot((double)mcDeposit->channelID(), "FiredChannelID","Fired Channel; ChannelID" , 0. , 800000.);
+    plot((double)mcDeposit->mcHitVec().size(), "HitPerChannel",
+         "Number of Hits per Channel;Number of Hits per Channel;" , 0. , 10.);
 
     // Fill map linking the deposited energy to the MCParticle which deposited it.
     std::map<const LHCb::MCParticle*, double> mcParticleMap;
@@ -93,6 +98,19 @@ StatusCode MCFTDigitCreator::execute() {
                            vecIter->first->midPoint().x(), vecIter->second, 
                            vecIter->first->mcParticle()->key() ) << endmsg;
       }
+
+      plot(vecIter->second,
+           "EnergyPerChannel",
+           "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 
+           0, 100);
+      plot(vecIter->second,
+           "EnergyPerChannelZOOM",
+           "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 
+           0, 10);
+      plot(vecIter->second,
+           "EnergyPerChannelBIGZOOM",
+           "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 0, 1);
+
       mcParticleMap[vecIter->first->mcParticle()] += vecIter->second;
       EnergySum += vecIter->second;
     }
@@ -144,7 +162,7 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
 
   // Convert energy sum in adc count
   // Compute the expected number of photoelectron, draw a poisson with that mean, and convert to ADC counts
-  //== For large number of photo-electrons, take a gausian.
+  //== For large number of photo-electrons, take a gaussian.
   //== Else compute manually the value, by computing when the sum of terms if greater than a flat random.
 
   double averagePhotoElectrons = energySum * m_photoElectronsPerMeV;

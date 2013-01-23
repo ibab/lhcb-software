@@ -21,14 +21,14 @@
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/RndmGenerators.h"
 
 // LHCbKernel
 #include "Kernel/FTChannelID.h"
 
 
-class MCFTDigitCreator : public GaudiAlgorithm {
+class MCFTDigitCreator : public GaudiHistoAlg {
 public: 
   /// Standard constructor
   MCFTDigitCreator( const std::string& name, ISvcLocator* pSvcLocator );
