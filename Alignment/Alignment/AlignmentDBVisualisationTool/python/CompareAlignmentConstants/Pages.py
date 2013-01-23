@@ -59,9 +59,9 @@ class TrendPlotRegion(PlotRegion):
     DefaultFormats = { "MagUp"   : "r-"
                      , "MagDown" : "b-"
                      , "MagOff"  : "g-"
-                     , "TS"      : { "facecolor" : "r" , "alpha" : 0.2 , "lw" : 0.0 }
-                     , "MD"      : { "facecolor" : "y" , "alpha" : 0.5 , "lw" : 0.0 }
-                     , "VDM"     : { "facecolor" : "g" , "alpha" : 0.2 , "lw" : 0.0 }
+                     , "TS"      : { "facecolor" : "k" , "alpha" : 0.05 , "lw" : 0.0 }
+                     , "MD"      : { "facecolor" : "k" , "alpha" : 0.05 , "lw" : 0.0 }
+                     , "VDM"     : { "facecolor" : "k" , "alpha" : 0.05 , "lw" : 0.0 }
                      }
     def __init__(self, name, var, parent, axes, periods=None):
         self.periods  = periods

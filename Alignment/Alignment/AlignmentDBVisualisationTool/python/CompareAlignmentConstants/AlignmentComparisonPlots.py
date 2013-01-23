@@ -36,7 +36,7 @@ def plotAlignmentParametersTimeSeries( elmGroup, dofs
                                      , since="2012-01-01", until="2013-01-01"
                                      , refConnectString=None, refTag="HEAD"
                                      , outputdir="."
-                                     , defaultTag="cond-20121116"
+                                     , defaultTag="cond-20130114"
                                      , addStats=False ):
     """
     Plot time trends of alignment sliceConnectString with tag sliceTag (+default layer with given tag)

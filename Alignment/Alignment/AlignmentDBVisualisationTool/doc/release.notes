@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2013-01-23 - Pieter David
+ - small fixes to work with the released database
+
 !======================= AlignmentDBVisualisationTool v1r0 2013-01-14 =======================
 ! 2012-01-09 - Pieter David
  - Initial commit (code moved from Alignment/Escher)
