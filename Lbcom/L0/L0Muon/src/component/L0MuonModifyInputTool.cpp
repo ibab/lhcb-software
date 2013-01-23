@@ -90,7 +90,7 @@ StatusCode L0MuonModifyInputTool::modifyInput(std::vector<LHCb::MuonTileID> &dig
   for (std::vector<LHCb::MuonTileID>::iterator it_digit=digits.begin(); it_digit!=digits.end();){
     if (rnd()>m_params[it_digit->station()*4+it_digit->region()]) {
       it_digit = digits.erase(it_digit);
-      ++debug_n;
+      //++debug_n;
     } else {
       ++it_digit;
     }
