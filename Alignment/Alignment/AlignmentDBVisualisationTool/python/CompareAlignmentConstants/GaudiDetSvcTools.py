@@ -81,7 +81,7 @@ def combinedIOVs(listOfIOVLists):
     """
     if len(listOfIOVLists) == 0:
         return []
-    elif len(listOfIOVLists) == 1:
+    elif ( len(listOfIOVLists) == 1 ) or all( len(iovList) == 0 for iovList in listOfIOVLists ):
         return listOfIOVLists[0]
     else:
         # check that they span the same range
