@@ -277,16 +277,9 @@ void Pythia8Production::hardProcessInfo( LHCb::GenCollision * theCollision ) {
 StatusCode Pythia8Production::finalize( ) {
   m_pythia -> statistics() ;
 
-  // Write in the XML file the cross-sections
-  m_xmlLogTool -> addCrossSection( "",//how to pass the name here ?
-                                   0 , 
-                                   m_pythia -> info.nAccepted(0) , 
-                                   m_pythia -> info.sigmaGen(0) ) ;
-  
-
-  for (int i = 1 ; i <= 500 ; ++i ) {
+  for (int i = 0 ; i <= 500 ; ++i ) {
     if ( 0 != m_pythia -> info.nAccepted(i) ) {
-      m_xmlLogTool -> addCrossSection( "",//same question have above ?
+      m_xmlLogTool -> addCrossSection( processName(i),
 				       i ,
 				       m_pythia -> info.nAccepted(i) ,
 				       m_pythia -> info.sigmaGen(i) ) ;
@@ -297,8 +290,20 @@ StatusCode Pythia8Production::finalize( ) {
   delete m_pythia ;
   if ( 0 != m_fortranUPTool ) release( m_fortranUPTool ) ;
   return GaudiTool::finalize( ) ;
+
 }  
 
+string Pythia8Production::processName( int i ) {
+  switch (i) {
+  case 0 : return "All";
+  case 101 : return "minimum bias";
+  case 102 : return "A B -> A B elastic";
+  case 103 : return "A B -> X B single diffractive";
+  case 104 : return "A B -> A X single diffractive";
+  case 105 : return "A B -> X X double diffractive";
+  default : return "unknown process";
+  }
+}
 
 //=============================================================================
 // Print Pythia8 parameters

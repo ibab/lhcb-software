@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2013-01-23 - Aurelien Martens
+ - update for x-sec names in xml
+
 ! 2013-01-22 - Aurelien Martens
  - update for x-sec in xml
  - uniformize usage of processCode in Pythia8

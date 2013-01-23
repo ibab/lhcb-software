@@ -93,6 +93,9 @@ private:
 
   /// retrieve the processCode
   int processCode( ) ;
+
+  /// retrieve the process Name
+  string processName( int i );
     
   std::string m_beamToolName ;
   
