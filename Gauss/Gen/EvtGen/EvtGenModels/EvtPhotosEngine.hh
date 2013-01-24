@@ -28,11 +28,13 @@
 #include "HepMC/GenEvent.h"
 #include "HepMC/GenParticle.h"
 
+#include <string>
+
 class EvtPhotosEngine : public EvtAbsExternalGen {
 
 public:
 
-  EvtPhotosEngine(std::string photonType = "gamma");
+  EvtPhotosEngine(std::string photonType = "gamma", bool useEvtGenRandom = true);
   virtual ~EvtPhotosEngine();
 
   virtual bool doDecay(EvtParticle* theMother);
@@ -43,6 +45,7 @@ protected:
 
 private:
 
+  std::string _photonType;
   EvtId _gammaId;
   double _mPhoton;
   bool _initialised;

@@ -114,6 +114,10 @@ EvtGen::EvtGen(const char* const decayName,
 
   EvtExternalGenFactory* externalGenerators = EvtExternalGenFactory::getInstance();
 
+  // Boolean to specify that we want to use the EvtGen random number generator
+  // for Pythia, Photos and Tauola.
+  bool useEvtGenRandom(true);
+
   // Set the radiative correction engine
   report(INFO,"EvtGen") << "Defining the radiative correction engine"<<endl;
 
@@ -125,7 +129,7 @@ EvtGen::EvtGen(const char* const decayName,
 
     // Define the photon type (and pass it to the external generator, not EvtPHOTOS).
     std::string photonType("gamma");
-    externalGenerators->definePhotosGenerator(photonType);
+    externalGenerators->definePhotosGenerator(photonType, useEvtGenRandom);
 
     EvtPHOTOS* defaultRadCorrEngine = new EvtPHOTOS();
     EvtRadCorr::setRadCorrEngine(defaultRadCorrEngine);
@@ -136,7 +140,6 @@ EvtGen::EvtGen(const char* const decayName,
   // We are using Pythia 6 physics codes in the decay.dec file(s).
   std::string xmlDir("./xmldoc");
   bool convertPhysCode(false);
-  bool useEvtGenRandom(true);
   if (convertPhysCode) {
     report(INFO,"EvtGen") << "Defining the PYTHIA 8 generator: data tables in "
 			  << xmlDir << ".\n Will convert Pythia 6 codes in decayfiles "
@@ -153,7 +156,7 @@ EvtGen::EvtGen(const char* const decayName,
   externalGenerators->definePythiaGenerator(xmlDir, convertPhysCode, useEvtGenRandom);
 
   // Set the Tauola external generator
-  externalGenerators->defineTauolaGenerator();
+  externalGenerators->defineTauolaGenerator(useEvtGenRandom);
 
   _initExternalGenerators = false;
 

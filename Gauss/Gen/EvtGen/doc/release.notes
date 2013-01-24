@@ -4,11 +4,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-01-24 - John Back
+ - Updated the Tauola++ and Photos++ engines to use the EvtGen random number
+   engine.
+
 ! 2013-01-23 - John Back
  - Added EvtGenModels/EvtPythiaRandom to allow the EvtGen random number 
    engine to also be used as the random engine for Pythia 8.
-   Added a boolean (useEvtGenRandom, default = true) within the
-   EvtExternalGenList constructor to use this feature.
 
 !========================== EvtGen v13r2 2013-01-16 ==========================
 ! 2013-01-16 - John Back

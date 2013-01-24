@@ -71,20 +71,20 @@ void EvtExternalGenFactory::definePythiaGenerator(std::string xmlDir, bool conve
   
 }
 
-void EvtExternalGenFactory::definePhotosGenerator(std::string photonType) {
+void EvtExternalGenFactory::definePhotosGenerator(std::string photonType, bool useEvtGenRandom) {
 
   int genId = EvtExternalGenFactory::PhotosGenId;
 
-  EvtAbsExternalGen* photosGenerator = new EvtPhotosEngine(photonType);
+  EvtAbsExternalGen* photosGenerator = new EvtPhotosEngine(photonType, useEvtGenRandom);
   _extGenMap[genId] = photosGenerator;
 
 }
 
-void EvtExternalGenFactory::defineTauolaGenerator() {
+void EvtExternalGenFactory::defineTauolaGenerator(bool useEvtGenRandom) {
 
   int genId = EvtExternalGenFactory::TauolaGenId;
 
-  EvtAbsExternalGen* tauolaGenerator = new EvtTauolaEngine();
+  EvtAbsExternalGen* tauolaGenerator = new EvtTauolaEngine(useEvtGenRandom);
   _extGenMap[genId] = tauolaGenerator;
 
 }

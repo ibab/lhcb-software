@@ -18,10 +18,12 @@
 //------------------------------------------------------------------------
 
 #include "EvtGenModels/EvtPhotosEngine.hh"
+
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtPhotonParticle.hh"
 #include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtRandom.hh"
 
 #include "Photos/Photos.h"
 #include "Photos/PhotosHepMCEvent.h"
@@ -34,20 +36,31 @@
 
 #include <iostream>
 #include <sstream>
-#include <string>
 #include <vector>
 
 using std::endl;
 
-EvtPhotosEngine::EvtPhotosEngine(std::string photonType) {
+EvtPhotosEngine::EvtPhotosEngine(std::string photonType, bool useEvtGenRandom) {
 
-  _gammaId = EvtPDL::getId(photonType);
-  if (_gammaId == EvtId(-1, -1)) {
-    report(INFO,"EvtGen")<<"Error in EvtPhotosEngine. Do not recognise the photon type "
-			 <<photonType<<". Setting this to \"gamma\". "<<endl;
-    _gammaId = EvtPDL::getId("gamma");
+  _photonType = photonType;
+  _gammaId = EvtId(-1,-1);
+  _mPhoton = 0.0;
+
+  report(INFO,"EvtGen")<<"Setting up PHOTOS."<<endl;
+
+  if (useEvtGenRandom == true) {
+      
+    report(INFO,"EvtGen")<<"Using EvtGen random number engine also for Photos++"<<endl;
+
+    Photospp::Photos::setRandomGenerator(EvtRandom::Flat);
+
   }
-  _mPhoton = EvtPDL::getMeanMass(_gammaId);
+
+  Photospp::Photos::initialize();
+  // Set minimum photon energy (50keV at 1 GeV scale)
+  Photospp::Photos::setInfraredCutOff(50.0e-6);
+  // Increase the maximum possible value of the interference weight
+  Photospp::Photos::maxWtInterference(4.0); // 2^n, where n = number of charges (+,-)
 
   _initialised = false;
 
@@ -61,16 +74,18 @@ void EvtPhotosEngine::initialise() {
 
   if (_initialised == false) {
 
-    report(INFO,"EvtGen")<<"Initialising PHOTOS."<<endl;
+    _gammaId = EvtPDL::getId(_photonType);
 
-    Photospp::Photos::initialize();
-    // Set minimum photon energy (50keV at 1 GeV scale)
-    Photospp::Photos::setInfraredCutOff(50.0e-6);
-    // Increase the maximum possible value of the interference weight
-    Photospp::Photos::maxWtInterference(4.0); // 2^n, where n = number of charges (+,-)
+    if (_gammaId == EvtId(-1,-1)) {
+      report(INFO,"EvtGen")<<"Error in EvtPhotosEngine. Do not recognise the photon type "
+			   <<_photonType<<". Setting this to \"gamma\". "<<endl;
+      _gammaId = EvtPDL::getId("gamma");
+    }
+
+    _mPhoton = EvtPDL::getMeanMass(_gammaId);
 
     _initialised = true;
-
+ 
   }
 
 }

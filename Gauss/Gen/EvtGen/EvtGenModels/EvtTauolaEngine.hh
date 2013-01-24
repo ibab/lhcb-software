@@ -36,7 +36,7 @@ class EvtTauolaEngine : public EvtAbsExternalGen {
 
 public:
 
-  EvtTauolaEngine();
+  EvtTauolaEngine(bool useEvtGenRandom = true);
   virtual ~EvtTauolaEngine();
 
   virtual bool doDecay(EvtParticle* theMother);

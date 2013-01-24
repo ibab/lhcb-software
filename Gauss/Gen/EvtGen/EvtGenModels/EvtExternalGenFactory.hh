@@ -38,9 +38,9 @@ public:
 
   void initialiseAllGenerators();
 
-  void definePythiaGenerator(std::string xmlDir, bool convertPhysCodes, bool useEvtGenRandom);
-  void definePhotosGenerator(std::string photonType = "gamma");
-  void defineTauolaGenerator();
+  void definePythiaGenerator(std::string xmlDir, bool convertPhysCodes, bool useEvtGenRandom = true);
+  void definePhotosGenerator(std::string photonType = "gamma", bool useEvtGenRandom = true);
+  void defineTauolaGenerator(bool useEvtGenRandom = true);
 
   //methods to add configuration commands to the pythia generators
   void addPythiaCommand( std::string generator, std::string module, std::string param, std::string value);
