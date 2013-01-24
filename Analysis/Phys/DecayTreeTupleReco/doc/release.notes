@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2013-01-24 - Patrick Koppenburg
+ - Rob said "undo your changes", so I did. Actually the functionality is already in the baseclass.
+
 ! 2013-01-22 - P. Koppenburg
  - TupleToolTrackExtrapolation: add a prefix field to allow several instances to be used.
 
