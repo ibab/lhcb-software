@@ -495,7 +495,7 @@ void ScpBinning::print(std::ostream& os) const{
   }
   os << "\n=========================================================="<< endl;
   os << "scp / nbins = " << scpsum << " / " << numBins()
-    								                                     << " = " << scpsum/numBins() << endl;
+    								                                             << " = " << scpsum/numBins() << endl;
   os <<	" Number of Boxes "<<  nBoxes
       << " Number of Sets " << _boxSets.size() << endl;
   os << "===========================================================" << endl;
@@ -522,8 +522,8 @@ double ScpBinning::normFactor() const{
 
   for (int i = 0; i < _boxSets.size(); ++i)
     {
-      sum = sum + _boxSets[i].weightedData();
-      sumCC = sumCC + _boxSets[i].weightedMC();
+      sum = sum + _boxSets[i].weightedData() - _boxSets[i].weightedBkg();
+      sumCC = sumCC + _boxSets[i].weightedMC() - _boxSets[i].weightedBkgCC();
     }
   return (sum/sumCC);
   //	return m_norm;
@@ -535,6 +535,26 @@ void ScpBinning::setBoxesNormFactors(){
   }
 }
 
+double ScpBinning::rawAsym_ofBin(unsigned int i) const{
+  if(i > _boxSets.size()) return -9999;
+
+  double asym = Diff_ofBin(i)/(_boxSets[i].weightedData() + _boxSets[i].weightedMC());
+  return asym;
+}
+
+double ScpBinning::rawAsymErr_ofBin(unsigned int i) const{
+  if(i > _boxSets.size()) return -9999;
+
+  double ErrNData(0);
+  double ErrNDataCC(0);
+
+  double NData = _boxSets[i].weightedData();
+  double NDataCC = _boxSets[i].weightedMC();
+  double Sum = NData+NDataCC;
+  double ErrSq =  2*NDataCC/(Sum*Sum) * ErrNData + -2*NData/(Sum*Sum) * ErrNDataCC;
+
+  return pow(ErrSq,0.5);
+}
 
 double ScpBinning::scp_ofBin(unsigned int i) const{
   if(i > _boxSets.size()) return -9999;
@@ -616,6 +636,28 @@ double ScpBinning::getMaxScp() const{
 
   return max;
 }
+
+double ScpBinning::getMeanScp() const{
+  double scp(0);
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+      scp = scp + scp_ofBin(i);
+  }
+  std::cout << "Mean SCP " << scp/_boxSets.size() << std::endl;
+
+  return scp/_boxSets.size();
+}
+
+double ScpBinning::getMeanErrScp() const{
+  double Var(0);
+  double MeanScp = getMeanScp();
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+      Var = Var + pow((scp_ofBin(i) - MeanScp),2.0);
+  }
+
+
+  return sqrt(Var/_boxSets.size());
+}
+
 
 int ScpBinning::numBins() const{
   return _boxSets.size();
@@ -749,6 +791,7 @@ double ScpBinning::Chi2() const{
   return chi2;
 }
 
+
 double ScpBinning::Prob() const
 {
   double chi2 = this->Chi2();
@@ -790,7 +833,7 @@ void ScpBinning::SubtractBackgroundData(IDalitzEventList* data){
             }
           if(_boxSets[i].subtractData(data->getEvent(),weight)){
               foundBox=true;
-              _nData--;
+              _nBkg++;
               break;
           }
       }
@@ -801,9 +844,9 @@ void ScpBinning::SubtractBackgroundData(IDalitzEventList* data){
           //      data->getEvent()->print();
           cout << "compare to first event: " << endl;
           //      data->getREvent(0)->print();
-          ScpBox box(data->getEvent()->eventPattern());
-          cout << "would have fit into large? "
-              << box.addData(data->getEvent()) << endl;
+          //          ScpBox box(data->getEvent()->eventPattern());
+          //          cout << "would have fit into large? "
+          //              << box.addData(data->getEvent()) << endl;
       }
   }
 }
@@ -818,9 +861,9 @@ void ScpBinning::SubtractBackgroundDataCC(IDalitzEventList* data){
             {
               weight = data->getEvent()->getWeight();
             }
-          if(_boxSets[i].subtractMC(data->getEvent(),1.0)){
+          if(_boxSets[i].subtractMC(data->getEvent(),weight)){
               foundBox=true;
-              _nDataCC--;
+              _nBkgCC++;
               break;
           }
       }
@@ -880,6 +923,26 @@ double ScpBinning::weightedMC() const
   for (int i = 0; i < _boxSets.size(); ++i)
     {
       sum = sum + _boxSets[i].weightedMC();
+    }
+  return sum;
+}
+
+double ScpBinning::weightedBKG() const{
+  double sum(0);
+  for (int i = 0; i < _boxSets.size(); ++i)
+    {
+      sum = sum + _boxSets[i].weightedBkg();
+    }
+  return sum;
+}
+
+
+double ScpBinning::weightedBKGCC() const
+{
+  double sum(0);
+  for (int i = 0; i < _boxSets.size(); ++i)
+    {
+      sum = sum + _boxSets[i].weightedBkgCC();
     }
   return sum;
 }
@@ -1086,6 +1149,35 @@ void ScpBinning::saveAsNTuple(const char* tuplsFileName, IDalitzEventList* data)
   out_tree->Write();
   out_file->Close();
 }
+
+void ScpBinning::saveNTuple(const char* tuplsFileName)
+{
+  TFile *out_file = new TFile(tuplsFileName,"RECREATE");
+  TTree* out_tree = new TTree("SCPVariables","SCPVariables");
+  double SCP = 0;
+
+  double ND(0), NDBar(0), NDBKG(0), NDBarBKG(0);
+  int Bin(0);
+  TBranch *newBranch = out_tree->Branch("SCP", &SCP, "SCP/D");
+  out_tree->Branch("ND", &ND, "ND/D");
+  out_tree->Branch("NDBar", &NDBar, "NDBar/D");
+  out_tree->Branch("NDBKG", &NDBKG, "NDBKG/D");
+  out_tree->Branch("NDBarBKG", &NDBarBKG, "NDBarBKG/D");
+  out_tree->Branch("Bin",&Bin, "Bin/I");
+
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+      SCP = scp_ofBin(i);
+      ND = _boxSets[i].weightedData();
+      NDBar  = _boxSets[i].weightedMC();
+      NDBKG = _boxSets[i].weightedBkg();
+      NDBarBKG  = _boxSets[i].weightedBkgCC();
+      Bin = i;
+      out_tree->Fill();
+  }
+  out_tree->Write();
+  out_file->Close();
+}
+
 
 double ScpBinning::Scp(const IDalitzEvent* Devt)
 {

@@ -29,7 +29,7 @@ ILineshape* CLEO2012_LineshapeMaker(const AssociatedDecayTree* tree
 			   , IDalitzEventAccess* events
 			   , const std::string& lopt
 			   ){
-  bool dbThis=true;
+  bool dbThis=false;
   if(0 == tree) return 0;
   
   if(dbThis){

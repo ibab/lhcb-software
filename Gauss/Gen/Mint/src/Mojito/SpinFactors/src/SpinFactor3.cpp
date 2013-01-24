@@ -82,7 +82,7 @@ bool SpinFactor3::parseTree(){
 
   normalOrder(fsPS[1], fsPS[2]);
 
-  printYourself();
+//  printYourself();
 
   setSpin();
   return true;

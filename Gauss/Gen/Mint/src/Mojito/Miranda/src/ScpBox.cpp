@@ -11,6 +11,8 @@ ScpBox::ScpBox()
 , _nWeightedMC(0.0)
 , _nWeightedData(0.0)
 , _weightMC_Squared(0.0)
+, _nWeightedBkg(0.0)
+, _nWeightedBkgCC(0.0)
 {}
 ScpBox::ScpBox(const DalitzEventPattern& pat)
 : _area(pat)
@@ -19,6 +21,8 @@ ScpBox::ScpBox(const DalitzEventPattern& pat)
 , _nWeightedMC(0.0)
 , _nWeightedData(0.0)
 , _weightMC_Squared(0.0)
+, _nWeightedBkg(0.0)
+, _nWeightedBkgCC(0.0)
 {
   enclosePhaseSpace();
 }
@@ -29,6 +33,8 @@ ScpBox::ScpBox(const DalitzArea& area)
 , _nWeightedMC(0.0)
 , _nWeightedData(0.0)
 , _weightMC_Squared(0.0)
+, _nWeightedBkg(0.0)
+, _nWeightedBkgCC(0.0)
 {}
 ScpBox::ScpBox(const ScpBox& other)
 : _area(other._area)
@@ -37,6 +43,8 @@ ScpBox::ScpBox(const ScpBox& other)
 , _nWeightedMC(other._nWeightedMC)
 , _nWeightedData(other._nWeightedData)
 , _weightMC_Squared(other._weightMC_Squared)
+, _nWeightedBkg(other._nWeightedBkg)
+, _nWeightedBkgCC(other._nWeightedBkgCC)
 {}
 
 void ScpBox::enclosePhaseSpace(double safetyFactor){
@@ -143,6 +151,12 @@ double ScpBox::weightedMC() const{
 double ScpBox::weightedData() const{
   return _nWeightedData;
 }
+double ScpBox::weightedBkg() const{
+  return _nWeightedBkg;
+}
+double ScpBox::weightedBkgCC() const{
+  return _nWeightedBkgCC;
+}
 double ScpBox::weightedMC2() const{
   return _weightMC_Squared;
 }
@@ -166,8 +180,8 @@ double ScpBox::rmsMC(int Ntotal) const{
 
 bool ScpBox::subtractData(const IDalitzEvent& evt, double weight){
   if(! _area.isInside(evt)) return false;
-  _nData--;
-  _nWeightedData -= weight;
+  _nBkg++;
+  _nWeightedBkg= _nWeightedBkg + weight;
   return true;
 }
 
@@ -180,16 +194,17 @@ bool ScpBox::subtractData(const IDalitzEvent* evt, double weight){
       cout << "found data event inside area. This is the event:" << endl;
       evt->print();
   }
+  _nWeightedBkg= _nWeightedBkg + weight;
+  _nBkg++;
 
-  _nWeightedData -= weight;
-  _nData--;
   return true;
 }
 
 bool ScpBox::subtractMC(const IDalitzEvent& evt, double weight){
   if(! _area.isInside(evt)) return false;
-  _nMC--;
-  _nWeightedMC -= weight;
+  _nBkgCC++;
+  _nWeightedBkgCC= _nWeightedBkgCC + weight;
+
   return true;
 }
 
@@ -202,9 +217,10 @@ bool ScpBox::subtractMC(const IDalitzEvent* evt, double weight){
       evt->print();
   }
   if(! _area.isInside(*evt)) return false;
-  _nMC--;
-  _nWeightedMC -= weight;
-  _weightMC_Squared -= weight*weight;
+  _nBkgCC++;
+  _nWeightedBkgCC= _nWeightedBkgCC + weight;
+
+//  _weightMC_Squared -= weight*weight;
 
   if(dbThis) cout << "ScpBox::subtractMC returning; have nMC = "<< _nMC << endl;
   return true;
@@ -212,8 +228,15 @@ bool ScpBox::subtractMC(const IDalitzEvent* evt, double weight){
 
 double ScpBox::scp(double normFactorPassed) const{
 
-  int n_data =  this->weightedData();
+  double n_data =  this->weightedData();
   double n_dataCC = this->weightedMC();
+
+  double n_Bkg =  this->weightedBkg();
+  double n_BkgCC = this->weightedBkgCC();
+
+  double ErrDataSq = n_data+n_Bkg;
+  double ErrDataCCSq = n_dataCC+n_BkgCC;
+
   double scp;
   double alpha = (normFactorPassed);
   if (n_data == 0 || n_dataCC == 0 )
@@ -221,7 +244,7 @@ double ScpBox::scp(double normFactorPassed) const{
       scp = 0;
     }
   else{
-      scp = (n_data-(alpha*n_dataCC))/sqrt(n_data+(alpha*alpha*n_dataCC));
+      scp = ((n_data-n_Bkg)-(alpha*(n_dataCC-n_BkgCC)))/sqrt(ErrDataSq+(alpha*alpha*ErrDataCCSq));
   }
   return scp;
 }
