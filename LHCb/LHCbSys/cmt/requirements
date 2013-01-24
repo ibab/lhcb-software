@@ -91,7 +91,7 @@ use GaudiObjDesc          v11r17
 
 # Kernel packages
 use FSRAlgs               v1r1    Kernel  # Rob Lambert, Jaap Panman
-use HistoStrings          v1r4    Kernel  # Vanya Belyaev
+#use HistoStrings          v1r4    Kernel  # Vanya Belyaev
 use HltInterfaces         v4r8    Kernel  # Patrick Koppenburg
 use KernelSys             v12r2   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r53   Kernel  # Marco Cattaneo
