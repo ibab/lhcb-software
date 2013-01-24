@@ -96,21 +96,18 @@ protected:
   double scp_ofBin(unsigned int i) const;
   double getMaxScp() const;
   double getMinScp() const;
+  double getMeanScp() const;
+  double getMeanErrScp() const;
 
   double Prob() const;
   double Prob(double chi2) const;
-
   double Chi2() const;
-
   int ndof() const;
 
   void SubtractBin(unsigned int i);
-
-
   int Diff_ofBin(unsigned int i) const;
 
   void print(std::ostream& os = std::cout) const;
-
   void setNorm(double norm)
   {
 	  m_norm = norm;
@@ -131,6 +128,9 @@ protected:
   double weightedData() const;
   double weightedMC() const;
 
+  double weightedBKG() const;
+  double weightedBKGCC() const;
+
   int SetBinning(const char*);
 
   void saveBinning(const char*);
@@ -138,6 +138,8 @@ protected:
   double getMinEntries() const;
 
   void saveAsNTuple(const char* tuplsFileName, IDalitzEventList* data);
+
+  void saveNTuple(const char* tuplsFileName);
 
   double Scp(const IDalitzEvent* Devt);
 

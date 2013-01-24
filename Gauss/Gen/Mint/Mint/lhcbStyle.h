@@ -1,3 +1,6 @@
+#ifndef LHCBSTYLE_H
+#define LHCBSTYLE_H
+
 #include "TLatex.h"
 #include "TStyle.h"
 #include "TText.h"
@@ -442,3 +445,4 @@ TStyle* LHCbStyle()
 }
 
 
+#endif
