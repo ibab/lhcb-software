@@ -4,6 +4,9 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+! 2013-01-25 - Olivier Callot
+ - Change the coding of charge, as the ADC will be 6 bits -> 1 MIP ~ 32 cx.
+
 !========================= FTDAQ v1r1 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
