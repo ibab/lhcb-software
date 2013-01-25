@@ -39,8 +39,8 @@ DECLARE_ALGORITHM_FACTORY( FTClusterCreator )
   declareProperty("ADCThreshold" ,      m_adcThreshold      = 1 , "Minimal ADC Count to be added in cluster");
   declareProperty("ClusterMinWidth" ,   m_clusterMinWidth   = 1 , "Minimal allowed width for clusters");
   declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 8 , "Maximal allowed width for clusters");
-  declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 6 , "Minimal charge to keep cluster");
-  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 3 , "Minimal ADC for cluster peaks");
+  declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 8 , "Minimal charge to keep cluster ~4 p.e.");
+  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 5 , "Minimal ADC for cluster peaks, ~2.5 pe.");
 }
 //=============================================================================
 // Destructor

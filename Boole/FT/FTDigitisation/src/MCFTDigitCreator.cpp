@@ -13,11 +13,8 @@
 
 // local
 #include "MCFTDigitCreator.h"
-//#include "FTSortingFunctor.h"
 
 using namespace LHCb;
-
-
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MCFTDigitCreator );
@@ -32,8 +29,9 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
 {
   declareProperty("InputLocation" ,       m_inputLocation        = LHCb::MCFTDepositLocation::Default );
   declareProperty("OutputLocation" ,      m_outputLocation       = LHCb::MCFTDigitLocation::Default   );
-  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 10. );
-  declareProperty("SiPMGain",             m_sipmGain             =  2. );
+  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 86. );  // 0.21 MeV per MIP, 18 photoelectrons per MIP
+  declareProperty("SiPMGain",             m_sipmGain             = 2.0 );
+  declareProperty("ADCNoise",             m_adcNoise             = 0.5 );
 }
 //=============================================================================
 // Destructor
@@ -180,7 +178,8 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
       cumul += last;
     }
   }
-  int adcCount = int( photoElectrons * m_sipmGain );
+  //== Digitise the signal + noise, add 0.5 for rounding
+  int adcCount = int( photoElectrons * m_sipmGain + m_adcNoise * m_gauss() + 0.5 );
   
   if( msgLevel( MSG::DEBUG) ){
     debug() <<format("deposit2ADC() : energySum=%8.3f averagePE=%8.2f realPE %4i Gain=%8.3f adcCount = %4i",

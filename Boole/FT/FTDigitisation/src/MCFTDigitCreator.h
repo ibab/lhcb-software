@@ -50,6 +50,7 @@ private:
 
   double m_photoElectronsPerMeV; ///< mean number of photoelectrons produced per deposited MeV
   double m_sipmGain; ///< SiPM gain
+  double m_adcNoise; ///< Sigma of the noise in the ADC.
 
   Rndm::Numbers m_gauss;
   Rndm::Numbers m_flat;
