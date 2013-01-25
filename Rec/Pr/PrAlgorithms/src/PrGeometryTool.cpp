@@ -49,24 +49,24 @@ StatusCode PrGeometryTool::initialize ( ) {
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
   if ( m_zMagnetParams.size() == 0 ) {
-    m_zMagnetParams.push_back(  5211.26  );
-    m_zMagnetParams.push_back(   448.027 );
-    m_zMagnetParams.push_back( -1170.42  );
-    m_zMagnetParams.push_back(  -529.514 );
+    m_zMagnetParams.push_back(  5212.38  );
+    m_zMagnetParams.push_back(   406.609 );
+    m_zMagnetParams.push_back( -1102.35  );
+    m_zMagnetParams.push_back(  -498.039 );
   }
   if ( m_xParams.size() == 0 ) {
-    m_xParams.push_back( -18.2925  );
-    m_xParams.push_back(   5.62397 );
+    m_xParams.push_back(  18.6195  );
+    m_xParams.push_back(  -5.55793 );
   }
-  if ( m_byParams.size() == 0. ) m_byParams.push_back( -1.54 );
-  if ( m_cyParams.size() == 0. ) m_cyParams.push_back( -5.37e-05 );
+  if ( m_byParams.size() == 0. ) m_byParams.push_back( -0.667996    );
+  if ( m_cyParams.size() == 0. ) m_cyParams.push_back( -3.68424e-05 );
   if ( m_momentumParams.size() == 0 ) {
-    m_momentumParams.push_back(  1.2585  );
-    m_momentumParams.push_back( -32.0535 );
-    m_momentumParams.push_back( 52342.4 );
-    m_momentumParams.push_back( -18.5486 );
-    m_momentumParams.push_back(  0.67387  );
-    m_momentumParams.push_back(  0.74933  );
+    m_momentumParams.push_back(   1.21014  );
+    m_momentumParams.push_back(   0.637339 );
+    m_momentumParams.push_back(  -0.200292 );
+    m_momentumParams.push_back(   0.632298 );
+    m_momentumParams.push_back(   3.23793  );
+    m_momentumParams.push_back( -27.0259   );
   }
   if ( m_covarianceValues.size() == 0 ) {
     m_covarianceValues.push_back( 4.0   ); // ErrX = 2mm 
@@ -90,7 +90,7 @@ float PrGeometryTool::xAtReferencePlane( PrForwardTrack& track, PrHit* hit ) {
   float xMag    = track.xFromVelo( zMag );
   float dz      = 1.e-3 * ( zHit - m_zReference );
   float dxCoef  = dz * dz * ( m_xParams[0] + dz * m_xParams[1] );
-  xHit          = xHit - dxCoef * dSlope ;
+  xHit          = xHit + dxCoef * dSlope ;
   float x       = xMag + ( m_zReference - zMag ) * ( xHit - xMag ) / ( zHit - zMag );
   hit->setCoord( x );
   return x;
@@ -104,7 +104,7 @@ void PrGeometryTool::setTrackParameters ( PrForwardTrack& track, float xAtRef ) 
   float zMag    = zMagnet( track ) + m_zMagnetParams[1] * dSlope * dSlope;
   float xMag    = track.xFromVelo( zMag );
   float slopeT  = ( xAtRef - xMag ) / ( m_zReference - zMag );
-  dSlope        = track.slX() - slopeT;
+  dSlope        = slopeT - track.slX();
   float dyCoef  = dSlope * dSlope * track.slY();
   
   track.setParameters( xAtRef,
@@ -159,7 +159,7 @@ float PrGeometryTool::qOverP ( const PrForwardTrack& track) {
   float qop(1.0/Gaudi::Units::GeV) ;
   float magscalefactor = m_magFieldSvc->signedRelativeCurrent() ;
   if( std::abs(magscalefactor) > 1e-6 ) {
-    float bx   = track.xSlope( 0. );
+    float bx   = track.xSlope( m_zReference );
     float bx2  = bx * bx;
     float coef = ( m_momentumParams[0] +
                    m_momentumParams[1] * bx2 +

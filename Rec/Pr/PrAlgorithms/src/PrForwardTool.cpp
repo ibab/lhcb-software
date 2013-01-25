@@ -202,7 +202,9 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
 //=========================================================================
 void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side ) {
   m_allXHits.clear();
-  float openingAngle = 1300. * sqrt( track.slX2() + track.slY2() ) / m_minPt;
+  //== Compute the size of the search window in the reference plane
+  float dxRef = 3973000. * sqrt( track.slX2() + track.slY2() ) / m_minPt - 2200. * track.slY2() - 1000. * track.slX2();
+  dxRef *= 1.10; //== 10% tolerance
   float zMag = m_geoTool->zMagnet( track );
   m_nbXPlanes = 0;
   for ( unsigned int zoneNumber = side; m_hitManager->nbZones() > zoneNumber; zoneNumber+=2 ) {
@@ -217,19 +219,21 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
     float xInZone = track.xFromVelo( zZone );
     float yInZone = track.yFromVelo( zZone );
     if ( !zone->isInside( xInZone, yInZone ) ) continue;
-    float xTol  = openingAngle * ( zZone - zMag );
+    float xTol  = dxRef * zZone / m_geoTool->zReference();
+    if ( zZone > m_geoTool->zReference() ) xTol = dxRef * (zZone - zMag) / ( m_geoTool->zReference() - zMag );
     float xMin  = xInZone - xTol;
     float xMax  = xInZone + xTol;
     float dx    = yInZone * zoneUv->dxDy();
     PrHits::const_iterator itUv = m_hitManager->hits( uvZoneNumber ).begin();
     float zRatio = ( zoneUv->z() - zMag ) / ( zZone - zMag );
     float xCentral = xInZone + yInZone * zoneUv->dxDy();
+    float xInUv = track.xFromVelo( zoneUv->z() );
     for ( PrHits::const_iterator itH = m_hitManager->hits( zoneNumber ).begin();
           m_hitManager->hits( zoneNumber ).end() != itH; ++itH ) {
-      (*itH)->setUsed( false );
       if ( (*itH)->x() < xMin ) continue;
       if ( (*itH)->x() > xMax ) break;
-      float xPredUv = xInZone + ( (*itH)->x() - xInZone) * zRatio - dx;
+      (*itH)->setUsed( false );
+      float xPredUv = xInUv + ( (*itH)->x() - xInZone) * zRatio - dx;
       float maxDx   = m_tolY + ( fabs( (*itH)->x() -xCentral ) + fabs( yInZone ) ) * m_tolYSlope;
       while ( (*itUv)->x() < xPredUv - maxDx ) {
         if ( itUv == m_hitManager->hits( uvZoneNumber ).end()-1 ) break;

@@ -5,6 +5,7 @@
 // from Gaudi
 #include "PrKernel/PrHitManager.h"
 #include "FTDet/DeFTDetector.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 static const InterfaceID IID_PrFTHitManager ( "PrFTHitManager", 1, 0 );
 
@@ -35,5 +36,8 @@ protected:
 
 private:
   DeFTDetector* m_ftDet;
+  Rndm::Numbers m_gauss;
+  float m_xSmearing;
+  float m_zSmearing;
 };
 #endif // PRFTHITMANAGER_H

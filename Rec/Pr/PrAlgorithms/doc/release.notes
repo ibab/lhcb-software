@@ -4,6 +4,11 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-11-21 - Olivier Callot
+ - Better parameterisation of momentum and pprojections
+ - New parameterisation of the zone to look at in the T stations for a given Pt.
+   The same parameters could be used to rpedict the position if te hmomentum is known.
+
 !========================= PrAlgorithms v1r1 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.

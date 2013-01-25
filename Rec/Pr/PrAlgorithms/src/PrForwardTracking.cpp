@@ -52,7 +52,7 @@ StatusCode PrForwardTracking::initialize() {
   m_hitManager = tool<PrHitManager>( m_hitManagerName );
   m_hitManager->buildGeometry();
   
-  m_forwardTool = tool<IPrForwardTool>( m_forwardToolName );
+  m_forwardTool = tool<IPrForwardTool>( m_forwardToolName, this );
 
   m_debugTool   = 0;
   if ( "" != m_debugToolName ) {

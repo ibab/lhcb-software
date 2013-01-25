@@ -3,7 +3,7 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "Event/FTRawCluster.h"
-
+#include "GaudiKernel/IRndmGenSvc.h"
 // local
 #include "PrFTHitManager.h"
 
@@ -26,7 +26,8 @@ PrFTHitManager::PrFTHitManager( const std::string& type,
   : PrHitManager ( type, name , parent )
 {
   declareInterface<PrFTHitManager>(this);
-
+  declareProperty( "XSmearing",   m_xSmearing = -1. );
+  declareProperty( "ZSmearing",   m_zSmearing = -1. );
 }
 //=============================================================================
 // Destructor
@@ -37,6 +38,9 @@ PrFTHitManager::~PrFTHitManager() {}
 //  Create the zones in the hit manager, 'zone' is a method of the base class
 //=========================================================================
 void PrFTHitManager::buildGeometry ( ) {
+  IRndmGenSvc* randSvc;
+  service( "RndmGenSvc", randSvc );
+  m_gauss.initialize( randSvc, Rndm::Gauss( 0., 1. ) );
   m_ftDet = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
   for ( std::vector<DeFTLayer*>::const_iterator itL = m_ftDet->layers().begin();
         m_ftDet->layers().end() != itL; ++itL ) {
@@ -49,6 +53,7 @@ void PrFTHitManager::buildGeometry ( ) {
     zone( 2*id+1 )->setBoundaries( -4090., 4090., -50., 3030. );    
     debug() << "Zone " << id << " z " << zone(2*id)->z() << " angle " << zone(2*id)->dxDy() << endmsg;
   }
+  info() << "XSmearing " << m_xSmearing << " ZSmearing " << m_zSmearing << endmsg;
 }
 
 //=========================================================================
@@ -61,7 +66,10 @@ void PrFTHitManager::decodeData ( ) {
   DeFTLayer* myLayer = NULL;
   unsigned int oldLayer = 1000;
   debug() << "Retrieved " << clus->size() << " clusters" << endmsg;
-  
+
+  float zDisplacement = 0.;
+  unsigned int oldBiLayer = 1000;
+
   for ( FTRawClusters::iterator itC = clus->begin(); clus->end() != itC; ++itC ) {
     if( (*itC).channelID().layer() != oldLayer ) {
       oldLayer =(*itC).channelID().layer();
@@ -70,10 +78,33 @@ void PrFTHitManager::decodeData ( ) {
         info() << "Layer not found for FT channelID " << (*itC).channelID() << endmsg;    
         oldLayer = 1000;
       }
+      unsigned int biLayer = (*itC).channelID().layer()/2;
+      if ( m_zSmearing > 0. && biLayer != oldBiLayer ) {
+        oldBiLayer = biLayer;
+        zDisplacement = m_zSmearing * m_gauss();
+        if ( msgLevel( MSG::DEBUG ) ) {
+          debug () << "Bilayer " << biLayer << " z displacement " << zDisplacement << endmsg;
+        }
+      }
     }
     float fraction = (*itC).fraction() + 0.125;   // Truncated to 4 bits = 0.25. Add half of it
     LHCb::FTChannelID id = (*itC).channelID();
     DetectorSegment seg = myLayer->createDetSegment( id, fraction );
+
+    //== Add some smearing if needed
+    if ( m_xSmearing > 0. || m_zSmearing > 0. ) {
+      float x0 = seg.x(0.);
+      float z0 = seg.z(0.);
+      float dxDy = 0.001 * ( seg.x(1000.)-seg.x(0.) );
+      float dzDy = 0.001 * ( seg.z(1000.)-seg.z(0.) );
+      float yMin = seg.yMin();
+      float yMax = seg.yMax();
+      
+      if ( m_xSmearing > 0. ) x0 = x0 + m_xSmearing * m_gauss();
+      if ( m_zSmearing > 0. ) z0 = z0 + zDisplacement;
+      DetectorSegment tmp( x0, z0, dxDy, dzDy, yMin, yMax );
+      seg = tmp;
+    }
 
     int lay  = (*itC).channelID().layer();
     int zone = ( (*itC).channelID().quarter() > 1 ) ? 1 : 0;
