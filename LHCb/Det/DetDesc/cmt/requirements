@@ -28,6 +28,6 @@ apply_pattern     reflex_dictionary                                 \
                   selectionfile=$(DETDESCROOT)/dict/DetDescDict.xml \
                   options="-U__MINGW32__"
 
-macro_append ROOT_linkopts " -lMathCore -lGenVector " \
-             WIN32 " libMathCore.lib libGenVector.lib "
+macro_append ROOT_linkopts " -lMathCore -lGenVector -lHist -lXMLIO " \
+             WIN32 " libMathCore.lib libGenVector.lib libHist.lib libXMLIO.lib "
 
