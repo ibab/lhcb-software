@@ -6,7 +6,7 @@
 #include "DetDescCnv/XmlBaseConditionCnv.h"
 #include "XmlTools/IXmlSvc.h"
 
-#include "Kernel/HistoParsers.h"
+#include "GaudiUtils/HistoParsers.h"
 #include "DetDesc/HistoParam.h"
 
 #include <sstream>
@@ -22,7 +22,7 @@ class ISvcLocator;
 // -----------------------------------------------------------------------
 namespace {
   /// helper function for converton of 1d or 2d histograms
-  template<typename HTYPE> 
+  template<typename HTYPE>
   StatusCode _addHisto(Condition         *dataObj ,
                        const std::string &name    ,
                              std::string  value   ,
@@ -40,7 +40,7 @@ XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc) :
   paramVectorString = xercesc::XMLString::transcode("paramVector");
   mapString = xercesc::XMLString::transcode("map");
   itemString = xercesc::XMLString::transcode("item");
-  
+
   typeString = xercesc::XMLString::transcode("type");
   nameString = xercesc::XMLString::transcode("name");
   commentString = xercesc::XMLString::transcode("comment");
@@ -63,7 +63,7 @@ XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc,
   paramVectorString = xercesc::XMLString::transcode("paramVector");
   mapString = xercesc::XMLString::transcode("map");
   itemString = xercesc::XMLString::transcode("item");
-  
+
   typeString = xercesc::XMLString::transcode("type");
   nameString = xercesc::XMLString::transcode("name");
   commentString = xercesc::XMLString::transcode("comment");
@@ -83,7 +83,7 @@ XmlBaseConditionCnv::~XmlBaseConditionCnv () {
   xercesc::XMLString::release((XMLCh**)&paramVectorString);
   xercesc::XMLString::release((XMLCh**)&mapString);
   xercesc::XMLString::release((XMLCh**)&itemString);
-  
+
   xercesc::XMLString::release((XMLCh**)&typeString);
   xercesc::XMLString::release((XMLCh**)&nameString);
   xercesc::XMLString::release((XMLCh**)&commentString);
@@ -153,7 +153,7 @@ StatusCode XmlBaseConditionCnv::i_createObj (xercesc::DOMElement* /*element*/,
   // Since the name is never used afterwars, we just don't pass it to
   // the condition object
   refpObject = new Condition (/*elementName*/);
-  
+
   // returns
   return StatusCode::SUCCESS;
 } // end i_createObj
@@ -201,7 +201,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
     std::string type = dom2Std (childElement->getAttribute (typeString));
     std::string name = dom2Std (childElement->getAttribute (nameString));
     std::string comment = dom2Std (childElement->getAttribute (commentString));
-    
+
     // gets the value
     std::string value;
     xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
@@ -243,7 +243,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
         StatusCode sc = _addHisto<DetDesc::Params::Histo2D>(dataObj, name, value, comment);
         if ( sc.isFailure() )
           error() << "failed to parse Histo2D name ='" << name
-                  << "' value = '" << value << "'" << endmsg;      
+                  << "' value = '" << value << "'" << endmsg;
       } else {
         dataObj->addParam<std::string>(name,value,comment);
       }
@@ -256,7 +256,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
       while (cstr >> val) {
         vect.push_back (val);
       }
-      
+
       // depending on the type, evaluates the value
       std::vector<double> d_vect;
       std::vector<int> i_vect;
@@ -285,7 +285,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
         verbose() << ", type " << type << " and comment \""
                   << comment << "\"." << endmsg;
       }
-      
+
       if ("int" == type) {
         dataObj->addParam(name,i_vect,comment);
       } else if ("double" == type) {
@@ -299,7 +299,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
     std::string comment = dom2Std(childElement->getAttribute(commentString));
     std::string keytype = dom2Std(childElement->getAttribute(keytypeString));
     std::string valuetype = dom2Std(childElement->getAttribute(valuetypeString));
-    
+
     xercesc::DOMNodeList* entries = childElement->getChildNodes();
     if ( keytype == "string" ) {
       if ( valuetype == "int" ) {
