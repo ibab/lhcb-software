@@ -3,6 +3,10 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+! 2013-01-25 - Francesco Dettori
+ - Adding new algorithm for debuggin OT channels (OTChannelMonitor)
+
+
 !========================= OTMonitor v3r4 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
