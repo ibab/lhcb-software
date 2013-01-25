@@ -90,7 +90,7 @@ StatusCode FTRawBankEncoder::execute() {
       int frac = int( (*itC)->fraction() * (FTRawBank::fractionMaximum+1) );
       int cell = id.sipmCell();
       int cSize = (*itC)->size();
-      int charg = (*itC)->charge() / 8; // one MIP should be around 32 (6 bits ADC) -> coded as 2.
+      int charg = (*itC)->charge() / 16; // one MIP should be around 32 (6 bits ADC) -> coded as 2.
       if ( 0 > frac || FTRawBank::fractionMaximum < frac  ) frac  = FTRawBank::fractionMaximum;
       if ( 0 > cell || FTRawBank::cellMaximum     < cell  ) cell  = FTRawBank::cellMaximum;
       if ( 0 > cSize|| FTRawBank::sizeMaximum     < cSize ) cSize = FTRawBank::sizeMaximum;
