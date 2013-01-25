@@ -1,22 +1,9 @@
-# Special wrapper to load the declared version of the heptools toolchain.
-set(heptools_version 64b)
-
-# Remove the reference to this file from the cache.
-unset(CMAKE_TOOLCHAIN_FILE CACHE)
-
-# Find the actual toolchain file.
-find_file(CMAKE_TOOLCHAIN_FILE
-          NAMES heptools-${heptools_version}.cmake
-          HINTS ENV CMTPROJECTPATH
-          PATHS ${CMAKE_CURRENT_LIST_DIR}/cmake/toolchain
-          PATH_SUFFIXES toolchain)
-
-if(NOT CMAKE_TOOLCHAIN_FILE)
-  message(FATAL_ERROR "Cannot find heptools-${heptools_version}.cmake.")
+# Special toolchain file that inherits the same heptools version as the
+# used projects.
+find_file(inherit_heptools_module InheritHEPTools.cmake)
+# this check is needed because the toolchain seem to be called a second time
+# without the proper cache
+if(inherit_heptools_module)
+  include(${inherit_heptools_module})
+  inherit_heptools()
 endif()
-
-# Reset the cache variable to have proper documentation.
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_TOOLCHAIN_FILE}
-    CACHE FILEPATH "The CMake toolchain file" FORCE)
-
-include(${CMAKE_TOOLCHAIN_FILE})
