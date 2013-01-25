@@ -374,7 +374,10 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       sensor->tell1EventInfo().setHasError(true);
       StatusCode sc = replaceFullFromLite(clusters,sensor->sensorNumber(),
                                           banks);
-      if(!sc) return sc;
+      if(!sc){
+        delete clusters;
+        return Error("Failed to convert lite to fake full VELO clusters");
+      }
     } else { // we got clusters decoded from this bank, update TELL1 event info
       sensor->tell1EventInfo().setWasDecoded(true); 
     }
