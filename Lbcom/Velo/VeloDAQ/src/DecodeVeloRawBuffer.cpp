@@ -370,7 +370,7 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
           << endmsg;
       failEvent(format("Raw data corruption in the VELO, bank source ID %i",
             rb->sourceID()),
-          "CorruptVeloBuffer",CorruptVeloBuffer,true);
+          "CorruptVeloBuffer",CorruptVeloBuffer,false);
       sensor->tell1EventInfo().setHasError(true);
       StatusCode sc = replaceFullFromLite(clusters,sensor->sensorNumber(),
                                           banks);
