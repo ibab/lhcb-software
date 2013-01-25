@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-01-25 - Vanya Belyaev
+
+ - TrackScaleState algorithm: 
+   change the default path in CONDDB 
+
 ! 2013-01-18 - Vanya Belyaev
 
  - add TrackScaleState algorithm: 

@@ -364,7 +364,7 @@ TrackScaleState::TrackScaleState
   ISvcLocator*       pSvc )
   : base_class ( name , pSvc )
 //
-  , m_cond_path     ( "/dd/Conditions/Calibration/MomentumScale" ) 
+  , m_cond_path     ( "/dd/Conditions/Calibration/LHCb/MomentumScale" ) 
   , m_h1_str        ()  // the first  histogram for state scaling 
   , m_h2_str        ()  // the second histogram for state scaling 
   , m_offsets_str   ()  // run-dependent offsets for the scaling 
@@ -554,8 +554,8 @@ StatusCode TrackScaleState::i_updateDATA ()
       return Error ( "Unable to get 'IdpPlus'  from CONDDB" ) ;
     }
     //
-    ON_DEBUG
-    { debug() << "Comment for IdpPlus  : " << m_condition->comment ( "IdpPlus"  ) << endreq ; }
+    // ON_DEBUG
+    { info () << "Comment for IdpPlus  : " << m_condition->comment ( "IdpPlus"  ) << endreq ; }
     //
     h2 = DetDesc::Params::paramAsHisto2D ( m_condition , "IdpMinus"  ) ;
     if ( 0 == h2 ) 
@@ -564,8 +564,8 @@ StatusCode TrackScaleState::i_updateDATA ()
       return Error ( "Unable to get 'IdpMinus' from CONDDB") ; 
     }
     //
-    ON_DEBUG
-    { debug() << "Comment for IdpMinus : " << m_condition->comment ( "IdpMinus" ) << endreq ; }
+    // ON_DEBUG
+    { info () << "Comment for IdpMinus : " << m_condition->comment ( "IdpMinus" ) << endreq ; }
     //
     ro = DetDesc::Params::paramAsHisto1D ( m_condition , "Offsets"   ) ;
     if ( 0 == ro ) 
@@ -574,16 +574,16 @@ StatusCode TrackScaleState::i_updateDATA ()
       return Error ( "Unable to get 'Offsets' from CONDDB") ; 
     }
     //
-    ON_DEBUG
-    { debug() << "Comment for Offsets  : " << m_condition->comment ( "Offsets"  ) << endreq ; }
+    // ON_DEBUG
+    { info () << "Comment for Offsets  : " << m_condition->comment ( "Offsets"  ) << endreq ; }
     //
     if ( m_condition->exists ( "Delta" ) && m_condition->is<double>( "Delta" ) ) 
     { 
       m_delta = m_condition->paramAsDouble ( "Delta" ) ;
       counter("#DELTA update") += m_delta ;
       //
-      ON_DEBUG
-      { debug() << "Comment for Delta    : " << m_condition->comment ( "Delta"    ) << endreq ; }
+      // ON_DEBUG
+      { info () << "Comment for Delta    : " << m_condition->comment ( "Delta"    ) << endreq ; }
       //
     }
     //
@@ -591,15 +591,13 @@ StatusCode TrackScaleState::i_updateDATA ()
   catch ( GaudiException& e ) 
   {
     ++counter("#CONDB problem") ;
-    return Error("Unable to get data form CONDDB" , e.code() ) ; // RETURN
+    return Error("Unable to get data from CONDDB" , e.code() ) ; // RETURN
   }
   //
-  ON_DEBUG { 
-    debug() << " Condition: " << m_condition -> name()    << "   "
-            << ( m_condition ->isValid() ? "  Valid;  " : "Invalid;  " ) 
-            << " Validity: "  << m_condition -> validSince () 
-            << " -> "         << m_condition -> validTill  () << endreq ;
-  }
+  info () << " Condition: " << m_condition -> name()    << "   "
+          << ( m_condition ->isValid() ? "  Valid;  " : "Invalid; " ) 
+          << " Validity: "  << m_condition -> validSince ().format ( true ) 
+          << " -> "         << m_condition -> validTill  ().format ( true )  << endreq ;
   //
   h1 -> Copy ( m_h1      ) ;
   h2 -> Copy ( m_h2      ) ;
