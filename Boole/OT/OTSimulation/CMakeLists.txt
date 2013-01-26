@@ -9,9 +9,10 @@ gaudi_depends_on_subdirs(Det/OTDet
 
 find_package(Boost)
 find_package(GSL)
+find_package(AIDA)
 
 gaudi_add_module(OTSimulation
                  src/*.cpp
-                 INCLUDE_DIRS GSL Boost OT/OTDAQ
+                 INCLUDE_DIRS GSL Boost OT/OTDAQ AIDA
                  LINK_LIBRARIES GSL Boost OTDetLib MCEvent)
 

@@ -10,6 +10,7 @@ use OTDAQ   v*  OT
 use OTDet   v*  Det
 use Boost   v*  LCG_Interfaces
 use GSL     v*  LCG_Interfaces
+use AIDA    v*  LCG_Interfaces
 
 # ================= component library ====================
 library OTSimulation ../src/*.cpp
