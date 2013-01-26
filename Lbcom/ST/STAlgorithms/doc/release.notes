@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2013-01-26 - Marco Clemencic
+ - Added dependency on AIDA.
+
 !========================= STAlgorithms v4r5 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.

@@ -13,6 +13,7 @@ use DigiEvent           v*    Event
 use STDet               v*    Det
 use STKernel            v*    ST
 use RecEvent            v*    Event
+use AIDA                v*    LCG_Interfaces
 
 # ================= component library ====================
 library STAlgorithms ../src/*.cpp  import=AIDA

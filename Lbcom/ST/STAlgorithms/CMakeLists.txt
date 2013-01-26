@@ -12,8 +12,10 @@ gaudi_depends_on_subdirs(Det/STDet
                          Kernel/LHCbKernel
                          ST/STKernel)
 
+find_package(AIDA)
+
 gaudi_add_module(STAlgorithms
                  src/*.cpp
-                 INCLUDE_DIRS Event/DigiEvent
+                 INCLUDE_DIRS Event/DigiEvent AIDA
                  LINK_LIBRARIES STDetLib RecEvent GaudiAlgLib GaudiGSLLib GaudiKernel LHCbKernel STKernelLib)
 
