@@ -13,8 +13,10 @@ gaudi_depends_on_subdirs(Det/VeloDet
                          Tf/TfTools
                          Tr/TrackInterfaces)
 
+find_package(AIDA)
+
 gaudi_add_module(PatVelo
                  src/*.cpp
-                 INCLUDE_DIRS Event/DigiEvent Tf/PatKernel Tf/TfKernel Tr/TrackInterfaces
+                 INCLUDE_DIRS Event/DigiEvent Tf/PatKernel Tf/TfKernel Tr/TrackInterfaces AIDA
                  LINK_LIBRARIES VeloDetLib TrackEvent GaudiAlgLib LHCbMathLib)
 

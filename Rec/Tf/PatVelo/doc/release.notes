@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2013-01-26 - Marco Clemencic
+ - Added dependency on AIDA.
+
 !========================= PatVelo v3r27 2012-11-28 =========================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.

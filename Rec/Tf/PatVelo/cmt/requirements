@@ -21,6 +21,7 @@ use     TfKernel        v*      Tf
 use     TfTools         v*      Tf
 use     LHCbMath        v*      Kernel
 use     GaudiAlg        v*
+use     AIDA            v*      LCG_Interfaces
 
 # Component library building rule
 #============================================================================
