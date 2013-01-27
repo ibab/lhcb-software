@@ -218,9 +218,10 @@ StatusCode TrackIPResolutionChecker::execute()
       if(mcparticle->momentum().Pz()>0 &&
 	 mcparticle->momentum().Pt()> 200 ) {
 	
-	double ptGeV = mcparticle->momentum().Pt() / Gaudi::Units::GeV ;
-	double invtrueptGeV = 1/ptGeV ;
-	plot1D( ptGeV, "IP/ptH1", "Pt in GeV", 0, 5 ) ;
+	double trueptGeV = mcparticle->momentum().Pt() / Gaudi::Units::GeV ;
+	double truephi = mcparticle->momentum().Phi() ;
+	double invtrueptGeV = 1/trueptGeV ;
+	plot1D( trueptGeV, "IP/TruePtH1", "true Pt in GeV", 0, 5 ) ;
 	
 	plot(track->lhcbIDs().size(),"NumLHCBIDs","Number of LHCbIDs",-0.5,40.5,41) ;
 	Gaudi::XYZPoint trueorigin = mcparticle->originVertex()->position() ;
@@ -239,8 +240,15 @@ StatusCode TrackIPResolutionChecker::execute()
 	double IPy = state.y() - trueorigin.y() ;
 	double IP3D = std::sqrt( (IPx*IPx+IPy*IPy)/(1 + tx*tx + ty*ty) ) ;
 	plot2D( invtrueptGeV, IPx, "IP/IPXVsInvTruePtH2", "IPx versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
-	plot2D( invtrueptGeV, IPy, "IP/IPYVsInvTruePtH2", "IPx versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
+	plot2D( invtrueptGeV, IPy, "IP/IPYVsInvTruePtH2", "IPy versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
 	plot2D( invtrueptGeV, IP3D, "IP/IP3DVsInvTruePtH2", "IP versus 1/pt_true", 0, maxinvpt, 0, maxip, nbinsinvpt, 200 ) ;
+
+	if( trueptGeV > 0.5 ) {
+	  const double pi = M_PI ;
+	  plot2D( truephi, IPx, "IP/IPXVsTruePhiH2", "IPx versus phi_{true}", -pi, pi, -maxip, maxip, 24, 100 ) ;
+	  plot2D( truephi, IPy, "IP/IPYVsTruePhiH2", "IPy versus phi_{true}", -pi, pi, -maxip, maxip, 24, 100 ) ;
+	}
+	
 	plot1D( IPx, "IP/IPxH1","IP x", -maxip,maxip) ;
 	plot1D( IPy, "IP/IPyH1","IP y", -maxip,maxip) ;
 	plot1D( IP3D, "IP/IP3DH1","IP 3D",0,maxip) ;
