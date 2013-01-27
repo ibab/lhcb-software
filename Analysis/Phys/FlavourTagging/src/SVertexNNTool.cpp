@@ -327,16 +327,14 @@ double SVertexNNTool::SIGMOID(double x){
 }
 double SVertexNNTool::ipprob(double x) {
   if( x > 40. ) return 0.6;
-  double r = - 0.535 + 0.3351*x - 0.03102*pow(x,2) + 0.001316*pow(x,3)
-    - 0.00002598*pow(x,4) + 0.0000001919*pow(x,5);
-  if(r<0) r=0;
-  return r;
+  const double r = - 0.535 + x * (0.3351 + x *(-0.03102 + x * (0.001316 +
+		  x * (-0.00002598 + x * 0.0000001919))));
+  return (r < 0.) ? 0. : r;
 }
 double SVertexNNTool::ptprob(double x) {
   if( x > 5.0 ) return 0.65;
-  double r = 0.04332 + 0.9493*x - 0.5283*pow(x,2) + 0.1296*pow(x,3)
-    - 0.01094*pow(x,4);
-  if(r<0) r=0;
-  return r;
+  const double r = 0.04332 + x * (0.9493 + x * (-0.5283 + x *(0.1296 +
+		  x * -0.01094)));
+  return (r < 0.) ? 0. : r;
 }
 //=============================================================================

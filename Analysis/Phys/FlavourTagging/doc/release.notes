@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-01-27 - Manuel Tobias Schiller
+ - get rid of even more useless pow(..., integer) invocations...
+
+! 2013-01-27 - Manuel Tobias Schiller
  - complete rewrite of the clone definition in the flavour tagging input based
    on my experience with tracking in LHCb; also, use a smarter algorithm to
    kill clones...

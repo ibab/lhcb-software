@@ -372,12 +372,13 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   
   RecVertex::Range::const_iterator jv;
   for(jv=verts.begin(); jv!=verts.end(); jv++){
+    const double dx = RecVert->position().x()-(*jv)->position().x();
+    const double dy = RecVert->position().y()-(*jv)->position().y();
+    const double dz = RecVert->position().z()-(*jv)->position().z();
 
-    double chiPV = sqrt( 
-                        pow((RecVert->position().x()-(*jv)->position().x()),2)/RecVert->covMatrix()(0,0) +
-                        pow((RecVert->position().y()-(*jv)->position().y()),2)/RecVert->covMatrix()(1,1) +
-                        pow((RecVert->position().z()-(*jv)->position().z()),2)/RecVert->covMatrix()(2,2)
-                        );
+    const double chiPV = sqrt(dx * dx / RecVert->covMatrix()(0,0) +
+	    dy * dy / RecVert->covMatrix()(1,1) +
+	    dz * dz / RecVert->covMatrix()(2,2));
     
     if(chiPV < min_chiPV) min_chiPV = chiPV;
     
@@ -392,11 +393,12 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   if(min_chiPV!=the_chiPV || nPV!=1 ) {
     PileUpVtx.clear();    
     for(jv=verts.begin(); jv!=verts.end(); jv++){
-      double chiPV = sqrt( 
-                          pow((RecVert->position().x()-(*jv)->position().x()),2)/RecVert->covMatrix()(0,0) +
-                          pow((RecVert->position().y()-(*jv)->position().y()),2)/RecVert->covMatrix()(1,1) +
-                          pow((RecVert->position().z()-(*jv)->position().z()),2)/RecVert->covMatrix()(2,2)
-                          );
+      const double dxx = RecVert->position().x()-(*jv)->position().x();
+      const double dyy = RecVert->position().y()-(*jv)->position().y();
+      const double dzz = RecVert->position().z()-(*jv)->position().z();
+      const double chiPV = sqrt(dxx * dxx / RecVert->covMatrix()(0,0) +
+	      dyy * dyy / RecVert->covMatrix()(1,1) +
+	      dzz * dzz / RecVert->covMatrix()(2,2));
       
       if(chiPV == min_chiPV) continue;
       else PileUpVtx.push_back(*jv);

@@ -311,22 +311,19 @@ double SVertexTool::angle( Gaudi::LorentzVector a, Gaudi::LorentzVector b) {
 }
 double SVertexTool::ipprob(double x) {
   if( x > 40. ) return 0.6;
-  double r = m_ipfitpol0 + m_ipfitpol1*x + m_ipfitpol2*pow(x,2)
-    + m_ipfitpol3*pow(x,3) + m_ipfitpol4*pow(x,4) + m_ipfitpol5*pow(x,5);
-  if(r<0) r=0;
-  return r;
+  const double r = m_ipfitpol0 + x * (m_ipfitpol1 + x * (m_ipfitpol2 +
+	      x * (m_ipfitpol3 + x * (m_ipfitpol4 + x * m_ipfitpol5))));
+  return (r < 0.) ? 0. : r;
 }
 double SVertexTool::ptprob(double x) {
   if( x > 5.0 ) return 0.65;
-  double r = m_ptfitpol0 + m_ptfitpol1*x + m_ptfitpol2*pow(x,2)
-    + m_ptfitpol3*pow(x,3) + m_ptfitpol4*pow(x,4);
-  if(r<0) r=0;
-  return r;
+  const double r = m_ptfitpol0 + x * (m_ptfitpol1 + x * (m_ptfitpol2 +
+	      x * (m_ptfitpol3 + x * m_ptfitpol4)));
+  return (r < 0.) ? 0. : r;
 }
 double SVertexTool::aprob(double x) {
   if( x < 0.02 ) return 0.32;
-  double r = m_anglepol0 + m_anglepol1*x;
-  if(r<0) r=0;
-  return r;
+  const double r = m_anglepol0 + m_anglepol1*x;
+  return (r < 0.) ? 0. : r;
 }
 //=============================================================================
