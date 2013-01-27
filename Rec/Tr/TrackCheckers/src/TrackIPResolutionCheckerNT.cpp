@@ -43,10 +43,8 @@ class TrackIPResolutionCheckerNT : public GaudiTupleAlg {
   /** Algorithm initialize */
   virtual StatusCode initialize();
 
- private:
-
 private:
-  //std::string m_tracksInContainer;    ///< Input Tracks container location
+  std::string m_tracklocation;    ///< Input Tracks container location
 };
 
 DECLARE_ALGORITHM_FACTORY( TrackIPResolutionCheckerNT )
@@ -58,7 +56,7 @@ TrackIPResolutionCheckerNT::TrackIPResolutionCheckerNT(const std::string& name,
                            ISvcLocator* pSvcLocator ) :
   GaudiTupleAlg( name , pSvcLocator )
 {
-  //declareProperty( "TracksInContainer", m_tracksInContainer = LHCb::TrackLocation::Default  );
+  declareProperty( "TrackContainer", m_tracklocation = LHCb::TrackLocation::Velo );
 }
 
 //=============================================================================
@@ -71,7 +69,6 @@ TrackIPResolutionCheckerNT::~TrackIPResolutionCheckerNT() {}
 //=============================================================================
 StatusCode TrackIPResolutionCheckerNT::initialize()
 {
-  std::cout  << "Pantso check!" << std::endl;
   // Mandatory initialization of GaudiAlgorithm
   StatusCode sc = GaudiTupleAlg::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -107,10 +104,6 @@ namespace
 //=============================================================================
 StatusCode TrackIPResolutionCheckerNT::execute()
 {
-
-  std::string m_tracklocation = LHCb::TrackLocation::Velo;
-  if ( true ) m_tracklocation = LHCb::TrackLocation::VP;
-
   // get the list of tracks
   const LHCb::Tracks* tracks = get<LHCb::Tracks>(m_tracklocation);
 
