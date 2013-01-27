@@ -47,7 +47,7 @@ StatusCode ApplyPhotos::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Initialize" << endmsg;
 
   if ( m_pdgIdList.empty() ) 
     return Error( "PDGId list property is not set" ) ;
@@ -83,21 +83,34 @@ StatusCode ApplyPhotos::execute() {
     for ( HepMC::GenEvent::particle_iterator itP = ev -> particles_begin() ;
           itP != ev -> particles_end() ; ++itP ) {
       if ( LHCb::HepMCEvent::DocumentationParticle != (*itP) -> status() ) {
-	if ( std::binary_search( m_pdgIds.begin() , m_pdgIds.end() , abs( (*itP) -> pdg_id() ) ) ) {
-	  HepMC::GenVertex * EV = (*itP)->end_vertex();
-	  if ( 0 == EV ) continue ;
-	  
-	  // Create an event with only the initial particle itP and its immediate
-	  // daughters. Then call Photos++ on this event. Next, modify the original
-	  // event information with the new Photos++ results.
+        if ( std::binary_search( m_pdgIds.begin() , m_pdgIds.end() , 
+                                 abs( (*itP) -> pdg_id() ) ) ) {
+          HepMC::GenVertex * EV = (*itP) -> end_vertex() ;
+          if ( 0 == EV ) continue ;
 
-	  Photospp::PhotosHepMCEvent photosEvent(ev);
+          // Make one event with only the "signal" and its decay products
+          HepMC::GenEvent * newEvent = new HepMC::GenEvent( ) ;
 
-	  // Run the Photos algorithm. 
-	  // New photons should be automatically added to the (original) GenEvent pointer.
-	  photosEvent.process();
+          // Fill the event
+          newEvent -> add_vertex( EV ) ;
+          HepMC::GenVertex::particle_iterator iterDes ;
+          for ( iterDes = EV -> particles_begin( HepMC::descendants ) ;
+                iterDes != EV -> particles_end( HepMC::descendants ) ; ++iterDes ) {
+            if ( 0 != (*iterDes) -> end_vertex() ) 
+              newEvent -> add_vertex( (*iterDes) -> end_vertex() ) ;
+          }
 
-	}
+         // Process the event in PHOTOS
+          Photospp::PhotosHepMCEvent photosEvent( newEvent );
+          photosEvent.process();
+
+          ev -> add_vertex( EV ) ;
+          for ( iterDes = EV -> particles_begin( HepMC::descendants ) ;
+                iterDes != EV -> particles_end( HepMC::descendants ) ; ++iterDes ) {
+            if ( 0 != (*iterDes) -> end_vertex() ) 
+              ev -> add_vertex( (*iterDes) -> end_vertex() ) ;
+          }
+        }
       }
     }
   }
