@@ -1,11 +1,12 @@
 // Include files 
+#include <limits>
 #include "TaggingUtils.h"
 #include <Kernel/IDVAlgorithm.h>
 #include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
 #include "Kernel/IPVReFitter.h"
 
-#include "dphi.h"
+#include "TaggingHelpers.h"
 
 //--------------------------------------------------------------------
 // Implementation file for class : TaggingUtils
@@ -96,12 +97,12 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
 StatusCode TaggingUtils::calcIP( const Particle* axp,
                                  const RecVertex::ConstVector& PileUpVtx,
                                  double& ip, double& ipe) {
-  double ipmin = 100000.0;
+  double ipmin = std::numeric_limits<double>::max();
   double ipminerr = 0.0;
   StatusCode sc, lastsc=1;
 
   RecVertex::ConstVector::const_iterator iv;
-  for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
+  for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); ++iv){
     double ipx=0, ipex=0;
     double ipC=0, ipChi2=0;
     sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
@@ -124,18 +125,19 @@ int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
 
   int nr = 0;
 
-  //nr = vtags.size();
-
-  Particle::ConstVector::const_iterator ipart, jpart;
-  for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
+  typedef Particle::ConstVector::const_iterator Iterator;
+  using TaggingHelpers::SameTrackStatus;
+  using TaggingHelpers::isSameTrack;
+  for (Iterator ipart = vtags.begin(); vtags.end() != ipart; ++ipart ) {
     bool duplic=false;
-    for( jpart = ipart+1; jpart != vtags.end(); jpart++ ) {
-      if((*jpart)->proto()==(*ipart)->proto()) { 
+    for( Iterator jpart = vtags.begin(); ipart != jpart; ++jpart ) {
+      SameTrackStatus isSame = isSameTrack(**ipart, **jpart);
+      if (isSame) {
         duplic=true; 
         break; 
       }
     }
-    if(!duplic) ++nr;
+    if (!duplic) ++nr;
   }
 
   return nr;
@@ -144,26 +146,26 @@ int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
 bool TaggingUtils::isinTree(const Particle* axp, 
 			    Particle::ConstVector& sons, 
                             double& dist_phi){
-  double p_axp  = axp->p();
-  double pt_axp = axp->pt();
-  double phi_axp= axp->momentum().phi();
-  dist_phi=1000.;
+  dist_phi = std::numeric_limits<double>::max();
 
-  for( Particle::ConstVector::iterator ip = sons.begin(); 
-       ip != sons.end(); ip++ ){
+  for (Particle::ConstVector::iterator ip = sons.begin(); 
+       ip != sons.end(); ++ip) {
+    using TaggingHelpers::SameTrackStatus;
+    using TaggingHelpers::isSameTrack;
+    using TaggingHelpers::toString;
+    using TaggingHelpers::dphi;
 
-    double dphi = fabs(TaggingHelpers::dphi(phi_axp,(*ip)->momentum().phi()));
-    dist_phi= std::min(dist_phi, dphi);
-    
-    if( (    fabs(p_axp -(*ip)->p()) < 0.1 
-             && fabs(pt_axp-(*ip)->pt())< 0.01 
-             && dphi < 0.1 )
-        || axp->proto()==(*ip)->proto() ) {
+    const double deltaphi =
+	fabs(dphi(axp->momentum().phi(), (*ip)->momentum().phi()));
+    if (dist_phi > deltaphi) dist_phi = deltaphi;
+    SameTrackStatus isSame = isSameTrack(*axp, **ip);
+    if (isSame) {
       if (msgLevel(MSG::VERBOSE)) 
-        verbose() << " isinTree part: " << axp->particleID().pid() 
-                  << " with p="<<p_axp/Gaudi::Units::GeV 
-                  << " pt="<<pt_axp/Gaudi::Units::GeV 
-                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endreq;
+        verbose() << " particle is: " << toString(isSame)
+	          << " isinTree part: " << axp->particleID().pid() 
+                  << " with p="<< axp->p()/Gaudi::Units::GeV 
+                  << " pt="<< axp->pt()/Gaudi::Units::GeV 
+                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto() << endreq;
       return true;
     }
   }

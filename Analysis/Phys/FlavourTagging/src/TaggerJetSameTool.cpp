@@ -2,7 +2,7 @@
 #include "TaggerJetSameTool.h"
 #include "Event/RecVertex.h"
 
-#include "dphi.h"
+#include "TaggingHelpers.h"
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerJetSameTool
 //
@@ -54,10 +54,10 @@ Tagger TaggerJetSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     Gaudi::LorentzVector ptotB = AXB0->momentum();
     double etasig= -log(tan(ptotB.Theta())/2);
     double eta   = -log(tan(axp->momentum().Theta()/2));
-    double dphi  = fabs(
+    double dphi = fabs(
 	    TaggingHelpers::dphi(axp->momentum().Phi(), ptotB.Phi()));
     //cone condition
-    double dR = sqrt(pow((eta-etasig),2)+dphi*dphi);
+    double dR = sqrt((eta-etasig)*(eta-etasig)+dphi*dphi);
     if ( dR < m_dR_cut_jetS ) {
       // Construction of a Jet charge same side with no kaonS(pionS)
       //if ((*ip) != ikaonS || (*ip) != ipionS){

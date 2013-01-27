@@ -5,6 +5,14 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-01-27 - Manuel Tobias Schiller
+ - complete rewrite of the clone definition in the flavour tagging input based
+   on my experience with tracking in LHCb; also, use a smarter algorithm to
+   kill clones...
+ - remove a couple of useless pow(..., 2) to square something (too slow
+   anyhow)
+ - rename dphi.h to TaggingHelpers.{cpp,h} to clean things up a little
+
 ! 2013-01-08 - Manuel Tobias Schiller
  - fix initialize()/finalize() methods to call the parent's implementation the
    way they're supposed to be called

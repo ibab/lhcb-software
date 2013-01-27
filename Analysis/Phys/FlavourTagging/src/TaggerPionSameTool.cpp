@@ -1,7 +1,7 @@
 // Include files 
 #include "TaggerPionSameTool.h"
 
-#include "dphi.h"
+#include "TaggingHelpers.h"
 
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerPionSameTool
@@ -152,7 +152,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( distphi < m_distPhi_cut_pS ) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
-    double dphi  = fabs(TaggingHelpers::dphi(
+    double dphi = fabs(TaggingHelpers::dphi(
 		(*ipart)->momentum().Phi(), ptotB.Phi()));
     double dR = sqrt(deta*deta+dphi*dphi);
     if(deta > m_eta_max_cut_pionS) continue;

@@ -1,5 +1,16 @@
 // Include files 
 #include "BTaggingTool.h"
+#include "Event/Track.h"
+
+#include <boost/foreach.hpp>
+#include <algorithm>
+#include <cstdio>
+
+#include "TaggingHelpers.h"
+
+#undef DEBUG_CLONES
+// uncomment line below to fill clone killing debug counters
+//#define DEBUG_CLONES
 
 //--------------------------------------------------------------------------
 // Implementation file for class : BTaggingTool
@@ -410,71 +421,243 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
                                Particle::Range& parts,
                                const RecVertex::ConstVector& PileUpVtx) {
 
-  double distphi;
-  Particle::ConstVector vtags(0);
-  Particle::Range::iterator ip;
+  Particle::ConstVector vtags;
+  vtags.reserve(32);
   Particle::ConstVector axdaugh = m_descend->descendants( AXB );
   axdaugh.push_back( AXB );
-  for ( ip = parts.begin(); ip != parts.end(); ip++ ){
+  std::vector<const LHCb::Particle*> clones;
+  for (Particle::Range::iterator ip = parts.begin(); parts.end() != ip; ++ip) {
+    const LHCb::Particle* p = *ip;
+    const ProtoParticle* proto = p->proto();
+    if ( !proto || !proto->track() ) continue;
+    if ( 0 == p->charge() ) continue;               
+    // for now, only allow long tracks
+    const bool trackTypeOK = 
+	(proto->track()->type() == LHCb::Track::Long) ||
+	(proto->track()->type() == LHCb::Track::Upstream);
+    if (!trackTypeOK) continue;
+    if( p->p()/GeV < 2.0 || p->p()/GeV  > 200. ) continue;
+    if( p->pt()/GeV >  10. ) continue;
+    // exclude tracks too close to the beam line
+    if( p->momentum().theta() < m_thetaMin ) continue;
+    // exclude "trivial" clones: particles with same protoparticle or same
+    // underlying track
+    //
+    // FIXME: this uses the first such track for now, since they have the same
+    // hit content, this should be ok...
+    using TaggingHelpers::SameTrackStatus;
+    using TaggingHelpers::isSameTrack;
+    using TaggingHelpers::toString;
+    SameTrackStatus isSame = TaggingHelpers::DifferentParticles;
+    clones.clear();
+    BOOST_FOREACH(const LHCb::Particle* q, vtags) {
+	isSame = isSameTrack(*p, *q);
+	if (!isSame) continue;
+	// only skip all the rest if actually same track
+	if (isSame >= TaggingHelpers::SameTrack) break;
+	// otherwise, we may need some form of clone killing, because tracks
+	// may be slightly different and we want to pick the "best" one, so
+	// save the other contenders for "best track"
+	clones.push_back(q);
+    }
+    if (isSame) {
+#ifdef DEBUG_CLONES
+	counter(std::string("clone/") + toString(isSame))++;
+#endif
+	// if it's actually the same underlying track object, we can throw away
+	// this candidate because it is already in vtags
+	if (isSame >= TaggingHelpers::SameTrack) continue;
+    }
+    // exclude pre-flagged clones we did not catch ourselves
+    if (proto->track()->hasInfo(LHCb::Track::CloneDist)) {
+	if (proto->track()->info(LHCb::Track::CloneDist, 999999.) < 5000.) {
+#ifdef DEBUG_CLONES
+	    counter("clone/KL-clone")++;
+#endif
+	    continue;
+	}
+    }
 
-    const ProtoParticle* proto = (*ip)->proto();
-    if( !proto )                                 continue;
-    if( !proto->track() )                        continue;
-    if( proto->track()->type() < 3 )             continue; 
-    if( proto->track()->type() > 4 )             continue;
-    if( (*ip)->p()/GeV < 2.0 )                   continue;               
-    if( (*ip)->momentum().theta() < m_thetaMin ) continue;
-    if( (*ip)->charge() == 0 )                   continue;               
-    if( (*ip)->p()/GeV  > 200 )                  continue;
-    if( (*ip)->pt()/GeV >  10 )                  continue;
-    if( m_util->isinTree( *ip, axdaugh, distphi ) ) continue ;//exclude signal
+    // exclude signal tracks themselves
+    double distphi;
+    if( m_util->isinTree( p, axdaugh, distphi ) ) continue ;
+    // exclude tracks too close to the signal
     if( distphi < m_distphi_cut ) continue;
 
-    //calculate the min IP wrt all pileup vtxs
+    // calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
-    m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
-    //eliminate from vtags all parts coming from a pileup vtx
-
-    
+    m_util->calcIP( p, PileUpVtx, ippu, ippuerr );
+    // eliminate from vtags all parts coming from a pileup vtx
     if(ippuerr) {
       if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts 
-      Particle* c = const_cast<Particle*>(*ip);
+      Particle* c = const_cast<Particle*>(p);
       c->addInfo(1, ippu/ippuerr);
-      verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
-    }else debug()<<"particle p="<<(*ip)->p()<<" ippu NAN ****"<<endmsg; // happens only when there is 1 PV 
+      verbose()<<"particle p="<<p->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
+    }else debug()<<"particle p="<<p->p()<<" ippu NAN ****"<<endmsg; // happens only when there is 1 PV 
       
-    
-    
-    bool dup=false;
-    Particle::ConstVector::const_iterator ik;
-    double partp = (*ip)->p();
-    for ( ik = ip+1; ik != parts.end(); ik++) {
-      if((*ik)->proto() == proto) { 
-        dup=true; 
-        break; 
-      }
-      //more duplicates
-      if((*ik)->p()==partp){
-        warning()<<"Same particle momentum but different protoparticle --> duplicate"<<endreq;
-        dup=true;
-        break;
-      }
+    // ok, if p is a potential clone, we need to find the "best" track and keep
+    // only that one
+    if (clones.empty()) {
+        // no clone, so just store tagger candidate
+	vtags.push_back(p);
+    } else {
+	// complete list of clones
+	clones.push_back(p);
+#ifdef DEBUG_CLONES
+	counter("clones.size()") += clones.size();
+#endif
+	// functor to sort by quality (want to keep "best" track)
+	struct dummy {
+	    static bool byIncreasingQual(
+		    const LHCb::Particle* p, const LHCb::Particle* q)
+	    {
+		if (p->proto() && q->proto()) {
+		    if (p->proto()->track() && q->proto()->track()) {
+			const LHCb::Track &t1 = *p->proto()->track();
+			const LHCb::Track &t2 = *q->proto()->track();
+			// prefer tracks which have more subdetectors in
+			// where TT counts as half a subdetector
+			const unsigned nSub1 = (t1.hasVelo() ? 2 : 0) +
+			    (t1.hasTT() ? 1 : 0) + (t1.hasT() ? 2 : 0);
+			const unsigned nSub2 = (t2.hasVelo() ? 2 : 0) +
+			    (t2.hasTT() ? 1 : 0) + (t2.hasT() ? 2 : 0);
+			if (nSub1 < nSub2) return true;
+			if (nSub1 > nSub2) return false;
+			// if available, prefer lower ghost probability
+			const double ghProb1 = t1.ghostProbability();
+			const double ghProb2 = t2.ghostProbability();
+			if (-0. <= ghProb1 && ghProb1 <= 1. &&
+				-0. <= ghProb2 && ghProb2 <= 1.) {
+			    if (ghProb1 > ghProb2) return true;
+			    if (ghProb1 < ghProb2) return false;
+			}
+			// prefer longer tracks
+			if (t1.nLHCbIDs() < t2.nLHCbIDs()) return true;
+			if (t1.nLHCbIDs() > t2.nLHCbIDs()) return false;
+			// for same length tracks, have chi^2/ndf decide
+			const double chi1 = t1.chi2() / double(t1.nDoF());
+			const double chi2 = t2.chi2() / double(t2.nDoF());
+			if (chi1 > chi2) return true;
+			if (chi1 < chi2) return false;
+		    }
+		}
+		// fall back on a pT comparison (higher is better) as last resort
+		return p->pt() < q->pt();
+	    }
+	};
+	// sort clones by quality (stable_sort since byIncreasingQual does not
+	// impose a total ordering, so use stable_sort to ensure that the
+	// resulting order does not depend on sort implementation)
+	std::stable_sort(clones.begin(), clones.end(),
+		dummy::byIncreasingQual);
+	// remove all potential clones from vtags
+	BOOST_FOREACH(const LHCb::Particle* q, clones) {
+	    // find potential clone in vtags
+	    Particle::ConstVector::iterator it =
+		std::find(vtags.begin(), vtags.end(), q);
+	    // if in vtags, remove
+	    if (vtags.end() != it) vtags.erase(it);
+	}
+	// get rid of the clones
+#undef DEBUGCLONES
+#ifdef DEBUGCLONES
+	bool debugclones = false;
+	if (2 < clones.size()) {
+	    debugclones = true;
+	    // print overview in order
+	    std::printf("\n\nClone track list:\n");
+	    for (std::vector<const LHCb::Particle*>::const_iterator it = clones.begin();
+		    clones.end() != it; ++it) {
+		const LHCb::Track* t = (*it)->proto() ? ((*it)->proto()->track() ?
+			(*it)->proto()->track() : 0) : 0;
+		if (t) {
+		    std::printf("track p %6.3f pt %6.3f eta %6.3f phi %6.3f type %1u/%2u nmeas %2u chi2/ndf %6.3f ghostProb %6.3f sameness",
+			    t->p() / GeV, t->pt() / GeV, t->pseudoRapidity(),
+			    t->phi(), t->type(), t->history(), t->nLHCbIDs(),
+			    t->chi2() / double(t->nDoF()), t->ghostProbability());
+		} else {
+		    std::printf("part. p %6.3f pt %6.3f eta %6.3f phi %6.3f                                                     sameness",
+			    (*it)->p() / GeV, (*it)->pt() / GeV, (*it)->momentum().eta(), (*it)->momentum().phi());
+		}
+		for (std::vector<const LHCb::Particle*>::const_iterator jt = clones.begin();
+			clones.end() != jt; ++jt) {
+		    int isSame = isSameTrack(*(*it), *(*jt));
+		    printf(" %1u", isSame);
+		    if (jt == it) break;
+		}
+		printf("\n");
+	    }
+	}
+#endif
+	// make a disjoint set of tracks by removing the worst track which
+	// is a clone of another track until the set is clone-free
+	for (std::vector<const LHCb::Particle*>::iterator it =
+		clones.begin();
+		clones.end() != it; ) {
+	    bool elim = false;
+	    for (std::vector<const LHCb::Particle*>::iterator jt = it + 1;
+		    clones.end() != jt; ++jt) {
+		SameTrackStatus status = isSameTrack(*(*it), *(*jt));
+		if (status) {
+		    // it is a redundant track, remove it from clones and
+		    // start over
+		    if (status == TaggingHelpers::ConvertedGamma) {
+			// if we have a converted photon, remove the other leg
+			// as well
+			jt = clones.erase(jt);
+		    }
+		    it = clones.erase(it);
+		    elim = true;
+		    break;
+		}
+	    }
+	    if (elim) continue;
+	    ++it;
+	}
+#ifdef DEBUGCLONES
+	if (debugclones) {
+	    // print overview in order
+	    std::printf("Clone track list after filtering:\n");
+	    for (std::vector<const LHCb::Particle*>::const_iterator it = clones.begin();
+		    clones.end() != it; ++it) {
+		const LHCb::Track* t = (*it)->proto() ? ((*it)->proto()->track() ?
+			(*it)->proto()->track() : 0) : 0;
+		if (t) {
+		    std::printf("track p %6.3f pt %6.3f eta %6.3f phi %6.3f type %1u/%2u nmeas %2u chi2/ndf %6.3f ghostProb %6.3f sameness",
+			    t->p() / GeV, t->pt() / GeV, t->pseudoRapidity(),
+			    t->phi(), t->type(), t->history(), t->nLHCbIDs(),
+			    t->chi2() / double(t->nDoF()), t->ghostProbability());
+		} else {
+		    std::printf("part. p %6.3f pt %6.3f eta %6.3f phi %6.3f                                                     sameness",
+			    (*it)->p() / GeV, (*it)->pt() / GeV, (*it)->momentum().eta(), (*it)->momentum().phi());
+		}
+		for (std::vector<const LHCb::Particle*>::const_iterator jt = clones.begin();
+			clones.end() != jt; ++jt) {
+		    int isSame = isSameTrack(*(*it), *(*jt));
+		    printf(" %1u", isSame);
+		    if (jt == it) break;
+		}
+		printf("\n");
+	    }
+	}
+#endif
+	// insert disjoint set of tracks into vtags
+	if (!clones.empty())
+	    vtags.insert(vtags.end(), clones.begin(), clones.end());
     }
-    if(dup) continue; 
- 
-    ////////////////////////////////
-    vtags.push_back(*ip);         // store tagger candidate
-    ////////////////////////////////
 
     if (msgLevel(MSG::DEBUG)) 
-      debug() <<"part ID="<<(*ip)->particleID().pid()
-              <<" p="<<(*ip)->p()/GeV
-              <<" pt="<<(*ip)->pt()/GeV
-              <<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
-              <<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
-              <<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
+      debug() <<"part ID="<<p->particleID().pid()
+              <<" p="<<p->p()/GeV
+              <<" pt="<<p->pt()/GeV
+              <<" PIDm="<<p->proto()->info( ProtoParticle::CombDLLmu, 0)
+              <<" PIDe="<<p->proto()->info( ProtoParticle::CombDLLe, 0)
+              <<" PIDk="<<p->proto()->info( ProtoParticle::CombDLLk, 0)
               <<endreq;
   }
+#ifdef DEBUG_CLONES
+  counter("nCands") += vtags.size();
+#endif
   return vtags;
 }
 
