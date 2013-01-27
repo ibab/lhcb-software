@@ -3401,10 +3401,11 @@ def axis_bins ( bins         ) :
 ## make 2D-histogram from axes
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def h2_axes ( x_axis       ,
-              y_axis       ,
-              title = '2D' , 
-              name  = None ) :
+def h2_axes ( x_axis            ,
+              y_axis            ,
+              title  = '2D'     , 
+              name   = None     ,
+              double = False    ) :
     """
     Make 2D-histogram with binning deifned by already created axes
     
@@ -3424,19 +3425,22 @@ def h2_axes ( x_axis       ,
     y_bins  = y_axis.edges()
     #
     from numpy import array
-    return ROOT.TH2F ( name  ,
-                       title ,
-                       len ( x_bins ) - 1 , array ( x_bins , dtype='d' ) ,
-                       len ( y_bins ) - 1 , array ( y_bins , dtype='d' ) ) 
+    #
+    typ = ROOT.TH2D if double else ROOT.TH2F
+    return typ ( name  ,
+                 title ,
+                 len ( x_bins ) - 1 , array ( x_bins , dtype='d' ) ,
+                 len ( y_bins ) - 1 , array ( y_bins , dtype='d' ) ) 
 
 
 # =============================================================================
 ## make 1D-histogram from axis
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def h1_axis ( axis         ,
-              title = '1D' , 
-              name  = None ) :
+def h1_axis ( axis           ,
+              title  = '1D'  , 
+              name   = None  ,
+              double = False ) :
     """
     Make 1D-histogram with binning deifned by already created axes
     
@@ -3452,9 +3456,11 @@ def h1_axis ( axis         ,
     bins  = axis.edges()
     #
     from numpy import array
-    return ROOT.TH1F ( name  ,
-                       title ,
-                       len ( bins ) - 1 , array ( bins , dtype='d' ) ) 
+    #
+    typ = ROOT.TH1D if double else ROOT.TH1F
+    return typ ( name  ,
+                 title ,
+                 len ( bins ) - 1 , array ( bins , dtype='d' ) ) 
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function 
@@ -4097,6 +4103,71 @@ def _f_fit_ ( func , histo , *args ) :
 ROOT.TF1 . Fit      = _f_fit_ 
 ROOT.TF1 . fitHisto = _f_fit_ 
 # =============================================================================
+## draw the line for the histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _level_ ( self , level = 0 , linestyle = 2 ) :
+    """
+    Draw NULL-line for the histogram
+
+    >>> h.level ( 5 )
+    
+    """
+    mn,mx = self.xminmax() 
+    line = ROOT.TLine ( mn , level , mx , level )
+    line.SetLineStyle ( linestyle )
+    self._line_ = line
+    self._line_.Draw() 
+    return self._line_
+# =============================================================================
+## draw null-level for histogram  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _null_ ( self , linestyle = 2 ) :
+    """
+    Draw NULL-line for the histogram
+    
+    >>> h.null() 
+    """
+    return _level_ ( self , 0 , linestyle ) 
+# =============================================================================
+## set color attributes  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _color_ ( self , color = 2 ) :
+    """
+    Set color attributes
+
+    >>> h.color ( 3 ) 
+    """
+    #
+    if hasattr ( self , 'SetLineColor'   ) : self.SetLineColor   ( color )
+    if hasattr ( self , 'SetMarkerColor' ) : self.SetMarkerColor ( color )
+    #
+    return self
+# =============================================================================
+## set color attributes  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _red_  ( self ) : return _color_( self , 2 ) 
+# =============================================================================
+## set color attributes  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _blue_ ( self ) : return _color_( self , 4 ) 
+
+ROOT.TH1D. level = _level_
+ROOT.TH1F. level = _level_
+ROOT.TH1D. null  = _null_
+ROOT.TH1F. null  = _null_
+
+ROOT.TH1D. color  = _color_
+ROOT.TH1D. red    = _red_
+ROOT.TH1D. blue   = _blue_
+
+ROOT.TH1F. color  = _color_
+ROOT.TH1F. red    = _red_
+ROOT.TH1F. blue   = _blue_
 
 # =============================================================================
 logger.info ( 'Some useful decorations for TMinuit objects')
@@ -4597,7 +4668,38 @@ for t in ( ROOT.TH1D       ,
     t.fromString = _h_fromString_
     t.toXml      = _h_toXml_
     t.fromXml    = _h_fromXml_
+
+# =============================================================================
+## define simplified print for TCanvas 
+def _cnv_print_ ( cnv , fname , exts = [ 'eps' , 'pdf' , 'png' ] ) :
+    """
+    A bit simplified version for TCanvas print
+
+    >>> canvas.print ( 'fig' )    
+    """
+    p = fname.rfind ('.')
+    if    0 < p and p+4   == len ( fname ) : cnv.Print ( fname )
+    elif  0 < p and p[p:] == '.ps'         : cnv.Print ( fname )
+    else :
+        for e in exts :
+            cnv.Print ( fname + '.' + e )
+            
+    return cnv 
+
+# =============================================================================
+## define streamer for canvas 
+def _cnv_rshift_ ( cnv , fname ) :
+    """
+    very simple print for canvas:
     
+    >>> canvas >> 'a'
+    
+    """
+    return _cnv_print_ ( cnv , fname )
+
+ROOT.TCanvas.print_     = _cnv_print_
+ROOT.TCanvas.__rshift__ = _cnv_rshift_
+
 # =============================================================================
 ## HEPDATA format
 # 

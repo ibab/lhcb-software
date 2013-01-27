@@ -122,7 +122,9 @@ def LHCbStyle ( name      = "LHCbStyle"                 ,
     style . SetOptTitle   ( 0 )
     style . SetOptFit     ( 0 )
     ## lhcbStyle . SetOptFit(1011); // order is probability, Chi2, errors, parameters
-    
+
+    ## size of small lines at the end of error bars
+    style.  SetEndErrorSize ( 5 ) 
 
     ## look of the statistics box:
     style . SetStatBorderSize         ( 0 )

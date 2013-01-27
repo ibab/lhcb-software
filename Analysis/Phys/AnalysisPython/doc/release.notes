@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-01-27 - Vanya Belyaev
+ - few minor fixes in PyRoUts 
+
 ! 2013-01-05 - Vanya Belyaev
  - add StudentT pdf by Matt Needham 
 
