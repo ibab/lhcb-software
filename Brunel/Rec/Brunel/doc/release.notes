@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references to reflect changes since v44r1
+  . Remove check on full bank length when decoding Velo lite clusters, add
+    corresponding protection to full decoding
+
 - Changes to tests
   . Add NameAuditor to brunel-mc10-withtruth test to monitor changes in
     called components, and debug causes of non reproducible Brunel exits
