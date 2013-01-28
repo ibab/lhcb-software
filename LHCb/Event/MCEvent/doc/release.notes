@@ -2,6 +2,8 @@
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
+ 2013-01-28 - Sajan Easo
+ - Added an extra flag in MCRichHit.xml for the PMT lens for upgrade studies.
 
 !========================= MCEvent v2r24 2012-11-26 =========================
 ! 2012-11-20 - Chris Jones
