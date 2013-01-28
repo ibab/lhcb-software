@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2013-01-28 - Wouter Hulsbergen
+ - fixed bug in VPLiteMeasurement leading to bias in x position
+
 ! 2013-01-07 - Jianchun Wang
  - Add UT cluster as one of the ST clusters
 
