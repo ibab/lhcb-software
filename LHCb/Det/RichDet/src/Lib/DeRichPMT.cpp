@@ -150,6 +150,12 @@ StatusCode DeRichPMT::getPMTParameters()
   m_PmtQwZSize = deRich->param<double>  ("RichPmtQuartzZSize"  );
   m_QwToAnodeZDist= deRich->param<double> ( "RichPmtQWToSiMaxDist" );
 
+  m_PmtLensMagnificationRatio=deRich->param<double> ("RichPmtLensMagnficationFactor"  );
+  m_PmtLensRoc =deRich->param<double> ("RichPmtLensRadiusofCurvature" );
+  
+  
+
+
   return sc;
 }
 
@@ -191,13 +197,39 @@ StatusCode DeRichPMT::detectionPoint ( const double fracPixelCol,
 
   const Gaudi::XYZPoint aPhCathHit = Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zPh    );
   const Gaudi::XYZPoint aQWExtHit =  Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zQwExt );
+
   // detectPoint  =  geometry()->toGlobalMatrix() * aPhCathHit ; // not used since the
   // output is expected to be in the PMT coord system.
   // for now assume negligible refraction effect at the QW.
+  const Gaudi::XYZPoint  aDetPlanePointFromPhCath = 
+      (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath(aPhCathHit):  aPhCathHit;
+  const Gaudi::XYZPoint  aDetPlanePointFromQW = 
+      (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath( aQWExtHit ): aQWExtHit ;
 
-  detectPoint = photoCathodeSide ? aPhCathHit : aQWExtHit;
+  
+  detectPoint = photoCathodeSide ? aDetPlanePointFromPhCath : aDetPlanePointFromQW ;
 
   return sc;
+}
+Gaudi::XYZPoint DeRichPMT::RichPmtLensReconFromPhCath(  const Gaudi::XYZPoint & aPhCathCoord  ) const
+{
+
+   double aPhCaRsq_Coord =
+    (aPhCathCoord.x() * aPhCathCoord.x() + aPhCathCoord.y() * aPhCathCoord.y() );
+   double  aPhCaR_Coord =  (aPhCaRsq_Coord>0.0) ? sqrt(aPhCaRsq_Coord) : 0.0;
+   double aPhCaRsq_Phi = atan(  aPhCathCoord.y()/aPhCathCoord.x());
+   double aXSignLocal= (( aPhCathCoord.x()) > 0) ? 1 : -1;
+   double aYSignLocal= (( aPhCathCoord.y()) > 0) ? 1 : -1;
+
+   double aLensRecXLocal = fabs((aPhCaR_Coord*m_PmtLensMagnificationRatio)*cos( aPhCaRsq_Phi ))* aXSignLocal;
+   double aLensRecYLocal = fabs((aPhCaR_Coord*m_PmtLensMagnificationRatio)*sin( aPhCaRsq_Phi ))* aYSignLocal;
+   double Rsq= (aPhCaR_Coord*m_PmtLensMagnificationRatio )*(aPhCaR_Coord*m_PmtLensMagnificationRatio);
+   
+   double aLensRecZStd =  aPhCathCoord.z()+sqrt((m_PmtLensRoc*m_PmtLensRoc)- Rsq );
+
+   return  Gaudi::XYZPoint(aLensRecXLocal,aLensRecYLocal,aLensRecZStd);
+  
+  
 }
 
 //=============================================================================
@@ -217,9 +249,18 @@ StatusCode DeRichPMT::detectionPoint( const LHCb::RichSmartID smartID,
   const Gaudi::XYZPoint aQWExtHit =  Gaudi::XYZPoint ( aLocalHit.x(), aLocalHit.y(), zQwExt );
   // for now assume negligible refraction effect at the QW.
 
+
+  const Gaudi::XYZPoint  aDetPlanePointFromPhCath = 
+      (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath(aPhCathHit):  aPhCathHit;
+  const Gaudi::XYZPoint  aDetPlanePointFromQW = 
+      (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath( aQWExtHit ): aQWExtHit ;
+
+
+
+
   detectPoint = ( photoCathodeSide ?
-                  geometry()->toGlobalMatrix() * aPhCathHit  :
-                  geometry()->toGlobalMatrix() * aQWExtHit   );
+                  geometry()->toGlobalMatrix() * aDetPlanePointFromPhCath  :
+                  geometry()->toGlobalMatrix() * aDetPlanePointFromQW  );
 
   return sc;
 }

@@ -152,6 +152,8 @@ StatusCode DeRichPMTPanel::initialize()
               updMgrSvc()->registerCondition( this,dePMT->geometry(),&DeRichPMTPanel::geometryUpdate );
               // get the current pmt and save.
               int curPmtNum = det_it_pm - dePMTModule->childIDetectorElements().begin();
+              int curPmtCopyNum= dePMT->pmtCopyNumber();
+              dePMT->setPmtLensFlag( isCurrentPmtWithLens(curPmtCopyNum)   );
               DePmtsInCurModule[curPmtNum] =dePMT;
 
               if( ! dePMT->childIDetectorElements().empty() )
@@ -460,8 +462,11 @@ StatusCode DeRichPMTPanel::getPanelGeometryInfo()
       firstRich->param<std::vector<int> > ("RichPmtModuleNumEndInPanels");
     m_RichPmtModuleActiveAreaHalfSize=
       firstRich->param<std::vector<double> >("RichPMTModuleActiveAreaHalfSize" );
+
     m_PmtModulePitch = firstRich->param<double>("RichPmtModulePitch");
     m_PmtPitch=firstRich->param<double>("RichPmtPitch");
+
+
     m_NumPmtInRowCol.resize(2);
     m_NumPmtInRowCol[0] = firstRich->param<int> ("RichPmtNumInModuleRow");
     m_NumPmtInRowCol[1] = firstRich->param<int> ("RichPmtNumInModuleCol");
@@ -470,7 +475,7 @@ StatusCode DeRichPMTPanel::getPanelGeometryInfo()
     int aRich1NumModules=  firstRich->param<int> ("Rich1TotNumModules" );
     int aRich2NumModules=  firstRich->param<int> ("Rich2TotNumModules" );
     m_totNumPmtModuleInRich = aRich1NumModules + aRich2NumModules;
-
+    
     m_NumPmtModuleInRich.resize(4);
     m_NumPmtModuleInRich[0]=aRich1NumModules/2; //rich1top
     m_NumPmtModuleInRich[1]=aRich1NumModules/2; //rich1bottom
@@ -492,13 +497,87 @@ StatusCode DeRichPMTPanel::getPanelGeometryInfo()
     m_Rich2TotNumPmts = firstRich->param<int>("Rich2TotNumPmt");
     m_RichPmtQuartzThickness = firstRich->param<double>("RichPmtQuartzZSize" );
     m_RichPmtQuartzLocalZInPmt= firstRich->param<double>("RichPmtQuartzZPosInPmt");
+    
+
+
+  // setup the Lens Flag.
+
+
+      m_totNumPmtModuleInRich1     = firstRich-> param<int> ("Rich1TotNumModules" );
+
+      m_Rich1PmtLensPresence=0;
+      m_Rich1PmtLensModuleCol.clear();
+      
+      if(exists("Rich1PmtLensPresence") ){
+        m_Rich1PmtLensPresence  = firstRich->  param<int>("Rich1PmtLensPresence");
+        m_Rich1PmtLensModuleCol = firstRich->  param<std::vector<int> >("Rich1PmtLensModuleColumns"); 
+
+
+        m_PmtMasterWithLensLateralSize = firstRich->param<double>("RichLensPmtMasterLateralSize" );
+        m_PmtModuleWithLensPitch = firstRich->param<double>("RichLensPmtModulePitch");
+        m_PmtLensPitch=firstRich->param<double>("RichLensPmtPitch");
+        m_Rich1PmtPanelWithLensXSize = firstRich->param<std::vector<double> > ("Rich1PMTModuleLensPlaneXEdge");
+        m_Rich1PmtPanelWithLensYSize = firstRich->param<std::vector<double> > ( "Rich1PMTModuleLensPlaneYEdge"   );
+        
+        m_Rich1PmtPanelWithLensColSize = firstRich->param<std::vector<int> > ( "Rich1PmtLensModuleColumnsSize"  );
+        
+          m_RichNumLensPmtinModuleRowCol.resize(2);
+        
+          m_RichNumLensPmtinModuleRowCol[0] =  firstRich->param<int> ( "RichLensPmtNumInModuleRow" );
+          m_RichNumLensPmtinModuleRowCol[1] =  firstRich->param<int> ( "RichLensPmtNumInModuleCol" );
+          m_Rich1LensMagnificationFactor = firstRich->param<double> ("RichPmtLensMagnficationFactor"    );
+          
+        
+      }
+    
+      Rich1SetupPMTModulesWithLens();
+    
+
+  
+    
 
   }
 
   return StatusCode::SUCCESS;
 }
 
+void DeRichPMTPanel::Rich1SetupPMTModulesWithLens()
+{
 
+  int aRowR1 =  2*m_RichPmtNumModulesInRowCol[0];
+  int aColR1 =  m_RichPmtNumModulesInRowCol[1];
+  m_RichPmtModuleLensFlag.clear();
+  m_RichPmtModuleLensFlag.assign(aRowR1*aColR1, false);
+  
+  for (int r=0; r<aRowR1  ; ++r ) {
+    for(int c=0; c<aColR1 ; ++c ){
+      int m=(r*aColR1)+c;
+      std::vector<int>::const_iterator location= find(m_Rich1PmtLensModuleCol.begin(),
+                                                      m_Rich1PmtLensModuleCol.end(), c);
+      if(location != m_Rich1PmtLensModuleCol.end() ) m_RichPmtModuleLensFlag[m]=true;      
+    }  
+    
+  }
+  
+  
+}
+
+bool DeRichPMTPanel::isCurrentPmtModuleWithLens(const int aModuleNum) 
+{
+  bool aPresence=false;
+  if( aModuleNum < m_totNumPmtModuleInRich1 ) {
+    aPresence = m_RichPmtModuleLensFlag[aModuleNum];
+  } 
+  return  aPresence;
+  
+}
+bool DeRichPMTPanel::isCurrentPmtWithLens(const int aPMTNum) 
+{
+
+  const int aModuleNum = aPMTNum/m_NumPmtInRichModule;
+  return isCurrentPmtModuleWithLens(aModuleNum);
+  
+}
 int DeRichPMTPanel::getPmtNumFromRowCol(int PRow, int PCol ) const
 {
   //for values outside the range, set the closest value to the
@@ -510,6 +589,18 @@ int DeRichPMTPanel::getPmtNumFromRowCol(int PRow, int PCol ) const
   if ( PCol >= m_NumPmtInRowCol[0] ) PCol = m_NumPmtInRowCol[0]-1;
 
   return ( PCol + ( PRow*m_NumPmtInRowCol[0] ) );
+}
+int DeRichPMTPanel::getLensPmtNumFromRowCol(int PRow, int PCol ) const
+{
+  //for values outside the range, set the closest value to the
+  // corresponding edges.
+
+  if ( PRow < 0 ) PRow=0;
+  if ( PCol < 0 ) PCol =0;
+  if ( PRow >= m_RichNumLensPmtinModuleRowCol[1] ) PRow =m_RichNumLensPmtinModuleRowCol[1] -1;
+  if ( PCol >= m_RichNumLensPmtinModuleRowCol[0] ) PCol =m_RichNumLensPmtinModuleRowCol[0]-1;
+
+  return ( PCol + ( PRow*m_RichNumLensPmtinModuleRowCol[0] ) );
 }
 
 std::vector<int> DeRichPMTPanel::getPmtRowColFromPmtNum( const int aPmtNum )
@@ -654,8 +745,9 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
 
   const Gaudi::XYZPoint inPanel( geometry()->toLocal(aGlobalPoint) );
 
-  // info()<<"Now in findPMTArraySetup  cood inPanel coord "<<inPanel<<"    Rich=  "<<rich()
-  //       <<  "    side= "<<side()<<"   modulepitch "<<m_PmtModulePitch<<"  "<< aGlobalPoint <<endmsg;
+  //  info()<<"Now in findPMTArraySetup  cood inPanel coord "<<inPanel<<"    Rich=  "<<rich()
+  //       <<  "    side= "<<side()<<"   modulepitch "<<m_PmtModulePitch
+  //       <<"  "<< aGlobalPoint <<" Lensflag  "<<m_Rich1PmtLensPresence<< endmsg;
 
   const double x =  inPanel.x();
   const double y =  inPanel.y();
@@ -663,20 +755,80 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
   int  aModuleRow=-1;
   int  aModuleNum = -1;
   int  aModuleNumInPanel=-1;
-
+  int  aModuleWithLens=0;
+  
   if ( rich() == Rich::Rich1 )
   {
     if(side() == Rich::top)
     {
-      aModuleCol = (int) (fabs( (x-m_PmtModulePlaneHalfSizeR1[0])/m_PmtModulePitch ));
-      aModuleRow = (int) (fabs( (y-m_PmtModulePlaneHalfSizeR1[1])/m_PmtModulePitch));
+      if( m_Rich1PmtLensPresence   ) {
+        if( x > m_Rich1PmtPanelWithLensXSize[0] && x <  m_Rich1PmtPanelWithLensXSize[1] ) {
+          aModuleCol = ((int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[0])/m_PmtModulePitch )))+ m_Rich1PmtPanelWithLensColSize[2];
+          aModuleRow = (int) (fabs( (y-m_PmtModulePlaneHalfSizeR1[1])/m_PmtModulePitch));
+             
+        }else if (x < m_Rich1PmtPanelWithLensXSize[0] ) {
+ 
+          aModuleCol = (int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[2])/m_PmtModuleWithLensPitch ));
+          aModuleRow = (int) (fabs( (y-m_Rich1PmtPanelWithLensYSize[0])/m_PmtModuleWithLensPitch ));
+          aModuleWithLens=1;
+          
+        }else if ( x >  m_Rich1PmtPanelWithLensXSize[1] ) {
+          
+          aModuleCol = ( (int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[4])/m_PmtModuleWithLensPitch )))
+                        +m_Rich1PmtPanelWithLensColSize[0]+ m_Rich1PmtPanelWithLensColSize[2] ;
+          aModuleRow = (int) (fabs( (y-m_Rich1PmtPanelWithLensYSize[0])/m_PmtModuleWithLensPitch ));
+          aModuleWithLens=1;
+          
+        }  
+        
+
+      } else {  
+      
+         aModuleCol = (int) (fabs( (x-m_PmtModulePlaneHalfSizeR1[0])/m_PmtModulePitch ));
+         aModuleRow = (int) (fabs( (y-m_PmtModulePlaneHalfSizeR1[1])/m_PmtModulePitch));
+      }
+
       aModuleNum= getPmtModuleNumFromRowCol(aModuleRow,aModuleCol);
       aModuleNumInPanel=aModuleNum-m_RichPmtModuleCopyNumBeginPanel[0];
+      
+        
     }
+    
     else if ( side() == Rich::bottom)
     {
-      aModuleCol = (int) ( fabs( (x-m_PmtModulePlaneHalfSizeR1[2])/m_PmtModulePitch));
-      aModuleRow = (int) ( fabs( (y-m_PmtModulePlaneHalfSizeR1[3])/m_PmtModulePitch));
+      if( m_Rich1PmtLensPresence   ) {
+              
+
+        if( x > m_Rich1PmtPanelWithLensXSize[0] && x <  m_Rich1PmtPanelWithLensXSize[1] ) {
+          aModuleCol = ((int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[1])/m_PmtModulePitch )))+ m_Rich1PmtPanelWithLensColSize[1];
+          aModuleRow = (int) (fabs( (y-m_PmtModulePlaneHalfSizeR1[3])/m_PmtModulePitch));
+             
+        }else if (x > m_Rich1PmtPanelWithLensXSize[1] ) {
+ 
+          aModuleCol = (int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[5])/m_PmtModuleWithLensPitch ));
+          aModuleRow = (int) (fabs( (y-m_Rich1PmtPanelWithLensYSize[0])/m_PmtModuleWithLensPitch ));
+          aModuleWithLens=1;
+          
+        }else if ( x <  m_Rich1PmtPanelWithLensXSize[0] ) {
+          
+          aModuleCol = ( (int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[3])/m_PmtModuleWithLensPitch )))
+                        +m_Rich1PmtPanelWithLensColSize[0]+ m_Rich1PmtPanelWithLensColSize[1] ;
+          aModuleRow = (int) (fabs( (y-m_Rich1PmtPanelWithLensYSize[0])/m_PmtModuleWithLensPitch ));
+          aModuleWithLens=1;
+          
+        }  
+
+
+
+   
+      }else {
+        
+      
+         aModuleCol = (int) ( fabs( (x-m_PmtModulePlaneHalfSizeR1[2])/m_PmtModulePitch));
+         aModuleRow = (int) ( fabs( (y-m_PmtModulePlaneHalfSizeR1[3])/m_PmtModulePitch));
+      }
+      
+
       aModuleNum= getPmtModuleNumFromRowCol(aModuleRow,aModuleCol);
       aModuleNumInPanel=aModuleNum-m_RichPmtModuleCopyNumBeginPanel[1];
     }
@@ -699,8 +851,8 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
     }
   }
 
-  // info() <<"findPmtarray Module col row num "<<aModuleCol<<"   "<<aModuleRow<<"  "
-  //        <<aModuleNum<<"  "<<aModuleNumInPanel<< endmsg;
+  //  info() <<"findPmtarray Module col row num "<<aModuleCol<<"   "<<aModuleRow<<"  "
+  //        <<aModuleNum<<"  "<<aModuleNumInPanel<<" modulelens  "<< aModuleWithLens   << endmsg;
 
   if( aModuleNum >-1 )
   {
@@ -709,11 +861,26 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
 
     const double xp= inModule.x();
     const double yp= inModule.y();
+    int aPmtCol =-1;
+    int aPmtRow =-1;
+    int  aPmtNum=-1;
+    
+    if(aModuleWithLens== 0 ) {
+      
 
-    int aPmtCol = (int) (fabs ((xp-m_RichPmtModuleActiveAreaHalfSize[0])/m_PmtPitch));
-    int aPmtRow = (int) (fabs ((yp-m_RichPmtModuleActiveAreaHalfSize[1])/m_PmtPitch));
-    int  aPmtNum = getPmtNumFromRowCol(aPmtRow,aPmtCol);
-
+       aPmtCol = (int) (fabs ((xp-m_RichPmtModuleActiveAreaHalfSize[0])/m_PmtPitch));
+       aPmtRow = (int) (fabs ((yp-m_RichPmtModuleActiveAreaHalfSize[1])/m_PmtPitch));
+       aPmtNum = getPmtNumFromRowCol(aPmtRow,aPmtCol);
+    
+    }else {
+       aPmtCol = (int) (fabs  ((xp-(0.5*m_PmtMasterWithLensLateralSize))/m_PmtModuleWithLensPitch));
+       aPmtRow = (int) (fabs ((yp-(0.5*m_PmtMasterWithLensLateralSize))/m_PmtModuleWithLensPitch));
+       aPmtNum = getLensPmtNumFromRowCol(aPmtRow,aPmtCol);
+                  
+      
+    }
+    
+    
     if ( aPmtNum > -1 )
     {
       aCh [0]=aModuleNum;
@@ -728,6 +895,13 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
       double  xpi = inPmtAnode.x();
       double  ypi = inPmtAnode.y();
 
+
+      if(aModuleWithLens > 0 ){
+        xpi = xpi/m_Rich1LensMagnificationFactor;
+        ypi = ypi/m_Rich1LensMagnificationFactor;  
+      
+      }
+    
       int aPmtPixelCol = (int) (fabs ((xpi - m_PmtAnodeXEdge)/m_PmtAnodeEffectiveXPixelSize));
       int aPmtPixelRow = (int) (fabs ((ypi - m_PmtAnodeYEdge)/m_PmtAnodeEffectiveYPixelSize));
 
@@ -823,7 +997,10 @@ DeRichPMTPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
     const Gaudi::XYZPoint coordinPmt( (m_DePMTs [aModuleNumInPanel] [aC[1]]) ->
                                       geometry() ->toLocalMatrix() *windowPointGlobal );
 
-    isInPmtAcc = isInPmt(coordinPmt);
+    bool CoordIsOnLens  = (m_DePMTs [aModuleNumInPanel] [aC[1]]) -> PmtLensFlag();
+    const Gaudi::XYZPoint coordinPmtA = CoordIsOnLens ? DemagnifyFromLens(coordinPmt): coordinPmt;    
+    
+    isInPmtAcc = isInPmt(coordinPmtA);
     if(isInPmtAcc )
     {
       const Gaudi::XYZPoint coordinPmtAnode( (m_DePMTAnodes [aModuleNumInPanel] [aC[1]]) ->
@@ -850,6 +1027,13 @@ DeRichPMTPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
     debug() << "mode used " <<mode<<endmsg;
 
   return res;
+}
+Gaudi::XYZPoint DeRichPMTPanel::DemagnifyFromLens(const Gaudi::XYZPoint aLensPoint) const 
+{
+  double aX = aLensPoint.x()/ m_Rich1LensMagnificationFactor ;
+  double aY = aLensPoint.y()/ m_Rich1LensMagnificationFactor ;
+  return Gaudi::XYZPoint(aX,aY,aLensPoint.z());
+  
 }
 
 StatusCode DeRichPMTPanel::getPanelInterSection ( const Gaudi::XYZPoint& pGlobal,
