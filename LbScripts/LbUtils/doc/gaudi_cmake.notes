@@ -1,3 +1,21 @@
+! 2013-01-25 - Marco Clemencic (23aa43e)
+
+ - fixed the Xrootd version in HEPTools 64b and 64c
+
+   
+
+! 2013-01-25 - Marco Clemencic (c51d971)
+
+ - added (preliminary) HEPTools 64c
+
+   
+
+! 2013-01-25 - Marco Clemencic (223eba8)
+
+ - improved inclusion of HEPTools toolchain and added module to inherit it
+
+   
+
 ! 2013-01-22 - Marco Clemencic (b554676)
 
  - fixed FindROOT.cmake to allow use of system installed ROOT
