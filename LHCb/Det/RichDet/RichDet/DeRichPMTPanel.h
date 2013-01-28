@@ -113,7 +113,6 @@ private:
   std::vector<int> findPMTArraySetup(const Gaudi::XYZPoint& inPanel) const;
   StatusCode setRichPmtSmartID(const std::vector<int>& aPmtHitChannel,
                                LHCb::RichSmartID& ID ) const;
-
   DetectorElement* getFirstDeRich() const;
   int getNumModulesInThisPanel() ;
   int getPmtNumFromRowCol(int PRow, int PCol) const;
@@ -163,13 +162,38 @@ private:
   double m_RichPmtQuartzThickness;
   double  m_RichPmtQuartzLocalZInPmt;
 
+  /// Setup for Lens Flag
+  void Rich1SetupPMTModulesWithLens();
+  int getLensPmtNumFromRowCol(int PRow, int PCol ) const;
+  
+  int m_Rich1PmtLensPresence;
+  std::vector<int> m_Rich1PmtLensModuleCol;
+  std::vector<bool> m_RichPmtModuleLensFlag;
+  int m_totNumPmtModuleInRich1;
+
   Gaudi::Plane3D m_localPlane;
   Gaudi::XYZVector m_localPlaneNormal;
   // Gaudi::Plane3D m_localPlane2;
   int  m_Rich1TotNumPmts;
   int m_Rich2TotNumPmts;
   Gaudi::Plane3D m_detectionPlane_exterior;
+  // Access info related to PMT Lens flag
 
+   bool isCurrentPmtModuleWithLens(const int aModuleNum);
+   bool isCurrentPmtWithLens(const int aPMTNum) ;
+   Gaudi::XYZPoint DemagnifyFromLens(const Gaudi::XYZPoint aLensPoint) const ;
+ 
+  double  m_PmtMasterWithLensLateralSize;
+  double  m_PmtModuleWithLensPitch;
+  double m_PmtLensPitch;
+  std::vector<double> m_Rich1PmtPanelWithLensXSize;
+  std::vector<double> m_Rich1PmtPanelWithLensYSize;
+  std::vector<int>   m_Rich1PmtPanelWithLensColSize;
+  std::vector<int>  m_RichNumLensPmtinModuleRowCol;
+  double m_Rich1LensMagnificationFactor;
+  
+
+  
 };
 
 #endif // RICHDET_DERICHPMTPANEL_H
