@@ -56,14 +56,14 @@ void VPLiteMeasurement::init( const DeVP& det, const IVPClusterPosition::toolInf
   std::pair<double,double> pixSize = sqDet.PixelSize(clusInfo.pixel.pixel());
 
   //// CHEATED..................................
-  if(position.x()>0 && clusInfo.pixel.chip()%2!=0 )position.SetX(position.x()+pixSize.first);
-  else if(position.x()<0 && clusInfo.pixel.chip()%2!=0 ) position.SetX(position.x()-pixSize.first);
+  //if(position.x()>0 && clusInfo.pixel.chip()%2!=0 )position.SetX(position.x()+pixSize.first);
+  //else if(position.x()<0 && clusInfo.pixel.chip()%2!=0 ) position.SetX(position.x()-pixSize.first);
   //// CHEATED..................................END
 
   m_position = position;
   double dx = pixSize.first*clusInfo.fractionalError.first ;
   //// CHEATED..................................
-  if (sqDet.isLong(clusInfo.pixel.pixel())) dx = 0.1 ;
+  //if (sqDet.isLong(clusInfo.pixel.pixel())) dx = 0.1 ;
   //// CHEATED..................................END
   double dy = pixSize.second*clusInfo.fractionalError.second;
   setZ(position.z());
