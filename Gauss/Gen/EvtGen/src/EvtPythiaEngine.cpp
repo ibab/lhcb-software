@@ -472,11 +472,11 @@ void EvtPythiaEngine::updateParticleLists() {
 
   } // Loop over EvtPDL entries
 
-  report(INFO,"EvtGen")<<"Writing out changed generic Pythia decay list"<<endl;
-  _genericPythiaGen->particleData.listChanged();
+  //report(INFO,"EvtGen")<<"Writing out changed generic Pythia decay list"<<endl;
+  //_genericPythiaGen->particleData.listChanged();
 
-  report(INFO,"EvtGen")<<"Writing out changed alias Pythia decay list"<<endl;
-  _aliasPythiaGen->particleData.listChanged();
+  //report(INFO,"EvtGen")<<"Writing out changed alias Pythia decay list"<<endl;
+  //_aliasPythiaGen->particleData.listChanged();
 
 }
 

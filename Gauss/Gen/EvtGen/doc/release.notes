@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-01-28 - John Back
+ - Commented out printing of the updated decay tables used for Pythia
+   (EvtPythiaEngine::updateParticleLists, called within initialise).
+
 ! 2013-01-24 - John Back
  - Updated the Tauola++ and Photos++ engines to use the EvtGen random number
    engine.
