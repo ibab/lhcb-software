@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-01-28 - Olivier Callot
+ - Add a fluctuation to the gain, to avoid a comb structure in the ADC values.
+
 ! 2013-01-25 - Olivier Callot
  - Set the default pe/MeV to 86, and teh gain to 2 cx/p.e, add adc Noise (.5 cx)
  - Eric Cogneras added plots to monitor the signals.

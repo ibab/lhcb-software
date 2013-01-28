@@ -29,9 +29,10 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
 {
   declareProperty("InputLocation" ,       m_inputLocation        = LHCb::MCFTDepositLocation::Default );
   declareProperty("OutputLocation" ,      m_outputLocation       = LHCb::MCFTDigitLocation::Default   );
-  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 86. );  // 0.21 MeV per MIP, 18 photoelectrons per MIP
-  declareProperty("SiPMGain",             m_sipmGain             = 2.0 );
-  declareProperty("ADCNoise",             m_adcNoise             = 0.5 );
+  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 86.  );  // 0.21 MeV per MIP, 18 photoelectrons per MIP
+  declareProperty("SiPMGain",             m_sipmGain             = 2.0  );
+  declareProperty("SiPMGainVariation",    m_sipmGainVariation    = 0.05 );  // relative fluctuation of the gain
+  declareProperty("ADCNoise",             m_adcNoise             = 0.5  );
 }
 //=============================================================================
 // Destructor
@@ -179,11 +180,14 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
     }
   }
   //== Digitise the signal + noise, add 0.5 for rounding
-  int adcCount = int( photoElectrons * m_sipmGain + m_adcNoise * m_gauss() + 0.5 );
+  double gain  = m_siPmGain * ( 1 + m_gauss() * m_siPmGainVariation );
+  double noise = m_adcNoise * m_gauss();
+  
+  int adcCount = int( photoElectrons * gain + noise + 0.5 );  // Rounding, not truncation...
   
   if( msgLevel( MSG::DEBUG) ){
-    debug() <<format("deposit2ADC() : energySum=%8.3f averagePE=%8.2f realPE %4i Gain=%8.3f adcCount = %4i",
-                     energySum, averagePhotoElectrons, photoElectrons, m_sipmGain, adcCount)
+    debug() <<format("deposit2ADC() : energySum=%8.3f averagePE=%8.2f realPE %4i Gain=%8.3f noise=%4.2f adcCount = %4i",
+                     energySum, averagePhotoElectrons, photoElectrons, gain, noise, adcCount)
             << endmsg;
   }
   return adcCount;

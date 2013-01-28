@@ -49,8 +49,9 @@ private:
   std::string m_outputLocation;///< FT digit Location
 
   double m_photoElectronsPerMeV; ///< mean number of photoelectrons produced per deposited MeV
-  double m_sipmGain; ///< SiPM gain
-  double m_adcNoise; ///< Sigma of the noise in the ADC.
+  double m_sipmGain;             ///< SiPM gain, in adccount per photoelectron
+  double m_sipmGainVariation;    ///< SiPM gain relative fluctuation
+  double m_adcNoise;             ///< Sigma of the noise in the ADC.
 
   Rndm::Numbers m_gauss;
   Rndm::Numbers m_flat;
