@@ -567,7 +567,7 @@ void GeneratorAnalysis::bookHistos(bool neutral)
     book(  108, "Multiplicity stable charged particles in LHCb eta", 0., 150., 75 );
   m_pHisto.push_back( m_hNSChEta );
   i++;
-  m_hProcess = book(  109, "Process type", -0.5, 110.5, 111);
+  m_hProcess = book(  109, "Process type", -0.5, 5100.5, 5101);
   m_pHisto.push_back( m_hProcess );
   i++;
   m_hPartP   = book( 120, "Momentum of all particles (GeV)", 0., 100., 100 );

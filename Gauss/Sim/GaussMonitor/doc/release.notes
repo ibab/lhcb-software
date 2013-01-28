@@ -4,6 +4,9 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-01-28 - Aurelien Martens
+ - update hProcess number of bins and upper limit to cope with Pythia8 processIDs
+
 !====================== GaussMonitor v6r10 2012-10-19 ========================
 ! 2012-07-14 - Christian Elsasser
  - Change in GeneratorFullMonitor s.t. intermediate particles in the hard
