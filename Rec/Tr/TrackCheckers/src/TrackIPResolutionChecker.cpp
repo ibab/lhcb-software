@@ -225,9 +225,9 @@ StatusCode TrackIPResolutionChecker::execute()
 	
 	plot(track->lhcbIDs().size(),"NumLHCBIDs","Number of LHCbIDs",-0.5,40.5,41) ;
 	Gaudi::XYZPoint trueorigin = mcparticle->originVertex()->position() ;
-	plot(trueorigin.z(),"IP/TrueOriginZ","True origin z",-20,20) ;
-	plot(trueorigin.x(),"IP/TrueOriginX","True origin x",-2,2) ;
-	plot(trueorigin.y(),"IP/TrueOriginY","True origin y",-2,2) ;
+	plot(trueorigin.z(),"IP/TrueOriginZ","True origin z",-100,100) ;
+	plot(trueorigin.x(),"IP/TrueOriginX","True origin x",-0.5,0.5) ;
+	plot(trueorigin.y(),"IP/TrueOriginY","True origin y",-0.5,0.5) ;
 	
 	// for now, the track state is simply firststate
 	const LHCb::State& firststate = track->firstState() ;
@@ -239,14 +239,14 @@ StatusCode TrackIPResolutionChecker::execute()
 	double IPx = state.x() - trueorigin.x() ;
 	double IPy = state.y() - trueorigin.y() ;
 	double IP3D = std::sqrt( (IPx*IPx+IPy*IPy)/(1 + tx*tx + ty*ty) ) ;
-	plot2D( invtrueptGeV, IPx, "IP/IPXVsInvTruePtH2", "IPx versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
-	plot2D( invtrueptGeV, IPy, "IP/IPYVsInvTruePtH2", "IPy versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
+	plot2D( invtrueptGeV, IPx, "IP/IPxVsInvTruePtH2", "IPx versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
+	plot2D( invtrueptGeV, IPy, "IP/IPyVsInvTruePtH2", "IPy versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
 	plot2D( invtrueptGeV, IP3D, "IP/IP3DVsInvTruePtH2", "IP versus 1/pt_true", 0, maxinvpt, 0, maxip, nbinsinvpt, 200 ) ;
 
 	if( trueptGeV > 0.5 ) {
 	  const double pi = M_PI ;
-	  plot2D( truephi, IPx, "IP/IPXVsTruePhiH2", "IPx versus phi_{true}", -pi, pi, -maxip, maxip, 24, 100 ) ;
-	  plot2D( truephi, IPy, "IP/IPYVsTruePhiH2", "IPy versus phi_{true}", -pi, pi, -maxip, maxip, 24, 100 ) ;
+	  plot2D( truephi, IPx, "IP/IPxVsTruePhiH2", "IPx versus phi_{true}", -pi, pi, -maxip, maxip, 24, 100 ) ;
+	  plot2D( truephi, IPy, "IP/IPyVsTruePhiH2", "IPy versus phi_{true}", -pi, pi, -maxip, maxip, 24, 100 ) ;
 	}
 	
 	plot1D( IPx, "IP/IPxH1","IP x", -maxip,maxip) ;
@@ -290,9 +290,9 @@ StatusCode TrackIPResolutionChecker::execute()
     }
     if( truepv ) {
       Gaudi::XYZVector delta = pv->position() -truepv->position() ;
-      plot1D(delta.x(),"PV/dxH1","x_{PV} - x_{true}", -0.2,0.2) ;
-      plot1D(delta.y(),"PV/dyH1","y_{PV} - y_{true}", -0.2,0.2) ;
-      plot1D(delta.z(),"PV/dzH1","z_{PV} - z_{true}", -2,2) ;
+      plot1D(delta.x(),"PV/dxH1","x_{PV} - x_{true}", -0.1,0.1) ;
+      plot1D(delta.y(),"PV/dyH1","y_{PV} - y_{true}", -0.1,0.1) ;
+      plot1D(delta.z(),"PV/dzH1","z_{PV} - z_{true}", -1,1) ;
       plot1D(delta.x()/std::sqrt(pv->covMatrix()(0,0)),"PV/dxpullH1","x_{PV} - x_{true} pull", -5,5) ;
       plot1D(delta.y()/std::sqrt(pv->covMatrix()(1,1)),"PV/dypullH1","y_{PV} - y_{true} pull", -5,5) ;
       plot1D(delta.z()/std::sqrt(pv->covMatrix()(2,2)),"PV/dzpullH1","z_{PV} - z_{true} pull", -5,5) ;
