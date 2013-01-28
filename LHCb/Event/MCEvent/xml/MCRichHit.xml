@@ -72,6 +72,8 @@
                 <bitfield desc="Hit from a photon reflected by the PC/QW interface in the HPD"                    length="1"  name="hpdReflPCQW"       />
                 <bitfield desc="Hit from a photon created via scintillation in the radiator"                      length="1"  name="radScintillation"  /> 
                 <bitfield desc="If an Aerogel SubTile hit, store the SubTile ID Number in the corresponding Full  tile "  length="6" name="AerogelSubTileID" />
+                <bitfield desc="If  a Hit has gone through a Lens in front of PMT this bit is set "               length="1"  name="pmtLensFlag"      />
+       
         </attribute>
 
         <method 
