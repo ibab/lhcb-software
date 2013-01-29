@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-01-29 - Jianchun Wang
+ - Add UT in TrackHitAdder.
+
 ! 2013-01-14 - Frederic Dupertuis
  - Adding ChargedParticlesToTracks algo that dumps tracks from charged particles
    (refitting, mother's mass window cut).
