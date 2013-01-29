@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-01-29 - Olivier Callot
+ - Implement the VP lite clusters in PrLHCbID2MCParticle
+
 ! 2012-12-05 - Olivier Callot
  - Change Tf::OTHitCreator to OTHitCreator
 

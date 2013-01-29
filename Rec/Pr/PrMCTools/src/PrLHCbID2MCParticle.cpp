@@ -10,6 +10,7 @@
 #include "Event/VeloLiteCluster.h"
 #include "Event/VLCluster.h"
 #include "Event/VPCluster.h"
+#include "Event/VPLiteCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
 #include "Event/FTCluster.h"
@@ -124,6 +125,17 @@ StatusCode PrLHCbID2MCParticle::execute() {
     LHCb::VPClusters::const_iterator iClus;
     for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
       LHCb::LHCbID myId = (*iClus)->lCluster().channelID();
+      int id            = myId.vpID();
+      linkAll( myId, id );
+    }
+  } else if ( exist<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default) ) {    
+    LinkedTo<LHCb::MCParticle> veloLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
+    m_detectorLink = &veloLink;
+    LHCb::VPLiteCluster::VPLiteClusters* clusters = 
+      get<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default);
+    LHCb::VPLiteCluster::VPLiteClusters::const_iterator iClus;
+    for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
+      LHCb::LHCbID myId = LHCb::LHCbID( (*iClus).channelID() );
       int id            = myId.vpID();
       linkAll( myId, id );
     }
