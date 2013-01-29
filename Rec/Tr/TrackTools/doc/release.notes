@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2013-01-29 - Jianchun Wang
+ - Use common ST detector for UT & TT and update the providermap size
+
 ! 2013-01-07 - Jianchun Wang
  - Add UT measurement provider and hit expectation
 

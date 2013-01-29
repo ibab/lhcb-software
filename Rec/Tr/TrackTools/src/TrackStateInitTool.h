@@ -72,7 +72,6 @@ private:
   IPatVeloUTFit* m_veloUTFit ;
   const ITrackExtrapolator* m_extrapolator;
   const DeSTDetector* m_ttdetector ;
-  const DeSTDetector* m_utdetector ;
   bool m_useUT;
 } ;
 

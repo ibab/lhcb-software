@@ -84,7 +84,7 @@ StatusCode MeasurementProvider::initialize()
   if (sc.isFailure()) return sc;  // error already reported by base class
 
   m_providermap.clear() ;
-  m_providermap.resize(LHCb::Measurement::VL+1,0) ;
+  m_providermap.resize(LHCb::Measurement::UTLite+1,0) ;
 
   if(!m_ignoreVelo) {
     sc = m_veloRProvider.retrieve() ;

@@ -431,9 +431,9 @@ namespace MeasurementProviderTypes {
     typedef LHCb::STCluster          ClusterType ;
     typedef LHCb::STClusters         ClusterContainerType ;
     typedef DeSTDetector             DetectorType ;
-    static std::string positionToolName() { return "STOfflinePosition" ; }
-    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("UT") ; }
+    static std::string positionToolName() { return "STOfflinePosition/UTClusterPosition" ; }
     static std::string defaultClusterLocation() { return LHCb::STClusterLocation::UTClusters ; }
+    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("UT") ; }
     static LHCb::STChannelID channelId( const LHCb::LHCbID& id ) { return id.stID() ; }
     static bool checkType(const LHCb::LHCbID& id) { return id.isUT() ; }
   };
@@ -453,13 +453,13 @@ DECLARE_TOOL_FACTORY( UTMeasurementProvider )
 namespace MeasurementProviderTypes {
   struct UTLite {
     typedef LHCb::STLiteMeasurement      MeasurementType ;
-    typedef ISTClusterPosition       PositionToolType ;
+    typedef ISTClusterPosition           PositionToolType ;
     typedef LHCb::STLiteCluster          ClusterType ;
     typedef LHCb::STLiteCluster::STLiteClusters  ClusterContainerType ;
-    typedef DeSTDetector             DetectorType ;
-    static std::string positionToolName() { return "STOnlinePosition" ; }
-    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("UT") ; }
+    typedef DeSTDetector                 DetectorType ;
+    static std::string positionToolName() { return "STOnlinePosition/UTLiteClusterPosition" ; }
     static std::string defaultClusterLocation() { return LHCb::STLiteClusterLocation::UTClusters ; }
+    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("UT") ; }
     static LHCb::STChannelID channelId( const LHCb::LHCbID& id ) { return id.stID() ; }
     static bool checkType(const LHCb::LHCbID& id) { return id.isUT() ; }
   };

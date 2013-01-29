@@ -34,7 +34,8 @@ StatusCode TrackStateInitTool::initialize()
   else           m_veloTTFit = tool<IPatVeloTTFit>("PatVeloTTFit");
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator", 
 					    "Extrapolator",this);
-  if ( m_useUT ) m_utdetector = getDet<DeSTDetector>(DeSTDetLocation::location("UT")) ;
+  // DeSTDetector* m_ttdetector for both TT & UT
+  if ( m_useUT ) m_ttdetector = getDet<DeSTDetector>(DeSTDetLocation::location("UT")) ;
   else           m_ttdetector = getDet<DeSTDetector>(DeSTDetLocation::location("TT")) ;
 
   return sc ;
