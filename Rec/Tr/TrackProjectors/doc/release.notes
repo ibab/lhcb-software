@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2013-01-29 - Jianchun Wang
+ - Add UT projector in the selector.
+
 ! 2012-11-29 - Olivier Callot
  - Add FT measurement as normal projectors
 
