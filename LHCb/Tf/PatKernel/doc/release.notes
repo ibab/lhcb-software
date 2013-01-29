@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-01-29 - Jianchun Wang
+ - Use PatTTHit for both TT & UT so that other functions can be shared.
+
 ! 2013-01-07 - Jianchun Wang
  - Clone UT Pat tool from that of TT.
 

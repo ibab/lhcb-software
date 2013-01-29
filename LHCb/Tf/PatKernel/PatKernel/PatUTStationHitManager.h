@@ -4,7 +4,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolHandle.h"
-#include "PatKernel/PatUTHit.h"
+#include "PatKernel/PatTTHit.h"
 
 #include "TfKernel/UTStationHitManager.h"
 
@@ -16,7 +16,7 @@
    *  @date   2007-06-01 Initial version
    */
 
-  class PatUTStationHitManager : public Tf::UTStationHitManager <PatUTHit>
+  class PatUTStationHitManager : public Tf::UTStationHitManager <PatTTHit>
   {
 
   public:

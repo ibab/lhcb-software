@@ -3,7 +3,7 @@
 #define PATKERNEL_IPATDEBUGUTTOOL_H 1
 
 // Include files
-#include "PatKernel/PatUTHit.h"
+#include "PatKernel/PatTTHit.h"
 
 // Forward declarations
 class MsgStream;
@@ -30,10 +30,10 @@ public:
   static const InterfaceID& interfaceID() { return IID_IPatDebugUTTool; }
 
   virtual void debugUTClusterOnTrack( const LHCb::Track* track, 
-                                      const PatUTHits::const_iterator beginCoord,
-                                      const PatUTHits::const_iterator endCoord   ) = 0;
+                                      const PatTTHits::const_iterator beginCoord,
+                                      const PatTTHits::const_iterator endCoord   ) = 0;
   
-  virtual void debugUTCluster( MsgStream& msg, const PatUTHit* hit ) = 0;
+  virtual void debugUTCluster( MsgStream& msg, const PatTTHit* hit ) = 0;
 
 
 protected:

@@ -13,7 +13,7 @@ DECLARE_TOOL_FACTORY( PatUTStationHitManager )
 PatUTStationHitManager::PatUTStationHitManager( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
-  : Tf::UTStationHitManager<PatUTHit> ( type, name , parent )
+  : Tf::UTStationHitManager<PatTTHit> ( type, name , parent )
 {
 }
 
