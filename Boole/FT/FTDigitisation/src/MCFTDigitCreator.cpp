@@ -180,7 +180,7 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
     }
   }
   //== Digitise the signal + noise, add 0.5 for rounding
-  double gain  = m_siPmGain * ( 1 + m_gauss() * m_siPmGainVariation );
+  double gain  = m_sipmGain * ( 1 + m_gauss() * m_sipmGainVariation );
   double noise = m_adcNoise * m_gauss();
   
   int adcCount = int( photoElectrons * gain + noise + 0.5 );  // Rounding, not truncation...
