@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-01-29 - Olivier Callot
+ - Add two option files, to run the HLT emulation with VP or VL
+
+! 2013-01-29 - Olivier Callot
  - Fix the configuration for VP. New option MinVPClusters
  - New option MinIPChi2 to control the forward selection
 

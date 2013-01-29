@@ -54,6 +54,11 @@ class FstConf(LHCbConfigurableUser):
             FstSequencer( "RecoFstSeq" ).Members = [ "VPRawBankToLiteCluster/FstVPDecoding",
                                                      "PatPixelTracking/FstPixel" ]
             PatPixelTracking( "FstPixel" ).OutputTracksName = self.getProp( "RootInTES") + "Track/Velo"
+        elif "VL" == self.getProp( "VeloType" ):
+            from Configurables import PrVLTracking
+            FstSequencer( "RecoFstSeq" ).Members = [ "VLRawBankDecoder/FstVLDecoding",
+                                                     "PrVLTracking/FstVLTracking" ]
+            PrVLTracking( "FstVLTracking" ).TrackLocation = self.getProp( "RootInTES") + "Track/Velo"
         else:
             log.warning( "Unknown VeloType option '%s' !"%self.getProp( "VeloType" ) )
             exit(0)
@@ -139,15 +144,20 @@ class FstConf(LHCbConfigurableUser):
             fitter = ConfiguredHltFitter( getattr(HltFastFit,'Fitter'))
             FstSequencer( "RecoFstSeq" ).Members +=[ HltFastFit ]
             HltFastFit.Fitter.addTool( MeasurementProvider )
+            if "VP" == self.getProp( "VeloType" ):
+                HltFastFit.Fitter.MeasurementProvider.IgnoreVelo = True
+                HltFastFit.Fitter.MeasurementProvider.IgnoreVP   = False
+            elif "VL" == self.getProp( "VeloType" ):
+               HltFastFit.Fitter.MeasurementProvider.IgnoreVelo = True
+               HltFastFit.Fitter.MeasurementProvider.IgnoreVL   = False
+                
+            if "ValidateTT" != self.getProp( "TTType" ):
+                HltFastFit.Fitter.MeasurementProvider.IgnoreTT = True
+
             if "FT" == self.getProp( "TStationType" ):                       #ignore IT+OT as it cannot initialize
                 HltFastFit.Fitter.MeasurementProvider.IgnoreIT = True
                 HltFastFit.Fitter.MeasurementProvider.IgnoreOT = True
                 HltFastFit.Fitter.MeasurementProvider.IgnoreFT = False
-            if "VP" == self.getProp( "VeloType" ):
-                HltFastFit.Fitter.MeasurementProvider.IgnoreVelo = True
-                HltFastFit.Fitter.MeasurementProvider.IgnoreVP   = False
-            if "ValidateTT" != self.getProp( "TTType" ):
-                HltFastFit.Fitter.MeasurementProvider.IgnoreTT = True
 
         ## Selection after measuring momentum
         FstSequencer( "RecoFstSeq" ).Members += [ "FstSelectForwardTracks" ]
