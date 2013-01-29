@@ -16,11 +16,13 @@ from Configurables import GaudiSequencer, FstSequencer, FstSelectVeloTracks, Fst
 class FstConf(LHCbConfigurableUser):
     __slots__ = {
         "RootInTES" : "Fst/"
-        ,"MinPt"           : 1500.  # MeV
+        ,"MinPt"           : 1200.  # MeV
         ,"MinIP"           : 0.100  # mm
         ,"MaxIP"           : 3.000  # mm
-        ,"MaxChi2Ndf"      : 3.0  # mm
+        ,"MinIPChi2"       : 9.0
+        ,"MaxChi2Ndf"      : 3.0    
         ,"MinVeloClusters" : 9
+        ,"MinVPClusters"   : 3
         ,"VeloType"        : "Velo"
         ,"TTType"          : "ValidateTT"
         ,"TStationType"    : "IT+OT"
@@ -48,7 +50,10 @@ class FstConf(LHCbConfigurableUser):
             FastVeloTracking( "FstVeloTracking" ).ResetUsedFlags = True
             FastVeloTracking( "FstVeloTracking" ).HLT1Only = True
         elif "VP" == self.getProp( "VeloType" ):
-            FstSequencer( "RecoFstSeq" ).Members = [ "PatPixel/FstPixel" ]
+            from Configurables import PatPixelTracking
+            FstSequencer( "RecoFstSeq" ).Members = [ "VPRawBankToLiteCluster/FstVPDecoding",
+                                                     "PatPixelTracking/FstPixel" ]
+            PatPixelTracking( "FstPixel" ).OutputTracksName = self.getProp( "RootInTES") + "Track/Velo"
         else:
             log.warning( "Unknown VeloType option '%s' !"%self.getProp( "VeloType" ) )
             exit(0)
@@ -73,8 +78,11 @@ class FstConf(LHCbConfigurableUser):
         FstSelectVeloTracks().PVName           = self.getProp( "RootInTES") + "Vertices/PV"
         FstSelectVeloTracks().MinIP            = self.getProp( "MinIP" )
         FstSelectVeloTracks().MaxIP            = self.getProp( "MaxIP" )
-        FstSelectVeloTracks().MinVeloClusters  = self.getProp( "MinVeloClusters" )
-
+        if "VP" == self.getProp( "VeloType" ):
+            FstSelectVeloTracks().MinVeloClusters  = self.getProp( "MinVPClusters" )
+        else:
+            FstSelectVeloTracks().MinVeloClusters  = self.getProp( "MinVeloClusters" )
+        
         ## Handle TT/UT
         if "ValidateTT" == self.getProp( "TTType" ):
             FstSelectVeloTracks().ValidateWithTT = True
@@ -135,6 +143,11 @@ class FstConf(LHCbConfigurableUser):
                 HltFastFit.Fitter.MeasurementProvider.IgnoreIT = True
                 HltFastFit.Fitter.MeasurementProvider.IgnoreOT = True
                 HltFastFit.Fitter.MeasurementProvider.IgnoreFT = False
+            if "VP" == self.getProp( "VeloType" ):
+                HltFastFit.Fitter.MeasurementProvider.IgnoreVelo = True
+                HltFastFit.Fitter.MeasurementProvider.IgnoreVP   = False
+            if "ValidateTT" != self.getProp( "TTType" ):
+                HltFastFit.Fitter.MeasurementProvider.IgnoreTT = True
 
         ## Selection after measuring momentum
         FstSequencer( "RecoFstSeq" ).Members += [ "FstSelectForwardTracks" ]
@@ -144,6 +157,7 @@ class FstConf(LHCbConfigurableUser):
         FstSelectForwardTracks().MinIP            = self.getProp( "MinIP" )
         FstSelectForwardTracks().MaxIP            = self.getProp( "MaxIP" )
         FstSelectForwardTracks().MinPt            = self.getProp( "MinPt" )
+        FstSelectForwardTracks().MinIPChi2        = self.getProp( "MinIPChi2" )
         if "HltFit" == self.getProp ( "TrackFit" ):
             FstSelectForwardTracks().MaxChi2Ndf            = self.getProp( "MaxChi2Ndf" )
         else:

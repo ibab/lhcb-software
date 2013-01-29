@@ -4,6 +4,10 @@
 ! Purpose     : First Software Trigger tools for teh upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-01-29 - Olivier Callot
+ - Fix the configuration for VP. New option MinVPClusters
+ - New option MinIPChi2 to control the forward selection
+
 ! 2012-12-04 - Olivier Callot
  - fix IPS computation in FstSelectForwardTracks
  - Use track fit for FT also
