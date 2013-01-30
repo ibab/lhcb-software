@@ -13,7 +13,8 @@
 #include "TfKernel/IOTHitCreator.h"
 #include "TfKernel/IITHitCreator.h"
 #include "TfKernel/ITTHitCreator.h"
- 
+#include "TfKernel/IUTHitCreator.h"
+
 
 /** @class PatLHCbID2MCParticle PatLHCbID2MCParticle.h
  *  Build the linker table relating LHCbID used in pattern to MCParticles
@@ -54,7 +55,8 @@
     ToolHandle<Tf::IOTHitCreator> m_otHitCreator;
     bool m_linkOT;
     bool m_linkIT;
-    bool m_linkTT;
+    bool m_linkTT;  // or UT when m_useUT=true
     bool m_linkVELO;
+    bool m_useUT;
   };
 #endif // PATLHCBID2MCPARTICLE_H

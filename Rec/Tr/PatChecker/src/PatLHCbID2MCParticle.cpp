@@ -38,6 +38,7 @@ PatLHCbID2MCParticle::PatLHCbID2MCParticle( const std::string& name,
   declareProperty( "LinkIT", m_linkIT=true);
   declareProperty( "LinkTT", m_linkTT=true);
   declareProperty( "LinkVELO", m_linkVELO=true);
+  declareProperty( "UseUT",   m_useUT=false);
 }
 //=============================================================================
 // Destructor
@@ -136,13 +137,13 @@ StatusCode PatLHCbID2MCParticle::execute() {
     }
   }
 
-  //== TT
+  //== TT (UT)
   if (m_linkTT) {
     LinkedTo<LHCb::MCParticle,LHCb::STCluster> 
-      ttLink( evtSvc(), msgSvc(),LHCb::STClusterLocation::TTClusters );
+      ttLink( evtSvc(), msgSvc(), (m_useUT ? LHCb::STClusterLocation::UTClusters : LHCb::STClusterLocation::TTClusters) );
 
     const LHCb::STCluster::Container* cont = 
-      get<LHCb::STCluster::Container>(LHCb::STClusterLocation::TTClusters);
+      get<LHCb::STCluster::Container>(m_useUT ? LHCb::STClusterLocation::UTClusters : LHCb::STClusterLocation::TTClusters);
  
 
     for(  LHCb::STCluster::Container::const_iterator iclus = cont->begin();
