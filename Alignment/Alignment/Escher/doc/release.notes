@@ -6,18 +6,8 @@ Purpose : Gaudi application used to perform
 
 </PRE><H1><A NAME=v4r14>2013-01-14 Escher v4r14</A></H1><PRE>
 
-! 2013-01-22 - Maurizio Martinelli
- - Added an exclusion list for QMtests. Updated tests accordingly.
- - Updated one qmtests reference.
-
-! 2013-01-21 - Maurizio Martinelli
- - Updated qmtests references. Solved a bug in D0 qmtest.
-
-! 2013-01-18 - Maurizio Martinelli
- - Updated qmtests and added a test for the Dstar selection
-
 ! 2013-01-18 - Rob Lambert
- - Update configurables test with new stack
+ - Update QM and configurables testz with new stack
 
 ! 2013-01-14 - Rob Lambert
  - Minor changes from Mauritxio and Pieter
