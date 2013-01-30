@@ -19,6 +19,7 @@
 #include "TfKernel/RegionID.h"
 #include "TfKernel/IITHitCreator.h"
 #include "TfKernel/ITTHitCreator.h"
+#include "TfKernel/IUTHitCreator.h"
 
 #include "STHitCreator.h"
 #include "HitCreatorGeom.h"
@@ -323,6 +324,17 @@ namespace Tf
   typedef STHitCreator<TT> TTHitCreator ;
   DECLARE_TOOL_FACTORY( TTHitCreator )
 
+  struct UT {
+    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("UT") ; }
+    static std::string defaultClusterLocation() { return LHCb::STLiteClusterLocation::UTClusters ; }
+    typedef IUTHitCreator ISTHitCreator ;
+    typedef UTStationID StationID ;
+    typedef UTLayerID   LayerID ;
+    typedef UTRegionID RegionID ;
+  } ;
+  
+  typedef STHitCreator<UT> UTHitCreator ;
+  DECLARE_TOOL_FACTORY( UTHitCreator )
 
 
   // RestUsed flag for all OT hits 

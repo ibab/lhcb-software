@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2013-01-30 - Jianchun Wang
+ - Include UT hits in STHitCreator.
+
 ! 2012-12-05 - Marco Cattaneo
  - Remove unneccessary connection to DetectorDataSvc in OTHitCreator
  - Fix UNINIT_CTOR coverity defects
