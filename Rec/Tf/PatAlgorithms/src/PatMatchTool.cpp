@@ -32,7 +32,7 @@ DECLARE_TOOL_FACTORY(PatMatchTool)
   PatMatchTool::PatMatchTool(const std::string& type,
                              const std::string& name, const IInterface* parent) :
     GaudiTool(type, name , parent),
-    m_fastMomentumTool(0), m_addTTClusterTool(0)
+    m_fastMomentumTool(0), m_addTTClusterTool(0), m_addUTClusterTool(0)
 {
   declareInterface<IMatchTool>(this);
   declareInterface<ITrackMatch>(this);
@@ -55,6 +55,8 @@ DECLARE_TOOL_FACTORY(PatMatchTool)
   declareProperty("AddTTClusterName", m_addTTClusterName = "PatAddTTCoord");
   declareProperty("writeNNVariables", m_writeNNVariables = true);
 
+  declareProperty("AddUTClusters"   , m_addUT            = false);
+  declareProperty("AddUTClusterName", m_addUTClusterName = "PatAddUTCoord");
 }
 //=============================================================================
 // Destructor
@@ -74,7 +76,8 @@ StatusCode PatMatchTool::initialize()
   if (UNLIKELY(msgLevel(MSG::DEBUG)))
     debug() << "==> Initialize" << endmsg;
 
-  m_addTTClusterTool = tool<IAddTTClusterTool>(m_addTTClusterName);
+  if ( m_addTT) m_addTTClusterTool = tool<IAddTTClusterTool>(m_addTTClusterName);
+  if ( m_addUT) m_addUTClusterTool = tool<IAddUTClusterTool>(m_addUTClusterName);
 
   m_fastMomentumTool = tool<ITrackMomentumEstimate>(m_fastMomentumToolName);
 
@@ -91,6 +94,7 @@ StatusCode PatMatchTool::matchSingle(const LHCb::Track& velo,
     // set states and flags of output track
     makeTrack(velo, seed, output, chi2);
     if (m_addTT) m_addTTClusterTool->addTTClusters(output);
+    if (m_addUT) m_addUTClusterTool->addUTClusters(output);
     return StatusCode::SUCCESS;
   }
 
@@ -171,6 +175,12 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
       StatusCode sc = m_addTTClusterTool->addTTClusters(*match);
       if (sc.isFailure())
         Warning("adding TT clusters failed!",sc).ignore();
+    }
+
+    if (m_addUT) {
+      StatusCode sc = m_addUTClusterTool->addUTClusters(*match);
+      if (sc.isFailure())
+        Warning("adding UT clusters failed!",sc).ignore();
     }
 
     // added for NNTools -- check how many tracks have common hits

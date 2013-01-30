@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2013-01-30 - Jianchun Wang
+ - Add UT in pattern recognition.
+
 ! 2013-01-09 - Paul Seyfert
  - tiny code cosmetic in PatSeedingTool: reorder properties and replace hard
    coded track location by existing property.

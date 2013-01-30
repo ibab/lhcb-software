@@ -13,11 +13,13 @@
 
 #include "TrackInterfaces/IMatchTool.h"            // Interface
 #include "TrackInterfaces/ITrackMatch.h"            // Interface for Hlt
+#include "TrackInterfaces/IAddUTClusterTool.h"
 
 
 // forward decls
 class ITrackMomentumEstimate;
 class IAddTTClusterTool;
+class IAddUTClusterTool;
 
 /** @class PatMatchTool PatMatchTool.h
  *
@@ -121,12 +123,15 @@ class PatMatchTool : public GaudiTool,
 	// use tool for momentum parametrisation
 	std::string m_fastMomentumToolName;
 	std::string m_addTTClusterName;
+	std::string m_addUTClusterName;
 	bool m_addTT;
+	bool m_addUT;
 	bool m_writeNNVariables;
 
 	ITrackMomentumEstimate* m_fastMomentumTool;
 
 	IAddTTClusterTool*   m_addTTClusterTool;
+	IAddUTClusterTool*   m_addUTClusterTool;
 
 	double m_zMagnet;
 	double m_zMagnetTx2;
