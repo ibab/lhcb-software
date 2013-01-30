@@ -41,7 +41,7 @@ DECLARE_ALGORITHM_FACTORY( PatPixelTracking )
   declareProperty( "MaxMissed",             m_maxMissed         = 4     );
   declareProperty( "MaxChi2PerHit",         m_maxChi2PerHit     = 12.0  ); // 16.0 // limit when removing worst hits
   declareProperty( "MaxChi2Short",          m_maxChi2Short      =  6.0  ); //  6.0 // short (3-hit) tracks are removed with this limit
-
+  declareProperty( "ClearHits",             m_clearHits         = false ); // Clear hits if needed, for a rerun in same event
   // Parameters for debugging
   declareProperty( "DebugToolName",         m_debugToolName     = ""    );
   declareProperty( "WantedKey",             m_wantedKey         = -100  );
@@ -100,6 +100,7 @@ StatusCode PatPixelTracking::execute() {
   LHCb::Tracks* outputTracks = new LHCb::Tracks();
   put( outputTracks, m_outputLocation );
 
+  if ( m_clearHits ) m_hitManager->clearHits();
   m_hitManager->buildHits();                                        // import hits from VeloLite Clusters
   m_hitManager->sortByX();                                          // sort by X-pos. within each sensor for faster search
   // printf(" m_hitManager->nbHits() => %d\n", m_hitManager->nbHits());
@@ -363,11 +364,11 @@ void PatPixelTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
     newTrack->setNDoF(2*((*itT).hits().size()-2)); newTrack->setChi2PerDoF((*itT).chi2());
     outputTracks->insert( newTrack );
 
-    int HitsPerTrack = (*itT).hits().size();
     // printf(" pseudoRapidity=%3.1f Chi2/DoF=%3.1f nDoF=%d\n",
     //  newTrack->pseudoRapidity(), newTrack->chi2PerDoF(), newTrack->nDoF() );
 
 #ifdef DEBUG_HISTO
+    int HitsPerTrack = (*itT).hits().size();
     if(backward)
     {
     plot(HitsPerTrack,                               "Bwd_HitsPerTrack", "PatPixelTracking: Number of hits per backward track",

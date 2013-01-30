@@ -76,6 +76,7 @@ private:
   int    m_maxMissed;
   double m_maxChi2PerHit;
   double m_maxChi2Short;
+  bool   m_clearHits;
 
   PatPixelTracks m_tracks;                  // list of tracks found by searchByPair()
   PatPixelTrack  m_track;

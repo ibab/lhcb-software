@@ -128,7 +128,6 @@ StatusCode PatPixelHitManager::rebuildGeometry ( ) {
 void PatPixelHitManager::handle ( const Incident& incident ) {
   if ( IncidentType::BeginEvent == incident.type() ){
     this->clearHits();
-    m_eventReady = false;
   }
 }
 
@@ -143,6 +142,7 @@ void PatPixelHitManager::clearHits( ) {
     if ( 0 != *itS) (*itS)->reset();
   }
   m_nextInPool = m_pool.begin();
+  m_eventReady = false;
 }
 
 //=========================================================================
