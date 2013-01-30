@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2013-01-30 - Jianchun Wang
+ - Replace PatUTHit with PatTTHit
+
 ! 2013-01-07 - Jianchun Wang
  - Add UT cluster and VeloUT interface
 

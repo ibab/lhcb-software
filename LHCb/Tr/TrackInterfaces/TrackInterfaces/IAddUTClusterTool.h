@@ -25,7 +25,7 @@ namespace LHCb {
   class STCluster;
   
 }
-class PatUTHit;
+class PatTTHit;
 
 
 class IAddUTClusterTool : virtual public IAlgTool {
@@ -36,7 +36,7 @@ public:
 
   /// Add UT clusters to matched tracks
   virtual StatusCode addUTClusters( LHCb::Track& track ) = 0;
-  virtual StatusCode returnUTClusters( LHCb::State& state, std::vector<PatUTHit*>& ttHits, double& finalChi2, double p) = 0;
+  virtual StatusCode returnUTClusters( LHCb::State& state, std::vector<PatTTHit*>& ttHits, double& finalChi2, double p) = 0;
 
   virtual StatusCode addUTClusters( LHCb::Track& track, 
                                     std::vector<LHCb::STCluster*>& ttClusters,
