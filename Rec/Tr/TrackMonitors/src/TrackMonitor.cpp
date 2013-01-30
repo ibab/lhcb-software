@@ -51,6 +51,7 @@ TrackMonitor::TrackMonitor(const std::string& name,
                            ISvcLocator* pSvcLocator ) :
   TrackMonitorBase( name , pSvcLocator )
 {
+  declareProperty( "UseUT"       , m_useUT =  false );
 }
 
 //=============================================================================
@@ -66,7 +67,8 @@ StatusCode TrackMonitor::initialize()
   m_veloDet = getDet<DeVelo>(  DeVeloLocation::Default ) ;
      
   m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
-  m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
+  if ( m_useUT ) m_ttExpectation = tool<IHitExpectation>("UTHitExpectation");
+  else           m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
   m_itExpectation = tool<IHitExpectation>("ITHitExpectation");
   m_otExpectation = tool<IHitExpectation>("OTHitExpectation");
   
@@ -171,6 +173,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   // found hits of each type
   const std::vector<LHCb::LHCbID>& ids = track.lhcbIDs();
   const unsigned int nTTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isTT,_1));
+  const unsigned int nUTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isUT,_1));
   const unsigned int nITHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isIT,_1));
   const unsigned int nOTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isOT,_1));
   const unsigned int nVeloHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVelo,_1));
@@ -185,6 +188,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(nVeloRHits, type+"/114","# Velo R hits" ,-0.5, 20.5 ,21);
   plot(nVeloPhiHits, type+"/115","# Velo phi hits" ,-0.5, 20.5 ,21);
   plot(nMuonHits, type+"/116","# Muon hits" ,-0.5, 20.5 ,21);
+  plot(nUTHits, type+"/117", "# UT hits",  -0.5, 10.5 ,11);
   
   size_t numoutliers(0) ;
   if( track.nodes().size()>0 ) {
@@ -420,6 +424,10 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   std::bitset<LHCb::HitPattern::NumTT> tt = hitpattern.tt() ;
   for(size_t ilay=0; ilay<LHCb::HitPattern::NumTT; ++ilay)
     profile1D( double(ilay),tt.test(ilay),type+"/HitTTLayers", "Hits per TT layer", -0.5,3.5,4) ;
+  
+  std::bitset<LHCb::HitPattern::NumTT> ut = hitpattern.ut() ;
+  for(size_t ilay=0; ilay<LHCb::HitPattern::NumTT; ++ilay)
+    profile1D( double(ilay),ut.test(ilay),type+"/HitUTLayers", "Hits per UT layer", -0.5,3.5,4) ;
   
   std::bitset<LHCb::HitPattern::NumVelo> velo = hitpattern.velo() ;
   for(size_t ilay=0; ilay<LHCb::HitPattern::NumVelo; ++ilay)

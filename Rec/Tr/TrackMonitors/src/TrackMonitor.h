@@ -48,6 +48,7 @@ class TrackMonitor : public TrackMonitorBase {
 		     const LHCb::State*& lastMeasurementState) const ;
 
   const DeVelo*        m_veloDet ;
+  bool m_useUT;
   
   IVeloExpectation* m_veloExpectation;
   IHitExpectation* m_ttExpectation;

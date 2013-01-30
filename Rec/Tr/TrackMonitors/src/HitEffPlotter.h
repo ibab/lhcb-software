@@ -40,7 +40,8 @@ class HitEffPlotter : public GaudiHistoAlg
     private:
 	/// name of input track collection
 	std::string m_inputCollection;
-
+  bool m_useUT;
+  
 	IVeloExpectation* m_veloExpectation;
 	IHitExpectation* m_ttExpectation;
 	IHitExpectation* m_itExpectation;

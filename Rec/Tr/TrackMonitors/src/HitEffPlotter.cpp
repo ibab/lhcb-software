@@ -31,6 +31,7 @@ DECLARE_ALGORITHM_FACTORY( HitEffPlotter )
         m_xyzExpectation(0)
 {
     declareProperty("InputCollection", m_inputCollection = LHCb::TrackLocation::Default);
+    declareProperty("UseUT"       , m_useUT =  false );
 }
 
 //=============================================================================
@@ -49,7 +50,8 @@ StatusCode HitEffPlotter::initialize()
     if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
     m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
-    m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
+    if ( m_useUT) m_ttExpectation = tool<IHitExpectation>("UTHitExpectation");
+    else          m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
     m_itExpectation = tool<IHitExpectation>("ITHitExpectation");
     m_otExpectation = tool<IHitExpectation>("OTHitExpectation");
     m_xyzExpectation = tool<TrackExpectedHitsXYZTool>("TrackExpectedHitsXYZTool");
@@ -146,8 +148,12 @@ StatusCode HitEffPlotter::execute()
 		100u, -75., 75., 100u, -75., 75.,
 		expectedpat.veloPhiC(), ontrackpat.veloPhiC(), xyzpat.VeloPhiC);
 	// plot TT
-	plot("tt", "TT", 100u, -1500., 1500., 100u, -1500., 1500.,
-		expectedpat.tt(), ontrackpat.tt(), xyzpat.TT);
+//   if ( m_useUT ) 
+//     plot("ut", "UT", 100u, -1500., 1500., 100u, -1500., 1500.,
+//          expectedpat.ut(), ontrackpat.ut(), xyzpat.UT);
+//   else
+  plot("tt", "TT", 100u, -1500., 1500., 100u, -1500., 1500.,
+       expectedpat.tt(), ontrackpat.tt(), xyzpat.TT);
 	// plot IT
 	plot("it", "IT", 20u, -750, 750., 15u, -300., 300.,
 		expectedpat.itAC(), ontrackpat.itAC(), xyzpat.ITAC);
