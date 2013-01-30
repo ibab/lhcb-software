@@ -4,6 +4,7 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v1r10 2013-01-30 =========================
 ! 2013-01-30 - Chris Jones
  - Turn off the forcible suppression of stdout and stderr printout from
    NeuroBayes, for testing.
