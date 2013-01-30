@@ -50,7 +50,7 @@ gamma		0	1.22	0.1
 "D0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Phase"      	 	1	261	0.5	0.0	0.0
 *
 "D0->f(2)(1270)0(->pi+,pi-),NonResV0(->pi+,pi-)_Frac"		0.049
-"D0->f(2)(1270)0(->pi+,pi-),NonResV0(->pi+,pi-)_Amp"          	 	0	8.589	0.1	0.0	0.0
+"D0->f(2)(1270)0(->pi+,pi-),NonResV0(->pi+,pi-)_Amp"          	 	0	0.589	0.1	0.0	0.0
 "D0->f(2)(1270)0(->pi+,pi-),NonResV0(->pi+,pi-)_Phase"         	 	1	317	0.5	0.0	0.0
 *
 "D0->sigma10(->pi+,pi-),pi+,pi-_Frac"				0.082
