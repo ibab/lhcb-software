@@ -19,7 +19,7 @@ use HltMonitors          v1r6    Hlt  # Roel Aaij
 use MuonID               v9r5    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v5r4    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTools            v5r4    Muon # Alessia Satta
-use MuonTrackAlign       v1r9  Muon # Silvia Pozzi
+use MuonTrackAlign       v1r9    Muon # Silvia Pozzi
 use MuonTrackMonitor     v2r7    Muon # Giacomo Graziani
 use MuonTrackRec         v3r8    Muon # Giacomo Graziani
 
@@ -27,6 +27,7 @@ use MuonTrackRec         v3r8    Muon # Giacomo Graziani
 use PrAlgorithms         v1r1    Pr   # Olivier Callot
 use PrKernel             v1r1    Pr   # Olivier Callot
 use PrMCTools            v1r1    Pr   # Olivier Callot
+use PrUtils              v1r0    Pr   # Thomas Nikodem
 use PrVL                 v1r0    Pr   # Heinrich Schindler
 
 # Non sub-detector specific components
