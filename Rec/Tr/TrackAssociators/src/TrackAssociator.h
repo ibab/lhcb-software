@@ -64,6 +64,7 @@ private:
   std::string m_linkerOutTable;     //< Name of the output Linker table
   double      m_fractionOK;         //< minimal good matching fraction
   bool        m_decideUsingMuons;   //< use muon hits in link decision
+  bool        m_useUT;              //< use UT instead of TT
 
   // Vector containing the MCParticles which
   // have a Measurement of any type associated to them
@@ -86,7 +87,7 @@ private:
   std::vector< double > m_nMuon;
 
   double m_nTotVelo;   // Total number of Velo hits
-  double m_nTotTT1;    // Total number of TT hits
+  double m_nTotTT1;    // Total number of TT (UT) hits
   double m_nTotSeed;   // Total number of IT+OT hits
   double m_nTotMuon;   // Total number of Muon hits
 

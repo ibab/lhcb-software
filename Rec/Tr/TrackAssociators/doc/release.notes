@@ -4,6 +4,9 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+! 2013-01-30 - Jianchun Wang
+ - Add UT as alternative to TT.
+
 !========================= TrackAssociators v2r10 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.

@@ -39,6 +39,7 @@ TrackAssociator::TrackAssociator( const std::string& name,
   declareProperty( "LinkerOutTable", m_linkerOutTable = "" );
   declareProperty( "FractionOK"    , m_fractionOK = 0.70 );
   declareProperty( "DecideUsingMuons", m_decideUsingMuons = false );
+  declareProperty( "UseUT",          m_useUT = false );
 }
 
 //=============================================================================
@@ -92,9 +93,11 @@ StatusCode TrackAssociator::execute() {
 
   // Get the linker table TTCluster => MCParticle
   LinkedTo<MCParticle,STCluster>
-    ttLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::TTClusters );
+    ttLink( evtSvc(), msgSvc(), m_useUT ? LHCb::STClusterLocation::UTClusters : LHCb::STClusterLocation::TTClusters);
   if( ttLink.notFound() ) {
-    error() << "Unable to retrieve TTCluster to MCParticle linker table."
+    error() << "Unable to retrieve "
+            << (m_useUT ? "UTCluster" : "TTCluster")
+            <<" to MCParticle linker table."
             << endreq;
     return StatusCode::FAILURE;
   }
@@ -165,13 +168,14 @@ StatusCode TrackAssociator::execute() {
         }
         continue;
       }
-      if( (*iId).isTT() ) {
+      if( (*iId).isTT() || (*iId).isUT() ) {
         ++nMeas;
         m_nTotTT1 += 1.;
         STChannelID ttID = (*iId).stID();
         MCParticle* mcParticle = ttLink.first( ttID );
         if( m_debugLevel && 0 == mcParticle ) {
-          debug() << "No MCParticle linked with TTCluster " << ttID << endreq;
+          if ( m_useUT ) debug() << "No MCParticle linked with UTCluster " << ttID << endreq;
+          else           debug() << "No MCParticle linked with TTCluster " << ttID << endreq;
         }
         while( 0 != mcParticle ) {
           if( mcParts != mcParticle->parent() ) {
