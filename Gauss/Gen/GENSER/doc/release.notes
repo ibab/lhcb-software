@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2013-01-24 - Patrick Robbe
+ - use photos 3.52
+
 ! 2013-01-21 - Patrick Robbe
  - Remove FORTRAN files for PHOTOS in Gauss
 
