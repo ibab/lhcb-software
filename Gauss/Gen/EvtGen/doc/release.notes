@@ -3,9 +3,18 @@
 ! Responsible : Patrick Robbe, Mark Whitehead, John Back
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2013-01-31 - John Back
+  - Added the ability to read in Pythia 8 commands in ascii decay files
+    in EvtDecayTable::readDecayFile. They can be set using the syntax:
+    "PythiaTypeParam module:variable=value", where Type = Generic, Alias or
+    Both for specifying whether the parameter is for the generic or alias
+    Pythia decay engines (or both). The 2nd argument must not contain any
+    spaces. Fixed the list of commands strings being used in the
+    EvtPythiaEngine class (i.e. Pythia parameters that can be set via decay
+    files).
 
 !========================== EvtGen v13r3 2013-01-28 ==========================
-! 2012-01-28 - John Back
+! 2013-01-28 - John Back
  - Commented out printing of the updated decay tables used for Pythia
    (EvtPythiaEngine::updateParticleLists, called within initialise).
 

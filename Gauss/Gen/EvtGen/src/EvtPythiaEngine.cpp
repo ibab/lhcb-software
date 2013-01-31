@@ -747,9 +747,12 @@ void EvtPythiaEngine::updatePhysicsParameters() {
   //Now read in any custom configuration entered in the XML
   GeneratorCommands commands = EvtExtGeneratorCommandsTable::getInstance()->getCommands("PYTHIA");
   GeneratorCommands::iterator it = commands.begin();
-  std::vector<std::string> commandStrings;
+
   for( ; it!=commands.end(); it++) {
+
     Command command = *it;
+    std::vector<std::string> commandStrings;
+
     if(command["VERSION"] == "PYTHIA6") {
       report(INFO,"EvtGen")<<"Converting Pythia 6 command: "<<command["MODULE"]<<"("<<command["PARAM"]<<")="<<command["VALUE"]<<"..."<<endl;
       commandStrings = convertPythia6Command(command);

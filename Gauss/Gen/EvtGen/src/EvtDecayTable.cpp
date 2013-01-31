@@ -95,6 +95,9 @@ void EvtDecayTable::readDecayFile(const std::string dec_name, bool verbose){
 
   if ( _decaytable.size() < EvtPDL::entries() ) _decaytable.resize(EvtPDL::entries());
   EvtModel &modelist=EvtModel::instance();
+  EvtExtGeneratorCommandsTable* extGenCommands = EvtExtGeneratorCommandsTable::getInstance();
+  std::string colon(":"), equals("=");
+
   int i;
 
   report(INFO,"EvtGen") << "In readDecayFile, reading:"<<dec_name.c_str()<<endl;
@@ -239,6 +242,60 @@ void EvtDecayTable::readDecayFile(const std::string dec_name, bool verbose){
 
       modelist.storeCommand(token,cnfgstr);
 
+    } else if (token == "PythiaGenericParam" || token == "PythiaAliasParam" ||
+	       token == "PythiaBothParam") {
+
+      // Read in any Pythia 8 commands, which will be of the form 
+      // pythia<type>Param module:param=value, with no spaces in the parameter 
+      // string! Here, <type> specifies whether the command is for generic 
+      // decays, alias decays, or both.
+
+      // Pythia 6 commands will be defined by the old JetSetPar command
+      // name, which is handled by the modelist.isCommand() statement above.
+
+      std::string pythiaCommand = parser.getToken(itoken++);
+      std::string pythiaModule(""), pythiaParam(""), pythiaValue("");
+
+      // Separate out the string into the 3 sections using the delimiters
+      // ":" and "=".
+      
+      std::vector<std::string> pComVect1 = this->splitString(pythiaCommand, colon);
+
+      if (pComVect1.size() == 2) {
+
+	pythiaModule = pComVect1[0];
+
+	std::string pCom2 = pComVect1[1];
+
+	std::vector<std::string> pComVect2 = this->splitString(pCom2, equals);
+
+	if (pComVect2.size() == 2) {
+
+	  pythiaParam = pComVect2[0];
+	  pythiaValue = pComVect2[1];
+
+	}
+
+      }
+
+      // Define the Pythia 8 command and pass it to the external generator
+      // command list.
+      Command command;
+      if (token == "PythiaGenericParam") {
+	command["GENERATOR"] = "Generic";
+      } else if (token == "PythiaAliasParam") {
+	command["GENERATOR"] = "Alias";
+      } else {
+	command["GENERATOR"] = "Both";
+      }
+      
+      command["MODULE"]  = pythiaModule;
+      command["PARAM"]   = pythiaParam;
+      command["VALUE"]   = pythiaValue;
+
+      command["VERSION"] = "PYTHIA8";
+      extGenCommands->addCommand("PYTHIA", command);
+      
     } else if (token=="CDecay"){
 
       std::string name;
@@ -1387,4 +1444,31 @@ int  EvtDecayTable::inChannelList(EvtId parent, int ndaug, EvtId *daugs){
    return -1;
 }
    
-      
+std::vector<std::string> EvtDecayTable::splitString(std::string& theString, 
+						    std::string& splitter) {
+
+  // Code from STLplus
+  std::vector<std::string> result;
+
+  if (!theString.empty() && !splitter.empty()) {
+
+    for (std::string::size_type offset = 0;;) {
+
+      std::string::size_type found = theString.find(splitter, offset);
+
+      if (found != std::string::npos) {
+	std::string tmpString = theString.substr(offset, found-offset);
+        if (tmpString.size() > 0) {result.push_back(tmpString);}
+        offset = found + splitter.size();
+      } else {
+	std::string tmpString = theString.substr(offset, theString.size()-offset);
+        if (tmpString.size() > 0) {result.push_back(tmpString);}
+        break;
+      }
+    }
+  }
+
+  return result;
+}
+
+     
