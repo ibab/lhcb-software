@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2013-01-31 - Jianchun Wang
+ - Fix a typo.
+
 ! 2013-01-30 - Jianchun Wang
  - Add UT in pattern recognition.
 

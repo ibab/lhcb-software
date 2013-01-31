@@ -220,7 +220,7 @@ StatusCode PatForward::execute() {
 	  for( mitId0 = (*mitT)->lhcbIDs().begin(); 
 	       (*mitT)->lhcbIDs().end() != mitId0; ++mitId0 ) {
 	    if ( (*mitId0).isVelo() ) continue;
-	    if ( (*mitId0).isTT() || (*mitId1).isUT() ) {
+	    if ( (*mitId0).isTT() || (*mitId0).isUT() ) {
 	      ++nbTT0;
 	      continue;
 	    }
@@ -278,7 +278,7 @@ StatusCode PatForward::execute() {
 
         for ( itId0 = (*itT)->lhcbIDs().begin(); (*itT)->lhcbIDs().end() != itId0; ++itId0 ) {
           if ( (*itId0).isVelo() ) continue;
-          if ( (*itId0).isTT() || (*itId1).isUT() ) {
+          if ( (*itId0).isTT() || (*itId0).isUT() ) {
             ++nbTT0;
             continue;
           }
