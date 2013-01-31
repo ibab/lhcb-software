@@ -5,6 +5,9 @@
 #include "Photos/PhotosHepMCParticle.h"
 #include "Photos/PhotosParticle.h"
 
+// Generators
+#include "Generators/RandomForGenerator.h"
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -57,10 +60,16 @@ StatusCode ApplyPhotos::initialize() {
   
   // Initialize PHOTOS
   Photospp::Photos::initialize();
+  
+  // Give the Gauss random generator to Gauss 
+  // It is already initialized in Generation !
+  Photospp::Photos::setRandomGenerator( RandomForGenerator::flat );
   // Set minimum photon energy (50keV at 1 GeV scale)
-  Photospp::Photos::setInfraredCutOff(50.0e-6);
+  Photospp::Photos::setInfraredCutOff(1.e-7);
   // Increase the maximum possible value of the interference weight
-  Photospp::Photos::maxWtInterference(4.0); // 2^n, where n = number of charges (+,-)
+  Photospp::Photos::maxWtInterference(64.0); // 2^n, where n = number of charges (+,-)
+  Photospp::Photos::setInterference( true ) ;
+  Photospp::Photos::setExponentiation( true ) ;
 
   return StatusCode::SUCCESS;
 }

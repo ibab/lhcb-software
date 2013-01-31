@@ -5,6 +5,9 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2013-01-31 - Patrick Robbe
+ - Use Gaudi random number in ApplyPhotos
+
 ! 2013-01-27 - Patrick Robbe
  - ApplyPhotos.cpp: adapt to new photos++ interface
 

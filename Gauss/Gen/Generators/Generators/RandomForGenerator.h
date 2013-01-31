@@ -13,12 +13,9 @@
  */
 class RandomForGenerator {
 public:
-  /// Standard constructor
-  //  RandomForGenerator( ){ } ; 
-
-  //  virtual ~RandomForGenerator( ) {} ; ///< Destructor
-
   static Rndm::Numbers & getNumbers() ;
+
+  static double flat( ) ;
 
 protected:
 

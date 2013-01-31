@@ -31,6 +31,5 @@ private:
 
   std::vector< int > m_pdgIdList    ;    ///< list of the particle ID to study
   std::set   < int > m_pdgIds       ;    ///< ordered list of PDG Ids
-
 };
 #endif // GENERATORS_APPLYPHOTOS_H

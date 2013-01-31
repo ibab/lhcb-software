@@ -9,3 +9,8 @@ Rndm::Numbers RandomForGenerator::s_randgaudi ;
 Rndm::Numbers & RandomForGenerator::getNumbers() {
   return s_randgaudi ;
 }
+
+double RandomForGenerator::flat( ) {
+  return s_randgaudi() ;
+}
+
