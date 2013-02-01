@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2013-02-01 - Vanya Belyaev
+ - allow four indices for MASS-functor 
+
 !========================= LoKiPhys v10r12p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

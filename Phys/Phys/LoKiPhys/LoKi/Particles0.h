@@ -628,25 +628,33 @@ namespace LoKi
     public:      
       // ======================================================================
       /// type for container of indices 
-      typedef std::vector<size_t> Indices   ;
+      typedef std::vector<unsigned int> Indices   ;
       /** constructor with index of daughter particle 
        *  @attention <c>index==0</c> corresponds to the particle 
        */
       InvariantMass
-      ( const size_t index = 0 ) ;
+      ( const unsigned int index = 0 ) ;
       /** constructor with pair of indices of daughter particle 
        *  @attention <c>index==0</c> corresponds to the particle 
        */
       InvariantMass
-      ( const size_t index1 , 
-        const size_t index2 ) ;
+      ( const unsigned int index1 , 
+        const unsigned int index2 ) ;
       /** constructor with triplet of indices of daughter particle 
        *  @attention <c>index==0</c> corresponds to the particle 
        */
       InvariantMass 
-      ( const size_t index1 , 
-        const size_t index2 , 
-        const size_t index3 ) ;
+      ( const unsigned int index1 , 
+        const unsigned int index2 , 
+        const unsigned int index3 ) ;
+      /** constructor with four indices of daughter particle 
+       *  @attention <c>index==0</c> corresponds to the particle 
+       */
+      InvariantMass 
+      ( const unsigned int index1 , 
+        const unsigned int index2 , 
+        const unsigned int index3 ,
+        const unsigned int index4 ) ;
       /** constructor with arbitrary number of indices of daughter particle 
        *  @attention <c>index==0</c> corresponds to the particle 
        */

@@ -519,8 +519,9 @@ LoKi::Particles::MeasuredMass::fillStream( std::ostream& s ) const
 /*  constructor with index of daughter particle 
  *  @attention <c>index==0</c> corresponds to the particle 
  */
+// ============================================================================
 LoKi::Particles::InvariantMass::InvariantMass
-( const size_t index ) 
+( const unsigned int index ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_indices() 
 { m_indices.push_back ( index ) ; }
@@ -530,8 +531,8 @@ LoKi::Particles::InvariantMass::InvariantMass
  */
 // ============================================================================
 LoKi::Particles::InvariantMass::InvariantMass
-( const size_t index1    , 
-  const size_t index2    ) 
+( const unsigned int index1    , 
+  const unsigned int index2    ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_indices() 
 { 
@@ -545,15 +546,34 @@ LoKi::Particles::InvariantMass::InvariantMass
  */
 // ============================================================================
 LoKi::Particles::InvariantMass::InvariantMass
-( const size_t index1    , 
-  const size_t index2    , 
-  const size_t index3    ) 
+( const unsigned int index1    , 
+  const unsigned int index2    , 
+  const unsigned int index3    ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_indices() 
 { 
   m_indices.push_back ( index1 ) ; 
   m_indices.push_back ( index2 ) ; 
   m_indices.push_back ( index3 ) ; 
+  std::sort ( m_indices.begin() , m_indices.end () ) ;
+}
+// ============================================================================
+/*  constructor with triplet of indices of daughter particle 
+ *  @attention <c>index==0</c> corresponds to the particle 
+ */
+// ============================================================================
+LoKi::Particles::InvariantMass::InvariantMass
+( const unsigned int index1    , 
+  const unsigned int index2    , 
+  const unsigned int index3    ,
+  const unsigned int index4    ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , m_indices() 
+{ 
+  m_indices.push_back ( index1 ) ; 
+  m_indices.push_back ( index2 ) ; 
+  m_indices.push_back ( index3 ) ; 
+  m_indices.push_back ( index4 ) ; 
   std::sort ( m_indices.begin() , m_indices.end () ) ;
 }
 // ============================================================================
@@ -599,7 +619,7 @@ double LoKi::Particles::InvariantMass::operator()
   {
     if ( 0 == *index   ) { mom += mother->momentum() ; continue ; } 
     const LHCb::Particle* daughter = 
-      LoKi::Child::child( mother , *index ) ;
+      LoKi::Child::child ( mother , *index ) ;
     if ( 0 == daughter ) 
     { 
       Error (" 'Daughter' is invalid, return 'InvalidMass'");
