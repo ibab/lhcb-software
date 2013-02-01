@@ -90,6 +90,7 @@ Rich::Rec::Track::Type Rich::Rec::Track::type( const LHCb::Track * track )
     else if ( LHCb::Track::PatSeeding    == hist )  { return Rich::Rec::Track::Seed;     }
     // veloTT types
     else if ( LHCb::Track::PatVeloTT     == hist )  { return Rich::Rec::Track::VeloTT;   }
+    else if ( LHCb::Track::PatVeloUT     == hist )  { return Rich::Rec::Track::VeloTT;   }
     // Ks Tracks
     else if ( LHCb::Track::PatKShort     == hist ||
               LHCb::Track::PatDownstream == hist )  { return Rich::Rec::Track::KsTrack;  }
@@ -98,20 +99,23 @@ Rich::Rec::Track::Type Rich::Rec::Track::type( const LHCb::Track * track )
               LHCb::Track::VeloR == track->type() ) { return Rich::Rec::Track::Velo;     }
     // MC or ideal tracking
     else if ( LHCb::Track::TrackIdealPR  == hist )  { return Rich::Rec::Track::MCRichTrack; }
-    else if ( LHCb::Track::HLTImportedTrack == hist ) { 
-      switch( track->type() ) {
-      case LHCb::Track::Downstream: 
-	return Rich::Rec::Track::KsTrack ; 
+    // Imported HLT tracks
+    else if ( LHCb::Track::HLTImportedTrack == hist )
+    {
+      switch( track->type() )
+      {
+      case LHCb::Track::Downstream:
+        return Rich::Rec::Track::KsTrack;
       case LHCb::Track::VeloR:
       case LHCb::Track::Velo:
-	return Rich::Rec::Track::Velo;
+        return Rich::Rec::Track::Velo;
       case LHCb::Track::Upstream:
-	return Rich::Rec::Track::VeloTT;
+        return Rich::Rec::Track::VeloTT;
       case LHCb::Track::Ttrack:
-	return Rich::Rec::Track::Seed; 
-      case LHCb::Track::Long: 
+        return Rich::Rec::Track::Seed;
+      case LHCb::Track::Long:
       default:
-	return Rich::Rec::Track::Forward;
+        return Rich::Rec::Track::Forward;
       }
     }
     else
