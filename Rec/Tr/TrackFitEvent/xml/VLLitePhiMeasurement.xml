@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackFitEvent'>
+
+<!-- =============== VLLitePhiMeasurement class definition =============== -->
+
+    <class
+      name        = 'VLLitePhiMeasurement'
+      author      = 'David Hutchcroft'
+      desc        = 'VLLitePhiMeasurement is a measurement made from a VLLiteCluster.'
+      defaultconstructor ='FALSE'
+      serializers = 'FALSE'>
+
+      <base name='LHCb::VLLiteMeasurement' />
+
+      <import name='Event/VLLiteMeasurement' />
+      <import name='TrackInterfaces/IVLClusterPosition'/>
+      <import name='StateVector' soft='FORWARDONLY'/>
+      <import name='Event/VLLiteCluster' />
+      <import name='DeVL' namespace='::' soft='FORWARDONLY'/>
+      <import name='DeVLPhiSensor' namespace='::' soft='FORWARDONLY'/>
+
+      <constructor
+        desc = 'Constructor from a VLLiteCluster (Phi type) and refVector'>
+        <arg type = 'LHCb::VLLiteCluster' name = 'aCluster' const='TRUE' />
+        <arg type = 'DeVL' name = 'det' const='TRUE' />
+        <arg type = 'IVLClusterPosition' name = 'clusPosTool' const='TRUE' />
+        <arg type = 'LHCb::StateVector' name='refVector' const='TRUE'/>
+       </constructor>
+
+      <constructor
+        desc = 'Constructor from a VLLiteCluster (Phi type) without refVector'>
+        <arg type = 'LHCb::VLLiteCluster' name = 'aCluster' const='TRUE' />
+        <arg type = 'DeVL' name = 'det' const='TRUE' />
+        <arg type = 'IVLClusterPosition' name = 'clusPosTool' const='TRUE' />
+       </constructor>
+
+      <attribute
+        type = 'Gaudi::XYZPoint'
+        name = 'origin'
+        desc = 'Origin of the sensor'
+        access = 'PRIVATE'
+	getMeth = 'FALSE'
+	setMeth = 'FALSE' />
+
+      <method
+        name   = 'init'
+        desc   = 'Initialize the data members'
+        access = 'PUBLIC'>
+        <arg type = 'DeVL' name = 'det' const='TRUE' />
+        <arg type = 'IVLClusterPosition::toolInfo' name = 'clusinfo'
+	  const='TRUE' />
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'resolution'
+        argList = 'Gaudi::XYZPoint /*point*/, Gaudi::XYZVector /*vec*/'
+        desc    = 'Retrieve the measurement error'
+        const   = 'TRUE'>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'resolution2'
+        argList = 'Gaudi::XYZPoint /*point*/, Gaudi::XYZVector /*vec*/'
+        desc    = 'Retrieve the measurement error squared'
+        const   = 'TRUE'>
+      </method>
+
+      <method
+        type    = 'LHCb::VLLitePhiMeasurement*'
+        name    = 'clone'
+        desc    = 'Clone the VLLitePhiMeasurement'
+        const   = 'TRUE'>
+        <code>
+          return new LHCb::VLLitePhiMeasurement(*this);
+        </code>
+      </method>
+
+     <method
+       type = 'const DeVLPhiSensor&amp;'
+       name = 'sensor'
+       desc = 'Retrieve const the sector of the measurement'
+       const = 'TRUE'>
+      </method>
+
+
+    </class>
+
+  </package>
+</gdd>

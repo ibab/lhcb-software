@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackFitEvent'>
+
+<!-- =============== VLLiteMeasurement class definition =============== -->
+
+    <class
+      name        = 'VLLiteMeasurement'
+      author      = 'David Hutchcroft'
+      desc        = 'Base class for a measurement made from a VLLiteCluster.'
+      defaultconstructor ='FALSE'
+      serializers = 'FALSE'>
+
+      <base name='LHCb::Measurement' />
+
+      <import name='Event/Measurement' />
+      <import name='Event/VLCluster' />
+
+      <constructor
+        desc = 'Constructor'
+               argList = ' LHCb::Measurement::Type&amp; type, LHCb::VLLiteCluster cluster'
+        initList = ' Measurement(type, LHCbID(cluster.channelID())), m_cluster(&amp;cluster)'> 
+      </constructor>
+
+      <attribute
+        type = 'const LHCb::VLLiteCluster*'
+        name = 'cluster'
+        desc = 'Pointer to the VLLiteCluster'
+	getMeth = 'FALSE'
+        setMeth = 'FALSE'  />
+
+      <method
+        type  = 'const LHCb::VLLiteCluster*'
+        name  = 'cluster'
+        desc  = 'Retrieve const  Pointer to the VLLiteCluster'
+        const = 'TRUE'>
+        <code>
+  return m_cluster;
+        </code>
+      </method>
+
+
+      <method
+	type    = 'LHCb::VLChannelID'
+	name    = 'channelID'
+	desc    = 'channel identifier'
+	const   = 'TRUE'>
+	<code>
+     return m_cluster->channelID() ;
+        </code>
+      </method>
+
+      <method
+	type    = 'bool'
+	name    = 'highThreshold'
+	desc    = 'has high Threshold'
+	const   = 'TRUE'>
+	<code>
+      return m_cluster->highThreshold() ;
+        </code>
+      </method>
+      
+ 
+
+    </class>
+
+  </package>
+</gdd>

@@ -3,38 +3,37 @@
 <gdd>
   <package name='TrackFitEvent'>
 
-<!-- =============== VLRMeasurement class definition =============== -->
+<!-- =============== VeloRMeasurement class definition =============== -->
 
     <class
-      name        = 'VLMeasurement'
+      name        = 'VeloMeasurement'
       author      = 'M Needham'
-      desc        = 'Base class for a measurement made from a VLCluster.'
+      desc        = 'Base class for a measurement made from a VeloCluster.'
       defaultconstructor ='FALSE'
       serializers = 'FALSE'>
 
       <base name='LHCb::Measurement' />
 
       <import name='Event/Measurement' />
-      <import name='Event/VLCluster' />
-      <import name='TrackInterfaces/IVLClusterPosition' />
+      <import name='Event/VeloCluster' />
 
       <constructor
         desc = 'Constructor'
-               argList = ' LHCb::Measurement::Type&amp; type, LHCb::VLCluster cluster'
+               argList = ' LHCb::Measurement::Type&amp; type, LHCb::VeloCluster cluster'
         initList = ' Measurement(type, LHCbID(cluster.channelID())), m_cluster(&amp;cluster)'> 
       </constructor>
 
       <attribute
-        type = 'const LHCb::VLCluster*'
+        type = 'const LHCb::VeloCluster*'
         name = 'cluster'
-        desc = 'Pointer to the VLCluster'
+        desc = 'Pointer to the VeloCluster'
 	getMeth = 'FALSE'
         setMeth = 'FALSE'  />
 
       <method
-        type  = 'const LHCb::VLCluster*'
+        type  = 'const LHCb::VeloCluster*'
         name  = 'cluster'
-        desc  = 'Retrieve const  Pointer to the VLCluster'
+        desc  = 'Retrieve const  Pointer to the VeloCluster'
         const = 'TRUE'>
         <code>
   return m_cluster;
@@ -52,7 +51,7 @@
       </method>
 
 <method
-  type    = 'LHCb::VLChannelID'
+  type    = 'LHCb::VeloChannelID'
   name    = 'channelID'
   desc    = 'channel identifier'
   const   = 'TRUE'>
