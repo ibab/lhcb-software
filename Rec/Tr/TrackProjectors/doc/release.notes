@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
+! 2013-02-01 - Sascha Stahl
+ - Added VL projector in selector.
 
 ! 2013-01-29 - Jianchun Wang
  - Add UT projector in the selector.
