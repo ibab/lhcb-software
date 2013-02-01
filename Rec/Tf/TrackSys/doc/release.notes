@@ -4,6 +4,12 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-02-01 - Sascha Stahl
+ - Added a clone killer for the upgrade to the upgrade sequence.
+ - Added UT to the decoded detectors.
+ - Renamed PatCheckingUpgrade.py into PrUpgradeChecking.py and enabled
+	 the efficiency checkers.
+
 ! 2012-12-12 - Sascha Stahl
  - started implementing a sequence for the upgrade
  - Added a RecoUpgradeTracking.py and a PatCheckingUpgrade.py

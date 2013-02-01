@@ -35,6 +35,7 @@ def RecoUpgradeTracking(exclude=[]):
         if not (("FT" in subDets) or ("IT+OT" in subDets)):
             raise RuntimeError("Specify T-Stations. FT or IT+OT.")
 
+        
     ### Do the decoding of the detectors
    
     print subDets
@@ -45,13 +46,19 @@ def RecoUpgradeTracking(exclude=[]):
     if "VL" in subDets:
         from Configurables import VLRawBankDecoder
         VLRawBankDecoder().DecodeToClusters = True
+        VLRawBankDecoder().DecodeToLiteClusters = True
         decodingSeq.Members += [ VLRawBankDecoder() ]
     if "VP" in subDets:
         from Configurables import VPRawBankToLiteCluster,VPRawBankToPartialCluster
         decodingSeq.Members += [ VPRawBankToLiteCluster() ]
-        #decodingSeq.Members += [ VPRawBankToPartialCluster() ]
     if "UT" in subDets:
         print "UT not yet implemented"
+        from Configurables import RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg
+        createUTClusters = RawBankToSTClusterAlg("CreateUTClusters")
+        createUTLiteClusters = RawBankToSTLiteClusterAlg("CreateUTLiteClusters")
+        createUTClusters.DetType     = "UT"
+        createUTLiteClusters.DetType = "UT"
+        decodingSeq.Members += [ createUTClusters, createUTLiteClusters ]
     if "FT" in subDets:
         from Configurables import FTRawBankDecoder
         decodingSeq.Members += [ FTRawBankDecoder() ]
@@ -99,43 +106,61 @@ def RecoUpgradeTracking(exclude=[]):
             seedingSeq.Members += [ PatSeeding() ]
 
 
-    ### Do the track fit and Clone killing
-    ### For now Dummy fitter for Long tracks, needs to be checked by experts
+
+    # Do the Clone Killing and create Best tracks container
+    bestSeq = GaudiSequencer("TrBestSeq")
+    GaudiSequencer("RecoTrSeq").Members += [ bestSeq ]
+  
+    #Fill list of Tracks to write out
+    tracklists = []
+    if "Velo" in trackTypes:
+        tracklists += ["Rec/Track/Velo"]
+    if "Seeding" in trackTypes:
+        tracklists += ["Rec/Track/Seed"]
     if "Forward" in trackTypes:
-        fitSeq = GaudiSequencer("TrFitSeq")
-        GaudiSequencer("RecoTrSeq").Members += [ fitSeq ]
-        from Configurables import TrackEventFitter, TrackMasterFitter, MeasurementProvider
-        from TrackFitter.ConfiguredFitters import ConfiguredEventFitter, ConfiguredMasterFitter
-        eventfitter = TrackEventFitter("FitForward")
-        eventfitter.TracksInContainer = "Rec/Track/Forward"
-        eventfitter.addTool( TrackMasterFitter, name="Fitter")
-        ConfiguredMasterFitter(eventfitter.Fitter,
-                               FieldOff = False,
-                               SimplifiedGeometry = False,
-                               NoDriftTimes       = None,
-                               KalmanSmoother     = None,
-                               LiteClusters = True,
-                               ApplyMaterialCorrections = None,
-                               StateAtBeamLine = True,
-                               MaxNumberOutliers = 2)
-        eventfitter.Fitter.MeasProvider.IgnoreVelo = True
-        eventfitter.Fitter.MeasProvider.IgnoreIT = True
-        eventfitter.Fitter.MeasProvider.IgnoreTT = True
-        eventfitter.Fitter.MeasProvider.IgnoreOT = True
-        eventfitter.Fitter.MeasProvider.IgnoreVP = True
-        eventfitter.Fitter.MeasProvider.IgnoreVL = True
-        eventfitter.Fitter.MeasProvider.IgnoreFT = True
+        tracklists += ["Rec/Track/Forward"]
 
-                
-        if ("VP" in subDets):
-            eventfitter.Fitter.MeasProvider.IgnoreVP = False
-        if ("VL" in subDets):
-            eventfitter.Fitter.MeasProvider.IgnoreVL = False
-        if ("FT" in subDets):
-            eventfitter.Fitter.MeasProvider.IgnoreFT = False
+    # create the best track creator
+    from Configurables import UpgradeBestTrackCreator
+    bestTrackCreator = UpgradeBestTrackCreator( TracksInContainers = tracklists )
+    
+    bestSeq.Members += [ bestTrackCreator ]
 
-        ### other configurations crash    
-        if ( ("VP" in subDets) and ("FT" in subDets)):
-            fitSeq.Members += [ eventfitter ]
-        else:
-            log.warning("Fitter crashes in this configuration")
+
+    ### Do the track fit
+    fitSeq = GaudiSequencer("TrFitSeq")
+    GaudiSequencer("RecoTrSeq").Members += [ fitSeq ]
+    from Configurables import TrackEventFitter, TrackMasterFitter, MeasurementProvider
+    from TrackFitter.ConfiguredFitters import ConfiguredEventFitter, ConfiguredMasterFitter
+    eventfitter = TrackEventFitter("FitBest")
+    eventfitter.TracksInContainer = "Rec/Track/Best"
+    eventfitter.addTool( TrackMasterFitter, name="Fitter")
+    ConfiguredMasterFitter(eventfitter.Fitter,
+                           FieldOff = False,
+                           SimplifiedGeometry = False,
+                           NoDriftTimes       = None,
+                           KalmanSmoother     = None,
+                           LiteClusters = True,
+                           ApplyMaterialCorrections = None,
+                           StateAtBeamLine = True,
+                           MaxNumberOutliers = 2)
+    eventfitter.Fitter.MeasProvider.IgnoreVelo = True
+    eventfitter.Fitter.MeasProvider.IgnoreIT = True
+    eventfitter.Fitter.MeasProvider.IgnoreTT = True
+    eventfitter.Fitter.MeasProvider.IgnoreOT = True
+    eventfitter.Fitter.MeasProvider.IgnoreVP = True
+    eventfitter.Fitter.MeasProvider.IgnoreVL = True
+    eventfitter.Fitter.MeasProvider.IgnoreFT = True
+    
+    
+    if ("VP" in subDets):
+        eventfitter.Fitter.MeasProvider.IgnoreVP = False
+    if ("VL" in subDets):
+        eventfitter.Fitter.MeasProvider.IgnoreVL = False
+    if ("FT" in subDets):
+        eventfitter.Fitter.MeasProvider.IgnoreFT = False
+
+
+    fitSeq.Members += [ eventfitter ]
+
+

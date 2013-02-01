@@ -163,8 +163,8 @@ class TrackSys(LHCbConfigurableUser):
 
         if self.getProp( "WithMC" ):
             if self.getProp( "Upgrade" ) :
-                from TrackSys import PatCheckingUpgrade
-                PatCheckingUpgrade.PatCheckingUpgrade()
+                from TrackSys import PrUpgradeChecking
+                PrUpgradeChecking.PrUpgradeChecking()
             else :
                 from TrackSys import PatChecking
                 PatChecking.PatChecking()
