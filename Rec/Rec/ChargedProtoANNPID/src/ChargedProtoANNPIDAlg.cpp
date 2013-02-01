@@ -22,16 +22,17 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDAlg )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
-                                              ISvcLocator* pSvcLocator )
-  : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
-    m_trSel                   ( NULL               ),
-    m_netHelper               ( NULL               )
+  ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
+                                                ISvcLocator* pSvcLocator )
+    : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
+      m_trSel                   ( NULL               ),
+      m_netHelper               ( NULL               )
 {
   // JOs
-  declareProperty( "Configuration",     m_configFile );
-  declareProperty( "TrackSelectorType", m_trSelType = "TrackSelector" );
-  declareProperty( "NetworkVersion",    m_netVersion = "MC10TuneV1" );
+  declareProperty( "Configuration",       m_configFile );
+  declareProperty( "TrackSelectorType",   m_trSelType = "TrackSelector" );
+  declareProperty( "NetworkVersion",      m_netVersion = "MC12TuneV1"   );
+  declareProperty( "SuppressANNPrintout", m_suppressANNPrintout = true  );
   // turn off histos and ntuples
   setProperty( "HistoProduce",   false );
   setProperty( "NTupleProduce",  false );
@@ -127,7 +128,10 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     {
       // FPE Guard for NB call
       FPE::Guard guard(true);
-      m_netHelper = new NeuroBayesANN(paramFileName,variableIDs(inputs),this);
+      m_netHelper = new NeuroBayesANN( paramFileName, 
+                                       variableIDs(inputs),
+                                       this,
+                                       m_suppressANNPrintout );
     }
     else
     {
@@ -288,29 +292,36 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
   {
     m_inArray[input] = static_cast<float>(m_parent->getInput(proto,*iIn));
   }
-  
+
   // FPE Guard for NB call
   FPE::Guard guard(true);
 
   // NeuroBayes seems to sporadically send mysterious std messages which we
   // cannot control... So forcibly intercept them all here and send to /dev/null
-//   const int original_stdout = dup(fileno(stdout));
-//   fflush(stdout);
-//   freopen("/dev/null","w",stdout);
-//   const int original_stderr = dup(fileno(stderr));
-//   fflush(stderr);
-//   freopen("/dev/null","w",stderr);
+  int original_stdout(0), original_stderr(0);
+  if ( m_suppressPrintout )
+  {
+    original_stdout = dup(fileno(stdout));
+    fflush(stdout);
+    freopen("/dev/null","w",stdout);
+    original_stderr = dup(fileno(stderr));
+    fflush(stderr);
+    freopen("/dev/null","w",stderr);
+  }
 
   // get the NN output, rescaled to the range 0 to 1
   const double nnOut = 0.5 * ( 1.0 + (double)m_expert->nb_expert(m_inArray) );
 
   // put std back to normal
-//   fflush(stdout);
-//   dup2(original_stdout,fileno(stdout));
-//   close(original_stdout);
-//   fflush(stderr);
-//   dup2(original_stderr,fileno(stderr));
-//   close(original_stderr);
+  if ( m_suppressPrintout )
+  {
+    fflush(stdout);
+    dup2(original_stdout,fileno(stdout));
+    close(original_stdout);
+    fflush(stderr);
+    dup2(original_stderr,fileno(stderr));
+    close(original_stderr);
+  }
 
   // return final output
   return nnOut;

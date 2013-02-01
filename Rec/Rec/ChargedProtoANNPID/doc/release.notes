@@ -4,6 +4,10 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-02-01 - Chris Jones
+ - Make it possible to turn on or offline the suppression of printout from the
+   underlying ANN library (NeuroBayes) via options.
+
 !========================= ChargedProtoANNPID v1r10 2013-01-30 =========================
 ! 2013-01-30 - Chris Jones
  - Turn off the forcible suppression of stdout and stderr printout from

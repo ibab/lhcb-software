@@ -123,10 +123,12 @@ namespace ANNGlobalPID
        */
       NeuroBayesANN( const std::string &                  paramFileName,
                      const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
-                     const ChargedProtoANNPIDAlgBase *           parent )
+                     const ChargedProtoANNPIDAlgBase *           parent,
+                     const bool suppressPrintout = true )
         : ANNHelper ( inputs, parent ),
           m_expert  ( new Expert(paramFileName.c_str(),-2) ),
-          m_inArray ( new float[inputs.size()]             )
+          m_inArray ( new float[inputs.size()]             ),
+          m_suppressPrintout (            suppressPrintout )
       { }
       /// Destructor
       virtual ~NeuroBayesANN() { delete m_expert; delete[] m_inArray; }
@@ -136,6 +138,7 @@ namespace ANNGlobalPID
     private:
       Expert * m_expert;  ///< Pointer to the NeuroBayes 'Expert'
       float * m_inArray;  ///< Working array for network inputs
+      bool m_suppressPrintout; ///< Suppress any printout from NeuroBayes
     };
 #endif
 
@@ -180,6 +183,9 @@ namespace ANNGlobalPID
 
     /// The version of the PID networks trianing to use
     std::string m_netVersion;
+
+    /// Suppress all printout from the ANN experts
+    bool m_suppressANNPrintout;
 
   };
 

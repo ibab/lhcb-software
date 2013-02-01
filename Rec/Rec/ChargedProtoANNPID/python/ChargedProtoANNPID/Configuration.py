@@ -30,6 +30,7 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                   ,"DataType"   : "" # Type of data, propagated from application
                   ,"TrackTypes" : ["Long","Downstream","Upstream"]
                   ,"PIDTypes"   : ["Electron","Muon","Pion","Kaon","Proton","Ghost"]
+                  ,"SuppressANNPrintout" : True
                   }
 
     ## Apply the configuration to the given sequence
@@ -67,6 +68,9 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                 # If configured, set the ProtoParticle location
                 if self.isPropertySet("ProtoParticlesLocation") :
                     nn.ProtoParticleLocation = self.getProp("ProtoParticlesLocation")
+
+                # Suppress ANN Printout
+                nn.SuppressANNPrintout = self.getProp("SuppressANNPrintout")
 
                 # Add to sequencer
                 nnpidseq.Members += [nn]
