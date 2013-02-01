@@ -4,6 +4,13 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2013-02-01 - Chris Jones
+ - Add back an approximate log(exp(x)-1) implementation. Gains a signficant 
+   speed up (factors of 3 or more) in the likehood. Previously removed as it
+   was thought to be contributing to 32/64 bit instabilities. However, I 
+   suspect that something else (sorting) was the real issue there, so lets try 
+   again, particularly as 32 bit will soon be dropped anyway.
+
 !========================= RichGlobalPID v3r19 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.

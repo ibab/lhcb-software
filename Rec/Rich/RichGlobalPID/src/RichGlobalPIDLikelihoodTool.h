@@ -33,9 +33,6 @@
 // RichKernel
 #include "RichKernel/RichMap.h"
 
-// RichDet
-#include "RichDet/Rich1DTabFunc.h"
-
 // boost
 #include "boost/format.hpp"
 #include "boost/numeric/conversion/bounds.hpp"
@@ -60,6 +57,13 @@ namespace Rich
                              virtual public Rich::Rec::IRichPID,
                              virtual public Rich::Rec::GlobalPID::IRichGlobalPID
       {
+
+      private: // Parameters
+
+        static const double limitA = 0.001;
+        static const double limitB = 0.01;
+        static const double limitC = 0.1;
+        static const double limitD = 1.0;
 
       public:
 
@@ -167,11 +171,7 @@ namespace Rich
                                    const Rich::ParticleIDType newHypo ) const;
 
         /// Implementation of log( e^x -1 )
-        inline double logExp( const double x ) const
-        {
-          return std::log( std::exp(x) - 1.0 );
-        }
-        //double logExp( const double x ) const;
+        inline double logExp( const double x ) const;
 
         /// Returns log( exp(x) - 1 ) or an approximation for small signals
         inline double sigFunc( const double x ) const
@@ -181,10 +181,10 @@ namespace Rich
 
         /// Returns the force change Dll value
         inline double forceChangeDll() const { return m_forceChangeDll; }
-        
+
         /// Returns the freeze out Dll value
         inline double freezeOutDll() const { return m_freezeOutDll; }
-        
+
         /// Sets flags to say if the given set of tracks are in Rich1 and/or Rich2
         void updateRichFlags( const MinTrList & minTracks ) const;
 
@@ -192,11 +192,11 @@ namespace Rich
         void printTrackList( const MSG::Level level ) const;
 
         /// Sort the track list
-        inline void sortTrackList() const 
+        inline void sortTrackList() const
         {
           std::stable_sort( m_trackList.begin(),
                             m_trackList.end(),
-                            TrackListSort() ); 
+                            TrackListSort() );
         }
 
       private:  // Private data members

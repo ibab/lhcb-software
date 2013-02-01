@@ -15,33 +15,19 @@
 // namespaces
 using namespace Rich::Rec::GlobalPID;
 
-//-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( LikelihoodTool )
-
-// anon namespace for a few constants
-// namespace
-// {
-//   const double limitA = 0.001;
-//   const double limitB = 0.01;
-//   const double limitC = 0.1;
-//   const double limitD = 1.0;
-// }
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  LikelihoodTool::LikelihoodTool( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
-    : Rich::Rec::GlobalPID::ToolBase ( type, name, parent ),
-      m_gtkCreator      ( NULL ),
-      m_tkSignal        ( NULL ),
-      m_photonSig       ( NULL ),
-      m_gpidTracksToPID ( NULL ),
-      m_inR1            ( true ),
-      m_inR2            ( true )
+LikelihoodTool::LikelihoodTool( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
+  : Rich::Rec::GlobalPID::ToolBase ( type, name, parent ),
+    m_gtkCreator      ( NULL ),
+    m_tkSignal        ( NULL ),
+    m_photonSig       ( NULL ),
+    m_gpidTracksToPID ( NULL ),
+    m_inR1            ( true ),
+    m_inR2            ( true )
 {
   // interfaces
   declareInterface<IRichGlobalPID> ( this );
@@ -99,11 +85,11 @@ StatusCode LikelihoodTool::initialize()
   photonCreator();
   statusCreator();
 
-  //   // Check if power series expansions are OK
-  //   if ( m_minSig < 0.999*limitA )
-  //   {
-  //     return Warning( "Power series interpolations for log(exp(x)-1) need retuning" );
-  //   }
+  // Check if power series expansions are OK
+  if ( m_minSig < 0.999*limitA )
+  {
+    return Warning( "Power series interpolations for log(exp(x)-1) need retuning" );
+  }
 
   // Initialise parameters
   m_logMinSig = logExp(m_minSig);
@@ -117,6 +103,8 @@ StatusCode LikelihoodTool::initialize()
 
   return sc;
 }
+
+//=============================================================================
 
 StatusCode LikelihoodTool::finalize()
 {
@@ -321,6 +309,8 @@ unsigned int LikelihoodTool::doIterations() const
   return eventIteration;
 }
 
+//=============================================================================
+
 unsigned int LikelihoodTool::initBestLogLikelihood() const
 {
   if ( msgLevel(MSG::DEBUG) )
@@ -429,6 +419,8 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
   return minTrackData.size();
 }
 
+//=============================================================================
+
 void LikelihoodTool::printTrackList( const MSG::Level level ) const
 {
   if ( msgLevel(level) )
@@ -445,6 +437,8 @@ void LikelihoodTool::printTrackList( const MSG::Level level ) const
     }
   }
 }
+
+//=============================================================================
 
 void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
 {
@@ -633,6 +627,8 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
 
 }
 
+//=============================================================================
+
 void LikelihoodTool::updateRichFlags( const MinTrList & minTracks ) const
 {
   if ( !minTracks.empty() )
@@ -653,6 +649,8 @@ void LikelihoodTool::updateRichFlags( const MinTrList & minTracks ) const
     m_inR2 = true;
   }
 }
+
+//=============================================================================
 
 double
 LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
@@ -716,6 +714,8 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 
   return ( pixDeltaLL + tkDeltaLL );
 }
+
+//=============================================================================
 
 double LikelihoodTool::logLikelihood() const
 {
@@ -802,56 +802,65 @@ double LikelihoodTool::logLikelihood() const
   return ( trackLL + pixelLL );
 }
 
-// double LikelihoodTool::logExp( const double x ) const
-// {
-//   double res(0);
-//   if ( x <= limitD )
-//   {
-//     // A collection of rational power series covering the important range
-//     // note by construction this function should never be called for x < limitA
+//=============================================================================
 
-//     const double xx    = x*x;
-//     const double xxx   = xx*x;
-//     const double xxxx  = xx*xx;
-//     const double xxxxx = xx*xxx;
+double LikelihoodTool::logExp( const double x ) const
+{
+  double res(0);
+  if ( x <= limitD )
+  {
+    // A collection of rational power series covering the important range
+    // note by construction this function should never be called for x < limitA
 
-//     if      ( x > limitC )
-//     {
-//       res = (-5.751779337152293 - 261.58791552313113*x -
-//              1610.1902353909695*xx - 291.61172549536417*xxx +
-//              3733.957211885683*xxxx + 1224.2104172168554*xxxxx)/
-//         (1.0 + 79.52981108433892*x + 953.4570349071099*xx +
-//          2638.609797400796*xxx + 1506.9612115322623*xxxx -
-//          27.33558114045007*xxxxx);
-//     }
-//     else if ( x > limitB )
-//     {
-//       res = (-7.845788509794026 - 3428.7804135353526*x -
-//              228752.20145929293*xx - 3.082032088759535e6*xxx -
-//              3.836270197409883e6*xxxx + 1.2251900378118051e7*xxxxx)/
-//         (1.0 + 638.7306815040638*x + 60430.91709817034*xx +
-//          1.315432074531156e6*xxx + 6.373056770682967e6*xxxx +
-//          3.3914176474223877e6*xxxxx);
-//     }
-//     else if ( x > limitA )
-//     {
-//       res = (-10.160864268729455 - 49897.23275778952*x -
-//              3.855669108991894e7*xx - 6.777802095268419e9*xxx -
-//              2.421987003565588e11*xxxx - 3.5610129242332263e11*xxxxx)/
-//         (1.0 + 6487.897657865318*x + 6.294785881144457e6*xx +
-//          1.4333658673633337e9*xxx + 7.670700007081306e10*xxxx +
-//          6.06654149712832e11*xxxxx);
-//     }
-//     else
-//     {
-//       // should never get here. But just in case ...
-//       res = std::log( std::exp(x) - 1.0 );
-//     }
-//   }
-//   else
-//   {
-//     // Very very rarely called in this regime, so just use the full fat version
-//     res = std::log( std::exp(x) - 1.0 );
-//   }
-//   return res;
-// }
+    const double xx    = x*x;
+    const double xxx   = xx*x;
+    const double xxxx  = xx*xx;
+    const double xxxxx = xx*xxx;
+
+    if      ( x > limitC )
+    {
+      res = (-5.751779337152293 - 261.58791552313113*x -
+             1610.1902353909695*xx - 291.61172549536417*xxx +
+             3733.957211885683*xxxx + 1224.2104172168554*xxxxx)/
+        (1.0 + 79.52981108433892*x + 953.4570349071099*xx +
+         2638.609797400796*xxx + 1506.9612115322623*xxxx -
+         27.33558114045007*xxxxx);
+    }
+    else if ( x > limitB )
+    {
+      res = (-7.845788509794026 - 3428.7804135353526*x -
+             228752.20145929293*xx - 3.082032088759535e6*xxx -
+             3.836270197409883e6*xxxx + 1.2251900378118051e7*xxxxx)/
+        (1.0 + 638.7306815040638*x + 60430.91709817034*xx +
+         1.315432074531156e6*xxx + 6.373056770682967e6*xxxx +
+         3.3914176474223877e6*xxxxx);
+    }
+    else if ( x > limitA )
+    {
+      res = (-10.160864268729455 - 49897.23275778952*x -
+             3.855669108991894e7*xx - 6.777802095268419e9*xxx -
+             2.421987003565588e11*xxxx - 3.5610129242332263e11*xxxxx)/
+        (1.0 + 6487.897657865318*x + 6.294785881144457e6*xx +
+         1.4333658673633337e9*xxx + 7.670700007081306e10*xxxx +
+         6.06654149712832e11*xxxxx);
+    }
+    else
+    {
+      // should never get here. But just in case ...
+      res = std::log( std::exp(x) - 1.0 );
+    }
+  }
+  else
+  {
+    // Very very rarely called in this regime, so just use the full fat version
+    res = std::log( std::exp(x) - 1.0 );
+  }
+  return res;
+}
+
+//=============================================================================
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( LikelihoodTool )
+
+//=============================================================================
