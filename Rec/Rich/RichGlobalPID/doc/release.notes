@@ -10,6 +10,8 @@
    was thought to be contributing to 32/64 bit instabilities. However, I 
    suspect that something else (sorting) was the real issue there, so lets try 
    again, particularly as 32 bit will soon be dropped anyway.
+ - Add as "mathematica/Log(Exp(x)-1).nb" the mathematica workbook used to 
+   compute the above approximation.
 
 !========================= RichGlobalPID v3r19 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
