@@ -3,6 +3,8 @@
 ! Responsible : M.Needham, W.Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
+! 2013-02-01 - Sascha Stahl
+ - Added measurement types for VL (R, Phi, LiteR, LitePhi)
 
 ! 2013-01-07 - Jianchun Wang
  - Add UT measurement and track
