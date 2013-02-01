@@ -91,8 +91,12 @@ def ConfiguredMasterFitter( Name,
     if LiteClusters:
         from Configurables import (MeasurementProviderT_MeasurementProviderTypes__VeloLiteR_,
                                    MeasurementProviderT_MeasurementProviderTypes__VeloLitePhi_,
+                                   MeasurementProviderT_MeasurementProviderTypes__VLLiteR_,
+                                   MeasurementProviderT_MeasurementProviderTypes__VLLitePhi_,
                                    MeasurementProviderT_MeasurementProviderTypes__TTLite_,
                                    MeasurementProviderT_MeasurementProviderTypes__ITLite_)
+        fitter.MeasProvider.VLRProvider = MeasurementProviderT_MeasurementProviderTypes__VLLiteR_()
+        fitter.MeasProvider.VLPhiProvider = MeasurementProviderT_MeasurementProviderTypes__VLLitePhi_()
         fitter.MeasProvider.VeloRProvider = MeasurementProviderT_MeasurementProviderTypes__VeloLiteR_()
         fitter.MeasProvider.VeloPhiProvider = MeasurementProviderT_MeasurementProviderTypes__VeloLitePhi_()
         fitter.MeasProvider.TTProvider = MeasurementProviderT_MeasurementProviderTypes__TTLite_()
