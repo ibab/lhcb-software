@@ -56,7 +56,8 @@ private:
   ToolHandle<IMeasurementProvider> m_veloRProvider ;
   ToolHandle<IMeasurementProvider> m_veloPhiProvider ;
   ToolHandle<IMeasurementProvider> m_vpProvider ;
-  ToolHandle<IMeasurementProvider> m_vlProvider ;
+  ToolHandle<IMeasurementProvider> m_vlRProvider ;
+  ToolHandle<IMeasurementProvider> m_vlPhiProvider ;
   ToolHandle<IMeasurementProvider> m_ttProvider ;
   ToolHandle<IMeasurementProvider> m_utProvider ;
   ToolHandle<IMeasurementProvider> m_itProvider ;

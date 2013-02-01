@@ -212,6 +212,13 @@ void MeasurementProviderT<T>::addToMeasurements( const std::vector<LHCb::LHCbID>
 #include "Event/VeloLiteRMeasurement.h"
 #include "TrackInterfaces/IVeloClusterPosition.h"
 
+#include "VLDet/DeVL.h"
+#include "Event/VLCluster.h"
+#include "Event/VLLiteCluster.h"
+#include "Event/VLRMeasurement.h"
+#include "Event/VLLiteRMeasurement.h"
+#include "TrackInterfaces/IVLClusterPosition.h"
+
 namespace MeasurementProviderTypes {
   struct VeloR {
     typedef LHCb::VeloRMeasurement   MeasurementType ;
@@ -238,6 +245,33 @@ namespace MeasurementProviderTypes {
     static LHCb::VeloChannelID channelId( const LHCb::LHCbID& id ) { return id.veloID(); }
     static bool checkType(const LHCb::LHCbID& id) { return id.isVelo() && channelId(id).isRType() ; }
   };
+  
+  struct VLR {
+    typedef LHCb::VLRMeasurement     MeasurementType ;
+    typedef IVLClusterPosition       PositionToolType ;
+    typedef LHCb::VLCluster          ClusterType ;
+    typedef LHCb::VLClusters         ClusterContainerType ;
+    typedef DeVL                   DetectorType ;
+    static std::string positionToolName() { return "VLClusterPosition" ; }
+    static std::string defaultDetectorLocation() { return DeVLLocation::Default ; }
+    static std::string defaultClusterLocation() { return LHCb::VLClusterLocation::Default; }
+    static LHCb::VLChannelID channelId( const LHCb::LHCbID& id ) { return id.vlID(); }
+    static bool checkType(const LHCb::LHCbID& id) { return id.isVL() && channelId(id).isRType() ; }
+  };
+
+  struct VLLiteR {
+    typedef LHCb::VLLiteRMeasurement MeasurementType ;
+    typedef IVLClusterPosition       PositionToolType ;
+    typedef LHCb::VLLiteCluster      ClusterType ;
+    typedef LHCb::VLLiteCluster::VLLiteClusters       ClusterContainerType ;
+    typedef DeVL                   DetectorType ;
+    static std::string positionToolName() { return "VLClusterPosition" ; }
+    static std::string defaultDetectorLocation() { return DeVLLocation::Default ; }
+    static std::string defaultClusterLocation() { return LHCb::VLLiteClusterLocation::Default; }
+    static LHCb::VLChannelID channelId( const LHCb::LHCbID& id ) { return id.vlID(); }
+    static bool checkType(const LHCb::LHCbID& id) { return id.isVL() && channelId(id).isRType() ; }
+  };
+
 
 }
 
@@ -259,10 +293,33 @@ double MeasurementProviderT<MeasurementProviderTypes::VeloLiteR>::nominalZ( cons
 typedef MeasurementProviderT<MeasurementProviderTypes::VeloLiteR> VeloLiteRMeasurementProvider ;
 DECLARE_TOOL_FACTORY( VeloLiteRMeasurementProvider )
 
+
+template<>
+double MeasurementProviderT<MeasurementProviderTypes::VLR>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  return m_det->rSensor( id.vlID() )->z() ;
+}
+
+typedef MeasurementProviderT<MeasurementProviderTypes::VLR> VLRMeasurementProvider ;
+DECLARE_TOOL_FACTORY( VLRMeasurementProvider )
+
+
+template<>
+double MeasurementProviderT<MeasurementProviderTypes::VLLiteR>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  return m_det->rSensor( id.vlID() )->z() ;
+}
+
+typedef MeasurementProviderT<MeasurementProviderTypes::VLLiteR> VLLiteRMeasurementProvider ;
+DECLARE_TOOL_FACTORY( VLLiteRMeasurementProvider )
+
+
 ////////////////////////////////////////////////////////////////////////////////////////
 
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/VeloLitePhiMeasurement.h"
+#include "Event/VLPhiMeasurement.h"
+#include "Event/VLLitePhiMeasurement.h"
 
 namespace MeasurementProviderTypes {
   struct VeloPhi {
@@ -290,6 +347,36 @@ namespace MeasurementProviderTypes {
     static LHCb::VeloChannelID channelId( const LHCb::LHCbID& id ) { return id.veloID(); }
     static bool checkType(const LHCb::LHCbID& id) { return id.isVelo() && channelId(id).isPhiType() ; }
   };
+
+  
+
+  struct VLPhi {
+    typedef LHCb::VLPhiMeasurement   MeasurementType ;
+    typedef IVLClusterPosition       PositionToolType ;
+    typedef LHCb::VLCluster          ClusterType ;
+    typedef LHCb::VLClusters         ClusterContainerType ;
+    typedef DeVL                     DetectorType ;
+    static std::string positionToolName() { return "VLClusterPosition" ; }
+    static std::string defaultDetectorLocation() { return DeVLLocation::Default ; }
+    static std::string defaultClusterLocation() { return LHCb::VLClusterLocation::Default; }
+    static LHCb::VLChannelID channelId( const LHCb::LHCbID& id ) { return id.vlID(); }
+    static bool checkType(const LHCb::LHCbID& id) { return id.isVL() && channelId(id).isPhiType() ; }
+  };
+
+
+  struct VLLitePhi {
+    typedef LHCb::VLLitePhiMeasurement MeasurementType ;
+    typedef IVLClusterPosition         PositionToolType ;
+    typedef LHCb::VLLiteCluster        ClusterType ;
+    typedef LHCb::VLLiteCluster::VLLiteClusters       ClusterContainerType ;
+    typedef DeVL                       DetectorType ;
+    static std::string positionToolName() { return "VLClusterPosition" ; }
+    static std::string defaultDetectorLocation() { return DeVLLocation::Default ; }
+    static std::string defaultClusterLocation() { return LHCb::VLLiteClusterLocation::Default; }
+    static LHCb::VLChannelID channelId( const LHCb::LHCbID& id ) { return id.vlID(); }
+    static bool checkType(const LHCb::LHCbID& id) { return id.isVL() && channelId(id).isPhiType() ; }
+  };
+
 }
 
 template<>
@@ -309,6 +396,27 @@ double MeasurementProviderT<MeasurementProviderTypes::VeloLitePhi>::nominalZ( co
 
 typedef MeasurementProviderT<MeasurementProviderTypes::VeloLitePhi> VeloLitePhiMeasurementProvider ;
 DECLARE_TOOL_FACTORY( VeloLitePhiMeasurementProvider )
+
+
+
+template<>
+double MeasurementProviderT<MeasurementProviderTypes::VLPhi>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  return m_det->phiSensor( id.vlID() )->z() ;
+}
+
+typedef MeasurementProviderT<MeasurementProviderTypes::VLPhi> VLPhiMeasurementProvider ;
+DECLARE_TOOL_FACTORY( VLPhiMeasurementProvider )
+
+template<>
+double MeasurementProviderT<MeasurementProviderTypes::VLLitePhi>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  return m_det->phiSensor( id.vlID() )->z() ;
+}
+
+typedef MeasurementProviderT<MeasurementProviderTypes::VLLitePhi> VLLitePhiMeasurementProvider ;
+DECLARE_TOOL_FACTORY( VLLitePhiMeasurementProvider )
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

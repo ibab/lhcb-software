@@ -36,7 +36,9 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
     m_veloRProvider(  "MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider", this ),
     m_veloPhiProvider("MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider", this ),
     m_vpProvider(     "VPLiteMeasurementProvider", this ),
-    m_vlProvider(     "VLMeasurementProvider", this ), 
+    //m_vlProvider(     "VLMeasurementProvider", this ), 
+    m_vlRProvider(     "MeasurementProviderT<MeasurementProviderTypes::VLR>/VLRMeasurementProvider", this ), 
+    m_vlPhiProvider(     "MeasurementProviderT<MeasurementProviderTypes::VLPhi>/VLPhiMeasurementProvider", this ), 
     m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider", this ),
     m_utProvider(     "MeasurementProviderT<MeasurementProviderTypes::UT>/UTMeasurementProvider", this ),
     m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider", this ),
@@ -59,7 +61,8 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "VeloRProvider", m_veloRProvider ) ;
   declareProperty( "VeloPhiProvider", m_veloPhiProvider ) ;
   declareProperty( "VPProvider", m_vpProvider ) ;
-  declareProperty( "VLProvider", m_vlProvider ) ;
+  declareProperty( "VLRProvider", m_vlRProvider ) ;
+  declareProperty( "VLPhiProvider", m_vlPhiProvider ) ;
   declareProperty( "TTProvider", m_ttProvider ) ;
   declareProperty( "UTProvider", m_utProvider ) ;
   declareProperty( "ITProvider", m_itProvider ) ;
@@ -103,9 +106,15 @@ StatusCode MeasurementProvider::initialize()
   }
 
   if (!m_ignoreVL) {
-    sc = m_vlProvider.retrieve();
+    sc = m_vlRProvider.retrieve();
     if (sc.isFailure()) return sc;
-    m_providermap[LHCb::Measurement::VL] = &(*m_vlProvider);
+    m_providermap[LHCb::Measurement::VLR] = &(*m_vlRProvider);
+
+    sc = m_vlPhiProvider.retrieve();
+    if (sc.isFailure()) return sc;
+    m_providermap[LHCb::Measurement::VLPhi] = &(*m_vlPhiProvider);
+
+
   }
 
   if(!m_ignoreTT) {
@@ -164,9 +173,13 @@ StatusCode MeasurementProvider::finalize()
     if (sc.isFailure()) return sc;
   }
   if (!m_ignoreVL) {
-    sc = m_vlProvider.release();
+    sc = m_vlRProvider.release();
     if (sc.isFailure()) return sc;
+    sc = m_vlPhiProvider.release();
+    if (sc.isFailure()) return sc;
+    
   }
+  
   if(!m_ignoreTT) {
     sc = m_ttProvider.release() ;
     if (sc.isFailure()) return sc;
@@ -259,7 +272,9 @@ inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
     rc = id.isVeloR() ? LHCb::Measurement::VeloR : LHCb::Measurement::VeloPhi ;
     break ;
   case LHCb::LHCbID::VP:      rc = LHCb::Measurement::VPLite ; break ;
-  case LHCb::LHCbID::VL:      rc = LHCb::Measurement::VL      ; break ;
+  case LHCb::LHCbID::VL: 
+    rc = id.isVLR() ? LHCb::Measurement::VLR : LHCb::Measurement::VLPhi ;
+    break ;
   case LHCb::LHCbID::TT:      rc = LHCb::Measurement::TT      ; break ;
   case LHCb::LHCbID::UT:      rc = LHCb::Measurement::UT      ; break ;
   case LHCb::LHCbID::IT:      rc = LHCb::Measurement::IT      ; break ;
