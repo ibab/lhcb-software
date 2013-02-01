@@ -123,17 +123,12 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
   //select kaon opposite tagger(s)
   Particle const * ikaon=0;
   int ncand = 0;
-  int ncand_pre = 0;
   Particle::ConstVector::const_iterator ipart;
   //Particle::ConstVector::iterator ipart;
 
   Particle::ConstVector vtags_sel;
 
-  int cands_before = m_util->countTracks(vtags);
-
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) { // presel before NN1
-
-    ncand_pre++;
 
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
 
@@ -163,8 +158,6 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
 
     ncand++;
   }
-
-  assert(ncand_pre == cands_before);
 
   int cands = m_util->countTracks(vtags_sel);
   assert(ncand == cands);
@@ -260,7 +253,7 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
 
   else{
 	  std::sort(myMap.begin(), myMap.end(), std::greater<myPair>());
-	  for(int i =0; i < cands; i++){
+	  for(unsigned i =0; i < (unsigned)cands; i++){
 		  assert(i < pos_rnet_opp.size());
 		  assert(i < pre_rnet_opp.size());
 		  assert(i < pos_sign_tag.size());

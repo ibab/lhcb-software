@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-02-01 - Katharina Kreplin
+ - new NN OS kaon tagger added
+
 ! 2013-01-27 - Manuel Tobias Schiller
  - get rid of even more useless pow(..., integer) invocations...
 
