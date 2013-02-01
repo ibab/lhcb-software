@@ -29,6 +29,7 @@ use PrKernel             v1r1    Pr   # Olivier Callot
 use PrMCTools            v1r1    Pr   # Olivier Callot
 use PrUtils              v1r0    Pr   # Thomas Nikodem
 use PrVL                 v1r0    Pr   # Heinrich Schindler
+use PatPixel             v1r0    Tf   # Pavel Jalocha
 
 # Non sub-detector specific components
 use ChargedProtoANNPID   v1r9    Rec  # Chris Jones
