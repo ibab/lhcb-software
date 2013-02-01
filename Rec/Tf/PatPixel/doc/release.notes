@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recogintion for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-02-01 - Sascha Stahl
+ - Added CMake file
+
 ! 2013-01-30 - Olivier Callot
  - Add option "ClearHits" to clear the hits, for rerunning the VP pattern twice.
 
