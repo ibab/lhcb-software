@@ -4,6 +4,10 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+! 2013-02-01 - Vanya Belyaev
+ - define std::abs for ParticleID and ParticleProperty classes 
+   - it appears to be very useful for generic algorithms 
+
 !========================= PartProp v1r14 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

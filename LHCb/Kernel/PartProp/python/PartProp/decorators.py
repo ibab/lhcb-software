@@ -169,7 +169,40 @@ LHCb.ParticleProperty .__getattr__ = _get_attr_from_PID_
 LHCb.ParticleID       .__str__  = LHCb.ParticleID.toString
 LHCb.ParticleID       .__repr__ = LHCb.ParticleID.toString
 
-## defibne the type for std::vector<LHCb::ParticleID>
+## abs for ParticleID 
+def _abs_1_ ( self ) :
+    """
+    Absolute value for the PID
+    
+    >>> p  = ...
+    >>> pa = abs ( p  ) 
+    
+    """
+    if 0 <= self.pid() : return self 
+    return LHCb.ParticleID ( self.abspid() )
+
+## abs for ParticleProperty
+def _abs_2_ ( self ) :
+    """
+    Absolute value for the ParticleProperty
+    
+    >>> p  = ...
+    >>> pa = abs ( p  )
+    
+    """
+    ##
+    _pid  = self.particleID()
+    if self.selfcc () or 0 <= _pid.pid()       : return self
+    ##
+    _anti = self.anti()
+    if _anti and 0 <= _anti.particleID().pid() : return _anti
+    ##
+    return self 
+
+LHCb.ParticleID       . __abs__  = _abs_1_
+LHCb.ParticleProperty . __abs__  = _abs_2_
+
+## define the type for std::vector<LHCb::ParticleID>
 LHCb.ParticleIDs = std.vector( LHCb.ParticleID )
 
 ## get particleID objects whcih satisfy some criteria 
