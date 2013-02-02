@@ -53,8 +53,8 @@ default_config = { # Cuts made on all charged input particles in all lines
                      'MM_MIN'        : '480.*MeV',
                      'MM_MAX'        : '515.*MeV' },
            # Cuts made on all pi0's
-           "Pi0" : { 'PT_MIN'        : '1200*MeV',
-                     'P_MIN'         : '4000*MeV',
+           "Pi0" : { 'PT_MIN'        : '1000*MeV',
+                     'P_MIN'         : '0*MeV',
                      'CHILDCL1_MIN'  : 0.25,
                      'CHILDCL2_MIN'  : 0.25 },
            # Cuts made on all B's and Lb's used in all lines
@@ -81,7 +81,7 @@ default_config = { # Cuts made on all charged input particles in all lines
                    #'pP_MIN'        : '10000*MeV' # for pH only (obviously)
                  },
            # Cuts for omega -> 3 body decay
-           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '2*MeV', 'K1': ['0.8*GeV', '3.5*GeV']},
+           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '100*MeV', 'K1': ['0.8*GeV', '3.5*GeV']},
                     'DAUGHTERS'     : {'PT_MIN':'350*MeV','P_MIN':'2000*MeV'},
                     'AMAXDOCA_MAX'  : '0.50*mm',
                     'VCHI2DOF_MAX'  : 9,
@@ -115,26 +115,26 @@ class Beauty2XGamma(LineBuilder):
                               'Pi0',
                               'Prescales')
 
-    def __init__(self, moduleName, config):
-        LineBuilder.__init__(self, moduleName, config)
+    def __init__(self, moduleName, default_config):
+        LineBuilder.__init__(self, moduleName, default_config)
         ###########################################################################
         # Prepare the inputs
         ###########################################################################
         # Prefilter input tracks
-        pions = filterInputs('Pi', [StdNoPIDsPions], config['ALL'])
-        kaons = filterInputs('K', [StdNoPIDsKaons], config['ALL'])
-        protons = filterInputs('P', [StdNoPIDsProtons], config['ALL'])
+        pions = filterInputs('Pi', [StdNoPIDsPions], default_config['ALL'])
+        kaons = filterInputs('K', [StdNoPIDsKaons], default_config['ALL'])
+        protons = filterInputs('P', [StdNoPIDsProtons], default_config['ALL'])
         # Prefilter KS
         mergedKS = MergedSelection('MergedKS0', RequiredSelections = [dataOnDemand("StdLooseKsDD"), dataOnDemand("StdLooseKsLL")])
-        KS_filter = filterInputs('KS0', [mergedKS], config['KS0'])
+        KS_filter = filterInputs('KS0', [mergedKS], default_config['KS0'])
         ks = [KS_filter]
         # Prefilter photons
-        photons = filterPhotons([StdLooseAllPhotons], config['GAMMA'])
+        photons = filterPhotons([StdLooseAllPhotons], default_config['GAMMA'])
         mergedConvPhotons = MergedSelection('MergedConvPhotons', RequiredSelections = [StdAllLooseGammaDD,StdAllLooseGammaLL])
-        photonsConv = filterPhotonsConv([mergedConvPhotons], config['GAMMACONV'])
+        photonsConv = filterPhotonsConv([mergedConvPhotons], default_config['GAMMACONV'])
         # Prefilter pi0
-        pi0_merged   = filterPi0s('Merged', [StdLooseMergedPi0], config['Pi0'])
-        pi0_resolved = filterPi0s('Resolved', [StdLooseResolvedPi0], config['Pi0'])
+        pi0_merged   = filterPi0s('Merged', [StdLooseMergedPi0], default_config['Pi0'])
+        pi0_resolved = filterPi0s('Resolved', [StdLooseResolvedPi0], default_config['Pi0'])
         pi0 = {"Merged": [pi0_merged], "Resolved": [pi0_resolved]}
         # Prefilter hard inputs
         topoPions = topoInputs('Pi', [pions])
@@ -144,29 +144,29 @@ class Beauty2XGamma(LineBuilder):
         # Build particles
         ###########################################################################
         # X -> hh
-        hh = HHBuilder(pions, kaons, protons, ks, pi0, config['HH'], config['PID'])
+        hh = HHBuilder(pions, kaons, protons, ks, pi0, default_config['HH'], default_config['PID'])
         # X -> hhh
-        hhh = HHHBuilder(pions, kaons, protons, pi0, config['HHH'])
+        hhh = HHHBuilder(pions, kaons, protons, pi0, default_config['HHH'])
         #hhh = None
         ###########################################################################
         # B -> X Gamma
         ###########################################################################
-        b2xgamma = B2XGammaBuilder(photons, photonsConv, topoPions, topoKaons, ks, pi0, hh, hhh, config['B2X'])
+        b2xgamma = B2XGammaBuilder(photons, photonsConv, topoPions, topoKaons, ks, pi0, hh, hhh, default_config['B2X'])
         #b2xgamma = B2XGammaBuilder(photons, topoPions, topoKaons, ks, pi0, hh, hhh, config['B2X'])
-        self._makeLines(b2xgamma.lines, config)
+        self._makeLines(b2xgamma.lines, default_config)
         ###########################################################################
         # Lb -> X Gamma
         ###########################################################################
-        lb2xgamma = Lb2XGammaBuilder(photons, hh, config['B2X'])
-        self._makeLines(lb2xgamma.lines, config)
+        lb2xgamma = Lb2XGammaBuilder(photons, hh, default_config['B2X'])
+        self._makeLines(lb2xgamma.lines, default_config)
     
-    def _makeLine(self,protoLine,config):
+    def _makeLine(self,protoLine,default_config):
         tag = 'B2XGBBDTBeauty2XGammaFilter'
         for line in protoLine.selections:
             tmpSel = Selection(line.name() + 'FilterALL',
                                Algorithm=FilterDesktop(Code='ALL'),
                                RequiredSelections=[line])
-            _filter = { 'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GECNTrkMax'],
+            _filter = { 'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % default_config['GECNTrkMax'],
                         'Preambulo' : [ "from LoKiTracks.decorators import *",
                                         "from LoKiCore.functions    import *" ]
                       }
@@ -174,7 +174,7 @@ class Beauty2XGamma(LineBuilder):
             hlt = "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision') & HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
             name = line.name().replace(tag,'')+'Line'
             sline = StrippingLine(name,
-                                  protoLine.prescale(line, name, config),
+                                  protoLine.prescale(line, name, default_config),
                                   selection=tmpSel,
                                   checkPV=True,
                                   FILTER=_filter,
@@ -183,8 +183,8 @@ class Beauty2XGamma(LineBuilder):
                                   )
             self.registerLine(sline)
       
-    def _makeLines(self, lines, config):
+    def _makeLines(self, lines, default_config):
         for line in lines:
-            self._makeLine(line, config)
+            self._makeLine(line, default_config)
 
 # EOF
