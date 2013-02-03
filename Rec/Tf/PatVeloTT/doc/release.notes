@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-02-03 - Jianchun Wang
+ - Create VeloUT from copy of VeloTT codes.
+
 !========================= PatVeloTT v3r21 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
