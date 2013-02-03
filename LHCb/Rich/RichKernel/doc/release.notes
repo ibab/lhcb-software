@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2013-02-03 Chris Jones
+ - Minor clean up. Add missing preprocessor directives and remove some CVS 
+   comments.
+
 !========================= RichKernel v7r51 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
