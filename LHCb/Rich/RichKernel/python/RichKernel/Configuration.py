@@ -139,16 +139,16 @@ class RichTools(RichConfigurableUser):
     ## Initialize 
     def initialize(self):
         # default values
-        self.setRichDefaults( "PixelCreatorType",    { "Offline" : "RawBuffer",    "HLT" : "RawBuffer"   } )
-        self.setRichDefaults( "PhotonCreatorType",   { "Offline" : "RecoPhotons",  "HLT" : "RecoPhotons" } )
-        self.setRichDefaults( "PhotonRecoType",      { "Offline" : "Quartic",      "HLT" : "EstiFromRadius" } )
-        self.setRichDefaults( "PhotonPredictorType", { "Offline" : "CKthetaBands", "HLT" : "CKthetaBands" } )
-        self.setRichDefaults( "TrackCreatorType",    { "Offline" : "RecoTracks",   "HLT" : "RecoTracks" } )
-        self.setRichDefaults( "TrackSelectorType",   { "Offline" : "Reco",         "HLT" : "Reco" } )
-        self.setRichDefaults( "TrSegMakerType",      { "Offline" : "Detailed",     "HLT" : "Detailed" } )
-        self.setRichDefaults( "GeomEffType",         { "Offline" : "CKMassRing",   "HLT" : "CKMassRing" } )
-        self.setRichDefaults( "CkResType",           { "Offline" : "Functional",   "HLT" : "Binned" } )
-        self.setRichDefaults( "SignalDetEffType",    { "Offline" : "Tabulated",    "HLT" : "NominalTabulated" } )
+        self.setRichDefaults( "PixelCreatorType",    { "Offline" : "RawBuffer",      "HLT" : "RawBuffer"   } )
+        self.setRichDefaults( "PhotonCreatorType",   { "Offline" : "RecoPhotons",    "HLT" : "RecoPhotons" } )
+        self.setRichDefaults( "PhotonRecoType",      { "Offline" : "Quartic",        "HLT" : "EstiFromRadius" } )
+        self.setRichDefaults( "PhotonPredictorType", { "Offline" : "CKthetaBands",   "HLT" : "CKthetaBands" } )
+        self.setRichDefaults( "TrackCreatorType",    { "Offline" : "RecoTracks",     "HLT" : "RecoTracks" } )
+        self.setRichDefaults( "TrackSelectorType",   { "Offline" : "Reco",           "HLT" : "Reco" } )
+        self.setRichDefaults( "TrSegMakerType",      { "Offline" : "Detailed",       "HLT" : "Detailed" } )
+        self.setRichDefaults( "GeomEffType",         { "Offline" : "CKMassRing",     "HLT" : "CKMassRing" } )
+        self.setRichDefaults( "CkResType",           { "Offline" : "Functional",     "HLT" : "Binned" } )
+        self.setRichDefaults( "SignalDetEffType",    { "Offline" : "Tabulated",      "HLT" : "NominalTabulated" } )
                
     ## @brief Make an instance of the given configurable and configure this
     #         tool in the RichToolRegistry
@@ -315,7 +315,7 @@ class RichTools(RichConfigurableUser):
         else:
             raise RuntimeError("Unknown Photon Predictor '%s'"%predType)
         return tool
-    
+
     ## @brief Returns the appropriate RichRecPixel creator tool
     #  @param nickname The tool nickname
     #  @return The tool configurable
@@ -364,7 +364,7 @@ class RichTools(RichConfigurableUser):
         else:
             raise RuntimeError("Unknown Photon Creator '%s'"%phottype)
         return tool
-    
+
     ## @brief Returns the appropriate RichGeomPhoton reconstruction tool
     #  @param nickname The tool nickname
     #  @return The tool configurable

@@ -9,6 +9,9 @@
  */
 //-----------------------------------------------------------------------------
 
+#ifndef RICHKERNEL_RichHistoBase_ICPP
+#define RICHKERNEL_RichHistoBase_ICPP 1
+
 // local
 #include "RichKernel/RichHistoBase.h"
 #include "RichKernel/RichException.h"
@@ -296,3 +299,5 @@ Rich::HistoBase<PBASE>::richProfile2D( const Rich::HistogramID &  id,
   // return the histo
   return h;
 }
+
+#endif // RICHKERNEL_RichHistoBase_ICPP

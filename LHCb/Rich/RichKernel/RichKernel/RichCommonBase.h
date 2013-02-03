@@ -159,7 +159,8 @@ namespace Rich
       else if ( this -> msgLevel(MSG::DEBUG) )
       {
         this -> debug() << " Acquired tool '" << pTool->name()
-                        << "' of type '" << this->toolRegistry()->toolType(nickName) << "'" << endmsg;
+                        << "' of type '" 
+                        << this->toolRegistry()->toolType(nickName) << "'" << endmsg;
       }
 
       // return the tool pointer

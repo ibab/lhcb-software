@@ -4,9 +4,6 @@
  *
  *  Header file for RICH utility class : Rich::HistogramID
  *
- *  CVS Log :-
- *  $Id: RichHistoID.h,v 1.10 2010-02-15 15:58:51 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   27/10/2005
  */

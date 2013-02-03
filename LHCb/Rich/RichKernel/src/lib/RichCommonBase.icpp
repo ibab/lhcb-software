@@ -9,6 +9,9 @@
  */
 //-----------------------------------------------------------------------------
 
+#ifndef RICHKERNEL_RICHCOMMONBASE_ICPP
+#define RICHKERNEL_RICHCOMMONBASE_ICPP 1
+
 // STL
 #include <sstream>
 #include <string>
@@ -329,3 +332,5 @@ Rich::CommonBase<PBASE>::propagateJobOptions( const std::string & from_name,
   return sc;
 }
 //=============================================================================
+
+#endif // RICHKERNEL_RICHCOMMONBASE_ICPP
