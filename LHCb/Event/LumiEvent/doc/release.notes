@@ -4,6 +4,7 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!========================= LumiEvent v3r4 2013-02-04 =========================
 ! 2012-12-10 - Marco Cattaneo
  - Use getIfExists instead of separate get/exist calls
  - Fix UNINIT_CTOR defect
