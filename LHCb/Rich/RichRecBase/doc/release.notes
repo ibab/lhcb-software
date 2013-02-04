@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r16 2013-02-04 =========================
 ! 2013-02-01 - Chris Jones
  - Add preliminary support for PatVeloUT track types, mapping them to
    Rich::Rec::Track::VeloTT
