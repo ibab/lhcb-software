@@ -4,6 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+!========================= DetDescCnv v4r17 2013-02-04 =========================
 ! 2013-01-25 - Marco Clemencic
  - Fixed compilation after replacement of Kernel/HistoStrings with GaudiUtils.
 
