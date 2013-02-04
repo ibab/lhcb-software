@@ -4,6 +4,7 @@
   <argument name="timeout"><integer>2400</integer></argument>
   <argument name="args"><set>
     <text>$BRUNELOPTS/COLLISION11_25.py</text>
+    <text>$BRUNELROOT/tests/options/enableANNPrintout.py</text>
     <text>--option</text>
     <text>from Brunel.Configuration import *; Brunel().EvtMax=200; Brunel().ProductionMode=True; LHCbApp().TimeStamp=False</text>
   </set></argument>

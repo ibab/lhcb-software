@@ -3,7 +3,8 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout"><integer>2400</integer></argument>
   <argument name="args"><set>
-    <text>../options/2012-crashes.py</text>
+    <text>$BRUNELROOT/tests/options/enableANNPrintout.py</text>
+    <text>$BRUNELROOT/tests/options/2012-crashes.py</text>
     <text>--option</text>
     <text>from Brunel.Configuration import *; Brunel().ProductionMode=True; LHCbApp().TimeStamp=False</text>
   </set></argument>

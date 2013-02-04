@@ -4,7 +4,6 @@
   <argument name="timeout"><integer>2400</integer></argument>
   <argument name="options"><text>
 from Gaudi.Configuration import *
-importOptions("$BRUNELROOT/tests/options/testBrunel-defaults.py")
 
 from Configurables import LHCbApp
 LHCbApp().DDDBtag="head-20110914"
@@ -13,6 +12,8 @@ LHCbApp().CondDBtag="sim-20111020-vc-md100"
 EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2011/XDST/00012935/0000/00012935_00000827_3.xdst?svcClass=lhcbdisk'"]
 
 from Brunel.Configuration import *
+Brunel().EvtMax   = 10
+Brunel().Monitors = ["SC","FPE"]
 Brunel().InputType="XDST"
 Brunel().WithMC=True
 Brunel().DataType="2011"</text></argument>

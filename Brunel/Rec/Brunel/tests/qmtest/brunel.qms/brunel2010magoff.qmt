@@ -2,6 +2,7 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
+    <text>$BRUNELROOT/tests/options/enableANNPrintout.py</text>
     <text>$BRUNELOPTS/COLLISION10-Beam3500GeV-VeloClosed-MagOff.py</text>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
