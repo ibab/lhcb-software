@@ -4,7 +4,11 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
-!====================== EvtGenExtras v3r4p1 2012-11-29 =======================
+!======================= EvtGenExtras v3r5 2013-02-04 ========================
+! 2013-02-04 - by Alexander Luchinski
+ - New models for Bc -> psi K K pi, Bc -> psi K pi pi
+
+!====================== EvtGenExtras v3r4p1 2013-01-28 =======================
 ! 2012-11-29 - Patrick Robbe
  - Fix compilation warnings
 
