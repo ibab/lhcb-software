@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= MCAssociators v1r3 2013-02-04 =========================
 ! 2013-01-09 - Olivier Callot
  - Pass a NULL message service to the linker constructor, to remove messages.
 
