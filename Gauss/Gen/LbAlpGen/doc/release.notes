@@ -5,6 +5,10 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+!========================= LbAlpGen v3r0p1 2013-02-04 =========================
+! 2012-12-04 - by Patrick Robbe
+ - Fix compilation warnings
+
 !========================== LbAlpGen v3r0 2012-10-19 ==========================
 
 ! 2012-10-12 - Stephane Tourneur
