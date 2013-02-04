@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r11 2013-02-04 =========================
 ! 2012-12-12 - Vanya Belyaev
  - Fix Coverity defect 19275
 
