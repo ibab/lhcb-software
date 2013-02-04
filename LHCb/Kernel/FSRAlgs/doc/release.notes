@@ -4,6 +4,7 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= FSRAlgs v1r2 2013-02-04 =========================
 ! 2012-12-10 - Marco Cattaneo
  - Use getIfExists wherever appropriate
 
