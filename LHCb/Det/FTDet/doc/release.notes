@@ -4,6 +4,7 @@
 ! Responsible : Plamen Hopchev
 !--------------------------------------------------------------------------
 
+!========================= FTDet v1r3 2013-02-04 =========================
 ! 2012-11-27 - Olivier Callot
  - add method findLayer( FTChannelID ) needed for track fit
 
