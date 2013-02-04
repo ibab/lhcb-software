@@ -27,12 +27,12 @@ gen.Special.CutTool = "XiccDaughtersInLHCb"
 gen.Special.addTool(XiccDaughtersInLHCb)
 gen.Special.XiccDaughtersInLHCb.BaryonState = gen.Special.GenXiccProduction.BaryonState
 
-myOutputLevel = 3
+#myOutputLevel = 3
 
-gen.OutputLevel = myOutputLevel
-gen.Special.OutputLevel = myOutputLevel
-gen.Special.GenXiccProduction.OutputLevel = myOutputLevel
-gen.Special.XiccDaughtersInLHCb.OutputLevel = myOutputLevel
+#gen.OutputLevel = myOutputLevel
+#gen.Special.OutputLevel = myOutputLevel
+#gen.Special.GenXiccProduction.OutputLevel = myOutputLevel
+#gen.Special.XiccDaughtersInLHCb.OutputLevel = myOutputLevel
 
 #temporary patch to ParticlePropertySvc
 from Configurables import LHCb__ParticlePropertySvc

@@ -2,6 +2,10 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+!======================== LbGenXicc v2r0p1 2013-02-04 ========================
+! 2013-02-04 - Gloria Corti
+ - Comment output level in GenXibc options for production
+
 !========================= LbGenXicc v2r0 2012-07-23 =========================
 ! 2012-07-23 - Gloria Corti
  - Remove options in *.opts form that are obsolete
