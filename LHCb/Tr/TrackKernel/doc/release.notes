@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= TrackKernel v1r12 2013-02-04 =========================
 ! 2012-12-12 - Marco Cattaneo
  - Add include dependency on DetDesc, introduced by previous change
    (ideally, DetDesc/StaticArray.h should be moved to e.g. GaudiKernel)
