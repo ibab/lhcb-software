@@ -3,6 +3,7 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+!========================= STKernel v2r11 2013-02-04 =========================
 ! 2013-01-14 - Frederic Dupertuis
  - Moving the constructor and destructor of STHisto2DProperties to public
    and the destructor to virtual.
