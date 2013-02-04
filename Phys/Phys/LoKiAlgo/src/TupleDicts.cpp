@@ -2,6 +2,10 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// STD&STL
+// ============================================================================
+#include <climits>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/Kernel.h"
@@ -552,6 +556,73 @@ StatusCode LoKi::Dicts::TupleAux::column
   //
   return StatusCode::SUCCESS ;
 }
+// ============================================================================
+// store boolean value in n-tuple 
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_bool  
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const bool                value )
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  return tuple -> column ( name , value ) ;  
+}
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  const double s_float_max =  0.99 * std::numeric_limits<float>::max() ;
+  const double s_float_min =  0.99 * std::numeric_limits<float>::min() ;
+  // ==========================================================================
+}
+// ============================================================================
+// store float  value in n-tuple
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_float  
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const double              value )
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  //
+  const float _value = float ( std::max ( std::min ( value , s_float_max ) , s_float_min ) ) ;
+  //
+  return tuple -> column ( name , _value ) ;  
+}
+// ============================================================================
+// store double value in n-tuple
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_double
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const double              value )
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  return tuple -> column ( name , value ) ;  
+}
+// ============================================================================
+// store int value in n-tuple 
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_int 
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const int                 value ) 
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  return tuple -> column ( name , value ) ;  
+}
+// ============================================================================
+// store long value in n-tuple 
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_long
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const long                value ) 
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  return tuple -> column ( name , value ) ;  
+}
+
 // ============================================================================
 // The END 
 // ============================================================================

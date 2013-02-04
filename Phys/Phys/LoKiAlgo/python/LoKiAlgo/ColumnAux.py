@@ -45,11 +45,12 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = "2012-02-16"
 __version__ = "$Revision$"
 # =============================================================================
-from LoKiCore.basic import cpp
+from LoKiCore.basic import cpp, LoKi
 
 
-_Tuple  = cpp.Tuples.Tuple
-_ColAux = cpp.LoKi.Dicts.TupleAux 
+_Tuple    = cpp.Tuples.Tuple
+_ColAux   = LoKi.Dicts.TupleAux 
+_ColBasic = LoKi.Dicts.TupleBasic 
 
 ## simple function for decoration of "Tuples::Tuple::farray" method 
 def _colAux_ ( self , *args ) :
@@ -83,7 +84,66 @@ _colAux_ . __doc__ += '\n' + _ColAux . column . __doc__
 
 # =============================================================================
 ## finally decorate tuple 
-_Tuple.column_aux   = _colAux_
+_Tuple.column_aux    = _colAux_
+
+# =============================================================================
+## few basic types 
+_ColBasic = LoKi.Dicts.TupleBasic 
+
+## specialization for bool values 
+def _column_bool_ ( self , name , value ) :
+    """
+    Add boolean value to n-tuple
+    
+    """
+    return _ColBasic.column_bool ( self , name , value )
+# =============================================================================
+## specialization for float  values 
+def _column_float_ ( self , name , value ) :
+    """
+    Add float value to n-tuple
+    
+    """
+    return _ColBasic.column_float ( self , name , value )
+# =============================================================================
+## specialization for double  values 
+def _column_double_ ( self , name , value ) :
+    """
+    Add float value to n-tuple
+    
+    """
+    return _ColBasic.column_double ( self , name , value )
+# =============================================================================
+## specialization for int  values 
+def _column_int_ ( self , name , value ) :
+    """
+    Add int value to n-tuple
+    
+    """
+    return _ColBasic.column_int ( self , name , value )
+# =============================================================================
+## specialization for long  values 
+def _column_long_ ( self , name , value ) :
+    """
+    Add long value to n-tuple
+    """
+    return _ColBasic.column_long ( self , name , value )
+
+_column_bool_   . __doc__ += '\n' + _ColBasic . column_bool   . __doc__
+_column_float_  . __doc__ += '\n' + _ColBasic . column_float  . __doc__
+_column_double_ . __doc__ += '\n' + _ColBasic . column_double . __doc__
+_column_int_    . __doc__ += '\n' + _ColBasic . column_int    . __doc__
+_column_long_   . __doc__ += '\n' + _ColBasic . column_long   . __doc__
+
+# =============================================================================
+## finally decorate tuple 
+_Tuple.column_bool       =       _column_bool_ 
+_Tuple.column_float      =       _column_float_ 
+_Tuple.column_double     =       _column_double_ 
+_Tuple.column_int        =       _column_int_ 
+_Tuple.column_long       =       _column_long_ 
+_Tuple.column_longlong   = _Tuple.column_ll 
+_Tuple.column_ulonglong  = _Tuple.column_ull 
 
 # =============================================================================
 if '__main__' == __name__ :

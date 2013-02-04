@@ -412,9 +412,49 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    /** @class TupleBasic 
+     *  set of helper columns for n-tuple 
+     *  @toto try to move it to Gaudi
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-02-16
+     */
+    class GAUDI_API TupleBasic
+    {
+    public:
+      // ======================================================================
+      /// store boolean value in n-tuple 
+      static StatusCode column_bool  
+      ( const Tuples::Tuple&      tuple , 
+        const std::string&        name  , 
+        const bool                value ) ;
+      /// store float  value in n-tuple 
+      static StatusCode column_float  
+      ( const Tuples::Tuple&      tuple , 
+        const std::string&        name  , 
+        const double              value ) ;
+      /// store float  value in n-tuple 
+      static StatusCode column_double  
+      ( const Tuples::Tuple&      tuple , 
+        const std::string&        name  , 
+        const double              value ) ;
+      /// store int value in n-tuple 
+      static StatusCode column_int   
+      ( const Tuples::Tuple&      tuple , 
+        const std::string&        name  , 
+        const int                 value ) ;
+      /// store int value in n-tuple 
+      static StatusCode column_long 
+      ( const Tuples::Tuple&      tuple , 
+        const std::string&        name  , 
+        const long                value ) ;
+      // ======================================================================
+    };
+    // ========================================================================
   } //                                              end of namespace LoKi:Dicts 
   // ==========================================================================
 } //                                                      end of namespace LoKi
+// ============================================================================
+
 // ============================================================================
 //                                                                      The END 
 // ============================================================================
