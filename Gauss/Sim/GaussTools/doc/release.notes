@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussTools v18r1p1 2013-02-04 =======================
 ! 2013-01-15 - Patrick Robbe
  - Fix compilation warnings
 
