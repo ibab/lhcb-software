@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-02-04 - Paul Szczypka
+ - Add method to pass detector list to LHCbApp in Configuration.py
+ - Corrected 'Moun' typos in Configuration.py
+
 ! 2013-01-08 - Paul Szczypka
  - Correction to GaussVis.py options to use new Detector configuration syntax.
 
