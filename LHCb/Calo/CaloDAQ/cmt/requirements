@@ -3,7 +3,7 @@
 # Maintainer : Olivier Deschamps
 # =============================================================================
 package           CaloDAQ
-version           v4r31
+version           v4r32
 
 # =============================================================================
 # Structure, i.e. directories to process. 
