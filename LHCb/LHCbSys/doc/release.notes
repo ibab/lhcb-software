@@ -5,6 +5,147 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v35r4>2013-02-05 LHCbSys v35r4</A></H1><PRE>
+This version uses Gaudi v23r6 and LCG_64c
+
+- Packages removed:  Kernel/HistoStrings, functionality now in GaudiUtils
+- Packages modified: Associators/MCAssociators v1r3, Calo/CaloDAQ v4r32
+    Det/DDDB v1r60, Det/DetCond v12r29, Det/DetDesc v18r31, Det/DetDescCnv v4r17,
+    Det/FTDet v1r3, Det/RichDet v16r15, Det/VLDet v1r4, Event/EventPacker v2r21,
+    Event/FTEvent v1r2, Event/LinkerEvent v3r10, Event/LumiEvent v3r4,
+    Event/MCEvent v2r25, Event/RecreatePIDTools v1r7, Event/TrackEvent v5r21,
+    GaudiConf v17r3, Kernel/FSRAlgs v1r2, Kernel/LHCbAlgs v2r54,
+    Kernel/LHCbKernel v13r15, Kernel/LHCbMath v3r37, Kernel/PartProp v1r15,
+    L0/L0Interfaces v2r3, Muon/MuonDAQ v4r17, Phys/LoKiCore v11r11,
+    Rich/RichKernel v7r52, Rich/RichRecBase v4r16, Sim/SimComponents v2r24,
+    ST/STKernel v2r11, ST/STTELL1Event v1r12, Tf/PatKernel v2r7, 
+    Tf/TfKernel v2r24, Tools/CondDBUI v3r20, Tr/TrackInterfaces v4r23,
+    Tr/TrackKernel v1r12
+
+- In LHCbSys:
+  . Improved toolchain.cmake: no need to specify LCG version
+
+- In Associators/MCAssociators v1r3
+  . Pass a NULL message service to the linker constructor, to remove messages.
+
+- In Det/DDDB v1r60
+  . Add 2013 DataType (pA run)
+
+- In Det/DetCond v12r29
+  . Stop the TimeOutChecker thread when explicitly disconnected. The thread is
+    restarted automatically when we reconnect.
+
+- In Det/DetDesc v18r31
+  . DetDesc/ParamAsHisto.h: Add missing protection against double inclusion
+  . dict/DetDescDict.xml: fix a typo in function name
+
+- In Det/FTDet v1r3
+  . add method findLayer( FTChannelID ) needed for track fit
+
+- In Det/RichDet v16r15
+  . Modifications for PMTS with Lenses in DePmt and DePmtPanel
+
+- In Det/VLDet v1r4
+  . Modification of R sensor layout for compact layout
+
+- In Event/FTEvent v1r2
+  . Make the channelID method const for track fit
+
+- In Event/LumiEvent v3r4
+  . Remove unnecessary member variables
+
+- In Event/MCEvent v2r25
+  . Added an extra flag in MCRichHit.xml for the PMT lens for upgrade studies.
+
+- In Event/TrackEvent v5r21
+  . Added measurement types for VL (R, Phi, LiteR, LitePhi), FT, UT
+  . Added track type for UT
+
+- In GaudiConf v17r3
+  . Add protection around Rich-specific code in DigiConf.py
+  . Fix OptItemList for /Event/Gen/HepMCEvents and ItemList for
+    /Event/Gen/BeamParameters, in both cases there was a missing #1.
+    Bug introduced in v17r0
+
+- In Kernel/LHCbKernel v13r15
+  . Add UT hits
+
+- In Kernel/LHCbMath v3r37
+  . Add StudentT function 
+  . Fix some issue with Functions.cpp 
+
+- In Kernel/PartProp v1r15
+  . define std::abs for ParticleID and ParticleProperty classes 
+
+- In L0/L0Interfaces v2r3
+  . Add a new tool interface to allow removal of some hits used in the L0Muon 
+    emulation for special studies
+
+- In Muon/MuonDAQ v4r17
+  . Fix unneccessary tool release in MuonRec and MuonTAERec::finalize()
+
+- In Phys/LoKiCore v11r11
+  . Fix Coverity defect 19275
+
+- In Rich/RichKernel v7r52
+  . Minor clean up. Add missing preprocessor directives and remove some CVS 
+    comments.
+
+- In Rich/RichRecBase v4r16
+  . Add preliminary support for PatVeloUT track types, mapping them to
+    Rich::Rec::Track::VeloTT
+  . Add KeyedContainers and some missing entries for LHCb::RichRecRingOnPixel to
+    python dictionary
+
+- In Sim/SimComponents v2r24
+  . Add dependency on Gen/DecFiles, needed by EvtTypeSvc
+
+- In ST/STKernel v2r11
+  . Move the constructor and destructor of STHisto2DProperties to public
+    and the destructor to virtual.
+
+- In ST/STTELL1Event v1r12
+  . Add UT banks
+
+- In Tf/PatKernel v2r7
+  . Use PatTTHit for both TT & UT so that other functions can be shared.
+  . Clone UT Pat tool from that of TT.
+
+- In Tf/TfKernel v2r24
+  . Add UT hit
+
+- In Tools/CondDBUI v3r20
+  . internals.py: DumpToFiles method now ignores the C++ exception ("Attempt 
+    to access data of NULL attribute "NODE_PARENTID"") which prevented dumping 
+    local tags from SQLite to XML files in some cases
+
+- In Tr/TrackInterfaces v4r23
+  . Change void to StatusCode for removeTracksAndRecalculatePV (IPVOfflineTool)
+    to give the information that PV recalculation failed and original PV is
+    returned
+  . Replace PatUTHit with PatTTHit
+  . Add UT cluster and VeloUT interface
+
+- In Tr/TrackKernel v1r12
+  . Added TrackCloneData
+  . Add include dependency on DetDesc
+
+- In Calo/CaloDAQ v4r32, Event/LumiEvent v3r4, Event/RecreatePIDTools v1r7,
+     Kernel/FSRAlgs v1r2, Kernel/LHCbAlgs v2r54, Muon/MuonDAQ v4r17,
+     Phys/LoKiCore v11r11
+  . use getIfExists when appropriate
+
+- In Det/DetDesc v18r31, Det/DetDescCnv v4r17, Event/EventPacker v2r21
+  . Fixes following replacement of Kernel/HistoStrings with GaudiUtils.
+
+- In Event/LinkerEvent v3r10, Event/LumiEvent v3r4, Kernel/LHCbAlgs v2r54
+  . Fix UNINIT_CTOR coverity defect
+
+- In Kernel/LHCbAlgs v2r54, Muon/MuonDAQ v4r17
+  . Remove 'do nothing' finalize methods
+
+
+
 </PRE><H1><A NAME=v35r3>2012-11-28 LHCbSys v35r3</A></H1><PRE>
 This version uses Gaudi v23r5 and LCG_64b
 
