@@ -3,6 +3,7 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+!========================= LbBcVegPy v4r4 2013-02-04 =========================
 ! 2012-12-04 - Patrick Robbe
  - Added the option options/BcVegPyPythia8.py to configure BcVegPy
    in Pythia8
