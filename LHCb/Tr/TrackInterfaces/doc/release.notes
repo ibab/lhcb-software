@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2013-02-04 - Mariusz Witek
+ - change void to StatusCode for removeTracksAndRecalculatePV (IPVOfflineTool)
+   to give the information that PV recalculation failed and original PV is returned
+
 ! 2013-01-30 - Jianchun Wang
  - Replace PatUTHit with PatTTHit
 
