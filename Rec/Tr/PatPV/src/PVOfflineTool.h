@@ -49,9 +49,9 @@ public:
   StatusCode reconstructSinglePV(const Gaudi::XYZPoint xyzseed,
 			         LHCb::RecVertex& outvtx);
 
-  void removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
-                                    const std::vector<const LHCb::Track*>& tracks2remove,
-                                    LHCb::RecVertex& vtx);
+  StatusCode removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
+					  const std::vector<const LHCb::Track*>& tracks2remove,
+					  LHCb::RecVertex& vtx);
   
 
 private:

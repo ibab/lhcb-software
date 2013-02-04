@@ -4,6 +4,11 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2013-02-04 - Mariusz Witek
+ - change void to StatusCode for removeTracksAndRecalculatePV (in PVOfflineTool)
+   to give the information that PV recalculation failed and original PV is returned.
+   Associated modification has been made in Tr/TrackInterfaces (IPVOfflineTool).
+
 !========================= PatPV v3r25 2012-11-28 =========================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.
