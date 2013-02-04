@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackEvent
 ################################################################################
-gaudi_subdir(TrackEvent v5r20)
+gaudi_subdir(TrackEvent v5r21)
 
 gaudi_depends_on_subdirs(GaudiObjDesc
                          Kernel/LHCbKernel)
