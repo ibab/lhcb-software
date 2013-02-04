@@ -22,7 +22,7 @@ class Boole(LHCbConfigurableUser):
         "DetectorInit": {"DATA":['Data'],"MUON":['Muon']}
         ,"DetectorDigi": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0']
         ,"DetectorLink": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0']
-        ,"DetectorMoni": ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Calo', 'Muon', 'L0', 'MC']
+        ,"DetectorMoni": ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0', 'MC']
         ,"EvtMax"              : -1
         ,"SkipEvents"          : 0
         ,"UseSpillover"        : False
@@ -108,6 +108,16 @@ class Boole(LHCbConfigurableUser):
         if hasattr( self, "Persistency" ):
             self.setOtherProps(LHCbApp(),["Persistency"])
             self.setOtherProps(DigiConf(),["Persistency"])
+
+    def setLHCbAppDetectors(self):
+        from Configurables import LHCbApp
+        # If detectors set in LHCbApp then use those        
+        if hasattr(LHCbApp(),"Detectors"):
+            if not LHCbApp().Detectors:
+                LHCbApp().Detectors = self.getProp("DetectorDigi")
+            else:
+                print "WARNING:: Value of 'LHCbApp().Detectors' already set, using that value: %s" %(LHCbApp().Detectors)
+        return
 
 
     def defineEvents(self):
@@ -521,6 +531,8 @@ class Boole(LHCbConfigurableUser):
             RichDigiSysConf().ResponseModel = "Copy"
             RichDigiSysConf().OutputLevel = INFO
             RichDigiSysConf().RawDataFormatVersion = 3
+            from Configurables import DigiConf
+            DigiConf().DigiType = "Extended"
         else:
             raise RuntimeError("TAE not implemented for RICHMaPMT")
             
@@ -842,6 +854,7 @@ class Boole(LHCbConfigurableUser):
 
             writerName = "DigiWriter"
             digiWriter = OutputStream( writerName, Preload=False )
+            
 
             digiWriter.RequireAlgs.append( "Filter" )
             if self.getProp( "NoWarnings" ) and not digiWriter.isPropertySet( "OutputLevel" ):
@@ -1054,6 +1067,7 @@ class Boole(LHCbConfigurableUser):
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
         self.defineDB()
+        self.setLHCbAppDetectors()
         self.defineEvents()
         self.configurePhases()
         self.defineOutput()
