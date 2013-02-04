@@ -1,8 +1,9 @@
-! =============================================================================
+! ========================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
-! =============================================================================
+! ========================================================================
 
+!========================= CondDBUI v3r20 2013-02-04 =========================
 ! 2012-12-04 - Illya Shapoval
  - _internals.py: DumpToFiles method now ignores the C++ exception ("Attempt 
    to access data of NULL attribute "NODE_PARENTID"") which prevented dumping 
