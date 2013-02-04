@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r29 2013-02-04 =========================
 ! 2012-12-20 - Marco Clemencic
  - Stop the TimeOutChecker thread when explicitly disconnected. The thread is
    restarted automatically when we reconnect.
