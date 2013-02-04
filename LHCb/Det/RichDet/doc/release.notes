@@ -3,8 +3,11 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
-2013-01-28 - Sajan Easo
+
+!========================= RichDet v16r15 2013-02-04 =========================
+! 2013-01-28 - Sajan Easo
  -  Modifications for PMTS with Lenses in DePmt and DePmtPanel
+
 !========================= RichDet v16r14 2012-11-26 =========================
 ! 2012-11-20 - Antonis Papanestis
  - Check the list of inactive Photo-Detectors for possible errors in 
