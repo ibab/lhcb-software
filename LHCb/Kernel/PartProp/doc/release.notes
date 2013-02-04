@@ -4,6 +4,7 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!========================= PartProp v1r15 2013-02-04 =========================
 ! 2013-02-01 - Vanya Belyaev
  - define std::abs for ParticleID and ParticleProperty classes 
    - it appears to be very useful for generic algorithms 
