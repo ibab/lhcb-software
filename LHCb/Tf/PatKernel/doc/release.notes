@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-02-05 - Sascha Stahl
+ - Moved UT related code to PrKernel.
+
+
 !========================= PatKernel v2r7 2013-02-04 =========================
 ! 2013-01-29 - Jianchun Wang
  - Use PatTTHit for both TT & UT so that other functions can be shared.
