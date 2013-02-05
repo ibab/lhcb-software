@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-02-04 - Paul Szczypka
+ - Reverted some changes inadvertantly included in last commit.
+
+! 2013-02-04 - Paul Szczypka
  - Add method to pass detector list to LHCbApp in Configuration.py
  - Corrected 'Moun' typos in Configuration.py
 

@@ -86,9 +86,6 @@ class Gauss(LHCbConfigurableUser):
         ,"DetectorGeo"       : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
         ,"DetectorSim"       : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
         ,"DetectorMoni"      : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-        #       ,"DetectorGeo"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
-        #       ,"DetectorSim"       : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
-        #       ,"DetectorMoni"      : {"VELO":['PuVeto', 'Velo'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1Pmt', 'Rich2Pmt'], "CALO":['Spd', 'Prs', 'Ecal', 'Hcal'], "MUON":['Muon'], "MAGNET":['Magnet'] }
         ,"SpilloverPaths"    : []
         ,"PhysicsList"       : {"Em":'NoCuts', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
         ,"DeltaRays"         : True
@@ -129,7 +126,7 @@ class Gauss(LHCbConfigurableUser):
        ,"DetectorSim"    : """ Dictionary specifying the detectors to simulated (should be in geometry): """
        ,"DetectorMoni"   : """ Dictionary specifying the detectors to monitor (should be simulated) :"""
        ,'SpilloverPaths' : """ Spillover paths to fill: [] means no spillover, otherwise put ['Next', 'Prev', 'PrevPrev'] """
-       ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3','NoCuts','LHCb', 'LHCbNoCuts', 'LHCbOldForE', 'LHCbNoCutsOldForE', 'LHCbTest', 'LHCbTestNoCut' ], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','QGSP_BERT_CHIPS','FTFP_BERT'], 'LHCbPhys': [True,False], 'Other': [''] """
+       ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3','NoCuts','LHCb', 'LHCbNoCuts', 'LHCbOldForE', 'LHCbNoCutsOldForE', 'LHCbTest', 'LHCbTestNoCut' ], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','QGSP_BERT_CHIPS','QGSP_FTFP_BERT','FTFP_BERT'], 'LHCbPhys': [True,False], 'Other': [''] """
        ,"DeltaRays"      : """ Simulation of delta rays enabled (default True) """
        ,'Phases'         : """ List of phases to run (Generator, Simulation, GenToMCTree) """
        ,'Output'         : """ Output: [ 'NONE', 'SIM'] (default 'SIM') """
@@ -137,15 +134,13 @@ class Gauss(LHCbConfigurableUser):
        ,'EnablePack'     : """ Flag to turn on or off the packing of the SIM data """
        ,'DataPackingChecks' : """ Flag to turn on or off the running of some test algorithms to check the quality of the data packing """
        ,"WriteFSR"       : """Add file summary record, default True"""
-       , "Persistency"   : """ROOT or POOL persistency, overwrite the default"""
+       ,"Persistency"    : """ROOT or POOL persistency, overwrite the default"""
+       ,"BeamPipe"       : """Switch for beampipe definition; BeamPipeOn: On everywhere, BeamPipeOff: Off everywhere, BeamPipeInDet: Only in named detectors """
        }
     KnownHistOptions     = ['NONE','DEFAULT']
     TrackingSystem       = ['VELO','TT','IT','OT']
     PIDSystem            = ['RICH','CALO','MUON']
     _beamPipeStates = ['beampipeon', 'beampipeoff', 'beampipeindet']
-    # Keep default positive in private var
-    _beamPipeSwitch = 1
-
 
     _incompatibleDetectors = {
         "Velo"       : [ "Velo", "VL", "VP" ],
@@ -154,15 +149,6 @@ class Gauss(LHCbConfigurableUser):
         "Muon"       : [ "Muon", "MuonNoM1" ],
         "MuonTorch"  : [ "Muon", "Torch" ]
         }
-
-    #_incompatibleDetectors = {
-    #    "Velo"     : [ [ "Velo", "PuVeto" ] , "VL", "VP" ],
-    #    "Rich"     : [ [ "Rich1", "Rich2" ], [ "Rich1Pmt", "Rich2Pmt" ] ],
-    #    "TT"       : [ "TT", "UT" ],
-    #    "Tracking" : [ [ "IT", "OT" ], [ "FT" ] ],
-    #    "Calo"     : [ "Spd", "Prs", "Ecal", "Hcal" ],
-    #    "Muon"     : [ "Moun", ["MuonNoM1", "Torch"] ]
-    #    }
 
     _beamPipeElements = {
         #"upstreamregion" : [
@@ -264,31 +250,6 @@ class Gauss(LHCbConfigurableUser):
                 print "WARNING:: Value of 'LHCbApp().Detectors' already set, using that value: %s" %(LHCbApp().Detectors)
         return
 
-
-
-##########################################################################
-##########################################################################
-# Set Geo, Sim, Moni from DataType
-##########################################################################
-##########################################################################
-
-    def detectorModifications ( self ):
-        #should do this with sets.
-        #if (setA union setB) == setA:
-        [det for det in self.getProp("DetectorGeo")["Detectors"] if det in self._defaultDetectors["Detectors"] ]
-        
-        return False
-
-    def setDetectorsFromDataType( self ):
-        
-
-        if self.getProp("DataType") in ["EXAMPLE_UPGRADE_DATATYPE"]:
-            self.__slots__["DetectorGeo"]  = {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-            self.__slots__["DetectorSim"]  = {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-            self.__slots__["DetectorMoni"] = {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-
-
-
 #"""
 ##########################################################################
 ##########################################################################
@@ -308,17 +269,11 @@ class Gauss(LHCbConfigurableUser):
 # ><<<< ><<    ><<<<      ><< ><<< ><<<  ><  ><< ><<      ><< ><<        ><<<<   
 #                                                ><<          ><<                
 
-    def setBeamPipeSwitch ( self, bpString ):
+    def validateBeamPipeSwitch ( self, bpString ):
         import string
-        bpLower = bpString.lower()
+        bpLower = self.getProp("BeamPipe").lower()
         if bpLower not in self._beamPipeStates:
             raise RuntimeError("ERROR: BeamPipe configuration '%s' not recognised!" %bpString)
-        else:
-            # default is "beampipeon" === 1
-            if bpLower in ["beampipeoff"]:
-                self._beamPipeSwitch = 0
-            elif bpLower in ["beampipeindet"]:
-                self._beamPipeSwitch = -1
 
     def removeBeamPipeElements( self, det ):
         det = det.lower()
@@ -372,55 +327,6 @@ class Gauss(LHCbConfigurableUser):
             else:
                 for element in self._beamPipeElements["ut"]:
                     geo.StreamItems.append(element)
-
-
-        # Upstream
-        #geo.StreamItems.append("/dd/Structure/LHCb/UpstreamRegion/PipeUpstream")
-        #geo.StreamItems.append("/dd/Structure/LHCb/UpstreamRegion/MBXWHUp") # not clear what this is
-
-        # Before Magnet
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/PipeJunctionBeforeVelo")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeBeforeVelo")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/PipeSupportBeforeVelo")
-
-        # Velo
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamWakeFieldCone")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamWakeFieldCone")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownstreamPipeSections")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VacTank")
-
-        # Rich 1
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1BeforeSubM")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1SubMaster")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PipeInRich1AfterSubM")
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1BeamPipe")
-
-        # TT
-        #geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/TT/PipeInTT")
-        
-        # Magnet
-        #geo.StreamItems.append("/dd/Structure/LHCb/MagnetRegion/PipeInMagnet")
-        #geo.StreamItems.append("/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet")
-
-        # After Magnet Region
-        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/PipeAfterT")
-        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/PipeSupportsAfterMagnet")
-
-        # T
-        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/T/PipeInT")
-
-        # Rich 2
-        #geo.StreamItems.append("/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2BeamPipe")
-
-        # Downstream Region
-        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/PipeDownstream")
-        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream")
-        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream")
-
-        # After Muon
-        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/AfterMuon/PipeAfterMuon")
-        #geo.StreamItems.append("/dd/Structure/LHCb/DownstreamRegion/AfterMuon/MBXWSDown")
-
 
 #"""
 #><<         ><<             ><<               ><<<<<     ><<<<<     ><<<<<     ><< ><<   
@@ -1810,7 +1716,7 @@ class Gauss(LHCbConfigurableUser):
     def setBeamParameters( self, CrossingSlots, genInit):
 
         from Configurables import ( MinimumBias , FixedNInteractions , HijingProduction )
-        from Configurables import ( BcVegPyProduction , Special , BcVegPyProduction )
+        from Configurables import ( BcVegPyProduction , Special , Pythia8Production , LbLHAup )
         from Configurables import ( Generation )
 
         #
@@ -1857,6 +1763,10 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.addTool(Special,name="Special")
         gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
         gen_t0.Special.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
+        gen_t0.Special.addTool( Pythia8Production , "Pythia8Production" ) 
+        gen_t0.Special.Pythia8Production.addTool( LbLHAup , "LbLHAup" )
+        gen_t0.Special.Pythia8Production.LbLHAup.addTool( BcVegPyProduction , "BcVegPyProduction" ) 
+        gen_t0.Special.Pythia8Production.LbLHAup.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
 
         # or with Hijing
         txtP = "hijinginit efrm "+str(pInGeV)
@@ -2255,8 +2165,8 @@ class Gauss(LHCbConfigurableUser):
         self.defineGeoBasePieces( basePieces )
 
         # Define beampipe 
-        self.setBeamPipeSwitch ( self.getProp("BeamPipe") )
-        if (1 == self._beamPipeSwitch):
+        self.validateBeamPipeSwitch ( self.getProp("BeamPipe") )
+        if ("BeamPipeOn" == self.getProp("BeamPipe")):
             # BeamPipe on - add BP elements
             self.defineBeamPipeGeo ( geo, basePieces, detPieces )
 
@@ -2314,7 +2224,7 @@ class Gauss(LHCbConfigurableUser):
                 print "%s" %(item)
 
         # No BP requested - therefore remove all elements from Geo.StreamItems
-        if (0 == self._beamPipeSwitch):
+        if ("BeamPipeOff" == self.getProp("BeamPipe")):
             self.removeAllBeamPipeElements()
 
 
@@ -3034,6 +2944,11 @@ class Gauss(LHCbConfigurableUser):
         elif(hadronPhys == "QGSP_BERT_CHIPS"):
             addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
             addConstructor("HadronPhysicsQGSP_BERT_CHIPS", "QGSP_BERT_CHIPSPhysics")
+            addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
+            addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")            
+        elif(hadronPhys == "QGSP_FTFP_BERT"):
+            addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
+            addConstructor("HadronPhysicsQGSP_FTFP_BERT", "QGSP_FTFP_BERTPhysics")
             addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
             addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")            
         elif(hadronPhys == "FTFP_BERT"):
