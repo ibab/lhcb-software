@@ -25,6 +25,10 @@
 // ============================================================================
 #include "Kernel/ILHCbMagnetSvc.h"
 // ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/LHCbMath.h"
+// ============================================================================
 // TrackEvent 
 // ============================================================================
 #include "Event/Track.h"
@@ -107,7 +111,7 @@
  *  OPTION is actiavted in case 
  *  - all three input histos are specified - it overrides CONDB access 
  *
- * How to sepcify the histograms as options? 
+ * How to specify the histograms as options? 
  *  
  *  @code 
  * 
@@ -137,6 +141,31 @@
  *  The dedicated script calib.py is provided for :
  *   - conversion of run off-set table into offset-histo
  *   - converison of histos into CONDB format
+ *
+ *  Other cross-checks: Track slope test:
+ *  
+ *   - "ScaleSlope" 
+ *   - "DeltaSlope" 
+ *
+ *  @code 
+ * 
+ *  from Configurables import TrackScaleState as SCALER
+ *
+ *  ## conservative setting:
+ *  scaler = SCALER(
+ *       'Scaler' , 
+ *       ScaleSlope = 1 - 1.0e-3 ,
+ *       DeltaSlope =     0.9e-3 ,
+ *       )
+ *  
+ *  ## settings in accordance to Delta m_s paper:
+ *  scaler = SCALER(
+ *       'Scaler' , 
+ *       ScaleSlope = 1 -  2.0e-4 ,
+ *       DeltaSlope =      2.0e-4 
+ *       )
+ *     
+ *  @endcode 
  */
 class TrackScaleState : public extends1<GaudiAlgorithm,IIncidentListener>
 {
@@ -250,6 +279,13 @@ private: // properties
   double      m_deltaScale  ;          // deltaScale                 (property) 
   /// input location for tracks  (property) 
   std::string m_input       ;       // input location for tracks     (property) 
+  // ==========================================================================
+private:
+  // ==========================================================================
+  /// scale factor for slopes (==z-scale) 
+  double m_slope       ;  // scale factor for slopes (==z-scale)
+  /// compensation term for slope scale 
+  double m_delta_slope ;  // compensation term for slope scale 
   // ==========================================================================
 private: // data 
   // ==========================================================================  
@@ -370,12 +406,16 @@ TrackScaleState::TrackScaleState
   , m_offsets_str   ()  // run-dependent offsets for the scaling 
   , m_delta         ( 2.4e-4 ) 
   , m_deltaScale    ( 0      )
-  , m_input         ( LHCb::TrackLocation::Default ) 
-//
+  , m_input         ( LHCb::TrackLocation::Default )
+  // scale factor for slopes (==z-scale) 
+  , m_slope         ( 1.0 )  // scale factor for slopes (==z-scale)
+  // compensation term for slope scale 
+  , m_delta_slope   ( 0.0 )  //  compensation term for slope scale 
+  //
   , m_h1            () 
   , m_h2            () 
   , m_offsets       ()
-//
+  //
   , m_condition     ( 0      )  
   , m_run_offset    ( 0      ) // the run-offset for the current run 
   , m_down          ( true   ) // field polarity for the current run 
@@ -420,6 +460,16 @@ TrackScaleState::TrackScaleState
     ( "Input"         , 
       m_input         ,
       "Input location for Tracks" ) ;
+  //
+  declareProperty 
+    ( "ScaleSlope"    , 
+      m_slope         ,
+      "Scaling factor for track slopes" ) ;
+  //
+  declareProperty 
+    ( "DeltaSlope"    , 
+      m_delta_slope   ,
+      "Compensation factor for track slopes scaling" ) ;
   //
 }
 // ============================================================================
@@ -486,6 +536,15 @@ StatusCode TrackScaleState::initialize()
   incsvc -> addListener ( this , IncidentType::RunChange ) ;
   incsvc -> addListener ( this , IncidentType::BeginRun  ) ;
   //
+  //
+  if ( !LHCb::Math::equal_to_double ( m_slope       , 1.0 ) || 
+       !LHCb::Math::equal_to_double ( m_delta_slope , 0.0 ) ) 
+  {
+    Warning ( "Track slope scaling is  activated" ) ;
+    warning () << " SlopeScale " << m_slope 
+               << " DeltaSlope " << m_delta_slope << endreq ;
+  }
+  //
   return sc ;
 }
 // ============================================================================
@@ -493,6 +552,14 @@ StatusCode TrackScaleState::initialize()
 // ============================================================================ 
 StatusCode TrackScaleState::finalize () 
 {
+  //
+  if ( !LHCb::Math::equal_to_double ( m_slope       , 1.0 ) || 
+       !LHCb::Math::equal_to_double ( m_delta_slope , 0.0 ) ) 
+  {
+    Warning ( "Track slope scaling was used"      ) ;
+    warning () << " SlopeScale " << m_slope 
+               << " DeltaSlope " << m_delta_slope << endreq ;
+  }
   //
   m_magfieldsvc = 0 ;
   m_scaler.reset()  ;
@@ -655,12 +722,16 @@ StatusCode TrackScaleState::execute ()
       // 
       // calculate  the scale factor :
       const double theScale = m_scaler -> eval (tx , ty , idp , m_run_offset ) 
-        + m_deltaScale;
+        + m_deltaScale + m_delta_slope ;
       //
       scale += theScale ;
       //
       // the actual scaling: 
-      state ->setQOverP ( qOverP / theScale ) ;          // THE ACTUAL SCALING 
+      state -> setQOverP ( qOverP / theScale ) ;          // THE ACTUAL SCALING 
+      //
+      // scale slopes:                                    // ATTENTION!
+      state -> setTx ( tx * m_slope ) ;
+      state -> setTy ( ty * m_slope ) ;      
       //
     } //                                           end of loop over the states   
   } //                                             end loop over the tarcks 

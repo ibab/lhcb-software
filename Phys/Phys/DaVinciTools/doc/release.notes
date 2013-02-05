@@ -3,6 +3,14 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-02-05 - Vanya Belyaev
+  
+  - TrackScaleState algorithm: 
+
+       add functionality to study z-scale systematic 
+      (thanks to Matt and Wouter)
+
+
 ! 2013-01-25 - Vanya Belyaev
 
  - TrackScaleState algorithm: 
