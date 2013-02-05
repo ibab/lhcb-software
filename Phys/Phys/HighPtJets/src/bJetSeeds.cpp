@@ -86,6 +86,8 @@ StatusCode bJetSeeds::execute()
   if(m_inputPVs->size() > m_nrPVs) return StatusCode::SUCCESS;
   // Particles
   const Particle::ConstVector& inputParts = this->i_particles();
+  // Protection againts HUGE events (too high memory usage)
+  if(inputParts.size() > 160) return StatusCode::SUCCESS;
   // Create seeds --------------------
   std::vector<Vertex> seed3Vec = build3PartSV(inputParts);
   if(seed3Vec.size() >= m_nrSeeds) setFilterPassed(true);

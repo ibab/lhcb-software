@@ -5,6 +5,9 @@
 
 !========================= HighPtJets v1r7p2 2012-11-30 =========================
 
+! 2013-02-05 - Marcin Kucharczyk
+ - Add protection against huge memory usage events in bJetSeeds algo
+
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
