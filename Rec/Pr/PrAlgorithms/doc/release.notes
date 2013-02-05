@@ -4,6 +4,10 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-02-05 - Sascha Stahl
+ - Added PrDownstream and PrAddUTCoord to PrAlgorithms.
+
+
 ! 2012-11-21 - Olivier Callot
  - Better parameterisation of momentum and pprojections
  - New parameterisation of the zone to look at in the T stations for a given Pt.

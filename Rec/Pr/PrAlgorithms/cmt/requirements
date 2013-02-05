@@ -17,6 +17,8 @@ use   PrKernel       v*    Pr
 use   RecEvent       v*    Event
 use   DAQEvent       v*    Event
 use   FTDet          v*    Det
+use   TrackInterfaces v*   Tr
+
 include_path      none
 #============================================================================
 # Component library building rule
