@@ -3,6 +3,9 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2013-02-05 - Marco Cattaneo
+ - Fix gcc -pedantic warning and UNINIT_CTOR defect in previous commit
+
 ! 2013-01-22 - Julien Cogan
  - L0MuonModifyInputTool : new tool to allow removal of some hits used in the 
    L0Muon emulation for special studies (interface is IL0MuonModifyInputTool

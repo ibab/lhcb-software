@@ -37,6 +37,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   , m_l0CondCtrl( 0 )
   , m_l0CondProc( 0 )
   , m_lut(NULL)
+  , m_modifyInputTool(NULL)
 {
 
   declareProperty( "EnableTAE" , m_enableTAE = false  );
