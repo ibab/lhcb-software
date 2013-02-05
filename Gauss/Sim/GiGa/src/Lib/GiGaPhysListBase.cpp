@@ -171,7 +171,7 @@ G4VUserPhysicsList* GiGaPhysListBase::physicsList ()  const
 unsigned long GiGaPhysListBase::release()
 {
   unsigned long count = addRef() ;
-  if ( count > 2 )
+  if ( count >= 2 )
   {
     AlgTool::release() ;
     return AlgTool::release() ;

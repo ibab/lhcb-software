@@ -141,7 +141,7 @@ StatusCode GiGaSensDetBase::finalize()
 unsigned long GiGaSensDetBase::release()
 {
   unsigned long count = addRef() ;
-  if ( count > 2 )
+  if ( count >= 2 )
   {
     AlgTool::release() ;
     return AlgTool::release() ;
