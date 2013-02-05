@@ -3,6 +3,10 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2013-02-05 - Julien Cogan
+ - L0MuonOutputs : fix bug discovered by Coverity (was affecting debug print 
+   out only)  
+
 ! 2013-02-05 - Marco Cattaneo
  - Fix gcc -pedantic warning and UNINIT_CTOR defect in previous commit
 
