@@ -211,7 +211,7 @@ StatusCode PatForward::execute() {
 	  for( mitId1=(*mitT1)->lhcbIDs().begin(); 
 	       (*mitT1)->lhcbIDs().end() != mitId1; ++mitId1){
 	    if ( (*mitId1).isVelo() ) continue;
-	    if ( (*mitId1).isTT() || (*mitId1).isUT() ) {
+	    if ( (*mitId1).isTT() ) {
 	      ++nbTT1;
 	    } else {
 	      ++nb1;
@@ -220,7 +220,7 @@ StatusCode PatForward::execute() {
 	  for( mitId0 = (*mitT)->lhcbIDs().begin(); 
 	       (*mitT)->lhcbIDs().end() != mitId0; ++mitId0 ) {
 	    if ( (*mitId0).isVelo() ) continue;
-	    if ( (*mitId0).isTT() || (*mitId0).isUT() ) {
+	    if ( (*mitId0).isTT() ) {
 	      ++nbTT0;
 	      continue;
 	    }
@@ -269,7 +269,7 @@ StatusCode PatForward::execute() {
         int nb1      = 0;
         for ( itId1 = (*itT1)->lhcbIDs().begin(); (*itT1)->lhcbIDs().end() != itId1; ++itId1 ) {
           if ( (*itId1).isVelo() ) continue;
-          if ( (*itId1).isTT() || (*itId1).isUT() ) {
+          if ( (*itId1).isTT() ) {
             ++nbTT1;
           } else {
             ++nb1;
@@ -278,7 +278,7 @@ StatusCode PatForward::execute() {
 
         for ( itId0 = (*itT)->lhcbIDs().begin(); (*itT)->lhcbIDs().end() != itId0; ++itId0 ) {
           if ( (*itId0).isVelo() ) continue;
-          if ( (*itId0).isTT() || (*itId0).isUT() ) {
+          if ( (*itId0).isTT() ) {
             ++nbTT0;
             continue;
           }

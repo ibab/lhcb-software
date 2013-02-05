@@ -9,7 +9,6 @@
 #include "TrackInterfaces/IPatForwardTool.h"
 #include "Event/STCluster.h"
 #include "TrackInterfaces/IAddTTClusterTool.h"
-#include "TrackInterfaces/IAddUTClusterTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
 
 #include "STDet/DeSTDetector.h"
@@ -97,10 +96,8 @@ private:
   Tf::TStationHitManager <PatForwardHit> *   m_tHitManager;    ///< Tool to provide hits
   IAddTTClusterTool*                          m_addTTClusterTool;
   std::string                                 m_addTtToolName;
-  IAddUTClusterTool*                          m_addUTClusterTool;
   std::string                                 m_addUtToolName;
 
-  bool m_useUT;
 
   //== Parameters of the algorithm
   bool   m_secondLoop;

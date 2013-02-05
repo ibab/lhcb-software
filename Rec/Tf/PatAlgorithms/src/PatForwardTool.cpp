@@ -78,8 +78,6 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty("StateErrorP",   m_stateErrorP   =  0.15);
 
   declareProperty("AddTTClusterName", m_addTtToolName = "" );
-  declareProperty("AddUTClusterName", m_addUtToolName = "" );
-  declareProperty("UseUT",            m_useUT = false );
 
   declareProperty( "WithoutBField"         , m_withoutBField         = false);
 
@@ -102,16 +100,10 @@ StatusCode PatForwardTool::initialize ( ) {
   m_tHitManager  = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
   m_fwdTool      = tool<PatFwdTool>( "PatFwdTool", this);
 
-  if ( "" != m_addTtToolName && (! m_useUT) ) {
+  if ( "" != m_addTtToolName  ) {
     m_addTTClusterTool = tool<IAddTTClusterTool>( m_addTtToolName, this );
   } else {
     m_addTTClusterTool = NULL;
-  }
-
-  if ( "" != m_addUtToolName && m_useUT ) {
-    m_addUTClusterTool = tool<IAddUTClusterTool>( m_addUtToolName, this );
-  } else {
-    m_addUTClusterTool = NULL;
   }
 
   return StatusCode::SUCCESS;
@@ -510,12 +502,6 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       if (sc.isFailure())
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug()<<" Failure in adding TT clusters to track"<<endmsg;
-    }
-    if ( NULL != m_addUTClusterTool ) {
-      StatusCode sc = m_addUTClusterTool->addUTClusters( *fwTra );
-      if (sc.isFailure())
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-          debug()<<" Failure in adding UT clusters to track"<<endmsg;
     }
   }
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Finished track" << endmsg;
