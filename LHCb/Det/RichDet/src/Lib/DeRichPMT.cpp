@@ -150,8 +150,24 @@ StatusCode DeRichPMT::getPMTParameters()
   m_PmtQwZSize = deRich->param<double>  ("RichPmtQuartzZSize"  );
   m_QwToAnodeZDist= deRich->param<double> ( "RichPmtQWToSiMaxDist" );
 
-  m_PmtLensMagnificationRatio=deRich->param<double> ("RichPmtLensMagnficationFactor"  );
-  m_PmtLensRoc =deRich->param<double> ("RichPmtLensRadiusofCurvature" );
+  if(exists("RichPmtLensMagnficationFactor")) {
+       m_PmtLensMagnificationRatio=deRich->param<double> ("RichPmtLensMagnficationFactor"  );
+  }else {
+       m_PmtLensMagnificationRatio=1.0;
+       
+  }
+  
+     
+
+  if(exists("RichPmtLensRadiusofCurvature") ) {
+    
+    m_PmtLensRoc =deRich->param<double> ("RichPmtLensRadiusofCurvature" );
+  }else {
+    m_PmtLensRoc =100000.0;
+    
+  }
+  
+  
   
   
 
