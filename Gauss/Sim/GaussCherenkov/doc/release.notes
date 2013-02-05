@@ -4,6 +4,7 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
 
+!======================= GaussCherenkov v3r0p1 2013-02-05 ====================
 ! 2013-01-15 - Patrick Robbe
  - Fix nightly compilation warnings about unused variables
 
