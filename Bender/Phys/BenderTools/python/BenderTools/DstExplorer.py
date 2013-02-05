@@ -188,21 +188,29 @@ def configure ( options , arguments ) :
     from BenderTools.Parser import hasInFile 
     if   hasInFile ( files , 'CHARM.MDST'    ) and not options.RootInTES :
         options.RootInTES = '/Event/Charm'
-        logger.info ('RootInTES is set according to CHARM.MDST')
-        DaVinci.InputType = 'MDST'        
+        logger.info ('RootInTES is set according to CHARM.MDST'    )
+        daVinci.InputType = 'MDST'        
     elif hasInFile ( files , 'LEPTONIC.MDST' ) and not options.RootInTES :
         options.RootInTES = '/Event/Leptonic'
-        logger.info ('RootInTES is set according to LEPTONIC.MDST')
-        DaVinci.InputType = 'MDST'
+        logger.info ('RootInTES is set according to LEPTONIC.MDST' )
+        daVinci.InputType = 'MDST'
     elif hasInFile ( files , 'BHADRON.MDST'  ) and not options.RootInTES :
         options.RootInTES = '/Event/Bhadron'
-        logger.info ('RootInTES is set according to BHADRON.MDST')
-        DaVinci.InputType = 'MDST'
-    elif hasInFile ( files , 'PID.MDST'  ) and not options.RootInTES :
+        logger.info ('RootInTES is set according to BHADRON.MDST'  )
+        daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'PID.MDST'      ) and not options.RootInTES :
         options.RootInTES = '/Event/PID'
-        logger.info ('RootInTES is set according to PID.MDST')
-        DaVinci.InputType = 'MDST'
-
+        logger.info ('RootInTES is set according to PID.MDST'      )
+        daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'PSIX.MDST'     ) and not options.RootInTES :
+        options.RootInTES = '/Event/PSIX'
+        logger.info ('RootInTES is set according to PSIX.MDST'     )
+        daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'PSIX0.MDST'    ) and not options.RootInTES :
+        options.RootInTES = '/Event/PSIX0'
+        logger.info ('RootInTES is set according to PSIX0.MDST'    )
+        daVinci.InputType = 'MDST'
+        
     if options.RootInTES and  0  != options.RootInTES.find ( '/Event' ) :
         options.RootInTES = '/Event/' + options.RootInTES
         
