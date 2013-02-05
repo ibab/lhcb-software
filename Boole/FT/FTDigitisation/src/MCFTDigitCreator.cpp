@@ -29,7 +29,7 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
 {
   declareProperty("InputLocation" ,       m_inputLocation        = LHCb::MCFTDepositLocation::Default );
   declareProperty("OutputLocation" ,      m_outputLocation       = LHCb::MCFTDigitLocation::Default   );
-  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 86.  );  // 0.21 MeV per MIP, 18 photoelectrons per MIP
+  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 120. );  // 0.21 MeV per MIP, 25 photoelectrons per MIP
   declareProperty("SiPMGain",             m_sipmGain             = 2.0  );
   declareProperty("SiPMGainVariation",    m_sipmGainVariation    = 0.05 );  // relative fluctuation of the gain
   declareProperty("ADCNoise",             m_adcNoise             = 0.5  );

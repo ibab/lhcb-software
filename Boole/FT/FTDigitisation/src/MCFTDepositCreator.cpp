@@ -81,6 +81,7 @@ StatusCode MCFTDepositCreator::initialize() {
 
   /// Retrieve and initialize DeFT (no test: exception in case of failure)
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
+
   m_nHits = 0;
   m_sumEnergy = 0.;
   
@@ -250,7 +251,8 @@ StatusCode MCFTDepositCreator::execute() {
             debug()  << "FTChannel=" << vecIter->first << " EnergyHitFraction="<< EnergyInSiPM << endmsg;
           }
         
-           plot(vecIter->second,"EnergyDepositedInCell","EnergyDepositedInCell; Energy Deposited in Cell ; Nber of Channels" ,0. ,10);
+          plot(vecIter->second,"EnergyDepositedInCell","EnergyDepositedInCell; Energy Deposited in Cell ; Nber of Channels" ,
+               0. ,10);
           plot(EnergyInSiPM,"EnergyRecordedInCell","EnergyRecordedInCell; EnergyReachingSiPM ; Nber of Channels" ,0. ,10);
           // if reference to the channelID already exists, just add DepositedEnergy
           if( depositCont->object(vecIter->first) != 0 ){

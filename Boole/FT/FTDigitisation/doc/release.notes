@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-02-05 - Olivier Callot
+ - Set the gain to 25 photoelectrons near SIPM, i.e. before attenuation.
+
 ! 2013-01-28 - Olivier Callot
  - Add a fluctuation to the gain, to avoid a comb structure in the ADC values.
 
