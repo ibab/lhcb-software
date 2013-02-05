@@ -1,8 +1,12 @@
-RI!-----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 ! Package     : Sim/GaussRICH
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+
+! 2013-02-05 - Patrick Robbe 
+ - Make a linker library for objects used outside GaussRICH like in 
+   GaussCherenkov
 
 !========================= GaussRICH v13r0 2012-11-27 ========================
 ! 2012-11-09 - Sajan Easo

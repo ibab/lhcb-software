@@ -23,13 +23,14 @@ use  LinkerEvent  v*   Event
 
 # Component library building rule
 #============================================================================
+library          GaussRICHLib ../src/Misc/*.cpp \
+                              ../src/srcG4/*.cc
+
 library          GaussRICH    ../src/*.cpp             \
                               ../src/SensDet/*.cpp     \ 
                               ../src/PhysProcess/*.cpp \
-                              ../src/srcG4/*.cc       \
                               ../src/RichAction/*.cpp \
                               ../src/RichAnalysis/*.cpp \
-                              ../src/Misc/*.cpp \
                               ../src/Assoc/*.cpp
 
 # Includes used not only internally but exported for GaussCherenkov use
@@ -39,6 +40,7 @@ apply_pattern install_more_includes more=GaussRICH
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=GaussRICH
+apply_pattern    linker_library    library=GaussRICHLib
 
 # define options directory
 #============================================================================
@@ -57,7 +59,3 @@ include_dirs     $(GAUSSRICHROOT) \
                  $(GAUSSRICHROOT)/src/Misc \
                  $(GAUSSRICHROOT)/src/RichAnalysis \
                  $(GAUSSRICHROOT)/src/srcG4
-
-
-
-
