@@ -3,10 +3,11 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
--2013-02-05 Sajan Easo
--  Modifications for PMTS with Lenses : safety check for no-lens PMT data
 
-!========================= RichDet v16r15 2013-02-04 =========================
+!========================= RichDet v16r15 2013-02-05 =========================
+! 2013-02-05 Sajan Easo
+ - Modifications for PMTS with Lenses : safety check for no-lens PMT data
+
 ! 2013-01-28 - Sajan Easo
  -  Modifications for PMTS with Lenses in DePmt and DePmtPanel
 
