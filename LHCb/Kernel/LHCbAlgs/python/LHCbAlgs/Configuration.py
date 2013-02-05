@@ -58,6 +58,8 @@ class LHCbApp(LHCbConfigurableUser):
         "ft"       : "FT",
         "vp"       : "VP",
         "vl"       : "VL",
+        "rich"     : "Rich",
+        "richpmt"  : "RichPmt",
         "rich1"    : "Rich1",
         "rich2"    : "Rich2",
         "rich1pmt" : "Rich1Pmt",
@@ -96,7 +98,7 @@ class LHCbApp(LHCbConfigurableUser):
             },
         "BeforeMagnetRegion" : {
             "regions" : ['veloRegion', 'rich1Region', 'ttRegion'],
-            "ignore" : ['rich1', 'rich1pmt']
+            "ignore" : ['rich1', 'rich1pmt', 'rich', 'richpmt']
             },
         "MagnetRegion" : {
             "regions" : ['magnetRegion'],
@@ -104,7 +106,7 @@ class LHCbApp(LHCbConfigurableUser):
             },
         "AfterMagnetRegion" : {
             "regions" : ['itRegion', 'otRegion', 'ftRegion', 'rich2Region'],
-            "ignore" : ['rich2', 'rich2pmt']
+            "ignore" : ['rich2', 'rich2pmt', 'rich', 'richpmt']
             },
         "DownstreamRegion" : {
             "regions" : ['muonRegion'],
