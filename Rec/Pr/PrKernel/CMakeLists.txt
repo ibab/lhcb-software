@@ -4,10 +4,11 @@
 gaudi_subdir(PrKernel v1r1)
 
 gaudi_depends_on_subdirs(Event/RecEvent
+                         Tf/TfKernel     
                          GaudiAlg)
 
 gaudi_add_library(PrKernel
                   src/*.cpp
                   PUBLIC_HEADERS PrKernel
-                  LINK_LIBRARIES RecEvent GaudiAlgLib)
+                  LINK_LIBRARIES RecEvent TfKernel GaudiAlgLib)
 
