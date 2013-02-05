@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-02-05 - Chris Jones
+ - Only save Rich and Muon Digitisation summary objects in XDSTs.
+
 !========================= GaudiConf v17r3 2012-12-20 =========================
 ! 2012-12-17 - Paul Szczypka
  - Add protection around Rich-specific code in DigiConf.py

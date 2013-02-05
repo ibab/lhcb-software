@@ -171,10 +171,10 @@ class DstConf(LHCbConfigurableUser):
                     # Objects propagated from Boole
                     # Digi headers
                     DigiConf().addHeaders(writer)
-                    # Digitisation summaries
-                    DigiConf().addMCDigitSummaries(writer)
 
                     if dType == "XDST":
+                        # Digitisation summaries
+                        DigiConf().addMCDigitSummaries(writer)
                         # Add the MCHits (from Gauss) and links to them (from Boole)
                         SimConf().addSubDetSimInfo(writer)
                         DigiConf().addMCHitLinks(writer)
