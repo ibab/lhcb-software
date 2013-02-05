@@ -4,6 +4,7 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v8r0 2013-02-05 ==========================
 ! 2013-02-05 - Gloria Corti
  - Port changes needed for hijing 1.383bs.2
    . modify requirement to have use of hijing and special linking only here
