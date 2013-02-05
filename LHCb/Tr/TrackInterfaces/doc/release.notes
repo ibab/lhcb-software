@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2013-02-05 - Sascha Stahl
+ - Renamed IPatVeloUTFit.h to IPrVeloUTFit.h.
+
+
 !========================= TrackInterfaces v4r23 2013-02-04 =========================
 ! 2013-02-04 - Mariusz Witek
  - change void to StatusCode for removeTracksAndRecalculatePV (IPVOfflineTool)
