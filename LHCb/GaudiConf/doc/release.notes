@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v17r4 2013-02-05 =========================
 ! 2013-02-05 - Chris Jones
  - Only save Rich and Muon Digitisation summary objects in XDSTs.
 
