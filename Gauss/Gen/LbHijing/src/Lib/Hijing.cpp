@@ -59,17 +59,17 @@ extern "C" {
 // LUHEPC Fortran function
 extern "C" {
 #ifdef WIN32
-  void __stdcall LUHEPC_HIJING( int * ) ;
+  void __stdcall HILUNHEP( int * ) ;
 #else
-  void luhepc_hijing_( int & ) ;
+  void hilunhep_( int & ) ;
 #endif 
 }
 
-void Hijing::LuHepc( int mcconv ) {
+void Hijing::LunHep( int mcconv ) {
 #ifdef WIN32
-  LUHEPC_HIJING( &mcconv) ;
+  HILUNHEP( &mcconv) ;
 #else
-  luhepc_hijing_( mcconv ) ;
+  hilunhep_( mcconv ) ;
 #endif
 }
 
@@ -85,20 +85,3 @@ void Hijing::HijingEvnt( const std::string l_frame, double l_bmin, double l_bmax
 #endif
 }
 
-// LULIST Function
-extern "C" {
-#ifdef WIN32
-  void __stdcall LULIST_HIJING( int * ) ;
-#else
-  void lulist_hijing_( int & ) ;
-#endif
-}
-
-void Hijing::LuList( int mode ) {
-  int l_mode = mode ;
-#ifdef WIN32
-  LULIST_HIJING( &l_mode ) ;
-#else
-  lulist_hijing_(l_mode );  
-#endif
-}

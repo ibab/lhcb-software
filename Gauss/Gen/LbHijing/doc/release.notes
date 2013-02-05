@@ -4,6 +4,17 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2013-02-05 - Gloria Corti
+ - Port changes needed for hijing 1.383bs.2
+   . modify requirement to have use of hijing and special linking only here
+   . LbHijing/Hijing.h, remove definition of function not needed and put the
+     one now necessary
+   . LbHijing/HijingCB.h, adapt to common block variables
+   . src/component/HijingProduction.cpp, use Hijing::LunHep for convertion to
+     HepEvt
+   . src/Lib/Hijing.cpp, use hilunhep in Hijing::LunHep and remove LuList that
+     is not used
+
 !========================= LbHijing v7r0 2012-07-23 ==========================
 ! 2012-05-29 - Patrick Robbe  
  - HijingProduction: use new particle property service

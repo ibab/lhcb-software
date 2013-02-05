@@ -9,7 +9,7 @@
 
 extern struct HIMAIN1 {
   int natt;
-  float eatt;
+  int eatt;
   int jatt;
   int np;
   int nt;
@@ -17,14 +17,12 @@ extern struct HIMAIN1 {
   int n01;
   int n10;
   int n11;
-  float bb ;
 } himain1;
 
 
 extern struct HIMAIN2 {
-  int katt[4][200000];
-  float patt[4][200000];
-  float vatt[4][200000];
+  int katt[4][130000];
+  float patt[4][130000];
 } himain2;
 
 

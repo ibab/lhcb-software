@@ -4,7 +4,7 @@
 # Maintainer : Vincenzo Vagnoni
 #============================================================================
 package       LbHijing
-version       v7r0
+version       v8r0
 
 
 # Structure, i.e. directories to process. 
@@ -19,6 +19,7 @@ include_dirs  $(LBHIJINGROOT)
 ### NOTE: the order of these use is important, for the wrong order
 ###       GaussHijing.exe complains about vanishing process and stops
 use  GENSER      v*  Gen
+use  hijing      v*  LCG_GeneratorsInterfaces
 use  LbPythia    v*  Gen
 
 
@@ -34,13 +35,18 @@ apply_pattern component_library library=LbHijing
 apply_pattern linker_library    library=LbHijingLib 
 apply_pattern library_stamps    library=LbHijingLib 
 
-private
-macro_append fflags "" \
-      target-gcc3   " -fno-second-underscore "
+#private
+#macro_append fflags "" \
+#      target-gcc3   " -fno-second-underscore "
+#
+#end_private
 
-end_private
 
 # do not build on windows
 #============================================================================
 apply_pattern disable_package_on platform=target-winxp
 
+private
+macro_prepend LbHijingLib_shlibflags "$(hijing_home)/lib/hidata.o $(hijing_home)/lib/pyhidata.o $(hijing_home)/lib/ludata.o "
+
+end_private
