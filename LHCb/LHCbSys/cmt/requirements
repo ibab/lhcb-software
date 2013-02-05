@@ -75,7 +75,7 @@ use IOExample             v4r8    Ex      # Marco Cattaneo
 # Packages without Hat, cannot have comment field.
 
 # Maintainer M.Cattaneo
-use GaudiConf             v17r3
+use GaudiConf             v17r4
 
 # Maintainer ??
 use GaudiConfUtils        v1r1

@@ -14,7 +14,7 @@ This version uses Gaudi v23r6 and LCG_64c
     Det/FTDet v1r3, Det/RichDet v16r15, Det/VLDet v1r4, Event/EventPacker v2r21,
     Event/FTEvent v1r2, Event/LinkerEvent v3r10, Event/LumiEvent v3r4,
     Event/MCEvent v2r25, Event/RecreatePIDTools v1r7, Event/TrackEvent v5r21,
-    GaudiConf v17r3, Kernel/FSRAlgs v1r2, Kernel/LHCbAlgs v2r54,
+    GaudiConf v17r4, Kernel/FSRAlgs v1r2, Kernel/LHCbAlgs v2r54,
     Kernel/LHCbKernel v13r15, Kernel/LHCbMath v3r37, Kernel/PartProp v1r15,
     L0/L0Interfaces v2r3, Muon/MuonDAQ v4r17, Phys/LoKiCore v11r11,
     Rich/RichKernel v7r52, Rich/RichRecBase v4r16, Sim/SimComponents v2r24,
@@ -61,7 +61,8 @@ This version uses Gaudi v23r6 and LCG_64c
   . Added measurement types for VL (R, Phi, LiteR, LitePhi), FT, UT
   . Added track type for UT
 
-- In GaudiConf v17r3
+- In GaudiConf v17r2, v17r3, v17r4
+  . Only save Rich and Muon Digitisation summary objects in XDSTs.
   . Add protection around Rich-specific code in DigiConf.py
   . Fix OptItemList for /Event/Gen/HepMCEvents and ItemList for
     /Event/Gen/BeamParameters, in both cases there was a missing #1.
