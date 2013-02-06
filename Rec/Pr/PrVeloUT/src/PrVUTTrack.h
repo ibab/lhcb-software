@@ -71,7 +71,10 @@
     PrVUTTrack( LHCb::Track* tr ) {
       m_track  = tr;
       m_fittrack  = 0;
-      const LHCb::State & trState = *(tr->stateAt(LHCb::State::EndVelo));
+      const LHCb::State& trState = tr->hasStateAt(LHCb::State::EndVelo) ?
+        *(tr->stateAt(LHCb::State::EndVelo)) :
+        (tr->closestState(LHCb::State::EndVelo)) ;
+
       m_origin = trState.position( );
       m_slope  = trState.slopes();
       m_list.reserve(100);

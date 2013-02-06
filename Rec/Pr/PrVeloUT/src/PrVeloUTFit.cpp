@@ -62,8 +62,11 @@ StatusCode PrVeloUTFit::finalize()
 StatusCode PrVeloUTFit::fitVUT( LHCb::Track& track ) const
 {
   LHCb::Track* veloTr = &track;
-  double slY = veloTr->stateAt(LHCb::State::EndVelo)->ty();
-  double slX = veloTr->stateAt(LHCb::State::EndVelo)->tx();
+  const LHCb::State& trState = veloTr->hasStateAt(LHCb::State::EndVelo) ?
+    *(veloTr->stateAt(LHCb::State::EndVelo)) :
+    (veloTr->closestState(LHCb::State::EndVelo)) ;
+  double slY = trState.ty();
+  double slX = trState.tx();
 
   // The candidate based on the Velo track
   PrVUTTrack cand( veloTr );

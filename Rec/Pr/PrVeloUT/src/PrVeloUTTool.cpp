@@ -413,7 +413,10 @@ void PrVeloUTTool::simpleFit(PrVUTTrack& vtttr) {
   LHCb::Track* velotr = vtttr.track();
 
   // Get End Velo state
-  const LHCb::State& pStateVelo = *(velotr->stateAt(LHCb::State::EndVelo));
+  const LHCb::State& pStateVelo = velotr->hasStateAt(LHCb::State::EndVelo) ?
+    *(velotr->stateAt(LHCb::State::EndVelo)) :
+    (velotr->closestState(LHCb::State::EndVelo)) ;
+
   // Velo track parameters
   double xVelo      = pStateVelo.x();
   double yVelo      = pStateVelo.y();
@@ -729,7 +732,11 @@ void PrVeloUTTool::prepareOutputTracks( std::vector<PrVUTTrack>& vttTracks,
     }
 
     LHCb::Track* veloTr = cand.track();
-    const LHCb::State& state = *(veloTr->stateAt(LHCb::State::EndVelo));
+    const LHCb::State& state = veloTr->hasStateAt(LHCb::State::EndVelo) ?
+      *(veloTr->stateAt(LHCb::State::EndVelo)) :
+      (veloTr->closestState(LHCb::State::EndVelo)) ;
+
+
     double tx = state.tx();
     double ty = state.ty();
     double dist = cand.Dx();
