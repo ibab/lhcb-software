@@ -154,7 +154,10 @@ void PrVeloUTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PrVUTTrack
 
   if( m_debug ) debug() << "Input Velo track address: " << veloTr << endmsg;
 
-  const LHCb::State& state = *(veloTr->stateAt(LHCb::State::EndVelo));
+  const LHCb::State& state = veloTr->hasStateAt(LHCb::State::EndVelo) ?
+    *(veloTr->stateAt(LHCb::State::EndVelo)) :
+    (veloTr->closestState(LHCb::State::EndVelo)) ;
+  
 
   double slX = state.tx();
   double slY = state.ty();

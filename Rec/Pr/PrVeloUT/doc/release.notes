@@ -4,6 +4,10 @@
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
 
+! 2013-02-06 - Sascha Stahl
+ - Added protection when Velo track has no state at end of Velo.
+
+
 ! 2013-02-05 - Sascha Stahl
  - Creation of package
  - Moved UT related code from PatVeloTT to PrVeloUT
