@@ -617,7 +617,7 @@ LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::UTLite>::measu
     if ( !UTLite::checkType(id) ) {
       error() << "Not correct measurement" << endmsg ;
     } else {
-      TTLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( TTLite::channelId(id) );     
+      UTLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( UTLite::channelId(id) );     
       if (clus != clusters()->end()){
         const double z = nominalZ(id) ;      
         LHCb::StateVector refvector = reftraj.stateVector(z) ;
