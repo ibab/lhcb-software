@@ -14,7 +14,7 @@
 #include "TrackInterfaces/IPatSeedingTool.h"
 #include "TrackInterfaces/IPatSeedFit.h"
 #include "TrackInterfaces/IPatVeloTTFit.h"
-#include "TrackInterfaces/IPatVeloUTFit.h"
+#include "TrackInterfaces/IPrVeloUTFit.h"
 #include "TrackInterfaces/IPromoteClusters.h"
 #include "TrackInterfaces/IPtTransporter.h"
 #include "TrackInterfaces/IPVOfflineTool.h"

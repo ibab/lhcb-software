@@ -11,7 +11,7 @@
   <class name    = "IPatSeedFit"             />
   <class name    = "IPatSeedingTool"         />
   <class name    = "IPatVeloTTFit"           />
-  <class name    = "IPatVeloUTFit"           />
+  <class name    = "IPrVeloUTFit"            />
   <class name    = "IPromoteClusters"        />
   <class name    = "IPtTransporter"          />
   <class name    = "IPVOfflineTool"          />
