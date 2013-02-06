@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-02-06 - Paul Szczypka
+ - Added method to Configuration.py which returns list of Upgrade detectors.
+
 ! 2013-02-05 - Paul Szczypka
  - Added missing pairs to dictionary.
 

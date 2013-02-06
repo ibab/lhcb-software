@@ -49,8 +49,26 @@ class LHCbApp(LHCbConfigurableUser):
     
     __used_configurables__ = [ DDDBConf, XMLSummary ]
 
+    __nominalDetectors = [
+        'velo',
+        'puveto',
+        'rich1',
+        'rich2',
+        'rich',
+        'tt',
+        'it',
+        'ot',
+        'spd',
+        'prs',
+        'ecal',
+        'hcal',
+        'muon',
+        'magnet'
+        ]
+
     __dtMapping = {
         "velo"     : "Velo",
+        "puveto"     : "PuVeto",
         "muon"     : "Muon",
         "muonnom1" : "MuonNoM1",
         "tt"       : "TT",
@@ -64,7 +82,8 @@ class LHCbApp(LHCbConfigurableUser):
         "rich2"    : "Rich2",
         "rich1pmt" : "Rich1Pmt",
         "rich2pmt" : "Rich2Pmt",
-        "rich1horiz" : "Rich1Horiz"
+        "rich1horiz" : "Rich1Horiz",
+        "magnet"   : "Magnet"
         }
 
 
@@ -141,6 +160,18 @@ class LHCbApp(LHCbConfigurableUser):
             for det in self.getProp("Detectors"):
                 detList.append( det.lower() )
         return detList
+
+    def upgradeDetectors(self):
+        upgradeDetectorList = []
+        if self.isPropertySet("Detectors"):
+            tmpUpgradeDetectorList = [det for det in self.createDetList() if det not in self.__nominalDetectors]
+            for det in tmpUpgradeDetectorList:
+                if self.__dtMapping.has_key(det):
+                    upgradeDetectorList.append( self.__dtMapping[det] )
+                else:
+                    log.warning("Unknown Upgrade detector: %s" %(det))
+        return upgradeDetectorList
+
 
     def knownMonitors(self):
         return ["SC", "FPE"]
