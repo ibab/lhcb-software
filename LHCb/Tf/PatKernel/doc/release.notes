@@ -4,7 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================= PatKernel v2r7 2013-02-05 =========================
+! 2013-02-06 - Marco Cattaneo
+ - Remove also the UT related dictionaries... Now SVN head is identical to v2r6
+
 ! 2013-02-05 - Sascha Stahl
  - Moved UT related code to PrKernel.
 
