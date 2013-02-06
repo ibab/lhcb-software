@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-02-06 - Paul Szczypka
+ - Changed print messages to log.warning.
+ - Cleaned up some if statements.
+
 ! 2013-02-04 - Paul Szczypka
  - Reverted some changes inadvertantly included in last commit.
 

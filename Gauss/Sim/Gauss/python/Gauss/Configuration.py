@@ -247,7 +247,7 @@ class Gauss(LHCbConfigurableUser):
             if not LHCbApp().Detectors:
                 LHCbApp().Detectors = self.getProp("DetectorGeo")["Detectors"]
             else:
-                print "WARNING:: Value of 'LHCbApp().Detectors' already set, using that value: %s" %(LHCbApp().Detectors)
+                log.warning("Value of 'LHCbApp().Detectors' already set, using that value: %s" %(LHCbApp().Detectors))
         return
 
 #"""
@@ -813,16 +813,16 @@ class Gauss(LHCbConfigurableUser):
 #                                                               
 #"""
     def defineTorchGeo( self ):
-        print "WARNING: Geo not defined for TORCH"
+        log.warning("Geo not defined for TORCH")
         pass
 
     def configureTorchSim( self, slot, detHits ):
-        print "WARNING: Sim not defined for TORCH"
+        log.warning("Sim not defined for TORCH")
         pass
 
     def configureTorchMoni( self, slot, packCheckSeq, detMoniSeq, checkHits ):
         #detMoniSeq = GaudiSequencer( "DetectorsMonitor" + slot ) 
-        print "WARNING: Moni not defined for TORCH"
+        log.warning ("Moni not defined for TORCH")
         pass
 
 
@@ -2077,7 +2077,7 @@ class Gauss(LHCbConfigurableUser):
         import string
         lDet = det.lower()
         if lDet not in self.__knownDetectors__:
-            print "WARNING: Geo Detector not known : %s" %(det)
+            log.warning("Geo Detector not known : %s" %(det))
 
         if lDet == "magnet":
             self.defineMagnetGeo( basePieces, detPieces )
@@ -2121,13 +2121,13 @@ class Gauss(LHCbConfigurableUser):
         elif lDet == "ut":
             self.defineUTGeo( detPieces )
         else:
-            print "WARNING: Geo Detector not known : %s" %(det)
+            log.warning("Geo Detector not known : %s" %(det))
             
     def defineDetectorGeoStream ( self, geo, giGaGeo, det ):
         import string
         lDet = det.lower()
         if lDet not in self.__knownDetectors__:
-            print "WARNING: Geo Stream Detector not known : %s" %(det)
+            log.warning("Geo Stream Detector not known : %s" %(det))
 
         if lDet == "rich1":
             self.defineRich1GeoStream( geo )
@@ -2242,11 +2242,11 @@ class Gauss(LHCbConfigurableUser):
         import string
         det = det.lower()
         if det not in self.__knownDetectors__:
-            print "WARNING: Sim Detector not known : %s" %(det)
+            log.warning("Sim Detector not known : %s" %(det))
 
         if det == "puveto":
             self.configurePuVetoSim( slot, detHits )
-        if det == "velo":
+        elif det == "velo":
             self.configureVeloSim( slot, detHits )
         elif det == "tt":
             self.configureTTSim( slot, detHits )
@@ -2283,7 +2283,8 @@ class Gauss(LHCbConfigurableUser):
                 configuredRichSim[0] = True
         elif det == "ut":
             self.configureUTSim( slot, detHits )
-
+        else:
+            log.warning("Sim Detector not known : %s" %(det))
 
     ##
     ##
@@ -2414,11 +2415,11 @@ class Gauss(LHCbConfigurableUser):
         import string
         det = det.lower()
         if det not in self.__knownDetectors__:
-            print "WARNING: Moni Detector not known : %s" %(det)
+            log.warning("Moni Detector not known : %s" %(det))
 
         if det == "puveto":
             self.configurePuVetoMoni( slot, packCheckSeq, detMoniSeq, checkHits )
-        if det == "velo":
+        elif det == "velo":
             self.configureVeloMoni( slot, packCheckSeq, detMoniSeq, checkHits )
         elif det == "tt":
             self.configureTTMoni( slot, packCheckSeq, detMoniSeq, checkHits )
@@ -2468,7 +2469,8 @@ class Gauss(LHCbConfigurableUser):
                 configuredRichMoni[0] = True
         elif det == "ut":
             self.configureUTMoni( slot, packCheckSeq, detMoniSeq, checkHits )
-
+        else:
+            log.warning("Moni Detector not known : %s" %(det))            
 
     def resetCheckHits( self, checkHits ):
         checkHits.TTHits     = ''
