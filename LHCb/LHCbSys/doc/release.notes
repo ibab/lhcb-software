@@ -18,9 +18,8 @@ This version uses Gaudi v23r6 and LCG_64c
     Kernel/LHCbKernel v13r15, Kernel/LHCbMath v3r37, Kernel/PartProp v1r15,
     L0/L0Interfaces v2r3, Muon/MuonDAQ v4r17, Phys/LoKiCore v11r11,
     Rich/RichKernel v7r52, Rich/RichRecBase v4r16, Sim/SimComponents v2r24,
-    ST/STKernel v2r11, ST/STTELL1Event v1r12, Tf/PatKernel v2r7, 
-    Tf/TfKernel v2r24, Tools/CondDBUI v3r20, Tr/TrackInterfaces v4r23,
-    Tr/TrackKernel v1r12
+    ST/STKernel v2r11, ST/STTELL1Event v1r12, Tf/TfKernel v2r24,
+    Tools/CondDBUI v3r20, Tr/TrackInterfaces v4r23, Tr/TrackKernel v1r12
 
 - In LHCbSys:
   . Improved toolchain.cmake: no need to specify LCG version
@@ -107,10 +106,6 @@ This version uses Gaudi v23r6 and LCG_64c
 
 - In ST/STTELL1Event v1r12
   . Add UT banks
-
-- In Tf/PatKernel v2r7
-  . Use PatTTHit for both TT & UT so that other functions can be shared.
-  . Clone UT Pat tool from that of TT.
 
 - In Tf/TfKernel v2r24
   . Add UT hit

@@ -87,7 +87,6 @@ use GaudiMTTools          v1r2
 use GaudiObjDesc          v11r17
 
 #use GaudiPatches          v1r2
-#use HepMCBack             v1r1    Gen     # Obsolete, was for DC06
 
 # Kernel packages
 use FSRAlgs               v1r2    Kernel  # Rob Lambert, Jaap Panman
@@ -131,7 +130,7 @@ use SimComponents         v2r24   Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v2r11   ST      # Mark Tobin
 use STTELL1Event          v1r12   ST      # Matt Needham
 
-use PatKernel             v2r7    Tf      # Stephanie Hansmann-Menzemer
+use PatKernel             v2r6    Tf      # Stephanie Hansmann-Menzemer
 use TfKernel              v2r24   Tf      # Stephanie Hansmann-Menzemer
 use TsaKernel             v3r7    Tf      # Matt Needham
 
