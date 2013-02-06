@@ -8,7 +8,7 @@ version           v1r1
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src PrKernel
+branches          cmt dict doc src PrKernel
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
@@ -28,3 +28,11 @@ library          PrKernel    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    linker_library library=PrKernel
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                     \
+              dictionary=PrKernel                                  \
+              headerfiles=$(PRKERNELROOT)/dict/PrKernelDict.h     \
+              selectionfile=$(PRKERNELROOT)/dict/PrKernelDict.xml \
+              options="-U__MINGW32__"
+

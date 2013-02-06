@@ -4,6 +4,9 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-02-06 - Sascha Stahl
+ - Added dictionary files.
+
 ! 2013-02-05 - Sascha Stahl
  - Moved UT related code from Tf/PatKernel. 
 

@@ -12,3 +12,10 @@ gaudi_add_library(PrKernel
                   PUBLIC_HEADERS PrKernel
                   LINK_LIBRARIES RecEvent TfKernel GaudiAlgLib)
 
+gaudi_add_dictionary(PrKernel
+                     dict/PrKernelDict.h
+                     dict/PrKernelDict.xml
+                     INCLUDE_DIRS Pr/PrKernel
+                     LINK_LIBRARIES RecEvent TfKernel GaudiAlgLib
+                     OPTIONS "-U__MINGW32__")
+
