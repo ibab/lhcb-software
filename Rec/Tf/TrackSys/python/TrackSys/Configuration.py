@@ -31,8 +31,6 @@ class TrackSys(LHCbConfigurableUser):
        ,"GlobalCuts"  : {}     # global event cuts for tracking
        ,"OldCloneKiller" : False # Switch between old and new (in 2012) clone killers
        ,"Simulation" : False # True if using simulated data/SIMCOND
-       ,"Upgrade" : False 
-       ,"UpgradeDetectors" : [] # List of the upgrade detectors
        ,"TrackTypes" : [] 
         }
     
@@ -56,8 +54,7 @@ class TrackSys(LHCbConfigurableUser):
     CosmicExpertTracking      = ["noDrifttimes"] 
     ## DefaultTrackTypes
     DefaultTrackTypes = ["Velo","Upstream","Forward","Seeding","Match","Downstream"]
-    ## Known Upgrade Detectors
-    KnownUpgradeDetectors = ["VP","VL","UT","FT","IT+OT"]
+        
     ## @brief Check the options are sane etc.
     def defineOptions(self):
         
@@ -108,10 +105,6 @@ class TrackSys(LHCbConfigurableUser):
           if len(self.getProp("ExpertTracking")) == 0 :
               self.setProp("ExpertTracking",self.CosmicExpertTracking)
 
-      ### Upgrade Detectors
-      for prop in self.getProp("UpgradeDetectors"):
-          if prop not in self.KnownUpgradeDetectors:
-              raise RuntimeError("Unknown UpgradeDetector '%s'"%prop)
           
     ## @brief Shortcut to the fieldOff option
     def MC09(self)     : return "MC09" == self.getProp( "DataType" )
@@ -147,7 +140,15 @@ class TrackSys(LHCbConfigurableUser):
     ## @brief Apply the configuration
     def __apply_configuration__(self):
         self.defineOptions()
-        if self.getProp( "Upgrade" ) :
+        useUpgrade = False
+        from Configurables import Brunel
+        if hasattr(Brunel(),"UpgradeDets"):
+            if Brunel().getProp("UpgradeDets"):
+                useUpgrade = True
+        if not TrackSys().isPropertySet("TrackTypes"):
+            TrackSys().setProp("TrackTypes", self.DefaultTrackTypes)
+        
+        if useUpgrade :
             from TrackSys import RecoUpgradeTracking
             RecoUpgradeTracking.RecoUpgradeTracking()
         else:
@@ -162,7 +163,7 @@ class TrackSys(LHCbConfigurableUser):
                 RecoTrackingOld.RecoTracking()
 
         if self.getProp( "WithMC" ):
-            if self.getProp( "Upgrade" ) :
+            if useUpgrade :
                 from TrackSys import PrUpgradeChecking
                 PrUpgradeChecking.PrUpgradeChecking()
             else :

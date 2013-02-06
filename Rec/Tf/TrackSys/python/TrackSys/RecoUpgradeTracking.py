@@ -6,39 +6,51 @@ from GaudiKernel.SystemOfUnits import mm
 
 
 def RecoUpgradeTracking(exclude=[]):
-    print "Yes we run the upgrade sequence"
     ## Start TransportSvc, needed by track fit  ???
     ApplicationMgr().ExtSvc.append("TransportSvc")
-
-    subDets = TrackSys().getProp("UpgradeDetectors")
+    subDets = []
+    from Configurables import Brunel
+    if hasattr(Brunel(),"UpgradeDets"):
+        if (Brunel().isPropertySet("UpgradeDets")):
+            subDets = Brunel().getProp("UpgradeDets")
     trackTypes = TrackSys().getProp("TrackTypes")
 
-
     ### Sanity checks
-    if ("VL" in subDets) and ("VP" in subDets):
-        raise RuntimeError("There is no place for two Velos, choose one.")
-    if ("FT" in subDets) and ("IT+OT" in subDets):
-        raise RuntimeError("Currently either FT or IT+OT are supported.")
-
     if "Forward" in trackTypes:
         if not ("Velo" in trackTypes):
             log.warning("Velo tracks added to tracking sequence.")
             trackTypes += ["Velo"]
-        if not (("FT" in subDets) or ("IT+OT" in subDets)):
-            raise RuntimeError("Specify T-Stations. FT or IT+OT.")
-            
+        if not (("FT" in subDets)):
+            raise RuntimeError("Specify T-Stations.")
+
+
+    if "Upstream" in trackTypes:
+        if not ("Velo" in trackTypes):
+            log.warning("Velo tracks added to tracking sequence.")
+            trackTypes += ["Velo"]
+        if not (("UT" in subDets)):
+            raise RuntimeError("Specify UT.")
+
+    if "Downstream" in trackTypes:
+        if not ("Seeding" in trackTypes):
+            log.warning("Seed tracks added to tracking sequence.")
+            trackTypes += ["Seeding"]
+        if not (("UT" in subDets)):
+            raise RuntimeError("Specify UT.")
+
     if "Velo" in trackTypes:
         if not (("VL" in subDets) or ("VP" in subDets)):
             raise RuntimeError("Specify a Velo. VL or VP.")
     
     if "Seeding" in trackTypes:
-        if not (("FT" in subDets) or ("IT+OT" in subDets)):
-            raise RuntimeError("Specify T-Stations. FT or IT+OT.")
+        if not ("FT" in subDets) :
+            raise RuntimeError("Specify T-Stations.")
 
-        
+
+
     ### Do the decoding of the detectors
    
-    print subDets
+
 
     decodingSeq = GaudiSequencer("RecoDecodingSeq")
 
@@ -52,29 +64,20 @@ def RecoUpgradeTracking(exclude=[]):
         from Configurables import VPRawBankToLiteCluster,VPRawBankToPartialCluster
         decodingSeq.Members += [ VPRawBankToLiteCluster() ]
     if "UT" in subDets:
-        print "UT not yet implemented"
         from Configurables import RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg
         createUTClusters = RawBankToSTClusterAlg("CreateUTClusters")
         createUTLiteClusters = RawBankToSTLiteClusterAlg("CreateUTLiteClusters")
         createUTClusters.DetType     = "UT"
         createUTLiteClusters.DetType = "UT"
         decodingSeq.Members += [ createUTClusters, createUTLiteClusters ]
+        from Configurables import STOfflinePosition
+        UT = STOfflinePosition('ToolSvc.UTClusterPosition')
+        UT.DetType = "UT"
     if "FT" in subDets:
         from Configurables import FTRawBankDecoder
         decodingSeq.Members += [ FTRawBankDecoder() ]
-    if "IT+OT" in subDets:
-        print "IT+OT, Not yet implemented"
-        from Configurables import RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg
-        createITClusters = RawBankToSTClusterAlg("CreateITClusters")
-        createITLiteClusters = RawBankToSTLiteClusterAlg("CreateITLiteClusters")
-        createITClusters.DetType     = "IT"
-        createITLiteClusters.DetType = "IT"
-        decodingSeq.Members += [ createITClusters, createITLiteClusters ]
- 
 
     ### Define the pattern recognition
-
-    print trackTypes
     if "Velo" in trackTypes:
         veloSeq = GaudiSequencer("TrVeloSeq")
         GaudiSequencer("RecoTrSeq").Members += [ veloSeq ]
@@ -92,19 +95,42 @@ def RecoUpgradeTracking(exclude=[]):
         if "FT" in subDets:
             from Configurables import PrForwardTracking
             forwardSeq.Members += [ PrForwardTracking() ]
-        if "IT+OT" in subDets:
-            from Configurables import PatForward
-            forwardSeq.Members += [ PatForward() ]
     if "Seeding" in trackTypes:
         seedingSeq = GaudiSequencer("TrSeedingSeq")
         GaudiSequencer("RecoTrSeq").Members += [ seedingSeq ]
         if "FT" in subDets:
             from Configurables import PrSeedingAlgorithm
             seedingSeq.Members += [ PrSeedingAlgorithm() ]
-        if "IT+OT" in subDets:
-            from Configurables import PatSeeding
-            seedingSeq.Members += [ PatSeeding() ]
 
+    if "Upstream" in trackTypes:
+        upSeq = GaudiSequencer("TrUpSeq")
+        GaudiSequencer("RecoTrSeq").Members += [ upSeq ]
+        if "UT" in subDets:
+            from Configurables import PrVeloUT
+            prVeloUT = PrVeloUT()
+            from Configurables import TrackMasterFitter
+            prVeloUT.addTool(TrackMasterFitter,"Fitter")
+            prVeloUT.Fitter.MeasProvider.IgnoreVelo = True
+            prVeloUT.Fitter.MeasProvider.IgnoreVP = True
+            prVeloUT.Fitter.MeasProvider.IgnoreVL = True
+            prVeloUT.Fitter.MeasProvider.IgnoreTT = True
+            prVeloUT.Fitter.MeasProvider.IgnoreIT = True
+            prVeloUT.Fitter.MeasProvider.IgnoreOT = True
+            
+            prVeloUT.Fitter.MeasProvider.IgnoreUT = False
+            if ("VP" in subDets):
+                prVeloUT.Fitter.MeasProvider.IgnoreVP = False
+            if ("VL" in subDets):
+                prVeloUT.Fitter.MeasProvider.IgnoreVL = False
+            upSeq.Members += [ PrVeloUT() ]
+            
+
+    if "Downstream" in trackTypes:
+        downSeq = GaudiSequencer("TrDownSeq")
+        GaudiSequencer("RecoTrSeq").Members += [ downSeq ]
+        if "UT" in subDets:
+            from Configurables import PrDownstream
+            downSeq.Members += [ PrDownstream() ]
 
 
     # Do the Clone Killing and create Best tracks container
@@ -119,6 +145,11 @@ def RecoUpgradeTracking(exclude=[]):
         tracklists += ["Rec/Track/Seed"]
     if "Forward" in trackTypes:
         tracklists += ["Rec/Track/Forward"]
+    if "Upstream" in trackTypes:
+        tracklists += ["Rec/Track/VeloTT"]
+    if "Downstream" in trackTypes:
+        tracklists += ["Rec/Track/Downstream"]
+
 
     # create the best track creator
     from Configurables import UpgradeBestTrackCreator
@@ -145,11 +176,12 @@ def RecoUpgradeTracking(exclude=[]):
                            StateAtBeamLine = True,
                            MaxNumberOutliers = 2)
     eventfitter.Fitter.MeasProvider.IgnoreVelo = True
-    eventfitter.Fitter.MeasProvider.IgnoreIT = True
-    eventfitter.Fitter.MeasProvider.IgnoreTT = True
-    eventfitter.Fitter.MeasProvider.IgnoreOT = True
     eventfitter.Fitter.MeasProvider.IgnoreVP = True
     eventfitter.Fitter.MeasProvider.IgnoreVL = True
+    eventfitter.Fitter.MeasProvider.IgnoreTT = True
+    eventfitter.Fitter.MeasProvider.IgnoreUT = True
+    eventfitter.Fitter.MeasProvider.IgnoreIT = True
+    eventfitter.Fitter.MeasProvider.IgnoreOT = True
     eventfitter.Fitter.MeasProvider.IgnoreFT = True
     
     
@@ -159,7 +191,9 @@ def RecoUpgradeTracking(exclude=[]):
         eventfitter.Fitter.MeasProvider.IgnoreVL = False
     if ("FT" in subDets):
         eventfitter.Fitter.MeasProvider.IgnoreFT = False
-
+    if ("UT" in subDets):
+        eventfitter.Fitter.MeasProvider.IgnoreUT = False
+        
 
     fitSeq.Members += [ eventfitter ]
 

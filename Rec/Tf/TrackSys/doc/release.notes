@@ -4,6 +4,13 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-02-06 - Sascha Stahl
+ - Two properties removed from TrackSys Upgrade, UpgradeDetectors. These
+   are steered by Brunel().Detectors now.
+ - Added Downstream tracking, Upstream tracking and 
+   UpgradeTrackBestCreator to the sequence. 
+
+
 ! 2013-02-01 - Sascha Stahl
  - Added a clone killer for the upgrade to the upgrade sequence.
  - Added UT to the decoded detectors.

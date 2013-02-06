@@ -6,12 +6,11 @@ def PrUpgradeChecking():
    ### match hits and tracks
    log.warning("Run upgrade checkers.")
    from Configurables import UnpackMCParticle, UnpackMCVertex, PrLHCbID2MCParticle
-   trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
-   if "Truth" in trackAlgs :
+   trackTypes = TrackSys().getProp("TrackTypes")
+   if "Truth" in trackTypes :
       truthSeq = GaudiSequencer("RecoTruthSeq")
       truthSeq.Members = [UnpackMCParticle(), UnpackMCVertex(), PrLHCbID2MCParticle()]
    else:
-      log.warning("no truth specified.")
       GaudiSequencer("MCLinksTrSeq").Members = [ PrLHCbID2MCParticle() ]
    
    from Configurables import PrTrackAssociator
