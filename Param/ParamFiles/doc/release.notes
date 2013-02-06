@@ -5,6 +5,9 @@
 !               simulation and digitization
 !-----------------------------------------------------------------------------
 
+! 2013-02-06 - Victor Coco
+ - remove the data/JetEnergyCorrections_Reco12.root since it has never been used in any release 
+
 ! 2013-01-22 - Murilo Rangel
  - reverted the data/JetEnergyCorrections_Reco12.root and 
    added data/JetEnergyCorrections_Reco12_v1.root
