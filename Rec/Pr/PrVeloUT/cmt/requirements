@@ -1,0 +1,32 @@
+#============================================================================
+# Created    : 2013-02-05
+# Maintainer : Jianchun Wang
+#============================================================================
+package           PrVeloUT
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options python
+include_path      none
+
+#============================================================================
+# Used packages.
+#============================================================================
+use	TfKernel	v*	Tf
+use     PrKernel        v*      Pr
+use     TrackInterfaces	v*	Tr
+use     STDet           v*      Det
+use     DigiEvent       v*      Event
+use     TrackEvent      v*      Event
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          PrVeloUT    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    install_python_modules
+apply_pattern    component_library library=PrVeloUT
