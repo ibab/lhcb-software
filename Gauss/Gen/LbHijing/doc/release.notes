@@ -4,7 +4,11 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
-!========================= LbHijing v8r0 2013-02-05 ==========================
+!========================= LbHijing v8r0 2013-02-06 ==========================
+! 2013-02-06 - Gloria Corti
+ - Add file hilunhep.F that was forgotten and remove LoadHiData.F that is not
+   needed.
+
 ! 2013-02-05 - Gloria Corti
  - Port changes needed for hijing 1.383bs.2
    . modify requirement to have use of hijing and special linking only here
