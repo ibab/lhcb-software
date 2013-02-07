@@ -4,7 +4,9 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
-!========================= LbPythia v13r0 2013-02-07 =========================
+!========================= LbPythia v14r0 2013-02-07 =========================
+ - v13r0 is on a branch
+
 ! 2013-01-20 - Patrick Robbe
  - Remove Pythia6 from EvtGen
  - Add counters for cross-section
