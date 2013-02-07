@@ -5,7 +5,7 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
-!======================= Generators v13r1 2013-02-04 =========================
+!======================= Generators v14r0 2013-02-04 =========================
 ! 2013-02-01 - Aurelien Martens
  - ExternalGenerator.cpp: add call to initializeGenerator, so that
 particle properties are set before initialization of the pythia instance
