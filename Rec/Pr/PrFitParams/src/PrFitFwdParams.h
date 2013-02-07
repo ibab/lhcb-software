@@ -12,6 +12,8 @@
  *
  *  @author Olivier Callot
  *  @date   2005-07-01
+ *  @modification on 2013-01-23  : Yasmine Amhis
+ *  Adapt to work with Fiber Tracker and VP or VL
  */
 class PrFitFwdParams : public GaudiTupleAlg {
 public:
@@ -40,7 +42,7 @@ private:
   double m_zRefExt;                   ///< Z to define the state for the Muon
   double m_zRefM;                     ///< Positikon of the Muon test point, i.e. M1
   bool   m_veloFromMC;
-
+  bool   m_useVeloPix ; 
   std::vector<double> m_zMagParams;
   std::vector<double> m_xParams;
   std::vector<double> m_byParams;

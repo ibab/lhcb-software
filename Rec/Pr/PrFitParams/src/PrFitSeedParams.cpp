@@ -19,8 +19,10 @@
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PrFitSeedParams
-//
-// 2006-12-08 : Olivier Callot
+// 
+// 2006-12-08  : Olivier Callot
+// 2013-01-23  : Yasmine Amhis
+// Adapt to work with Fiber Tracker and UT
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -37,6 +39,7 @@ PrFitSeedParams::PrFitSeedParams( const std::string& name,
   declareProperty( "TupleName",          m_tupleName  = "Track" );
   declareProperty( "ZRef",               m_zRef       = StateParameters::ZMidT );
   declareProperty( "ZSeed",              m_zSeed      = StateParameters::ZEndT );
+  //THIS NEEDS TO BE UPDATED FOR THE UT 
   declareProperty( "ZTT",                m_zTT        = 2485.0 * Gaudi::Units::mm );
 
   // these are the "tunables" for PatSeeding
@@ -83,28 +86,37 @@ StatusCode PrFitSeedParams::initialize() {
 //=============================================================================
 StatusCode PrFitSeedParams::execute() {
 
-  debug() << "==> Execute" << endmsg;
 
+
+  debug() << "==> Execute" << endmsg;
+ 
   m_nEvent += 1;
 
   LHCb::MCParticles* partCtnr = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
 
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );
+  
 
-  // Get the IT  hits
-  LHCb::MCHits* itHits = get<LHCb::MCHits>( LHCb::MCHitLocation::IT );
-  LHCb::MCHits* TTHits = get<LHCb::MCHits>( LHCb::MCHitLocation::TT );
+  // Get the FT hits
+  LHCb::MCHits* ftHits = get<LHCb::MCHits>( LHCb::MCHitLocation::FT);
 
-  // Get the OT hits
-  LHCb::MCHits* otHits = get<LHCb::MCHits>( LHCb::MCHitLocation::OT );
 
+  
+
+
+  
+  // Get the UT  hits
+  LHCb::MCHits* UTHits = get<LHCb::MCHits>( LHCb::MCHitLocation::UT );
+
+  
   LHCb::MCParticles::const_iterator pItr;
   const LHCb::MCParticle* part;
   const LHCb::MCParticle* mother;
   const LHCb::MCVertex* vOrigin;
   SmartRefVector<LHCb::MCVertex> vDecay;
   
-  for ( pItr = partCtnr->begin(); partCtnr->end() != pItr; pItr++ ) {
+  for ( pItr = partCtnr->begin(); partCtnr->end() != pItr; pItr++ ) 
+    {//here loop over the MC particle container 
     part = *pItr;
     if ( 0 == trackInfo.fullInfo( part ) ) continue;
     if ( !trackInfo.hasT( part ) ) continue;
@@ -135,32 +147,29 @@ StatusCode PrFitSeedParams::execute() {
 
     // A container for used hits
     std::vector<Gaudi::XYZPoint> trHits;
-    std::vector<Gaudi::XYZPoint> ttHits;
+    std::vector<Gaudi::XYZPoint> utHits;
+    
+    
 
-    // Get the IT hits
-    for ( LHCb::MCHits::const_iterator iHitIt = itHits->begin() ; 
-          itHits->end() != iHitIt ; iHitIt++ ) {
-      if ( (*iHitIt)->mcParticle() ==  part ) {
-        trHits.push_back( (*iHitIt)->midPoint() );
-      }
-    }
-   
-    // Get the OT hits
-    for ( LHCb::MCHits::const_iterator oHitIt = otHits->begin() ; 
-          otHits->end() != oHitIt ; oHitIt++ ) {
-      if ( (*oHitIt)->mcParticle() ==  part ) {
-        trHits.push_back( (*oHitIt)->midPoint() );
-      }
-    }
-
-    // Get the TT hits
-    for ( LHCb::MCHits::const_iterator iHittt = TTHits->begin() ; 
-          TTHits->end() != iHittt ; iHittt++ ) {
-      if ( (*iHittt)->mcParticle() ==  part ) {
-        ttHits.push_back( (*iHittt)->midPoint() );
+    // Get the FT hits
+    
+    for ( LHCb::MCHits::const_iterator fiberHit = ftHits->begin() ; 
+	  ftHits->end() != fiberHit ; fiberHit++ ) {
+      if ( (*fiberHit)->mcParticle() ==  part ) {
+	trHits.push_back( (*fiberHit)->midPoint() );
       }
     }
     
+
+
+      // Get the UT hits
+    for ( LHCb::MCHits::const_iterator iHitut = UTHits->begin() ; 
+	  UTHits->end() != iHitut ; iHitut++ ) {
+      if ( (*iHitut)->mcParticle() ==  part ) {
+	utHits.push_back( (*iHitut)->midPoint() );
+      }
+    }
+
     m_nTrack += 1;
     if ( msgLevel( MSG::DEBUG ) ) {
       debug() << format( "Track MC %4d z0 %7.2f p%8.2f Velo%2d TT%2d T%2d",
@@ -172,7 +181,6 @@ StatusCode PrFitSeedParams::execute() {
         debug() << format( "  x%8.2f y%8.2f z%8.2f ", (*itP).x(), (*itP).y(), (*itP).z() ) << endmsg;
       }
     }
-
 
     Tuple tTrack = nTuple( m_tupleName, m_tupleName );
     tTrack->column( "moment",  momentum );
@@ -217,12 +225,12 @@ StatusCode PrFitSeedParams::execute() {
       m_initialArrowPar.addEvent( dSag );
     }
 
-
+    
     double axt, bxt, cxt, ayt, byt, zMagnet, zEst;
-    if ( 2 < ttHits.size() ) {
+    if ( 2 < utHits.size() ) {
       //m_fitTool->fitLine( ttHits, 0, m_zTT, axt, bxt );
-      m_fitTool->fitParabola( ttHits, 0, m_zTT, axt, bxt, cxt );
-      m_fitTool->fitLine( ttHits, 1, m_zTT, ayt, byt );
+      m_fitTool->fitParabola( utHits, 0, m_zTT, axt, bxt, cxt );
+      m_fitTool->fitLine( utHits, 1, m_zTT, ayt, byt );
       
       double dz = m_zSeed - m_zRef;
       double x0 = ax + dz * ( bx + dz * ( cx + dz * dx ) );
@@ -244,6 +252,8 @@ StatusCode PrFitSeedParams::execute() {
       ayt = 0.;
       byt = 0.;
     }
+
+    
 
     m_dRatioPar.setFun(0, 1.0);
     m_dRatioPar.setFun(1, fabs(cx));
@@ -283,8 +293,13 @@ StatusCode PrFitSeedParams::execute() {
     tTrack->column( "zEst", zEst );
 
     tTrack->write();
-  }
+    
+    
+    }// end of the big loop 
 
+
+ 
+ 
   return StatusCode::SUCCESS;
 }
 
@@ -298,6 +313,9 @@ StatusCode PrFitSeedParams::finalize() {
   msg << "============================================" << endmsg;
   msg << "  Processed " << m_nEvent << " events and " << m_nTrack << " tracks. " << endmsg;
   msg << "============================================" << endmsg;
+
+
+  
   m_initialArrowPar.updateParameters( msg );
   m_momentumScalePar.updateParameters(  msg );
   m_zMagPar.updateParameters(  msg );
@@ -320,7 +338,7 @@ StatusCode PrFitSeedParams::finalize() {
   m_dRatioPar.printPythonParams( toolName );
   m_yCorrectionPar.printPythonParams( toolName );
   std::cout << std::endl;
-
+  
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
 

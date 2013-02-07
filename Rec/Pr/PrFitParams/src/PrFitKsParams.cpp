@@ -17,6 +17,8 @@
 // Implementation file for class : PrFitKsParams
 //
 // 2002-11-02 : Olivier Callot
+// 2013-01-23  : Yasmine Amhis
+// Adapt to work with Fiber Tracker and UT
 //-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY( PrFitKsParams );
@@ -30,11 +32,10 @@ PrFitKsParams::PrFitKsParams( const std::string& name,
   : GaudiTupleAlg ( name , pSvcLocator )
 {
   declareProperty( "NTupleName",     m_tupleName  = "Track" );
-  declareProperty( "ZTT1",           m_zTT1       = 2469.0*Gaudi::Units::mm );
+  declareProperty( "ZTT1",           m_zTT1       = 2469.0*Gaudi::Units::mm ); //THIS NEEDS TO BE CHANGED FOR UT
   declareProperty( "ZRef",           m_zRef       = 9410.0*Gaudi::Units::mm );
   declareProperty( "zMagnetParams",  m_zMagParams );
   declareProperty( "momentumParams", m_momParams  );
-  
   m_nEvent = 0;
   m_nTrack = 0;
 }
@@ -71,13 +72,14 @@ StatusCode PrFitKsParams::execute() {
 
   LHCb::MCParticles* partCtnr = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
 
-  // Get the IT and TT hits
-  LHCb::MCHits* itHits = get<LHCb::MCHits>( LHCb::MCHitLocation::IT );
-  LHCb::MCHits* ttHits = get<LHCb::MCHits>( LHCb::MCHitLocation::TT );
+    // Get the UT  hits
+  LHCb::MCHits* utHits = get<LHCb::MCHits>( LHCb::MCHitLocation::UT );
+  // Get the FT hits
+  LHCb::MCHits* ftHits = get<LHCb::MCHits>( LHCb::MCHitLocation::FT);
+  
 
-  // Get the OT hits
-  LHCb::MCHits* otHits = get<LHCb::MCHits>( LHCb::MCHitLocation::OT );
 
+  
   LHCb::MCParticles::const_iterator pItr;
   const LHCb::MCParticle* part;
   SmartRefVector<LHCb::MCVertex> vDecay;
@@ -87,7 +89,7 @@ StatusCode PrFitKsParams::execute() {
   
   // A container for used hits
   std::vector<Gaudi::XYZPoint> trHits;
-  std::vector<Gaudi::XYZPoint> TTHits;
+  std::vector<Gaudi::XYZPoint> UTHits;
   
   for ( pItr = partCtnr->begin(); partCtnr->end() != pItr; pItr++ ) {
     part = *pItr;
@@ -113,33 +115,27 @@ StatusCode PrFitKsParams::execute() {
     
       debug() << "--- Found pi key " << part->key() << endmsg;
     
-      TTHits.clear();
+      UTHits.clear();
       trHits.clear();
    
-      // Get the IT hits
-      for ( LHCb::MCHits::const_iterator iHitIt = itHits->begin() ; 
-            itHits->end() != iHitIt ; iHitIt++ ) {
-        if ( (*iHitIt)->mcParticle() ==  part ) {
-          trHits.push_back( (*iHitIt)->midPoint() );
+     
+
+      // Get the UT hits
+      for ( LHCb::MCHits::const_iterator iHitut = utHits->begin() ; 
+            utHits->end() != iHitut ; iHitut++ ) {
+        if ( (*iHitut)->mcParticle() ==  part ) {
+            UTHits.push_back( (*iHitut)->midPoint() );
         }
       }
 
-      // Get the TT hits
-      for ( LHCb::MCHits::const_iterator iHittt = ttHits->begin() ; 
-            ttHits->end() != iHittt ; iHittt++ ) {
-        if ( (*iHittt)->mcParticle() ==  part ) {
-            TTHits.push_back( (*iHittt)->midPoint() );
-        }
+          // Get the FT hits
+      for ( LHCb::MCHits::const_iterator fHitIt = ftHits->begin() ; 
+	    ftHits->end() != fHitIt ; fHitIt++ ) {
+	if ( (*fHitIt)->mcParticle() ==  part ) {
+	  trHits.push_back( (*fHitIt)->midPoint() );
+	}
       }
-
-      // Get the OT hits
-      for ( LHCb::MCHits::const_iterator oHitIt = otHits->begin() ; 
-            otHits->end() != oHitIt ; oHitIt++ ) {
-        if ( (*oHitIt)->mcParticle() ==  part ) {
-          trHits.push_back( (*oHitIt)->midPoint() );
-        }
-      }
-      if ( 3  > TTHits.size() || 12 > trHits.size() )  continue;
+     if ( 3  > UTHits.size() || 12 > trHits.size() )  continue;
 
       debug() << "=== Found a good K0S Decay : " 
               << kShort->key() << " decay at " 
@@ -175,9 +171,9 @@ StatusCode PrFitKsParams::execute() {
     
       //== Fit the TT area
       double axt, bxt, ayt, byt, dz;
-      debug() << "  TT: ";
-      m_fitTool->fitLine( TTHits, 0, m_zTT1, axt, bxt );
-      m_fitTool->fitLine( TTHits, 1, m_zTT1, ayt, byt );
+      debug() << "  UT: ";
+      m_fitTool->fitLine( UTHits, 0, m_zTT1, axt, bxt );
+      m_fitTool->fitLine( UTHits, 1, m_zTT1, ayt, byt );
       debug() << format( " x %7.1f tx %7.4f   y %7.1f ty %7.4f ",
                          axt, bxt, ayt, byt ) 
               << endmsg;;
@@ -188,7 +184,7 @@ StatusCode PrFitKsParams::execute() {
       
       std::vector<Gaudi::XYZPoint>::const_iterator itP;
       if ( msgLevel( MSG::DEBUG ) ) {
-        for ( itP = TTHits.begin(); TTHits.end() > itP; itP++ ) {
+        for ( itP = UTHits.begin(); UTHits.end() > itP; itP++ ) {
           dz = (*itP).z()-m_zTT1;
           debug() << format( "    : %7.1f %7.1f %7.1f  dx %7.3f  dy %7.3f",
                              (*itP).x(), (*itP).y(), (*itP).z(),

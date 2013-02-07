@@ -27,6 +27,8 @@
 // Implementation file for class : PrFitFwdParams
 //
 // 13/10/2001 : Olivier Callot
+// 2013/01/23  : Yasmine Amhis
+// Adapt to work with Fiber Tracker and VP or VL
 //-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY( PrFitFwdParams );
@@ -72,9 +74,12 @@ PrFitFwdParams::PrFitFwdParams( const std::string& name,
   declareProperty( "ZbeforeST3"           , m_zBeforeST3    );
 
   declareProperty( "VeloFromMC"           , m_veloFromMC = false );
+  declareProperty( "useVeloPix"           , m_useVeloPix = true );
 
   declareProperty( "VeloTracksLocation", 
                    m_veloTracksLocation = LHCb::TrackLocation::Velo);
+
+
 }
 
 //=============================================================================
@@ -118,8 +123,18 @@ StatusCode PrFitFwdParams::execute() {
   LHCb::MCParticles* partCtnr = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
 
   // Get the Velo hits
-  LHCb::MCHits* vHits = get<LHCb::MCHits>( LHCb::MCHitLocation::Velo );
+  //LHCb::MCHits* vHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP );
 
+  LHCb::MCHits* vHits; 
+
+  if (m_useVeloPix = true ){
+    vHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP );
+  }
+  else {
+    vHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VL );
+  }
+  
+ 
   // Get the FT hits
   LHCb::MCHits* ftHits = get<LHCb::MCHits>( LHCb::MCHitLocation::FT );
 
@@ -276,7 +291,7 @@ StatusCode PrFitFwdParams::execute() {
     m_count[0] += 1;
 
     std::vector<Gaudi::XYZPoint>::iterator pt;
-    double khi2 = 1000.;
+    double chi2 = 1000.;
     double AX = 0.;
     double BX = 0.;
     double CX = 0.;
@@ -334,7 +349,7 @@ StatusCode PrFitFwdParams::execute() {
     
     // now check the distance / quality
     
-    khi2 = 0;
+    chi2 = 0;
     double dist;
     int nbMeas = 0;
     double worst = 0.;
@@ -349,17 +364,17 @@ StatusCode PrFitFwdParams::execute() {
         // Fit error. Arbitrary = 100 microns in X, 1mm in Y, as this is MC hit position.
 
         dist = (dx*dx / .01) + dy*dy;
-        khi2 += dist;
+        chi2 += dist;
         if ( worst < dist ) {
           worst  = dist;
           badGuy = pt;
         }
       }
     }
-    khi2 = khi2 / (nbMeas-7);
-    verbose() << " Track Khi2 = " << khi2 << endmsg;
-    if ( 5. < khi2 ) {
-      info() << "-- Bad track : Khi2 = " << khi2
+    chi2 = chi2 / (nbMeas-7);
+    verbose() << " Track Chi2 = " << chi2 << endmsg;
+    if ( 5. < chi2 ) {
+      info() << "-- Bad track : Chi2 = " << chi2
              << " momentum " << momentum/Gaudi::Units::GeV
              << endmsg;
       
@@ -538,7 +553,7 @@ StatusCode PrFitFwdParams::finalize() {
          << " tracks. " << endmsg;
   if ( 0 != m_count[0] ) {
     info() << "    " << m_count[1] << " ("
-           << 100.*m_count[1]/m_count[0] << " % ) with good Khi2" << endmsg
+           << 100.*m_count[1]/m_count[0] << " % ) with good Chi2" << endmsg
            << "    " << m_count[2] << " with good momentum match " << endmsg;
   }
   MsgStream& msg = info() << "==========================================="

@@ -10,10 +10,12 @@
 #include "PrFitTool.h"
 
 /** @class PrFitKsParams PrFitKsParams.h
- *  PArameterize the KShort tracks
+ *  Parameterize the KShort tracks
  *
  *  @author Olivier Callot
  *  @date   2012-07-03
+ *  @modification on 2013-01-23  : Yasmine Amhis
+ *  Adapt to work with Fiber Tracker and UT
  */
 class PrFitKsParams : public GaudiTupleAlg {
 public:
