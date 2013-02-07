@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-02-07 - Gloria Corti
- - Replace CaloOnly.py with Gauss-CaloOnly.py
+ - Replace CaloOnly.py with Gauss-CaloOnly.py and remove dependency from upgrade
  - Add file from v42b branch for setting simulation conditions when RICHES are
    not simulated (xml/SimulationRICHesOff.xml)
 
