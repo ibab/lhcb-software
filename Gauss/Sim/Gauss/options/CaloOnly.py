@@ -7,8 +7,6 @@
 
 
 from Gaudi.Configuration import *
-from Configurables import CondDB
-
 
 from Configurables import Gauss
 Gauss().DetectorGeo  = { "Detectors": ['Spd', 'Prs', 'Ecal', 'Hcal', 'Magnet' ] }
