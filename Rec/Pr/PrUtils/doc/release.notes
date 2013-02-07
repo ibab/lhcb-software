@@ -4,6 +4,9 @@
 ! Purpose     : Utils important for tracking
 !-----------------------------------------------------------------------------
 
+! 2013-02-07 - Sascha Stahl
+ - Added PrUTStationHitManager.* to PrUtils.
+
 !========================= PrUtils v1r0 2013-01-30 =========================
 initial release
 ~          
