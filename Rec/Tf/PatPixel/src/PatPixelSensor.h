@@ -7,6 +7,7 @@
 #include "VPDet/DeVP.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "TMath.h"
 
 class ChipParams   // geometrical parameters for a single readout chip: there are 3 chips per sensor and 12 chips per module
 {
@@ -50,9 +51,38 @@ public:
   DeVPSensor* sensor()      { return m_sensor; }
 
   Gaudi::XYZPoint position( LHCb::VPChannelID id, double dx, double dy ) // X,Y,Z-position for pixel ChannelID with fractional interpolation
-  { double low = id.pixel_lp() + dx;
-    double hig = id.pixel_hp() + dy;
-    return m_chips[id.chip()].position( low, hig ); }
+  { 
+    std::pair<double,double> offsets(dx,dy);
+    double dx_prime = dx*1.0, dy_prime = dy*1.0;
+    Double_t P_offset, T_factor;
+    Double_t slx, sly;
+    Double_t delta_x = fabs(dx-0.5);
+    Double_t delta_y = fabs(dy-0.5);
+    const DeVPSquareType* sqDet = sensor()->squareType();
+    Gaudi::XYZPoint Point = sqDet->globalXYZ( id.channelID(), offsets );
+    if (dx == 0.5 && dy ==0.5) {return Point;}
+    if (dx != 0.5) {
+      slx = fabs(Point.x()/Point.z());
+      P_offset =  0.31172471 +  0.15879833* TMath::Erf(-6.78928312*slx +  0.73019077);
+      T_factor =  0.43531842 +  0.3776611 *TMath::Erf(6.84465914*slx -0.75598833);
+      dx_prime = 0.5 + (dx-0.5)/delta_x*(P_offset + T_factor *delta_x);
+      
+    }
+    if (dy!=0.5) {
+      sly = fabs(Point.y()/Point.z());
+      P_offset =  0.35829374 -0.20900493* TMath::Erf(5.67571733*sly -0.40270243);
+      T_factor =  0.29798696 +  0.47414641 *TMath::Erf(5.84419802*sly -0.40472057);
+      dy_prime = 0.5 + (dy-0.5)/delta_y*(P_offset + T_factor *delta_y); 
+    }
+     
+    
+    
+    std::pair<double,double> offsets2(dx_prime,dy_prime);
+    return sqDet->globalXYZ( id.channelID(), offsets2 );
+  }
+    //double low = id.pixel_lp() + dx;
+    //double hig = id.pixel_hp() + dy;
+    //return m_chips[id.chip()].position( low, hig ); }
 
   void reset() {  m_hits.clear(); }                               // clear (remove) all stored hits
 
