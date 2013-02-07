@@ -4,6 +4,10 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-02-07 - Sascha Stahl
+ - Enabled finding of T-Tracks in PrSeeding.
+
+
 ! 2013-02-05 - Sascha Stahl
  - Added PrDownstream and PrAddUTCoord to PrAlgorithms.
 
