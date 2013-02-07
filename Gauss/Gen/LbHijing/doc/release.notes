@@ -4,6 +4,9 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2013-02-07 - Patrick Robbe
+ - cmt/requirements: remove link statement to absent library
+
 !========================= LbHijing v8r0 2013-02-06 ==========================
 ! 2013-02-06 - Gloria Corti
  - Add file hilunhep.F that was forgotten and remove LoadHiData.F that is not
