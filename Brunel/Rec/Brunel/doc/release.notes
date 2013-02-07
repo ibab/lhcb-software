@@ -7,6 +7,8 @@ Purpose: LHCb reconstruction program
   . Remove check on full bank length when decoding Velo lite clusters, add
     corresponding protection to full decoding
   . Additional profile histograms for track resolution (TrackCheckers)
+  . Do not save Rich and Muon Digitisation summary objects by deafult, only
+    in XDSTs (GaudiConf v17r4)
 
 - Changes to tests
   . Add NameAuditor to brunel-mc10-withtruth test to monitor changes in
