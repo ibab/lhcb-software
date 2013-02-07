@@ -2,6 +2,9 @@
 ! Package     : VLDet
 !-------------------------------------------------------------------------
 
+! 2013-02-07 - Sascha Stahl
+ - Changed default location back to VeloLite until databse is released.
+
 !========================= VLDet v1r4 2013-02-04 =========================
 ! 2013-01-08 - Heinrich Schindler
  - modification of R sensor layout for compact layout
