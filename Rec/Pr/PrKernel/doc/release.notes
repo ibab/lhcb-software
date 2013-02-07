@@ -4,6 +4,10 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-02-07 - Sascha Stahl
+ - Moved PrUTStationHitManager to PrUtils.
+
+
 ! 2013-02-06 - Sascha Stahl
  - Added dictionary files.
 
