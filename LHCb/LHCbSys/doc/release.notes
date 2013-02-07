@@ -5,7 +5,7 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v35r4>2013-02-05 LHCbSys v35r4</A></H1><PRE>
+</PRE><H1><A NAME=v35r4>2013-02-08 LHCbSys v35r4</A></H1><PRE>
 This version uses Gaudi v23r6 and LCG_64c
 
 - Packages removed:  Kernel/HistoStrings, functionality now in GaudiUtils
@@ -86,6 +86,7 @@ This version uses Gaudi v23r6 and LCG_64c
 
 - In Phys/LoKiCore v11r11
   . Fix Coverity defect 19275
+  . Tweak a bit CONTAINS functor: return -1 for non-existing locations
 
 - In Rich/RichKernel v7r52
   . Minor clean up. Add missing preprocessor directives and remove some CVS 
