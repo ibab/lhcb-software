@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-02-07 - Vanya Belyaev
+ - update StrippingPsiX0  StrippingPsiXForBandQ 
+
 !========================= StrippingSelections v3r20 2012-12-20 =========================
 ! 2013-02-02 - Ricardo Vazquez Gomez
  - Rename from config to default_config all the appearances in the StrippingBeauty2XGamma. Loosen the pi0 cuts, keeping rate under control. 

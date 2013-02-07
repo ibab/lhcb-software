@@ -41,6 +41,7 @@ from PhysSelPython.Wrappers                import Selection
 from StandardParticles  import ( StdLoosePions       ,
                                  StdLooseKaons       ,
                                  StdLooseMuons       , 
+                                 StdLooseProtons     , 
                                  StdLoosePi02gg      ) ## for gamma-eff
 # =============================================================================
 ## logging
@@ -66,7 +67,7 @@ _default_configuration_ = {
     #
     ## c*tau cut for B-hadrons 
     #
-    'CTAU'      : 125 * micrometer , 
+    'CTAU'      : 100 * micrometer , 
     'CTAU_BC'   :  50 * micrometer , 
     'CTAU_Kst'  : 150 * micrometer , 
     #
@@ -89,7 +90,8 @@ _default_configuration_ = {
     HASRICH                  &
     ( PIDpi - PIDK > -5    ) &
     ( MIPCHI2DV()  >  9    )
-    """ , 
+    """ ,
+    #
     'KaonCut'   : """
     ( CLONEDIST   > 5000   ) & 
     ( TRCHI2DOF   < 4      ) & 
@@ -98,7 +100,18 @@ _default_configuration_ = {
     HASRICH                  &
     ( PIDK - PIDpi > -5    ) &
     ( MIPCHI2DV()  >  9    ) 
-    """ , 
+    """ ,
+    #
+    'ProtonCut'   : """
+    ( CLONEDIST   > 5000   ) & 
+    ( TRCHI2DOF   < 4      ) & 
+    ( TRGHOSTPROB < 0.5    ) & 
+    in_range ( 2 , ETA , 5 ) &
+    HASRICH                  &
+    ( PIDp - PIDpi >  0    ) &
+    ( PIDp - PIDK  >  0    ) &
+    ( MIPCHI2DV()  >  9    ) 
+    """ ,
     #
     ## useful shortcuts:
     #
@@ -115,10 +128,12 @@ _default_configuration_ = {
     ## Combination mass-cut for neutral beauty particles 
     "mb0_acut  = in_range ( 5.100 * GeV , AM , 5.550 * GeV ) " ,
     "mbp_acut  = in_range ( 5.100 * GeV , AM , 5.550 * GeV ) " ,
+    "mlb_acut  = in_range ( 5.350 * GeV , AM , 5.850 * GeV ) " ,
     "mbc_acut  = in_range ( 6.050 * GeV , AM , 6.550 * GeV ) " ,
     ## mass-cut for beauty particles 
     "mb0_cut   = in_range ( 5.150 * GeV ,  M , 5.500 * GeV ) " ,
     "mbp_cut   = in_range ( 5.150 * GeV ,  M , 5.500 * GeV ) " ,
+    "mlb_cut   = in_range ( 5.400 * GeV ,  M , 5.800 * GeV ) " ,
     "mbc_cut   = in_range ( 6.100 * GeV ,  M , 6.500 * GeV ) " ,
     ] ,
     # =========================================================================
@@ -149,12 +164,22 @@ _default_configuration_ = {
     'B2PsiD0Prescale'   : 1.0 ,
     'B2PsiDpPrescale'   : 1.0 ,
     'B2PsiDsPrescale'   : 1.0 ,
+    # 
+    'Lb2PsiPKPrescale'      : 1.0 ,
+    'Lb2PsiPPiPrescale'     : 1.0 ,
+    'Lb2PsiPKPiPiPrescale'  : 1.0 ,
+    'Lb2PsiPPiPiPiPrescale' : 1.0 ,
+    #
+    'B2PsiPPPrescale'       : 1.0 ,
+    'B2PsiPPPiPrescale'     : 1.0 ,
+    'B2PsiPPKPrescale'      : 1.0 ,
+    'B2PsiPPPiPiPrescale'   : 1.0 ,
+    'B2PsiPPKPiPiPrescale'  : 1.0 ,
+    'B2PsiPPPiPiPiPrescale' : 1.0 ,
     # =========================================================================
     'B2PsiKstPrescale'  : 1.0 
     # =========================================================================
     }
-## ============================================================================
-
 ## ============================================================================
 ## @class  PsiX_BQ_Conf
 #  psi(') X configuration file 
@@ -162,7 +187,7 @@ _default_configuration_ = {
 #  @date 2012-02-19
 class PsiX_BQ_Conf(LineBuilder) :
     """
-    Helper class to configure 'PsiX0'-lines
+    Helper class to configure 'PsiX'-lines
     """
     __configuration_keys__ = tuple ( _default_configuration_.keys() )
     
@@ -172,7 +197,7 @@ class PsiX_BQ_Conf(LineBuilder) :
         """
         Get the default/recommended configurtaion
         
-        >>> conf = PsiX0.defaultConfiguration()
+        >>> conf = PsiX.defaultConfiguration()
         
         """
         from copy import deepcopy
@@ -220,7 +245,7 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         for line in self._lines_psiX () :
             self.registerLine(line)
-            logger.debug ( "Register line: %s" %  line.name () ) 
+            logger.info ( "Register line: %s" %  line.name () ) 
             
             
     ## get the selection, associated with some nickname name 
@@ -432,39 +457,111 @@ class PsiX_BQ_Conf(LineBuilder) :
             HLT             = self [ 'L0DU'    ]          ,
             algos           = [ self.psi_6Kpi ()       ]  ) ,
             #
-            ## psi + charm 
+            ## 1 proton
             #
             StrippingLine (
-            "B2PsiD0For"    + self.name()                 ,
-            prescale        = self [ 'B2PsiD0Prescale' ]  , 
+            "Lb2PsiPKFor"   + self.name()                 ,
+            prescale        = self [ 'Lb2PsiPKPrescale'  ] , 
             checkPV         = self [ 'CheckPV' ]          ,
             FILTER          = self [ 'FILTER'  ]          ,
             ODIN            = self [ 'ODIN'    ]          ,
             L0DU            = self [ 'L0DU'    ]          ,
             HLT             = self [ 'L0DU'    ]          ,
-            algos           = [ self.psi_D0 ()       ]  ) ,
-            #
+            algos           = [ self.psi_pK ()         ]  ) ,
+            #            
             StrippingLine (
-            "B2PsiDpFor"    + self.name()                 ,
-            prescale        = self [ 'B2PsiDpPrescale' ]  , 
+            "Lb2PsiPPiFor"  + self.name()                 ,
+            prescale        = self [ 'Lb2PsiPPiPrescale' ] , 
             checkPV         = self [ 'CheckPV' ]          ,
             FILTER          = self [ 'FILTER'  ]          ,
             ODIN            = self [ 'ODIN'    ]          ,
             L0DU            = self [ 'L0DU'    ]          ,
             HLT             = self [ 'L0DU'    ]          ,
-            algos           = [ self.psi_Dp ()       ]  ) ,
-            #
+            algos           = [ self.psi_ppi ()        ]  ) ,
             #
             StrippingLine (
-            "B2PsiDsFor"    + self.name()                 ,
-            prescale        = self [ 'B2PsiDsPrescale' ]  , 
+            "Lb2PsiPKPiPiFor"  + self.name()                 ,
+            prescale        = self [ 'Lb2PsiPKPiPiPrescale' ] , 
             checkPV         = self [ 'CheckPV' ]          ,
             FILTER          = self [ 'FILTER'  ]          ,
             ODIN            = self [ 'ODIN'    ]          ,
             L0DU            = self [ 'L0DU'    ]          ,
             HLT             = self [ 'L0DU'    ]          ,
-            algos           = [ self.psi_Ds ()       ]  ) ,
+            algos           = [ self.psi_pKpipi ()      ]  ) ,
             #
+            #
+            StrippingLine (
+            "Lb2PsiPPiPiPiFor"  + self.name()                 ,
+            prescale        = self [ 'Lb2PsiPPiPiPiPrescale' ] , 
+            checkPV         = self [ 'CheckPV' ]          ,
+            FILTER          = self [ 'FILTER'  ]          ,
+            ODIN            = self [ 'ODIN'    ]          ,
+            L0DU            = self [ 'L0DU'    ]          ,
+            HLT             = self [ 'L0DU'    ]          ,
+            algos           = [ self.psi_ppipipi ()       ]  ) ,
+            #
+            ## two protons
+            #
+            StrippingLine (
+            "B2PsiPPFor"    + self.name()                 ,
+            prescale        = self [ 'B2PsiPPPrescale' ]  , 
+            checkPV         = self [ 'CheckPV' ]          ,
+            FILTER          = self [ 'FILTER'  ]          ,
+            ODIN            = self [ 'ODIN'    ]          ,
+            L0DU            = self [ 'L0DU'    ]          ,
+            HLT             = self [ 'L0DU'    ]          ,
+            algos           = [ self.psi_pp ()       ]  ) ,
+            #
+            StrippingLine (
+            "B2PsiPPPiFor"  + self.name()                 ,
+            prescale        = self [ 'B2PsiPPPiPrescale' ]  , 
+            checkPV         = self [ 'CheckPV' ]          ,
+            FILTER          = self [ 'FILTER'  ]          ,
+            ODIN            = self [ 'ODIN'    ]          ,
+            L0DU            = self [ 'L0DU'    ]          ,
+            HLT             = self [ 'L0DU'    ]          ,
+            algos           = [ self.psi_pppi ()       ]  ) ,
+            #
+            StrippingLine (
+            "B2PsiPPKFor"  + self.name()                 ,
+            prescale        = self [ 'B2PsiPPKPrescale' ]  , 
+            checkPV         = self [ 'CheckPV' ]          ,
+            FILTER          = self [ 'FILTER'  ]          ,
+            ODIN            = self [ 'ODIN'    ]          ,
+            L0DU            = self [ 'L0DU'    ]          ,
+            HLT             = self [ 'L0DU'    ]          ,
+            algos           = [ self.psi_ppK ()       ]  ) ,
+            #
+            StrippingLine (
+            "B2PsiPPPiPiFor"  + self.name()                 ,
+            prescale        = self [ 'B2PsiPPPiPiPrescale' ]  , 
+            checkPV         = self [ 'CheckPV' ]          ,
+            FILTER          = self [ 'FILTER'  ]          ,
+            ODIN            = self [ 'ODIN'    ]          ,
+            L0DU            = self [ 'L0DU'    ]          ,
+            HLT             = self [ 'L0DU'    ]          ,
+            algos           = [ self.psi_pppipi ()       ]  ) ,
+            #
+            StrippingLine (
+            "B2PsiPPKPiPiFor"  + self.name()                 ,
+            prescale        = self [ 'B2PsiPPKPiPiPrescale' ]  , 
+            checkPV         = self [ 'CheckPV' ]          ,
+            FILTER          = self [ 'FILTER'  ]          ,
+            ODIN            = self [ 'ODIN'    ]          ,
+            L0DU            = self [ 'L0DU'    ]          ,
+            HLT             = self [ 'L0DU'    ]          ,
+            algos           = [ self.psi_ppKpipi ()       ]  ) ,
+            #
+            StrippingLine (
+            "B2PsiPPPiPiPiFor"  + self.name()                 ,
+            prescale        = self [ 'B2PsiPPPiPiPiPrescale' ]  , 
+            checkPV         = self [ 'CheckPV' ]          ,
+            FILTER          = self [ 'FILTER'  ]          ,
+            ODIN            = self [ 'ODIN'    ]          ,
+            L0DU            = self [ 'L0DU'    ]          ,
+            HLT             = self [ 'L0DU'    ]          ,
+            algos           = [ self.psi_pppipipi ()       ]  ) ,
+            #            
             # =================================================================
             # Helper line to study gamma/pi0 reconstruction efficiency
             # =================================================================
@@ -494,6 +591,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             self.muons        () ,
             self.pions        () ,
             self.kaons        () ,
+            self.protons      () ,
             ## composite
             self.psi          () ,
             self.psi_prompt   () ,
@@ -520,18 +618,23 @@ class PsiX_BQ_Conf(LineBuilder) :
             self.psi_6pi      () ,
             self.psi_6Kpi     () ,
             ##
-            self.D0           () ,
-            self.Dp           () ,
-            self.Ds           () ,
-            ## 
-            self.psi_D0       () ,
-            self.psi_Dp       () ,
-            self.psi_Ds       () ,
-            ## 
             self.psi_Kst      () ,
+            ##
+            self.psi_pK       () ,
+            self.psi_ppi      () ,
+            self.psi_pKpipi   () ,
+            self.psi_ppipipi  () ,
+            ## 
+            self.psi_pp       () ,
+            self.psi_pppi     () ,
+            self.psi_ppK      () ,
+            self.psi_pppipi   () ,
+            self.psi_ppKpipi  () ,
+            self.psi_pppipipi () ,
             ]
         
         return self._add_selection ( 'Selections' , sel )
+    
     
     ## muons 
     def muons     ( self ) : return StdLooseMuons 
@@ -587,6 +690,31 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         return self._add_selection( 'Kaon_Selection' , sel ) 
 
+    ## protons :
+    def protons    ( self ) :
+        """
+        Protons for   b -> psi X lines 
+        """
+        sel = self._selection ( 'Proton_Selection')
+        if sel : return sel
+        
+        alg  = FilterDesktop (
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            Code = self['ProtonCut'] ,
+            ##
+            )
+        
+        sel  = Selection (
+            "SelPFor"          +   self.name()     ,
+            Algorithm          =   alg             ,
+            RequiredSelections = [ StdLooseProtons ]  
+            )
+        
+        return self._add_selection( 'Proton_Selection' , sel ) 
+    
+    
     ## psi(') -> mu+ mu-
     def psi ( self ) :
         """
@@ -758,7 +886,6 @@ class PsiX_BQ_Conf(LineBuilder) :
             )
         
         return self._add_selection( 'PsiK*+_Selection' , sel ) 
-
     
     # B -> psi(') pipi
     def psi_2pi ( self ) :
@@ -833,9 +960,7 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         return self._add_selection( 'Psi2KPi_Selection' , sel ) 
     
-    
     # B -> psi(') KK
-
     def psi_2K ( self ) :
         """
         B -> psi(') KK
@@ -871,47 +996,6 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         return self._add_selection( 'Psi2K_Selection' , sel ) 
 
-    
-    # B -> psi(') 3pi 
-    def psi_3pi ( self ) :
-        """
-        B -> psi(') 3pi         
-        """
-
-    def psi_2K ( self ) :
-        """
-        B -> psi(') KK
-        """
-        sel = self._selection ( 'Psi2K_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
-            DecayDescriptor = "B_s0 -> J/psi(1S) K+ K-" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
-            ## 
-            MotherCut = """
-            mb0_cut & 
-            ( chi2vx    < 25 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
-            )
-        
-        sel  = Selection (
-            "SelPsi2KFor"      + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ] 
-            )
-        
-        return self._add_selection( 'Psi2K_Selection' , sel ) 
 
     
     # B -> psi(') 3pi 
@@ -1112,7 +1196,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             ##
             DecayDescriptors = [
             "[ B_s0 -> J/psi(1S) K+ pi+ pi- pi- ]cc" ,
-            "[ B_s0 -> J/psi(1S) K+ pi+ K-  pi- ]cc" ,
+            "  B_s0 -> J/psi(1S) K+ pi+ K-  pi-    " ,
             "[ B_s0 -> J/psi(1S) K+ K+  K-  pi- ]cc"
             ] ,
             ##
@@ -1304,9 +1388,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             ##
             DecayDescriptors = [
             "[B_s0 -> J/psi(1S) K+ pi+ pi+ pi- pi- pi-]cc" ,  ## 1K 
-            "[B_s0 -> J/psi(1S) K+ pi+ pi+ K-  pi- pi-]cc" ,  ## 2K
+            " B_s0 -> J/psi(1S) K+ pi+ pi+ K-  pi- pi-   " ,  ## 2K
             "[B_s0 -> J/psi(1S) K+ K+  pi+ K-  pi- pi-]cc" ,  ## 3K
-            "[B_s0 -> J/psi(1S) K+ K+  pi+ K-  K-  pi-]cc"    ## 4K
+            " B_s0 -> J/psi(1S) K+ K+  pi+ K-  K-  pi-   "    ## 4K
             ],
             ##
             DaughtersCuts = {
@@ -1338,6 +1422,10 @@ class PsiX_BQ_Conf(LineBuilder) :
             )
         
         return self._add_selection( 'Psi6KPi_Selection' , sel )
+
+    # =========================================================================
+    # a little bit of charm 
+    # =========================================================================
     
     ## D0 -> Kpi candidates
     def D0 ( self ) :
@@ -1354,7 +1442,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             ## combination cut : wide mass-cut & PT-cut
             CombinationCut = """
             ( ADAMASS('D0') <  80 * MeV ) &
-            ( APT           > 900 * MeV )
+            ( APT           > 500 * MeV )
             """ , 
             ## mother cut
             MotherCut      = """
@@ -1363,7 +1451,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             ( ADMASS('D0') < 75 * MeV ) 
             """ ,
             ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter' } 
+            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
             )
         
         sel = Selection (
@@ -1391,7 +1479,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             ## combination cut : wide mass-cut & PT-cut
             CombinationCut = """
             ( ADAMASS('D+') <  60 * MeV ) &
-            ( APT           > 900 * MeV )
+            ( APT           > 500 * MeV )
             """ , 
             ## mother cut
             MotherCut      = """
@@ -1400,7 +1488,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             ( ADMASS('D+') < 50 * MeV ) 
             """ ,
             ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter' } 
+            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
             )
         
         sel = Selection (
@@ -1428,7 +1516,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             CombinationCut = """
             (   AM12           < 1050 * MeV ) & 
             ( ( ADAMASS('D+')  <   60 * MeV ) | ( ADAMASS('D_s+') <   60 * MeV ) ) & 
-            (   APT            >  900 * MeV )
+            (   APT            >  500 * MeV )
             """ , 
             ## mother cut
             MotherCut      = """
@@ -1437,7 +1525,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             ( ( ADMASS('D+')  < 50 * MeV ) | ( ADMASS('D_s+') < 50 * MeV ) ) 
             """ ,
             ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter' } 
+            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
             )
         
         sel = Selection (
@@ -1472,12 +1560,12 @@ class PsiX_BQ_Conf(LineBuilder) :
             ( ctau    > 50 * micrometer ) 
             """ ,
             ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter' } 
+            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
             )
 
         ## make the selection
         sel = Selection (
-            'SelB2PsiD0For'    +   self.name () ,
+            'B2PsiD0For'       +   self.name () ,
             Algorithm          =   alg          ,
             RequiredSelections = [ self.psi  () ,
                                    self.D0   () ]
@@ -1508,12 +1596,12 @@ class PsiX_BQ_Conf(LineBuilder) :
             ( ctau    > 50 * micrometer ) 
             """ , 
             ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter' } 
+            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
             )
         
         ## make the selection
         sel = Selection (
-            'SelB2PsiDpFor'    +   self.name () ,
+            'B2PsiDpFor'       +   self.name () ,
             Algorithm          =   alg          ,
             RequiredSelections = [ self.psi  () ,
                                    self.Dp   () ]
@@ -1545,12 +1633,12 @@ class PsiX_BQ_Conf(LineBuilder) :
             ( ctau    > 50 * micrometer ) 
             """ ,
             ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter' } 
+            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
             )
         
         ## make the selection
         sel = Selection (
-            'SelB2PsiDsFor'    +   self.name () ,
+            'B2PsiDsFor'       +   self.name () ,
             Algorithm          =   alg          ,
             RequiredSelections = [ self.psi  () ,
                                    self.Ds   () ]
@@ -1558,8 +1646,383 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         return self._add_selection( 'PsiDs_Selection' , sel )
 
+    # =========================================================================
+    # make use of protons 
+    # =========================================================================
     
+    # Lb -> psi(') pK
+    def psi_pK ( self ) :
+        """
+        Lb -> psi(') pK
+        """
+        sel = self._selection ( 'PsiPK_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "[Lambda_b0 -> J/psi(1S) p+ K-]cc" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            mlb_acut & 
+            ADOCACHI2CUT ( 9 , '' )
+            """ ,
+            ## 
+            MotherCut = """
+            mlb_cut & 
+            ( chi2vx    < 25 ) &
+            ( ctau      > %s ) 
+            """ % self['CTAU'] 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsiPKFor"      + self.name()       ,
+            Algorithm          =   alg             ,
+            RequiredSelections = [ self.psi     () , 
+                                   self.protons () ,
+                                   self.kaons   () ] 
+            )
+        
+        return self._add_selection( 'PsiPK_Selection' , sel ) 
 
+    # Lb -> psi(') pK pipi
+    def psi_pKpipi( self ) :
+        """
+        Lb -> psi(') pKpipi
+        """
+        sel = self._selection ( 'PsiPKpipi_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "[Lambda_b0 -> J/psi(1S) p+ K- pi+ pi-]cc" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            mlb_acut & 
+            ADOCACHI2CUT ( 9 , '' )
+            """ ,
+            ## 
+            MotherCut = """
+            mlb_cut & 
+            ( chi2vx    < 49 ) &
+            ( ctau      > %s ) 
+            """ % self['CTAU'] 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsiPKpipiFor"  + self.name()       ,
+            Algorithm          =   alg             ,
+            RequiredSelections = [ self.psi     () , 
+                                   self.protons () ,
+                                   self.kaons   () ,
+                                   self.pions   () ] 
+            )
+        
+        return self._add_selection( 'PsiPKpipi_Selection' , sel ) 
+    
+    # Lb -> psi(') p pipipi
+    def psi_ppipipi( self ) :
+        """
+        Lb -> psi(') p pi pi pi
+        """
+        sel = self._selection ( 'PsiPpipipi_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "[Lambda_b0 -> J/psi(1S) p+ pi- pi- pi+]cc" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            mlb_acut & 
+            ADOCACHI2CUT ( 9 , '' )
+            """ ,
+            ## 
+            MotherCut = """
+            mlb_cut & 
+            ( chi2vx    < 49 ) &
+            ( ctau      > %s ) 
+            """ % self['CTAU'] 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsiPpipipiFor"  + self.name()       ,
+            Algorithm          =   alg             ,
+            RequiredSelections = [ self.psi     () , 
+                                   self.protons () ,
+                                   self.kaons   () ,
+                                   self.pions   () ] 
+            )
+        
+        return self._add_selection( 'PsiPpipipi_Selection' , sel ) 
+
+    
+    # Lb -> psi(') pPi
+    def psi_ppi ( self ) :
+        """
+        Lb -> psi(') pK
+        """
+        sel = self._selection ( 'PsiPPi_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "[Lambda_b0 -> J/psi(1S) p+ pi-]cc" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            mlb_acut & 
+            ADOCACHI2CUT ( 9 , '' )
+            """ ,
+            ## 
+            MotherCut = """
+            mlb_cut & 
+            ( chi2vx    < 25 ) &
+            ( ctau      > %s ) 
+            """ % self['CTAU'] 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsiPPiFor"     + self.name()       ,
+            Algorithm          =   alg             ,
+            RequiredSelections = [ self.psi     () , 
+                                   self.protons () ,
+                                   self.kaons   () ] 
+            )
+        
+        return self._add_selection( 'PsiPPi_Selection' , sel ) 
+    
+    # B -> psi(') pp
+    def psi_pp ( self ) :
+        """
+        B -> psi(') pp
+        """
+        sel = self._selection ( 'PsiPP_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "B_s0 -> J/psi(1S) p+ p~-" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            mb0_acut & 
+            ADOCACHI2CUT ( 9 , '' )
+            """ ,
+            ## 
+            MotherCut = """
+            mb0_cut & 
+            ( chi2vx    < 25 ) &
+            ( ctau      > %s ) 
+            """ % self['CTAU'] 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsiPPFor"      + self.name()       ,
+            Algorithm          =   alg             ,
+            RequiredSelections = [ self.psi     () , 
+                                   self.protons () ] 
+            )
+        
+        return self._add_selection( 'PsiPP_Selection' , sel ) 
+        
+    # B -> psi(') pppi
+    def psi_pppi( self ) :
+        """
+        B -> psi(') pppi
+        """
+        sel = self._selection ( 'PsiPPPi_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "[B+ -> J/psi(1S) p+ p~- pi+]cc" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            ( mbp_acut | mbc_acut ) & 
+            ADOCACHI2CUT ( 9 , '' )
+            """ ,
+            ## 
+            MotherCut = """
+            ( chi2vx    < 36 ) &
+            ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
+            """ % ( self['CTAU'] , self['CTAU_BC'] ) 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsiPPPiFor"      + self.name()       ,
+            Algorithm          =   alg             ,
+            RequiredSelections = [ self.psi     () , 
+                                   self.protons () ,
+                                   self.pions   () ] 
+            )
+        
+        return self._add_selection( 'PsiPPPi_Selection' , sel ) 
+    
+    # B -> psi(') ppK
+    def psi_ppK( self ) :
+        """
+        Bc -> psi(') pppi
+        """
+        sel = self._selection ( 'PsiPPK_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "[B_c+ -> J/psi(1S) p+ p~- K+]cc" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            mbc_acut  & 
+            ADOCACHI2CUT ( 9 , '' )
+            """ ,
+            ## 
+            MotherCut = """
+            mbc_cut         &
+            ( chi2vx < 36 ) &
+            ( ctau   > %s )            
+            """ % self['CTAU_BC'] 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsiPPKFor"      + self.name()       ,
+            Algorithm          =   alg             ,
+            RequiredSelections = [ self.psi     () , 
+                                   self.protons () ,
+                                   self.pions   () ] 
+            )
+        
+        return self._add_selection( 'PsiPPK_Selection' , sel ) 
+    
+    # B -> psi(') pppipi
+    def psi_pppipi ( self ) :
+        """
+        B -> psi(') pp pi pi 
+        """
+        sel = self._selection ( 'PsiPPPiPi_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "B_s0 -> J/psi(1S) p+ p~- pi+ pi-" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            mb0_acut & 
+            ADOCACHI2CUT ( 9 , '' )
+            """ ,
+            ## 
+            MotherCut = """
+            mb0_cut & 
+            ( chi2vx    < 49 ) &
+            ( ctau      > %s ) 
+            """ % self['CTAU'] 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsiPPPiPiFor"  + self.name()       ,
+            Algorithm          =   alg             ,
+            RequiredSelections = [ self.psi     () , 
+                                   self.protons () ,
+                                   self.pions   () ] 
+            )
+        
+        return self._add_selection( 'PsiPPPiPi_Selection' , sel ) 
+        
+    # Bc -> psi(') ppKpipi
+    def psi_ppKpipi( self ) :
+        """
+        Bc -> psi(') ppKpipi
+        """
+        sel = self._selection ( 'PsiPPKPiPi_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "[B_c+ -> J/psi(1S) p+ p~- K+ pi+ pi-]cc" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            mbc_acut  & 
+            ADOCACHI2CUT ( 9 , '' )
+            """ ,
+            ## 
+            MotherCut = """
+            mbc_cut          &
+            ( chi2vx  < 64 ) &
+            ( ctau    > %s )
+            """ % self['CTAU_BC'] 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsiPPKPiPiFor" + self.name()       ,
+            Algorithm          =   alg             ,
+            RequiredSelections = [ self.psi     () , 
+                                   self.protons () ,
+                                   self.kaons   () , 
+                                   self.pions   () ] 
+            )
+        
+        return self._add_selection( 'PsiPPKPiPi_Selection' , sel ) 
+
+    # Bc -> psi(') pppipipi
+    def psi_pppipipi( self ) :
+        """
+        Bc -> psi(') p p pi pi pi
+        """
+        sel = self._selection ( 'PsiPPPiPiPi_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptor = "[B_c+ -> J/psi(1S) p+ p~- pi+ pi+ pi-]cc" ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            mbc_acut  & 
+            ADOCACHI2CUT ( 9 , '' )
+            """ ,
+            ## 
+            MotherCut = """
+            mbc_cut          &
+            ( chi2vx  < 64 ) &
+            ( ctau    > %s )
+            """ % self['CTAU_BC'] 
+            ## 
+            )
+        
+        sel  = Selection (
+            "SelPsiPPPiPiPiFor" + self.name()       ,
+            Algorithm           =   alg             ,
+            RequiredSelections  = [ self.psi     () , 
+                                    self.protons () ,
+                                    self.pions   () ] 
+            )
+        
+        return self._add_selection( 'PsiPPPiPiPi_Selection' , sel ) 
+    
+    
 # =============================================================================
 if '__main__' == __name__ :
 
