@@ -166,7 +166,7 @@ LoKi::TES::Contains::operator() ( /* LoKi::TES::Contains::argument */ ) const
   Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
   //
   const ObjectContainerBase *obj =
-    m_algorithm->get<ObjectContainerBase>( m_location , m_useRootInTes )  ;
+    m_algorithm->getIfExists<ObjectContainerBase>( m_location , m_useRootInTes )  ;
   //
   if ( NULL == obj ) { return -1 ; } // REUTRN
   //

@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-02-07 - Vanya Belyaev
+
+ - tweak a bit CONTAINS functor: return -1 fo rnon-existing locations
+
 !========================= LoKiCore v11r11 2013-02-04 =========================
 ! 2012-12-12 - Vanya Belyaev
  - Fix Coverity defect 19275
@@ -34,61 +38,61 @@
 
 !========================= LoKiCore v11r9p1 2012-09-28 =========================
 ! 2012-09-26 - Vanya Belyaev
- - fix the bug with decay tree parsing. 
+ - fix the bug with decay tree parsing.
    Many thanks to Francesco Dettory for reporting the problem
 
 !========================= LoKiCore v11r9 2012-06-25 =========================
 ! 2012-06-21 - Vanya Belyaev
  - fix ICC compiler warning
- 
+
 ! 2012-06-18 - Vanya Belyaev
  - fix compiler warning
 
 ! 2012-06-17 - Vanya Belyaev
- - minor tweak for event type in AuxFunBase 
+ - minor tweak for event type in AuxFunBase
 
 ! 2012-06-15 - Vanya Belyaev
- - minor tweak to make Clara, Beat and Markus  happy 
+ - minor tweak to make Clara, Beat and Markus  happy
 
 !========================= LoKiCore v11r8 2012-05-24 =========================
 ! 2012-05-20 - Vanya Belyaev
- - improve decorators 
+ - improve decorators
 
 !========================= LoKiCore v11r7 2012-02-28 =========================
 ! 2012-02-14 - Vanya Belyaev
- - small fix 
+ - small fix
 
 ! 2012-02-13 - Vanya Belyaev
- - improve treatment of vector-like argument 
+ - improve treatment of vector-like argument
 
 !========================= LoKiCore v11r6 2012-01-31 =========================
 ! 2012-01-29 - Vanya Belyaev
- - add dumping functors 
+ - add dumping functors
 
 ! 2011-12-20 - Marco Cattaneo
  - Fix include recursion between AddRef.h and Release.h, Coverity defect 15553
 
 !========================= LoKiCore v11r5 2011-12-14 =========================
 ! 2011-12-11 - Vanya Belyaev
- - use new reimplementation (by Sascha) of decay node and decay 
+ - use new reimplementation (by Sascha) of decay node and decay
    tree parsers (based on Spirit v2)
 
 ! 2011-11-18 - Vanya Belyaev
  - LoKi/Sources.h
-    fix a compilation error for gcc46 
+    fix a compilation error for gcc46
 
 !========================= LoKiCore v11r4 2011-11-07 =========================
 ! 2011-10-30 - Vanya Belyaev
  - add new functionality to streamers:
-     - selection the first few elements 
-       " ... >> FirstN ( 5 ) >> ... " 
+     - selection the first few elements
+       " ... >> FirstN ( 5 ) >> ... "
      - reverse the ordering of streamer
-       " ... >> reverse  >> ... "  
-     - sort and partial sort of the stream 
-     " ... >> sort ( PT      ) >> ... " 
-     " ... >> sort ( PT , 10 ) >> ... " 
-     " ... >> sort ( PT , -1 , False ) >> ... " 
-     " ... >> sort ( PT , 10 , False ) >> ... " 
+       " ... >> reverse  >> ... "
+     - sort and partial sort of the stream
+     " ... >> sort ( PT      ) >> ... "
+     " ... >> sort ( PT , 10 ) >> ... "
+     " ... >> sort ( PT , -1 , False ) >> ... "
+     " ... >> sort ( PT , 10 , False ) >> ... "
 
 ! 2011-08-05 - Roel Aaij
  - Fix a bug in the copy constructor of Scalers::RateLimitV. On copy, an
