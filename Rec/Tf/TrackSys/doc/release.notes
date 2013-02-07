@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-02-07 - Sascha Stahl
+ - Changed way of getting Upgrade detectors.
+
+
 ! 2013-02-06 - Sascha Stahl
  - Two properties removed from TrackSys Upgrade, UpgradeDetectors. These
    are steered by Brunel().Detectors now.

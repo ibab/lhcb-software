@@ -141,10 +141,13 @@ class TrackSys(LHCbConfigurableUser):
     def __apply_configuration__(self):
         self.defineOptions()
         useUpgrade = False
-        from Configurables import Brunel
-        if hasattr(Brunel(),"UpgradeDets"):
-            if Brunel().getProp("UpgradeDets"):
-                useUpgrade = True
+        from Configurables import LHCbApp
+        upgradeDets = []
+        #Test if LHCbApp has this method (same revision as property)
+        if hasattr(LHCbApp(),"Detectors"):
+            if LHCbApp().isPropertySet("Detectors"):
+                upgradeDets = LHCbApp().upgradeDetectors()
+                useUpgrade = bool([det for det in upgradeDets if det in ['VP','VL','UT','FT']])
         if not TrackSys().isPropertySet("TrackTypes"):
             TrackSys().setProp("TrackTypes", self.DefaultTrackTypes)
         

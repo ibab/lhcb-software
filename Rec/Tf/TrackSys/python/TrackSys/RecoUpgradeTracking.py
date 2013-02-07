@@ -9,10 +9,11 @@ def RecoUpgradeTracking(exclude=[]):
     ## Start TransportSvc, needed by track fit  ???
     ApplicationMgr().ExtSvc.append("TransportSvc")
     subDets = []
-    from Configurables import Brunel
-    if hasattr(Brunel(),"UpgradeDets"):
-        if (Brunel().isPropertySet("UpgradeDets")):
-            subDets = Brunel().getProp("UpgradeDets")
+    from Configurables import LHCbApp
+    #Test if LHCbApp has this method (same revision as property)
+    if hasattr(LHCbApp(),"Detectors"):
+        if LHCbApp().isPropertySet("Detectors"):
+            subDets = LHCbApp().upgradeDetectors()
     trackTypes = TrackSys().getProp("TrackTypes")
 
     ### Sanity checks
