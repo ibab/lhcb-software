@@ -94,16 +94,45 @@ def ConfiguredMasterFitter( Name,
                                    MeasurementProviderT_MeasurementProviderTypes__VLLiteR_,
                                    MeasurementProviderT_MeasurementProviderTypes__VLLitePhi_,
                                    MeasurementProviderT_MeasurementProviderTypes__TTLite_,
-                                   MeasurementProviderT_MeasurementProviderTypes__ITLite_)
+                                   MeasurementProviderT_MeasurementProviderTypes__ITLite_,
+                                   MeasurementProviderT_MeasurementProviderTypes__UTLite_)
         fitter.MeasProvider.VLRProvider = MeasurementProviderT_MeasurementProviderTypes__VLLiteR_()
         fitter.MeasProvider.VLPhiProvider = MeasurementProviderT_MeasurementProviderTypes__VLLitePhi_()
         fitter.MeasProvider.VeloRProvider = MeasurementProviderT_MeasurementProviderTypes__VeloLiteR_()
         fitter.MeasProvider.VeloPhiProvider = MeasurementProviderT_MeasurementProviderTypes__VeloLitePhi_()
         fitter.MeasProvider.TTProvider = MeasurementProviderT_MeasurementProviderTypes__TTLite_()
         fitter.MeasProvider.ITProvider = MeasurementProviderT_MeasurementProviderTypes__ITLite_()
+        fitter.MeasProvider.UTProvider = MeasurementProviderT_MeasurementProviderTypes__UTLite_()
 
     if TrackSys().cosmics():
         fitter.MeasProvider.OTProvider.RawBankDecoder = 'OTMultiBXRawBankDecoder'
+
+    # figure out upgrade detectors
+    from Configurables import LHCbApp
+    if hasattr(LHCbApp(),"Detectors"):
+        if LHCbApp().isPropertySet("Detectors"):
+            subDets = LHCbApp().upgradeDetectors()
+            useUpgrade = bool([det for det in subDets if det in ['VP','VL','UT','FT']])            
+            if useUpgrade:
+                fitter.MeasProvider.IgnoreVelo = True
+                fitter.MeasProvider.IgnoreVP = True
+                fitter.MeasProvider.IgnoreVL = True
+                fitter.MeasProvider.IgnoreTT = True
+                fitter.MeasProvider.IgnoreUT = True
+                fitter.MeasProvider.IgnoreIT = True
+                fitter.MeasProvider.IgnoreOT = True
+                fitter.MeasProvider.IgnoreFT = True
+
+                if ("VP" in subDets):
+                    fitter.MeasProvider.IgnoreVP = False
+                if ("VL" in subDets):
+                    fitter.MeasProvider.IgnoreVL = False
+                if ("FT" in subDets):
+                    fitter.MeasProvider.IgnoreFT = False
+                if ("UT" in subDets):
+                    fitter.MeasProvider.IgnoreUT = False
+
+
 
     return fitter
 

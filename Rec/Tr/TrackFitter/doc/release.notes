@@ -3,6 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2013-02-07 - Sascha Stahl
+ - Added check for available upgrade detectors. It sets the correct
+	 measurement providers.
+
+
 ! 2013-02-01 - Sascha Stahl
  - Added VL measurements to the TrackMasterFitter. 
  - Changed structure of hittype map so that it reflects the measurements 
