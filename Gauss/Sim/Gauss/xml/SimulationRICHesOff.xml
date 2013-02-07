@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Simulation SYSTEM "Simulation.dtd"[
+<!ENTITY SimAttrRich SYSTEM "RichSimulationAttributes.xml">
+<!ENTITY RegionDefRich1Aerogel SYSTEM "Rich1AerogelRegionDefinition.xml">
+<!ENTITY RegionDefRichOverall SYSTEM "RichOverallRegionDefinition.xml">
+]>
+  <Simulation>
+  <SimAtts>
+    
+    <!-- ******************************************************************* -->
+    <!-- This part of the file contains definitions of simulation attributes -->
+    <!-- ******************************************************************* -->
+    
+    <SimAtt name="SimAttrGlobal"
+      minEkine="1.0*MeV"/>
+
+    <SimAtt name="SimAttrMuFilt"
+      minEkine="500.0*MeV"/>
+
+    <SimAtt name="SimAttrMuon"
+      minEkine="10.0*MeV"/>
+    
+    <SimAtt name="SimAttrElectr"
+      minEkine="0.001*MeV"/>
+    <!-- the following not used. This is so that the default 
+         thresholds for the  magnet iron is used also for the
+         RichShielding -->
+    <SimAtt name="SimAttrShielding"
+        minEkine="1.0*MeV" /> 
+ 
+    <!-- Note that you may skip some of the attributes ! -->
+    
+  </SimAtts>
+  <LogVols>
+    
+    <!-- ************************************************************** -->
+    <!-- This part is where simulation attributes are mapped to volumes -->
+    <!-- ************************************************************** -->
+
+    &SimAttrRich;
+
+    <Item name="/dd/Geometry/DownstreamRegion/Muon/lvMuFilter1">
+      <Cut particle="0" attr="SimAttrMuFilt"/>
+      <Cut particle="13" attr="SimAttrMuon"/>
+      <Cut particle="-13" attr="SimAttrMuon"/>
+    </Item>
+
+   <Item name="/dd/Geometry/DownstreamRegion/Muon/lvMuFilter2">
+      <Cut particle="0" attr="SimAttrMuFilt"/>
+      <Cut particle="13" attr="SimAttrMuon"/>
+      <Cut particle="-13" attr="SimAttrMuon"/>
+    </Item>
+
+   <Item name="/dd/Geometry/DownstreamRegion/Muon/lvMuFilter3">
+      <Cut particle="0" attr="SimAttrMuFilt"/>
+      <Cut particle="13" attr="SimAttrMuon"/>
+      <Cut particle="-13" attr="SimAttrMuon"/>
+    </Item>
+
+   <Item name="/dd/Geometry/DownstreamRegion/Muon/lvMuFilter4">
+      <Cut particle="0" attr="SimAttrMuFilt"/>
+      <Cut particle="13" attr="SimAttrMuon"/>
+      <Cut particle="-13" attr="SimAttrMuon"/>
+    </Item>
+    
+  </LogVols>
+
+  <!-- Define cuts to be applied later in regions -->
+  <ProductionCuts>
+    <ProductionCut name="calocut"
+      gammaCut="10*MeV"/>
+
+
+  <!-- Produce delta electrons in RICH above the 
+       Cherenkov Threshold for electrons in the medium .
+       Three regions considered : (a) aerogel , (b) rich1 submaster
+       (c) rich2 master
+       The Rich1Overall region contains the aerogel region 
+       and hence if OverallRich region is activated there is no need to
+       activate the aerogel region separately in this file.
+
+       For now, only the aerogel region is activated until
+       the effect on the cpu time is verified SE 2-11-2005 
+    <ProductionCut name="Rich1OverallDeltaElectronCut"
+      electronCut="1.5*mm"/>
+    <ProductionCut name="Rich2OverallDeltaElectronCut"
+      electronCut="1.5*mm"/>
+-->
+
+  <ProductionCut name="RichAerogelDeltaElectronCut"
+      electronCut="1.5*mm"
+      positronCut="5.0*mm"
+      gammaCut="10.0*mm"/>
+  </ProductionCuts>
+
+  <Regions>
+
+    <!-- &RegionDefRich1Aerogel; -->
+
+    <!-- @RegionDefRichOverall; -->
+
+  </Regions>  
+  
+  </Simulation>

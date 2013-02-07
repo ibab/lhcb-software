@@ -6,6 +6,8 @@
 
 ! 2013-02-07 - Gloria Corti
  - Replace CaloOnly.py with Gauss-CaloOnly.py
+ - Add file from v42b branch for setting simulation conditions when RICHES are
+   not simulated (xml/SimulationRICHesOff.xml)
 
 ! 2013-02-06 - Paul Szczypka
  - Changed print messages to log.warning.
