@@ -6,6 +6,9 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+! 2012-02-07 - Patrick Robbe
+ - GiGaRunManager.h: Fix release method to avoid compilation warnings
+
 ! 2012-02-05 - Patrick Robbe
  - Fix release method to avoid compilation warnings when create configurables
    in GiGaPhysConstructorBase.cpp, GiGaPhysListBase.cpp and GiGaSensDetBase.cpp 

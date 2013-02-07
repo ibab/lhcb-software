@@ -183,7 +183,7 @@ public:
   virtual unsigned long release()
   {
     unsigned long count = addRef() ;
-    if ( count > 2 )
+    if ( count >= 2 )
     {
       AlgTool::release() ;
       return AlgTool::release() ;
