@@ -271,17 +271,25 @@ bool PrVeloUT::matchingTracks( LHCb::Track* vttcand, LHCb::Track* trackused)
   int nvelo1 = 0;
   int nvelo2 = 0;
   for ( unsigned int i1 = 0; i1 < ids1.size(); ++i1 ) {
-    if(ids1[i1].checkDetectorType(LHCb::LHCbID::Velo) || ids1[i1].checkDetectorType(LHCb::LHCbID::VP) ) nvelo1++;
+    if(ids1[i1].checkDetectorType(LHCb::LHCbID::Velo) 
+       || ids1[i1].checkDetectorType(LHCb::LHCbID::VP)
+       || ids1[i1].checkDetectorType(LHCb::LHCbID::VL) ) nvelo1++;
   }
   for ( unsigned int i2 = 0; i2 < ids2.size(); ++i2 ) {
-    if(ids2[i2].checkDetectorType(LHCb::LHCbID::Velo)|| ids2[i2].checkDetectorType(LHCb::LHCbID::VP) ) nvelo2++;
+    if(ids2[i2].checkDetectorType(LHCb::LHCbID::Velo) 
+       || ids2[i2].checkDetectorType(LHCb::LHCbID::VP)
+       || ids2[i2].checkDetectorType(LHCb::LHCbID::VL) ) nvelo2++;
   }
 
   // Calculate the number of common LHCbIDs
   for ( unsigned int i1 = 0; i1 < ids1.size(); ++i1 ) {
-    if(!ids1[i1].checkDetectorType(LHCb::LHCbID::Velo) && !ids1[i1].checkDetectorType(LHCb::LHCbID::VP)) continue;
+    if(!ids1[i1].checkDetectorType(LHCb::LHCbID::Velo) 
+       && !ids1[i1].checkDetectorType(LHCb::LHCbID::VP)
+       && !ids1[i1].checkDetectorType(LHCb::LHCbID::VL) ) continue;
     for ( unsigned int i2 = 0; i2 < ids2.size(); ++i2 ) {
-      if(!ids2[i2].checkDetectorType(LHCb::LHCbID::Velo) && !ids2[i2].checkDetectorType(LHCb::LHCbID::VP)) continue;
+      if(!ids2[i2].checkDetectorType(LHCb::LHCbID::Velo) 
+         && !ids2[i2].checkDetectorType(LHCb::LHCbID::VP)
+         && !ids2[i2].checkDetectorType(LHCb::LHCbID::VL)) continue;
 
       if ( ids1[i1].channelID() == ids2[i2].channelID()  ) {
         ++nCommon;
