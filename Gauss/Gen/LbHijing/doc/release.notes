@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-02-07 - Patrick Robbe
- - cmt/requirements: remove link statement to absent library
+ - cmt/requirements: remove link statement to absent library and 
+   put it back
 
 !========================= LbHijing v8r0 2013-02-06 ==========================
 ! 2013-02-06 - Gloria Corti

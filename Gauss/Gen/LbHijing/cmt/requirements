@@ -47,6 +47,6 @@ apply_pattern library_stamps    library=LbHijingLib
 apply_pattern disable_package_on platform=target-winxp
 
 private
-# macro_prepend LbHijingLib_shlibflags "$(hijing_home)/lib/hidata.o $(hijing_home)/lib/pyhidata.o $(hijing_home)/lib/ludata.o "
+macro_prepend LbHijingLib_shlibflags "$(hijing_home)/lib/hidata.o $(hijing_home)/lib/pyhidata.o $(hijing_home)/lib/ludata.o "
 
 end_private
