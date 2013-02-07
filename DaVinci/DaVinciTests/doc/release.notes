@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-02-07 - Chris Jones
+ - Add an unpacking test.
+
 ! 2013-01-08 - Anton Poluektov 
  - Fix fsrs tests, change stripping version to Stripping20r1
 
