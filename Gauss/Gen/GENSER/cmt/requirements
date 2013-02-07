@@ -77,19 +77,13 @@ macro_append GENSER_linkopts " $(pythia6_linkopts) "
 
 #-- Hijing
 #============================================================================
-macro hijing_native_version "1.36.a.2"
-use  hijing      v*  LCG_GeneratorsInterfaces    
+macro hijing_native_version "1.383bs.2"
 macro         hijingforgaussSrc    " hijing/*.F "
 macro_append  hijingforgaussSrc   "" \
                       Darwin       "-x=ran.F"
 library      hijingforgauss   $(hijingforgaussSrc)
 
 apply_pattern linker_library library=hijingforgauss
-macro_append hijingforgauss_shlibflags "$(hijing_home)/lib/hidata.o $(hijing_home)/lib/pydata_hijing.o $(hijing_home)/lib/ludata_hijing.o"
-
-# force the order of link for hijing
-macro_append GENSER_linkopts " $(hijing_linkopts) "
-macro_append hijing_linkopts " -lpythia_hijing "
 
 
 private

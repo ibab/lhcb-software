@@ -4,8 +4,15 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v12r1 2013-02-07 ==========================
+! 2013-02-07 - Gloria Corti
+ - Put back the version of hijing as in MC10 1.383bs.2 and change the rlu.F 
+   function in src/hijing to adapt back to it. 
+   Remove all linking appended to those of GENSER from here to remove tying
+   all generators to hijing as in link library symbols
+
 ! 2013-01-24 - Patrick Robbe
- - use photos 3.52
+ - use photos++ 3.52
 
 ! 2013-01-21 - Patrick Robbe
  - Remove FORTRAN files for PHOTOS in Gauss
