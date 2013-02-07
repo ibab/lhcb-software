@@ -4,6 +4,10 @@
 ! Purpose     : Fit parameters for the pattern
 !-----------------------------------------------------------------------------
 
+
+! 2013-02-07   Yasmine Amhis 
+  - Adapt  PrFwdFitParams, PrFitSeedParams, PrFitKsParams to work with 
+    upgrade geometry 
 ! 2012-11-21 - Olivier Callot
  - Fix the PrFwdFitParams to produce proper input fo rthe next iteration.
 
