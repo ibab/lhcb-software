@@ -1,28 +1,24 @@
 ## Options to switch off all geometry (and related simulation)
-## but for that of calorimeters area.  But leave containers in output.
+## save that of calorimeters area.
 ##
-## Author: G.Corti
-## Date:   2009-09-16
+## Author: P.Szczypka
+## Date:   2012-12-12
 ##
+
 
 from Gaudi.Configuration import *
 
-importOptions('$GAUSSOPTS/RICHesOff.py')
 
-def onlyCaloGeometry():
-    
-    from Configurables import GiGaInputStream
+from Configurables import CondDB
 
-    # Define only the Calo geometry
-    geo = GiGaInputStream('Geo')
-    geo.StreamItems  = ["/dd/Structure/LHCb/DownstreamRegion/Spd"]
-    geo.StreamItems += ["/dd/Structure/LHCb/DownstreamRegion/Converter"]
-    geo.StreamItems += ["/dd/Structure/LHCb/DownstreamRegion/Prs"]
-    geo.StreamItems += ["/dd/Structure/LHCb/DownstreamRegion/Ecal"]
-    geo.StreamItems += ["/dd/Structure/LHCb/DownstreamRegion/Hcal"]
-    geo.StreamItems += ["/dd/Structure/LHCb/DownstreamRegion/PipeDownstream"]
-    geo.StreamItems += ["/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream"]
-    geo.StreamItems += ["/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream"]
+CondDB().Upgrade     = True
 
 
-appendPostConfigAction(onlyCaloGeometry)
+from Configurables import Gauss
+
+Gauss().DetectorGeo  = { "Detectors": ['Spd', 'Prs', 'Ecal', 'Hcal', 'Magnet' ] }
+Gauss().DetectorSim  = { "Detectors": ['Spd', 'Prs', 'Ecal', 'Hcal', 'Magnet' ] }
+Gauss().DetectorMoni = { "Detectors": ['Spd', 'Prs', 'Ecal', 'Hcal', 'Magnet' ] }
+Gauss().BeamPipe     = "BeamPipeInDet"
+
+

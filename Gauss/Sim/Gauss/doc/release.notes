@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-02-07 - Gloria Corti
+ - Replace CaloOnly.py with Gauss-CaloOnly.py
+
 ! 2013-02-06 - Paul Szczypka
  - Changed print messages to log.warning.
  - Cleaned up some if statements.
