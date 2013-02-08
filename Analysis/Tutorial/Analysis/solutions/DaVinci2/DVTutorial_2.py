@@ -43,6 +43,6 @@ DaVinci().MainOptions  = ""                    # None
 ########################################################################
 #
 # To run in shell :
-# gaudirun.py solutions/DaVinci2/DVTutorial_2.py $DAVINCIROOT/options/DaVinciTestData.py
+# gaudirun.py solutions/DaVinci2/DVTutorial_2.py options/DimuonR14S20.py
 #
 ########################################################################

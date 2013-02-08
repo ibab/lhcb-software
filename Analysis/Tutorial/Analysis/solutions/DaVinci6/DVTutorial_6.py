@@ -63,6 +63,6 @@ DaVinci().MoniSequence = [ tuple, etuple ]
 ########################################################################
 #
 # To run in shell :
-# gaudirun.py solutions/DaVinci6/DVTutorial_6.py options/Bs2JpsiPhi2008.py
+# gaudirun.py solutions/DaVinci6/DVTutorial_6.py options/DimuonR14S20.py
 #
 ########################################################################

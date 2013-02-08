@@ -98,7 +98,7 @@ DaVinci().UserAlgorithms = [ seq, tuple]
 ########################################################################
 #
 # To run in shell :
-# gaudirun.py solutions/DaVinci7/DVTutorial_7.py options/Bs2JpsiPhi2008.py
+# gaudirun.py solutions/DaVinci7/DVTutorial_7.py options/DimuonR14S20.py
 #
 # ... but it's best to run it inside of Ganga
 ########################################################################
