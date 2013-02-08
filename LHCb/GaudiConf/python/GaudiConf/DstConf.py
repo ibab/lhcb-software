@@ -27,6 +27,7 @@ class DstConf(LHCbConfigurableUser):
        , "EnablePackingChecks" : False
        , "PackType"        : "TES"
        , "PackSequencer"   : None
+       , "Detectors"       : ['Velo','TT','IT','OT','Rich','Tr','Calo','Muon']
        , "AlwaysCreate"    : False
        , "Writer"          : "DstWriter"
        , "OutputName"      : ""
@@ -112,17 +113,25 @@ class DstConf(LHCbConfigurableUser):
                              , "/Event/Rec/Status"                       + depth
                              , "/Event/Rec/Summary"                      + depth
                              , "/Event/" + recDir + "/Track/Best"        + depth
-                             , "/Event/" + recDir + "/Rich/PIDs"         + depth
-                             , "/Event/" + recDir + "/Muon/MuonPID"      + depth
-                             , "/Event/" + recDir + "/Calo/Electrons"    + depth
-                             , "/Event/" + recDir + "/Calo/Photons"      + depth
-                             , "/Event/" + recDir + "/Calo/MergedPi0s"   + depth
-                             , "/Event/" + recDir + "/Calo/SplitPhotons" + depth
-                             , "/Event/" + recDir + "/ProtoP/Charged"    + depth
+                               ]
+        if "Rich" in self.getProp("Detectors"):
+            writer.ItemList += [ "/Event/" + recDir + "/Rich/PIDs"         + depth]
+        if "Muon" in self.getProp("Detectors"):
+            writer.ItemList += [ "/Event/" + recDir + "/Muon/MuonPID"      + depth]
+        if "Calo" in self.getProp("Detectors"):
+            writer.ItemList += [ "/Event/" + recDir + "/Calo/Electrons"    + depth
+                                 , "/Event/" + recDir + "/Calo/Photons"      + depth
+                                 , "/Event/" + recDir + "/Calo/MergedPi0s"   + depth
+                                 , "/Event/" + recDir + "/Calo/SplitPhotons" + depth]
+
+        writer.ItemList += [ "/Event/" + recDir + "/ProtoP/Charged"    + depth
                              , "/Event/" + recDir + "/ProtoP/Neutrals"   + depth
                              , "/Event/" + recDir + "/Vertex/Primary"    + depth
-                             , "/Event/" + recDir + "/Vertex/V0"         + depth
-                             , "/Event/" + recDir + "/Track/Muon"        + depth ]
+                             , "/Event/" + recDir + "/Vertex/V0"         + depth]
+
+        if "Muon" in self.getProp("Detectors"):
+            writer.ItemList += [ "/Event/" + recDir + "/Track/Muon"        + depth ]
+
         # Additional objects not packable as MDF
         if pType != "MDF":
             if self.getProp("KeepDAQRawEvent") :
@@ -132,13 +141,17 @@ class DstConf(LHCbConfigurableUser):
             # Keep split copy of RawEvent instead of the original
                 writer.ItemList += [
                     #Exists from Brunel v41r0 onwards...
-                    "/Event/Trigger/RawEvent#1"
-                  , "/Event/Muon/RawEvent#1"
+                    "/Event/Trigger/RawEvent#1"]
+                if "Muon" in self.getProp("Detectors"):
+                    writer.ItemList += [ "/Event/Muon/RawEvent#1" ]
                     #Exists from Brunel v44r0 onwards...
-                  , "/Event/Calo/RawEvent#1"
-                  , "/Event/Rich/RawEvent#1"
-                  , "/Event/Other/RawEvent#1"
-                  ]
+                if "Calo" in self.getProp("Detectors"):
+                    writer.ItemList += [ "/Event/Calo/RawEvent#1" ]
+                if "Rich" in self.getProp("Detectors"):
+                    writer.ItemList += [ "/Event/Rich/RawEvent#1"]
+                    
+                writer.ItemList += [ "/Event/Other/RawEvent#1"]
+
 
             # Add the simulation objects if simulation DST
             if sType != "None":
@@ -155,12 +168,13 @@ class DstConf(LHCbConfigurableUser):
 
                     writer.ItemList += [
                         # Links to from reconstructed objects to MCParticles
-                        "/Event/Link/Rec/Track/Best#1",
-                        "/Event/Link/Rec/Calo/Photons#1",
-                        "/Event/Link/Rec/Calo/Electrons#1",
-                        "/Event/Link/Rec/Calo/MergedPi0s#1",
-                        "/Event/Link/Rec/Calo/SplitPhotons#1"
-                        ]
+                        "/Event/Link/Rec/Track/Best#1"]
+                    if "Calo" in self.getProp("Detectors"):
+                        writer.ItemList += ["/Event/Link/Rec/Calo/Photons#1",
+                                            "/Event/Link/Rec/Calo/Electrons#1",
+                                            "/Event/Link/Rec/Calo/MergedPi0s#1",
+                                            "/Event/Link/Rec/Calo/SplitPhotons#1"
+                                            ]
 
                     # Objects propagated from Gauss
                     # Generation information
@@ -247,17 +261,22 @@ class DstConf(LHCbConfigurableUser):
         muonpidpack = DataPacking__Pack_LHCb__MuonPIDPacker_( name               = "PackMuonPIDs",
                                                               AlwaysCreateOutput = alwaysCreate,
                                                               EnableCheck        = doChecks )
-        packDST.Members += [ richpidpack, muonpidpack ]
+
+        if "Rich" in self.getProp("Detectors"):
+            packDST.Members += [ richpidpack ]
+        if "Muon" in self.getProp("Detectors"):
+            packDST.Members += [ muonpidpack ]
 
         caloPackSeq = GaudiSequencer("CaloPacking")
-        packDST.Members += [caloPackSeq]
+        if "Calo" in self.getProp("Detectors"):
+            packDST.Members += [caloPackSeq]
 
-        caloPack = CaloDstPackConf()
-        if not caloPack.isPropertySet('Enable') :
-            CaloDstPackConf ( Enable = True )
-        caloPack.Sequence     = caloPackSeq
-        caloPack.AlwaysCreate = alwaysCreate
-        caloPack.EnableChecks = doChecks
+            caloPack = CaloDstPackConf()
+            if not caloPack.isPropertySet('Enable') :
+                CaloDstPackConf ( Enable = True )
+            caloPack.Sequence     = caloPackSeq
+            caloPack.AlwaysCreate = alwaysCreate
+            caloPack.EnableChecks = doChecks
 
         # Clean the PID information in the Charged ProtoParticles
         protoPidClean = ChargedProtoParticleRemovePIDInfo("ProtoParticlePIDClean")
@@ -285,11 +304,12 @@ class DstConf(LHCbConfigurableUser):
             PackTwoProngVertex(AlwaysCreateOutput = alwaysCreate)
             ]
 
-        packDST.Members += [ PackTrack( name               = "PackMuonTracks",
-                                        AlwaysCreateOutput = alwaysCreate,
-                                        InputName          = "/Event/Rec/Track/Muon",
-                                        OutputName         = "/Event/pRec/Track/Muon",
-                                        EnableCheck        = doChecks ) ]
+        if "Muon" in self.getProp("Detectors"):
+            packDST.Members += [ PackTrack( name               = "PackMuonTracks",
+                                            AlwaysCreateOutput = alwaysCreate,
+                                            InputName          = "/Event/Rec/Track/Muon",
+                                            OutputName         = "/Event/pRec/Track/Muon",
+                                            EnableCheck        = doChecks ) ]
         
         # In MDF case, add a sub sequence for the MDF writing
         if self.getProp( "PackType" ).upper() == "MDF":
@@ -333,12 +353,13 @@ class DstConf(LHCbConfigurableUser):
 
         log.debug("In DstConf._doUnpack")
 
-        caloUnpack = CaloDstUnPackConf ()
-        if not caloUnpack.isPropertySet('Enable') :
-            log.debug( "Setting caloUnpack.Enable = True" )
-            caloUnpack.Enable = True
-        else :
-            log.debug( "Not setting caloUnpack.Enable. Current value = %s", caloUnpack.Enable )
+        if "Calo" in self.getProp("Detectors"):
+            caloUnpack = CaloDstUnPackConf ()
+            if not caloUnpack.isPropertySet('Enable') :
+                log.debug( "Setting caloUnpack.Enable = True" )
+                caloUnpack.Enable = True
+            else :
+                log.debug( "Not setting caloUnpack.Enable. Current value = %s", caloUnpack.Enable )
 
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Best" ]     = UnpackTrack()
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ] = UnpackRecVertex()
@@ -347,20 +368,23 @@ class DstConf(LHCbConfigurableUser):
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Weights" ] = pvWunpack
 
         # RichPIDs
-        self._unpackRichPIDs()
+        if "Rich" in self.getProp("Detectors"):
+            self._unpackRichPIDs()
 
         # MuonPIDs
-        self._unpackMuonPIDs()
+        if "Muon" in self.getProp("Detectors"):
+            self._unpackMuonPIDs()
 
         # ProtoParticles
         self._unpackProtoParticles()
 
         # Muon Tracks
-        unpackMuons = UnpackTrack( name       = "UnpackMuonTracks",
-                                   OutputName = "/Event/Rec/Track/Muon",
-                                   InputName  = "/Event/pRec/Track/Muon",
-                                   AncestorFor= "/Event/pRec/Track/Muon" )
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Muon" ] = unpackMuons
+        if "Muon" in self.getProp("Detectors"):
+            unpackMuons = UnpackTrack( name       = "UnpackMuonTracks",
+                                       OutputName = "/Event/Rec/Track/Muon",
+                                       InputName  = "/Event/pRec/Track/Muon",
+                                       AncestorFor= "/Event/pRec/Track/Muon" )
+            DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Muon" ] = unpackMuons
 
     def _unpackMuonPIDs(self):
 
@@ -472,14 +496,18 @@ class DstConf(LHCbConfigurableUser):
         # algorithm types from source ClassIDs
         mapper.Algorithms[1550] = "UnpackTrack"
         mapper.Algorithms[1552] = "UnpackProtoParticle"
-        mapper.Algorithms[1551] = "UnpackCaloHypo"
-        mapper.Algorithms[1561] = "DataPacking::Unpack<LHCb::RichPIDPacker>"
-        mapper.Algorithms[1571] = "DataPacking::Unpack<LHCb::MuonPIDPacker>"
+        if "Calo" in self.getProp("Detectors"):
+            mapper.Algorithms[1551] = "UnpackCaloHypo"
+        if "Rich" in self.getProp("Detectors"):
+            mapper.Algorithms[1561] = "DataPacking::Unpack<LHCb::RichPIDPacker>"
+        if "Muon" in self.getProp("Detectors"):
+            mapper.Algorithms[1571] = "DataPacking::Unpack<LHCb::MuonPIDPacker>"
         mapper.Algorithms[1553] = "UnpackRecVertex"
         mapper.Algorithms[1555] = "DataPacking::Unpack<LHCb::WeightsVectorPacker>"
         mapper.Algorithms[1581] = "UnpackParticlesAndVertices"
         mapper.Algorithms[1559] = "UnpackDecReport"
-        mapper.Algorithms[1541] = "DataPacking::Unpack<LHCb::CaloClusterPacker>"
+        if "Calo" in self.getProp("Detectors"):
+            mapper.Algorithms[1541] = "DataPacking::Unpack<LHCb::CaloClusterPacker>"
         mapper.Algorithms[1510] = "UnpackMCParticle"
         mapper.Algorithms[1511] = "UnpackMCVertex"
 
@@ -493,7 +521,8 @@ class DstConf(LHCbConfigurableUser):
         lclusmapper.InputOptionName  = "inputLocation"
         lclusmapper.OutputOptionName = "outputLocation"
         lclusmapper.Transformations = [ ('(.*)/Raw/(.*)/LiteClusters','$1/Raw/$2/Clusters') ]
-        lclusmapper.Algorithms[397222] = "VeloClustersToLite"
+        if "Velo" in self.getProp("Detectors"):
+            lclusmapper.Algorithms[397222] = "VeloClustersToLite"
         lclusmapper.Algorithms[402220] = "STClustersToLite"
        
         # Add the tools to the DOD service tools lists
@@ -520,8 +549,8 @@ class DstConf(LHCbConfigurableUser):
             dtype = "DST"
 
         # Propagate SpilloverPaths and DataType to DigiConf and to SimConf via DigiConf
-        self.setOtherProps(DigiConf(),["SpilloverPaths","DataType"])
-        DigiConf().setOtherProps(SimConf(),["SpilloverPaths","DataType"])
+        self.setOtherProps(DigiConf(),["SpilloverPaths","DataType", "Detectors"])
+        DigiConf().setOtherProps(SimConf(),["SpilloverPaths","DataType", "Detectors"])
 
         pType = self.getProp( "PackType" ).upper()
         if pType not in self.KnownPackTypes:
@@ -539,3 +568,6 @@ class DstConf(LHCbConfigurableUser):
             GaudiKernel.ProcessJobOptions.PrintOn()
             self._doWrite(dType, pType, sType)
             GaudiKernel.ProcessJobOptions.PrintOff()
+
+
+        

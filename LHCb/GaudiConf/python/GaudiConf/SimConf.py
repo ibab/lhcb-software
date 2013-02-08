@@ -448,3 +448,4 @@ class SimConf(LHCbConfigurableUser) :
         if self.getProp("EnableUnpack") : self._doUnpacking()
         
         GaudiKernel.ProcessJobOptions.PrintOff()
+
