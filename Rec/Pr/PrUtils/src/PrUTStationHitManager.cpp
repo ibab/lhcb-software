@@ -2,7 +2,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // local
-#include "PrKernel/PrUTStationHitManager.h"
+#include "PrUtils/PrUTStationHitManager.h"
 
 
 DECLARE_TOOL_FACTORY( PrUTStationHitManager )
