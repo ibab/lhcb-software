@@ -58,13 +58,6 @@ namespace Rich
                              virtual public Rich::Rec::GlobalPID::IRichGlobalPID
       {
 
-      private: // Parameters
-
-        static const double limitA = 0.001;
-        static const double limitB = 0.01;
-        static const double limitC = 0.1;
-        static const double limitD = 1.0;
-
       public:
 
         /// Standard constructor

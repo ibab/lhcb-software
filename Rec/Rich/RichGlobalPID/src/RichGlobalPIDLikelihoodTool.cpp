@@ -15,6 +15,13 @@
 // namespaces
 using namespace Rich::Rec::GlobalPID;
 
+namespace { // Parameters
+  const double limitA = 0.001;
+  const double limitB = 0.01;
+  const double limitC = 0.1;
+  const double limitD = 1.0;
+}
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
