@@ -1,6 +1,7 @@
 2013-02-08  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/SvnChecker: added checker for the encoding of Python files
+	* doc/SvnCheckers.rst: instructions to deploy the SVN pre-commit hooks
 
 2013-01-22 Ben Couturier <Ben.Couturier@cern.ch>
 
