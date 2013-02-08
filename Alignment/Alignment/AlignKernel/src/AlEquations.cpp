@@ -23,7 +23,10 @@ namespace Al
 	    << data.m_numTracks
 	    << data.m_weightV 
 	    << data.m_weightR 
-	    << data.m_alphaIsSet ;
+	    << data.m_alphaIsSet 
+	    << data.m_sumX
+	    << data.m_sumY
+	    << data.m_sumZ ;
       return file ;
     }
   
@@ -41,13 +44,17 @@ namespace Al
 	    >> data.m_numTracks
 	    >> data.m_weightV 
 	    >> data.m_weightR 
-	    >> data.m_alphaIsSet ;
+	    >> data.m_alphaIsSet 
+	    >> data.m_sumX
+	    >> data.m_sumY
+	    >> data.m_sumZ ;
       return file ;
     }
   }
 
   ElementData::ElementData()
-    : m_numHits(0), m_numOutliers(0), m_numTracks(0), m_weightV(0), m_weightR(0), m_alphaIsSet(false)
+    : m_numHits(0), m_numOutliers(0), m_numTracks(0), m_weightV(0), m_weightR(0), m_alphaIsSet(false),
+      m_sumX(0), m_sumY(0), m_sumZ(0)
   {}
   
   void ElementData::add( const ElementData& rhs ) 
@@ -74,6 +81,9 @@ namespace Al
       else
 	it->second += rhsit->second ;
     }
+    m_sumX += rhs.m_sumX ;
+    m_sumY += rhs.m_sumY ;
+    m_sumZ += rhs.m_sumZ ;
   }
 
   void ElementData::transform( const Gaudi::Matrix6x6& jacobian )
@@ -171,7 +181,7 @@ namespace Al
   {
     std::ofstream file(filename,std::ios::out | std::ios::binary);
     writeToBuffer(file) ;
-    std::cout << "Equations::wroteToFile wrote " << file.tellp() << " bytes to file" << std::endl ;
+    std::cout << "Equations::writeToFile wrote " << m_numEvents << " events in " <<  file.tellp() << " bytes to file" << std::endl ;
     file.close() ;
   }
   
@@ -180,7 +190,7 @@ namespace Al
     std::ifstream file(filename,std::ios::in | std::ios::binary);
     if( file.is_open() ) {
       readFromBuffer(file) ;
-      std::cout << "Equations::readFromFile read " << file.tellg() << " bytes from file" << std::endl ;
+      std::cout << "Equations::readFromFile read " << m_numEvents << " events in " << file.tellg() << " bytes from file.N" << std::endl ;
       file.close() ;
     } else {
       printf("Cannot open input file: \'%s\'",filename) ;
@@ -190,7 +200,7 @@ namespace Al
   void Equations::add(const Equations& rhs)
   {
     // if this if the first one, we just copy
-    if( m_elements.empty() ) {
+    if( m_elements.empty() || m_numEvents==0 ) {
       m_elements = rhs.m_elements ;
       m_initTime = rhs.m_initTime ;
     } else {
@@ -199,7 +209,8 @@ namespace Al
 	assert(0) ;
       }
       if( m_initTime != rhs.m_initTime ) 
-	std::cout << "Al::Equations::add: WARNING:: adding up Equations with different initTime. Make sure you know what you are doing."
+	std::cout << "Al::Equations::add: WARNING:: adding up Equations with different initTime: "
+		  << m_initTime << " and " << rhs.m_initTime << ". Make sure that you know what you are doing."
 		  << std::endl ;
       
       // this is a tricky one. if we add up derivatievs that were
@@ -249,7 +260,8 @@ namespace Al
     if( m_lastTime.ns()  < rhs.m_lastTime.ns()  ) m_lastTime  = rhs.m_lastTime ;
     if( m_firstRun > rhs.m_firstRun ) m_firstRun = rhs.m_firstRun ;
     if( m_lastRun  < rhs.m_lastRun  ) m_lastRun  = rhs.m_lastRun ;
-    
+    //std::cout << "Total number of events is now: "
+    //<<  m_numEvents << " (added " << rhs.m_numEvents << ")" << std::endl ;
   }
   
   size_t Equations::numHits() const

@@ -9,6 +9,7 @@
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 #include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/Time.h"
   
@@ -64,10 +65,16 @@ namespace Al
     size_t numHits() const { return m_numHits ; }
     size_t numOutliers() const { return m_numOutliers ; }
     size_t numTracks() const { return m_numTracks ; }
-    void addHitSummary(double V, double R) {
+    void addHitSummary(double V, double R, const Gaudi::XYZPoint& hitpos) {
       m_numHits += 1 ;
       m_weightV += 1/V ;
       m_weightR += R/(V*V) ;
+      m_sumX += hitpos.x() ;
+      m_sumY += hitpos.y() ;
+      m_sumZ += hitpos.z() ;
+    }
+    Gaudi::XYZPoint averageHitPosition() const {
+      return m_numHits>0 ? Gaudi::XYZPoint( m_sumX/m_numHits, m_sumY/m_numHits,m_sumZ/m_numHits) : Gaudi::XYZPoint() ;
     }
     void addTrack() { ++m_numTracks ; }
 
@@ -83,6 +90,9 @@ namespace Al
     double               m_weightV ; // sum V^{-1}          --> weight of 1st derivative
     double               m_weightR ; // sum V^{-1} R V^{-1} --> weight of 2nd derivative
     bool                 m_alphaIsSet ;
+    double               m_sumX ;
+    double               m_sumY ;
+    double               m_sumZ ;
   } ;
   
   class Equations {

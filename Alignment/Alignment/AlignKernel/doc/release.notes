@@ -3,6 +3,9 @@
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
 
+! 2013-02-08 - Wouter Hulsbergen
+ - add information on average hit position to AlEquations
+
 !=========================== AlignKernel v3r4 2010-10-08 ====================
 ! 2010-10-08 -Wouter Hulsbergen
  - add runrange to AlEquations
