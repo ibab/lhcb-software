@@ -4,9 +4,12 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-02-08 - Marco Clemencic
+ - Rewmoved TfKernel from the link statement in CMakeLists.txt (that library
+   does not exists.
+
 ! 2013-02-07 - Sascha Stahl
  - Moved PrUTStationHitManager to PrUtils.
-
 
 ! 2013-02-06 - Sascha Stahl
  - Added dictionary files.

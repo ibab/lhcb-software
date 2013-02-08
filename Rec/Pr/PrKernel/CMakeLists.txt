@@ -10,12 +10,12 @@ gaudi_depends_on_subdirs(Event/RecEvent
 gaudi_add_library(PrKernel
                   src/*.cpp
                   PUBLIC_HEADERS PrKernel
-                  LINK_LIBRARIES RecEvent TfKernel GaudiAlgLib)
+                  LINK_LIBRARIES RecEvent GaudiAlgLib)
 
 gaudi_add_dictionary(PrKernel
                      dict/PrKernelDict.h
                      dict/PrKernelDict.xml
                      INCLUDE_DIRS Pr/PrKernel
-                     LINK_LIBRARIES RecEvent TfKernel GaudiAlgLib
+                     LINK_LIBRARIES RecEvent GaudiAlgLib
                      OPTIONS "-U__MINGW32__")
 
