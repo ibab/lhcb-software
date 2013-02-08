@@ -462,4 +462,7 @@ class ValidPythonEncoding(PathChecker):
             return (False, "Error parsing '%s': %s" % (path, x))
         except UnicodeDecodeError, x:
             self.log.debug("Bad Python data")
-            return (False, "Error parsing '%s': %s" % (path, x))
+            msg = ["Wrong encoding in file '%s':\n    %s" % (path, x),
+                   "Probably you forgot the line '# -*- coding: utf-8 -*-'",
+                   "(see http://www.python.org/dev/peps/pep-0263/)"]
+            return (False, '\n'.join(msg))
