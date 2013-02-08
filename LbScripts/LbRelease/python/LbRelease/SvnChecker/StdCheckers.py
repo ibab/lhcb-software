@@ -9,6 +9,9 @@ __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 from Core import Checker, PathChecker, Not, Failure
 import re
 import logging
+import sys
+import codecs
+from StringIO import StringIO
 
 class PropertyChecker(Checker):
     """
@@ -403,3 +406,60 @@ class ValidXml(PathChecker):
                 pass
             self.log.debug("Bad XML")
             return (False, "\n".join(msg))
+
+def checkEncoding(fileObj):
+    '''
+    Check that a file honors the declared encoding (default ASCII for Python 2
+    and UTF-8 for Python 3).
+
+    Raises a UnicodeDecodeError in case of decoding problems and LookupError if
+    the specified codec does not exists.
+
+    See http://www.python.org/dev/peps/pep-0263/
+    '''
+    from itertools import islice
+
+    # default encoding
+    if sys.version_info[0] <= 2:
+        enc = 'ascii'
+    else:
+        enc = 'utf-8'
+
+    # find the encoding of the file, if specified (in the first two lines)
+    enc_exp = re.compile(r"coding[:=]\s*([-\w.]+)")
+    for l in islice(fileObj, 2):
+        m = enc_exp.search(l)
+        if m:
+            enc = m.group(1)
+            break
+
+    if hasattr(fileObj, 'name'):
+        logging.getLogger('checkEncoding').debug('checking encoding %s on %s',
+                                                 enc, fileObj.name)
+    else:
+        logging.getLogger('checkEncoding').debug('checking encoding %s on file object',
+                                                 enc)
+    # try to read the file with the declared encoding
+    fileObj.seek(0)
+    codecs.getreader(enc)(fileObj).read()
+
+class ValidPythonEncoding(PathChecker):
+    """
+    Check that a file honors the declared encoding (default ASCII for Python 2
+    and UTF-8 for Python 3).
+
+    See http://www.python.org/dev/peps/pep-0263/
+    """
+    def __call__(self, txn, path):
+        self.log.debug("check %s", path)
+        try:
+            data = txn.file_contents(path)
+            checkEncoding(StringIO(data))
+            self.log.debug("Valid Python encoding")
+            return (True, "Valid Python encoding in '%s'" % path)
+        except LookupError, x:
+            self.log.debug("Bad Python encoding, %s", x)
+            return (False, "Error parsing '%s': %s" % (path, x))
+        except UnicodeDecodeError, x:
+            self.log.debug("Bad Python data")
+            return (False, "Error parsing '%s': %s" % (path, x))

@@ -10,12 +10,15 @@ __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
 from StdCheckers import AllPaths, NotContains, PackageTag, ProjectTag
 from StdCheckers import TagIntermediateDirs, TagRemoval, AllowedUsers, ValidXml
+from StdCheckers import ValidPythonEncoding
 from StdCheckers import OnPath, MovePackage
 from StdCheckers import PropertyChecker
 from StdCheckers import tagsFilter
 from Core import Failure
 
-__all__ = ("notHasTags", "validTag", "movePackage", "librarian", "nightlyConf", "uniquePackages")
+__all__ = ("notHasTags", "validTag", "movePackage", "librarian",
+           "nightlyConf", "validPython",
+           "uniquePackages")
 
 # The transaction does not involve tags:
 #   - AllPaths(Failure(), pattern) returns a failure is
@@ -33,6 +36,9 @@ librarian = AllowedUsers(["liblhcb"])
 
 # Run the XML checkers on the nightly build configuration.
 nightlyConf = AllPaths(ValidXml(), r".*LHCbNightlyConf/trunk/configuration\.xml$")
+
+# Check that all Python files do have the right encoding
+validPython = AllPaths(ValidPythonEncoding(), r".*\.py$")
 
 # Check that a package name exists only once in the repository (only in the 'packages' property)
 def allUnique(packages):

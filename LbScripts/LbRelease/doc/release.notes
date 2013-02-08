@@ -1,10 +1,14 @@
+2013-02-08  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/SvnChecker: added checker for the encoding of Python files
+
 2013-01-22 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r12
 
 2013-01-18 Ben Couturier <Ben.Couturier@cern.ch>
 
-        * scripts/lb-project-testcoderatio: Imported script from R.Lambert. 
+        * scripts/lb-project-testcoderatio: Imported script from R.Lambert.
 
 2012-12-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

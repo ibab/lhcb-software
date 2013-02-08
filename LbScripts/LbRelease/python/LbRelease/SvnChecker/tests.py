@@ -14,9 +14,10 @@ from Core import FakeTransaction
 from Core import Failure, Success, Not
 from StdCheckers import AllowedUsers
 from StdCheckers import AllPaths, PackageTag, ProjectTag, TagRemoval
-from StdCheckers import TagIntermediateDirs, ValidXml
+from StdCheckers import TagIntermediateDirs, ValidXml, ValidPythonEncoding
 
 import logging
+import sys
 
 class Test(unittest.TestCase):
 
@@ -156,6 +157,23 @@ class Test(unittest.TestCase):
 </root>"""}), False),
                  (FakeTransaction({"/path/to/xml/data.txt": ('M', (-1, None), 'file')},
                                   files = {"/path/to/xml/data.txt": "text"}), True)
+                 ]
+
+    py_files = [
+                 (FakeTransaction({"/path/to/xml/good_ascii.py": ('M', (-1, None), 'file')},
+                                  files = {"/path/to/xml/good_ascii.py": """
+print 'hello world'
+"""}), True),
+                (FakeTransaction({"/path/to/xml/good_utf8.py": ('M', (-1, None), 'file')},
+                                  files = {"/path/to/xml/good_utf8.py":
+"""# -*- coding: utf-8 -*-
+print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
+"""}), True),
+                (FakeTransaction({"/path/to/xml/bad_utf8.py": ('M', (-1, None), 'file')},
+                                  files = {"/path/to/xml/bad_utf8.py":
+"""
+print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
+"""}), False),
                  ]
 
     move_package = [
@@ -378,6 +396,11 @@ class Test(unittest.TestCase):
         for txn, result in self.xml_files:
             self.assertCheckTxn(txn, checker, result)
 
+    def test_040_valid_py_encoding(self):
+        checker = AllPaths(ValidPythonEncoding(), r".*\.py$")
+        for txn, result in self.py_files:
+            self.assertCheckTxn(txn, checker, result)
+
     def test_050_duplicated_packages(self):
         checker = LHCbCheckers.uniquePackages
         for txn, result in [(FakeTransaction({"/": ('M', (-1, None), 'file')},
@@ -420,8 +443,11 @@ Hat2/Pack2 Proj2
             txn.properties["svn:author"] = "liblhcb"
             self.assertCheckTxn(txn, checker, True)
 
+
+
 if __name__ == "__main__":
-    #import logging
-    #logging.basicConfig(level=logging.DEBUG)
+    if '--debug' in sys.argv:
+        logging.basicConfig(level=logging.DEBUG)
+        sys.argv.remove('--debug')
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
