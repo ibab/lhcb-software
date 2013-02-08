@@ -4,6 +4,9 @@
 ! Purpose     : Utils important for tracking
 !-----------------------------------------------------------------------------
 
+! 2013-02-08 - Marco Clemencic
+ - Fixed compilation with CMake.
+
 ! 2013-02-07 - Paul Szczypka
  - Fixed fix to header file location.
 

@@ -13,6 +13,7 @@ gaudi_depends_on_subdirs(Det/CaloDet
                          Kernel/HltInterfaces
                          Kernel/LHCbMath
                          Kernel/PartProp
+                         Pr/PrKernel
                          Tr/TrackFitEvent
                          Tr/TrackInterfaces
                          Tr/TrackKernel)
@@ -22,6 +23,6 @@ gaudi_add_module(PrUtils
                  INCLUDE_DIRS Tr/TrackInterfaces
                  LINK_LIBRARIES CaloDetLib OTDetLib STDetLib HltEvent
 LinkerEvent TrackEvent GaudiAlgLib HltInterfaces LHCbMathLib PartPropLib
-TrackFitEvent TrackKernel)
+PrKernel TrackFitEvent TrackKernel)
 
 

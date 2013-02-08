@@ -7,12 +7,12 @@ gaudi_depends_on_subdirs(Det/VPDet
                          Event/DigiEvent
                          Event/TrackEvent
                          GaudiAlg
-			 GaudiKernel)
+                         GaudiKernel)
 
 
 gaudi_add_module(PatPixel
                  src/*.cpp
-		 LINK_LIBRARIES VPDetLib DigiEvent TrackEvent GaudiAlgLib GaudiKernel )
+		 LINK_LIBRARIES VPDetLib TrackEvent GaudiAlgLib GaudiKernel )
 
 
 
