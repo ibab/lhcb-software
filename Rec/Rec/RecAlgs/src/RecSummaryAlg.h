@@ -24,12 +24,12 @@
 #include "L0Interfaces/IL0DUFromRawTool.h"
 #include "Kernel/ICountContainedObjects.h"
 
-// LoKi
-#include "LoKi/select.h"
+// boost
+#include "boost/assign/list_of.hpp"
 
 /** @class RecSummaryAlg RecSummaryAlg.h
  *  
- *  Fill the LHCb::RecSUmmary class with summary information from the event
+ *  Fill the LHCb::RecSummary class with summary information from the event
  *  reconstruction.
  *
  *  @author Chris Jones
@@ -45,23 +45,57 @@ public:
 
   virtual ~RecSummaryAlg( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
 
   /// Adds the number of objects at the given TES location to the summary object
   template<class CLASS> 
-  void addSizeSummary( LHCb::RecSummary * summary,
-                       const LHCb::RecSummary::DataTypes id,
-                       const std::string& location ) const
+  inline void addSizeSummary( LHCb::RecSummary * summary,
+                              const LHCb::RecSummary::DataTypes id,
+                              const std::string& location ) const
   {
     const CLASS * data = getIfExists<CLASS>(location);
     if ( data ) { summary->addInfo( id, (int)data->size() );           }
     else        { Warning( "No data at '" + location + "'" ).ignore(); }
   }
 
+  /// Access on demand the RICH decoding tool
+  inline Rich::DAQ::IRawBufferToSmartIDsTool * richTool() 
+  {
+    if ( !m_richTool )
+    {
+      m_richTool = 
+        tool<Rich::DAQ::IRawBufferToSmartIDsTool>
+        ("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
+    }
+    return m_richTool;
+  }
+
+  /// Access on demand the OT decoder
+  const IOTRawBankDecoder* otTool() 
+  {
+    if ( !m_otTool )
+    {
+      m_otTool = tool<IOTRawBankDecoder>("OTRawBankDecoder");
+    }
+    return m_otTool;
+  }
+
+  /// Access on-demand the Velo track counter
+  inline const ICountContainedObjects* countVeloTracks()
+  {
+    if ( !m_countVeloTracks )
+    {
+      m_countVeloTracks = tool<ICountContainedObjects>("CountVeloTracks");
+    }
+    return m_countVeloTracks;
+  }
+  
 private:
+
+  /// List of sub-detectors to add
+  std::vector<std::string> m_dets;
 
   /// TES location to save the summary object
   std::string m_summaryLoc;

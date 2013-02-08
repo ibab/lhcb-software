@@ -19,28 +19,33 @@ DECLARE_ALGORITHM_FACTORY( RecSummaryAlg )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RecSummaryAlg::RecSummaryAlg( const std::string& name,
-                              ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm    ( name , pSvcLocator ),
-    m_richTool        ( NULL ),
-    m_otTool          ( NULL ),
-    m_countVeloTracks ( NULL )
+  RecSummaryAlg::RecSummaryAlg( const std::string& name,
+                                ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm    ( name , pSvcLocator ),
+      m_richTool        ( NULL ),
+      m_otTool          ( NULL ),
+      m_countVeloTracks ( NULL )
 {
+  const std::vector<std::string> tmpList = boost::assign::list_of
+    ("RICH1")("RICH2")("VELO")("TT")("IT")("OT")("SPD")("MUON")
+    ;
+  declareProperty( "Detectors", m_dets = tmpList );
+
   declareProperty( "SummaryLocation",
                    m_summaryLoc = LHCb::RecSummaryLocation::Default );
   declareProperty( "TracksLocation",
                    m_trackLoc   = LHCb::TrackLocation::Default );
   declareProperty( "PVsLocation",
                    m_pvLoc      = LHCb::RecVertexLocation::Primary );
-  declareProperty( "VeloClustersLocation", 
+  declareProperty( "VeloClustersLocation",
                    m_veloLoc    = LHCb::VeloClusterLocation::Default );
-  declareProperty( "ITClustersLocation", 
+  declareProperty( "ITClustersLocation",
                    m_itLoc      = LHCb::STClusterLocation::ITClusters );
-  declareProperty( "TTClustersLocation", 
+  declareProperty( "TTClustersLocation",
                    m_ttLoc      = LHCb::STClusterLocation::TTClusters );
   declareProperty( "SpdDigitsLocation",
                    m_spdLoc     = LHCb::CaloDigitLocation::Spd );
-  declareProperty( "MuonCoordsLocation", 
+  declareProperty( "MuonCoordsLocation",
                    m_muonCoordsLoc = LHCb::MuonCoordLocation::MuonCoords );
   declareProperty( "MuonTracksLocation",
                    m_muonTracksLoc = LHCb::TrackLocation::Muon );
@@ -50,25 +55,6 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
 // Destructor
 //=============================================================================
 RecSummaryAlg::~RecSummaryAlg() {}
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode RecSummaryAlg::initialize()
-{
-  const StatusCode sc = GaudiAlgorithm::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  m_richTool = 
-    tool<Rich::DAQ::IRawBufferToSmartIDsTool>
-    ("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
-
-  m_otTool = tool<IOTRawBankDecoder>("OTRawBankDecoder");
-
-  m_countVeloTracks = tool<ICountContainedObjects>("CountVeloTracks");
-
-  return sc;
-}
 
 //=============================================================================
 // Main execution
@@ -100,7 +86,7 @@ StatusCode RecSummaryAlg::execute()
       else if ( (*iTk)->type() == LHCb::Track::Velo &&
                 (*iTk)->checkFlag(LHCb::Track::Backward)  ) { ++nBack; }
     }
-    const int nVelo = m_countVeloTracks->nObj(tracks);
+    const int nVelo = countVeloTracks()->nObj(tracks);
 
     // Save track info by type to summary
     summary->addInfo( LHCb::RecSummary::nLongTracks,       nLong );
@@ -119,52 +105,73 @@ StatusCode RecSummaryAlg::execute()
   // PVs
   addSizeSummary<LHCb::RecVertices>( summary, LHCb::RecSummary::nPVs, m_pvLoc );
 
-  // RICH information
-  summary->addInfo( LHCb::RecSummary::nRich1Hits, 
-                    m_richTool->nTotalHits(Rich::Rich1) );
-  summary->addInfo( LHCb::RecSummary::nRich2Hits, 
-                    m_richTool->nTotalHits(Rich::Rich2) );
-
-  // Velo
-  addSizeSummary<LHCb::VeloClusters>( summary, LHCb::RecSummary::nVeloClusters, m_veloLoc ); 
-
-  // TT
-  addSizeSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nTTClusters, m_ttLoc ); 
-
-  // IT
-  addSizeSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nITClusters, m_itLoc ); 
-
-  // OT
-  summary->addInfo( LHCb::RecSummary::nOTClusters, 
-                    m_otTool->totalNumberOfHits() );
-
-  // SPD
-  addSizeSummary<LHCb::CaloDigits>( summary, LHCb::RecSummary::nSPDhits, m_spdLoc );
-
-  // Muon Tracks
-  addSizeSummary<LHCb::Tracks>( summary, LHCb::RecSummary::nMuonTracks, m_muonTracksLoc );
-
-  // Muon Coords
-  const LHCb::MuonCoords * coords = getIfExists<LHCb::MuonCoords>(m_muonCoordsLoc);
-  if ( coords )
+  // Loop over the sub-detectors
+  for ( std::vector<std::string>::const_iterator iDet = m_dets.begin();
+        iDet != m_dets.end(); ++iDet )
   {
+    if      ( "RICH1" == *iDet )
+    {
+      summary->addInfo( LHCb::RecSummary::nRich1Hits,
+                        richTool()->nTotalHits(Rich::Rich1) );
+    }
+    else if ( "RICH2" == *iDet )
+    {
+      summary->addInfo( LHCb::RecSummary::nRich2Hits,
+                        richTool()->nTotalHits(Rich::Rich2) );
+    }
+    else if ( "VELO" == *iDet )
+    {
+      addSizeSummary<LHCb::VeloClusters>( summary, LHCb::RecSummary::nVeloClusters, m_veloLoc );
+    }
+    else if ( "TT" == *iDet )
+    {
+      addSizeSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nTTClusters, m_ttLoc );
+    }
+    else if ( "IT" == *iDet )
+    {
+      addSizeSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nITClusters, m_itLoc );
+    }
+    else if ( "OT" == *iDet )
+    {
+      summary->addInfo( LHCb::RecSummary::nOTClusters, otTool()->totalNumberOfHits() );
+    }
+    else if ( "SPD" == *iDet )
+    {
+      addSizeSummary<LHCb::CaloDigits>( summary, LHCb::RecSummary::nSPDhits, m_spdLoc );
+    }
+    else if ( "MUON" == *iDet )
+    {
+      // Muon Tracks
+      addSizeSummary<LHCb::Tracks>( summary, LHCb::RecSummary::nMuonTracks, m_muonTracksLoc );
 
-    // Count by stations
-    std::map<int,unsigned int> mCount;
-    for ( LHCb::MuonCoords::const_iterator iC = coords->begin();
-          iC != coords->end(); ++iC ) { ++mCount[(*iC)->key().station()]; }
+      // Muon Coords
+      const LHCb::MuonCoords * coords = getIfExists<LHCb::MuonCoords>(m_muonCoordsLoc);
+      if ( coords )
+      {
 
-    // Save to summary
-    if ( mCount[0]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS0, mCount[0] ); }
-    if ( mCount[1]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS1, mCount[1] ); }
-    if ( mCount[2]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS2, mCount[2] ); }
-    if ( mCount[3]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS3, mCount[3] ); }
-    if ( mCount[4]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS4, mCount[4] ); }
+        // Count by stations
+        std::map<int,unsigned int> mCount;
+        for ( LHCb::MuonCoords::const_iterator iC = coords->begin();
+              iC != coords->end(); ++iC ) { ++mCount[(*iC)->key().station()]; }
 
-  }
-  else
-  {
-    Warning( "No MuonCoords available at '"+m_muonCoordsLoc+"'" ).ignore();
+        // Save to summary
+        if ( mCount[0]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS0, mCount[0] ); }
+        if ( mCount[1]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS1, mCount[1] ); }
+        if ( mCount[2]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS2, mCount[2] ); }
+        if ( mCount[3]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS3, mCount[3] ); }
+        if ( mCount[4]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS4, mCount[4] ); }
+
+      }
+      else
+      {
+        Warning( "No MuonCoords available at '"+m_muonCoordsLoc+"'" ).ignore();
+      }
+    }
+    else
+    {
+      Warning( "Unknown detector '" + *iDet + "'" ).ignore();
+    }
+
   }
 
   if ( msgLevel(MSG::DEBUG) ) { debug() << *summary << endmsg; }
