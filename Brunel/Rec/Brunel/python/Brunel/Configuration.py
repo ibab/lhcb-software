@@ -32,8 +32,8 @@ class Brunel(LHCbConfigurableUser):
     DefaultReproInitSequence = ["Reproc"] + DefaultInitSequence
 
     ## Known checking sequences, all run by default
-    KnownCheckSubdets       = ["Pat","RICH","MUON"]
-    KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr","CALO","PROTO"]
+    #KnownCheckSubdets       = ["Pat","RICH","MUON"]
+    #KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr","CALO","PROTO"]
     ## Default main sequences for real and simulated data
     DefaultSequence = [ "ProcessPhase/Reco",
                         "ProcessPhase/Moni" ]
@@ -74,6 +74,8 @@ class Brunel(LHCbConfigurableUser):
        ,"RawBanksToKill"  : None
        ,"CaloPhotonChecker" : False
        ,"VetoHltErrorEvents" : True
+       ,"Detectors"       : ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet']
+       ,"UpgradeDets"     : []
         # only use for Online running
        ,"UseDBSnapshot" : False
        ,"PartitionName" : "LHCb"
@@ -114,6 +116,8 @@ class Brunel(LHCbConfigurableUser):
        ,'RawBanksToKill':""" Raw banks to remove from RawEvent before processing. Removed also from DST copy of RawEvent """
        ,'CaloPhotonChecker':""" Temporary workaround to bug #73392 """
        ,"VetoHltErrorEvents" : """Do not reconstruct events that have been flagged as error by Hlt"""
+       ,"Detectors"    : """List of detectors""" 
+       ,"UpgradeDets"  : """List of Upgrade detectors"""
         # only use for Online running
         ,"UseDBSnapshot" : """Use a snapshot for velo position and rich pressure"""
         ,"PartitionName" : """Name of the partition when running (needed to find DB: '', 'FEST', or 'LHCb'"""
@@ -130,6 +134,25 @@ class Brunel(LHCbConfigurableUser):
 
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation"])
+
+        # Set list of detectors in LHCbApp
+        if hasattr(LHCbApp(), "Detectors"):
+            LHCbApp().setProp("Detectors", self.getProp("Detectors"))
+            self.setProp("UpgradeDets", LHCbApp().upgradeDetectors())
+
+        # Set list of detectors in DstConf
+        dstConfDetList = []
+        for det in self.getProp("Detectors"):
+            if det in ['Rich1', 'Rich2', 'Rich1Pmt', 'Rich2Pmt']:
+                if "Rich" not in dstConfDetList:
+                    dstConfDetList.append("Rich")
+            elif det in ['Spd', 'Prs', 'Ecal', 'Hcal']:
+                if "Calo" not in dstConfDetList:
+                    dstConfDetList.append("Calo")
+            else:
+                dstConfDetList.append(det)
+        log.warning("dstConfDetList: %s" %(dstConfDetList))
+        DstConf().setProp("Detectors", dstConfDetList)
 
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
@@ -489,41 +512,53 @@ class Brunel(LHCbConfigurableUser):
                     
                 # then the Calo Raw Event
                 caloRawBankCopy = RawEventSelectiveCopy('CaloRawBank')
-                caloBanks = [ 'PrsE',
-                              'EcalE',
-                              'HcalE',
-                              'PrsTrig',
-                              'EcalTrig',
-                              'HcalTrig',
-                              'EcalPacked',
-                              'HcalPacked',
-                              'PrsPacked',
-                              'EcalPackedError',
-                              'HcalPackedError',
-                              'PrsPackedError'
-                              ]
+                caloBanks = []
+                if self.isPropertySet("Detectors"):
+                    for det in ['Prs', 'Ecal', 'Hcal']:
+                        if det in self.getProp("Detectors"):
+                            for bankType in ['E', 'Trig', 'Packed', 'PackedError']:
+                                caloBanks.append("%s%s" %(det, bankType))
+                else:
+                    caloBanks = [ 'PrsE',
+                                  'EcalE',
+                                  'HcalE',
+                                  'PrsTrig',
+                                  'EcalTrig',
+                                  'HcalTrig',
+                                  'EcalPacked',
+                                  'HcalPacked',
+                                  'PrsPacked',
+                                  'EcalPackedError',
+                                  'HcalPackedError',
+                                  'PrsPackedError'
+                                  ]
                 caloRawBankCopy.RawBanksToCopy = caloBanks
                 caloRawBankCopy.OutputRawEventLocation = "Calo/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [caloRawBankCopy]
                     
-                # then the Muon Raw Event
-                muonRawBankCopy = RawEventSelectiveCopy('MuonRawBank')
-                muonRawBankCopy.RawBanksToCopy = [ 'Muon' ]
-                muonRawBankCopy.OutputRawEventLocation = "Muon/RawEvent"
-                GaudiSequencer("OutputDSTSeq").Members += [muonRawBankCopy]
+                banksToRemove = []
+                if "Muon" in self.getProp("Detectors"):
+                    # then the Muon Raw Event
+                    muonRawBankCopy = RawEventSelectiveCopy('MuonRawBank')
+                    muonRawBankCopy.RawBanksToCopy = [ 'Muon' ]
+                    muonRawBankCopy.OutputRawEventLocation = "Muon/RawEvent"
+                    GaudiSequencer("OutputDSTSeq").Members += [muonRawBankCopy]
+                    banksToRemove += ['Muon']
 
-                # then the Rich Raw Event
-                richRawBankCopy = RawEventSelectiveCopy('RichRawBank')
-                richRawBankCopy.RawBanksToCopy = [ 'Rich' ]
-                richRawBankCopy.OutputRawEventLocation = "Rich/RawEvent"
-                GaudiSequencer("OutputDSTSeq").Members += [richRawBankCopy]
-                    
+                if [det for det in ['Rich1', 'Rich2', 'Rich1Pmt', 'Rich2Pmt'] if det in self.getProp("Detectors")]:
+                    # then the Rich Raw Event
+                    richRawBankCopy = RawEventSelectiveCopy('RichRawBank')
+                    richRawBankCopy.RawBanksToCopy = [ 'Rich' ]
+                    richRawBankCopy.OutputRawEventLocation = "Rich/RawEvent"
+                    GaudiSequencer("OutputDSTSeq").Members += [richRawBankCopy]
+                    banksToRemove += ['Rich']                    
+
                 # and the rest
                 allOtherRawBankCopy = RawEventSelectiveCopy('OtherRawEvent')
-                allOtherRawBankCopy.RawBanksToRemove = trigBanks + ['Muon','Rich'] + caloBanks
+                allOtherRawBankCopy.RawBanksToRemove = trigBanks + banksToRemove + caloBanks
                 allOtherRawBankCopy.OutputRawEventLocation = "Other/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [allOtherRawBankCopy]
-                    
+                                        
                 # Finally, remove knowledge of original RawEvent
                 from Configurables import EventNodeKiller
                 daqKiller = EventNodeKiller("DAQKiller")
@@ -535,13 +570,15 @@ class Brunel(LHCbConfigurableUser):
             # Filter Best Track States to be written
             trackFilter = TrackToDST("FilterBestTrackStates")
 
-            # Filter Muon Track States
-            muonTrackFilter = TrackToDST("FilterMuonTrackStates")
-            muonTrackFilter.TracksInContainer = "/Event/Rec/Track/Muon"
+            if "Muon" in self.getProp("Detectors"):
+                # Filter Muon Track States            
+                muonTrackFilter = TrackToDST("FilterMuonTrackStates")
+                muonTrackFilter.TracksInContainer = "/Event/Rec/Track/Muon"
+                GaudiSequencer("OutputDSTSeq").Members += [ muonTrackFilter ]
 
             from Configurables import ProcessPhase
             ProcessPhase("Output").DetectorList += [ "DST" ]
-            GaudiSequencer("OutputDSTSeq").Members += [ trackFilter, muonTrackFilter ]
+            GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
 
             if packType != "NONE":
                 # Add the sequence to pack the DST containers
@@ -582,21 +619,47 @@ class Brunel(LHCbConfigurableUser):
     def configureCheck(self,expert):
         # "Check" histograms filled only with simulated data
 
+        KnownCheckSubdets       = ["Pat"]
+
+
+        # CheckSubdets
+        if [det for det in ['Rich1', 'Rich2', 'Rich1Pmt', 'Rich2Pmt'] if det in self.getProp("Detectors")]:
+            #self.KnownCheckSubdets.append("RICH")
+            KnownCheckSubdets.append("RICH")
+        if [det for det in ['Muon', 'MuonNoM1'] if det in self.getProp("Detectors")]:
+            #self.KnownCheckSubdets.append("MUON")
+            KnownCheckSubdets.append("MUON")
+
+        KnownExpertCheckSubdets = KnownCheckSubdets+["Tr","PROTO"]
+
+        # Expert Check Subdets
+        tmpExpertSubdets = [det for det in ['IT', 'OT'] if det in self.getProp("Detectors")]
+        if tmpExpertSubdets:
+            for det in tmpExpertSubdets:
+                #self.KnownExpertCheckSubdets.append(det)
+                KnownExpertCheckSubdets.append(det)
+        if [det for det in ['TT', 'UT'] if det in self.getProp("Detectors")]:
+            #self.KnownCheckSubdets.append("TT")
+            KnownCheckSubdets.append("TT")
+        if [det for det in ['Spd', 'Prs', 'Ecal', 'Hcal'] if det in self.getProp("Detectors")]:
+            #self.KnownCheckSubdets.append("CALO")
+            KnownCheckSubdets.append("CALO")
+
         RecMoniConf().setProp( "CheckEnabled", True )
 
         if not self.isPropertySet("MCCheckSequence"):
             if expert:
-                checkSeq = self.KnownExpertCheckSubdets
+                checkSeq = KnownExpertCheckSubdets
             else:
-                checkSeq = self.KnownCheckSubdets
+                checkSeq = KnownCheckSubdets
             self.MCCheckSequence = checkSeq
         else:
             for seq in self.getProp("MCCheckSequence"):
                 if expert:
-                    if seq not in self.KnownExpertCheckSubdets:
+                    if seq not in KnownExpertCheckSubdets:
                         log.warning("Unknown subdet '%s' in MCCheckSequence"%seq)
                 else:
-                    if seq not in self.KnownCheckSubdets:
+                    if seq not in KnownCheckSubdets:
                         log.warning("Unknown subdet '%s' in MCCheckSequence"%seq)
 
         checkSeq = self.getProp("MCCheckSequence")
@@ -606,13 +669,13 @@ class Brunel(LHCbConfigurableUser):
         # Tracking handled inside TrackSys configurable
         TrackSys().setProp( "WithMC", True )
 
-        if "MUON" in checkSeq :
+        if ("MUON" in checkSeq) and ("Muon" in self.getProp("Detectors")):
             from MuonPIDChecker import ConfigureMuonPIDChecker as cmuon
             mydata =  self.getProp("DataType")
             mycheckconf = cmuon.ConfigureMuonPIDChecker(data = mydata)
             mycheckconf.configure(UseMC = True, HistosLevel = self.getProp("Histograms"))
 
-        if "RICH" in checkSeq :
+        if ("RICH" in checkSeq) and [det for det in ['Rich1', 'Rich2', 'Rich1Pmt', 'Rich2Pmt'] if det in self.getProp("Detectors")] :
             # Unpacking RICH summaries
             from Configurables import DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_
             unp = DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_("MCRichDigitSummaryUnpack")
@@ -630,7 +693,11 @@ class Brunel(LHCbConfigurableUser):
             # Allow multiple files open at once (SIM,DST,DIGI etc.)
             IODataManager().AgeLimit += 1
 
-            if "TT" in checkSeq :
+            if (
+                ("TT" in checkSeq) and
+                (hasattr(self, "Detectors")) and
+                ("TT" in self.getProp("Detectors"))
+                ):
                 from Configurables import ( STEffChecker, MCParticleSelector )
                 from GaudiKernel.SystemOfUnits import GeV
                 effCheck = STEffChecker("TTEffChecker")
@@ -639,9 +706,14 @@ class Brunel(LHCbConfigurableUser):
                 effCheck.MCParticleSelector.zOrigin = 50.0
                 effCheck.MCParticleSelector.pMin = 1.0*GeV
                 effCheck.MCParticleSelector.betaGammaMin = 1.0
+                from Configurables import GaudiSequencer
                 GaudiSequencer("CheckTTSeq").Members += [effCheck]
 
-            if "IT" in checkSeq :
+            if (
+                ("IT" in checkSeq) and
+                (hasattr(self, "Detectors")) and
+                ("IT" in self.getProp("Detectors"))
+                ):
                 from Configurables import ( STEffChecker, MCParticleSelector )
                 from GaudiKernel.SystemOfUnits import GeV
                 effCheck = STEffChecker("ITEffChecker")
@@ -651,9 +723,14 @@ class Brunel(LHCbConfigurableUser):
                 effCheck.MCParticleSelector.pMin = 1.0*GeV
                 effCheck.MCParticleSelector.betaGammaMin = 1.0
                 effCheck.DetType = "IT"
+                from Configurables import GaudiSequencer
                 GaudiSequencer("CheckITSeq").Members += [effCheck]
 
-            if "OT" in checkSeq :
+            if (
+                ("OT" in checkSeq) and
+                (hasattr(self, "Detectors")) and
+                ("OT" in self.getProp("Detectors"))
+                ):
                 GaudiSequencer("CheckOTSeq").Members += ["OTTimeChecker"] # needs MCHits
 
             if "Tr" in  checkSeq :
@@ -702,13 +779,14 @@ class Brunel(LHCbConfigurableUser):
                                    'DBSnapshotDirectory',
                                    'PartitionName' ])
 
-        print "# WARNING using hack https://savannah.cern.ch/task/index.php?27329#comment45"
-        from Configurables import RichRecSysConf
-        rConf = RichRecSysConf("RichOfflineRec")
-        rConf.Context = "HLT"
-        from Configurables import RichRecQCConf
-        rMoni = RichRecQCConf("OfflineRichMoni")
-        rMoni.Context = "HLT"
+        if [det for det in ['Rich1', "Rich2", "Rich1Pmt", "Rich2Pmt"] if det in self.getProp("Detectors")]:
+            log.warning( "using hack https://savannah.cern.ch/task/index.php?27329#comment45" )
+            from Configurables import RichRecSysConf
+            rConf = RichRecSysConf("RichOfflineRec")
+            rConf.Context = "HLT"
+            from Configurables import RichRecQCConf
+            rMoni = RichRecQCConf("OfflineRichMoni")
+            rMoni.Context = "HLT"
 
     ## Apply the configuration
     def __apply_configuration__(self):

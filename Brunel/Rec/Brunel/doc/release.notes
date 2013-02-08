@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes for Upgrade
+  . Protect all detector-specific code in Configuration.py
+	. Added "Detectors" property to Brunel object.
+  . Pass relevent properties to DstConf etc.
+
 - Changes to references to reflect changes since v44r1
   . Remove check on full bank length when decoding Velo lite clusters, add
     corresponding protection to full decoding
