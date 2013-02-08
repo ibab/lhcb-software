@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2013-02-08 - Wouter Hulsbergen
+ - print information on average hit position to log file
+ - add option to force using particlular initialization time
 
 !========================= TAlignment v5r8 2013-01-30 =========================
 ! 2013-01-18 - Maurizio Martinelli
