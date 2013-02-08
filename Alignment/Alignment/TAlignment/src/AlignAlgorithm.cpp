@@ -98,9 +98,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   //"HistogramDataSvc" ) ;
   declareProperty("AlignSummaryLocation", m_alignSummaryLocation = "AlignDerivativeData") ;
   declareProperty("FillHistos", m_fillHistos = false ) ;
-  
- 
-
+  declareProperty("ForcedInitialTime", m_forcedInitTime = 0 ) ;
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -121,7 +119,9 @@ StatusCode AlignAlgorithm::initialize() {
   /// Get tool to align detector
   m_align = tool<IGetElementsToBeAligned>("GetElementsToBeAligned");
   if (!m_align) return Error("==> Failed to retrieve detector selector tool!", StatusCode::FAILURE);
-
+  // This is for debugging, mostly
+  if( m_forcedInitTime ) m_align->initAlignmentFrame( m_forcedInitTime ) ;
+  
   sc = m_trackresidualtool.retrieve() ;
   if ( sc.isFailure() ) return sc;
 
@@ -200,18 +200,20 @@ StatusCode AlignAlgorithm::execute() {
 
   // Reset histograms if required
   if(m_resetHistos) resetHistos() ;
-
+  
   // Make sure that the alignment frames are properly initialized on the first event
-  if( m_equations->initTime() != m_align->initTime() ) {
+  if( m_equations->initTime() != 0 && m_equations->initTime() != m_align->initTime() ) {
     error() << "Mismatch in init time: " << m_equations->initTime() << " " << m_align->initTime() << ". Aborting."
-	    << endreq ;
+  	    << endreq ;
     return StatusCode::FAILURE ;
   }
-  if( m_align->initTime() == 0 ) {
-    m_align->initAlignmentFrame() ;
+  
+  if( m_equations->initTime() == 0 ) {
+    if ( m_align->initTime() == 0 )
+      m_align->initAlignmentFrame() ;
     m_align->initEquations( *m_equations ) ;
   }
-
+  
   // Get tracks. Copy them into a vector, because that's what we need for dealing with vertices.
   LHCb::Track::Range tracks;
   if( !m_tracksLocation.empty() ) {
@@ -403,7 +405,7 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 	   ires != residuals.residuals().end();++ires, ++nodeindex) {
 	const Derivative& deriv = derivatives[nodeindex] ;
 	Al::ElementData& elementdata = m_equations->element(ires->element().index()) ;
-	elementdata.addHitSummary(ires->V(), ires->R()) ;
+	elementdata.addHitSummary(ires->V(), ires->R(), ires->node().state().position()) ;
 
 	// add to the first derivative
 	

@@ -155,6 +155,7 @@ private:
   // @todo: Move this to a monitoring tool
   std::vector<AlElementHistos*>     m_elemHistos ;
   bool                              m_resetHistos ; // reset histos on next event processing
+  long long                         m_forcedInitTime ; // force the alignment geometry to initialize with this time (rather than first event)
 };
 
 #endif // TALIGNMENT_ALIGNALGORITHM_H
