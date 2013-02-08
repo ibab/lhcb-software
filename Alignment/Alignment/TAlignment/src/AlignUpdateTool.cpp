@@ -548,7 +548,9 @@ namespace Al
 	for (Elements::const_iterator it = elements.begin(); it != elements.end(); ++it, ++iElem) {
 	  const Al::ElementData& elemdata = equations.element(iElem) ;
 	  modmessage << "Alignable: " << (*it)->name() << std::endl
-		     << "Global position: " << (*it)->centerOfGravity() << std::endl
+		     << "Global position: " << (*it)->centerOfGravity() 
+		     << " Average position of hits: "
+		     << elemdata.averageHitPosition() << std::endl
 		     << "Number of tracks/hits/outliers seen: " 
 		     << elemdata.numTracks() << " "
 		     << elemdata.numHits() << " "
@@ -754,7 +756,7 @@ namespace Al
       }
     std::sort( dofchi2s.begin(), dofchi2s.end() ) ;
     
-    for(size_t i=0; i<10 && i<dofchi2s.size() ; ++i) 
+    for(size_t i=0; i<25 && i<dofchi2s.size() ; ++i) 
       logmessage << "  " << i << " " << dofchi2s[i].element->name() 
 		 << " dof=" << dofchi2s[i].dof 
 		 << " chi2= " << dofchi2s[i].chi2 
