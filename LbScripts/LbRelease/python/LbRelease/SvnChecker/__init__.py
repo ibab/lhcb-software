@@ -37,6 +37,7 @@ pre-commit script (https://svnweb.cern.ch/trac/admin/browser/lhcb/usr-hooks/svn-
 Created on Nov 24, 2010
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
+__version__ = "$Id$"
 
 from Core import *
 from StdCheckers import *
