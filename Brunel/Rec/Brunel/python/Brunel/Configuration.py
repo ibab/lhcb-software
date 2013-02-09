@@ -151,7 +151,6 @@ class Brunel(LHCbConfigurableUser):
                     dstConfDetList.append("Calo")
             else:
                 dstConfDetList.append(det)
-        log.warning("dstConfDetList: %s" %(dstConfDetList))
         DstConf().setProp("Detectors", dstConfDetList)
 
     def defineEvents(self):
@@ -569,6 +568,10 @@ class Brunel(LHCbConfigurableUser):
 
             # Filter Best Track States to be written
             trackFilter = TrackToDST("FilterBestTrackStates")
+            from Configurables import ProcessPhase
+            ProcessPhase("Output").DetectorList += [ "DST" ]
+            GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
+
 
             if "Muon" in self.getProp("Detectors"):
                 # Filter Muon Track States            
@@ -576,9 +579,6 @@ class Brunel(LHCbConfigurableUser):
                 muonTrackFilter.TracksInContainer = "/Event/Rec/Track/Muon"
                 GaudiSequencer("OutputDSTSeq").Members += [ muonTrackFilter ]
 
-            from Configurables import ProcessPhase
-            ProcessPhase("Output").DetectorList += [ "DST" ]
-            GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
 
             if packType != "NONE":
                 # Add the sequence to pack the DST containers
@@ -638,12 +638,12 @@ class Brunel(LHCbConfigurableUser):
             for det in tmpExpertSubdets:
                 #self.KnownExpertCheckSubdets.append(det)
                 KnownExpertCheckSubdets.append(det)
-        if [det for det in ['TT', 'UT'] if det in self.getProp("Detectors")]:
+        if [det for det in ['TT'] if det in self.getProp("Detectors")]:
             #self.KnownCheckSubdets.append("TT")
-            KnownCheckSubdets.append("TT")
+            KnownExpertCheckSubdets.append("TT")
         if [det for det in ['Spd', 'Prs', 'Ecal', 'Hcal'] if det in self.getProp("Detectors")]:
             #self.KnownCheckSubdets.append("CALO")
-            KnownCheckSubdets.append("CALO")
+            KnownExpertCheckSubdets.append("CALO")
 
         RecMoniConf().setProp( "CheckEnabled", True )
 
