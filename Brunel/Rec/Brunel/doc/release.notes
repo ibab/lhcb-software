@@ -8,6 +8,9 @@ Purpose: LHCb reconstruction program
 	. Added "Detectors" property to Brunel object.
   . Pass relevent properties to DstConf etc.
 
+- Changes to example options
+  . Remove 2009-FEST-Data.py, obsolete since these data have been deleted
+
 - Changes to references to reflect changes since v44r1
   . Remove check on full bank length when decoding Velo lite clusters, add
     corresponding protection to full decoding
@@ -20,6 +23,7 @@ Purpose: LHCb reconstruction program
     called components, and debug causes of non reproducible Brunel exits
   . Enable printout from ANNPID in most tests, to follow any new problems
     caught by NeuroBayes
+  . Remove brunel-fest09 test since input data no longer exists
  
 </PRE><H1><A NAME=v44r1>2012-11-30 Brunel v44r1</A></H1><PRE>
 This version uses projects LCG 64b, Gaudi v23r5, LHCb v35r3, Lbcom v13r3,
