@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v17r5 2013-02-09 =========================
 ! 2013-02-08 - Paul Szczypka
  - Add upgrade detector switching in DstConf
 
