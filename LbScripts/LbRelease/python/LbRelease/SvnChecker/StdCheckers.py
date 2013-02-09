@@ -385,6 +385,8 @@ class ValidXml(PathChecker):
     correct by trying to parse it.
     """
     def __call__(self, txn, path):
+        if txn.change_kind(path) == 'D':
+            return (True, "No check on deleted files")
         self.log.debug("check %s", path)
         from xml.dom.minidom import parseString
         try:
@@ -451,6 +453,8 @@ class ValidPythonEncoding(PathChecker):
     See http://www.python.org/dev/peps/pep-0263/
     """
     def __call__(self, txn, path):
+        if txn.change_kind(path) == 'D':
+            return (True, "No check on deleted files")
         self.log.debug("check %s", path)
         try:
             data = txn.file_contents(path)

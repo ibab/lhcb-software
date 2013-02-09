@@ -1,3 +1,7 @@
+2013-02-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/SvnChecker: fixed a bug when checking removed files
+
 2013-02-08  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/SvnChecker: added checker for the encoding of Python files

@@ -174,6 +174,8 @@ print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
 """
 print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
 """}), False),
+                 (FakeTransaction({"/path/to/xml/removed.py": ('D', (-1, None), 'file')},
+                                  files = {}), True),
                  ]
 
     move_package = [
