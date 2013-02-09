@@ -4,7 +4,7 @@
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/enableANNPrintout.py</text>
     <text>$BRUNELOPTS/COLLISION10-Beam3500GeV-VeloClosed-MagUp.py</text>
-    <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
+    <text>$APPCONFIGOPTS/Brunel/MonitorOnline.py</text>
     <text>--option</text>
     <text>from Brunel.Configuration import *; Brunel().EvtMax=1000;Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="SDST"; Brunel().PackType="MDF" </text>
   </set></argument>

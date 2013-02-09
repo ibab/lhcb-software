@@ -24,6 +24,8 @@ Purpose: LHCb reconstruction program
   . Enable printout from ANNPID in most tests, to follow any new problems
     caught by NeuroBayes
   . Remove brunel-fest09 test since input data no longer exists
+  . Change brunel2010magup test to create Online rather than Express
+    historgams (Online histograms previously only tested in brunel-fest09)
  
 </PRE><H1><A NAME=v44r1>2012-11-30 Brunel v44r1</A></H1><PRE>
 This version uses projects LCG 64b, Gaudi v23r5, LHCb v35r3, Lbcom v13r3,
