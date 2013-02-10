@@ -6,6 +6,7 @@ Purpose: LHCb Digitization program
  - Changes to Configurable
    . Corrected detectors passed to DigiConf.
    . Renamed some upgrade rich algos.
+ - Removed obsolete dependency on VeloPix packages
 
  - Changes to Configurable
    . Added method to pass detector list to LHCbApp to derive DB dataTypes.
