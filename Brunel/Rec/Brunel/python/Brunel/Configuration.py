@@ -619,8 +619,7 @@ class Brunel(LHCbConfigurableUser):
     def configureCheck(self,expert):
         # "Check" histograms filled only with simulated data
 
-        KnownCheckSubdets       = ["Pat"]
-
+        KnownCheckSubdets = ["Pat"]
 
         # CheckSubdets
         if [det for det in ['Rich1', 'Rich2', 'Rich1Pmt', 'Rich2Pmt'] if det in self.getProp("Detectors")]:
@@ -630,20 +629,27 @@ class Brunel(LHCbConfigurableUser):
             #self.KnownCheckSubdets.append("MUON")
             KnownCheckSubdets.append("MUON")
 
-        KnownExpertCheckSubdets = KnownCheckSubdets+["Tr","PROTO"]
-
         # Expert Check Subdets
+        KnownExpertCheckSubdets = [] + KnownCheckSubdets
+        
+        if [det for det in ['TT'] if det in self.getProp("Detectors")]:
+            #self.KnownCheckSubdets.append("TT")
+            KnownExpertCheckSubdets.append("TT")
+
         tmpExpertSubdets = [det for det in ['IT', 'OT'] if det in self.getProp("Detectors")]
         if tmpExpertSubdets:
             for det in tmpExpertSubdets:
                 #self.KnownExpertCheckSubdets.append(det)
                 KnownExpertCheckSubdets.append(det)
-        if [det for det in ['TT'] if det in self.getProp("Detectors")]:
-            #self.KnownCheckSubdets.append("TT")
-            KnownExpertCheckSubdets.append("TT")
+                
+        KnownExpertCheckSubdets.append("Tr")
+
         if [det for det in ['Spd', 'Prs', 'Ecal', 'Hcal'] if det in self.getProp("Detectors")]:
             #self.KnownCheckSubdets.append("CALO")
             KnownExpertCheckSubdets.append("CALO")
+
+        KnownExpertCheckSubdets.append("PROTO")
+
 
         RecMoniConf().setProp( "CheckEnabled", True )
 
