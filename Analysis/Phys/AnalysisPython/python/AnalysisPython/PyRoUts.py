@@ -52,6 +52,11 @@ __all__     = (
     'axis_bins'      , ## convert list of bin edges to axis
     've_adjust'      , ## adjust the efficiency to be in physical range
     #
+    # from Utils
+    'memory'         , 
+    'clocks'         , 
+    'timing'         , 
+    #
     )
 # =============================================================================
 import ROOT
@@ -4804,6 +4809,12 @@ for t in ( ROOT.TH2D ,
     t . toHepData = _h2_hepdata_
     
 # =============================================================================
+## import useful contetx managers
+from AnalysisPython.Utils import *
+
+# =============================================================================
+
+
 if '__main__' == __name__ :
     
     print 80*'*'
