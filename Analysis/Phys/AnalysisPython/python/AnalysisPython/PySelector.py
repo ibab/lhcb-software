@@ -116,7 +116,7 @@ Selector  = Analysis.Selector
 #
 # @code
 #
-# from AnalysisPython.TpySelectorFix import Selector
+# from AnalysisPython.PySelector import Selector
 #
 # class MySelector ( Selector ) :
 #
@@ -153,7 +153,7 @@ Selector  = Analysis.Selector
 # @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 # @date   2010-04-30
 #
-def _process_ ( self , selector ) :
+def _process_ ( self , selector , *args ) :
     """
     ``Process'' the tree/chain with proper TPySelector :
     
@@ -167,7 +167,7 @@ def _process_ ( self , selector ) :
     chain.process ( selector )  ## NB: note lowercase ``process'' here !!!
     
     """
-    return Analysis.Process.process ( self , selector )
+    return Analysis.Process.process ( self , selector , *args )
 
 _process_. __doc__ += '\n' + Analysis.Process.process.__doc__
 
