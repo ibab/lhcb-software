@@ -19,6 +19,7 @@ class LHCbApp(LHCbConfigurableUser):
        ,"LocalDataTypes": []
        ,"DDDBtag"       : ""
        ,"CondDBtag"     : ""
+       ,"CondDBUpgrade" : False
        ,"DQFLAGStag"    : ""
        ,"Simulation"    : False
        ,"Monitors"      : []
@@ -37,6 +38,7 @@ class LHCbApp(LHCbConfigurableUser):
        ,"LocalDataTypes" : """ Set of Local DataTypes uses to set DB """
        ,'DDDBtag'     : """ Tag for DDDB. Default as set in DDDBConf for DataType """
        ,'CondDBtag'   : """ Tag for CondDB. Default as set in DDDBConf for DataType """
+       ,'CondDBUpgrade' : """ Use Upgrade CondDB (Default False) """
        ,"DQFLAGStag"  : """ Tag for DQFLAGS. Default as set in DDDBConf for DataType """
        ,'Simulation'  : """ Flag to indicate usage of simulation conditions """
        ,'Monitors'    : """ List of monitors to execute """
@@ -260,7 +262,7 @@ class LHCbApp(LHCbConfigurableUser):
             CondDB().Tags [ "SIMCOND"  ] = self.getProp("CondDBtag")
         if hasattr( self, "DQFLAGStag" ):
             CondDB().Tags [ "DQFLAGS" ] = self.getProp("DQFLAGStag")
-
+        self.defineDBDataTypes()
 
     def defineDBDataTypes(self):
         self.checkIncompatibleDetectors()
@@ -284,6 +286,10 @@ class LHCbApp(LHCbConfigurableUser):
             if hasattr(CondDB(), "AllLocalTagsByDataType"):
                 if not CondDB().AllLocalTagsByDataType:
                     CondDB().AllLocalTagsByDataType = myDataTypes
+        if self.upgradeDetectors():
+            from Configurables import CondDB
+            if hasattr(CondDB(), "Upgrade"):
+                CondDB().Upgrade = True
         return
     
     def defineEvents(self):
@@ -367,7 +373,6 @@ class LHCbApp(LHCbConfigurableUser):
     
     def __apply_configuration__(self):
         self.defineDB()
-        self.defineDBDataTypes()
         self.defineEvents()
         self.defineMonitors()
         self.defineXMLSum()
