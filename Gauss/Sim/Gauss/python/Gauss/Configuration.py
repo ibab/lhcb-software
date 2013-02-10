@@ -464,7 +464,7 @@ class Gauss(LHCbConfigurableUser):
         if (VeloP==1 or VeloP==2):
             basePieces['BeforeMagnetRegion']=[]
 
-        #detPieces['BeforeMagnetRegion']+=['Velo']
+        detPieces['BeforeMagnetRegion']+=['Velo']
 
         # Also sort out mis-alignment
         if self.getProp("DataType") != "Upgrade" :

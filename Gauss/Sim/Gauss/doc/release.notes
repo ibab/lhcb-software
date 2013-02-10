@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-02-10 - Paul Szczypka
+ - Uncomment line which prevented the simulation of the Velo in Configuration.py
+
 ! 2013-02-07 - Gloria Corti
  - Replace CaloOnly.py with Gauss-CaloOnly.py and remove dependency from upgrade
  - Add file from v42b branch for setting simulation conditions when RICHES are
