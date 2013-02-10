@@ -96,6 +96,9 @@ class Boole(LHCbConfigurableUser):
     
     __used_configurables__ = [ LHCbApp, L0Conf, DigiConf, SimConf, RichDigiSysConf ]
 
+    __detLinkListDigiConf = []
+
+
     def defineDB(self):
         if self.getProp("DataType") == "DC06" :
             raise RuntimeError( "DC06 data type no longer supported. Please use an earlier Boole version" )
@@ -222,8 +225,10 @@ class Boole(LHCbConfigurableUser):
 
         if 'RichPmt' in self.getProp('DetectorDigi') :
             detListDigi += ['RichPmt']
-            if 'RichPmt' in self.getProp('DetectorLink') : detListLink += ['RichPmt']
-            if 'RichPmt' in self.getProp('DetectorMoni') : detListMoni += ['RichPmt']
+            #if 'RichPmt' in self.getProp('DetectorLink') : detListLink += ['RichPmt']
+            #if 'RichPmt' in self.getProp('DetectorMoni') : detListMoni += ['RichPmt']
+            if 'RichPmt' in self.getProp('DetectorLink') : detListLink += ['Rich']
+            if 'RichPmt' in self.getProp('DetectorMoni') : detListMoni += ['Rich']
 
         if 'Calo' in self.getProp('DetectorDigi') :
             detListDigi += ['Calo']
@@ -244,6 +249,14 @@ class Boole(LHCbConfigurableUser):
                 if 'L0' in self.getProp('DetectorMoni') : detListMoni += ['L0']
 
         if 'MC' in self.getProp('DetectorMoni') : detListMoni += ['MC']
+
+        for det in detListLink:
+            if det in ["Rich", "RichPmt"]:
+                if "Rich" not in self.__detLinkListDigiConf:
+                    self.__detLinkListDigiConf.append("Rich")
+            else:
+                self.__detLinkListDigiConf.append(det)
+
 
         initDets   = self._setupPhase( "Init",   detListInit )
         digiDets   = self._setupPhase( "Digi",   detListDigi )
@@ -526,6 +539,7 @@ class Boole(LHCbConfigurableUser):
         if tae == "":
             from Configurables import RichDigiSysConf
             self.setOtherProp(RichDigiSysConf(),"UseSpillover")
+            #RichDigiSysConf().Sequencer = GaudiSequencer("DigiRichSeq")
             RichDigiSysConf().Sequencer = GaudiSequencer("DigiRichPmtSeq")
             RichDigiSysConf().ChargeShareModel = "None"
             RichDigiSysConf().ResponseModel = "Copy"
@@ -698,6 +712,7 @@ class Boole(LHCbConfigurableUser):
         if "RichPmt" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkRichPmtSeq")
             seq.Members += [ "Rich::MC::MCRichDigitSummaryAlg" ]
+            #seq.Members += [ "Rich::MC::MCRichPmtDigitSummaryAlg" ]
 
         if "Calo" in linkDets or "Calo" in moniDets:
             from Configurables import CaloDigitsFromRaw, CaloEnergyFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth
@@ -785,6 +800,7 @@ class Boole(LHCbConfigurableUser):
                 self.configureDigiRich( GaudiSequencer("Digi%sRichSeq"%taeSlot), taeSlot )
             if "RichPmt" in taeDets:
                 self.configureDigiRichPmt( GaudiSequencer("Digi%sRichPmtSeq"%taeSlot), taeSlot )
+                #self.configureDigiRichPmt( GaudiSequencer("Digi%sRichSeq"%taeSlot), taeSlot )
             if "Calo" in taeDets:
                 self.configureDigiCalo( GaudiSequencer("Digi%sCaloSeq"%taeSlot), taeSlot )
             if "Muon" in taeDets:
@@ -863,7 +879,7 @@ class Boole(LHCbConfigurableUser):
             # Set up the Digi content
             DigiConf().Writer     = writerName
             DigiConf().OutputName = self.outputName()
-            DigiConf().Detectors = self.getProp("DetectorDigi")
+            DigiConf().Detectors = self.__detLinkListDigiConf
             self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover","DataType",])
             if self.getProp("UseSpillover"):
                 self.setOtherProps(DigiConf(),["SpilloverPaths"])
