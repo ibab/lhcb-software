@@ -63,6 +63,9 @@ namespace Analysis
    *     - ROOT.TTree  does have method <c>TTree.Process</c>  with TSelector as argument 
    *     - ROOT.TChain has *NO*  method <c>TChain.Process</c> with TSelector as argument 
    *  This trick allows to access these methods indirectly.
+   *
+   *  It is due to "python-unfriendly" signature of TTree::Process method  
+   *
    *  @author Vanya BELYAEV Ivan.Belyaev Ivan.Belyaev@cern.ch
    *  @date 2010-11-21
    */
@@ -87,6 +90,25 @@ namespace Analysis
     ( TTree*             tree      ,
       TSelector*         selector  ) ;
     // ========================================================================
+    /** helper function to use TTree::Process in python 
+     * 
+     *  @param tree      root-tree 
+     *  @param selector  the selector 
+     *  @param events    events to be processed 
+     *  
+     *  @see TTree 
+     *  @see TTree::Process 
+     *  @see TSelector 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+     *  @date   2013-02-10
+     */
+    static
+    long process
+    ( TTree*              tree      ,
+      TSelector*          selector  , 
+      const unsigned long events    ) ;
+    // ========================================================================
     /** helper function to use TChain::Process in python 
      * 
      *  @param tree      root-tree 
@@ -103,6 +125,25 @@ namespace Analysis
     long process 
     ( TChain*    chain     ,
       TSelector* selector  ) ;
+    // ========================================================================
+    /** helper function to use TChain::Process in python 
+     * 
+     *  @param tree      root-tree 
+     *  @param selector  the selector 
+     *  @param events    events to be processed 
+     *  
+     *  @see TTree 
+     *  @see TTree::Process 
+     *  @see TSelector 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+     *  @date   2013-02-10
+     */
+    static 
+    long process 
+    ( TChain*             chain     ,
+      TSelector*          selector  ,
+      const unsigned long events    ) ;
     // ========================================================================
   };  
   // ==========================================================================

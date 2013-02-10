@@ -59,6 +59,29 @@ long Analysis::Process::process
   return tree->Process ( selector ) ;
 }
 // ============================================================================
+/*  helper function to use TTree::Process in python 
+ * 
+ *  @param tree      root-tree 
+ *  @param selector  the selector 
+ *  @param events    events to be processed 
+ *  
+ *  @see TTree 
+ *  @see TTree::Process 
+ *  @see TSelector 
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+ *  @date   2013-02-10
+ */
+// ============================================================================
+long Analysis::Process::process
+( TTree*              tree      ,
+  TSelector*          selector  , 
+  const unsigned long events    ) 
+{
+  if ( 0 == tree || 0 == selector ) { return 0 ; }
+  return tree->Process ( selector , "" , events ) ;
+} 
+// ============================================================================
 /* helper function to use TChain::Process in python 
  * 
  *  @param chain     root-chain
@@ -78,6 +101,29 @@ long Analysis::Process::process
 {
   if ( 0 == chain || 0 == selector ) { return 0 ; }
   return chain -> Process ( selector ) ;
+}
+// ============================================================================
+/* helper function to use TChain::Process in python 
+ * 
+ *  @param chain     root-chain
+ *  @param selector  the selector 
+ *  @param events    events to be processed 
+ *  
+ *  @see TTree 
+ *  @see TTree::Process 
+ *  @see TSelector 
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+ *  @date   2011-01-21
+ */
+// ============================================================================
+long Analysis::Process::process
+( TChain*             chain    ,
+  TSelector*          selector ,
+  const unsigned long events   ) 
+{
+  if ( 0 == chain || 0 == selector ) { return 0 ; }
+  return chain -> Process ( selector , "" , events ) ;
 }
 // ============================================================================
 // The END 
