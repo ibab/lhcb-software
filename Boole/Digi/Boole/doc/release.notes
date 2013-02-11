@@ -5,7 +5,8 @@ Purpose: LHCb Digitization program
 
  - Changes to Configurable
    . Corrected VL Linking, plus a lot of minor edits for Sim/DigiConf compatability
-   . Editd Detector lists.
+   . Edit Detector lists.
+   . Removed 'L0' entries in Detector lists.
 
  - Changes to Configurable
    . Corrected detectors passed to DigiConf.
