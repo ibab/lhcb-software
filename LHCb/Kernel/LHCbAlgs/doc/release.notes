@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-02-10 - Paul Szczypka
+ - Correction to setting CondDB().Upgrade
+
+! 2013-02-10 - Paul Szczypka
  - Extended method in Configuration which sets DB dataTypes to also set
    CondBD().Upgrade to True if appropriate.
 

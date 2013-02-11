@@ -288,8 +288,7 @@ class LHCbApp(LHCbConfigurableUser):
                     CondDB().AllLocalTagsByDataType = myDataTypes
         if self.upgradeDetectors():
             from Configurables import CondDB
-            if hasattr(CondDB(), "Upgrade"):
-                CondDB().Upgrade = True
+            CondDB().Upgrade = True
         return
     
     def defineEvents(self):
