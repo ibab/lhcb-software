@@ -60,7 +60,8 @@ def main():
     try:
        filesize = os.path.getsize(options.input_file)
     except OSError:
-        logging.warning("Input data file doesn't exist!\n")
+        ## this may be normal if no new file found
+        ## logging.warning("Input data file doesn't exist!\n")
         return
     else:
         if not filesize > 0:
