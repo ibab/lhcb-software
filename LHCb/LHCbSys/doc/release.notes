@@ -5,7 +5,7 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v35r4>2013-02-11 LHCbSys v35r4</A></H1><PRE>
+</PRE><H1><A NAME=v35r4>2013-02-12 LHCbSys v35r4</A></H1><PRE>
 This version uses Gaudi v23r6 and LCG_64c
 
 - Packages removed:  Kernel/HistoStrings, functionality now in GaudiUtils
@@ -68,6 +68,13 @@ This version uses Gaudi v23r6 and LCG_64c
   . Fix OptItemList for /Event/Gen/HepMCEvents and ItemList for
     /Event/Gen/BeamParameters, in both cases there was a missing #1.
     Bug introduced in v17r0
+
+- In Kernel/LHCbAlgs v2r54
+  . In Configuration.py (LHCbApp)
+    o Extended method iwhich sets DB dataTypes to also set CondBD().Upgrade to
+      True if appropriate
+    o Added method which returns list of Upgrade detectors.
+    o Added methods to derive local dataTypes from detector list
 
 - In Kernel/LHCbKernel v13r15
   . Add UT hits
