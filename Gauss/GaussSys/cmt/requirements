@@ -1,5 +1,5 @@
 package GaussSys
-version v43r3
+version v43r4
 
 branches cmt doc
 
@@ -8,10 +8,10 @@ branches cmt doc
 #==================================================================
 
 # Temporarily to pick up fix in GaudiConf
-use GaudiConf           v17r2
+use GaudiConf           v17r4
 
 # Gauss application: the application is not built on Win32
-use Gauss               v43r3   Sim
+use Gauss               v43r4   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v64r2p1 
@@ -21,28 +21,28 @@ use rivet               v64r2p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
 use GenCuts             v3r1    Gen
-use GENSER              v11r0   Gen
+use GENSER              v11r1   Gen
 use EvtGen              v12r11  Gen
-use Mint                v1r6    Gen
-use EvtGenExtras        v3r4    Gen
-use Generators          v12r2   Gen
-use LbPythia            v12r1   Gen
+use Mint                v1r7    Gen
+use EvtGenExtras        v3r5    Gen
+use Generators          v12r3   Gen
+use LbPythia            v13r0   Gen
 
 # Generators packages: extensions to Pythia6
-use LbAlpGen            v3r0    Gen 
+use LbAlpGen            v3r0p1  Gen 
 use BcVegPy             v3r1    Gen
 use GenXicc             v2r0    Gen
-use LbBcVegPy           v4r3p1  Gen
-use LbGenXicc           v2r0    Gen
+use LbBcVegPy           v4r4    Gen
+use LbGenXicc           v2r0p1  Gen
 use LbHidValley         v3r2    Gen
 use LbOniaPairs         v1r2    Gen
 
 # Generators packages: alternative to Pythia6 for pp collisions
-use LbPythia8           v5r1    Gen
+use LbPythia8           v6r0    Gen
 use LbHerwigpp          v2r0    Gen
 
 # Generators packages: alternative to Pythia6 for p-A collisions
-use LbHijing            v7r0    Gen
+use LbHijing            v8r0    Gen
 
 # Generators packages: LHCb sampling results for Machine Induced Background
 use LbMIB               v7r0    Gen
@@ -52,7 +52,7 @@ use LbPGuns             v4r0    Gen
 
 # Simulation basic packages
 use GiGa        	v20r0	  Sim     
-use GiGaCnv     	v20r0	  Sim
+use GiGaCnv     	v20r1	  Sim
 use SimSvc              v5r2      Sim
 use GiGaVisUI           v5r2      Sim
 use VisSvc              v5r7      Vis 
@@ -61,15 +61,15 @@ use ClhepTools          v2r1p1    Tools
 # Simulation specialized packages
 use GaussKine           v6r1      Sim
 use GaussAlgs		v6r1      Sim
-use GaussTools          v18r1     Sim
+use GaussTools          v18r1p1   Sim
 use GaussRICH		v13r0     Sim
 use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r4	  Sim
 use GaussPhysics	v10r0	  Sim
-use GaussCherenkov      v3r0      Sim
+use GaussCherenkov      v3r0p1    Sim
 
 # Monitoring packages
-use GaussMonitor	v6r10     Sim
+use GaussMonitor	v6r11     Sim
 use CaloMoniSim         v4r0      Calo
 use VeloGauss           v2r4      Velo
 use MuonMoniSim         v2r6      Muon
