@@ -38,7 +38,7 @@ class LHCbApp(LHCbConfigurableUser):
        ,"LocalDataTypes" : """ Set of Local DataTypes uses to set DB """
        ,'DDDBtag'     : """ Tag for DDDB. Default as set in DDDBConf for DataType """
        ,'CondDBtag'   : """ Tag for CondDB. Default as set in DDDBConf for DataType """
-       ,'CondDBUpgrade' : """ Use Upgrade CondDB (Default False) """
+       ,'CondDBtag'   : """ Use Upgrade CondDB (Default False) """
        ,"DQFLAGStag"  : """ Tag for DQFLAGS. Default as set in DDDBConf for DataType """
        ,'Simulation'  : """ Flag to indicate usage of simulation conditions """
        ,'Monitors'    : """ List of monitors to execute """
@@ -288,7 +288,8 @@ class LHCbApp(LHCbConfigurableUser):
                     CondDB().AllLocalTagsByDataType = myDataTypes
         if self.upgradeDetectors():
             from Configurables import CondDB
-            CondDB().Upgrade = True
+            if hasattr(CondDB(), "Upgrade"):
+                CondDB().Upgrade = True
         return
     
     def defineEvents(self):
