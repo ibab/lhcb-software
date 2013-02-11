@@ -4,7 +4,6 @@ Tests for SvnChecker
 
 Created on Nov 24, 2010
 '''
-from LbRelease.SvnChecker.StdCheckers import MovePackage
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
 import unittest
@@ -14,6 +13,7 @@ from Core import FakeTransaction
 from Core import Failure, Success, Not
 from StdCheckers import AllowedUsers
 from StdCheckers import AllPaths, PackageTag, ProjectTag, TagRemoval
+from StdCheckers import MovePackage
 from StdCheckers import TagIntermediateDirs, ValidXml, ValidPythonEncoding
 
 import logging
@@ -35,13 +35,13 @@ class Test(unittest.TestCase):
                                      True),
                     (FakeTransaction({'/Project/tags/Package/test': ('A', (1234, '/Project/trunk/Package'), 'dir')},
                                      {'/Project/trunk/Package':'dir'}),
-                                     (False, 'Invalid tag copy')),
+                                     (False, 'Invalid package tag copy')),
                     (FakeTransaction({'/Project/tags/Package/v1r1': ('A', (1234, '/Project/branches/Package'), 'dir')},
                                      {'/Project/branches/Package':'dir'}),
-                                     (False, 'Invalid tag copy')),
+                                     (False, 'Invalid package tag copy')),
                     (FakeTransaction({'/Project/tags/v1r1': ('A', (1234, '/Project/trunk'), 'dir')},
                                      {'/Project/trunk/Package':'dir'}),
-                                     (False, 'Invalid tag copy')),
+                                     (False, 'Invalid package tag copy')),
                     #(FakeTransaction({'/Project/tags/Hat/v1r0': ('A', (1234, '/Project/trunk/Hat'), 'dir')},
                     #                 {'/Project/trunk/Hat/Package/cmt':'dir'}),
                     #                 False),
@@ -207,6 +207,23 @@ print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
                                                              }
                                                        }),
                                       True),
+                    # good one with new hat
+                    (FakeTransaction({'/Dest/trunk/Hat': ('A', (-1, None), 'dir'),
+                                      '/Dest/tags/Hat': ('A', (-1, None), 'dir'),
+                                      '/Dest/branches/Hat': ('A', (-1, None), 'dir'),
+                                      '/Dest/trunk/Hat/Package': ('A', (999, '/Source/trunk/Hat/Package'), 'dir'),
+                                      '/Dest/tags/Hat/Package': ('A', (999, '/Source/tags/Hat/Package'), 'dir'),
+                                      '/Dest/branches/Hat/Package': ('A', (999, '/Source/branches/Hat/Package'), 'dir'),
+                                      '/Source/trunk/Hat/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/tags/Hat/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/branches/Hat/Package': ('D', (-1, None), 'dir'),
+                                      '/': ('M', (-1, None), 'dir')},
+                                      {'/': 'dir'},
+                                      node_properties={'/': {'packages':
+                                                             "\n".join(["Hat/Package Dest"])
+                                                             }
+                                                       }),
+                                      True),
                     # good two
                     (FakeTransaction({'/Dest/trunk/Package': ('A', (999, '/Source/trunk/Package'), 'dir'),
                                       '/Dest/tags/Package': ('A', (999, '/Source/tags/Package'), 'dir'),
@@ -306,7 +323,8 @@ print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
         check = checker(txn)
         msg = "Expected %r but found %r checking\n%s" % (result, check, txn)
         if type(result) is tuple:
-            self.assertEquals(check, result, msg = msg)
+            self.assertEquals(check[0], result[0], msg = msg)
+            self.assertTrue(result[1] in check[1].splitlines(), msg = msg)
         else:
             self.assertEquals(check[0], result, msg = msg)
 

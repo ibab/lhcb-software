@@ -274,12 +274,16 @@ class Or(Checker):
         self._operands = (a, b)
     def __call__(self, *args):
         self.log.debug("Start OR block")
+        msgs = []
         for o in self._operands:
             r, m = o(*args)
             if r:
+                msgs = [m] # keep only the success message
                 break # stop checking on the first success
+            else:
+                msgs.append(m) # record all the failure messages
         self.log.debug("End OR block (%s)", r)
-        return (r, m)
+        return (r, '\n'.join(msgs))
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, ", ".join(map(repr, self._operands)))
 

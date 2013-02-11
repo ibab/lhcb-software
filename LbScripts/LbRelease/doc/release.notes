@@ -1,3 +1,8 @@
+2013-02-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/SvnChecker: improved error messages and fixed a minor issue
+	with move of packages
+
 2013-02-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/SvnChecker: fixed a bug when checking removed files

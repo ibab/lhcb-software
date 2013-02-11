@@ -75,6 +75,19 @@ class AllowedUsers2(PropertyChecker):
     def _msg(self, res, value):
         return "User %s %s" % (value, res and "allowed" or "not allowed")
 
+def getHats(pkg):
+    '''
+    Return the list of hats in a package name.
+
+    >>> getHats('Pkg')
+    []
+    >>> getHats('Hat/Pkg')
+    ['Hat']
+    >>> getHats('Hat1/Hat2/Pkg')
+    ['Hat1', 'Hat1/Hat2']
+    '''
+    return [pkg.rsplit('/', i)[0] for i in range(pkg.count('/'), 0, -1)]
+
 class MovePackage(Checker):
     """
     Checker to allow move of packages.
@@ -106,11 +119,19 @@ class MovePackage(Checker):
                 self.log.debug("'packages' property still refers to %s for package %s", src, pkg)
                 return (False, "Bad change in property 'packages'")
             # look for trunk, tags and branches moves
+            # (consume all the valid changes)
             for t in ['/trunk/', '/tags/', '/branches/']:
+                # - source removed
                 s = "/%s%s%s" % (src, t, pkg)
                 if s not in txn.changes or txn.change_kind(s) != 'D':
                     return (False, "path %s not removed" % s)
                 consumed_changes.append(s)
+                for hat in getHats(pkg):
+                    # - allow creation of missing hats
+                    h = "/%s%s%s" % (dst, t, hat)
+                    if h in txn.changes and txn.change_kind(h) == 'A':
+                        consumed_changes.append(h)
+                # - destination copied from source
                 d = "/%s%s%s" % (dst, t, pkg)
                 if d not in txn.changes or txn.change_kind(d) != 'A':
                     return (False, "path %s not added" % d)
@@ -125,8 +146,8 @@ class MovePackage(Checker):
         extra_changes = sorted([c for c in all_changes if c not in consumed_changes])
         if extra_changes:
             self.log.debug("Changes not consumed: %s", extra_changes)
-            return (False, "Cannot mix package move and other changes:\n"
-                            + "\n".join(map(txn.formatChange, extra_changes)))
+            return (False, "Cannot mix package move and other changes:\n\t"
+                            + "\n\t".join(map(txn.formatChange, extra_changes)))
         return (True, "Valid move of packages")
 
 class ForeachPath(Checker):
@@ -246,7 +267,7 @@ class TagCheckerBase(PathChecker):
                 return (False, "Only copies are allowed")
             if not self._validCopy(src, path):
                 self.log.debug("not a valid copy from %s", src)
-                return (False, "Invalid tag copy")
+                return (False, "Invalid %s tag copy" % self.__type__)
         except:
             self.log.debug("not a copy")
             # if copy_from fails, it is not a copy
@@ -264,6 +285,7 @@ class PackageTag(TagCheckerBase):
      - if the version is not valid
      - if the packages do not match
     """
+    __type__ = 'package'
     def _validCopy(self, src, dest):
         try:
             # splitted source
@@ -304,6 +326,7 @@ class ProjectTag(TagCheckerBase):
      - Proj/trunk/CMakeLists.txt -> Proj/tags/PROJ/PROJ_vXrY/CMakeLists.txt
      - Proj/trunk/toolchain.cmake -> Proj/tags/PROJ/PROJ_vXrY/toolchain.cmake
     """
+    __tag__ = 'project'
     def _validCopy(self, src, dest):
         try:
             # splitted source
