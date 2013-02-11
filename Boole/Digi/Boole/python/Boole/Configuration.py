@@ -1074,17 +1074,13 @@ class Boole(LHCbConfigurableUser):
             from Configurables import Rich__MC__Digi__DigitQC
             GaudiSequencer("MoniRichSeq").Members += [ Rich__MC__Digi__DigitQC("RiDigitQC") ]
 
-        if [det for det in moniDets if det in ['Spd','Prs','Ecal','Hcal']]:
+        if "Calo" in moniDets:
             from Configurables import CaloDigitChecker
             importOptions("$CALOMONIDIGIOPTS/CaloDigitChecker.opts")
-            if "Spd" in moniDets:
-                GaudiSequencer("MoniCaloSeq").Members += [ CaloDigitChecker("SpdCheck")]
-            if "Prs" in moniDets:
-                GaudiSequencer("MoniCaloSeq").Members += [ CaloDigitChecker("PrsCheck")]
-            if "Ecal" in moniDets:
-                GaudiSequencer("MoniCaloSeq").Members += [ CaloDigitChecker("EcalCheck")]
-            if "Hcal" in moniDets:
-                GaudiSequencer("MoniCaloSeq").Members += [ CaloDigitChecker("HcalCheck")]
+            GaudiSequencer("MoniCaloSeq").Members += [ CaloDigitChecker("SpdCheck")]
+            GaudiSequencer("MoniCaloSeq").Members += [ CaloDigitChecker("PrsCheck")]
+            GaudiSequencer("MoniCaloSeq").Members += [ CaloDigitChecker("EcalCheck")]
+            GaudiSequencer("MoniCaloSeq").Members += [ CaloDigitChecker("HcalCheck")]
             
         if "Muon" in moniDets:
             from Configurables import MuonDigitChecker

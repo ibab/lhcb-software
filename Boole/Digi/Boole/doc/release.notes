@@ -4,6 +4,9 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
  - Changes to Configurable
+   . Corrected Calo digits.
+
+ - Changes to Configurable
    . Corrected VL Linking, plus a lot of minor edits for Sim/DigiConf compatability
    . Edit Detector lists.
    . Removed 'L0' entries in Detector lists.
