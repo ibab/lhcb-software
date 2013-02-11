@@ -4,6 +4,10 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
  - Changes to Configurable
+   . Corrected VL Linking, plus a lot of minor edits for Sim/DigiConf compatability
+   . Editd Detector lists.
+
+ - Changes to Configurable
    . Corrected detectors passed to DigiConf.
    . Renamed some upgrade rich algos.
  - Removed obsolete dependency on VeloPix packages
