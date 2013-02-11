@@ -1031,6 +1031,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         richConf.InitPhotons        = True
         richConf.TracklessRingAlgs  = []
         richConf.Particles          = self.getProp("RichHypos")
+        richConf.pixelConfig().FindClusters = False
         # Set cuts on which tracks enter the RICH reco
         richConf.trackConfig().TrackCuts = self.getProp("RichTrackCuts")
         richConf.gpidConfig().TrackCuts  = self.getProp("RichTrackCuts") 

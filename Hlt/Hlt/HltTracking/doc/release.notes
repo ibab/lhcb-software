@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2013-02-11 - Chris Jones
+ - Turn off pixel clusters in the RICH Reco settings. Not used and just wastes
+   a little CPU (used offline for monitoring only).
+
 ! 2013-01-09 - E. van Herwijnen
  - I removed Jibo's pA run forward reco p,pt cuts from the head and put 
    them in the v9r25p1 branch
