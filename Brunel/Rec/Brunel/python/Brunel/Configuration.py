@@ -142,16 +142,24 @@ class Brunel(LHCbConfigurableUser):
 
         # Set list of detectors in DstConf
         dstConfDetList = []
+        simConfDetList = []
         for det in self.getProp("Detectors"):
             if det in ['Rich1', 'Rich2', 'Rich1Pmt', 'Rich2Pmt']:
                 if "Rich" not in dstConfDetList:
                     dstConfDetList.append("Rich")
-            elif det in ['Spd', 'Prs', 'Ecal', 'Hcal']:
+                if "Rich" not in simConfDetList:                    
+                    simConfDetList.append("Rich")
+            elif det in ['Prs', 'Spd', 'Ecal', 'Hcal']:
+                simConfDetList.append(det)
                 if "Calo" not in dstConfDetList:
                     dstConfDetList.append("Calo")
             else:
                 dstConfDetList.append(det)
+                simConfDetList.append(det)
         DstConf().setProp("Detectors", dstConfDetList)
+        from Configurables import SimConf
+        SimConf().setProp("Detectors", simConfDetList)
+
 
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
@@ -623,10 +631,8 @@ class Brunel(LHCbConfigurableUser):
 
         # CheckSubdets
         if [det for det in ['Rich1', 'Rich2', 'Rich1Pmt', 'Rich2Pmt'] if det in self.getProp("Detectors")]:
-            #self.KnownCheckSubdets.append("RICH")
             KnownCheckSubdets.append("RICH")
         if [det for det in ['Muon', 'MuonNoM1'] if det in self.getProp("Detectors")]:
-            #self.KnownCheckSubdets.append("MUON")
             KnownCheckSubdets.append("MUON")
 
         # Expert Check Subdets
@@ -639,13 +645,11 @@ class Brunel(LHCbConfigurableUser):
         tmpExpertSubdets = [det for det in ['IT', 'OT'] if det in self.getProp("Detectors")]
         if tmpExpertSubdets:
             for det in tmpExpertSubdets:
-                #self.KnownExpertCheckSubdets.append(det)
                 KnownExpertCheckSubdets.append(det)
-                
-        KnownExpertCheckSubdets.append("Tr")
-
+        if [det for det in ['TT','UT'] if det in self.getProp("Detectors")]:
+            KnownExpertCheckSubdets.append('TT') # TT only because UT inherits from TT
+            #KnownExpertCheckSubdets.append(det) 
         if [det for det in ['Spd', 'Prs', 'Ecal', 'Hcal'] if det in self.getProp("Detectors")]:
-            #self.KnownCheckSubdets.append("CALO")
             KnownExpertCheckSubdets.append("CALO")
 
         KnownExpertCheckSubdets.append("PROTO")
