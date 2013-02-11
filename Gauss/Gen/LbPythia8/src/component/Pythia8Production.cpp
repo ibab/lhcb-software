@@ -115,19 +115,7 @@ StatusCode Pythia8Production::initialize( ) {
     return Error( "Cannot initialize BeamToolForPythia8" , sc ) ;
   m_pythia -> setBeamShapePtr( m_pythiaBeamTool );
 
-  // XML log file
-  m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;
-
-  return initializeGenerator() ;
-}
-
-//=============================================================================
-// Part specific to generator initialization
-//=============================================================================
-StatusCode Pythia8Production::initializeGenerator( ) {
-  bool success = true ;
-  
-  //set the mean beam momentum to the pythia instance   
+  //set the mean beam momentum to the pythia instance
   //pythia beam tool smearing is using difference wrt to nominal beam directions
   Gaudi::XYZVector pBeam1 , pBeam2 ;
   m_beamTool->getMeanBeams( pBeam1 , pBeam2 ) ;
@@ -153,23 +141,26 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   m_pythia->readString("Beams:pzB = " + momProj.str());
   momProj.str("");
 
+  // XML log file
+  m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;
+
+  bool success = true ;
   // set default LHCb tuning options
   std::string optspath = "" ;
   if ( "UNKNOWN" != System::getEnv("LBPYTHIA8ROOT") ) {
     optspath  = System::getEnv( "LBPYTHIA8ROOT" ) ;
     success = m_pythia->readFile(optspath+"/options/"+m_tuningFile);
     if (!success)
-      Warning ( "Cannot find  LBPYTHIA8ROOT/options/"+m_tuningFile+", thus default pythia8 options are parsed" ) ; 
+      Warning ( "Cannot find  LBPYTHIA8ROOT/options/"+m_tuningFile+", thus default pythia8 options are parsed" ) ;
   }
-  else 
+  else
     Warning ( "Cannot find LBPYTHIA8ROOT/options/"+m_tuningFile+", thus default pythia8 options are parsed" ) ;
-  
+
   // add user defined tuning options
   if (m_tuningUserFile!="")
     success = m_pythia->readFile(m_tuningUserFile);
   if (!success)
     Warning ( "Cannot find "+m_tuningUserFile+", thus default LHCb tune is not overwritten" ) ;
-  
 
   // Check if there is a FORTRAN User Process tool
   if ( "" != m_fortranUPToolName ) {
@@ -185,16 +176,22 @@ StatusCode Pythia8Production::initializeGenerator( ) {
     m_pythia -> setLHAupPtr( ( Pythia8::LHAup * ) m_fortranUPTool -> getLHAupPtr() ) ;
   }
 
-
-  // also read a vector of commands if any is provided, for backward compatibility
+  // also read a vector of commands if any is provided
   // this will overwrite anything that is passed through a user tuning file
   // should be done as the last step of the reading of the options,
   // so that everything can be overwritten by the user.
-  for (unsigned int count = 0; count<m_commandVector.size(); ++count) {  
-    cout << m_commandVector[count] << endl;
+  for (unsigned int count = 0; count<m_commandVector.size(); ++count) {
+    debug() << m_commandVector[count] << endmsg;
     success = m_pythia->readString(m_commandVector[count]);
   }
-  
+
+  return success ;
+}
+
+//=============================================================================
+// Part specific to generator initialization
+//=============================================================================
+StatusCode Pythia8Production::initializeGenerator( ) {
   m_pythia->init();
   return StatusCode::SUCCESS;
 }
@@ -219,11 +216,58 @@ StatusCode Pythia8Production::generateEvent( HepMC::GenEvent * theEvent ,
 }
 
 //=============================================================================
+// Convert the PythiaID (stored in ParticleTable.txt, comes from pythia6) 
+// and the PDGID in a Pythia8ID
+// this can be change once Pythia6 is definitely retired.
+//=============================================================================
+int Pythia8Production::getPythia8ID( const LHCb::ParticleProperty * thePP ) {
+  int pdgId = thePP -> pid().pid();
+  int pythiaId = thePP -> pythiaID() ;
+
+  int pythia8Id = 0;
+  
+  switch ( thePP -> pid().abspid() ) {
+  case 9010221:
+  case 10331:
+  case 10111:
+  case 10211:
+  case 9000111:
+  case 9000211:
+  case 100113:
+  case 100213:
+  case 30313:
+  case 30213:
+  case 3124:
+  case 13122:
+  case 23122:
+  case 33122:
+    //for these guys the pythiaId is now corresponding to the pdgId
+    pythia8Id = pdgId;
+    break;
+  case 30221:
+    //the pdgID has changed, and the new pythiaId is the same as new pdg
+    pythia8Id = 10221;
+    break;
+  case 104122:
+    //the pdgID has changed, and the new pythiaId is the same as new pdg
+    pythia8Id = 4124;
+    break;
+  default:
+    //else pdgId=pythiaId=pythia8Id 
+    //(except for unknown particles to pythia, for which pythiaId=pythia8Id=0)
+    pythia8Id = pythiaId;
+    break;
+  }
+  return pythia8Id;
+}
+
+//=============================================================================
 // Set stable the given particle in Pythia8
 //=============================================================================
 void Pythia8Production::setStable( const LHCb::ParticleProperty * thePP ) {
-  int pdgId = thePP -> pid().pid();
-  m_pythia->particleData.mayDecay(pdgId, false);
+  //  int pythiaId = thePP -> pythiaID() ;
+  int pythiaId = getPythia8ID(thePP);
+  m_pythia->particleData.mayDecay(pythiaId, false);
 }
 
 //=============================================================================
@@ -232,10 +276,13 @@ void Pythia8Production::setStable( const LHCb::ParticleProperty * thePP ) {
 void Pythia8Production::updateParticleProperties( const LHCb::ParticleProperty * 
                                                   thePP ) {
   
-  //this can probalbly be passed by otpions instead. (and read through the readFile(...))
+  //  int pythiaId = thePP -> pythiaID() ;
+  int pythiaId = getPythia8ID(thePP);
+  //  int pdgId = thePP -> pid().pid();
   
-  int pythiaId = thePP -> pythiaID() ;
-  int pdgId = thePP -> pid().pid();
+  //  if (pythiaId!=pdgId)
+  //  verbose() << "pythiaID: " << pythiaId << " pdgID " << pdgId << " PLEASE CHECK " << endmsg;
+
   double pwidth , lifetime ;
   if ( 0 != pythiaId ) {
     if ( 0 == thePP -> lifetime() ) pwidth = 0. ;
@@ -246,14 +293,18 @@ void Pythia8Production::updateParticleProperties( const LHCb::ParticleProperty *
     if ( ( lifetime <= 1.e-4 * Gaudi::Units::mm ) || ( lifetime >= 1.e16 * Gaudi::Units::mm ) ) 
       lifetime = 0. ;
     
-    m_pythia -> particleData.m0(pdgId, thePP -> mass() / Gaudi::Units::GeV) ;
+    m_pythia -> particleData.m0(pythiaId, thePP -> mass() / Gaudi::Units::GeV) ;
 
     // For Higgs, top, Z and W: update only masses
-    if ( ( 6 != pdgId ) && ( 23 != pdgId ) && ( 24 != pdgId ) 
-         && ( 25 != pdgId ) ) {
-      m_pythia -> particleData.mWidth(pdgId, pwidth / Gaudi::Units::GeV) ;
-      m_pythia -> particleData.mMax(pdgId, thePP -> maxWidth() / Gaudi::Units::GeV) ;
-      m_pythia -> particleData.tau0(pdgId, lifetime / Gaudi::Units::mm) ;
+    if ( ( 6 != abs(pythiaId) ) && ( 23 != abs(pythiaId) ) && ( 24 != abs(pythiaId) ) 
+         && ( 25 != abs(pythiaId) ) ) {
+      m_pythia -> particleData.mWidth(pythiaId, pwidth / Gaudi::Units::GeV) ;
+      //      m_pythia -> particleData.mMax(pdgId, thePP -> maxWidth() / Gaudi::Units::GeV) ;
+      // m_pythia -> particleData.mMax(pythiaId, (thePP -> maxWidth() + thePP -> mass())/ Gaudi::Units::GeV) ;  
+      if (pwidth!=0) m_pythia -> particleData.mMin(pythiaId, (thePP -> mass() - thePP -> maxWidth())/ Gaudi::Units::GeV) ; 
+      else m_pythia -> particleData.mMin(pythiaId, 0);
+      m_pythia -> particleData.mMax(pythiaId, 0);
+      m_pythia -> particleData.tau0(pythiaId, lifetime / Gaudi::Units::mm) ;
     }
   }
 }
@@ -350,7 +401,9 @@ void Pythia8Production::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ )
 StatusCode Pythia8Production::hadronize( HepMC::GenEvent * theEvent , 
                                          LHCb::GenCollision * 
                                          theCollision ) {
+  //  m_pythia->event.list();
   if (!m_pythia->forceHadronLevel()) return StatusCode::FAILURE ;
+  // m_pythia->event.list();
   return toHepMC ( theEvent , theCollision ) ;
 }
 
@@ -532,8 +585,8 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
     else if (status==91 || status==92 || (status>99 && status<110)) {
       if ((*p) -> end_vertex()!=0)
         (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
-        else
-          (*p) -> set_status( LHCb::HepMCEvent::StableInProdGen );
+      else
+	(*p) -> set_status( LHCb::HepMCEvent::StableInProdGen );
     }
     else if (status==93 || status==94)
       (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
@@ -543,7 +596,25 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
              && status!=LHCb::HepMCEvent::StableInProdGen
              && status!=LHCb::HepMCEvent::DocumentationParticle)
       warning() << "Unknown status rule " << status << " for particle" << (*p)->pdg_id() << endmsg;
+
+    //    verbose() << "Status " << status << " --> " << (*p) -> status() << " for particle" << (*p)->pdg_id() << endmsg;
     
+    //convert the pdgId to a correct value.
+    //consistency between pdgId and pythiaId was not present in the past
+    //with pythia8 it is the case, but one takes the old particletable it creates an issue.
+    //this should be removed once the new particle table is used.
+    int pythia8id = (*p) -> pdg_id();
+    int pdgId = pythia8id;
+    switch (abs(pythia8id)) {
+    case 10221:
+      (*p) -> set_pdg_id(pythia8id>0 ? 30221 : -30221);
+      break;
+    case 4124:
+      (*p) -> set_pdg_id(pythia8id>0 ? 104122 : -104122);
+      break;
+    }
+
+    //if( status==LHCb::HepMCEvent::StableInProdGen) verbose() << "Status " << status << " --> " << (*p) -> status() << " for particle" << (*p)->pdg_id() << "(pythia8Id " << pythia8id << ")" << endmsg;
   }
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;

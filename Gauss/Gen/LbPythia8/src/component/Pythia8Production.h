@@ -91,6 +91,9 @@ private:
 
   ICounterLogFile * m_xmlLogTool ; ///< XML Log file to store cross-sections 
 
+  /// get pythai8Id from the PP
+  int getPythia8ID( const LHCb::ParticleProperty * thePP ) ;
+
   /// retrieve the processCode
   int processCode( ) ;
 
