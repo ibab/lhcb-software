@@ -4,6 +4,9 @@
 !------------------------------------------------------------------------------
 
 ! 2013-02-08 - Paul Szczypka
+ - Remove debug statement.
+
+! 2013-02-08 - Paul Szczypka
  - Add test for upgrade detectors when adding Rec/Summary to writer in DstConf.
 
 !========================= GaudiConf v17r5 2013-02-09 =========================

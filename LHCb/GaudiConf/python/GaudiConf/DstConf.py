@@ -112,7 +112,6 @@ class DstConf(LHCbConfigurableUser):
         writer.ItemList += [   "/Event/Rec/Header"                       + depth
                              , "/Event/Rec/Status"                       + depth]
         from Configurables import LHCbApp
-        print LHCbApp()
         if not LHCbApp().upgradeDetectors():
             writer.ItemList += [ "/Event/Rec/Summary"                      + depth]
 
