@@ -4,6 +4,11 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2013-02-11 - Gloria Corti
+ - Introduce hijing 1.383bs.2 routines modified by Zhenwei to replace call to
+   "rlu" and "ran" functions by "hijing_rlu" and "hijing_ran" to avoid conflicts
+   with system calls that seems to be call anyway instead of our implementation.
+
 ! 2013-02-07 - Patrick Robbe
  - cmt/requirements: remove link statement to absent library and 
    put it back
