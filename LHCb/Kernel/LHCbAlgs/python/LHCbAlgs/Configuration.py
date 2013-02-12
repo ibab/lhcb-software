@@ -65,7 +65,8 @@ class LHCbApp(LHCbConfigurableUser):
         'ecal',
         'hcal',
         'muon',
-        'magnet'
+        'magnet',
+        'tr'      # Added "Tr" -> "tr" to remove extra warnings when running Boole, Brunel, etc.
         ]
 
     __dtMapping = {

@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-02-12 - Paul Szczypka
+ - Added protection from warnings due to "Tr" being in detector list.
+
 ! 2012-02-11 - Paul Szczypka
  - Small edit of CondDB().Upgrade code.
  - Added ConDBUpgrade property, but unused as yet.
