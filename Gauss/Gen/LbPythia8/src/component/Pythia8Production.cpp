@@ -276,12 +276,7 @@ void Pythia8Production::setStable( const LHCb::ParticleProperty * thePP ) {
 void Pythia8Production::updateParticleProperties( const LHCb::ParticleProperty * 
                                                   thePP ) {
   
-  //  int pythiaId = thePP -> pythiaID() ;
   int pythiaId = getPythia8ID(thePP);
-  //  int pdgId = thePP -> pid().pid();
-  
-  //  if (pythiaId!=pdgId)
-  //  verbose() << "pythiaID: " << pythiaId << " pdgID " << pdgId << " PLEASE CHECK " << endmsg;
 
   double pwidth , lifetime ;
   if ( 0 != pythiaId ) {
@@ -299,8 +294,6 @@ void Pythia8Production::updateParticleProperties( const LHCb::ParticleProperty *
     if ( ( 6 != abs(pythiaId) ) && ( 23 != abs(pythiaId) ) && ( 24 != abs(pythiaId) ) 
          && ( 25 != abs(pythiaId) ) ) {
       m_pythia -> particleData.mWidth(pythiaId, pwidth / Gaudi::Units::GeV) ;
-      //      m_pythia -> particleData.mMax(pdgId, thePP -> maxWidth() / Gaudi::Units::GeV) ;
-      // m_pythia -> particleData.mMax(pythiaId, (thePP -> maxWidth() + thePP -> mass())/ Gaudi::Units::GeV) ;  
       if (pwidth!=0) m_pythia -> particleData.mMin(pythiaId, (thePP -> mass() - thePP -> maxWidth())/ Gaudi::Units::GeV) ; 
       else m_pythia -> particleData.mMin(pythiaId, 0);
       m_pythia -> particleData.mMax(pythiaId, 0);
@@ -401,9 +394,7 @@ void Pythia8Production::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ )
 StatusCode Pythia8Production::hadronize( HepMC::GenEvent * theEvent , 
                                          LHCb::GenCollision * 
                                          theCollision ) {
-  //  m_pythia->event.list();
   if (!m_pythia->forceHadronLevel()) return StatusCode::FAILURE ;
-  // m_pythia->event.list();
   return toHepMC ( theEvent , theCollision ) ;
 }
 
@@ -597,14 +588,11 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
              && status!=LHCb::HepMCEvent::DocumentationParticle)
       warning() << "Unknown status rule " << status << " for particle" << (*p)->pdg_id() << endmsg;
 
-    //    verbose() << "Status " << status << " --> " << (*p) -> status() << " for particle" << (*p)->pdg_id() << endmsg;
-    
     //convert the pdgId to a correct value.
     //consistency between pdgId and pythiaId was not present in the past
     //with pythia8 it is the case, but one takes the old particletable it creates an issue.
     //this should be removed once the new particle table is used.
     int pythia8id = (*p) -> pdg_id();
-    int pdgId = pythia8id;
     switch (abs(pythia8id)) {
     case 10221:
       (*p) -> set_pdg_id(pythia8id>0 ? 30221 : -30221);
@@ -613,8 +601,6 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
       (*p) -> set_pdg_id(pythia8id>0 ? 104122 : -104122);
       break;
     }
-
-    //if( status==LHCb::HepMCEvent::StableInProdGen) verbose() << "Status " << status << " --> " << (*p) -> status() << " for particle" << (*p)->pdg_id() << "(pythia8Id " << pythia8id << ")" << endmsg;
   }
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;

@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-02-12 - Aurelien Martens
+ - Pythia8Production: Remove useless comments
+ - Pythia8Production: Remove unused variable -> was poping up a warning 
+
+! 2013-02-12 - Aurelien Martens
  - Pythia8Production: sign of two pythiaId was wrong (30221, 104122)
 
 ! 2013-02-11 - Aurelien Martens
