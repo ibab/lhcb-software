@@ -418,7 +418,7 @@ class Brunel(LHCbConfigurableUser):
                 # Suppress known warnings
                 importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
                 if not recInit.isPropertySet( "OutputLevel" ): recInit.OutputLevel = INFO
-        self.setOtherProps(RecSysConf(), ["OutputLevel"])
+        self.setOtherProps(RecSysConf(), ["OutputLevel","Detectors"])
         self.setOtherProps(RecMoniConf(),["OutputLevel"])
 
         # Always print Magnetic Field used

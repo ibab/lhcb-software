@@ -7,6 +7,7 @@ Purpose: LHCb reconstruction program
   . Protect all detector-specific code in Configuration.py
 	. Added "Detectors" property to Brunel object.
   . Pass relevent properties to DstConf etc.
+  . Pass relevant properties to RecSysConf.
   . Add configuration of SimConf.
 
 - Changes to example options
