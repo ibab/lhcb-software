@@ -4,6 +4,11 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2013-02-12 - Sascha Stahl
+ - Added slot "Detectors" to RecSysConf.
+ - Property Detectors of RecSummaryAlg is set to the list of detectors if this dos not 
+   consist of "Rich1","Rich2","Velo","TT","IT","OT","Spd","Muon".
+
 !========================= RecConf v2r10 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
