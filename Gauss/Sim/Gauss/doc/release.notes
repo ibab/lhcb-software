@@ -3,11 +3,16 @@
 ! Responsible : Gloria CORTI
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
-! 2012-02-11 - Patrick Robbe
+
+! 2013-02-12 - Paul Szczypka
+ - Change to Configurable such that the velo misalignment (and therefore definiition)
+   is always done even for the upgrade. 
+
+! 2013-02-11 - Patrick Robbe
  - Suppress warning output form the script "makeQMTests.py" to avoid 
    compilation warnings in the nightlies
 
-! 2012-02-10 - Paul Szczypka
+! 2013-02-10 - Paul Szczypka
  - Uncomment line which prevented the simulation of the Velo in Configuration.py
 
 ! 2013-02-07 - Gloria Corti

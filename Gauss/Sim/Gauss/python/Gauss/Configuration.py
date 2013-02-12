@@ -464,15 +464,12 @@ class Gauss(LHCbConfigurableUser):
         if (VeloP==1 or VeloP==2):
             basePieces['BeforeMagnetRegion']=[]
 
-        detPieces['BeforeMagnetRegion']+=['Velo']
-
         # Also sort out mis-alignment
-        if self.getProp("DataType") != "Upgrade" :
-            VeloP = self.checkVeloDDDB()
-            # No need to check, this is the case if this is called.
-            # No need to misalign if only PuVeto exits - check me PSZ.
-            if "Velo" in self.getProp('DetectorGeo')['Detectors']:
-                self.veloMisAlignGeometry(VeloP) # To misalign VELO
+        VeloP = self.checkVeloDDDB()
+        # No need to check, this is the case if this is called.
+        # No need to misalign if only PuVeto exits - check me PSZ.
+        if "Velo" in self.getProp('DetectorGeo')['Detectors']:
+            self.veloMisAlignGeometry(VeloP) # To misalign VELO
 
 
 
