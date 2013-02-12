@@ -1,11 +1,14 @@
 <PRE>
 Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
+Purpose: LHCb Digitization program
+
+ - Changes to Configurables
+   . Re-added "L0" back into detector lists.
 
  - Changes to Configurables
    . Removed lines of code which always set filetype to extended. (old mistake which
      was unfortunately remerged in a recent edit.)
-Purpose: LHCb Digitization program
 
  - Changes to Configurable
    . Corrected Calo digits.
