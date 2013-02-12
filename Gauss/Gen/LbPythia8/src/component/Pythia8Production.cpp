@@ -246,11 +246,11 @@ int Pythia8Production::getPythia8ID( const LHCb::ParticleProperty * thePP ) {
     break;
   case 30221:
     //the pdgID has changed, and the new pythiaId is the same as new pdg
-    pythia8Id = 10221;
+    pythia8Id = pdgId>0 ? 10221 : -10221;
     break;
   case 104122:
     //the pdgID has changed, and the new pythiaId is the same as new pdg
-    pythia8Id = 4124;
+    pythia8Id = pdgId>0 ? 4124 : -4124;
     break;
   default:
     //else pdgId=pythiaId=pythia8Id 
