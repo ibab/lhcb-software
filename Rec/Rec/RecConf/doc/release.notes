@@ -4,6 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2013-02-12 - Paul Szczypka
+ - Property Detectors of RecSummaryAlg is set to the list of uppered detectors
+   if it is a superset of "RICH1","RICH2","VELO","TT","IT","OT","SPD","MUON".
+
 ! 2013-02-12 - Sascha Stahl
  - Added slot "Detectors" to RecSysConf.
  - Property Detectors of RecSummaryAlg is set to the list of detectors if this dos not 
