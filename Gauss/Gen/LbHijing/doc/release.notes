@@ -4,6 +4,10 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2013-02-12 - Zhenwei Yang
+ - Removed line 229 in src/Lib/hijing.F, which is a screen print line
+   during private debug
+
 ! 2013-02-11 - Gloria Corti
  - Introduce hijing 1.383bs.2 routines modified by Zhenwei to replace call to
    "rlu" and "ran" functions by "hijing_rlu" and "hijing_ran" to avoid conflicts
