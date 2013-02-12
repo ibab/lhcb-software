@@ -4,6 +4,10 @@
 ! Purpose     : Pattern recogintion for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-02-08 - Diego Martinez Santos
+ - Added correction to the bias in cluster positions, as well as a slope dependent correction
+for two pixel culsters. This might cause for the moment a loss of speed.
+
 ! 2013-02-08 - Marco Clemencic
  - Fixed compilation with CMake.
 
