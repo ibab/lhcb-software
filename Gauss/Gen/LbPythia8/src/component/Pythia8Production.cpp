@@ -241,6 +241,7 @@ int Pythia8Production::getPythia8ID( const LHCb::ParticleProperty * thePP ) {
   case 13122:
   case 23122:
   case 33122:
+  case 4124://old table
     //for these guys the pythiaId is now corresponding to the pdgId
     pythia8Id = pdgId;
     break;
@@ -248,10 +249,10 @@ int Pythia8Production::getPythia8ID( const LHCb::ParticleProperty * thePP ) {
     //the pdgID has changed, and the new pythiaId is the same as new pdg
     pythia8Id = pdgId>0 ? 10221 : -10221;
     break;
-  case 104122:
+    /*case 104122:
     //the pdgID has changed, and the new pythiaId is the same as new pdg
     pythia8Id = pdgId>0 ? 4124 : -4124;
-    break;
+    break;*/
   default:
     //else pdgId=pythiaId=pythia8Id 
     //(except for unknown particles to pythia, for which pythiaId=pythia8Id=0)
@@ -597,9 +598,9 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
     case 10221:
       (*p) -> set_pdg_id(pythia8id>0 ? 30221 : -30221);
       break;
-    case 4124:
-      (*p) -> set_pdg_id(pythia8id>0 ? 104122 : -104122);
-      break;
+      //    case 4124:
+      // (*p) -> set_pdg_id(pythia8id>0 ? 104122 : -104122);
+      //break;
     }
   }
   
