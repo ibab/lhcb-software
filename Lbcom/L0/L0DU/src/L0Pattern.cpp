@@ -139,8 +139,7 @@ StatusCode L0Pattern::execute() {
     std::istringstream is( (*it).c_str() );
     is >> std::hex >> itck;
     LHCb::L0DUConfig* config   = m_config->config( itck );
-    if(NULL != config)return Error("Unknown TCK",StatusCode::SUCCESS);
-
+    if(NULL == config)return Error("Unknown TCK",StatusCode::SUCCESS);
     m_emulator->process(config , m_datas); 
 
     unsigned int rs = 0;

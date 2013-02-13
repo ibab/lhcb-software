@@ -3,9 +3,11 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2013-02-13 - Olivier Deschamps
+ - L0Pattern : fix inverted check
+
 ! 2013-01-11 - Olivier Deschamps
  - L0Pattern : fix Coverity defects
-
 
 !========================= L0DU v10r26 2012-12-21 =========================
 ! 2012-12-19 - Marco Cattaneo
