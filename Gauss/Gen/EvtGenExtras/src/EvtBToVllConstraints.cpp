@@ -312,7 +312,6 @@ double EvtBToVllConstraints::getDstar(const double q2, const std::vector<EvtComp
 	const EvtComplex tensA = tensors.at(QCDFactorisation::A);
 	const EvtComplex tensB = tensors.at(QCDFactorisation::B);
 	const EvtComplex tensC = tensors.at(QCDFactorisation::C);
-	const EvtComplex tensD = tensors.at(QCDFactorisation::D);
 	const EvtComplex tensE = tensors.at(QCDFactorisation::E);
 	const EvtComplex tensF = tensors.at(QCDFactorisation::F);
 	const EvtComplex tensG = tensors.at(QCDFactorisation::G);
@@ -398,7 +397,6 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 	const EvtComplex tensA = tensors.at(QCDFactorisation::A);
 	const EvtComplex tensB = tensors.at(QCDFactorisation::B);
 	const EvtComplex tensC = tensors.at(QCDFactorisation::C);
-	const EvtComplex tensD = tensors.at(QCDFactorisation::D);
 	const EvtComplex tensE = tensors.at(QCDFactorisation::E);
 	const EvtComplex tensF = tensors.at(QCDFactorisation::F);
 	const EvtComplex tensG = tensors.at(QCDFactorisation::G);

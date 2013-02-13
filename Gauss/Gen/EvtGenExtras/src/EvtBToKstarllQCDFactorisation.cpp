@@ -423,7 +423,6 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	//see Appendix B
 	const EvtComplex F_1_9 = inner::get_F_1_9(Lc,Lm,Ls,mc1,s2);
 	const EvtComplex F_2_9 = inner::get_F_2_9(Lc,Lm,Ls,mc1,s2);
-	const EvtComplex F_1_7 = inner::get_F_1_7(Lc,Lm,Ls,mc1,s2);
 	const EvtComplex F_2_7 = inner::get_F_2_7(Lc,Lm,Ls,mc1,s2);
 	
 	DEBUGPRINT("F[1,9]: ", F_1_9);//V

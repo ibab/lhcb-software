@@ -521,14 +521,12 @@ double EvtbTosllVectorAmpNewExt::CalcMaxProb(EvtId parnum, EvtId mesnum,
      s_min = 4.0*pow(ml,2.0);
      t_for_s = 0.5*(pow(M1,2.0)+pow(M2,2.0)-2.0*pow(ml,2.0));
 
-     double EV, El1, El2;
+     double EV, El2;
      EV  = (pow(M1,2.0)+pow(M2,2.0)-s_min)/(2.0*M1);         // V-meson energy
-     El1 = (pow(M1,2.0)+pow(ml,2.0)-t_for_s)/(2.0*M1);       // ell^+ energy
      El2 = (s_min+t_for_s-pow(M2,2.0)-pow(ml,2.0))/(2.0*M1); // ell^- energy 
 
-     double modV, modl1, modl2;
+     double modV, modl2;
      modV  = sqrt(pow(EV,2.0) -pow(M2,2.0)); 
-     modl1 = sqrt(pow(El1,2.0)-pow(ml,2.0)); 
      modl2 = sqrt(pow(El2,2.0)-pow(ml,2.0)); 
 
      double cosVellminus; // angle between the vector meson and ell^- directions
@@ -707,14 +705,12 @@ double EvtbTosllVectorAmpNewExt::CalcMaxProb(EvtId parnum, EvtId mesnum,
        }
        
             // B-meson rest frame particles and they kinematics inicialization
-       double EV, El1, El2;
+       double EV, El2;
        EV  = (pow(M1,2.0)+pow(M2,2.0)-s)/(2.0*M1);         // V-meson energy
-       El1 = (pow(M1,2.0)+pow(ml,2.0)-t_for_s)/(2.0*M1);   // ell^+ energy
        El2 = (s+t_for_s-pow(M2,2.0)-pow(ml,2.0))/(2.0*M1); // ell^- energy 
 
-       double modV, modl1, modl2;
+       double modV, modl2;
        modV  = sqrt(pow(EV,2.0) -pow(M2,2.0)); 
-       modl1 = sqrt(pow(El1,2.0)-pow(ml,2.0)); 
        modl2 = sqrt(pow(El2,2.0)-pow(ml,2.0)); 
 
        double cosVellminus; // angle between the vector meson and ell^- directions

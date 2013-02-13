@@ -160,8 +160,6 @@ void Evtbs2llGammaAmp::CalcAmp(EvtParticle *parent,
 
   EvtVector4R hatp  = p/M1;
   EvtVector4R hatk  = k/M1;
-  EvtVector4R hatp1 = p_1/M1;
-  EvtVector4R hatp2 = p_2/M1;
 
 //  report(NOTICE,"EvtGen") 
 //         << "\n\n The function EvtbsTollGammaAmp::CalcAmp(...)"
@@ -692,13 +690,11 @@ double Evtbs2llGammaAmp::CalcMaxProb(EvtId parnum, EvtId photnum,
           t_for_s = t_minus + dt*((double) ijk);
 
           // B-meson rest frame particles and they kinematics inicialization
-          double Eg, El1, El2;
+          double Eg, El2;
           Eg  = (pow(M1,2.0)-s)/(2.0*M1);                     // photon energy
-          El1 = (pow(M1,2.0)+pow(ml,2.0)-t_for_s)/(2.0*M1);   // ell^+ energy
           El2 = (s+t_for_s-pow(ml,2.0))/(2.0*M1);             // ell^- energy 
 
-          double modl1, modl2;
-          modl1 = sqrt(pow(El1,2.0)-pow(ml,2.0)); 
+          double modl2;
           modl2 = sqrt(pow(El2,2.0)-pow(ml,2.0));
 
           double cosBellminus; // angle between the B-meson and ell^- directions

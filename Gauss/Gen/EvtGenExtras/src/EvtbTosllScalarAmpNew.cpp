@@ -429,7 +429,6 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
      double ds, dt;
      int j, k;
      int max_j, max_k;
-     double s_at_max, t_at_max;
 
      s_min = 4.0*pow(ml,2.0);   // minimum value of s-variable
      s_max = pow((M1-M2),2.0);  // maximum value of s-variable
@@ -523,9 +522,8 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
              El2 = 1.0000001*ml;
           }
 
-          double modV, modl1, modl2;
+          double modV, modl2;
           modV  = sqrt(pow(EV,2.0) -pow(M2,2.0));
-          modl1 = sqrt(pow(El1,2.0)-pow(ml,2.0)); 
           modl2 = sqrt(pow(El2,2.0)-pow(ml,2.0)); 
 
           double cosVellminus; // angle between the P-meson and ell^- directions
@@ -707,8 +705,6 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
 
           if(nikmax>maxfoundprob){
              maxfoundprob=nikmax;
-             s_at_max = s;
-             t_at_max = t_for_s;
 //             report(NOTICE,"EvtGen")
 //                    << "\n maxfoundprob ( s =" << s << ",  t = " << t_for_s << " ) = " 
 //                    << maxfoundprob
@@ -773,14 +769,12 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
        }
        
             // B-meson rest frame particles and they kinematics inicialization
-       double EV, El1, El2;
+       double EV, El2;
        EV  = (pow(M1,2.0)+pow(M2,2.0)-s)/(2.0*M1);         // V-meson energy
-       El1 = (pow(M1,2.0)+pow(ml,2.0)-t_for_s)/(2.0*M1);   // ell^+ energy
        El2 = (s+t_for_s-pow(M2,2.0)-pow(ml,2.0))/(2.0*M1); // ell^- energy 
 
-       double modV, modl1, modl2;
+       double modV,  modl2;
        modV  = sqrt(pow(EV,2.0) -pow(M2,2.0)); 
-       modl1 = sqrt(pow(El1,2.0)-pow(ml,2.0)); 
        modl2 = sqrt(pow(El2,2.0)-pow(ml,2.0)); 
 
        double cosVellminus; // angle between the vector meson and ell^- directions

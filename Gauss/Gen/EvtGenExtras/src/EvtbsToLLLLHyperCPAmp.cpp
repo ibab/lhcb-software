@@ -169,7 +169,6 @@ void EvtbsToLLLLHyperCPAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
   EvtParticle* lep2Minus = 0;
 
   EvtVector4R p;    // B-meson momentum in the B-rest frame
-  double p2;        // p^2=M1^2
 
   EvtVector4R q;    // first transition 4-momentum in the B-rest frame
   EvtVector4R k;    // second transition 4-momentum in the B-rest frame
@@ -257,7 +256,6 @@ void EvtbsToLLLLHyperCPAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
   }
 
   p    = parent->getP4Restframe();
-  p2   = p.mass2();                // p^2=M1^2
   
   //
   // The calculation of the FIRST part of the amplitude

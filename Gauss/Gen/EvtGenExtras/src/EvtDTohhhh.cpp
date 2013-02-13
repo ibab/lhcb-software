@@ -58,8 +58,6 @@ void EvtDTohhhh::init(){
 
 	static EvtId D0=EvtPDL::getId("D0");
 	static EvtId D0B=EvtPDL::getId("anti-D0");
-	static EvtId DSP=EvtPDL::getId("D_s+");
-	static EvtId DSM=EvtPDL::getId("D_s-");
 	static EvtId KM=EvtPDL::getId("K-");
 	static EvtId KP=EvtPDL::getId("K+");
 	static EvtId PIM=EvtPDL::getId("pi-");
@@ -177,14 +175,7 @@ void EvtDTohhhh::init(){
 
 void EvtDTohhhh::decay( EvtParticle *p){
 
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PIP=EvtPDL::getId("pi+");
-
-  EvtId Id = p ->getId ();                              
+  p ->getId ();                              
   
   // Create Event in MINT
   std::vector<std::vector<double> > daughters;

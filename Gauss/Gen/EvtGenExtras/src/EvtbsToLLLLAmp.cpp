@@ -182,9 +182,7 @@ void EvtbsToLLLLAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
   EvtVector4R q;    // first transition 4-momentum in the B-rest frame
   EvtVector4R k;    // second transition 4-momentum in the B-rest frame
 
-  double p2;        // p^2=M1^2
   double q2;        // Mandelstam variable s=q^2
-  double k2;        // Mandelstam variable t=k^2
 
   // Nondimentional 4-momentums
   EvtVector4R hatp;
@@ -195,7 +193,6 @@ void EvtbsToLLLLAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
   EvtVector4R ksecond;    // second transition 4-momentum in the B-rest frame
 
   double q2second;        // Mandelstam variable s=q^2
-  double k2second;        // Mandelstam variable t=k^2
 
   // Nondimentional 4-momentums
   EvtVector4R hatpsecond;
@@ -278,7 +275,6 @@ void EvtbsToLLLLAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
   }
 
   p    = parent->getP4Restframe();
-  p2   = p.mass2();                // p^2=M1^2
   hatp = p/M1;
   
   //
@@ -288,7 +284,6 @@ void EvtbsToLLLLAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
   q    = k_1 + k_2;
   k    = k_3 + k_4;
   q2   = q.mass2();       // Mandelstam variable s=q^2
-  k2   = k.mass2();       // Mandelstam variable t=k^2
   hatq = q/M1;
   hatk = k/M1;
 
@@ -318,7 +313,6 @@ void EvtbsToLLLLAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
                                Relambda_qu,Imlambda_qu);
     c10a            =  WilsCoeff->GetC10Eff(mt, Mw);
   }
-
 
   EvtComplex Fv, Fa; // The change of the sign is included in the amplitudes definition! 
   EvtComplex Ftv_b2q, Ftv_barb2barq;
@@ -388,7 +382,6 @@ void EvtbsToLLLLAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
   qsecond    = k_1 + k_4;
   ksecond    = k_3 + k_2;
   q2second   = qsecond.mass2();       // Mandelstam variable s=q^2
-  k2second   = ksecond.mass2();       // Mandelstam variable t=k^2
   hatqsecond = qsecond/M1;
   hatksecond = ksecond/M1;
 
