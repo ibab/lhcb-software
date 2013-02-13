@@ -74,7 +74,7 @@ class Brunel(LHCbConfigurableUser):
        ,"RawBanksToKill"  : None
        ,"CaloPhotonChecker" : False
        ,"VetoHltErrorEvents" : True
-       ,"Detectors"       : ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet']
+       ,"Detectors"       : ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
        ,"UpgradeDets"     : []
         # only use for Online running
        ,"UseDBSnapshot" : False
@@ -639,16 +639,14 @@ class Brunel(LHCbConfigurableUser):
         KnownExpertCheckSubdets = [] + KnownCheckSubdets
         
         if [det for det in ['TT'] if det in self.getProp("Detectors")]:
-            #self.KnownCheckSubdets.append("TT")
             KnownExpertCheckSubdets.append("TT")
 
         tmpExpertSubdets = [det for det in ['IT', 'OT'] if det in self.getProp("Detectors")]
         if tmpExpertSubdets:
             for det in tmpExpertSubdets:
                 KnownExpertCheckSubdets.append(det)
-        if [det for det in ['TT','UT'] if det in self.getProp("Detectors")]:
-            KnownExpertCheckSubdets.append('TT') # TT only because UT inherits from TT
-            #KnownExpertCheckSubdets.append(det) 
+        if [det for det in ['Tr'] if det in self.getProp("Detectors")]:
+            KnownExpertCheckSubdets.append('Tr')
         if [det for det in ['Spd', 'Prs', 'Ecal', 'Hcal'] if det in self.getProp("Detectors")]:
             KnownExpertCheckSubdets.append("CALO")
 

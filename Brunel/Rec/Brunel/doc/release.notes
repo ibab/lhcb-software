@@ -9,6 +9,7 @@ Purpose: LHCb reconstruction program
   . Pass relevent properties to DstConf etc.
   . Pass relevant properties to RecSysConf.
   . Add configuration of SimConf.
+  . Fix for including TT in check seq twice and Tr not at all.
 
 - Changes to example options
   . Remove 2009-FEST-Data.py, obsolete since these data have been deleted
