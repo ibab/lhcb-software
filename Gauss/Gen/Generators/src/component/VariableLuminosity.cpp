@@ -85,10 +85,9 @@ unsigned int VariableLuminosity::numberOfPileUp( ) {
   if ( 0 == beam ) Exception( "No beam parameters registered" ) ;
 
   unsigned int result = 0 ;
-  double theTime , mean , currentLuminosity;
+  double mean , currentLuminosity;
   while ( 0 == result ) {
     m_nEvents++ ;
-    theTime = m_flatGenerator() * m_fillDuration ;
     currentLuminosity = beam -> luminosity() * m_fillDuration / m_beamDecayTime / 
       ( 1.0 - exp( -m_fillDuration / m_beamDecayTime ) ) ;
 
