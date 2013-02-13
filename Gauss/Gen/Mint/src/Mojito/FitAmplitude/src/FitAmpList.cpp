@@ -423,24 +423,24 @@ void FitAmpList::setAllAmpsTo(std::complex<double> z){
 }
 
 DalitzBoxSet FitAmpList::makeBoxes(IGetRealEvent<IDalitzEvent>* pdf
-				   , double nSigma
-				   ){
-    if(0 == getEvent()){
+                                   , double nSigma
+                                   ){
+  if(0 == getEvent()){
     cout << "NOTE in FitAmpList::makeBoxes()"
-	 << " I got called, but there is no event."
-	 << " Need at least one event to determine final state."
-	 << " Alternatively pass me the pattern as an argument:"
-	 << " makeBoxes(pattern);"
-	 << endl;
+         << " I got called, but there is no event."
+         << " Need at least one event to determine final state."
+         << " Alternatively pass me the pattern as an argument:"
+         << " makeBoxes(pattern);"
+         << endl;
     cout << " event record: " << getEventRecord()->size() << endl;
-    return false;
+    return DalitzBoxSet( 0 ) ;
   }
-
+  
   DalitzEventPattern thePattern = getEvent()->eventPattern();
   // this assumes that the final state is the same
   // for all events in list. No point, really, in
   // adding amplitudes for different final states.
-
+  
   return makeBoxes(thePattern, pdf, nSigma);
 }
 
