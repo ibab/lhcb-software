@@ -210,7 +210,7 @@ class RecSysConf(LHCbConfigurableUser):
             # Check to see if our detector list is ok.
             if set(summary.Detectors).issubset(set(dets)):
                 #summary.Detectors = self.getProp("Detectors")
-                summary.Detectors = dets        
+                #summary.Detectors = dets        
                 GaudiSequencer("RecoSUMMARYSeq").Members += [summary]
 
 ## @class RecMoniConf

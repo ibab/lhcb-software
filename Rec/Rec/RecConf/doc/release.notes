@@ -4,6 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2013-02-13 - Paul Szczypka
+ - Property Detectors of RecSummaryAlg is set to original list if Brunel detectors
+   a superset. Removes warnings.
+
 ! 2013-02-12 - Paul Szczypka
  - Property Detectors of RecSummaryAlg is set to the list of uppered detectors
    if it is a superset of "RICH1","RICH2","VELO","TT","IT","OT","SPD","MUON".
