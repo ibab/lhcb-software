@@ -60,7 +60,6 @@ EvtVector4C EvtWnPi::WCurrent(EvtVector4R q1, EvtVector4R q2, EvtVector4R q3) {
 
 // W+ -> pi+ pi+ pi- pi- pi+ current with symmetrization
 EvtVector4C EvtWnPi::WCurrent(EvtVector4R q1, EvtVector4R q2, EvtVector4R q3, EvtVector4R q4, EvtVector4R q5) {
-  EvtVector4R Qtot = q1+q2+q3+q4+q5;
 //  double Q2 = Qtot*Qtot;
 //  return q1-Qtot*(q1*Qtot)/Q2;
   EvtVector4C V = JB(q1, q2, q3, q4, q5) + JB(q5, q2, q3, q4, q1) + JB(q1, q5, q3, q4, q2) +

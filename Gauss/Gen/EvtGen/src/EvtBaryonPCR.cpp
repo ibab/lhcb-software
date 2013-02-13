@@ -89,24 +89,9 @@ void EvtBaryonPCR::decay( EvtParticle *p ){
 }
 
 void EvtBaryonPCR::initProbMax() {
-  
-  // Leptons
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-  
+
   // Baryons (partial list 5/28/04)
-  static EvtId PP=EvtPDL::getId("p+");
-  static EvtId PM=EvtPDL::getId("anti-p-");
-  static EvtId N0=EvtPDL::getId("n0");
-  static EvtId N0B=EvtPDL::getId("anti-n0");
-  static EvtId SIGP=EvtPDL::getId("Sigma+");
-  static EvtId SIGM=EvtPDL::getId("anti-Sigma-");
-  static EvtId LAM0=EvtPDL::getId("Lambda0");
-  static EvtId LAM0B=EvtPDL::getId("anti-Lambda0");
+
   static EvtId SIGC0=EvtPDL::getId("Sigma_c0");
   static EvtId SIGC0B=EvtPDL::getId("anti-Sigma_c0");
   static EvtId SIGCP=EvtPDL::getId("Sigma_c+");
@@ -121,19 +106,6 @@ void EvtBaryonPCR::initProbMax() {
   static EvtId LAMC2M=EvtPDL::getId("anti-Lambda_c(2625)-");
   static EvtId LAMB=EvtPDL::getId("Lambda_b0");
   static EvtId LAMBB=EvtPDL::getId("anti-Lambda_b0");
-  static EvtId CASM=EvtPDL::getId("Xi-");
-  static EvtId CASP=EvtPDL::getId("anti-Xi+");
-  static EvtId CAS0=EvtPDL::getId("Xi0");
-  static EvtId CAS0B=EvtPDL::getId("anti-Xi0");
-  static EvtId CASCP=EvtPDL::getId("Xi_c+");
-  static EvtId CASCM=EvtPDL::getId("anti-Xi_c-");
-  static EvtId CASC0=EvtPDL::getId("Xi_c0");
-  static EvtId CASC0B=EvtPDL::getId("anti-Xi_c0");
-  static EvtId OMEGM=EvtPDL::getId("Omega-");
-  static EvtId OMEGP=EvtPDL::getId("anti-Omega+");
-  static EvtId OMEGC0=EvtPDL::getId("Omega_c0");
-  static EvtId OMEGC0B=EvtPDL::getId("anti-Omega_c0");
-
   
   EvtId parnum,barnum,lnum;
   

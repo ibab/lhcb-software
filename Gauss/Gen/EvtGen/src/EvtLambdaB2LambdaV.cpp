@@ -274,8 +274,9 @@ void EvtLambdaB2LambdaV::decay( EvtParticle *lambdab)
 
 
   
-   EvtVector4R P_lambda=lambda->getP4();
-   EvtVector4R P_V=V->getP4();
+
+   lambda->getP4();
+   V->getP4();
    report(INFO,fname.c_str())<<" LambdaB  px: "<<px<<std::endl;
    report(INFO,fname.c_str())<<" LambdaB  py: "<<py<<std::endl;
    report(INFO,fname.c_str())<<" LambdaB  pz: "<<pz<<std::endl;

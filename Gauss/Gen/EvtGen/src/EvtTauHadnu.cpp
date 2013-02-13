@@ -122,7 +122,7 @@ void EvtTauHadnu::decay(EvtParticle *p){
   
   EvtParticle *nut;
   nut = p->getDaug(getNDaug()-1);
-  EvtVector4R momscalar = p->getDaug(0)->getP4();
+  p->getDaug(0)->getP4();
 
   //get the leptonic current 
   EvtVector4C tau1, tau2;

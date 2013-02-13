@@ -140,27 +140,16 @@ EvtComplex EvtBtoXsllUtil::GetC7Eff1(double sh, double mbeff, bool nnlo)
 }
 
 
-EvtComplex EvtBtoXsllUtil::GetC9Eff0(double sh, double mbeff,
+EvtComplex EvtBtoXsllUtil::GetC9Eff0(double sh, double /* mbeff */,
                                      bool nnlo, bool btod) 
 {
   // This function returns the zeroth-order alpha_s part of C9
 
   if (!nnlo) return 4.344;
-  double logsh;
-  logsh = log(sh);
   double mch = 0.29;
 
-  
-  double muscale;
-  muscale = 2.5;
-  double alphas;
-  alphas = 0.267;
-  double A8;
-  A8 = -0.164;
   double A9;
   A9 = 4.287 + (-0.218);
-  double A10;
-  A10 = -4.592 + 0.379;
   double C1;
   C1 = -0.697;
   double C2;
@@ -171,10 +160,6 @@ EvtComplex EvtBtoXsllUtil::GetC9Eff0(double sh, double mbeff,
   U9 = 0.045 + 0.023;
   double W9;
   W9 = 0.044 + 0.016;
-  
-  double Lmu;
-  Lmu = log(muscale/mbeff);
-
 
   EvtComplex uniti(0.0,1.0);
 
@@ -236,16 +221,12 @@ EvtComplex EvtBtoXsllUtil::GetC9Eff0(double sh, double mbeff,
   }
 
   // change energy scale to 5.0 for full NNLO calculation below shat = 0.25
-  muscale = 5.0;
-  alphas = 0.215;
   A9 = 4.174 + (-0.035);
   C1 = -0.487;
   C2 = 1.024;
-  A8 = -0.148;
   T9 = 0.374 + 0.252;
   U9 = 0.033 + 0.015;
   W9 = 0.032 + 0.012;
-  Lmu = log(muscale/mbeff);
 
   Xd = (Vudstar * Vub / Vtdstar * Vtb) * (4.0/3.0*C1 + C2) * (hc - h0);
 

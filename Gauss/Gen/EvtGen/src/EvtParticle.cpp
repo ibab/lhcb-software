@@ -437,8 +437,8 @@ void EvtParticle::decay(){
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BD0=EvtPDL::getId("B0");
   static EvtId BDB=EvtPDL::getId("anti-B0"); 
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
+  // static EvtId D0=EvtPDL::getId("D0");
+  // static EvtId D0B=EvtPDL::getId("anti-D0");
 
   EvtId thisId=getId();
   // remove D0 mixing for now..
@@ -601,8 +601,6 @@ EvtVector4C EvtParticle::epsPhoton(int i){
 
 EvtDiracSpinor EvtParticle::spParent(int i) const {
   EvtDiracSpinor tempD;
-  int temp;
-  temp = i;
   printParticle();
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th dirac spinor."
@@ -614,8 +612,6 @@ EvtDiracSpinor EvtParticle::spParent(int i) const {
 
 EvtDiracSpinor EvtParticle::sp(int i) const {
   EvtDiracSpinor tempD;
-  int temp;
-  temp = i;
   printParticle();
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th dirac spinor."
@@ -648,8 +644,6 @@ EvtDiracSpinor EvtParticle::spNeutrino() const {
 }
 
 EvtTensor4C EvtParticle::epsTensorParent(int i) const {
-  int temp;
-  temp = i;
   EvtTensor4C tempC; 
   printParticle();
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
@@ -661,8 +655,6 @@ EvtTensor4C EvtParticle::epsTensorParent(int i) const {
 }
 
 EvtTensor4C EvtParticle::epsTensor(int i) const {
-  int temp;
-  temp = i;
   EvtTensor4C tempC; 
   printParticle();
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
@@ -676,8 +668,6 @@ EvtTensor4C EvtParticle::epsTensor(int i) const {
 
 EvtRaritaSchwinger EvtParticle::spRSParent(int i) const {
   EvtRaritaSchwinger tempD;
-  int temp;
-  temp = i;
   printParticle();
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th Rarita-Schwinger spinor."
@@ -689,8 +679,6 @@ EvtRaritaSchwinger EvtParticle::spRSParent(int i) const {
 
 EvtRaritaSchwinger EvtParticle::spRS(int i) const {
   EvtRaritaSchwinger tempD;
-  int temp;
-  temp = i;
   printParticle();
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th Rarita-Schwinger spinor."

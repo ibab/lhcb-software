@@ -186,8 +186,7 @@ bool EvtPythiaEngine::doDecay(EvtParticle* theParticle) {
   double m0 = theParticle->mass();
   double E = m0;
 
-  int entryIndex(0);
-  entryIndex = theEvent.append(PDGCode, status, colour, anticolour, px, py, pz, E, m0);
+  theEvent.append(PDGCode, status, colour, anticolour, px, py, pz, E, m0);
 
   // Generate the Pythia event
   int iTrial(0);

@@ -35,41 +35,10 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
 			    double *f0f ) {
 
   //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
-  static EvtId BP=EvtPDL::getId("B+");
-  static EvtId BM=EvtPDL::getId("B-");
-  static EvtId B0=EvtPDL::getId("B0");
-  static EvtId B0B=EvtPDL::getId("anti-B0");
-
-  static EvtId DST0=EvtPDL::getId("D*0");
-  static EvtId DSTB=EvtPDL::getId("anti-D*0");
-  static EvtId DSTP=EvtPDL::getId("D*+");
-  static EvtId DSTM=EvtPDL::getId("D*-");
   static EvtId D0=EvtPDL::getId("D0");
   static EvtId D0B=EvtPDL::getId("anti-D0");
   static EvtId DP=EvtPDL::getId("D+");
   static EvtId DM=EvtPDL::getId("D-");
-
-  static EvtId D1P1P=EvtPDL::getId("D_1+");
-  static EvtId D1P1N=EvtPDL::getId("D_1-");
-  static EvtId D1P10=EvtPDL::getId("D_10");
-  static EvtId D1P1B=EvtPDL::getId("anti-D_10");
-
-  static EvtId D3P2P=EvtPDL::getId("D_2*+");
-  static EvtId D3P2N=EvtPDL::getId("D_2*-");
-  static EvtId D3P20=EvtPDL::getId("D_2*0");
-  static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
-
-  static EvtId D3P1P=EvtPDL::getId("D'_1+");
-  static EvtId D3P1N=EvtPDL::getId("D'_1-");
-  static EvtId D3P10=EvtPDL::getId("D'_10");
-  static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
 
   static EvtId D3P0P=EvtPDL::getId("D_0*+");
   static EvtId D3P0N=EvtPDL::getId("D_0*-");
@@ -81,15 +50,6 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
   static EvtId D21S00=EvtPDL::getId("hi");
   static EvtId D21S0B=EvtPDL::getId("hi");
 
-  static EvtId D23S1P=EvtPDL::getId("hi");
-  static EvtId D23S1N=EvtPDL::getId("hi");
-  static EvtId D23S10=EvtPDL::getId("hi");
-  static EvtId D23S1B=EvtPDL::getId("hi");
-
-  static EvtId RHO2S0=EvtPDL::getId("rho(2S)0");
-  static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
-  static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
-  static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
   static EvtId ETA2S=EvtPDL::getId("eta(2S)");
 
   static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
@@ -100,39 +60,15 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
   static EvtId PIM=EvtPDL::getId("pi-");
   static EvtId PI0=EvtPDL::getId("pi0");
 
-  static EvtId RHOP=EvtPDL::getId("rho+");
-  static EvtId RHOM=EvtPDL::getId("rho-");
-  static EvtId RHO0=EvtPDL::getId("rho0");
-
-  static EvtId A2P=EvtPDL::getId("a_2+");
-  static EvtId A2M=EvtPDL::getId("a_2-");
-  static EvtId A20=EvtPDL::getId("a_20");
-
-  static EvtId A1P=EvtPDL::getId("a_1+");
-  static EvtId A1M=EvtPDL::getId("a_1-");
-  static EvtId A10=EvtPDL::getId("a_10");
-
   static EvtId A0P=EvtPDL::getId("a_0+");
   static EvtId A0M=EvtPDL::getId("a_0-");
-  static EvtId A00=EvtPDL::getId("a_00");
+  static EvtId A00=EvtPDL::getId("a_00"); 
 
-  static EvtId B1P=EvtPDL::getId("b_1+");
-  static EvtId B1M=EvtPDL::getId("b_1-");
-  static EvtId B10=EvtPDL::getId("b_10");
-
-  static EvtId H1=EvtPDL::getId("h_1");
-  static EvtId H1PR=EvtPDL::getId("h'_1");
-
-  static EvtId F1=EvtPDL::getId("f_1");
-  static EvtId F1PR=EvtPDL::getId("f'_1");
   static EvtId F0=EvtPDL::getId("f_0");
   static EvtId F0PR=EvtPDL::getId("f'_0");
-  static EvtId F2=EvtPDL::getId("f_2");
-  static EvtId F2PR=EvtPDL::getId("f'_2");
 
   static EvtId ETA=EvtPDL::getId("eta");
   static EvtId ETAPR=EvtPDL::getId("eta'");
-  static EvtId OMEG=EvtPDL::getId("omega");
 
   static EvtId KP=EvtPDL::getId("K+");
   static EvtId KM=EvtPDL::getId("K-");
@@ -141,52 +77,17 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
   static EvtId K0S=EvtPDL::getId("K_S0");
   static EvtId K0L=EvtPDL::getId("K_L0");
 
-  static EvtId KSTP=EvtPDL::getId("K*+");
-  static EvtId KSTM=EvtPDL::getId("K*-");
-  static EvtId KST0=EvtPDL::getId("K*0");
-  static EvtId KSTB=EvtPDL::getId("anti-K*0");
-
-  static EvtId K1P=EvtPDL::getId("K_1+");
-  static EvtId K1M=EvtPDL::getId("K_1-");
-  static EvtId K10=EvtPDL::getId("K_10");
-  static EvtId K1B=EvtPDL::getId("anti-K_10");
-
-  static EvtId K1STP=EvtPDL::getId("K'_1+");
-  static EvtId K1STM=EvtPDL::getId("K'_1-");
-  static EvtId K1ST0=EvtPDL::getId("K'_10");
-  static EvtId K1STB=EvtPDL::getId("anti-K'_10");
-
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
   static EvtId K0STP=EvtPDL::getId("K_0*+");
   static EvtId K0STM=EvtPDL::getId("K_0*-");
   static EvtId K0ST0=EvtPDL::getId("K_0*0");
   static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
 
-  static EvtId PHI=EvtPDL::getId("phi");
   static EvtId DSP=EvtPDL::getId("D_s+");
   static EvtId DSM=EvtPDL::getId("D_s-");
-
-  static EvtId D1P1SP=EvtPDL::getId("D_s1+");
-  static EvtId D1P1SN=EvtPDL::getId("D_s1-");
 
   static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
   static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
 
-  static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
-  static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
-
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
-  static EvtId DSSTP=EvtPDL::getId("D_s*+");
-  static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
   double fmf;
   double mb=EvtPDL::getMeanMass(parent);
 
@@ -221,162 +122,9 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
 			     double *kf, double *bpf, double *bmf ){
 
   //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
-  static EvtId BP=EvtPDL::getId("B+");
-  static EvtId BM=EvtPDL::getId("B-");
-  static EvtId B0=EvtPDL::getId("B0");
-  static EvtId B0B=EvtPDL::getId("anti-B0");
-
-  static EvtId DST0=EvtPDL::getId("D*0");
-  static EvtId DSTB=EvtPDL::getId("anti-D*0");
-  static EvtId DSTP=EvtPDL::getId("D*+");
-  static EvtId DSTM=EvtPDL::getId("D*-");
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId DP=EvtPDL::getId("D+");
-  static EvtId DM=EvtPDL::getId("D-");
-
-  static EvtId D1P1P=EvtPDL::getId("D_1+");
-  static EvtId D1P1N=EvtPDL::getId("D_1-");
-  static EvtId D1P10=EvtPDL::getId("D_10");
-  static EvtId D1P1B=EvtPDL::getId("anti-D_10");
-
-  static EvtId D3P2P=EvtPDL::getId("D_2*+");
-  static EvtId D3P2N=EvtPDL::getId("D_2*-");
-  static EvtId D3P20=EvtPDL::getId("D_2*0");
-  static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
-
-  static EvtId D3P1P=EvtPDL::getId("D'_1+");
-  static EvtId D3P1N=EvtPDL::getId("D'_1-");
-  static EvtId D3P10=EvtPDL::getId("D'_10");
-  static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
-
-  static EvtId D3P0P=EvtPDL::getId("D_0*+");
-  static EvtId D3P0N=EvtPDL::getId("D_0*-");
-  static EvtId D3P00=EvtPDL::getId("D_0*0");
-  static EvtId D3P0B=EvtPDL::getId("anti-D_0*0");
-
-  static EvtId D21S0P=EvtPDL::getId("hi");
-  static EvtId D21S0N=EvtPDL::getId("hi");
-  static EvtId D21S00=EvtPDL::getId("hi");
-  static EvtId D21S0B=EvtPDL::getId("hi");
-
-  static EvtId D23S1P=EvtPDL::getId("hi");
-  static EvtId D23S1N=EvtPDL::getId("hi");
-  static EvtId D23S10=EvtPDL::getId("hi");
-  static EvtId D23S1B=EvtPDL::getId("hi");
-
-  static EvtId RHO2S0=EvtPDL::getId("rho(2S)0");
-  static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
-  static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
-  static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
-  static EvtId ETA2S=EvtPDL::getId("eta(2S)");
-
-  static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
-  static EvtId PI2SP=EvtPDL::getId("pi(2S)+");
-  static EvtId PI2SM=EvtPDL::getId("pi(2S)-");
-
-  static EvtId PIP=EvtPDL::getId("pi+");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PI0=EvtPDL::getId("pi0");
-
-  static EvtId RHOP=EvtPDL::getId("rho+");
-  static EvtId RHOM=EvtPDL::getId("rho-");
-  static EvtId RHO0=EvtPDL::getId("rho0");
-
-  static EvtId A2P=EvtPDL::getId("a_2+");
-  static EvtId A2M=EvtPDL::getId("a_2-");
-  static EvtId A20=EvtPDL::getId("a_20");
-
-  static EvtId A1P=EvtPDL::getId("a_1+");
-  static EvtId A1M=EvtPDL::getId("a_1-");
-  static EvtId A10=EvtPDL::getId("a_10");
-
-  static EvtId A0P=EvtPDL::getId("a_0+");
-  static EvtId A0M=EvtPDL::getId("a_0-");
-  static EvtId A00=EvtPDL::getId("a_00");
-
-  static EvtId B1P=EvtPDL::getId("b_1+");
-  static EvtId B1M=EvtPDL::getId("b_1-");
-  static EvtId B10=EvtPDL::getId("b_10");
-
-  static EvtId H1=EvtPDL::getId("h_1");
-  static EvtId H1PR=EvtPDL::getId("h'_1");
-
-  static EvtId F1=EvtPDL::getId("f_1");
-  static EvtId F1PR=EvtPDL::getId("f'_1");
-  static EvtId F0=EvtPDL::getId("f_0");
-  static EvtId F0PR=EvtPDL::getId("f'_0");
-  static EvtId F2=EvtPDL::getId("f_2");
-  static EvtId F2PR=EvtPDL::getId("f'_2");
-
-  static EvtId ETA=EvtPDL::getId("eta");
-  static EvtId ETAPR=EvtPDL::getId("eta'");
-  static EvtId OMEG=EvtPDL::getId("omega");
-
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId K0S=EvtPDL::getId("K_S0");
-  static EvtId K0L=EvtPDL::getId("K_L0");
-
-  static EvtId KSTP=EvtPDL::getId("K*+");
-  static EvtId KSTM=EvtPDL::getId("K*-");
-  static EvtId KST0=EvtPDL::getId("K*0");
-  static EvtId KSTB=EvtPDL::getId("anti-K*0");
-
-  static EvtId K1P=EvtPDL::getId("K_1+");
-  static EvtId K1M=EvtPDL::getId("K_1-");
-  static EvtId K10=EvtPDL::getId("K_10");
-  static EvtId K1B=EvtPDL::getId("anti-K_10");
-
-  static EvtId K1STP=EvtPDL::getId("K'_1+");
-  static EvtId K1STM=EvtPDL::getId("K'_1-");
-  static EvtId K1ST0=EvtPDL::getId("K'_10");
-  static EvtId K1STB=EvtPDL::getId("anti-K'_10");
-
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
-  static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
-
-  static EvtId D1P1SP=EvtPDL::getId("D_s1+");
-  static EvtId D1P1SN=EvtPDL::getId("D_s1-");
-
-  static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
-  static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
-
-  static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
-  static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
-
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
-  static EvtId DSSTP=EvtPDL::getId("D_s*+");
-  static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
-
-    EvtISGW1FF3P2(parent,daught,t,mass,hf,kf,bpf,bmf);
-
-    return;
+   EvtISGW1FF3P2(parent,daught,t,mass,hf,kf,bpf,bmf);
+   
+   return;
 
  }
 
@@ -386,51 +134,20 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
 			     double *a2f, double *vf, double *a0f ){
  
   //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
-  static EvtId BP=EvtPDL::getId("B+");
-  static EvtId BM=EvtPDL::getId("B-");
-  static EvtId B0=EvtPDL::getId("B0");
-  static EvtId B0B=EvtPDL::getId("anti-B0");
-
   static EvtId DST0=EvtPDL::getId("D*0");
   static EvtId DSTB=EvtPDL::getId("anti-D*0");
   static EvtId DSTP=EvtPDL::getId("D*+");
   static EvtId DSTM=EvtPDL::getId("D*-");
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId DP=EvtPDL::getId("D+");
-  static EvtId DM=EvtPDL::getId("D-");
 
   static EvtId D1P1P=EvtPDL::getId("D_1+");
   static EvtId D1P1N=EvtPDL::getId("D_1-");
   static EvtId D1P10=EvtPDL::getId("D_10");
   static EvtId D1P1B=EvtPDL::getId("anti-D_10");
 
-  static EvtId D3P2P=EvtPDL::getId("D_2*+");
-  static EvtId D3P2N=EvtPDL::getId("D_2*-");
-  static EvtId D3P20=EvtPDL::getId("D_2*0");
-  static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
-
   static EvtId D3P1P=EvtPDL::getId("D'_1+");
   static EvtId D3P1N=EvtPDL::getId("D'_1-");
   static EvtId D3P10=EvtPDL::getId("D'_10");
   static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
-
-  static EvtId D3P0P=EvtPDL::getId("D_0*+");
-  static EvtId D3P0N=EvtPDL::getId("D_0*-");
-  static EvtId D3P00=EvtPDL::getId("D_0*0");
-  static EvtId D3P0B=EvtPDL::getId("anti-D_0*0");
-
-  static EvtId D21S0P=EvtPDL::getId("hi");
-  static EvtId D21S0N=EvtPDL::getId("hi");
-  static EvtId D21S00=EvtPDL::getId("hi");
-  static EvtId D21S0B=EvtPDL::getId("hi");
 
   static EvtId D23S1P=EvtPDL::getId("hi");
   static EvtId D23S1N=EvtPDL::getId("hi");
@@ -441,31 +158,14 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
   static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
   static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
   static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
-  static EvtId ETA2S=EvtPDL::getId("eta(2S)");
-
-  static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
-  static EvtId PI2SP=EvtPDL::getId("pi(2S)+");
-  static EvtId PI2SM=EvtPDL::getId("pi(2S)-");
-
-  static EvtId PIP=EvtPDL::getId("pi+");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PI0=EvtPDL::getId("pi0");
 
   static EvtId RHOP=EvtPDL::getId("rho+");
   static EvtId RHOM=EvtPDL::getId("rho-");
   static EvtId RHO0=EvtPDL::getId("rho0");
 
-  static EvtId A2P=EvtPDL::getId("a_2+");
-  static EvtId A2M=EvtPDL::getId("a_2-");
-  static EvtId A20=EvtPDL::getId("a_20");
-
   static EvtId A1P=EvtPDL::getId("a_1+");
   static EvtId A1M=EvtPDL::getId("a_1-");
   static EvtId A10=EvtPDL::getId("a_10");
-
-  static EvtId A0P=EvtPDL::getId("a_0+");
-  static EvtId A0M=EvtPDL::getId("a_0-");
-  static EvtId A00=EvtPDL::getId("a_00");
 
   static EvtId B1P=EvtPDL::getId("b_1+");
   static EvtId B1M=EvtPDL::getId("b_1-");
@@ -476,21 +176,8 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
 
   static EvtId F1=EvtPDL::getId("f_1");
   static EvtId F1PR=EvtPDL::getId("f'_1");
-  static EvtId F0=EvtPDL::getId("f_0");
-  static EvtId F0PR=EvtPDL::getId("f'_0");
-  static EvtId F2=EvtPDL::getId("f_2");
-  static EvtId F2PR=EvtPDL::getId("f'_2");
 
-  static EvtId ETA=EvtPDL::getId("eta");
-  static EvtId ETAPR=EvtPDL::getId("eta'");
   static EvtId OMEG=EvtPDL::getId("omega");
-
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId K0S=EvtPDL::getId("K_S0");
-  static EvtId K0L=EvtPDL::getId("K_L0");
 
   static EvtId KSTP=EvtPDL::getId("K*+");
   static EvtId KSTM=EvtPDL::getId("K*-");
@@ -507,37 +194,16 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
   static EvtId K1ST0=EvtPDL::getId("K'_10");
   static EvtId K1STB=EvtPDL::getId("anti-K'_10");
 
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
   static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
 
   static EvtId D1P1SP=EvtPDL::getId("D_s1+");
   static EvtId D1P1SN=EvtPDL::getId("D_s1-");
 
-  static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
-  static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
-
   static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
   static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
 
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
   static EvtId DSSTP=EvtPDL::getId("D_s*+");
   static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
 
    double ff,gf,apf,amf;
 
@@ -580,170 +246,30 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
    
    *a0f = a3f - ( (t*amf)/(2.0*mass));
 
-
-
    return;
  }
-
-
 
 void EvtISGWFF::EvtISGW1FF3P2 (EvtId parent,EvtId daugt,
        double t, double mass,
        double *hf, double *kf, double *bpf, double *bmf ) {
 
   //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
   static EvtId BP=EvtPDL::getId("B+");
   static EvtId BM=EvtPDL::getId("B-");
   static EvtId B0=EvtPDL::getId("B0");
   static EvtId B0B=EvtPDL::getId("anti-B0");
-
-  static EvtId DST0=EvtPDL::getId("D*0");
-  static EvtId DSTB=EvtPDL::getId("anti-D*0");
-  static EvtId DSTP=EvtPDL::getId("D*+");
-  static EvtId DSTM=EvtPDL::getId("D*-");
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId DP=EvtPDL::getId("D+");
-  static EvtId DM=EvtPDL::getId("D-");
-
-  static EvtId D1P1P=EvtPDL::getId("D_1+");
-  static EvtId D1P1N=EvtPDL::getId("D_1-");
-  static EvtId D1P10=EvtPDL::getId("D_10");
-  static EvtId D1P1B=EvtPDL::getId("anti-D_10");
 
   static EvtId D3P2P=EvtPDL::getId("D_2*+");
   static EvtId D3P2N=EvtPDL::getId("D_2*-");
   static EvtId D3P20=EvtPDL::getId("D_2*0");
   static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
 
-  static EvtId D3P1P=EvtPDL::getId("D'_1+");
-  static EvtId D3P1N=EvtPDL::getId("D'_1-");
-  static EvtId D3P10=EvtPDL::getId("D'_10");
-  static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
-
-  static EvtId D3P0P=EvtPDL::getId("D_0*+");
-  static EvtId D3P0N=EvtPDL::getId("D_0*-");
-  static EvtId D3P00=EvtPDL::getId("D_0*0");
-  static EvtId D3P0B=EvtPDL::getId("anti-D_0*0");
-
-  static EvtId D21S0P=EvtPDL::getId("hi");
-  static EvtId D21S0N=EvtPDL::getId("hi");
-  static EvtId D21S00=EvtPDL::getId("hi");
-  static EvtId D21S0B=EvtPDL::getId("hi");
-
-  static EvtId D23S1P=EvtPDL::getId("hi");
-  static EvtId D23S1N=EvtPDL::getId("hi");
-  static EvtId D23S10=EvtPDL::getId("hi");
-  static EvtId D23S1B=EvtPDL::getId("hi");
-
-  static EvtId RHO2S0=EvtPDL::getId("rho(2S)0");
-  static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
-  static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
-  static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
-  static EvtId ETA2S=EvtPDL::getId("eta(2S)");
-
-  static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
-  static EvtId PI2SP=EvtPDL::getId("pi(2S)+");
-  static EvtId PI2SM=EvtPDL::getId("pi(2S)-");
-
-  static EvtId PIP=EvtPDL::getId("pi+");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PI0=EvtPDL::getId("pi0");
-
-  static EvtId RHOP=EvtPDL::getId("rho+");
-  static EvtId RHOM=EvtPDL::getId("rho-");
-  static EvtId RHO0=EvtPDL::getId("rho0");
-
   static EvtId A2P=EvtPDL::getId("a_2+");
   static EvtId A2M=EvtPDL::getId("a_2-");
   static EvtId A20=EvtPDL::getId("a_20");
 
-  static EvtId A1P=EvtPDL::getId("a_1+");
-  static EvtId A1M=EvtPDL::getId("a_1-");
-  static EvtId A10=EvtPDL::getId("a_10");
-
-  static EvtId A0P=EvtPDL::getId("a_0+");
-  static EvtId A0M=EvtPDL::getId("a_0-");
-  static EvtId A00=EvtPDL::getId("a_00");
-
-  static EvtId B1P=EvtPDL::getId("b_1+");
-  static EvtId B1M=EvtPDL::getId("b_1-");
-  static EvtId B10=EvtPDL::getId("b_10");
-
-  static EvtId H1=EvtPDL::getId("h_1");
-  static EvtId H1PR=EvtPDL::getId("h'_1");
-
-  static EvtId F1=EvtPDL::getId("f_1");
-  static EvtId F1PR=EvtPDL::getId("f'_1");
-  static EvtId F0=EvtPDL::getId("f_0");
-  static EvtId F0PR=EvtPDL::getId("f'_0");
   static EvtId F2=EvtPDL::getId("f_2");
   static EvtId F2PR=EvtPDL::getId("f'_2");
-
-  static EvtId ETA=EvtPDL::getId("eta");
-  static EvtId ETAPR=EvtPDL::getId("eta'");
-  static EvtId OMEG=EvtPDL::getId("omega");
-
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId K0S=EvtPDL::getId("K_S0");
-  static EvtId K0L=EvtPDL::getId("K_L0");
-
-  static EvtId KSTP=EvtPDL::getId("K*+");
-  static EvtId KSTM=EvtPDL::getId("K*-");
-  static EvtId KST0=EvtPDL::getId("K*0");
-  static EvtId KSTB=EvtPDL::getId("anti-K*0");
-
-  static EvtId K1P=EvtPDL::getId("K_1+");
-  static EvtId K1M=EvtPDL::getId("K_1-");
-  static EvtId K10=EvtPDL::getId("K_10");
-  static EvtId K1B=EvtPDL::getId("anti-K_10");
-
-  static EvtId K1STP=EvtPDL::getId("K'_1+");
-  static EvtId K1STM=EvtPDL::getId("K'_1-");
-  static EvtId K1ST0=EvtPDL::getId("K'_10");
-  static EvtId K1STB=EvtPDL::getId("anti-K'_10");
-
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
-  static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
-
-  static EvtId D1P1SP=EvtPDL::getId("D_s1+");
-  static EvtId D1P1SN=EvtPDL::getId("D_s1-");
-
-  static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
-  static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
-
-  static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
-  static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
-
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
-  static EvtId DSSTP=EvtPDL::getId("D_s*+");
-  static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
   double msd(0.0), mx(0.0), mb(0.0); 
@@ -806,158 +332,22 @@ void EvtISGWFF::EvtISGW1FF1S0 ( EvtId parent, EvtId daugt,
        double t, double mass, double *fpf, double *fmf ) {
   
   //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
   static EvtId BP=EvtPDL::getId("B+");
   static EvtId BM=EvtPDL::getId("B-");
   static EvtId B0=EvtPDL::getId("B0");
   static EvtId B0B=EvtPDL::getId("anti-B0");
 
-  static EvtId DST0=EvtPDL::getId("D*0");
-  static EvtId DSTB=EvtPDL::getId("anti-D*0");
-  static EvtId DSTP=EvtPDL::getId("D*+");
-  static EvtId DSTM=EvtPDL::getId("D*-");
   static EvtId D0=EvtPDL::getId("D0");
   static EvtId D0B=EvtPDL::getId("anti-D0");
   static EvtId DP=EvtPDL::getId("D+");
   static EvtId DM=EvtPDL::getId("D-");
 
-  static EvtId D1P1P=EvtPDL::getId("D_1+");
-  static EvtId D1P1N=EvtPDL::getId("D_1-");
-  static EvtId D1P10=EvtPDL::getId("D_10");
-  static EvtId D1P1B=EvtPDL::getId("anti-D_10");
-
-  static EvtId D3P2P=EvtPDL::getId("D_2*+");
-  static EvtId D3P2N=EvtPDL::getId("D_2*-");
-  static EvtId D3P20=EvtPDL::getId("D_2*0");
-  static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
-
-  static EvtId D3P1P=EvtPDL::getId("D'_1+");
-  static EvtId D3P1N=EvtPDL::getId("D'_1-");
-  static EvtId D3P10=EvtPDL::getId("D'_10");
-  static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
-
-  static EvtId D3P0P=EvtPDL::getId("D_0*+");
-  static EvtId D3P0N=EvtPDL::getId("D_0*-");
-  static EvtId D3P00=EvtPDL::getId("D_0*0");
-  static EvtId D3P0B=EvtPDL::getId("anti-D_0*0");
-
-  static EvtId D21S0P=EvtPDL::getId("hi");
-  static EvtId D21S0N=EvtPDL::getId("hi");
-  static EvtId D21S00=EvtPDL::getId("hi");
-  static EvtId D21S0B=EvtPDL::getId("hi");
-
-  static EvtId D23S1P=EvtPDL::getId("hi");
-  static EvtId D23S1N=EvtPDL::getId("hi");
-  static EvtId D23S10=EvtPDL::getId("hi");
-  static EvtId D23S1B=EvtPDL::getId("hi");
-
-  static EvtId RHO2S0=EvtPDL::getId("rho(2S)0");
-  static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
-  static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
-  static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
-  static EvtId ETA2S=EvtPDL::getId("eta(2S)");
-
-  static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
-  static EvtId PI2SP=EvtPDL::getId("pi(2S)+");
-  static EvtId PI2SM=EvtPDL::getId("pi(2S)-");
-
   static EvtId PIP=EvtPDL::getId("pi+");
   static EvtId PIM=EvtPDL::getId("pi-");
   static EvtId PI0=EvtPDL::getId("pi0");
 
-  static EvtId RHOP=EvtPDL::getId("rho+");
-  static EvtId RHOM=EvtPDL::getId("rho-");
-  static EvtId RHO0=EvtPDL::getId("rho0");
-
-  static EvtId A2P=EvtPDL::getId("a_2+");
-  static EvtId A2M=EvtPDL::getId("a_2-");
-  static EvtId A20=EvtPDL::getId("a_20");
-
-  static EvtId A1P=EvtPDL::getId("a_1+");
-  static EvtId A1M=EvtPDL::getId("a_1-");
-  static EvtId A10=EvtPDL::getId("a_10");
-
-  static EvtId A0P=EvtPDL::getId("a_0+");
-  static EvtId A0M=EvtPDL::getId("a_0-");
-  static EvtId A00=EvtPDL::getId("a_00");
-
-  static EvtId B1P=EvtPDL::getId("b_1+");
-  static EvtId B1M=EvtPDL::getId("b_1-");
-  static EvtId B10=EvtPDL::getId("b_10");
-
-  static EvtId H1=EvtPDL::getId("h_1");
-  static EvtId H1PR=EvtPDL::getId("h'_1");
-
-  static EvtId F1=EvtPDL::getId("f_1");
-  static EvtId F1PR=EvtPDL::getId("f'_1");
-  static EvtId F0=EvtPDL::getId("f_0");
-  static EvtId F0PR=EvtPDL::getId("f'_0");
-  static EvtId F2=EvtPDL::getId("f_2");
-  static EvtId F2PR=EvtPDL::getId("f'_2");
-
   static EvtId ETA=EvtPDL::getId("eta");
   static EvtId ETAPR=EvtPDL::getId("eta'");
-  static EvtId OMEG=EvtPDL::getId("omega");
-
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId K0S=EvtPDL::getId("K_S0");
-  static EvtId K0L=EvtPDL::getId("K_L0");
-
-  static EvtId KSTP=EvtPDL::getId("K*+");
-  static EvtId KSTM=EvtPDL::getId("K*-");
-  static EvtId KST0=EvtPDL::getId("K*0");
-  static EvtId KSTB=EvtPDL::getId("anti-K*0");
-
-  static EvtId K1P=EvtPDL::getId("K_1+");
-  static EvtId K1M=EvtPDL::getId("K_1-");
-  static EvtId K10=EvtPDL::getId("K_10");
-  static EvtId K1B=EvtPDL::getId("anti-K_10");
-
-  static EvtId K1STP=EvtPDL::getId("K'_1+");
-  static EvtId K1STM=EvtPDL::getId("K'_1-");
-  static EvtId K1ST0=EvtPDL::getId("K'_10");
-  static EvtId K1STB=EvtPDL::getId("anti-K'_10");
-
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
-  static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
-
-  static EvtId D1P1SP=EvtPDL::getId("D_s1+");
-  static EvtId D1P1SN=EvtPDL::getId("D_s1-");
-
-  static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
-  static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
-
-  static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
-  static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
-
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
-  static EvtId DSSTP=EvtPDL::getId("D_s*+");
-  static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
   double msd(0.0), mx(0.0), mb(0.0); 
@@ -1014,13 +404,6 @@ void  EvtISGWFF::EvtISGW1FF3S1(EvtId parent,EvtId daugt,double t,
       double mass, double *f,double *g,double *ap,double *am){
  
   //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
   static EvtId BP=EvtPDL::getId("B+");
   static EvtId BM=EvtPDL::getId("B-");
   static EvtId B0=EvtPDL::getId("B0");
@@ -1030,144 +413,14 @@ void  EvtISGWFF::EvtISGW1FF3S1(EvtId parent,EvtId daugt,double t,
   static EvtId DSTB=EvtPDL::getId("anti-D*0");
   static EvtId DSTP=EvtPDL::getId("D*+");
   static EvtId DSTM=EvtPDL::getId("D*-");
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId DP=EvtPDL::getId("D+");
-  static EvtId DM=EvtPDL::getId("D-");
-
-  static EvtId D1P1P=EvtPDL::getId("D_1+");
-  static EvtId D1P1N=EvtPDL::getId("D_1-");
-  static EvtId D1P10=EvtPDL::getId("D_10");
-  static EvtId D1P1B=EvtPDL::getId("anti-D_10");
-
-  static EvtId D3P2P=EvtPDL::getId("D_2*+");
-  static EvtId D3P2N=EvtPDL::getId("D_2*-");
-  static EvtId D3P20=EvtPDL::getId("D_2*0");
-  static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
-
-  static EvtId D3P1P=EvtPDL::getId("D'_1+");
-  static EvtId D3P1N=EvtPDL::getId("D'_1-");
-  static EvtId D3P10=EvtPDL::getId("D'_10");
-  static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
-
-  static EvtId D3P0P=EvtPDL::getId("D_0*+");
-  static EvtId D3P0N=EvtPDL::getId("D_0*-");
-  static EvtId D3P00=EvtPDL::getId("D_0*0");
-  static EvtId D3P0B=EvtPDL::getId("anti-D_0*0");
-
-  static EvtId D21S0P=EvtPDL::getId("hi");
-  static EvtId D21S0N=EvtPDL::getId("hi");
-  static EvtId D21S00=EvtPDL::getId("hi");
-  static EvtId D21S0B=EvtPDL::getId("hi");
-
-  static EvtId D23S1P=EvtPDL::getId("hi");
-  static EvtId D23S1N=EvtPDL::getId("hi");
-  static EvtId D23S10=EvtPDL::getId("hi");
-  static EvtId D23S1B=EvtPDL::getId("hi");
-
-  static EvtId RHO2S0=EvtPDL::getId("rho(2S)0");
-  static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
-  static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
-  static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
-  static EvtId ETA2S=EvtPDL::getId("eta(2S)");
-
-  static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
-  static EvtId PI2SP=EvtPDL::getId("pi(2S)+");
-  static EvtId PI2SM=EvtPDL::getId("pi(2S)-");
-
-  static EvtId PIP=EvtPDL::getId("pi+");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PI0=EvtPDL::getId("pi0");
 
   static EvtId RHOP=EvtPDL::getId("rho+");
   static EvtId RHOM=EvtPDL::getId("rho-");
   static EvtId RHO0=EvtPDL::getId("rho0");
 
-  static EvtId A2P=EvtPDL::getId("a_2+");
-  static EvtId A2M=EvtPDL::getId("a_2-");
-  static EvtId A20=EvtPDL::getId("a_20");
-
-  static EvtId A1P=EvtPDL::getId("a_1+");
-  static EvtId A1M=EvtPDL::getId("a_1-");
-  static EvtId A10=EvtPDL::getId("a_10");
-
-  static EvtId A0P=EvtPDL::getId("a_0+");
-  static EvtId A0M=EvtPDL::getId("a_0-");
-  static EvtId A00=EvtPDL::getId("a_00");
-
-  static EvtId B1P=EvtPDL::getId("b_1+");
-  static EvtId B1M=EvtPDL::getId("b_1-");
-  static EvtId B10=EvtPDL::getId("b_10");
-
-  static EvtId H1=EvtPDL::getId("h_1");
-  static EvtId H1PR=EvtPDL::getId("h'_1");
-
-  static EvtId F1=EvtPDL::getId("f_1");
-  static EvtId F1PR=EvtPDL::getId("f'_1");
-  static EvtId F0=EvtPDL::getId("f_0");
-  static EvtId F0PR=EvtPDL::getId("f'_0");
-  static EvtId F2=EvtPDL::getId("f_2");
-  static EvtId F2PR=EvtPDL::getId("f'_2");
-
-  static EvtId ETA=EvtPDL::getId("eta");
-  static EvtId ETAPR=EvtPDL::getId("eta'");
   static EvtId OMEG=EvtPDL::getId("omega");
-
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId K0S=EvtPDL::getId("K_S0");
-  static EvtId K0L=EvtPDL::getId("K_L0");
-
-  static EvtId KSTP=EvtPDL::getId("K*+");
-  static EvtId KSTM=EvtPDL::getId("K*-");
-  static EvtId KST0=EvtPDL::getId("K*0");
-  static EvtId KSTB=EvtPDL::getId("anti-K*0");
-
-  static EvtId K1P=EvtPDL::getId("K_1+");
-  static EvtId K1M=EvtPDL::getId("K_1-");
-  static EvtId K10=EvtPDL::getId("K_10");
-  static EvtId K1B=EvtPDL::getId("anti-K_10");
-
-  static EvtId K1STP=EvtPDL::getId("K'_1+");
-  static EvtId K1STM=EvtPDL::getId("K'_1-");
-  static EvtId K1ST0=EvtPDL::getId("K'_10");
-  static EvtId K1STB=EvtPDL::getId("anti-K'_10");
-
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
-  static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
-
-  static EvtId D1P1SP=EvtPDL::getId("D_s1+");
-  static EvtId D1P1SN=EvtPDL::getId("D_s1-");
-
-  static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
-  static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
-
-  static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
-  static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
-
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
-  static EvtId DSSTP=EvtPDL::getId("D_s*+");
-  static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
  
-  double msd(0.0),mup,msq(0.0),bb2(0.0),mum,mtx,bbx2;
+  double msd(0.0),msq(0.0),bb2(0.0),mum,mtx,bbx2;
   double bx2(0.0),msb(0.0),tm;
   double mb,mx,f3, kap;
 
@@ -1198,7 +451,6 @@ void  EvtISGWFF::EvtISGW1FF3S1(EvtId parent,EvtId daugt,double t,
   mtb=msb+msd;
   mtx=msq+msd;
   
-  mup=1.0/(1.0/msq+1.0/msb);
   mum=1.0/(1.0/msq-1.0/msb);
   bbx2=0.5*(bb2+bx2);
   mb=EvtPDL::getMeanMass(parent);
@@ -1222,51 +474,10 @@ void EvtISGWFF::EvtISGW1FF23S1 (EvtId parent,EvtId daugt,
        double t, double mass, double *fpf, double *gpf, 
        double *appf, double *apmf ) {
   //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
   static EvtId BP=EvtPDL::getId("B+");
   static EvtId BM=EvtPDL::getId("B-");
   static EvtId B0=EvtPDL::getId("B0");
   static EvtId B0B=EvtPDL::getId("anti-B0");
-
-  static EvtId DST0=EvtPDL::getId("D*0");
-  static EvtId DSTB=EvtPDL::getId("anti-D*0");
-  static EvtId DSTP=EvtPDL::getId("D*+");
-  static EvtId DSTM=EvtPDL::getId("D*-");
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId DP=EvtPDL::getId("D+");
-  static EvtId DM=EvtPDL::getId("D-");
-
-  static EvtId D1P1P=EvtPDL::getId("D_1+");
-  static EvtId D1P1N=EvtPDL::getId("D_1-");
-  static EvtId D1P10=EvtPDL::getId("D_10");
-  static EvtId D1P1B=EvtPDL::getId("anti-D_10");
-
-  static EvtId D3P2P=EvtPDL::getId("D_2*+");
-  static EvtId D3P2N=EvtPDL::getId("D_2*-");
-  static EvtId D3P20=EvtPDL::getId("D_2*0");
-  static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
-
-  static EvtId D3P1P=EvtPDL::getId("D'_1+");
-  static EvtId D3P1N=EvtPDL::getId("D'_1-");
-  static EvtId D3P10=EvtPDL::getId("D'_10");
-  static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
-
-  static EvtId D3P0P=EvtPDL::getId("D_0*+");
-  static EvtId D3P0N=EvtPDL::getId("D_0*-");
-  static EvtId D3P00=EvtPDL::getId("D_0*0");
-  static EvtId D3P0B=EvtPDL::getId("anti-D_0*0");
-
-  static EvtId D21S0P=EvtPDL::getId("hi");
-  static EvtId D21S0N=EvtPDL::getId("hi");
-  static EvtId D21S00=EvtPDL::getId("hi");
-  static EvtId D21S0B=EvtPDL::getId("hi");
 
   static EvtId D23S1P=EvtPDL::getId("hi");
   static EvtId D23S1N=EvtPDL::getId("hi");
@@ -1277,109 +488,12 @@ void EvtISGWFF::EvtISGW1FF23S1 (EvtId parent,EvtId daugt,
   static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
   static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
   static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
-  static EvtId ETA2S=EvtPDL::getId("eta(2S)");
-
-  static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
-  static EvtId PI2SP=EvtPDL::getId("pi(2S)+");
-  static EvtId PI2SM=EvtPDL::getId("pi(2S)-");
-
-  static EvtId PIP=EvtPDL::getId("pi+");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PI0=EvtPDL::getId("pi0");
-
-  static EvtId RHOP=EvtPDL::getId("rho+");
-  static EvtId RHOM=EvtPDL::getId("rho-");
-  static EvtId RHO0=EvtPDL::getId("rho0");
-
-  static EvtId A2P=EvtPDL::getId("a_2+");
-  static EvtId A2M=EvtPDL::getId("a_2-");
-  static EvtId A20=EvtPDL::getId("a_20");
-
-  static EvtId A1P=EvtPDL::getId("a_1+");
-  static EvtId A1M=EvtPDL::getId("a_1-");
-  static EvtId A10=EvtPDL::getId("a_10");
-
-  static EvtId A0P=EvtPDL::getId("a_0+");
-  static EvtId A0M=EvtPDL::getId("a_0-");
-  static EvtId A00=EvtPDL::getId("a_00");
-
-  static EvtId B1P=EvtPDL::getId("b_1+");
-  static EvtId B1M=EvtPDL::getId("b_1-");
-  static EvtId B10=EvtPDL::getId("b_10");
-
-  static EvtId H1=EvtPDL::getId("h_1");
-  static EvtId H1PR=EvtPDL::getId("h'_1");
-
-  static EvtId F1=EvtPDL::getId("f_1");
-  static EvtId F1PR=EvtPDL::getId("f'_1");
-  static EvtId F0=EvtPDL::getId("f_0");
-  static EvtId F0PR=EvtPDL::getId("f'_0");
-  static EvtId F2=EvtPDL::getId("f_2");
-  static EvtId F2PR=EvtPDL::getId("f'_2");
-
-  static EvtId ETA=EvtPDL::getId("eta");
-  static EvtId ETAPR=EvtPDL::getId("eta'");
-  static EvtId OMEG=EvtPDL::getId("omega");
-
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId K0S=EvtPDL::getId("K_S0");
-  static EvtId K0L=EvtPDL::getId("K_L0");
-
-  static EvtId KSTP=EvtPDL::getId("K*+");
-  static EvtId KSTM=EvtPDL::getId("K*-");
-  static EvtId KST0=EvtPDL::getId("K*0");
-  static EvtId KSTB=EvtPDL::getId("anti-K*0");
-
-  static EvtId K1P=EvtPDL::getId("K_1+");
-  static EvtId K1M=EvtPDL::getId("K_1-");
-  static EvtId K10=EvtPDL::getId("K_10");
-  static EvtId K1B=EvtPDL::getId("anti-K_10");
-
-  static EvtId K1STP=EvtPDL::getId("K'_1+");
-  static EvtId K1STM=EvtPDL::getId("K'_1-");
-  static EvtId K1ST0=EvtPDL::getId("K'_10");
-  static EvtId K1STB=EvtPDL::getId("anti-K'_10");
-
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
-  static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
-
-  static EvtId D1P1SP=EvtPDL::getId("D_s1+");
-  static EvtId D1P1SN=EvtPDL::getId("D_s1-");
-
-  static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
-  static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
-
-  static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
-  static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
-
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
-  static EvtId DSSTP=EvtPDL::getId("D_s*+");
-  static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
   double msd(0.0), mx(0.0), mb(0.0); 
   double msq(0.0), bx2(0.0),mtx;
   double f3,f5,tt;
-  double mum,mup,bb2(0.0),bbx2,tm,msb(0.0);
+  double mum,bb2(0.0),bbx2,tm,msb(0.0);
     
   if (parent==BM||parent==BP||parent==B0||parent==B0B) {
     msb=5.2;
@@ -1407,7 +521,6 @@ void EvtISGWFF::EvtISGW1FF23S1 (EvtId parent,EvtId daugt,
   mtx = msq + msd;
   mb = EvtPDL::getMeanMass( parent );
   mx = mass;
-  mup=1.0/(1.0/msq+1.0/msb);
   mum=1.0/(1.0/msq-1.0/msb);
   bbx2=0.5*(bb2+bx2);
   tm=(mb-mx)*(mb-mx);
@@ -1447,163 +560,27 @@ void EvtISGWFF::EvtISGW1FF3P1 (EvtId parent,EvtId daugt,
        double t, double mass,
        double *lf, double *qf, double *cpf, double *cmf ) {
   //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
   static EvtId BP=EvtPDL::getId("B+");
   static EvtId BM=EvtPDL::getId("B-");
   static EvtId B0=EvtPDL::getId("B0");
   static EvtId B0B=EvtPDL::getId("anti-B0");
-
-  static EvtId DST0=EvtPDL::getId("D*0");
-  static EvtId DSTB=EvtPDL::getId("anti-D*0");
-  static EvtId DSTP=EvtPDL::getId("D*+");
-  static EvtId DSTM=EvtPDL::getId("D*-");
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId DP=EvtPDL::getId("D+");
-  static EvtId DM=EvtPDL::getId("D-");
-
-  static EvtId D1P1P=EvtPDL::getId("D_1+");
-  static EvtId D1P1N=EvtPDL::getId("D_1-");
-  static EvtId D1P10=EvtPDL::getId("D_10");
-  static EvtId D1P1B=EvtPDL::getId("anti-D_10");
-
-  static EvtId D3P2P=EvtPDL::getId("D_2*+");
-  static EvtId D3P2N=EvtPDL::getId("D_2*-");
-  static EvtId D3P20=EvtPDL::getId("D_2*0");
-  static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
 
   static EvtId D3P1P=EvtPDL::getId("D'_1+");
   static EvtId D3P1N=EvtPDL::getId("D'_1-");
   static EvtId D3P10=EvtPDL::getId("D'_10");
   static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
 
-  static EvtId D3P0P=EvtPDL::getId("D_0*+");
-  static EvtId D3P0N=EvtPDL::getId("D_0*-");
-  static EvtId D3P00=EvtPDL::getId("D_0*0");
-  static EvtId D3P0B=EvtPDL::getId("anti-D_0*0");
-
-  static EvtId D21S0P=EvtPDL::getId("hi");
-  static EvtId D21S0N=EvtPDL::getId("hi");
-  static EvtId D21S00=EvtPDL::getId("hi");
-  static EvtId D21S0B=EvtPDL::getId("hi");
-
-  static EvtId D23S1P=EvtPDL::getId("hi");
-  static EvtId D23S1N=EvtPDL::getId("hi");
-  static EvtId D23S10=EvtPDL::getId("hi");
-  static EvtId D23S1B=EvtPDL::getId("hi");
-
-  static EvtId RHO2S0=EvtPDL::getId("rho(2S)0");
-  static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
-  static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
-  static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
-  static EvtId ETA2S=EvtPDL::getId("eta(2S)");
-
-  static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
-  static EvtId PI2SP=EvtPDL::getId("pi(2S)+");
-  static EvtId PI2SM=EvtPDL::getId("pi(2S)-");
-
-  static EvtId PIP=EvtPDL::getId("pi+");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PI0=EvtPDL::getId("pi0");
-
-  static EvtId RHOP=EvtPDL::getId("rho+");
-  static EvtId RHOM=EvtPDL::getId("rho-");
-  static EvtId RHO0=EvtPDL::getId("rho0");
-
-  static EvtId A2P=EvtPDL::getId("a_2+");
-  static EvtId A2M=EvtPDL::getId("a_2-");
-  static EvtId A20=EvtPDL::getId("a_20");
-
   static EvtId A1P=EvtPDL::getId("a_1+");
   static EvtId A1M=EvtPDL::getId("a_1-");
   static EvtId A10=EvtPDL::getId("a_10");
 
-  static EvtId A0P=EvtPDL::getId("a_0+");
-  static EvtId A0M=EvtPDL::getId("a_0-");
-  static EvtId A00=EvtPDL::getId("a_00");
-
-  static EvtId B1P=EvtPDL::getId("b_1+");
-  static EvtId B1M=EvtPDL::getId("b_1-");
-  static EvtId B10=EvtPDL::getId("b_10");
-
-  static EvtId H1=EvtPDL::getId("h_1");
-  static EvtId H1PR=EvtPDL::getId("h'_1");
-
   static EvtId F1=EvtPDL::getId("f_1");
   static EvtId F1PR=EvtPDL::getId("f'_1");
-  static EvtId F0=EvtPDL::getId("f_0");
-  static EvtId F0PR=EvtPDL::getId("f'_0");
-  static EvtId F2=EvtPDL::getId("f_2");
-  static EvtId F2PR=EvtPDL::getId("f'_2");
-
-  static EvtId ETA=EvtPDL::getId("eta");
-  static EvtId ETAPR=EvtPDL::getId("eta'");
-  static EvtId OMEG=EvtPDL::getId("omega");
-
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId K0S=EvtPDL::getId("K_S0");
-  static EvtId K0L=EvtPDL::getId("K_L0");
-
-  static EvtId KSTP=EvtPDL::getId("K*+");
-  static EvtId KSTM=EvtPDL::getId("K*-");
-  static EvtId KST0=EvtPDL::getId("K*0");
-  static EvtId KSTB=EvtPDL::getId("anti-K*0");
-
-  static EvtId K1P=EvtPDL::getId("K_1+");
-  static EvtId K1M=EvtPDL::getId("K_1-");
-  static EvtId K10=EvtPDL::getId("K_10");
-  static EvtId K1B=EvtPDL::getId("anti-K_10");
-
-  static EvtId K1STP=EvtPDL::getId("K'_1+");
-  static EvtId K1STM=EvtPDL::getId("K'_1-");
-  static EvtId K1ST0=EvtPDL::getId("K'_10");
-  static EvtId K1STB=EvtPDL::getId("anti-K'_10");
-
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
-  static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
-
-  static EvtId D1P1SP=EvtPDL::getId("D_s1+");
-  static EvtId D1P1SN=EvtPDL::getId("D_s1-");
-
-  static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
-  static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
-
-  static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
-  static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
-
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
-  static EvtId DSSTP=EvtPDL::getId("D_s*+");
-  static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
   double msd(0.0), mx(0.0), mb(0.0); 
   double msq(0.0), bx2(0.0),mtx,f5;
-  double msb(0.0),bb2(0.0),mup,mum,bbx2,tm;
+  double msb(0.0),bb2(0.0),mum,bbx2,tm;
   double kap;
 
   if (parent==BM||parent==BP||parent==B0||parent==B0B) {  
@@ -1634,7 +611,6 @@ void EvtISGWFF::EvtISGW1FF3P1 (EvtId parent,EvtId daugt,
   mb = EvtPDL::getMeanMass( parent );
   mx = mass;
   
-  mup=1.0/(1.0/msq+1.0/msb);
   mum=1.0/(1.0/msq-1.0/msb);
   bbx2=0.5*(bb2+bx2);
   tm=(mb-mx)*(mb-mx);
@@ -1660,164 +636,28 @@ void EvtISGWFF::EvtISGW1FF3P1 (EvtId parent,EvtId daugt,
 void EvtISGWFF::EvtISGW1FF3P0 (EvtId parent,EvtId daugt,
        double t, double mass, double *upf, double *umf ) {
   //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
   static EvtId BP=EvtPDL::getId("B+");
   static EvtId BM=EvtPDL::getId("B-");
   static EvtId B0=EvtPDL::getId("B0");
   static EvtId B0B=EvtPDL::getId("anti-B0");
-
-  static EvtId DST0=EvtPDL::getId("D*0");
-  static EvtId DSTB=EvtPDL::getId("anti-D*0");
-  static EvtId DSTP=EvtPDL::getId("D*+");
-  static EvtId DSTM=EvtPDL::getId("D*-");
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId DP=EvtPDL::getId("D+");
-  static EvtId DM=EvtPDL::getId("D-");
-
-  static EvtId D1P1P=EvtPDL::getId("D_1+");
-  static EvtId D1P1N=EvtPDL::getId("D_1-");
-  static EvtId D1P10=EvtPDL::getId("D_10");
-  static EvtId D1P1B=EvtPDL::getId("anti-D_10");
-
-  static EvtId D3P2P=EvtPDL::getId("D_2*+");
-  static EvtId D3P2N=EvtPDL::getId("D_2*-");
-  static EvtId D3P20=EvtPDL::getId("D_2*0");
-  static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
-
-  static EvtId D3P1P=EvtPDL::getId("D'_1+");
-  static EvtId D3P1N=EvtPDL::getId("D'_1-");
-  static EvtId D3P10=EvtPDL::getId("D'_10");
-  static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
 
   static EvtId D3P0P=EvtPDL::getId("D_0*+");
   static EvtId D3P0N=EvtPDL::getId("D_0*-");
   static EvtId D3P00=EvtPDL::getId("D_0*0");
   static EvtId D3P0B=EvtPDL::getId("anti-D_0*0");
 
-  static EvtId D21S0P=EvtPDL::getId("hi");
-  static EvtId D21S0N=EvtPDL::getId("hi");
-  static EvtId D21S00=EvtPDL::getId("hi");
-  static EvtId D21S0B=EvtPDL::getId("hi");
-
-  static EvtId D23S1P=EvtPDL::getId("hi");
-  static EvtId D23S1N=EvtPDL::getId("hi");
-  static EvtId D23S10=EvtPDL::getId("hi");
-  static EvtId D23S1B=EvtPDL::getId("hi");
-
-  static EvtId RHO2S0=EvtPDL::getId("rho(2S)0");
-  static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
-  static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
-  static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
-  static EvtId ETA2S=EvtPDL::getId("eta(2S)");
-
-  static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
-  static EvtId PI2SP=EvtPDL::getId("pi(2S)+");
-  static EvtId PI2SM=EvtPDL::getId("pi(2S)-");
-
-  static EvtId PIP=EvtPDL::getId("pi+");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PI0=EvtPDL::getId("pi0");
-
-  static EvtId RHOP=EvtPDL::getId("rho+");
-  static EvtId RHOM=EvtPDL::getId("rho-");
-  static EvtId RHO0=EvtPDL::getId("rho0");
-
-  static EvtId A2P=EvtPDL::getId("a_2+");
-  static EvtId A2M=EvtPDL::getId("a_2-");
-  static EvtId A20=EvtPDL::getId("a_20");
-
-  static EvtId A1P=EvtPDL::getId("a_1+");
-  static EvtId A1M=EvtPDL::getId("a_1-");
-  static EvtId A10=EvtPDL::getId("a_10");
-
   static EvtId A0P=EvtPDL::getId("a_0+");
   static EvtId A0M=EvtPDL::getId("a_0-");
   static EvtId A00=EvtPDL::getId("a_00");
 
-  static EvtId B1P=EvtPDL::getId("b_1+");
-  static EvtId B1M=EvtPDL::getId("b_1-");
-  static EvtId B10=EvtPDL::getId("b_10");
-
-  static EvtId H1=EvtPDL::getId("h_1");
-  static EvtId H1PR=EvtPDL::getId("h'_1");
-
-  static EvtId F1=EvtPDL::getId("f_1");
-  static EvtId F1PR=EvtPDL::getId("f'_1");
   static EvtId F0=EvtPDL::getId("f_0");
   static EvtId F0PR=EvtPDL::getId("f'_0");
-  static EvtId F2=EvtPDL::getId("f_2");
-  static EvtId F2PR=EvtPDL::getId("f'_2");
-
-  static EvtId ETA=EvtPDL::getId("eta");
-  static EvtId ETAPR=EvtPDL::getId("eta'");
-  static EvtId OMEG=EvtPDL::getId("omega");
-
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId K0S=EvtPDL::getId("K_S0");
-  static EvtId K0L=EvtPDL::getId("K_L0");
-
-  static EvtId KSTP=EvtPDL::getId("K*+");
-  static EvtId KSTM=EvtPDL::getId("K*-");
-  static EvtId KST0=EvtPDL::getId("K*0");
-  static EvtId KSTB=EvtPDL::getId("anti-K*0");
-
-  static EvtId K1P=EvtPDL::getId("K_1+");
-  static EvtId K1M=EvtPDL::getId("K_1-");
-  static EvtId K10=EvtPDL::getId("K_10");
-  static EvtId K1B=EvtPDL::getId("anti-K_10");
-
-  static EvtId K1STP=EvtPDL::getId("K'_1+");
-  static EvtId K1STM=EvtPDL::getId("K'_1-");
-  static EvtId K1ST0=EvtPDL::getId("K'_10");
-  static EvtId K1STB=EvtPDL::getId("anti-K'_10");
-
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
-  static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
-
-  static EvtId D1P1SP=EvtPDL::getId("D_s1+");
-  static EvtId D1P1SN=EvtPDL::getId("D_s1-");
-
-  static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
-  static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
-
-  static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
-  static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
-
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
-  static EvtId DSSTP=EvtPDL::getId("D_s*+");
-  static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
   double msd(0.0), mx(0.0), mb(0.0); 
   double msq(0.0), bx2(0.0),mtx;
   double f5;
-  double mum,mup,bb2(0.0),bbx2,msb(0.0),tm;
+  double mum,bb2(0.0),bbx2,msb(0.0),tm;
 
   if (parent==BM||parent==BP||parent==B0||parent==B0B) {    
     msb=5.2;
@@ -1847,7 +687,6 @@ void EvtISGWFF::EvtISGW1FF3P0 (EvtId parent,EvtId daugt,
   mb = EvtPDL::getMeanMass( parent );
   mx = mass;
   
-  mup=1.0/(1.0/msq+1.0/msb);
   mum=1.0/(1.0/msq-1.0/msb);
   bbx2=0.5*(bb2+bx2);
   tm=(mb-mx)*(mb-mx);
@@ -1868,86 +707,15 @@ void EvtISGWFF::EvtISGW1FF1P1 (EvtId parent,EvtId daugt,
        double t, double mass,
        double *vf, double *rf, double *spf, double *smf ) {
     //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
   static EvtId BP=EvtPDL::getId("B+");
   static EvtId BM=EvtPDL::getId("B-");
   static EvtId B0=EvtPDL::getId("B0");
   static EvtId B0B=EvtPDL::getId("anti-B0");
 
-  static EvtId DST0=EvtPDL::getId("D*0");
-  static EvtId DSTB=EvtPDL::getId("anti-D*0");
-  static EvtId DSTP=EvtPDL::getId("D*+");
-  static EvtId DSTM=EvtPDL::getId("D*-");
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId DP=EvtPDL::getId("D+");
-  static EvtId DM=EvtPDL::getId("D-");
-
   static EvtId D1P1P=EvtPDL::getId("D_1+");
   static EvtId D1P1N=EvtPDL::getId("D_1-");
   static EvtId D1P10=EvtPDL::getId("D_10");
   static EvtId D1P1B=EvtPDL::getId("anti-D_10");
-
-  static EvtId D3P2P=EvtPDL::getId("D_2*+");
-  static EvtId D3P2N=EvtPDL::getId("D_2*-");
-  static EvtId D3P20=EvtPDL::getId("D_2*0");
-  static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
-
-  static EvtId D3P1P=EvtPDL::getId("D'_1+");
-  static EvtId D3P1N=EvtPDL::getId("D'_1-");
-  static EvtId D3P10=EvtPDL::getId("D'_10");
-  static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
-
-  static EvtId D3P0P=EvtPDL::getId("D_0*+");
-  static EvtId D3P0N=EvtPDL::getId("D_0*-");
-  static EvtId D3P00=EvtPDL::getId("D_0*0");
-  static EvtId D3P0B=EvtPDL::getId("anti-D_0*0");
-
-  static EvtId D21S0P=EvtPDL::getId("hi");
-  static EvtId D21S0N=EvtPDL::getId("hi");
-  static EvtId D21S00=EvtPDL::getId("hi");
-  static EvtId D21S0B=EvtPDL::getId("hi");
-
-  static EvtId D23S1P=EvtPDL::getId("hi");
-  static EvtId D23S1N=EvtPDL::getId("hi");
-  static EvtId D23S10=EvtPDL::getId("hi");
-  static EvtId D23S1B=EvtPDL::getId("hi");
-
-  static EvtId RHO2S0=EvtPDL::getId("rho(2S)0");
-  static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
-  static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
-  static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
-  static EvtId ETA2S=EvtPDL::getId("eta(2S)");
-
-  static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
-  static EvtId PI2SP=EvtPDL::getId("pi(2S)+");
-  static EvtId PI2SM=EvtPDL::getId("pi(2S)-");
-
-  static EvtId PIP=EvtPDL::getId("pi+");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PI0=EvtPDL::getId("pi0");
-
-  static EvtId RHOP=EvtPDL::getId("rho+");
-  static EvtId RHOM=EvtPDL::getId("rho-");
-  static EvtId RHO0=EvtPDL::getId("rho0");
-
-  static EvtId A2P=EvtPDL::getId("a_2+");
-  static EvtId A2M=EvtPDL::getId("a_2-");
-  static EvtId A20=EvtPDL::getId("a_20");
-
-  static EvtId A1P=EvtPDL::getId("a_1+");
-  static EvtId A1M=EvtPDL::getId("a_1-");
-  static EvtId A10=EvtPDL::getId("a_10");
-
-  static EvtId A0P=EvtPDL::getId("a_0+");
-  static EvtId A0M=EvtPDL::getId("a_0-");
-  static EvtId A00=EvtPDL::getId("a_00");
 
   static EvtId B1P=EvtPDL::getId("b_1+");
   static EvtId B1M=EvtPDL::getId("b_1-");
@@ -1955,71 +723,6 @@ void EvtISGWFF::EvtISGW1FF1P1 (EvtId parent,EvtId daugt,
 
   static EvtId H1=EvtPDL::getId("h_1");
   static EvtId H1PR=EvtPDL::getId("h'_1");
-
-  static EvtId F1=EvtPDL::getId("f_1");
-  static EvtId F1PR=EvtPDL::getId("f'_1");
-  static EvtId F0=EvtPDL::getId("f_0");
-  static EvtId F0PR=EvtPDL::getId("f'_0");
-  static EvtId F2=EvtPDL::getId("f_2");
-  static EvtId F2PR=EvtPDL::getId("f'_2");
-
-  static EvtId ETA=EvtPDL::getId("eta");
-  static EvtId ETAPR=EvtPDL::getId("eta'");
-  static EvtId OMEG=EvtPDL::getId("omega");
-
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId K0S=EvtPDL::getId("K_S0");
-  static EvtId K0L=EvtPDL::getId("K_L0");
-
-  static EvtId KSTP=EvtPDL::getId("K*+");
-  static EvtId KSTM=EvtPDL::getId("K*-");
-  static EvtId KST0=EvtPDL::getId("K*0");
-  static EvtId KSTB=EvtPDL::getId("anti-K*0");
-
-  static EvtId K1P=EvtPDL::getId("K_1+");
-  static EvtId K1M=EvtPDL::getId("K_1-");
-  static EvtId K10=EvtPDL::getId("K_10");
-  static EvtId K1B=EvtPDL::getId("anti-K_10");
-
-  static EvtId K1STP=EvtPDL::getId("K'_1+");
-  static EvtId K1STM=EvtPDL::getId("K'_1-");
-  static EvtId K1ST0=EvtPDL::getId("K'_10");
-  static EvtId K1STB=EvtPDL::getId("anti-K'_10");
-
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
-  static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
-
-  static EvtId D1P1SP=EvtPDL::getId("D_s1+");
-  static EvtId D1P1SN=EvtPDL::getId("D_s1-");
-
-  static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
-  static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
-
-  static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
-  static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
-
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
-  static EvtId DSSTP=EvtPDL::getId("D_s*+");
-  static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
   double msd(0.0), mx(0.0), mb(0.0); 
@@ -2081,158 +784,21 @@ void EvtISGWFF::EvtISGW1FF1P1 (EvtId parent,EvtId daugt,
 void EvtISGWFF::EvtISGW1FF21S0 (EvtId parent,EvtId daugt,
        double t, double mass, double *fppf, double *fpmf ) {
   //added by Lange Jan4,2000
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId TAUP=EvtPDL::getId("tau+");
-
   static EvtId BP=EvtPDL::getId("B+");
   static EvtId BM=EvtPDL::getId("B-");
   static EvtId B0=EvtPDL::getId("B0");
   static EvtId B0B=EvtPDL::getId("anti-B0");
-
-  static EvtId DST0=EvtPDL::getId("D*0");
-  static EvtId DSTB=EvtPDL::getId("anti-D*0");
-  static EvtId DSTP=EvtPDL::getId("D*+");
-  static EvtId DSTM=EvtPDL::getId("D*-");
-  static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId DP=EvtPDL::getId("D+");
-  static EvtId DM=EvtPDL::getId("D-");
-
-  static EvtId D1P1P=EvtPDL::getId("D_1+");
-  static EvtId D1P1N=EvtPDL::getId("D_1-");
-  static EvtId D1P10=EvtPDL::getId("D_10");
-  static EvtId D1P1B=EvtPDL::getId("anti-D_10");
-
-  static EvtId D3P2P=EvtPDL::getId("D_2*+");
-  static EvtId D3P2N=EvtPDL::getId("D_2*-");
-  static EvtId D3P20=EvtPDL::getId("D_2*0");
-  static EvtId D3P2B=EvtPDL::getId("anti-D_2*0");
-
-  static EvtId D3P1P=EvtPDL::getId("D'_1+");
-  static EvtId D3P1N=EvtPDL::getId("D'_1-");
-  static EvtId D3P10=EvtPDL::getId("D'_10");
-  static EvtId D3P1B=EvtPDL::getId("anti-D'_10");
-
-  static EvtId D3P0P=EvtPDL::getId("D_0*+");
-  static EvtId D3P0N=EvtPDL::getId("D_0*-");
-  static EvtId D3P00=EvtPDL::getId("D_0*0");
-  static EvtId D3P0B=EvtPDL::getId("anti-D_0*0");
 
   static EvtId D21S0P=EvtPDL::getId("hi");
   static EvtId D21S0N=EvtPDL::getId("hi");
   static EvtId D21S00=EvtPDL::getId("hi");
   static EvtId D21S0B=EvtPDL::getId("hi");
 
-  static EvtId D23S1P=EvtPDL::getId("hi");
-  static EvtId D23S1N=EvtPDL::getId("hi");
-  static EvtId D23S10=EvtPDL::getId("hi");
-  static EvtId D23S1B=EvtPDL::getId("hi");
-
-  static EvtId RHO2S0=EvtPDL::getId("rho(2S)0");
-  static EvtId RHO2SP=EvtPDL::getId("rho(2S)+");
-  static EvtId RHO2SM=EvtPDL::getId("rho(2S)-");
-  static EvtId OMEG2S=EvtPDL::getId("omega(2S)");
   static EvtId ETA2S=EvtPDL::getId("eta(2S)");
 
   static EvtId PI2S0=EvtPDL::getId("pi(2S)0");
   static EvtId PI2SP=EvtPDL::getId("pi(2S)+");
   static EvtId PI2SM=EvtPDL::getId("pi(2S)-");
-
-  static EvtId PIP=EvtPDL::getId("pi+");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PI0=EvtPDL::getId("pi0");
-
-  static EvtId RHOP=EvtPDL::getId("rho+");
-  static EvtId RHOM=EvtPDL::getId("rho-");
-  static EvtId RHO0=EvtPDL::getId("rho0");
-
-  static EvtId A2P=EvtPDL::getId("a_2+");
-  static EvtId A2M=EvtPDL::getId("a_2-");
-  static EvtId A20=EvtPDL::getId("a_20");
-
-  static EvtId A1P=EvtPDL::getId("a_1+");
-  static EvtId A1M=EvtPDL::getId("a_1-");
-  static EvtId A10=EvtPDL::getId("a_10");
-
-  static EvtId A0P=EvtPDL::getId("a_0+");
-  static EvtId A0M=EvtPDL::getId("a_0-");
-  static EvtId A00=EvtPDL::getId("a_00");
-
-  static EvtId B1P=EvtPDL::getId("b_1+");
-  static EvtId B1M=EvtPDL::getId("b_1-");
-  static EvtId B10=EvtPDL::getId("b_10");
-
-  static EvtId H1=EvtPDL::getId("h_1");
-  static EvtId H1PR=EvtPDL::getId("h'_1");
-
-  static EvtId F1=EvtPDL::getId("f_1");
-  static EvtId F1PR=EvtPDL::getId("f'_1");
-  static EvtId F0=EvtPDL::getId("f_0");
-  static EvtId F0PR=EvtPDL::getId("f'_0");
-  static EvtId F2=EvtPDL::getId("f_2");
-  static EvtId F2PR=EvtPDL::getId("f'_2");
-
-  static EvtId ETA=EvtPDL::getId("eta");
-  static EvtId ETAPR=EvtPDL::getId("eta'");
-  static EvtId OMEG=EvtPDL::getId("omega");
-
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId K0S=EvtPDL::getId("K_S0");
-  static EvtId K0L=EvtPDL::getId("K_L0");
-
-  static EvtId KSTP=EvtPDL::getId("K*+");
-  static EvtId KSTM=EvtPDL::getId("K*-");
-  static EvtId KST0=EvtPDL::getId("K*0");
-  static EvtId KSTB=EvtPDL::getId("anti-K*0");
-
-  static EvtId K1P=EvtPDL::getId("K_1+");
-  static EvtId K1M=EvtPDL::getId("K_1-");
-  static EvtId K10=EvtPDL::getId("K_10");
-  static EvtId K1B=EvtPDL::getId("anti-K_10");
-
-  static EvtId K1STP=EvtPDL::getId("K'_1+");
-  static EvtId K1STM=EvtPDL::getId("K'_1-");
-  static EvtId K1ST0=EvtPDL::getId("K'_10");
-  static EvtId K1STB=EvtPDL::getId("anti-K'_10");
-
-  static EvtId K2STP=EvtPDL::getId("K_2*+");
-  static EvtId K2STM=EvtPDL::getId("K_2*-");
-  static EvtId K2ST0=EvtPDL::getId("K_2*0");
-  static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
-
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
-  static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
-
-  static EvtId D1P1SP=EvtPDL::getId("D_s1+");
-  static EvtId D1P1SN=EvtPDL::getId("D_s1-");
-
-  static EvtId D3P0SP=EvtPDL::getId("D_s0*+");
-  static EvtId D3P0SN=EvtPDL::getId("D_s0*-");
-
-  static EvtId D3P1SP=EvtPDL::getId("D'_s1*+");
-  static EvtId D3P1SN=EvtPDL::getId("D'_s1*-");
-
-  static EvtId D3P2SP=EvtPDL::getId("D_s2*+");
-  static EvtId D3P2SN=EvtPDL::getId("D_s2*-");
-
-  static EvtId DSSTP=EvtPDL::getId("D_s*+");
-  static EvtId DSSTM=EvtPDL::getId("D_s*-");
-
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
   double msd(0.0), mx(0.0), mb(0.0); 

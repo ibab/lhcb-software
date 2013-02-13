@@ -389,17 +389,8 @@ void EvtDDalitz::decay( EvtParticle *p){
   static EvtId BM = EvtPDL::getId("B-");                                       
   static EvtId B0 = EvtPDL::getId("B0");                                       
   static EvtId B0B = EvtPDL::getId("anti-B0");         
-  static EvtId DM=EvtPDL::getId("D-");
-  static EvtId DP=EvtPDL::getId("D+");
+
   static EvtId D0=EvtPDL::getId("D0");
-  static EvtId D0B=EvtPDL::getId("anti-D0");
-  static EvtId KM=EvtPDL::getId("K-");
-  static EvtId KP=EvtPDL::getId("K+");
-  static EvtId K0=EvtPDL::getId("K0");
-  static EvtId KB=EvtPDL::getId("anti-K0");
-  static EvtId PIM=EvtPDL::getId("pi-");
-  static EvtId PIP=EvtPDL::getId("pi+");
-  static EvtId PI0=EvtPDL::getId("pi0");
 
   double oneby2 = 0.707106782;
 

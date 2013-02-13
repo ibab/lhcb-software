@@ -260,20 +260,10 @@ EvtComplex EvtbTosllAmp::GetC7Eff(double q2, bool nnlo)
   A7 = -0.353 + 0.023;
   double A8;
   A8 = -0.164;
-  double A9;
-  A9 = 4.287 + (-0.218);
-  double A10;
-  A10 = -4.592 + 0.379;
   double C1;
   C1 = -0.697;
   double C2;
   C2 = 1.046;
-  double T9;
-  T9 = 0.114 + 0.280;
-  double U9;
-  U9 = 0.045 + 0.023;
-  double W9;
-  W9 = 0.044 + 0.016;
   
   double Lmu;
   Lmu = log(muscale/mbeff);
@@ -287,21 +277,13 @@ EvtComplex EvtbTosllAmp::GetC7Eff(double q2, bool nnlo)
    return c7eff;
   }
 
-
-
-
   // change energy scale to 5.0 for full NNLO calculation below shat = 0.25
   muscale = 5.0;
   alphas = 0.215;
   A7 = -0.312 + 0.008;
   A8 = -0.148;
-  A9 = 4.174 + (-0.035);
-  A10 = -4.592 + 0.379;
   C1 = -0.487;
   C2 = 1.024;
-  T9 = 0.374 + 0.252;
-  U9 = 0.033 + 0.015;
-  W9 = 0.032 + 0.012;
   Lmu = log(muscale/mbeff);
 
   EvtComplex F71;
@@ -363,14 +345,10 @@ EvtComplex EvtbTosllAmp::GetC9Eff(double q2, bool nnlo, bool btod)
   muscale = 2.5;
   double alphas;
   alphas = 0.267;
-  double A7;
-  A7 = -0.353 + 0.023;
   double A8;
   A8 = -0.164;
   double A9;
   A9 = 4.287 + (-0.218);
-  double A10;
-  A10 = -4.592 + 0.379;
   double C1;
   C1 = -0.697;
   double C2;

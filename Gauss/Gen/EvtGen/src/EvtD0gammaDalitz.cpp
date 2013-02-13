@@ -83,7 +83,7 @@ void EvtD0gammaDalitz::init()
   readPDGValues();
 
   // Get the EvtId of the D0 and its 3 daughters.
-  EvtId parId = getParentId();
+  getParentId();
 
   EvtId dau[ 3 ];
   for ( int index = 0; index < 3; index++ )

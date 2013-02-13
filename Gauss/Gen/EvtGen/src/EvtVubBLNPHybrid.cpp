@@ -242,7 +242,7 @@ void EvtVubBLNPHybrid::decay(EvtParticle *Bmeson) {
   
   EvtParticle *xuhad, *lepton, *neutrino;
   EvtVector4R p4;
-  double Pp, Pm, Pl, pdf, EX, PX, sh, qsq, El, ml, mpi, ratemax;
+  double Pp, Pm, Pl, pdf, EX, sh, qsq, El, ml, mpi, ratemax;
   
   double xhigh, xlow, what;
   double mX;
@@ -287,7 +287,6 @@ void EvtVubBLNPHybrid::decay(EvtParticle *Bmeson) {
 
       sh = Pm*Pp;
       EX = 0.5*(Pm + Pp);
-      PX = 0.5*(Pm - Pp);
       qsq = (mBB - Pp)*(mBB - Pm);
       El = 0.5*(mBB - Pl);
       

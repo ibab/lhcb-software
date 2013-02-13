@@ -73,9 +73,7 @@ void EvtBHadronic::decay( EvtParticle *p){
   p->initializePhaseSpace(getNDaug(),getDaugs());
 
   EvtVector4R p4[MAX_DAUG];
-  double m;
-
-  m = p->mass();
+  p->mass();
 
 
   int i,j;

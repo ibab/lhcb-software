@@ -375,42 +375,16 @@ void EvtSemiLeptonicBaryonAmp::CalcAmp(EvtParticle *parent,
   static EvtId TAUP=EvtPDL::getId("tau+");
 
   //  Baryons
-  static EvtId PP=EvtPDL::getId("p+");
-  static EvtId N0=EvtPDL::getId("n0");
-  static EvtId SIGP=EvtPDL::getId("Sigm4a+");
-  static EvtId LAM0=EvtPDL::getId("Lambda0");
-  static EvtId SIGC0=EvtPDL::getId("Sigma_c0");
-  static EvtId SIGCP=EvtPDL::getId("Sigma_c+");
-  static EvtId SIGCPP=EvtPDL::getId("Sigma_c++");
   static EvtId LAMCP=EvtPDL::getId("Lambda_c+");
   static EvtId LAMC1P=EvtPDL::getId("Lambda_c(2593)+");
   static EvtId LAMC2P=EvtPDL::getId("Lambda_c(2625)+");
   static EvtId LAMB=EvtPDL::getId("Lambda_b0");
-  static EvtId CASM=EvtPDL::getId("Xi-");
-  static EvtId CAS0=EvtPDL::getId("Xi0");
-  static EvtId CASCP=EvtPDL::getId("Xi_c+");
-  static EvtId CASC0=EvtPDL::getId("Xi_c0");
-  static EvtId OMEGM=EvtPDL::getId("Omega-");
-  static EvtId OMEGC0=EvtPDL::getId("Omega_c0");
 
   // Anti-Baryons
-  static EvtId PM=EvtPDL::getId("anti-p-");
-  static EvtId N0B=EvtPDL::getId("anti-n0");
-  static EvtId SIGM=EvtPDL::getId("anti-Sigma-");
-  static EvtId LAM0B=EvtPDL::getId("anti-Lambda0");
-  static EvtId SIGC0B=EvtPDL::getId("anti-Sigma_c0");
-  static EvtId SIGCM=EvtPDL::getId("anti-Sigma_c-");
-  static EvtId SIGCMM=EvtPDL::getId("anti-Sigma_c--");
   static EvtId LAMCM=EvtPDL::getId("anti-Lambda_c-");
   static EvtId LAMC1M=EvtPDL::getId("anti-Lambda_c(2593)-");
   static EvtId LAMC2M=EvtPDL::getId("anti-Lambda_c(2625)-");
   static EvtId LAMBB=EvtPDL::getId("anti-Lambda_b0");
-  static EvtId CASP=EvtPDL::getId("anti-Xi+");
-  static EvtId CAS0B=EvtPDL::getId("anti-Xi0");
-  static EvtId CASCM=EvtPDL::getId("anti-Xi_c-");
-  static EvtId CASC0B=EvtPDL::getId("anti-Xi_c0");
-  static EvtId OMEGP=EvtPDL::getId("anti-Omega+");
-  static EvtId OMEGC0B=EvtPDL::getId("anti-Omega_c0");
 
   // Set the spin density matrix of the parent baryon
   EvtSpinDensity rho;

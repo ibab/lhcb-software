@@ -338,9 +338,6 @@ void EvtCPUtil::OtherIncoherentB( EvtParticle * p ,
                                   EvtId & otherb ,
                                   double probB )
 {
-  static EvtId B0  = EvtPDL::getId( "B0" ) ;
-  static EvtId B0B = EvtPDL::getId( "anti-B0" ) ;
-
   //std::cout<<"New routine running"<<endl;
   //if(p->getId() == B0 || p->getId() == B0B) 
   //added by liming Zhang

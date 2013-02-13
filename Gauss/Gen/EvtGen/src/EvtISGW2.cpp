@@ -202,11 +202,6 @@ void EvtISGW2::initProbMax() {
   static EvtId K2ST0=EvtPDL::getId("K_2*0");
   static EvtId K2STB=EvtPDL::getId("anti-K_2*0");
 
-  static EvtId K0STP=EvtPDL::getId("K_0*+");
-  static EvtId K0STM=EvtPDL::getId("K_0*-");
-  static EvtId K0ST0=EvtPDL::getId("K_0*0");
-  static EvtId K0STB=EvtPDL::getId("anti-K_0*0");
-
   static EvtId PHI=EvtPDL::getId("phi");
   static EvtId DSP=EvtPDL::getId("D_s+");
   static EvtId DSM=EvtPDL::getId("D_s-");

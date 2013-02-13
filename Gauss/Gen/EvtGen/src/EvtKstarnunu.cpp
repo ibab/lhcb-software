@@ -96,14 +96,12 @@ void EvtKstarnunu::decay(EvtParticle *p){
   EvtVector4R momnu2 = neutrino2->getP4();
   EvtVector4R momkstar = meson->getP4();
   
-  double v0_0, a0_0, a1_0, a2_0;
-  double m2v0, m2a0, a1_b, a2_b;
+  double v0_0, a1_0, a2_0;
+  double m2v0, a1_b, a2_b;
   v0_0 = 0.47;
-  a0_0 = 0.30;
   a1_0 = 0.37;
   a2_0 = 0.40;
   m2v0 = 5.*5.;
-  m2a0 = 4.8*4.8;
   a1_b = -0.023;
   a2_b = 0.034;
 

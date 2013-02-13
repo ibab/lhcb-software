@@ -303,7 +303,7 @@ void EvtLb2Lll::calcAmp(EvtAmp *amp,EvtParticle *parent){
   int i,j,spins[4];
   char ch;
 
-  double r,M_L,M_Lb,M_s,M_c,M_b,q2,alpha,alpha_s,eta,M_W,M_t;
+  double r,M_L,M_Lb,M_s,M_c,M_b,q2,alpha,M_W,M_t;
   double M_psi[2]={0,0},Gamma_psi[2]={0,0},k_psi[2]={0,0};
   double F0_1,F0_2,a_F1,a_F2,b_F1,b_F2,F1,F2;
   double f_1,f_2,f_3,g_1,g_2,g_3,f_1T,f_2T,f_3T,g_1T,g_2T,g_3T,f_TV,f_TS,g_TV(0.0),g_TS,f_T,g_T;
@@ -325,8 +325,6 @@ void EvtLb2Lll::calcAmp(EvtAmp *amp,EvtParticle *parent){
   M_c     = 1.35;
   M_b     = 4.8;
   alpha   = 1./137.036;
-  alpha_s = 0.217484;
-  eta     = 0.556289;
   M_W     = 80.425;
   M_t     = 174.3;
   M_psi[0] = 3.096916;

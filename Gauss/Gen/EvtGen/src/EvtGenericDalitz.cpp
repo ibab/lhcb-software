@@ -99,7 +99,6 @@ void EvtGenericDalitz::decay(EvtParticle *p) {
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
 
-  EvtVector4R p4_p = p->getP4();
   EvtVector4R p4_d1 = p->getDaug(_d1)->getP4();
   EvtVector4R p4_d2 = p->getDaug(_d2)->getP4();
   EvtVector4R p4_d3 = p->getDaug(_d3)->getP4();

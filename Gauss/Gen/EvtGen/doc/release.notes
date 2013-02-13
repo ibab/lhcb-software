@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-02-13 - Patrick Robbe
+ - Various fixes to compile with gcc46
+
 !========================== EvtGen v13r4 2013-02-01 ==========================
 ! 2013-02-01 - John Back
   - Modified the default settings for the Photos++ engine to be the same as 

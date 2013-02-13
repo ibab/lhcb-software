@@ -80,9 +80,8 @@ void EvtVVSPwave::decay( EvtParticle *p){
     ::abort();
   }
     
-  EvtParticle *v,*s;
+  EvtParticle *v;
   v=p->getDaug(0);
-  s=p->getDaug(1);
 
   EvtTensor4C d,g;
   
