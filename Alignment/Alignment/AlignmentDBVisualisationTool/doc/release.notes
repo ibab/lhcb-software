@@ -3,6 +3,10 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2013-02-13 - Pieter David
+ - Added support for TT sensors
+ - Changed the method that constructs the alignment tree from the geometry tree
+
 ! 2013-01-23 - Pieter David
  - small fixes to work with the released database
 

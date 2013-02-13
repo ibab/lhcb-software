@@ -39,9 +39,12 @@ def getGlobalPositionFromGeometryInfo( geo ):
     gbl.DetDesc.getZYXTransformParameters( geo.toGlobalMatrix(), trans, rot )
     return Transformation( ( trans[0], trans[1], trans[2] ), ( rot[0], rot[1], rot[2] ) )
 
-def getAlignableTreeFromDetectorElement( detElm, nodeFilter=lambda det : True, nodeValue=lambda det : None, parentName=None ):
+def getAlignableTreeFromDetectorElement( detElm, nodeValue=lambda det : None, parentName=None ):
     """
     Create a simple alignment tree from a detector element
+
+    If the nodeValue function returns None for a node and all its descendants,
+    it will not be added to the resulting tree.
 
     Helper for extractAlignmentParameters
     """
@@ -51,8 +54,15 @@ def getAlignableTreeFromDetectorElement( detElm, nodeFilter=lambda det : True, n
         shortName = name[len(parentName)+1:]
 
     alignNode = AlignableTreeNode( shortName, nodeValue(detElm) )
-    alignNode.children = [ getAlignableTreeFromDetectorElement(childDet, nodeFilter, nodeValue, name) for childDet in detElm.childIDetectorElements() if nodeFilter(childDet) ]
-    return alignNode
+    alignNode.children = filter( None, ( getAlignableTreeFromDetectorElement(childDet, nodeValue, name) for childDet in detElm.childIDetectorElements() ) )
+    # we also look through nodes without alignment condition
+    # but if there is no node value (no alignment) and all children are None
+    # they should not be added (the above statement makes sure it does not get added to the parent then)
+    if ( alignNode.value is not None ) or any( cn is not None for cn in alignNode.children ):
+        print "Created alignable tree node for element %s" % name
+        return alignNode
+    else:
+        return None
 
 ############################################################
 #       conversion between datetime and gaudi time         #
@@ -129,14 +139,12 @@ def extractAlignmentParameters(
         , DDDBtag        = "default"
         , CondDBtag      = "default"
         , alignDBs       = []
-        , filterRegexp   = r'/dd/Structure/LHCb/((BeforeMagnetRegion/(Velo|TT))|(AfterMagnetRegion/T/(IT|OT)))[a-zA-Z0-9]*'
         ):
     """
     The method talking to the detector svc
 
-    Extract from all DetectorElements with names matching filterRegexp,
-    down from each element in elementsWithTESAndCondDBNodes ( format { elm : ( detTES, [ condDBNode ] ) } ),
-    alignment parameters using valueExtractor,
+    Extract from all DetectorElements down from each element in elementsWithTESAndCondDBNodes
+    ( format { elm : ( detTES, [ condDBNode ] ) } ), alignment parameters using valueExtractor,
     for all iovs between since and until (datetimes), using the CondDBNodes.
     The default database is configured with database tags DDDBtag and CondDBtag,
     and all alignDBs [ (tag, connectString) ] are added as layers to the CondDB.
@@ -187,9 +195,6 @@ def extractAlignmentParameters(
 
     detDataSvc = updateManagerSvc.detDataSvc()
 
-    import re
-    allowedPattern = re.compile(filterRegexp)
-
     alignmentTrees = dict( ( detName, [] ) for detName in elementsWithTESAndCondDBNodes.iterkeys() )
 
     for detName, (detPath, condNodes) in elementsWithTESAndCondDBNodes.iteritems():
@@ -227,7 +232,6 @@ def extractAlignmentParameters(
             logging.info( "Extracting parameters for %s between %s and %s" % ( detName, begin, end ) )
             detTree = getAlignableTreeFromDetectorElement(
                           gaudi.detSvc().getObject(detPath)
-                        , nodeFilter = lambda detElm : detElm.geometry().alignmentCondition() and allowedPattern.match(detElm.name())
                         , nodeValue  = valueExtractor
                         , parentName = detPath
                         )
@@ -248,7 +252,7 @@ class AlignmentsWithIOVs(object):
     Initialized with a connect string and detector root element names.
     Extracts the parameters and provides access to them
     """
-    def __init__(self, connectStringsAndTags, detectorNames, since, until, defaultTag="default", valueExtractor=lambda detElm : getGlobalPositionFromGeometryInfo(detElm.geometry())):
+    def __init__(self, connectStringsAndTags, detectorNames, since, until, defaultTag="default", valueExtractor=lambda detElm : getGlobalPositionFromGeometryInfo(detElm.geometry()) if detElm.geometry().alignmentCondition() else None ):
         self.connectStringsAndTags = connectStringsAndTags
         self.detectorNames = detectorNames
         self.since = parseTimeMin(since)

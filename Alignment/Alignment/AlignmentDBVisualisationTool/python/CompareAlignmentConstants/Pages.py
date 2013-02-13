@@ -284,6 +284,7 @@ class ElementGroup(object):
 
 ElementGroups = { "TT.Layers"       : ElementGroup("(?P<page>TT)/TT[ab]/(?P<elm>TT(?:aX|aU|bV|bX)Layer)$", 2, 2)
                 , "TT.Modules"      : ElementGroup("TT/TT[ab]/(?P<page>TT(?:aX|aU|bV|bX)Layer/R[1-3])Module(?P<elm>[1-6][BT])$", 4, 3)
+                , "TT.Sensors"      : ElementGroup("TT/TT[ab]/(?P<page>TT(?:aX|aU|bV|bX)Layer/R[1-3]Module[1-6][BT])/(?P<elm>Ladder[0-9]/Sensor[0-9]*)$", 3, 3)
                 , "IT.Boxes"        : ElementGroup("IT/(?P<page>Station[1-3])/(?P<elm>(?:ASide|CSide|Top|Bottom)Box)$", 2, 2)
                 , "IT.Layers"       : ElementGroup("IT/(?P<page>Station[1-3]/(?:ASide|CSide|Top|Bottom)Box)/(?P<elm>(?:X1|U|V|X2)Layer)$", 2, 2)
                 , "OT.CFrames"      : ElementGroup("OT/(?P<page>T[1-3]/(?:X1|U|V|X2))/(?P<elm>Q[0-3])$", 2, 2)
