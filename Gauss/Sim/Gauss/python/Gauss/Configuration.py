@@ -1131,12 +1131,12 @@ class Gauss(LHCbConfigurableUser):
         myZStationYMax = 100.*SystemOfUnits.cm
 
         # Upgrade
-        if self.getProp("DataType") == "Upgrade" :
-            myZStations = [
-                7672.0*SystemOfUnits.mm,
-                8354.0*SystemOfUnits.mm,
-                9039.0*SystemOfUnits.mm
-                ]
+        #if self.getProp("DataType") == "Upgrade" :
+        #    myZStations = [
+        #        7672.0*SystemOfUnits.mm,
+        #        8354.0*SystemOfUnits.mm,
+        #        9039.0*SystemOfUnits.mm
+        #        ]
 
         detMoniSeq.Members += [ 
             MCHitMonitor( 

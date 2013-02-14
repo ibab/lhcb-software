@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-02-14 - Paul Szczypka
+ - Commented out upgrade position of OT in Configuration.py (Removes warnings)
+
+! 2013-02-14 - Paul Szczypka
  - Added qmtests, options and refs, for the upgrade configurations:
  . VL-UT-FT
  . VL-UT-FT
