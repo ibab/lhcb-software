@@ -67,22 +67,75 @@ This version uses Gaudi v23r6 and LHCb v35r4
   . Tiny code cosmetic in PatSeedingTool: reorder properties and replace hard
     coded track location by existing property.
 
-Tf/PatVelo v3r28
-Tf/PatVeloTT v3r22
-Tf/TfTools v1r17
-Tf/TrackMatching v2r35
-Tf/TrackSys v7r9
-Tr/PatChecker v3r14
-Tr/PatPV v3r26
-Tr/TrackAssociators v2r11
-Tr/TrackCheckers v4r15
-Tr/TrackFitEvent v5r20
-Tr/TrackFitter v4r10
-Tr/TrackMonitors v1r42
-Tr/TrackProjectors v2r34
-Tr/TrackTools v4r21
-Tr/TrackUtils v1r50
-Velo/VeloRecMonitors v2r23
+- In Tf/PatVelo v3r28
+  . Added dependency on AIDA.
+
+- In Tf/TfTools v1r17
+  . Include UT hits in STHitCreator.
+  . Remove unneccessary connection to DetectorDataSvc in OTHitCreator
+  . Fix UNINIT_CTOR coverity defects
+  . Fix unnecessary printouts, test statuscode value, replace endreq by endmsg;
+  . Initialize the geometry in OTHitCreator.
+
+- In Tf/TrackSys v7r9
+  . Implemented a sequence for the upgrade
+  . Added a RecoUpgradeTracking.py and a PrUpgradeChecking.py
+  . Added TrackTypes property to TrackSys.
+
+- In Tr/PatChecker v3r14
+  . Include UT hits in PatLHCbID2MCParticle
+  . Change the name of the OTHitCreator from Tf::OTHitCreator to OTHitCreator in 
+    PatLHCbID2MCParticle
+
+- In Tr/PatPV v3r26
+  . Change void to StatusCode for removeTracksAndRecalculatePV (in PVOfflineTool)
+    to give the information that PV recalculation failed and original PV is
+    returned.
+
+- In Tr/TrackAssociators v2r11
+  . Add UT as alternative to TT.
+
+- In Tr/TrackCheckers v4r15
+  . Fixed link problem in CMake build.
+
+- In Tr/TrackFitEvent v5r20
+  . Added VL measurements. Copy from Velo measurements.
+  . Fixed bug in VPLiteMeasurement leading to bias in x position
+  . Add UT cluster as one of the ST clusters
+  . Add FTMeasurements
+
+- In Tr/TrackFitter v4r10
+  . Added check for available upgrade detectors. It sets the correct
+	  measurement providers.
+  . Added VL measurements to the TrackMasterFitter. 
+  . Changed structure of hittype map so that it reflects the measurements 
+    defined in Measurement.h
+
+- In Tr/TrackMonitors v1r42
+  . Add UT Monitor.
+  . Rebuilding of STEfficiency that is working with TT now. 
+  . Fix bin number computed in histoBin of TTTrackMonitor.
+
+- In Tr/TrackProjectors v2r34
+  . Added VL and UT projectors in selector.
+  . Add FT measurement as normal projectors
+
+- In Tr/TrackTools v4r21
+  . Added VL measurement provider for R and Phi sensors to the templated
+    measurement provider.
+  . Use common ST detector for UT & TT and update the providermap size
+  . Add UT measurement provider and hit expectation
+  . Add VL and FT measurement providers
+
+- In Tr/TrackUtils v1r50
+  . Add UT in TrackHitAdder.
+  . Adding ChargedParticlesToTracks algo that dumps tracks from charged particles
+    (refitting, mother's mass window cut).
+  . Change the name of the OTHitCreator in TrackHitAdder
+
+- In Velo/VeloRecMonitors v2r23
+  . Update in VeloTrackMonitorNT: add ntuple for eta study and other small 
+    changes (clean up of the code, delete duplication in the variables)
 
 </PRE><H1><A NAME=v14r3>2012-11-29 RecSys v14r3</A></H1><PRE>
 This version uses Gaudi v23r5 and LHCb v35r3
