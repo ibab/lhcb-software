@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v2r12 2013-02-14 =========================
 ! 2013-02-08 - Chris Jones
  - Make the sub-detectors information filled by RecSummaryAlg a configurable
    list.
