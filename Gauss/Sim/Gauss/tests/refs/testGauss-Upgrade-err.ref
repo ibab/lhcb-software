@@ -1,0 +1,41 @@
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+--- Warning from G4Material::G4Material() define a material with density=0 is not allowed.
+ The material /dd/Materials/Vacuum will be constructed with the default minimal density: 1e-25g/cm3
+--- Warning from G4Material::G4Material() define a material with density=0 is not allowed.
+ The material /dd/Materials/RichMaterials/RichPMTVacuum will be constructed with the default minimal density: 1e-25g/cm3
+--- Warning from G4Material::G4Material() define a material with density=0 is not allowed.
+ The material /dd/Materials/RichMaterials/RichPMTPhCathodeMaterial will be constructed with the default minimal density: 1e-25g/cm3

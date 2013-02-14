@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-02-14 - Paul Szczypka
+ - Added qmtests, options and refs, for the upgrade configurations:
+ . VL-UT-FT
+ . VL-UT-FT
+ . Upgrade Reference (Minimal)
+
 ! 2013-02-12 - Paul Szczypka
  - Change to Configurable such that the velo misalignment (and therefore definiition)
    is always done even for the upgrade. 
