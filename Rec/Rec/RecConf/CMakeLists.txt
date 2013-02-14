@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RecConf
 ################################################################################
-gaudi_subdir(RecConf v2r10)
+gaudi_subdir(RecConf v2r11)
 
 gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Calo/CaloPIDs

@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r11 2013-02-14 =========================
 ! 2013-02-13 - Paul Szczypka
  - Property Detectors of RecSummaryAlg is set to original list if Brunel detectors
    a superset. Removes warnings.
