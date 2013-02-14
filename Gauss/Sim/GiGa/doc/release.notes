@@ -6,6 +6,7 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+!========================== GiGa v20r1 2013-02-14 ============================
 ! 2012-02-07 - Patrick Robbe
  - GiGaRunManager.h: Fix release method to avoid compilation warnings
 
