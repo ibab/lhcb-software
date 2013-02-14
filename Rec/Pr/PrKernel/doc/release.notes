@@ -4,8 +4,9 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrKernel v1r2 2013-02-14 =========================
 ! 2013-02-08 - Marco Clemencic
- - Rewmoved TfKernel from the link statement in CMakeLists.txt (that library
+ - Removed TfKernel from the link statement in CMakeLists.txt (that library
    does not exists.
 
 ! 2013-02-07 - Sascha Stahl
@@ -16,7 +17,6 @@
 
 ! 2013-02-05 - Sascha Stahl
  - Moved UT related code from Tf/PatKernel. 
-
 
 !========================= PrKernel v1r1 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
