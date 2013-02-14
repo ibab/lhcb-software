@@ -2,6 +2,7 @@
 ! Responsible : Alessia Satta
 !---------------------------------------------------------------------------
 
+!========================= MuonAssociators v3r5 2013-02-14 =========================
 ! 2012-12-19 - Marco Cattaneo
  - Remove an unused member variable to fix UNINIT_CTOR defect
  - Remove unnecessary finalize methods

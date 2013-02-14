@@ -1,7 +1,7 @@
 package           MuonAssociators
-version           v3r4
+version           v3r5
         
-# =============== structure =================================================== 
+# =============== structure ==================================================
 branches          src cmt doc
 
 include_path      none
