@@ -5,6 +5,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
+
 // Detector description classes
 #include "DetDesc/DetectorElement.h"
 
@@ -25,39 +26,46 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
                                      IMessageSvc * msgSvc ) {
   MsgStream log(msgSvc, "MuonBasicGeometry");
   //log << MSG::INFO << "%%% " << "muon geom" << endmsg;
-  
   SmartDataPtr<DetectorElement> muonSystem(detSvc,DeMuonLocation::Default); 
-  // log << MSG::INFO << "%%% " << muonSystem->name() << endmsg;
   m_stationNumber=0; 
   m_regionNumber=4;   
-  if(muonSystem){
-    //log << MSG::INFO << "%%% " << muonSystem->name() << endmsg;    
-  }
-  else{
-    // log << MSG::INFO << "%%%  muon system null"  << endmsg;
-  }
+  m_isM1defined=false;
   
-  IDetectorElement::IDEContainer::iterator itStation;  
+  IDetectorElement::IDEContainer::iterator itStation; 
+
+ // for(itStation=muonSystem->childBegin(); itStation<muonSystem->childEnd(); itStation++){
+ //   // Test if M1 is defined in the DB
+ //   m_isM1defined |= (name.find("/M1") != name.npos);
+ // }
+ // bool isM1defined=m_isM1defined;
+ // log<<MSG::INFO<< "Retrieved M1 definition status: " << isM1defined <<endmsg;
+
   for( itStation = muonSystem->childBegin();
      itStation != muonSystem->childEnd();
     itStation++){
-  SmartDataPtr<DetectorElement> muStation(detSvc,
-                                        (*itStation)->name());
-  if(!muStation){
-   log << MSG::ERROR << "Could not read station"
-       <<(*itStation)->name() <<endmsg;      
-  }
-  //log << MSG::INFO << "+ " << muStation->name() << endmsg;
-  std::string stationName=findName(muStation->name(),DeMuonLocation::Default); 
-  //log << MSG::INFO << "+++ " << stationName << endmsg;
+    std::string name=((*itStation)->name()).c_str();
+    m_isM1defined |= (name.find("/M1") != name.npos);
+    if(name.find("/MF") != name.npos) continue;
+    SmartDataPtr<DetectorElement> muStation(detSvc,(*itStation)->name());
+    if(!muStation){
+      log << MSG::ERROR << "Could not read station"
+        <<(*itStation)->name() <<endmsg;      
+    }
+    //log << MSG::INFO << "+ " << muStation->name() << endmsg;
+    std::string stationName=findName(muStation->name(),DeMuonLocation::Default); 
+    //log << MSG::INFO << "+++ " << stationName << endmsg;
    
-  m_stationNumber=m_stationNumber+1;
-  numsta.push_back(stationName);
+    m_stationNumber=m_stationNumber+1;
+    numsta.push_back(stationName);
+    
   }
+  bool isM1defined=m_isM1defined;
+  log << MSG::INFO << "Retrieved M1 definition status: " << isM1defined <<endmsg;
   m_partition=m_stationNumber*m_regionNumber;
   
 }
 //=============================================================================
+
 
 
 int MuonBasicGeometry::getStations(  ) {
@@ -89,5 +97,9 @@ std::string  MuonBasicGeometry::findName(std::string allname,
   return name;
   
   
+}
+
+int MuonBasicGeometry::retrieveM1status() {
+  return m_isM1defined;
 }
 
