@@ -4,6 +4,7 @@
 ! Purpose     : First Software Trigger tools for teh upgrade
 !-----------------------------------------------------------------------------
 
+!========================= FstTools v1r0 2013-02-14 =========================
 ! 2013-01-29 - Olivier Callot
  - Add two option files, to run the HLT emulation with VP or VL
 
