@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Gen/LbHijing
-! Responsible : Vincenzo VAGNONI 
+! Responsible : Zhenwei Yang   
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v8r1 2013-02-14 ==========================
 ! 2013-02-12 - Zhenwei Yang
  - Removed line 229 in src/Lib/hijing.F, which is a screen print line
    during private debug
