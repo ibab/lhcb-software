@@ -3,6 +3,7 @@
 ! Package manager : H.Schindler
 !------------------------------------------------------------------------------
 
+!========================= VLDAQ v1r3 2013-02-14 =========================
 ! 2012-12-20 - Marco Cattaneo
  - Fix Coverity defect
  - Use getIfExists
