@@ -1,5 +1,5 @@
 package		  L0DU
-version           v10r26
+version           v10r27
 
 # ================ structure =============================================
 branches	src cmt doc options python
