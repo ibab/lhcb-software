@@ -4,6 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!========================= PatPV v3r26 2013-02-14 =========================
 ! 2013-02-04 - Mariusz Witek
  - change void to StatusCode for removeTracksAndRecalculatePV (in PVOfflineTool)
    to give the information that PV recalculation failed and original PV is returned.

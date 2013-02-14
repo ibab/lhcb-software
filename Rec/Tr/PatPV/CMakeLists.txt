@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PatPV
 ################################################################################
-gaudi_subdir(PatPV v3r25)
+gaudi_subdir(PatPV v3r26)
 
 gaudi_depends_on_subdirs(Det/VeloDet
                          Event/RecEvent
