@@ -118,7 +118,7 @@ namespace {
       
       double newsumw   = sumw + c ;
       double newsumx2w = sumx2w + c*x*x ;
-      if(sumw>0) {
+      if(sumw>0 && x > h1pos.GetMean() ) {
 	double newrms    = sqrt(  newsumx2w / newsumw ) ;
 	if( 3 * newrms < up ) {
 	  double drms = newrms - sqrt(  sumx2w / sumw ) ;
