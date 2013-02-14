@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v13r3
+version           v13r4
 
 branches doc cmt tests
 
@@ -15,30 +15,30 @@ use CaloAssociators   v6r12    Calo      # Olivier Deschamps
 use CaloTools         v6r5     Calo      # Olivier Deschamps
 
 # DAQ
-use DAQMonitors       v1r8     DAQ       # Olivier Deschamps
+use DAQMonitors       v1r9     DAQ       # Olivier Deschamps
 
 # Fibre tracker
-use FTDAQ             v1r1     FT        # Olivier Callot
+use FTDAQ             v1r2     FT        # Olivier Callot
 
 # HLT
 use HltDAQ            v2r16    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
 use L0Calo            v11r9    L0        # Patrick Robbe
-use L0DU              v10r25   L0        # Olivier Deschamps   
-use L0Muon            v9r11    L0        # Julien Cogan
+use L0DU              v10r27   L0        # Olivier Deschamps   
+use L0Muon            v9r12    L0        # Julien Cogan
 use L0MuonMonitor     v2r3     L0        # Julien Cogan
-use PuVeto            v7r8     L0        # Serena Oggero
+use PuVeto            v7r9     L0        # Serena Oggero
 
 # Muon
-use MuonAssociators   v3r4     Muon      # Alessia Satta
+use MuonAssociators   v3r5     Muon      # Alessia Satta
 
 # Outer tracker
 use OTAssociators     v4r6     OT        # Alexandr Kozlinskiy
-use OTMonitor         v3r4     OT        # Wouter Hulsbergen
+use OTMonitor         v3r5     OT        # Wouter Hulsbergen
 
 # Rich
-use RichAlgorithms    v1r5     Rich      # Chris Jones
+use RichAlgorithms    v1r6     Rich      # Chris Jones
 use RichDAQ           v3r39    Rich      # Chris Jones
 use RichMCMonitors    v1r10    Rich      # Chris Jones
 use RichMCTools       v3r18    Rich      # Chris Jones
@@ -48,22 +48,22 @@ use RichTools         v2r41    Rich      # Chris Jones
 use SiTools           v1r9     Si        # Matt Needham
 
 # Silicon Tracker
-use STAlgorithms      v4r5     ST        # Jeroen van Tilburg, Matt Needham
+use STAlgorithms      v4r6     ST        # Jeroen van Tilburg, Matt Needham
 use STAssociators     v1r7     ST        # Jeroen van Tilburg, Matt Needham
 use STCheckers        v4r1     ST        # Jeroen van Tilburg, Matt Needham
-use STDAQ             v4r1     ST        # Jeroen van Tilburg, Matt Needham
-use STMonitors        v4r1     ST        # Mark Tobin
+use STDAQ             v4r2     ST        # Jeroen van Tilburg, Matt Needham
+use STMonitors        v4r2     ST        # Mark Tobin
 use STTools           v4r14    ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
 use VeloAlgorithms    v5r7     Velo      # Tomasz Szumlak
 use VeloAssociators   v2r5     Velo      # Tomasz Szumlak
-use VeloDAQ           v6r8     Velo      # Kurt Rinnert
-use VeloSimulation    v3r13    Velo      # Tomasz Szumlak
+use VeloDAQ           v6r9     Velo      # Kurt Rinnert
+use VeloSimulation    v3r14    Velo      # Tomasz Szumlak
 use VeloTools         v4r2     Velo      # Tomasz Szumlak
 
 # VeloLite
-use VLDAQ             v1r2     VL        # Heinrich Schindler
+use VLDAQ             v1r3     VL        # Heinrich Schindler
 
 # Velo Pixel
 use VPDAQ             v2r1     VP        # Marcin Kucharczyk

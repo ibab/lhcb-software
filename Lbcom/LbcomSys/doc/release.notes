@@ -6,6 +6,75 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v13r4>2013-02-15 LbcomSys v13r4</A></H1><PRE>
+This version uses Gaudi v23r6 and LHCb v35r4
+
+- Packages modified: DAQ/DAQMonitors v1r9, FT/FTDAQ v1r2, L0/L0DU v10r27,
+    L0/L0Muon v9r12, L0/PuVeto v7r9, Muon/MuonAssociators v3r5, 
+    OT/OTMonitor v3r5, Rich/RichAlgorithms v1r6, ST/STAlgorithms v4r6,
+    ST/STDAQ v4r2, ST/STMonitors v4r2, Velo/VeloDAQ v6r9, 
+    Velo/VeloSimulation v3r14, VL/VLDAQ v1r3
+
+- In FT/FTDAQ v1r2
+  . Change the coding of charge, as the ADC will be 6 bits -> 1 MIP ~ 32 cx.
+
+- In L0/L0DU v10r26, v10r27
+  . L0Pattern : fix Coverity defects
+  . To allow L0 simulation in Moore :
+    o L0Conf: L0SimulationSeq does not to write L0 results on TES anymore.
+      The writing on the TES being done by the L0 decoding setup in Moore.
+    o L0DUFromRawTool: For backward compatibility, reintroduce the RawLocation.
+      Empty by default. If set, added in first position of the RawLocations list.
+  . Following Savannah bug #99253 : 
+    o L0Conf & L0DUFromRawAlg: Add new property EnsureKnownTCK, default True.
+      If True, the L0DU decoding (L0DUFromRawAlg) will return an error if the
+      TCK in use is not recognized
+
+- In L0/L0Muon v9r12
+  . L0MuonOutputs : fix bug discovered by Coverity
+                    (was affecting debug printout only)  
+  . L0MuonModifyInputTool : new tool to allow removal of some hits used in the 
+                            L0Muon emulation for special studies
+  . L0MuonAlg : modified to use this tool if the new property ModifyDigits
+    is set to True (False by default)
+
+- In OT/OTMonitor v3r5
+  . Adding new algorithm for debugging OT channels (OTChannelMonitor)
+
+- In ST/STAlgorithms v4r6
+  . Added dependency on AIDA.
+
+- In ST/STDAQ v4r2
+  . UT cluster is decoded differently from TT or IT cluster
+
+- In ST/STMonitors v4r2
+  . Deleted STZSMonitor algorithm as it is obsolete.
+
+- In Velo/VeloDAQ v6r9
+  . Improved checking on bad bank length, to speed up lite cluster decoding
+  . Made a bad bank length set a non-abort ProcStatus.
+
+- In VL/VLDAQ v1r3
+  . Remove unnecessary global variable
+
+- In DAQ/DAQMonitors v1r9
+  . Fix untested StatusCode from Warning()
+  . Fix unprotected debug()
+
+- In DAQ/DAQMonitors v1r9, L0/PuVeto v7r9, Muon/MuonAssociators v3r5,
+     Rich/RichAlgorithms v1r6, ST/STMonitors v4r2, Velo/VeloDAQ v6r9,
+     Velo/VeloSimulation v3r14, VL/VLDAQ v1r3
+  . Fix UNINIT_CTOR defects
+
+- In DAQ/DAQMonitors v1r9, L0/L0DU v10r26, ST/STMonitors v4r2, Velo/VeloDAQ v6r9,
+     VL/VLDAQ v1r3
+  . Use getIfExists
+
+- In DAQ/DAQMonitors v1r9, L0/L0DU v10r26, Muon/MuonAssociators v3r5,
+     Rich/RichAlgorithms v1r6, ST/STMonitors v4r2, Velo/VeloDAQ v6r9,
+     VL/VLDAQ v1r3
+  . Remove unneccessary finalize methods
+
 </PRE><H1><A NAME=v13r3>2012-11-29 LbcomSys v13r3</A></H1><PRE>
 This version uses Gaudi v23r5 and LHCb v35r3
 
