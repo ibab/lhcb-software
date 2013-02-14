@@ -4,6 +4,7 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v6r1 2013-02-14 =========================
 ! 2013-02-12 - Aurelien Martens
  - Pythia8Production: cahnge Lc(2625) pythia8 id according to *OLD* table
 
