@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!========================= STDAQ v4r2 2013-02-14 =========================
 ! 2013-01-07 - Jianchun Wang
  - UT cluster is decoded differently from TT or IT cluster
 
