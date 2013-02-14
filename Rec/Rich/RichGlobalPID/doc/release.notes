@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!========================= RichGlobalPID v3r20 2013-02-14 =========================
 ! 2013-02-08 - Marco Clemencic
  - Moved the limitX parameters of RichGlobalPIDLikelihoodTool from the header
    to the cpp (outside of the class declaration) to avoid the following error
@@ -12,7 +13,6 @@
       error: floating-point literal cannot appear in a constant-expression
       warning: ISO C++ forbids initialization of member constant ‘limitA’ of
                non-integral type ‘const double’ [-pedantic]
-
 
 ! 2013-02-01 - Chris Jones
  - Add back an approximate log(exp(x)-1) implementation. Gains a signficant 

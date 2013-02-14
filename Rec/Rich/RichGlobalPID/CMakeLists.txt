@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichGlobalPID
 ################################################################################
-gaudi_subdir(RichGlobalPID v3r19)
+gaudi_subdir(RichGlobalPID v3r20)
 
 gaudi_depends_on_subdirs(GaudiObjDesc
                          Rich/RichRecBase)
