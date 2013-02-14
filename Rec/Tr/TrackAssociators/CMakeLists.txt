@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackAssociators
 ################################################################################
-gaudi_subdir(TrackAssociators v2r10)
+gaudi_subdir(TrackAssociators v2r11)
 
 gaudi_depends_on_subdirs(Event/DigiEvent
                          Event/LinkerEvent
