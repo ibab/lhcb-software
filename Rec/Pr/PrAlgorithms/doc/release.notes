@@ -4,13 +4,12 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r2 2013-02-14 =========================
 ! 2013-02-07 - Sascha Stahl
  - Enabled finding of T-Tracks in PrSeeding.
 
-
 ! 2013-02-05 - Sascha Stahl
  - Added PrDownstream and PrAddUTCoord to PrAlgorithms.
-
 
 ! 2012-11-21 - Olivier Callot
  - Better parameterisation of momentum and pprojections
