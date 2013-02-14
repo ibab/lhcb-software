@@ -4,6 +4,7 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================= PatChecker v3r14 2013-02-14 =========================
 ! 2013-01-30 - Jianchun Wang
  - Include UT hits in PatLHCbID2MCParticle
 

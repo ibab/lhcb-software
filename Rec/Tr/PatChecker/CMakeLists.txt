@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PatChecker
 ################################################################################
-gaudi_subdir(PatChecker v3r13)
+gaudi_subdir(PatChecker v3r14)
 
 gaudi_depends_on_subdirs(Event/DigiEvent
                          Event/LinkerEvent
