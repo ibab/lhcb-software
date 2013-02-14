@@ -4,6 +4,10 @@
 ! Purpose     : Jet related Tuple Tools
 !-----------------------------------------------------------------------------
 
+! 2013-02-14 - Cedric Potterat
+ - Added TupleToolJetTag (need Phys/JetTagging)
+
+
 !========================= DecayTreeTupleJets v1r0 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

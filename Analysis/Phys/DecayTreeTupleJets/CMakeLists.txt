@@ -1,12 +1,13 @@
 ################################################################################
 # Package: DecayTreeTupleJets
 ################################################################################
-gaudi_subdir(DecayTreeTupleJets v1r0)
+gaudi_subdir(DecayTreeTupleJets v1r1)
 
 gaudi_depends_on_subdirs(Phys/DecayTreeTupleBase
-                         Phys/LoKiArrayFunctors)
+                         Phys/LoKiArrayFunctors
+			 Phys/JetTagging)
 
 gaudi_add_module(DecayTreeTupleJets
                  src/*.cpp
-                 LINK_LIBRARIES DecayTreeTupleBaseLib LoKiArrayFunctorsLib)
+                 LINK_LIBRARIES DecayTreeTupleBaseLib LoKiArrayFunctorsLib JetTaggingLib)
 

@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           DecayTreeTupleJets
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure
@@ -15,6 +15,7 @@ branches          cmt doc src
 #============================================================================
 use   DecayTreeTupleBase  v*    Phys
 use   LoKiArrayFunctors   v*    Phys
+use   JetTagging          v*    Phys
 
 #============================================================================
 # Component library building rule
