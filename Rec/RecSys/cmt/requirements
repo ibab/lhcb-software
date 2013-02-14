@@ -24,7 +24,7 @@ use MuonTrackMonitor     v2r7    Muon # Giacomo Graziani
 use MuonTrackRec         v3r8    Muon # Giacomo Graziani
 
 # Pr packages: Track Pattern Recognition for upgrade detectors
-use PrAlgorithms         v1r1    Pr   # Olivier Callot
+use PrAlgorithms         v1r2    Pr   # Olivier Callot
 use PrFitParams          v1r0    Pr   # Yasmine Amhis
 use PrKernel             v1r2    Pr   # Sascha Stahl
 use PrMCTools            v1r2    Pr   # Olivier Callot

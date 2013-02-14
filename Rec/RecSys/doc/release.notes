@@ -13,7 +13,7 @@ This version uses Gaudi v23r6 and LHCb v35r4
                    Pr/PrVeloUT    - Velo UT tracking
                    Sft/FstTools   - First Software Trigger tools for the upgrade
                    Tf/PatPixel    = PR for the LHCb upgrade Pixel detector
- - Packages modified: Pr/PrKernel v1r2, Pr/PrMCTools v1r2,
+ - Packages modified: Pr/PrAlgorithms v1r2, Pr/PrKernel v1r2, Pr/PrMCTools v1r2,
      Rec/ChargedProtoANNPID v1r11, Rec/RecAlgs v2r12, Rec/RecConf v2r11,
      Rich/RichGlobalPID v3r20, Tf/FastPV v1r2, Tf/PatAlgorithms v4r26,
      Tf/PatVelo v3r28, Tf/PatVeloTT v3r22, Tf/TfTools v1r17,
@@ -23,16 +23,50 @@ This version uses Gaudi v23r6 and LHCb v35r4
      Tr/TrackProjectors v2r34, Tr/TrackTools v4r21, Tr/TrackUtils v1r50,
      Velo/VeloRecMonitors v2r23
 
+- In Pr/PrAlgorithms v1r2
+  . Enabled finding of T-Tracks in PrSeeding.
+  . Added PrDownstream and PrAddUTCoord to PrAlgorithms.
+  . Better parameterisation of momentum and pprojections
+  . New parameterisation of the zone to look at in the T stations for a given Pt.
+    The same parameters could be used to predict the position if the momentum is
+    known.
+
 - In Pr/PrKernel v1r2
   . Added UT related code from Tf/PatKernel
 
-Pr/PrMCTools v1r2
-Rec/ChargedProtoANNPID v1r11
-Rec/RecAlgs v2r12
-Rec/RecConf v2r11
-Rich/RichGlobalPID v3r20
-Tf/FastPV v1r2
-Tf/PatAlgorithms v4r26
+- In Pr/PrMCTools v1r2
+  . Implement the VP and VL lite clusters in PrLHCbID2MCParticle
+  . Change Tf::OTHitCreator to OTHitCreator
+  . New options for container names in PrDebugTrackingLosses
+  . Initialize properly the otHitManager in PrLHCbID2MCParticle
+
+- In Rec/ChargedProtoANNPID v1r11, v1r10
+  . Make it possible to turn on or offline the suppression of printout from the
+    underlying ANN library (NeuroBayes) via options.
+  . Suppress variadic macros warning from neurobayes header file when compiling
+    with gcc -pedantic
+
+- In Rec/RecAlgs v2r12
+  . Make the sub-detectors information filled by RecSummaryAlg a configurable
+    list.
+
+- In Rec/RecConf v2r11
+  . Added slot "Detectors" to RecSysConf, propagated to RecSummayAlg with
+    protections to handle default case and upgrade
+
+- In Rich/RichGlobalPID v3r20
+  . Add back an approximate log(exp(x)-1) implementation. Gains a signficant 
+    speed up (factors of 3 or more) in the likehood.
+  . Add as "mathematica/Log(Exp(x)-1).nb" the mathematica workbook used to 
+    compute the above approximation.
+
+- In Tf/FastPV v1r2
+  . debug histograms added to FastPVMonitor (activate with DEBUG_HISTO)
+
+- In Tf/PatAlgorithms v4r26
+  . Tiny code cosmetic in PatSeedingTool: reorder properties and replace hard
+    coded track location by existing property.
+
 Tf/PatVelo v3r28
 Tf/PatVeloTT v3r22
 Tf/TfTools v1r17
