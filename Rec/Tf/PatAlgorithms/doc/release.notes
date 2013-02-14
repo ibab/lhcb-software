@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r26 2013-02-14 =========================
 ! 2013-02-05 - Sascha Stahl
  - Moved all UT related code to Pr/PrAlgorithms
 
