@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!========================= STMonitors v4r2 2013-02-14 =========================
 ! 2012-12-20 - Mark Tobin
  - Fixed coverity error in STZSMonitor.
  - In fact, better solution: Deleted this algorithm as it is obsolete.
