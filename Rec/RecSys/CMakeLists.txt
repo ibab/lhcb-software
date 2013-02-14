@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RecSys
 ################################################################################
-gaudi_subdir(RecSys v14r3)
+gaudi_subdir(RecSys v14r4)
 
 gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Calo/CaloPIDs
@@ -14,11 +14,12 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Muon/MuonTrackMonitor
                          Muon/MuonTrackRec
                          Pr/PrAlgorithms
+                         Pr/PrFitParams
                          Pr/PrKernel
                          Pr/PrMCTools
                          Pr/PrUtils
                          Pr/PrVL
-			 Tf/PatPixel 
+                         Pr/PrVeloUT
 			 Rec/ChargedProtoANNPID
                          Rec/GlobalReco
                          Rec/LumiAlgs
@@ -45,9 +46,11 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Rich/RichRecTemplateRings
                          Rich/RichRecTools
                          Rich/RichRecTrackTools
+                         Sft/FstTools
                          Tf/FastPV
                          Tf/FastVelo
                          Tf/PatAlgorithms
+			 Tf/PatPixel 
                          Tf/PatVelo
                          Tf/PatVeloTT
                          Tf/TfTools
