@@ -3,7 +3,7 @@
 # Maintainer : Patrick ROBBE, Gloria CORTI
 #============================================================================
 package GENSER
-version v12r1
+version v12r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -78,19 +78,13 @@ macro_append GENSER_linkopts " $(pythia6_linkopts) "
 #-- Hijing
 #============================================================================
 macro hijing_native_version "1.383bs.2"
-macro         hijingforgaussSrc    " hijing/*.F "
-macro_append  hijingforgaussSrc   "" \
-                      Darwin       "-x=ran.F"
-library      hijingforgauss   $(hijingforgaussSrc)
 
-apply_pattern linker_library library=hijingforgauss
-
-
-private
-macro_remove libraryshr_linkopts "-Wl,--no-undefined"
 
 #-- linkopts
 #============================================================================
+private
+macro_remove libraryshr_linkopts "-Wl,--no-undefined"
+
 public
 macro GENSER_linkopts "-lnsl -lcrypt -ldl -lg2c" \
       target-gcc4     "-lnsl -lcrypt -ldl -lgfortran" \

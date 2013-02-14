@@ -4,6 +4,18 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v12r2 2013-02-14 ==========================
+! 2013-02-14 - Gloria Corti
+ - Merge changes to remove hijing code from v12r2b branch. See below.
+
+! 2013-02-14 - Gloria Corti (merged r152263)
+ - Now physically remove the line commented in the requirement and the rlu.F 
+   and ran.F code from src/hijing since the tests are successful
+
+! 2013-02-11 - Gloria Corti (merged r151897, r151988)
+ - Comment out making the library for hijing, since the code is now in 
+   LbHijing itself
+
 !========================== GENSER v12r1 2013-02-07 ==========================
 ! 2013-02-07 - Gloria Corti
  - Put back the version of hijing as in MC10 1.383bs.2 and change the rlu.F 
