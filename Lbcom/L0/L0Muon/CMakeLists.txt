@@ -1,7 +1,7 @@
 ################################################################################
 # Package: L0Muon
 ################################################################################
-gaudi_subdir(L0Muon v9r11)
+gaudi_subdir(L0Muon v9r12)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/DAQEvent
