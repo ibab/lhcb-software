@@ -15,6 +15,7 @@ branches          cmt doc src python options
 #============================================================================
 use GaudiAlg        v* 
 use RecEvent        v*    Event
+use TrackFitEvent   v*    Tr
 use TrackInterfaces v*    Tr       # For TT validation tool
 include_path      none
 #============================================================================
@@ -26,3 +27,6 @@ library          FstTools    ../src/*.cpp
 #============================================================================
 apply_pattern    component_library library=FstTools
 apply_pattern    install_python_modules
+
+# FstTools Configurable uses the generated configurables
+macro_append FstToolsGenConfUser_dependencies FstToolsConfDbMerge
