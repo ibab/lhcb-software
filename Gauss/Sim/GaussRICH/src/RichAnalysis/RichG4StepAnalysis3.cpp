@@ -375,8 +375,6 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
                 G4int   aPeRadiatorNumber =  -1;
                 // the following variable not used for now.
-                G4int   aMotherChTkId = -1;
-
 
                 G4VUserTrackInformation* aUserTrackinfo=
                   aTrack->GetUserInformation();
@@ -398,8 +396,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
                         aPeRadiatorNumber =
                           aPEInfo->PhotOriginRadiatorNumber();
-                        aMotherChTkId
-                          = aPEInfo-> MotherOfPhotonId();
+                        aPEInfo-> MotherOfPhotonId();
 
                       }
                     }

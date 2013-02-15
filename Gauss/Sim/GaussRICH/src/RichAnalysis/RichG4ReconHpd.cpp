@@ -340,10 +340,6 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
   double xph =0.0;
   double yph =0.0;
   double rph =0.0;
-  double rphtest =0.0;
-  double xphLin =0.0;
-  double yphLin =0.0;
-  double rphLin = 0.0;
   double zph =0.0;
   double rphsq=0.0;
   double phCSq=0.0;
@@ -351,8 +347,6 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
   double zPhInHpd=0.0;
 
   double inverseR = 0.0;
-
-  double inverseRtest = 0.0;
 
   double rphsqUncorr=0.0;
   double rphCorrection  = 0.0;
@@ -366,9 +360,6 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
 
   if(m_HpdCrossFocusParameters[0] !=0.0 ) {
      rsi = pow( (xsi*xsi + ysi*ysi), 0.5);
-    xphLin= xsi/m_HpdCrossFocusParameters[0];
-    yphLin= ysi/m_HpdCrossFocusParameters[0];
-    rphLin = rsi/m_HpdCrossFocusParameters[0];
 
     //    double c= -1.0*rsi;
     //  double b = -1.0* m_HpdCrossFocusParameters[0];
@@ -398,12 +389,10 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
       if(c !=0.0 ) {
 
       inverseR = a* ( (-1.0*b)  + pow((b*b+ 4.0*rsi*c), 0.5) );
-      inverseRtest = a* ( (-1.0*b)  - pow((b*b+ 4.0*rsi*c), 0.5) );
 
       }else {
 
         inverseR =  m_HpdCrossFocusParameters[0]/rsi;
-        inverseRtest =  inverseR;
 
       }
 
@@ -417,12 +406,6 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
         xph = (rph/rsi)*xsi;
         yph = (rph/rsi)*ysi;
       }
-
-    if( inverseRtest == 0.0 ) {
-      rphtest=0.0;
-    }else {
-      rphtest = 1.0/inverseRtest;
-    }
     }
 
 
