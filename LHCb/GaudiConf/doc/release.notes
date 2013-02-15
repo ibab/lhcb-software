@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v17r6 2013-02-15 =========================
 ! 2013-02-15 - Marco Cattaneo
  - Add a new function DigiConf().AddMCTrackInfo, to add MC/TrackInfo to the
    output, called by both DigiConf and DstConf. Previously this was part of 
