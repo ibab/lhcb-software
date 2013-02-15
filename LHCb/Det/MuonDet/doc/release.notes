@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2013-02-15 - Maddalena Frosini
+ - src/Lib/MuonBasicGeometry.cpp changed the M1 status messagei level from 
+   INFO to DEBUG.
+
 ! 2013-02-14 - Maddalena Frosini
  - src/Lib/MuonBasicGeometry.cpp, MuonDet/MuonBasicGeometry.h
    added a check on the muonSystem children to skip the muon filter and keep
