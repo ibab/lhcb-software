@@ -39,7 +39,10 @@ class JetMakerConf:
         self.algorithms = []
         self.setupJetMaker()
         hsvc = HistogramSvc ( 'HistogramDataSvc' );
-        hsvc.Input += [ "JEC DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco12_v1.root' TYP='ROOT'" ]
+        alreadySet = False
+        for file in hsvc.Input:
+            if file == "JEC DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco12_v1.root' TYP='ROOT'": alreadySet = True
+        if not alreadySet: hsvc.Input += [ "JEC DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco12_v1.root' TYP='ROOT'" ]
         
     def setupJetMaker(self):
         jetMakerName = self.name

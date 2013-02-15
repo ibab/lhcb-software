@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-02-15 - Victor Coco
+ - Allow to call several instance of JetMaker Config (fix the multiple JEC in hsvc)
+
 ! 2013-01-22 - Murilo Rangel
  - mpt cut fixed to MeV
 
