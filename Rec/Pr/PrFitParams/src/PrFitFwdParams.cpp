@@ -127,7 +127,7 @@ StatusCode PrFitFwdParams::execute() {
 
   LHCb::MCHits* vHits; 
 
-  if (m_useVeloPix = true ){
+  if (m_useVeloPix == true ){
     vHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP );
   }
   else {
