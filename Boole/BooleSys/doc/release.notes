@@ -31,6 +31,9 @@ This version uses projects LCGCMT 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4
   . Adapt boole-2012-latestdb.ref and boole-2011-latestdb.ref to latest
     2011+2012 simcond tags (Velo closing around off centre beam position)
 
+- Packaging changes
+  . Add dependency on AIDA (OTSimulation v5r4)
+
 </PRE><H1><A NAME=v26r1>2012-12-21 Boole v26r1</A></H1><PRE>
 This version uses projects LCGCMT 64, Gaudi v23r5, LHCb v35r3, Lbcom v13r3
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*

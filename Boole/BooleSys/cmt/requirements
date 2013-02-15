@@ -28,7 +28,7 @@ use MuonBackground      v2r12   Muon     # Alessia Satta
 use MuonMoniDigi        v2r6    Muon     # Alessio Sarti
 
 # Outer Tracker
-use OTSimulation        v5r3    OT       # Alexandr Kozlinskiy
+use OTSimulation        v5r4    OT       # Alexandr Kozlinskiy
 
 # Rich
 use RichDigiQC          v3r14   Rich     # Chris Jones
