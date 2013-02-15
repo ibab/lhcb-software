@@ -63,6 +63,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
   declareProperty( "ValidateHEPEVT"  , m_validate_HEPEVT = false ); //The flag to force the validation (mother&daughter) of HEPEVT
   declareProperty( "Inconsistencies" , m_inconsistencies ); //The file to dump HEPEVT inconsinstencies
   declareProperty( "ListAllParticles", m_listAllParticles = false ); //list all particles
+  declareProperty( "CheckParticleProperties", m_checkParticleProperties = false ); //dump particle proterty check
   declareProperty( "Tuning", m_tuningFile = "LHCbDefault.cmd");
   declareProperty( "UserTuning", m_tuningUserFile = ""); //a default Pythia8 tune using the Tune: 'subrun' would overwrite LHCb defaults, if chosen here...
   declareProperty( "PythiaUserProcessTool" , m_fortranUPToolName = "" ) ;
@@ -192,6 +193,7 @@ StatusCode Pythia8Production::initialize( ) {
 // Part specific to generator initialization
 //=============================================================================
 StatusCode Pythia8Production::initializeGenerator( ) {
+  if (m_checkParticleProperties) checkPassedParticleProperties();
   m_pythia->init();
   return StatusCode::SUCCESS;
 }
@@ -236,8 +238,10 @@ int Pythia8Production::getPythia8ID( const LHCb::ParticleProperty * thePP ) {
   case 100113:
   case 100213:
   case 30313:
+  case 30323:
   case 30213:
   case 3124:
+  case 14122:
   case 13122:
   case 23122:
   case 33122:
@@ -249,10 +253,10 @@ int Pythia8Production::getPythia8ID( const LHCb::ParticleProperty * thePP ) {
     //the pdgID has changed, and the new pythiaId is the same as new pdg
     pythia8Id = pdgId>0 ? 10221 : -10221;
     break;
-    /*case 104122:
+  case 104124:
     //the pdgID has changed, and the new pythiaId is the same as new pdg
     pythia8Id = pdgId>0 ? 4124 : -4124;
-    break;*/
+    break;
   default:
     //else pdgId=pythiaId=pythia8Id 
     //(except for unknown particles to pythia, for which pythiaId=pythia8Id=0)
@@ -269,6 +273,24 @@ void Pythia8Production::setStable( const LHCb::ParticleProperty * thePP ) {
   //  int pythiaId = thePP -> pythiaID() ;
   int pythiaId = getPythia8ID(thePP);
   m_pythia->particleData.mayDecay(pythiaId, false);
+}
+
+//=============================================================================
+// Check we have modified all the particles we wanted to modify
+//=============================================================================
+void Pythia8Production::checkPassedParticleProperties( ) {
+  int nMax = 10000000;
+  for (int i=0;i<nMax;i++) {
+    if (m_pythia->particleData.isParticle(i)) {
+      bool hasChanged = m_pythia->particleData.hasChanged(i);
+      if (!hasChanged) {
+	warning() << "Particle Data has not been changed "
+		  << "for particle with pythai8id " << i 
+		  << " with name " << m_pythia->particleData.name(i)
+		  << endmsg;
+      }
+    }
+  }
 }
 
 //=============================================================================

@@ -86,7 +86,9 @@ protected:
   /// PYTHIA  -> HEPMC conversion 
   StatusCode toHepMC ( HepMC::GenEvent*     theEvent    , 
                        LHCb::GenCollision * theCollision ) ;
-  
+
+  void checkPassedParticleProperties( );
+
 private:
 
   ICounterLogFile * m_xmlLogTool ; ///< XML Log file to store cross-sections 
@@ -124,7 +126,8 @@ private:
   // ==========================================================================
   
   bool m_listAllParticles ; ///list particles.
-  
+  bool m_checkParticleProperties ; //check part prop
+
   std::string m_tuningFile;
   std::string m_tuningUserFile;
   std::string m_LHAupOptionFile;
