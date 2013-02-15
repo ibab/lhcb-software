@@ -11,7 +11,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : Bd2Dst3piBDTSelection
 //
-// 2012-11-11 : Stefano Perazzini
+// 2013-03-15 Conor Fitzpatrick
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
