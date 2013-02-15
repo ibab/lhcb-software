@@ -4,6 +4,8 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2013-02-15 - Aurelien Martens
+ - Fix a mistake with Lc(2625) while resolving a conflit
 
 ! 2013-02-15 - Aurelien Martens
  - Pythia8Prodcution: Add a detailed systematic check of the *unchanged* 

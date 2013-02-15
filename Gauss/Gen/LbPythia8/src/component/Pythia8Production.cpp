@@ -245,7 +245,6 @@ int Pythia8Production::getPythia8ID( const LHCb::ParticleProperty * thePP ) {
   case 13122:
   case 23122:
   case 33122:
-  case 4124://old table
     //for these guys the pythiaId is now corresponding to the pdgId
     pythia8Id = pdgId;
     break;
