@@ -4,10 +4,10 @@
 ! Purpose     : Fit parameters for the pattern
 !-----------------------------------------------------------------------------
 
-
+!========================= PrFitParams v1r0 2013-02-15 =========================
 ! 2013-02-15 Yasmine Amhis 
   - Remove warning in PrFwdFitParams
-!========================= PrFitParams v1r0 2013-02-14 =========================
+
 ! 2013-02-07   Yasmine Amhis 
   - Adapt  PrFwdFitParams, PrFitSeedParams, PrFitKsParams to work with 
     upgrade geometry 
