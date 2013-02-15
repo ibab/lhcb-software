@@ -3,6 +3,34 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v26r2>2013-02-18 Boole v26r2</A></H1><PRE>
+This version uses projects LCGCMT 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+- Development release for upgrade simulation.
+
+- Changes to supported platforms
+  . Add support for x86_64-slc6-gcc46 (I/O via Castor client not yet supported)
+  . Remove support for i686-slc5-gcc43
+
+- Functionality changes
+  . Complete the support for three baseline upgrade detector configurations
+    (See Lbcom+LHCb release notes for upgrade related changes)
+
+- Changes to Configurable
+  . Several changes to support Upgrade detectors and to propagate the 
+    information to SimConf/DigiConf
+
+- New tuning (FTDigitisation v1r2, FTDAQ v1r2)
+  . Set the gain to 25 photoelectrons near SIPM, i.e. before attenuation.
+  . Add a fluctuation to the gain, to avoid a comb structure in the ADC values.
+  . Set the default pe/MeV to 86, the gain to 2 cx/p.e, add adc Noise (.5 cx)
+  . Change the coding of charge, as the ADC will be 6 bits -> 1 MIP ~ 32 cx.
+
+- Changes to references to follow changes in underlying packages
+  . Adapt boole-2012-latestdb.ref and boole-2011-latestdb.ref to latest
+    2011+2012 simcond tags (Velo closing around off centre beam position)
+
 </PRE><H1><A NAME=v26r1>2012-12-21 Boole v26r1</A></H1><PRE>
 This version uses projects LCGCMT 64, Gaudi v23r5, LHCb v35r3, Lbcom v13r3
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
