@@ -4,6 +4,7 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+!========================= FTDigitisation v1r2 2013-02-15 =========================
 ! 2013-02-05 - Olivier Callot
  - Set the gain to 25 photoelectrons near SIPM, i.e. before attenuation.
 

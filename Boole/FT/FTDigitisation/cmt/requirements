@@ -1,6 +1,6 @@
 package FT/FTDigitisation
 
-version           v1r1
+version           v1r2
 
 branches cmt src options doc
 
