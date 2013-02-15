@@ -4,10 +4,10 @@
 ! Purpose     : Fit parameters for the pattern
 !-----------------------------------------------------------------------------
 
+!========================= PrFitParams v1r0 2013-02-15 =========================
 ! 2013-02-15 - Marco Clemencic
  - Added CMakeLists.txt.
 
-!========================= PrFitParams v1r0 2013-02-15 =========================
 ! 2013-02-15 Yasmine Amhis 
   - Remove warning in PrFwdFitParams
 
