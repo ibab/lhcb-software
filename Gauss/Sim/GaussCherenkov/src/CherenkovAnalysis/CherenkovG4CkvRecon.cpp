@@ -768,7 +768,6 @@ void CherenkovG4CkvRecon::SolveQuartic(  gsl_complex z[4],
   //  double c[8] =  {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
   //  int ierr=0;
   // double resolv=0.0;
-  int asol=0;
 
 
   if( denom != 0.0 ) {
@@ -778,8 +777,8 @@ void CherenkovG4CkvRecon::SolveQuartic(  gsl_complex z[4],
 
     //    drteq4_(&b[0],&b[1],&b[2],&b[3],c,&resolv,&ierr);
 
-    asol = gsl_poly_complex_solve_quartic_eqn( b[0], b[1], b[2], b[3],
-					       &z[0], &z[1], &z[2], &z[3]);
+    gsl_poly_complex_solve_quartic_eqn( b[0], b[1], b[2], b[3],
+                                        &z[0], &z[1], &z[2], &z[3]);
 
     //    int j=0;
     //  for(int ii=0; ii< 4 ; ++ii) {
