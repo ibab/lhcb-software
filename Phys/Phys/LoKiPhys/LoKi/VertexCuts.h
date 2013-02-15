@@ -394,7 +394,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-02-28
      */
-    const LoKi::Vertices::Chi2Prob                                VPCHI2 ()  ;
+    const LoKi::Vertices::Chi2Prob                                VPCHI2 ;
     // ========================================================================
     /** @var VX 
      *  the trivial evaluator of X-position of the vertex 
