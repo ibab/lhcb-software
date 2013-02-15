@@ -3,7 +3,60 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+
+</PRE><H1><A NAME=v44r2>2013-02-18 Brunel v44r2</A></H1><PRE>
+This version uses projects LCG 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4,
+ Rec v14r4 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development version for first upgrade simulation productions
+
+- Changes to supported platforms
+  . Add support for x86_64-slc6-gcc46 (I/O via Castor client not yet supported)
+  . Remove support for i686-slc5-gcc43
+
+- Functionality changes
+  . Add support for three baseline upgrade detector configurations
+    (See Rec+Lbcom+LHCb release notes for all new upgrade related packages)
+
+- Changes to configuration
+	. Added "Detectors" property to Brunel configurable. This switches on/off
+    all detector specific code throughout the application, including persistent
+    objects on the output file. Default is 2012 detectors, no change in default
+    behaviour relative to Reco14
+
+- Changes to persistency
+  . Add back MC/TrackInfo to MC DST (GaudiConf v17r5, broken in Brunel v44r1)
+  . Do not save Rich and Muon Digitisation summary objects by default, only
+    in XDSTs (GaudiConf v17r3)
+  . Fix OptItemList for /Event/Gen/HepMCEvents and ItemList for
+    /Event/Gen/BeamParameters, in both cases there was a missing #1.
+    (GaudiConf v17r2, broken in Brunel v44r1, v44r0)
+
+- New optimisations
+  . Add back an approximate log(exp(x)-1) implementation. Gains a signficant 
+    speed up (factors of 3 or more) in the likehood (RichGlobalPID v3r20)
+  . Remove check on full bank length when decoding Velo lite clusters, add
+    corresponding protection to full decoding (VeloDAQ v6r9)
+  . Avoid creating multiple instances of OTHitCreator (PatChecker v3r14)
+  . Various minor fixes (remove unused finalize specialisations, use getIfExists)
+
+- Changes to monitoring
+  . Add a job option to enable NeuroBayes printout to stdout and stderr
+    (previously forcibly removed, now off by default) (ChargedProtoANNPID v1r11)
+  . Additional profile histograms for track resolution (TrackCheckers v4r15)
+  . Bad Velo bank length flagged in ProcStatus (VeloDAQ v6r9)
+
+- Changes to example options
+  . Remove 2009-FEST-Data.py, obsolete since these data have been deleted
+
 - Changes to tests
+  . Add NameAuditor to brunel-mc10-withtruth test to monitor changes in
+    called components, and debug causes of non reproducible Brunel exits
+  . Enable printout from ANNPID in most tests, to follow any new problems
+    caught by NeuroBayes
+  . Remove brunel-fest09 test since input data no longer exists
+  . Change brunel2010magup test to create Online rather than Express
+    historgams (Online histograms previously only tested in brunel-fest09)
   . Remove configurables test, redundant with those in RecSys and LbcomSys
 
 </PRE><H1><A NAME=v44r1>2012-11-30 Brunel v44r1</A></H1><PRE>
@@ -19,8 +72,12 @@ Development release, post Reco14
   . Do not use SequencerTimerTool to MeasureTime, duplicates measures already
     done by TimingAuditor
 
-- Persistency changes
-  . Removed Boole linkers from default MC DST output (GaudiConf)
+- Persistency changes (GaudiConf v17r0)
+  . Make saving of HepMCEvents optional (was mandatory), allows Gauss to create
+    Sim files without HepMCEvents
+  . Never save HepMCEvents for Spillover slots
+  . Do not save Digit to MCParticle linkers on default MC DST,
+    saved only if DstConf().SimType = "Extended"
 
 - Physics performance changes
   . New default global tags (DDDB v1r59)
@@ -82,6 +139,33 @@ Development release, post Reco14
     Use ios::showpoint instead of ios::fixed (GaudiKernel v28r3)
   . Patch #5518: save TimingHistograms in job histograms (GaudiAlg v14r3)
 
+</PRE><H1><A NAME=v43r2p5>2013-02-15 Brunel v43r2p5</A></H1><PRE>
+
+Patch release built on v43r1p2b branch, for Reco14 simulation.
+
+- Changes to persistecy
+  . Add back MC/TrackInfo to MC DST (GaudiConf v17r4p1, broken since v43r2p3)
+  . Only save Rich + Muon Digitisation summary objects in XDSTs (GaudiConf v17r3)
+
+- Changes to monitoring
+  . Put back forcible suppression of stdout and stderr printout from NeuroBayes
+    by default, can now be switched via a job option (ChargedProtoANNPID v1r11)
+
+- Changes to example options
+  . Remove 2009-FEST-Data.py, obsolete since these data have been deleted
+
+- Changes to tests:
+  . Remove brunel-fest09 test since input data no longer exists  
+
+</PRE><H1><A NAME=v43r2p4>2013-01-31 Brunel v43r2p4</A></H1><PRE>
+
+Patch release built on v43r1p2b branch.
+Version for Reco14 simulation and Reco14 2011 reprocessing.
+
+- Changes to monitoring
+  . Turn off forcible suppression of stdout and stderr printout from NeuroBayes,
+    to track down reason for occasional exit(1) (ChargedProtoANNPID v1r10)
+
 </PRE><H1><A NAME=v43r2p3>2012-12-17 Brunel v43r2p3</A></H1><PRE>
 
 Patch release built on v43r1p2b branch.
@@ -95,7 +179,7 @@ Version for Reco14 simulation and Reco14 2011 reprocessing.
       RootCnvSvc().BufferSize = 2*kBYTE
       RootCnvSvc().SplitLevel = 0
 
-- Changes to persistency (GaudiConf v17r2)
+- Changes to persistency (GaudiConf v17r0)
   . Make saving of HepMCEvents optional (was mandatory), allows Gauss to create
     Sim files without HepMCEvents
   . Never save HepMCEvents for Spillover slots
