@@ -3,6 +3,12 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-02-15 - Marco Cattaneo
+ - Add a new function DigiConf().AddMCTrackInfo, to add MC/TrackInfo to the
+   output, called by both DigiConf and DstConf. Previously this was part of 
+   AddMCParticleLinks, so MC/TrackInfo was not added to defalut MC DST, only
+   XDST (bug introduced in v17r0, fixed also in v17r4b branch)
+
 ! 2013-02-08 - Paul Szczypka
  - Remove debug statement.
 

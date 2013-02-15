@@ -149,9 +149,13 @@ class DigiConf(LHCbConfigurableUser):
                     writer.ItemList += ["/Event/Link/Raw/Hcal/Digits#1"]
         if 'Muon' in dets :
                     writer.ItemList += ["/Event/Link/Raw/Muon/Digits#1"]
+
+    def addMCTrackInfo( self, writer ):
+        
+        # Information for Tracking efficiencies and ghost rates
+        dets = self.getProp("Detectors")
         if 'Tr' in dets :
             writer.ItemList += ["/Event/MC/TrackInfo#1"]
-
 
                     
     def addMCHitLinks( self, writer ):
@@ -222,6 +226,9 @@ class DigiConf(LHCbConfigurableUser):
 
             # MCParticle links
             self.addMCParticleLinks(writer)
+
+            # Reconstructible Info
+            self.addMCTrackInfo(writer)
 
             # MCHit Links
             self.addMCHitLinks(writer)

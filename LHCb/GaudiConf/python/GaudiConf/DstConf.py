@@ -188,6 +188,7 @@ class DstConf(LHCbConfigurableUser):
                     # Objects propagated from Boole
                     # Digi headers
                     DigiConf().addHeaders(writer)
+                    DigiConf().addMCTrackInfo(writer)
 
                     if dType == "XDST":
                         # Digitisation summaries
