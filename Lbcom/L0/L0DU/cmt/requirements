@@ -21,9 +21,9 @@ use L0Base       v*     L0
 # ================ component library =====================================
 library		L0DU  *.cpp -import=AIDA
 
-macro_append ROOT_linkopts " -lHist" \ 
-                     WIN32 " libHist.lib "\
-                                
+macro_append ROOT_linkopts " -lHist" \
+                     WIN32 " libHist.lib "
+
 
 apply_pattern component_library library=L0DU
 apply_pattern install_python_modules
