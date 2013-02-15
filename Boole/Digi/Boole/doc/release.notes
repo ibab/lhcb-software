@@ -3,32 +3,18 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- - Changes to Configurables
-   . Re-added "L0" back into detector lists.
 
- - Changes to Configurables
-   . Removed lines of code which always set filetype to extended. (old mistake which
-     was unfortunately remerged in a recent edit.)
+</PRE><H1><A NAME=v26r2>2013-02-18 Boole v26r2</A></H1><PRE>
+This version uses projects LCGCMT 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
- - Changes to Configurable
-   . Corrected Calo digits.
+ - Development release for upgrade simulation.
 
- - Changes to Configurable
-   . Corrected VL Linking, plus a lot of minor edits for Sim/DigiConf compatability
-   . Edit Detector lists.
-   . Removed 'L0' entries in Detector lists.
-
- - Changes to Configurable
-   . Corrected detectors passed to DigiConf.
-   . Renamed some upgrade rich algos.
  - Removed obsolete dependency on VeloPix packages
 
  - Changes to Configurable
-   . Added method to pass detector list to LHCbApp to derive DB dataTypes.
-
- - Changes to Configurable
-   . Fixed bug in RichMaPmt digitisation where output file was always
-     set to "Extended".
+   . Several changes to support Upgrade detectors and to propagate the 
+     information to SimConf/DigiConf
 
  - Changes to references to follow changes in underlying packages
    . Adapt boole-2012-latestdb.ref and boole-2011-latestdb.ref to latest
