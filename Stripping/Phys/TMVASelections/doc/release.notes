@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+! 2013-02-13 - Conor Fitzpatrick
+ - Added Bd2Dst3piBDTSelection.cpp<h> for the DstTaunu analysis
+
 !========================= TMVASelections v1r4 2012-12-20 =========================
 
 ! 2012-12-13 - Stefano Perazzini
