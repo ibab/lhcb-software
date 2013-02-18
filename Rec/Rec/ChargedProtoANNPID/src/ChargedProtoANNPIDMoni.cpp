@@ -27,6 +27,8 @@ ChargedProtoANNPIDMoni::ChargedProtoANNPIDMoni( const std::string& name,
 { 
   // histo base dir
   setProperty ( "HistoTopDir", "PROTO/" );
+  // print some stats on the final plots
+  setProperty ( "HistoPrint", true ); 
 }
 
 //=============================================================================
