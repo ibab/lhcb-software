@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2013-02-18 - Chris Jones
+ - Add new package Phys/JetTagging
+
 </PRE><H1><A NAME=v10r3>2012-11-30 Analysis v10r3 </A></H1><PRE>
 New development release, built against Phys v16r3.
 

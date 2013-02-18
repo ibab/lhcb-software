@@ -28,6 +28,7 @@ use  MCStandardParticles        v1r3p1   Phys   # Juan Palacios
 use  FlavourTaggingChecker      v6r13    Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r5p1   Phys   # Chris Jones
 use  DisplVerticesMC            v1r4p2   Phys   # Victor Coco
+use  JetTagging                 v1r0     Phys   # Cedric Potterat
 use  JetAccessories		v2r0     Phys   # Victor Coco, Cedric Potterat
 use  JetAccessoriesMC		v2r0	 Phys   # Victor Coco, Cedric Potterat
 
