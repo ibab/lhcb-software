@@ -1,4 +1,8 @@
-2012-13-22 Ben Couturier <Ben.Couturier@cern.ch>
+2013-02-18 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Platform.py: Fixed to support Big Box Linux
+
+2013-01-21 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r6
 
@@ -12,7 +16,7 @@
 
 2013-01-11 Ben Couturier <Ben.Couturier@cern.ch>
 
-        * python/LbConfiguration/Project.py: Added project Urania 
+	* python/LbConfiguration/Project.py: Added project Urania
 
 2012-12-04 Ben Couturier <Ben.Couturier@cern.ch>
 

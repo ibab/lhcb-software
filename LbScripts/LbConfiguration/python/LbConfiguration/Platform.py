@@ -236,7 +236,8 @@ linux_flavour_aliases = {
                          "co"     : ["CentOS"],
                          "deb"    : ["Debian"],
                          "ubuntu" : ["Ubuntu"],
-                         "ml"     : ["Mandriva Linux"]
+                         "ml"     : ["Mandriva Linux"],
+                         "bb"     : ["Big Box Linux"]
                         }
 
 lsb_flavour_aliases   = {
