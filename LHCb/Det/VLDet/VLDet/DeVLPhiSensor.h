@@ -149,7 +149,7 @@ public:
     return m_zones[zone].distToOrigin;
   }
   
-  /// Calculate the angle of the strip wrt to the x axis in the local frame
+  /// Calculate the angle between strip and x-axis in the local frame
   virtual double angleOfStrip(unsigned int strip, double fraction = 0.) const {
     const unsigned int zone = zoneOfStrip(strip);
     const double effectiveStrip = fraction + strip - m_zones[zone].firstStrip;

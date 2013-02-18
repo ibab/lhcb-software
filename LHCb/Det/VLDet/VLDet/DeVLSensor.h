@@ -1,5 +1,5 @@
-#ifndef DEVELOLITE_SENSOR_H
-#define DEVELOLITE_SENSOR_H 1
+#ifndef DEVL_SENSOR_H
+#define DEVL_SENSOR_H 1
 
 // STL
 #include <algorithm>

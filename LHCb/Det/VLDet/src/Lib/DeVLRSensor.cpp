@@ -350,7 +350,7 @@ StatusCode DeVLRSensor::pointToChannel(const Gaudi::XYZPoint& point,
   channel.setStrip(closestStrip);
   channel.setType(LHCb::VLChannelID::RType);
   // Calculate the pitch.
-  pitch = rPitchOfStrip(channel.strip());
+  pitch = rPitchOfStrip(closestStrip);
   return StatusCode::SUCCESS;
   
 }
