@@ -3,7 +3,7 @@
 # @file grid_url.py
 #
 # Helper module to get Grid access URL 
-# Actually it is a bit modified version of dirac-get-accessURL script 
+# Actually it is a bit modified version of dirac-dms-lfn-accessURL
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -29,7 +29,7 @@
 # =============================================================================
 """
   Helper module to get Grid access URL 
-  Actually it is a bit modified version of dirac-get-accessURL script 
+  Actually it is a bit modified version of dirac-dms-lfn-accessURL script 
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -52,13 +52,13 @@ __version__ = "$Revision: 146621 $"
 __all__     = ( 'accessURLs' , ) 
 # =============================================================================
 ## get the dictionary { 'LFN' : 'access-URL' }
-#  Actually it is a bit modified version of dirac-get-accessURL script 
+#  Actually it is a bit modified version of dirac-dms-lfn-accessURL script 
 #  @author VanyaBELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-10-23
 def _accessURLs ( silent  = True ) :  
     """
     Get the dictionary { 'LFN' : 'access-URL' }
-    Actually it is a bit modified version of dirac-get-accessURL script 
+    Actually it is a bit modified version of dirac-dms-lfn-accessURL script 
     """
     import DIRAC
     from   LHCbDIRAC.DataManagementSystem.Client.DMScript import DMScript, printDMResult

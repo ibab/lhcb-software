@@ -216,6 +216,8 @@ def inGrid ( filename , grid ) :
     #
     ## 2 - get the files from storage element 
     #
+    import os 
+    from subprocess import Popen, PIPE
     p   = Popen ( [ 'get_grid_url', filename , '-g' , grid.upper() ] ,
                   env       = os.environ  ,
                   stdout    = PIPE        ,
