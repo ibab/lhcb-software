@@ -27,6 +27,7 @@ use   STDet              v*    Det
 use   OTDet              v*    Det
 use   CaloDet            v*    Det
 use   HltInterfaces      v*    Kernel
+use   PrKernel           v*    Pr
 
 #============================================================================
 # Component library building rule
