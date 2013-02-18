@@ -14,7 +14,6 @@
 // Includes
 
 // Kernel
-#include "Kernel/HistogramAsProperty.h"
 #include "Kernel/IJetMaker.h"
 #include "Kernel/IParticle2MCAssociator.h"
 #include "Kernel/IDistanceCalculator.h"

@@ -1,16 +1,15 @@
-! $Id: release.notes,v 1.23 2010-04-30 14:42:02 jpalac Exp $ 
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.23 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/JetTagging
 ! Responsible : Victor Coco victor.coco@cern.ch, Cedric Potterat cedric.potterat@cern.ch
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2013-02-18 - Marco Clemencic
+ - Fixed compilation with CMake.
+ - Removed unused inclusion of Kernel/HistogramAsProperty.h.
 
 ! 2013-02-14 - Cedric Potterat
  - Introduction of JetTagging
-
 
 ! 2013-02-07 - Cedric Potterat
  - added FilterJet based on FilterDesktop.

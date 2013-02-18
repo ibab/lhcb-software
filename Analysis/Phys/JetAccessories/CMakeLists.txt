@@ -10,6 +10,8 @@ gaudi_depends_on_subdirs(Calo/CaloUtils
 
 find_package(FastJet)
 
+gaudi_install_headers(Kernel)
+
 gaudi_add_module(JetAccessories
                  src/*.cpp
                  INCLUDE_DIRS FastJet

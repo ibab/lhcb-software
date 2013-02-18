@@ -4,6 +4,7 @@
 gaudi_subdir(JetAccessoriesMC v2r0)
 
 gaudi_depends_on_subdirs(Kernel/LHCbMath
+                         Phys/JetAccessories
                          Phys/LoKiAlgoMC
                          Phys/LoKiGenMC
                          Phys/LoKiPhysMC)

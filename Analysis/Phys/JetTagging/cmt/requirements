@@ -26,7 +26,7 @@ include_path      none
 
 #apply_pattern
 apply_pattern install_python_modules 
-apply_pattern install_more_includes more =Kernel
+apply_pattern install_more_includes more=Kernel
 # =============== constituents ================================================
 library           JetTagging    ../src/*.cpp 
 

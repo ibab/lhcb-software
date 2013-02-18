@@ -14,8 +14,6 @@
 // Includes
 
 // Kernel
-#include "Kernel/HistogramAsProperty.h"
-
 #include "Kernel/ITriggerTisTos.h"
 
 #include "Kernel/IJetTagTool.h"

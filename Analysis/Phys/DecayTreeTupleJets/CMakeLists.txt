@@ -9,5 +9,4 @@ gaudi_depends_on_subdirs(Phys/DecayTreeTupleBase
 
 gaudi_add_module(DecayTreeTupleJets
                  src/*.cpp
-                 LINK_LIBRARIES DecayTreeTupleBaseLib LoKiArrayFunctorsLib JetTaggingLib)
-
+                 LINK_LIBRARIES DecayTreeTupleBaseLib LoKiArrayFunctorsLib)
