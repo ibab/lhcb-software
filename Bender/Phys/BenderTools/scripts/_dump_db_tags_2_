@@ -1,0 +1,121 @@
+#!/usr/bin/env python
+# =============================================================================
+# $Id:$ 
+# =============================================================================
+## @file 	
+#  Simple  excript to extract DB-tags from the file 
+#
+#  @author Thomas RUF 
+#  @date   2012-10-24
+#
+#                    $Revision:$
+#  Last modification $Date:$
+#                 by $Author:$
+#
+# =============================================================================
+"""
+Simple script to extract DB-tags from the file
+
+"""
+__author__  = "Thomas RUF, Vanya BELYAEV"
+__date__    = "2012-10-24"
+__version__ = "Revision"
+# =============================================================================
+## helper function to get DB-tags
+#  @author Thomas RUF
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date  2013-02-18
+def _get_db_tags_ ( files ) :
+    """
+    Helper function to get DB-tags 
+    """
+    tags = {}
+
+    from GaudiConf.IOHelper import IOHelper
+    evtsel = IOHelper().inputFiles ( files )
+       
+    from Configurables import LHCbApp
+    app = LHCbApp()
+    
+    from GaudiPython.Bindings import AppMgr
+    gaudi = AppMgr( outputlevel = 6 )
+    
+    gaudi.run(1)
+    evtsvc = gaudi.evtSvc()
+
+    for header in ( '/Event/Rec/Header' ,
+                    '/Event/MC/Header'  ,
+                    '/Event/Gen/Header' ) : 
+        
+        hdr = evtsvc [ header ]
+        if not hdr : continue 
+        tgs = hdr.condDBTags()
+        for t in tgs :
+            tag = t.first
+            val = t.second 
+            if not tags.has_key( tag ) : tags [ tag ] = set()
+            tags[tag] . add ( val )
+            
+    for t in tags :
+        ts = tags[t]
+        if 1 != len ( ts ) : tags[t] = list ( ts ) 
+        else               : tags[t] = list ( ts ) [0]
+
+    return tags
+    
+
+# =============================================================================
+## helper function to get DB-tags
+#  @author Thomas RUF
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date  2013-02-18
+def get_db_tags ( silent = True , files = [] ) :
+    """
+    Helper function to get DB-tags 
+    """
+    import sys 
+    if not files :
+        if len(sys.argv) > 1 : 
+            files = sys.argv[1:] 
+            
+    ## no valid 
+    if not files : return {}
+    
+    stdout = sys.stdout
+    stderr = sys.stderr
+    
+    tags = {}
+
+    try:
+        
+        if silent :
+
+            class Silent(object):
+                def write(*args,**kwargs) : pass
+                
+            sys.stderr = Silent () ## None ## null  ## open ( '/dev/null' )
+            sys.stdout = Silent () ## None ## null
+            
+        tags = _get_db_tags_ ( files )
+        
+    except:
+        
+        tags = {}
+            
+    finally:
+        
+        sys.stderr = stderr
+        sys.stdout = stdout
+        
+        
+    return tags
+
+
+ # =============================================================================
+if __name__ == '__main__' :
+
+    print 'DBTags: %s ' % get_db_tags ( silent = True  ) 
+        
+# =============================================================================
+# The END 
+# =============================================================================

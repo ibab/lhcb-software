@@ -210,17 +210,20 @@ def configure ( options , arguments ) :
         options.RootInTES = '/Event/PSIX0'
         logger.info ('RootInTES is set according to PSIX0.MDST'    )
         daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'BOTTOM.MDST'   ) and not options.RootInTES :
+        options.RootInTES = '/Event/BOTTOM'
+        logger.info ('RootInTES is set according to BOTTOM.MDST'   )
+        daVinci.InputType = 'MDST'
+
         
     if options.RootInTES and  0  != options.RootInTES.find ( '/Event' ) :
         options.RootInTES = '/Event/' + options.RootInTES
-        
     if options.RootInTES and '/' == options.RootInTES[-1] :
         options.RootInTES = options.RootInTES[:-1]
-
     if options.RootInTES and '/Event' != options.RootInTES  : 
         from BenderTools.MicroDST import uDstConf 
         uDstConf(options.RootInTES)
-
+        
     #
     ## check for Grid-access
     #

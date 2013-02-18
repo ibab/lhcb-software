@@ -77,7 +77,6 @@ def getDBTags ( file_name      ,
     
     import os
 
-    file_name = _lfn_pfn_strip_    ( file_name )
     
     file_name = os.path.expandvars ( file_name ) 
     file_name = os.path.expanduser ( file_name ) 
@@ -87,48 +86,39 @@ def getDBTags ( file_name      ,
         
         from Bender.DataUtils import extendfile1
         file_name = extendfile1     ( file_name , castor , grid )
-        file_name = _lfn_pfn_strip_ ( file_name )
 
     logger.info ( "Use the file %s " % file_name )
 
     from subprocess import Popen, PIPE
 
-    keys = { 'first'  : '_Event_Rec_Header.LHCb::ProcessHeader.m_condDBTags.first'  ,
-             'second' : '_Event_Rec_Header.LHCb::ProcessHeader.m_condDBTags.second' }
-    
     serr =  open ( '/dev/null' )
-    pipe = Popen ( [ '_dump_db_tags_'  , file_name ] ,
+    pipe = Popen ( [ '_dump_db_tags_2_'  , file_name ] ,
                    env    = os.environ ,
                    stdout = PIPE       ,
                    stderr = serr       )
     
     stdout = pipe.stdout 
     ts = {}
-    
+
+    ## Format = 'DBTags: { disctionary} '
+    key  = 'DBTags:'
+    tags = {} 
     for line in stdout :
 
         if debug : logger.info ( line ) 
-            
-        for k in keys:
-            
-            if line.find(keys[k])<0 : continue
-            
-            ts[k] = line.split('=')[1].split(',')
 
-        
-    tags = {}
-    n = 0
-            
-    if ts.has_key('first') :
-        for t in ts['first']:
-            
-            x = ts['second'][n]
-            y = t.replace(' ','').replace('\n','')
+        ## good line? 
+        p = line.find ( key )
+        if not 0 <= p : continue
 
-            if not tags.has_key ( y ) : tags[y] = [] 
-            tags[y].append ( x.replace(' ','').replace('\n','') ) 
-            
-            n+=1
+        try : 
+            dct    = line[ p + len(key) : ]
+            value  = eval ( dct )
+            if not isinstance ( value , dict ) : continue
+            tags   = value
+            if not tags : continue 
+        except :
+            continue 
             
     return tags 
 

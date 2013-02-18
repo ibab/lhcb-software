@@ -5,6 +5,9 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2013-02-18 - Vanya Belyaev
+ - rewrite access to DB-tags 
+
 ! ==================== Phys/BenderTools v22r3   2012-12-05 ====================
 
 ! 2012-12-05 - Vanya Belyaev
