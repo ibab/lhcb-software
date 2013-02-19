@@ -384,7 +384,7 @@ class MuteAll(object):
     """    
     def __init__( self , out = True , err = False ):
         self._c    = MuteC  ( out , err ) 
-        self._py   = MutePu ( out , err ) 
+        self._py   = MutePy ( out , err ) 
         
     def __enter__(self):
 
