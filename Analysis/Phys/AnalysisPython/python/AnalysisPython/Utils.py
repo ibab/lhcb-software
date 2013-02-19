@@ -28,14 +28,18 @@ __all__     = (
     'clocks'         , ## context manager to count clocks 
     'timing'         , ## context manager to count time 
     'timer'          , ## ditto
+    'mute_c'         , ## contex manager to suppress stdout/strerr printout 
+    'silence_c'      , ## ditto 
+    'mute_py'        , ## contex manager to suppress stdout/strerr printout 
+    'silence_py'     , ## ditto 
     'mute'           , ## contex manager to suppress stdout/strerr printout 
     'silence'        , ## ditto 
-)    
+    )    
 # =============================================================================
 import ROOT, time, os,sys  
 from   GaudiPython.Bindings   import gbl as cpp
 # =============================================================================
-## @class _Memory
+## @class Memory
 #  Simple context manager to measure the virtual memory increase
 #
 #  @see System::virtualMemory
@@ -297,16 +301,10 @@ def timing ( name = '' ) :
 ## ditto 
 timer = timing   # ditto
 
-class Silent(object):
-    def write(self,*args,**kwards) : pass
-    
 # ============================================================================
-## @class Mute
-#  context manager to suppress the printour
-#
-#  The code is copied from
-#    http://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions
-class Mute(object):
+## @class MutePy
+#  context manager to suppress python printout 
+class MutePy(object):
     """
     A context manager for doing a ``deep suppression'' of stdout and stderr in 
     Python, i.e. will suppress all print, even if the print originates in a 
@@ -323,7 +321,40 @@ class Mute(object):
         self._err = err
         
     def __enter__(self):
+        #
+        ## helper class to define empty stream 
+        class Silent(object):
+            def write(self,*args,**kwards) : pass
 
+        self.stdout = sys.stdout
+        self.stderr = sys.stderr
+        if self._out : sys.stdout = Silent() 
+        if self._err : sys.stderr = Silent() 
+
+    def __exit__(self, *_):
+        
+        sys.stdout = self.stdout
+        sys.stderr = self.stderr
+        
+# ============================================================================
+## @class MuteC
+#  context manager to suppress pythion prinout 
+class MuteC(object):
+    """
+    A context manager for doing a ``deep suppression'' of stdout and stderr in 
+    Python, i.e. will suppress all print, even if the print originates in a 
+    compiled C/Fortran sub-function.
+    This will not suppress raised exceptions, since exceptions are printed
+    to stderr just before a script exits, and after the context manager has
+    exited (at least, I think that is why it lets exceptions through).      
+    
+    stallen from  
+    http://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions
+    """
+    def __init__( self , out = True , err = False ):
+        self._out = out
+        self._err = err
+    def __enter__(self):
         #
         ## C/C++
         # 
@@ -332,28 +363,9 @@ class Mute(object):
         # Save the actual stdout (1) and stderr (2) file descriptors.
         self.save_fds = ( os.dup(1), os.dup(2) )
 
-        #
-        ## Python
-        # 
-        self.stdout = sys.stdout
-        self.stderr = sys.stdout
-        
-        if self._out :
-            os.dup2 ( self.null_fds[0] , 1 )  ## C/C++
-            sys.stdout = Silent ()            ## Python
-            
-        if self._err :
-            os.dup2 ( self.null_fds[1] , 2 )  ## C/C++
-            sys.stderr = Silent ()            ## Python
-        
-    def __exit__(self, *_):
-        
-        #
-        ## Python
-        # 
-        sys.stdout = self.stdout
-        sys.stderr = self.stdout
-        
+        if self._out : os.dup2 ( self.null_fds[0] , 1 )  ## C/C++
+        if self._err : os.dup2 ( self.null_fds[1] , 2 )  ## C/C++
+    def __exit__(self, *_):        
         # Re-assign the real stdout/stderr back to (1) and (2)  (C/C++_)
         os.dup2 ( self.save_fds[0] , 1 )
         os.dup2 ( self.save_fds[1] , 2 )
@@ -361,27 +373,88 @@ class Mute(object):
         # Close the null files  (C/C++_
         os.close ( self.null_fds[0] )
         os.close ( self.null_fds[1] )
+
+
+# ============================================================================
+## @class MuteAll
+#  context manager to suppress All (C/C++/Python) printout
+class MuteAll(object):
+    """
+    A context manager to suppress a;; (C/C++/Python) printout
+    """    
+    def __init__( self , out = True , err = False ):
+        self._c    = MuteC  ( out , err ) 
+        self._py   = MutePu ( out , err ) 
+        
+    def __enter__(self):
+
+        self._c .__enter__()
+        self._py.__enter__()
+        
+    def __exit__(self, *_):
+        
+        self._c .__exit__ ( *_ )
+        self._py.__exit__ ( *_ )
         
 # =============================================================================
-## simple context manager to suppress the printout
+## simple context manager to suppress all(C/C++/Python) printout
 #
 #  @code
-#  with mute () :
+#  with mute_all () :
 #          <some code here>
 #  @endcode 
-def mute ( cout = True , cerr = False )   :
+def mute_all ( cout = True , cerr = False )   :
     """
-    Simple context manager to suppress the printout
+    Simple context manager to suppress All printout
     
-    with mute () :
+    with mute_all () :
     # <some code here>
     #
     """
-    return Mute ( cout , cerr )
+    return MuteAll ( cout , cerr )
+
+# =============================================================================
+## simple context manager to suppressC/C++-printout
+#
+#  @code
+#  with mute_c () :
+#          <some code here>
+#  @endcode 
+def mute_c ( cout = True , cerr = False )   :
+    """
+    Simple context manager to suppress All printout
+    
+    with mute_c () :
+    # <some code here>
+    #
+    """
+    return MuteC ( cout , cerr )
+
+# =============================================================================
+## simple context manager to suppress Python-printout
+#
+#  @code
+#  with mute_py () :
+#          <some code here>
+#  @endcode 
+def mute_py ( cout = True , cerr = False )   :
+    """
+    Simple context manager to suppress All printout
+    
+    with mute_Py () :
+    # <some code here>
+    #
+    """
+    return MutePy ( cout , cerr )
 
 # ==============================================================================
 ## ditto 
-silence = mute  # ditto
+silence_c   = mute_c   # ditto
+silence_py  = mute_py  # ditto
+silence_all = mute_all # ditto
+
+mute        = mute_all # ditto  
+silence     = mute     # ditto
 
 # =============================================================================
 if '__main__' == __name__ :
