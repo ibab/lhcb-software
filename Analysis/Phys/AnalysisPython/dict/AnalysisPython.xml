@@ -17,7 +17,6 @@
   <class name = "Analysis::Process"                 />
   <class name = "Analysis::RooMakeHistos"           />
   <class name = "Analysis::UStat"                   />
-  <class name = "Gaudi::Utils::HStats"              />
   <class name = "Analysis::Models::BreitWigner"     />
   <class name = "Analysis::Models::Rho0"            />
   <class name = "Analysis::Models::Flatte"          />
@@ -36,6 +35,16 @@
   <class name = "Analysis::Models::PolyPositive"    />
   <class name = "Analysis::Models::ExpoPositive"    />
   <class name = "Analysis::Models::StudentT"        />
+
+  <class name = "Gaudi::Utils::HStats"              />
+  <class name = "Gaudi::Utils::Mute"                />
+  
+  <exclusion>
+    <class name="Gaudi::Utils::Mute">
+      <field name="m_output" />
+      <field name="m_buffer" />
+    </class>
+  </exclusion>
   
 </lcgdict> 
 

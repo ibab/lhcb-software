@@ -12,6 +12,7 @@
 #include "Analysis/UStat.h"
 #include "Analysis/HStats.h"
 #include "Analysis/Models.h"
+#include "Analysis/Mute.h"
 // ============================================================================
 /** @file 
  *

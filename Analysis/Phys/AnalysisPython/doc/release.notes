@@ -5,9 +5,13 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
   
+! 2013-02-19 - Vanya Belyaev
+
+ - add utilities to suppress stdout/stderr printout  
+
 ! 2013-02-10 - Vanya Belyaev
 
- - Uitls.py simple module  with very simple context managers 
+ - Utils.py simple module  with very simple context managers 
 
 !  2013-02-10 - Vanya Belyaev
  - PySelector - allow to control number of processed events 
