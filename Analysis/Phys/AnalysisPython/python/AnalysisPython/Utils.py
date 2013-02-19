@@ -32,7 +32,7 @@ __all__     = (
     'silence'        , ## ditto 
 )    
 # =============================================================================
-import ROOT, time, os  
+import ROOT, time, os,sys  
 from   GaudiPython.Bindings   import gbl as cpp
 # =============================================================================
 ## @class _Memory
@@ -297,6 +297,9 @@ def timing ( name = '' ) :
 ## ditto 
 timer = timing   # ditto
 
+class Silent(object):
+    def write(self,*args,**kwards) : pass
+    
 # ============================================================================
 ## @class Mute
 #  context manager to suppress the printour
@@ -316,26 +319,49 @@ class Mute(object):
     http://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions
     """
     def __init__( self , out = True , err = False ):
-        # Open a pair of null files
-        self.null_fds =  [os.open(os.devnull,os.O_RDWR) for x in range(2)]
-        # Save the actual stdout (1) and stderr (2) file descriptors.
-        self.save_fds = (os.dup(1), os.dup(2))
         self._out = out
-        self._err = err 
+        self._err = err
         
     def __enter__(self):
-        # Assign the null pointers to stdout and stderr.
-        if self._out : os.dup2 ( self.null_fds[0] , 1 )
-        if self._err : os.dup2 ( self.null_fds[1] , 2 )
 
+        #
+        ## C/C++
+        # 
+        # Open a pair of null files
+        self.null_fds = [ os.open ( os.devnull , os.O_RDWR ) for x in range(2) ]
+        # Save the actual stdout (1) and stderr (2) file descriptors.
+        self.save_fds = ( os.dup(1), os.dup(2) )
+
+        #
+        ## Python
+        # 
+        self.stdout = sys.stdout
+        self.stderr = sys.stdout
+        
+        if self._out :
+            os.dup2 ( self.null_fds[0] , 1 )  ## C/C++
+            sys.stdout = Silent ()            ## Python
+            
+        if self._err :
+            os.dup2 ( self.null_fds[1] , 2 )  ## C/C++
+            sys.stderr = Silent ()            ## Python
+        
     def __exit__(self, *_):
-        # Re-assign the real stdout/stderr back to (1) and (2)
-        os.dup2(self.save_fds[0],1)
-        os.dup2(self.save_fds[1],2)
-        # Close the null files
-        os.close(self.null_fds[0])
-        os.close(self.null_fds[1])
-
+        
+        #
+        ## Python
+        # 
+        sys.stdout = self.stdout
+        sys.stderr = self.stdout
+        
+        # Re-assign the real stdout/stderr back to (1) and (2)  (C/C++_)
+        os.dup2 ( self.save_fds[0] , 1 )
+        os.dup2 ( self.save_fds[1] , 2 )
+        
+        # Close the null files  (C/C++_
+        os.close ( self.null_fds[0] )
+        os.close ( self.null_fds[1] )
+        
 # =============================================================================
 ## simple context manager to suppress the printout
 #
