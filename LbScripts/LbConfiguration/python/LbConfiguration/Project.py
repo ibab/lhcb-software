@@ -566,7 +566,7 @@ Panoramix.setFullSize(15000000)#IGNORE:E0602
 Phys.setFullSize(15000000)#IGNORE:E0602
 
 # Rec
-Rec.setFullSize(15000000)#IGNORE:E0602
+Rec.setFullSize(30000000)#IGNORE:E0602
 
 # Stripping
 Stripping.setFullSize(15000000)#IGNORE:E0602
