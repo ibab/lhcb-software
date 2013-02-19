@@ -3,6 +3,8 @@
 ! Responsible : Juan Palacios
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+! 2013-02-19 - Stefania Vecchi
+ - Update tests references for tagging
 
 ! 2013-02-07 - Chris Jones
  - Add an unpacking test.
