@@ -3,10 +3,12 @@
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
 
-!========================= HighPtJets v1r7p2 2012-11-30 =========================
+!========================= HighPtJets v1r8 2013-02-20 =========================
 
 ! 2013-02-05 - Marcin Kucharczyk
  - Add protection against huge memory usage events in bJetSeeds algo
+
+!========================= HighPtJets v1r7p2 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
