@@ -6,7 +6,7 @@
 
 !========================== GENSER v12r2 2013-02-14 ==========================
 ! 2013-02-14 - Gloria Corti
- - Merge changes to remove hijing code from v12r2b branch. See below.
+ - Merge changes to remove hijing code from v10r2b branch. See below.
 
 ! 2013-02-14 - Gloria Corti (merged r152263)
  - Now physically remove the line commented in the requirement and the rlu.F 
