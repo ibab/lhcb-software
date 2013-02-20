@@ -4,16 +4,16 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
-! 2013-01-25 - Kazu Akiba 
- - Adding TupleToolParticleStats. It counts how many particles  are in aa given location.
+!========================= DecayTreeTupleReco v1r1 2013-02-20 =========================
 
 ! 2013-01-24 - Patrick Koppenburg
- - Rob said "undo your changes", so I did. Actually the functionality is already in the baseclass.
+ - Rob said "undo your changes", so I did. Actually the functionality is already in
+   the baseclass.
 
 ! 2013-01-22 - P. Koppenburg
  - TupleToolTrackExtrapolation: add a prefix field to allow several instances to be used.
 
-! 2013      -01-07 - Chris Jones
+! 2013-01-07 - Chris Jones
  - Minor optimisations to TupleToolTrackIsolation
 
 ! 2012-12-11 - Kazu Akiba 

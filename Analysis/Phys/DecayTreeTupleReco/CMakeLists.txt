@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleReco
 ################################################################################
-gaudi_subdir(DecayTreeTupleReco v1r0)
+gaudi_subdir(DecayTreeTupleReco v1r1)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          Phys/DecayTreeTupleBase)
