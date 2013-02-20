@@ -5,10 +5,10 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiAlgo v9r8 2013-02-20 =========================
 
 ! 2013-02-04 - Vanya Belyaev
-
- - add few basic types to n-tuple to allow easier
+ - Add few basic types to n-tuple to allow easier
    (and more efficient) explicit overload resolution 
 
 !========================= LoKiAlgo v9r7p2 2012-11-30 =========================

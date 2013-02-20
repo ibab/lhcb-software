@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiAlgo
 ################################################################################
-gaudi_subdir(LoKiAlgo v9r7p2)
+gaudi_subdir(LoKiAlgo v9r8)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          GaudiPython
