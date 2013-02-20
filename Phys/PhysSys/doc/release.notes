@@ -3,6 +3,35 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v16r4>2013-02-20 Phys v16r4 </A></H1><PRE>
+Development release, based on Rec v14r44, LHCb v35r4.
+
+- Packages Updated :
+   DaVinciKernel, DaVinciTools, HighPtJets, LoKiAlgo, LoKiPhys, LoKiTracks,
+   ParticleMaker, VertexFit
+
+- In DaVinciKernel :
+ . Fix a bug where IgnoreP2PVFromInputLocations in DVCommonBase was not 
+   respected. Fixes https://savannah.cern.ch/bugs/?99656
+ . Disable the preloading of P2PV relations, as this is no longer needed with 
+   the new logic that loads on demand the relations based on the Particle 
+   location in the TES.
+
+- In DaVinciTools :
+ . TrackScaleState algorithm: New algorithm to apply a momentum scale.
+ . Added ability to cut on Delta phi in DoubleTopoTool.
+
+- In HighPtJets :
+ . Add protection against huge memory usage events in bJetSeeds algo.
+
+- In LoKiAlgo :
+ . Add few basic types to n-tuple to allow easier (and more efficient) 
+   explicit overload resolution.
+
+- In LoKiPhys :
+ . Fix definition of VPCHI2 symbol.
+ . Allow four indices for MASS-functor 
+
 </PRE><H1><A NAME=v16r3>2012-11-30 Phys v16r3 </A></H1><PRE>
 Development release, based on Rec v14r3, LHCb v35r3.
 
