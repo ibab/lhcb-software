@@ -1,6 +1,6 @@
 project ANALYSIS
 
-use PHYS PHYS_v16r3
+use PHYS PHYS_v16r4
 
 build_strategy	with_installarea
 setup_strategy	root
