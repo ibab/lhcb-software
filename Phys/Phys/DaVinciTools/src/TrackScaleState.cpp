@@ -683,7 +683,7 @@ StatusCode TrackScaleState::i_updateDATA ()
 StatusCode TrackScaleState::execute ()
 {
   // get the tracks to scale
-  LHCb::Tracks* trackCont = get<LHCb::Tracks> ( m_input );
+  LHCb::Tracks* trackCont = getIfExists<LHCb::Tracks> ( m_input );
   //
   /// perform the action for new run 
   const LHCb::ODIN* odin = get<LHCb::ODIN>( evtSvc() , LHCb::ODINLocation::Default) ;
@@ -697,44 +697,46 @@ StatusCode TrackScaleState::execute ()
   StatEntity& scale = counter("SCALE") ;
   //
   // loop and do the scaling
-  for ( LHCb::Tracks::iterator it = trackCont->begin() ; 
-        it != trackCont->end(); ++it )
-  {
-    LHCb::Track* track = *it ;
-    if ( 0 == track ) { continue ; }
-    //
-    typedef std::vector<LHCb::State*> STATES ;
-    const STATES& theStates = track->states();
-    //
-    const int idp = track->charge()*polarity; // charge * magnet polarity
-    //
-    // loop over the states for the given track 
-    for ( STATES::const_iterator iterState = theStates.begin(); 
-          iterState != theStates.end(); ++iterState ) 
+  if ( LIKELY (NULL!=trackCont) ) {
+    for ( LHCb::Tracks::iterator it = trackCont->begin() ; 
+          it != trackCont->end(); ++it )
     {
-      LHCb::State* state = *iterState ;
-      if ( 0 == state ) { continue ; }
+      LHCb::Track* track = *it ;
+      if ( 0 == track ) { continue ; }
       //
-      const double qOverP = state->qOverP(); 
+      typedef std::vector<LHCb::State*> STATES ;
+      const STATES& theStates = track->states();
       //
-      const double tx = state -> tx () ;
-      const double ty = state -> ty () ;
-      // 
-      // calculate  the scale factor :
-      const double theScale = m_scaler -> eval (tx , ty , idp , m_run_offset ) 
-        + m_deltaScale + m_delta_slope ;
+      const int idp = track->charge()*polarity; // charge * magnet polarity
       //
-      scale += theScale ;
-      //
-      // the actual scaling: 
-      state -> setQOverP ( qOverP / theScale ) ;          // THE ACTUAL SCALING 
-      //
-      // scale slopes:                                    // ATTENTION!
-      state -> setTx ( tx * m_slope ) ;
-      state -> setTy ( ty * m_slope ) ;      
-      //
-    } //                                           end of loop over the states   
-  } //                                             end loop over the tarcks 
+      // loop over the states for the given track 
+      for ( STATES::const_iterator iterState = theStates.begin(); 
+            iterState != theStates.end(); ++iterState ) 
+      {
+        LHCb::State* state = *iterState ;
+        if ( 0 == state ) { continue ; }
+        //
+        const double qOverP = state->qOverP(); 
+        //
+        const double tx = state -> tx () ;
+        const double ty = state -> ty () ;
+        // 
+        // calculate  the scale factor :
+        const double theScale = m_scaler -> eval (tx , ty , idp , m_run_offset ) 
+          + m_deltaScale + m_delta_slope ;
+        //
+        scale += theScale ;
+        //
+        // the actual scaling: 
+        state -> setQOverP ( qOverP / theScale ) ;          // THE ACTUAL SCALING 
+        //
+        // scale slopes:                                    // ATTENTION!
+        state -> setTx ( tx * m_slope ) ;
+        state -> setTy ( ty * m_slope ) ;      
+        //
+      } //                                           end of loop over the states   
+    } //                                             end loop over the tracks 
+  } //                                             if tracks exist
   //
   return StatusCode::SUCCESS;
 }

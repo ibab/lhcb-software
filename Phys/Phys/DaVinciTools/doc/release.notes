@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-02-20 - Paul Seyfert
+ - TrackScaleState algorithm:
+    protection against nonexistent track container.
+
 ! 2013-02-05 - Vanya Belyaev
   
   - TrackScaleState algorithm: 
