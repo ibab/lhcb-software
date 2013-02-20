@@ -5,11 +5,13 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiPhys v10r13 2013-02-20 =========================
+
 ! 2013-02-15 - Vanya Belyaev
- - fix definition of VPCHI2 symbol. Thanks to Conor Fitzpatrick 
+ - Fix definition of VPCHI2 symbol. Thanks to Conor Fitzpatrick 
 
 ! 2013-02-01 - Vanya Belyaev
- - allow four indices for MASS-functor 
+ - Allow four indices for MASS-functor 
 
 !========================= LoKiPhys v10r12p1 2012-11-30 =========================
 
