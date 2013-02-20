@@ -3,6 +3,41 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v10r4>2013-02-20 Analysis v10r4 </A></H1><PRE>
+New development release, built against Phys v16r4.
+
+- Packages Updated :
+   LoKiExample, HltSelChecker, AnalysisPython, DaVinciMCTools,
+   DecayTreeTuple, DaVinciMonitors, DecayTreeTupleReco,
+   DisplVerticesMC, FlavourTagging, JetAccessories, VertexFitCheck
+
+- Packages Added :
+   JetTagging
+
+In AnalysisPython :
+ . Various. See package release notes.
+
+In DecayTreeTuple :
+ . Small clean up and optimisation of TupleToolGeometry
+
+In DecayTreeTupleReco :
+ . Minor optimisations to TupleToolTrackIsolation
+ . Adding TupleToolVeloTrackClusterInfo
+ . Adding  TupleToolDEDX and TupleToolVeloClusters. 
+   TupleToolDEDX has many variables to use the energy loss in the VELO
+   TupleToolVeloClusters searches for unused velo clusters. 
+
+In FlavourTagging :
+ . New NN OS kaon tagger added
+ . Complete rewrite of the clone definition in the flavour tagging
+ . Misc. bug fixes. See full release notes.
+
+In JetAccessories and JetAccessoriesMC :
+ . Various improvments. See package release notes.
+
+In JetTagging :
+ . New package for tagging jets.
+
 ! 2013-02-18 - Chris Jones
  - Add new package Phys/JetTagging
 
