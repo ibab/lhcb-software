@@ -5,20 +5,19 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
   
+!========================= AnalysisPython v2r18 2013-02-20 =========================
+
 ! 2013-02-19 - Vanya Belyaev
  - more silence 
 
 ! 2013-02-19 - Vanya Belyaev
-
  - add utilities to suppress stdout/stderr printout  
 
 ! 2013-02-10 - Vanya Belyaev
-
  - Utils.py simple module  with very simple context managers 
 
 !  2013-02-10 - Vanya Belyaev
  - PySelector - allow to control number of processed events 
-
 
 ! 2013-01-27 - Vanya Belyaev
  - few minor fixes in PyRoUts 
