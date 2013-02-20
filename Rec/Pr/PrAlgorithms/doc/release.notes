@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-02-20 - Olivier Callot
+ - New algorithm PrSeedingNew for FT seeding, prototype for tests.
+
 !========================= PrAlgorithms v1r2 2013-02-14 =========================
 ! 2013-02-07 - Sascha Stahl
  - Enabled finding of T-Tracks in PrSeeding.

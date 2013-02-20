@@ -89,6 +89,12 @@ public:
 
   void setMeanDy( float meanDy )      { m_meanDy = meanDy; }
   float meanDy()                const { return m_meanDy; }
+
+  struct GreaterBySize {
+    bool operator() (const PrSeedTrack& lhs, const PrSeedTrack rhs ) const { return lhs.hits().size() > rhs.hits().size(); }
+  };
+
+
 protected:
 
 private:
