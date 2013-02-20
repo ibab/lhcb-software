@@ -36,7 +36,7 @@ private:
   std::string _fname;
   std::string _ntpName;
   long int _maxEvents;
- 
+
 
 
   TRandom Rand;
@@ -57,7 +57,7 @@ private:
 
   int m_particle;
   const char* _cuts;
-  
+
   Long64_t _entries;
   Long64_t _firstentry;
 
@@ -162,7 +162,7 @@ public:
   {
     return Rand.Rndm();
   }
-  
+
   void SetEntries(int entries){ _entries = entries;}
   void SetFirstEntry(int firstEntry){ _firstentry = firstEntry;}
 
@@ -414,7 +414,7 @@ MINT::counted_ptr<DalitzEvent> ReadNTuple<T,N>::readEntry(unsigned int entry){
 
   int pdgArray[5];
   pdgArray[0] = (int)m_mother_pdg;
-//  std::cout << m_mother_pdg <<
+  //  std::cout << m_mother_pdg <<
 
   if (dbThis)
     {
@@ -492,11 +492,11 @@ MINT::counted_ptr<DalitzEvent> ReadNTuple<T,N>::readEntry(unsigned int entry){
       if(entry < 5){
           for(unsigned int i = 0; i < 5; i++){
               cout << " mass " << i << ") " << PArray[i].M()
-												               << " Px " << i << ") " << PArray[i].Px()
-												               << " Py " << i << ") " << PArray[i].Py()
-												               << " Pz " << i << ") " << PArray[i].Pz()
-												               << " E " << i << ") " << PArray[i].E()
-												               << ", pdg " << pdgArray[i] << endl;
+												                   << " Px " << i << ") " << PArray[i].Px()
+												                   << " Py " << i << ") " << PArray[i].Py()
+												                   << " Pz " << i << ") " << PArray[i].Pz()
+												                   << " E " << i << ") " << PArray[i].E()
+												                   << ", pdg " << pdgArray[i] << endl;
           }
       }
 
@@ -504,8 +504,8 @@ MINT::counted_ptr<DalitzEvent> ReadNTuple<T,N>::readEntry(unsigned int entry){
         {
           for(unsigned int i = 0; i < 5; i++){
               cout << " mass " << i << ") " << PArray[i].M()
-														             << " Px " << i << ") " << PArray[i].Px()
-														             << ", pdg " << pdgArray[i] << endl;
+														                 << " Px " << i << ") " << PArray[i].Px()
+														                 << ", pdg " << pdgArray[i] << endl;
           }
         }
     }
@@ -571,8 +571,17 @@ bool ReadNTuple<T,N>::readit(DiskResidentEventList* listPtr, int maxEvents, doub
                 {
                   evtPtr->setWeight(weight);
                 }
-              numEvents++;
-              listPtr->Add(*(evtPtr.get()));
+
+              if (evtPtr->kinematicallyAllowed(5.e-2))
+                {
+                  numEvents++;
+                  listPtr->Add(*(evtPtr.get()));
+                }
+              else if (!evtPtr->kinematicallyAllowed(5.e-2))
+                {
+                  std::cout << "Not allowed " << std::endl;
+                  evtPtr->print();
+                }
             }
           if(maxEvents > 0 && numEvents > maxEvents) break;
         }

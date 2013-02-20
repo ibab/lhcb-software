@@ -84,6 +84,6 @@
 "CLEO2012D0[D]->NonResV0(->K+,pi-),NonResV0(->K-,pi+)_Im"    1    -344.0    0.2    0.0    0.0
 **
 ** {pi+ pi-}P {K+ K-}P D OK
-"CLEO2012D0->NonResV0(->pi+,pi-),NonResV0(->K+,K-)_Re"    1    -105.0    0.2    0.0    0.0
-"CLEO2012D0->NonResV0(->pi+,pi-),NonResV0(->K+,K-)_Im"    1    -151.0    0.2    0.0    0.0
+"CLEO2012D0[D]->NonResV0(->pi+,pi-),NonResV0(->K+,K-)_Re"    1    -105.0    0.2    0.0    0.0
+"CLEO2012D0[D]->NonResV0(->pi+,pi-),NonResV0(->K+,K-)_Im"    1    -151.0    0.2    0.0    0.0
 **

@@ -30,7 +30,7 @@ namespace MINT{
 }
 class FastAmplitudeIntegrator : virtual public IDalitzIntegrator{
   mutable double _mean;
-  const static long int _minEvents=1000;
+  const static long int _minEvents=100;
   int _numEvents;
   int _Ncalls;
 
