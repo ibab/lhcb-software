@@ -6,6 +6,9 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 2013-02-20 - Matthew Coombes
+ - Removed Miranda packages
+
 ! 2013-02-13 - Patrick Robbe
  - Fix gcc46 compilation problems
 
