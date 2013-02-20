@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTuple
 ################################################################################
-gaudi_subdir(DecayTreeTuple v4r0)
+gaudi_subdir(DecayTreeTuple v4r0p1)
 
 gaudi_depends_on_subdirs(Phys/DecayTreeFitter
                          Phys/DecayTreeTupleBase
