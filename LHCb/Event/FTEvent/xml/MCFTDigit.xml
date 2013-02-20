@@ -12,7 +12,7 @@
            desc   = "This class represents the ADC charge collected per FTChannelID"
            serializers="FALSE">
       <import   name = "Kernel/FTChannelID" />
-      <import   name = "Event/MCParticle.h" />
+      <import   name = "Event/MCHit.h" />
       <location name = "Default"   place="MC/FT/Digits"   />
 
       <template name = "KeyedObjectDict" t1="LHCb::FTChannelID"/>
@@ -20,8 +20,8 @@
       &KeyedObject;
 
       <constructor desc     = "Constructor"
-		   argList  = "LHCb::FTChannelID&amp; id, int adc,std::map&lt;const LHCb::MCParticle*, double&gt; mcMap" 
-                   initList = "m_adcCount(adc),m_mcParticleMap(mcMap)">
+		   argList  = "LHCb::FTChannelID&amp; id, int adc, std::map&lt;const LHCb::MCHit*, double&gt; hitMap" 
+                   initList = "m_adcCount(adc),m_mcHitMap(hitMap)">
         <code> this->setKey(id); </code>
       </constructor>
 
@@ -50,11 +50,13 @@
                  type   = "int"
                  access = "PRIVATE"/>
 
-      <attribute name   = "mcParticleMap"
-                 desc   = "map of MCParticle involved in the digit and deposited energy"
-                 type   = "std::map&lt; const LHCb::MCParticle*, double&gt;"
+      <attribute name   = "mcHitMap"
+                 desc   = "map of MCHit involved in the digit and deposited energy"
+                 type   = "std::map&lt; const LHCb::MCHit*, double&gt;"
                  setMeth = "FALSE"
                  access = "PRIVATE"/>
+
+
     </class>
   </package>
 </gdd>

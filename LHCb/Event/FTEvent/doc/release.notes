@@ -4,6 +4,9 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+! 2013-02-13 - Eric Cogneras
+ - In MCFTDigit class, map of MCParticle replaced by map of MCHit
+
 !========================= FTEvent v1r2 2013-02-04 =========================
 ! 2012-11-29 - Olivier Callot
  - Make the channelID method const for track fit
