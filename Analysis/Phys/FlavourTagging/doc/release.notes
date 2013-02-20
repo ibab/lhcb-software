@@ -5,8 +5,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTagging v12r12 2013-02-20 =========================
+
 ! 2013-02-01 - Katharina Kreplin
- - new NN OS kaon tagger added
+ - New NN OS kaon tagger added
 
 ! 2013-01-27 - Manuel Tobias Schiller
  - get rid of even more useless pow(..., integer) invocations...
