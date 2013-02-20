@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VertexFitCheck
 ################################################################################
-gaudi_subdir(VertexFitCheck v1r8p1)
+gaudi_subdir(VertexFitCheck v1r8p2)
 
 gaudi_depends_on_subdirs(Event/LinkerEvent
                          Event/MCEvent
