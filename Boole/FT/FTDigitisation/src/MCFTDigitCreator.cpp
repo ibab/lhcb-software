@@ -85,19 +85,18 @@ StatusCode MCFTDigitCreator::execute() {
 
     plot((double)mcDeposit->channelID(), "FiredChannelID","Fired Channel; ChannelID" , 0. , 800000.);
     plot((double)mcDeposit->mcHitVec().size(), "HitPerChannel",
-         "Number of Hits per Channel;Number of Hits per Channel;" , 0. , 10.);
+         "Number of Hits per Channel;Number of Hits per Channel; Number of channels" , 0. , 10., 10);
 
-    // Fill map linking the deposited energy to the MCParticle which deposited it.
-    std::map<const LHCb::MCParticle*, double> mcParticleMap;
+    // Fill map linking the deposited energy to the MCHit which deposited it.
+    std::map<const LHCb::MCHit*, double> mcParticleMap;
     std::vector<std::pair <LHCb::MCHit*,double> >::const_iterator vecIter=mcDeposit->mcHitVec().begin();
-    double EnergySum = 0;
+    
     for(;vecIter != mcDeposit->mcHitVec().end(); ++vecIter){
       if ( msgLevel( MSG::DEBUG) ) {
         debug() << format( " aHit->midPoint().x()=%10.3f E=%10.3f from MCParticle %5d",
                            vecIter->first->midPoint().x(), vecIter->second, 
                            vecIter->first->mcParticle()->key() ) << endmsg;
       }
-
       plot(vecIter->second,
            "EnergyPerChannel",
            "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 
@@ -110,8 +109,7 @@ StatusCode MCFTDigitCreator::execute() {
            "EnergyPerChannelBIGZOOM",
            "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 0, 1);
 
-      mcParticleMap[vecIter->first->mcParticle()] += vecIter->second;
-      EnergySum += vecIter->second;
+      mcParticleMap[vecIter->first] += vecIter->second;
     }
 
     // Define & store digit
@@ -151,8 +149,6 @@ StatusCode MCFTDigitCreator::finalize() {
 int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
 {
   /// Compute energy sum
-  // TODO :
-  // - add noise 
   double energySum = 0;
   std::vector<std::pair <LHCb::MCHit*,double> >::const_iterator vecIter= ftdeposit->mcHitVec().begin();
   for(;vecIter != ftdeposit->mcHitVec().end(); ++vecIter){

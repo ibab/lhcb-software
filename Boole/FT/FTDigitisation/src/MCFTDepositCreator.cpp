@@ -81,9 +81,6 @@ StatusCode MCFTDepositCreator::initialize() {
 
   /// Retrieve and initialize DeFT (no test: exception in case of failure)
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
-
-  m_nHits = 0;
-  m_sumEnergy = 0.;
   
   //== Generate the transmission map. 
   //== Two attenuation length, then in the radiaton area a different attenuation length
@@ -179,7 +176,8 @@ StatusCode MCFTDepositCreator::execute() {
 
     MCHit* ftHit = *iterHit;     //pointer to the Hit
 
-    plot2D( ftHit->entry().x(), ftHit->entry().y(), "x/y entry",  -500., 500., -500., 500., 100, 100 );
+    plot2D( ftHit->entry().x(), ftHit->entry().y(), "HitEntryPosition;x/y entry ; x [mm]; y [mm]",  
+            -500., 500., -500.,500., 100, 100 );
 
 
     plot(ftHit->energy(),"EnergyOfHit", "Energy of the Hit ; Energy [MeV];Number of hits" , 0 , 10 );
@@ -214,16 +212,16 @@ StatusCode MCFTDepositCreator::execute() {
                   << channels.size() << endmsg;
         }
 
-        plot(pL->angle()*180/M_PI,"CheckStereoAngle","Stereo Angle; Stereo Angle [#degree];" ,-10 , 10);
-        plot(pL->layerInnerHoleRadius(),"CheckHoleRadius","Hole Radius ; Hole Radius  [mm];" ,50 , 150);
-        plot(pL->layerMaxY(),"CheckLayerHalfSizeY","Layer Half Size Y ; Layer Half Size Y  [mm];" ,3000 , 3100);
+        plot(pL->angle()*180/M_PI,"LayerStereoAngle","Layer Stereo Angle;Layer Stereo Angle [#degree];" ,-10 , 10);
+        plot(pL->layerInnerHoleRadius(),"LayerHoleRadius","Layer Hole Radius ; Hole Radius  [mm];" ,50 , 150);
+        plot(pL->layerMaxY(),"LayerHalfSizeY","Layer Half Size Y ; Layer Half Size Y  [mm];" ,0 , 3500);
 
         plot(channels.size(),"CheckNbChannel", 
              "Number of fired channels per Hit; Number of fired channels; Number of hits" , 
-             0 , 100);
+             0 , 50);
 
-        m_nHits += 1;
-        m_sumEnergy += ftHit->energy();
+     
+ 
 
         //== Compute attenuation by interpolation in the table
         int kx = fabs( ftHit->midPoint().x() ) / m_xStepMap;
@@ -235,12 +233,13 @@ StatusCode MCFTDepositCreator::execute() {
                                     (1-fracY) * m_transmissionMap[m_nYSteps*(kx+1)+ky]   ) +
                       (1-fracX) * ( fracY     * m_transmissionMap[m_nYSteps*kx+ky+1] + 
                                     (1-fracY) * m_transmissionMap[m_nYSteps*kx+ky]   ) );
+
         if ( msgLevel( MSG::DEBUG ) ) {
           debug() << format( "x %9.2f y %9.2f kx %3d ky %3d fracx %8.3f fracY %8.3f att %7.4f",
                              ftHit->midPoint().x(), ftHit->midPoint().y(), kx, ky, fracX, fracY, att ) << endmsg;
         }
         
-          plot(att,"CheckAttFactor","AttFactorDistrib; Attenuation factor ; Nber of Events" ,0 ,1);
+        plot(att,"AttenuationFactor","AttFactorDistrib; Attenuation factor ; Nber of Events" ,0 ,1);
 
         // Fill MCFTDeposit
         FTDoublePairs::const_iterator vecIter;
@@ -251,9 +250,9 @@ StatusCode MCFTDepositCreator::execute() {
             debug()  << "FTChannel=" << vecIter->first << " EnergyHitFraction="<< EnergyInSiPM << endmsg;
           }
         
-          plot(vecIter->second,"EnergyDepositedInCell","EnergyDepositedInCell; Energy Deposited in Cell ; Nber of Channels" ,
-               0. ,10);
-          plot(EnergyInSiPM,"EnergyRecordedInCell","EnergyRecordedInCell; EnergyReachingSiPM ; Nber of Channels" ,0. ,10);
+          plot(vecIter->second,"EnergyDepositedInCell","EnergyDepositedInCell ; Energy Deposited in Cell [MeV]; Nber of Channels"
+               ,0. ,2);
+          plot(EnergyInSiPM,"EnergyRecordedInCell","EnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,2);
           // if reference to the channelID already exists, just add DepositedEnergy
           if( depositCont->object(vecIter->first) != 0 ){
             (depositCont->object(vecIter->first))->addMCHit(ftHit,EnergyInSiPM);
@@ -276,7 +275,7 @@ StatusCode MCFTDepositCreator::execute() {
 //  
 //=========================================================================
 StatusCode MCFTDepositCreator::finalize() {
-  info() << "Average energy per MCHit = " << m_sumEnergy / m_nHits << endmsg;
+
 
   return GaudiAlgorithm::finalize();
 }

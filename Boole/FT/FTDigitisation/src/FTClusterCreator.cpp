@@ -32,7 +32,7 @@ DECLARE_ALGORITHM_FACTORY( FTClusterCreator )
 //=============================================================================
   FTClusterCreator::FTClusterCreator( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-    : GaudiAlgorithm ( name , pSvcLocator )
+    : GaudiHistoAlg ( name , pSvcLocator )
 {
   declareProperty("InputLocation" ,     m_inputLocation     = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
   declareProperty("OutputLocation" ,    m_outputLocation    = LHCb::FTClusterLocation::Default, "Path to output Clusters");
@@ -41,6 +41,9 @@ DECLARE_ALGORITHM_FACTORY( FTClusterCreator )
   declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 8 , "Maximal allowed width for clusters");
   declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 8 , "Minimal charge to keep cluster ~4 p.e.");
   declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 5 , "Minimal ADC for cluster peaks, ~2.5 pe.");
+
+  m_nberOfLostHit = 0;
+  m_nberOfKeptHit = 0;
 }
 //=============================================================================
 // Destructor
@@ -88,14 +91,16 @@ StatusCode FTClusterCreator::execute() {
   // Create a link between the FTCluster and the MCParticle which leave a track
   LinkerWithKey<LHCb::MCParticle,LHCb::FTCluster> mcToClusterLink( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default);
 
+  LinkerWithKey<LHCb::MCHit,LHCb::FTCluster> mchitToClusterLink( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default);
+
   // DEBUG : print Digit content : should be sorted
   if(msgLevel(MSG::DEBUG)){
     for (MCFTDigits::const_iterator iterDigit = mcDigitsCont->begin(); iterDigit!=mcDigitsCont->end();++iterDigit){
       MCFTDigit* mcDigit = *iterDigit;
-      std::map< const LHCb::MCParticle*, double> mcMap = mcDigit->mcParticleMap();
+      std::map< const LHCb::MCHit*, double> hitMap = mcDigit->mcHitMap();
       debug() <<"Channel ="<<mcDigit->channelID()<< " : " <<"\t ADC ="<<mcDigit->adcCount() << endmsg;
-      for(std::map<const LHCb::MCParticle*,double>::const_iterator mapiter=mcMap.begin(); mapiter!=mcMap.end(); ++mapiter){
-        debug() <<"MCParticle : index="<<mapiter->first->index() <<" "<<mapiter->first->particleID()
+      for(std::map<const LHCb::MCHit*,double>::const_iterator mapiter=hitMap.begin(); mapiter!=hitMap.end(); ++mapiter){
+        debug() <<"MCParticle : index="<<mapiter->first->mcParticle()->index() <<" "<<mapiter->first->mcParticle()->particleID()
                 << " Energy=" <<mapiter->second << endmsg;
       }
     }
@@ -109,6 +114,8 @@ StatusCode FTClusterCreator::execute() {
   while(seedDigitIter != mcDigitsCont->end()){ // loop over digits
     MCFTDigit* seedDigit = *seedDigitIter;
 
+
+
     if(seedDigit->adcCount() > m_adcThreshold){ // ADC count in  digit is over threshold : start cluster
       bool hasSeed = seedDigit->adcCount() > m_clusterMinADCPeak;
       // vector of ADC count of each cell from the cluster
@@ -119,11 +126,17 @@ StatusCode FTClusterCreator::execute() {
 
       // map of contributing MCParticles with their relative energy deposit
       std::map< const LHCb::MCParticle*, double> mcContributionMap;
+
+
       if ( msgLevel( MSG::DEBUG) ) {
         debug() <<"++ Starts clustering with Channel "<<seedDigit->channelID()
                 <<" (ADC = "<<seedDigit->adcCount() <<" )"<< endmsg;
       }
     
+
+      /** Construction of the cluster from its first (seedDigit) to last (lastDigit) channel
+      */
+      int NbOfHitInvolvedInCluster = 0;
       MCFTDigits::const_iterator lastDigitIter = seedDigitIter;
       do{
         // Add digit to cluster
@@ -134,13 +147,15 @@ StatusCode FTClusterCreator::execute() {
         if ( lastDigit->adcCount() > m_clusterMinADCPeak ) hasSeed = true;
         
         clusterADCDistribution.push_back(lastDigit->adcCount());
+        NbOfHitInvolvedInCluster += lastDigit->mcHitMap().size();
+
 
         // Keep track of MCParticles involved in the cluster definition
-        std::map<const LHCb::MCParticle*, double> mcMap = lastDigit->mcParticleMap();
-        std::map<const LHCb::MCParticle*, double>::const_iterator mcMapIter=mcMap.begin();
-        for(; mcMapIter!=mcMap.end(); ++mcMapIter){
-          totalEnergyFromMC +=mcMapIter->second;
-          mcContributionMap[mcMapIter->first] += mcMapIter->second;
+        std::map<const LHCb::MCHit*, double> hitMap = lastDigit->mcHitMap();
+        std::map<const LHCb::MCHit*, double>::const_iterator hitMapIter=hitMap.begin();
+        for(; hitMapIter!=hitMap.end(); ++hitMapIter){
+          totalEnergyFromMC +=hitMapIter->second;
+          mcContributionMap[hitMapIter->first->mcParticle()] += hitMapIter->second;
         }
         ++lastDigitIter;
 
@@ -149,10 +164,10 @@ StatusCode FTClusterCreator::execute() {
              && (clusterADCDistribution.size()<m_clusterMaxWidth));
       
 
-      // Compute total ADC counts and cluster barycenter position in ChannelID unit
+      /** Compute total ADC counts and cluster barycenter position in ChannelID unit
+       */
       unsigned int totalCharge = 0;
       double meanPosition = 0;
-      
       for(std::vector<int>::const_iterator i = clusterADCDistribution.begin();i != clusterADCDistribution.end(); ++i){
         totalCharge += *i;
         meanPosition += (i-clusterADCDistribution.begin()) * (*i);
@@ -165,7 +180,7 @@ StatusCode FTClusterCreator::execute() {
       meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
 
 
-      // Checks :
+      // Before Cluster record, checks :
       // - total ADC charge of the cluster is over threshold and
       // - A seed has been found and
       // - number of cells above the minimal allowed value      
@@ -210,9 +225,23 @@ StatusCode FTClusterCreator::execute() {
                   << endmsg;
         }
 
+        // increment lost Hit counter
+        m_nberOfKeptHit += NbOfHitInvolvedInCluster;   
       }
+      else{
+        // increment lost Hit counter
+        m_nberOfLostHit += NbOfHitInvolvedInCluster;      
+        
+      }
+      
       seedDigitIter = (lastDigitIter-1);
     }
+    else{
+      // increment lost Hit counter
+      m_nberOfLostHit += seedDigit->mcHitMap().size();
+    }
+
+    
 
     ++seedDigitIter;
 
@@ -229,6 +258,9 @@ StatusCode FTClusterCreator::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   info() << "*** Average cluster charge = " << m_sumCharge / m_nCluster << endmsg;
+
+  info() << "*** Lost Hits = " <<m_nberOfLostHit << "\t Kept Hits = "<< m_nberOfKeptHit 
+         << "\t Eff = "<< (double)m_nberOfKeptHit/(m_nberOfKeptHit + m_nberOfLostHit)<< endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

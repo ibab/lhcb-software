@@ -47,6 +47,7 @@ StatusCode MCFTDigitMonitor::initialize() {
   return StatusCode::SUCCESS;
 }
 
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -66,13 +67,19 @@ StatusCode MCFTDigitMonitor::execute() {
     // plot digit adc count
     plot((double)mcDigit->adcCount(), "DigADCCount",
          "ADC count [Channel level]; ADC count;Number of SiPM channels" , 
+         0. , 100. ,100);
+    plot((double)mcDigit->adcCount(), "DigADCCountZOOM",
+         "ADC count [Channel level]; ADC count;Number of SiPM channels" , 
          0. , 10. ,10);
+    plot((double)mcDigit->adcCount(), "DigADCCountZOOMZOOM",
+         "ADC count [Channel level]; ADC count;Number of SiPM channels" , 
+         -1. , 1.);
 
     // plot digit adc count vs energy deposited in the channel
     double EnergySum = 0;
-    std::map< const LHCb::MCParticle*, double>::const_iterator mcpart = (mcDigit->mcParticleMap()).begin();
-    for(;mcpart != (mcDigit->mcParticleMap()).end(); ++mcpart)
-      EnergySum += mcpart->second;
+    std::map< const LHCb::MCHit*, double>::const_iterator mchit = (mcDigit->mcHitMap()).begin();
+    for(;mchit != (mcDigit->mcHitMap()).end(); ++mchit)
+      EnergySum += mchit->second;
     
     plot2D(EnergySum, mcDigit->adcCount(), "DigADCCountvsEnergy",
            "ADC count vs deposited energy [Channel level]; Deposited energy [MeV]; ADC count" ,

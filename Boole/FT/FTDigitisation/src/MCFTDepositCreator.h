@@ -63,9 +63,7 @@ private:
   int         m_nYSteps;
   std::vector<float> m_transmissionMap;
 
-  DeFTDetector* m_deFT; ///< pointer to FT detector description  
+  DeFTDetector* m_deFT; ///< pointer to FT detector description
 
-  int         m_nHits;
-  float       m_sumEnergy;
 };
 #endif // MCFTDEPOSITCREATOR_H

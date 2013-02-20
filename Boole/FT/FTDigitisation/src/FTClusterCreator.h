@@ -4,7 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 // LHCbKernel
 #include "Kernel/FTChannelID.h"
@@ -19,7 +19,7 @@
  *  @author Eric Cogneras
  *  @date   2012-04-06
  */
-class FTClusterCreator : public GaudiAlgorithm {
+class FTClusterCreator : public GaudiHistoAlg {
 public: 
   /// Standard constructor
   FTClusterCreator( const std::string& name, ISvcLocator* pSvcLocator );
@@ -47,6 +47,9 @@ private:
   //=== Sum for some average information
   int  m_nCluster;
   float m_sumCharge;
+
+  int     m_nberOfLostHit;
+  int     m_nberOfKeptHit;
 };
 #endif // FTCLUSTERCREATOR_H
 

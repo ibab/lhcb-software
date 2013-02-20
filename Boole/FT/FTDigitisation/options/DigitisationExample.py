@@ -19,8 +19,8 @@ LHCbApp().CondDBtag = "sim-20111111-vc-md100"
 #Datasetname="Bs_mumu_v6_nu325"
 #Datasetname="Bs_mumu_v6_nu65"
 
-Datasetname="MiniBias_v6_nu325"
-#Datasetname="MiniBias_v6_nu65"
+#Datasetname="MiniBias_v6_nu325"
+Datasetname="MiniBias_v6_nu65"
 
 
 EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/o/ogruenbe/"+Datasetname+".sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
@@ -44,7 +44,7 @@ myAlgDeposit = MCFTDepositCreator()
 
 
 myAlgDigit = MCFTDigitCreator()
-#myAlgDigit.SiPMGain = 5
+#myAlgDigit.SiPMGain = 2
 #myAlgDigit.OutputLevel = DEBUG
 
 
