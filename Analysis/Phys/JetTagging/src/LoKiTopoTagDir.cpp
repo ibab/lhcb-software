@@ -16,8 +16,7 @@
 #include "LoKi/ParticleCuts.h"
 // ============================================================================
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,TopoTagDir);
-
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,TopoTagDir)
 
 // ============================================================================
 // Standard Initialization

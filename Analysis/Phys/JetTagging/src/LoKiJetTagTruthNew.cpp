@@ -16,7 +16,7 @@
 #include "Kernel/IParticle2MCAssociator.h"
 // ============================================================================
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,JetTagTruthNew);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,JetTagTruthNew)
 
 
 // ============================================================================

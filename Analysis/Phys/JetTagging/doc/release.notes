@@ -4,6 +4,10 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2013-02-20 - Cedric Potterat
+ - Fixed compilation with icc11 (replacing std::isnan)
+ - Removing all remarks from icc11 compilation
+
 ! 2013-02-18 - Marco Clemencic
  - Fixed compilation with CMake.
  - Removed unused inclusion of Kernel/HistogramAsProperty.h.

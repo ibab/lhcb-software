@@ -9,8 +9,7 @@
 
 // ============================================================================
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,TopoTag);
-
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,TopoTag)
 
 // ============================================================================
 // Standard Constructor

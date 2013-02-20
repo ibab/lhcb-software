@@ -9,7 +9,7 @@
 
 // ============================================================================
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,ElectronTag);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,ElectronTag)
 
 
 // ============================================================================

@@ -5,9 +5,10 @@
 #include <stdlib.h>
 
 #include "LoKiNNBTag.h"
+#include "GaudiAlg/CheckForNaN.h"
 
 
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,NNBTag);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,NNBTag)
 
 
 LoKi::NNBTag::NNBTag(const std::string& type, const std::string& name, const IInterface* parent)
@@ -358,7 +359,7 @@ void LoKi::NNBTag::calculateTrackVariables()
 	  m_pvTool->removeTracksAndRecalculatePV (biasedPV,excludeTracks,unbiasedPV);
 
 	  calculateIP(part, unbiasedPV.position(), ip_tmp, ip_sig_tmp);
-	  if ( std::fabs(ip_tmp) < std::fabs(ip) && !std::isnan(ip_tmp) && !std::isnan(ip_sig_tmp) ) {
+	  if ( std::fabs(ip_tmp) < std::fabs(ip) && !lnan(ip_tmp) && !lnan(ip_sig_tmp) ) {
 	    ip = ip_tmp; 
 	    ip_sig = ip_sig_tmp; 
 	    ip_err = ip_tmp/ip_sig_tmp;

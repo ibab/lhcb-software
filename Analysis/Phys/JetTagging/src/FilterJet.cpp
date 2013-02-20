@@ -7,7 +7,7 @@
 //=======================================
 
 
-DECLARE_ALGORITHM_FACTORY( FilterJet );
+DECLARE_ALGORITHM_FACTORY( FilterJet )
 //=============================================================================
 // Constructor
 FilterJet::FilterJet(const std::string& name,
@@ -30,8 +30,7 @@ FilterJet::FilterJet(const std::string& name,
   declareProperty ( "setNewPID"       ,  m_SubPID  ) ;
   declareProperty ( "Cut"       ,  m_cut  ) ;
 
-} ;
-
+} 
 
 
 //=============================================================================

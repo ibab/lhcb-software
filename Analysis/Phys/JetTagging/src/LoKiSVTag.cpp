@@ -11,7 +11,7 @@
 
 // ============================================================================
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,SVTag);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,SVTag)
 
 
 // ============================================================================
