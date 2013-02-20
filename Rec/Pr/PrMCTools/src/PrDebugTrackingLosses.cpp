@@ -42,7 +42,7 @@ PrDebugTrackingLosses::PrDebugTrackingLosses( const std::string& name,
   declareProperty( "SaveList",    m_saveList    = false );
   declareProperty( "VeloName",    m_veloName    = LHCb::TrackLocation::Velo    );
   declareProperty( "ForwardName", m_forwardName = LHCb::TrackLocation::Forward );
-  declareProperty( "SeedName",    m_forwardName = LHCb::TrackLocation::Seed    );
+  declareProperty( "SeedName",    m_seedName    = LHCb::TrackLocation::Seed    );
 }
 //=============================================================================
 // Destructor

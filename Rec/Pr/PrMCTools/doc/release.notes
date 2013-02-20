@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-02-20 - Olivier Callot
+ - Fix a typo in PrDebugTrackingLosses for seeding.
+
 !========================= PrMCTools v1r2 2013-02-14 =========================
 ! 2013-01-29 - Olivier Callot
  - Implement the VP and VL lite clusters in PrLHCbID2MCParticle
