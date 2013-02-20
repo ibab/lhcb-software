@@ -288,30 +288,70 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
             if element.tag == _xel("global_tag"):
                 for subelement1 in element:
                     if subelement1.tag == _xel("tag") and subelement1.text == GT_name:
-                        # Before returning the global tag element checking partition to be requested.
+                        # Checking partition
                         for subelement2 in element:
                             if subelement2.tag == _xel("partition"):
                                 for part_subelement2 in subelement2:
-                                    if part_subelement2.tag == _xel("name") and part_subelement2.text == partition:
+                                    if (part_subelement2.tag == _xel("name") and
+                                        part_subelement2.text == partition):
                                         return element
 
-    def getGlobalTags(self, partition):
-        """The function finds all global tags names for the requested partition."""
+    def getGlobalTags(self, partition = None, datatype = None):
+        """The function finds all global tags names for the requested partition and data type."""
 
         # Accessing the root element of release notes DOM
         rootelement = self.tree.getroot()
-        all_gts = []
+        gts = [] # global tags to return
         for element in rootelement:
             if element.tag == _xel("global_tag"):
-                # Before returning the global tag element checking partition to be requested.
+                # Checking data type
+                if datatype:
+                    datatypes = []
+                    for subelement in element:
+                        if subelement.tag == _xel("type"):
+                            datatypes.append(subelement.text)
+                    if datatype not in datatypes:
+                        continue
+
+                # Checking partition
                 for subelement2 in element:
                     if subelement2.tag == _xel("partition"):
                         for part_subelement2 in subelement2:
-                            if part_subelement2.tag == _xel("name") and part_subelement2.text == partition:
+                            if part_subelement2.tag == _xel("name") and ( not partition or
+                                                      part_subelement2.text == partition):
                                 for subelement1 in element:
                                     if subelement1.tag == _xel("tag"):
-                                        all_gts.append(subelement1.text)
-        return all_gts
+                                        gts.append(subelement1.text)
+        return gts
+
+    def getDataType(self, partition, global_tag_name):
+        """Get data types which correspond to a global tag in a specific partition"""
+
+        datatypes = []
+        for element in [e for e in self.getGlobalTagElement(partition, global_tag_name) if e.tag == _xel("type")]:
+            datatype = element.text.lstrip('#')
+            if datatype not in datatypes: datatypes.append(datatype)
+
+        return datatypes
+
+
+    def collectAllDataTypes(self, partitions = None):
+        """Get all known data types for a partition or a list of them."""
+
+        if partitions and type(partitions).__name__ != 'list': partitions = [partitions]
+
+        rootelement = self.tree.getroot()
+
+        datatypes = []
+        for element in [e for e in rootelement if e.tag == _xel("global_tag")]:
+            for subelement2 in [e2 for e2 in element if e2.tag == _xel("partition")]:
+                for part_subelement2 in [ parte2 for parte2 in subelement2
+                                         if parte2.tag == _xel("name") and
+                                         (not partitions or parte2.text in partitions)]:
+                    for subelement in [sube for sube in element if sube.tag == _xel("type")]:
+                        datatype = subelement.text.lstrip('#')
+                        if datatype not in datatypes: datatypes.append(datatype)
+        return datatypes
 
     def write(self, filename = None , encoding = "utf-8"):
         if filename is None:

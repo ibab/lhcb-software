@@ -3,14 +3,18 @@
 ! package manager : Marco Clemencic
 ! ========================================================================
 
+
+! 2013-02-20 - Illya Shapoval
+ - ReleaseNotes.py: few handy methods added to fetch DataTypes from RN XML.
+
 !========================= CondDBUI v3r20 2013-02-04 =========================
 ! 2012-12-04 - Illya Shapoval
- - _internals.py: DumpToFiles method now ignores the C++ exception ("Attempt 
-   to access data of NULL attribute "NODE_PARENTID"") which prevented dumping 
+ - _internals.py: DumpToFiles method now ignores the C++ exception ("Attempt
+   to access data of NULL attribute "NODE_PARENTID"") which prevented dumping
    local tags from SQLite to XML files in some cases(*). The ignorance is safe,
    but a more deep fix is needed in COOL.
-   
-   (*) This happened when a local tag (not it's auto-childs) was bound to 
+
+   (*) This happened when a local tag (not it's auto-childs) was bound to
    the most common folderset level being NOT the '/' root folderset.
 
 !========================= CondDBUI v3r19 2012-11-26 =========================
@@ -18,7 +22,7 @@
  - Added CMake configuration file.
 
 ! 2012-10-25 - Liang Sun
- - Making flow cotrol file ".stopUpdatingSnapshots" able to stop the update 
+ - Making flow cotrol file ".stopUpdatingSnapshots" able to stop the update
    process on ONLINE snapshots for the CondDB_UpdateOnlineSnapshots.py script.
 
 !========================= CondDBUI v3r18 2012-09-28 =========================

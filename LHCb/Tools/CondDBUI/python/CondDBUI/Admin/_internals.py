@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 """
-Internal common functions/utilities. 
+Internal common functions/utilities.
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 __version__ = "$Id: _internals.py,v 1.6 2009-11-13 19:00:35 marcocle Exp $"
 
-# Set up the logger 
+# Set up the logger
 import logging
 log = logging.getLogger("CondDBUI.Admin")
 log.setLevel(logging.INFO)
@@ -26,7 +26,7 @@ def check_addition_db_content(original,addition):
     """
     Check if the database specified as 'addition' contains only objects that are
     not in the database 'original'.
-    
+
     Note: original and addition have to be tuples with the format
     (connection_string,tag).
     """
@@ -40,7 +40,7 @@ def check_addition_db_content(original,addition):
         raise RuntimeError("Command '%s' failed (status = %d)"%(cmd,r))
     elif not os.path.exists(os.path.join(tmpdir,"tmp1.db")):
         raise RuntimeError("Diff DB not produced")
-    
+
     cmd = cmd_template % (addition+(tmp_db % 1,"HEAD")+(tmp_db % 2,))
     log.debug("Executing: %s"%cmd)
     r = os.system(cmd)
@@ -77,11 +77,11 @@ def MergeAndTag(source, target, tag, check_addition_db = True):
     'target' tagging the new data as 'tag'.
     If the tag 'tag' already exists, then it is moved to include the new data,
     otherwise a new tag is created.
-    
+
     'source' and 'target' can be tuples (connection_string,tag) or only the
     connection string.
     """
-    
+
     if not isinstance(target,tuple):
         target = (target,"HEAD")
     if not isinstance(source,tuple):
@@ -92,7 +92,7 @@ def MergeAndTag(source, target, tag, check_addition_db = True):
 
         db = CondDBUI.CondDB(source[0])
         target_db = CondDBUI.CondDB(target[0],readOnly=False)
-        
+
         addition = filter(db.db.existsFolder,db.getAllNodes())
         local_tags = {}
         for l in addition:
@@ -168,40 +168,40 @@ def MakeDBFromFiles(source, db, includes, excludes, basepath = "",
     foldersets.sort() # not needed, but it seems cleaner
 
     for folderset in foldersets:
-        
+
         folders = nodes[folderset].keys()
         folders.sort()
 
         for folder in folders:
             keys = nodes[folderset][folder].keys()
             keys.sort()
-            
+
             folder_path = re.sub('/+','/','/'.join([basepath,folderset,folder]))
             if remove_extension:
                 folder_path = os.path.splitext(folder_path)[0]
 
             if not db.db.existsFolder(folder_path):
                 db.createNode(path = folder_path, storageKeys = keys)
-                
+
             collection = {}
             for key in keys:
                 for channel in nodes[folderset][folder][key].keys():
-                    
+
                     if channel not in collection:
                         collection[channel] = {}
                         for k in keys:
                             collection[channel][k] = ""
-            
+
                     collection[channel][key] = CondDBUI._fix_xml(open(nodes[folderset][folder][key][channel],"rb").read(),
                                                                  "conddb:"+'/'.join([basepath,folderset]))
-                    
+
             xmllist = []
             for channel in collection:
                 xmllist.append({ 'payload': collection[channel],
                                  'since': since,
                                  'until': until,
                                  'channel': channel })
-                
+
             folder_count += 1
             file_count += len(keys)
             if verbose:
@@ -258,7 +258,7 @@ def timeToValKey(tstring, default):
         return t
     return default
 
-## --- Imported from dump_db_to_files.py 
+## --- Imported from dump_db_to_files.py
 def _make_relative(cwd,dst):
     """
     Generate a relative path that appended to cwd will point to dst.
@@ -328,7 +328,7 @@ class _dummyMonitor(object):
         return False
     def setLabelText(self, text):
         pass
-    
+
 ## Dump the content of the database at a given time and tag to XML files.
 def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
                 destroot='DDDB', force=False, addext=False,
@@ -338,10 +338,10 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
                                                 destroot,force,addext)))
     if monitor is None:
         monitor = _dummyMonitor()
-    
+
     from CondDBUI import CondDB
     import re
-    
+
     if type(database) is str:
         # Connect to the database
         db = CondDB(database, defaultTag = tag)
@@ -349,12 +349,12 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
     else:
         # Let's assume we were given a CondDBUI.CondDB instance
         db = database
-    
+
     # @note: This piece of code is needed if we want to allow only global tags
     # # Check the validity of the tag
     # if not db.isTagReady(tag):
     #     raise RuntimeError("Tag '%s' is not a valid global tag."%tag)
-    
+
     # Collect the list of folders we are going to use.
     nodes = []
     for s in srcs:
@@ -364,7 +364,7 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
             nodes += db.getAllChildNodes(s)
         else:
             _log.warning("Node '%s' does not exist. Ignored",s)
-    
+
     nodes = [ n for n in set(nodes) if db.db.existsFolder(n) ]
     nodes.sort()
     monitor.setMaximum(len(nodes))
@@ -387,13 +387,13 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
         for ch in channels:
             monitor.setValue(value)
             try:
-                
+
                 data = db.getPayload(node, time, channelID = ch, tag = tag)
-                
+
                 nodesplit = node.split('/')
                 nodebase = '/'.join(nodesplit[:-1])
                 nodename = nodesplit[-1]
-                
+
                 if '/' != os.sep:
                     tmppath = nodebase.replace('/',os.sep)
                 else:
@@ -401,29 +401,30 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
                 if tmppath and (tmppath[0] == os.sep):
                     tmppath = tmppath[1:]
                 dirname = os.path.join(destroot,tmppath)
-                
+
                 if not os.path.isdir(dirname):
                     _log.debug("create directory '%s'",dirname)
                     os.makedirs(dirname)
-                
+
                 _log.debug("looping over data keys")
+
                 for key,xml in data.items():
-                    
+
                     _log.debug("key: '%s'",key)
                     filename = nodename
                     if key != 'data':
                         filename = '%s@%s'%(key,nodename)
-                    # Let's assume that if there is more than 1 channel also the "0" is used explicitely
+                    # Let's assume that if there is more than 1 channel also the "0" is used explicitly
                     if ch != 0 or len(channels) > 1:
                         filename += ':%d'%ch
                     tmppath = os.path.join(dirname,filename)
-                    
+
                     if not force and os.path.exists(tmppath):
                         _log.warning("file '%s' already exists: skipping",tmppath)
                         continue
-                    
+
                     _log.debug("fixating XML")
-                    
+
                     # fix system IDs
                     xml = _fixate_string(xml, sysIdRE, _relativize_url(node,key,nodebase))
                     # fix hrefs pointing to absolute conddb urls
@@ -431,10 +432,10 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
                     if tmppath.endswith(os.path.join("Conditions","MainCatalog.xml")):
                         # make the href to Online point to the DB
                         xml = xml.replace('"Online"', '"conddb:/Conditions/Online"')
-                    
+
                     _log.debug("write '%s'",tmppath)
                     open(tmppath,'w').write(xml)
-                
+
             except RuntimeError, x:
                 desc = str(x)
                 if "Object not found" in desc:
