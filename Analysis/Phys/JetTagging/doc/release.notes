@@ -4,6 +4,8 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+!========================= JetTagging v1r0 2013-02-20 =========================
+
 ! 2013-02-20 - Cedric Potterat
  - Fixed compilation with icc11 (replacing std::isnan)
  - Removing all remarks from icc11 compilation
