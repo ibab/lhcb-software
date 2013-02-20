@@ -10,7 +10,7 @@ New development release, built against Phys v16r4.
    LoKiExample, HltSelChecker, AnalysisPython, DaVinciMCTools,
    DecayTreeTuple, DaVinciMonitors, DecayTreeTupleReco,
    DecayTreeTupleBase, DisplVerticesMC, FlavourTagging, 
-   JetAccessories, VertexFitCheck
+   JetAccessories, VertexFitCheck, DaVinciTrackRefitting
 
 - Packages Added :
    JetTagging
@@ -38,6 +38,10 @@ In JetAccessories and JetAccessoriesMC :
 
 In JetTagging :
  . New package for tagging jets.
+
+In DaVinciTrackRefitting :
+ . Fixed memory leak in RefitParticleTracks and implement missing
+   functionality
 
 ! 2013-02-18 - Chris Jones
  - Add new package Phys/JetTagging
