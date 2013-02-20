@@ -35,7 +35,7 @@ use  JetAccessoriesMC		v2r1	 Phys   # Victor Coco, Cedric Potterat
 ####################################################################
 
 use  DecayTreeTuple             v4r0p1   Phys   # Rob Lambert
-use  DecayTreeTupleBase         v1r0     Phys
+use  DecayTreeTupleBase         v1r1     Phys
 use  DecayTreeTupleReco         v1r1     Phys   
 use  DecayTreeTupleDalitz       v1r0     Phys
 use  DecayTreeTupleJets         v1r1     Phys

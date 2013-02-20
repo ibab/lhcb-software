@@ -9,7 +9,8 @@ New development release, built against Phys v16r4.
 - Packages Updated :
    LoKiExample, HltSelChecker, AnalysisPython, DaVinciMCTools,
    DecayTreeTuple, DaVinciMonitors, DecayTreeTupleReco,
-   DisplVerticesMC, FlavourTagging, JetAccessories, VertexFitCheck
+   DecayTreeTupleBase, DisplVerticesMC, FlavourTagging, 
+   JetAccessories, VertexFitCheck
 
 - Packages Added :
    JetTagging
