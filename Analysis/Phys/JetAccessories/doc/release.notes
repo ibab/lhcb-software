@@ -4,6 +4,8 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v2r1 2013-02-20 =========================
+
 ! 2013-02-18 - Marco Clemencic                                                          
  - Fixed compilation with CMake.                                                        
 
@@ -14,7 +16,7 @@
  - mpt cut fixed to MeV
 
 ! 2013-01-22 - Murilo Rangel
- - Changed JEC file defaul in the JetMaker_Config.py
+ - Changed JEC file default in the JetMaker_Config.py
 
 ! 2013-01-22 - Murilo Rangel
  - Updated JEC range. Updated JetID cut. Now MPT>1.8 is required.
@@ -29,8 +31,9 @@
  - Updated algorithm to apply JEC. JetID and JEC are now TRUE by default in JetMaker
 
 ! 2012-12-14 - Victor Coco
- - Put UseVelo to false as default in the ParticleFlow_Config.py (was not functionnal, this
-   is fixed but in order not to affect the jetID, default is equivalent to 2012-12-07 setup)
+ - Put UseVelo to false as default in the ParticleFlow_Config.py (was not functional, 
+   this is fixed but in order not to affect the jetID, default is equivalent to the
+   2012-12-07 setup)
 
 ! 2012-12-08 - Chris Jones
  - Remove inclusion of DVAlgorithm.h header
