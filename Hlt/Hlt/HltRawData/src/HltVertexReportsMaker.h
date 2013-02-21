@@ -7,7 +7,6 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/HltVertexReports.h"
 #include "Kernel/IANNSvc.h"
-#include "Kernel/IOnOffline.h"
 #include "HltBase/IHltRegister.h"
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
@@ -53,7 +52,9 @@ private:
   Hlt::IRegister* m_regSvc;
   Hlt::IInspector* m_inspectionSvc;;
 
-  IOnOffline* m_onOfflineTool;
+  /// location of vertices
+  std::string  m_PVLocation;
+  
 
   std::vector<const Hlt::Selection*> m_selections;
   std::vector<std::pair<std::string,std::string> >           m_tesSelections;

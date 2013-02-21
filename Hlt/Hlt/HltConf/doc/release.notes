@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2013-02-21 - Rob Lambert
+ - Retire context for HltVertexReportsMaker
+
+! 2013-02-21 - Rob Lambert
  - Explicit dependency on HltLuminosity package
 
 !========================= HltConf v9r22 2013-01-09 =========================

@@ -293,7 +293,11 @@ class HltConf(LHCbConfigurableUser):
              if i.name() in lines : selections.extend( [ j for j in i.outputSelections() if j not in selections ] )
         vertices = [ i for i in vertices if i in selections ]
         HltVertexReportsMaker().VertexSelections = vertices
-        HltVertexReportsMaker().Context = "HLT"
+        #Can't do this any longer, need replacing with a smart way to get the vertex locations
+        #HltVertexReportsMaker().Context = "HLT"
+        # TODO: make this smarter!
+        # Look at the other ways done in this module!!
+        HltVertexReportsMaker().PVLocation="Hlt/Vertex/PV3D"
         ## do not write out the candidates for the vertices we store 
         from Configurables import HltSelReportsMaker
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )

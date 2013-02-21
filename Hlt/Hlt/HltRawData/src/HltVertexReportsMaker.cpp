@@ -69,13 +69,14 @@ HltVertexReportsMaker::HltVertexReportsMaker( const std::string& name,
   , m_hltSvc(0)
   , m_regSvc(0)
   , m_inspectionSvc(0)
-  , m_onOfflineTool(0)
+  , m_PVLocation(LHCb::RecVertexLocation::Primary)
 {
 
   declareProperty("OutputHltVertexReportsLocation",
     m_outputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
 
   declareProperty("VertexSelections", m_vertexSelections);
+  declareProperty("PVLocation", m_PVLocation);
 
 }
 //=============================================================================
@@ -96,8 +97,6 @@ StatusCode HltVertexReportsMaker::initialize() {
   m_hltSvc = svc<Hlt::IData> ( "Hlt::Service" , true ) ;
   m_regSvc = svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
   m_inspectionSvc = svc<Hlt::IInspector> ( "Hlt::Service" , true ) ;
-
-  m_onOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
 
   m_selections.clear();  
 
@@ -131,12 +130,11 @@ StatusCode HltVertexReportsMaker::initialize() {
      m_selections.push_back(s);
   }
   
-  // add Hlt2 vertex location from OnOfflineTool (also get TES path from this)
-  const std::string& hlt2PVLocation = m_onOfflineTool->primaryVertexLocation() ;
-  std::size_t found = hlt2PVLocation.find_last_of("/");
+  //replaced OnOfflineTool with simple property
+  std::size_t found = m_PVLocation.find_last_of("/");
   std::string pvSelectionName = ( found != std::string::npos ) 
-                              ? hlt2PVLocation.substr(found+1)
-                              : hlt2PVLocation;
+                              ? m_PVLocation.substr(found+1)
+                              : m_PVLocation;
   // int selection id
   map_t::const_iterator im = selectionNameToIntMap.find( pvSelectionName );
   if (im == selectionNameToIntMap.end() ) {
@@ -144,7 +142,7 @@ StatusCode HltVertexReportsMaker::initialize() {
   } else {
     // check we don't already have this one from the datasvc...
     if (std::find_if( m_selections.begin(), m_selections.end(), matchByName(pvSelectionName) ) == m_selections.end() ) {
-        m_tesSelections.push_back(std::make_pair(pvSelectionName,hlt2PVLocation));
+        m_tesSelections.push_back(std::make_pair(pvSelectionName,m_PVLocation));
     } else {
         debug() << " got " << pvSelectionName << " also from datasvc ... using the one from the datasvc" << endmsg;
     }

@@ -4,6 +4,11 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2013-02-21 - Rob Lambert
+ - Retire OnOfflineTool for HltVertexReportsMaker see task #40113
+
+
 !========================== HltRawData v2r11 2011-07-05 ===================
 ! 2011-07-05 - Gerhard Raven
  - add chisq and dof for tracks to report
