@@ -32,7 +32,7 @@ DECLARE_ALGORITHM_FACTORY( LLParticlesFromRecVertices );
 //=============================================================================
 LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : DVAlgorithm( name , pSvcLocator )
+  : DaVinciAlgorithm( name , pSvcLocator )
   , m_pt(400.)
   , m_FirstPVMaxRho(1.5*Gaudi::Units::mm)
   , m_FirstPVMaxZ(150.0*Gaudi::Units::mm) // should accept a PV as soon as there is one
@@ -242,7 +242,7 @@ namespace {
 // Initialization
 //=============================================================================
 StatusCode LLParticlesFromRecVertices::initialize() {
-  StatusCode sc = DVAlgorithm::initialize();
+  StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   m_debug = msgLevel(MSG::DEBUG);
@@ -340,7 +340,7 @@ StatusCode LLParticlesFromRecVertices::execute()
 StatusCode LLParticlesFromRecVertices::finalize() {
   if( msgLevel( MSG::DEBUG ) ) { debug() << "==> Finalize" << endmsg; }
 
-  return DVAlgorithm::finalize();
+  return DaVinciAlgorithm::finalize();
 }
 
 

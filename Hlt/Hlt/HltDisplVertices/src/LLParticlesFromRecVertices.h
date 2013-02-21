@@ -2,7 +2,7 @@
 #define HLTDISPLVERTICES_LLPARTICLESFROMRECVERTICES_H 1
 
 // Include files
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/IMatterVeto.h"
 
 #include "VeloDet/DeVelo.h"
@@ -22,7 +22,7 @@
  *  @author Pieter David
  *  @date   2012-03-27
  */
-class LLParticlesFromRecVertices : public DVAlgorithm {
+class LLParticlesFromRecVertices : public DaVinciAlgorithm {
 public:
   /// Standard constructor
   LLParticlesFromRecVertices( const std::string& name, ISvcLocator* pSvcLocator );

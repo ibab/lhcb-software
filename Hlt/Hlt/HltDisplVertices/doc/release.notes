@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2013-02-21 - Rob Lambert
+ - Move to DaVinciAlgorithm instead of DVAlgorithm
+
 !========================= HltDisplVertices v3r11 2012-06-19 =========================
 ! 2012-06-18 - Pieter David
  - Cleanup of most of the code for displaced vertex Hlt2 lines
