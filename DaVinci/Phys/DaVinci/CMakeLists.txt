@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinci
 ################################################################################
-gaudi_subdir(DaVinci v33r1p1)
+gaudi_subdir(DaVinci v33r2)
 
 gaudi_depends_on_subdirs(AnalysisSys
                          Calo/CaloDAQ
@@ -23,4 +23,3 @@ set_property(DIRECTORY PROPERTY CONFIGURABLE_USER_MODULES DaVinci.Configuration)
 gaudi_install_python_modules()
 
 gaudi_env(SET DAVINCIOPTS \${DAVINCIROOT}/options)
-
