@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2013-02-21 - Rob Lambert
+ - Add implements in copy constructor of HelperTool to fix nightly warning
+
 !========================= LoKiTrigger v12r8 2012-04-17 =========================
 ! 2012-04-12 - Pieter David
  - fix more UpgradeVertices memory leaks

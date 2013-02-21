@@ -153,7 +153,11 @@ LoKi::Hlt1::HelperTool::HelperTool ( const int /* dummy */ )
 // ============================================================================
 LoKi::Hlt1::HelperTool::HelperTool ( const LoKi::Hlt1::HelperTool& right ) 
   : LoKi::AuxFunBase  ( right ) 
-  , LoKi::Listener    ( right ) 
+  , IInterface        ( right          ) 
+  , IIncidentListener ( right          ) 
+  , extend_interfaces1<IIncidentListener> ( right ) 
+  , implements1<IIncidentListener>        ( right ) 
+  , LoKi::Listener    ( right )   
                                    //
   , m_alg             ( 0     ) 
                                    //
