@@ -40,11 +40,10 @@ namespace LoKi
   namespace Kinematics 
   {
     // ========================================================================
-    /** simple function for evaluation of the euclidiam norm
+    /** simple function for evaluation of the euclidian norm
      *  for LorentzVectors:
      * 
-     *  \f$  \left| v \right|_{euclid}^2 = 
-     *    e^2 + p_x^2 + p_y^2 + p_z^2 \f$ 
+     *  \f$  \left| v \right|_{euclid}^2 = e^2 + p_x^2 + p_y^2 + p_z^2 \f$ 
      *  
      *  @attention this value is <b>NOT</b> Lorentz Invariant!
      *
@@ -56,11 +55,10 @@ namespace LoKi
     GAUDI_API
     double euclidianNorm2 ( const LoKi::LorentzVector& vct ) ;
     // ========================================================================
-    /** simple function for evaluation of the euclidiam norm
+    /** simple function for evaluation of the euclidian norm
      *  for LorentzVectors 
      *
-     *  \f$  \left| v \right|_{euclid} = 
-     *      \sqrt{ e^2 + p_x^2 + p_y^2 + p_z^2 } \f$ 
+     *  \f$  \left| v \right|_{euclid} = \sqrt{ e^2 + p_x^2 + p_y^2 + p_z^2 } \f$ 
      *
      *  @attention this value is <b>NOT</b> Lorentz Invariant!
      *
@@ -77,10 +75,10 @@ namespace LoKi
      *  the euclidian distance in between two Lorentz-vectors:
      *  
      *  \f$ \delta^2_{euclid}\left( v_1 , v_2 \right) = 
-     *   \left| v_1 - v_2 \right|^2_{euclid} = 
-     *    (e_1-e_2)^2 + (p_{x1}-p_{x2})^2 
-     *    + (p_{y1}-p_{y2})^2 
-     *    + (p_{z1}-p_{z2})^2 \f$ 
+     *     \left| v_1 - v_2 \right|^2_{euclid} = 
+     *      (e_1-e_2)^2 + (p_{x1}-p_{x2})^2 
+     *                  + (p_{y1}-p_{y2})^2 
+     *                  + (p_{z1}-p_{z2})^2 \f$ 
      *   
      *  @attention this value is <b>NOT</b> Lorentz Invariant!
      *
@@ -98,12 +96,9 @@ namespace LoKi
     /** simple function which evaluates the transverse 
      *  momentum with respect a certain 3D-direction:
      * 
-     * \f$
-     *  r_T = \left| \vec{r} \right| = 
-     *  = \left| \vec{v} - 
-     * \vec{d}\frac{\left(\vec{v}\vec{d}\right)}
-     *  { \left| \vec{d} \right|^2 } \right|
-     *  \f$
+     * \f$ r_T = \left| \vec{r} \right| = \left| \vec{v} - 
+     *    \vec{d}\frac{\left(\vec{v}\vec{d}\right)}
+     *  { \left| \vec{d} \right|^2 } \right| \f$
      *  
      *  @param mom the momentum
      *  @param dir the direction
@@ -115,15 +110,13 @@ namespace LoKi
     double transverseMomentumDir 
     ( const LoKi::ThreeVector& mom , 
       const LoKi::ThreeVector& dir ) ;
+    // ========================================================================
     /** simple function which evaluates the transverse 
      *  momentum with respect a certain 3D-direction:
      * 
-     * \f$
-     *  r_T = \left| \vec{r} \right| = 
-     *  = \left| \vec{v} - 
+     * \f$ r_T = \left| \vec{r} \right| =  = \left| \vec{v} - 
      * \vec{d}\frac{\left(\vec{v}\vec{d}\right)}
-     *  { \left| \vec{d} \right|^2 } \right|
-     *  \f$
+     *  { \left| \vec{d} \right|^2 } \right| \f$
      *  
      *  @param mom the momentum
      *  @param dir the direction
@@ -327,8 +320,8 @@ namespace LoKi
      *    - std::vector<const MCParticle*>
      *    - Particles
      *    - MCParticles
-     *    - SmartRefVectro<Particle>
-     *    - SmartRefVectro<MCParticle>
+     *    - SmartRefVector<Particle>
+     *    - SmartRefVector<MCParticle>
      *    - Range 
      *    - MCRange 
      *
@@ -364,13 +357,13 @@ namespace LoKi
      *  with respect to "Q"'s flight direction in "P"'s
      *  (the parent of "Q") rest frame
      * 
-     *  \f$ 
+     *  \f[ 
      *  \cos \theta = \frac
      *  { \left(P \cdot D\right)Q^2 - 
      *    \left(P \cdot Q\right)\left(D \cdot Q \right) }
      *  {\sqrt{ \left[ \left( P \cdot Q \right)^2 - Q^2 P^2 \right] 
-     *          \left[ \left( D \cdot Q \right)^2 - Q^2 D^2 \right] } } 
-     *  \f$ 
+     *          \left[ \left( D \cdot Q \right)^2 - Q^2 D^2 \right] } }
+     *  \f] 
      *  
      *  Note that the expression has the symmetry: \f$ P \leftrightarrow D \f$ 
      *  
@@ -400,13 +393,13 @@ namespace LoKi
      *  with respect to "Q"'s flight direction in "P"'s
      *  (the parent of "Q") rest frame
      * 
-     *  \f$ 
+     *  \f[ 
      *  \cos \theta = \frac
      *  { \left(P \cdot D\right)Q^2 - 
      *    \left(P \cdot Q\right)\left(D \cdot Q \right) }
      *  {\sqrt{ \left[ \left( P \cdot Q \right)^2 - Q^2 P^2 \right] 
      *          \left[ \left( D \cdot Q \right)^2 - Q^2 D^2 \right] } } 
-     *  \f$ 
+     *  \f] 
      *  
      *  Note that the expression has the symmetry: \f$ P \leftrightarrow D \f$ 
      *  
@@ -523,7 +516,7 @@ namespace LoKi
     /** simple function which evaluates the energy
      *  of particle "v" in the rest system of particle "M" 
      * 
-     *  \f$ e = \frac{ v \cdot M }{\sqrt{ M^2 } } \f$
+     *  \f[ e = \frac{ v \cdot M }{\sqrt{ M^2 } } \f]
      *  
      *  Note that this is clear Lorentz invarinat expresssion. 
      * 
@@ -543,25 +536,26 @@ namespace LoKi
     /** simple function to evaluate the cosine angle between 
      *  two directions (v1 and v2) in the rest system of M 
      *
-     * \f$ 
+     * \f[ 
      * \cos\theta = 
      * \frac{\vec{p}_1\vec{p}_2}{\left|\vec{p}_1\right|
      * \left|\vec{p}_2\right|} = 
      * \frac{1}{\left|\vec{p}_1\right|\left|\vec{p}_2\right|} 
      * \left( E_1E_2 -\frac{1}{2}
      * \left(\left(v_1+v_2\right)^2-v_1^2-v_2^2 \right) \right), 
-     * \f$ 
+     * \f]
+     * 
      *  where 
-     *  \f$ 
+     *  \f[ 
      *  E_1 E_2 = \frac{ \left ( v_1 \cdot M\right) \left (v_2 \cdot M \right ) }{M^2}
-     *  \f$ 
+     *  \f] 
      *  and 
-     *  \f$ 
+     *  \f[ 
      * \left|\vec{p}_1\right|\left|\vec{p}_2\right| = 
      * \sqrt{ 
      * \left( \frac{\left(v_1\cdot M\right)^2}{M^2}-v_1^2 \right)   
      *      \left( \frac{\left(v_2\cdot M\right)^2}{M^2}-v_2^2 \right) }
-     * \f$ 
+     * \f] 
      *
      *  Note that the expressions are clear Lorentz invariant
      * 
@@ -626,15 +620,15 @@ namespace LoKi
      *     { \sqrt{ \left[ -L_D^2 \right]\left[ -L_H^2 \right] }},
      *  \f] 
      *  where "4-normales" are defined as:
-     *  \f$ 
+     *  \f[ 
      *   L_D^{\mu} = \epsilon_{\mu\nu\lambda\kappa}
      *                d_1^{\nu}d_2^{\lambda}\left(h_1+h_2\right)^{\kappa} 
-     *  \f$ 
+     *  \f] 
      *   and 
-     *  \f$ 
+     *  \f[ 
      *   L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
      *                h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
-     *   \f$.
+     *   \f] 
      *
      *  @param d1 the 1st daughter 
      *  @param d2 the 2nd daughter 
@@ -712,20 +706,20 @@ namespace LoKi
     /** evaluate the Armenteros-Podolanski variable \f$\mathbf{\alpha}\f$, 
      *  defined as:
      *  \f[
-     *  \mathbf{\alpha} = \dfrac
+     *  \mathbf{\alpha} = \frac
      *  { \mathrm{p}^{\mathrm{L},1} - \mathrm{p}^{\mathrm{L},1} }
      *  { \mathrm{p}^{\mathrm{L},1} + \mathrm{p}^{\mathrm{L},1} },
      *  \f]
      *  where 
      *   \f$ \mathrm{p}^{\mathrm{L},1}\f$ and 
      *   \f$ \mathrm{p}^{\mathrm{L},2}\f$ are longitudinal momentum
-     *   components for the first and the seco ddaughter particles 
+     *   components for the first and the second daughter particles 
      *   with respect to the total momentum direction. 
      *
      *  Clearly this expression could be rewritten in an equivalent 
      *  form which however much more easier for calculation:
      *  \f[
-     *  \mathbf{\alpha} = \dfrac
+     *  \mathbf{\alpha} = \frac
      *  { \vec{\mathbf{p}}_1^2 - \vec{\mathbf{p}}_2^2 }  
      *  { \left( \vec{\mathbf{p}}_1 + \vec{\mathbf{p}}_2 \right)^2 }  
      *  \f]
@@ -752,20 +746,20 @@ namespace LoKi
     /** evaluate the Armenteros-Podolanski variable \f$\mathbf{\alpha}\f$, 
      *  defined as:
      *  \f[
-     *  \mathbf{\alpha} = \dfrac
+     *  \mathbf{\alpha} = \frac
      *  { \mathrm{p}^{\mathrm{L},1} - \mathrm{p}^{\mathrm{L},1} }
      *  { \mathrm{p}^{\mathrm{L},1} + \mathrm{p}^{\mathrm{L},1} },
      *  \f]
      *  where 
      *   \f$ \mathrm{p}^{\mathrm{L},1}\f$ and 
      *   \f$ \mathrm{p}^{\mathrm{L},2}\f$ are longitudinal momentum
-     *   components for the first and the seco ddaughter particles 
+     *   components for the first and the second daughter particles 
      *   with respect to the total momentum direction. 
      *
      *  Clearly this expression could be rewritten in an equivalent 
      *  form which however much more easier for calculation:
      *  \f[
-     *  \mathbf{\alpha} = \dfrac
+     *  \mathbf{\alpha} = \frac
      *  { \vec{\mathbf{p}}_1^2 - \vec{\mathbf{p}}_2^2 }  
      *  { \left( \vec{\mathbf{p}}_1 + \vec{\mathbf{p}}_2 \right)^2 }  
      *  \f]
@@ -931,9 +925,10 @@ namespace LoKi
     // ========================================================================
     /** evaluate the transverse angle phi, \f$ \phi_{\mathrm{tr}}\f$, 
      *  e.g. for decay  
-     *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
-     *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
-     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \f$
+     *
+     *  \f$ \mathrm{B}^0_{\mathrm{s}}\rightarrow
+     *       \left( \mathrm{J}/\psi  \rightarrow \mu^+ \mu^-               \right)
+     *       \left( \phi             \rightarrow \mathrm{K}^+ \mathrm{K}^- \right) \f$
      *    
      *  The evaluation is performed using the explicit Lorentz-invariant 
      *  expression for \f$ \sin \phi_{\mathrm{tr}} \f$ and 
@@ -1011,7 +1006,7 @@ namespace LoKi
       const Gaudi::SymMatrix4x4& c2 ) ;
     // ========================================================================
     /** trivial function to calculate the mass-distance 
-     *  \f$ (m^2_{12} - m^2_1 - m^2_2 ) / m^2_{12}\f$
+     *  \f$ (m^2_{12} - m^2_1 - m^2_2 ) / m^2_{12} \f$
      *  @param p1 the first  particle 
      *  @param p2 the second particle 
      *  @return mass-difference
