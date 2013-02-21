@@ -3,6 +3,35 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v33r2>2013-02-21 DaVinci v33r2</A></H1><PRE>
+
+New development release based on the LHCb v35r4 stack.
+
+Executive Summary :-
+
+- Changes to supported platforms
+ . Add support for x86_64-slc6-gcc46 (I/O via Castor client not yet supported)
+ . Remove support for i686-slc5-gcc43
+
+- Core changes
+ . Fix a bug where IgnoreP2PVFromInputLocations in DVCommonBase was not 
+   respected. Fixes https://savannah.cern.ch/bugs/?99656
+ . Disable the preloading of P2PV relations, as this is no longer needed with 
+   the new logic that loads on demand the relations based on the Particle 
+   location in the TES.
+
+- DecayTreeTuple
+ . New tools : TupleToolVeloTrackClusterInfo, TupleToolDEDX and 
+               TupleToolVeloClusters. 
+
+- Jets
+ . Various improvements to the Jet finding and tagging. 
+   See package release notes in Analysis.
+
+- Flavour Tagging
+ . New NN OS kaon tagger added
+ . Complete rewrite of the clone definition in the flavour tagging
+
 </PRE><H1><A NAME=v33r1p1>2013-01-20 DaVinci v33r1p1</A></H1><PRE>
 
 Patch release on top of DaVinci v33r1 to fix dependency on DecFiles.
