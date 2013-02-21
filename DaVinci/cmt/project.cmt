@@ -1,8 +1,8 @@
 project DAVINCI
 
-use ANALYSIS  ANALYSIS_v10r3
-use STRIPPING STRIPPING_v6r3
-use LBCOM     LBCOM_v13r3
+use ANALYSIS  ANALYSIS_v10r4
+use STRIPPING STRIPPING_v6r4
+use LBCOM     LBCOM_v13r4
 
 build_strategy with_installarea
 setup_strategy root
