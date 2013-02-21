@@ -3,6 +3,32 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v6r4 2013-02-21 =========================
+
+* Phys/CommonParticles:
+  Changes to StdLooseDetachedTauNonPhys.py and StdLooseDetachedTau.py.
+
+* Phys/DisplVertices:
+  Fix MatterVetoTool.
+
+* Phys/StrippingAlgs:
+  Update StrippingReport
+
+* Phys/StrippingArchive:
+  Add encoding declaration to some modules containing non-ASCII chars. Add Stripping20r1.
+
+* Phys/StrippingSelections:
+  Various updates/bug fixes to existing lines, and addition of new lines.
+
+* Phys/StrippingSettings:
+  Various updates to the dictionaries.
+
+* Phys/StrippingUtils:
+  Removal of QMTest pattern (since this package doesn't provide tests).
+
+* Phys/TMVASelections:
+  A few minor fixes.
+
 !========================= StrippingSys v6r3 2012-11-30 =========================
 
 Development release. 
