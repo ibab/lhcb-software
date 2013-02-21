@@ -18,6 +18,8 @@
 #include "CoolKernel/IRecord.h"
 #include "CoolKernel/RecordException.h"
 
+#include "DetCond/CondDBCompression.h"
+
 // local
 #include "CondDBEntityResolver.h"
 
@@ -211,7 +213,8 @@ StatusCode CondDBEntityResolver::i_getData(const std::string &url,
     }
     try {
       // try to copy the data into the istringstream
-      str = (*data)[data_field_name].data<std::string>();
+      std::string str2 = (*data)[data_field_name].data<std::string>();
+      str = CondDBCompression::decompress(str2);
     } catch (cool::RecordSpecificationUnknownField &e) {
       log << MSG::ERROR << "I cannot find the data inside COOL object: "
           << e.what() << endmsg;
