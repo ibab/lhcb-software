@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2013-02-21 - Rob Lambert
+ - Remove deprecated OnOffline reference
+
 !========================= HltLuminosity v2r19 2012-01-25 =========================
 
 
