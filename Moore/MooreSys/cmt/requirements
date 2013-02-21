@@ -1,5 +1,5 @@
 package MooreSys
-version v14r12
+version v20r0
 branches doc cmt
 
 #=======================================================
@@ -10,25 +10,23 @@ use  Moore               v14r12      Hlt
 use  IndependenceTests   v1r3        Hlt
 
 
-# Bug fixes on top of LHCb v34r3 release stack
-use  RichDet             v16r11      Det
-use  DetCond             v12r26      Det
+# Bug fixes on top of LHCb v35r4 release stack
 
 # Hlt
-use  HltSettings         v5r57       Hlt
-use  Hlt1Lines           v6r31       Hlt
-use  Hlt2Lines           v8r28       Hlt
-use  HltConf             v9r22       Hlt
-use  HltTracking         v9r25p1     Hlt
+#use  HltSettings         v5r57       Hlt
+#use  Hlt1Lines           v6r31       Hlt
+#use  Hlt2Lines           v8r28       Hlt
+#use  HltConf             v9r22       Hlt
+#use  HltTracking         v9r25p1     Hlt
 
 
 # Declare this as a container package
 apply_pattern container_package
 
-# Allow the generation of QMTest summary 
+# Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
 
-macro_remove cmt_actions_constituents 'runMakeOptions' 
+macro_remove cmt_actions_constituents 'runMakeOptions'
 macro_remove cmt_actions_constituents 'WriteOptions'
 # dummy to avoid warnings...
 tag ONLINE_OVERRULE_MOORE_SETUP
