@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-//#include "Kernel/IOnOffline.h"
 // from LHCB
 #include "Event/Track.h"
 #include "Event/Vertex.h"
