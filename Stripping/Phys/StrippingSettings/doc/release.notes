@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r21 2013-02-21 =========================
+
 ! 2013-02-08 - Anton Poluektov 
  - Remove non-ascii characters from the comments in QEE dictionaries
 
