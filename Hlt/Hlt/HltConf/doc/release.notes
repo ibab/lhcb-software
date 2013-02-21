@@ -4,7 +4,8 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-
+! 2013-02-21 - Rob Lambert
+ - Explicit dependency on HltLuminosity package
 
 !========================= HltConf v9r22 2013-01-09 =========================
 ! 2013-01-09 - Eric van Herwijnen
