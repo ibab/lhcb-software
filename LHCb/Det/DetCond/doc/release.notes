@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-02-21 - Liang Sun
+ - Added functionalities of compression and decompression on CondDB with new class CondDBCompression
+
 !========================= DetCond v12r29 2013-02-04 =========================
 ! 2012-12-20 - Marco Clemencic
  - Stop the TimeOutChecker thread when explicitly disconnected. The thread is

@@ -59,6 +59,8 @@ apply_pattern install_python_modules
 private
 macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_filesystem_mt) $(Boost_linkopts_date_time) "
 
+use bz2lib v* LCG_Interfaces
+
 apply_pattern QMTest
 # =====================================
 # Packages needed for tests
