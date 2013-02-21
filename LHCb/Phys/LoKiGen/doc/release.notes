@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-02-21 - Vanya Belyaev
+ - symbol GY was masked by incorrect redefinition.
+   Many thanks for Wenbin Qian for the hints
+
 !========================= LoKiGen v10r10 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

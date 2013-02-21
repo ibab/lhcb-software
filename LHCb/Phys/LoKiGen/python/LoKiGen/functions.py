@@ -258,7 +258,7 @@ GY        = LoKi.GenParticles.Rapidity ()
 GRAPIDITY = LoKi.GenParticles.Rapidity
 
 ## @see LoKi::Cuts::GY0
-GY         = LoKi.GenParticles.Rapidity0 ()
+GY0        = LoKi.GenParticles.Rapidity0 ()
 ## @see LoKi::Cuts::GRAPIDITY0
 GRAPIDITY0 = LoKi.GenParticles.Rapidity0
 
