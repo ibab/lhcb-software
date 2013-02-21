@@ -120,25 +120,28 @@ def get_hepmc_version(native_version):
 #
 def get_MCGen_tar_name(root,gen,native,bin):
     if debug_flag == 1: print ' get_MCGen_tar_name for %s %s %s %s '%(root,gen,native,bin)
-    rootdef = root
+    rootdef = os.path.join(root, gen)
     name = None
-    list = os.listdir(rootdef)
-    for l in list:
-        if l.find(gen) != -1:
-            name = gen+'-'+native+'-'+bin+'.tgz'
-            return name
+    fullfilename = None
 
-    if debug_flag == 1: print ' Did not find file in %s - Replacing pp by ++ just in case...' % rootdef
-    # Try an alternative name if the file was not found
-    if name == None:
+    # Looking for the file...
+    tmpname = gen+'-'+native+'-'+bin+'.tgz'
+    tmpfullfilename = os.path.join(rootdef, tmpname)
+    if os.path.exists(tmpfullfilename):
+        print ' get_MCGen_tar_name Found %s'% tmpfullfilename
+        name = tmpname
+        fullfilename = tmpfullfilename
+    else:
+        # Looking for the pp version instead of ++
         gen = gen.replace("pp", "++")
-        list = os.listdir(rootdef)
-        for l in list:
-            if l.find(gen) != -1:
-                name = gen+'-'+native+'-'+bin+'.tgz'
-                return name
+        tmpname = gen+'-'+native+'-'+bin+'.tgz'
+        tmpfullfilename = os.path.join(rootdef, tmpname)
+        if os.path.exists(tmpfullfilename):
+            print ' get_MCGen_tar_name Found %s'% tmpfullfilename
+            name = tmpname
+            fullfilename = tmpfullfilename
 
-    return name
+    return (name, fullfilename)
 
 
 def get_MCGen_base(package_home, genname, genversion):
@@ -162,7 +165,10 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
     
     for key in packages_versions.keys():
 
-
+        if key == 'GENSER':
+            print "Ignoring %s ================================================================================" % key
+            continue
+        
         print
         print "Processing %s ================================================================================" % key
 
@@ -181,15 +187,16 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
         if orig_key.endswith("pp"):
             key = orig_key.replace("pp", "++")
             
-        file = get_MCGen_tar_name(MCGen_tar_dir,key,value,binary_dir)
-
+        (file, fullfilename) = get_MCGen_tar_name(MCGen_tar_dir,key,value,binary_dir)
+        
         print "-----------------------------------"
         print " dist dir     : %s" % MCGen_tar_dir
         print " orig Package : %s" % orig_key
         print " fixed Package: %s" % key
         print " Version      : %s" % value
         print " Binary       : %s" % binary_dir
-        print " Tar file     : %s" % file
+        print " Tar name     : %s" % file
+        print " Tar file     : %s" % fullfilename
         print "-----------------------------------"
 
         print 'get_tar_files Processing %s '%(file)
@@ -198,16 +205,16 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
         # Check that the file file actually exists
         # FAIL otherwise, we need to know...
         #
-        if file == None:
+
+        
+        if file == None or  not os.path.exists(fullfilename):
             print "ERROR"
             print "ERROR *** Tar file for %s %s in %s does NOT exist" % (key, value, MCGen_tar_dir)
             print "ERROR"
             missing_tars.append(orig_key)
+        else:
 
-        
-        if file != None:                
-
-            if os.path.exists(os.path.join(MCGen_tar_dir,file)):
+            if os.path.exists(fullfilename):
 
                 # Copying the tar file locally - why ? XXX
                 #if debug_flag == 1:
@@ -216,7 +223,7 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
 
                 
                 # Untarring the binary tarball for the project
-                fullfile = os.path.join(MCGen_tar_dir,file)
+                fullfile = fullfilename
                 key_value = os.path.join(key,value)
                 str = 'tar --extract --ungzip --file '+fullfile +' '+ os.path.join(key_value,binary_dir)
                 if debug_flag == 1:
@@ -256,7 +263,7 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
                         if os.path.exists(file):
                             os.remove(file)
                         file = file.replace(binary_dir, "share")
-                        fullfile = os.path.join(MCGen_tar_dir,file)
+                        fullfile = os.path.join(MCGen_tar_dir, key, file)
                         print "Error getting PDFs - Looking in share file %s" %  fullfile
                         #if os.path.exists(os.path.join(MCGen_tar_dir,file)):
                         #    shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
