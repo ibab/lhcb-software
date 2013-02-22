@@ -24,8 +24,11 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
+#include "Relations/Relation1D.h"
+#include "Relations/Relation2D.h"
 
 #include "LoKi/GenParticleCuts.h" 
+#include "LoKi/MCParticleCuts.h" 
 #include "LoKi/GenExtract.h" 
 #include "Event/HepMCEvent.h"
 
@@ -87,7 +90,8 @@ namespace LoKi
       , m_cutForMother ( _PBOOL ( false )       )
       , m_cutForBanned ( _PBOOL ( false )       )
       , m_simpleAcceptance ( false )
-      , m_outputTable ("Relations/Phys/R2HepMC")
+      , m_outputTable ("Relations/Phys/MCJets2MCParticles")
+      , m_jetsFromMotherOnly (false)
     { 
       // 
       declareProperty  ( "JetMaker"  , 
@@ -107,7 +111,10 @@ namespace LoKi
 			 "A simple theta cut on the acceptance" );
       declareProperty  ( "OutputTable" ,
 			 m_outputTable ,
-			 "Location of the " );
+			 "Location of the Jet 2 MCParticles relation table" );
+      declareProperty  ( "SaveMCJetsFromMotherOnly" ,
+			 m_jetsFromMotherOnly ,
+			 "Only save the jets from mother" );
       //
     }
     /// destructor
@@ -217,6 +224,11 @@ namespace LoKi
     bool m_simpleAcceptance ;
     /// Location of the HepMC to LHCb::Particle table
     std::string m_outputTable;
+    /// Only save the jets from mother
+    bool m_jetsFromMotherOnly;
+
+    std::string m_daughtersLocation;
+    std::string m_jetsLocation;
     
     // ========================================================================    
   };
@@ -258,11 +270,14 @@ StatusCode LoKi::MCJetMaker::initialize ()
     m_inputTypes.push_back("gamma");
     m_inputTypes.push_back("KL0");
     m_inputTypes.push_back("n0");
-    //m_inputTypes.push_back("nu");
-    //m_inputTypes.push_back("nu_mu");
-    //m_inputTypes.push_back("nu_tau");
   }
   
+  m_daughtersLocation = "Phys/";
+  m_daughtersLocation.append(this->name());
+  m_daughtersLocation.append("Particles/Particles");
+  m_jetsLocation  = "Phys/";
+  m_jetsLocation.append(this->name());
+  m_jetsLocation.append("Jets/Particles");
 
   return StatusCode::SUCCESS ;
 }
@@ -331,39 +346,30 @@ StatusCode LoKi::MCJetMaker::analyse   ()
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts ; 
 
-  // Create the relation table between Particles and GenParticles
-  /*typedef LHCb::Relation2D<LHCb::Particle,HepMC::GenParticle*> Table ;
-  BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::RC2HepMC2D));
+  typedef LoKi::GenTypes::GenContainer Container  ;
+  typedef LoKi::GenTypes::GenVContainer VContainer;
+
+  typedef LHCb::Relation1D< LHCb::Particle, LHCb::MCParticle > Table ;
+
+  LHCb::Particles* daughterParticles = new LHCb::Particles();
+  LHCb::Particles* jetParticles = new LHCb::Particles();
+
+  put(daughterParticles,m_daughtersLocation);
+  put(jetParticles,m_jetsLocation);
+
+  
+  LHCb::HepMC2MC2D* tableHepMC2MC = 0 ;
   Table* table = 0 ;
   if ( !m_outputTable.empty() ){
     table = new Table(100) ;
     put ( table , m_outputTable ) ;
+    tableHepMC2MC = get<LHCb::HepMC2MC2D> ( LHCb::HepMC2MCLocation::Default ) ;
   }
-  */
-  typedef LoKi::GenTypes::GenContainer Container  ;
-  typedef LoKi::GenTypes::GenVContainer VContainer;
-
+  
   // Initialize the tool
   if ( 0 == m_maker ) { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
   
-  // Give some default values to the types if not defined
-  if (m_inputTypes.empty()){
-    m_inputTypes.push_back("pi+");
-    m_inputTypes.push_back("K+");
-    m_inputTypes.push_back("p+");
-    m_inputTypes.push_back("e+");
-    m_inputTypes.push_back("mu+");
-    m_inputTypes.push_back("pi0");
-    m_inputTypes.push_back("gamma");
-    m_inputTypes.push_back("KL0");
-    m_inputTypes.push_back("n0");
-    m_inputTypes.push_back("nu");
-    m_inputTypes.push_back("nu_mu");
-    m_inputTypes.push_back("nu_tau");
-  }
-  
   // PID and stable particles cut
-  //GCut isNotFromBannedMother = LoKi::Cuts::GNINTREE( LoKi::Cuts::GABSID == m_motherIDToBan , HepMC::parent ) < 1 ;
   LoKi::Types::GCut cut = GVALID ;
   for ( std::vector< std::string >::iterator pid = m_inputTypes.begin() ; m_inputTypes.end() != pid ; ++ pid ){
     if( pid == m_inputTypes.begin()) cut =  ( (*pid) == LoKi::Cuts::GABSID );
@@ -372,6 +378,7 @@ StatusCode LoKi::MCJetMaker::analyse   ()
   if ( m_simpleAcceptance ) cut = cut && ( LoKi::Cuts::GTHETA < 0.4 );
   GCut isToBan = ( LoKi::Cuts::GNINTREE( m_cutForBanned , HepMC::ancestors ) > 0 ) || ( m_cutForBanned );
   cut = cut && ( ( LoKi::Cuts::GSTATUS == 1 ) || ( LoKi::Cuts::GSTATUS == 999 ) ) && ( !isToBan );
+  // Some cuts to identify the type of jet
   GCut containsB = LoKi::Cuts::GQUARK( LHCb::ParticleID::bottom ) ;
   GCut containsC = LoKi::Cuts::GQUARK( LHCb::ParticleID::charm ) ;
   GCut containsS = LoKi::Cuts::GQUARK( LHCb::ParticleID::strange ) ;
@@ -383,7 +390,8 @@ StatusCode LoKi::MCJetMaker::analyse   ()
   GCut isFromc = LoKi::Cuts::GNINTREE( LoKi::Cuts::GABSID == "c" , HepMC::ancestors ) > 0 ;
   GCut isFroms = LoKi::Cuts::GNINTREE( LoKi::Cuts::GABSID == "s" , HepMC::ancestors ) > 0 ;
   GCut isFromMother = LoKi::Cuts::GNINTREE( m_cutForMother , HepMC::ancestors ) > 0 ;
-  
+  // Some map to ease the jet 2 MCParticle relation table making
+  std::map< int , LHCb::MCParticle* > mapBarCode2MCPs ;
   // Get the HepMCEvents
   const LHCb::HepMCEvent::Container* events = get<LHCb::HepMCEvent::Container> (  LHCb::HepMCEventLocation::Default ) ;
   std::vector< std::vector< const LHCb::Particle * > > particles;
@@ -420,7 +428,8 @@ StatusCode LoKi::MCJetMaker::analyse   ()
       }
       newPart->addInfo ( ProcessID , processID );
       newPart->addInfo ( GBarCode , GBAR(*p) );
-      this->markTree(newPart);
+      //this->markTree(newPart);
+      jetParticles->insert(newPart);
     }
     for ( HepMC::GenEvent::particle_const_iterator p = event->particles_begin ()  ;  event->particles_end () != p ; ++p ){
       if ( !cut(*p) )continue;
@@ -442,6 +451,13 @@ StatusCode LoKi::MCJetMaker::analyse   ()
       newPart->addInfo ( Hasb , isFromb(*p) );
       newPart->addInfo ( FromMother , isFromMother(*p) );
       newPart->addInfo ( GBarCode , GBAR(*p) );
+      if ( !m_outputTable.empty() ){
+	LHCb::HepMC2MC2D::Range range = tableHepMC2MC->relations(*p);
+	if (range.size()>0){
+	  LHCb::MCParticle*  mcp = range[0];
+	  mapBarCode2MCPs[int(GBAR(*p))]=  mcp ;
+	}
+      }
       int motherBarCode(-1),motherID(0);
       for(std::vector< const HepMC::GenParticle* >::const_iterator imother = mothers.begin();
 	  mothers.end()!=imother ; ++ imother){
@@ -453,6 +469,7 @@ StatusCode LoKi::MCJetMaker::analyse   ()
       }
       newPart->addInfo ( GMotherBarCode , motherBarCode  );
       newPart->addInfo ( MotherID , motherID );
+      daughterParticles->insert(newPart);
       inputs.push_back(newPart);
     }
     // Now make the jets
@@ -467,20 +484,37 @@ StatusCode LoKi::MCJetMaker::analyse   ()
       LHCb::Particle* jet = jets.back() ;
       jet->setReferencePoint( vertexPosition );
       LHCb::Vertex  vJet;
-      for ( SmartRefVector< LHCb::Particle >::const_iterator ip = jet->daughters().begin();jet->daughters().end()!=ip;++ip ){
-	usedBarCode.push_back((int)(*ip)->info(GBarCode,-1.));
-      }
       vJet.setPosition( vertexPosition );
       vJet.setOutgoingParticles(jet->daughters());
       jet->setEndVertex(vJet.clone());
       this->appendJetIDInfo(jet);
-      this->markTree( jet );
+      if (m_jetsFromMotherOnly && jet->info(FromMother,-1.)<0.){
+	jets.pop_back() ;
+	delete jet ;
+      }
+      // store the hepmc particles that are used
+      for ( SmartRefVector< LHCb::Particle >::const_iterator ip = jet->daughters().begin();jet->daughters().end()!=ip;++ip ){
+	usedBarCode.push_back((int)(*ip)->info(GBarCode,-1.));
+      }
+      // if requested, store the MCParticles used in this jet in a relation table
+      double totE(0.);
+      if ( !m_outputTable.empty() ){
+	
+	for ( SmartRefVector< LHCb::Particle >::const_iterator ip = jet->daughters().begin();jet->daughters().end()!=ip;++ip ){
+	  if (! mapBarCode2MCPs[int((*ip)->info(GBarCode,-1.))])continue;
+	  totE+=MCE(mapBarCode2MCPs[int((*ip)->info(GBarCode,-1.))]);
+	  table -> relate(jet , mapBarCode2MCPs[int((*ip)->info(GBarCode,-1.))] );
+	}
+      }
+      
+      jetParticles->insert(jet);
+      //this->markTree( jet );
       jets.pop_back() ;
-      delete jet ;
+      //delete jet ;
     }
-    while ( !inputs.empty())
+    /*while ( !inputs.empty())
     {
-      const LHCb::Particle* p = inputs.back() ;
+      LHCb::Particle* p = inputs.back() ;
       bool used = false;
       for ( int i = 0 ; i < (int)usedBarCode.size(); ++i){
 	if ((int)p->info(GBarCode,-1.) == usedBarCode[i]){
@@ -488,15 +522,18 @@ StatusCode LoKi::MCJetMaker::analyse   ()
 	  break;
 	}
       }
-      if (used) this->markTree( p );
+      if (used) daughterParticles->insert(p); //this->markTree( p );
       inputs.pop_back();
       delete( p );
       
-    }
+      }*/
   }
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
   { counter ( "#jets" ) += selected ("jets").size() ; }
 
+  if ( m_outputTable.empty() ){
+    delete(table);
+  }
   setFilterPassed ( true ) ;
   
   return StatusCode::SUCCESS ;
@@ -625,32 +662,6 @@ StatusCode LoKi::MCJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   return SUCCESS;
 }
 
-/*
-StatusCode LoKi::MCJetMaker::associateJet( LHCb::Particle* jet )
-{
-  LoKi::Types::GCut cut = GNONE ;
-  // Create a cut coresponding to the HepMC particles bar codes in this jet
-  for ( SmartRefVector< LHCb::Particle >::const_iterator ip = jet->daughters().begin();jet->daughters().end()!=ip;++ip ){
-    cut = ( cut || ( (*ip)->info(GBarCode,-1.) == GBAR ) );
-  }
-  // Get all the HepMC particles of this jet
-  LoKi::GenTypes::GenContainer TheHepMCVect = gselect("theJetdaug","theJetdaug",cut );
-  // The cut which is true for every MC particles from those HepMC
-  Cut StdMC_fromGen = GMCTRUTH ( TheHepMCVect , tableHepMC2MC , mc ) ;
-      
-  //Loop over the StdHepMC Particles of the HepMCjet
-  for(Parts::iterator idaug_primjet = .begin() ; daug_primjet.end()!= idaug_primjet  ; idaug_primjet++ )
-  {
-      Table2DHepMC2Part::Range links = table_togetHepMC ->relations (*idaug_primjet ) ;
-      for ( Table2DHepMC2Part::iterator ilink = links.begin() ;links.end() != ilink ; ++ilink )
-        {
-          const HepMC::GenParticle* gp  = ilink->to() ;
-          if ( 0 == gp ) { continue ;}
-          TheHepMCVect.push_back(gp);
-        }
-      }
-      Cut StdMC_fromGen = GMCTRUTH ( TheHepMCVect , tableHepMC2MC , mc ) ;
-*/
 // ===========================================================================
 /// The factory
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,MCJetMaker)

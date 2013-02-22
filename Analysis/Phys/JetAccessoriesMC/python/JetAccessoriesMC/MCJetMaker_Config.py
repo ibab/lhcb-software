@@ -1,4 +1,4 @@
-__version__ = "$Id: JetMaker_Config.py,v 1.1 2010-02-04 12:37:55 cocov Exp $"
+__version__ = "$Id: MCJetMaker_Config.py,v 1.1 2010-02-04 12:37:55 cocov Exp $"
 __author__  = "Victor Coco <Victor.Coco@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -14,7 +14,10 @@ class MCJetMakerConf:
                  ToBanCut = "GNONE" ,
                  SimpleAcceptance = False ,
                  jetidnumber = 99 ,
-                 algtype="anti-kt"):
+                 algtype="anti-kt",
+                 OutputTable = "",
+                 SaveMotherOnly = False ):
+
         
         jetname_dict = {"kt":0,"Cambridge":1,"anti-kt":2}
         self.name = _name
@@ -27,14 +30,21 @@ class MCJetMakerConf:
         self.jetMakerType =  jetname_dict[algtype]
         self.jetidnumber = jetidnumber
         self.MCParticleTypes = PartTypes
+        self.SaveMotherOnly = SaveMotherOnly
+        self.OutputTable = OutputTable
         self.algorithms = []
         self.setupJetMaker()
         
     def setupJetMaker(self):
+        from GaudiKernel.ProcessJobOptions import importOptions
+        importOptions("$LOKIGENMCROOT/python/LoKiGenMC/HepMC2MC_Configuration.py")
+        importOptions("$LOKIGENMCROOT/python/LoKiGenMC/MC2Collision_Configuration.py")
         jetMakerName = self.name
         algo =  LoKi__MCJetMaker ( jetMakerName )
         algo.CodeForMotherSelection = self.CodeForMotherSelection
         algo.CodeForBannedSelection = self.CodeForBannedSelection
+        algo.OutputTable = self.OutputTable
+        algo.SaveMCJetsFromMotherOnly = self.SaveMotherOnly
         algo.SimpleAcceptance = self.SimpleAcceptance
         algo.JetMaker = self.jetMakerTool
         algo.addTool ( LoKi__FastJetMaker )
