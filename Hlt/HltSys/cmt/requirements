@@ -1,5 +1,5 @@
 package HltSys
-version           v15r5
+version           v20r0
 
 branches cmt doc
 
@@ -28,8 +28,6 @@ use TCKUtils            v1r11   Hlt   # Gerhard Raven
 use LoKiTrigger         v12r8   Phys  # Vanya Belyaev
 
 #temporary
-use PatAlgorithms       v4r24   Tf    # Stephanie Hansmann-Menzemer
-use L0Calo              v11r8   L0    # Patrick Robbe
 
 # Declare this as a container package
 apply_pattern container_package
