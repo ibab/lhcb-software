@@ -3,7 +3,6 @@
 #define INCLUDE_REFITPARTICLETRACKS_H 1
 
 #include "Kernel/DaVinciAlgorithm.h"
-///@todo: fix this
 
 class ITrackManipulator;
 class ITrackFitter;
