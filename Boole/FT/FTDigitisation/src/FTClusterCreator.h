@@ -48,8 +48,9 @@ private:
   int  m_nCluster;
   float m_sumCharge;
 
-  int     m_nberOfLostHit;
-  int     m_nberOfKeptHit;
+
+  int     m_nberOfLostHitFromMap;
+  int     m_nberOfKeptHitFromMap;
 };
 #endif // FTCLUSTERCREATOR_H
 

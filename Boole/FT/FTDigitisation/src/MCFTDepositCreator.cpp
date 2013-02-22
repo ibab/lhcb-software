@@ -176,7 +176,7 @@ StatusCode MCFTDepositCreator::execute() {
 
     MCHit* ftHit = *iterHit;     //pointer to the Hit
 
-    plot2D( ftHit->entry().x(), ftHit->entry().y(), "HitEntryPosition;x/y entry ; x [mm]; y [mm]",  
+    plot2D( ftHit->entry().x(), ftHit->entry().y(), "HitEntryPosition; Entry position of hits ; x [mm]; y [mm]",  
             -500., 500., -500.,500., 100, 100 );
 
 

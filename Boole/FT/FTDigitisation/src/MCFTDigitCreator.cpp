@@ -88,8 +88,9 @@ StatusCode MCFTDigitCreator::execute() {
          "Number of Hits per Channel;Number of Hits per Channel; Number of channels" , 0. , 10., 10);
 
     // Fill map linking the deposited energy to the MCHit which deposited it.
-    std::map<const LHCb::MCHit*, double> mcParticleMap;
+    std::map<const LHCb::MCHit*, double> mcHitMap;
     std::vector<std::pair <LHCb::MCHit*,double> >::const_iterator vecIter=mcDeposit->mcHitVec().begin();
+    double HitEnergySumInChannel = 0;
     
     for(;vecIter != mcDeposit->mcHitVec().end(); ++vecIter){
       if ( msgLevel( MSG::DEBUG) ) {
@@ -98,26 +99,43 @@ StatusCode MCFTDigitCreator::execute() {
                            vecIter->first->mcParticle()->key() ) << endmsg;
       }
       plot(vecIter->second,
-           "EnergyPerChannel",
-           "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 
+           "EnergyPerHitPerChannel",
+           "Energy deposited by each Hit in SiPM Channel;Energy [MeV];Number of SiPM channels", 
            0, 100);
       plot(vecIter->second,
-           "EnergyPerChannelZOOM",
-           "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 
+           "EnergyPerHitPerChannelZOOM",
+           "Energy deposited by each Hit in SiPM Channel;Energy [MeV];Number of SiPM channels", 
            0, 10);
       plot(vecIter->second,
-           "EnergyPerChannelBIGZOOM",
-           "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 0, 1);
+           "EnergyPerHitPerChannelBIGZOOM",
+           "Energy deposited by each Hit in SiPM Channel;Energy [MeV];Number of SiPM channels", 0, 1);
 
-      mcParticleMap[vecIter->first] += vecIter->second;
+      mcHitMap[vecIter->first] += vecIter->second;
+      HitEnergySumInChannel +=vecIter->second;
     }
 
+    plot(HitEnergySumInChannel,
+         "EnergyPerChannel",
+         "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 
+         0, 100);
+    plot(HitEnergySumInChannel,
+         "EnergyPerChannelZOOM",
+         "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 
+         0, 10);
+    plot(HitEnergySumInChannel,
+         "EnergyPerChannelBIGZOOM",
+         "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 0, 1);
     // Define & store digit
     // The deposited energy to ADC conversion is made by the deposit2ADC method
     int adc = deposit2ADC(mcDeposit);
     if ( 0 < adc ) {
-      MCFTDigit *mcDigit = new MCFTDigit(mcDeposit->channelID(), adc, mcParticleMap );
+      plot2D(HitEnergySumInChannel,(double)adc,"ADCGain","ADC Gain; Energy [MeV]; ADC", 0, 1.,0,40.,100,40);
+      counter("ADCPerMeV") += (double)adc/HitEnergySumInChannel ;
+      MCFTDigit *mcDigit = new MCFTDigit(mcDeposit->channelID(), adc, mcHitMap );
       digitCont->insert(mcDigit);
+    plot(adc,
+         "ADCPerChannel",
+         "ADC in SiPM Channel;ADC;Number of SiPM channels", 0, 20);
     }
   }
 
