@@ -4,6 +4,11 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-02-22 - Marco Clemencic
+ - Added use of BZip2 in CMakeLists.txt and removed the use of LCG_Interfaces/bz2lib
+   from the requirements (we must pick up the system version because the one in
+   lcg/externals is obsolete and deprecated).
+
 ! 2013-02-21 - Liang Sun
  - Added functionalities of compression and decompression on CondDB with new class CondDBCompression
 
