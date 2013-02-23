@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-02-23 - Marco Clemencic
+ - Forgot to add -lbz2 after removing the 'use' statement.
+
 ! 2013-02-22 - Marco Clemencic
  - Added use of BZip2 in CMakeLists.txt and removed the use of LCG_Interfaces/bz2lib
    from the requirements (we must pick up the system version because the one in

@@ -57,6 +57,7 @@ apply_pattern install_python_modules
 
 # ==============================================================================
 private
+macro_append DetCondLib_use_linkopts " -lbz2 "
 macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_filesystem_mt) $(Boost_linkopts_date_time) "
 
 apply_pattern QMTest
