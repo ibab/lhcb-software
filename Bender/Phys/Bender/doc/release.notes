@@ -24,10 +24,18 @@
 !
 ! -----------------------------------------------------------------------------
 
-! 2013-02-18 - Vanya Belyaev
+! ==================== Phys/Bender v22r4   2013-02-23 =========================
+
+! 2013-02-23 - Vanya Belyaev
+
 
  - fixes for DataUtils and Grid-access 
 
+   restore proper access to Grid files 
+
+ - fix extraction of DB-tags from file. Now it is a little bit slower, 
+   but more robust and easier to debug in case of problmes.
+ 
 ! ==================== Phys/Bender v22r3   2012-12-05 =========================
 ! ==================== Phys/Bender v22r2p1 2012-10-28 =========================
 ! ==================== Phys/Bender v22r2   2012-10-27 =========================
