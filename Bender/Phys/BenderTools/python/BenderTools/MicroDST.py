@@ -204,7 +204,7 @@ def uDstConf13b ( rootInTes ) :
     ## 0. Kill Event/DAQ
     #
     def _killDAQ_13b_ ( ) :
-        return  killDAQ ( nodes = [ '/Event/pRec' ] )  :
+        return  killDAQ ( nodes = [ '/Event/pRec' ] ) 
             
     from Gaudi.Configuration import appendPostConfigAction
     appendPostConfigAction ( _killDAQ_13b_ )
