@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file BenderTools/GoodEvents.py
 #
@@ -24,9 +24,9 @@
 #  @date   2012-06-12
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
-#                    $Revision: 138072 $
-#  Last modification $Date: 2012-04-04 16:41:10 +0200 (Wed, 04 Apr 2012) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 
@@ -50,7 +50,7 @@ By usage of this code one clearly states the disagreement with the smear campaig
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-06-12"
-__version__ = '$Revision: 138072 $'
+__version__ = '$Revision$'
 __all__     = (
     #
     'fireIncident'      ,

@@ -1,4 +1,4 @@
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 # Created    : 2012-04-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -15,9 +15,9 @@
 # with the smear campaign of Dr.O.Callot et al.: 
 # ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
-#                   $Revision: 136969 $
-# Last modification $Date: 2012-03-16 18:28:54 +0100 (Fri, 16 Mar 2012) $
-#                by $Author: ibelyaev $
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
 #
 # =============================================================================
 package             BenderTools

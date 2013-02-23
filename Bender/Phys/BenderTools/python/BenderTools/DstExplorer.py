@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: DstExplorer.py 138072 2012-04-04 14:41:10Z ibelyaev $ 
+# $Id$ 
 # =============================================================================
 ## @file BenderTools/DstExplorer.py
 #
@@ -57,9 +57,9 @@
 #  @date   2010-09-10
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#                    $Revision: 138072 $
-#  Last modification $Date: 2012-04-04 16:41:10 +0200 (Wed, 04 Apr 2012) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs
@@ -108,15 +108,15 @@ Usage:
        >>> ok, evt = seekStripDecision('.*Lam.*' )
  
 
-                  $Revision: 138072 $
-Last modification $Date: 2012-04-04 16:41:10 +0200 (Wed, 04 Apr 2012) $
-               by $Author: ibelyaev $
+                  $Revision$
+Last modification $Date$
+               by $Author$
 
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-09-10"
-__version__ = '$Revision: 138072 $'
+__version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================

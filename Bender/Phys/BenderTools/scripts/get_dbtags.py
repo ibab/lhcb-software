@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file 	
 #  Simple script to extract DB-tags from the file 
@@ -17,9 +17,9 @@
 #  @author Vanya BELYAEV 
 #  @date   2012-10-24
 #
-#                    $Revision:$
-#  Last modification $Date:$
-#                 by $Author:$
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 #
 # =============================================================================
 """

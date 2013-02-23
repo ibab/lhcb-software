@@ -21,9 +21,9 @@
 #  @date   2011-12-17
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #
-#                    $Revision: 135409 $
-#  Last modification $Date: 2012-02-15 21:01:06 +0100 (Wed, 15 Feb 2012) $
-#                 by $Author: ibelyaev $ 
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
 The helper Python module for creationof tag-collections 
@@ -45,7 +45,7 @@ with the smear campaign of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@cern.ch'
 __date__    = "2011-12-17"
-__version__ = '$Revision: 135409 $'
+__version__ = '$Revision$'
 __all__     = ()
 # =============================================================================
 from   GaudiPython.GaudiAlgs import TupleAlgo, SUCCESS 

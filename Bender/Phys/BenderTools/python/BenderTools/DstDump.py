@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: DstDump.py 138072 2012-04-04 14:41:10Z ibelyaev $ 
+# $Id$ 
 # =============================================================================
 ## @file BenderTools/DstDump.py
 #
@@ -31,9 +31,9 @@
 #  @date   2011-10-24
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
-#                    $Revision: 138072 $
-#  Last modification $Date: 2012-04-04 16:41:10 +0200 (Wed, 04 Apr 2012) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 
 """
@@ -58,15 +58,15 @@ Usage:
     dst_dump [options] file1 [ file2 [ file3 [ file4 ....'
 
 
-                  $Revision: 138072 $
-Last modification $Date: 2012-04-04 16:41:10 +0200 (Wed, 04 Apr 2012) $
-               by $Author: ibelyaev $
+                  $Revision$
+Last modification $Date$
+               by $Author$
 
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@cern.ch'
 __date__    = "2011-10-24"
-__version__ = '$Revision: 138072 $'
+__version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_dump [options] file1 [ file2 [ file3 [ file4 ....'
 __all__     =  ( 'dumpDst' , )

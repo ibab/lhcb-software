@@ -22,9 +22,9 @@
 # @author VanyaBELYAEV Ivan.Belyaev@nikhef.nl
 # @date   2011-10-05
 #
-#                    $Revision: 139297 $
-#  Last modification $Date: 2012-04-29 19:54:39 +0200 (Sun, 29 Apr 2012) $
-#                 by $Author: ibelyaev $ 
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
 
@@ -47,7 +47,7 @@ with the smear campaign of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-10-05"
-__version__ = "$Revision: 139297 $"
+__version__ = "$Revision$"
 __all__     = ( 'uDstConf' , )
 # =============================================================================
 ## logging

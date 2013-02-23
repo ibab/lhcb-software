@@ -44,7 +44,7 @@ By usage of this code one clearly states the disagreement with the smear campaig
 
 """
 # =============================================================================
-__version__ = "$Revision: 124897 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2011-06-07"
 # =============================================================================

@@ -78,7 +78,7 @@ def configure ( datafiles         ,
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@cern.ch "
 __date__    = " 2011-06-18 "
-__version__ = " $Revision: 1.2 $ "
+__version__ = " $Revision$ "
 # =============================================================================
 ## import everything from bender
 from   Bender.MainMC                 import *

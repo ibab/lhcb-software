@@ -29,9 +29,9 @@
 #  @date   2011-10-24
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
-#                    $Revision: 138072 $
-#  Last modification $Date: 2012-04-04 16:41:10 +0200 (Wed, 04 Apr 2012) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 
 """
@@ -56,15 +56,15 @@ Usage:
     dst-dump [options] file1 [ file2 [ file3 [ file4 ....'
 
 
-                  $Revision: 138072 $
-Last modification $Date: 2012-04-04 16:41:10 +0200 (Wed, 04 Apr 2012) $
-               by $Author: ibelyaev $
+                  $Revision$
+Last modification $Date$
+               by $Author$
 
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2011-10-24"
-__version__ = '$Revision: 138072 $'
+__version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_dump [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
