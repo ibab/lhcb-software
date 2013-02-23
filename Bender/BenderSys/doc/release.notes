@@ -23,6 +23,48 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v22r4>2013-02-23 Bender v22r4 based on the DaVinci v33r2</A>
+
+<PRE>		
+It is rather similar to v22r3, but based on fresh DaVinci picking up 
+all goodies and bug-fixes.
+
+Other features: 
+
+<li>	
+The direct access to GRID-files has been restored. 
+</li>	
+
+<li>	
+Functionality to get DB-tags form data files has been totally 
+rewritten. Now it is a little bit slower, but does not rely on internals of ROOT, 
+and in this way it is more geeneric, flexible and much easier 
+to debug in case of problems (e.g. with GRID access). 
+</li>	
+
+<li>	
+From now Bender-based standard scripts can be blindly applied to (x)gen files. 
+This functionality is available through 
+new module GenFiles.pym that makes some polishing of 
+Data-On-Demand service, suppression soem actions 
+not needed for processing (x)gen files. 
+</li>	
+
+<li>	
+Many tiny improvements for standard Bender-based scripts
+</li>	
+
+<li>	
+Restore the configuration for processing of ancient 
+Stripping13b uDST files with new software stack.
+</li>	
+
+<li>	
+Some helper (experimenta) functionality from Phys/DiCharm is added.
+</li>	
+
+</PRE> 
+
 <A NAME=v22r3>2012-12-05 Bender v22r3 based on the DaVinci v33r1</A>
 
 <PRE>		
