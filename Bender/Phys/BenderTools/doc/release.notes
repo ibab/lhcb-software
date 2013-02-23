@@ -5,7 +5,17 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+
+! ==================== Phys/BenderTools v22r4   2013-02-23 ====================
+
+! 2013-02-23 - Vanya Belyaev
+
+   - enhance functionality to reading/dumping/etc  of(x)GEN-files 
+   - restore uDstConf for Stripping13b data 
+   - copy some experimental code from Phys/DiCharm
+   
 ! 2013-02-18 - Vanya Belyaev
+
  - rewrite access to DB-tags 
 
 ! ==================== Phys/BenderTools v22r3   2012-12-05 ====================
