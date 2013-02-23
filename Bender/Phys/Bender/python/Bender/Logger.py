@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: Utils.py 133294 2011-12-18 14:37:25Z ibelyaev $ 
+# $Id$ 
 # =============================================================================
 ## @file Bender/Logger.py
 #
@@ -24,9 +24,9 @@
 #  @date   2010-09-12
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#                    $Revision: 133294 $
-#  Last modification $Date: 2011-12-18 15:37:25 +0100 (Sun, 18 Dec 2011) $
-#                 by $Author: ibelyaev $ 
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
 Logger for Bender 
@@ -43,14 +43,14 @@ By usage of this code one clearly states the disagreement
 with the smear campaign of Dr.O.Callot et al.: 
    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                    $Revision: 133294 $
-  Last modification $Date: 2011-12-18 15:37:25 +0100 (Sun, 18 Dec 2011) $
-                 by $Author: ibelyaev $  
+                    $Revision$
+  Last modification $Date$
+                 by $Author$  
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-03-16"
-__version__ = '$Revision: 133294 $'
+__version__ = '$Revision$'
 __all__     = (
     'getLogger' , 
     )

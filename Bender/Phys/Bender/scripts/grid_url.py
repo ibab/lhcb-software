@@ -23,9 +23,9 @@
 # @author VanyaBELYAEV Ivan.Belyaev@itep.ru
 # @date   2012-10-23
 #
-#                    $Revision: 146621 $
-#  Last modification $Date: 2012-10-08 14:47:42 +0200 (Mon, 08 Oct 2012) $
-#                 by $Author: ibelyaev $ 
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
   Helper module to get Grid access URL 
@@ -48,7 +48,7 @@ with the smear campaign of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2012-10-27"
-__version__ = "$Revision: 146621 $"
+__version__ = "$Revision$"
 __all__     = ( 'accessURLs' , ) 
 # =============================================================================
 ## get the dictionary { 'LFN' : 'access-URL' }
