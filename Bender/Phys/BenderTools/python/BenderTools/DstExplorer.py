@@ -159,8 +159,11 @@ def configure ( options , arguments ) :
     files = arguments 
     dtype, simu, ext = dataType ( files ) 
 
+    # 
+    if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) and not simu : simu = True 
+        
     if dtype and dtype != options.DataType :
-        logger.info ( 'Redefine DataType from  %s to %s ' % ( options.DataType, dtype ) )
+        logger.info ( 'Redefine DataType from  %s to %s '   % ( options.DataType, dtype ) )
         options.DataType  = dtype
         
     if simu and not options.Simulation : 
@@ -169,8 +172,7 @@ def configure ( options , arguments ) :
         
     if options.Simulation and '2009' == options.DataType :
         options.DataType = 'MC09'
-        logger.info('set DataType to be MC09')
-        
+        logger.info('set DataType to be MC09')    
     
     daVinci = DaVinci (
         DataType    = options.DataType    ,
@@ -264,24 +266,30 @@ def configure ( options , arguments ) :
             options.Grid      ,
             options.OutputLevel < 3 or not options.Quiet )
         if tags :
+            logger.info( 'Extract tags from DATA : %s' % tags         )
             logger.info( 'Extract tags from DATA : %s' % tags.keys()  )
             if tags.has_key ( 'DDDB'    ) and tags ['DDDB'   ] : 
-                daVinci.DDDBtag   = tags ['DDDB'  ][0]                 
+                daVinci.DDDBtag   = tags ['DDDB'  ]                 
                 logger.info( ' DDDBtag   : %s ' % daVinci.DDDBtag    )
             if tags.has_key ( 'CONDDB'  ) and tags ['CONDDB' ] : 
-                daVinci.CondDBtag = tags ['CONDDB'][0]
+                daVinci.CondDBtag = tags ['CONDDB']
                 logger.info( ' CondDBtag : %s ' % daVinci.CondDBtag  )
             if tags.has_key ( 'SIMCOND' ) and tags ['SIMCOND'] :
                 from Configurables import CondDB 
                 db = CondDB()
                 if  db.LocalTags.has_key( 'SIMCOND' ) :                    
-                    db.LocalTags["SIMCOND"] += tags ['SIMCOND']
+                    db.LocalTags["SIMCOND"] += [ tags ['SIMCOND'] ] 
                 else :
-                    db.LocalTags["SIMCOND"]  = tags ['SIMCOND']
+                    db.LocalTags["SIMCOND"]  = [ tags ['SIMCOND'] ] 
                         
                 logger.info( ' SIMCOND   : %s ' %  db.LocalTags["SIMCOND"] ) 
 
 
+    ## specific action for (x)gen files 
+    if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) :
+        from BenderTools.GenFiles import genAction
+        genAction ( ext )
+        
     ## Reset all DaVinci sequences 
     def _action ( ) :
         """
@@ -336,7 +344,7 @@ def configure ( options , arguments ) :
               options.Grid    )
 
     if not options.Quiet : print daVinci
-        
+
 # =============================================================================
 if '__main__' == __name__ :
     

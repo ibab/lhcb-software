@@ -134,8 +134,12 @@ def dumpDst ( usage   = __usage__   ,
         print __doc__         
         
     ## The input files must be specified!
-    if not arguments : parser.error ( 'No input files are specified' ) 
-    
+    if not arguments : parser.error ( 'No input files are specified' )
+
+    files = arguments 
+    from BenderTools.Parser import dataType
+    dtype, simu, ext = dataType ( files ) 
+
     ## options.Quiet = True 
     configure ( options , arguments ) 
     
@@ -159,6 +163,7 @@ def dumpDst ( usage   = __usage__   ,
     else :
         DataOnDemandSvc   ( Dump = False , OutputLevel = 6 )
         msg.setFatal += [ 'DataOnDemandSvc' ] 
+
         
     msg.setFatal += [ 'RootCnvSvc'          ,
                       'IOManagerSvc'        ,
@@ -175,6 +180,10 @@ def dumpDst ( usage   = __usage__   ,
     ##if not options.RootInTES :
     ##    if hasInFile ( arguments , 'EW.DST' ) :
     
+    if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) :
+        from BenderTools.GenFiles import genAction
+        genAction ( ext )
+        
     #
     ## instantiate the application manager
     #

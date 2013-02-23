@@ -38,11 +38,16 @@ def _get_db_tags_ ( files ) :
     app = LHCbApp()
     
     from GaudiPython.Bindings import AppMgr
+ 
+    import Bender.Fixes_Gaudi
+
     gaudi = AppMgr( outputlevel = 6 )
-    
+
     gaudi.run(1)
     evtsvc = gaudi.evtSvc()
 
+    for i in range (0,5) : print 100*'*'
+    
     for header in ( '/Event/Rec/Header' ,
                     '/Event/MC/Header'  ,
                     '/Event/Gen/Header' ) : 
@@ -61,6 +66,10 @@ def _get_db_tags_ ( files ) :
         if 1 != len ( ts ) : tags[t] = list ( ts ) 
         else               : tags[t] = list ( ts ) [0]
 
+    gaudi.stop     ()
+    gaudi.finalize ()    
+    del gaudi
+    
     return tags
     
 
@@ -81,37 +90,22 @@ def get_db_tags ( silent = True , files = [] ) :
     ## no valid 
     if not files : return {}
     
-    stdout = sys.stdout
-    stderr = sys.stderr
-    
     tags = {}
 
     try:
         
-        if silent :
-
-            class Silent(object):
-                def write(*args,**kwargs) : pass
-                
-            sys.stderr = Silent () ## None ## null  ## open ( '/dev/null' )
-            sys.stdout = Silent () ## None ## null
+        from AnalysisPython.Utils import mute
+        with mute ( silent , silent ) :
+            tags = _get_db_tags_ ( files )
             
-        tags = _get_db_tags_ ( files )
-        
     except:
         
         tags = {}
-            
-    finally:
-        
-        sys.stderr = stderr
-        sys.stdout = stdout
-        
-        
+                    
     return tags
 
 
- # =============================================================================
+# =============================================================================
 if __name__ == '__main__' :
 
     print 'DBTags: %s ' % get_db_tags ( silent = True  ) 
