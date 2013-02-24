@@ -16,7 +16,7 @@ DECLARE_TOOL_FACTORY(VLClusterPosition)
 typedef IVLClusterPosition::toolInfo toolInfo;
 
 //=============================================================================
-// Standard constructor, initializes variables
+/// Standard constructor, initializes variables
 //=============================================================================
 VLClusterPosition::VLClusterPosition(const std::string& type,
                                      const std::string& name,
@@ -31,6 +31,8 @@ VLClusterPosition::VLClusterPosition(const std::string& type,
 
 }
 
+//=============================================================================
+/// Initialize 
 //=============================================================================
 StatusCode VLClusterPosition::initialize() {
 
@@ -76,7 +78,7 @@ StatusCode VLClusterPosition::initialize() {
 }
 
 //=============================================================================
-//  Finalize
+/// Finalize
 //=============================================================================
 StatusCode VLClusterPosition::finalize() {
 
@@ -92,28 +94,31 @@ StatusCode VLClusterPosition::finalize() {
 
 }
 
-//=========================================================================
+//=============================================================================
+/// Calculate fractional position of a cluster
+//=============================================================================
 double VLClusterPosition::fraction(const LHCb::VLCluster* cluster) const {
 
-  int nStrips = cluster->size();
+  const unsigned int nStrips = cluster->size();
   if (nStrips <= 1) return 0.;
   std::vector<LHCb::VLChannelID> strips = cluster->channels();
-  double centre = 0.;
   double sum = 0.;
-  int distance = 0;
-  const DeVLSensor* sensor = m_det->sensor(strips[0].sensor());
-  for (int i = 0; i < nStrips; ++i) {
-    StatusCode sc = sensor->channelDistance(strips[0], strips[i], distance);
-    sc.ignore();
-    centre += static_cast<float>(distance) * cluster->adcValue(i);
-    sum += cluster->adcValue(i);
+  double mean = 0.;
+  for (unsigned int i = 0; i < nStrips; ++i) {
+    const unsigned int adc = cluster->adcValue(i);
+    const int strip = cluster->strip(i);
+    sum += adc;
+    mean += strip * adc;
   }
-  centre /= sum;
-  return centre - int(LHCb::Math::round(centre));
+  mean /= sum;
+  unsigned int centre = static_cast<unsigned int>(floor(mean));
+  return mean - centre;
 
 }
 
-//=========================================================================
+//=============================================================================
+/// Cluster position and error given channel ID and inter-strip fraction
+//=============================================================================
 toolInfo VLClusterPosition::position(const LHCb::VLChannelID& channel,
                                      const double& fraction) const {
 
@@ -144,8 +149,9 @@ toolInfo VLClusterPosition::position(const LHCb::VLChannelID& channel,
 
 }  
 
-//=========================================================================
-//=========================================================================
+//============================================================================
+/// Cluster position and error given channel ID, inter-strip fraction and track
+//=============================================================================
 toolInfo VLClusterPosition::position(const LHCb::VLChannelID& channel,
                                      const double& fraction,
                                      const Gaudi::XYZPoint& point,
@@ -174,6 +180,7 @@ toolInfo VLClusterPosition::position(const LHCb::VLChannelID& channel,
 }
 
 //============================================================================
+/// Calculate track angle
 //============================================================================
 double VLClusterPosition::angleOfTrack(const double tx, const double ty,
                                        Gaudi::XYZVector& parallel2Track) const {
@@ -191,6 +198,7 @@ double VLClusterPosition::angleOfTrack(const double tx, const double ty,
 }
 
 //============================================================================
+/// Interpolation of measurement error
 //============================================================================
 double VLClusterPosition::errorEstimate(double angle,
                                         const double pitch) const {
@@ -215,6 +223,7 @@ double VLClusterPosition::errorEstimate(double angle,
 }
 
 //=========================================================================
+/// Cluster position given cluster and track
 //=========================================================================
 toolInfo VLClusterPosition::position(const LHCb::VLCluster* cluster,
                                      const LHCb::StateVector& state) const {
@@ -223,12 +232,13 @@ toolInfo VLClusterPosition::position(const LHCb::VLCluster* cluster,
   const DeVLSensor* sensor = m_det->sensor(sensorNumber);
   // Build space point in global frame
   Gaudi::XYZPoint point(state.x(), state.y(), sensor->z());
-  return position(cluster->channelID(), cluster->interStripFraction(), 
+  return position(cluster->channelID(), fraction(cluster),
                   point, state.tx(), state.ty());
 
 }
 
 //=========================================================================
+/// Cluster position given lite cluster and track
 //=========================================================================
 toolInfo VLClusterPosition::position(const LHCb::VLLiteCluster* cluster,
                                      const LHCb::StateVector& state) const {
@@ -243,6 +253,7 @@ toolInfo VLClusterPosition::position(const LHCb::VLLiteCluster* cluster,
 }
 
 //=========================================================================
+/// Calculate projected angle of track
 //=========================================================================
 void VLClusterPosition::projectedAngle(const DeVLSensor* sensor,
                                        const LHCb::VLChannelID channel,
@@ -310,7 +321,7 @@ void VLClusterPosition::projectedAngle(const DeVLSensor* sensor,
       Gaudi::XYZVector stripdir = traj->direction(0.5).Unit();
       double cosangle = (stripdir.x() * point.x() + stripdir.y() * point.y()) / point.rho();
       double stereoAngle = std::abs(cosangle) < 1 ? acos(cosangle) : 0;
-      // for phi sensors, projection angle is diluted by stereo angle
+      // For phi sensors, projection angle is diluted by stereo angle
       angle = sqrt(tx * tx + ty * ty) * stereoAngle;
     }
   }
