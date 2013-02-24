@@ -30,7 +30,6 @@ private:
   void monitor();
 
   bool m_detailed;
-  bool m_printInfo;
   LHCb::MCVLDigits* m_digits;
   DeVL* m_det;
   double m_nDigits;

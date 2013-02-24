@@ -30,7 +30,6 @@ VLClusterMonitor::VLClusterMonitor(const std::string& name,
     m_nEvents(0) {
 
   declareProperty("Detailed",  m_detailed = false);
-  declareProperty("PrintInfo", m_printInfo = false);
 
 }
 
@@ -55,19 +54,18 @@ StatusCode VLClusterMonitor::execute() {
 
   if (msgLevel(MSG::DEBUG)) debug() << " ==> execute()" << endmsg;
   ++m_nEvents;
-  if (!exist<VLClusters>(VLClusterLocation::Default)) {
-    error() << " ==> There are no VLClusters in the TES! " << endmsg;
+  m_clusters = getIfExists<VLClusters>(VLClusterLocation::Default);
+  if (!m_clusters) {
+    error() << "No clusters at " << VLClusterLocation::Default << endmsg;
     return StatusCode::FAILURE;
-  } else {
-    m_clusters = get<VLClusters>(VLClusterLocation::Default);
-  }
+  } 
   monitor();
   return StatusCode::SUCCESS;
 
 }
 
 //=============================================================================
-///  Finalize
+/// Finalize
 //=============================================================================
 StatusCode VLClusterMonitor::finalize() {
 
@@ -141,18 +139,8 @@ void VLClusterMonitor::monitor() {
     }
     if (!m_detailed) continue;
     VLChannelID channel = (*it)->channelID();
-    unsigned int sensor = channel.sensor();
-    // Print out some info about the cluster
-    if (m_printInfo) {
-      info() << " ==> VLCluster: sensor "
-             << channel.sensor() << ", first strip: "
-             << (*it)->strip(0) << endmsg;
-      for (int i = 0; i < nstrips; ++i) {
-        info() << " ==> VLCluster: strip: "
-                << (*it)->strip(i) << ", signal on strip: "
-                << (*it)->adcValue(i) << endmsg;
-      }
-    }
+    const unsigned int sensor = channel.sensor();
+    const unsigned int firstStrip = (*it)->strip(0);
     double adcSum = 0.;
     for (int i = 0; i < nstrips; ++i) {
       adcSum += double((*it)->adcValue(i));
@@ -163,11 +151,11 @@ void VLClusterMonitor::monitor() {
     plot((*it)->interStripFraction(), "isp",
          "Inter-strip fraction",
          0., 1., 50);
-    plot2D(sensor, (*it)->strip(0), "sensorAndStrip",
+    plot2D(sensor, firstStrip, "sensorAndStrip",
            "Sensor and first strip number",
            0., 132., 0., 3000., 132, 50);
     if ((*it)->isRType()) {
-      double r = m_det->rSensor(sensor)->rOfStrip((*it)->strip(0));
+      double r = m_det->rSensor(sensor)->rOfStrip(firstStrip);
       plot2D(r, nstrips, "radiusVsSize",
              "Cluster size as function of radius",
              0., 40., -0.5, 5.5, 40, 6);
@@ -184,11 +172,7 @@ void VLClusterMonitor::monitor() {
       plot((*it)->interStripFraction(), "ispPhi",
            "Inter-strip fraction",
            0., 1., 50);
-      unsigned int zone = m_det->phiSensor(sensor)->zoneOfStrip((*it)->strip(0));
-      const double angle = m_det->phiSensor(sensor)->angleOfStrip((*it)->strip(0), 0.);
-      plot2D(angle, nstrips, "angleVsSize",
-             "Cluster size as function of strip angle",
-             0., Gaudi::Units::pi, -0.5, 5.5, 90, 6);
+      unsigned int zone = m_det->phiSensor(sensor)->zoneOfStrip(firstStrip);
       if (0 == zone) {
         plot(nstrips, "clusterSizePhiZone0",
              "Number of strips in cluster (zone 0)",

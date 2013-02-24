@@ -25,22 +25,17 @@ DECLARE_ALGORITHM_FACTORY(VLClusterCreator)
 VLClusterCreator::VLClusterCreator(const std::string& name,
                                    ISvcLocator* pSvcLocator) : 
     GaudiAlgorithm(name, pSvcLocator),
-    m_digits(0),
-    m_clusters(0),
-    m_det(0) {
+    m_digits(0), m_clusters(0), m_det(0) {
 
   declareProperty("DigitLocation", 
                   m_digitLocation = MCVLDigitLocation::Default);
   declareProperty("ClusterLocation",
                   m_clusterLocation = VLClusterLocation::Default);
-
   declareProperty("SeedSignalToNoiseCut", m_seedSignalToNoiseCut = 4.5);
   declareProperty("LowSignalToNoiseCut", m_lowSignalToNoiseCut = 1.5);
-
   declareProperty("MaxClusters", m_maxClusters = 10000);
   declareProperty("HighThreshold", m_highThreshold = 30.0);
   declareProperty("ElectronsPerADC", m_electronsPerADC = 1200.);
-
   declareProperty("MCTruth", m_truth = true);
 
 }
@@ -88,16 +83,6 @@ StatusCode VLClusterCreator::execute() {
   return StatusCode::SUCCESS;
 
 }
-
-//=============================================================================
-/// Finalisation 
-//=============================================================================
-StatusCode VLClusterCreator::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
-}
-
 
 //==========================================================================
 /// Clustering procedure
@@ -148,7 +133,7 @@ void VLClusterCreator::makeClusters() {
         mean += strip * adc;
       }
       mean /= sum;
-      std::sort(strips.begin(), strips.begin());
+      std::stable_sort(strips.begin(), strips.end());
       unsigned int centre = static_cast<unsigned int>(floor(mean));
       const double isp = mean - centre;
       // Set the key.

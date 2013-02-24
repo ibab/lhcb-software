@@ -29,7 +29,6 @@ private:
   void monitor();
 
   bool m_detailed;
-  bool m_printInfo;
   LHCb::VLClusters* m_clusters;
   DeVL* m_det;
   double m_nClusters;

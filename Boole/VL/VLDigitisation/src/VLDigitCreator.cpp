@@ -149,12 +149,12 @@ StatusCode VLDigitCreator::execute() {
   m_digits = new MCVLDigits();
   std::vector<std::string>::const_iterator it;
   for (it = m_hitLocations.begin(); it != m_hitLocations.end(); ++it) {
-    if (!exist<MCHits>(*it)) {
-      if (m_debug) debug() << "No MCHits in " << *it << endmsg;
+    // Retrieve the MC hits.
+    MCHits* hits = getIfExists<MCHits>(*it);
+    if (!hits) {
+      if (m_debug) debug() << "No hits in " << *it << endmsg;
       continue;
     }
-    // Retrieve the MC hits.
-    MCHits* hits = get<MCHits>(*it);
     if (m_debug) debug() << hits->size() << " hits in " << *it << endmsg;
     const unsigned int timeIndex = it - m_hitLocations.begin();
     const double timeOffset = m_timeOffsets[timeIndex];
@@ -856,11 +856,3 @@ double VLDigitCreator::erfcSafe(const double arg) {
 
 }
 
-//============================================================================
-/// Finalization
-//============================================================================
-StatusCode VLDigitCreator::finalize() {
- 
-  return GaudiAlgorithm::finalize(); 
-
-}

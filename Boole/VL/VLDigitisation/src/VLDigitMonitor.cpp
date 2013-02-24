@@ -34,7 +34,6 @@ VLDigitMonitor::VLDigitMonitor(const std::string& name,
     m_nEvents(0) {
 
   declareProperty("Detailed",  m_detailed = false);
-  declareProperty("PrintInfo", m_printInfo = false);
 
 }
 
@@ -60,12 +59,11 @@ StatusCode VLDigitMonitor::execute() {
 
   if (msgLevel(MSG::DEBUG)) debug() << " ==> execute()" << endmsg;
   ++m_nEvents;
-  if (!exist<LHCb::MCVLDigits>(LHCb::MCVLDigitLocation::Default)) {
-    error() << "No MCVLDigits at " 
-            << LHCb::MCVLDigitLocation::Default << endmsg;
+  m_digits = getIfExists<LHCb::MCVLDigits>(LHCb::MCVLDigitLocation::Default);
+  if (!m_digits) {
+    error() << "No digits at " << LHCb::MCVLDigitLocation::Default << endmsg;
     return StatusCode::FAILURE;
   }
-  m_digits = get<LHCb::MCVLDigits>(LHCb::MCVLDigitLocation::Default);
   monitor();
   return StatusCode::SUCCESS;
 
@@ -127,14 +125,6 @@ void VLDigitMonitor::monitor() {
     } else if (fabs(digit->signal()) > 0. && (digit->mcHits().size() == 0)) {
       other = true;
       ++m_nOther;
-    }
-    // Print some info if asked to.
-    if (m_printInfo) {
-      info() << " ==> MCVLDigit " << it - m_digits->begin()
-             << " (sensor " << digit->sensor()
-             << ", strip " << digit->strip() << endmsg;
-      info() << "    noise:  " << digit->noise() << endmsg;
-      info() << "    signal: " << digit->signal() << endmsg;
     }
     plot(digit->charge(), "charge", 
          "Charge in Si strip (electrons)",
@@ -233,60 +223,53 @@ void VLDigitMonitor::monitor() {
            "Other dominated - MC total signal deposited in MCVLDigit",
            0., 50000., 100);
     }
-    if (m_detailed) {
-      LHCb::VLChannelID channel = digit->channelID();
-      const DeVLSensor* sens = m_det->sensor(digit->channelID().sensor());
-      double sensorZ = sens->z() / cm;
-      if (m_printInfo) {
-        info() << "Channel: " << channel << ", sensor (from channel): "
-               << channel.sensor() << ", sensor (from MCVLDigit): "
-               << digit->sensor() << ", Z position: "
-               << sensorZ << endmsg;
+    if (!m_detailed) continue;
+    LHCb::VLChannelID channel = digit->channelID();
+    const DeVLSensor* sens = m_det->sensor(digit->channelID().sensor());
+    double sensorZ = sens->z() / cm;
+    if (sens->isR()) {
+      const DeVLRSensor* rSens = dynamic_cast<const DeVLRSensor*>(sens);
+      const double radius = rSens->rOfStrip(channel.strip());
+      const unsigned int zone = rSens->zoneOfStrip(channel.strip());
+      if (0 == zone) {
+        plot2D(sensorZ, radius / cm, "rz0",
+               "MCVLDigit R position vs. Z (cm), Zone 0",
+               -20., 80., 0., 5., 1000, 50);
+      } else if (1 == zone) {
+        plot2D(sensorZ, radius / cm, "rz1",
+               "MCVLDigit R position vs. Z (cm), Zone 1",
+               -20., 80., 0., 5., 1000, 50);
+      } else if (2 == zone) {
+        plot2D(sensorZ, radius / cm, "rz2",
+               "MCVLDigit R position vs. Z (cm), Zone 2",
+               -20., 80., 0., 5., 1000, 50);
+      } else if (3 == zone) {
+        plot2D(sensorZ, radius / cm, "rz3",
+               "MCVLDigit R position vs. Z (cm), Zone 3",
+               -20., 80., 0., 5., 1000, 50);
+      } else if (4 == zone) {
+        plot2D(sensorZ, radius / cm, "rz4",
+               "MCVLDigit R position vs. Z (cm), Zone 4",
+               -20., 80., 0., 5., 1000, 50);
       }
-      if (sens->isR()) {
-        const DeVLRSensor* rSens = dynamic_cast<const DeVLRSensor*>(sens);
-        const double radius = rSens->rOfStrip(channel.strip());
-        const unsigned int zone = rSens->zoneOfStrip(channel.strip());
-        if (0 == zone) {
-          plot2D(sensorZ, radius / cm, "rz0",
-                 "MCVLDigit R position vs. Z (cm), Zone 0",
-                 -20., 80., 0., 5., 1000, 50);
-        } else if (1 == zone) {
-          plot2D(sensorZ, radius / cm, "rz1",
-                 "MCVLDigit R position vs. Z (cm), Zone 1",
-                 -20., 80., 0., 5., 1000, 50);
-        } else if (2 == zone) {
-          plot2D(sensorZ, radius / cm, "rz2",
-                 "MCVLDigit R position vs. Z (cm), Zone 2",
-                 -20., 80., 0., 5., 1000, 50);
-        } else if (3 == zone) {
-          plot2D(sensorZ, radius / cm, "rz3",
-                 "MCVLDigit R position vs. Z (cm), Zone 3",
-                 -20., 80., 0., 5., 1000, 50);
-        } else if (4 == zone) {
-          plot2D(sensorZ, radius / cm, "rz4",
-                 "MCVLDigit R position vs. Z (cm), Zone 4",
-                 -20., 80., 0., 5., 1000, 50);
-        }
-      } else if (sens->isPhi()) {
-        const unsigned int strip = channel.strip();
-        const unsigned int zone = sens->zoneOfStrip(strip);
-        const DeVLPhiSensor* phiSens = dynamic_cast<const DeVLPhiSensor*>(sens);
-        const double radius = phiSens->rMin(zone);
-        const double phi = phiSens->phiOfStrip(strip, 0., radius);
-        if (0 == zone) {
-          plot2D(sensorZ, phi / degree, "phiz0",
-                 "MCVLDigit Phi position vs. Z (cm), Zone 0",
-                 -20., 80., -180., 180., 1000, 60);
-        } else if (1 == zone) {
-          plot2D(sensorZ, phi / degree, "phiz1",
-                 "MCVLDigit Phi position vs. Z (cm), Zone 1",
-                 -20., 80., -180., 180., 1000, 60);
-        } else if (2 == zone) {
-          plot2D(sensorZ, phi / degree, "phiz2",
-                 "MCVLDigit Phi position vs. Z (cm), Zone 2",
-                 -20., 80., -180., 180., 1000, 60);
-        }
+    } else if (sens->isPhi()) {
+      const unsigned int strip = channel.strip();
+      const unsigned int zone = sens->zoneOfStrip(strip);
+      const DeVLPhiSensor* phiSens = dynamic_cast<const DeVLPhiSensor*>(sens);
+      const double radius = phiSens->rMin(zone);
+      const double phi = phiSens->phiOfStrip(strip, 0., radius);
+      if (0 == zone) {
+        plot2D(sensorZ, phi / degree, "phiz0",
+               "MCVLDigit Phi position vs. Z (cm), Zone 0",
+               -20., 80., -180., 180., 1000, 60);
+      } else if (1 == zone) {
+        plot2D(sensorZ, phi / degree, "phiz1",
+               "MCVLDigit Phi position vs. Z (cm), Zone 1",
+               -20., 80., -180., 180., 1000, 60);
+      } else if (2 == zone) {
+        plot2D(sensorZ, phi / degree, "phiz2",
+               "MCVLDigit Phi position vs. Z (cm), Zone 2",
+               -20., 80., -180., 180., 1000, 60);
       }
     }
   }
