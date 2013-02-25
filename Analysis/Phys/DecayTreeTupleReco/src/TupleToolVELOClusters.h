@@ -29,7 +29,7 @@ public:
 
   virtual ~TupleToolVELOClusters( ); ///< Destructor
   virtual StatusCode fill( Tuples::Tuple& );///< Fill tuple
-  int unusedVelo();
+//  int unusedVelo();
 
 };
 

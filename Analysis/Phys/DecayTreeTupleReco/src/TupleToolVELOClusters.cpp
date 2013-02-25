@@ -46,11 +46,9 @@ StatusCode TupleToolVELOClusters::fill( Tuples::Tuple& tup )
   }
   // Fill the tuple
   bool test = true;
-  int unusedvelo = TupleToolVELOClusters::unusedVelo();
-  test &= tup->column( prefix+"nUnusedVeloClusters", unusedvelo);
-  return StatusCode(test);
-}
-int TupleToolVELOClusters::unusedVelo(){
+  std::vector<double> stations;
+  std::vector<double> stationADC;
+
   std::vector<int> vids; vids.reserve(1000);
   LHCb::Tracks* tracksCont = get<LHCb::Tracks>( LHCb::TrackLocation::Default );
   if( tracksCont == NULL || tracksCont->size()==0 ){
@@ -78,9 +76,22 @@ int TupleToolVELOClusters::unusedVelo(){
     if (std::find(vids.begin(), vids.end(),(*iterV)->channelID()) == vids.end()){
         debug() << "hit is not on track " 
           << (*iterV)->isRType() <<  " "<< (*iterV)->isPhiType() <<  " " << (*iterV)->isPileUp() << std::endl; 
+
+      int sensor = (*iterV)->channelID().sensor();
+      double mysensor = sensor;
+      stations.push_back(mysensor);
+      double adc =(*iterV)->totalCharge();
+      stationADC.push_back(adc);
+
     }
   }
-  return clusters->size() - vids.size() ;
+  int unusedvelo  = clusters->size() - vids.size() ;
+  //info() << " n unused =  " << unusedvelo << endmsg;
+  test &= tup->column( prefix+"nUnusedVeloClusters", unusedvelo);
+  test &= tup->farray( prefix+"UNUSED_VELO_STATION_ADC", stationADC.begin(), stationADC.end(), "nClusters" , 100);
+  test &= tup->farray( prefix+"UNUSED_VELO_STATION_VECTOR", stations.begin(), stations.end(), "nClusters", 100);
+  return StatusCode(test);
+
 
 }
 
