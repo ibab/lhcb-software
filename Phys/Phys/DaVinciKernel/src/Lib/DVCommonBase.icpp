@@ -519,7 +519,11 @@ StatusCode DVCommonBase<PBASE>::loadEventInput()
 
   if ( !m_inputLocations.empty() )
   {
-    sc = loadParticles() && loadParticle2PVRelations();
+    sc = loadParticles();
+    if ( UNLIKELY(!m_p2PVInputLocations.empty()) ) 
+    {
+      sc = sc && loadParticle2PVRelations();
+    }
   }
 
   return sc;
@@ -641,7 +645,7 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
   }
 
   // statistics:
-  this->counter ("# input particles" ) += m_inputParts.size() ;
+  this->counter ( "# input particles" ) += m_inputParts.size() ;
 
   return StatusCode::SUCCESS;
 }
@@ -789,16 +793,17 @@ StatusCode DVCommonBase<PBASE>::saveP2PVRelations() const
 template <class PBASE>
 void DVCommonBase<PBASE>::buildP2PVMap() const
 {
+  if ( m_parts.empty() ) return;
 
-  if (m_parts.empty()) return;
-
-  LHCb::Particle::ConstVector particles;
-  LHCb::Vertex::ConstVector   vertices;
+  static LHCb::Particle::ConstVector particles;
+  particles.clear();
+  static LHCb::Vertex::ConstVector   vertices;
+  vertices.clear();
 
   for ( LHCb::Particle::ConstVector::const_iterator iPart = m_parts.begin();
         iPart != m_parts.end(); ++iPart )
   {
-    DaVinci::Utils::findDecayTree( *iPart, particles, vertices);
+    DaVinci::Utils::findDecayTree( *iPart, particles, vertices );
   }
 
   if ( particles.empty() ) return;
