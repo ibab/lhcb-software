@@ -261,6 +261,25 @@ private : // some local private class
     double       m_delta  ;
     // ========================================================================
   };
+  /** @class  
+   *  Helper class for momentum error calibration 
+   *  @author C.Voss
+   */
+  class StateCovModify
+  {
+  public:
+    
+    StateCovModify();
+    ~StateCovModify();
+    
+    Gaudi::TrackSymMatrix CorrectCovMatrix( LHCb::State* state );
+    
+  private:
+    
+    void initmap();
+    double getF(double p);
+    std::map<std::vector<double>,double> _pSel;
+  };
   // ==========================================================================
 private: // properties 
   // ==========================================================================
@@ -386,6 +405,71 @@ namespace
     return histo.GetBinContent ( bin ) ;
   } 
   // ==========================================================================
+}
+// ==========================================================================
+// StateCovModify implementation
+// ==========================================================================
+// constructor 
+// ==========================================================================
+TrackScaleState::StateCovModify::StateCovModify()
+{
+  TrackScaleState::StateCovModify::initmap();
+}
+// ==========================================================================
+// destructor 
+// ==========================================================================
+TrackScaleState::StateCovModify::~StateCovModify(){}
+// ==========================================================================
+//  StateCovModify functions
+// ==========================================================================
+Gaudi::TrackSymMatrix TrackScaleState::StateCovModify::CorrectCovMatrix( LHCb::State* state )
+{
+  Gaudi::TrackSymMatrix Cov = state->covariance();
+  double CorrFactor = getF( state->p() );
+  for (int i = 0; i < 5; ++i ) 
+    {
+      Cov[i][4] *= CorrFactor;
+      Cov[4][i] *= CorrFactor;
+    } 
+  return Cov;
+}
+// ==========================================================================
+void TrackScaleState::StateCovModify::initmap()
+{
+  double pBins[] = { 3.e3, 8.e3, 10.e3, 12.e3, 14.e3, 16.e3,
+		     18.e3, 20.e3, 22.e3, 24.e3, 26.e3, 29.e3,
+		     33.e3, 37.e3, 41.e3, 45.e3, 51.e3, 59.e3,
+		     67.e3, 83.e3, 106.e3, 136.e3, 300.e3 };    
+  
+  double pF[] = { 1.5981159181787334, 1.5344751530704794,
+		  1.524508127341563, 1.5108670852000343,
+		  1.5034082640270672, 1.5033674384307274,
+		  1.5045598852805602, 1.5125798396304568, 
+		  1.5077244607357643, 1.5118973093049883,
+		  1.5205950755646001, 1.5326659542372139,
+		  1.547747931811412, 1.5418316282388613,
+		  1.5567059784108734, 1.5610376660430338,
+		  1.5795891863730962, 1.5907031004036067,
+		  1.602830230226908, 1.6122234643961293,
+		  1.6261412260004753, 1.5800090318521556
+  };
+  
+  for( int i = 0; i < 22; ++i)
+    {
+      std::vector<double> h ;
+      h.push_back(pBins[i]);
+      h.push_back(pBins[i+1]) ;
+      _pSel.insert ( std::pair<std::vector<double>,double>(h,pF[i]) );
+    }
+}
+// ==========================================================================
+double  TrackScaleState::StateCovModify::getF(double p)
+{ 
+  std::map<std::vector<double>,double>::iterator it;
+  double ret(1e-99);
+  for(it = _pSel.begin(); it != _pSel.end(); it++)
+    if(p > (it->first).at(0) && p < (it->first).at(1) ) ret = it->second ;
+  return ret;
 }
 // ============================================================================
 // SOME MACROS
@@ -696,6 +780,7 @@ StatusCode TrackScaleState::execute ()
   //
   StatEntity& scale = counter("SCALE") ;
   //
+  StateCovModify CovMod;
   // loop and do the scaling
   if ( LIKELY (NULL!=trackCont) ) {
     for ( LHCb::Tracks::iterator it = trackCont->begin() ; 
@@ -734,6 +819,7 @@ StatusCode TrackScaleState::execute ()
         state -> setTx ( tx * m_slope ) ;
         state -> setTy ( ty * m_slope ) ;      
         //
+	state -> setCovariance ( CovMod.CorrectCovMatrix( state ) ); //Scaling of the covMatrix
       } //                                           end of loop over the states   
     } //                                             end loop over the tracks 
   } //                                             if tracks exist
