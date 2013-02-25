@@ -1,4 +1,3 @@
-// $Id: DeMuonDetector.h,v 1.33 2009-09-14 08:58:35 jonrob Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -37,12 +36,6 @@ class IDataProviderSvc;
  *  @date   18/10/2005
  */
 
-#define partition 20
-#define maxReadoutType 2
-#define numberChamber 1380   
-#define numberGap 4
-#define nFE 2
-#define nLogMap 2
 static const CLID CLID_DEMuonDetector = 11009;  
 
 
@@ -275,15 +268,15 @@ public:
   //Returns the chamber (as DetectorElement pointer) from a Hit 
   DeMuonChamber* Hit2Chamber(const Gaudi::XYZPoint myPoint);
 
-
-// unsigned int getReadoutType(int station, int region,MuonLayout lay);  
-// MuonODEBoard* getODEContainingTile(LHCb::MuonTileID digit);  
-// MuonL1Board* getL1ContainingTile(LHCb::MuonTileID digit);
   inline MuonDAQHelper* getDAQInfo(){
     return &(m_daqHelper);
   };
 
 private:
+
+  // Useful constants
+  static const unsigned int partition = 20;
+  static const unsigned int maxReadoutType = 2;
 
   /// Access to Msgstream object
   inline MsgStream & msgStream() const
