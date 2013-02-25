@@ -17,7 +17,7 @@
 
 namespace LHCb {
   class HltDecReports;
-};
+}
   
 /** @class TriggerSelectionTisTosSummary TriggerSelectionTisTosSummary.h
  *  

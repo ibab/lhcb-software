@@ -97,13 +97,13 @@ bool BremAdder::addBrem   ( LHCb::Particle* particle,bool force )
   if( NULL == particle)return false;
   const std::vector<const LHCb::CaloHypo*>& brems = bremList((const LHCb::Particle*)particle,"Add");
   return brem4particle( particle, "add" , brems, force  );
-}; 
+}
 // ---- Remove brem from particle
-bool BremAdder::removeBrem( LHCb::Particle* particle,bool force ){ 
-  if( NULL == particle)return false; 
+bool BremAdder::removeBrem( LHCb::Particle* particle,bool force ){
+  if( NULL == particle)return false;
   const std::vector<const LHCb::CaloHypo*>& brems = bremList((const LHCb::Particle*)particle,"Remove");
   return brem4particle( particle, "remove",brems,force);
-}; 
+}
 
 //---- Add brem(s) to a pair of particles removing overlaps
 bool BremAdder::addBrem2Pair( LHCb::Particle* p1, LHCb::Particle* p2 , bool force){
@@ -146,7 +146,7 @@ const std::vector<const LHCb::CaloHypo*>  BremAdder::bremList(const LHCb::Partic
 //--- get the associate Brem vectors pair
 const std::pair<std::vector<const LHCb::CaloHypo*>,
                 std::vector<const LHCb::CaloHypo*> > BremAdder::bremLists(const LHCb::Particle* p1,
-                                                                           const LHCb::Particle* p2, std::string flag){
+                                                                          const LHCb::Particle* p2, std::string flag){
   const std::vector<const LHCb::CaloHypo*>& brems1 = getBrem(p1);
   const std::vector<const LHCb::CaloHypo*>& brems2 = getBrem(p2);
   std::vector<const LHCb::CaloHypo*> bb2;
@@ -178,7 +178,7 @@ const LHCb::CaloMomentum BremAdder::bremMomentum(const LHCb::Particle* particle,
 const std::pair<LHCb::CaloMomentum,LHCb::CaloMomentum> BremAdder::bremMomenta(const LHCb::Particle* p1,
                                                                               const LHCb::Particle* p2,
                                                                               std::string flag){
-  
+
   const std::pair<std::vector<const LHCb::CaloHypo*>,std::vector<const LHCb::CaloHypo*> >& pair=bremLists(p1,p2,flag);
   const std::vector<const LHCb::CaloHypo*>& b1=pair.first;
   const std::vector<const LHCb::CaloHypo*>& b2=pair.second;
@@ -288,7 +288,7 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,
   // add flag
   particle->eraseInfo(LHCb::Particle::HasBremAdded);
   particle->addInfo(LHCb::Particle::HasBremAdded,1.);
-  
+
   // update covariance matrices
   (Gaudi::SymMatrix4x4&)particle->momCovMatrix() += bremPhoton.momCovMatrix();
   (Gaudi::Matrix4x3&)particle->posMomCovMatrix() += bremPhoton.momPointCovMatrix();
@@ -525,7 +525,7 @@ void BremAdder::bremMatcher(const std::vector<const LHCb::CaloHypo*>& brems,
   for(std::vector<const LHCb::CaloHypo*>::const_iterator ib=brems.begin();brems.end()!=ib;++ib){
     const LHCb::CaloHypo* brem = *ib;
     const Gaudi::XYZPoint& origin = bremOrigin(brem,track);
-    LHCb::State pState = LHCb::State();    
+    LHCb::State pState = LHCb::State();
     (m_extrapolator->propagate ( *track, origin.Z() , pState ,  LHCb::ParticleID(11))).ignore();
     LHCb::CaloMomentum b = LHCb::CaloMomentum( brem ,pState.position() ) ;
     p= ( p * pState.slopes()/pState.slopes().R()  + b.momentum().Vect() ).R();
@@ -545,7 +545,7 @@ void BremAdder::bremMatcher(const std::vector<const LHCb::CaloHypo*>& brems,
 //=== bremOrigin ==================================================================================================
 const Gaudi::XYZPoint BremAdder::bremOrigin(const LHCb::CaloHypo* brem,
                                             const LHCb::Track*    track){
-  
+
   Gaudi::XYZPoint mPoint = Gaudi::XYZPoint();
   // scan the trajectory
   double fromZ = ( LHCb::Track::Downstream == track->type())?  (double)StateParameters::ZEndVelo : usedState(track)->z()-100;
@@ -574,7 +574,7 @@ const Gaudi::XYZPoint BremAdder::bremOrigin(const LHCb::CaloHypo* brem,
   return mPoint;
 }
 
-const Gaudi::XYZPoint BremAdder::firstOrigin( const std::vector<const LHCb::CaloHypo*>& brems ,const LHCb::Particle* particle){  
+const Gaudi::XYZPoint BremAdder::firstOrigin( const std::vector<const LHCb::CaloHypo*>& brems ,const LHCb::Particle* particle){
   const LHCb::Track* track = particle->proto()->track();
   Gaudi::XYZPoint firstPoint = Gaudi::XYZPoint(0.,0.,12000);
   for(std::vector<const LHCb::CaloHypo*>::const_iterator ib=brems.begin();brems.end()!=ib;++ib){

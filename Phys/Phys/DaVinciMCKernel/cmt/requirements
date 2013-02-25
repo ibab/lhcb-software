@@ -7,7 +7,7 @@ package           DaVinciMCKernel
 version           v4r3p1
 
 #============================================================================
-branches          cmt doc dict src options Kernel
+branches          cmt doc dict src Kernel
 
 # Used packages. 
 #============================================================================

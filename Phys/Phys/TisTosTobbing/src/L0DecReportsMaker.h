@@ -13,7 +13,7 @@
 namespace LHCb {
   class L0MuonCandidate;  
   class L0CaloCandidate;  
-};
+}
 
 
 /** @class L0DecReportsMaker L0DecReportsMaker.h
@@ -35,13 +35,10 @@ public:
 
   virtual ~L0DecReportsMaker( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-
 
 private:
 
-  
   // ----------------------- data members 
 
   /// location of input L0 DU Report
@@ -49,8 +46,6 @@ private:
 
   /// location of output Hlt Summary
   StringProperty m_outputHltDecReportsLocation;
-
-
 
 };
 

@@ -19,7 +19,7 @@
 namespace LHCb {
   class HltDecReports;
   class HltSelReports;
-};
+}
   
 /** @class TriggerSelectionTisTos TriggerSelectionTisTos.h
  *  

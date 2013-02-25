@@ -93,7 +93,7 @@ bool BBDTSimpleTool::operator()(const LHCb::Particle* p) const {
 }
 // ============================================================================
 /// declare & implement the factory
-DECLARE_TOOL_FACTORY(BBDTSimpleTool);
+DECLARE_TOOL_FACTORY(BBDTSimpleTool)
 // ============================================================================
 
 #include "GaudiKernel/ParsersFactory.h"

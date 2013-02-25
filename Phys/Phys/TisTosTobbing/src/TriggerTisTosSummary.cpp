@@ -22,7 +22,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TriggerTisTosSummary );
+DECLARE_TOOL_FACTORY( TriggerTisTosSummary )
 
 const std::vector< std::string > TriggerTisTosSummary::m_empty_selections = std::vector< std::string >();
 

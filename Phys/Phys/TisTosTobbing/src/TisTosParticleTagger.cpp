@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TisTosParticleTagger );
+DECLARE_ALGORITHM_FACTORY( TisTosParticleTagger )
 
 using namespace LHCb;
 

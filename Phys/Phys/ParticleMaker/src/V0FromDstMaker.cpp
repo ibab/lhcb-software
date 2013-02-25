@@ -3,9 +3,6 @@
  *
  * Algorithm to build particles from the Brunel V0 list.
  *
- * CVS Log :-
- * $Id: V0FromDstMaker.cpp,v 1.1 $
- *
  * @author Wouter Hulsbergen
  * @date 2012-01-01
  */
@@ -21,8 +18,11 @@
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/ParticleID.h"
 
-class V0FromDstMaker : public GaudiAlgorithm {
+class V0FromDstMaker : public GaudiAlgorithm 
+{
+  
 public:
+  
   /// Standard constructor
   V0FromDstMaker( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -30,13 +30,20 @@ public:
 
   StatusCode initialize() ;
   StatusCode execute() ;
-protected:
-  LHCb::Particle* build( const LHCb::TwoProngVertex& vertex,const LHCb::ParticleID& pid,
-			 const LHCb::Particle::Range& posDaughters,const LHCb::Particle::Range& negDaughters ) const ;
-  LHCb::Particle* build(const LHCb::TwoProngVertex& vertex,const LHCb::ParticleID& pid,
-			const LHCb::Particle& daughterA,const LHCb::Particle& daughterB) const ;
 
 private:
+
+  LHCb::Particle* build( const LHCb::TwoProngVertex& vertex,
+                         const LHCb::ParticleID& pid,
+                         const LHCb::Particle::Range& posDaughters,
+                         const LHCb::Particle::Range& negDaughters ) const ;
+  LHCb::Particle* build( const LHCb::TwoProngVertex& vertex,
+                         const LHCb::ParticleID& pid,
+                         const LHCb::Particle& daughterA,
+                         const LHCb::Particle& daughterB ) const ;
+
+private:
+
   std::string m_longPionLocation ;
   std::string m_downstreamPionLocation ;
   std::string m_longProtonLocation ;
@@ -45,16 +52,12 @@ private:
   std::string m_ksDDOutputLocation ;
   std::string m_lambdaLLOutputLocation ;
   std::string m_lambdaDDOutputLocation ;
-  std::string m_v0InputLocation ; 
+  std::string m_v0InputLocation ;
   const LHCb::ParticleProperty* m_ksProperty ;
   const LHCb::ParticleProperty* m_lambdaProperty ;
 };
 
 //-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-
-DECLARE_ALGORITHM_FACTORY( V0FromDstMaker ) ;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -77,12 +80,12 @@ V0FromDstMaker::V0FromDstMaker( const std::string& name, ISvcLocator* pSvcLocato
 
 V0FromDstMaker::~V0FromDstMaker( ) { }
 
-StatusCode V0FromDstMaker::initialize() 
+StatusCode V0FromDstMaker::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  
-  LHCb::IParticlePropertySvc* propertysvc = 
+
+  LHCb::IParticlePropertySvc* propertysvc =
     svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
   m_ksProperty     = propertysvc->find( "KS0" ) ;
   m_lambdaProperty = propertysvc->find( "Lambda0" ) ;
@@ -94,9 +97,9 @@ StatusCode V0FromDstMaker::initialize()
 //=============================================================================
 
 LHCb::Particle* V0FromDstMaker::build(const LHCb::TwoProngVertex& vertex,
-				      const LHCb::ParticleID& pid,
-				      const LHCb::Particle& daughterA,
-				      const LHCb::Particle& daughterB) const
+                                      const LHCb::ParticleID& pid,
+                                      const LHCb::Particle& daughterA,
+                                      const LHCb::Particle& daughterB) const
 {
   LHCb::Particle* v0 = new LHCb::Particle(pid) ;
   v0->addToDaughters( &daughterA ) ;
@@ -111,23 +114,23 @@ LHCb::Particle* V0FromDstMaker::build(const LHCb::TwoProngVertex& vertex,
   v0->setMomCovMatrix( cov.Sub<Gaudi::SymMatrix4x4>(3,3) ) ;
   v0->setPosCovMatrix( cov.Sub<Gaudi::SymMatrix3x3>(0,0) ) ;
   v0->setPosMomCovMatrix( cov.Sub<Gaudi::Matrix4x3>(3,0) ) ;
-  
+
   // now create the vertex object
   LHCb::Vertex* particlevertex = new LHCb::Vertex(vertex.position()) ;
   particlevertex->addToOutgoingParticles(&daughterA) ;
   particlevertex->addToOutgoingParticles(&daughterB) ;
   particlevertex->setChi2AndDoF( vertex.chi2(), vertex.nDoF() ) ;
   particlevertex->setCovMatrix( v0->posCovMatrix() ) ;
-  
+
   v0->setEndVertex( particlevertex ) ;
-  
+
   return v0 ;
 }
 
 LHCb::Particle* V0FromDstMaker::build( const LHCb::TwoProngVertex& vertex,
-				       const LHCb::ParticleID& pid,
-				       const LHCb::Particle::Range& particlesA,
-				       const LHCb::Particle::Range& particlesB) const
+                                       const LHCb::ParticleID& pid,
+                                       const LHCb::Particle::Range& particlesA,
+                                       const LHCb::Particle::Range& particlesB) const
 {
   // locate patricles associated to this V0 in input lists
   LHCb::Particle* v0(0) ;
@@ -135,18 +138,18 @@ LHCb::Particle* V0FromDstMaker::build( const LHCb::TwoProngVertex& vertex,
   const LHCb::Track* track ;
   BOOST_FOREACH( const LHCb::Particle* dau, particlesA) {
     if( dau->proto() && (track = dau->proto()->track()) &&
-	track == vertex.trackA() ) dauA = dau ;
+        track == vertex.trackA() ) dauA = dau ;
   }
   BOOST_FOREACH( const LHCb::Particle* dau, particlesB) {
     if( dau->proto() && (track = dau->proto()->track()) &&
-	track == vertex.trackB() ) dauB = dau ;
+        track == vertex.trackB() ) dauB = dau ;
   }
   if(dauA && dauB) v0 = build( vertex, pid, *dauA, *dauB) ;
   //info() << "Did we find the pions? " << pionA << " " << pionB << endreq ;
   return v0 ;
 }
 
- 
+
 StatusCode V0FromDstMaker::execute()
 {
   // get the input list with TwoProngVertices
@@ -170,48 +173,6 @@ StatusCode V0FromDstMaker::execute()
   LHCb::Particle::Container* lambdaddparticles = new LHCb::Particle::Container() ;
   LHCb::Vertex::Container* lambdaddvertices = new LHCb::Vertex::Container() ;
 
-  // horrible logic, but I don't know how to do this otherwise, at
-  // least, not at this hour of the day
-  BOOST_FOREACH( const LHCb::TwoProngVertex* vertex, vertices) {
-    assert( vertex->trackA()->firstState().qOverP()>0) ;
-    assert( vertex->trackB()->firstState().qOverP()<0) ;
-    // just make sure they are unique
-    std::set<LHCb::ParticleID> pids( vertex->compatiblePIDs().begin(), vertex->compatiblePIDs().end() ) ;
-    BOOST_FOREACH( LHCb::ParticleID pid, pids) {
-      if( pid == m_ksProperty->pdgID() ) {
-	LHCb::Particle* p = build( *vertex,pid,longpions,longpions ) ;
-	if( p ) {
-	  ksllparticles->insert( p ) ;
-	  ksllvertices->insert( const_cast<LHCb::Vertex*>(p->endVertex()) ) ;
-	} else {
-	  p = build( *vertex,pid,downstreampions,downstreampions ) ;
-	  if( p ) {
-	    ksddparticles->insert( p ) ;
-	    ksddvertices->insert( const_cast<LHCb::Vertex*>(p->endVertex()) ) ;
-	  }
-	}
-      } else if( std::abs(pid.pid()) == std::abs(m_lambdaProperty->pdgID().pid()) ) {
-	const LHCb::Particle::Range* rangeA = &longprotons ;
-	const LHCb::Particle::Range* rangeB = &longpions ;
-	if( pid.pid()<0) std::swap( rangeA, rangeB) ;
-	LHCb::Particle* p = build( *vertex,pid,*rangeA,*rangeB) ;
-	if( p ) {
-	  lambdallparticles->insert( p ) ;
-	  lambdallvertices->insert( const_cast<LHCb::Vertex*>(p->endVertex()) ) ;
-	} else {
-	  const LHCb::Particle::Range* rangeA = &downstreamprotons ;
-	  const LHCb::Particle::Range* rangeB = &downstreampions ;
-	  if( pid.pid()<0) std::swap( rangeA, rangeB) ;
-	  p = build( *vertex,pid,*rangeA,*rangeB) ;
-	  if( p ) {
-	    lambdaddparticles->insert( p ) ;
-	    lambdaddvertices->insert( const_cast<LHCb::Vertex*>(p->endVertex()) ) ;
-	  }
-	}
-      }
-    }
-  }
-
   put( ksllparticles,  m_ksLLOutputLocation + "/Particles" ) ;
   put( ksllvertices,  m_ksLLOutputLocation + "/Vertices" ) ;
   put( ksddparticles,  m_ksDDOutputLocation + "/Particles" ) ;
@@ -222,7 +183,52 @@ StatusCode V0FromDstMaker::execute()
   put( lambdaddparticles,  m_lambdaDDOutputLocation + "/Particles" ) ;
   put( lambdaddvertices,  m_lambdaDDOutputLocation + "/Vertices" ) ;
 
+  // horrible logic, but I don't know how to do this otherwise, at
+  // least, not at this hour of the day
+  BOOST_FOREACH( const LHCb::TwoProngVertex* vertex, vertices) {
+    assert( vertex->trackA()->firstState().qOverP()>0) ;
+    assert( vertex->trackB()->firstState().qOverP()<0) ;
+    // just make sure they are unique
+    std::set<LHCb::ParticleID> pids( vertex->compatiblePIDs().begin(), vertex->compatiblePIDs().end() ) ;
+    BOOST_FOREACH( LHCb::ParticleID pid, pids) {
+      if( pid == m_ksProperty->pdgID() ) {
+        LHCb::Particle* p = build( *vertex,pid,longpions,longpions ) ;
+        if( p ) {
+          ksllparticles->insert( p ) ;
+          ksllvertices->insert( const_cast<LHCb::Vertex*>(p->endVertex()) ) ;
+        } else {
+          p = build( *vertex,pid,downstreampions,downstreampions ) ;
+          if( p ) {
+            ksddparticles->insert( p ) ;
+            ksddvertices->insert( const_cast<LHCb::Vertex*>(p->endVertex()) ) ;
+          }
+        }
+      } else if( std::abs(pid.pid()) == std::abs(m_lambdaProperty->pdgID().pid()) ) {
+        const LHCb::Particle::Range* rangeA = &longprotons ;
+        const LHCb::Particle::Range* rangeB = &longpions ;
+        if( pid.pid()<0) std::swap( rangeA, rangeB) ;
+        LHCb::Particle* p = build( *vertex,pid,*rangeA,*rangeB) ;
+        if( p ) {
+          lambdallparticles->insert( p ) ;
+          lambdallvertices->insert( const_cast<LHCb::Vertex*>(p->endVertex()) ) ;
+        } else {
+          const LHCb::Particle::Range* rangeA = &downstreamprotons ;
+          const LHCb::Particle::Range* rangeB = &downstreampions ;
+          if( pid.pid()<0) std::swap( rangeA, rangeB) ;
+          p = build( *vertex,pid,*rangeA,*rangeB) ;
+          if( p ) {
+            lambdaddparticles->insert( p ) ;
+            lambdaddvertices->insert( const_cast<LHCb::Vertex*>(p->endVertex()) ) ;
+          }
+        }
+      }
+    }
+  }
+
   //info() << "Number of input vertices/output: " << vertices.size() << " " << outputparticles->size() << endreq ;
 
   return StatusCode::SUCCESS ;
 }
+
+// Declaration of the Tool Factory
+DECLARE_ALGORITHM_FACTORY( V0FromDstMaker )

@@ -92,7 +92,7 @@ MCParticleMakerBase::MCParticleMakerBase
   declareProperty( "dualGaussSF"            , m_dualGaussSF     ) ;
   // relative weight second Gaussian
   declareProperty( "dualGaussW"             , m_dualGaussWeight ) ; 
-} ;
+}
 // ============================================================================
 /// initializationof the tool 
 // ============================================================================
@@ -114,7 +114,7 @@ StatusCode MCParticleMakerBase::initialize()
   { Warning ( "No smearing is requiested!" , StatusCode::SUCCESS ) ; }
   
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
 /// finalization of the tool 
 // ============================================================================

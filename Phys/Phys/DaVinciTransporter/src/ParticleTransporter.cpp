@@ -1,8 +1,8 @@
 // $Id: ParticleTransporter.cpp,v 1.24 2009-09-11 17:14:05 jonrob Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiAlg/CheckForNaN.h" // lfin
 
 // from LHCb
@@ -22,8 +22,7 @@
 //
 // 2006-01-20 : Patrick KOPPENBURG
 //-----------------------------------------------------------------------------
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( ParticleTransporter );
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -37,14 +36,14 @@ ParticleTransporter::ParticleTransporter( const std::string& type,
   , m_eID(0)
 {
   declareInterface<IParticleTransporter>(this);
-  declareProperty("TrackExtrapolator", 
+  declareProperty("TrackExtrapolator",
                   m_trackExtrapolatorName = "TrackParabolicExtrapolator");
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-ParticleTransporter::~ParticleTransporter() {} 
+ParticleTransporter::~ParticleTransporter() {}
 
 //=============================================================================
 // Initialize
@@ -53,13 +52,13 @@ StatusCode ParticleTransporter::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
-  
+
   if ( m_trackExtrapolatorName != "" )
   {
-    debug() << "Using the " << m_trackExtrapolatorName 
+    debug() << "Using the " << m_trackExtrapolatorName
             << " tool to extrapolate particles from tracks" << endmsg;
     m_trackExtrapolator = tool<ITrackExtrapolator>(m_trackExtrapolatorName,this);
-  } 
+  }
   else { warning() << "No TrackExtrapolator given for tracks" << endmsg ; }
 
   m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
@@ -75,17 +74,17 @@ StatusCode ParticleTransporter::initialize()
 //=============================================================================
 // transport methods
 //=============================================================================
-StatusCode ParticleTransporter::transport(const LHCb::Particle* P, 
+StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
                                           const double zNew,
                                           LHCb::Particle& transParticle)
 {
   StatusCode sc = StatusCode::SUCCESS;
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Transport PID " << P->particleID().pid() 
-            << " p " << P->momentum() << " from " 
+    debug() << "Transport PID " << P->particleID().pid()
+            << " p " << P->momentum() << " from "
             << P->referencePoint()  << " to " << zNew << endmsg ;
-  
+
   // avoid some "extra" self-assignements:
   if ( &transParticle != P ) { transParticle = LHCb::Particle(*P) ; }
 
@@ -105,28 +104,28 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
   }
 
   sc = checkParticle(transParticle);
-  
+
   return sc;
 }
 //=============================================================================
-StatusCode ParticleTransporter::transportAndProject(const LHCb::Particle* P, 
+StatusCode ParticleTransporter::transportAndProject(const LHCb::Particle* P,
                                                     const double zNew,
                                                     LHCb::Particle& transParticle)
 {
   StatusCode sc = StatusCode::SUCCESS;
-  
+
   // avoid some "extra" self-assignements:
   if ( &transParticle != P ) { transParticle = LHCb::Particle(*P) ; }
-  
+
   if ( ! (P->isBasicParticle()) ) {
-    sc = DaVinci::Transporter::transportAndProjectComposite(P, 
-                                               zNew, 
-                                               transParticle);
+    sc = DaVinci::Transporter::transportAndProjectComposite(P,
+                                                            zNew,
+                                                            transParticle);
     if (!sc) return sc;
   } else if (P->charge()==0 ) {
-    sc = DaVinci::Transporter::transportAndProjectNeutralBasic(P, 
-                                                  zNew, 
-                                                  transParticle);
+    sc = DaVinci::Transporter::transportAndProjectNeutralBasic(P,
+                                                               zNew,
+                                                               transParticle);
     if (!sc) return sc;
   } else {
     sc = transportChargedBasic(P, zNew, transParticle);
@@ -138,8 +137,8 @@ StatusCode ParticleTransporter::transportAndProject(const LHCb::Particle* P,
   return sc;
 }
 //=============================================================================
-StatusCode 
-ParticleTransporter::transportChargedBasic(const LHCb::Particle* P, 
+StatusCode
+ParticleTransporter::transportChargedBasic(const LHCb::Particle* P,
                                            const double zNew,
                                            LHCb::Particle& transParticle)
 {
@@ -156,7 +155,7 @@ ParticleTransporter::transportChargedBasic(const LHCb::Particle* P,
   if (!sc) return sc;
   if (0==m_trackExtrapolator){
     err() << "No extrapolator defined" << endmsg ;
-    return StatusCode::FAILURE ;      
+    return StatusCode::FAILURE ;
   }
   sc = m_trackExtrapolator->propagate(s,zNew,P->particleID());
 
@@ -169,26 +168,26 @@ ParticleTransporter::transportChargedBasic(const LHCb::Particle* P,
   }
 
   sc = m_particle2State->state2Particle(s,transParticle);
-  
+
   return sc;
 
 }
 //=============================================================================
-StatusCode 
+StatusCode
 ParticleTransporter::checkParticle(const LHCb::Particle& transParticle)
 {
-  
+
   if ( lfin(transParticle.momentum().E() )){
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "Obtained Particle " 
+      verbose() << "Obtained Particle "
                 << transParticle.particleID().pid() << endmsg;
       verbose() << transParticle << endmsg ;
     }
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Transported " << transParticle.particleID().pid() 
-              << " " << transParticle.momentum() << " to " 
+      debug() << "Transported " << transParticle.particleID().pid()
+              << " " << transParticle.momentum() << " to "
               << transParticle.referencePoint() << endmsg ;
     }
   } else {
@@ -201,26 +200,26 @@ ParticleTransporter::checkParticle(const LHCb::Particle& transParticle)
 //=============================================================================
 // get a state from a Particle
 //=============================================================================
-StatusCode ParticleTransporter::state(const LHCb::Particle* P, 
-                                      const double zNew, 
-                                      LHCb::State& s) const 
-{ 
-  // charged basic: no need to make 
+StatusCode ParticleTransporter::state(const LHCb::Particle* P,
+                                      const double zNew,
+                                      LHCb::State& s) const
+{
+  // charged basic: no need to make
   verbose() << "Starting from Particle \n " << *P << endmsg ;
 
   StatusCode sc = StatusCode::SUCCESS ;
-  
+
   if (P->charge()!=0 && P->isBasicParticle()){
     // Particles from MCParticles
     if (0==P->proto()){
       const LHCb::ParticleProperty *pp = m_ppSvc->find(P->particleID());
-      if (0!=pp) { Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.", 
+      if (0!=pp) { Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.",
                            StatusCode::SUCCESS) ;
       }
       else
       {
-        err() << "Particle with unknown PID " << P->particleID().pid() << " has no endVertex. " 
-                 <<  "Assuming it's from MC" << endmsg ;
+        err() << "Particle with unknown PID " << P->particleID().pid() << " has no endVertex. "
+              <<  "Assuming it's from MC" << endmsg ;
       }
       sc = m_particle2State->particle2State(*P,s);
     } else if (m_eID==P->particleID().abspid()){
@@ -231,18 +230,18 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P,
     } else if (0==P->proto()->track()){
       // Charged protopraticle without track -> error
       err() << "Basic Particle of ID " << P->particleID().pid() << " has no track" << endmsg;
-      return StatusCode::FAILURE; 
+      return StatusCode::FAILURE;
     } else {
       // That's fine
       s = P->proto()->track()->closestState(zNew);
-      if (msgLevel(MSG::DEBUG)) 
+      if (msgLevel(MSG::DEBUG))
       {
         debug() << "Getting state closest to " << zNew << " at "
                 << s.position().z() << " : " << s.stateVector() << endmsg ;
         debug() << "Track has " << P->proto()->track()->nStates() << ". First at "
-                << P->proto()->track()->firstState().position().z() << " : " 
+                << P->proto()->track()->firstState().position().z() << " : "
                 << P->proto()->track()->firstState().stateVector() << endmsg ;
-      }      
+      }
     }
   } else { // make a state
     return m_particle2State->particle2State(*P,s);
@@ -252,4 +251,7 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P,
     verbose() << "Got state: \n" << s << endmsg ;
 
   return sc ;
-}  
+}
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( ParticleTransporter )

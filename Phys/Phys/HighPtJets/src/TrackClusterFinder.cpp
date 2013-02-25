@@ -23,7 +23,7 @@ using namespace LHCb;
 // 2010-04-03 : Marcin Kucharczyk
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY(TrackClusterFinder);
+DECLARE_ALGORITHM_FACTORY(TrackClusterFinder)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -50,7 +50,7 @@ TrackClusterFinder::TrackClusterFinder(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackClusterFinder::~TrackClusterFinder() {};
+TrackClusterFinder::~TrackClusterFinder() {}
 
 //=============================================================================
 // Initialisation
@@ -65,7 +65,7 @@ StatusCode TrackClusterFinder::initialize() {
     m_inputTracks.push_back(LHCb::TrackLocation::Default);
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Execution

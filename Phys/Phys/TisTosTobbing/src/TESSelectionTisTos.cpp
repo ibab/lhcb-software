@@ -22,8 +22,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TESSelectionTisTos );
-
+DECLARE_TOOL_FACTORY( TESSelectionTisTos )
 
 //=============================================================================
 // Standard constructor, initializes variables

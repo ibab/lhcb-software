@@ -26,7 +26,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TESTisTos );
+DECLARE_TOOL_FACTORY( TESTisTos )
 
 const std::vector< std::string > TESTisTos::m_empty_selections = std::vector< std::string >();
 

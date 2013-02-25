@@ -195,5 +195,5 @@ bool BBDecTreeTool::operator()(const LHCb::Particle* p) const {
 }
 // ============================================================================
 /// declare & implement the factory
-DECLARE_TOOL_FACTORY(BBDecTreeTool);
+DECLARE_TOOL_FACTORY(BBDecTreeTool)
 // ============================================================================

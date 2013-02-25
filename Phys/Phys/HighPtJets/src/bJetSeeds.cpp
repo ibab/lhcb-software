@@ -26,7 +26,7 @@ using namespace Gaudi::Units;
 // 2011-11-26 : Marcin Kucharczyk
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY(bJetSeeds);
+DECLARE_ALGORITHM_FACTORY(bJetSeeds)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -53,7 +53,7 @@ bJetSeeds::bJetSeeds(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-bJetSeeds::~bJetSeeds() {};
+bJetSeeds::~bJetSeeds() {}
 
 //=============================================================================
 // Initialisation
