@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2013-02-26 - Rob Lambert
+ - Migrate to getIfExists, task #40118
+
 ! 2013-02-21 - Rob Lambert
  - Remove deprecated OnOffline reference
 

@@ -49,19 +49,24 @@ StatusCode LumiCountMuons::initialize() {
 StatusCode LumiCountMuons::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   int nCand = 0;
-  if ( !exist<LHCb::L0MuonCandidates>(m_InputSelectionName) ) {
+  LHCb::L0MuonCandidates* cands = getIfExists<LHCb::L0MuonCandidates>(m_InputSelectionName);
+  if ( NULL == cands ) 
+  {
     if (msgLevel(MSG::DEBUG)) debug() << m_InputSelectionName << " not found" << endmsg ;
-  } else {    
-    LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>(m_InputSelectionName);
-    if ( !cands ) { 
-      err() << "Could not find location " <<  m_InputSelectionName << endmsg;
-      return StatusCode::FAILURE ;
-    }
+  } 
+  else 
+  {    
+    //LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>(m_InputSelectionName);
+    //if ( !cands ) 
+    //{ 
+    //  err() << "Could not find location " <<  m_InputSelectionName << endmsg;
+    //  return StatusCode::FAILURE ;
+    //}
     LHCb::L0MuonCandidates::const_iterator itcand;
     for ( itcand=cands->begin(); itcand!=cands->end(); ++itcand)
       if ((*itcand)->pt() > m_Threshold) ++nCand;
   }
-  debug() << "There are " << nCand << " muons with Pt>" << m_Threshold << " in " << m_InputSelectionName <<  endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCand << " muons with Pt>" << m_Threshold << " in " << m_InputSelectionName <<  endmsg ;
 
   LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
   sums->addInfo(m_Counter, nCand); // add track counter

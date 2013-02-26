@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2013-02-26 - Rob Lambert
+ - Update to getIfExists. Needs branching for older Gaudi.
+
 !========================= HltCommon v8r7 2012-08-30 =========================
 ! 2012-08-29 - Johannes Albrecht
  - HltGEC: add activity trigger 

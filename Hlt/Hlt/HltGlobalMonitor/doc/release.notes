@@ -4,6 +4,9 @@ Package Coordinator : Bruno Souza de Paula
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+! 2013-02-26 - Rob Lambert
+ - Migrate to getIfExists, task #40118
+
 !========================= HltGlobalMonitor v3r10 2012-03-26 =========================
 ! 2012-03-26 - Eric van Herwijnen
  - Add histograms for the conditions in the online.xml file.

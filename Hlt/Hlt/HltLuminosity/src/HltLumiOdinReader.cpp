@@ -40,7 +40,7 @@ HltLumiOdinReader::~HltLumiOdinReader() {};
 // Initialization
 //=============================================================================
 StatusCode HltLumiOdinReader::initialize() {
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -57,10 +57,9 @@ StatusCode HltLumiOdinReader::execute() {
 
 
   // get ODIN
-  LHCb::ODIN* odin;
-  if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-  }else{
+  LHCb::ODIN* odin= getIfExists<LHCb::ODIN> (LHCb::ODINLocation::Default);;
+  if( NULL==odin)
+  {
     StatusCode sc = Error("ODIN cannot be loaded",StatusCode::FAILURE);
     return sc;
   }
@@ -69,7 +68,7 @@ StatusCode HltLumiOdinReader::execute() {
   std::stringstream trType("");
   bxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
   trType << (LHCb::ODIN::TriggerType) odin->triggerType();
-  debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endreq;
   m_selection.output()->setDecision(true);
 
   return StatusCode::SUCCESS;
@@ -79,7 +78,7 @@ StatusCode HltLumiOdinReader::execute() {
 //  Finalize
 //=============================================================================
 StatusCode HltLumiOdinReader::finalize() {
-  debug() << " Entering the finalize " << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " Entering the finalize " << endreq;
   return HltAlgorithm::finalize();  // must be called after all other actions
 }
 

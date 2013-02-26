@@ -309,6 +309,7 @@ StatusCode LLParticlesFromRecVertices::execute()
     LHCb::RecVertex::Range recVertices;
     BOOST_FOREACH( std::string rvLoc, m_RVLocations )
     {
+      
       if ( ! exist<LHCb::RecVertex::Range>(rvLoc) ) {
         return Error("No RecVertices found at " + rvLoc, StatusCode::FAILURE);
       }

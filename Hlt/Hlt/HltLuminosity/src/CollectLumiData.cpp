@@ -96,34 +96,39 @@ StatusCode CollectLumiData::execute() {
   // ------------------------------------------
   // load the track objects
   int n_RZVelo =  0;
-  if ( !exist<LHCb::Tracks>(m_RZVeloContainerName) ){
+  const LHCb::Tracks* __m_RZVelo = getIfExists<LHCb::Tracks>(m_RZVeloContainerName);
+  if ( NULL == __m_RZVelo)
+  {
     if (m_printing_info) 
       info() << m_RZVeloContainerName << " not found" << endmsg ;
-  } else {
+  } 
+  else 
+  {
     // get the container
-    m_RZVelo = get<LHCb::Tracks>(m_RZVeloContainerName);
-  
-    if ( !m_RZVelo ) { 
-      err() << "Could not find location " 
-	    <<  m_RZVeloContainerName << endreq;
-      return StatusCode::FAILURE ;
-    }
+    m_RZVelo = __m_RZVelo;//get<LHCb::Tracks>(m_RZVeloContainerName);
+    
     n_RZVelo =  m_RZVelo->size() ;
     if (m_printing_verbose) 
       verbose() << "found " << n_RZVelo << " RZVelo tracks." << endreq ;
   }
   m_nRZVelo = n_RZVelo;
-  debug() << "There are " << n_RZVelo << " tracks in " << m_RZVeloContainerName <<  endreq ;
+  if ( m_printing_debug ) debug() << "There are " << n_RZVelo << " tracks in " << m_RZVeloContainerName <<  endreq ;
 
   // ------------------------------------------
   // load the vertex objects
   int n_PV3D =  0;
-  if ( !exist<LHCb::RecVertices>(m_PV3DContainerName)){
+  const LHCb::RecVertices* __m_PV3D = get<LHCb::RecVertices>(m_PV3DContainerName);
+  if ( NULL == __m_PV3D)
+  {
     if (m_printing_info) 
       info() << m_PV3DContainerName << " not found" << endmsg ;
-  } else {  
-    m_PV3D = get<LHCb::RecVertices>(m_PV3DContainerName);
-    if ( !m_PV3D ) { 
+  } 
+  else 
+  {  
+    m_PV3D = __m_PV3D;
+    if ( !m_PV3D ) 
+    {
+      
       err() << "Could not find location " 
             <<  m_PV3DContainerName << endreq;
       return StatusCode::FAILURE ;
@@ -133,7 +138,7 @@ StatusCode CollectLumiData::execute() {
       verbose() << "found " << n_PV3D << " PV3D vertices." << endreq ;
   }
   m_nPV3D = n_PV3D;
-  debug() << "There are " << n_PV3D << " vertices in " << m_PV3DContainerName <<  endreq ;
+  if ( m_printing_debug ) debug() << "There are " << n_PV3D << " vertices in " << m_PV3DContainerName <<  endreq ;
 
   // ------------------------------------------
   // fill the output container

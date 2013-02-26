@@ -576,8 +576,8 @@ void HltGlobalMonitor::monitorVertices()
    typedef LHCb::RecVertex::Container Vertices;
    BOOST_FOREACH( const LocationMap::value_type& entry, m_vertexLocations ) {
       const std::string loc = entry.second;
-      if ( !exist< Vertices >( loc ) ) continue;
-      Vertices* vertices = get< Vertices >( loc );
+      Vertices* vertices = getIfExists< Vertices >( loc );
+      if ( NULL==vertices ) continue;
       const HistoVector& histos = m_vertexHistos[ entry.first ];
       BOOST_FOREACH( AIDA::IHistogram2D* histo, histos ) {
          BOOST_FOREACH( const LHCb::RecVertex* vx, *vertices ) {
@@ -632,8 +632,9 @@ void HltGlobalMonitor::monitorTrends()
 
    //monitor CPU time vs evt size
    size_t evtSize = 0;
-   if( exist<LHCb::RawEvent>(m_rawEventLocation) ){
-      RawEvent* evt = get<LHCb::RawEvent>(m_rawEventLocation);
+   RawEvent* evt = getIfExists<LHCb::RawEvent>(m_rawEventLocation);
+   if( NULL!=evt )
+   {
       evtSize = rawEvtLength(evt);
    }
    m_hltTimeVsEvtSize->fill(evtSize, t );

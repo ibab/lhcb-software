@@ -238,9 +238,9 @@ StatusCode HltSelReportsMaker::execute() {
   
   const HltDecReports* decReports(0);
   // get input
-  if( exist<HltDecReports>(m_inputHltDecReportsLocation) ){    
-    decReports = get<HltDecReports>(m_inputHltDecReportsLocation);
-  }  else {
+  decReports = getIfExists<HltDecReports>(m_inputHltDecReportsLocation);
+  if( NULL == decReports )
+  {  
     Warning( " No HltDecReports at " + m_inputHltDecReportsLocation.value(), StatusCode::SUCCESS, 10 );
   }
 
@@ -482,10 +482,9 @@ StatusCode HltSelReportsMaker::execute() {
                    if( registry ){
                      std::string path = registry->identifier() ;
                      boost::replace_last(path,"/Particles","/Particle2VertexRelations");
-                     if( !table ){                     
-                       if( exist< Particle2Vertex::Table >(path) ){
-                         table = get< Particle2Vertex::Table >(path);
-                       }
+                     if( !table )
+                     {
+                       table = getIfExists< Particle2Vertex::Table >(path);
                      }
                      if( table ){                     
                        Particle2Vertex::Table::Range rels= table->relations( dynamic_cast<const LHCb::Particle*>(*ic) );
@@ -1063,7 +1062,8 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle* o
           if( muid->IsMuon() ){
             const LHCb::Track*  muStub=muid->muonTrack();
             if (!muStub ){
-              if( !m_HLTmuonTracks ){ 
+              if( !m_HLTmuonTracks )
+              { 
                 //Now we need to derive the muon segment container from
                 //the track container
                 m_HltMuonTracksLocation = "";
@@ -1076,10 +1076,9 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle* o
                     }
                   }
                 }
-                if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){
-                  m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
-                } else {
-                  Warning(" Found Particle which is a muon but no muon tracks at " + m_HltMuonTracksLocation.value()
+                m_HLTmuonTracks = getIfExists<LHCb::Tracks>(m_HltMuonTracksLocation);
+                if( NULL==m_HLTmuonTracks) 
+                  Warning(" Found Particle which is a muon but no muon tracks at " + m_HltMuonTracksLocation.value() 
                           ,StatusCode::SUCCESS,10 );
                 }
               }

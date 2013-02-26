@@ -51,16 +51,16 @@ StatusCode LumiCountTracks::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  debug() <<  "InputSelection: " << boost::format("%20s")%m_InputSelectionName  << " "
-         <<     "CounterName: " << boost::format("%20s")%m_CounterName         << " "
-         << "OutputContainer: " << boost::format("%20s")%m_OutputContainerName << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() <<  "InputSelection: " << boost::format("%20s")%m_InputSelectionName  << " "
+                                    <<     "CounterName: " << boost::format("%20s")%m_CounterName         << " "
+                                    << "OutputContainer: " << boost::format("%20s")%m_OutputContainerName << endmsg;
 
   // ------------------------------------------
   m_Counter = LHCb::LumiCounters::counterKeyToType(m_CounterName);
   if ( m_Counter == LHCb::LumiCounters::Unknown ) {
     info() << "LumiCounter not found with name: " << m_CounterName <<  endmsg;
   } else {
-    debug() << m_CounterName << " key value: " << m_Counter << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << m_CounterName << " key value: " << m_Counter << endmsg;
   }
   // ------------------------------------------
  
@@ -76,19 +76,17 @@ StatusCode LumiCountTracks::execute() {
 
   // load the track objects
   int nCounter =  0;
-  if ( !exist<LHCb::Tracks>(m_InputSelectionName) ){
+  m_InputContainer = getIfExists<LHCb::Tracks>(m_InputSelectionName);
+  if ( NULL==m_InputContainer )
+  {
     if (msgLevel(MSG::DEBUG)) debug() << m_InputSelectionName << " not found" << endmsg ;
-  } else {
-    // get the container
-    m_InputContainer = get<LHCb::Tracks>(m_InputSelectionName);
-    if ( !m_InputContainer ) { 
-      err() << "Could not find location " <<  m_InputSelectionName << endmsg;
-      return StatusCode::FAILURE ;
-    }
+  } 
+  else 
+  {
     nCounter = m_InputContainer->size() ;
-    verbose() << "found " << nCounter << " tracks." << endmsg ;
+    if (msgLevel(MSG::DEBUG)) verbose() << "found " << nCounter << " tracks." << endmsg ;
   }
-  debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endmsg ;
 
 
   // get container

@@ -4,6 +4,9 @@
 ! Purpose     : Hlt-project-dependent implementation of TisTosTobbing tools
 !-----------------------------------------------------------------------------
 
+! 2013-02-26 - Rob Lambert
+ - Migrate to getIfExists, task #40118
+
 !========================== HltTisTosTobbing v1r1 2010-10-16 ===================
 ! 2011-02-16 - Gerhard Raven
  - add support for Hlt::Candidate

@@ -78,21 +78,17 @@ StatusCode LumiCountVertices::execute() {
 
   // load the track objects
   int nCounter =  0;
-  if ( !exist<LHCb::RecVertices>(m_InputSelectionName) ){
-    debug() << m_InputSelectionName << " not found" << endmsg ;
-  } else {
-    // get the container
-    m_InputContainer = get<LHCb::RecVertices>(m_InputSelectionName);
-  
-    if ( !m_InputContainer ) { 
-      err() << "Could not find location " 
-	    <<  m_InputSelectionName << endreq;
-      return StatusCode::FAILURE ;
-    }
+  m_InputContainer = getIfExists<LHCb::RecVertices>(m_InputSelectionName);
+  if ( NULL==m_InputContainer ){
+    if (msgLevel(MSG::DEBUG))debug() << m_InputSelectionName << " not found" << endmsg ;
+  } 
+  else 
+  {
+    
     nCounter = m_InputContainer->size() ;
-    verbose() << "found " << nCounter << " vertices." << endreq ;
+    if (msgLevel(MSG::DEBUG)) verbose() << "found " << nCounter << " vertices." << endreq ;
   }
-  debug() << "There are " << nCounter << " vertices in " << m_InputSelectionName <<  endreq ;
+  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCounter << " vertices in " << m_InputSelectionName <<  endreq ;
 
 
   // get container

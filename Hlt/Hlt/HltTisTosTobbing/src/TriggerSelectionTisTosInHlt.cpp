@@ -122,9 +122,9 @@ void TriggerSelectionTisTosInHlt::handle(const Incident& )
 void TriggerSelectionTisTosInHlt::getHltSummary()
 {
   if( !m_hltDecReports ){
-    if( exist<HltDecReports>(m_HltDecReportsLocation) ){    
-      m_hltDecReports = get<HltDecReports>(m_HltDecReportsLocation);
-    } else {
+    m_hltDecReports = getIfExists<HltDecReports>(m_HltDecReportsLocation);
+    if( NULL==m_hltDecReports )
+    {
       Error( " No HltDecReports at "+m_HltDecReportsLocation.value(), StatusCode::FAILURE, 2 ).setChecked();
       m_hltDecReports =0;
     }    
@@ -491,10 +491,12 @@ std::vector<const LHCb::HltObjectSummary*> TriggerSelectionTisTosInHlt::hltSelec
   std::vector<const LHCb::HltObjectSummary*> matchedObjectSummaries;
 
   getHltSummary();
-  if( !m_objectSummaries ){
-    if( exist<HltObjectSummary::Container>("/Event/Hlt/TriggerSelectionTisTosInHltStore") ){
-      m_objectSummaries =  get<HltObjectSummary::Container>("/Event/Hlt/TriggerSelectionTisTosInHltStore");
-    } else  {      
+  if( !m_objectSummaries )
+  {
+    m_objectSummaries =  getIfExists<HltObjectSummary::Container>("/Event/Hlt/TriggerSelectionTisTosInHltStore");
+    if( NULL==m_objectSummaries)
+    {
+      
       m_objectSummaries = new HltObjectSummary::Container();
       put( m_objectSummaries,"/Event/Hlt/TriggerSelectionTisTosInHltStore");
     }      

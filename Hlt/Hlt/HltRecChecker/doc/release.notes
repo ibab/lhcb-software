@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2013-02-26 - Rob Lambert
+ - Migrate to getIfExists, and protect hundreds of verbose statements, task #40118
+
 !========================= HltRecChecker v1r14 2012-06-19 =========================
 ! 2012-03-02 - E. v. Herwijnen
  - Remove unused variables tis&tos in HltRecChecker.cpp

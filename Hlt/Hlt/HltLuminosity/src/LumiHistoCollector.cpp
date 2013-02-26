@@ -348,11 +348,12 @@ bool LumiHistoCollector::printHistoLeaf(IHistogramSvc* histogramSvc, SmartIF<IDa
 ulonglong LumiHistoCollector::gpsTime() {
 
   // get ODIN bank
-  LHCb::ODIN* odin;
-  if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-  }else{
-    StatusCode sc = Error("ODIN cannot be loaded",StatusCode::FAILURE);
+  LHCb::ODIN* odin= getIfExists<LHCb::ODIN> (LHCb::ODINLocation::Default);
+  if( NULL==odin)
+  {
+    err() << "ODIN cannot be loaded" <<endmsg;
+    
+    //StatusCode sc = Error("ODIN cannot be loaded",StatusCode::FAILURE);
     return 0;
   }
   return odin->gpsTime();  // in microseconds

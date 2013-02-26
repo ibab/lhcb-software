@@ -133,8 +133,9 @@ StatusCode SelectVeloTracksNotFromPV::execute()
 
   // If needed, reject splash events immedeately
   if ( m_rejectSplashEvents ) {
-    if ( exist<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ) ) {
-      LHCb::ProcStatus* procStat = get<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default );
+    LHCb::ProcStatus* procStat = getIfExists<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default );
+    if ( NULL != procStat ) 
+    {
       for( LHCb::ProcStatus::AlgStatusVector::const_iterator iAlg = procStat->algs().begin(); iAlg != procStat->algs().end(); ++iAlg ) {
         if ( m_debug ) { debug() << "Found ProcStatus entry: " << (*iAlg).first << " (" << (*iAlg).second << ")" << endmsg; }
         if ( (*iAlg).first.compare("OK:VELO:BeamSplashFastVelo:FastVeloTracking") == 0 ) {
@@ -145,7 +146,7 @@ StatusCode SelectVeloTracksNotFromPV::execute()
       }
     }
   }
-
+  
   if ( ! exist<LHCb::RecVertex::Range>(m_PVLocation) ) {
     return Warning("No RecVertex container found at " + m_PVLocation, StatusCode::SUCCESS, 1 );
   }

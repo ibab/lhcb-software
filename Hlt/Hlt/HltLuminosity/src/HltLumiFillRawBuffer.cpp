@@ -117,10 +117,12 @@ StatusCode HltLumiFillRawBuffer::finalize() {
 //  Fill the data bank, structure: Key (upper 16 bits) + value
 //=========================================================================
 void HltLumiFillRawBuffer::fillDataBankShort ( ) {
-
-  if ( exist<LHCb::HltLumiSummary>(m_inputBank) ){
-    LHCb::HltLumiSummary* HltLumiSummary = get<LHCb::HltLumiSummary>(m_inputBank);
-    debug() << m_inputBank << " found" << endmsg ;
+  
+  LHCb::HltLumiSummary* HltLumiSummary = getIfExists<LHCb::HltLumiSummary>(m_inputBank);
+  if ( NULL!=HltLumiSummary )
+  {
+    
+    if ( msgLevel(MSG::DEBUG) ) debug() << m_inputBank << " found" << endmsg ;
 
     for ( int iKey = 0; iKey < m_LastKey; ++iKey ) {
       // check for existing counters

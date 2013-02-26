@@ -232,11 +232,12 @@ StatusCode HltVertexReportsMaker::execute() {
  
    // now try TES location
    typedef std::pair<std::string,std::string> pair_t;
-   BOOST_FOREACH(const pair_t& p, m_tesSelections ) {
-       if (!exist<LHCb::RecVertices>(p.second)) continue;
-       LHCb::RecVertices* pvs = get<LHCb::RecVertices>(p.second);
-       if( pvs->empty() )continue;
-       saveCandidates(p.first,pvs->begin(),pvs->end(),outputSummary).ignore();
+   BOOST_FOREACH(const pair_t& p, m_tesSelections ) 
+   {
+     LHCb::RecVertices* pvs = getIfExists<LHCb::RecVertices>(p.second);
+     if (NULL==pvs) continue;
+     if( pvs->empty() )continue;
+     saveCandidates(p.first,pvs->begin(),pvs->end(),outputSummary).ignore();
   }
 
   if ( msgLevel(MSG::VERBOSE) ){

@@ -115,42 +115,44 @@ StatusCode HltRecCheckGhosts::execute() {
   //Grab the linker, this is for long tracks only
   //for their parts will need to do something else...
   LinkedTo<MCParticle> link(evtSvc(), msgSvc(), "Hlt/Track/Forward");
-
-  if( exist<ODIN>( LHCb::ODINLocation::Default ) ){
-    odin = get<ODIN>( LHCb::ODINLocation::Default ); 
+  odin = getIfExists<ODIN>( LHCb::ODINLocation::Default ); 
+  if( NULL!=odin )
+  {
     eventNumber = odin->eventNumber();
     runNumber = odin->runNumber();
     info() << "Recording ntuple for event and run number " << eventNumber << " and " << runNumber << endmsg;
-  } else {
+  } 
+  else 
+  {
     Error("Can't get LHCb::ODINLocation::Default (" +
           LHCb::ODINLocation::Default + ")" );
   }
 
-  debug() << "About to retrieve the selection" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "About to retrieve the selection" << endmsg;
 
   const Hlt::Selection* s = m_hltSvc->selection(m_inputTrackSelection,this);
 
   if (s == NULL) return StatusCode::SUCCESS;
 
-  debug() << "About to retrieve the tracks" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "About to retrieve the tracks" << endmsg;
 
   //We need to down cast what the data service does in order to get
   //a vector of tracks for us to look at
   const Hlt::TSelection<LHCb::Track>* tracks =  s->down_cast<LHCb::Track >();
 
-  debug() << "About to print out a  mountain of crap" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "About to print out a  mountain of crap" << endmsg;
 
   if (tracks == 0) return StatusCode::SUCCESS;
 
   //Make the ntuple
   Tuple m_ghostTuple = nTuple("GhostTuple");
 
-  debug() << "Printing out the tracks in input container" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Printing out the tracks in input container" << endmsg;
   BOOST_FOREACH( const LHCb::Track* tT, *tracks) {
     verbose() << tT << endmsg;
   }
 
-  verbose() << "About to loop over the selected tracks" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to loop over the selected tracks" << endreq;
 
   BOOST_FOREACH( const LHCb::Track* ghostTrack, *tracks) {
 
@@ -158,10 +160,10 @@ StatusCode HltRecCheckGhosts::execute() {
 
     //Get the long track decision
     if (ghostTrack == 0) {
-      verbose() << "Null pointer retrieved for a track in input container!" << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Null pointer retrieved for a track in input container!" << endreq;
       continue;
     }
-    verbose() << "Track type = " << ghostTrack->type() << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Track type = " << ghostTrack->type() << endreq;
  
     //Save basic track information
     m_nHitsLong.push_back((*ghostTrack).nLHCbIDs());
@@ -190,13 +192,15 @@ StatusCode HltRecCheckGhosts::execute() {
     if (isThisAGhost) {
       m_ghostResultsLong.push_back(1);
       m_isFromBorDforLong.push_back(0);
-      verbose() << "This long track is a ghost!" << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "This long track is a ghost!" << endreq;
 
       m_ghostToolLong->info(*ghostTrack,ghostInfoLong);
-      verbose() << "This long ghost is classified as " << ghostInfoLong.classification() << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "This long ghost is classified as " << ghostInfoLong.classification() << endreq;
       m_ghostClassesLong.push_back(ghostInfoLong.classification());
       m_nLinkedLong.push_back(ghostInfoLong.nLinked());
-    } else {
+    } 
+    else 
+    {
       //If not a ghost get the best linked MCParticle and check where it comes from
       m_ghostToolLong->info(*ghostTrack,ghostInfoLong);
       MCParticle* bestMatch = (ghostInfoLong.bestLink()).first;
@@ -368,7 +372,7 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
   //Classifies the VELO and T parts of the track by making two dummy tracks
   //And adding the appropriate measurements to them.
 
-  verbose() << "Getting ready to classify the parts of the ghost track in question" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Getting ready to classify the parts of the ghost track in question" << endreq;
 
   LHCb::Track* dummyVeloTrack = new LHCb::Track();
   bool dummyVeloTrackIsAGhost = false;
@@ -385,32 +389,32 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
   LHCb::GhostTrackInfo ghostInfoVeloR;
   LHCb::GhostTrackInfo ghostInfoTTrack;
 
-  verbose() << "About to reset the dummy tracks" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to reset the dummy tracks" << endreq;
 
   //Some paranoia initializing
   dummyVeloTrack->reset();
   dummyVeloRTrack->reset();
   dummyTTrack->reset();
 
-  verbose() << "About to classify the parts of the ghost track" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to classify the parts of the ghost track" << endreq;
 
   //We should never be passed a null track here, but we are paranoid...
   if (ghostTrack == 0) {
-    verbose() << "Something has gone very wrong indeed!" << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Something has gone very wrong indeed!" << endreq;
     return StatusCode::SUCCESS;
   }
 
   //These states matter for the number of missed hits calculation
   //on the Velo track
-  verbose() << "About to add states to the VELO track" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to add states to the VELO track" << endreq;
   dummyVeloTrack->addToStates(*ghostTrack->stateAt(LHCb::State::ClosestToBeam)); //closest to beam
   dummyVeloTrack->addToStates(*ghostTrack->stateAt(LHCb::State::EndVelo)); //End of the Velo
 
-  verbose() << "About to get the measurements" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the measurements" << endreq;
 
   //Now we add the LHCbIDs to our dummy tracks, this is what
   //will allow us to associate them in a moment
-  verbose() << "About to get the LHCbIDs" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the LHCbIDs" << endreq;
   for (std::vector<LHCb::LHCbID>::const_iterator iID = (ghostTrack->lhcbIDs()).begin();
                                                  iID != (ghostTrack->lhcbIDs()).end(); ++iID){
 
@@ -427,7 +431,7 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
 
   }
 
-  verbose() << "About to run the classification tool on the dummy tracks" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to run the classification tool on the dummy tracks" << endreq;
 
   //Now we classify the two dummy tracks above
   if (checkTrackPart(dummyVeloTrack)) dummyVeloTrackIsAGhost = false; else dummyVeloTrackIsAGhost = true;
@@ -440,10 +444,10 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
   m_nMissedInVelo.push_back(m_veloExpectation->nExpected(*dummyVeloTrack,zBeamLine(*dummyVeloTrack),850.) - numDummyVeloMeas);
   if (dummyVeloTrackIsAGhost) {
     m_ghostResultsVelo.push_back(1);
-    verbose() << "This Velo component is a ghost" << endreq; 
+    if (msgLevel(MSG::VERBOSE)) verbose() << "This Velo component is a ghost" << endreq; 
 
     m_ghostToolVelo->info(*dummyVeloTrack,ghostInfoVelo);
-    verbose() << "This Velo component is classified as " << ghostInfoVelo.classification() << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "This Velo component is classified as " << ghostInfoVelo.classification() << endreq;
     m_ghostClassesVelo.push_back(ghostInfoVelo.classification());
     m_nLinkedVelo.push_back(ghostInfoVelo.nLinked());
   } else {
@@ -458,10 +462,10 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
   m_nHitsVeloR.push_back((*dummyVeloRTrack).nLHCbIDs());
   if (dummyVeloRTrackIsAGhost) {
     m_ghostResultsVeloR.push_back(1);
-    verbose() << "This VeloR component is a ghost" << endreq; 
+    if (msgLevel(MSG::VERBOSE)) verbose() << "This VeloR component is a ghost" << endreq; 
     
     m_ghostToolVeloR->info(*dummyVeloRTrack,ghostInfoVeloR);
-    verbose() << "This VeloR component is classified as " << ghostInfoVeloR.classification() << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "This VeloR component is classified as " << ghostInfoVeloR.classification() << endreq;
     m_ghostClassesVeloR.push_back(ghostInfoVeloR.classification());
     m_nLinkedVeloR.push_back(ghostInfoVeloR.nLinked());
   } else {
@@ -476,10 +480,10 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
   m_nHitsTTrack.push_back((*dummyTTrack).nLHCbIDs());
   if (dummyTTrackIsAGhost) {
     m_ghostResultsTTrack.push_back(1);
-    verbose() << "This TTrack component is a ghost" << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "This TTrack component is a ghost" << endreq;
 
     m_ghostToolTTrack->info(*dummyTTrack,ghostInfoTTrack);
-    verbose() << "This TTrack component is classified as " << ghostInfoTTrack.classification() << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "This TTrack component is classified as " << ghostInfoTTrack.classification() << endreq;
     m_ghostClassesTTrack.push_back(ghostInfoTTrack.classification());
     m_nLinkedTTrack.push_back(ghostInfoTTrack.nLinked());
   } else { 

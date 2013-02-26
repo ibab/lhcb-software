@@ -103,22 +103,23 @@ StatusCode HltMoveVerticesForSwimming::execute() {
 
   debug() << "About to get the offline particles" << endmsg;
 
-  //Check if particles exist
-  if (!exist<Particle::Range>(m_Bcontainer+"/Particles")) return sc;
-
-  debug() << "The particles exist, will now get them" << endmsg;
-
-  Particle::Range pars = get<Particle::Range>(m_Bcontainer+"/Particles");
-  if (msgLevel(MSG::DEBUG)) {
-    if (!pars) verbose() << " no particles found! " << endmsg;
-    else verbose() << " particles found " << pars.size() << endmsg;
-  }   
-  if (!pars) return sc;
+  Particle::Range pars = getIfExists<Particle::Range>(m_Bcontainer+"/Particles");
   
-  debug() << "About to check if only one particle in the event" << endmsg;
+  //Check if particles exist
+  if (!pars) return sc;
+
+
+  if (msgLevel(MSG::DEBUG)) 
+  {
+    verbose() << " particles found " << pars.size() << endmsg;
+  }   
+  
+  if (msgLevel(MSG::DEBUG)) debug() << "About to check if only one particle in the event" << endmsg;
+  
   //If more than one particle quit!
   if (pars.size() != 1) return sc;
-  debug() << "About to check if there are any PVs in the event!" << endmsg;
+  if (msgLevel(MSG::DEBUG))
+    debug() << "About to check if there are any PVs in the event!" << endmsg;
   //If no PVs quit!
   if (m_selections.input<1>()->empty()) return sc;
   
@@ -144,11 +145,13 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   */
 
   //Now get the offline PVs
-  debug() << "About to get the offline PVs" << endmsg;
-  if (!exist<LHCb::RecVertex::Range>(m_offlinePVs)) return sc;
-  debug() << "Offline PVs found, grabbing them" << endmsg; 
-  const LHCb::RecVertex::Range offPVs = get<LHCb::RecVertex::Range>(m_offlinePVs);
-
+  if (msgLevel(MSG::DEBUG)) debug() << "About to get the offline PVs" << endmsg;
+  const LHCb::RecVertex::Range offPVs = getIfExists<LHCb::RecVertex::Range>(m_offlinePVs);
+  
+  if (msgLevel(MSG::DEBUG)) debug() << "About to get the offline PVs" << endmsg;
+  if (!offPVs) return sc;
+  if (msgLevel(MSG::DEBUG)) debug() << "Offline PVs found, grabbing them" << endmsg; 
+  
   //Print the offline PVs for debug
   if (msgLevel(MSG::DEBUG)) {
         debug() << "Printing out the offline vertices" << endmsg;
@@ -176,7 +179,7 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   delete offPV_Clone;
 
   int ncan = m_selections.output()->size();
-  debug() << " candidates found " << ncan << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << " candidates found " << ncan << endmsg;
   return sc;
   
 }
@@ -206,19 +209,25 @@ StatusCode HltMoveVerticesForSwimming::move_PVs(const LHCb::Particle* myB, LHCb:
   //I know this shouldn't modify the input vertex in the long run,
   //but for now it is easier to do it like this 
   BOOST_FOREACH(const LHCb::RecVertex* vertex, *m_selections.input<1>() ) {
-    debug() << "The primary vertex is at " << vertex << endmsg;
-    debug() << "With X coordinate " << vertex->position().X() << endmsg;
-    debug() << "With Y coordinate " << vertex->position().Y() << endmsg;
-    debug() << "With Z coordinate " << vertex->position().Z() << endmsg;
+    if (msgLevel(MSG::DEBUG))
+    {
+      debug() << "The primary vertex is at " << vertex << endmsg;
+      debug() << "With X coordinate " << vertex->position().X() << endmsg;
+      debug() << "With Y coordinate " << vertex->position().Y() << endmsg;
+      debug() << "With Z coordinate " << vertex->position().Z() << endmsg;
+    }
     
     const_cast<LHCb::RecVertex*>(vertex)->setPosition(vertex->position() + m_swimmingDistance*myB->slopes().Unit());
     m_selections.output()->push_back( vertex ); 
- 
-    debug() << "The new vertex" << endmsg;
-    debug() << "With X coordinate " << vertex->position().X() << endmsg;
-    debug() << "With Y coordinate " << vertex->position().Y() << endmsg;
-    debug() << "With Z coordinate " << vertex->position().Z() << endmsg;
-
+    
+    if (msgLevel(MSG::DEBUG))
+    {      
+      debug() << "The new vertex" << endmsg;
+      debug() << "With X coordinate " << vertex->position().X() << endmsg;
+      debug() << "With Y coordinate " << vertex->position().Y() << endmsg;
+      debug() << "With Z coordinate " << vertex->position().Z() << endmsg;
+    }
+    
   }
   //Also move the clone of the offline PV to compute the new lifetime
   offPV->setPosition(offPV->position() + m_swimmingDistance*myB->slopes().Unit());
@@ -228,7 +237,7 @@ StatusCode HltMoveVerticesForSwimming::move_PVs(const LHCb::Particle* myB, LHCb:
   if (!sc) {  
     warning() << "The lifetime fit failed!!" << endmsg; 
   }
-  debug() << "The lifetime of the signal candidate is now = " << pt << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "The lifetime of the signal candidate is now = " << pt << endmsg;
   m_bLifetime = pt;
   m_bLifetimeErr = ept;
 
@@ -237,7 +246,7 @@ StatusCode HltMoveVerticesForSwimming::move_PVs(const LHCb::Particle* myB, LHCb:
   if (!sc) {   
     warning() << "The distance calculator failed!!" << endmsg; 
   }
-  debug() << "The IP of the signal candidate is now = " << ip << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "The IP of the signal candidate is now = " << ip << endmsg;
   m_bIP = ip;
   m_bIPChi2 = ipchi2;
   m_bFDChi2 = fdchi2;
