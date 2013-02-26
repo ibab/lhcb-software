@@ -1,5 +1,5 @@
 // $Id: TaggerElectronTool.h,v 1.13 2010-06-17 17:46:03 mgrabalo Exp $
-#ifndef USER_TAGGERELECTRONTOOL_H 
+#ifndef USER_TAGGERELECTRONTOOL_H
 #define USER_TAGGERELECTRONTOOL_H 1
 
 // from Gaudi
@@ -15,7 +15,7 @@
 #include "INNetTool.h"
 #include "Kernel/IParticleDescendants.h"
 
-/** @class TaggerElectronTool TaggerElectronTool.h 
+/** @class TaggerElectronTool TaggerElectronTool.h
  *
  *  Tool to tag the B flavour with a Electron Tagger
  *
@@ -23,22 +23,21 @@
  *  @date   30/06/2005
  */
 
-class TaggerElectronTool : public GaudiTool, 
-	virtual public ITagger {
+class TaggerElectronTool : public GaudiTool,
+                           virtual public ITagger {
 
-public: 
+public:
   /// Standard constructor
   TaggerElectronTool( const std::string& type,
-		      const std::string& name,
-		      const IInterface* parent );
+                      const std::string& name,
+                      const IInterface* parent );
   virtual ~TaggerElectronTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
-  StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
   virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
-			    std::vector<const LHCb::Vertex*>&, 
-			    LHCb::Particle::ConstVector&);
+                            std::vector<const LHCb::Vertex*>&,
+                            LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
@@ -49,13 +48,13 @@ private:
 
   std::string m_CombinationTechnique, m_NeuralNetName;
 
-  //properties 
+  //properties
   double m_Pt_cut_ele;
   double m_P_cut_ele;
   double m_IPs_cut_ele;
   double m_VeloChMin;
   double m_VeloChMax;
-  double m_EoverP, m_lcs_cut_ele;  
+  double m_EoverP, m_lcs_cut_ele;
   double m_AverageOmega;
   double m_ghost_cut_ele;
   double m_PIDe_cut;

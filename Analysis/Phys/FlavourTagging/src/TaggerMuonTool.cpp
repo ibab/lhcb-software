@@ -11,41 +11,42 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TaggerMuonTool );
+DECLARE_TOOL_FACTORY( TaggerMuonTool )
 
 //====================================================================
-TaggerMuonTool::TaggerMuonTool( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent ) :
-  GaudiTool ( type, name, parent ), m_eventSvc(0) {
+  TaggerMuonTool::TaggerMuonTool( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent ) :
+    GaudiTool ( type, name, parent ), m_eventSvc(0) {
 
-  declareInterface<ITagger>(this);
+    declareInterface<ITagger>(this);
 
-  declareProperty( "CombTech",     m_CombinationTechnique = "NNet" );
-  declareProperty( "NeuralNetName",m_NeuralNetName        = "NNetTool_MLP" );
-  declareProperty( "Muon_AverageOmega", m_AverageOmega         = 0.33 );
+    declareProperty( "CombTech",     m_CombinationTechnique = "NNet" );
+    declareProperty( "NeuralNetName",m_NeuralNetName        = "NNetTool_MLP" );
+    declareProperty( "Muon_AverageOmega", m_AverageOmega         = 0.33 );
 
-  declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1.2 *GeV );
-  declareProperty( "Muon_P_cut",   m_P_cut_muon   = 0.0 *GeV );
-  declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 0.0 );
-  declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 3.2 );
-  declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.5 );
-  declareProperty( "Muon_ipPU_cut", m_ipPU_cut_muon      = 3.0 );
-  declareProperty( "Muon_distPhi_cut", m_distPhi_cut_muon= 0.005 );
-  declareProperty( "Muon_P0_Cal",  m_P0_Cal_muon   = 0.309 ); 
-  declareProperty( "Muon_P1_Cal",  m_P1_Cal_muon   = 1.1953 ); 
-  declareProperty( "Muon_Eta_Cal", m_Eta_Cal_muon  = 0.304 ); 
+    declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1.2 *GeV );
+    declareProperty( "Muon_P_cut",   m_P_cut_muon   = 0.0 *GeV );
+    declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 0.0 );
+    declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 3.2 );
+    declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.5 );
+    declareProperty( "Muon_ipPU_cut", m_ipPU_cut_muon      = 3.0 );
+    declareProperty( "Muon_distPhi_cut", m_distPhi_cut_muon= 0.005 );
+    declareProperty( "Muon_P0_Cal",  m_P0_Cal_muon   = 0.309 );
+    declareProperty( "Muon_P1_Cal",  m_P1_Cal_muon   = 1.1953 );
+    declareProperty( "Muon_Eta_Cal", m_Eta_Cal_muon  = 0.304 );
 
-  declareProperty( "Muon_ProbMin", m_ProbMin_muon = 0. ); //no cut
+    declareProperty( "Muon_ProbMin", m_ProbMin_muon = 0. ); //no cut
 
-  m_nnet = 0;
-  m_util = 0;
-  m_descend = 0;
-}
-TaggerMuonTool::~TaggerMuonTool() {}; 
+    m_nnet = 0;
+    m_util = 0;
+    m_descend = 0;
+  }
+
+TaggerMuonTool::~TaggerMuonTool() {}
 
 //=====================================================================
-StatusCode TaggerMuonTool::initialize() { 
+StatusCode TaggerMuonTool::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
@@ -72,19 +73,19 @@ StatusCode TaggerMuonTool::initialize() {
     return StatusCode::FAILURE;
   }
 
-  return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS;
 }
 
 //=====================================================================
 Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-                            std::vector<const Vertex*>& allVtx, 
+                            std::vector<const Vertex*>& allVtx,
                             Particle::ConstVector& vtags ){
   Tagger tmu;
   if(!RecVert) return tmu;
-  
+
   verbose()<<"--Muon Tagger--"<<endreq;
-  
- //fill auxdaugh for distphi
+
+  //fill auxdaugh for distphi
   double distphi;
   Particle::ConstVector axdaugh = m_descend->descendants( AXB0 );
   axdaugh.push_back( AXB0 );
@@ -104,7 +105,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double pidm=proto->info( ProtoParticle::CombDLLmu, -1000.0 );
     if(pidm < m_PIDm_cut ) continue;
     verbose() << " Muon PIDm="<< pidm <<" muonNSH="<<muonNSH<<endreq;
-    
+
     double Pt = axp->pt();
     if( Pt < m_Pt_cut_muon ) continue;
 
@@ -118,7 +119,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double lcs = proto->track()->chi2PerDoF();
     if(lcs>m_lcs_cut_muon) continue;
     verbose() << " Muon lcs="<< lcs <<endreq;
-  
+
     //calculate signed IP wrt RecVert
     double IP, IPerr;
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
@@ -152,7 +153,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     m_util->calcIP(imuon, RecVert, IP, IPerr); //calculate IP
 
     debug()<<"IP/IPerr: "<<IP/IPerr<<endmsg;
-    
+
     std::vector<double> NNinputs(10);
     //    NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = AXB0->pt()/GeV;;
@@ -160,7 +161,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(3) = imuon->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
     NNinputs.at(8) = allVtx.size();
-    
+
     pn = m_nnet->MLPm( NNinputs );
     verbose() << " Muon pn="<< pn <<endreq;
 
@@ -174,12 +175,10 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   tmu.setOmega( 1-pn );
   tmu.setDecision(imuon->charge()>0 ? -1: 1);
-  tmu.setType( Tagger::OS_Muon ); 
+  tmu.setType( Tagger::OS_Muon );
   tmu.addToTaggerParts(imuon);
 
   return tmu;
 }
 
 //====================================================================
-StatusCode TaggerMuonTool::finalize() { return GaudiTool::finalize(); }
-

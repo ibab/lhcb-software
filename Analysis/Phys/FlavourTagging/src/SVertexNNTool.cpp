@@ -4,14 +4,14 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : SVertexNNTool v1.3
 //
-// 2004-03-18 : 
+// 2004-03-18 :
 //-----------------------------------------------------------------------------
 
 using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( SVertexNNTool );
+DECLARE_TOOL_FACTORY( SVertexNNTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -19,7 +19,7 @@ DECLARE_TOOL_FACTORY( SVertexNNTool );
 SVertexNNTool::SVertexNNTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent ) :
-  GaudiTool ( type, name, parent ) { 
+  GaudiTool ( type, name, parent ) {
   declareInterface<ISecondaryVertexTool>(this);
 }
 
@@ -34,22 +34,19 @@ StatusCode SVertexNNTool::initialize() {
   }
 
   fitter = tool<IVertexFit>("UnconstVertexFitter");
-  if ( !fitter ) {   
+  if ( !fitter ) {
     err() << "Unable to Retrieve UnconstVertexFitter" << endreq;
     return StatusCode::FAILURE;
   }
 
   return StatusCode::SUCCESS;
-};
-
-//=============================================================================
-StatusCode SVertexNNTool::finalize() { return GaudiTool::finalize(); }
+}
 
 //=============================================================================
 SVertexNNTool::~SVertexNNTool(){}
 
 //=============================================================================
-std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert, 
+std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
                                                 const Particle::ConstVector& vtags ){
 
   double RVz = RecVert.position().z()/mm;
@@ -60,21 +57,21 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
   std::vector<Vertex> vtxvect;
   const Particle* p1=0, *p2=0;
   Particle::ConstVector::const_iterator jp, kp, jpp;
-  double ipl, iperrl, ips, iperrs, probf = -1.0 ; 
+  double ipl, iperrl, ips, iperrs, probf = -1.0 ;
 
   long iijp = 0;
   for ( jp = vtags.begin(); jp != vtags.end()-1; jp++, iijp++ ) {
 
     int jpid = (*jp)->particleID().abspid();
-    if( jpid == 2212 ) continue;                                //preselection 
+    if( jpid == 2212 ) continue;                                //preselection
 
     m_util->calcIP(*jp, &RecVert, ipl, iperrl);
 
     if( iperrl==0 ) continue;
-    if( fabs(ipl/iperrl) < 2.0 ) continue;                      //preselection 
-    if( iperrl > 0.15 ) continue;                               //preselection 
-    if( fabs(ipl) > 4.0 ) continue;                             //preselection 
-    if( jpid==11 && fabs(ipl) > 2.5 ) continue;                 //preselection 
+    if( fabs(ipl/iperrl) < 2.0 ) continue;                      //preselection
+    if( iperrl > 0.15 ) continue;                               //preselection
+    if( fabs(ipl) > 4.0 ) continue;                             //preselection
+    if( jpid==11 && fabs(ipl) > 2.5 ) continue;                 //preselection
 
     double lcs=1000.;
     const ProtoParticle* proto = (*jp)->proto();
@@ -90,14 +87,14 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
     for ( kp = (jp+1) ; kp != vtags.end(); kp++, iikp++ ) {
 
       int kpid = (*kp)->particleID().abspid();
-      if( kpid == 2212 ) continue;                             //preselection 
+      if( kpid == 2212 ) continue;                             //preselection
 
       m_util->calcIP(*kp, &RecVert, ips, iperrs);
-     if( iperrs==0 ) continue;
-      if( fabs(ips/iperrs) < 2.0 ) continue;                   //preselection 
-      if( iperrs > 0.15 ) continue;                            //preselection 
-      if( fabs(ips) > 4.0 ) continue;                          //preselection 
-      if( kpid==11 && fabs(ips) > 2.5 ) continue;              //preselection 
+      if( iperrs==0 ) continue;
+      if( fabs(ips/iperrs) < 2.0 ) continue;                   //preselection
+      if( iperrs > 0.15 ) continue;                            //preselection
+      if( fabs(ips) > 4.0 ) continue;                          //preselection
+      if( kpid==11 && fabs(ips) > 2.5 ) continue;              //preselection
 
       double lcs=1000.;
       const ProtoParticle* proto = (*kp)->proto();
@@ -106,14 +103,14 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
         lcs = track->chi2()/((track->measurements()).size()-5);
       if( lcs > 2.0 ) continue;                                //preselection
       if( track->type() == Track::Long ) continue;             //preselection
-      
+
       sc = fitter->fit( vtx , **jp, **kp );
       if( sc.isFailure() ) continue;
       if((vtx.position().z()/mm - RVz) < -10.0 ) continue;    //preselection
 
       //if the couple is compatible with a Ks, drop it          //preselection
       Gaudi::LorentzVector sum = (*jp)->momentum() + (*kp)->momentum();
-      if( sum.M()/GeV > 0.490 && sum.M()/GeV < 0.505 
+      if( sum.M()/GeV > 0.490 && sum.M()/GeV < 0.505
           &&  jpid == 211 &&  kpid == 211
           && ((*jp)->particleID().threeCharge())
           * ((*kp)->particleID().threeCharge()) < 0 ) {
@@ -147,7 +144,7 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
   }
 
   Vertex VfitTMP;
-  Particle::ConstVector Pfit(0);  
+  Particle::ConstVector Pfit(0);
 
   if( probf > 0.8 ) {
 
@@ -174,10 +171,10 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
       if( probs/(probs+probb) < 0.2 ) continue;                          //cut
 
       sc = fitter->fit( VfitTMP , Pfit ); /////////FIT before
-      if( !sc ) continue; 
+      if( !sc ) continue;
 
       m_util->calcIP(*jpp, &VfitTMP, ip, ipe);
-      if( ipe==0 ) continue; 
+      if( ipe==0 ) continue;
       if( ip/ipe > 5.0 ) continue;                                       //cut
 
       //Add track to the fit
@@ -185,10 +182,10 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
 
       sc = fitter->fit( VfitTMP , Pfit ); /////////FIT after
       if( !sc ) { Pfit.pop_back(); continue; }
-    
-      if( VfitTMP.chi2() / VfitTMP.nDoF() > 5.0 ) 
+
+      if( VfitTMP.chi2() / VfitTMP.nDoF() > 5.0 )
       { Pfit.pop_back(); continue; }                                   //cut
-      if( VfitTMP.position().z()/mm - RVz < 1.0 ) 
+      if( VfitTMP.position().z()/mm - RVz < 1.0 )
       { Pfit.pop_back(); continue; }                                   //cut
 
       debug()<<"---> chi="<< VfitTMP.chi2() / VfitTMP.nDoF()
@@ -209,7 +206,7 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
         Particle::ConstVector tmplist = Pfit;
         tmplist.erase( tmplist.begin() + ikpp );
 
-        sc = fitter->fit( vtx , tmplist ); 
+        sc = fitter->fit( vtx , tmplist );
         if( !sc ) continue;
 
         m_util->calcIP(*kpp, &vtx, ip, ipe);
@@ -328,13 +325,13 @@ double SVertexNNTool::SIGMOID(double x){
 double SVertexNNTool::ipprob(double x) {
   if( x > 40. ) return 0.6;
   const double r = - 0.535 + x * (0.3351 + x *(-0.03102 + x * (0.001316 +
-		  x * (-0.00002598 + x * 0.0000001919))));
+                                                               x * (-0.00002598 + x * 0.0000001919))));
   return (r < 0.) ? 0. : r;
 }
 double SVertexNNTool::ptprob(double x) {
   if( x > 5.0 ) return 0.65;
   const double r = 0.04332 + x * (0.9493 + x * (-0.5283 + x *(0.1296 +
-		  x * -0.01094)));
+                                                              x * -0.01094)));
   return (r < 0.) ? 0. : r;
 }
 //=============================================================================

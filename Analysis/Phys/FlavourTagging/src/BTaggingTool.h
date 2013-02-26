@@ -1,5 +1,5 @@
 // $Id: BTaggingTool.h,v 1.24 2010-03-05 15:54:18 jpalac Exp $
-#ifndef USER_BTAGGINGTOOL_H 
+#ifndef USER_BTAGGINGTOOL_H
 #define USER_BTAGGINGTOOL_H 1
 
 // from STL
@@ -10,13 +10,13 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
-// from Event 
-#include "Event/FlavourTag.h" 
+// from Event
+#include "Event/FlavourTag.h"
 #include "Event/RecHeader.h"
 
-#include "ICombineTaggersTool.h" 
-#include "Kernel/ITagger.h" 
-#include "Kernel/IBTaggingTool.h" 
+#include "ICombineTaggersTool.h"
+#include "Kernel/ITagger.h"
+#include "Kernel/IBTaggingTool.h"
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IRelatedPVFinder.h"
@@ -27,7 +27,7 @@
 #include <Kernel/GetIDVAlgorithm.h>
 class DaVinciAlgorithm;
 
-/** @class BTaggingTool BTaggingTool.h 
+/** @class BTaggingTool BTaggingTool.h
  *
  *  Tool to tag the B flavour
  *
@@ -38,7 +38,7 @@ class DaVinciAlgorithm;
 class BTaggingTool : public GaudiTool,
                      virtual public IBTaggingTool {
 
-public: 
+public:
 
   /// Standard constructor
   BTaggingTool( const std::string& type,
@@ -46,29 +46,28 @@ public:
                 const IInterface* parent );
   virtual ~BTaggingTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
-  StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
   StatusCode tag( LHCb::FlavourTag& theTag, const LHCb::Particle* );
 
-  StatusCode tag( LHCb::FlavourTag& theTag, 
+  StatusCode tag( LHCb::FlavourTag& theTag,
                   const LHCb::Particle*, const LHCb::RecVertex* );
 
-  StatusCode tag( LHCb::FlavourTag& theTag, 
-                  const LHCb::Particle*, const LHCb::RecVertex*, 
-                  LHCb::Particle::ConstVector& ); 
+  StatusCode tag( LHCb::FlavourTag& theTag,
+                  const LHCb::Particle*, const LHCb::RecVertex*,
+                  LHCb::Particle::ConstVector& );
 
 private:
 
   const LHCb::RecVertex::ConstVector
   choosePrimary(const LHCb::Particle* AXB,
-                const LHCb::RecVertex::Range& verts, 
+                const LHCb::RecVertex::Range& verts,
                 const LHCb::RecVertex*& RecVert,
                 LHCb::RecVertex& RefitRecVert);
 
-  const LHCb::Particle::ConstVector 
+  const LHCb::Particle::ConstVector
   chooseCandidates(const LHCb::Particle* AXB,
-                    LHCb::Particle::Range& parts,
+                   LHCb::Particle::Range& parts,
                    const LHCb::RecVertex::ConstVector& PileUpVtx);
 
   ITaggingUtils* m_util;

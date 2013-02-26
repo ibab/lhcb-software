@@ -11,51 +11,53 @@ using namespace LHCb;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TaggerElectronTool );
+DECLARE_TOOL_FACTORY( TaggerElectronTool )
 
 //====================================================================
-TaggerElectronTool::TaggerElectronTool( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent ) :
-  GaudiTool ( type, name, parent ) {
+  TaggerElectronTool::TaggerElectronTool( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent ) :
+    GaudiTool ( type, name, parent ) {
 
-  declareInterface<ITagger>(this);
+    declareInterface<ITagger>(this);
 
-  declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
-  declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
-  declareProperty( "Ele_AverageOmega", m_AverageOmega      = 0.33 );
+    declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
+    declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
+    declareProperty( "Ele_AverageOmega", m_AverageOmega      = 0.33 );
 
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1. * GeV );
-  declareProperty( "Ele_P_cut",    m_P_cut_ele     = 0.0 * GeV );
-  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 3.85 );
-  declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 1. );
-  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -999 );
-  declareProperty( "Ele_VeloChargeMin",m_VeloChMin     = 0.0 );
-  declareProperty( "Ele_VeloChargeMax",m_VeloChMax     = 1.6 );
-  declareProperty( "Ele_EoverP",       m_EoverP        = 0.75 );
-  declareProperty( "Ele_PIDe_cut", m_PIDe_cut      = 4. );
-  declareProperty( "Ele_ipPU_cut", m_ipPU_cut_ele      = 5.0 );
-  declareProperty( "Ele_distPhi_cut", m_distPhi_cut_ele= 0.005 );
-  declareProperty( "Ele_P0_Cal",  m_P0_Cal_ele   = 0.306 ); 
-  declareProperty( "Ele_P1_Cal",  m_P1_Cal_ele   = 0.974 ); 
-  declareProperty( "Ele_Eta_Cal", m_Eta_Cal_ele  = 0.346 ); 
+    declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1. * GeV );
+    declareProperty( "Ele_P_cut",    m_P_cut_ele     = 0.0 * GeV );
+    declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 3.85 );
+    declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 1. );
+    declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -999 );
+    declareProperty( "Ele_VeloChargeMin",m_VeloChMin     = 0.0 );
+    declareProperty( "Ele_VeloChargeMax",m_VeloChMax     = 1.6 );
+    declareProperty( "Ele_EoverP",       m_EoverP        = 0.75 );
+    declareProperty( "Ele_PIDe_cut", m_PIDe_cut      = 4. );
+    declareProperty( "Ele_ipPU_cut", m_ipPU_cut_ele      = 5.0 );
+    declareProperty( "Ele_distPhi_cut", m_distPhi_cut_ele= 0.005 );
+    declareProperty( "Ele_P0_Cal",  m_P0_Cal_ele   = 0.306 );
+    declareProperty( "Ele_P1_Cal",  m_P1_Cal_ele   = 0.974 );
+    declareProperty( "Ele_Eta_Cal", m_Eta_Cal_ele  = 0.346 );
 
-  declareProperty( "Ele_ProbMin",  m_ProbMin_ele   = 0. ); //no cut
+    declareProperty( "Ele_ProbMin",  m_ProbMin_ele   = 0. ); //no cut
 
-  m_nnet = 0;
-  m_util = 0;
-  m_descend = 0;
-  m_electron = 0;
-}
-TaggerElectronTool::~TaggerElectronTool() {}; 
+    m_nnet = 0;
+    m_util = 0;
+    m_descend = 0;
+    m_electron = 0;
+  }
+
+TaggerElectronTool::~TaggerElectronTool() {}
 
 //=====================================================================
-StatusCode TaggerElectronTool::initialize() { 
+StatusCode TaggerElectronTool::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
   warning() << "Ele calib ctt: P0_Cal "<<m_P0_Cal_ele<<", P1_Cal "<<m_P1_Cal_ele<<endreq;
-  
+
   m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
   if(! m_nnet) {
     fatal() << "Unable to retrieve NNetTool"<< endreq;
@@ -77,7 +79,7 @@ StatusCode TaggerElectronTool::initialize() {
     return StatusCode::FAILURE;
   }
 
-  return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS;
 }
 
 //=====================================================================
@@ -88,7 +90,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   if(!RecVert) return tele;
 
   verbose()<<"-- Electron Tagger --"<<endreq;
-  
+
   //fill auxdaugh for distphi
   double distphi;
   Particle::ConstVector axdaugh = m_descend->descendants( AXB0 );
@@ -100,7 +102,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   double ptmaxe = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ++ipart ) {
-    
+
     bool inHcalACC= (*ipart)->proto()->info(ProtoParticle::InAccHcal, false);
     if(!inHcalACC) continue;
 
@@ -122,7 +124,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut_ele ) continue;
     if(track->type() != Track::Long) continue;
- 
+
     double tsa = track->likelihood();
     if(tsa < m_ghost_cut_ele) continue;
 
@@ -142,20 +144,20 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( distphi < m_distPhi_cut_ele ) continue;
 
     double eOverP  = -999;
-    if( m_electron->set(*ipart) ) { 
+    if( m_electron->set(*ipart) ) {
       eOverP  = m_electron->eOverP();
     }
- 
+
     if(eOverP > m_EoverP || eOverP<-100) {
       verbose() << " Elec E/P=" << eOverP <<endreq;
 
       double veloch = (*ipart)->proto()->info( ProtoParticle::VeloCharge, 0.0 );
       if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
         verbose() << " Elec veloch=" << veloch << endreq;
-        
+
         ++ncand;
 
-        if( Pt > ptmaxe ) { 
+        if( Pt > ptmaxe ) {
           iele = (*ipart);
           ptmaxe = Pt;
         }
@@ -200,5 +202,3 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 }
 
 //====================================================================
-StatusCode TaggerElectronTool::finalize() { return GaudiTool::finalize(); }
-

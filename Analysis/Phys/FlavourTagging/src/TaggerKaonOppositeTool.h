@@ -1,5 +1,5 @@
 // $Id: TaggerKaonOppositeTool.h,v 1.11 2010-06-17 17:46:03 mgrabalo Exp $
-#ifndef USER_TAGGERKAONOPPOSITETOOL_H 
+#ifndef USER_TAGGERKAONOPPOSITETOOL_H
 #define USER_TAGGERKAONOPPOSITETOOL_H 1
 
 // from Gaudi
@@ -15,7 +15,7 @@
 #include "Kernel/IParticleDescendants.h"
 #include "ITaggingUtils.h"
 
-/** @class TaggerKaonOppositeTool TaggerKaonOppositeTool.h 
+/** @class TaggerKaonOppositeTool TaggerKaonOppositeTool.h
  *
  *  Tool to tag the B flavour with a KaonOpposite Tagger
  *
@@ -23,32 +23,31 @@
  *  @date   30/06/2005
  */
 
-class TaggerKaonOppositeTool : public GaudiTool, 
+class TaggerKaonOppositeTool : public GaudiTool,
                                virtual public ITagger {
 
-public: 
+public:
   /// Standard constructor
   TaggerKaonOppositeTool( const std::string& type,
-			  const std::string& name,
-			  const IInterface* parent );
+                          const std::string& name,
+                          const IInterface* parent );
   virtual ~TaggerKaonOppositeTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
-  StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
   virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
-                            std::vector<const LHCb::Vertex*>&, 
+                            std::vector<const LHCb::Vertex*>&,
                             LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
-  
+
   ITaggingUtils* m_util;
   IParticleDescendants* m_descend;
   INNetTool* m_nnet;
   std::string m_CombinationTechnique, m_NeuralNetName;
 
-  //properties 
+  //properties
   double m_Pt_cut_kaon;
   double m_P_cut_kaon ;
   double m_IP_cut_kaon ;

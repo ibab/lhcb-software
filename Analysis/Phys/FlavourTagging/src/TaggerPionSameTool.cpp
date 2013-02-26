@@ -13,7 +13,7 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TaggerPionSameTool );
+DECLARE_TOOL_FACTORY( TaggerPionSameTool )
 
 //====================================================================
 TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
@@ -41,11 +41,11 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 4.3);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 14.0);
   // 1fb-1 paper tuning
-  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.388 ); 
-  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.88 ); 
-  declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -2.06 ); 
+  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.388 );
+  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.88 );
+  declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -2.06 );
   declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.361 );
- 
+
   declareProperty( "PionSame_AverageOmega",  m_AverageOmega   = 0.40 );
   declareProperty( "PionSame_ProbMin",       m_PionProbMin   = 0.56);
 
@@ -54,10 +54,11 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   m_descend = 0;
 
 }
-TaggerPionSameTool::~TaggerPionSameTool() {}; 
+
+TaggerPionSameTool::~TaggerPionSameTool() {}
 
 //=====================================================================
-StatusCode TaggerPionSameTool::initialize() { 
+StatusCode TaggerPionSameTool::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
@@ -79,12 +80,12 @@ StatusCode TaggerPionSameTool::initialize() {
     return StatusCode::FAILURE;
   }
 
-  return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS;
 }
 
 //=====================================================================
 Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-                                std::vector<const Vertex*>& allVtx, 
+                                std::vector<const Vertex*>& allVtx,
                                 Particle::ConstVector& vtags ){
   Tagger tpionS;
   if(!RecVert) return tpionS;
@@ -94,7 +95,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Gaudi::LorentzVector ptotB = AXB0->momentum();
   double B0mass = ptotB.M();
 
- //fill auxdaugh for distphi
+  //fill auxdaugh for distphi
   double distphi;
   Particle::ConstVector axdaugh = m_descend->descendants( AXB0 );
   axdaugh.push_back( AXB0 );
@@ -116,7 +117,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( (*ipart)->particleID().abspid() != 211 ) continue;
     if(!pidpass) continue;
     verbose()<<" Pion PIDk="<< PIDk <<endreq;
-    
+
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_pionS )  continue;
     double P  = (*ipart)->p();
@@ -143,22 +144,22 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(IPsig > m_IPs_cut_pionS)  continue;
 
 
-    double ippu=(*ipart)->info(1,100000.); // retrieve the stored information of IP significance wrt PU, saved in BTaggingTool.cpp    
+    double ippu=(*ipart)->info(1,100000.); // retrieve the stored information of IP significance wrt PU, saved in BTaggingTool.cpp
     if(ippu < m_ipPU_cut_pS) continue;
 
-    
+
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distPhi_cut_pS ) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
     double dphi = fabs(TaggingHelpers::dphi(
-		(*ipart)->momentum().Phi(), ptotB.Phi()));
+                                            (*ipart)->momentum().Phi(), ptotB.Phi()));
     double dR = sqrt(deta*deta+dphi*dphi);
     if(deta > m_eta_max_cut_pionS) continue;
     if(deta < m_eta_min_cut_pionS) continue;
     if(dphi > m_phi_cut_pionS) continue;
-    if(dR > m_dR_cut_pionS) continue; 
+    if(dR > m_dR_cut_pionS) continue;
 
     double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
     verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
@@ -172,18 +173,18 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     ipionS = (*ipart);
     ptmaxpS = Pt;
 
-  } 
+  }
   if( !ipionS ) return tpionS;
 
   double extra_dQ = (ptotB+ipionS->momentum()).M() - B0mass;
   if( extra_dQ > m_dQcut_extra_pionS ) return tpionS;
   verbose() << " Pion dQExtra="<< extra_dQ <<endmsg;
- 
+
   //calculate omega
   double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
 
-    //calculate omega  
+    //calculate omega
     double IP, IPerr;
     m_util->calcIP(ipionS, RecVert, IP, IPerr);
     double B0the= ptotB.Theta();
@@ -193,7 +194,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double dphi= fabs(TaggingHelpers::dphi(ipionS->momentum().Phi(), B0phi));
     double dQ  = ((ptotB+ ipionS->momentum() ).M() - B0mass);
     double dR = sqrt(deta*deta+dphi*dphi);
-    
+
     std::vector<double> NNinputs(10);
     NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = AXB0->pt()/GeV;
@@ -207,17 +208,17 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     pn = m_nnet->MLPpS( NNinputs );
     verbose() << " Pion pn="<< pn <<endmsg;
-    
+
     //    std::cout<<" NNet inputs AC "<<NNinputs.at(0)<<" "<<NNinputs.at(1)<<" "<<NNinputs.at(3)<<" "<<NNinputs.at(4)<<" "<<NNinputs.at(5)<<" "<<NNinputs.at(7)<<" "<<NNinputs.at(8)<<" "<<pn<<std::endl;
-    
-    
+
+
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     //pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ( (1-pn)-m_Eta_Cal_pionS);
     pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) - m_P2_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) * ((1-pn)-m_Eta_Cal_pionS);
-    
+
     debug() << " PionS pn="<< pn <<" w="<<1-pn<<endmsg;
 
-    if( pn < 0 || pn > 1 ) return tpionS;    
+    if( pn < 0 || pn > 1 ) return tpionS;
     if( pn < m_PionProbMin ) return tpionS;
   }
 
@@ -226,11 +227,9 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   tpionS.setDecision( tagdecision );
   tpionS.setOmega( 1-pn );
-  tpionS.setType( Tagger::SS_Pion ); 
+  tpionS.setType( Tagger::SS_Pion );
   tpionS.addToTaggerParts(ipionS);
 
   return tpionS;
 }
 //==========================================================================
-StatusCode TaggerPionSameTool::finalize() { return GaudiTool::finalize(); }
-

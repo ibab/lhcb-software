@@ -11,7 +11,7 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TaggerVertexChargeTool );
+DECLARE_TOOL_FACTORY( TaggerVertexChargeTool )
 
 //====================================================================
 TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
@@ -21,12 +21,12 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
 
   declareInterface<ITagger>(this);
 
-  declareProperty( "SecondaryVertexName", 
+  declareProperty( "SecondaryVertexName",
                    m_SecondaryVertexToolName = "SVertexOneSeedTool" );
   declareProperty( "Vtx_AverageOmega", m_AverageOmega         = 0.41 );
- 
+
   //NNet - no bias, Probability - old with bias:
-  declareProperty( "CombTech",  m_CombinationTechnique    = "NNet" ); 
+  declareProperty( "CombTech",  m_CombinationTechnique    = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName      = "NNetTool_MLP" );
 
   declareProperty( "Vtx_PowerK",        m_PowerK              = 0.55 );
@@ -39,9 +39,9 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "Vtx_Msum",          m_Msum_vtx            = 0.6);
 
   declareProperty( "Vtx_ProbMin", m_ProbMin_vtx           = 0.54);
-  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.404 ); 
-  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.84 ); 
-  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.362 ); 
+  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.404 );
+  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.84 );
+  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.362 );
 
   //For CombinationTechnique: "Probability"
   declareProperty( "P0",           m_P0                   = 5.255669e-01 );
@@ -54,7 +54,8 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   m_nnet = 0;
   m_util = 0;
 }
-TaggerVertexChargeTool::~TaggerVertexChargeTool() {}; 
+
+TaggerVertexChargeTool::~TaggerVertexChargeTool() {}
 
 //=====================================================================
 StatusCode TaggerVertexChargeTool::initialize() {
@@ -63,10 +64,10 @@ StatusCode TaggerVertexChargeTool::initialize() {
 
   warning() << "Vtx calib ctt: P0_Cal "<<m_P0_Cal_vtx<<", P1_Cal "<<m_P1_Cal_vtx<<endreq;
 
-  m_svtool = tool<ISecondaryVertexTool> ("SVertexOneSeedTool", 
+  m_svtool = tool<ISecondaryVertexTool> ("SVertexOneSeedTool",
                                          m_SecondaryVertexToolName, this);
   if(! m_svtool) {
-    warning()<< "*** No Vertex Charge tag will be used! " 
+    warning()<< "*** No Vertex Charge tag will be used! "
              << m_SecondaryVertexToolName << endreq;
   }
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
@@ -84,9 +85,9 @@ StatusCode TaggerVertexChargeTool::initialize() {
 }
 
 //=====================================================================
-Tagger TaggerVertexChargeTool::tag( const Particle* AXB0, 
+Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
                                     const RecVertex* RecVert,
-                                    Vertex::ConstVector& allVtx, 
+                                    Vertex::ConstVector& allVtx,
                                     Particle::ConstVector& vtags ) {
   Tagger tVch;
   if(!RecVert) return tVch;
@@ -100,7 +101,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   if(m_svtool) vvec = m_svtool -> buildVertex( *RecVert, vtags );
   if(vvec.empty()) return tVch;
   Particle::ConstVector Pfit = vvec.at(0).outgoingParticlesVector();
-  
+
   //if Vertex does not contain any daughters, exit
   if(Pfit.size()<1) return tVch;
   debug()<<"--- SVTOOL buildVertex returns: "<<vvec.size()
@@ -118,7 +119,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   int vflagged = 0;
   Gaudi::LorentzVector SVmomentum;
   Particle::ConstVector::const_iterator ip;
-  for(ip=Pfit.begin(); ip!=Pfit.end(); ++ip) { 
+  for(ip=Pfit.begin(); ip!=Pfit.end(); ++ip) {
     debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
     SVmomentum += (*ip)->momentum();
     double a = pow((*ip)->pt()/GeV, m_PowerK);
@@ -148,7 +149,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   debug()<<"Vch: "<<Vch<<endreq;
   if( Vch==0 ) return tVch;
 
-  //Variables of the SV (Seed Vertex)                                                                                                                                         
+  //Variables of the SV (Seed Vertex)
   double SVP = SVmomentum.P()/1000;
   double SVM = SVmomentum.M()/1000;
   double SVGP = SVP/(0.16*SVM+0.12);
@@ -195,22 +196,19 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   omega =  m_P0_Cal_vtx + m_P1_Cal_vtx * ( omega-m_Eta_Cal_vtx);
   debug() << " Vtx pn="<< 1-omega <<" w="<<omega<<endmsg;
 
-  if( omega < 0 || omega > 1 ) return tVch;  
+  if( omega < 0 || omega > 1 ) return tVch;
   if( 1-omega < m_ProbMin_vtx ) return tVch;
   //  if(   omega > m_ProbMin_vtx ) return tVch;
 
   verbose()<<"Vtx passed"<<endreq;
- 
+
   tVch.setDecision( Vch>0 ? -1 : 1 );
   tVch.setOmega( omega );
-  tVch.setType( Tagger::VtxCharge ); 
+  tVch.setType( Tagger::VtxCharge );
   for(ip=Pfit.begin(); ip!=Pfit.end(); ++ip) {
     tVch.addToTaggerParts(*ip);
   }
-  
+
   return tVch;
 }
 //====================================================================
-StatusCode TaggerVertexChargeTool::finalize() { return GaudiTool::finalize(); }
-
-//======================================================================

@@ -10,18 +10,19 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( CombineTaggersPID );
+DECLARE_TOOL_FACTORY( CombineTaggersPID )
 
 //=============================================================================
 CombineTaggersPID::CombineTaggersPID( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent ) :
-  GaudiTool ( type, name, parent ) { 
+  GaudiTool ( type, name, parent ) {
   declareInterface<ICombineTaggersTool>(this);
 }
+
 CombineTaggersPID::~CombineTaggersPID(){}
 
-StatusCode CombineTaggersPID::initialize() { 
+StatusCode CombineTaggersPID::initialize() {
 
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
@@ -118,11 +119,9 @@ StatusCode CombineTaggersPID::initialize() {
     m_pid_cats_bs.push_back(pid_cats_bs[i]);
     m_index.push_back(0);
   }
-  
-  return StatusCode::SUCCESS; 
-}
 
-StatusCode CombineTaggersPID::finalize() { return GaudiTool::finalize(); }
+  return StatusCode::SUCCESS;
+}
 
 //=============================================================================
 int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& vtg, int signalType){
@@ -152,38 +151,38 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
     debug() << "has strange" << endmsg;
   }
   if ((kaonSS==false) && (pionSS==false)) return 0;
-  
+
   //Fill the taggers
   for(std::vector<Tagger*>::const_iterator iter = vtg.begin(); iter != vtg.end(); ++iter){
-    if((*iter)->type() == Tagger::OS_Muon){ 
+    if((*iter)->type() == Tagger::OS_Muon){
       debug() << "Muon tool present    " << endmsg;
       ostaggers.push_back(*iter);
       itag[0] = (*iter)->decision();
       debug() << "Muon decision =      " << itag[0] << endmsg;
       if(itag[0] != 0) theTag.addTagger(**iter);
     }
-    if((*iter)->type() == Tagger::OS_Electron){      
+    if((*iter)->type() == Tagger::OS_Electron){
       debug() << "Electron tool present" << endmsg;
       ostaggers.push_back(*iter);
       itag[1] = (*iter)->decision();
       debug() << "Electron decision =  " << itag[1] << endmsg;
       if(itag[1] != 0) theTag.addTagger(**iter);
     }
-    if((*iter)->type() == Tagger::OS_Kaon){      
+    if((*iter)->type() == Tagger::OS_Kaon){
       debug() << "Kaon tool present    " << endmsg;
       ostaggers.push_back(*iter);
       itag[2] = (*iter)->decision();
       debug() << "Kaon decision =      " << itag[2] << endmsg;
       if(itag[2] !=0 ) theTag.addTagger(**iter);
     }
-    if(((*iter)->type() == Tagger::SS_Kaon) || ((*iter)->type() == Tagger::SS_Pion)){      
+    if(((*iter)->type() == Tagger::SS_Kaon) || ((*iter)->type() == Tagger::SS_Pion)){
       debug() << "Kaon/Pion SS tool present    " << endmsg;
       ostaggers.push_back(*iter);
       itag[3] = (*iter)->decision();
       debug() << "Kaon/Pion SS decision =      " << itag[3] << endmsg;
       if(itag[3] !=0 ) theTag.addTagger(**iter);
     }
-    if((*iter)->type() == Tagger::VtxCharge){      
+    if((*iter)->type() == Tagger::VtxCharge){
       debug() << "Vertex tool present  " << endmsg;
       ostaggers.push_back(*iter);
       itag[4] = (*iter)->decision();
@@ -192,7 +191,7 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
     }
   }
 
-  //Want to combine opposite side muon, electron, kaon, same side kaon/pion, vertex  
+  //Want to combine opposite side muon, electron, kaon, same side kaon/pion, vertex
   int index=0;
   int tagsum=0;
   int tagdecision=0;
@@ -211,8 +210,8 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
   if (tagsum < 0)  tagdecision=-1;
   if (tagsum == 0) tagdecision=0;
 
-  debug() << "Index = " << index << endmsg;           
-  debug() << "Tagsum/Tagdecision = " << tagsum << "/" << tagdecision << endmsg;           
+  debug() << "Index = " << index << endmsg;
+  debug() << "Tagsum/Tagdecision = " << tagsum << "/" << tagdecision << endmsg;
 
   //sort into categories
 
@@ -223,7 +222,7 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
       if (kaonSS==true) m_index[ic]=m_pid_cats_bs[ic];
       if (pionSS==true) m_index[ic]=m_pid_cats_bu[ic];
       if (m_index[ic]==index){
-        debug() << "Index =    " << m_index[ic] << " = " << index << endmsg;     
+        debug() << "Index =    " << m_index[ic] << " = " << index << endmsg;
         if      (ic<=10) catt=5;
         else if (ic<=18) catt=4;
         else if (ic<=25) catt=3;
@@ -234,7 +233,7 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
     }
   }
   debug() << "Category =    " << catt << endmsg;
-  
+
   ///fill Result of FlavourTag object
   if(      tagdecision ==  1 ) theTag.setDecision( FlavourTag::bbar );
   else if( tagdecision == -1 ) theTag.setDecision( FlavourTag::b );

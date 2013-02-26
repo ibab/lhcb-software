@@ -14,23 +14,16 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( BTagging );
+DECLARE_ALGORITHM_FACTORY( BTagging )
 
 //=======================================================================
-BTagging::BTagging(const std::string& name,
-                   ISvcLocator* pSvcLocator):
-  DaVinciAlgorithm(name, pSvcLocator),
-  m_TagLocation("FlavourTags")
+  BTagging::BTagging(const std::string& name,
+                     ISvcLocator* pSvcLocator):
+    DaVinciAlgorithm(name, pSvcLocator),
+    m_TagLocation("FlavourTags")
 
-{ 
+{
   declareProperty( "TagOutputLocation", m_TagLocation );
-}
-
-//=======================================================================
-StatusCode BTagging::initialize() { 
-
-  return DaVinciAlgorithm::initialize() ; 
-
 }
 
 BTagging::~BTagging() {}
@@ -49,21 +42,21 @@ StatusCode BTagging::execute() {
   return StatusCode::SUCCESS;
 }
 //=======================================================================
-void BTagging::performTagging(const std::string & location) 
+void BTagging::performTagging(const std::string & location)
 {
   //look in location where Selection has put the B candidates
   if(!exist<LHCb::Particle::Range>(location+"/Particles") ) {
     debug()<<("No selection found in "+ location+"/Particles")<<endreq;
     return;
   }
-  
+
   const Particle::Range parts = get<Particle::Range>( location+"/Particles" );
   if( parts.empty() ) {
-    Warning("No particles found at "+ location+"/Particles", 
+    Warning("No particles found at "+ location+"/Particles",
             StatusCode::SUCCESS,10).ignore();
     return;
   }
-  
+
   verbose() << " Will tag "<< parts.size() << " B hypos!" <<endreq;
 
   //-------------- loop on signal B candidates from selection
@@ -71,7 +64,7 @@ void BTagging::performTagging(const std::string & location)
   Particle::Range::const_iterator icandB;
   for ( icandB = parts.begin(); icandB != parts.end(); icandB++){
     if((*icandB)->particleID().hasBottom()) {
-      debug() << "About to tag candidate B of mass=" 
+      debug() << "About to tag candidate B of mass="
               << (*icandB)->momentum().M()/GeV <<" GeV"<<endreq;
 
       FlavourTag* theTag = new FlavourTag;
@@ -95,7 +88,7 @@ void BTagging::performTagging(const std::string & location)
       //--- PRINTOUTS ---
       //print the information in theTag
       int tagdecision = theTag->decision();
-      if(tagdecision) debug() << "Flavour guessed: " 
+      if(tagdecision) debug() << "Flavour guessed: "
                               << (tagdecision>0 ? "b":"bbar")<<endreq;
       debug() << "estimated omega= " << theTag->omega() <<endreq;
       const Particle* tagB = theTag->taggedB();
@@ -128,7 +121,7 @@ void BTagging::performTagging(const std::string & location)
         SmartRefVector<LHCb::Particle> taggerparts = itag->taggerParts();
         SmartRefVector<LHCb::Particle>::const_iterator kp;
         for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
-          verbose() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid() 
+          verbose() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid()
                     << " p= "  << (*kp)->p()/GeV << endreq;
         }
       }
@@ -143,14 +136,7 @@ void BTagging::performTagging(const std::string & location)
   } else {
     delete tags;
   }
-  
-  
 
-}
-
-//=========================================================================
-StatusCode BTagging::finalize() { 
-  return DaVinciAlgorithm::finalize(); 
 }
 
 //==========================================================================

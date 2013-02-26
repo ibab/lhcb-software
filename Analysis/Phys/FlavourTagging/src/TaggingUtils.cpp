@@ -18,29 +18,31 @@ using namespace LHCb;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TaggingUtils );
+DECLARE_TOOL_FACTORY( TaggingUtils )
 
 //====================================================================
-TaggingUtils::TaggingUtils( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent ) :
-  GaudiTool ( type, name, parent ), 
-  m_Dist(0), 
-  m_dva(0) 
+  TaggingUtils::TaggingUtils( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent ) :
+    GaudiTool ( type, name, parent ),
+    m_Dist(0),
+    m_dva(0)
 {
   declareProperty( "ChoosePVCriterium", m_ChoosePV = "PVbyIPs");
   declareInterface<ITaggingUtils>(this);
 }
-TaggingUtils::~TaggingUtils() {}; 
+
+TaggingUtils::~TaggingUtils() {}
 
 //=====================================================================
-StatusCode TaggingUtils::initialize() { 
+StatusCode TaggingUtils::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
   m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
-                             StatusCode::FAILURE);  
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
+                             StatusCode::FAILURE);
 
   m_Dist = m_dva->distanceCalculator();
   if( !m_Dist ) {
@@ -53,14 +55,14 @@ StatusCode TaggingUtils::initialize() {
     return StatusCode::FAILURE;
   }
 
-  return StatusCode::SUCCESS; 
+  return sc;
 }
 
-//==========================================================================                                                                                 
+//==========================================================================
 StatusCode TaggingUtils::calcDOCAmin( const Particle* axp,
-				      const Particle* p1,
-				      const Particle* p2,
-				      double& doca, double& docaerr) {
+                                      const Particle* p1,
+                                      const Particle* p2,
+                                      double& doca, double& docaerr) {
   double doca1, doca2, err1, err2;
   StatusCode sc1 = m_Dist->distance (axp, p1, doca1, err1);
   StatusCode sc2 = m_Dist->distance (axp, p2, doca2, err2);
@@ -73,8 +75,8 @@ StatusCode TaggingUtils::calcDOCAmin( const Particle* axp,
 
 //==========================================================================
 StatusCode TaggingUtils::calcIP( const Particle* axp,
-                                        const VertexBase* v,
-                                        double& ip, double& iperr) 
+                                 const VertexBase* v,
+                                 double& ip, double& iperr)
 {
   ip   =-100.0;
   iperr= 0.0;
@@ -112,7 +114,7 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
       if( ipx < ipmin ) {
         ipmin = ipx;
         ipminerr = ipex;
-      } 
+      }
     } else lastsc = sc;
   }
   ip  = ipmin;
@@ -133,8 +135,8 @@ int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
     for( Iterator jpart = vtags.begin(); ipart != jpart; ++jpart ) {
       SameTrackStatus isSame = isSameTrack(**ipart, **jpart);
       if (isSame) {
-        duplic=true; 
-        break; 
+        duplic=true;
+        break;
       }
     }
     if (!duplic) ++nr;
@@ -143,12 +145,12 @@ int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
   return nr;
 }
 //============================================================================
-bool TaggingUtils::isinTree(const Particle* axp, 
-			    Particle::ConstVector& sons, 
+bool TaggingUtils::isinTree(const Particle* axp,
+                            Particle::ConstVector& sons,
                             double& dist_phi){
   dist_phi = std::numeric_limits<double>::max();
 
-  for (Particle::ConstVector::iterator ip = sons.begin(); 
+  for (Particle::ConstVector::iterator ip = sons.begin();
        ip != sons.end(); ++ip) {
     using TaggingHelpers::SameTrackStatus;
     using TaggingHelpers::isSameTrack;
@@ -156,15 +158,15 @@ bool TaggingUtils::isinTree(const Particle* axp,
     using TaggingHelpers::dphi;
 
     const double deltaphi =
-	fabs(dphi(axp->momentum().phi(), (*ip)->momentum().phi()));
+      fabs(dphi(axp->momentum().phi(), (*ip)->momentum().phi()));
     if (dist_phi > deltaphi) dist_phi = deltaphi;
     SameTrackStatus isSame = isSameTrack(*axp, **ip);
     if (isSame) {
-      if (msgLevel(MSG::VERBOSE)) 
+      if (msgLevel(MSG::VERBOSE))
         verbose() << " particle is: " << toString(isSame)
-	          << " isinTree part: " << axp->particleID().pid() 
-                  << " with p="<< axp->p()/Gaudi::Units::GeV 
-                  << " pt="<< axp->pt()/Gaudi::Units::GeV 
+                  << " isinTree part: " << axp->particleID().pid()
+                  << " with p="<< axp->p()/Gaudi::Units::GeV
+                  << " pt="<< axp->pt()/Gaudi::Units::GeV
                   << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto() << endreq;
       return true;
     }
@@ -173,5 +175,3 @@ bool TaggingUtils::isinTree(const Particle* axp,
 }
 
 //====================================================================
-StatusCode TaggingUtils::finalize() { return GaudiTool::finalize(); }
-

@@ -12,13 +12,13 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TaggerNEWKaonOppositeTool );
+DECLARE_TOOL_FACTORY( TaggerNEWKaonOppositeTool )
 
 //====================================================================
-TaggerNEWKaonOppositeTool::TaggerNEWKaonOppositeTool( const std::string& type,
-                                                const std::string& name,
-                                                const IInterface* parent ) :
-  GaudiTool ( type, name, parent )
+  TaggerNEWKaonOppositeTool::TaggerNEWKaonOppositeTool( const std::string& type,
+                                                        const std::string& name,
+                                                        const IInterface* parent ) :
+    GaudiTool ( type, name, parent )
 {
   declareInterface<ITagger>(this);
 
@@ -45,12 +45,13 @@ TaggerNEWKaonOppositeTool::TaggerNEWKaonOppositeTool( const std::string& type,
 
   m_util = 0;
   m_descend = 0;
-  
+
 }
-TaggerNEWKaonOppositeTool::~TaggerNEWKaonOppositeTool() {}; 
+
+TaggerNEWKaonOppositeTool::~TaggerNEWKaonOppositeTool() {}
 
 //=====================================================================
-StatusCode TaggerNEWKaonOppositeTool::initialize() { 
+StatusCode TaggerNEWKaonOppositeTool::initialize() {
 
   warning() << "NEW NN KOS calib ctt: P0_Cal "<<m_P0_Cal_kaon<<", P1_Cal "<<m_P1_Cal_kaon<<endreq;
 
@@ -102,10 +103,10 @@ StatusCode TaggerNEWKaonOppositeTool::initialize() {
 }
 
 //=====================================================================
-Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0, 
-                                    const RecVertex* RecVert,
-                                    std::vector<const Vertex*>& allVtx, 
-                                    Particle::ConstVector& vtags ){
+Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
+                                       const RecVertex* RecVert,
+                                       std::vector<const Vertex*>& allVtx,
+                                       Particle::ConstVector& vtags ){
   Tagger tkaon;
   if(!RecVert) return tkaon;
 
@@ -194,48 +195,48 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
 
     double IP, IPerr;
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
-	IP = fabs(IP);
+    IP = fabs(IP);
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
     double ippu=(*ipart)->info(1,100000.);
 
 
-	double eta = (*ipart)->momentum().Eta();
-	double phi = (*ipart)->momentum().Phi();
+    double eta = (*ipart)->momentum().Eta();
+    double phi = (*ipart)->momentum().Phi();
 
-	double diff_eta = B_eta - eta;
-	double diff_phi = B_phi - phi;
+    double diff_eta = B_eta - eta;
+    double diff_phi = B_phi - phi;
 
-	std::vector<double> values;
-	values.push_back(log(P)          );
-	values.push_back(log(Pt)         );
-	values.push_back(log(IPsig)      );
-	values.push_back(log(IP)         );
-	values.push_back(log(lcs)        );
-	values.push_back(diff_eta        );
-	values.push_back(diff_phi        );
-	values.push_back(log(B_Pt)       );
-	values.push_back(log(cands_nn_1) );
-	values.push_back(no_vtx          );
+    std::vector<double> values;
+    values.push_back(log(P)          );
+    values.push_back(log(Pt)         );
+    values.push_back(log(IPsig)      );
+    values.push_back(log(IP)         );
+    values.push_back(log(lcs)        );
+    values.push_back(diff_eta        );
+    values.push_back(diff_phi        );
+    values.push_back(log(B_Pt)       );
+    values.push_back(log(cands_nn_1) );
+    values.push_back(no_vtx          );
 
-	m_nn_1 = mymc_reader->GetMvaValue(values);
+    m_nn_1 = mymc_reader->GetMvaValue(values);
 
     if(ippu < m_ipPU_cut_kaon)  continue;
 
     if(m_nn_1 < m_NN1_cut_kaon) continue;
 
-	myPair pair = std::make_pair(m_nn_1, count); // sort tracks by NN1 output, highest first
-	myMap.push_back(pair);
+    myPair pair = std::make_pair(m_nn_1, count); // sort tracks by NN1 output, highest first
+    myMap.push_back(pair);
     debug() << " " << pair.first << " " << pair.second << endmsg;
 
-	pre_sign_tag.at(count) = (*ipart)->charge();
-	pre_rnet_opp.at(count) = m_nn_1;
-	pre_pidk.at(count)     = pidk;
+    pre_sign_tag.at(count) = (*ipart)->charge();
+    pre_rnet_opp.at(count) = m_nn_1;
+    pre_pidk.at(count)     = pidk;
 
-	count ++;
+    count ++;
 
-	myPair_ev ev_pair = std::make_pair(m_nn_1, ipart); // find highest nn1 track
-	event_map.push_back(ev_pair);
+    myPair_ev ev_pair = std::make_pair(m_nn_1, ipart); // find highest nn1 track
+    event_map.push_back(ev_pair);
 
   }
 
@@ -252,56 +253,56 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
   if(cands == 0) return tkaon;
 
   else{
-	  std::sort(myMap.begin(), myMap.end(), std::greater<myPair>());
-	  for(unsigned i =0; i < (unsigned)cands; i++){
-		  assert(i < pos_rnet_opp.size());
-		  assert(i < pre_rnet_opp.size());
-		  assert(i < pos_sign_tag.size());
-		  assert(i < pre_sign_tag.size());
-		  assert(i < pos_pidk.size());
-		  assert(i < pre_pidk.size());
-		  debug() << " <map 1> " << myMap[i].first << " <map 2> " << myMap[i].second << endmsg;
-		  pos_rnet_opp.at(i) = pre_rnet_opp.at(myMap[i].second);
-		  pos_sign_tag.at(i) = pre_sign_tag.at(myMap[i].second);
-		  pos_pidk.at(i)     = pre_pidk.at(myMap[i].second);
-	  }
+    std::sort(myMap.begin(), myMap.end(), std::greater<myPair>());
+    for(unsigned i =0; i < (unsigned)cands; i++){
+      assert(i < pos_rnet_opp.size());
+      assert(i < pre_rnet_opp.size());
+      assert(i < pos_sign_tag.size());
+      assert(i < pre_sign_tag.size());
+      assert(i < pos_pidk.size());
+      assert(i < pre_pidk.size());
+      debug() << " <map 1> " << myMap[i].first << " <map 2> " << myMap[i].second << endmsg;
+      pos_rnet_opp.at(i) = pre_rnet_opp.at(myMap[i].second);
+      pos_sign_tag.at(i) = pre_sign_tag.at(myMap[i].second);
+      pos_pidk.at(i)     = pre_pidk.at(myMap[i].second);
+    }
 
-	  if(cands < max_tracks){
-		  for(int i=0; i < (max_tracks-cands); i++){
-			  pos_rnet_opp.at(cands+i) = 0.;
-			  pos_sign_tag.at(cands+i) = 0.;
-			  pos_pidk.at(cands+i)     = 0.;
-		  }
-	  }
+    if(cands < max_tracks){
+      for(int i=0; i < (max_tracks-cands); i++){
+        pos_rnet_opp.at(cands+i) = 0.;
+        pos_sign_tag.at(cands+i) = 0.;
+        pos_pidk.at(cands+i)     = 0.;
+      }
+    }
 
 
-	  std::vector<double> values;
-	  values.push_back(pos_sign_tag.at(0)*pos_rnet_opp.at(0));
-	  values.push_back(pos_sign_tag.at(1)*pos_rnet_opp.at(1));
-	  values.push_back(pos_sign_tag.at(2)*pos_rnet_opp.at(2));
-	  values.push_back(pos_sign_tag.at(3)*pos_rnet_opp.at(3));
-	  values.push_back(pos_sign_tag.at(0)*pos_pidk.at(0)    );
-	  values.push_back(pos_sign_tag.at(1)*pos_pidk.at(1)    );
-	  values.push_back(pos_sign_tag.at(2)*pos_pidk.at(2)    );
-	  values.push_back(pos_sign_tag.at(3)*pos_pidk.at(3)    );
-	  values.push_back(B_Pt                                 );
-	  values.push_back(no_vtx                               );
-	  values.push_back(cands_nn_2                           );
+    std::vector<double> values;
+    values.push_back(pos_sign_tag.at(0)*pos_rnet_opp.at(0));
+    values.push_back(pos_sign_tag.at(1)*pos_rnet_opp.at(1));
+    values.push_back(pos_sign_tag.at(2)*pos_rnet_opp.at(2));
+    values.push_back(pos_sign_tag.at(3)*pos_rnet_opp.at(3));
+    values.push_back(pos_sign_tag.at(0)*pos_pidk.at(0)    );
+    values.push_back(pos_sign_tag.at(1)*pos_pidk.at(1)    );
+    values.push_back(pos_sign_tag.at(2)*pos_pidk.at(2)    );
+    values.push_back(pos_sign_tag.at(3)*pos_pidk.at(3)    );
+    values.push_back(B_Pt                                 );
+    values.push_back(no_vtx                               );
+    values.push_back(cands_nn_2                           );
 
-	  m_nn_2 = mydata_reader->GetMvaValue(values);
+    m_nn_2 = mydata_reader->GetMvaValue(values);
 
-	  my_os_k_eta = m_nn_2;
+    my_os_k_eta = m_nn_2;
 
-	  debug () << " NN 2     " << m_nn_2 << endmsg;
+    debug () << " NN 2     " << m_nn_2 << endmsg;
 
-	  myMap.clear();
+    myMap.clear();
 
-	  // event_map is a vector, so let's sort it descending...
-	  std::sort(event_map.rbegin(), event_map.rend());
-	  assert(event_map.front().first >= event_map.back().first);
-	  ikaon = *event_map[0].second;
+    // event_map is a vector, so let's sort it descending...
+    std::sort(event_map.rbegin(), event_map.rend());
+    assert(event_map.front().first >= event_map.back().first);
+    ikaon = *event_map[0].second;
 
-	  event_map.clear();
+    event_map.clear();
   }
 
 
@@ -310,13 +311,13 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
   my_os_k_eta = m_P0_Cal_kaon + m_P1_Cal_kaon * (my_os_k_eta  - m_AverageOmega);
 
   if(my_os_k_eta > m_ProbMax_kaon)
-      my_os_k_dec = 1;
+    my_os_k_dec = 1;
 
   if(my_os_k_eta < m_ProbMin_kaon)
-      my_os_k_dec = -1;
+    my_os_k_dec = -1;
 
   if(my_os_k_eta > 0.5)
-	  my_os_k_eta = 1. - my_os_k_eta;
+    my_os_k_eta = 1. - my_os_k_eta;
 
   tkaon.setOmega( my_os_k_eta );
   tkaon.setDecision( my_os_k_dec );
@@ -325,7 +326,4 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
 
   return tkaon;
 }
-
-//==========================================================================
-StatusCode TaggerNEWKaonOppositeTool::finalize() { return StatusCode::SUCCESS; }
 

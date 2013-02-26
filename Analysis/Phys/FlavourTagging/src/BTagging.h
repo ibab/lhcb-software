@@ -1,11 +1,11 @@
 // $Id: BTagging.h,v 1.19 2009-11-25 08:42:27 jpalac Exp $
-#ifndef USER_BTAGGING_H 
+#ifndef USER_BTAGGING_H
 #define USER_BTAGGING_H 1
 
 #include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/IBTaggingTool.h"
 
-/** @class BTagging BTagging.h 
+/** @class BTagging BTagging.h
  *
  *  Algorithm to tag the B flavour
  *
@@ -15,20 +15,22 @@
 
 class BTagging : public DaVinciAlgorithm {
 
-public: 
+public:
   /// Standard constructor
   BTagging( const std::string& name, ISvcLocator* pSvcLocator );
+
   virtual ~BTagging( ); ///< Destructor
-  virtual StatusCode initialize();    ///< Algorithm initialization
+
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 
   void performTagging(const std::string & location);
 
 private:
+
   std::string m_TagLocation; ///< Location of tags
+
 };
 
 //=======================================================================//

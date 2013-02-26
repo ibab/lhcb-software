@@ -10,16 +10,15 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CombineTaggersNN );
-
+DECLARE_TOOL_FACTORY( CombineTaggersNN )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CombineTaggersNN::CombineTaggersNN( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  CombineTaggersNN::CombineTaggersNN( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent )
+    : GaudiTool ( type, name , parent )
 {
   declareInterface<ICombineTaggersTool>(this);
   declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.36 );
@@ -31,12 +30,11 @@ CombineTaggersNN::CombineTaggersNN( const std::string& type,
   declareProperty( "P2_NN",   m_P2_NN   = 0 );
 
 }
+
 CombineTaggersNN::~CombineTaggersNN(){}
-StatusCode CombineTaggersNN::initialize() { return GaudiTool::initialize(); }
-StatusCode CombineTaggersNN::finalize()   { return GaudiTool::finalize(); }
 
 //=============================================================================
-int CombineTaggersNN::combineTaggers(FlavourTag& theTag, 
+int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
                                      std::vector<Tagger*>& vtg , int signalType){
   if( vtg.empty() ) return 0;
   fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "<<signalType<<endmsg;
@@ -59,32 +57,32 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
     int type = vtg.at(i)->type();
     if (type==2) {
       pmu = 1-(vtg.at(i))->omega(); //probability of 'right' mu
-      mutag = vtg.at(i)->decision(); 
+      mutag = vtg.at(i)->decision();
       debug()<<"muon -> pmu: "<<pmu<<", mutag:"<<mutag<<endreq;
     }
     else if (type==3) {
       pe = 1-(vtg.at(i))->omega(); //probability of 'right' e
-      etag = vtg.at(i)->decision(); 
+      etag = vtg.at(i)->decision();
       debug()<<"ele -> pe: "<<pe<<", etag:"<<etag<<endreq;
     }
     else if (type==4) {
       pk = 1-(vtg.at(i))->omega(); //probability of 'right' k
-      ktag = vtg.at(i)->decision(); 
+      ktag = vtg.at(i)->decision();
       debug()<<"kaon -> pk: "<<pk<<", ktag:"<<ktag<<endreq;
     }
     else if (type==5) {
       pss = 1-(vtg.at(i))->omega(); //probability of 'right' kaonSS
-      sstag = vtg.at(i)->decision(); 
+      sstag = vtg.at(i)->decision();
       debug()<<"kaonSS -> pss: "<<pss<<", sstag:"<<sstag<<endreq;
     }
     else if (type==6){
       pss = 1-(vtg.at(i))->omega(); //probability of 'right' pionSS
-      sstag = vtg.at(i)->decision(); 
+      sstag = vtg.at(i)->decision();
       debug()<<"pionSS -> pss: "<<pss<<", sstag:"<<sstag<<endreq;
     }
     else if (type==10){
       pvtx = 1-(vtg.at(i))->omega(); //probability of 'right' vtx
-      vtxtag = vtg.at(i)->decision(); 
+      vtxtag = vtg.at(i)->decision();
       debug()<<"pvtx: "<<pvtx<<", vtxtag:"<<vtxtag<<endreq;
     }
     abstagsum = abs(mutag)+abs(etag)+abs(ktag)+abs(sstag)+abs(vtxtag);
@@ -118,7 +116,7 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
       pnsum = 1-pnsum;
       tagdecision = -1*tagdecision;
     }
-    debug() << "probNN: " << probNN <<", probPlus: " << probPlus 
+    debug() << "probNN: " << probNN <<", probPlus: " << probPlus
             <<", pnsum: "<<pnsum<<", tagdecision: "<<tagdecision<<endreq;
   }
   //throw away poorly significant tags
@@ -126,12 +124,12 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
     pnsum = 0.50;
     tagdecision = 0;
   }
-  
+
   //sort decision into categories ------------------
   //cat=1 will be least reliable, cat=5 most reliable
   //ProbMin is a small offset to adjust for range of pnsum
   int category = 0;
-  double omega = fabs(1-pnsum); 
+  double omega = fabs(1-pnsum);
   if(      omega > m_omegamaxbin                ) category=1;
   else if( omega > m_omegamaxbin-m_omegascale   ) category=2;
   else if( omega > m_omegamaxbin-m_omegascale*2 ) category=3;

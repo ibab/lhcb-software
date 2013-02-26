@@ -7,29 +7,26 @@
 #include "ICombineTaggersTool.h"            // Interface
 
 /** @class CombineTaggersProbability CombineTaggersProbability.h CombineTaggersProbability.h
- *  
+ *
  *  v1.3
  *  @author Marco Musy
  *  @date   2006-10-02
  */
 
-class CombineTaggersProbability : public GaudiTool, 
-	virtual public ICombineTaggersTool {
+class CombineTaggersProbability : public GaudiTool,
+                                  virtual public ICombineTaggersTool {
 public:
 
   /// Standard constructor
-  CombineTaggersProbability( const std::string& type, 
-			     const std::string& name,
-			     const IInterface* parent );
+  CombineTaggersProbability( const std::string& type,
+                             const std::string& name,
+                             const IInterface* parent );
 
   virtual ~CombineTaggersProbability( ); ///< Destructor
 
   /// Initialize
   StatusCode initialize();
 
-  /// Finalize
-  StatusCode finalize();
-  
   int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>&, int signalType );
 
 private:

@@ -1,5 +1,5 @@
 // $Id: TaggerNEWKaonOppositeTool.h,v 1.0 2013-01-23 $
-#ifndef USER_TAGGERNEWKAONOPPOSITETOOL_H 
+#ifndef USER_TAGGERNEWKAONOPPOSITETOOL_H
 #define USER_TAGGERNEWKAONOPPOSITETOOL_H 1
 
 // from Gaudi
@@ -20,7 +20,7 @@
 #include "NEWKaonOpposite_NN1.h"
 #include "NEWKaonOpposite_NN2.h"
 
-/** @class TaggerNEWKaonOppositeTool TaggerNEWKaonOppositeTool.h 
+/** @class TaggerNEWKaonOppositeTool TaggerNEWKaonOppositeTool.h
  *
  *  Tool to tag the B flavour with the new KaonOpposite Tagger
  *
@@ -29,16 +29,15 @@
  */
 
 class TaggerNEWKaonOppositeTool : public GaudiTool,
-                               virtual public ITagger {
+                                  virtual public ITagger {
 
 public:
   /// Standard constructor
   TaggerNEWKaonOppositeTool( const std::string& type,
-			  const std::string& name,
-			  const IInterface* parent );
+                             const std::string& name,
+                             const IInterface* parent );
   virtual ~TaggerNEWKaonOppositeTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
-  StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
   virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,

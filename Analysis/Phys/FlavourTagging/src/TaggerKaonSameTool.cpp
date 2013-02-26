@@ -13,7 +13,7 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TaggerKaonSameTool );
+DECLARE_TOOL_FACTORY( TaggerKaonSameTool )
 
 //====================================================================
 TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
@@ -25,7 +25,7 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
   declareProperty( "KaonSame_AverageOmega",    m_AverageOmega   = 0.33 );
-  
+
   declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.85 *GeV );
   declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 5.25 *GeV );
   declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 4.125 );
@@ -49,10 +49,12 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   m_util = 0;
   m_descend = 0;
 }
-TaggerKaonSameTool::~TaggerKaonSameTool() {}; 
+
+TaggerKaonSameTool::~TaggerKaonSameTool() {}
 
 //=====================================================================
-StatusCode TaggerKaonSameTool::initialize() { 
+StatusCode TaggerKaonSameTool::initialize() 
+{
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
@@ -67,20 +69,19 @@ StatusCode TaggerKaonSameTool::initialize() {
   if( ! m_util ) {
     fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
     return StatusCode::FAILURE;
-  } 
+  }
   m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
   if( ! m_descend ) {
     fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
     return StatusCode::FAILURE;
   }
 
-
-  return StatusCode::SUCCESS; 
+  return sc;
 }
 
 //=====================================================================
 Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-                                std::vector<const Vertex*>& allVtx, 
+                                std::vector<const Vertex*>& allVtx,
                                 Particle::ConstVector& vtags ){
   Tagger tkaonS;
   if(!RecVert) return tkaonS;
@@ -144,7 +145,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
     double dphi = fabs(TaggingHelpers::dphi(
-		(*ipart)->momentum().Phi(), ptotB.Phi()));
+                                            (*ipart)->momentum().Phi(), ptotB.Phi()));
     double dR = sqrt(deta*deta+dphi*dphi);
 
     if(deta > m_etacut_kaonS) continue;
@@ -163,7 +164,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     ncand++;
 
-    if( Pt > ptmaxkS ) { 
+    if( Pt > ptmaxkS ) {
       ikaonS  = (*ipart);
       ptmaxkS = Pt;
       save_dphi=dphi;
@@ -171,17 +172,17 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
       save_IPsig=IPsig;
     }
 
-  } 
+  }
   if( !ikaonS ) return tkaonS;
 
   //calculate omega
-  double pn = 1-m_AverageOmega; 
+  double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
 
     double ang = asin(ikaonS->pt()/ikaonS->p());
     double deta= log(tan(ptotB.Theta()/2))-log(tan(ang/2));
     double dphi = fabs(TaggingHelpers::dphi(
-		ikaonS->momentum().Phi(), ptotB.Phi()));
+                                            ikaonS->momentum().Phi(), ptotB.Phi()));
     double dR = sqrt(deta*deta+dphi*dphi);
 
     std::vector<double> NNinputs(10);
@@ -211,11 +212,9 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   tkaonS.setOmega( 1-pn );
   tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
-  tkaonS.setType( Tagger::SS_Kaon ); 
+  tkaonS.setType( Tagger::SS_Kaon );
   tkaonS.addToTaggerParts(ikaonS);
 
   return tkaonS;
 }
 //==========================================================================
-StatusCode TaggerKaonSameTool::finalize() { return GaudiTool::finalize(); }
-

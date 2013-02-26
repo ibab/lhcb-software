@@ -1,5 +1,5 @@
 // $Id: SVertexNNTool.h,v 1.4 2010-01-18 22:17:04 musy Exp $
-#ifndef SVERTEXNNTOOL_H 
+#ifndef SVERTEXNNTOOL_H
 #define SVERTEXNNTOOL_H 1
 // Include files
 // from Gaudi
@@ -12,7 +12,7 @@
 #include "Kernel/ISecondaryVertexTool.h"   // Interface
 
 /** @class SVertexNNTool SVertexNNTool.h SVertexNNTool.h
- *  
+ *
  *  v1.3 This tool takes as input a primary vertex and a particle vector
  *       and returns a secondary vertex
  *  @author Marco Musy
@@ -24,18 +24,16 @@ class SVertexNNTool : public GaudiTool, virtual public ISecondaryVertexTool {
 public:
 
   /// Standard constructor
-  SVertexNNTool( const std::string& type, 
+  SVertexNNTool( const std::string& type,
                  const std::string& name,
                  const IInterface* parent );
   virtual ~SVertexNNTool( ); ///< Destructor
   /// Initialize
   StatusCode initialize();
-  /// Finalize
-  StatusCode finalize();
-  
+
   //-------------------------------------------------------------
-  std::vector<LHCb::Vertex> buildVertex( const LHCb::RecVertex&, 
-					 const LHCb::Particle::ConstVector& ); 
+  std::vector<LHCb::Vertex> buildVertex( const LHCb::RecVertex&,
+                                         const LHCb::Particle::ConstVector& );
   //-------------------------------------------------------------
 
 private:
@@ -51,7 +49,7 @@ private:
                    double IP2,
                    double JVZ,
                    double JCHI );
- 
+
   double SIGMOID(double x);
   double ipprob(double x) ;
   double ptprob(double x);

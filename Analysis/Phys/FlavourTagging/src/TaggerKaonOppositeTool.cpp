@@ -11,7 +11,7 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TaggerKaonOppositeTool );
+DECLARE_TOOL_FACTORY( TaggerKaonOppositeTool )
 
 //====================================================================
 TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
@@ -33,21 +33,23 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareProperty( "Kaon_ghost_cut",m_ghost_cut     = -999.0 );
   declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 7.5 );
   declareProperty( "Kaon_distPhi_cut", m_distPhi_cut_kaon= 0.005 );
-  declareProperty( "Kaon_P0_Cal",  m_P0_Cal_kaon   = 0.393 ); 
-  declareProperty( "Kaon_P1_Cal",  m_P1_Cal_kaon   = 0.706 ); 
-  declareProperty( "Kaon_Eta_Cal", m_Eta_Cal_kaon  = 0.354 ); 
+  declareProperty( "Kaon_P0_Cal",  m_P0_Cal_kaon   = 0.393 );
+  declareProperty( "Kaon_P1_Cal",  m_P1_Cal_kaon   = 0.706 );
+  declareProperty( "Kaon_Eta_Cal", m_Eta_Cal_kaon  = 0.354 );
   declareProperty( "Kaon_AverageOmega",  m_AverageOmega     = 0.33 );
   declareProperty( "Kaon_ProbMin",  m_ProbMin_kaon  = 0.54 ); //no cut
 
   m_nnet = 0;
   m_util = 0;
   m_descend = 0;
-  
+
 }
-TaggerKaonOppositeTool::~TaggerKaonOppositeTool() {}; 
+
+TaggerKaonOppositeTool::~TaggerKaonOppositeTool() {}
 
 //=====================================================================
-StatusCode TaggerKaonOppositeTool::initialize() { 
+StatusCode TaggerKaonOppositeTool::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
@@ -69,13 +71,13 @@ StatusCode TaggerKaonOppositeTool::initialize() {
     return StatusCode::FAILURE;
   }
 
-  return StatusCode::SUCCESS; 
+  return sc;
 }
 
 //=====================================================================
-Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0, 
+Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
                                     const RecVertex* RecVert,
-                                    std::vector<const Vertex*>& allVtx, 
+                                    std::vector<const Vertex*>& allVtx,
                                     Particle::ConstVector& vtags ){
   Tagger tkaon;
   if(!RecVert) return tkaon;
@@ -92,7 +94,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   double ptmaxk = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ++ipart ) {
-    
+
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
 
     if(pidk < m_PID_k_cut ) continue;
@@ -101,7 +103,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     double pidproton = (*ipart)->proto()->info(ProtoParticle::CombDLLp, -1000.0);
     if( pidk - pidproton < m_PIDkp_cut ) continue;
     verbose() << " Kaon PIDk="<< pidk <<" Dkp="<<pidk - pidproton<<endmsg;
-    
+
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaon )  continue;
 
@@ -127,7 +129,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     double IPsig = fabs(IP/IPerr);
     if (fabs(IP) > m_IP_cut_kaon) continue;
     if (IPsig < m_IPs_cut_kaon) continue;
- 
+
     double ippu=(*ipart)->info(1,100000.);
     verbose() << " Kaon IPs="<< IPsig <<" IP="<<fabs(IP)<<" IPPU="<<ippu<<endmsg;
     if(ippu < m_ipPU_cut_kaon) continue;
@@ -136,12 +138,12 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     if( distphi < m_distPhi_cut_kaon ) continue;
 
     ++ncand;
-	
-    if( Pt > ptmaxk ) { 
+
+    if( Pt > ptmaxk ) {
       ikaon = (*ipart);
       ptmaxk = Pt;
     }
-  } 
+  }
 
   if( ! ikaon ) return tkaon;
 
@@ -175,12 +177,10 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
 
   tkaon.setOmega( 1-pn );
   tkaon.setDecision(ikaon->charge()>0 ? -1: 1);
-  tkaon.setType( Tagger::OS_Kaon ); 
+  tkaon.setType( Tagger::OS_Kaon );
   tkaon.addToTaggerParts(ikaon);
 
   return tkaon;
 }
 
 //==========================================================================
-StatusCode TaggerKaonOppositeTool::finalize() { return GaudiTool::finalize(); }
-

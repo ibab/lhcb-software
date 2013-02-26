@@ -3,20 +3,20 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : CombineTaggersProbability v2.
 //
-// 2011-01-18 : Marco Musy & Marc Grabalosa 
+// 2011-01-18 : Marco Musy & Marc Grabalosa
 //-----------------------------------------------------------------------------
 
 using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( CombineTaggersProbability );
+DECLARE_TOOL_FACTORY( CombineTaggersProbability )
 
 //=============================================================================
 CombineTaggersProbability::CombineTaggersProbability( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent ):
-  GaudiTool ( type, name, parent ) { 
+  GaudiTool ( type, name, parent ) {
   declareInterface<ICombineTaggersTool>(this);
 
   declareProperty( "OmegaMaxBin", m_omegamaxbin  = 0.38 );
@@ -25,27 +25,28 @@ CombineTaggersProbability::CombineTaggersProbability( const std::string& type,
   declareProperty( "ProbMin",     m_ProbMin     = 0.);
   declareProperty( "ProbMin_OS",  m_ProbMin_OS  = 0.);
   // Tuning Moriond 2012
-  //declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392); 
-  //declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.921); 
+  //declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392);
+  //declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.921);
   //declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.363);
   // Tuning 1fb-1 paper
-  declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392); 
-  declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.953); 
+  declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392);
+  declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.953);
   declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.362);
 
 }
+
 CombineTaggersProbability::~CombineTaggersProbability(){}
-StatusCode CombineTaggersProbability::initialize() {
+
+StatusCode CombineTaggersProbability::initialize() 
+{
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
   warning() << "Comb OS calib ctt: P0_Cal "<<m_P0_Cal_OS<<", P1_Cal "<<m_P1_Cal_OS<<endreq;
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
-StatusCode CombineTaggersProbability::finalize()   { return GaudiTool::finalize(); }
-
 //=============================================================================
-int CombineTaggersProbability::combineTaggers(FlavourTag& theTag, 
+int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
                                               std::vector<Tagger*>& vtg , int signalType){
   if( vtg.empty() ) return 0;
 
@@ -80,12 +81,12 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
     tagdecision = 0;
   }
   verbose() << "Final OS 1-w = " << pnsum <<endreq;
-    
+
   //sort decision into categories ------------------
   //cat=1 will be least reliable, cat=5 most reliable
   //ProbMin is a small offset to adjust for range of pnsum
   int category = 0;
-  double omega = fabs(1-pnsum); 
+  double omega = fabs(1-pnsum);
   if(      omega > m_omegamaxbin                ) category=1;
   else if( omega > m_omegamaxbin-m_omegascale   ) category=2;
   else if( omega > m_omegamaxbin-m_omegascale*2 ) category=3;
@@ -107,7 +108,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   double SSeOS_pnsum_b= ((1+tagdecision)/2 - tagdecision*pnsum );;  //hypothesis of truetag=-1
   for( int i = 0; i != vtgsize; ++i ) { //multiply all probabilities
     if(! vtg.at(i)) continue;
-    if( (signalType == 1 && vtg.at(i)->type() == (Tagger::SS_Pion)) || 
+    if( (signalType == 1 && vtg.at(i)->type() == (Tagger::SS_Pion)) ||
         (signalType == 2 && vtg.at(i)->type() == (Tagger::SS_Kaon)) ) {
       double mtagss = vtg.at(i)->decision();
       if(!mtagss) continue;
@@ -115,24 +116,24 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
       SSeOS_pnsum_a *= ((1-mtagss)/2 + mtagss*pnss ); // p
       SSeOS_pnsum_b *= ((1+mtagss)/2 - mtagss*pnss ); //(1-p)
     }
-  }    
+  }
   if(SSeOS_pnsum_a > SSeOS_pnsum_b) SSeOS_tagdecision = +1;
   if(SSeOS_pnsum_a < SSeOS_pnsum_b) SSeOS_tagdecision = -1;
   //normalise probability to the only two possible flavours:
   double SSeOS_pnsum = std::max(SSeOS_pnsum_a,SSeOS_pnsum_b) /(SSeOS_pnsum_a + SSeOS_pnsum_b);
-    
+
   //throw away poorly significant tags
   if(SSeOS_pnsum < m_ProbMin ||  SSeOS_tagdecision == 0) {
     SSeOS_pnsum = 0.50;
     SSeOS_tagdecision = 0;
   }
   verbose() << "Final 1-w = " << SSeOS_pnsum <<endreq;
-    
+
   //sort decision into categories ------------------
   //cat=1 will be least reliable, cat=5 most reliable
   //ProbMin is a small offset to adjust for range of pnsum
   int SSeOS_category = 0;
-  double SSeOS_omega = fabs(1-SSeOS_pnsum); 
+  double SSeOS_omega = fabs(1-SSeOS_pnsum);
   if(      SSeOS_omega > m_omegamaxbin                ) SSeOS_category=1;
   else if( SSeOS_omega > m_omegamaxbin-m_omegascale   ) SSeOS_category=2;
   else if( SSeOS_omega > m_omegamaxbin-m_omegascale*2 ) SSeOS_category=3;

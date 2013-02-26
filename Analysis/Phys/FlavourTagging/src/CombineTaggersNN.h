@@ -11,30 +11,24 @@
 #include "NeuralNet/NNcomb.cxx"
 
 /** @class CombineTaggersNN CombineTaggersNN.h
- *  
+ *
  *
  *  @author Marc Grabalosa Gandara
  *  @date   2010-10-13
  */
 
-class CombineTaggersNN : public GaudiTool, 
-	virtual public ICombineTaggersTool {
+class CombineTaggersNN : public GaudiTool,
+                         virtual public ICombineTaggersTool {
 
-public: 
+public:
 
   /// Standard constructor
-  CombineTaggersNN( const std::string& type, 
+  CombineTaggersNN( const std::string& type,
                     const std::string& name,
                     const IInterface* parent);
 
   virtual ~CombineTaggersNN( ); ///< Destructor
 
-  /// Initialize
-  StatusCode initialize();
-
-  /// Finalize
-  StatusCode finalize();
-  
   int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>&, int );
 
 private:

@@ -11,16 +11,16 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( SVertexTool );
+DECLARE_TOOL_FACTORY( SVertexTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-SVertexTool::SVertexTool( const std::string& type,
-                          const std::string& name,
-                          const IInterface* parent ) :
-  GaudiTool ( type, name, parent ) 
-{ 
+  SVertexTool::SVertexTool( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent ) :
+    GaudiTool ( type, name, parent )
+{
   declareInterface<ISecondaryVertexTool>(this);
 
   declareProperty( "lcs_Long_cut",     m_lcs_Long_cut     = 2.5 );
@@ -44,8 +44,8 @@ SVertexTool::SVertexTool( const std::string& type,
 
 }
 
-StatusCode SVertexTool::initialize() {
-
+StatusCode SVertexTool::initialize() 
+{
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
@@ -55,33 +55,31 @@ StatusCode SVertexTool::initialize() {
   }
 
   fitter = tool<IVertexFit>("OfflineVertexFitter");
-  if ( !fitter ) {   
+  if ( !fitter ) {
     err() << "Unable to Retrieve Default VertexFitter" << endreq;
     return StatusCode::FAILURE;
   }
-  return StatusCode::SUCCESS;
-};
 
-//=============================================================================
-StatusCode SVertexTool::finalize() { return GaudiTool::finalize(); }
+  return sc;
+}
 
 //=============================================================================
 SVertexTool::~SVertexTool(){}
 
 //=============================================================================
-std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert, 
+std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
                                              const Particle::ConstVector& vtags){
   verbose()<<"=======SVertex Tool========"<<endreq;
-//  for(Particle::ConstVector::const_iterator ip = vtags.begin(); 
-//       ip != vtags.end(); ip++) {
-//     info() <<"B vtag part= "<< (*ip)->pt()<<"  "<<(*ip)->proto()<<" id="<<
-//            (*ip)->particleID().pid()<<endreq;
-//   }
+  //  for(Particle::ConstVector::const_iterator ip = vtags.begin();
+  //       ip != vtags.end(); ip++) {
+  //     info() <<"B vtag part= "<< (*ip)->pt()<<"  "<<(*ip)->proto()<<" id="<<
+  //            (*ip)->particleID().pid()<<endreq;
+  //   }
 
   double RVz = RecVert.position().z()/mm;
 
   //Build Up 2 Seed Particles For Vertexing ------------------------
-  double ipl, iperrl, ips, iperrs, probf = -1.0 ; 
+  double ipl, iperrl, ips, iperrs, probf = -1.0 ;
   StatusCode sc;
   Vertex Vfit(0);
   Vertex vtx;
@@ -99,10 +97,10 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
     for ( jp = ip+1; jp != vtags.end(); jp++ ) {
       if( (*ip)->proto() == (*jp)->proto() ) { duplicate=true; break; }
     }
-    if( duplicate ) continue; 
+    if( duplicate ) continue;
 
     if( (*ip)->p()/GeV < 2.0 ) continue;
-    if( (*ip)->proto()->track()->type()!= Track::Long 
+    if( (*ip)->proto()->track()->type()!= Track::Long
         && (*ip)->proto()->track()->type()!= Track::Upstream) continue;//preselection
 
     double lcs = 0.;
@@ -113,7 +111,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
     if((*ip)->proto()->track()->type()== Track::Upstream ){
       if(lcs > m_lcs_Upstream_cut) continue;
     }
-    
+
     vtags_unique.push_back(*ip);
   }
   verbose() << "size of tracks for sec vtx="<<vtags_unique.size()<<endreq;
@@ -147,7 +145,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       if((*jp)->particleID().pid()!=310 && (*kp)->particleID().pid()!=310){
         //if the couple is compatible with a Ks, drop it         //preselection
         mass = ((*jp)->momentum() + (*kp)->momentum()).M()/GeV;
-        if( mass > 0.490 && mass < 0.505 
+        if( mass > 0.490 && mass < 0.505
             &&  (*jp)->particleID().abspid() == 211
             &&  (*kp)->particleID().abspid() == 211
             && ((*jp)->charge()) * ((*kp)->charge())< 0){
@@ -178,8 +176,8 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       probi1=ipprob(ipl/iperrl);
       probi2=ipprob(ips/iperrs);
       // pt
-      probp1=ptprob((*jp)->pt()/GeV); 
-      probp2=ptprob((*kp)->pt()/GeV); 
+      probp1=ptprob((*jp)->pt()/GeV);
+      probp2=ptprob((*kp)->pt()/GeV);
       // angle
       proba= aprob(angle( (*jp)->momentum(), (*kp)->momentum() ));
       // total
@@ -232,10 +230,10 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       // replaced by V.B., 20 aug 2k+9: sc = fitter->fit( Pfit, VfitTMP ); /////////FIT///////////
       sc = fitter->fit( VfitTMP , Pfit ); /////////FIT///////////
       if( !sc ) { Pfit.pop_back(); continue; }
-    
-      if( VfitTMP.chi2() / VfitTMP.nDoF()  > 5.0 ) 
+
+      if( VfitTMP.chi2() / VfitTMP.nDoF()  > 5.0 )
       { Pfit.pop_back(); continue; }                                   //cut
-      if((VfitTMP.position().z()/mm - RVz) < 1.0 ) 
+      if((VfitTMP.position().z()/mm - RVz) < 1.0 )
       { Pfit.pop_back(); continue; }                                   //cut
 
       //look what is the part which behaves the worst
@@ -250,7 +248,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
         Particle::ConstVector tmplist = Pfit;
         tmplist.erase( tmplist.begin() + ikpp );
 
-        sc = fitter->fit( vtx , tmplist ); 
+        sc = fitter->fit( vtx , tmplist );
         if( !sc ) continue;
 
         m_util->calcIP(*kpp, &vtx, ip, ipe);
@@ -264,12 +262,12 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       //decide if keep it or kill it
       if( worse_exist ) {
         verbose()<< "Worse=" << (*kpp_worse)->particleID().pid()
-               << " P=" << (*kpp_worse)->p()/GeV << " ipmax=" << ipmax ;
+                 << " P=" << (*kpp_worse)->p()/GeV << " ipmax=" << ipmax ;
         if ( ipmax > 3.0 && Pfit.size() > 2 ) {
           Pfit.erase( kpp_worse );
-          verbose() << " killed." << endreq;	
+          verbose() << " killed." << endreq;
         } else {
-          verbose() << " included." << endreq;	
+          verbose() << " included." << endreq;
         }
       }
     }
@@ -287,7 +285,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
   return vtxvect;
 }
 //=============================================================================
-bool SVertexTool::isin(Particle::ConstVector& vtags_toexclude, 
+bool SVertexTool::isin(Particle::ConstVector& vtags_toexclude,
                        const Particle* axp){
 
   Particle::ConstVector::const_iterator i;
@@ -295,7 +293,7 @@ bool SVertexTool::isin(Particle::ConstVector& vtags_toexclude,
     if((*i)->proto() == axp->proto()) return true;
   }
   return false;
-} 
+}
 //=============================================================================
 double SVertexTool::angle( Gaudi::LorentzVector a, Gaudi::LorentzVector b) {
   double ang=0;
@@ -312,13 +310,13 @@ double SVertexTool::angle( Gaudi::LorentzVector a, Gaudi::LorentzVector b) {
 double SVertexTool::ipprob(double x) {
   if( x > 40. ) return 0.6;
   const double r = m_ipfitpol0 + x * (m_ipfitpol1 + x * (m_ipfitpol2 +
-	      x * (m_ipfitpol3 + x * (m_ipfitpol4 + x * m_ipfitpol5))));
+                                                         x * (m_ipfitpol3 + x * (m_ipfitpol4 + x * m_ipfitpol5))));
   return (r < 0.) ? 0. : r;
 }
 double SVertexTool::ptprob(double x) {
   if( x > 5.0 ) return 0.65;
   const double r = m_ptfitpol0 + x * (m_ptfitpol1 + x * (m_ptfitpol2 +
-	      x * (m_ptfitpol3 + x * m_ptfitpol4)));
+                                                         x * (m_ptfitpol3 + x * m_ptfitpol4)));
   return (r < 0.) ? 0. : r;
 }
 double SVertexTool::aprob(double x) {

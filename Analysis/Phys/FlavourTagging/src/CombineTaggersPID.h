@@ -9,30 +9,28 @@
 
 
 /** @class CombineTaggersPID CombineTaggersPID.h CombineTaggersPID.h
- *  
+ *
  *  Tool to do the combined tagging (OS and SS)
  *  @author Marc Grabalosa
  *  @date   2008-10-31
  */
-class CombineTaggersPID : public GaudiTool, 
-	virtual public ICombineTaggersTool {
+class CombineTaggersPID : public GaudiTool,
+                          virtual public ICombineTaggersTool {
 public:
   /// Standard constructor
-  CombineTaggersPID( const std::string& type, 
-                       const std::string& name,
-                       const IInterface* parent );
+  CombineTaggersPID( const std::string& type,
+                     const std::string& name,
+                     const IInterface* parent );
 
   virtual ~CombineTaggersPID( ); ///< Destructor
 
   /// Initialize
   StatusCode initialize();
 
-  /// Finalize
-  StatusCode finalize();
   int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& , int);
 
 private:
-  
+
   std::vector<int> m_pid_cats_bs;
   std::vector<int> m_pid_cats_bu;
   std::vector<int> m_index;

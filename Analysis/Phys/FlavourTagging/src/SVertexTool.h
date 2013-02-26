@@ -1,5 +1,5 @@
 // $Id: SVertexTool.h,v 1.8 2010-01-18 22:17:04 musy Exp $
-#ifndef SVERTEXTOOL_H 
+#ifndef SVERTEXTOOL_H
 #define SVERTEXTOOL_H 1
 // Include files
 // from Gaudi
@@ -12,7 +12,7 @@
 #include "ITaggingUtils.h"
 
 /** @class SVertexTool SVertexTool.h SVertexTool.h
- *  
+ *
  *  v1.3 This tool takes as input a primary vertex and a particle vector
  *       and returns a secondary vertex (based on a likelihood function)
  *  @author Marco Musy
@@ -22,8 +22,9 @@
 class SVertexTool : public GaudiTool, virtual public ISecondaryVertexTool {
 
 public:
+
   /// Standard constructor
-  SVertexTool( const std::string& type, 
+  SVertexTool( const std::string& type,
                const std::string& name,
                const IInterface* parent );
 
@@ -31,15 +32,14 @@ public:
 
   /// Initialize
   StatusCode initialize();
-  /// Finalize
-  StatusCode finalize();
-  
+
   //----------------------------------------------------------------
-  std::vector<LHCb::Vertex> buildVertex ( const LHCb::RecVertex&, 
-					  const LHCb::Particle::ConstVector& );
+  std::vector<LHCb::Vertex> buildVertex ( const LHCb::RecVertex&,
+                                          const LHCb::Particle::ConstVector& );
   //----------------------------------------------------------------
 
 private:
+
   ITaggingUtils* m_util;
 
   IVertexFit *fitter;
@@ -61,12 +61,13 @@ private:
 
   float  m_anglepol0;
   float  m_anglepol1;
- 
+
   bool isin(LHCb::Particle::ConstVector& , const LHCb::Particle* );
 
   double angle( Gaudi::LorentzVector , Gaudi::LorentzVector );
   double ipprob(double x) ;
   double ptprob(double x);
   double aprob(double x);
+
 };
 #endif // SVERTEXTOOL_H

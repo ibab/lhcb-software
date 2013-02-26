@@ -1,5 +1,5 @@
 // $Id: TaggerPionSameTool.h,v 1.9 2009-12-11 15:15:05 musy Exp $
-#ifndef USER_TAGGERPIONSAMETOOL_H 
+#ifndef USER_TAGGERPIONSAMETOOL_H
 #define USER_TAGGERPIONSAMETOOL_H 1
 
 // from Gaudi
@@ -17,7 +17,7 @@
 #include "Kernel/IParticleDescendants.h"
 #include "INNetTool.h"
 
-/** @class TaggerPionSameTool TaggerPionSameTool.h 
+/** @class TaggerPionSameTool TaggerPionSameTool.h
  *
  *  Tool to tag the B flavour with a PionSame Tagger
  *
@@ -25,22 +25,21 @@
  *  @date   30/06/2005
  */
 
-class TaggerPionSameTool : public GaudiTool, 
-	virtual public ITagger {
+class TaggerPionSameTool : public GaudiTool,
+                           virtual public ITagger {
 
-public: 
+public:
   /// Standard constructor
   TaggerPionSameTool( const std::string& type,
-		      const std::string& name,
-		      const IInterface* parent );
+                      const std::string& name,
+                      const IInterface* parent );
   virtual ~TaggerPionSameTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
-  StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
   virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
-			    std::vector<const LHCb::Vertex*>&, LHCb::
-			    Particle::ConstVector&);
+                            std::vector<const LHCb::Vertex*>&, LHCb::
+                            Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
@@ -50,7 +49,7 @@ private:
   ITaggingUtils* m_util;
   std::string m_CombinationTechnique, m_NeuralNetName;
 
-  //properties 
+  //properties
   double m_Pt_cut_pionS;
   double m_P_cut_pionS;
   double m_IPs_cut_pionS;

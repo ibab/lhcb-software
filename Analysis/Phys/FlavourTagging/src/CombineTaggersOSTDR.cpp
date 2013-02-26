@@ -10,25 +10,24 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( CombineTaggersOSTDR );
+DECLARE_TOOL_FACTORY( CombineTaggersOSTDR )
 
 //=============================================================================
-CombineTaggersOSTDR::CombineTaggersOSTDR( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent ) :
-  GaudiTool ( type, name, parent ) { 
-  declareInterface<ICombineTaggersTool>(this);
-}
+  CombineTaggersOSTDR::CombineTaggersOSTDR( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent ) :
+    GaudiTool ( type, name, parent ) {
+    declareInterface<ICombineTaggersTool>(this);
+  }
+
 CombineTaggersOSTDR::~CombineTaggersOSTDR(){}
-StatusCode CombineTaggersOSTDR::initialize() { return GaudiTool::initialize(); }
-StatusCode CombineTaggersOSTDR::finalize() { return GaudiTool::finalize(); }
 
 //=============================================================================
 int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& vtg, int signalType){
 
   debug() << "Running CombineTaggersOSTDR::combineTaggers signalTpye" <<signalType<< endmsg;
 
-  //Want to combine opposite side muon, electron, kaon, vertex  
+  //Want to combine opposite side muon, electron, kaon, vertex
   int catt=0;
   double tagdecision=0;
   std::vector<Tagger*> ostaggers;
@@ -36,30 +35,30 @@ int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>
   for(int j=0; j!=4; ++j) itag.push_back(0);
 
   debug() << "Number of taggers = " << vtg.size() << endmsg;
-  
+
   for(std::vector<Tagger*>::const_iterator iter = vtg.begin(); iter != vtg.end(); ++iter){
-    if((*iter)->type() == Tagger::OS_Muon){ 
+    if((*iter)->type() == Tagger::OS_Muon){
       debug() << "Muon tool present    " << endmsg;
       ostaggers.push_back(*iter);
       itag[0] = (*iter)->decision();
       debug() << "Muon decision =      " << itag[0] << endmsg;
       if(itag[0] != 0) theTag.addTagger(**iter);
     }
-    if((*iter)->type() == Tagger::OS_Electron){      
+    if((*iter)->type() == Tagger::OS_Electron){
       debug() << "Electron tool present" << endmsg;
       ostaggers.push_back(*iter);
       itag[1] = (*iter)->decision();
       debug() << "Electron decision =  " << itag[1] << endmsg;
       if(itag[1] != 0) theTag.addTagger(**iter);
     }
-    if((*iter)->type() == Tagger::OS_Kaon){      
+    if((*iter)->type() == Tagger::OS_Kaon){
       debug() << "Kaon tool present    " << endmsg;
       ostaggers.push_back(*iter);
       itag[2] = (*iter)->decision();
       debug() << "Kaon decision =      " << itag[2] << endmsg;
       if(itag[2] !=0 ) theTag.addTagger(**iter);
     }
-    if((*iter)->type() == Tagger::VtxCharge){      
+    if((*iter)->type() == Tagger::VtxCharge){
       debug() << "Vertex tool present  " << endmsg;
       ostaggers.push_back(*iter);
       itag[3] = (*iter)->decision();
@@ -67,7 +66,7 @@ int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>
       if(itag[3] != 0) theTag.addTagger(**iter);
     }
   }
-  
+
   if(itag[0]){
     tagdecision = itag[0];
     catt = 1;
@@ -79,7 +78,7 @@ int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>
   else if(itag[1]){
     tagdecision = itag[1];
     catt = 2;
-    if(itag[2]){      
+    if(itag[2]){
       tagdecision += itag[2];
       catt=5;
     }
@@ -92,7 +91,7 @@ int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>
     tagdecision = itag[3];
     catt = 6;
   }
-  
+
   if(tagdecision) tagdecision = tagdecision>0 ? 1 : -1;
   if(!tagdecision) catt = 0;
 

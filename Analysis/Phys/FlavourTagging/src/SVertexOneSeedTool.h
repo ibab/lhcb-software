@@ -31,8 +31,6 @@ public:
 
   /// Initialize
   StatusCode initialize();
-  /// Finalize
-  StatusCode finalize();
   
   //----------------------------------------------------------------
   std::vector<LHCb::Vertex> buildVertex ( const LHCb::RecVertex&, 

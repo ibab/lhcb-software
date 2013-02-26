@@ -7,7 +7,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : SVertexOneSeedTool v1.4
 //
-// 2010-06-1 : Marc Grabalosa       
+// 2010-06-1 : Marc Grabalosa
 //
 // Secondary inclusive vertexing based on a likelihood function
 //-----------------------------------------------------------------------------
@@ -16,7 +16,7 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( SVertexOneSeedTool );
+DECLARE_TOOL_FACTORY( SVertexOneSeedTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -24,8 +24,8 @@ DECLARE_TOOL_FACTORY( SVertexOneSeedTool );
 SVertexOneSeedTool::SVertexOneSeedTool( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent ) :
-  GaudiTool ( type, name, parent ) 
-{ 
+  GaudiTool ( type, name, parent )
+{
   declareInterface<ISecondaryVertexTool>(this);
 
   declareProperty( "lcs_Long_cut",       m_lcs_Long_cut     = 2.5 );
@@ -50,21 +50,18 @@ StatusCode SVertexOneSeedTool::initialize() {
   }
 
   fitter = tool<IVertexFit>("OfflineVertexFitter");
-  if ( !fitter ) {   
+  if ( !fitter ) {
     err() << "Unable to Retrieve Default VertexFitter" << endreq;
     return StatusCode::FAILURE;
   }
-  return StatusCode::SUCCESS;
-};
-
-//=============================================================================
-StatusCode SVertexOneSeedTool::finalize() { return GaudiTool::finalize(); }
+  return sc;
+}
 
 //=============================================================================
 SVertexOneSeedTool::~SVertexOneSeedTool(){}
 
 //=============================================================================
-std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert, 
+std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
                                                     const Particle::ConstVector& vtags){
 
 
@@ -72,7 +69,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
 
   debug()<<" Build 2 Seed Particles for vertexing"<<endreq;
   //Build Up 2 Seed Particles For Vertexing ------------------------
-  double ipl, iperrl, ips, iperrs; 
+  double ipl, iperrl, ips, iperrs;
   StatusCode sc;
   Vertex Vfit(0);
   Vertex vtx, myseed(0);
@@ -82,7 +79,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
   double maxprobf = m_maxprobf;
   VertexBase::ExtraInfo likeinfo;
   Gaudi::XYZPoint SVpos;
-  
+
   //loop to find seed -----------------------------------
   for ( jp = vtags.begin(); jp != vtags.end(); ++jp ) {
 
@@ -99,7 +96,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
       double cloneDist = jtrack->info(LHCb::Track::CloneDist, -1.);
       if (cloneDist!=-1) continue;
     }
- 
+
     m_util->calcIP(*jp, &RecVert, ipl, iperrl);
     ipl=fabs(ipl);
     if( iperrl==0 ) continue;
@@ -122,7 +119,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
 
       m_util->calcIP(*kp, &RecVert, ips, iperrs);
       ips=fabs(ips);
-      if( iperrs ==0 ) continue;                                
+      if( iperrs ==0 ) continue;
       if( iperrs > 1.0 ) continue;                              //cut
       if( ips/iperrs < 2.5 ) continue;                          //cut
       if( ips/iperrs > 100.0 ) continue;                        //cut
@@ -130,20 +127,20 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
 
       if( std::min((*jp)->pt(), (*kp)->pt()) /GeV < 0.15) continue;  //cut
       if( std::max((*jp)->pt(), (*kp)->pt()) /GeV < 0.3 ) continue;  //cut
- 
+
       double dphi = fabs(TaggingHelpers::dphi((*jp)->momentum().phi(),
-		  (*kp)->momentum().phi()));
+                                              (*kp)->momentum().phi()));
       if(dphi<0.001) continue;                                  //cut
 
       sc = fitter->fit( vtx , **jp, **kp );
       if( sc.isFailure() )          continue;
       if( vtx.chi2PerDoF() > 10.0 ) continue;                   //cut
 
-      ROOT::Math::PositionVector3D< ROOT::Math::Cartesian3D< double > > 
+      ROOT::Math::PositionVector3D< ROOT::Math::Cartesian3D< double > >
         SVpoint((vtx.position()-RecVert.position()).x()/mm,
                 (vtx.position()-RecVert.position()).y()/mm,
                 (vtx.position()-RecVert.position()).z()/mm);
-  
+
       if(SVpoint.z() < 0.0 ) continue;                 //cut
       if(SVpoint.Theta()>.350 || SVpoint.Theta()<.010) continue;//cut
 
@@ -157,7 +154,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
       //if the couple is compatible with a Ks, drop it          //cut
       double mass = ((*jp)->momentum() + (*kp)->momentum()).M()/GeV;
       if( mass<0.2) continue;
-      if( mass > 0.490 && mass < 0.505 
+      if( mass > 0.490 && mass < 0.505
           &&  (*jp)->particleID().abspid() == 211
           &&  (*kp)->particleID().abspid() == 211
           && ((*jp)->charge()) * ((*kp)->charge())< 0){
@@ -189,13 +186,13 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
       double prob_pointtheta = 0;
       if (pointtheta <0.05) prob_pointtheta = pol(pointtheta, 0.466409, 7.29019, -94.1293);
       else prob_pointtheta = pol(pointtheta, 0.555528, 0.98924, -5.43018);
-      
+
       debug()<<prob_chi2<< " "<<  prob_ptmin<<  " "<<    prob_ipmax<< " "
              << prob_ipsmin<<  " "<< prob_deltaphi<<  " "<< prob_rdist<< " "<<prob_pointtheta<<endmsg;
-      
+
       double probf = combine(prob_chi2,   prob_ptmin,    prob_ipmax,
                              prob_ipsmin, prob_deltaphi, prob_rdist, prob_pointtheta);
-            
+
       debug()<<"      seed formed - probf: "<<probf<<endreq;
       if(probf>=maxprobf) {
         myseed=vtx;
@@ -211,7 +208,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
         SVpos.SetZ((vtx.position()-RecVert.position()).z()/mm);
         debug()<<"       svpos (SV-RV): "<<SVpos.x()<<", "<<SVpos.y()<<", "<<SVpos.z()<<endreq;
       }
-      
+
     }//kp
   }//jp
   //save likelihood
@@ -222,7 +219,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
   //add tracks from best seed
   Vfit.addToOutgoingParticles(p1);
   Vfit.addToOutgoingParticles(p2);
-  
+
   verbose()<<"maxprobf="<<maxprobf<<endreq;
   if(maxprobf<=m_maxprobf) return vtxvect; //return empty
 
@@ -262,7 +259,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
 }
 
 //======================================================================
-double SVertexOneSeedTool::pol(double x, double a0, double a1, 
+double SVertexOneSeedTool::pol(double x, double a0, double a1,
                                double a2, double a3, double a4) {
   double res = a0;
   if(a1) res += a1*x;
