@@ -21,26 +21,26 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolDEDX );
+DECLARE_TOOL_FACTORY( TupleToolDEDX )
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolDEDX::TupleToolDEDX( const std::string& type,
-    const std::string& name,
-    const IInterface* parent )
-: GaudiTool ( type, name , parent )
+  TupleToolDEDX::TupleToolDEDX( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
+    : GaudiTool ( type, name , parent )
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("absCharge", m_abs=false);
-
 }
 
 //=============================================================================
 
-StatusCode TupleToolDEDX::fill( const LHCb::Particle* 
-    , const LHCb::Particle* P
-    , const std::string& head
-    , Tuples::Tuple& tuple ){
+StatusCode TupleToolDEDX::fill( const LHCb::Particle*
+                                , const LHCb::Particle* P
+                                , const std::string& head
+                                , Tuples::Tuple& tuple ){
   //fill some information about the particle here!
   bool test = true;
   if( P ){
@@ -57,7 +57,7 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
     else {
       m_clusters = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default );
       debug() << "  -> number of clusters found in TES: "
-        << m_clusters->size() <<endmsg;
+              << m_clusters->size() <<endmsg;
     }
 
     //NEW CODE:
@@ -76,12 +76,12 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
     //Skip the tracks without VELO(Velo, VeloR, Upstream and Long)hits
     if ( !track->hasVelo() ) {
       debug() <<"Track has no VELO hits, continuing with next track."<< endmsg;
-      //	continue;
+      // continue;
     }
 
     //Get track IDs:
     const std::vector< LHCb::LHCbID > & trackID = track->lhcbIDs() ;
-    // int nClusters=trackID.size();  
+    // int nClusters=trackID.size();
 
     //Get track angle vector:
     Gaudi::XYZVector slope= track->slopes();
@@ -99,7 +99,7 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
     double prap = track->pseudoRapidity();
     double trackChi2 = track->chi2();
     int    trackKey  = track->key();
-    int    trackVeloKey  = -10 ; 
+    int    trackVeloKey  = -10 ;
     const SmartRefVector<LHCb::Track>& ancestors = track->ancestors();
     for (SmartRefVector<LHCb::Track>::const_iterator it4 = ancestors.begin();  it4 != ancestors.end();  ++it4){
       if((*it4)->type() == 1) trackVeloKey = (*it4)->key();
@@ -153,7 +153,7 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
     }
     //tracks travel at an angle relative to sensors, so have a factor to account for
     // the excess material traversed. This will need to be refined later...
-    // dE/dx = constant \times ADC counts/ path. path = 300 um /cos(theta); 
+    // dE/dx = constant \times ADC counts/ path. path = 300 um /cos(theta);
     // dE/dx = constant' \times cos(theta)
     double AngleFactor=1;
     //if(m_AngleCorrection){
@@ -174,7 +174,7 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
         //Veloclusters:
         m_clusters = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default );
         debug() << "  -> number of clusters found in TES: "
-          << m_clusters->size() <<endmsg;
+                << m_clusters->size() <<endmsg;
 
         debug() << "Getting cluster "  << endmsg;
         LHCb::VeloCluster *cluster = m_clusters->object( vcID );
@@ -190,15 +190,15 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
 
         //Separate info for R and Phi sensors...
         if(idfilter.isRType()){
-          //Can do something here...        
+          //Can do something here...
         }
         else if (idfilter.isPhiType() ){
           // do something with the phis.
         }
         double adc = cluster->totalCharge();
         if(ClusterCounter<MAXCLUSTERS){
-        ClusterArray[ClusterCounter]=adc;
-        ADCValues.push_back(adc);
+          ClusterArray[ClusterCounter]=adc;
+          ADCValues.push_back(adc);
         }
         adc = cluster->totalCharge()*AngleFactor;
         if(ClusterCounter<MAXCLUSTERS){
@@ -247,12 +247,12 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
         MPV_Median=(float)ClusterArray[ClusterCounter/2];
       }
       else{
-          MPV_Corrected_Median = 0.5*((float)CorrectedClusterArray[ClusterCounter/2] +
-                                      (float)CorrectedClusterArray[(ClusterCounter/2) -1]);
-          MPV_Median = 0.5*((float)ClusterArray[ClusterCounter/2] +
-                            (float)ClusterArray[(ClusterCounter/2) -1]);
+        MPV_Corrected_Median = 0.5*((float)CorrectedClusterArray[ClusterCounter/2] +
+                                    (float)CorrectedClusterArray[(ClusterCounter/2) -1]);
+        MPV_Median = 0.5*((float)ClusterArray[ClusterCounter/2] +
+                          (float)ClusterArray[(ClusterCounter/2) -1]);
       }
-     
+
       debug()<<"==> Calculating Mean " << endmsg;
       tempMean=0.0;
       for(int i=0; i<ClusterCounter ; i++)       tempMean += ClusterArray[i];
@@ -260,7 +260,7 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
       tempMean=0.0;
       //Trunc20:
       debug()<<"==> Calculating Truncated Mean " << endmsg;
-      if(ClusterCounter<5) MPV_Trunc20=MPV_Median; 
+      if(ClusterCounter<5) MPV_Trunc20=MPV_Median;
       else{
         nToInclude20 = (int)round(0.8*ClusterCounter);
         tempMean=0.0;
@@ -354,11 +354,11 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
     tuple->column( head+"_DEDX_MPV_GenMean_0_5", MPV_GenMean_0_5);
     tuple->column( head+"_DEDX_nClustersPerTrack", ClusterCounter);
     tuple->farray( head+"_DEDX_ADCValues", ADCValues.begin(), ADCValues.end(), head+"_DEDX_ArrayLength", MAXCLUSTERS);
-    tuple->farray( head+"_DEDX_CorrectedADCValues", CorrectedADCValues.begin(), 
-                                                    CorrectedADCValues.end(), 
-                                                    head+"_DEDX_ArrayLength", MAXCLUSTERS);
+    tuple->farray( head+"_DEDX_CorrectedADCValues", CorrectedADCValues.begin(),
+                   CorrectedADCValues.end(),
+                   head+"_DEDX_ArrayLength", MAXCLUSTERS);
 
-  }else 
+  }else
   {
     return StatusCode::FAILURE;
   }
