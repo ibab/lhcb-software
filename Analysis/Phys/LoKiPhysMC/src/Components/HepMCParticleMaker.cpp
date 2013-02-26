@@ -674,7 +674,7 @@ bool LoKi::HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
 
 // ============================================================================
 /// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,HepMCParticleMaker);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,HepMCParticleMaker)
 // ============================================================================
 // The END 
 // ============================================================================
