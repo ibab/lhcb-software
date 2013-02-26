@@ -8,10 +8,11 @@
 // ============================================================================
 StatusCode LoKi::HepMCJets2Jets::initialize() 
 {
+  StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
   // locate LoKi service (needed for some functions) 
   m_loki = svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
-
 
   m_reporter = tool<LoKi::IReporter>( "LoKi::Reporter", this ) ;
 
@@ -36,7 +37,7 @@ StatusCode LoKi::HepMCJets2Jets::initialize()
     m_p2mcAssoc = tool<IParticle2MCAssociator>(m_p2mcAssocType, this);
 
 
-  return (0!=m_reporter && 0!=m_matcher && 0!= m_incSvc && 0!= m_loki&&initMethod()) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  return (0!=m_reporter && 0!=m_matcher && 0!= m_incSvc && 0!= m_loki&&initMethod()) ? sc : StatusCode::FAILURE;
 
 }
 
@@ -61,7 +62,7 @@ StatusCode LoKi::HepMCJets2Jets::finalize()
   
   m_loaded = false ;
 
-  return StatusCode::SUCCESS ;
+  return GaudiTool::finalize() ;
 }
 
 void LoKi::HepMCJets2Jets::makeRelation( const IJets2Jets::Jets& StdPrimaryJets  
@@ -206,7 +207,7 @@ bool LoKi::HepMCJets2Jets::initMethod()
 
 // ============================================================================
 /// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,HepMCJets2Jets);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,HepMCJets2Jets)
 
 // ============================================================================
 // The END 

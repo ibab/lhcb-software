@@ -1,33 +1,33 @@
 // $Id: $
 
-#ifndef COMPONENTS_ZPLUSJETHEPMCSELECTOR_H 
+#ifndef COMPONENTS_ZPLUSJETHEPMCSELECTOR_H
 #define COMPONENTS_ZPLUSJETHEPMCSELECTOR_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "MCInterfaces/IHepMCParticleSelector.h"            // Interface
 // ===========================================================================
-// LoKiGen 
+// LoKiGen
 // ============================================================================
-#include "LoKi/GenParticleCuts.h" 
-#include "LoKi/GenExtract.h" 
+#include "LoKi/GenParticleCuts.h"
+#include "LoKi/GenExtract.h"
 // ============================================================================
 
 
 /** @class ZPlusJetHepMCSelector ZPlusJetHepMCSelector.h Components/ZPlusJetHepMCSelector.h
- *  
+ *
  *
  *  @author Victor Coco
  *  @date   2009-10-22
  */
 class ZPlusJetHepMCSelector : public GaudiTool, virtual public IHepMCParticleSelector {
-public: 
+public:
   /// Standard constructor
-  ZPlusJetHepMCSelector( const std::string& type, 
+  ZPlusJetHepMCSelector( const std::string& type,
                          const std::string& name,
                          const IInterface* parent);
 
@@ -45,8 +45,7 @@ public:
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( ZPlusJetHepMCSelector );
-
+DECLARE_TOOL_FACTORY( ZPlusJetHepMCSelector )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -63,7 +62,7 @@ ZPlusJetHepMCSelector::ZPlusJetHepMCSelector( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-ZPlusJetHepMCSelector::~ZPlusJetHepMCSelector() {} 
+ZPlusJetHepMCSelector::~ZPlusJetHepMCSelector() {}
 
 //=============================================================================
 // the main function that tell you if youy accept the GenParticle or not
@@ -72,7 +71,7 @@ ZPlusJetHepMCSelector::~ZPlusJetHepMCSelector() {}
 bool ZPlusJetHepMCSelector::accept(const HepMC::GenParticle* p ) const
 {
 
-  // avoid long names 
+  // avoid long names
   using namespace LoKi        ;
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
@@ -82,15 +81,15 @@ bool ZPlusJetHepMCSelector::accept(const HepMC::GenParticle* p ) const
   // the particle is a quark
   HepMC::GenVertex * thePV =  p -> production_vertex() ;
   if (thePV == NULL) return false;
-  if (thePV->parent_event()->signal_process_id()!=30)return false; 
+  if (thePV->parent_event()->signal_process_id()!=30)return false;
   HepMC::GenVertex::particle_iterator p_in ;
   bool hasZsister = false;
-  
+
   for(p_in = thePV -> particles_begin( HepMC::parents); p_in != thePV -> particles_end(HepMC::parents); ++p_in){
     if (!IsA_Q(*p_in))return false;
-    
+
   }
-  
+
   for(p_in = thePV -> particles_begin( HepMC::children); p_in != thePV -> particles_end(HepMC::children); ++p_in){
     if (!IsA_Z(*p_in)) hasZsister = true;
   }
@@ -100,23 +99,23 @@ bool ZPlusJetHepMCSelector::accept(const HepMC::GenParticle* p ) const
   //    p_out2 != (p)-> production_vertex() ->particles_end(HepMC::children); ++p_out2){
   //  always()<<"Daugthers: "<<GABSID(*p_out2)<<endreq;
   //}
-  
-//     // it have a quark as mother
-//     HepMC::GenVertex::particle_iterator p_out ;
-//     for(p_out = (*p_in)-> production_vertex() -> particles_begin( HepMC::children);
-//         p_out != (*p_in)-> production_vertex() ->particles_end(HepMC::children); ++p_out){
-//       if (IsA_Z(*p_out)){ 
-//         HepMC::GenVertex::particle_iterator p_out2 ;
-//         for(p_out2 = p-> production_vertex() -> particles_begin( HepMC::children);
-//             p_out2 != (p)-> production_vertex() ->particles_end(HepMC::children); ++p_out2){
-//           always()<<"Daugthers: "<<GABSID(*p_out2)<<endreq;
-          
-//         }
-        
-//         return true;
-//       }
-      
-//     }
-//   }
+
+  //     // it have a quark as mother
+  //     HepMC::GenVertex::particle_iterator p_out ;
+  //     for(p_out = (*p_in)-> production_vertex() -> particles_begin( HepMC::children);
+  //         p_out != (*p_in)-> production_vertex() ->particles_end(HepMC::children); ++p_out){
+  //       if (IsA_Z(*p_out)){
+  //         HepMC::GenVertex::particle_iterator p_out2 ;
+  //         for(p_out2 = p-> production_vertex() -> particles_begin( HepMC::children);
+  //             p_out2 != (p)-> production_vertex() ->particles_end(HepMC::children); ++p_out2){
+  //           always()<<"Daugthers: "<<GABSID(*p_out2)<<endreq;
+
+  //         }
+
+  //         return true;
+  //       }
+
+  //     }
+  //   }
   return true;
 }
