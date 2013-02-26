@@ -21,8 +21,6 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolBremInfo );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -44,10 +42,10 @@ StatusCode TupleToolBremInfo::initialize()
   if ( sc.isFailure() ) return sc;
 
   m_adder = tool<IBremAdder>("BremAdder","BremAdder" ,this );
-  
+
   if ( !m_parts.empty() )
   {
-    LHCb::IParticlePropertySvc* ppsvc = 
+    LHCb::IParticlePropertySvc* ppsvc =
       svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
     for ( std::vector<std::string>::const_iterator p = m_parts.begin();
           m_parts.end() != p; ++p )
@@ -61,7 +59,7 @@ StatusCode TupleToolBremInfo::initialize()
 }
 
 //=============================================================================
-StatusCode TupleToolBremInfo::fill(const Particle*, 
+StatusCode TupleToolBremInfo::fill(const Particle*,
                                    const Particle* P,
                                    const std::string& head,
                                    Tuples::Tuple& tuple )
@@ -71,14 +69,14 @@ StatusCode TupleToolBremInfo::fill(const Particle*,
   const std::string prefix = fullName(head);
 
   bool ok=false;
-  for ( std::vector<unsigned int>::const_iterator pid = m_pids.begin(); 
-        m_pids.end() != pid; ++pid ) 
+  for ( std::vector<unsigned int>::const_iterator pid = m_pids.begin();
+        m_pids.end() != pid; ++pid )
   {
     if (  P->particleID().abspid() == *pid ) { ok=true; break; }
   }
   if ( !ok ) return StatusCode::SUCCESS;
 
-  LHCb::CaloMomentum brem = 
+  LHCb::CaloMomentum brem =
     m_adder->bremMomentum( P, Gaudi::Utils::toString(P->particleID().pid()) );
 
   bool filltuple = true;
@@ -87,3 +85,6 @@ StatusCode TupleToolBremInfo::fill(const Particle*,
   filltuple &= tuple->column( prefix+"_BremOrigin"      , brem.referencePoint());
   return StatusCode(filltuple);
 }
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( TupleToolBremInfo )

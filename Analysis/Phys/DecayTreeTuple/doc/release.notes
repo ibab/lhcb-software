@@ -3,10 +3,14 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+! 2013-02-26 - Chris Jones
+ - Fix -pedantic compilation warnings
+
 ! 2013-02-25 Kazu Akiba
  - adding  TupleToolParticleStats. this tool only counts the number of particles
-   recosntructed, located in a particular location. by default it counts
-   the number of photons, but locations can be set to count any kind of particles.
+   reconstructed, located in a particular location. By default it counts
+   the number of photons, but locations can be set to count any kind of particle.
 
 !========================= DecayTreeTuple v4r0p1 2013-02-20 =========================
 
