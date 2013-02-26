@@ -14,8 +14,6 @@
 // 2007-03-29 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltSelectionsBase );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -31,28 +29,19 @@ HltSelectionsBase::HltSelectionsBase( const std::string& name,
 //=============================================================================
 HltSelectionsBase::~HltSelectionsBase() {} 
 
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode HltSelectionsBase::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); 
-  if ( sc.isFailure() ) return sc;
-  if (msgLevel(MSG::DEBUG)) debug() << "HltSelectionsBase initialize" << endmsg ;
-
-  return StatusCode::SUCCESS;
-}
-
 //=========================================================================
 //  fill selections map
 //=========================================================================
-const hltPairs& HltSelectionsBase::selections ( ) {
-
-  if ( m_selections.empty()){
+const hltPairs& HltSelectionsBase::selections ( ) 
+{
+  if ( m_selections.empty() )
+  {
   
     m_selections = svc<IANNSvc>("ANNDispatchSvc")->items(m_hlt2SelectionID);
     if ( m_selections.empty()) Exception("Empty selections!");
     if (msgLevel(MSG::INFO)) info() << "Selections" ;
-    for ( hltPairs::const_iterator n = m_selections.begin() ; m_selections.end() != n ; n++){
+    for ( hltPairs::const_iterator n = m_selections.begin() ; m_selections.end() != n ; ++n ) 
+    {
       if (msgLevel(MSG::INFO)) info() << ", " << n->first << " : " << n->second ;
     }
     if (msgLevel(MSG::INFO)) info() << endmsg ;
@@ -60,20 +49,12 @@ const hltPairs& HltSelectionsBase::selections ( ) {
   
   return m_selections ;
 }
+
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HltSelectionsBase::execute() {
+StatusCode HltSelectionsBase::execute() 
+{
   err() << "This is a base class. Do not invoke." << endmsg ;
   return StatusCode::FAILURE ;
 }
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltSelectionsBase::finalize() {
-
-  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize(); 
-}
-

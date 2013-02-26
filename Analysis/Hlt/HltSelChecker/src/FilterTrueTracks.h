@@ -35,17 +35,16 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
+
   MCParts finalStates( ) const;
   bool isSignal(MCParts&, const Range&) const;
   LHCb::Track::ConstVector signalTracks(MCParts&) const ;
   StatusCode save(const LHCb::Track::ConstVector&) const ;
 
 private:
+
   IMCDecayFinder* m_mcDecFinder ;        ///<  MCDecayFinder
   std::string m_mcParticlePath ;         ///< MC truth path
   std::vector< std::string >  m_tracksPath ;  ///< Tracks input paths

@@ -15,8 +15,11 @@
  *  @date   2008-06-23
  */
 class IAlgorithmCorrelations ;
-class Hlt2Statistics : public Hlt2StatisticsBase {
+class Hlt2Statistics : public Hlt2StatisticsBase
+{
+
 public: 
+
   /// Standard constructor
   Hlt2Statistics( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -24,15 +27,16 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
+
   StatusCode fillQuarks();            ///< Fill Quarks
   StatusCode fillHlt(std::string level = "Hlt2");               ///< Fil Hlt Decisions
 
-
 private:
+
   strings m_cats ; ///< categories
 
 };
+
 #endif // HLT2STATISTICS_H

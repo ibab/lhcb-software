@@ -4,6 +4,9 @@
 ! Purpose     : Checking and debugging of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2013-02-26 - Chris Jones
+ - Fix compilation warnings with -pedantic
+
 ! 2013-02-26 - Rob Lambert
  - Migrate to getIfExists, task #40118
 
@@ -25,9 +28,9 @@
 
 !========================== HltSelChecker v12r1   2011-06-20 ===================
 ! 2011-06-15 - Patrick Koppenburg
-	- ReadHltReport : Fix bug https://savannah.cern.ch/bugs/index.php?83269
-    . Now just makes statistics. Print decisions per event in PrintDecisions is set
-      to true, and objects if PrintParticles is set to true.
+- ReadHltReport : Fix bug https://savannah.cern.ch/bugs/index.php?83269
+ . Now just makes statistics. Print decisions per event in PrintDecisions is set
+   to true, and objects if PrintParticles is set to true.
 
 !========================== HltSelChecker v12r0   2011-01-20 ===================
 ! 2011-01-20 - Patrick Koppenburg

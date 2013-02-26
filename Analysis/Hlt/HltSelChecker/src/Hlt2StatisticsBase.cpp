@@ -15,10 +15,6 @@
 // 2008-06-23 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( Hlt2StatisticsBase );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -37,7 +33,8 @@ Hlt2StatisticsBase::~Hlt2StatisticsBase() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode Hlt2StatisticsBase::initialize() {
+StatusCode Hlt2StatisticsBase::initialize()
+{
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -50,14 +47,15 @@ StatusCode Hlt2StatisticsBase::initialize() {
 //=========================================================================
 //  get selections
 //=========================================================================
-strings Hlt2StatisticsBase::getSelections( ) const {
+strings Hlt2StatisticsBase::getSelections( ) const 
+{
   return svc<IANNSvc>("HltANNSvc")->keys(m_hlt2SelectionID);
 }
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode Hlt2StatisticsBase::finalize() {
-
+StatusCode Hlt2StatisticsBase::finalize()
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   StatusCode sc = m_algoCorr->printTable() ;
   if (!sc) return sc;
@@ -71,8 +69,8 @@ StatusCode Hlt2StatisticsBase::finalize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode Hlt2StatisticsBase::execute() {
+StatusCode Hlt2StatisticsBase::execute()
+{
   err() << "Hlt2StatisticsBase:: This is a base class. Do not invoke." << endmsg ;
   return StatusCode::FAILURE ;
 }
-

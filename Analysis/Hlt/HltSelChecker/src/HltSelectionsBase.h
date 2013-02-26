@@ -29,11 +29,10 @@ public:
 
   virtual ~HltSelectionsBase( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
+
   const hltPairs& selections();    ///< fill map of selections
 
   bool m_isTrigger;

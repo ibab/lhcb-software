@@ -29,7 +29,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ReadHltReport );
+DECLARE_ALGORITHM_FACTORY( ReadHltReport )
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================

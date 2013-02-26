@@ -18,10 +18,6 @@
 // 2008-06-23 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( Hlt2Statistics );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -31,6 +27,7 @@ Hlt2Statistics::Hlt2Statistics( const std::string& name,
 {
 
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -39,7 +36,8 @@ Hlt2Statistics::~Hlt2Statistics() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode Hlt2Statistics::initialize() {
+StatusCode Hlt2Statistics::initialize()
+{
   StatusCode sc = Hlt2StatisticsBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by Hlt2StatisticsBase
 
@@ -161,14 +159,8 @@ StatusCode Hlt2Statistics::fillQuarks( ) {
   }
   return StatusCode::SUCCESS ;
 }
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode Hlt2Statistics::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return Hlt2StatisticsBase::finalize();  // must be called after all other actions
-}
 
 //=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( Hlt2Statistics )

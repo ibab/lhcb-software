@@ -38,11 +38,9 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
+
   bool m_printTree ;               ///< print tree
   bool m_fillAll ;                  ///< fill all candidates, not only best
   IBackgroundCategory* m_bkg     ; //< Background category tool

@@ -1,8 +1,8 @@
 // $Id: FilterTrueTracks.cpp,v 1.10 2010-06-01 09:44:18 pkoppenb Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // LHCb
 #include "MCInterfaces/IMCDecayFinder.h"
@@ -18,10 +18,6 @@
 // 2007-08-17 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( FilterTrueTracks );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -29,9 +25,9 @@ FilterTrueTracks::FilterTrueTracks( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_mcDecFinder(0)
-    , m_ppSvc(0)
+  , m_ppSvc(0)
 {
-  
+
   declareProperty( "TracksPath", m_tracksPath );
   declareProperty( "OutputPath", m_outputPath = "" );
   declareProperty( "MCParticlePath", m_mcParticlePath = LHCb::MCParticleLocation::Default);
@@ -41,12 +37,13 @@ FilterTrueTracks::FilterTrueTracks( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-FilterTrueTracks::~FilterTrueTracks() {} 
+FilterTrueTracks::~FilterTrueTracks() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode FilterTrueTracks::initialize() {
+StatusCode FilterTrueTracks::initialize()
+{
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialize" << endmsg;
@@ -59,15 +56,15 @@ StatusCode FilterTrueTracks::initialize() {
   for ( std::vector<std::string>::const_iterator t = m_tracksPath.begin() ;
         t!=m_tracksPath.end() ; ++t) info() << *t << " " ;
   info() << endmsg ;
-  
+
   m_mcDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
 
   if ( "" == m_outputPath ){
     warning() << "Nothing will be written out" << endmsg ;
-  }  
+  }
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 //=============================================================================
 // Main execution
@@ -79,7 +76,7 @@ StatusCode FilterTrueTracks::execute() {
   setFilterPassed(false);
   MCParts mcparts = finalStates();
 
-  if ( msgLevel (MSG::DEBUG)) debug() << "Found " << mcparts.size() 
+  if ( msgLevel (MSG::DEBUG)) debug() << "Found " << mcparts.size()
                                       << " true daughters" << endmsg ;
   counter("Signal particles") += mcparts.size();
 
@@ -106,12 +103,12 @@ StatusCode FilterTrueTracks::execute() {
 // Get signal tracks
 //=============================================================================
 LHCb::Track::ConstVector FilterTrueTracks::signalTracks(MCParts& mcparts) const {
-  
+
   LHCb::Track::ConstVector tracks ;
 
   for ( std::vector<std::string>::const_iterator p = m_tracksPath.begin() ;
         p!=m_tracksPath.end() ; ++p) {
-    
+
     LHCb::Track::Container* inTracks = getIfExists< LHCb::Track::Container>(*p);
     if ( NULL==inTracks)
     {
@@ -119,7 +116,7 @@ LHCb::Track::ConstVector FilterTrueTracks::signalTracks(MCParts& mcparts) const 
     } 
     else 
     {
-      if (msgLevel(MSG::DEBUG)) debug() << "Container " << *p << " contains " 
+      if (msgLevel(MSG::DEBUG)) debug() << "Container " << *p << " contains "
                                         << inTracks->size() << " Tracks" << endmsg ;
       Asct assoc(evtSvc(),*p);
       const Table* table = assoc.direct();
@@ -127,36 +124,36 @@ LHCb::Track::ConstVector FilterTrueTracks::signalTracks(MCParts& mcparts) const 
       {
         Warning("NO association Table for "+*p,StatusCode::FAILURE,1) ;
       }
-      
+
       counter("All Tracks") += inTracks->size();
       for ( LHCb::Track::Container::const_iterator t = inTracks->begin() ;
             t != inTracks->end() ; ++t){
         const Range range = table->relations( *t) ;
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Track " << (*t)->key() 
-                                              << " is associated to " 
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Track " << (*t)->key()
+                                              << " is associated to "
                                               << range.size() << " MCP" << endmsg ;
         if ( isSignal(mcparts, range) ) {
-          if (msgLevel(MSG::DEBUG)) debug() << "Track " << (*t)->key() 
+          if (msgLevel(MSG::DEBUG)) debug() << "Track " << (*t)->key()
                                             << " is associated to truth " << endmsg ;
           tracks.push_back(*t);
-        }    
+        }
       }
-    } 
-  } 
+    }
+  }
   return tracks ;
 }
 //=============================================================================
 // save tracks
 //=============================================================================
 StatusCode FilterTrueTracks::save(const LHCb::Track::ConstVector& tracks) const {
-  
+
   LHCb::Track::Container* newTracks = new LHCb::Track::Container() ;
   put( newTracks, m_outputPath);
-  
+
   for ( LHCb::Track::ConstVector::const_iterator t = tracks.begin() ; t!= tracks.end() ; ++t){
-    
+
     LHCb::Track* newT = (*t)->clone();
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Cloned Track " << (*t)->key() 
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Cloned Track " << (*t)->key()
                                           << endmsg ;
     newTracks->insert(newT);
   }
@@ -170,14 +167,14 @@ MCParts FilterTrueTracks::finalStates ( ) const {
   const LHCb::MCParticle::Container* kmcparts = get<LHCb::MCParticle::Container>
     ( m_mcParticlePath );
   LHCb::MCParticle::ConstVector MCHead;
-  const LHCb::MCParticle* imc = NULL; 
+  const LHCb::MCParticle* imc = NULL;
   while ( m_mcDecFinder->findDecay(*kmcparts, imc ) ){
     if (msgLevel(MSG::DEBUG)) debug() << "Found decay head " << imc->key() << " "
                                       << imc->particleID().pid() << endmsg ;
     MCHead.push_back(imc);
   }
   if (MCHead.empty()) Warning("Expected decay not found in this event") ;
-  
+
   LHCb::MCParticle::ConstVector  decayMembers;
   LHCb::MCParticle::ConstVector::const_iterator ihead;
   for( ihead = MCHead.begin(); ihead != MCHead.end(); ++ihead){
@@ -201,23 +198,16 @@ bool FilterTrueTracks::isSignal(MCParts& mc, const Range& range) const {
   for ( MCParts::iterator m = mc.begin() ; m != mc.end() ; ++m){
     for ( iter rel = range.begin() ; rel != range.end() ; ++rel ){
       if ( m->first == rel->to() ){
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Track is associated to " 
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Track is associated to "
                                               << m->first->particleID().pid() << endmsg ;
         m->second = true ; // found you
         return (!m_filterOut) ; // OK
       }
     }
   }
-  
+
   return m_filterOut ;
 }
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode FilterTrueTracks::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( FilterTrueTracks )

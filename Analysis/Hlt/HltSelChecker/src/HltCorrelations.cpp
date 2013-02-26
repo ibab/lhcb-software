@@ -11,7 +11,6 @@
 #include "Kernel/ReadRoutingBits.h"
 #include "GaudiKernel/xtoa.h"
 
-
 // local
 #include "HltCorrelations.h"
 
@@ -22,8 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltCorrelations );
-
+DECLARE_ALGORITHM_FACTORY( HltCorrelations )
 
 //=============================================================================
 // Standard constructor, initializes variables
