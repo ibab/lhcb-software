@@ -5,6 +5,9 @@
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
 
+! 2013-02-26 - Chris Jones
+ - Fix -pedantic compilation warnings
+
 !========================= VertexFitCheck v1r8p2 2013-02-20 =========================
 
 ! 2012-12-08 - Chris Jones

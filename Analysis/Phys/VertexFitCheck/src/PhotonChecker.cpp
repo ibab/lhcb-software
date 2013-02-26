@@ -19,10 +19,6 @@ using namespace Gaudi::Units;
 // 2006-05-25 : Yuehong Xie
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PhotonChecker );
-// ===========================================================================
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -150,11 +146,13 @@ StatusCode PhotonChecker::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode PhotonChecker::finalize() {
+StatusCode PhotonChecker::finalize()
+{
 
   debug() << "==> Finalize" << endmsg;
 
   delete m_pLinker;
+  m_pLinker = NULL;
 
   return DaVinciTupleAlgorithm::finalize();
 }
@@ -209,3 +207,8 @@ StatusCode PhotonChecker::getPhotonParameter(const LHCb::Particle& photon,
 
   return sc;
 }
+
+// ===========================================================================
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( PhotonChecker )
+// ===========================================================================

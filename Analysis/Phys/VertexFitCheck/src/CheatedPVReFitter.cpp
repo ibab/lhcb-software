@@ -1,8 +1,8 @@
 // $Id: CheatedPVReFitter.cpp,v 1.7 2009-10-09 10:15:53 xieyu Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "Event/VertexBase.h"
 #include "Event/RecVertex.h"
@@ -27,10 +27,6 @@ using namespace Gaudi::Units;
 // 2006-06-08 : Yuehong Xie
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-
-DECLARE_TOOL_FACTORY(CheatedPVReFitter);
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -44,9 +40,9 @@ CheatedPVReFitter::CheatedPVReFitter( const std::string& type,
   declareProperty( "maxIter", m_maxIter = 10);
   declareProperty( "maxDeltaChi2", m_maxDeltaChi2 = 0.001);
   declareProperty( "maxDeltaZ", m_maxDeltaZ = 1.0 *  mm  );
-  declareProperty( "fullExtrapolatorName", 
+  declareProperty( "fullExtrapolatorName",
                    m_fullExtrapolatorName = "TrackMasterExtrapolator");
-  declareProperty( "veloExtrapolatorName", 
+  declareProperty( "veloExtrapolatorName",
                    m_veloExtrapolatorName = "TrackLinearExtrapolator");
 
 }
@@ -54,12 +50,13 @@ CheatedPVReFitter::CheatedPVReFitter( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-CheatedPVReFitter::~CheatedPVReFitter() {};
+CheatedPVReFitter::~CheatedPVReFitter() {}
 
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode CheatedPVReFitter::initialize(){
+StatusCode CheatedPVReFitter::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
 
@@ -67,7 +64,7 @@ StatusCode CheatedPVReFitter::initialize(){
   m_veloExtrapolator = tool<ITrackExtrapolator>( m_veloExtrapolatorName );
 
   return sc;
-};
+}
 
 //=============================================================================
 // refit PV
@@ -82,12 +79,12 @@ StatusCode CheatedPVReFitter::reFit(LHCb::VertexBase* PV) const {
 
   if(!(PV->isPrimary())) {
     debug() <<"CheatedPVReFitter is used to reFit a  non-PV"<< endreq;
-    return StatusCode::FAILURE;    
+    return StatusCode::FAILURE;
   }
 
   RecVertex* primvtx=dynamic_cast<RecVertex*>(PV);
   if(!primvtx) return StatusCode::FAILURE;
- 
+
   std::vector<LHCb::Track*> tracks;
 
   SmartRefVector<LHCb::Track> pvtracks = primvtx->tracks();
@@ -118,11 +115,11 @@ StatusCode CheatedPVReFitter::reFit(LHCb::VertexBase* PV) const {
 
   return sc;
 }
- 
+
 //=============================================================================
 // remove track used for a LHCb::Particle and refit PV
 //=============================================================================
-StatusCode CheatedPVReFitter::remove(const LHCb::Particle* /*part*/,  
+StatusCode CheatedPVReFitter::remove(const LHCb::Particle* /*part*/,
                                      LHCb::VertexBase* /*PV*/) const {
 
   warning() <<"remove method not implemented! "<< endreq;
@@ -135,8 +132,8 @@ StatusCode CheatedPVReFitter::remove(const LHCb::Particle* /*part*/,
 //=============================================================================
 // fit PV from a vector of tracks
 //=============================================================================
-StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV, 
-                             std::vector<LHCb::Track*> & tracks) const {
+StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV,
+                                    std::vector<LHCb::Track*> & tracks) const {
   StatusCode sc = StatusCode::SUCCESS;
 
   debug() <<"Now entering fitPV!"<<endreq;
@@ -147,8 +144,8 @@ StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV,
     debug() << "number of track left for the PV "<< tracks.size() <<endreq;
     return StatusCode::FAILURE;
   }
-  
-  LHCb::Track* tr1 =  tracks.back(); 
+
+  LHCb::Track* tr1 =  tracks.back();
   tracks.pop_back();
   LHCb::Track* tr2 =  tracks.back();
   tracks.pop_back();
@@ -164,7 +161,7 @@ StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV,
     return StatusCode::FAILURE;
   }
 
-  for( std::vector<LHCb::Track*>::iterator itrack = tracks.begin(); tracks.end() != itrack; itrack++ ) 
+  for( std::vector<LHCb::Track*>::iterator itrack = tracks.begin(); tracks.end() != itrack; itrack++ )
   {
     LHCb::Track* tr = *itrack;
     sc = addTr(PV, tr);
@@ -181,7 +178,7 @@ StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV,
 //=============================================================================
 // get final tracks of a particle
 //=============================================================================
-void CheatedPVReFitter::getFinalTracks(LHCb::Particle* part, 
+void CheatedPVReFitter::getFinalTracks(LHCb::Particle* part,
                                        LHCb::Track::ConstVector& tracks) const
 {
   const LHCb::ProtoParticle*   proto  = part->proto() ;
@@ -237,7 +234,7 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
 
   double  sumSquaredSlopes = tx1*tx1 + ty1*ty1+ tx2*tx2 + ty2*ty2;
   double  sumCrossedProduct = tx1*(x1-tx1*z1) + ty1*(y1-ty1*z1) +
-                              tx2*(x2-tx2*z2) + ty2*(y2-ty2*z2);
+    tx2*(x2-tx2*z2) + ty2*(y2-ty2*z2);
 
   double sumX=x1-tx1*z1 + x2-tx2*z2;
   double sumY=y1-ty1*z1 + y2-ty2*z2;
@@ -250,7 +247,7 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
   double zEstimate = 0;
   if (det != 0) {
     zEstimate = (((sumX*sumSlopeX + sumY*sumSlopeY)/2.)
-               - sumCrossedProduct) /det;
+                 - sumCrossedProduct) /det;
   }  else {
     err() << "Unable to make z estimate " << endreq;
     if(z1<z2) zEstimate = z1-.001;
@@ -336,7 +333,7 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
       //f=(x2-x1)*(py2*pz1-py1*pz2)-(y2-y1)*(px2*pz1-px1*pz2)
       ROOT::Math::SVector<double, 1> f;
       f(0)=(vfit(5)-vfit(0))*(vfit(8)*vfit(4)-vfit(3)*vfit(9))-
-           (vfit(6)-vfit(1))*(vfit(7)*vfit(4)-vfit(2)*vfit(9));
+        (vfit(6)-vfit(1))*(vfit(7)*vfit(4)-vfit(2)*vfit(9));
       verbose() << "constraint values   " << f << endreq;
       //D is the derivative matrix
       ROOT::Math::SMatrix<double, 1, 10> D;
@@ -392,53 +389,53 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
     ROOT::Math::SMatrix<double, 3, 10> JA;
     JA(0,0)=1.+vfit(2)*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9));
     JA(0,2)=-(vfit(5)-vfit(0))*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-            -vfit(2)*(vfit(5)-vfit(0))*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-             /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(9);
+      -vfit(2)*(vfit(5)-vfit(0))*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
+      /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(9);
     JA(0,4)=vfit(2)*(vfit(5)-vfit(0))*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-            /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(7);
+      /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(7);
     JA(0,5)=-vfit(2)*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9));
     JA(0,7)=vfit(2)*(vfit(5)-vfit(0))*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-            /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(4);
+      /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(4);
     JA(0,9)=-vfit(2)*(vfit(5)-vfit(0))/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-             -vfit(2)*(vfit(5)-vfit(0))*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-              /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(2);
+      -vfit(2)*(vfit(5)-vfit(0))*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
+      /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(2);
 
     JA(1,1)=1.+vfit(3)*vfit(9)/(vfit(8)*vfit(4)-vfit(3)*vfit(9));
     JA(1,3)=-(vfit(6)-vfit(1))*vfit(9)/(vfit(8)*vfit(4)-vfit(3)*vfit(9))
-            -vfit(3)*(vfit(6)-vfit(1))*vfit(9)/(vfit(8)*vfit(4)-vfit(3)*vfit(9))
-             /(vfit(8)*vfit(4)-vfit(3)*vfit(9))*vfit(9);
+      -vfit(3)*(vfit(6)-vfit(1))*vfit(9)/(vfit(8)*vfit(4)-vfit(3)*vfit(9))
+      /(vfit(8)*vfit(4)-vfit(3)*vfit(9))*vfit(9);
     JA(1,4)=vfit(3)*(vfit(6)-vfit(1))*vfit(9)/(vfit(8)*vfit(4)-vfit(3)*vfit(9))
-            /(vfit(8)*vfit(4)-vfit(3)*vfit(9))*vfit(8);
+      /(vfit(8)*vfit(4)-vfit(3)*vfit(9))*vfit(8);
     JA(1,6)=-vfit(3)*vfit(9)/(vfit(8)*vfit(4)-vfit(3)*vfit(9));
     JA(1,8)=vfit(3)*(vfit(6)-vfit(1))*vfit(9)/(vfit(8)*vfit(4)-vfit(3)*vfit(9))
-            /(vfit(8)*vfit(4)-vfit(3)*vfit(9))*vfit(4);
+      /(vfit(8)*vfit(4)-vfit(3)*vfit(9))*vfit(4);
     JA(1,9)=-vfit(3)*(vfit(6)-vfit(1))/(vfit(8)*vfit(4)-vfit(3)*vfit(9))
-             -vfit(3)*(vfit(6)-vfit(1))*vfit(9)/(vfit(8)*vfit(4)-vfit(3)*vfit(9))
-              /(vfit(8)*vfit(4)-vfit(3)*vfit(9))*vfit(3);
+      -vfit(3)*(vfit(6)-vfit(1))*vfit(9)/(vfit(8)*vfit(4)-vfit(3)*vfit(9))
+      /(vfit(8)*vfit(4)-vfit(3)*vfit(9))*vfit(3);
 
     JA(2,0)=vfit(4)*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9));
     JA(2,2)=-(vfit(5)-vfit(0))*vfit(4)*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-            /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(9);
+      /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(9);
     JA(2,4)=-(vfit(5)-vfit(0))*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-           +(vfit(5)-vfit(0))*vfit(4)*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-            /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(7);
+      +(vfit(5)-vfit(0))*vfit(4)*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
+      /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(7);
     JA(2,5)=-vfit(4)*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9));
     JA(2,7)=(vfit(5)-vfit(0))*vfit(4)*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-             /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(4);
+      /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(4);
     JA(2,9)=-(vfit(5)-vfit(0))*vfit(4)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-            -(vfit(5)-vfit(0))*vfit(4)*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
-             /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(2);    
+      -(vfit(5)-vfit(0))*vfit(4)*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9))
+      /(vfit(7)*vfit(4)-vfit(2)*vfit(9))*vfit(2);
 
     Cov3=ROOT::Math::Similarity<double,3,10>(JA, cfit);
 
-    zfit = V3[2]; 
-    
+    zfit = V3[2];
+
   }
-  
+
   Gaudi::XYZPoint position(V3[0],V3[1],V3[2]);
   PV->setPosition(position);
   PV->setCovMatrix(Cov3);
-  
+
   double chi2new = chi2Fit;
   PV->setChi2(chi2new);
 
@@ -474,8 +471,8 @@ StatusCode  CheatedPVReFitter::addTr(LHCb::RecVertex* PV,
   if(isVelo || isVeloB) sc = m_veloExtrapolator->propagate( newstate, z2 );
   else  sc = m_fullExtrapolator->propagate( newstate, z2 );
   if( sc.isFailure ()) {
-      debug() << "failed to propagate tarck state in addTr!" << endreq;
-      return sc;
+    debug() << "failed to propagate tarck state in addTr!" << endreq;
+    return sc;
   }
 
   ROOT::Math::SVector<double, 8> X;
@@ -527,7 +524,7 @@ StatusCode  CheatedPVReFitter::addTr(LHCb::RecVertex* PV,
 
     //f(0)=(xtr-xpv)*pztr-(z2-zpv)*pxtr
     //f(1)=(ytr-ypv)*pztr-(z2-zpv)*pytr
-                                                                                                        
+
     ROOT::Math::SVector<double, 2> f;
     f(0)= (vfit[3]-vfit[0])*vfit[7]- (z2-vfit[2])*vfit[5];
     f(1)= (vfit[4]-vfit[1])*vfit[7]- (z2-vfit[2])*vfit[6];
@@ -553,30 +550,30 @@ StatusCode  CheatedPVReFitter::addTr(LHCb::RecVertex* PV,
     D(1,7) = (vfit[4]-vfit[1]);
 
     ROOT::Math::SVector<double, 2> d = f - D*vfit;
-                                                                                                        
+
     Gaudi::SymMatrix2x2 VD=ROOT::Math::Similarity<double,2,8>(D, Cx);
     if(!VD.Invert()) {
       debug() << "could not invert matrix VD in addTr! " <<endreq;
       return StatusCode::FAILURE;
     }
-                                                                                                        
+
     ROOT::Math::SVector<double, 2> alpha=D*X+d;
-                                                                                                        
+
     ROOT::Math::SVector<double, 2> lambda=VD*alpha;
-                                                                                                        
+
     ROOT::Math::SMatrix<double, 8,2> DT = ROOT::Math::Transpose(D);
-                                                                                                        
+
     vfit=X-Cx*DT*lambda;
 
     SymMatrix8x8 delataC1=ROOT::Math::Similarity<double,8,2>(DT, VD);
-                                                                                                        
+
     SymMatrix8x8 delataC2=ROOT::Math::Similarity<double,8,8>(Cx, delataC1);
-                                                                                                        
+
     cfit=Cx -delataC2;
-                                                                                                        
+
     chi2Fit=ROOT::Math::Dot(alpha,lambda);
     //chi2Fit+= 2*ROOT::Math::Dot(lambda,f);
-                                                                                                        
+
     if(fabs(chi2Fit-chi2PreviousFit)<m_maxDeltaChi2) {
       converged=true;
     } else {
@@ -622,8 +619,8 @@ StatusCode CheatedPVReFitter::kalman_remove(LHCb::RecVertex* PV, LHCb::Track* tr
   if(isVelo || isVeloB) sc = m_veloExtrapolator->propagate( newstate, z2 );
   else  sc = m_fullExtrapolator->propagate( newstate, z2 );
   if( sc.isFailure ()) {
-      debug() << "failed to propagate tarck state in addTr!" << endreq;
-      return sc;
+    debug() << "failed to propagate tarck state in addTr!" << endreq;
+    return sc;
   }
 
   ROOT::Math::SVector<double, 8> X;
@@ -699,7 +696,7 @@ int CheatedPVReFitter::countMatchedPVTrks(const RecVertex* pv,
   if(!mcPV) return count;
   if(mcPV->type()!=LHCb::MCVertex::ppCollision) return count;
   if(!pv) return count;
-//  if(!(pv->isPrimary()))return count;
+  //  if(!(pv->isPrimary()))return count;
 
   if( mcPV->mother() != NULL ) return count;
 
@@ -726,3 +723,5 @@ int CheatedPVReFitter::countMatchedPVTrks(const RecVertex* pv,
 
 }
 
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY(CheatedPVReFitter)
