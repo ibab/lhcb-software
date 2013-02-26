@@ -52,25 +52,6 @@ public:
 
 private :
 
-  // HCAL constants
-  static const double HCAL_CellSize_Inner = 131.3;
-  static const double HCAL_CellSize_Outer = 262.6;
-  static const double HCAL_xMax_Inner = 2101;
-  static const double HCAL_yMax_Inner = 1838;
-  static const double HCAL_xMax_Outer = 4202;
-  static const double HCAL_yMax_Outer = 3414;
-
-  // ECAL constants
-  static const double ECAL_CellSize_Inner = 40.4;
-  static const double ECAL_CellSize_Middle = 60.6;
-  static const double ECAL_CellSize_Outer = 121.2;
-  static const double ECAL_xMax_Inner = 970;
-  static const double ECAL_yMax_Inner = 725;
-  static const double ECAL_xMax_Middle = 1940;
-  static const double ECAL_yMax_Middle = 1210;
-  static const double ECAL_xMax_Outer = 3880;
-  static const double ECAL_yMax_Outer = 3150;
-
   int isinside_HCAL(double x,
                     double y);
   int isinside_ECAL(double x,
@@ -80,4 +61,5 @@ private :
   std::string m_calo;
 
 };
+
 #endif // TUPLETOOLL0CALO_H

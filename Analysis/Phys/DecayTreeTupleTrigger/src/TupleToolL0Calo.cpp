@@ -24,6 +24,29 @@
 using namespace Gaudi;
 using namespace LHCb;
 
+// parameters
+namespace
+{
+  // HCAL constants
+  const double HCAL_CellSize_Inner = 131.3;
+  const double HCAL_CellSize_Outer = 262.6;
+  const double HCAL_xMax_Inner = 2101;
+  const double HCAL_yMax_Inner = 1838;
+  const double HCAL_xMax_Outer = 4202;
+  const double HCAL_yMax_Outer = 3414;
+
+  // ECAL constants
+  const double ECAL_CellSize_Inner = 40.4;
+  const double ECAL_CellSize_Middle = 60.6;
+  const double ECAL_CellSize_Outer = 121.2;
+  const double ECAL_xMax_Inner = 970;
+  const double ECAL_yMax_Inner = 725;
+  const double ECAL_xMax_Middle = 1940;
+  const double ECAL_yMax_Middle = 1210;
+  const double ECAL_xMax_Outer = 3880;
+  const double ECAL_yMax_Outer = 3150;
+}
+
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( TupleToolL0Calo )
 
@@ -103,7 +126,7 @@ StatusCode TupleToolL0Calo::fill( const LHCb::Particle* /* mother */,
     test &= tuple->column( prefix+"_L0Calo_ECAL_yProjection", yProjection );
     test &= tuple->column( prefix+"_L0Calo_ECAL_region", isinside_ECAL( xProjection , yProjection ) );
   }
-  
+
 
   if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endreq;
   return StatusCode(test);
@@ -111,8 +134,8 @@ StatusCode TupleToolL0Calo::fill( const LHCb::Particle* /* mother */,
 }
 
 
-int TupleToolL0Calo::isinside_HCAL(double x, 
-                                   double y) 
+int TupleToolL0Calo::isinside_HCAL(double x,
+                                   double y)
 {
   bool inside, inner, outer;
   inside = true;
@@ -130,10 +153,10 @@ int TupleToolL0Calo::isinside_HCAL(double x,
     }
     else
       outer = true;
-  }      
+  }
   else
     inside = false;
-  
+
   if (!inside)
     return -1;
   else if (inner)
@@ -145,8 +168,8 @@ int TupleToolL0Calo::isinside_HCAL(double x,
 
 }
 
-int TupleToolL0Calo::isinside_ECAL(double x, 
-                                   double y) 
+int TupleToolL0Calo::isinside_ECAL(double x,
+                                   double y)
 {
   bool inside, inner, middle, outer;
   inside = true;
@@ -156,7 +179,7 @@ int TupleToolL0Calo::isinside_ECAL(double x,
 
   if (TMath::Abs(x) < ECAL_xMax_Outer && TMath::Abs(y) < ECAL_yMax_Outer) { // projection inside calo
     if (TMath::Abs(x) < ECAL_xMax_Middle && TMath::Abs(y) < ECAL_yMax_Middle) { // projection inside middle calo (else is outer calo)
-      if (TMath::Abs(x) < ECAL_xMax_Inner && TMath::Abs(y) < ECAL_yMax_Inner) { // projection inside inner calo 
+      if (TMath::Abs(x) < ECAL_xMax_Inner && TMath::Abs(y) < ECAL_yMax_Inner) { // projection inside inner calo
         if (TMath::Abs(x) > 2*ECAL_CellSize_Inner) // projections outside the beampipe (in x)
           inner = true;
         else if (TMath::Abs(y) > 2*ECAL_CellSize_Inner) // projections outside the beampipe (not in x, so in y)
@@ -166,13 +189,13 @@ int TupleToolL0Calo::isinside_ECAL(double x,
       }
       else
         middle = true;
-    }      
+    }
     else
       outer = true;
   }
   else
     inside = false;
-  
+
   if (!inside)
     return -1;
   else if (inner)
