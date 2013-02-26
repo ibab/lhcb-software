@@ -489,17 +489,14 @@ std::vector<const LHCb::HltObjectSummary*> TriggerSelectionTisTosInHlt::hltSelec
                       unsigned int tpsRequirement)
 {
   std::vector<const LHCb::HltObjectSummary*> matchedObjectSummaries;
-
+  
   getHltSummary();
-  if( !m_objectSummaries )
+  
+  if( NULL==m_objectSummaries ) m_objectSummaries =  getOrCreate<HltObjectSummary::Container,HltObjectSummary::Container>("/Event/Hlt/TriggerSelectionTisTosInHltStore");
+  
+  if( NULL==m_objectSummaries )
   {
-    m_objectSummaries =  getIfExists<HltObjectSummary::Container>("/Event/Hlt/TriggerSelectionTisTosInHltStore");
-    if( NULL==m_objectSummaries)
-    {
-      
-      m_objectSummaries = new HltObjectSummary::Container();
-      put( m_objectSummaries,"/Event/Hlt/TriggerSelectionTisTosInHltStore");
-    }      
+    error() << " Unable to create summary container object " << endmsg;
   }  
 
 

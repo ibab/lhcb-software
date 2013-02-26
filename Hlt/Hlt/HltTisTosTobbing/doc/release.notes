@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-02-26 - Rob Lambert
+ - Move to getOrCreate for object summaries
+
+! 2013-02-26 - Rob Lambert
  - Migrate to getIfExists, task #40118
 
 !========================== HltTisTosTobbing v1r1 2010-10-16 ===================
