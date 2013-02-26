@@ -295,9 +295,13 @@ class HltConf(LHCbConfigurableUser):
         HltVertexReportsMaker().VertexSelections = vertices
         #Can't do this any longer, need replacing with a smart way to get the vertex locations
         #HltVertexReportsMaker().Context = "HLT"
-        # TODO: make this smarter!
-        # Look at the other ways done in this module!!
-        HltVertexReportsMaker().PVLocation="Hlt/Vertex/PV3D"
+        from HltTracking.HltVertexNames import Hlt3DPrimaryVerticesName as PV3DSelection
+        from HltTracking.HltVertexNames import ( _vertexLocation,
+                                                 HltSharedVerticesPrefix,
+                                                 HltGlobalVertexLocation )                  
+        from HltTracking.HltPVs import ProtoPV3DSelection
+        pv3d  = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, PV3DSelection )
+        HltVertexReportsMaker().PVLocation=pv3d
         ## do not write out the candidates for the vertices we store 
         from Configurables import HltSelReportsMaker
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )

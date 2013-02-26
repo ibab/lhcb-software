@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2013-02-26 - Rob Lambert
+ - now set location in a smarter way task #40113
+
 ! 2013-02-21 - Rob Lambert
  - Retire context for HltVertexReportsMaker
 
