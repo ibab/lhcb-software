@@ -31,7 +31,7 @@
 // Adapt to work with Fiber Tracker and VP or VL
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PrFitFwdParams );
+DECLARE_ALGORITHM_FACTORY( PrFitFwdParams )
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -85,7 +85,7 @@ PrFitFwdParams::PrFitFwdParams( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrFitFwdParams::~PrFitFwdParams() {};
+PrFitFwdParams::~PrFitFwdParams() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -113,7 +113,7 @@ StatusCode PrFitFwdParams::initialize() {
 
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -541,7 +541,7 @@ StatusCode PrFitFwdParams::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -596,7 +596,6 @@ StatusCode PrFitFwdParams::finalize() {
   }
 
   return GaudiTupleAlg::finalize();
-};
-
+}
 
 //=============================================================================

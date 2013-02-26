@@ -21,7 +21,7 @@
 // Adapt to work with Fiber Tracker and UT
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PrFitKsParams );
+DECLARE_ALGORITHM_FACTORY( PrFitKsParams )
 
 
 //=============================================================================
@@ -43,7 +43,7 @@ PrFitKsParams::PrFitKsParams( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrFitKsParams::~PrFitKsParams() {}; 
+PrFitKsParams::~PrFitKsParams() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -261,7 +261,7 @@ StatusCode PrFitKsParams::execute() {
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================
