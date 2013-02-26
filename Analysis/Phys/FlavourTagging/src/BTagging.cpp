@@ -31,11 +31,11 @@ BTagging::~BTagging() {}
 //=======================================================================
 // Main executio
 //=======================================================================
-StatusCode BTagging::execute() {
-
-  std::vector<std::string>::const_iterator iLoc = inputLocations().begin();
-  std::vector<std::string>::const_iterator endLoc = inputLocations().end();
-  for ( ; iLoc != endLoc; ++iLoc) {
+StatusCode BTagging::execute() 
+{
+  for ( std::vector<std::string>::const_iterator iLoc = inputLocations().begin();
+        iLoc != inputLocations().end(); ++iLoc ) 
+  {
     performTagging(*iLoc);
   }
   setFilterPassed( true );
@@ -51,7 +51,8 @@ void BTagging::performTagging(const std::string & location)
   }
 
   const Particle::Range parts = get<Particle::Range>( location+"/Particles" );
-  if( parts.empty() ) {
+  if( parts.empty() ) 
+  {
     Warning("No particles found at "+ location+"/Particles",
             StatusCode::SUCCESS,10).ignore();
     return;
