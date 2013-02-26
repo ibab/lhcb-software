@@ -18,16 +18,15 @@
 
 #include "TupleToolJetTag.h"
 
-DECLARE_TOOL_FACTORY(TupleToolJetTag);
-
+DECLARE_TOOL_FACTORY(TupleToolJetTag)
 
 //=============================================================================
 // Constructor
-TupleToolJetTag::TupleToolJetTag(const std::string& type,
-				                        const std::string& name,
-				                        const IInterface* parent)
-  : TupleToolJetsBase(type, name , parent)
-  , m_TagTool(0)
+  TupleToolJetTag::TupleToolJetTag(const std::string& type,
+                                   const std::string& name,
+                                   const IInterface* parent)
+    : TupleToolJetsBase(type, name , parent)
+    , m_TagTool(0)
 {
   declareInterface<IParticleTupleTool>(this);
 
@@ -63,33 +62,33 @@ StatusCode TupleToolJetTag::initialize()
 //=============================================================================
 // Execute
 StatusCode TupleToolJetTag::fill(const LHCb::Particle*,
-				 const LHCb::Particle* jet,
-				 const std::string& head,
-				 Tuples::Tuple& tuple)
+                                 const LHCb::Particle* jet,
+                                 const std::string& head,
+                                 Tuples::Tuple& tuple)
 {
   const std::string prefix = fullName(head);
   bool result = true;
   if(jet)
-    {
-      // Run jet tag tool
-      std::map<std::string,double> property;
-      
-      m_TagTool->calculateJetProperty(jet, property);
-      
-      if(property.empty())
-	if(msgLevel(MSG::ERROR)) 	debug() << "Write tag to ntuple --- not found "<< endmsg;
-      
-      
-      typedef std::map<std::string, double>::iterator it_type;
-      for( std::map<std::string, double>::iterator  it = property.begin();  it != property.end(); it++) {
-	if(it->first != "extraInfo")
-	  result &= (tuple)->column(prefix + "_" + m_tagToolLabel +"_" + (it->first) , (it->second));
-	
-	
-	
-      }
+  {
+    // Run jet tag tool
+    std::map<std::string,double> property;
+
+    m_TagTool->calculateJetProperty(jet, property);
+
+    if(property.empty())
+      if(msgLevel(MSG::ERROR))  debug() << "Write tag to ntuple --- not found "<< endmsg;
+
+
+    typedef std::map<std::string, double>::iterator it_type;
+    for( std::map<std::string, double>::iterator  it = property.begin();  it != property.end(); it++) {
+      if(it->first != "extraInfo")
+        result &= (tuple)->column(prefix + "_" + m_tagToolLabel +"_" + (it->first) , (it->second));
+
+
+
     }
-  
+  }
+
   return StatusCode(result);
 }
 

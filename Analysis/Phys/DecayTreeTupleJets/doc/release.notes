@@ -4,6 +4,9 @@
 ! Purpose     : Jet related Tuple Tools
 !-----------------------------------------------------------------------------
 
+! 2013-02-26 - Chris Jones
+ - Fix -pedantic compilation warnings
+
 !========================= DecayTreeTupleJets v1r1 2013-02-20 =========================
 
 ! 2013-02-18 - Marco Clemencic                                                          
