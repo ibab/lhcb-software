@@ -83,13 +83,20 @@ StatusCode HltBackgroundCategory::initialize() {
 StatusCode HltBackgroundCategory::execute() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
-
-  if( !exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){
+  
+  const LHCb::HltDecReports* decReports = getIfExists<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default);
+  
+  if( NULL==decReports)
+  {
     return Warning("No Hlt decision",StatusCode::SUCCESS,1);
   }
-  const LHCb::HltDecReports* decReports = get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default);
+  
   if (!(decReports->decReport("Hlt2Global"))) return StatusCode::SUCCESS ;
-  const LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>( LHCb::HltSelReportsLocation::Default );
+  const LHCb::HltSelReports* selReports = getIfExists<LHCb::HltSelReports>( LHCb::HltSelReportsLocation::Default );
+  if( NULL==selReports)
+  {
+    return Warning("No Hlt sel Reports",StatusCode::SUCCESS,1);
+  }
 
   Particle2MCLinker* linker = 0;
   if (m_printTree) linker = m_linker->linker( Particle2MCMethod::Links );

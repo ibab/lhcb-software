@@ -4,6 +4,9 @@
 ! Purpose     : Checking and debugging of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2013-02-26 - Rob Lambert
+ - Migrate to getIfExists, task #40118
+
 !========================= HltSelChecker v12r1p3 2013-02-20 =========================
 
 ! 2012-12-08 - Chris Jones

@@ -112,15 +112,19 @@ LHCb::Track::ConstVector FilterTrueTracks::signalTracks(MCParts& mcparts) const 
   for ( std::vector<std::string>::const_iterator p = m_tracksPath.begin() ;
         p!=m_tracksPath.end() ; ++p) {
     
-    if ( !exist<LHCb::Track::Container>(*p)){
+    LHCb::Track::Container* inTracks = getIfExists< LHCb::Track::Container>(*p);
+    if ( NULL==inTracks)
+    {
       Warning("No tracks at "+(*p),1);
-    } else {
-      LHCb::Track::Container* inTracks = get< LHCb::Track::Container>(*p);
+    } 
+    else 
+    {
       if (msgLevel(MSG::DEBUG)) debug() << "Container " << *p << " contains " 
                                         << inTracks->size() << " Tracks" << endmsg ;
       Asct assoc(evtSvc(),*p);
       const Table* table = assoc.direct();
-      if ( NULL==table) {
+      if ( NULL==table) 
+      {
         Warning("NO association Table for "+*p,StatusCode::FAILURE,1) ;
       }
       

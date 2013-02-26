@@ -85,10 +85,12 @@ StatusCode ReadHltReport::execute() {
   StatusCode sc = StatusCode::SUCCESS ;
   if (msgLevel(MSG::VERBOSE)) verbose() << "==> Execute" << endmsg;
   // code goes here
-  if( !exist<LHCb::HltDecReports>( m_hltDecReportsLocation ) ){
+  const LHCb::HltDecReports* hltDecReports = getIfExists<LHCb::HltDecReports>(m_hltDecReportsLocation);
+  if( NULL==hltDecReports )
+  {
     return Warning("No Hlt decision",StatusCode::SUCCESS,1);
   }
-  const LHCb::HltDecReports* hltDecReports = get<LHCb::HltDecReports>(m_hltDecReportsLocation);
+  
   if ( hltDecReports->decReport("Hlt1Global")){
     counter("Has Hlt1")++;
     if (hltDecReports->decReport("Hlt1Global")->decision()){
@@ -113,19 +115,20 @@ StatusCode ReadHltReport::readHltReport(const LHCb::HltDecReports* decReports){
 
   StatusCode sc = StatusCode::SUCCESS ;
   std::vector<std::string> decisions;
-  const LHCb::HltSelReports* selReports = 0;
-  if ( exist<LHCb::HltSelReports>(m_hltSelReportsLocation ))
-    selReports = get<LHCb::HltSelReports>( m_hltSelReportsLocation );
-
+  const LHCb::HltSelReports* selReports  = getIfExists<LHCb::HltSelReports>( m_hltSelReportsLocation );
+  if ( NULL==selReports) return Warning("No HltDecReports at "+m_hltSelReportsLocation,StatusCode::FAILURE,1);
+  
   for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
-      it!=decReports->end();++it){
+      it!=decReports->end();++it)
+  {
     if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first
                                        << " decision= " << it->second.decision() << endmsg;
     if ( it->second.decision() ){
       if (m_printDecisions) decisions.push_back(it->first);
       counter("Selections")++ ;
       counter(it->first)++;
-      if (m_printParticles && selReports && it->first!="Hlt1Global" && it->first!="Hlt2Global"){
+      if (m_printParticles && selReports && it->first!="Hlt1Global" && it->first!="Hlt2Global")
+      {
         const LHCb::HltObjectSummary* sum = selReports->selReport(it->first);
         if (0==sum) {
           Warning("No summary for "+it->first,StatusCode::SUCCESS,1);
@@ -138,7 +141,8 @@ StatusCode ReadHltReport::readHltReport(const LHCb::HltDecReports* decReports){
       }
     }
   }
-  if (!decisions.empty()) {
+  if (!decisions.empty()) 
+  {
     always() << "Decisions in this event : " ;
     for ( std::vector<std::string>::const_iterator s = decisions.begin() ; s!=decisions.end() ; ++s) always() << *s << " ";
     always() << endmsg;

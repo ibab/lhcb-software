@@ -82,10 +82,14 @@ StatusCode Hlt2Statistics::execute() {
 //=========================================================================
 //  fill Hlt
 //=========================================================================
-StatusCode Hlt2Statistics::fillHlt ( std::string level) {
-  if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){ 
-    const LHCb::HltDecReports* decReports = 
-      get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+StatusCode Hlt2Statistics::fillHlt ( std::string level) 
+{
+  const LHCb::HltDecReports* decReports = 
+    getIfExists<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+  
+  if( NULL!=decReports )
+  { 
+    
     if( !m_algoCorr->fillResult( level+"Global", (decReports->decReport(level+"Global"))? 
                         (decReports->decReport(level+"Global")->decision()):0 )) return StatusCode::FAILURE;
     unsigned int nsel = 0 ;
@@ -108,6 +112,7 @@ StatusCode Hlt2Statistics::fillHlt ( std::string level) {
       if (!m_algoCorr->fillResult(*n, found )) return StatusCode::FAILURE;
     }
   } else Warning("No HltDecReports at "+LHCb::HltDecReportsLocation::Default,StatusCode::FAILURE,1);
+  
   if (msgLevel(MSG::DEBUG)) debug() << "Done " << level << endmsg ;
   return StatusCode::SUCCESS ;
 }

@@ -113,8 +113,9 @@ StatusCode HltCorrelations::execute() {
   }
 
   bool l0yes = false ;
-  if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) ){
-    LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+  LHCb::L0DUReport* report = getIfExists<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+  if( NULL!=report )
+  {
     StatusCode sc = m_algoCorr->fillResult("L0",report->decision());
     l0yes = report->decision() ;
     if (!sc) return sc;
@@ -122,20 +123,29 @@ StatusCode HltCorrelations::execute() {
 
   // bits
   if (msgLevel(MSG::DEBUG)) debug() << "Reading routing bits" << endmsg;
-  if (l0yes && exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default)){
-    LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
-    std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_firstBit,m_lastBit);
-    for (std::vector<unsigned int>::const_iterator i = yes.begin() ; i!= yes.end() ; ++i){
-      if (!m_algoCorr->fillResult(bitX(*i),true))
-        return StatusCode::FAILURE;
+  if (l0yes)
+  {
+    LHCb::RawEvent* rawEvent = getIfExists<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+    if(NULL!=rawEvent)
+    {
+      std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_firstBit,m_lastBit);
+      for (std::vector<unsigned int>::const_iterator i = yes.begin() ; i!= yes.end() ; ++i)
+      {
+        if (!m_algoCorr->fillResult(bitX(*i),true))
+          return StatusCode::FAILURE;
+      }
     }
+    
   }
+  
   if (msgLevel(MSG::DEBUG)) debug() << "Read routing bits" << endmsg;
   
   // decreports
-  if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){ 
-    const LHCb::HltDecReports* decReports = 
-      get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+  const LHCb::HltDecReports* decReports = 
+      getIfExists<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+  
+  if( NULL!=decReports )
+  { 
     
     hltPairs sels = HltSelectionsBase::selections();
     
@@ -145,11 +155,16 @@ StatusCode HltCorrelations::execute() {
                                 (decReports->decReport(p->first)->decision()):0))
       return StatusCode::FAILURE;
     }
-  } else {
-    if ( l0yes) {
+  } 
+  else 
+  {
+    if ( l0yes) 
+    {
       err() << "No HltDecReports found. Run HltDecReportsMaker" << endmsg;
       return StatusCode::FAILURE;
-    } else {
+    } 
+    else 
+    {
       Warning("No HltDecReports found. Run HltDecReportsMaker",StatusCode::SUCCESS,1);
     }
   }
