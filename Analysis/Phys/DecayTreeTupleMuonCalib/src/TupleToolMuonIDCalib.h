@@ -23,28 +23,31 @@ using namespace Gaudi;
 
 class DVAlgorithm;
 
-class TupleToolMuonIDCalib : public TupleToolBase, virtual public IParticleTupleTool {
+class TupleToolMuonIDCalib : public TupleToolBase, virtual public IParticleTupleTool
+{
+
 public:
+
   /// Standard constructor
   TupleToolMuonIDCalib( const std::string& type,
                         const std::string& name,
                         const IInterface* parent );
+
+  virtual ~TupleToolMuonIDCalib( ); ///< Destructor
+
   /// Loop over differnt conesizes and fill the variables into the tuple
   virtual StatusCode fill( const LHCb::Particle*
                            , const LHCb::Particle*
                            , const std::string&
                            , Tuples::Tuple& );
 
-  virtual ~TupleToolMuonIDCalib( ); ///< Destructor
+private:
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-
-  StatusCode fillVars(  const LHCb::Particle *part, std::string, Tuples::Tuple&);
+  StatusCode fillVars( const LHCb::Particle *part, std::string, Tuples::Tuple& );
   void LoadMuonGeometry();
   StatusCode fillCoordVectors();
   double foiX(const int &station, const int &region, const double &p, const double &dx);
   double foiY(const int &station, const int &region, const double &p, const double &dy);
-
 
 private:
 
