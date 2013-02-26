@@ -197,7 +197,7 @@ protected:
 
 
 
-DECLARE_ALGORITHM_FACTORY(HighPtIsoLeptonAndTagPV);
+DECLARE_ALGORITHM_FACTORY(HighPtIsoLeptonAndTagPV)
 // ============================================================================
 // The END
 // ============================================================================

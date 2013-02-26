@@ -86,7 +86,7 @@ private:
   std::string m_pvRelatorName;   ///< The name of the PV relator to use
 };
 
-DECLARE_ALGORITHM_FACTORY( UpdateJetsWithVtx );
+DECLARE_ALGORITHM_FACTORY( UpdateJetsWithVtx )
 // ===========================================================================
 
 StatusCode UpdateJetsWithVtx::execute () 
