@@ -24,7 +24,7 @@ using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( Particle2MCChi2 );
+DECLARE_ALGORITHM_FACTORY( Particle2MCChi2 )
 
 #define _verbose if( msgLevel(MSG::VERBOSE) ) verbose()
 #define _debug if( msgLevel(MSG::DEBUG) ) debug()
@@ -45,7 +45,7 @@ Particle2MCChi2::Particle2MCChi2( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Particle2MCChi2::~Particle2MCChi2() {}; 
+Particle2MCChi2::~Particle2MCChi2() {} 
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -64,7 +64,7 @@ StatusCode Particle2MCChi2::initialize() {
     return Error("Cannot create Object2MCLinker helper");
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -131,7 +131,7 @@ StatusCode Particle2MCChi2::execute() {
   }
       
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

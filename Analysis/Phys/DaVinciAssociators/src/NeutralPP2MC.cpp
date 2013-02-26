@@ -44,7 +44,7 @@
  */
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( NeutralPP2MC );
+DECLARE_ALGORITHM_FACTORY( NeutralPP2MC )
 
 NeutralPP2MC::NeutralPP2MC( const std::string& name , ISvcLocator*       svc  )
   : AsctAlgorithm ( name , svc ),
@@ -57,7 +57,7 @@ NeutralPP2MC::NeutralPP2MC( const std::string& name , ISvcLocator*       svc  )
     m_outputTable = LHCb::ProtoParticle2MCLocation::Neutrals ;
   }
   m_test = context();
-};
+}
 
 
 // ============================================================================
@@ -193,4 +193,4 @@ StatusCode NeutralPP2MC::execute(){
             << table->relations().size() << endreq ;
   }
   return StatusCode::SUCCESS;
-};
+}

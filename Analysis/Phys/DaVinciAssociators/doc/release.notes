@@ -4,6 +4,9 @@
 ! Responsible : Vladimir Gligorov
 !==============================================================================
 
+! 2013-02-26 - Chris Jones
+ - Fix -pedantic compilation warnings
+
 !========================= DaVinciAssociators v9r5 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

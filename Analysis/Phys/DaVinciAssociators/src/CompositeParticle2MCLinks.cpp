@@ -62,7 +62,7 @@ CompositeParticle2MCLinks::CompositeParticle2MCLinks( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-CompositeParticle2MCLinks::~CompositeParticle2MCLinks() {}; 
+CompositeParticle2MCLinks::~CompositeParticle2MCLinks() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -93,7 +93,7 @@ StatusCode CompositeParticle2MCLinks::initialize() {
   
   m_ppSvc  = svc<IParticlePropertySvc>("ParticlePropertySvc");
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -234,7 +234,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
            << m_nrel << " relations found" << endreq;
   }    
   return StatusCode::SUCCESS ;
-};
+}
 
 //=============================================================================
 //  associateTree auxiliary method

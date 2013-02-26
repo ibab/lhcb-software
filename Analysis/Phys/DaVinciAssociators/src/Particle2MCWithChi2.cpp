@@ -35,7 +35,7 @@ using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( Particle2MCWithChi2 );
+DECLARE_ALGORITHM_FACTORY( Particle2MCWithChi2 )
 
 #define _verbose if( msgLevel(MSG::VERBOSE) ) verbose()
 #define _debug if( msgLevel(MSG::DEBUG) ) debug()
@@ -56,7 +56,7 @@ Particle2MCWithChi2::Particle2MCWithChi2( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Particle2MCWithChi2::~Particle2MCWithChi2() {}; 
+Particle2MCWithChi2::~Particle2MCWithChi2() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -100,7 +100,7 @@ StatusCode Particle2MCWithChi2::initialize() {
     } else _info << "No algorithm " << algo << " found " << endmsg ;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -249,7 +249,7 @@ StatusCode Particle2MCWithChi2::execute() {
   } // End of loop on input data locations
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

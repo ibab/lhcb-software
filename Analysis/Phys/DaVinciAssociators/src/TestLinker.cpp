@@ -42,7 +42,7 @@ using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( TestLinker );
+DECLARE_ALGORITHM_FACTORY( TestLinker )
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -82,7 +82,7 @@ TestLinker::TestLinker(const std::string& name,
 //=============================================================================
 // Standard destructor
 //=============================================================================
-TestLinker::~TestLinker() { };
+TestLinker::~TestLinker() { }
 
 //=============================================================================
 // Initialisation. Check parameters

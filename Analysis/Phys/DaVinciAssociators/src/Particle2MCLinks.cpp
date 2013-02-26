@@ -25,7 +25,7 @@ using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY(Particle2MCLinks );
+DECLARE_ALGORITHM_FACTORY(Particle2MCLinks )
 
 #define _verbose if( msgLevel(MSG::VERBOSE) ) verbose()
 #define _debug if( msgLevel(MSG::DEBUG) ) debug()
@@ -54,7 +54,7 @@ Particle2MCLinks::Particle2MCLinks( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Particle2MCLinks::~Particle2MCLinks() {}; 
+Particle2MCLinks::~Particle2MCLinks() {} 
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -89,7 +89,7 @@ StatusCode Particle2MCLinks::initialize() {
                                                               m_neutralPPLocation
                                                               );
   return sc;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -172,7 +172,7 @@ StatusCode Particle2MCLinks::execute() {
            << nrel << " relations found" << endreq;
   }
   return StatusCode::SUCCESS ;
-};
+}
 
 //=============================================================================
 //  Finalize
