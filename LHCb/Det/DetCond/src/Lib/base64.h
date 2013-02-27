@@ -66,7 +66,7 @@ void build_decoding_table() {
     decoding_table = new char[256];
 
     for (int i = 0; i < 0x40; i++)
-        decoding_table[encoding_table[i]] = i;
+        decoding_table[(size_t)encoding_table[i]] = i;
 }
 
 bool base64_decode(const std::string& data,
@@ -87,12 +87,12 @@ bool base64_decode(const std::string& data,
 //    decoded_data = new unsigned char[*output_length];
 //    if (decoded_data == NULL) return false;
 
-    for (int i = 0, j = 0; i < input_length;) {
+    for (size_t i = 0, j = 0; i < input_length;) {
 
-        uint32_t sextet_a = data[i] == '=' ? 0 & i++ : decoding_table[data[i++]];
-        uint32_t sextet_b = data[i] == '=' ? 0 & i++ : decoding_table[data[i++]];
-        uint32_t sextet_c = data[i] == '=' ? 0 & i++ : decoding_table[data[i++]];
-        uint32_t sextet_d = data[i] == '=' ? 0 & i++ : decoding_table[data[i++]];
+        uint32_t sextet_a = data[i] == '=' ? 0 & i++ : decoding_table[(size_t)data[i++]];
+        uint32_t sextet_b = data[i] == '=' ? 0 & i++ : decoding_table[(size_t)data[i++]];
+        uint32_t sextet_c = data[i] == '=' ? 0 & i++ : decoding_table[(size_t)data[i++]];
+        uint32_t sextet_d = data[i] == '=' ? 0 & i++ : decoding_table[(size_t)data[i++]];
 
         uint32_t triple = (sextet_a << 3 * 6)
                         + (sextet_b << 2 * 6)

@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-02-27 - Liang Sun
+ - Fix the type conversions to quell the -pedantic warnings
+
 ! 2013-02-23 - Marco Clemencic
  - Forgot to add -lbz2 after removing the 'use' statement.
 
