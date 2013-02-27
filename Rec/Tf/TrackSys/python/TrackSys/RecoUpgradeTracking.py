@@ -47,7 +47,14 @@ def RecoUpgradeTracking(exclude=[]):
         if not ("FT" in subDets) :
             raise RuntimeError("Specify T-Stations.")
 
+    if "Match" in trackTypes:
+        if not ("Velo" in trackTypes):
+            log.warning("Velo tracks added to tracking sequence.")
+            trackTypes += ["Velo"]
 
+        if not ("Seeding" in trackTypes):
+            log.warning("Seed tracks added to tracking sequence.")
+            trackTypes += ["Seeding"]
 
     ### Do the decoding of the detectors
    
@@ -134,6 +141,16 @@ def RecoUpgradeTracking(exclude=[]):
             downSeq.Members += [ PrDownstream() ]
 
 
+    if "Match" in trackTypes:
+        matchSeq = GaudiSequencer("TrMatchSeq")
+        GaudiSequencer("RecoTrSeq").Members += [ matchSeq ]
+        from Configurables import PatMatch, PatMatchTool, PrAddUTCoord
+        matchSeq.Members += [ PatMatch() ]
+        PatMatch().addTool(PatMatchTool, "PatMatchTool")
+        PatMatch().PatMatchTool.AddTTClusters = True
+        PatMatch().PatMatchTool.AddTTClusterName = "PrAddUTCoord"
+      
+
     # Do the Clone Killing and create Best tracks container
     bestSeq = GaudiSequencer("TrBestSeq")
     GaudiSequencer("RecoTrSeq").Members += [ bestSeq ]
@@ -150,7 +167,8 @@ def RecoUpgradeTracking(exclude=[]):
         tracklists += ["Rec/Track/VeloTT"]
     if "Downstream" in trackTypes:
         tracklists += ["Rec/Track/Downstream"]
-
+    if "Match" in trackTypes:
+        tracklists += ["Rec/Track/Match"]
 
     # create the best track creator
     from Configurables import UpgradeBestTrackCreator

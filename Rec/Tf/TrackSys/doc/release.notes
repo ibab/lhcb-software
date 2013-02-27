@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-02-27 - Sascha Stahl
+ - Added PatMatch to upgrade sequence.
+
+
 !========================= TrackSys v7r9 2013-02-14 =========================
 ! 2013-02-07 - Sascha Stahl
  - Changed way of getting Upgrade detectors.
