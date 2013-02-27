@@ -143,14 +143,14 @@ StatusCode Hlt::L0DiMuon2MultiTrack::execute  ()
       const LHCb::L0MuonCandidate* l0muon1 = l0dimuon->first  () ;
       const LHCb::L0MuonCandidate* l0muon2 = l0dimuon->second () ;
       //
-      debug() << "l0pt1 " << l0muon1->pt() << " l0encodedPt " << l0muon1->encodedPt()<< endmsg;
-      debug() << "l0pt2 " << l0muon2->pt() << " l0encodedPt " << l0muon2->encodedPt()<< endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "l0pt1 " << l0muon1->pt() << " l0encodedPt " << l0muon1->encodedPt()<< endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "l0pt2 " << l0muon2->pt() << " l0encodedPt " << l0muon2->encodedPt()<< endmsg;
       // check the cut:
       if ( 0 == l0muon1 || !cut ( l0muon1 ) ) { continue ; }  // CONTINUE 
       if ( 0 == l0muon2 || !cut ( l0muon2 ) ) { continue ; }  // CONTINUE 
       //
-      debug() << "l0pt1 " << l0muon1->pt() << " l0encodedPt " << l0muon1->encodedPt()<< " accept " << endmsg;
-      debug() << "l0pt2 " << l0muon2->pt() << " l0encodedPt " << l0muon2->encodedPt()<< " accept " << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "l0pt1 " << l0muon1->pt() << " l0encodedPt " << l0muon1->encodedPt()<< " accept " << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "l0pt2 " << l0muon2->pt() << " l0encodedPt " << l0muon2->encodedPt()<< " accept " << endmsg;
       //
       
       // Has been this L0MuonCandidate already converted into track?

@@ -182,10 +182,10 @@ StatusCode Hlt::L0Muon2Track::execute  ()
       //  
       const LHCb::L0MuonCandidate* l0muon = stage->get<LHCb::L0MuonCandidate>() ;
       //
-      debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< endmsg;
       // check the cut:
       if ( 0 == l0muon || !cut ( l0muon) ) { continue ; }     // CONTINUE 
-      debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< " accept " << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< " accept " << endmsg;
       
       
       // Has been this L0MuonCandidate already converted into track?
@@ -194,7 +194,7 @@ StatusCode Hlt::L0Muon2Track::execute  ()
       // it is already selected and it is clone ? 
       if      ( 0 != track && 0 != checkMuon ( track , m_selection ) )
       {
-        debug() << "is clone " << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "is clone " << endmsg;
         continue ;
       }
       
