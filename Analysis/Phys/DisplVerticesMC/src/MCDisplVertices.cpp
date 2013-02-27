@@ -3045,7 +3045,7 @@ double MCDisplVertices::VertDistance(HepMC::ThreeVector & point){
 double MCDisplVertices::Angle( const Gaudi::LorentzVector & a,
                                const Gaudi::LorentzVector & b ){
   return Angle( a.Vect(), b.Vect() );
-};
+}
 
 double MCDisplVertices::Angle( const Gaudi::XYZVector & a,
                                const Gaudi::XYZVector & b ){
