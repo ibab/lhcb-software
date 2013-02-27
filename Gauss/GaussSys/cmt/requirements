@@ -1,5 +1,5 @@
 package GaussSys
-version v43r4
+version v45r0
 
 branches cmt doc
 
@@ -7,26 +7,25 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 
-# Temporarily to pick up fix in GaudiConf
-use GaudiConf           v17r4p1
-
 # Gauss application: the application is not built on Win32
-use Gauss               v43r4   Sim
+use Gauss               v45r0   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v64r2p1 
 use thepeg              v64r2p1 LCG_GeneratorsInterfaces
 use herwigpp            v64r2p1 LCG_GeneratorsInterfaces
 use rivet               v64r2p1 LCG_GeneratorsInterfaces
+use photospp            v64r2p1 LCG_GeneratorsInterfaces
+use tauolapp            v64r2p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
 use GenCuts             v3r1    Gen
-use GENSER              v11r2   Gen
-use EvtGen              v12r11  Gen
+use GENSER              v12r2   Gen
+use EvtGen              v13r4   Gen
 use Mint                v1r7    Gen
 use EvtGenExtras        v3r5    Gen
-use Generators          v12r3   Gen
-use LbPythia            v13r0   Gen
+use Generators          v14r0   Gen
+use LbPythia            v14r0   Gen
 
 # Generators packages: extensions to Pythia6
 use LbAlpGen            v3r0p1  Gen 
