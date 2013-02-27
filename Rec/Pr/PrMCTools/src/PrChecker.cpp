@@ -32,12 +32,18 @@ PrChecker::PrChecker( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_velo(NULL),
     m_forward(NULL),
+    m_match(NULL),
+    m_upTrack(NULL),
     m_tTrack(NULL),
+    m_downTrack(NULL),
     m_best(NULL)
 {
   declareProperty( "VeloTracks",        m_veloTracks      = LHCb::TrackLocation::Velo    );
   declareProperty( "ForwardTracks",     m_forwardTracks   = LHCb::TrackLocation::Forward );
+  declareProperty( "MatchTracks",       m_matchTracks     = LHCb::TrackLocation::Match );
   declareProperty( "SeedTracks",        m_seedTracks      = LHCb::TrackLocation::Seed    );
+  declareProperty( "DownTracks",        m_downTracks      = LHCb::TrackLocation::Downstream    );
+  declareProperty( "UpTracks",          m_upTracks        = LHCb::TrackLocation::VeloTT    );
   
 }
 //=============================================================================
@@ -75,6 +81,27 @@ StatusCode PrChecker::initialize() {
   m_forward->addSelection( "long from B decay" );
   m_forward->addSelection( "and > 5 GeV" );
 
+  m_match = tool<PrCounter>( "PrCounter", "Match", this );
+  m_match->setContainer( m_matchTracks );
+  m_match->setSelectId( 8 );
+  m_match->addSelection( "long" );
+  m_match->addSelection( "long > 5 GeV" );
+  m_match->addSelection( "Strange+long" );
+  m_match->addSelection( "and > 5 GeV" );
+  m_match->addSelection( "long from B decay" );
+  m_match->addSelection( "and > 5 GeV" );
+
+  m_upTrack = tool<PrCounter>( "PrCounter", "Upstream", this );
+  m_upTrack->setContainer( m_upTracks );
+  m_upTrack->setSelectId( 4 );
+  m_upTrack->addSelection( "long" );
+  m_upTrack->addSelection( "long > 5 GeV" );
+  m_upTrack->addSelection( "Strange+long" );
+  m_upTrack->addSelection( "and > 5 GeV" );
+  m_upTrack->addSelection( "long from B decay" );
+  m_upTrack->addSelection( "and > 5 GeV" );
+
+
   m_tTrack = tool<PrCounter>( "PrCounter", "TTrack", this );
   m_tTrack->setContainer( m_seedTracks );
   m_tTrack->setSelectId( 8 );
@@ -83,6 +110,21 @@ StatusCode PrChecker::initialize() {
   m_tTrack->addSelection( "long > 5 GeV" );
   m_tTrack->addSelection( "Strange+T+TT" );
   m_tTrack->addSelection( "and > 5 GeV" );
+
+  m_downTrack = tool<PrCounter>( "PrCounter", "Downstream", this );
+  m_downTrack->setContainer( m_downTracks );
+  m_downTrack->setSelectId( 4 );
+  m_downTrack->addSelection( "has T+TT hits" );
+  m_downTrack->addSelection( "and > 5 GeV" );
+  m_downTrack->addSelection( "Strange+T+TT" );
+  m_downTrack->addSelection( "and > 5 GeV" );
+  m_downTrack->addSelection( "Strange+T+TT+noVelo " );
+  m_downTrack->addSelection( "and > 5 GeV" );
+  m_downTrack->addSelection( "T+TT from B" );
+  m_downTrack->addSelection( "and > 5 GeV" );
+  m_downTrack->addSelection( "T+TT+noVelo from B" );
+  m_downTrack->addSelection( "and > 5 GeV" );
+  
 
   m_best = tool<PrCounter>( "PrCounter", "Best", this );
   m_best->setContainer( LHCb::TrackLocation::Default );
@@ -96,7 +138,10 @@ StatusCode PrChecker::initialize() {
 
   m_allCounters.push_back( m_velo  );
   m_allCounters.push_back( m_forward );
+  m_allCounters.push_back( m_match );
+  m_allCounters.push_back( m_upTrack );
   m_allCounters.push_back( m_tTrack );
+  m_allCounters.push_back( m_downTrack );
   m_allCounters.push_back( m_best  );
 
   m_counters.resize(20);
@@ -161,6 +206,10 @@ StatusCode PrChecker::execute() {
 
     bool isLong  = trackInfo.hasVeloAndT( part );
     isLong = isLong && ( abs( part->particleID().pid() ) != 11 ); // and not electron
+
+    bool isDown  = trackInfo.hasT( part ) &&  trackInfo.hasTT( part );
+    isDown = isDown && ( abs( part->particleID().pid() ) != 11 ); // and not electron
+
     
     bool over5       = 5000. < fabs( part->p() );
     bool isInVelo    = trackInfo.hasVelo( part );
@@ -230,6 +279,8 @@ StatusCode PrChecker::execute() {
     flags.push_back( isLong && fromB && over5 );
 
     int ok = m_forward->count( part, flags, ids );
+    m_match->count( part, flags, ids );
+    m_upTrack->count( part, flags, ids );
     m_best->count( part, flags, ids );
 
     if ( isLong ) {
@@ -249,6 +300,20 @@ StatusCode PrChecker::execute() {
     flags.push_back( strangeDown && over5 );
 
     m_tTrack->count( part, flags, ids );
+
+    flags.clear();
+    flags.push_back( isDown );
+    flags.push_back( isDown && over5);
+    flags.push_back( strangeDown );
+    flags.push_back( strangeDown && over5 );
+    flags.push_back( strangeDown && !isInVelo );
+    flags.push_back( strangeDown && over5 && !isInVelo );
+    flags.push_back( isDown && fromB );
+    flags.push_back( isDown && fromB && over5 );
+    flags.push_back( isDown && fromB && !isInVelo);
+    flags.push_back( isDown && fromB && over5 && !isInVelo);
+    m_downTrack->count( part, flags, ids );
+
   }
   
   return StatusCode::SUCCESS;

@@ -55,11 +55,17 @@ protected:
 private:
   std::string m_veloTracks;
   std::string m_forwardTracks;
+  std::string m_matchTracks;
   std::string m_seedTracks;
+  std::string m_downTracks;
+  std::string m_upTracks;
   
   PrCounter* m_velo;
   PrCounter* m_forward;
+  PrCounter* m_match;
+  PrCounter* m_upTrack;
   PrCounter* m_tTrack;
+  PrCounter* m_downTrack;
   PrCounter* m_best;
 
   //== Vector of the counters

@@ -139,7 +139,7 @@ int PrCounter::count( const LHCb::MCParticle* part, std::vector<bool> flags,
     for ( std::vector<LHCb::LHCbID>::const_iterator itId = ids.begin(); ids.end() != itId; ++itId ) {
       if ( (*itId).isVP() || (*itId).isVL() || (*itId).isVelo() ) {
         if ( 0 != (m_selectId & 3) ) nTrue += 1.;
-      } else if ( (*itId).isTT() ) {
+      } else if ( (*itId).isTT() || (*itId).isUT() ) {
         if ( 0 != (m_selectId & 4) ) nTrue += 1.;
       } else if ( (*itId).isOT() || (*itId).isIT() || (*itId).isFT() ) {
         if ( 0 != (m_selectId & 8) ) nTrue += 1.;
@@ -164,7 +164,7 @@ int PrCounter::count( const LHCb::MCParticle* part, std::vector<bool> flags,
               if ( 0 != (m_selectId & 3) ) nbMeas += 1;
             } else if ( (*itId).isOT() || (*itId).isIT() || (*itId).isFT() ) {
               if ( 0 != (m_selectId & 8) ) nbMeas += 1;
-            } else if ( (*itId).isTT() ) {
+            } else if ( (*itId).isTT() || (*itId).isUT() ) {
               if ( 0 != (m_selectId & 4) ) nbMeas += 1;
             }
           }
