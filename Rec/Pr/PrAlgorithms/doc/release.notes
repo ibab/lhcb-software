@@ -4,6 +4,14 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-02-27 - Thomas Nikodem
+ - Added PrAddUTCoord to PrForwardTool.
+
+
+! 2013-02-27 - Sascha Stahl
+ - Changed interface of PrAddUTCoord to IAddTTClusterTool.h.
+
+
 ! 2013-02-20 - Olivier Callot
  - New algorithm PrSeedingNew for FT seeding, prototype for tests.
 

@@ -28,7 +28,7 @@ PrAddUTCoord::PrAddUTCoord( const std::string& type,
                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareInterface<IAddUTClusterTool>(this);
+  declareInterface<IAddTTClusterTool>(this);
   declareProperty( "ZUTField"  , m_zUTField            =  1740. * Gaudi::Units::mm );
   declareProperty( "ZMSPoint"  , m_zMSPoint            =  400. * Gaudi::Units::mm  );
   declareProperty( "UTParam"   , m_utParam             =  29.                      );
@@ -66,7 +66,7 @@ StatusCode PrAddUTCoord::initialize ( ) {
 //=========================================================================
 //  Add the UT hits on the track, only the ids.
 //=========================================================================
-StatusCode PrAddUTCoord::addUTClusters( LHCb::Track& track){
+StatusCode PrAddUTCoord::addTTClusters( LHCb::Track& track){
 
   LHCb::State state = track.closestState( m_zUTProj );
   PrUTHits myUTHits;
@@ -214,7 +214,7 @@ void PrAddUTCoord::selectHits(PrUTHits& selected, const LHCb::State& state, cons
   double yTol = m_yTolSlope / p ;
   double xTol = m_xTol + m_xTolSlope / p;
   selected.clear();
-
+ 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "State z " << state.z() << " x " << state.x() 
             << " y " << state.y() << " tx " << state.tx() << " ty " 

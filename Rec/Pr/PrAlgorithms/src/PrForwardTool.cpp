@@ -49,6 +49,9 @@ DECLARE_TOOL_FACTORY( PrForwardTool )
   declareProperty( "MaxQuality",             m_maxQuality             =   15.                    );
   declareProperty( "DeltaQuality",           m_deltaQuality           =    3.                    );
   declareProperty( "YQualityWeight",         m_yQualityWeight         =    4.                    );
+
+  declareProperty("AddUTClusterName", m_addUtToolName = "PrAddUTCoord" );
+
 }
 //=============================================================================
 // Destructor
@@ -66,6 +69,13 @@ StatusCode PrForwardTool::initialize ( ) {
   m_geoTool = tool<PrGeometryTool>("PrGeometryTool");
   m_hitManager = tool<PrHitManager>( m_hitManagerName );
   m_allXHits.reserve(5000);
+
+  if ( "" != m_addUtToolName  ) {
+    m_addUTClusterTool = tool<IAddTTClusterTool>( m_addUtToolName, this );
+  } else {
+    m_addUTClusterTool = NULL;
+  }
+
   return StatusCode::SUCCESS;
 }
 //=========================================================================
@@ -190,7 +200,7 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
   }
 
   //====================================================================
-  // Finalisation: Produce LHCb tracks
+  // Finalisation: Produce LHCb tracks (and add UT hits)
   //====================================================================
   makeLHCbTracks( result );
 }
@@ -937,6 +947,16 @@ void PrForwardTool::makeLHCbTracks ( LHCb::Tracks* result ) {
     tmp->setChi2PerDoF( (*itT).chi2PerDoF() );
     tmp->setNDoF(       (*itT).nDoF() );
     tmp->addInfo( LHCb::Track::PatQuality, (*itT).quality() );
+
+    //ADD UT hits on track
+    if ( NULL != m_addUTClusterTool ) {
+      StatusCode sc = m_addUTClusterTool->addTTClusters( *tmp );
+      if (sc.isFailure()){
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug()<<" Failure in adding UT clusters to track"<<endmsg;
+      }
+    }
+
     result->insert( tmp );
     if ( m_debug ) info() << "Store track " << (*(result->end()-1))->key()
                           << " quality " << (*(result->end()-1))->info( LHCb::Track::PatQuality, 0. ) << endmsg;

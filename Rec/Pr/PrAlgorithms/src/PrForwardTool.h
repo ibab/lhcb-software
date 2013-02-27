@@ -10,6 +10,8 @@
 #include "IPrForwardTool.h"
 #include "PrGeometryTool.h"
 
+#include "TrackInterfaces/IAddTTClusterTool.h"
+
 /** @class PrForwardTool PrForwardTool.h
  *  Extend a Velo track to the T stations
  *
@@ -50,6 +52,7 @@ protected:
 
 private:
   std::string     m_hitManagerName;
+  std::string     m_addUtToolName;
   float           m_minPt;
   unsigned int    m_minXHits;
   float           m_tolY;
@@ -73,6 +76,7 @@ private:
   unsigned int    m_nbXPlanes;
   unsigned int    m_minStereoHits;
 
+  IAddTTClusterTool*  m_addUTClusterTool;
   PrHitManager*   m_hitManager;
   PrGeometryTool* m_geoTool;
   bool            m_debug;

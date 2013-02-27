@@ -8,8 +8,9 @@
 
 #include "Event/Track.h"
 #include "Event/State.h"
-#include "TrackInterfaces/IAddUTClusterTool.h"            // Interface
+#include "TrackInterfaces/IAddTTClusterTool.h"            // Interface
 #include "PrKernel/PrUTHit.h"
+#include "PatKernel/PatTTHit.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 #include "TfKernel/UTStationHitManager.h"
 
@@ -39,7 +40,7 @@
    *  
    */
 
-class PrAddUTCoord : public GaudiTool, virtual public IAddUTClusterTool {
+class PrAddUTCoord : public GaudiTool, virtual public IAddTTClusterTool {
 public:
     /// Standard constructor
   PrAddUTCoord( const std::string& type,
@@ -51,10 +52,14 @@ public:
   virtual StatusCode initialize();
 
   /// Add UT clusters to matched tracks
-  virtual StatusCode addUTClusters( LHCb::Track& track);
-  virtual StatusCode returnUTClusters( LHCb::State& state, PrUTHits& utHits, double& finalChi2, double p = 0 );
+  virtual StatusCode addTTClusters( LHCb::Track& track);
+  StatusCode returnUTClusters( LHCb::State& state, PrUTHits& utHits, double& finalChi2, double p = 0 );
+  /// Method not implemented
+  StatusCode returnTTClusters( LHCb::State& /*state*/, std::vector<PatTTHit*>& /*ttHits*/, double& /*finalChi2*/, double /*p*/){
+    return StatusCode::SUCCESS;
+  };
 
-  virtual StatusCode addUTClusters( LHCb::Track& /*track*/, 
+  virtual StatusCode addTTClusters( LHCb::Track& /*track*/, 
                                     std::vector<LHCb::STCluster*>& /*utClusters*/,
                                     std::vector<double>& /*utChi2s*/ ) { return StatusCode::SUCCESS;};
   
