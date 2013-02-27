@@ -105,7 +105,7 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     m_DataStore->nTHits.push_back( m_tHitManager->hits().size() ) ;
     m_DataStore->decodingTime.push_back( tDecoding.eTotalTime() );
     m_DataStore->trackHypo.push_back(new ParabolaHypothesis(tp));
-    if ( msgLevel(MSG::DEBUG) ) debug() << " number of decoded hits: " << m_tHitManager->hits().size() << endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << " number of decoded hits: " << m_tHitManager->hits().size() << endmsg;
     tTracking.start();
   }
 
@@ -155,8 +155,8 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     m_DataStore->trackingTime.push_back( tTracking.eTotalTime() );    
     if (msgLevel(MSG::DEBUG) ) {
       debug() << "tTracking.eTotalTime() "
-              << tTracking.eTotalTime() + tDecoding.eTotalTime() << endreq;
-      debug() << "tracks found sofar in PatSearch Tool: " << tmpTracks.size() << endreq;
+              << tTracking.eTotalTime() + tDecoding.eTotalTime() << endmsg;
+      debug() << "tracks found sofar in PatSearch Tool: " << tmpTracks.size() << endmsg;
     }
   }
   

@@ -68,7 +68,7 @@ StatusCode HltLumiOdinReader::execute() {
   std::stringstream trType("");
   bxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
   trType << (LHCb::ODIN::TriggerType) odin->triggerType();
-  if ( msgLevel(MSG::DEBUG) ) debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endmsg;
   m_selection.output()->setDecision(true);
 
   return StatusCode::SUCCESS;
@@ -78,7 +78,7 @@ StatusCode HltLumiOdinReader::execute() {
 //  Finalize
 //=============================================================================
 StatusCode HltLumiOdinReader::finalize() {
-  if ( msgLevel(MSG::DEBUG) ) debug() << " Entering the finalize " << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " Entering the finalize " << endmsg;
   return HltAlgorithm::finalize();  // must be called after all other actions
 }
 

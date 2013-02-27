@@ -88,7 +88,7 @@ StatusCode LumiFromL0DU::execute() {
   for (std::vector<std::pair<int,std::string> >::const_iterator i = m_CounterValue.begin() ;i!= m_CounterValue.end();++i) {
       // get the value using its name from the fromRawReport
       double value = report->dataValue(i->second);
-      if (msgLevel(MSG::DEBUG)) debug() << "found value from the L0DU report for " << i->second << " " << value << endreq ;
+      if (msgLevel(MSG::DEBUG)) debug() << "found value from the L0DU report for " << i->second << " " << value << endmsg ;
 
       // add counter (must be integer, so we force it to be so...
       sums->addInfo( i->first, (int)value);

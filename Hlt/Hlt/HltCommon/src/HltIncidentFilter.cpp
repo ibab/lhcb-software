@@ -73,7 +73,7 @@ StatusCode HltIncidentFilter::finalize() {
 //=============================================================================
 StatusCode HltIncidentFilter::execute() {
     setFilterPassed(m_keep);
-    if (msgLevel(MSG::DEBUG)) debug() << "HltIncidentFilter: " << (m_keep?"accept":"reject") << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << "HltIncidentFilter: " << (m_keep?"accept":"reject") << endmsg;
     return StatusCode::SUCCESS;
 };
 

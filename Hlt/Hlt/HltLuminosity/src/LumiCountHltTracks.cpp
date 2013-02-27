@@ -88,7 +88,7 @@ StatusCode LumiCountHltTracks::execute() {
 
   // load the track objects
   int nCounter =  m_input->size();
-  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endreq ;
+  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endmsg ;
 
   // get container
   LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);

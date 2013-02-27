@@ -104,7 +104,7 @@ StatusCode HltRecCheckTracks::execute() {
       double rat = double(nghost)/double(ntracks);
       fill( m_histoGhost, rat, 1.);
       debug() << " checkReco ghost " << nghost << " " 
-              << ntracks << " " << rat << endreq;
+              << ntracks << " " << rat << endmsg;
   }
   return StatusCode::SUCCESS;
 }

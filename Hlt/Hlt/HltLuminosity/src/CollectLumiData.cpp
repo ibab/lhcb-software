@@ -109,10 +109,10 @@ StatusCode CollectLumiData::execute() {
     
     n_RZVelo =  m_RZVelo->size() ;
     if (m_printing_verbose) 
-      verbose() << "found " << n_RZVelo << " RZVelo tracks." << endreq ;
+      verbose() << "found " << n_RZVelo << " RZVelo tracks." << endmsg ;
   }
   m_nRZVelo = n_RZVelo;
-  if ( m_printing_debug ) debug() << "There are " << n_RZVelo << " tracks in " << m_RZVeloContainerName <<  endreq ;
+  if ( m_printing_debug ) debug() << "There are " << n_RZVelo << " tracks in " << m_RZVeloContainerName <<  endmsg ;
 
   // ------------------------------------------
   // load the vertex objects
@@ -130,15 +130,15 @@ StatusCode CollectLumiData::execute() {
     {
       
       err() << "Could not find location " 
-            <<  m_PV3DContainerName << endreq;
+            <<  m_PV3DContainerName << endmsg;
       return StatusCode::FAILURE ;
     }
     n_PV3D =  m_PV3D->size() ;
     if (m_printing_verbose) 
-      verbose() << "found " << n_PV3D << " PV3D vertices." << endreq ;
+      verbose() << "found " << n_PV3D << " PV3D vertices." << endmsg ;
   }
   m_nPV3D = n_PV3D;
-  if ( m_printing_debug ) debug() << "There are " << n_PV3D << " vertices in " << m_PV3DContainerName <<  endreq ;
+  if ( m_printing_debug ) debug() << "There are " << n_PV3D << " vertices in " << m_PV3DContainerName <<  endmsg ;
 
   // ------------------------------------------
   // fill the output container

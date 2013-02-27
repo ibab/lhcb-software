@@ -161,9 +161,9 @@ void L0ConfExtrapolator::hcal2T( const LHCb::Track& hcalTrack,
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Seeding using ";
     if (13360.0 > z)
-      debug() << "ECal and HCal" << endreq;
+      debug() << "ECal and HCal" << endmsg;
     else
-      debug() << "HCal only" << endreq;
+      debug() << "HCal only" << endmsg;
   }
   // kick in x depends on momentum
   // different constants for HCal-only and ECal/HCal seeding
@@ -282,17 +282,17 @@ int L0ConfExtrapolator::getCaloRegion(double stateX,
  
   if (msgLevel(MSG::DEBUG)) {
     if (13360. > stateZ)
-      debug() << "HCAL + ECAL Seeding" << endreq;
+      debug() << "HCAL + ECAL Seeding" << endmsg;
     else
-      debug() << "HCAL Seeding" << endreq;
+      debug() << "HCAL Seeding" << endmsg;
     if (-1. == xpos[reg])
       debug() << "CALO: not in calo!?!,  x,y = "
-              << stateX << " , " << stateY << endreq;
+              << stateX << " , " << stateY << endmsg;
 
     debug() << "HCAL+ ECAL section 0 : x,y = " << stateX << " , " << stateY
-            << endreq
+            << endmsg
             << " .................................   region is: " << reg
-            << endreq;
+            << endmsg;
   }
   if (-1. == xpos[reg]) reg = -1;
   

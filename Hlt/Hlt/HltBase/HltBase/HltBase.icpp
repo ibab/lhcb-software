@@ -28,7 +28,7 @@ HltBase<EBASE>::~HltBase() {}
 
 template <class EBASE>
 StatusCode HltBase<EBASE>::initialize() {  
-  EBASE::debug() << "==> Initialize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::initialize"<< endreq;
+  EBASE::debug() << "==> Initialize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::initialize"<< endmsg;
   StatusCode sc = EBASE::initialize(); 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -38,7 +38,7 @@ StatusCode HltBase<EBASE>::initialize() {
              it = hdes.begin(); it != hdes.end(); it++){
           EBASE::book(it->second);
           EBASE::debug() << " booking histogram from descriptor " 
-                         << it->second << endreq;
+                         << it->second << endmsg;
       }
   }
   return StatusCode::SUCCESS;
@@ -56,7 +56,7 @@ AIDA::IHistogram1D* HltBase<EBASE>::initializeHisto(const std::string& title,
   std::map<std::string,Gaudi::Histo1DDef>::const_iterator i = values.find(title);
   Gaudi::Histo1DDef hd = (i!=values.end()) ? i->second 
                                            : Gaudi::Histo1DDef(title,x0,xf,nbins);
-  EBASE::debug() << " booking histogram  " << hd << endreq;
+  EBASE::debug() << " booking histogram  " << hd << endmsg;
   return EBASE::book(hd);
 }
 
@@ -91,7 +91,7 @@ int HltBase<EBASE>::hltInfoID(const std::string& infoname)
 {
   boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",infoname);
   if(!i) {
-	EBASE::info()<<"request for unknown Info id for name: "<<infoname <<endreq;
+	EBASE::info()<<"request for unknown Info id for name: "<<infoname <<endmsg;
 	return 0;
   }
  return i->second;
@@ -102,7 +102,7 @@ std::string HltBase<EBASE>::hltInfoName(int id)
 {
   boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",id);
   if(!i) {
-	EBASE::info()<<"request for unknown Info name for id: "<<id << endreq;
+	EBASE::info()<<"request for unknown Info name for id: "<<id << endmsg;
 	return "UNKNOWN";
   }
   return i->first;
@@ -117,7 +117,7 @@ void HltBase<EBASE>::printInfo(const std::string& title,
                 << " q/p " << track.firstState().qOverP()
                 << " ids " << track.lhcbIDs().size() 
                 << " states " << track.states().size()
-                << endreq;
+                << endmsg;
   printInfo(title+" Info: ",track.extraInfo());
 }
 
@@ -125,7 +125,7 @@ template <class EBASE>
 void HltBase<EBASE>::printInfo(const std::string& title,
                              const LHCb::RecVertex& vertex) {
   EBASE::info() << title << " vertex  " << vertex.key() << " position " 
-               << vertex.position()  << endreq;
+               << vertex.position()  << endmsg;
   printInfo(title+" Info: ",vertex.extraInfo());
   printInfo(title,vertex.tracks());
 }
@@ -137,5 +137,5 @@ void HltBase<EBASE>::printInfo(const std::string& title,
   for (GaudiUtils::VectorMap<int,double>::const_iterator i = vmap.begin(); 
        i != vmap.end(); ++i)
     EBASE::info() << hltInfoName(i->first) << " = " << i->second << "; \t";
-  EBASE::info() << endreq;
+  EBASE::info() << endmsg;
 }

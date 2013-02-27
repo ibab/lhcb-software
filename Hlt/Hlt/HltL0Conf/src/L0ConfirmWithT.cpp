@@ -55,8 +55,8 @@ StatusCode L0ConfirmWithT::initialize()
 
   // check if particle type is valid
   if ( m_particleTypeTMP < Muon || m_particleTypeTMP >= Last) {
-	fatal() << "Unknown particle type " << m_particleTypeTMP << endreq
-		<< "Can't continue." << endreq;
+	fatal() << "Unknown particle type " << m_particleTypeTMP << endmsg
+		<< "Can't continue." << endmsg;
 	return StatusCode::FAILURE;
   }
   m_particleType = static_cast<ParticleType>(m_particleTypeTMP);
@@ -82,7 +82,7 @@ StatusCode L0ConfirmWithT::tracksFromTrack(
   if ( msgLevel(MSG::DEBUG) )
 	  debug() << "enter tracksFromTrack method" << endmsg;
   if ( seed.nStates() < 1 ) {
-    error() << "No states on track - skipping" << endreq;
+    error() << "No states on track - skipping" << endmsg;
     if ( m_debugMode ) {
       m_DataStore->nTHits.push_back( 0 );
       m_DataStore->decodingTime.push_back( 0 );

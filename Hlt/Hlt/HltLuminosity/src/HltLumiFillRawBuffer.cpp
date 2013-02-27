@@ -81,20 +81,20 @@ StatusCode HltLumiFillRawBuffer::execute() {
   if ( msgLevel( MSG::DEBUG ) ) {
     debug() << "Bank size: ";
     debug() << format( "%4d ", m_bank.size() ) 
-		       << "Total Data bank size " << totDataSize << endreq;
+		       << "Total Data bank size " << totDataSize << endmsg;
   }
 
   if ( MSG::VERBOSE >= msgLevel() ) {
-    verbose() << "DATA bank : " << endreq;
+    verbose() << "DATA bank : " << endmsg;
     int kl = 0;
     std::vector<unsigned int>::const_iterator itW;
     
     for ( itW = m_bank.begin(); m_bank.end() != itW; itW++ ){
       verbose() << format ( " %8x %11d   ", (*itW), (*itW) );
       kl++;
-      if ( 0 == kl%4 ) verbose() << endreq;
+      if ( 0 == kl%4 ) verbose() << endmsg;
     }
-      verbose() << endreq ;
+      verbose() << endmsg ;
   }
  
   return StatusCode::SUCCESS;
@@ -108,7 +108,7 @@ StatusCode HltLumiFillRawBuffer::finalize() {
   if ( 0 < m_nbEvents ) {
     m_totDataSize /= m_nbEvents;
     info() << "Average event size : " << format( "%7.1f words", m_totDataSize ) 
-	   << endreq;
+	   << endmsg;
   }
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 };
@@ -134,7 +134,7 @@ void HltLumiFillRawBuffer::fillDataBankShort ( ) {
         unsigned int word = ( iKey << 16 ) + ( i_value & 0xFFFF );
         m_bank.push_back( word );
         if ( MSG::VERBOSE >= msgLevel() ) {
-          verbose() << format ( " %8x %11d %11d %11d ", word, word, iKey, i_value ) << endreq;
+          verbose() << format ( " %8x %11d %11d %11d ", word, word, iKey, i_value ) << endmsg;
         }
       }
     }

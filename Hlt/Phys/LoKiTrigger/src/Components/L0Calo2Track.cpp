@@ -187,7 +187,7 @@ namespace Hlt
             m_types1.end() != imap ; ++imap ) 
       { log << std::endl <<  "'" << imap->first << "' :\t" << imap->second ; }
       //
-      log << endreq ;
+      log << endmsg ;
     }
     // ========================================================================
     void update2 ( Property& /* p */ ) // update the channels map 
@@ -210,7 +210,7 @@ namespace Hlt
             m_types2.end() != imap ; ++imap ) 
       { log << std::endl <<  "'" << imap->first << "' :\t" << imap->second ; }
       //
-      log << endreq ;
+      log << endmsg ;
     }
     // ========================================================================
   private:

@@ -147,7 +147,7 @@ StatusCode HltL0MuonCandidates::execute() {
 
   if (msgLevel(MSG::DEBUG)) {
      debug() << "# Input: " << m_selection.input<1>()->size() 
-             << " -> # Output: " << m_selection.output()->size() << endreq;
+             << " -> # Output: " << m_selection.output()->size() << endmsg;
      printInfo(" Muons ",*m_selection.output()); //#($)*))@*)@ requires outputlevel debut, but prnts at INFO...
   }
 

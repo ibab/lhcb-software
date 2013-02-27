@@ -86,9 +86,9 @@ StatusCode LumiCountVertices::execute() {
   {
     
     nCounter = m_InputContainer->size() ;
-    if (msgLevel(MSG::DEBUG)) verbose() << "found " << nCounter << " vertices." << endreq ;
+    if (msgLevel(MSG::DEBUG)) verbose() << "found " << nCounter << " vertices." << endmsg ;
   }
-  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCounter << " vertices in " << m_InputSelectionName <<  endreq ;
+  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCounter << " vertices in " << m_InputSelectionName <<  endmsg ;
 
 
   // get container

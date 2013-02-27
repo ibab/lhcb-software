@@ -71,7 +71,7 @@ void HltRecChecker::checkQuark() {
   MCParticles* mcpars = get<MCParticles>(MCParticleLocation::Default);
   int q = MCHlt::iquark(*mcpars);
   fill( histo1D(std::string("Quark")), q, 1.);
-  if ( msgLevel(MSG::DEBUG) ) debug() << " check quark " << q << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " check quark " << q << endmsg;
 }
 
 void HltRecChecker::checkTracks(const Hlt::TrackSelection& tracks) {
@@ -103,8 +103,8 @@ void HltRecChecker::checkTracks(const Hlt::TrackSelection& tracks) {
   // int tostis = MCHlt::tostis(tos,tis);
   // fill( histo1D(Track TISTOS),tostis,1.);
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << " check tracks nbs " << nbs << endreq;
-  // debug() << " check tracks tostis " << tostis << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " check tracks nbs " << nbs << endmsg;
+  // debug() << " check tracks tostis " << tostis << endmsg;
 
 }
 

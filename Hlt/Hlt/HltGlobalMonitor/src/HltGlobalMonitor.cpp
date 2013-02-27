@@ -502,7 +502,7 @@ StatusCode HltGlobalMonitor::updateCondition()
 void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,const LHCb::HltDecReports* hlt) {
    if (odin == 0 ) return;
    unsigned long long gpstime=odin->gpsTime();
-   if (msgLevel(MSG::DEBUG)) debug() << "gps time" << gpstime << endreq;
+   if (msgLevel(MSG::DEBUG)) debug() << "gps time" << gpstime << endmsg;
    m_gpstimesec=int(gpstime/1000000-904262401); //@TODO: is this still OK with ODIN v6?
    counter("ODIN::Lumi")    += (odin->triggerType()==ODIN::LumiTrigger);
    counter("ODIN::NotLumi") += (odin->triggerType()!=ODIN::LumiTrigger);

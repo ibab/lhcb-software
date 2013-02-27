@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2013-02-27 - Rob Lambert
+ - Move to endmsg, not endreq, see task #40215
+
 ! 2013-02-11 - Chris Jones
  - Turn off pixel clusters in the RICH Reco settings. Not used and just wastes
    a little CPU (used offline for monitoring only).

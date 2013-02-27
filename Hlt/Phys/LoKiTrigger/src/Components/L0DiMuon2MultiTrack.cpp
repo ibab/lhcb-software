@@ -194,7 +194,7 @@ StatusCode Hlt::L0DiMuon2MultiTrack::execute  ()
   if (msgLevel(MSG::DEBUG)) 
   {
     debug() << "# Input: "      << input       -> size() 
-            << " -> # Output: " << m_selection -> size() << endreq;
+            << " -> # Output: " << m_selection -> size() << endmsg;
   }
   
   counter ( "#input"  ) +=  input       -> size  () ;

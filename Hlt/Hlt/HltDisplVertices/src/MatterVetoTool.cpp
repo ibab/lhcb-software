@@ -207,7 +207,7 @@ bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
   // First get the z bin
   int regModIndex(0);
   double downlimit(-1000.),uplimit(-1000.);
-  //always()<<m_LeftSensorsCenter.size()-1<<endreq;
+  //always()<<m_LeftSensorsCenter.size()-1<<endmsg;
   if(int(m_LeftSensorsCenter.size())-1<2)return false;
   for(int mod = 0 ; mod != int(m_LeftSensorsCenter.size())-1; mod++){
     downlimit=uplimit;

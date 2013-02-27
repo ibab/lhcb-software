@@ -74,7 +74,7 @@ StatusCode HltLHCbIDMCParticleRelation::execute() {
   }
 
   // const std::vector<int>& keys = relation->keys();
-  // debug() << " Keys " << keys.size() << " [1] " << keys[1] << endreq;
+  // debug() << " Keys " << keys.size() << " [1] " << keys[1] << endmsg;
   
   // relation->info();
 

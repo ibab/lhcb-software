@@ -57,7 +57,7 @@ StatusCode HltL0CaloCandidates::initialize() {
   //Gaudi::Utils::setProperty(m_l02CaloTool, "OutputLevel", 3).ignore() ;
 
   if ( !m_l02CaloTool ) {
-    error() << "Error retrieving L02Calo tool" << endreq;
+    error() << "Error retrieving L02Calo tool" << endmsg;
     return StatusCode::FAILURE;
   }
 

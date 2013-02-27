@@ -151,7 +151,7 @@ StatusCode HltAlgorithm::endExecute() {
   
   if (msgLevel(MSG::DEBUG)) debug() << " output candidates " << m_outputSelection->size() 
           << " decision " << m_outputSelection->decision() 
-          << " filterpassed " << filterPassed() << endreq;
+          << " filterpassed " << filterPassed() << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -170,26 +170,26 @@ bool HltAlgorithm::verifyInput()
               << " decision " << i->second->decision() 
               << " process status " << i->second->processed() 
               << " error status " << i->second->error() 
-              << " candidates " << i->second->size() << endreq;
+              << " candidates " << i->second->size() << endmsg;
   }
 
   if (!ok) {
-    warning() << endreq;
-    warning() << endreq;
-    warning() << " FIXME FIXME FIXME FIXME" << endreq;
-    warning() << endreq;
-    warning() << " Empty input or false input selection!" << endreq;
-    warning() << " Most likely due to a misconfiguration" << endreq;
+    warning() << endmsg;
+    warning() << endmsg;
+    warning() << " FIXME FIXME FIXME FIXME" << endmsg;
+    warning() << endmsg;
+    warning() << " Empty input or false input selection!" << endmsg;
+    warning() << " Most likely due to a misconfiguration" << endmsg;
     for (IMap::const_iterator i = m_in.begin() ; i!=m_in.end(); ++i ) {
       warning() << " input selection " << i->second->id()
                 << " decision " << i->second->decision()
                 << " processed " << i->second->processed()
                 << " error " << i->second->error()
-                << " candidates " << i->second->size() << endreq;      
+                << " candidates " << i->second->size() << endmsg;      
     }
-    warning() << endreq;
-    warning() << endreq;
-    warning() << endreq;
+    warning() << endmsg;
+    warning() << endmsg;
+    warning() << endmsg;
     return StatusCode::FAILURE;
   }
   return ok;
@@ -228,16 +228,16 @@ const Hlt::Selection* HltAlgorithm::selection(const Gaudi::StringKey& key, const
 
 const Hlt::Selection* HltAlgorithm::selection(const Gaudi::StringKey& selname) const {
     Assert(!selname.empty()," selection(): no selection name");
-    if (msgLevel(MSG::DEBUG)) debug() << " selection: " << selname << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << " selection: " << selname << endmsg;
     StatusCode sc = regSvc()->registerInput(selname,this);
     if (sc.isFailure()) {
-      error() << " failed to register input " << selname << endreq;
+      error() << " failed to register input " << selname << endmsg;
       Assert(0," selection:, failed to register input!");
         
     }
     const Hlt::Selection* sel = hltSvc()->selection(selname,this);
     if (sel == 0 ) {
-      error() << " failed to retrieve input " << selname << endreq;
+      error() << " failed to retrieve input " << selname << endmsg;
       Assert(0," selection:, failed to retrieve input!");
     }
     if (std::find_if(m_in.begin(), m_in.end(), cmp_by_id(*sel))==m_in.end() ) {
@@ -247,9 +247,9 @@ const Hlt::Selection* HltAlgorithm::selection(const Gaudi::StringKey& selname) c
         Assert(ok, "selection(): already input selection "+sel->id().str());
         m_inputHistos[sel->id()] = const_cast<HltAlgorithm*>(this)->initializeHisto(sel->id().str());
       }
-      if (msgLevel(MSG::DEBUG)) debug() << " Input selection " << sel->id() << endreq;
+      if (msgLevel(MSG::DEBUG)) debug() << " Input selection " << sel->id() << endmsg;
     }
-    if (msgLevel(MSG::DEBUG)) debug() << " retrieved selection " << sel->id() << endreq;    
+    if (msgLevel(MSG::DEBUG)) debug() << " retrieved selection " << sel->id() << endmsg;    
     return sel;
 }
 
@@ -268,7 +268,7 @@ StatusCode HltAlgorithm::registerOutput(Hlt::Selection* sel) const{
           sels.push_back(i->second);
     }
     sel->addInputSelectionIDs( sels.begin(), sels.end() );
-    if (msgLevel(MSG::DEBUG)) debug() << " Output selection " << sel->id() << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << " Output selection " << sel->id() << endmsg;
     if (regSvc()->registerOutput(sel,this).isFailure()) {
        error() <<"Failed to add Selection" << sel->id() << endmsg; 
        return StatusCode::FAILURE;

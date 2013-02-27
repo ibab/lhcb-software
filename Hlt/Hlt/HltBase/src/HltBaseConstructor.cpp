@@ -15,7 +15,7 @@ HltBase<GaudiHistoAlg>::HltBase ( const std::string& type   ,
   : GaudiHistoAlg("ERROR",0)
 {
   fatal() << " invalid tool constructor " << type << " name " << name
-          << " interface" << parent << endreq;
+          << " interface" << parent << endmsg;
 }
 
 template<>
@@ -24,7 +24,7 @@ HltBase<GaudiHistoTool>::HltBase( const std::string& name,
   : GaudiHistoTool ( "ERROR", "ERROR", 0 )
 {
   fatal() << " invalid algoritm constructor : name " << name
-          << " svclocator " << pSvcLocator << endreq;
+          << " svclocator " << pSvcLocator << endmsg;
 }
 
 template<>

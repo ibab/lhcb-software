@@ -193,7 +193,7 @@ void LumiHistoCollector::setupStore() {
 StatusCode LumiHistoCollector::analyse() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "analyse()" << endmsg;
   // look at what we have in store 
-  info () << "summary of store contents" << endreq;  
+  info () << "summary of store contents" << endmsg;  
   std::string prefix = "";
   for ( histoStore::iterator iBx=m_histoStore.begin(); iBx != m_histoStore.end(); ++iBx ) {
     histoMap *theMap=iBx->second;
@@ -334,13 +334,13 @@ bool LumiHistoCollector::printHistoLeaf(IHistogramSvc* histogramSvc, SmartIF<IDa
         const std::string& id = (*i)->identifier();
         if ( printHistoLeaf(histogramSvc, mgr, (*i)) ) {
           // this is not a histogram
-          info() << MSG::INFO << "--Node found with id " << id << endreq;
+          info() << MSG::INFO << "--Node found with id " << id << endmsg;
         }
       }
     }
     else {
       const std::string& id = pObj->identifier();
-      info() << MSG::INFO << "**Hist found with id " << id << endreq;
+      info() << MSG::INFO << "**Hist found with id " << id << endmsg;
       return false;
     }
   }

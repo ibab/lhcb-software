@@ -4,6 +4,10 @@ Package Coordinator : Bruno Souza de Paula
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+
+! 2013-02-27 - Rob Lambert
+ - Move to endmsg, not endreq, see task #40215
+
 ! 2013-02-26 - Rob Lambert
  - Migrate to getIfExists, task #40118
 

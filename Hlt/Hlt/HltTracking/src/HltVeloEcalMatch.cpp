@@ -71,7 +71,7 @@ double HltVeloEcalMatch::match(const Track& track)
 {
   double matchChi2 = 999.;
   
-  if ( msgLevel(MSG::DEBUG) ) debug() << "running confirmation3D()" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "running confirmation3D()" << endmsg;
 
   // get track slopes
   double trackDxDz = track.firstState().tx();
@@ -108,7 +108,7 @@ double HltVeloEcalMatch::match(const Track& track)
     } // end if chi2 < matchChi2
   } // end loop for -1 and +1 charge
   
-  if ( msgLevel(MSG::DEBUG) ) debug() << " matchChi2 " << matchChi2 << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " matchChi2 " << matchChi2 << endmsg;
   return matchChi2;
 }
 

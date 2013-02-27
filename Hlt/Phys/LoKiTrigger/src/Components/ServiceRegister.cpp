@@ -131,7 +131,7 @@ StatusCode Hlt::Service::registerOutput
   //
   debug() << "Register OUTPUT" 
           << " selection '" << std::string( selection -> id () ) << "'" 
-          << " for algorithm '"  << producer  -> name () << "'" << endreq ;
+          << " for algorithm '"  << producer  -> name () << "'" << endmsg ;
   //
   return StatusCode::SUCCESS ;
 }
@@ -202,7 +202,7 @@ StatusCode Hlt::Service::registerInput
   // debug printout here 
   debug() << "Register  INPUT " 
           << " selection '"      << std::string(selection) << "'" 
-          << " for algorithm '"  << consumer  -> name ()   << "'" << endreq ;
+          << " for algorithm '"  << consumer  -> name ()   << "'" << endmsg ;
   //
   return StatusCode::SUCCESS ;
 }
@@ -252,7 +252,7 @@ StatusCode Hlt::Service::registerTESInput
   // debug printout here 
   if (msgLevel(MSG::DEBUG)) debug() << "Register  INPUT-TES " 
                                     << " location '"       << std::string(location)  << "'" 
-                                    << " for algorithm '"  << consumer  -> name ()   << "'" << endreq ;
+                                    << " for algorithm '"  << consumer  -> name ()   << "'" << endmsg ;
   //
   return StatusCode::SUCCESS ;                                        // RETURN 
   // ==========================================================================

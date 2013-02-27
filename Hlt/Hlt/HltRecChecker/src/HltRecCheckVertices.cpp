@@ -111,8 +111,8 @@ void HltRecCheckVertices::checkVertices() {
   fill(m_histoNMCV,nmcver,1.);
   fill(m_histoNDV,nrcver-nmcver,1.);
   
-  if ( msgLevel(MSG::DEBUG) ) debug() << " n rec vertices " << nrcver << endreq;
-  if ( msgLevel(MSG::DEBUG) ) debug() << " n mc vertices " << nmcver << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " n rec vertices " << nrcver << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " n mc vertices " << nmcver << endmsg;
   
 
   double w = 0.;
@@ -136,9 +136,9 @@ void HltRecCheckVertices::checkVertices() {
     fill(m_histoDY,y-mcy,1.);
     fill(m_histoDZ,z-mcz,1.);
 
-    if ( msgLevel(MSG::DEBUG) ) debug() << " dx vertex " << x-mcx << endreq;
-    if ( msgLevel(MSG::DEBUG) ) debug() << " dy vertex " << y-mcy << endreq;
-    if ( msgLevel(MSG::DEBUG) ) debug() << " dz vertex " << z-mcz << endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << " dx vertex " << x-mcx << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << " dy vertex " << y-mcy << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << " dz vertex " << z-mcz << endmsg;
   }
 }
 
