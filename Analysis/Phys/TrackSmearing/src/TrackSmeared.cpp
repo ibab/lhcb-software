@@ -20,15 +20,14 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackSmeared );
-
+DECLARE_ALGORITHM_FACTORY( TrackSmeared )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TrackSmeared::TrackSmeared( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-  : DaVinciAlgorithm ( name , pSvcLocator )
+  TrackSmeared::TrackSmeared( const std::string& name,
+                              ISvcLocator* pSvcLocator)
+    : DaVinciAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputLocation",m_trackLocation = LHCb::TrackLocation::Default);
   declareProperty( "OutputLocation",m_outputLocation = "Smeared");
@@ -50,33 +49,33 @@ TrackSmeared::TrackSmeared( const std::string& name,
   declareProperty( "smearProto", m_smearProto = false );
   declareProperty( "smearCopied", m_smearCopied = false );
   declareProperty( "Settings", m_settings = "2012" );
-  
+
   // Parameters for MC10 and Reco12
   /*
-  declareProperty( "paramsx_data",m_paramsx_data=
-                   boost::assign::list_of< std::pair<double,double> >
-                   (7.39663,25.375)(11.9523,30.8468)(12.1657,31.0318)(6.80381,26.2239)
-                   (6.31307,26.1924)(12.0715,30.4908)(13.968,29.4501)(8.58082,24.9248) );
-  declareProperty( "paramsy_data",m_paramsy_data=
-                   boost::assign::list_of< std::pair<double,double> >
-                   (11.3659,23.9497)(9.61021,29.9749)(7.62483,31.652)(9.04329,26.1887) 
-                   (10.1667,24.9057)(10.4476,28.463)(7.64104,30.8264)(12.5512,23.7025) );
-  declareProperty( "paramsx_mc",m_paramsx_mc=
-                   boost::assign::list_of< std::pair<double,double> >
-                   (5.94179,19.298)(10.4385,29.5275)(9.38674,30.6793)(6.45098,19.2148)
-                   (7.05916,18.8357)(9.35444,29.9623)(8.79601,30.6255)(6.60782,18.9007) );
-  declareProperty( "paramsy_mc",m_paramsy_mc=
-                   boost::assign::list_of< std::pair<double,double> >
-                   (9.85327,19.1644)(6.61456,28.2261)(6.21135,29.2543)(10.0675,19.4316)
-                   (9.74202,19.0929)(6.13729,28.6578)(5.31868,29.8177)(10.6302,18.7859) );
+    declareProperty( "paramsx_data",m_paramsx_data=
+    boost::assign::list_of< std::pair<double,double> >
+    (7.39663,25.375)(11.9523,30.8468)(12.1657,31.0318)(6.80381,26.2239)
+    (6.31307,26.1924)(12.0715,30.4908)(13.968,29.4501)(8.58082,24.9248) );
+    declareProperty( "paramsy_data",m_paramsy_data=
+    boost::assign::list_of< std::pair<double,double> >
+    (11.3659,23.9497)(9.61021,29.9749)(7.62483,31.652)(9.04329,26.1887)
+    (10.1667,24.9057)(10.4476,28.463)(7.64104,30.8264)(12.5512,23.7025) );
+    declareProperty( "paramsx_mc",m_paramsx_mc=
+    boost::assign::list_of< std::pair<double,double> >
+    (5.94179,19.298)(10.4385,29.5275)(9.38674,30.6793)(6.45098,19.2148)
+    (7.05916,18.8357)(9.35444,29.9623)(8.79601,30.6255)(6.60782,18.9007) );
+    declareProperty( "paramsy_mc",m_paramsy_mc=
+    boost::assign::list_of< std::pair<double,double> >
+    (9.85327,19.1644)(6.61456,28.2261)(6.21135,29.2543)(10.0675,19.4316)
+    (9.74202,19.0929)(6.13729,28.6578)(5.31868,29.8177)(10.6302,18.7859) );
   */
-  
+
   // Parameters for MC11 and Stripping17, don't mix them as the method to exctract them was changed.
   declareProperty( "paramsx_data",m_paramsx_data=
                    boost::assign::list_of< std::pair<double,double> >
                    (15.8007 , 21.5995 )(17.083 , 26.8743 )(17.188 , 26.9004 )(15.2431 , 21.8942 )
                    (15.3789 , 21.6944 )(17.3643 , 26.0733 )(18.1501 , 26.4945 )(15.9901 , 21.751 ));
-  
+
   declareProperty( "paramsy_data",m_paramsy_data=
                    boost::assign::list_of< std::pair<double,double> >
                    (15.4397 , 22.0227 )(17.2131 , 25.725 )(17.3457 , 25.8134 )(15.1637 , 22.3395 )
@@ -89,7 +88,7 @@ TrackSmeared::TrackSmeared( const std::string& name,
                    boost::assign::list_of< std::pair<double,double> >
                    (14.7947 , 17.0342 )(12.9836 , 25.0856 )(12.7721 , 25.6032 )(15.0134 , 17.299 )
                    (14.652 , 17.3152 )(13.187 , 24.8611 )(12.8251 , 25.2981 )(14.0403 , 17.3576 ) );
-  
+
   if (m_settings == "2012"){
     m_paramsx_data =  boost::assign::list_of< std::pair<double,double> >
       (18.1363 , 21.151 )(19.4728 , 25.755 )(19.5616 , 25.6784 )(17.0959 , 21.3326 )
@@ -97,7 +96,7 @@ TrackSmeared::TrackSmeared( const std::string& name,
     m_paramsy_data = boost::assign::list_of< std::pair<double,double> >
       (16.8973 , 21.3073 )(20.9937 , 24.8285 )(20.3615 , 24.5534 )(16.7094 , 21.2874 )
       (16.8174 , 21.0898 )(21.8155 , 23.2996 )(22.415 , 24.2684 )(16.652 , 21.662 );
-    
+
     m_paramsx_mc =  boost::assign::list_of< std::pair<double,double> >
       (12.0798 + 2.23 , 16.419 )(14.2948 + 2.45, 26.1166 )(14.2859 + 2.44, 26.5871 )(12.1948 + 2.07 , 16.6805 )
       (12.153 + 2.24 , 16.5793 )(14.5924 +2.47 , 25.8522 )(14.8085 + 2.7 , 26.277 )(12.0577 + 2.6, 16.6684 );
@@ -109,7 +108,7 @@ TrackSmeared::TrackSmeared( const std::string& name,
   m_funcsx_mc.reserve(m_paramsx_mc.size());
   m_funcsy_data.reserve(m_paramsy_data.size());
   m_funcsx_data.reserve(m_paramsx_data.size());
-  
+
 
 }
 
@@ -157,7 +156,7 @@ StatusCode TrackSmeared::initialize() {
 
   m_rnd=new TRandom3();
   m_rnd->SetSeed(m_seed);
-  if(m_paramsx_data.size()!= m_paramsy_data.size() || m_paramsx_mc.size()!= m_paramsy_mc.size() || 
+  if(m_paramsx_data.size()!= m_paramsy_data.size() || m_paramsx_mc.size()!= m_paramsy_mc.size() ||
      m_paramsx_mc.size()!= m_paramsx_data.size() || m_paramsy_mc.size()!= m_paramsy_data.size() ||
      m_paramsx_data.size()!= m_paramsy_mc.size() || m_paramsx_mc.size()!= m_paramsy_data.size()  )
     return StatusCode::FAILURE;
@@ -165,22 +164,22 @@ StatusCode TrackSmeared::initialize() {
     m_funcsx_mc.push_back(new TF1(Form("funcx%d_mc",i),"[0]/1000.0+[1]*x",0.0,1.0));
     m_funcsx_mc[i]->SetParameter(0,m_paramsx_mc[i].first);
     m_funcsx_mc[i]->SetParameter(1,m_paramsx_mc[i].second);
-  
+
     m_funcsy_mc.push_back( new TF1(Form("funcy%d_mc",i),"[0]/1000.0+[1]*x",0.0,1.0));
     m_funcsy_mc[i]->SetParameter(0,m_paramsy_mc[i].first);
     m_funcsy_mc[i]->SetParameter(1,m_paramsy_mc[i].second);
-  
+
     m_funcsx_data.push_back( new TF1(Form("funcx%d_data",i),"[0]/1000.0+[1]*x",0.0,1.0));
     m_funcsx_data[i]->SetParameter(0,m_paramsx_data[i].first);
     m_funcsx_data[i]->SetParameter(1,m_paramsx_data[i].second);
-    
+
 
     m_funcsy_data.push_back( new TF1(Form("funcy%d_data",i),"[0]/1000.0+[1]*x",0.0,1.0));
     m_funcsy_data[i]->SetParameter(0,m_paramsy_data[i].first);
     m_funcsy_data[i]->SetParameter(1,m_paramsy_data[i].second);
-    
+
   }
-    
+
 
   return StatusCode::SUCCESS;
 }
@@ -265,7 +264,7 @@ StatusCode TrackSmeared::smearProto(){
   LHCb::Tracks* newTracks = new LHCb::Tracks();
   put(newTracks, "Rec/Track/"+m_outputLocation);
   put(newProtos, "Rec/ProtoP/"+m_outputLocation);
-  
+
   BOOST_FOREACH(const LHCb::ProtoParticle* proto, *pp){
     // copy protoparticle
     LHCb::ProtoParticle* smearedProto = proto->clone();
@@ -275,7 +274,7 @@ StatusCode TrackSmeared::smearProto(){
     LHCb::Track* smearedtrack = new LHCb::Track();
     smearedtrack->copy(*(smearedProto->track()));
     const std::vector< LHCb::State * > & states = smearedtrack->states();
-  
+
     debug()<<"smeared track before p:"<<smearedtrack->states()[0]->p()<<".x: "<< smearedtrack->states()[0]->x()<<endmsg;
     smearStates(states);
     // save smeared track and set to protoparticle
@@ -285,19 +284,19 @@ StatusCode TrackSmeared::smearProto(){
     debug()<<"######"<<endmsg;
     newProtos->add(smearedProto);
     newTracks->add(smearedtrack);
-    
+
   }
 
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
-  
+
 }
 
 StatusCode TrackSmeared::smearBest(){
   if (m_trackLocation!=LHCb::TrackLocation::Default){
     debug()<<"You know what you are doing? Smearing a different container "<<endmsg;
   }
-  
+
   if  (!exist<LHCb::Track::Range>(m_trackLocation))  return StatusCode::FAILURE;
   LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
   // loop over Best Track Container
@@ -324,8 +323,8 @@ StatusCode TrackSmeared::smearBest(){
 }
 
 StatusCode TrackSmeared::smearCopied(){
-  
-  
+
+
   if  (!exist<LHCb::Track::Range>(m_trackLocation))  return StatusCode::FAILURE;
   if  (!exist<LHCb::RichPIDs>(LHCb::RichPIDLocation::Offline))  return StatusCode::FAILURE;
   LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
@@ -354,7 +353,7 @@ StatusCode TrackSmeared::smearCopied(){
       neueid->setTrack(smearedtrack);
       newRichIDs->add(neueid);
     }
-    
+
     if (!tr->type() || LHCb::Track::Long != tr->type() ){
       debug()<< "No Long track! Not smeared!" <<endmsg;
       newTracks->add(smearedtrack);
@@ -364,7 +363,7 @@ StatusCode TrackSmeared::smearCopied(){
       debug()<<"old x position "<<states[0]->x()<<endmsg;
       debug()<<"old y position "<<states[0]->y()<<endmsg;
       debug()<<"old z position "<<states[0]->z()<<endmsg;
-      
+
       if (states.size()>0){
         smearStates(states);
       }
@@ -374,10 +373,10 @@ StatusCode TrackSmeared::smearCopied(){
       newTracks->add(smearedtrack);
     }
   }
-  
+
   debug() << "adding Container to TES " <<"Rec/Track/"<<m_outputLocation<< endmsg;
 
-  
+
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
 }
@@ -411,13 +410,13 @@ StatusCode TrackSmeared::execute() {
 StatusCode TrackSmeared::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  
+
   delete m_funcx_data;
   delete m_funcx_mc;
   delete m_funcy_data;
   delete m_funcy_mc;
   delete m_rnd;
-  
+
 
   for(unsigned int i = 0; i< m_paramsx_data.size(); i++){
 
@@ -426,7 +425,7 @@ StatusCode TrackSmeared::finalize() {
     delete m_funcsx_data[i];
     delete m_funcsy_data[i];
   }
-  
+
   return DaVinciAlgorithm::finalize();
 }
 
