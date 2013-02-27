@@ -4,7 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+
 ! 2013-02-27 - Gloria Corti
+ - Change version of DecFiles to v27r* for latest EvtGen
  - Add use of package GDMLData for import of GDML files
  - Port changes for GDML from v42b branch: see below
 
