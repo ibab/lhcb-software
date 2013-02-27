@@ -293,7 +293,7 @@ void Kali::MisCalibrateCalo::handleMap ( Property& /* p */ )
   updateTable ( m_pmap ) ;
 }
 // =============================================================================
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(Kali,MisCalibrateCalo);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(Kali,MisCalibrateCalo)
 // =============================================================================
 // The END 
 // =============================================================================

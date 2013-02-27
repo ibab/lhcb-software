@@ -4,6 +4,9 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2013-02-27 - Chris Jones
+ - Fix -pedantic compilation warnings
+
 !========================= KaliCalo v4r13p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
