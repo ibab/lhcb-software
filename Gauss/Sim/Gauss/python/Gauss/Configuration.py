@@ -113,6 +113,7 @@ class Gauss(LHCbConfigurableUser):
         ,"Persistency"       : None
         ,"Debug"             : False
         ,"BeamPipe" : "BeamPipeOn" # _beamPipeSwitch = 1
+        ,"ReplaceWithGDML"   : [ { "volsToReplace" : [], "gdmlFile" : "" } ]
         #,"BeamPipe" : "BeamPipeOff"  # _beamPipeSwitch = 0
         #,"BeamPipe" : "BeamPipeInDet"  # _beamPipeSwitch = -1
       }
@@ -136,6 +137,7 @@ class Gauss(LHCbConfigurableUser):
        ,"WriteFSR"       : """Add file summary record, default True"""
        ,"Persistency"    : """ROOT or POOL persistency, overwrite the default"""
        ,"BeamPipe"       : """Switch for beampipe definition; BeamPipeOn: On everywhere, BeamPipeOff: Off everywhere, BeamPipeInDet: Only in named detectors """
+       ,"ReplaceWithGDML": """Replace a list of specified volumes with GDML description from file provided """
        }
     KnownHistOptions     = ['NONE','DEFAULT']
     TrackingSystem       = ['VELO','TT','IT','OT']
@@ -327,6 +329,32 @@ class Gauss(LHCbConfigurableUser):
             else:
                 for element in self._beamPipeElements["ut"]:
                     geo.StreamItems.append(element)
+
+
+    def defineGDMLGeo ( self, geo, giGaGeo, gdmlDict ):
+
+        # Define the GDML reader tool and add it to the sequence
+        from Configurables import GDMLReader
+        import os
+        gdmlFile = gdmlDict["gdmlFile"]
+
+        if gdmlFile:
+            gdmlToolName = os.path.splitext(os.path.basename(gdmlFile))[0]
+            gdmlTool = GDMLReader( gdmlToolName,
+                                   FileName = gdmlFile )
+            giGaGeo.addTool(gdmlTool, gdmlToolName)
+            giGaGeo.GdmlReaders.append(gdmlToolName)
+            
+            # Remove the corresponding geometry from the Geo.InputStreams
+            for item in gdmlDict["volsToReplace"]:
+                if item in geo.StreamItems:
+                    geo.StreamItems.remove(item)
+                else:
+                    raise RuntimeError("ERROR: Volume not in list of existing volumes, '%s'" %item)
+        else:
+           raise RuntimeError("ERROR: Invalid GDML file provided, '%s'" %gdmlFile)
+
+
 
 #"""
 #><<         ><<             ><<               ><<<<<     ><<<<<     ><<<<<     ><< ><<   
@@ -2139,6 +2167,16 @@ class Gauss(LHCbConfigurableUser):
 
 
 
+    def defineGDMLGeoStream ( self, geo, giGaGeo ):
+        if self.getProp("ReplaceWithGDML"):
+            gdmlOpt = self.getProp("ReplaceWithGDML")
+            if gdmlOpt[0]["volsToReplace"]:
+                for gdmlDict in self.getProp("ReplaceWithGDML"):
+                    self.defineGDMLGeo ( geo, giGaGeo, gdmlDict )
+
+            
+
+
     def defineGeo( self ):
         # Define the simulated geometry
         geo = GiGaInputStream( "Geo",
@@ -2191,6 +2229,9 @@ class Gauss(LHCbConfigurableUser):
         # Returns a list containing all the elments common to both lists
         if [det for det in ['Spd', 'Prs', 'Ecal', 'Hcal'] if det in self.getProp('DetectorGeo')['Detectors']]:
             importOptions("$GAUSSCALOROOT/options/Calo.opts")
+
+        # Call GDML description
+        self.defineGDMLGeoStream( geo, giGaGeo )
 
         if self.getProp("Debug"):
             print "\nDEBUG Detector Geometry Elements:"

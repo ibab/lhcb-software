@@ -4,6 +4,18 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-02-27 - Gloria Corti
+ - Add use of package GDMLData for import of GDML files
+ - Port changes for GDML from v42b branch: see below
+
+! 2013-02-12 - Paul Szczypka (merged r152118)
+ - Correction to the GDML code - tool now added to correct algo.
+
+! 2013-02-12 - Gloria Corti and Paul Szczypka (merged r152070,152071)
+ - Introduce in the Gauss() configurable a new property "ReplaceWithGDML" to
+   allow to replace a list of volumes with a GDML description given in a file.
+   The name of the tool is set from the filename.
+
 ! 2013-02-26 - Paul Szczypka
  - Commented out upgrade position of IT in Configuration.py (Removes warnings)
 
