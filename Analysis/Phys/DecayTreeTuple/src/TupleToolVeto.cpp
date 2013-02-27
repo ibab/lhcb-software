@@ -43,15 +43,16 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolVeto );
+DECLARE_TOOL_FACTORY( TupleToolVeto )
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolVeto::TupleToolVeto( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent )
-  : TupleToolBase ( type, name , parent ),
-    m_pid(0)
+  TupleToolVeto::TupleToolVeto( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
+    : TupleToolBase ( type, name , parent ),
+      m_pid(0)
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("Particle",m_part="");
@@ -66,7 +67,7 @@ StatusCode TupleToolVeto::initialize()
   m_check = tool<IParticleVeto>("ParticleVeto","ParticleVeto" ,this );
   if ( !m_part.empty() )
   {
-    LHCb::IParticlePropertySvc* ppsvc = 
+    LHCb::IParticlePropertySvc* ppsvc =
       svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
     const LHCb::ParticleProperty* pp = ppsvc->find( m_part );
     m_pid = (pp) ? pp->pdgID().abspid() : 0;
@@ -86,13 +87,13 @@ StatusCode TupleToolVeto::fill( const Particle* , const Particle* P,
   if ( P )
   {
 
-    if ( !m_part.empty() && m_pid != P->particleID().abspid() ) 
+    if ( !m_part.empty() && m_pid != P->particleID().abspid() )
     {
       return StatusCode::SUCCESS;
     }
 
     for ( std::map<std::string,std::vector<std::string> >::const_iterator i = m_veto.begin();
-          m_veto.end() != i; ++i ) 
+          m_veto.end() != i; ++i )
     {
       const std::string&              flag = i->first;
       const std::vector<std::string>& cont = i->second;
@@ -101,7 +102,7 @@ StatusCode TupleToolVeto::fill( const Particle* , const Particle* P,
     }
 
     for( std::map<std::string,std::vector<std::string> >::const_iterator i = m_vetoOther.begin();
-         m_vetoOther.end() != i; ++i ) 
+         m_vetoOther.end() != i; ++i )
     {
       const std::string& flag              = i->first;
       const std::vector<std::string>& cont = i->second;
