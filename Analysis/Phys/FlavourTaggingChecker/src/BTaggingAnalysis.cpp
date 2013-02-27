@@ -10,7 +10,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( BTaggingAnalysis );
+DECLARE_ALGORITHM_FACTORY( BTaggingAnalysis )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -54,7 +54,7 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   declareProperty( "thetaMin_cut",            m_thetaMin    = 0.012 );
 }
 
-BTaggingAnalysis::~BTaggingAnalysis() {}; 
+BTaggingAnalysis::~BTaggingAnalysis() {}
 
 //=============================================================================
 StatusCode BTaggingAnalysis::initialize() {

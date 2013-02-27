@@ -11,7 +11,7 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of Factory
-DECLARE_ALGORITHM_FACTORY( CheatedSelection );
+DECLARE_ALGORITHM_FACTORY( CheatedSelection )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -34,7 +34,7 @@ CheatedSelection::CheatedSelection( const std::string& name,
 }
 
 //=============================================================================
-CheatedSelection::~CheatedSelection() {};
+CheatedSelection::~CheatedSelection() {}
 
 //=============================================================================
 StatusCode CheatedSelection::initialize() {

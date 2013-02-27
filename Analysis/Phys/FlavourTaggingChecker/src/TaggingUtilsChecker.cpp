@@ -11,7 +11,7 @@ using namespace LHCb;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TaggingUtilsChecker );
+DECLARE_TOOL_FACTORY( TaggingUtilsChecker )
 
 //====================================================================
 TaggingUtilsChecker::TaggingUtilsChecker( const std::string& type,
@@ -25,7 +25,7 @@ TaggingUtilsChecker::TaggingUtilsChecker( const std::string& type,
   declareInterface<ITaggingUtilsChecker>(this);
 
 }
-TaggingUtilsChecker::~TaggingUtilsChecker() {}; 
+TaggingUtilsChecker::~TaggingUtilsChecker() {}
 
 //=====================================================================
 StatusCode TaggingUtilsChecker::initialize() { 

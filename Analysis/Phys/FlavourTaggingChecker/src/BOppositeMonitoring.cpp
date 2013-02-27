@@ -17,7 +17,7 @@ using namespace LHCb;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( BOppositeMonitoring );
+DECLARE_ALGORITHM_FACTORY( BOppositeMonitoring )
 
 
 //=============================================================================
@@ -29,6 +29,7 @@ BOppositeMonitoring::BOppositeMonitoring( const std::string& name,
     m_forcedBtool(0)
 {
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================

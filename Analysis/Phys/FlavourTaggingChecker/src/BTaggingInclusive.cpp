@@ -18,7 +18,7 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of Factory
-DECLARE_ALGORITHM_FACTORY( BTaggingInclusive );
+DECLARE_ALGORITHM_FACTORY( BTaggingInclusive )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -11,7 +11,7 @@ using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of Factory
-DECLARE_ALGORITHM_FACTORY( BTaggingChecker );
+DECLARE_ALGORITHM_FACTORY( BTaggingChecker )
 
 //==========================================================================
 BTaggingChecker::BTaggingChecker( const std::string& name,
@@ -27,7 +27,7 @@ BTaggingChecker::BTaggingChecker( const std::string& name,
 }
 
 //==========================================================================
-BTaggingChecker::~BTaggingChecker() {}; 
+BTaggingChecker::~BTaggingChecker() {}
 
 //==========================================================================
 StatusCode BTaggingChecker::initialize() {
@@ -42,7 +42,7 @@ StatusCode BTaggingChecker::initialize() {
   for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; nrtag[i]=0; nwtag[i]=0; }
 
   return sc ;
-};
+}
 
 //==========================================================================
 // Main execution
