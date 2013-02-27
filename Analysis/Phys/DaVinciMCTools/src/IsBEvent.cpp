@@ -1,5 +1,5 @@
 // $Id: IsBEvent.cpp,v 1.8 2010-06-01 09:38:21 pkoppenb Exp $
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -17,16 +17,16 @@
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( IsBEvent );
+DECLARE_ALGORITHM_FACTORY( IsBEvent )
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-IsBEvent::IsBEvent( const std::string& name,
-                    ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-  , m_particles()
+  IsBEvent::IsBEvent( const std::string& name,
+                      ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator )
+    , m_particles()
 {
   m_required.push_back("b"); // default is to require a b-quark
   declareProperty( "RequiredParticles", m_required );
@@ -35,7 +35,7 @@ IsBEvent::IsBEvent( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-IsBEvent::~IsBEvent() {}; 
+IsBEvent::~IsBEvent() {}
 
 //=============================================================================
 // Initialization
@@ -52,7 +52,7 @@ StatusCode IsBEvent::initialize() {
     fatal() << "Unable to locate Particle Property Service" << endmsg;
     return sc;
   }
-  for (std::vector<std::string>::const_iterator PN=m_required.begin() ; 
+  for (std::vector<std::string>::const_iterator PN=m_required.begin() ;
        PN!=m_required.end() ; ++PN ){
     if ( *PN == "b" ) m_particles.push_back(5); // b quark
     else if ( *PN == "c" ) m_particles.push_back(4); // c
@@ -66,13 +66,13 @@ StatusCode IsBEvent::initialize() {
       int pid = pp->particleID().pid();
       m_particles.push_back(pid);
     }
-  }  
+  }
   if (m_particles.empty()) warning() << "Particles list is empty." << endmsg;
   else info() << "Will be looking for events with " << m_particles << endmsg;
   if (m_andMode) info() << "... of which all have to be there!" << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -84,25 +84,25 @@ StatusCode IsBEvent::execute() {
   LHCb::MCParticles* mcparts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default );
   if( !mcparts ){
     fatal() << "Unable to find MC particles at '"
-        << LHCb::MCParticleLocation::Default << "'" << endreq;
+            << LHCb::MCParticleLocation::Default << "'" << endreq;
     return StatusCode::FAILURE;
   }
   bool found = goodEvent(mcparts);
   if (found) debug() << "Found required particle(s)" << endreq;
   setFilterPassed(found);
-  
+
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  All there?
 //=============================================================================
 bool IsBEvent::goodEvent(LHCb::MCParticles* mcparts){
-  
-  for ( std::vector<int>::const_iterator id = m_particles.begin() ; 
+
+  for ( std::vector<int>::const_iterator id = m_particles.begin() ;
         id != m_particles.end() ; ++id ){
     bool found = false ;
-    for ( LHCb::MCParticles::const_iterator MC = mcparts->begin() ; 
+    for ( LHCb::MCParticles::const_iterator MC = mcparts->begin() ;
           MC != mcparts->end() ; ++MC){
       if ( *id == 5 ) found = (*MC)->particleID().hasBottom() ;
       else if ( *id == 4 ) found = (*MC)->particleID().hasCharm() ;
@@ -111,7 +111,7 @@ bool IsBEvent::goodEvent(LHCb::MCParticles* mcparts){
         found = ( (*MC)->particleID().pid() == *id ) ;
       }
       if (found) {
-        debug() << "Found required particle " << 
+        debug() << "Found required particle " <<
           (*MC)->particleID().pid() << endmsg;
         break ; // happy
       }

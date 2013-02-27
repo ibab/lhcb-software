@@ -24,38 +24,38 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCReconstructed );
+DECLARE_TOOL_FACTORY( MCReconstructed )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MCReconstructed::MCReconstructed( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_pCPPAsct(0)
-  , m_pNPPAsct(0)
+  MCReconstructed::MCReconstructed( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent )
+    : GaudiTool ( type, name , parent )
+    , m_pCPPAsct(0)
+    , m_pNPPAsct(0)
 {
   declareInterface<IMCReconstructed>(this);
-
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-MCReconstructed::~MCReconstructed() {}; 
+MCReconstructed::~MCReconstructed() {}
 
 //=============================================================================
 // Initialize
 //=============================================================================
 StatusCode MCReconstructed::initialize() {
- 
+
   StatusCode sc = GaudiTool::initialize();
   if( sc.isFailure() ) return sc;
-  
+
   debug() << "==> MCReconstructed initialize" << endmsg;
- 
-  m_pCPPAsct = new ProtoParticle2MCLinker( this, Particle2MCMethod::ChargedPP, LHCb::ProtoParticleLocation::Charged);
+
+  m_pCPPAsct = new ProtoParticle2MCLinker( this, Particle2MCMethod::ChargedPP,
+                                           LHCb::ProtoParticleLocation::Charged);
   m_pNPPAsct = new ProtoParticle2MCLinker( this, Particle2MCMethod::NeutralPP, LHCb::ProtoParticleLocation::Neutrals);
   return sc;
 }
@@ -67,12 +67,12 @@ StatusCode MCReconstructed::finalize()
     delete m_pCPPAsct;
     m_pCPPAsct = 0;
   }
-  
+
   if( 0 != m_pNPPAsct ) {
     delete m_pNPPAsct;
     m_pNPPAsct = 0;
   }
-  
+
   return GaudiTool::finalize();
 }
 
@@ -94,40 +94,40 @@ IMCReconstructed::RecCategory MCReconstructed::reconstructed( const LHCb::MCPart
   }
   if (iMCstable->particleID().threeCharge() != 0) ///< for charged
   {
-      LHCb::ProtoParticle* pp = m_pCPPAsct->firstP( iMCstable );
-      while( pp )
-      {
-        if (msgLevel(MSG::DEBUG)) debug() << "    has an associated charged ProtoParticle " << pp 
-                                          << " " << pp->track() << " " << pp->calo() << endmsg;
-        const LHCb::Track *ptrack = pp->track();
-        if ( msgLevel(MSG::DEBUG)) {
-          if ( ptrack ) debug() << "Track type is " << ptrack->type() << " clone? " 
-                                << ptrack->checkFlag(LHCb::Track::Clone) << endmsg ;
-          else debug() << "No track"  << endmsg ;
-        }
-        if( ptrack && ! ptrack->checkFlag(LHCb::Track::Clone) ){
-          switch( ptrack->type() )
-          {
-          case LHCb::Track::Long        : rected = IMCReconstructed::ChargedLong; break;
-          case LHCb::Track::Downstream  : rected = IMCReconstructed::ChargedDownstream; break;
-          case LHCb::Track::Upstream    : rected = IMCReconstructed::ChargedUpstream; break;
-            
-            // Other enum values not covered by the original logic
-          case LHCb::Track::TypeUnknown : 
-          case LHCb::Track::Velo        : 
-          case LHCb::Track::VeloR       : 
-          case LHCb::Track::Ttrack      : 
-          case LHCb::Track::Muon        :
-          default                       : break;
-          }
-          
-          if (msgLevel(MSG::DEBUG)) debug() << "      rected = " << rected << endmsg;
-          
-          break;
-        }
-        
-        pp = m_pCPPAsct->nextP();
+    LHCb::ProtoParticle* pp = m_pCPPAsct->firstP( iMCstable );
+    while( pp )
+    {
+      if (msgLevel(MSG::DEBUG)) debug() << "    has an associated charged ProtoParticle " << pp
+                                        << " " << pp->track() << " " << pp->calo() << endmsg;
+      const LHCb::Track *ptrack = pp->track();
+      if ( msgLevel(MSG::DEBUG)) {
+        if ( ptrack ) debug() << "Track type is " << ptrack->type() << " clone? "
+                              << ptrack->checkFlag(LHCb::Track::Clone) << endmsg ;
+        else debug() << "No track"  << endmsg ;
       }
+      if( ptrack && ! ptrack->checkFlag(LHCb::Track::Clone) ){
+        switch( ptrack->type() )
+        {
+        case LHCb::Track::Long        : rected = IMCReconstructed::ChargedLong; break;
+        case LHCb::Track::Downstream  : rected = IMCReconstructed::ChargedDownstream; break;
+        case LHCb::Track::Upstream    : rected = IMCReconstructed::ChargedUpstream; break;
+
+          // Other enum values not covered by the original logic
+        case LHCb::Track::TypeUnknown :
+        case LHCb::Track::Velo        :
+        case LHCb::Track::VeloR       :
+        case LHCb::Track::Ttrack      :
+        case LHCb::Track::Muon        :
+        default                       : break;
+        }
+
+        if (msgLevel(MSG::DEBUG)) debug() << "      rected = " << rected << endmsg;
+
+        break;
+      }
+
+      pp = m_pCPPAsct->nextP();
+    }
   }
   else ///< for neutrals
   {
@@ -135,20 +135,20 @@ IMCReconstructed::RecCategory MCReconstructed::reconstructed( const LHCb::MCPart
     if( pp )
     {
       if (msgLevel(MSG::DEBUG)) debug() << "    has an associated neutral ProtoParticle." << endmsg;
-      
+
       rected = IMCReconstructed::Neutral;
-      
+
       // pp = m_pNPPAsct->nextP();
     }
-    
+
     if (msgLevel(MSG::DEBUG)) debug() << "      rected = " << rected << endmsg;
   }
-  
-  
+
+
   if (msgLevel(MSG::DEBUG)) debug() << "  returning " << IMCReconstructed::text(rected) << endmsg;
-  
+
   return rected;
-  
+
 }
 
 //=============================================================================

@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCPrimVertexMaker );
+DECLARE_ALGORITHM_FACTORY( MCPrimVertexMaker )
 //
 using namespace Gaudi::Units;
 

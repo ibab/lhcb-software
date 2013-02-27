@@ -74,7 +74,7 @@ struct IsUnstable : std::unary_function<LHCb::MCParticle*,bool> {
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( MCParticleMaker );
+DECLARE_TOOL_FACTORY( MCParticleMaker )
 
 using namespace Gaudi::Units;
 
@@ -111,7 +111,7 @@ MCParticleMaker::MCParticleMaker
 //=============================================================================
 // Destructor
 //=============================================================================
-MCParticleMaker::~MCParticleMaker( ) { };
+MCParticleMaker::~MCParticleMaker( ) { }
 
 //=============================================================================
 // Initialisation. Check parameters

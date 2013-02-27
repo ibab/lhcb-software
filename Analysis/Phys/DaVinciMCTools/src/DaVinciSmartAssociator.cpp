@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( DaVinciSmartAssociator );
+DECLARE_TOOL_FACTORY( DaVinciSmartAssociator )
 
 using namespace LHCb;
 

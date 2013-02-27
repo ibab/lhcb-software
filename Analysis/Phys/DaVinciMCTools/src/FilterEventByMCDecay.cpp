@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( FilterEventByMCDecay );
+DECLARE_ALGORITHM_FACTORY( FilterEventByMCDecay )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -31,6 +31,7 @@ FilterEventByMCDecay::FilterEventByMCDecay( const std::string& name,
 {
   declareProperty("Select", m_select);
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -73,15 +74,6 @@ StatusCode FilterEventByMCDecay::execute() {
   setFilterPassed(pass);
 
   return StatusCode::SUCCESS;
-}
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode FilterEventByMCDecay::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

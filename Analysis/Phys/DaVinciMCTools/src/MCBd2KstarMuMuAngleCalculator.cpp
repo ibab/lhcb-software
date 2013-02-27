@@ -23,7 +23,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( MCBd2KstarMuMuAngleCalculator );
+DECLARE_TOOL_FACTORY( MCBd2KstarMuMuAngleCalculator )
 
 using namespace DaVinci::P2VVAngles;
 

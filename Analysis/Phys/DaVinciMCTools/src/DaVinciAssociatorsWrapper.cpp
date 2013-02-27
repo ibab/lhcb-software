@@ -1,7 +1,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
 // local
@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( DaVinciAssociatorsWrapper );
+DECLARE_TOOL_FACTORY( DaVinciAssociatorsWrapper )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -31,13 +31,14 @@ DaVinciAssociatorsWrapper::DaVinciAssociatorsWrapper( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-DaVinciAssociatorsWrapper::~DaVinciAssociatorsWrapper() {} 
+DaVinciAssociatorsWrapper::~DaVinciAssociatorsWrapper() {}
 //=============================================================================
 // Make & return the linker
-//============================================================================= 
-Particle2MCLinker* DaVinciAssociatorsWrapper::linker(const Particle2MCMethod::AssociationMethod& method, 
-                                                     const std::vector<std::string>& locations 
-                                                    ) {
+//=============================================================================
+Particle2MCLinker* DaVinciAssociatorsWrapper::linker(const Particle2MCMethod::AssociationMethod& method,
+                                                     const std::vector<std::string>& locations
+                                                     )
+ {
   //If the linker already exists, just return a pointer to it
   if ( m_linker != NULL) {
     Warning("Linker already exists, returning it!",StatusCode::SUCCESS,0);
@@ -48,7 +49,7 @@ Particle2MCLinker* DaVinciAssociatorsWrapper::linker(const Particle2MCMethod::As
     return NULL ;
   }
 
-  //Otherwise make the required linker 
+  //Otherwise make the required linker
   debug() << "Creating linker for " << Particle2MCMethod::algType[method] ;
   debug() << " using locations " << locations ;
   m_linker =  new Particle2MCLinker(this, method, locations);
@@ -59,7 +60,7 @@ Particle2MCLinker* DaVinciAssociatorsWrapper::linker(const Particle2MCMethod::As
     err() << "Could not create linker " << Particle2MCMethod::algType[method] << endmsg ;
     return NULL ;
   }
-  return m_linker ; 
+  return m_linker ;
 }
 //=============================================================================
 // initialize
@@ -73,7 +74,7 @@ StatusCode DaVinciAssociatorsWrapper::initialize() {
 // finalize
 //=============================================================================
 StatusCode DaVinciAssociatorsWrapper::finalize() {
-  return GaudiTool::finalize() ; 
+  return GaudiTool::finalize() ;
 }
 //=============================================================================
 // Implementation of Listener interface

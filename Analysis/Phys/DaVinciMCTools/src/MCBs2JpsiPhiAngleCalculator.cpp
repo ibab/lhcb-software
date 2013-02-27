@@ -21,8 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCBs2JpsiPhiAngleCalculator );
-
+DECLARE_TOOL_FACTORY( MCBs2JpsiPhiAngleCalculator )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -35,24 +34,13 @@ MCBs2JpsiPhiAngleCalculator::MCBs2JpsiPhiAngleCalculator( const std::string& typ
   declareInterface<IP2VVMCPartAngleCalculator>(this);
   declareProperty( "DecayDepth" , m_depth = 2 );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 MCBs2JpsiPhiAngleCalculator::~MCBs2JpsiPhiAngleCalculator() {} 
 
 //=============================================================================
-
-
-StatusCode MCBs2JpsiPhiAngleCalculator::initialize() {
-  
-  StatusCode sc = GaudiTool::initialize() ;
-  if (!sc) return sc ;
-  
-  info() << "Initializing Angle Calculator Tool" << endmsg ;
-  
-  return sc ;
-}
-
 
 void MCBs2JpsiPhiAngleCalculator::fillDescendants( const LHCb::MCParticle* particle, 
                                                    LHCb::MCParticle::ConstVector& descendants, int depth )
