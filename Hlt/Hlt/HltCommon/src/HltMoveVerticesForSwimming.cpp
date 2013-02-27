@@ -101,9 +101,10 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   m_bDIRA             = -999999.0 ;
   m_badEvent          = false; 
 
-  debug() << "About to get the offline particles" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "About to get the offline particles" << endmsg;
 
   Particle::Range pars = getIfExists<Particle::Range>(m_Bcontainer+"/Particles");
+
   
   //Check if particles exist
   if (!pars) return sc;
@@ -170,7 +171,7 @@ StatusCode HltMoveVerticesForSwimming::execute() {
        return sc;  
   }      
   //Now get the best PV for the particle
-  debug() << "About to get the related PV" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "About to get the related PV" << endmsg;
   const LHCb::VertexBase* offPV  = m_finder->relatedPV(pars[0], LHCb::RecVertex::ConstVector(offPVs.begin(), offPVs.end()));
   LHCb::VertexBase* offPV_Clone = offPV->clone();
 

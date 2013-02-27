@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+
+! 2013-02-27 - Rob Lambert
+ - protect debug messages, task #40215
+
 ! 2013-02-26 - Rob Lambert
  - now set location in a smarter way task #40113
 

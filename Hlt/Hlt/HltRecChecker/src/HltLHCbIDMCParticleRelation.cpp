@@ -35,7 +35,7 @@ StatusCode HltLHCbIDMCParticleRelation::initialize() {
 
 StatusCode HltLHCbIDMCParticleRelation::execute() {
 
-  debug() << "==> Execute" << endmsg;  
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;  
   
   Hlt::IntRelation* relation = new Hlt::IntRelation();
   put(relation,m_relationLocation);

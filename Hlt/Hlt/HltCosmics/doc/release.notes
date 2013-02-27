@@ -3,6 +3,10 @@
 ! Responsible : Stephan Nies 
 ! Purpose     : Cosmic run specific algorithms and tools
 !----------------------------------------------------------------------------
+
+! 2013-02-27 - Rob Lambert
+ - protect debug messages, task #40215
+
 !========================== HltCosmics v1r0p2 2010-01-11 =================
 ! 2009-12-23 - Gerhard Raven
  - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration 

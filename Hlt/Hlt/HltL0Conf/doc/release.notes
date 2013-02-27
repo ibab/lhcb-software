@@ -4,6 +4,9 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-02-27 - Rob Lambert
+ - protect debug messages, task #40215
+
 !========================== HltL0Conf v3r0p1 2011-06-24 ===================
 ! 2011-0x-zz - Gerhard Raven
  - remove options from requirements

@@ -81,7 +81,7 @@ StatusCode HltVeloTCaloMatch::match(const Track& tvelo,
 
   bool ok = ((Chi2Y < m_maxYChi2)&&(Chi2X < m_maxXChi2));
   
-  debug() << " match Chi2 "<< Chi2Y << " " << Chi2X << " accepted? " << ok << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " match Chi2 "<< Chi2Y << " " << Chi2X << " accepted? " << ok << endmsg;
   if (!ok) return StatusCode::FAILURE;
   
   // merge tracks
@@ -89,8 +89,8 @@ StatusCode HltVeloTCaloMatch::match(const Track& tvelo,
   Hlt::TrackMerge(tcalo,otrack);
   otrack.setType(tvelo.type());
   
-  debug() << " match track slopes " << otrack.slopes() 
-          << " quality " << Chi2Y << ", " << Chi2X << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " match track slopes " << otrack.slopes() 
+          << " quality " << Chi2Y << ", " << Chi2X << endmsg;
   
   return StatusCode::SUCCESS;
 }
@@ -116,7 +116,7 @@ double HltVeloTCaloMatch::match(const Track& track,
 
 double HltVeloTCaloMatch::match(const Track& track, int matchtype) 
 {
-  debug() << "running confirmation3D()" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "running confirmation3D()" << endmsg;
 
   //First the y Chi2X 
   const std::vector<State*> TSV = track.states();

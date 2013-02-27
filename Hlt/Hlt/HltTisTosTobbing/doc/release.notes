@@ -4,6 +4,10 @@
 ! Purpose     : Hlt-project-dependent implementation of TisTosTobbing tools
 !-----------------------------------------------------------------------------
 
+
+! 2013-02-27 - Rob Lambert
+ - protect debug messages, task #40215
+
 ! 2013-02-26 - Rob Lambert
  - Move to getOrCreate for object summaries
 

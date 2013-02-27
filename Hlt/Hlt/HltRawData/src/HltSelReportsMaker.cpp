@@ -1078,6 +1078,8 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle* o
                 }
                 m_HLTmuonTracks = getIfExists<LHCb::Tracks>(m_HltMuonTracksLocation);
                 if( NULL==m_HLTmuonTracks) 
+                {
+                  
                   Warning(" Found Particle which is a muon but no muon tracks at " + m_HltMuonTracksLocation.value() 
                           ,StatusCode::SUCCESS,10 );
                 }

@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2013-02-27 - Rob Lambert
+ - protect debug messages, task #40215
+
 ! 2013-02-21 - Rob Lambert
  - Retire OnOfflineTool for HltVertexReportsMaker see task #40113
 

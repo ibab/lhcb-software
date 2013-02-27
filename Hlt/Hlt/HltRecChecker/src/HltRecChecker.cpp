@@ -71,7 +71,7 @@ void HltRecChecker::checkQuark() {
   MCParticles* mcpars = get<MCParticles>(MCParticleLocation::Default);
   int q = MCHlt::iquark(*mcpars);
   fill( histo1D(std::string("Quark")), q, 1.);
-  debug() << " check quark " << q << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " check quark " << q << endreq;
 }
 
 void HltRecChecker::checkTracks(const Hlt::TrackSelection& tracks) {
@@ -103,7 +103,7 @@ void HltRecChecker::checkTracks(const Hlt::TrackSelection& tracks) {
   // int tostis = MCHlt::tostis(tos,tis);
   // fill( histo1D(Track TISTOS),tostis,1.);
 
-  debug() << " check tracks nbs " << nbs << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " check tracks nbs " << nbs << endreq;
   // debug() << " check tracks tostis " << tostis << endreq;
 
 }
@@ -125,18 +125,22 @@ StatusCode HltRecChecker::printTrack(const LHCb::Track* T) {
   if ( T->firstState().qOverP()!=0.){
     Gaudi::SymMatrix6x6 cov6D ; 
     T->posMomCovariance(cov6D);
-    debug() << "    Track " << T->key() << " " << T->type() << " " 
+    if ( msgLevel(MSG::DEBUG) ) debug() << "    Track " << T->key() << " " << T->type() << " " 
             << T->position() << " " << T->momentum() << "\n"
             << cov6D << endmsg ;
   } else { // velo tracks
     Gaudi::XYZPoint p ;
     Gaudi::SymMatrix3x3 cov3D ; 
     T->position(p,cov3D);
-    debug() << "    Track " << T->key() << " " << T->type() << " " 
+    if ( msgLevel(MSG::DEBUG) ) debug() << "    Track " << T->key() << " " << T->type() << " " 
             << p << "\n" << cov3D << endmsg ; 
   }
   
-  if (!T->ancestors().empty()) debug() << "Looking at " << T->ancestors().size() << " ancestors" << endmsg ;
+  if (!T->ancestors().empty()) 
+  {
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Looking at " << T->ancestors().size() << " ancestors" << endmsg ;
+  }
+  
   for ( SmartRefVector< LHCb::Track >::const_iterator t = 
           T->ancestors().begin(); t!= T->ancestors().end(); ++t ) {
     const LHCb::Track* at = *t ;

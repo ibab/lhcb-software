@@ -61,7 +61,7 @@ StatusCode HltLumiFillRawBuffer::initialize() {
 //=============================================================================
 StatusCode HltLumiFillRawBuffer::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   
   m_bank.clear( );
 

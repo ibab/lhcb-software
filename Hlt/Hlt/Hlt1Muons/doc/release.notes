@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2013-02-27 - Rob Lambert
+ - protect debug messages, task #40215
+
 !========================= Hlt1Muons v1r5 2012-02-29 =========================
  - EvH tagged for release.
 

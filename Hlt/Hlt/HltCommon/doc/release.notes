@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2013-02-27 - Rob Lambert
+ - protect debug messages, task #40215
+
 ! 2013-02-26 - Rob Lambert
  - Update to getIfExists. Needs branching for older Gaudi.
 

@@ -105,7 +105,7 @@ StatusCode LumiPutResult::execute() {
       m_means[i] = mean;
       double threshold = result->info(key+200, -10000.);
       m_thresholds[i] = threshold;
-      debug() << "Key: " << key << " mean: " << mean << " threshold " << threshold << endmsg;
+       if ( msgLevel(MSG::DEBUG) ) debug() << "Key: " << key << " mean: " << mean << " threshold " << threshold << endmsg;
     }
   }
 

@@ -75,8 +75,8 @@ StatusCode PatConfirmTool::initialize(){
 
   m_l0ConfExtrapolator = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
 
-  debug()<<"PatConfirmTool configured with the following search windows: "<<endmsg;
-  debug()<<"nSigma:  X = "<<m_nSigmaX<<"  , y = "<<m_nSigmaY
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"PatConfirmTool configured with the following search windows: "<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"nSigma:  X = "<<m_nSigmaX<<"  , y = "<<m_nSigmaY
          <<" ,  Tx = "<<m_nSigmaTx<<"  , Ty = "<<m_nSigmaTy<<endmsg;
   
   return sc;
@@ -101,11 +101,11 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     
   if (m_debugMode) {
     tDecoding.stop();
-    debug()<<"--> write dec time"<<endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug()<<"--> write dec time"<<endmsg;
     m_DataStore->nTHits.push_back( m_tHitManager->hits().size() ) ;
     m_DataStore->decodingTime.push_back( tDecoding.eTotalTime() );
     m_DataStore->trackHypo.push_back(new ParabolaHypothesis(tp));
-    debug() << " number of decoded hits: " << m_tHitManager->hits().size() << endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << " number of decoded hits: " << m_tHitManager->hits().size() << endreq;
     tTracking.start();
   }
 

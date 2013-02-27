@@ -126,9 +126,9 @@ StatusCode HltL0MuonCandidates::execute() {
     bool pass = ( cuts.empty() || ( (l0muon->encodedPt()&0x7F) > cuts[0] ) ); // encodedPt is signed 
     if (!pass)  continue;
 
-    debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< endmsg;
     if (checkClone(l0muon)) {
-        debug() << "is clone " << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "is clone " << endmsg;
         continue;
     }
     fill(m_pt,l0muon->pt(),1.);

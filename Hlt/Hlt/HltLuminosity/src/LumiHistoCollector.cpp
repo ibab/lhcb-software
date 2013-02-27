@@ -121,7 +121,7 @@ void LumiHistoCollector::setDecision(bool ok) {
 
 //---------------------------------------------------------
 void LumiHistoCollector::setupStore() {
-  debug() << "LumiHistoCollector::setupStore()0" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "LumiHistoCollector::setupStore()0" << endmsg;
 
   //  get histogram objects
   ISvcLocator* svclocator = Gaudi::svcLocator();
@@ -173,14 +173,17 @@ void LumiHistoCollector::setupStore() {
           AIDA::IHistogram1D* trendHisto = initializeHisto(prefix+var, -m_trendSize*m_trendInterval, 0, m_trendSize);
           m_trendMap[var] = trendHisto;  // store in trend map
         }
-        debug() << theHisto->title() << " at path = " << path << " "
-                << " axis: " << bins << " " << lowerEdge << " " << upperEdge
-                << " sumBins: " << sumBins << " mean: " << mean
-                << endreq;
+        if ( msgLevel(MSG::DEBUG) ) debug() << theHisto->title() 
+                                            << " at path = " << path << " "
+                                            << " axis: " << bins << " " 
+                                            << lowerEdge << " " << upperEdge
+                                            << " sumBins: " << sumBins 
+                                            << " mean: " << mean
+                                            << endmsg;
       }
       else {
         error() << MSG::INFO << ">>>Could not retrieve object from TES (" << path << ")"
-                << endreq;
+                << endmsg;
       }
     }
   }
@@ -188,7 +191,7 @@ void LumiHistoCollector::setupStore() {
 
 //---------------------------------------------------------
 StatusCode LumiHistoCollector::analyse() {
-  debug() << "analyse()" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "analyse()" << endmsg;
   // look at what we have in store 
   info () << "summary of store contents" << endreq;  
   std::string prefix = "";
@@ -207,10 +210,10 @@ StatusCode LumiHistoCollector::analyse() {
       double prevSumAllBins=prevHist->sumAllBinHeights();
       double mean=theHist->mean();
       double prevMean=prevHist->mean();
-      debug() << bx << " / " << var << " : " << title
+      if ( msgLevel(MSG::DEBUG) ) debug() << bx << " / " << var << " : " << title
               << " sumBins: " << sumBins << " (" << sumAllBins << ") mean: " << mean
               << " prevSumBins: " << prevSumBins << " (" << prevSumAllBins << ") prevMean: " << prevMean
-              << endreq;
+              << endmsg;
     }
   }
 
@@ -244,7 +247,7 @@ StatusCode LumiHistoCollector::analyse() {
       double tempMean=tempHist->mean();
       
       prevHist->add(*theHist);
-      debug() << " subtraction result: " << bx << "/" << var << " entries: " 
+      if ( msgLevel(MSG::DEBUG) ) debug() << " subtraction result: " << bx << "/" << var << " entries: " 
               << theHist->entries() << " - " << prevEntries << " = " << prevHist->entries() 
               << " *** sum: " 
               << theHist->sumAllBinHeights() << " - " << prevSumAll << " = " << prevHist->sumAllBinHeights() 
@@ -252,7 +255,7 @@ StatusCode LumiHistoCollector::analyse() {
       // add and subtract according to crossing type
       double deltaSumAll = prevHist->sumAllBinHeights();
       double deltaMean = prevHist->mean();
-      debug() << " check means " << deltaMean << " and " << calcMean 
+      if ( msgLevel(MSG::DEBUG) ) debug() << " check means " << deltaMean << " and " << calcMean 
               << " from " << theMean << " and " << prevMean 
               << " temp " << tempMean << endmsg;
       double scale = 0;  // if histo not wanted scale to zero
@@ -387,7 +390,7 @@ void LumiHistoCollector::storeTrend(std::string varname, double lumiValue)
   AIDA::IHistogram1D *theHist = m_trendMap[varname];
   const AIDA::IAxis& axis = theHist->axis();
   long bins = axis.bins();
-  debug() << "trend " << varname << ": ";
+  if ( msgLevel(MSG::DEBUG) ) debug() << "trend " << varname << ": ";
   for ( long i = 0; i < bins; ++i ) {
     double binValue = theHist->binHeight(i);
     double nextValue;
@@ -399,7 +402,7 @@ void LumiHistoCollector::storeTrend(std::string varname, double lumiValue)
     }
     double x = 0.5*(axis.binUpperEdge(i)+axis.binLowerEdge(i));
     theHist->fill(x, nextValue - binValue);
-    debug() << theHist->binHeight(i) << " ";
+    if ( msgLevel(MSG::DEBUG) ) debug() << theHist->binHeight(i) << " ";
   }
-  debug() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << endmsg;
 }

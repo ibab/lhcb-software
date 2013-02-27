@@ -114,7 +114,7 @@ StatusCode HltMatchTVeloTracks::match3dVelo(const LHCb::Track& veloTrack,
         return sc;
     }
 
-    debug() << "new p " << 1.0/qOverP << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "new p " << 1.0/qOverP << endmsg;
     
     matchedTrack.firstState().setQOverP(qOverP);   
     matchedTrack.setHistory( Track::TrackMatching );
@@ -126,7 +126,7 @@ StatusCode HltMatchTVeloTracks::match3dVelo(const LHCb::Track& veloTrack,
     
     // transfer the momentum
     const std::vector<LHCb::State*>& allStates = matchedTrack.states();
-    debug() << " N states " << allStates.size() << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << " N states " << allStates.size() << endmsg;
     for(std::vector< LHCb::State* >::const_iterator 
           itState =allStates.begin();itState<allStates.end();itState++){
       if((*itState)->qOverP() == 0) (*itState)->setQOverP(qOverP);

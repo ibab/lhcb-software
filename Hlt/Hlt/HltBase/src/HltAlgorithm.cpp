@@ -274,7 +274,7 @@ StatusCode HltAlgorithm::registerOutput(Hlt::Selection* sel) const{
        return StatusCode::FAILURE;
     }
     m_outputHisto = const_cast<HltAlgorithm*>(this)->initializeHisto("Ncandidates",-0.5,99.5,100);
-    if (msgLevel(MSG::DEBUG)) debug() << " registered selection " << sel->id() << " type " << sel->classID() << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << " registered selection " << sel->id() << " type " << sel->classID() << endmsg;
     return StatusCode::SUCCESS;
 }
 

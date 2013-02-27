@@ -330,12 +330,13 @@ StatusCode HadronSeedTool::getECalBarycenter(double& x, double& y, double& z, do
   }
   
   if (ecalCells.empty()) {
-    debug() << "No acceptable ECal cells found." << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "No acceptable ECal cells found." << endmsg;
     return StatusCode::FAILURE;
   }
   if (int(ecalCells.size()) < minCells) {
-    debug() << "Too few ECal cells: " << ecalCells.size() << " found, need "
-            << minCells << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Too few ECal cells: " 
+                                        << ecalCells.size() << " found, need "
+                                        << minCells << endmsg;
     return StatusCode::FAILURE;
   }
 

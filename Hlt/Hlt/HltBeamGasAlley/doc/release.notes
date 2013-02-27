@@ -4,6 +4,9 @@
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
 
+! 2013-02-27 - Rob Lambert
+ - protect debug messages, task #40215
+
 !========================== HltBeamGasAlley v3r0   2012-03-29 =================
 ! 2011-03-27 Plamen Hopchev
  - simplification of the logic of the search. Now do just one extension in fwd

@@ -67,7 +67,7 @@ StatusCode LumiHistoMaker::initialize() {
 
   // create the histograms
   bool useMaxBins = (m_Variables.size()==m_MaxBins.size());
-  debug() << "list of histograms booked:" << endreq;
+  debug() << "list of histograms booked:" << endmsg;
   int i=0;
   for(std::vector< std::string >::iterator ivar = m_Variables.begin() ; 
       ivar!= m_Variables.end() ; ++ivar, ++i ){
@@ -90,7 +90,7 @@ StatusCode LumiHistoMaker::initialize() {
       m_ThresholdHistos.push_back(digitHisto);  
 
       debug() << "Variable: " << *ivar << " Key: " << counter << 
-	" Bins: " << bins << " Threshold: " << m_Thresholds[i] << endreq;
+	" Bins: " << bins << " Threshold: " << m_Thresholds[i] << endmsg;
     }
   }
   debug() << m_keys.size()<< " variables used " << endmsg ;
@@ -120,7 +120,7 @@ StatusCode LumiHistoMaker::execute() {
     double digit=0;
     if ( ivalue > m_Thresholds[i] ) digit=1.;
     fill(thresholdHisto, digit, 1.);
-    debug() << "histo:" << cname << " value " << ivalue << " threshold " << digit<< endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "histo:" << cname << " value " << ivalue << " threshold " << digit<< endmsg;
   }
   
   counter("#HistoInputs") += 1;

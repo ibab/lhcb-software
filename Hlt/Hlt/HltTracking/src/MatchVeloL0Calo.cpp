@@ -213,7 +213,7 @@ StatusCode Hlt::MatchVeloL0Calo::match
          matchChi2      = chi2;
          if ( msgLevel(MSG::DEBUG) ) {
             debug() << "Best so far: q = " << q[i] << "\tchi2 = " << matchChi2
-                    << " (" << deltaX*deltaX << " + " << deltaY*deltaY << ")" << endreq;
+                    << " (" << deltaX*deltaX << " + " << deltaY*deltaY << ")" << endmsg;
          }
       } // end if chi2 < matchChi2
    } // end loop for -1 and +1 charge

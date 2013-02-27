@@ -64,8 +64,7 @@ StatusCode HltCosmicsOT::initialize()
 //=============================================================================
 StatusCode HltCosmicsOT::execute()
 {
-    if (msgLevel(MSG::DEBUG))
-	debug() << "==> Execute" << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
     if (m_otdecoder->totalNumberOfHits() >= m_minhits) {
 	// loop over all modules, decode them, and return early if we find
@@ -94,7 +93,7 @@ StatusCode HltCosmicsOT::execute()
 		setFilterPassed(true);
                 m_selections.output()->setDecision(true);
    		if (msgLevel(MSG::DEBUG))
-		    debug() << "OT activity found!" << endreq;
+		    debug() << "OT activity found!" << endmsg;
 		return StatusCode::SUCCESS;
 	    }
 	}

@@ -38,7 +38,7 @@ StatusCode LumiCountVeloWithZRCuts::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  debug() << "TrackCounterName: "     << boost::format("%20s")%m_TrackCounterName         << " "
+  if ( msgLevel(MSG::DEBUG) ) debug() << "TrackCounterName: "     << boost::format("%20s")%m_TrackCounterName         << " "
 	  << "VertexCounterName: "    << boost::format("%20s")%m_VertexCounterName        << " "
 	  << "TrackInputSelection: "  << boost::format("%20s")%m_TrackInputSelectionName  << " "
 	  << "VertexInputSelection: " << boost::format("%20s")%m_VertexInputSelectionName << " "

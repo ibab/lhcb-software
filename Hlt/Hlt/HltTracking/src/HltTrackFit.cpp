@@ -43,7 +43,7 @@ StatusCode HltTrackFit::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
- debug() << " ===> initialize HltTrackFit" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << " ===> initialize HltTrackFit" << endmsg;
 
  m_fit = tool<ITrackFitter>(m_fitName, this);
 

@@ -58,7 +58,7 @@ StatusCode LumiHisto2dSPD::execute() {
   if( !m_daq->getBanks()    )return StatusCode::SUCCESS;
   const CaloVector<LHCb::CaloAdc>& adcs= m_daq->adcs();
   int multDAQ    = adcs.size();
-  debug() << "DAQ :    "<< multDAQ << endmsg ;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "DAQ :    "<< multDAQ << endmsg ;
 
   //Make Histo:
   for(CaloVector<LHCb::CaloAdc>::const_iterator iadc0 = adcs.begin() ; adcs.end() != iadc0 ; ++iadc0 ){
