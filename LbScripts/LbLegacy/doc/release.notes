@@ -1,3 +1,7 @@
+2013-02-27  Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* scripts/archive_project: Fix invocation of grid installation checks. 
+
 2013-02-21  Ben Couturier  <Ben.Couturier@cern.ch>
 
 	* scripts/mkMCGentar:Fixed with new layout on Genser tar files in
