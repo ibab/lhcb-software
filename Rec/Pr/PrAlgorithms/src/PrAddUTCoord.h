@@ -10,7 +10,6 @@
 #include "Event/State.h"
 #include "TrackInterfaces/IAddTTClusterTool.h"            // Interface
 #include "PrKernel/PrUTHit.h"
-#include "PatKernel/PatTTHit.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 #include "TfKernel/UTStationHitManager.h"
 
