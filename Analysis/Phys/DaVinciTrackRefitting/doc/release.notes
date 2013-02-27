@@ -4,7 +4,10 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
-!2013-02-22 - Paul Seyfert
+! 2013-02-27 - Chris Jones
+ - Fix -pedantic compilation warnings
+
+! 2013-02-22 - Paul Seyfert
  - Added ParticleRefitter algorithm to update existing Particles in case their
    tracks were manipulated (limited functionality, no individual vertex
    fitters for individual decays)
