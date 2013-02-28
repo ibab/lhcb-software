@@ -12,7 +12,7 @@ use HltBeamGasAlley     v3r0    Hlt   # Plamen Hopchev
 use HltCommon           v8r7    Hlt   # Gerhard Raven
 use HltConf             v9r21   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
-use HltDisplVertices    v3r11   Hlt   # Neil Gauvin, Victor Coco
+use HltDisplVertices    v3r11   Hlt   # Pieter Norbert Y David, Victor Coco
 use HltGlobalMonitor    v3r9    Hlt   # Bruno de Paula
 use HltL0Conf           v3r0p1  Hlt   # Johannes Albrecht
 use HltLine             v5r1p7  Hlt   # Vanya Belyaev, Gerhard Raven
