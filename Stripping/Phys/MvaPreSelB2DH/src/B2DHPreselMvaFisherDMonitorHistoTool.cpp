@@ -33,8 +33,7 @@ using namespace AIDA;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( B2DHPreselMvaFisherDMonitorHistoTool );
-
+DECLARE_TOOL_FACTORY( B2DHPreselMvaFisherDMonitorHistoTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

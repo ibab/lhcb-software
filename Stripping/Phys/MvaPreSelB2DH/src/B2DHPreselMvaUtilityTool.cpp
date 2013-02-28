@@ -19,8 +19,7 @@ using namespace Gaudi ;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( B2DHPreselMvaUtilityTool );
-
+DECLARE_TOOL_FACTORY( B2DHPreselMvaUtilityTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

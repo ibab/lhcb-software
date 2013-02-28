@@ -20,8 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( B2DHMvaPreSelectionParamTool );
-
+DECLARE_TOOL_FACTORY( B2DHMvaPreSelectionParamTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

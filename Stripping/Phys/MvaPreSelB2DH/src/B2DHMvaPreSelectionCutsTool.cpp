@@ -14,8 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( B2DHMvaPreSelectionCutsTool );
-
+DECLARE_TOOL_FACTORY( B2DHMvaPreSelectionCutsTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

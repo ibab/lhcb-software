@@ -19,8 +19,7 @@ using namespace Gaudi::Units ;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( B2DHMvaPreSelectionAlg );
-
+DECLARE_ALGORITHM_FACTORY( B2DHMvaPreSelectionAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
