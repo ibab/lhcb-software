@@ -4,6 +4,7 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+!========================= HltRecChecker v2r0 2013-02-28 =========================
 ! 2013-02-27 - Rob Lambert
  - Move to endmsg, not endreq, see task #40215
 
