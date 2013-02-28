@@ -119,7 +119,7 @@ StatusCode PrTrackAssociator::execute() {
             part = idLinker.next();
           }
 
-        } else if ( (*iId).isTT() ) {
+        } else if ( (*iId).isTT() || (*iId).isUT() ) {
           ++nMeas;
           m_total.nTT += 1.;       // Count number of TT hits
           LHCb::MCParticle* part = idLinker.first( (*iId).lhcbID() );
