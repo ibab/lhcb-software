@@ -4,7 +4,7 @@
 # Maintainer : Bruno Souza de Paula	 
 #============================================================================
 package           HltGlobalMonitor
-version           v3r10
+version           v4r0
 
 # Structure
 #============================================================================
