@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v7r0 2013-02-28 =========================
+! 2013-02-28 - Rob Lambert
+ - Dummy tag to signify start of LS1 development.
+
 !========================= Hlt1Lines v6r31 2013-01-09 =========================
 ! 2013-01-09 - Eric van Herwijnen
  - python/Hlt1Lines/Hlt1pALines.py
@@ -1106,5 +1110,4 @@
 !========================== Hlt1Lines v1r0 2009-06-03 ===================
 ! 2009-05-28 - Gerhard Raven
  - initial import of bits from HltConf 
-
 
