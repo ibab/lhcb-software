@@ -18,18 +18,17 @@
  *  @author Anton Poluektov
  *  @date   2010-06-24
  */
-class ProcStatusCheck : public GaudiAlgorithm {
+class ProcStatusCheck : public GaudiAlgorithm
+{
+
 public: 
+
   /// Standard constructor
   ProcStatusCheck( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~ProcStatusCheck( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
 

@@ -6,25 +6,24 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 /** @class StrippingTCK StrippingTCK.h
- *  
- * A simple algorithm that sets the TCK field in the stripping DecReports 
+ *
+ * A simple algorithm that sets the TCK field in the stripping DecReports
  * structure
- * 
+ *
  *  @author Anton Poluektov
  *  @date   2010-09-20
  */
-class StrippingTCK : public GaudiAlgorithm {
-public: 
+class StrippingTCK : public GaudiAlgorithm 
+{
+
+public:
+
   /// Standard constructor
   StrippingTCK( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~StrippingTCK( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
 
@@ -32,4 +31,5 @@ private:
   unsigned int m_tck;
 
 };
+
 #endif // StrippingTCK_H

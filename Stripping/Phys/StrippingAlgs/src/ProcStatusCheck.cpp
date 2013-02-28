@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ProcStatusCheck );
+DECLARE_ALGORITHM_FACTORY( ProcStatusCheck )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -27,24 +27,12 @@ ProcStatusCheck::ProcStatusCheck( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 ProcStatusCheck::~ProcStatusCheck() {} 
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode ProcStatusCheck::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
 
 //=============================================================================
 // Main execution
@@ -83,16 +71,6 @@ StatusCode ProcStatusCheck::execute() {
       
   setFilterPassed( selected );
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ProcStatusCheck::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

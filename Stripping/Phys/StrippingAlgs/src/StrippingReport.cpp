@@ -1,9 +1,9 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-#include "Event/Particle.h" 
-//#include "GaudiAlg/GaudiTuples.h" 
+#include "GaudiKernel/AlgFactory.h"
+#include "Event/Particle.h"
+//#include "GaudiAlg/GaudiTuples.h"
 
 #include "Event/HltDecReports.h"
 #include "Event/HltDecReport.h"
@@ -24,13 +24,13 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( StrippingReport );
+DECLARE_ALGORITHM_FACTORY( StrippingReport )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 StrippingReport::StrippingReport( const std::string& name,
-                                              ISvcLocator* pSvcLocator)
+                                  ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
 {
   declareProperty("HDRLocation", m_hdrLocation = "");
@@ -48,7 +48,7 @@ StrippingReport::StrippingReport( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-StrippingReport::~StrippingReport() {} 
+StrippingReport::~StrippingReport() {}
 
 //=============================================================================
 // Initialization
@@ -58,19 +58,19 @@ StatusCode StrippingReport::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  
+
   m_algMgr = svc<IAlgManager>   ( "ApplicationMgr" );
-  
+
   m_chronoSvc = svc<IChronoStatSvc> ( "ChronoStatSvc" );
 
-  m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" ); 
+  m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" );
 
   if ( !m_incSvc ) {
     error() << "Could not retrieve 'IncidentSvc'" << endmsg;
     return StatusCode::FAILURE;
   }
   m_incSvc->addListener ( this , IncidentType::BeginEvent );
-  
+
   std::vector<std::string>::iterator i;
 
   for (i = m_selections.begin(); i != m_selections.end(); i++) {
@@ -83,7 +83,7 @@ StatusCode StrippingReport::initialize() {
     stat.slow_events = 0;
     m_stat.push_back(stat);
   }
-  
+
   m_event = 0;
   m_goodEvent = 0;
 
@@ -91,14 +91,14 @@ StatusCode StrippingReport::initialize() {
 }
 
 //===============================================================================
-// Function to show selection statistics 
+// Function to show selection statistics
 //===============================================================================
 void StrippingReport::report(bool onlyPositive) {
 
   std::vector<ReportStat>::iterator i;
 
   char str[128];
-  
+
   sprintf(str," |%61.61s|%8.8s|%10.10s|%7.7s|%8.8s|", "*Decision name*", "*Rate,%*", "*Accepted*", "*Mult*","*ms/evt*");
 
   info() << "Event " << m_event << ", Good event " << m_goodEvent << "\n" << str << "\n";
@@ -106,7 +106,7 @@ void StrippingReport::report(bool onlyPositive) {
   for (i = m_stat.begin(); i != m_stat.end(); i++) {
 
     double rate = 0.;
-    
+
     if (m_normalizeByGoodEvents) {
       if (m_goodEvent > 0) rate = 100.*(double)i->decisions/(double)m_goodEvent;
     }
@@ -119,11 +119,11 @@ void StrippingReport::report(bool onlyPositive) {
       double mult = 0;
       if (i->decisions > 0) mult = (double)i->candidates/(double)i->decisions;
       if (i->decisions > 0 || !onlyPositive) {
-        if (i->avgtime > 0) 
-          sprintf(str," |%-61.61s|%8.4f|%10.1d|%7.3f|%8.3f|", outputName.data(), 
+        if (i->avgtime > 0)
+          sprintf(str," |%-61.61s|%8.4f|%10.1d|%7.3f|%8.3f|", outputName.data(),
                   rate, i->decisions, mult, i->avgtime);
-        else 
-          sprintf(str," |%-61.61s|%8.4f|%10.1d|%7.3f|        |", outputName.data(), 
+        else
+          sprintf(str," |%-61.61s|%8.4f|%10.1d|%7.3f|        |", outputName.data(),
                   rate, i->decisions, mult);
         info() << str << "\n";
       }
@@ -131,13 +131,13 @@ void StrippingReport::report(bool onlyPositive) {
       std::string outputName = "_" + i->name + "_";
 
       // Not a Selection::Line
-      if (i->avgtime > 0) 
+      if (i->avgtime > 0)
         sprintf(str," |%-61.61s|%8.4f|%10.1d|       |%8.3f|", outputName.data(), rate, i->decisions, i->avgtime);
-      else 
+      else
         sprintf(str," |%-61.61s|%8.4f|%10.1d|       |        |", outputName.data(), rate, i->decisions);
       info() << str << "\n";
     }
-      
+
   }
 
   info() << endmsg;
@@ -149,7 +149,7 @@ void StrippingReport::reportLatex(bool onlyPositive) {
   std::vector<ReportStat>::iterator i;
 
   char str[128];
-  
+
   sprintf(str," %61.61s&%8.8s&%10.10s&%7.7s&%8.8s\\\\ \\hline", "Decision name", "Rate, \\%", "Accepted", "Mult","ms/evt");
 
   info() << "Event " << m_event << ", Good event " << m_goodEvent << "\n" << str << "\n";
@@ -157,7 +157,7 @@ void StrippingReport::reportLatex(bool onlyPositive) {
   for (i = m_stat.begin(); i != m_stat.end(); i++) {
 
     double rate = 0.;
-    
+
     if (m_normalizeByGoodEvents) {
       if (m_goodEvent > 0) rate = 100.*(double)i->decisions/(double)m_goodEvent;
     }
@@ -170,11 +170,11 @@ void StrippingReport::reportLatex(bool onlyPositive) {
       double mult = 0;
       if (i->decisions > 0) mult = (double)i->candidates/(double)i->decisions;
       if (i->decisions > 0 || !onlyPositive) {
-        if (i->avgtime > 0) 
-          sprintf(str," %-61.61s&%8.4f&%10.1d&%7.3f&%8.3f\\\\", outputName.data(), 
+        if (i->avgtime > 0)
+          sprintf(str," %-61.61s&%8.4f&%10.1d&%7.3f&%8.3f\\\\", outputName.data(),
                   rate, i->decisions, mult, i->avgtime);
-        else 
-          sprintf(str," %-61.61s&%8.4f&%10.1d&%7.3f&        \\\\", outputName.data(), 
+        else
+          sprintf(str," %-61.61s&%8.4f&%10.1d&%7.3f&        \\\\", outputName.data(),
                   rate, i->decisions, mult);
         info() << str << "\n";
       }
@@ -182,13 +182,13 @@ void StrippingReport::reportLatex(bool onlyPositive) {
       std::string outputName = i->name;
 
       // Not a Selection::Line
-      if (i->avgtime > 0) 
+      if (i->avgtime > 0)
         sprintf(str," %-61.61s&%8.4f&%10.1d&       &%8.3f\\\\", outputName.data(), rate, i->decisions, i->avgtime);
-      else 
+      else
         sprintf(str," %-61.61s&%8.4f&%10.1d&       &       \\\\", outputName.data(), rate, i->decisions);
       info() << str << "\n";
     }
-      
+
   }
 
   info() << endmsg;
@@ -203,52 +203,52 @@ void StrippingReport::reportLatex(bool onlyPositive) {
 StatusCode StrippingReport::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  
+
   StatusCode result = StatusCode::SUCCESS;
-  
+
   std::vector< ReportStat >::iterator i;
 
   char str[128];
 
-  if (m_everyEvent) { 
+  if (m_everyEvent) {
     sprintf(str,"%-61.61s: %4s %5s", "Decision name", "Decn", "Cands");
- 
+
     info() << "----------------------------------------------------------------" << endmsg;
     info() << str << endmsg;
   }
 
   for (i = m_stat.begin(); i != m_stat.end(); i++) {
-    
+
     int passed = 0;
     int cand = 0;
     int executed = 0;
-    
+
     i->avgtime = -1;
 
     IAlgorithm* myIAlg(0);
 
     StatusCode result = m_algMgr->getAlgorithm( i->name, myIAlg );
     if ( result.isSuccess() ) {
-        Algorithm* myAlg = dynamic_cast<Algorithm*>(myIAlg);
-        if (myAlg) {
-          executed = myAlg->isExecuted();
-          passed = myAlg->filterPassed();
+      Algorithm* myAlg = dynamic_cast<Algorithm*>(myIAlg);
+      if (myAlg) {
+        executed = myAlg->isExecuted();
+        passed = myAlg->filterPassed();
+      }
+      Selection::Line* strAlg = dynamic_cast<Selection::Line*>(myIAlg);
+      if (strAlg) cand = strAlg->numberOfCandidates();
+      else {
+        // Not a Selection::Line
+        cand = -1;
+      }
+
+      if (m_chronoSvc) {
+        verbose() << "Chrono service found" << endmsg;
+        const ChronoEntity* chrono = m_chronoSvc->chrono(i->name + ":Execute");
+        if (chrono) {
+          verbose() << "ChronoSvc returned execute for " << i->name << endmsg;
+          i->avgtime = chrono->uMeanTime()/1.e3;
         }
-        Selection::Line* strAlg = dynamic_cast<Selection::Line*>(myIAlg);
-        if (strAlg) cand = strAlg->numberOfCandidates();
-        else {
-          // Not a Selection::Line
-          cand = -1;
-        }
-        
-        if (m_chronoSvc) {
-          verbose() << "Chrono service found" << endmsg;
-    	  const ChronoEntity* chrono = m_chronoSvc->chrono(i->name + ":Execute");
-    	  if (chrono) {
-    	    verbose() << "ChronoSvc returned execute for " << i->name << endmsg;
-    	    i->avgtime = chrono->uMeanTime()/1.e3;
-          } 
-        } 
+      }
     }
 
     if (cand < 0) {
@@ -261,11 +261,11 @@ StatusCode StrippingReport::execute() {
       i->decisions += passed;
     }
 
-    if (m_everyEvent && (passed != 0 || cand < 0 || !m_onlyPositive)) { 
+    if (m_everyEvent && (passed != 0 || cand < 0 || !m_onlyPositive)) {
       if (cand >= 0) {
         sprintf(str,"-- %-58.58s: %4.1d %5.1d", i->name.data(), passed, cand);
         info() << str << endmsg;
-      } else {  
+      } else {
         sprintf(str,"%-61.61s: %4.1d", i->name.data(), passed);
         info() << "----------------------------------------------------------------" << endmsg;
         info() << str << endmsg;
@@ -274,20 +274,20 @@ StatusCode StrippingReport::execute() {
 
   }
 
-  if (m_everyEvent) { 
+  if (m_everyEvent) {
     info() << "----------------------------------------------------------------" << endmsg;
   }
-  
+
   m_goodEvent++;
-  
-  if (m_reportFreq > 0 && (m_goodEvent % m_reportFreq == 0) ) { 
+
+  if (m_reportFreq > 0 && (m_goodEvent % m_reportFreq == 0) ) {
     if (m_latex) {
       reportLatex(m_onlyPositive);
-    } else { 
+    } else {
       report(m_onlyPositive);
     }
   }
-  
+
   return result;
 }
 
@@ -301,7 +301,7 @@ StatusCode StrippingReport::finalize() {
   // Produce selection statistics report (always show all lines, even non-responding)
   if (m_latex) {
     reportLatex(false);
-  } else { 
+  } else {
     report(false);
   }
 
@@ -325,8 +325,8 @@ StatusCode StrippingReport::finalize() {
         if (i->decisions == 0) {
           sprintf(str,"-- %-58.58s", strippedName.data());
           warning() << str << endmsg;
-        } 
-      } 
+        }
+      }
     }
     warning() << "-----------------------------------------------------------------" << endmsg;
   }
@@ -356,7 +356,7 @@ StatusCode StrippingReport::finalize() {
           sprintf(str,"-- %-58.58s %8.6f", strippedName.data(), rate);
           warning() << str << endmsg;
         }
-      } 
+      }
     }
     warning() << "-----------------------------------------------------------------" << endmsg;
   }
@@ -366,12 +366,12 @@ StatusCode StrippingReport::finalize() {
 }
 
 //=======================================================================
-//  Handler for BeginEvent incident: increment event counter. 
+//  Handler for BeginEvent incident: increment event counter.
 //=======================================================================
 
 void StrippingReport::handle ( const Incident& i ) {
   if ( IncidentType::BeginEvent == i.type () ) {
-    m_event++;
+    ++m_event;
   }
 }
 
