@@ -4,27 +4,27 @@ version           v20r0
 branches cmt doc
 
 use Hlt1Lines           v6r28   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
-use Hlt1Muons           v1r5    Hlt   # Roel Aaij
+use Hlt1Muons           v1r5p1  Hlt   # Roel Aaij
 use Hlt2Lines           v8r27   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
 use Hlt2SharedParticles v6r12   Hlt   # Patrick Koppenburg, Gerhard Raven
-use HltBase             v12r3   Hlt   # Gerhard Raven
-use HltBeamGasAlley     v3r0    Hlt   # Plamen Hopchev
-use HltCommon           v8r7    Hlt   # Gerhard Raven
-use HltConf             v9r21   Hlt   # Vanya Belyaev, Gerhard Raven
+use HltBase             v12r3p1 Hlt   # Gerhard Raven
+use HltBeamGasAlley     v3r1    Hlt   # Plamen Hopchev
+use HltCommon           v9r0    Hlt   # Gerhard Raven
+use HltConf             v10r0   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
-use HltDisplVertices    v3r11   Hlt   # Pieter Norbert Y David, Victor Coco
-use HltGlobalMonitor    v3r9    Hlt   # Bruno de Paula
-use HltL0Conf           v3r0p1  Hlt   # Johannes Albrecht
+use HltDisplVertices    v4r0    Hlt   # Pieter Norbert Y David, Victor Coco
+use HltGlobalMonitor    v4r0    Hlt   # Bruno de Paula
+use HltL0Conf           v3r0p2  Hlt   # Johannes Albrecht
 use HltLine             v5r1p7  Hlt   # Vanya Belyaev, Gerhard Raven
-use HltLuminosity       v2r19   Hlt   # Jaap Panman
+use HltLuminosity       v3r0    Hlt   # Jaap Panman
 use HltMonitor          v1r1    Hlt   # Roel Aaij
-use HltRawData          v2r11   Hlt   # Tomasz Skwarnicki
-use HltRecChecker       v1r14   Hlt   # Jose Angel Hernando-Morata
-use HltSettings         v5r54   Hlt   # Parick Koppenburg, Gerhard Raven
-use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
-use HltTracking         v9r25   Hlt   # Johannes Albrecht, Vava Gligorov
+use HltRawData          v3r0    Hlt   # Tomasz Skwarnicki
+use HltRecChecker       v2r0    Hlt   # Jose Angel Hernando-Morata
+use HltSettings         v6r0    Hlt   # Parick Koppenburg, Gerhard Raven
+use HltTisTosTobbing    v2r0    Hlt   # Tomasz Skwarnicki
+use HltTracking         v9r26   Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r11   Hlt   # Gerhard Raven
-use LoKiTrigger         v12r8   Phys  # Vanya Belyaev
+use LoKiTrigger         v12r8p1 Phys  # Vanya Belyaev
 
 #temporary
 

@@ -1,9 +1,27 @@
 <PRE>
 Package: HltSys
-Package Coordinator: P. Koppenburg, Gerhard Raven
+Package Coordinator: R. Lambert, Gerhard Raven
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
+
+</PRE><H1><A NAME=v20r0>2013-02-28 HltSys v20r0</A></H1><PRE>
+HLT LS1 first development version. First backward-incompatible changes for 2012 triggers and Gaudi versions tentatively allowed. see task #40113.
+
+LHCb v35r4 stack. Depends on Rec v14r4 via Phys v16r4. Based on Gaudi v23r6.
+
+Packages Removed:
+ - HltSelChecker (is in Analysis project and has been for a while)
+ - PatAlgorithms v4r24, now taken from latest Rec
+ - L0Calo v11r8, now taken in Moore from latest Lbcom (was never needed in HLT)
+
+Modification summary:
+ - Review of debug printout: task #40215
+ - Replace exist-get with getIfExists: task #40118. Requires latest Gaudi
+ - Absorption of minor changes which were otherwise included directly in Moore.
+
+For a description of the introduced changes, links to changesets, and other details, see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r0
 
 </PRE><H1><A NAME=v15r5>2012-09-19 HltSys v15r5</A></H1><PRE>
 As v15r4 but with V0 LT cut as v15r3.
