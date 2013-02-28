@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================= HltDisplVertices v4r0 2013-02-28 =========================
 ! 2013-02-27 - Rob Lambert
  - Move to endmsg, not endreq, see task #40215
 
