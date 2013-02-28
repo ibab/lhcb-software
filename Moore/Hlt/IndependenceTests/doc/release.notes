@@ -1,7 +1,8 @@
 Package     : Hlt/IndepenceTests
-Package Coordinator : Eric van Herwijnen
+Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test indepence of Hlt lines
 
+!========================= IndependenceTests v1r4 2013-02-28 =========================
 ! 2012-06-26 - Mika Vesterinen
  - Change treatment of technical lines
 
@@ -34,5 +35,4 @@ Purpose     : HLT application to test indepence of Hlt lines
 
 ! 2011-07-29 - Eric van Herwijnen
  - First release: took original code from Roel Aaij and put it in svn.
-
 

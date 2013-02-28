@@ -1,10 +1,10 @@
 #============================================================================
 # Created    : 2011-07-29
 # Author     : Roel Aaij
-# Maintainer : Eric van Herwijnen
+# Maintainer : Mika Vesterinen
 #============================================================================
 package           IndependenceTests
-version           v1r3
+version           v1r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
