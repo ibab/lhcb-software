@@ -1,11 +1,15 @@
 !$Id: release.notes,v 1.90 2010-08-26 08:47:30 graven Exp $
 Package     : Hlt/HltGlobalMonitor
-Package Coordinator : Bruno Souza de Paula 
+Package Coordinator : Eric van Herwijnen 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
 
 !========================= HltGlobalMonitor v4r0 2013-02-28 =========================
+! 2013-02-27 - Rob Lambert
+ - Major bug reported in this algorithm, see bug #100666
+
+
 ! 2013-02-27 - Rob Lambert
  - Move to endmsg, not endreq, see task #40215
 
