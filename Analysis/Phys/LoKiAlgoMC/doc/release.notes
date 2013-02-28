@@ -5,6 +5,9 @@
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+! 2013-02-28 - Chris Jones
+ - Fix -pedantic compilation warnings
+
 !========================= LoKiAlgoMC v9r5p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

@@ -1147,7 +1147,8 @@ LoKi::AlgoMC::mcselect
   return this->mcselect ( tag              , 
                           results.begin () , 
                           results.end   () , cut ) ;
-}// ============================================================================
+}
+// ============================================================================
 // select (Gen)particles according to decay-finder and cuts
 // ============================================================================
 template <class GENPARTICLE, class GENCUT>
@@ -1274,17 +1275,17 @@ namespace LoKi                                            \
 /* ============================================================ */ \
 /** Declaration of the Algorithm Factory                        */ \
 /* ============================================================ */ \
-DECLARE_NAMESPACE_ALGORITHM_FACTORY( LoKi, ALGNAME ) ;             \
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( LoKi, ALGNAME )               \
 /* ============================================================ */ \
 /** Standard constructor                                        */ \
 /* ============================================================ */ \
 LoKi::ALGNAME::ALGNAME ( const std::string& name  ,                \
                          ISvcLocator*       svc   )                \
-: LoKi::AlgoMC( name , svc ) {} ; /* constructor for base class */ \
+: LoKi::AlgoMC( name , svc ) {}   /* constructor for base class */ \
 /* ============================================================ */ \
 /** destructor (empty)                                          */ \
 /* =============================================================*/ \
-LoKi::ALGNAME ::~ALGNAME () {};
+LoKi::ALGNAME ::~ALGNAME () {} 
 // ============================================================================
 /** @def LOKI_MCALGORITHM_FULLIMPLEMENT 
  *
@@ -1310,9 +1311,9 @@ LoKi::ALGNAME ::~ALGNAME () {};
  *  @date   2003-01-18
  */
 // ============================================================================
-#define LOKI_MCALGORITHM_FULLIMPLEMENT(   ALGNAME   )      \
-        LOKI_MCALGORITHM_BODY         (   ALGNAME   ) ;    \
-        LOKI_MCALGORITHM_IMPLEMENT    (   ALGNAME   ) ;
+#define LOKI_MCALGORITHM_FULLIMPLEMENT(   ALGNAME   )     \
+        LOKI_MCALGORITHM_BODY         (   ALGNAME   )     \
+        LOKI_MCALGORITHM_IMPLEMENT    (   ALGNAME   ) 
 // ============================================================================
 /** @def LOKI_MCALGORITHM
  * 
@@ -1342,8 +1343,8 @@ LoKi::ALGNAME ::~ALGNAME () {};
  *  
  */
 // ============================================================================
-#define LOKI_MCALGORITHM(   ALGNAME   )              \
-        LOKI_MCALGORITHM_FULLIMPLEMENT ( ALGNAME ) ; \
+#define LOKI_MCALGORITHM(   ALGNAME   )             \
+        LOKI_MCALGORITHM_FULLIMPLEMENT ( ALGNAME )  \
         StatusCode LoKi::ALGNAME::analyse()                      
 // ============================================================================
 
