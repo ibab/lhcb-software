@@ -1,18 +1,18 @@
 #============================================================================
 # Created    : 2009-july-1
-# Maintainer : Neal Gauvin , Victor Coco
+# Maintainer : Pieter Norbert Y David , Victor Coco
 #============================================================================
 package Hlt/HltDisplVertices
 version           v3r11
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
-branches       Kernel  cmt doc src 
+branches       Kernel  cmt doc src
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-# Used packages. 
+# Used packages.
 #============================================================================
 
 use DaVinciKernel       v* Phys
@@ -28,7 +28,7 @@ include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library          HltDisplVertices    ../src/*.cpp 
+library          HltDisplVertices    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
