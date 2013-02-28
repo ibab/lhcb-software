@@ -1,8 +1,8 @@
 // $Id: FilterMCParticleArrayByDecay.cpp,v 1.3 2007-08-20 09:17:00 pkoppenb Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // from LHCb
 #include "MCInterfaces/IMCDecayFinder.h"
@@ -17,27 +17,25 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( FilterMCParticleArrayByDecay );
-
+DECLARE_TOOL_FACTORY( FilterMCParticleArrayByDecay )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-FilterMCParticleArrayByDecay::FilterMCParticleArrayByDecay( const std::string& type,
-                                                            const std::string& name,
-                                                            const IInterface* parent )
-  : 
-  GaudiTool ( type, name , parent ),
-  m_decayFinderName("MCDecayFinder"),
-  m_decayFinder(0)
+  FilterMCParticleArrayByDecay::FilterMCParticleArrayByDecay( const std::string& type,
+                                                              const std::string& name,
+                                                              const IInterface* parent )
+    :
+    GaudiTool ( type, name , parent ),
+    m_decayFinderName("MCDecayFinder"),
+    m_decayFinder(0)
 {
   declareInterface<IMCParticleArrayFilter>(this);
 
   declareProperty("DecayFinderName", m_decayFinderName);
-
 }
 //=============================================================================
-StatusCode FilterMCParticleArrayByDecay::initialize() 
+StatusCode FilterMCParticleArrayByDecay::initialize()
 {
   m_decayFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
 
@@ -45,7 +43,7 @@ StatusCode FilterMCParticleArrayByDecay::initialize()
 
 }
 //=============================================================================
-StatusCode FilterMCParticleArrayByDecay::filter( const LHCb::MCParticle::ConstVector& in, 
+StatusCode FilterMCParticleArrayByDecay::filter( const LHCb::MCParticle::ConstVector& in,
                                                  LHCb::MCParticle::ConstVector& out) const
 {
   LHCb::MCParticle::ConstVector heads;
@@ -62,7 +60,7 @@ StatusCode FilterMCParticleArrayByDecay::filter( LHCb::MCParticle::ConstVector& 
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-void FilterMCParticleArrayByDecay::findDecayHeads(const LHCb::MCParticle::ConstVector& in, 
+void FilterMCParticleArrayByDecay::findDecayHeads(const LHCb::MCParticle::ConstVector& in,
                                                   LHCb::MCParticle::ConstVector& heads) const
 {
   if (!m_decayFinder->hasDecay(in)) return;
@@ -73,13 +71,13 @@ void FilterMCParticleArrayByDecay::findDecayHeads(const LHCb::MCParticle::ConstV
   while ( m_decayFinder->findDecay(in, tmp) ){
     if (NULL!=tmp) {
       LHCb::MCParticle* head= tmp->clone();
-      heads.push_back(head);  
+      heads.push_back(head);
     }
   }
 
 }
 //=============================================================================
-void FilterMCParticleArrayByDecay::findAllDecay(const LHCb::MCParticle::ConstVector& heads, 
+void FilterMCParticleArrayByDecay::findAllDecay(const LHCb::MCParticle::ConstVector& heads,
                                                 LHCb::MCParticle::ConstVector& decay) const
 {
   if (!decay.empty()) decay.clear();
@@ -95,7 +93,7 @@ void FilterMCParticleArrayByDecay::findAllDecay(const LHCb::MCParticle::ConstVec
 }
 
 //=============================================================================
-StatusCode FilterMCParticleArrayByDecay::finalize() 
+StatusCode FilterMCParticleArrayByDecay::finalize()
 {
   toolSvc()->releaseTool(m_decayFinder);
   return GaudiTool::finalize();
@@ -103,6 +101,6 @@ StatusCode FilterMCParticleArrayByDecay::finalize()
 //=============================================================================
 // Destructor
 //=============================================================================
-FilterMCParticleArrayByDecay::~FilterMCParticleArrayByDecay() {} 
+FilterMCParticleArrayByDecay::~FilterMCParticleArrayByDecay() {}
 
 //=============================================================================
