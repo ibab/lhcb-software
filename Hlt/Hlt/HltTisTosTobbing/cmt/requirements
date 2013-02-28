@@ -3,7 +3,7 @@
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package HltTisTosTobbing
-version           v1r1
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
