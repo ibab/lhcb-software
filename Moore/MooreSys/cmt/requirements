@@ -6,8 +6,8 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v14r12      Hlt
-use  IndependenceTests   v1r3        Hlt
+use  Moore               v20r0      Hlt
+use  IndependenceTests   v1r4       Hlt
 
 
 # Bug fixes on top of LHCb v35r4 release stack

@@ -1,7 +1,33 @@
 <PRE>
 Package     : MooreSys
-Package Coordinator : E. van Herwijnen
+Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
+
+</PRE><H1><A NAME=v20r0>2013-02-28 Moore v20r0</A></H1><PRE>
+HLT/Moore LS1 first development version. First backward-incompatible changes for 2012 triggers and Gaudi versions tentatively allowed. see task #40113. 
+
+LHCb v35r4 stack. Depends on Rec v14r4 via Phys v16r4 via Hlt v20r0. Also depends on Lbcom v13r4. Based on Gaudi v23r6. 
+ 
+Packages Removed from HLT: 
+ - HltSelChecker (is in Analysis project and has been for a while) 
+ - PatAlgorithms v4r24, now taken from latest Rec 
+ - L0Calo v11r8, now taken in Moore from latest Lbcom (was never needed in HLT) 
+
+Packages Removed from MooreSys: 
+ - HltSettings, Hlt1Lines, Hlt2Lines, HltConf, HltTracking
+ - All of the above are now inherited from HLT
+ - RichDet, DetCond,
+ - All of the above taken through latest stack, Lbcom, etc.
+
+Modification summary: 
+ - Review of debug printout: task #40215 
+ - Replace exist-get with getIfExists: task #40118. Requires latest Gaudi 
+ - Absorption of minor changes which were otherwise included directly in Moore. 
+
+For a description of the introduced changes, links to changesets, and other details, see: 
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r0
+and
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r0
 
 </PRE><H1><A NAME=v14r12>2013-01-09 Moore v14r12</A></H1><PRE>
 For the pA run only.
