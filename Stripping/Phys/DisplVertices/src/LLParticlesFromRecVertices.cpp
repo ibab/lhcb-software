@@ -24,106 +24,106 @@ using namespace LoKi::Cuts;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LLParticlesFromRecVertices );
+DECLARE_ALGORITHM_FACTORY( LLParticlesFromRecVertices )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-  : DaVinciAlgorithm( name , pSvcLocator )
-  , m_pt(400.)
+  LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
+                                                          ISvcLocator* pSvcLocator)
+    : DaVinciAlgorithm( name , pSvcLocator )
+    , m_pt(400.)
 
-  , m_p2s(NULL)
+    , m_p2s(NULL)
 
-  , m_chargedProto(NULL)
+    , m_chargedProto(NULL)
 
-  , m_RHO( LoKi::Constant<const LHCb::VertexBase*,double>(0.0) )
-  , m_Z( LoKi::Constant<const LHCb::VertexBase*,double>(0.0) )
-  , m_VERTEXCUT( LoKi::Constant<const LHCb::VertexBase*,bool>(false) )
-  , m_UPPVZ( LoKi::Constant<std::vector<const LHCb::RecVertex*>,double>(LoKi::Constants::HugeDistance) )
+    , m_RHO( LoKi::Constant<const LHCb::VertexBase*,double>(0.0) )
+    , m_Z( LoKi::Constant<const LHCb::VertexBase*,double>(0.0) )
+    , m_VERTEXCUT( LoKi::Constant<const LHCb::VertexBase*,bool>(false) )
+    , m_UPPVZ( LoKi::Constant<std::vector<const LHCb::RecVertex*>,double>(LoKi::Constants::HugeDistance) )
 
 {
   // Vertex "input" location, Inputs is used for the daughters
   declareProperty("RecVertexLocations"
-                 , m_RVLocations
-                 , "Input RecVertex containers" );
+                  , m_RVLocations
+                  , "Input RecVertex containers" );
 
   // PV selection
   declareProperty("FirstPVMaxRho"
-                 , m_FirstPVMaxRho = 0.3*Gaudi::Units::mm
-                 , "Maximal rho position of the \"most upstream\" PV" );
+                  , m_FirstPVMaxRho = 0.3*Gaudi::Units::mm
+                  , "Maximal rho position of the \"most upstream\" PV" );
 
   declareProperty("FirstPVMinZ"
-                 , m_FirstPVMinZ = -150.0*Gaudi::Units::mm
-                 , "Minimal z position of the \"most upstream\" PV" );
+                  , m_FirstPVMinZ = -150.0*Gaudi::Units::mm
+                  , "Minimal z position of the \"most upstream\" PV" );
 
   declareProperty("FirstPVMaxZ"
-                 , m_FirstPVMaxZ = 150.0*Gaudi::Units::mm
-                 , "Maximal z position of the \"most upstream\" PV" );
+                  , m_FirstPVMaxZ = 150.0*Gaudi::Units::mm
+                  , "Maximal z position of the \"most upstream\" PV" );
 
   declareProperty("FirstPVMinNumTracks"
-                 , m_FirstPVNumTracks = 10
-                 , "Minimal number of tracks required in the \"most upstream\" PV" );
+                  , m_FirstPVNumTracks = 10
+                  , "Minimal number of tracks required in the \"most upstream\" PV" );
 
   // daughter track selection
   declareProperty("UseVeloTracks"
-                 , m_useVeloTracks = false
-                 , "Allow Velo-only daughters" );
+                  , m_useVeloTracks = false
+                  , "Allow Velo-only daughters" );
 
   declareProperty("VerticesFromVeloOnly"
-                 , m_verticesFromVeloOnly = true
-                 , "Hlt (true) or Stripping (false)" );
+                  , m_verticesFromVeloOnly = true
+                  , "Hlt (true) or Stripping (false)" );
 
   declareProperty("MaxChi2NonVeloOnly"
-                 , m_chi2NonVeloOnly = 5.0
-                 , "Maximum track Chi2 for daughter tracks that are not Velo-only" );
+                  , m_chi2NonVeloOnly = 5.0
+                  , "Maximum track Chi2 for daughter tracks that are not Velo-only" );
 
   // mother/combination cuts
   declareProperty("LLPName"
-                 , m_LLPName = "~chi_10"
-                 , "LLP ParticleID name" );
+                  , m_LLPName = "~chi_10"
+                  , "LLP ParticleID name" );
 
   declareProperty("MinMass"
-                 , m_LLPMinMass = 0.0
-                 , "Minimal reconstructed mass of the LLP" );
+                  , m_LLPMinMass = 0.0
+                  , "Minimal reconstructed mass of the LLP" );
 
   declareProperty("MinSumPT"
-                 , m_LLPMinSumPT = 0.0*Gaudi::Units::GeV
-                 , "Minimal sum-PT of the LLP" );
+                  , m_LLPMinSumPT = 0.0*Gaudi::Units::GeV
+                  , "Minimal sum-PT of the LLP" );
 
   declareProperty("MinRho"
-                 , m_LLPMinR = 0.3*Gaudi::Units::mm
-                 , "Minimal LLP RHO distance to the beam line" );
+                  , m_LLPMinR = 0.3*Gaudi::Units::mm
+                  , "Minimal LLP RHO distance to the beam line" );
 
   declareProperty("MinNumTracks"
-                 , m_LLPMinNumTracks = 1
-                 , "Minimal number of daughter tracks of the LLP" );
+                  , m_LLPMinNumTracks = 1
+                  , "Minimal number of daughter tracks of the LLP" );
 
   declareProperty("MaxFractE1Track"
-                 , m_LLPMaxFractEFromOne = 0.85
-                 , "Maximal allowed fraction of the energy contributed by one daughter" );
+                  , m_LLPMaxFractEFromOne = 0.85
+                  , "Maximal allowed fraction of the energy contributed by one daughter" );
 
   declareProperty("MaxFractTrwHitBefore"
-                 , m_LLPMaxFractTrWithUpstream = 0.49
-                 , "Maximal allowed fraction of daughters with a hit upstream of the vertex" );
+                  , m_LLPMaxFractTrWithUpstream = 0.49
+                  , "Maximal allowed fraction of daughters with a hit upstream of the vertex" );
 
   declareProperty("ComputeMatterVeto"
-                 , m_computeMatterVeto = false
-                 , "Add InMatterVeto flag to the created particles" );
+                  , m_computeMatterVeto = false
+                  , "Add InMatterVeto flag to the created particles" );
 
   declareProperty("ApplyMatterVeto"
-                 , m_applyMatterVeto = false
-                 , "Reject candidates inside matter veto" );
+                  , m_applyMatterVeto = false
+                  , "Reject candidates inside matter veto" );
 
   // output location for Velo protoparticles
   declareProperty("VeloProtoParticlesLocation"
-                 , m_VeloProtoPLocation = "Hlt2/" + this->name() + "/VeloProtoP"
-                 , "TES output location for created Velo protoparticles" );
+                  , m_VeloProtoPLocation = "Hlt2/" + this->name() + "/VeloProtoP"
+                  , "TES output location for created Velo protoparticles" );
 
   declareProperty("ChargedProtoParticlesLocation"
-                 , m_chargedProtoLocation = LHCb::ProtoParticleLocation::Charged
-                 , "Input protoparticles location" );
+                  , m_chargedProtoLocation = LHCb::ProtoParticleLocation::Charged
+                  , "Input protoparticles location" );
 }
 
 // ExtraInfo keys
@@ -168,7 +168,7 @@ namespace {
   {
   public:
     IsVeloOnlyAncestor( const LHCb::Track* track )
-    : m_track(track)
+      : m_track(track)
     {}
     bool operator() ( const LHCb::Particle* part )
     {
@@ -194,7 +194,7 @@ namespace {
   {
   public:
     IsTrack( const LHCb::Track* track )
-    : m_track(track)
+      : m_track(track)
     {}
     inline bool operator() ( const LHCb::Particle* part )
     {
@@ -217,22 +217,22 @@ namespace {
 
   // DEBUG PRINTOUT
   void printUpPVZSelection( MsgStream& out
-                          , const LHCb::RecVertex::Range& PVs
-                          , const double& maxZ
-                          , const int& minNumTracks )
+                            , const LHCb::RecVertex::Range& PVs
+                            , const double& maxZ
+                            , const int& minNumTracks )
   {
     out << "\n" <<
       ( PVs >> LoKi::select<const LHCb::RecVertex*>(
-            ( monitor( VZ, out.stream(), "\n", "\nPV Candidate\nPV Z: " ) < maxZ )
-          &&   monitor( RV_TrHAS(TrBACKWARD) && RV_TrHAS(! TrBACKWARD), out.stream(), "\n", "Forward and backward tracks in PV: " )
-          && ( monitor( RV_TrNUM(TrALL), out.stream(), "\n", "Number of tracks in PV: " ) >= minNumTracks )
-        ) >> LoKi::min_value<const LHCb::RecVertex*>( VZ )
-      ) << " is the minimal PV Z\n"
-      << endmsg;
+                                                    ( monitor( VZ, out.stream(), "\n", "\nPV Candidate\nPV Z: " ) < maxZ )
+                                                    &&   monitor( RV_TrHAS(TrBACKWARD) && RV_TrHAS(! TrBACKWARD), out.stream(), "\n", "Forward and backward tracks in PV: " )
+                                                    && ( monitor( RV_TrNUM(TrALL), out.stream(), "\n", "Number of tracks in PV: " ) >= minNumTracks )
+                                                    ) >> LoKi::min_value<const LHCb::RecVertex*>( VZ )
+        ) << " is the minimal PV Z\n"
+        << endmsg;
   }
   void printRecVertexCandidateSummary( MsgStream& out
-                                     , const LHCb::RecVertex* rv
-                                     , const double& minZ )
+                                       , const LHCb::RecVertex* rv
+                                       , const double& minZ )
   {
     out << "\nRecVertex LLP candidate"
         << "\nNumber of tracks   : " << RV_TrNUM(TrALL)(rv)
@@ -242,12 +242,12 @@ namespace {
         << endmsg;
   }
   void printLLPCandidateSummary( MsgStream& out
-                               , int numLongDaugs
-                               , int numVeloDaugs
-                               , const Gaudi::LorentzVector& momentum
-                               , double motherSumPT
-                               , const int& numDaugsWithHitBefore
-                               , const double& maxDaugE )
+                                 , int numLongDaugs
+                                 , int numVeloDaugs
+                                 , const Gaudi::LorentzVector& momentum
+                                 , double motherSumPT
+                                 , const int& numDaugsWithHitBefore
+                                 , const double& maxDaugE )
   {
     out << "\nCreated a LLP candidate "
         << "\nwith " << numLongDaugs << " long and " << numVeloDaugs << " Velo-only daughters"
@@ -308,16 +308,16 @@ StatusCode LLParticlesFromRecVertices::initialize() {
   m_Z = VZ;
 
   m_VERTEXCUT =
-         ( RV_TrNUM(TrALL) >= m_LLPMinNumTracks )
-      && ( ! RV_TrHAS(TrBACKWARD) )
-      && ( m_RHO > m_LLPMinR )
-      ;
+    ( RV_TrNUM(TrALL) >= m_LLPMinNumTracks )
+    && ( ! RV_TrHAS(TrBACKWARD) )
+    && ( m_RHO > m_LLPMinR )
+    ;
 
   m_UPPVZ = LoKi::select<const LHCb::RecVertex*>(
-         ( VZ < m_FirstPVMaxZ ) && ( VZ > m_FirstPVMinZ )
-      && RV_TrHAS(TrBACKWARD) && RV_TrHAS(! TrBACKWARD)
-      && ( RV_TrNUM(TrALL) >= m_FirstPVNumTracks )
-    ) >> LoKi::min_value<const LHCb::RecVertex*>( m_Z );
+                                                 ( VZ < m_FirstPVMaxZ ) && ( VZ > m_FirstPVMinZ )
+                                                 && RV_TrHAS(TrBACKWARD) && RV_TrHAS(! TrBACKWARD)
+                                                 && ( RV_TrNUM(TrALL) >= m_FirstPVNumTracks )
+                                                 ) >> LoKi::min_value<const LHCb::RecVertex*>( m_Z );
 
   m_protoMap[ "pi+" ] = std::make_pair( tool<IProtoParticleFilter>( "ProtoParticleANNPIDFilter", "pion"  , this )
                                         , ppSvc()->find( "pi+" ) );
@@ -500,11 +500,11 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
 
   LHCb::Particle* prey = NULL;
   if ( ( motherMomentum.M() > m_LLPMinMass )
-    && ( motherSumPT > m_LLPMinSumPT )
-    && ( ( fractTracksWithHitBeforeVertex =  1.*numDaugTracksWithHitsBefore/(m_selectedDaughters.size()+m_selectedVeloDaughters.size()) ) < m_LLPMaxFractTrWithUpstream )
-    && ( maxDaugE/motherMomentum.E() < m_LLPMaxFractEFromOne )
-    && ( ! ( m_applyMatterVeto && m_materialVeto->isInMatter(rv->position()) ) )
-    ) { // passes all cuts, make the composite
+       && ( motherSumPT > m_LLPMinSumPT )
+       && ( ( fractTracksWithHitBeforeVertex =  1.*numDaugTracksWithHitsBefore/(m_selectedDaughters.size()+m_selectedVeloDaughters.size()) ) < m_LLPMaxFractTrWithUpstream )
+       && ( maxDaugE/motherMomentum.E() < m_LLPMaxFractEFromOne )
+       && ( ! ( m_applyMatterVeto && m_materialVeto->isInMatter(rv->position()) ) )
+       ) { // passes all cuts, make the composite
     if (m_debug) { debug() << "==> Constructing the particle to put on the TES" << endmsg; }
 
     LHCb::Vertex* preyVtx = new LHCb::Vertex(rv->position());

@@ -4,11 +4,11 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 // ============================================================================
-// DaVinci Kernel 
+// DaVinci Kernel
 // ============================================================================
-#include "Kernel/IMatterVeto.h"           
+#include "Kernel/IMatterVeto.h"
 // ============================================================================
-// Event 
+// Event
 // ============================================================================
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
@@ -29,13 +29,13 @@ using namespace std ;
 
 
 class MatterVetoTool
-    : public virtual IMatterVeto
-    , public         GaudiTool
+  : public virtual IMatterVeto
+  , public         GaudiTool
 {
   // ========================================================================
-  /// friend factory for instantiation 
+  /// friend factory for instantiation
   friend class ToolFactory<MatterVetoTool> ;
-public: 
+public:
 
   // ========================================================================
   /// standard initialization of the tool
@@ -46,10 +46,10 @@ public:
 protected:
   // ========================================================================
   /// standard constructor
-  MatterVetoTool 
-  ( const std::string& type   , ///< tool type ??? 
-    const std::string& name   , ///< tool name 
-    const IInterface*  parent ) 
+  MatterVetoTool
+  ( const std::string& type   , ///< tool type ???
+    const std::string& name   , ///< tool name
+    const IInterface*  parent )
     : GaudiTool ( type, name , parent )
   {
     //
@@ -59,24 +59,24 @@ protected:
     //
     //this->registering();
     //this->InitialiseGeoInfo();
-    
-  } 
-  /// virtual protected destructor 
-  virtual ~MatterVetoTool() {} 
+
+  }
+  /// virtual protected destructor
+  virtual ~MatterVetoTool() {}
   // ========================================================================
 private:
   // flag to enable the enlarged matter veto
   bool m_useEnlargedMatterVeto;
   // ========================================================================
-  // default constructor is disabled 
+  // default constructor is disabled
   MatterVetoTool () ;
-  // copy constructor is disabled 
+  // copy constructor is disabled
   MatterVetoTool ( const MatterVetoTool& ) ;
-  // assignement operator is disabled 
+  // assignement operator is disabled
   MatterVetoTool & operator=( const MatterVetoTool& ) ;
   // ========================================================================
 private:
-  // ======================================================================== 
+  // ========================================================================
   StatusCode i_cacheGeo();
   bool IsInMaterialBoxLeft(const Gaudi::XYZPoint &)const;///<Point in material region in Left halfbox
   bool IsInMaterialBoxRight(const Gaudi::XYZPoint &)const;///<Point in material region in Right halfbox
@@ -86,27 +86,27 @@ private:
   std::vector<Gaudi::XYZPoint > m_LeftSensorsCenter;
   std::vector<Gaudi::XYZPoint > m_RightSensorsCenter;
   Condition* m_motionSystem;
-  
-  
+
+
 
   // ========================================================================
 };
 
- // end of namespace LoKi 
+// end of namespace LoKi
 
 
 // ============================================================================
-// standard initialization of the tool 
+// standard initialization of the tool
 // ============================================================================
-StatusCode MatterVetoTool::initialize() 
-{ 
+StatusCode MatterVetoTool::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
   if (msgLevel(MSG::DEBUG)) { debug() << " ===> Initialize" << endmsg; }
 
   if( !exist<Condition>(detSvc(),"/dd/Conditions/Online/Velo/MotionSystem") ){
-    Warning("VELO motion system not in conditions DB", 
+    Warning("VELO motion system not in conditions DB",
             StatusCode::SUCCESS).ignore();
     //m_useConditions = false;
   }else{
@@ -119,7 +119,7 @@ StatusCode MatterVetoTool::initialize()
   return StatusCode::SUCCESS;
 
   //m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
-  //return GaudiTool::initialize () ; 
+  //return GaudiTool::initialize () ;
 }
 //=============================================================================
 // Check if particle vertex is in material
@@ -130,7 +130,7 @@ bool MatterVetoTool::isInMatter( const Gaudi::XYZPoint & point ) const {
 
   Gaudi::XYZPoint posloc;
   bool inMat = false;
-  
+
   //move to local Velo half frame
   if( point.x() < 2. ){ //right half
     posloc = m_toVeloRFrame * point;
@@ -151,7 +151,7 @@ bool MatterVetoTool::isInMatter( const Gaudi::XYZPoint & point ) const {
 //=============================================================================
 // Initialize the geometric info
 //=============================================================================
-StatusCode MatterVetoTool::i_cacheGeo(){  
+StatusCode MatterVetoTool::i_cacheGeo(){
 
   if (msgLevel(MSG::DEBUG)) { debug() << " ===> i_cacheGeo" << endmsg; }
 
@@ -167,7 +167,7 @@ StatusCode MatterVetoTool::i_cacheGeo(){
   if( msgLevel( MSG::DEBUG ) )
     debug() << "Velo global right half center "
             << rightcenter <<", left half center "<< leftcenter << endmsg;
-  
+
   //matrix to transform to local velo frame
   m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
   //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
@@ -179,11 +179,11 @@ StatusCode MatterVetoTool::i_cacheGeo(){
   for(;iLeftR!=velo->leftRSensorsEnd();iLeftR++){
     if((*iLeftR)->isPileUp())continue;
     const Gaudi::XYZPoint localCenter(0.,0.,0.);
-    const Gaudi::XYZPoint halfBoxRCenter = 
+    const Gaudi::XYZPoint halfBoxRCenter =
       (*iLeftR)->localToVeloHalfBox (localCenter);
     const DeVeloPhiType * phisens = (*iLeftR)->associatedPhiSensor () ;
     if(!(*iLeftR)->isPileUp()){
-      const Gaudi::XYZPoint halfBoxPhiCenter = 
+      const Gaudi::XYZPoint halfBoxPhiCenter =
         phisens->localToVeloHalfBox (localCenter);
       Gaudi::XYZPoint halfBoxCenter(halfBoxRCenter.x()+(halfBoxPhiCenter.x()-halfBoxRCenter.x())/2,
                                     halfBoxRCenter.y()+(halfBoxPhiCenter.y()-halfBoxRCenter.y())/2,
@@ -191,15 +191,15 @@ StatusCode MatterVetoTool::i_cacheGeo(){
       m_LeftSensorsCenter.push_back(halfBoxCenter);
     }
   }
-  std::vector< DeVeloRType * >::const_iterator iRightR = 
+  std::vector< DeVeloRType * >::const_iterator iRightR =
     velo->rightRSensorsBegin() ;
   for(;iRightR!=velo->rightRSensorsEnd();iRightR++){
     const Gaudi::XYZPoint localCenter(0.,0.,0.);
-    const Gaudi::XYZPoint halfBoxRCenter = 
+    const Gaudi::XYZPoint halfBoxRCenter =
       (*iRightR)->localToVeloHalfBox (localCenter);
     const DeVeloPhiType * phisens = (*iRightR)->associatedPhiSensor () ;
     if(!(*iRightR)->isPileUp()){
-      const Gaudi::XYZPoint halfBoxPhiCenter = 
+      const Gaudi::XYZPoint halfBoxPhiCenter =
         phisens->localToVeloHalfBox (localCenter);
       Gaudi::XYZPoint halfBoxCenter(halfBoxRCenter.x()+(halfBoxPhiCenter.x()-halfBoxRCenter.x())/2,
                                     halfBoxRCenter.y()+(halfBoxPhiCenter.y()-halfBoxRCenter.y())/2,
@@ -208,12 +208,12 @@ StatusCode MatterVetoTool::i_cacheGeo(){
     }
   }//end sensorloop
   return StatusCode::SUCCESS;
-  
+
 }
 
 
 //=============================================================================
-// Check if a point is in a region containing RFFoil and sensors in the Left 
+// Check if a point is in a region containing RFFoil and sensors in the Left
 // halfbox frame
 //=============================================================================
 
@@ -239,11 +239,11 @@ bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
   }
   // Is in the module area
   double halfModuleBoxThickness(1.75);
-  if (point.z()<m_LeftSensorsCenter[regModIndex].z()+halfModuleBoxThickness 
+  if (point.z()<m_LeftSensorsCenter[regModIndex].z()+halfModuleBoxThickness
       && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness){
     return true;
   }
-  
+
   // depending on z:
   // in the region of small corrugation
   if(point.z()<290. && point.x()-m_LeftSensorsCenter[regModIndex].x()>4){
@@ -252,54 +252,54 @@ bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
     float RsmallerCyl = 7.;
     float largerCyl = 11.;
     float RlargerCyl = 9.;
-    
+
     if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>smallerCyl
-       && r < RsmallerCyl ){ 
+       && r < RsmallerCyl ){
       return false;
     }
-    
+
     if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>largerCyl
        && r < RlargerCyl ){
       return false;
     }
-    
+
   }
   if(r<12.5 && point.z()<440.){
     return true;
   }
-  
-  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<5.5 && 
+
+  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<5.5 &&
      point.z()<440.){
     return true;
   }
-  
-  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<8.5 && 
-     point.z()>440.){ 
-    return true;  
+
+  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<8.5 &&
+     point.z()>440.){
+    return true;
   }
-  
+
   if (m_useEnlargedMatterVeto) {
     // two modules
     if ( ( (446. < point.z() && point.z() < 453.) ||
-	   (348. < point.z() && point.z() < 351.) ) && 
-	 ( 5. < r && r < 44. ) )
+           (348. < point.z() && point.z() < 351.) ) &&
+         ( 5. < r && r < 44. ) )
       return true;
     // RFoil
-    if ( ( 300. < point.z() && point.z() < 600.) && 
-	 ( 4. < point.x() && point.x() < 8.) && 
-	 ( ( -13. < point.y() && point.y() < -10. ) ||
-	   ( 10. < point.y() && point.y() < -13. ) ) )
+    if ( ( 300. < point.z() && point.z() < 600.) &&
+         ( 4. < point.x() && point.x() < 8.) &&
+         ( ( -13. < point.y() && point.y() < -10. ) ||
+           ( 10. < point.y() && point.y() < -13. ) ) )
       return true;
   }
 
   return false;
 
 
-  
+
 }
 
 //=============================================================================
-// Check if a point is in a region containing RFFoil and sensors in the Right 
+// Check if a point is in a region containing RFFoil and sensors in the Right
 // halfbox frame
 //=============================================================================
 
@@ -320,14 +320,14 @@ bool MatterVetoTool::IsInMaterialBoxRight(const Gaudi::XYZPoint& point) const{
     regModIndex=m_RightSensorsCenter.size()-1;
   // Is in vaccum clean cylinder?
   double r = sqrt(pow(point.x()-m_RightSensorsCenter[regModIndex].x(),2)+pow(point.y()-m_RightSensorsCenter[regModIndex].y(),2));
-  
+
   // inner cylinder
   if ( (r<5. && point.z()<390.) || (r<4.3 && point.z()>390.) ){
     return false;
   }
   // is in the module area
   double halfModuleBoxThickness(1.75);
-  if (point.z()<m_RightSensorsCenter[regModIndex].z()+halfModuleBoxThickness 
+  if (point.z()<m_RightSensorsCenter[regModIndex].z()+halfModuleBoxThickness
       && point.z()>m_RightSensorsCenter[regModIndex].z()-halfModuleBoxThickness) return true;
   // depending on z:
   // in the region of small corrugation
@@ -337,7 +337,7 @@ bool MatterVetoTool::IsInMaterialBoxRight(const Gaudi::XYZPoint& point) const{
     float RsmallerCyl = 7.;
     float largerCyl = 11.;
     float RlargerCyl = 9.;
-    
+
     if (fabs(point.z()-m_RightSensorsCenter[regModIndex].z())>smallerCyl
         && r < RsmallerCyl ) return false;
     if (fabs(point.z()-m_RightSensorsCenter[regModIndex].z())>largerCyl
@@ -346,22 +346,22 @@ bool MatterVetoTool::IsInMaterialBoxRight(const Gaudi::XYZPoint& point) const{
   // Is clearly outside RFFoil part
   if (r<12.5 && point.z()<450. ) return true;
   if (point.z()<450. && fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<5.5)return true;
-  if (fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<8.5 && point.z()>450.) return true;  
+  if (fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<8.5 && point.z()>450.) return true;
 
   // enlarged MatterVeto
   if (m_useEnlargedMatterVeto) {
     // one module
-    if ( ( 431. < point.z() && point.z() < 439.) && 
-	 ( 5. < r && r < 44. ) )
+    if ( ( 431. < point.z() && point.z() < 439.) &&
+         ( 5. < r && r < 44. ) )
       return true;
     // RFoil
-    if ( ( 300. < point.z() && point.z() < 600.) && 
-	 ( 4. < point.x() && point.x() < 8.) && 
-	 ( ( -13. < point.y() && point.y() < -10. ) ||
-	   ( 10. < point.y() && point.y() < -13. ) ) )
+    if ( ( 300. < point.z() && point.z() < 600.) &&
+         ( 4. < point.x() && point.x() < 8.) &&
+         ( ( -13. < point.y() && point.y() < -10. ) ||
+           ( 10. < point.y() && point.y() < -13. ) ) )
       return true;
   }
-  
+
 
   return false;
 }
@@ -369,7 +369,7 @@ bool MatterVetoTool::IsInMaterialBoxRight(const Gaudi::XYZPoint& point) const{
 
 // ============================================================================
 /// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY(MatterVetoTool);
+DECLARE_TOOL_FACTORY(MatterVetoTool)
 // ============================================================================
-// The END 
+// The END
 // ============================================================================

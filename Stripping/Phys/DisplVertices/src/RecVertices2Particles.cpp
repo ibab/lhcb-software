@@ -29,21 +29,21 @@ using namespace std ;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RecVertices2Particles );
+DECLARE_ALGORITHM_FACTORY( RecVertices2Particles )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RecVertices2Particles::RecVertices2Particles( const std::string& name,
-                                              ISvcLocator* pSvcLocator)
-  : DaVinciHistoAlgorithm ( name , pSvcLocator )
-  , pi(3.1415926)
-  , m_FromBL(false)
-  , m_FromUpPV(false)
-  , m_FromBeamSpot(false)
-  , m_GeoInit(false)
-  , m_PVnbtrks(10)
-  , m_pt(400.)
+  RecVertices2Particles::RecVertices2Particles( const std::string& name,
+                                                ISvcLocator* pSvcLocator)
+    : DaVinciHistoAlgorithm ( name , pSvcLocator )
+    , pi(3.1415926)
+    , m_FromBL(false)
+    , m_FromUpPV(false)
+    , m_FromBeamSpot(false)
+    , m_GeoInit(false)
+    , m_PVnbtrks(10)
+    , m_pt(400.)
 {
   declareProperty("UsePartFromTES", m_UsePartFromTES = false );
   declareProperty("Prey", m_Prey = "~chi_10" );
@@ -459,7 +459,7 @@ void RecVertices2Particles::GetSumPtNbGoodTrks( const LHCb::RecVertex * rv,
     pttot += i->target()->pt();
     nb++;
   }
-};
+}
 
 
 //=============================================================================

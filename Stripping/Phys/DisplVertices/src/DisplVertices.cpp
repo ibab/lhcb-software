@@ -809,7 +809,7 @@ double DisplVertices::VertDistance( const Gaudi::XYZPoint & v1,
 double DisplVertices::Angle( const Gaudi::LorentzVector & a,
                              const Gaudi::LorentzVector & b ){
   return Angle( a.Vect(), b.Vect() );
-};
+}
 
 double DisplVertices::Angle( const Gaudi::XYZVector & a,
                              const Gaudi::XYZVector & b ){
