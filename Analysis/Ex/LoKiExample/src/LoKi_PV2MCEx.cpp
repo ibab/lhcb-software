@@ -177,7 +177,7 @@ StatusCode LoKi::Example::PV2MCEx::analyse  ()
 }
 // ============================================================================
 /// declare a factory
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi::Example,PV2MCEx) ;
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi::Example,PV2MCEx)
 // ============================================================================
 // The END 
 // ============================================================================

@@ -95,10 +95,7 @@ LOKI_MCALGORITHM(PhiK_Dalitz)
   setFilterPassed ( true ) ;
   
   return SUCCESS ;
-} ;
-
-
-
+}
 
 // ============================================================================
 // The END 
