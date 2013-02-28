@@ -10,6 +10,9 @@ HLT LS1 first development version. First backward-incompatible changes for 2012 
 
 LHCb v35r4 stack. Depends on Rec v14r4 via Phys v16r4. Based on Gaudi v23r6.
 
+Known Issues:
+  - Major bug reported in HltGlobalMonitor, see bug #100666
+
 Packages Removed:
  - HltSelChecker (is in Analysis project and has been for a while)
  - PatAlgorithms v4r24, now taken from latest Rec
