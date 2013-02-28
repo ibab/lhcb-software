@@ -4,6 +4,7 @@
 ! Purpose     : Cosmic run specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================= HltCosmics v1r1 2013-02-28 =========================
 ! 2013-02-27 - Rob Lambert
  - protect debug messages, task #40215
 
