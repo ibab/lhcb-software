@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+! 2013-02-28 - Chris Jones
+ - Fix -pedantic compilation warnings
+
 !========================= TMVASelections v1r5 2013-02-21 =========================
 
 ! 2013-02-13 - Conor Fitzpatrick
