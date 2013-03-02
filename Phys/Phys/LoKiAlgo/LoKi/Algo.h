@@ -1326,17 +1326,17 @@ namespace LoKi                                                                \
 /* ======================================================================== */ \
 /** Declaration of the Algorithm Factory                                    */ \
 /* ======================================================================== */ \
-DECLARE_NAMESPACE_ALGORITHM_FACTORY( LoKi , ALGNAME ) ;                        \
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( LoKi , ALGNAME )                          \
 /* ======================================================================== */ \
 /** Standard constructor                                                    */ \
 /* ======================================================================== */ \
 LoKi::ALGNAME::ALGNAME ( const std::string& name  ,                            \
                          ISvcLocator*       svc   )                            \
-: LoKi::Algo( name , svc ) {} ; /* constructor for base class */               \
+: LoKi::Algo( name , svc ) {}   /* constructor for base class */               \
 /* ======================================================================== */ \
 /** destructor (empty)                                                      */ \
 /* ======================================================================== */ \
-LoKi::ALGNAME ::~ALGNAME () {};
+LoKi::ALGNAME ::~ALGNAME () {}
 // ============================================================================
 /** @def LOKI_ALGORITHM_FULLIMPLEMENT 
  *
@@ -1363,8 +1363,8 @@ LoKi::ALGNAME ::~ALGNAME () {};
  */
 // ============================================================================
 #define LOKI_ALGORITHM_FULLIMPLEMENT(   ALGNAME   )                            \
-        LOKI_ALGORITHM_BODY         (   ALGNAME   ) ;                          \
-        LOKI_ALGORITHM_IMPLEMENT    (   ALGNAME   ) ;
+        LOKI_ALGORITHM_BODY         (   ALGNAME   )                            \
+        LOKI_ALGORITHM_IMPLEMENT    (   ALGNAME   )
 // ============================================================================
 /** @def LOKI_ALGORITHM
  * 
@@ -1395,7 +1395,7 @@ LoKi::ALGNAME ::~ALGNAME () {};
  */
 // ============================================================================
 #define LOKI_ALGORITHM(   ALGNAME   )              \
-        LOKI_ALGORITHM_FULLIMPLEMENT ( ALGNAME ) ; \
+        LOKI_ALGORITHM_FULLIMPLEMENT ( ALGNAME )   \
         StatusCode LoKi::ALGNAME::analyse()                      
 // ============================================================================
 

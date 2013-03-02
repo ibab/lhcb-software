@@ -5,6 +5,9 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2013-03-02 - Chris Jones
+ - Fix compilation warnings (in downstream packages) with -pedantic enabled
+
 !========================= LoKiAlgo v9r8 2013-02-20 =========================
 
 ! 2013-02-04 - Vanya Belyaev
