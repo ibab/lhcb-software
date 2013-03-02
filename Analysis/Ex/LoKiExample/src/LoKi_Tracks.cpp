@@ -52,7 +52,7 @@ namespace LoKi
   } ;  
 }
 // ============================================================================
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,SelectTracks) ;
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,SelectTracks)
 // ============================================================================
 namespace 
 {

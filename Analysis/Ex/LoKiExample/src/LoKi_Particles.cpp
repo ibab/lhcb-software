@@ -47,7 +47,7 @@ LOKI_ALGORITHM( SelectParticles)
   setFilterPassed ( true ) ;
   
   return SUCCESS ;                                                  // RETURN  
-};
+}
 
 
 // ============================================================================

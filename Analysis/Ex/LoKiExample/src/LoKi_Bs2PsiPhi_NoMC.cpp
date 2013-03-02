@@ -130,7 +130,7 @@ LOKI_ALGORITHM(Bs2PsiPhi_NoMC)
   if ( !Bs.empty() ) { setFilterPassed( true ) ; }             // IMPORTANT 
   
   return SUCCESS ;                                             // RETURN 
-} ;
+}
 
 // ============================================================================
 // The END 

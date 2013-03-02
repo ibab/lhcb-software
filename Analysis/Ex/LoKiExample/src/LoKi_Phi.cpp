@@ -52,7 +52,7 @@ LOKI_ALGORITHM(Phi)
   setFilterPassed ( true ) ;
   
   return SUCCESS ;                                                  // RETURN  
-};
+}
 
 
 // ============================================================================

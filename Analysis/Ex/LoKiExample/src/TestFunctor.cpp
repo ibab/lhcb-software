@@ -147,7 +147,7 @@ StatusCode LoKi::TestFunctor::execute()
 } 
 // ============================================================================
 /// the algorithm factory:
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,TestFunctor) ;
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,TestFunctor)
 // ============================================================================
 // The END 
 // ============================================================================
