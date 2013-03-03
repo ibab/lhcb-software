@@ -29,6 +29,12 @@ DECLARE_ALGORITHM_FACTORY( RecSummaryAlg )
   const std::vector<std::string> tmpList = boost::assign::list_of
     ("RICH1")("RICH2")("VELO")("TT")("IT")("OT")("SPD")("MUON")
     ;
+
+  m_knownDets = boost::assign::list_of
+    ("RICH1")("RICH2")("VELO")("TT")("IT")("OT")("SPD")("MUON")
+    ("VL")("VP")("UT")("FT")("RICH1PMT")("RICH2PMT")
+    ;
+
   declareProperty( "Detectors", m_dets = tmpList );
 
   declareProperty( "SummaryLocation",
@@ -49,12 +55,40 @@ DECLARE_ALGORITHM_FACTORY( RecSummaryAlg )
                    m_muonCoordsLoc = LHCb::MuonCoordLocation::MuonCoords );
   declareProperty( "MuonTracksLocation",
                    m_muonTracksLoc = LHCb::TrackLocation::Muon );
+  // Upgrade detectors
+  declareProperty( "VLClustersLocation",
+                   m_vlLoc    = LHCb::VLClusterLocation::Default );
+  declareProperty( "VPClustersLocation",
+                   m_vpLoc    = LHCb::VPLiteClusterLocation::Default );
+  declareProperty( "UTClustersLocation",
+                   m_utLoc      = LHCb::STClusterLocation::UTClusters );
+  declareProperty( "FTClustersLocation",
+                   m_ftLoc      = LHCb::FTRawClusterLocation::Default );
+
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
 RecSummaryAlg::~RecSummaryAlg() {}
+
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode RecSummaryAlg::initialize()
+{
+  const StatusCode sc = GaudiAlgorithm::initialize(); 
+  if ( sc.isFailure() ) return sc; 
+  std::vector<std::string> tmpDets;
+  std::sort(m_dets.begin(),m_dets.end());
+  std::sort(m_knownDets.begin(),m_knownDets.end());
+  set_intersection(m_dets.begin(),m_dets.end(), m_knownDets.begin(),m_knownDets.end(), std::back_inserter(tmpDets)); 
+  m_dets = tmpDets;
+  
+  
+  return sc;
+}
+
 
 //=============================================================================
 // Main execution
@@ -109,12 +143,12 @@ StatusCode RecSummaryAlg::execute()
   for ( std::vector<std::string>::const_iterator iDet = m_dets.begin();
         iDet != m_dets.end(); ++iDet )
   {
-    if      ( "RICH1" == *iDet )
+    if      ( "RICH1" == *iDet || "RICH1PMT" == *iDet )
     {
       summary->addInfo( LHCb::RecSummary::nRich1Hits,
                         richTool()->nTotalHits(Rich::Rich1) );
     }
-    else if ( "RICH2" == *iDet )
+    else if ( "RICH2" == *iDet || "RICH2PMT" == *iDet)
     {
       summary->addInfo( LHCb::RecSummary::nRich2Hits,
                         richTool()->nTotalHits(Rich::Rich2) );
@@ -167,6 +201,25 @@ StatusCode RecSummaryAlg::execute()
         Warning( "No MuonCoords available at '"+m_muonCoordsLoc+"'" ).ignore();
       }
     }
+    //Upgrade detectors
+    else if ( "VP" == *iDet )
+    {
+      addSizeSummary<LHCb::VPLiteCluster::VPLiteClusters>( summary, LHCb::RecSummary::nVeloClusters, m_vpLoc );
+    }
+    else if ( "VL" == *iDet )
+    {
+      addSizeSummary<LHCb::VLClusters>( summary, LHCb::RecSummary::nVeloClusters, m_vlLoc );
+    }
+    else if ( "UT" == *iDet )
+    {
+      addSizeSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nUTClusters, m_utLoc );
+    }
+    else if ( "FT" == *iDet )
+    {
+      typedef FastClusterContainer<LHCb::FTRawCluster,int> FTRawClusters;
+      addSizeSummary<FTRawClusters>( summary, LHCb::RecSummary::nFTClusters, m_ftLoc );
+    }
+
     else
     {
       Warning( "Unknown detector '" + *iDet + "'" ).ignore();

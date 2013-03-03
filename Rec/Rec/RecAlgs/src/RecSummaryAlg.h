@@ -15,6 +15,9 @@
 #include "Event/RecVertex.h"
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
+#include "Event/VLCluster.h"
+#include "Event/VPCluster.h"
+#include "Event/FTRawCluster.h"
 #include "Event/CaloDigit.h"
 #include "Event/MuonCoord.h"
 
@@ -46,7 +49,8 @@ public:
   virtual ~RecSummaryAlg( ); ///< Destructor
 
   virtual StatusCode execute(); ///< Algorithm execution
-
+  virtual StatusCode initialize(); ///<  Algorithm initialization
+  
 private:
 
   /// Adds the number of objects at the given TES location to the summary object
@@ -97,6 +101,9 @@ private:
   /// List of sub-detectors to add
   std::vector<std::string> m_dets;
 
+  /// List of known-detectors to add
+  std::vector<std::string> m_knownDets;
+
   /// TES location to save the summary object
   std::string m_summaryLoc;
 
@@ -109,11 +116,23 @@ private:
   /// TES location of Velo clusters
   std::string m_veloLoc;
 
+  /// TES location of VL clusters
+  std::string m_vlLoc;
+
+  /// TES location of VP clusters
+  std::string m_vpLoc;
+
   /// TES location of IT clusters
   std::string m_itLoc;
 
   /// TES location of TT clusters
   std::string m_ttLoc;
+
+  /// TES location of UT clusters
+  std::string m_utLoc;
+
+  /// TES location of FT clusters
+  std::string m_ftLoc;
 
   /// TES location of CaloDigits
   std::string m_spdLoc;
