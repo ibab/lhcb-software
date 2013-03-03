@@ -34,6 +34,10 @@ std::ostream& LHCb::RecSummary::fillStream(std::ostream& s) const
 
   s << " nTTClusters = " << info( LHCb::RecSummary::nTTClusters, 0 );
 
+  s << " nUTClusters = " << info( LHCb::RecSummary::nUTClusters, 0 );
+
+  s << " nFTClusters = " << info( LHCb::RecSummary::nFTClusters, 0 );
+
   s << " nITClusters = " << info( LHCb::RecSummary::nITClusters, 0 );
 
   s << " nOTClusters = " << info( LHCb::RecSummary::nOTClusters, 0 );
