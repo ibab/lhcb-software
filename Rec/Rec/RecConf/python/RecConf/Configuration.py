@@ -197,21 +197,12 @@ class RecSysConf(LHCbConfigurableUser):
         if "SUMMARY" in recoSeq:
             from Configurables import RecSummaryAlg
             summary = RecSummaryAlg("RecSummary")
-            # Temporary hack to not write summary if using incompatible dets
             # make a new list of uppered detectors
             dets = []
             for det in self.getProp("Detectors"):
-                if det.upper() in ['RICH1PMT']:
-                    dets.append("RICH1")
-                elif det.upper() in ['RICH2PMT']:
-                    dets.append("RICH2")
-                else:
-                    dets.append(det.upper())
-            # Check to see if our detector list is ok.
-            if set(summary.Detectors).issubset(set(dets)):
-                #summary.Detectors = self.getProp("Detectors")
-                #summary.Detectors = dets        
-                GaudiSequencer("RecoSUMMARYSeq").Members += [summary]
+                dets.append(det.upper())
+            summary.Detectors = dets 
+            GaudiSequencer("RecoSUMMARYSeq").Members += [summary]
 
 ## @class RecMoniConf
 #  Configurable for LHCb reconstruction monitoring (without MC truth)
