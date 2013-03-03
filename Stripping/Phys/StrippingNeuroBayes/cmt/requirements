@@ -23,7 +23,10 @@ include_path      none
 # Component library building rule
 #============================================================================
 library          StrippingNeuroBayes    ../src/*.cpp -import=AIDA 
-
+private
+macro_append     StrippingNeuroBayes_cppflags "" \
+                                   target-gcc " -Wno-variadic-macros "
+end_private
 
 #============================================================================
 # define component library link options

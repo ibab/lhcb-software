@@ -4,6 +4,9 @@ i!-----------------------------------------------------------------------------
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2013-03-03 - Chris Jones
+ - Suppress variadic macro warnings
+
 !========================= StrippingNeuroBayes v1r7 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
