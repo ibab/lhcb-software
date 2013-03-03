@@ -4,6 +4,9 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2013-03-03 - Chris Jones
+ - Suppress variadic macro warnings
+
 !========================= JetTagging v1r0 2013-02-20 =========================
 
 ! 2013-02-20 - Cedric Potterat

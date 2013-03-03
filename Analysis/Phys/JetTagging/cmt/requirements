@@ -32,6 +32,10 @@ library           JetTagging    ../src/*.cpp
 
 # =============== standard patterns ===========================================
 apply_pattern     component_library library=JetTagging
+private
+macro_append      JetTagging_cppflags "" \
+                           target-gcc " -Wno-variadic-macros "
+end_private
 
 apply_pattern install_python_modules 
 
