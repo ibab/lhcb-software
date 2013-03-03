@@ -5,6 +5,9 @@
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
 
+! 2013-03-03 - Chris Jones
+ - Suppress variadic macro warnings
+
 !========================= NeuroBayesTools v1r2p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

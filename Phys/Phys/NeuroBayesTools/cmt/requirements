@@ -32,6 +32,10 @@ library          NeuroBayesTool    ../src/*.cpp -import=AIDA
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=NeuroBayesTool
+private
+macro_append     NeuroBayesTool_cppflags "" \
+                              target-gcc " -Wno-variadic-macros "
+end_private
 
 # =============================================================================
 # ======= the patterns ========================================================
