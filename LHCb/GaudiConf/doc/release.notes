@@ -3,6 +3,11 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-03-03 - Sascha Stahl
+ - Removed test for upgrade detectors when adding Rec/Summary to writer in DstConf.
+   RecSummary supports upgrade detectors now.
+
+
 !========================= GaudiConf v17r6 2013-02-15 =========================
 ! 2013-02-15 - Marco Cattaneo
  - Add a new function DigiConf().AddMCTrackInfo, to add MC/TrackInfo to the
