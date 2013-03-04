@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-02-15 - Aurelien Martens
+ - for 8.175: using namespace std was implictely hidden in Pythia8StdLib, not the case anymore.
+Replace  call to max(...) by std::max(...).
+
+! 2013-02-15 - Aurelien Martens
  - Fix a mistake with Lc(2625) while resolving a conflit
 
 ! 2013-02-15 - Aurelien Martens

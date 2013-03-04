@@ -42,7 +42,7 @@ bool LbLHAupFortran::setInit() {
   setStrategy( Pythia8::heprup_.idwtup ) ;
 
   for ( int ip = 0 ; ip < Pythia8::heprup_.nprup ; ++ip ) {
-    double xsec = max( 1e-10 , Pythia8::heprup_.xsecup[ ip ] ) ;
+    double xsec = std::max( 1e-10 , Pythia8::heprup_.xsecup[ ip ] ) ;
     addProcess( Pythia8::heprup_.lprup[ ip ] , xsec , 
                 Pythia8::heprup_.xerrup[ ip ] , 
                 Pythia8::heprup_.xmaxup [ ip ] ) ;
