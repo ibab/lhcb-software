@@ -29,7 +29,7 @@ DECLARE_ALGORITHM_FACTORY( BTagging )
 BTagging::~BTagging() {}
 
 //=======================================================================
-// Main executio
+// Main execution
 //=======================================================================
 StatusCode BTagging::execute() 
 {
