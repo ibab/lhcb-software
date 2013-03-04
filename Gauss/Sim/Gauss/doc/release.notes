@@ -4,6 +4,8 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-03-04 - Paul Szczypka
+ - Change VL path in Configurable.py (assuming DB release)
 
 ! 2013-02-27 - Gloria Corti
  - Use Feb dbase tags in upgrade qmtest

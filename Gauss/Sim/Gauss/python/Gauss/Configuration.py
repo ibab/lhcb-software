@@ -552,8 +552,8 @@ class Gauss(LHCbConfigurableUser):
         self.removeBeamPipeElements( "velo" )
 
         # Temp fix for non-schema VL path in DDDB
-        #detPieces['BeforeMagnetRegion'] += ['VL']
-        detPieces['BeforeMagnetRegion'] += ['VeloLite']
+        detPieces['BeforeMagnetRegion'] += ['VL']
+        #detPieces['BeforeMagnetRegion'] += ['VeloLite']
 
         # Also sort out mis-alignment
         if self.getProp("DataType") != "Upgrade" :
@@ -574,8 +574,8 @@ class Gauss(LHCbConfigurableUser):
             MCHitsLocation = 'MC/' + det  + '/Hits',
             CollectionName = det + 'SDet/Hits',
             # Temp fix for non-schema VL path in DDDB
-            #Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
-            Detectors = [ '/dd/Structure/LHCb/' + region + '/VeloLite' ]
+            Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
+            #Detectors = [ '/dd/Structure/LHCb/' + region + '/VeloLite' ]
             )
         detHits.Members += [ moni ]
         pass
