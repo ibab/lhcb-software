@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2013-03-04 - Gloria Corti
+ - Use latest version of PYthia8 175
+
 !========================== GENSER v12r2 2013-02-14 ==========================
 ! 2013-02-14 - Gloria Corti
  - Merge changes to remove hijing code from v10r2b branch. See below.
