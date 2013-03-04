@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2013-03-04 - Patrick Koppenburg
+ - New flag FilMultiPV for TupleToolGeometry (that's becoming a monster)
+
 ! 2013-02-26 - Chris Jones
  - Fix -pedantic compilation warnings
 

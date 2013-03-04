@@ -43,6 +43,8 @@ DECLARE_TOOL_FACTORY( TupleToolGeometry )
   declareInterface<IParticleTupleTool>(this);
   declareProperty("RefitPVs",m_refitPVs=false,
                   "Refit PVs when doing next best PV checks");
+  declareProperty("FillMultiPV",m_fillMultiPV=false,
+                  "Fill Multi PV arrays");
 
   //declareProperty("FillMother",m_fillMother=true,
   //                "Turn false if the mother is expected to be NULL, will not fill mother PV info");
@@ -97,7 +99,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
               << endmsg ;
 
   //fill min IP
-  if ( isVerbose() )
+  if ( isVerbose() || m_fillMultiPV )
   {
     sc = fillMinIP(P,prefix,tuple);
     if ( sc.isFailure() )
@@ -282,7 +284,7 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P,
   if(msgLevel(MSG::VERBOSE)) verbose() << "Looking for Min IP"  << endmsg  ;
   const RecVertex::Range PV = m_dva->primaryVertices();
   if(msgLevel(MSG::VERBOSE)) verbose() << "PV size: "  << PV.size() << endmsg  ;
-  std::vector<double> ips, ipchi2s;
+  std::vector<double> ips, ipchi2s, diras;
   if ( !PV.empty() )
   {
     if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP : "
@@ -305,7 +307,8 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P,
       StatusCode test2 = m_dist->distance ( P, newPVPtr, ip, chi2 );
       ips.push_back(ip);
       ipchi2s.push_back(chi2);
-      if( test2 )
+      if (P->endVertex()) diras.push_back(dira(newPVPtr,P));
+      if( test2 && isVerbose() )
       {
         if ((ip<ipmin) || (ipmin<0.))
         {
@@ -335,21 +338,26 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P,
       }
     }
   }
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "Filling IP " << prefix + "_MINIP " << ipmin << " at " << minchi2 << endmsg  ;
-    verbose() << "Filling IP next best " << prefix + "_MINIP " << ipminnextbest << " at "
-              << minchi2nextbest << endmsg  ;
+  if (isVerbose()){
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Filling IP " << prefix + "_MINIP " << ipmin << " at " << minchi2 << endmsg  ;
+      verbose() << "Filling IP next best " << prefix + "_MINIP " << ipminnextbest << " at "
+                << minchi2nextbest << endmsg  ;
+    }
+    test &= tuple->column( prefix + "_MINIP", ipmin );
+    test &= tuple->column( prefix + "_MINIPCHI2", minchi2 );
+    
+    test &= tuple->column( prefix + "_MINIPNEXTBEST", ipminnextbest );
+    test &= tuple->column( prefix + "_MINIPCHI2NEXTBEST", minchi2nextbest );
   }
-  test &= tuple->column( prefix + "_MINIP", ipmin );
-  test &= tuple->column( prefix + "_MINIPCHI2", minchi2 );
-
-  test &= tuple->column( prefix + "_MINIPNEXTBEST", ipminnextbest );
-  test &= tuple->column( prefix + "_MINIPCHI2NEXTBEST", minchi2nextbest );
-
-  test &= tuple->farray( prefix + "_AllIP", ips, "nPV", m_maxPV );
-  test &= tuple->farray( prefix + "_AllIPchi2", ipchi2s, "nPV", m_maxPV );
-  // --------------------------------------------------
+  if (m_fillMultiPV){
+    test &= tuple->farray( prefix + "_AllIP", ips, "nPV", m_maxPV );
+    test &= tuple->farray( prefix + "_AllIPchi2", ipchi2s, "nPV", m_maxPV );
+    if (!diras.empty()) test &= tuple->farray( prefix + "_AllDIRA", diras, "nPV", m_maxPV );
+    // --------------------------------------------------
+  }
+  
   if(msgLevel(MSG::VERBOSE))
     verbose() << "Return from fillMinIP: " << prefix  << " " << test << endmsg;
   if (!test)  Warning("Error in fillMinIP",1,StatusCode::FAILURE);
@@ -425,16 +433,7 @@ StatusCode TupleToolGeometry::fillFlight( const VertexBase* oriVtx,
     // cosine of (flight distance) dot (momentum):
     // find the origin vertex. Either the primary or the origin in the
     // decay
-    const LHCb::Vertex* evtx = P->endVertex();
-    if( !evtx )
-    {
-      return Error("Can't retrieve the end vertex for " + prefix );
-    }
-    const Gaudi::XYZVector& A = P->momentum().Vect();
-    const Gaudi::XYZVector B = evtx->position() - oriVtx->position ();
-
-    const double cosPFD = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
-    test &= tuple->column( prefix + "_DIRA"+trail, cosPFD );
+    test &= tuple->column( prefix + "_DIRA"+trail, dira(oriVtx,P) );
   }
 
   if (!test) Warning("Error in fillFlight "+prefix,1).ignore();

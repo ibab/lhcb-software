@@ -34,24 +34,23 @@ namespace LHCb
  * - head_OWNPV_CHI2 : related primary vertex chi2
  * - head_OWNPV_NDOF : related primary vertex nDoF
  * - head_IP_OWNPV : impact parameter with respect to the PhysDesktop::relatedVertex() considered particle
- * - head_IPCHI2_OWNPV : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() considered particle
- * - head_FD_OWNPV : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() considered particle
- * - head_FDCHI2_OWNPV : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() considered particle
+ * - head_IPCHI2_OWNPV : impact parameter chi2 with respect to the relatedVertex() considered particle
+ * - head_FD_OWNPV : flight distance of composite particle wrt. the relatedVertex() considered particle
+ * - head_FDCHI2_OWNPV : flight distance significance in units of chi2 wrt. the relatedVertex() considered particle
  * - head_DIRA_OWNPV : direction angle wrt. the PhysDesktop::relatedVertex() considered particle
  *
  *  If Verbose is true:
- *
  *
  * - head_TOPPV_[X|Y|Z] : PhysDesktop::relatedVertex() of the top of decay chain position
  * - head_TOPPV_[X|Y|Z]ERR : PhysDesktop::relatedVertex() of the top of decay chain position error estimate
  * - head_TOPPV_CHI2 : PhysDesktop::relatedVertex() of the top of decay chain chi2
  * - head_TOPPV_NDOF : PhysDesktop::relatedVertex() of the top of decay chain nDoF
  * - head_IP_TOPPV : impact parameter with respect to the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_IPCHI2_TOPPV : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_FD_TOPPV : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_IPCHI2_TOPPV : impact parameter chi2 with respect to the relatedVertex() of the top of decay chain
+ * - head_FD_TOPPV : flight distance of composite particle wrt. the relatedVertex() of the top of decay chain
  * - head_FDCHI2_TOPPV : flight distance significance in units of chi2 wrt.
  *      the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_DIRA_TOPPV : direction angle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_DIRA_TOPPV : direction angle wrt. the relatedVertex() of the top of decay chain
  *
  * - head_ORIVX_[X|Y|Z] : ancestor's related primary vertex position (when applicable)
  * - head_ORIVX_[X|Y|Z]ERR : ancestor's related primary vertex position error estimate (when applicable)
@@ -62,6 +61,11 @@ namespace LHCb
  * - head_FD_ORIVX : flight distance of composite particle wrt. the ancestor's vertex (when applicable)
  * - head_FDCHI2_ORIVX : flight distance significance in units of chi2 wrt. ancestor's vertex (when applicable)
  * - head_DIRA_ORIVX : direction angle wrt. ancestor's vertex (when applicable)
+ *
+ * Finally some arrays with FillMultiPV
+ * - head_AllIP : IP wrt to all PVs
+ * - head_AllIPchi2 : IPchi2 wrt to all Vs
+ * - head_AllDIRA : DIRA wrt to all PVs
  *
  * \sa DecayTreeTuple
  *
@@ -124,11 +128,28 @@ private:
                         Tuples::Tuple& tuple, 
                         const std::string& trail = "" ) const ;
 
+  double dira(const LHCb::VertexBase* oriVtx, const LHCb::Particle* P) const {
+    if (!P || !oriVtx){
+      Exception("Wrong use of dira");
+      return -1501. ;      
+    }
+    const LHCb::Vertex* evtx = P->endVertex();
+    if( !evtx ) {
+      Warning("Cannot find end vertex",StatusCode::SUCCESS,1).ignore();
+      return -999.;
+    }
+    const Gaudi::XYZVector& A = P->momentum().Vect();
+    const Gaudi::XYZVector B = evtx->position() - oriVtx->position ();
+    return A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
+  }
+  
+
 private:
 
   const IDistanceCalculator* m_dist;
 
   bool m_refitPVs;
+  bool m_fillMultiPV ; ///< fill multiPV variables
 
   //bool m_fillMother;
 
