@@ -1,3 +1,8 @@
+2013-03-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/lcg-*-4.6.3: added wrapper for gcc 4.6.3
+	* cmake: updated to the latest version in Gaudi
+
 2013-01-22  Ben Couturier  <ben.couturier@cern.ch>
 
 	* cmt/requirements: release of version v3r12
