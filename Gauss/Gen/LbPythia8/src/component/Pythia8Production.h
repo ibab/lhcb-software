@@ -128,6 +128,8 @@ private:
   bool m_listAllParticles ; ///list particles.
   bool m_checkParticleProperties ; //check part prop
 
+  bool m_showBanner ; //flag to show banner or not
+
   std::string m_tuningFile;
   std::string m_tuningUserFile;
   std::string m_LHAupOptionFile;

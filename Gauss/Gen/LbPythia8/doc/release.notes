@@ -4,11 +4,14 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
-! 2013-02-15 - Aurelien Martens
+! 2013-03-05 - Aurelien Martens
+ - for 8.175: remove Pythia8 Banner by default (adding a configurable flag)
+
+! 2013-03-05 - Aurelien Martens
  - for 8.175: fix a changes in the way HepMC is filled (remove methods not supported anymore)
  - update the cmd file so that one switches off versobity in one command
 
-! 2013-02-15 - Aurelien Martens
+! 2013-03-04 - Aurelien Martens
  - for 8.175: using namespace std was implictely hidden in Pythia8StdLib, not the case anymore.
 Replace  call to max(...) by std::max(...).
 

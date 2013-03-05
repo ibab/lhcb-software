@@ -54,6 +54,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
     m_randomEngine( 0 ) ,
     m_fortranUPTool( 0 ) ,
     m_validate_HEPEVT ( false ) ,// force the valiadation of I_Pythia8 
+    m_showBanner ( false ) ,
     m_inconsistencies ( "HEPEVT_inconsistencies.out" ) ,
     m_HEPEVT_errors ( 0 ) {
   
@@ -67,6 +68,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
   declareProperty( "Tuning", m_tuningFile = "LHCbDefault.cmd");
   declareProperty( "UserTuning", m_tuningUserFile = ""); //a default Pythia8 tune using the Tune: 'subrun' would overwrite LHCb defaults, if chosen here...
   declareProperty( "PythiaUserProcessTool" , m_fortranUPToolName = "" ) ;
+  declareProperty( "ShowBanner" , m_showBanner = false ) ;
   declareProperty( "LHAupOptionFile" , m_LHAupOptionFile = "LHAup.cmd");
 }
 
@@ -95,7 +97,7 @@ StatusCode Pythia8Production::initialize( ) {
     xmlpath  = System::getEnv( "PYTHIA8XML" ) ;
 
   //Initializing the pythia object
-  m_pythia = new Pythia8::Pythia( xmlpath );
+  m_pythia = new Pythia8::Pythia( xmlpath, m_showBanner );
   
   //Setting the random generator
   IRndmGenSvc* randSvc( 0 );
