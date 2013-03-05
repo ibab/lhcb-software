@@ -5,6 +5,7 @@ Created on Jun 27, 2011
 '''
 import re
 import os
+import logging
 from os.path import normpath
 from zipfile import is_zipfile
 
@@ -74,9 +75,13 @@ class EnvExpander(VariableProcessor):
     def _repl(self, value):
         m = self._exp.search(value)
         if m:
-            value = (value[:m.start()]
-                     + str(self._env[filter(None, m.groups())[0]])
-                     + value[m.end():])
+            try:
+                value = (value[:m.start()]
+                         + str(self._env[filter(None, m.groups())[0]])
+                         + value[m.end():])
+            except KeyError, k:
+                logging.debug('KeyError: %s unknown while expanding %s', k, value)
+                return value
             return self._repl(value)
         else:
             return value

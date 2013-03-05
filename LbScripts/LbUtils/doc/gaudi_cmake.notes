@@ -1,3 +1,54 @@
+! 2013-03-05 - Marco Clemencic (625f13a)
+
+ - ignore unknown variables when expanding the environment
+
+   If in the environment we have a definition like
+
+     MYVAR=${MYBASE}
+
+   but MYBASE is not defined, do not expand (and stop the recursion).
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7135
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2013-03-01 - Marco Clemencic (b41bc64)
+
+ - add TIMEOUT argument to gaudi_add_test
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7134
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2013-03-01 - Danilo Piparo (436df61)
+
+ - Patch #5606: Improvement of the gaudi_add_test CMake function
+
+   Added capability of considering failing commands as successful tests and/or
+   to look for regexps in the output to select between a PASS or FAIL.
+
+   https://savannah.cern.ch/patch/index.php?5606
+
+   From: Danilo Piparo <danilo.piparo@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7133
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2013-03-01 - Marco Clemencic (c71afa6)
+
+ - added toolchain file for LCG 64d
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7130
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2013-01-25 - Marco Clemencic (23aa43e)
 
  - fixed the Xrootd version in HEPTools 64b and 64c

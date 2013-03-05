@@ -35,8 +35,18 @@ LCG_prepare_paths()"""
                         "GCCXML":  "gccxml",
                         "Qt":  "qt",
                         "CASTOR":  "castor",
-                        "lfc": "Grid/LFC",
                         "TBB":  "tbb",
+                        "cgsigsoap": "Grid/cgsi-gsoap",
+                        "epel": "Grid/epel",
+                        "gfal": "Grid/gfal",
+                        "globus": "Grid/globus",
+                        "gridftp_ifce": "Grid/gridftp-ifce",
+                        "is_ifce": "Grid/is-ifce",
+                        "lcgdmcommon": "Grid/lcg-dm-common",
+                        "lfc": "Grid/LFC",
+                        "srm_ifce": "Grid/srm-ifce",
+                        "vomsapic": "Grid/voms-api-c",
+                        "voms": "Grid/voms",
                         }
 
     __special_names__ = {"qt": "Qt"}

@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: 6bb7604780da09c6d784c301774c8f21bffe7850
+# Commit Id: 300a4664dc45b23ce48edf213691f88b52a5bb5c
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -1675,7 +1675,10 @@ endfunction()
 #-------------------------------------------------------------------------------
 # gaudi_add_test(<name>
 #                [FRAMEWORK options1 options2 ...|QMTEST|COMMAND cmd args ...]
-#                [ENVIRONMENT variable[+]=value ...])
+#                [ENVIRONMENT variable[+]=value ...]
+#                [DEPENDS other_test ...]
+#                [FAILS] [PASSREGEX regex] [FAILREGEX regex]
+#                [TIMEOUT seconds])
 #
 # Declare a run-time test in the subdirectory.
 # The test can be of the types:
@@ -1685,9 +1688,16 @@ endfunction()
 # If special environment settings are needed, they can be specified in the
 # section ENVIRONMENT as <var>=<value> or <var>+=<value>, where the secon format
 # prepends the value to the PATH-like variable.
+# Great flexibility is given by the following options:
+#  FAILS - the tests succeds if the command fails (return code !=0)
+#  DEPENDS - ensures an order of execution of tests (e.g. do not run a read
+#            test if the write one failed)
+#  PASSREGEX - Specify a regexp; if matched in the output the test is successful
+#  FAILREGEX - Specify a regexp; if matched in the output the test is failed
+#
 #-------------------------------------------------------------------------------
 function(gaudi_add_test name)
-  CMAKE_PARSE_ARGUMENTS(ARG "QMTEST" "" "ENVIRONMENT;FRAMEWORK;COMMAND" ${ARGN})
+  CMAKE_PARSE_ARGUMENTS(ARG "QMTEST;FAILS" "TIMEOUT" "ENVIRONMENT;FRAMEWORK;COMMAND;DEPENDS;PASSREGEX;FAILREGEX" ${ARGN})
 
   gaudi_get_package_name(package)
 
@@ -1732,6 +1742,30 @@ function(gaudi_add_test name)
            ${env_cmd}
                ${extra_env} --xml ${env_xml}
                ${cmdline})
+
+  if(ARG_DEPENDS)
+    foreach(t ${ARG_DEPENDS})
+      list(APPEND depends ${package}.${t})
+    endforeach()
+    set_property(TEST ${package}.${name} PROPERTY DEPENDS ${depends})
+  endif()
+
+  if(ARG_FAILS)
+    set_property(TEST ${package}.${name} PROPERTY WILL_FAIL TRUE)
+  endif()
+
+  if(ARG_PASSREGEX)
+    set_property(TEST ${package}.${name} PROPERTY PASS_REGULAR_EXPRESSION ${ARG_PASSREGEX})
+  endif()
+
+  if(ARG_FAILREGEX)
+    set_property(TEST ${package}.${name} PROPERTY FAIL_REGULAR_EXPRESSION ${ARG_FAILREGEX})
+  endif()
+
+  if(ARG_TIMEOUT)
+    set_property(TEST ${package}.${name} PROPERTY TIMEOUT ${ARG_TIMEOUT})
+  endif()
+
 endfunction()
 
 #---------------------------------------------------------------------------------------------------

@@ -140,6 +140,7 @@ def extName(n):
                'uuid': 'UUID',
                'fastjet': 'FastJet',
                'lapack': 'LAPACK',
+               'bz2lib': 'BZip2',
                }
     return mapping.get(n, n)
 
