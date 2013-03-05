@@ -6,6 +6,16 @@
 // from Gaudi
 #include "DecayTreeTupleBase/TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
+#include "MuonDet/MuonBasicGeometry.h"
+#include "MuonDet/DeMuonDetector.h"
+//#include "MuonDet/MuonNamespace.h"
+
+// From event packages
+#include "Event/MuonPID.h"
+#include "Event/Track.h"
+#include "Event/MuonCoord.h"
+#include "Event/MuonDigit.h"
+
 
 /** @class TupleToolMuonPid TupleToolMuonPid.h
  *
@@ -20,11 +30,24 @@ public:
                     const std::string& name,
                     const IInterface* parent);
 
+  virtual StatusCode initialize();    ///< Algorithm initialization
+
   virtual ~TupleToolMuonPid(){}; ///< Destructor
 
   virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*
                            , const std::string&, Tuples::Tuple& );
 
 private:
+  DeMuonDetector*  m_mudet;
+  unsigned int m_NStation;     // Number of stations
+  unsigned int m_NRegion;      //Number of regions
+  std::vector<double> m_stationZ; // station position
+  std::vector<double> m_trackX; // position of track in x(mm) in each station
+  std::vector<double> m_trackY; // position of track in y(mm) in each station  
+
+  //Names of the station
+  std::vector<std::string> m_stationNames;
+
+
 };
 #endif // TUPLETOOLMUONID_H

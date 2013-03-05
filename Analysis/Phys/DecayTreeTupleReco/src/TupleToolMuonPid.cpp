@@ -2,7 +2,13 @@
 // Include files
 
 // from Gaudi
+#include "DetDesc/IGeometryInfo.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "Event/MuonCoord.h"
+#include "Kernel/LHCbID.h"
+#include "Kernel/MuonTileID.h"
+#include "Kernel/Particle2MCLinker.h"
+
 
 // local
 #include "TupleToolMuonPid.h"
@@ -31,6 +37,40 @@ TupleToolMuonPid::TupleToolMuonPid( const std::string& type,
 }
 
 //=============================================================================
+//=============================================================================
+StatusCode TupleToolMuonPid::initialize()
+{
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
+  // Get Basic Muon geometry info
+  m_NStation = 0;
+  m_NRegion = 0;
+  MuonBasicGeometry basegeometry( detSvc(),msgSvc());
+  m_NStation= basegeometry.getStations();
+  m_NRegion = basegeometry.getRegions();
+  unsigned int i=0;
+  while(i<m_NStation){
+    m_stationNames.push_back(basegeometry.getStationName(i));
+    if (msgLevel(MSG::DEBUG)) debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endmsg;
+    i++;
+  }
+  m_mudet=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
+  //m_mudet=getDet<DeMuonDetector>(DeMuonLocation::Default);
+  for(unsigned int station = 0 ; station < m_NStation ; station++ ){
+    m_stationZ.push_back(m_mudet->getStationZ(station));
+  }
+  if(!m_mudet) return StatusCode::FAILURE;
+  return sc;
+
+}
+
+
+//=============================================================================
+//=============================================================================
+//=============================================================================
+
+
+
 
 StatusCode TupleToolMuonPid::fill( const Particle*
                                    , const Particle* P
