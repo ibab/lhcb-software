@@ -557,12 +557,15 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
   // Force the verification of the HEPEVT  record 
   if ( m_validate_HEPEVT ) 
   { 
-    conversion.set_trust_both_mothers_and_daughters ( true ) ;
-    conversion.set_trust_mothers_before_daughters   ( true ) ;
-    conversion.set_print_inconsistency_errors       ( false );
-    if ( msgLevel( MSG::DEBUG ) ) 
-      conversion.set_print_inconsistency_errors       ( true );
-    
+    //    conversion.set_trust_both_mothers_and_daughters ( true ) ;
+    //conversion.set_trust_mothers_before_daughters   ( true ) ;
+    //    conversion.set_print_inconsistency_errors       ( false );
+    //if ( msgLevel( MSG::DEBUG ) ) 
+    //  conversion.set_print_inconsistency_errors       ( true );
+    conversion.set_print_inconsistency       ( false );
+    if ( msgLevel( MSG::DEBUG ) )
+      conversion.set_print_inconsistency       ( true );
+
     if ( !m_inconsistencies.empty() && 0 == m_HEPEVT_errors )
     { m_HEPEVT_errors = new std::ofstream ( m_inconsistencies.c_str() ) ; }
     

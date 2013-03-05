@@ -16,15 +16,16 @@ ParticleDecays:mixB = off
 # -------------------------------
 # control verbosity
 # -------------------------------
-Init:showAllSettings = off                   
-Init:showMultipartonInteractions = off 
-Init:showProcesses = off 
-Init:showChangedSettings = off 
-Init:showChangedParticleData = off
-Next:numberShowInfo = 0 
-Next:numberShowProcess = 0 
-Next:numberShowEvent = 0
-Next:numberCount = 0
+#Init:showAllSettings = off                   
+#Init:showMultipartonInteractions = off 
+#Init:showProcesses = off 
+#Init:showChangedSettings = off 
+#Init:showChangedParticleData = off
+#Next:numberShowInfo = 0 
+#Next:numberShowProcess = 0 
+#Next:numberShowEvent = 0
+#Next:numberCount = 0
+Print:quiet = on
 # -------------------------------
 # process selection
 # -------------------------------
