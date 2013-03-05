@@ -4,6 +4,12 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2013-03-05 - Zhenwei Yang
+ - Added some lines in generateEvent function of src/component/HijingProduction.cpp,
+   which performs Lorentz boost for pA run.
+   This will not affect fix-target (LAB) mode, but only CMS mode.
+   The boost is only valid for 2013 pA and Ap run.
+
 !========================= LbHijing v8r1 2013-02-14 ==========================
 ! 2013-02-12 - Zhenwei Yang
  - Removed line 229 in src/Lib/hijing.F, which is a screen print line

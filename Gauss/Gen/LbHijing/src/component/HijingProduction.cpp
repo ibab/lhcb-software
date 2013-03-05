@@ -103,7 +103,7 @@ StatusCode HijingProduction::initialize() {
   HepMC::HEPEVT_Wrapper::set_sizeof_int( 4 ) ;
   HepMC::HEPEVT_Wrapper::set_sizeof_real( 8 ) ;
   HepMC::HEPEVT_Wrapper::set_max_number_entries( 10000 ) ;
-  
+
   return StatusCode::SUCCESS ;
 }
 
@@ -123,15 +123,34 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
   if ( ! theHepIO.fill_next_event( theEvent ) ) 
     return Error( "Could not fill HepMC event" ) ;
 
+  //To boost to Lab frame from CMS frame, only valid for pA 2013 run, by zhwyang
+  double beta   = 0.0;
+  double gamma  = 1.0;
+  double bgamma = beta*gamma;
+  //HepMC::FourVector cmsMom ;
+  if ( m_frame=="CMS" ) {
+    if (m_izt==82)      { beta= 0.4344844366; } //CMS velosity for pA(pPb)
+    else if (m_izp==82) { beta=-0.4344844366; } //CMS velosity for Ap(Pbp)
+    gamma=1./sqrt(1.-beta*beta); //Lorentz boost factor
+    bgamma=beta*gamma;
+  } 
+
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) {
+    //For Lorentz boost in pA and Ap run (5.023 TeV)
+    //pz and energy of particle in GeV in CMS (before Lorentz boost)
+    double pz1 = (*p) -> momentum() . pz() * Gaudi::Units::GeV ;
+    double pe1 = (*p) -> momentum() . e() * Gaudi::Units::GeV ;
+    //pz and energy of particle in GeV in LAB (after Lorentz boost)
+    double pz2 = gamma*pz1 - bgamma*pe1 ;
+    double pe2 = gamma*pe1 - bgamma*pz1 ;
    
     HepMC::FourVector newMom ;
     newMom.setX( (*p) -> momentum() . px() * Gaudi::Units::GeV ) ;
     newMom.setY( (*p) -> momentum() . py() * Gaudi::Units::GeV ) ;
-    newMom.setZ( (*p) -> momentum() . pz() * Gaudi::Units::GeV ) ;
-    newMom.setT( (*p) -> momentum() . e() * Gaudi::Units::GeV ) ;
+    newMom.setZ( pz2 ) ;
+    newMom.setT( pe2) ;
     (*p) -> set_momentum( newMom );
     // Change generated mass 
     (*p) -> 
