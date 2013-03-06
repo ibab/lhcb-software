@@ -54,9 +54,9 @@ Pythia8Production::Pythia8Production( const std::string& type,
     m_randomEngine( 0 ) ,
     m_fortranUPTool( 0 ) ,
     m_validate_HEPEVT ( false ) ,// force the valiadation of I_Pythia8 
-    m_showBanner ( false ) ,
     m_inconsistencies ( "HEPEVT_inconsistencies.out" ) ,
-    m_HEPEVT_errors ( 0 ) {
+    m_HEPEVT_errors ( 0 ) ,
+    m_showBanner ( false ) {
   
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;

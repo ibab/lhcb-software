@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2013-03-06 - Aurelien Martens
+ - fix warning in the nightlies
+
 ! 2013-03-05 - Aurelien Martens
  - for 8.175: remove Pythia8 Banner by default (adding a configurable flag)
 
