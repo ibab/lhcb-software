@@ -4,6 +4,25 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-03-06 - Gloria Corti
+ - The property Gauss().Output has been renamed Gauss().OutputType to be in
+   line with Brunel and make clear its meaning.
+   The following values can be used:
+   . GEN, forced when running the Generator only phase
+   . RGEN and XGEN (default), when running the Generator phase followed by
+                              filling the MCParticles/MCVertices with the
+                              generator information (i.e. no Geant4 processing)
+   . SIM (default) and XSIM, when running also the Simulation phase
+
+ - By default "MC/Gen/HepMCEvents" in no longer written in SIM files. In order
+   to have it one has to speciy the OutputType to be the new 'XSIM'
+ - "MC/Gen/HepMCEvents" is not written out when specifying the OutputType to 
+   be the new 'RGEN'
+ - "MC/Gen/HepMCEvents" continues to be written out in the GEN and XGEN 
+   filetypes
+ - Adapt the Gauss-Job.py examample and the qmtest to the change from
+   Gauss().Output to Gauss().OutputType
+
 ! 2013-03-04 - Paul Szczypka
  - Change VL path in Configurable.py (assuming DB release)
 

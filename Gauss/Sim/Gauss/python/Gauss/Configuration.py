@@ -105,7 +105,7 @@ class Gauss(LHCbConfigurableUser):
                                  ]
         ,"Luminosity"        : 0.247*(10**30)/(SystemOfUnits.cm2*SystemOfUnits.s)
         ,"TotalCrossSection" : 91.1*SystemOfUnits.millibarn
-        ,"Output"            : 'SIM'
+        ,"OutputType"        : 'SIM'
         ,"Production"        : 'PHYS'
         ,"EnablePack"        : True
         ,"DataPackingChecks" : True
@@ -130,7 +130,7 @@ class Gauss(LHCbConfigurableUser):
        ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3','NoCuts','LHCb', 'LHCbNoCuts', 'LHCbOldForE', 'LHCbNoCutsOldForE', 'LHCbTest', 'LHCbTestNoCut' ], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','QGSP_BERT_CHIPS','QGSP_FTFP_BERT','FTFP_BERT'], 'LHCbPhys': [True,False], 'Other': [''] """
        ,"DeltaRays"      : """ Simulation of delta rays enabled (default True) """
        ,'Phases'         : """ List of phases to run (Generator, Simulation, GenToMCTree) """
-       ,'Output'         : """ Output: [ 'NONE', 'SIM'] (default 'SIM') """
+       ,'OutputType'     : """ Output: [ 'NONE', 'GEN', 'XGEN', 'RGEN', 'SIM', 'XSIM' ] (default 'SIM') """
        ,'Production'     : """ Generation type : ['PHYS', 'PGUN', 'MIB' (default 'PHYS')"""
        ,'EnablePack'     : """ Flag to turn on or off the packing of the SIM data """
        ,'DataPackingChecks' : """ Flag to turn on or off the running of some test algorithms to check the quality of the data packing """
@@ -1928,28 +1928,44 @@ class Gauss(LHCbConfigurableUser):
 
     def defineOutput( self, SpillOverSlots ):
         """
-        Set up output stream according to phase processed and spill-over slots
+        Set up output stream according to phase processed, the spill-over slots and the type of output
         """
-        # and in the future extended or reduced DIGI
-        
-        # not required since it is now in LHCb App
-        # POOL persistency 
-        #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-        
+
         #
-        knownOptions = ['NONE','SIM']
-        output = self.getProp("Output").upper()
+        knownOptions = ['NONE','GEN','XGEN','RGEN','SIM','XSIM']
+        output = self.getProp("OutputType").upper()
         if output == 'NONE':
             log.warning("No event data output produced")
             return
         
         simWriter = SimConf().writer()
-        fileExtension = ".gen"
+
+        # define default file extensions depending on the phase that has been run
+        fileDefaultExtension = ".gen"
+        fileAllowedExtension = [fileDefaultExtension]
         if "GenToMCTree" in self.getProp("Phases"):
-            fileExtension = ".xgen"
+            fileDefaultExtension = ".xgen"
+            fileAllowedExtension = [fileDefaultExtension, ".rgen"]
         elif "Simulation" in self.getProp("Phases"):
-            fileExtension = ".sim"
-        
+            fileDefaultExtension = ".sim"
+            fileAllowedExtension = [fileDefaultExtension, ".xsim"]
+
+        # choose the file extension from the one selected compatibly with the phase run
+        if output not in knownOptions:
+            print "WARNING: OutputType not supported. Use default for chosen phases : %s" %(fileDefaultExtension)
+        fileExtension = "." + output.lower()
+        if fileExtension not in fileAllowedExtension:
+            fileExtension = fileDefaultExtension
+            print "WARNING: OutputType not supported for this phase. Use default : %s" %(fileExtension)
+
+        # set saving or not of HepMC depending on chosen file extension
+        if SimConf().isPropertySet( "SaveHepMC" ):
+            print "WARNING: SimConf().SaveHepMC will be ignored. Value set by Gauss()"
+        saveHepMC = False
+        if fileExtension in ['.gen','.xgen','.xsim']:
+            saveHepMC = True
+        SimConf().setProp("SaveHepMC", saveHepMC )
+       
         outputFile=""
         from GaudiConf import IOHelper
         if simWriter.isPropertySet( "Output" ):

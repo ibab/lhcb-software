@@ -4,6 +4,6 @@
 
 from Gauss.Configuration import *
 
-Gauss().Output = 'NONE'
+Gauss().OutputType = 'NONE'
 Gauss().Histograms = 'NONE'
 
