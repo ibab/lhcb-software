@@ -66,5 +66,5 @@ DaVinci().DDDBtag  = "dddb-20120831"
 DaVinci().CondDBtag = "cond-20121025"
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagDn.py") # MagDown sample
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagUp.py") # MagUp sample
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagDn_New.py") # MagDown sample
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagUp_New.py") # MagUp sample
