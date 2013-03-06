@@ -24,7 +24,7 @@ class SimConf(LHCbConfigurableUser) :
         ,"Detectors"         : ['Velo','PuVeto','TT','IT','OT','Rich','Muon','Spd','Prs','Ecal','Hcal'] # Active sub-detectors
         ,"PackingSequencers" : { } # The packing sequence to fill for each spillover event
         ,"DataType"          : "" # Flag for backward compatibility with old data
-        ,"SaveHepMC"         : "True" # If False, do not save HepMC on output file
+        ,"SaveHepMC"         : True # If False, do not save HepMC on output file
         }
 
     def allEventLocations(self):

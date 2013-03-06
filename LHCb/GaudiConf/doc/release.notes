@@ -3,10 +3,15 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
-! 2013-03-03 - Sascha Stahl
- - Removed test for upgrade detectors when adding Rec/Summary to writer in DstConf.
-   RecSummary supports upgrade detectors now.
+!========================= GaudiConf v17r7 2013-03-06 =========================
+! 2013-03-06 - Gloria Corti
+ - Fix type of SaveHepMC to be a bool in SimConf. Bug, introduced in v17r0,
+   affects only Gauss.
 
+! 2013-03-03 - Sascha Stahl
+ - Removed test for upgrade detectors when adding Rec/Summary to writer
+   in DstConf.
+   RecSummary supports upgrade detectors now.
 
 !========================= GaudiConf v17r6 2013-02-15 =========================
 ! 2013-02-15 - Marco Cattaneo
