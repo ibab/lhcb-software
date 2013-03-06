@@ -4,6 +4,50 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v45r0">2013-03-07 - GaussSys v45r0</A></H1><PRE>
+<H2><A NAME="Note">Candidate for Sim08 production for 2012 and 2011 data.
+    It integrates the changes of Gauss v43 for Geant 9.5.p02 and of Gauss v44
+    for new EvtGen. It used latest available Pythia6 and Pythia8. 
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v35r4 (and Gaudi v23r6)</b>
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   <b>pythia 6.427.2</b>, lhapdf 5.8.5, 
+   <b> NEW: photos++ 2.6.1a and tauola++ 1.0.7</b> 
+   (via LCG_GeneratorsInterfaces)
+   <b>REMOVED: photos (FORTRAN)</b>
+   HepMC 2.06.05 (via LCG_Interfaces)
+   <b>Geant4 v95r2p2</b> (based on geant4.9.5.p02) and Geant4Files v95r0
+   XmlVis v1r15,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   <b>pythia8 175</b> (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1a and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.1 (via LCG_GeneratorsInterfaces),
+   <b>EvtGen v13r4</b> (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
+   HidValley v3r2 (private LHCb versions)
+</A></H3>
+
+! 2013-03-07 - Gloria Corti
+ - Use GaudiConf v17r7 for bug fix in SimConf for saving or no HepMC
+
+! 2013-02-27 - Gloria Corti
+ - Add packages needed for new EvtGen as in GaussSys v44r4 as well as newer
+   version of packages
+
+
+!=============================================================================
+
+! 2013-03-06 - Gloria Corti
+ - GaussSys v42r2 and v42r4 made on branch v42b
+   GaussSys v44r3, v44r3p1 and v44r4 made on branch v44b
+
+!=============================================================================
 </PRE><H1><A NAME="v43r4">2013-02-20 - GaussSys v43r4</A></H1><PRE>
 <H2><A NAME="Note">Development release with Geant4 9.5.p02
     </A></H2>
@@ -24,7 +68,7 @@ Purpose: LHCb Simulation program
    alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
    herwig++ 2.6.1a and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
    rivet 1.8.1 (via LCG_GeneratorsInterfaces),
-   EvtGen v12r11(private LHCb version),
+   EvtGen v12r11 (private LHCb version),
    BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
    HidValley v3r2 (private LHCb versions)
 </A></H3>
