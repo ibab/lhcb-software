@@ -1,5 +1,5 @@
-package           VLDigitisation
-version           v1r2
+package         VLDigitisation
+version           v1r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
