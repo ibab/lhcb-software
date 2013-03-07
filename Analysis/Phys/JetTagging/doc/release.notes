@@ -6,7 +6,7 @@
 
 ! 2013-03-07 - Chris Jones
  - Make fastjet and neurobayes_expert usage -no_auto_imports to prevent them
-   leaking into into downstream packages that used this one.
+   leaking into downstream packages that used this one.
 
 ! 2013-03-03 - Chris Jones
  - Suppress variadic macro warnings
