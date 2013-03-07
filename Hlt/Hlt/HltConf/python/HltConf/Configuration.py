@@ -619,7 +619,7 @@ class HltConf(LHCbConfigurableUser):
         if self.isPropertySet(option):
             log.warning('#Asked to reset already set property, '+str(option)+', ignoring request')
             return False
-        self.setProp(option, newval)
+        self.setProp(option, newVal)
         return True
     
     def endSequence(self):
