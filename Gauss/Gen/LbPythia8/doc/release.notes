@@ -4,6 +4,7 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v7r0 2013-03-07 =========================
 ! 2013-03-06 - Aurelien Martens
  - fix warning in the nightlies
 
