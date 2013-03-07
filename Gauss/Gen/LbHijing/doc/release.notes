@@ -4,6 +4,7 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v8r2 2013-03-07 ==========================
 ! 2013-03-05 - Zhenwei Yang
  - Added some lines in generateEvent function of src/component/HijingProduction.cpp,
    which performs Lorentz boost for pA run.
