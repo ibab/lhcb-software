@@ -45,7 +45,9 @@ HijingProduction::HijingProduction(const std::string& type,
     m_iat( 0 ) ,
     m_izt( 0 ) ,
     m_bmin( 0. ) ,
-    m_bmax( 0. ) 
+    m_bmax( 0. ) , 
+    m_beta( 0. ) , 
+    m_gamma( 1. ) 
 {
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;
@@ -104,6 +106,19 @@ StatusCode HijingProduction::initialize() {
   HepMC::HEPEVT_Wrapper::set_sizeof_real( 8 ) ;
   HepMC::HEPEVT_Wrapper::set_max_number_entries( 10000 ) ;
 
+  //To boost to Lab frame from CMS frame, by zhwyang
+  m_beta  = 0. ;
+  m_gamma = 1. ;
+  if ( m_frame=="CMS" ) {
+    double rp = m_izp/(double)m_iap ; //ratio of Z/A for projectile
+    double rt = m_izt/(double)m_iat ; //ratio of Z/A for target
+    double ep = m_efrm/2.*sqrt(rp/rt) ; //energy or momentum for projectile
+    double et = m_efrm/2.*sqrt(rt/rp) ; //energy or momentum for target
+    m_beta = (ep-et)/sqrt( m_efrm*m_efrm + (ep-et)*(ep-et) ) ; //velocity
+    m_gamma=1./sqrt(1.-m_beta*m_beta); //Lorentz boost factor
+  } 
+  always() << "Lorentz Boost: beta = " << m_beta << "\tgamma = " << m_gamma << endmsg ;
+
   return StatusCode::SUCCESS ;
 }
 
@@ -123,28 +138,16 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
   if ( ! theHepIO.fill_next_event( theEvent ) ) 
     return Error( "Could not fill HepMC event" ) ;
 
-  //To boost to Lab frame from CMS frame, only valid for pA 2013 run, by zhwyang
-  double beta   = 0.0;
-  double gamma  = 1.0;
-  double bgamma = beta*gamma;
-  //HepMC::FourVector cmsMom ;
-  if ( m_frame=="CMS" ) {
-    if (m_izt==82)      { beta= 0.4344844366; } //CMS velosity for pA(pPb)
-    else if (m_izp==82) { beta=-0.4344844366; } //CMS velosity for Ap(Pbp)
-    gamma=1./sqrt(1.-beta*beta); //Lorentz boost factor
-    bgamma=beta*gamma;
-  } 
-
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) {
-    //For Lorentz boost in pA and Ap run (5.023 TeV)
+    //For Lorentz boost in pA and Ap run
     //pz and energy of particle in GeV in CMS (before Lorentz boost)
     double pz1 = (*p) -> momentum() . pz() * Gaudi::Units::GeV ;
     double pe1 = (*p) -> momentum() . e() * Gaudi::Units::GeV ;
     //pz and energy of particle in GeV in LAB (after Lorentz boost)
-    double pz2 = gamma*pz1 - bgamma*pe1 ;
-    double pe2 = gamma*pe1 - bgamma*pz1 ;
+    double pz2 = m_gamma*(pz1 - m_beta*pe1) ;
+    double pe2 = m_gamma*(pe1 - m_beta*pz1) ;
    
     HepMC::FourVector newMom ;
     newMom.setX( (*p) -> momentum() . px() * Gaudi::Units::GeV ) ;

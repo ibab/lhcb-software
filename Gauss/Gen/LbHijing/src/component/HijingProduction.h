@@ -69,9 +69,12 @@ private:
   int m_izt            ; // target charge number
   double m_bmin        ; // minimum impact parameter
   double m_bmax        ; // maximum impact parameter
-  
+
   CommandVector m_defaultSettings ;
   CommandVector m_commandVector ; ///< Commands to setup hijing
+  
+  double m_beta        ; // velocity of NN pairs in LAB: zhwyang
+  double m_gamma       ; // Lorentz boost factor, 1/sqrt(1.-m_beta*m_beta): zhwyang
   
 };
 #endif // LBHIJING_HIJINGPRODUCTION_H
