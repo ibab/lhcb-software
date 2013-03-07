@@ -4,6 +4,7 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+!======================= EvtGenExtras v3r6 2013-03-07 ========================
 ! 2013-02-13 - Patrick Robbe
  - Fix gcc46 compilation warnings
 

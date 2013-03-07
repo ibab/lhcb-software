@@ -1,7 +1,7 @@
 # Package of Non-Standard EvtGen Models
 
 package     EvtGenExtras
-version     v3r5
+version     v3r6
  
 branches    cmt doc EvtGenModels src
 
