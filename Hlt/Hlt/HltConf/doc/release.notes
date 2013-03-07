@@ -4,10 +4,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v10r0 2013-03-07 =========================
 ! 2013-03-07 - Rob Lambert
- - Simulation will not run certain monitors
+ - Simulation will not run certain monitors, bug #100666
 
-!========================= HltConf v10r0 2013-02-28 =========================
 ! 2013-02-27 - Rob Lambert
  - protect debug messages, task #40215
 
