@@ -27,25 +27,468 @@ Purpose: LHCb Simulation program
    <b>pythia8 175</b> (via LCG_GeneratorsInterfaces),
    alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
    herwig++ 2.6.1a and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
-   rivet 1.8.1 (via LCG_GeneratorsInterfaces),
-   <b>EvtGen v13r4</b> (private LHCb version),
+   <b>rivet 1.8.2</b> (via LCG_GeneratorsInterfaces),
+   <b>EvtGen v13r5</b> (private LHCb version),
    BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
    HidValley v3r2 (private LHCb versions)
 </A></H3>
 
 ! 2013-03-07 - Gloria Corti
  - Use GaudiConf v17r7 for bug fix in SimConf for saving or no HepMC
+ - New version of LCG_Setting and LCG_Generators_Interface to indicate changes
+   with respect to LCGCMT_64c. In reality although the tags are different their
+   content is the same. 
 
 ! 2013-02-27 - Gloria Corti
  - Add packages needed for new EvtGen as in GaussSys v44r4 as well as newer
    version of packages
 
-
-!=============================================================================
-
 ! 2013-03-06 - Gloria Corti
  - GaussSys v42r2 and v42r4 made on branch v42b
    GaussSys v44r3, v44r3p1 and v44r4 made on branch v44b
+
+!========================= Gauss v45r0 2013-04-07 ============================
+! 2013-03-07 - Gloria Corti
+ - Note that Gauss v42r3 and v42r4 are on v42b branch
+   v43r4 on v43b branch
+   v44r3, v44r3p1 and v44r4 on v44b branch
+ - Put in VL qmtest the DB tags for release Upgrade DBASE
+ - Change back VL path in Configurable.py since DB release has not occured 
+   and also requires a new LHCb 
+
+! 2013-03-07 - Paul Szczypka
+ - Added VL upgrade options for qmtest, uses VL path DB tags now
+ - edited VL qmtest to pick up new options file.
+
+! 2013-03-06 - Gloria Corti
+ - The property Gauss().Output has been renamed Gauss().OutputType to be in
+   line with Brunel and make clear its meaning.
+   The following values can be used:
+   . GEN, forced when running the Generator only phase
+   . RGEN and XGEN (default), when running the Generator phase followed by
+                              filling the MCParticles/MCVertices with the
+                              generator information (i.e. no Geant4 processing)
+   . SIM (default) and XSIM, when running also the Simulation phase
+
+ - By default "MC/Gen/HepMCEvents" in no longer written in SIM files. In order
+   to have it one has to speciy the OutputType to be the new 'XSIM'
+ - "MC/Gen/HepMCEvents" is not written out when specifying the OutputType to 
+   be the new 'RGEN'
+ - "MC/Gen/HepMCEvents" continues to be written out in the GEN and XGEN 
+   filetypes
+ - Adapt the Gauss-Job.py examample and the qmtest to the change from
+   Gauss().Output to Gauss().OutputType
+
+! 2013-03-04 - Paul Szczypka
+ - Change VL path in Configurable.py (assuming DB release)
+
+! 2013-02-27 - Gloria Corti
+ - Use Feb dbase tags in upgrade qmtest
+ - Change version of DecFiles to v27r* for latest EvtGen
+ - Add use of package GDMLData for import of GDML files
+ - Port changes for GDML from v42b branch: see below
+
+! 2013-02-12 - Paul Szczypka (merged r152118)
+ - Correction to the GDML code - tool now added to correct algo.
+
+! 2013-02-12 - Gloria Corti and Paul Szczypka (merged r152070,152071)
+ - Introduce in the Gauss() configurable a new property "ReplaceWithGDML" to
+   allow to replace a list of volumes with a GDML description given in a file.
+   The name of the tool is set from the filename.
+
+! 2013-02-26 - Paul Szczypka
+ - Commented out upgrade position of IT in Configuration.py (Removes warnings)
+
+! 2013-02-14 - Paul Szczypka
+ - Commented out upgrade position of OT in Configuration.py (Removes warnings)
+
+! 2013-02-14 - Paul Szczypka
+ - Added qmtests, options and refs, for the upgrade configurations:
+ . VL-UT-FT
+ . VL-UT-FT
+ . Upgrade Reference (Minimal)
+
+! 2013-02-12 - Paul Szczypka
+ - Change to Configurable such that the velo misalignment (and therefore definiition)
+   is always done even for the upgrade. 
+
+! 2013-02-11 - Patrick Robbe
+ - Suppress warning output form the script "makeQMTests.py" to avoid 
+   compilation warnings in the nightlies
+
+! 2013-02-10 - Paul Szczypka
+ - Uncomment line which prevented the simulation of the Velo in Configuration.py
+
+! 2013-02-07 - Gloria Corti
+ - Replace CaloOnly.py with Gauss-CaloOnly.py and remove dependency from upgrade
+ - Add file from v42b branch for setting simulation conditions when RICHES are
+   not simulated (xml/SimulationRICHesOff.xml)
+
+! 2013-02-06 - Paul Szczypka
+ - Changed print messages to log.warning.
+ - Cleaned up some if statements.
+
+! 2013-02-04 - Paul Szczypka
+ - Reverted some changes inadvertantly included in last commit.
+
+! 2013-02-04 - Paul Szczypka
+ - Add method to pass detector list to LHCbApp in Configuration.py
+ - Corrected 'Moun' typos in Configuration.py
+
+! 2013-01-08 - Paul Szczypka
+ - Correction to GaussVis.py options to use new Detector configuration syntax.
+
+! 2012-12-20 - Paul Szczypka
+ - Removed comments and some unused methods in Configuration.py
+
+! 2012-12-18 - Paul Szczypka
+ - Removed debug statements in Configuration.py
+ - Corrected date of previous edit in release.notes
+
+! 2012-12-17 - Paul Szczypka
+ - Added Gauss-CaloOnly.py options.
+ - Edited BeamPipe configuration method.
+
+! 2012-12-11 - Paul Szczypka
+ - Whitespace editing
+ - Added BeamPipe entry to PropertyDocDict
+
+! 2012-12-06 - Paul Szczypka
+ - Typo, Moun -> Muon in Configuration.py
+
+! 2012-12-04 - Patrick Robbe
+ - Configuration.py: add options to pass beam energy to BcVegPy in Pythia8
+
+!========================== GENSER v12r3 2013-03-07 ==========================
+! 2013-03-07 - Gloria Corti
+ - Use latest version of rivet 1.8.2, as verified by A.Grecu
+
+! 2013-03-04 - Gloria Corti
+ - Use latest version of Pythia8 175, as suggested by T.Sijostrand
+
+!========================== EvtGen v13r5 2013-03-07 ==========================
+! 2013-02-13 - Patrick Robbe
+ - Various fixes to compile with gcc46
+
+!========================== EvtGen v13r4 2013-02-01 ==========================
+! 2013-02-01 - John Back
+  - Modified the default settings for the Photos++ engine to be the same as 
+    the original settings used in the old fortran version. New tag.
+
+! 2013-01-31 - John Back
+  - Added the ability to read in Pythia 8 commands in ascii decay files
+    in EvtDecayTable::readDecayFile. They can be set using the syntax:
+    "PythiaTypeParam module:variable=value", where Type = Generic, Alias or
+    Both for specifying whether the parameter is for the generic or alias
+    Pythia decay engines (or both). The 2nd argument must not contain any
+    spaces. Fixed the list of commands strings being used in the
+    EvtPythiaEngine class (i.e. Pythia parameters that can be set via decay
+    files).
+
+!========================== EvtGen v13r3 2013-01-28 ==========================
+! 2013-01-28 - John Back
+ - Commented out printing of the updated decay tables used for Pythia
+   (EvtPythiaEngine::updateParticleLists, called within initialise).
+
+! 2013-01-24 - John Back
+ - Updated the Tauola++ and Photos++ engines to use the EvtGen random number
+   engine.
+
+! 2013-01-23 - John Back
+ - Added EvtGenModels/EvtPythiaRandom to allow the EvtGen random number 
+   engine to also be used as the random engine for Pythia 8.
+
+!========================== EvtGen v13r2 2013-01-16 ==========================
+! 2013-01-16 - John Back
+ - Removed Pythia 6 decay classes. New tag.
+
+! 2013-01-15 - Patrick Robbe
+ - EvtDecayBase.cpp : fix compilation warning
+
+!========================== EvtGen v13r1 2012-12-20 ==========================
+! 2012-12-20 - John Back
+ - Created new tag containing the recent changes to the Dalitz decay models.
+
+! 2012-12-18 - John Back
+ - Corrected some wrong daughter assignments for EvtDDalitz modes 5 
+   (D0 -> K0 K+ K-) and 12 (D0 -> pi- pi+ pi0).
+
+! 2012-12-17 - John Back
+ - Updated some of the xml generic Dalitz plot code to incorporate extra
+   additions from Daniel Craik. 
+   Make EvtSimpleRandomEngine inherit from EvtRandomEngine.
+
+! 2012-12-14 - John Back
+ - Changed the EvtGen constructor to use Pythia 8 codes in decay files.
+
+!========================== EvtGen v13r0 2012-11-23 ==========================
+! 2012-11-23 - John Back
+ - Created new tag incorporating all changes below.
+
+! 2012-11-16 - Gloria Corti
+ - Use interface packages for photos++ and tauola++ that replace '++'
+   with 'pp' needed on bash to correctly resolve the paths.
+
+! 2012-11-15 - Gloria Corti
+ - Remove macro definitions for native version of photo++ and taula++ that
+   must be located in GENSER for script to make tarball for remove distribution
+   of the code to work
+
+! 2012-10-08 - John Back
+ - Provide default constructors for EvtVector4R and EvtPhotonParticle.
+   Corrected the t3 vector form factor values for the Ball-Zwicky '05 model 
+   (modelId = 6) in EvtbTosllBallFF::getVectorFF(), which were set to t3tilde 
+   instead.
+
+   From Michal Kreps: fixed the calculation of the angle between decay planes 
+   in the function EvtKine::EvtDecayAngleChi. Fixed typo in the EvtLb2Lll 
+   decay model. Only some NP scenarios could be affected, SM one is definitely 
+   unaffected.
+
+! 2012-09-11 - John Back
+ - Added missing EvtBCVFF class. Updated photos++ and tauola++ required 
+   versions to be 3.51 and 1.0.7, respectively. Added the use of the 
+   namespaces Photospp and Tauolapp in the classes EvtPhotosEngine 
+   and EvtTauolaEngine.
+
+! 2012-07-11 - John Back
+ - Added new decay models/classes from Alexey Luchinsky:
+   EvtBcVMuNu, EvtTVP, EvtWnPi, EvtSVP, EvtXPsiGamma, EvtBcVNpi
+
+! 2012-07-11 - Frederic Dreyer and Marco Gersabeck
+ - Updated EvtDDalitz to contain Dalitz model for D0-->pi-pi+pi0.
+
+! 2012-05-15 - John Back
+ - Updated EvtD0gammaDalitz to deal with D mesons from neutral B->DK, 
+   from Daniel Craik.
+
+! 2012-05-14 - John Back
+ - Replaced BaBar specific configuration for BlattWeisskopf birth factors, 
+   from Daniel Craik.
+
+! 2012-05-04 - John Back
+ - Updated various generic xml Dalitz code from Daniel Craik.
+
+! 2012-04-24 - John Back
+ - From Jordi Tico: Solved two bugs in the EvtD0gammaDalitz model;
+   configuration of the conjugated model, and using only the B charge
+   to determine the model used, not the D flavour.
+
+! 2012-04-21 - John Back
+ - Added code from Daniel Craik to allow the use of xml decay.dec files
+   and to use a more general Dalitz plot model interface, again using
+   xml syntax to specify resonances, dynamics terms and amplitude 
+   coefficients. This will eventually replace the EvtDDalitz model,
+   avoiding the need for hardcoded resonance setttings/parameters.
+
+! 2012-04-02 - John Back
+ - EvtDDalitz.cpp: Updated the maximum probability values in initProbMax().
+
+! 2012-03-23 - John Back
+ - Added EvtEta2MuMuGamma model from Marcin Chrzaszcz.
+
+! 2012-03-21 - John Back
+ - Added EvtD0gammaDalitz model from Jordi Tico.
+   Added K_1+/- vector modes for EvtbTosllBallFF::getVectorFF. 
+   Added check for null pointers when printing debug info when checking the 
+   spin density matrix rho in EvtDecayAmp.
+
+! 2012-02-10 - John Back
+ - Change EvtTauolaEngine to use the "lab" frame (first mother) for all 
+   4-momentum calculations, since there were problems for 4-momentum 
+   conservation at the HepMC vertex when the mother of the given
+   tau particle was not at rest. 
+   Reinstate PYTHIA8DATA variable in cmt/requirements.
+
+! 2011-11-18 - John Back
+ - Reinstated the Pythia6 code, now called EvtPythia6, that is needed for the 
+   EvtGenDecay.cpp class within Gen/Generators. Also reinstated the old fortran 
+   routines Pythia.F and EvtPythiaPart.F.
+   EvtGenDecay.cpp needs to use EvtPythia6::pythiaInit(), or needs to be 
+   changed to be fully Pythia8 compliant...
+   EvtGen uses Pythia8 for its own PYTHIA decay model.
+   Added the PYTHIA8DATA environment variable to cmt/requirements
+   for specifying the location of the Pythia8 xml data files.
+   At the moment, the external LCG Photos++ libraries are broken; somehow 
+   they are split up into separate C++ and Fortran parts, which gives memory 
+   corruption; a default installation should only have the one library
+   libPhotosCxxInterface.so (tested OK with a standalone version).
+
+! 2011-10-05 - John Back
+ - Update various classes to include recent fixes and changes made to the
+   v12r2b branch (see below). Also update the versions of the external 
+   generators in the cmt/requirements file. 
+  1) Changes to EvtParticle::generateMassTree() to not abort the code if
+     the parent mass is below the threshold to generate the required decay.
+     Now it just stops the particle decay; before there was an abort.
+     This keeps the EvtParticle::isDecayed() boolean set to false.
+  2) Protection against negative square-root values in EvtGenKine p3 momentum 
+     component which was giving NaN values to boost/spin matrix calculations. 
+  3) Fixed array index increments in various initialisation assert checks
+     in the EvtMultiChannelParser and EvtPto3PAmpFactory classes for the
+     Pto3P Dalitz plot model (a specific problem for optimised builds).
+  4) Added getName() to EvtParticle and EvtId classes to help identify 
+     EvtParticles during testing instead of relying on EvtId numbers.
+  5) Updated various D Dalitz decay models in EvtDDalitz.
+  6) Some changes to debug/error output report levels in a few classes.
+
+! 2011-08-11 - John Back
+ - Major changes to use Pythia 8 instead of Pythia 6, including the use of
+   the new C++ interfaced packages of Photos and Tauola (with the new model 
+   name TAUOLA available). The Pythia and Photos model names are unchanged 
+   (they are still called PYTHIA and PHOTOS). See doc/Pythia8_README.txt and 
+   doc/Tauola_README.txt for more details about the use of the new external
+   generators. 
+   EvtGen can now also write out generated decay tree(s) as an HepMC event 
+   structure using EvtGenBase/EvtHepMCEvent. Modified the static class 
+   interface of EvtGenBase/EvtDecayTable to use the singleton pattern.
+
+!=========================== Mint v2r0 2013-03-07 ============================
+! 2013-02-20 - Matthew Coombes
+ - Removed Miranda packages
+
+! 2013-02-13 - Patrick Robbe
+ - Fix gcc46 compilation problems
+
+!======================= EvtGenExtras v3r6 2013-03-07 ========================
+! 2013-02-13 - Patrick Robbe
+ - Fix gcc46 compilation warnings
+
+!======================= Generators v14r1 2013-03-07 =========================
+! 2013-02-13 - Patrick Robbe
+ - Fix compilation warnings with gcc46
+
+!======================= Generators v14r0 2013-02-04 =========================
+! 2013-02-01 - Aurelien Martens
+ - ExternalGenerator.cpp: add call to initializeGenerator, so that
+particle properties are set before initialization of the pythia instance
+
+
+! 2013-01-31 - Patrick Robbe
+ - Use Gaudi random number in ApplyPhotos
+
+! 2013-01-27 - Patrick Robbe
+ - ApplyPhotos.cpp: adapt to new photos++ interface
+
+! 2013-01-21 - Patrick Robbe
+ - EvtGenInPhSpDecay.cpp: remove Photos functions
+ - ICounterLogFile, XmlCounterLogFile: add counters for cross-section
+
+! 2013-01-20 - Patrick Robbe
+ - Remove Pythia6 from EvtGenDecay tool
+
+! 2013-01-16 - Patrick Robbe
+ - Add ICounterLogFile and XmlCounterLogFile classes to store in XML 
+   files the counters that allow to compute the generator level cut 
+   efficiencies.
+
+! 2012-12-19 - Aurelien Martens
+ - Fix SignalRH for pythia8 so that it also hadronize pile-up events.
+
+!======================= Generators v13r0 2012-11-29 =========================
+! 2012-09-27 - Patrick Robbe
+ - Added an option to switch off the reinitialization of the pile-up
+   production in the Special method.
+ - Fix the bug that events are not smeared (vertex) when there is no
+   decay tool.
+
+! 2012-09-11 - John Back
+ - Added the use of the namespace Photospp for src/component/ApplyPhotos.cpp,
+   which is required for Photos++ version 3.5.
+
+! 2012-07-13 - Patrick Robbe
+ - Use LHCb::ParticlePropertySvc for the new particle property service
+   name
+
+! 2012-07-22 - Gloria Corti
+ - Fix bug in FlatZSmearVertex where the location where to take the beam
+   parameters was empty. (merge from v11r4b)
+
+! 2012-06-11 - Alex Shires
+ - update EvtGenInPhSpDecay to allow a configurable input file name
+
+! 2012-05-27 - Patrick Robbe
+ - use new ParticlePropertySvc
+
+! 2012-05-08 - Gloria Corti
+ - Fix linking problems with boost newer version from building with Gaudi v23r2
+
+! 2012-05-04 - John Back
+ - Changed src/component/ApplyPhotos.cpp to use Photos++
+ - Removed src/Lib/photos_utils.F
+
+! 2012-04-16 - John Back
+ - Some changes in EvtGenDecay.cpp to be compatible with the trunk of EvtGen:
+    a) use updated static instance for EvtGen/EvtDecayTable functions
+    b) added EvtPythia6 include header to still allow Pythia6 initialisation
+      (for some reason, this is still needed here for the initial p-p event)
+    c) commented out photos external fortran function calls.
+   Branch v11r4b is a copy of the trunk prior to the above changes.
+
+!========================= LbBcVegPy v4r5 2013-03-07 =========================
+! 2013-02-20 - Marc-Olivier Bettler
+ - new files to allow to cut on lepton combination for Bc daughters
+
+!========================= LbPythia v14r0 2013-02-07 =========================
+ - v13r0 is on a branch
+
+! 2013-01-20 - Patrick Robbe
+ - Remove Pythia6 from EvtGen
+ - Add counters for cross-section
+
+! 2012-12-07 - Patrick Robbe
+ - Add option in Pythia_CT09MCS.py to configure PDF also in Pythia of
+   EvtGen
+
+!========================= LbPythia8 v7r0 2013-03-07 =========================
+! 2013-03-06 - Aurelien Martens
+ - fix warning in the nightlies
+
+! 2013-03-05 - Aurelien Martens
+ - for 8.175: remove Pythia8 Banner by default (adding a configurable flag)
+
+! 2013-03-05 - Aurelien Martens
+ - for 8.175: fix a changes in the way HepMC is filled (remove methods not supported anymore)
+ - update the cmd file so that one switches off versobity in one command
+
+! 2013-03-04 - Aurelien Martens
+ - for 8.175: using namespace std was implictely hidden in Pythia8StdLib, not the case anymore.
+Replace  call to max(...) by std::max(...).
+
+! 2013-02-15 - Aurelien Martens
+ - Fix a mistake with Lc(2625) while resolving a conflit
+
+! 2013-02-15 - Aurelien Martens
+ - Pythia8Prodcution: Add a detailed systematic check of the *unchanged* 
+particle properties in pythia8.
+ - found two particles still decayed by pythia and fix this: Lc(2593), K*(1680)+
+
+!========================= LbHijing v8r2 2013-03-07 ==========================
+! 2013-03-05 - Zhenwei Yang
+ - Added some lines in generateEvent function of src/component/HijingProduction.cpp,
+   which performs Lorentz boost for pA run.
+   This will not affect fix-target (LAB) mode, but only CMS mode.
+   The boost is only valid for 2013 pA and Ap run.
+
+!========================= GaussRICH v13r1 2013-03-07 ========================
+! 2013-02-15 - Patrick Robbe
+ - Fix compilation with gcc46
+
+! 2013-02-05 - Patrick Robbe 
+ - Make a linker library for objects used outside GaussRICH like in 
+   GaussCherenkov
+
+!===================== GaussCherenkov v3r1 2013-03-07 ========================
+! 2013-02-15 - Patrick Robbe
+ - Fix compilation with gcc46
+
+!========================= GenTune v1r1 2013-03-05 =========================
+! 2013-03-05 - Alex Grecu
+ - correct particle status id mapping algorithm to PYTHIA/HepMC 2.05 codes
+ - improve internal statistical counters and print-out rules
+ - introduce properties/options to control print-out suppression rules
+ - the example now produces some 2D histograms for neutral pions (unstable) and photons (stable).
+ - regenerated references for QMTests and eliminate i686 ref as arhitecture no longer supported
 
 !=============================================================================
 </PRE><H1><A NAME="v43r4">2013-02-20 - GaussSys v43r4</A></H1><PRE>
