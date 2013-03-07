@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : R. Lambert, G. Raven
 Purpose     : LHCb HLT application
 
+! 2013-03-07 - Rob Lambert
+ - Propagate simulation options to HLTConf
+
 !========================= Moore v20r0 2013-02-28 =========================
 Dummy tag to reset version number to new stack. Signifies start of LS1 development.
 

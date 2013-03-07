@@ -464,6 +464,9 @@ class Moore(LHCbConfigurableUser):
 
 
     def _config_with_hltconf(self):
+        """
+        Propagate settings to HltConf
+        """
         hltConf = HltConf()
         self.setOtherProps( hltConf,  
                             [ 'ThresholdSettings'
@@ -480,7 +483,11 @@ class Moore(LHCbConfigurableUser):
                             , 'VetoRoutingBits' 
                             ]
                           )
-
+        if self.getProp("Simulation") is True:
+            hltConf.setProp("EnableHltGlobalMonitor",False)
+            hltConf.setProp("EnableBeetleSyncMonitor",False)
+            hltConf.setProp("EnableHltL0GlobalMonitor",False)                     
+            
     def _config_with_tck(self):
         from Configurables import HltConfigSvc
         cfg = HltConfigSvc( prefetchDir = self.getProp('prefetchConfigDir')
