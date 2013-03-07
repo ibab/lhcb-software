@@ -5,9 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-03-07 - Chris Jones
- - Change the way the tuple names for stable particles in TupleToolDecayTreeFitter
-   to fix a problem where different types where being mixed in the same
-   tuple branches.
+ - Change the way the tuple names for stable particles in 
+   TupleToolDecayTreeFitter to fix a problem where different types where being 
+   mixed in the same tuple branches.
+ - Prefer boost::lexical_cast over static_cast to char
+ - Fix a few minor performance issues related to not using references where
+   appropriate.
 
 ! 2013-03-04 - Patrick Koppenburg
  - New flag FilMultiPV for TupleToolGeometry (that's becoming a monster)

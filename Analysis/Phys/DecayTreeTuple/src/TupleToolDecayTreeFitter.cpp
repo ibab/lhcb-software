@@ -306,8 +306,8 @@ StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitte
                                     << " daughter size is " << daughters.size() << endmsg;
   if ( daughters.empty() ) return test;
   std::set<std::string> usedNames;
-  unsigned int add = 65;
-  for ( LHCb::Particle::ConstVector::const_iterator it = daughters.begin(); it < daughters.end(); ++it )
+  unsigned int add = 0;
+  for ( LHCb::Particle::ConstVector::const_iterator it = daughters.begin(); it != daughters.end(); ++it )
   {
     const LHCb::Particle* particle = *it;
     if ( particle->isBasicParticle() ) continue ;
@@ -319,8 +319,7 @@ StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitte
     { // fix to bug 88702
       renamed = true;
       if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name << " trying next " << endmsg;
-      char asciiChar = static_cast<char>(add);
-      name = prefix+"_"+pidName + asciiChar; 
+      name = prefix+"_"+pidName + "_" + boost::lexical_cast<std::string>(add);
       ++add;
     }
     if ( renamed ) Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
@@ -361,7 +360,7 @@ TupleToolDecayTreeFitter::fillStableDaughters( const DecayTreeFitter::Fitter& fi
       { // fix to bug 88702
         if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name << " trying next " << endmsg ;
         renamed = true;
-        name = prefix+"_"+pidName+boost::lexical_cast<std::string>( add );
+        name = prefix+"_"+pidName+boost::lexical_cast<std::string>(add);
         ++add;
       }
       if ( renamed ) Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
@@ -379,7 +378,7 @@ TupleToolDecayTreeFitter::fillStableDaughters( const DecayTreeFitter::Fitter& fi
       { // fix to bug 88702
         if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name << " trying next " << endmsg ;
         renamed = true;
-        name = prefix+"_"+pidName+"_"+boost::lexical_cast<std::string>( add );
+        name = prefix+"_"+pidName+"_"+boost::lexical_cast<std::string>(add);
         ++add;
       }
       if ( renamed ) Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
@@ -449,7 +448,7 @@ StatusCode TupleToolDecayTreeFitter::fillTuple( const TupleMap& tMap,
                                                 const std::string& prefix ) const 
 {
   bool test = true ;
-  for ( TupleMap::const_iterator t = tMap.begin() ; t!=tMap.end() ; ++t )
+  for ( TupleMap::const_iterator t = tMap.begin() ; t != tMap.end() ; ++t )
   {
     std::string leaf = t->first;
     std::vector<double> data = t->second;
@@ -460,15 +459,18 @@ StatusCode TupleToolDecayTreeFitter::fillTuple( const TupleMap& tMap,
   }
   return StatusCode(test);
 }
+
 //=============================================================================
 // Sort Tracks
 //=============================================================================
-std::set<const LHCb::Track*> TupleToolDecayTreeFitter::sortedTracks(const LHCb::VertexBase* vb) const
+std::set<const LHCb::Track*> 
+TupleToolDecayTreeFitter::sortedTracks(const LHCb::VertexBase* vb) const
 {
   const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(vb);
   if (!pv) Exception("Failed to cast PV");
   std::set<const LHCb::Track*> st ;
-  for ( SmartRefVector<LHCb::Track>::const_iterator i = pv->tracks().begin(); i!=pv->tracks().end() ;++i)
+  for ( SmartRefVector<LHCb::Track>::const_iterator i = pv->tracks().begin(); 
+        i != pv->tracks().end(); ++i )
   {
     st.insert(*i);
   }
@@ -478,7 +480,8 @@ std::set<const LHCb::Track*> TupleToolDecayTreeFitter::sortedTracks(const LHCb::
 //=============================================================================
 // Compare PVs, check that one PV's traks is a subset of the other
 //=============================================================================
-bool TupleToolDecayTreeFitter::samePV(const LHCb::VertexBase* vb1, const LHCb::VertexBase* vb2) const
+bool TupleToolDecayTreeFitter::samePV( const LHCb::VertexBase* vb1, 
+                                       const LHCb::VertexBase* vb2) const
 {
   if ( !(vb1->isPrimary()) || !(vb2->isPrimary()) )
   {
@@ -489,7 +492,7 @@ bool TupleToolDecayTreeFitter::samePV(const LHCb::VertexBase* vb1, const LHCb::V
   std::set<const LHCb::Track*> st1 = sortedTracks(vb1);
   std::set<const LHCb::Track*> st2 = sortedTracks(vb2);
 
-  bool inc = std::includes(st1.begin(),st1.end(),st2.begin(),st2.end());
+  const bool inc = std::includes(st1.begin(),st1.end(),st2.begin(),st2.end());
   if ( UNLIKELY(MSG::VERBOSE))
   {
     verbose() << "PV 2 of size " << st2.size() << " is ";
@@ -498,6 +501,7 @@ bool TupleToolDecayTreeFitter::samePV(const LHCb::VertexBase* vb1, const LHCb::V
   }
   return inc;
 }
+
 //=============================================================================
 // get origin vertex
 //=============================================================================
@@ -507,19 +511,21 @@ TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* 
   std::vector<const VertexBase*> oriVx;
   if (mother == P){// the origin vertex is the primary.
     const VertexBase* bpv = m_dva->bestVertex( P );
-    if (bpv) {
+    if (bpv) 
+    {
       oriVx.push_back(bpv);
       if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back bpv " << bpv << " from "
                                             << bpv->parent()->registry()->identifier() << " at "
                                             << bpv->position() << endmsg ;
     }
-    else if ( m_constrainToOriginVertex){
+    else if ( m_constrainToOriginVertex)
+    {
       Warning("NULL bestPV while constraining to origin vertex. Fit will be ignored.",0,StatusCode::SUCCESS).ignore();
     }
     // all the other ones
     /// @todo : keep only the related ones
     for ( LHCb::RecVertex::Range::const_iterator pv = m_dva->primaryVertices().begin() ;
-         pv!=m_dva->primaryVertices().end() ; ++pv )
+         pv != m_dva->primaryVertices().end() ; ++pv )
     {
       if ( m_storeAnyway || !samePV(*pv,bpv) ) {
         oriVx.push_back(*pv);
@@ -539,7 +545,7 @@ TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* 
     const SmartRefVector<LHCb::Particle>& dau = mother->daughters ();
     if( dau.empty() ) return oriVx ;
 
-    for( SmartRefVector<LHCb::Particle>::const_iterator it = dau.begin(); dau.end()!=it; ++it )
+    for( SmartRefVector<LHCb::Particle>::const_iterator it = dau.begin(); dau.end() != it; ++it )
     {
       if( P == *it )
       {
@@ -549,7 +555,7 @@ TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* 
     }
 
     // vertex not yet found, get deeper in the decay:
-    for( SmartRefVector<LHCb::Particle>::const_iterator it = dau.begin(); dau.end()!=it; ++it )
+    for( SmartRefVector<LHCb::Particle>::const_iterator it = dau.begin(); dau.end() != it; ++it )
     {
       if( P != *it && !(*it)->isBasicParticle() )
       {
