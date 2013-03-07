@@ -28,7 +28,7 @@
 		<text>$DECFILESROOT/options/10000000.py</text>
 		<text>$LBPYTHIAROOT/options/Pythia.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
-		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-DBTags.py</text>
+		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-VL-DBTags.py</text>
 		<text>$GAUSSOPTS/Gauss-Upgrade-VL-UT-FT.py</text>
 	</set>
 </argument>

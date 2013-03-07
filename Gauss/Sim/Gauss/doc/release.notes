@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-03-07 - Paul Szczypka
+ - Added VL upgrade options for qmtest, uses VL path DB tags now.
+ - edited VL qmtest to pick up new options file.
+
 ! 2013-03-06 - Gloria Corti
  - The property Gauss().Output has been renamed Gauss().OutputType to be in
    line with Brunel and make clear its meaning.
