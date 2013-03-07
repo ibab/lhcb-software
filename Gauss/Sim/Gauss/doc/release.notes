@@ -4,8 +4,18 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v45r0 2013-04-07 ============================
+
+! 2013-03-07 - Gloria Corti
+ - Note that Gauss v42r3 and v42r4 are on v42b branch
+   v43r4 on v43b branch
+   v44r3, v44r3p1 and v44r4 on v44b branch
+ - Put in VL qmtest the DB tags for release Upgrade DBASE
+ - Change back VL path in Configurable.py since DB release has not occured 
+   and also requires a new LHCb 
+
 ! 2013-03-07 - Paul Szczypka
- - Added VL upgrade options for qmtest, uses VL path DB tags now.
+ - Added VL upgrade options for qmtest, uses VL path DB tags now
  - edited VL qmtest to pick up new options file.
 
 ! 2013-03-06 - Gloria Corti
