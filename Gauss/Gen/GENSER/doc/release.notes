@@ -4,8 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v12r3 2013-03-07 ==========================
+! 2013-03-07 - Gloria Corti
+ - Use latest version of rivet 1.8.2, as verified by A.Grecu
+
 ! 2013-03-04 - Gloria Corti
- - Use latest version of PYthia8 175
+ - Use latest version of Pythia8 175, as suggested by T.Sijostrand
 
 !========================== GENSER v12r2 2013-02-14 ==========================
 ! 2013-02-14 - Gloria Corti

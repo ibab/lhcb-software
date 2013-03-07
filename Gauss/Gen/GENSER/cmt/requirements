@@ -3,7 +3,7 @@
 # Maintainer : Patrick ROBBE, Gloria CORTI
 #============================================================================
 package GENSER
-version v12r2
+version v12r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -57,7 +57,7 @@ macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
 #-- Rivet for reference analysis with comparison with published data and
 #-- Professor for tuning
 #============================================================================
-macro rivet_native_version "1.8.1"
+macro rivet_native_version "1.8.2"
 
 #-- Redefine symbols of MCGenerators libraries
 #-- Pythia 6
