@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2013-03-07 - Chris Jones
+ - Change the way the tuple names for stable particles in TupleToolDecayTreeFitter
+   to fix a problem where different types where being mixed in the same
+   tuple branches.
+
 ! 2013-03-04 - Patrick Koppenburg
  - New flag FilMultiPV for TupleToolGeometry (that's becoming a monster)
 

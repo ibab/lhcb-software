@@ -86,18 +86,21 @@
 // STL
 #include <vector>
 #include <string>
+#include <sstream>
 
 class IParticleDescendants;
 class ITrackStateProvider ;
-// pid
-namespace LHCb{
+
+namespace LHCb
+{
   class ParticleID;
   class IParticlePropertySvc;
   class VertexBase;
   class Particle;
   class RecVertex ;
 }
-namespace DecayTreeFitter{
+namespace DecayTreeFitter
+{
   class Fitter;
 }
 
@@ -187,22 +190,24 @@ private:
   /// actual filling of tuple
   StatusCode fillTuple(const TupleMap& tMap,
                        Tuples::Tuple& tuple,
-                       std::string prefix)const ;
+                       const std::string& prefix ) const ;
   /// insert helper method
-  StatusCode insert(std::string leaf,
-                    double val,
-                    TupleMap& tMap)const ;
+  StatusCode insert( const std::string& leaf,
+                     const double val,
+                     TupleMap& tMap ) const ;
 
-  std::string getName(int id) const;  ///< name of particle
+  std::string getName(const int id) const;  ///< name of particle
 
   ///  origin vertex
-  std::vector<const LHCb::VertexBase*> originVertex( const  LHCb::Particle*,
+  std::vector<const LHCb::VertexBase*> originVertex( const LHCb::Particle*,
                                                      const LHCb::Particle* ) const;
 
   /// same PV?
   bool samePV(const LHCb::VertexBase*, const LHCb::VertexBase*) const ;
   /// sort tracks into a set
   std::set<const LHCb::Track*> sortedTracks(const LHCb::VertexBase*) const ;
+
+private:
 
   std::string m_pvLocation ; ///<  PV location to be used. If empty, take context-dependent default
 
