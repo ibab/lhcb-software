@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2013-03-07 - Rob Lambert
+ - Simulation will not run certain monitors
 
 !========================= HltConf v10r0 2013-02-28 =========================
 ! 2013-02-27 - Rob Lambert

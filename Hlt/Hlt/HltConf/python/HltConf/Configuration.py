@@ -610,6 +610,18 @@ class HltConf(LHCbConfigurableUser):
 #
 # end sequence
 #
+    def _safeSet(self, option, newVal):
+        """
+        Set properties safely, only if not already set by someone.. I'm pretty sure there is a way to do this in gudi with owned configurables ...
+        """
+        if option not in self.__slots__:
+            raise AttributeError("No such option, " + str(option))
+        if self.isPropertySet(option):
+            log.warning('#Asked to reset already set property, '+str(option)+', ignoring request')
+            return False
+        self.setProp(option, newval)
+        return True
+    
     def endSequence(self):
         """
         define end sequence (mostly for persistence + monitoring)
@@ -633,12 +645,14 @@ class HltConf(LHCbConfigurableUser):
             log.warning('### Setting requests stripped down HltEndSequence ###')
             strip = getattr(sets,'StripEndSequence')
             #  TODO: check not explicitly set if so, provide warning....
-            self.EnableHltGlobalMonitor   = ( 'EnableHltGlobalMonitor'   in strip )
-            self.EnableHltL0GlobalMonitor = ( 'EnableHltL0GlobalMonitor' in strip )
-            self.EnableBeetleSyncMonitor  = ( 'EnableBeetleSyncMonitor'  in strip )
-            self.EnableHltSelReports      = ( 'EnableHltSelReports'      in strip )
-            self.EnableHltVtxReports      = ( 'EnableHltVtxReports'      in strip )
-            self.EnableLumiEventWriting   = ( 'EnableLumiEventWriting'   in strip )
+            for option in ['EnableHltGlobalMonitor','EnableHltL0GlobalMonitor','EnableBeetleSyncMonitor','EnableHltSelReports','EnableHltVtxReports','EnableLumiEventWriting']:
+                self._safeSet(option, (option in strip))
+            #self.EnableHltGlobalMonitor   = ( 'EnableHltGlobalMonitor'   in strip )
+            #self.EnableHltL0GlobalMonitor = ( 'EnableHltL0GlobalMonitor' in strip )
+            #self.EnableBeetleSyncMonitor  = ( 'EnableBeetleSyncMonitor'  in strip )
+            #self.EnableHltSelReports      = ( 'EnableHltSelReports'      in strip )
+            #self.EnableHltVtxReports      = ( 'EnableHltVtxReports'      in strip )
+            #self.EnableLumiEventWriting   = ( 'EnableLumiEventWriting'   in strip )
 
         # Setup the beetle sync sequence
         BeetleMonitorAccept = Sequence( 'BeetleSyncMonitorAcceptSequence' )
