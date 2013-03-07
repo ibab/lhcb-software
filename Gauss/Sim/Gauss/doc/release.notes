@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-03-07 - Gloria Corti
+ - Undo my changes for VL just made for release
+
 !========================= Gauss v45r0 2013-04-07 ============================
 
 ! 2013-03-07 - Gloria Corti
