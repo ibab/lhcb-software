@@ -1,5 +1,6 @@
 In this directory there is a small example of how to currently develop and run 
-a user plugin for Rivet.
+a user plugin for Rivet in the LHCb environment and using the LHCb Monte Carlo
+tunes.
 
 The files needed to run and process the output of a Rivet analysis plugin are 
 the source code (.cc), a meta file (.info) which describes the analysis, 
@@ -12,6 +13,10 @@ In order to access the Rivet tools the user should first set up the
 environment (for bash shell):
 
 $ source ../cmt/setup.sh
+
+or 
+
+$ SetupProject Gauss 
 
 The .cc file contains the source code of the plugin which you must compile 
 manually before running Gauss:

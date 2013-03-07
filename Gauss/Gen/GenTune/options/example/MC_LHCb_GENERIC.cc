@@ -3,6 +3,7 @@
 #include "Rivet/RivetAIDA.hh"
 #include "Rivet/Tools/Logging.hh"
 #include "Rivet/Projections/FinalState.hh"
+#include "Rivet/Projections/UnstableFinalState.hh"
 #include "Rivet/Projections/ChargedFinalState.hh"
 #include "LWH/Histogram1D.h"
 #include <cmath>
@@ -16,8 +17,22 @@ namespace Rivet {
 
     /// Constructor
     MC_LHCb_GENERIC()
-      : Analysis("MC_LHCb_GENERIC")
-    {    }
+      : Analysis("MC_LHCb_GENERIC"),
+        nerrinf(0), nerrnan(0)
+    { 
+       nphotons = 0;
+       npions = 0;
+       minPhtPx = 0.;
+       maxPhtPx = 0.;
+       minPhtPz = 0.;
+       maxPhtPz = 0.;
+       minPi0Px = 0.;
+       maxPi0Px = 0.;
+       minPi0Pz = 0.;
+       maxPi0Pz = 0.;
+       minPhtM = 0.; maxPhtM = 0.;
+       minPi0M = 0.; maxPi0M = 0.;
+    }
 
 
   public:
@@ -30,6 +45,7 @@ namespace Rivet {
 
       // Projections
       const FinalState cnfs(-10.0, 10.0, 150*MeV);
+      addProjection(UnstableFinalState(-10.0,10.0, 100*MeV), "UFS");
       addProjection(cnfs, "FS");
       addProjection(ChargedFinalState(-10.0, 10.0, 150*MeV), "CFS");
 
@@ -41,8 +57,13 @@ namespace Rivet {
       _histPt    = bookHistogram1D("Pt", 300, 0, 30);
       _histPtCh  = bookHistogram1D("PtCh", 300, 0, 30);
 
-      _histPx = bookHistogram1D("Px", 2000, -100, 100);
-      _histPy = bookHistogram1D("Py", 2000, -100, 100);
+      _histPx = bookHistogram1D("Px", 1000, -50, 50);
+      _histPy = bookHistogram1D("Py", 1000, -50, 50);
+
+      _hPhtPx = bookHistogram2D("PhtPxM", 40, -0.2, 0.2, 40, -4., 4.);
+      _hPi0Px = bookHistogram2D("Pi0PxM", 50, -0.5, 0.5, 40, -4., 4.);
+      _hPhtPz = bookHistogram2D("PhtPzM", 40, -0.2, 0.2, 120, -600., 600.);
+      _hPi0Pz = bookHistogram2D("Pi0PzM", 100, -1., 1., 200, -3400., 3400.);
 
       _histE    = bookHistogram1D("E", 100, 0, 200);
       _histECh  = bookHistogram1D("ECh", 100, 0, 200);
@@ -73,6 +94,22 @@ namespace Rivet {
     void analyze(const Event& event) {
       const double weight = event.weight();
 
+      // Iterate through unstable particle list
+      const UnstableFinalState& ufs = applyProjection<UnstableFinalState>(event, "UFS");
+      foreach (const Particle&p, ufs.particles()) {
+        if ( p.pdgId() == 111 ) {
+          _hPi0Px->fill(p.momentum().mass2()/GeV/GeV, p.momentum().px()/GeV, weight);
+          _hPi0Pz->fill(p.momentum().mass2()/GeV/GeV, p.momentum().pz()/GeV, weight);
+          npions++;
+          if (minPi0Px > p.momentum().px()) minPi0Px = p.momentum().px();
+          if (maxPi0Px < p.momentum().px()) maxPi0Px = p.momentum().px();
+          if (minPi0Pz > p.momentum().pz()) minPi0Pz = p.momentum().pz();
+	  if (maxPi0Pz < p.momentum().pz()) maxPi0Pz = p.momentum().pz();
+	  if (minPi0M > p.momentum().mass2()) minPi0M = p.momentum().mass2();
+          if (maxPi0M < p.momentum().mass2()) maxPi0M = p.momentum().mass2();
+        };
+      }
+
       // Charged + neutral final state
       const FinalState& cnfs = applyProjection<FinalState>(event, "FS");
       MSG_DEBUG("Total multiplicity = " << cnfs.size());
@@ -92,8 +129,16 @@ namespace Rivet {
         }
         const double rapidity = p.momentum().rapidity();
         MSG_DEBUG("Filling rapidity (" << (float)rapidity << ")!");
-        if (isinf(rapidity)) {MSG_ERROR("Rapidity reached infinity!"); continue;};
-        if (isnan(rapidity)) {MSG_ERROR("Rapidity is NAN for particle " << p.pdgId() << " !"); continue; };
+        if (isinf(rapidity)) {
+          if (nerrinf < 100) MSG_ERROR("Rapidity is Inf for particle " << p.pdgId() << " (status=" << p.genParticle().status()  << ")..."); 
+          nerrinf++;
+          continue;
+        };
+        if (isnan(rapidity)) {
+          if (nerrnan < 100) MSG_ERROR("Rapidity is NaN for particle " << p.pdgId() << " (status=" << p.genParticle().status() << ")...");
+          nerrnan++;
+          continue;
+        };
         _histRapidity->fill(rapidity, weight);
         if (rapidity > 0) {
           MSG_DEBUG("Filling rapidity plus!");
@@ -116,8 +161,18 @@ namespace Rivet {
         _histE->fill(p.momentum().E()/GeV, weight);
         MSG_DEBUG("Filling phi!");
         _histPhi->fill(p.momentum().phi(), weight);
+        if ( p.pdgId() == 22 ) {
+          _hPhtPx->fill(p.momentum().mass2()/GeV/GeV, p.momentum().px()/GeV, weight);
+          _hPhtPz->fill(p.momentum().mass2()/GeV/GeV, p.momentum().pz()/GeV, weight);
+          nphotons++;
+          if (minPhtPx > p.momentum().px()) minPhtPx = p.momentum().px();
+          if (maxPhtPx < p.momentum().px()) maxPhtPx = p.momentum().px();
+          if (minPhtPz > p.momentum().pz()) minPhtPz = p.momentum().pz();
+	  if (maxPhtPz < p.momentum().pz()) maxPhtPz = p.momentum().pz();
+	  if (minPhtM > p.momentum().mass2()) minPhtM = p.momentum().mass2();
+          if (maxPhtM < p.momentum().mass2()) maxPhtM = p.momentum().mass2();
+        };
       }
-
       const FinalState& cfs = applyProjection<FinalState>(event, "CFS");
       MSG_DEBUG("Total charged multiplicity = " << cfs.size());
       _histMultCh->fill(cfs.size(), weight);
@@ -130,7 +185,7 @@ namespace Rivet {
           _tmphistEtaChMinus->fill(fabs(eta), weight);
         }
         const double rapidity = p.momentum().rapidity();
-        if (isnan(rapidity)) continue;
+        if (isnan(rapidity) || isinf(rapidity)) continue; //avoid events with bad data!
         _histRapidityCh->fill(rapidity, weight);
         if (rapidity > 0) {
           _tmphistRapChPlus->fill(fabs(rapidity), weight);
@@ -170,10 +225,30 @@ namespace Rivet {
       scale(_histPhi, 1/sumOfWeights());
       scale(_histPhiCh, 1/sumOfWeights());
 
+      scale(_hPhtPx, 1/sumOfWeights());
+      scale(_hPi0Px, 1/sumOfWeights());
+      scale(_hPhtPz, 1/sumOfWeights());
+      scale(_hPi0Pz, 1/sumOfWeights());
+
       histogramFactory().divide(histoPath("EtaPMRatio"), *_tmphistEtaPlus, *_tmphistEtaMinus);
       histogramFactory().divide(histoPath("EtaChPMRatio"), *_tmphistEtaChPlus, *_tmphistEtaChMinus);
       histogramFactory().divide(histoPath("RapidityPMRatio"), *_tmphistRapPlus, *_tmphistRapMinus);
       histogramFactory().divide(histoPath("RapidityChPMRatio"), *_tmphistRapChPlus, *_tmphistRapChMinus);
+      
+      cout << "=======================================" << std::endl;
+      cout << "Number of photons: " << nphotons << std::endl;
+      cout << "min px, max px: " << minPhtPx << " , " << maxPhtPx << std::endl;
+      cout << "min pz, max pz: " << minPhtPz << " , " << maxPhtPz << std::endl;
+      cout << "min M, max M: " << minPhtM << " , " << maxPhtM << std::endl;
+      cout << "=======================================" << std::endl;
+      cout << "Number of neutral pions: " << npions << std::endl;
+      cout << "min px, max px: " << minPi0Px << " , " << maxPi0Px << std::endl;
+      cout << "min pz, max pz: " << minPi0Pz << " , " << maxPi0Pz << std::endl;
+      cout << "min M, max M: " << minPi0M << " , " << maxPi0M << std::endl;
+      cout << "=======================================" << std::endl;
+      cout << "Number of particles with rapidity=NaN: " << nerrnan << std::endl;
+      cout << "Number of particles with rapidity=Inf: " << nerrinf << std::endl;
+      cout << "=======================================" << std::endl;
     }
 
     //@}
@@ -186,6 +261,15 @@ namespace Rivet {
     shared_ptr<LWH::Histogram1D> _tmphistEtaChPlus, _tmphistEtaChMinus;
     shared_ptr<LWH::Histogram1D> _tmphistRapPlus, _tmphistRapMinus;
     shared_ptr<LWH::Histogram1D> _tmphistRapChPlus, _tmphistRapChMinus;
+    /// Counters for error suppression
+    unsigned int nerrinf;
+    unsigned int nerrnan;
+
+    /// Temp variables:
+    unsigned int nphotons;
+    double maxPhtPx, minPhtPx, minPhtPz, maxPhtPz, minPhtM, maxPhtM;
+    unsigned int npions;
+    double maxPi0Px, minPi0Px, minPi0Pz, maxPi0Pz, minPi0M, maxPi0M;
 
     /// @name Histograms
     //@{
@@ -197,6 +281,8 @@ namespace Rivet {
     AIDA::IHistogram1D *_histPx, *_histPy;
     AIDA::IHistogram1D *_histE, *_histECh;
     AIDA::IHistogram1D *_histPhi, *_histPhiCh;
+    AIDA::IHistogram2D *_hPhtPx, *_hPi0Px;
+    AIDA::IHistogram2D *_hPhtPz, *_hPi0Pz;
     //@}
 
   };

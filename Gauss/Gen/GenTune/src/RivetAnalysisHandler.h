@@ -2,12 +2,10 @@
 #ifndef COMPONENT_RIVETANALYSISHANDLER_H 
 #define COMPONENT_RIVETANALYSISHANDLER_H 1
 
-// Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-//#include "GaudiKernel/ServiceHandle.h"
-//#include "GaudiKernel/IHistogramSvc.h"
 
+#include <sstream>
 #include <string>
 #include <vector>
 #include <utility>
@@ -30,65 +28,86 @@ private:
 
   bool detectBeamCrossingAngles(HepMC::GenEvent* hEvent);
 
-  /// The base file name to write results to (prefix of filenames).
+  /// Property: The base file name (prefix of filenames) to write results to ("MyRivet").
   string m_filename;
  
-  /// The name of the run (prepended to plot paths).
+  /// Property: The name of the run to prepended to AIDA plot paths ("LHCB").
   string m_runname;
  
-  /// A list of names of the analyses to run (set from the job properties)
+  /// Property: A list of names of the analyses to run ([]).
   vector<string> m_analysisNames;
 
   /// The main Rivet analysis handler
   Rivet::AnalysisHandler* _analysisManager;
 
-  /// Stream name where output plots are stored (AIDA file) - default: "/Rivet"
+  /// Property: Stream name where output plots are stored in AIDA file ("/Rivet").
   string m_histStreamName;
 
-  /// Location where the HepMC events are read from (on TES) - default: LHCb::HepMCEventLocation::Default
+  /// Property: Location on TES where the HepMC events are read from (LHCb::HepMCEventLocation::Default).
   string m_mcEvtLocation;
 
-  /// Instructs the algorithm to automatically detect and correct for beam crossing angles
+  /// Property: Instructs the algorithm to automatically detect and correct for beam crossing angles (True). 
   bool m_xAngleDetect;
 
-  /// List of paths where analyses should be looked for
+  /// Property: List of additional file paths where analyses should be looked for, e.g. add os.path.abspath('.') when analysis lib is in option file directory ([]).
   vector<string> m_analysisPaths;
 
-  /// Indicates whether the cross-section is to be read from data (true)
+  /// Property: Indicates whether the cross-section is to be read from data (True).
   bool m_reqCrossSection;
 
-  /// The externally provided cross-section for the present run (mb or mub?); ignored when read from data
+  /// Property: The externally provided cross-section for the present run (mb or mub!?); ignored when read from data (-1.).
   double m_crossSection;
 
-  /// Switch that controls the transformation of status ID of particles (given by EvtGen) to Pythia defaults
+  /// Switch that controls the transformation of status ID of particles (given by EvtGen) back to Pythia defaults (False).
   bool m_modStatusID;
 
-  /// When crossing angle presence is detected these flags is true
+  /// When crossing angle presence is detected these flags are true.
   bool _xHAngleCorrection;
   bool _xVAngleCorrection;
 
-  // The medium horizontal crossing angle value (Ox)
+  // The medium horizontal crossing angle value (Ox).
   double _mHxAngle;
-  // The medium vertical crossing angle value (Oy)
+  // The medium vertical crossing angle value (Oy).
   double _mVxAngle;
   
-  /// This flag is true only if the component was linked against HepMC 2.03 or when scaling to LHCb units is needed
+  /// This flag is true only if the component was linked against HepMC 2.03 or when scaling to LHCb units is needed.
   bool _needsUnitConv;
   
-  /// Toggles after first event processed to allow dynamic setup of flags above
+  /// Toggles to false after first event processed to allow dynamic setup of flags above (true).
   bool _isFirstEvent;
   
-  /// Energy conversion factor
+  /// Energy conversion factor (1.).
   double _scaleFactorEnergy;
   
-  /// Time conversion factor (not really used!)
+  /// Time conversion factor (1.) - not really used!
   double _scaleFactorTime;
 
   /// Various statistics (debugging mode and not only)
-  // Index 0: Counter for debug message supression
-  vector<long int> myStats;   
+  // 0: count particles with negative! rest mass
+  // 1: times x-Angle boost(s) was done
+  // 2: times internal unit conversion was applied
+  // 3: times particleId was adjusted
+  vector<long unsigned int> _myStats;
+
+  /// The description for each internal statistical counter
+  static const char* const _statDescriptors[];
+
+  /// Number of internal statistical counters
+  static const unsigned int COUNTERS_NB = 4;
+
+  /// Property: Internal statistical messages print-out suppression soft limit (30).
+  long unsigned int m_logSoftLimit;
+
+  /// Property: Internal statistical message print-out suppression frequency (10).
+  long unsigned int m_logSuppressFreq;
+
+  /// Property: Internal statistical message print-out suppression hard limit (200).
+  long unsigned int m_logHardLimit;
 
   void compatSetCrossSection();
+
+  /// Checks whether messages specific to internal flag statId are suppressed or not.
+  bool statLogEnabled(unsigned int statId);
 
 public:
   /// Standard constructor
@@ -103,6 +122,8 @@ public:
 bool cmpGenParticleByEDesc(const HepMC::GenParticle* a, const HepMC::GenParticle* b);
 
 bool fuzzyEq(double a, double b, double eps);
+
+double invariantMass(const HepMC::FourVector& mom);
 
 #endif
 // COMPONENT_RIVETANALYSISHANDLER_H

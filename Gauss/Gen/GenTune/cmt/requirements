@@ -3,7 +3,7 @@
 # Maintainer : Alex Grecu
 #============================================================================
 package           GenTune
-version           v1r0p1
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -30,16 +30,11 @@ use ROOT              v*     LCG_Interfaces -no_auto_imports
 #apply_tag ignore_installarea
 use rivet             v*     LCG_GeneratorsInterfaces -auto_imports
 
-#macro GenTune_home "$(GAUSS_home)/Gen/GenTune"
-
 #============================================================================
 # Component library building rule
 #============================================================================
 #library          GenTune     ../src/*.cpp
 library          GenTune     ../src/*.cpp -import=AIDA
-
-# Include more directories - works without it!
-#apply_pattern install_more_includes more=GenTune
 
 #============================================================================
 # define component library link options

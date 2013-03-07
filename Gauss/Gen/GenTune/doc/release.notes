@@ -5,6 +5,14 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+!========================= GenTune v1r1 2013-03-05 =========================
+! 2013-03-05 - Alex Grecu
+ - correct particle status id mapping algorithm to PYTHIA/HepMC 2.05 codes
+ - improve internal statistical counters and print-out rules
+ - introduce properties/options to control print-out suppression rules
+ - the example now produces some 2D histograms for neutral pions (unstable) and photons (stable).
+ - regenerated references for QMTests and eliminate i686 ref as arhitecture no longer supported
+
 !========================= GenTune v1r0p1 2012-11-26 =========================
 ! 2012-10-22 - Alex Grecu
  - disable "unused parameter" warnings from Rivet library

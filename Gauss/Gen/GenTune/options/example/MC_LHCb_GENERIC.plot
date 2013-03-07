@@ -137,3 +137,40 @@ XLabel=$p_y$ [GeV/c]
 YLabel=$1/\sigma \; \mathrm{d}\sigma/\mathrm{d}p_y$ [GeV$^{-1} c$]
 FullRange=1
 # END PLOT
+
+# BEGIN PLOT /MC_LHCb_GENERIC/PhtPxM$
+Title=$p_x$ to $m_{0}^{2}$ correlation for photons (PID=22)
+YLabel=$p_x$ [GeV/c]
+XLabel=$m_{\gamma}^{2}$ [GeV$^2$/c$^4$]
+RatioPlot=0
+#FullRange=1
+LogZ=1
+# END PLOT
+
+# BEGIN PLOT /MC_LHCb_GENERIC/PhtPzM$
+Title=$p_z$ to $m_{0}^{2}$ correlation for photons (PID=22)
+YLabel=$p_z$ [GeV/c]
+XLabel=$m_{\gamma}^{2}$ [GeV$^2$/c$^4$]
+RatioPlot=0
+#FullRange=1
+LogZ=1
+# END PLOT
+
+# BEGIN PLOT /MC_LHCb_GENERIC/Pi0PxM$
+Title=$p_x$ to $m_{0}^{2}$ correlation for $\pi^0$s (PID=111)
+YLabel=$p_x$ [GeV/c]
+XLabel=$m_{\pi^0}^{2}$ [GeV$^2$/c$^4$]
+RatioPlot=0
+#FullRange=1
+LogZ=1
+# END PLOT
+
+# BEGIN PLOT /MC_LHCb_GENERIC/Pi0PzM$
+Title=$p_z$ to $m_{0}^{2}$ correlation for $\pi^0$s (PID=111)
+YLabel=$p_z$ [GeV/c]
+XLabel=$m_{\pi^0}^{2}$ [GeV$^2$/c$^4$]
+RatioPlot=0
+#FullRange=1
+LogZ=1
+# END PLOT
+
