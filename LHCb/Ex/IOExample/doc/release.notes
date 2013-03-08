@@ -4,8 +4,8 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
-! 2013-03-05 - Marco Cattaneo
- - Fix access URLs for Stripping17 test files that have moved to EOS
+! 2013-03-08 - Marco Cattaneo
+ - Fix access URLs for Stripping17 and Reco08 test files that have moved to EOS
 
 !========================= IOExample v4r8 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic

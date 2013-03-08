@@ -6,5 +6,5 @@ IOTest( EvtMax = 5, LoadAll = True, DataContent = 'MDST' )
 
 ioh = IOHelper('POOL','ROOT')
 ioh.setupServices()
-ioh.inputFiles(['PFN:root://castorlhcb.cern.ch//castor/cern.ch/grid//lhcb/data/2010/CHARM.MDST/00008397/0000/00008397_00000939_1.charm.mdst?svcClass=lhcbdisk'])
+ioh.inputFiles(['PFN:root://eoslhcb.cern.ch//eos/lhcb/data/2010/CHARM.MDST/00008397/0000/00008397_00000939_1.charm.mdst'])
 ioh.outStream('PFN:ROOT-Reco08.mdst',"InputCopyStream")
