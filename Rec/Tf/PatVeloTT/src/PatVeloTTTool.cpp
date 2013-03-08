@@ -25,11 +25,11 @@ DECLARE_TOOL_FACTORY( PatVeloTTTool )
 PatVeloTTTool::PatVeloTTTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_ttHitManager(0)
+  : GaudiTool( type, name , parent ),
+  m_ttHitManager(0)
   , m_PatTTMagnetTool(0)
 {
-  declareInterface<PatVeloTTTool>(this);
+  declareInterface<ITracksFromTrack>(this);
 
   declareProperty("MaxXSlope"          , m_maxXSlope        = 0.350);
   declareProperty("MaxYSlope"          , m_maxYSlope        = 0.300);
@@ -119,7 +119,8 @@ StatusCode PatVeloTTTool::initialize ( ) {
 //=========================================================================
 // Main reconstruction method
 //=========================================================================
-void PatVeloTTTool::recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks )
+StatusCode 
+PatVeloTTTool::tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks )
 {
 
   std::vector<PatVTTTrack> vttTracks;
@@ -128,14 +129,25 @@ void PatVeloTTTool::recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*
   localCleanUp(vttTracks);
   selectBestTracks(vttTracks);
   prepareOutputTracks(vttTracks, outtracks);
+  return StatusCode::SUCCESS;
 
+}
+//=========================================================================
+// DEPRECATED Main reconstruction method
+//=========================================================================
+void PatVeloTTTool::recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks )
+{
+  warning() << "Calling deprecated PatVeloTTTool::recoVeloTT. Please use tracksFromTrack instead." << endmsg;
+  
+  tracksFromTrack(velotrack,outtracks);
+  
 }
 
 
 //=========================================================================
 // Get all the VeloTT track candidates
 //=========================================================================
-void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vttTracks){
+void PatVeloTTTool::getCandidates( const LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vttTracks){
 
   if(m_debug) debug() << "Entering getCandidates" << endmsg;
 
@@ -150,7 +162,7 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
   //== try to match
   //===========================================================================
 
-  LHCb::Track* veloTr = &veloTrack;
+  const LHCb::Track* veloTr = &veloTrack;
 
   if( m_debug ) debug() << "Input Velo track address: " << veloTr << endmsg;
 
@@ -407,7 +419,7 @@ void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
     return;
   }
 
-  LHCb::Track* velotr = vtttr.track();
+  const LHCb::Track* velotr = vtttr.track();
 
   // Get End Velo state
   const LHCb::State& pStateVelo = *(velotr->stateAt(LHCb::State::EndVelo));
@@ -725,7 +737,7 @@ void PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks,
               << candClusters.size() << " TT clusters with dx: " << cand.Dx() << endmsg;
     }
 
-    LHCb::Track* veloTr = cand.track();
+    const LHCb::Track* veloTr = cand.track();
     const LHCb::State& state = *(veloTr->stateAt(LHCb::State::EndVelo));
     double tx = state.tx();
     double ty = state.ty();

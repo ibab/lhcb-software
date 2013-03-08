@@ -68,7 +68,7 @@
 
   public:
     /// Standard constructor
-    PatVTTTrack( LHCb::Track* tr ) {
+    PatVTTTrack( const LHCb::Track* tr ) {
       m_track  = tr;
       m_fittrack  = 0;
       const LHCb::State & trState = *(tr->stateAt(LHCb::State::EndVelo));
@@ -100,7 +100,7 @@
 
     virtual ~PatVTTTrack( ) {}; ///< Destructor
 
-    LHCb::Track* track()       const { return m_track; }
+    const LHCb::Track* track()       const { return m_track; }
 
     LHCb::Track* fitTrack()       const { return m_fittrack; }
     void setFitTrack(LHCb::Track* pTr)       { m_fittrack = pTr; }
@@ -385,7 +385,7 @@
   protected:
 
   private:
-    LHCb::Track*  m_track;
+    const LHCb::Track*  m_track;
     LHCb::Track*  m_fittrack;
     Gaudi::XYZPoint m_origin;
     Gaudi::XYZVector m_slope;

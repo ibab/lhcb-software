@@ -9,6 +9,8 @@
 #include "Event/Track.h"
 #include "TfKernel/TTStationHitManager.h"
 
+#include "TrackInterfaces/ITracksFromTrack.h"
+
 // local
 #include "PatVTTTrack.h"
 #include "PatTTMagnetTool.h"
@@ -27,11 +29,11 @@ static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
    *
    */
 
-  class PatVeloTTTool : public GaudiTool {
-  public:
+class PatVeloTTTool : public GaudiTool, virtual public ITracksFromTrack {
+public:
 
     // Return the interface ID
-    static const InterfaceID& interfaceID() { return IID_PatVeloTTTool; }
+  static const InterfaceID& interfaceID() { return IID_PatVeloTTTool; }
 
     /// Standard constructor
     PatVeloTTTool( const std::string& type,
@@ -42,8 +44,16 @@ static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
 
     StatusCode initialize ( );
 
+    
+  virtual StatusCode tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
+  
+  
+  
 
+    // for the moment keep the following, deprecated method for bakcwards compatibility.
+    // will call tracksFromrack internally
     void recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
+
     void simpleFit( PatVTTTrack& vtt);
 
   protected:
@@ -52,7 +62,7 @@ static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
     void selectBestTracks( std::vector<PatVTTTrack>& vttTracks);
     void prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks, std::vector<LHCb::Track*>& outtracks);
     void localCleanUp(std::vector<PatVTTTrack>&);
-    void getCandidates(LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vtt);
+    void getCandidates(const LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vtt);
     void saveCandidate( PatTTHits& theClusters, PatVTTTrack& candidate);
 
   private:
