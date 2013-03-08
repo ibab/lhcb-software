@@ -23,6 +23,7 @@ Modification summary:
  - Review of debug printout: task #40215 
  - Replace exist-get with getIfExists: task #40118. Requires latest Gaudi 
  - Absorption of minor changes which were otherwise included directly in Moore. 
+ - Major bug reported in HltGlobalMonitor, see bug #100666 
 
 For a description of the introduced changes, links to changesets, and other details, see: 
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r0
