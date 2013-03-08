@@ -57,7 +57,10 @@ apply_pattern install_python_modules
 
 # ==============================================================================
 private
-macro_append DetCondLib_use_linkopts " -lbz2 "
+
+# hack to be able to compile on i686 (the dev package for 32 bits bz2 library cannot be installed on lxbuild)
+macro_append DetCondLib_use_linkopts " -lbz2 " target-i686 " /usr/lib/libbz2.so.1 "
+
 macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_filesystem_mt) $(Boost_linkopts_date_time) "
 
 apply_pattern QMTest
