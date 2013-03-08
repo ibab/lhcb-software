@@ -202,19 +202,18 @@ bool DaughtersInLHCbAndWithDaughAndBCuts::passCuts( const HepMC::GenParticle * t
         return false ;
       if ( fabs( sin( angle ) ) < fabs( sin( m_chargedThetaMin ) ) ) 
         return false ;
-    }
-
-    //check momentum
-    bool pass = true;
-    if ( 13 == abs( (*it) -> pdg_id() ) )  pass = momentumCut((*it), m_minMuonP, sumP );
-    else   pass = momentumCut((*it), m_minTrackP, sumP );
-    if (!pass) return false;
  
-    //check transverse momentum
-    if ( 13 == abs( (*it) -> pdg_id() ) )  pass = transverseMomentumCut((*it), m_minMuonPT, sumPt );
-    else   pass = transverseMomentumCut((*it), m_minTrackPT, sumPt );
-    if (!pass) return false;
-
+      //check momentum
+      bool pass = true;
+      if ( 13 == abs( (*it) -> pdg_id() ) )  pass = momentumCut((*it), m_minMuonP, sumP );
+      else   pass = momentumCut((*it), m_minTrackP, sumP );
+      if (!pass) return false;
+      
+      //check transverse momentum
+      if ( 13 == abs( (*it) -> pdg_id() ) )  pass = transverseMomentumCut((*it), m_minMuonPT, sumPt );
+      else   pass = transverseMomentumCut((*it), m_minTrackPT, sumPt );
+      if (!pass) return false;
+    }
   }
 
   if (sumP < m_minSumP) return false;

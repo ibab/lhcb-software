@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-09-27 - Aurelien Martens
+ - Added a bug fix (gammas from pi0's or eta's were considered as tracks for the momentum cuts...)
+ for DaughtersInLHCbAndWithDaughAndBCuts and DaughtersInLHCbAndWithMinP
+
 !========================== GenCuts v3r1 2012-10-19 ========================== 
 ! 2012-09-27 - Aurelien Martens
  - Added a bug fix for DaughtersInLHCbAndWithDaughAndBCuts

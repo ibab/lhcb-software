@@ -135,13 +135,14 @@ bool DaughtersInLHCbAndWithMinP::passCuts( const HepMC::GenParticle * theSignal 
         return false ;
       if ( fabs( sin( angle ) ) < fabs( sin( m_chargedThetaMin ) ) ) 
         return false ;
+      //check momentum
+      bool pass = true;
+      if ( 13 == abs( (*it) -> pdg_id() ) )  pass = momentumCut((*it), m_minMuonP );
+      else   pass = momentumCut((*it), m_minTrackP );
+      if (!pass) return false;
     }
-    //check momentum
-    bool pass = true;
-    if ( 13 == abs( (*it) -> pdg_id() ) )  pass = momentumCut((*it), m_minMuonP );
-    else   pass = momentumCut((*it), m_minTrackP );
-    if (!pass) return false;
   }
+  
 
   debug() << "Event passed !" << endmsg ;
   
