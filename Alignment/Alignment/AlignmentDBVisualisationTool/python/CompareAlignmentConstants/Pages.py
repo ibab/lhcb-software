@@ -22,6 +22,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates
 import matplotlib.ticker
 from matplotlib.figure import SubplotParams
+from matplotlib.patches import Rectangle
+from matplotlib.collections import PatchCollection
+import numpy as np
 
 class PlotRegion(object):
     """
@@ -286,10 +289,12 @@ ElementGroups = { "TT.Layers"       : ElementGroup("(?P<page>TT)/TT[ab]/(?P<elm>
                 , "TT.Modules"      : ElementGroup("TT/TT[ab]/(?P<page>TT(?:aX|aU|bV|bX)Layer/R[1-3])Module(?P<elm>[1-6][BT])$", 4, 3)
                 , "TT.Sensors"      : ElementGroup("TT/TT[ab]/(?P<page>TT(?:aX|aU|bV|bX)Layer/R[1-3]Module[1-6][BT])/(?P<elm>Ladder[0-9]/Sensor[0-9]*)$", 3, 3)
                 , "IT.Boxes"        : ElementGroup("IT/(?P<page>Station[1-3])/(?P<elm>(?:ASide|CSide|Top|Bottom)Box)$", 2, 2)
-                , "IT.Layers"       : ElementGroup("IT/(?P<page>Station[1-3]/(?:ASide|CSide|Top|Bottom)Box)/(?P<elm>(?:X1|U|V|X2)Layer)$", 2, 2)
+#                , "IT.Layers"       : ElementGroup("IT/(?P<page>Station[1-3]/(?:ASide|CSide|Top|Bottom)Box)/(?P<elm>(?:X1|U|V|X2)Layer)$", 2, 2)
+                , "IT.Layers"       : ElementGroup("IT/(?P<page>Station[1-3]/(?:ASide|CSide|Top|Bottom)Box)/(?P<elm>Layer(?:X1|U|V|X2))$", 2, 2) # fixed
                 , "OT.CFrames"      : ElementGroup("OT/(?P<page>T[1-3]/(?:X1|U|V|X2))/(?P<elm>Q[0-3])$", 2, 2)
-                , "OT.CFrameLayers" : ElementGroup("OT/(?P<page>T[1-3])/(?P<elm>(?:X1|U|V|X2)/Q[0-1])$", 4, 2)
+                , "OT.CFrameLayers" : ElementGroup("OT/(?P<page>T[1-3])/(?P<elm>(?:X1|U|V|X2)/Q[0-1])$", 4, 2) # not 0-3?
                 , "OT.Modules"      : ElementGroup("OT/(?P<page>T[1-3]/(?:X1|U|V|X2)/Q[0-3])/(?P<elm>M[1-9])$", 3, 3)
+                , "Velo.Modules"    : ElementGroup("null", 1, 1) #### only for reference
                 }
 # TODO implement an "ElementGroupFolder" that has ElementGroup, the regular expressions all methods below in its members
 
@@ -362,3 +367,231 @@ def drawDiffReference( periods, elmGroupName, alignment, dofs, draw="P" ):
         for dof in dofs:
             region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=DiffPlotRegion )
             region.addReference(getattr(matrix[0], dof))
+
+def generateRegionEntries( DictName, detectorName, layerName, regionName, moduleNamePrefix, moduleNameSuffix # most of these are used to build the key string
+                         , finalModule # the last module number in the sequence
+                         , initialCoords # lower-right point of the number "1" element
+                         , width, height
+                         , shift # what to add to the initialCoords to generate subsequent elements
+                         , rotateY # the y coordinate to rotate about for stereo layers
+                         , zorder=0 # matplotlib kwarg to set the drawing order; doesn't work for reasons unknown
+                         ):
+    """
+    Create a sequence of geometry dictionary entries with keys that are meant to match the element node names
+    A 'sequence' is a set of adjacent detector elements with numerically indexed names
+    """
+    
+    for i in range(1,finalModule + 1):
+        _key = detectorName + "/" + layerName + regionName + moduleNamePrefix + str(i) + moduleNameSuffix
+        logging.debug("Writing geometry dictionary entry for %r" % _key)
+        DictName[_key] = [ np.copy(initialCoords), width, height , rotateY, zorder ]
+        initialCoords += shift
+
+def generateTTGeometryDict( DictName, detector, layer ):
+    moduleSuffix = ""
+    width = 9.24
+    height = 9.46
+    shift = np.array([0, height])
+    if layer.split("/")[0] == "TTa":
+        middleModules = 3
+    elif layer.split("/")[0] == "TTb":
+        middleModules = 5
+    xInitialR1 = - ( 6 + middleModules * 0.5 ) * width
+    xInitialR2 = - ( middleModules * 0.5 ) * width
+    xInitialR3 = - xInitialR2
+    rotateY = 0
+    TTLayerSeed = { "/R1"   : ( 6, ( (np.array([xInitialR1, -3*height]),  shift, "B", 3), (np.array([xInitialR1, -7*height]),  shift, "B", 4)
+                                   , (np.array([xInitialR1,  2*height]), -shift, "T", 3), (np.array([xInitialR1,  6*height]), -shift, "T", 4)
+                                   )
+                              )
+                  , "/R2"   : ( middleModules, ( (np.array([xInitialR2, -1*height]),  shift, "B", 1)
+                                               , (np.array([xInitialR2, -3*height]),  shift, "B", 2), (np.array([xInitialR2, -7*height]),  shift, "B", 4)
+                                               , (np.array([xInitialR2,         0]), -shift, "T", 1)
+                                               , (np.array([xInitialR2,  2*height]), -shift, "T", 2), (np.array([xInitialR2,  6*height]), -shift, "T", 4)
+                                               )
+                              )
+                  , "/R3"   : ( 6, ( (np.array([xInitialR3, -3*height]),  shift, "B", 3), (np.array([xInitialR3, -7*height]),  shift, "B", 4)
+                                   , (np.array([xInitialR3,  2*height]), -shift, "T", 3), (np.array([xInitialR3,  6*height]), -shift, "T", 4)
+                                   )
+                              )
+                  } # region: ( number of modules, ( tuple of ladder entries with format:
+                                                           # ( sensor xy point, shift to subsequent sensor, top or bottom, number of sensors) ) )
+    # fill the dictionary
+    for region, entry in TTLayerSeed.iteritems():
+        layerName = layer + region
+        for k in range(entry[0]):
+            module = "Module" + str(k + 1)
+            moduleShift = np.array([k * width, 0])
+            for coord, step, half, size in entry[1]:
+                name = half + "/Ladder" + str(size) + "/Sensor" + str(size)
+                initialCoords = coord + moduleShift
+                generateRegionEntries(DictName, detector, layerName, module, name, moduleSuffix, size, initialCoords, width, height, step, rotateY)
+
+    # move central module halves to make room for the beampipe
+    centralModule = str( (middleModules + 1) / 2)
+    layerName = layer + "/R2"
+    module = "Module" + centralModule
+    for coord, step, half, size in TTLayerSeed["/R2"][1]:
+        name = half + "/Ladder" + str(size) + "/Sensor" + str(size)
+        initialCoords = coord + np.array([- width * 0.5 - xInitialR2, - 3.7 * cmp(step[1],0)])
+        generateRegionEntries(DictName, detector, layerName, module, name, moduleSuffix, size, initialCoords, width, height, step, rotateY)
+
+    # add correct R2 ladders in the edge modules of TTb;
+    # ladders 1 and 2 created above do not physically exist and their module entries will never be asked for by the layer fill list
+    if layer.split("/")[0] == "TTb":
+        layerName = layer + "/R2"
+        _entry = lambda index: TTLayerSeed["/R2"][1][index]
+        hackedTogether = ( (_entry(1), 0), (_entry(4), 0), (_entry(1), 4), (_entry(4), 4) )
+        for (coord, step, half, unused), k in hackedTogether:
+            module = "Module" + str(k + 1)
+            moduleShift = np.array([k * width, 0])
+            name = half + "/Ladder3/Sensor3"
+            initialCoords = coord + moduleShift
+            generateRegionEntries(DictName, detector, layerName, module, name, moduleSuffix, 3, initialCoords, width, height, step, rotateY)
+
+def generateITGeometryDict( DictName, detector, layer ):
+    finalSensor = 7
+    width = 7.557
+    height = 10.9
+#    overlap = 1.1
+    # matplotlib zorder isn't working
+    overlap = 0
+    shift = np.array([width, 0])
+    ITLayerSeed = { "/ASideBox/"  : ( (np.array([ 9.9, -height]), shift, 0, 10), (np.array([9.9, 0]), shift, 0, 10) )
+                  , "/BottomBox/" : ( (np.array([-3.5*width, - 2*height + overlap]), shift, -1.5*height + overlap, 1), )
+                  , "/CSideBox/"  : ( (np.array([-9.9 - 7*width, -height]), shift, 0, 10), (np.array([-9.9 - 7*width, 0]), shift, 0, 10) )
+                  , "/TopBox/"    : ( (np.array([-3.5*width, height - overlap]), shift, 1.5*height - overlap, 1), )
+                  } # region      : ( ( sensor1 xy point, shift, roatation y coord, zorder(smaller drawn first) ), ( sensor2 xy point, ... ) )
+    
+    # fill the dictionary
+    splitLayer = layer.split("/")
+    for region, coords in ITLayerSeed.iteritems():
+        # put box names back in
+        layer = splitLayer[0] + region + splitLayer[1]
+        for k, ( coord, step, rotateY, drawOrder ) in enumerate(coords):
+            sensorName = "/Sector/Sensor" + str(k + 1)
+            generateRegionEntries(DictName, detector, layer, "", "/Ladder", sensorName, finalSensor, coord, width, height, step, rotateY, zorder=drawOrder)
+
+def generateOTGeometryDict( DictName, detector, layer ):
+    modulePrefix = "M"
+    moduleSuffix = ""
+    finalModule = 9
+    width = 34
+    height = 240
+    shift = np.array([width, 0])
+    rotateY = 0
+    OTLayerSeed = { "/Q0/"  : (np.array([-297.5, -240]),  shift)
+                  , "/Q1/"  : (np.array([ 263.5, -240]), -shift)
+                  , "/Q2/"  : (np.array([-297.5,    0]),  shift)
+                  , "/Q3/"  : (np.array([ 263.5,    0]), -shift)
+                  } # region: (lower right point of module 1, location of subsequent modules)
+    
+    # fill the dictionary
+    for region, ( coord, step ) in OTLayerSeed.iteritems():
+        generateRegionEntries(DictName, detector, layer, region, modulePrefix, moduleSuffix, finalModule, coord, width, height, step, rotateY)
+
+    # ammend to make the hole for the IT and the beampipe
+    _edit = lambda x: DictName["OT/" + layer + x]
+    _edit("/Q1/M9")[0] += np.array([width * 0.5, 0])
+    _edit("/Q1/M9")[1] -= width * 0.5
+    _edit("/Q2/M9")[1] -= width * 0.5
+    for i in range(4):
+        _edit("/Q" + str(i) + "/M8")[2] -= 11
+        _edit("/Q" + str(i) + "/M9")[2] -= 20
+    for i in (2,3):
+        _edit("/Q" + str(i) + "/M8")[0] += np.array([0, 11])
+        _edit("/Q" + str(i) + "/M9")[0] += np.array([0, 20])    
+
+def generateGeometryDict( detector, layer ):
+    _Dict = {}
+    if detector == "TT":
+        generateTTGeometryDict(_Dict, detector, layer)
+    elif detector == "IT":
+        generateITGeometryDict(_Dict, detector, layer)
+    elif detector == "OT":
+        generateOTGeometryDict(_Dict, detector, layer)
+    return _Dict
+
+# the method that does all the drawing for plotAlignHeat
+def drawHeatPlot( comparisonDescription, detector, layer, dof, outputDir, layerFillList, GeometryDict, diffColorRange, drawNames=False ):
+    fig = plt.figure(figsize=(11.6929134, 8.26771654), subplotpars=SubplotParams(wspace=0.35, left=0.1, bottom=0.1, right=0.98))
+    ax = fig.add_subplot(111, axisbg='#E6E6E6')
+    ax.set_aspect("equal", adjustable="box")
+    ax.set_title(comparisonDescription + "\n Detector: %s,   Layer: %s,   Degree of Freedom: %s" % (detector, layer, dof) )
+    ax.set_xlabel("A side $\qquad \qquad \qquad \qquad \qquad$ x (cm) $\qquad \qquad \qquad \qquad \qquad$ C side")
+#    ax.set_xlabel("x (cm)")
+    ax.set_ylabel("y (cm)")
+    ax.grid(True, linestyle='-', linewidth=1.5, alpha=0.1)
+    # put grid behind polygons
+    ax.set_axisbelow(True)
+    # reverse x axis to match LHCb coodrinates from VELO perspective
+    ax.set_xlim(ax.get_xlim()[::-1])
+    
+    patches = []
+    # values will be overwritten, we just need a numpy array at least as big as the fill list
+    colorArray = np.array([x for x in range(len(layerFillList))], dtype=np.float64)
+
+    rotationAngle = 0
+    if layer.find("U") != -1: rotationAngle = -5
+    if layer.find("V") != -1: rotationAngle =  5
+
+    logging.debug("Building list of alignment elements and color array of corresponding alignment parameters")
+    for i, (name, unused, matrix) in enumerate(layerFillList):
+        _shape = lambda j: GeometryDict[name][j] # (xy, width, height, rotateY, zorder)
+        # nb: with x axis reversed, xy of rectangle is lower right point
+        poly = Rectangle(_shape(0), _shape(1), _shape(2), zorder=_shape(4))
+        if rotationAngle != 0:
+            rotate = mpl.transforms.Affine2D().rotate_deg_around(poly.get_x() + _shape(1)*0.5, _shape(3), rotationAngle)
+            poly.set_transform(rotate)
+        patches.append(poly)
+        colorArray[i] = getattr(matrix, dof)
+
+        # element labels
+        if drawNames:
+            splitName = name.split("/")
+            if detector == "TT":
+                elementName = "\n".join(splitName[-3:])
+                textSize = 4
+            elif detector == "IT":
+                elementName = "\n".join(splitName[-3::2])
+                textSize = 8
+            elif detector == "OT":
+                elementName = "/".join(splitName[-2:])
+                textSize = 10
+            smallAngleShift = 0
+            if rotationAngle != 0 and detector != "IT":
+                tan = 0.08748866
+                smallAngleShift = - (poly.get_y() + _shape(2)*0.5)*tan*cmp(rotationAngle,0)
+            elementLabel = plt.text(poly.get_x() + _shape(1)*0.5 + smallAngleShift, poly.get_y() + _shape(2)*0.5
+                                   , elementName, verticalalignment='center', horizontalalignment='center', rotation=90-rotationAngle, size=textSize)
+
+    polyCollection = PatchCollection(patches, cmap=mpl.cm.RdBu)
+    polyCollection.set_array(colorArray)
+    polyCollection.set_clim([-diffColorRange, diffColorRange])
+    ax.add_collection(polyCollection)
+
+    cbar = plt.colorbar(polyCollection)
+    if dof.startswith("T"):
+        cbar.set_label("%s (mm)" % dof)
+    elif dof.startswith("R"):
+        cbar.set_label("%s (mrad)" % dof)
+
+    plt.axis('equal')
+
+# this is busted for stereo layers, just putting the labels in the x axis title
+#     if detector == "IT":
+#         ax.text(ax.get_xlim()[0], 0, '$\quad$A side', horizontalalignment='left', verticalalignment='center')
+#         ax.text(ax.get_xlim()[1], 0, '$\!\!\!$ C side', horizontalalignment='right', verticalalignment='center')
+#     else:
+#         ax.text(ax.get_xlim()[0], 0, 'A side     $\qquad$', horizontalalignment='right', verticalalignment='center')
+#         ax.text(ax.get_xlim()[1], 0, '$\quad$C side', horizontalalignment='left', verticalalignment='center')
+
+    detectorOutputDir = os.path.join(*([outputDir] + [detector]))
+    if not os.path.isdir(detectorOutputDir):
+        os.makedirs(detectorOutputDir)
+    layerName = layer.replace("/","_")
+    fileName = "_".join((detector,layerName,dof)) + ".pdf"
+    outputPath = os.path.join(*([detectorOutputDir] + [fileName]))
+    print "Writing %s" % outputPath
+    fig.savefig(outputPath)
+#    plt.show()

@@ -69,3 +69,23 @@ def statusPeriodsFromTable(fileName, nToSkipAtBegin=2):
                     statusPeriods.append(period)
 
     return statusPeriods
+
+def prepareTimePeriods( connection, since, until, tag ):
+    """
+    Method to prepare the appropriate list of StatusTimePeriods depending on whether the connection is to a local sqlite file or the conditions database
+    """
+    pSince = parseTimeMin(since)
+    pUntil = parseTimeMax(until)
+    if len(connection) == 0:
+        timePeriods = list( period for period in statusPeriodsFromTable("$ALIGNMENTDBVISUALISATIONTOOLROOT/data/LHCbStatus2011.txt")
+                           + statusPeriodsFromTable("$ALIGNMENTDBVISUALISATIONTOOLROOT/data/LHCbStatus2012.txt") if period.startTime < pUntil and period.endTime > pSince )
+        for p in timePeriods:
+            if p.startTime < pSince:
+                logging.debug( "Setting start time of %s to %s" % ( p, pSince ) )
+                p.startTime = pSince
+            if p.endTime > pUntil:
+                logging.debug( "Setting end   time of %s to %s" % ( p, pUntil ) )
+                p.endTime = pUntil
+    else:
+        timePeriods = [ StatusTimePeriod( "MagDown", pSince, pUntil ) ]
+    return timePeriods

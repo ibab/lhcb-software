@@ -152,6 +152,7 @@ class AlignableTreeNode(object):
         if parentName:
             fullName = "/".join((parentName, self.name))
         yield fullName, self.value
+#        logging.debug("(in AlignableTreeNode.loop) fullName, self.value: %s, %s" % (fullName, self.value)) # super-verbose
         for c in sorted(self.children, key = lambda ch : ch.name):
             for ccN, ccV in c.loop(fullName):
                 yield ccN, ccV

@@ -32,6 +32,8 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.ERROR)
 
+loggin.basicConfig(level=19)
+
 refConnStr = options.refDbFile
 if refConnStr is not None:
     refConnStr = "sqlite_file:%s/LHCBCOND" % refConnStr

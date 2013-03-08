@@ -59,7 +59,8 @@ def getAlignableTreeFromDetectorElement( detElm, nodeValue=lambda det : None, pa
     # but if there is no node value (no alignment) and all children are None
     # they should not be added (the above statement makes sure it does not get added to the parent then)
     if ( alignNode.value is not None ) or any( cn is not None for cn in alignNode.children ):
-        print "Created alignable tree node for element %s" % name
+#        print "Created alignable tree node for element %s" % name
+        logging.debug("Created alignable tree node for element %s" % name)
         return alignNode
     else:
         return None

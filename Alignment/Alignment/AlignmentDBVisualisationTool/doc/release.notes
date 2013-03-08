@@ -3,6 +3,12 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2013-03-07 - Jason Andrews
+ - Added the script plotAlignHeat
+ - Added supporting methods in AlignmentComparisonPlots, 
+   ParseStatusTable, and Pages
+ - fixed IT.Layers ElementGroup regular expression in Pages
+
 ! 2013-02-13 - Pieter David
  - Added support for TT sensors
  - Changed the method that constructs the alignment tree from the geometry tree

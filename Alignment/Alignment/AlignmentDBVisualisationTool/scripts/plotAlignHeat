@@ -1,0 +1,70 @@
+#!/usr/bin/env python2
+"""
+Command-line script to make alignment heat maps
+Modification of plotAlignDiff by Pieter David <pieter.david@nikhef.nl>
+"""
+__author__ = "Jason Emory Andrews <jea@umd.edu>"
+__date__   = "February 2013"
+
+import logging
+from optparse import OptionParser
+
+class MyParser(OptionParser):
+    # override default epilog formatter because it strips newlines
+    def format_epilog(self, formatter):
+        return self.epilog
+
+parser = MyParser(epilog =
+                  """
+Enter each alignment as either an IOV or the path of an sqlite file.
+Format IOVs as since,until[,condDBtag] with condDBtag optional.
+If more than one IOV is contained in the provided date range, the latest IOV will be used.
+
+Layer name conventions:
+                  TT: TT(a,b)/TT(a(X,U), b(X,V))Layer, eg 'TTb/TTbXLayer' etc.
+                  IT: Station(1-3)/Layer(X1,U,V,X2), eg 'Station2/LayerX1' etc.
+                  OT: T(1-3)/(X1,U,V,X2), eg 'T1/V' etc.
+""")
+parser.usage = "%prog [options] detector dof1,dof2,... alignment1 alignment2"
+parser.add_option("-l", "--layer", dest="layerName", default="all", metavar="LAYERNAME", help="Layer name [default: %default]")
+parser.add_option("-n", "--names", action="store_true", dest="names", default=False, help="Draw element names")
+parser.add_option("-o", "--outdir",    dest="outDirName",     default="AlignmentsCompared", metavar="OUTDIR",
+                  help="Output directory [default: %default]")
+parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Turn on verbose messages")
+
+(options, args) = parser.parse_args()
+
+assert len(args) == 4
+detector = args[0]
+dofs = args[1].split(",")
+alignments = []
+for i in (2,3):
+    alignment = args[i].split(",")
+    if len(alignment) == 1:
+        name = alignment[0].split("/")[-1]
+        alignments.append( ( name, [("sqlite_file:%s/LHCBCOND" % alignment[0], "HEAD")], "2010-01-01", "2013-01-01", "default" ) )
+        print "Alignment %s input as the file %r with path %s" % (str(i - 1), name, alignment[0])
+    else:
+        name = "IOV: " + alignment[0] + " to " + alignment[1]
+        if len(alignment) == 2:
+            tag = "cond-20130114"
+            alignments.append( ( name, [], alignment[0], alignment[1], tag ) )
+            print "Alignment %s input as the %s using CondDBtag %r" % (str(i - 1), name, tag)
+        elif len(alignment) == 3:
+            alignments.append( ( name, [], alignment[0], alignment[1], alignment[2] ) )
+            print "Alignment %s input as the %s using CondDBtag %r" % (str(i - 1), name, alignment[2])
+
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.ERROR)
+
+from CompareAlignmentConstants.AlignmentComparisonPlots import plotAlignmentParametersHeat
+
+plotAlignmentParametersHeat(
+        detector, dofs
+      , alignments
+      , outputDir=options.outDirName
+      , layers=[options.layerName]
+      , drawNames=options.names
+      )
