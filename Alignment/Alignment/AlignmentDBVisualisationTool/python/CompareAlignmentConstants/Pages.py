@@ -531,17 +531,17 @@ def drawHeatPlot( comparisonDescription, detector, layer, dof, outputDir, layerF
     # values will be overwritten, we just need a numpy array at least as big as the fill list
     colorArray = np.array([x for x in range(len(layerFillList))], dtype=np.float64)
 
-    rotationAngle = 0
-    if layer.find("U") != -1: rotationAngle = -5
-    if layer.find("V") != -1: rotationAngle =  5
+    stereoRotation = 0
+    if layer.find("U") != -1: stereoRotation = -5
+    if layer.find("V") != -1: stereoRotation =  5
 
     logging.debug("Building list of alignment elements and color array of corresponding alignment parameters")
     for i, (name, unused, matrix) in enumerate(layerFillList):
         _shape = lambda j: GeometryDict[name][j] # (xy, width, height, rotateY, zorder)
         # nb: with x axis reversed, xy of rectangle is lower right point
         poly = Rectangle(_shape(0), _shape(1), _shape(2), zorder=_shape(4))
-        if rotationAngle != 0:
-            rotate = mpl.transforms.Affine2D().rotate_deg_around(poly.get_x() + _shape(1)*0.5, _shape(3), rotationAngle)
+        if stereoRotation != 0:
+            rotate = mpl.transforms.Affine2D().rotate_deg_around(poly.get_x() + _shape(1)*0.5, _shape(3), stereoRotation)
             poly.set_transform(rotate)
         patches.append(poly)
         colorArray[i] = getattr(matrix, dof)
@@ -551,19 +551,22 @@ def drawHeatPlot( comparisonDescription, detector, layer, dof, outputDir, layerF
             splitName = name.split("/")
             if detector == "TT":
                 elementName = "\n".join(splitName[-3:])
+                labelRotation = 0
                 textSize = 4
             elif detector == "IT":
                 elementName = "\n".join(splitName[-3::2])
+                labelRotation = 90
                 textSize = 8
             elif detector == "OT":
                 elementName = "/".join(splitName[-2:])
+                labelRotation = 90
                 textSize = 10
             smallAngleShift = 0
-            if rotationAngle != 0 and detector != "IT":
+            if stereoRotation != 0 and detector != "IT":
                 tan = 0.08748866
-                smallAngleShift = - (poly.get_y() + _shape(2)*0.5)*tan*cmp(rotationAngle,0)
+                smallAngleShift = - (poly.get_y() + _shape(2)*0.5)*tan*cmp(stereoRotation,0)
             elementLabel = plt.text(poly.get_x() + _shape(1)*0.5 + smallAngleShift, poly.get_y() + _shape(2)*0.5
-                                   , elementName, verticalalignment='center', horizontalalignment='center', rotation=90-rotationAngle, size=textSize)
+                                   , elementName, verticalalignment='center', horizontalalignment='center', rotation=labelRotation-stereoRotation, size=textSize)
 
     polyCollection = PatchCollection(patches, cmap=mpl.cm.RdBu)
     polyCollection.set_array(colorArray)
