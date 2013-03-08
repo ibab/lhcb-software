@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2013-03-08 - Marco Clemencic
+ - Fixed compilation with CMake.
+
 ! 2013-03-05 - Kazu Akiba 
  - adding muondet to TupleToolMuonPid. had to change the requirements file too.
    no variables were added using the muon det element yet. 
