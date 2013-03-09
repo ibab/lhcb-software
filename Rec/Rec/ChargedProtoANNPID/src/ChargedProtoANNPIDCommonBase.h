@@ -20,6 +20,8 @@
 
 // Gaudi
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 // Event Model
 #include "Event/ProtoParticle.h"
@@ -47,7 +49,8 @@ namespace ANNGlobalPID
    */
 
   template <class PBASE>
-  class ChargedProtoANNPIDCommonBase : public PBASE
+  class ChargedProtoANNPIDCommonBase : public PBASE,
+                                       virtual public IIncidentListener
   {
 
   public:
@@ -80,6 +83,9 @@ namespace ANNGlobalPID
      * @retval StatusCode::FAILURE Finalization failed
      */
     virtual StatusCode finalize();
+    
+    /// Implement the handle method for the Incident service.
+    void handle( const Incident& incident );
 
   protected:
 
@@ -126,9 +132,23 @@ namespace ANNGlobalPID
     /// Common Constructor initisalisations
     void initCommonConstructor();
 
+    /// Access on demand the RecSummary object
+    const LHCb::RecSummary * recSummary() const
+    {
+      if ( !m_summary )
+      {
+        m_summary =
+          this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
+      }
+      return m_summary;
+    }
+
   protected:
     
     std::string m_protoPath; ///< Location in TES of ProtoParticles
+
+    /// Cached pointer to the RecSummary object
+    mutable const LHCb::RecSummary * m_summary;
 
   };
 

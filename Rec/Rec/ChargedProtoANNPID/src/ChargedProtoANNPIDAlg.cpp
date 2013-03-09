@@ -52,8 +52,6 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
   StatusCode sc = ChargedProtoANNPIDAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-#ifdef __GNUC__
-
   // ParamFile root
   const std::string paramEnv = "CHARGEDPROTOANNPIDPARAMROOT";
   if ( !getenv(paramEnv.c_str()) ) return Error( "$"+paramEnv+" not set" );
@@ -76,16 +74,68 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     std::string trackType;
     config >> trackType;
 
-    // Track selection cuts
-    double minP(0),minPt(0),maxChiSq(0),minLikelihood(0),maxGhostProb(0);
-    config >> minP;
-    config >> minPt;
-    config >> maxChiSq;
-    config >> minLikelihood;
-    config >> maxGhostProb;
+    // Track selection cuts file name
+    std::string cutsFile;
+    config >> cutsFile;
 
-    // Track Pre-Selection
-    config >> m_trackPreSel;
+    // Check if this string ends with .txt ?
+    if ( cutsFile.find(".txt") != std::string::npos )
+    {
+
+      // New style cuts file, so read from file
+      cutsFile = paramRoot+cutsFile;
+      std::ifstream cuts(cutsFile.c_str());
+      if ( !cuts.is_open() ) return Error( "Track Selection cuts file '" +
+                                           cutsFile + "' cannot be opened" );
+      // Read the cuts and create a cut object for each
+      std::string cut;
+      while ( std::getline(cuts,cut) )
+      {
+        // Skip empty lines or comments
+        if ( !cut.empty() && cut.find("#") == std::string::npos )
+        {
+          // try and make a cut for this string
+          m_cuts.push_back( Cut(cut,this) );
+          if ( !m_cuts.back().isOK() )
+          { return Error( "Failed to decode selection cut '" + cut + "'" ); }
+        }
+      }
+      // close the file
+      cuts.close();
+
+    }
+    else
+    {
+
+      // Old style, so last line and the next few are cut values themselves
+      std::string minP,minPt,maxChiSq,minLikeli,maxGhostProb,trackPreSel;
+      minP = cutsFile;
+      config >> minPt;
+      config >> maxChiSq;
+      config >> minLikeli;
+      config >> maxGhostProb;
+      config >> trackPreSel;
+
+      // Create cut objects
+      bool ok = true;
+      m_cuts.push_back( Cut( "TrackP                > "+minP,         this ) );
+      ok &= m_cuts.back().isOK();
+      m_cuts.push_back( Cut( "TrackPt               > "+minPt,        this ) );
+      ok &= m_cuts.back().isOK();
+      m_cuts.push_back( Cut( "TrackChi2PerDof       < "+maxChiSq,     this ) );
+      ok &= m_cuts.back().isOK();
+      m_cuts.push_back( Cut( "TrackLikelihood       > "+minLikeli,    this ) );
+      ok &= m_cuts.back().isOK();
+      m_cuts.push_back( Cut( "TrackGhostProbability < "+maxGhostProb, this ) );
+      ok &= m_cuts.back().isOK();
+      if ( trackPreSel == "TrackPreSelIsMuon" )
+      {
+        m_cuts.push_back( Cut( "MuonIsMuon > 0.5", this ) );
+        ok &= m_cuts.back().isOK(); 
+      }
+      if ( !ok ) { return Error( "Failed to decode old style track cuts" ); }
+      
+    }
 
     // Proto variable to fill
     if      ( "electron" == particleType ) { m_protoInfo = LHCb::ProtoParticle::ProbNNe; }
@@ -104,34 +154,38 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     std::string paramFileName;
     config >> paramFileName;
     paramFileName = paramRoot+paramFileName;
-    std::ifstream ftest(paramFileName.c_str());
-    if ( !ftest.is_open() ) return Error( "Network parameters file '" +
-                                          paramFileName + "' cannot be opened" );
-    ftest.close();
+    std::ifstream netparamtest(paramFileName.c_str());
+    if ( !netparamtest.is_open() ) return Error( "Network parameters file '" +
+                                                 paramFileName + "' cannot be opened" );
+    netparamtest.close();
 
     // Read the list of inputs
     std::string input;
     StringInputs inputs;
     while ( config >> input )
     {
-      if ( !input.empty() )
+      // Skip empty lines and comments
+      if ( !input.empty() && input.find("#") == std::string::npos )
       {
-        if ( input.find("#") == std::string::npos )
-        {
-          inputs.push_back(input);
-        }
+        inputs.push_back(input);
       }
     }
 
-    // Load the network
+    // Load the network helper object
     if ( "NeuroBayes" == annType )
     {
       // FPE Guard for NB call
       FPE::Guard guard(true);
-      m_netHelper = new NeuroBayesANN( paramFileName, 
+      m_netHelper = new NeuroBayesANN( paramFileName,
                                        variableIDs(inputs),
                                        this,
                                        m_suppressANNPrintout );
+    }
+    else if ( "TMVA" == annType )
+    {
+      m_netHelper = new TMVAANN( paramFileName,
+                                 variableIDs(inputs),
+                                 this );
     }
     else
     {
@@ -140,19 +194,9 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
 
     // Set options for owned TrackSelector
     const std::string trSelName = "TrackSelector";
-    const DoubleProperty      pProp     ( "MinPCut",          minP          );
-    const DoubleProperty      ptProp    ( "MinPtCut",         minPt         );
-    const DoubleProperty      chiProp   ( "MaxChi2Cut",       maxChiSq      );
-    const DoubleProperty      likProp   ( "MinLikelihoodCut", minLikelihood );
-    const DoubleProperty      ghostProp ( "MaxGhostProbCut",  maxGhostProb  );
-    const StringArrayProperty tkProp    ( "TrackTypes", boost::assign::list_of(trackType) );
+    const StringArrayProperty tkProp( "TrackTypes", boost::assign::list_of(trackType) );
     IJobOptionsSvc * joSvc = svc<IJobOptionsSvc>("JobOptionsSvc");
-    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, pProp     );
-    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, ptProp    );
-    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, chiProp   );
-    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, likProp   );
-    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, ghostProp );
-    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, tkProp    );
+    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, tkProp );
     sc = sc && release(joSvc);
     if ( sc.isFailure() )
     { return Error( "Problems setting TrackSelector Properties" ); }
@@ -163,13 +207,14 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     // print a summary of the configuration
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Particle type    = " << particleType << endmsg
-              << "Track Selection  = " << trackType << " " << m_trackPreSel << endmsg
+              << "Track Selection  = " << trackType << endmsg
               << "Network type     = " << annType << endmsg
               << "ConfigFile       = " << configFile << endmsg
               << "ParamFile        = " << paramFileName << endmsg
-              << "ANN inputs (" << inputs.size() << ")  = " << inputs
+              << "ANN inputs (" << inputs.size() << ")  = " << inputs << endmsg
+              << "Preselection Cuts (" << m_cuts.size() << ") = " << m_cuts
               << endmsg;
-
+    
   }
   else
   {
@@ -178,8 +223,6 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
 
   // Close the config file
   config.close();
-
-#endif
 
   // return
   return sc;
@@ -190,8 +233,6 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
 //=============================================================================
 StatusCode ChargedProtoANNPIDAlg::execute()
 {
-
-#ifdef __GNUC__
 
   // Load the charged ProtoParticles
   LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( m_protoPath );
@@ -211,13 +252,20 @@ StatusCode ChargedProtoANNPIDAlg::execute()
     if ( proto->hasInfo(m_protoInfo) )
     {
       std::ostringstream mess;
-      mess << "ProtoParticle already has '" << m_protoInfo << "' information -> Replacing.";
+      mess << "ProtoParticle already has '" << m_protoInfo
+           << "' information -> Replacing.";
       Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
       proto->eraseInfo(m_protoInfo);
     }
 
-    // Track Pre-selection
-    if ( !trackPreSel(proto) ) continue;
+    // ANN Track Selection.
+    bool ok = true;
+    for ( Cut::Vector::const_iterator iC = m_cuts.begin();
+          iC != m_cuts.end(); ++iC )
+    {
+      if ( !(*iC).isSatisfied(proto) ) { ok = false; break; }
+    }
+    if ( !ok ) continue;
 
     // get the ANN output for this proto
     const double nnOut = m_netHelper->getOutput( proto );
@@ -229,58 +277,48 @@ StatusCode ChargedProtoANNPIDAlg::execute()
 
   } // loop over protos
 
-#endif
-
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
-// Run track preselection
+// Cut constructor
 //=============================================================================
-bool
-ChargedProtoANNPIDAlg::trackPreSel( const LHCb::ProtoParticle * proto ) const
+ChargedProtoANNPIDAlg::Cut::Cut( const std::string& desc,
+                                 const ChargedProtoANNPIDAlgBase * parent )
+  : m_parent(parent),
+    m_desc(desc),
+    m_OK(false),
+    m_variable(0),
+    m_cut(0),
+    m_delim(UNDEFINED)
 {
-  bool OK = true;
-  if ( !m_trackPreSel.empty() && "TrackPreSelNone" != m_trackPreSel )
+  // Cuts must have a precise form. Either
+  //    variable > value
+  // or
+  //    variable < value
+
+  // Parse the cut string
+  boost::regex re("\\s+");
+  boost::sregex_token_iterator i( desc.begin(), desc.end(), re, -1 );
+  boost::sregex_token_iterator j;
+  std::vector<std::string> matches;
+  while ( i != j ) { matches.push_back( *i++ ); }
+  if ( matches.size() == 3 )
   {
-    if      ( "TrackPreSelIsLooseMuon" == m_trackPreSel )
-    {
-      OK = ( getInput(proto,"MuonIsLooseMuon") > 0.5 );
-    }
-    else if ( "TrackPreSelIsMuon"      == m_trackPreSel )
-    {
-      OK = ( getInput(proto,"MuonIsMuon") > 0.5 );
-    }
-    else if ( "TrackPreSelHasRICHInfo" == m_trackPreSel )
-    {
-      OK = hasRichInfo(proto);
-    }
-    else if ( "TrackPreSelHasECALInfo" == m_trackPreSel )
-    {
-      OK = hasEcalInfo(proto);
-    }
-    else if ( "TrackPreSelHasECALorRICHInfo" == m_trackPreSel )
-    {
-      OK = ( hasRichInfo(proto) || hasEcalInfo(proto) );
-    }
-    else if ( "TrackPreSelHasECALandRICHInfo" == m_trackPreSel )
-    {
-      OK = ( hasRichInfo(proto) && hasEcalInfo(proto) );
-    }
-    else
-    {
-      OK = false;
-      Exception( "Unknown Track pre-selection '" + m_trackPreSel + "'" );
-    }
+    // Get the variable ID from its name
+    m_variable = m_parent->variableID( matches[0] );
+
+    // Delimitor
+    m_OK = setDelim( matches[1] );
+
+    // The cut value
+    m_cut = boost::lexical_cast<double>( matches[2] );
   }
-  return OK;
 }
-//=============================================================================
 
 //=============================================================================
 // Get ANN output for NeuroBayes network helper
 //=============================================================================
-#ifdef __GNUC__
 double
 ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * proto )
   const
@@ -326,7 +364,33 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
   // return final output
   return nnOut;
 }
-#endif
+
+//=============================================================================
+// Get ANN output for TMVA helper
+//=============================================================================
+double
+ChargedProtoANNPIDAlg::TMVAANN::getOutput( const LHCb::ProtoParticle * proto )
+  const
+{
+  // Fill the array of network inputs
+  unsigned int input = 0;
+  for ( ChargedProtoANNPIDAlgBase::IntInputs::const_iterator iIn = m_inputs.begin();
+        iIn != m_inputs.end(); ++iIn, ++input )
+  {
+    m_inArray[input] = static_cast<float>(m_parent->getInput(proto,*iIn));
+  }
+
+  // get the output
+  double mvaOut = m_reader->EvaluateMVA("PID");
+
+  // Scale to range 0 - 1
+  const double e = 0.002;
+  mvaOut = ( 1 + std::sqrt(std::pow(mvaOut,2)+4.0*e) -
+             std::sqrt(std::pow(mvaOut-1.0,2)+4.0*e) ) / 2.0;
+
+  // return
+  return mvaOut;
+}
 
 //=============================================================================
 //  Finalize

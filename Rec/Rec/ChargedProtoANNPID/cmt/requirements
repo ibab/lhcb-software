@@ -22,6 +22,11 @@ use  ChargedProtoANNPIDParam   v*
 use  RecInterfaces             v*   Rec
 use  neurobayes_expert         v*   LCG_Interfaces
 
+private
+macro_append Boost_linkopts " $(Boost_linkopts_regex) "
+macro_append ROOT_linkopts  " -lMLP -lTMVA "
+end_private
+
 #============================================================================
 # Component library building rule
 #============================================================================

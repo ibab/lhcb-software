@@ -14,6 +14,8 @@
 template <class PBASE>
 void ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initCommonConstructor()
 {
+  // initalise data members
+  m_summary = NULL;
   // Job Options
   this->declareProperty( "ProtoParticleLocation", 
                          m_protoPath = LHCb::ProtoParticleLocation::Charged );
@@ -38,6 +40,11 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initialize()
     return this -> Error( "Failed to initialise Gaudi Base class", sc );
   }
 
+  // Setup incident services
+  IIncidentSvc * incSvc = this -> template svc<IIncidentSvc>( "IncidentSvc", true );
+  incSvc->addListener( this, IncidentType::EndEvent );
+  release(incSvc);
+
   // Printout from initialize
   if ( this -> msgLevel(MSG::DEBUG) )
   {
@@ -45,6 +52,17 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initialize()
   }
 
   return sc;
+}
+//=============================================================================
+
+//=============================================================================
+// Incident handle
+//=============================================================================
+template <class PBASE>
+void 
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::handle ( const Incident& )
+{
+  m_summary = NULL;
 }
 //=============================================================================
 
@@ -257,63 +275,43 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
 
   else if ( (int)LHCb::ProtoParticle::LastGlobal+15 == input )
   {
-    const LHCb::RecSummary * summary =
-      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-    var = summary->info( LHCb::RecSummary::nLongTracks, 0 );
+    var = recSummary()->info( LHCb::RecSummary::nLongTracks, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+16 == input )
   {
-    const LHCb::RecSummary * summary =
-      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-    var = summary->info( LHCb::RecSummary::nDownstreamTracks, 0 );
+    var = recSummary()->info( LHCb::RecSummary::nDownstreamTracks, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+17 == input )
   {
-    const LHCb::RecSummary * summary =
-      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-    var = summary->info( LHCb::RecSummary::nUpstreamTracks, 0 );
+    var = recSummary()->info( LHCb::RecSummary::nUpstreamTracks, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+18 == input )
   {
-    const LHCb::RecSummary * summary =
-      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-    var = summary->info( LHCb::RecSummary::nVeloTracks, 0 );
+    var = recSummary()->info( LHCb::RecSummary::nVeloTracks, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+19 == input )
   {
-    const LHCb::RecSummary * summary =
-      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-    var = summary->info( LHCb::RecSummary::nTTracks, 0 );
+    var = recSummary()->info( LHCb::RecSummary::nTTracks, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+20 == input )
   {
-    const LHCb::RecSummary * summary =
-      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-    var = summary->info( LHCb::RecSummary::nPVs, 0 );
+    var = recSummary()->info( LHCb::RecSummary::nPVs, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+21 == input )
   {
-    const LHCb::RecSummary * summary =
-      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-    var = summary->info( LHCb::RecSummary::nSPDhits, 0 );
+    var = recSummary()->info( LHCb::RecSummary::nSPDhits, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+22 == input )
   {
-    const LHCb::RecSummary * summary =
-      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-    var = summary->info( LHCb::RecSummary::nRich1Hits, 0 );
+    var = recSummary()->info( LHCb::RecSummary::nRich1Hits, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+23 == input )
   {
-    const LHCb::RecSummary * summary =
-      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-    var = summary->info( LHCb::RecSummary::nRich2Hits, 0 );
+    var = recSummary()->info( LHCb::RecSummary::nRich2Hits, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+30 == input )
   {
-    const LHCb::RecSummary * summary =
-      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-    var = summary->info( LHCb::RecSummary::nMuonTracks, 0 );
+    var = recSummary()->info( LHCb::RecSummary::nMuonTracks, 0 );
   }
 
   // -----------------------------------------------------------------------------------------------

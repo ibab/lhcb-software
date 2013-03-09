@@ -4,6 +4,13 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-03-09 - Chris Jones
+ - Add support for TMVA based network tunings.
+ - Update preselection cut handling to handle the new still text file based
+   specification the training application now uses.
+ - Improve access to RecSummary to prevent multiple loads from the TES each 
+   events.
+
 ! 2013-02-18 - Chris Jones
  - Print some basic statistics of the ANNPID distributions during finalize,
    to help monitor for instabilities in the expert.

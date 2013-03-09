@@ -26,16 +26,19 @@
 // Event Model
 #include "Event/ProtoParticle.h"
 
-// NeuroBayes (only on linux with gcc for the moment)
-#ifdef __GNUC__
+// NeuroBayes
 #include "NeuroBayesExpert.hh"
-#endif
+
+// TMVA
+#include "TMVA/Reader.h"
 
 // interfaces
 #include "TrackInterfaces/ITrackSelector.h"
 
 // boost
+#include "boost/lexical_cast.hpp"
 #include "boost/assign/list_of.hpp"
+#include "boost/regex.hpp"
 
 // FPE exception protection
 #include "Kernel/FPEGuard.h"
@@ -102,7 +105,6 @@ namespace ANNGlobalPID
       const ChargedProtoANNPIDAlgBase *    m_parent; ///< Pointer to parent algorithm
     };
 
-#ifdef __GNUC__
     /** @class ANNHelper ChargedProtoANNPIDAlg.h
      *
      *  Helper class for NeuroBayes networks
@@ -120,6 +122,7 @@ namespace ANNGlobalPID
        *  @param paramFileName Network tuning parameter file
        *  @param inputs The list of inputs needed for this network
        *  @param parent Point to parent algorithm
+       *  @param suppressPrintout Supress all output from NeuroBayes
        */
       NeuroBayesANN( const std::string &                  paramFileName,
                      const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
@@ -140,26 +143,103 @@ namespace ANNGlobalPID
       float * m_inArray;  ///< Working array for network inputs
       bool m_suppressPrintout; ///< Suppress any printout from NeuroBayes
     };
-#endif
+
+    /** @class TMVAANN ChargedProtoANNPIDAlg.h
+     *
+     *  Helper class for TMVAANN networks
+     *
+     *  @author Chris Jones
+     *  @date   2010-03-09
+     */
+    class TMVAANN : public ANNHelper
+    {
+    private:
+      /// No default constructor
+      TMVAANN() : m_reader(NULL) { }
+    public:
+      /** Constructor from information
+       *  @param paramFileName Network tuning parameter file
+       *  @param inputs The list of inputs needed for this network
+       *  @param parent Point to parent algorithm
+       */
+      TMVAANN( const std::string &                  paramFileName,
+               const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
+               const ChargedProtoANNPIDAlgBase *           parent )
+        : ANNHelper ( inputs, parent ),
+          m_reader  ( new TMVA::Reader( parent->msgLevel(MSG::DEBUG) ? 
+                                        "!Color:!Silent" : "!Color:Silent" ) ),
+          m_inArray ( new float[inputs.size()]          )
+      {
+        int i = 0;
+        for ( ChargedProtoANNPIDAlgBase::IntInputs::const_iterator iIn = inputs.begin();
+              iIn != inputs.end(); ++iIn, ++i )
+        {
+          m_reader->AddVariable( (parent->stringID(*iIn)).c_str(), &(m_inArray[i]) );
+        }
+        m_reader->BookMVA( "PID", paramFileName.c_str() );
+      }
+      /// Destructor
+      virtual ~TMVAANN() { delete m_reader; delete[] m_inArray; }
+    public:
+      /// Compute the ANN output for the given ProtoParticle
+      virtual double getOutput( const LHCb::ProtoParticle * proto ) const;
+    private:
+      TMVA::Reader * m_reader; ///< The TMVA reader
+      float * m_inArray;  ///< Working array for network inputs
+    };
 
   private:
 
-    /// Checks if the ProtoParticle has any RICH information
-    bool hasRichInfo( const LHCb::ProtoParticle * proto ) const
+    /** @class Cut ChargedProtoANNPIDAlg.h
+     *
+     *  Cut object
+     *
+     *  @author Chris Jones
+     *  @date   2010-03-09
+     */
+    class Cut
     {
-      return ( getInput(proto,"RichUsedAero")  > 0.5 ||
-               getInput(proto,"RichUsedR1Gas") > 0.5 ||
-               getInput(proto,"RichUsedR2Gas") > 0.5 );
-    }
-
-    /// Checks if the ProtoParticle has any ECAL information
-    bool hasEcalInfo( const LHCb::ProtoParticle * proto ) const
-    {
-      return ( getInput(proto,"InAccEcal")  > 0.5 );
-    }
-
-    /// Run track preselection
-    bool trackPreSel( const LHCb::ProtoParticle * proto ) const;
+    public:
+      typedef std::vector<Cut> Vector;
+    private:
+      enum Delim { UNDEFINED = -1, GT, LT };
+    public:
+      /// Default from Constructor
+      Cut( const std::string& desc = "NOTDEFINED",
+           const ChargedProtoANNPIDAlgBase * parent = NULL );
+      /// Is this object well defined
+      bool isOK() const { return m_OK; }
+      /// Does the ProtoParticle pass the cut
+      bool isSatisfied( const LHCb::ProtoParticle * proto ) const
+      {
+        const double var = m_parent->getInput( proto, m_variable );
+        return ( m_delim == GT ? var > m_cut :
+                 m_delim == LT ? var < m_cut :
+                 false );
+      }
+      /// Cut description
+      const std::string description() const { return m_desc; }
+    public:
+      /// Overload output to ostream
+      friend inline std::ostream& operator << ( std::ostream& s, const Cut & cut )
+      { return s << "'" << cut.description() << "'" ; }
+    private:
+      /// Set the delimitor enum from a string
+      bool setDelim( const std::string & delim )
+      {
+        bool ok = false;
+        if      ( ">" == delim ) { m_delim = GT; ok = true; }
+        else if ( "<" == delim ) { m_delim = LT; ok = true; }
+        return ok;
+      }
+    private:
+      const ChargedProtoANNPIDAlgBase * m_parent; ///< Pointer to parent algorithm
+      std::string m_desc; ///< The cut description
+      bool m_OK;          ///< Is this cut well defined
+      int m_variable;     ///< The variable ID number
+      double m_cut;       ///< The cut value
+      Delim m_delim;      ///< The delimitor
+    };
 
   private:
 
@@ -168,9 +248,6 @@ namespace ANNGlobalPID
 
     /// Track selector tool
     ITrackSelector * m_trSel;
-
-    /// Track Pre-selection
-    std::string m_trackPreSel;
 
     /// Configuration file
     std::string m_configFile;  
@@ -186,6 +263,9 @@ namespace ANNGlobalPID
 
     /// Suppress all printout from the ANN experts
     bool m_suppressANNPrintout;
+
+    /// Vector of cuts to apply
+    Cut::Vector m_cuts;
 
   };
 
