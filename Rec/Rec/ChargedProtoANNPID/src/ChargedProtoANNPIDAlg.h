@@ -110,7 +110,7 @@ namespace ANNGlobalPID
      *  Helper class for NeuroBayes networks
      *
      *  @author Chris Jones
-     *  @date   2010-03-09
+     *  @date   2013-03-09
      */
     class NeuroBayesANN : public ANNHelper
     {
@@ -149,7 +149,7 @@ namespace ANNGlobalPID
      *  Helper class for TMVAANN networks
      *
      *  @author Chris Jones
-     *  @date   2010-03-09
+     *  @date   2013-03-09
      */
     class TMVAANN : public ANNHelper
     {
@@ -168,7 +168,7 @@ namespace ANNGlobalPID
         : ANNHelper ( inputs, parent ),
           m_reader  ( new TMVA::Reader( parent->msgLevel(MSG::DEBUG) ? 
                                         "!Color:!Silent" : "!Color:Silent" ) ),
-          m_inArray ( new float[inputs.size()]          )
+          m_inArray ( new float[inputs.size()] )
       {
         int i = 0;
         for ( ChargedProtoANNPIDAlgBase::IntInputs::const_iterator iIn = inputs.begin();
@@ -192,7 +192,7 @@ namespace ANNGlobalPID
 
     /** @class Cut ChargedProtoANNPIDAlg.h
      *
-     *  Cut object
+     *  ProtoParticle selection cut
      *
      *  @author Chris Jones
      *  @date   2010-03-09
@@ -200,9 +200,11 @@ namespace ANNGlobalPID
     class Cut
     {
     public:
+      /// Vector of cuts
       typedef std::vector<Cut> Vector;
     private:
-      enum Delim { UNDEFINED = -1, GT, LT };
+      /// Delimitor enum
+      enum Delim { UNDEFINED = -1, GT, LT, GE, LE };
     public:
       /// Default from Constructor
       Cut( const std::string& desc = "NOTDEFINED",
@@ -213,8 +215,10 @@ namespace ANNGlobalPID
       bool isSatisfied( const LHCb::ProtoParticle * proto ) const
       {
         const double var = m_parent->getInput( proto, m_variable );
-        return ( m_delim == GT ? var > m_cut :
-                 m_delim == LT ? var < m_cut :
+        return ( m_delim == GT ? var >  m_cut :
+                 m_delim == LT ? var <  m_cut :
+                 m_delim == GE ? var >= m_cut :
+                 m_delim == LE ? var <= m_cut :
                  false );
       }
       /// Cut description
@@ -228,8 +232,10 @@ namespace ANNGlobalPID
       bool setDelim( const std::string & delim )
       {
         bool ok = false;
-        if      ( ">" == delim ) { m_delim = GT; ok = true; }
-        else if ( "<" == delim ) { m_delim = LT; ok = true; }
+        if      ( ">"  == delim ) { m_delim = GT; ok = true; }
+        else if ( "<"  == delim ) { m_delim = LT; ok = true; }
+        else if ( ">=" == delim ) { m_delim = GE; ok = true; }
+        else if ( "<=" == delim ) { m_delim = LE; ok = true; }
         return ok;
       }
     private:

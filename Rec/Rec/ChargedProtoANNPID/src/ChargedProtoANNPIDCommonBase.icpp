@@ -34,22 +34,23 @@ template <class PBASE>
 StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initialize()
 {
   // Execute the base class initialize
-  const StatusCode sc = PBASE::initialize();
+  StatusCode sc = PBASE::initialize();
   if ( sc.isFailure() )
   {
     return this -> Error( "Failed to initialise Gaudi Base class", sc );
   }
-
-  // Setup incident services
-  IIncidentSvc * incSvc = this -> template svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::EndEvent );
-  release(incSvc);
 
   // Printout from initialize
   if ( this -> msgLevel(MSG::DEBUG) )
   {
     this -> debug() << "Initialize" << endmsg;
   }
+
+  // Setup incident services
+  IIncidentSvc * incSvc = 
+    this -> template svc<IIncidentSvc>( "IncidentSvc", true );
+  incSvc->addListener( this, IncidentType::EndEvent );
+  sc = sc && release(incSvc);
 
   return sc;
 }
