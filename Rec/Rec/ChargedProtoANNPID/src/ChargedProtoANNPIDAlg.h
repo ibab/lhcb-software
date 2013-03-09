@@ -39,6 +39,7 @@
 #include "boost/lexical_cast.hpp"
 #include "boost/assign/list_of.hpp"
 #include "boost/regex.hpp"
+#include "boost/algorithm/string.hpp"
 
 // FPE exception protection
 #include "Kernel/FPEGuard.h"

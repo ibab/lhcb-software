@@ -314,6 +314,9 @@ ChargedProtoANNPIDAlg::Cut::Cut( const std::string& desc,
     // The cut value
     m_cut = boost::lexical_cast<double>( matches[2] );
   }
+
+  // Remove spaces from the cached description string
+  boost::erase_all( m_desc, " " );
 }
 
 //=============================================================================
