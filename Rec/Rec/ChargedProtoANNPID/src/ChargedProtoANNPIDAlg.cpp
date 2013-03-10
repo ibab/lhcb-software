@@ -87,6 +87,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
       std::ifstream cuts(cutsFile.c_str());
       if ( !cuts.is_open() ) return Error( "Track Selection cuts file '" +
                                            cutsFile + "' cannot be opened" );
+
       // Read the cuts and create a cut object for each
       std::string cut;
       while ( std::getline(cuts,cut) )
@@ -100,6 +101,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
           { return Error( "Failed to decode selection cut '" + cut + "'" ); }
         }
       }
+
       // close the file
       cuts.close();
 

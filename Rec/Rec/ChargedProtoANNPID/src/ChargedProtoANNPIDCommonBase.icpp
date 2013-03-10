@@ -50,7 +50,7 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initialize()
   IIncidentSvc * incSvc = 
     this -> template svc<IIncidentSvc>( "IncidentSvc", true );
   incSvc->addListener( this, IncidentType::EndEvent );
-  sc = sc && release(incSvc);
+  sc = sc && this -> releaseSvc(incSvc);
 
   return sc;
 }
