@@ -45,10 +45,10 @@ from Configurables import L0MuonAlg
 L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 
 EventSelector().Input = [
-    "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/81349_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'",
-    "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/80881_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'",
-    "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/79647_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'",
-    "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/79646_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'"
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/e/evh/81349/81349_0x002a_MBNB_L0Phys.raw' SVC='LHCb::MDFSelector'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/e/evh/80881/80881_0x002a_MBNB_L0Phys.raw' SVC='LHCb::MDFSelector'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/e/evh/79647/79647_0x002a_MBNB_L0Phys.raw' SVC='LHCb::MDFSelector'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/e/evh/79646/79646_0x002a_MBNB_L0Phys.raw' SVC='LHCb::MDFSelector'"
     ]
 EventSelector().PrintFreq = 100
 
