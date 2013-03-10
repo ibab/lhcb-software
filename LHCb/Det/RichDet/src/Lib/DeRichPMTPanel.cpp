@@ -547,20 +547,32 @@ void DeRichPMTPanel::Rich1SetupPMTModulesWithLens()
   int aRowR1 =  2*m_RichPmtNumModulesInRowCol[0];
   int aColR1 =  m_RichPmtNumModulesInRowCol[1];
   m_RichPmtModuleLensFlag.clear();
-  m_RichPmtModuleLensFlag.assign(aRowR1*aColR1, false);
+  m_RichPmtModuleLensFlag.reserve(aRowR1*aColR1);
+  m_RichPmtModuleLensFlag.resize(aRowR1*aColR1);
+  
+  //m_RichPmtModuleLensFlag.assign(aRowR1*aColR1, false);
   
   for (int r=0; r<aRowR1  ; ++r ) {
     for(int c=0; c<aColR1 ; ++c ){
       int m=(r*aColR1)+c;
-      std::vector<int>::const_iterator location= find(m_Rich1PmtLensModuleCol.begin(),
+      m_RichPmtModuleLensFlag[m]=false;
+      if( (int) (m_Rich1PmtLensModuleCol.size()) > 0) {
+        
+        std::vector<int>::const_iterator location= find(m_Rich1PmtLensModuleCol.begin(),
                                                       m_Rich1PmtLensModuleCol.end(), c);
-      if(location != m_Rich1PmtLensModuleCol.end() ) m_RichPmtModuleLensFlag[m]=true;      
+        if(location != m_Rich1PmtLensModuleCol.end() ) m_RichPmtModuleLensFlag[m]=true;      
+      }
+      
+      
+      
     }  
     
   }
   
   
 }
+
+
 
 bool DeRichPMTPanel::isCurrentPmtModuleWithLens(const int aModuleNum) 
 {
@@ -909,10 +921,10 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
 
       if(aPmtPixelCol < 0 ) aPmtPixelCol=0;
       if(aPmtPixelRow  < 0) aPmtPixelRow=0;
-      if( aPmtPixelCol >=  m_PmtPixelsInRow )aPmtPixelCol= m_PmtPixelsInRow;
-      if( aPmtPixelRow >=  m_PmtPixelsInCol )aPmtPixelRow = m_PmtPixelsInCol;
+      if( aPmtPixelCol >=  m_PmtPixelsInRow )aPmtPixelCol= m_PmtPixelsInRow-1;
+      if( aPmtPixelRow >=  m_PmtPixelsInCol )aPmtPixelRow = m_PmtPixelsInCol-1;
 
-      // info() <<"  pixel col row from lcoal coord to store "<<aPmtPixelCol <<"   "<<aPmtPixelRow<<endmsg;
+      // info() <<"  pixel col row from local coord to store "<<aPmtPixelCol <<"   "<<aPmtPixelRow<<endmsg;
 
 
       aCh[2] = aPmtPixelCol;
