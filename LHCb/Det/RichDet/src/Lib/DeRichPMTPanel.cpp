@@ -36,17 +36,24 @@ const CLID CLID_DeRichPMTPanel = 12020;  // User defined
 //=============================================================================
 DeRichPMTPanel::DeRichPMTPanel( const std::string & name )
   : DeRichPDPanel ( name ),
-    m_DePMTModules(1),
+    m_DePMTModules(std::vector<IDetectorElement*> (1)),
     m_DePMTs(1,std::vector<DeRichPMT*>(2)),
     m_DePMTAnodes(1,std::vector<IDetectorElement*>(2)),
-    m_PmtModulePlaneHalfSizeR1(0),
-    m_PmtModulePlaneHalfSizeR2(0),
-    m_RichPmtNumModulesInRowCol(4),
-    m_RichPmtModuleCopyNumBeginPanel(4),
-    m_RichPmtModuleCopyNumEndPanel(4),
-    m_RichPmtModuleActiveAreaHalfSize(2),
-    m_NumPmtInRowCol(2),
-    m_NumPmtModuleInRich(4)
+    m_PmtModulePlaneHalfSizeR1( std::vector<double> (0)),
+    m_PmtModulePlaneHalfSizeR2( std::vector<double>(0)),
+    m_RichPmtNumModulesInRowCol(std::vector<int>(4)),
+    m_RichPmtModuleCopyNumBeginPanel(std::vector<int>(4)),
+    m_RichPmtModuleCopyNumEndPanel(std::vector<int>(4)),
+    m_RichPmtModuleActiveAreaHalfSize(std::vector<double>(2)),
+    m_NumPmtInRowCol(std::vector<int>(2)),
+    m_NumPmtModuleInRich(std::vector<int>(4)),
+    m_Rich1PmtLensPresence(0),
+    m_Rich1PmtLensModuleCol(std::vector<int>(0)),
+    m_RichPmtModuleLensFlag(std::vector<bool>(350)),
+    m_Rich1PmtPanelWithLensXSize(std::vector<double>(2)),
+    m_Rich1PmtPanelWithLensYSize(std::vector<double>(2)),
+    m_Rich1PmtPanelWithLensColSize(std::vector<int>(2)),
+    m_RichNumLensPmtinModuleRowCol(std::vector<int>(2))
 {
   // Set the PD type to PMT
   m_pdType = LHCb::RichSmartID::MaPMTID;
@@ -510,9 +517,11 @@ StatusCode DeRichPMTPanel::getPanelGeometryInfo()
       
       if(exists("Rich1PmtLensPresence") ){
         m_Rich1PmtLensPresence  = firstRich->  param<int>("Rich1PmtLensPresence");
-        m_Rich1PmtLensModuleCol = firstRich->  param<std::vector<int> >("Rich1PmtLensModuleColumns"); 
+      }
 
-
+      if(m_Rich1PmtLensPresence >= 1 ) {
+        
+        m_Rich1PmtLensModuleCol = firstRich->  param<std::vector<int> >("Rich1PmtLensModuleColumns");
         m_PmtMasterWithLensLateralSize = firstRich->param<double>("RichLensPmtMasterLateralSize" );
         m_PmtModuleWithLensPitch = firstRich->param<double>("RichLensPmtModulePitch");
         m_PmtLensPitch=firstRich->param<double>("RichLensPmtPitch");
@@ -527,10 +536,20 @@ StatusCode DeRichPMTPanel::getPanelGeometryInfo()
           m_RichNumLensPmtinModuleRowCol[1] =  firstRich->param<int> ( "RichLensPmtNumInModuleCol" );
           m_Rich1LensMagnificationFactor = firstRich->param<double> ("RichPmtLensMagnficationFactor"    );
           
+          Rich1SetupPMTModulesWithLens();
+       
+      }else {
+        for (int i=0; i< (int)m_RichPmtModuleLensFlag.size(); ++i ) {
+          m_RichPmtModuleLensFlag[i]=false;    
+        }
+        
         
       }
+      
+      
+      
     
-      Rich1SetupPMTModulesWithLens();
+      
     
 
   
