@@ -498,6 +498,8 @@ class Boole(LHCbConfigurableUser):
                     seq.Members += [ MCSTDigitCreator("MCTTDigitCreatorPrevPrev",DetType=det) ]
                     seq.Members += [ STDigitCreator("TTDigitCreatorNext",DetType=det) ]
                     seq.Members += [ STDigitCreator("TTDigitCreatorPrevPrev",DetType=det) ]
+                elif det == "UT":
+                    pass
                 else:
                     raise RuntimeError("Unknown ST detector '%s'"%det)
                 seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%sPrev"%(det,tae),DetType=det) ]

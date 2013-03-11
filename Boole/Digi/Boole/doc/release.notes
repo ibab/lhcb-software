@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changed configuration for UT to avoid an exception when using DataType
+ Upgrade.
+
  - Added qmtests and reference files for the upgrade
    . boole-vp-ut-ft
    . boole-vl-ut-ft
