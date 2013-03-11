@@ -389,9 +389,14 @@ ChargedProtoANNPIDAlg::TMVAANN::getOutput( const LHCb::ProtoParticle * proto )
   double mvaOut = m_reader->EvaluateMVA("PID");
 
   // Scale to range 0 - 1
-  const double e = 0.002;
-  mvaOut = ( 1 + std::sqrt(std::pow(mvaOut,2)+4.0*e) -
-             std::sqrt(std::pow(mvaOut-1.0,2)+4.0*e) ) / 2.0;
+  // Not needed for EstimatorType=CE networks
+//   const double e = 0.002;
+//   mvaOut = ( 1 + std::sqrt(std::pow(mvaOut,2)+4.0*e) -
+//              std::sqrt(std::pow(mvaOut-1.0,2)+4.0*e) ) / 2.0;
+
+  // Final sanity check
+  if      ( mvaOut > 1.0 ) { mvaOut = 1.0; }
+  else if ( mvaOut < 0.0 ) { mvaOut = 0.0; }
 
   // return
   return mvaOut;

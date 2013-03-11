@@ -4,6 +4,10 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-03-11 - Chris Jones
+ - Remove rescaling of the TMVA output value. Not required if EstimatorType=CE
+   is used (which looks promising in tests).
+
 ! 2013-03-09 - Chris Jones
  - Add support for TMVA based network tunings.
  - Update preselection cut handling to support the new style text file based

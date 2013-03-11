@@ -132,7 +132,7 @@ namespace ANNGlobalPID
         : ANNHelper ( inputs, parent ),
           m_expert  ( new Expert(paramFileName.c_str(),-2) ),
           m_inArray ( new float[inputs.size()]             ),
-          m_suppressPrintout (            suppressPrintout )
+          m_suppressPrintout ( suppressPrintout            )
       { }
       /// Destructor
       virtual ~NeuroBayesANN() { delete m_expert; delete[] m_inArray; }
