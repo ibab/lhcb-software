@@ -4,6 +4,9 @@
 ! Purpose     : Fit parameters for the pattern
 !-----------------------------------------------------------------------------
 
+! 2013-03-11 - Marco Clemencic
+ - Fixed compilation with C++11.
+ 
 ! 2013-02-26 - Marco Cattaneo
  - Fix gcc -pedentic warnings
 

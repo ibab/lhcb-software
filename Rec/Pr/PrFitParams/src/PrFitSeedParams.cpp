@@ -46,12 +46,17 @@ PrFitSeedParams::PrFitSeedParams( const std::string& name,
   // for many of these parameters, PatSeeding only takes the first one
   // while we fit for several to disentangle dependencies which would
   // move the values we'd obtain away from their "best" value
-  declareProperty( "InitialArrowParams", m_initialArrowParams  = boost::assign::list_of(4.21826e-09)(-8.93796e-08)(0.372981) );
-  declareProperty( "MomentumScaleParams",m_momentumScaleParams  = boost::assign::list_of(40.3751)(1163.24)(-682850) );
-  declareProperty( "zMagnetParams",      m_zMagParams = boost::assign::list_of(5372.27)(-3111.41)(384.74) );
+  std::vector<double> tmp1 = boost::assign::list_of(4.21826e-09)(-8.93796e-08)(0.372981);
+  declareProperty( "InitialArrowParams", m_initialArrowParams  = tmp1);
+  std::vector<double> tmp2 = boost::assign::list_of(40.3751)(1163.24)(-682850);
+  declareProperty( "MomentumScaleParams",m_momentumScaleParams  = tmp2 );
+  std::vector<double> tmp3 = boost::assign::list_of(5372.27)(-3111.41)(384.74);
+  declareProperty( "zMagnetParams",      m_zMagParams = tmp3 );
 
-  declareProperty( "dRatioParams",      m_dRatio = boost::assign::list_of(-3.77e-4)(4.7) );
-  declareProperty( "yCorrectionParams", m_yCorrection = boost::assign::list_of(1.25e-14) );
+  std::vector<double> tmp4 = boost::assign::list_of(-3.77e-4)(4.7);
+  declareProperty( "dRatioParams",      m_dRatio = tmp4 );
+  std::vector<double> tmp5 = boost::assign::list_of(1.25e-14);
+  declareProperty( "yCorrectionParams", m_yCorrection = tmp5 );
  
   m_nEvent = 0;
   m_nTrack = 0;
