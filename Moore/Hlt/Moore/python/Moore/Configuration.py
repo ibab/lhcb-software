@@ -458,7 +458,8 @@ class Moore(LHCbConfigurableUser):
                 self.setOtherProps( L0Conf(), [ "ReplaceL0BanksWithEmulated" , "DataType" ] )
                 log.info("Will rerun L0")
             if ( self.getProp("RunL0Emulator") ):
-                self.setOtherProps( L0Conf(), [ "SimulateL0" , "DataType" ] )
+                L0Conf().setProp("SimulateL0",True)
+                self.setOtherProps( L0Conf(), [ "DataType" ] )
                 log.info("Will run L0 emulator")
 
 

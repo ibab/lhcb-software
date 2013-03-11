@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : R. Lambert, G. Raven
 Purpose     : LHCb HLT application
 
+! 2013-03-11 - Rob Lambert
+ - Fix obvious cut-paste error, see task #39741
+
 ! 2013-03-10 - Rob Lambert
  - Update existing test files... tests all still fail, but for other reasons.
 
