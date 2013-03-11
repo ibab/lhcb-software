@@ -75,7 +75,8 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty( "DetType"            , m_detType = "IT" );
   declareProperty( "ClusterCollector"   , m_clustercollectorName = m_detType+"ClusterCollector");  
   declareProperty( "HitExpectation"     , m_expectedHitsToolName = m_detType+"HitExpectation");  
-  declareProperty( "Cuts"               , m_spacialCuts = list_of( 300. * Gaudi::Units::um ) );
+  std::vector<double> tmp = list_of( 300. * Gaudi::Units::um );
+  declareProperty( "Cuts"               , m_spacialCuts = tmp );
   declareProperty( "XLayerCut"          , m_xCut = 300. * Gaudi::Units::um );
   declareProperty( "StereoLayerCut"     , m_stereoCut = 300. * Gaudi::Units::um );
   declareProperty( "MinExpectedSectors" , m_minExpSectors = 10 );
