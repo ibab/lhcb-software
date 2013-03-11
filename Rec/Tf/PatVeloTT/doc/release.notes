@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-03-11 - Sebastian Neubert
+- PatVeloTT now uses PatVeloTTTool through the correct interface 
+
 ! 2013-03-08 - Sebastian Neubert
 - PatVeloTTTool now implements ITracksFromTrack
 

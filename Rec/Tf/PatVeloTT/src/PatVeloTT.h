@@ -60,7 +60,7 @@
     /// The fitter tool
     std::string m_fitterName;
     ITrackFitter* m_tracksFitter;
-    PatVeloTTTool* m_veloTTTool;
+    ITracksFromTrack* m_veloTTTool;
     std::vector< std::string > m_inputUsedTracksNames;
     double m_maxChi2;
     bool m_fitTracks; 

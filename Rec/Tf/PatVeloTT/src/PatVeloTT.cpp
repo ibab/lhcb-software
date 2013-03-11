@@ -60,7 +60,7 @@ StatusCode PatVeloTT::initialize() {
 
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
-  m_veloTTTool = tool<PatVeloTTTool>("PatVeloTTTool", "PatVeloTTTool");
+  m_veloTTTool = tool<ITracksFromTrack>("PatVeloTTTool", "PatVeloTTTool");
   
   m_trackSelector = NULL;
   if (m_trackSelectorName != "None")
@@ -128,7 +128,7 @@ StatusCode PatVeloTT::execute() {
 
     LHCb::Track* velotr = *itv;
  
-    m_veloTTTool->recoVeloTT(*velotr, tmptracks);
+    m_veloTTTool->tracksFromTrack(*velotr, tmptracks).ignore();
 
     for (itvtmp = tmptracks.begin(); itvtmp != tmptracks.end(); ++itvtmp ) {
 
