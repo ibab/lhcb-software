@@ -35,8 +35,8 @@ ChargedParticlesToTracks::ChargedParticlesToTracks( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
 {
-  declareProperty( "ParticlesLocations"    , 
-                   m_partloc = list_of( "/Event/CharmCompleteEvent/Phys/D2hhCompleteEventPromptD2KPiLine/Particles" ) ) ;
+  std::vector<std::string> tmp = list_of( "/Event/CharmCompleteEvent/Phys/D2hhCompleteEventPromptD2KPiLine/Particles" );
+  declareProperty( "ParticlesLocations"    , m_partloc = tmp ) ;
   declareProperty( "TracksOutputLocation"  , 
                    m_trackOutputLocation = "/Event/Rec/Track/MyBest" ) ;
   declareProperty( "MassWindow"            , m_masswindow = -1. );

@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-03-11 - Marco Clemencic
+ - Fixed compilation with C++11.
+ 
 !========================= TrackUtils v1r50 2013-02-14 =========================
 ! 2013-01-29 - Jianchun Wang
  - Add UT in TrackHitAdder.
