@@ -189,6 +189,7 @@ class DstConf(LHCbConfigurableUser):
                     # Digi headers
                     DigiConf().addHeaders(writer)
                     DigiConf().addMCTrackInfo(writer)
+                    DigiConf().addMCCaloInfo(writer)
 
                     if dType == "XDST":
                         # Digitisation summaries

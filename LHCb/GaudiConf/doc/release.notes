@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-03-11 - Chris Jones
+ - Add Ecal and Hcal linkers back to standardf DSTs, as they are needed for MC
+   matching in DaVinci.
+
 !========================= GaudiConf v17r7 2013-03-06 =========================
 ! 2013-03-06 - Gloria Corti
  - Fix type of SaveHepMC to be a bool in SimConf. Bug, introduced in v17r0,

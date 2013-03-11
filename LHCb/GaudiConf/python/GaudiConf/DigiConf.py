@@ -125,30 +125,26 @@ class DigiConf(LHCbConfigurableUser):
         # Links to MCParticles
         dets = self.getProp("Detectors")
         if 'Velo' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/Velo/Clusters#1"]
+            writer.ItemList += ["/Event/Link/Raw/Velo/Clusters#1"]
         if 'VP' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/VP/Clusters#1"]
+            writer.ItemList += ["/Event/Link/Raw/VP/Clusters#1"]
         if 'VL' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/VL/Clusters#1"]
+            writer.ItemList += ["/Event/Link/Raw/VL/Clusters#1"]
         if 'L0' in dets :
-                    writer.OptItemList += ["/Event/Link/Trig/L0/Calo#1"]
-                    writer.OptItemList += ["/Event/Link/Trig/L0/FullCalo#1"]
+            writer.OptItemList += ["/Event/Link/Trig/L0/Calo#1"]
+            writer.OptItemList += ["/Event/Link/Trig/L0/FullCalo#1"]
         if 'TT' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/TT/Clusters#1"]
+            writer.ItemList += ["/Event/Link/Raw/TT/Clusters#1"]
         if 'UT' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/UT/Clusters#1"]
+            writer.ItemList += ["/Event/Link/Raw/UT/Clusters#1"]
         if 'IT' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/IT/Clusters#1"]
+            writer.ItemList += ["/Event/Link/Raw/IT/Clusters#1"]
         if 'OT' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/OT/Times#1"]
+            writer.ItemList += ["/Event/Link/Raw/OT/Times#1"]
         if 'FT' in dets :
             writer.ItemList += ["/Event/Link/Raw/FT/Clusters#1"]
-
-        if 'Calo' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/Ecal/Digits#1"]
-                    writer.ItemList += ["/Event/Link/Raw/Hcal/Digits#1"]
         if 'Muon' in dets :
-                    writer.ItemList += ["/Event/Link/Raw/Muon/Digits#1"]
+            writer.ItemList += ["/Event/Link/Raw/Muon/Digits#1"]
 
     def addMCTrackInfo( self, writer ):
         
@@ -157,6 +153,12 @@ class DigiConf(LHCbConfigurableUser):
         if 'Tr' in dets :
             writer.ItemList += ["/Event/MC/TrackInfo#1"]
 
+    def addMCCaloInfo( self, writer ):
+        # For calo matching in DaVinci
+        dets = self.getProp("Detectors")
+        if 'Calo' in dets :
+            writer.ItemList += ["/Event/Link/Raw/Ecal/Digits#1"]
+            writer.ItemList += ["/Event/Link/Raw/Hcal/Digits#1"]
                     
     def addMCHitLinks( self, writer ):
 
