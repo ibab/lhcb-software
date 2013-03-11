@@ -15,7 +15,6 @@ branches          cmt doc src
 #============================================================================
 use   DecayTreeTupleBase  v*    Phys
 use   HltEvent            v*    Event
-use   MuonDet             v*    Det
 
 #============================================================================
 # Component library building rule
