@@ -8,6 +8,8 @@
 #ifndef CONDDBCOMPRESSION_H_
 #define CONDDBCOMPRESSION_H_
 
+#include <stdint.h>
+
 /** @class CondDBCompression CondDBCompression.h DetCond/CondDBCompression.h
  *
  *  Provides two functions to compress & decompress the strings
@@ -19,7 +21,7 @@
 
 class CondDBCompression{
 public:
-	static std::string compress(const std::string&);
+	static std::string compress(const std::string& strin, const int8_t method = 0);
 	static std::string decompress(const std::string&);
 };
 

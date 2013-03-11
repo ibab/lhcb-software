@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-03-11 - Liang Sun
+ - Set up prototype to allow multiple compression methods, with an additional byte identifying the method prepended to the compressed string
+
 ! 2013-03-08 - Marco Clemencic
  - Fixed compilation on 32 bits with a hack (the 32 bits dev version of bz2
    cannot be installed on lxbuild because of missing templates).

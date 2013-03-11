@@ -33,13 +33,15 @@ class DetCondCompressionTest(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
         self.testin = 'data'
-        self.testout = 'QlpoNDFBWSZTWa/mnnIAAAEBgCQABAAgADDMDHqCcXckU4UJCv5p5yA='
+        self.testout = '0QlpoOTFBWSZTWa/mnnIAAAEBgCQABAAgADDMDHqCcXckU4UJCv5p5yA='
+#        self.testout = '0QlpoNDFBWSZTWa/mnnIAAAEBgCQABAAgADDMDHqCcXckU4UJCv5p5yA='
+        self.Nmethods = 1 # number of methods
     
 #    def tearDown(self):
 #        unittest.TestCase.tearDown(self)
 
     def test_compression(self):
-        """Check compression method"""
+        """Check compression method 0"""
         ret = PyCintex.gbl.CondDBCompression.compress(self.testin)
         self.assertEquals(self.testout, ret)
         
@@ -50,19 +52,20 @@ class DetCondCompressionTest(unittest.TestCase):
         
     def test_decompression_2(self):
         """Check decompression method with random string
-           should do nothing here""" 
-        rdnstr = str_generator(random.randint(1,10000))
+           should do nothing here"""
+        rdnstr = "<" + str_generator(random.randint(1,10000))
         ret = PyCintex.gbl.CondDBCompression.decompress(rdnstr)
         self.assertEquals(rdnstr, ret)
-                          
+
     def test_both(self):
         """Check both compression and decompression methods with random string in sequence
            should return exactly the same string""" 
         rdnstr = str_generator(random.randint(1,10000))
-        ret = PyCintex.gbl.CondDBCompression.compress(rdnstr)
-        self.assertTrue(ret)
-        ret = PyCintex.gbl.CondDBCompression.decompress(ret)
-        self.assertEquals(rdnstr, ret)
+        for method in range(self.Nmethods):
+            ret = PyCintex.gbl.CondDBCompression.compress(rdnstr, method)
+            self.assertTrue(ret)
+            ret = PyCintex.gbl.CondDBCompression.decompress(ret)
+            self.assertEquals(rdnstr, ret)
 
 if __name__ == '__main__':
-    unittest.main(testRunner = unittest.TextTestRunner(stream=sys.stdout,verbosity=2))
+    unittest.main(testRunner = unittest.TextTestRunner(stream=sys.stdout,verbosity=0))

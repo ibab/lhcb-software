@@ -17,11 +17,20 @@
 // 2013-02-14 : Liang SUN
 //-----------------------------------------------------------------------------
 
-std::string CondDBCompression::compress(const std::string& strin){
+std::string CondDBCompression::compress(const std::string& strin, const int8_t method){
 	char *dest = new char[MAXBUFFSIZE];
 	unsigned int destLen = MAXBUFFSIZE;
-	int retbit = BZ2_bzBuffToBuffCompress(dest, &destLen, const_cast<char*>(strin.c_str()), strin.length(), 4, 0, 0);
-	if (retbit == BZ_MEM_ERROR){
+	int retbit(0);
+    switch (method){
+    case 0:
+        retbit = BZ2_bzBuffToBuffCompress(dest, &destLen, const_cast<char*>(strin.c_str()), strin.length(), 9, 0, 0);
+        if (retbit != BZ_OK) return "";
+        break;
+    default: //Do nothing if method not recognized
+        return strin;
+    }
+	
+/*    if (retbit == BZ_MEM_ERROR){
 		std::cerr << "Insufficient memory for BZ2_bzBuffToBuffCompress" << std::endl;
 		return "";
 	}
@@ -29,29 +38,44 @@ std::string CondDBCompression::compress(const std::string& strin){
 		std::cerr << "The size of the compressed data exceeds "
 				<< "*destLen in BZ2_bzBuffToBuffCompress" << std::endl;
 		return "";
-	}
+	}*/
 
     std::string deststr(dest, destLen);
 	delete [] dest;
 	std::string out;
 	base64_encode(deststr, out);
+    out.insert(0, 1, '0'+method); //Set first byte to identify compression method
 	return out;
 }
 
 
 std::string CondDBCompression::decompress(const std::string& strin){
+    if (!(strin[0] >= '0' && strin[0]<='9'))
+        return strin; //If not starting from a digit, do nothing as the compression method is not recognizable
 
+    std::string strin2 = strin; //Create a clone for future modification
+    const int8_t method = strin2[0] - '0';
+    strin2.erase(0, 1); // Strip the method character
 	std::string zdata;
-	base64_decode(strin, zdata);
+	base64_decode(strin2, zdata);
 	size_t output_length = zdata.length();
 //    std::auto_ptr<unsigned char> zdata(base64_decode(strin.c_str(), strin.length(), &output_length));
     if (output_length){
     	char* dest = new char[MAXBUFFSIZE];
     	unsigned int destLen = MAXBUFFSIZE;
-    	int retbit = BZ2_bzBuffToBuffDecompress(dest, &destLen, const_cast<char*>(zdata.c_str()), output_length,0,0);
+    	int retbit(0);
+        switch (method){
+        case 0:    
+            retbit = BZ2_bzBuffToBuffDecompress(dest, &destLen, const_cast<char*>(zdata.c_str()), output_length,0,0);
+            break;
+        default: //Do nothing if method not recognized
+            return strin;
+        }
+        if (destLen == 0 || retbit) return "";    
     	std::string out(dest, destLen);
     	delete [] dest;
-    	if (retbit == BZ_OK)  return out;
+        return out;
+/*    	if (retbit == BZ_OK)  return out;
     	else if (retbit == BZ_MEM_ERROR){
     		std::cerr << "Insufficient memory for BZ2_bzBuffToBuffDecompress" << std::endl;
     		return "";
@@ -61,7 +85,7 @@ std::string CondDBCompression::decompress(const std::string& strin){
     				<< "*destLen in BZ2_bzBuffToBuffDecompress" << std::endl;
     		return "";
     	}
-/*    	else if (retbit == BZ_DATA_ERROR ) { std::cerr << "BZ_DATA_ERROR"<<std::endl;
+    	else if (retbit == BZ_DATA_ERROR ) { std::cerr << "BZ_DATA_ERROR"<<std::endl;
             return "";
         }
     	else if (retbit == BZ_DATA_ERROR_MAGIC ) { std::cerr << "BZ_DATA_ERROR_MAGIC"<<std::endl;
@@ -71,7 +95,7 @@ std::string CondDBCompression::decompress(const std::string& strin){
             return "";
         }*/
     }
-    return strin;
+    return strin; // Do nothing if the string fails the compression process
 }
 
 
