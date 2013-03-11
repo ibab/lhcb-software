@@ -588,9 +588,10 @@ class Moore(LHCbConfigurableUser):
         app = LHCbApp()
         self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType' ] )
 
-        # this is a hack. Why does setOtherProps not work?
-        app.CondDBtag = self.getProp('CondDBtag')
-        app.DDDBtag   = self.getProp('DDDBtag')
+        # this was a hack. Someone thought setOtherProps did not work?
+        #app.CondDBtag = self.getProp('CondDBtag')
+        #app.DDDBtag   = self.getProp('DDDBtag')
+        self.setOtherProps( app, ['CondDBtag','DDDBtag'])
         # Get the event time (for CondDb) from ODIN 
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
