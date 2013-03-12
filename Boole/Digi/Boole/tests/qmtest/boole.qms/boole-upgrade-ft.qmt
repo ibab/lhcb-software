@@ -1,0 +1,16 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>$APPCONFIGOPTS/Boole/Default.py</text>
+    <text>$APPCONFIGOPTS/Boole/patchUpgrade1.py</text>
+    <text>--option</text>
+    <text>from Configurables import Boole; Boole().DetectorDigi = ['Velo', 'TT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon']; Boole().DetectorLink = ['Velo', 'TT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Tr']; Boole().DetectorMoni = ['Velo', 'TT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'MC']; from Boole.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130124"; LHCbApp().CondDBtag="simcond-20121001-vc-md100"; EventSelector().Input = ["DATAFILE='/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/FT/Gauss-10000000-5ev-20130312-FT.sim'"];</text>
+    </set></argument>
+  <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-ft.ref</text></argument>
+  <argument name="error_reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-ft-err.ref</text></argument>
+  <argument name="validator"><text>
+from Boole.QMTest.BooleExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>

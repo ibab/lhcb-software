@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Added upgrade qmtests for ft only, ut only and minimal upgrade detector.
+
  - Updated qmtests for the upgrade, added expected errors. Added temporary
  localTags to the vl test until the DB is updated.
 
