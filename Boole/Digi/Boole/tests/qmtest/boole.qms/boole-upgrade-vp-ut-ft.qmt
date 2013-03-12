@@ -6,9 +6,10 @@
     <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-VP-UT-FT.py</text>
     <text>$APPCONFIGOPTS/Boole/patchUpgrade1.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130124"; LHCbApp().CondDBtag="simcond-20121001-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/gauss/upgrade/VP-UT-FT/Gauss-13104011-5ev-VP-UT-FT.sim'"];</text>
+    <text>from Boole.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130214"; LHCbApp().CondDBtag="simcond-20121001-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/gauss/upgrade/VP-UT-FT/Gauss-13104011-5ev-VP-UT-FT.sim'"];</text>
     </set></argument>
-  <argument name="reference"><text>../refs/boole-vp-ut-ft.ref</text></argument>
+  <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-vp-ut-ft.ref</text></argument>
+  <argument name="error_reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-vp-ut-ft-err.ref</text></argument>
   <argument name="validator"><text>
 from Boole.QMTest.BooleExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
