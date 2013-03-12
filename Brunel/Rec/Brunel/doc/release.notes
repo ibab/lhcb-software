@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes for the Upgrade qmtests
+  . Updated reference for VP-UT-FT test.
+
 - Changes for Upgrade
   . Added qmtest for VP-UT-FT
   . Replaced reference for VP-UT-FT test now Det/RichDet has been patched.
