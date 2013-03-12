@@ -46,14 +46,7 @@ public:
 
     
   virtual StatusCode tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
-  
-  
-  
-
-    // for the moment keep the following, deprecated method for bakcwards compatibility.
-    // will call tracksFromrack internally
-    void recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
-
+   
     void simpleFit( PatVTTTrack& vtt);
 
   protected:

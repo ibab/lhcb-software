@@ -30,6 +30,8 @@ PatVeloTTTool::PatVeloTTTool( const std::string& type,
   , m_PatTTMagnetTool(0)
 {
   declareInterface<ITracksFromTrack>(this);
+  declareInterface<PatVeloTTTool>(this);
+  
 
   declareProperty("MaxXSlope"          , m_maxXSlope        = 0.350);
   declareProperty("MaxYSlope"          , m_maxYSlope        = 0.300);
@@ -131,16 +133,6 @@ PatVeloTTTool::tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::
   prepareOutputTracks(vttTracks, outtracks);
   return StatusCode::SUCCESS;
 
-}
-//=========================================================================
-// DEPRECATED Main reconstruction method
-//=========================================================================
-void PatVeloTTTool::recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks )
-{
-  warning() << "Calling deprecated PatVeloTTTool::recoVeloTT. Please use tracksFromTrack instead." << endmsg;
-  
-  tracksFromTrack(velotrack,outtracks);
-  
 }
 
 

@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-03-12 - Sebastian Neubert
+- PatVeloTTTool exposes itself as an interface again to support PatVeloTTFit
+
 ! 2013-03-11 - Sebastian Neubert
 - PatVeloTT now uses PatVeloTTTool through the correct interface 
 
