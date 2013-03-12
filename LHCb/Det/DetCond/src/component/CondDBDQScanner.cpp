@@ -63,7 +63,10 @@ IDQFilter::FlagsType CondDBDQScanner::scan(const Gaudi::Time & since, const Gaud
   for(IOVList::iterator iov = iovs.begin(); iov != iovs.end(); ++iov) {
     // get the condition data (XML)
     StatusCode sc = m_condDB->getObject(m_condPath, iov->since, data, desc, dataSince, dataUntil);
-    if (sc.isFailure()) Exception("Problems retrieving data from the database");
+    if (sc.isFailure()){
+      Exception("Problems retrieving data from the database");
+      return flags; // never reached, but helps Coverity
+    }
 
     try {
       // prepare the IOpaqueAddress to be given to the PersistencySvc
@@ -76,7 +79,10 @@ IDQFilter::FlagsType CondDBDQScanner::scan(const Gaudi::Time & since, const Gaud
                                                              xml_data,
                                                              info(),
                                                              m_converter->addressCreator());
-      if (!addr) Exception("Failed to create temporary IOpaqueAddress");
+      if (!addr){
+        Exception("Failed to create temporary IOpaqueAddress");
+        return flags; // never reached, but helps Coverity
+      }
 
       // Retrieve the condition data
       DataObject *obj = 0;
@@ -87,6 +93,7 @@ IDQFilter::FlagsType CondDBDQScanner::scan(const Gaudi::Time & since, const Gaud
         delete addr;
         if (obj) delete obj;
         Exception("Conversion of Condition failed");
+        return flags; // never reached, but helps Coverity
       }
       delete addr;
 

@@ -4,6 +4,12 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-03-12 - Marco Clemencic
+ - Added hints to Coverity to fix a few flas positives:
+   - https://lhcb-coverity.cern.ch:8443/sourcebrowser.htm?projectId=10002#mergedDefectId=45071&defectInstanceId=156278261&fileInstanceId=111423297
+   - https://lhcb-coverity.cern.ch:8443/sourcebrowser.htm?projectId=10002#mergedDefectId=45070&defectInstanceId=156277446&fileInstanceId=111423297
+   - https://lhcb-coverity.cern.ch:8443/sourcebrowser.htm?projectId=10002#mergedDefectId=45069&defectInstanceId=156277445&fileInstanceId=111423297
+
 ! 2013-03-12 - Liang Sun
  - Minor fix on coverity defects (0&i++)
 
