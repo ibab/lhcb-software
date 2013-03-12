@@ -89,10 +89,10 @@ bool base64_decode(const std::string& data,
 
     for (size_t i = 0, j = 0; i < input_length;) {
 
-        uint32_t sextet_a = data[i] == '=' ? 0 & i++ : decoding_table[(size_t)data[i++]];
-        uint32_t sextet_b = data[i] == '=' ? 0 & i++ : decoding_table[(size_t)data[i++]];
-        uint32_t sextet_c = data[i] == '=' ? 0 & i++ : decoding_table[(size_t)data[i++]];
-        uint32_t sextet_d = data[i] == '=' ? 0 & i++ : decoding_table[(size_t)data[i++]];
+        uint32_t sextet_a = data[i] == '=' ? 0: decoding_table[(size_t)data[i]]; i++;
+        uint32_t sextet_b = data[i] == '=' ? 0: decoding_table[(size_t)data[i]]; i++;
+        uint32_t sextet_c = data[i] == '=' ? 0: decoding_table[(size_t)data[i]]; i++;
+        uint32_t sextet_d = data[i] == '=' ? 0: decoding_table[(size_t)data[i]]; i++;
 
         uint32_t triple = (sextet_a << 3 * 6)
                         + (sextet_b << 2 * 6)

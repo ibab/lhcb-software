@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-03-12 - Liang Sun
+ - Minor fix on coverity defects (0&i++)
+
 ! 2013-03-11 - Liang Sun
  - Set up prototype to allow multiple compression methods, with an additional byte identifying the method prepended to the compressed string
 
