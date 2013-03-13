@@ -1,13 +1,8 @@
-// $Id: VLRMeasurement.cpp,v 1.19 2008-11-14 10:33:37 mneedham Exp $
-// Include files
-
-// From VLDet
+// Det/VLDet
 #include "VLDet/DeVL.h"
-
-// From Event
+// Event/DigiEvent
 #include "Event/VLCluster.h"
-
-// local
+// Local
 #include "Event/VLRMeasurement.h"
 
 using namespace LHCb;
@@ -15,52 +10,54 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 // Implementation file for class : VLRMeasurement
 //
-// 2005-04-07 : Jose Hernando, Eduardo Rodrigues
-// Author: Rutger van der Eijk
-// Created: 27-06-2000
 //-----------------------------------------------------------------------------
 
-/// Standard constructor, initializes variables
-VLRMeasurement::VLRMeasurement( const VLCluster& aCluster,
-                                const DeVL& det,
-                                const IVLClusterPosition& clusPosTool,
-                                const LHCb::StateVector& refVector )
-  : VLMeasurement(Measurement::VLR,aCluster)
+//============================================================================
+/// Constructor from VLCluster with ref. vector
+//============================================================================
+VLRMeasurement::VLRMeasurement(const VLCluster& cl,
+                               const DeVL& det,
+                               const IVLClusterPosition& posTool,
+                               const LHCb::StateVector& ref)
+  : VLMeasurement(Measurement::VLR, cl) {
 
-{
-  IVLClusterPosition::toolInfo clusInfo = 
-    clusPosTool.position(this->cluster(),refVector.position(),
-                         refVector.tx(),refVector.ty()) ;
-  this->init( det, clusInfo ) ;
+  init(det, posTool.position(cluster(), ref.position(), ref.tx(), ref.ty()));
+
 }
 
-/// Standard constructor, initializes variables
-VLRMeasurement::VLRMeasurement( const VLCluster& aCluster,
-                                const DeVL& det, 
-                                const IVLClusterPosition& clusPosTool) 
-  : VLMeasurement(Measurement::VLR,aCluster)
-{
-  IVLClusterPosition::toolInfo clusInfo = clusPosTool.position(this->cluster());
-  this->init( det, clusInfo ) ;
+//============================================================================
+/// Constructor from VLCluster without ref. vector
+//============================================================================
+VLRMeasurement::VLRMeasurement(const VLCluster& cl,
+                               const DeVL& det, 
+                               const IVLClusterPosition& posTool) 
+  : VLMeasurement(Measurement::VLR, cl) {
+
+  init(det, posTool.position(cluster()));
+
 }
 
-void VLRMeasurement::init( const DeVL& det, const IVLClusterPosition::toolInfo& clusInfo)
-{
-  // Fill the data members
-  const DeVLRSensor* rDet=det.rSensor( channelID().sensor() );
-  m_detectorElement = rDet ;
-  m_z = rDet -> z();
+//============================================================================
+/// Initialise data members
+//============================================================================
+void VLRMeasurement::init(const DeVL& det, const IVLClusterPosition::toolInfo& clusInfo) {
   
-  m_measure = rDet -> rOfStrip( clusInfo.strip.strip() ) +
-    rDet -> rPitchOfStrip( clusInfo.strip.strip() ) * clusInfo.fractionalPosition;
-  m_errMeasure = rDet -> rPitchOfStrip( clusInfo.strip.strip() )
-    * clusInfo.fractionalError;
+  const DeVLRSensor* rDet = det.rSensor(channelID().sensor());
+  m_detectorElement = rDet;
+  m_z = rDet->z();
 
-  m_trajectory = rDet -> trajectory( clusInfo.strip, clusInfo.fractionalPosition );
+  const unsigned int strip = clusInfo.strip.strip();  
+  m_measure = rDet->rOfStrip(strip) +
+              rDet->rPitchOfStrip(strip) * clusInfo.fractionalPosition;
+  m_errMeasure = rDet->rPitchOfStrip(strip) * clusInfo.fractionalError;
+  m_trajectory = rDet->trajectory(clusInfo.strip, clusInfo.fractionalPosition);
+
 }
 
-
-const DeVLRSensor& VLRMeasurement::sensor() const{
-  return *static_cast<const DeVLRSensor *>(detectorElement());
+//============================================================================
+/// Return pointer to detector element
+//============================================================================
+const DeVLRSensor& VLRMeasurement::sensor() const {
+  return *static_cast<const DeVLRSensor*>(detectorElement());
 }
 

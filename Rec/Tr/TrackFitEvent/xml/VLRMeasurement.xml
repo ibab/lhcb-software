@@ -1,69 +1,55 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE gdd SYSTEM 'gdd.dtd'>
 <gdd>
-  <package name='TrackFitEvent'>
+  <package name = 'TrackFitEvent'>
+    <class name = 'VLRMeasurement'
+           desc = 'Measurement made from an R-type VLCluster.'
+           author = ''
+           defaultconstructor = 'FALSE'
+           serializers = 'FALSE'>
+      <base name = 'LHCb::VLMeasurement'/>
+      <import name = 'Event/VLMeasurement'/>
+      <import name = 'TrackInterfaces/IVLClusterPosition'/>
+      <import name = 'StateVector' soft = 'FORWARDONLY'/>
+      <import name = 'Event/VLCluster'/>
+      <import name = 'DeVL' namespace = '::' soft = 'FORWARDONLY'/>
+      <import name = 'DeVLRSensor' namespace = '::' soft = 'FORWARDONLY'/>
 
-<!-- =============== VLRMeasurement class definition =============== -->
+      <constructor desc = 'Constructor from VLCluster and refVector'>
+        <arg type = 'LHCb::VLCluster' name = 'cluster' const = 'TRUE'/>
+        <arg type = 'DeVL' name = 'det' const = 'TRUE'/>
+        <arg type = 'IVLClusterPosition' name = 'clusPosTool' const = 'TRUE'/>
+        <arg type = 'LHCb::StateVector' name = 'refVector' const = 'TRUE'/>
+      </constructor>
 
-    <class
-      name        = 'VLRMeasurement'
-      author      = 'Jose Hernando, Eduardo Rodrigues'
-      desc        = 'VLRMeasurement is a measurement made from a VLRCluster.'
-      defaultconstructor ='FALSE'
-      serializers = 'FALSE'>
+      <constructor desc = 'Constructor from VLCluster without refVector'>
+        <arg type = 'LHCb::VLCluster' name = 'cluster' const = 'TRUE'/>
+        <arg type = 'DeVL' name = 'det' const = 'TRUE'/>
+        <arg type = 'IVLClusterPosition' name = 'clusPosTool' const = 'TRUE'/>
+      </constructor>
 
-      <base name='LHCb::VLMeasurement' />
-
-      <import name='Event/VLMeasurement' />
-      <import name='TrackInterfaces/IVLClusterPosition'/>
-      <import name='StateVector' soft='FORWARDONLY'/>
-      <import name='Event/VLCluster' />
-      <import name='DeVL' namespace='::' soft='FORWARDONLY'/>
-      <import name='DeVLRSensor' namespace='::' soft='FORWARDONLY'/>
-
-      <constructor
-        desc = 'Constructor from a VLRCluster and refVector'>
-        <arg type = 'LHCb::VLCluster' name = 'aCluster' const='TRUE' />
-        <arg type = 'DeVL' name = 'det' const='TRUE' />
-        <arg type = 'IVLClusterPosition' name = 'clusPosTool' const='TRUE' />
-        <arg type = 'LHCb::StateVector' name='refVector' const='TRUE'/>
-       </constructor>
-
-      <constructor
-        desc = 'Constructor from a VLRCluster without refVector'>
-        <arg type = 'LHCb::VLCluster' name = 'aCluster' const='TRUE' />
-        <arg type = 'DeVL' name = 'det' const='TRUE' />
-        <arg type = 'IVLClusterPosition' name = 'clusPosTool' const='TRUE' />
-       </constructor>
-
-      <method
-        name   = 'init'
-        desc   = 'Initialize the data members'
-        access = 'PUBLIC'>
-        <arg type = 'DeVL' name = 'det' const='TRUE' />
-        <arg type = 'IVLClusterPosition::toolInfo' name = 'clusinfo'
-	  const='TRUE' />
+      <method name = 'init'
+              desc = 'Initialize the data members'
+              access = 'PUBLIC'>
+        <arg type = 'DeVL' name = 'det' const = 'TRUE'/>
+        <arg type = 'IVLClusterPosition::toolInfo' name = 'clusinfo' const = 'TRUE'/>
       </method>
 
-      <method
-        type    = 'LHCb::VLRMeasurement*'
-        name    = 'clone'
-        desc    = 'Clone the VLRMeasurement'
-        const   = 'TRUE'>
+      <method type = 'LHCb::VLRMeasurement*'
+              name = 'clone'
+              desc = 'Clone the VLRMeasurement'
+              const = 'TRUE'>
         <code>
-          return new LHCb::VLRMeasurement(*this);
+  return new LHCb::VLRMeasurement(*this);
         </code>
       </method>
 
-     <method
-       type = 'const DeVLRSensor&amp;'
-       name = 'sensor'
-       desc = 'Retrieve const the sector of the measurement'
-       const = 'TRUE'>
-      </method>
-
+     <method type = 'const DeVLRSensor&amp;'
+             name = 'sensor'
+             desc = 'Retrieve the sensor of the measurement'
+             const = 'TRUE'>
+     </method>
 
     </class>
-
   </package>
 </gdd>
