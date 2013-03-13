@@ -271,7 +271,7 @@ StatusCode FTClusterCreator::execute() {
       counter("NberOfKeptHitFromMap")++;
       plot2D( hitboolMapiter->first->entry().x(), hitboolMapiter->first->entry().y(), 
               "KeptHitEntryPosition;Entry position of Hits kept by Clusterisation ; x [mm]; y [mm]",
-              1000., 1000., -1000.,1000., 1000, 1000 );  
+              -500., 500., -500.,500., 100, 100);  
       plot(hitboolMapiter->first->energy(),"KeptHitEnergy", 
            "Energy of Hits kept by Clusterisation; Energy [MeV];Number of hits" , 0 , 1 );
       plot(hitboolMapiter->first->mcParticle()->particleID().pid(),"KeptHitPDGId", 
@@ -282,7 +282,7 @@ StatusCode FTClusterCreator::execute() {
       counter("NberOfLostHitFromMap")++;
       plot2D( hitboolMapiter->first->entry().x(), hitboolMapiter->first->entry().y(), 
               "LostHitEntryPosition;Entry position of Hits lost in Clusterisation; x [mm]; y [mm]",
-              1000., 1000., -1000.,1000., 1000, 1000 );  
+              -500., 500., -500.,500., 100, 100);  
       plot(hitboolMapiter->first->energy(),"LostHitEnergy", 
            "Energy of Hits lost in Clusterisation; Energy [MeV];Number of hits" , 0 , 1 );
       plot(hitboolMapiter->first->mcParticle()->particleID().pid(),"LostHitPDGId", 

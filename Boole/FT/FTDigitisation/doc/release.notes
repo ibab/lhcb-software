@@ -4,10 +4,14 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-03-13 - Eric Cogneras
+ - Fix a typo in plot2D call
+
 ! 2013-02-23 - Eric Cogneras
  - Assessement of the ADC gain (ADC/photoelectron) and gain (photoelectron/cluster)
  - Remove Monitor classes, with migration of plotting to Creator classes
  - code cleaning
+
 ! 2013-02-20 - Eric Cogneras
  - MCHits map from MCFTDigit used to compute the fraction of hit lost in clusterisation 
  - typo correction
