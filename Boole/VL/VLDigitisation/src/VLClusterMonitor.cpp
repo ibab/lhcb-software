@@ -147,13 +147,13 @@ void VLClusterMonitor::monitor() {
     }
     plot(adcSum, "adcSum",
          "ADC sum",
-         -0.5, 255.5, 256);
+         -0.5, 127.5, 128);
     plot((*it)->interStripFraction(), "isp",
          "Inter-strip fraction",
          0., 1., 50);
     plot2D(sensor, firstStrip, "sensorAndStrip",
            "Sensor and first strip number",
-           0., 132., 0., 3000., 132, 50);
+           -0.5, 131.5, 0., 3000., 132, 50);
     if ((*it)->isRType()) {
       double r = m_det->rSensor(sensor)->rOfStrip(firstStrip);
       plot2D(r, nstrips, "radiusVsSize",
@@ -161,14 +161,14 @@ void VLClusterMonitor::monitor() {
              0., 40., -0.5, 5.5, 40, 6);
       plot(adcSum, "adcSumR",
            "ADC sum",
-           -0.5, 255.5, 256);
+           -0.5, 127.5, 128);
       plot((*it)->interStripFraction(), "ispR",
            "Inter-strip fraction",
            0., 1., 50);
     } else {
       plot(adcSum, "adcSumPhi",
            "ADC sum",
-           -0.5, 255.5, 256);
+           -0.5, 127.5, 128);
       plot((*it)->interStripFraction(), "ispPhi",
            "Inter-strip fraction",
            0., 1., 50);

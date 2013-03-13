@@ -91,7 +91,7 @@ StatusCode VLDigitCreator::initialize() {
 
   // Get the detector element.
   m_det = getDet<DeVL>(DeVLLocation::Default);
-  m_baseDiffuseSigma = sqrt(2 * m_kT / m_biasVoltage);
+  m_baseDiffuseSigma = sqrt(2. * m_kT / m_biasVoltage);
 
   // Get the front end time tool.
   m_SiTimeTool = tool<ISiAmplifierResponse>("SiAmplifierResponse", 
@@ -116,7 +116,8 @@ StatusCode VLDigitCreator::initialize() {
   const unsigned int nStripsR = rSensor->numberOfStrips();
   // Calculate the average strip noise.
   double noiseR = m_StripNoiseTool->averageNoise(rSensor->sensorNumber());
-  noiseR *= m_scaleNoise; 
+  noiseR *= m_scaleNoise;
+  info() << "Average noise level in R sensors: " << noiseR << endmsg; 
   double noiseHitsR = 2. * erfcSafe(m_threshold / noiseR) * nStripsR;
   sc = m_poissonR.initialize(randSvc(), Rndm::Poisson(noiseHitsR));
   if (!sc) {
@@ -127,6 +128,7 @@ StatusCode VLDigitCreator::initialize() {
   const DeVLPhiSensor* phiSensor = m_det->phiSensors().front();
   const unsigned int nStripsPhi = phiSensor->numberOfStrips();
   double noisePhi = m_StripNoiseTool->averageNoise(phiSensor->sensorNumber());
+  info() << "Average noise level in Phi sensors: " << noisePhi << endmsg; 
   noisePhi *= m_scaleNoise; 
   double noiseHitsPhi = 2. * erfcSafe(m_threshold / noisePhi) * nStripsPhi;
   sc = m_poissonPhi.initialize(randSvc(), Rndm::Poisson(noiseHitsPhi));
@@ -207,7 +209,7 @@ void VLDigitCreator::simulateSignal(MCHits* hits, double bunchOffset) {
     // to points along the hit path.
     points.clear();
     if (!deposit(hit, points, fraction)) continue;
-    // Diffuse charges from points to strips.
+    // Map deposited charges onto strips.
     drift(hit, points);
   }
 
@@ -248,12 +250,11 @@ bool VLDigitCreator::deposit(MCHit* hit, std::vector<double>& points,
   // Calculate how many full strips entry and exit points are apart.
   int nNeighb;
   StatusCode sc = sens->channelDistance(entryChannel, exitChannel, nNeighb);
-  if (!sc) {
-    // Entry and exit strips are not in the same sector.
-    return false;
-  }
+  // Make sure that entry and exit strips are not in the same sector.
+  if (!sc) return false;
   double distance = fabs(nNeighb - (entryFraction - exitFraction));
   unsigned int nPoints = static_cast<int>(ceil(distance) * m_pointsPerStrip);
+  if (nPoints < 1) nPoints = 1;
   points.resize(nPoints);
 
   // Calculate the total charge in electrons.
@@ -269,14 +270,14 @@ bool VLDigitCreator::deposit(MCHit* hit, std::vector<double>& points,
   // Amount of charge to divide equally
   double chargeEqual = charge;
   if (m_inhomogeneousCharge) {
-    double thickness = m_det->sensor(hit->sensDetID())->siliconThickness();
-    chargeEqual = m_chargeUniform * thickness / Gaudi::Units::micrometer;
+    const double d = m_det->sensor(hit->sensDetID())->siliconThickness();
+    chargeEqual = m_chargeUniform * d / Gaudi::Units::micrometer;
     // Apply time correction.
     chargeEqual *= fraction;
     if (chargeEqual > charge) chargeEqual = charge;
   } 
   if (m_verbose) {
-    verbose() << "Charge for equal allocation: " << chargeEqual << endmsg;
+    verbose() << "Equally allocated charge: " << chargeEqual << endmsg;
   }
   // Divide charge equally among the points.
   const double chargeDiv = chargeEqual / points.size();
@@ -303,12 +304,11 @@ bool VLDigitCreator::deposit(MCHit* hit, std::vector<double>& points,
   }
   // Check if distributed charge is equal to charge from hit.
   if (fabs(sum - charge) > 1.e-6) {
-    Warning("Normalization problem, see debug for information!");
-    if (m_debug) {
-      debug() << "Sum of charges distributed on points: " 
-              << sum << endmsg;
-      debug() << "Deposited charge: " << charge << endmsg;
-    }
+    Warning("Normalization problem.");
+    info() << "Sum of charges distributed on points: " << sum << endmsg; 
+    info() << "Deposited charge: " << charge << endmsg;
+    info() << "Equally distributed charge: " << chargeEqual << endmsg;
+    info() << "Number of points: " << points.size() << endmsg;
   }
   return true;
 
@@ -549,8 +549,7 @@ void VLDigitCreator::simulateCoupling() {
 }
 
 //============================================================================
-/// From an originally sorted list, find the strip with the previous key,
-/// or create a new one.
+/// Find the strip with the previous key in the list, or create a new one.
 //============================================================================
 MCVLDigit* VLDigitCreator::getDigitPrev(MCVLDigits::iterator itd, 
                                         bool& valid, bool& create) {
@@ -563,19 +562,19 @@ MCVLDigit* VLDigitCreator::getDigitPrev(MCVLDigits::iterator itd,
     prev = (*(itd));
     ++itd;
   }
-  // Check
+  // Check its validity.
   int distance = 0;
   const DeVLSensor* sens = m_det->sensor((*itd)->key().sensor());
   StatusCode sc = sens->channelDistance((*itd)->key(), prev->key(), distance);
   valid = sc.isSuccess();
   if (valid && -1 == distance) return prev;
-  // Check if just added this strip in other container
+  // Check if just added this strip in other container.
   if (m_digitsCoupling->size() != 0) {
     MCVLDigits::iterator last = m_digitsCoupling->end(); 
     last--;
     prev = (*last);
   }
-  // Check
+  // Check its validity.
   sc = sens->channelDistance((*itd)->key(), prev->key(), distance);
   valid = sc.isSuccess();
   if (valid && -1 == distance) return prev;
@@ -608,8 +607,7 @@ MCVLDigit* VLDigitCreator::getDigitPrev(MCVLDigits::iterator itd,
 }
 
 //============================================================================
-/// From an originally sorted list, find the strip with the next key,
-/// or create a new one.
+/// Find the strip with the next key in the list, or create a new one.
 //============================================================================
 MCVLDigit* VLDigitCreator::getDigitNext(
     MCVLDigits::iterator itd, bool& valid, bool& create) {
@@ -624,7 +622,7 @@ MCVLDigit* VLDigitCreator::getDigitNext(
     nextStrip = (*(itd));
     --itd;
   }
-  // Check
+  // Check its validity.
   const DeVLSensor* sens = m_det->sensor((*itd)->key().sensor());
   int checkDistance;
   StatusCode sc = sens->channelDistance((*itd)->key(), nextStrip->key(),
@@ -689,7 +687,7 @@ void VLDigitCreator::simulateNoise() {
     const DeVLSensor* sens = *its;
     // Estimate the number of noise hits.
     int nNoiseHits = 0;
-    // Turn off FPEs
+    // Turn off FPEs.
     FPE::Guard allFPE(FPE::Guard::mask("AllExcept"), true);
     if (sens->isPhi()) {
       nNoiseHits = int(m_poissonPhi());
@@ -754,7 +752,7 @@ void VLDigitCreator::simulateInefficiency() {
   if (m_debug) debug()<< " ==> simulateInefficiency()" << endmsg;
   MCVLDigits::iterator itd;
   for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
-    if (m_inefficiency > m_uniform()) {
+    if (m_uniform() < m_inefficiency) {
       // Set signal to zero (channel will be removed by cut in final process).
       (*itd)->setSignal(0.);
     }
@@ -772,10 +770,6 @@ MCVLDigit* VLDigitCreator::getDigit(VLChannelID& channel, const bool create) {
   if (0 == digit && create) {
     // This strip has not been used before, so create it.
     digit = new MCVLDigit(channel);
-    if (m_verbose) {
-      verbose() << "Add digit (sensor " << channel.sensor() 
-                << ", strip " << channel.strip() << ")" << endmsg;
-    } 
     m_digits->insert(digit);
   }
   return digit;

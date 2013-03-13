@@ -325,13 +325,24 @@ void VLClusterCreator::linkClustersToParticles() {
   const std::string location = m_clusterLocation;
   // Create a linker for associating clusters with MC particles.
   LinkerWithKey<MCParticle, VLCluster> linker(evtSvc(), msgSvc(), location);
-  // TODO: merging of hits created by delta electrons with parent particle hit
   std::vector<std::pair<VLCluster*, std::map<const MCParticle*, 
                                              double> > >::iterator it;
   for (it = m_particleTruthTable.begin(); it != m_particleTruthTable.end(); ++it) {
     VLCluster* cluster = (*it).first;
     std::map<const MCParticle*, double>::iterator itp;
     for (itp = (*it).second.begin(); itp != (*it).second.end(); ++itp) {
+      // Merge delta-electrons with mother particle (if in same cluster).
+      const MCVertex* vtx = (*itp).first->originVertex();
+      if (vtx && vtx->type() == MCVertex::DeltaRay) {
+        const MCParticle* mother = vtx->mother();
+        if ((*it).second.count(mother) > 0) {
+          (*it).second[mother] += (*itp).second;
+          (*it).second[(*itp).first] = -1.;
+        }
+      }
+    }
+    for (itp = (*it).second.begin(); itp != (*it).second.end(); ++itp) {
+      if ((*itp).second < 0.) continue;
       linker.link(cluster, (*itp).first, (*itp).second);
     }
   }

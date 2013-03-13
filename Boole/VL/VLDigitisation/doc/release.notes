@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for VL Digitization
 !-----------------------------------------------------------------------------
 
+! 2013-02-24 - Heinrich Schindler
+ - bugfix in VLDigitCreator (allocation of charges to strips)
+
 !========================= VLDigitisation v1r3 2013-03-06 =========================
 ! 2013-02-24 - Heinrich Schindler
  - bugfix in VLClusterCreator (sorting of strips)

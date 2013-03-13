@@ -114,16 +114,17 @@ private:
   double m_kT;
   /// Voltage applied to (over)depleted sensor
   double m_biasVoltage;
+  /// Base size of charge diffusion 
+  double m_baseDiffuseSigma;    
   /// Amount of energy required to make an electron-hole pair in silicon
   double m_eVPerElectron;
 
   /// Number of points to distribute charge on per strip
   int m_pointsPerStrip;
-  /// Use same charge along strip at each seeding centre
+  /// Charge in electrons / micron to distribute uniformly
   double m_chargeUniform;
+  /// Threshold energy deposit for delta electron simulation
   double m_deltaRayMinEnergy;
-  /// Base size of charge diffusion 
-  double m_baseDiffuseSigma;    
 
   /// Peaking time of the amplifier response function
   double m_peakTime;  
@@ -132,13 +133,13 @@ private:
 
   /// Scale factor for noise
   double m_scaleNoise;          
-  /// Scale factor for Gaussian flucuations in charge at points
+  /// Scale factor for Gaussian fluctuations in charge at points
   double m_scaleFluctuations;   
 
   /// Conversion factor between ADC counts and number of electrons
   double m_electronsPerAdc;     
   /// Range of ADC values
-  int m_adcRange;            
+  int m_adcRange; 
 
   /// Tool for emulating amplifier response
   ISiAmplifierResponse* m_SiTimeTool;
