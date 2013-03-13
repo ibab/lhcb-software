@@ -60,7 +60,7 @@ StatusCode PrFitKsParams::initialize() {
   m_fitTool = tool<PrFitTool>( "PrFitTool" );
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
