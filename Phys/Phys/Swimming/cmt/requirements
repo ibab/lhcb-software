@@ -1,0 +1,41 @@
+#============================================================================
+# Created    : 2011-04-13
+# Maintainer : Vladimir Gligorov
+#============================================================================
+package           Swimming
+version           v2r8p1
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc python
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use     GaudiPolicy     v*
+use     GaudiKernel     v*
+use     GaudiConf       v*
+use     LHCbKernel      v*  Kernel
+use     TisTosTobbing   v*  Phys
+
+include_path      none
+
+#============================================================================
+# Linker library
+#============================================================================
+library          Swimming          ../src/functions.cpp
+apply_pattern    linker_library    library=Swimming
+
+#============================================================================
+# Reflex dictionary
+#============================================================================
+apply_pattern     reflex_dictionary                                \
+                  dictionary=Swimming                              \
+                  headerfiles=$(SWIMMINGROOT)/dict/functions.h     \
+                  selectionfile=$(SWIMMINGROOT)/dict/functions.xml \
+                  options="-U__MINGW32__"
+
+apply_pattern install_python_modules
+
+macro_append SwimmingGenConfUser_dependencies SwimmingConfDbMerge
