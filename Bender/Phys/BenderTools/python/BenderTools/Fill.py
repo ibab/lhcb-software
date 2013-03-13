@@ -82,9 +82,9 @@ def _fill_initialize ( self ) :
     self._ctau_9      = BPVLTIME (  9 ) * c_light
     self._ctau_25     = BPVLTIME ( 25 ) * c_light
     self._lv01        = LV01  
-    self._vchi2       = VFASPF       ( VCHI2    )
-    self._vchi2ndf    = VFASPF       ( VCHI2DOF )
-    self._dtfchi2     = DTF_CHI2NDOF ( True     )
+    self._vchi2       = VFASPF       ( VCHI2     )
+    self._vchi2ndf    = VFASPF       ( VCHI2PDOF )
+    self._dtfchi2     = DTF_CHI2NDOF ( True      )
     self._ipchi2      = BPVIPCHI2    ()
     self._dls         = LoKi.Particles.DecayLengthSignificanceDV () 
     #
