@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v13r6 2013-03-14 ==========================
+! 2013-03-14 - John Back
+ - Added a check in EvtPhotosEngine::doDecay to skip Photos if a given particle 
+   has too many daughters (>= 10) to avoid a problem with a hard coded upper 
+   limit in the Photos PHOENE subroutine.
+
 !========================== EvtGen v13r5 2013-03-07 ==========================
 ! 2013-02-13 - Patrick Robbe
  - Various fixes to compile with gcc46

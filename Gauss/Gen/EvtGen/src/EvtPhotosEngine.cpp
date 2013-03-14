@@ -107,8 +107,10 @@ bool EvtPhotosEngine::doDecay(EvtParticle* theMother) {
   // We add these extra photons to the mother particle daughter list.
 
   // Skip running Photos if the particle has no daughters, since we can't add FSR.
+  // Also skip Photos if the particle has too many daughters (>= 10) to avoid a problem
+  // with a hard coded upper limit in the PHOENE subroutine.
   int nDaug(theMother->getNDaug());
-  if (nDaug == 0) {return false;}
+  if (nDaug == 0 || nDaug >= 10) {return false;}
 
   // Create the dummy event.
   HepMC::GenEvent* theEvent = new HepMC::GenEvent(HepMC::Units::GEV, HepMC::Units::MM);
