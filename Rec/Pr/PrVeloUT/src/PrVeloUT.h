@@ -67,7 +67,7 @@
     ISequencerTimerTool* m_timerTool;
     int  m_veloUTTime;
     bool m_doTiming;
-
+    bool m_AddMomentumEstimate;
   };
 
 #endif // PRVELOUT_H

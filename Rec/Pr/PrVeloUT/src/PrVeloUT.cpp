@@ -45,6 +45,7 @@ PrVeloUT::PrVeloUT( const std::string& name,
   declareProperty("maxChi2"            , m_maxChi2          = 5.); 
   declareProperty("TrackSelectorName"  , m_trackSelectorName = "None");
   declareProperty( "TimingMeasurement", m_doTiming = false);
+  declareProperty( "AddMomentumEstimate", m_AddMomentumEstimate = false);
 }
 //=============================================================================
 // Destructor
@@ -157,6 +158,29 @@ StatusCode PrVeloUT::execute() {
        
       if(bestTrack) {
         if(bestTrack->chi2PerDoF() < m_maxChi2) {
+          
+          if(m_AddMomentumEstimate){
+            // qop estimate
+            //Get qop from VeloUT track
+            const LHCb::State& state_VELOUT = *(bestTrack->stateAt(LHCb::State::EndVelo));
+            double qop = state_VELOUT.qOverP();
+            
+            //Find track state for Velo track - will write out qop to it
+            LHCb::Track* veloTr = new LHCb::Track;
+            SmartRefVector<LHCb::Track>& ancestor = bestTrack->ancestors();
+            
+            for( SmartRefVector<LHCb::Track>::iterator trIt = ancestor.begin();
+                 ancestor.end() != trIt; trIt++) {
+              veloTr = *trIt;
+            }
+            
+            // Add the qop estimate to all Velo track states
+            LHCb::Track::StateContainer::const_iterator istate;
+            for( istate = veloTr->states().begin(); istate != veloTr->states().end(); ++istate){
+              (const_cast<LHCb::State*>(*istate))->setQOverP( qop ) ;
+            }
+          }
+          
           outputTracks->insert(bestTrack);
           tracks++;
         }

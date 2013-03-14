@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= PrVeloUT v1r0 2013-02-14 =========================
+
+! 2013-03-14 - Espen Eie Bowen	
+ - PrVeloUT can give momentum estimate to velo tracks.
+
 ! 2013-02-07 - Sascha Stahl
  - Added missing checks for VL.
 
