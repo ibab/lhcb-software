@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-03-14 - Espen Eie Bowen
+- PatVeloTT can give momentum estimate to velo tracks
+
 ! 2013-03-12 - Sebastian Neubert
 - PatVeloTTTool exposes itself as an interface again to support PatVeloTTFit
 

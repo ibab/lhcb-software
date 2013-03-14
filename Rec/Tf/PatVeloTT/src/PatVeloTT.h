@@ -67,7 +67,7 @@
     ISequencerTimerTool* m_timerTool;
     int  m_veloTTTime;
     bool m_doTiming;
-
+    bool m_AddMomentumEstimate;
   };
 
 #endif // PATVELOTT_H
