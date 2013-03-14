@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Tools/EventIndexer
+! Responsible : Marco Clemencic
+! Purpose     : Components for generation of indexes of events.
+!-----------------------------------------------------------------------------
+
+! 2013-03-14 - Marco Clemencic
+ - Ported the prototype based on Bender to C++.

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>-v</text>
+</set></argument>
+<argument name="options"><text>
+# Options of the test job
+from Gaudi.Configuration import *
+
+from Configurables import EventIndexer, EventIndexerTest__FakeIndexerData as FakeIndexerData
+
+ei = EventIndexer()
+#ei.OutputLevel = DEBUG
+ei.Stripping = "Strip9876"
+
+EventDataSvc(ForceLeaves=True)
+
+app = ApplicationMgr()
+app.EvtSel = "NONE"
+app.EvtMax = 20
+app.TopAlg = [FakeIndexerData("FakeIndexerData"), ei]
+
+</text></argument>
+<argument name="reference"><text>refs/filling.ref</text></argument>
+<argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+<argument name="validator"><text>
+validateWithReference()
+# countErrorLines()
+
+from subprocess import Popen, PIPE
+root = Popen(['root', '-b', '-n', 'indexer_data.root'],
+             stdin=PIPE, stdout=PIPE, stderr=PIPE)
+out, err = root.communicate('index->Scan()\n')
+
+findReferenceBlock("""
+************************************************************************
+*    Row   * data.stri *  data.lfn * data.posi * data.even * data.runN *
+************************************************************************
+*        0 * Strip9876 * first_fil *         1 *         1 *    123456 *
+*        1 * Strip9876 * first_fil *         2 *         2 *    123456 *
+*        2 * Strip9876 * first_fil *         3 *         3 *    123456 *
+*        3 * Strip9876 * first_fil *         4 *         4 *    123456 *
+*        4 * Strip9876 * first_fil *         5 *         5 *    123456 *
+*        5 * Strip9876 * first_fil *         6 *         6 *    123456 *
+*        6 * Strip9876 * first_fil *         7 *         7 *    123456 *
+*        7 * Strip9876 * first_fil *         8 *         8 *    123456 *
+*        8 * Strip9876 * first_fil *         9 *         9 *    123456 *
+*        9 * Strip9876 * first_fil *        10 *        10 *    123456 *
+*       10 * Strip9876 * second_fi *         1 *        11 *    123456 *
+*       11 * Strip9876 * second_fi *         2 *        12 *    123456 *
+*       12 * Strip9876 * second_fi *         3 *        13 *    123456 *
+*       13 * Strip9876 * second_fi *         4 *        14 *    123456 *
+*       14 * Strip9876 * second_fi *         5 *        15 *    123456 *
+*       15 * Strip9876 * second_fi *         6 *        16 *    123456 *
+*       16 * Strip9876 * second_fi *         7 *        17 *    123456 *
+*       17 * Strip9876 * second_fi *         8 *        18 *    123456 *
+*       18 * Strip9876 * second_fi *         9 *        19 *    123456 *
+*       19 * Strip9876 * second_fi *        10 *        20 *    123456 *
+************************************************************************
+""", out, signature_offset=1)
+
+</text></argument>
+</extension>

@@ -1,0 +1,46 @@
+# --> Including file '/afs/cern.ch/work/m/marcocle/workspace/LHCb_v35r4/Tools/EventIndexer/tests/qmtest/.eclipse/eventindexer.filling.launch.py'
+# <-- End of file '/afs/cern.ch/work/m/marcocle/workspace/LHCb_v35r4/Tools/EventIndexer/tests/qmtest/.eclipse/eventindexer.filling.launch.py'
+# Dumping all configurables and properties (different from default)
+{'ApplicationMgr': {'EvtMax': 20,
+                    'EvtSel': 'NONE',
+                    'TopAlg': ['EventIndexerTest::FakeIndexerData/FakeIndexerData',
+                               'EventIndexer/EventIndexer']},
+ 'EventDataSvc': {'ForceLeaves': True},
+ 'EventIndexer': {'Stripping': 'Strip9876'}}
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r3)
+                                          running on pclhcb117 on Thu Mar 14 15:13:03 2013
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+EventLoopMgr      WARNING Unable to locate service "EventSelector"
+EventLoopMgr      WARNING No events will be processed from external input.
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+FakeIndexerData      INFO Pretend opening file 'first_file.StripFake.dst'
+FakeIndexerData      INFO Run 123456, Event 1
+FakeIndexerData      INFO Run 123456, Event 2
+FakeIndexerData      INFO Run 123456, Event 3
+FakeIndexerData      INFO Run 123456, Event 4
+FakeIndexerData      INFO Run 123456, Event 5
+FakeIndexerData      INFO Run 123456, Event 6
+FakeIndexerData      INFO Run 123456, Event 7
+FakeIndexerData      INFO Run 123456, Event 8
+FakeIndexerData      INFO Run 123456, Event 9
+FakeIndexerData      INFO Run 123456, Event 10
+FakeIndexerData      INFO Pretend opening file 'second_file.StripFake.dst'
+FakeIndexerData      INFO Run 123456, Event 11
+FakeIndexerData      INFO Run 123456, Event 12
+FakeIndexerData      INFO Run 123456, Event 13
+FakeIndexerData      INFO Run 123456, Event 14
+FakeIndexerData      INFO Run 123456, Event 15
+FakeIndexerData      INFO Run 123456, Event 16
+FakeIndexerData      INFO Run 123456, Event 17
+FakeIndexerData      INFO Run 123456, Event 18
+FakeIndexerData      INFO Run 123456, Event 19
+FakeIndexerData      INFO Run 123456, Event 20
+ApplicationMgr       INFO Application Manager Stopped successfully
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully

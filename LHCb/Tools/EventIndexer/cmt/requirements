@@ -1,35 +1,40 @@
 #============================================================================
-# Created    : 2010-10-25
-# Maintainer : Johannes Albrecht
+# Created    : 2013-03-13
+# Maintainer : Marco Clemencic
 #============================================================================
-package           EventIndexer
-version v1r0
+package          EventIndexer
+version          v1r0
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
-branches          cmt doc python
+branches         cmt doc src tests
 
 #============================================================================
 # Used packages.
 #============================================================================
+use              GaudiAlg        v*
+use              RecEvent        v*        Event
+use              ROOT            v*        LCG_Interfaces
 
-use Bender v* Phys
+private
+#============================================================================
+# Component library building rule
+#============================================================================
+library          EventIndexer    ../src/*.cpp ../$(CMTCONFIG)/dict/EventIndexerDict.cpp -no_static
+macro_append     EventIndexer_dependencies " EventIndexerDict "
 
-### attention, now and then a release of this guy doesn't compile out of the
-### box. I sent a bug report, which was classified as "won't fix". So dear
-### user, fix it yourself. (have fun)
-### PS: actually it this statement also causes the nightlies to crash (linking
-### flags ...)
-# use SomeUtils v* Math
-### PS: actually it this statement also causes the nightlies to crash (linking
-### flags ...)
-# use BenderAlgo v* Phys
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=EventIndexer
 
+apply_pattern    QMTest
 
+include_dirs  $(EventIndexer_root)/src
 
-#------------------------------------------------------------------------------
+macro EventIndexer_cintflags " $(includes) $(use_includes) "
 
-apply_pattern install_python_modules
-# =============== running options =============================================
+document rootcint EventIndexerDict EventIndexer.h
 
+end_private
