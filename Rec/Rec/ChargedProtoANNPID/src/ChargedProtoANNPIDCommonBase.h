@@ -133,15 +133,7 @@ namespace ANNGlobalPID
     void initCommonConstructor();
 
     /// Access on demand the RecSummary object
-    const LHCb::RecSummary * recSummary() const
-    {
-      if ( !m_summary )
-      {
-        m_summary =
-          this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
-      }
-      return m_summary;
-    }
+    const LHCb::RecSummary * recSummary() const;
 
   protected:
     

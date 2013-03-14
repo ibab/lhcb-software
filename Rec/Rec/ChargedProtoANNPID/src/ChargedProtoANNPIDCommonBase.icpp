@@ -17,7 +17,7 @@ void ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initCommonConstructor()
   // initalise data members
   m_summary = NULL;
   // Job Options
-  this->declareProperty( "ProtoParticleLocation", 
+  this->declareProperty( "ProtoParticleLocation",
                          m_protoPath = LHCb::ProtoParticleLocation::Charged );
 }
 
@@ -47,7 +47,7 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initialize()
   }
 
   // Setup incident services
-  IIncidentSvc * incSvc = 
+  IIncidentSvc * incSvc =
     this -> template svc<IIncidentSvc>( "IncidentSvc", true );
   incSvc->addListener( this, IncidentType::EndEvent );
   sc = sc && this -> releaseSvc(incSvc);
@@ -60,7 +60,7 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initialize()
 // Incident handle
 //=============================================================================
 template <class PBASE>
-void 
+void
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::handle ( const Incident& )
 {
   m_summary = NULL;
@@ -85,6 +85,26 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::finalize()
 //=============================================================================
 
 //=============================================================================
+// Access the RecSummary
+//=============================================================================
+template <class PBASE>
+const LHCb::RecSummary *
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::recSummary() const
+{
+  if ( !m_summary )
+  {
+    m_summary =
+      this -> template getIfExists<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default, false );
+    if ( !m_summary )
+    {
+      m_summary =
+        this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default, true );
+    }
+  }
+  return m_summary;
+}
+//=============================================================================
+
 template <class PBASE>
 const typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::StringToInt &
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringToIntMap() const

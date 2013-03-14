@@ -4,6 +4,15 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-03-13 - Chris Jones
+ - Add a TMVAImpFactory to provide instances of compiled TMVA classifers for known
+   configurations. Using compiled classes are roughly 3 times faster than using 
+	 the corresponding TMVA::Reader implementation with the XML weights file.
+   If a compiled instance is not registered with the factory for a particular 
+   network configuration, the TMVA::Reader implementation is used as the fallback.
+   Currently no C++ implementations are included. This will be added once training
+   is complete.
+
 ! 2013-03-11 - Chris Jones
  - Remove rescaling of the TMVA output value. Not required if EstimatorType=CE
    is used (which looks promising in tests).

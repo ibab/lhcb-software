@@ -133,10 +133,10 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
       if ( trackPreSel == "TrackPreSelIsMuon" )
       {
         m_cuts.push_back( Cut( "MuonIsMuon > 0.5", this ) );
-        ok &= m_cuts.back().isOK(); 
+        ok &= m_cuts.back().isOK();
       }
       if ( !ok ) { return Error( "Failed to decode old style track cuts" ); }
-      
+
     }
 
     // Proto variable to fill
@@ -174,20 +174,33 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     }
 
     // Load the network helper object
-    if ( "NeuroBayes" == annType )
+    if ( "TMVA" == annType )
     {
+      // First see if we have a built in C++ implementation for this case
+      m_netHelper = new TMVAImpANN( m_netVersion, particleType, trackType,
+                                    inputs, variableIDs(inputs), this );
+      if ( !m_netHelper || !m_netHelper->isOK() )
+      {
+        // No, so try again with a TMVA Reader
+        warning() << "Compiled TMVA implementation not available for "
+                  << m_netVersion << " " << particleType << " " << trackType
+                  << " -> Reverting to XML Reader"
+                  << endmsg;
+        delete m_netHelper;
+        m_netHelper = new TMVAReaderANN( paramFileName,
+                                         variableIDs(inputs),
+                                         this );
+      }
+    }
+    else if ( "NeuroBayes" == annType )
+    {
+      debug() << "Using NeuroBayes Expert implementation" << endmsg;
       // FPE Guard for NB call
       FPE::Guard guard(true);
       m_netHelper = new NeuroBayesANN( paramFileName,
                                        variableIDs(inputs),
                                        this,
                                        m_suppressANNPrintout );
-    }
-    else if ( "TMVA" == annType )
-    {
-      m_netHelper = new TMVAANN( paramFileName,
-                                 variableIDs(inputs),
-                                 this );
     }
     else
     {
@@ -216,7 +229,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
               << "ANN inputs (" << inputs.size() << ")  = " << inputs << endmsg
               << "Preselection Cuts (" << m_cuts.size() << ") = " << m_cuts
               << endmsg;
-    
+
   }
   else
   {
@@ -235,9 +248,10 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
 //=============================================================================
 StatusCode ChargedProtoANNPIDAlg::execute()
 {
-
+  
   // Load the charged ProtoParticles
-  LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( m_protoPath );
+  LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>( m_protoPath );
+  if ( !protos ) return StatusCode::SUCCESS;
 
   // Loop over ProtoParticles
   for ( LHCb::ProtoParticles::iterator iP = protos->begin();
@@ -371,10 +385,10 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
 }
 
 //=============================================================================
-// Get ANN output for TMVA helper
+// Get ANN output for TMVA Reader helper
 //=============================================================================
 double
-ChargedProtoANNPIDAlg::TMVAANN::getOutput( const LHCb::ProtoParticle * proto )
+ChargedProtoANNPIDAlg::TMVAReaderANN::getOutput( const LHCb::ProtoParticle * proto )
   const
 {
   // Fill the array of network inputs
@@ -390,9 +404,35 @@ ChargedProtoANNPIDAlg::TMVAANN::getOutput( const LHCb::ProtoParticle * proto )
 
   // Scale to range 0 - 1
   // Not needed for EstimatorType=CE networks
-//   const double e = 0.002;
-//   mvaOut = ( 1 + std::sqrt(std::pow(mvaOut,2)+4.0*e) -
-//              std::sqrt(std::pow(mvaOut-1.0,2)+4.0*e) ) / 2.0;
+  //   const double e = 0.002;
+  //   mvaOut = ( 1 + std::sqrt(std::pow(mvaOut,2)+4.0*e) -
+  //              std::sqrt(std::pow(mvaOut-1.0,2)+4.0*e) ) / 2.0;
+
+  // Final sanity check
+  if      ( mvaOut > 1.0 ) { mvaOut = 1.0; }
+  else if ( mvaOut < 0.0 ) { mvaOut = 0.0; }
+
+  // return
+  return mvaOut;
+}
+
+//=============================================================================
+// Get ANN output for TMVA Imp helper
+//=============================================================================
+double
+ChargedProtoANNPIDAlg::TMVAImpANN::getOutput( const LHCb::ProtoParticle * proto )
+  const
+{
+  // Fill the array of network inputs
+  unsigned int input = 0;
+  for ( ChargedProtoANNPIDAlgBase::IntInputs::const_iterator iIn = m_inputs.begin();
+        iIn != m_inputs.end(); ++iIn, ++input )
+  {
+    m_vars[input] = m_parent->getInput(proto,*iIn);
+  }
+
+  // get the output
+  double mvaOut = m_reader->GetMvaValue(m_vars);
 
   // Final sanity check
   if      ( mvaOut > 1.0 ) { mvaOut = 1.0; }

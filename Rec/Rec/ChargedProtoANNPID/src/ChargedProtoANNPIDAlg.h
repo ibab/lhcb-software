@@ -22,6 +22,7 @@
 
 // local
 #include "ChargedProtoANNPIDAlgBase.h"
+#include "TMVAImpFactory.h"
 
 // Event Model
 #include "Event/ProtoParticle.h"
@@ -93,10 +94,13 @@ namespace ANNGlobalPID
       ANNHelper( const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
                  const ChargedProtoANNPIDAlgBase *           parent )
         : m_inputs ( inputs ),
-          m_parent ( parent ) { }
+          m_parent ( parent ),
+          m_ok     ( false  ) { }
       /// Destructor
       virtual ~ANNHelper() { }
     public:
+      /// Are we configured properly
+      inline bool isOK() const { return m_ok; }
       /// Compute the ANN output for the given ProtoParticle
       virtual double getOutput( const LHCb::ProtoParticle * proto ) const = 0;
       /// Number of inputs to the ANN
@@ -104,6 +108,7 @@ namespace ANNGlobalPID
     protected:
       ChargedProtoANNPIDAlgBase::IntInputs m_inputs; ///< The list of inputs for this network
       const ChargedProtoANNPIDAlgBase *    m_parent; ///< Pointer to parent algorithm
+      bool m_ok; ///< Is this reader configured properly
     };
 
     /** @class ANNHelper ChargedProtoANNPIDAlg.h
@@ -133,7 +138,7 @@ namespace ANNGlobalPID
           m_expert  ( new Expert(paramFileName.c_str(),-2) ),
           m_inArray ( new float[inputs.size()]             ),
           m_suppressPrintout ( suppressPrintout            )
-      { }
+      { m_ok = true; }
       /// Destructor
       virtual ~NeuroBayesANN() { delete m_expert; delete[] m_inArray; }
     public:
@@ -145,29 +150,29 @@ namespace ANNGlobalPID
       bool m_suppressPrintout; ///< Suppress any printout from NeuroBayes
     };
 
-    /** @class TMVAANN ChargedProtoANNPIDAlg.h
+    /** @class TMVAReaderANN ChargedProtoANNPIDAlg.h
      *
-     *  Helper class for TMVAANN networks
+     *  Helper class for TMVA ANN networks via the Reader
      *
      *  @author Chris Jones
      *  @date   2013-03-09
      */
-    class TMVAANN : public ANNHelper
+    class TMVAReaderANN : public ANNHelper
     {
     private:
       /// No default constructor
-      TMVAANN() : m_reader(NULL) { }
+      TMVAReaderANN() : m_reader(NULL) { }
     public:
       /** Constructor from information
        *  @param paramFileName Network tuning parameter file
        *  @param inputs The list of inputs needed for this network
        *  @param parent Point to parent algorithm
        */
-      TMVAANN( const std::string &                  paramFileName,
-               const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
-               const ChargedProtoANNPIDAlgBase *           parent )
+      TMVAReaderANN( const std::string &                  paramFileName,
+                     const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
+                     const ChargedProtoANNPIDAlgBase *           parent )
         : ANNHelper ( inputs, parent ),
-          m_reader  ( new TMVA::Reader( parent->msgLevel(MSG::DEBUG) ? 
+          m_reader  ( new TMVA::Reader( parent->msgLevel(MSG::DEBUG) ?
                                         "!Color:!Silent" : "!Color:Silent" ) ),
           m_inArray ( new float[inputs.size()] )
       {
@@ -178,15 +183,56 @@ namespace ANNGlobalPID
           m_reader->AddVariable( (parent->stringID(*iIn)).c_str(), &(m_inArray[i]) );
         }
         m_reader->BookMVA( "PID", paramFileName.c_str() );
+        m_ok = true;
       }
       /// Destructor
-      virtual ~TMVAANN() { delete m_reader; delete[] m_inArray; }
+      virtual ~TMVAReaderANN() { delete m_reader; delete[] m_inArray; }
     public:
       /// Compute the ANN output for the given ProtoParticle
       virtual double getOutput( const LHCb::ProtoParticle * proto ) const;
     private:
       TMVA::Reader * m_reader; ///< The TMVA reader
       float * m_inArray;  ///< Working array for network inputs
+    };
+
+    /** @class TMVAImpANN ChargedProtoANNPIDAlg.h
+     *
+     *  Helper class for TMVA ANN networks via the C++ implementation
+     *
+     *  @author Chris Jones
+     *  @date   2013-03-09
+     */
+    class TMVAImpANN : public ANNHelper
+    {
+    private:
+      /// No default constructor
+      TMVAImpANN() : m_reader(NULL) { }
+    public:
+      /** Constructor from information
+       *  @param paramFileName Network tuning parameter file
+       *  @param inputs The list of inputs needed for this network
+       *  @param parent Point to parent algorithm
+       */
+      TMVAImpANN( const std::string & config,
+                  const std::string & particle,
+                  const std::string & track,
+                  const ChargedProtoANNPIDAlgBase::StringInputs& sInputs,
+                  const ChargedProtoANNPIDAlgBase::IntInputs&    iInputs,
+                  const ChargedProtoANNPIDAlgBase *               parent )
+        : ANNHelper ( iInputs, parent ),
+          m_reader  ( tmvaFactory().create( config, particle, track, sInputs ) ),
+          m_vars    ( iInputs.size() )
+      {
+        m_ok = ( m_reader && m_reader->IsStatusClean() );
+      }
+      /// Destructor
+      virtual ~TMVAImpANN() { delete m_reader; }
+    public:
+      /// Compute the ANN output for the given ProtoParticle
+      virtual double getOutput( const LHCb::ProtoParticle * proto ) const;
+    private:
+      IClassifierReader * m_reader; ///< The TMVA reader
+      mutable std::vector<double> m_vars; ///< the input variables
     };
 
   private:
@@ -257,10 +303,10 @@ namespace ANNGlobalPID
     ITrackSelector * m_trSel;
 
     /// Configuration file
-    std::string m_configFile;  
+    std::string m_configFile;
 
     /// Network Helper
-    ANNHelper * m_netHelper;     
+    ANNHelper * m_netHelper;
 
     /// The extra info to fill on the ProtoParticle
     LHCb::ProtoParticle::additionalInfo m_protoInfo;
