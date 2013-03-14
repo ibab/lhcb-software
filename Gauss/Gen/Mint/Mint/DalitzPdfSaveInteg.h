@@ -45,6 +45,16 @@ public:
 		     // default: integratorOutputFile = integratorInputFile
 		     // (set in constructor)
 		     );
+  DalitzPdfSaveInteg(IFastAmplitudeIntegrable* amps
+		     , IDalitzEventList* events=0
+		     , double precision=1.e-4
+		     , const std::string& integInputFiles="Integrator"//could be "intg1,intg2,intg2"
+		     , const std::string& integEvtFile="integEvtFile.root"
+		     , const std::string& topUpIntegOption="topUp"
+		     , const std::string& integOutputFile=""
+		     // default: integratorOutputFile = integratorInputFile
+		     // (set in constructor)
+		     );
   IFastAmplitudeIntegrable* getAmpSum();
 
   ~DalitzPdfSaveInteg();

@@ -73,10 +73,10 @@ class DalitzPdfBaseFastInteg
   MINT::IEventGenerator<IDalitzEvent>* makeDefaultGenerator();
 
  public:
-  DalitzPdfBaseFastInteg( IDalitzEventAccess* events
-			  , MINT::IEventGenerator<IDalitzEvent>* generator
-			  , IFastAmplitudeIntegrable* amps
-			  , double precision = 1.e-3
+  DalitzPdfBaseFastInteg(IDalitzEventAccess* events
+			 , MINT::IEventGenerator<IDalitzEvent>* generator
+			 , IFastAmplitudeIntegrable* amps
+			 , double precision = 1.e-3
 			 );
 
   DalitzPdfBaseFastInteg(IDalitzEventList* events

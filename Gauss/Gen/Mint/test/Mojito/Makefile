@@ -16,7 +16,7 @@ CXXFLAGS += $(MOREINCSFLAGS)
 
 LIBS += -lMinuit
 LIBS += $(shell clheplib)
-LIBS += -lHepMC
+##LIBS += -lHepMC
 
 PROG = $(shell grep -l main *.cpp | sed 's/\.cpp//g')
 

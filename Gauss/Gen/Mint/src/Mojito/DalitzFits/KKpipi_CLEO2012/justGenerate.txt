@@ -1,16 +1,19 @@
 **
 
-doFit	0;
+doFit	0
 
 RandomSeed   5
 
-"Nevents"    10000
+"Nevents"    100
+"OutputEventFileName"	"KKpipiEvents.root"
 
+** the next 5 lines are irrelevant if you only generate events ( but important for fitting) ...
 "IntegPrecision"        5.0e-3
 "IntegMethod"           "efficient"
 IntegratorFileName      "SignalIntegrationEventsKKpipi.root"
 IntegratorSource        "file"
 "IntegratorInputFile"	"sgIntegrator"
+** .... 
 
 "Event Pattern"         421 321 -321 211 -211
 **

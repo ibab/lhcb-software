@@ -132,10 +132,11 @@ DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg( IDalitzEventAccess* events
    }
    if(0 == _generator) makeDefaultGenerator();
 }
+
 DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(IDalitzEventList* events
 					       , IEventGenerator<IDalitzEvent>*
-					           generator
-					        , IFastAmplitudeIntegrable* amps
+					         generator
+					       , IFastAmplitudeIntegrable* amps
 					       , double prec
 					       ) 
   : PdfBase<IDalitzEvent>(events)
@@ -235,7 +236,9 @@ DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg( IDalitzEventAccess* events
   , _defaultGenerator(0)
   , _commaSepList_of_SavedIntegrators("")
 {
-  _amps = new FitAmpSum(this, mps);
+  MinuitParameterSet *thisMps = (0 == mps ? MinuitParameterSet::getDefaultSet() : mps);
+  _amps = new FitAmpSum(this, thisMps);
+
   counted_ptr<IFastAmplitudeIntegrable> cp(_amps);
   _countedAmps = cp;
   if(0 == _generator) makeDefaultGenerator();
@@ -259,7 +262,8 @@ DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(IDalitzEventList* events
   , _defaultGenerator(0)
   , _commaSepList_of_SavedIntegrators("")
 {
-  _amps = new FitAmpSum(this, mps);
+  MinuitParameterSet *thisMps = (0 == mps ? MinuitParameterSet::getDefaultSet() : mps);
+  _amps = new FitAmpSum(this, thisMps);
   counted_ptr<IFastAmplitudeIntegrable> cp(_amps);
   _countedAmps = cp;
   if(0 == _generator) makeDefaultGenerator();

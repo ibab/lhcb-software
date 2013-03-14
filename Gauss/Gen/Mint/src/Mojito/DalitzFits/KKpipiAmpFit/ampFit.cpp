@@ -140,6 +140,7 @@ int ampFit(){
  
   NamedParameter<int>  Nevents("Nevents", 10000);
   NamedParameter<int>  doScan("doScan", 0);
+  NamedParameter<int>  doFit("doFit", 1);
   NamedParameter<double> integPrecision("IntegPrecision", 1.e-4);
 
      
@@ -193,18 +194,20 @@ int ampFit(){
   nc.checkNorm();
   */
 
+  if(! doFit){
+    return 0;
+  }
+
   Minimiser mini(&fcn);
   mini.doFit();
   mini.printResultVsInput();
-
-
+  
   DalitzHistoSet fitH = amps.histoSet(); 
   fitH.save("plotsFromIntegrator.root");
   amps.saveEachAmpsHistograms("singleAmpHistos");
-
+  
   fitH.draw("fitPlots_");
   datH.drawWithFit(fitH, "datFit_");
-  
 
   if(doScan){
     Double_t arglist[100] = {0};
