@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Removed histo error warnings from upgrade error references:
+   . boole-upgrade-ft-err.ref
+   . boole-upgrade-vp-ut-ft-err.ref
+   . boole-upgrade-vl-ut-ft-err.ref
+
  - Updated reference file for vp-ut-ft qmtest.
 
  - Updated reference file for vl-ut-ft qmtest.
