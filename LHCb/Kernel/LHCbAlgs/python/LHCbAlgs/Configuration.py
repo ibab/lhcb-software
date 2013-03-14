@@ -70,23 +70,24 @@ class LHCbApp(LHCbConfigurableUser):
         ]
 
     __dtMapping = {
-        "velo"     : "Velo",
+        "velo"       : "Velo",
         "puveto"     : "PuVeto",
-        "muon"     : "Muon",
-        "muonnom1" : "MuonNoM1",
-        "tt"       : "TT",
-        "ut"       : "UT",
-        "ft"       : "FT",
-        "vp"       : "VP",
-        "vl"       : "VL",
-        "rich"     : "Rich",
-        "richpmt"  : "RichPmt",
-        "rich1"    : "Rich1",
-        "rich2"    : "Rich2",
-        "rich1pmt" : "Rich1Pmt",
-        "rich2pmt" : "Rich2Pmt",
+        "muon"       : "Muon",
+        "muonnom1"   : "MuonNoM1",
+        "tt"         : "TT",
+        "ut"         : "UT",
+        "ft"         : "FT",
+        "vp"         : "VP",
+        "vl"         : "VL",
+        "rich"       : "Rich",
+        "richpmt"    : "RichPmt",
+        "rich1"      : "Rich1",
+        "rich2"      : "Rich2",
+        "rich1pmt"   : "Rich1Pmt",
+        "rich2pmt"   : "Rich2Pmt",
         "rich1horiz" : "Rich1Horiz",
-        "magnet"   : "Magnet"
+        "magnet"     : "Magnet",
+        "compact"    : "Compact"
         }
 
 
@@ -265,29 +266,77 @@ class LHCbApp(LHCbConfigurableUser):
             CondDB().Tags [ "DQFLAGS" ] = self.getProp("DQFLAGStag")
         self.defineDBDataTypes()
 
-    def defineDBDataTypes(self):
-        self.checkIncompatibleDetectors()
-        myDataTypes = []
+
+    def recursiveTagGen(self, inputTagList, tagList, column=0, tmpS="", endTag=False):
+        outS = tmpS
+        for row in range(len(inputTagList[column])):
+            if tmpS:
+                if inputTagList[column][row]:
+                    outS = "%s+%s" %(tmpS,inputTagList[column][row])
+            else:
+                outS = inputTagList[column][row]
+            if column < len(inputTagList) - 1:
+                self.recursiveTagGen(inputTagList, tagList, column + 1, outS, endTag)
+            elif column == len(inputTagList) - 1:
+                tagList.append(outS)
+            else:
+                log.error("Problem traversing tag list.")
+                return
+
+
+    def generateSectionTagDict(self):
+        # generates a structured dictionary of all tags
+        import string
+        sectionTagDict = {}
         for section in self.__DTRegion:
             myTag = ""
             joinText = "" 
-            for step in self.__sectionOrder[section]["regions"]:
-                for det in  self.__DTRegion[section][step]:
-                    if det not in self.__sectionOrder[section]["ignore"]:
-                        if not joinText:
-                            myTag += "%s" %(self.__dtMapping[det])
-                            joinText = "+"
+            regionTagDict = {}
+            for region in self.__sectionOrder[section]["regions"]:
+                regionTagDict[region] = []
+                for det in self.__DTRegion[section][region]:
+                    for detOpt in det.split("_"):
+                        if not regionTagDict[region]:
+                            regionTagDict[region].append(self.__dtMapping[detOpt])
                         else:
-                            myTag = "%s%s%s" %(myTag, joinText, self.__dtMapping[det])
-            if myTag:
-                myDataTypes.append(myTag)
+                            regionTagDict[region].append("%s_%s" %(regionTagDict[region][-1], self.__dtMapping[detOpt]))
+            sectionTagDict[section] = regionTagDict
+        return sectionTagDict
 
-        if myDataTypes:
+    def generateSectionTagList(self, sectionTagDict):
+        # Generates a list of all possible individual tags
+        sectionTagList = []
+        for section in sectionTagDict:
+            sectionList = []
+            for region in self.__sectionOrder[section]["regions"]:
+                if sectionTagDict[section][region]:
+                    # Clean up of tags
+                    for tag in sectionTagDict[section][region]:
+                        if tag.lower() in self.__sectionOrder[section]["ignore"]:
+                            sectionTagDict[section][region].remove(tag)
+                    # post-clean, add if non-empty
+                    if sectionTagDict[section][region]:
+                        sectionList.append(sectionTagDict[section][region])
+            sectionTagList.append(sectionList)
+        return sectionTagList
+
+
+    def defineDBDataTypes(self):
+        self.checkIncompatibleDetectors()
+        sectionTagDict = self.generateSectionTagDict()
+        sectionTagList = self.generateSectionTagList(sectionTagDict)
+        fullTagList = []
+        for secList in sectionTagList:
+            if secList:
+                self.recursiveTagGen(secList, fullTagList)
+
+        if fullTagList:
             from Configurables import CondDB
-            if hasattr(CondDB(), "AllLocalTagsByDataType"):
+            if "AllLocalTagsByDataType" in CondDB().__slots__:
                 if not CondDB().AllLocalTagsByDataType:
-                    CondDB().AllLocalTagsByDataType = myDataTypes
-        if self.upgradeDetectors():
+                    CondDB().AllLocalTagsByDataType = fullTagList
+
+        if self.getProp("DataType") in ["Upgrade"]:
             from Configurables import CondDB
             if hasattr(CondDB(), "Upgrade"):
                 CondDB().Upgrade = True

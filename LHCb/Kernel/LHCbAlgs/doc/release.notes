@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-03-14 - Paul Szczypka
+ - Changed the way LHCbApp derives dataTypes for the DB to also pick up older
+   tags of the various detectors and their combinations.
+
 !========================= LHCbAlgs v2r54 2013-02-14 =========================
 ! 2012-02-12 - Paul Szczypka
  - Added protection from warnings due to "Tr" being in detector list.
