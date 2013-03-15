@@ -4,5 +4,8 @@
 ! Purpose     : Components for generation of indexes of events.
 !-----------------------------------------------------------------------------
 
+! 2013-03-15 - Marco Clemencic
+ - Fix to the CMake configuration.
+
 ! 2013-03-14 - Marco Clemencic
  - Ported the prototype based on Bender to C++.

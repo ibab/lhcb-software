@@ -11,7 +11,8 @@ find_package(ROOT COMPONENTS Core Cint Tree)
 set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/EventIndexer.h
               ${CMAKE_CURRENT_SOURCE_DIR}/src/LinkDef.h)
 add_custom_command(OUTPUT EventIndexerDict.h EventIndexerDict.cpp
-                   COMMAND ${ROOT_rootcint_CMD} -f EventIndexerDict.cpp -c
+                   COMMAND ${env_cmd} --xml ${env_xml}
+                     ${ROOT_rootcint_CMD} -f EventIndexerDict.cpp -c
                            ${dict_srcs}
                    DEPENDS ${dict_srcs})
 
