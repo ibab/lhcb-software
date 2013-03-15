@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v12r4 2013-03-15 ==========================
+! 2013-03-15 - Gloria Corti
+ - Use latest version of tauolapp 1.1.1a, ok by John Back, to allow to use
+   distribution from lcgcmt_VERSION instead of hepmc_VERSION
+
 !========================== GENSER v12r3 2013-03-07 ==========================
 ! 2013-03-07 - Gloria Corti
  - Use latest version of rivet 1.8.2, as verified by A.Grecu
