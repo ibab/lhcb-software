@@ -13,6 +13,7 @@
 // Implementation file for class : PrForwardTool
 //
 // 2012-03-20 : Olivier Callot
+// 2013-03-15 : Thomas Nikodem
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -51,6 +52,16 @@ DECLARE_TOOL_FACTORY( PrForwardTool )
   declareProperty( "YQualityWeight",         m_yQualityWeight         =    4.                    );
 
   declareProperty("AddUTClusterName", m_addUtToolName = "PrAddUTCoord" );
+
+  //VeloUT momentum estimate configuration
+  std::vector<double> tmp;
+  tmp.push_back(1255 * Gaudi::Units::MeV);
+  tmp.push_back(175 * Gaudi::Units::MeV);
+  declareProperty( "MagnetKickParams"      , m_magnetKickParams      =  tmp);
+  declareProperty( "UseMomentumEstimate"   , m_useMomentumEstimate = false ); 
+  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.5 );
+  declareProperty( "MinRange"              , m_minRange              =   300. * Gaudi::Units::mm  );
+
 
 }
 //=============================================================================
@@ -233,6 +244,19 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
     if ( zZone > m_geoTool->zReference() ) xTol = dxRef * (zZone - zMag) / ( m_geoTool->zReference() - zMag );
     float xMin  = xInZone - xTol;
     float xMax  = xInZone + xTol;
+
+    //use momentum estimate from VeloUT tracks
+    if(m_useMomentumEstimate && 0 != track.qOverP() ){
+      double kick = 0;
+      double q = track.qOverP() > 0 ? 1. : -1.;
+      double magscalefactor = m_geoTool->magscalefactor();
+      kick = q*magscalefactor*(-1)*m_magnetKickParams[0] / ( fabs(1./track.qOverP()) -  m_magnetKickParams[1] ) ;
+      kick *= ( m_geoTool->zReference() - zMag);
+      double maxRange = m_minRange + m_momentumEstimateError*fabs(kick);
+      xMin = xInZone + kick - maxRange;
+      xMax = xInZone + kick + maxRange;
+    }
+
     float dx    = yInZone * zoneUv->dxDy();
     PrHits::const_iterator itUv = m_hitManager->hits( uvZoneNumber ).begin();
     float zRatio = ( zoneUv->z() - zMag ) / ( zZone - zMag );

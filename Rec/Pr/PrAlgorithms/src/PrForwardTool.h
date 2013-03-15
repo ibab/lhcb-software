@@ -17,6 +17,7 @@
  *
  *  @author Olivier Callot
  *  @date   2012-03-20
+ *  @modified Thomas Nikodem
  */
 class PrForwardTool : public IPrForwardTool {
 public: 
@@ -80,6 +81,12 @@ private:
   PrHitManager*   m_hitManager;
   PrGeometryTool* m_geoTool;
   bool            m_debug;
+
+  //Momentum estimate
+  std::vector<double>  m_magnetKickParams ;
+  double m_minRange;
+  bool   m_useMomentumEstimate;
+  double m_momentumEstimateError;
 
   // Working values
   float           m_minXSize;   // current value for the minimal number of X hits.

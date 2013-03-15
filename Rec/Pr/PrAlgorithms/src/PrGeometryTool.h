@@ -15,6 +15,7 @@ static const InterfaceID IID_PrGeometryTool ( "PrGeometryTool", 1, 0 );
  *
  *  @author Olivier Callot
  *  @date   2012-03-22
+ *  @modified Thomas Nikodem
  */
 class PrGeometryTool : public GaudiTool {
 public:
@@ -46,6 +47,9 @@ public:
   float zReference() const { return m_zReference; }  ///< fixed z for all parameterizations
 
   Gaudi::TrackSymMatrix covariance( float qOverp );  ///< Default (large) covariance matrix
+
+  double magscalefactor() const { return m_magFieldSvc->signedRelativeCurrent();} ;
+
 
 protected:
 
