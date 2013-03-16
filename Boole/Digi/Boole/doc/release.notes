@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Disabled activation of spillover sequences for the UT which do not exist.
+ These were only activated when dataType = Upgrade. Will re-integrate once
+ the algos are written.
+
  - Removed histo error warnings from upgrade error references:
    . boole-upgrade-ft-err.ref
    . boole-upgrade-vp-ut-ft-err.ref

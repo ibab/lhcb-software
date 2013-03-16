@@ -502,8 +502,9 @@ class Boole(LHCbConfigurableUser):
                     pass
                 else:
                     raise RuntimeError("Unknown ST detector '%s'"%det)
-                seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%sPrev"%(det,tae),DetType=det) ]
-                seq.Members += [ STDigitCreator("%sDigitCreator%sPrev"%(det,tae),DetType=det) ]
+                if det not in ["UT"]:
+                    seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%sPrev"%(det,tae),DetType=det) ]
+                    seq.Members += [ STDigitCreator("%sDigitCreator%sPrev"%(det,tae),DetType=det) ]
                 if det =="IT":
                     seq.Members += [ STSpilloverSubtraction("%sSpilloverSubtraction%s"%(det,tae),DetType=det) ]
                 if det =="TT":
@@ -1042,9 +1043,10 @@ class Boole(LHCbConfigurableUser):
             effCheck.InputData = "Raw/UT/Clusters"
             GaudiSequencer("MoniUTSeq").Members += [ mcDepMoni, mcDigitMoni, digitMoni, clusMoni,
                                                      mcp2MCHit, effCheck ]
-            if self.getProp("DataType") == "Upgrade" :
-                from Configurables import STSpilloverSubtrMonitor
-                GaudiSequencer("MoniUTSeq").Members += [ STSpilloverSubtrMonitor("UTSpilloverSubtrMonitor",DetType="UT") ]
+            if False:
+            #if self.getProp("DataType") == "Upgrade" :                
+                #from Configurables import STSpilloverSubtrMonitor
+                #GaudiSequencer("MoniUTSeq").Members += [ STSpilloverSubtrMonitor("UTSpilloverSubtrMonitor",DetType="UT") ]
             if histOpt == "Expert":
                 mcDepMoni.FullDetail   = True
                 mcDigitMoni.FullDetail = True
