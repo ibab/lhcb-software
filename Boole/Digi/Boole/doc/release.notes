@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Corrected the last changes to avoild indentation error.
+
  - Disabled activation of spillover sequences for the UT which do not exist.
  These were only activated when dataType = Upgrade. Will re-integrate once
  the algos are written.

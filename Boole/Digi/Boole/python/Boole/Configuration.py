@@ -1045,8 +1045,8 @@ class Boole(LHCbConfigurableUser):
                                                      mcp2MCHit, effCheck ]
             if False:
             #if self.getProp("DataType") == "Upgrade" :                
-                #from Configurables import STSpilloverSubtrMonitor
-                #GaudiSequencer("MoniUTSeq").Members += [ STSpilloverSubtrMonitor("UTSpilloverSubtrMonitor",DetType="UT") ]
+                from Configurables import STSpilloverSubtrMonitor
+                GaudiSequencer("MoniUTSeq").Members += [ STSpilloverSubtrMonitor("UTSpilloverSubtrMonitor",DetType="UT") ]
             if histOpt == "Expert":
                 mcDepMoni.FullDetail   = True
                 mcDigitMoni.FullDetail = True
