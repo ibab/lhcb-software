@@ -4175,9 +4175,103 @@ ROOT.TH1F. color  = _color_
 ROOT.TH1F. red    = _red_
 ROOT.TH1F. blue   = _blue_
 
+
+# =============================================================================
+## add some spline&interpoaliton stuff
+# =============================================================================
+## create spline object for the histogram
+#  @see Gaudi::Math::Spline 
+#  @see GaudiMath::Spline 
+#  @see GaudiMath::SplineBase
+#  @see Genfun::GaudiMathImplementation::SplineBase ;
+#  @see GaudiMath::Interpolation::Type
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-03-17 
+def _1d_spline_ ( self                                      ,
+                  type  = cpp.GaudiMath.Interpolation.Akima ,
+                  null  = True                              ,
+                  scale = 1                                 ,
+                  shift = 0                                 ) :
+    """
+    Create spline object for the histogram:
+
+    >>> histo = ...
+    >>> spline = histo.spline ()
+
+    >>> value = spline ( 10 ) 
+    """
+    return cpp.Gaudi.Math.Spline ( self , type , null , scale , shift )
+# =============================================================================
+## create spline object for the histogram
+#  @see Gaudi::Math::SplineError 
+#  @see Gaudi::Math::Spline 
+#  @see GaudiMath::Spline 
+#  @see GaudiMath::SplineBase
+#  @see Genfun::GaudiMathImplementation::SplineBase ;
+#  @see GaudiMath::Interpolation::Type
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-03-17 
+def _1d_spline_err_ ( self                                      ,
+                      type  = cpp.GaudiMath.Interpolation.Akima ,
+                      null  = True                              ,
+                      scale = 1                                 ,
+                      shift = 0                                 ) :
+    """
+    Create spline object for the histogram:
+
+    >>> histo  = ...
+    >>> spline = histo.splineErr ()
+
+    >>> value  = spline ( 10 )
+    """
+    return cpp.Gaudi.Math.SplineErrors ( self , type , null , scale , shift )
+
+_1d_spline_     . __doc__ += '\n' + cpp.Gaudi.Math.Spline       .__init__ .__doc__
+_1d_spline_err_ . __doc__ += '\n' + cpp.Gaudi.Math.SplineErrors .__init__ .__doc__
+
+for t in ( ROOT.TH1D , ROOT.TH1D , ROOT.TGraphErrors ) :
+    t.spline    = _1d_spline_
+    t.splineErr = _1d_spline_err_
+    
+ROOT.TGraph.spline    = _1d_spline_
+
+# =============================================================================
+# 2D interpolation
+# =============================================================================
+def _2d_interp_ ( self                                   ,
+                  typex  = cpp.Gaudi.Math.Interp2D.Cubic , ## default is bicubic 
+                  typey  = cpp.Gaudi.Math.Interp2D.Cubic , ## default is bicubic 
+                  null   = True                          ,
+                  scalex = 1 , 
+                  scaley = 1 , 
+                  shiftx = 0 , 
+                  shifty = 0 ) :
+    """
+    Create interpolation object for 2D-histogram
+    
+    >>> histo_2d = ...
+
+    >>> interp = histo_2d.interp()
+    
+    >>> value = interp ( 10 , 20 ) 
+    """
+    obj = cpp.Gaudi.Math.Interp2D ( self   ,
+                                    typex  , typey  ,
+                                    null   ,
+                                    scalex , scaley , 
+                                    shiftx , shifty )
+    obj._histo = self
+    
+    return obj
+
+_2d_interp_     . __doc__ += '\n' + cpp.Gaudi.Math.Interp2D .__init__ .__doc__
+
+for t in ( ROOT.TH2D , ROOT.TH2F ) :
+    t.interp    = _2d_interp_ 
+
 # =============================================================================
 logger.info ( 'Some useful decorations for TMinuit objects')
-# ==============================================================================
+# =============================================================================
 ## get the parameter form minuit 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-09-28

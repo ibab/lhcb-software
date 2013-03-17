@@ -92,7 +92,10 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Flatte23L              ,
                Gaudi.Math.Gounaris23L            ,
                Gaudi.Math.StudentT               ,
-               Gaudi.Math.Voigt                  ) :
+               Gaudi.Math.Voigt                  ,
+               Gaudi.Math.Spline                 ,
+               Gaudi.Math.Linear                 ,
+               Gaudi.Math.Parabola               ) :
     model . tf1 = _tf1_ 
 
 Gaudi.Math.LASS23L   . amp = _amp_
