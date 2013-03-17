@@ -155,17 +155,23 @@ _default_configuration_ = {
     # =========================================================================
     ## Prescales 
     # =========================================================================
-    'Eta2ggPrescale'        : 1.0 ,
-    'Eta23piPrescale'       : 1.0 ,
-    'Etap2rhogPrescale'     : 1.0 ,
-    'Etap2pipietaPrescale'  : 1.0 ,
-    'OmegaPrescale'         : 1.0 ,
+    'Eta2ggPrescale'           : 1.0 ,
+    'Eta23piPrescale'          : 1.0 ,
+    'Etap2rhogPrescale'        : 1.0 ,
+    'Etap2pipietaPrescale'     : 1.0 ,
+    'OmegaPrescale'            : 1.0 ,
     #
-    'KEta2ggPrescale'       : 1.0 ,
-    'KEta23piPrescale'      : 1.0 ,
-    'KEtap2rhogPrescale'    : 1.0 ,
-    'KEtap2pipietaPrescale' : 1.0 ,
-    'KOmegaPrescale'        : 1.0 ,    
+    'KEta2ggPrescale'          : 1.0 ,
+    'KEta23piPrescale'         : 1.0 ,
+    'KEtap2rhogPrescale'       : 1.0 ,
+    'KEtap2pipietaPrescale'    : 1.0 ,
+    'KOmegaPrescale'           : 1.0 ,
+    # 
+    'KpiEta2ggPrescale'        : 1.0 ,
+    'KpiEta23piPrescale'       : 1.0 ,
+    'KpiEtap2rhogPrescale'     : 1.0 ,
+    'KpiEtap2pipietaPrescale'  : 1.0 ,
+    'KpiOmegaPrescale'         : 1.0 ,
     # ========================================================================= 
     }
 ## ============================================================================
@@ -292,17 +298,23 @@ class PsiX0Conf(LineBuilder) :
             #
             ## beauty
             #
-            self.b2eta2gg        () ,
-            self.b2eta23pi       () ,
-            self.b2etap2rhog     () ,
-            self.b2etap2pipieta  () ,
-            self.b2omega         () , 
+            self.b2eta2gg         () ,
+            self.b2eta23pi        () ,
+            self.b2etap2rhog      () ,
+            self.b2etap2pipieta   () ,
+            self.b2omega          () , 
             ##
-            self.b2Keta2gg       () ,
-            self.b2Keta23pi      () ,
-            self.b2Ketap2rhog    () ,
-            self.b2Ketap2pipieta () ,
-            self.b2Komega        ()
+            self.b2Keta2gg        () ,
+            self.b2Keta23pi       () ,
+            self.b2Ketap2rhog     () ,
+            self.b2Ketap2pipieta  () ,
+            self.b2Komega         () , 
+            ##
+            self.b2KpiEta2gg       () ,
+            self.b2KpiEta23pi      () ,
+            self.b2KpiEtap2rhog    () ,
+            self.b2KpiEtap2pipieta () ,
+            self.b2KpiOmega        ()
             ##
             ]
         
@@ -390,6 +402,43 @@ class PsiX0Conf(LineBuilder) :
             prescale = self['KOmegaPrescale']  , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'       ]  ,
             algos    = [ self.b2Komega ()      ]
+            ) ,
+            #
+            ## B -> psi(') X0 Kpi
+            #
+            StrippingLine (
+            "B2PsiKpiEta2ggFor" + self.name()     ,
+            prescale = self['KpiEta2ggPrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'           ] ,
+            algos    = [ self.b2KpiEta2gg ()      ]
+            ) ,
+            ## 
+            StrippingLine (
+            "B2PsiKpiEta23piFor" + self.name()     ,
+            prescale = self['KpiEta23piPrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'            ] ,
+            algos    = [ self.b2KpiEta23pi ()      ]
+            ) ,
+            ## 
+            StrippingLine (
+            "B2PsiKpiEtap2rhogFor" + self.name()    ,
+            prescale = self['KpiEtap2rhogPrescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'             ] ,
+            algos    = [ self.b2KpiEtap2rhog ()     ]
+            ) ,
+            ## 
+            StrippingLine (
+            "B2PsiKpiEtap2pipietaFor" + self.name()    ,
+            prescale = self['KpiEtap2pipietaPrescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'                ] ,
+            algos    = [ self.b2KpiEtap2pipieta ()     ]
+            ) ,
+            ## 
+            StrippingLine (
+            "B2PsiKpiOmegaFor" + self.name ()    ,
+            prescale = self['KpiOmegaPrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'          ] ,
+            algos    = [ self.b2KpiOmega ()      ]
             ) ,
             #
             ]
@@ -1173,7 +1222,211 @@ class PsiX0Conf(LineBuilder) :
             )
         ##
         return self._add_selection( 'B2PsiKOmega_Selection' , sel ) 
+
+    # ============================================================================
+    ## Beauty -> psi(') X0  K pi
+    # ============================================================================
     
+    # B -> psi(') ( eta -> gg ) K pi
+    def b2KpiEta2gg ( self ) :
+        """
+        B -> psi(') ( eta -> gg ) K pi 
+        """
+        sel = self._selection ( 'B2PsiKpiEta2gg_Selection')
+        if sel : return sel
+        
+        _alg = CombineParticles (
+            ## 
+            DecayDescriptor = "[B0 -> J/psi(1S) K+ pi- eta]cc" ,
+            ##
+            Preambulo       = self['Preambulo'] ,
+            ##
+            DaughtersCuts   = {
+            'eta' : ' PT > %s ' % self['X0PTK']
+            } ,
+            ##
+            CombinationCut  = "mb_acut" ,
+            ##
+            MotherCut       = """
+            mb_cut             &
+            ( chi2vxNDF <  6 ) &  
+            ( ctau      > %s ) 
+            """ % self['CTAU'],
+            ##
+            ParticleCombiners = {'' : "LoKi::VertexFitter:PUBLIC" }
+            )
+        ##
+        sel  = Selection (
+            "SelB2PsiKpiEta2ggFor" + self.name() ,
+            Algorithm            =   _alg      ,
+            RequiredSelections   = [ self.psi    () ,
+                                     self.kaons  () , 
+                                     self.eta2gg () ,
+                                     self.pions  () ]  
+           )
+        ##
+        return self._add_selection( 'B2PsiKpiEta2gg_Selection' , sel ) 
+
+    
+    # B -> psi(') ( eta -> 3pi ) K pi 
+    def b2KpiEta23pi ( self ) :
+        """
+        B -> psi(') ( eta -> 3pi ) K pi
+        """
+        sel = self._selection ( 'B2PsiKpiEta23pi_Selection')
+        if sel : return sel
+        
+        _alg = CombineParticles (
+            ## 
+            DecayDescriptor = " [B0   -> J/psi(1S) K+ pi- eta]cc " ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            #
+            DaughtersCuts   = {
+            'eta' : ' PT > %s ' % self['X0PTK']
+            } ,
+            ##
+            CombinationCut  = " mb_acut " , 
+            ##
+            MotherCut = """
+            mb_cut             & 
+            ( chi2vxNDF <  6 ) &  
+            ( ctau      > %s ) 
+            """ % self ['CTAU'],
+            ##
+            ParticleCombiners = {'' : "LoKi::VertexFitter:PUBLIC" }
+            )
+        ##
+        sel  = Selection (
+            "SelB2PsiKpiEta23piFor" + self.name() ,
+            Algorithm            =   _alg      ,
+            RequiredSelections   = [ self.psi     () ,
+                                     self.kaons   () ,
+                                     self.eta23pi () ,
+                                     self.pions   () ]
+            )
+        ##
+        return self._add_selection( 'B2PsiKpiEta23pi_Selection' , sel ) 
+    
+    # B -> psi(') ( eta' -> rhog ) K pi
+    def b2KpiEtap2rhog ( self ) :
+        """
+        B -> psi(') ( eta' -> rhog ) K pi
+        """
+        sel = self._selection ( 'B2PsiKpiEtap2rhog_Selection')
+        if sel : return sel
+        
+        _alg = CombineParticles (
+            ## 
+            DecayDescriptor = "[B0   -> J/psi(1S) K+ pi- eta_prime]cc " ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            DaughtersCuts   = {
+            'eta_prime' : ' PT > %s ' % self['X0PTK']
+            } ,
+            ## 
+            CombinationCut  = "mb_acut " ,
+            ##
+            MotherCut = """
+            mb_cut             & 
+            ( chi2vxNDF <  6 ) &  
+            ( ctau      > %s ) 
+            """ % self['CTAU'],
+            ##
+            ParticleCombiners = {'' : "LoKi::VertexFitter:PUBLIC" }
+            )
+        ##
+        sel  = Selection (
+            "SelB2PsiKpiEtap2rhogFor" + self.name() ,
+            Algorithm              =   _alg      ,
+            RequiredSelections     = [ self.psi       () ,
+                                       self.kaons     () ,
+                                       self.etap2rhog () ,
+                                       self.pions     () ] 
+            )
+        ##
+        return self._add_selection( 'B2PsiKpiEtap2rhog_Selection' , sel ) 
+    
+    # B -> psi(') ( eta' -> pi pi eta  ) K pi
+    def b2KpiEtap2pipieta ( self ) :
+        """
+        B -> psi(') ( eta' -> pi pi eta  ) K pi
+        """
+        sel = self._selection ( 'B2PsiKpiEtap2pipieta_Selection')
+        if sel : return sel
+        
+        _alg = CombineParticles (
+            ## 
+            DecayDescriptor = "[B0   -> J/psi(1S) K+ pi- eta_prime]cc" , 
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            DaughtersCuts   = {
+            'eta_prime' : ' PT > %s ' % self['X0PTK']
+            } ,
+            ## 
+            CombinationCut  = "mb_acut ", 
+            ##
+            MotherCut = """
+            mb_cut             & 
+            ( chi2vxNDF <  6 ) &  
+            ( ctau      > %s ) 
+            """ % self ['CTAU'] ,
+            ##
+            ParticleCombiners = {'' : "LoKi::VertexFitter:PUBLIC" }
+            )
+        ##
+        sel  = Selection (
+            "SelB2PsiKpiEtap2pipietaFor" + self.name() ,
+            Algorithm                 =   _alg      ,
+            RequiredSelections        = [ self.psi          () ,
+                                          self.kaons        () ,
+                                          self.etap2pipieta () ,
+                                          self.pions        () ]
+        )
+        ##
+        return self._add_selection( 'B2PsiKpiEtap2pipieta_Selection' , sel ) 
+    
+    # B -> psi(') (omega -> 3pi  ) K pi
+    def b2KpiOmega ( self ) :
+        """
+        B -> psi(') (omega -> 3pi  ) K pi
+        """
+        sel = self._selection ( 'B2PsiKpiOmega_Selection')
+        if sel : return sel
+        
+        _alg = CombineParticles (
+            ## 
+            DecayDescriptor = "[B0   -> J/psi(1S) K+ pi- omega(782)]cc" , 
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            DaughtersCuts   = {
+            'omega(782)' : ' PT > %s ' % self['X0PTK']
+            } ,
+            ##
+            CombinationCut  = " mb_acut " , 
+            ##
+            MotherCut = """
+            mb_cut             & 
+            ( chi2vxNDF <  6 ) &  
+            ( ctau      > %s ) 
+            """ % self['CTAU'] ,
+            ##
+            ParticleCombiners = {'' : "LoKi::VertexFitter:PUBLIC" }
+            )
+        ##
+        sel  = Selection (
+            "SelB2PsiKpiOmegaFor" + self.name() ,
+            Algorithm          =   _alg       ,
+            RequiredSelections = [ self.psi   () ,
+                                   self.kaons () ,  
+                                   self.omega () ,
+                                   self.pions () ]   
+            )
+        ##
+        return self._add_selection( 'B2PsiKpiOmega_Selection' , sel ) 
     
 # =============================================================================
 if '__main__' == __name__ :

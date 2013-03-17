@@ -1393,8 +1393,8 @@ class StrippingPromptCharmConf(LineBuilder) :
             ] ,
             ##
             Code = self [ 'WCuts'] + """
-            ( -100 * GeV < ptCone ) &
-            ( -100 * GeV < etCone ) 
+            & ( -100 * GeV < ptCone ) 
+            & ( -100 * GeV < etCone ) 
             """ 
             )
 
