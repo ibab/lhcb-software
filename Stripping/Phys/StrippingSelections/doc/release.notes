@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-17 - Vanya Belyaev
+ -  update StrippingPromptCharm 
+
 ! 2013-03-06 - Laurence Carson
  - Update 2011 Reco 14 data samples in tests/data, edit TestMyStrippingLineOn2011Data_Reco14.py
    to use these. Remove old 2011 Reco 14 data samples.

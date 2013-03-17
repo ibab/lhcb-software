@@ -28,6 +28,11 @@
 #    - dimuons   & W+
 #    - chi_(c,b) & W+
 #
+#  Double charmed baryons:
+#
+#    - Xi_cc+    -> Lambda_c+ K- pi+
+#    - Xi_cc++   -> Lambda_c+ K- pi+ pi+
+#
 #  The cuts more or less correspond to D*+ selection by Alexandr Kozlinzkiy.
 #  In addition the PT-cut for the long-lived charmed particle has been applied.
 #  Thanks to Marco Gersabeck & Harry Cliff for nice idea.
@@ -62,7 +67,12 @@
 # | <>DiMuonAndWForPromptCharm     | 0.0119 |   33 | 0.033 |
 # | <>ChiAndWForPromptCharm        | 0.0054 |   15 | 0.033 |
 # +--------------------------------+--------+------+-------+
+# |               other                                    |
+# +--------------------------------+--------+------+-------+
 # | <>DsPsiForPromptCharm          | 0.0090 |   25 | 0.032 |
+# | <>DsLamCForPromptCharm         | 0.0090 |   25 | 0.032 |
+# | <>Xicc+ForPromptCharm          | 0.0090 |   25 | 0.032 |
+# | <>Xicc++ForPromptCharm         | 0.0090 |   25 | 0.032 |
 # +--------------------------------+--------+------+-------+
 #
 # Usage:
@@ -215,12 +225,17 @@ _default_configuration_ = {
     'pT(D+)'           :  3.0 * GeV ,    ## pt-cut for  prompt   D+
     'pT(Ds+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Ds+
     'pT(Ds+) for Bc+'  :  1.0 * GeV ,    ## pt-cut for  Ds+ from Bc+
+    'pT(Ds+) for Lb'   :  1.0 * GeV ,    ## pt-cut for  Ds+ from Bc+
     'pT(Lc+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Lc+
+    'pT(Lc+) for Xicc' :  1.0 * GeV ,    ## pt-cut for  Lc+ from Xicc
+    'pT(Lc+) for Lb'   :  1.0 * GeV ,    ## pt-cut for  Lc+ from Lb0
+    'pT(Xicc+)'        :  2.0 * GeV ,    ## pt-cut for Xicc+ 
+    'pT(Xicc++)'       :  2.0 * GeV ,    ## pt-cut for Xicc++
     #
     # Selection of basic particles
     #
     'TrackCuts'       : """
-    ( TRCHI2DOF < 5     ) &
+    ( TRCHI2DOF < 4     ) &
     ( PT > 250 * MeV    ) &
     ( TRGHOSTPROB < 0.5 ) & 
     in_range  ( 2 , ETA , 5 )
@@ -257,10 +272,19 @@ _default_configuration_ = {
     'chi2vx = VFASPF(VCHI2) '                    ,
     # shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light" ,
-    "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+    "ctau     = BPVLTIME (   9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+    "ctau_9   = BPVLTIME (   9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+    "ctau_16  = BPVLTIME (  16 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<16
+    "ctau_25  = BPVLTIME (  25 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<25
+    "ctau_100 = BPVLTIME ( 100 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<100
+    "ctau_no  = BPVLTIME (     ) * c_light "  , ## no embedded cut for chi2(lifetimeFit)
     # dimuons:
     "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
+    ## good proton
+    "good_proton   = ( 'p+' == ABSID ) & in_range ( 8 * GeV , P , 150 * GeV )  " ,
+    "good_proton   = good_proton & ( PIDp - PIDpi > 5 ) " ,
+    "good_proton   = good_proton & ( PIDp - PIDK  > 5 ) " 
     ] ,
     ## monitoring ?
     'Monitor'     : False ,
@@ -271,17 +295,22 @@ _default_configuration_ = {
     'D+Prescale'             : 1.0 ,
     'LambdaCPrescale'        : 1.0 ,
     'LambdaC*Prescale'       : 1.0 ,
+    'Xicc+Prescale'          : 1.0 ,
+    'Xicc++Prescale'         : 1.0 ,
     'SigmaCPrescale'         : 1.0 ,
     'DiCharmPrescale'        : 1.0 ,
     'DiMu&CharmPrescale'     : 1.0 ,
     'Chi&CharmPrescale'      : 1.0 ,
     'Ds&PsiPrescale'         : 1.0 ,
+    'Ds&Lc+Prescale'         : 1.0 ,
     'Charm&WPrescale'        : 1.0 ,
     'DiMuon&WPrescale'       : 1.0 ,
     'Chi&WPrescale'          : 1.0 ,
     ## ========================================================================
     }
-
+# =============================================================================
+# use a bit faster fitter 
+FITTER = 'LoKi::VertexFitter:PUBLIC'
 ## ============================================================================
 ## @class  StrippingPromptCharmConf
 #  Helper class required by Tom & Greig
@@ -371,15 +400,20 @@ class StrippingPromptCharmConf(LineBuilder) :
                  self.Dstar          () ,
                  self.Ds             () ,
                  self.Dplus          () ,
+                 self.preLamC        () ,
                  self.LamC           () ,
+                 self.LamC4Xicc      () ,
                  self.SigC           () ,
                  self.LamCstar       () ,
+                 self.XiccP          () ,
+                 self.XiccPP         () ,
                  self.DiMuon         () ,
                  self.DiCharm        () ,
                  self.DiMuonAndCharm () ,
                  self.ChiAndCharm    () ,
                  self.preDs          () ,
                  self.DsPsi          () ,
+                 self.DsLamC         () ,
                  self.W              () ,
                  self.CharmAndW      () ,
                  self.DiMuonAndW     () ,
@@ -472,7 +506,21 @@ class StrippingPromptCharmConf(LineBuilder) :
             checkPV  = self['CheckPV'         ] ,
             algos    =     [ self.LamCstar () ]
             ) ,
-            ##
+            ## Xicc+ 
+            StrippingLine (
+            "Xicc+For" + self.name()     ,
+            prescale = self['Xicc+Prescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'      ] ,
+            algos    =     [ self.XiccP () ]
+            ) ,
+            ## Xicc++ 
+            StrippingLine (
+            "Xicc++For" + self.name()         ,
+            prescale = self['Xicc++Prescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'       ] ,
+            algos    =     [ self.XiccPP () ]
+            ) ,
+            ## DiCharm
             StrippingLine (
             "DiCharmFor" + self.name() ,
             prescale = self['DiCharmPrescale'] , ## ATTENTION! Prescale here !!
@@ -492,6 +540,13 @@ class StrippingPromptCharmConf(LineBuilder) :
             prescale = self['Chi&CharmPrescale']  , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'          ] ,
             algos    =     [ self.ChiAndCharm () ]
+            ) ,
+            ##
+            StrippingLine (
+            "DsLamCFor" + self.name() ,
+            prescale   = self['Ds&Lc+Prescale' ] , ## ATTENTION! Prescale here !!
+            checkPV    = self['CheckPV'        ] ,
+            algos      =     [ self.DsLamC ()  ]
             ) ,
             ##
             StrippingLine (
@@ -657,7 +712,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( abs ( LV01 ) < 0.9      ) &
             ( ctau > 100 * micrometer )
             """ %           min ( self['pT(D0)'        ] ,
-                                  self['pT(D0) for D*+'] )
+                                  self['pT(D0) for D*+'] ) ,
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } ,
+            #
             )
         #
         ## make (pre)selection
@@ -760,7 +820,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             MotherMonitor  = """
             process ( monitor ( M - M1 , hdm1 , 'Delta Mass' ) )  >> ~EMPTY
-            """
+            """ , 
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } ,
+            #
             )
 
         ## convert it to selection
@@ -813,7 +878,8 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( APT > %s  ) &
             ( admD | admDs  )
             """  % ( 0.95 * min ( self['pT(Ds+)'        ] ,
-                                  self['pT(Ds+) for Bc+'] ) ) ,
+                                  self['pT(Ds+) for Bc+'] ,
+                                  self['pT(Ds+) for Lb' ] ) ) ,
             #
             ## ATTENTION: there is neither c*tau nor pointing cuts here!
             MotherCut      = """
@@ -825,7 +891,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             MotherMonitor  = """
             process ( monitor ( M , hKKpi , 'mass KKpi' )  ) >> ~EMPTY
-            """
+            """ ,
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } ,
+            #
             )
 
         ## convert it to selection
@@ -897,7 +968,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             MotherMonitor  = """
             process ( monitor ( M , hKpipi , 'mass K pi pi' ) )  >> ~EMPTY
-            """
+            """ ,
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } ,
+            #
             )
 
         # convert it to selection
@@ -909,13 +985,12 @@ class StrippingPromptCharmConf(LineBuilder) :
 
         return self._add_selection ( 'DForPromptCharm_Selection' , sel )
 
-
     # =============================================================================
-    # Lambda_C -> ( pKpi )  selection
+    # Lambda_C -> ( pKpi )  (pre)selection
     # =============================================================================
-    def LamC ( self ) :
+    def preLamC ( self ) :
 
-        sel = self._selection ( 'LambdaCForPromptCharm_Selection' )
+        sel = self._selection ( 'PreLambdaCForPromptCharm_Selection' )
         if sel : return sel
 
         cmb = CombineParticles(
@@ -940,25 +1015,90 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( chi2vx  < 25 )                   &
             ( PT      > %s                   ) &
             ( ADMASS('Lambda_c+') < 50 * MeV ) &
-            ( ctau    > 100 * micrometer     )
-            """ %  self['pT(Lc+)' ] ,
+            ( ctau_no > 80 * micrometer      )
+            """ %  min ( self [ 'pT(Lc+)'          ] ,
+                         self [ 'pT(Lc+) for Xicc' ] ,
+                         self [ 'pT(Lc+) for Lb'   ] ) , 
             ##
             MotherMonitor  = """
             process ( monitor ( M , hpKpi , 'mass p K pi ' ) ) >> ~EMPTY
-            """
+            """ , 
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } ,
+            #
             )
 
         # convert it to selection
         sel = Selection (
-            "SelLambdaCFor"    + self.name()       ,
+            "PreSelLambdaCFor" + self.name()       ,
             Algorithm          = cmb               ,
             RequiredSelections = [ self.mesons  () ,
                                    self.protons () ]
             )
 
+        return self._add_selection( 'PreLambdaCForPromptCharm_Selection' ,  sel )
+
+    # =============================================================================
+    # Lambda_C -> ( pKpi )  (prompt) selection 
+    # =============================================================================
+    def LamC ( self ) :
+        """
+        Lambda_C -> ( pKpi )  (prompt) selection 
+        """
+        sel = self._selection ( 'LambdaCForPromptCharm_Selection' )
+        if sel : return sel
+        
+        fltr = FilterDesktop (
+            ##
+            Preambulo = self.preambulo() ,
+            ##
+            Code = """
+            ( PT     > %s               ) &
+            ( ctau_9 > 100 * micrometer ) 
+            """ % self [ 'pT(Lc+)' ] 
+            )
+        
+        # convert it to selection
+        sel = Selection (
+            "SelLambdaCFor"    + self.name()       ,
+            Algorithm          = fltr              ,
+            RequiredSelections = [ self.preLamC () ] 
+            )
+        
         return self._add_selection( 'LambdaCForPromptCharm_Selection' ,  sel )
+    
 
-
+    # =============================================================================
+    # Lambda_C -> ( pKpi ) selection for Xicc 
+    # =============================================================================
+    def LamC4Xicc ( self ) :
+        """
+        Lambda_C -> ( pKpi ) selection for Xicc
+        """
+        sel = self._selection ( 'LamC4XiccForPromptCharm_Selection' )
+        if sel : return sel
+        
+        fltr = FilterDesktop (
+            ##
+            Preambulo = self.preambulo() ,
+            ##
+            Code = """
+            ( PT > %s ) & INTREE ( good_proton ) 
+            """ % self [ 'pT(Lc+) for Xicc' ] 
+            )
+        
+        # convert it to selection
+        sel = Selection (
+            "SelLamC4XiccFor"    + self.name()     ,
+            Algorithm          = fltr              ,
+            RequiredSelections = [ self.preLamC () ] 
+            )
+        
+        return self._add_selection( 'LamC4XiccForPromptCharm_Selection' ,  sel )
+    
+    
     # =============================================================================
     # Sigma_C -> Lambda_C pi selection
     # =============================================================================
@@ -978,7 +1118,8 @@ class StrippingPromptCharmConf(LineBuilder) :
             ] ,
             ##
             DaughtersCuts = {
-            'pi+' :  self.slowPionCuts()
+            'Lambda_c+' : ' INTREE ( good_proton ) ' , 
+            'pi+'       :  self.slowPionCuts()
             } ,
             ##
             Preambulo = self.preambulo() + [
@@ -995,7 +1136,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             MotherMonitor  = """
             process ( monitor ( M-M1 , hDmSigC , 'dm(Sigma_c)' ) ) >> ~EMPTY
-            """
+            """ ,
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } ,
+            #
             )
 
         # convert it to selection
@@ -1027,7 +1173,8 @@ class StrippingPromptCharmConf(LineBuilder) :
             ] ,
             ##
             DaughtersCuts = {
-            'pi+' :  self.slowPionCuts()
+            'Lambda_c+' : ' INTREE ( good_proton ) ' , 
+            'pi+'       :  self.slowPionCuts()
             } ,
             ##
             Preambulo = self.preambulo() + [
@@ -1043,7 +1190,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             MotherMonitor  = """
             process ( monitor ( M-M1 , hDmLamC , 'dm(Lambda_c)' ) ) >> ~EMPTY
-            """
+            """ ,
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } ,
+            #
             )
 
         # convert it to selection
@@ -1056,7 +1208,106 @@ class StrippingPromptCharmConf(LineBuilder) :
 
         return self._add_selection( 'SigmaCstarForPromptCharm_Selection' ,  sel )
 
+    # ===========================================================================
+    ## try to reconstruct   Xicc+
+    def XiccP  ( self ) :
+        """
+        Try to reconstruct   Xicc+ -> Lambda_c+ K- pi+ 
+        """
+        sel = self._selection ( 'Xicc+ForPromptCharm_Selection' )
+        if sel : return sel
+        
+        cmb = CombineParticles(
+            ##
+            Preambulo = self.preambulo() , 
+            ##
+            DecayDescriptors = [
+            " [ Xi_cc+ -> Lambda_c+ K- pi+]cc" , 
+            " [ Xi_cc+ -> Lambda_c+ K+ pi-]cc"
+            ] ,
+            ##
+            DaughtersCuts = {
+            'K-'        : self [ 'TrackCuts' ] + ' & HASRICH '                    ,
+            'pi+'       : self [ 'TrackCuts' ] + ' & HASRICH ' + self['PionCuts'] 
+            } ,
+            ##
+            CombinationCut = """
+            ( AM  < 6 * GeV ) &
+            ( APT > %s      ) 
+            """ %  ( 0.95 * self[ 'pT(Xicc+)'] ) ,
+            ## 
+            MotherCut      = """
+            ( PT      > %s              ) &
+            ( chi2vx  < 16              ) &
+            ( ctau_16 > 50 * micrometer ) 
+            """ %        self[ 'pT(Xicc+)' ] , 
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
+            )
+        
+        # convert it to selection
+        sel = Selection (
+            "SelXicc+For"       +   self.name()       ,
+            Algorithm           =   cmb               ,
+            RequiredSelections  = [ self.LamC4Xicc () ,
+                                    StdLooseKaons     ,
+                                    StdLoosePions     ]
+            )
+        return self._add_selection( 'Xicc+ForPromptCharm_Selection' ,  sel )
 
+
+    # ===========================================================================
+    ## try to reconstruct   XiccPP
+    def XiccPP  ( self ) :
+        """
+        Try to reconstruct   Xicc++ -> Lambda_c+ K- pi+ pi+
+        """
+        sel = self._selection ( 'Xicc++ForPromptCharm_Selection' )
+        if sel : return sel
+        
+        cmb = CombineParticles(
+            ##
+            Preambulo = self.preambulo() , 
+            ##
+            DecayDescriptors = [
+            " [ Xi_cc++ -> Lambda_c+ K- pi+ pi+]cc" , 
+            " [ Xi_cc++ -> Lambda_c+ K+ pi- pi-]cc" 
+            ] ,
+            ##
+            DaughtersCuts = {
+            'K-'        : self [ 'TrackCuts' ] + ' & HASRICH '                    ,
+            'pi+'       : self [ 'TrackCuts' ] + ' & HASRICH ' + self['PionCuts'] 
+            } ,
+            ##
+            CombinationCut = """
+            ( AM  < 6 * GeV ) &
+            ( APT > %s      ) 
+            """ %  ( 0.95 * self[ 'pT(Xicc++)'] ) ,
+            MotherCut      = """
+            ( PT      > %s              ) &
+            ( chi2vx  < 36              ) &
+            ( ctau_16 > 50 * micrometer ) 
+            """ %        self[ 'pT(Xicc++)'] ,
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
+            )
+        
+        # convert it to selection
+        sel = Selection (
+            "SelXicc++For"      +   self.name()       ,
+            Algorithm           =   cmb               ,
+            RequiredSelections  = [ self.LamC4Xicc () ,
+                                    StdLooseKaons     ,
+                                    StdLoosePions     ]
+            )
+        return self._add_selection( 'Xicc++ForPromptCharm_Selection' ,  sel )
+     
     ## helper merged selection of all charmed particles
     def PromptCharm ( self ) :
         """
@@ -1077,6 +1328,51 @@ class StrippingPromptCharmConf(LineBuilder) :
 
         return self._add_selection ( 'PromptCharm_Selection' , sel )
 
+    # =========================================================================
+    ## Lambda_c + Ds selection 
+    def DsLamC ( self ) :
+        """
+        Get Lambda_c + Ds 
+        """
+        sel = self._selection ( 'DsLamC_Selection' )
+        if sel : return sel
+        
+        cmb = CombineParticles (
+            ##
+            DecayDescriptors = [
+            "[ Lambda_b0 -> Lambda_c+ D_s- ]cc" ,
+            "[ Lambda_b0 -> Lambda_c+ D_s+ ]cc" ,
+            ] , 
+            ##
+            DaughtersCuts  = {
+            'Lambda_c+'   : " PT > %s " % self['pT(Lc+) for Lb'] , 
+            'D_s-'        : " PT > %s " % self['pT(Ds+) for Lb'] 
+            } ,
+            ##
+            CombinationCut = """
+            AM < 7.5 * GeV 
+            """,
+            ##
+            MotherCut      = """
+            ( chi2vx  < 16              )  &
+            ( ctau_16 > 25 * micrometer ) 
+            """ ,
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
+            )
+        
+        sel = Selection  (
+            "SelDsLamCFor"     +   self.name()     ,
+            Algorithm          =   cmb             ,
+            RequiredSelections = [ self.preLamC () ,
+                                   self.preDs   () ]
+            )
+        
+        return self._add_selection( 'DsLamc_Selection' , sel )
+    
 
     ## selection of W+-
     def W ( self )  :
@@ -1087,7 +1383,20 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'W_Selection' )
         if sel : return sel
 
-        _Filter = FilterDesktop ( Code = self [ 'WCuts'] )
+        _Filter = FilterDesktop (
+            ##
+            Preambulo = self.preambulo () + [ 
+            "ptCone_ = SUMCONE (   0.25 , PT , '/Event/Phys/StdAllLoosePions/Particles'   )",
+            "etCone_ = SUMCONE (   0.25 , PT , '/Event/Phys/StdLooseAllPhotons/Particles' )",
+            "ptCone  =   SINFO (  55001 , ptCone_ , True ) " ,
+            "etCone  =   SINFO (  55002 , etCone_ , True ) " ,
+            ] ,
+            ##
+            Code = self [ 'WCuts'] + """
+            ( -100 * GeV < ptCone ) &
+            ( -100 * GeV < etCone ) 
+            """ 
+            )
 
         sel = Selection  (
             "SelWFor" + self._name  ,
@@ -1157,10 +1466,16 @@ class StrippingPromptCharmConf(LineBuilder) :
             " [ psi(3770) -> Lambda_c+ Lambda_c+  ]cc "
 
             ] ,
+            Preambulo = self.preambulo () ,
             ## combination cut : accept all
             CombinationCut = " AALL " ,
             ##      mother cut : accept all
-            MotherCut      = "  ALL "
+            MotherCut      = "  ALL " , 
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
             )
 
         sel = Selection (
@@ -1200,10 +1515,17 @@ class StrippingPromptCharmConf(LineBuilder) :
             " [ chi_b0(2P) -> Lambda_c+ mu+ ]cc " ,
             " [ chi_b0(2P) -> Lambda_c+ mu- ]cc " ,
             ] ,
+            ##
+            Preambulo = self.preambulo() ,
             ## combination cut : accept all
             CombinationCut = " AALL " ,
             ##      mother cut : accept all
-            MotherCut      = "  ALL "
+            MotherCut      = "  ALL " , 
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
             )
 
         sel = Selection (
@@ -1237,7 +1559,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## combination cut
             CombinationCut  = " psi | psi_prime | ( AM > 8 * GeV ) " ,
             ##      mother cut
-            MotherCut       = " chi2vx < 20 "
+            MotherCut       = " chi2vx < 20 " ,
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
             )
 
         ##
@@ -1271,8 +1598,14 @@ class StrippingPromptCharmConf(LineBuilder) :
             "[ Upsilon(1S) -> J/psi(1S) D_s+      ]cc" ,
             "[ Upsilon(1S) -> J/psi(1S) Lambda_c+ ]cc"
             ] ,
+            Preambulo      = self.preambulo() , 
             CombinationCut = " AALL " ,
-            MotherCut      = "  ALL "
+            MotherCut      = "  ALL " , 
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
             )
 
         sel = Selection  (
@@ -1304,6 +1637,8 @@ class StrippingPromptCharmConf(LineBuilder) :
             "[ Upsilon(1S) -> J/psi(1S) Lambda_c+ gamma ]cc"
             ] ,
             ##
+            Preambulo = self.preambulo () ,
+            ##
             DaughtersCuts = {
             #                    J/psi                              Upsilon(1S)
             "J/psi(1S)" : " ( M  < 3.21 * GeV ) | in_range ( 9.3 * GeV , M , 9.6 * GeV ) " ,
@@ -1314,7 +1649,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             AM13 - AM1 < 1.01 * GeV
             """,
             ##
-            MotherCut      = "  ALL "
+            MotherCut      = "  ALL " , 
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
             )
         ##
         sel_ = Selection (
@@ -1358,10 +1698,17 @@ class StrippingPromptCharmConf(LineBuilder) :
             #
             " [ chi_b0(2P) -> J/psi(1S) mu+ ]cc " ,
             ] ,
+            ##
+            Preambulo = self.preambulo () ,
             ## combination cut : accept all
             CombinationCut = " AALL " ,
             ##      mother cut : accept all
-            MotherCut      = "  ALL "
+            MotherCut      = "  ALL " , 
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
             )
 
         sel = Selection (
@@ -1394,12 +1741,19 @@ class StrippingPromptCharmConf(LineBuilder) :
             "J/psi(1S)" : " ( M  < 3.21 * GeV ) | in_range ( 8.5 * GeV , M , 12.0 * GeV ) " ,
             "gamma"     : self [ 'GammaChi' ]
             },
+            ##
+            Preambulo  = self.preambulo() ,
             ## require chi_(c,b)
             CombinationCut = """
             AM12 - AM1 < 1.01 * GeV
             """,
             ##
-            MotherCut      = "  ALL "
+            MotherCut      = "  ALL " , 
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
             )
         ##
         sel_ = Selection (
@@ -1438,6 +1792,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             DecayDescriptor = "[ B_c+ -> J/psi(1S) D_s+ ]cc" ,
             ##
+            Preambulo      = self.preambulo() ,
             DaughtersCuts  = {
             "J/psi(1S)" : "M < 4.0 * GeV " ,
             "D_s+"      : "PT > %s " % self['pT(Ds+) for Bc+'],
@@ -1449,7 +1804,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             MotherCut      = """
             ( chi2vx < 16 )
-            """
+            """, 
+            #
+            ## make the selection faster
+            #
+            ParticleCombiners = {'' : FITTER } 
+            #
             )
 
         sel = Selection  (
