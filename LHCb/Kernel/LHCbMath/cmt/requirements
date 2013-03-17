@@ -19,6 +19,7 @@ use GaudiKernel     v*
 use ROOT            v*      LCG_Interfaces
 use Boost           v*      LCG_Interfaces
 use GSL             v*      LCG_Interfaces
+use GaudiGSL        v*   
 use GaudiPython     v*                     -no_auto_imports
 
 apply_pattern install_more_includes more=LHCbMath
@@ -87,4 +88,9 @@ macro_append  GSL_linkopts " -Wl,--as-needed " \
                     Darwin "" \
                      WIN32 "" \
                 target-icc ""
+
+macro_append ROOT_linkopts "  -lHist      -lGraf "   \
+                     WIN32 " libHist.lib libGraf.lib"
+
 end_private
+

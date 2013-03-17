@@ -534,8 +534,6 @@ for t in ( Gaudi.Math.ValueWithError         ,
         t.__str__   = t.toString
         t.__repr__  = t.toString
 
-
-
         
 ## get the eigenvalues for symmetric matrices :
 def _eigen_1_ ( self , sorted = True ) :
@@ -1009,6 +1007,24 @@ def _fit_mass_ ( particle , mass )  :
 Gaudi.Math.ParticleParams.fitMass = _fit_mass_
 
 
+# =============================================================================
+## decorate some basic vectors 
+for t in ( 'int'                ,
+           'long'               ,
+           'long long'          ,
+           'unsigned int'       ,
+           'unsigned long'      , 
+           'unsigned long long' , 
+           'double'             ,
+           'float'              ) :
+    v = std.vector( t )
+    v.asList   = lambda s :       [ i for i in s ]   ## convert vector into list
+    v.toList   = v.asList
+    v.__repr__ = lambda s : str ( [ i for i in s ] ) ## print it !
+    v.__str__  = lambda s : str ( [ i for i in s ] ) ## print it !
+
+
+
 LHCb  = cpp.LHCb
 Gaudi.Math.round                 = LHCb.Math.round 
 Gaudi.Math.equal_to_int          = LHCb.Math.equal_to_int 
@@ -1019,6 +1035,136 @@ Gaudi.Math.knuth_equal_to_double = LHCb.Math.knuth_equal_to_double
 __lomont = Gaudi.Math.lomont_compare_double
 Gaudi.Math.lomont_compare_double = __lomont
 
+if not hasattr ( Gaudi.Math.Splines , 'DATA'    ) or \
+   not hasattr ( Gaudi.Math.Splines , 'PAIR'    ) or \
+   not hasattr ( Gaudi.Math.Splines , 'DATAERR' ) : 
+    
+    _pair_ = std.pair('double','double')
+    Gaudi.Math.Splines.DATA    = std.vector ( _pair_ ) 
+    Gaudi.Math.Splines.PAIR    = std.pair   ( 'double',Gaudi.Math.ValueWithError )
+    Gaudi.Math.Splines.DATAERR = std.vector ( Gaudi.Math.Splines.PAIR ) 
+
+# =============================================================================
+## make some simple interpolation for set of data points
+#  @see Gaudi::Math::Splines::interpolate
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2013-03-17
+def _v_interp_ ( self , x ) :
+    """
+    Simple interpolation for set of data points.
+    The vector of pairs is interpreted as vector of (x,y) pairs
+
+    >>> vct_of_pairs = ...
+
+    >>> result = vct_of_pairs.interpolate ( x )
+    
+    """
+    if hasattr ( x , 'value' ) : x = x.value()
+    #
+    ## make the interpolation
+    #
+    return Gaudi.Math.Splines.interpolate ( self , x )
+
+_v_interp_ . __doc__  += '\n' + Gaudi.Math.Splines.interpolate. __doc__
+
+Gaudi.Math.Splines.DATA    .interpolate = _v_interp_
+Gaudi.Math.Splines.DATAERR .interpolate = _v_interp_
+
+# =============================================================================
+## build a spline to approximate the data poinst
+#  @see Gaudi::Math::Spline
+#  @see GaudiMath::Spline
+#  @see GaudiMath::SplineBase 
+#  @see Genfun::GaudiMathImplementation::SplineBase 
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2013-03-17
+def _v_spline_ ( self                                      ,
+                 type  = cpp.GaudiMath.Interpolation.Akima ,
+                 null  = False                             ,
+                 scale = 1                                 ,
+                 shift = 0                                 ) :
+    """
+    Create spline object for the data vector 
+
+    >>> vdata  = ...
+    >>> spline = vdata.spline ()
+
+    >>> value = spline ( 10 ) 
+    """
+    return cpp.Gaudi.Math.Spline ( self , type , null , scale , shift )
+
+# =============================================================================
+## build a spline to approximate the data poinst
+#  @see Gaudi::Math::SplineErrors
+#  @see GaudiMath::Spline
+#  @see GaudiMath::SplineBase 
+#  @see Genfun::GaudiMathImplementation::SplineBase 
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2013-03-17
+def _v_spline_err_ ( self                                      ,
+                     type  = cpp.GaudiMath.Interpolation.Akima ,
+                     null  = False                             ,
+                     scale = 1                                 ,
+                     shift = 0                                 ) :
+    """
+    Create spline object for the data vector 
+
+    >>> vdata  = ...
+    >>> spline = vdata.splineErr()
+
+    >>> value = spline ( 10 ) 
+    """
+    return cpp.Gaudi.Math.SplineErrors ( self , type , null , scale , shift )
+
+_v_spline_     . __doc__ += '\n' + cpp.Gaudi.Math.Spline       .__init__ .__doc__
+_v_spline_err_ . __doc__ += '\n' + cpp.Gaudi.Math.SplineErrors .__init__ .__doc__
+
+Gaudi.Math.Splines.DATA    .spline     = _v_spline_
+Gaudi.Math.Splines.DATAERR .spline     = _v_spline_
+Gaudi.Math.Splines.DATAERR .splineErr  = _v_spline_err_
+
+# =============================================================================
+## get values from the DATAERR 
+def _v_get_values_ ( self ) :
+    """
+    Get values from vector
+
+    >>> vdataerr = ...
+    >>> vvalues   = vdataerr.getValues()
+    
+    """
+    return Gaudi.Math.Spline.getValues ( self )
+
+
+## get values from the DATAERR 
+def _v_get_errors_ ( self ) :
+    """
+    Get errors from vector
+    
+    >>> vdataerr = ...
+    >>> verrors   = vdataerr.getErrors()
+    
+    """
+    return Gaudi.Math.Spline.getErrors ( self )
+
+_v_get_values_ . __doc__  += '\n' + Gaudi.Math.Splines.getValues. __doc__
+_v_get_errors_ . __doc__  += '\n' + Gaudi.Math.Splines.getErrors. __doc__
+
+Gaudi.Math.Splines.DATAERR .getValues = _v_get_values_
+Gaudi.Math.Splines.DATAERR .getErrors = _v_get_errors_
+
+Gaudi.Math.Splines.DATA    . __repr__ = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
+Gaudi.Math.Splines.DATAERR . __repr__ = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
+Gaudi.Math.Splines.DATA    . __str__  = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
+Gaudi.Math.Splines.DATAERR . __str__  = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
+
+if not hasattr ( Gaudi.Math.Spline       , 'DATA'    ) :
+    Gaudi.Math.Spline.DATA          = Gaudi.Math.Splines.DATA
+if not hasattr ( Gaudi.Math.Spline       , 'DATAERR' ) :
+    Gaudi.Math.Spline.DATAERR       = Gaudi.Math.Splines.DATAERR
+if not hasattr ( Gaudi.Math.SplineErrors , 'DATAERR' ) :
+    Gaudi.Math.SplineErrors.DATAERR = Gaudi.Math.Splines.DATAERR
+    
 # =============================================================================
 if '__main__' == __name__ :
 

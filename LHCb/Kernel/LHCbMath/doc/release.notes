@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-03-17 - Vanya Belyaev
+ - add some interpolation & spline functionality 
+
 !========================= LHCbMath v3r37 2013-02-04 =========================
 ! 2013-01-05 - Vany aBelyaev 
  - add StudentT function by Matt Needham 

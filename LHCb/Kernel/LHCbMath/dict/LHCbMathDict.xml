@@ -61,16 +61,37 @@
   <class name    = "Gaudi::Math::Flatte"           />
   <class name    = "Gaudi::Math::Flatte2"          />
   <class name    = "Gaudi::Math::WorkSpace"        >
-    <field name = "m_workspace" transient = "true"/>      
+    <field name  = "m_workspace" transient = "true"/>      
   </class>
   <class name    = "Gaudi::Math::Positive"        />
   <class name    = "Gaudi::Math::Bernstein"       />
+
+  <class name    = "Gaudi::Math::Spline"           >
+    <field name  = "m_spline" transient = "true"/>      
+  </class>
+  <class name    = "Gaudi::Math::SplineErrors"    />
+  <class name    = "Gaudi::Math::Interp2D"        />
+
+  <class name    = "Gaudi::Math::Linear"       />
+  <class name    = "Gaudi::Math::LinearErr"    />
+  <class name    = "Gaudi::Math::Parabola"     />
+  <class name    = "Gaudi::Math::ParabolaErr"  />
+  <function pattern = "Gaudi::Math::Splines::*"  />
+  
+  <class name    = "Gaudi::Math::Splines::DATA"    />
+  <class name    = "Gaudi::Math::Splines::PAIR"    />
+  <class name    = "Gaudi::Math::Splines::DATAERR" />
+
+  <class name    = "std::unary_function<double,Gaudi::Math::ValueWithError>"/>
+  <class name    = "std::binary_function<double,double,Gaudi::Math::ValueWithError>"/>
+
+  <class name = "std::allocator<std::pair<double,double> >"/>
+  <class name = "std::allocator<std::pair<double,Gaudi::Math::ValueWithError> >"/>
   
   <class name    = "std::vector<ROOT::Math::SVector<double,2> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,3> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,4> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,6> >" />
-
   
   <function name = "Gaudi::Math::blind"           />
   <function name = "Gaudi::Math::pow"             />
@@ -104,12 +125,15 @@
   <function name    = "Gaudi::Math::interpolate_2D"        />
   <function pattern = "Gaudi::Math::Jackson::jackson*"     />
   
+  
   <class name = "Gaudi::Math::Chi2Fit"   />
 
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>"         />
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>::CMTRX2" />
   <class name = "Gaudi::Math::Chi2Solution<6,2,double>"         />
   <class name = "Gaudi::Math::Chi2Solution<6,2,double>::CMTRX2" />
+
+  <enum name = "GaudiMath::Interpolation::Type" />
   
   <exclusion>
     <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />
@@ -136,6 +160,13 @@
     <class name = "Gaudi::Math::Workspace">  
       <field name = "m_workspace"/>      
     </class>
+    <class name = "Gaudi::Math::Spline">  
+      <field name = "m_spline"/>      
+    </class>
+    <class name    = "Gaudi::Math::Interp2D">
+      <field name = "m_histo"/>      
+    </class>
+    
     <class name = "Gaudi::Math::BreitWigner::rho_fun"/>  
     <class name = "Gaudi::Math::BreitWigner">  
       <field name = "m_rho_fun"/>      

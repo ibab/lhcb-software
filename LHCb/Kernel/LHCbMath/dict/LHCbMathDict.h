@@ -28,6 +28,7 @@
 #include "LHCbMath/LHCbMath.h"
 #include "LHCbMath/Chi2Solution.h"
 #include "LHCbMath/Chi2Fit.h"
+#include "LHCbMath/Spline.h"
 // ============================================================================
 /** @file LHCbMathDict.h 
  *  
@@ -322,6 +323,10 @@ namespace
     Gaudi::Math::Chi2Solution<6,2>::COFF    __cs52 ;
     Gaudi::Math::Chi2Solution<6,2>::VECT    __cs62 ;
     
+    Gaudi::Math::Splines::DATA    _sd_1 ;
+    Gaudi::Math::Splines::PAIR    _sd_2 ;
+    Gaudi::Math::Splines::DATAERR _sd_3 ;
+ 
   };
 }
 
