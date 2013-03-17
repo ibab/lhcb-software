@@ -4,6 +4,10 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-03-17 - Paul Szczypka
+ - Added "Upgrade" key to NetworkVersions property. New key maps to "MC12TuneV1"
+ which is the same as the "2012" key.
+
 ! 2013-03-13 - Chris Jones
  - Add a TMVAImpFactory to provide instances of compiled TMVA classifers for known
    configurations. Using compiled classes are roughly 3 times faster than using 
