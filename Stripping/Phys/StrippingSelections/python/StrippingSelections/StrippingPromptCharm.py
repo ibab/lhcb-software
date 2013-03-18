@@ -282,9 +282,9 @@ _default_configuration_ = {
     "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
     ## good proton
-    "good_proton   = ( 'p+' == ABSID ) & in_range ( 8 * GeV , P , 150 * GeV )  " ,
-    "good_proton   = good_proton & ( PIDp - PIDpi > 5 ) " ,
-    "good_proton   = good_proton & ( PIDp - PIDK  > 5 ) " 
+    "good_proton   = ( 'p+' == ABSID ) & HASRICH & in_range ( 8 * GeV , P , 150 * GeV )  " ,
+    "good_proton   = good_proton & ( PIDp - PIDpi > 2 ) " ,
+    "good_proton   = good_proton & ( PIDp - PIDK  > 2 ) " 
     ] ,
     ## monitoring ?
     'Monitor'     : False ,
