@@ -3,7 +3,8 @@
 ################################################################################
 gaudi_subdir(LHCbMath v3r37)
 
-gaudi_depends_on_subdirs(GaudiKernel
+gaudi_depends_on_subdirs(GaudiGSL
+                         GaudiKernel
                          GaudiPython)
 
 find_package(Boost)
@@ -14,7 +15,7 @@ gaudi_add_library(LHCbMathLib
                   src/*.cpp
                   PUBLIC_HEADERS LHCbMath
                   INCLUDE_DIRS Boost GSL ROOT
-                  LINK_LIBRARIES Boost GSL ROOT GaudiKernel)
+                  LINK_LIBRARIES Boost GSL ROOT GaudiGSLLib GaudiKernel)
 
 gaudi_add_dictionary(LHCbMath
                      dict/LHCbMathDict.h
