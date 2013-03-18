@@ -593,8 +593,8 @@ void PrSeedingNew::makeLHCbTracks ( LHCb::Tracks* result ) {
     //printTrack( *itT );
     
     LHCb::Track* tmp = new LHCb::Track;
-    tmp->setType( LHCb::Track::Long );
-    tmp->setHistory( LHCb::Track::PatForward );
+    tmp->setType( LHCb::Track::Ttrack );
+    tmp->setHistory( LHCb::Track::PatSeeding );
     double qOverP = m_geoTool->qOverP( *itT );
 
     LHCb::State tState;

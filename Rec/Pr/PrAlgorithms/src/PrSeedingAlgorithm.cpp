@@ -570,8 +570,8 @@ void PrSeedingAlgorithm::makeLHCbTracks ( LHCb::Tracks* result ) {
         m_trackCandidates.end() != itT; ++itT ) {
     if ( !(*itT).valid() ) continue;
     LHCb::Track* tmp = new LHCb::Track;
-    tmp->setType( LHCb::Track::Long );
-    tmp->setHistory( LHCb::Track::PatForward );
+    tmp->setType( LHCb::Track::Ttrack );
+    tmp->setHistory( LHCb::Track::PatSeeding );
     double qOverP = m_geoTool->qOverP( *itT );
 
     LHCb::State tState;

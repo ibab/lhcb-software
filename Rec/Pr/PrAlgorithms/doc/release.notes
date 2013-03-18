@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-03-18 - Sascha Stahl
+ - Fixed track type (Long -> Ttrack) in PrSeedingAlgorithm and PrSeedNew.
+
 ! 2013-02-27 - Thomas Nikodem
  - Added PrAddUTCoord to PrForwardTool.
 
