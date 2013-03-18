@@ -4,16 +4,14 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
-! 2013-03-11 - Marco Clemencic
- - Fixed compilation with C++11.
- 
-!========================= TrackMonitors v1r42 2013-02-14 =========================
-! 2013-01-30 - Jianchun Wang
- - Add UT Monitor.
-
-! 2013-01-14 - Frederic Dupertuis
- - Rebuilding of STEfficiency that is working with TT now. 
- - Fix bin number computed in histoBin of TTTrackMonitor.
+! 2013-03-14 - Jack Wimberley
+- Minor changes to TrackParticleMonitor, including:
+- Fixed axes limits in massVersusMomH2
+- Changed ID of momentum asymmetry histogram (now 'asym', previous 'momentum asymmetry' awkward in ROOT because of ' ')
+- Adds a few new histograms
+- Added configurable axes limits for most histograms (kept defaults)
+- Added ability to use variable bin sizes for histo2D's / profile1D's,
+	which is helpful in order to get ~ even statistics in bins for mass profile and bin-by-bin fits
 
 !========================= TrackMonitors v1r41 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
