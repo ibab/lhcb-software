@@ -225,12 +225,12 @@ _default_configuration_ = {
     'pT(D+)'           :  3.0 * GeV ,    ## pt-cut for  prompt   D+
     'pT(Ds+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Ds+
     'pT(Ds+) for Bc+'  :  1.0 * GeV ,    ## pt-cut for  Ds+ from Bc+
-    'pT(Ds+) for Lb'   :  1.0 * GeV ,    ## pt-cut for  Ds+ from Bc+
+    'pT(Ds+) for Lb'   :  1.0 * GeV ,    ## pt-cut for  Ds+ from Lb0
     'pT(Lc+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Lc+
     'pT(Lc+) for Xicc' :  1.0 * GeV ,    ## pt-cut for  Lc+ from Xicc
     'pT(Lc+) for Lb'   :  1.0 * GeV ,    ## pt-cut for  Lc+ from Lb0
-    'pT(Xicc+)'        :  2.0 * GeV ,    ## pt-cut for Xicc+ 
-    'pT(Xicc++)'       :  2.0 * GeV ,    ## pt-cut for Xicc++
+    'pT(Xicc+)'        :  2.0 * GeV ,    ## pt-cut for  Xicc+ 
+    'pT(Xicc++)'       :  2.0 * GeV ,    ## pt-cut for  Xicc++
     #
     # Selection of basic particles
     #
@@ -1350,12 +1350,11 @@ class StrippingPromptCharmConf(LineBuilder) :
             } ,
             ##
             CombinationCut = """
-            AM < 7.5 * GeV 
+            AALL
             """,
             ##
             MotherCut      = """
-            ( chi2vx  < 16              )  &
-            ( ctau_16 > 25 * micrometer ) 
+            ( chi2vx  < 100 )  
             """ ,
             #
             ## make the selection faster
