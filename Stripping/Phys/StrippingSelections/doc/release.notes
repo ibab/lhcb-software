@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-18 - Oliver Gruenberg
+ - Added StrippingBLVLines 
+
 ! 2013-03-17 - Vanya Belyaev
  -  update StrippingPsiX0 
 

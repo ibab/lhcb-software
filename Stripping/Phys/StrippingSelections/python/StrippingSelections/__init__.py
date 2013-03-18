@@ -63,6 +63,7 @@ import StrippingBd2eeKstar
 import StrippingBd2eeKstarBDT
 import StrippingBd2MuMuKstarBDT
 import StrippingBeauty2XGamma
+import StrippingBLVLines
 
 import StrippingDiMuonNew
 import StrippingDiMuonForXsection
@@ -150,7 +151,7 @@ import StrippingLb2V0hh
 #import StrippingB2PPbar
 import StrippingB2TwoBaryons
 import StrippingB2FourKHigh
-import StrippingBs2KKhh
+import StrippingBs2Khh
 import StrippingBs2KSKS
 import StrippingB2XEta
 import StrippingBu2KSh
