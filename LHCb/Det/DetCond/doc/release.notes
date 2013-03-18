@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-03-18 - Vanya Belyaev
+
+ - comment usage of python module from removed package HistoStrings 
+
 ! 2013-03-12 - Marco Clemencic
  - Added hints to Coverity to fix a few flas positives:
    - https://lhcb-coverity.cern.ch:8443/sourcebrowser.htm?projectId=10002#mergedDefectId=45071&defectInstanceId=156278261&fileInstanceId=111423297

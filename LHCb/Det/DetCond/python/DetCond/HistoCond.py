@@ -17,7 +17,7 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, verison $Revision: 1.1
 __all__ = ()                                                  ## export nothing 
 # =============================================================================
 
-import HistoStrings.Histos
+## import HistoStrings.Histos
 from   GaudiPython.Bindings import gbl as cpp
 
 _C  = cpp.Condition
