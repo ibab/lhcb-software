@@ -1010,13 +1010,13 @@ Gaudi.Math.ParticleParams.fitMass = _fit_mass_
 # =============================================================================
 ## decorate some basic vectors 
 for t in ( 'int'                ,
-           'long'               ,
-           'long long'          ,
-           'unsigned int'       ,
-           'unsigned long'      , 
-           'unsigned long long' , 
-           'double'             ,
-           'float'              ) :
+           ##'long'               ,
+           ##'long long'          ,
+           ##'unsigned int'       ,
+           ##'unsigned long'      , 
+           ##'unsigned long long' ,
+           ##'float'
+           'double'               ) :
     v = std.vector( t )
     v.asList   = lambda s :       [ i for i in s ]   ## convert vector into list
     v.toList   = v.asList
