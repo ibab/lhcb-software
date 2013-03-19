@@ -279,12 +279,12 @@ def RecoTracking(exclude=[]):
          from Configurables import TrackEventFitter, TrackMasterFitter
          fitBest = TrackEventFitter("FitBest")
          fitBest.Fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
-         fitBest.Fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.86
+         fitBest.Fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.76
       else:
          from Configurables import TrackBestTrackCreator
          fitter = TrackBestTrackCreator().Fitter
          fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
-         fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.86
+         fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.76
       
    ## Extra track information sequence
    extraInfos = TrackSys().getProp("TrackExtraInfoAlgorithms")
