@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-19 - Aurelien Martens
+ - update default StrippingBu2KSh to include Bc
+
 ! 2013-03-18 - Oliver Gruenberg
  - Added StrippingBLVLines 
 
