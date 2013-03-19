@@ -10,11 +10,12 @@ gaudi_depends_on_subdirs(Event/MCEvent
                          Rec/RecInterfaces)
 
 find_package(NeuroBayesExpert)
+find_package(ROOT COMPONENTS TMVA)
 
 gaudi_add_module(ChargedProtoANNPID
                  src/*.cpp
-                 INCLUDE_DIRS NeuroBayesExpert Rec/RecInterfaces
-                 LINK_LIBRARIES NeuroBayesExpert MCEvent PhysEvent RecEvent GaudiAlgLib)
+                 INCLUDE_DIRS NeuroBayesExpert ROOT Rec/RecInterfaces
+                 LINK_LIBRARIES NeuroBayesExpert ROOT MCEvent PhysEvent RecEvent GaudiAlgLib)
 
 gaudi_install_python_modules()
 
