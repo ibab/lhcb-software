@@ -1,0 +1,24 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>2400</integer></argument>
+  <argument name="options"><text>
+from Gaudi.Configuration import *
+
+from Configurables import LHCbApp
+LHCbApp().DDDBtag="dddb-20130312-1"
+LHCbApp().CondDBtag="sim-20130222-1-vc-md100"
+
+EventSelector().Input = ["DATAFILE='PFN:$LHCBDEV/GAUSS/Tests/Tests-v45r0/10000000-50ev-20130313-HLT.digi'"]
+
+from Brunel.Configuration import *
+Brunel().Monitors = ["SC","FPE"]
+Brunel().WithMC=True
+Brunel().InputType = "DIGI"
+Brunel().DataType="2012"</text></argument>
+  <argument name="reference"><text>../refs/sim08.ref</text></argument>
+  <argument name="validator"><text>
+from Brunel.QMTest.BrunelExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>
