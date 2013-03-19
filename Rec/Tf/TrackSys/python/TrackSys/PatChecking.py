@@ -4,7 +4,7 @@ from GaudiKernel.SystemOfUnits import mm
 
 from Configurables import ( TrackAssociator, TrackResChecker, TrackOccupChecker,
                             TrackEffChecker, TrackSelector, MCReconstructible,
-                            MCParticleSelector, PrimaryVertexChecker, PatLHCbID2MCParticle,
+                            MCParticleSelector, PatLHCbID2MCParticle,
                             UnpackMCParticle, UnpackMCVertex, DebugTrackingLosses )
                             
 def PatChecking():
@@ -98,10 +98,6 @@ def PatChecking():
    ConfigureEffCheckTools(TrackEffChecker("Downstream"))
    
    GaudiSequencer("CheckPatSeq").Members  += [TrackOccupChecker("OccupancyCheck")]
-
-   #don't do this for DC06 because there's an FPE.
-   if TrackSys().getProp('DataType')!="DC06":
-     GaudiSequencer("CheckPatSeq").Members  += [PrimaryVertexChecker("PVOfflineCheck")]
 
 def ConfigureEffCheckTools(EffCheck):
    EffCheck.addTool(MCReconstructible, name="Selector")

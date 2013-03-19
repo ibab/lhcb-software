@@ -4,9 +4,14 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-03-19 - Marco Cattaneo
+ - In patChecking.py: Remove PrimaryVertexChecker from Check sequence, since
+   it requires HepMC, no longer available in MC DSTs by default (from Sim08)
+   (also on v7r6p1 branch)
 
 ! 2013-03-19 - Maurizio Martinelli
  - Modified energy loss correction factor in RecoTracking.py.
+   (also on v7r6p1 branch)
 
 ! 2013-02-27 - Sascha Stahl
  - Added PatMatch to upgrade sequence.
