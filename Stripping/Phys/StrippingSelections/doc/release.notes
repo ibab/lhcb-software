@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-19 - Mika Vesterinen
+ - Addeed new module CharmFromBSemiForProtonPID
+   - See slides from PPTS 2013-03-18
+
 ! 2013-03-19 - Aurelien Martens
  - update default StrippingBu2KSh to include Bc
 

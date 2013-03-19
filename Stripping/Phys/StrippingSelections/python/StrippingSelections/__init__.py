@@ -30,6 +30,7 @@ import StrippingBd2DstarTauNu
 import StrippingB2XuMuNu
 import StrippingB2DMuNuX
 import StrippingCharmFromBSemi
+import StrippingCharmFromBSemiForProtonPID
 import StrippingCrossSectionB2DMuNuX
 import StrippingInclPhi
 import StrippingV0ForPID
