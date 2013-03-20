@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v17r8 2013-03-20 =========================
 ! 2013-03-11 - Chris Jones
  - Add Ecal and Hcal linkers back to standardf DSTs, as they are needed for MC
    matching in DaVinci.
