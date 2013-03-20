@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-20 - Oliver Gruenberg
+ - Added StrippingLc23MumLines 
 
 ! 2013-03-20 - Mika Vesterinen
  - Minor changes to CharmFromBSemiForProtonPID,
