@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r38 2013-03-20 =========================
 ! 2013-03-18 - Marco Clemencic
  - updated CMake configuration after latest changes
 
