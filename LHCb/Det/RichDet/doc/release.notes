@@ -3,9 +3,12 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
+
+!========================= RichDet v16r16 2013-03-20 =========================
 ! 2013-03-10 - Sajan Easo
 - Fix for DePMTPanel to avoid pmt pixel row/column to exceed the allowed range (0-7).
 - Fix to avoid potential memory leak for array related to pmt lens.  
+
 !========================= RichDet v16r15 2013-02-05 =========================
 ! 2013-02-05 Sajan Easo
  - Modifications for PMTS with Lenses : safety check for no-lens PMT data
