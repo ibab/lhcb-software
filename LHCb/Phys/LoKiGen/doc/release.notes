@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r11 2013-03-20 =========================
 ! 2013-02-21 - Vanya Belyaev
  - symbol GY was masked by incorrect redefinition.
    Many thanks for Wenbin Qian for the hints
