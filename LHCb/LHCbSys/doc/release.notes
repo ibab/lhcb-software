@@ -5,6 +5,80 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v35r5>2013-03-21 LHCbSys v35r5</A></H1><PRE>
+This version uses Gaudi v23r7 and LCG_64d
+
+- Packages added:    Tools/EventIndexer v1r0 - Generation of indexes of events
+- Packages modified: Det/DDDB v1r61, Det/DetCond v12r29p1, Det/MuonDet v9r10,
+    Det/RichDet v16r16, Det/VLDet v1r5, Event/FTEvent v1r3, Event/RecEvent v2r45,
+    Ex/IOExample v4r9, GaudiConf v17r8, Kernel/LHCbAlgs v2r55,
+    Kernel/LHCbMath v3r38, Phys/LoKiGen v10r11, Tools/CondDBUI v3r21
+
+- In Det/DDDB v1r61
+  . Update default database tags to the latest ones:
+    o LHCBCOND, 2013: cond-20130125
+    o LHCBCOND, 2012: cond-20130125
+    o DDDB,     2011: dddb-20130111
+    o LHCBCOND, 2011: cond-20130125
+
+- In Det/DetCond v12r29p1
+  . Remove usage of python module from removed package HistoStrings 
+
+- In Det/MuonDet v9r10
+  . In DeMuonDetector.h: (see https://savannah.cern.ch/bugs/?100553)
+    o remove define directives in favour of private static const members
+    o remove unused defines
+  . In src/Lib/MuonBasicGeometry.cpp, MuonDet/MuonBasicGeometry.h
+    Added a check on the muonSystem children to skip the muon filter and keep
+    only the muon stations.
+  . Added CMake configuration file.
+
+- In Det/RichDet v16r16
+  . In DePMTPanel, avoid pmt pixel row/column to exceed the allowed range (0-7).
+  . Avoid potential memory leak for array related to pmt lens.
+
+- In Det/VLDet v1r5
+  . Put back VL path
+
+- In Event/FTEvent v1r3
+  . In MCFTDigit class, map of MCParticle replaced by map of MCHit
+
+- In Event/RecEvent v2r45
+  . Added information about FT clusters to RecSummary.
+
+- In Ex/IOExample v4r9
+  . Fix access URLs for MC10, Stripping17, Reco08 and Reco09 test files that have
+    been moved to EOS
+
+- In GaudiConf v17r6, v17r7, v17r8
+  . Add Ecal and Hcal linkers back to standard DSTs, as they are needed for MC
+    matching in DaVinci.
+  . Fix type of SaveHepMC to be a bool in SimConf. Bug, introduced in v17r0,
+    affects only Gauss.
+  . RecSummary added to DST also for upgrade detectors.
+  . Add a new function DigiConf().AddMCTrackInfo, to add MC/TrackInfo to the
+    output, called by both DigiConf and DstConf. Previously this was part of 
+    AddMCParticleLinks, so MC/TrackInfo was not added to default MC DST, only
+    XDST (bug introduced in v17r0, fixed also in v17r4b branch)
+
+- In Kernel/LHCbAlgs v2r55
+  . Changed the way LHCbApp derives dataTypes for the DB to also pick up older
+    tags of the various detectors and their combinations.
+
+- In Kernel/LHCbMath v3r38
+  . Add some interpolation & spline functionality
+
+- In Phys/LoKiGen v10r11
+  . Symbol GY was masked by incorrect redefinition.
+ 
+- In Tools/CondDBUI v3r21
+  . compress_db_metadata.py, compress_db_metadata_mp.py: new scripts to compress
+    the content of a CondDB file, both will yield exactly the same results.
+    The later one is supposed to be much faster since it runs concurrent tasks
+    with multiprocessing 
+  . ReleaseNotes.py: few handy methods added to fetch DataTypes from RN XML.
+
+
 </PRE><H1><A NAME=v35r4>2013-02-12 LHCbSys v35r4</A></H1><PRE>
 This version uses Gaudi v23r6 and LCG_64c
 
