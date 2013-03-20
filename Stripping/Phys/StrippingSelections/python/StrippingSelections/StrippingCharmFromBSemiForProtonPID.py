@@ -117,14 +117,14 @@ class CharmFromBSemiForProtonPIDAllLinesConf(LineBuilder) :
                                                
         self.sel_Lb2LcMuNu = Selection(name="sel_Lb2LcMuNu"+_name,
                                        Algorithm = self.comb_Lb2LcMuNu,
-                                       RequiredSelections = [self.sel_Lc2PKPi,self.Muons])
+                                       RequiredSelections = [self.sel_Lc2PKPi,StdLooseMuons])
 
         #### define the GECs
         GECs = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(GEC_nLongTrk)s)" % self.__confdict__ ,
                  "Preambulo": ["from LoKiTracks.decorators import *"]}
 
         #### make the line
-        self.StrippingLine = StrippingLine('LbToLcMuNuLcToPKPi'+name+"Line",
+        self.StrippingLine = StrippingLine('LbToLcMuNuLcToPKPi'+_name+"Line",
                                            prescale = config['prescale'],
                                            FILTER=GECs,
                                            selection = self.sel_Lb2LcMuNu)

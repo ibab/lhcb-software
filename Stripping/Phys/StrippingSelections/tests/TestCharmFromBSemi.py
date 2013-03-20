@@ -21,6 +21,11 @@ from StrippingSelections import StrippingCharmFromBSemi
 confCharmFromBSemi = StrippingCharmFromBSemi.CharmFromBSemiAllLinesConf("CharmFromBSemi", StrippingCharmFromBSemi.confdict)
 Charm_stream.appendLines( confCharmFromBSemi.lines() )
 
+from StrippingSelections import StrippingCharmFromBSemiForProtonPID
+confCharmFromBSemiForProtonPID = StrippingCharmFromBSemiForProtonPID.CharmFromBSemiForProtonPIDAllLinesConf("CharmFromBSemiForProtonPID",
+                                                                                                            StrippingCharmFromBSemiForProtonPID.confdict)
+Charm_stream.appendLines( confCharmFromBSemiForProtonPID.lines() )
+
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
 
@@ -56,6 +61,7 @@ CondDB().IgnoreHeartBeat = True
 from Configurables import FilterDesktop
 
 StdParticles = []
+StdParticles.append("Phys/StdNoPIDsProtons")
 StdParticles.append("Phys/StdNoPIDsPions")
 StdParticles.append("Phys/StdNoPIDsKaons")
 StdParticles.append("Phys/StdNoPIDsMuons")
@@ -87,4 +93,4 @@ DaVinci().InputType = 'SDST'
 DaVinci().DDDBtag  = "head-20120413"
 DaVinci().CondDBtag = "head-20120420"
 
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")

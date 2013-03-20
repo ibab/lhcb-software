@@ -4,8 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+
+! 2013-03-20 - Mika Vesterinen
+ - Minor changes to CharmFromBSemiForProtonPID,
+   and update to test/TestCharmFromBSemi.py
+
 ! 2013-03-19 - Mika Vesterinen
- - Addeed new module CharmFromBSemiForProtonPID
+ - Added new module CharmFromBSemiForProtonPID
    - See slides from PPTS 2013-03-18
 
 ! 2013-03-19 - Aurelien Martens
