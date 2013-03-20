@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r45 2013-03-20 =========================
 ! 2013-03-03 - Sascha Stahl
  - Added information about FT clusters to RecSummary.
 
