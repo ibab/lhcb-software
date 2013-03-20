@@ -33,9 +33,9 @@ PrVeloUTTool::PrVeloUTTool( const std::string& type,
 
   declareProperty("MaxXSlope"          , m_maxXSlope        = 0.350);
   declareProperty("MaxYSlope"          , m_maxYSlope        = 0.300);
-  declareProperty("MaxXSize"           , m_maxXSize         = 660. * Gaudi::Units::mm);
-  declareProperty("MaxYSize"           , m_maxYSize         = 580. * Gaudi::Units::mm);
-  declareProperty("centralHoleSize"    , m_centralHoleSize  =  39. * Gaudi::Units::mm);
+  declareProperty("MaxXSize"           , m_maxXSize         = 760. * Gaudi::Units::mm);
+  declareProperty("MaxYSize"           , m_maxYSize         = 600. * Gaudi::Units::mm);
+  declareProperty("centralHoleSize"    , m_centralHoleSize  = 28.1 * Gaudi::Units::mm);
   // Momentum determination
   declareProperty("minMomentum"        , m_minMomentum      = 0.8*Gaudi::Units::GeV);
   declareProperty("maxPseudoChi2"      , m_maxPseudoChi2          = 10000.);
@@ -169,7 +169,7 @@ void PrVeloUTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PrVUTTrack
   double yAtMidUT = state.y() + slY*(m_zMidUT-state.z());
 
   // skip tracks pointing into central hole of UT
-  if(fabs(xAtMidUT) < m_centralHoleSize && fabs(yAtMidUT) < m_centralHoleSize) return;
+  if(xAtMidUT*xAtMidUT + yAtMidUT*yAtMidUT < m_centralHoleSize*m_centralHoleSize) return;
 
   if( m_debug )   debug() << " Start with the track" << " tx,ty  " << slX << " " << slY  << endmsg;
 

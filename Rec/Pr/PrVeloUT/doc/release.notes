@@ -4,6 +4,9 @@
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
 
+! 2013-03-20 - Jianchun Wang
+ - Change default UT size and hole shape.
+
 !========================= PrVeloUT v1r0 2013-02-14 =========================
 
 ! 2013-03-14 - Espen Eie Bowen	
