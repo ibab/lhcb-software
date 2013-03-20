@@ -3,6 +3,7 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+!========================= MuonDet v9r10 2013-03-20 =========================
 ! 2013-02-25 - Marco Cattaneo for Danilo Piparo
  - In DeMuonDetector.h: (see https://savannah.cern.ch/bugs/?100553)
    . remove define directives in favour of private static const members
