@@ -108,8 +108,9 @@ def RecoUpgradeTracking(exclude=[]):
         GaudiSequencer("RecoTrSeq").Members += [ seedingSeq ]
         if "FT" in subDets:
             from Configurables import PrSeedingAlgorithm
-            seedingSeq.Members += [ PrSeedingAlgorithm() ]
-
+            #seedingSeq.Members += [ PrSeedingAlgorithm() ]
+            from Configurables import PrSeedingXLayers
+            seedingSeq.Members += [PrSeedingXLayers()]
     if "Upstream" in trackTypes:
         upSeq = GaudiSequencer("TrUpSeq")
         GaudiSequencer("RecoTrSeq").Members += [ upSeq ]

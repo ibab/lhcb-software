@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2012-03-21 - Yasmine Amhis 
+ - In RecoUpgradeTracking.py make PrSeedingXLayers default algorithm for seeding
+
 ! 2013-03-19 - Marco Cattaneo
  - In patChecking.py: Remove PrimaryVertexChecker from Check sequence, since
    it requires HepMC, no longer available in MC DSTs by default (from Sim08)
