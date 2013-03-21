@@ -4,8 +4,6 @@
 // local
 #include "BcDaughtersInLHCb.h"
 
-#include "Generators/ExternalGenerator.h"
-
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/Vector4DTypes.h"

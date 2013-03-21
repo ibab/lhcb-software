@@ -4,6 +4,12 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+!========================== GenCuts v3r3 2013-03-21 ========================== 
+! 2013-03-21 - Gloria Corti
+ - Remove include of Generators/ExternalGenerator.h from 
+   BcDaughtersInLHCb and BcDaughtersInLHCbAndMassCut not necessary and that
+   would need use of Generator package
+
 ! 2013-03-21 - Patrick Robbe
  - Move the Bc generator level cuts from Gen/LbBcVegPy to Gen/GenCuts
   (BcDaughtersInLHCb and BcDaughtersInLHCbAndMassCut)
