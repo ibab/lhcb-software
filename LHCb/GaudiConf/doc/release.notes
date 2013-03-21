@@ -3,9 +3,13 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-03-21 - Chris Jones
+ - Add the Ecal and Hcal linkers back to the standard Digi format, which was
+   accidentally removed in the last change ...
+
 !========================= GaudiConf v17r8 2013-03-20 =========================
 ! 2013-03-11 - Chris Jones
- - Add Ecal and Hcal linkers back to standardf DSTs, as they are needed for MC
+ - Add Ecal and Hcal linkers back to standard DSTs, as they are needed for MC
    matching in DaVinci.
 
 !========================= GaudiConf v17r7 2013-03-06 =========================

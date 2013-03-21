@@ -228,6 +228,7 @@ class DigiConf(LHCbConfigurableUser):
 
             # MCParticle links
             self.addMCParticleLinks(writer)
+            self.addMCCaloInfo(writer)
 
             # Reconstructible Info
             self.addMCTrackInfo(writer)
