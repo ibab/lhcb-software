@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-03-21 - Patrick Robbe
+ - Move the Bc generator level cuts from Gen/LbBcVegPy to Gen/GenCuts
+  (BcDaughtersInLHCb and BcDaughtersInLHCbAndMassCut)
+
 !========================== GenCuts v3r2 2013-03-15 ========================== 
 ! 2012-09-27 - Aurelien Martens
  - Added a bug fix (gammas from pi0's or eta's were considered as tracks for 
