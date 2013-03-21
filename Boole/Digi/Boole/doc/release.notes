@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Added a number of qmtests for the various upgrade configurations.
+
  - Updated vl-ut-ft ref file to include new VLDigitCreator output.
 
  - Corrected the last changes to avoild indentation error.
