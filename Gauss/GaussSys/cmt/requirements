@@ -15,16 +15,19 @@ use Gauss               v45r0   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v64r3p1 
-use photospp            v64r3p1 LCG_GeneratorsInterfaces
-use tauolapp            v64r3p1 LCG_GeneratorsInterfaces
-use thepeg              v64r3p1 LCG_GeneratorsInterfaces
-use herwigpp            v64r3p1 LCG_GeneratorsInterfaces
-use rivet               v64r3p1 LCG_GeneratorsInterfaces
+use lhapdf              v64r3p2 LCG_GeneratorsInterfaces
+use photospp            v64r3p2 LCG_GeneratorsInterfaces
+use tauolapp            v64r3p2 LCG_GeneratorsInterfaces
+use pythia6             v64r3p2 LCG_GeneratorsInterfaces
+use pythia8             v64r3p2 LCG_GeneratorsInterfaces
+use thepeg              v64r3p2 LCG_GeneratorsInterfaces
+use herwigpp            v64r3p2 LCG_GeneratorsInterfaces
+use rivet               v64r3p2 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
-use GenCuts             v3r1    Gen
-use GENSER              v12r3   Gen
-use EvtGen              v13r5   Gen
+use GenCuts             v3r2    Gen
+use GENSER              v12r4   Gen
+use EvtGen              v13r6   Gen
 use Mint                v2r0    Gen
 use EvtGenExtras        v3r6    Gen
 use Generators          v14r1   Gen
