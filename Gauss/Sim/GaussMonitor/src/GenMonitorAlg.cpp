@@ -278,8 +278,8 @@ void GenMonitorAlg::bookHistos()
                       -0.5, 299.5, 300 );
   m_hProcess = book(  5, "Process type", -0.5, 5100.5, 5101);
   m_hNPileUp = book( 10, "Num. of primary interaction per bunch", -0.5, 10.5, 11 );
-  m_hPrimX   = book( 11, "PrimaryVertex x (mm)", -0.5, 0.5, 100 );
-  m_hPrimY   = book( 12, "PrimaryVertex y (mm)", -0.5, 0.5, 100 );
+  m_hPrimX   = book( 11, "PrimaryVertex x (mm)", -1.0, 1.0, 200 );
+  m_hPrimY   = book( 12, "PrimaryVertex y (mm)", -1.0, 1.0, 200 );
   m_hPrimZ   = book( 13, "PrimaryVertex z (mm)", -200., 200., 100 ); 
   m_hPrimZV  = book( 14, "PrimaryVertex z, all Velo (mm)", -1000., 1000., 100 );
   m_hPrimZE  = book( 15, "PrimaryVertex z, all Exp Area (mm)", -1000., 20000., 105 );

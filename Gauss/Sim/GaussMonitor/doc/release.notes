@@ -4,6 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v6r12 2013-03-21 ========================
+! 2013-03-21 - Gloria Corti
+ - Increase boundaries of histograms for primary vertex in generator monitor
+   to take into account that they can be offset from 0 in x and y
+
 !====================== GaussMonitor v6r11 2013-02-05 ========================
 ! 2013-01-28 - Aurelien Martens
  - update hProcess number of bins and upper limit to cope with Pythia8 processIDs
