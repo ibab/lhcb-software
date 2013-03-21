@@ -27,6 +27,7 @@ std::string CondDBCompression::compress(const std::string& strin, const int8_t m
         if (retbit != BZ_OK) return "";
         break;
     default: //Do nothing if method not recognized
+        delete [] dest;
         return strin;
     }
 	
@@ -69,6 +70,7 @@ std::string CondDBCompression::decompress(const std::string& strin){
             retbit = BZ2_bzBuffToBuffDecompress(dest, &destLen, const_cast<char*>(zdata.c_str()), output_length,0,0);
             break;
         default: //Do nothing if method not recognized
+            delete [] dest;
             return strin;
         }
         if (destLen == 0 || retbit) return "";    

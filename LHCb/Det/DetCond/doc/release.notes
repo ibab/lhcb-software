@@ -4,6 +4,11 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-03-21 - Liang Sun
+ - Minor fix on a few potential memory leaks
+   - http://lhcb-coverity.cern.ch:8080/sourcebrowser.htm?projectId=10002#mergedDefectId=45083&defectInstanceId=156348385&fileInstanceId=111518946
+   - http://lhcb-coverity.cern.ch:8080/sourcebrowser.htm?projectId=10002#mergedDefectId=45084&defectInstanceId=156348386&fileInstanceId=111518946
+
 ! 2013-03-18 - Vanya Belyaev
 
  - comment usage of python module from removed package HistoStrings 
