@@ -3,6 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+ - Added a number of qmtests for the various upgrade configurations.
+
  - Changes for Upgrade qmtests
   . Updated Upgrade minimal reference now the PV algos are removed.
 

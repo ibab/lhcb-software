@@ -1,0 +1,20 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>2400</integer></argument>
+  <argument name="args"><set>
+    <text>$APPCONFIGOPTS/Brunel/Default.py</text>
+    <text>$APPCONFIGOPTS/Brunel/DataType-2012.py</text>
+    <text>$APPCONFIGOPTS/Brunel/MC-WithTruth.py</text>
+    <text>$APPCONFIGOPTS/Brunel/Brunel-Upgrade-VL-UT-FT.py</text>
+    <text>$APPCONFIGOPTS/Brunel/Upgrade-RichPmt.py</text>
+    <text>$APPCONFIGOPTS/Brunel/patchUpgrade1.py</text>
+    <text>--option</text>
+    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130320"; LHCbApp().CondDBtag="simcond-20121001-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/VL_LoI_MicroChannel-UT-FT/VL_LoI_MicroChannel-UT-FT.digi'"]; CondDB().AllLocalTagsByDataType = ["VL_LoI_MicroChannel+UT","FT"];</text>
+    </set></argument>
+  <argument name="reference"><text>../refs/brunel-upgrade-vl_loi_microchannel-ut-ft.ref</text></argument>
+  <argument name="validator"><text>
+from Brunel.QMTest.BrunelExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>
