@@ -170,7 +170,7 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
   return fillTuple(tMap,tuple,prefix); // the actual filling
 }
 //=============================================================================
-// do filling for a give vertex
+// do filling for a given vertex
 //=============================================================================
 StatusCode TupleToolDecayTreeFitter::fit(DecayTreeFitter::Fitter& fitter,
                                          const LHCb::Particle* P,
@@ -221,7 +221,7 @@ StatusCode TupleToolDecayTreeFitter::fillPV(const LHCb::VertexBase* pv,
 {
   bool test = true;
   if (msgLevel(MSG::VERBOSE)) verbose() << "FillPV " << prefix << endmsg ;
-  if (!pv) Exception("Null PVs cannot happen!");
+  if (!pv) Exception("Null PVs cannot happen with ConstrainToOriginVertex!");
   test &= insert( prefix+"_PV_key", pv->key(), tMap );
   if ( isVerbose() )
   {
@@ -478,11 +478,24 @@ TupleToolDecayTreeFitter::sortedTracks(const LHCb::VertexBase* vb) const
 }
 
 //=============================================================================
-// Compare PVs, check that one PV's traks is a subset of the other
+// Compare PVs, check that one PV's tracks is a subset of the other
 //=============================================================================
 bool TupleToolDecayTreeFitter::samePV( const LHCb::VertexBase* vb1, 
                                        const LHCb::VertexBase* vb2) const
 {
+  // exception checking. See bug https://savannah.cern.ch/bugs/?100933
+  if (!vb1 && !vb2){
+    Warning("samePV method called with 2 NULL PVs. "
+            "The answer is obviously true, but you may want to check the meaning of the question.",
+            StatusCode::SUCCESS,1);
+    return true ;
+  } else if (!vb1 || !vb2){
+    Warning("samePV method called with 1 NULL PV. "
+            "The answer is obviously false, but you may want to check the meaning of the question.",
+            StatusCode::SUCCESS,1);
+    return false ;    
+  }
+
   if ( !(vb1->isPrimary()) || !(vb2->isPrimary()) )
   {
     Warning("Non PV VertexBase is being used as PV",1,StatusCode::SUCCESS).ignore();

@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2013-03-21 - Patrick Koppenburg
+ - TupleToolDecayTreeFitter: Allow for NULL PVs in PV comparison method. 
+   Fixes bug https://savannah.cern.ch/bugs/?100933.
+
 ! 2013-03-07 - Chris Jones
  - Change the way the tuple names for stable particles in 
    TupleToolDecayTreeFitter to fix a problem where different types where being 
