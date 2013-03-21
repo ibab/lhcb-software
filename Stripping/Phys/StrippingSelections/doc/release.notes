@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-21 - Anton Poluektov 
+ - Fixed typo in __init__.py
+
 ! 2013-03-20 - Oliver Gruenberg
  - Added StrippingLc23MumLines 
 

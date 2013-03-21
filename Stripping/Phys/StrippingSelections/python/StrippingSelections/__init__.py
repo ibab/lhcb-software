@@ -153,7 +153,7 @@ import StrippingLb2V0hh
 #import StrippingB2PPbar
 import StrippingB2TwoBaryons
 import StrippingB2FourKHigh
-import StrippingBs2Khh
+import StrippingBs2KKhh
 import StrippingBs2KSKS
 import StrippingB2XEta
 import StrippingBu2KSh
