@@ -3,6 +3,10 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2013-03-21 - Patrick Robbe
+ - Move generator level cuts to the Gen/GenCuts package
+   (BcDaughtersInLHCb and BcDaughtersInLHCbAndMassCut)
+
 !========================= LbBcVegPy v4r5 2013-03-07 =========================
 ! 2013-02-20 - Marc-Olivier Bettler
  - new files to allow to cut on lepton combination for Bc daughters
