@@ -3,6 +3,9 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+! 2013-03-21 - Amhis Yasmine 
+ - Rename PrSeedingNew to PrSeedingXLayers to make it default 
+   in reconstruction upgrade sequence 	
 
 ! 2013-03-18 - Sascha Stahl
  - Fixed track type (Long -> Ttrack) in PrSeedingAlgorithm and PrSeedNew.
