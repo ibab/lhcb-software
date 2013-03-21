@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 ! 2013-03-21 - Amhis Yasmine 
+ - Delete from svn PrSeedingNew.cpp/h 
+	
+! 2013-03-21 - Amhis Yasmine 
  - Rename PrSeedingNew to PrSeedingXLayers to make it default 
    in reconstruction upgrade sequence 	
 
