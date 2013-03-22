@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2013-03-22 - Antonis Papanestis
+ - Changes in DeRichSystem for the single RICH simulation. Allow one Rich 
+   detector with number 0 or 1
+
 !========================= RichDet v16r16 2013-03-20 =========================
 ! 2013-03-10 - Sajan Easo
 - Fix for DePMTPanel to avoid pmt pixel row/column to exceed the allowed range (0-7).

@@ -22,6 +22,7 @@
 
 // local
 #include "RichDet/DeRichSystem.h"
+#include "RichDet/DeRich.h"
 
 // boost
 #include "boost/format.hpp"
@@ -37,15 +38,8 @@ const CLID CLID_DERichSystem = 12005;  // User defined
 DeRichSystem::DeRichSystem( const std::string & name )
   : DeRichBase     ( name            ),
     m_photDetConf  ( Rich::HPDConfig ), // assume HPD by default
-    m_deRich       ( Rich::NRiches   ),
-    m_condDBLocs   ( Rich::NRiches   ),
     m_firstL1CopyN ( 0               )
-{
-  m_deRich[Rich::Rich1] = NULL;
-  m_deRich[Rich::Rich2] = NULL;
-  m_condDBLocs[Rich::Rich1] = "Rich1DetectorNumbers";
-  m_condDBLocs[Rich::Rich2] = "Rich2DetectorNumbers";
-}
+{}
 
 //=============================================================================
 // Destructor
@@ -68,18 +62,51 @@ StatusCode DeRichSystem::initialize()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Initialize " << name() << endmsg;
 
-  // register for condition updates
+  // get rich detectors
+  std::vector<std::string> deRichLocs = getDeRichLocations();
 
-  updMgrSvc()->registerCondition( this,
-                                  condition(m_condDBLocs[Rich::Rich1]).path(),
-                                  &DeRichSystem::buildPDMappings );
-  updMgrSvc()->registerCondition( this,
-                                  condition(m_condDBLocs[Rich::Rich2]).path(),
-                                  &DeRichSystem::buildPDMappings );
+  // get condition names for detector numbers
+  std::vector<std::string> condNames;
+  if ( exists("DetectorNumbersConditions") )
+  {
+    condNames = paramVect<std::string>("DetectorNumbersConditions");
+  }
+  else
+  {
+    condNames.push_back("Rich1DetectorNumbers");
+    condNames.push_back("Rich2DetectorNumbers");
+  }
+
+  // check if the numbers match.
+  if ( deRichLocs.size() != condNames.size() )
+  {
+    error() << "Number of rich detector does not match detector number conditions" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // loop over detectors and conditions to set things up
+  for ( unsigned int i = 0; i < deRichLocs.size(); ++i)
+  {
+    SmartDataPtr<DeRich> deR( dataSvc(), deRichLocs[i] );
+    if ( !deR )
+    {
+      error() << "Cannot get Rich detector at: " << deRichLocs[i] << endmsg;
+      return StatusCode::FAILURE;
+    }
+    m_deRich[deR->rich()] = deR;
+    m_detNumConds[deR->rich()] = condNames[i];
+    updMgrSvc()->registerCondition( this,
+                                    condition(condNames[i]).path(),
+                                    &DeRichSystem::buildPDMappings );
+
+  }
 
   // Run first update
   const StatusCode sc = updMgrSvc()->update(this);
   if ( sc.isFailure() ) error() << "Failed to update mappings" << endmsg;
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "DeRichSystem initialized " << endmsg;
 
   return sc;
 }
@@ -108,12 +135,17 @@ bool DeRichSystem::safeMapFill( const SOURCE& source, const TARGET& target, MAP&
 //=========================================================================
 DetectorElement * DeRichSystem::deRich( const Rich::DetectorType rich ) const
 {
-  if ( !m_deRich[rich] )
+  std::map<Rich::DetectorType, DetectorElement*>::const_iterator richElement;
+  richElement = m_deRich.find(rich);
+
+  if ( richElement != m_deRich.end() )
+    return richElement->second;
+  else
   {
-    SmartDataPtr<DetectorElement> deR( dataSvc(), DeRichLocations::location(rich) );
-    m_deRich[rich] = deR;
+    throw GaudiException( "Did not find Rich Detector","DeRichSystem::deRich",
+                          StatusCode::FAILURE );
   }
-  return m_deRich[rich];
+  return NULL;
 }
 
 //=========================================================================
@@ -154,11 +186,19 @@ StatusCode DeRichSystem::buildPDMappings()
   m_firstL1CopyN = 0;
 
   // Fill the maps for each RICH
-  const StatusCode sc = ( fillMaps ( Rich::Rich1 ) &&
-                          fillMaps ( Rich::Rich2 ) );
+  std::map<Rich::DetectorType, DetectorElement*>::iterator richElement;
+  for ( richElement = m_deRich.begin(); richElement != m_deRich.end(); ++richElement)
+  {
+    const StatusCode sc = fillMaps ( richElement->first );
+    if ( !sc )
+      return sc;
+  }
 
+  //const StatusCode sc = ( fillMaps ( Rich::Rich1 ) &&
+  //                         fillMaps ( Rich::Rich2 ) );
   // return
-  return sc;
+
+  return StatusCode::SUCCESS;
 }
 
 //=========================================================================
@@ -189,8 +229,11 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       (Rich::RichPhDetConfigType) deRC->param<int>(str_PhotoDetConfigValue) ;
     if ( m_photDetConf == Rich::PMTConfig )
     {
-      m_condDBLocs[Rich::Rich1] = "Rich1PMTDetectorNumbers";
-      m_condDBLocs[Rich::Rich2] = "Rich2PMTDetectorNumbers";
+      if ( !exists("DetectorNumbersConditions") )
+      {
+        m_detNumConds[Rich::Rich1] = "Rich1PMTDetectorNumbers";
+        m_detNumConds[Rich::Rich2] = "Rich2PMTDetectorNumbers";
+      }
       str_NumberOfPDs           = "NumberOfPMTs";
       str_PDSmartIDs            = "PMTSmartIDs";
       str_PDHardwareIDs         = "PMTHardwareIDs";
@@ -207,8 +250,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 
   // load conditions
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Loading Conditions from " <<  m_condDBLocs[rich] << endmsg;
-  const SmartRef<Condition> numbers = condition(m_condDBLocs[rich]);
+    debug() << "Loading Conditions from " <<  m_detNumConds[rich] << endmsg;
+  const SmartRef<Condition> numbers = condition(m_detNumConds[rich]);
 
   // local typedefs for vector from Conditions
   typedef std::vector<int> CondData;
@@ -958,5 +1001,36 @@ unsigned int DeRichSystem::nPDs( const Rich::DetectorType rich ) const
   }
   return nPDs;
 }
+
+//=========================================================================
+//  getDeRichLocations
+//=========================================================================
+std::vector<std::string> DeRichSystem::getDeRichLocations ( )
+{
+  // find the Rich detectos
+  SmartDataPtr<DetectorElement> afterMag(dataSvc(),"/dd/Structure/LHCb/AfterMagnetRegion");
+  if ( !afterMag )
+  {
+    throw GaudiException( "Could not load AfterMagnetRegion ",
+                          "DeRichBase::deRichSys()", StatusCode::FAILURE );
+  }
+
+  std::vector<std::string> deRichLocs;
+  if ( afterMag->exists("RichDetectorLocations") )
+  {
+    deRichLocs = afterMag->paramVect<std::string>("RichDetectorLocations");
+  }
+  else
+  {
+    deRichLocs.push_back( DeRichLocations::Rich1 );
+    deRichLocs.push_back( DeRichLocations::Rich2 );
+  }
+
+  return deRichLocs;
+
+}
+
+
+
 
 //===========================================================================

@@ -213,7 +213,7 @@ public:
   /** Obtain a list of RichSmartID PD identifiers for a given level1 hardwareID
    *  @param l1ID The level1 ID number
    *  @return Vector of all PD RichSmartIDs for that Level1 board
-   */  
+   */
   const LHCb::RichSmartID::Vector & l1PDSmartIDs( const Rich::DAQ::Level1HardwareID l1ID ) const;
 
   /** Obtain a list of PD hardware identifiers for a given level1 hardware ID
@@ -257,8 +257,8 @@ public:
   /// The photon detector type
   inline Rich::RichPhDetConfigType RichPhotoDetConfig() const
   {
-    return m_photDetConf; 
-  }    
+    return m_photDetConf;
+  }
 
 private: // methods
 
@@ -275,11 +275,14 @@ private: // methods
   template < class SOURCE, class TARGET, class MAP >
   bool safeMapFill( const SOURCE& source, const TARGET& target, MAP& map );
 
+  /// Get the locations of the rich detectors
+  std::vector<std::string> getDeRichLocations();
+
 private: // data
 
   // RICH PhotoDetector Configuration
   Rich::RichPhDetConfigType m_photDetConf;
-  
+
   /// Type for mapping from RichSmartID to Rich::DAQ::HPDHardwareID
   typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::HPDHardwareID > SoftToHard;
   SoftToHard m_soft2hard; ///< Software ID to hardware ID map
@@ -367,10 +370,10 @@ private: // data
   L1HIDToCopyN m_l1H2CopyN;
 
   /// Rich1 & Rich2 detector elements
-  mutable std::vector<DetectorElement*> m_deRich;
+  mutable std::map<Rich::DetectorType, DetectorElement*> m_deRich;
 
   /// Location of RICH Numbering schemes in Conditions DB
-  std::vector<std::string> m_condDBLocs;
+  std::map<Rich::DetectorType, std::string> m_detNumConds;
 
   /// Logical to hardware L1 ID map
   typedef GaudiUtils::HashMap< const Rich::DAQ::Level1LogicalID, Rich::DAQ::Level1HardwareID > L1LogToHard;
@@ -430,7 +433,7 @@ inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::inactivePDHardwareIDs() co
 //=========================================================================
 inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::allPDHardwareIDs() const
 {
-  return m_allPDHardIDs; 
+  return m_allPDHardIDs;
 }
 
 //=========================================================================

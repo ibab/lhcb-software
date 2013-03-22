@@ -220,6 +220,8 @@ StatusCode DeRichPMTPanel::initialize()
   // trigger first UMS update
   const StatusCode update = updMgrSvc()->update(this);
 
+  msg << MSG::DEBUG << "Panel Initialised" << endmsg;
+
   return update;
 }
 
@@ -482,7 +484,7 @@ StatusCode DeRichPMTPanel::getPanelGeometryInfo()
     int aRich1NumModules=  firstRich->param<int> ("Rich1TotNumModules" );
     int aRich2NumModules=  firstRich->param<int> ("Rich2TotNumModules" );
     m_totNumPmtModuleInRich = aRich1NumModules + aRich2NumModules;
-    
+
     m_NumPmtModuleInRich.resize(4);
     m_NumPmtModuleInRich[0]=aRich1NumModules/2; //rich1top
     m_NumPmtModuleInRich[1]=aRich1NumModules/2; //rich1bottom
@@ -500,60 +502,60 @@ StatusCode DeRichPMTPanel::getPanelGeometryInfo()
     m_PmtAnodeEffectiveXPixelSize= m_AnodeXPixelSize+m_PmtPixelGap;
     m_PmtAnodeEffectiveYPixelSize= m_AnodeYPixelSize+m_PmtPixelGap;
     m_PmtMasterLateralSize = firstRich->param<double>("RichPmtMasterLateralSize" );
-    m_Rich1TotNumPmts = firstRich->param<int>("Rich1TotNumPmt");
+    if ( rich() == Rich::Rich1 )
+      m_Rich1TotNumPmts = firstRich->param<int>("Rich1TotNumPmt");
     m_Rich2TotNumPmts = firstRich->param<int>("Rich2TotNumPmt");
     m_RichPmtQuartzThickness = firstRich->param<double>("RichPmtQuartzZSize" );
     m_RichPmtQuartzLocalZInPmt= firstRich->param<double>("RichPmtQuartzZPosInPmt");
-    
 
 
-  // setup the Lens Flag.
+    // setup the Lens Flag.
 
 
-      m_totNumPmtModuleInRich1     = firstRich-> param<int> ("Rich1TotNumModules" );
+    m_totNumPmtModuleInRich1     = firstRich-> param<int> ("Rich1TotNumModules" );
 
-      m_Rich1PmtLensPresence=0;
-      m_Rich1PmtLensModuleCol.clear();
-      
-      if(exists("Rich1PmtLensPresence") ){
-        m_Rich1PmtLensPresence  = firstRich->  param<int>("Rich1PmtLensPresence");
+    m_Rich1PmtLensPresence=0;
+    m_Rich1PmtLensModuleCol.clear();
+
+    if(exists("Rich1PmtLensPresence") ){
+      m_Rich1PmtLensPresence  = firstRich->  param<int>("Rich1PmtLensPresence");
+    }
+
+    if(m_Rich1PmtLensPresence >= 1 ) {
+
+      m_Rich1PmtLensModuleCol = firstRich->  param<std::vector<int> >("Rich1PmtLensModuleColumns");
+      m_PmtMasterWithLensLateralSize = firstRich->param<double>("RichLensPmtMasterLateralSize" );
+      m_PmtModuleWithLensPitch = firstRich->param<double>("RichLensPmtModulePitch");
+      m_PmtLensPitch=firstRich->param<double>("RichLensPmtPitch");
+      m_Rich1PmtPanelWithLensXSize = firstRich->param<std::vector<double> > ("Rich1PMTModuleLensPlaneXEdge");
+      m_Rich1PmtPanelWithLensYSize = firstRich->param<std::vector<double> > ( "Rich1PMTModuleLensPlaneYEdge"   );
+
+      m_Rich1PmtPanelWithLensColSize = firstRich->param<std::vector<int> > ( "Rich1PmtLensModuleColumnsSize"  );
+
+      m_RichNumLensPmtinModuleRowCol.resize(2);
+
+      m_RichNumLensPmtinModuleRowCol[0] =  firstRich->param<int> ( "RichLensPmtNumInModuleRow" );
+      m_RichNumLensPmtinModuleRowCol[1] =  firstRich->param<int> ( "RichLensPmtNumInModuleCol" );
+      m_Rich1LensMagnificationFactor = firstRich->param<double> ("RichPmtLensMagnficationFactor"    );
+
+      Rich1SetupPMTModulesWithLens();
+
+    }else {
+      for (int i=0; i< (int)m_RichPmtModuleLensFlag.size(); ++i ) {
+        m_RichPmtModuleLensFlag[i]=false;
       }
 
-      if(m_Rich1PmtLensPresence >= 1 ) {
-        
-        m_Rich1PmtLensModuleCol = firstRich->  param<std::vector<int> >("Rich1PmtLensModuleColumns");
-        m_PmtMasterWithLensLateralSize = firstRich->param<double>("RichLensPmtMasterLateralSize" );
-        m_PmtModuleWithLensPitch = firstRich->param<double>("RichLensPmtModulePitch");
-        m_PmtLensPitch=firstRich->param<double>("RichLensPmtPitch");
-        m_Rich1PmtPanelWithLensXSize = firstRich->param<std::vector<double> > ("Rich1PMTModuleLensPlaneXEdge");
-        m_Rich1PmtPanelWithLensYSize = firstRich->param<std::vector<double> > ( "Rich1PMTModuleLensPlaneYEdge"   );
-        
-        m_Rich1PmtPanelWithLensColSize = firstRich->param<std::vector<int> > ( "Rich1PmtLensModuleColumnsSize"  );
-        
-          m_RichNumLensPmtinModuleRowCol.resize(2);
-        
-          m_RichNumLensPmtinModuleRowCol[0] =  firstRich->param<int> ( "RichLensPmtNumInModuleRow" );
-          m_RichNumLensPmtinModuleRowCol[1] =  firstRich->param<int> ( "RichLensPmtNumInModuleCol" );
-          m_Rich1LensMagnificationFactor = firstRich->param<double> ("RichPmtLensMagnficationFactor"    );
-          
-          Rich1SetupPMTModulesWithLens();
-       
-      }else {
-        for (int i=0; i< (int)m_RichPmtModuleLensFlag.size(); ++i ) {
-          m_RichPmtModuleLensFlag[i]=false;    
-        }
-        
-        
-      }
-      
-      
-      
-    
-      
-    
 
-  
-    
+    }
+
+
+
+
+
+
+
+
+
 
   }
 
@@ -568,46 +570,46 @@ void DeRichPMTPanel::Rich1SetupPMTModulesWithLens()
   m_RichPmtModuleLensFlag.clear();
   m_RichPmtModuleLensFlag.reserve(aRowR1*aColR1);
   m_RichPmtModuleLensFlag.resize(aRowR1*aColR1);
-  
+
   //m_RichPmtModuleLensFlag.assign(aRowR1*aColR1, false);
-  
+
   for (int r=0; r<aRowR1  ; ++r ) {
     for(int c=0; c<aColR1 ; ++c ){
       int m=(r*aColR1)+c;
       m_RichPmtModuleLensFlag[m]=false;
       if( (int) (m_Rich1PmtLensModuleCol.size()) > 0) {
-        
+
         std::vector<int>::const_iterator location= find(m_Rich1PmtLensModuleCol.begin(),
-                                                      m_Rich1PmtLensModuleCol.end(), c);
-        if(location != m_Rich1PmtLensModuleCol.end() ) m_RichPmtModuleLensFlag[m]=true;      
+                                                        m_Rich1PmtLensModuleCol.end(), c);
+        if(location != m_Rich1PmtLensModuleCol.end() ) m_RichPmtModuleLensFlag[m]=true;
       }
-      
-      
-      
-    }  
-    
+
+
+
+    }
+
   }
-  
-  
+
+
 }
 
 
 
-bool DeRichPMTPanel::isCurrentPmtModuleWithLens(const int aModuleNum) 
+bool DeRichPMTPanel::isCurrentPmtModuleWithLens(const int aModuleNum)
 {
   bool aPresence=false;
   if( aModuleNum < m_totNumPmtModuleInRich1 ) {
     aPresence = m_RichPmtModuleLensFlag[aModuleNum];
-  } 
+  }
   return  aPresence;
-  
+
 }
-bool DeRichPMTPanel::isCurrentPmtWithLens(const int aPMTNum) 
+bool DeRichPMTPanel::isCurrentPmtWithLens(const int aPMTNum)
 {
 
   const int aModuleNum = aPMTNum/m_NumPmtInRichModule;
   return isCurrentPmtModuleWithLens(aModuleNum);
-  
+
 }
 int DeRichPMTPanel::getPmtNumFromRowCol(int PRow, int PCol ) const
 {
@@ -787,7 +789,7 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
   int  aModuleNum = -1;
   int  aModuleNumInPanel=-1;
   int  aModuleWithLens=0;
-  
+
   if ( rich() == Rich::Rich1 )
   {
     if(side() == Rich::top)
@@ -796,69 +798,69 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
         if( x > m_Rich1PmtPanelWithLensXSize[0] && x <  m_Rich1PmtPanelWithLensXSize[1] ) {
           aModuleCol = ((int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[0])/m_PmtModulePitch )))+ m_Rich1PmtPanelWithLensColSize[2];
           aModuleRow = (int) (fabs( (y-m_PmtModulePlaneHalfSizeR1[1])/m_PmtModulePitch));
-             
+
         }else if (x < m_Rich1PmtPanelWithLensXSize[0] ) {
- 
+
           aModuleCol = (int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[2])/m_PmtModuleWithLensPitch ));
           aModuleRow = (int) (fabs( (y-m_Rich1PmtPanelWithLensYSize[0])/m_PmtModuleWithLensPitch ));
           aModuleWithLens=1;
-          
+
         }else if ( x >  m_Rich1PmtPanelWithLensXSize[1] ) {
-          
+
           aModuleCol = ( (int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[4])/m_PmtModuleWithLensPitch )))
-                        +m_Rich1PmtPanelWithLensColSize[0]+ m_Rich1PmtPanelWithLensColSize[2] ;
+            +m_Rich1PmtPanelWithLensColSize[0]+ m_Rich1PmtPanelWithLensColSize[2] ;
           aModuleRow = (int) (fabs( (y-m_Rich1PmtPanelWithLensYSize[0])/m_PmtModuleWithLensPitch ));
           aModuleWithLens=1;
-          
-        }  
-        
 
-      } else {  
-      
-         aModuleCol = (int) (fabs( (x-m_PmtModulePlaneHalfSizeR1[0])/m_PmtModulePitch ));
-         aModuleRow = (int) (fabs( (y-m_PmtModulePlaneHalfSizeR1[1])/m_PmtModulePitch));
+        }
+
+
+      } else {
+
+        aModuleCol = (int) (fabs( (x-m_PmtModulePlaneHalfSizeR1[0])/m_PmtModulePitch ));
+        aModuleRow = (int) (fabs( (y-m_PmtModulePlaneHalfSizeR1[1])/m_PmtModulePitch));
       }
 
       aModuleNum= getPmtModuleNumFromRowCol(aModuleRow,aModuleCol);
       aModuleNumInPanel=aModuleNum-m_RichPmtModuleCopyNumBeginPanel[0];
-      
-        
+
+
     }
-    
+
     else if ( side() == Rich::bottom)
     {
       if( m_Rich1PmtLensPresence   ) {
-              
+
 
         if( x > m_Rich1PmtPanelWithLensXSize[0] && x <  m_Rich1PmtPanelWithLensXSize[1] ) {
           aModuleCol = ((int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[1])/m_PmtModulePitch )))+ m_Rich1PmtPanelWithLensColSize[1];
           aModuleRow = (int) (fabs( (y-m_PmtModulePlaneHalfSizeR1[3])/m_PmtModulePitch));
-             
+
         }else if (x > m_Rich1PmtPanelWithLensXSize[1] ) {
- 
+
           aModuleCol = (int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[5])/m_PmtModuleWithLensPitch ));
           aModuleRow = (int) (fabs( (y-m_Rich1PmtPanelWithLensYSize[0])/m_PmtModuleWithLensPitch ));
           aModuleWithLens=1;
-          
+
         }else if ( x <  m_Rich1PmtPanelWithLensXSize[0] ) {
-          
+
           aModuleCol = ( (int) (fabs( (x-m_Rich1PmtPanelWithLensXSize[3])/m_PmtModuleWithLensPitch )))
-                        +m_Rich1PmtPanelWithLensColSize[0]+ m_Rich1PmtPanelWithLensColSize[1] ;
+            +m_Rich1PmtPanelWithLensColSize[0]+ m_Rich1PmtPanelWithLensColSize[1] ;
           aModuleRow = (int) (fabs( (y-m_Rich1PmtPanelWithLensYSize[0])/m_PmtModuleWithLensPitch ));
           aModuleWithLens=1;
-          
-        }  
+
+        }
 
 
 
-   
+
       }else {
-        
-      
-         aModuleCol = (int) ( fabs( (x-m_PmtModulePlaneHalfSizeR1[2])/m_PmtModulePitch));
-         aModuleRow = (int) ( fabs( (y-m_PmtModulePlaneHalfSizeR1[3])/m_PmtModulePitch));
+
+
+        aModuleCol = (int) ( fabs( (x-m_PmtModulePlaneHalfSizeR1[2])/m_PmtModulePitch));
+        aModuleRow = (int) ( fabs( (y-m_PmtModulePlaneHalfSizeR1[3])/m_PmtModulePitch));
       }
-      
+
 
       aModuleNum= getPmtModuleNumFromRowCol(aModuleRow,aModuleCol);
       aModuleNumInPanel=aModuleNum-m_RichPmtModuleCopyNumBeginPanel[1];
@@ -895,23 +897,23 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
     int aPmtCol =-1;
     int aPmtRow =-1;
     int  aPmtNum=-1;
-    
-    if(aModuleWithLens== 0 ) {
-      
 
-       aPmtCol = (int) (fabs ((xp-m_RichPmtModuleActiveAreaHalfSize[0])/m_PmtPitch));
-       aPmtRow = (int) (fabs ((yp-m_RichPmtModuleActiveAreaHalfSize[1])/m_PmtPitch));
-       aPmtNum = getPmtNumFromRowCol(aPmtRow,aPmtCol);
-    
+    if(aModuleWithLens== 0 ) {
+
+
+      aPmtCol = (int) (fabs ((xp-m_RichPmtModuleActiveAreaHalfSize[0])/m_PmtPitch));
+      aPmtRow = (int) (fabs ((yp-m_RichPmtModuleActiveAreaHalfSize[1])/m_PmtPitch));
+      aPmtNum = getPmtNumFromRowCol(aPmtRow,aPmtCol);
+
     }else {
-       aPmtCol = (int) (fabs  ((xp-(0.5*m_PmtMasterWithLensLateralSize))/m_PmtModuleWithLensPitch));
-       aPmtRow = (int) (fabs ((yp-(0.5*m_PmtMasterWithLensLateralSize))/m_PmtModuleWithLensPitch));
-       aPmtNum = getLensPmtNumFromRowCol(aPmtRow,aPmtCol);
-                  
-      
+      aPmtCol = (int) (fabs  ((xp-(0.5*m_PmtMasterWithLensLateralSize))/m_PmtModuleWithLensPitch));
+      aPmtRow = (int) (fabs ((yp-(0.5*m_PmtMasterWithLensLateralSize))/m_PmtModuleWithLensPitch));
+      aPmtNum = getLensPmtNumFromRowCol(aPmtRow,aPmtCol);
+
+
     }
-    
-    
+
+
     if ( aPmtNum > -1 )
     {
       aCh [0]=aModuleNum;
@@ -929,10 +931,10 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
 
       if(aModuleWithLens > 0 ){
         xpi = xpi/m_Rich1LensMagnificationFactor;
-        ypi = ypi/m_Rich1LensMagnificationFactor;  
-      
+        ypi = ypi/m_Rich1LensMagnificationFactor;
+
       }
-    
+
       int aPmtPixelCol = (int) (fabs ((xpi - m_PmtAnodeXEdge)/m_PmtAnodeEffectiveXPixelSize));
       int aPmtPixelRow = (int) (fabs ((ypi - m_PmtAnodeYEdge)/m_PmtAnodeEffectiveYPixelSize));
 
@@ -1029,8 +1031,8 @@ DeRichPMTPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
                                       geometry() ->toLocalMatrix() *windowPointGlobal );
 
     bool CoordIsOnLens  = (m_DePMTs [aModuleNumInPanel] [aC[1]]) -> PmtLensFlag();
-    const Gaudi::XYZPoint coordinPmtA = CoordIsOnLens ? DemagnifyFromLens(coordinPmt): coordinPmt;    
-    
+    const Gaudi::XYZPoint coordinPmtA = CoordIsOnLens ? DemagnifyFromLens(coordinPmt): coordinPmt;
+
     isInPmtAcc = isInPmt(coordinPmtA);
     if(isInPmtAcc )
     {
@@ -1059,12 +1061,12 @@ DeRichPMTPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
 
   return res;
 }
-Gaudi::XYZPoint DeRichPMTPanel::DemagnifyFromLens(const Gaudi::XYZPoint aLensPoint) const 
+Gaudi::XYZPoint DeRichPMTPanel::DemagnifyFromLens(const Gaudi::XYZPoint aLensPoint) const
 {
   double aX = aLensPoint.x()/ m_Rich1LensMagnificationFactor ;
   double aY = aLensPoint.y()/ m_Rich1LensMagnificationFactor ;
   return Gaudi::XYZPoint(aX,aY,aLensPoint.z());
-  
+
 }
 
 StatusCode DeRichPMTPanel::getPanelInterSection ( const Gaudi::XYZPoint& pGlobal,
