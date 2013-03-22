@@ -162,7 +162,9 @@ StatusCode PrVeloUT::execute() {
           if(m_AddMomentumEstimate){
             // qop estimate
             //Get qop from VeloUT track
-            const LHCb::State& state_VELOUT = *(bestTrack->stateAt(LHCb::State::EndVelo));
+            const LHCb::State& state_VELOUT = bestTrack->hasStateAt(LHCb::State::EndVelo) ?
+              *(bestTrack->stateAt(LHCb::State::EndVelo)) :
+              (bestTrack->closestState(LHCb::State::EndVelo)) ;
             double qop = state_VELOUT.qOverP();
             
             //Find track state for Velo track - will write out qop to it

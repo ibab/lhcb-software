@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= PrVeloUT v1r1 2013-03-22 =========================
+! 2013-03-22 - Espen Eie Bowen
+ - Added extra protection when Velo track has no state at end of Velo.
+
 ! 2013-03-20 - Jianchun Wang
  - Change default UT size and hole shape.
 
