@@ -6,5 +6,5 @@ IOTest( EvtMax = 5, LoadAll = True )
 
 ioh = IOHelper()
 ioh.setupServices()
-ioh.inputFiles(['PFN:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/LHCb/Collision12/DIMUON.DST/00020198/0000/00020198_00000763_1.dimuon.dst?svcClass=lhcbdisk'])
+ioh.inputFiles(['PFN:root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00020198/0000/00020198_00000763_1.dimuon.dst'])
 ioh.outStream('PFN:Reco14-Stripping20.dst',"InputCopyStream")
