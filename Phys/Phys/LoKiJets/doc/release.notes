@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-03-22 - Cedric Potterat
+ - Fix Covertiy defect in LoKiSeedFinder.cpp
+
 !========================= LoKiJets v6r8 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

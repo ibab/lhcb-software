@@ -537,16 +537,11 @@ StatusCode LoKi::SeedFinder::makeJets
     if(Seed1->daughters().size()<2) continue;
 
     const LHCb::Particle* dau11(0);
-
     const LHCb::Particle* dau12(0);
-
     const LHCb::Particle* dau13(0);
 
     dau11 = Seed1->daughters().at(0).target();
-
     dau12 = Seed1->daughters().at(1).target();
-
-    if(Seed1->daughters().size()>2)  dau13 = Seed1->daughters().at(2).target();
 
 
     verbose() << "Seeds  "<<myj<<"| nb of combin Seeds:  "<<   Seed1->weight()<< "  nb part in the jet:  " <<  Seed1->daughtersVector().size() <<"  Pt:  "<<  Seed1->pt() << endmsg;
@@ -554,7 +549,11 @@ StatusCode LoKi::SeedFinder::makeJets
     verbose() <<         "        | eta: "<<   Seed1->momentum().eta() << "  / phi: " <<    Seed1->momentum().phi() <<endmsg;
     verbose() <<         "        |dau1: "<<  dau11->pt()<<endmsg;
     verbose() <<         "        |dau2: "<<  dau12->pt()<<endmsg;
-    if(Seed1->daughters().size()>2)     verbose() <<         "        |dau3: "<<  dau13->pt()<<endmsg;
+
+    if(Seed1->daughters().size()>2){ 
+      dau13 = Seed1->daughters().at(2).target();
+      verbose() <<         "        |dau3: "<<  dau13->pt()<<endmsg;
+    }
 
     Gaudi::XYZVector seedd = Gaudi::XYZVector(
 					      Gaudi::XYZPoint(Seed1->endVertex()->position()) -
@@ -643,16 +642,22 @@ StatusCode LoKi::SeedFinder::makeJets
 
       const LHCb::Particle* dau11(0);
       const LHCb::Particle* dau12(0);
-      const LHCb::Particle* dau13(0);
       dau11 = pJet->daughters().at(0).target();
       dau12 = pJet->daughters().at(1).target();
-      if(pJet->daughters().size()>2)  dau13 = pJet->daughters().at(2).target();
 
 
 
       debug() <<         "        |dau1: "<<  dau11->pt()<<endmsg;
       debug() <<         "        |dau2: "<<  dau12->pt()<<endmsg;
-      if(pJet->daughters().size()>2)     debug() <<         "        |dau3: "<<  dau13->pt()<<endmsg;
+
+
+      if(pJet->daughters().size()>2){ 
+	const LHCb::Particle* dau13(0);
+	dau13 = pJet->daughters().at(2).target();
+	debug() <<         "        |dau3: "<<  dau13->pt()<<endmsg;
+      }
+
+
       
       Gaudi::XYZVector seedd = Gaudi::XYZVector(
 						Gaudi::XYZPoint(pJet->endVertex()->position()) -
