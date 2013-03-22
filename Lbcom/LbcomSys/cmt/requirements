@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v13r4
+version           v13r5
 
 branches doc cmt tests
 
@@ -25,7 +25,7 @@ use HltDAQ            v2r16    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
 use L0Calo            v11r9    L0        # Patrick Robbe
-use L0DU              v10r27   L0        # Olivier Deschamps   
+use L0DU              v10r27p1 L0        # Olivier Deschamps   
 use L0Muon            v9r12    L0        # Julien Cogan
 use L0MuonMonitor     v2r3     L0        # Julien Cogan
 use PuVeto            v7r9     L0        # Serena Oggero
