@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+
+! 2013-03-22 - Rob Lambert
+ - Add a huge number of qmtests, dummy tests mostly checking instantiation
+
 !========================== HltLine v5r1p7 2011-08-03 ===================
 ! 2011-07-30 - Roel Aaij
  - Add DecodeL0FullCALO to HltDecodeRaw.py

@@ -5,6 +5,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+
+! 2013-03-22 - Rob Lambert
+ - Add a huge number of qmtests, dummy tests mostly checking instantiation
+
 !========================= HltSettings v6r0 2013-02-28 =========================
 
 !========================= HltSettings v5r57 2013-01-09 =========================

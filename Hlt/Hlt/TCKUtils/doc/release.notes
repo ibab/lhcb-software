@@ -5,6 +5,10 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+
+! 2013-03-22 - Rob Lambert
+ - Add a huge number of qmtests, dummy tests mostly checking instantiation
+
 !========================= TCKUtils v1r11 2012-06-19 =========================
 ! 2012-05-21 - Gerhard Raven
  - add proper shutdown of app mgr so that services get finalized

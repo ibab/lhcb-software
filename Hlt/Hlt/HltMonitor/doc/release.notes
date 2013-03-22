@@ -4,6 +4,10 @@
 ! Purpose     : Offline monitoring of Hlt from raw data
 !-----------------------------------------------------------------------------
 
+
+! 2013-03-22 - Rob Lambert
+ - Add a huge number of qmtests, dummy tests mostly checking instantiation
+
 !========================= HltMonitor v1r1 2012-02-06 =========================
 ! 2011-12-12 - Eric van Herwijnen
  - Replace L0TCK v4r99 by v* in requirements file

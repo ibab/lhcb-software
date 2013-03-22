@@ -5,6 +5,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+
+! 2013-03-22 - Rob Lambert
+ - Add a huge number of qmtests, dummy tests mostly checking instantiation
+
 !========================= Hlt2SharedParticles v6r12 2012-08-30 =========================
 ! 2012-08-27 - V. Gligorov
  - Clean up messy comments in Ks.py

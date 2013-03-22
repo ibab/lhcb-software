@@ -26,3 +26,13 @@ library          Hlt1Muons    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=Hlt1Muons
+
+# ==== Auto added tests ====
+apply_pattern    QMTest
+private
+  macro SQL_use "" QMTest "SQLDDDB v* Det --no-auto-imports"
+  macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel --no-auto-imports"
+  use $(SQL_use)
+  use $(LHCbAlgs_use)
+end_private
+

@@ -28,3 +28,13 @@ use LinkerInstances    v*    Event
 library		HltL0Conf	../src/*.cpp
 
 apply_pattern component_library library=HltL0Conf
+
+# ==== Auto added tests ====
+apply_pattern    QMTest
+private
+  macro SQL_use "" QMTest "SQLDDDB v* Det --no-auto-imports"
+  macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel --no-auto-imports"
+  use $(SQL_use)
+  use $(LHCbAlgs_use)
+end_private
+

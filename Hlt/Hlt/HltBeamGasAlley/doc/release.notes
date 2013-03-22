@@ -4,6 +4,10 @@
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
 
+
+! 2013-03-22 - Rob Lambert
+ - Add a huge number of qmtests, dummy tests mostly checking instantiation
+
 !========================= HltBeamGasAlley v3r1 2013-02-28 =========================
 ! 2013-02-27 - Rob Lambert
  - protect debug messages, task #40215

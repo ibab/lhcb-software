@@ -1,5 +1,9 @@
 !$Id: release.notes,v 1.90 2010-08-26 08:47:30 graven Exp $
 Package     : Hlt/HltGlobalMonitor
+
+! 2013-03-22 - Rob Lambert
+ - Add a huge number of qmtests, dummy tests mostly checking instantiation
+
 Package Coordinator : Eric van Herwijnen 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------

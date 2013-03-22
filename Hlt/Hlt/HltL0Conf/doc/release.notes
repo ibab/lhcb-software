@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2013-03-22 - Rob Lambert
+ - Add a huge number of qmtests, dummy tests mostly checking instantiation
+
+
 !========================= HltL0Conf v3r0p2 2013-02-28 =========================
 ! 2013-02-27 - Rob Lambert
  - Move to endmsg, not endreq, see task #40215
