@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v2r13 2013-03-22 =========================
 ! 2013-03-03 - Sascha Stahl
  - Added known detectors list. Information stored is the intersection of the
    known detectors and the list given to RecSummary.
