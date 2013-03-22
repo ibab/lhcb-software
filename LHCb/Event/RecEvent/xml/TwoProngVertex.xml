@@ -33,6 +33,7 @@
       <import name='Kernel/ParticleID'/>
       <import name='Track' soft='FORWARDONLY'/>
       <import name='LHCbMath/MatrixTransforms'/>
+      <import name='LHCbMath/ValueWithError'/>
       
       <typedef 
 	  type   = "SharedObjectsContainer&lt;LHCb::TwoProngVertex&gt;"
@@ -180,6 +181,15 @@
       <code>
          return (p4A(massA)+p4B(massB)).M() ; 
       </code>
+     </method>
+
+    <method 
+        type = 'Gaudi::Math::ValueWithError'
+        name = 'massWithError'
+        desc = 'error on fitted mass of two-prong given mass hypothesis for 2 daughters'
+        const   = 'TRUE'>
+      <arg type='double' name='massA'/>
+      <arg type='double' name='massB'/>
      </method>
 
       <method 

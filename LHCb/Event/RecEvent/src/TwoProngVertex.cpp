@@ -199,9 +199,18 @@ namespace LHCb
     return theMatrix;
   }
 
-
-
- 
-  
+  Gaudi::Math::ValueWithError TwoProngVertex::massWithError(const double mass1, const double mass2 ) const
+  {   
+    // we could implement this much more efficiently but I am lazy now
+    Gaudi::SymMatrix4x4 p4cov = covMatrix7x7(mass1,mass2).Sub<Gaudi::SymMatrix4x4>(3,3) ;
+    ROOT::Math::SMatrix<double,1,4> dMdP4 ;
+    Gaudi::LorentzVector p4sum = momentum(mass1,mass2) ;
+    double m = p4sum.M() ;
+    dMdP4(0,0) = - p4sum.Px()/m ;
+    dMdP4(0,1) = - p4sum.Py()/m ;
+    dMdP4(0,2) = - p4sum.Pz()/m ;
+    dMdP4(0,3) =   p4sum.E()/m ;
+    return Gaudi::Math::ValueWithError(m,std::sqrt( ROOT::Math::Similarity( dMdP4, p4cov )(0,0) )) ;
+  }
   
 }
