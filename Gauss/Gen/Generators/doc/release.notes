@@ -5,6 +5,10 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2013-03-22 - Stephane Tourneur
+ - Minor modification to allow the inclusive production of baryons with
+no charm nor bottom content
+
 !======================= Generators v14r1 2013-03-07 =========================
 ! 2013-02-13 - Patrick Robbe
  - Fix compilation warnings with gcc46

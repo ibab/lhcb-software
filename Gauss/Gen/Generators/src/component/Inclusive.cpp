@@ -95,7 +95,7 @@ StatusCode Inclusive::initialize( ) {
 
   if ( bottom && ! charm ) m_lightestQuark = LHCb::ParticleID::bottom ;
   else if ( charm ) m_lightestQuark = LHCb::ParticleID::charm ;
-  else return Error( "This case is not yet implemented" ) ;
+  else if (m_pids.size() > 2) return Error( "This case is not yet implemented" ) ;
 
   info() << endmsg ;  
   release( ppSvc ) ;
@@ -132,7 +132,9 @@ bool Inclusive::generate( const unsigned int nPileUp ,
 
     if ( ! result ) {
       // Decay particles heavier than the particles to look at
-      decayHeavyParticles( theGenEvent , m_lightestQuark , 0 ) ;
+      // If N hadrons <= 2, we assume it is (h,hbar)
+      // Passing m_pids[0] needed for incl. charmless bottomless hadron production
+      decayHeavyParticles( theGenEvent , m_lightestQuark , m_pids.size() > 2 ? 0 : *(m_pids.begin()) ) ;
       
       // Check if one particle of the requested list is present in event
       ParticleVector theParticleList ;
