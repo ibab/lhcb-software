@@ -4,9 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r12 2013-03-22 =========================
 ! 2013-03-03 - Sascha Stahl
  - RecSysConf propagates all detectors in this slot to RecSummary.
-
 
 !========================= RecConf v2r11 2013-02-14 =========================
 ! 2013-02-13 - Paul Szczypka
