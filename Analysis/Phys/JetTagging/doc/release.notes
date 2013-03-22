@@ -4,6 +4,9 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2013-03-22 - Cedric Potterat
+ - Fix covertiy defect in FilterJet.cpp
+
 ! 2013-03-07 - Chris Jones
  - Make fastjet and neurobayes_expert usage -no_auto_imports to prevent them
    leaking into downstream packages that used this one.

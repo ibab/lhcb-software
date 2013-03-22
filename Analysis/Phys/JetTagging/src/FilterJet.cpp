@@ -56,7 +56,7 @@ StatusCode FilterJet::execute()
 { 
 
   i_markedParticles.clear();
-  i_markedParticles.empty();
+
   const LHCb::Particle::ConstVector& jets = i_particles () ;
 
   LHCb::Particle::ConstVector::const_iterator ijet;
