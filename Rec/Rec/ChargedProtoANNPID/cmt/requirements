@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           ChargedProtoANNPID
-version           v1r11
+version           v1r12
 
 #============================================================================
 # Structure, i.e. directories to process.

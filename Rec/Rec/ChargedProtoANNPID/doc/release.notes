@@ -4,6 +4,7 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v1r12 2013-03-22 =========================
 ! 2013-03-19 - Marco Clemencic
  - Fixed compilation with CMake.
 
