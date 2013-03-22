@@ -3,6 +3,8 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+
+!========================= PrAlgorithms v1r3 2013-03-22 =========================
 ! 2013-03-21 - Amhis Yasmine 
  - Delete from svn PrSeedingNew.cpp/h 
 	
