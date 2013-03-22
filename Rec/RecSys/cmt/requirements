@@ -1,5 +1,5 @@
 package RecSys
-version           v14r4
+version           v14r5
 
 branches cmt doc tests
 
@@ -24,20 +24,20 @@ use MuonTrackMonitor     v2r7    Muon # Giacomo Graziani
 use MuonTrackRec         v3r8    Muon # Giacomo Graziani
 
 # Pr packages: Track Pattern Recognition for upgrade detectors
-use PrAlgorithms         v1r2    Pr   # Olivier Callot
-use PrFitParams          v1r0    Pr   # Yasmine Amhis
+use PrAlgorithms         v1r3    Pr   # Yasmine Amhis, Sascha Stahl
+use PrFitParams          v1r1    Pr   # Yasmine Amhis
 use PrKernel             v1r2    Pr   # Sascha Stahl
-use PrMCTools            v1r2    Pr   # Olivier Callot
+use PrMCTools            v1r3    Pr   # Sascha Stahl
 use PrUtils              v1r1    Pr   # Thomas Nikodem
 use PrVL                 v1r0    Pr   # Heinrich Schindler
-use PrVeloUT             v1r0    Pr   # Jianchun Wang
+use PrVeloUT             v1r1    Pr   # Jianchun Wang
 
 # Non sub-detector specific components
-use ChargedProtoANNPID   v1r11   Rec  # Chris Jones
+use ChargedProtoANNPID   v1r12   Rec  # Chris Jones
 use GlobalReco           v6r44   Rec  # Chris Jones
 use LumiAlgs             v8r1    Rec  # Jaap Panman
-use RecAlgs              v2r12   Rec  # Marco Cattaneo
-use RecConf              v2r11   Rec  # Rob Lambert
+use RecAlgs              v2r13   Rec  # Marco Cattaneo
+use RecConf              v2r12   Rec  # Rob Lambert
 use RecInterfaces        v1r1    Rec  # Chris Jones
 
 # Non sub-detector specific components upgrade related
@@ -65,38 +65,38 @@ use RichRecTools         v4r21   Rich # Chris Jones
 use RichRecTrackTools    v1r34   Rich # Chris Jones
 
 # Sft
-use FstTools             v1r0    Sft  # Olivier Callot
+use FstTools             v1r0    Sft  # Yasmine Amhis
 
 # Tf packages: Track Pattern Recognition
-use FastVelo             v1r12   Tf   # Olivier Callot
+use FastVelo             v1r12   Tf   # ??
 use PatAlgorithms        v4r26   Tf   # Stephanie Hansmann-Menzemer
 use PatPixel             v1r0    Tf   # Pavel Jalocha
 use PatVelo              v3r28   Tf   # David Hutchcroft
-use PatVeloTT            v3r22   Tf   # Mariusz Witek
+use PatVeloTT            v3r23   Tf   # Mariusz Witek
 use TfTools              v1r17   Tf   # Stephanie Hansmann-Menzemer
 use TrackMatching        v2r35   Tf   # Eduardo Rodrigues
 use TrackSeeding         v1r7    Tf   # Eduardo Rodrigues, Henk Jan Bulten
-use TrackSys             v7r9    Tf   # Stephanie Hansmann-Menzemer
+use TrackSys             v7r10   Tf   # Stephanie Hansmann-Menzemer
 use TsaAlgorithms        v3r27   Tf   # Matt Needham
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use PatChecker           v3r14   Tr   # Olivier Callot, David Hutchcroft
-use PatFitParams         v4r2    Tr   # Olivier Callot
+use PatChecker           v3r14   Tr   # David Hutchcroft
+use PatFitParams         v4r2    Tr   # ??
 use TrackAssociators     v2r11   Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r15   Tr   # Eduardo Rodrigues
 use TrackExtrapolators   v2r33   Tr   # Eduardo Rodrigues
-use TrackFitEvent        v5r20   Tr   # Eduardo Rodrigues
+use TrackFitEvent        v5r21   Tr   # Eduardo Rodrigues
 use TrackFitter          v4r10   Tr   # Wouter Hulsbergen
 use TrackIdealPR         v2r20   Tr   # Eduardo Rodrigues
 use TrackMCTools         v3r3    Tr   # Eduardo Rodrigues
-use TrackMonitors        v1r42   Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackMonitors        v1r43   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r34   Tr   # Wouter Hulsbergen
-use TrackTools           v4r21   Tr   # Wouter Hulsbergen
-use TrackUtils           v1r50   Tr   # Eduardo Rodrigues
+use TrackTools           v4r22   Tr   # Wouter Hulsbergen
+use TrackUtils           v1r51   Tr   # Eduardo Rodrigues
 
 # Primary Vertex Finder
 use PatPV                v3r26   Tr   # Mariusz Witek
-use FastPV               v1r2    Tf   # Olivier Callot
+use FastPV               v1r2    Tf   # Pawel Jalocha
 
 # Velo
 use VeloRecMonitors      v2r23   Velo # Malcom John, Eduardo Rodrigues

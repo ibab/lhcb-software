@@ -5,6 +5,85 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v14r5>2013-03-25 RecSys v14r5</A></H1><PRE>
+This version uses Gaudi v23r7 and LHCb v35r5
+
+- Packages modified: Pr/PrAlgorithms v1r3, Pr/PrFitParams v1r1,
+   Pr/PrMCTools v1r3, Pr/PrVeloUT v1r1, Rec/ChargedProtoANNPID v1r12,
+   Rec/RecAlgs v2r13, Rec/RecConf v2r12, Tf/PatVeloTT v3r23, Tf/TrackSys v7r10,
+   Tr/TrackFitEvent v5r21, Tr/TrackMonitors v1r43, Tr/TrackTools v4r22,
+   Tr/TrackUtils v1r51
+
+- In Pr/PrAlgorithms v1r3
+  . New algorithm PrSeedingXLayers for FT seeding
+  . Fixed track type (Long -> Ttrack) in PrSeedingAlgorithm and PrSeedingXLayers
+  . Added PrAddUTCoord to PrForwardTool.
+  . Changed interface of PrAddUTCoord to IAddTTClusterTool.h.
+
+- In Pr/PrMCTools v1r3
+  . Added UT to PrTrackAssociator.
+  . Implemented basic efficiency checking for Matching, Downstream and Upstream
+    tracking.
+  . Fixed a typo in PrDebugTrackingLosses for seeding.
+
+- In Pr/PrVeloUT v1r1
+  . Added extra protection when Velo track has no state at end of Velo.
+  . Changed default UT size and hole shape.
+
+- In Rec/ChargedProtoANNPID v1r12
+  . Fixed compilation with CMake.
+  . Added "Upgrade" key to NetworkVersions property. New key maps to "MC12TuneV1"
+    which is the same as the "2012" key.
+  . Added support for TMVA based network tunings.
+  . Updated preselection cut handling to support the new style text file based
+    specification the training application now uses.
+  . Improved access to the RecSummary data object to prevent multiple loads from 
+    the TES each event.
+  . Print some basic statistics of the ANNPID distributions during finalize,
+    to help monitor for instabilities in the expert.
+
+- In Rec/RecAlgs v2r13
+  . Added known detectors list. Information stored is the intersection of the
+    known detectors and the list given to RecSummary.
+
+- In Rec/RecConf v2r12
+  . RecSysConf propagates all detectors in this slot to RecSummary.
+
+- In Tf/PatVeloTT v3r23
+  . PatVeloTT can give momentum estimate to velo tracks
+  . PatVeloTT now uses PatVeloTTTool through ITrackFromTrack interface 
+  . PatVeloTTTool now implements ITracksFromTrack
+
+- In Tf/TrackSys v7r10
+  . In RecoUpgradeTracking.py make PrSeedingXLayers default algorithm for seeding
+  . In PatChecking.py: Remove PrimaryVertexChecker from Check sequence, since
+    it requires HepMC, no longer available in MC DSTs by default (from Sim08)
+    (also on v7r6p1 branch)
+  . Modified energy loss correction factor in RecoTracking.py.
+    (also on v7r6p1 branch)
+  . Added PatMatch to upgrade sequence.
+
+- In Tr/TrackFitEvent v5r21
+  . Cleanup of VL measurements. 
+
+- In Tr/TrackMonitors v1r43
+  . Minor changes to TrackParticleMonitor, including:
+    o Fixed axes limits in massVersusMomH2
+    o Changed ID of momentum asymmetry histogram
+      (now 'asym', previous 'momentum asymmetry' awkward in ROOT because of ' ')
+    o Adds a few new histograms
+    o Added configurable axes limits for most histograms (kept defaults)
+    o Added ability to use variable bin sizes for histo2D's / profile1D's
+
+- In Tr/TrackTools v4r22
+  . Bugfix in VLClusterPosition tool (inter-strip fraction)
+
+- In Pr/PrFitParams v1r1, Tr/TrackMonitors v1r43, Tr/TrackUtils v1r51
+  . Fixed compilation with C++11.
+
+- In Pr/PrFitParams v1r1
+  . Fixed gcc -pedantic warnings
+
 </PRE><H1><A NAME=v14r4>2013-02-15 RecSys v14r4</A></H1><PRE>
 This version uses Gaudi v23r6 and LHCb v35r4
 
