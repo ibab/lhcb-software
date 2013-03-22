@@ -6,8 +6,8 @@
 ! -----------------------------------------------------------------------------
 
 ! 2013-03-22 - Chris Jones
- - Suppress redefinition warnings for _XOPEN_SOURCE during dictionary 
-   generation on SLC6.
+ - Fix redefinition warnings for _XOPEN_SOURCE during dictionary generation 
+   on SLC6.
 
 ! 2013-02-28 - Chris Jones
  - Fix -pedantic compilation warnings

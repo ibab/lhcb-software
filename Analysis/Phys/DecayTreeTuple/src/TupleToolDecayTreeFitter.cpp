@@ -307,7 +307,8 @@ StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitte
   if ( daughters.empty() ) return test;
   std::set<std::string> usedNames;
   unsigned int add = 0;
-  for ( LHCb::Particle::ConstVector::const_iterator it = daughters.begin(); it != daughters.end(); ++it )
+  for ( LHCb::Particle::ConstVector::const_iterator it = daughters.begin(); 
+        it != daughters.end(); ++it )
   {
     const LHCb::Particle* particle = *it;
     if ( particle->isBasicParticle() ) continue ;
@@ -318,8 +319,9 @@ StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitte
     while ( usedNames.find(name) != usedNames.end() ) 
     { // fix to bug 88702
       renamed = true;
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name << " trying next " << endmsg;
-      name = prefix+"_"+pidName + "_" + boost::lexical_cast<std::string>(add);
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name 
+                                            << " trying next " << endmsg;
+      name = prefix + "_" + pidName + "_" + boost::lexical_cast<std::string>(add);
       ++add;
     }
     if ( renamed ) Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
@@ -347,7 +349,8 @@ TupleToolDecayTreeFitter::fillStableDaughters( const DecayTreeFitter::Fitter& fi
   if ( daughters.empty() ) return test;
   std::set<std::string> usedNames;
   unsigned int add = 0;
-  for ( LHCb::Particle::ConstVector::const_iterator it = daughters.begin(); it != daughters.end(); ++it ) 
+  for ( LHCb::Particle::ConstVector::const_iterator it = daughters.begin(); 
+        it != daughters.end(); ++it ) 
   {
     const LHCb::Particle* particle = *it;
     if ( !particle->isBasicParticle() ) 
@@ -358,7 +361,8 @@ TupleToolDecayTreeFitter::fillStableDaughters( const DecayTreeFitter::Fitter& fi
       bool renamed = false;
       while ( usedNames.find(name) != usedNames.end() )
       { // fix to bug 88702
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name << " trying next " << endmsg ;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name 
+                                              << " trying next " << endmsg ;
         renamed = true;
         name = prefix+"_"+pidName+boost::lexical_cast<std::string>(add);
         ++add;
@@ -376,7 +380,8 @@ TupleToolDecayTreeFitter::fillStableDaughters( const DecayTreeFitter::Fitter& fi
       bool renamed = false;
       while ( usedNames.find(name) != usedNames.end() ) 
       { // fix to bug 88702
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name << " trying next " << endmsg ;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name 
+                                              << " trying next " << endmsg ;
         renamed = true;
         name = prefix+"_"+pidName+"_"+boost::lexical_cast<std::string>(add);
         ++add;
@@ -436,16 +441,18 @@ StatusCode TupleToolDecayTreeFitter::insert( const std::string& leaf,
     l->second.push_back(val); /// append a to vector
   }
   if (msgLevel(MSG::VERBOSE)) 
-    verbose() << "insert " << leaf << " " << val  << " size " << l->second.size() << endmsg ;
+    verbose() << "insert " << leaf << " " << val  
+              << " size " << l->second.size() << endmsg ;
   return StatusCode::SUCCESS ;
 }
 
 //=============================================================================
 // actual filling of the Tuple
 //=============================================================================
-StatusCode TupleToolDecayTreeFitter::fillTuple( const TupleMap& tMap, 
-                                                Tuples::Tuple& tuple, 
-                                                const std::string& prefix ) const 
+StatusCode
+TupleToolDecayTreeFitter::fillTuple( const TupleMap& tMap, 
+                                     Tuples::Tuple& tuple, 
+                                     const std::string& prefix ) const 
 {
   bool test = true ;
   for ( TupleMap::const_iterator t = tMap.begin() ; t != tMap.end() ; ++t )
@@ -453,8 +460,10 @@ StatusCode TupleToolDecayTreeFitter::fillTuple( const TupleMap& tMap,
     std::string leaf = t->first;
     std::vector<double> data = t->second;
     if (msgLevel(MSG::DEBUG))
-      debug() << "Filling leaf ``" << leaf << "'' with vector of size " << data.size() << endmsg ;
-    if (m_maxPV<data.size()) Exception("Seeing data with too many PVs. Have you set MaxPVs?");
+      debug() << "Filling leaf ``" << leaf << "'' with vector of size " 
+              << data.size() << endmsg ;
+    if ( m_maxPV < data.size() )
+      Exception("Seeing data with too many PVs. Have you set MaxPVs?");
     test &= tuple->farray( leaf, data, prefix+"_nPV", m_maxPV);
   }
   return StatusCode(test);
@@ -481,7 +490,7 @@ TupleToolDecayTreeFitter::sortedTracks(const LHCb::VertexBase* vb) const
 // Compare PVs, check that one PV's tracks is a subset of the other
 //=============================================================================
 bool TupleToolDecayTreeFitter::samePV( const LHCb::VertexBase* vb1, 
-                                       const LHCb::VertexBase* vb2) const
+                                       const LHCb::VertexBase* vb2 ) const
 {
   // exception checking. See bug https://savannah.cern.ch/bugs/?100933
   if (!vb1 && !vb2){
@@ -527,24 +536,28 @@ TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* 
     if (bpv) 
     {
       oriVx.push_back(bpv);
-      if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back bpv " << bpv << " from "
-                                            << bpv->parent()->registry()->identifier() << " at "
-                                            << bpv->position() << endmsg ;
+      if (UNLIKELY(MSG::VERBOSE)) 
+        verbose() << "Pushed back bpv " << bpv << " from "
+                  << bpv->parent()->registry()->identifier() << " at "
+                  << bpv->position() << endmsg ;
     }
     else if ( m_constrainToOriginVertex)
     {
-      Warning("NULL bestPV while constraining to origin vertex. Fit will be ignored.",0,StatusCode::SUCCESS).ignore();
+      Warning( "NULL bestPV while constraining to origin vertex. Fit will be ignored.",
+               0, StatusCode::SUCCESS ).ignore();
     }
     // all the other ones
     /// @todo : keep only the related ones
-    for ( LHCb::RecVertex::Range::const_iterator pv = m_dva->primaryVertices().begin() ;
-         pv != m_dva->primaryVertices().end() ; ++pv )
+    for ( LHCb::RecVertex::Range::const_iterator pv = m_dva->primaryVertices().begin();
+          pv != m_dva->primaryVertices().end() ; ++pv )
     {
-      if ( m_storeAnyway || !samePV(*pv,bpv) ) {
+      if ( m_storeAnyway || !samePV(*pv,bpv) )
+      {
         oriVx.push_back(*pv);
-        if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back  pv " << *pv << " from "
-                                              << (*pv)->parent()->registry()->identifier() << " at "
-                                              << (*pv)->position() << endmsg ;
+        if (UNLIKELY(MSG::VERBOSE))
+          verbose() << "Pushed back  pv " << *pv << " from "
+                    << (*pv)->parent()->registry()->identifier() << " at "
+                    << (*pv)->position() << endmsg ;
       }
       if ( oriVx.size() >= m_maxPV )
       {
@@ -558,7 +571,8 @@ TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* 
     const SmartRefVector<LHCb::Particle>& dau = mother->daughters ();
     if( dau.empty() ) return oriVx ;
 
-    for( SmartRefVector<LHCb::Particle>::const_iterator it = dau.begin(); dau.end() != it; ++it )
+    for( SmartRefVector<LHCb::Particle>::const_iterator it = dau.begin(); 
+         dau.end() != it; ++it )
     {
       if( P == *it )
       {
@@ -568,7 +582,8 @@ TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* 
     }
 
     // vertex not yet found, get deeper in the decay:
-    for( SmartRefVector<LHCb::Particle>::const_iterator it = dau.begin(); dau.end() != it; ++it )
+    for( SmartRefVector<LHCb::Particle>::const_iterator it = dau.begin(); 
+         dau.end() != it; ++it )
     {
       if( P != *it && !(*it)->isBasicParticle() )
       {
