@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2013-03-22 - Wouter Hulsbergen
+ - HitPattern: adapt for FT; merge UT with TT.
+
 !========================= LHCbKernel v13r15 2013-02-04 =========================
 ! 2013-01-07 - Jianchun Wang
  - Add UT hits

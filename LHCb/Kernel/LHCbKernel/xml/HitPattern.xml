@@ -6,7 +6,7 @@
     <class
        name   = "HitPattern"
        desc   = "pattern of hits used on tracks"
-       author = "Stephanie Hansmann-Menzemer"
+       author = "Stephanie Hansmann-Menzemer and Wouter Hulsbergen (2009)"
        virtual= "FALSE" >
           
        <import name="Kernel/LHCbID"/> 
@@ -132,7 +132,7 @@
          const   = 'TRUE'
          desc    = 'number of UT hits'>
          <code>
-            return (m_ut.count());
+            return (m_tt.count());
          </code>
        </method>
 
@@ -205,7 +205,6 @@
            m_veloPhiC.reset();
 	
 	   m_tt.reset();
-	   m_ut.reset();
 		  
 	   m_itAC.reset();
            m_itTopBottom.reset();
@@ -295,14 +294,6 @@
         type      = 'std::bitset&lt;LHCb::HitPattern::NumTT&gt;'
         name      = 'tt'
         desc      = 'tt bit pattern'
-        access    = 'PRIVATE'
-        setMeth   = 'TRUE'
-        getMeth   = 'TRUE' />  
-
-     <attribute
-        type      = 'std::bitset&lt;LHCb::HitPattern::NumTT&gt;'
-        name      = 'ut'
-        desc      = 'ut bit pattern'
         access    = 'PRIVATE'
         setMeth   = 'TRUE'
         getMeth   = 'TRUE' />  

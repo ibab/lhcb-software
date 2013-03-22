@@ -40,6 +40,7 @@ namespace LHCb
 		    }
 		}
 		break ;
+		case LHCbID::UT:
 		case LHCbID::TT:
 		{
 		    LHCb::STChannelID stid = id->stID() ;
@@ -47,14 +48,7 @@ namespace LHCb
 		    m_tt.set(uniquelayer) ;
 		}
 		break ;
-		case LHCbID::UT:
-		{
-		    LHCb::STChannelID stid = id->stID() ;
-		    unsigned int uniquelayer = (stid.station()-1)*2 + stid.layer()-1 ;
-		    m_ut.set(uniquelayer) ;
-		}
-		break ;
-		case LHCbID::IT:
+	        case LHCbID::IT:
 		{
 		    LHCb::STChannelID stid = id->stID() ;
 		    unsigned int uniquelayer = (stid.station()-1)*4 + stid.layer()-1 ;
@@ -81,6 +75,14 @@ namespace LHCb
 			m_ot2ndMonoLayer.set(uniquelayer);
 		}
 		break ;
+		case LHCbID::FT:
+		{
+		   LHCb::FTChannelID stid = id->ftID() ;
+		   unsigned int uniquelayer = stid.layer() ;
+		   // we could also fill in OT, but it doesn't really matter now
+		   m_itAC.set(uniquelayer);
+		}
+		break ;
 		case LHCbID::Muon:
 		{
 		    LHCb::MuonTileID muonid = id->muonID() ;
@@ -101,7 +103,6 @@ namespace LHCb
 	  << "veloPhiA:           " << m_veloPhiA << std::endl
 	  << "veloPhiC:           " << m_veloPhiC << std::endl
 	  << "TT:                 " << m_tt << std::endl
-	  << "UT:                 " << m_ut << std::endl
 	  << "IT-top-bottom:      " << m_itTopBottom << std::endl
 	  << "IT-AC:              " << m_itAC << std::endl
 	  << "OT-1st-mono-layer:  " << m_ot1stMonoLayer << std::endl
@@ -194,7 +195,6 @@ namespace LHCb
 	      m_itAC == hitPat.itAC() &&
 	      m_itTopBottom == hitPat.itTopBottom() &&
 	      m_tt == hitPat.tt() &&
-	      m_ut == hitPat.ut() &&
 	      m_muon == hitPat.muon() );
   }
 }
