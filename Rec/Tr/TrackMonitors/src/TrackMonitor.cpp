@@ -17,6 +17,8 @@
 // Det
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeITDetector.h"
+#include "OTDet/DeOTDetector.h"
+
 #include "VeloDet/DeVelo.h"
 #include "Event/FitNode.h"
 #include "Event/RecVertex.h"
@@ -51,6 +53,7 @@ TrackMonitor::TrackMonitor(const std::string& name,
                            ISvcLocator* pSvcLocator ) :
   TrackMonitorBase( name , pSvcLocator )
 {
+  // FIXME: remove this unused flag
   declareProperty( "UseUT"       , m_useUT =  false );
 }
 
@@ -64,13 +67,15 @@ StatusCode TrackMonitor::initialize()
   // Mandatory initialization of GaudiAlgorithm
   StatusCode sc = TrackMonitorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
-  m_veloDet = getDet<DeVelo>(  DeVeloLocation::Default ) ;
-     
-  m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
-  if ( m_useUT ) m_ttExpectation = tool<IHitExpectation>("UTHitExpectation");
-  else           m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
-  m_itExpectation = tool<IHitExpectation>("ITHitExpectation");
-  m_otExpectation = tool<IHitExpectation>("OTHitExpectation");
+
+  m_veloDet = getDetIfExists<DeVelo>(  DeVeloLocation::Default ) ;
+  m_veloExpectation = m_veloDet ? tool<IVeloExpectation>("VeloExpectation") : 0 ;
+
+  m_ttExpectation = 
+    getDetIfExists<DeSTDetector>(DeSTDetLocation::location("TT")) ? tool<IHitExpectation>("TTHitExpectation") : 
+    (getDetIfExists<DeSTDetector>(DeSTDetLocation::location("UT")) ? tool<IHitExpectation>("UTHitExpectation") : 0) ;
+  m_itExpectation = getDetIfExists<DeSTDetector>(DeSTDetLocation::location("IT")) ? tool<IHitExpectation>("ITHitExpectation") : 0 ;
+  m_otExpectation = getDetIfExists<DeOTDetector>(DeOTDetectorLocation::Default) ? tool<IHitExpectation>("OTHitExpectation") : 0 ;
   
   return StatusCode::SUCCESS;
 }
@@ -129,6 +134,47 @@ void TrackMonitor::findRefStates(const LHCb::Track& track,
         lastMeasurementState = &((*inode)->state()) ;
     }
 }
+
+namespace {
+  enum HitType {VeloR=0, VeloPhi, TT, IT, OT, Muon, HitTypeUnknown} ;
+  const std::string HitTypeName[] = {"VeloR","VeloPhi","TT","IT","OT","Muon"} ;
+  double      HitTypeMaxRes[] = {0.1,0.1,0.5,0.5,2.0,10} ;
+  
+  inline HitType hittypemap( LHCb::Measurement::Type type ) {
+    HitType rc = HitTypeUnknown ;
+    switch( type ) {
+    case LHCb::Measurement::Calo:
+    case LHCb::Measurement::Origin :
+    case LHCb::Measurement::Unknown: rc = HitTypeUnknown ; break ;
+
+    case LHCb::Measurement::VPLite:
+    case LHCb::Measurement::VLR :
+    case LHCb::Measurement::VLLiteR :
+    case LHCb::Measurement::VeloLiteR:
+    case LHCb::Measurement::VeloR:   rc = VeloR ; break ;
+
+    case LHCb::Measurement::VLPhi :
+    case LHCb::Measurement::VLLitePhi :
+    case LHCb::Measurement::VeloLitePhi:
+    case LHCb::Measurement::VeloPhi: rc = VeloPhi ; break ;
+
+    case LHCb::Measurement::UT :
+    case LHCb::Measurement::UTLite :
+    case LHCb::Measurement::TTLite:
+    case LHCb::Measurement::TT: rc = TT; break;
+
+    case LHCb::Measurement::FT :
+    case LHCb::Measurement::ITLite:
+    case LHCb::Measurement::IT: rc = IT; break;
+
+    case LHCb::Measurement::OT: rc = OT; break;
+
+    case LHCb::Measurement::Muon: rc = Muon; break;
+    }
+    return rc;
+  }
+}
+
 
 void TrackMonitor::fillHistograms(const LHCb::Track& track, 
                                   const std::string& type) const
@@ -191,13 +237,8 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(nUTHits, type+"/117", "# UT hits",  -0.5, 10.5 ,11);
   
   size_t numoutliers(0) ;
+  HitType mtype ;
   if( track.nodes().size()>0 ) {
-    std::string names[] = { "VeloR","VeloPhi","VeloLiteR",
-                            "VeloLitePhi","TT","IT","OT","Muon",
-                            "TTLite","ITLite" } ;
-    double resmax[] = { 0.1,0.1,0.1,0.1, //VeloR,VeloPhi,VeloLiteR.VeloLitePhi
-                        0.5,0.5,2.0,10,  // TT,IT,OT,Muon
-                        0.5,0.5 } ;      // TTLite,ITLite
     LHCb::Track::ConstNodeRange nodes = track.nodes() ;
     for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
          inode != nodes.end(); ++inode) 
@@ -205,17 +246,21 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
           // discard extremely small fraction of hits with zero error
           // on residual. (e.g. a downstream track with only one
           // active TT hit)
-          && (*inode)->errResidual2() > TrackParameters::lowTolerance ) {
-        size_t mtype = (*inode)->measurement().type() - 1  ;
+          && (*inode)->errResidual2() > TrackParameters::lowTolerance
+	  && (mtype = hittypemap( (*inode)->measurement().type()) )!=HitTypeUnknown ) {
+	
+	const std::string& name = HitTypeName[ mtype ] ;
+	const double resmax    = HitTypeMaxRes[ mtype ] ;
+	
         // factor for unbiasing the rms (not the mean!)
         double f = std::sqrt( (*inode)->errMeasure2()/(*inode)->errResidual2()) ;
         plot(f*(*inode)->residual(),
-             type+"/"+names[mtype]+"Residual",names[mtype]+" residual (rms-unbiased)",
-             -resmax[mtype],resmax[mtype],50);
+             type+"/"+name+"Residual",name+" residual (rms-unbiased)",
+             -resmax,resmax,50);
         plot((*inode)->residual()/(*inode)->errResidual(),
-             type+"/"+names[mtype]+"residualPull",names[mtype]+" residual pull",-5,5,50);
+             type+"/"+name+"residualPull",name+" residual pull",-5,5,50);
         // these should be expert plots because 2D
-        if(mtype<=1 && fullDetail()) {
+        if((mtype==VeloR || mtype==VeloPhi) && fullDetail()) {
           // calculate R in the local frame
           Gaudi::XYZPoint globalPoint = (*inode)->state().position() ;
           Gaudi::XYZPoint localPoint = 
@@ -231,27 +276,29 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
             cosalpha = localUnitPocaVector.Rho()/localUnitPocaVector.R() ;
           }
           plot2D(r,(*inode)->residual()*f/cosalpha,
-                 type+"/"+names[mtype]+"residualVsR",names[mtype]+" residual vs R",
-                 10,42,-resmax[mtype],resmax[mtype], 16, 50);
+                 type+"/"+name+"residualVsR",name+" residual vs R",
+                 10,42,-resmax,resmax, 16, 50);
 
-          // now get the pitch ...
-          double pitch(1) ;
-          if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ||
-              (*inode)->measurement().type() == LHCb::Measurement::VeloLitePhi) {
-            const LHCb::VeloCluster* clus = 
-              static_cast<LHCb::VeloPhiMeasurement&>((*inode)->measurement()).cluster() ;
-            const DeVeloPhiType* phiDet = m_veloDet->phiSensor( clus->channelID().sensor() );
-            pitch = r * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
-          } else {
-            const LHCb::VeloCluster* clus = 
-              static_cast<LHCb::VeloRMeasurement&>((*inode)->measurement()).cluster() ;
-            const DeVeloRType* rDet = m_veloDet->rSensor( clus->channelID().sensor() );
-            pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
-          }
-          plot2D(pitch,(*inode)->residual()*f/cosalpha,
-                 type+"/"+names[mtype]+"residualVsPitch",names[mtype]+" residual vs pitch",
-                 0.04,0.100,-resmax[mtype],resmax[mtype], 12, 50);
-        }
+	  if( m_veloDet) {
+	    // now get the pitch ...
+	    double pitch(1) ;
+	    if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ||
+		(*inode)->measurement().type() == LHCb::Measurement::VeloLitePhi) {
+	      const LHCb::VeloCluster* clus = 
+		static_cast<LHCb::VeloPhiMeasurement&>((*inode)->measurement()).cluster() ;
+	      const DeVeloPhiType* phiDet = m_veloDet->phiSensor( clus->channelID().sensor() );
+	      pitch = r * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
+	    } else {
+	      const LHCb::VeloCluster* clus = 
+		static_cast<LHCb::VeloRMeasurement&>((*inode)->measurement()).cluster() ;
+	      const DeVeloRType* rDet = m_veloDet->rSensor( clus->channelID().sensor() );
+	      pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
+	    }
+	    plot2D(pitch,(*inode)->residual()*f/cosalpha,
+		   type+"/"+name+"residualVsPitch",name+" residual vs pitch",
+		   0.04,0.100,-resmax,resmax, 12, 50);
+	  }
+	}
       } else if( (*inode)->type() == LHCb::Node::Outlier ) {
         ++numoutliers ;
       }
@@ -324,10 +371,10 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     if( track.type() == LHCb::Track::Long ) {
       std::vector<LHCb::LHCbID > ids;
       std::bitset<23> velo[4];
-      m_veloExpectation->expectedInfo(track, velo);
-      m_ttExpectation->collect(track, ids);
-      m_itExpectation->collect(track, ids);
-      m_otExpectation->collect(track, ids);
+      if(m_veloExpectation) m_veloExpectation->expectedInfo(track, velo);
+      if(m_ttExpectation) m_ttExpectation->collect(track, ids);
+      if(m_itExpectation) m_itExpectation->collect(track, ids);
+      if(m_otExpectation) m_otExpectation->collect(track, ids);
       
       LHCb::HitPattern expHitPattern = LHCb::HitPattern(ids);
       expHitPattern.setVeloRA(velo[0]);
@@ -424,10 +471,6 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   std::bitset<LHCb::HitPattern::NumTT> tt = hitpattern.tt() ;
   for(size_t ilay=0; ilay<LHCb::HitPattern::NumTT; ++ilay)
     profile1D( double(ilay),tt.test(ilay),type+"/HitTTLayers", "Hits per TT layer", -0.5,3.5,4) ;
-  
-  std::bitset<LHCb::HitPattern::NumTT> ut = hitpattern.ut() ;
-  for(size_t ilay=0; ilay<LHCb::HitPattern::NumTT; ++ilay)
-    profile1D( double(ilay),ut.test(ilay),type+"/HitUTLayers", "Hits per UT layer", -0.5,3.5,4) ;
   
   std::bitset<LHCb::HitPattern::NumVelo> velo = hitpattern.velo() ;
   for(size_t ilay=0; ilay<LHCb::HitPattern::NumVelo; ++ilay)

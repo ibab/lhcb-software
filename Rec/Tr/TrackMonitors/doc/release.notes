@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-03-22 - Wouter Hulsbergen
+ - fixes in TrackMonitor and TrackVertexMonitor to make them working for upgrade
+
 !========================= TrackMonitors v1r43 2013-03-22 =========================
 ! 2013-03-18 - Jack Wimberley
 - Fixed accidently deleted portion of release notes
