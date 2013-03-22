@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0DU v10r27p1 2013-03-22 =========================
+! 2013-02-15 - Rob Lambert
+ - remove dangling backslash in requirements
+
 !========================= L0DU v10r27 2013-02-14 =========================
 ! 2013-02-13 - Olivier Deschamps
  - L0Pattern : fix inverted check

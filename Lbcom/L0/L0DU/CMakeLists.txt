@@ -1,7 +1,7 @@
 ################################################################################
 # Package: L0DU
 ################################################################################
-gaudi_subdir(L0DU v10r27)
+gaudi_subdir(L0DU v10r27p1)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Det/CaloDet
