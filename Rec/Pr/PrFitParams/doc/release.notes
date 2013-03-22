@@ -4,6 +4,7 @@
 ! Purpose     : Fit parameters for the pattern
 !-----------------------------------------------------------------------------
 
+!========================= PrFitParams v1r1 2013-03-22 =========================
 ! 2013-03-11 - Marco Clemencic
  - Fixed compilation with C++11.
  
