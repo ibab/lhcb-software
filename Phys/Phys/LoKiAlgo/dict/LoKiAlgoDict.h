@@ -12,9 +12,10 @@
 #include "LoKi/LoopChild.h"
 #include "LoKi/LoopDecorator.h"
 // ============================================================================
-// Trick to suppress _POSIX_C_SOURCE redefinition warning
+// Trick to suppress redefinition warnings
 #ifdef __GNUC__
 #undef _POSIX_C_SOURCE
+#undef _XOPEN_SOURCE
 #endif
 // ============================================================================
 #include "LoKi/AlgoDecorator.h"
