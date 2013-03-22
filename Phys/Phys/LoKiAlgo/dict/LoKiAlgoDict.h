@@ -7,19 +7,12 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/AlgoDecorator.h"
+#include "LoKi/TupleDicts.h"
 #include "LoKi/LoKiAlgo.h"
 #include "LoKi/ExtCalls.h"
 #include "LoKi/LoopChild.h"
 #include "LoKi/LoopDecorator.h"
-// ============================================================================
-// Trick to suppress redefinition warnings
-#ifdef __GNUC__
-#undef _POSIX_C_SOURCE
-#undef _XOPEN_SOURCE
-#endif
-// ============================================================================
-#include "LoKi/AlgoDecorator.h"
-#include "LoKi/TupleDicts.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
 // ============================================================================
