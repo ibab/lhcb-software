@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!========================= TrackTools v4r22 2013-03-22 =========================
+! 2013-02-24 - Heinrich Schindler
+ - Bugfix in VLClusterPosition tool (inter-strip fraction)
+
 !========================= TrackTools v4r21 2013-02-14 =========================
 ! 2013-02-06 - Sascha Stahl
  - Removed UT stuff from TrackStateInitTool.
