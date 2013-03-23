@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2013-03-23 - Antonis Papanestis
+ - Un-did some of the changes needed for the single RICH because the broke 
+   the current geometry. This version will not work with the single RICH
+
 ! 2013-03-22 - Antonis Papanestis
  - Changes in DeRichSystem for the single RICH simulation. Allow one Rich 
    detector with number 0 or 1

@@ -39,7 +39,10 @@ DeRichSystem::DeRichSystem( const std::string & name )
   : DeRichBase     ( name            ),
     m_photDetConf  ( Rich::HPDConfig ), // assume HPD by default
     m_firstL1CopyN ( 0               )
-{}
+{
+  m_deRich[Rich::Rich1] = NULL;
+  m_deRich[Rich::Rich2] = NULL;
+}
 
 //=============================================================================
 // Destructor
@@ -87,18 +90,21 @@ StatusCode DeRichSystem::initialize()
   // loop over detectors and conditions to set things up
   for ( unsigned int i = 0; i < deRichLocs.size(); ++i)
   {
-    SmartDataPtr<DeRich> deR( dataSvc(), deRichLocs[i] );
-    if ( !deR )
-    {
-      error() << "Cannot get Rich detector at: " << deRichLocs[i] << endmsg;
-      return StatusCode::FAILURE;
-    }
-    m_deRich[deR->rich()] = deR;
-    m_detNumConds[deR->rich()] = condNames[i];
+    //SmartDataPtr<DeRich> deR( dataSvc(), deRichLocs[i] );
+
+    // if ( !deR )
+    // {
+    //   error() << "Cannot get Rich detector at: " << deRichLocs[i] << endmsg;
+    //   return StatusCode::FAILURE;
+    // }
+    // m_deRich[deR->rich()] = deR;
+    // m_detNumConds[deR->rich()] = condNames[i];
+
+    m_detNumConds[(Rich::DetectorType)i] = condNames[i];
+
     updMgrSvc()->registerCondition( this,
                                     condition(condNames[i]).path(),
                                     &DeRichSystem::buildPDMappings );
-
   }
 
   // Run first update
@@ -139,7 +145,16 @@ DetectorElement * DeRichSystem::deRich( const Rich::DetectorType rich ) const
   richElement = m_deRich.find(rich);
 
   if ( richElement != m_deRich.end() )
+  {
+    if ( !m_deRich[rich] )
+    {
+      SmartDataPtr<DetectorElement> deR( dataSvc(), DeRichLocations::location(rich) );
+      m_deRich[rich] = deR;
+    }
+
     return richElement->second;
+
+  }
   else
   {
     throw GaudiException( "Did not find Rich Detector","DeRichSystem::deRich",
