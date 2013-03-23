@@ -6,6 +6,9 @@
 ! which are essentially independent from Detector and Event models
 !=============================================================================
 
+! 2013-03-23 - Chris Jones
+ - Try and fix gcc47 compilation error with CaloVector
+
 !========================= CaloKernel v6r3 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

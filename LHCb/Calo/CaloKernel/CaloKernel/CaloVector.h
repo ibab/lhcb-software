@@ -61,10 +61,10 @@ public:
     : ContVector (   0 )
     , m_cc_def   ( def )
     , m_index    (   0 )
-  { };
+  { }
   
   /// (virtual) destructor
-  virtual ~CaloVector() { clear (); }
+  virtual ~CaloVector() { this -> clear(); }
   
   /// following lines from std::vector interface 
   
@@ -88,7 +88,7 @@ public:
   {
     const unsigned int indx = id.index();
     return ( ( m_index.size() > indx ) ? m_index[indx] : -1 ); 
-  };
+  }
   
   /** Access to the content itself using LHCb::CaloCellID as index. 
    *  Check the boundaries of the index array. 
@@ -98,7 +98,7 @@ public:
   { 
     const int indx = index( id );
     return ( ( 0 > indx ) ? def() : *(begin()+indx) ) ; 
-  };
+  }
   
   /** Access to the content itself using LHCb::CaloCellID as index.
    *  (const version)
@@ -109,14 +109,14 @@ public:
   { 
     const int indx = index( id );
     return ( ( 0 > indx ) ? def() : *(begin()+indx) ) ; 
-  };
+  }
   
   /** Access to the content itself using LHCb::CaloCellID as index. 
    *  Check the boundaries of the index array. 
    *  @param id index 
    */                                         
   inline       Content& operator()  ( INDEX id )       
-  { return (*this)[ id ] ; };
+  { return (*this)[ id ] ; }
   
   /** Access to the content itself using LHCb::CaloCellID as index.
    *  (const version)
@@ -124,7 +124,7 @@ public:
    *  @param id index 
    */                                         
   inline const Content& operator()  ( INDEX id ) const 
-  { return (*this)[ id ] ; };
+  { return (*this)[ id ] ; }
   
   /** Add one entry. vector is extended, index vector is updated.
    *  @param content   value to be added into CaloVector 
@@ -140,9 +140,9 @@ public:
       const Indices::value_type val = -1 ;
       m_index.insert ( m_index.end() , num  , val ) ; 
     }
-    m_index[indx] =  size();
-    push_back( content );
-  };
+    m_index[indx] = this -> size();
+    this -> push_back( content );
+  }
   
   /// set size for intermediate container
   void setSize ( const unsigned int Num )
@@ -172,9 +172,9 @@ public:
 protected:
 
   /// get default value 
-  inline       Content& def()       { return m_cc_def; };
+  inline       Content& def()       { return m_cc_def; }
   /// get default value (const version)
-  inline const Content& def() const { return m_cc_def; };    
+  inline const Content& def() const { return m_cc_def; } 
   
 private:
   
