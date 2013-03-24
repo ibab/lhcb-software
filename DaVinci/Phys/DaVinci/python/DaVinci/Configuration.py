@@ -12,6 +12,12 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp,
 from LumiAlgs.LumiIntegratorConf import LumiIntegratorConf
 import GaudiKernel.ProcessJobOptions
 
+#
+##
+#
+from AnalysisPython.Logger import getLogger
+log = getLogger ( 'DaVinci' )
+
 class DaVinci(LHCbConfigurableUser) :
     
     __slots__ = {
@@ -47,6 +53,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "EventPreFilters"    : []
         , "VerboseMessages"    : False           # Turn on some verbose printout
         , "ProductionType"     : "None"          # Sets up options needed in various production modes
+        , "RootInTES"          : ""              # RootInTES property propagated to MainSequence in case of MDST input type 
        }
 
     _propertyDocDct = {  
@@ -74,6 +81,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "EventPreFilters"    : """Set of event filtering algorithms to be run before DaVinci initializaton sequence. Only events passing these filters will be processed."""
         , "VerboseMessages"    : """ Enable additional verbose printouts """
         , "ProductionType"     : """ Enables special settings for running in production (e.g. stripping) """
+        , "RootInTES"          : """ RootInTES (for uDst inptu type) """
         }
 
     __used_configurables__ = [
@@ -454,6 +462,53 @@ class DaVinci(LHCbConfigurableUser) :
                          'MultiSelectionSequence'    : lambda x : x.sequence() }
         return _obj2ConfMap.get(type(obj).__name__, lambda x : x)(obj)
 
+    ## for MDST input type and if RootInTES is specified, propagate it 
+    def _root_in_Tes ( self ) :
+        """
+        Propagate RootInTES :
+        
+        - use PhysConf.MicroDST
+        - set RooInTES property to all members of user sequence
+        
+        """
+        ## 
+        itype = self.getProp   ( 'InputType'  ).upper()
+        if not 'MDST' == itype : return  ## no action
+        #
+        ## for a time being no action for simulated data
+        #
+        if self.isPropertySet  ( 'Simulation' ) :
+            if self.getProp    ( 'Simulation' ) : return  ## no action   
+        #
+        if not self.isPropertySet ('RootInTES') : return  ## no action
+        rit = self.getProp('RootInTES')
+        if rit in ( '' , '/' , '/Event' , '/Event/' ) : return  ## no action
+        #
+        ## call uDstConf
+        #
+        from PhysConf.MicroDST import uDstConf
+        uDstConf ( rit , logger = getLogger ( 'PhysConf.MicroDST' )  ) ## use it!
+        #
+        ## setup RootInTES property for mainSeq
+        if not hasattr ( self , 'mainSeq' )  : return
+        ms = self.mainSeq
+
+        def _set_root_in_tes_ ( s , root  ) :
+            #
+            if isinstance ( s , str ) : return
+            prps = s.getProperties().keys()
+            if 'RootInTES' in prps : 
+                if not s.isPropertySet ( 'RootInTES' ) : 
+                    log.info ( "Set RootInTES=%s for %s" % ( root , s.getName() ) ) 
+                    s.RootInTES = root
+            #
+            if not 'Members' in prps : return 
+            #
+            for a in s.Members :
+                _set_root_in_tes_ ( a , root ) 
+
+        _set_root_in_tes_ ( ms , rit )
+
 ################################################################################
 # Monitoring sequence
 #
@@ -538,6 +593,8 @@ class DaVinci(LHCbConfigurableUser) :
         self._rootFiles()
         
         # Add main sequence to TopAlg
-        self._mainSequence()
+        self._mainSequence ()
         # monitoring
-        self._moniSequence()
+        self._moniSequence ()
+
+        self._root_in_Tes  () 
