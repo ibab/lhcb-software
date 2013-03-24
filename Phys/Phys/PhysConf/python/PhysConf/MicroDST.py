@@ -163,11 +163,11 @@ def uDstConf ( rootInTes        ,
 #
 #  @author VanyaBELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-10-05  
-def uDstConf_13b ( rootInTes , logger = None )  :
+def uDstConf13b ( rootInTes , logger = None )  :
     """
     Various settings for mDst (stripping 13b version)
     
-    #  from PhysConf.MicroDST import uDstConf
+    #  from PhysConf.MicroDST import uDstConf13b as uDstConf 
     #  uDstConf ( '/Event/Leptonic' )
     #
     """
