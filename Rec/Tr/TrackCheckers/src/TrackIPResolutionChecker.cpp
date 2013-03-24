@@ -14,6 +14,7 @@
 #include "Kernel/LHCbID.h"
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
+#include "Event/TrackFitResult.h"
 #include "Kernel/HitPattern.h"
 #include "Linker/LinkedTo.h"
 
@@ -60,6 +61,7 @@ private:
   void createResolutionProfile( const HistoID& inputname, const HistoID& outputname ) ;
 private:
   std::string m_tracklocation ;    ///< Input Tracks container location
+  std::string m_linkerlocation ;
   std::string m_pvlocation ;
   int m_minNumTracksReconstructablePV ;
 };
@@ -74,6 +76,7 @@ TrackIPResolutionChecker::TrackIPResolutionChecker(const std::string& name,
   GaudiHistoAlg( name , pSvcLocator )
 {
   declareProperty( "TrackContainer", m_tracklocation = LHCb::TrackLocation::Velo );
+  declareProperty( "LinkerLocation", m_linkerlocation ) ;
   declareProperty( "PVContainer", m_pvlocation = LHCb::RecVertexLocation::Primary ) ;
   declareProperty( "MinNumTracksReconstructablePV", m_minNumTracksReconstructablePV = 5 ) ;
 }
@@ -91,6 +94,7 @@ StatusCode TrackIPResolutionChecker::initialize()
   // Mandatory initialization of GaudiAlgorithm
   StatusCode sc = GaudiHistoAlg::initialize();
   if ( sc.isFailure() ) { return sc; }
+  if( m_linkerlocation.empty() ) m_linkerlocation = m_tracklocation ;
 
   return StatusCode::SUCCESS;
 }
@@ -217,7 +221,7 @@ StatusCode TrackIPResolutionChecker::execute()
   const LHCb::RecVertex::Range pvs = get<LHCb::RecVertex::Range>(m_pvlocation) ;
 
   // get the linker table track -> mcparticle
-  LinkedTo<LHCb::MCParticle> linker( evtSvc(), msgSvc(), m_tracklocation );  
+  LinkedTo<LHCb::MCParticle> linker( evtSvc(), msgSvc(), m_linkerlocation );
 
   // create the list of true PVs. count how many reconstructed tracks in each PV.
   std::map< const LHCb::MCVertex*, int > truepvs ;
@@ -230,7 +234,10 @@ StatusCode TrackIPResolutionChecker::execute()
       if(mcparticle->momentum().Pz()>0 ) {
 	double trueptGeV = mcparticle->momentum().Pt() / Gaudi::Units::GeV ;
 	plot1D( trueptGeV, "IP/TruePtH1", "true Pt in GeV", 0, 5 ) ;
-	
+    plot1D( mcparticle->p() / Gaudi::Units::GeV, "IP/TruePH1", "true momentum in GeV", 0, 100 ) ;
+    int trackWasFitted = track->fitResult() && !track->fitResult()->nodes().empty() ;
+    plot1D( trackWasFitted, "IP/TrackWasFittedH1","track was fitted by K-filter",-0.5,1.5,2) ;
+          
 	if( trueptGeV > 0.2 ) {
 	  double truephi = mcparticle->momentum().Phi() ;
 	  double invtrueptGeV = 1/trueptGeV ;
@@ -314,7 +321,16 @@ StatusCode TrackIPResolutionChecker::execute()
 
   // Finally, we also want to monitor the reconstructed IP, so the IP with respect to the reconstructed PVs.
   if( !pvs.empty() ) {
-    BOOST_FOREACH(const LHCb::Track* track, tracks) {
+    BOOST_FOREACH(const LHCb::Track* track, tracks)
+      if( !track->checkFlag( LHCb::Track::Backward) ) {
+      const LHCb::MCParticle* mcparticle = linker.first(track) ; 
+      // distinghuish secondaries, from primaries, from ghosts
+      bool hasMCMatch = mcparticle && mcparticle->originVertex() ;
+      bool isFromPV   = hasMCMatch && mcparticle->originVertex()->isPrimary() ;
+          std::string prefix = isFromPV ? "IPRecPV/TruePrimary/" :
+          ( hasMCMatch ? "IPRecPV/TrueSecondary/" : "IPRecPV/Ghost/" ) ;
+          
+          
       // find the closest PV, again using the minimal distance
       const LHCb::RecVertex* pv(0) ;
       double bestip2(0) ;
@@ -332,13 +348,14 @@ StatusCode TrackIPResolutionChecker::execute()
 	  pv = thispv ;
 	}
       }
-      plot1D( std::sqrt(bestip2), "IPRecPV/IP3DH1","IP 3D wrt to reconstructed vertex",0,maxip) ;
+      
+      plot1D( std::sqrt(bestip2), prefix + "IP3DH1","IP 3D wrt to reconstructed vertex",0,maxip) ;
 
       LHCb::State stateAtVtx = tracktraj.state( pv->position().z() ) ;
       double dx  = stateAtVtx.x() - pv->position().x() ;
       double dy  = stateAtVtx.y() - pv->position().y() ;
-      plot1D( dx, "IPRecPV/IPxH1","IP X wrt reconstructed vertex", -maxip, maxip ) ;
-      plot1D( dy, "IPRecPV/IPyH1","IP Y wrt reconstructed vertex", -maxip, maxip ) ;
+      plot1D( dx, prefix + "IPxH1","IP X wrt reconstructed vertex", -maxip, maxip ) ;
+      plot1D( dy, prefix + "IPyH1","IP Y wrt reconstructed vertex", -maxip, maxip ) ;
       
       // now compute the errors. this isn't quite right because
       // - PV is biased
@@ -346,15 +363,14 @@ StatusCode TrackIPResolutionChecker::execute()
       double tx = stateAtVtx.tx() ;
       double sigmaX2 = state.covariance()(0,0) + pv->covMatrix()(0,0) +
 	2*tx*pv->covMatrix()(0,2)+ tx*tx * pv->covMatrix()(2,2)  ;
-      plot1D( dx / std::sqrt( sigmaX2 ), "IPRecPV/IPxPullH1","IP X pull wrt reconstructed vertex", -5,5 ) ;
+      plot1D( dx / std::sqrt( sigmaX2 ), prefix + "IPxPullH1","IP X pull wrt reconstructed vertex", -5,5 ) ;
       double ty = stateAtVtx.ty() ;
       double sigmaY2 = state.covariance()(1,1) + pv->covMatrix()(1,1) +
 	2*ty*pv->covMatrix()(1,2)+ ty*ty * pv->covMatrix()(2,2)  ;
-      plot1D( dx / std::sqrt( sigmaY2 ), "IPRecPV/IPyPullH1","IP Y pull wrt reconstructed vertex", -5,5 ) ;
+      plot1D( dx / std::sqrt( sigmaY2 ), prefix + "IPyPullH1","IP Y pull wrt reconstructed vertex", -5,5 ) ;
     }
   }
   
   return StatusCode::SUCCESS ;
 }
-
 
