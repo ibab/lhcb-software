@@ -3,7 +3,7 @@
 #define _IVeloExpectation_H
  
 #include "GaudiKernel/IAlgTool.h"
-#include <bitset>
+#include "Kernel/HitPattern.h"
 
 static const InterfaceID IID_IVeloExpectation( "IVeloExpectation", 0, 0 );
  
@@ -32,8 +32,10 @@ public:
     unsigned int nR;
     unsigned int nPhi;
   };
- 
-                                                                        
+  // / Number of velo stations
+  enum { NumStations = LHCb::HitPattern::NumVelo } ;
+  typedef std::bitset<NumStations> VeloPattern ;
+                                                              
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IVeloExpectation ; }
                                                                                
@@ -59,7 +61,7 @@ public:
   *
   *  @return Info
   */
-  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack, std::bitset<23> velo[4]) const = 0;
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack, VeloPattern velo[4]) const = 0;
 
   /** Returns number of hits expected, from zStart to zStop
    *
@@ -97,7 +99,8 @@ public:
   *
   *  @return Info
   */
-  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop,  std::bitset<23> velo[4]) const = 0;
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop,
+						VeloPattern velo[4]) const = 0;
 
 
   /** Returns number of hits missed, from zBeamLine to firstHit
