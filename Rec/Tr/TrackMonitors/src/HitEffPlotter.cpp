@@ -116,7 +116,7 @@ StatusCode HitEffPlotter::execute()
 	std::vector<LHCb::LHCbID> ids;
 	ids.reserve(2 * tr->nLHCbIDs());
 
-	std::bitset<23> velo[4];
+	std::bitset<LHCb::HitPattern::NumVelo> velo[4];
 	m_veloExpectation->expectedInfo(*tr, velo);
 	m_ttExpectation->collect(*tr, ids);
 	m_itExpectation->collect(*tr, ids);

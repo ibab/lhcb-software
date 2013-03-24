@@ -10,6 +10,7 @@
 
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "Kernel/HitPattern.h"
 
 namespace LHCb {
     class Track;
@@ -73,14 +74,14 @@ class TrackExpectedHitsXYZTool : public GaudiTool
 
 	/// represent points in each layer where we expect a hit (approx. positions)
 	struct HitPatternXYZ {
-	    boost::array<Gaudi::XYZVector, 23> VeloRA;	///< Velo R sensor A side
-	    boost::array<Gaudi::XYZVector, 23> VeloRC;	///< Velo R sensor C side
-	    boost::array<Gaudi::XYZVector, 23> VeloPhiA;///< Velo Phi sensor A side
-	    boost::array<Gaudi::XYZVector, 23> VeloPhiC;///< Velo Phi sensor C side
-	    boost::array<Gaudi::XYZVector, 4> TT;	///< TT
-	    boost::array<Gaudi::XYZVector, 12> ITAC;	///< IT A/C side boxes
-	    boost::array<Gaudi::XYZVector, 12> ITTopBot;///< IT top/bottom boxes
-	    boost::array<Gaudi::XYZVector, 12> OT;	///< OT
+	  boost::array<Gaudi::XYZVector, LHCb::HitPattern::NumVelo> VeloRA;	///< Velo R sensor A side
+	  boost::array<Gaudi::XYZVector, LHCb::HitPattern::NumVelo> VeloRC;	///< Velo R sensor C side
+	  boost::array<Gaudi::XYZVector, LHCb::HitPattern::NumVelo> VeloPhiA;///< Velo Phi sensor A side
+	  boost::array<Gaudi::XYZVector, LHCb::HitPattern::NumVelo> VeloPhiC;///< Velo Phi sensor C side
+	  boost::array<Gaudi::XYZVector, LHCb::HitPattern::NumTT> TT;	///< TT
+	  boost::array<Gaudi::XYZVector, LHCb::HitPattern::NumT> ITAC;	///< IT A/C side boxes
+	  boost::array<Gaudi::XYZVector, LHCb::HitPattern::NumT> ITTopBot;///< IT top/bottom boxes
+	  boost::array<Gaudi::XYZVector, LHCb::HitPattern::NumT> OT;	///< OT
 
 	    /// default constructor to fill members with invalid values (quiet NaNs)
 	    HitPatternXYZ();

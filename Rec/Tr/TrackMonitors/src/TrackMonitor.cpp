@@ -370,7 +370,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
  
     if( track.type() == LHCb::Track::Long ) {
       std::vector<LHCb::LHCbID > ids;
-      std::bitset<23> velo[4];
+      IVeloExpectation::VeloPattern velo[4];
       if(m_veloExpectation) m_veloExpectation->expectedInfo(track, velo);
       if(m_ttExpectation) m_ttExpectation->collect(track, ids);
       if(m_itExpectation) m_itExpectation->collect(track, ids);
