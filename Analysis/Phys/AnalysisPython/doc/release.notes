@@ -5,8 +5,13 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
   
+! 2013-03-24 - Vanya Belyaev
+
+ - drastical speedup for rebin-methods
+
 ! 2013-03-17 - Vanya Belyaev
  - add some decorations for splines and interpolation 
+
 
 ! 2013-02-26 - Chris Jones
  - Fix -pedantic compilation warnings

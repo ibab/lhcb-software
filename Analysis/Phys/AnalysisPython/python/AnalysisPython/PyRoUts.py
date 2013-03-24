@@ -68,7 +68,7 @@ VE             = Gaudi.Math.ValueWithError
 SE             = cpp.StatEntity 
 ValueWithError = Gaudi.Math.ValueWithError
 binomEff       = Gaudi.Math.binomEff
-import math
+import math, sys
 # =============================================================================
 # logging 
 # =============================================================================
@@ -556,6 +556,20 @@ ROOT.TH2   .   size       = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetNbin
 ROOT.TH3   . __len__      = lambda s : s.size() 
 ROOT.TH3   .   size       = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetNbinsZ()
 
+ROOT.TH1D  . nbins        = lambda s : s.GetNbinsX() 
+ROOT.TH1F  . nbins        = lambda s : s.GetNbinsX() 
+ROOT.TH1D  .  bins        = lambda s : s.GetNbinsX() 
+ROOT.TH1F  .  bins        = lambda s : s.GetNbinsX() 
+
+ROOT.TH2D  . nbinsx       = lambda s : s.GetNbinsX()
+ROOT.TH2D  . nbinsy       = lambda s : s.GetNbinsY()
+ROOT.TH2F  . nbinsx       = lambda s : s.GetNbinsX()
+ROOT.TH2F  . nbinsy       = lambda s : s.GetNbinsY()
+ROOT.TH2D  .  binsx       = lambda s : s.GetNbinsX()
+ROOT.TH2D  .  binsy       = lambda s : s.GetNbinsY()
+ROOT.TH2F  .  binsx       = lambda s : s.GetNbinsX()
+ROOT.TH2F  .  binsy       = lambda s : s.GetNbinsY()
+
 # =============================================================================
 ## check bin in 2D-histo 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -833,7 +847,7 @@ ROOT.TH3D  . __getitem__  = _h3_get_item_
 ## iterate over entries in 1D-histogram 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def _h1_iteritems_ ( h1 ) :
+def _h1_iteritems_ ( h1 , low = 1 , high = sys.maxsize ) :
     """
     Iterate over histogram items:
     
@@ -843,8 +857,10 @@ def _h1_iteritems_ ( h1 ) :
     """
     ax = h1.GetXaxis()
     sx = ax.GetNbins()
-
-    for ix in range ( 1  , sx + 1 ) : 
+    if low  < 1   : low = 1 
+    
+    for ix in range ( max (      1 , low  )  ,
+                      min ( sx + 1 , high ) ) : 
         
         x   =       ax.GetBinCenter ( ix )
         xe  = 0.5 * ax.GetBinWidth  ( ix )
@@ -2952,12 +2968,18 @@ def _bin_overlap_1D_ ( x1 , x2 ) :
     """
     """
     #
-    xmin_1 = x1.value() - x1.error () 
-    xmax_1 = x1.value() + x1.error ()
+    x1v = x1.value()
+    x1e = x1.error()
+    #
+    xmin_1 = x1v - x1e 
+    xmax_1 = x1v + x1e
     if xmin_1 >= xmax_1  : return 0         ## RETURN
     #
-    xmin_2 = x2.value() - x2.error () 
-    xmax_2 = x2.value() + x2.error ()
+    x2v = x2.value()
+    x2e = x2.error()
+    #
+    xmin_2 = x2v - x2e 
+    xmax_2 = x2v + x2e
     if xmin_2 >= xmax_2  : return 0         ## RETURN
     #
     xmin = max ( xmin_1 , xmin_2 )
@@ -2965,27 +2987,39 @@ def _bin_overlap_1D_ ( x1 , x2 ) :
     #
     if xmin >= xmax      : return 0         ## RETURN 
     #
-    return ( xmax - xmin ) / 2.0 / x1.error()
+    return ( xmax - xmin ) / 2.0 / x1e
 # =============================================================================
 ## get the overlap for 2D-bins 
 def _bin_overlap_2D_ ( x1 , y1 , x2 , y2 ) :
     """
     """
     #
-    xmin_1 = x1.value() - x1.error () 
-    xmax_1 = x1.value() + x1.error ()
+    x1v = x1.value()
+    x1e = x1.error()
+    #
+    xmin_1 = x1v - x1e
+    xmax_1 = x1v + x1e
     if xmin_1 >= xmax_1  : return 0         ## RETURN
     #
-    xmin_2 = x2.value() - x2.error () 
-    xmax_2 = x2.value() + x2.error ()
+    x2v = x2.value()
+    x2e = x2.error()    
+    #
+    xmin_2 = x2v - x2e 
+    xmax_2 = x2v + x2e
     if xmin_2 >= xmax_2  : return 0         ## RETURN
     #
-    ymin_1 = y1.value() - y1.error () 
-    ymax_1 = y1.value() + y1.error ()
+    y1v = y1.value()
+    y1e = y1.error()    
+    #
+    ymin_1 = y1v - y1e 
+    ymax_1 = y1v + y1e
     if ymin_1 >= ymax_1  : return 0         ## RETURN
     #
-    ymin_2 = y2.value() - y2.error () 
-    ymax_2 = y2.value() + y2.error ()
+    y2v = y2.value()
+    y2e = y2.error()        
+    #
+    ymin_2 = y2v - y2e 
+    ymax_2 = y2v + y2e
     if ymin_2 >= ymax_2  : return 0         ## RETURN
     #
     xmin = max ( xmin_1 , xmin_2 )
@@ -2997,7 +3031,7 @@ def _bin_overlap_2D_ ( x1 , y1 , x2 , y2 ) :
     if ymin >= ymax      : return 0         ## RETURN 
     #
     #
-    return ( xmax - xmin ) * ( ymax - ymin ) / 4.0 / x1.error() / y1.error()  
+    return ( xmax - xmin ) * ( ymax - ymin ) / 4.0 / x1e / y1e 
 
 # ==============================================================================
 ## rebin 1D-histogram with NUMBERS 
@@ -3019,8 +3053,14 @@ def _rebin_nums_1D_ ( h1 , template ) :
     for i2 in h2 : h2[i2] = VE(0,0)
     #
     for i2 in h2.iteritems() :
+
+        xb  = i2[1]
+        xbv = xb.value ()
+        xbe = xb.error ()
         
-        for i1 in h1.iteritems() :
+        bl = h1.findBin ( xbv - xbe ) - 1 
+        bh = h1.findBin ( xbv + xbe ) + 1 
+        for i1 in h1.iteritems( bl , bh + 1 ) :
             
             o = _bin_overlap_1D_ ( i1[1] , i2[1] )
             
@@ -3046,8 +3086,14 @@ def _rebin_func_1D_ ( h1 , template ) :
     #
     for i2 in h2.iteritems() :
         
-        for i1 in h1.iteritems() :
-            
+        xb  = i2[1]
+        xbv = xb.value ()
+        xbe = xb.error ()
+        
+        bl = h1.findBin ( xbv - xbe ) - 1  
+        bh = h1.findBin ( xbv + xbe ) + 1 
+        for i1 in h1.iteritems( bl , bh + 1 ) :
+
             o = _bin_overlap_1D_ ( i2[1] , i1[1] ) ## NOTE THE ORDER!!! 
             
             h2 [ i2[0] ] +=  o * i1[2]
@@ -3073,7 +3119,7 @@ def _rebin_nums_2D_ ( h1 , template ) :
     for i2 in h2 : h2[i2] = VE(0,0)
     #
     for i2 in h2.iteritems() :
-        
+
         for i1 in h1.iteritems() :
             
             o = _bin_overlap_2D_ ( i1[2] , i1[3] , i2[2] , i2[3] )
@@ -3193,7 +3239,7 @@ def _gr_iter_ ( graph ) :
         yield ip
         
 # =============================================================================
-## iterate over points in TGraphError
+## iterate over points in TGraph
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _gr_iteritems_ ( graph ) :
@@ -3211,10 +3257,28 @@ def _gr_iteritems_ ( graph ) :
         yield ip , point[0] , point[1] 
         
 # =============================================================================
-## get the point in TGraphError
+## get the point in TGraph
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _gr_getitem_ ( graph , ipoint )  :
+    """
+    Get the point from the Graph
+    """
+    if not ipoint in graph : raise IndexError 
+    #
+    
+    x_ = ROOT.Double(0)
+    v_ = ROOT.Double(0)
+    
+    graph.GetPoint ( ipoint , x_ , v_ )
+    
+    return x_,v_
+
+# =============================================================================
+## get the point in TGraphError
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _gre_getitem_ ( graph , ipoint )  :
     """
     Get the point from the Graph
     """
@@ -3232,7 +3296,7 @@ def _gr_getitem_ ( graph , ipoint )  :
     return x,v
 
 # =============================================================================
-## set the point in TGraphError
+## set the point in TGraph
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _gr_setitem_ ( graph , ipoint , point )  :
@@ -3243,24 +3307,98 @@ def _gr_setitem_ ( graph , ipoint , point )  :
     if not ipoint in graph : raise IndexError 
     #
     
-    x = point[0]
-    v = point[1]
+    x = VE ( point[0] ).value () 
+    v = VE ( point[1] ).value () 
+    
+    graph.SetPoint      ( ipoint , x , v )
+
+# =============================================================================
+## set the point in TGraphError
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _gre_setitem_ ( graph , ipoint , point )  :
+    """
+    Get the point from the Graph
+    """
+    #
+    if not ipoint in graph : raise IndexError 
+    #
+    
+    x = VE ( point[0] ) 
+    v = VE ( point[1] ) 
 
     graph.SetPoint      ( ipoint , x . value () , v . value () )
     graph.SetPointError ( ipoint , x . error () , v . error () )
 
 # =============================================================================
-ROOT.TGraphErrors.__len__       = ROOT.TGraphErrors . GetN 
-ROOT.TGraphErrors.__contains__  = lambda s,i : i in range(0,len(s))
-ROOT.TGraphErrors.__iter__      = _gr_iter_ 
-ROOT.TGraphErrors.__iteritems__ = _gr_iteritems_ 
-ROOT.TGraphErrors.__getitem__   = _gr_getitem_ 
-ROOT.TGraphErrors.__setitem__   = _gr_setitem_ 
+ROOT.TGraph       . __len__       = ROOT.TGraphErrors . GetN 
+ROOT.TGraph       . __contains__  = lambda s,i : i in range(0,len(s))
+ROOT.TGraph       . __iter__      = _gr_iter_ 
+ROOT.TGraph       . __iteritems__ = _gr_iteritems_
+ROOT.TGraph       . __getitem__   = _gr_getitem_ 
+ROOT.TGraph       . __setitem__   = _gr_setitem_ 
+ROOT.TGraphErrors . __getitem__   = _gre_getitem_ 
+ROOT.TGraphErrors . __setitem__   = _gre_setitem_ 
+
+ROOT.TGraph       . __call__      = ROOT.TGraph.Eval
 
 ROOT.TH1F.asGraph = hToGraph
 ROOT.TH1D.asGraph = hToGraph
 ROOT.TH1F.toGraph = hToGraph
 ROOT.TH1D.toGraph = hToGraph
+
+# =============================================================================
+## min-value for the graph)
+def _gr_xmax_ ( graph ) :
+    """
+    Get x-max for the graph
+    
+    >>> xmax = graph.xmax()
+
+    """
+    #
+    _size = len ( graph )
+    if 0 == _sise : return 1
+    #
+    _last = _size - 1
+    x_ = ROOT.Double(0)
+    v_ = ROOT.Double(0)    
+    g.GetPoint ( _last , x_ , v_ )
+    #
+    return x_
+# =============================================================================
+## min-value for the graph)
+def _gr_xmin_ ( g ) :
+    """
+    Get x-min for the graph
+    
+    >>> xmin = graph.xmin()
+    
+    """
+    #
+    _size = len ( graph )
+    if 0 == _sise : return 0
+    #
+    x_ = ROOT.Double(0)
+    v_ = ROOT.Double(0)    
+    graph.GetPoint ( 0 , x_ , v_ )
+    #
+    return x_
+
+# =============================================================================
+## minmax-value for the graph)
+def _gr_xminmax_ ( graph ) :
+    """
+    Get x-minmax for the graph
+
+    >>> xmin,xmax = graph.xminmax() 
+    """
+    #
+    return (graph.xmin(), graph.xmax() )
+
+ROOT.TGraph  . xmin    = _gr_xmin_
+ROOT.TGraph  . xmax    = _gr_xmax_
+ROOT.TGraph  . xminmax = _gr_xminmax_
 
 # =============================================================================
 ## convert histogram to graph
