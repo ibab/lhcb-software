@@ -218,6 +218,8 @@ StatusCode TrackNNGhostId::initialize()
 
 StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
 {
+  enum { NumVelo = LHCb::HitPattern::NumVelo } ;
+  typedef std::bitset<NumVelo> VeloPattern ;
 
   const bool isDebug   = msgLevel(MSG::DEBUG);
   double retval = 0;
@@ -291,8 +293,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
       std::vector<LHCb::LHCbID> ids;
       ids.reserve(2 * aTrack.nLHCbIDs());
 
-      std::bitset<23> velo[4];
-
+      VeloPattern velo[4];
       m_veloExpectation->expectedInfo(aTrack, velo);
       m_ttExpectation->collect(aTrack, ids);
       m_itExpectation->collect(aTrack, ids);
@@ -307,12 +308,12 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     }
     float expectedV;
     {
-      std::bitset< 23 > ar = expectedpattern.veloRA()  .to_ulong();
-      std::bitset< 23 > cr = expectedpattern.veloRC()  .to_ulong();
-      std::bitset< 23 > ap = expectedpattern.veloPhiA().to_ulong();
-      std::bitset< 23 > cp = expectedpattern.veloPhiC().to_ulong();
+      VeloPattern ar = expectedpattern.veloRA()  .to_ulong();
+      VeloPattern cr = expectedpattern.veloRC()  .to_ulong();
+      VeloPattern ap = expectedpattern.veloPhiA().to_ulong();
+      VeloPattern cp = expectedpattern.veloPhiC().to_ulong();
       float ret = 0.;
-      for (int i = 0 ; i < 23 ; ++i) {
+      for (int i = 0 ; i < NumVelo ; ++i) {
         if (ar[i]) ret+=1.;
         if (ap[i]) ret+=1.;
         if (cr[i]) ret+=1.;
@@ -323,12 +324,12 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     }
     float observedV;
     {
-      std::bitset< 23 > ar = observedpattern.veloRA()  .to_ulong();
-      std::bitset< 23 > cr = observedpattern.veloRC()  .to_ulong();
-      std::bitset< 23 > ap = observedpattern.veloPhiA().to_ulong();
-      std::bitset< 23 > cp = observedpattern.veloPhiC().to_ulong();
+      VeloPattern ar = observedpattern.veloRA()  .to_ulong();
+      VeloPattern cr = observedpattern.veloRC()  .to_ulong();
+      VeloPattern ap = observedpattern.veloPhiA().to_ulong();
+      VeloPattern cp = observedpattern.veloPhiC().to_ulong();
       float ret = 0.;
-      for (int i = 0 ; i < 23 ; ++i) {
+      for (int i = 0 ; i < NumVelo ; ++i) {
         if (ar[i]) ret+=1.;
         if (ap[i]) ret+=1.;
         if (cr[i]) ret+=1.;
@@ -447,7 +448,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
       std::vector<LHCb::LHCbID> ids;
       ids.reserve(2 * aTrack.nLHCbIDs());
 
-      std::bitset<23> velo[4];
+      VeloPattern velo[4];
 
       m_veloExpectation->expectedInfo(aTrack, velo);
       m_ttExpectation->collect(aTrack, ids);
@@ -463,12 +464,12 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     }
     float expectedV;
     {
-      std::bitset< 23 > ar = expectedpattern.veloRA()  .to_ulong();
-      std::bitset< 23 > cr = expectedpattern.veloRC()  .to_ulong();
-      std::bitset< 23 > ap = expectedpattern.veloPhiA().to_ulong();
-      std::bitset< 23 > cp = expectedpattern.veloPhiC().to_ulong();
+      VeloPattern ar = expectedpattern.veloRA()  .to_ulong();
+      VeloPattern cr = expectedpattern.veloRC()  .to_ulong();
+      VeloPattern ap = expectedpattern.veloPhiA().to_ulong();
+      VeloPattern cp = expectedpattern.veloPhiC().to_ulong();
       float ret = 0.;
-      for (int i = 0 ; i < 23 ; ++i) {
+      for (int i = 0 ; i < NumVelo ; ++i) {
         if (ar[i]) ret+=1.;
         if (ap[i]) ret+=1.;
         if (cr[i]) ret+=1.;
@@ -479,12 +480,12 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     }
     float observedV;
     {
-      std::bitset< 23 > ar = observedpattern.veloRA()  .to_ulong();
-      std::bitset< 23 > cr = observedpattern.veloRC()  .to_ulong();
-      std::bitset< 23 > ap = observedpattern.veloPhiA().to_ulong();
-      std::bitset< 23 > cp = observedpattern.veloPhiC().to_ulong();
+      VeloPattern ar = observedpattern.veloRA()  .to_ulong();
+      VeloPattern cr = observedpattern.veloRC()  .to_ulong();
+      VeloPattern ap = observedpattern.veloPhiA().to_ulong();
+      VeloPattern cp = observedpattern.veloPhiC().to_ulong();
       float ret = 0.;
-      for (int i = 0 ; i < 23 ; ++i) {
+      for (int i = 0 ; i < NumVelo ; ++i) {
         if (ar[i]) ret+=1.;
         if (ap[i]) ret+=1.;
         if (cr[i]) ret+=1.;
@@ -595,7 +596,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
       std::vector<LHCb::LHCbID> ids;
       ids.reserve(2 * aTrack.nLHCbIDs());
 
-      std::bitset<23> velo[4];
+      VeloPattern velo[4];
 
       m_veloExpectation->expectedInfo(aTrack, velo);
       m_ttExpectation->collect(aTrack, ids);
@@ -751,7 +752,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
       std::vector<LHCb::LHCbID> ids;
       ids.reserve(2 * aTrack.nLHCbIDs());
 
-      std::bitset<23> velo[4];
+      VeloPattern velo[4];
 
       m_veloExpectation->expectedInfo(aTrack, velo);
       m_ttExpectation->collect(aTrack, ids);
@@ -899,7 +900,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
       std::vector<LHCb::LHCbID> ids;
       ids.reserve(2 * aTrack.nLHCbIDs());
 
-      std::bitset<23> velo[4];
+      VeloPattern velo[4];
 
       m_veloExpectation->expectedInfo(aTrack, velo);
       m_ttExpectation->collect(aTrack, ids);
@@ -915,12 +916,12 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     }
     float expectedV;
     {
-      std::bitset< 23 > ar = expectedpattern.veloRA()  .to_ulong();
-      std::bitset< 23 > cr = expectedpattern.veloRC()  .to_ulong();
-      std::bitset< 23 > ap = expectedpattern.veloPhiA().to_ulong();
-      std::bitset< 23 > cp = expectedpattern.veloPhiC().to_ulong();
+      VeloPattern ar = expectedpattern.veloRA()  .to_ulong();
+      VeloPattern cr = expectedpattern.veloRC()  .to_ulong();
+      VeloPattern ap = expectedpattern.veloPhiA().to_ulong();
+      VeloPattern cp = expectedpattern.veloPhiC().to_ulong();
       float ret = 0.;
-      for (int i = 0 ; i < 23 ; ++i) {
+      for (int i = 0 ; i < NumVelo ; ++i) {
         if (ar[i]) ret+=1.;
         if (ap[i]) ret+=1.;
         if (cr[i]) ret+=1.;
@@ -931,12 +932,12 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const
     }
     float observedV;
     {
-      std::bitset< 23 > ar = observedpattern.veloRA()  .to_ulong();
-      std::bitset< 23 > cr = observedpattern.veloRC()  .to_ulong();
-      std::bitset< 23 > ap = observedpattern.veloPhiA().to_ulong();
-      std::bitset< 23 > cp = observedpattern.veloPhiC().to_ulong();
+      VeloPattern ar = observedpattern.veloRA()  .to_ulong();
+      VeloPattern cr = observedpattern.veloRC()  .to_ulong();
+      VeloPattern ap = observedpattern.veloPhiA().to_ulong();
+      VeloPattern cp = observedpattern.veloPhiC().to_ulong();
       float ret = 0.;
-      for (int i = 0 ; i < 23 ; ++i) {
+      for (int i = 0 ; i < NumVelo ; ++i) {
         if (ar[i]) ret+=1.;
         if (ap[i]) ret+=1.;
         if (cr[i]) ret+=1.;

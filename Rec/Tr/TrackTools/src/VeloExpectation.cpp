@@ -63,7 +63,7 @@ int VeloExpectation::nExpected ( const Track& aTrack ) const
   return expectedHits.nR + expectedHits.nPhi;
 }
 
-IVeloExpectation::Info VeloExpectation::expectedInfo ( const Track& aTrack, std::bitset<23> velo[4] ) const{
+IVeloExpectation::Info VeloExpectation::expectedInfo ( const Track& aTrack, VeloPattern velo[4] ) const{
 
   // work out the first and last z on the track
   double zStart; double zStop;
@@ -108,14 +108,14 @@ int VeloExpectation::nExpected(const LHCb::Track& aTrack,
 
 
 IVeloExpectation::Info VeloExpectation::expectedInfo(const LHCb::Track& aTrack, 
-                               const double zStart, const double zStop,std::bitset<23> velo[4]) const{
+                               const double zStart, const double zStop, VeloPattern velo[4]) const{
   return scan(aTrack,zStart, zStop, velo);
 }
 
 IVeloExpectation::Info VeloExpectation::expectedInfo(const LHCb::Track& aTrack, 
                                const double zStart, const double zStop) const{
 
-  std::bitset<23> velo[4];
+  VeloPattern velo[4];
   return scan(aTrack,zStart, zStop, velo);
 }
 
@@ -151,7 +151,7 @@ int VeloExpectation::nMissed ( const Track& aTrack ) const
 
   
   // number expected...
-  std::bitset<23> velo[4];
+  VeloPattern velo[4];
   IVeloExpectation::Info expectedHits = scan(aTrack,zStart,zStop,velo);
 
   return expectedHits.nR + expectedHits.nPhi - nFound(aTrack,zStart,zStop);
@@ -171,14 +171,14 @@ int VeloExpectation::nMissed( const Track& aTrack, const double z ) const{
   }
 
   // number expected...
-  std::bitset<23> velo[4];
+  VeloPattern velo[4];
   IVeloExpectation::Info expectedHits = scan(aTrack, zStart, zStop, velo);
 
   return expectedHits.nPhi + expectedHits.nR - nFound(aTrack,zStart,zStop);
 }
 
 IVeloExpectation::Info VeloExpectation::scan(const LHCb::Track& aTrack, 
-                          const double zStart, const double zStop, std::bitset<23> velo[4]) const {
+                          const double zStart, const double zStop, VeloPattern velo[4]) const {
 
   IVeloExpectation::Info nHits;
   nHits.nR = 0; nHits.nPhi = 0;

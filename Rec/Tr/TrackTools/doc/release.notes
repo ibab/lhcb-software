@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2013-03-24 - Wouter Hulsbergen
+ - Adaptations of VeloExpectation and TrackNNGhostId in preparation for change of HitPattern
+
 !========================= TrackTools v4r22 2013-03-22 =========================
 ! 2013-02-24 - Heinrich Schindler
  - Bugfix in VLClusterPosition tool (inter-strip fraction)

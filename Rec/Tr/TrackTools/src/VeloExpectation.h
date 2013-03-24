@@ -54,7 +54,7 @@ public:
    *  @param aTrack Reference to the Track to test
    *  @return Info
    */ 
-  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack, std::bitset<23> velo[4] ) const;
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack, VeloPattern velo[4] ) const;
 
 
   /** Returns info on expected hits
@@ -93,7 +93,7 @@ public:
    *  @return Info
    */
   virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop, 
-						std::bitset<23> velo[4]) const;
+						VeloPattern velo[4]) const;
 
 
   /** Returns number of hits missed, from zBeamLine to firstHit
@@ -131,7 +131,7 @@ public:
 private:
 
   IVeloExpectation::Info scan(const LHCb::Track& aTrack,
-                              const double zStart, const double zStop,std::bitset<23> velo[4] ) const;
+                              const double zStart, const double zStop, VeloPattern velo[4] ) const;
 
   bool isInside(const DeVeloSensor* sensor, const Tf::Tsa::Line& xLine,
                 const Tf::Tsa::Line& yLine, const double z) const;
