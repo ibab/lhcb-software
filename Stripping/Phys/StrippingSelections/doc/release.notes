@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-24 - Lucio Anderlini (for Yury Shcheglov)
+ - Added StrippingXic2HHH.py for measurement  Br(Xic->p +\phi)/Br(Xic->p Kpi)
+ - Modified StrippingBetac2PhiP.py 
+
 ! 2013-03-24 - Pieter David
  - added StrippingLLP2MuX with HighPTHighIPMuonLine for exotics
 

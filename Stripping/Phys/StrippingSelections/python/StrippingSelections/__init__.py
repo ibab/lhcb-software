@@ -128,6 +128,7 @@ import StrippingD2XMuMuSS
 import StrippingDstarD02xx
 import StrippingDstarPromptWithD02HH
 import StrippingXicc
+import StrippingXicc2HHH
 import StrippingXibc
 import StrippingDstarD02KKmumuRegular
 import StrippingDstarD02KKpipiRegular
