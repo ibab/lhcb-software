@@ -55,7 +55,7 @@ StatusCode TrackComputeExpectedHits::execute(){
     std::vector<LHCb::LHCbID > ids;
     LHCb::Track* aTrack = *(iterT);
 
-    std::bitset<23> velo[4];
+    IVeloExpectation::VeloPattern velo[4];
     m_veloExpectation->expectedInfo(*aTrack,velo);
     m_ttExpectation->collect(*aTrack, ids);
     m_itExpectation->collect(*aTrack, ids);
