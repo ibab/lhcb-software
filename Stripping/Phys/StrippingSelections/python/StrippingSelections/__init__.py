@@ -106,6 +106,7 @@ import StrippingStrangeBaryons
 import StrippingDisplVertices
 import StrippingHighPtJets
 import StrippingInclbJets
+import StrippingLLP2MuX
 
 import StrippingMiniBias
 

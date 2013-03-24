@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-24 - Pieter David
+ - added StrippingLLP2MuX with HighPTHighIPMuonLine for exotics
+
 ! 2013-03-21 - Anton Poluektov 
  - Fixed typo in __init__.py
 
