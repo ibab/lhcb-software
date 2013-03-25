@@ -1,49 +1,47 @@
-# --> Including file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/Gen/LbPGuns/options/PGuns.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/Gen/LbPGuns/options/PGuns.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/56000050.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/CaloAcceptance.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/GaudiConf/options/units.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-branches-2/Wed/GAUSS/GAUSS_v42r3/Gen/LbPGuns/options/PGuns.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-branches-2/Wed/GAUSS/GAUSS_v42r3/Gen/LbPGuns/options/PGuns.py'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-branches-2/Wed/GAUSS/GAUSS_v42r3/Gen/DecFiles/options/56000050.py'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-branches-2/Wed/GAUSS/GAUSS_v42r3/Gen/DecFiles/options/CaloAcceptance.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-branches-2/Wed/GAUSS/GAUSS_v42r3/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-branches-2/Wed/GAUSS/GAUSS_v42r3/GaudiConf/options/units.opts'
 # ParticleGun.MomentumRange.ThetaMin = 0.037*rad;
 # ParticleGun.MomentumRange.ThetaMax = 0.240*rad;
 # GaussGen.PrintFreq = 100;
 # GaussSim.PrintFreq = 100;
 # SimMonitor.Members   -= { "GiGaGetEventAlg" };
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/CaloAcceptance.opts'
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/56000050.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/options/Gauss-DEV.py'
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/options/Gauss-DEV.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/options/CaloOnly.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/options/RICHesOff.py'
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/options/RICHesOff.py'
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/options/CaloOnly.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-branches-2/Wed/GAUSS/GAUSS_v42r3/Gen/DecFiles/options/CaloAcceptance.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-branches-2/Wed/GAUSS/GAUSS_v42r3/Gen/DecFiles/options/56000050.py'
+# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v42r3/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v42r3/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v42r3/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
+# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v42r3/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
+# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v42r3/Sim/Gauss/options/Gauss-DEV.py'
+# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v42r3/Sim/Gauss/options/Gauss-DEV.py'
+# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v42r3/Sim/Gauss/options/CaloOnly.py'
+# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v42r3/Sim/Gauss/options/CaloOnly.py'
 # applying configuration of Gauss
-# WARNING: file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/GaudiConf/options/units.opts' already included, ignored.
-VeloPostMC09  2
+# WARNING: file '/afs/cern.ch/lhcb/software/nightlies/lhcb-branches-2/Wed/GAUSS/GAUSS_v42r3/GaudiConf/options/units.opts' already included, ignored.
 Ecut value = 5.0
 # WARNING: No event data output produced
 # WARNING: No histograms produced
 # /***** User Gauss/Gauss ****************************************************************************
 # |-DatasetName         = 'Gauss'
-# |-DetectorGeo         = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
-# |                     (default: {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'TT': ['TT'], 'OT': ['OT'], 'IT': ['IT']})
+# |-DetectorGeo         = {'Detectors': ['Spd', 'Prs', 'Ecal', 'Hcal']}
+# |                     (default: {'Detectors': ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet']})
 # |-Histograms          = 'NONE'  (default: 'DEFAULT')
 # |-BeamEmittance       = 0.0022000000000000001
 # |-Phases              = ['Generator', 'Simulation']  (default: ['Generator', 'Simulation'])
 # |-Production          = 'PGUN'  (default: 'PHYS')
 # |-TotalCrossSection   = 9.1099999999999988e-24
 # |-BeamCrossingAngle   = -0.00052000000000000006
+# |-BeamPipe            = 'BeamPipeOn'
 # |-InteractionPosition = [0.0, 0.0, 0.0]  (default: [0.0, 0.0, 0.0])
 # |-BeamLineAngles      = [-7.4999999999999993e-05, 3.5000000000000004e-05]
 # |                     (default: [-7.4999999999999993e-05, 3.5000000000000004e-05])
 # |-PhysicsList         = {'Em': 'NoCuts', 'GeneralPhys': True, 'Other': '', 'Hadron': 'LHEP', 'LHCbPhys': True}
 # |                     (default: {'Em': 'NoCuts', 'GeneralPhys': True, 'Other': '', 'Hadron': 'LHEP', 'LHCbPhys': True})
-# |-DetectorMoni        = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
-# |                     (default: {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'TT': ['TT'], 'OT': ['OT'], 'IT': ['IT']})
+# |-DetectorMoni        = {'Detectors': ['Spd', 'Prs', 'Ecal', 'Hcal']}
+# |                     (default: {'Detectors': ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet']})
 # |-DeltaRays           = True
 # |-EnablePack          = True
 # |-BeamBetaStar        = 3000.0
@@ -52,24 +50,25 @@ Ecut value = 5.0
 # |-InteractionSize     = [0.029999999999999999, 0.029999999999999999, 57.0]
 # |                     (default: [0.029999999999999999, 0.029999999999999999, 57.0])
 # |-Persistency         = None
+# |-Debug               = False
 # |-Output              = 'NONE'  (default: 'SIM')
 # |-BeamMomentum        = 3500000.0
 # |-DataType            = ''
 # |-WriteFSR            = True
-# |-DetectorSim         = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
-# |                     (default: {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'TT': ['TT'], 'OT': ['OT'], 'IT': ['IT']})
+# |-DetectorSim         = {'Detectors': ['Spd', 'Prs', 'Ecal', 'Hcal']}
+# |                     (default: {'Detectors': ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet']})
 # |-SpilloverPaths      = []  (default: [])
 # \----- (End of User Gauss/Gauss) -------------------------------------------------------------------
-# GaussTape.ItemList    = ['/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/Gen/Collisions#1', '/Event/Gen/HepMCEvents#1', '/Event/Gen/BeamParameters#1', '/Event/pSim/MCVertices#1', '/Event/pSim/MCParticles#1', '/Event/pSim/Velo/Hits#1', '/Event/pSim/PuVeto/Hits#1', '/Event/pSim/IT/Hits#1', '/Event/pSim/OT/Hits#1', '/Event/pSim/TT/Hits#1', '/Event/pSim/Muon/Hits#1', '/Event/pSim/Spd/Hits#1', '/Event/pSim/Prs/Hits#1', '/Event/pSim/Ecal/Hits#1', '/Event/pSim/Hcal/Hits#1', '/Event/pSim/Rich/Hits#1', '/Event/pSim/Rich/OpticalPhotons#1', '/Event/pSim/Rich/Tracks#1', '/Event/pSim/Rich/Segments#1', '/Event/Link/MC/Particles2MCRichTracks#1', '/Event/Link/MC/Rich/Hits2MCRichOpticalPhotons#1']
-# GaussTape.OptItemList = []
-# WARNING: Using default tag head-20110914 for partition LHCBCOND
-# WARNING: Using default tag tt-20110126 for partition DQFLAGS
-# WARNING: Default global tags will be overridden with the latest ones available for '2011' data type: {'DDDB': 'head-20111102', 'SIMCOND': 'sim-20111111-vc-md100'}
-# WARNING: Latest unbound local tags of '2011' data type will be put on top of the latest global tags: {}
+# GaussTape.ItemList    = ['/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/Gen/BeamParameters#1', '/Event/Gen/Collisions#1', '/Event/pSim/MCVertices#1', '/Event/pSim/MCParticles#1', '/Event/pSim/Spd/Hits#1', '/Event/pSim/Prs/Hits#1', '/Event/pSim/Ecal/Hits#1', '/Event/pSim/Hcal/Hits#1']
+# GaussTape.OptItemList = ['/Event/Gen/HepMCEvents#1']
+# WARNING: Using default tag cond-20120724 for partition LHCBCOND
+# WARNING: Using default tag dq-20120910 for partition DQFLAGS
+# WARNING: Default global tags will be overridden with the latest ones available for '2012' data type: {'DDDB': 'dddb-20120831', 'SIMCOND': 'sim-20121025-vc-md100'}
+# WARNING: Latest unbound local tags on top of the latest global tags of 2012 data type(s) are added: {'DDDB': ['muon-20121018']}
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Gauss version v41r1
-                                          running on lxplus431.cern.ch on Wed Dec  7 12:02:47 2011
+                                                   Welcome to Gauss version v42r3p1
+                                          running on lxplus435.cern.ch on Wed Jan  9 18:44:43 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO Added successfully Conversion service:XmlCnvSvc
@@ -83,7 +82,7 @@ ChronoStatSvc              INFO  Number of skipped events for MemStat-1
                             WWW : http://cern.ch/geant4
 *************************************************************
 
-SimulationSvc              INFO Loading simulation attributes file "/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/xml/Simulation.xml" ...
+SimulationSvc              INFO Loading simulation attributes file "/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v42r3/Sim/Gauss/xml/SimulationRICHesOff.xml" ...
 GiGa.ModularPL             INFO GiGaPhysListModular initializing
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.EmOpt1NoCutsPhysics
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.DecayPhysics
@@ -98,18 +97,12 @@ GiGa                       INFO Used Physics List Object is GiGaPhysListModular/
 GiGa                       INFO Stacking Action Object is not required to be loaded
 COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/DDDB.db/DDDB"
-DDDB                       INFO Using TAG "head-20111102"
-EventClockSvc.FakeEve...   INFO Event times generated from 0 with steps of 0
-SIMCOND                    INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/SIMCOND.db/SIMCOND"
-SIMCOND                    INFO Using TAG "sim-20111111-vc-md100"
-RichG4TrackActionPhotOpt   INFO  Rich HPD Max QE from DB and UsedInThisRun are  0.45    0.45
-ParticlePropertySvc        INFO Opened particle properties file : conddb:///param/ParticleTable.txt
+DDDB_0                     INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB_0                     INFO Using TAG "muon-20121018"
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                       INFO Using TAG "dddb-20120831"
 GiGa                       INFO Used Tracking Action Object is GiGaTrackActionSequence/GiGa.TrackSeq
 GiGa                       INFO Used  Stepping Action Object is GiGaStepActionSequence/GiGa.StepSeq
-RootHistSvc                INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
-HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r5/data/gausscalo.root as GaussCalo
 GiGa                       INFO Used  Event Action Object is GiGaEventActionSequence/GiGa.EventSeq
 GiGa                       INFO Used  Run Action Object is GiGaRunActionSequence/GiGa.RunSeq
 GiGa                       INFO GiGa User Interface session is not required to be launched
@@ -118,7 +111,7 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.99 times the speed of a 2.8 GHz Xeon.
 GaussSequencer             INFO Member list: GaudiSequencer/Generator, GaudiSequencer/Simulation
 ToolSvc.SequencerTime...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GaudiSequencer/GeneratorSlotMainSeq
@@ -126,6 +119,10 @@ GeneratorSlotMainSeq       INFO Member list: GenInit/GaussGen, ParticleGun, Gaud
 GaussGen                SUCCESS ==================================================================
 GaussGen                SUCCESS Requested to process 10 events
 GaussGen                SUCCESS ==================================================================
+RootHistSvc                INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
+HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
+HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r8/data/gausscalo.root as GaussCalo
+GaussGen                   INFO Create BeamForInitialization
 GaussGen                   INFO Beam Parameters :
 GaussGen                   INFO Energy = 3.5 TeV
 GaussGen                   INFO Bunch length RMS = 57 mm
@@ -143,7 +140,6 @@ GaussGen                   INFO Luminosity = 2.47e+29 /cm2/s
 GaussGen                   INFO Nu = 2.00104
 GaussGen                   INFO emittance = 5.89771e-07
 GaussGen                   INFO Luminous region = ( 0.0297432, 0.0297432, 40.3051 ), mm
-GaussGen                   INFO Create BeamForInitialization
 ParticleGun.FlatNPart...   INFO Number of particles per event chosen randomly between 1 and 1
 ParticleGun.MomentumR...   INFO Particle type chosen randomly from : gamma
 ParticleGun.MomentumR...   INFO Momentum range: 50 GeV <-> 50 GeV
@@ -161,69 +157,29 @@ MainEventGaussSim       SUCCESS Requested to process 10 events
 MainEventGaussSim       SUCCESS ==================================================================
 MainSimulation             INFO Member list: GaudiSequencer/MakeMainSim, GaudiSequencer/SimMonitor
 MakeMainSim                INFO Member list: GenerationToSimulation/GenToSim, GiGaFlushAlgorithm/GiGaFlush, GiGaCheckEventStatus/GiGaCheckEvent, SimulationToMCTruth/SimToMCTruth, GaudiSequencer/DetectorsHits, GaudiSequencer/MainEventDataPacking
-DetectorsHits              INFO Member list: GetTrackerHitsAlg/GetVeloHits, GetTrackerHitsAlg/GetPuVetoHits, GetTrackerHitsAlg/GetTTHits, GetTrackerHitsAlg/GetITHits, GetTrackerHitsAlg/GetOTHits, GetTrackerHitsAlg/GetMuonHits, GetCaloHitsAlg/GetSpdHits, GetCaloHitsAlg/GetPrsHits, GetCaloHitsAlg/GetEcalHits, GetCaloHitsAlg/GetHcalHits, GaudiSequencer/RichHits
-RichHits                   INFO Member list: GetMCRichHitsAlg/GetRichHits, GetMCRichOpticalPhotonsAlg/GetRichPhotons, GetMCRichSegmentsAlg/GetRichSegments, GetMCRichTracksAlg/GetRichTracks, Rich::MC::MCPartToMCRichTrackAlg/MCPartToMCRichTrack, Rich::MC::MCRichHitToMCRichOpPhotAlg/MCRichHitToMCRichOpPhot
-GetRichHits                INFO Filling 'MC/Rich/Hits' from G4 collections 'Rich1TopHC' 'Rich1BotHC' 'Rich2LeftHC' 'Rich2RightHC'
-GetRichHits                INFO Using Rich1 Rich2 Detectors
-GetRichPhotons             INFO Filling 'MC/Rich/OpticalPhotons' from G4 collections 'Rich1TopHC' 'Rich1BotHC' 'Rich2LeftHC' 'Rich2RightHC'
-GetRichPhotons             INFO Using Rich1 Rich2 Detectors
-GetRichSegments            INFO Filling 'MC/Rich/Segments' from G4 collections 'Rich1TopHC' 'Rich1BotHC' 'Rich2LeftHC' 'Rich2RightHC'
-GetRichSegments            INFO Using Rich1 Rich2 Detectors
-GetRichTracks              INFO Filling 'MC/Rich/Tracks' from G4 collections 'Rich1TopHC' 'Rich1BotHC' 'Rich2LeftHC' 'Rich2RightHC'
-GetRichTracks              INFO Using Rich1 Rich2 Detectors
-MainEventDataPacking       INFO Member list: PackMCParticle, PackMCVertex, DataPacking::Pack<LHCb::MCVeloHitPacker>/MCVeloHitPacker, DataPacking::Pack<LHCb::MCPuVetoHitPacker>/MCPuVetoHitPacker, DataPacking::Pack<LHCb::MCTTHitPacker>/MCTTHitPacker, DataPacking::Pack<LHCb::MCITHitPacker>/MCITHitPacker, DataPacking::Pack<LHCb::MCOTHitPacker>/MCOTHitPacker, DataPacking::Pack<LHCb::MCMuonHitPacker>/MCMuonHitPacker, DataPacking::Pack<LHCb::MCPrsHitPacker>/MCPrsHitPacker, DataPacking::Pack<LHCb::MCSpdHitPacker>/MCSpdHitPacker, DataPacking::Pack<LHCb::MCEcalHitPacker>/MCEcalHitPacker, DataPacking::Pack<LHCb::MCHcalHitPacker>/MCHcalHitPacker, DataPacking::Pack<LHCb::MCRichHitPacker>/MCRichHitPacker, DataPacking::Pack<LHCb::MCRichOpticalPhotonPacker>/MCRichOpPhotPacker, DataPacking::Pack<LHCb::MCRichSegmentPacker>/MCRichSegmentPacker, DataPacking::Pack<LHCb::MCRichTrackPacker>/MCRichTrackPacker
+DetectorsHits              INFO Member list: GetCaloHitsAlg/GetSpdHits, GetCaloHitsAlg/GetPrsHits, GetCaloHitsAlg/GetEcalHits, GetCaloHitsAlg/GetHcalHits
+MainEventDataPacking       INFO Member list: PackMCParticle, PackMCVertex, DataPacking::Pack<LHCb::MCPrsHitPacker>/MCPrsHitPacker, DataPacking::Pack<LHCb::MCSpdHitPacker>/MCSpdHitPacker, DataPacking::Pack<LHCb::MCEcalHitPacker>/MCEcalHitPacker, DataPacking::Pack<LHCb::MCHcalHitPacker>/MCHcalHitPacker
 SimMonitor                 INFO Member list: GiGaGetEventAlg/GiGaGetMainEvent, MCTruthMonitor/MainMCTruthMonitor, GiGaGetHitsAlg, GaudiSequencer/DetectorsMonitor, GaudiSequencer/DataUnpackTest
-DetectorsMonitor           INFO Member list: VeloGaussMoni, MCHitMonitor/TTHitMonitor, MCHitMonitor/ITHitMonitor, MCHitMonitor/OTHitMonitor, MCCaloMonitor/SpdMonitor, MCCaloMonitor/PrsMonitor, MCCaloMonitor/EcalMonitor, MCCaloMonitor/HcalMonitor, MuonHitChecker, MuonMultipleScatteringChecker
-TTHitMonitor.MCPartic...   INFO MCParticle Momentum cut     : 0 GeV/c < P < 1.79769e+308 GeV/c
-TTHitMonitor.MCPartic...   INFO            Beta * gamma cut : 0 < beta*gamma
-TTHitMonitor.MCPartic...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
-ITHitMonitor.MCPartic...   INFO MCParticle Momentum cut     : 0 GeV/c < P < 1.79769e+308 GeV/c
-ITHitMonitor.MCPartic...   INFO            Beta * gamma cut : 0 < beta*gamma
-ITHitMonitor.MCPartic...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
-OTHitMonitor.MCPartic...   INFO MCParticle Momentum cut     : 0 GeV/c < P < 1.79769e+308 GeV/c
-OTHitMonitor.MCPartic...   INFO            Beta * gamma cut : 0 < beta*gamma
-OTHitMonitor.MCPartic...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
+DetectorsMonitor           INFO Member list: MCCaloMonitor/SpdMonitor, MCCaloMonitor/PrsMonitor, MCCaloMonitor/EcalMonitor, MCCaloMonitor/HcalMonitor
+EventClockSvc.FakeEve...   INFO Event times generated from 0 with steps of 0
+SIMCOND                    INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
+SIMCOND                    INFO Using TAG "sim-20121025-vc-md100"
 EcalDet.Quality            INFO Found  9 problematic readout channel(s)
 HcalDet.Quality            INFO Found  2 problematic readout channel(s)
-DataUnpackTest             INFO Member list: UnpackMCVertex, UnpackMCParticle, CompareMCVertex, CompareMCParticle, DataPacking::Unpack<LHCb::MCVeloHitPacker>/UnpackVeloHits, DataPacking::Unpack<LHCb::MCPuVetoHitPacker>/UnpackPuVetoHits, DataPacking::Unpack<LHCb::MCTTHitPacker>/UnpackTTHits, DataPacking::Unpack<LHCb::MCITHitPacker>/UnpackITHits, DataPacking::Unpack<LHCb::MCOTHitPacker>/UnpackOTHits, DataPacking::Unpack<LHCb::MCMuonHitPacker>/UnpackMuonHits, DataPacking::Check<LHCb::MCVeloHitPacker>/CheckVeloHits, DataPacking::Check<LHCb::MCPuVetoHitPacker>/CheckPuVetoHits, DataPacking::Check<LHCb::MCTTHitPacker>/CheckTTHits, DataPacking::Check<LHCb::MCITHitPacker>/CheckITHits, DataPacking::Check<LHCb::MCOTHitPacker>/CheckOTHits, DataPacking::Check<LHCb::MCMuonHitPacker>/CheckMuonHits, DataPacking::Unpack<LHCb::MCPrsHitPacker>/UnpackPrsHits, DataPacking::Unpack<LHCb::MCSpdHitPacker>/UnpackSpdHits, DataPacking::Unpack<LHCb::MCEcalHitPacker>/UnpackEcalHits, DataPacking::Unpack<LHCb::MCHcalHitPacker>/UnpackHcalHits, DataPacking::Check<LHCb::MCPrsHitPacker>/CheckPrsHits, DataPacking::Check<LHCb::MCSpdHitPacker>/CheckSpdHits, DataPacking::Check<LHCb::MCEcalHitPacker>/CheckEcalHits, DataPacking::Check<LHCb::MCHcalHitPacker>/CheckHcalHits, DataPacking::Unpack<LHCb::MCRichHitPacker>/UnpackRichHits, DataPacking::Unpack<LHCb::MCRichOpticalPhotonPacker>/UnpackRichOpPhot, DataPacking::Unpack<LHCb::MCRichSegmentPacker>/UnpackRichSegments, DataPacking::Unpack<LHCb::MCRichTrackPacker>/UnpackRichTracks, DataPacking::Check<LHCb::MCRichHitPacker>/CheckRichHits, DataPacking::Check<LHCb::MCRichOpticalPhotonPacker>/CheckRichOpPhot, DataPacking::Check<LHCb::MCRichSegmentPacker>/CheckRichSegments, DataPacking::Check<LHCb::MCRichTrackPacker>/CheckRichTracks
+DataUnpackTest             INFO Member list: UnpackMCVertex, UnpackMCParticle, CompareMCVertex, CompareMCParticle, DataPacking::Unpack<LHCb::MCSpdHitPacker>/UnpackSpdHits, DataPacking::Check<LHCb::MCSpdHitPacker>/CheckSpdHits, DataPacking::Unpack<LHCb::MCPrsHitPacker>/UnpackPrsHits, DataPacking::Check<LHCb::MCPrsHitPacker>/CheckPrsHits, DataPacking::Unpack<LHCb::MCEcalHitPacker>/UnpackEcalHits, DataPacking::Check<LHCb::MCEcalHitPacker>/CheckEcalHits, DataPacking::Unpack<LHCb::MCHcalHitPacker>/UnpackHcalHits, DataPacking::Check<LHCb::MCHcalHitPacker>/CheckHcalHits
 EventLoopMgr            WARNING Unable to locate service "EventSelector"
 EventLoopMgr            WARNING No events will be processed from external input.
 ApplicationMgr             INFO Application Manager Initialized successfully
 ApplicationMgr             INFO Application Manager Started successfully
 GaussGen                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 2119103972, 0]
-RFileCnv                   INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r5/data/gausscalo.root" for reading
+RFileCnv                   INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r8/data/gausscalo.root" for reading
 GiGaGeo.ZeroField          INFO createFieldMgr(): null magnetic field
-MagneticFieldSvc           INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/c1_onemap_down.cdf
-MagneticFieldSvc           INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/c2_onemap_down.cdf
-MagneticFieldSvc           INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/c3_onemap_down.cdf
-MagneticFieldSvc           INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/c4_onemap_down.cdf
-MagneticFieldSvc           INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
-GiGaGeo.FieldMgr           INFO Minimum and Maximum Epsilon Step : 5e-05 0.001
-GiGaGeo                    INFO world():: Global          'Field Manager' is set to be = GiGaFieldMgr/GiGaGeo.FieldMgr
-GiGaGeo                    INFO world():: Global        'G4Field Manager' is set to be = G4FieldManager
-GiGaGeo                    INFO world():: Global        'G4MagneticField' is set to be = GiGaMagFieldGlobal
-GiGaGeo                    INFO world():: Global 'G4MagIntegratorStepper' is set to be = G4ClassicalRK4
+GiGaGeo                 WARNING world():: Magnetic Field is not requested to be loaded
 MainEventGaussSim          INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 1677927199, 0]
 GiGa.GiGaMgr               INFO GiGaRunManager::  Geometry will be extracted from GiGaGeo
 GiGa.ModularPL             INFO  The production cut for gamma is set to 	5 mm
 GiGa.ModularPL             INFO  The production cut for electron is set to 	5 mm
 GiGa.ModularPL             INFO  The production cut for positron is set to 	5 mm
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT0' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT1' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT2' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT3' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT4' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT5' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT6' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT7' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT8' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT9' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT10' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT11' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT12' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT13' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT14' points to NULL, skip it   StatusCode=FAILURE
-GiGa.GiGaMgr.GiGaRegi...  ERROR GiGaRegionsTool::  process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT15' points to NULL, skip it   StatusCode=FAILURE
 ============================================================================================
              HADRONIC PROCESSES SUMMARY (verbose level 1)
 
@@ -288,364 +244,33 @@ AntiNeutronInelastic  Models:  G4LEAntiNeutronInelastic: Emin(GeV)=     0  Emax(
      ProtonInelastic  Models:       G4LEProtonInelastic: Emin(GeV)=     0  Emax(GeV)= 55
                                     G4HEProtonInelastic: Emin(GeV)=    25  Emax(GeV)= 10000
 ============================================================================================
-RichG4HistoSet2            INFO Now Booking Rich G4 Histo Set2
-<Rich1TopHC> is not found.
-<Rich1BotHC> is not found.
-<Rich2LeftHC> is not found.
-<Rich2RightHC> is not found.
-<VeloSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetVeloHits             WARNING GetTrackerHitsAlg:: The hit collection='VeloSDet/Hits' is not found!
-<VeloPuSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloPuSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetPuVetoHits           WARNING GetTrackerHitsAlg:: The hit collection='VeloPuSDet/Hits' is not found!
-<TTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'TTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetTTHits               WARNING GetTrackerHitsAlg:: The hit collection='TTSDet/Hits' is not found!
-<ITSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'ITSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetITHits               WARNING GetTrackerHitsAlg:: The hit collection='ITSDet/Hits' is not found!
-<OTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'OTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetOTHits               WARNING GetTrackerHitsAlg:: The hit collection='OTSDet/Hits' is not found!
-<MuonSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'MuonSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetMuonHits             WARNING GetTrackerHitsAlg:: The hit collection='MuonSDet/Hits' is not found!
-<Rich1TopHC> is not found.
-GetRichHits             WARNING GetMCRichHitsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
-GetRichPhotons          WARNING GetMCRichOpticalPhotonsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
 GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	1
 GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	2
 MainEventGaussSim          INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1044128089, 0]
-<Rich1TopHC> is not found.
-<Rich1BotHC> is not found.
-<Rich2LeftHC> is not found.
-<Rich2RightHC> is not found.
-<VeloSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetVeloHits             WARNING GetTrackerHitsAlg:: The hit collection='VeloSDet/Hits' is not found!
-<VeloPuSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloPuSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetPuVetoHits           WARNING GetTrackerHitsAlg:: The hit collection='VeloPuSDet/Hits' is not found!
-<TTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'TTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetTTHits               WARNING GetTrackerHitsAlg:: The hit collection='TTSDet/Hits' is not found!
-<ITSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'ITSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetITHits               WARNING GetTrackerHitsAlg:: The hit collection='ITSDet/Hits' is not found!
-<OTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'OTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetOTHits               WARNING GetTrackerHitsAlg:: The hit collection='OTSDet/Hits' is not found!
-<MuonSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'MuonSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetMuonHits             WARNING GetTrackerHitsAlg:: The hit collection='MuonSDet/Hits' is not found!
-<Rich1TopHC> is not found.
-GetRichHits             WARNING GetMCRichHitsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
-GetRichPhotons          WARNING GetMCRichOpticalPhotonsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
 GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	1
 GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	2
 MainEventGaussSim          INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 790725412, 0]
-<Rich1TopHC> is not found.
-<Rich1BotHC> is not found.
-<Rich2LeftHC> is not found.
-<Rich2RightHC> is not found.
-<VeloSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetVeloHits             WARNING GetTrackerHitsAlg:: The hit collection='VeloSDet/Hits' is not found!
-<VeloPuSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloPuSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetPuVetoHits           WARNING GetTrackerHitsAlg:: The hit collection='VeloPuSDet/Hits' is not found!
-<TTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'TTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetTTHits               WARNING GetTrackerHitsAlg:: The hit collection='TTSDet/Hits' is not found!
-<ITSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'ITSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetITHits               WARNING GetTrackerHitsAlg:: The hit collection='ITSDet/Hits' is not found!
-<OTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'OTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetOTHits               WARNING GetTrackerHitsAlg:: The hit collection='OTSDet/Hits' is not found!
-<MuonSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'MuonSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetMuonHits             WARNING GetTrackerHitsAlg:: The hit collection='MuonSDet/Hits' is not found!
-<Rich1TopHC> is not found.
-GetRichHits             WARNING GetMCRichHitsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
-GetRichPhotons          WARNING GetMCRichOpticalPhotonsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
 GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	1
 GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	2
 MainEventGaussSim          INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 1633773475, 0]
-<Rich1TopHC> is not found.
-<Rich1BotHC> is not found.
-<Rich2LeftHC> is not found.
-<Rich2RightHC> is not found.
-<VeloSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetVeloHits             WARNING GetTrackerHitsAlg:: The hit collection='VeloSDet/Hits' is not found!
-<VeloPuSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloPuSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetPuVetoHits           WARNING GetTrackerHitsAlg:: The hit collection='VeloPuSDet/Hits' is not found!
-<TTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'TTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetTTHits               WARNING GetTrackerHitsAlg:: The hit collection='TTSDet/Hits' is not found!
-<ITSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'ITSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetITHits               WARNING GetTrackerHitsAlg:: The hit collection='ITSDet/Hits' is not found!
-<OTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'OTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetOTHits               WARNING GetTrackerHitsAlg:: The hit collection='OTSDet/Hits' is not found!
-<MuonSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'MuonSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetMuonHits             WARNING GetTrackerHitsAlg:: The hit collection='MuonSDet/Hits' is not found!
-<Rich1TopHC> is not found.
-GetRichHits             WARNING GetMCRichHitsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
-GetRichPhotons          WARNING GetMCRichOpticalPhotonsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
 GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	1
 GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	2
 MainEventGaussSim          INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 103049051, 0]
-<Rich1TopHC> is not found.
-<Rich1BotHC> is not found.
-<Rich2LeftHC> is not found.
-<Rich2RightHC> is not found.
-<VeloSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetVeloHits             WARNING GetTrackerHitsAlg:: The hit collection='VeloSDet/Hits' is not found!
-<VeloPuSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloPuSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetPuVetoHits           WARNING GetTrackerHitsAlg:: The hit collection='VeloPuSDet/Hits' is not found!
-<TTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'TTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetTTHits               WARNING GetTrackerHitsAlg:: The hit collection='TTSDet/Hits' is not found!
-<ITSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'ITSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetITHits               WARNING GetTrackerHitsAlg:: The hit collection='ITSDet/Hits' is not found!
-<OTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'OTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetOTHits               WARNING GetTrackerHitsAlg:: The hit collection='OTSDet/Hits' is not found!
-<MuonSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'MuonSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetMuonHits             WARNING GetTrackerHitsAlg:: The hit collection='MuonSDet/Hits' is not found!
-<Rich1TopHC> is not found.
-GetRichHits             WARNING GetMCRichHitsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
-GetRichPhotons          WARNING GetMCRichOpticalPhotonsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
 GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	1
 GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	2
 MainEventGaussSim          INFO Evt 6,  Run 1082,  Nr. in job = 6 with seeds [1082, 6, 733772902, 0]
-<Rich1TopHC> is not found.
-<Rich1BotHC> is not found.
-<Rich2LeftHC> is not found.
-<Rich2RightHC> is not found.
-<VeloSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetVeloHits             WARNING GetTrackerHitsAlg:: The hit collection='VeloSDet/Hits' is not found!
-<VeloPuSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloPuSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetPuVetoHits           WARNING GetTrackerHitsAlg:: The hit collection='VeloPuSDet/Hits' is not found!
-<TTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'TTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetTTHits               WARNING GetTrackerHitsAlg:: The hit collection='TTSDet/Hits' is not found!
-<ITSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'ITSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetITHits               WARNING GetTrackerHitsAlg:: The hit collection='ITSDet/Hits' is not found!
-<OTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'OTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetOTHits               WARNING GetTrackerHitsAlg:: The hit collection='OTSDet/Hits' is not found!
-<MuonSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'MuonSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetMuonHits             WARNING GetTrackerHitsAlg:: The hit collection='MuonSDet/Hits' is not found!
-<Rich1TopHC> is not found.
-GetRichHits             WARNING GetMCRichHitsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
-GetRichPhotons          WARNING GetMCRichOpticalPhotonsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
 GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	1
 GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	2
 MainEventGaussSim          INFO Evt 7,  Run 1082,  Nr. in job = 7 with seeds [1082, 7, 494329819, 0]
-<Rich1TopHC> is not found.
-<Rich1BotHC> is not found.
-<Rich2LeftHC> is not found.
-<Rich2RightHC> is not found.
-<VeloSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetVeloHits             WARNING GetTrackerHitsAlg:: The hit collection='VeloSDet/Hits' is not found!
-<VeloPuSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloPuSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetPuVetoHits           WARNING GetTrackerHitsAlg:: The hit collection='VeloPuSDet/Hits' is not found!
-<TTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'TTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetTTHits               WARNING GetTrackerHitsAlg:: The hit collection='TTSDet/Hits' is not found!
-<ITSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'ITSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetITHits               WARNING GetTrackerHitsAlg:: The hit collection='ITSDet/Hits' is not found!
-<OTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'OTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetOTHits               WARNING GetTrackerHitsAlg:: The hit collection='OTSDet/Hits' is not found!
-<MuonSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'MuonSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetMuonHits             WARNING GetTrackerHitsAlg:: The hit collection='MuonSDet/Hits' is not found!
-<Rich1TopHC> is not found.
-GetRichHits             WARNING GetMCRichHitsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
-GetRichPhotons          WARNING GetMCRichOpticalPhotonsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
 GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	1
 GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	2
 MainEventGaussSim          INFO Evt 8,  Run 1082,  Nr. in job = 8 with seeds [1082, 8, 1086315665, 0]
-<Rich1TopHC> is not found.
-<Rich1BotHC> is not found.
-<Rich2LeftHC> is not found.
-<Rich2RightHC> is not found.
-<VeloSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetVeloHits             WARNING GetTrackerHitsAlg:: The hit collection='VeloSDet/Hits' is not found!
-<VeloPuSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloPuSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetPuVetoHits           WARNING GetTrackerHitsAlg:: The hit collection='VeloPuSDet/Hits' is not found!
-<TTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'TTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetTTHits               WARNING GetTrackerHitsAlg:: The hit collection='TTSDet/Hits' is not found!
-<ITSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'ITSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetITHits               WARNING GetTrackerHitsAlg:: The hit collection='ITSDet/Hits' is not found!
-<OTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'OTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetOTHits               WARNING GetTrackerHitsAlg:: The hit collection='OTSDet/Hits' is not found!
-<MuonSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'MuonSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetMuonHits             WARNING GetTrackerHitsAlg:: The hit collection='MuonSDet/Hits' is not found!
-<Rich1TopHC> is not found.
-GetRichHits             WARNING GetMCRichHitsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
-GetRichPhotons          WARNING GetMCRichOpticalPhotonsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
 GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	1
 GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	2
 MainEventGaussSim          INFO Evt 9,  Run 1082,  Nr. in job = 9 with seeds [1082, 9, 1327397198, 0]
-<Rich1TopHC> is not found.
-<Rich1BotHC> is not found.
-<Rich2LeftHC> is not found.
-<Rich2RightHC> is not found.
-<VeloSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetVeloHits             WARNING GetTrackerHitsAlg:: The hit collection='VeloSDet/Hits' is not found!
-<VeloPuSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloPuSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetPuVetoHits           WARNING GetTrackerHitsAlg:: The hit collection='VeloPuSDet/Hits' is not found!
-<TTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'TTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetTTHits               WARNING GetTrackerHitsAlg:: The hit collection='TTSDet/Hits' is not found!
-<ITSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'ITSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetITHits               WARNING GetTrackerHitsAlg:: The hit collection='ITSDet/Hits' is not found!
-<OTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'OTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetOTHits               WARNING GetTrackerHitsAlg:: The hit collection='OTSDet/Hits' is not found!
-<MuonSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'MuonSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetMuonHits             WARNING GetTrackerHitsAlg:: The hit collection='MuonSDet/Hits' is not found!
-<Rich1TopHC> is not found.
-GetRichHits             WARNING GetMCRichHitsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
-GetRichPhotons          WARNING GetMCRichOpticalPhotonsAlg:: RICH Collection Rich1TopHC : ID = -1
-<Rich1TopHC> is not found.
-GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	4
-GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	6
+GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	5
+GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	8
 MainEventGaussSim          INFO Evt 10,  Run 1082,  Nr. in job = 10 with seeds [1082, 10, 2062307553, 0]
-<Rich1TopHC> is not found.
-<Rich1BotHC> is not found.
-<Rich2LeftHC> is not found.
-<Rich2RightHC> is not found.
-<VeloSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetVeloHits             WARNING GetTrackerHitsAlg:: The WARNING message is suppressed : 'The hit collection='VeloSDet/Hits' is not found!'
-<VeloPuSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'VeloPuSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetPuVetoHits           WARNING GetTrackerHitsAlg:: The WARNING message is suppressed : 'The hit collection='VeloPuSDet/Hits' is not found!'
-<TTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'TTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetTTHits               WARNING GetTrackerHitsAlg:: The WARNING message is suppressed : 'The hit collection='TTSDet/Hits' is not found!'
-<ITSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'ITSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetITHits               WARNING GetTrackerHitsAlg:: The WARNING message is suppressed : 'The hit collection='ITSDet/Hits' is not found!'
-<OTSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'OTSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetOTHits               WARNING GetTrackerHitsAlg:: The WARNING message is suppressed : 'The hit collection='OTSDet/Hits' is not found!'
-<MuonSDet/Hits> is not found.
-GiGa                    WARNING Illegal (negative) ID for collection 'MuonSDet/Hits'
-GiGa                    WARNING Illegal (negative) collection ID
-GetMuonHits             WARNING GetTrackerHitsAlg:: The WARNING message is suppressed : 'The hit collection='MuonSDet/Hits' is not found!'
-<Rich1TopHC> is not found.
-GetRichHits             WARNING GetMCRichHitsAlg:: The WARNING message is suppressed : 'RICH Collection Rich1TopHC : ID = -1'
-<Rich1TopHC> is not found.
-GetRichPhotons          WARNING GetMCRichOpticalPhotonsAlg:: The WARNING message is suppressed : 'RICH Collection Rich1TopHC : ID = -1'
-<Rich1TopHC> is not found.
 GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	1
 GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	2
 ApplicationMgr             INFO Application Manager Stopped successfully
@@ -683,411 +308,162 @@ GenMonitorAlg           SUCCESS Booked 21 Histogram(s) : 1D=19 2D=2
 MainEventGaussSim       SUCCESS ==================================================================
 MainEventGaussSim       SUCCESS 10 events processed
 MainEventGaussSim       SUCCESS ==================================================================
-GetVeloHits             SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-GetVeloHits             SUCCESS  #WARNINGS   = 10       Message = 'The hit collection='VeloSDet/Hits' is not found!'
-GetPuVetoHits           SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-GetPuVetoHits           SUCCESS  #WARNINGS   = 10       Message = 'The hit collection='VeloPuSDet/Hits' is not found!'
-GetTTHits               SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-GetTTHits               SUCCESS  #WARNINGS   = 10       Message = 'The hit collection='TTSDet/Hits' is not found!'
-GetITHits               SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-GetITHits               SUCCESS  #WARNINGS   = 10       Message = 'The hit collection='ITSDet/Hits' is not found!'
-GetOTHits               SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-GetOTHits               SUCCESS  #WARNINGS   = 10       Message = 'The hit collection='OTSDet/Hits' is not found!'
-GetMuonHits             SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-GetMuonHits             SUCCESS  #WARNINGS   = 10       Message = 'The hit collection='MuonSDet/Hits' is not found!'
-GetRichHits                INFO Av. # Invalid RICH flags              =    0.00 +- 0.00
-GetRichHits                INFO Av. # MCRichHits              : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Invalid radiator hits   : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Signal Hits             : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Gas Quartz CK hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # HPD Quartz CK hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Nitrogen CK hits        : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Aero Filter CK hits     : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Si back-scattering      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Charged Track hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Scintillation hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # All HPD reflection hits : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # QW/PC refl. hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Chromium refl. hits   : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Air/QW refl. hits     : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Air/PC refl. hits     : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # PC/QW refl. hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Silicon refl. hits    : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Kovar refl. hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Kapton refl. hits     : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Signal CK MCRichHits    : Aero  =    0.00 +- 0.00 (  0.00 +-0.00%) Rich1Gas =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2Gas =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Rayleigh scattered hits : Aero  =    0.00 +- 0.00 (  0.00 +-0.00%) Rich1Gas =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2Gas =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # MCParticle-less hits    : Aero  =    0.00 +- 0.00 (  0.00 +-0.00%) Rich1Gas =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2Gas =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Aero hits per tile     :
-GetRichHits                INFO           tile =  0 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  1 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  2 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  3 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  4 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  5 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  6 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  7 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  8 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  9 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 10 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 11 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 12 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 13 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 14 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 15 hits =    0.00 +- 0.00 / event
-GetRichHits             SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-GetRichHits             SUCCESS  #WARNINGS   = 10       Message = 'RICH Collection Rich1TopHC : ID = -1'
-GetRichPhotons          SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-GetRichPhotons          SUCCESS  #WARNINGS   = 10       Message = 'RICH Collection Rich1TopHC : ID = -1'
-GetRichTracks              INFO Av. # MCRichTracks         : Overall =     0.00 +-  0.00
-MCVeloHitPacker         SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-MCPuVetoHitPacker       SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-MCTTHitPacker           SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-MCITHitPacker           SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-MCOTHitPacker           SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-MCMuonHitPacker         SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 MCPrsHitPacker          SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |        466 |     46.600 |     29.527 |      12.000 |      102.00 |
+ | "# PackedData"                                  |        10 |        536 |     53.600 |     36.371 |      12.000 |      126.00 |
 MCSpdHitPacker          SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |         96 |     9.6000 |     10.800 |      0.0000 |      36.000 |
+ | "# PackedData"                                  |        10 |        126 |     12.600 |     9.4678 |      0.0000 |      30.000 |
 MCEcalHitPacker         SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |        404 |     40.400 |     23.762 |      18.000 |      87.000 |
+ | "# PackedData"                                  |        10 |        439 |     43.900 |     26.486 |      18.000 |      104.00 |
 MCHcalHitPacker         SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |         23 |     2.3000 |     1.3454 |      0.0000 |      5.0000 |
-MCRichHitPacker         SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-MCRichOpPhotPacker      SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-MCRichSegmentPacker     SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-MCRichTrackPacker       SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-VeloGaussMoni              INFO ------------------------------------------------------
-VeloGaussMoni              INFO                 - VeloGaussMoni table -
-VeloGaussMoni              INFO ------------------------------------------------------
-VeloGaussMoni              INFO | ==> No MCHits found!
-VeloGaussMoni              INFO ------------------------------------------------------
-TTHitMonitor               INFO *** Summary ***
-TTHitMonitor               INFO #hits per event: 0
-TTHitMonitor               INFO Mean beta * gamma: 0
-TTHitMonitor               INFO Most Probable deposited charge: 0
-TTHitMonitor               INFO Half Sample width 0
-TTHitMonitor            SUCCESS Booked 5 Histogram(s) : 1D=5
-TTHitMonitor            SUCCESS Number of counters : 2
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "numberHits"                                    |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-ITHitMonitor               INFO *** Summary ***
-ITHitMonitor               INFO #hits per event: 0
-ITHitMonitor               INFO Mean beta * gamma: 0
-ITHitMonitor               INFO Most Probable deposited charge: 0
-ITHitMonitor               INFO Half Sample width 0
-ITHitMonitor            SUCCESS Booked 7 Histogram(s) : 1D=7
-ITHitMonitor            SUCCESS Number of counters : 2
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "numberHits"                                    |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-OTHitMonitor               INFO *** Summary ***
-OTHitMonitor               INFO #hits per event: 0
-OTHitMonitor               INFO Mean beta * gamma: 0
-OTHitMonitor               INFO Most Probable deposited charge: 0
-OTHitMonitor               INFO Half Sample width 0
-OTHitMonitor            SUCCESS Booked 7 Histogram(s) : 1D=7
-OTHitMonitor            SUCCESS Number of counters : 2
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "numberHits"                                    |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "# PackedData"                                  |        10 |         20 |     2.0000 |     1.4142 |      0.0000 |      5.0000 |
 SpdMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19
 PrsMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19
 EcalMonitor             SUCCESS Booked 19 Histogram(s) : 1D=19
 HcalMonitor             SUCCESS Booked 16 Histogram(s) : 1D=16
-MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO        Muon Monitoring Table
-MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO  M1        M2        M3        M4        M5
-MuonHitChecker             INFO 0.000  0.000  0.000  0.000  0.000   R1
-MuonHitChecker             INFO 0.000  0.000  0.000  0.000  0.000   R2
-MuonHitChecker             INFO 0.000  0.000  0.000  0.000  0.000   R3
-MuonHitChecker             INFO 0.000  0.000  0.000  0.000  0.000   R4
-MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO -------    Integrated over regions    ---------------------------
-MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO 0.000  0.000  0.000  0.000  0.000   allR
-MuonHitChecker             INFO  number of hit generate doutside gaps volume 0
-UnpackVeloHits          SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-UnpackPuVetoHits        SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-UnpackTTHits            SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-UnpackITHits            SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-UnpackOTHits            SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-UnpackMuonHits          SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-UnpackPrsHits           SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |        466 |     46.600 |     29.527 |      12.000 |      102.00 |
 UnpackSpdHits           SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |         96 |     9.6000 |     10.800 |      0.0000 |      36.000 |
-UnpackEcalHits          SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |        404 |     40.400 |     23.762 |      18.000 |      87.000 |
-UnpackHcalHits          SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |         23 |     2.3000 |     1.3454 |      0.0000 |      5.0000 |
-CheckPrsHits            SUCCESS Number of counters : 6
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Diff.    - Energy"                             |       466 |-0.0003022219 |-6.4854e-07 | 2.8038e-05 | -4.9890e-05 |  4.9663e-05 |
- | "Diff.    - TOF"                                |       466 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
- | "Original - Energy"                             |       466 |   1314.974 |     2.8218 |     17.382 |  1.7700e-05 |      222.82 |
- | "Original - TOF"                                |       466 |        704 |     1.5107 |     1.7036 |     -1.0000 |      4.0000 |
- | "Unpacked - Energy"                             |       466 |   1314.975 |     2.8218 |     17.382 |      0.0000 |      222.82 |
- | "Unpacked - TOF"                                |       466 |        704 |     1.5107 |     1.7036 |     -1.0000 |      4.0000 |
+ | "# UnPackedData"                                |        10 |        126 |     12.600 |     9.4678 |      0.0000 |      30.000 |
 CheckSpdHits            SUCCESS Number of counters : 6
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Diff.    - Energy"                             |        96 |-2.627386e-06 |-2.7369e-08 | 2.8090e-05 | -4.8506e-05 |  4.9581e-05 |
- | "Diff.    - TOF"                                |        96 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
- | "Original - Energy"                             |        96 |    24.6226 |    0.25649 |    0.61770 |  0.00012862 |      3.9459 |
- | "Original - TOF"                                |        96 |        144 |     1.5000 |     1.7078 |     -1.0000 |      4.0000 |
- | "Unpacked - Energy"                             |        96 |    24.6226 |    0.25649 |    0.61770 |  0.00010000 |      3.9459 |
- | "Unpacked - TOF"                                |        96 |        144 |     1.5000 |     1.7078 |     -1.0000 |      4.0000 |
+ | "Diff.    - Energy"                             |       126 |7.06998e-05 | 5.6111e-07 | 2.9173e-05 | -4.9509e-05 |  4.9296e-05 |
+ | "Diff.    - TOF"                                |       126 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Original - Energy"                             |       126 |   30.89987 |    0.24524 |    0.58249 |  3.8280e-06 |      4.5904 |
+ | "Original - TOF"                                |       126 |        189 |     1.5000 |     1.7078 |     -1.0000 |      4.0000 |
+ | "Unpacked - Energy"                             |       126 |    30.8998 |    0.24524 |    0.58249 |      0.0000 |      4.5904 |
+ | "Unpacked - TOF"                                |       126 |        189 |     1.5000 |     1.7078 |     -1.0000 |      4.0000 |
+UnpackPrsHits           SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# UnPackedData"                                |        10 |        536 |     53.600 |     36.371 |      12.000 |      126.00 |
+CheckPrsHits            SUCCESS Number of counters : 6
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Diff.    - Energy"                             |       536 |-0.0002146811 |-4.0052e-07 | 2.9634e-05 | -4.9969e-05 |  4.9984e-05 |
+ | "Diff.    - TOF"                                |       536 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Original - Energy"                             |       536 |    1691.27 |     3.1554 |     19.323 |  3.1629e-05 |      245.41 |
+ | "Original - TOF"                                |       536 |        814 |     1.5187 |     1.7004 |     -1.0000 |      4.0000 |
+ | "Unpacked - Energy"                             |       536 |    1691.27 |     3.1554 |     19.323 |      0.0000 |      245.41 |
+ | "Unpacked - TOF"                                |       536 |        814 |     1.5187 |     1.7004 |     -1.0000 |      4.0000 |
+UnpackEcalHits          SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# UnPackedData"                                |        10 |        439 |     43.900 |     26.486 |      18.000 |      104.00 |
 CheckEcalHits           SUCCESS Number of counters : 6
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Diff.    - Energy"                             |       404 |-0.001126692 |-2.7888e-06 | 2.7846e-05 | -4.9873e-05 |  4.9768e-05 |
- | "Diff.    - TOF"                                |       404 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
- | "Original - Energy"                             |       404 |    64229.4 |     158.98 |     766.95 |   0.0017281 |      6143.9 |
- | "Original - TOF"                                |       404 |          5 |   0.012376 |    0.11056 |      0.0000 |      1.0000 |
- | "Unpacked - Energy"                             |       404 |    64229.4 |     158.98 |     766.95 |   0.0017000 |      6143.9 |
- | "Unpacked - TOF"                                |       404 |          5 |   0.012376 |    0.11056 |      0.0000 |      1.0000 |
+ | "Diff.    - Energy"                             |       439 |-0.000150265 |-3.4229e-07 | 2.8582e-05 | -4.9734e-05 |  4.9811e-05 |
+ | "Diff.    - TOF"                                |       439 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Original - Energy"                             |       439 |   64567.45 |     147.08 |     730.29 |   0.0037092 |      6143.9 |
+ | "Original - TOF"                                |       439 |          3 |  0.0068337 |   0.082383 |      0.0000 |      1.0000 |
+ | "Unpacked - Energy"                             |       439 |   64567.45 |     147.08 |     730.29 |   0.0037000 |      6143.9 |
+ | "Unpacked - TOF"                                |       439 |          3 |  0.0068337 |   0.082383 |      0.0000 |      1.0000 |
+UnpackHcalHits          SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# UnPackedData"                                |        10 |         20 |     2.0000 |     1.4142 |      0.0000 |      5.0000 |
 CheckHcalHits           SUCCESS Number of counters : 6
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Diff.    - Energy"                             |        23 |-0.0001674341 |-7.2797e-06 | 2.6527e-05 | -4.8011e-05 |  4.7396e-05 |
- | "Diff.    - TOF"                                |        23 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
- | "Original - Energy"                             |        23 |   29.12603 |     1.2663 |     1.5255 |   0.0056541 |      5.2310 |
- | "Original - TOF"                                |        23 |         -4 |   -0.17391 |    0.37903 |     -1.0000 |      0.0000 |
- | "Unpacked - Energy"                             |        23 |    29.1262 |     1.2664 |     1.5255 |   0.0057000 |      5.2310 |
- | "Unpacked - TOF"                                |        23 |         -4 |   -0.17391 |    0.37903 |     -1.0000 |      0.0000 |
-UnpackRichHits          SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-UnpackRichOpPhot        SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-UnpackRichSegments      SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-UnpackRichTracks        SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Diff.    - Energy"                             |        20 |-0.0001809284 |-9.0464e-06 | 2.6824e-05 | -4.5871e-05 |  4.4330e-05 |
+ | "Diff.    - TOF"                                |        20 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Original - Energy"                             |        20 |   21.92102 |     1.0961 |     1.3775 |   0.0050650 |      5.2310 |
+ | "Original - TOF"                                |        20 |         -4 |   -0.20000 |    0.40000 |     -1.0000 |      0.0000 |
+ | "Unpacked - Energy"                             |        20 |    21.9212 |     1.0961 |     1.3775 |   0.0051000 |      5.2310 |
+ | "Unpacked - TOF"                                |        20 |         -4 |   -0.20000 |    0.40000 |     -1.0000 |      0.0000 |
 RootHistSvc             WARNING no ROOT output file name, Histograms cannot be persistified
 EventLoopMgr               INFO Histograms converted successfully according to request.
+GiGaGeo                 SUCCESS  Exceptions/Errors/Warnings statistics:  0/0/1
+GiGaGeo                 SUCCESS  #WARNINGS  = 1 Message='world():: Magnetic Field is not requested to be loaded '
 ToolSvc                    INFO Removing all tools created by ToolSvc
 MainEventGaussSim.Mai...SUCCESS Booked 4 Histogram(s) : 1D=4
 MainEventGaussSim.Mai...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         9 |      7.844 |    0.87156 |     2.4651 |      0.0000 |      7.8440 |
- | "Total Memory/MB"                               |        10 |   11167.32 |     1116.7 |     2.3532 |      1109.7 |      1117.5 |
+ | "Delta Memory/MB"                               |         9 |     20.536 |     2.2818 |     6.4538 |      0.0000 |      20.536 |
+ | "Total Memory/MB"                               |        10 |    12620.3 |     1262.0 |     6.1608 |      1243.5 |      1264.1 |
 GaussGen.GaussGenMemory SUCCESS Booked 4 Histogram(s) : 1D=4
 GaussGen.GaussGenMemory SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         9 |     76.848 |     8.5387 |     24.151 |      0.0000 |      76.848 |
- | "Total Memory/MB"                               |        10 |   11098.31 |     1109.8 |     23.054 |      1040.7 |      1117.5 |
+ | "Delta Memory/MB"                               |         9 |     313.88 |     34.876 |     98.643 |      0.0000 |      313.88 |
+ | "Total Memory/MB"                               |        10 |   12326.96 |     1232.7 |     94.164 |      950.20 |      1264.1 |
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTime...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.99 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    |  3130.224 |  3132.532 | 1120.307   20777.0 |      10 |    31.325 |
-TimingAuditor.TIMER        INFO  GaussSequencer               |  3130.024 |  3132.416 | 1120.243   20776.8 |      10 |    31.324 |
-TimingAuditor.TIMER        INFO   Generator                   |     0.500 |     0.535 |    0.201       3.4 |      10 |     0.005 |
-TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |     0.500 |     0.533 |    0.200       3.4 |      10 |     0.005 |
-TimingAuditor.TIMER        INFO     GaussGen                  |     0.200 |     0.268 |    0.112       1.6 |      10 |     0.003 |
-TimingAuditor.TIMER        INFO     ParticleGun               |     0.200 |     0.221 |    0.062       1.6 |      10 |     0.002 |
-TimingAuditor.TIMER        INFO     GenMonitor                |     0.100 |     0.038 |    0.016       0.2 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.100 |     0.035 |    0.014       0.2 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO   Simulation                  |  3129.524 |  3131.878 | 1120.008   20773.4 |      10 |    31.319 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    | 10525.900 | 12163.585 | 1071.612  105522.8 |      10 |   121.636 |
+TimingAuditor.TIMER        INFO  GaussSequencer               | 10520.401 | 12158.166 | 1071.560  105522.5 |      10 |   121.582 |
+TimingAuditor.TIMER        INFO   Generator                   |     0.700 |     0.986 |    0.221       4.4 |      10 |     0.010 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |     0.700 |     0.983 |    0.219       4.4 |      10 |     0.010 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.500 |     0.650 |    0.145       2.1 |      10 |     0.007 |
+TimingAuditor.TIMER        INFO     ParticleGun               |     0.200 |     0.281 |    0.054       2.1 |      10 |     0.003 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.000 |     0.044 |    0.015       0.3 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.000 |     0.041 |    0.013       0.3 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO   Simulation                  | 10519.701 | 12157.176 | 1070.981  105518.1 |      10 |   121.572 |
 TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.004 |    0.003       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO    Geo                        |   872.067 |   874.325 |    0.001    8743.2 |      10 |     8.743 |
-TimingAuditor.TIMER        INFO    MainEventSeq               |  2257.457 |  2257.544 | 1119.999   12030.1 |      10 |    22.575 |
-TimingAuditor.TIMER        INFO     MainEventGaussSim         |     0.300 |     0.155 |    0.088       0.6 |      10 |     0.002 |
-TimingAuditor.TIMER        INFO     MainSimulation            |  2257.157 |  2257.379 | 1119.859   12029.5 |      10 |    22.574 |
-TimingAuditor.TIMER        INFO      MakeMainSim              |  2255.657 |  2255.822 | 1118.487   12023.3 |      10 |    22.558 |
-TimingAuditor.TIMER        INFO       GenToSim                |  1084.235 |  1084.173 |    0.102   10839.7 |      10 |    10.842 |
-TimingAuditor.TIMER        INFO       GiGaFlush               |  1170.022 |  1170.187 | 1116.687    1269.0 |      10 |    11.702 |
+TimingAuditor.TIMER        INFO    Geo                        |  7890.101 |  8619.478 |    0.001   86194.8 |      10 |    86.195 |
+TimingAuditor.TIMER        INFO    MainEventSeq               |  2629.600 |  3537.689 | 1070.972   19323.3 |      10 |    35.377 |
+TimingAuditor.TIMER        INFO     MainEventGaussSim         |     0.200 |     0.283 |    0.119       0.9 |      10 |     0.003 |
+TimingAuditor.TIMER        INFO     MainSimulation            |  2629.400 |  3537.395 | 1070.810   19322.3 |      10 |    35.374 |
+TimingAuditor.TIMER        INFO      MakeMainSim              |  2628.500 |  3536.245 | 1070.385   19316.7 |      10 |    35.362 |
+TimingAuditor.TIMER        INFO       GenToSim                |  1330.098 |  1777.450 |    0.099   17772.1 |      10 |    17.774 |
+TimingAuditor.TIMER        INFO       GiGaFlush               |  1297.503 |  1758.221 | 1069.853    4758.3 |      10 |    17.582 |
 TimingAuditor.TIMER        INFO       GiGaCheckEvent          |     0.000 |     0.004 |    0.003       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO       SimToMCTruth            |     0.100 |     0.105 |    0.035       0.6 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO       DetectorsHits           |     0.800 |     0.834 |    0.580       2.1 |      10 |     0.008 |
-TimingAuditor.TIMER        INFO        GetVeloHits            |     0.200 |     0.165 |    0.100       0.5 |      10 |     0.002 |
-TimingAuditor.TIMER        INFO        GetPuVetoHits          |     0.000 |     0.045 |    0.040       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        GetTTHits              |     0.000 |     0.042 |    0.038       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        GetITHits              |     0.000 |     0.042 |    0.037       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        GetOTHits              |     0.000 |     0.042 |    0.037       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        GetMuonHits            |     0.000 |     0.042 |    0.038       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        GetSpdHits             |     0.000 |     0.040 |    0.014       0.2 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        GetPrsHits             |     0.000 |     0.027 |    0.014       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        GetEcalHits            |     0.100 |     0.050 |    0.023       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        GetHcalHits            |     0.000 |     0.015 |    0.011       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        RichHits               |     0.500 |     0.312 |    0.174       0.9 |      10 |     0.003 |
-TimingAuditor.TIMER        INFO         GetRichHits           |     0.100 |     0.095 |    0.036       0.4 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO         GetRichPhotons        |     0.300 |     0.069 |    0.028       0.1 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO         GetRichSegments       |     0.000 |     0.028 |    0.017       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO         GetRichTracks         |     0.000 |     0.019 |    0.012       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO         MCPartToMCRichTrack   |     0.100 |     0.053 |    0.031       0.2 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO         MCRichHitToMCRichOpPho|     0.000 |     0.035 |    0.023       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO       MainEventDataPacking    |     0.500 |     0.502 |    0.323       1.7 |      10 |     0.005 |
-TimingAuditor.TIMER        INFO        PackMCParticle         |     0.100 |     0.056 |    0.024       0.3 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        PackMCVertex           |     0.000 |     0.044 |    0.018       0.3 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCVeloHitPacker        |     0.000 |     0.036 |    0.019       0.2 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCPuVetoHitPacker      |     0.000 |     0.020 |    0.016       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCTTHitPacker          |     0.000 |     0.018 |    0.016       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCITHitPacker          |     0.000 |     0.019 |    0.017       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCOTHitPacker          |     0.100 |     0.027 |    0.017       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCMuonHitPacker        |     0.000 |     0.019 |    0.018       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCPrsHitPacker         |     0.000 |     0.034 |    0.022       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCSpdHitPacker         |     0.000 |     0.021 |    0.018       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCEcalHitPacker        |     0.100 |     0.024 |    0.019       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCHcalHitPacker        |     0.000 |     0.021 |    0.019       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCRichHitPacker        |     0.100 |     0.032 |    0.020       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCRichOpPhotPacker     |     0.100 |     0.036 |    0.019       0.2 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCRichSegmentPacker    |     0.000 |     0.034 |    0.019       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCRichTrackPacker      |     0.000 |     0.034 |    0.019       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO      SimMonitor               |     1.500 |     1.553 |    0.872       6.2 |      10 |     0.016 |
-TimingAuditor.TIMER        INFO       GiGaGetMainEvent        |     0.100 |     0.065 |    0.029       0.3 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO       MainMCTruthMonitor      |     0.000 |     0.018 |    0.012       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO       GiGaGetHitsAlg          |     0.000 |     0.065 |    0.047       0.2 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO       DetectorsMonitor        |     0.500 |     0.580 |    0.157       3.3 |      10 |     0.006 |
-TimingAuditor.TIMER        INFO        VeloGaussMoni          |     0.100 |     0.063 |    0.017       0.5 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        TTHitMonitor           |     0.000 |     0.024 |    0.009       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        ITHitMonitor           |     0.000 |     0.011 |    0.005       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        OTHitMonitor           |     0.000 |     0.010 |    0.005       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        SpdMonitor             |     0.100 |     0.113 |    0.010       0.6 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        PrsMonitor             |     0.000 |     0.108 |    0.025       0.6 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        EcalMonitor            |     0.100 |     0.108 |    0.021       0.7 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        HcalMonitor            |     0.200 |     0.075 |    0.011       0.5 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        MuonHitChecker         |     0.000 |     0.038 |    0.019       0.2 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MuonMultipleScatteringC|     0.000 |     0.015 |    0.010       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO       DataUnpackTest          |     0.900 |     0.819 |    0.527       2.4 |      10 |     0.008 |
-TimingAuditor.TIMER        INFO        UnpackMCVertex         |     0.000 |     0.027 |    0.015       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackMCParticle       |     0.100 |     0.021 |    0.011       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CompareMCVertex        |     0.000 |     0.021 |    0.010       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CompareMCParticle      |     0.000 |     0.020 |    0.010       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackVeloHits         |     0.100 |     0.037 |    0.020       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackPuVetoHits       |     0.000 |     0.020 |    0.016       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackTTHits           |     0.000 |     0.023 |    0.016       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackITHits           |     0.000 |     0.018 |    0.016       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackOTHits           |     0.000 |     0.019 |    0.016       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackMuonHits         |     0.100 |     0.020 |    0.017       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckVeloHits          |     0.100 |     0.012 |    0.006       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckPuVetoHits        |     0.000 |     0.008 |    0.005       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckTTHits            |     0.000 |     0.007 |    0.006       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckITHits            |     0.000 |     0.007 |    0.005       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckOTHits            |     0.000 |     0.007 |    0.005       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckMuonHits          |     0.000 |     0.006 |    0.005       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackPrsHits          |     0.000 |     0.042 |    0.022       0.2 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackSpdHits          |     0.000 |     0.022 |    0.017       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackEcalHits         |     0.000 |     0.024 |    0.019       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackHcalHits         |     0.000 |     0.020 |    0.018       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckPrsHits           |     0.200 |     0.105 |    0.035       0.3 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckSpdHits           |     0.000 |     0.026 |    0.006       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckEcalHits          |     0.000 |     0.075 |    0.037       0.2 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckHcalHits          |     0.000 |     0.012 |    0.007       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackRichHits         |     0.000 |     0.032 |    0.020       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackRichOpPhot       |     0.100 |     0.035 |    0.022       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackRichSegments     |     0.000 |     0.032 |    0.021       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackRichTracks       |     0.000 |     0.033 |    0.021       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckRichHits          |     0.000 |     0.013 |    0.007       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckRichOpPhot        |     0.000 |     0.013 |    0.007       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckRichSegments      |     0.000 |     0.013 |    0.007       0.1 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckRichTracks        |     0.100 |     0.013 |    0.007       0.1 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO       SimToMCTruth            |     0.100 |     0.121 |    0.036       0.8 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO       DetectorsHits           |     0.300 |     0.186 |    0.097       0.6 |      10 |     0.002 |
+TimingAuditor.TIMER        INFO        GetSpdHits             |     0.100 |     0.062 |    0.023       0.3 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        GetPrsHits             |     0.000 |     0.034 |    0.013       0.1 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        GetEcalHits            |     0.200 |     0.065 |    0.033       0.1 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        GetHcalHits            |     0.000 |     0.016 |    0.010       0.0 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO       MainEventDataPacking    |     0.400 |     0.245 |    0.116       1.0 |      10 |     0.002 |
+TimingAuditor.TIMER        INFO        PackMCParticle         |     0.000 |     0.051 |    0.025       0.2 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        PackMCVertex           |     0.000 |     0.037 |    0.016       0.2 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        MCPrsHitPacker         |     0.000 |     0.053 |    0.019       0.3 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        MCSpdHitPacker         |     0.200 |     0.039 |    0.015       0.2 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        MCEcalHitPacker        |     0.000 |     0.022 |    0.016       0.0 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        MCHcalHitPacker        |     0.100 |     0.020 |    0.015       0.0 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO      SimMonitor               |     0.900 |     1.146 |    0.421       5.6 |      10 |     0.011 |
+TimingAuditor.TIMER        INFO       GiGaGetMainEvent        |     0.000 |     0.080 |    0.042       0.2 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO       MainMCTruthMonitor      |     0.000 |     0.024 |    0.010       0.1 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO       GiGaGetHitsAlg          |     0.000 |     0.028 |    0.014       0.1 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO       DetectorsMonitor        |     0.400 |     0.460 |    0.077       3.1 |      10 |     0.005 |
+TimingAuditor.TIMER        INFO        SpdMonitor             |     0.100 |     0.121 |    0.013       1.0 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        PrsMonitor             |     0.100 |     0.120 |    0.019       0.8 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        EcalMonitor            |     0.200 |     0.129 |    0.020       0.8 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        HcalMonitor            |     0.000 |     0.083 |    0.010       0.5 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO       DataUnpackTest          |     0.500 |     0.547 |    0.241       2.1 |      10 |     0.005 |
+TimingAuditor.TIMER        INFO        UnpackMCVertex         |     0.000 |     0.036 |    0.016       0.2 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        UnpackMCParticle       |     0.000 |     0.024 |    0.011       0.1 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        CompareMCVertex        |     0.000 |     0.026 |    0.008       0.2 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        CompareMCParticle      |     0.100 |     0.022 |    0.009       0.1 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        UnpackSpdHits          |     0.000 |     0.054 |    0.018       0.3 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckSpdHits           |     0.100 |     0.079 |    0.006       0.5 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackPrsHits          |     0.000 |     0.034 |    0.016       0.1 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckPrsHits           |     0.000 |     0.107 |    0.028       0.2 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackEcalHits         |     0.000 |     0.025 |    0.018       0.0 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckEcalHits          |     0.200 |     0.089 |    0.037       0.2 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackHcalHits         |     0.000 |     0.019 |    0.015       0.0 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckHcalHits          |     0.000 |     0.012 |    0.005       0.0 |      10 |     0.000 |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-GiGa.GiGaMgr.GiGaRegi...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/16/0/0
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT0' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT1' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT10' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT11' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT12' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT13' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT14' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT15' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT2' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT3' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT4' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT5' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT6' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT7' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT8' points to NULL, skip it  '
-GiGa.GiGaMgr.GiGaRegi...SUCCESS  #ERRORS     = 1        Message = ' process('Rich1AerogelRegion'): G4LogicalVolume* '/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT9' points to NULL, skip it  '
 GiGa.GiGaMgr               INFO GiGaRunManager:: GiGaRunManager Finalization
-GiGa                    SUCCESS  Exceptions/Errors/Warnings statistics:  0/0/7
-GiGa                    SUCCESS  #WARNINGS  = 10 Message='Illegal (negative) ID for collection 'ITSDet/Hits''
-GiGa                    SUCCESS  #WARNINGS  = 10 Message='Illegal (negative) ID for collection 'MuonSDet/Hits''
-GiGa                    SUCCESS  #WARNINGS  = 10 Message='Illegal (negative) ID for collection 'OTSDet/Hits''
-GiGa                    SUCCESS  #WARNINGS  = 10 Message='Illegal (negative) ID for collection 'TTSDet/Hits''
-GiGa                    SUCCESS  #WARNINGS  = 10 Message='Illegal (negative) ID for collection 'VeloPuSDet/Hits''
-GiGa                    SUCCESS  #WARNINGS  = 10 Message='Illegal (negative) ID for collection 'VeloSDet/Hits''
-GiGa                    SUCCESS  #WARNINGS  = 60 Message='Illegal (negative) collection ID'
 *****Chrono*****           INFO ****************************************************************************************************
 *****Chrono*****           INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****           INFO ****************************************************************************************************
-GiGa.GiGaMgr::process...   INFO Time User   : Tot= 11.7  [s] Ave/Min/Max= 1.17(+-0.043)/ 1.12/ 1.27  [s] #= 10
-ChronoStatSvc              INFO Time User   : Tot= 55.9  [s]                                             #=  1
+GiGa.GiGaMgr::process...   INFO Time User   : Tot=   13  [s] Ave/Min/Max=  1.3(+-0.167)/ 1.07/ 1.67  [s] #= 10
+ChronoStatSvc              INFO Time User   : Tot=  109  [s]                                             #=  1
 *****Chrono*****           INFO ****************************************************************************************************
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO  The Final stat Table (ordered)
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO      Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-******Stat******           INFO  "GiGa:Warning"  |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-******Stat******           INFO  "#VeloPU MCHits |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#Velo MCHits"  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#TT MCHits"    |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#Rich2 MCHits" |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#Rich1 MCHits" |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#Rich MCHits"  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#OT MCHits"    |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#Muon MCHits"  |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#MCRichTracks" |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#MCRichSegment |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#MCRichOpPhoto |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#IT MCHits"    |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-******Stat******           INFO  "#MCParticles"  |        10 |         13 |     1.3000 |    0.90000 |      1.0000 |      4.0000 |
-******Stat******           INFO  "#Hcal MCHits"  |        10 |         23 |     2.3000 |     1.3454 |      0.0000 |      5.0000 |
-******Stat******           INFO  "#MCVertices"   |        10 |         24 |     2.4000 |     1.2000 |      2.0000 |      6.0000 |
-******Stat******           INFO  "#Spd MCHits"   |        10 |         96 |     9.6000 |     10.800 |      0.0000 |      36.000 |
-******Stat******           INFO  "#Ecal MCHits"  |        10 |        404 |     40.400 |     23.762 |      18.000 |      87.000 |
-******Stat******           INFO  "#Prs MCHits"   |        10 |        466 |     46.600 |     29.527 |      12.000 |      102.00 |
+******Stat******           INFO  "GiGaGeo:Warnin |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
+******Stat******           INFO  "#MCParticles"  |        10 |         14 |     1.4000 |     1.2000 |      1.0000 |      5.0000 |
+******Stat******           INFO  "#Hcal MCHits"  |        10 |         20 |     2.0000 |     1.4142 |      0.0000 |      5.0000 |
+******Stat******           INFO  "#MCVertices"   |        10 |         26 |     2.6000 |     1.8000 |      2.0000 |      8.0000 |
+******Stat******           INFO  "#Spd MCHits"   |        10 |        126 |     12.600 |     9.4678 |      0.0000 |      30.000 |
+******Stat******           INFO  "#Ecal MCHits"  |        10 |        439 |     43.900 |     26.486 |      18.000 |      104.00 |
+******Stat******           INFO  "#Prs MCHits"   |        10 |        536 |     53.600 |     36.371 |      12.000 |      126.00 |
 ******Stat******           INFO ****************************************************************************************************
 ChronoStatSvc.finalize()   INFO  Service finalized successfully
 ApplicationMgr             INFO Application Manager Finalized successfully

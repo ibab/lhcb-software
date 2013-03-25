@@ -13,6 +13,7 @@
     LineSkipper([&quot;SimulationSvc              INFO Loading simulation attributes file &quot;]) + \
     LineSkipper([&quot;MagneticFieldSvc           INFO Opened magnetic field file : &quot;]) + \
     LineSkipper([&quot;RFileCnv                   INFO opening Root file &quot;]) + \
-    LineSkipper([&quot;ChronoStatSvc.f...   INFO  Service finalized succes&quot;]) 
+    LineSkipper([&quot;ChronoStatSvc.f...   INFO  Service finalized succes&quot;]) + \
+    LineSkipper([&quot;GaussGen                   INFO Memory has changed from&quot;]) 
 validateWithReference(preproc = preprocessor)
 </text></argument><argument name="resources"><set/></argument><argument name="stdin"><text/></argument></extension>

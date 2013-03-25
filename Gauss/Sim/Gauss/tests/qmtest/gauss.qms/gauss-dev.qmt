@@ -2,7 +2,33 @@
 <!DOCTYPE extension
   PUBLIC '-//QM/2.4.1/Extension//EN'
   'http://www.codesourcery.com/qm/dtds/2.4.1/-//qm/2.4.1/extension//en.dtd'>
-<extension class="GaudiTest.GaudiExeTest" kind="test"><argument name="program"><text>gaudirun.py</text></argument><argument name="target_group"><text>.*</text></argument><argument name="timeout"><integer>1800</integer></argument><argument name="reference"><text>$GAUSSROOT/tests/refs/testGauss-DEV.ref</text></argument><argument name="stdout"><text/></argument><argument name="prerequisites"><set/></argument><argument name="args"><set><text>$GAUSSOPTS/Gauss-DEV.py</text><text>$DECFILESROOT/options/30000000.py</text><text>$LBPYTHIAROOT/options/Pythia.py</text><text>$GAUSSOPTS/Gauss-Job.py</text></set></argument><argument name="exit_code"><integer>0</integer></argument><argument name="use_temp_dir"><enumeral>true</enumeral></argument><argument name="error_reference"><text>$GAUSSROOT/tests/refs/testGauss-DEV-err.ref</text></argument><argument name="environment"><set/></argument><argument name="unsupported_platforms"><set/></argument><argument name="workdir"><text/></argument><argument name="stderr"><text/></argument><argument name="options"><text/></argument><argument name="validator"><text>preprocessor = normalizeExamples + \
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="target_group"><text>.*</text></argument>
+<argument name="timeout"><integer>1800</integer></argument>
+<argument name="reference">
+	<text>$GAUSSROOT/tests/refs/testGauss-DEV.ref</text>
+</argument>
+<argument name="stdout"><text/></argument>
+<argument name="prerequisites"><set/></argument>
+<argument name="args"><set>
+	<text>$GAUSSOPTS/Gauss-DEV.py</text>
+	<text>$DECFILESROOT/options/30000000.py</text>
+	<text>$LBPYTHIAROOT/options/Pythia.py</text>
+	<text>$GAUSSOPTS/Gauss-Job.py</text>
+</set>
+</argument>
+<argument name="exit_code"><integer>0</integer></argument>
+<argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+<argument name="error_reference">
+	<text>$GAUSSROOT/tests/refs/testGauss-err.ref</text>
+</argument>
+<argument name="environment"><set/></argument>
+<argument name="unsupported_platforms"><set/></argument>
+<argument name="workdir"><text/></argument>
+<argument name="stderr"><text/></argument>
+<argument name="options"><text/></argument>
+<argument name="validator"><text>preprocessor = normalizeExamples + \
     RegexpReplacer(when = &quot;Connected to database&quot;,
         orig = r&quot;(\&quot;sqlite_file:)(.*/)([\w.]+/[0-9A-Z_]{1,8}\&quot;)&quot;,
         repl = r&quot;\1\3&quot;) + \
@@ -33,4 +59,7 @@ for l in stdout.splitlines():
         if firstLineToSkip in l:
             skipping = True
 validateWithReference(preproc = preprocessor)
-</text></argument><argument name="resources"><set/></argument><argument name="stdin"><text/></argument></extension>
+</text></argument>
+<argument name="resources"><set/></argument>
+<argument name="stdin"><text/></argument>
+</extension>

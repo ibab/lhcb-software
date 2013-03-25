@@ -4,6 +4,6 @@
 ##  Option1)
 ##
 
-from Gauss.Configuration import *
+from Configurables import Gauss
 
 Gauss().PhysicsList = {"Em":'NoCuts', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True}

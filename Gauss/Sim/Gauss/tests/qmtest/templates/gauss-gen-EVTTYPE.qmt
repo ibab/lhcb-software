@@ -10,17 +10,19 @@
   <argument name="prerequisites"><set/></argument>
   <argument name="args">
      <set>
-       <text>$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-MC11-nu2.py</text>
+       <text>$GAUSSOPTS/Gauss-DEV.py</text>
        <text>$DECFILESROOT/options/@[eventtype].py</text>
        <text>$LBPYTHIAROOT/options/Pythia.py</text>
        <text>$GAUSSOPTS/GenStandAlone.py</text>
        <text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
        <text>$GAUSSROOT/tests/options/testGauss-gen-10evts-defaults.py</text>
-       </set>
+     </set>
   </argument>
   <argument name="exit_code"><integer>0</integer></argument>
   <argument name="use_temp_dir"><enumeral>false</enumeral></argument>
-  <argument name="error_reference"><text/></argument>
+  <argument name="error_reference">
+       <text>$GAUSSROOT/tests/refs/testGauss-err.ref</text>
+  </argument>
   <argument name="environment"><set/></argument>
   <argument name="unsupported_platforms"><set/></argument>
   <argument name="workdir"><text/></argument>

@@ -16,7 +16,7 @@
 	<text>$GAUSSROOT/tests/refs/testGauss-config-10000000.ref</text>
 </argument>
 <argument name="error_reference">
-	<text>$GAUSSROOT/tests/refs/testGauss-config-10000000-err.ref</text>
+	<text>$GAUSSROOT/tests/refs/testGauss-err.ref</text>
 </argument>
 <argument name="stdout">
 	<text/>
@@ -26,8 +26,7 @@
 </argument>
 <argument name="args">
 	<set>
-		<text>$GAUSSOPTS/Gauss-MC11a.py</text>
-		<text>$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-MC11-nu2.py</text>
+		<text>$GAUSSOPTS/Gauss-2011.py</text>
 		<text>$DECFILESROOT/options/10000000.py</text>
 		<text>$LBPYTHIAROOT/options/Pythia.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
@@ -69,6 +68,8 @@ preprocessor = (normalizeExamples +
      LineSkipper(["GaussGen.GaussGenMemory"]) + 
      LineSkipper(["PDFset"]) + 
      LineSkipper(["ChronoStatSvc.f...   INFO  from GaudiConf.QMTesService finalized succes"])  + 
+     LineSkipper(["RFileCnv                   INFO opening Root file"]) + 
+     LineSkipper(["HistogramDataSvc           INFO Added stream file"]) +
      LineSkipper(regexps=[r"GiGaGeo.HpdSiliconSen...\s*DEBUG Now in ProcessHits().*",
                          r"MainEventGaussSim\s*DEBUG event.*",
                          r"GaussGen\s*DEBUG event.*"]) + 

@@ -91,18 +91,16 @@ class Gauss(LHCbConfigurableUser):
         ,"DeltaRays"         : True
         ,"Phases"            : ["Generator","Simulation"] # The Gauss phases to include in the SIM file
         ,"BeamMomentum"      : 3.5*SystemOfUnits.TeV
-        ,"BeamCrossingAngle" : -0.520*SystemOfUnits.mrad
-        ,"BeamEmittance"     : 0.0022*SystemOfUnits.mm
-        ,"BeamBetaStar"      : 3.0*SystemOfUnits.m
-        ,"BeamLineAngles"    : [ -0.075*SystemOfUnits.mrad, 0.035*SystemOfUnits.mrad ]
-        ,"InteractionPosition" : [ 0.0*SystemOfUnits.mm,
-                                   0.0*SystemOfUnits.mm,
-                                   0.0*SystemOfUnits.mm
-                                   ]
-        ,"InteractionSize"   : [ 0.030*SystemOfUnits.mm,
-                                 0.030*SystemOfUnits.mm,
-                                 5.7*SystemOfUnits.cm
-                                 ]
+        ,"BeamHCrossingAngle" : -0.520*SystemOfUnits.mrad
+        ,"BeamVCrossingAngle" : 0.0
+        ,"BeamEmittance"     : 0.0037*SystemOfUnits.mm
+        ,"BeamBetaStar"      : 3.1*SystemOfUnits.m
+        ,"BeamLineAngles"    : [ -0.075*SystemOfUnits.mrad,
+                                  0.035*SystemOfUnits.mrad ]
+        ,"InteractionPosition" : [  0.459*SystemOfUnits.mm ,
+                                   -0.015*SystemOfUnits.mm ,
+                                    0.5*SystemOfUnits.mm ]
+        ,"BunchRMS"          : 82.03*SystemOfUnits.mm
         ,"Luminosity"        : 0.247*(10**30)/(SystemOfUnits.cm2*SystemOfUnits.s)
         ,"TotalCrossSection" : 91.1*SystemOfUnits.millibarn
         ,"OutputType"        : 'SIM'
@@ -1746,22 +1744,22 @@ class Gauss(LHCbConfigurableUser):
 
         #
         beamMom                        = self.getProp("BeamMomentum")
-        angle                          = self.getProp("BeamCrossingAngle")
+        xAngle                         = self.getProp("BeamHCrossingAngle")
+        yAngle                         = self.getProp("BeamVCrossingAngle")
         xAngleBeamLine, yAngleBeamLine = self.getProp("BeamLineAngles")
         emittance                      = self.getProp("BeamEmittance")
         betaStar                       = self.getProp("BeamBetaStar")
         lumiPerBunch                   = self.getProp("Luminosity")
         totCrossSection                = self.getProp("TotalCrossSection")
         meanX, meanY, meanZ            = self.getProp("InteractionPosition")
-        sigmaX, sigmaY, sigmaZ         = self.getProp("InteractionSize")
+        sigmaS                         = self.getProp("BunchRMS")
 
 
         # Give beam parameters to GenInit algorithm
-        #genInit = GenInit( "GaussGen" )
         genInit.CreateBeam              = True
         genInit.BeamEnergy              = beamMom
-        genInit.HorizontalCrossingAngle = angle
-        genInit.VerticalCrossingAngle   = 0. 
+        genInit.HorizontalCrossingAngle = xAngle
+        genInit.VerticalCrossingAngle   = yAngle
         genInit.NormalizedEmittance     = emittance
         genInit.BetaStar                = betaStar
         genInit.HorizontalBeamlineAngle = xAngleBeamLine
@@ -1771,7 +1769,7 @@ class Gauss(LHCbConfigurableUser):
         genInit.XLuminousRegion         = meanX
         genInit.YLuminousRegion         = meanY
         genInit.ZLuminousRegion         = meanZ
-        genInit.BunchLengthRMS          = sigmaZ
+        genInit.BunchLengthRMS          = sigmaS
     
         gen_t0 = Generation("Generation")
         

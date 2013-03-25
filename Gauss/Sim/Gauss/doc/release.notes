@@ -4,6 +4,68 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-03-25 - Gloria Corti
+ - Port changes from v45b branch:
+
+ - Update qmtests with changes from Patrick Robbe in v42r4. 
+ - Commit new file with reference error for most tests, since info message
+   from tauola is sent to stderr
+ - Modify the template for the evttype tests to use the common reference 
+   error file
+ - Reformat some tests to make them more readable and to use the common
+   reference error file. Also remove the specific error file and update 
+   the reference output. Copy the new references for -opt to -dbg, 
+   although they may be different they will be more similar then the old -dbg.
+   To be updated or removed later.
+   The tests affected are:
+   . gauss-config-2011 (no reformatting, only one outpur referecence existed)
+   . gauss-dev
+   . gauss-dev-pythia8-30000000
+   . gauss-dev-spillover
+   . gauss-gen-10000000
+   . gauss-gen-10000000.qmt
+   . gauss-gen-11164012.qmt
+   . gauss-gen-14165011.qmt
+   . gauss-gen-18112001.qmt
+   . gauss-gen-18412431.qmt
+   . gauss-gen-22112001.qmt
+   . gauss-gen-24142004.qmt
+   . gauss-gen-42112000.qmt
+   . gauss-gen-42112002.qmt
+   . gauss-gen-pythia8-10000000.qmt
+   . gauss-gen-pythia8-13164051.qmt
+ - Add options 'SpillOver-50ns.py' to switch off at any energy when bunch
+   spacing is 50 ns. Use this option in qmtest gauss-dev-spillover
+ - Remove the reference output and error files for slc5 32-bits that is no 
+   longer supported (i686-slc5-gcc43-{opt,dbg}
+ - Update the nightly that were using the old 'Beam3500GeV...' no longer
+   compatible with the Configurable to use 'Sim08-Beam3500GeV...' and remove
+   it in template for the event type check because it is no longer needed
+ - Modify properties of Gauss() for beam parameters:
+   . remove InteractionSize(x,y,z) where x and y are not used but set
+     in the BeamParameter class from beta* and emittance and where z is really
+     used as RMS of the bunch, so introuduce BunchRMS property to make it
+     clear what it is
+   . rename BeamCrossingAngle as BeamHCrossingAngle, since it is the horizontal 
+     one
+   . add BeamVCrossingAngle for the vertical crossing angle and set value
+     in BeamParameter (remove need of postConfigAction as for MC11)
+ - Modify Gauss-2011.py to include new options in AppConfig with new Gauss()
+   properties (Sim08-Beam3500GeV...) as for Sim08 for 2011 data
+ - Modify Gauss-DEV.py to remove setting of beam interaction position and use
+   default from Gauss()
+ - Add new Gauss-2012.py setting beam and tags as for Sim08 for 2012 data
+ - Remove obsolete Gauss-MC10.py no longer supported
+ - Rename options Gauss-MC11a.py to Gauss-2011.py to reflect that they can be
+   used to generate samples for 2011 with this latest version
+ - Change database tags in Gauss-2011.py to use compatible one for 2011 in
+   DDDB and SIMCOND. Also introduce beam transveral offset as needed by these
+   tags. 
+ - Adapt qmtests to use Gauss-2011.py and remove in that case the use of 
+   Beam3500GeV-md100-MC11-nu2.py already in Gauss itself.
+ - Change Gauss-DEV.py to use compatible DDDB tag for 2012 and DataTypes 2012
+   so that latest SIMCOND tag will be picked up
+
 ! 2013-03-07 - Gloria Corti
  - Undo my changes for VL just made for release
 
