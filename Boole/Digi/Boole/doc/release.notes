@@ -3,40 +3,18 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- - Updated the boole-upgrade-minimal reference file to pick up changes
- due to new input file.
+</PRE><H1><A NAME=v26r4>2013-03-26 Boole v26r4</A></H1><PRE>
+This version uses projects LCGCMT 64c, Gaudi v23r7, LHCb v35r5, Lbcom v13r5
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
- - Added a number of qmtests for the various upgrade configurations.
+ - Bug fix release for upgrade simulation.
 
- - Updated vl-ut-ft ref file to include new VLDigitCreator output.
+ - Changes to configuration:
+    . Disabled activation of spillover sequences for the UT which do not exist.
+    . Changed configuration for UT to avoid an exception when using DataType
+      Upgrade.
 
- - Corrected the last changes to avoild indentation error.
-
- - Disabled activation of spillover sequences for the UT which do not exist.
- These were only activated when dataType = Upgrade. Will re-integrate once
- the algos are written.
-
- - Removed histo error warnings from upgrade error references:
-   . boole-upgrade-ft-err.ref
-   . boole-upgrade-vp-ut-ft-err.ref
-   . boole-upgrade-vl-ut-ft-err.ref
-
- - Updated reference file for vp-ut-ft qmtest.
-
- - Updated reference file for vl-ut-ft qmtest.
-
- - Added upgrade qmtests for ft only, ut only and minimal upgrade detector.
-
- - Updated qmtests for the upgrade, added expected errors. Added temporary
- localTags to the vl test until the DB is updated.
-
- - Changed configuration for UT to avoid an exception when using DataType
- Upgrade.
-
- - Added qmtests and reference files for the upgrade
-   . boole-vp-ut-ft
-   . boole-vl-ut-ft
-   . boole-minimal-upgrade
+ - Added several qmtests for the various upgrade configurations.
 
 </PRE><H1><A NAME=v26r3>2013-03-06 Boole v26r3</A></H1><PRE>
 This version uses projects LCGCMT 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4
