@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
- *  CVS Log :-
- *  $Id: RichNonZeroSuppData_V2.h,v 1.9 2007-09-20 08:06:30 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
@@ -115,14 +112,14 @@ namespace Rich
         inline void setPixelActive( const ShortType row,
                                     const ShortType col )
         {
-          setBit( this->data()[this->maxDataSize()-(row+1)], col );
+          this -> setBit( this->data()[this->maxDataSize()-(row+1)], col );
         }
 
         /// Is a given pixel active ?
         inline bool isPixelActive( const ShortType row,
                                    const ShortType col ) const
         {
-          return isBitOn( this->data()[this->maxDataSize()-(row+1)], col );
+          return this -> isBitOn( this->data()[this->maxDataSize()-(row+1)], col );
         }
 
       private: // data

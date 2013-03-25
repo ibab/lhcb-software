@@ -122,14 +122,14 @@ namespace Rich
         inline void setPixelActive( const ShortType row,
                                     const ShortType col )
         {
-          setBit( this->data()[this->maxDataSize()-(row+1)], col );
+          this->setBit( this->data()[this->maxDataSize()-(row+1)], col );
         }
 
         /// Is a given pixel active ?
         inline bool isPixelActive( const ShortType row,
                                    const ShortType col ) const
         {
-          return isBitOn( this->data()[this->maxDataSize()-(row+1)], col );
+          return this->isBitOn( this->data()[this->maxDataSize()-(row+1)], col );
         }
 
       private: // data
