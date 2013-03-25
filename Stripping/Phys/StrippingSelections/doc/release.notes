@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-25 - Mat Charles
+ - Added StrippingB2Xic2815Sc2455.py for charm baryon branching fractions (+ corresponding edit to __init__.py)
+
 ! 2013-03-24 - Lucio Anderlini (for Yury Shcheglov)
  - Added StrippingXic2HHH.py for measurement  Br(Xic->p +\phi)/Br(Xic->p Kpi)
  - Modified StrippingBetac2PhiP.py 

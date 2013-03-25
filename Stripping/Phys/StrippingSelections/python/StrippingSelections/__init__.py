@@ -144,6 +144,7 @@ import StrippingD2PhiPiForXSec
 import StrippingD2HHHForXSec
 import StrippingD02HHForXSec
 import StrippingD02KSKS
+import StrippingB2Xic2815Sc2455
 
 ## the following two module names added December 13, 2013  M. Sokoloff
 import StrippingChargedHyperons
