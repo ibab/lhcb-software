@@ -239,7 +239,7 @@ namespace Tf
       void insert(size_t index, ModuleType* module) {
         m_modules.insert(index,module) ;
         std::sort(m_modules.begin(),m_modules.end(),compareX<ModuleType>) ;
-        add(module->detelement()) ;
+        this->add(module->detelement()) ;
       }
 
       /// Clear event data
