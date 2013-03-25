@@ -6,7 +6,7 @@
   </set></argument>
   <argument name="validator"><text>
 if len(stdout)>0:
-  result['HltConf'.tolower()+'.instantiate.failure']=stdout
+  result['HltConf'.lower()+'.instantiate.failure']=stdout
   causes.append('failed instantiation')
 
 </text></argument>

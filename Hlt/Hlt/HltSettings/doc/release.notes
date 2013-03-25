@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2013-03-25 - Rob Lambert
+ - Fix test problems
+
+
 ! 2013-03-22 - Rob Lambert
  - Add a huge number of qmtests, dummy tests mostly checking instantiation
 
