@@ -46,7 +46,7 @@
 # DigiWriter.ItemList    = ['/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/MC/DigiHeader#1', '/Event/DAQ/RawEvent#1', '/Event/Gen/BeamParameters#1', '/Event/Gen/Collisions#1', '/Event/pSim/MCVertices#1', '/Event/pSim/MCParticles#1', '/Event/pSim/Rich/DigitSummaries#1', '/Event/MC/Muon/DigitsInfo#1', '/Event/Link/Raw/VP/Clusters#1', '/Event/Link/Raw/UT/Clusters#1', '/Event/Link/Raw/FT/Clusters#1', '/Event/Link/Raw/Muon/Digits#1', '/Event/Link/Raw/Ecal/Digits#1', '/Event/Link/Raw/Hcal/Digits#1', '/Event/MC/TrackInfo#1', '/Event/Link/Raw/VP/Clusters2MCHits#1', '/Event/Link/Raw/UT/Clusters2MCHits#1']
 # DigiWriter.OptItemList = ['/Event/Gen/HepMCEvents#1']
 # WARNING: Using default tag dq-20121016 for partition DQFLAGS
-# WARNING: ALL local tags of ['VP_Compact_Pocoform+UT', 'FT'] data type(s) are added: {'DDDB': ['VP-CompactPocoform-Local-20130319', 'VP-UT-Local-NoPuVeto-20121024', 'UT-Pipe-Upgrade-Local-20120928', 'FT-Upgrade-Local-20120910'], 'SIMCOND': []}
+# WARNING: ALL local tags of ['VP_Compact_Pocofoam+UT', 'FT'] data type(s) are added: {'DDDB': ['VP-CompactPocofoam-Local-20130319', 'VP-UT-Local-NoPuVeto-20121024', 'UT-Pipe-Upgrade-Local-20120928', 'FT-Upgrade-Local-20120910'], 'SIMCOND': []}
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v26r3
@@ -75,7 +75,7 @@ InitMuonSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackgro
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB_3               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
-DDDB_3               INFO Using TAG "VP-CompactPocoform-Local-20130319"
+DDDB_3               INFO Using TAG "VP-CompactPocofoam-Local-20130319"
 DDDB_2               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
 DDDB_2               INFO Using TAG "VP-UT-Local-NoPuVeto-20121024"
 DDDB_1               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
@@ -233,7 +233,7 @@ Filter               INFO OR Member list:
 PrepareDIGI          INFO Member list: PackMCVertex, PackMCParticle, DataPacking::Pack<LHCb::MCRichDigitSummaryPacker>/MCRichDigitSummaryPacker, EventNodeKiller/MCRichNodeKiller
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 DigiWriter           INFO Data source: EventDataSvc output: DATAFILE='PFN:Boole.digi' SVC='RootCnvSvc' OPT='REC'
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/VP_Compact_Pocoform-UT-FT/VP_Compact_Pocoform-UT-FT.sim' SVC='Gaudi::RootEvtSelector' OPT='READ'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/VP_Compact_Pocofoam-UT-FT/VP_Compact_Pocofoam-UT-FT.sim' SVC='Gaudi::RootEvtSelector' OPT='READ'
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 BooleInit            INFO Evt 1,  Run 1082,  Nr. in job = 1
@@ -418,7 +418,7 @@ MCRichDigitSumm...SUCCESS Number of counters : 1
 DigiWriter           INFO Events output: 3
 EventLoopMgr         INFO Histograms converted successfully according to request.
 RootCnvSvc           INFO Disconnected data IO:0C2BD0EA-4192-E211-818F-003048F0E852 [Boole.digi]
-RootCnvSvc           INFO Disconnected data IO:3077DF85-2792-E211-938D-003048D2BF92 [castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/VP_Compact_Pocoform-UT-FT/VP_Compact_Pocoform-UT-FT.sim]
+RootCnvSvc           INFO Disconnected data IO:3077DF85-2792-E211-938D-003048D2BF92 [castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/VP_Compact_Pocofoam-UT-FT/VP_Compact_Pocofoam-UT-FT.sim]
 ToolSvc              INFO Removing all tools created by ToolSvc
 HcalFromRaw.Hca...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
