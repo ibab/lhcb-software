@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2013-03-25 - Antonis Papanestis
+ - Fix a bug introduced in DeRichPMTPanel
+
 ! 2013-03-23 - Antonis Papanestis
  - Un-did some of the changes needed for the single RICH because the broke 
    the current geometry. This version will not work with the single RICH

@@ -502,8 +502,7 @@ StatusCode DeRichPMTPanel::getPanelGeometryInfo()
     m_PmtAnodeEffectiveXPixelSize= m_AnodeXPixelSize+m_PmtPixelGap;
     m_PmtAnodeEffectiveYPixelSize= m_AnodeYPixelSize+m_PmtPixelGap;
     m_PmtMasterLateralSize = firstRich->param<double>("RichPmtMasterLateralSize" );
-    if ( rich() == Rich::Rich1 )
-      m_Rich1TotNumPmts = firstRich->param<int>("Rich1TotNumPmt");
+    m_Rich1TotNumPmts = firstRich->param<int>("Rich1TotNumPmt");
     m_Rich2TotNumPmts = firstRich->param<int>("Rich2TotNumPmt");
     m_RichPmtQuartzThickness = firstRich->param<double>("RichPmtQuartzZSize" );
     m_RichPmtQuartzLocalZInPmt= firstRich->param<double>("RichPmtQuartzZPosInPmt");
