@@ -1,5 +1,5 @@
 package           BrunelSys
-version           v44r2
+version           v44r3
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v44r2 Rec
+use Brunel v44r3 Rec
 
 # Add here any component libraries to be added as patches
 
@@ -22,4 +22,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use GaudiConf v17r6

@@ -4,6 +4,66 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
 
+</PRE><H1><A NAME=v44r3>2013-03-26 Brunel v44r3</A></H1><PRE>
+This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5,
+ Rec v14r5 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Release for Upgrade productions
+
+- Changes to supported platforms
+  . Full support for x86_64-slc6-gcc46 (Gaudi v23r7 + LCG 64d)
+
+- Changes to configuration
+  . Support for all upgrade tracking detector configurations
+    (RecAlgs v2r13, RecConf v2r12, LHCbAlgs v2r55)
+  . Added support for TMVA based network tunings (ChargedProtoANNPID v1r12)
+  . Use VL instead of VeloLite CondDB path (VLDet v1r5)
+
+- Persistency changes
+  . RecSummary added to DST also for upgrade detectors (GaudiConf v17r7)
+  . Add back Ecal and Hcal linkers to standard DSTs, as they are needed for
+    MC matching in DaVinci (removed in Brunel v44r1)
+
+- New tuning
+  . New algorithm PrSeedingXLayers replaces PrSeedingAlgorithm as default for FT
+    seeding (PrAlgorithms v1r3, TrackSys v7r10)
+  . Fixed track type (Long -> Ttrack) in PrSeedingAlgorithm and PrSeedingXLayers
+    (PrAlgorithms v1r3)
+  . Added PatMatch to upgrade sequence (TrackSys v7r10)
+  . Added PrAddUTCoord to PrForwardTool (PrAlgorithms v1r3)
+  . Changed default UT size and hole shape (PrVeloUT v1r1)
+  . Added "Upgrade" key to NetworkVersions property. New key maps to "MC12TuneV1"
+    which is the same as the "2012" key (ChargedProtoANNPID v1r12)
+  . Modified energy loss correction factor in RecoTracking.py to be consistent
+    with Sim08 (also on v7r6p1 branch) (TrackSys v7r10)
+  . Update default database tags for 2011,2012,2013 (Reco14 setting) (DDDB v1r61)
+
+- New optimisations
+  . Improved access to the RecSummary data object to prevent multiple loads from 
+    the TES each event (ChargedProtoANNPID v1r12)
+
+- Monitoring changes
+  . Added UT to PrTrackAssociator (Pr/PrMCTools v1r3)
+  . Implemented basic efficiency checking for Matching, Downstream and Upstream
+    tracking in upgrade configuration (Pr/PrMCTools v1r3)
+  . Print some basic statistics of the ANNPID distributions during finalize,
+    to help monitor for instabilities in the expert (ChargedProtoANNPID v1r12)
+  . In PatChecking.py: Remove PrimaryVertexChecker from Check sequence, since
+    it requires HepMC, no longer available in MC DSTs by default (from Sim08)
+    (also on v7r6p1 branch) (TrackSys v7r10)
+  . Minor changes to TrackParticleMonitor (TrackMonitors v1r43)
+
+- Bug fixes
+  . Added extra protection when Velo track has no state at end of Velo
+    (PrVeloUT v1r1)
+  . Bugfix in VLClusterPosition tool (inter-strip fraction) (TrackTools v4r22)
+
+- Changes to tests
+  . In brunel2012magdown, add a reference block to monitor ChargedProtoANNPID
+    histogram statistics
+  . Add sim08 test to test compatibility with .digi files from sim08 productions
+  . Add several tests for the various upgrade configurations
+
 </PRE><H1><A NAME=v44r2>2013-02-18 Brunel v44r2</A></H1><PRE>
 This version uses projects LCG 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4,
  Rec v14r4 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
