@@ -5,9 +5,9 @@
     <text>../options/instantiate.py</text>
   </set></argument>
   <argument name="validator"><text>
-if len(stdout)>0:
-  result['HltMonitor'.lower()+'.instantiate.failure']=stdout
-  causes.append('failed instantiation')
+if len(stderr)>0:
+  result['HltMonitor'.lower()+'.instantiate.failure']='failed instantiation, check stderr'
+  causes.append('failed instantiation, check stderr')
 
 </text></argument>
 </extension>

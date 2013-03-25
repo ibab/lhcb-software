@@ -2,6 +2,10 @@
 Package     : Hlt/HltGlobalMonitor
 
 ! 2013-03-25 - Rob Lambert
+ - Print more details of given exceptions
+
+
+! 2013-03-25 - Rob Lambert
  - Fix test problems
 
 
