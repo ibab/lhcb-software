@@ -39,7 +39,8 @@ void STMeasurement::init( const DeSTDetector& geom,
                           const ISTClusterPosition& stClusPosTool) 
 {
   // Fill the data members
-  m_mtype = ( m_cluster->isTT() ? Measurement::TT : Measurement::IT );
+  m_mtype = ( m_cluster->isTT() ? Measurement::TT : 
+	      (m_cluster->isUT() ? Measurement::UT : Measurement::IT ) ) ;
  
   // Get the corresponding sensor
   const DeSTSector* stSector = geom.findSector( m_cluster->channelID() );
