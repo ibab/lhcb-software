@@ -3,6 +3,35 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v26r4>2013-03-26 Boole v26r4</A></H1><PRE>
+This version uses projects LCGCMT 64c, Gaudi v23r7, LHCb v35r5, Lbcom v13r5
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Bug fix release for upgrade simulation.
+
+ - Changes to configuration:
+    . Disabled activation of spillover sequences for the UT which do not exist.
+    . Changed configuration for UT to avoid an exception when using DataType
+      Upgrade
+    . Use VL path (instead of VeloLite) (VLDet v1r5)
+    . Changed the way LHCbApp derived dataTypes for the DB (LHCbAlgs v2r55)
+    . Full support for SLC6 (gcc46) (Gaudi v23r7)
+
+ - Tuning changes
+   . Assessement of the ADC gain (ADC/photoelectron) and gain
+    (photoelectron/cluster) (FTDigitisation v1r3)
+
+ - Bug fixes
+   . Fix in VLDigitCreator (allocation of charges to strips)(VLDigitisation v1r4)
+   . Fix a typo in plot2D call (FTDigitisation v1r3)
+
+ - Monitoring changes
+   . MCHits map from MCFTDigit used to compute the fraction of hit lost in
+     clusterisation (FTDigitisation v1r3) 
+
+ - Changes to tests
+   . Added several qmtests for the various upgrade configurations.
+
 </PRE><H1><A NAME=v26r3>2013-03-06 Boole v26r3</A></H1><PRE>
 This version uses projects LCGCMT 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
