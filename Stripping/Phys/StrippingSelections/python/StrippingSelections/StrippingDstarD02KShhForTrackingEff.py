@@ -4,31 +4,39 @@ __version__ = '$Revision: 1.1 $'
 
 __all__ = ('DstarD02KShh_ForTrackingEffBuilder',
            'filterDaughters',
-           'makeKstar',
+           'makeD0',
            'makeDstar')
 
-config_default = {'LongTrackGEC'          :  150
-                , 'Trk_PT_MIN'            :  300.0
-                , 'Trk_P_MIN'             : 3000.0
+config_default = {'LongTrackGEC'          :    150
+                , 'Trk_PT_MIN'            :  600.0
+                , 'Trk_P_MIN'             :10000.0
+                , 'Trk_GHOST_MAX'         :    0.4
                 , 'Pair_AMINDOCA_MAX'     :    0.1
                 , 'Pair_BPVVD_MIN'        :    0.0
-                , 'Pair_SumAPT_MIN'       :    0.0
-                , 'Pair_BPVCORRM_MAX'     : 3500.0
-                , 'TrkPt_SlowPion'        :  300.0
+                , 'Pair_SumAPT_MIN'       : 2500.0
+                , 'Pair_BPVCORRM_MAX'     : 3000.0
+                , 'TrkPt_SlowPion'        :    0.0
                 , 'TrkP_SlowPion'         : 3000.0
                 , 'TrkChi2_SlowPion'      :    2.25
                 , 'TrkChi2_MAX_Child_MAX' :    2.25
-                , 'IPCHI2_MAX_Child_MIN'  :   36.0
+                , 'KAON_PIDK_MIN'         :    3.0
+                , 'PION_PIDK_MAX'         :    0.0
+                , 'IPCHI2_MAX_Child_MIN'  :   16.0
                 , 'IPCHI2_PiSlow_MAX'     :    9.0
                 , 'PairMaxDoca_Dstar'     :  100.0
-                , 'PT_Dstar_MIN'          : 3750.0
-                , 'DIRA_D0_MIN'           :    0.99
-                , 'FDCHI2_D0_MIN'         :  100.0
-                , 'VCHI2_D0_MAX'          :   10.0
-                , 'M_MAX'                 : 1900.0
+                , 'PT_Dstar_MIN'          : 2500.0
+                , 'DIRA_D0_MIN'           :    0.999
+                , 'FDCHI2_D0_MIN'         :   80.0
+                , 'VCHI2_D0_MAX'          :    4.0
+                , 'M_MAX'                 : 1800.0
                 , 'DeltaM_MIN'            :    0.0
                 , 'DeltaM_MAX'            :  250.0
-                , 'prescale'              :    1.0
+                , 'HLTFILTER'             : "(HLT_PASS_RE('Hlt2CharmHadD02HHXDst.*Decision'))"
+                , 'Hlt2TisTosSpec'        : { 'Hlt2CharmHadD02HHXDst.*Decision%TOS' : 0 }
+                , 'KKprescale'            :    0.5
+                , 'PiPiprescale'          :    0.1
+                , 'KPlusPiMinusprescale'  :    0.1
+                , 'KMinusPiPlusprescale'  :    0.1
                 , 'postscale'             :    1.0
                 }
 
@@ -37,6 +45,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers                import Selection, DataOnDemand
 from StrippingConf.StrippingLine           import StrippingLine
 from StrippingUtils.Utils                  import LineBuilder
+from Configurables import TisTosParticleTagger
 
 name = "DstarD02KShh_ForTrackingEff"
 
@@ -44,6 +53,7 @@ class DstarD02KShh_ForTrackingEffBuilder(LineBuilder):
     __configuration_keys__ = ('LongTrackGEC',
                               'Trk_PT_MIN',
                               'Trk_P_MIN',
+                              'Trk_GHOST_MAX',
                               'Pair_AMINDOCA_MAX',
                               'Pair_BPVVD_MIN',
                               'Pair_SumAPT_MIN',
@@ -52,6 +62,8 @@ class DstarD02KShh_ForTrackingEffBuilder(LineBuilder):
                               'TrkP_SlowPion',
                               'TrkChi2_SlowPion',
                               'TrkChi2_MAX_Child_MAX',
+                              'PION_PIDK_MAX',
+                              'KAON_PIDK_MIN',
                               'IPCHI2_MAX_Child_MIN',
                               'IPCHI2_PiSlow_MAX',
                               'PairMaxDoca_Dstar',
@@ -62,7 +74,12 @@ class DstarD02KShh_ForTrackingEffBuilder(LineBuilder):
                               'M_MAX',
                               'DeltaM_MIN',
                               'DeltaM_MAX',
-                              'prescale',
+                              'HLTFILTER',
+                              'Hlt2TisTosSpec',
+                              'KKprescale',
+                              'PiPiprescale',
+                              'KPlusPiMinusprescale',
+                              'KMinusPiPlusprescale',
                               'postscale')
     def __init__(self, name, config) :
         LineBuilder.__init__(self, name, config)
@@ -74,89 +91,138 @@ class DstarD02KShh_ForTrackingEffBuilder(LineBuilder):
                             "Preambulo": ["from LoKiTracks.decorators import *"]}
 
         # Select all kaons and pions.
-        self.selDauKaon = filterDaughters('KFor'+name, 'Phys/StdAllLooseKaons/Particles',
+        self.selDauKaon = filterKaons('KFor'+name, 'Phys/StdLooseKaons/Particles',
                                           config['TrkChi2_MAX_Child_MAX'],
                                           config['Trk_PT_MIN'],
                                           config['Trk_P_MIN'],
+                                          config['Trk_GHOST_MAX'],
+                                          config['KAON_PIDK_MIN'],
                                           config['IPCHI2_MAX_Child_MIN'])
-        self.selDauPion = filterDaughters('PiFor'+name, 'Phys/StdAllLoosePions/Particles',
+        self.selDauPion = filterPions('PiFor'+name, 'Phys/StdLoosePions/Particles',
                                           config['TrkChi2_MAX_Child_MAX'],
                                           config['Trk_PT_MIN'],
                                           config['Trk_P_MIN'],
+                                          config['Trk_GHOST_MAX'],
+                                          config['PION_PIDK_MAX'],
                                           config['IPCHI2_MAX_Child_MIN'])
 
         self.selDauPP = [self.selDauPion]
         self.selDauKK = [self.selDauKaon]
-        self.selDauKP = [self.selDauKaon, self.selDauPion]
+        self.selDauKP = [self.selDauKaon,self.selDauPion]
         
-        # Now make the various decays of the K*(892)0
-        strDecaysPiPi         = ["K*(892)0 -> pi+ pi-"]
-        strDecaysKK           = ["K*(892)0 -> K+ K-"]
-        strDecaysKPlusPiMinus = ["K*(892)0 -> K+ pi-"]
-        strDecaysKMinusPiPlus = ["K*(892)0 -> K- pi+"]
+        # Now make the various decays of the D0
+        strDecaysPiPi         = ["D0 -> pi+ pi-"]
+        strDecaysKPlusPiMinus = ["D0 -> K+ pi-"]
+        strDecaysKMinusPiPlus = ["D0 -> K- pi+"]
+        strDecaysKK           = ["D0 -> K+ K-"]
         
-        self.selKstarPiPi         = makeKstar('Kstar2PiPi'        + name, strDecaysPiPi,         self.selDauPP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
-        self.selKstarKK           = makeKstar('Kstar2KK'          + name, strDecaysKK  ,         self.selDauKK, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
-        self.selKstarKPlusPiMinus = makeKstar('Kstar2KPlusPiMinus'+ name, strDecaysKPlusPiMinus, self.selDauKP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
-        self.selKstarKMinusPiPlus = makeKstar('Kstar2KMinusPiPlus'+ name, strDecaysKMinusPiPlus, self.selDauKP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
+        self.selD0PiPi         = makeD0('D02PiPi'        + name, strDecaysPiPi,         self.selDauPP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
+        self.selD0KK           = makeD0('D02KK'          + name, strDecaysKK  ,         self.selDauKK, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
+        self.selD0KMinusPiPlus         = makeD0('D02KMinusPiPlus'        + name, strDecaysKMinusPiPlus,self.selDauKP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
+        self.selD0KPlusPiMinus         = makeD0('D02KPlusPiMinus'        + name, strDecaysKPlusPiMinus,self.selDauKP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
 
-        # Now make the D* -> K*(892)0 pi
-        self.selDstarPiPi         = makeDstar('Dstar_PiPi'         + name, [self.selKstarPiPi],         config['IPCHI2_PiSlow_MAX'], config['PairMaxDoca_Dstar'], config['PT_Dstar_MIN'], config['DeltaM_MIN'], config['DeltaM_MAX'])
-        self.selDstarKK           = makeDstar('Dstar_KK'           + name, [self.selKstarKK],           config['IPCHI2_PiSlow_MAX'], config['PairMaxDoca_Dstar'], config['PT_Dstar_MIN'], config['DeltaM_MIN'], config['DeltaM_MAX'])
-        self.selDstarKPlusPiMinus = makeDstar('Dstar_KPlusPiMinus' + name, [self.selKstarKPlusPiMinus], config['IPCHI2_PiSlow_MAX'], config['PairMaxDoca_Dstar'], config['PT_Dstar_MIN'], config['DeltaM_MIN'], config['DeltaM_MAX'])
-        self.selDstarKMinusPiPlus = makeDstar('Dstar_KMinusPiPlus' + name, [self.selKstarKMinusPiPlus], config['IPCHI2_PiSlow_MAX'], config['PairMaxDoca_Dstar'], config['PT_Dstar_MIN'], config['DeltaM_MIN'], config['DeltaM_MAX'])
 
+
+        # Now make the D* -> D)0 pi
+        self.selDstarPiPi         = makeDstar('Dstar_PiPi'         + name, [self.selD0PiPi],         config['IPCHI2_PiSlow_MAX'], config['PairMaxDoca_Dstar'], config['PT_Dstar_MIN'], config['DeltaM_MIN'], config['DeltaM_MAX'])
+        self.selDstarKK           = makeDstar('Dstar_KK'           + name, [self.selD0KK],           config['IPCHI2_PiSlow_MAX'], config['PairMaxDoca_Dstar'], config['PT_Dstar_MIN'], config['DeltaM_MIN'], config['DeltaM_MAX'])
+        self.selDstarKPlusPiMinus = makeDstar('Dstar_KPlusPiMinus' + name, [self.selD0KPlusPiMinus], config['IPCHI2_PiSlow_MAX'], config['PairMaxDoca_Dstar'], config['PT_Dstar_MIN'], config['DeltaM_MIN'], config['DeltaM_MAX'])
+        self.selDstarKMinusPiPlus = makeDstar('Dstar_KMinusPiPlus' + name, [self.selD0KMinusPiPlus], config['IPCHI2_PiSlow_MAX'], config['PairMaxDoca_Dstar'], config['PT_Dstar_MIN'], config['DeltaM_MIN'], config['DeltaM_MAX'])
+
+
+        self.selDstarPiPi_TisTos = makeTisTos(name+'SelDstarPiPi'
+                                   , selection = self.selDstarPiPi
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selDstarKK_TisTos = makeTisTos(name+'SelDstarKK'
+                                   , selection = self.selDstarKK
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selDstarKPlusPiMinus_TisTos = makeTisTos(name+'SelDstarKPlusPiMinus'
+                                   , selection = self.selDstarKPlusPiMinus
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selDstarKMinusPiPlus_TisTos = makeTisTos(name+'SelDstarKMinusPiPlus'
+                                   , selection = self.selDstarKMinusPiPlus
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+
+        
         # Make the stripping lines
         self.linePiPi          = StrippingLine(name+'PiPiLine',
                                                FILTER    = _globalEventCuts,
-                                               prescale  = config['prescale'],
+                                               prescale  = config['PiPiprescale'],
                                                postscale = config['postscale'],
-                                               selection = self.selDstarPiPi)
+                                               HLT = config['HLTFILTER'],
+                                               selection = self.selDstarPiPi_TisTos)
         self.lineKK            = StrippingLine(name + 'KKLine',
                                                FILTER    = _globalEventCuts,
-                                               prescale  = config['prescale'],
+                                               prescale  = config['KKprescale'],
                                                postscale = config['postscale'],
-                                               selection = self.selDstarKK)
-        self.lineKPlusPiMinus  = StrippingLine(name + 'KPlusPiMinusLine',
+                                               HLT = config['HLTFILTER'],
+                                               selection = self.selDstarKK_TisTos)
+        self.lineKPlusPiMinus  = StrippingLine(name+'KPlusPiMinusLine',
                                                FILTER    = _globalEventCuts,
-                                               prescale  = config['prescale'],
+                                               prescale  = config['KPlusPiMinusprescale'],
                                                postscale = config['postscale'],
-                                               selection = self.selDstarKPlusPiMinus)
-        self.lineKMinusPiPlus  = StrippingLine(name + 'KMinusPiPlusLine',
+                                               HLT = config['HLTFILTER'],
+                                               selection = self.selDstarKPlusPiMinus_TisTos)
+        self.lineKMinusPiPlus  = StrippingLine(name+'KMinusPiPlusLine',
                                                FILTER    = _globalEventCuts,
-                                               prescale  = config['prescale'],
+                                               prescale  = config['KMinusPiPlusprescale'],
                                                postscale = config['postscale'],
-                                               selection = self.selDstarKMinusPiPlus)
+                                               HLT = config['HLTFILTER'],
+                                               selection = self.selDstarKMinusPiPlus_TisTos)
 
         self.registerLine(self.linePiPi)
         self.registerLine(self.lineKK)
         self.registerLine(self.lineKPlusPiMinus)
         self.registerLine(self.lineKMinusPiPlus)
+
         
-def filterDaughters(name, inputName, TrkChi2_MAX_Child_MAX, Trk_PT_MIN, Trk_P_MIN, IPCHI2_MAX_Child_MIN):
+def filterPions(name, inputName, TrkChi2_MAX_Child_MAX, Trk_PT_MIN, Trk_P_MIN,Trk_GHOST_MAX,PION_PIDK_MAX,IPCHI2_MAX_Child_MIN):
     """
-    Apply cuts to daughters of K*(892)0
+    Apply cuts to daughters of D0
     """
     _strCutChi2   = "(TRCHI2DOF < %(TrkChi2_MAX_Child_MAX)s)"     % locals()
     _strCutPT     = "(PT > %(Trk_PT_MIN)s)"                       % locals()
     _strCutP      = "(P  > %(Trk_P_MIN)s)"                        % locals()
+    _strCutPID    = "(PIDK  < %(PION_PIDK_MAX)s)"                 % locals()
+    _strCutGHOST  = "(TRGHP  < %(Trk_GHOST_MAX)s)"                % locals()
     _strCutIPChi2 = "(MIPCHI2DV(PRIMARY)> %(IPCHI2_MAX_Child_MIN)s)" % locals()
     
-    _strCuts = '(' + _strCutChi2 + '&' + _strCutPT + '&' + _strCutP \
-                   + '&' + _strCutIPChi2 + ')'
+    _strCuts = '((~ISMUON)&' + _strCutChi2 + '&' + _strCutPT + '&' + _strCutP \
+                   + '&' + _strCutPID \
+                   + '&' + _strCutGHOST + '&' + _strCutIPChi2 + ')'
     _trackFilter = FilterDesktop(Code = _strCuts)
     inputTracks = DataOnDemand(Location = inputName)
     return Selection(name,
                      Algorithm          = _trackFilter,
                      RequiredSelections = [inputTracks])
-
-def makeKstar(name, inputDecayDescriptors, inputDaughters, Pair_SumAPT_MIN, Pair_AMINDOCA_MAX, Pair_BPVVD_MIN, Pair_BPVCORRM_MAX, FDCHI2_D0_MIN, DIRA_D0_MIN, M_MAX, VCHI2_D0_MAX):
+                     
+def filterKaons(name, inputName, TrkChi2_MAX_Child_MAX, Trk_PT_MIN, Trk_P_MIN,Trk_GHOST_MAX,KAON_PIDK_MIN, IPCHI2_MAX_Child_MIN):
     """
-    Given lists of K*(892)0 daughter tracks  reconstruct K*(892)0 -> h+ h-.
+    Apply cuts to daughters of D0
+    """
+    _strCutChi2   = "(TRCHI2DOF < %(TrkChi2_MAX_Child_MAX)s)"     % locals()
+    _strCutPT     = "(PT > %(Trk_PT_MIN)s)"                       % locals()
+    _strCutP      = "(P  > %(Trk_P_MIN)s)"                        % locals()
+    _strCutPID    = "(PIDK  > %(KAON_PIDK_MIN)s)"                 % locals()
+    _strCutGHOST  = "(TRGHP  < %(Trk_GHOST_MAX)s)"                % locals()
+    _strCutIPChi2 = "(MIPCHI2DV(PRIMARY)> %(IPCHI2_MAX_Child_MIN)s)" % locals()
+    
+    _strCuts = '((~ISMUON)&' + _strCutChi2 + '&' + _strCutPT + '&' + _strCutP \
+                   + '&' + _strCutPID \
+                   + '&' + _strCutGHOST + '&' + _strCutIPChi2 + ')'
+    _trackFilter = FilterDesktop(Code = _strCuts)
+    inputTracks = DataOnDemand(Location = inputName)
+    return Selection(name,
+                     Algorithm          = _trackFilter,
+                     RequiredSelections = [inputTracks])                     
+
+def makeD0(name, inputDecayDescriptors, inputDaughters, Pair_SumAPT_MIN, Pair_AMINDOCA_MAX, Pair_BPVVD_MIN, Pair_BPVCORRM_MAX, FDCHI2_D0_MIN, DIRA_D0_MIN, M_MAX, VCHI2_D0_MAX):
+    """
+    Given lists of D0 daughter tracks  reconstruct D0 -> h+ h-.
     The same routine works for all final states.
     """
 
-    _combCutsMass = "(AM<2100*MeV)" 
+    _combCutsMass = "(AM<1900*MeV)" 
     _combCutsPT   = "((APT1+APT2)> %(Pair_SumAPT_MIN)s)"                                % locals()
     _combCutsDOCA = "(AMINDOCA('LoKi::TrgDistanceCalculator') < %(Pair_AMINDOCA_MAX)s)" % locals()
     _combCutsPV   = "(AALLSAMEBPV)"
@@ -167,7 +233,7 @@ def makeKstar(name, inputDecayDescriptors, inputDaughters, Pair_SumAPT_MIN, Pair
     _motherCutsFD       = '(BPVVD> %(Pair_BPVVD_MIN)s)'            % locals()
     _motherCutsCorrMass = '(BPVCORRM < %(Pair_BPVCORRM_MAX)s)'     % locals()
     _motherCutsFDChi2   = '(BPVVDCHI2> %(FDCHI2_D0_MIN)s)'         % locals()
-    _motherCutsDira     = '(BPVDIRA < %(DIRA_D0_MIN)s)'            % locals()
+    _motherCutsDira     = '(BPVDIRA > %(DIRA_D0_MIN)s)'            % locals()
     _motherCutsMass     = '(M < %(M_MAX)s)'                        % locals()
     _motherCutsVtx      = '(VFASPF(VCHI2PDOF) < %(VCHI2_D0_MAX)s)' % locals()
     
@@ -178,16 +244,16 @@ def makeKstar(name, inputDecayDescriptors, inputDaughters, Pair_SumAPT_MIN, Pair
                         _motherCutsMass     + '&' + \
                         _motherCutsVtx      + ')'
     
-    _Kst = CombineParticles(DecayDescriptors = inputDecayDescriptors,
+    _D0 = CombineParticles(DecayDescriptors = inputDecayDescriptors,
                             CombinationCut   = _combCuts,
                             MotherCut        = _motherCuts)
     return Selection(name,
-                     Algorithm = _Kst,
+                     Algorithm = _D0,
                      RequiredSelections = inputDaughters)
 
-def makeDstar(name, inputKstar, IPCHI2_PiSlow_MAX, PairMaxDoca_Dstar, PT_Dstar_MIN, DeltaM_MIN, DeltaM_MAX):
+def makeDstar(name, inputD0, IPCHI2_PiSlow_MAX, PairMaxDoca_Dstar, PT_Dstar_MIN, DeltaM_MIN, DeltaM_MAX):
     """
-    Given a list of K*(892)0, try to make D*+ -> K*(892)0 pi+
+    Given a list of D0, try to make D*+ -> D0 pi+
     """
     _softPi = DataOnDemand(Location = 'Phys/StdAllLoosePions/Particles')
     
@@ -202,19 +268,31 @@ def makeDstar(name, inputKstar, IPCHI2_PiSlow_MAX, PairMaxDoca_Dstar, PT_Dstar_M
     
     
     _cutsDstarMothPT       = '(PT > %(PT_Dstar_MIN)s)' % locals()
-    _cutsDstarMothMassLow  = "(M-MAXTREE('K*(892)0'==ABSID,M)>%(DeltaM_MIN)s)" % locals()
-    _cutsDstarMothMassHigh = "(M-MAXTREE('K*(892)0'==ABSID,M)<%(DeltaM_MAX)s)" % locals()
+    _cutsDstarMothMassLow  = "(M-MAXTREE('D0'==ABSID,M)>%(DeltaM_MIN)s)" % locals()
+    _cutsDstarMothMassHigh = "(M-MAXTREE('D0'==ABSID,M)<%(DeltaM_MAX)s)" % locals()
     
     _cutsDstarMoth = '(' + _cutsDstarMothPT + '&' + \
                      _cutsDstarMothMassLow  + '&' + \
                      _cutsDstarMothMassHigh + ')'
     
-    _Dstar = CombineParticles(DecayDescriptors = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)- -> K*(892)0 pi-"],
+    _Dstar = CombineParticles(DecayDescriptors = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
                               DaughtersCuts    = {"pi+" : _cutsSoftPi},
                               CombinationCut   = _cutsDstarComb,
                               MotherCut        = _cutsDstarMoth)
     return Selection(name,
                      Algorithm = _Dstar,
-                     RequiredSelections = inputKstar + [_softPi])
+                     RequiredSelections = inputD0 + [_softPi])
+                     
+def makeTisTos( name, selection, hltTisTosSpec = { } ) :
+    outSel = selection
+    if len(hltTisTosSpec) > 0:
+        _tisTosFilter = TisTosParticleTagger( name + 'TisTos'
+                                              , TisTosSpecs = hltTisTosSpec )
+
+        outSel = Selection( name
+                            , Algorithm = _tisTosFilter
+                            , RequiredSelections = [ selection ] )
+
+    return outSel
     
     
