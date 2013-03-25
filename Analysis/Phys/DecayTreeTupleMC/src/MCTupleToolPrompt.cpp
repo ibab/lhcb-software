@@ -1,27 +1,10 @@
 // $Id: $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/PhysicalConstants.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
-
 // local
 #include "MCTupleToolPrompt.h"
 
-// from GaudiAlg
-#include "GaudiAlg/Tuple.h"
-#include "GaudiAlg/TupleObj.h"
-
-// from Event
-#include "Event/Particle.h"
-#include "Event/MCParticle.h"
-
-// from Kernel
-#include "Kernel/IParticle2MCAssociator.h"
-
-using namespace LHCb;
+//using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MCTupleToolPrompt
@@ -89,17 +72,15 @@ StatusCode MCTupleToolPrompt::fill( const LHCb::Particle*
   int mcParentPid=0;
   int mcParentKey=0;
 
-  double lcl_lifetime;
-
-  const LHCb::MCParticle *mcp = 0;
+  double lcl_lifetime(0);
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolPrompt::getting related MCP to " << P << endmsg ;
-  mcp = m_p2mcAssoc->relatedMCP(P);
+  const LHCb::MCParticle *mcp = m_p2mcAssoc->relatedMCP(P);
   if (msgLevel(MSG::VERBOSE)) verbose() << "TupleToolMCTruth::got mcp " << mcp << endmsg ;
 
   const LHCb::MCParticle *mcp_parent = mcp;
 
-  ParticleProperty * lclPprop;
+  const LHCb::ParticleProperty * lclPprop = NULL;
 
   if (msgLevel(MSG::DEBUG)) debug() << "MCTupleToolPrompt::fill " << head << endmsg;
 
@@ -113,7 +94,7 @@ StatusCode MCTupleToolPrompt::fill( const LHCb::Particle*
       mcParentPid=mcp_parent->particleID().pid();
       mcParentKey=mcp_parent->key();
 
-      lclPprop = m_ppSvc->findByStdHepID(mcp_parent->particleID().pid());
+      lclPprop = m_ppSvc->find( mcp_parent->particleID() );
       lcl_lifetime = lclPprop->lifetime();
 
       if(msgLevel(MSG::DEBUG))
