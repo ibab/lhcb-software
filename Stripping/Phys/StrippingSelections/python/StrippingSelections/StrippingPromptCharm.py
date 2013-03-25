@@ -389,7 +389,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         for line in self._lines_charm() :
             self.registerLine(line)
             logger.debug ( "Register line: %s" %  line.name () )
-
+                
     ## get the selections
     def _selections_private ( self ) :
 
@@ -446,7 +446,6 @@ class StrippingPromptCharmConf(LineBuilder) :
         self.__selections_[ self.name() ][ nick ] = sel
 
         return sel
-
 
     ## get all single charm lines
     def _lines_charm   ( self ) :
@@ -1406,7 +1405,6 @@ class StrippingPromptCharmConf(LineBuilder) :
 
         return self._add_selection ( 'W_Selection' , sel )
 
-
     ## get "Di-Charm"-selection
     def DiCharm ( self ) :
         """
@@ -1819,7 +1817,6 @@ class StrippingPromptCharmConf(LineBuilder) :
             )
 
         return self._add_selection( 'DsPsi_Selection' , sel )
-
 
 
 # =============================================================================

@@ -177,7 +177,7 @@ _default_configuration_ = {
     'B2PsiPPKPiPiPrescale'  : 1.0 ,
     'B2PsiPPPiPiPiPrescale' : 1.0 ,
     # =========================================================================
-    'B2PsiKstPrescale'  : 1.0 
+    'B2PsiKstPrescale'  : 1.0   ,
     # =========================================================================
     }
 ## ============================================================================
@@ -242,7 +242,7 @@ class PsiX_BQ_Conf(LineBuilder) :
                 logger.warning ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
                 
         self._name         = name
-        
+
         for line in self._lines_psiX () :
             self.registerLine(line)
             logger.info ( "Register line: %s" %  line.name () ) 
@@ -634,8 +634,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             ]
         
         return self._add_selection ( 'Selections' , sel )
-    
-    
+        
     ## muons 
     def muons     ( self ) : return StdLooseMuons 
     
@@ -2022,7 +2021,26 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         return self._add_selection( 'PsiPPPiPiPi_Selection' , sel ) 
     
-    
+    ## merged few basic B-hadrons: B+ , B- & Bs 
+    def beauty ( self ) :
+        """
+        Merged selection of B-, B+ & Bs  
+        """
+        sel = self._selection ( 'BeautySelection')
+        if sel : return sel
+
+        #
+        sel = MergedSelection (
+            'SelBeautyFor' + self.name() ,
+            RequiredSelections = [ self.psi_K    () ,
+                                   self.psi_2Kpi () , 
+                                   self.psi_2K   () , 
+                                   self.psi_3K   () , 
+                                   self.psi_3Kpi () ] 
+            )
+        #
+        return self._add_selection ( 'BeautySelection' , sel )
+        
 # =============================================================================
 if '__main__' == __name__ :
 
@@ -2041,7 +2059,6 @@ if '__main__' == __name__ :
     print 80*'*'
     print 80*'*'
         
-
 # =============================================================================
 # The END 
 # =============================================================================
