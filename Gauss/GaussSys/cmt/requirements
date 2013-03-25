@@ -7,9 +7,6 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 
-# Temporarily to pick up fix in GaudiConf
-use GaudiConf           v17r7
-
 # Gauss application: the application is not built on Win32
 use Gauss               v45r0   Sim
 
@@ -23,21 +20,22 @@ use pythia8             v64r3p2 LCG_GeneratorsInterfaces
 use thepeg              v64r3p2 LCG_GeneratorsInterfaces
 use herwigpp            v64r3p2 LCG_GeneratorsInterfaces
 use rivet               v64r3p2 LCG_GeneratorsInterfaces
+use hijing              v64r3p2 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
-use GenCuts             v3r2    Gen
+use GenCuts             v3r3    Gen
 use GENSER              v12r4   Gen
 use EvtGen              v13r6   Gen
 use Mint                v2r0    Gen
 use EvtGenExtras        v3r6    Gen
-use Generators          v14r1   Gen
+use Generators          v14r2   Gen
 use LbPythia            v14r0   Gen
 
 # Generators packages: extensions to Pythia6
 use LbAlpGen            v3r0p1  Gen 
 use BcVegPy             v3r1    Gen
 use GenXicc             v2r0    Gen
-use LbBcVegPy           v4r5    Gen
+use LbBcVegPy           v5r0    Gen
 use LbGenXicc           v2r0p1  Gen
 use LbHidValley         v3r2    Gen
 use LbOniaPairs         v1r2    Gen
@@ -74,7 +72,7 @@ use GaussPhysics	v10r0	  Sim
 use GaussCherenkov      v3r1      Sim
 
 # Monitoring packages
-use GaussMonitor	v6r11     Sim
+use GaussMonitor	v6r12     Sim
 use CaloMoniSim         v4r0      Calo
 use VeloGauss           v2r4      Velo
 use MuonMoniSim         v2r6      Muon
