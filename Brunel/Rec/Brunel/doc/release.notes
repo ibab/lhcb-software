@@ -3,25 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
- - Removed old upgrade VP-UT-FT qmtest and reference.
+</PRE><H1><A NAME=v44r3>2013-03-26 Brunel v44r3</A></H1><PRE>
+This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5,
+ Rec v14r5 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
- - Updated upgrade references due to Pr changes.
-
- - Added a number of qmtests for the various upgrade configurations.
-
- - Changes for Upgrade qmtests
-  . Updated Upgrade minimal reference now the PV algos are removed.
-
-- Changes for Upgrade qmtests
-  . Added qmtest for Minimal upgrade.
-  . Added references file for Minimal upgrade.
-
-- Changes for the Upgrade qmtests
-  . Updated reference for VP-UT-FT test.
-
-- Changes for Upgrade
-  . Added qmtest for VP-UT-FT
-  . Replaced reference for VP-UT-FT test now Det/RichDet has been patched.
+- Release for Upgrade productions
 
 - Changes to references to reflect changes since v44r2
   . Follow addition of histogram statistics to ChargedProtoANNPID
@@ -31,7 +17,8 @@ Purpose: LHCb reconstruction program
 - Changes to tests
   . In brunel2012magdown, add a reference block to monitor ChargedProtoANNPID
     histogram statistics
-  . Add sim08 test to test compatibility with .digi files from sim08 productions 
+  . Add sim08 test to test compatibility with .digi files from sim08 productions
+  . Add several tests for the various upgrade configurations
 
 </PRE><H1><A NAME=v44r2>2013-02-18 Brunel v44r2</A></H1><PRE>
 This version uses projects LCG 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4,
@@ -62,7 +49,7 @@ This version uses projects LCG 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4,
     caught by NeuroBayes
   . Remove brunel-fest09 test since input data no longer exists
   . Change brunel2010magup test to create Online rather than Express
-    historgams (Online histograms previously only tested in brunel-fest09)
+    histograms (Online histograms previously only tested in brunel-fest09)
  
 </PRE><H1><A NAME=v44r1>2012-11-30 Brunel v44r1</A></H1><PRE>
 This version uses projects LCG 64b, Gaudi v23r5, LHCb v35r3, Lbcom v13r3,
