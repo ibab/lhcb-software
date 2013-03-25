@@ -18,8 +18,8 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 # Standard Particles
-from StandardParticles import StdLooseResolvedPi0, StdLooseMergedPi0, StdLooseAllPhotons, StdAllLooseElectrons
-from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
+from StandardParticles import StdLooseResolvedPi0, StdLooseMergedPi0, StdLooseAllPhotons, StdAllLooseElectrons,StdLooseMuons
+from StandardParticles import StdNoPIDsPions, StdNoPIDsDownPions, StdNoPIDsKaons, StdNoPIDsProtons
 from StandardParticles import StdAllLooseGammaLL, StdAllLooseGammaDD
 
 # Builders
@@ -38,7 +38,7 @@ default_config = { # Cuts made on all charged input particles in all lines
                       'MIPCHI2DV_MIN'  : 16,
                       'TRGHP_MAX'      : 0.4},
            # Cuts made on the photon
-           "GAMMA" : { 'PT_MIN'       : '2500*MeV',
+           "GAMMA" : { 'PT_MIN'       : '2000*MeV',
                        'CL_MIN'       : 0.25 
                      },
            # Cuts made on the converted photon
@@ -68,7 +68,7 @@ default_config = { # Cuts made on all charged input particles in all lines
                      #'BBDT_MIN'      : 0.0, 
                      },
            # Cuts for rho, K*, phi, omega
-           "HH": { 'MASS_WINDOW'      : {'KST':'150*MeV','RHO':'250*MeV','PHI':'15*MeV','OMEGA':'30*MeV'}, 
+           "HH": { 'MASS_WINDOW'      : {'KST':'150*MeV','RHO': ['520*MeV','2.0*GeV'],'PHI':'15*MeV','OMEGA':'30*MeV'}, 
                    'DAUGHTERS'        : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV'},
                    'piLAMBDADAUGHTERS': {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MAX':'2'},   # only for pH
                    'pLAMBDADAUGHTERS' : {'PT_MIN':'1200*MeV','P_MIN':'10000*MeV','PIDp_MIN':'10','PIDpK_MIN':'0'}, # only for pH
@@ -124,6 +124,7 @@ class Beauty2XGamma(LineBuilder):
         pions = filterInputs('Pi', [StdNoPIDsPions], default_config['ALL'])
         kaons = filterInputs('K', [StdNoPIDsKaons], default_config['ALL'])
         protons = filterInputs('P', [StdNoPIDsProtons], default_config['ALL'])
+        muons = filterInputs('Mu', [StdLooseMuons], default_config['ALL'])
         # Prefilter KS
         mergedKS = MergedSelection('MergedKS0', RequiredSelections = [dataOnDemand("StdLooseKsDD"), dataOnDemand("StdLooseKsLL")])
         KS_filter = filterInputs('KS0', [mergedKS], default_config['KS0'])
@@ -138,20 +139,21 @@ class Beauty2XGamma(LineBuilder):
         pi0 = {"Merged": [pi0_merged], "Resolved": [pi0_resolved]}
         # Prefilter hard inputs
         topoPions = topoInputs('Pi', [pions])
-        topoKaons = topoInputs('K', [kaons])
+        softtopoKaons = softtopoInputs('K', [kaons])
+        topoKaons = topoInputs('K', [softtopoKaons])
         topoProtons = topoInputs('P', [protons])
         ###########################################################################
         # Build particles
         ###########################################################################
         # X -> hh
-        hh = HHBuilder(pions, kaons, protons, ks, pi0, default_config['HH'], default_config['PID'])
+        hh = HHBuilder(pions, kaons, protons, muons, ks, pi0, default_config['HH'], default_config['PID'])
         # X -> hhh
         hhh = HHHBuilder(pions, kaons, protons, pi0, default_config['HHH'])
         #hhh = None
         ###########################################################################
         # B -> X Gamma
         ###########################################################################
-        b2xgamma = B2XGammaBuilder(photons, photonsConv, topoPions, topoKaons, ks, pi0, hh, hhh, default_config['B2X'])
+        b2xgamma = B2XGammaBuilder(photons, photonsConv, topoPions, topoKaons, softtopoKaons, ks, pi0, hh, hhh, default_config['B2X'])
         #b2xgamma = B2XGammaBuilder(photons, topoPions, topoKaons, ks, pi0, hh, hhh, config['B2X'])
         self._makeLines(b2xgamma.lines, default_config)
         ###########################################################################

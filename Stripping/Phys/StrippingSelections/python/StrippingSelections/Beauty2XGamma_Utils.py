@@ -81,12 +81,19 @@ def filterPhotonsConv(inputs,config):
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "(TRCHI2DOF<3) & (PT > 500*MeV) & (P > 5000*MeV)"
 
+def softtopoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
+    return "(TRCHI2DOF<3) & (PT > 350*MeV) & (P > 1500*MeV)"
+
 def topoKSInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "(PT > 500*MeV) & (P > 5000*MeV) & (BPVVDCHI2 > 1000)"
 
 def topoInputs(tag,inputs):
     '''Selects tracks that could have been used by the Topo.'''
     return filterSelection(tag+'TopoInputs',topoInputsCuts(),inputs)
+
+def softtopoInputs(tag,inputs):
+    '''Selects tracks that could have been used by the Topo.'''
+    return filterSelection(tag+'SoftTopoInputs',softtopoInputsCuts(),inputs)
 
 def hasTopoChild():
     return "AHASCHILD((ISBASIC & "+topoInputsCuts()+")|((ABSID=='KS0') & "\
@@ -122,6 +129,22 @@ def tisTosSelection(sel):
     '''Filters Selection sel to be TOS OR TIS.'''
     tisTosFilter = makeTISTOSFilter(sel.name())
     return Selection(sel.name()+'TISTOS', Algorithm=tisTosFilter, RequiredSelections=[sel])
+
+
+def TOSFilter( name = None, sel = None, trigger = None ):
+    """
+    Function to return a selection object, filtering for TOS candidates from input selection
+    """
+    from Configurables import TisTosParticleTagger
+    
+    _filter = TisTosParticleTagger(name+"_TriggerTos")
+    _filter.TisTosSpecs = { trigger+"%TOS" : 0 }
+    _filter.NoRegex = True
+    
+    from PhysSelPython.Wrappers import Selection
+    _sel = Selection("Sel" + name + "_TriggerTos", RequiredSelections = sel, Algorithm = _filter )
+    return _sel
+
 
 def filterPID(name,input,config,level=1):
     cuts = ["(NINGENERATION(('p+'==ABSID) & (PIDp < %s),%d) == 0)" \
@@ -192,8 +215,10 @@ def makeB2XSels(decays, xtag, inputs, config, useIP=True, resVert=True, usePi0=F
         #    sel = makeLambda2X(sname, decay, inputs[tag], config, hasLambdaPion)
         if tag == 'Lb2PPiGamma':
             sel = makeLambda2X(sname, decay, inputs[tag], config, hasLambdaPion=True)
+        elif 'Lb2LGamma' in tag:
+            sel = makeLambda2X(sname, decay, inputs[tag], config, hasLambdaPion=True)
         elif tag == 'Lb2PKGamma':
-            sel = makeLambda2X(sname, decay, inputs[tag], config, hasLambdaPion)    
+            sel = makeLambda2X(sname, decay, inputs[tag], config, hasLambdaPion) 
         #if tag in lambdaTags : 
         #    sel = makeLambda2X(sname, decay, inputs[tag], config, hasLambdaPion)
             #sel = tisTosSelection(sel)

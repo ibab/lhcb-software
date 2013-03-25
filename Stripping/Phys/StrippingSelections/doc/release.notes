@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-25 - Cedric Potterat
+ - Update of the Radiative Stripping lines
+
 ! 2013-03-25 - Mat Charles
  - Added StrippingB2Xic2815Sc2455.py for charm baryon branching fractions (+ corresponding edit to __init__.py)
 

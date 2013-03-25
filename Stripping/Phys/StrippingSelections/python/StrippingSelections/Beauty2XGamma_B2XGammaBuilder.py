@@ -11,10 +11,11 @@ from Beauty2XGamma_Utils import *
 class B2XGammaBuilder(object):
     '''Makes all B->XGamma decays for the Beauty2XGamma module.'''
 
-    def __init__(self, gamma, gammaConv, topoPions, topoKaons, ks, pi0, hh, hhh, config):
+    def __init__(self, gamma, gammaConv, topoPions, topoKaons, softtopoKaons, ks, pi0, hh, hhh, config):
         self.config = config
         self.topoPions = [topoPions]
         self.topoKaons = [topoKaons]
+        self.softtopoKaons = [softtopoKaons]
         self.hh = hh
         self.hhh = hhh
         self.ks = ks
@@ -59,27 +60,29 @@ class B2XGammaBuilder(object):
         # Charged
         decays = { 'B2KstarPiGamma'    : ['[B+ -> K*(892)0 pi+ gamma]cc'],
                    'B2PhiKGamma'       : ['[B+ -> phi(1020) K+ gamma]cc'],
+                   'B2JpsiKGamma'      : ['[B+ -> J/psi(1S) K+ gamma]cc']
                   }
         inputs = { 'B2KstarPiGamma'    : self.gamma + self.hh.kstar0 + self.topoPions,
                    'B2PhiKGamma'       : self.gamma + self.hh.phi + self.topoKaons,
+                   'B2JpsiKGamma'      : self.gamma + self.hh.jpsi + self.softtopoKaons
                   }
         b2vchargedgamma = makeB2XSels(decays, name, inputs, self.config)
         # Neutral
-        decays = { 'B2KstarKSGamma'          : ['[B0 -> K*(892)0 KS0 gamma]cc'],
-                   'B2RhoKSGamma'            : ['B0 -> rho(770)0 KS0 gamma'],
-                   'B2KstarPi0GammaResolved'   : ['[B0 -> K*(892)0 pi0 gamma]cc'],
-                   'B2KstarPi0GammaMerged'     : ['[B0 -> K*(892)0 pi0 gamma]cc'],
-                   'B2PhiKSGamma'            : ['B_s0 -> phi(1020) KS0 gamma'],
-                   'B2PhiPi0GammaResolved'     : ['B_s0 -> phi(1020) pi0 gamma'],
-                   'B2PhiPi0GammaMerged'       : ['B_s0 -> phi(1020) pi0 gamma'],
+        decays = { 'B2KstarKSGamma'           : ['[B0 -> K*(892)0 KS0 gamma]cc'],
+                   'B2RhoKSGamma'             : ['B0 -> rho(770)0 KS0 gamma'],
+                   'B2KstarPi0GammaResolved'  : ['[B0 -> K*(892)0 pi0 gamma]cc'],
+                   'B2KstarPi0GammaMerged'    : ['[B0 -> K*(892)0 pi0 gamma]cc'],
+                   'B2PhiKSGamma'             : ['B_s0 -> phi(1020) KS0 gamma'],
+                   'B2PhiPi0GammaResolved'    : ['B_s0 -> phi(1020) pi0 gamma'],
+                   'B2PhiPi0GammaMerged'      : ['B_s0 -> phi(1020) pi0 gamma'],
                  }
-        inputs = { 'B2KstarKSGamma'        : self.gamma + self.hh.kstar0 + self.ks,
-                   'B2RhoKSGamma'          : self.gamma + self.hh.rho0 + self.ks,
-                   'B2KstarPi0GammaResolved' : self.gamma + self.hh.kstar0 + self.pi0['Resolved'],
-                   'B2KstarPi0GammaMerged'   : self.gamma + self.hh.kstar0 + self.pi0['Merged'],
-                   'B2PhiKSGamma'          : self.gamma + self.hh.phi + self.ks,
-                   'B2PhiPi0GammaResolved'   : self.gamma + self.hh.phi + self.pi0['Resolved'],
-                   'B2PhiPi0GammaMerged'     : self.gamma + self.hh.phi + self.pi0['Merged'],
+        inputs = { 'B2KstarKSGamma'           : self.gamma + self.hh.kstar0 + self.ks,
+                   'B2RhoKSGamma'             : self.gamma + self.hh.rho0 + self.ks,
+                   'B2KstarPi0GammaResolved'  : self.gamma + self.hh.kstar0 + self.pi0['Resolved'],
+                   'B2KstarPi0GammaMerged'    : self.gamma + self.hh.kstar0 + self.pi0['Merged'],
+                   'B2PhiKSGamma'             : self.gamma + self.hh.phi + self.ks,
+                   'B2PhiPi0GammaResolved'    : self.gamma + self.hh.phi + self.pi0['Resolved'],
+                   'B2PhiPi0GammaMerged'      : self.gamma + self.hh.phi + self.pi0['Merged'],
                  }
         b2vneutralgamma = makeB2XSels(decays, name, inputs, self.config)      
         self.lines.append(ProtoLine(b2vchargedgamma, 1.0))
