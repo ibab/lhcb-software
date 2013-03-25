@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2013-03-25 - Chris Jones
+ - Fix gcc 4.7 'narrowing' warnings.
+
 !========================= EventPacker v2r21 2013-02-04 =========================
 ! 2012-12-10 - Marco Cattaneo
  - Use getIfExists wherever possible

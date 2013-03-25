@@ -316,7 +316,7 @@ StatusCode WritePackedDst::execute()
   hdr->setSize( len );
   LHCb::MDFHeader::SubHeader h = hdr->subHeader();
 
-  unsigned int trMask[] = {~0,~0,~0,~0};
+  unsigned int trMask[] = {~0u,~0u,~0u,~0u};
   LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default );
   h.H1->setTriggerMask(trMask);
   h.H1->setRunNumber(   odin->runNumber() );
@@ -332,7 +332,7 @@ StatusCode WritePackedDst::execute()
 //=========================================================================
 void WritePackedDst::storeInBlob( PackedBank& pBnk, const void* data, unsigned int nb, unsigned int bSize ) {
 
-#define MAXBANK 65000
+  const unsigned int MAXBANK = 65000;
 
   //== First, put the data in column order: x for all tracks, then y, then ...
   unsigned int iSize = bSize/4;
