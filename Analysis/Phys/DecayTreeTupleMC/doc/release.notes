@@ -4,6 +4,9 @@
 ! Purpose     : MC tuple tools
 !-----------------------------------------------------------------------------
 
+! 2013-03-25 - Chris Jones
+ - Update MCTupleToolPrompt to use LHCb::ParticlePropertySvc
+
 !========================= DecayTreeTupleMC v1r0 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

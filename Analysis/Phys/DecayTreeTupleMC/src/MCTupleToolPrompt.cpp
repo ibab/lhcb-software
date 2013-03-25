@@ -55,15 +55,16 @@ StatusCode MCTupleToolPrompt::initialize()
 {
   StatusCode sc = TupleToolBase::initialize();
   if (sc.isFailure()) return sc;
-  if (isVerbose()) m_storeLongLivedPid=true;
 
-  sc = service("ParticlePropertySvc", m_ppSvc);
+  if (isVerbose()) m_storeLongLivedPid = true;
+
+  sc = service( "LHCb::ParticlePropertySvc", m_ppSvc );
 
   if (sc.isFailure()) return sc;
 
   m_p2mcAssoc = tool<IParticle2MCAssociator>(m_p2mcAssocType, this);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode MCTupleToolPrompt::fill( const LHCb::Particle*
