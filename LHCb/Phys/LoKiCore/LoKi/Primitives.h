@@ -697,7 +697,7 @@ namespace LoKi
     virtual  NotEqual* clone() const { return new NotEqual ( *this ) ; }
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument a ) const 
-    { return not_equal ( a ) ; }
+    { return this -> not_equal ( a ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() 
@@ -2453,7 +2453,7 @@ namespace LoKi
     { return new NotEqualToList(*this); }
     /// MANDATORY: the only one essential method :
     virtual  result_type operator() ( argument a ) const
-    { return not_equal_to ( a ) ; }
+    { return this -> not_equal_to ( a ) ; }
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
     { return s << " (" << this->func() << "!=" 

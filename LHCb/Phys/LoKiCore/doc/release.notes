@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-03-25 - Chris Jones
+ - Try and fix gcc 4.7 compilation issues with Primitives.h
+
 !========================= LoKiCore v11r11 2013-02-07 =========================
 ! 2013-02-07 - Vanya Belyaev
  - tweak a bit CONTAINS functor: return -1 for non-existing locations
