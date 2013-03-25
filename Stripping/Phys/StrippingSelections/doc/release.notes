@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-25 - Vanya Belyaev
+ - minor update for psi-X 
+
 ! 2013-03-25 - Eduardo Rodrigues
  - Mass range of B -> ppbar stripping line extended to have a proper sideband
    to the right of the Bs signal region.
