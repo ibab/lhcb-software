@@ -4,7 +4,10 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
-!========================= PrAlgorithms v1r3 2013-03-22 =========================
+!========================= PrAlgorithms v1r3 2013-03-25 =========================
+! 2013-03-25 - Marco Cattaneo
+ - Use stable_sort in PrSeedingXLayers, to get same results in gcc43 and gcc46
+
 ! 2013-03-21 - Amhis Yasmine 
  - Delete from svn PrSeedingNew.cpp/h 
 	

@@ -309,7 +309,7 @@ void PrSeedingXLayers::findXProjections( unsigned int zone ){
     }
   }
 
-  std::sort( m_xCandidates.begin(), m_xCandidates.end(), PrSeedTrack::GreaterBySize() );
+  std::stable_sort( m_xCandidates.begin(), m_xCandidates.end(), PrSeedTrack::GreaterBySize() );
 
   //====================================================================
   // Remove clones, i.e. share more than 2 hits
