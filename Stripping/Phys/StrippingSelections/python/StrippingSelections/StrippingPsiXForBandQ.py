@@ -2019,7 +2019,7 @@ class PsiX_BQ_Conf(LineBuilder) :
                                     self.pions   () ] 
             )
         
-        return self._add_selection( 'PsiPPPiPiPi_Selection' , sel ) 
+        return self._add_selection( 'PsiPPPiPiPi_Selection' , sel )
     
     ## merged few basic B-hadrons: B+ , B- & Bs 
     def beauty ( self ) :
@@ -2028,15 +2028,15 @@ class PsiX_BQ_Conf(LineBuilder) :
         """
         sel = self._selection ( 'BeautySelection')
         if sel : return sel
-
-        #
+        
+        from PhysSelPython.Wrappers import MergedSelection
         sel = MergedSelection (
             'SelBeautyFor' + self.name() ,
-            RequiredSelections = [ self.psi_K    () ,
-                                   self.psi_2Kpi () , 
-                                   self.psi_2K   () , 
-                                   self.psi_3K   () , 
-                                   self.psi_3Kpi () ] 
+            RequiredSelections = [ self.psi_K    () ,  ## B+
+                                   self.psi_2Kpi () ,  ## B0 
+                                   self.psi_2K   () ,  ## B_s0 
+                                   self.psi_3K   () ,  ## B+ 
+                                   self.psi_3Kpi () ]  ## B+ 
             )
         #
         return self._add_selection ( 'BeautySelection' , sel )
