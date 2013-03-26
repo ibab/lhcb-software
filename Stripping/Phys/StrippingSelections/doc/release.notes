@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-26 - Anton Poluektov 
+ - Fix typo in __init__.py, update tests
+
 ! 2013-03-25 - Vanya Belyaev
  - minor update for psi-X 
 
