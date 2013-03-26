@@ -26,6 +26,11 @@ confCharmFromBSemiForProtonPID = StrippingCharmFromBSemiForProtonPID.CharmFromBS
                                                                                                             StrippingCharmFromBSemiForProtonPID.confdict)
 Charm_stream.appendLines( confCharmFromBSemiForProtonPID.lines() )
 
+from StrippingSelections import StrippingCharmFromBSemiForHadronAsy
+confCharmFromBSemiForHadronAsy = StrippingCharmFromBSemiForHadronAsy.CharmFromBSemiForHadronAsyAllLinesConf("CharmFromBSemiForHadronAsy",
+                                                                                                            StrippingCharmFromBSemiForHadronAsy.confdict)
+Charm_stream.appendLines( confCharmFromBSemiForHadronAsy.lines() )
+
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
 

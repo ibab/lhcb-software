@@ -393,10 +393,10 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selDstar_2KPiPi0Merged = makeDstar('DstarKPiPi0MergedFor'+name,self.seld02KPiPi0Merged,self.selSlowPion,Dstar_cuts)
         self.selDstar_2KPiPi0MergedUp = makeDstar('DstarKPiPi0MergedUpFor'+name,self.seld02KPiPi0Merged,self.selSlowPionAll,Dstar_cuts)
 
-        self.seld02KKPi0Merged = self._D02HHPi0Filter("D02KKPi0Mergedfor"+name,["[D0 -> K- K+ pi0]cc"],[self.selKaon,self.selPi0Merged])
+        self.seld02KKPi0Merged = self._D02HHPi0Filter("D02KKPi0Mergedfor"+name,["D0 -> K- K+ pi0"],[self.selKaon,self.selPi0Merged])
         self.selDstar_2KKPi0Merged = makeDstar('DstarKKPi0MergedFor'+name,self.seld02KKPi0Merged,self.selSlowPion,Dstar_cuts)
 
-        self.seld02PiPiPi0Merged = self._D02HHPi0Filter("D02PiPiPi0Mergedfor"+name,["[D0 -> pi- pi+ pi0]cc"],[self.selPion,self.selPi0Merged])
+        self.seld02PiPiPi0Merged = self._D02HHPi0Filter("D02PiPiPi0Mergedfor"+name,["D0 -> pi- pi+ pi0"],[self.selPion,self.selPi0Merged])
         self.selDstar_2PiPiPi0Merged = makeDstar('DstarPiPiPi0MergedFor'+name,self.seld02PiPiPi0Merged,self.selSlowPion,Dstar_cuts)
         
         ################## D0 -> HHPi0 WITH RESOLVED PI0 #######################
@@ -411,16 +411,16 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                                                      self.seld02KPiPi0ResolvedLoose,self.selSlowPionAll,Dstar_cuts)
 
         self.seld02KKPi0Resolved = self._D02HHPi0Filter("D02KKPi0Resolvedfor"+name,
-                                                            ["[D0 -> K- K+ pi0]cc"],[self.selKaon,self.selPi0Resolved])
+                                                            ["D0 -> K- K+ pi0"],[self.selKaon,self.selPi0Resolved])
         self.seld02KKPi0ResolvedLoose = self._D02HHPi0Filter("D02KKPi0ResolvedLoosefor"+name,
-                                                                 ["[D0 -> K- K+ pi0]cc"],[self.selKaon,self.selPi0ResolvedLoose])
+                                                                 ["D0 -> K- K+ pi0"],[self.selKaon,self.selPi0ResolvedLoose])
         self.selDstar_2KKPi0Resolved = makeDstar('DstarKKPi0ResolvedFor'+name,
                                                      self.seld02KKPi0ResolvedLoose,self.selSlowPion,Dstar_cuts)
 
         self.seld02PiPiPi0Resolved = self._D02HHPi0Filter("D02PiPiPi0Resolvedfor"+name,
                                                              ["[D0 -> pi- pi+ pi0]cc"],[self.selPion,self.selPi0Resolved])
         self.seld02PiPiPi0ResolvedLoose = self._D02HHPi0Filter("D02PiPiPi0ResolvedLoosefor"+name,
-                                                                  ["[D0 -> pi- pi+ pi0]cc"],[self.selPion,self.selPi0ResolvedLoose])
+                                                                  ["D0 -> pi- pi+ pi0"],[self.selPion,self.selPi0ResolvedLoose])
         self.selDstar_2PiPiPi0Resolved = makeDstar('DstarPiPiPi0ResolvedFor'+name,
                                                       self.seld02PiPiPi0ResolvedLoose,self.selSlowPion,Dstar_cuts)
         

@@ -31,6 +31,7 @@ import StrippingB2XuMuNu
 import StrippingB2DMuNuX
 import StrippingCharmFromBSemi
 import StrippingCharmFromBSemiForProtonPID
+import StrippingCharmFromBSemiForHadronAsy
 import StrippingCrossSectionB2DMuNuX
 import StrippingInclPhi
 import StrippingV0ForPID

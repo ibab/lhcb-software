@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-26 - Mika Vesterinen
+ - New module StrippingCharmFromBSemiForHadronAsy.py 
+   - Kaon, pion and proton asymmetries with "double tagged" charm.
+ - Bug fix to StrippingCharmFromBSemi.py
+   - Fix duplication of D0->KKpi0 and D0->pipipi0 candidates
+ - Updates to TestCharmFromBSemi.py
+
 ! 2013-03-26 - Anton Poluektov 
  - Fix typo in __init__.py, update tests
 
