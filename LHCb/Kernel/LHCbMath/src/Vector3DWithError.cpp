@@ -85,7 +85,7 @@ Gaudi::Math::Vector3DWithError&
 Gaudi::Math::Vector3DWithError::operator-= 
 ( const Gaudi::Math::Vector3DWithError::Vector3D& right ) 
 {
-  vector3d () -= right;
+  vector3d() -= right;
   return *this ;
 }
 // ============================================================================
@@ -94,7 +94,9 @@ Gaudi::Math::Vector3DWithError::operator+=
 ( const Gaudi::Math::Vector3DWithError::VectorE& right ) 
 {
   using namespace Gaudi::Math::Operators ;
-  setVector ( vector3d () + right.value() )  ;
+  setVector ( vector3d() + Vector3D(right.value()[0],
+                                    right.value()[1],
+                                    right.value()[2]) )  ;
   m_cov2 += right.cov2() ;
   return *this ;
 }
@@ -104,7 +106,9 @@ Gaudi::Math::Vector3DWithError::operator-=
 ( const Gaudi::Math::Vector3DWithError::VectorE& right ) 
 {
   using namespace Gaudi::Math::Operators ;
-  setVector ( vector3d () - right.value() )  ;
+  setVector ( vector3d() - Vector3D(right.value()[0],
+                                    right.value()[1],
+                                    right.value()[2]) )  ;
   m_cov2 += right.cov2() ;
   return *this ;
 }
@@ -114,7 +118,7 @@ Gaudi::Math::Vector3DWithError::operator+=
 ( const Gaudi::Math::Vector3DWithError::Vector& right ) 
 {
   using namespace Gaudi::Math::Operators ;
-  setVector ( vector3d () + right )  ;
+  setVector ( vector3d() + Vector3D(right[0],right[1],right[2]) )  ;
   return *this ;
 }
 // ============================================================================
@@ -123,7 +127,7 @@ Gaudi::Math::Vector3DWithError::operator-=
 ( const Gaudi::Math::Vector3DWithError::Vector& right ) 
 {
   using namespace Gaudi::Math::Operators ;
-  setVector ( vector3d () - right )  ;
+  setVector ( vector3d() - Vector3D(right[0],right[1],right[2]) )  ;
   return *this ;
 }
 // ============================================================================
@@ -159,6 +163,7 @@ double Gaudi::Math::Vector3DWithError::chi2
   /// calculate chi2 
   return Gaudi::Math::Similarity ( vector3d() - right.vector3d() , s_cov2 ) ;
 }
+
 // ============================================================================
 // chi2 distance 
 // ============================================================================
@@ -172,7 +177,6 @@ double Gaudi::Math::Vector3DWithError::chi2
   /// calculate chi2 
   return Gaudi::Math::Similarity ( vector3d() - right , s_cov2 ) ;
 }
-
 
 // ============================================================================
 // chi2 distance 
@@ -193,6 +197,7 @@ double Gaudi::Math::Vector3DWithError::chi2
   //
   return ROOT::Math::Similarity ( vct , s_cov2 ) ;
 }
+
 // ============================================================================
 // chi2 distance 
 // ============================================================================
@@ -211,6 +216,7 @@ double Gaudi::Math::Vector3DWithError::chi2
   //
   return ROOT::Math::Similarity ( vct , s_cov2 ) ;
 }
+
 // ============================================================================
 // printout 
 // ============================================================================
@@ -228,6 +234,7 @@ Gaudi::Math::Vector3DWithError::fillStream ( std::ostream& s ) const // printout
            << Y () << " +- " << err ( m_cov2(1,1) ) << " , "
            << Z () << " +- " << err ( m_cov2(2,2) ) << " )";
 }  
+
 // ============================================================================
 // conversion to the string 
 // ============================================================================
@@ -238,6 +245,7 @@ Gaudi::Math::Vector3DWithError::toString   () const // conversion to the string
   fillStream ( s ) ;
   return s.str() ;
 }
+
 // ============================================================================
 // unary- 
 // ============================================================================
@@ -273,8 +281,6 @@ Gaudi::Math::Vector3DWithError::__add__
   Gaudi::Math::Point3DWithError tmp ( right ) ;
   return tmp += (*this)  ;
 }
-
-
 // ============================================================================
 Gaudi::Math::Vector3DWithError 
 Gaudi::Math::Vector3DWithError::__sub__ 
@@ -340,9 +346,6 @@ Gaudi::Math::Vector3DWithError::asVector () const
 }
 // ============================================================================
 
-
-
-
 // ========================================================================
 Gaudi::Math::Vector3DWithError operator- 
 ( const Gaudi::XYZPoint&               b ,
@@ -373,7 +376,6 @@ Gaudi::Math::Vector3DWithError::__idiv__ ( const double v )
 }
 // ============================================================================
 
-
 // ============================================================================
 Gaudi::Math::Vector3DWithError 
 Gaudi::Math::Vector3DWithError::__mul__ ( const double v ) const
@@ -383,7 +385,6 @@ Gaudi::Math::Vector3DWithError::__mul__ ( const double v ) const
 }
 // ============================================================================
 
-
 // ============================================================================
 Gaudi::Math::Vector3DWithError 
 Gaudi::Math::Vector3DWithError::__div__ ( const double v ) const 
@@ -392,8 +393,6 @@ Gaudi::Math::Vector3DWithError::__div__ ( const double v ) const
   return ( tmp /= v ) ;
 }
 // ============================================================================
-
-
 
 // ============================================================================
 // The END 
