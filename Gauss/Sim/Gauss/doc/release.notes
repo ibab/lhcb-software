@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-03-26 - Gloria Corti
+ - Port change from v45b branch:
+ - Set Gauss() default physics list as in Sim08: EmNoCuts and FTFP_BERT
+
 ! 2013-03-25 - Gloria Corti
  - Port changes from v45b branch:
 

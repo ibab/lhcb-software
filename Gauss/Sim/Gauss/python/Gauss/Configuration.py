@@ -87,7 +87,7 @@ class Gauss(LHCbConfigurableUser):
         ,"DetectorSim"       : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
         ,"DetectorMoni"      : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
         ,"SpilloverPaths"    : []
-        ,"PhysicsList"       : {"Em":'NoCuts', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
+        ,"PhysicsList"       : {"Em":'NoCuts', "Hadron":'FTFP_BERT', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
         ,"DeltaRays"         : True
         ,"Phases"            : ["Generator","Simulation"] # The Gauss phases to include in the SIM file
         ,"BeamMomentum"      : 3.5*SystemOfUnits.TeV
