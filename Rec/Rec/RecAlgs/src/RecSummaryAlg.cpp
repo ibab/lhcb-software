@@ -19,23 +19,28 @@ DECLARE_ALGORITHM_FACTORY( RecSummaryAlg )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  RecSummaryAlg::RecSummaryAlg( const std::string& name,
-                                ISvcLocator* pSvcLocator)
-    : GaudiAlgorithm    ( name , pSvcLocator ),
-      m_richTool        ( NULL ),
-      m_otTool          ( NULL ),
-      m_countVeloTracks ( NULL )
+RecSummaryAlg::RecSummaryAlg( const std::string& name,
+                              ISvcLocator* pSvcLocator)
+: GaudiAlgorithm    ( name , pSvcLocator ),
+  m_richTool        ( NULL ),
+  m_otTool          ( NULL ),
+  m_countVeloTracks ( NULL )
 {
-  const std::vector<std::string> tmpList = boost::assign::list_of
-    ("RICH1")("RICH2")("VELO")("TT")("IT")("OT")("SPD")("MUON")
-    ;
 
-  m_knownDets = boost::assign::list_of
-    ("RICH1")("RICH2")("VELO")("TT")("IT")("OT")("SPD")("MUON")
-    ("VL")("VP")("UT")("FT")("RICH1PMT")("RICH2PMT")
-    ;
-
-  declareProperty( "Detectors", m_dets = tmpList );
+  // Following are work arounds for -std=c++11 issues with boost ...
+  {
+    const std::vector<std::string> tmpList = boost::assign::list_of
+      ("RICH1")("RICH2")("VELO")("TT")("IT")("OT")("SPD")("MUON")
+      ;
+    declareProperty( "Detectors", m_dets = tmpList );
+  }
+  {
+    const std::vector<std::string> tmpList = boost::assign::list_of
+      ("RICH1")("RICH2")("VELO")("TT")("IT")("OT")("SPD")("MUON")
+      ("VL")("VP")("UT")("FT")("RICH1PMT")("RICH2PMT") 
+      ;
+    m_knownDets = tmpList;
+  }
 
   declareProperty( "SummaryLocation",
                    m_summaryLoc = LHCb::RecSummaryLocation::Default );
@@ -77,15 +82,15 @@ RecSummaryAlg::~RecSummaryAlg() {}
 //=============================================================================
 StatusCode RecSummaryAlg::initialize()
 {
-  const StatusCode sc = GaudiAlgorithm::initialize(); 
-  if ( sc.isFailure() ) return sc; 
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
   std::vector<std::string> tmpDets;
   std::sort(m_dets.begin(),m_dets.end());
   std::sort(m_knownDets.begin(),m_knownDets.end());
-  set_intersection(m_dets.begin(),m_dets.end(), m_knownDets.begin(),m_knownDets.end(), std::back_inserter(tmpDets)); 
+  set_intersection(m_dets.begin(),m_dets.end(), m_knownDets.begin(),m_knownDets.end(), std::back_inserter(tmpDets));
   m_dets = tmpDets;
-  
-  
+
+
   return sc;
 }
 
