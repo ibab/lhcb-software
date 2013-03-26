@@ -18,7 +18,7 @@ from LbUtils.Temporary import TempDir
 
 tmpdir = TempDir(prefix="mkMCGentar")
 
-import sys, os, getopt, time, shutil
+import sys, os, getopt, time, shutil, re
 version = '081013'
 #---------------------------------------------------------------------------
 def usage() :
@@ -55,12 +55,12 @@ def get_native_versions(native_version):
     version =  native_version.split('_')[1]
     name = NAME.lower().capitalize()
     release_area = os.getenv(name +'_release_area')
-    if debug_flag == 1: print 'get_native_versions - release_area = ',release_area
+    if debug_flag == 1: print 'get_native_versions - release_area = ',release_area, ' ', name
 
     Sys_dir = os.path.join(release_area,NAME,native_version,name+'Sys','cmt')
     if not os.path.exists(Sys_dir) :
         Sys_dir = os.path.join(release_area,NAME,native_version,name+'Sys',version,'cmt')
-    if debug_flag == 1: print 'get_native_versions -  ',Sys_dir
+    if debug_flag == 1: print 'get_native_versions -  SysDir=',Sys_dir
     os.chdir(Sys_dir)
 
     status,value = getStatusOutput('cmt sh macro_value GENSERVERSION')
@@ -69,6 +69,7 @@ def get_native_versions(native_version):
     else:
         GENSERVERSION = value
     packages_versions['GENSER'] = GENSERVERSION
+    if debug_flag == 1: print 'get_native_versions -  GENSERVERSION=', GENSERVERSION
 
     for fdline in os.popen('cmt show macros native').readlines():
         if fdline.find('config_version') == -1:
@@ -114,6 +115,96 @@ def get_hepmc_version(native_version):
 
     return HepMC_version
 
+#----------------------------------------------------------------------------
+#
+#  get LCG version ==============================================
+#
+def get_lcgcmt_version(native_version):
+    """ Utility method to lookup the LCGCMT version """
+    if debug_flag == 1: print 'get_lcgcmt_version', native_version
+
+    NAME = native_version.split('_')[0]
+    version =  native_version.split('_')[1]
+    name = NAME.lower().capitalize()
+    release_area = os.getenv(name +'_release_area')
+    if debug_flag == 1: print 'get_lcgcmt_version - release_area = ',release_area
+
+    Sys_dir = os.path.join(release_area,NAME,native_version,name+'Sys','cmt')
+    if not os.path.exists(Sys_dir) :
+        Sys_dir = os.path.join(release_area,NAME,native_version,name+'Sys',version,'cmt')
+    if debug_flag == 1: print 'get_lcgcmt_version -  ',Sys_dir
+    os.chdir(Sys_dir)
+
+    # Checking the HepMC version.
+    # Using value of macro HepMC_config_version
+    status,value = getStatusOutput('cmt sh macro_value LCG_config_version')
+    if isCMTMessage(value) :
+        LCG_version = value.split('\n')[1]
+    else:
+        LCG_version  = value
+
+    return LCG_version
+
+
+#----------------------------------------------------------------------------
+#
+#  CHeck if we take stuff from MCGenerators_hepmc of MCGenerators_lcgcmt ====
+#
+def check_MCGenerators_flavour(package_homes):
+
+    lname = "check_MCGenerators_flavour"
+    flavour = None
+    consistent = True
+    flavour_types = {"hepmc": "MCGenerators_hepmc", "lcgcmt":"MCGenerators_lcgcmt"}
+
+    for package in package_homes.keys():
+        home = package_homes[package]
+
+        # Ignoring package like GENSER with no home, and soft to package...
+        if home == None or len(home) == 0:
+            continue
+
+        # Now looking for the MCGenerator flavour
+        m = re.search("(MCGenerators_\w+)", home)
+        if (m==None):
+            # We are trying to package a external which is NOT in the generators, this should
+            # NOT happen, so we bail out...
+            print >>sys.stderr, "%s - %s - Package %s is not in MCGenerators - Home= %s" % (lname, package, home)
+            sys.exit(1);
+
+        # We have a match, check if it's correct...
+        tmpmatch = m.group(1)
+        package_flavour = None
+
+        # Iterate of LOV to check if tghe type is known...
+        for key, value in flavour_types.items():
+            if tmpmatch.startswith(value):
+                package_flavour = key
+
+        # Checking we got a match
+        if package_flavour == None:
+            print >>sys.stderr, "%s - Package %s did not match known MCGenerators flavours - Home= %s" % (lname, package, home)
+            sys.exit(1);
+
+        # Now checking consistency...
+        if flavour == None:
+            # First external, we set the flavour for all of them...
+            flavour = package_flavour
+        else:
+            # Otherwise we check consistency
+            if package_flavour != flavour:
+                consistent = False
+                print >>sys.stderr, "%s - Error: Package %s of incorrect flavour: %s - Home= %s" % (lname, package, package_flavour, home)
+            else:
+                print "%s - Package %s flavour: %s " % (lname, package, package_flavour)
+
+    if not consistent:
+        print >>sys.stderr, "%s - Inconsistency in MCGenerators flavour - Aborting" % (lname)
+        sys.exit(1);
+
+    return flavour
+
+
 
 #
 #  get MCGen tar file names ===============================================
@@ -150,7 +241,7 @@ def get_MCGen_base(package_home, genname, genversion):
 #
 #  get tar files from lcg  ==================================================
 #
-def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
+def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version, mcgen_flavour):
 
     if debug_flag == 1: print ' get_tar_files for GENSER %s %s '%(packages_versions['GENSER'],binary_dir)
 
@@ -162,33 +253,33 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
 
     missing_tars = []
     missing_pdfs = []
-    
+
     for key in packages_versions.keys():
 
         if key == 'GENSER':
             print "Ignoring %s ================================================================================" % key
             continue
-        
+
         print
         print "Processing %s ================================================================================" % key
 
         # Seting the global vriables to be able to locate the tarballs
         gen_base = get_MCGen_base(packages_homes[key], key, packages_versions[key])
         gen_root = os.path.basename(gen_base)
-        MCGen_tar_dir = os.path.join(lcg_dir,'MCGenerators_hepmc%s' % HepMC_version,'distribution')
+        MCGen_tar_dir = os.path.join(lcg_dir,'MCGenerators_%s%s' % (mcgen_flavour, HepMC_version),'distribution')
         if gen_root :
             if not os.path.exists(gen_root):
                 os.mkdir(gen_root)
             os.chdir(gen_root)
         value = packages_versions[key]
-        
+
         # Trick to deal with the packages ending in pp instead of ++
         orig_key = key
         if orig_key.endswith("pp"):
             key = orig_key.replace("pp", "++")
-            
+
         (file, fullfilename) = get_MCGen_tar_name(MCGen_tar_dir,key,value,binary_dir)
-        
+
         print "-----------------------------------"
         print " dist dir     : %s" % MCGen_tar_dir
         print " orig Package : %s" % orig_key
@@ -206,7 +297,7 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
         # FAIL otherwise, we need to know...
         #
 
-        
+
         if file == None or  not os.path.exists(fullfilename):
             print "ERROR"
             print "ERROR *** Tar file for %s %s in %s does NOT exist" % (key, value, MCGen_tar_dir)
@@ -218,10 +309,10 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
 
                 # Copying the tar file locally - why ? XXX
                 #if debug_flag == 1:
-                #    print "Copying tar file to local directory %s" % str    
+                #    print "Copying tar file to local directory %s" % str
                 #shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
 
-                
+
                 # Untarring the binary tarball for the project
                 fullfile = fullfilename
                 key_value = os.path.join(key,value)
@@ -234,10 +325,10 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
                 # i.e. we had to replace "pp" by "++"
                 if orig_key != key:
                     os.symlink(key, orig_key)
-                
+
                 # Extract a few PDFs from lhapdf main tar file
                 if key == 'lhapdf':
-                    
+
                     #
                     # Extraction of PDFs cteq6ll/cteq6l
                     #
@@ -277,12 +368,12 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
                     else:
                         missing_pdfs.append("cteq6l.LHpdf")
                         missing_pdfs.append("cteq6ll.LHpdf")
-                        
+
 
                     #
                     # Extra list of PDFs to be added to the Genser release
                     #
-                    
+
                     extra_pdfs = [ '/share/lhapdf/PDFsets/CT09MCS.LHgrid', '/share/lhapdf/PDFsets/CT10nlo.LHgrid',
                                   '/share/lhapdf/PDFsets/MSTW2008lo68cl.LHgrid', '/share/lhapdf/PDFsets/MSTW2008nlo68cl.LHgrid']
                     for p in extra_pdfs:
@@ -299,8 +390,8 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
                 # Removing the local copy if it was done
                 if os.path.exists(file):
                     os.remove(file)
-                
-                    
+
+
 
         os.chdir(tmpdir.getName())
 
@@ -397,12 +488,23 @@ if __name__ == "__main__":
         print ' packages_versions = ', packages_versions
         print ' packages_homes = ', packages_homes
 
-    HepMC_version = get_hepmc_version(native_version)
-    if debug_flag == 1:
-        print ' HepMC_version = ', HepMC_version
+    # Check whether we take the generators from MCGEnerators_hepmc of MCGenerators_lcgcmt
+    # And also check consistency...
+    MCGenerators_flavour = check_MCGenerators_flavour(packages_homes)
+
+    mcgen_version = None
+    if MCGenerators_flavour == "lcgcmt":
+        mcgen_version = get_lcgcmt_version(native_version)
+        if debug_flag == 1:
+            print ' LCG_version = ', mcgen_version
+
+    if MCGenerators_flavour == "hepmc":
+        mcgen_version = get_hepmc_version(native_version)
+        if debug_flag == 1:
+            print ' HepMC_version = ', mcgen_version
 
 
     if packages_versions.has_key('GENSER') != 1:
         sys.exit()
     else:
-        rc = get_tar_files(packages_versions, packages_homes, binary, HepMC_version)
+        rc = get_tar_files(packages_versions, packages_homes, binary, mcgen_version, MCGenerators_flavour)

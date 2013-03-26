@@ -1,3 +1,8 @@
+2013-03-26  Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* scripts/mkMCGentar: Improved to take tar files from MCGenerators_lcgcmt
+	as well as from MCGenerators_hepmc (JIRA LBCORE-78) 
+
 2013-02-27  Ben Couturier  <Ben.Couturier@cern.ch>
 
 	* scripts/archive_project: Fix invocation of grid installation checks. 
