@@ -611,11 +611,12 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
     // Retrieve the particles:
     LHCb::Particle::Range parts =
       this -> template getIfExists<LHCb::Particle::Range>(location);
+    // CRJ : To fix, as parts cannot be null with a range ....
     if ( !parts )
     {
-      Info ( "Non-existing location "+(*iloc) +
-             ( this->rootInTES().empty() ?  "" : (" under " + this->rootInTES() ) ),
-             StatusCode::SUCCESS, 0).ignore() ;
+      this->Info ( "Non-existing location "+(*iloc) +
+                   ( this->rootInTES().empty() ?  "" : (" under " + this->rootInTES() ) ),
+                   StatusCode::SUCCESS, 0 ).ignore() ;
       continue ;
     }
 
