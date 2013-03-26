@@ -3,8 +3,6 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-- Updated Pocofoam qmtest and ref.
-
 </PRE><H1><A NAME=v44r3>2013-03-26 Brunel v44r3</A></H1><PRE>
 This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5,
  Rec v14r5 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
