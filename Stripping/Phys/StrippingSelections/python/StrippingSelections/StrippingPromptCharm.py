@@ -202,7 +202,6 @@ from StandardParticles      import ( StdNoPIDsPions     ,
                                      ## for chi_(c,b)
                                      StdLooseAllPhotons )
 
-
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 # =============================================================================
@@ -659,22 +658,6 @@ class StrippingPromptCharmConf(LineBuilder) :
         #
         return self._add_selection ( 'ProtonSelection' , sel )
 
-    ## get the meson selection
-    def mesons ( self ) :
-        """
-        Get the meson ( kaon + pion ) selection
-        """
-        sel = self._selection ( 'MesonSelection')
-        if sel : return sel
-
-        #
-        sel = MergedSelection (
-            'SelBasicMesonsFor' + self.name() ,
-            RequiredSelections = [ self.pions() , self.kaons() ]
-            )
-        #
-        return self._add_selection ( 'MesonSelection' , sel )
-
     ## get the common preambulo:
     def preambulo ( self ) : return self['Preambulo']
 
@@ -726,7 +709,8 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             Algorithm          = _D0PreCombine   ,
             ##
-            RequiredSelections = [ self.mesons() ]
+            RequiredSelections = [ self.kaons () ,
+                                   self.pions () ]
             )
 
         return self._add_selection ( 'D02HHForPromptCharm_PreSelection' , sel )
@@ -902,7 +886,8 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = Selection (
             "SelPreDsFor"      + self.name()     ,
             Algorithm          = cmb             ,
-            RequiredSelections = [ self.mesons() ]
+            RequiredSelections = [ self.kaons () ,
+                                   self.pions () ]
             )
 
         return self._add_selection ( 'PreDsForPromptCharm_Selection' , sel )
@@ -979,7 +964,8 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = Selection (
             "SelDFor"          + self.name()     ,
             Algorithm          = cmb             ,
-            RequiredSelections = [ self.mesons() ]
+            RequiredSelections = [ self.kaons () ,
+                                   self.pions () ]
             )
 
         return self._add_selection ( 'DForPromptCharm_Selection' , sel )
@@ -1033,8 +1019,9 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = Selection (
             "PreSelLambdaCFor" + self.name()       ,
             Algorithm          = cmb               ,
-            RequiredSelections = [ self.mesons  () ,
-                                   self.protons () ]
+            RequiredSelections = [ self.kaons   () ,
+                                   self.protons () ,
+                                   self.pions   () ] 
             )
 
         return self._add_selection( 'PreLambdaCForPromptCharm_Selection' ,  sel )
