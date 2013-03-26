@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2013-03-26 - Chris Jones
+ - Extend the RichSmartID test application to check conversion to and from
+   an LHCbID. 
+ - Fix LHCbID class to use & instead of && in richID().
+
 ! 2013-03-22 - Wouter Hulsbergen
  - HitPattern: adapt for FT; merge UT with TT.
 
