@@ -11,8 +11,9 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePions, StdAllLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions, StdLooseMergedPi0,StdLooseResolvedPi0
+from StandardParticles import StdLoosePions, StdAllLooseMuons, StdLooseKaons, StdLooseProtons, StdAllLoosePions, StdLooseMergedPi0,StdLooseResolvedPi0,StdAllNoPIDsMuons, StdLooseANNUpPions
 from Configurables import ConjugateNeutralPID
+from PhysSelPython.Wrappers import MergedSelection
 
 __all__ = ('B2DMuForTauMuconf',
            'makeb2DMuX',
@@ -75,6 +76,11 @@ class B2DMuForTauMuconf(LineBuilder) :
         self.selmuon = Selection( "Mufor" + name,
                                   Algorithm = self._muonFilter(),
                                   RequiredSelections = [StdAllLooseMuons])
+                                  
+                                  
+        self.selFakemuon = Selection( "FakeMufor" + name,
+                                  Algorithm = self._FakemuonFilter(),
+                                  RequiredSelections = [StdAllNoPIDsMuons])                                  
 
 
         ############### KAON AND PION SELECTIONS ################
@@ -86,13 +92,15 @@ class B2DMuForTauMuconf(LineBuilder) :
         self.selPion = Selection( "Pifor" + name,
                                   Algorithm = self._pionFilter(),
                                   RequiredSelections = [StdLoosePions])
-
+                                  
+                                                             
 
         ################ D0 -> HH SELECTION ##########################
         
         self.seld02kpi = Selection( "D02KPifor" + name,
                                     Algorithm = self._D02KPiFilter(),
                                     RequiredSelections = [self.selKaon, self.selPion] )
+
 
         self.selb2D0MuX = makeb2DMuX('b2D0MuX' + name,
                                      DecayDescriptors = [ '[B- -> D0 mu-]cc','[B+ -> D0 mu+]cc'],
@@ -101,7 +109,15 @@ class B2DMuForTauMuconf(LineBuilder) :
                                      BVCHI2DOF = config['BVCHI2DOF'],
                                      BDIRA = config['BDIRA']
                                      )
-        
+
+                                     
+        self.selFakeb2D0MuX = makeFakeb2DMuX('b2D0MuXFake' + name,
+                                     DecayDescriptors = [ '[B- -> D0 mu-]cc','[B+ -> D0 mu+]cc'],
+                                     FakeMuSel = self.selFakemuon, 
+                                     DSel = self.seld02kpi,
+                                     BVCHI2DOF = config['BVCHI2DOF'],
+                                     BDIRA = config['BDIRA']
+                                     )        
         
         ################# DECLARE THE STRIPPING LINES #################################
 
@@ -113,10 +129,18 @@ class B2DMuForTauMuconf(LineBuilder) :
         self.registerLine(self.B2DMuForTauMu)        
 
 
+        self.FakeB2DMuForTauMu = StrippingLine('b2D0MuXFake' + name+ 'Line', prescale = 0.1, selection = self.selFakeb2D0MuX, FILTER  = GECs)
+        self.registerLine(self.FakeB2DMuForTauMu)   
+
     def _muonFilter( self ):
         _code = "(MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) &(TRGHOSTPROB < %(GhostProb)s) & (PIDmu > %(PIDmu)s)   & (P> 3.0*GeV)" % self.__confdict__
         _mu = FilterDesktop( Code = _code )
-        return _mu        
+        return _mu 
+        
+    def _FakemuonFilter( self ):
+        _code = "(MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) &(TRGHOSTPROB < %(GhostProb)s) & (P> 3.0*GeV) & (~ISMUON) & (INMUON)" % self.__confdict__
+        _Fakemu = FilterDesktop( Code = _code )
+        return _Fakemu               
 
     def _pionFilter( self ):
         _code = "(P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
@@ -143,6 +167,7 @@ class B2DMuForTauMuconf(LineBuilder) :
 
 
 
+
 def makeb2DMuX(name,
                DecayDescriptors,
                MuSel,
@@ -164,4 +189,21 @@ def makeb2DMuX(name,
 
 
 
+def makeFakeb2DMuX(name,
+               DecayDescriptors,
+               FakeMuSel,
+               DSel,
+               BVCHI2DOF,
+               BDIRA):
+               #due to tight cuts, B sideband adds virtually zero events, free
+    _combinationCut = "(AM<10.2*GeV)"
+    _motherCut = "  (MM<10.0*GeV) & (MM>0.0*GeV) & (VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)  " \
+                   " "  % locals()
+    _FakeB = CombineParticles(DecayDescriptors = DecayDescriptors,
+                          CombinationCut = _combinationCut,
+                          MotherCut = _motherCut)
+                          
+    return Selection (name,
+                      Algorithm = _FakeB,
+                      RequiredSelections = [FakeMuSel, DSel])
 
