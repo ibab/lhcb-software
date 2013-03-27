@@ -5,6 +5,15 @@ import Configurables
 from GaudiKernel.ConfigurableDb import cfgDb, loadConfigurableDb
 import sys, traceback
 
+##### Setup Configurable for tracking... #####
+from Configurables import Hlt2Tracking, GaudiSequencer
+
+for s in Hlt2Tracking.__slots__:
+  if "Seq" in s:
+    setattr(Hlt2Tracking(),s,GaudiSequencer(s+"dummy"))
+
+
+
 ##### load all configurables of this package #####
 loadConfigurableDb()
 for name,conf in cfgDb.iteritems():

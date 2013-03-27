@@ -5,6 +5,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2013-03-27 - Rob Lambert
+ - Fill the tracking sequencers with empty sequencers for the test
+
 
 ! 2013-03-25 - Rob Lambert
  - Print more details of given exceptions
