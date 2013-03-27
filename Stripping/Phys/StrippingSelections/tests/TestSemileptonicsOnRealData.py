@@ -139,6 +139,6 @@ DaVinci().CondDBtag = "cond-20121008"
 
 
 #importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py")
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagDn.py")
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagDn.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
 #importOptions("$STRIPPINGSELECTIONSROOT/Reco13e.py")

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-27 - Paolo Gandini
+ - Added new lines in StrippingB2DHHHForBXX.py (preliminary)
+
 ! 2013-03-27 - Olga Kochebina
  - Corrected a bug in StrippingD2XMuMuSS.py
 
