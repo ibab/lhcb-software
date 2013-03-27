@@ -5,6 +5,9 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2013-03-27 - Francesca Dordei
+ - Update the config_params in StrippingB2Psi2SXMuMu.py and StrippingB2Psi2SX.py
+
+! 2013-03-27 - Francesca Dordei
  - Update to StrippingB2JPsiXforBeta_s.py line (11 new lines and loose vtx chi2 for Jpsi Phi and Jpsi K*)
 
 ! 2013-03-26 - Mika Vesterinen

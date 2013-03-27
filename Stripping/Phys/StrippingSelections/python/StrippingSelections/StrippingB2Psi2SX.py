@@ -43,13 +43,13 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'Psi2SAM23up': 800,
                  'Psi2SAPT': 500,
                  'Psi2SADAMASS': 30,
-                 'Psi2SVFASPF': 16,
+                 'Psi2SVFASPF': 16,     
                  'PIDpi': 10, # new 10
                  'ChKTRCHI2DOF':5,
                  'ChKPID': 0 ,# before -2
                  'PhiWin':20,
                  'PhiPT':1000, #before 500 #ara 1000
-                 'PhiVFASPF':16,
+                 'PhiVFASPF':25,        #new change it was 16 before
                  'PhiMAXTRCHI2DOF':5,
                  'PhiMINTRCHI2DOF':-2,#
                  'KstMassDown':  826,
@@ -64,11 +64,11 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'incl_LinePrescale':0.1, #0.1 #before 0.5 #avui 0.2 
                  'incl_LinePostscale':1,
                  'BPVLTIME_detatched':0.15,
-                 'BsMassCutDownPre':5050,#before 5000
-                 'BsMassCutUpPre':5600,#before 5650
+                 'BsMassCutDownPre':5000,#before 5000
+                 'BsMassCutUpPre':5650,#before 5650
                  'BsMassCutDownPost':5150,#before 5100
-                 'BsMassCutUpPost':5500, #before 5550
-                 'BsVCHI2PDOF':10,
+                 'BsMassCutUpPost':5550, #before 5550
+                 'BsVCHI2PDOF':20,     #new change it was 10 before
                  'sig_LinePrescale': 1,
                  'sig_LinePostscale': 1,
                  'ChKPT': 500 ,

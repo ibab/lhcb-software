@@ -39,7 +39,7 @@ config_params = {'muPID':0.,
                  'ChKPID':0, #before -2
                  'PhiWin':20,
                  'PhiPT':1000, #before 500
-                 'PhiVFASPF':16,
+                 'PhiVFASPF':25,    #new change, it was 16 before
                  'PhiMAXTRCHI2DOF':5,
                  'PhiMINTRCHI2DOF':-2,
                  'KstMassDown':  826,
@@ -56,11 +56,11 @@ config_params = {'muPID':0.,
                  'BPVLTIME_detatched':0.2, #before 0.15
                  'incl_DetatchedLinePrescale':0.2, #before 0.5
                  'incl_DetatchedLinePostscale':1,
-                 'BsMassCutDownPre':5050, #before 5000
-                 'BsMassCutUpPre':5600,  #before 5650
+                 'BsMassCutDownPre':5000, #before 5000
+                 'BsMassCutUpPre':5650,  #before 5650
                  'BsMassCutDownPost':5150, #before 5100
-                 'BsMassCutUpPost':5500,  #before 5550
-                 'BsVCHI2PDOF':10,
+                 'BsMassCutUpPost':5550,  #before 5550
+                 'BsVCHI2PDOF':20,     #new change, it was 10 before
                  'sig_PrescaledLinePrescale':0.5, #before 1.
                  'sig_PrescaledLinePostscale':1,
                  'sig_DetatchedLinePrescale':1,
