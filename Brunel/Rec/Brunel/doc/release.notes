@@ -7,6 +7,7 @@ Purpose: LHCb reconstruction program
   . Additional histograms in TrackMonitors
   . In brunel2012magdown, attempt to update reference block to monitor
     ChargedProtoANNPID histogram statistics
+  . Fix small bug in STMeasurement, measurement type incorrectly set for UT
 
 </PRE><H1><A NAME=v44r3>2013-03-26 Brunel v44r3</A></H1><PRE>
 This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5,
