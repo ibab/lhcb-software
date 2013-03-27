@@ -32,5 +32,8 @@ use LoKiTrigger         v12r8p1 Phys  # Vanya Belyaev
 # Declare this as a container package
 apply_pattern container_package
 
+# Allow the generation of QMTests
+apply_pattern QMTest
+
 # Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
