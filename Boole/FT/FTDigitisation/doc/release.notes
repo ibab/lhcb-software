@@ -4,6 +4,10 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+
+! 2013-03-27 - Eric Cogneras
+ - Bug fix : double declaration of variable reported by gcc47
+
 !========================= FTDigitisation v1r3 2013-03-25 =========================
 ! 2013-03-13 - Eric Cogneras
  - Fix a typo in plot2D call

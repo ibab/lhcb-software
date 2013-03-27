@@ -83,7 +83,7 @@ StatusCode MCFTDepositCreator::initialize() {
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
   
   //== Generate the transmission map. 
-  //== Two attenuation length, then in the radiaton area a different attenuation length
+  //== Two attenuation length, then in the radiation area a different attenuation length
   //== Compute also the transmission of the reflected signal, attenuated by the two length
   //   and the irradiated area
 
@@ -132,7 +132,6 @@ StatusCode MCFTDepositCreator::initialize() {
       for ( int kk = 0; m_nYSteps > kk; ++kk ) {
         float y = kk * m_yStepMap;
         if ( y > m_endReflexionLossY ) break;
-        int kk = y / m_yStepMap;
         float att = m_transmissionMap[ m_nYSteps*kx + kk] / m_transmissionMap[ m_nYSteps*kx + kk + 1];
         if ( y > m_beginReflexionLossY ) {
           att *= ( m_endReflexionLossY - y ) / ( m_endReflexionLossY - m_beginReflexionLossY );
