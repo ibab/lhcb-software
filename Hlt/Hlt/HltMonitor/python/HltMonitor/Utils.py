@@ -6,7 +6,8 @@ __rundb__=None
 
 def findDB():
     global __rundb__
-    if __rundb__ is not None return __rundb__
+    if __rundb__ is not None:
+        return __rundb__
     try:
         import rundb as __rundb__
         return __rundb__
