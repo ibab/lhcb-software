@@ -489,7 +489,7 @@ class D2XMuMuConf(LineBuilder) :
         self.PiPiPiPiLine = StrippingLine(PiPiPiPiLine_name+"Line",
                                         prescale = config['D02PiPiPiPiLinePrescale'],
                                         postscale = config['D02PiPiPiPiLinePostscale'],
-                                        selection = selD02K3Pi
+                                        selection = selD02PiPiPiPi
                                         )
 
  
@@ -996,7 +996,7 @@ def makeD02KKMuMu(name, kaonSel, muonSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DVCH
               "(BPVVDCHI2>%(DFDCHI2)s) & (BPVIPCHI2()< %(DIPCHI2)s) & "\
               "(BPVDIRA > %(DDIRA)s)" % locals()
     
-    _Combine = CombineParticles(DecayDescriptor = "D0 -> K+ K- mu+ mu-",
+    _Combine = CombineParticles(DecayDescriptor = "[D0 -> K+ K- mu+ mu-]cc",
                                 CombinationCut = _combcut,
                                 MotherCut = _bcut)
     _Combine.ReFitPVs = True
@@ -1025,7 +1025,7 @@ def makeD02PiPiMuMu(name, pionSel, muonSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DV
               "(BPVVDCHI2>%(DFDCHI2)s) & (BPVIPCHI2()< %(DIPCHI2)s) & "\
               "(BPVDIRA > %(DDIRA)s)" % locals()
     
-    _Combine = CombineParticles(DecayDescriptor = "D0 -> pi+ pi- mu+ mu-",
+    _Combine = CombineParticles(DecayDescriptor = "[D0 -> pi+ pi- mu+ mu-]cc",
                                 CombinationCut = _combcut,
                                 MotherCut = _bcut)
     _Combine.ReFitPVs = True
@@ -1053,7 +1053,7 @@ def makeD02KPiMuMu(name, kaonSel, pionSel, muonSel, DMAXDOCA, DdauMAXIPCHI2, DFD
               "(BPVVDCHI2>%(DFDCHI2)s) & (BPVIPCHI2()< %(DIPCHI2)s) & "\
               "(BPVDIRA > %(DDIRA)s)" % locals()
     
-    _Combine = CombineParticles(DecayDescriptor = "D0 -> K- pi+ mu+ mu-",
+    _Combine = CombineParticles(DecayDescriptor = "[D0 -> K- pi+ mu+ mu-]cc",
                                 CombinationCut = _combcut,
                                 MotherCut = _bcut)
     _Combine.ReFitPVs = True
@@ -1081,7 +1081,7 @@ def makeD02KKPiPi(name, kaonSel, pionSel, OneKaonPID, DMAXDOCA, DdauMAXIPCHI2, D
               "(BPVVDCHI2>%(DFDCHI2)s) & (BPVIPCHI2()< %(DIPCHI2)s) & "\
               "(BPVDIRA > %(DDIRA)s)" % locals()
     
-    _Combine = CombineParticles(DecayDescriptor = "D0 -> K+ K- pi+ pi-",
+    _Combine = CombineParticles(DecayDescriptor = "[D0 -> K+ K- pi+ pi-]cc",
                                 CombinationCut = _combcut,
                                 MotherCut = _bcut)
     _Combine.ReFitPVs = True
@@ -1138,7 +1138,7 @@ def makeD02PiPiPiPi(name, pionSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DVCHI2DOF, 
               "(PT > %(DPT)s *MeV) &"\
               "(BPVDIRA > %(DDIRA)s)" % locals()
     
-    _Combine = CombineParticles(DecayDescriptor = "D0 -> pi+ pi- pi+ pi-",
+    _Combine = CombineParticles(DecayDescriptor = "[D0 -> pi+ pi- pi+ pi-]cc",
                                 CombinationCut = _combcut,
                                 MotherCut = _bcut)
     _Combine.ReFitPVs = True
