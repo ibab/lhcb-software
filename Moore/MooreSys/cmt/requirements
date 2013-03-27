@@ -8,6 +8,7 @@ branches doc cmt
 
 use  Moore               v20r0      Hlt
 use  IndependenceTests   v1r4       Hlt
+use  HltMonitor          v1r1	    Hlt   # Roel Aaij
 
 
 # Bug fixes on top of LHCb v35r4 release stack
