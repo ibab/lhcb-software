@@ -4,13 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+
+!========================= Gauss v45r1 2013-03-27 ============================
+! 2013-03-27 - Gloria Corti
+ - Remove use of MCatNLOData that is no longer in use since a while
+
 ! 2013-03-26 - Gloria Corti
  - Port change from v45b branch:
  - Set Gauss() default physics list as in Sim08: EmNoCuts and FTFP_BERT
 
 ! 2013-03-25 - Gloria Corti
  - Port changes from v45b branch:
-
  - Update qmtests with changes from Patrick Robbe in v42r4. 
  - Commit new file with reference error for most tests, since info message
    from tauola is sent to stderr
@@ -27,22 +31,24 @@
    . gauss-dev-pythia8-30000000
    . gauss-dev-spillover
    . gauss-gen-10000000
-   . gauss-gen-10000000.qmt
-   . gauss-gen-11164012.qmt
-   . gauss-gen-14165011.qmt
-   . gauss-gen-18112001.qmt
-   . gauss-gen-18412431.qmt
-   . gauss-gen-22112001.qmt
-   . gauss-gen-24142004.qmt
-   . gauss-gen-42112000.qmt
-   . gauss-gen-42112002.qmt
-   . gauss-gen-pythia8-10000000.qmt
-   . gauss-gen-pythia8-13164051.qmt
+   . gauss-gen-10000000
+   . gauss-gen-11164012
+   . gauss-gen-14165011
+   . gauss-gen-18112001
+   . gauss-gen-18412431
+   . gauss-gen-22112001
+   . gauss-gen-24142004
+   . gauss-gen-42112000
+   . gauss-gen-42112002
+   . gauss-gen-pythia8-10000000
+   . gauss-gen-pythia8-13164051
+   . gauss-xgen
+ - Change error reference for all upgrade tests, testGauss-Upgrade-err.ref
  - Add options 'SpillOver-50ns.py' to switch off at any energy when bunch
    spacing is 50 ns. Use this option in qmtest gauss-dev-spillover
  - Remove the reference output and error files for slc5 32-bits that is no 
    longer supported (i686-slc5-gcc43-{opt,dbg}
- - Update the nightly that were using the old 'Beam3500GeV...' no longer
+ - Update the qmtests that were using the old 'Beam3500GeV...' no longer
    compatible with the Configurable to use 'Sim08-Beam3500GeV...' and remove
    it in template for the event type check because it is no longer needed
  - Modify properties of Gauss() for beam parameters:
@@ -73,8 +79,7 @@
 ! 2013-03-07 - Gloria Corti
  - Undo my changes for VL just made for release
 
-!========================= Gauss v45r0 2013-04-07 ============================
-
+!========================= Gauss v45r0 2013-03-07 ============================
 ! 2013-03-07 - Gloria Corti
  - Note that Gauss v42r3 and v42r4 are on v42b branch
    v43r4 on v43b branch

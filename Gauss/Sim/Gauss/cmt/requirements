@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti (Patrick Robbe, Paul Szczypka) 
 #============================================================================
 package Gauss
-version v45r1
+version v46r0
 
 #============================================================================
 #-- Structure
@@ -20,7 +20,6 @@ use FieldMap           v5r*                  -no_auto_imports
 use DecFiles           v27r*  Gen            -no_auto_imports
 use Geant4Files	       v95r*	             -no_auto_imports
 use MIBData            v3r*                  -no_auto_imports
-use MCatNLOData        v1r*                  -no_auto_imports
 use BcVegPyData        v2r*                  -no_auto_imports
 use GenXiccData        v2r*                  -no_auto_imports
 use XmlVis             v*     Vis            -no_auto_imports
