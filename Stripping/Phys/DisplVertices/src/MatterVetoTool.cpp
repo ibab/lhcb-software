@@ -232,18 +232,38 @@ bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
       continue;
     }
   }
-  if(point.z()<800. && point.z()>uplimit)regModIndex=m_LeftSensorsCenter.size()-1;
+  if(point.z()<800. && point.z()>uplimit) regModIndex=m_LeftSensorsCenter.size()-1;
   double r = sqrt(pow(point.x()-m_LeftSensorsCenter[regModIndex].x(),2)+pow(point.y()-m_LeftSensorsCenter[regModIndex].y(),2));
-  if ( (r<5. && point.z()<370.) || (r<4.3 && point.z()>370.) ){
-    return false;
-  }
-  // Is in the module area
-  double halfModuleBoxThickness(1.75);
-  if (point.z()<m_LeftSensorsCenter[regModIndex].z()+halfModuleBoxThickness
-      && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness){
-    return true;
+
+  if (m_useEnlargedMatterVeto) {
+    if ( ( (256. < point.z() && point.z() < 261.)||(348. < point.z() && point.z() < 351.) ) && 
+	 ( 4.5 < r && r < 6 ) ) return true;
   }
 
+  // inner cylinder is not material
+  if ( (r<5. && point.z()<370.) || (r<4.3 && point.z()>370.) ) return false;
+
+  // Is in the module area
+  double halfModuleBoxThickness(1.75);
+  if (m_useEnlargedMatterVeto) {
+    halfModuleBoxThickness = 2.;
+  }
+  if (point.z()<m_LeftSensorsCenter[regModIndex].z()+halfModuleBoxThickness
+      && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness){ return true;  }
+
+  if (m_useEnlargedMatterVeto) {
+    // For large z, the resolution gets worse, so increase thickness
+    if ( point.z() > 400. ){
+      halfModuleBoxThickness = 4.;
+      if (point.z()<m_LeftSensorsCenter[regModIndex].z()+halfModuleBoxThickness
+	  && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness){ return true;  }
+    }
+    if ( point.z() > 550. ){
+      halfModuleBoxThickness = 12.;
+      if (point.z()<m_LeftSensorsCenter[regModIndex].z()+halfModuleBoxThickness
+	  && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness){ return true;  }
+    }
+  }
   // depending on z:
   // in the region of small corrugation
   if(point.z()<290. && point.x()-m_LeftSensorsCenter[regModIndex].x()>4){
@@ -254,47 +274,20 @@ bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
     float RlargerCyl = 9.;
 
     if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>smallerCyl
-       && r < RsmallerCyl ){
-      return false;
-    }
-
+       && r < RsmallerCyl ) return false; 
     if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>largerCyl
-       && r < RlargerCyl ){
-      return false;
-    }
-
-  }
-  if(r<12.5 && point.z()<440.){
-    return true;
+       && r < RlargerCyl ) return false; 
   }
 
-  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<5.5 &&
-     point.z()<440.){
-    return true;
-  }
-
-  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<8.5 &&
-     point.z()>440.){
-    return true;
-  }
-
+  // remaining stuff within RF box is in material
+  if(r<12.5 && point.z()<440.) return true;
   if (m_useEnlargedMatterVeto) {
-    // two modules
-    if ( ( (446. < point.z() && point.z() < 453.) ||
-           (348. < point.z() && point.z() < 351.) ) &&
-         ( 5. < r && r < 44. ) )
-      return true;
-    // RFoil
-    if ( ( 300. < point.z() && point.z() < 600.) &&
-         ( 4. < point.x() && point.x() < 8.) &&
-         ( ( -13. < point.y() && point.y() < -10. ) ||
-           ( 10. < point.y() && point.y() < -13. ) ) )
-      return true;
+    if(r<13.5 && point.z()<440.) return true;
   }
+  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<5.5 && point.z()<440.) return true;
+  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<8.5 && point.z()>440.) return true;
 
   return false;
-
-
 
 }
 
@@ -316,19 +309,39 @@ bool MatterVetoTool::IsInMaterialBoxRight(const Gaudi::XYZPoint& point) const{
       continue;
     }
   }
-  if(point.z()<800. && point.z()>uplimit)
-    regModIndex=m_RightSensorsCenter.size()-1;
-  // Is in vaccum clean cylinder?
+  if(point.z()<800. && point.z()>uplimit) regModIndex=m_RightSensorsCenter.size()-1;
   double r = sqrt(pow(point.x()-m_RightSensorsCenter[regModIndex].x(),2)+pow(point.y()-m_RightSensorsCenter[regModIndex].y(),2));
 
-  // inner cylinder
-  if ( (r<5. && point.z()<390.) || (r<4.3 && point.z()>390.) ){
-    return false;
+  // enlarged MatterVeto
+  if (m_useEnlargedMatterVeto) {
+    if ( ( (256. < point.z() && point.z() < 261.)||(348. < point.z() && point.z() < 351.) ) && 
+	 ( 4.5 < r && r < 6 ) ) return true;
   }
+
+  // inner cylinder is not material
+  if ( (r<5. && point.z()<390.) || (r<4.3 && point.z()>390.) ) return false;
+  
   // is in the module area
   double halfModuleBoxThickness(1.75);
+  if (m_useEnlargedMatterVeto) {
+    halfModuleBoxThickness = 2.;
+  }
   if (point.z()<m_RightSensorsCenter[regModIndex].z()+halfModuleBoxThickness
       && point.z()>m_RightSensorsCenter[regModIndex].z()-halfModuleBoxThickness) return true;
+
+  if (m_useEnlargedMatterVeto) {
+    // for large z, the resolution gets worse, so make the thickness larger 
+    if ( point.z() > 400. ){
+      halfModuleBoxThickness = 4.;
+      if (point.z()<m_RightSensorsCenter[regModIndex].z()+halfModuleBoxThickness
+	  && point.z()>m_RightSensorsCenter[regModIndex].z()-halfModuleBoxThickness) return true;
+    }
+    if ( point.z() > 550. ){
+      halfModuleBoxThickness = 15.;
+      if (point.z()<m_RightSensorsCenter[regModIndex].z()+halfModuleBoxThickness
+	  && point.z()>m_RightSensorsCenter[regModIndex].z()-halfModuleBoxThickness) return true;
+    }
+  }
   // depending on z:
   // in the region of small corrugation
   if(point.z()<300. && point.x()-m_RightSensorsCenter[regModIndex].x()<-4){
@@ -343,24 +356,13 @@ bool MatterVetoTool::IsInMaterialBoxRight(const Gaudi::XYZPoint& point) const{
     if (fabs(point.z()-m_RightSensorsCenter[regModIndex].z())>largerCyl
         && r < RlargerCyl ) return false;
   }
-  // Is clearly outside RFFoil part
+  // remaining stuff within RF box is in material
   if (r<12.5 && point.z()<450. ) return true;
+  if (m_useEnlargedMatterVeto) {
+    if (r<13.5 && point.z()<440.) return true;
+  }
   if (point.z()<450. && fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<5.5)return true;
   if (fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<8.5 && point.z()>450.) return true;
-
-  // enlarged MatterVeto
-  if (m_useEnlargedMatterVeto) {
-    // one module
-    if ( ( 431. < point.z() && point.z() < 439.) &&
-         ( 5. < r && r < 44. ) )
-      return true;
-    // RFoil
-    if ( ( 300. < point.z() && point.z() < 600.) &&
-         ( 4. < point.x() && point.x() < 8.) &&
-         ( ( -13. < point.y() && point.y() < -10. ) ||
-           ( 10. < point.y() && point.y() < -13. ) ) )
-      return true;
-  }
 
 
   return false;
