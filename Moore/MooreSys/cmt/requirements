@@ -24,6 +24,9 @@ use  HltMonitor          v1r1	    Hlt   # Roel Aaij
 # Declare this as a container package
 apply_pattern container_package
 
+# Allow the generation of QMTests
+apply_pattern QMTest
+
 # Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
 

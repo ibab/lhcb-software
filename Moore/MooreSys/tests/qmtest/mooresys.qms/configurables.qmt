@@ -1,0 +1,125 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>python</text></argument>
+  <argument name="args"><set>
+    <text>$MOORESYSROOT/tests/options/configurables.py</text>
+  </set></argument>
+  <argument name="timeout"><integer>3000</integer></argument>
+  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+  <argument name="validator"><text>
+ref="$MOORESYSROOT/tests/refs/configurables.ref"
+me='mooresys.configurables'
+success_ref=[]
+failed_ref=[]
+success_list=[]
+failed_list=[]
+
+import os
+#####################################################
+#Open and parse the reference file
+#####################################################
+f=open(os.path.expandvars(ref))
+refs=f.read().split('\n')
+try:
+  i=refs.index('== successful ==')
+  exec("success_ref="+refs[i+2])
+  i=refs.index('== failed ==')
+  exec("failed_ref="+refs[i+2])
+except:
+  pass
+
+#####################################################
+#parse the stdout
+#####################################################
+theResults=stdout.split('\n')
+i=theResults.index('== successful ==')
+exec("success_list="+theResults[i+2])
+i=theResults.index('== failed ==')
+exec("failed_list="+theResults[i+2])
+
+#####################################################
+#check the stdout against the reference
+#####################################################
+quote=''
+for conf in success_ref:
+  if (conf not in success_list) and (conf not in failed_list): 
+    if len(quote):
+      quote=quote+'\n'
+    quote=quote+'-' + conf
+    causes.append(conf+ ' missing')
+
+if(len(quote)):
+  print quote
+  result[me+'.missing']=result.Quote(quote) 
+
+quote=''
+for conf in success_list:
+  if conf not in success_ref:
+    if len(quote):
+      quote=quote+'\n'
+    quote=quote+'+' + conf
+
+if(len(quote)):
+  print quote
+  result[me+'.added']=result.Quote(quote)
+
+quote=''
+for conf in failed_list:
+  if len(quote):
+    quote=quote+'\n'
+  quote=quote+conf+ ' failure'
+  causes.append(conf+ ' failure')
+
+if(len(quote)):
+  print quote
+  result[me+'.failure']=result.Quote(quote) 
+
+#####################################################
+#check the stdout for random other warnings
+#####################################################
+quote=''
+prev_lines=[]
+random_lines=[]
+last_line=''
+for line in theResults:
+  if "== successful ==" in line:
+    break
+  #all my lines start with a '#' and have the configurable in
+  if   (line.split('#')[-1].strip() in success_list): pass
+  elif (line.split('#')[-1].strip() in failed_list ): pass
+  elif (line.split('#')[-1].strip() in success_ref ): pass
+  elif (line.split('#')[-1].strip() in failed_ref  ): pass
+  else:
+    print line
+    if last_line in prev_lines: pass
+    elif last_line in random_lines: pass
+    else:
+      random_lines.append("...\n &gt;&gt;" + last_line)
+      prev_lines.append(last_line)
+    random_lines.append(line)
+    # only fail if the random line has no '#' at the start
+    if '#'!=line[0] and ('stdout' not in causes): causes.append('stdout')
+  
+  if line not in random_lines:
+    last_line=line
+
+if(len(random_lines)):
+  quote = '\n'.join(random_lines)
+  print quote
+  result[me+'.stdout']=result.Quote(quote) 
+
+#####################################################
+#write a new reference file
+#####################################################
+if theResults!=refs:
+  newref=ref+".new"
+  try:
+    newref=ref+".new"
+    fn=open(os.path.expandvars(newref),'w')
+    fn.write(stdout)
+    fn.close()
+  except:
+    pass
+
+</text></argument>
+</extension>
