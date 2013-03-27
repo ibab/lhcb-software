@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-27 - Ronan Wallace
+ - Addition to StrippingLowMult.py to search for Phi->KK
+
 ! 2013-03-27 - Ronan Wallace 
  - Add new lines in StrippingHighPtGamma.py (change to __init__.py also)
 
