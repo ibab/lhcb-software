@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-27 - Ronan Wallace 
+ - Add new lines in StrippingHighPtGamma.py (change to __init__.py also)
+
 ! 2013-03-27 - Mika Vesterinen
  - Add Lambda_c -> p Ks lines (LL and DD versions) to StrippingCharmFromBSemi.py
  - minor fixes to StrippingCharmFromBSemiForHadronAsy.py and StrippingCharmFromBSemiForProtonPID.py
