@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2013-03-27 - Rob Lambert
+ - Expect test failure
+
 
 ! 2013-03-25 - Rob Lambert
  - Print more details of given exceptions

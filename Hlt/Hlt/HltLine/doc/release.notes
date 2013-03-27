@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2013-03-27 - Rob Lambert
+ - Expect failiure of init_final tests
+
 
 ! 2013-03-25 - Rob Lambert
  - Print more details of given exceptions
