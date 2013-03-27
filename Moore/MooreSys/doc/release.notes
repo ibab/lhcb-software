@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
+Packages added:
+ - HltMonitor (Moved from HLT)
+
 </PRE><H1><A NAME=v20r0>2013-02-28 Moore v20r0</A></H1><PRE>
 HLT/Moore LS1 first development version. First backward-incompatible changes for 2012 triggers and Gaudi versions tentatively allowed. see task #40113. 
 
