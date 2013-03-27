@@ -4,6 +4,9 @@
 ! Purpose     : Offline monitoring of Hlt from raw data
 !-----------------------------------------------------------------------------
 
+! 2013-03-27 - Rob Lambert
+ - comment out unused buggy line in Tasks.py, see task #40437
+ - Fix some of the ctrl-M characters added on each line in requirements and release notes, probably also elsewhere
 
 ! 2013-03-25 - Rob Lambert
  - Print more details of given exceptions

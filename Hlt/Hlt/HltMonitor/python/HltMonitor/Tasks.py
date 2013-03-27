@@ -6,7 +6,9 @@ import Queue
 import sys, time
 
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
+
+#Bug, there is no OCnfiguration module in GaudiConf
+#from GaudiConf.Configuration import *
 
 from GaudiPython import AppMgr, SUCCESS, FAILURE
 
