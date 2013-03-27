@@ -47,6 +47,6 @@ for mod in modules:
   try:
     amod=__import__('Hlt2SharedParticles.'+mod.split(os.sep)[-1][:-3])
   except Exception, e:
-    print >> sys.stderr, 'ERROR, cannot import module', mod, '\n-------\n', e.__class__, '\n-------',
+    print >> sys.stderr, 'ERROR, cannot import module', mod, '\n-------\n', e.__class__, '\n-------'
     traceback.print_exc()
 
