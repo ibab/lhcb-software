@@ -4,6 +4,160 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v46r0">2013-03-27 - GaussSys v46r0</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. The physics is the 
+   same as Gauss v45r1.
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v35r5 (and Gaudi v23r7)</b>
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   <b>pythia 6.427.2, lhapdf 5.8.5,</b> 
+   <b>photos++ 2.6.1a and tauola++ 1.0.7</b> 
+   <b>pythia8 175</b> (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.05 (via LCG_Interfaces),
+   <b>Geant4 v95r2p3 (based on geant4.9.5.p02) and Geant4Files v95r0</b>, 
+   XmlVis v1r15,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1a and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.2 (via LCG_GeneratorsInterfaces),
+   <b>EvtGen v13r6</b> (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
+   HidValley v3r2 (private LHCb versions)
+</A></H3>
+
+! 2013-03-27 - Gloria Corti
+ - New LCG_GeneratorsInterfaces packages, lhapdf, pythia6, pythia8, alpgen
+   and hijing, and new versions of those already used
+   to pick up the libraries from lcgcmt_VERSION instead of hepmc_VERSION
+   since there other dependencies from externals in additions to HepMC for
+   some of the generators packages that have to be consistent with the rest
+   of LHCb code. 
+   New version number are to indicate changes with respect to LCGCMT_64d. 
+   In reality although the tags are different their content are the same as 
+   in GAUSS v45r1
+!========================= Gauss v46r0 2013-03-27 ============================
+! 2013-03-27 - Gloria Corti
+ - Remove use of MCatNLOData that is no longer in use since a while
+
+! 2013-03-26 - Gloria Corti
+ - Port change from v45b branch:
+ - Set Gauss() default physics list as in Sim08: EmNoCuts and FTFP_BERT
+
+! 2013-03-25 - Gloria Corti
+ - Port changes from v45b branch:
+ - Update qmtests with changes from Patrick Robbe in v42r4. 
+ - Commit new file with reference error for most tests, since info message
+   from tauola is sent to stderr
+ - Modify the template for the evttype tests to use the common reference 
+   error file
+ - Reformat some tests to make them more readable and to use the common
+   reference error file. Also remove the specific error file and update 
+   the reference output. Copy the new references for -opt to -dbg, 
+   although they may be different they will be more similar then the old -dbg.
+   To be updated or removed later.
+   The tests affected are:
+   . gauss-config-2011 (no reformatting, only one outpur referecence existed)
+   . gauss-dev
+   . gauss-dev-pythia8-30000000
+   . gauss-dev-spillover
+   . gauss-gen-10000000
+   . gauss-gen-10000000
+   . gauss-gen-11164012
+   . gauss-gen-14165011
+   . gauss-gen-18112001
+   . gauss-gen-18412431
+   . gauss-gen-22112001
+   . gauss-gen-24142004
+   . gauss-gen-42112000
+   . gauss-gen-42112002
+   . gauss-gen-pythia8-10000000
+   . gauss-gen-pythia8-13164051
+   . gauss-xgen
+ - Change error reference for all upgrade tests, testGauss-Upgrade-err.ref
+ - Add options 'SpillOver-50ns.py' to switch off at any energy when bunch
+   spacing is 50 ns. Use this option in qmtest gauss-dev-spillover
+ - Remove the reference output and error files for slc5 32-bits that is no 
+   longer supported (i686-slc5-gcc43-{opt,dbg}
+ - Update the qmtests that were using the old 'Beam3500GeV...' no longer
+   compatible with the Configurable to use 'Sim08-Beam3500GeV...' and remove
+   it in template for the event type check because it is no longer needed
+ - Modify properties of Gauss() for beam parameters:
+   . remove InteractionSize(x,y,z) where x and y are not used but set
+     in the BeamParameter class from beta* and emittance and where z is really
+     used as RMS of the bunch, so introuduce BunchRMS property to make it
+     clear what it is
+   . rename BeamCrossingAngle as BeamHCrossingAngle, since it is the horizontal 
+     one
+   . add BeamVCrossingAngle for the vertical crossing angle and set value
+     in BeamParameter (remove need of postConfigAction as for MC11)
+ - Modify Gauss-2011.py to include new options in AppConfig with new Gauss()
+   properties (Sim08-Beam3500GeV...) as for Sim08 for 2011 data
+ - Modify Gauss-DEV.py to remove setting of beam interaction position and use
+   default from Gauss()
+ - Add new Gauss-2012.py setting beam and tags as for Sim08 for 2012 data
+ - Remove obsolete Gauss-MC10.py no longer supported
+ - Rename options Gauss-MC11a.py to Gauss-2011.py to reflect that they can be
+   used to generate samples for 2011 with this latest version
+ - Change database tags in Gauss-2011.py to use compatible one for 2011 in
+   DDDB and SIMCOND. Also introduce beam transveral offset as needed by these
+   tags. 
+ - Adapt qmtests to use Gauss-2011.py and remove in that case the use of 
+   Beam3500GeV-md100-MC11-nu2.py already in Gauss itself.
+ - Change Gauss-DEV.py to use compatible DDDB tag for 2012 and DataTypes 2012
+   so that latest SIMCOND tag will be picked up
+
+! 2013-03-07 - Gloria Corti
+ - Undo my changes for VL just made for release
+ - Gauss v45r1 is released on a branch
+
+!========================== GenCuts v3r3 2013-03-21 ========================== 
+! 2013-03-21 - Gloria Corti
+ - Remove include of Generators/ExternalGenerator.h from 
+   BcDaughtersInLHCb and BcDaughtersInLHCbAndMassCut not necessary and that
+   would need use of Generator package
+
+! 2013-03-21 - Patrick Robbe
+ - Move the Bc generator level cuts from Gen/LbBcVegPy to Gen/GenCuts
+  (BcDaughtersInLHCb and BcDaughtersInLHCbAndMassCut)
+
+!========================== GenCuts v3r2 2013-03-15 ========================== 
+! 2012-09-27 - Aurelien Martens
+ - Added a bug fix (gammas from pi0's or eta's were considered as tracks for 
+   the momentum cuts...)
+   for DaughtersInLHCbAndWithDaughAndBCuts and DaughtersInLHCbAndWithMinP
+
+!========================== GENSER v12r4 2013-03-15 ==========================
+! 2013-03-15 - Gloria Corti
+ - Use latest version of tauolapp 1.1.1a, ok by John Back, to allow to use
+   distribution from lcgcmt_VERSION instead of hepmc_VERSION
+
+!========================== EvtGen v13r6 2013-03-14 ==========================
+! 2013-03-14 - John Back
+ - Added a check in EvtPhotosEngine::doDecay to skip Photos if a given particle 
+   has too many daughters (>= 10) to avoid a problem with a hard coded upper 
+   limit in the Photos PHOENE subroutine.
+
+!======================= Generators v14r2 2013-03-27 =========================
+! 2013-03-22 - Stephane Tourneur
+ - Minor modification to allow the inclusive production of baryons with
+   no charm nor bottom content
+
+!========================= LbBcVegPy v5r0 2013-03-21 =========================
+! 2013-03-21 - Patrick Robbe
+ - Move generator level cuts to the Gen/GenCuts package
+   (BcDaughtersInLHCb and BcDaughtersInLHCbAndMassCut)
+
+!====================== GaussMonitor v6r12 2013-03-21 ========================
+! 2013-03-21 - Gloria Corti
+ - Increase boundaries of histograms for primary vertex in generator monitor
+   to take into account that they can be offset from 0 in x and y
+
+!=============================================================================
 </PRE><H1><A NAME="v45r0">2013-03-07 - GaussSys v45r0</A></H1><PRE>
 <H2><A NAME="Note">Candidate for Sim08 production for 2012 and 2011 data.
     It integrates the changes of Gauss v43 for Geant 9.5.p02 and of Gauss v44

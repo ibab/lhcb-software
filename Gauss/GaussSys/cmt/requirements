@@ -1,5 +1,5 @@
 package GaussSys
-version v45r0
+version v46r0
 
 branches cmt doc
 
@@ -8,19 +8,20 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-use Gauss               v45r0   Sim
+use Gauss               v46r0   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
-use LCG_Settings        v64r3p1 
-use lhapdf              v64r3p2 LCG_GeneratorsInterfaces
-use photospp            v64r3p2 LCG_GeneratorsInterfaces
-use tauolapp            v64r3p2 LCG_GeneratorsInterfaces
-use pythia6             v64r3p2 LCG_GeneratorsInterfaces
-use pythia8             v64r3p2 LCG_GeneratorsInterfaces
-use thepeg              v64r3p2 LCG_GeneratorsInterfaces
-use herwigpp            v64r3p2 LCG_GeneratorsInterfaces
-use rivet               v64r3p2 LCG_GeneratorsInterfaces
-use hijing              v64r3p2 LCG_GeneratorsInterfaces
+use LCG_Settings        v64r4p1 
+use lhapdf              v64r4p1 LCG_GeneratorsInterfaces
+use photospp            v64r4p1 LCG_GeneratorsInterfaces
+use tauolapp            v64r4p1 LCG_GeneratorsInterfaces
+use pythia6             v64r4p1 LCG_GeneratorsInterfaces
+use pythia8             v64r4p1 LCG_GeneratorsInterfaces
+use thepeg              v64r4p1 LCG_GeneratorsInterfaces
+use herwigpp            v64r4p1 LCG_GeneratorsInterfaces
+use rivet               v64r4p1 LCG_GeneratorsInterfaces
+use alpgen              v64r4p1 LCG_GeneratorsInterfaces
+use hijing              v64r4p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
 use GenCuts             v3r3    Gen
