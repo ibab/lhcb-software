@@ -22,8 +22,11 @@
  *  @author Sascha Stahl
  *  @date   2012-11-26
  */
-class IpImprover : public DaVinciAlgorithm {
+class IpImprover : public DaVinciAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   IpImprover( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -33,12 +36,8 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-
-
-  
-protected:
-
 private:
+
   std::vector<unsigned int> m_types;
   std::vector<std::string> m_trackLocations;
   double m_improvement;
@@ -58,14 +57,12 @@ private:
   double m_ypar1_upgrade;
   double m_ypar2_upgrade;
 
+private:
   
   StatusCode improveTrack(LHCb::Track& aTrack, const LHCb::MCParticle* mcp);
   
   double getImprovement(double pt, bool isX);
-  
 
-  //std::map<unsigned int, ITrackManipulator*> m_toolMap;
-  //std::string m_improverToolName;
-  
 };
+
 #endif // IPIMPROVER_H

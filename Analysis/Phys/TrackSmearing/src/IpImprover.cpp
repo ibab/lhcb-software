@@ -25,20 +25,20 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( IpImprover )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 IpImprover::IpImprover( const std::string& name,
                         ISvcLocator* pSvcLocator)
-  : DaVinciAlgorithm ( name , pSvcLocator )
+  : DaVinciAlgorithm ( name , pSvcLocator ),
+    m_trackLocations( 1, LHCb::TrackLocation::Default )
 {
-  declareProperty( "TrackLocations",m_trackLocations = 
-                   boost::assign::list_of<std::string> (LHCb::TrackLocation::Default));
-  //declareProperty("ImproverTool", m_improverToolName = "IpImprover");
+  declareProperty( "TrackLocations", m_trackLocations );
 
-  declareProperty("types", m_types = boost::assign::list_of(LHCb::Track::Long )(LHCb::Track::Velo )
-                  (LHCb::Track::Upstream ));
+  // Workaround for boost compilation errors with -std=c++11
+  const std::vector<unsigned int> tmpTypes = boost::assign::list_of
+    (LHCb::Track::Long)(LHCb::Track::Velo)(LHCb::Track::Upstream);
+  declareProperty("types", m_types = tmpTypes );
 
   declareProperty("Improvement",m_improvement = -1.0); // set to bigger 0, 
                                                       // if one wants only one overall correction

@@ -14,8 +14,12 @@
  *  @author Sascha Stahl
  *  @date   2010-08-27
  */
-class TrackSmeared : public DaVinciAlgorithm {
+class TrackSmeared : public DaVinciAlgorithm 
+
+{
+
 public: 
+
   /// Standard constructor
   TrackSmeared( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -24,24 +28,33 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-  void smearStates(  const std::vector< LHCb::State * > & states );
-    
-protected:
-  
+
 private:
-  std::string m_trackLocation;
-  std::string m_outputLocation;
-  std::string m_protoLocation;
-  std::string m_settings;
-  
-  
-  double getSigma( LHCb::State* state,  std::vector<TF1*> funcs_data, std::vector<TF1*> funcs_mc);
+
+  void smearStates(  const std::vector< LHCb::State * > & states );
+
+  double getSigma( LHCb::State* state, 
+                   const std::vector<TF1*>& funcs_data, 
+                   const std::vector<TF1*>& funcs_mc);
   double getSigmax(LHCb::State* state);
   double getSigmay(LHCb::State* state);
   
   StatusCode smearProto();
   StatusCode smearBest();
   StatusCode smearCopied();
+
+private:
+
+  typedef std::pair<double,double> DPair;
+  typedef std::vector<DPair> DPairVector;
+
+private:
+
+  std::string m_trackLocation;
+  std::string m_outputLocation;
+  std::string m_protoLocation;
+  std::string m_settings;
+
   ITrackFitter* m_trackFitter;
   TF1* m_funcx_data;
   TF1* m_funcx_mc;  
@@ -51,10 +64,10 @@ private:
   std::vector<TF1*> m_funcsy_mc;
   std::vector<TF1*> m_funcsx_data;
   std::vector<TF1*> m_funcsy_data;
-  std::vector< std::pair<double,double> > m_paramsx_data;
-  std::vector< std::pair<double,double> > m_paramsx_mc;
-  std::vector< std::pair<double,double> > m_paramsy_data;
-  std::vector< std::pair<double,double> > m_paramsy_mc;
+  DPairVector m_paramsx_data;
+  DPairVector m_paramsx_mc;
+  DPairVector m_paramsy_data;
+  DPairVector m_paramsy_mc;
   unsigned int m_nPhiBins;
   double m_xpar1_mc;
   double m_xpar2_mc;

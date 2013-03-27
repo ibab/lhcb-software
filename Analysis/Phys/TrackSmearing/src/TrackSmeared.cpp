@@ -70,45 +70,57 @@ DECLARE_ALGORITHM_FACTORY( TrackSmeared )
     (9.74202,19.0929)(6.13729,28.6578)(5.31868,29.8177)(10.6302,18.7859) );
   */
 
-  // Parameters for MC11 and Stripping17, don't mix them as the method to exctract them was changed.
-  declareProperty( "paramsx_data",m_paramsx_data=
-                   boost::assign::list_of< std::pair<double,double> >
-                   (15.8007 , 21.5995 )(17.083 , 26.8743 )(17.188 , 26.9004 )(15.2431 , 21.8942 )
-                   (15.3789 , 21.6944 )(17.3643 , 26.0733 )(18.1501 , 26.4945 )(15.9901 , 21.751 ));
-
-  declareProperty( "paramsy_data",m_paramsy_data=
-                   boost::assign::list_of< std::pair<double,double> >
-                   (15.4397 , 22.0227 )(17.2131 , 25.725 )(17.3457 , 25.8134 )(15.1637 , 22.3395 )
-                   (15.4863 , 21.9516 )(17.8457 , 24.7536 )(17.6028 , 25.6401 )(15.5212 , 22.0329 ) );
-  declareProperty( "paramsx_mc",m_paramsx_mc=
-                   boost::assign::list_of< std::pair<double,double> >
-                   (12.241 , 16.793 )(15.4021 , 26.2156 )(15.0332 , 26.9101 )(12.4106 , 17.1177 )
-                   (12.9271 , 16.7202 )(14.9721 , 26.2175 )(15.4448 , 26.4068 )(12.0711 , 17.2668 ) );
-  declareProperty( "paramsy_mc",m_paramsy_mc=
-                   boost::assign::list_of< std::pair<double,double> >
-                   (14.7947 , 17.0342 )(12.9836 , 25.0856 )(12.7721 , 25.6032 )(15.0134 , 17.299 )
-                   (14.652 , 17.3152 )(13.187 , 24.8611 )(12.8251 , 25.2981 )(14.0403 , 17.3576 ) );
-
-  if (m_settings == "2012"){
-    m_paramsx_data =  boost::assign::list_of< std::pair<double,double> >
+  if ( "2012" == m_settings )
+  {
+    const DPairVector tmp1 = boost::assign::list_of<DPair>
       (18.1363 , 21.151 )(19.4728 , 25.755 )(19.5616 , 25.6784 )(17.0959 , 21.3326 )
       (17.5133 , 20.9126 )(20.0083 , 24.678 )(21.3094 , 25.1192 )(18.7363 , 20.945 );
-    m_paramsy_data = boost::assign::list_of< std::pair<double,double> >
+    m_paramsx_data = tmp1;
+
+    const DPairVector tmp2 = boost::assign::list_of<DPair>
       (16.8973 , 21.3073 )(20.9937 , 24.8285 )(20.3615 , 24.5534 )(16.7094 , 21.2874 )
       (16.8174 , 21.0898 )(21.8155 , 23.2996 )(22.415 , 24.2684 )(16.652 , 21.662 );
+    m_paramsy_data = tmp2;
 
-    m_paramsx_mc =  boost::assign::list_of< std::pair<double,double> >
+    const DPairVector tmp3 = boost::assign::list_of<DPair>
       (12.0798 + 2.23 , 16.419 )(14.2948 + 2.45, 26.1166 )(14.2859 + 2.44, 26.5871 )(12.1948 + 2.07 , 16.6805 )
       (12.153 + 2.24 , 16.5793 )(14.5924 +2.47 , 25.8522 )(14.8085 + 2.7 , 26.277 )(12.0577 + 2.6, 16.6684 );
-    m_paramsy_mc =  boost::assign::list_of< std::pair<double,double> >
+    m_paramsx_mc = tmp3;
+
+    const DPairVector tmp4 = boost::assign::list_of<DPair>
       (14.0701 + 2.0 , 16.828 )(12.6155 + 2.98 , 24.5925 )(12.8974 + 2.70, 25.0376 )(14.3956 + 1.9 , 16.9418 )
       (14.1787 + 1.69 , 16.7516 )(12.4779 + 3.26, 24.5073 )(13.0426 + 3.0, 24.5692 )(14.6289 + 1.61, 16.5893 );
+    m_paramsy_mc = tmp4;
   }
-  m_funcsy_mc.reserve(m_paramsy_mc.size());
-  m_funcsx_mc.reserve(m_paramsx_mc.size());
-  m_funcsy_data.reserve(m_paramsy_data.size());
-  m_funcsx_data.reserve(m_paramsx_data.size());
+  else
+  {
+    // Parameters for MC11 and Stripping17, don't mix them as the method to exctract them was changed.
+    const DPairVector tmp1 = boost::assign::list_of<DPair>
+      (15.8007 , 21.5995 )(17.083 , 26.8743 )(17.188 , 26.9004 )(15.2431 , 21.8942 )
+      (15.3789 , 21.6944 )(17.3643 , 26.0733 )(18.1501 , 26.4945 )(15.9901 , 21.751 );
+    m_paramsx_data=tmp1;
 
+    const DPairVector tmp2 = boost::assign::list_of<DPair>
+      (15.4397 , 22.0227 )(17.2131 , 25.725 )(17.3457 , 25.8134 )(15.1637 , 22.3395 )
+      (15.4863 , 21.9516 )(17.8457 , 24.7536 )(17.6028 , 25.6401 )(15.5212 , 22.0329 );
+    m_paramsy_data=tmp2;
+
+    const DPairVector tmp3 = boost::assign::list_of<DPair>
+      (12.241 , 16.793 )(15.4021 , 26.2156 )(15.0332 , 26.9101 )(12.4106 , 17.1177 )
+      (12.9271 , 16.7202 )(14.9721 , 26.2175 )(15.4448 , 26.4068 )(12.0711 , 17.2668 );
+    m_paramsx_mc=tmp3;
+
+    const DPairVector tmp4 = boost::assign::list_of<DPair>
+      (14.7947 , 17.0342 )(12.9836 , 25.0856 )(12.7721 , 25.6032 )(15.0134 , 17.299 )
+      (14.652 , 17.3152 )(13.187 , 24.8611 )(12.8251 , 25.2981 )(14.0403 , 17.3576 );
+    m_paramsy_mc=tmp4;
+
+  }
+
+  declareProperty( "paramsx_data",m_paramsx_data );
+  declareProperty( "paramsy_data",m_paramsy_data );
+  declareProperty( "paramsx_mc",m_paramsx_mc );
+  declareProperty( "paramsy_mc",m_paramsy_mc );
 
 }
 
@@ -120,11 +132,16 @@ TrackSmeared::~TrackSmeared() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TrackSmeared::initialize() {
+StatusCode TrackSmeared::initialize()
+{
   StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  m_funcsy_mc.reserve(m_paramsy_mc.size());
+  m_funcsx_mc.reserve(m_paramsx_mc.size());
+  m_funcsy_data.reserve(m_paramsy_data.size());
+  m_funcsx_data.reserve(m_paramsx_data.size());
+
   info()<< "==> Initialize" << endmsg;
   info()<< "++++++++++++++++" << endmsg;
   info()<< "smear: "<< m_smear << endmsg;
@@ -180,8 +197,7 @@ StatusCode TrackSmeared::initialize() {
 
   }
 
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 double TrackSmeared::getSigmax( LHCb::State* state)
@@ -190,7 +206,7 @@ double TrackSmeared::getSigmax( LHCb::State* state)
   double inversept = pt > 0 ? 1.0/pt : 0.0;
   double sigma2 = m_funcx_data->Eval(inversept)*m_funcx_data->Eval(inversept)-
     m_funcx_mc->Eval(inversept)*m_funcx_mc->Eval(inversept);
-  return sigma2>0 ? m_scale*sqrt(sigma2) : 0.0;
+  return sigma2>0 ? m_scale*std::sqrt(sigma2) : 0.0;
 
 }
 
@@ -200,10 +216,12 @@ double TrackSmeared::getSigmay( LHCb::State* state)
   double inversept = pt > 0 ? 1.0/pt : 0.0;
   double sigma2 = m_funcy_data->Eval(inversept)*m_funcy_data->Eval(inversept)-
     m_funcy_mc->Eval(inversept)*m_funcy_mc->Eval(inversept);
-  return sigma2>0 ? m_scale*sqrt(sigma2) : 0.0;
+  return sigma2>0 ? m_scale*std::sqrt(sigma2) : 0.0;
 }
 
-double TrackSmeared::getSigma( LHCb::State* state,  std::vector<TF1*> funcs_data, std::vector<TF1*> funcs_mc)
+double TrackSmeared::getSigma( LHCb::State* state,
+                               const std::vector<TF1*>& funcs_data,
+                               const std::vector<TF1*>& funcs_mc)
 {
   double pt = state->pt();
   double phi = state->momentum().phi() >= 0.0 ?  state->momentum().phi() :  state->momentum().phi() + 2.0*M_PI;
@@ -215,9 +233,7 @@ double TrackSmeared::getSigma( LHCb::State* state,  std::vector<TF1*> funcs_data
   TF1* func_mc = funcs_mc[phiBin];
   double sigma2 = func_data->Eval(inversept)*func_data->Eval(inversept)-
     func_mc->Eval(inversept)*func_mc->Eval(inversept);
-  return sigma2>0 ? m_scale*sqrt(sigma2) : 0.0;
-
-
+  return sigma2>0 ? m_scale*std::sqrt(sigma2) : 0.0;
 }
 
 
@@ -322,8 +338,8 @@ StatusCode TrackSmeared::smearBest(){
   return StatusCode::SUCCESS;
 }
 
-StatusCode TrackSmeared::smearCopied(){
-
+StatusCode TrackSmeared::smearCopied()
+{
 
   if  (!exist<LHCb::Track::Range>(m_trackLocation))  return StatusCode::FAILURE;
   if  (!exist<LHCb::RichPIDs>(LHCb::RichPIDLocation::Offline))  return StatusCode::FAILURE;
@@ -386,7 +402,8 @@ StatusCode TrackSmeared::smearCopied(){
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TrackSmeared::execute() {
+StatusCode TrackSmeared::execute()
+{
 
   debug()<<"==> Execute! "<<endmsg;
   if ((m_smearBest && m_smearCopied) || (m_smearBest && m_smearProto) || (m_smearProto && m_smearCopied)){
