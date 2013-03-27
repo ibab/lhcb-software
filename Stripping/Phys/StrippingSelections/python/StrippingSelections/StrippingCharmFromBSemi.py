@@ -513,7 +513,14 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.sellambdacDCS = Selection( 'SelLc2PKPiDCSfor' + name,
                                         Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> K+ p+ pi-]cc' ],'Lc2PKPiDCSfor' + name),
                                         RequiredSelections = [self.selKaon, self.selPion, self.selProton ] )
+        
+        self.sel_Lc2pKsLL = Selection("selLc2pKsLLfor"+name,
+                                      Algorithm =  self._Lc2pKsFilter( ['[Lambda_c+ -> p+ KS0]cc'], 'Lc2pKsLLfor' + name),
+                                      RequiredSelections = [self.selProton, self.selKSLL ] )
 
+        self.sel_Lc2pKsDD = Selection("selLc2pKsDDfor"+name,
+                                      Algorithm =  self._Lc2pKsFilter( ['[Lambda_c+ -> p+ KS0]cc'], 'Lc2pKsDDfor' + name),
+                                      RequiredSelections = [self.selProton, self.selKSDD ] )
 
         #################### MAKE THE "B" CANDIDATES ##############################
         MuSel = self.selmuon 
@@ -629,6 +636,11 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selb2Lc2pPiPiMuX = makeb2DMuX('b2Lc2pPiPiMuX' + name, BDecays,MuSel,self.selLc2pPiPi,BCuts)
         self.selb2Lc2pKKMuX = makeb2DMuX('b2Lc2pKKMuX' + name, BDecays,MuSel,self.selLc2pKK,BCuts)
 
+        ####### Lambda_c -> p Ks
+        MuSel = self.selmuonnew
+        BDecays = [ '[Lambda_b0 -> Lambda_c+ mu-]cc', '[Lambda_b0 -> Lambda_c+ mu+]cc']
+        self.selb2LcMuXpKsLL = makeb2DMuX('b2LcMuXpKsLL' + name,BDecays,MuSel, self.sel_Lc2pKsLL,BCuts)
+        self.selb2LcMuXpKsDD = makeb2DMuX('b2LcMuXpKsDD' + name,BDecays,MuSel, self.sel_Lc2pKsDD,BCuts)
         
         ################# DECLARE THE STRIPPING LINES #################################
 
@@ -718,6 +730,11 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.registerLine( StrippingLine('b2LcDCSMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2LcDCSMuX) )
         self.registerLine( StrippingLine('b2Lc2pPiPiMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2pPiPiMuX) ) 
         self.registerLine( StrippingLine('b2Lc2pKKMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2pKKMuX) )
+
+        ########## Lambda_c+ -> p KS0
+        self.registerLine( StrippingLine('b2MuXLc2pKsLL'+name+'Line',prescale = 1, FILTER=GECs, selection = self.selb2LcMuXpKsLL))
+        self.registerLine( StrippingLine('b2MuXLc2pKsDD'+name+'Line',prescale = 1, FILTER=GECs, selection = self.selb2LcMuXpKsDD))
+        
         
     def _muonFilter( self , _name):
         _code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV)"\
@@ -955,6 +972,20 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                           "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(ADMASS('Lambda_c+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (SUMTREE( PT,  ISBASIC )> %(PTSUM)s*MeV)"\
+                     "& (BPVVDCHI2 > %(DsFDCHI2)s) & (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
+        _lambdac = CombineParticles( name = _name,
+                                     DecayDescriptors = _decayDescriptors,
+                                     CombinationCut = _combinationCut,
+                                     MotherCut = _motherCut)                                                         
+        return _lambdac
+
+    def  _Lc2pKsFilter( self , _decayDescriptors, _name):
+        _combinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV)"\
+                          " & (ACHILD(PT,1)+ACHILD(PT,2) > %(PTSUM)s *MeV)"\
+                          "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _motherCut = "(ADMASS('Lambda_c+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+                     "& (SUMTREE( PT,  ISBASIC )> %(PTSUM)s*MeV)"\
+                     "& (MINTREE(((ABSID=='KS0')) , VFASPF(VZ))-VFASPF(VZ) > %(KSCutZFDFromD)s *mm )" \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) & (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _lambdac = CombineParticles( name = _name,
                                      DecayDescriptors = _decayDescriptors,

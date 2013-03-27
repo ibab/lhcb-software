@@ -110,7 +110,7 @@ class CharmFromBSemiForProtonPIDAllLinesConf(LineBuilder) :
 
         #### combine the Lambda_c -> p K pi with a muon
         
-        self.comb_Lb2LcMuNu = CombineParticles(DecayDescriptor = '[Lambda_b~0 -> Lambda_c+ mu-]cc',
+        self.comb_Lb2LcMuNu = CombineParticles(DecayDescriptor = '[Lambda_b0 -> Lambda_c+ mu-]cc',
                                                DaughtersCuts = {"mu-" : self.MuonCuts},
                                                CombinationCut = self.LambdaB_CombinationCut,
                                                MotherCut = self.LambdaB_MotherCut)
@@ -124,7 +124,7 @@ class CharmFromBSemiForProtonPIDAllLinesConf(LineBuilder) :
                  "Preambulo": ["from LoKiTracks.decorators import *"]}
 
         #### make the line
-        self.StrippingLine = StrippingLine('LbToLcMuNuLcToPKPi'+_name+"Line",
+        self.StrippingLine = StrippingLine(_name+'_LbToLcMuNuLcToPKPi',
                                            prescale = config['prescale'],
                                            FILTER=GECs,
                                            selection = self.sel_Lb2LcMuNu)

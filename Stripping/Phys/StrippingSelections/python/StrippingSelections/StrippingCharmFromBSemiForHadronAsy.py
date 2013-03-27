@@ -287,11 +287,9 @@ class CharmFromBSemiForHadronAsyAllLinesConf(LineBuilder) :
         self.MuPiPi_RS = MuPiPiMaker("MuPiPiRSFor"+_name,config,[self.Muons,self.PiPi_RS],['K*(892)+ -> mu+ rho(770)0'])
         self.MuPiPi_WS = MuPiPiMaker("MuPiPiWSFor"+_name,config,[self.Muons,self.PiPi_WS],['K*(892)+ -> mu+ rho(770)0',
                                                                                            'K*(892)+ -> mu- rho(770)0'])
-        #self.LcStar_RS = LcStarMaker("LcStarRSFor"+_name,config,[self.LcToKpi_RS,self.MuPiPi_RS],['[Lambda_c(2595)+ -> Lambda_c+ K*(892)-]cc'])
-        #self.LcStar_WS = LcStarMaker("LcStarWSFor"+_name,config,[self.LcToKpi_WS,self.MuPiPi_WS],['[Lambda_c(2595)+ -> Lambda_c+ K*(892)-]cc'])
 
-        self.Lb_RS = LbMaker("LbRSFor"+_name,config,[self.MuPiPi_RS,self.LcToKpi_RS],['[Lambda_b~0 -> Lambda_c+ K*(892)-]cc'])
-        self.Lb_WS = LbMaker("LbWSFor"+_name,config,[self.MuPiPi_WS,self.LcToKpi_WS],['[Lambda_b~0 -> Lambda_c+ K*(892)-]cc'])
+        self.Lb_RS = LbMaker("LbRSFor"+_name,config,[self.MuPiPi_RS,self.LcToKpi_RS],['[Lambda_b0 -> Lambda_c+ K*(892)-]cc'])
+        self.Lb_WS = LbMaker("LbWSFor"+_name,config,[self.MuPiPi_WS,self.LcToKpi_WS],['[Lambda_b0 -> Lambda_c+ K*(892)-]cc'])
 
         self.LbRSLine = StrippingLine(_name+'_LbToLcStarMuLcToKpiRS',
                                       prescale = config["prescale_LbRS"],

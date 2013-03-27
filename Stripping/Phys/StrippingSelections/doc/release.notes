@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-27 - Mika Vesterinen
+ - Add Lambda_c -> p Ks lines (LL and DD versions) to StrippingCharmFromBSemi.py
+ - minor fixes to StrippingCharmFromBSemiForHadronAsy.py and StrippingCharmFromBSemiForProtonPID.py
+    - fix Lambda_b decay descriptors (just convention), and change name of proton PID line.
+
 ! 2013-03-27 - Francesca Dordei
  - Update the config_params in StrippingB2Psi2SXMuMu.py and StrippingB2Psi2SX.py
 
