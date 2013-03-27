@@ -8,9 +8,22 @@ import sys, traceback
 ##### Setup Configurable for tracking... #####
 from Configurables import Hlt2Tracking, GaudiSequencer
 
-for s in Hlt2Tracking.__slots__:
-  if "Seq" in s:
-    setattr(Hlt2Tracking(),s,GaudiSequencer(s+"dummy"))
+from HltLine.HltLine import Hlt1Line
+import HltTracking.Hlt2TrackingConfigurations
+
+for att in dir(HltTracking.Hlt2TrackingConfigurations):
+  if "Hlt2BiKalmanFitted" in att:
+    iatt=getattr(HltTracking.Hlt2TrackingConfigurations,att)()
+    for s in iatt.__slots__:
+      if "Seq" in s:
+        al=Hlt1Line(s+"dummy")
+        al._outputsel="DummySelectionName"
+        setattr(iatt,s,al)
+
+#
+#for s in Hlt2Tracking.__slots__:
+#  if "Seq" in s:
+#    setattr(Hlt2Tracking(),s,GaudiSequencer(s+"dummy"))
 
 
 
