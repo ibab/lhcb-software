@@ -61,6 +61,8 @@ namespace ANNGlobalPID
     public:
       /// Create an instance of the TMVA classifier for this factory
       virtual IClassifierReader* create( std::vector<std::string> inputs ) = 0;
+      /// Destructor
+      virtual ~FactoryBase() { }
     };
 
     /** @class TMVAFactory TMVAImpFactory.h
@@ -79,6 +81,8 @@ namespace ANNGlobalPID
       {
         return new TMVATYPE(inputs); 
       }
+      /// Destructor
+      virtual ~TMVAFactory() { }
     };
     
   public:
