@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 
-!========================= Gauss v45r1 2013-03-27 ============================
+!========================= Gauss v46r0 2013-03-27 ============================
 ! 2013-03-27 - Gloria Corti
  - Remove use of MCatNLOData that is no longer in use since a while
 
@@ -78,6 +78,7 @@
 
 ! 2013-03-07 - Gloria Corti
  - Undo my changes for VL just made for release
+ - Gauss v45r1 is released on a branch
 
 !========================= Gauss v45r0 2013-03-07 ============================
 ! 2013-03-07 - Gloria Corti
