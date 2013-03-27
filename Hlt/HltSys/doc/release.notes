@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+Packages removed:
+ - HltMonitor (Moved into Moore)
+
 </PRE><H1><A NAME=v20r0>2013-02-28 HltSys v20r0</A></H1><PRE>
 HLT LS1 first development version. First backward-incompatible changes for 2012 triggers and Gaudi versions tentatively allowed. see task #40113.
 
