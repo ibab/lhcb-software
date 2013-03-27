@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-27 - Francesca Dordei
+ - Update to StrippingB2JPsiXforBeta_s.py line (11 new lines and loose vtx chi2 for Jpsi Phi and Jpsi K*)
+
 ! 2013-03-26 - Mika Vesterinen
  - New module StrippingCharmFromBSemiForHadronAsy.py 
    - Kaon, pion and proton asymmetries with "double tagged" charm.
