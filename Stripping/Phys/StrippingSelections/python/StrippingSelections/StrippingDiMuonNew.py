@@ -197,6 +197,7 @@ config_default= {
         'Jpsi2MuMuDetached_VCHI2PDOF'                      :    20.   ,
         'Jpsi2MuMuDetached_PT'                             : -1000.   ,  # MeV
         'Jpsi2MuMuDetached_LTCuts'                         :    " & (BPVDLS>3) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)",
+        'Jpsi2MuMuDetached_MinusLTCuts'                    :    " & (BPVDLS<-3) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)",
 
         # Psi2MuMuDetachedDetached line
         'Psi2MuMuDetached_Prescale'                        :     1.   ,
@@ -210,7 +211,8 @@ config_default= {
         'Psi2MuMuDetached_MassWindow'                      :   100.   ,  # MeV
         'Psi2MuMuDetached_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
-        'Psi2MuMuDetached_LTCuts'                          :  " & (BPVDLS>5) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)"  
+        'Psi2MuMuDetached_LTCuts'                          :  " & (BPVDLS>5) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)",
+        'Psi2MuMuDetached_MinusLTCuts'                     :  " & (BPVDLS<-3) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)"
         }
     
 config_microDST= {
@@ -520,6 +522,7 @@ class DiMuonConf(LineBuilder):
         'Jpsi2MuMuDetached_VCHI2PDOF',
         'Jpsi2MuMuDetached_PT',
         'Jpsi2MuMuDetached_LTCuts',
+        'Jpsi2MuMuDetached_MinusLTCuts',
         
         # Psi2MuMuDetached line
         'Psi2MuMuDetached_Prescale',
@@ -533,7 +536,8 @@ class DiMuonConf(LineBuilder):
         'Psi2MuMuDetached_MassWindow',
         'Psi2MuMuDetached_VCHI2PDOF',
         'Psi2MuMuDetached_PT',
-        'Psi2MuMuDetached_LTCuts'       
+        'Psi2MuMuDetached_LTCuts',
+        'Psi2MuMuDetached_MinusLTCuts'       
         )
     
 
@@ -831,7 +835,27 @@ class DiMuonConf(LineBuilder):
                                                     selection = self.SelJpsi2MuMuDetached
                                                     )
 
-        
+        """                               
+        Jpsi2MuMuDetached tight line. negative value for lifetime cut.      
+        """
+        self.SelJpsi2MuMuDetachedMinus = filterJpsi2MuMuDetached( name + 'Jpsi2MuMuDetachedMinus',
+                                                             MuonPT        = config['Jpsi2MuMuDetached_MuonPT'],
+                                                             MuonP         = config['Jpsi2MuMuDetached_MuonP'],
+                                                             MuonPIDmu     = config['Jpsi2MuMuDetached_MuonPIDmu'],
+                                                             MuonTRCHI2DOF = config['Jpsi2MuMuDetached_MuonTRCHI2DOF'],
+                                                             MuMuMinMass   = config['Jpsi2MuMuDetached_MinMass'],
+                                                             MuMuMaxMass   = config['Jpsi2MuMuDetached_MaxMass'],
+                                                             MuMuVCHI2PDOF = config['Jpsi2MuMuDetached_VCHI2PDOF'],
+                                                             MuMuPT        = config['Jpsi2MuMuDetached_PT'],
+                                                             MuMuLTCuts    = config['Jpsi2MuMuDetached_MinusLTCuts']
+                                                             )
+        self.Jpsi2MuMuDetachedMinusLine = StrippingLine( name + 'Jpsi2MuMuDetachedMinus' + 'Line',
+                                                    prescale  = config['Jpsi2MuMuDetached_Prescale'],
+                                                    postscale = config['Jpsi2MuMuDetached_Postscale'],
+                                                    checkPV   = True,
+                                                    selection = self.SelJpsi2MuMuDetachedMinus
+                                                    )
+
         """
         Psi2MuMuDetached line
         """
@@ -854,6 +878,28 @@ class DiMuonConf(LineBuilder):
                                                    selection = self.SelPsi2MuMuDetached
                                                    ) 
 
+        """
+        Psi2MuMuDetached line. negative value for lifetime cut.
+        """                                      
+        self.SelPsi2MuMuDetachedMinus = filterSignalDetached( name + 'Psi2MuMuDetachedMinus',
+                                                         ParticleName  = config['Psi2MuMuDetached_ParticleName'],
+                                                         MuonPT        = config['Psi2MuMuDetached_MuonPT'],
+                                                         MuonP         = config['Psi2MuMuDetached_MuonP'],
+                                                         MuonPIDmu     = config['Psi2MuMuDetached_MuonPIDmu'],  
+                                                         MuonTRCHI2DOF = config['Psi2MuMuDetached_MuonTRCHI2DOF'],
+                                                         MuMuMassWindow= config['Psi2MuMuDetached_MassWindow'],
+                                                         MuMuVCHI2PDOF = config['Psi2MuMuDetached_VCHI2PDOF'],
+                                                         MuMuPT        = config['Psi2MuMuDetached_PT'],
+                                                         MuMuLTCuts    = config['Psi2MuMuDetached_MinusLTCuts']
+                                                         )
+           
+        self.Psi2MuMuDetachedMinusLine = StrippingLine( name + 'Psi2MuMuDetachedMinus' + 'Line',
+                                                   prescale  = config['Psi2MuMuDetached_Prescale'],
+                                                   postscale = config['Psi2MuMuDetached_Postscale'],
+                                                   checkPV   = True,
+                                                   selection = self.SelPsi2MuMuDetachedMinus
+                                                   )
+
         
 
         if config['MicroDST']:
@@ -875,8 +921,9 @@ class DiMuonConf(LineBuilder):
             self.registerLine( self.Psi2MuMuTOSLine )
             #self.registerLine( self.DiMuonDetachedLine )
             self.registerLine( self.Jpsi2MuMuDetachedLine )
+            self.registerLine( self.Jpsi2MuMuDetachedMinusLine )
             self.registerLine( self.Psi2MuMuDetachedLine )
-        
+            self.registerLine( self.Psi2MuMuDetachedMinusLine )
 
 def filterDiMuon( name,
                   MuonPT,
@@ -1116,6 +1163,7 @@ def filterSignalDetached( name,
                       Algorithm = _MuMu,
                       RequiredSelections = [ _StdLooseDiMuon ]
                       )
+
 
 
 def filterTisTos(name,
