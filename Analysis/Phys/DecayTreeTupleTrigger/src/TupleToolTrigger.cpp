@@ -39,15 +39,14 @@ DECLARE_TOOL_FACTORY( TupleToolTrigger )
   //declareProperty( "FillHlt", m_fillHlt=true, "Fill Hlt" ); now in the base class
   //depracated, use VerboseHlt1, VerboseHlt2 or VerboseL0
   //declareProperty( "AllIntermediateSteps", m_allSteps=false, "Fill also intermediate steps" );
-  for ( unsigned int i = 32 ; i < 96 ; ++i)
+  for ( unsigned int i = 32 ; i < 96 ; ++i )
   {
     m_routingBits.push_back(i);
   }
   declareProperty( "RoutingBits", m_routingBits, "Routing bits to fill" );
-  declareProperty( "RawEventLocations",
-                   m_rawEventLocs = boost::assign::list_of
-                   (LHCb::RawEventLocation::Trigger)
-                   (LHCb::RawEventLocation::Default) );
+  m_rawEventLocs.push_back( LHCb::RawEventLocation::Trigger );
+  m_rawEventLocs.push_back( LHCb::RawEventLocation::Default );
+  declareProperty( "RawEventLocations", m_rawEventLocs );
 }
 
 //=========================================================================

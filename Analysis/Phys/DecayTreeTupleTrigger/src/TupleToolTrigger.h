@@ -7,9 +7,6 @@
 #include "TupleToolTriggerBase.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
 
-// boost
-#include "boost/assign/list_of.hpp"
-
 /** @class TupleToolTrigger TupleToolTrigger.h jborel/TupleToolTrigger.h
  *
  * \brief Fill the trigger informations for the DecayTreeTuple.
