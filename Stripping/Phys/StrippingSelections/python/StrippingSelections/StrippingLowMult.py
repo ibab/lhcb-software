@@ -80,6 +80,14 @@ confdict_LowMult = {
     , 'LMR2HH_ADOCAmax'      : 0.1 * mm
     , 'LMR2HH_APmin'         : 15000.0 * MeV
     , 'LMR2HH_VtxChi2DoFmax' : 3.0
+    # Phi resonance -> KK
+    , 'PHI2KK_APTmin'        : 0.0 * MeV
+    , 'PHI2KK_APTmax'        : 1500.0 * MeV
+    , 'PHI2KK_AMmin'         : 990.0 * MeV
+    , 'PHI2KK_AMmax'         : 1050.0 * MeV
+    , 'PHI2KK_ADOCAmax'      : 0.1 * mm
+    , 'PHI2KK_APmin'         : 4000.0 * MeV
+    , 'PHI2KK_VtxChi2DoFmax' : 3.0
     }
 
 default_name = "LowMult"
@@ -151,7 +159,16 @@ class LowMultConf(LineBuilder) :
                               , 'LMR2HH_ADOCAmax'
                               , 'LMR2HH_APmin'
                               , 'LMR2HH_VtxChi2DoFmax'
-                              )
+                              # Phi -> KK (H = K, Pi)
+                              , 'PHI2KK_APTmin'
+                              , 'PHI2KK_APTmax' 
+                              , 'PHI2KK_AMmin'  
+                              , 'PHI2KK_AMmax' 
+                              , 'PHI2KK_ADOCAmax'
+                              , 'PHI2KK_APmin'
+                              , 'PHI2KK_VtxChi2DoFmax'
+ 
+                             )
 
     def __init__(self, name, config) :
         LineBuilder.__init__(self, name, config)
@@ -459,6 +476,18 @@ class LowMultConf(LineBuilder) :
                                     LMR2HH_VtxChi2DoFmax = config['LMR2HH_VtxChi2DoFmax']
                                     )
 
+        self.selPHI2KK = makePHI2KK("selPHI2KK",
+                                    decayDesc = [ "phi(1020)  -> K+ K-" ],
+                                    kaons = self.selKaons,
+                                    PHI2KK_APTmin = config['PHI2KK_APTmin'],
+                                    PHI2KK_APTmax = config['PHI2KK_APTmax'],
+                                    PHI2KK_AMmin = config['PHI2KK_AMmin'],
+                                    PHI2KK_AMmax = config['PHI2KK_AMmax'],
+                                    PHI2KK_ADOCAmax = config['PHI2KK_ADOCAmax'],
+                                    PHI2KK_APmin = config['PHI2KK_APmin'],
+                                    PHI2KK_VtxChi2DoFmax = config['PHI2KK_VtxChi2DoFmax']
+                                    )
+
         #
         #=== Wrong-sign lines ===#
         #
@@ -636,6 +665,16 @@ class LowMultConf(LineBuilder) :
                                                     algos = [ self.selLMR2HH ]
                                                     )
         self.registerLine(self.LowMultCEP_LMR2HH_line)
+
+        self.LowMultCEP_PHI2KK_line = StrippingLine(self._myname + "CEP_PHI2KK_line",
+                                                    prescale = config['LowMultPrescale'],
+                                                    postscale = config['LowMultPostscale'],
+                                                    checkPV = False,
+                                                    FILTER = CEPFilterTracksChiC2HHHH,   
+                                                    HLT = CEPHLTReq,
+                                                    algos = [ self.selPHI2KK ]
+                                                    )
+        self.registerLine(self.LowMultCEP_PHI2KK_line)
 
         self.LowMultCEP_D2KPiWS_line = StrippingLine(self._myname + "CEP_D2KPiWS_line",
                                                      prescale = config['LowMultWSPrescale'],
@@ -1001,3 +1040,29 @@ def makeLMR2HH(name,
     return Selection(name,
                      Algorithm = CombineLMR2HH,
                      RequiredSelections = [kaons, pions])
+
+
+def makePHI2KK(name,
+               decayDesc,
+               kaons,
+               PHI2KK_APTmin,
+               PHI2KK_APTmax,
+               PHI2KK_AMmin,
+               PHI2KK_AMmax,
+               PHI2KK_ADOCAmax,
+               PHI2KK_APmin,
+               PHI2KK_VtxChi2DoFmax
+               ) :
+
+    PHI2KK_Comb_cut   = "(APT > %(PHI2KK_APTmin)s) & (APT < %(PHI2KK_APTmax)s) & (AM > %(PHI2KK_AMmin)s) & (AM < %(PHI2KK_AMmax)s) & " \
+                        "(ADOCAMAX('LoKi::DistanceCalculator') < %(PHI2KK_ADOCAmax)s) & (AP > %(PHI2KK_APmin)s)" % locals()
+    PHI2KK_Mother_cut = "(VFASPF(VCHI2PDOF) < %(PHI2KK_VtxChi2DoFmax)s)" % locals()
+    
+    CombinePHI2KK = CombineParticles( DecayDescriptors = decayDesc
+                                      , CombinationCut = PHI2KK_Comb_cut
+                                      , MotherCut = PHI2KK_Mother_cut
+                                      )
+    
+    return Selection(name,
+                     Algorithm = CombinePHI2KK,
+                     RequiredSelections = [kaons])
