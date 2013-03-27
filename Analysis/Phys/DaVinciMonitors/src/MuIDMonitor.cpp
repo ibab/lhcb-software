@@ -44,7 +44,15 @@ DECLARE_ALGORITHM_FACTORY( MuIDMonitor )
 //=============================================================================
   MuIDMonitor::MuIDMonitor( const std::string& name,
                             ISvcLocator* pSvcLocator)
-    : DaVinciHistoAlgorithm ( name , pSvcLocator )
+    : DaVinciHistoAlgorithm ( name , pSvcLocator ),
+      m_distPion( 9, 1.0 ),
+      m_distMuon( 9, 1.0 ),
+      m_xfoiParam1( 20, 1.0 ),
+      m_xfoiParam2( 20, 1.0 ),
+      m_xfoiParam3( 20, 1.0 ),
+      m_yfoiParam1( 20, 1.0 ),
+      m_yfoiParam2( 20, 1.0 ),
+      m_yfoiParam3( 20, 1.0 )
 {
 
   using namespace boost::assign;
@@ -66,23 +74,25 @@ DECLARE_ALGORITHM_FACTORY( MuIDMonitor )
   declareProperty( "PreSelMomentum", m_PreSelMomentum = 3000.0);
 
   // Different depths of stations considered in different momentum ranges
-  declareProperty( "MomentumCuts", m_MomentumCuts = list_of  (6000.)   (10000.)  );
+  m_MomentumCuts.push_back(6000.);
+  m_MomentumCuts.push_back(10000.);
+  declareProperty( "MomentumCuts", m_MomentumCuts );
 
   // function that defines the field of interest size
   // here momentum is scaled to Gaudi::Units::GeV....
   // new formula: p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
 
-  declareProperty( "XFOIParameter1", m_xfoiParam1 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-  declareProperty( "XFOIParameter2", m_xfoiParam2 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-  declareProperty( "XFOIParameter3", m_xfoiParam3 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-  declareProperty( "YFOIParameter1", m_yfoiParam1 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-  declareProperty( "YFOIParameter2", m_yfoiParam2 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-  declareProperty( "YFOIParameter3", m_yfoiParam3 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "XFOIParameter1", m_xfoiParam1 );
+  declareProperty( "XFOIParameter2", m_xfoiParam2 );
+  declareProperty( "XFOIParameter3", m_xfoiParam3 );
+  declareProperty( "YFOIParameter1", m_yfoiParam1 );
+  declareProperty( "YFOIParameter2", m_yfoiParam2 );
+  declareProperty( "YFOIParameter3", m_yfoiParam3 );
 
   declareProperty("FOIfactor",m_foifactor = 1.);
 
-  declareProperty("distMuon",m_distMuon = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
-  declareProperty("distPion",m_distPion = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty("distMuon",m_distMuon);
+  declareProperty("distPion",m_distPion);
 
 }
 
@@ -94,14 +104,15 @@ MuIDMonitor::~MuIDMonitor() {}
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode MuIDMonitor::initialize() {
+StatusCode MuIDMonitor::initialize()
+{
 
   // Sets up various tools and services
   const StatusCode sc = DaVinciHistoAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  debug()   << " MuIDMonitor v5r2 " << endmsg;
-  debug()  << "==> Initialise" << endreq;
+  debug() << " MuIDMonitor v5r2 " << endmsg;
+  debug() << "==> Initialise" << endreq;
 
   m_extrFail = 0;
   m_NStation = 0;
@@ -191,7 +202,7 @@ StatusCode MuIDMonitor::initialize() {
     return StatusCode::FAILURE;
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
@@ -215,8 +226,7 @@ StatusCode MuIDMonitor::execute() {
     // get the MuonCoords for each station in turn
     LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
     if ( coords==0 ) {
-      err() << " Cannot retrieve MuonCoords " << endreq;
-      return StatusCode::FAILURE;
+      return Error( "Cannot retrieve MuonCoords" );
     }
 
     // loop over the coords
@@ -531,7 +541,7 @@ StatusCode MuIDMonitor::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode MuIDMonitor::finalize() 
+StatusCode MuIDMonitor::finalize()
 {
   debug() <<"Number of tracks that failed extrapolation:: "<<m_extrFail<<endreq;
   // Execute base class method
@@ -595,7 +605,7 @@ double MuIDMonitor::foiX(const int &station, const int &region, const double &p,
                          const double &dx){
   return ( m_xfoiParam1[ station * m_NRegion + region ] +
            m_xfoiParam2[ station * m_NRegion + region ]*
-           exp(-m_xfoiParam3[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dx;
+           std::exp(-m_xfoiParam3[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dx;
 
   //in the future optimize this checking that 2*dx =m_padSizeX[station * m_NRegion + region]
   //then eliminates dx from function
@@ -608,7 +618,7 @@ double MuIDMonitor::foiY(const int &station, const int &region, const double &p,
                          const double &dy){
   return ( m_yfoiParam1[ station * m_NRegion + region ] +
            m_yfoiParam2[ station * m_NRegion + region ]*
-           exp(-m_yfoiParam3[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dy;
+           std::exp(-m_yfoiParam3[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dy;
 }
 
 //=============================================================================
@@ -826,6 +836,3 @@ double MuIDMonitor::calc_closestDist(const LHCb::MuonPID *pMuid, const double& p
   return closest_dist;
 
 }
-
-
-
