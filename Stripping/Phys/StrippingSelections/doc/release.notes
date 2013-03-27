@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-27 - Ronan Wallace
+ - Addition of new lines in StrippingDiMuonNew.py to strip Jpsi and psi with negative lifetime.
+
 ! 2013-03-27 - Paolo Gandini
  - Added new lines in StrippingB2DHHHForBXX.py (preliminary)
 
