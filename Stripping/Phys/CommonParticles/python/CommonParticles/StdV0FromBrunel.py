@@ -34,9 +34,10 @@ V0Maker = V0FromDstMaker()
 dod = DataOnDemandSvc()
 
 for v0 in v0locations:
-    p = { hat + v0 + '/Particles' : V0Maker.getFullName() }
-    dod.AlgMap.update( p )
-    locations.update ( p )
+    p1 = { hat + v0 + '/Particles' : V0Maker.getFullName() }
+    p2 = { hat + v0 + '/Particles' : V0Maker               }
+    dod.AlgMap.update( p1 )
+    locations.update ( p2 )
         
 ## ============================================================================
 if '__main__' == __name__ :
@@ -44,7 +45,7 @@ if '__main__' == __name__ :
     print __doc__
     print __author__
     print __version__
-    print locations
+    print  locationsDoD ( locations ) 
 
 # =============================================================================
 # The END 
