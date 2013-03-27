@@ -5,6 +5,11 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2013-03-27 - Vanya Belyaev
+
+ - Wrappers.py:  optimize MergedSelection 
+
+
 !========================= PhysSelPython v9r3p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

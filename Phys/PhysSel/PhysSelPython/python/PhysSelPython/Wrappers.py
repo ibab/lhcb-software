@@ -231,7 +231,23 @@ class MergedSelection(NamedObject,
                               RequiredSelections = RequiredSelections,
                               OutputBranch = OutputBranch)
         
-        self._algos = flatAlgorithmList(self._sel)
+        self._selections = RequiredSelections 
+        
+        ## it was 
+        #self._algos1 = flatAlgorithmList(self._sel)
+
+        ## it now 
+        self._algos = [] 
+        for s in RequiredSelections :
+            lst = flatAlgorithmList ( s )
+            if   not lst : continue 
+            elif 1 == len ( lst ) :
+                self._algos.append( lst[0] ) 
+            else :
+                _seq  =  sequencerType  ( 'SEQ:' + s.name() , Members = lst ) 
+                self._algos.append  ( _seq )
+                
+        self._algos += [ self._sel.algorithm() ]
 
         _alg = sequencerType('Seq'+self.name(),
                              Members = self._algos,
@@ -242,6 +258,7 @@ class MergedSelection(NamedObject,
                                algorithm = _alg,
                                outputLocation = self._sel.outputLocation(),
                                requiredSelections = [])
+
 
 class SelectionSequence(SelSequence) :
     """
