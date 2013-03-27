@@ -20,13 +20,15 @@ DECLARE_TOOL_FACTORY( StandardParticleProvider )
     : GaudiTool ( type, name , parent )
 {
   declareInterface<IStandardParticleProvider>(this);
-  m_pidToTESMap = boost::assign::map_list_of
+
+  // Work around for -std=c++11 compilation problems with Boost
+  const PIDToTESMap tmpMap = boost::assign::map_list_of
     ( 11,   "Phys/StdAllNoPIDsElectrons/Particles" )
     ( 13,   "Phys/StdAllNoPIDsMuons/Particles"     )
     ( 211,  "Phys/StdAllNoPIDsPions/Particles"     )
     ( 321,  "Phys/StdAllNoPIDsKaons/Particles"     )
     ( 2212, "Phys/StdAllNoPIDsProtons/Particles"   );
-  declareProperty( "ParticleLocations", m_pidToTESMap );
+  declareProperty( "ParticleLocations", m_pidToTESMap = tmpMap );
 }
 
 //=============================================================================
