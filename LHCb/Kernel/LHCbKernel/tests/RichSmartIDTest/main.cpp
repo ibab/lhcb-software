@@ -104,22 +104,22 @@ int main ( int /*argc*/, char** /*argv*/ )
                 OK = false;
               }
 
-              // // Test conversion to and from an LHCbID
-              // const LHCb::LHCbID lID( id );
-              // const LHCb::RichSmartID nid( lID.richID() );
-              // if ( nid.rich()        != id.rich()       ||
-              //      nid.panel()       != id.panel()      ||
-              //      nid.pdNumInCol()  != id.pdNumInCol() ||
-              //      nid.pdCol()       != id.pdCol()      ||
-              //      nid.pixelRow()    != id.pixelRow()   ||
-              //      nid.pixelCol()    != id.pixelCol()   ||
-              //      nid.pixelSubRow() != id.pixelSubRow() )
-              // {
-              //   cerr << "Problem with RichSmartID <-> LHCbID conversion" << endl;
-              //   cerr << "  Original  ID : " << id  << endl;
-              //   cerr << "  Converted ID : " << nid << endl;
-              //   OK = false;
-              // }
+              // Test conversion to and from an LHCbID
+              const LHCb::LHCbID lID( id );
+              const LHCb::RichSmartID nid( lID.richID() );
+              if ( nid.rich()        != id.rich()       ||
+                   nid.panel()       != id.panel()      ||
+                   nid.pdNumInCol()  != id.pdNumInCol() ||
+                   nid.pdCol()       != id.pdCol()      ||
+                   nid.pixelRow()    != id.pixelRow()   ||
+                   nid.pixelCol()    != id.pixelCol()   ||
+                   nid.pixelSubRow() != id.pixelSubRow() )
+              {
+                cerr << "Problem with RichSmartID <-> LHCbID conversion" << endl;
+                cerr << "  Original  ID : " << id  << endl;
+                cerr << "  Converted ID : " << nid << endl;
+                OK = false;
+              }
 
             }
           }
