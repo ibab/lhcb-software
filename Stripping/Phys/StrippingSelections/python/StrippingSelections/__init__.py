@@ -120,6 +120,7 @@ import StrippingCharmForVub
 import StrippingDstarD02KMuNu
 import StrippingD02MuMu
 import StrippingPromptCharm
+import StrippingSigmacForPID
 import StrippingD2hh
 import StrippingD2KS0H_conf
 import StrippingD2KS0HHH_conf
