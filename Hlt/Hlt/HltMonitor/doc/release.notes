@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-03-27 - Rob Lambert
+ - Protect against missing rundb
+
+! 2013-03-27 - Rob Lambert
  - comment out unused buggy line in Tasks.py, see task #40437
  - Fix some of the ctrl-M characters added on each line in requirements and release notes, probably also elsewhere
 

@@ -1,12 +1,28 @@
-import sys
+import sys, os
 
-try:
-    import rundb
-except ImportError:
-    db_path = "/group/online/rundb/RunDatabase/python"
-    if db_path not in sys.path:
-        sys.path.append( db_path )
-    import rundb
+db_path = "/group/online/rundb/RunDatabase/python"
+
+__rundb__=None
+
+def findDB():
+    global __rundb__
+    if __rundb__ is not None return __rundb__
+    try:
+        import rundb as __rundb__
+        return __rundb__
+    except ImportError:
+        if os.path.exists(db_path):
+            if db_path not in sys.path:
+                sys.path.append( db_path )
+        else:
+            print "#WARNING you cannot access the rundb outside of the pit, so don't try. If this is a problem for you, re-write the findDB method to use JSON"
+            return None
+    try:
+        import rundb as __rundb__
+        
+    except ImportError:
+        print "#WARNING you cannot access the rundb."
+        return None
 
 # ROOT
 from ROOT import ( TFile, TH1F )
@@ -46,6 +62,7 @@ def dt_to_seconds( dt ):
     return int( timegm( dt.utctimetuple() ) )
 
 def run_info( run_nr ):
+    rundb=findDB()
     def get_runDB():
         db = rundb.RunDB()
         while True:
