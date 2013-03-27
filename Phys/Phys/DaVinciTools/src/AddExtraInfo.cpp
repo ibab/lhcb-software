@@ -24,6 +24,7 @@ DECLARE_ALGORITHM_FACTORY( AddExtraInfo )
     DaVinciAlgorithm(name, pSvcLocator)
 {
   declareProperty("Tools", m_toolNames, "Names of ExtraInfoTools" );
+  declareProperty("MaxLevel", m_maxLevel = 0, "Maximum recursion level");
 }
 
 //=======================================================================
@@ -52,7 +53,7 @@ StatusCode AddExtraInfo::initialize()
 AddExtraInfo::~AddExtraInfo() {}
 
 //=======================================================================
-// Main executio
+// Main execution
 //=======================================================================
 StatusCode AddExtraInfo::execute()
 {
@@ -78,36 +79,9 @@ StatusCode AddExtraInfo::execute()
     Particle::Range::const_iterator icand;
     for ( icand = parts.begin(); icand != parts.end(); icand++) {
 
-      std::list<IExtraInfoTool*>::iterator iTool;
-
       Particle* c = const_cast<Particle*>(*icand);
 
-      // Calculate extra information using each tool
-      for (iTool = m_tools.begin(); iTool != m_tools.end(); iTool++) {
-
-        StatusCode sc = (*iTool)->calculateExtraInfo(*icand, *icand);
-        if (sc.isFailure()) {
-          warning() << "Error calculating extra info" << endreq;
-          continue;
-        }
-
-        int index = (*iTool)->getFirstIndex();
-
-        for (int i=0 ; i < (*iTool)->getNumberOfParameters(); i++ ) {
-          std::string name;
-          double value;
-
-          int result = (*iTool)->getInfo(index+i, value, name);
-
-          if (result) {
-            c->addInfo( index+i, value);
-            if (msgLevel(MSG::DEBUG)) debug() << "Added extra info: " << name << "=" << value << endreq;
-          }
-
-        }
-
-      }
-
+      fill(c, c, 0);
     }
 
   }
@@ -116,3 +90,53 @@ StatusCode AddExtraInfo::execute()
 }
 
 //==========================================================================
+
+void AddExtraInfo::fill(const Particle* top, Particle* c, int level) {
+
+  std::list<IExtraInfoTool*>::iterator iTool;
+
+  // Calculate extra information using each tool
+  for (iTool = m_tools.begin(); iTool != m_tools.end(); iTool++) {
+
+    StatusCode sc = (*iTool)->calculateExtraInfo(top, c);
+    if (sc.isFailure()) {
+      warning() << "Error calculating extra info" << endreq;
+      continue;
+    }
+
+    int index = (*iTool)->getFirstIndex();
+
+    for (int i=0 ; i < (*iTool)->getNumberOfParameters(); i++ ) {
+      std::string name;
+      double value;
+
+      int result = (*iTool)->getInfo(index+i, value, name);
+
+      if (result) {
+        c->addInfo( index+i, value);
+        if (msgLevel(MSG::DEBUG)) debug() << "Added extra info: " << name << "=" << value << endreq;
+      }
+
+    }
+
+  }
+
+  // If we reached the maximum recursion level, we're done
+  if (level >= m_maxLevel) return;
+  
+  // Otherwise loop over the daughters of the particle
+  const SmartRefVector< LHCb::Particle > & daughters = c->daughters();
+
+  for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){
+    if( !(*idau)->isBasicParticle() ) {
+      // -- if it is not stable, call the function recursively
+      
+      const Particle* const_dau = (*idau);
+      Particle* dau = const_cast<Particle*>(const_dau); 
+    
+      if ( msgLevel(MSG::DEBUG) ) debug() << " Filling ExtraInfo for daughters of ID " << dau->particleID().pid() << endmsg;
+      fill( top, dau, level+1 );
+    }
+  }
+
+}
