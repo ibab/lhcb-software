@@ -4,6 +4,9 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2013-03-27 - Chris Jones
+ - Fix compilation with -std=c++11
+
 ! 2013-02-27 - Chris Jones
  - Fix -pedantic compilation warnings
 
