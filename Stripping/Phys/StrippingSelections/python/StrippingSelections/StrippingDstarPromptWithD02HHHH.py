@@ -81,6 +81,10 @@ config_default_NoPID = {
   ,'MaxITClusters'    : None
   ,'ApplyGhostProbCut': True
   ,'GhostProbCut'     : 0.5
+  ,'RunK3pi'     : True
+  ,'Run4pi'     : True
+  ,'Run2K2pi'     : True
+  ,'Run3Kpi'     : True
   ,'Prescale'         : 0.10
   ,'Postscale'        : 1
   }
@@ -119,6 +123,10 @@ config_default= {
   ,'MaxITClusters'    : None
   ,'ApplyGhostProbCut': True
   ,'GhostProbCut'     : 0.5
+  ,'RunK3pi'     : True
+  ,'Run4pi'     : True
+  ,'Run2K2pi'     : True
+  ,'Run3Kpi'     : True
   ,'Prescale'         : 1
   ,'Postscale'        : 1
   }
@@ -189,6 +197,11 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
     ,'MaxSpdDigits'
     ,'MaxITClusters'
 
+    ,'RunK3pi'
+    ,'Run4pi'
+    ,'Run2K2pi'
+    ,'Run3Kpi'
+
     ,'Prescale'
     ,'Postscale'
     )
@@ -217,6 +230,10 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       ,pionPIDK = config['PionPIDK']
       ,applyGhostProbCut = config['ApplyGhostProbCut']
       ,ghostProbCut = config['GhostProbCut']
+      ,runK3pi = config['RunK3pi']
+      ,run4pi = config['Run4pi']
+      ,run2K2pi = config['Run2K2pi']
+      ,run3Kpi = config['Run3Kpi']
       )
 
     selPromptDstar = makePromptDstar(
@@ -301,6 +318,10 @@ def makeD02hhhh (
   ,pionPIDK
   ,applyGhostProbCut
   ,ghostProbCut
+  ,runK3pi
+  ,run4pi
+  ,run2K2pi
+  ,run3Kpi
   ):
   """Creates a D0->hhhh Selection object, merging D0->K3pi CF
   , D0->K3pi DCS, D0->pi3K CF
@@ -420,15 +441,27 @@ def makeD02hhhh (
                                 ,Algorithm=_conjPID
                                 ,RequiredSelections=[_selD02FourPi])
 
+  _selectionsToRun = []
+
+  if runK3pi: 
+    _selectionsToRun += [_selD02K3Pi, _selD02K3PiConj]
+  if run4pi: 
+    _selectionsToRun += [_selD02FourPi, _selD02FourPiConj]
+  if run2K2pi: 
+    _selectionsToRun += [_selD02KKPiPi, _selD02KKPiPiConj]
+  if run3Kpi: 
+    _selectionsToRun += [_selD02Pi3K, _selD02Pi3KConj]
+
   _d0Sel = MergedSelection('D02hhhhFor'+moduleName
-                           ,RequiredSelections=[_selD02K3Pi
-                                                ,_selD02K3PiConj
-                                                ,_selD02KKPiPi
-                                                ,_selD02KKPiPiConj
-                                                ,_selD02FourPi
-                                                ,_selD02FourPiConj
-                                                ,_selD02Pi3K
-                                                ,_selD02Pi3KConj]
+                           ,RequiredSelections=_selectionsToRun
+#                           ,RequiredSelections=[_selD02K3Pi
+#                                                ,_selD02K3PiConj
+#                                                ,_selD02KKPiPi
+#                                                ,_selD02KKPiPiConj
+#                                                ,_selD02FourPi
+#                                                ,_selD02FourPiConj
+#                                                ,_selD02Pi3K
+#                                                ,_selD02Pi3KConj]
                            )
 
   return _d0Sel
