@@ -30,6 +30,7 @@
 #include "LoKi/Listener.h"
 #include "LoKi/Dump.h"
 #include "LoKi/DecayChainBase.h"
+#include "LoKi/TES.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
 // ============================================================================

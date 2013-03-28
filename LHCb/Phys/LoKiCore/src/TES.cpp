@@ -22,6 +22,7 @@
 #include "LoKi/ILoKiSvc.h"
 #include "LoKi/Constants.h"
 #include "LoKi/Exception.h"
+#include "LoKi/Services.h"
 // ============================================================================
 #ifdef __INTEL_COMPILER       // Disable ICC remark
 #pragma warning(disable:2259) // non-pointer conversion may lose significant bits
@@ -51,25 +52,69 @@ namespace
   // ==========================================================================
 }
 // ============================================================================
+/*  constructor from TES location and root-in-tes flag
+ *  @param location     TES-location
+ *  @param useRootInTES RootInTES-flag 
+ */
+// ============================================================================
+LoKi::TES::Get::Get
+( const std::string& location     , 
+  const bool         useRootInTES ) 
+  : LoKi::AuxFunBase () 
+  , m_location     ( location     ) 
+  , m_useRootInTES ( useRootInTES ) 
+  , m_algorithm () 
+  , m_datasvc   () 
+{
+  //
+  // 1. locate algorithm 
+  //
+  ILoKiSvc* l = lokiSvc() ;
+  Assert ( 0 != l   , "ILoKiSvc*       points to NULL!" ) ;
+  SmartIF<IAlgContextSvc> cntx ( l ) ;
+  if ( !(!cntx) )
+  { m_algorithm = Gaudi::Utils::getGaudiAlg ( cntx ) ; }
+  //
+  // 2. use data service only in case root-in-tes is not required 
+  //
+  if ( !m_algorithm && !m_useRootInTES ) 
+  {
+    const LoKi::Services& svc = LoKi::Services::instance() ;
+    m_datasvc = svc.evtSvc() ;
+  } 
+  //
+  Assert ( !(!m_algorithm) || !(!m_datasvc)  , 
+           "Neither algorithm nor service is located" ) ;
+}
+// ============================================================================
+// virtual destructor 
+// ============================================================================
+LoKi::TES::Get::~Get(){}
+// ============================================================================
+// OPTIONAL: nice printout
+// ============================================================================
+std::ostream& LoKi::TES::Get::fillStream ( std::ostream& s ) const 
+{
+  s << " GET(" << "'" << location() << "'" ;
+  if ( !useRootInTES() ) { s << ", False" ; }
+  return s << ") " ;
+}
+// ============================================================================
+// get algorithm name
+// ============================================================================
+const std::string& LoKi::TES::Get::algName() const
+{ return !algorithm() ? s_INVALID : algorithm()->name() ; }
+
+
+// ============================================================================
 // constructor from TES location
 // ============================================================================
 LoKi::TES::Exists::Exists
-( const std::string& location     ,
-  const bool         useRootInTes )
+( const std::string& location  ,
+  const bool         rootInTes )
   : LoKi::Functor<void,bool> ()
-  , m_location     ( location     )
-  , m_useRootInTes ( useRootInTes )
-  , m_algorithm    ( )
-{
-  if ( !m_algorithm )
-  {
-    ILoKiSvc* l = lokiSvc() ;
-    Assert ( 0 != l   , "ILoKiSvc*       points to NULL!" ) ;
-    SmartIF<IAlgContextSvc> cntx ( l ) ;
-    Assert ( !(!cntx) , "IAlgContextSvc* points to NULL!" ) ;
-    m_algorithm = Gaudi::Utils::getGaudiAlg ( cntx ) ;
-  }
-}
+  , LoKi::TES::Get ( location , rootInTes ) 
+{}
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
@@ -84,26 +129,7 @@ LoKi::TES::Exists* LoKi::TES::Exists::clone() const
 // ============================================================================
 LoKi::TES::Exists::result_type
 LoKi::TES::Exists::operator() ( /* LoKi::TES::Exists::argument */ ) const
-{
-  // check/locate the algorithm
-  if ( !m_algorithm )
-  {
-    ILoKiSvc* l = lokiSvc() ;
-    Assert ( 0 != l   , "ILoKiSvc*       points to NULL!" ) ;
-    SmartIF<IAlgContextSvc> cntx ( l ) ;
-    Assert ( !(!cntx) , "IAlgContextSvc* points to NULL!" ) ;
-    m_algorithm = Gaudi::Utils::getGaudiAlg ( cntx ) ;
-  }
-  // the final check
-  Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
-  //
-  return m_algorithm->exist<DataObject> ( m_location , m_useRootInTes ) ;
-}
-// ============================================================================
-// get algorithm name
-// ============================================================================
-const std::string& LoKi::TES::Exists::algName() const
-{ return !m_algorithm ? s_INVALID : m_algorithm->name() ; }
+{ return LoKi::TES::exists_<DataObject> ( *this ) ; }
 // ============================================================================
 // OPTIONAL: nice printout
 // ============================================================================
@@ -111,12 +137,11 @@ std::ostream&
 LoKi::TES::Exists::fillStream ( std::ostream& s ) const
 {
   s << " EXISTS( " ;
-  Gaudi::Utils::toStream ( m_location , s ) ;
-  if ( !m_useRootInTes ) { s << " , False" ; }
+  Gaudi::Utils::toStream ( location () , s ) ;
+  if ( useRootInTES()  ) { s << " , False" ; }
   return s << " ) " ;
 }
 // ============================================================================
-
 
 // ============================================================================
 // constructor from TES location
@@ -125,19 +150,8 @@ LoKi::TES::Contains::Contains
 ( const std::string& location     ,
   const bool         useRootInTes )
   : LoKi::Functor<void,double> ()
-  , m_location     ( location     )
-  , m_useRootInTes ( useRootInTes )
-  , m_algorithm    ( )
-{
-  if ( !m_algorithm )
-  {
-    ILoKiSvc* l = lokiSvc() ;
-    Assert ( 0 != l   , "ILoKiSvc*       points to NULL!" ) ;
-    SmartIF<IAlgContextSvc> cntx ( l ) ;
-    Assert ( !(!cntx) , "IAlgContextSvc* points to NULL!" ) ;
-    m_algorithm = Gaudi::Utils::getGaudiAlg ( cntx ) ;
-  }
-}
+  , LoKi::TES::Get ( location , useRootInTes ) 
+{}
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
@@ -153,30 +167,13 @@ LoKi::TES::Contains* LoKi::TES::Contains::clone() const
 LoKi::TES::Contains::result_type
 LoKi::TES::Contains::operator() ( /* LoKi::TES::Contains::argument */ ) const
 {
-  // check/locate the algorithm
-  if ( !m_algorithm )
-  {
-    ILoKiSvc* l = lokiSvc() ;
-    Assert ( 0 != l   , "ILoKiSvc*       points to NULL!" ) ;
-    SmartIF<IAlgContextSvc> cntx ( l ) ;
-    Assert ( !(!cntx) , "IAlgContextSvc* points to NULL!" ) ;
-    m_algorithm = Gaudi::Utils::getGaudiAlg ( cntx ) ;
-  }
-  // the final check
-  Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
   //
-  const ObjectContainerBase *obj =
-    m_algorithm->getIfExists<ObjectContainerBase>( m_location , m_useRootInTes )  ;
+  const ObjectContainerBase *obj = LoKi::TES::get_<ObjectContainerBase> ( *this ) ;
   //
   if ( NULL == obj ) { return -1 ; } // REUTRN
   //
   return obj -> numberOfObjects () ;
 }
-// ============================================================================
-// get algorithm name
-// ============================================================================
-const std::string& LoKi::TES::Contains::algName() const
-{ return !m_algorithm ? s_INVALID : m_algorithm->name() ; }
 // ============================================================================
 // OPTIONAL: nice printout
 // ============================================================================
@@ -184,8 +181,8 @@ std::ostream&
 LoKi::TES::Contains::fillStream ( std::ostream& s ) const
 {
   s << " CONTAINS( " ;
-  Gaudi::Utils::toStream ( m_location , s ) ;
-  if ( !m_useRootInTes ) { s << " , False" ; }
+  Gaudi::Utils::toStream ( location() , s ) ;
+  if ( !useRootInTES() ) { s << " , False" ; }
   return s << " ) " ;
 }
 // ============================================================================
@@ -228,21 +225,8 @@ LoKi::TES::Counter* LoKi::TES::Counter::clone() const
 LoKi::TES::Counter::result_type
 LoKi::TES::Counter::operator() ( /* LoKi::TES::Contains::argument */ ) const
 {
-
-  if ( !m_algorithm )
-  {
-    ILoKiSvc* l = lokiSvc() ;
-    Assert ( 0 != l   , "ILoKiSvc*       points to NULL!" ) ;
-    SmartIF<IAlgContextSvc> cntx ( l ) ;
-    Assert ( !(!cntx) , "IAlgContextSvc* points to NULL!" ) ;
-    m_algorithm = Gaudi::Utils::getGaudiAlg ( cntx ) ;
-  }
-  // the final check
-  Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
   //
-  //
-  const Gaudi::Numbers* data = m_algorithm -> getIfExists<Gaudi::Numbers>
-    ( location() , useRootInTes() ) ;
+  const Gaudi::Numbers* data = LoKi::TES::get_<Gaudi::Numbers> ( *this );
   if( NULL == data )
   {
     Error ("No valid object is found for TES location, return 'bad'") ;
@@ -272,127 +256,135 @@ LoKi::TES::Counter::fillStream ( std::ostream& s ) const
   Gaudi::Utils::toStream ( counter  () , s ) ;
   //
   if ( LoKi::Constants::NegativeInfinity != m_bad  ) { s << ", " << m_bad  ; }
-  if ( !useRootInTes ()                            ) { s << " , False" ; }
+  if ( !useRootInTES ()                            ) { s << " , False" ; }
   //
   return s << " ) " ;
 }
 // ============================================================================
-namespace LoKi { namespace TES {
-/** Helper class used to extract information from a \c StatEntity object.
- *
- * @author Marco Clemencic <marco.clemencic@cern.ch>
- */
-class StatEntityGetter {
-private:
-  /// List of known getters in \c StatEntity.
-  enum StatFunction {
-    nEntries,
-    sum,
-    sum2,
-    mean,
-    rms,
-    meanErr,
-    min,
-    max,
-    eff,
-    effErr
-  };
-
-  /// Base class for the internal helper object.
-  /// The derived class have to re-implement the operator() and the method
-  /// name().
-  struct BaseHelper {
-    /// Virtual destructor.
-    virtual ~BaseHelper() {}
-    /// Accessor method.
-    /// Extract some data from a \c StatEntity object.
-    virtual double operator() (const StatEntity &ent) const = 0;
-    /// Name of the data member of \c StatEntity that the helper gets.
-    virtual std::string name() const = 0;
-  };
-
-  /// Helper used to actually access the content of \c StatEntity.
-  template <StatFunction Fun>
-  struct Helper: public BaseHelper {
-    /// Virtual Destructor.
-    virtual ~Helper() {}
-    /// Extract the data member specified with the template argument from a
-    /// \c StatEntity object.
-    virtual double operator()(const StatEntity &ent) const;
-    /// Return a string representing, essentially, the template argument.
-    virtual std::string name() const;
-  };
-
-  /// Commodity function to create a new specialized \c Helper instance.
-  /// This function is used only by the other, non-templated, setHelper() method.
-  template <StatFunction Fun>
-  inline void setHelper();
-
-  /// Commodity function to create a new specialized Helper instance.
-  /// This method uses internally the templated one for simplicity. The
-  /// separation between the two member is not really needed except to ensure
-  /// that all the entries in the enum StatFunction are used and (not more).
-  void setHelper(StatFunction fun);
-
-  /// Pointer to the actual instance of the Helper class.
-  boost::shared_ptr<BaseHelper> m_helper;
-
-public:
-
-  /// Constructor.
-  /// Maps a string the the required Helper instance to extract the requested
-  /// data member for \c StatEntity.
-  StatEntityGetter(const std::string &fun) {
-    // basic
-    if      ( "nEntries" == fun ) { setHelper(nEntries); }
-    else if ( "sum"      == fun ) { setHelper(sum     ); }
-    else if ( "sum2"     == fun ) { setHelper(sum2    ); }
-    else if ( "mean"     == fun ) { setHelper(mean    ); }
-    else if ( "rms"      == fun ) { setHelper(rms     ); }
-    else if ( "meanErr"  == fun ) { setHelper(meanErr ); }
-    else if ( "min"      == fun ) { setHelper(min     ); }
-    else if ( "max"      == fun ) { setHelper(max     ); }
-    // derived
-    else if ( "efficiency"    == fun ) { setHelper(eff   ); }
-    else if ( "efficiencyErr" == fun ) { setHelper(effErr); }
-    else if ( "eff"           == fun ) { setHelper(eff   ); }
-    else if ( "effErr"        == fun ) { setHelper(effErr); }
-    // a'la ROOT
-    else if ( "Sum"     == fun ) { setHelper(sum     ); }
-    else if ( "Sum2"    == fun ) { setHelper(sum2    ); }
-    else if ( "Mean"    == fun ) { setHelper(mean    ); }
-    else if ( "Rms"     == fun ) { setHelper(rms     ); }
-    else if ( "RMS"     == fun ) { setHelper(rms     ); }
-    else if ( "MeanErr" == fun ) { setHelper(meanErr ); }
-    else if ( "Min"     == fun ) { setHelper(min     ); }
-    else if ( "Max"     == fun ) { setHelper(max     ); }
-    else if ( "Eff"     == fun ) { setHelper(eff     ); }
-    else if ( "EffErr"  == fun ) { setHelper(effErr  ); }
-    else if ( "N"       == fun ) { setHelper(nEntries); }
-    else if ( "Entries" == fun ) { setHelper(nEntries); }
-    else if ( "entries" == fun ) { setHelper(nEntries); }
-
-    else { throw LoKi::Exception("invalid function name '" + fun + "'") ; }
-  }
-
-  /// Accessor function.
-  /// Forwards the call to the \c Helper instance.
-  inline double operator() (const StatEntity &ent) const {
-    assert(m_helper.get());
-    return (*m_helper)(ent);
-  }
-
-  /// Name of the \c StatEntity data member.
-  /// Forwards the call to the \c Helper instance.
-  inline std::string name() const {
-    assert(m_helper.get());
-    return m_helper->name();
-  }
-};
+namespace LoKi 
+{
+  // ==========================================================================
+  namespace TES 
+  {
+    // =======================================================================-
+    /** Helper class used to extract information from a \c StatEntity object.
+     *
+     * @author Marco Clemencic <marco.clemencic@cern.ch>
+     */
+    class StatEntityGetter {
+    private:
+      /// List of known getters in \c StatEntity.
+      enum StatFunction 
+        {
+          nEntries,
+          sum,
+          sum2,
+          mean,
+          rms,
+          meanErr,
+          min,
+          max,
+          eff,
+          effErr
+        };
+      /// Base class for the internal helper object.
+      /// The derived class have to re-implement the operator() and the method
+      /// name().
+      struct BaseHelper 
+      {
+        /// Virtual destructor.
+        virtual ~BaseHelper() {}
+        /// Accessor method.
+        /// Extract some data from a \c StatEntity object.
+        virtual double operator() (const StatEntity &ent) const = 0;
+        /// Name of the data member of \c StatEntity that the helper gets.
+        virtual std::string name() const = 0;
+      };
+      
+      /// Helper used to actually access the content of \c StatEntity.
+      template <StatFunction Fun>
+      struct Helper: public BaseHelper {
+        /// Virtual Destructor.
+        virtual ~Helper() {}
+        /// Extract the data member specified with the template argument from a
+        /// \c StatEntity object.
+        virtual double operator()(const StatEntity &ent) const;
+        /// Return a string representing, essentially, the template argument.
+        virtual std::string name() const;
+      };
+      
+      /// Commodity function to create a new specialized \c Helper instance.
+      /// This function is used only by the other, non-templated, setHelper() method.
+      template <StatFunction Fun>
+      inline void setHelper();
+      
+      /// Commodity function to create a new specialized Helper instance.
+      /// This method uses internally the templated one for simplicity. The
+      /// separation between the two member is not really needed except to ensure
+      /// that all the entries in the enum StatFunction are used and (not more).
+      void setHelper(StatFunction fun);
+      
+      /// Pointer to the actual instance of the Helper class.
+      boost::shared_ptr<BaseHelper> m_helper;
+      
+    public:
+      
+      /// Constructor.
+      /// Maps a string the the required Helper instance to extract the requested
+      /// data member for \c StatEntity.
+      StatEntityGetter(const std::string &fun) {
+        // basic
+        if      ( "nEntries" == fun ) { setHelper(nEntries); }
+        else if ( "sum"      == fun ) { setHelper(sum     ); }
+        else if ( "sum2"     == fun ) { setHelper(sum2    ); }
+        else if ( "mean"     == fun ) { setHelper(mean    ); }
+        else if ( "rms"      == fun ) { setHelper(rms     ); }
+        else if ( "meanErr"  == fun ) { setHelper(meanErr ); }
+        else if ( "min"      == fun ) { setHelper(min     ); }
+        else if ( "max"      == fun ) { setHelper(max     ); }
+        // derived
+        else if ( "efficiency"    == fun ) { setHelper(eff   ); }
+        else if ( "efficiencyErr" == fun ) { setHelper(effErr); }
+        else if ( "eff"           == fun ) { setHelper(eff   ); }
+        else if ( "effErr"        == fun ) { setHelper(effErr); }
+        // a'la ROOT
+        else if ( "Sum"     == fun ) { setHelper(sum     ); }
+        else if ( "Sum2"    == fun ) { setHelper(sum2    ); }
+        else if ( "Mean"    == fun ) { setHelper(mean    ); }
+        else if ( "Rms"     == fun ) { setHelper(rms     ); }
+        else if ( "RMS"     == fun ) { setHelper(rms     ); }
+        else if ( "MeanErr" == fun ) { setHelper(meanErr ); }
+        else if ( "Min"     == fun ) { setHelper(min     ); }
+        else if ( "Max"     == fun ) { setHelper(max     ); }
+        else if ( "Eff"     == fun ) { setHelper(eff     ); }
+        else if ( "EffErr"  == fun ) { setHelper(effErr  ); }
+        else if ( "N"       == fun ) { setHelper(nEntries); }
+        else if ( "Entries" == fun ) { setHelper(nEntries); }
+        else if ( "entries" == fun ) { setHelper(nEntries); }
+        
+        else { throw LoKi::Exception("invalid function name '" + fun + "'") ; }
+      }
+      
+      /// Accessor function.
+      /// Forwards the call to the \c Helper instance.
+      inline double operator() (const StatEntity &ent) const
+      {
+        assert(m_helper.get());
+        return (*m_helper)(ent);
+      }
+      
+      /// Name of the \c StatEntity data member.
+      /// Forwards the call to the \c Helper instance.
+      inline std::string name() const 
+      {
+        assert(m_helper.get());
+        return m_helper->name();
+      }
+    };
 
 // Macro to simplify the specialization of Helper
-#define SpecializedHelper(Fun) \
-  template <> \
+#define SpecializedHelper(Fun)                  \
+    template <>                                                         \
   double StatEntityGetter::Helper<StatEntityGetter::Fun>::operator() (const StatEntity &ent) const { \
     return ent.Fun(); \
   } \
@@ -496,31 +488,17 @@ LoKi::TES::Stat* LoKi::TES::Stat::clone() const
 LoKi::TES::Stat::result_type
 LoKi::TES::Stat::operator() ( /* LoKi::TES::Contains::argument */ ) const
 {
-  if ( !m_algorithm )
-  {
-    ILoKiSvc* l = lokiSvc() ;
-    Assert ( 0 != l   , "ILoKiSvc*       points to NULL!" ) ;
-    SmartIF<IAlgContextSvc> cntx ( l ) ;
-    Assert ( !(!cntx) , "IAlgContextSvc* points to NULL!" ) ;
-    m_algorithm = Gaudi::Utils::getGaudiAlg ( cntx ) ;
-  }
-  // the final check
-  Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
-  //
   //
   if ( counter().empty() )
   {
-    const Gaudi::Counter* cnt = m_algorithm -> getIfExists<Gaudi::Counter>
-      ( location     () ,
-        useRootInTes () ) ;
+    const Gaudi::Counter* cnt = LoKi::TES::get_<Gaudi::Counter>  (*this ) ;
     if( NULL != cnt )
     {
       return (*m_getter)(cnt->counter());
     }
   }
   //
-  const Gaudi::Counters* data = m_algorithm -> getIfExists<Gaudi::Counters>
-    ( location() , useRootInTes() ) ;
+  const Gaudi::Counters* data = LoKi::TES::get_<Gaudi::Counters> ( *this) ;
   if ( NULL == data )
   {
     Error ("No valid object is found for TES location, return 'bad'") ;
@@ -552,7 +530,7 @@ LoKi::TES::Stat::fillStream ( std::ostream& s ) const
   s << m_getter->name();
   //
   if ( LoKi::Constants::NegativeInfinity != bad()  ) { s << ", " << bad() ; }
-  if ( !useRootInTes ()                            ) { s << " , False" ; }
+  if ( !useRootInTES ()                            ) { s << " , False" ; }
   //
   return s << " ) " ;
 }

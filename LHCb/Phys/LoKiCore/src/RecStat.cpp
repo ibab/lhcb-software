@@ -61,11 +61,10 @@ LoKi::TES::HasRecSummary::result_type
 LoKi::TES::HasRecSummary::operator() 
   ( /* LoKi::TES::HasRecSummary::argument a */ ) const 
 {
-  // check the algorithm
-  Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
   //
   const LHCb::RecSummary* summary = 
-    m_algorithm->getIfExists<LHCb::RecSummary> ( location () , useRootInTes () );
+    LoKi::TES::get_<LHCb::RecSummary> ( *this );
+  //
   if ( NULL == summary ) 
   {
     Error ( "No LHCb::RecSummary is available at '" + location () + "'") ;
@@ -82,9 +81,9 @@ LoKi::TES::HasRecSummary::fillStream ( std::ostream& s ) const
 {
   //
   s << " HASRECSUMMARY( " << m_key ;
-  if ( !useRootInTes() || LHCb::RecSummaryLocation::Default != location() ) 
+  if ( !useRootInTES () || LHCb::RecSummaryLocation::Default != location() ) 
   { s << ",'" << location() << "'" ; }
-  if ( !useRootInTes() ) { s << ", False " ; }
+  if ( !useRootInTES () ) { s << ", False " ; }
   //
   return s << " ) " ;
 }
@@ -125,11 +124,9 @@ LoKi::TES::RecSummary::result_type
 LoKi::TES::RecSummary::operator() 
   ( /* LoKi::TES::HasRecSummary::argument a */ ) const 
 {
-  // check the algorithm
-  Assert ( !(!m_algorithm) , "GaudiAlgorithm* points to NULL" ) ;
   //
-  const LHCb::RecSummary* summary = 
-    m_algorithm->getIfExists<LHCb::RecSummary> ( location () , useRootInTes () );
+  const LHCb::RecSummary* summary = LoKi::TES::get_<LHCb::RecSummary> ( *this );
+  //
   if ( NULL == summary ) 
   {
     Error ( "No LHCb::RecSummary is available at '" + location () + "'") ;
@@ -145,9 +142,9 @@ std::ostream&
 LoKi::TES::RecSummary::fillStream ( std::ostream& s ) const 
 {
   s << " RECSUMMARY( " << m_key << "," << m_bad ;
-  if ( !useRootInTes() || LHCb::RecSummaryLocation::Default != location() ) 
+  if ( !useRootInTES() || LHCb::RecSummaryLocation::Default != location() ) 
   { s << ",'" << location() << "'" ; }
-  if ( !useRootInTes() ) { s << ", False " ; }
+  if ( !useRootInTES() ) { s << ", False " ; }
   //
   return s << " ) " ;
 }

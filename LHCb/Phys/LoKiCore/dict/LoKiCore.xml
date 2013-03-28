@@ -80,6 +80,8 @@
     <field name = "m_incSvc" transient = "true"/>
   </class>
   
+  <class    name = "LoKi::TES::Get" />
+  
   <class name =        "implements1<IIncidentListener>" />
   <class name = "extend_interfaces1<IIncidentListener>" />
   

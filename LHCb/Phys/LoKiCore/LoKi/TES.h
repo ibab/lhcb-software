@@ -36,6 +36,63 @@ namespace LoKi
   namespace TES
   {
     // ========================================================================
+    /** @class Get 
+     *  helper class to get some objects from TES 
+     *
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2013-03-28
+     */
+    class GAUDI_API Get : public virtual LoKi::AuxFunBase 
+    {
+    public:
+      // =======================================================================
+      /** constructor from TES location and root-in-tes flag
+       *  @param location     TES-location
+       *  @param useRootInTES RootInTES-flag 
+       */
+      Get ( const std::string& location            , 
+            const bool         useRootInTES = true ) ;
+      /// virtual destructor 
+      virtual ~Get() ;
+      // ======================================================================
+      /// OPTIONAL: nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled 
+      Get () ;                                // defalt constructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================      
+      const LoKi::Interface<GaudiAlgorithm>&   algorithm () const 
+      { return m_algorithm ; }
+      const LoKi::Interface<IDataProviderSvc>& service   () const 
+      { return m_datasvc   ; }
+      const LoKi::Interface<IDataProviderSvc>& dataSvc   () const 
+      { return m_datasvc   ; }
+      const std::string& location     () const { return m_location     ; }
+      bool               useRootInTES () const { return m_useRootInTES ; }
+      /// get algorithm name
+      const std::string& algName      () const ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      void setLocation ( const std::string& value ) { m_location = value ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual TES location 
+      std::string m_location     ; // the actual TES location 
+      /// "Root-in-TES" flag
+      bool        m_useRootInTES ; // "Root-in-TES" flag
+      /// the algorithm to be used
+      mutable LoKi::Interface<GaudiAlgorithm>   m_algorithm ;  // the algorithm
+      /// the service   to be used
+      mutable LoKi::Interface<IDataProviderSvc> m_datasvc   ;  // the service 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Exists
      *  Simple checker of existence of object in TES
      *  @see LoKi::Cuts::EXISTS
@@ -44,7 +101,9 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl
      *  @date 2010-02-13
      */
-    class GAUDI_API Exists : public LoKi::Functor<void,bool>
+    class GAUDI_API Exists 
+      : public LoKi::Functor<void,bool>
+      , public LoKi::TES::Get 
     {
     public:
       // ======================================================================
@@ -62,34 +121,10 @@ namespace LoKi
       /// OPTIONAL: nice printout
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
-    public:
-      // ======================================================================
-      /// get TES-location
-      const  std::string& location     () const { return m_location     ; }
-      inline bool         useRootInTes () const { return m_useRootInTes ; }
-      /// get algorithm name
-      const std::string& algName  () const ;
-      // ======================================================================
-    protected:
-      // ======================================================================
-      void setLocation ( const std::string& value ) { m_location = value ; }
-      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled
       Exists() ;                        // the default constructor is disabled
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// TES location to be tested
-      std::string                     m_location ; // TES location to be tested
-      /// Use 'RootInTes' ?
-      bool                            m_useRootInTes ; //     Use 'RootInTes' ?
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// the algorithm to be used
-      mutable LoKi::Interface<GaudiAlgorithm> m_algorithm ;  // the algorithm
       // ======================================================================
     } ;
     // ========================================================================
@@ -104,7 +139,9 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl
      *  @date 2010-02-13
      */
-    class GAUDI_API Contains : public LoKi::Functor<void,double>
+    class GAUDI_API Contains 
+      : public LoKi::Functor<void,double>
+      , public LoKi::TES::Get 
     {
     public:
       // ======================================================================
@@ -125,34 +162,10 @@ namespace LoKi
       /// OPTIONAL: nice printout
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
-    public:
-      // ======================================================================
-      /// get TES-location
-      const  std::string& location     () const { return m_location     ; }
-      inline bool         useRootInTes () const { return m_useRootInTes ; }
-      /// get algorithm name
-      const std::string& algName  () const ;
-      // ======================================================================
-    protected:
-      // ======================================================================
-      void setLocation ( const std::string& value ) { m_location = value ; }
-      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled
       Contains () ;                      // the default constructor is disabled
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// TES location to be tested
-      std::string                     m_location ; // TES location to be tested
-      /// Use 'RootInTes' ?
-      bool                            m_useRootInTes ; //     Use 'RootInTes' ?
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// the algorithm to be used
-      mutable LoKi::Interface<GaudiAlgorithm> m_algorithm ; // the algorithm
       // ======================================================================
     } ;
     // ========================================================================
@@ -163,7 +176,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
      *  @date 2011-02-12
      */
-    class GAUDI_API Counter : public Contains
+    class GAUDI_API Counter : public LoKi::TES::Contains
     {
     public:
       // ======================================================================
@@ -212,6 +225,7 @@ namespace LoKi
     // ========================================================================
     // Helper class needed by Stat.
     class StatEntityGetter;
+    // ========================================================================
     /** @class Stat
      *  Simple accessor for counters in TES
      *  @see Gaudi::Counters
@@ -219,7 +233,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
      *  @date 2011-02-12
      */
-    class GAUDI_API Stat : public Counter
+    class GAUDI_API Stat : public LoKi::TES::Counter
     {
     public:
       // ======================================================================
@@ -264,6 +278,35 @@ namespace LoKi
       boost::shared_ptr<StatEntityGetter> m_getter;
       // ======================================================================
     } ;
+    // ========================================================================
+    template <class TYPE>
+    inline 
+    const TYPE* 
+    get_ ( const LoKi::TES::Get&  obj ) 
+    {
+      if      ( !(!obj.algorithm() ) )
+      { return obj.algorithm()->getIfExists<TYPE> ( obj.location () , obj.useRootInTES () ) ; }
+      else if ( !(!obj.service  () ) ) 
+      { return SmartDataPtr<TYPE>                 ( obj.service  () , obj.location     () ) ; }
+      // 
+      return 0 ;     
+    }      
+    // ========================================================================
+    template <class TYPE>
+    inline 
+    bool 
+    exists_ ( const LoKi::TES::Get&  obj ) 
+    {
+      if      ( !(!obj.algorithm () ) )
+      { return obj.algorithm()->exist<TYPE> ( obj.location () , obj.useRootInTES () ) ; }
+      else if ( !(!obj.service   () ) ) 
+      { 
+        SmartDataPtr<TYPE> o                ( obj.service  () , obj.location     () ) ; 
+        return !(!o) ;
+      }
+      // 
+      return false  ;     
+    }      
     // ========================================================================
   } //                                               end of namespace LoKi::TES
   // ==========================================================================
