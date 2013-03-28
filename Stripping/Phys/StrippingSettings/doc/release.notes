@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-03-28 - Edmund Smith (LHCb 2010) 
+ - Added LineConfigDictionaries for B2OC WG for Stripping20r0p1 and Stripping20r1p1.
+
 ! 2013-03-27
  - Add B2CC ConfigDictionaries for Stripping20r0p1 (2012) and Stripping20r1p1 (2011)
 
