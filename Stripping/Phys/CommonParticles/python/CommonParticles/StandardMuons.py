@@ -46,6 +46,9 @@ _locations.update ( locations )
 from CommonParticles.StdTightANNUpMuons import *
 _locations.update ( locations )
 
+from CommonParticles.StdLooseDownMuons import *
+_locations.update ( locations )
+
 # redefine the locations 
 locations = _locations
 

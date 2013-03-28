@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2013-03-28 - Thomas Blake
+ - Added StdLooseDownMuons
+
 ! 2013-03-27 - Vanya Belyaev
 
  - fixed StdV0FromBrunel 
