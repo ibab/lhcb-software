@@ -8,6 +8,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/Constants.h"
 #include "LoKi/L0.h"
 // ============================================================================
 /** @file 
@@ -960,6 +961,127 @@ std::ostream& LoKi::L0::TriggerDecisionRegex::fillStream ( std::ostream& s ) con
 { return s << "L0_TRIGGER_RE ('" << substr() << "'," << bx () << ")" ; }
 
 
+
+// ============================================================================
+// LoKiCore
+// ============================================================================
+#include "LoKi/TES.h"
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  class _L0C : public LoKi::Functor<void,bool>
+  {
+  public:
+    // ========================================================================
+    _L0C ( const LoKi::TES::Get&                              obj , 
+           const LoKi::Functor<const LHCb::L0DUReport*,bool>& cut ) 
+      : LoKi::Functor<void,bool> () 
+      , m_get ( obj ) 
+      , m_cut ( cut ) 
+      , m_l0  ( 0   ) 
+    {}
+    // ========================================================================     
+    virtual ~_L0C () {}
+    virtual _L0C* clone() const { return new _L0C(*this) ; }
+    // ========================================================================
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return  s << " (" << m_get << " >> " << m_cut  << ") " ; }
+    // ========================================================================
+    virtual result_type operator() ( /* argument */ ) const 
+    {
+      //
+      if ( 0 == m_l0 || !sameEvent() ) 
+      { 
+        m_l0 = LoKi::TES::get_<LHCb::L0DUReport> ( m_get ) ; 
+        setEvent () ;
+      }
+      //
+      if ( 0 == m_l0 ) 
+      {
+        Error ("No valid L0DUReport is found, return False") ;
+        return false ;
+      }
+      //
+      return m_cut ( m_l0 ) ;
+    }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// default constructor is disabled 
+    _L0C() ;                                // default constructor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    LoKi::TES::Get                                         m_get ;
+    LoKi::FunctorFromFunctor<const LHCb::L0DUReport*,bool> m_cut ;
+    mutable const LHCb::L0DUReport*                        m_l0  ;
+    // ========================================================================    
+  };
+  // ==========================================================================
+  class _L0F : public LoKi::Functor<void,double>
+  {
+  public:
+    // ========================================================================
+    _L0F ( const LoKi::TES::Get&                                obj , 
+           const LoKi::Functor<const LHCb::L0DUReport*,double>& fun ) 
+      : LoKi::Functor<void,double> () 
+      , m_get ( obj ) 
+      , m_fun ( fun ) 
+      , m_l0  ( 0   ) 
+    {}
+    // ========================================================================     
+    virtual ~_L0F () {}
+    virtual  _L0F* clone() const { return new _L0F(*this) ; }
+    // ========================================================================
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return  s << " (" << m_get << " >> " << m_fun  << ") " ; }
+    // ========================================================================
+    virtual result_type operator() ( /* argument */ ) const 
+    {
+      //
+      if ( 0 == m_l0 || !sameEvent() ) 
+      { 
+        m_l0 = LoKi::TES::get_<LHCb::L0DUReport> ( m_get ) ; 
+        setEvent () ;
+      }
+      //
+      if ( 0 == m_l0 ) 
+      {
+        Error ("No valid L0DUReport is found, return NegativeInfinity") ;
+        return LoKi::Constants::NegativeInfinity ;
+      }
+      //
+      return m_fun ( m_l0 ) ;
+    }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// default constructor is disabled 
+    _L0F() ;                                // default constructor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    LoKi::TES::Get                                           m_get ;
+    LoKi::FunctorFromFunctor<const LHCb::L0DUReport*,double> m_fun ;
+    mutable const LHCb::L0DUReport*                          m_l0  ;
+    // ========================================================================    
+  };
+  // ==========================================================================
+}
+// ============================================================================
+LoKi::FunctorFromFunctor<void,bool>  
+LoKi::TES::get 
+( const LoKi::TES::Get&                                obj , 
+  const LoKi::Functor<const LHCb::L0DUReport*,bool>&   cut )
+{ return _L0C ( obj , cut ) ; }
+// ============================================================================
+LoKi::FunctorFromFunctor<void,double>  
+LoKi::TES::get 
+( const LoKi::TES::Get&                                  obj , 
+  const LoKi::Functor<const LHCb::L0DUReport*,double>&   fun )
+{ return _L0F ( obj , fun ) ; }
+// ============================================================================
 
 // ============================================================================
 // The END 

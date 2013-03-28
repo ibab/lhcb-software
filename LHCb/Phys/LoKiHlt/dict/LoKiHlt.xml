@@ -79,6 +79,8 @@
   </class> 
   <function name = "LoKi::Numbers::add1"       /> 
   <function name = "LoKi::Numbers::add2"       /> 
+
+  <function name = "LoKi::TES::get" /> 
   
   <exclusion>
     

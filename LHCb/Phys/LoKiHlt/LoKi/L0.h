@@ -5,6 +5,10 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
@@ -44,7 +48,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-01-08
      */
-    class Valid
+    class GAUDI_API Valid
       : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate
     {
     public:
@@ -69,7 +73,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */      
-    class SumEt 
+    class GAUDI_API SumEt 
       : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Function
     {
     public:
@@ -101,7 +105,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */      
-    class DataValue 
+    class GAUDI_API DataValue 
       : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Function
     {
     public:
@@ -141,7 +145,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */      
-    class DataDigit : public DataValue 
+    class GAUDI_API DataDigit : public DataValue 
     {
     public:
       // ======================================================================
@@ -173,7 +177,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class SumDecision
+    class GAUDI_API SumDecision
       : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate 
     {
     public:
@@ -214,7 +218,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class Decision
+    class GAUDI_API Decision
       : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate 
     {
     public:
@@ -249,7 +253,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class ForceBit
+    class GAUDI_API ForceBit
       : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate 
     {
     public:
@@ -273,7 +277,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class Tck
+    class GAUDI_API Tck
       : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Function
     {
     public:
@@ -296,7 +300,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class TimingBit
+    class GAUDI_API TimingBit
       : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate 
     {
     public:
@@ -322,7 +326,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class ChannelDecision 
+    class GAUDI_API ChannelDecision 
       : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate 
     {
     protected:
@@ -391,7 +395,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class ChannelPreDecision : public ChannelDecision
+    class GAUDI_API ChannelPreDecision : public ChannelDecision
     {
     public:
       // ======================================================================
@@ -425,7 +429,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class TriggerDecision : public ChannelDecision
+    class GAUDI_API TriggerDecision : public ChannelDecision
     {
     public:
       // ======================================================================
@@ -459,7 +463,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class ConditionValue : public ChannelDecision
+    class GAUDI_API ConditionValue : public ChannelDecision
     {
     public:
       // ======================================================================
@@ -485,7 +489,7 @@ namespace LoKi
       // ====================================================================== 
     } ;
     // ========================================================================
-    class ChannelDecisionSubString : public ChannelDecision 
+    class GAUDI_API ChannelDecisionSubString : public ChannelDecision 
     {
     public:
       // ======================================================================
@@ -519,7 +523,7 @@ namespace LoKi
       // ======================================================================      
     } ;
     // ========================================================================
-    class ChannelDecisionRegex : public ChannelDecisionSubString
+    class GAUDI_API ChannelDecisionRegex : public ChannelDecisionSubString
     {
     public:
       // ======================================================================
@@ -553,7 +557,7 @@ namespace LoKi
       // ======================================================================      
     } ;
     // ========================================================================
-    class ChannelPreDecisionSubString : public ChannelDecisionSubString 
+    class GAUDI_API ChannelPreDecisionSubString : public ChannelDecisionSubString 
     {
     public:
       // ======================================================================
@@ -578,7 +582,7 @@ namespace LoKi
       // ======================================================================      
     } ;
     // ========================================================================
-    class ChannelPreDecisionRegex : public ChannelDecisionRegex
+    class GAUDI_API ChannelPreDecisionRegex : public ChannelDecisionRegex
     {
     public:
       // ======================================================================
@@ -611,7 +615,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class TriggerDecisionSubString : public ChannelDecisionSubString
+    class GAUDI_API TriggerDecisionSubString : public ChannelDecisionSubString
     {
     public:
       // ======================================================================
@@ -642,7 +646,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
-    class TriggerDecisionRegex : public ChannelDecisionRegex
+    class GAUDI_API TriggerDecisionRegex : public ChannelDecisionRegex
     {
     public:
       // ======================================================================
@@ -664,10 +668,30 @@ namespace LoKi
       TriggerDecisionRegex () ;          // the default constructor is disabled 
       // ====================================================================== 
     } ;
-    // ========================================================================
-  } // end of namespace LoKi::L0 
+    // ========================================================================    
+  } //                                                end of namespace LoKi::L0 
   // ==========================================================================
-} // end of namespace LoKi
+  namespace TES 
+  {
+    // ========================================================================
+    // forward declaration 
+    class Get ;
+    // ========================================================================
+    GAUDI_API 
+    LoKi::FunctorFromFunctor<void,bool>  
+    get 
+    ( const LoKi::TES::Get&                                obj , 
+      const LoKi::Functor<const LHCb::L0DUReport*,bool>&   cut );
+    // ========================================================================
+    GAUDI_API 
+    LoKi::FunctorFromFunctor<void,double>  
+    get 
+    ( const LoKi::TES::Get&                                obj , 
+      const LoKi::Functor<const LHCb::L0DUReport*,double>& fun );
+    // ========================================================================
+  } //                                               end of namespace LoKi::TES 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

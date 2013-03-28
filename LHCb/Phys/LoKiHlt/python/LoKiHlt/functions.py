@@ -407,6 +407,29 @@ for t in ( EvtNum , EvtNumList ,
     if hasattr ( t , '__cpp_eq__' ) :  t.__eq__   = t.__cpp_eq__
     if hasattr ( t , '__cpp_ne__' ) :  t.__ne__   = t.__cpp_ne__
 
+    
+    
+## @see LoKi::TES::Get 
+GET = LoKi.TES.Get
+#
+GET.__repr__ = lambda s : s.toString ()
+GET.__str__  = lambda s : s.toString ()
+#
+## merge the getter with the subsequent calls 
+def _get_rshift_ ( self , func ) :
+    """
+    Merge ``getter'' with other functions
+    
+    >>> getter = GET('/Event/DAQ/ODIN')
+    >>> func   = getter >> ODIN_TCK
+
+    In particular it allows insertion of  various functors (ODIN,L0,Hlt)
+    into Hlt1-streamers.
+    
+    """
+    return LoKi.TES.get ( getter , func ) 
+
+GET. __rshift__ = _get_rshift_
 
 # =============================================================================
 ## build the vector of event-numbers from fragments 

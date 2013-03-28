@@ -7,6 +7,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StringKey.h"
 // ============================================================================
 // LoKi
@@ -43,7 +44,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
-    class HasDecision 
+    class GAUDI_API HasDecision 
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
     {
     protected:
@@ -112,7 +113,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
-    class PassDecision : public HasDecision
+    class GAUDI_API PassDecision : public HasDecision
     {
     public:
       // ======================================================================
@@ -166,7 +167,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
-    class Size 
+    class GAUDI_API Size 
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function
     {
     public:
@@ -193,7 +194,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
-    class NPass
+    class GAUDI_API NPass
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function
     {
     public:
@@ -221,7 +222,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
-    class Decision
+    class GAUDI_API Decision
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
     {
     public:
@@ -246,7 +247,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-10-03
      */
-    class DecisionBut 
+    class GAUDI_API DecisionBut 
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
     {
     protected:
@@ -297,7 +298,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
-    class HasDecisionSubString 
+    class GAUDI_API HasDecisionSubString 
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
     {
     public:
@@ -338,7 +339,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-06-16
      */
-    class PassDecisionSubString : public HasDecisionSubString 
+    class GAUDI_API PassDecisionSubString : public HasDecisionSubString 
     {
     public:
       // ======================================================================
@@ -368,7 +369,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-06-16
      */
-    class DecisionButSubString : public PassDecisionSubString 
+    class GAUDI_API DecisionButSubString : public PassDecisionSubString 
     {
     public:
       // ======================================================================
@@ -398,7 +399,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-06-16
      */
-    class HasDecisionRegex : public HasDecisionSubString 
+    class GAUDI_API HasDecisionRegex : public HasDecisionSubString 
     {
     public:
       // ======================================================================
@@ -438,7 +439,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-06-16
      */
-    class PassDecisionRegex : public HasDecisionRegex 
+    class GAUDI_API PassDecisionRegex : public HasDecisionRegex 
     {
     public:
       // ======================================================================
@@ -468,7 +469,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-06-16
      */
-    class DecisionButRegex : public PassDecisionRegex
+    class GAUDI_API DecisionButRegex : public PassDecisionRegex
     {
     public:
       // ======================================================================
@@ -497,7 +498,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
      *  @date 2010-05-17
      */
-    class ErrorBits 
+    class GAUDI_API ErrorBits 
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function
     {
     public:
@@ -538,7 +539,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
      *  @date 2010-05-17
      */
-    class ExecutionStage : public ErrorBits 
+    class GAUDI_API ExecutionStage : public ErrorBits 
     {
     public:
       // ======================================================================
@@ -569,7 +570,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
      *  @date 2010-05-17
      */
-    class NumberOfCandidates : public ErrorBits 
+    class GAUDI_API NumberOfCandidates : public ErrorBits 
     {
     public:
       // ======================================================================
@@ -601,7 +602,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
      *  @date 2010-05-17
      */
-    class Saturated 
+    class GAUDI_API Saturated 
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
     {
     public:
@@ -641,7 +642,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
      *  @date 2010-05-17
      */
-    class CountErrorBits  
+    class GAUDI_API CountErrorBits  
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function 
     {
     public:
@@ -706,7 +707,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
      *  @date 2010-05-17
      */
-    class CountErrorBitsRegex
+    class GAUDI_API CountErrorBitsRegex
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function 
     {
     public:
@@ -749,7 +750,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-05-17
      */
-    class HltRoutingBits 
+    class GAUDI_API HltRoutingBits 
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
     {
     public:
@@ -782,6 +783,26 @@ namespace LoKi
     };
     // ========================================================================
   } //end of namespace LoKi::HLT
+  // ==========================================================================
+  namespace TES 
+  {
+    // ========================================================================
+    // forward declaration 
+    class Get ;
+    // ========================================================================
+    GAUDI_API 
+    LoKi::FunctorFromFunctor<void,bool>  
+    get 
+    ( const LoKi::TES::Get&                                   obj , 
+      const LoKi::Functor<const LHCb::HltDecReports*,bool>&   cut );
+    // ========================================================================
+    GAUDI_API 
+    LoKi::FunctorFromFunctor<void,double>  
+    get 
+    ( const LoKi::TES::Get&                                   obj , 
+      const LoKi::Functor<const LHCb::HltDecReports*,double>& fun );
+    // ========================================================================
+  } //                                               end of namespace LoKi::TES
   // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
