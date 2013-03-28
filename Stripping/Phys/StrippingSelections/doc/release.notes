@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-28 - Cedric Potterat
+ - Update of the Radiative Stripping lines to remove error messages
+
 ! 2013-03-27 - Ronan Wallace
  - Addition of new lines in StrippingDiMuonNew.py to strip Jpsi and psi with negative lifetime.
 

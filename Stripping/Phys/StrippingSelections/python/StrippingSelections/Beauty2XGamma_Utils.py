@@ -68,7 +68,7 @@ def filterPhotons(inputs, config):
 def filterPhotonsConv(inputs,config):
     ''' Makes converted photons before the magnet '''
     cuts = ['MM','VCHI2DOF']
-    code = LoKiCuts(cuts,config).code()
+    code = LoKiCuts.combine(["HASVERTEX",LoKiCuts(cuts,config).code()])
     return filterSelection("GammaConv", code, inputs)
     #comboCuts = LoKiCuts(cuts,config).code()
     #momCuts = LoKiCuts(['VCHI2DOF'],config).code()
@@ -79,10 +79,10 @@ def filterPhotonsConv(inputs,config):
     #return filterSelection("GammaConv", code, inputs)
 
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
-    return "(TRCHI2DOF<3) & (PT > 500*MeV) & (P > 5000*MeV)"
+    return "HASTRACK & (TRCHI2DOF<3) & (PT > 500*MeV) & (P > 5000*MeV)"
 
 def softtopoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
-    return "(TRCHI2DOF<3) & (PT > 350*MeV) & (P > 1500*MeV)"
+    return "HASTRACK & (TRCHI2DOF<3) & (PT > 350*MeV) & (P > 1500*MeV)"
 
 def topoKSInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "(PT > 500*MeV) & (P > 5000*MeV) & (BPVVDCHI2 > 1000)"
@@ -104,7 +104,7 @@ def hasTopoChildren():
            +topoKSInputsCuts() +")) > 1"
 
 def has1TrackChild():
-    return "INTREE(ISBASIC & (P>5000*MeV) & (PT>1000*MeV) & (TRCHI2DOF<2.5) "\
+    return "INTREE(HASTRACK & ISBASIC & (P>5000*MeV) & (PT>1000*MeV) & (TRCHI2DOF<2.5) "\
            "& (MIPCHI2DV(PRIMARY)>16) & (MIPDV(PRIMARY)>0.1*mm))"
 
 def makeTISTOSFilter(name):
