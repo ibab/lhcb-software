@@ -138,6 +138,7 @@ import StrippingDstarD02KKpipiRegular
 import StrippingDstarPromptWithD02HHHH
 import StrippingDstarPromptWithD02HHMuMu
 import StrippingDstarD2KShh
+import StrippingB2ppipiSigmacmm_Lcpi
 
 import StrippingD02K3PiForXSec
 import StrippingD02KPiGeoForXSec
