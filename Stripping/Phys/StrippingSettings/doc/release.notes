@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-03-28 - Mika Vesterinen
+ - Added dictionaries for the SL group for Stripping20r0p1 and Stripping20r1p1.
+
 ! 2013-03-28 - Frederic Dupertuis
  - Updated LineConfigDictionaries_B2CC.py
 
