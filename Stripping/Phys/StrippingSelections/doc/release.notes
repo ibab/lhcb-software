@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-28 - Edmund Smith (LHCb 2010) 
+ - Added B02D0PPbarD2HHFULLDST RS and WS lines in Beauty2Charm module.
+
 ! 2013-03-28 - Cedric Potterat
  - Update of the Radiative Stripping lines to remove error messages
 

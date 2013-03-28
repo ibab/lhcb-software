@@ -36,6 +36,7 @@ class B2DXBuilder(object):
 
         #Tighter selection Full DST lines
         self._makeB02D0HH_FULLDST('D2HHFULLDST',self.d.hh_pid_tight)
+        self._makeB02D0PPbar_FULLDST('D2HHFULLDST',self.d.hh_pid_tight) 
         
         self._makeB02D0HH('D2HHWS',self.d.hh_ws) # B0  -> D0(HH)WS  H+ H-
         self.lines[-2].pre = 0.1 # WS D line
@@ -376,6 +377,22 @@ class B2DXBuilder(object):
                   'B02D0KPi'  : d2x+self.hh.kpi_pid_tighter}
         b2d0hh = makeB2XSels(decays,dname,inputs,config)
         self.lines.append(ProtoLine(b2d0hh,1.0))
+
+    def _makeB02D0PPbar_FULLDST(self,dname,d2x):
+        '''Makes RS B0 -> D0 p+p~- + c.c.'''
+        config = deepcopy(self.config)
+        config['AM_MIN'] = '4950*MeV'
+        config['AM_MAX'] = '6000*MeV'
+        config['B2CBBDT_MIN'] = '0.3'
+        config['DZ1_MIN'] = '-1.5*mm'
+        decays = { 'B02D0PPbar': ["B0 -> D0 rho(770)0"]}
+        inputs = { 'B02D0PPbar': d2x+self.hh.ppbar_pid}
+        b2d0ppbar = makeB2XSels(decays,dname,inputs,self.config)
+        decays = {'B02D0PPbarWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
+        inputs = {'B02D0PPbarWS': d2x+self.hh.ppbar_ws_pid}
+        b2d0ppbar_ws = makeB2XSels(decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b2d0ppbar,1.0))
+        self.lines.append(ProtoLine(b2d0ppbar_ws,0.1))        
 
     def _makeB02DHHH(self,dname,d2x):
         '''Makes RS and WS B0 -> D + h- + c.c.'''
