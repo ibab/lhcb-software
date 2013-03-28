@@ -135,12 +135,12 @@ B2XTauNu = {
     'TRGHP_slowPi'      : 0.6
     },
     'STREAMS' : {
-    'BhadronCompleteEvent' : ['Bc2JpsiTauNuNonPhysTauForB2XTauNu',
-                              'Bd2DTauNuNonPhysTauForB2XTauNu',
-                              'Bd2DdoubleStarTauNuNonPhysTauForB2XTauNu',
-                              'Bd2DstarTauNuNonPhysTauForB2XTauNu',
-                              'Bs2DsTauNuNonPhysTauForB2XTauNu',
-                              'Bu2D0TauNuNonPhysTauForB2XTauNu',
+    'BhadronCompleteEvent' : ['StrippingBc2JpsiTauNuNonPhysTauForB2XTauNu',
+                              'StrippingBd2DTauNuNonPhysTauForB2XTauNu',
+                              'StrippingBd2DdoubleStarTauNuNonPhysTauForB2XTauNu',
+                              'StrippingBd2DstarTauNuNonPhysTauForB2XTauNu',
+                              'StrippingBs2DsTauNuNonPhysTauForB2XTauNu',
+                              'StrippingBu2D0TauNuNonPhysTauForB2XTauNu',
                               ]
     },
     'WGs'    : ['Semileptonic']
