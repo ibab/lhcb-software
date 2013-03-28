@@ -84,11 +84,15 @@ class StrippingInflaton2MuMuConf(LineBuilder) :
         self.selRho = makeRho(default_name+"_rho")
 
         
-        self.selBu2InflatonK = makeBu2InflatonK(default_name+"_Bu2InflatonKBuilder", self.selLongLoose)
-        self.selBs2InflatonPhi = makeBs2InflatonPhi(default_name+"_Bs2InflatonPhiBuilder", self.selLongLoose)
-        self.selBd2InflatonKst = makeBd2InflatonKst(default_name+"_Bd2InflatonKstBuilder", self.selLongLoose)
-        self.selBd2InflatonRho = makeBd2InflatonRho(default_name+"_Bd2InflatonRhoBuilder", self.selLongLoose, self.selRho)
+        self.selBu2InflatonK   = makeBu2InflatonK(default_name+"_Bu2InflatonK", self.selLongLoose)
+        self.selBs2InflatonPhi = makeBs2InflatonPhi(default_name+"_Bs2InflatonPhi", self.selLongLoose)
+        self.selBd2InflatonKst = makeBd2InflatonKst(default_name+"_Bd2InflatonKst", self.selLongLoose)
+        self.selBd2InflatonRho = makeBd2InflatonRho(default_name+"_Bd2InflatonRho", self.selLongLoose, self.selRho)
 
+        self.selBu2InflatonKDn  = makeBu2InflatonK(default_name+"_Bu2InflatonKDn"    , self.selDownstream )
+        self.selBs2InflatonPhiDn= makeBs2InflatonPhi(default_name+"_Bs2InflatonPhiDn", self.selDownstream )
+        self.selBd2InflatonKstDn= makeBd2InflatonKst(default_name+"_Bd2InflatonKstDn", self.selDownstream )
+        self.selBd2InflatonRhoDn= makeBd2InflatonRho(default_name+"_Bd2InflatonRhoDn", self.selDownstream, self.selRho)
 
 
         self.longLine = StrippingLine(default_name+"LongLine",
@@ -103,38 +107,69 @@ class StrippingInflaton2MuMuConf(LineBuilder) :
                                             algos = [ self.selDownstream ]
                                             )
 
-        self.Bu2InflatonKLine = StrippingLine(default_name+"_Bu2InflatonK", 
+        self.Bu2InflatonKLine = StrippingLine(default_name+"_Bu2InflatonKLine", 
                                               prescale = config['Bu2InflatonKPrescale'],
                                               postscale = config['Bu2InflatonKPostscale'],
                                               algos = [ self.selBu2InflatonK ]
                                               )
 
-        self.Bs2InflatonPhiLine = StrippingLine(default_name+"_Bs2InflatonPhi", 
+        self.Bs2InflatonPhiLine = StrippingLine(default_name+"_Bs2InflatonPhiLine", 
                                               prescale = config['Bs2InflatonPhiPrescale'],
                                               postscale = config['Bs2InflatonPhiPostscale'],
                                               algos = [ self.selBs2InflatonPhi ]
                                               )
         
-        self.Bd2InflatonKstLine = StrippingLine(default_name+"_Bd2InflatonKst", 
+        self.Bd2InflatonKstLine = StrippingLine(default_name+"_Bd2InflatonKstLine", 
                                               prescale = config['Bd2InflatonKstPrescale'],
                                               postscale = config['Bd2InflatonKstPostscale'],
                                               algos = [ self.selBd2InflatonKst ]
                                               )
         
-        self.Bd2InflatonRhoLine = StrippingLine(default_name+"_Bd2InflatonRho", 
+        self.Bd2InflatonRhoLine = StrippingLine(default_name+"_Bd2InflatonRhoLine", 
                                               prescale = config['Bd2InflatonRhoPrescale'],
                                               postscale = config['Bd2InflatonRhoPostscale'],
                                               algos = [ self.selBd2InflatonRho ]
                                               )
 
-      
+        self.Bu2InflatonKDnLine = StrippingLine(default_name+"_Bu2InflatonKDnLine", 
+                                              prescale = config['Bu2InflatonKPrescale'],
+                                              postscale = config['Bu2InflatonKPostscale'],
+                                              algos = [ self.selBu2InflatonKDn ]
+                                              )
+
+        self.Bs2InflatonPhiDnLine = StrippingLine(default_name+"_Bs2InflatonPhiDnLine", 
+                                              prescale = config['Bs2InflatonPhiPrescale'],
+                                              postscale = config['Bs2InflatonPhiPostscale'],
+                                              algos = [ self.selBs2InflatonPhiDn ]
+                                              )
+        
+        self.Bd2InflatonKstDnLine = StrippingLine(default_name+"_Bd2InflatonKstDnLine", 
+                                              prescale = config['Bd2InflatonKstPrescale'],
+                                              postscale = config['Bd2InflatonKstPostscale'],
+                                              algos = [ self.selBd2InflatonKstDn ]
+                                              )
+        
+        self.Bd2InflatonRhoDnLine = StrippingLine(default_name+"_Bd2InflatonRhoDnLine", 
+                                              prescale = config['Bd2InflatonRhoPrescale'],
+                                              postscale = config['Bd2InflatonRhoPostscale'],
+                                              algos = [ self.selBd2InflatonRhoDn ]
+                                              )
+
+        # Inclusive lines
         self.registerLine( self.longLine )
+        self.registerLine( self.downstreamLine )
+        # LL lines
         self.registerLine( self.Bu2InflatonKLine )
         self.registerLine( self.Bs2InflatonPhiLine )
         self.registerLine( self.Bd2InflatonKstLine )
         self.registerLine( self.Bd2InflatonRhoLine )
-        #self.registerLine( self.downstreamLine )
+        # DD lines
+        self.registerLine( self.Bu2InflatonKDnLine )
+        self.registerLine( self.Bs2InflatonPhiDnLine )
+        self.registerLine( self.Bd2InflatonKstDnLine )
+        self.registerLine( self.Bd2InflatonRhoDnLine )
         
+    
 
 
 def makeLong(name, vertexDistChi2, vertexDist) :

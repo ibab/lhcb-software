@@ -255,25 +255,25 @@ class B2XMuMuConf(LineBuilder) :
         self.K1 = self.__K1__(self.A1, config)
         self.K2 = self.__K2__(self.A1, config)
 
-        self.Bs = self.__Bs__(self.Dimuon, self.Protons, self.Kaons, self.Pions, self.Pi0,
-                              self.Kshort, self.Lambda, self.Phi, self.Rho, self.F2, self.Dplus,
-                              self.Kstar, self.Lambdastar, self.Kstar2KsPi,
-                              self.Kstar2KPi0, self.A1, self.K1, self.K2, config)
+        self.Bs = self.__Bs__( self.Dimuon,
+                               daughters = [ self.Protons, self.Kaons, self.Pions, self.Pi0,
+                                             self.Kshort, self.Lambda, self.Phi, self.Rho, self.F2, self.Dplus,
+                                             self.Kstar, self.Lambdastar, self.Kstar2KsPi,
+                                             self.Kstar2KPi0, self.A1, self.K1, self.K2] ,
+                               conf = config)
 
 
-        self.line = StrippingLine(self.name+"_Line",
-                                  prescale = 1,
-                                   FILTER = {
-                                   'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
-                                   'Preambulo' : [ "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb" ]
-                                   },
-                                  algos=[self.Bs]
-                                  )
-        #        else:
-        #        self.line = StrippingLine(self.name+"_Line",
-        #                                  prescale = 1,
-        #                                  algos=[self.Bs]
-        #                                  )
+        self.line = StrippingLine(
+            self.name+"_Line",
+            prescale = 1,
+            FILTER = {
+            'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
+            'Preambulo' : [
+            "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
+            ]
+            },
+            algos=[self.Bs]
+            )
         
         self.registerLine(self.line)
 
@@ -791,12 +791,14 @@ class B2XMuMuConf(LineBuilder) :
         return _dstar
 
     
-    def __Bs__(self, Dimuon, Protons, Kaons, Pions, Pi0, Kshort, Lambda, Phi, Rho, F2, Dplus, Kstar, Lambdastar, Kstar2KsPi, Kstar2KPi0, A1, K1, K2, conf):
+    def __Bs__(self, Dimuon, daughters, conf):
         """
         Make and return a Bs selection
         """      
 
         _b2xmumu = CombineParticles()
+        #_b2xmumu.DecayDescriptors = conf['DECAYS']
+        
         _b2xmumu.DecayDescriptors = [ "B0 -> J/psi(1S) phi(1020)",
                                       "[B0 -> J/psi(1S) K*(892)0]cc",
                                       "B0 -> J/psi(1S) rho(770)0",
@@ -820,11 +822,9 @@ class B2XMuMuConf(LineBuilder) :
         _b2xmumu.MotherCut = self.BdCut
         
         _sel_Daughters = MergedSelection("Selection_"+self.name+"_daughters",
-                                         RequiredSelections = [ Kaons, Pions, Kshort, Lambda, 
-                                                               Rho, F2, Phi, Lambdastar, Kstar,
-                                                               self.Dzero, Dplus, self.Dstar,
-                                                               Kstar2KsPi, Kstar2KPi0, Pi0, A1, K1, K2])
-        sel = Selection( "Selection_"+self.name+"_bs2xmumu",
+                                         RequiredSelections = daughters )
+        
+        sel = Selection( "Selection_"+self.name+"_b2xmumu",
                          Algorithm = _b2xmumu,
                          RequiredSelections = [ Dimuon, _sel_Daughters ])
         return sel
