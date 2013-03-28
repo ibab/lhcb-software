@@ -28,7 +28,7 @@
 		<text>$LBPYTHIAROOT/options/Pythia.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-DBTags.py</text>
-		<text>$APPCONFIGOPTS/Gauss/Gauss-Upgrade-VP_Classic-UT-FT.py</text>
+		<text>$APPCONFIGOPTS/Gauss/Gauss-Upgrade-VP_Compact_Pocofoam-UT-FT.py</text>
 	</set>
 </argument>
 <argument name="exit_code">

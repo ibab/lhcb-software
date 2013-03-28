@@ -4,6 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-03-28 - Paul Szczypka
+ - Added tests for the Velo Upgrade Geometries
+   . gauss-upgrade-vp_compact_microchannel
+   . gauss-upgrade-vp_compact_pocofoam
+   . gauss-upgrade-vl_compact_microchannel
+   . gauss-upgrade-vl_compact_tpg
+   . gauss-upgrade-vl_loi_microchannel
+   . gauss-upgrade-vl_loi_tpg
+ - Edited qmtests to work with legacy DB geometries
+   . gauss-upgrade-vp-ut-ft
+   . gauss-upgrade-vl-ut-ft
 
 !========================= Gauss v46r0 2013-03-27 ============================
 ! 2013-03-27 - Gloria Corti

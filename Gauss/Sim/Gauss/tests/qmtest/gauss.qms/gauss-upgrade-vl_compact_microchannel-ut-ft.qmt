@@ -27,8 +27,8 @@
 		<text>$DECFILESROOT/options/10000000.py</text>
 		<text>$LBPYTHIAROOT/options/Pythia.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
-		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-DBTags.py</text>
-		<text>$APPCONFIGOPTS/Gauss/Gauss-Upgrade-VP_Classic-UT-FT.py</text>
+		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-VL-DBTags.py</text>
+		<text>$APPCONFIGOPTS/Gauss/Gauss-Upgrade-VL_Compact_MicroChannel-UT-FT.py</text>
 	</set>
 </argument>
 <argument name="exit_code">
