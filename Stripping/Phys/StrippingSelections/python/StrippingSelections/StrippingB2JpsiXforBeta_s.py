@@ -92,7 +92,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.PhiList = self.createSubSel( OutputList = "Phi2KKForBetaS" + self.name,
                                           InputList = DataOnDemand(Location = "Phys/StdLoosePhi2KK/Particles"),
                                           Cuts = "(in_range(980,M,1050))" \
-                                          "& (PT > 1000.*MeV) " \
+                                          "& (PT > 500.*MeV) " \
                                           "& (VFASPF(VCHI2) < 25)" \
                                           "& (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
                                           "& (MINTREE('K+'==ABSID, PIDK) > 0)" % self.config)
@@ -100,7 +100,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 	self.KstarList = self.createSubSel( OutputList = "Kstar2KpiForBetaS" + self.name,
                                             InputList = DataOnDemand(Location = "Phys/StdLooseKstar2Kpi/Particles"),
                                             Cuts = "(in_range(826,M,966))" \
-                                            "& (PT > 2.*GeV) " \
+                                            "& (PT > 1300.*MeV) " \
                                             "& (VFASPF(VCHI2) < 25)" \
                                             "& (MAXTREE('K+'==ABSID,  TRCHI2DOF) < %(TRCHI2DOF)s )" \
                                             "& (MAXTREE('pi-'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
@@ -182,7 +182,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         
         self.EtaList = self.createSubSel( OutputList = "EtaForBetaS" + self.name,
                                           InputList = DataOnDemand(Location = "Phys/StdLooseResolvedEta/Particles"),
-                                          Cuts = "(PT > 2000.*MeV)"\
+                                          Cuts = "(PT > 1800.*MeV)"\
                                           "& (MINTREE('gamma'==ABSID, PT) > 300.*MeV)")
         
         self.Pi0List = self.createSubSel( OutputList = "Pi0ForBetaS" + self.name,
@@ -273,8 +273,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                    DecayDescriptor = "rho(770)0 -> pi+ pi-",
                                                    DaughterLists = [ self.NoIPPionList ],
                                                    DaughterCuts = { "pi+" : "(PT > 250.*MeV)" },
-                                                   PreVertexCuts = "(APT > 1300.) & (in_range(400,AM,1050)) & (ADOCACHI2CUT(20, ''))",
-                                                   PostVertexCuts = "(PT > 1500.) & (in_range(500,M,950)) & (VFASPF(VCHI2) < 16.)",
+                                                   PreVertexCuts = "(APT > 1100.) & (in_range(400,AM,1050)) & (ADOCACHI2CUT(20, ''))",
+                                                   PostVertexCuts = "(PT > 1300.) & (in_range(500,M,950)) & (VFASPF(VCHI2) < 16.)",
                                                    ReFitPVs = False
                                                    )
         
@@ -284,9 +284,9 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                    DaughterLists = [ self.NoIPPionList,
                                                                      DataOnDemand(Location = "Phys/StdLooseAllPhotons/Particles") ],
                                                    DaughterCuts = { "pi+" : "(PT > 250.*MeV)",
-                                                                    "gamma" : "(PT > 300.*MeV) & (CL > 0.02)" },
-                                                   PreVertexCuts = "(APT > 1800.*MeV) & (in_range(400,AM12,1050)) & (in_range(800,AM,1120))",
-                                                   PostVertexCuts = "(PT > 2000.*MeV) & (in_range(500,M12,950)) & (in_range(900,M,1020)) & (VFASPF(VCHI2) < 16.)",
+                                                                    "gamma" : "(PT > 300.*MeV) & (CL > 0.01)" },
+                                                   PreVertexCuts = "(APT > 1600.*MeV) & (in_range(400,AM12,1050)) & (in_range(800,AM,1120))",
+                                                   PostVertexCuts = "(PT > 1800.*MeV) & (in_range(500,M12,950)) & (in_range(900,M,1020)) & (VFASPF(VCHI2) < 16.)",
                                                    ReFitPVs = False
                                                    )
         

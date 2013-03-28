@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-28 - Frederic Dupertuis
+ - Updated StrippingB2JpsiXforBeta_s.py
+
 ! 2013-03-28 - Thomas Blake
  - Updated StrippingInflaton2MuMuLine.py and added StrippingBu2MuNu to __init__
 
