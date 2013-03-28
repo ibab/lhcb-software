@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-28 - Luiz Oliveira
+ - Added strippingButo5h (5pi/K4pi) line
+
 ! 2013-03-28 - Andrea Contu
  - StrippingB2ppipiSigmacmm_Lcpi added for Lc absolute BF measurement
 
