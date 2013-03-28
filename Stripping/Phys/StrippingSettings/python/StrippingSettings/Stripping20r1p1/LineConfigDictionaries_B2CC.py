@@ -10,15 +10,15 @@ BetaS = {
                  ,       'VCHI2PDOF'                 :       10
                  ,       'Jpsi2MuMuPrescale'         :       0.02   #0.01
 		 ,	 'Jpsi2MuMuDetachedPrescale' :       1.0
-                 ,       'Bu2JpsiKPrescale'          :       0.1  #0.05
-                 ,       'Bd2JpsiKstarPrescale'      :       0.2   #0.03
+                 ,       'Bu2JpsiKPrescale'          :       0.08  #0.05
+                 ,       'Bd2JpsiKstarPrescale'      :       0.08   #0.03
                  ,       'Bd2JpsiKsPrescale'         :       1.0   #0.3
-                 ,       'Bs2JpsiPhiPrescale'        :       0.4    #0.5 #0.15
+                 ,       'Bs2JpsiPhiPrescale'        :       0.15   #0.5 #0.15
 		 ,       'Bs2Jpsif0Prescale'         :       0.07   
-                 ,       'Bs2JpsiEtaPrescale'        :       0.2 
-		 ,       'Bs2JpsiEtapPrescale'       :       0.1 
+                 ,       'Bs2JpsiEtaPrescale'        :       0.22 
+		 ,       'Bs2JpsiEtapPrescale'       :       0.08 
 		 ,       'Bs2JpsiPi0Prescale'        :       0.2
-		 ,       'Bs2JpsiRho0Prescale'       :       0.1 
+		 ,       'Bs2JpsiRho0Prescale'       :       0.05 
                          },
 	'STREAMS' : { 
 		'Dimuon' : [
@@ -38,7 +38,6 @@ BetaS = {
  		'StrippingBetaSBs2JpsiEtapPrescaledLine',
  		'StrippingBetaSBs2JpsiEtapDetachedLine',
  		'StrippingBetaSBd2JpsiPi0PrescaledLine',
- 		'StrippingBetaSBd2JpsiPi0DetachedLine',
  		'StrippingBetaSBd2JpsiRho0PrescaledLine',
  		'StrippingBetaSBd2JpsiRho0DetachedLine'
 		]
