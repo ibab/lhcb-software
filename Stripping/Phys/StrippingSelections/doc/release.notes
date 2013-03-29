@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-29 - Jibo He
+ - Removed ee lower mass cuts in Bd->eeKstar (and BDT) lines
+
 ! 2013-03-29 - Anton Poluektov 
  - Remove characters above 0x7F from some comments
 

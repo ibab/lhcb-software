@@ -26,7 +26,7 @@ defaulSettings =  {
         'ElectronPIDepi'          :   -2.   ,          
         #
         'eeVertexCHI2'            :   16.   ,  
-        'eeMinMass'               :   20.   ,  # MeV 
+        'eeMinMass'               : -999.   ,  # MeV 
         'eeMaxMass'               : 1500.   ,  # MeV
         'eeFD'                    :    1.   ,  # mm
         #
@@ -216,7 +216,7 @@ def makeEE( name,
             eeMaxMass
             ):
 
-    _StdLooseDetachedDiElectron = DataOnDemand(Location = "Phys/StdLooseDetachedDiElectron/Particles" )
+    _StdLooseDetachedDiElectron = DataOnDemand(Location = "Phys/StdDiElectronFromTracks/Particles" )
     
     ElectronPCut = "(INTREE( (ID=='e+') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) ))" % locals()
 
