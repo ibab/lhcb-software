@@ -64,7 +64,7 @@
 # @date   2010-08-10
 # 
 # $Revision$
-# Last modification $Date$
+# Last modification $Date: 2012-08-22 15:36:56 +0200
 #                by $Author$
 # =============================================================================
 """
@@ -121,7 +121,7 @@ Strip three-muon events:
 
 
 $Revision$
-Last modification $Date$
+Last modification $Date: 2012-08-22 15:36:56 +0200
                by $Author$
 """
 # =============================================================================

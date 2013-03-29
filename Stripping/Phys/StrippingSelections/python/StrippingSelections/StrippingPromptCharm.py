@@ -94,7 +94,7 @@
 # @todo Increment PT-threshold for D0,D+,D_s+, Lambda_c+
 #
 #                   $Revision$
-# Last modification $Date$
+# Last modification $Date: 2013-03-26 18:58:29 +0100
 #                by $Author$
 # =============================================================================
 """
@@ -172,7 +172,7 @@
  
 
                   $Revision$
-Last modification $Date$
+Last modification $Date: 2013-03-26 18:58:29 +0100
                by $Author$
 
 """

@@ -5,6 +5,9 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2013-03-29 - Anton Poluektov 
+ - Remove characters above 0x7F from some comments
+
+! 2013-03-29 - Anton Poluektov 
  - Add StrippingB2KSKpi to __init__.py
 
 ! 2013-03-29 - Paolo Gandini
