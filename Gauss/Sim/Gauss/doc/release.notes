@@ -4,7 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-! 2012-03-28 - Paul Szczypka
+! 2013-03-29 - Paul Szczypka
+ - Removed old VL qmtest
+ - Removed old VL DB options file for qmtest
+ - Updated Upgrade qmtests to use latest DB tags.
+
+! 2013-03-28 - Paul Szczypka
  - Added tests for the Velo Upgrade Geometries
    . gauss-upgrade-vp_compact_microchannel
    . gauss-upgrade-vp_compact_pocofoam
