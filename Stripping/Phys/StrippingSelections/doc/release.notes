@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-29 - Stefano Perazzini
+ - Added StrippingB2KSKpi.py for new BDT based stripping line
+
 ! 2013-03-29 - Anton Poluektov 
  - More verbose error messages in Utils.py
 
