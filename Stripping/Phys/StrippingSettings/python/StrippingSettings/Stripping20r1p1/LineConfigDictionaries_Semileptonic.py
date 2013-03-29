@@ -42,6 +42,10 @@ B2DHHHForBXX = {
     ,"B_DZ"          : 0.0   # mm
     ,"B_D_deltamass_MIN" : 2500 #MeV              
     ,"B_D_deltamass_MAX" : 4550 #MeV
+    ,"PiPi_MASS_MAX"                     :  500  #MeV            (500)
+    ,"PiPi_DOCACHI2_MAX"                 :   15  # adimensional  (15)
+    ,"PiPi_SUMPT_MIN"                    :  200  #MeV            (600)
+    ,"PiPi_CHI2NDF"                      :    4  # adimensional  (3)
     ,"Lb_MASS_MIN"    : 3100  # MeV               <-
     ,"Lb_MASS_MAX"    : 4800  # MeV               <-
     ,"Lb_PT_MIN"      : 1500  # MeV
@@ -51,6 +55,8 @@ B2DHHHForBXX = {
     ,"Lb_DZ"          : 1.0   # mm
     ,"Lb_Lc_deltamass_MIN" : 2000 #MeV             <-            
     ,"Lb_Lc_deltamass_MAX" : 4100 #MeV             <-         
+    ,"LcStar_MASS_MIN"                   :    0  #
+    ,"LcStar_MASS_MAX"                   :  700  #MeV            (700)
     },
     'STREAMS' : ['BhadronCompleteEvent'],
     'WGs'    : ['Semileptonic']

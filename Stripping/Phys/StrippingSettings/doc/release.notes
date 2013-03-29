@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-03-29 - Anton Poluektov 
+ - Update Semileptonic dict (B2DHHH line config, add missing keys)
+
 ! 2013-03-29 - Philip Hunt
  - Added dictionaries for the Calibration and PID lines
 
