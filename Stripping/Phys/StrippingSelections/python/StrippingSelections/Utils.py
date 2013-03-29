@@ -83,7 +83,8 @@ def addBuilderToStreamGrouping( streams, config, lb ):
                     if line:
                         streams[stream] += [ line ]
                     else:
-                        raise Exception('The line you have requested does not exist '+linename)
+                        raise Exception('The line you have requested does not exist '+linename + \
+                                        ", stream " + stream + ", builder " + config['BUILDERTYPE'])
             elif isinstance(config['STREAMS'],list):
                 streams[stream] += [ line for line in lb.lines() ]
             else:
@@ -99,7 +100,8 @@ def addBuilderToStreamGrouping( streams, config, lb ):
                         else:
                             streams[stream] += [ line ]
                     else:
-                        raise Exception('The line you have requested does not exist '+linename)
+                        raise Exception('The line you have requested does not exist '+linename + \
+                                        ", stream " + stream + ", builder " + config['BUILDERTYPE'])
             elif isinstance(config['STREAMS'],list):
                 streams[stream] = [ line for line in lb.lines() ]
             else:
