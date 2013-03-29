@@ -286,8 +286,8 @@ FullDSTDiMuon = {
         },
     'STREAMS' : { 'Dimuon':
                   [
-                    'StrippingJpsi2MuMuDetachedMinusLine',
-                    'StrippingPsi2MuMuDetachedMinusLine',
+                    'StrippingFullDSTDiMuonJpsi2MuMuDetachedMinusLine',
+                    'StrippingFullDSTDiMuonPsi2MuMuDetachedMinusLine',
 #                    'StrippingFullDSTDiMuonDiMuonNoPVLine'    
 # StrippingFullDSTDiMuonDiMuonNoPVLine already run on 2011 data
                   ]
@@ -461,7 +461,7 @@ MicroDSTDiMuon = {
         'Psi2MuMuDetached_MinusLTCuts'                     :  " & (BPVDLS<-3) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)"
         }, 
     'STREAMS' : { 'Leptonic' :
-                    'StrippingMicroDSTDiMuonDiMuonIncLine'
+                    [ 'StrippingMicroDSTDiMuonDiMuonIncLine' ]
                 } ,
     'WGs'    : [ 'BandQ' ]
     }
@@ -587,7 +587,7 @@ PromptCharm = {
 
 #StrippingXicHHH.py
 XicHHH = {
-    'BUILDERTYPE' : 'StrippingXicHHHConf',
+    'BUILDERTYPE' : 'StrippingXic2HHHConf',
     'CONFIG' : {
                     'Daug_All_PT_MIN'         : 400.0 * MeV
                   , 'Daug_1of3_PT_MIN'        : 700.0 * MeV
