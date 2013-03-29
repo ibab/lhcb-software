@@ -58,35 +58,35 @@ Last modification $Date: 2013-March-28 $
 """
 
 confdict= {
-    "GEC_nLongTrk"        : 250.  , #adimensional
+    "GEC_nLongTrk"        : 250.   ,#adimensional
     "TRGHOSTPROB"         : 0.5    ,#adimensional
     #Muon Cuts
-    "MuonGHOSTPROB"       : 0.5   ,#adimensional
-    "MuonTRCHI2"          : 4.    ,#adimensional
-    "MuonP"               : 3000. ,#MeV
-    "MuonPT"              : 1600. ,#MeV
-    "MuonMINIPCHI2"       : 12    ,#adminensional
+    "MuonGHOSTPROB"       : 0.5    ,#adimensional
+    "MuonTRCHI2"          : 4.     ,#adimensional
+    "MuonP"               : 3000.  ,#MeV
+    "MuonPT"              : 1600.  ,#MeV
+    "MuonMINIPCHI2"       : 12     ,#adminensional
     #Proton Cuts 
-    "ProtonTRCHI2"          : 6.   ,#adimensional
-    "ProtonP"               : 15000. ,#MeV
-    "ProtonPT"              : 1000.  ,#MeV
-    "ProtonPIDK"            : 0.    ,#adimensional 
-    "ProtonPIDp"            : 5.    ,#adimensional
-    "ProtonMINIPCHI2"       : 16     ,#adminensional
+    "ProtonTRCHI2"        : 6.     ,#adimensional
+    "ProtonP"             : 15000. ,#MeV
+    "ProtonPT"            : 1000.  ,#MeV
+    "ProtonPIDK"          : 0.     ,#adimensional 
+    "ProtonPIDp"          : 5.     ,#adimensional
+    "ProtonMINIPCHI2"     : 16     ,#adminensional
     #B Mother Cuts
     "BVCHI2DOF"           : 4.    ,#adminensional
     "BVCHI2DOFTight"      : 2.    ,#adminensional
-    "BDIRA"               : 0.999  ,#adminensional
+    "BDIRA"               : 0.999 ,#adminensional
     "BFDCHI2HIGH"         : 125.  ,#adimensional
     #B Mass Minima
     "pMuMassLow"          : 2250. ,#MeV
     "pMuMassLowTight"     : 2750. ,#MeV
-    "pMuMassUpper"        : 5600. ,   #MeV
-    "BPVIPChi2"           : 25.   ,   #adminensional  
-    "pMuPT"               : 1500. ,   #MeV
-    "PassymLow"           : -0.4  ,   #adminensional
-    "PassymLower"         : -0.65 ,  #adimensional
-    "PassymUpper"         : 0.2       #adimensional
+    "pMuMassUpper"        : 5600. ,#MeV
+    "BPVIPChi2"           : 25.   ,#adminensional  
+    "pMuPT"               : 1500. ,#MeV
+    "PassymLow"           : -0.4  ,#adminensional
+    "PassymLower"         : -0.65 ,#adimensional
+    "PassymUpper"         : 0.2    #adimensional
     }
 
 from Gaudi.Configuration import *
@@ -159,7 +159,7 @@ class Lb2pMuNuBuilder(LineBuilder):
                "& (PIDp-PIDpi> %(ProtonPIDp)s )& (PIDp-PIDK> %(ProtonPIDK)s ) "\
                "& (MIPCHI2DV(PRIMARY)> %(ProtonMINIPCHI2)s )"
 
-    ###### Low q^2 Line######
+    ###### Low q^2 Line ######
     def _lowq2_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         hlt = "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"\
@@ -169,7 +169,7 @@ class Lb2pMuNuBuilder(LineBuilder):
                              FILTER=self.GECs, 
                              algos = [ self._Lb2pMuNu_lowq2()], HLT = hlt, L0DU = ldu)
 
-    ###### Low q^2 Line Same Sign######
+    ###### Low q^2 Line Same Sign ######
     def _SS_lowq2_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         hlt = "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"\
@@ -180,7 +180,7 @@ class Lb2pMuNuBuilder(LineBuilder):
                              algos = [ self._Lb2pMuNuSS_lowq2()], HLT = hlt, L0DU = ldu)
 
     
-    ###### High q^2 Line######
+    ###### High q^2 Line ######
     def _highq2_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         hlt = "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"\
@@ -190,7 +190,7 @@ class Lb2pMuNuBuilder(LineBuilder):
                              FILTER=self.GECs, 
                              algos = [ self._Lb2pMuNu_highq2()], HLT = hlt, L0DU = ldu)
 
-    ###### High q^2 Same Sign Line######
+    ###### High q^2 Same Sign Line ######
     def _SS_highq2_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         hlt = "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"\
@@ -200,7 +200,7 @@ class Lb2pMuNuBuilder(LineBuilder):
                              FILTER=self.GECs, 
                              algos = [ self._Lb2pMuNuSS_highq2()], HLT = hlt, L0DU = ldu)
 
-    ######--######
+    ##### Muon Filter ######
     def _muonFilter( self ):
         if self._muonSel is not None:
             return self._muonSel
@@ -217,7 +217,7 @@ class Lb2pMuNuBuilder(LineBuilder):
         
         return _muSel
 
-    ######Proton Filter######
+    ###### Proton Filter ######
     def _protonFilter( self ):
         if self._protonSel is not None:
             return self._protonSel
@@ -236,7 +236,7 @@ class Lb2pMuNuBuilder(LineBuilder):
         return _prSel
     
 
-    ######Lb->pMuNu low q2 Opposite Sign######
+    ###### Lb->pMuNu Low q^2 Opposite Sign ######
     def _Lb2pMuNu_lowq2( self ):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
@@ -255,7 +255,7 @@ class Lb2pMuNuBuilder(LineBuilder):
                          RequiredSelections = [self._muonFilter(), self._protonFilter()])
         return _pMuSel
 	    
-    ######Lb->pMuNu low q2 Same Sign######
+    ###### Lb->pMuNu Low q^2 Same Sign ######
     def _Lb2pMuNuSS_lowq2( self ):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
@@ -274,7 +274,7 @@ class Lb2pMuNuBuilder(LineBuilder):
                          RequiredSelections = [self._muonFilter(), self._protonFilter()])
         return _pMuSel
 
-    ###### Lb->pMuNu high q2 opposite sign ######
+    ###### Lb->pMuNu high q^2 Opposite Sign ######
     def _Lb2pMuNu_highq2( self ):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
@@ -294,7 +294,7 @@ class Lb2pMuNuBuilder(LineBuilder):
                          RequiredSelections = [self._muonFilter(), self._protonFilter()])
         return _pMuSel
 	    
-    ###### Lb->pMuNu high q2 same sign ######
+    ###### Lb->pMuNu High q2 Same Sign ######
     def _Lb2pMuNuSS_highq2( self ):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
