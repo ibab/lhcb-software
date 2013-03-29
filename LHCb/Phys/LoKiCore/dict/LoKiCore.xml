@@ -80,7 +80,10 @@
     <field name = "m_incSvc" transient = "true"/>
   </class>
   
-  <class    name = "LoKi::TES::Get" />
+  <class    name = "LoKi::TES::Get" >
+    <field name = "m_algorithm" transient = "true"/>
+    <field name = "m_datasvc"   transient = "true"/>
+  </class>
   
   <class name =        "implements1<IIncidentListener>" />
   <class name = "extend_interfaces1<IIncidentListener>" />
@@ -103,7 +106,12 @@
     <class pattern="std::binary_function&lt;*&gt;">
       <method name="=" />
     </class>
-
+    
+    <class    name = "LoKi::TES::Get" >
+      <field name = "m_algorithm" />
+      <field name = "m_datasvc"   />
+    </class>
+    
     <class pattern="LoKi::Listener">
       <method name="release"  />
       <method name="addRef"   />
