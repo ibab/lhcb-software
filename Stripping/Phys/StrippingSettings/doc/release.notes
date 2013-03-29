@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-03-29 - Stefano Perazzini
+ - Updated dictionaries for the Charmless WG (Stripping20r0p1 and
+   Stripping20r1p1)
+
 ! 2013-03-29 - Ronan Wallace
  - Added dictionaries for the QEE WG (Stripping20r0p1 and Stripping20r1p1)
 
