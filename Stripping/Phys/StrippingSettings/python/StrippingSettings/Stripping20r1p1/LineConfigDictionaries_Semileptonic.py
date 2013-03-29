@@ -59,8 +59,7 @@ B2DHHHForBXX = {
 CharmFromBSemiForHadronAsy = {
     'BUILDERTYPE'       : 'CharmFromBSemiForHadronAsyAllLinesConf',
     'CONFIG'    :{
-    "prescale" : 1 # adimensional
-    ,"prescale_LbRS" : 1.0
+    "prescale_LbRS" : 1.0
     ,"prescale_LbWS" : 0.2 
     ,"prescale_D0to3piRS" : 1.0
     ,"prescale_D0to3piWS" : 0.2
@@ -99,7 +98,7 @@ CharmFromBSemiForHadronAsy = {
     ,"D0to3H_B_VCHI2NDF_MAX" : 15. # adimensional
     ,"D0to3H_B_DOCACHI2_MAX" : 50. # adimensional
     #### specific to Lambda_c+ modes
-    ,"PiPi_MASS_MAX" : 500.  # MeV
+    ,"PiPi_MASS_MAX" : 450.  # MeV
     ,"PiPi_DOCACHI2_MAX" : 15. # adimensional
     ,"PiPi_CHI2NDF" : 3. # adimensional
     ,"PiPi_SUMPT_MIN" : 600.  # MeV

@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-03-29 - Mika Vesterinen
+ - Minor updates for the CharmFromBSemiForHadronAsy module in Semileptonic dicts (Stripping20r0p1 and Stripping20r1p1)
+
 ! 2013-03-29 - Stefano Perazzini
  - Updated dictionaries for the Charmless WG (Stripping20r0p1 and
    Stripping20r1p1)
