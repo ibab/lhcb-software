@@ -19,58 +19,59 @@ Charm_stream = StrippingStream("_Charm_DST")
 
 ######## Semileptonic full DST #########
 
+
 ### flavour tagging calibration
 from StrippingSelections import StrippingBd2DstarMuNu
 confBd2DstarMuNu = StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf("Bd2DstarMuNu", StrippingBd2DstarMuNu.confdict)
-SL_stream.appendLines( confBd2DstarMuNu.lines() )
+#SL_stream.appendLines( confBd2DstarMuNu.lines() )
 
 ### delta a_fs
 from StrippingSelections import StrippingB0q2DplusMuX 
 confStrippingB0q2DplusMuX  = StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf("B0q2DplusMuX",StrippingB0q2DplusMuX.confdict)
-SL_stream.appendLines( confStrippingB0q2DplusMuX.lines() )
+#SL_stream.appendLines( confStrippingB0q2DplusMuX.lines() )
 
 ### V_ub
 from StrippingSelections import StrippingB2XuMuNu
 confB2XuMuNu = StrippingB2XuMuNu.B2XuMuNuBuilder("B2XuMuNu", StrippingB2XuMuNu.confdict)
-SL_stream.appendLines( confB2XuMuNu.lines() )
+#SL_stream.appendLines( confB2XuMuNu.lines() )
 
 ### Delta_ACP, a_sl, B-fractions etc...
 from StrippingSelections import StrippingB2DMuNuX
 confB2DMuNuX = StrippingB2DMuNuX.B2DMuNuXAllLinesConf("B2DMuNuX", StrippingB2DMuNuX.confdict)
-SL_stream.appendLines( confB2DMuNuX.lines() )
+#SL_stream.appendLines( confB2DMuNuX.lines() )
 
 ### B->D tau(->mu) nu 
 from StrippingSelections import StrippingB2DMuForTauMu
 confB2DMuForTauMu = StrippingB2DMuForTauMu.B2DMuForTauMuconf("B2DMuForTauMu",StrippingB2DMuForTauMu.confdict)
-SL_stream.appendLines( confB2DMuForTauMu.lines())
+#SL_stream.appendLines( confB2DMuForTauMu.lines())
 
 ##### CHARM MICRO DST STREAM #########
 
 from StrippingSelections import StrippingDForBSemi
 confDForBSemi = StrippingDForBSemi.DforBSemiLinesConf("DForBSemi", StrippingDForBSemi.confdict)
-Charm_stream.appendLines( confDForBSemi.lines() )
+#Charm_stream.appendLines( confDForBSemi.lines() )
 
 from StrippingSelections import StrippingD0ForBXX
 confD0ForBXX = StrippingD0ForBXX.D0forBXXLinesConf("D0ForBXX", StrippingD0ForBXX.confdict)
-Charm_stream.appendLines( confD0ForBXX.lines() )
+#Charm_stream.appendLines( confD0ForBXX.lines() )
 
 ##### DIMUON STREAM FULL DST ###########
 
 ## semi-incl J/psi from B
 from StrippingSelections import StrippingJPsiForSL
 confJPsiForSL = StrippingJPsiForSL.JPsiForSLAllLinesConf("JPsiForSL", StrippingJPsiForSL.confdict)
-Dimuon_stream.appendLines( confJPsiForSL.lines() )
+#Dimuon_stream.appendLines( confJPsiForSL.lines() )
 
 ##### BHADRON FULL DST ##################
 
 # B->D* TAU NU
-#from StrippingSelections import StrippingBd2DstarTauNu
-#confBd2DstarTauNu = StrippingBd2DstarTauNu.Bd2DstarTauNuAllLinesConf("Bd2DstarTauNu", StrippingBd2DstarTauNu.confdict)
+from StrippingSelections import StrippingBd2DstarTauNu
+confBd2DstarTauNu = StrippingBd2DstarTauNu.Bd2DstarTauNuAllLinesConf("Bd2DstarTauNu", StrippingBd2DstarTauNu.confdict)
 #BHad_stream.appendLines( confBd2DstarTauNu.lines() )
 
 from StrippingSelections import StrippingB2XTauNu
 confB2XTauNu = StrippingB2XTauNu.B2XTauNuAllLinesConf("B2XTauNu",StrippingB2XTauNu.confdict)
-BHad_stream.appendLines( confB2XTauNu.lines() )
+#BHad_stream.appendLines( confB2XTauNu.lines() )
 
 from StrippingSelections import StrippingB2DHHHForBXX
 confB2DHHHForBXX =  StrippingB2DHHHForBXX.B2DHHHForBXXLinesConf("B2DHHHForBXX",StrippingB2DHHHForBXX.confdict)
@@ -88,7 +89,7 @@ filterBadEvents =  ProcStatusCheck()
 
 # Configure the stripping using the same options as in Reco06-Stripping10
 #sc = StrippingConf( Streams = [ SL_stream,Dimuon_stream,PID_stream , Charm_stream],
-sc = StrippingConf( Streams = [ SL_stream,Dimuon_stream,Charm_stream,BHad_stream],
+sc = StrippingConf( Streams = [ BHad_stream ], #SL_stream,Dimuon_stream,Charm_stream,BHad_stream
                     MaxCandidates = 2000,
                     AcceptBadEvents = False,
                     BadEventSelection = filterBadEvents )
@@ -109,6 +110,7 @@ AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 from Configurables import StrippingReport
 sr = StrippingReport(Selections = sc.selections())
 sr.OnlyPositive = False
+sr.ReportFrequency = 1000
 
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
@@ -129,7 +131,7 @@ DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [MakePionsEtc] )
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
-#DaVinci().appendToMainSequence( [ ac ] )
+DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().DataType = "2012"
 DaVinci().InputType = 'SDST'
 #DaVinci().DDDBtag  = "head-20120413"

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-29 - Paolo Gandini
+ - Updated StrippingB2DHHHForBXX.py and thresholds fixed
+
 ! 2013-03-29 - Mika Vesterinen
  - Fix missing charge combination for double-tag D0->KsKpi in CharmFromBSemi.py
  - Minor changes to CharmFromBSemiForHadronAsy.py
