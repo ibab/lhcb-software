@@ -61,12 +61,9 @@
   <class name = "LoKi::Scalers::SkipperV"     />
   <class name = "LoKi::Scalers::Skipper"      />
 
-  <class name = "LoKi::TES::Exists"   >
-    <field name = "m_algorithm" transient = "true"/>
-  </class>
-  <class name = "LoKi::TES::Contains" >
-    <field name = "m_algorithm" transient = "true"/>
-  </class>
+  <class name = "LoKi::TES::Exists"        />
+  <class name = "LoKi::TES::Contains"      />
+
   <class name = "LoKi::TES::Counter"       />
   <class name = "LoKi::TES::Stat"          />
   <class name = "LoKi::TES::HasRecSummary" />

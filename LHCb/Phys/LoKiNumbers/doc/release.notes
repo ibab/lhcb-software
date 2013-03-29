@@ -18,6 +18,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2013-03-29 - Vanya Belyaev
+
+ - fix accoring to changes in LoKiCore 
+
 !========================= LoKiNumbers v10r3 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
