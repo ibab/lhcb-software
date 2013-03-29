@@ -206,6 +206,7 @@ import StrippingB2HHBDT
 import StrippingD2HHBDT
 import StrippingB2DHHHForBXX
 import StrippingB2KSKpi
+import StrippingButo5h
 
 import StrippingBs2D0KS0
 import StrippingB2LambdaMuLines
