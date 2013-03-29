@@ -19,7 +19,7 @@ StdLooseDetachedDiElectron.DecayDescriptor = "J/psi(1S) -> e+ e-"
 StdLooseDetachedDiElectron.Inputs = ["Phys/StdAllLooseElectrons/Particles"]
 StdLooseDetachedDiElectron.DaughtersCuts = { "e+" : "(PT>200*MeV) & (MIPCHI2DV(PRIMARY)>1.)" }
 StdLooseDetachedDiElectron.CombinationCut = "(ADOCACHI2CUT(30,''))"
-StdLooseDetachedDiElectron.MotherCut = "(VFASPF(VCHI2)<25) & (MM>20*MeV)"
+StdLooseDetachedDiElectron.MotherCut = "(VFASPF(VCHI2)<25)"
 locations = updateDoD(StdLooseDetachedDiElectron)
 
 ## ============================================================================

@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2013-03-29 - Jibo He
+ - Removed mass cut in StdLooseDetachedDiElectron
+
 ! 2013-03-28 - Thomas Blake
  - Added StdLooseDownMuons
 
