@@ -29,7 +29,7 @@ class DeVelo;
  *        are the same, container is randomly chosen.
  *     c) MiddlePerVeloHalf - split into two nearly equal parts each having
  *        nearly equal number of left and right tracks
- *  2) The two track containers are fitted with 
+ *  2) The two track containers are fitted with
  *     PVOfflineTool::reconstructSinglePVFromTracks().
  *  3) Fitted vertices are written to a TES location. Each split vertex is
  *    'tagged' with the parent vertex' index. Additionally, for each split
@@ -44,12 +44,11 @@ class DeVelo;
  */
 
 //-----------------------------------------------------------------------------
-class PVSplit : public GaudiAlgorithm {
+class PVSplit : public GaudiAlgorithm
+{
+
 public:
-  enum ExtraInfoKey { ParentVertexIndex  = 1000001,
-                      SumOfParentWeights = 1000002
-    };
-  
+
   PVSplit(const std::string& name, ISvcLocator* pSvcLocator);
 
   virtual ~PVSplit();    ///< Destructor
@@ -59,11 +58,16 @@ public:
   virtual StatusCode finalize();      ///< Algorithm finalization
 
 private:
+
+  enum ExtraInfoKey { ParentVertexIndex  = 1000001,
+                      SumOfParentWeights = 1000002
+  };
+
   enum SplitMethod { Unknown = 0,
                      Middle,
                      VeloHalf,
                      MiddlePerVeloHalf
-    };
+  };
 
   void clearSplitTracks();
   void randomShuffleTracks();
@@ -71,17 +75,19 @@ private:
   void splitTracksByVeloHalf();
   void splitTracksByMiddlePerVeloHalf();
 
-  int randomMiddle(unsigned int n);
+  unsigned int randomMiddle(unsigned int n);
   void countVeloLhcbIDs(const LHCb::Track* track, int& left, int& right) const;
   bool isLeftTrack(const LHCb::Track* track);
 
   void debugVertex(const LHCb::RecVertex* vx) const;
 
+private:
+
   std::string m_inputVerticesLocation;  ///< Location of input vertices
   std::string m_outputVerticesLocation; ///< Location of split vertices
   bool m_randomShuffle; ///< Whether to shuffle tracks first
   std::string m_splitMethodStr; ///< How to split track container (see enum SplitMethod for possible values)
-  
+
   SplitMethod m_splitMethod;
   IPVOfflineTool* m_pvsfit;
   Rndm::Numbers m_rndm;

@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-03-29 - Chris Jones
+ - Fix narrowing warning in PVSplit
+
 ! 2013-03-22 - Wouter Hulsbergen
  - fixes in TrackMonitor and TrackVertexMonitor to make them working for upgrade
 

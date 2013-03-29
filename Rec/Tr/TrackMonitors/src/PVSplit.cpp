@@ -19,17 +19,18 @@ DECLARE_ALGORITHM_FACTORY( PVSplit )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PVSplit::PVSplit(const std::string& name, ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm(name, pSvcLocator),
-  m_splitMethod(Unknown),
-  m_pvsfit(0),
-  m_splitTracks(2),
-  m_splitTracksWSum(2)
+  PVSplit::PVSplit(const std::string& name, ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm(name, pSvcLocator),
+      m_splitMethod(Unknown),
+      m_pvsfit(NULL),
+      m_velo(NULL),
+      m_splitTracks(2),
+      m_splitTracksWSum(2)
 {
   declareProperty("InputVerticesLocation",
-    m_inputVerticesLocation = LHCb::RecVertexLocation::Primary);
+                  m_inputVerticesLocation = LHCb::RecVertexLocation::Primary);
   declareProperty("OutputVerticesLocation",
-    m_outputVerticesLocation = "Rec/Vertex/Split");
+                  m_outputVerticesLocation = "Rec/Vertex/Split");
   declareProperty("RandomShuffle", m_randomShuffle = true);
   declareProperty("SplitMethod", m_splitMethodStr = "middle");
 }
@@ -42,7 +43,8 @@ PVSplit::~PVSplit() {}
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode PVSplit::initialize() {
+StatusCode PVSplit::initialize()
+{
   StatusCode sc = GaudiAlgorithm::initialize();
   if (!sc) return sc;
   if (msgLevel(MSG::DEBUG)) debug() << "Initialisation" << endmsg;
@@ -59,14 +61,10 @@ StatusCode PVSplit::initialize() {
     err() << "Unknown split method '" << m_splitMethodStr << "'!" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   // Access PVOfflineTool
   m_pvsfit = tool<IPVOfflineTool>("PVOfflineTool",this);
-  if (!m_pvsfit) {
-    err() << "Unable to retrieve the PVOfflineTool" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  
+
   // randomn number generator
   if (!m_rndm.initialize(randSvc(), Rndm::Flat(0., 1.))) {
     return Error("Unable to create Random generator");
@@ -74,7 +72,7 @@ StatusCode PVSplit::initialize() {
 
   m_velo = getDet<DeVelo>(DeVeloLocation::Default);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
@@ -109,21 +107,21 @@ StatusCode PVSplit::execute() {
       m_weights.assign(vx->weights().begin(), vx->weights().end());
     else
       m_weights.assign(vx->tracks().size(), 1.0);
-    
+
     if (m_randomShuffle)
       randomShuffleTracks();
-      
+
     if (m_splitMethod == Middle)
       splitTracksByMiddle();
     else if (m_splitMethod == VeloHalf)
       splitTracksByVeloHalf();
     else if (m_splitMethod == MiddlePerVeloHalf)
       splitTracksByMiddlePerVeloHalf();
-    
+
     for (int j = 0; j < 2; j++) {
       LHCb::RecVertex splitVx;
       StatusCode scfit = m_pvsfit->reconstructSinglePVFromTracks(
-                           vx->position(), m_splitTracks[j], splitVx);
+                                                                 vx->position(), m_splitTracks[j], splitVx);
       if (scfit == StatusCode::SUCCESS) {
         splitVx.addInfo(ParentVertexIndex, vxKey);
         splitVx.addInfo(SumOfParentWeights, m_splitTracksWSum[j]);
@@ -149,7 +147,7 @@ StatusCode PVSplit::finalize() {
   const StatusCode sc = m_rndm.finalize();
   if (sc.isFailure())
     Warning( "Failed to finalise random number generator" );
-  
+
   return GaudiAlgorithm::finalize(); // must be called after all other actions
 }
 
@@ -169,7 +167,7 @@ void PVSplit::randomShuffleTracks() {
     std::swap(m_tracks[i], m_tracks[j]);
     std::swap(m_weights[i], m_weights[j]);
   }
-  
+
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Randomized tracks (n=" << m_tracks.size() << "):\n";
     for (i = 0; i < n; i++)
@@ -180,11 +178,11 @@ void PVSplit::randomShuffleTracks() {
 
 void PVSplit::splitTracksByMiddle() {
   unsigned int n1 = randomMiddle(m_tracks.size());
-     
+
   if (msgLevel(MSG::DEBUG))
     debug() << "Split track containers size: n1=" << n1
             << ", n2=" << m_tracks.size() - n1 << endmsg;
-      
+
   m_splitTracks[0].assign(m_tracks.begin(), m_tracks.begin() + n1);
   m_splitTracks[1].assign(m_tracks.begin() + n1, m_tracks.end());
   m_splitTracksWSum[0] = std::accumulate(m_weights.begin(),
@@ -195,7 +193,7 @@ void PVSplit::splitTracksByMiddle() {
 
 void PVSplit::splitTracksByVeloHalf() {
   clearSplitTracks();
-  
+
   int n = m_tracks.size();
   for (int i = 0; i < n; i++) {
     int j = isLeftTrack(m_tracks[i])?0:1;
@@ -212,10 +210,10 @@ void PVSplit::splitTracksByMiddlePerVeloHalf() {
     int h = isLeftTrack(m_tracks[i])?0:1;
     lrIndices[h].push_back(i);
   }
-  
-  unsigned int n1[2] = {randomMiddle(lrIndices[0].size()),
-                        randomMiddle(lrIndices[1].size())};
-  
+
+  unsigned int n1[2] = { randomMiddle(lrIndices[0].size()),
+                         randomMiddle(lrIndices[1].size()) };
+
   if (msgLevel(MSG::DEBUG)) {
     debug() << "splitTracksByMiddlePerVeloHalf():\n";
     for (int h = 0; h < 2; h++) {
@@ -228,7 +226,7 @@ void PVSplit::splitTracksByMiddlePerVeloHalf() {
     }
     debug() << endmsg;
   }
-  
+
   for (int h = 0; h < 2; h++) {
     for (unsigned int k = 0; k < lrIndices[h].size(); k++) {
       int i = lrIndices[h][k];
@@ -239,10 +237,10 @@ void PVSplit::splitTracksByMiddlePerVeloHalf() {
   }
 }
 
-int PVSplit::randomMiddle(unsigned int n){
+unsigned int PVSplit::randomMiddle(unsigned int n){
   unsigned int m = n / 2;
   if (n % 2 == 1)
-    m += static_cast<int>(m_rndm.shoot() + 0.5); // add 0 or 1
+    m += static_cast<unsigned int>(m_rndm.shoot() + 0.5); // add 0 or 1
   return m;
 }
 
