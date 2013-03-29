@@ -23,8 +23,7 @@ __all__ = ('CharmFromBSemiForHadronAsyAllLinesConf',
            'confdict')
 
 confdict = {
-    "prescale" : 1 # adimensional
-    ,"prescale_LbRS" : 1.0
+    "prescale_LbRS" : 1.0
     ,"prescale_LbWS" : 0.2 
     ,"prescale_D0to3piRS" : 1.0
     ,"prescale_D0to3piWS" : 0.2
@@ -92,8 +91,7 @@ class CharmFromBSemiForHadronAsyAllLinesConf(LineBuilder) :
     """
     
     __configuration_keys__ = (
-        "prescale" 
-        ,"prescale_LbRS"
+        "prescale_LbRS"
         ,"prescale_LbWS"
         ,"prescale_D0to3piRS" 
         ,"prescale_D0to3piWS" 
@@ -382,7 +380,7 @@ def D0To3HMaker(_combName,MASS_MIN,MASS_MAX,config,_RequiredSelections,_decayDes
 def PiPiMaker(_combName,config,_RequiredSelections,_decayDescriptors):
     comb = CombineParticles(name="Comb"+_combName,
                             DecayDescriptors = _decayDescriptors, 
-                            CombinationCut = "(AM23 < %(PiPi_MASS_MAX)s*MeV)"\
+                            CombinationCut = "(AM < %(PiPi_MASS_MAX)s*MeV)"\
                             "& (ACUTDOCACHI2(%(PiPi_DOCACHI2_MAX)s,''))"\
                             "& (ACHILD(PT,1) + ACHILD(PT,2) > %(PiPi_SUMPT_MIN)s *MeV)" % config, 
                             MotherCut = "(VFASPF(VCHI2/VDOF)< %(PiPi_CHI2NDF)s)" % config)        

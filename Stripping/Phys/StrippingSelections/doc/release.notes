@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-29 - Mika Vesterinen
+ - Fix missing charge combination for double-tag D0->KsKpi in CharmFromBSemi.py
+ - Minor changes to CharmFromBSemiForHadronAsy.py
+   - remove reduntant dict variable
+   - fix pipi mass cut for the Lambda_b lines
+ - add tests/TestSemileptonicsFromSettings.py
+
 ! 2013-03-29 - Stefano Perazzini
  - Added StrippingB2KSKpi.py for new BDT based stripping line
 

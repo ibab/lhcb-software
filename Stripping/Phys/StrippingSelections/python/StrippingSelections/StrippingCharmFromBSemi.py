@@ -378,12 +378,12 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         ### ks K Pi 
         self.seld02KsKPiLL = Selection( 'SelD02KsKPiLLfor' + name,
-                                        Algorithm = self._D02KsHHFilter(['[D0 -> KS0 K- pi+]cc'],'D02KsKPiLLfor' + name),
+                                        Algorithm = self._D02KsHHFilter(['[D0 -> KS0 K- pi+]cc','[D0 -> KS0 K+ pi-]cc'],'D02KsKPiLLfor' + name),
                                         RequiredSelections = [self.selKSLL,self.selPionloose,self.selKaonloose] )           
         self.selDstar_2KsKPiLL = makeDstar('DstarKPiLLFor'+name,self.seld02KsKPiLL,self.selSlowPion,Dstar_cuts)
         
         self.seld02KsKPiDD = Selection( 'SelD02KsKPiDDfor' + name,
-                                        Algorithm = self._D02KsHHFilter(['[D0 -> KS0 K- pi+]cc'],'D02KsKPiDDfor' + name),
+                                        Algorithm = self._D02KsHHFilter(['[D0 -> KS0 K- pi+]cc','[D0 -> KS0 K+ pi-]cc'],'D02KsKPiDDfor' + name),
                                         RequiredSelections = [self.selKSDD,self.selPionloose,self.selKaonloose] )           
         self.selDstar_2KsKPiDD = makeDstar('DstarKPiDDFor'+name,self.seld02KsKPiDD,self.selSlowPion,Dstar_cuts)
 
@@ -543,6 +543,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selb2D0MuXKsPiPiDD = makeb2DMuX('b2D0MuXKsPiPiDD' + name,BDecays,MuSel,self.seld02KsPiPiDD,BCuts)
         self.selb2D0MuXKsKKLL = makeb2DMuX('b2D0MuXKsKKLL' + name,BDecays,MuSel,self.seld02KsKKLL,BCuts)
         self.selb2D0MuXKsKKDD = makeb2DMuX('b2D0MuXKsKKDD' + name,BDecays,MuSel,self.seld02KsKKDD,BCuts)
+        BDecays = [ '[B- -> D0 mu-]cc'] # since already have both D0 -> KS0 K-pi+ and KS0 K+pi-
         self.selb2D0MuXKsKPiLL = makeb2DMuX('b2D0MuXKsKPiLL' + name,BDecays,MuSel,self.seld02KsKPiLL,BCuts)
         self.selb2D0MuXKsKPiDD = makeb2DMuX('b2D0MuXKsKPiDD' + name,BDecays,MuSel,self.seld02KsKPiDD,BCuts)
 
