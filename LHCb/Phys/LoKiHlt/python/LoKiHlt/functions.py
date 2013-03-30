@@ -338,9 +338,6 @@ HLT_COUNT_ERRORBITS_RE = LoKi.HLT.CountErrorBitsRegex
 HLT_ROUTINGBITS        = LoKi.HLT.HltRoutingBits
 
 
-
-
-
 ## @see LoKi::Cuts::ROUTINBITS
 ROUTINGBITS            = LoKi.HLT.RoutingBits
 
@@ -361,6 +358,10 @@ def _add_1_ ( o1 , o2 ) :
     >>> o2 = ...
     >>> o  = o1 + o2 
     """
+    ##
+    if isinstance ( o1 , ( int , long ) ) : o1 = EvtNum ( o1 )
+    if isinstance ( o2 , ( int , long ) ) : o2 = EvtNum ( o2 )
+    ##
     return LoKi.Numbers.add1 ( o1 , o2 )
 
 ## Make event-number list from fragments :
@@ -371,6 +372,10 @@ def _add_2_ ( o1 , o2 ) :
     >>> o2 = ...
     >>> o  = o1 + o2 
     """
+    ##
+    if isinstance ( o1 , tuple ) and 2 == len ( o1 ) : o1 = RunEvt ( o1[0] , o1[1] ) 
+    if isinstance ( o2 , tuple ) and 2 == len ( o2 ) : o2 = RunEvt ( o2[0] , o2[1] ) 
+    ##
     return LoKi.Numbers.add2 ( o1 , o2 )
 
 _add_1_  . __doc__ += '\n' + LoKi.Numbers.add1.__doc__
@@ -407,13 +412,13 @@ for t in ( EvtNum , EvtNumList ,
     if hasattr ( t , '__cpp_eq__' ) :  t.__eq__   = t.__cpp_eq__
     if hasattr ( t , '__cpp_ne__' ) :  t.__ne__   = t.__cpp_ne__
 
-    
-    
+        
 ## @see LoKi::TES::Get 
 GET = LoKi.TES.Get
 #
-GET.__repr__ = lambda s : s.toString ()
-GET.__str__  = lambda s : s.toString ()
+GET.toString = lambda s : s.printOut ()
+GET.__repr__ = lambda s : s.printOut ()
+GET.__str__  = lambda s : s.printOut ()
 #
 ## merge the getter with the subsequent calls 
 def _get_rshift_ ( self , func ) :
@@ -427,8 +432,9 @@ def _get_rshift_ ( self , func ) :
     into Hlt1-streamers.
     
     """
-    return LoKi.TES.get ( getter , func ) 
+    return LoKi.TES.TESGet.get ( self , func ) 
 
+_get_rshift_ . __doc__ += '\n' + LoKi.TES.TESGet.get .__doc__
 GET. __rshift__ = _get_rshift_
 
 # =============================================================================

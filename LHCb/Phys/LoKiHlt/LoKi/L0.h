@@ -671,26 +671,6 @@ namespace LoKi
     // ========================================================================    
   } //                                                end of namespace LoKi::L0 
   // ==========================================================================
-  namespace TES 
-  {
-    // ========================================================================
-    // forward declaration 
-    class Get ;
-    // ========================================================================
-    GAUDI_API 
-    LoKi::FunctorFromFunctor<void,bool>  
-    get 
-    ( const LoKi::TES::Get&                                obj , 
-      const LoKi::Functor<const LHCb::L0DUReport*,bool>&   cut );
-    // ========================================================================
-    GAUDI_API 
-    LoKi::FunctorFromFunctor<void,double>  
-    get 
-    ( const LoKi::TES::Get&                                obj , 
-      const LoKi::Functor<const LHCb::L0DUReport*,double>& fun );
-    // ========================================================================
-  } //                                               end of namespace LoKi::TES 
-  // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
 // The END 

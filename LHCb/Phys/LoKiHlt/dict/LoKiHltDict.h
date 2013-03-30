@@ -26,6 +26,7 @@
 #include "LoKi/IHltAntiFactory.h"
 #include "LoKi/HltEngine.h"
 #include "LoKi/EvtNum.h"
+#include "LoKi/TESGet.h"
 // ============================================================================
 /** @file
  *  Simpe file to build the dictionaries for LoKi's functors, which 
