@@ -585,23 +585,24 @@ XicHHH = {
     'CONFIG' : {
                     'Daug_All_PT_MIN'         : 400.0 * MeV
                   , 'Daug_1of3_PT_MIN'        : 700.0 * MeV
-                  , 'Daug_P_MIN'              : 1.2 * MeV
+                  , 'Daug_P_MIN'              : 1200.0 * MeV
                   , 'Daug_TRCHI2DOF_MAX'      : 10.0
                   , 'Daug_BPVIPCHI2_MIN'      : 0.5
                   , 'Daug_1of3_BPVIPCHI2_MIN' : 5.0
                   , 'Proton_PIDp_MIN'         : 10.0
+                  , 'K_IPCHI2_MIN'            : 20.0
                   , 'Pi_PIDK_MAX'             : 0.0
-                  , 'K_PIDK_MIN'              : 10.0
+                  , 'K_PIDK_MIN'              : 5.0
                   , 'Comb_MASS_MIN'           : 1950.0 * MeV 
                   , 'Comb_MASS_MAX'           : 3000.0 * MeV 
                   , 'Comb_ADOCAMAX_MAX'       : 0.1 * mm
                   , 'Xic_PT_MIN'              : 1000.0 * MeV
                   , 'Xic_VCHI2VDOF_MAX'       : 10.0
-                  , 'Xic_BPVVDCHI2_MIN'       : 8.0
+                  , 'Xic_BPVVDCHI2_MIN'       : 5.0
                   , 'Xic_BPVDIRA_MIN'         : 0.9999
                   , 'Xic_BPVLTIME_MAX'        : 0.06 * ns
                   , 'Xic_BPVLTIME_MIN'        : 0.0 * ns
-                  , 'HltFilter'               : "HLT_PASS_RE('Hlt2CharmHadD2HHHDecision')"
+                  , 'HltFilter'               : "HLT_PASS('Hlt2CharmHadD2HHHDecision')"
                   , 'PrescaleXic2PKPi'        : 1.0
                   , 'PostscaleXic2PKPi'       : 1.0
                   , 'PrescaleXic2PKK'         : 1.0

@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+- 2013-03-30 - Lucio Anderlini
+  - New conf. dictionaries for StrippingXic2HHH.py (Yury Shch.)
+
 ! 2013-03-30 - Jibo He
  - Added Bd->eeKstar(and BDT) lines to v20r0p1, v20r1p1
 
