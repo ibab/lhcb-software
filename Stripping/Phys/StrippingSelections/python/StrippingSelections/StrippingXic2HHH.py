@@ -1,12 +1,10 @@
 '''
- Theta+, Lambdac+, Betac+ Xic+, lines
-Originally were designed by 'Francesca Dordei', 'Francesco Dettori', 'Patrick Spradlin' 
-to study Lambdac+ and next modified and adapted to  study Xic+, Theta+ and Betac+ 
-by Y. Shcheglov.
+Xic+ and Theta+ lines
+Designed by Yury Shcheglov, Alexey Dzyuba, Nelya Sagidova to  study Xic+ and Theta+ particles
 '''
 
 __author__ = ['Yury Shcheglov']
-__date__ = '2013/03/12'
+__date__ = '2013/03/30'
 __version__ = '$Revision: 1.0 $'
 
 __all__ = ( 'StrippingXic2HHHConf',
@@ -20,9 +18,10 @@ from GaudiKernel.SystemOfUnits import MeV, mm, ns
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand, AutomaticData
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsPions, StdTightPions,StdNoPIDsKaons, StdAllNoPIDsProtons, StdNoPIDsProtons
+
 from Configurables import TisTosParticleTagger
 
 class StrippingXic2HHHConf(LineBuilder): 
@@ -34,6 +33,7 @@ class StrippingXic2HHHConf(LineBuilder):
                                , 'Daug_TRCHI2DOF_MAX'
                                , 'Daug_BPVIPCHI2_MIN'
                                , 'Proton_PIDp_MIN'
+                               , 'K_IPCHI2_MIN'  
                                , 'Pi_PIDK_MAX'
                                , 'K_PIDK_MIN'
                                , 'Comb_MASS_MIN'
@@ -103,7 +103,7 @@ class StrippingXic2HHHConf(LineBuilder):
 
         xic_PKPi_name =  name + 'Xic2PKPi'
         xic_pKK_name  =  name + 'Xic2PKK'
-        xic_pks_name  =  name + 'Xic2PKS0'
+        theta_pks_name  =  name + 'Theta2PKS0'
         xic_klam_name  = name + 'Xic2KLam'        
 
 
@@ -111,7 +111,8 @@ class StrippingXic2HHHConf(LineBuilder):
         self.KS0DD = DataOnDemand(Location = "Phys/StdLooseKsDD/Particles")
         self.LamLL = DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")
         self.LamDD = DataOnDemand(Location = "Phys/StdLooseLambdaDD/Particles")
-        
+
+
 
  ############### PROTON SELECTIONS #########################################
 
@@ -129,7 +130,7 @@ class StrippingXic2HHHConf(LineBuilder):
 
         self.KS0 =  Selection( "KSfor" + name,
                                   Algorithm = self._ksFilter(),
-                                  RequiredSelections = [self.KS0LL,self.KS0DD])
+                                  RequiredSelections = [self.KS0LL])
 
         self.Lam =  Selection( "Lambdafor" + name,
                                   Algorithm = self._lamFilter(),
@@ -151,10 +152,11 @@ class StrippingXic2HHHConf(LineBuilder):
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
                , Daug_BPVIPCHI2_MIN = config['Daug_BPVIPCHI2_MIN']
                , Proton_PIDp_MIN = config['Proton_PIDp_MIN']
+               , K_IPCHI2_MIN = 20.
                , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
                , K_PIDK_MIN = config['K_PIDK_MIN']
                , Comb_MASS_MIN  = config['Comb_MASS_MIN']
-               , Comb_MASS_MAX  = 2600  #config['Comb_MASS_MAX']
+               , Comb_MASS_MAX  = 2600. * MeV  #config['Comb_MASS_MAX']
                , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
                , Xic_PT_MIN = config['Xic_PT_MIN']
                , Xic_VCHI2VDOF_MAX = config['Xic_VCHI2VDOF_MAX']
@@ -173,32 +175,34 @@ class StrippingXic2HHHConf(LineBuilder):
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
                , Daug_BPVIPCHI2_MIN = config['Daug_BPVIPCHI2_MIN']
                , Proton_PIDp_MIN = config['Proton_PIDp_MIN']
+               , K_IPCHI2_MIN = 0.
                , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
                , K_PIDK_MIN = config['K_PIDK_MIN']
                , Comb_MASS_MIN  = config['Comb_MASS_MIN']
-               , Comb_MASS_MAX  = 3300.        #config['Comb_MASS_MAX']
+               , Comb_MASS_MAX  = 2800. * MeV  
                , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
                , Xic_PT_MIN = config['Xic_PT_MIN']
                , Xic_VCHI2VDOF_MAX = config['Xic_VCHI2VDOF_MAX']
                , Xic_BPVVDCHI2_MIN = config['Xic_BPVVDCHI2_MIN']
-               , Xic_BPVDIRA_MIN = 0.999          #config['Xic_BPVDIRA_MIN']
+               , Xic_BPVDIRA_MIN = 0.999
                , Xic_BPVLTIME_MAX = config['Xic_BPVLTIME_MAX']
                , Xic_BPVLTIME_MIN = config['Xic_BPVLTIME_MIN']
                , decDescriptors = [ "[Lambda_c+ -> p+ K- K+]cc" ]
              )
 
-        self.selXic2PKS0 = makeXic2PKS0 ( name = xic_pks_name
-               , inputSel = [  self.KS0 , self.inProtons ]
+        self.selTheta2PKS0 = makeTheta2PKS0 ( name = theta_pks_name
+               , inputSel = [ self.KS0,  self.inProtons ]
                , Daug_All_PT_MIN =  config['Daug_All_PT_MIN']
                , Daug_1of3_PT_MIN = config['Daug_1of3_PT_MIN']
                , Daug_P_MIN = config['Daug_P_MIN']
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Proton_PIDp_MIN = 30.             #config['Proton_PIDp_MIN']
-               , Comb_MASS_MIN  = 1400.            #config['Comb_MASS_MIN']
-               , Comb_MASS_MAX  = 2400.            #config['Comb_MASS_MAX']
-               , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
+               , Proton_PIDp_MIN = 30.                  
+               , K_IPCHI2_MIN = 0. 
+               , Comb_MASS_MIN  = 1435. * MeV            
+               , Comb_MASS_MAX  = 2330. * MeV            
+               , Comb_ADOCAMAX_MAX = 0.3 * mm
                , Xic_PT_MIN = config['Xic_PT_MIN']
-               , Xic_BPVDIRA_MIN = 0    #config['Xic_BPVDIRA_MIN']
+               , Xic_BPVDIRA_MIN = -100.   
                , Xic_BPVLTIME_MAX = config['Xic_BPVLTIME_MAX']
                , Xic_BPVLTIME_MIN = config['Xic_BPVLTIME_MIN']
                , decDescriptors = [ "[Lambda_c+ -> p+ KS0]cc" ]
@@ -210,14 +214,15 @@ class StrippingXic2HHHConf(LineBuilder):
                , Daug_1of3_PT_MIN =  config['Daug_1of3_PT_MIN']         
                , Daug_P_MIN = config['Daug_P_MIN']
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Proton_PIDp_MIN = 30.                #config['Proton_PIDp_MIN']
-               , Comb_MASS_MIN  = config['Comb_MASS_MIN']           
-               , Comb_MASS_MAX  = config['Comb_MASS_MAX'] 
-               , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
+               , Proton_PIDp_MIN = 30.
+               , K_IPCHI2_MIN = 4.
+               , Comb_MASS_MIN  = 2100. * MeV           
+               , Comb_MASS_MAX  = 2800. * MeV 
+               , Comb_ADOCAMAX_MAX = 0.5 * mm
                , Xic_PT_MIN = config['Xic_PT_MIN']
-               , Xic_BPVDIRA_MIN = 0.   
-               , Xic_BPVLTIME_MAX = config['Xic_BPVLTIME_MAX']
-               , Xic_BPVLTIME_MIN = config['Xic_BPVLTIME_MIN']
+               , Xic_BPVDIRA_MIN = -100.
+               , Xic_BPVLTIME_MAX = config['Xic_BPVLTIME_MAX']                   
+               , Xic_BPVLTIME_MIN = config['Xic_BPVLTIME_MIN']                   
                , decDescriptors = [ "[Lambda_c+ -> K+ Lambda0]cc" ]
              )
 
@@ -237,10 +242,10 @@ class StrippingXic2HHHConf(LineBuilder):
                                          selection = self.selXic2PKK
                                        )
 
-        self.line_Xic2PKS0 = self._strippingLine( name = xic_pks_name + 'Line',
+        self.line_Theta2PKS0 = self._strippingLine( name = theta_pks_name + 'Line',
                                          prescale  = config['PrescaleXic2PV0'],
                                          postscale = config['PostscaleXic2PV0'],
-                                         selection = self.selXic2PKS0
+                                         selection = self.selTheta2PKS0
                                        )
 
         self.line_Xic2KLam = self._strippingLine( name = xic_klam_name + 'Line',
@@ -250,31 +255,31 @@ class StrippingXic2HHHConf(LineBuilder):
                                        )
 
     def _protonFilter( self ):
-          _code = "(PIDp-PIDpi > %(Proton_PIDp_MIN)s) & (P> 10.0*GeV) & (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__
+          _code = "(PIDp-PIDpi > %(Proton_PIDp_MIN)s) & (P> 10000.0*MeV) & (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__
           _proton = FilterDesktop( Code = _code )
           return _proton
 
 
 
     def _pionFilter( self ):
-          _code = "(PIDK-PIDpi < %(Pi_PIDK_MAX)s) & (P>1.2*GeV)& (PT>0.4*GeV)&(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s) " % self.__confdict__
+          _code = "(PIDK-PIDpi < %(Pi_PIDK_MAX)s) & (P>1200*MeV)& (PT>400*MeV)&(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s) " % self.__confdict__
           _pion = FilterDesktop( Code = _code )
           return _pion
 
 
     def _kaonFilter( self ):
-          _code = "(PIDK-PIDpi > %(K_PIDK_MIN)s) & (P>1.2*GeV) & (PT>0.4*GeV) &(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__          
+          _code = "(MIPCHI2DV(PRIMARY) > %(K_IPCHI2_MIN)s) & (PIDK-PIDpi > %(K_PIDK_MIN)s) & (P>1200*MeV) & (PT>400*MeV) &(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__          
           _kaon = FilterDesktop( Code = _code )
           return _kaon
 
     def _ksFilter( self ):
-          _code = " (MM>0.477*GeV) & (MM<0.517*GeV) & (P>1.2*GeV) & (PT>1.0*GeV) & (BPVVDCHI2 > 200.) & (VFASPF(VCHI2PDOF) < 10.) & CHILDCUT((MIPCHI2DV(PRIMARY) >40),1) &CHILDCUT((MIPCHI2DV(PRIMARY)>40),2) " % self.__confdict__
+          _code = "(MIPDV(PRIMARY)<0.5*mm)&(BPVDIRA>0)&(MM>487.*MeV)&(MM<507.*MeV)&(VFASPF(VCHI2PDOF)<10.)&(P>6000.*MeV)&(PT>2000.*MeV)&(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>0.03*ns)&CHILDCUT((MIPCHI2DV(PRIMARY)>120.),1)&CHILDCUT((MIPCHI2DV(PRIMARY)>120.),2)&CHILDCUT((TRCHI2DOF<5.),1)&CHILDCUT((TRCHI2DOF<5.),2)" % self.__confdict__  
           _ks = FilterDesktop( Code = _code )
           return _ks
 
 
-    def _lamFilter( self ):
-          _code = "(P>1.2*GeV) & (PT>1.0*GeV)" % self.__confdict__
+    def _lamFilter( self ):          
+          _code = "(BPVDIRA>0.)&(P>6000.*MeV)&(PT>2000.*MeV)&(VFASPF(VCHI2PDOF)<10.)&(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>0.03*ns)&(MM>1106.*MeV)&(MM<1126.*MeV)&CHILDCUT((MIPCHI2DV(PRIMARY)>120.),1)&CHILDCUT((MIPCHI2DV(PRIMARY)>120.),2)&CHILDCUT((TRCHI2DOF < 5. ),1)&CHILDCUT((TRCHI2DOF < 5. ),2)" % self.__confdict__
           _lam = FilterDesktop( Code = _code )
           return _lam
 
@@ -288,6 +293,7 @@ def makeXic2PKPi( name
                , Daug_TRCHI2DOF_MAX
                , Daug_BPVIPCHI2_MIN
                , Proton_PIDp_MIN
+               , K_IPCHI2_MIN
                , Pi_PIDK_MAX
                , K_PIDK_MIN
                , Comb_MASS_MIN 
@@ -311,12 +317,12 @@ def makeXic2PKPi( name
                "& (ADOCAMAX('') < %(Comb_ADOCAMAX_MAX)s)" % locals()
 
 
-    xicCuts = "(PT > %(Xic_PT_MIN)s)" \
-                  "& (VFASPF(VCHI2/VDOF) < %(Xic_VCHI2VDOF_MAX)s)" \
-                  "& (BPVVDCHI2 > %(Xic_BPVVDCHI2_MIN)s)" \
-                  "& (BPVDIRA > %(Xic_BPVDIRA_MIN)s)" \
-                  "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(Xic_BPVLTIME_MIN)s)" \
-                  "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') < %(Xic_BPVLTIME_MAX)s)" % locals()
+    xicCuts =  "(PT > %(Xic_PT_MIN)s)" \
+               "& (VFASPF(VCHI2/VDOF) < %(Xic_VCHI2VDOF_MAX)s)" \
+               "& (BPVVDCHI2 > %(Xic_BPVVDCHI2_MIN)s)" \
+               "& (BPVDIRA > %(Xic_BPVDIRA_MIN)s)" \
+               "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(Xic_BPVLTIME_MIN)s)" \
+               "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') < %(Xic_BPVLTIME_MAX)s)" % locals()
 
 
     _Xic = CombineParticles(
@@ -334,13 +340,14 @@ def makeXic2PKPi( name
                       RequiredSelections = inputSel
                     )
 
-def makeXic2PKS0( name
+def makeTheta2PKS0( name
                , inputSel
                , Daug_All_PT_MIN
                , Daug_1of3_PT_MIN
                , Daug_P_MIN
                , Daug_TRCHI2DOF_MAX
                , Proton_PIDp_MIN
+               , K_IPCHI2_MIN 
                , Comb_MASS_MIN
                , Comb_MASS_MAX
                , Comb_ADOCAMAX_MAX
@@ -351,23 +358,22 @@ def makeXic2PKS0( name
                , decDescriptors = [ "[Lambda_c+ -> p+ KS0]cc" ]
              ) :
 
-    combCuts = "(AM > %(Comb_MASS_MIN)s)" \
-               "& (AM < %(Comb_MASS_MAX)s)" \
-               "& (AMAXCHILD(PT) > %(Daug_1of3_PT_MIN)s)" \
-               "& (ADOCAMAX('') < 3. * mm)" % locals()
+    combCuts = "(((AM > %(Comb_MASS_MIN)s)" \
+               "& (AM < 1650 * MeV))" \
+               "| ((AM > 2200 * MeV)" \
+               "& (AM <  %(Comb_MASS_MAX)s)))" \
+               "& (AMAXCHILD(PT) > %(Daug_1of3_PT_MIN)s)" % locals()
 
-    xicCuts = "(PT > %(Xic_PT_MIN)s)" \
-              "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 0.03)" \
-              "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') < %(Xic_BPVLTIME_MAX)s)" % locals()
+    thetaCuts = "(PT > %(Xic_PT_MIN)s) & (MIPDV(PRIMARY)< 0.4 * mm)" % locals()
 
-    _XicKS0 = CombineParticles(
+    _ThetaKS0 = CombineParticles(
         DecayDescriptors = decDescriptors
         , CombinationCut = combCuts
-        , MotherCut = xicCuts
+        , MotherCut = thetaCuts
     )
 
     return Selection( name,
-                      Algorithm = _XicKS0,
+                      Algorithm = _ThetaKS0,
                       RequiredSelections = inputSel
                     )
 
@@ -378,6 +384,7 @@ def makeXic2KLam( name
                , Daug_P_MIN
                , Daug_TRCHI2DOF_MAX
                , Proton_PIDp_MIN
+               , K_IPCHI2_MIN
                , Comb_MASS_MIN
                , Comb_MASS_MAX
                , Comb_ADOCAMAX_MAX
@@ -391,12 +398,10 @@ def makeXic2KLam( name
 
     combCuts = "(AM > %(Comb_MASS_MIN)s)" \
                "& (AM < %(Comb_MASS_MAX)s)" \
-               "& (AMAXCHILD(PT) > %(Daug_1of3_PT_MIN)s)" \
-               "& (ADOCAMAX('') < 3. * mm)" % locals()
+               "& (AMAXCHILD(PT) > %(Daug_1of3_PT_MIN)s)" % locals()
+              
 
-    xicCuts =  "(PT > %(Xic_PT_MIN)s)" \
-               "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 0.1)" \
-               "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') < 20.)" % locals()
+    xicCuts =  "(PT > %(Xic_PT_MIN)s)" % locals()
 
     _XicLam = CombineParticles(
         DecayDescriptors = decDescriptors
@@ -410,25 +415,28 @@ def makeXic2KLam( name
                     )
  
 
-default_config = {  'Daug_All_PT_MIN'         : 400.0 * MeV
+
+default_config = {
+                    'Daug_All_PT_MIN'         : 400.0 * MeV
                   , 'Daug_1of3_PT_MIN'        : 700.0 * MeV
-                  , 'Daug_P_MIN'              : 1.2 * MeV
+                  , 'Daug_P_MIN'              : 1200.0 * MeV
                   , 'Daug_TRCHI2DOF_MAX'      : 10.0
                   , 'Daug_BPVIPCHI2_MIN'      : 0.5
                   , 'Daug_1of3_BPVIPCHI2_MIN' : 5.0
                   , 'Proton_PIDp_MIN'         : 10.0
+                  , 'K_IPCHI2_MIN'            : 20.0
                   , 'Pi_PIDK_MAX'             : 0.0
-                  , 'K_PIDK_MIN'              : 10.0
+                  , 'K_PIDK_MIN'              : 5.0
                   , 'Comb_MASS_MIN'           : 1950.0 * MeV 
                   , 'Comb_MASS_MAX'           : 3000.0 * MeV 
                   , 'Comb_ADOCAMAX_MAX'       : 0.1 * mm
                   , 'Xic_PT_MIN'              : 1000.0 * MeV
                   , 'Xic_VCHI2VDOF_MAX'       : 10.0
-                  , 'Xic_BPVVDCHI2_MIN'       : 8.0
+                  , 'Xic_BPVVDCHI2_MIN'       : 5.0
                   , 'Xic_BPVDIRA_MIN'         : 0.9999
                   , 'Xic_BPVLTIME_MAX'        : 0.06 * ns
                   , 'Xic_BPVLTIME_MIN'        : 0.0 * ns
-                  , 'HltFilter'               : "HLT_PASS_RE('Hlt2CharmHadD2HHHDecision')"
+                  , 'HltFilter'               : "HLT_PASS('Hlt2CharmHadD2HHHDecision')"
                   , 'PrescaleXic2PKPi'        : 1.0
                   , 'PostscaleXic2PKPi'       : 1.0
                   , 'PrescaleXic2PKK'         : 1.0

@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-30 - Lucio Anderlini (for Yury Shcheglov)
+ - modifications to StrippingXicHHH.py
+ - (fixed microDST default config for consistency with StrippingSettings)
+
 ! 2013-03-30 - Oliver Gruenberg
  - Added StrippingB23MuLines
 

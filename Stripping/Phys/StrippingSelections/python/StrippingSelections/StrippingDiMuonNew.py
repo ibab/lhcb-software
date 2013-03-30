@@ -358,6 +358,7 @@ config_microDST= {
         'Jpsi2MuMuDetached_VCHI2PDOF'                      :    20.   ,
         'Jpsi2MuMuDetached_PT'                             : -1000.   ,  # MeV
         'Jpsi2MuMuDetached_LTCuts'                         :   " & (BPVDLS>3)"  ,
+        'Jpsi2MuMuDetached_MinusLTCuts'                    :    " & (BPVDLS<-3) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)",
 
         # Psi2MuMuDetachedDetached line
         'Psi2MuMuDetached_Prescale'                        :     1.   ,
@@ -371,7 +372,8 @@ config_microDST= {
         'Psi2MuMuDetached_MassWindow'                      :   120.   ,  # MeV
         'Psi2MuMuDetached_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
-        'Psi2MuMuDetached_LTCuts'                          :   " & (BPVDLS>5)"
+        'Psi2MuMuDetached_LTCuts'                          :   " & (BPVDLS>5)",
+        'Psi2MuMuDetached_MinusLTCuts'                     :  " & (BPVDLS<-3) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)"
         }
 
 from Gaudi.Configuration import *
