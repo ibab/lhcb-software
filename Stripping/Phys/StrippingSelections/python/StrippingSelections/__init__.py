@@ -211,6 +211,7 @@ import StrippingButo5h
 import StrippingBs2D0KS0
 import StrippingB2LambdaMuLines
 import StrippingTau2LambdaMuLines
+import StrippingD2PiPi0
 
 from sys import modules as _modules
 _this = _modules[__name__]

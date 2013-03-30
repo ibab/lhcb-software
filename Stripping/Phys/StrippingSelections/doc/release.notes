@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 30-03-2013
+- Added StrippingD2PiPi0 module to __init__.py 
+
 ! 2013-03-29 - Jibo He
  - Removed ee lower mass cuts in Bd->eeKstar (and BDT) lines
 
