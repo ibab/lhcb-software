@@ -67,6 +67,7 @@ import StrippingBd2MuMuKstarBDT
 import StrippingBeauty2XGamma
 import StrippingBLVLines
 import StrippingLc23MuLines
+import StrippingB23MuLines
 
 import StrippingDiMuonNew
 import StrippingDiMuonForXsection
