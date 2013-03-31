@@ -4636,8 +4636,28 @@ def _ral_iter_ ( self ) :
 ## some decoration over RooArgList 
 ROOT.RooArgList . __len__       = lambda s   : s.getSize()
 ROOT.RooArgList . __contains__  = lambda s,i :  0<= i < len(s)
-ROOT.RooArgList . __iter__      = _ral_iter_ 
+ROOT.RooArgList . __iter__      = _ral_iter_
 
+## helper function 
+def _rs_list_ ( self ) :
+    """
+    """
+    _l = []
+    for i in self :
+        
+        if   hasattr  ( i , 'GetName' ) and hasattr ( i , 'getVal' ) :
+            _l.append ( i.GetName() + ":%s" % i.getVal() )
+        elif hasattr  ( i , 'GetName' ) :
+            _l.append ( i.GetName()   )
+        elif hasattr  ( i , 'getVal'  ) :
+            _l.append ( "%s" % i.getVal ()  )
+        else :
+            _l.append (  str ( i )    )
+            
+    return _l ;
+
+ROOT.RooArgList . __str__       = lambda s : str ( _rs_list_ ( s ) )  
+ROOT.RooArgList . __repr__      = lambda s : str ( _rs_list_ ( s ) )  
 
 # =============================================================================
 ## iterator for RooArgSet
@@ -4645,13 +4665,12 @@ ROOT.RooArgList . __iter__      = _ral_iter_
 #  @date   2011-06-07
 def _ras_iter_ ( self ) :
     """
-    Simple iterator fior RotoArgSet:
+    Simple iterator for RootArgSet:
 
     >>> arg_set = ...
     >>> for i in arg_set : print i
     
-    """
-    
+    """    
     it  = self.createIterator()
     val = it.Next()
     while val :
@@ -4664,6 +4683,9 @@ def _ras_iter_ ( self ) :
 ROOT.RooArgSet . __len__       = lambda s   : s.getSize()
 ROOT.RooArgSet . __iter__      = _ras_iter_ 
 
+        
+ROOT.RooArgSet . __str__   = lambda s : str ( tuple ( _rs_list_ ( s ) ) )  
+ROOT.RooArgSet . __repr__  = lambda s : str ( tuple ( _rs_list_ ( s ) ) )  
 
 # =============================================================================
 ## iterator for RooDataSet
@@ -4676,9 +4698,22 @@ def _rds_iter_ ( self ) :
     _l = len ( self )
     for i in xrange ( 0 , _l ) : yield self.get ( i )
 
+# =============================================================================
+## access to the entries in  RooDataSet
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2013-03-31
+def _rds_getitem_ ( self , i ) :
+    """
+    Get the entry from RooDataSet 
+    """
+    if 0<= i < len ( self ) :
+        return self.get ( i )
+    raise IndexError 
+
 ## some decoration over RooDataSet 
 ROOT.RooDataSet . __len__       = lambda s   : s.numEntries()
-ROOT.RooDataSet . __iter__      = _ras_iter_ 
+ROOT.RooDataSet . __iter__      = _rds_iter_ 
+ROOT.RooDataSet . __getitem__   = _rds_getitem_ 
         
         
 # =============================================================================
@@ -4825,6 +4860,150 @@ ROOT.RooRealVar   . Fix     = _fix_par_
 ROOT.RooRealVar   . release = _rel_par_
 ROOT.RooRealVar   . Release = _rel_par_
 
+# ============================================================================
+## Addition of RooRealVar and ``number''
+def _rrv_add_ ( s , o ) :
+    """
+    Addition of RooRealVar and ``number''
+
+    >>> var = ...
+    >>> num = ...
+    >>> res = var + num
+    
+    """
+    if hasattr ( o , 'getVal' ) : o = o.getVal()
+    return s.getVal() + o
+
+## Subtraction  of RooRealVar and ``number''
+def _rrv_sub_ ( s , o ) :
+    """
+    Subtraction of RooRealVar and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> res = var - num
+    
+    """
+    if hasattr ( o , 'getVal' ) : o = o.getVal()
+    return s.getVal() - o
+
+## Multiplication of RooRealVar and ``number''
+def _rrv_mul_ ( s , o ) :
+    """
+    Multiplication  of RooRealVar and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> res = var * num
+    
+    """
+    if hasattr ( o , 'getVal' ) : o = o.getVal()
+    return s.getVal() * o
+
+## Division of RooRealVar and ``number''
+def _rrv_div_ ( s , o ) :
+    """
+    Division of RooRealVar and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> res = var / num
+    
+    """
+    if hasattr ( o , 'getVal' ) : o = o.getVal()
+    return s.getVal() / o
+
+
+## (right) Addition of RooRealVar and ``number''
+def _rrv_radd_ ( s , o ) :
+    """
+    (Right) Addition of RooRealVar and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> res = num + var 
+    
+    """
+    if hasattr ( o , 'getVal' ) : o = o.getVal()
+    return o + s.getVal()
+
+## (right) subtraction  of RooRealVar and ``number''
+def _rrv_rsub_ ( s , o ) :
+    """
+    (right) subtraction of RooRealVar and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> res = num - var 
+    
+    """
+    if hasattr ( o , 'getVal' ) : o = o.getVal()
+    return o - s.getVal()
+
+## (right) multiplication of RooRealVar and ``number''
+def _rrv_rmul_ ( s , o ) :
+    """
+    (right) Multiplication  of RooRealVar and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> res = num * var 
+    
+    """
+    if hasattr ( o , 'getVal' ) : o = o.getVal()
+    return o * s.getVal()
+
+## (right) Division of RooRealVar and ``number''
+def _rrv_rdiv_ ( s , o ) :
+    """
+    (right) Division of RooRealVar and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> res = num / var 
+    
+    """
+    if hasattr ( o , 'getVal' ) : o = o.getVal()
+    return o / s.getVal() 
+
+## pow of RooRealVar and ``number''
+def _rrv_pow_ ( s , o ) :
+    """
+    pow of RooRealVar and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> res = var ** num 
+    
+    """
+    if hasattr ( o , 'getVal' ) : o = o.getVal()
+    return s.getVal() ** o  
+
+## (right) pow of RooRealVar and ``number''
+def _rrv_rpow_ ( s , o ) :
+    """
+    pow of RooRealVar and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> res = num ** var 
+    
+    """
+    if hasattr ( o , 'getVal' ) : o = o.getVal()
+    return o ** s.getVal() 
+
+
+ROOT.RooRealVar . __add__   = _rrv_add_
+ROOT.RooRealVar . __sub__   = _rrv_sub_
+ROOT.RooRealVar . __div__   = _rrv_div_
+ROOT.RooRealVar . __mul__   = _rrv_mul_
+ROOT.RooRealVar . __pow__   = _rrv_pow_
+
+ROOT.RooRealVar . __radd__  = _rrv_radd_
+ROOT.RooRealVar . __rsub__  = _rrv_rsub_
+ROOT.RooRealVar . __rdiv__  = _rrv_rdiv_
+ROOT.RooRealVar . __rmul__  = _rrv_rmul_
+ROOT.RooRealVar . __rpow__  = _rrv_rpow_
 
 # =============================================================================
 ## further decoration
