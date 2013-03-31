@@ -74,19 +74,17 @@ confdict= {
     "ProtonPIDp"          : 5.     ,#adimensional
     "ProtonMINIPCHI2"     : 16     ,#adminensional
     #B Mother Cuts
-    "BVCHI2DOF"           : 4.    ,#adminensional
-    "BVCHI2DOFTight"      : 2.    ,#adminensional
-    "BDIRA"               : 0.999 ,#adminensional
-    "BFDCHI2HIGH"         : 125.  ,#adimensional
-    #B Mass Minima
-    "pMuMassLow"          : 2250. ,#MeV
-    "pMuMassLowTight"     : 2750. ,#MeV
-    "pMuMassUpper"        : 5600. ,#MeV
-    "BPVIPChi2"           : 25.   ,#adminensional  
-    "pMuPT"               : 1500. ,#MeV
-    "PassymLow"           : -0.4  ,#adminensional
-    "PassymLower"         : -0.65 ,#adimensional
-    "PassymUpper"         : 0.2    #adimensional
+    "BVCHI2DOF"           : 4.     ,#adminensional
+    "BDIRA"               : 0.999  ,#adminensional
+    "BFDCHI2HIGH"         : 125.   ,#adimensional
+    "BPVIPChi2"           : 25.    ,#adminensional  
+    "pMuMassLow"          : 2250.  ,#MeV
+    "pMuMassLowTight"     : 2750.  ,#MeV
+    "pMuMassUpper"        : 5600.  ,#MeV
+    "pMuPT"               : 1500.  ,#MeV
+    "PassymLow"           : -0.4   ,#adminensional
+    "PassymLower"         : -0.65  ,#adimensional
+    "PassymUpper"         : 0.2     #adimensional
     }
 
 from Gaudi.Configuration import *
@@ -103,8 +101,8 @@ class Lb2pMuNuBuilder(LineBuilder):
     
     __configuration_keys__ = [
         "GEC_nLongTrk"
-        ,"MuonGHOSTPROB"
         ,"TRGHOSTPROB"          
+        ,"MuonGHOSTPROB"
         ,"MuonTRCHI2"          
         ,"MuonP"               
         ,"MuonPT"              
@@ -116,13 +114,12 @@ class Lb2pMuNuBuilder(LineBuilder):
         ,"ProtonPIDp"            
         ,"ProtonMINIPCHI2"
         ,"BVCHI2DOF"
-        ,"BVCHI2DOFTight"      
         ,"BDIRA"               
         ,"BFDCHI2HIGH"         
+        ,"BPVIPChi2" 
         ,"pMuMassLow"     
         ,"pMuMassLowTight"     
         ,"pMuMassUpper"        
-        ,"BPVIPChi2" 
 	,"pMuPT"     
 	,"PassymLow"  
 	,"PassymLower"  
