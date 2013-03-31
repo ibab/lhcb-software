@@ -4410,7 +4410,7 @@ for t in ( ROOT.TH2D , ROOT.TH2F ) :
 # =============================================================================
 logger.info ( 'Some useful decorations for TMinuit objects')
 # =============================================================================
-## get the parameter form minuit 
+## get the parameter from Minuit 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-09-28
 def _mn_par_ ( self , i ) :
@@ -4456,7 +4456,7 @@ def _mn_set_par_ ( self , i , val , fix = False ) :
     arglist = array.array('d',2*[0.])
     ierr    = ROOT.Long  ( -1 )
     #
-    arglist[0] = i+1 
+    arglist[0] =  i + 1 
     arglist[1] = val
     self.mnexcm ( "SET PAR" , arglist , 2 , ierr )
     #
