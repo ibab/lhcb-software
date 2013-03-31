@@ -420,7 +420,7 @@ DstarD2KShh = {
     ,'PPDDPostscale'        :    0.0
     },
     'WGs' : ['Charm'],
-    'STREAMS' : [ 'CharmToBeSwum' ]
+    'STREAMS' : [ 'Charm' ]
     }
 
 ## KShh. Mat Charles.
