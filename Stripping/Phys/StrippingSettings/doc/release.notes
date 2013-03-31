@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2013-03-29 - Mat Charles
+ - Remove redundant prompt-tagged CharmCompleteEvent D0 -> KS K pi from v20r1p1 (already run in previous processing)
+
+! 2013-03-29 - Mat Charles
  - Move D0 -> KS K pi from CharmToBeSwum to Charm
 
 ! 2013-03-29 - Andrea Contu
