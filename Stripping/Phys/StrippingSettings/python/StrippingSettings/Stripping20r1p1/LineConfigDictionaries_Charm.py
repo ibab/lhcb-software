@@ -525,7 +525,7 @@ CharmFromBSemi = {
     ,"PionPIDKTight" : 4.0    # adimensiional
     ,"MuonIPCHI2"    : 4.0    # adimensiional
     ,"MuonPT"        : 800.0  # MeV
-    ,"KPiPT"         : 300.0  # MeV
+    ,"KPiPT"         : 250.0  # MeV
     ,"DsDIRA"        : 0.99   # adimensiional
     ,"DsFDCHI2"      : 100.0  # adimensiional
     ,"DsMassWin"     : 80.0   # MeV
@@ -543,9 +543,9 @@ CharmFromBSemi = {
     ,"KaonPIDKloose" : -5     #adimensiional
     ,'KSCutZFDFromD' :   10.0  #mm
     ,'KSLLPMin'         : 2000  ## MeV
-    ,'KSLLPTMin'        : 400   ## MeV
+    ,'KSLLPTMin'        : 250   ## MeV
     ,'KSDDPMin'         : 3000  ## MeV
-    ,'KSDDPTMin'        : 500   ## MeV
+    ,'KSDDPTMin'        : 250   ## MeV
     ,'KSLLCutMass'      : 30    ## MeV
     ,'KSDDCutMass'      : 30    ## MeV
     ,'KSLLCutFDChi2'    : 100   ## unitless
@@ -580,22 +580,21 @@ CharmFromBSemi = {
     ,"PTSUM"       : 1800. ## MeV
     ,"PTSUM_HHPi0" : 1800. ## MeV
     },
-    'STREAMS' : {'Charm': [
-        'Strippingb2DstarMuXKsPiPiLLCharmFromBSemiLine'
-        ,'Strippingb2DstarMuXKsPiPiDDCharmFromBSemiLine'
-        ,'Strippingb2DstarMuXKsKPiLLCharmFromBSemiLine'
-        ,'Strippingb2DstarMuXKsKPiDDCharmFromBSemiLine'
-        ,'Strippingb2DstarMuXKsKKLLCharmFromBSemiLine'
-        ,'Strippingb2DstarMuXKsKKDDCharmFromBSemiLine'
-        ,'Strippingb2D0MuXKsPiPiLLCharmFromBSemiLine'
-        ,'Strippingb2D0MuXKsPiPiDDCharmFromBSemiLine'
-        ,'Strippingb2D0MuXKsKKLLCharmFromBSemiLine'
-        ,'Strippingb2D0MuXKsKKDDCharmFromBSemiLine'
-        ,'Strippingb2D0MuXKsKPiLLCharmFromBSemiLine'
-        ,'Strippingb2D0MuXKsKPiDDCharmFromBSemiLine'
-        ,'Strippingb2MuXLc2pKsLLCharmFromBSemiLine'
-        ,'Strippingb2MuXLc2pKsDDCharmFromBSemiLine'
-        ]} ,
+    'STREAMS' : {
+    'Charm' : ['Strippingb2DstarMuXKsKPiLLCharmFromBSemiLine',
+               'Strippingb2DstarMuXKsKPiDDCharmFromBSemiLine',
+               'Strippingb2DstarMuXKsPiPiLLCharmFromBSemiLine',
+               'Strippingb2DstarMuXKsPiPiDDCharmFromBSemiLine',
+               'Strippingb2DstarMuXKsKKLLCharmFromBSemiLine',
+               'Strippingb2DstarMuXKsKKDDCharmFromBSemiLine',
+               'Strippingb2D0MuXKsKPiLLCharmFromBSemiLine',
+               'Strippingb2D0MuXKsKPiDDCharmFromBSemiLine',
+               'Strippingb2D0MuXKsPiPiLLCharmFromBSemiLine',
+               'Strippingb2D0MuXKsPiPiDDCharmFromBSemiLine',
+               'Strippingb2D0MuXKsKKLLCharmFromBSemiLine',
+               'Strippingb2D0MuXKsKKDDCharmFromBSemiLine',
+               'Strippingb2MuXLc2pKsLLCharmFromBSemiLine',
+               'Strippingb2MuXLc2pKsDDCharmFromBSemiLine']},
     'WGs'    : ['Charm']
     }
     

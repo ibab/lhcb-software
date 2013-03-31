@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-01 - Andrea Contu
+ - Minor change to Charm from semileptonic lines
+
 ! 2013-03-29 - Mat Charles
  - Remove redundant prompt-tagged CharmCompleteEvent D0 -> KS K pi from v20r1p1 (already run in previous processing)
 
