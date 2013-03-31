@@ -4678,11 +4678,50 @@ def _ras_iter_ ( self ) :
         val = it.Next()
         
     del it
+
+# =============================================================================
+## get the attibute for RooArgtSet 
+def _ras_getattr_ ( self , aname ) :
+    """
+    Get the attibute from RooArgSet
+
+    >>> aset = ...
+    >>> print aset.pt
     
+    """
+    _v = self.find ( aname )
+    if not _v : raise  AttributeError
+    return _v 
+
+# =============================================================================
+## get the attibute for RooArgtSet 
+def _ras_getitem_ ( self , aname ) :
+    """
+    Get the attibute from RooArgSet
+
+    >>> aset = ...
+    >>> print aset.pt
+    
+    """
+    _v = self.find ( aname )
+    if not _v : raise  IndexError
+    return _v 
+
+# =============================================================================
+## check the presence of variable in set 
+def _ras_contains_ ( self , ename ) :
+    """
+    """
+    _v = self.find ( aname )
+    if not _v : return False 
+    return             True 
+
 ## some decoration over RooArgSet 
 ROOT.RooArgSet . __len__       = lambda s   : s.getSize()
 ROOT.RooArgSet . __iter__      = _ras_iter_ 
-
+ROOT.RooArgSet  . __getattr__  = _ras_getattr_ 
+ROOT.RooArgSet  . __getitem__  = _ras_getitem_ 
+ROOT.RooArgSet  . __contains__ = _ras_contains_ 
         
 ROOT.RooArgSet . __str__   = lambda s : str ( tuple ( _rs_list_ ( s ) ) )  
 ROOT.RooArgSet . __repr__  = lambda s : str ( tuple ( _rs_list_ ( s ) ) )  
@@ -4714,7 +4753,7 @@ def _rds_getitem_ ( self , i ) :
 ROOT.RooDataSet . __len__       = lambda s   : s.numEntries()
 ROOT.RooDataSet . __iter__      = _rds_iter_ 
 ROOT.RooDataSet . __getitem__   = _rds_getitem_ 
-        
+
         
 # =============================================================================
 ## ``easy'' print of RooFitResult
