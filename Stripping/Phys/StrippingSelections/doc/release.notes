@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-03-31 - Mika Vesterinen
+ - Changes to CharmFromBSemi. See talk by S. Reichert 27th March SL/charm WG meeting.
+ - minor updates to tests/TestSemileptonicsFromSettings.py
+
 ! 2013-03-30 - Lucio Anderlini (for Yury Shcheglov)
  - modifications to StrippingXicHHH.py
  - (fixed microDST default config for consistency with StrippingSettings)

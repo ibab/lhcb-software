@@ -14,7 +14,7 @@ Dstar methods closely copied from StrippingDstarD2KShh.py by Mat Charles.
 """
 __author__ = ['Mika Vesterinen']
 __date__ = '08/03/2012'
-__version__ = '$Revision: 0.7 $'
+__version__ = '$Revision: 0.8 $'
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -46,7 +46,7 @@ confdict = {
     ,"PionPIDKTight" : 4.0    # adimensiional
     ,"MuonIPCHI2"    : 4.0    # adimensiional
     ,"MuonPT"        : 800.0  # MeV
-    ,"KPiPT"         : 300.0  # MeV
+    ,"KPiPT"         : 250.0  # MeV
     ,"DsDIRA"        : 0.99   # adimensiional
     ,"DsFDCHI2"      : 100.0  # adimensiional
     ,"DsMassWin"     : 80.0   # MeV
@@ -63,10 +63,10 @@ confdict = {
     ,"MINIPCHI2Loose": 4.0   #adimensiional
     ,"KaonPIDKloose" : -5     #adimensiional
     ,'KSCutZFDFromD' :   10.0  #mm
-    ,'KSLLPMin'         : 2000  ## MeV
-    ,'KSLLPTMin'        : 400   ## MeV
-    ,'KSDDPMin'         : 3000  ## MeV
-    ,'KSDDPTMin'        : 500   ## MeV
+    ,'KSLLPMin'         : 1000  ## MeV
+    ,'KSLLPTMin'        : 250   ## MeV
+    ,'KSDDPMin'         : 2000  ## MeV
+    ,'KSDDPTMin'        : 250   ## MeV
     ,'KSLLCutMass'      : 30    ## MeV
     ,'KSDDCutMass'      : 30    ## MeV
     ,'KSLLCutFDChi2'    : 100   ## unitless
@@ -194,6 +194,12 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                  'MaxBMass': config['MaxBMass'],
                  'DZ': config['DZ']
                  }
+        BCutsKsHH = {'BVCHI2DOF': config['BVCHI2DOF'],
+                     'BDIRA': config['BDIRA'],
+                     'MinBMass': config['MinBMass'],
+                     'MaxBMass': config['MaxBMass'],
+                     'DZ': -9999
+                     }
         BCutsKsKs = {'BVCHI2DOF': config['BVCHI2DOF'],
                      'BDIRA': config['BDIRA'],
                      'MinBMass': config['MinBMass'],
@@ -539,22 +545,22 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         ############### B+ -> MU X D0 -> Ks HH #########################
         MuSel = self.selmuon
         BDecays = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ]
-        self.selb2D0MuXKsPiPiLL = makeb2DMuX('b2D0MuXKsPiPiLL' + name,BDecays,MuSel,self.seld02KsPiPiLL,BCuts)
-        self.selb2D0MuXKsPiPiDD = makeb2DMuX('b2D0MuXKsPiPiDD' + name,BDecays,MuSel,self.seld02KsPiPiDD,BCuts)
-        self.selb2D0MuXKsKKLL = makeb2DMuX('b2D0MuXKsKKLL' + name,BDecays,MuSel,self.seld02KsKKLL,BCuts)
-        self.selb2D0MuXKsKKDD = makeb2DMuX('b2D0MuXKsKKDD' + name,BDecays,MuSel,self.seld02KsKKDD,BCuts)
+        self.selb2D0MuXKsPiPiLL = makeb2DMuX('b2D0MuXKsPiPiLL' + name,BDecays,MuSel,self.seld02KsPiPiLL,BCutsKsHH)
+        self.selb2D0MuXKsPiPiDD = makeb2DMuX('b2D0MuXKsPiPiDD' + name,BDecays,MuSel,self.seld02KsPiPiDD,BCutsKsHH)
+        self.selb2D0MuXKsKKLL = makeb2DMuX('b2D0MuXKsKKLL' + name,BDecays,MuSel,self.seld02KsKKLL,BCutsKsHH)
+        self.selb2D0MuXKsKKDD = makeb2DMuX('b2D0MuXKsKKDD' + name,BDecays,MuSel,self.seld02KsKKDD,BCutsKsHH)
         BDecays = [ '[B- -> D0 mu-]cc'] # since already have both D0 -> KS0 K-pi+ and KS0 K+pi-
-        self.selb2D0MuXKsKPiLL = makeb2DMuX('b2D0MuXKsKPiLL' + name,BDecays,MuSel,self.seld02KsKPiLL,BCuts)
-        self.selb2D0MuXKsKPiDD = makeb2DMuX('b2D0MuXKsKPiDD' + name,BDecays,MuSel,self.seld02KsKPiDD,BCuts)
+        self.selb2D0MuXKsKPiLL = makeb2DMuX('b2D0MuXKsKPiLL' + name,BDecays,MuSel,self.seld02KsKPiLL,BCutsKsHH)
+        self.selb2D0MuXKsKPiDD = makeb2DMuX('b2D0MuXKsKPiDD' + name,BDecays,MuSel,self.seld02KsKPiDD,BCutsKsHH)
 
         #### Dstar
         BDecays = [ '[B0 -> D*(2010)+ mu-]cc', '[B0 -> D*(2010)+ mu+]cc' ]
-        self.selb2DstarMuXKsPiPiLL = makeb2DMuX('b2DstarMuXKsPiPiLL'+name,BDecays,MuSel,self.selDstar_2KsPiPiLL,BCuts)
-        self.selb2DstarMuXKsPiPiDD = makeb2DMuX('b2DstarMuXKsPiPiDD'+name,BDecays,MuSel,self.selDstar_2KsPiPiDD,BCuts)
-        self.selb2DstarMuXKsKKLL = makeb2DMuX('b2DstarMuXKsKKLL'+name,BDecays,MuSel,self.selDstar_2KsKKLL,BCuts)
-        self.selb2DstarMuXKsKKDD = makeb2DMuX('b2DstarMuXKsKKDD'+name,BDecays,MuSel,self.selDstar_2KsKKDD,BCuts)
-        self.selb2DstarMuXKsKPiLL = makeb2DMuX('b2DstarMuXKsKPiLL'+name,BDecays,MuSel,self.selDstar_2KsKPiLL,BCuts)
-        self.selb2DstarMuXKsKPiDD = makeb2DMuX('b2DstarMuXKsKPiDD'+name,BDecays,MuSel,self.selDstar_2KsKPiDD,BCuts)
+        self.selb2DstarMuXKsPiPiLL = makeb2DMuX('b2DstarMuXKsPiPiLL'+name,BDecays,MuSel,self.selDstar_2KsPiPiLL,BCutsKsHH)
+        self.selb2DstarMuXKsPiPiDD = makeb2DMuX('b2DstarMuXKsPiPiDD'+name,BDecays,MuSel,self.selDstar_2KsPiPiDD,BCutsKsHH)
+        self.selb2DstarMuXKsKKLL = makeb2DMuX('b2DstarMuXKsKKLL'+name,BDecays,MuSel,self.selDstar_2KsKKLL,BCutsKsHH)
+        self.selb2DstarMuXKsKKDD = makeb2DMuX('b2DstarMuXKsKKDD'+name,BDecays,MuSel,self.selDstar_2KsKKDD,BCutsKsHH)
+        self.selb2DstarMuXKsKPiLL = makeb2DMuX('b2DstarMuXKsKPiLL'+name,BDecays,MuSel,self.selDstar_2KsKPiLL,BCutsKsHH)
+        self.selb2DstarMuXKsKPiDD = makeb2DMuX('b2DstarMuXKsKPiDD'+name,BDecays,MuSel,self.selDstar_2KsKPiDD,BCutsKsHH)
 
 
         ############# B+ -> MU X D0 -> Ks Ks #####################
@@ -888,12 +894,12 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
     
     def _D02KsHHFilter( self , _decayDescriptors, _name):
         _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV)" \
-                          "& (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSUM)s *MeV)" \
+                          "& (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSUMLoose)s *MeV)" \
                           "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                     "& (SUMTREE( PT,  ISBASIC )> %(PTSUM)s*MeV)" \
+                     "& (SUMTREE( PT,  ISBASIC )> %(PTSUMLoose)s*MeV)" \
                      "& (MINTREE(((ABSID=='KS0')) , VFASPF(VZ))-VFASPF(VZ) > %(KSCutZFDFromD)s *mm )" \
-                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
+                     "& (BPVVDCHI2 > %(DsFDCHI2)s)"  % self.__confdict__
         _d02KsHH = CombineParticles( name = _name,
                                      DecayDescriptors = _decayDescriptors,
                                      CombinationCut = _combinationCut,
