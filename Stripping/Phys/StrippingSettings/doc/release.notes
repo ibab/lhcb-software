@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-01 - Anton Poluektov 
+ - Create dbase for first tests of stripping20r0p1 and stripping20r1p1 
+
 ! 2013-04-01 - Lucio Anderlini
  - Included StrippingMicroDSTDiMuonDiMuonPrescaledLine to 20r1p1 for Ronan McNulty
 
