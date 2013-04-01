@@ -42,7 +42,11 @@ apply_pattern    QMTest
 private
   macro SQL_use "" QMTest "SQLDDDB v* Det --no-auto-imports"
   macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel --no-auto-imports"
+  macro CaloDAQ_use "" QMTest "CaloDAQ v* Calo --no-auto-imports"
+  macro L0DU_use "" QMTest "L0DU v* L0 --no-auto-imports"
   use $(SQL_use)
   use $(LHCbAlgs_use)
+  use $(CaloDAQ_use)
+  use $(L0DU_use)
 end_private
 

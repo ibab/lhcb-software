@@ -5,6 +5,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+
+! 2013-03-29 - Rob Lambert
+ - Add CaloDAQ and L0DU to environment
+
 ! 2013-03-27 - Rob Lambert
  - Fill the tracking sequencers with empty sequencers for the test
 

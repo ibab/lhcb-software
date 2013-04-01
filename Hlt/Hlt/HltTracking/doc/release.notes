@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2013-03-29 - Rob Lambert
+ - Add CaloDAQ and L0DU to environment
+
 ! 2013-03-25 - Rob Lambert
  - Print more details of given exceptions
 
