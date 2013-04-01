@@ -461,7 +461,9 @@ MicroDSTDiMuon = {
         'Psi2MuMuDetached_MinusLTCuts'                     :  " & (BPVDLS<-3) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)"
         }, 
     'STREAMS' : { 'Leptonic' :
-                    [ 'StrippingMicroDSTDiMuonDiMuonIncLine' ]
+                    [ 'StrippingMicroDSTDiMuonDiMuonIncLine',
+                      'StrippingFullDSTDiMuonPsi2MuMuDetachedMinusLine'
+                    ]
                 } ,
     'WGs'    : [ 'BandQ' ]
     }

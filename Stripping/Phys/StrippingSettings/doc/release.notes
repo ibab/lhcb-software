@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-01 - Lucio Anderlini
+ - Included StrippingMicroDSTDiMuonDiMuonPrescaledLine to 20r1p1 for Ronan McNulty
+
 ! 2013-04-01 - Andrea Contu
  - Minor change to Charm from semileptonic lines
 
