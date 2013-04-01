@@ -55,6 +55,9 @@ private:
   /// Allow the deposited charge points to diffuse to the strips
   void drift(LHCb::MCHit* hit, std::vector<double>& points);
 
+  double fluence(const double z, const double r);
+  double chargeCollectionEfficiency(const double fluence);
+
   /// Add charge to a digit (possibly with link to MCHit) 
   void addSignal(LHCb::MCVLDigit* digit, LHCb::MCHit* hit, double charge);
 
@@ -125,6 +128,9 @@ private:
   double m_chargeUniform;
   /// Threshold energy deposit for delta electron simulation
   double m_deltaRayMinEnergy;
+  
+  /// Integrated luminosity in inverse femtobarns
+  double m_integratedLuminosity;
 
   /// Peaking time of the amplifier response function
   double m_peakTime;  

@@ -37,8 +37,7 @@ VLDigitCreator::VLDigitCreator(const std::string& name,
                                ISvcLocator* pSvcLocator) : 
     GaudiAlgorithm(name, pSvcLocator),
     m_det(0),
-    m_threshold(0.),
-    m_baseDiffuseSigma(0.) {
+    m_threshold(0.), m_baseDiffuseSigma(0.) {
   
   declareProperty("HitLocations", m_hitLocations);
   declareProperty("TimeOffsets", m_timeOffsets);
@@ -58,6 +57,8 @@ VLDigitCreator::VLDigitCreator(const std::string& name,
   declareProperty("PointsPerStrip", m_pointsPerStrip = 3);
   declareProperty("ChargeUniform", m_chargeUniform = 70.);
   declareProperty("DeltaRayMinEnergy", m_deltaRayMinEnergy = 1000.);
+
+  declareProperty("IntegratedLuminosity", m_integratedLuminosity = 0.);
 
   declareProperty("NoiseScale", m_scaleNoise = 1.);
   declareProperty("FluctuationsScale", m_scaleFluctuations = 1.);
@@ -264,9 +265,15 @@ bool VLDigitCreator::deposit(MCHit* hit, std::vector<double>& points,
               << 1.e-3 * hit->energy() / Gaudi::Units::eV << " keV" << endmsg; 
     verbose() << "Deposited charge: " << charge << " electrons" << endmsg;
   }
+  // Account for charge loss due to radiation damage.
+  if (m_integratedLuminosity > 0.) {
+    const double phi = fluence(hit->entry().z(), hit->entry().rho() / 10.);
+    const double cce = chargeCollectionEfficiency(phi);
+    charge *= cce;
+  }
   // Apply time correction.
   charge *= fraction;
-  if (m_verbose) verbose() << "Collected charge: " << charge << endmsg; 
+  if (m_verbose) verbose() << "Collected charge: " << charge << endmsg;
   // Amount of charge to divide equally
   double chargeEqual = charge;
   if (m_inhomogeneousCharge) {
@@ -793,6 +800,39 @@ void VLDigitCreator::cleanup() {
   // Sort the digits by sensor and strip number.
   std::sort(m_digits->begin(), m_digits->end(),
             VLDataFunctor::LessByKey<const MCVLDigit*>());
+
+}
+
+//============================================================================
+/// Calculate fluence at given position 
+//============================================================================
+double VLDigitCreator::fluence(const double z, const double r) {
+
+  const double k = 1.91;
+  const double phi0 = 6.35852e13 - 0.157915e11 * z - 0.00530917e11 * z * z + 
+                      7.47364e5 * pow(z, 3) + 2.66563e3 * pow(z, 4) - 
+                      6.85319 * pow(z, 5) + 4.17616e-3 * pow(z, 6);
+  const double a = phi0 / pow(0.82, -k);
+  return a * m_integratedLuminosity * pow(r, -k); 
+
+}
+
+//============================================================================
+/// Calculate charge collection efficiency at a given fluence 
+//============================================================================
+double VLDigitCreator::chargeCollectionEfficiency(const double fluence) {
+
+  if (fluence < 1.e14) return 1.;
+  const double a = 2.2e4 * pow(fluence, -0.306);
+  const double b = -0.1363 * pow(fluence, 0.2276) + 191.6; 
+
+  // Collected charge
+  const double q = a * sqrt(m_biasVoltage + b);
+  if (q < 0.) return 0.;
+  const double q0 = 16.;
+  const double cce = q / q0;
+  if (cce > 1.) return 1.;
+  return cce; 
 
 }
 
