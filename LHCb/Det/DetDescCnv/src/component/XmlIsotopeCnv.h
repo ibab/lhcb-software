@@ -1,4 +1,3 @@
-// $Id: XmlIsotopeCnv.h,v 1.4 2008-05-20 08:19:25 smenzeme Exp $
 #ifndef DETDESCCNV_XMLCNVSVC_XMLISOTOPECNV_H
 #define DETDESCCNV_XMLCNVSVC_XMLISOTOPECNV_H
 
@@ -76,7 +75,6 @@ private:
   const XMLCh* AString;
   const XMLCh* ZString;
   const XMLCh* IString;
-  const XMLCh* NString;
   const XMLCh* densityString;
   const XMLCh* radlenString;
   const XMLCh* lambdaString;

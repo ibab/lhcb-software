@@ -4,6 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2013-04-02 - Marco Cattaneo
+ - Fix UNINIT_CTOR defect
+
 !========================= DetDescCnv v4r17 2013-02-04 =========================
 ! 2013-01-25 - Marco Clemencic
  - Fixed compilation after replacement of Kernel/HistoStrings with GaudiUtils.
