@@ -4,6 +4,9 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2013-04-02 - Marco Cattaneo
+ - Fix i686 references for move to EOS
+
 !========================= IOExample v4r9 2013-03-22 =========================
 ! 2013-03-22 - Marco Cattaneo
  - Fix access URLs for test files that have been moved to EOS
