@@ -4451,7 +4451,7 @@ def _mn_iter_ ( self ) :
     
     """
     i = 0
-    while i < len ( m )  :
+    while i < len ( self )  :
         yield i
         i += 1
 
