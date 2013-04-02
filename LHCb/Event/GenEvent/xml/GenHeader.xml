@@ -18,7 +18,8 @@
       <import name="BeamParameters" soft="TRUE"/>
        <import name="GenCollision" soft="TRUE"/>
       <constructor
-       desc="Constructor">
+       desc="Constructor"
+       initList = "m_luminosity(0.0), m_evType(0), m_evtNumber(0), m_totCrossSection(0.0), m_crossingFreq(0.0)" >
 	<code>
 	  setVersion( '2' );
 	</code>

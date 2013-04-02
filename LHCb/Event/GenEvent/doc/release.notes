@@ -3,6 +3,9 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2013-04-02 - Marco Cattaneo
+ - Fix UNINIT_CTOR defect
+
 !========================= GenEvent v6r5 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
