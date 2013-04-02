@@ -4,13 +4,17 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-04-02 - Chris Jones
+ - Add 'FromB' and 'FromD' flags to training tuple.
+ - Update ganga scripts to v6 series.
+
 !========================= ChargedProtoANNPID v1r12 2013-03-22 =========================
 ! 2013-03-19 - Marco Clemencic
  - Fixed compilation with CMake.
 
 ! 2013-03-17 - Paul Szczypka
  - Added "Upgrade" key to NetworkVersions property. New key maps to "MC12TuneV1"
- which is the same as the "2012" key.
+   which is the same as the "2012" key.
 
 ! 2013-03-13 - Chris Jones
  - Add a TMVAImpFactory to provide instances of compiled TMVA classifers for known

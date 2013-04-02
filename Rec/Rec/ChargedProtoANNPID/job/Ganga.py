@@ -1,33 +1,36 @@
 
-for polarity in ["MagUp","MagDown"]:
+sim="Sim08"
+digi="Digi13"
+reco="Reco14"
+strp="Stripping20"
 
-    reco="Reco13a"
-    strp="Stripping19a"
+for pythia in ["Pythia6","Pythia8"] :
+    for polarity in ["MagUp","MagDown"]:
 
-    j = Job( application = DaVinci( version = 'v32r1p2' ) )
-    j.name = "MC2012-ANNPID-"+polarity+"-"+reco+"-"+strp+"-TEST"
+        j = Job( application = DaVinci( version = 'v33r2' ) )
+        j.name = "MC2012-ANNPID-"+polarity+"-"+pythia+sim+digi+reco+strp
 
-    datapath = "/MC/DEV/Beam4000GeV-MayJune2012-"+polarity+"-Nu2.5-EmNoCuts/Sim06a/Trig0x0097003dFlagged/"+reco+"/"+strp+"NoPrescalingFlagged/10000000/ALLSTREAMS.DST"
+        datapath = "/MC/2012/Beam4000GeV-2012-"+polarity+"-Nu2.5-"+pythia+"/"+sim+"/"+digi+"/Trig0x409f0045/"+reco+"/"+strp+"NoPrescalingFlagged/10000000/ALLSTREAMS.DST"
+        
+        datalfns = BKQuery(path=datapath).getDataset()
+        print "Extracted", len(datalfns), "LFNS for", datapath
 
-    # Main options
-    j.application.optsfile = [ File('options.py') ]
+        if len(datalfns) > 0 :
 
-    j.splitter = DiracSplitter ( filesPerJob = 2, maxFiles = 999999 )
-    #j.splitter = SplitByFiles ( filesPerJob = 2, maxFiles = 6 )
+            # Main options
+            j.application.optsfile = [ File('options.py') ]
+            
+            j.splitter = SplitByFiles ( filesPerJob = 1, maxFiles = 999999 )
+            
+            rootfiles = [ SandboxFile('ProtoPIDANN.tuples.root') ]
+            
+            j.outputfiles = rootfiles
+            
+            j.inputdata = datalfns
 
-    rootfiles = [ 'ProtoPIDANN.tuples.root' ]
-
-    j.outputsandbox = rootfiles
-
-    j.inputdata = BKQuery(path=datapath).getDataset()
-
-    # j.merger = SmartMerger( files        = rootfiles,
-    #                        ignorefailed = True,
-    #                        overwrite    = True )
-
-    j.do_auto_resubmit = True
-    
-    j.backend = Dirac()
-
-    print "Submitting job", j.name
-    j.submit()
+            j.do_auto_resubmit = True
+            
+            j.backend = Dirac()
+            
+            print "Submitting job", j.name
+            j.submit()

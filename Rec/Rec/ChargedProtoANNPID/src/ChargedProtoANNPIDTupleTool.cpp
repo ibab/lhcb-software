@@ -112,7 +112,7 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
   if ( !track ) return sc;
 
   // make a tuple
-  Tuple tuple = nTuple("annInputs", "ProtoParticle PID Information for ANN Training");
+  Tuple tuple = nTuple( "annInputs", "ProtoParticle PID Information for ANN Training" );
 
   // Loop over reconstruction variables
   StringInputs::const_iterator inputS = m_variablesS.begin();
@@ -123,15 +123,31 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
     sc = sc && tuple->column( *inputS, (float)getInput(proto,*inputI) );
   }
 
-  // MC variables
-  const LHCb::MCParticle * mcPart = m_truth->mcParticle(track);
-  sc = sc && tuple->column( "MCParticleType", mcPart ? mcPart->particleID().pid() : 0 );
-  sc = sc && tuple->column( "MCParticleP",    mcPart ? mcPart->p()  : -999 );
-  sc = sc && tuple->column( "MCParticlePt",   mcPart ? mcPart->pt() : -999 );
-  sc = sc && tuple->column( "MCVirtualMass",  mcPart ? mcPart->virtualMass() : -999 );
-
   // PID info
   sc = sc && tuple->column( "RecoPIDcode", pid.pid() );
+
+  // MC variables
+  const LHCb::MCParticle * mcPart = m_truth->mcParticle(track);
+  sc = sc && tuple->column( "MCParticleType", mcPart ? mcPart->particleID().pid() : 0    );
+  sc = sc && tuple->column( "MCParticleP",    mcPart ? mcPart->p()                : -999 );
+  sc = sc && tuple->column( "MCParticlePt",   mcPart ? mcPart->pt()               : -999 );
+  sc = sc && tuple->column( "MCVirtualMass",  mcPart ? mcPart->virtualMass()      : -999 );
+
+  // MC history flags
+  bool fromB(false), fromD(false);
+
+  // Parent MC particle
+  const LHCb::MCParticle * mcParent = ( mcPart ? mcPart->mother() : NULL );
+  while ( mcParent )
+  {
+    if ( mcParent->particleID().hasBottom() ) fromB = true;
+    if ( mcParent->particleID().hasCharm()  ) fromD = true;
+    mcParent = mcParent->mother();
+  }
+
+  // Save MC parent info
+  sc = sc && tuple->column( "MCFromB", fromB );
+  sc = sc && tuple->column( "MCFromD", fromD );
 
   // write the tuple for this ProtoParticle
   sc = sc && tuple->write();
