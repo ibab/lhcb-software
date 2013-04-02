@@ -30,7 +30,7 @@ DECLARE_SERVICE_FACTORY(XmlParserSvc)
 // Standard Constructor
 // ------------------------------------------------------------------------
 XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
-  Service (name, svc),m_parser(NULL),m_resolver(NULL),m_detDataSvc(NULL),m_toolSvc(NULL), m_msg(NULL) {
+  Service (name, svc),m_parser(NULL),m_resolverTool(NULL),m_resolver(NULL),m_detDataSvc(NULL),m_toolSvc(NULL), m_msg(NULL) {
 
   // gets the maximum number of caches documents from the joboption file
   // by default, this is 10.

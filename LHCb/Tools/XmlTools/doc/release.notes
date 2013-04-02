@@ -4,6 +4,9 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2013-04-02 - Marco Cattaneo
+ - Fix UNINIT_CTOR defect
+
 !========================= XmlTools v6r7 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
