@@ -457,7 +457,7 @@ namespace LHCb
     state.setZ( m_pos(2) ) ;
     Gaudi::TrackVector& par = state.stateVector() ;
     Gaudi::SymMatrix5x5& cov = state.covariance() ;
-    for(int i=0;i<2; ++i) par(i)   = m_pos(i) ;
+    for(int k=0;k<2; ++k) par(k)   = m_pos(k) ;
     for(int j=0;j<3; ++j) par(j+2) = track.mom()(j) ;
     // now we need to recompute B for this z-position
     const ROOT::Math::SMatrix<double,5,3>& A = track.A() ;
