@@ -28,7 +28,8 @@ DECLARE_ALGORITHM_FACTORY( DeCaloCalib )
 DeCaloCalib::DeCaloCalib( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
-  , m_rndmSvc           (  0    )
+  , m_calo(NULL)
+  , m_rndmSvc(NULL)
 {
 
   declareProperty( "DetectorName"   , m_detectorName );

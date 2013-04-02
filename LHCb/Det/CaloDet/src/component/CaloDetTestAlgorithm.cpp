@@ -32,6 +32,7 @@ CaloDetTestAlgorithm::CaloDetTestAlgorithm( const std::string& name   ,
                             ISvcLocator*       svcloc )
   : GaudiAlgorithm ( name , svcloc ) 
   , m_DetData(  )
+  , m_calo(NULL)
 {
   declareProperty("DetDataLocation" , m_DetData ) ;
   
