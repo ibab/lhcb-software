@@ -22,12 +22,16 @@ DECLARE_ALGORITHM_FACTORY( CaloFillRawBuffer )
 CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_bankType(LHCb::RawBank::LastType)
+  , m_triggerBankType(LHCb::RawBank::LastType)
+  , m_numberOfBanks(0)
   , m_calo(NULL)
   , m_totDataSize(0)
   , m_totTrigSize(0)
   , m_nbEvents(0)
 {
   //=== Default values according to the name of the algorithm !
+  m_detectorName = "None";  
   if ( "Ecal" == name.substr( 0, 4 ) ) {
     m_detectorName     = "Ecal";
     m_detectorLocation = DeCalorimeterLocation::Ecal;
@@ -64,6 +68,14 @@ StatusCode CaloFillRawBuffer::initialize() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
+  if ( "None" == m_detectorName ) {
+    return Error( "Invalid algorithm name" + name(), StatusCode::FAILURE );
+  }
+  
+  if ( 2 < m_dataCodingType || 0 >= m_dataCodingType ) {
+    Error( "Invalid Data coding type", StatusCode::FAILURE );
+  }
+
   m_calo = getDet<DeCalorimeter>( m_detectorLocation );
 
 
@@ -96,10 +108,6 @@ StatusCode CaloFillRawBuffer::initialize() {
   }
 
   info() << "Data coding type " << m_dataCodingType << endmsg;
-
-  if ( 2 < m_dataCodingType || 0 >= m_dataCodingType ) {
-    Error( "Invalid Data coding type", StatusCode::FAILURE );
-  }
 
   return StatusCode::SUCCESS;
 }
