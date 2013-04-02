@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-04-02 - Marco Cattaneo
+ - Fix UNINIT_CTOR defects
+
 ! 2013-03-21 - Liang Sun
  - Minor fix on a few potential memory leaks
    - http://lhcb-coverity.cern.ch:8080/sourcebrowser.htm?projectId=10002#mergedDefectId=45083&defectInstanceId=156348385&fileInstanceId=111518946

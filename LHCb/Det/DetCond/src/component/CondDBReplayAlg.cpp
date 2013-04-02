@@ -26,6 +26,7 @@ DECLARE_ALGORITHM_FACTORY( CondDBReplayAlg )
 CondDBReplayAlg::CondDBReplayAlg( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_reader(NULL)
 {
   declareProperty("Reader",  m_readerName = "CondDBCnvSvc",
                   "Name of the reader to use to replay the requests.");

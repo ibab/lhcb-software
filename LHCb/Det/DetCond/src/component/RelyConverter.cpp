@@ -38,7 +38,8 @@ DECLARE_CONVERTER_FACTORY(RelyConverter)
 // Standard constructor, initializes variables
 //=============================================================================
 RelyConverter::RelyConverter(ISvcLocator* svc):
-  CondDBGenericCnv(svc,RelyConverter::classID())
+  CondDBGenericCnv(svc,RelyConverter::classID()),
+  m_detPersSvc(NULL)
 {}
 //=============================================================================
 // Destructor
