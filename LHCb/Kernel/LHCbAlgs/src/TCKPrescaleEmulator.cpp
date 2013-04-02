@@ -30,6 +30,8 @@ TCKPrescaleEmulator::TCKPrescaleEmulator( const std::string& name,
 	m_propertyConfigSvc(0),
 	m_condTrigger(0),
 	m_triggerTCK(0),
+  firstevent(true),
+  lasttck(0),
   decreports(NULL)
 {
 	//TCK we wish to emulate prescales for:

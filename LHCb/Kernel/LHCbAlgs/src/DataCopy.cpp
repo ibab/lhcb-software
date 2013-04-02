@@ -1,4 +1,3 @@
-// $Id: $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -22,9 +21,6 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date 2011-10-05
  *  
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
  */
 // ============================================================================
 namespace Gaudi
@@ -239,9 +235,9 @@ StatusCode Gaudi::DataCopy::initialize ()
   m_target = _TESLocation ( m_target , true ) ;
   //
   if ( m_what.empty()      )
-  { Warning ( "Nothing to be copied"    , StatusCode::SUCCESS ) ; }
+  { Warning ( "Nothing to be copied"    , StatusCode::SUCCESS ).ignore() ; }
   if ( m_target.empty()    )
-  { Warning ( "Target is not specified" , StatusCode::SUCCESS ) ; }
+  { Warning ( "Target is not specified" , StatusCode::SUCCESS ).ignore() ; }
   if ( m_what  == m_target )
   { return Warning ( "No need to copy"  , StatusCode::SUCCESS ) ; }
   //

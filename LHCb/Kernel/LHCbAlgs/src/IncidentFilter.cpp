@@ -209,10 +209,9 @@ void Gaudi::IncidentFilter::subscribe ()
   m_old_incidents.clear () ;
   //
   if ( m_incidents.empty() ) 
-  { Warning ( "Empty list of incidents", StatusCode::SUCCESS ) ; return ; }
+  { Warning ( "Empty list of incidents", StatusCode::SUCCESS ).ignore() ; return ; }
   //                  
   IIncidentSvc* isvc = svc<IIncidentSvc>( "IncidentSvc" ) ;
-  Assert ( 0 != isvc , "Incident Service is not available" ) ;
   //
   const LIST& tmp = m_incidents ;
   for ( LIST::const_iterator item = tmp.begin() ; tmp.end() != item ; ++item )
@@ -235,7 +234,6 @@ void Gaudi::IncidentFilter::unsubscribe ()
   m_old_incidents.clear () ;
   //
   IIncidentSvc* isvc = svc<IIncidentSvc>( "IncidentSvc" ) ;
-  Assert ( 0 != isvc , "Incident Service is not available" ) ;
   //
   const LIST& tmp = m_old_incidents ;
   for ( LIST::const_iterator item = tmp.begin() ; tmp.end() != item ; ++item )
@@ -255,7 +253,6 @@ void Gaudi::IncidentFilter::handler_1 ( Property&  /* p */ )
   //
   // unsibscribe old incidents 
   IIncidentSvc* isvc = svc<IIncidentSvc>( "IncidentSvc" ) ;
-  Assert ( 0 != isvc , "Incident Service is not available" ) ;
   //
   const LIST& tmp = m_old_incidents ;
   for ( LIST::const_iterator item = tmp.begin() ; tmp.end() != item ; ++item )
