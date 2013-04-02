@@ -1,7 +1,10 @@
 ! =============================================================================
 ! Package     : MuonInterfaces
-! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
+! Responsible : Alessia Satta Alessia.Satta@cern.ch
 ! =============================================================================
+
+! 2013-04-02 - Marco Cattaneo
+ - Fix UNINIT_CTOR defects
 
 !========================= MuonInterfaces v1r3 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic

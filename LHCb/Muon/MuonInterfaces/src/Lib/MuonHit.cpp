@@ -57,6 +57,7 @@ MuonHit::MuonHit( DeMuonDetector* md,
   m_pid(0),
   m_mamy_pid(0),
   m_hit_ID(-1),
+  m_xsize(0), m_ysize(0), m_zsize(0),
   m_posTool(posTool)
 {
   createFromPad(mp);
@@ -70,6 +71,7 @@ MuonHit::MuonHit( DeMuonDetector* md,
   m_pid(0),
   m_mamy_pid(0),
   m_hit_ID(-1),
+  m_xsize(0), m_ysize(0), m_zsize(0),
   m_posTool(posTool)
 {
   createFromPad(mp);
