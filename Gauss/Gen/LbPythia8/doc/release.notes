@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2013-04-02 - Aurelien Martens
+ - add options with preliminary tuning of fragmentation
+
 !========================= LbPythia8 v7r0 2013-03-07 =========================
 ! 2013-03-06 - Aurelien Martens
  - fix warning in the nightlies
