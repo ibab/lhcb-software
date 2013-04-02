@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-01 - Anton Poluektov 
+ - Add Lb2pMuNu to __init__.py
+
 ! 2013-03-31 - Mika Vesterinen
  - Changes to CharmFromBSemi. See talk by S. Reichert 27th March SL/charm WG meeting.
  - minor updates to tests/TestSemileptonicsFromSettings.py
