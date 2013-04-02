@@ -1,4 +1,3 @@
-// $Id: PackedCaloCluster.h,v 1.3 2009-11-10 10:24:09 jonrob Exp $
 #ifndef EVENT_PackedCaloCluster_H
 #define EVENT_PackedCaloCluster_H 1
 
@@ -55,6 +54,7 @@ namespace LHCb
         pos_c0(0), pos_c1(0),
         pos_cov00(0), pos_cov11(0), pos_cov22(0),
         pos_cov10(0), pos_cov20(0), pos_cov21(0),
+        pos_spread00(0), pos_spread11(0), pos_spread10(0),
         firstEntry(0), lastEntry(0)
     { }
 
