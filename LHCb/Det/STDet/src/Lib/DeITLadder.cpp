@@ -19,9 +19,10 @@ using namespace LHCb;
 DeITLadder::DeITLadder( const std::string& name ) :
   DeSTBaseElement( name ),
   m_child(0),
+  m_parent(NULL),
   m_id(0u)
 { 
-  // constructer
+  // constructor
 }
 
 DeITLadder::~DeITLadder() {

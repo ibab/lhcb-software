@@ -24,7 +24,10 @@ using namespace LHCb;
 
 DeITBox::DeITBox( const std::string& name ) :
   DeSTBaseElement( name ),
-  m_id(0u)
+  m_parent(NULL),
+  m_id(0u),
+  m_firstLayer(NULL),
+  m_lastLayer(NULL)
 { 
   // constructer
 }

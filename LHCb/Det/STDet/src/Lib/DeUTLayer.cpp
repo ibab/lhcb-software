@@ -25,7 +25,8 @@ using namespace boost::lambda;
  */
 
 DeUTLayer::DeUTLayer( const std::string& name ) :
-  DeSTLayer( name )
+  DeSTLayer( name ),
+  m_parent(NULL)
 { 
   m_modules.clear();
 }

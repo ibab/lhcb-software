@@ -24,7 +24,8 @@ using namespace LHCb;
  */
 
 DeUTStation::DeUTStation( const std::string& name ) :
-  DeSTStation( name )
+  DeSTStation( name ),
+  m_parent(NULL)
 {
 }
 

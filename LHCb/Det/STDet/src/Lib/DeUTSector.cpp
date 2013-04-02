@@ -24,6 +24,7 @@ using namespace LHCb;
 
 DeUTSector::DeUTSector( const std::string& name ) :
   DeSTSector( name ),
+  m_parent(NULL),
   m_row(0u)
 { 
 }

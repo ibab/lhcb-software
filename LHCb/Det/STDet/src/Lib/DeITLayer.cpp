@@ -1,4 +1,3 @@
-
 #include "STDet/DeITLayer.h"
 #include "STDet/DeITLadder.h"
 #include "STDet/DeITBox.h"
@@ -26,9 +25,10 @@ using namespace LHCb;
 using namespace boost::lambda;
 
 DeITLayer::DeITLayer( const std::string& name ) :
-  DeSTLayer( name )
+  DeSTLayer( name ),
+  m_parent(NULL)
 { 
-  // constructer
+  // constructor
 }
 
 DeITLayer::~DeITLayer() {

@@ -26,9 +26,10 @@ using namespace LHCb;
 
 
 DeTTStation::DeTTStation( const std::string& name ) :
-  DeSTStation( name )
+  DeSTStation( name ),
+  m_parent(NULL)
 { 
-  // constructer
+  // constructor
 }
 
 

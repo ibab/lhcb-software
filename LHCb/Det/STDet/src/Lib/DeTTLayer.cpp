@@ -28,9 +28,10 @@ using namespace boost::lambda;
 
 
 DeTTLayer::DeTTLayer( const std::string& name ) :
-  DeSTLayer( name )
+  DeSTLayer( name ),
+  m_parent(NULL)
 { 
-  // constructer
+  // constructor
   m_modules.clear();
 }
 

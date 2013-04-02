@@ -22,6 +22,7 @@ using namespace LHCb;
 
 DeTTSector::DeTTSector( const std::string& name ) :
   DeSTSector( name ),
+  m_parent(NULL),
   m_row(0u)
 { 
   // constructer

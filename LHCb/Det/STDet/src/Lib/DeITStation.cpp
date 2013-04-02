@@ -27,9 +27,10 @@ using namespace boost::lambda;
 using namespace LHCb;
 
 DeITStation::DeITStation( const std::string& name ) :
-  DeSTStation( name )
+  DeSTStation( name ),
+  m_parent(NULL)
 { 
-  // constructer
+  // constructor
 }
 
 
