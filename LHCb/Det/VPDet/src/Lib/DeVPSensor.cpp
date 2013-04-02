@@ -1,6 +1,3 @@
-// $Id: DeVPSensor.cpp,v 1.3 2009-10-21 11:19:28 cocov Exp $
-//==============================================================================
-#define VPDET_DEVPSENSOR_CPP 1
 //==============================================================================
 // Include files 
 
@@ -31,7 +28,9 @@
 /// Standard constructor
 //==============================================================================
 DeVPSensor::DeVPSensor(const std::string& name) : 
-  DetectorElement(name)
+  DetectorElement(name),
+  m_geometry(NULL),
+  m_halfBoxGeom(NULL)
 {
   ;
 }
@@ -65,7 +64,7 @@ StatusCode DeVPSensor::initialize()
   MsgStream msg(msgSvc(), "DeVPSensor");
   sc = DetectorElement::initialize();
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to initialise DetectorElement" << endreq;
+    msg << MSG::ERROR << "Failed to initialise DetectorElement" << endmsg;
     return sc;
   }
   m_debug   = (msgSvc()->outputLevel("DeVPSensor") == MSG::DEBUG  ) ;
@@ -89,7 +88,7 @@ StatusCode DeVPSensor::initialize()
   if(m_debug)
     msg << MSG::DEBUG 
         << "Great grandparent of " << this->name() << " is " 
-        << halfBox->name() <<endreq;
+        << halfBox->name() <<endmsg;
   m_halfBoxGeom = halfBox->geometry();
   
   if(m_debug)
@@ -101,7 +100,7 @@ StatusCode DeVPSensor::initialize()
         << " Square " << isSquare()
         << " Left " << isLeft()
         << " Right " << isRight() 
-        << " Downstream " << isDownstream() << endreq;
+        << " Downstream " << isDownstream() << endmsg;
 
   return StatusCode::SUCCESS;
 }

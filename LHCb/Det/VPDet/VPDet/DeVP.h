@@ -1,4 +1,3 @@
-// $Id: DeVP.h,v 1.1.1.1 2009-09-17 16:07:20 cocov Exp $
 #ifndef       VPDET_DEVP_H
 #define       VPDET_DEVP_H 1
 // ============================================================================
@@ -412,7 +411,6 @@ private:
 
   // Set output level for message service
   bool m_debug;
-  bool m_verbose;
 
   double m_sensVolCut;
 };

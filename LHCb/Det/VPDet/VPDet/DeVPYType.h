@@ -1,4 +1,3 @@
-// $Id: DeVPYType.h,v 1.3 2009-10-21 11:19:28 cocov Exp $
 #ifndef VPDET_DEVPYTYPE_H 
 #define VPDET_DEVPYTYPE_H 1
 
@@ -105,9 +104,6 @@ private:
 
   // used to control initialization NEVER ACCESS THIS IN AN INLINED METHOD!
   static bool m_staticDataInvalid;
-  // Set output level for message service
-  bool m_debug;
-  bool m_verbose;
 
 };
 

@@ -4,6 +4,10 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2013-04-02 - Marco Cattaneo
+ - Replace endreq by endmsg
+ - Fix UNINIT_CTOR defects
+
 !========================= VPDet v2r1 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

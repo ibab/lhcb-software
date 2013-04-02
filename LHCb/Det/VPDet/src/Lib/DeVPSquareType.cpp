@@ -1,6 +1,3 @@
-// $Id: DeVPSquareType.cpp,v 1.14 2010-04-13 10:09:43 cocov Exp $
-//==============================================================================
-#define VPDET_DEVPSQUARETYPE_CPP 1
 //==============================================================================
 // Include files 
 
@@ -175,6 +172,13 @@ DeVPSquareType::DeVPSquareType(const std::string& name) :
   DeVPSensor(name),
   m_ladders(),
   m_otherSideSensor(0),
+  m_PixelLPBit(0),
+  m_PixelHPBit(0),
+  m_PixelBit(0),
+  m_ChipMask(0),
+  m_PixelLPMask(0),
+  m_PixelHPMask(0),
+  m_PixelMask(0),
   m_PixelSize(VPDet::deVPSquareTypeStaticPixelSize()), 
   m_NpixX(VPDet::deVPSquareTypeStaticNpixX()), 
   m_ChipWidth(VPDet::deVPSquareTypeStaticChipWidth()), 
@@ -183,6 +187,7 @@ DeVPSquareType::DeVPSquareType(const std::string& name) :
   m_ChipLastPixelSize(VPDet::deVPSquareTypeStaticChipLastPixelSize()), 
   m_ChipsInLadder(VPDet::deVPSquareTypeStaticChipsInLadder()),
   m_ChipHorizontal(VPDet::deVPSquareTypeStaticChipHorizontal()),
+  m_debug(false),
   m_msgStream(NULL)
 {
 }
@@ -219,12 +224,11 @@ StatusCode DeVPSquareType::initialize()
 
   sc = DeVPSensor::initialize();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to initialise DeVPSensor" << endreq;
+    msg() << MSG::ERROR << "Failed to initialise DeVPSensor" << endmsg;
     return sc;
   }
 
   m_debug   = (msgSvc()->outputLevel("DeVPSquareType") == MSG::DEBUG  ) ;
-  m_verbose = (msgSvc()->outputLevel("DeVPSquareType") == MSG::VERBOSE) ;
   int numOfChips = 0;
   // Fill the ladder vector with parameters from the DDDB
   for (int nl = 0 ; nl < ladderNumber() ; nl ++)
@@ -254,7 +258,7 @@ StatusCode DeVPSquareType::initialize()
   /// Calculate the pixels position and size
   sc = calcPixelsParam();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to store the pixel position in static" << endreq;
+    msg() << MSG::ERROR << "Failed to store the pixel position in static" << endmsg;
     return sc;
   }
 
@@ -285,7 +289,7 @@ StatusCode DeVPSquareType::initialize()
    first update
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to update geometry cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update geometry cache." << endmsg;
     return sc;
   }*/
 
@@ -348,7 +352,7 @@ StatusCode DeVPSquareType::pointToChannel(const Gaudi::XYZPoint& point,
   std::pair <int,int> pixelPos = WhichPixel(localPoint,ladderIndex,chipIndex,fraction);
 
   if( pixelPos.first < 0. || pixelPos.second < 0. ){
-    msg()<<MSG::INFO<<"Which Pixelfunction does not find the pixels..."<<endreq;
+    msg()<<MSG::INFO<<"Which Pixelfunction does not find the pixels..."<<endmsg;
     return StatusCode::FAILURE;
   }
   // Set the pixel position in the VPChannelID
@@ -443,7 +447,7 @@ StatusCode  DeVPSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
       if (pixX == nPixRow()-1 && chip%NchipInLad != NchipInLad-1)chipoffset = 1;
     }
     
-    //if (diff)msg() << MSG::INFO<<"Central Channel "<<(channelCentral).sensor()<<" "<<(channelCentral).chip()<<" "<<(channelCentral).pixel_hp()<<" "<<(channelCentral).pixel_lp()<<" "<<size<<" x,y,zloc "<<loc_point<<endreq;
+    //if (diff)msg() << MSG::INFO<<"Central Channel "<<(channelCentral).sensor()<<" "<<(channelCentral).chip()<<" "<<(channelCentral).pixel_hp()<<" "<<(channelCentral).pixel_lp()<<" "<<size<<" x,y,zloc "<<loc_point<<endmsg;
     for (int x = minX ; x < maxX ; x ++){
       for (int y = minY ; y < maxY ; y ++){
 	LHCb::VPChannelID neig_channel(channelCentral);
@@ -452,12 +456,12 @@ StatusCode  DeVPSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
 	neig_channel.setPixel_lp((neig_channel.pixel_lp()+x)%256);
 	neig_channel.setPixel_hp(neig_channel.pixel_hp()+y);
 	channels.push_back(neig_channel);
-	//if (diff) msg() << MSG::INFO<<"       x,y "<<x<<" "<<y<<" minX,Y "<<minX<<" "<<minY<<" maxX,Y"<<maxX<<" "<<maxY<<" "<<(neig_channel).sensor()<<" "<<(neig_channel).chip()<<" "<<(neig_channel).pixel_hp()<<" "<<(neig_channel).pixel_lp()<<endreq;
+	//if (diff) msg() << MSG::INFO<<"       x,y "<<x<<" "<<y<<" minX,Y "<<minX<<" "<<minY<<" maxX,Y"<<maxX<<" "<<maxY<<" "<<(neig_channel).sensor()<<" "<<(neig_channel).chip()<<" "<<(neig_channel).pixel_hp()<<" "<<(neig_channel).pixel_lp()<<endmsg;
       }
     }
   }
   else if(  !sc.isSuccess() ) {
-    //msg() << MSG::INFO<<"Central Channel does not exist.... "<<" x,y,zloc "<<loc_point<<endreq;
+    //msg() << MSG::INFO<<"Central Channel does not exist.... "<<" x,y,zloc "<<loc_point<<endmsg;
     std::vector< std::pair< int,int > > thePairPix;
     for (int x = -1 ; x < 2 ; x ++){
       for (int y = -1 ; y < 2 ; y ++){
@@ -617,7 +621,7 @@ int DeVPSquareType::WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) con
   // pixel at the reference point is a normal one... if PosInterChip1_Laddn!=1 then this might change...
   double extraDist = interChipDist()/2;
   if ( m_ladders[ladderIndex].edgeOrientation(0)!=1){
-    msg() << MSG::ERROR << "In the calculation of the pixel position, the case where first chip have an external readout edge is not forseen..." << endreq;
+    msg() << MSG::ERROR << "In the calculation of the pixel position, the case where first chip have an external readout edge is not forseen..." << endmsg;
     return -1;
   }
   // compute the local position of the point with respect to the reference point, along the chip alignment direction.
@@ -813,7 +817,7 @@ StatusCode DeVPSquareType::updateGeometryCache()
 {
   StatusCode sc = updatePixelSquareCache();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to update pixel square cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update pixel square cache." << endmsg;
     return sc;
   }
   return StatusCode::SUCCESS;

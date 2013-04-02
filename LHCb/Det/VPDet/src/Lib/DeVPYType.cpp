@@ -1,6 +1,3 @@
-// $Id: DeVPYType.cpp,v 1.5 2009-10-28 13:02:28 cocov Exp $
-//==============================================================================
-#define VPDET_DEVPYTYPE_CPP 1
 //==============================================================================
 // Include files 
 
@@ -78,11 +75,9 @@ StatusCode DeVPYType::initialize()
   MsgStream msg(msgSvc(), "DeVPYType");
   sc = DeVPSensor::initialize();
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to initialise DeVPSensor" << endreq;
+    msg << MSG::ERROR << "Failed to initialise DeVPSensor" << endmsg;
     return sc;
   }
-  m_debug   = (msgSvc()->outputLevel("DeVPYType") == MSG::DEBUG  ) ;
-  m_verbose = (msgSvc()->outputLevel("DeVPYType") == MSG::VERBOSE) ;
 
   /*  for (int nl = 0 ; nl < ladderNumber() ; nl ++)
   {

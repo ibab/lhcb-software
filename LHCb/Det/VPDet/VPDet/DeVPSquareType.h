@@ -348,7 +348,6 @@ private:
   static bool m_staticDataInvalid;
   // Set output level for message service
   bool m_debug;
-  bool m_verbose;
 
   /// cached Message Stream object
   mutable MsgStream * m_msgStream;
