@@ -1,4 +1,3 @@
-// $Id: STTell1ID.h,v 1.3 2009-01-22 11:43:44 mneedham Exp $
 #ifndef _STTell1ID_H
 #define _STTell1ID_H 1
 
@@ -17,7 +16,7 @@ class STTell1ID{
 
 public:
 
-  /// constructer with strip and waferIndex
+  /// constructor with strip and waferIndex
   STTell1ID(unsigned int aRegion,
             unsigned int aSubID){
 
@@ -50,7 +49,7 @@ public:
 
   /// Default Constructor
   STTell1ID()
-    : m_id(0) {}
+    : m_id(0), m_isUT(false) {}
 
   /// Destructor
   ~STTell1ID() {}

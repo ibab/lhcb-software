@@ -3,6 +3,9 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+! 2013-04-02 - Marco Cattaneo
+ - Fix UNINIT_CTOR defect
+
 !========================= STKernel v2r11 2013-02-04 =========================
 ! 2013-01-14 - Frederic Dupertuis
  - Moving the constructor and destructor of STHisto2DProperties to public
