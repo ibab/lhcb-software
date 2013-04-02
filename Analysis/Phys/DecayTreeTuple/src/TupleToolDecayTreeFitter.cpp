@@ -433,8 +433,7 @@ StatusCode TupleToolDecayTreeFitter::insert( const std::string& leaf,
   {  /// first time this is seen. Create
     std::vector<double> vals;
     vals.push_back(val);
-    std::pair<std::string,std::vector<double> > p(leaf,vals);
-    tMap.insert(p);
+    tMap.insert( std::make_pair(leaf,vals) );
   } 
   else
   {
@@ -457,8 +456,8 @@ TupleToolDecayTreeFitter::fillTuple( const TupleMap& tMap,
   bool test = true ;
   for ( TupleMap::const_iterator t = tMap.begin() ; t != tMap.end() ; ++t )
   {
-    std::string leaf = t->first;
-    std::vector<double> data = t->second;
+    const std::string&         leaf = t->first;
+    const std::vector<double>& data = t->second;
     if (msgLevel(MSG::DEBUG))
       debug() << "Filling leaf ``" << leaf << "'' with vector of size " 
               << data.size() << endmsg ;
