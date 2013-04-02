@@ -17,6 +17,7 @@ for name,conf in cfgDb.iteritems():
         print >> sys.stderr, 'ERROR, cannot import/instantiate configurable', name, '\n-------\n', e.__class__, '\n-------'
         traceback.print_exc()
 
+importOptions("$STDOPTS/DecodeRawEvent.py")
 
 # =========== Auto-generated, import all python modules ====
 import glob, os, sys, traceback
