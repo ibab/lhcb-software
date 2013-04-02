@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2013-04-02 - Marco Cattaneo
+ - Fix trivial coverity UNREACHABLE defect
+
 !========================= DetDesc v18r31 2013-02-04 =========================
 ! 2013-01-25 - Marco Clemencic
  - Replaced dependency on Kernel/HistoStrings with GaudiUtils.

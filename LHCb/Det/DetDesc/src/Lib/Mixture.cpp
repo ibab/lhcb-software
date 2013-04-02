@@ -1,4 +1,3 @@
-// $Id: Mixture.cpp,v 1.15 2009-04-17 08:54:24 cattanem Exp $ 
 // ============================================================================
 // DetDesc
 #include "DetDesc/MaterialException.h"
@@ -150,7 +149,6 @@ StatusCode Mixture::compute()
   { 
     throw MaterialException("Mixture::compute: could not compute "+name() );
   }
-  return StatusCode::FAILURE ;
 }
 //
 StatusCode Mixture::computeByAtoms()
