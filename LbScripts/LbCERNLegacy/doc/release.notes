@@ -1,6 +1,8 @@
 2013-04-02  Ben Couturier  <Ben.Couturier@cern.ch>
 
         * z5/group_bashrc: Remove forced call to CMTCONFIG 
+        * z5/group_tcshrc: Remove forced call to CMTCONFIG 
+        * z5/group_zshrc: Remove forced call to CMTCONFIG 
 
 2012-03-29  Ben Couturier  <Ben.Couturier@cern.ch>
 

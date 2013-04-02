@@ -4,9 +4,9 @@ if ! ( -e ${HOME}/.nogrouplogin || -e ${HOME}/.noLHCBLoginscript ) then
   #
   # Setting the default config to slc5-gcc46
   #
-  if ( ! $?CMTCONFIG ) then
-  setenv CMTCONFIG x86_64-slc5-gcc46-opt 
-  endif
+  #if ( ! $?CMTCONFIG ) then
+  #setenv CMTCONFIG x86_64-slc5-gcc46-opt 
+  #endif
 
 if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
   # Post setup, CMTCONFIG specific (compilers setup for example)
