@@ -13,25 +13,25 @@ B2DHHHForBXX = {
     ,"PionPIDK"      : 2.0   # adimensional
     ,"dau_PT_MIN"    : 200   # MeV -> was 400
     ,"dau_MIPCHI2DV" :   5   # adimensional
-    ,"D_MASS_MIN"    : 600   # MeV                   #  400 (safe)
-    ,"D_MASS_MAX"    : 1400  # MeV                   # 1400 (safe)
+    ,"D_MASS_MIN"    : 600   # MeV                 
+    ,"D_MASS_MAX"    : 1400  # MeV                 
     ,"D_PT_MIN"      : 1500  # MeV                 
     ,"D_AMAXDOCA"    : 0.5   # mm                  
     ,"D_DOCACHI2_MAX":   6   # adimensional        
     ,"D_VFASPF"      :   4   # adimensional
     ,"D_BPVVDCHI2"   : 100   # adimensional
-    ,"Lc_MASS_MIN"   :  750  # MeV
-    ,"Lc_MASS_MAX"   : 1350  # MeV
+    ,"Lc_MASS_MIN"   :  700  # MeV
+    ,"Lc_MASS_MAX"   : 1370  # MeV
     ,"Lc_PT_MIN"     : 1500  # MeV
     ,"Lc_AMAXDOCA"   : 0.5   # mm
     ,"Lc_DOCACHI2_MAX":  6   # adimensional
-    ,"Lc_VFASPF"     :   3   # adimensional    <-
+    ,"Lc_VFASPF"     :   4   # adimensional    
     ,"Lc_BPVVDCHI2"  : 100   # adimensional
     ,"A1_MASS_MIN"   : 400   # MeV
     ,"A1_MASS_MAX"   : 3400  # MeV
     ,"A1_PT_MIN"     : 1500  # MeV
-    ,"A1_AMAXDOCA"   : 0.3   # mm              <-
-    ,"A1_VFASPF"     :   3   # adimensional    <-
+    ,"A1_AMAXDOCA"   : 0.5   # mm              
+    ,"A1_VFASPF"     :   4   # adimensional    
     ,"A1_BPVVDCHI2"  : 100   # adimensional    
     ,"B_MASS_MIN"    : 3400  # MeV
     ,"B_MASS_MAX"    : 4950  # MeV
@@ -46,21 +46,22 @@ B2DHHHForBXX = {
     ,"PiPi_DOCACHI2_MAX"                 :   15  # adimensional  (15)
     ,"PiPi_SUMPT_MIN"                    :  200  #MeV            (600)
     ,"PiPi_CHI2NDF"                      :    4  # adimensional  (3)
-    ,"Lb_MASS_MIN"    : 3100  # MeV               <-
-    ,"Lb_MASS_MAX"    : 4800  # MeV               <-
-    ,"Lb_PT_MIN"      : 1500  # MeV
-    ,"Lb_DOCACHI2_MAX": 50    # adimensional
-    ,"Lb_VFASPF"      : 10    # adimensional
-    ,"Lb_BPVVDCHI2"   : 100   # adimensional
-    ,"Lb_DZ"          : 1.0   # mm
-    ,"Lb_Lc_deltamass_MIN" : 2000 #MeV             <-            
-    ,"Lb_Lc_deltamass_MAX" : 4100 #MeV             <-         
+    ,"Lb_MASS_MIN"                       : 2800  # MeV               
+    ,"Lb_MASS_MAX"                       : 4800  # MeV               
+    ,"Lb_PT_MIN"                         : 1500  # MeV
+    ,"Lb_DOCACHI2_MAX"                   : 50    # adimensional
+    ,"Lb_VFASPF"                         : 10    # adimensional
+    ,"Lb_BPVVDCHI2"                      : 100   # adimensional
+    ,"Lb_DZ"                             : 0.0   # mm
+    ,"Lb_Lc_deltamass_MIN"               : 1900  #MeV                         
+    ,"Lb_Lc_deltamass_MAX"               : 4150  #MeV             
     ,"LcStar_MASS_MIN"                   :    0  #
     ,"LcStar_MASS_MAX"                   :  700  #MeV            (700)
     },
     'STREAMS' : ['BhadronCompleteEvent'],
     'WGs'    : ['Semileptonic']
     }
+
 
 B2XTauNu = {
     'BUILDERTYPE'       : 'B2XTauNuAllLinesConf',
@@ -222,7 +223,6 @@ CharmFromBSemiForHadronAsy = {
     'WGs'    : ['Semileptonic']
     }
    
-
 B2DMuForTauMu = {
     'BUILDERTYPE'       : 'B2DMuForTauMuconf',
     'CONFIG'    :{
@@ -242,6 +242,43 @@ B2DMuForTauMu = {
     ,"BDIRA"         : 0.9995  #adimensiional
     ,"BVCHI2DOF"     : 6.0    # adimensiional
     ,"SPDmax"        : 600    # adimensiional
+    },
+    'STREAMS' : {
+    'Semileptonic' : ['Strippingb2D0MuXFakeB2DMuForTauMuLine']
+    },
+    'WGs'    : ['Semileptonic']
+    }
+
+Lb2pMuNu = {
+    'BUILDERTYPE'       : 'Lb2pMuNuBuilder',
+    'CONFIG'    :{
+    "GEC_nLongTrk"        : 250.   ,#adimensional
+    "TRGHOSTPROB"         : 0.5    ,#adimensional
+    #Muon Cuts
+    "MuonGHOSTPROB"       : 0.5    ,#adimensional
+    "MuonTRCHI2"          : 4.     ,#adimensional
+    "MuonP"               : 3000.  ,#MeV
+    "MuonPT"              : 1600.  ,#MeV
+    "MuonMINIPCHI2"       : 12     ,#adminensional
+    #Proton Cuts
+    "ProtonTRCHI2"        : 6.     ,#adimensional
+    "ProtonP"             : 15000. ,#MeV
+    "ProtonPT"            : 1000.  ,#MeV
+    "ProtonPIDK"          : 0.     ,#adimensional
+    "ProtonPIDp"          : 5.     ,#adimensional
+    "ProtonMINIPCHI2"     : 16     ,#adminensional
+    #B Mother Cuts
+    "BVCHI2DOF"           : 4.     ,#adminensional
+    "BDIRA"               : 0.999  ,#adminensional
+    "BFDCHI2HIGH"         : 125.   ,#adimensional
+    "BPVIPChi2"           : 25.    ,#adminensional
+    "pMuMassLow"          : 2250.  ,#MeV
+    "pMuMassLowTight"     : 2750.  ,#MeV
+    "pMuMassUpper"        : 5600.  ,#MeV
+    "pMuPT"               : 1500.  ,#MeV
+    "PassymLow"           : -0.4   ,#adminensional
+    "PassymLower"         : -0.65  ,#adimensional
+    "PassymUpper"         : 0.2     #adimensional
     },
     'STREAMS' : ['Semileptonic'],
     'WGs'    : ['Semileptonic']
