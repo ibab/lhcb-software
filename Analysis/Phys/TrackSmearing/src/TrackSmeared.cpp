@@ -70,6 +70,28 @@ DECLARE_ALGORITHM_FACTORY( TrackSmeared )
     (9.74202,19.0929)(6.13729,28.6578)(5.31868,29.8177)(10.6302,18.7859) );
   */
 
+  declareProperty( "paramsx_data",m_paramsx_data );
+  declareProperty( "paramsy_data",m_paramsy_data );
+  declareProperty( "paramsx_mc",m_paramsx_mc );
+  declareProperty( "paramsy_mc",m_paramsy_mc );
+
+}
+
+//=============================================================================
+// Destructor
+//=============================================================================
+TrackSmeared::~TrackSmeared() {}
+
+//=============================================================================
+// Initialization
+//=============================================================================
+StatusCode TrackSmeared::initialize()
+{
+  StatusCode sc = DaVinciAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
+
+
+
   if ( "2012" == m_settings )
   {
     const DPairVector tmp1 = boost::assign::list_of<DPair>
@@ -117,25 +139,6 @@ DECLARE_ALGORITHM_FACTORY( TrackSmeared )
 
   }
 
-  declareProperty( "paramsx_data",m_paramsx_data );
-  declareProperty( "paramsy_data",m_paramsy_data );
-  declareProperty( "paramsx_mc",m_paramsx_mc );
-  declareProperty( "paramsy_mc",m_paramsy_mc );
-
-}
-
-//=============================================================================
-// Destructor
-//=============================================================================
-TrackSmeared::~TrackSmeared() {}
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode TrackSmeared::initialize()
-{
-  StatusCode sc = DaVinciAlgorithm::initialize();
-  if ( sc.isFailure() ) return sc;
 
   m_funcsy_mc.reserve(m_paramsy_mc.size());
   m_funcsx_mc.reserve(m_paramsx_mc.size());

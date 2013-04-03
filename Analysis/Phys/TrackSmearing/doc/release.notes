@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-04-03 - Sascha Stahl
+ - Fixed setting up the settings for different years.
+
+
 ! 2013-03-27 - Chris Jones
  - Fix compilation with -std=c++11
  - Other minor improvements
