@@ -18,7 +18,7 @@ DaVinci().Simulation = True
 
 DaVinci().DataType  = "2012"
 
-NTupleSvc().Output += ["ANNPIDTUPLE DATAFILE='ProtoPIDANN.tuples.root' TYP='ROOT' OPT='NEW'"]
+NTupleSvc().Output += ["ANNPIDTUPLE DATAFILE='ProtoPIDANN.MC.tuples.root' TYP='ROOT' OPT='NEW'"]
 
 from Configurables import LHCbApp
 LHCbApp().TimeStamp = True

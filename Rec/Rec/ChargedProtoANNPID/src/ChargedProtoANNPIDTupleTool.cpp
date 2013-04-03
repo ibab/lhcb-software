@@ -135,16 +135,15 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
 
   // MC history flags
   bool fromB(false), fromD(false);
-
   // Parent MC particle
   const LHCb::MCParticle * mcParent = ( mcPart ? mcPart->mother() : NULL );
-  while ( mcParent )
+  unsigned int iCount(0); // protect against infinite loops
+  while ( mcParent && ++iCount < 99999 )
   {
-    if ( mcParent->particleID().hasBottom() ) fromB = true;
-    if ( mcParent->particleID().hasCharm()  ) fromD = true;
+    if ( mcParent->particleID().hasBottom() ) { fromB = true; }
+    if ( mcParent->particleID().hasCharm()  ) { fromD = true; }
     mcParent = mcParent->mother();
   }
-
   // Save MC parent info
   sc = sc && tuple->column( "MCFromB", fromB );
   sc = sc && tuple->column( "MCFromD", fromD );

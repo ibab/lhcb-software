@@ -5,10 +5,7 @@ reco="Reco14"
 strp="Stripping20"
 
 for pythia in ["Pythia6","Pythia8"] :
-    for polarity in ["MagUp","MagDown"]:
-
-        j = Job( application = DaVinci( version = 'v33r2' ) )
-        j.name = "MC2012-ANNPID-"+polarity+"-"+pythia+sim+digi+reco+strp
+    for polarity in ["MagUp","MagDown"]: 
 
         datapath = "/MC/2012/Beam4000GeV-2012-"+polarity+"-Nu2.5-"+pythia+"/"+sim+"/"+digi+"/Trig0x409f0045/"+reco+"/"+strp+"NoPrescalingFlagged/10000000/ALLSTREAMS.DST"
         
@@ -17,12 +14,15 @@ for pythia in ["Pythia6","Pythia8"] :
 
         if len(datalfns) > 0 :
 
+            j = Job( application = DaVinci( version = 'v33r2' ) )
+            j.name = "MC2012-ANNPID-"+polarity+"-"+pythia+sim+digi+reco+strp
+
             # Main options
-            j.application.optsfile = [ File('options.py') ]
+            j.application.optsfile = [ File('options-MC.py') ]
             
             j.splitter = SplitByFiles ( filesPerJob = 1, maxFiles = 999999 )
             
-            rootfiles = [ SandboxFile('ProtoPIDANN.tuples.root') ]
+            rootfiles = [ SandboxFile('ProtoPIDANN.MC.tuples.root') ]
             
             j.outputfiles = rootfiles
             
