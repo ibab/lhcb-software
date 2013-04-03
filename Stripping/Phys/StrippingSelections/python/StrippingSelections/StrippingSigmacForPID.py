@@ -164,7 +164,7 @@ class SigmacForPIDConf(LineBuilder) :
         #
         sel = [
             StrippingLine (
-            "SigmaCFor" + self.name() ,
+            self.name() + "Line" ,
             prescale = self['SigmaCPrescale'] , 
             checkPV  = self['CheckPV'       ] ,
             algos    =     [ self.SigC ()   ]
