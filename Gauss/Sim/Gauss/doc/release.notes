@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v46r0p1 2013-04-04 ===========================
 ! 2013-03-29 - Paul Szczypka
  - Removed old VL qmtest
  - Removed old VL DB options file for qmtest
