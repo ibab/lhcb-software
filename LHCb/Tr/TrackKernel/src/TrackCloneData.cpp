@@ -75,6 +75,6 @@ namespace LHCb
   {
     unsigned int n1 = m_ids[type].size() ;
     unsigned int n2 = rhs.m_ids[type].size() ;
-    return n1&&n2>0 ? nCommonEntries( m_ids[type],rhs.m_ids[type] )/double(std::min(n1,n2)) : 0 ;
+    return (n1>0)&&(n2>0) ? nCommonEntries( m_ids[type],rhs.m_ids[type] )/double(std::min(n1,n2)) : 0 ;
   }
 }
