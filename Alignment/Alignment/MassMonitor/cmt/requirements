@@ -8,13 +8,12 @@ version           v1r0
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src MassMonitor dict
+branches          cmt doc src MassMonitor
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 # use   Package      v1r*    Hat
-#use Gaudi	  v*
 use GaudiKernel   v*
 use ROOT          v*         LCG_Interfaces
 use roofit	  v*         LCG_Interfaces
