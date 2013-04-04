@@ -1,0 +1,37 @@
+#============================================================================
+# Created    : 2013-01-23
+# Maintainer : Jack Wimberley
+#============================================================================
+package           MassMonitor
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src MassMonitor dict
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+#use Gaudi	  v*
+use GaudiKernel   v*
+use ROOT          v*         LCG_Interfaces
+use roofit	  v*         LCG_Interfaces
+#============================================================================
+# Include directories
+#============================================================================
+apply_pattern install_more_includes more=MassMonitor
+
+#============================================================================
+# Application building rule
+#============================================================================
+application       MassBiasesFitter ../src/*.cpp
+macro_append      MassBiasesFitter_cppflags "-g"
+macro_append      ROOT_linkopts " -lRooFitCore -lRooFit -lMatrix -lMathCore -lMathMore -lCintex -lGraf -lGpad"
+macro             MassBiasesFitter_use_linkopts $(use_linkopts)
+
+#============================================================================
+# Application alias rule
+#============================================================================
+alias MassBiasesFitter $(MYPACKAGEROOT)/$(CMTCONFIG)/MassBiasesFitter.exe

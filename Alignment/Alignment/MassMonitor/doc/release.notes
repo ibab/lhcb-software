@@ -1,0 +1,17 @@
+!-----------------------------------------------------------------------------
+! Package     : Alignment/MassMonitor
+! Responsible : Jack Wimberley
+! Purpose     : Package for making fits to 2D histograms (mass vs. VARIABLE)
+!-----------------------------------------------------------------------------
+
+! 2013-04-04 - Jack Wimberley
+- Initial working version
+- Meant to streamline processes described in Needham et al
+  (LHCb-INT-2011-012) and Amhis et al (LHCb-INT-2011-013)
+- Meant to be used in conjunction with TrackParticleMonitor,
+  to get plots of mass position/resolution vs. mom, momasym, etc
+- Later a tool to look at mass position/resolution vs. time will be added
+- Support for Jpsi -> mu mu, Ups(1S) -> mu mu, Z0 -> mu mu
+- Still room for improvement in model PDFs
+- Still need for fallback PDFs in case of low statistics
+- Support for other decays (D0 -> K pi, etc.) will be added later
