@@ -4,6 +4,58 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v46r0p1">2013-04-04 - GaussSys v46r0p1</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. Patch to allow picking
+   up distribution of generators libraries from MCGenerators_lcgcmt64d area
+   instead of 64c as for Gauss v45r1.
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v35r5 (and Gaudi v23r7)
+   AppConfig v3r*,
+   DecFiles v27r*, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   pythia 6.427.2, lhapdf 5.8.5 
+   photos++ 2.6.1a and tauola++ 1.0.7 
+   pythia8 175 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.05 (via LCG_Interfaces),
+   Geant4 v95r2p3 (based on geant4.9.5.p02) and Geant4Files v95r0, 
+   XmlVis v1r15,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1a and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.2 (via LCG_GeneratorsInterfaces),
+   EvtGen v13r6 (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
+   HidValley v3r2 (private LHCb versions)
+</A></H3>
+
+!======================== Gauss v46r0p1 2013-04-04 ===========================
+! 2013-03-29 - Paul Szczypka
+ - Removed old VL qmtest
+ - Removed old VL DB options file for qmtest
+ - Updated Upgrade qmtests to use latest DB tags.
+
+! 2013-03-28 - Paul Szczypka
+ - Added tests for the Velo Upgrade Geometries
+   . gauss-upgrade-vp_compact_microchannel
+   . gauss-upgrade-vp_compact_pocofoam
+   . gauss-upgrade-vl_compact_microchannel
+   . gauss-upgrade-vl_compact_tpg
+   . gauss-upgrade-vl_loi_microchannel
+   . gauss-upgrade-vl_loi_tpg
+ - Edited qmtests to work with legacy DB geometries
+   . gauss-upgrade-vp-ut-ft
+   . gauss-upgrade-vl-ut-ft
+
+!========================= GENSER v12r4p1 2013-04-04 =========================
+! 2013-04-04 - Gloria Corti
+ - Make a patch release with no difference with respect to v12r4 to allow 
+   picking up the generators distributions from the MCGenerators_lcgcmt64d
+   area as needed by LHCB v35r5 and Gaudi v27r3
+
+!=============================================================================
 </PRE><H1><A NAME="v46r0">2013-03-27 - GaussSys v46r0</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. The physics is the 
    same as Gauss v45r1.

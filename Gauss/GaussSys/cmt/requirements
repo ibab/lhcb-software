@@ -1,5 +1,5 @@
 package GaussSys
-version v46r0
+version v46r0p1
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-use Gauss               v46r0   Sim
+use Gauss               v46r0p1 Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v64r4p1 
@@ -25,7 +25,7 @@ use hijing              v64r4p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
 use GenCuts             v3r3    Gen
-use GENSER              v12r4   Gen
+use GENSER              v12r4p1 Gen
 use EvtGen              v13r6   Gen
 use Mint                v2r0    Gen
 use EvtGenExtras        v3r6    Gen
