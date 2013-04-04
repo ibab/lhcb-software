@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-04-04 - Wouter Hulsbergen
+ - change TrackBestTrackCreator to use TrackKernel/TrackCloneData
+
 ! 2013-03-24 - Wouter Hulsbergen
  - prepare TrackComputeExpectedHits for change in HitPattern
 
