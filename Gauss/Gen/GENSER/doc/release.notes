@@ -4,6 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================= GENSER v12r4p1 2013-04-04 =========================
+! 2013-04-04 - Gloria Corti
+ - Make a patch release with no difference with respect to v12r4 to allow 
+   picking up the generators distributions from the MCGenerators_lcgcmt64d
+   area as needed by LHCB v35r5 and Gaudi v27r3
+
 !========================== GENSER v12r4 2013-03-15 ==========================
 ! 2013-03-15 - Gloria Corti
  - Use latest version of tauolapp 1.1.1a, ok by John Back, to allow to use
