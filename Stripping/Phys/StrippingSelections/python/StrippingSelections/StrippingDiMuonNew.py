@@ -69,6 +69,7 @@ config_default= {
         'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
+        'DiMuon_PT_oldTh'                          :  2000.   ,  # MeV, no cut now 
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05  ,
@@ -230,6 +231,7 @@ config_microDST= {
         'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                : -1000.   ,  # MeV
+        'DiMuon_PT_oldTh'                          : 2000.   ,  # MeV
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05 ,
@@ -400,6 +402,7 @@ class DiMuonConf(LineBuilder):
         'DiMuon_MaxMass',   
         'DiMuon_VCHI2PDOF',
         'DiMuon_PT',
+        'DiMuon_PT_oldTh',
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale',
@@ -556,7 +559,7 @@ class DiMuonConf(LineBuilder):
 
             
         """
-        DiMuon line
+        DiMuon line 
         """
         self.SelDiMuon = filterDiMuonWMax( name + 'DiMuon',
                                            MuonPT        = config['DiMuon_MuonPT'],
@@ -573,6 +576,27 @@ class DiMuonConf(LineBuilder):
                                          postscale = config['DiMuon_Postscale'],
                                          checkPV   = config['DiMuon_checkPV'],
                                          selection = self.SelDiMuon
+                                         )
+
+        """
+        DiMuonLowPT line (Complementary line for 2012 restripping, including only events with pT(Jpsi) < DiMuon_PT_oldTh
+        """
+        self.SelDiMuonLowPT = filterDiMuonWMax( name + 'DiMuonLowPT',
+                                           MuonPT        = config['DiMuon_MuonPT'],
+                                           MuonP         = config['DiMuon_MuonP'],
+                                           MuonTRCHI2DOF = config['DiMuon_MuonTRCHI2DOF'],
+                                           MuMuMinMass   = config['DiMuon_MinMass'],
+                                           MuMuMaxMass   = config['DiMuon_MaxMass'],
+                                           MuMuVCHI2PDOF = config['DiMuon_VCHI2PDOF'],
+                                           MuMuPT        = config['DiMuon_PT_oldTh'],
+                                           reversePtCut  = True
+                                       )
+
+        self.DiMuonLowPTLine = StrippingLine( name + 'DiMuonIncLowPT' + 'Line',
+                                         prescale  = config['DiMuon_Prescale'],
+                                         postscale = config['DiMuon_Postscale'],
+                                         checkPV   = config['DiMuon_checkPV'],
+                                         selection = self.SelDiMuonLowPT
                                          )
 
         """
@@ -906,6 +930,7 @@ class DiMuonConf(LineBuilder):
 
         if config['MicroDST']:
             self.registerLine( self.DiMuonLine )
+            self.registerLine( self.DiMuonLowPTLine )
             self.registerLine( self.DiMuonSameSignLine )
             # self.registerLine( self.DiMuonPrescaledLine )
             self.registerLine( self.Jpsi2MuMuLine )
@@ -981,7 +1006,8 @@ def filterDiMuonWMax( name,
                       MuMuMinMass,
                       MuMuMaxMass,
                       MuMuVCHI2PDOF,
-                      MuMuPT 
+                      MuMuPT,
+                      reversePtCut = False
                       ):
     
     _StdLooseDiMuon = DataOnDemand( Location = 'Phys/StdLooseDiMuon/Particles' )
@@ -989,6 +1015,9 @@ def filterDiMuonWMax( name,
     MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s *MeV) & (MINTREE('mu+'==ABSID,P) > %(MuonP)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)" % locals()
     
     MuMuCut = "(in_range( %(MuMuMinMass)s *MeV, MM, %(MuMuMaxMass)s *MeV)) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s)" % locals()
+
+    if (reversePtCut):
+      MuMuCut = "(in_range( %(MuMuMinMass)s *MeV, MM, %(MuMuMaxMass)s *MeV)) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT < %(MuMuPT)s)" % locals()
     
     _MuMu = FilterDesktop( Code = MuonCut + " & " + MuMuCut )
 

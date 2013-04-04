@@ -20,7 +20,7 @@ from Configurables import FilterDesktop, CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand, AutomaticData
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsPions, StdTightPions,StdNoPIDsKaons, StdAllNoPIDsProtons, StdNoPIDsProtons
+from StandardParticles import StdNoPIDsPions, StdTightPions,StdNoPIDsKaons, StdAllNoPIDsProtons
 
 from Configurables import TisTosParticleTagger
 
@@ -255,20 +255,20 @@ class StrippingXic2HHHConf(LineBuilder):
                                        )
 
     def _protonFilter( self ):
-          _code = "(PIDp-PIDpi > %(Proton_PIDp_MIN)s) & (P> 10000.0*MeV) & (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__
+          _code = "(TRGHP < 0.4) & (PIDp-PIDpi > %(Proton_PIDp_MIN)s) & (P> 10000.0*MeV) & (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__
           _proton = FilterDesktop( Code = _code )
           return _proton
 
 
 
     def _pionFilter( self ):
-          _code = "(PIDK-PIDpi < %(Pi_PIDK_MAX)s) & (P>1200*MeV)& (PT>400*MeV)&(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s) " % self.__confdict__
+          _code = "(TRGHP < 0.4) & (PIDK-PIDpi < %(Pi_PIDK_MAX)s) & (P>1200*MeV)& (PT>400*MeV)&(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s) " % self.__confdict__
           _pion = FilterDesktop( Code = _code )
           return _pion
 
 
     def _kaonFilter( self ):
-          _code = "(MIPCHI2DV(PRIMARY) > %(K_IPCHI2_MIN)s) & (PIDK-PIDpi > %(K_PIDK_MIN)s) & (P>1200*MeV) & (PT>400*MeV) &(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__          
+          _code = "(TRGHP < 0.4) & (MIPCHI2DV(PRIMARY) > %(K_IPCHI2_MIN)s) & (PIDK-PIDpi > %(K_PIDK_MIN)s) & (P>1200*MeV) & (PT>400*MeV) &(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__          
           _kaon = FilterDesktop( Code = _code )
           return _kaon
 
@@ -416,8 +416,7 @@ def makeXic2KLam( name
  
 
 
-default_config = {
-                    'Daug_All_PT_MIN'         : 400.0 * MeV
+default_config = {  'Daug_All_PT_MIN'         : 400.0 * MeV
                   , 'Daug_1of3_PT_MIN'        : 700.0 * MeV
                   , 'Daug_P_MIN'              : 1200.0 * MeV
                   , 'Daug_TRCHI2DOF_MAX'      : 10.0

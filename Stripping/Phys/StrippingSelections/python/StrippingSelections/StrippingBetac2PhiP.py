@@ -21,7 +21,7 @@ from LHCbKernel.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsProtons 
+from StandardParticles import StdAllNoPIDsProtons 
         
 class StrippingBetac2PhiPConf(LineBuilder): 
 
@@ -52,7 +52,7 @@ class StrippingBetac2PhiPConf(LineBuilder):
         phi2KK_name        = name + 'Phi2KK'
         Betac2PhiP_name = name + 'Betac2PhiP'
 
-        self.inProtons = StdNoPIDsProtons 
+        self.inProtons = StdAllNoPIDsProtons 
         
         self.selPhi2KK =  makePhi2KK( name = phi2KK_name
                             , Phi_Win      = config['Phi_WIN'] 
@@ -75,12 +75,14 @@ class StrippingBetac2PhiPConf(LineBuilder):
                                 , Betac_VCHI2VDOF_MAX = config['Betac_VCHI2VDOF_MAX']
                           )
         
-        self.line_Betac2PhiP = StrippingLine( Betac2PhiP_name + 'Line', 
+        self.line_Betac2PhiP = StrippingLine( Betac2PhiP_name + 'Line',
                                            HLT                   = config['Hlt2IncPhiDecision'], 
                                            prescale              = config['PrescaleBetac2PhiP'],
                                            postscale             = config['PostscaleBetac2PhiP'],
                                            algos                 = [ self.selBetac2PhiP ]
                                          )
+
+
         self.registerLine(self.line_Betac2PhiP)
 
    
@@ -157,14 +159,14 @@ def makeBetac2PhiP(name
 default_config = {
                     'Daug_TRCHI2DOF_MAX'        : 10.     
                   , 'Daug_P_MIN'                : 1200.0*MeV 
-                  , 'Daug_PT_MIN'               : 400.0*MeV
+                  , 'Daug_PT_MIN'               : 200.0*MeV
                   , 'Daug_MIPDV'                : 0.0      # mm
-		  , 'Proton_PIDpi_MIN'          : 20.0
-                  , 'Proton_PIDK_MIN'           : 10.0 
+		  , 'Proton_PIDpi_MIN'          : 10.0
+                  , 'Proton_PIDK_MIN'           :  0.0 
                   , 'Phi_WIN'                   : 20.0 * MeV
                   , 'Phi_PT'                    : 1700.0*MeV         
                   , 'Betac_AM_MIN'              : 1950.0 * MeV 
-                  , 'Betac_AM_MAX'              : 3000.0 * MeV 
+                  , 'Betac_AM_MAX'              : 3300.0 * MeV 
                   , 'Betac_BPVDIRA_MIN'         : 0.999   
                   , 'Betac_VCHI2VDOF_MAX'       : 10.0   
                   , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
