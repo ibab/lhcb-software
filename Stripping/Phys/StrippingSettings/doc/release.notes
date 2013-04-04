@@ -4,6 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-04 - Lucio Anderlini
+ - BW reduction for B&Q. Modified 20r0p1 and 20r1p1 dictionaries for: 
+    . Xic2HHH
+    . DiMuon
+ - dbase updated 
+
 ! 2013-04-04 - Mika Vesterinen
  - CharmFromBSemiForHadronAsy was wrongly in Charm stream for 20r0p1 and 20r1p1 (Semileptonic dict). Now moved to Semileptonic stream.
 

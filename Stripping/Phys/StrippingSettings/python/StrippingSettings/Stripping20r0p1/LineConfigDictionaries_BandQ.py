@@ -66,14 +66,14 @@ Betac2PhiP = {
     'CONFIG'       : {
                     'Daug_TRCHI2DOF_MAX'        : 10.     
                   , 'Daug_P_MIN'                : 1200.0*MeV 
-                  , 'Daug_PT_MIN'               : 400.0*MeV
+                  , 'Daug_PT_MIN'               : 200.0*MeV
                   , 'Daug_MIPDV'                : 0.0      # mm
-                  , 'Proton_PIDpi_MIN'          : 20.0
-                  , 'Proton_PIDK_MIN'           : 10.0 
+                  , 'Proton_PIDpi_MIN'          : 10.0
+                  , 'Proton_PIDK_MIN'           :  0.0 
                   , 'Phi_WIN'                   : 20.0 * MeV
                   , 'Phi_PT'                    : 1700.0*MeV         
                   , 'Betac_AM_MIN'              : 1950.0 * MeV 
-                  , 'Betac_AM_MAX'              : 3000.0 * MeV 
+                  , 'Betac_AM_MAX'              : 3300.0 * MeV 
                   , 'Betac_BPVDIRA_MIN'         : 0.999   
                   , 'Betac_VCHI2VDOF_MAX'       : 10.0   
                   , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
@@ -134,6 +134,7 @@ FullDSTDiMuon = {
         'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
+        'DiMuon_PT_oldTh'                          :  2000.   ,  # MeV
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05  ,
@@ -309,6 +310,7 @@ MicroDSTDiMuon = {
         'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                : -1000.   ,  # MeV
+        'DiMuon_PT_oldTh'                          :  2000.   ,  # MeV
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05 ,
@@ -455,7 +457,10 @@ MicroDSTDiMuon = {
         'Psi2MuMuDetached_MinusLTCuts'                     :  " & (BPVDLS<-3) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)"
         }, 
     'STREAMS' : { 'Leptonic' :
-                    [ 'StrippingMicroDSTDiMuonDiMuonIncLine' ] 
+                    [ 
+#                      'StrippingMicroDSTDiMuonDiMuonIncLine', 
+                      'StrippingMicroDSTDiMuonDiMuonIncLowPTLine'
+                    ] 
                 } ,
     'WGs'    : [ 'BandQ' ]
     }
@@ -564,18 +569,16 @@ PromptCharm = {
     'WGs' : [ 'BandQ' ],
     'STREAMS' : {
       'Charm' : [    
-        'StrippingCharmAndWForPromptCharm',
-        'StrippingDiMuonAndWForPromptCharm'
-        ],
-      'CharmCompleteEvent' : [
         'StrippingXicc+ForPromptCharm',
         'StrippingXicc++ForPromptCharm',
         'StrippingDsLamCForPromptCharm'
+        ],
+      'CharmCompleteEvent' : [
+        'StrippingCharmAndWForPromptCharm',
+        'StrippingDiMuonAndWForPromptCharm'
         ]
     }
 }
-
-
 
 
 
