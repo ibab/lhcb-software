@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-05 - Anton Poluektov 
+ - Update dbase
+
 ! 2013-04-05 - Lucio Anderlini
  - Fix to 20r1p1 dictionaries (MicroDST DiMuon lines switched off)
 
