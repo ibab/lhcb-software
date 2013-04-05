@@ -4,12 +4,14 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+!========================= JetTagging v1r1 2013-04-05 =========================
+
 ! 2013-03-22 - Cedric Potterat
- - Fix covertiy defect in FilterJet.cpp
+ - Fix coverity defect in FilterJet.cpp
 
 ! 2013-03-07 - Chris Jones
  - Make fastjet and neurobayes_expert usage -no_auto_imports to prevent them
-   leaking into downstream packages that used this one.
+   leaking into downstream packages that use this one.
 
 ! 2013-03-03 - Chris Jones
  - Suppress variadic macro warnings
