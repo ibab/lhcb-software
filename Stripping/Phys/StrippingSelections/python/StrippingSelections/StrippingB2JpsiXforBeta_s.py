@@ -257,8 +257,15 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
     def makeInclJpsi( self ):
         '''Inclusive J/psi. We keep it for as long as we can'''
         Jpsi2MuMuForBetasLine = StrippingLine( self.name + "Jpsi2MuMuLine", algos = [ self.JpsiList ], HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config["Jpsi2MuMuPrescale"] )
+
+        Jpsi2MuMuForBetasDetached = self.createSubSel( OutputList = "Jpsi2MuMuDetachedforBetaS" + self.name,
+                                                       InputList  = self.JpsiList,
+                                                       Cuts = "(BPVDLS > 3)" )
 	
-        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ self.JpsiList ], HLT = "HLT_PASS_RE('Hlt2DiMuonDetachedJPsiDecision')", prescale = self.config["Jpsi2MuMuDetachedPrescale"] )
+        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetached ],
+                                                       HLT = "HLT_PASS_RE('Hlt2DiMuonDetachedJPsiDecision')&"\
+                                                       "(HLT_PASS_RE('Hlt1DiMuonHighMassDecision')|HLT_PASS_RE('Hlt1TrackMuonDecision')|HLT_PASS_RE('Hlt1TrackAllL0Decision'))",
+                                                       prescale = self.config["Jpsi2MuMuDetachedPrescale"] )
         
         #Jpsi2MuMuForBetasDetached = self.createSubSel(  OutputList = self.JpsiList.name() + "Detached" + self.name,
         #                                                InputList  = self.JpsiList,

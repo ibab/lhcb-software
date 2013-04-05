@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-05 - Frederic Dupertuis
+ - Retention rate reduction of B2CC Jpsi2MuMuDetached line
+
 ! 2013-04-05 - Thomas Blake
  - Updated B2XMuMu to add disabling of decay modes
 
