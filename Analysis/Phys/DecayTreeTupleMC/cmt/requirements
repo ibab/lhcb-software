@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           DecayTreeTupleMC
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure
