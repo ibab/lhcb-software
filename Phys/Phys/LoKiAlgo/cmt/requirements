@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiAlgo
-version           v9r8
+version           v9r8p1
 	
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 

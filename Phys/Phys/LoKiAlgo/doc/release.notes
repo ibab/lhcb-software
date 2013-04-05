@@ -5,6 +5,8 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiAlgo v9r8p1 2013-04-05 =========================
+
 ! 2013-03-22 - Chris Jones
  - Fix redefinition warnings for _XOPEN_SOURCE during dictionary  generation 
    on SLC6.
