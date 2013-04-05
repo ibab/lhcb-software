@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( B2KShhBDTSelection );
+DECLARE_TOOL_FACTORY( B2KShhBDTSelection )
 
 //=============================================================================
 // Standard constructor, initializes variables
