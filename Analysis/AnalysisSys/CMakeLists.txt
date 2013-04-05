@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AnalysisSys
 ################################################################################
-gaudi_subdir(AnalysisSys v10r4)
+gaudi_subdir(AnalysisSys v10r5)
 
 gaudi_depends_on_subdirs(Analysis/PyAna
                          Ex/LoKiExample
@@ -44,4 +44,3 @@ gaudi_depends_on_subdirs(Analysis/PyAna
                          Phys/VertexFitCheck
                          Rich/RichPIDQC
                          Tutorial/Analysis)
-
