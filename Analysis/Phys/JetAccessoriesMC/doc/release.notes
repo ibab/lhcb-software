@@ -4,6 +4,8 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessoriesMC v2r2 2013-04-05 =========================
+
 ! 2013-02-26 - Chris Jones
  - Fix -pedantic compilation warnings
  - Fix cases where components where incorrectly (or not at all) calling the base
@@ -11,7 +13,7 @@
 
 ! 2013-02-22 - Victor Coco
  - Add relation tables between MCJets and MCParticles in MCJetMakerAlg.
-   also needed to remove makeTree and create the TES container instead
+   Also needed to remove makeTree and create the TES container instead
    so that jets get saved at Phys/algoName+Jets/Particles 
 
 !========================= JetAccessoriesMC v2r1 2013-02-20 =========================
