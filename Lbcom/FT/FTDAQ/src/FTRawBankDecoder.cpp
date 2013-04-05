@@ -29,7 +29,12 @@ DECLARE_ALGORITHM_FACTORY( FTRawBankDecoder )
                                       ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
 {
-
+  declareProperty( "RawEventLocation",  m_rawEventLocation = "",
+                   "OBSOLETE. Use RawEventLocations instead" );
+  declareProperty( "RawEventLocations", m_rawEventLocations,
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Other,"
+                   " LHCb::RawEventLocation::Default.");
 }
 //=============================================================================
 // Destructor
@@ -44,6 +49,24 @@ StatusCode FTRawBankDecoder::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+ 
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
+  if (! m_rawEventLocation.empty()) {
+    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
+    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+  }
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path 
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -54,12 +77,26 @@ StatusCode FTRawBankDecoder::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  LHCb::RawEvent* event = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  // Retrieve the RawEvent:
+  LHCb::RawEvent* rawEvent = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    rawEvent = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != rawEvent ){
+      break;
+    }
+  }
+
+  if( rawEvent == NULL ) {
+    if( msgLevel( MSG::DEBUG ) )
+      debug() << "Raw Event not found in " << m_rawEventLocations << endmsg;
+    return StatusCode::SUCCESS;
+  }
+
 
   FastClusterContainer<LHCb::FTRawCluster,int>* clus = new FastClusterContainer<LHCb::FTRawCluster,int>();
   put( clus, LHCb::FTRawClusterLocation::Default );
 
-  const std::vector<LHCb::RawBank*>& banks = event->banks( LHCb::RawBank::FTCluster );
+  const std::vector<LHCb::RawBank*>& banks = rawEvent->banks( LHCb::RawBank::FTCluster );
   if ( msgLevel(MSG::DEBUG) ) debug() << "Number of raw banks " << banks.size() << endmsg;
   for ( std::vector <LHCb::RawBank*>::const_iterator itB = banks.begin(); banks.end() != itB; ++itB ) {
     int source  = (*itB)->sourceID();
