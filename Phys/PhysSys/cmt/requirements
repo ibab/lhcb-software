@@ -1,5 +1,5 @@
 package PhysSys
-version v16r4
+version v16r5
 
 branches doc cmt
 
@@ -8,16 +8,16 @@ branches doc cmt
 use  DaVinciInterfaces          v2r17p1  Phys    # Juan Palacios
 use  DaVinciTypes               v2r6p1   Phys    # Juan Palacios
 use  DaVinciUtils               v1r1p1   Phys    # Juan Palacios
-use  DaVinciKernel              v11r3    Phys    # Juan Palacios
+use  DaVinciKernel              v11r4    Phys    # Juan Palacios
 use  SelectionLine              v1r0p2   Kernel  # Gerhard Raven
 use  SelPy                      v4r2p2   Phys    # Juan Palacios
-use  PhysSelPython              v9r3p1   PhysSel # Juan Palacios
+use  PhysSelPython              v9r4     PhysSel # Juan Palacios
 
 #===================================================================
 
-use  PhysConf                   v1r18    Phys    # Patrick Koppenburg
+use  PhysConf                   v1r19    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r7p2   Phys    # Chris Jones
-use  DaVinciTools       	v23r5    Phys    # Juan Palacios
+use  DaVinciTools       	v23r6    Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r10p1  Phys    # Juan Palacios
 use  ParticleMaker      	v6r7p1   Phys    # Chris Jones
 use  VertexFit			v6r14p1  Phys    # Yuehong Xie
@@ -30,8 +30,8 @@ use  BBDecTreeTool              v1r6p1   Phys    # Mike Williams
 #===================================================================
 
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
-use  LoKiJets                   v6r8     Phys    # Vanya Belyaev, Victor Coco
-use  LoKiAlgo                   v9r8     Phys    # Vanya Belyaev
+use  LoKiJets                   v6r8p1   Phys    # Vanya Belyaev, Victor Coco
+use  LoKiAlgo                   v9r8p1   Phys    # Vanya Belyaev
 use  LoKiArrayFunctors          v10r0p2  Phys    # Vanya Belyaev
 use  LoKiPhys                   v10r13   Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v2r1p1   Phys    # Vanya Belyaev
@@ -49,7 +49,7 @@ use NeuroBayesTools             v1r2p1   Phys    # Ulrich Kerzel
 
 #===================================================================
 
-use Swimming                    v2r9     Phys    # Vava Gligorov, Roel Aaij
+use Swimming                    v3r0     Phys    # Vava Gligorov, Roel Aaij
 
 #===================================================================
 

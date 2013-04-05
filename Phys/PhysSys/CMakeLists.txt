@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PhysSys
 ################################################################################
-gaudi_subdir(PhysSys v16r4)
+gaudi_subdir(PhysSys v16r5)
 
 gaudi_depends_on_subdirs(Kernel/SelectionLine
                          Phys/BBDecTreeTool
@@ -34,4 +34,3 @@ gaudi_depends_on_subdirs(Kernel/SelectionLine
                          Phys/TisTosTobbing
                          Phys/VertexFit
                          PhysSel/PhysSelPython)
-
