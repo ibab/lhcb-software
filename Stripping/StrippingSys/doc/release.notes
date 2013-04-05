@@ -3,6 +3,27 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v6r5 2013-04-05 =========================
+
+* Phys/CommonParticles: 
+  - Removed mass cut in StdLooseDetachedDiElectron
+  - Added StdLooseDownMuons
+  - fixed StdV0FromBrunel 
+
+* Phys/DisplVertices
+  - Fix bugs and extend matter veto. 
+
+* Phys/StrippingSelections
+  Many changes for Stripping20r0p1 and Stripping20r1p1: 
+
+* Phys/StrippingSettings 
+  Preliminary configuration of Stripping20r0p1 and Stripping20r1p1
+
+* Phys/TMVASelections
+  - New B2KShhBDTSelection
+
+* Small fixes (warning suppression) in many packages
+
 !========================= StrippingSys v6r4 2013-02-21 =========================
 
 * Phys/CommonParticles:
