@@ -3,7 +3,7 @@
 # Maintainer : Matt Needham
 #============================================================================
 package           DaVinciTrackFitting
-version           v1r2
+version           v1r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
