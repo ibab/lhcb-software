@@ -4,9 +4,11 @@
 ! Purpose     : tuple tools for Muon PID calibration
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleMuonCalib v1r1 2013-04-05 =========================
+
 ! 2013-03-05 - Kazu Akiba 
- - adding muondet to TupleToolMuonPid. had to change the requirements file too.
-   no variables were added using the muon det element yet. 
+ - Adding muondet to TupleToolMuonPid. Had to change the requirements file too.
+   No variables were added using the muon det element yet. 
 
 ! 2013-02-26 - Chris Jones
  - Fix -pedantic compilation warnings
