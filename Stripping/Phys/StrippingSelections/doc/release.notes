@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-05 - Thomas Blake
+ - Updated B2XMuMu to add disabling of decay modes
+
 ! 2013-04-04 - Lucio Anderlini 
  - Modified TRGHP cut to Xic2HHH lines (for Yury Shcheglov)
  - Modified line DiMuonIncLowPT to DiMuonNew.py for pT(J/psi)<2 GeV M.Adinolfi

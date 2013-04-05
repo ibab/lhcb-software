@@ -183,8 +183,9 @@ class B2XMuMuConf(LineBuilder) :
         'HadronWS',
 
         #GEC
-        'SpdMult'
-       )
+        'SpdMult',
+        'DECAYS' 
+        )
     
     def __init__(self, name, config) :
 
@@ -255,11 +256,37 @@ class B2XMuMuConf(LineBuilder) :
         self.K1 = self.__K1__(self.A1, config)
         self.K2 = self.__K2__(self.A1, config)
 
+
+        self.AvailableDaughters = {
+            'K*(892)0'      : [ self.Kstar ] ,
+            'rho(770)0'     : [ self.Rho   ] ,
+            'f_2(1950)'     : [ self.F2    ] ,
+            'KS0'           : [ self.Kshort] ,
+            'D~0'           : [ self.Dzero ] ,
+            'K+'            : [ self.Kaons ] ,
+            'pi+'           : [ self.Pions ] ,
+            'K*(892)+'      : [ self.Kstar2KsPi, self.Kstar2KPi0 ],
+            'D+'            : [ self.Dplus ] ,
+            'D*(2010)+'     : [ self.Dstar ] ,
+            'Lambda0'       : [ self.Lambda ] ,
+            'Lambda(1520)0' : [ self.Lambdastar ] ,
+            'pi0'           : [ self.Pi0 ] ,
+            'a_1(1260)'     : [ self.A1 ],
+            'K_1(1270)'     : [ self.K1 ],
+            'K_2(1770)'     : [ self.K2 ]
+            }
+
+        self.DeclaredDaughters = [] 
+        
+        for d in config['DECAYS']:
+            for k in self.AvailableDaughters.keys():
+                if k in d: self.DeclaredDaughters += self.AvailableDaughters.pop(k) 
+                
+                    
+                
+        
         self.Bs = self.__Bs__( self.Dimuon,
-                               daughters = [ self.Protons, self.Kaons, self.Pions, self.Pi0,
-                                             self.Kshort, self.Lambda, self.Phi, self.Rho, self.F2, self.Dplus,
-                                             self.Kstar, self.Lambdastar, self.Kstar2KsPi,
-                                             self.Kstar2KPi0, self.A1, self.K1, self.K2] ,
+                               daughters = self.DeclaredDaughters,  
                                conf = config)
 
 
@@ -278,6 +305,8 @@ class B2XMuMuConf(LineBuilder) :
         self.registerLine(self.line)
 
 
+ 
+        
         
     def __Dimuon__(self, conf):
         '''
@@ -797,25 +826,8 @@ class B2XMuMuConf(LineBuilder) :
         """      
 
         _b2xmumu = CombineParticles()
-        #_b2xmumu.DecayDescriptors = conf['DECAYS']
-        
-        _b2xmumu.DecayDescriptors = [ "B0 -> J/psi(1S) phi(1020)",
-                                      "[B0 -> J/psi(1S) K*(892)0]cc",
-                                      "B0 -> J/psi(1S) rho(770)0",
-                                      "B0 -> J/psi(1S) f_2(1950)",
-                                      "B0 -> J/psi(1S) KS0",
-                                      "[B0 -> J/psi(1S) D~0]cc",
-                                      "[B+ -> J/psi(1S) K+]cc",
-                                      "[B+ -> J/psi(1S) pi+]cc",
-                                      "[B+ -> J/psi(1S) K*(892)+]cc",
-                                      "[B+ -> J/psi(1S) D+]cc",
-                                      "[B+ -> J/psi(1S) D*(2010)+]cc",
-                                      "[Lambda_b0 -> J/psi(1S) Lambda0]cc",
-                                      "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",
-                                      "B0 -> J/psi(1S) pi0",
-                                      "[B+ -> J/psi(1S) a_1(1260)+]cc",
-                                      "[B+ -> J/psi(1S) K_1(1270)+]cc",
-                                      "[B+ -> J/psi(1S) K_2(1770)+]cc"]
+        _b2xmumu.DecayDescriptors = conf['DECAYS']
+
 
         
         _b2xmumu.CombinationCut = self.BdCombCut
@@ -829,3 +841,23 @@ class B2XMuMuConf(LineBuilder) :
                          RequiredSelections = [ Dimuon, _sel_Daughters ])
         return sel
 
+
+
+
+##   _b2xmumu.DecayDescriptors = [ "B0 -> J/psi(1S) phi(1020)",
+##                                       "[B0 -> J/psi(1S) K*(892)0]cc",
+##                                       "B0 -> J/psi(1S) rho(770)0",
+##                                       "B0 -> J/psi(1S) f_2(1950)",
+##                                       "B0 -> J/psi(1S) KS0",
+##                                       "[B0 -> J/psi(1S) D~0]cc",
+##                                       "[B+ -> J/psi(1S) K+]cc",
+##                                       "[B+ -> J/psi(1S) pi+]cc",
+##                                       "[B+ -> J/psi(1S) K*(892)+]cc",
+##                                       "[B+ -> J/psi(1S) D+]cc",
+##                                       "[B+ -> J/psi(1S) D*(2010)+]cc",
+##                                       "[Lambda_b0 -> J/psi(1S) Lambda0]cc",
+##                                       "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",
+##                                       "B0 -> J/psi(1S) pi0",
+##                                       "[B+ -> J/psi(1S) a_1(1260)+]cc",
+##                                       "[B+ -> J/psi(1S) K_1(1270)+]cc",
+##                                       "[B+ -> J/psi(1S) K_2(1770)+]cc"]
