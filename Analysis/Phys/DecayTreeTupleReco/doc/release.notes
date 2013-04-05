@@ -4,6 +4,8 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleReco v1r2 2013-04-05 =========================
+
 ! 2013-03-08 - Marco Clemencic
  - Fixed compilation with CMake.
 
@@ -11,7 +13,7 @@
  - Fix -pedantic compilation warnings
 
 ! 2013-02-25 - Kazu Akiba 
- - Adding 2 variables to TupleToolVELOClusters 
+ - Adding 2 new variables to TupleToolVELOClusters 
 
 !========================= DecayTreeTupleReco v1r1 2013-02-20 =========================
 
