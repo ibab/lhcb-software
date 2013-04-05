@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DisplVertices
 ################################################################################
-gaudi_subdir(DisplVertices v7r14)
+gaudi_subdir(DisplVertices v7r15)
 
 gaudi_depends_on_subdirs(Det/VeloDet
                          Phys/DaVinciKernel
