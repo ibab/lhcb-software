@@ -4,22 +4,20 @@
 ! Purpose     : Collection of useful python modules for LHCb-specific 
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
-  
-! 2013-03-31 - Vanya Belyaev
 
- - more decorators for RooFit objects 
+!========================= AnalysisPython v2r19 2013-04-05 =========================
+
+! 2013-03-31 - Vanya Belyaev
+ - More decorators for RooFit objects 
 
 ! 2013-03-24 - Vanya Belyaev
-
- - drastical speedup for rebin-methods
+ - Drastic speedup for rebin-methods
 
 ! 2013-03-17 - Vanya Belyaev
- - add some decorations for splines and interpolation 
-
+ - Add some decorations for splines and interpolation 
 
 ! 2013-02-26 - Chris Jones
  - Fix -pedantic compilation warnings
-
 
 !========================= AnalysisPython v2r18 2013-02-20 =========================
 
