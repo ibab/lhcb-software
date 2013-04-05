@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Swimming
 ################################################################################
-gaudi_subdir(Swimming v2r8p1)
+gaudi_subdir(Swimming v2r9)
 
 gaudi_depends_on_subdirs(GaudiConf
                          GaudiKernel
