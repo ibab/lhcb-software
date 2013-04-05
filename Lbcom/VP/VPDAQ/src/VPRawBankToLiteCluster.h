@@ -48,7 +48,13 @@ void createLiteCluster(
 private:
 
   std::string m_clusterLocation;
+  /// Location in the transient store of the RawEvent object.
+  /// @warning Obsolete: use m_rawEventLocations 
   std::string m_rawEventLocation;
+  /// List of locations in the transient store to search the RawEvent object.
+  std::vector<std::string> m_rawEventLocations;
+
+
   bool m_isDebug; 
   bool m_isVerbose;
 };

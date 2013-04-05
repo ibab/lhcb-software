@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2013-04-05 - Sascha Stahl
+ - Added vector of RawEventLocations.
+
 !========================= VPDAQ v2r1 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
