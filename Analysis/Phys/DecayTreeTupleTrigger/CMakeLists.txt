@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleTrigger
 ################################################################################
-gaudi_subdir(DecayTreeTupleTrigger v1r0)
+gaudi_subdir(DecayTreeTupleTrigger v1r0p1)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/HltEvent
