@@ -348,7 +348,13 @@ B2XMuMu =  {
     'HadronWS'            :   True,
 
     # GEC
-    'SpdMult'             :  600
+    'SpdMult'             :  600 ,
+
+    'DECAYS'              : [ 
+    "[B+ -> J/psi(1S) a_1(1260)+]cc",
+    "[B+ -> J/psi(1S) K_1(1270)+]cc",
+    "[B+ -> J/psi(1S) K_2(1770)+]cc"
+    ]
     },
     'WGs' : [ 'RD' ],
     'STREAMS' : [ 'Dimuon' ]
