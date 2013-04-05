@@ -5,6 +5,8 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingAlgs v1r12 2013-04-05 =========================
+
 ! 2013-02-28 - Chris Jones
  - Fix -pedantic compilation warnings
  - remove unneccessary initialize() and finalize() methods
