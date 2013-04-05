@@ -13,7 +13,7 @@ namespace  LHCb
   class TrackCloneData
   {
   public:
-    enum HitType { T, TT, VeloR, VeloPhi, Velo, MaxType } ;
+    enum HitType { T, TT, VeloR, VeloPhi, MaxType } ;
     typedef unsigned long WeightType ;
     typedef StaticArray<LHCb::LHCbID,64> LHCbIDs ;
     // constructor

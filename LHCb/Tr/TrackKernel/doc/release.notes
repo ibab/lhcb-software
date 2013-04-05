@@ -4,8 +4,8 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-! 2013-04-04 - Wouter Hulsbergen
- - Bug fix in TrackCloneData
+! 2013-04-05 - Wouter Hulsbergen
+ - TrackCloneData: bug fixes + adapted for upgrade
 
 ! 2013-04-02 - Marco Cattaneo
  - Fix PW.PARAMETER_HIDDEN Coverity defect

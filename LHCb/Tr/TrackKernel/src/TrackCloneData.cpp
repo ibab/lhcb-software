@@ -36,20 +36,29 @@ namespace LHCb
     : m_track(&atrack), m_weight(0)
   {
     const LHCb::Track::LHCbIDContainer& ids = atrack.lhcbIDs() ;
+    // WH: catch (and ignore) extremely rare and quite inconsequential
+    // (cross-your-fingers or believe-me-I-know-what-I'm-doing)
+    // exceptions from StaticArray::push_back
+    //try {
     for( LHCb::Track::LHCbIDContainer::const_iterator id = ids.begin() ;
 	 id != ids.end(); ++id ) {
       switch( id->detectorType() ) {
-      case LHCb::LHCbID::Velo: 
-	m_ids[Velo].push_back(*id) ;
+      case LHCb::LHCbID::VL:
+      case LHCb::LHCbID::VP:
+      case LHCb::LHCbID::Velo:
 	if( id->isVeloR() ) m_ids[VeloR].push_back(*id) ;
 	else m_ids[VeloPhi].push_back(*id) ;
 	break ;
+      case LHCb::LHCbID::UT:
       case LHCb::LHCbID::TT: m_ids[TT].push_back(*id) ; break ;
+      case LHCb::LHCbID::FT:
       case LHCb::LHCbID::OT: 
       case LHCb::LHCbID::IT: m_ids[T].push_back(*id) ; break ;
       default: break ;
       }
     }
+    //} catch (...) {}
+    
     // compute a weight for sorting.
     LHCb::HitPattern hp(ids) ;
     // first sort by type
@@ -73,8 +82,7 @@ namespace LHCb
   double TrackCloneData::overlapFraction( const TrackCloneData& rhs,
 					  TrackCloneData::HitType type ) const
   {
-    unsigned int n1 = m_ids[type].size() ;
-    unsigned int n2 = rhs.m_ids[type].size() ;
-    return (n1>0)&&(n2>0) ? nCommonEntries( m_ids[type],rhs.m_ids[type] )/double(std::min(n1,n2)) : 0 ;
+    size_t minsize = std::min(m_ids[type].size(),rhs.m_ids[type].size()) ;
+    return minsize>0 ? nCommonEntries( m_ids[type],rhs.m_ids[type] )/double(minsize) : 0 ;
   }
 }
