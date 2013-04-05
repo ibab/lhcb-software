@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiAlgoMC
 ################################################################################
-gaudi_subdir(LoKiAlgoMC v9r5p1)
+gaudi_subdir(LoKiAlgoMC v9r5p2)
 
 gaudi_depends_on_subdirs(GaudiPython
                          Kernel/MCInterfaces
