@@ -4,6 +4,8 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+!========================= TMVASelections v1r6 2013-04-05 =========================
+
 ! 2013-03-29 - Stefano Perazzini
  - Introduced B2KShhBDTSelection.cpp and B2KShhBDTSelection.h for new BDT based 
    stripping lines
