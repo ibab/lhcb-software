@@ -3,9 +3,12 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+!========================= DaVinciTools v23r6 2013-04-05 =========================
+
 ! 2013-03-27 - Anton Poluektov 
- - AddExtraInfo: add possibility to calculate extra info for daughters in the decay tree. 
-   Controlled by MaxLevel parameter, equals to 0 by default.  
+ - AddExtraInfo: Add possibility to calculate extra info for daughters in 
+                 the decay tree. Controlled by MaxLevel parameter, equals to 
+                 0 by default.  
      MaxLevel = 0: extra info is calculated only for the head
      MaxLevel = 1: head and 1st-generation daughters
      MaxLevel = 2: head, daughters and granddaughters, etc. 
