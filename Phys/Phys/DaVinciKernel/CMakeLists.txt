@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciKernel
 ################################################################################
-gaudi_subdir(DaVinciKernel v11r3)
+gaudi_subdir(DaVinciKernel v11r4)
 
 gaudi_depends_on_subdirs(Event/PhysEvent
                          GaudiAlg
