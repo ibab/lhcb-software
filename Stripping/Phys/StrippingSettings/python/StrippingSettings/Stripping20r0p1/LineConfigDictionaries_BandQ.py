@@ -299,7 +299,7 @@ MicroDSTDiMuon = {
         'MicroDST'                                 :   True   ,
     
         # DiMuon line
-        'DiMuon_Prescale'                          :     0.5  ,
+        'DiMuon_Prescale'                          :     1.   ,
         'DiMuon_Postscale'                         :     1.   ,
         'DiMuon_checkPV'                           :  False   ,  
         
@@ -307,7 +307,7 @@ MicroDSTDiMuon = {
         'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
         'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
         'DiMuon_MinMass'                           :  3000.   ,  # MeV
-        'DiMuon_MaxMass'                           :  4000.   ,  # MeV
+        'DiMuon_MaxMass'                           :   1e8    ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                : -1000.   ,  # MeV
         'DiMuon_PT_oldTh'                          :  2000.   ,  # MeV
