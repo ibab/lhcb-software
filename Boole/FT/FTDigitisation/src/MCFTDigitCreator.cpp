@@ -101,14 +101,14 @@ StatusCode MCFTDigitCreator::execute() {
       plot(vecIter->second,
            "EnergyPerHitPerChannel",
            "Energy deposited by each Hit in SiPM Channel;Energy [MeV];Number of SiPM channels", 
-           0, 100);
+           0, 10);
       plot(vecIter->second,
            "EnergyPerHitPerChannelZOOM",
            "Energy deposited by each Hit in SiPM Channel;Energy [MeV];Number of SiPM channels", 
-           0, 10);
+           0, 1);
       plot(vecIter->second,
            "EnergyPerHitPerChannelBIGZOOM",
-           "Energy deposited by each Hit in SiPM Channel;Energy [MeV];Number of SiPM channels", 0, 1);
+           "Energy deposited by each Hit in SiPM Channel;Energy [MeV];Number of SiPM channels", 0, 0.5);
 
       mcHitMap[vecIter->first] += vecIter->second;
       HitEnergySumInChannel +=vecIter->second;
@@ -117,25 +117,26 @@ StatusCode MCFTDigitCreator::execute() {
     plot(HitEnergySumInChannel,
          "EnergyPerChannel",
          "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 
-         0, 100);
+         0, 10);
     plot(HitEnergySumInChannel,
          "EnergyPerChannelZOOM",
          "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 
-         0, 10);
+         0, 1);
     plot(HitEnergySumInChannel,
          "EnergyPerChannelBIGZOOM",
-         "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 0, 1);
+         "Energy deposited in SiPM Channel;Energy [MeV];Number of SiPM channels", 0, 0.5);
     // Define & store digit
     // The deposited energy to ADC conversion is made by the deposit2ADC method
     int adc = deposit2ADC(mcDeposit);
     if ( 0 < adc ) {
-      plot2D(HitEnergySumInChannel,(double)adc,"ADCGain","ADC Gain; Energy [MeV]; ADC", 0, 1.,0,40.,100,40);
+      plot2D(HitEnergySumInChannel,(double)adc,"ADCGain","ADC Gain; Energy [MeV]; ADC", 0, .6 ,0,100.,100,100);
+      plot2D(HitEnergySumInChannel,(double)adc,"ADCGainZOOM","ADC Gain; Energy [MeV]; ADC", 0, .2 ,0,80.,100,100);
+      plot2D(HitEnergySumInChannel,(double)adc,"ADCGainBIGZOOM","ADC Gain; Energy [MeV]; ADC", 0, .1 ,0,50.,100,100);
       counter("ADCPerMeV") += (double)adc/HitEnergySumInChannel ;
       MCFTDigit *mcDigit = new MCFTDigit(mcDeposit->channelID(), adc, mcHitMap );
       digitCont->insert(mcDigit);
-    plot(adc,
-         "ADCPerChannel",
-         "ADC in SiPM Channel;ADC;Number of SiPM channels", 0, 20);
+      plot(adc,"ADCPerChannel",
+           "ADC in SiPM Channel;ADC;Number of SiPM channels", 0, 20);
     }
   }
 

@@ -53,12 +53,12 @@ private:
   float       m_xMaxIrradiatedZone;     ///< Size in x of the zone where fibres are irradiated
   float       m_yMaxIrradiatedZone;     ///< Size in y of the zone where fibres are irradiated
   std::vector<float> m_irradiatedAttenuationLength;    ///< Attenuation length by steps in the zone.
-  float       m_reflexionCoefficient;   ///< reflexion coefficient of the mirror at the y=0 side of the fibre
-  float       m_beginReflexionLossY;    ///< begin zone where reflexio is too late and lost
-  float       m_endReflexionLossY;      ///< end of this zone
+  float       m_reflectionCoefficient;   ///< reflection coefficient of the mirror at the y=0 side of the fibre
+  float       m_beginReflectionLossY;    ///< begin zone where reflectio is too late and lost
+  float       m_endReflectionLossY;      ///< end of this zone
 
-  float       m_xStepMap;
-  float       m_yStepMap;
+  float       m_xStepOfMap;               ///< Step  along X-axis of the FullAttenuationMap(in mm)
+  float       m_yStepOfMap;               ///< Step  along Y-axis of the FullAttenuationMap(in mm)
   int         m_nXSteps;
   int         m_nYSteps;
   std::vector<float> m_transmissionMap;

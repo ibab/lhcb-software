@@ -46,12 +46,12 @@ MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
   declareProperty( "XMaxIrradiatedZone",          m_xMaxIrradiatedZone          = 2000. * Gaudi::Units::mm );
   declareProperty( "YMaxIrradiatedZone",          m_yMaxIrradiatedZone          =  500. * Gaudi::Units::mm );
   declareProperty( "IrradiatedAttenuationLength", m_irradiatedAttenuationLength);
-  declareProperty( "ReflexionCoefficient" ,       m_reflexionCoefficient = 0.7, 
-                   "Reflexion coefficient of the fibre mirrored side, from 0 to 1");
-  declareProperty( "BeginReflexionLossY",         m_beginReflexionLossY         = 1000. * Gaudi::Units::mm );
-  declareProperty( "EndReflexionLossY",           m_endReflexionLossY           = 1500. * Gaudi::Units::mm );
-  declareProperty( "XStepMap",                    m_xStepMap                    = 200. * Gaudi::Units::mm );
-  declareProperty( "YStepMap",                    m_yStepMap                    = 100. * Gaudi::Units::mm );
+  declareProperty( "ReflectionCoefficient" ,       m_reflectionCoefficient = 0.7, 
+                   "Reflection coefficient of the fibre mirrored side, from 0 to 1");
+  declareProperty( "BeginReflectionLossY",         m_beginReflectionLossY         = 1000. * Gaudi::Units::mm );
+  declareProperty( "EndReflectionLossY",           m_endReflectionLossY           = 1500. * Gaudi::Units::mm );
+  declareProperty( "XStepOfMap",                  m_xStepOfMap                  = 200. * Gaudi::Units::mm );
+  declareProperty( "YStepOfMap",                  m_yStepOfMap                  = 100. * Gaudi::Units::mm );
 }
 //=============================================================================
 // Destructo
@@ -91,60 +91,93 @@ StatusCode MCFTDepositCreator::initialize() {
   float xMax = m_deFT->layers()[0]->layerMaxX();
   float yMax = m_deFT->layers()[0]->layerMaxY();
 
-  m_nXSteps = xMax / m_xStepMap + 2;   // add x=0 and x > max position
-  m_nYSteps = yMax / m_yStepMap + 2;   // same for y
-  xMax = (m_nXSteps - 1) * m_xStepMap;
-  yMax = (m_nYSteps - 1) * m_yStepMap;
+  info() << format( "layerMaxX()=%7.0f layerMaxY()=%7.0f \n",xMax,yMax );
+  m_nXSteps = xMax / m_xStepOfMap + 2;   // add x=0 and x > max position
+  m_nYSteps = yMax / m_yStepOfMap + 2;   // same for y
+  xMax = (m_nXSteps - 1) * m_xStepOfMap;
+  yMax = (m_nYSteps - 1) * m_yStepOfMap;
   m_transmissionMap.resize( m_nXSteps * m_nYSteps, 0. );
 
+  info() << format( "m_xStepOfMap=%7.0f m_yStepOfMap=%7.0f m_nXSteps=%7.0i m_nYSteps=%7.0i xMax=%7.0f yMax=%7.0f \n",
+                    m_xStepOfMap,m_yStepOfMap,m_nXSteps, m_nYSteps, xMax, yMax);
   for ( int kx = 0; m_nXSteps > kx; ++kx ) {
-    float x = kx * m_xStepMap;
+    float x = kx * m_xStepOfMap;
     float radZoneSize = 2 * m_yMaxIrradiatedZone * ( 1 - x / m_xMaxIrradiatedZone );
     if ( 0. > radZoneSize ) radZoneSize = 0.;
     float yBoundaryRadZone = .5 * radZoneSize;
     for ( int ky = 0; m_nYSteps > ky; ++ky ) {
-      float y = yMax - ky * m_yStepMap;
+      float y = yMax - ky * m_yStepOfMap;
+
+      // Compute attenuation according to the crossed fibre lengh
       float att = ( m_fractionShort       * exp( -(yMax-y)/m_shortAttenuationLength ) + 
                     ( 1-m_fractionShort ) * exp( -(yMax-y)/m_longAttenuationLength ) );
+
+      plot2D(x,y,"FibreAttenuationMap","Attenuation coefficient as a function of the position (Quarter 3); x [mm];y [mm]",
+             0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, m_nXSteps, m_nYSteps, att);
       if ( y < yBoundaryRadZone ){
         att = ( m_fractionShort       * exp( -(yMax-yBoundaryRadZone)/m_shortAttenuationLength ) + 
                 ( 1-m_fractionShort ) * exp( -(yMax-yBoundaryRadZone)/m_longAttenuationLength ) );
         float lInRadiation = yBoundaryRadZone - y;
         for ( unsigned int kz = 0; m_irradiatedAttenuationLength.size() > kz; ++kz ) {
-          if ( lInRadiation > m_yStepMap ) {
-            att  *= exp( - m_yStepMap / m_irradiatedAttenuationLength[kz] );
+          if ( lInRadiation > m_yStepOfMap ) {
+            att  *= exp( - m_yStepOfMap / m_irradiatedAttenuationLength[kz] );
           } else if ( lInRadiation > 0. ) {
             att  *= exp( - lInRadiation / m_irradiatedAttenuationLength[kz] );
           } else {
-          }
-          lInRadiation -= m_yStepMap;
+}
+          lInRadiation -= m_yStepOfMap;
         }
+        plot2D(x,y,"RadiationAttMap",
+               "Attenuation from radiation as a function of the position (Quarter 3); x [mm];y [mm]",0., 
+               m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, m_nXSteps, m_nYSteps, att);
       }
       m_transmissionMap[ m_nYSteps * (kx+1) - ky - 1 ] = att;
     }
 
-    //== Compute reflexion: This is as if light would come from negative y.
-    //== The attenuation by step is symetric, -> don't recompute, use the first part...
-    //== Linear attenuation up to 0 in the reflexionLoss zone.
+    for ( int kk = 0; m_nYSteps > kk ; ++kk ) {
 
-    if ( m_reflexionCoefficient > 0. ) {
-      float reflected = m_transmissionMap[ m_nYSteps * kx ] * m_reflexionCoefficient;
+    }
+    
+    //== Compute reflection: This is as if light would come from negative y.
+    //== The attenuation by step is symetric, -> don't recompute, use the first part...
+    //== Linear attenuation up to 0 in the reflectionLoss zone.
+
+    if ( m_reflectionCoefficient > 0. ) {
+      float reflected = m_transmissionMap[ m_nYSteps * kx ] * m_reflectionCoefficient;
       for ( int kk = 0; m_nYSteps > kk; ++kk ) {
-        float y = kk * m_yStepMap;
-        if ( y > m_endReflexionLossY ) break;
+        float y = kk * m_yStepOfMap;
+
+        //m_nXSteps, m_nYSteps, m_transmissionMap[ m_nYSteps*kx + kk]+reflected);
+
+        if ( y > m_endReflectionLossY ) break; // do nothing if out of intermediate area
+
         float att = m_transmissionMap[ m_nYSteps*kx + kk] / m_transmissionMap[ m_nYSteps*kx + kk + 1];
-        if ( y > m_beginReflexionLossY ) {
-          att *= ( m_endReflexionLossY - y ) / ( m_endReflexionLossY - m_beginReflexionLossY );
+
+        if ( y > m_beginReflectionLossY ){ // reflected contribution lineary decreased in intermediate area
+          att *= ( m_endReflectionLossY - y ) / ( m_endReflectionLossY - m_beginReflectionLossY );
         }
+
         m_transmissionMap[ m_nYSteps*kx + kk] += reflected;
-        reflected *= att;
+        plot2D(x,y,"ReflectionContributionMap",
+               "Additional signal from reflection (Quarter 3); x [mm];y [mm]",
+               0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, m_nXSteps, m_nYSteps, reflected);
+        
+        reflected *= att; // reflected coefficient prepared for next iteration
       }
     }
+ 
+    
 
-
-    info() << format( "x%7.0f ", x );
+    info() << format( "x=%7.0f\n", x);
     for ( int kk = 0; m_nYSteps > kk ; ++kk ) {
-      info() << format( "%6.3f", m_transmissionMap[kx*m_nYSteps+kk] );
+      info() << format( "y=%7.0f [%6.3f] ", kk * m_yStepOfMap , m_transmissionMap[kx*m_nYSteps+kk]);
+       plot2D(kx * m_xStepOfMap,kk * m_yStepOfMap,"ReflectionAttenuationMap",
+               "Attenuation coefficient (direct+reflection) (Quarter 3); x [mm];y [mm]",
+               0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, 
+               m_nXSteps, m_nYSteps, m_transmissionMap[kx*m_nYSteps+kk]);
+      plot2D(kx * m_xStepOfMap , kk * m_yStepOfMap, 
+             "FinalAttenuationMap","Attenuation coefficient as a function of the position (Quarter 3); x [mm];y [mm]",
+             0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, m_nXSteps, m_nYSteps, m_transmissionMap[kx*m_nYSteps+kk]);
     }
     info() << endmsg;  
   }
@@ -175,7 +208,8 @@ StatusCode MCFTDepositCreator::execute() {
 
     MCHit* ftHit = *iterHit;     //pointer to the Hit
 
-    plot2D( ftHit->entry().x(), ftHit->entry().y(), "HitEntryPosition; Entry position of hits ; x [mm]; y [mm]",  
+    plot2D( ftHit->entry().x(), ftHit->entry().y(),
+            "HitEntryPosition", "Entry position of hits ; x [mm]; y [mm]",  
             -500., 500., -500.,500., 100, 100 );
 
 
@@ -219,14 +253,19 @@ StatusCode MCFTDepositCreator::execute() {
              "Number of fired channels per Hit; Number of fired channels; Number of hits" , 
              0 , 50);
 
-     
- 
+        double fibrelengh = 0 ;
+        double fibrelenghfraction = 0;
+        if(pL->hitPositionInFibre(ftHit, fibrelengh,fibrelenghfraction)){
+          plot(fibrelengh,"FibreLengh","FibreLengh; Sci. Fibre Lengh [mm]; Nber of Events" ,2900 ,3100);
+          plot(fibrelenghfraction,"FibreFraction","FibreFraction; Sci. Fibre Fraction ; Nber of Events" ,0 ,1);
+        }
+        
 
         //== Compute attenuation by interpolation in the table
-        int kx = fabs( ftHit->midPoint().x() ) / m_xStepMap;
-        int ky = fabs( ftHit->midPoint().y() ) / m_yStepMap;
-        float fracX = fabs( ftHit->midPoint().x() )/m_xStepMap - kx;
-        float fracY = fabs( ftHit->midPoint().y() )/m_yStepMap - ky;
+        int kx = fabs( ftHit->midPoint().x() ) / m_xStepOfMap;
+        int ky = fabs( ftHit->midPoint().y() ) / m_yStepOfMap;
+        float fracX = fabs( ftHit->midPoint().x() )/m_xStepOfMap - kx;
+        float fracY = fabs( ftHit->midPoint().y() )/m_yStepOfMap - ky;
 
         float att = ( fracX     * ( fracY     * m_transmissionMap[m_nYSteps*(kx+1)+ky+1] + 
                                     (1-fracY) * m_transmissionMap[m_nYSteps*(kx+1)+ky]   ) +
@@ -240,6 +279,7 @@ StatusCode MCFTDepositCreator::execute() {
         
         plot(att,"AttenuationFactor","AttFactorDistrib; Attenuation factor ; Nber of Events" ,0 ,1);
 
+
         // Fill MCFTDeposit
         FTDoublePairs::const_iterator vecIter;
         for( vecIter = channels.begin(); vecIter != channels.end(); ++vecIter){
@@ -249,9 +289,13 @@ StatusCode MCFTDepositCreator::execute() {
             debug()  << "FTChannel=" << vecIter->first << " EnergyHitFraction="<< EnergyInSiPM << endmsg;
           }
         
-          plot(vecIter->second,"EnergyDepositedInCell","EnergyDepositedInCell ; Energy Deposited in Cell [MeV]; Nber of Channels"
-               ,0. ,2);
+          plot(vecIter->second,"EnergyDepositedInCell",
+               "EnergyDepositedInCell ; Energy Deposited in Cell [MeV]; Nber of Channels",0. ,2);
+          plot(vecIter->second,"EnergyDepositedInCellZOOM",
+               "EnergyDepositedInCell; Energy Deposited in Cell [MeV]; Nber of Channels",0.,1);
           plot(EnergyInSiPM,"EnergyRecordedInCell","EnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,2);
+          plot(EnergyInSiPM,"EnergyRecordedInCellZOOM",
+               "EnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,1);
           // if reference to the channelID already exists, just add DepositedEnergy
           if( depositCont->object(vecIter->first) != 0 ){
             (depositCont->object(vecIter->first))->addMCHit(ftHit,EnergyInSiPM);
