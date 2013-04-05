@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v4r1 2013-04-05 =========================
+
 ! 2013-03-21 - Patrick Koppenburg
  - TupleToolDecayTreeFitter: Allow for NULL PVs in PV comparison method. 
    Fixes bug https://savannah.cern.ch/bugs/?100933.
@@ -23,7 +25,7 @@
  - Fix -pedantic compilation warnings
 
 ! 2013-02-25 Kazu Akiba
- - adding  TupleToolParticleStats. this tool only counts the number of particles
+ - Adding TupleToolParticleStats. this tool only counts the number of particles
    reconstructed, located in a particular location. By default it counts
    the number of photons, but locations can be set to count any kind of particle.
 

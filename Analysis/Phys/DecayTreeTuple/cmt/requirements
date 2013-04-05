@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           DecayTreeTuple
-version           v4r0p1
+version           v4r1
 
 #============================================================================
 # Structure
