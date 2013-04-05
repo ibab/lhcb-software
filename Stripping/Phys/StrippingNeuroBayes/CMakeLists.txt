@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StrippingNeuroBayes
 ################################################################################
-gaudi_subdir(StrippingNeuroBayes v1r7)
+gaudi_subdir(StrippingNeuroBayes v1r8)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Phys/DaVinciTools
