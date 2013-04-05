@@ -3,6 +3,9 @@
 ! Package manager : H.Schindler
 !------------------------------------------------------------------------------
 
+! 2013-04-05 - Sascha Stahl
+ - Added vector of RawEventLocations.
+
 !========================= VLDAQ v1r3 2013-02-14 =========================
 ! 2012-12-20 - Marco Cattaneo
  - Fix Coverity defect
