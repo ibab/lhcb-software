@@ -59,6 +59,8 @@
   <function name = "LoKi::HistoBook::book"             />
   <function name = "LoKi::Monitoring::getCounter"      />
 
+  <class name      = "LoKi::Tensors::Delta"     />
+  <class name      = "LoKi::Tensors::Epsilon"   />
 
   <function name = "Decays::Trees::arrow"      />
   <function name = "Decays::Trees::decayOnly"  />

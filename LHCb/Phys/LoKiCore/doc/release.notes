@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-04-06 - Vanya Belyaev
+
+ - add LoKi::Tensors into dictionary  
+
 ! 2013-03-28 - Vanya Belyaev
 
  - extend functionality for TES-getters 
