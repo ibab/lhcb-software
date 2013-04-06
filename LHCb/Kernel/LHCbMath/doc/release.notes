@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-04-06 - Vanya Belyaev
+ - small adjustment of operators in python 
+
 ! 2013-03-26 - Chris Jones
  - A few work arounds to fix compilation with clang 3.2
 

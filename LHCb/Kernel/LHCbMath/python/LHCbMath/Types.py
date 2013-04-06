@@ -315,6 +315,8 @@ _V4D = Gaudi.LorentzVector
 
 def _o_mul_ ( self , other ) :
     _typ  = self.__class__
+    if isinstance ( other , _typ ) :
+        return self.Dot ( other ) 
     tmp   = _typ ( self )
     tmp  *= other 
     return tmp
@@ -347,8 +349,6 @@ def _o2_str_ ( self , fmt = "[( %g, %g, %g), %g]" ) :
     """
     return fmt % ( self.X() , self.Y( ), self.Z() , self.E() )
 
-
-_P3D.__mul__ = _o_mul_
 _V3D.__mul__ = _o_mul_
 _V4D.__mul__ = _o_mul_
 
@@ -362,6 +362,9 @@ _V4D.__sub__ = _o_sub_
     
 _V3D. __rmul__ = _V3D.__mul__ 
 _V4D. __rmul__ = _V4D.__mul__
+
+_P3D. __radd__ = _P3D.__add__
+_V3D. __radd__ = _V3D.__add__
 
 if not hasattr ( _P3D , '_new_str_' ) :
     _P3D._new_str_ = _o1_str_  
