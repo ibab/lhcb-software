@@ -6,6 +6,9 @@
 
 !========================= StrippingSelections v3r22 2013-04-05 =========================
 
+! 2013-04-07 - Mika Vesterinen
+ - Updates to D0->KsHH lines in CharmFromBSemi.py
+
 ! 2013-04-05 - Frederic Dupertuis
  - Retention rate reduction of B2CC Jpsi2MuMuDetached line
 
