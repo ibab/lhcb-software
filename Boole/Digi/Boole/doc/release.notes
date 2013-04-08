@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to references to follow changes in underlying packages
+   . Modifications to FT monitoring (FTDigitisation)
+
 </PRE><H1><A NAME=v26r4>2013-03-26 Boole v26r4</A></H1><PRE>
 This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
