@@ -3,6 +3,45 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v33r3>2013-04-08 DaVinci v33r3</A></H1><PRE>
+
+New development release based on the LHCb v35r5 stack.
+
+Executive Summary :-
+
+- Changes to DaVinci Application
+ . Add 'Upgrade' to the list of supported DataTypes.
+ . Add 'XDST' to the list of supported input data types.
+ . Add new property RooInTES  (default is '' )
+    In case this property is set and input-type is defined to be 'MDST' 
+    the following action is triggered: 
+      - make use of  PhysConf.MicroDST.uDstConf 
+      - RootInTES property is propagated to DaVinciUserSequnces and 
+        all its members unless the corresponding 'RootInTES' 
+        property is set explicitly
+   This action should minimize number of problems for running analyses on uDst
+
+- Swimming
+ . Add scripts for correcting the VELO acceptance bug 
+ . Correct bug in VELO acceptance calculation.
+ . Rewrite code which calculates the number of VELO hits on a track to take
+   into account more details of the VELO geometry
+
+- DaVinciTrackRefitting
+ . Added ParticleRefitter algorithm to update existing Particles in
+   case their tracks were manipulated (limited functionality, no 
+   individual vertex fitters for individual decays)
+ . Added python module ParticleRefitterSeq to wrap ParticleRefitter 
+   and apply momentum scale calibration in one go
+
+- DecayTreeTuple
+ . Change the way the tuple names for stable particles in 
+   TupleToolDecayTreeFitter to fix a problem where different types where being 
+   mixed in the same tuple branches.
+ . New flag FilMultiPV for TupleToolGeometry
+ . Adding TupleToolParticleStats. this tool only counts the number of particles
+   reconstructed, located in a particular location.
+
 </PRE><H1><A NAME=v33r2>2013-02-21 DaVinci v33r2</A></H1><PRE>
 
 New development release based on the LHCb v35r4 stack.
