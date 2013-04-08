@@ -5,6 +5,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2013-04-08 - Rob Lambert
+ - Remove obsolete D0 shared particle which doesn't run anyway
+
 
 ! 2013-03-29 - Rob Lambert
  - Add CaloDAQ and L0DU to environment
