@@ -3,6 +3,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2013-04-08 - Marco Cattaneo
+ - Add __init.py__ to please CMake
+
 !========================= STTools v4r14 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic & Ben Couturier
  - Fixed build with C++11.
