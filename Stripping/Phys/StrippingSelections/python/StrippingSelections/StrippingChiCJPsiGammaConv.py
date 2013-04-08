@@ -25,7 +25,7 @@ config =  {
     , 'Upsilon_PIDmu'         :    0. 
     , 'eDLLe'                 :   0.0
     , 'GammaEEMass'           :   100.0 #MeV
-    , 'GammaEEPt'             :   400.0 #MeV
+    , 'GammaEEPt'             :   580.0 #MeV
     , 'mMinChiCRaw'           :   2.9 #GeV
     , 'mMaxChiCRaw'           :   4.8 #GeV
     , 'mMinChiCFit'           :   3.0 #GeV

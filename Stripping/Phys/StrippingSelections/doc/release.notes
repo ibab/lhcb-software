@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-08 - Lucio Anderlini
+ - Updated dictionary for StrippingChiC lines (harder pT cut: 400 -> 580 MeV/c)
+
 !========================= StrippingSelections v3r22 2013-04-05 =========================
 
 ! 2013-04-07 - Mika Vesterinen
