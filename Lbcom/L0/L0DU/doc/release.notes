@@ -3,6 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2013-04-08 - Marco Cattaneo
+ - Add __init.py__ to please CMake
+
 !========================= L0DU v10r27p1 2013-03-22 =========================
 ! 2013-02-15 - Rob Lambert
  - remove dangling backslash in requirements
