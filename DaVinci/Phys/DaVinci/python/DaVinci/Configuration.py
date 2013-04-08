@@ -34,7 +34,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "Persistency"        : None            # ROOT or POOL, steers the setup of services
         # Input
         , "Input"              : []              # Input data. Can also be passed as a second option file.
-        , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST" of "SDST". Nothing means the input type is compatible with being a DST. 
+        , "InputType"          : "DST"           # 'DST', 'DIGI', 'RDST', 'MDST' or 'XDST'. Nothing means the input type is compatible with being a DST. 
         , 'EnableUnpack'       : None            # Explicitly enable/disable unpacking for input data (if specified) 
         # Output
         , "HistogramFile"      : ""              # Name of output Histogram file (set to "" to get no output) 
@@ -66,7 +66,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "CondDBtag"          : """ Tag for CondDB. Default as set in DDDBConf for DataType """
         , "DQFLAGStag"         : """ Tag for DQFLAGS. Default as set in DDDBConf for DataType """
         , "Input"              : """ Input data. Can also be passed as a second option file. """
-        , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' or 'SDST'. Nothing means the input type is compatible with being a DST.  """
+        , "InputType"          : """ 'DST', 'DIGI', 'RDST', 'MDST' or 'XDST'. Nothing means the input type is compatible with being a DST.  """
         , 'EnableUnpack'       : """Explicitly enable/disable unpacking for input data (if specified) """
         , "HistogramFile"      : """ Write name of output Histogram file """
         , "TupleFile"          : """ Write name of output Tuple file """
@@ -93,7 +93,7 @@ class DaVinci(LHCbConfigurableUser) :
         LumiIntegratorConf,
         LHCbApp           ]
 
-    __known_datatypes__  = [ "MC09", "2008", "2009", "2010", "2011", "2012" ]
+    __known_datatypes__  = [ "MC09", "2008", "2009", "2010", "2011", "2012", "Upgrade" ]
     __known_prod_types__ = [ "None", "Stripping" ] 
 
     ## Known monitoring sequences run by default
@@ -127,7 +127,7 @@ class DaVinci(LHCbConfigurableUser) :
         if dataType not in self.__known_datatypes__ :
             raise TypeError( "Invalid DataType '%s'" %dataType )
         inputType = self.getProp( "InputType" ).upper()
-        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST", "SDST" ]:
+        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST", "SDST", "XDST" ]:
             raise TypeError( "Invalid inputType '%s'"%inputType )
         if ( dataType in [ "MC09" ] ):
             if not self.getProp("Simulation"):

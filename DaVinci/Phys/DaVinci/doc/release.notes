@@ -8,19 +8,18 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2013-04-08 - Chris Jones
+ - Add 'Upgrade' to the list of supported DataTypes.
+ - Add 'XDST' to the list of supported input data types.
+
 ! 2013-03-24 - Vanya Belyaev
-
- - add new property RooInTES  (default is '' )
-
-    in case this property is set and input-type is defined to be 'MDST' 
+ - Add new property RooInTES  (default is '' )
+    In case this property is set and input-type is defined to be 'MDST' 
     the following action is triggered: 
-
       - make use of  PhysConf.MicroDST.uDstConf 
-
       - RootInTES property is propagated to DaVinciUserSequnces and 
         all its members unless the corresponding 'RootInTES' 
         property is set explicitly
-
    This action should minimize number of problems for running analysis on uDst
 
 !========================= DaVinci v33r2 2013-02-21 ===========================
