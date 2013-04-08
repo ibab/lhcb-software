@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for VL Digitization
 !-----------------------------------------------------------------------------
 
+! 2013-04-08 - Heinrich Schindler
+ - added possibility to model radiation damage 
+
 !========================= VLDigitisation v1r4 2013-03-25 =========================
 ! 2013-02-24 - Heinrich Schindler
  - bugfix in VLDigitCreator (allocation of charges to strips)
