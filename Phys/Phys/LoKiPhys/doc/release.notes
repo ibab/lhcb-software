@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2013-04-09 - Vanya Belyaev
+ - Photons.cpp: bug fix 
+
 !========================= LoKiPhys v10r13 2013-02-20 =========================
 
 ! 2013-02-15 - Vanya Belyaev

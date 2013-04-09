@@ -73,7 +73,7 @@ unsigned int LoKi::Photons::getDigits
 ( const LHCb::CaloCluster* cluster , 
   LHCb::CaloDigit::Vector& digits  ) 
 {
-  if ( 0 == hypo ){ return digits.size () ; }
+  if ( 0 == cluster){ return digits.size () ; }
   LHCb::CaloDigit::Set digs ( digits.begin() , digits.end() );
   getDigits ( cluster , digs ) ;
   digits.clear() ;
