@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Marco Cattaneo
+ - Add __init__.py to please CMake
+
 !========================= PatPV v3r26 2013-02-14 =========================
 ! 2013-02-04 - Mariusz Witek
  - change void to StatusCode for removeTracksAndRecalculatePV (in PVOfflineTool)
