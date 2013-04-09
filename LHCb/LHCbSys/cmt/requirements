@@ -59,7 +59,6 @@ use LinkerInstances       v3r6    Event   # Thomas Ruf
 use LumiEvent             v3r4    Event   # Jaap Panman
 use MCEvent               v2r25   Event   # Gloria Corti and sub-det experts
 use MicroDst              v1r1    Event   # ??
-use PackedEvent           v4r13   Event   # Chris Jones
 use PhysEvent             v11r19  Event   # Patrick Koppenburg
 use RecEvent              v2r45   Event   # Marco Cattaneo and sub-det experts
 use RecreatePIDTools      v1r7    Event   # Chris Jones

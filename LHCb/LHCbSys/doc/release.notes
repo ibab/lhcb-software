@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Chris Jones
+ - Remove Event/PackedEvent, as now merged into Event/EventPacker.
+
 </PRE><H1><A NAME=v35r5>2013-03-21 LHCbSys v35r5</A></H1><PRE>
 This version uses Gaudi v23r7 and LCG_64d
 
