@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Marco Cattaneo
+ - Add __init__.py to please CMake
+
 !========================= RichRecSys v4r7 2012-11-28 =========================
 ! 2012-11-26 - Chris Jones
  - Add 'DataType' option to PhotonCreator configurable. 
