@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-09 - Cedric Potterat for Raditaive
+ - Retention rate reduction of RD Lb2LGamma line
+
 ! 2013-04-08 - Lucio Anderlini
  - Updated dictionary for StrippingChiC lines (harder pT cut: 400 -> 580 MeV/c)
 

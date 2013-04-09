@@ -263,7 +263,7 @@ class HHBuilder(object):
 
     def _makeLambdaLL(self):
         return [Selection("LambdaLLForBeauty2XGamma",
-                          Algorithm = FilterDesktop(Code = "(PT > 1500.*MeV) & INTREE((ABSID=='p+') & (PIDp > 10) & ((PIDp-PIDK) > 0)) & INTREE(('pi-'==ABSID) & (PT > 350.*MeV)) & (ADMASS('Lambda0') < 6.*MeV) & (VFASPF(VCHI2) < 20)"),
+                          Algorithm = FilterDesktop(Code = "(PT > 1500.*MeV) & INTREE((ABSID=='p+') & (PIDp > 10) & ((PIDp-PIDK) > 0) & (TRGHP <0.4)) & INTREE(('pi-'==ABSID) & (PT > 350.*MeV) & (PIDK < 2) & (TRGHP <0.4) ) & (ADMASS('Lambda0') < 6.*MeV) & (VFASPF(VCHI2) < 20)"),
                            RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")]
                           )
                 ]
@@ -271,7 +271,7 @@ class HHBuilder(object):
     
     def _makeLambdaDD(self):
         return [Selection("LambdaDDForBeauty2XGamma",
-                          Algorithm = FilterDesktop(Code = "(PT > 1500.*MeV) & INTREE((ABSID=='p+') & (PIDp > 10) & ((PIDp-PIDK) > 0)) & INTREE(('pi-'==ABSID) & (PT > 400.*MeV)) & (ADMASS('Lambda0') < 7.*MeV) & (VFASPF(VCHI2) < 20)"),
+                          Algorithm = FilterDesktop(Code = "(PT > 1500.*MeV) & INTREE((ABSID=='p+') & (PIDp > 10) & ((PIDp-PIDK) > 0)  & (TRGHP <0.5)) & INTREE(('pi-'==ABSID) & (PT > 400.*MeV)  & (PIDK < 2) & (TRGHP <0.5)) & (ADMASS('Lambda0') < 7.*MeV) & (VFASPF(VCHI2) < 20)"),
                           RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseLambdaDD/Particles")]
                           )
                 ]
