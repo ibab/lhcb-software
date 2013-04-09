@@ -129,7 +129,7 @@ class B2DMuForTauMuconf(LineBuilder) :
         self.registerLine(self.B2DMuForTauMu)        
 
 
-        self.FakeB2DMuForTauMu = StrippingLine('b2D0MuXFake' + name+ 'Line', prescale = 0.1, selection = self.selFakeb2D0MuX, FILTER  = GECs)
+        self.FakeB2DMuForTauMu = StrippingLine('b2D0MuXFake' + name+ 'Line', prescale = 0.08, selection = self.selFakeb2D0MuX, FILTER  = GECs)
         self.registerLine(self.FakeB2DMuForTauMu)   
 
     def _muonFilter( self ):
