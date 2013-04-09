@@ -1,5 +1,5 @@
 package		HltL0Conf
-version           v3r0p2
+version           v3r0p3
 
 # ================ structure =============================================
 branches	src cmt doc 
