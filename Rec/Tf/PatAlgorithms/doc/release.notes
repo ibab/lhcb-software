@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Marco Cattaneo
+ - Add __init__.py to please CMake
+
 !========================= PatAlgorithms v4r26 2013-02-14 =========================
 ! 2013-02-05 - Sascha Stahl
  - Moved all UT related code to Pr/PrAlgorithms
