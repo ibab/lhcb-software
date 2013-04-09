@@ -4,6 +4,9 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Marco Cattaneo
+ - Add __init__.py to please CMake
+
 !========================= RecoUpgrade v3r1 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
@@ -25,7 +28,8 @@
 
 !========================== RecoUpgrade v2r0 2010-09-24 =====================
 ! 2010-09-23 - Victor Coco
- - Clean configurables and modifiy the PatVeloPixFitLHCbIDs so that it work for    all tracks (previous version was done for VeloPix only and was throwing away
+ - Clean configurables and modifiy the PatVeloPixFitLHCbIDs so that it work for
+   all tracks (previous version was done for VeloPix only and was throwing away
    other LHCbIDs)
 
 ! 2010-09-22 - Victor Coco
