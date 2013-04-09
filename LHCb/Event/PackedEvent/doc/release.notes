@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Chris Jones
+ - Retire this package. Imported into Event/EventPacker.
+
 ! 2013-04-02 - Marco Cattaneo
  - Fix UNINIT_CTOR defect
 
