@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-09 - Francesca Dordei
+ - Updated LineConfigDictionaries_B2CC.py in stripping20r0p1 and stripping20r1p1
+
 ! 2013-04-08 - Lucio Anderlini
  - Harder pT cut to ChiCConv Lines for BandQ (pT from 400 to 580 MeV) 
    as discussed with Edwige (author)
@@ -99,7 +102,7 @@
 ! 2013-03-28 - Edmund Smith (LHCb 2010) 
  - Added LineConfigDictionaries for B2OC WG for Stripping20r0p1 and Stripping20r1p1.
 
-! 2013-03-27
+! 2013-03-27 - Francesca Dordei
  - Add B2CC ConfigDictionaries for Stripping20r0p1 (2012) and Stripping20r1p1 (2011)
 
 ! 2013-03-21 - Anton Poluektov 
