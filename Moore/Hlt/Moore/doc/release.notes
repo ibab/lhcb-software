@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : R. Lambert, G. Raven
 Purpose     : LHCb HLT application
 
+!========================= Moore v20r1 2013-04-09 =========================
 ! 2013-03-11 - Rob Lambert
  - Fix setOtherProps also for LHCbApp.
 
