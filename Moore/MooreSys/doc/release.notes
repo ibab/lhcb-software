@@ -3,8 +3,28 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v20r1>2013-04-09 Moore v20r1</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v35r5 stack. Depends on Rec v14r5 via Phys v16r5. Based on Gaudi v23r7.
+
+On top of First HLT version to directly take Lbcom as a dependency, Lbcom v13r5. see task #40844
+
 Packages added:
- - HltMonitor (Moved from HLT)
+ - HltMonitor (Moved from HLT)
+ - Swimming (moved from Phys).
+
+Modification Summary (HLT project, not Moore):
+ - Added a test suite into every package, see task #40437
+   Tests check that configurables&modules can be instantiated and algs can be constructed
+ - During the addition of tests, some minor bugs showed up in Hlt2SharedParticles and HltMonitor.
+ - Some test updates in Moore, 
+ - bug in L0 emulation configuration fixed see task #39741
+ - Swimming package now to be included in Moore, major version change due to previous incompatibility with the head. See task #40021
+
+
+For a description of the introduced changes, links to changesets, and other details, see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r1
+and
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r1
 
 </PRE><H1><A NAME=v20r0>2013-02-28 Moore v20r0</A></H1><PRE>
 HLT/Moore LS1 first development version. First backward-incompatible changes for 2012 triggers and Gaudi versions tentatively allowed. see task #40113. 
