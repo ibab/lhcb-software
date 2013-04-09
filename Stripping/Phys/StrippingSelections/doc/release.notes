@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-09 - William Sutcliffe 
+ - Updated StrippingLb2pMuNu.py in order to reduce retention rates
+ - Added in tos selections. Updated dictionary.
+
+! 2013-04-09 - Cedric Potterat for Raditaive
+ - Retention rate reduction of RD Lb2LGamma line
+
 ! 2013-04-09 - Cedric Potterat for Raditaive
  - Retention rate reduction of RD Lb2LGamma line
 
