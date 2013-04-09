@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Marco Cattaneo
+ - Add __init__.py to please CMake
+
 !========================= TrackMatching v2r35 2013-02-14 =========================
 ! 2013-02-06 - Sascha Stahl
  - Removed UT cluster tool.
