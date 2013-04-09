@@ -4,6 +4,9 @@
 ! Purpose     : First Software Trigger tools for teh upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Marco Cattaneo
+ - Add __init__.py to please CMake
+
 !========================= FstTools v1r0 2013-02-15 =========================
 ! 2013-02-15 - Marco Clemencic
  - Added CMakeLists.txt.
