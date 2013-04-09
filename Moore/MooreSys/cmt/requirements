@@ -8,7 +8,7 @@ branches doc cmt
 
 use  Moore               v20r1      Hlt
 use  IndependenceTests   v1r4       Hlt
-use  HltMonitor          v1r1	    Hlt   # Roel Aaij
+use  HltMonitor          v1r2	    Hlt   # Roel Aaij
 use  Swimming            v3r0	    Phys  # Roel Aaij
 
 
