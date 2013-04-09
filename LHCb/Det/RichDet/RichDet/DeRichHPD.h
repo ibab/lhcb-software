@@ -253,12 +253,14 @@ private: // functions
   }
 
   /// parameterised extra radius for the defraction in the HPD window
-  inline double extraRadiusForRefraction( double rCathode ) const
+  inline double extraRadiusForRefraction( const double r ) const
   {
-    return ( m_refactParams[3]*gsl_pow_3(rCathode) +
-             m_refactParams[2]*gsl_pow_2(rCathode) +
-             m_refactParams[1]*rCathode +
-             m_refactParams[0] );
+    const double  rr = r*r;
+    const double rrr = r*rr;
+    return ( m_refactParams[3]*rrr +
+             m_refactParams[2]*rr  +
+             m_refactParams[1]*r   +
+             m_refactParams[0]     );
   }
 
   /// Get parameters from Rich1
@@ -271,10 +273,12 @@ private: // functions
   StatusCode updateDemagProperties();
 
   /// go from a point on silicon to a point on the photo-cathode with magnet ON
-  StatusCode magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
+  StatusCode magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint, 
+                                      const bool photoCathodeSide ) const;
 
   /// go from a point on silicon to a point on the photo-cathode with magnet OFF
-  StatusCode magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
+  StatusCode magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint, 
+                                       const bool photoCathodeSide ) const;
 
   /// Initialise the interpolators for demagnification (cathode to anode)
   StatusCode fillHpdDemagTable( const unsigned int field );
@@ -286,7 +290,14 @@ private: // functions
   StatusCode initHpdQuantumEff();
 
   /// Access magnetic field service on demand
-  ILHCbMagnetSvc * magSvc() const;
+  inline ILHCbMagnetSvc * magSvc() const
+  {
+    if ( !m_magFieldSvc ) { loadMagSvc(); }
+    return m_magFieldSvc;
+  }
+
+  /// Load the Magnetic field service when required
+  void loadMagSvc() const;
 
   /** It returns the rotation angle \Delta\phi [rad] as a function of the
    * radial entrance

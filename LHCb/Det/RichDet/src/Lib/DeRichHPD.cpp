@@ -28,6 +28,9 @@
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichSystem.h"
 
+// RichKernel
+#include "RichKernel/FastMaths.h"
+
 //=============================================================================
 
 const CLID CLID_DERichHPD = 12015;  // User defined
@@ -204,9 +207,9 @@ StatusCode DeRichHPD::initialize ( )
 }
 
 //=========================================================================
-// Access magnetic field service on demand
+// Load the Magnetic field service when required
 //=========================================================================
-ILHCbMagnetSvc * DeRichHPD::magSvc() const
+void DeRichHPD::loadMagSvc() const
 {
   if ( !m_magFieldSvc )
   {
@@ -225,7 +228,6 @@ ILHCbMagnetSvc * DeRichHPD::magSvc() const
                             "DeRichHPD" , StatusCode::FAILURE );
     }
   }
-  return m_magFieldSvc;
 }
 
 //=========================================================================
@@ -543,7 +545,7 @@ StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
     }
 
     simTable.push_back( TabulatedProperty::Entry( r_anode, phi_anode ) );
-    tableR[ r_cathode ]   = r_anode;
+    tableR  [ r_cathode ] = r_anode;
     tablePhi[ r_cathode ] = phi_anode;
 
   }
@@ -653,28 +655,41 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
 //  with the magnet ON
 //=========================================================================
 StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
-                                               bool photoCathodeSide ) const
+                                               const bool photoCathodeSide ) const
 {
   const unsigned int field = ( magSvc()->isDown() ? 0 : 1 );
 
-  detectPoint =  ( m_MDMS_version[field] == 0 ?
-                   m_SiSensorToHPDMatrix * detectPoint :
-                   detectPoint -= m_MDMSRotCentre );
+  detectPoint = ( m_MDMS_version[field] == 0              ?
+                  m_SiSensorToHPDMatrix * detectPoint     :
+                  detectPoint           - m_MDMSRotCentre );
   detectPoint.SetZ(0.0);
-
+  
   const double rAnode = detectPoint.R();
-  double rCathode = magnification_RtoR(field)->value( rAnode );
 
-  if ( m_MDMS_version[field] != 0 )
+  double rCathode(0);
+  if ( UNLIKELY( m_MDMS_version[field] != 0 ) )
   {
     detectPoint = m_SiSensorToHPDMatrix * detectPoint;
     detectPoint.SetZ(0.0);
     const double new_rAnode = detectPoint.R();
-    rCathode = m_magnificationCoef1*new_rAnode+m_magnificationCoef2*new_rAnode*new_rAnode;
+    rCathode = ( (m_magnificationCoef1*new_rAnode) + 
+                 (m_magnificationCoef2*new_rAnode*new_rAnode) );
+  }
+  else
+  {
+    rCathode = magnification_RtoR(field)->value( rAnode );
   }
 
+  // check if this point could have come from the photoCathode
+  if ( m_winInR < rCathode ) return StatusCode::FAILURE;
+
+  // add "extra" radius for the refraction on the HPD window,
+  // assuming 90 degrees angle
+  if ( !photoCathodeSide ) rCathode += extraRadiusForRefraction(rCathode);
+  
   // calculate angle phi
-  double anodePhi = std::atan2( detectPoint.Y(), detectPoint.X() );
+  //double anodePhi = std::atan2( detectPoint.Y(), detectPoint.X() );
+  double anodePhi = Rich::Maths::atan2_f( detectPoint.Y(), detectPoint.X() );
   if ( detectPoint.Y() < 0 ) anodePhi += Gaudi::Units::twopi;
 
   const double result_phi = magnification_RtoPhi(field)->value( rAnode );
@@ -682,23 +697,19 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
   double new_phi = anodePhi + result_phi + Gaudi::Units::pi;
   if ( new_phi > Gaudi::Units::twopi ) new_phi -= Gaudi::Units::twopi;
 
-  // check if this point could have come from the photoCathode
-  if ( m_winInRsq < rCathode*rCathode ) return StatusCode::FAILURE;
-
-  // add "extra" radius for the refraction on the HPD window,
-  // assuming 90 degrees angle
-  if ( !photoCathodeSide )
-    rCathode  = rCathode + extraRadiusForRefraction(rCathode);
+  const double& winRadius = ( photoCathodeSide ? m_winInR : m_winOutR );
+  if ( winRadius < rCathode ) return StatusCode::FAILURE;
 
   const double xWindow = rCathode * std::cos(new_phi);
   const double yWindow = rCathode * std::sin(new_phi);
-  const double XsqPlusYsq = xWindow*xWindow+yWindow*yWindow;
 
-  const double winRadiusSq = ( photoCathodeSide ? m_winInRsq : m_winOutRsq );
-  if ( winRadiusSq < XsqPlusYsq ) return StatusCode::FAILURE;
-  const double zWindow = std::sqrt(winRadiusSq - XsqPlusYsq);
-
-  detectPoint = m_fromWindowToGlobal * Gaudi::XYZPoint(xWindow,yWindow,zWindow);
+  const double& winRadiusSq = ( photoCathodeSide ? m_winInRsq : m_winOutRsq );
+  detectPoint = ( m_fromWindowToGlobal *
+                  Gaudi::XYZPoint( xWindow,
+                                   yWindow, 
+                                   std::sqrt(winRadiusSq-(rCathode*rCathode)) ) );
+  
+  //std::cout << detectPoint << std::endl;
 
   return StatusCode::SUCCESS;
 }
@@ -707,7 +718,7 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
 //  with the magnet OFF
 //=========================================================================
 StatusCode DeRichHPD::magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint,
-                                                bool photoCathodeSide ) const
+                                                const bool photoCathodeSide ) const
 {
   detectPoint = m_SiSensorToHPDMatrix * detectPoint;
   detectPoint.SetZ(0.0);
@@ -729,8 +740,7 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint,
 
   // add "extra" radius for the refraction on the HPD window,
   // assuming 90 degrees angle
-  if ( !photoCathodeSide )
-    rCathode += extraRadiusForRefraction(rCathode);
+  if ( !photoCathodeSide ) rCathode += extraRadiusForRefraction(rCathode);
 
   // the minus sign is for the cross-focussing
   const double scaleUp = ( rAnode>0 ? -rCathode/rAnode : 0 );

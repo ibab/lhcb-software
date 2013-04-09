@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Chris Jones
+ - Some minor CPU optimisations
+
 ! 2013-03-25 - Antonis Papanestis
  - Fix a bug introduced in DeRichPMTPanel
 

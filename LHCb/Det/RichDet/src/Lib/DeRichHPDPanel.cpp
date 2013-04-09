@@ -687,7 +687,8 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
   m_localPlaneZdiff = winR - std::sqrt( winR*winR - m_activeRadiusSq );
   m_localPlane2 = Gaudi::Transform3D(Gaudi::XYZVector(0.0,0.0,m_localPlaneZdiff))(m_localPlane);
 
-  if ( msgLevel(MSG::VERBOSE,msg) ) {
+  if ( msgLevel(MSG::VERBOSE,msg) )
+  {
     msg << MSG::VERBOSE << "Detection plane        " << m_detectionPlane << endmsg;
     msg << MSG::VERBOSE << "Detection plane local  " << m_localPlane << endmsg;
     msg << MSG::VERBOSE << "Local z coord of det plane " << m_detPlaneZ << endmsg;
@@ -729,3 +730,5 @@ unsigned int DeRichHPDPanel::pdNumber( const LHCb::RichSmartID smartID ) const
            smartID.pdCol() * nPDsPerCol() + smartID.pdNumInCol() :
            nPDs() + 1 );
 }
+
+//=========================================================================
