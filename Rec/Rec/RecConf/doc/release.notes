@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2013-04-09 - Marco Cattaneo
+ - Add __init__.py to please CMake
+
 !========================= RecConf v2r12 2013-03-22 =========================
 ! 2013-03-03 - Sascha Stahl
  - RecSysConf propagates all detectors in this slot to RecSummary.
