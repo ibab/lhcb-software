@@ -4,6 +4,7 @@
 ! Purpose     : Offline monitoring of Hlt from raw data
 !-----------------------------------------------------------------------------
 
+!========================= HltMonitor v1r2 2013-04-09 =========================
 ! 2013-03-27 - Rob Lambert
  - Protect against missing rundb
 
