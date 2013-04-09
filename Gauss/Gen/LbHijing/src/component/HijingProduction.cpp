@@ -146,8 +146,8 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
     double pz1 = (*p) -> momentum() . pz() * Gaudi::Units::GeV ;
     double pe1 = (*p) -> momentum() . e() * Gaudi::Units::GeV ;
     //pz and energy of particle in GeV in LAB (after Lorentz boost)
-    double pz2 = m_gamma*(pz1 - m_beta*pe1) ;
-    double pe2 = m_gamma*(pe1 - m_beta*pz1) ;
+    double pz2 = m_gamma*(pz1 + m_beta*pe1) ;
+    double pe2 = m_gamma*(pe1 + m_beta*pz1) ;
    
     HepMC::FourVector newMom ;
     newMom.setX( (*p) -> momentum() . px() * Gaudi::Units::GeV ) ;
