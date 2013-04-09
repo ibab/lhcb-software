@@ -2170,6 +2170,7 @@ const LHCb::Track* ZooWriter::refittedTrack(const LHCb::Track* tr)
     fittedtrack->copy(*tr);
     // refit
     StatusCode sc = m_trackFitter->fit(*fittedtrack);
+    fittedtrack->setGhostProbability(tr->ghostProbability());
     if (sc.isFailure()) {
 	warning() << "Refitting track failed!" << endreq;
 	// avoid further fitting attempts by putting it into the table

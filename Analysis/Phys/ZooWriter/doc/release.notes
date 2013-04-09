@@ -4,6 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Paul Seyfert
+ - fixed readout of ghostprobability in case tracks are refitted
+   NB: I didn't fully check if refitting has other undesired features
+
 ! 2012-10-22 - Paul Seyfert
  - added trigger lines for 2011 and 2012 data
    (2012 until 0x9a0042, excluding 0x97003c)
