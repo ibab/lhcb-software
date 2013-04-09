@@ -36,14 +36,14 @@ DECLARE_ALGORITHM_FACTORY( UnpackCluster )
 }
 
 //=============================================================================
-// explicite comparison for cluster sorting (hidden in anonymous namespace)
+// explicit comparison for cluster sorting (hidden in anonymous namespace)
 //=============================================================================
-namespace {
-  inline bool compareVeloClusterKeys(LHCb::VeloCluster* i1, LHCb::VeloCluster* i2) {
-    return ((i1)->key()<(i2)->key());
-  }
-  inline bool compareSTClusterKeys(LHCb::STCluster* i1, LHCb::STCluster* i2) {
-    return ((i1)->key()<(i2)->key());
+namespace 
+{
+  template < class TYPE >
+  inline bool compareKeys( const TYPE * a, const TYPE * b ) 
+  {
+    return ( a->key() < b->key() );
   }
 }
 
@@ -183,10 +183,10 @@ StatusCode UnpackCluster::execute()
   } // end loop over clusters
 
   // Sort any filled containers.
-  if ( m_vClus  ) { std::sort( m_vClus->begin(),  m_vClus->end() , compareVeloClusterKeys ); }
-  if ( m_ttClus ) { std::sort( m_ttClus->begin(), m_ttClus->end() , compareSTClusterKeys ); }
-  if ( m_utClus ) { std::sort( m_utClus->begin(), m_utClus->end() , compareSTClusterKeys ); }
-  if ( m_itClus ) { std::sort( m_itClus->begin(), m_itClus->end() , compareSTClusterKeys ); }
+  if ( m_vClus  ) { std::sort( m_vClus->begin(),  m_vClus->end(),  compareKeys<LHCb::VeloCluster> ); }
+  if ( m_ttClus ) { std::sort( m_ttClus->begin(), m_ttClus->end(), compareKeys<LHCb::STCluster>   ); }
+  if ( m_utClus ) { std::sort( m_utClus->begin(), m_utClus->end(), compareKeys<LHCb::STCluster>   ); }
+  if ( m_itClus ) { std::sort( m_itClus->begin(), m_itClus->end(), compareKeys<LHCb::STCluster>   ); }
 
   //== If we stored in a different location, compare...
   if ( !m_extension.empty() )
