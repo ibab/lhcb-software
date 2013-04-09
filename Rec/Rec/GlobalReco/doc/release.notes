@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Marco Cattaneo
+ - Add __init__.py to please CMake
+
 !========================= GlobalReco v6r44 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
