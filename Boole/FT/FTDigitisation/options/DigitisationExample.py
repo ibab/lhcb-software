@@ -10,7 +10,7 @@ from Configurables import L0Conf, DDDBConf
 L0Conf().TCK = '0x002A'
 
 #-- Event input
-DDDBConf().DbRoot = "/afs/cern.ch/user/o/ogruenbe/public/FT_upgrade/static_DDDB_FT_v6/lhcb.xml"
+DDDBConf().DbRoot = "/afs/cern.ch/user/o/ogruenbe/public/FT_upgrade/static_DDDB_FT_v16/lhcb.xml"
 LHCbApp().DDDBtag   = "MC11-20111102"
 LHCbApp().CondDBtag = "sim-20111111-vc-md100"
 
@@ -50,9 +50,9 @@ myAlgDigit = MCFTDigitCreator()
 
 myAlgCluster = FTClusterCreator()
 #myAlgCluster.OutputLevel = DEBUG
-#myAlgCluster.ClusterMaxWidth = 1000
-#myAlgCluster.ClusterMinCharge = 2
-#myAlgCluster.ClusterMaxCharge = 1000
+myAlgCluster.ClusterMaxWidth = 1000
+myAlgCluster.ClusterMinCharge = 1
+myAlgCluster.ClusterMinADCPeak = 1
 
 
 #myAlgEncoder = FTRawBankEncoder()

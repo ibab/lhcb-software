@@ -4,6 +4,12 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-04-10 - Eric Cogneras
+ - cluster monitoring
+ - Change of DDDB version numbering from O. Gruenberg propagated to joboption
+
+! 2013-04-05 - Eric Cogneras
+ -  Add monitoring plots and improve plotting python script
 
 ! 2013-03-27 - Eric Cogneras
  - Bug fix : double declaration of variable reported by gcc47

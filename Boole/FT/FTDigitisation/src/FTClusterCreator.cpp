@@ -218,17 +218,20 @@ StatusCode FTClusterCreator::execute() {
              0. , 1000000. ,10000);
         // draw cluster fractional part
         plot(newCluster->fraction(), "ClusFraction", 
-             "Cluster Fractional part; Cluster fractional part" , 0 , 1);
+             "Cluster Fractional part; Nber of events" , 0 , 1);
         // draw cluster width
-        plot(newCluster->size(),"ClusSize", "Cluster Size; Cluster Size" , 0 , 100);
+        plot(newCluster->size(),"ClusSize","Cluster Size;Nber of events" , 0. , 50., 50);
         // draw cluster total adc charge
-        plot(newCluster->charge(),"ClusCharge","Cluster Charge; Cluster Charge" , 0 , 100);
-        plot(newCluster->charge(),"ClusChargeZoom","Cluster Charge (Zoom); Cluster Charge" , 0. , 16., 16);
-        
+        plot(newCluster->charge(),"ClusCharge","Cluster Charge;Nber of events" , 0 , 100);
+        plot(newCluster->charge(),"ClusChargeZOOM","Cluster Charge;Nber of events" , 
+             0. , 50., 50);
         plot2D(newCluster->size(), newCluster->charge(), "ClusChargevsSize",
-               "Cluster Charge vs. Cluster Size;Cluster Charge [ADC counts];Cluster size [Nb of Channels]",
+               "Cluster charge vs. size;Cluster size [Nb of Channels];Cluster Charge [ADC counts]",
                0. , 16. , 0. , 100.,16, 100);
         counter("ClusterAccumulatedCharge") += newCluster->charge();
+        counter("ClusterSize") += newCluster->size();
+        if (newCluster->size() <9) counter("ClusterSizeUpto8")++;
+        else counter("ClusterSizeAbove8")++;
         ++m_nCluster;
         m_sumCharge += totalCharge;
 
@@ -270,7 +273,7 @@ StatusCode FTClusterCreator::execute() {
       ++m_nberOfKeptHitFromMap;
       counter("NberOfKeptHitFromMap")++;
       plot2D( hitboolMapiter->first->entry().x(), hitboolMapiter->first->entry().y(), 
-              "KeptHitEntryPosition;Entry position of Hits kept by Clusterisation ; x [mm]; y [mm]",
+              "KeptHitEntryPosition","Entry position of Hits kept by Clusterisation ; x [mm]; y [mm]",
               -500., 500., -500.,500., 100, 100);  
       plot(hitboolMapiter->first->energy(),"KeptHitEnergy", 
            "Energy of Hits kept by Clusterisation; Energy [MeV];Number of hits" , 0 , 1 );
@@ -281,7 +284,7 @@ StatusCode FTClusterCreator::execute() {
       ++m_nberOfLostHitFromMap;
       counter("NberOfLostHitFromMap")++;
       plot2D( hitboolMapiter->first->entry().x(), hitboolMapiter->first->entry().y(), 
-              "LostHitEntryPosition;Entry position of Hits lost in Clusterisation; x [mm]; y [mm]",
+              "LostHitEntryPosition","Entry position of Hits lost in Clusterisation; x [mm]; y [mm]",
               -500., 500., -500.,500., 100, 100);  
       plot(hitboolMapiter->first->energy(),"LostHitEnergy", 
            "Energy of Hits lost in Clusterisation; Energy [MeV];Number of hits" , 0 , 1 );

@@ -250,16 +250,27 @@ class Read:
             OutFileMantisse = files[:files.find('-histos')]
             
 
-            ClusChannelID     = tfile.Get('FTClusterCreator/ClusChannelID')
-            ClusFraction      = tfile.Get('FTClusterCreator/ClusFraction')
-            ClusSize          = tfile.Get('FTClusterCreator/ClusSize')
-            ClusCharge        = tfile.Get('FTClusterCreator/ClusCharge')
-            ClusChargeZoom    = tfile.Get('FTClusterCreator/ClusChargeZoom')
-            ClusChargeVsSize  = tfile.Get('FTClusterCreator/ClusChargevsSize')
-
+            ClusChannelID         = tfile.Get('FTClusterCreator/ClusChannelID')
+            ClusFraction          = tfile.Get('FTClusterCreator/ClusFraction')
+            ClusSize              = tfile.Get('FTClusterCreator/ClusSize')
+            ClusCharge            = tfile.Get('FTClusterCreator/ClusCharge')
+            ClusChargeZoom        = tfile.Get('FTClusterCreator/ClusChargeZOOM')
+            ClusChargeVsSize      = tfile.Get('FTClusterCreator/ClusChargevsSize') #2D
+            KeptHitEntryPosition  = tfile.Get('FTClusterCreator/KeptHitEntryPosition') #2D
+            KeptHitEnergy         = tfile.Get('FTClusterCreator/KeptHitEnergy')
+            KeptHitPDGId          = tfile.Get('FTClusterCreator/KeptHitPDGId')
+            LostHitEntryPosition  = tfile.Get('FTClusterCreator/LostHitEntryPosition') #2D
+            LostHitEnergy         = tfile.Get('FTClusterCreator/LostHitEnergy')
+            LostHitPDGId          = tfile.Get('FTClusterCreator/LostHitPDGId')          
+   
             Clustercvs= TCanvas("Clustercvs","Clustercvs")
             Extension = self.OutFileType
-            
+
+            ClusChargeVsSize.SetMarkerStyle(8)
+            ClusChargeVsSize.SetMarkerColor(kBlue)
+            ClusChargeVsSize.Draw("COLORZ")
+            Clustercvs.SaveAs(OutFileMantisse+"_ClusChargeVsSize"+Extension)
+                
             for i in range(2):
                 if i==1:
                     Clustercvs.SetLogy()
@@ -290,16 +301,12 @@ class Read:
                 ClusChargeZoom.Draw("P")
                 Clustercvs.SaveAs(OutFileMantisse+"_ClusChargeZoom"+Extension)
                 
-                ClusChargeVsSize.SetMarkerStyle(8)
-                ClusChargeVsSize.SetMarkerColor(kBlue)
-                ClusChargeVsSize.Draw("COLORZ")
-                Clustercvs.SaveAs(OutFileMantisse+"_ClusChargeVsSize"+Extension)
         
 def main():
     t = Read()
     #t.DepositPlots()
-    t.DigitPlots()
-    #t.ClusterPlots()
+    #t.DigitPlots()
+    t.ClusterPlots()
     
 if __name__ == "__main__":
     main()
