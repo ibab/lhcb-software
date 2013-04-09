@@ -46,11 +46,11 @@
 # DigiWriter.ItemList    = ['/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/MC/DigiHeader#1', '/Event/DAQ/RawEvent#1', '/Event/Gen/BeamParameters#1', '/Event/Gen/Collisions#1', '/Event/pSim/MCVertices#1', '/Event/pSim/MCParticles#1', '/Event/pSim/Rich/DigitSummaries#1', '/Event/MC/Muon/DigitsInfo#1', '/Event/Link/Raw/VP/Clusters#1', '/Event/Link/Raw/UT/Clusters#1', '/Event/Link/Raw/FT/Clusters#1', '/Event/Link/Raw/Muon/Digits#1', '/Event/Link/Raw/Ecal/Digits#1', '/Event/Link/Raw/Hcal/Digits#1', '/Event/MC/TrackInfo#1', '/Event/Link/Raw/VP/Clusters2MCHits#1', '/Event/Link/Raw/UT/Clusters2MCHits#1']
 # DigiWriter.OptItemList = ['/Event/Gen/HepMCEvents#1']
 # WARNING: Using default tag dq-20121016 for partition DQFLAGS
-# WARNING: ALL local tags of ['VP_Compact_MicroChannel+UT', 'FT'] data type(s) are added: {'DDDB': ['VP-Compact-Local-20130319', 'VP-UT-Local-NoPuVeto-20121024', 'UT-Pipe-Upgrade-Local-20120928', 'FT-Upgrade-Local-20120910'], 'SIMCOND': []}
+# WARNING: ALL local tags of ['VP_Compact_MicroChannel+UT', 'FT'] data type(s) are added: {'DDDB': ['VP-CompactMicroChannelOptimize-Local-20130408', 'VP-Compact-Local-20130319', 'VP-UT-Local-NoPuVeto-20121024', 'UT-Pipe-Upgrade-Local-20120928', 'FT-Upgrade-Local-20120910'], 'SIMCOND': []}
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Boole version v26r0
-                                          running on lxbuild163.cern.ch on Mon Apr  8 08:41:46 2013
+                                                   Welcome to Boole version v26r4
+                                          running on lxplus309.cern.ch on Tue Apr  9 23:28:01 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -58,7 +58,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.24 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.58 times the speed of a 2.8 GHz Xeon.
 BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Link, ProcessPhase/Moni, ProcessPhase/Filter
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMuonSeq
 InitBooleSeq         INFO Member list: BooleInit, GaudiSequencer/SpilloverHandler
@@ -67,80 +67,62 @@ BooleInit         SUCCESS Requested to process all events on input file(s)
 BooleInit         SUCCESS ==================================================================
 RootHistSvc          INFO Writing ROOT histograms to: Boole-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r9/data/muonlow-G4.root as LowEnergy
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r9/data/muonflat-G4.root as MuonFlatSpillover
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/PARAM/ParamFiles/v8r9/data/muonlow-G4.root as LowEnergy
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/PARAM/ParamFiles/v8r9/data/muonflat-G4.root as MuonFlatSpillover
 SpilloverHandler     INFO Member list: TESCheck/SpilloverLoader, EventNodeKiller/SpilloverKiller
 InitDataSeq          INFO Member list:
 InitMuonSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackground/MuonFlatSpillover
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB_3               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
+DDDB_4               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
+DDDB_4               INFO Using TAG "VP-CompactMicroChannelOptimize-Local-20130408"
+DDDB_3               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
 DDDB_3               INFO Using TAG "VP-Compact-Local-20130319"
-DDDB_2               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
+DDDB_2               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
 DDDB_2               INFO Using TAG "VP-UT-Local-NoPuVeto-20121024"
-DDDB_1               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
+DDDB_1               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
 DDDB_1               INFO Using TAG "UT-Pipe-Upgrade-Local-20120928"
-DDDB_0               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
+DDDB_0               INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
 DDDB_0               INFO Using TAG "FT-Upgrade-Local-20120910"
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "dddb-20130320"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
-SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/SIMCOND.db/SIMCOND"
+SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/../SQLDDDB_Upgrade/db/SIMCOND.db/SIMCOND"
 SIMCOND              INFO Using TAG "simcond-20121001-vc-md100"
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r9/data/muonlow-G4.root" for reading
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/PARAM/ParamFiles/v8r9/data/muonlow-G4.root" for reading
 MuonLowEnergy        INFO The low energy background is run by default for main events plus (if any) spillover events (max 4)
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r9/data/muonflat-G4.root" for reading
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/PARAM/ParamFiles/v8r9/data/muonflat-G4.root" for reading
 Digi                 INFO Member list: GaudiSequencer/DigiVPSeq, GaudiSequencer/DigiUTSeq, GaudiSequencer/DigiFTSeq, GaudiSequencer/DigiRichSeq, GaudiSequencer/DigiCaloSeq, GaudiSequencer/DigiMuonSeq
 DigiVPSeq            INFO Member list: VPMCDepositCreator, VPMCDigitCreator, VPDigitCreator, VPDigitsCreator, VPClusterCreator, PrepareVPRawBank
 DeVP                 INFO There are 52 Square sensors: Left 26 Right 26
 DigiUTSeq            INFO Member list: MCSTDepositCreator/MCUTDepositCreator, MCSTDigitCreator/MCUTDigitCreator, STDigitCreator/UTDigitCreator, STClusterCreator/UTClusterCreator, STClusterKiller/UTClusterKiller, STClustersToRawBankAlg/createUTRawBuffer
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c1_onemap_down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c2_onemap_down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c3_onemap_down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c4_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/DBASE/FieldMap/v5r6/cdf/c1_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/DBASE/FieldMap/v5r6/cdf/c2_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/DBASE/FieldMap/v5r6/cdf/c3_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/DBASE/FieldMap/v5r6/cdf/c4_onemap_down.cdf
 MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
 UTClusterCreator     INFO Loading cuts tagged as Data11
 ToolSvc.UTKiller     INFO Adding Tool: type: STRndmEffSelector / name: Selector
 DigiFTSeq            INFO Member list: MCFTDepositCreator, MCFTDigitCreator, FTClusterCreator, FTRawBankEncoder, MCFTDepositMonitor
 DeFTDetector         INFO ==> Initialize DeFTDetector
-MCFTDepositCreator   INFO layerMaxX()=   3210 layerMaxY()=   2418
-m_xStepOfMap=    200 m_yStepOfMap=    100 m_nXSteps=     18 m_nYSteps=     26 xMax=   3400 yMax=   2500
-x=      0
-y=      0 [ 0.552] y=    100 [ 0.617] y=    200 [ 0.637] y=    300 [ 0.649] y=    400 [ 0.661] y=    500 [ 0.674] y=    600 [ 0.682] y=    700 [ 0.691] y=    800 [ 0.701] y=    900 [ 0.710] y=   1000 [ 0.720] y=   1100 [ 0.730] y=   1200 [ 0.717] y=   1300 [ 0.692] y=   1400 [ 0.671] y=   1500 [ 0.668] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=    200
-y=      0 [ 0.646] y=    100 [ 0.682] y=    200 [ 0.695] y=    300 [ 0.705] y=    400 [ 0.715] y=    500 [ 0.724] y=    600 [ 0.732] y=    700 [ 0.740] y=    800 [ 0.748] y=    900 [ 0.757] y=   1000 [ 0.766] y=   1100 [ 0.775] y=   1200 [ 0.752] y=   1300 [ 0.712] y=   1400 [ 0.679] y=   1500 [ 0.670] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=    400
-y=      0 [ 0.755] y=    100 [ 0.765] y=    200 [ 0.772] y=    300 [ 0.779] y=    400 [ 0.788] y=    500 [ 0.793] y=    600 [ 0.799] y=    700 [ 0.806] y=    800 [ 0.813] y=    900 [ 0.820] y=   1000 [ 0.828] y=   1100 [ 0.836] y=   1200 [ 0.800] y=   1300 [ 0.740] y=   1400 [ 0.690] y=   1500 [ 0.672] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=    600
-y=      0 [ 0.772] y=    100 [ 0.780] y=    200 [ 0.786] y=    300 [ 0.793] y=    400 [ 0.800] y=    500 [ 0.805] y=    600 [ 0.811] y=    700 [ 0.817] y=    800 [ 0.824] y=    900 [ 0.831] y=   1000 [ 0.838] y=   1100 [ 0.846] y=   1200 [ 0.808] y=   1300 [ 0.745] y=   1400 [ 0.692] y=   1500 [ 0.672] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=    800
-y=      0 [ 0.790] y=    100 [ 0.795] y=    200 [ 0.801] y=    300 [ 0.808] y=    400 [ 0.813] y=    500 [ 0.818] y=    600 [ 0.823] y=    700 [ 0.829] y=    800 [ 0.836] y=    900 [ 0.842] y=   1000 [ 0.850] y=   1100 [ 0.857] y=   1200 [ 0.816] y=   1300 [ 0.750] y=   1400 [ 0.694] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   1000
-y=      0 [ 0.795] y=    100 [ 0.800] y=    200 [ 0.806] y=    300 [ 0.811] y=    400 [ 0.816] y=    500 [ 0.821] y=    600 [ 0.827] y=    700 [ 0.833] y=    800 [ 0.839] y=    900 [ 0.846] y=   1000 [ 0.853] y=   1100 [ 0.860] y=   1200 [ 0.819] y=   1300 [ 0.751] y=   1400 [ 0.695] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   1200
-y=      0 [ 0.799] y=    100 [ 0.805] y=    200 [ 0.811] y=    300 [ 0.815] y=    400 [ 0.820] y=    500 [ 0.825] y=    600 [ 0.830] y=    700 [ 0.836] y=    800 [ 0.842] y=    900 [ 0.849] y=   1000 [ 0.856] y=   1100 [ 0.863] y=   1200 [ 0.821] y=   1300 [ 0.753] y=   1400 [ 0.695] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   1400
-y=      0 [ 0.804] y=    100 [ 0.809] y=    200 [ 0.814] y=    300 [ 0.819] y=    400 [ 0.823] y=    500 [ 0.828] y=    600 [ 0.834] y=    700 [ 0.839] y=    800 [ 0.845] y=    900 [ 0.852] y=   1000 [ 0.859] y=   1100 [ 0.866] y=   1200 [ 0.824] y=   1300 [ 0.754] y=   1400 [ 0.696] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   1600
-y=      0 [ 0.809] y=    100 [ 0.814] y=    200 [ 0.818] y=    300 [ 0.822] y=    400 [ 0.827] y=    500 [ 0.832] y=    600 [ 0.837] y=    700 [ 0.843] y=    800 [ 0.849] y=    900 [ 0.855] y=   1000 [ 0.862] y=   1100 [ 0.869] y=   1200 [ 0.826] y=   1300 [ 0.755] y=   1400 [ 0.696] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   1800
-y=      0 [ 0.814] y=    100 [ 0.818] y=    200 [ 0.822] y=    300 [ 0.826] y=    400 [ 0.831] y=    500 [ 0.835] y=    600 [ 0.841] y=    700 [ 0.846] y=    800 [ 0.852] y=    900 [ 0.859] y=   1000 [ 0.865] y=   1100 [ 0.873] y=   1200 [ 0.829] y=   1300 [ 0.757] y=   1400 [ 0.697] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   2000
-y=      0 [ 0.819] y=    100 [ 0.822] y=    200 [ 0.826] y=    300 [ 0.830] y=    400 [ 0.834] y=    500 [ 0.839] y=    600 [ 0.844] y=    700 [ 0.850] y=    800 [ 0.856] y=    900 [ 0.862] y=   1000 [ 0.869] y=   1100 [ 0.876] y=   1200 [ 0.831] y=   1300 [ 0.758] y=   1400 [ 0.698] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   2200
-y=      0 [ 0.819] y=    100 [ 0.822] y=    200 [ 0.826] y=    300 [ 0.830] y=    400 [ 0.834] y=    500 [ 0.839] y=    600 [ 0.844] y=    700 [ 0.850] y=    800 [ 0.856] y=    900 [ 0.862] y=   1000 [ 0.869] y=   1100 [ 0.876] y=   1200 [ 0.831] y=   1300 [ 0.758] y=   1400 [ 0.698] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   2400
-y=      0 [ 0.819] y=    100 [ 0.822] y=    200 [ 0.826] y=    300 [ 0.830] y=    400 [ 0.834] y=    500 [ 0.839] y=    600 [ 0.844] y=    700 [ 0.850] y=    800 [ 0.856] y=    900 [ 0.862] y=   1000 [ 0.869] y=   1100 [ 0.876] y=   1200 [ 0.831] y=   1300 [ 0.758] y=   1400 [ 0.698] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   2600
-y=      0 [ 0.819] y=    100 [ 0.822] y=    200 [ 0.826] y=    300 [ 0.830] y=    400 [ 0.834] y=    500 [ 0.839] y=    600 [ 0.844] y=    700 [ 0.850] y=    800 [ 0.856] y=    900 [ 0.862] y=   1000 [ 0.869] y=   1100 [ 0.876] y=   1200 [ 0.831] y=   1300 [ 0.758] y=   1400 [ 0.698] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   2800
-y=      0 [ 0.819] y=    100 [ 0.822] y=    200 [ 0.826] y=    300 [ 0.830] y=    400 [ 0.834] y=    500 [ 0.839] y=    600 [ 0.844] y=    700 [ 0.850] y=    800 [ 0.856] y=    900 [ 0.862] y=   1000 [ 0.869] y=   1100 [ 0.876] y=   1200 [ 0.831] y=   1300 [ 0.758] y=   1400 [ 0.698] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   3000
-y=      0 [ 0.819] y=    100 [ 0.822] y=    200 [ 0.826] y=    300 [ 0.830] y=    400 [ 0.834] y=    500 [ 0.839] y=    600 [ 0.844] y=    700 [ 0.850] y=    800 [ 0.856] y=    900 [ 0.862] y=   1000 [ 0.869] y=   1100 [ 0.876] y=   1200 [ 0.831] y=   1300 [ 0.758] y=   1400 [ 0.698] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   3200
-y=      0 [ 0.819] y=    100 [ 0.822] y=    200 [ 0.826] y=    300 [ 0.830] y=    400 [ 0.834] y=    500 [ 0.839] y=    600 [ 0.844] y=    700 [ 0.850] y=    800 [ 0.856] y=    900 [ 0.862] y=   1000 [ 0.869] y=   1100 [ 0.876] y=   1200 [ 0.831] y=   1300 [ 0.758] y=   1400 [ 0.698] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
-MCFTDepositCreator   INFO x=   3400
-y=      0 [ 0.819] y=    100 [ 0.822] y=    200 [ 0.826] y=    300 [ 0.830] y=    400 [ 0.834] y=    500 [ 0.839] y=    600 [ 0.844] y=    700 [ 0.850] y=    800 [ 0.856] y=    900 [ 0.862] y=   1000 [ 0.869] y=   1100 [ 0.876] y=   1200 [ 0.831] y=   1300 [ 0.758] y=   1400 [ 0.698] y=   1500 [ 0.673] y=   1600 [ 0.679] y=   1700 [ 0.695] y=   1800 [ 0.712] y=   1900 [ 0.731] y=   2000 [ 0.752] y=   2100 [ 0.777] y=   2200 [ 0.809] y=   2300 [ 0.852] y=   2400 [ 0.912] y=   2500 [ 1.000]
+MCFTDepositCreator   INFO x      0  0.552 0.617 0.637 0.649 0.661 0.674 0.682 0.691 0.701 0.710 0.720 0.730 0.717 0.692 0.671 0.668 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x    200  0.646 0.682 0.695 0.705 0.715 0.724 0.732 0.740 0.748 0.757 0.766 0.775 0.752 0.712 0.679 0.670 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x    400  0.755 0.765 0.772 0.779 0.788 0.793 0.799 0.806 0.813 0.820 0.828 0.836 0.800 0.740 0.690 0.672 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x    600  0.772 0.780 0.786 0.793 0.800 0.805 0.811 0.817 0.824 0.831 0.838 0.846 0.808 0.745 0.692 0.672 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x    800  0.790 0.795 0.801 0.808 0.813 0.818 0.823 0.829 0.836 0.842 0.850 0.857 0.816 0.750 0.694 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   1000  0.795 0.800 0.806 0.811 0.816 0.821 0.827 0.833 0.839 0.846 0.853 0.860 0.819 0.751 0.695 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   1200  0.799 0.805 0.811 0.815 0.820 0.825 0.830 0.836 0.842 0.849 0.856 0.863 0.821 0.753 0.695 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   1400  0.804 0.809 0.814 0.819 0.823 0.828 0.834 0.839 0.845 0.852 0.859 0.866 0.824 0.754 0.696 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   1600  0.809 0.814 0.818 0.822 0.827 0.832 0.837 0.843 0.849 0.855 0.862 0.869 0.826 0.755 0.696 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   1800  0.814 0.818 0.822 0.826 0.831 0.835 0.841 0.846 0.852 0.859 0.865 0.873 0.829 0.757 0.697 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   2000  0.819 0.822 0.826 0.830 0.834 0.839 0.844 0.850 0.856 0.862 0.869 0.876 0.831 0.758 0.698 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   2200  0.819 0.822 0.826 0.830 0.834 0.839 0.844 0.850 0.856 0.862 0.869 0.876 0.831 0.758 0.698 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   2400  0.819 0.822 0.826 0.830 0.834 0.839 0.844 0.850 0.856 0.862 0.869 0.876 0.831 0.758 0.698 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   2600  0.819 0.822 0.826 0.830 0.834 0.839 0.844 0.850 0.856 0.862 0.869 0.876 0.831 0.758 0.698 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   2800  0.819 0.822 0.826 0.830 0.834 0.839 0.844 0.850 0.856 0.862 0.869 0.876 0.831 0.758 0.698 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   3000  0.819 0.822 0.826 0.830 0.834 0.839 0.844 0.850 0.856 0.862 0.869 0.876 0.831 0.758 0.698 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   3200  0.819 0.822 0.826 0.830 0.834 0.839 0.844 0.850 0.856 0.862 0.869 0.876 0.831 0.758 0.698 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
+MCFTDepositCreator   INFO x   3400  0.819 0.822 0.826 0.830 0.834 0.839 0.844 0.850 0.856 0.862 0.869 0.876 0.831 0.758 0.698 0.673 0.679 0.695 0.712 0.731 0.752 0.777 0.809 0.852 0.912 1.000
 DigiRichSeq          INFO Member list: Rich::MC::Digi::Signal/RichPDSignal, Rich::MC::Digi::SummedDeposits/RichSummedDeposits, Rich::MC::Digi::CopySummedDepositsToDigits/RichPDResponse, Rich::MC::Digi::MCRichDigitsToRawBufferAlg/RichFillRawBuffer
 ToolSvc.RichRaw...   INFO Using [DAQ/RawEvent] as search path for the RawEvent object
 RichFillRawBuffer    INFO Using RICH Level1 buffer format : 3
@@ -264,31 +246,31 @@ EventLoopMgr         INFO No more events in event selection
 ApplicationMgr       INFO Application Manager Stopped successfully
 UnpackMCMuonHits  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |         3 |       1926 |     642.00 |     108.21 |      545.00 |      793.00 |
+ | "# UnPackedData"                                |         3 |       1992 |     664.00 |     45.262 |      631.00 |      728.00 |
 UnpackMCVPHits    SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |         3 |       4069 |     1356.3 |     422.64 |      769.00 |      1746.0 |
+ | "# UnPackedData"                                |         3 |       3932 |     1310.7 |     415.66 |      729.00 |      1675.0 |
 UnpackMCUTHits    SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |         3 |       1979 |     659.67 |     180.52 |      413.00 |      840.00 |
+ | "# UnPackedData"                                |         3 |       2297 |     765.67 |     222.90 |      493.00 |      1039.0 |
 UnpackMCFTHits    SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |         3 |       6581 |     2193.7 |     372.67 |      1749.0 |      2661.0 |
+ | "# UnPackedData"                                |         3 |       6686 |     2228.7 |     286.86 |      1903.0 |      2601.0 |
 UnpackMCRichHits  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |         3 |       8480 |     2826.7 |     642.16 |      1960.0 |      3495.0 |
+ | "# UnPackedData"                                |         3 |       8565 |     2855.0 |     729.78 |      2037.0 |      3809.0 |
 UnpackMCSpdHits   SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |         3 |       6269 |     2089.7 |     364.19 |      1747.0 |      2594.0 |
+ | "# UnPackedData"                                |         3 |       6720 |     2240.0 |     331.81 |      1926.0 |      2699.0 |
 UnpackMCPrsHits   SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |         3 |      11923 |     3974.3 |     983.01 |      3208.0 |      5362.0 |
+ | "# UnPackedData"                                |         3 |      13015 |     4338.3 |     852.07 |      3593.0 |      5531.0 |
 UnpackMCEcalHits  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |         3 |      16152 |     5384.0 |     1335.0 |      4029.0 |      7200.0 |
+ | "# UnPackedData"                                |         3 |      16679 |     5559.7 |     1108.1 |      4459.0 |      7076.0 |
 UnpackMCHcalHits  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnPackedData"                                |         3 |       2103 |     701.00 |     108.09 |      581.00 |      843.00 |
+ | "# UnPackedData"                                |         3 |       1910 |     636.67 |     110.35 |      491.00 |      758.00 |
 BooleInit         SUCCESS ==================================================================
 BooleInit         SUCCESS 3 events processed
 BooleInit         SUCCESS ==================================================================
@@ -296,31 +278,31 @@ UTClusterKiller      INFO Fraction of clusters killed 0 %
 UTClusterKiller   SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Dead"                                          |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "Processed"                                     |      2018 |       2018 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Processed"                                     |      2384 |       2384 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 MCFTDigitCreator  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "ADCPerMeV"                                     |     26115 |1.122024e+08 |     4296.5 | 3.0263e+05 |      14.218 |  3.7626e+07 |
-FTClusterCreator     INFO *** Average cluster charge = 71.1079
-FTClusterCreator     INFO *** Lost Hits = 101	 Kept Hits = 6393	 Sum=6494	 Eff = 0.984447
+ | "ADCPerMeV"                                     |     26327 |3.050672e+07 |     1158.8 |     39753. |      14.658 |  4.0563e+06 |
+FTClusterCreator     INFO *** Average cluster charge = 80.2403
+FTClusterCreator     INFO *** Lost Hits = 86	 Kept Hits = 6506	 Sum=6592	 Eff = 0.986954
 FTClusterCreator  SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "ClusterAccumulatedCharge"                      |      6249 |     444353 |     71.108 |     140.78 |      9.0000 |      3671.0 |
- | "NberOfKeptHitFromMap"                          |      6393 |       6393 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "NberOfLostHitFromMap"                          |       101 |        101 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "ClusterAccumulatedCharge"                      |      6279 |     503829 |     80.240 |     153.36 |      9.0000 |      4333.0 |
+ | "NberOfKeptHitFromMap"                          |      6506 |       6506 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "NberOfLostHitFromMap"                          |        86 |         86 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 MCFTDepositMonitorSUCCESS Booked 15 Histogram(s) : 1D=14 2D=1
 RichPDSignal      SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Found MCRichHits at MC/Rich/Hits"              |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
-CaloFillPrsSpdR...   INFO Average event size :   393.7 words,    98.3 for trigger  Mean bank size    39.4, maximum size    55.3
-EcalFillRawBuffer    INFO Average event size :  1695.3 words,  1626.7 for trigger  Mean bank size    60.5, maximum size    74.3
-HcalFillRawBuffer    INFO Average event size :   456.7 words,   412.0 for trigger  Mean bank size    57.1, maximum size    77.3
+CaloFillPrsSpdR...   INFO Average event size :   439.3 words,   109.3 for trigger  Mean bank size    43.9, maximum size    60.7
+EcalFillRawBuffer    INFO Average event size :  1724.3 words,  1690.7 for trigger  Mean bank size    61.6, maximum size    77.3
+HcalFillRawBuffer    INFO Average event size :   450.7 words,   398.7 for trigger  Mean bank size    56.3, maximum size    84.0
 MuonDigitization     INFO  the hit which were not found inside a gap were 0
 EcalDigitMCTruth  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "#Digit->MC links"                              |         3 |      27846 |     9282.0 |     2214.8 |      7684.0 |      12414. |
+ | "#Digit->MC links"                              |         3 |      29252 |     9750.7 |     1398.3 |      8488.0 |      11700. |
 HcalDigitMCTruth  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "#Digit->MC links"                              |         3 |       3289 |     1096.3 |     200.84 |      942.00 |      1380.0 |
+ | "#Digit->MC links"                              |         3 |       3069 |     1023.0 |     231.12 |      719.00 |      1279.0 |
 MCUTDepositMonitorSUCCESS Booked 4 Histogram(s) : 1D=4
 MCUTDigitMonitor  SUCCESS Booked 4 Histogram(s) : 1D=4
 UTDigitMonitor    SUCCESS Booked 4 Histogram(s) : 1D=4
@@ -330,43 +312,43 @@ UTClusterMonitor  SUCCESS Number of counters : 1
  | "Number of events"                              |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 UTEffChecker         INFO  -------Efficiency %---------
 UTEffChecker         INFO UTaX eff 100 +/- 0
-UTEffChecker         INFO UTaU eff 100 +/- 0
-UTEffChecker         INFO UTbV eff 100 +/- 0
+UTEffChecker         INFO UTaU eff 99.4764 +/- 0.522188
+UTEffChecker         INFO UTbV eff 98.9529 +/- 0.736539
 UTEffChecker         INFO UTbX eff 100 +/- 0
 UTEffChecker         INFO  -----------------------
 UTEffChecker      SUCCESS Booked 24 Histogram(s) : 1D=16 2D=8
 RiDigitQC            INFO ===============================================================================================
 RiDigitQC            INFO                             RICH Digitisation Simulation Summary
 RiDigitQC            INFO -----------------------------------------------------------------------------------------------
-RiDigitQC            INFO  Rich1 : Av. total  hit occupancy      1299.33 +-20.81 hits/event
-RiDigitQC            INFO        : Av. signal hit occupancy      1122.00 +-19.34 hits/event
+RiDigitQC            INFO  Rich1 : Av. total  hit occupancy      1376.00 +-21.42 hits/event
+RiDigitQC            INFO        : Av. signal hit occupancy      1112.67 +-19.26 hits/event
 RiDigitQC            INFO        :   /Event/MC/Rich/Hits          100.00 +- 0.00 % of total, 100.00 +- 0.00 % signal eff.
-RiDigitQC            INFO        : Av. HPD hit occupancy            1.69 +- 0.03 hits/event
-RiDigitQC            INFO        :   Min Av. HPD occ. hID= 11607    0.33 +- 0.33 hits/event
-RiDigitQC            INFO        :   Max Av. HPD occ. hID= 11253   11.33 +- 1.94 hits/event
-RiDigitQC            INFO        : % overall background hits       13.65 +- 0.55 %
+RiDigitQC            INFO        : Av. HPD hit occupancy            1.79 +- 0.03 hits/event
+RiDigitQC            INFO        :   Min Av. HPD occ. hID= 11619    0.33 +- 0.33 hits/event
+RiDigitQC            INFO        :   Max Av. HPD occ. hID= 10280   11.67 +- 1.97 hits/event
+RiDigitQC            INFO        : % overall background hits       19.14 +- 0.61 %
 RiDigitQC            INFO        :   % rayleigh scattered hits      0.00 +- 0.00 %
-RiDigitQC            INFO        :   % charged track on HPD hits    0.41 +- 0.10 %
-RiDigitQC            INFO        :   % gas quartz window CK hits   10.16 +- 0.48 %
+RiDigitQC            INFO        :   % charged track on HPD hits    0.46 +- 0.11 %
+RiDigitQC            INFO        :   % gas quartz window CK hits   13.32 +- 0.53 %
 RiDigitQC            INFO        :   % hpd quartz window CK hits    0.00 +- 0.00 %
-RiDigitQC            INFO        :   % nitrogen CK hits             0.13 +- 0.06 %
+RiDigitQC            INFO        :   % nitrogen CK hits             0.22 +- 0.07 %
 RiDigitQC            INFO        :   % aerogel filter CK hits       0.00 +- 0.00 %
 RiDigitQC            INFO        :   % silicon back-scatter hits    0.00 +- 0.00 %
 RiDigitQC            INFO        :   % internal reflection hits     0.00 +- 0.00 %
 RiDigitQC            INFO        :   % silicon charge share hits    0.00 +- 0.00 %
 RiDigitQC            INFO -----------------------------------------------------------------------------------------------
-RiDigitQC            INFO  Rich2 : Av. total  hit occupancy      1227.67 +-20.23 hits/event
-RiDigitQC            INFO        : Av. signal hit occupancy       968.00 +-17.96 hits/event
+RiDigitQC            INFO  Rich2 : Av. total  hit occupancy      1165.67 +-19.71 hits/event
+RiDigitQC            INFO        : Av. signal hit occupancy       884.00 +-17.17 hits/event
 RiDigitQC            INFO        :   /Event/MC/Rich/Hits          100.00 +- 0.00 % of total, 100.00 +- 0.00 % signal eff.
-RiDigitQC            INFO        : Av. HPD hit occupancy            1.25 +- 0.02 hits/event
-RiDigitQC            INFO        :   Min Av. HPD occ. hID= 13685    0.33 +- 0.33 hits/event
-RiDigitQC            INFO        :   Max Av. HPD occ. hID= 14100    5.33 +- 1.33 hits/event
-RiDigitQC            INFO        : % overall background hits       21.15 +- 0.67 %
+RiDigitQC            INFO        : Av. HPD hit occupancy            1.20 +- 0.02 hits/event
+RiDigitQC            INFO        :   Min Av. HPD occ. hID= 13294    0.33 +- 0.33 hits/event
+RiDigitQC            INFO        :   Max Av. HPD occ. hID= 14319    5.33 +- 1.33 hits/event
+RiDigitQC            INFO        : % overall background hits       24.16 +- 0.72 %
 RiDigitQC            INFO        :   % rayleigh scattered hits      0.00 +- 0.00 %
-RiDigitQC            INFO        :   % charged track on HPD hits    0.24 +- 0.08 %
-RiDigitQC            INFO        :   % gas quartz window CK hits    7.44 +- 0.43 %
+RiDigitQC            INFO        :   % charged track on HPD hits    0.40 +- 0.11 %
+RiDigitQC            INFO        :   % gas quartz window CK hits    8.81 +- 0.48 %
 RiDigitQC            INFO        :   % hpd quartz window CK hits    0.00 +- 0.00 %
-RiDigitQC            INFO        :   % nitrogen CK hits             0.11 +- 0.05 %
+RiDigitQC            INFO        :   % nitrogen CK hits             0.06 +- 0.04 %
 RiDigitQC            INFO        :   % aerogel filter CK hits       0.00 +- 0.00 %
 RiDigitQC            INFO        :   % silicon back-scatter hits    0.00 +- 0.00 %
 RiDigitQC            INFO        :   % internal reflection hits     0.00 +- 0.00 %
@@ -387,26 +369,26 @@ MuonDigitChecker     INFO ------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Geant------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 66.333  41.000  12.333  2.000  2.000   R1
-MuonDigitChecker     INFO 52.333  28.667  4.333  3.667  4.000   R2
-MuonDigitChecker     INFO 52.000  10.667  1.333  1.333  2.000   R3
-MuonDigitChecker     INFO 54.667  2.000  1.333  0.667  1.333   R4
+MuonDigitChecker     INFO 75.667  26.000  25.000  6.333  4.333   R1
+MuonDigitChecker     INFO 40.667  27.667  14.667  4.000  3.333   R2
+MuonDigitChecker     INFO 56.333  7.333  3.333  4.000  2.000   R3
+MuonDigitChecker     INFO 64.667  4.333  0.667  0.000  0.667   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: FlastSpillOver------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 1.333  0.667  3.000  0.000  0.000   R1
-MuonDigitChecker     INFO 1.667  3.000  3.000  0.667  0.667   R2
-MuonDigitChecker     INFO 1.333  3.000  1.333  0.667  1.667   R3
-MuonDigitChecker     INFO 0.667  4.000  0.000  0.667  5.333   R4
+MuonDigitChecker     INFO 0.667  0.000  0.000  0.667  0.333   R1
+MuonDigitChecker     INFO 1.333  1.000  1.667  0.000  0.667   R2
+MuonDigitChecker     INFO 1.333  2.333  1.667  0.333  2.667   R3
+MuonDigitChecker     INFO 0.667  5.000  1.000  0.000  6.000   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Low Energy Background------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.000  5.000  0.000  0.000  1.000   R1
-MuonDigitChecker     INFO 0.000  14.667  0.333  0.000  0.000   R2
-MuonDigitChecker     INFO 0.000  1.000  0.000  0.000  0.000   R3
-MuonDigitChecker     INFO 0.000  2.667  0.000  0.000  0.000   R4
+MuonDigitChecker     INFO 0.000  4.667  6.000  1.333  2.333   R1
+MuonDigitChecker     INFO 0.000  7.000  2.667  2.000  0.667   R2
+MuonDigitChecker     INFO 0.000  4.000  0.000  0.000  0.000   R3
+MuonDigitChecker     INFO 0.000  2.000  0.667  0.000  0.667   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Chamber Noise------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
@@ -419,26 +401,26 @@ MuonDigitChecker     INFO ------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Crosstalk------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 7.333  3.333  1.333  1.000  0.667   R1
-MuonDigitChecker     INFO 16.333  2.667  0.667  1.333  1.000   R2
-MuonDigitChecker     INFO 8.667  3.000  0.000  0.333  0.000   R3
-MuonDigitChecker     INFO 1.000  0.000  0.000  0.000  0.000   R4
+MuonDigitChecker     INFO 4.667  2.333  2.667  3.000  2.000   R1
+MuonDigitChecker     INFO 15.333  3.333  2.000  1.000  0.000   R2
+MuonDigitChecker     INFO 13.667  3.333  0.000  0.000  0.000   R3
+MuonDigitChecker     INFO 0.667  0.000  0.333  0.000  0.000   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Electronic Noise------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
 MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R1
-MuonDigitChecker     INFO 0.000  0.000  0.333  0.000  0.000   R2
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
 MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R3
 MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R4
 MuonDigitChecker  SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 MCRichDigitSumm...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# PackedData"                                  |         3 |       8480 |     2826.7 |     642.16 |      1960.0 |      3495.0 |
+ | "# PackedData"                                  |         3 |       8565 |     2855.0 |     729.78 |      2037.0 |      3809.0 |
 DigiWriter           INFO Events output: 3
 EventLoopMgr         INFO Histograms converted successfully according to request.
-RootCnvSvc           INFO Disconnected data IO:A86D0DB6-15A0-E211-B86E-003048C9CD62 [Boole.digi]
-RootCnvSvc           INFO Disconnected data IO:EAAADEFA-2492-E211-A416-003048D2BF92 [castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/VP_Compact_MicroChannel-UT-FT/VP_Compact_MicroChannel-UT-FT.sim]
+RootCnvSvc           INFO Disconnected data IO:7AC5063C-57A1-E211-AFFE-003048672FAC [Boole.digi]
+RootCnvSvc           INFO Disconnected data IO:F2DBC8BC-12A1-E211-A978-003048F0E7A8 [castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/VP_Compact_MicroChannel-UT-FT/VP_Compact_MicroChannel-UT-FT.sim]
 ToolSvc              INFO Removing all tools created by ToolSvc
 HcalFromRaw.Hca...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
@@ -449,435 +431,435 @@ EcalFromRaw.Eca...SUCCESS Number of counters : 1
 ToolSvc.RichRaw...   INFO ========================================================================================================================
 ToolSvc.RichRaw...   INFO                              RICH Level 1 : Encoding Summary : 3 events
 ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1000/1000 V  3 | L1 size =   0.00 +- 0.00 pds :   24.67 +- 2.87 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1001/1001 V  3 | L1 size =   0.00 +- 0.00 pds :   14.00 +- 2.16 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1002/1002 V  3 | L1 size =   0.00 +- 0.00 pds :   10.00 +- 1.83 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1003/1003 V  3 | L1 size =   0.00 +- 0.00 pds :   10.00 +- 1.83 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1004/1004 V  3 | L1 size =   0.00 +- 0.00 pds :    9.00 +- 1.73 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1000/1000 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1001/1001 V  3 | L1 size =   0.00 +- 0.00 pds :   11.33 +- 1.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1002/1002 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1003/1003 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1004/1004 V  3 | L1 size =   0.00 +- 0.00 pds :    8.00 +- 1.63 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1005/1005 V  3 | L1 size =   0.00 +- 0.00 pds :    8.67 +- 1.70 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1006/1006 V  3 | L1 size =   0.00 +- 0.00 pds :   11.00 +- 1.91 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1007/1007 V  3 | L1 size =   0.00 +- 0.00 pds :    6.67 +- 1.49 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1008/1008 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1009/1009 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1010/1010 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1011/1011 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1012/1012 V  3 | L1 size =   0.00 +- 0.00 pds :    9.00 +- 1.73 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1013/1013 V  3 | L1 size =   0.00 +- 0.00 pds :   10.00 +- 1.83 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1014/1014 V  3 | L1 size =   0.00 +- 0.00 pds :   12.67 +- 2.05 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1015/1015 V  3 | L1 size =   0.00 +- 0.00 pds :   26.00 +- 2.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1016/1016 V  3 | L1 size =   0.00 +- 0.00 pds :   60.33 +- 4.48 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1017/1017 V  3 | L1 size =   0.00 +- 0.00 pds :   86.33 +- 5.36 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1018/1018 V  3 | L1 size =   0.00 +- 0.00 pds :   71.67 +- 4.89 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1019/1019 V  3 | L1 size =   0.00 +- 0.00 pds :   33.33 +- 3.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1020/1020 V  3 | L1 size =   0.00 +- 0.00 pds :    7.67 +- 1.60 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1021/1021 V  3 | L1 size =   0.00 +- 0.00 pds :    5.67 +- 1.37 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1022/1022 V  3 | L1 size =   0.00 +- 0.00 pds :    6.67 +- 1.49 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1023/1023 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1024/1024 V  3 | L1 size =   0.00 +- 0.00 pds :    6.00 +- 1.41 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1025/1025 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1026/1026 V  3 | L1 size =   0.00 +- 0.00 pds :   12.33 +- 2.03 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1027/1027 V  3 | L1 size =   0.00 +- 0.00 pds :   14.00 +- 2.16 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1028/1028 V  3 | L1 size =   0.00 +- 0.00 pds :   25.67 +- 2.92 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1029/1029 V  3 | L1 size =   0.00 +- 0.00 pds :   46.67 +- 3.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1030/1030 V  3 | L1 size =   0.00 +- 0.00 pds :   33.00 +- 3.32 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1031/1031 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1032/1032 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1006/1006 V  3 | L1 size =   0.00 +- 0.00 pds :    7.00 +- 1.53 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1007/1007 V  3 | L1 size =   0.00 +- 0.00 pds :   11.00 +- 1.91 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1008/1008 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1009/1009 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1010/1010 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1011/1011 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1012/1012 V  3 | L1 size =   0.00 +- 0.00 pds :    5.00 +- 1.29 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1013/1013 V  3 | L1 size =   0.00 +- 0.00 pds :    6.00 +- 1.41 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1014/1014 V  3 | L1 size =   0.00 +- 0.00 pds :   18.67 +- 2.49 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1015/1015 V  3 | L1 size =   0.00 +- 0.00 pds :   20.00 +- 2.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1016/1016 V  3 | L1 size =   0.00 +- 0.00 pds :   59.33 +- 4.45 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1017/1017 V  3 | L1 size =   0.00 +- 0.00 pds :   82.67 +- 5.25 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1018/1018 V  3 | L1 size =   0.00 +- 0.00 pds :   62.67 +- 4.57 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1019/1019 V  3 | L1 size =   0.00 +- 0.00 pds :   28.67 +- 3.09 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1020/1020 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1021/1021 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1022/1022 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1023/1023 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1024/1024 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1025/1025 V  3 | L1 size =   0.00 +- 0.00 pds :    8.67 +- 1.70 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1026/1026 V  3 | L1 size =   0.00 +- 0.00 pds :   16.00 +- 2.31 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1027/1027 V  3 | L1 size =   0.00 +- 0.00 pds :   16.67 +- 2.36 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1028/1028 V  3 | L1 size =   0.00 +- 0.00 pds :   28.33 +- 3.07 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1029/1029 V  3 | L1 size =   0.00 +- 0.00 pds :   44.33 +- 3.84 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1030/1030 V  3 | L1 size =   0.00 +- 0.00 pds :   42.67 +- 3.77 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1031/1031 V  3 | L1 size =   0.00 +- 0.00 pds :   33.67 +- 3.35 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1032/1032 V  3 | L1 size =   0.00 +- 0.00 pds :   12.67 +- 2.05 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1033/1033 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1034/1034 V  3 | L1 size =   0.00 +- 0.00 pds :    6.67 +- 1.49 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1035/1035 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1034/1034 V  3 | L1 size =   0.00 +- 0.00 pds :    8.00 +- 1.63 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1035/1035 V  3 | L1 size =   0.00 +- 0.00 pds :    5.67 +- 1.37 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1036/1036 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1037/1037 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1038/1038 V  3 | L1 size =   0.00 +- 0.00 pds :   11.33 +- 1.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1039/1039 V  3 | L1 size =   0.00 +- 0.00 pds :    8.33 +- 1.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1040/1040 V  3 | L1 size =   0.00 +- 0.00 pds :    6.33 +- 1.45 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1041/1041 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1042/1042 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1043/1043 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1044/1044 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1045/1045 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1046/1046 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1047/1047 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1048/1048 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1049/1049 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1050/1050 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1051/1051 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1052/1052 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1053/1053 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1054/1054 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1055/1055 V  3 | L1 size =   0.00 +- 0.00 pds :    6.33 +- 1.45 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1056/1056 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1057/1057 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1058/1058 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1059/1059 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1060/1060 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1061/1061 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1062/1062 V  3 | L1 size =   0.00 +- 0.00 pds :   11.00 +- 1.91 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1063/1063 V  3 | L1 size =   0.00 +- 0.00 pds :   16.00 +- 2.31 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1064/1064 V  3 | L1 size =   0.00 +- 0.00 pds :   10.33 +- 1.86 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1065/1065 V  3 | L1 size =   0.00 +- 0.00 pds :   14.67 +- 2.21 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1066/1066 V  3 | L1 size =   0.00 +- 0.00 pds :   10.00 +- 1.83 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1067/1067 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1068/1068 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1069/1069 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1070/1070 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1071/1071 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1072/1072 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1073/1073 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1074/1074 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1075/1075 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1076/1076 V  3 | L1 size =   0.00 +- 0.00 pds :   45.33 +- 3.89 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1077/1077 V  3 | L1 size =   0.00 +- 0.00 pds :   92.00 +- 5.54 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1078/1078 V  3 | L1 size =   0.00 +- 0.00 pds :   87.67 +- 5.41 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1079/1079 V  3 | L1 size =   0.00 +- 0.00 pds :   13.33 +- 2.11 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1080/1080 V  3 | L1 size =   0.00 +- 0.00 pds :    7.67 +- 1.60 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1081/1081 V  3 | L1 size =   0.00 +- 0.00 pds :   12.00 +- 2.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1082/1082 V  3 | L1 size =   0.00 +- 0.00 pds :   11.00 +- 1.91 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1083/1083 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1084/1084 V  3 | L1 size =   0.00 +- 0.00 pds :    5.67 +- 1.37 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1085/1085 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1086/1086 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1087/1087 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1088/1088 V  3 | L1 size =   0.00 +- 0.00 pds :   11.67 +- 1.97 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1089/1089 V  3 | L1 size =   0.00 +- 0.00 pds :   48.00 +- 4.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1090/1090 V  3 | L1 size =   0.00 +- 0.00 pds :   26.67 +- 2.98 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1091/1091 V  3 | L1 size =   0.00 +- 0.00 pds :   20.67 +- 2.62 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1092/1092 V  3 | L1 size =   0.00 +- 0.00 pds :   10.00 +- 1.83 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1093/1093 V  3 | L1 size =   0.00 +- 0.00 pds :   15.00 +- 2.24 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1094/1094 V  3 | L1 size =   0.00 +- 0.00 pds :   13.67 +- 2.13 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1095/1095 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1096/1096 V  3 | L1 size =   0.00 +- 0.00 pds :    7.00 +- 1.53 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1097/1097 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1098/1098 V  3 | L1 size =   0.00 +- 0.00 pds :    5.00 +- 1.29 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1099/1099 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1100/1100 V  3 | L1 size =   0.00 +- 0.00 pds :    5.67 +- 1.37 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1101/1101 V  3 | L1 size =   0.00 +- 0.00 pds :   19.67 +- 2.56 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1102/1102 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1103/1103 V  3 | L1 size =   0.00 +- 0.00 pds :   14.00 +- 2.16 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1104/1104 V  3 | L1 size =   0.00 +- 0.00 pds :    9.00 +- 1.73 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1105/1105 V  3 | L1 size =   0.00 +- 0.00 pds :   10.00 +- 1.83 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1106/1106 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1107/1107 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1037/1037 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1038/1038 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1039/1039 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1040/1040 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1041/1041 V  3 | L1 size =   0.00 +- 0.00 pds :   14.00 +- 2.16 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1042/1042 V  3 | L1 size =   0.00 +- 0.00 pds :   26.67 +- 2.98 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1043/1043 V  3 | L1 size =   0.00 +- 0.00 pds :   31.67 +- 3.25 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1044/1044 V  3 | L1 size =   0.00 +- 0.00 pds :   13.67 +- 2.13 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1045/1045 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1046/1046 V  3 | L1 size =   0.00 +- 0.00 pds :    9.00 +- 1.73 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1047/1047 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1048/1048 V  3 | L1 size =   0.00 +- 0.00 pds :    9.67 +- 1.80 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1049/1049 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1050/1050 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1051/1051 V  3 | L1 size =   0.00 +- 0.00 pds :    9.00 +- 1.73 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1052/1052 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1053/1053 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1054/1054 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1055/1055 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1056/1056 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1057/1057 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1058/1058 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1059/1059 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1060/1060 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1061/1061 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1062/1062 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1063/1063 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1064/1064 V  3 | L1 size =   0.00 +- 0.00 pds :   10.67 +- 1.89 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1065/1065 V  3 | L1 size =   0.00 +- 0.00 pds :   11.00 +- 1.91 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1066/1066 V  3 | L1 size =   0.00 +- 0.00 pds :   11.67 +- 1.97 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1067/1067 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1068/1068 V  3 | L1 size =   0.00 +- 0.00 pds :   17.67 +- 2.43 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1069/1069 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1070/1070 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1071/1071 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1072/1072 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1073/1073 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1074/1074 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1075/1075 V  3 | L1 size =   0.00 +- 0.00 pds :   10.00 +- 1.83 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1076/1076 V  3 | L1 size =   0.00 +- 0.00 pds :   61.33 +- 4.52 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1077/1077 V  3 | L1 size =   0.00 +- 0.00 pds :   94.67 +- 5.62 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1078/1078 V  3 | L1 size =   0.00 +- 0.00 pds :   76.67 +- 5.06 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1079/1079 V  3 | L1 size =   0.00 +- 0.00 pds :   14.67 +- 2.21 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1080/1080 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1081/1081 V  3 | L1 size =   0.00 +- 0.00 pds :   19.00 +- 2.52 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1082/1082 V  3 | L1 size =   0.00 +- 0.00 pds :   19.00 +- 2.52 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1083/1083 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1084/1084 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1085/1085 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1086/1086 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1087/1087 V  3 | L1 size =   0.00 +- 0.00 pds :    8.00 +- 1.63 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1088/1088 V  3 | L1 size =   0.00 +- 0.00 pds :   12.00 +- 2.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1089/1089 V  3 | L1 size =   0.00 +- 0.00 pds :   53.33 +- 4.22 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1090/1090 V  3 | L1 size =   0.00 +- 0.00 pds :   28.33 +- 3.07 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1091/1091 V  3 | L1 size =   0.00 +- 0.00 pds :    8.67 +- 1.70 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1092/1092 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1093/1093 V  3 | L1 size =   0.00 +- 0.00 pds :   12.00 +- 2.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1094/1094 V  3 | L1 size =   0.00 +- 0.00 pds :   12.67 +- 2.05 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1095/1095 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1096/1096 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1097/1097 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1098/1098 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1099/1099 V  3 | L1 size =   0.00 +- 0.00 pds :    5.67 +- 1.37 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1100/1100 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1101/1101 V  3 | L1 size =   0.00 +- 0.00 pds :   13.33 +- 2.11 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1102/1102 V  3 | L1 size =   0.00 +- 0.00 pds :   18.33 +- 2.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1103/1103 V  3 | L1 size =   0.00 +- 0.00 pds :   10.00 +- 1.83 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1104/1104 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1105/1105 V  3 | L1 size =   0.00 +- 0.00 pds :    5.00 +- 1.29 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1106/1106 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1107/1107 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1108/1108 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1109/1109 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1110/1110 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1111/1111 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1112/1112 V  3 | L1 size =   0.00 +- 0.00 pds :    7.00 +- 1.53 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1113/1113 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1114/1114 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1115/1115 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1116/1116 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1117/1117 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1109/1109 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1110/1110 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1111/1111 V  3 | L1 size =   0.00 +- 0.00 pds :   10.67 +- 1.89 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1112/1112 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1113/1113 V  3 | L1 size =   0.00 +- 0.00 pds :    8.33 +- 1.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1114/1114 V  3 | L1 size =   0.00 +- 0.00 pds :   10.00 +- 1.83 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1115/1115 V  3 | L1 size =   0.00 +- 0.00 pds :    6.67 +- 1.49 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1116/1116 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1117/1117 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1118/1118 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 1119/1119 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1120/1120 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1121/1121 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1122/1122 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1123/1123 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1124/1124 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1125/1125 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1126/1126 V  3 | L1 size =   0.00 +- 0.00 pds :    9.33 +- 1.76 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1127/1127 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1128/1128 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1120/1120 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1121/1121 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1122/1122 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1123/1123 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1124/1124 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1125/1125 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1126/1126 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1127/1127 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1128/1128 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1129/1129 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1130/1130 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1131/1131 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1132/1132 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1133/1133 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1134/1134 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1135/1135 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1136/1136 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1137/1137 V  3 | L1 size =   0.00 +- 0.00 pds :   11.67 +- 1.97 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1138/1138 V  3 | L1 size =   0.00 +- 0.00 pds :   16.00 +- 2.31 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1139/1139 V  3 | L1 size =   0.00 +- 0.00 pds :   17.00 +- 2.38 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1140/1140 V  3 | L1 size =   0.00 +- 0.00 pds :   21.33 +- 2.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1141/1141 V  3 | L1 size =   0.00 +- 0.00 pds :   10.00 +- 1.83 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1142/1142 V  3 | L1 size =   0.00 +- 0.00 pds :    8.00 +- 1.63 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1143/1143 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1144/1144 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1145/1145 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1130/1130 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1131/1131 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1132/1132 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1133/1133 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1134/1134 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1135/1135 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1136/1136 V  3 | L1 size =   0.00 +- 0.00 pds :    5.67 +- 1.37 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1137/1137 V  3 | L1 size =   0.00 +- 0.00 pds :    6.67 +- 1.49 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1138/1138 V  3 | L1 size =   0.00 +- 0.00 pds :   11.33 +- 1.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1139/1139 V  3 | L1 size =   0.00 +- 0.00 pds :   16.00 +- 2.31 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1140/1140 V  3 | L1 size =   0.00 +- 0.00 pds :   14.33 +- 2.19 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1141/1141 V  3 | L1 size =   0.00 +- 0.00 pds :   10.67 +- 1.89 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1142/1142 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1143/1143 V  3 | L1 size =   0.00 +- 0.00 pds :   10.33 +- 1.86 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1144/1144 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1145/1145 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1146/1146 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1147/1147 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1148/1148 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1149/1149 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1150/1150 V  3 | L1 size =   0.00 +- 0.00 pds :    8.33 +- 1.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1151/1151 V  3 | L1 size =   0.00 +- 0.00 pds :   33.33 +- 3.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1152/1152 V  3 | L1 size =   0.00 +- 0.00 pds :   22.00 +- 2.71 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1153/1153 V  3 | L1 size =   0.00 +- 0.00 pds :   18.00 +- 2.45 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1154/1154 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1155/1155 V  3 | L1 size =   0.00 +- 0.00 pds :    6.33 +- 1.45 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1156/1156 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1157/1157 V  3 | L1 size =   0.00 +- 0.00 pds :    5.00 +- 1.29 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1147/1147 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1148/1148 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1149/1149 V  3 | L1 size =   0.00 +- 0.00 pds :    6.33 +- 1.45 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1150/1150 V  3 | L1 size =   0.00 +- 0.00 pds :   12.33 +- 2.03 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1151/1151 V  3 | L1 size =   0.00 +- 0.00 pds :   22.33 +- 2.73 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1152/1152 V  3 | L1 size =   0.00 +- 0.00 pds :   23.33 +- 2.79 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1153/1153 V  3 | L1 size =   0.00 +- 0.00 pds :   23.67 +- 2.81 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1154/1154 V  3 | L1 size =   0.00 +- 0.00 pds :   15.00 +- 2.24 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1155/1155 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1156/1156 V  3 | L1 size =   0.00 +- 0.00 pds :   12.00 +- 2.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1157/1157 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1158/1158 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1159/1159 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1160/1160 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1161/1161 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1162/1162 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1163/1163 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1164/1164 V  3 | L1 size =   0.00 +- 0.00 pds :   28.67 +- 3.09 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1165/1165 V  3 | L1 size =   0.00 +- 0.00 pds :   30.67 +- 3.20 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1166/1166 V  3 | L1 size =   0.00 +- 0.00 pds :   42.67 +- 3.77 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1167/1167 V  3 | L1 size =   0.00 +- 0.00 pds :   12.33 +- 2.03 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1168/1168 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1169/1169 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1170/1170 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1171/1171 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1172/1172 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1159/1159 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1160/1160 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1161/1161 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1162/1162 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1163/1163 V  3 | L1 size =   0.00 +- 0.00 pds :    6.00 +- 1.41 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1164/1164 V  3 | L1 size =   0.00 +- 0.00 pds :   36.00 +- 3.46 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1165/1165 V  3 | L1 size =   0.00 +- 0.00 pds :   30.00 +- 3.16 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1166/1166 V  3 | L1 size =   0.00 +- 0.00 pds :   41.00 +- 3.70 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1167/1167 V  3 | L1 size =   0.00 +- 0.00 pds :   15.00 +- 2.24 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1168/1168 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1169/1169 V  3 | L1 size =   0.00 +- 0.00 pds :    6.67 +- 1.49 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1170/1170 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1171/1171 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1172/1172 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1173/1173 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1174/1174 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1175/1175 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1176/1176 V  3 | L1 size =   0.00 +- 0.00 pds :    5.33 +- 1.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1177/1177 V  3 | L1 size =   0.00 +- 0.00 pds :   18.00 +- 2.45 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1178/1178 V  3 | L1 size =   0.00 +- 0.00 pds :   26.67 +- 2.98 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1179/1179 V  3 | L1 size =   0.00 +- 0.00 pds :   24.00 +- 2.83 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1180/1180 V  3 | L1 size =   0.00 +- 0.00 pds :    9.00 +- 1.73 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1181/1181 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1182/1182 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1183/1183 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1174/1174 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1175/1175 V  3 | L1 size =   0.00 +- 0.00 pds :    5.00 +- 1.29 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1176/1176 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1177/1177 V  3 | L1 size =   0.00 +- 0.00 pds :   21.67 +- 2.69 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1178/1178 V  3 | L1 size =   0.00 +- 0.00 pds :   25.00 +- 2.89 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1179/1179 V  3 | L1 size =   0.00 +- 0.00 pds :   23.67 +- 2.81 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1180/1180 V  3 | L1 size =   0.00 +- 0.00 pds :   15.67 +- 2.29 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1181/1181 V  3 | L1 size =   0.00 +- 0.00 pds :    7.00 +- 1.53 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1182/1182 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1183/1183 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1184/1184 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1185/1185 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1186/1186 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1187/1187 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1188/1188 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1189/1189 V  3 | L1 size =   0.00 +- 0.00 pds :    5.00 +- 1.29 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1190/1190 V  3 | L1 size =   0.00 +- 0.00 pds :   18.33 +- 2.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1191/1191 V  3 | L1 size =   0.00 +- 0.00 pds :   26.33 +- 2.96 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1192/1192 V  3 | L1 size =   0.00 +- 0.00 pds :   29.67 +- 3.14 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1193/1193 V  3 | L1 size =   0.00 +- 0.00 pds :   10.67 +- 1.89 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1194/1194 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1185/1185 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1186/1186 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1187/1187 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1188/1188 V  3 | L1 size =   0.00 +- 0.00 pds :    8.00 +- 1.63 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1189/1189 V  3 | L1 size =   0.00 +- 0.00 pds :    9.00 +- 1.73 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1190/1190 V  3 | L1 size =   0.00 +- 0.00 pds :   16.67 +- 2.36 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1191/1191 V  3 | L1 size =   0.00 +- 0.00 pds :   18.67 +- 2.49 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1192/1192 V  3 | L1 size =   0.00 +- 0.00 pds :   18.00 +- 2.45 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1193/1193 V  3 | L1 size =   0.00 +- 0.00 pds :   18.00 +- 2.45 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1194/1194 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1195/1195 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1196/1196 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1197/1197 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1198/1198 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1199/1199 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1200/1200 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1201/1201 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1202/1202 V  3 | L1 size =   0.00 +- 0.00 pds :    6.00 +- 1.41 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1203/1203 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1204/1204 V  3 | L1 size =   0.00 +- 0.00 pds :    5.67 +- 1.37 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1205/1205 V  3 | L1 size =   0.00 +- 0.00 pds :    5.67 +- 1.37 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1206/1206 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1207/1207 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1208/1208 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1209/1209 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1210/1210 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1197/1197 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1198/1198 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1199/1199 V  3 | L1 size =   0.00 +- 0.00 pds :    8.00 +- 1.63 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1200/1200 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1201/1201 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1202/1202 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1203/1203 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1204/1204 V  3 | L1 size =   0.00 +- 0.00 pds :    7.67 +- 1.60 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1205/1205 V  3 | L1 size =   0.00 +- 0.00 pds :    6.00 +- 1.41 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1206/1206 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1207/1207 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1208/1208 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1209/1209 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1210/1210 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1211/1211 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1212/1212 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1213/1213 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1214/1214 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1215/1215 V  3 | L1 size =   0.00 +- 0.00 pds :    7.00 +- 1.53 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1216/1216 V  3 | L1 size =   0.00 +- 0.00 pds :    7.00 +- 1.53 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1217/1217 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1218/1218 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1219/1219 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1220/1220 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1221/1221 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1222/1222 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1223/1223 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1224/1224 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1225/1225 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1226/1226 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1227/1227 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1228/1228 V  3 | L1 size =   0.00 +- 0.00 pds :    8.67 +- 1.70 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1229/1229 V  3 | L1 size =   0.00 +- 0.00 pds :   12.00 +- 2.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1230/1230 V  3 | L1 size =   0.00 +- 0.00 pds :   16.67 +- 2.36 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1231/1231 V  3 | L1 size =   0.00 +- 0.00 pds :   12.33 +- 2.03 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1232/1232 V  3 | L1 size =   0.00 +- 0.00 pds :   16.67 +- 2.36 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1233/1233 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1234/1234 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1235/1235 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1236/1236 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1237/1237 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1238/1238 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1239/1239 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1240/1240 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1241/1241 V  3 | L1 size =   0.00 +- 0.00 pds :   25.67 +- 2.92 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1242/1242 V  3 | L1 size =   0.00 +- 0.00 pds :   21.67 +- 2.69 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1243/1243 V  3 | L1 size =   0.00 +- 0.00 pds :   25.67 +- 2.92 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1244/1244 V  3 | L1 size =   0.00 +- 0.00 pds :   17.33 +- 2.40 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1245/1245 V  3 | L1 size =   0.00 +- 0.00 pds :    9.67 +- 1.80 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1246/1246 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1247/1247 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1248/1248 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1249/1249 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1250/1250 V  3 | L1 size =   0.00 +- 0.00 pds :    7.67 +- 1.60 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1251/1251 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1252/1252 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1253/1253 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1254/1254 V  3 | L1 size =   0.00 +- 0.00 pds :   12.33 +- 2.03 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1255/1255 V  3 | L1 size =   0.00 +- 0.00 pds :   28.67 +- 3.09 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1256/1256 V  3 | L1 size =   0.00 +- 0.00 pds :   49.33 +- 4.06 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1257/1257 V  3 | L1 size =   0.00 +- 0.00 pds :   23.67 +- 2.81 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1258/1258 V  3 | L1 size =   0.00 +- 0.00 pds :   17.00 +- 2.38 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1259/1259 V  3 | L1 size =   0.00 +- 0.00 pds :    7.33 +- 1.56 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1260/1260 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1261/1261 V  3 | L1 size =   0.00 +- 0.00 pds :    7.67 +- 1.60 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1262/1262 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1263/1263 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1264/1264 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1265/1265 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1266/1266 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1267/1267 V  3 | L1 size =   0.00 +- 0.00 pds :   10.67 +- 1.89 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1268/1268 V  3 | L1 size =   0.00 +- 0.00 pds :   14.00 +- 2.16 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1269/1269 V  3 | L1 size =   0.00 +- 0.00 pds :   26.67 +- 2.98 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1270/1270 V  3 | L1 size =   0.00 +- 0.00 pds :   18.00 +- 2.45 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1271/1271 V  3 | L1 size =   0.00 +- 0.00 pds :   13.33 +- 2.11 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1272/1272 V  3 | L1 size =   0.00 +- 0.00 pds :   11.00 +- 1.91 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1273/1273 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1274/1274 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1275/1275 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1276/1276 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1277/1277 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1278/1278 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1279/1279 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1280/1280 V  3 | L1 size =   0.00 +- 0.00 pds :    5.67 +- 1.37 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1281/1281 V  3 | L1 size =   0.00 +- 0.00 pds :   15.33 +- 2.26 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1212/1212 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1213/1213 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1214/1214 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1215/1215 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1216/1216 V  3 | L1 size =   0.00 +- 0.00 pds :    6.00 +- 1.41 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1217/1217 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1218/1218 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1219/1219 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1220/1220 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1221/1221 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1222/1222 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1223/1223 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1224/1224 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1225/1225 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1226/1226 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1227/1227 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1228/1228 V  3 | L1 size =   0.00 +- 0.00 pds :    3.33 +- 1.05 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1229/1229 V  3 | L1 size =   0.00 +- 0.00 pds :   15.00 +- 2.24 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1230/1230 V  3 | L1 size =   0.00 +- 0.00 pds :    9.33 +- 1.76 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1231/1231 V  3 | L1 size =   0.00 +- 0.00 pds :    8.67 +- 1.70 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1232/1232 V  3 | L1 size =   0.00 +- 0.00 pds :   10.33 +- 1.86 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1233/1233 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1234/1234 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1235/1235 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1236/1236 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1237/1237 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1238/1238 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1239/1239 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1240/1240 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1241/1241 V  3 | L1 size =   0.00 +- 0.00 pds :    6.33 +- 1.45 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1242/1242 V  3 | L1 size =   0.00 +- 0.00 pds :   14.00 +- 2.16 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1243/1243 V  3 | L1 size =   0.00 +- 0.00 pds :   13.67 +- 2.13 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1244/1244 V  3 | L1 size =   0.00 +- 0.00 pds :   19.33 +- 2.54 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1245/1245 V  3 | L1 size =   0.00 +- 0.00 pds :   11.00 +- 1.91 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1246/1246 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1247/1247 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1248/1248 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1249/1249 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1250/1250 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1251/1251 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1252/1252 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1253/1253 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1254/1254 V  3 | L1 size =   0.00 +- 0.00 pds :   13.33 +- 2.11 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1255/1255 V  3 | L1 size =   0.00 +- 0.00 pds :   29.33 +- 3.13 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1256/1256 V  3 | L1 size =   0.00 +- 0.00 pds :   23.67 +- 2.81 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1257/1257 V  3 | L1 size =   0.00 +- 0.00 pds :   14.33 +- 2.19 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1258/1258 V  3 | L1 size =   0.00 +- 0.00 pds :    6.00 +- 1.41 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1259/1259 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1260/1260 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1261/1261 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1262/1262 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1263/1263 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1264/1264 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1265/1265 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1266/1266 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1267/1267 V  3 | L1 size =   0.00 +- 0.00 pds :   18.67 +- 2.49 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1268/1268 V  3 | L1 size =   0.00 +- 0.00 pds :   22.00 +- 2.71 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1269/1269 V  3 | L1 size =   0.00 +- 0.00 pds :   29.33 +- 3.13 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1270/1270 V  3 | L1 size =   0.00 +- 0.00 pds :   28.67 +- 3.09 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1271/1271 V  3 | L1 size =   0.00 +- 0.00 pds :    8.00 +- 1.63 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1272/1272 V  3 | L1 size =   0.00 +- 0.00 pds :   11.67 +- 1.97 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1273/1273 V  3 | L1 size =   0.00 +- 0.00 pds :    2.67 +- 0.94 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1274/1274 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1275/1275 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1276/1276 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1277/1277 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1278/1278 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1279/1279 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1280/1280 V  3 | L1 size =   0.00 +- 0.00 pds :    6.33 +- 1.45 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1281/1281 V  3 | L1 size =   0.00 +- 0.00 pds :   14.67 +- 2.21 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1282/1282 V  3 | L1 size =   0.00 +- 0.00 pds :   17.33 +- 2.40 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1283/1283 V  3 | L1 size =   0.00 +- 0.00 pds :   12.00 +- 2.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1284/1284 V  3 | L1 size =   0.00 +- 0.00 pds :    7.00 +- 1.53 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1285/1285 V  3 | L1 size =   0.00 +- 0.00 pds :    3.00 +- 1.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1286/1286 V  3 | L1 size =   0.00 +- 0.00 pds :    4.33 +- 1.20 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1283/1283 V  3 | L1 size =   0.00 +- 0.00 pds :   13.00 +- 2.08 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1284/1284 V  3 | L1 size =   0.00 +- 0.00 pds :    6.00 +- 1.41 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1285/1285 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1286/1286 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1287/1287 V  3 | L1 size =   0.00 +- 0.00 pds :    1.00 +- 0.58 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1288/1288 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1289/1289 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1290/1290 V  3 | L1 size =   0.00 +- 0.00 pds :    0.00 +- 0.00 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1291/1291 V  3 | L1 size =   0.00 +- 0.00 pds :    1.67 +- 0.75 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1292/1292 V  3 | L1 size =   0.00 +- 0.00 pds :    2.33 +- 0.88 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1293/1293 V  3 | L1 size =   0.00 +- 0.00 pds :    6.00 +- 1.41 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1294/1294 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1295/1295 V  3 | L1 size =   0.00 +- 0.00 pds :    7.00 +- 1.53 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1296/1296 V  3 | L1 size =   0.00 +- 0.00 pds :    5.00 +- 1.29 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1297/1297 V  3 | L1 size =   0.00 +- 0.00 pds :    7.67 +- 1.60 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1298/1298 V  3 | L1 size =   0.00 +- 0.00 pds :    3.67 +- 1.11 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1299/1299 V  3 | L1 size =   0.00 +- 0.00 pds :    6.67 +- 1.49 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1300/1300 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1301/1301 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1288/1288 V  3 | L1 size =   0.00 +- 0.00 pds :    2.00 +- 0.82 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1289/1289 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1290/1290 V  3 | L1 size =   0.00 +- 0.00 pds :    0.33 +- 0.33 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1291/1291 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1292/1292 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1293/1293 V  3 | L1 size =   0.00 +- 0.00 pds :    4.00 +- 1.15 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1294/1294 V  3 | L1 size =   0.00 +- 0.00 pds :    5.00 +- 1.29 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1295/1295 V  3 | L1 size =   0.00 +- 0.00 pds :   11.67 +- 1.97 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1296/1296 V  3 | L1 size =   0.00 +- 0.00 pds :    6.33 +- 1.45 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1297/1297 V  3 | L1 size =   0.00 +- 0.00 pds :    5.00 +- 1.29 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1298/1298 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1299/1299 V  3 | L1 size =   0.00 +- 0.00 pds :    0.67 +- 0.47 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1300/1300 V  3 | L1 size =   0.00 +- 0.00 pds :    1.33 +- 0.67 words :    0.00 +- 0.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 1301/1301 V  3 | L1 size =   0.00 +- 0.00 pds :    4.67 +- 1.25 words :    0.00 +- 0.00 hits / event
 ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
 ToolSvc.RichRaw...   INFO ========================================================================================================================
 BooleInit.Boole...SUCCESS Booked 4 Histogram(s) : 1D=4
 BooleInit.Boole...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         2 |     72.948 |     36.474 |     36.474 |      0.0000 |      72.948 |
- | "Total Memory/MB"                               |         3 |   3238.932 |     1079.6 |     34.388 |      1031.0 |      1104.0 |
+ | "Delta Memory/MB"                               |         2 |     73.144 |     36.572 |     36.572 |      0.0000 |      73.144 |
+ | "Total Memory/MB"                               |         3 |   3352.796 |     1117.6 |     34.480 |      1068.8 |      1142.0 |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.24 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.58 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO EVENT LOOP                    |  1314.800 |  1727.828 |  783.797    3131.9 |       3 |     5.183 |
-TimingAuditor.T...   INFO  BooleSequencer               |   706.226 |   762.398 |  488.558     945.3 |       3 |     2.287 |
-TimingAuditor.T...   INFO   Init                        |    20.331 |    35.060 |   20.187      57.7 |       3 |     0.105 |
-TimingAuditor.T...   INFO    InitBooleSeq               |     2.333 |     3.647 |    1.070       7.0 |       3 |     0.011 |
-TimingAuditor.T...   INFO     BooleInit                 |     2.333 |     3.585 |    1.023       6.9 |       3 |     0.011 |
-TimingAuditor.T...   INFO     SpilloverHandler          |     0.000 |     0.053 |    0.040       0.1 |       3 |     0.000 |
-TimingAuditor.T...   INFO      SpilloverLoader          |     0.000 |     0.040 |    0.030       0.1 |       3 |     0.000 |
-TimingAuditor.T...   INFO      SpilloverKiller          |     0.000 |     0.009 |    0.006       0.0 |       3 |     0.000 |
+TimingAuditor.T...   INFO EVENT LOOP                    |  1820.390 |  3363.812 | 1585.677    6771.1 |       3 |    10.091 |
+TimingAuditor.T...   INFO  BooleSequencer               |   872.534 |  1972.396 |  945.445    3682.9 |       3 |     5.917 |
+TimingAuditor.T...   INFO   Init                        |    28.662 |   145.752 |   45.258     307.3 |       3 |     0.437 |
+TimingAuditor.T...   INFO    InitBooleSeq               |     2.333 |     8.615 |    4.881      11.6 |       3 |     0.026 |
+TimingAuditor.T...   INFO     BooleInit                 |     2.333 |     8.247 |    3.962      11.5 |       3 |     0.025 |
+TimingAuditor.T...   INFO     SpilloverHandler          |     0.000 |     0.338 |    0.060       0.9 |       3 |     0.001 |
+TimingAuditor.T...   INFO      SpilloverLoader          |     0.000 |     0.307 |    0.046       0.8 |       3 |     0.001 |
+TimingAuditor.T...   INFO      SpilloverKiller          |     0.000 |     0.024 |    0.008       0.0 |       3 |     0.000 |
 TimingAuditor.T...   INFO    InitDataSeq                |     0.000 |     0.002 |    0.001       0.0 |       3 |     0.000 |
-TimingAuditor.T...   INFO    InitMuonSeq                |    17.998 |    31.407 |   19.112      50.6 |       3 |     0.094 |
-TimingAuditor.T...   INFO     MuonLowEnergy             |    13.332 |    27.316 |   16.649      44.0 |       3 |     0.082 |
-TimingAuditor.T...   INFO     MuonFlatSpillover         |     4.666 |     4.081 |    2.452       6.6 |       3 |     0.012 |
-TimingAuditor.T...   INFO   Digi                        |   542.917 |   583.178 |  396.575     708.7 |       3 |     1.750 |
-TimingAuditor.T...   INFO    DigiVPSeq                  |   204.302 |   222.630 |  102.038     317.0 |       3 |     0.668 |
-TimingAuditor.T...   INFO     VPMCDepositCreator        |   127.313 |   145.335 |   75.224     207.8 |       3 |     0.436 |
-TimingAuditor.T...   INFO     VPMCDigitCreator          |     3.333 |     3.400 |    1.815       4.2 |       3 |     0.010 |
-TimingAuditor.T...   INFO     VPDigitCreator            |     1.666 |     2.034 |    1.093       2.6 |       3 |     0.006 |
-TimingAuditor.T...   INFO     VPDigitsCreator           |     1.333 |     1.279 |    0.655       1.7 |       3 |     0.004 |
-TimingAuditor.T...   INFO     VPClusterCreator          |    65.657 |    65.358 |   20.492      94.6 |       3 |     0.196 |
-TimingAuditor.T...   INFO     PrepareVPRawBank          |     4.999 |     5.189 |    2.732       6.5 |       3 |     0.016 |
-TimingAuditor.T...   INFO    DigiUTSeq                  |    29.329 |    31.762 |   23.956      43.7 |       3 |     0.095 |
-TimingAuditor.T...   INFO     MCUTDepositCreator        |    14.998 |    17.542 |   12.139      26.6 |       3 |     0.053 |
-TimingAuditor.T...   INFO     MCUTDigitCreator          |     0.333 |     0.440 |    0.231       0.7 |       3 |     0.001 |
-TimingAuditor.T...   INFO     UTDigitCreator            |     8.998 |     9.155 |    8.060      10.5 |       3 |     0.027 |
-TimingAuditor.T...   INFO     UTClusterCreator          |     3.333 |     3.124 |    2.589       3.8 |       3 |     0.009 |
-TimingAuditor.T...   INFO     UTClusterKiller           |     0.333 |     0.332 |    0.176       0.6 |       3 |     0.001 |
-TimingAuditor.T...   INFO     createUTRawBuffer         |     1.333 |     1.137 |    0.729       1.6 |       3 |     0.003 |
-TimingAuditor.T...   INFO    DigiFTSeq                  |   202.303 |   211.059 |  171.565     267.8 |       3 |     0.633 |
-TimingAuditor.T...   INFO     MCFTDepositCreator        |    59.658 |    66.509 |   51.389      88.7 |       3 |     0.200 |
-TimingAuditor.T...   INFO     MCFTDigitCreator          |    68.656 |    68.981 |   56.830      85.3 |       3 |     0.207 |
-TimingAuditor.T...   INFO     FTClusterCreator          |    17.664 |    18.965 |   15.820      24.7 |       3 |     0.057 |
-TimingAuditor.T...   INFO     FTRawBankEncoder          |     0.667 |     0.511 |    0.374       0.8 |       3 |     0.002 |
-TimingAuditor.T...   INFO     MCFTDepositMonitor        |    55.658 |    56.053 |   46.602      68.2 |       3 |     0.168 |
-TimingAuditor.T...   INFO    DigiRichSeq                |     8.332 |    10.427 |    7.305      16.2 |       3 |     0.031 |
-TimingAuditor.T...   INFO     RichPDSignal              |     3.999 |     6.193 |    4.434       9.4 |       3 |     0.019 |
-TimingAuditor.T...   INFO     RichSummedDeposits        |     0.667 |     0.836 |    0.483       1.3 |       3 |     0.003 |
-TimingAuditor.T...   INFO     RichPDResponse            |     1.000 |     1.033 |    0.664       1.5 |       3 |     0.003 |
-TimingAuditor.T...   INFO     RichFillRawBuffer         |     2.667 |     2.348 |    1.393       3.9 |       3 |     0.007 |
-TimingAuditor.T...   INFO    DigiCaloSeq                |    37.328 |    43.836 |   37.012      55.0 |       3 |     0.132 |
-TimingAuditor.T...   INFO     SpdSignal                 |     2.333 |     4.571 |    2.510       7.4 |       3 |     0.014 |
-TimingAuditor.T...   INFO     PrsSignal                 |     1.666 |     3.867 |    2.775       4.8 |       3 |     0.012 |
-TimingAuditor.T...   INFO     EcalSignal                |     3.666 |     4.978 |    3.984       6.5 |       3 |     0.015 |
-TimingAuditor.T...   INFO     HcalSignal                |     1.667 |     2.021 |    1.439       2.7 |       3 |     0.006 |
-TimingAuditor.T...   INFO     SpdDigit                  |     6.666 |     6.995 |    5.978       8.6 |       3 |     0.021 |
-TimingAuditor.T...   INFO     PrsDigit                  |    12.998 |    13.027 |   11.077      16.1 |       3 |     0.039 |
-TimingAuditor.T...   INFO     EcalDigit                 |     5.666 |     5.429 |    5.289       5.6 |       3 |     0.016 |
-TimingAuditor.T...   INFO     HcalDigit                 |     1.666 |     1.548 |    1.465       1.6 |       3 |     0.005 |
-TimingAuditor.T...   INFO     CaloFillPrsSpdRawBuffer   |     0.333 |     0.680 |    0.551       0.9 |       3 |     0.002 |
-TimingAuditor.T...   INFO     EcalFillRawBuffer         |     0.667 |     0.543 |    0.464       0.6 |       3 |     0.002 |
-TimingAuditor.T...   INFO     HcalFillRawBuffer         |     0.000 |     0.130 |    0.121       0.1 |       3 |     0.000 |
-TimingAuditor.T...   INFO    DigiMuonSeq                |    61.324 |    63.447 |   52.184      77.2 |       3 |     0.190 |
-TimingAuditor.T...   INFO     MuonDigitization          |    21.997 |    23.954 |   18.188      29.5 |       3 |     0.072 |
-TimingAuditor.T...   INFO     MuonDigitToRawBuffer      |    39.327 |    39.476 |   33.979      47.7 |       3 |     0.118 |
-TimingAuditor.T...   INFO   Link                        |   124.981 |   124.993 |   51.264     171.7 |       3 |     0.375 |
-TimingAuditor.T...   INFO    LinkVPSeq                  |    92.319 |    92.643 |   25.071     141.2 |       3 |     0.278 |
-TimingAuditor.T...   INFO     VPDigit2MCHitLinker       |    41.327 |    41.464 |   10.011      64.6 |       3 |     0.124 |
-TimingAuditor.T...   INFO     VPDigit2MCParticleLinker  |    39.328 |    39.152 |    9.152      61.0 |       3 |     0.117 |
-TimingAuditor.T...   INFO     VPCluster2MCHitLinker     |     6.998 |     6.967 |    3.350       9.0 |       3 |     0.021 |
-TimingAuditor.T...   INFO     VPCluster2MCParticleLinker|     4.666 |     5.037 |    2.546       6.5 |       3 |     0.015 |
-TimingAuditor.T...   INFO    LinkUTSeq                  |    10.332 |    10.034 |    6.860      12.9 |       3 |     0.030 |
-TimingAuditor.T...   INFO     UTDigitLinker             |     4.999 |     4.733 |    3.776       5.7 |       3 |     0.014 |
-TimingAuditor.T...   INFO     UTClusterLinker           |     3.000 |     2.983 |    1.756       4.0 |       3 |     0.009 |
-TimingAuditor.T...   INFO     UTTruthLinker             |     2.333 |     2.307 |    1.319       3.2 |       3 |     0.007 |
-TimingAuditor.T...   INFO    LinkFTSeq                  |     0.000 |     0.002 |    0.001       0.0 |       3 |     0.000 |
-TimingAuditor.T...   INFO    LinkTrSeq                  |     1.333 |     1.371 |    0.749       2.1 |       3 |     0.004 |
-TimingAuditor.T...   INFO     BuildMCTrackInfoUpgrade   |     1.333 |     1.367 |    0.746       2.1 |       3 |     0.004 |
-TimingAuditor.T...   INFO    LinkRichSeq                |     0.667 |     0.645 |    0.370       0.8 |       3 |     0.002 |
-TimingAuditor.T...   INFO     Rich::MC::MCRichDigitSumma|     0.667 |     0.642 |    0.367       0.8 |       3 |     0.002 |
-TimingAuditor.T...   INFO    LinkCaloSeq                |    17.998 |    18.098 |   16.252      21.5 |       3 |     0.054 |
-TimingAuditor.T...   INFO     EcalFromRaw               |     2.333 |     2.271 |    1.756       3.3 |       3 |     0.007 |
-TimingAuditor.T...   INFO     HcalFromRaw               |     0.666 |     0.476 |    0.449       0.5 |       3 |     0.001 |
-TimingAuditor.T...   INFO     CaloReCreateMCLinks       |     0.000 |     0.056 |    0.025       0.1 |       3 |     0.000 |
-TimingAuditor.T...   INFO     EcalDigitMCTruth          |    12.998 |    12.934 |   11.719      15.0 |       3 |     0.039 |
-TimingAuditor.T...   INFO     HcalDigitMCTruth          |     2.000 |     2.341 |    2.226       2.6 |       3 |     0.007 |
-TimingAuditor.T...   INFO    LinkMuonSeq                |     2.333 |     2.187 |    1.688       2.9 |       3 |     0.007 |
-TimingAuditor.T...   INFO     MuonDigit2MCParticleAlg   |     2.000 |     1.996 |    1.550       2.6 |       3 |     0.006 |
-TimingAuditor.T...   INFO     MuonTileDigitInfo         |     0.333 |     0.183 |    0.131       0.3 |       3 |     0.001 |
-TimingAuditor.T...   INFO   Moni                        |    17.997 |    19.149 |   13.368      26.9 |       3 |     0.057 |
+TimingAuditor.T...   INFO    InitMuonSeq                |    26.329 |   137.128 |   35.867     302.4 |       3 |     0.411 |
+TimingAuditor.T...   INFO     MuonLowEnergy             |    19.997 |   129.933 |   32.640     294.7 |       3 |     0.390 |
+TimingAuditor.T...   INFO     MuonFlatSpillover         |     6.332 |     7.183 |    3.219      10.6 |       3 |     0.022 |
+TimingAuditor.T...   INFO   Digi                        |   683.229 |  1523.408 |  709.662    2962.0 |       3 |     4.570 |
+TimingAuditor.T...   INFO    DigiVPSeq                  |   241.964 |   966.447 |  266.202    2332.3 |       3 |     2.899 |
+TimingAuditor.T...   INFO     VPMCDepositCreator        |   160.310 |   408.524 |  194.942     790.9 |       3 |     1.226 |
+TimingAuditor.T...   INFO     VPMCDigitCreator          |     5.333 |   161.253 |    2.757     475.3 |       3 |     0.484 |
+TimingAuditor.T...   INFO     VPDigitCreator            |     2.999 |     2.836 |    1.481       3.8 |       3 |     0.009 |
+TimingAuditor.T...   INFO     VPDigitsCreator           |     2.000 |   289.643 |    0.734     866.2 |       3 |     0.869 |
+TimingAuditor.T...   INFO     VPClusterCreator          |    62.990 |    90.763 |   17.900     167.5 |       3 |     0.272 |
+TimingAuditor.T...   INFO     PrepareVPRawBank          |     8.332 |    13.396 |    3.562      28.5 |       3 |     0.040 |
+TimingAuditor.T...   INFO    DigiUTSeq                  |    58.658 |    72.072 |   38.706     100.4 |       3 |     0.216 |
+TimingAuditor.T...   INFO     MCUTDepositCreator        |    38.994 |    50.359 |   23.582      75.2 |       3 |     0.151 |
+TimingAuditor.T...   INFO     MCUTDigitCreator          |     1.333 |     1.073 |    0.503       1.7 |       3 |     0.003 |
+TimingAuditor.T...   INFO     UTDigitCreator            |    12.665 |    14.552 |   10.060      19.4 |       3 |     0.044 |
+TimingAuditor.T...   INFO     UTClusterCreator          |     3.999 |     4.042 |    3.112       5.8 |       3 |     0.012 |
+TimingAuditor.T...   INFO     UTClusterKiller           |     0.333 |     0.476 |    0.232       0.9 |       3 |     0.001 |
+TimingAuditor.T...   INFO     createUTRawBuffer         |     1.333 |     1.536 |    0.948       2.5 |       3 |     0.005 |
+TimingAuditor.T...   INFO    DigiFTSeq                  |   229.965 |   272.491 |  241.593     295.1 |       3 |     0.817 |
+TimingAuditor.T...   INFO     MCFTDepositCreator        |    59.991 |    99.656 |   86.310     120.4 |       3 |     0.299 |
+TimingAuditor.T...   INFO     MCFTDigitCreator          |    76.322 |    76.475 |   66.976      92.4 |       3 |     0.229 |
+TimingAuditor.T...   INFO     FTClusterCreator          |    22.996 |    25.286 |   19.106      29.1 |       3 |     0.076 |
+TimingAuditor.T...   INFO     FTRawBankEncoder          |     0.333 |     0.677 |    0.464       1.0 |       3 |     0.002 |
+TimingAuditor.T...   INFO     MCFTDepositMonitor        |    70.323 |    70.366 |   63.757      81.6 |       3 |     0.211 |
+TimingAuditor.T...   INFO    DigiRichSeq                |    17.331 |    57.391 |   14.754     112.3 |       3 |     0.172 |
+TimingAuditor.T...   INFO     RichPDSignal              |     6.999 |    42.925 |   10.702      97.8 |       3 |     0.129 |
+TimingAuditor.T...   INFO     RichSummedDeposits        |     2.000 |     3.023 |    0.900       5.8 |       3 |     0.009 |
+TimingAuditor.T...   INFO     RichPDResponse            |     2.666 |     4.063 |    1.167       7.2 |       3 |     0.012 |
+TimingAuditor.T...   INFO     RichFillRawBuffer         |     5.666 |     7.356 |    1.974      11.9 |       3 |     0.022 |
+TimingAuditor.T...   INFO    DigiCaloSeq                |    57.658 |    76.775 |   45.157     103.0 |       3 |     0.230 |
+TimingAuditor.T...   INFO     SpdSignal                 |     4.666 |    10.506 |    1.952      16.2 |       3 |     0.032 |
+TimingAuditor.T...   INFO     PrsSignal                 |     3.333 |     8.956 |    2.470      13.1 |       3 |     0.027 |
+TimingAuditor.T...   INFO     EcalSignal                |     5.332 |     9.745 |    3.683      14.9 |       3 |     0.029 |
+TimingAuditor.T...   INFO     HcalSignal                |     0.667 |     3.528 |    0.978       6.5 |       3 |     0.011 |
+TimingAuditor.T...   INFO     SpdDigit                  |    11.998 |    12.416 |    8.838      17.0 |       3 |     0.037 |
+TimingAuditor.T...   INFO     PrsDigit                  |    20.330 |    20.330 |   16.827      25.4 |       3 |     0.061 |
+TimingAuditor.T...   INFO     EcalDigit                 |     7.332 |     7.556 |    7.307       7.7 |       3 |     0.023 |
+TimingAuditor.T...   INFO     HcalDigit                 |     2.333 |     2.060 |    1.875       2.2 |       3 |     0.006 |
+TimingAuditor.T...   INFO     CaloFillPrsSpdRawBuffer   |     0.667 |     0.773 |    0.564       1.1 |       3 |     0.002 |
+TimingAuditor.T...   INFO     EcalFillRawBuffer         |     0.667 |     0.564 |    0.495       0.7 |       3 |     0.002 |
+TimingAuditor.T...   INFO     HcalFillRawBuffer         |     0.333 |     0.136 |    0.123       0.1 |       3 |     0.000 |
+TimingAuditor.T...   INFO    DigiMuonSeq                |    77.654 |    78.210 |   68.553      86.2 |       3 |     0.235 |
+TimingAuditor.T...   INFO     MuonDigitization          |    26.329 |    27.210 |   22.626      32.5 |       3 |     0.082 |
+TimingAuditor.T...   INFO     MuonDigitToRawBuffer      |    51.325 |    50.985 |   45.917      53.7 |       3 |     0.153 |
+TimingAuditor.T...   INFO   Link                        |   135.646 |   276.130 |   62.312     597.0 |       3 |     0.828 |
+TimingAuditor.T...   INFO    LinkVPSeq                  |    92.320 |   189.483 |   27.291     410.1 |       3 |     0.568 |
+TimingAuditor.T...   INFO     VPDigit2MCHitLinker       |    40.994 |    58.370 |   10.702     101.7 |       3 |     0.175 |
+TimingAuditor.T...   INFO     VPDigit2MCParticleLinker  |    34.329 |    34.132 |    9.542      50.3 |       3 |     0.102 |
+TimingAuditor.T...   INFO     VPCluster2MCHitLinker     |    10.665 |    75.730 |    4.022     212.4 |       3 |     0.227 |
+TimingAuditor.T...   INFO     VPCluster2MCParticleLinker|     6.332 |    21.226 |    3.013      53.3 |       3 |     0.064 |
+TimingAuditor.T...   INFO    LinkUTSeq                  |    15.331 |    14.937 |   11.002      21.5 |       3 |     0.045 |
+TimingAuditor.T...   INFO     UTDigitLinker             |     7.332 |     6.941 |    5.406       9.7 |       3 |     0.021 |
+TimingAuditor.T...   INFO     UTClusterLinker           |     4.666 |     4.636 |    3.162       6.8 |       3 |     0.014 |
+TimingAuditor.T...   INFO     UTTruthLinker             |     3.333 |     3.347 |    2.117       5.0 |       3 |     0.010 |
+TimingAuditor.T...   INFO    LinkFTSeq                  |     0.000 |     0.002 |    0.002       0.0 |       3 |     0.000 |
+TimingAuditor.T...   INFO    LinkTrSeq                  |     1.667 |    43.783 |    1.012     129.0 |       3 |     0.131 |
+TimingAuditor.T...   INFO     BuildMCTrackInfoUpgrade   |     1.667 |    43.777 |    1.009     129.0 |       3 |     0.131 |
+TimingAuditor.T...   INFO    LinkRichSeq                |     0.999 |     0.894 |    0.504       1.5 |       3 |     0.003 |
+TimingAuditor.T...   INFO     Rich::MC::MCRichDigitSumma|     0.999 |     0.890 |    0.502       1.5 |       3 |     0.003 |
+TimingAuditor.T...   INFO    LinkCaloSeq                |    22.330 |    23.326 |   19.727      29.2 |       3 |     0.070 |
+TimingAuditor.T...   INFO     EcalFromRaw               |     3.666 |     3.648 |    2.294       6.2 |       3 |     0.011 |
+TimingAuditor.T...   INFO     HcalFromRaw               |     1.000 |     0.647 |    0.577       0.7 |       3 |     0.002 |
+TimingAuditor.T...   INFO     CaloReCreateMCLinks       |     0.000 |     0.068 |    0.028       0.1 |       3 |     0.000 |
+TimingAuditor.T...   INFO     EcalDigitMCTruth          |    15.331 |    16.215 |   14.323      19.3 |       3 |     0.049 |
+TimingAuditor.T...   INFO     HcalDigitMCTruth          |     2.333 |     2.731 |    2.227       3.1 |       3 |     0.008 |
+TimingAuditor.T...   INFO    LinkMuonSeq                |     2.999 |     2.913 |    2.652       3.3 |       3 |     0.009 |
+TimingAuditor.T...   INFO     MuonDigit2MCParticleAlg   |     2.666 |     2.653 |    2.438       3.0 |       3 |     0.008 |
+TimingAuditor.T...   INFO     MuonTileDigitInfo         |     0.333 |     0.254 |    0.208       0.3 |       3 |     0.001 |
+TimingAuditor.T...   INFO   Moni                        |    24.997 |    27.091 |   20.604      39.2 |       3 |     0.081 |
 TimingAuditor.T...   INFO    MoniVPSeq                  |     0.000 |     0.001 |    0.001       0.0 |       3 |     0.000 |
-TimingAuditor.T...   INFO    MoniUTSeq                  |    12.998 |    13.815 |   10.382      18.1 |       3 |     0.041 |
-TimingAuditor.T...   INFO     MCUTDepositMonitor        |     1.000 |     0.806 |    0.441       1.2 |       3 |     0.002 |
-TimingAuditor.T...   INFO     MCUTDigitMonitor          |     0.667 |     0.747 |    0.413       1.1 |       3 |     0.002 |
-TimingAuditor.T...   INFO     UTDigitMonitor            |     5.332 |     5.512 |    4.888       6.0 |       3 |     0.017 |
-TimingAuditor.T...   INFO     UTClusterMonitor          |     1.667 |     1.615 |    0.949       2.5 |       3 |     0.005 |
-TimingAuditor.T...   INFO     MCP2UTMCHitAlg            |     0.333 |     1.301 |    0.440       1.8 |       3 |     0.004 |
-TimingAuditor.T...   INFO     UTEffChecker              |     3.999 |     3.814 |    2.024       5.6 |       3 |     0.011 |
+TimingAuditor.T...   INFO    MoniUTSeq                  |    17.331 |    19.359 |   15.693      25.7 |       3 |     0.058 |
+TimingAuditor.T...   INFO     MCUTDepositMonitor        |     1.667 |     1.497 |    0.921       2.3 |       3 |     0.004 |
+TimingAuditor.T...   INFO     MCUTDigitMonitor          |     1.333 |     1.249 |    0.778       1.9 |       3 |     0.004 |
+TimingAuditor.T...   INFO     UTDigitMonitor            |     7.332 |     7.773 |    6.865       8.4 |       3 |     0.023 |
+TimingAuditor.T...   INFO     UTClusterMonitor          |     2.333 |     2.068 |    1.333       3.4 |       3 |     0.006 |
+TimingAuditor.T...   INFO     MCP2UTMCHitAlg            |     0.333 |     2.322 |    0.477       3.4 |       3 |     0.007 |
+TimingAuditor.T...   INFO     UTEffChecker              |     4.333 |     4.432 |    2.692       6.7 |       3 |     0.013 |
 TimingAuditor.T...   INFO    MoniFTSeq                  |     0.000 |     0.002 |    0.002       0.0 |       3 |     0.000 |
-TimingAuditor.T...   INFO    MoniRichSeq                |     3.333 |     3.269 |    1.760       5.2 |       3 |     0.010 |
-TimingAuditor.T...   INFO     RiDigitQC                 |     3.333 |     3.265 |    1.757       5.2 |       3 |     0.010 |
-TimingAuditor.T...   INFO    MoniCaloSeq                |     0.333 |     0.619 |    0.239       1.3 |       3 |     0.002 |
-TimingAuditor.T...   INFO     SpdCheck                  |     0.000 |     0.167 |    0.048       0.4 |       3 |     0.001 |
-TimingAuditor.T...   INFO     PrsCheck                  |     0.000 |     0.119 |    0.051       0.2 |       3 |     0.000 |
-TimingAuditor.T...   INFO     EcalCheck                 |     0.333 |     0.215 |    0.104       0.4 |       3 |     0.001 |
-TimingAuditor.T...   INFO     HcalCheck                 |     0.000 |     0.111 |    0.031       0.3 |       3 |     0.000 |
-TimingAuditor.T...   INFO    MoniMuonSeq                |     1.333 |     1.429 |    0.972       2.2 |       3 |     0.004 |
-TimingAuditor.T...   INFO     MuonDigitChecker          |     1.333 |     1.425 |    0.968       2.2 |       3 |     0.004 |
-TimingAuditor.T...   INFO    MoniMCSeq                  |     0.000 |     0.002 |    0.001       0.0 |       3 |     0.000 |
-TimingAuditor.T...   INFO   Filter                      |     0.000 |     0.001 |    0.001       0.0 |       3 |     0.000 |
-TimingAuditor.T...   INFO  PrepareDIGI                  |     2.000 |     1.767 |    1.111       2.5 |       3 |     0.005 |
-TimingAuditor.T...   INFO   PackMCVertex                |     0.000 |     0.012 |    0.007       0.0 |       3 |     0.000 |
+TimingAuditor.T...   INFO    MoniRichSeq                |     4.333 |     4.930 |    2.771       8.9 |       3 |     0.015 |
+TimingAuditor.T...   INFO     RiDigitQC                 |     4.333 |     4.927 |    2.768       8.9 |       3 |     0.015 |
+TimingAuditor.T...   INFO    MoniCaloSeq                |     1.333 |     0.940 |    0.527       1.7 |       3 |     0.003 |
+TimingAuditor.T...   INFO     SpdCheck                  |     0.333 |     0.209 |    0.082       0.5 |       3 |     0.001 |
+TimingAuditor.T...   INFO     PrsCheck                  |     0.333 |     0.196 |    0.120       0.3 |       3 |     0.001 |
+TimingAuditor.T...   INFO     EcalCheck                 |     0.667 |     0.382 |    0.261       0.6 |       3 |     0.001 |
+TimingAuditor.T...   INFO     HcalCheck                 |     0.000 |     0.145 |    0.055       0.3 |       3 |     0.000 |
+TimingAuditor.T...   INFO    MoniMuonSeq                |     1.666 |     1.839 |    1.167       2.8 |       3 |     0.006 |
+TimingAuditor.T...   INFO     MuonDigitChecker          |     1.666 |     1.836 |    1.163       2.8 |       3 |     0.006 |
+TimingAuditor.T...   INFO    MoniMCSeq                  |     0.000 |     0.003 |    0.002       0.0 |       3 |     0.000 |
+TimingAuditor.T...   INFO   Filter                      |     0.000 |     0.002 |    0.001       0.0 |       3 |     0.000 |
+TimingAuditor.T...   INFO  PrepareDIGI                  |     3.333 |     3.602 |    2.172       6.0 |       3 |     0.011 |
+TimingAuditor.T...   INFO   PackMCVertex                |     0.000 |     0.014 |    0.009       0.0 |       3 |     0.000 |
 TimingAuditor.T...   INFO   PackMCParticle              |     0.000 |     0.006 |    0.004       0.0 |       3 |     0.000 |
-TimingAuditor.T...   INFO   MCRichDigitSummaryPacker    |     0.333 |     0.166 |    0.082       0.3 |       3 |     0.000 |
-TimingAuditor.T...   INFO   MCRichNodeKiller            |     1.667 |     1.575 |    1.009       2.2 |       3 |     0.005 |
-TimingAuditor.T...   INFO  DigiWriter                   |   591.910 |   948.961 |  294.007    2140.2 |       3 |     2.847 |
-TimingAuditor.T...   INFO *     UnpackMCParticles       |     4.333 |    10.867 |    5.029      19.9 |       3 |     0.033 |
-TimingAuditor.T...   INFO *     UnpackMCMuonHits        |     1.333 |     3.695 |    1.535       5.8 |       3 |     0.011 |
-TimingAuditor.T...   INFO *     UnpackMCVertices        |     3.333 |     7.017 |    5.708       8.9 |       3 |     0.021 |
-TimingAuditor.T...   INFO *     UnpackMCVPHits          |     1.666 |     3.280 |    0.648       5.0 |       3 |     0.010 |
-TimingAuditor.T...   INFO *     UnpackMCUTHits          |     0.333 |     3.170 |    0.369       5.9 |       3 |     0.010 |
-TimingAuditor.T...   INFO *     UnpackMCFTHits          |     1.667 |     8.014 |    4.470      15.0 |       3 |     0.024 |
-TimingAuditor.T...   INFO *     UnpackMCRichHits        |     3.332 |     5.480 |    4.047       7.9 |       3 |     0.016 |
-TimingAuditor.T...   INFO *     UnpackMCSpdHits         |     0.666 |     3.397 |    1.820       5.5 |       3 |     0.010 |
-TimingAuditor.T...   INFO *     UnpackMCPrsHits         |     1.666 |     3.032 |    1.863       3.6 |       3 |     0.009 |
-TimingAuditor.T...   INFO *     UnpackMCEcalHits        |     1.999 |     3.453 |    2.649       4.4 |       3 |     0.010 |
-TimingAuditor.T...   INFO *     UnpackMCHcalHits        |     1.000 |     1.560 |    1.090       1.9 |       3 |     0.005 |
+TimingAuditor.T...   INFO   MCRichDigitSummaryPacker    |     0.000 |     0.242 |    0.105       0.5 |       3 |     0.001 |
+TimingAuditor.T...   INFO   MCRichNodeKiller            |     3.333 |     3.328 |    2.046       5.5 |       3 |     0.010 |
+TimingAuditor.T...   INFO  DigiWriter                   |   927.526 |  1370.540 |  443.527    3030.7 |       3 |     4.112 |
+TimingAuditor.T...   INFO *     UnpackMCParticles       |     4.999 |    47.722 |   18.415     104.7 |       3 |     0.143 |
+TimingAuditor.T...   INFO *     UnpackMCMuonHits        |     2.000 |    56.885 |    2.238     158.0 |       3 |     0.171 |
+TimingAuditor.T...   INFO *     UnpackMCVertices        |     5.998 |    12.688 |    7.523      16.0 |       3 |     0.038 |
+TimingAuditor.T...   INFO *     UnpackMCVPHits          |     2.000 |    53.668 |    1.055     142.5 |       3 |     0.161 |
+TimingAuditor.T...   INFO *     UnpackMCUTHits          |     1.333 |     7.176 |    0.553      13.0 |       3 |     0.022 |
+TimingAuditor.T...   INFO *     UnpackMCFTHits          |     4.332 |    42.338 |   18.741      73.2 |       3 |     0.127 |
+TimingAuditor.T...   INFO *     UnpackMCRichHits        |     4.999 |    41.445 |   10.277      97.0 |       3 |     0.124 |
+TimingAuditor.T...   INFO *     UnpackMCSpdHits         |     2.666 |     8.208 |    1.223      12.3 |       3 |     0.025 |
+TimingAuditor.T...   INFO *     UnpackMCPrsHits         |     2.666 |     6.340 |    1.949       9.3 |       3 |     0.019 |
+TimingAuditor.T...   INFO *     UnpackMCEcalHits        |     2.000 |     6.229 |    2.003       8.3 |       3 |     0.019 |
+TimingAuditor.T...   INFO *     UnpackMCHcalHits        |     0.333 |     2.664 |    0.663       4.5 |       3 |     0.008 |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 33/6/240(Alg/Node/Total).
 ApplicationMgr       INFO Application Manager Finalized successfully

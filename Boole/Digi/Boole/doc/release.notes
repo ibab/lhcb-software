@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to references due to new VP,VL xml
+
  - Changes to references to follow changes in underlying packages
    . Modifications to FT monitoring (FTDigitisation)
 
