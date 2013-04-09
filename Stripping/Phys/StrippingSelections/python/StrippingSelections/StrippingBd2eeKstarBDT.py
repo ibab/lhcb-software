@@ -26,7 +26,7 @@ defaulSettings =  {
         'ElectronIPCHI2'          :    1.   ,
         'ElectronPIDepi'          :   -2.   ,          
         #
-        'eeCuts'                  : "(VFASPF(VCHI2)<16) & (((MM<1.5*GeV)) | ((MM>2.2*GeV) & (MM<4.2*GeV)))",
+        'eeCuts'                  : "(HASVERTEX) & (VFASPF(VCHI2)<16) & (((MM<1.5*GeV)) | ((MM>2.2*GeV) & (MM<4.2*GeV)))",
         #
         'KaonPT'                  :  400.   ,  # MeV 
         'KaonP'                   : 3000.   ,  # MeV  
