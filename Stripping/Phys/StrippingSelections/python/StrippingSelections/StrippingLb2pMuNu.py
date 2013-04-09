@@ -1,7 +1,7 @@
 
 __author__ = ['William Sutcliffe']
 __date__ = '28/03/2013'
-__version__ = '$Revision: 1.0 $'
+__version__ = '$Revision: 1.1 $'
 
 '''
 Lb->p mu nu exclusive reconstruction
@@ -59,9 +59,9 @@ Last modification $Date: 2013-March-28 $
 
 confdict= {
     "GEC_nLongTrk"        : 250.   ,#adimensional
-    "TRGHOSTPROB"         : 0.5    ,#adimensional
+    "TRGHOSTPROB"         : 0.35    ,#adimensional
     #Muon Cuts
-    "MuonGHOSTPROB"       : 0.5    ,#adimensional
+    "MuonGHOSTPROB"       : 0.35    ,#adimensional
     "MuonTRCHI2"          : 4.     ,#adimensional
     "MuonP"               : 3000.  ,#MeV
     "MuonPT"              : 1600.  ,#MeV
@@ -78,19 +78,37 @@ confdict= {
     "BDIRA"               : 0.999  ,#adminensional
     "BFDCHI2HIGH"         : 125.   ,#adimensional
     "BPVIPChi2"           : 25.    ,#adminensional  
-    "pMuMassLow"          : 2250.  ,#MeV
-    "pMuMassLowTight"     : 2750.  ,#MeV
+    "pMuMassLow"          : 2150.  ,#MeV
+    "pMuMassLowTight"     : 2800.  ,#MeV
     "pMuMassUpper"        : 5600.  ,#MeV
     "pMuPT"               : 1500.  ,#MeV
     "PassymLow"           : -0.4   ,#adminensional
     "PassymLower"         : -0.65  ,#adimensional
-    "PassymUpper"         : 0.2     #adimensional
+    "PassymUpper"         : 0.0     #adimensional
     }
 
 from Gaudi.Configuration import *
 from StrippingUtils.Utils import LineBuilder
 
 import logging
+
+# Define a make TOS filter function
+def makeTOSFilter(name,specs):
+    from Configurables import TisTosParticleTagger
+    tosFilter = TisTosParticleTagger(name+'TOSFilter')
+    tosFilter.TisTosSpecs = specs
+    tosFilter.ProjectTracksToCalo = False
+    tosFilter.CaloClustForCharged = False
+    tosFilter.CaloClustForNeutral = False
+    tosFilter.TOSFrac = {4:0.0, 5:0.0}
+    return tosFilter
+# Define a tosSelection function
+def tosSelection(sel,specs):
+    from PhysSelPython.Wrappers import Selection
+    '''Filters Selection sel to be TOS.'''
+    tosFilter = makeTOSFilter(sel.name(),specs)
+    return Selection(sel.name()+'TOS', Algorithm=tosFilter,
+                     RequiredSelections=[sel])
 
 default_name="LbpMuNu"
 
@@ -206,9 +224,11 @@ class Lb2pMuNuBuilder(LineBuilder):
         from PhysSelPython.Wrappers import Selection
         from StandardParticles import StdLooseMuons
         _mu = FilterDesktop( Code = self._NominalMuSelection() % self._config )
+
         _muSel=Selection("Mu_for"+self._name,
                          Algorithm=_mu,
                          RequiredSelections = [StdLooseMuons])
+        _muSel = tosSelection(_muSel,{'L0.*Muon.*Decision%TOS':0})
         
         self._muonSel=_muSel
         
@@ -250,6 +270,7 @@ class Lb2pMuNuBuilder(LineBuilder):
         _pMuSel=Selection("pMu_lowq2_for"+self._name,
                          Algorithm=_pMu,
                          RequiredSelections = [self._muonFilter(), self._protonFilter()])
+        _pMuSel = tosSelection(_pMuSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
         return _pMuSel
 	    
     ###### Lb->pMuNu Low q^2 Same Sign ######
@@ -269,6 +290,7 @@ class Lb2pMuNuBuilder(LineBuilder):
         _pMuSel=Selection("pMuSS_lowq2_for"+self._name,
                          Algorithm=_pMu,
                          RequiredSelections = [self._muonFilter(), self._protonFilter()])
+        _pMuSel = tosSelection(_pMuSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
         return _pMuSel
 
     ###### Lb->pMuNu high q^2 Opposite Sign ######
@@ -289,6 +311,7 @@ class Lb2pMuNuBuilder(LineBuilder):
         _pMuSel=Selection("pMu_highq2_for"+self._name,
                          Algorithm=_pMu,
                          RequiredSelections = [self._muonFilter(), self._protonFilter()])
+        _pMuSel = tosSelection(_pMuSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
         return _pMuSel
 	    
     ###### Lb->pMuNu High q2 Same Sign ######
@@ -309,5 +332,6 @@ class Lb2pMuNuBuilder(LineBuilder):
         _pMuSel=Selection("pMuSS_highq2_for"+self._name,
                          Algorithm=_pMu,
                          RequiredSelections = [self._muonFilter(), self._protonFilter()])
+        _pMuSel = tosSelection(_pMuSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
         return _pMuSel
     
