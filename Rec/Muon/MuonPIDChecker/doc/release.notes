@@ -2,6 +2,9 @@
 ! Responsible : E. Polycarpo, H. Lopes    
 !----------------------------------------------------------------------------
 
+! 2013-04-09 - Marco Cattaneo
+ - Add __init__.py to please CMake
+
 !========================= MuonPIDChecker v5r4 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
