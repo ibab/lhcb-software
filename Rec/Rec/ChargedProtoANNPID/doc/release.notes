@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-04-09 - Marco Cattaneo
+ - Add __init__.py to please CMake
+
 ! 2013-04-02 - Chris Jones
  - Add 'FromB' and 'FromD' flags to training tuple.
  - Update ganga scripts to v6 series.
