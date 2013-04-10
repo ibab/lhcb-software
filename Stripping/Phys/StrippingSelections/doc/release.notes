@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-10 - Paolo Gandini
+ - Minor fixes to StrippingB2DHHHForBXX.py (retention reduced of 30% as requested)
+
 ! 2013-04-09 - Cedric Potterat for Raditaive
  - Remove Error in the Bd2eeKstBDT lines
 

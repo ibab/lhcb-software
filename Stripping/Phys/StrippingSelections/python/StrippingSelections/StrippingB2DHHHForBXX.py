@@ -1,11 +1,11 @@
 __author__ = ['Paolo Gandini']
-__date__ = '19/03/2013'
-__version__ = '$Revision: 4.0 $'
+__date__ = '10/04/2013'
+__version__ = '$Revision: 5.0 $'
 
 #####################################################################################
 # Partially reconstructed selections for Kaon and Proton tracking efficiency studies
 # Hadronic modes only with high multiplicity
-# Lb phase space restricted to 
+# Lb phase space restricted to Lc** (test of efficiency)
 #####################################################################################
 
 from Gaudi.Configuration import *
@@ -31,7 +31,7 @@ confdict =  {
     ,"PionPIDK"      : 2.0   # adimensional
     ,"dau_PT_MIN"    : 200   # MeV -> was 400
     ,"dau_MIPCHI2DV" :   5   # adimensional
-    ,"D_MASS_MIN"    : 600   # MeV                 
+    ,"D_MASS_MIN"    : 650   # MeV                 
     ,"D_MASS_MAX"    : 1400  # MeV                 
     ,"D_PT_MIN"      : 1500  # MeV                 
     ,"D_AMAXDOCA"    : 0.5   # mm                  
@@ -51,7 +51,7 @@ confdict =  {
     ,"A1_AMAXDOCA"   : 0.5   # mm              
     ,"A1_VFASPF"     :   4   # adimensional    
     ,"A1_BPVVDCHI2"  : 100   # adimensional    
-    ,"B_MASS_MIN"    : 3400  # MeV
+    ,"B_MASS_MIN"    : 3600  # MeV
     ,"B_MASS_MAX"    : 4950  # MeV
     ,"B_PT_MIN"      : 1500  # MeV
     ,"B_DOCACHI2_MAX": 50    # adimensional     
@@ -60,7 +60,7 @@ confdict =  {
     ,"B_DZ"          : 0.0   # mm
     ,"B_D_deltamass_MIN" : 2500 #MeV              
     ,"B_D_deltamass_MAX" : 4550 #MeV
-    ,"PiPi_MASS_MAX"                     :  500  #MeV            (500)
+    ,"PiPi_MASS_MAX"                     :  400  #MeV            (500)
     ,"PiPi_DOCACHI2_MAX"                 :   15  # adimensional  (15)
     ,"PiPi_SUMPT_MIN"                    :  200  #MeV            (600)
     ,"PiPi_CHI2NDF"                      :    4  # adimensional  (3)
