@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-10 - Ronan Wallace
+ - Updated LineConfigDictionaries_QEE.py in stripping20r0p1. 
+ - Harsher cuts in HighPtGamma dictionary.
+ - Inclusion of StrangeBaryon dictionary.
+
 ! 2013-04-09 - Francesca Dordei
  - Updated LineConfigDictionaries_B2CC.py in stripping20r0p1 and stripping20r1p1
 
