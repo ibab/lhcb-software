@@ -1,8 +1,6 @@
 <PRE>
 Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
-
-- Changes to references due to new VP/VL xml
 Purpose: LHCb reconstruction program
 
 - Changes to references to reflect changes since v44r3
@@ -11,6 +9,8 @@ Purpose: LHCb reconstruction program
   . In brunel2012magdown, attempt to update reference block to monitor
     ChargedProtoANNPID histogram statistics
   . Fix small bug in STMeasurement, measurement type incorrectly set for UT
+  . Updated VP/Vl geometrry
+  . Minor optimisations in RichDet
 
 </PRE><H1><A NAME=v44r3>2013-03-26 Brunel v44r3</A></H1><PRE>
 This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5,
