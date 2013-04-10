@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2013-04-10 - Marco Clemencic
+ - Fixed compilation with CMake.
+
 ! 2013-04-09 - Chris Jones
  - Merge Event/PackedEvent into this package.
  - Move Kernel/StandardPacker.h into this package from Kernel/LHCbKernel.
@@ -27,7 +30,7 @@
  - Added CMake configuration file.
 
 ! 2012-11-08 - Chris Jones
- - Various changes to better support packing and unpacking of MC related 
+ - Various changes to better support packing and unpacking of MC related
    stripping information.
 
 ! 2012-11-05 - Chris Jones
@@ -48,10 +51,10 @@
 
 ! 2012-09-27 - Chris Jones
  - Add some 'band-aid' protection to UnpackCluster to catch exceptions thrown
-   when an attempt is made to insert an object into a KeyedContainer with an 
-   existing key 
- - Fix a problem in PackCLuster introducted in the commit below, to add UT 
-   support. The commit did not take into account the fact UT clusters might 
+   when an attempt is made to insert an object into a KeyedContainer with an
+   existing key
+ - Fix a problem in PackCLuster introducted in the commit below, to add UT
+   support. The commit did not take into account the fact UT clusters might
    not be available ...
 
 ! 2012-09-26 - Paul Szczypka
@@ -69,8 +72,8 @@
  - Fix trivial logic flaw in EventPacker.icpp (coverity defect 33355)
 
 !========================= EventPacker v2r17 2012-06-25 =========================
-! 2012-06-22 - Heinrich Schindler 
- - Add VL to Packers, Unpackers, Checkers 
+! 2012-06-22 - Heinrich Schindler
+ - Add VL to Packers, Unpackers, Checkers
 
 ! 2012-06-14 - Chris Jones
  - clean up a little the MCParticle packers
@@ -82,7 +85,7 @@
 !========================= EventPacker v2r16 2012-04-27 =========================
 
 ! 2012-04-26 - Chris Jones
- - Protect UnpackCluster against the possibility that the packed clusters 
+ - Protect UnpackCluster against the possibility that the packed clusters
    are missing
  - Add protection in PackDecReport in case the packer tries to repack existing
    reports. Needed for the use case of creating a packed private (u)DST from an
@@ -96,7 +99,7 @@
  - Packers return Error if they fail to unregister data when requested in options
 
 ! 2012-04-12 - Chris Jones
- - Improvements to the packers, adding an option to allow checking of the 
+ - Improvements to the packers, adding an option to allow checking of the
    packing to be done directly by the packing algorithms.
 
 ! 2012-03-30 - Chris Jones
@@ -115,7 +118,7 @@
 !========================= EventPacker v2r14 2012-03-26 =========================
 ! 2012-03-22 - Chris Jones
  - Take the default packing version from the packed data, instead of assuming 0.
- - Improve the debug and verbose messages from the ProtoParticle packer 
+ - Improve the debug and verbose messages from the ProtoParticle packer
    and unpacker
 
 ! 2012-03-22 - Marco Cattaneo
@@ -161,7 +164,7 @@
    when there is something to pack.
 
 ! 2012-01-31 - Chris Jones
- - Add a VetoedContainers option to PackParticleAndVertices, to allow some 
+ - Add a VetoedContainers option to PackParticleAndVertices, to allow some
    containers to be skipped
 
 ! 2012-01-31 - Olivier Callot
@@ -190,7 +193,7 @@
 
 ! 2012-01-23 - Olivier Callot
  - New algorithms PackDecReport and UnpackDecReport to unpack/pack the stripping
-   decisions. By default lines having not fired are removed. This can be changed 
+   decisions. By default lines having not fired are removed. This can be changed
    by setting the option PackDecReport().Filter = False
 
 ! 2012-01-17 - Marco Clemencic
