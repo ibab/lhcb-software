@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-10 - Vanya Belyaev
+ - minor fixed for StrippingPsiXforBandQ.py
+
 ! 2013-04-10 - Paolo Gandini
  - Minor fixes to StrippingB2DHHHForBXX.py (retention reduced of 30% as requested)
 

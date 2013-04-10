@@ -1756,7 +1756,6 @@ class PsiX_BQ_Conf(LineBuilder) :
             Algorithm          =   alg             ,
             RequiredSelections = [ self.psi     () , 
                                    self.protons () ,
-                                   self.kaons   () ,
                                    self.pions   () ] 
             )
         
@@ -1904,7 +1903,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             Algorithm          =   alg             ,
             RequiredSelections = [ self.psi     () , 
                                    self.protons () ,
-                                   self.pions   () ] 
+                                   self.kaons   () ] 
             )
         
         return self._add_selection( 'PsiPPK_Selection' , sel ) 
