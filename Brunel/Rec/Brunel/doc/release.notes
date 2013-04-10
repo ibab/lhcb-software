@@ -9,8 +9,15 @@ Purpose: LHCb reconstruction program
   . In brunel2012magdown, attempt to update reference block to monitor
     ChargedProtoANNPID histogram statistics
   . Fix small bug in STMeasurement, measurement type incorrectly set for UT
-  . Updated VP/Vl geometrry
+  . Updated VP/VL geometrry
   . Minor optimisations in RichDet
+
+- Changes to tests
+  . Pick up options files for input files from PRConfig package. This is
+    future proofing for changes to physical location of input data
+
+- Changes to example options
+  . Remove options files that are duplicated in PRConfig package 
 
 </PRE><H1><A NAME=v44r3>2013-03-26 Brunel v44r3</A></H1><PRE>
 This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5,

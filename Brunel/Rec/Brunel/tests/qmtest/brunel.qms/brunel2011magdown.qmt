@@ -3,7 +3,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout"><integer>2400</integer></argument>
   <argument name="args"><set>
-    <text>$BRUNELOPTS/COLLISION11-Beam3500GeV-VeloClosed-MagDown.py</text>
+    <text>$PRCONFIGOPTS/Brunel/PR-COLLISION11-Beam3500GeV-VeloClosed-MagDown.py</text>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
     <text>from Brunel.Configuration import *; Brunel().EvtMax=200; Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="SDST"; Brunel().PackType="MDF"; MessageSvc().countInactive=True</text>
