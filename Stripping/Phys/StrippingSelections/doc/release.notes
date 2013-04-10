@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+
+! 2013-04-10 - Ronan Wallace
+ - Cut change in StrippingHighPtGamma. (Pt 15->18, Iso 25->30)
+
 ! 2013-04-10 - Vanya Belyaev
  - minor fixed for StrippingPsiXforBandQ.py
 
