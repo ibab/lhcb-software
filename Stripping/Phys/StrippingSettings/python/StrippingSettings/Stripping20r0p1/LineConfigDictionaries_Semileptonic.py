@@ -13,7 +13,7 @@ B2DHHHForBXX = {
     ,"PionPIDK"      : 2.0   # adimensional
     ,"dau_PT_MIN"    : 200   # MeV -> was 400
     ,"dau_MIPCHI2DV" :   5   # adimensional
-    ,"D_MASS_MIN"    : 600   # MeV                 
+    ,"D_MASS_MIN"    : 650   # MeV                 
     ,"D_MASS_MAX"    : 1400  # MeV                 
     ,"D_PT_MIN"      : 1500  # MeV                 
     ,"D_AMAXDOCA"    : 0.5   # mm                  
@@ -33,7 +33,7 @@ B2DHHHForBXX = {
     ,"A1_AMAXDOCA"   : 0.5   # mm              
     ,"A1_VFASPF"     :   4   # adimensional    
     ,"A1_BPVVDCHI2"  : 100   # adimensional    
-    ,"B_MASS_MIN"    : 3400  # MeV
+    ,"B_MASS_MIN"    : 3600  # MeV
     ,"B_MASS_MAX"    : 4950  # MeV
     ,"B_PT_MIN"      : 1500  # MeV
     ,"B_DOCACHI2_MAX": 50    # adimensional     
@@ -42,7 +42,7 @@ B2DHHHForBXX = {
     ,"B_DZ"          : 0.0   # mm
     ,"B_D_deltamass_MIN" : 2500 #MeV              
     ,"B_D_deltamass_MAX" : 4550 #MeV
-    ,"PiPi_MASS_MAX"                     :  500  #MeV            (500)
+    ,"PiPi_MASS_MAX"                     :  400  #MeV            (500)
     ,"PiPi_DOCACHI2_MAX"                 :   15  # adimensional  (15)
     ,"PiPi_SUMPT_MIN"                    :  200  #MeV            (600)
     ,"PiPi_CHI2NDF"                      :    4  # adimensional  (3)
@@ -141,15 +141,7 @@ B2XTauNu = {
     #Slow pion ghost prob
     'TRGHP_slowPi'      : 0.6
     },
-    'STREAMS' : {
-    'BhadronCompleteEvent' : ['StrippingBc2JpsiTauNuNonPhysTauForB2XTauNu',
-                              'StrippingBd2DTauNuNonPhysTauForB2XTauNu',
-                              'StrippingBd2DdoubleStarTauNuNonPhysTauForB2XTauNu',
-                              'StrippingBd2DstarTauNuNonPhysTauForB2XTauNu',
-                              'StrippingBs2DsTauNuNonPhysTauForB2XTauNu',
-                              'StrippingBu2D0TauNuNonPhysTauForB2XTauNu',
-                              ]
-    },
+    'STREAMS' : ['BhadronCompleteEvent'],
     'WGs'    : ['Semileptonic']
     }
    
@@ -253,32 +245,32 @@ Lb2pMuNu = {
     'BUILDERTYPE'       : 'Lb2pMuNuBuilder',
     'CONFIG'    :{
     "GEC_nLongTrk"        : 250.   ,#adimensional
-    "TRGHOSTPROB"         : 0.5    ,#adimensional
+    "TRGHOSTPROB"         : 0.35    ,#adimensional
     #Muon Cuts
-    "MuonGHOSTPROB"       : 0.5    ,#adimensional
+    "MuonGHOSTPROB"       : 0.35    ,#adimensional
     "MuonTRCHI2"          : 4.     ,#adimensional
     "MuonP"               : 3000.  ,#MeV
     "MuonPT"              : 1600.  ,#MeV
     "MuonMINIPCHI2"       : 12     ,#adminensional
-    #Proton Cuts
+    #Proton Cuts 
     "ProtonTRCHI2"        : 6.     ,#adimensional
     "ProtonP"             : 15000. ,#MeV
     "ProtonPT"            : 1000.  ,#MeV
-    "ProtonPIDK"          : 0.     ,#adimensional
+    "ProtonPIDK"          : 0.     ,#adimensional 
     "ProtonPIDp"          : 5.     ,#adimensional
     "ProtonMINIPCHI2"     : 16     ,#adminensional
     #B Mother Cuts
     "BVCHI2DOF"           : 4.     ,#adminensional
     "BDIRA"               : 0.999  ,#adminensional
     "BFDCHI2HIGH"         : 125.   ,#adimensional
-    "BPVIPChi2"           : 25.    ,#adminensional
-    "pMuMassLow"          : 2250.  ,#MeV
-    "pMuMassLowTight"     : 2750.  ,#MeV
+    "BPVIPChi2"           : 25.    ,#adminensional  
+    "pMuMassLow"          : 2150.  ,#MeV
+    "pMuMassLowTight"     : 2800.  ,#MeV
     "pMuMassUpper"        : 5600.  ,#MeV
     "pMuPT"               : 1500.  ,#MeV
     "PassymLow"           : -0.4   ,#adminensional
     "PassymLower"         : -0.65  ,#adimensional
-    "PassymUpper"         : 0.2     #adimensional
+    "PassymUpper"         : 0.0     #adimensional
     },
     'STREAMS' : ['Semileptonic'],
     'WGs'    : ['Semileptonic']

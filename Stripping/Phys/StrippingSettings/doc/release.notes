@@ -4,6 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-10 - Mika Vesterinen
+ - Updates to Semileptonic dictionaries for 20r0p1 and 20r1p1
+  - tightened cuts for B2DHHHForBXX
+  - tightened cuts for Lb2pMuNu
+  - run all lines for B2XTauNu for 20r0p1, but remove altogether from 20r1p1
+
 ! 2013-04-10 - Ronan Wallace
  - Updated LineConfigDictionaries_QEE.py in stripping20r0p1. 
  - Harsher cuts in HighPtGamma dictionary.
