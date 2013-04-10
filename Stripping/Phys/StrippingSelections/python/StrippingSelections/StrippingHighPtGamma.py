@@ -15,8 +15,8 @@ from StandardParticles import StdLoosePhotons
 
 config_default = { 'Prescale'  : 1.0,
                    'Postscale' : 1.0,
-                   'pT'        : 15.,
-                   'photonIso' : 25,
+                   'pT'        : 18.,
+                   'photonIso' : 30,
 
                    'PrescaleLoose'  : 0.05,
                    'PostscaleLoose' : 1.0,
