@@ -15,7 +15,6 @@ use LinkerEvent   v* Event
 use LumiEvent     v* Event
 use L0Event       v* Event
 use MCEvent       v* Event
-use PackedEvent   v* Event
 use PhysEvent     v* Event
 use RecEvent      v* Event
 use TrackEvent    v* Event

@@ -13,7 +13,6 @@ gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/LinkerEvent
                          Event/LumiEvent
                          Event/MCEvent
-                         Event/PackedEvent
                          Event/PhysEvent
                          Event/RecEvent
                          Event/TrackEvent
