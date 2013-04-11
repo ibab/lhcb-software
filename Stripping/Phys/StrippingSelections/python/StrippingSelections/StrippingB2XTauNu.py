@@ -909,7 +909,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
     def __MakeBu2D0TauNuWS__(self):
         """
         Bu selection:
-        [B- -> D0 tau+]cc,
+        [B- -> D~0 tau-]cc,
         use of wrong charge combination is useful for background subtraction
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
@@ -919,7 +919,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
         CombBu2D0TauNuWS = CombineParticles(        
-            DecayDescriptors = ["[B- -> D0 tau+]cc"],
+            DecayDescriptors = ["[B- -> D~0 tau-]cc"],
             DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
             CombinationCut = self.BplusCombCut,
             MotherCut      = self.BCut,
@@ -934,7 +934,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
     def __MakeBu2D0TauNuNonPhysTau__(self):
         """
         Bu selection:
-        [B- -> D0 tau+++]cc, [B- -> D0 tau---]cc 
+        [B- -> D0 tau---]cc, [B- -> D~0 tau---]cc 
         use of non-physical tau+++ is useful as an independent background source
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
@@ -944,7 +944,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
         CombBu2D0TauNuNonPhysTau = CombineParticles(        
-            DecayDescriptors = ["[B- -> D0 tau+]cc", "[B- -> D0 tau-]cc" ],
+            DecayDescriptors = ["[B- -> D0 tau-]cc", "[B- -> D~0 tau-]cc" ],
             DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
             CombinationCut = self.BplusCombCut,
             MotherCut      = self.BCut,
@@ -983,7 +983,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
     def __MakeBc2JpsiTauNuNonPhysTau__(self):
         """
         Bc selection:
-        [B_c+ -> J/psi(1S) tau+++]cc, [B_c+ -> J/psi(1S) tau---]cc
+        [B_c+ -> J/psi(1S) tau+++]cc
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
@@ -992,7 +992,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
         CombBc2JpsiTauNuNonPhysTau = CombineParticles(        
-            DecayDescriptors = ["[B_c+ -> J/psi(1S) tau+]cc", "[B_c+ -> J/psi(1S) tau-]cc"],
+            DecayDescriptors = ["[B_c+ -> J/psi(1S) tau+]cc"],
             CombinationCut = self.BcCombCut,
             MotherCut      = self.BCut,
             )
