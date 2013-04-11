@@ -48,7 +48,6 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          Event/LumiEvent
                          Event/MCEvent
                          Event/MicroDst
-                         Event/PackedEvent
                          Event/PhysEvent
                          Event/RecEvent
                          Event/RecreatePIDTools
