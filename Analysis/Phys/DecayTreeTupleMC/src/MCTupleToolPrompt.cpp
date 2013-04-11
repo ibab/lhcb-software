@@ -22,16 +22,14 @@ DECLARE_TOOL_FACTORY( MCTupleToolPrompt )
                                         const std::string& name,
                                         const IInterface* parent )
     : TupleToolBase ( type, name , parent )
-    , m_p2mcAssoc(NULL)
-    , m_p2mcAssocType("DaVinciSmartAssociator")
+    , m_ppSvc(0)
 {
-  declareInterface<IParticleTupleTool>(this);
+  declareInterface<IMCParticleTupleTool>(this);
 
   // maximum lifetime of short-lived particles (ns)
   declareProperty( "MaxLifetime", m_maxLifetime = 1e-7
                    , "Maximum lifetime of short-lived particles (ns)" );
   declareProperty( "StoreLongLivedParticleID", m_storeLongLivedPid=true);
-  declareProperty( "IP2MCPAssociatorType", m_p2mcAssocType);
 }
 
 StatusCode MCTupleToolPrompt::initialize()
@@ -43,25 +41,18 @@ StatusCode MCTupleToolPrompt::initialize()
 
   sc = service( "LHCb::ParticlePropertySvc", m_ppSvc );
 
-  if (sc.isFailure()) return sc;
-
-  m_p2mcAssoc = tool<IParticle2MCAssociator>(m_p2mcAssocType, this);
-
   return sc;
 }
 
-StatusCode MCTupleToolPrompt::fill( const LHCb::Particle*
-                                    , const LHCb::Particle* P
+StatusCode MCTupleToolPrompt::fill( const LHCb::MCParticle*
+                                    , const LHCb::MCParticle* mcp
                                     , const std::string& head
                                     , Tuples::Tuple& tuple )
 {
-
-
   const std::string prefix = fullName(head);
 
-  Assert (P && m_p2mcAssoc, "No particle found , or misconfigured DaVinci smart associator" );
+  Assert (mcp, "No MCParticle found" );
 
-  if (P->isBasicParticle()) return StatusCode::SUCCESS; // don't fill for basic particles
   bool test=true;
 
   int longLivedPid=0;
@@ -73,10 +64,6 @@ StatusCode MCTupleToolPrompt::fill( const LHCb::Particle*
   int mcParentKey=0;
 
   double lcl_lifetime(0);
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolPrompt::getting related MCP to " << P << endmsg ;
-  const LHCb::MCParticle *mcp = m_p2mcAssoc->relatedMCP(P);
-  if (msgLevel(MSG::VERBOSE)) verbose() << "TupleToolMCTruth::got mcp " << mcp << endmsg ;
 
   const LHCb::MCParticle *mcp_parent = mcp;
 

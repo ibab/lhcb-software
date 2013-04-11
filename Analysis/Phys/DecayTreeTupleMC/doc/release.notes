@@ -4,6 +4,11 @@
 ! Purpose     : MC tuple tools
 !-----------------------------------------------------------------------------
 
+
+! 2013-Apr-11 - Patrick Spradlin
+ - Update MCTupleToolPrompt to make it a real MCTupleTool
+
+
 !========================= DecayTreeTupleMC v1r1 2013-04-05 =========================
 
 ! 2013-03-25 - Chris Jones

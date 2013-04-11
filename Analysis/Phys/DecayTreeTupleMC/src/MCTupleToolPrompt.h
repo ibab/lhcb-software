@@ -6,7 +6,8 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
-#include "Kernel/IParticleTupleTool.h"
+// from Kernel
+#include "Kernel/IMCParticleTupleTool.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 
@@ -17,11 +18,8 @@
 #include "GaudiAlg/TupleObj.h"
 
 // from Event
-#include "Event/Particle.h"
 #include "Event/MCParticle.h"
 
-// from Kernel
-#include "Kernel/IParticle2MCAssociator.h"
 
 /** @class MCTupleToolPrompt MCTupleToolPrompt.h
  *
@@ -35,12 +33,9 @@
  *  @date   2011-06-13
  */
 
-//forward declarations
-class IParticlePropertySvc;
-class IParticle2MCAssociator;
 
 class MCTupleToolPrompt : public TupleToolBase,
-                          virtual public IParticleTupleTool
+                          virtual public IMCParticleTupleTool
 {
 
 public:
@@ -54,8 +49,8 @@ public:
 
   virtual StatusCode initialize();
 
-  virtual StatusCode fill( const LHCb::Particle*
-                           , const LHCb::Particle*
+  virtual StatusCode fill( const LHCb::MCParticle*
+                           , const LHCb::MCParticle*
                            , const std::string&
                            , Tuples::Tuple& );
 
@@ -67,8 +62,6 @@ protected:
 private:
 
   LHCb::IParticlePropertySvc *m_ppSvc;
-  IParticle2MCAssociator *m_p2mcAssoc;
-  std::string m_p2mcAssocType;
 
 };
 
