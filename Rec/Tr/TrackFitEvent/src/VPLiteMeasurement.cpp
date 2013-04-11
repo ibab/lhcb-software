@@ -70,7 +70,7 @@ void VPLiteMeasurement::init( const DeVP& det, const IVPClusterPosition::toolInf
   // Case of the X projection
   if(m_vPProjection == X){
     setMeasure(position.x());
-    setErrMeasure(2.*dx);
+    setErrMeasure(dx);
     Gaudi::XYZVector y_dir(0,1,0); 
     std::pair<double,double> y_range(-dy,dy);
     m_trajectory = std::auto_ptr<Trajectory>(new LineTraj(position, y_dir, y_range, true));
@@ -79,7 +79,7 @@ void VPLiteMeasurement::init( const DeVP& det, const IVPClusterPosition::toolInf
   // Case of the Y projection
   else{
     setMeasure(position.y());
-    setErrMeasure(2.*dy);
+    setErrMeasure(dy);
     Gaudi::XYZVector x_dir(1,0,0); 
     std::pair<double,double> x_range(-dx,dx);
     m_trajectory = std::auto_ptr<Trajectory>(new LineTraj(position, x_dir, x_range, true));  
