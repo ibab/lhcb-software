@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2013-04-11 - Sascha Stahl
+ - Added back acccdidentally removed protection for RawEventLocations.
+
 ! 2013-04-05 - Sascha Stahl
  - Added vector of RawEventLocations.
 

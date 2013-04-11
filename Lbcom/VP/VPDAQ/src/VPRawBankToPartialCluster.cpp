@@ -103,6 +103,10 @@ StatusCode VPRawBankToPartialCluster::execute() {
     }
   }
 
+  if( NULL == rawEvent ){
+    return Warning("Failed to find raw data", StatusCode::SUCCESS,1);
+  }
+  
   // Decode RawBanks
   StatusCode sc = decodeRawBanks(rawEvent,clusCont);
   if(sc.isFailure()){
