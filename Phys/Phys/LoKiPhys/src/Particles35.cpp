@@ -170,7 +170,7 @@ LoKi::Particles::TrackFun::operator()
   }
   //
   const LHCb::Track* track = pp->track() ;
-  if ( 0 == pp ) 
+  if ( 0 == track ) 
   {
     Error ("LHCb::Track* points to NULL, return 'bad'") ;
     return m_bad ;                                                   // RETURN
@@ -230,7 +230,7 @@ LoKi::Particles::TrackCut::operator()
   }
   //
   const LHCb::Track* track = pp->track () ;
-  if ( 0 == pp ) 
+  if ( 0 == track ) 
   {
     Error ("LHCb::Track* points to NULL, return 'false'") ;
     return false ;                                                   // RETURN
