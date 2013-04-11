@@ -3,7 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
-
+! 2013-04-11 - Donal Hill
+ - Changed decay descriptor in Bu2D0TauNuWS line in StrippingB2XTauNu.py
 
 ! 2013-04-10 - Ronan Wallace
  - Cut change in StrippingHighPtGamma. (Pt 15->18, Iso 25->30)
