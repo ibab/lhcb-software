@@ -1,8 +1,14 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sft/FstTools
 ! Responsible : Olivier Callot
-! Purpose     : First Software Trigger tools for teh upgrade
+! Purpose     : First Software Trigger tools for the upgrade
 !-----------------------------------------------------------------------------
+
+! 2013-04-11 - Tim Head
+ - Split selection after forward tracking to allow for pre and post fit cuts
+ - Sequence changes to get closer to the real HLT
+ - Added a options file to run on real data
+ - New dependency on Phys/KalmanFilter for IP and IPchi2 calculation
 
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake

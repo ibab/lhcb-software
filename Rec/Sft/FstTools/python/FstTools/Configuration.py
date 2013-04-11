@@ -8,7 +8,8 @@ __author__  = "Olivier Callot"
 
 from Gaudi.Configuration import *
 from Configurables import LHCbConfigurableUser
-from Configurables import GaudiSequencer, FstSequencer, FstSelectVeloTracks, FstSelectForwardTracks
+from Configurables import GaudiSequencer, FstSequencer, FstSelectVeloTracks
+from Configurables import FstSelectForwardTracksPartOne, FstSelectForwardTracksPartTwo
 
 ## @class FstConf
 #  Configurable for the Fst simulation for the LHCb upgrade
@@ -17,6 +18,7 @@ class FstConf(LHCbConfigurableUser):
     __slots__ = {
         "RootInTES" : "Fst/"
         ,"MinPt"           : 1200.  # MeV
+        ,"MinP"            : 10000.  # MeV
         ,"MinIP"           : 0.100  # mm
         ,"MaxIP"           : 3.000  # mm
         ,"MinIPChi2"       : 9.0
@@ -36,11 +38,15 @@ class FstConf(LHCbConfigurableUser):
         FstSequencer( "RecoFstSeq" ).ForcePassOK = True
         ## Velo configuration
         if "Velo" == self.getProp( "VeloType" ):
-            from Configurables import FastVeloTracking, FastVeloDecoding
+            from Configurables import FastVeloTracking, FastVeloDecoding, DecodeVeloRawBuffer
             if self.getProp( "FastDecoding" ):
                 FstSequencer( "RecoFstSeq" ).Members = [ "FastVeloDecoding"]
             else:
-                FstSequencer( "RecoFstSeq" ).Members = [ "DecodeVeloRawBuffer/DecodeVeloClusters" ]
+                # TDH XXX had to rename it to DecodeVeloClusters2 to get my config changes to take effect?
+                FstSequencer( "RecoFstSeq" ).Members = [ "DecodeVeloRawBuffer/DecodeVeloClusters2" ]
+                DecodeVeloRawBuffer("DecodeVeloClusters2").MaxVeloClusters = 10000
+                DecodeVeloRawBuffer("DecodeVeloClusters2").DecodeToVeloClusters = False
+                
                 if self.getProp( "Compare" ):
                     FstSequencer( "RecoFstSeq" ).Members += [ "FastVeloDecoding"]
                     FastVeloDecoding().CompareResult = True
@@ -49,6 +55,7 @@ class FstConf(LHCbConfigurableUser):
             FastVeloTracking( "FstVeloTracking" ).OutputTracksName = self.getProp( "RootInTES") + "Track/Velo"
             FastVeloTracking( "FstVeloTracking" ).ResetUsedFlags = True
             FastVeloTracking( "FstVeloTracking" ).HLT1Only = True
+            
         elif "VP" == self.getProp( "VeloType" ):
             from Configurables import PatPixelTracking
             FstSequencer( "RecoFstSeq" ).Members = [ "VPRawBankToLiteCluster/FstVPDecoding",
@@ -64,10 +71,29 @@ class FstConf(LHCbConfigurableUser):
             exit(0)
 
         ## PV
-        from Configurables import FastPVFinder
-        FstSequencer( "RecoFstSeq" ).Members += [ "FastPVFinder/FstPV" ]
-        FastPVFinder( "FstPV" ).InputLocation  = self.getProp( "RootInTES") + "Track/Velo"
-        FastPVFinder( "FstPV" ).OutputLocation = self.getProp( "RootInTES") + "Vertices/PV"
+        # Originally the FastPV algorithm was used
+        if False:
+            from Configurables import FastPVFinder
+            FstSequencer( "RecoFstSeq" ).Members += [ "FastPVFinder/FstPV" ]
+            FastPVFinder( "FstPV" ).InputLocation  = self.getProp( "RootInTES") + "Track/Velo"
+            FastPVFinder( "FstPV" ).OutputLocation = self.getProp( "RootInTES") + "Vertices/PV"
+
+
+        # This is the HLT PatPV3D algorithm
+        else:
+            from Configurables import PatPV3D, PVOfflineTool, LSAdaptPV3DFitter
+            FstSequencer("RecoFstSeq").Members += ["PatPV3D/HltPVsPV3D"]
+            recoPV3D = PatPV3D('HltPVsPV3D' )
+            recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
+            recoPV3D.PVOfflineTool.UseBeamSpotRCut = True
+            recoPV3D.PVOfflineTool.BeamSpotRCut = 0.3
+            recoPV3D.PVOfflineTool.PVSeedingName = "PVSeedTool"
+            recoPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
+            recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
+            recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
+            recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 0.3
+            recoPV3D.PVOfflineTool.InputTracks = [self.getProp( "RootInTES") + "Track/Velo"]
+            recoPV3D.OutputVerticesName = self.getProp( "RootInTES") + "Vertices/PV"
 
         ## Selection of Velo tracks to extend
         if "ValidateTT" == self.getProp( "TTType" ):
@@ -77,99 +103,155 @@ class FstConf(LHCbConfigurableUser):
                 FastSTDecoding( "FastTTDecoding" ).DetectorName = "TT"
             else:
                 FstSequencer( "RecoFstSeq" ).Members += [ "RawBankToSTLiteClusterAlg/CreateTTLiteClusters" ]
-        FstSequencer( "RecoFstSeq" ).Members += [ "FstSelectVeloTracks" ]
-        FstSelectVeloTracks().InputTracksName  = self.getProp( "RootInTES") + "Track/Velo"
-        FstSelectVeloTracks().OutputTracksName = self.getProp( "RootInTES") + "Track/VeloFst"
-        FstSelectVeloTracks().PVName           = self.getProp( "RootInTES") + "Vertices/PV"
-        FstSelectVeloTracks().MinIP            = self.getProp( "MinIP" )
-        FstSelectVeloTracks().MaxIP            = self.getProp( "MaxIP" )
-        if "VP" == self.getProp( "VeloType" ):
+                
+        FstSequencer("RecoFstSeq").Members += ["FstSelectVeloTracks"]
+        FstSelectVeloTracks().InputTracksName = self.getProp("RootInTES") + "Track/Velo"
+        FstSelectVeloTracks().OutputTracksName = self.getProp("RootInTES") + "Track/VeloFst"
+        FstSelectVeloTracks().PVName = self.getProp("RootInTES") + "Vertices/PV"
+        FstSelectVeloTracks().MinIP = self.getProp("MinIP")
+        FstSelectVeloTracks().MaxIP = self.getProp("MaxIP")
+        if "VP" == self.getProp("VeloType"):
             FstSelectVeloTracks().MinVeloClusters  = self.getProp( "MinVPClusters" )
         else:
             FstSelectVeloTracks().MinVeloClusters  = self.getProp( "MinVeloClusters" )
         
         ## Handle TT/UT
-        if "ValidateTT" == self.getProp( "TTType" ):
+        if "ValidateTT" == self.getProp("TTType"):
             FstSelectVeloTracks().ValidateWithTT = True
-        elif "none" == self.getProp( "TTType" ):
+        elif "none" == self.getProp("TTType"):
             FstSelectVeloTracks().ValidateWithTT = False
         else:
             log.warning( "Unknown TTType option '%s' !"%self.getProp( "TTType" ))
             exit(0)
 
         ## Forward tracking on selected tracks
-        if "IT+OT" == self.getProp( "TStationType" ):
-            from Configurables import PatForward, PatForwardTool, FastSTDecoding
-            if self.getProp( "FastDecoding" ):
-                FstSequencer( "RecoFstSeq" ).Members += [ "FastSTDecoding/FastTTDecoding",
-                                                          "FastSTDecoding/FastITDecoding"]
-                FastSTDecoding( "FastTTDecoding" ).DetectorName = "TT"
-                FastSTDecoding( "FastITDecoding" ).DetectorName = "IT"
-            else:
-                FstSequencer( "RecoFstSeq" ).Members += [ "RawBankToSTLiteClusterAlg/CreateTTLiteClusters",
-                                                          "RawBankToSTLiteClusterAlg/CreateITLiteClusters" ]
-                if self.getProp( "Compare" ):
-                    FstSequencer( "RecoFstSeq" ).Members += [ "FastSTDecoding/FastTTDecoding",
-                                                              "FastSTDecoding/FastITDecoding"]
-                    if self.getProp( "Compare" ):
-                        FastSTDecoding( "FastTTDecoding" ).DetectorName = "TT"
-                        FastSTDecoding( "FastTTDecoding" ).CompareResult = True
-                        FastSTDecoding( "FastITDecoding" ).DetectorName = "IT"
-                        FastSTDecoding( "FastITDecoding" ).CompareResult = True
-            FstSequencer( "RecoFstSeq" ).Members += [ "PatForward/FstForward" ]
+        if "IT+OT" == self.getProp("TStationType"):
+            from Configurables import PatForward, PatForwardTool, FastSTDecoding, PatTStationHitManager
+            from Configurables import STOnlinePosition
 
-            PatForward("FstForward").InputTracksName  = self.getProp( "RootInTES") + "Track/VeloFst"
-            PatForward("FstForward").OutputTracksName = self.getProp( "RootInTES") + "Track/Forward"
-            PatForward("FstForward").addTool( PatForwardTool )
-            PatForward("FstForward").PatForwardTool.MinPt = self.getProp( "MinPt" )
+            # Configure same errors as used in the HLT
+            ITOnl = STOnlinePosition("ITLiteClusterPosition")
+            ITOnl.ErrorVec = [0.253, 0.236, 0.273]
+            ITOnl.APE = 0.0758
+            
+            if self.getProp("FastDecoding"):
+                FstSequencer("RecoFstSeq").Members += ["FastSTDecoding/FastTTDecoding",
+                                                       "FastSTDecoding/FastITDecoding"]
+                FastSTDecoding("FastTTDecoding").DetectorName = "TT"
+                FastSTDecoding("FastITDecoding").DetectorName = "IT"
+                
+            else:
+                FstSequencer("RecoFstSeq").Members += ["RawBankToSTLiteClusterAlg/CreateTTLiteClusters",
+                                                       "RawBankToSTLiteClusterAlg/CreateITLiteClusters"]
+                
+                if self.getProp("Compare"):
+                    FstSequencer("RecoFstSeq").Members += ["FastSTDecoding/FastTTDecoding",
+                                                             "FastSTDecoding/FastITDecoding"]
+                    FastSTDecoding("FastTTDecoding").DetectorName = "TT"
+                    FastSTDecoding("FastTTDecoding").CompareResult = True
+                    FastSTDecoding("FastITDecoding").DetectorName = "IT"
+                    FastSTDecoding("FastITDecoding").CompareResult = True
+            
+            FstSequencer("RecoFstSeq").Members += ["PatForward/FstForward"]
+            PatForward("FstForward").InputTracksName  = self.getProp("RootInTES") + "Track/VeloFst"
+            PatForward("FstForward").OutputTracksName = self.getProp("RootInTES") + "Track/Forward"
+            PatForward("FstForward").maxOTHits = 1E8
+            PatForward("FstForward").DeltaNumberInT = 1E8
+            PatForward("FstForward").DeltaNumberInTT = 1E8
+            PatForward("FstForward").MaxNVelo = 1E8
+            PatForward("FstForward").addTool(PatForwardTool)
+            PatForward("FstForward").PatForwardTool.MinPt = 1250 #self.getProp( "MinPt" )
+            PatForward("FstForward").PatForwardTool.MinMomentum = 3000
+            PatForward("FstForward").PatForwardTool.SecondLoop = False
+            
         elif "FT" == self.getProp( "TStationType" ):
             from Configurables import PrForwardTracking, PrForwardTool
-            FstSequencer( "RecoFstSeq" ).Members += [ "FTRawBankDecoder",
-                                                      "PrForwardTracking/FstForward" ]
-            PrForwardTracking( "FstForward" ).InputName  = self.getProp( "RootInTES") + "Track/VeloFst"
-            PrForwardTracking( "FstForward" ).OutputName = self.getProp( "RootInTES") + "Track/Forward"
-            PrForwardTracking( "FstForward" ).addTool( PrForwardTool )
-            PrForwardTracking( "FstForward" ).PrForwardTool.MinPt = self.getProp( "MinPt" )
+            FstSequencer("RecoFstSeq").Members += ["FTRawBankDecoder",
+                                                   "PrForwardTracking/FstForward"]
+            PrForwardTracking("FstForward").InputName  = self.getProp("RootInTES") + "Track/VeloFst"
+            PrForwardTracking("FstForward").OutputName = self.getProp("RootInTES") + "Track/Forward"
+            PrForwardTracking("FstForward").addTool(PrForwardTool)
+            PrForwardTracking("FstForward").PrForwardTool.MinPt = self.getProp("MinPt")
+            
         else:
-            log.warning( "Unknown TStationType option '%s' !"%self.getProp( "TStationType" ) )
+            log.warning("Unknown TStationType option '%s' !"%self.getProp("TStationType"))
             exit(0)
 
-        if "HltFit" == self.getProp ( "TrackFit" ):
-            from Configurables import TrackEventFitter, TrackMasterFitter, MeasurementProvider
-            HltFastFit_name    = 'FastFit'
-            HltFastFit           = TrackEventFitter(HltFastFit_name)
-            HltFastFit.TracksInContainer    = self.getProp( "RootInTES") + "Track/Forward" 
-            HltFastFit.addTool(TrackMasterFitter, name = 'Fitter')
-            from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
-            fitter = ConfiguredHltFitter( getattr(HltFastFit,'Fitter'))
-            FstSequencer( "RecoFstSeq" ).Members +=[ HltFastFit ]
-            HltFastFit.Fitter.addTool( MeasurementProvider )
-            if "VP" == self.getProp( "VeloType" ):
-                HltFastFit.Fitter.MeasurementProvider.IgnoreVelo = True
-                HltFastFit.Fitter.MeasurementProvider.IgnoreVP   = False
-            elif "VL" == self.getProp( "VeloType" ):
-               HltFastFit.Fitter.MeasurementProvider.IgnoreVelo = True
-               HltFastFit.Fitter.MeasurementProvider.IgnoreVL   = False
-                
-            if "ValidateTT" != self.getProp( "TTType" ):
-                HltFastFit.Fitter.MeasurementProvider.IgnoreTT = True
+        FstSequencer("RecoFstSeq").Members += ["FstSelectForwardTracksPartOne/SelectFwd1"]
+        fwd1 = FstSelectForwardTracksPartOne("SelectFwd1")
+        fwd1.InputTracksName = self.getProp("RootInTES") + "Track/Forward"
+        fwd1.OutputTracksName = self.getProp("RootInTES") + "Track/ForwardFstIntermediate"
+        fwd1.PVName = self.getProp( "RootInTES") + "Vertices/PV"
+        fwd1.MinIP = 10e-6
+        fwd1.MaxIP = 10e6
+        fwd1.MinPt = self.getProp("MinPt")
+        fwd1.MinP = self.getProp("MinP")
 
-            if "FT" == self.getProp( "TStationType" ):                       #ignore IT+OT as it cannot initialize
-                HltFastFit.Fitter.MeasurementProvider.IgnoreIT = True
-                HltFastFit.Fitter.MeasurementProvider.IgnoreOT = True
-                HltFastFit.Fitter.MeasurementProvider.IgnoreFT = False
+        if self.getProp("TrackFit") == "OnlineHltFit":
+            from Configurables import TrackEventFitter, TrackMasterFitter, MeasurementProvider
+            
+            HltFastFit_name = 'FastFit'
+            HltFastFit = TrackEventFitter(HltFastFit_name)
+            HltFastFit.TracksInContainer = self.getProp("RootInTES") + "Track/ForwardFstIntermediate"
+            #from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
+            #ConfiguredHltFitter(HltFastFit.Fitter)
+            #HltFastFit.addTool(TrackMasterFitter, name='Fitter')
+            #from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
+            #fitter = ConfiguredHltFitter(getattr(HltFastFit, 'Fitter'))
+            
+            FstSequencer("RecoFstSeq").Members += [HltFastFit]
+            #HltFastFit.Fitter.addTool(MeasurementProvider)
+
+            #if "ValidateTT" != self.getProp( "TTType" ):
+            #    HltFastFit.Fitter.MeasurementProvider.IgnoreTT = True
+
+            # ignore IT+OT as it cannot initialize
+            #if "FT" == self.getProp( "TStationType" ):
+            #    HltFastFit.Fitter.MeasurementProvider.IgnoreIT = True
+            #    HltFastFit.Fitter.MeasurementProvider.IgnoreOT = True
+            #    HltFastFit.Fitter.MeasurementProvider.IgnoreFT = False
+
+        elif "HltFit" == self.getProp("TrackFit"):
+            print "XXX HltFit"
+            from Configurables import TrackEventFitter, TrackMasterFitter, MeasurementProvider
+            from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
+            HltFastFit_name = 'FastFit'
+            HltFastFit = TrackEventFitter(HltFastFit_name)
+            FstSequencer("RecoFstSeq").Members += [HltFastFit]
+            
+            HltFastFit.TracksInContainer = self.getProp("RootInTES") + "Track/ForwardFstIntermediate"
+            
+            HltFastFit.addTool(ConfiguredHltFitter("Fitter"), name='Fitter')
+            
+            #HltFastFit.Fitter.addTool(MeasurementProvider)
+            #if "VP" == self.getProp( "VeloType" ):
+            #    HltFastFit.Fitter.MeasurementProvider.IgnoreVelo = True
+            #    HltFastFit.Fitter.MeasurementProvider.IgnoreVP   = False
+            #elif "VL" == self.getProp( "VeloType" ):
+            #   HltFastFit.Fitter.MeasurementProvider.IgnoreVelo = True
+            #   HltFastFit.Fitter.MeasurementProvider.IgnoreVL   = False
+                
+            #if "ValidateTT" != self.getProp( "TTType" ):
+            #    HltFastFit.Fitter.MeasurementProvider.IgnoreTT = True
+
+            # ignore IT+OT as it cannot initialize
+            #if "FT" == self.getProp( "TStationType" ):
+            #    HltFastFit.Fitter.MeasurementProvider.IgnoreIT = True
+            #    HltFastFit.Fitter.MeasurementProvider.IgnoreOT = True
+            #    HltFastFit.Fitter.MeasurementProvider.IgnoreFT = False
 
         ## Selection after measuring momentum
-        FstSequencer( "RecoFstSeq" ).Members += [ "FstSelectForwardTracks" ]
-        FstSelectForwardTracks().InputTracksName  = self.getProp( "RootInTES") + "Track/Forward"
-        FstSelectForwardTracks().OutputTracksName = self.getProp( "RootInTES") + "Track/ForwardFst"
-        FstSelectForwardTracks().PVName           = self.getProp( "RootInTES") + "Vertices/PV"
-        FstSelectForwardTracks().MinIP            = self.getProp( "MinIP" )
-        FstSelectForwardTracks().MaxIP            = self.getProp( "MaxIP" )
-        FstSelectForwardTracks().MinPt            = self.getProp( "MinPt" )
-        FstSelectForwardTracks().MinIPChi2        = self.getProp( "MinIPChi2" )
-        if "HltFit" == self.getProp ( "TrackFit" ):
-            FstSelectForwardTracks().MaxChi2Ndf            = self.getProp( "MaxChi2Ndf" )
+        FstSequencer( "RecoFstSeq" ).Members += [ "FstSelectForwardTracksPartTwo/SelectFwd2" ]
+        fwd2 = FstSelectForwardTracksPartTwo("SelectFwd2")
+        fwd2.InputTracksName  = self.getProp( "RootInTES") + "Track/ForwardFstIntermediate"
+        fwd2.OutputTracksName = self.getProp( "RootInTES") + "Track/ForwardFst"
+        fwd2.PVName = (self.getProp( "RootInTES") +
+                                                              "Vertices/PV")
+        fwd2.MinIP = 1E-7 #self.getProp( "MinIP" )
+        fwd2.MaxIP = 1E7 #self.getProp( "MaxIP" )
+        fwd2.MinIPChi2 = self.getProp( "MinIPChi2" )
+        if "HltFit" in self.getProp("TrackFit"):
+            fwd2.MaxChi2Ndf = self.getProp( "MaxChi2Ndf" )
         else:
-            FstSelectForwardTracks().MaxChi2Ndf            = -1.
+            fwd2.MaxChi2Ndf = -1.
 

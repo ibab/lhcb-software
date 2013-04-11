@@ -16,6 +16,7 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( FstSelectVeloTracks )
 
+#define dot(u,v)   ((u).x() * (v).x() + (u).y() * (v).y() + (u).z() * (v).z())
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -64,6 +65,7 @@ StatusCode FstSelectVeloTracks::initialize() {
   m_nTotTracks = 0;
   m_goodIPTracks = 0;
   m_nSelTracks = 0;
+  m_goodNHitsTracks = 0;
 
   return StatusCode::SUCCESS;
 }
@@ -89,21 +91,32 @@ StatusCode FstSelectVeloTracks::execute() {
     if ( track->checkFlag( LHCb::Track::Invalid ) ) continue;
     if ( track->checkFlag( LHCb::Track::Backward ) ) continue;
     ++m_nTotTracks;
-    if ( track->nLHCbIDs() < m_minVeloClusters ) continue;
+    if ( track->nLHCbIDs() <= m_minVeloClusters ) continue;
+
+    // Compute expected number of Velo hits and remove
+    // tracks with too many misses
+    int missed_hits(-1);
+    if (track->hasInfo(LHCb::Track::nPRVelo3DExpect)) {
+      missed_hits = track->info(LHCb::Track::nPRVelo3DExpect, -1) - track->nLHCbIDs();
+    }
+    else if (track->hasInfo(LHCb::Track::nPRVeloRZExpect)) {
+      missed_hits = 2 * track->info(LHCb::Track::nPRVeloRZExpect, -1) - track->nLHCbIDs();
+    }
+    if (missed_hits >= 3) continue;
+
+    ++m_goodNHitsTracks;
     float bestIP2 = 1.e9;
     Gaudi::XYZPoint pos = track->position();
-    float tx = track->slopes().x();
-    float ty = track->slopes().y();
-    float x0 = pos.x() - tx * pos.z();
-    float y0 = pos.y() - ty * pos.z();
-    float den2 = 1. + tx*tx + ty*ty;
+    Gaudi::XYZVector v = track->slopes();
+    v.SetZ(1.);
     for ( LHCb::RecVertices::const_iterator itPV = pvs->begin(); pvs->end() > itPV; ++itPV ) {
-      float xv = (*itPV)->position().x();
-      float yv = (*itPV)->position().y();
-      float zv = (*itPV)->position().z();
-      float dx = x0 + zv * tx - xv;
-      float dy = y0 + zv * ty - yv;
-      float dist2 = (dx * dx + dy * dy) / den2;
+      Gaudi::XYZPoint P = (*itPV)->position();
+      Gaudi::XYZVector w = P - pos;
+      double c1 = dot(w, v);
+      double c2 = dot(v, v);
+      double b = c1 / c2;
+      Gaudi::XYZPoint Pb = pos + b * v;
+      float dist2 = dot(P-Pb, P-Pb);
       if ( dist2 < bestIP2 ) {
         bestIP2 = dist2;
         if ( bestIP2 < m_minIP2 ) break;
@@ -141,6 +154,8 @@ StatusCode FstSelectVeloTracks::execute() {
 StatusCode FstSelectVeloTracks::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   info() << format( "From %8d tracks:", m_nTotTracks ) << endmsg;
+  info() << format( "     %8d tracks (%5.1f%%) with enough hits",
+                    m_goodNHitsTracks, 100. * float( m_goodNHitsTracks)/float( m_nTotTracks) ) << endmsg;
   info() << format( "     %8d tracks (%5.1f%%) with large IP",
                     m_goodIPTracks, 100. * float( m_goodIPTracks)/float( m_nTotTracks) ) << endmsg;
   info() << format( "     %8d tracks (%5.1f%%) selected",

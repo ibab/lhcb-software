@@ -6,23 +6,26 @@
 #include "Event/RecVertex.h"
 #include "Event/KalmanFitResult.h"
 
+// from Loki
+#include "KalmanFilter/FastVertex.h"
+
 // local
-#include "FstSelectForwardTracks.h"
+#include "FstSelectForwardTracksPartTwo.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : FstSelectForwardTracks
+// Implementation file for class : FstSelectForwardTracksPartTwo
 //
 // 2012-10-09 : Olivier Callot
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( FstSelectForwardTracks )
+DECLARE_ALGORITHM_FACTORY( FstSelectForwardTracksPartTwo )
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-FstSelectForwardTracks::FstSelectForwardTracks( const std::string& name,
+FstSelectForwardTracksPartTwo::FstSelectForwardTracksPartTwo( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
@@ -32,19 +35,18 @@ FstSelectForwardTracks::FstSelectForwardTracks( const std::string& name,
   declareProperty( "MinIP",                  m_minIP            = 0.100 * Gaudi::Units::mm );
   declareProperty( "MaxIP",                  m_maxIP            = 3.000 * Gaudi::Units::mm );
   declareProperty( "MinIPChi2",              m_minIPChi2        = 9. );
-  declareProperty( "MaxIPChi2",              m_maxIPChi2        = 100000. );
-  declareProperty( "MinPt",                  m_minPt            = 1.500 * Gaudi::Units::GeV );
+  declareProperty( "MaxIPChi2",              m_maxIPChi2        = -1 ); // negative deactivates the cut
   declareProperty( "MaxChi2Ndf",             m_maxChi2Ndf       = 2.0 ); // set negative to deactivate
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-FstSelectForwardTracks::~FstSelectForwardTracks() {} 
+FstSelectForwardTracksPartTwo::~FstSelectForwardTracksPartTwo() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode FstSelectForwardTracks::initialize() {
+StatusCode FstSelectForwardTracksPartTwo::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -59,7 +61,6 @@ StatusCode FstSelectForwardTracks::initialize() {
          << "MaxIP           : " << m_maxIP << endmsg
          << "MinIPChi2       : " << m_minIPChi2 << endmsg
          << "MaxIPChi2       : " << m_maxIPChi2 << endmsg
-         << "MinPt           : " << m_minPt << endmsg
          << "MaxChi2Ndf      : " << m_maxChi2Ndf << endmsg;
 
   m_nTracks = 0;
@@ -74,7 +75,7 @@ StatusCode FstSelectForwardTracks::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode FstSelectForwardTracks::execute() {
+StatusCode FstSelectForwardTracksPartTwo::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   LHCb::Tracks* forward  = get<LHCb::Tracks>( m_inputTracksName );
@@ -84,54 +85,45 @@ StatusCode FstSelectForwardTracks::execute() {
   
   for ( LHCb::Tracks::iterator itT = forward->begin();
         forward->end() != itT; ++itT ) {
-    ++m_nTracks;
     LHCb::Track* track = (*itT);
     if ( track->checkFlag( LHCb::Track::Invalid ) ) continue;
-    if ( m_minPt > track->pt() ) continue;
-    ++m_nPtOK;
     if ( m_maxChi2Ndf > 0 ){
-      if( NULL != track->fitResult() ) {
-        if (track->chi2()/track->nDoF() > m_maxChi2Ndf) continue;
-      } else {
+      if( NULL == track->fitResult() ) {
         continue;
       }
     }
+    ++m_nTracks;
+    if ( m_maxChi2Ndf > 0 ){
+      if (track->chi2PerDoF() >= m_maxChi2Ndf) continue;
+    }
     ++m_nChi2OK;
-    float bestIP2 = 1.e9;
+    float bestIP = 1.e9;
     float bestIPChi2 = 1.e9;
     
-    Gaudi::XYZPoint pos = track->position();
-    float tx = track->slopes().x();
-    float ty = track->slopes().y();
-    float den2 = 1. + tx*tx + ty*ty;
     for ( LHCb::RecVertices::const_iterator itPV = pvs->begin(); pvs->end() > itPV; ++itPV ) {
-      float xv = (*itPV)->position().x();
-      float yv = (*itPV)->position().y();
-      float zv = (*itPV)->position().z();
-      
-      float dx = pos.x() + (zv - pos.z()) * tx - xv;
-      float dy = pos.y() + (zv - pos.z()) * ty - yv;
-      float dist2 = (dx * dx + dy * dy) / den2;
-      if ( dist2   < bestIP2  ) bestIP2 = dist2;
-      if ( bestIP2 < m_minIP2 ) break;               //== if one PV with low IP -> reject.
+      LHCb::RecVertex* vertex = (*itPV);
+      double impact = 0 ;
+      double ipchi2 = 0 ;
+      StatusCode sc = LoKi::FastVertex::distance(track, vertex, impact, ipchi2, true);
 
-      //== Compute IPChi2, error takes into account the PV error
-      float wx2 = 1. / ( track->firstState().errX2() + (*itPV)->covMatrix()(0,0));
-      float wy2 = 1. / ( track->firstState().errY2() + (*itPV)->covMatrix()(1,1));
-      float ipChi2 = dx * dx * wx2 + dy * dy * wy2;
-      if ( ipChi2     < bestIPChi2  ) bestIPChi2 = ipChi2;
-      if ( bestIPChi2 < m_minIPChi2 ) break;
+      if (impact < bestIP) bestIP = impact;
+      //== if one PV with low IP -> reject.
+      if (bestIP <= m_minIP) break;
+
+      if (ipchi2 < bestIPChi2) bestIPChi2 = ipchi2;
+      //== if one PV with low IPchi2 -> reject.
+      if (bestIPChi2 <= m_minIPChi2) break;
     }
-    if ( bestIP2 > m_maxIP2 || bestIP2 < m_minIP2 ) continue;
+    if (bestIP > m_maxIP || bestIP <= m_minIP) continue;
     ++m_nIPOK;
-    if ( bestIPChi2 < m_maxIPChi2 &&
-         bestIPChi2 > m_minIPChi2    ) {
+    if (((bestIPChi2 < m_maxIPChi2)||(m_maxIPChi2 < 0)) &&
+        bestIPChi2 > m_minIPChi2) {
       ++m_nIPSOK;
       LHCb::Track* goodTrack = track->clone();
-      selected->add( goodTrack );
+      selected->add(goodTrack);
     }
   }
-  setFilterPassed( 0 != selected->size() );
+  setFilterPassed(0 != selected->size());
   
   debug() << "Selected " << selected->size() << " Forward tracks from " << pvs->size() << " PV." << endmsg;
 
@@ -141,7 +133,7 @@ StatusCode FstSelectForwardTracks::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode FstSelectForwardTracks::finalize() {
+StatusCode FstSelectForwardTracksPartTwo::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
@@ -151,7 +143,6 @@ StatusCode FstSelectForwardTracks::finalize() {
   float eff4 = 100. * float( m_nIPSOK )  / float( m_nTracks );
   
   info() << format( "From %7d tracks:", m_nTracks ) << endmsg;
-  info() << format( "      %6d with Pt OK,     %7.2f%%", m_nPtOK,   eff1 ) << endmsg;
   info() << format( "      %6d with chi2 OK,   %7.2f%%", m_nChi2OK, eff2 ) << endmsg;
   info() << format( "      %6d with IP OK,     %7.2f%%", m_nIPOK,   eff3 ) << endmsg;
   info() << format( "      %6d with IPS OK,    %7.2f%%", m_nIPSOK,  eff4 ) << endmsg;

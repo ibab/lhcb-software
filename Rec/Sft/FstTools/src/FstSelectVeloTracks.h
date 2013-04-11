@@ -41,5 +41,6 @@ private:
   int    m_nTotTracks;
   int    m_goodIPTracks;
   int    m_nSelTracks;
+  int m_goodNHitsTracks;
 };
 #endif // FSTSELECTVELOTRACKS_H

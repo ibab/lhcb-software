@@ -1,23 +1,23 @@
-#ifndef FSTSELECTFORWARDTRACKS_H 
-#define FSTSELECTFORWARDTRACKS_H 1
+#ifndef FSTSELECTFORWARDTRACKSPARTONE_H 
+#define FSTSELECTFORWARDTRACKSPARTONE_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 
-/** @class FstSelectForwardTracks FstSelectForwardTracks.h
+/** @class Fstselectforwardtrackspartone Fstselectforwardtrackspartone.h
  *  Select the Forward track for the First Software Trigger
  *
  *  @author Olivier Callot
  *  @date   2012-10-09
  */
-class FstSelectForwardTracks : public GaudiAlgorithm {
+class FstSelectForwardTracksPartOne : public GaudiAlgorithm {
 public: 
   /// Standard constructor
-  FstSelectForwardTracks( const std::string& name, ISvcLocator* pSvcLocator );
+  FstSelectForwardTracksPartOne( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~FstSelectForwardTracks( ); ///< Destructor
+  virtual ~FstSelectForwardTracksPartOne( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -37,6 +37,7 @@ private:
   float  m_maxIPChi2;
   
   float  m_minPt;
+  float  m_minP;
   float  m_maxChi2Ndf;
 
   //== Counters
@@ -45,5 +46,6 @@ private:
   int m_nChi2OK;
   int m_nIPOK;
   int m_nIPSOK;
+  int m_nInput;
 };
 #endif // FSTSELECTFORWARDTRACKS_H

@@ -16,6 +16,7 @@ branches          cmt doc src python options
 use GaudiAlg        v* 
 use RecEvent        v*    Event
 use TrackFitEvent   v*    Tr
+use KalmanFilter    v*    Phys
 use TrackInterfaces v*    Tr       # For TT validation tool
 include_path      none
 #============================================================================
