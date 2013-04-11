@@ -90,6 +90,58 @@ namespace {
       0.05,
     }; // Starting width for fit
 
+  // ----------------------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------------
+  // MODEL PDFS
+  // ----------------------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------------
+
+  // Signal mean and width (common to all shapes, basically)
+  RooRealVar mass ("mass","mass", 0.0);
+  RooRealVar mean("mean","mass mean", 0.0);
+  RooRealVar width("width","mass width", 0.0);
+
+  // Gaussian
+  RooGaussian signal_g("signal_g","signal (G)",mass,mean,width);
+
+  // Crystal Ball
+  RooRealVar z("z","z",1.5,0.01,5);
+  RooRealVar n("n","n",1);
+  RooCBShape signal_cb("signal_cb","signal (CB)",mass,mean,width,z,n);
+
+  // Cruijff (Symmetric, 1-sided)
+  RooRealVar alpha("alpha","alpha",0.1,1E-10,1);
+  const char* cr1_formula =
+    "exp( - (mass-mean)*(mass-mean)"
+    " / (2*width*width "
+    "+ alpha*(mass-mean)*(mass-mean)*(mass<mean) ) )";
+  RooGenericPdf signal_cr1("signal_cr1","signal (CR1)",cr1_formula,RooArgSet(mass,mean,width,alpha));
+
+  // Exponential background
+  RooRealVar decay("decay","decay",0,-10,10);
+  RooExponential bkg_exp("bkg_exp","bkg (EXP)",mass,decay);
+
+  // Polynomial backgrounds
+  RooRealVar c1("c1","c1",0,-10,10);
+  RooRealVar c2("c2","c2",0,-10,10);
+  RooChebychev bkg_p0("bkg_p1","bkg (P0)",mass,RooArgList());
+  RooChebychev bkg_p1("bkg_p1","bkg (P1)",mass,RooArgList(c1));
+  RooChebychev bkg_p2("bkg_p2","bkg (P2)",mass,RooArgList(c1,c2));  
+
+  // Combinations
+  RooRealVar frac("frac","frac",0.7,0,1);
+  RooAddPdf model_cb_exp("model","model",RooArgList(signal_cb,bkg_exp),RooArgList(frac)); // J/psi and Ups
+  /* Create others as needed, such as 
+     - D0, KS, Lambda decays : Gaussian / Constant
+     - phi : Voigtian / threshold
+     - Others for testing purposes
+  */
+
+  RooAbsPdf* ResModel[NumRes] = {
+    &model_cb_exp
+    , &model_cb_exp
+  };
+
   // Doesn't seem to be a native function for this, sadly
   RooDataHist splitDataHistFromTH2D(const char* name, const char* title,
                                     const RooRealVar& var, RooCategory& indexCat, TH2D* hist)
@@ -148,8 +200,8 @@ namespace {
       meanErrs[i] = data[0].errs[i]/(Mass[res])*1000;
       width[i] = data[1].vals[i]/(Mass[res])*1000;
       widthErrs[i] = data[1].errs[i]/(Mass[res])*1000;
-      mids[i] = hist->GetBinCenter(i);
-      binwidths[i] = hist->GetBinWidth(i);
+      mids[i] = hist->GetBinCenter(i+1);
+      binwidths[i] = hist->GetBinWidth(i+1)/2.0;
     }
 
     // CREATE GRAPH OF MEANS
@@ -227,59 +279,6 @@ int main( int argc, char** argv) {
   } else  {
     if (verbose) cout << "Input file opened successfully" << endl;
   }
-
-  // ----------------------------------------------------------------------------------------------------
-  // ----------------------------------------------------------------------------------------------------
-  // MODEL PDFS
-  // ----------------------------------------------------------------------------------------------------
-  // ----------------------------------------------------------------------------------------------------
-
-  // Signal mean and width (common to all shapes, basically)
-  RooRealVar mass ("mass","mass", 0.0);
-  RooRealVar mean("mean","mass mean", 0.0);
-  RooRealVar width("width","mass width", 0.0);
-
-  // Gaussian
-  RooGaussian signal_g("signal_g","signal (G)",mass,mean,width);
-
-  // Crystal Ball
-  RooRealVar z("z","z",1.5,0.01,5);
-  RooRealVar n("n","n",2,0.1,100);
-  RooCBShape signal_cb("signal_cb","signal (CB)",mass,mean,width,z,n);
-
-  // Cruijff (Symmetric, 1-sided)
-  RooRealVar alpha("alpha","alpha",0.1,1E-10,1);
-  const char* cr1_formula =
-    "exp( - (mass-mean)*(mass-mean)"
-    " / (2*width*width "
-    "+ alpha*(mass-mean)*(mass-mean)*(mass<mean) ) )";
-  RooGenericPdf signal_cr1("signal_cr1","signal (CR1)",cr1_formula,RooArgSet(mass,mean,width,alpha));
-
-  // Exponential background
-  RooRealVar decay("decay","decay",0,-10,10);
-  RooExponential bkg_exp("bkg_exp","bkg (EXP)",mass,decay);
-
-  // Polynomial backgrounds
-  RooRealVar c1("c1","c1",0,-10,10);
-  RooRealVar c2("c2","c2",0,-10,10);
-  RooChebychev bkg_p0("bkg_p1","bkg (P0)",mass,RooArgList());
-  RooChebychev bkg_p1("bkg_p1","bkg (P1)",mass,RooArgList(c1));
-  RooChebychev bkg_p2("bkg_p2","bkg (P2)",mass,RooArgList(c1,c2));  
-
-  // Combinations
-  RooRealVar frac("frac","frac",0.7,0,1);
-  RooAddPdf model_cb_exp("model","model",RooArgList(signal_cb,bkg_exp),RooArgList(frac)); // J/psi and Ups
-  /* Create others as needed, such as 
-     - D0, KS, Lambda decays : Gaussian / Constant
-     - phi : Voigtian / threshold
-     - Others for testing purposes
-  */
-
-  RooAbsPdf* ResModel[NumRes] = {
-    &model_cb_exp
-    , &model_cb_exp
-  };
-    
 
   // ----------------------------------------------------------------------------------------------------
   // ----------------------------------------------------------------------------------------------------

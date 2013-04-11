@@ -4,6 +4,9 @@
 ! Purpose     : Package for making fits to 2D histograms (mass vs. VARIABLE)
 !-----------------------------------------------------------------------------
 
+! 2013-04-10 - Jack Wimberley
+- Arithmetic fixes in calculating bin centers/widths
+
 ! 2013-04-04 - Jack Wimberley
 - Initial working version
 - Meant to streamline processes described in Needham et al
