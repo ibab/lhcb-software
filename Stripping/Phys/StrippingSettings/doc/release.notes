@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-12 - Anton Poluektov 
+ - Tighten proton PID in D0PPbarFULLDST in B2OC
+
 ! 2013-04-11 - Thomas Blake
  - Updated RD lines for Stripping 20r0p1 and 20r1p1 
 
