@@ -122,50 +122,7 @@ Bd2eeKstarBDT = {
     'STREAMS' : [ 'Radiative' ]
     }
 
-Bd2eeKstar = {
-    'BUILDERTYPE'             : 'Bd2eeKstarConf',
-    'CONFIG'                  : {
-        'LinePrescale'            :    1.   ,
-        'LinePostscale'           :    1.   ,
-        #
-        'ElectronPT'              :  300.   ,  # MeV
-        'ElectronTrackCHI2pNDOF'  :    5.   ,
-        'ElectronIPCHI2'          :    2.25 ,
-        'ElectronPIDepi'          :   -2.   ,          
-        #
-        'eeVertexCHI2'            :   16.   ,  
-        'eeMinMass'               : -999.   ,  # MeV 
-        'eeMaxMass'               : 1500.   ,  # MeV
-        'eeFD'                    :    1.   ,  # mm
-        #
-        'KaonPT'                  :  400.   ,  # MeV 
-        'KaonP'                   : 3000.   ,  # MeV  
-        'KaonTrackCHI2pNDOF'      :    5.   , 
-        'KaonIPCHI2'              :    4.   , 
-        'KaonPIDKpi'              :   -5.   , 
-        #
-        'PionPT'                  :  300.   ,  # MeV
-        'PionP'                   : 3000.   ,  # MeV 
-        'PionTrackCHI2pNDOF'      :    5.   , 
-        'PionIPCHI2'              :    4.   , 
-        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
-        #
-        'KstarVertexCHI2'         :   16.   , 
-        'KstarMassW'              :  130.   ,  # MeV
-        'KstarIPCHI2'             :    1.   , 
-        'KstarFDCHI2'             :    1.   , 
-        #
-        'BComMassW'               : 1200.   ,  # MeV
-        'BVertexCHI2'             :    9.   ,  # /ndf
-        'BMassW'                  : 1000.   ,  # MeV  
-        'BIPCHI2'                 :   64.   ,  # pointing
-        'BFDCHI2'                 :    9.   , 
-        'BDIRA'                   :    0.999, 
-        'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)" 
-           },
-    'WGs'    : [ 'RD' ],
-    'STREAMS' : [ 'Radiative' ]
-    }
+
 
 
 ####################################################################
@@ -205,7 +162,14 @@ Lc23MuLines = {
 
 Inflaton2MuMu = {
     'BUILDERTYPE' : 'StrippingInflaton2MuMuConf' ,
-    'STREAMS' : [ 'Dimuon' ],
+    'STREAMS' : {
+    'Dimuon'  : [
+    'StrippingInflaton2MuMu_Bu2InflatonKDnLine',
+    'StrippingInflaton2MuMu_Bs2InflatonPhiDnLine',
+    'StrippingInflaton2MuMu_Bd2InflatonKstDnLine',
+    'StrippingInflaton2MuMu_Bd2InflatonRhoDnLine'
+    ] 
+    },
     'WGs'     : [ 'RD' ] ,
     'CONFIG'  : {
     'Inflaton2MuMuLongPrescale'    : 0,
@@ -227,7 +191,10 @@ Inflaton2MuMu = {
 # Lines for micro-DST
 Inflaton2MuMuForMicro = {
     'BUILDERTYPE' : 'StrippingInflaton2MuMuConf' ,
-    'STREAMS' : [ 'Leptonic' ],
+    'STREAMS' : {
+    'Leptonic' : [ 'StrippingInflaton2MuMuForMicroLongLine',
+                   'StrippingInflaton2MuMuForMicroDownstreamLine' ]
+    },
     'WGs'     : [ 'RD' ] ,
     'CONFIG'  : {
     'Inflaton2MuMuLongPrescale'    : 1,
