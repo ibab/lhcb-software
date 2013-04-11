@@ -386,10 +386,10 @@ class B2DXBuilder(object):
         config['B2CBBDT_MIN'] = '0.3'
         config['DZ1_MIN'] = '-1.5*mm'
         decays = { 'B02D0PPbar': ["B0 -> D0 rho(770)0"]}
-        inputs = { 'B02D0PPbar': d2x+self.hh.ppbar_pid}
+        inputs = { 'B02D0PPbar': d2x+self.hh.ppbar_pid_tighter}
         b2d0ppbar = makeB2XSels(decays,dname,inputs,self.config)
         decays = {'B02D0PPbarWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
-        inputs = {'B02D0PPbarWS': d2x+self.hh.ppbar_ws_pid}
+        inputs = {'B02D0PPbarWS': d2x+self.hh.ppbar_ws_pid_tighter}
         b2d0ppbar_ws = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2d0ppbar,1.0))
         self.lines.append(ProtoLine(b2d0ppbar_ws,0.1))        

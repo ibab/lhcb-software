@@ -122,7 +122,7 @@ config = {
     'TIGHT' : {    'P'  : {'PIDp_MIN' : -5},
                    'PI' : {'PIDK_MAX' : 10},
                    'K'  : {'PIDK_MIN' : -5}},
-    'TIGHTER' : {    'P'  : {'PIDp_MIN' : -5},
+    'TIGHTER' : {    'P'  : {'PIDp_MIN' : 0},
                      'PI' : {'PIDK_MAX' : 10},
                      'K'  : {'PIDK_MIN' : 0}},
     'TIGHTPI' : { 'P' : {'PIDp_MIN' : -10},

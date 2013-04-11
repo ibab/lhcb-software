@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
+! 2013-04-12 - Anton Poluektov 
+ - Tighter proton PID for D0PPbarFULLDST line in Beauty2Charm
+
 ! 2013-04-11 - Donal Hill
  - Changed decay descriptor in Bu2D0TauNuWS line in StrippingB2XTauNu.py
 

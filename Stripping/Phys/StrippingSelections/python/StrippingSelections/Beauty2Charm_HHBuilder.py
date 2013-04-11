@@ -66,6 +66,8 @@ class HHBuilder(object):
         self.ph_pid = [filterPID('X2PHPID',self.ph,config_pid)]
         self.ppbar_pid = [filterPID('X2PPbarPID',self.ppbar,config_pid['TIGHT'])]
         self.ppbar_ws_pid = [filterPID('X2PPbarWSPID',self.ppbar_ws,config_pid['TIGHT'])]
+        self.ppbar_pid_tighter = [filterPID('X2PPbarPIDTIGHTER',self.ppbar,config_pid['TIGHTER'])]
+        self.ppbar_ws_pid_tighter = [filterPID('X2PPbarWSPIDTIGHTER',self.ppbar_ws,config_pid['TIGHTER'])]
         self.rho0_pid = [filterPID('RHO02PiPiPID',self.rho0,config_pid)]
         self.kstar0_pid = [filterPID('Kstar02KPiPID',self.kstar0,config_pid)]
         self.phi_pid = [filterPID('PHI2KKPID',self.phi,config_pid)]
