@@ -60,7 +60,6 @@ LoKi::Algo* Gaudi::Utils::getLoKiAlgo ( LoKi::ILoKiSvc* svc )
     const LoKi::Services& svcs = LoKi::Services::instance() ;
     return Gaudi::Utils::getLoKiAlgo ( svcs.contextSvc() ) ;   // RETURN 
   }
-  if ( 0 == svc ) { return 0 ; }                               // RETURN 
   return Gaudi::Utils::getLoKiAlgo ( SmartIF<IAlgContextSvc>( svc ) ) ; // RETURN 
 }
 // ============================================================================

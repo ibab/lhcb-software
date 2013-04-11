@@ -5,6 +5,9 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2013-04-11 - Vanya Belyaev
+ - GetLoKiAlgo.cpp: bug fix 
+
 !========================= LoKiAlgo v9r8p1 2013-04-05 =========================
 
 ! 2013-03-22 - Chris Jones
