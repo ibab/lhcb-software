@@ -44,6 +44,12 @@ public:
 			  const LHCb::RecVertex& pv,
 			  double& chi2,double& decaylength,double& decaylengtherr) const ;
   
+  /// Return the ip chi2 for a track (uses stateprovider)
+  double ipchi2( const LHCb::Track& track, const LHCb::RecVertex& pv) const ;
+  
+  /// Return the ip chi2 for a track state
+  double ipchi2( const LHCb::State& state, const LHCb::RecVertex& pv) const ;
+  
   /// initialize
   StatusCode initialize() ;
 

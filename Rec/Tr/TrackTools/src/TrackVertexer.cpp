@@ -239,3 +239,48 @@ TrackVertexer::computeDecayLength(const LHCb::TwoProngVertex& vertex,
 
   return (OK!=0) ;
 }
+
+double
+TrackVertexer::ipchi2( const LHCb::Track& track, const LHCb::RecVertex& pv) const
+{  
+  const LHCb::TrackTraj* traj = m_stateprovider->trajectory( track ) ;
+  return traj ? 
+    ipchi2( traj->state(pv.position().z()),pv ) : 
+    ipchi2( track.firstState(),pv) ;
+}
+
+double
+TrackVertexer::ipchi2( const LHCb::State& state, const LHCb::RecVertex& pv) const
+{  
+  double tx = state.tx() ;
+  double ty = state.ty() ;
+  double dz = pv.position().z() - state.z() ;
+  double dx = state.x() + dz * tx - pv.position().x() ;
+  double dy = state.y() + dz * ty - pv.position().y() ;
+  
+  const Gaudi::SymMatrix3x3& pvcov = pv.covMatrix() ;
+  const Gaudi::SymMatrix5x5& trkcov = state.covariance() ;
+  
+  // compute the covariance matrix. first only the trivial parts:
+  double cov00 = pvcov(0,0) + trkcov(0,0) ;
+  double cov10 = pvcov(1,0) + trkcov(1,0) ;
+  double cov11 = pvcov(1,1) + trkcov(1,1) ;
+  
+  // add the contribution from the extrapolation
+  cov00 += dz*dz*trkcov(2,2) + 2*dz*trkcov(2,0) ;
+  cov10 += dz*dz*trkcov(3,2) + dz*(trkcov(3,0)+trkcov(2,1)) ;
+  cov11 += dx*dx*trkcov(3,3) + 2*dz*trkcov(3,1) ;
+  
+  // add the contribution from pv Z
+  cov00 += tx*tx*pvcov(2,2)  -  2*tx*pvcov(2,0) ;
+  cov10 += tx*ty*pvcov(2,2)  -  ty*pvcov(2,0) - tx*pvcov(2,1) ;
+  cov11 += ty*ty*pvcov(2,2)  -  2*ty*pvcov(2,1) ;
+  
+  // invert the covariance matrix
+  double D = cov00*cov11 - cov10*cov10 ;
+  double invcov00 = cov11 / D ;
+  double invcov10 = -cov10 / D ;
+  double invcov11 = cov00 / D ;
+  
+  return dx*dx * invcov00 + 2*dx*dy * invcov10 + dy*dy * invcov11 ;
+}
