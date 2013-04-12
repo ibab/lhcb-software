@@ -1,0 +1,192 @@
+#!/usr/bin/env python
+"""
+A script to list the dependencies of a project from SVN,
+both in terms of packages or projects.
+"""
+
+import logging
+import re
+import subprocess
+import sys
+
+
+from LbConfiguration.Repository import getRepositories
+from LbUtils.Script import Script
+from LbRelease import rcs
+from LbRelease.SvnTools.Project import translateProject, getProjectCmt, containerFromProject
+from LbRelease.SvnTools.Package import getRequirements
+from LbUtils.CMT.Parse import parseReq
+
+# Standard LHCb SVN repository
+url = str(getRepositories(protocol='anonymous')["lbsvn"])
+lbsvn = rcs.connect(url)
+
+# GAUDI Svn repository
+gaudiurl = str(getRepositories(protocol='anonymous')["gaudi"])
+gaudisvn = rcs.connect(gaudiurl)
+
+# LHCb Script main body
+class SvnProjectDepsScript(Script):
+    """ Main scripts class for looking up dependencies.
+    It inherits from """
+
+    def defineOpts(self):
+        """ Script specific options """
+        parser = self.parser
+        parser.add_option("-n",
+                          dest = "non_recursive",
+                          action = "store_true",
+                          help = "Only checks the children projects, not their children")
+        parser.add_option("-P",
+                          dest = "projects",
+                          action = "store_true",
+                          help = "Display the projects, not the packages")
+        parser.add_option("-f",
+                          dest = "filter",
+                          action = "store",
+                          help = "Filter package by name")
+        parser.add_option("-d",
+                          dest = "debug",
+                          action = "store_true",
+                          help = "Display debug output")
+
+    def main(self):
+        """ Main method for bootstrap and parsing the options.
+        It invokes the appropriate method and  """
+        self.log = logging.getLogger()
+        opts = self.options
+        args = self.args
+        if opts.debug:
+            self.log.setLevel(logging.DEBUG)
+        if len(args) < 2:
+            self.log.error("Not enough arguments")
+            sys.exit(1)
+        else :
+            project   = args[0]
+            version   = args[1]
+
+            # No need to list the project in its dependencies...
+            if self.options.projects:
+                deps = []
+            else:
+                # But lists its packages if requested
+                deps = [ (project.upper(), project.upper() + "_" + version)]
+
+            #
+            if self.options.non_recursive:
+                deps += self.getDependencies(project, version)
+            else:
+                deps += self.traverseDependencies(project, version)
+
+            # Now printing
+            for (p, v) in deps:
+                if self.options.projects:
+                    # In this case we print the list of projects
+                    print "%s\t%s" % (p, v)
+                else:
+                    # Hack to separate the version number as the projects are versioned
+                    # PROJECT_version
+                    v = v.split("_")[1]
+                    allpacks = self.getPackages(p,v)
+                    if allpacks == None:
+                        continue
+                    for (pa, ve) in allpacks.items():
+                        if self.options.filter:
+                            if re.search(self.options.filter, pa):
+                                print "%s\t%s\t%s\t%s" % (p, v, pa, ve)
+                        else:
+                            print "%s\t%s\t%s\t%s" % (p, v, pa, ve)
+
+    def traverseDependencies(self, project, version, alreadyDone = []):
+        """ Recursively traverse all dependencies.
+        Dependencies are looked up from SVN using the getDependencyMethod.
+        A complete list of tuples (project, version) is returned"""
+        self.log.debug("TraverseDeps %s,%s" % (project, version))
+        self.log.debug(alreadyDone)
+        deps = self.getDependencies(project, version)
+        alreadyDone.append((project, version))
+        ndeps = deps
+        for d in deps:
+            if not d in alreadyDone:
+                tmpDeps = self.traverseDependencies(d[0], d[1], alreadyDone)
+                for td in tmpDeps:
+                    if not td in alreadyDone:
+                        alreadyDone.append(td)
+                    if not td in ndeps:
+                        ndeps.append(td)
+        return ndeps
+
+    def getDependencies(self, p, v):
+        """ Get the dependencies for a single project """
+        # Cleanup the project name and version and get the SVN URL
+        self.log.debug("Processing dependencies for %s %s" % (p, v))
+        tagpath = self.getTagSvnPath(p, v)
+        if (p != "LCGCMT" and not self.checkSvnPathExists(tagpath)):
+            raise Exception("Project %s %s not found - SVN path: %s" %(p, v, tagpath))
+
+        projcmt=getProjectCmt(tagpath).strip()
+        deps = []
+        for l in projcmt.splitlines():
+            m = re.match("\s*use\s+(\w+)\s+(\w+)", l)
+            if m != None:
+                dp = m.group(1)
+                dv = m.group(2)
+                deps.append((dp, dv))
+        return deps
+
+
+    def getTagSvnPath(self, project, version, isProject=True):
+        """ returns the SVN path for the tag """
+        if isProject:
+            (proj,ver)=translateProject(project,version)
+        else:
+            (proj, ver) = project, version
+
+        tagpath = ""
+        if proj.upper().startswith("GAUDI"):
+            tagpath = gaudisvn.url(proj,ver, isProject)
+        else:
+            tagpath=lbsvn.url(proj,ver, isProject)
+
+        self.log.debug("Svn Path for the tag:" + tagpath)
+        return tagpath
+
+    def getPackages(self, p, v):
+        """ List the packages used by the project """
+        # First getting the project information
+
+        # Exclude LCGCMT, as we don't have the LCGCMTSYS in our repo...
+        if p.upper() == "LCGCMT":
+            return None
+
+        # Special case for Gaudi, we need to check in GaudiRelease...
+        if p.upper() == "GAUDI":
+            svnpath = self.getTagSvnPath("GaudiRelease", v, False)
+            self.log.debug("Getting requirements from %s" % svnpath)
+            return  parseReq(getRequirements(svnpath))
+        else:
+            # Lookup the container name and the package path
+            container = containerFromProject(p, v)
+            svnpath = self.getTagSvnPath(container, v, False)
+            self.log.debug("Getting requirements from %s" % svnpath)
+            return  parseReq(getRequirements(svnpath))
+
+    def checkSvnPathExists(self, path):
+        """ Check if a SVN path exists """
+        pexists = False
+        rc = subprocess.call(["svn", "ls", path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if rc == 0:
+            pexists = True
+        return pexists
+
+if __name__=='__main__':
+    sUsage = """%prog [-r] project version
+     -n: Not recursive, only lists first level.
+     -P: Show projects only
+     -f: Filter package by name
+     -d: Prints debug output.
+      """
+    s = SvnProjectDepsScript(usage=sUsage)
+    sys.exit(s.run())
+
+
