@@ -19,6 +19,7 @@ use   TrackInterfaces v*      Tr
 
 use   TrackEvent      v*      Event
 use   DigiEvent       v*      Event
+use   TrackKernel     v*      Tr
 
 use   OTDet           v*      Det
 use   STDet           v*      Det
