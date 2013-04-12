@@ -39,5 +39,11 @@ public:
 				  const LHCb::RecVertex& pv,
 				  double& chi2,double& decaylength,double& decaylengtherr) const = 0 ;
 
+  /// Return the ip chi2 for a track (uses stateprovider, not good for
+  /// HLT: better call routine below with track->firstState())
+  virtual double ipchi2( const LHCb::Track& track, const LHCb::RecVertex& pv) const = 0 ;
+  
+  /// Return the ip chi2 for a track state
+  virtual double ipchi2( const LHCb::State& state, const LHCb::RecVertex& pv) const = 0 ;
 };
 #endif // TRACKINTERFACES_ITRACKVERTEXER_H

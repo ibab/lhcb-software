@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2013-04-12 - Wouter Hulsbergen
+ - added ITrackVertexer::ipchi2
+
 ! 2013-03-24 - Wouter Hulsbergen
  - prepare IVeloExpectation for change in HitPattern
 
