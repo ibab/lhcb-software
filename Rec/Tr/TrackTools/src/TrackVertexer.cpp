@@ -269,7 +269,7 @@ TrackVertexer::ipchi2( const LHCb::State& state, const LHCb::RecVertex& pv) cons
   // add the contribution from the extrapolation
   cov00 += dz*dz*trkcov(2,2) + 2*dz*trkcov(2,0) ;
   cov10 += dz*dz*trkcov(3,2) + dz*(trkcov(3,0)+trkcov(2,1)) ;
-  cov11 += dx*dx*trkcov(3,3) + 2*dz*trkcov(3,1) ;
+  cov11 += dz*dz*trkcov(3,3) + 2*dz*trkcov(3,1) ;
   
   // add the contribution from pv Z
   cov00 += tx*tx*pvcov(2,2)  -  2*tx*pvcov(2,0) ;
