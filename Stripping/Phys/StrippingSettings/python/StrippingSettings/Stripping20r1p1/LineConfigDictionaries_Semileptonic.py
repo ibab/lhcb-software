@@ -2,6 +2,109 @@
 #  Line config dictionaries for Semileptonic WG
 #
 
+B2XTauNu = {
+    'BUILDERTYPE'       : 'B2XTauNuAllLinesConf',
+    'CONFIG'    :{
+    'Prescale_B0d2DstarTauNu'        : 1.0,
+    'Prescale_B0d2DTauNu'            : 1.0,
+    'Prescale_Bu2D0TauNu'            : 1.0,
+    'Prescale_B0s2DsTauNu'           : 1.0,
+    'Prescale_Bc2JpsiTauNu'          : 1.0,
+    'Prescale_B0d2DdoubleStarTauNu'  : 1.0,
+    'Postscale'   : 1.0 ,
+    #B cuts
+    'B_BPVDIRA'       : 0.999,
+    #B combination cuts
+    'B_DeltaM_low'       : -2579.0, #MeV
+    'B_DeltaM_high'      : 300.0,   #MeV
+    'B_DOCAMAX'          : 0.13,  #mm
+    'B_upperDeltaM_low'  : 720.0,   #MeV
+    'B_upperDeltaM_high' : 1721.0,  #MeV
+    #D kaon cuts
+    'D_K_PT'          : 150.0,  #MeV
+    'Dplus_K_PT'      : 1500.0, #MeV
+    'Ds_K_PT'         : 1500.0, #MeV
+    'D_K_TRCHI2DOF'   : 3.0,
+    'D_K_IPCHI2'      : 4.0,
+    'D_K_PIDK'        : -5.0,
+    'Dplus_K_PIDK'    : 0.0,
+    'Dplus_K_TRPCHI2' : 0.1,
+    #D pion cuts
+    'D_Pi_PT'         : 150.0, # MeV
+    'D_Pi_TRCHI2'     : 3.0,
+    'D_Pi_IPCHI2'     : 4.0,
+    'D_Pi_PIDK'       : 8.0,
+    'Dplus_Pi_TRPCHI2' : 0.1,
+    #D0-resonance parameters
+    'D0_MassW'        : 40.0,      #MeV, 100 in StdLooseD0 
+    'D0_BPVVDCHI2'    : 50.0,      #36 in StdLooseD0
+    'D0_DIRA'         : 0.999,
+    'D0_PT'           : 1600.0,    #MeV, 1.2 GeV in StdLooseD02KPi
+    'D0_VCHI2'        : 10.0,      #10 in StdLooseD0
+    #D0 combination cut
+    'D0_DOCAMAX'      : 0.1,     #mm, 0.5 mm in StdLooseD0
+    #D-resonance parameters
+    'D_MassW'         : 40.0,      #MeV, 100 in StdLooseDplus
+    'D_BPVVDCHI2'     : 50.0,      #36 in StdLooseDplus
+    'Ds_BPVVDCHI2'    : 36.0,      #shorter lifetime than Dplus 
+    'D_DIRA'          : 0.999,   #0.98 in StdLooseDplus
+    'D_PT'            : 1600.0,    #MeV, 1.2 in StdLooseDplus
+    'D_VCHI2'         : 10.0,      #30 in StdLooseDplus
+    'D_MIPCHI2'       : 10.0,
+    #Dstar-resonance parameters
+    'slowPi_TRCHI2DOF' : 3.0,
+    'slowPi_PT'        : 110.0,    #MeV
+    'Dstar_PT'         : 1250.0,   #MeV, 1250 in StdLooseD*
+    'Dstar_VCHI2'      : 10.0,     #MeV, 25 in StdLooseD*WithD02KPi 
+    'Dstar_MassW'      : 50.0,     #MeV, 50 MeV in StdLooseD*WithD02KPi
+    'Dstar_DeltaM_low'  : 135.0,
+    'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD*
+    #Muon and J/psi cuts
+    'Muon_TRCHI2DOF'    : 3.0,
+    'Muon_PT'           : 1000.0,  #MeV
+    'Jpsi_MassW'        : 80.0,    #MeV, 100 in StdLooseJpsi
+    'Jpsi_VCHI2'        : 9.0,   #25 in StdLooseJpsi
+    'Jpsi_PT'           : 2000.0,  #MeV
+     #Cuts on single pions which are used to form the D_1(2420)0 from D* and pion
+    'D1_Pi_IPCHI2' : 4.0,
+    'D1_Pi_TRCHI2' : 3.0,
+    'D1_Pi_PIDK'   : 8.0,
+    #D1(2420) and D*2(2460) cuts
+    'D1_VCHI2'         : 25.0,
+    'D1_PT'            : 500.0,  #MeV
+    'D1_DeltaM_low'    : 350.0,  #MeV
+    'D1_DeltaM_high'   : 450.0,  #MeV
+    'D1_MassW'         : 300.0,  #MeV
+    #Ghost Prob cut on all tracks apart from slow pion
+    'TRGHP'             : 0.4,
+    #Slow pion ghost prob
+    'TRGHP_slowPi'      : 0.6
+    },
+    'STREAMS' : {
+    'BhadronCompleteEvent' : [
+    #'StrippingBd2DstarTauNuForB2XTauNu',
+    #'StrippingBd2DstarTauNuWSForB2XTauNu',
+    #'StrippingBd2DstarTauNuNonPhysTauForB2XTauNu',
+    #'StrippingBd2DTauNuForB2XTauNu',
+    #'StrippingBd2DTauNuWSForB2XTauNu',
+    #'StrippingBd2DTauNuNonPhysTauForB2XTauNu',
+    'StrippingBu2D0TauNuForB2XTauNu',
+    'StrippingBu2D0TauNuWSForB2XTauNu',
+    'StrippingBu2D0TauNuNonPhysTauForB2XTauNu'
+    #'StrippingBc2JpsiTauNuForB2XTauNu',
+    #'StrippingBc2JpsiTauNuNonPhysTauForB2XTauNu',
+    #'StrippingBs2DsTauNuForB2XTauNu',
+    #'StrippingBs2DsTauNuWSForB2XTauNu',
+    #'StrippingBs2DsTauNuNonPhysTauForB2XTauNu',
+    #'StrippingBd2DdoubleStarTauNuForB2XTauNu',
+    #'StrippingBd2DdoubleStarTauNuWSForB2XTauNu',
+    #'StrippingBd2DdoubleStarTauNuNonPhysTauForB2XTauNu'
+    ]
+    },
+    'WGs'    : ['Semileptonic']
+    }
+
+
 B2DHHHForBXX = {
     'BUILDERTYPE' : 'B2DHHHForBXXLinesConf',
     'CONFIG' : {

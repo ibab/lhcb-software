@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-13 - Mika Vesterinen
+ - Changes to B2XTauNu lines in Semileptonic dictionaries for 20r0p1 and 20r1p1
+
 ! 2013-04-12 - Anton Poluektov 
  - Tighten proton PID in D0PPbarFULLDST in B2OC
 

@@ -2,67 +2,6 @@
 #  Line config dictionaries for Semileptonic WG
 #
 
-B2DHHHForBXX = {
-    'BUILDERTYPE' : 'B2DHHHForBXXLinesConf',
-    'CONFIG' : {
-    "PreScale"      : 1.0   # adimensional
-    ,"GEC_nLongTrk"  : 250   # adimensional
-    ,"TRCHI2"        : 3.0   # adimensional
-    ,"GHOSTPROB_MAX" : 0.35  # adimensional
-    ,"KaonPIDK"      : 4.0   # adimensional
-    ,"PionPIDK"      : 2.0   # adimensional
-    ,"dau_PT_MIN"    : 200   # MeV -> was 400
-    ,"dau_MIPCHI2DV" :   5   # adimensional
-    ,"D_MASS_MIN"    : 650   # MeV                 
-    ,"D_MASS_MAX"    : 1400  # MeV                 
-    ,"D_PT_MIN"      : 1500  # MeV                 
-    ,"D_AMAXDOCA"    : 0.5   # mm                  
-    ,"D_DOCACHI2_MAX":   6   # adimensional        
-    ,"D_VFASPF"      :   4   # adimensional
-    ,"D_BPVVDCHI2"   : 100   # adimensional
-    ,"Lc_MASS_MIN"   :  700  # MeV
-    ,"Lc_MASS_MAX"   : 1370  # MeV
-    ,"Lc_PT_MIN"     : 1500  # MeV
-    ,"Lc_AMAXDOCA"   : 0.5   # mm
-    ,"Lc_DOCACHI2_MAX":  6   # adimensional
-    ,"Lc_VFASPF"     :   4   # adimensional    
-    ,"Lc_BPVVDCHI2"  : 100   # adimensional
-    ,"A1_MASS_MIN"   : 400   # MeV
-    ,"A1_MASS_MAX"   : 3400  # MeV
-    ,"A1_PT_MIN"     : 1500  # MeV
-    ,"A1_AMAXDOCA"   : 0.5   # mm              
-    ,"A1_VFASPF"     :   4   # adimensional    
-    ,"A1_BPVVDCHI2"  : 100   # adimensional    
-    ,"B_MASS_MIN"    : 3600  # MeV
-    ,"B_MASS_MAX"    : 4950  # MeV
-    ,"B_PT_MIN"      : 1500  # MeV
-    ,"B_DOCACHI2_MAX": 50    # adimensional     
-    ,"B_VFASPF"      : 10    # adimensional
-    ,"B_BPVVDCHI2"   : 100   # adimensional
-    ,"B_DZ"          : 0.0   # mm
-    ,"B_D_deltamass_MIN" : 2500 #MeV              
-    ,"B_D_deltamass_MAX" : 4550 #MeV
-    ,"PiPi_MASS_MAX"                     :  400  #MeV            (500)
-    ,"PiPi_DOCACHI2_MAX"                 :   15  # adimensional  (15)
-    ,"PiPi_SUMPT_MIN"                    :  200  #MeV            (600)
-    ,"PiPi_CHI2NDF"                      :    4  # adimensional  (3)
-    ,"Lb_MASS_MIN"                       : 2800  # MeV               
-    ,"Lb_MASS_MAX"                       : 4800  # MeV               
-    ,"Lb_PT_MIN"                         : 1500  # MeV
-    ,"Lb_DOCACHI2_MAX"                   : 50    # adimensional
-    ,"Lb_VFASPF"                         : 10    # adimensional
-    ,"Lb_BPVVDCHI2"                      : 100   # adimensional
-    ,"Lb_DZ"                             : 0.0   # mm
-    ,"Lb_Lc_deltamass_MIN"               : 1900  #MeV                         
-    ,"Lb_Lc_deltamass_MAX"               : 4150  #MeV             
-    ,"LcStar_MASS_MIN"                   :    0  #
-    ,"LcStar_MASS_MAX"                   :  700  #MeV            (700)
-    },
-    'STREAMS' : ['BhadronCompleteEvent'],
-    'WGs'    : ['Semileptonic']
-    }
-
-
 B2XTauNu = {
     'BUILDERTYPE'       : 'B2XTauNuAllLinesConf',
     'CONFIG'    :{
@@ -141,9 +80,91 @@ B2XTauNu = {
     #Slow pion ghost prob
     'TRGHP_slowPi'      : 0.6
     },
+    'STREAMS' : {
+    'BhadronCompleteEvent' : [
+    'StrippingBd2DstarTauNuForB2XTauNu',
+    'StrippingBd2DstarTauNuWSForB2XTauNu',
+    'StrippingBd2DstarTauNuNonPhysTauForB2XTauNu',
+    'StrippingBd2DTauNuForB2XTauNu',
+    'StrippingBd2DTauNuWSForB2XTauNu',
+    'StrippingBd2DTauNuNonPhysTauForB2XTauNu',
+    'StrippingBu2D0TauNuForB2XTauNu',
+    'StrippingBu2D0TauNuWSForB2XTauNu',
+    'StrippingBu2D0TauNuNonPhysTauForB2XTauNu',
+    'StrippingBc2JpsiTauNuForB2XTauNu',
+    'StrippingBc2JpsiTauNuNonPhysTauForB2XTauNu',
+    #'StrippingBs2DsTauNuForB2XTauNu',
+    #'StrippingBs2DsTauNuWSForB2XTauNu',
+    #'StrippingBs2DsTauNuNonPhysTauForB2XTauNu',
+    'StrippingBd2DdoubleStarTauNuForB2XTauNu',
+    'StrippingBd2DdoubleStarTauNuWSForB2XTauNu',
+    'StrippingBd2DdoubleStarTauNuNonPhysTauForB2XTauNu'
+    ]
+    },
+    'WGs'    : ['Semileptonic']
+    }
+
+B2DHHHForBXX = {
+    'BUILDERTYPE' : 'B2DHHHForBXXLinesConf',
+    'CONFIG' : {
+    "PreScale"      : 1.0   # adimensional
+    ,"GEC_nLongTrk"  : 250   # adimensional
+    ,"TRCHI2"        : 3.0   # adimensional
+    ,"GHOSTPROB_MAX" : 0.35  # adimensional
+    ,"KaonPIDK"      : 4.0   # adimensional
+    ,"PionPIDK"      : 2.0   # adimensional
+    ,"dau_PT_MIN"    : 200   # MeV -> was 400
+    ,"dau_MIPCHI2DV" :   5   # adimensional
+    ,"D_MASS_MIN"    : 650   # MeV                 
+    ,"D_MASS_MAX"    : 1400  # MeV                 
+    ,"D_PT_MIN"      : 1500  # MeV                 
+    ,"D_AMAXDOCA"    : 0.5   # mm                  
+    ,"D_DOCACHI2_MAX":   6   # adimensional        
+    ,"D_VFASPF"      :   4   # adimensional
+    ,"D_BPVVDCHI2"   : 100   # adimensional
+    ,"Lc_MASS_MIN"   :  700  # MeV
+    ,"Lc_MASS_MAX"   : 1370  # MeV
+    ,"Lc_PT_MIN"     : 1500  # MeV
+    ,"Lc_AMAXDOCA"   : 0.5   # mm
+    ,"Lc_DOCACHI2_MAX":  6   # adimensional
+    ,"Lc_VFASPF"     :   4   # adimensional    
+    ,"Lc_BPVVDCHI2"  : 100   # adimensional
+    ,"A1_MASS_MIN"   : 400   # MeV
+    ,"A1_MASS_MAX"   : 3400  # MeV
+    ,"A1_PT_MIN"     : 1500  # MeV
+    ,"A1_AMAXDOCA"   : 0.5   # mm              
+    ,"A1_VFASPF"     :   4   # adimensional    
+    ,"A1_BPVVDCHI2"  : 100   # adimensional    
+    ,"B_MASS_MIN"    : 3600  # MeV
+    ,"B_MASS_MAX"    : 4950  # MeV
+    ,"B_PT_MIN"      : 1500  # MeV
+    ,"B_DOCACHI2_MAX": 50    # adimensional     
+    ,"B_VFASPF"      : 10    # adimensional
+    ,"B_BPVVDCHI2"   : 100   # adimensional
+    ,"B_DZ"          : 0.0   # mm
+    ,"B_D_deltamass_MIN" : 2500 #MeV              
+    ,"B_D_deltamass_MAX" : 4550 #MeV
+    ,"PiPi_MASS_MAX"                     :  400  #MeV            (500)
+    ,"PiPi_DOCACHI2_MAX"                 :   15  # adimensional  (15)
+    ,"PiPi_SUMPT_MIN"                    :  200  #MeV            (600)
+    ,"PiPi_CHI2NDF"                      :    4  # adimensional  (3)
+    ,"Lb_MASS_MIN"                       : 2800  # MeV               
+    ,"Lb_MASS_MAX"                       : 4800  # MeV               
+    ,"Lb_PT_MIN"                         : 1500  # MeV
+    ,"Lb_DOCACHI2_MAX"                   : 50    # adimensional
+    ,"Lb_VFASPF"                         : 10    # adimensional
+    ,"Lb_BPVVDCHI2"                      : 100   # adimensional
+    ,"Lb_DZ"                             : 0.0   # mm
+    ,"Lb_Lc_deltamass_MIN"               : 1900  #MeV                         
+    ,"Lb_Lc_deltamass_MAX"               : 4150  #MeV             
+    ,"LcStar_MASS_MIN"                   :    0  #
+    ,"LcStar_MASS_MAX"                   :  700  #MeV            (700)
+    },
     'STREAMS' : ['BhadronCompleteEvent'],
     'WGs'    : ['Semileptonic']
     }
+
+
    
 
 CharmFromBSemiForHadronAsy = {
