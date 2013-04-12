@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2013-04-12 - Marco Clemencic
+ - Fixed an error that was causing a segfault in clang++.
+
 ! 2013-04-11 - Vanya Belyaev
  - Particles35.cpp: bug fix 
 

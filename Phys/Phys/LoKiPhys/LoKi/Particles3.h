@@ -212,7 +212,7 @@ namespace LoKi
         PARTICLE last  ,
         const LoKi::Vertices::ImpactParamTool& tool ) 
       : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-      , LoKi::Keeper<LHCb::Particle>( first , last ) 
+      , LoKi::UniqueKeeper<LHCb::Particle>( first , last ) 
       , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
       {}      
       /** templated contructor 
@@ -227,7 +227,7 @@ namespace LoKi
         PARTICLE                               first , 
         PARTICLE                               last  )
         : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-        , LoKi::Keeper<LHCb::Particle>( first , last ) 
+        , LoKi::UniqueKeeper<LHCb::Particle>( first , last ) 
         , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
       {} 
       // ======================================================================
