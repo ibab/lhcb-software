@@ -21,13 +21,14 @@
 #
 # =============================================================================
 package             BenderTools
-version             v22r4p1
+version             v22r5
 
 # =============================================================================
 branches            cmt doc python scripts 
 
 # ================= dependencies ==============================================
 use                 Bender         v*  Phys 
+use                 PhysConf       v*  Phys 
 
 # ================= standard patterns =========================================
 apply_pattern       install_python_modules 
