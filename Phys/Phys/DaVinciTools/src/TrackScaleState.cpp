@@ -208,15 +208,26 @@ private:  // disable everything that is not needed
   // ==========================================================================
 private: // 
   // ==========================================================================
-  /// update the data from CONDDB 
-  StatusCode i_updateDATA () ;                   // update the data from CONDDB 
+  /// update the momentum scale data from CONDDB 
+  StatusCode i_updateSCALE () ;                   // update the data from CONDDB 
+  /// update the covariance scale from CONDDB 
+  StatusCode i_updateCOV2  () ;                   // update the data from CONDDB 
   /** the  action for new run:
    *  - store the magnet polarity      (from magnet field service )
    *  - store the run-dependent offset (taking run number from ODIN)
    *  @param run new run number 
    */
   void       new_run      ( const unsigned int run ) ; 
-  // the  action for new run 
+  // ==========================================================================
+private:
+  // ==========================================================================
+  /** scale the covarince matrix 
+   *  @param mtrx (in/out) the marix 
+   *  @param sf   scale factor 
+   */
+  inline void scaleCov       
+  (  Gaudi::TrackSymMatrix& mtrx , 
+     const double           sf    ) const ;
   // ==========================================================================
 private : // some local private class 
   // ==========================================================================
@@ -261,30 +272,13 @@ private : // some local private class
     double       m_delta  ;
     // ========================================================================
   };
-  /** @class  
-   *  Helper class for momentum error calibration 
-   *  @author C.Voss
-   */
-  class StateCovModify
-  {
-  public:
-    
-    StateCovModify();
-    ~StateCovModify();
-    
-    Gaudi::TrackSymMatrix CorrectCovMatrix( LHCb::State* state );
-    
-  private:
-    
-    void initmap();
-    double getF(double p);
-    std::map<std::vector<double>,double> _pSel;
-  };
   // ==========================================================================
 private: // properties 
   // ==========================================================================
   /// the condition path in CONDDB       (property) 
-  std::string m_cond_path   ; //   the condition path in CONDDB      (property) 
+  std::string m_cond_path     ; //   the condition path in CONDDB    (property) 
+  /// the condition path in CONDDB       (property) 
+  std::string m_cond_path_cov ; //   the condition path in CONDDB    (property) 
   /// =========================================================================
   // the first  histogram for scaler     (property) 
   std::string m_h1_str      ;          // the first  histogram       (property) 
@@ -296,6 +290,8 @@ private: // properties
   double      m_delta       ;          // delta                      (property) 
   // deltaScale  (property)  
   double      m_deltaScale  ;          // deltaScale                 (property) 
+  // scale factors for covariance matrix  (property) 
+  std::string m_hc_str      ;          // scale factors for covariance matrix
   /// input location for tracks  (property) 
   std::string m_input       ;       // input location for tracks     (property) 
   // ==========================================================================
@@ -309,17 +305,21 @@ private:
 private: // data 
   // ==========================================================================  
   // the first  histogram for scaler     (property) 
-  TH2D        m_h1          ;          // the first  histogram      
+  TH2D        m_h1           ;          // the first  histogram      
   // the second histogram for the scaler (property) 
-  TH2D        m_h2          ;          // the second histogram      
+  TH2D        m_h2           ;          // the second histogram      
   // the run-dependent offsets           (property) 
-  TH1D        m_offsets     ;          // the run-dependent offsets
-  /// the condition itself 
-  Condition* m_condition    ;     // the condition itself 
+  TH1D        m_offsets      ;          // the run-dependent offsets
+  // the scale factors for covariance matrix (property) 
+  TH1D        m_hc           ;          // scale factors for covarinace 
+  /// the condition itself (for momentum scale) 
+  Condition* m_condition     ;     // the condition itself  (momentum)
+  /// the condition itself (for covarinace rescale 
+  Condition* m_condition_cov ;     // the condition for covariance 
   /// the run-offset for current run 
-  double m_run_offset       ;     // the run-offset  for current cut 
+  double m_run_offset        ;     // the run-offset  for current cut 
   /// magnet polarity for current run 
-  bool   m_down             ;     // magnet polarity for current run
+  bool   m_down              ;     // magnet polarity for current run
   /// the actual scaler
   std::auto_ptr<CalScale> m_scaler      ;   // the actual scaler
   /// magnetic field service 
@@ -384,9 +384,9 @@ TrackScaleState::CalScale::CalScale
   , m_mhisto ( mhisto )
   , m_delta  ( delta  ) 
 {}
-// ========================================================================
+// ============================================================================
 // destructor 
-// ========================================================================
+// ============================================================================
 TrackScaleState::CalScale::~CalScale(){}
 // ============================================================================
 // anonymous namespace to keep local functions
@@ -395,81 +395,31 @@ namespace
 {
   // ==========================================================================
   /// get the value from the histogram 
-  inline double histo_val ( const TH1D&  histo , const double x     )
+  inline double histo_val 
+  ( const TH1D&  histo     , 
+    const double x         , 
+    const double def   = 0 )
   {
     TAxis* axis = histo.GetXaxis() ;
-    if ( 0 == axis ) { return 0 ; }                     // RETURN
+    if ( 0 == axis ) { return def ; }                     // RETURN
     const int bin = axis->FindBin ( x )  ;
-    if ( 0 == bin || axis->GetNbins() + 1 ==  bin ) { return 0 ; } 
+    if ( 0 == bin || axis->GetNbins() + 1 ==  bin ) { return def ; } // RETURN
     //
     return histo.GetBinContent ( bin ) ;
   } 
   // ==========================================================================
 }
-// ==========================================================================
-// StateCovModify implementation
-// ==========================================================================
-// constructor 
-// ==========================================================================
-TrackScaleState::StateCovModify::StateCovModify()
+// ============================================================================
+// scale the covarince matrix 
+// ============================================================================
+void TrackScaleState::scaleCov
+( Gaudi::TrackSymMatrix& mtrx , 
+  const double           sf   ) const 
 {
-  TrackScaleState::StateCovModify::initmap();
-}
-// ==========================================================================
-// destructor 
-// ==========================================================================
-TrackScaleState::StateCovModify::~StateCovModify(){}
-// ==========================================================================
-//  StateCovModify functions
-// ==========================================================================
-Gaudi::TrackSymMatrix TrackScaleState::StateCovModify::CorrectCovMatrix( LHCb::State* state )
-{
-  Gaudi::TrackSymMatrix Cov = state->covariance();
-  double CorrFactor = getF( state->p() );
-  for (int i = 0; i < 5; ++i ) 
-    {
-      Cov[i][4] *= CorrFactor;
-      Cov[4][i] *= CorrFactor;
-    } 
-  return Cov;
-}
-// ==========================================================================
-void TrackScaleState::StateCovModify::initmap()
-{
-  double pBins[] = { 3.e3, 8.e3, 10.e3, 12.e3, 14.e3, 16.e3,
-		     18.e3, 20.e3, 22.e3, 24.e3, 26.e3, 29.e3,
-		     33.e3, 37.e3, 41.e3, 45.e3, 51.e3, 59.e3,
-		     67.e3, 83.e3, 106.e3, 136.e3, 300.e3 };    
-  
-  double pF[] = { 1.5981159181787334, 1.5344751530704794,
-		  1.524508127341563, 1.5108670852000343,
-		  1.5034082640270672, 1.5033674384307274,
-		  1.5045598852805602, 1.5125798396304568, 
-		  1.5077244607357643, 1.5118973093049883,
-		  1.5205950755646001, 1.5326659542372139,
-		  1.547747931811412, 1.5418316282388613,
-		  1.5567059784108734, 1.5610376660430338,
-		  1.5795891863730962, 1.5907031004036067,
-		  1.602830230226908, 1.6122234643961293,
-		  1.6261412260004753, 1.5800090318521556
-  };
-  
-  for( int i = 0; i < 22; ++i)
-    {
-      std::vector<double> h ;
-      h.push_back(pBins[i]);
-      h.push_back(pBins[i+1]) ;
-      _pSel.insert ( std::pair<std::vector<double>,double>(h,pF[i]) );
-    }
-}
-// ==========================================================================
-double  TrackScaleState::StateCovModify::getF(double p)
-{ 
-  std::map<std::vector<double>,double>::iterator it;
-  double ret(1e-99);
-  for(it = _pSel.begin(); it != _pSel.end(); it++)
-    if(p > (it->first).at(0) && p < (it->first).at(1) ) ret = it->second ;
-  return ret;
+  //
+  for (int i = 0; i < 5; ++i ) { mtrx [i][4] *= sf ; }  // scale matrix 
+  mtrx [4][4] *= sf ;                                   // squared correction 
+  //
 }
 // ============================================================================
 // SOME MACROS
@@ -484,23 +434,27 @@ TrackScaleState::TrackScaleState
   ISvcLocator*       pSvc )
   : base_class ( name , pSvc )
 //
-  , m_cond_path     ( "/dd/Conditions/Calibration/LHCb/MomentumScale" ) 
+  , m_cond_path     ( "/dd/Conditions/Calibration/LHCb/MomentumScale"   ) 
+  , m_cond_path_cov ( "/dd/Conditions/Calibration/LHCb/CovarianceScale" ) 
   , m_h1_str        ()  // the first  histogram for state scaling 
   , m_h2_str        ()  // the second histogram for state scaling 
   , m_offsets_str   ()  // run-dependent offsets for the scaling 
   , m_delta         ( 2.4e-4 ) 
   , m_deltaScale    ( 0      )
+  , m_hc_str        ()  // the histogram for covariance scaling 
   , m_input         ( LHCb::TrackLocation::Default )
-  // scale factor for slopes (==z-scale) 
+// scale factor for slopes (==z-scale) 
   , m_slope         ( 1.0 )  // scale factor for slopes (==z-scale)
-  // compensation term for slope scale 
+// compensation term for slope scale 
   , m_delta_slope   ( 0.0 )  //  compensation term for slope scale 
-  //
-  , m_h1            () 
-  , m_h2            () 
-  , m_offsets       ()
-  //
+//
+  , m_h1            ()  // the first histogram 
+  , m_h2            ()  // second histogram
+  , m_offsets       ()  // run-dependent off-sets 
+  , m_hc            ()  // histogram for covarinace matrix 
+//
   , m_condition     ( 0      )  
+  , m_condition_cov ( 0      )  
   , m_run_offset    ( 0      ) // the run-offset for the current run 
   , m_down          ( true   ) // field polarity for the current run 
   , m_scaler        () 
@@ -568,7 +522,6 @@ StatusCode TrackScaleState::initialize()
   StatusCode sc = GaudiAlgorithm::initialize(); 
   if ( sc.isFailure() ) { return sc ; }
   //
-  //  
   // if all histograms from the options are fine, just use them  
   //
   if ( Gaudi::Parsers::parse ( m_h1      , m_h1_str      ).isSuccess () && 
@@ -577,13 +530,16 @@ StatusCode TrackScaleState::initialize()
   {
     //
     m_scaler.reset ( new CalScale ( &m_h1 , &m_h2 , m_delta ) ) ;
-    info() << "Use the momentum calibration from options" << endreq ;
+    info() << "Use the momentum   calibration from options" << endreq ;
   }
   else if ( !m_cond_path.empty() && existDet<DataObject>( detSvc() , m_cond_path ) ) 
   {
     //
-    try {  
-      registerCondition ( m_cond_path , m_condition , &TrackScaleState::i_updateDATA );
+    try 
+    {  
+      registerCondition ( m_cond_path                     , 
+                          m_condition                     , 
+                          &TrackScaleState::i_updateSCALE );
     }
     catch ( GaudiException &e ) 
     {
@@ -594,12 +550,43 @@ StatusCode TrackScaleState::initialize()
     sc = runUpdate () ;
     if ( sc.isFailure() ) { return Error ( "Unable update Run" , sc ) ; }
     //
-    info() << "Use the momentum calibration form CONDDB"  << endreq ;
+    info() << "Use the momentum   calibration from CONDDB"  << endreq ;
   }
   else 
   {
-    return Error ( "Invalid setting of histogam source" ) ;           // RETURN 
+    return Error ( "Invalid setting of histogram source(1)" ) ;           // RETURN 
   }
+  //  scale covariance matrices 
+  if ( Gaudi::Parsers::parse ( m_hc      , m_hc_str      ).isSuccess () ) 
+  {
+    info() << "Use the covariance calibration from options" << endreq ;
+  }
+  else if ( !m_cond_path_cov.empty() && 
+            existDet<DataObject>( detSvc() , m_cond_path_cov ) ) 
+  {
+    //
+    try 
+    {  
+      registerCondition ( m_cond_path_cov                , 
+                          m_condition_cov                ,
+                          &TrackScaleState::i_updateCOV2 );
+    }
+    catch ( GaudiException &e ) 
+    {
+      error () << e << endmsg;
+      return Error ( "Unable register condition " + m_cond_path_cov , e.code() ) ;  
+    }
+    //
+    sc = runUpdate () ;
+    if ( sc.isFailure() ) { return Error ( "Unable update Run" , sc ) ; }
+    //
+    info() << "Use the covariance calibration from CONDDB"  << endreq ;
+  }
+  else 
+  {
+    return Error ( "Invalid setting of histogam source(2)" ) ;           // RETURN 
+  }
+  
   //
   if ( 0 == m_scaler.get() ) { return Error ( "Invalid Scaler" ) ; }  // RETURN 
   //
@@ -686,7 +673,7 @@ void TrackScaleState::new_run ( const unsigned int run )
 // ============================================================================
 // update histos from CONDDB 
 // ============================================================================
-StatusCode TrackScaleState::i_updateDATA ()
+StatusCode TrackScaleState::i_updateSCALE ()
 {
   //
   if ( !m_condition ) { return StatusCode::FAILURE ; }  //               RETURN
@@ -760,14 +747,71 @@ StatusCode TrackScaleState::i_updateDATA ()
   //
   return StatusCode::SUCCESS;
 }
-
+// ============================================================================
+// update histos from CONDDB 
+// ============================================================================
+StatusCode TrackScaleState::i_updateCOV2 ()
+{
+  //
+  std::cout << "  I am here 1 " << std::endl ;
+  //
+  if ( !m_condition_cov ) { return StatusCode::FAILURE ; }  //               RETURN
+  //
+  //
+  std::cout << "  I am here 2 " << std::endl ;
+  //
+  const TH1D* h1 = 0 ;
+  //
+  try 
+  {
+    //
+    std::cout << "  I am here 3-1" << std::endl ;
+    std::cout << m_condition_cov->toXml() << std::endl ;
+    std::cout << "  I am here 3-2" << std::endl ;
+    //
+    h1 = DetDesc::Params::paramAsHisto1D ( m_condition_cov , "Scale"   ) ;
+    //
+    std::cout << "  I am here 4 " << std::endl ;
+    //
+   if ( 0 == h1 ) 
+    { 
+      ++counter("#CONDB problem") ;
+      return Error ( "Unable to get 'Scale' from CONDDB") ; 
+    }
+   //
+   std::cout << "  I am here 5 " << std::endl ;
+   //
+  }
+  catch ( GaudiException& e ) 
+  {
+    ++counter("#CONDB problem") ;
+    return Error("Unable to get data from CONDDB" , e.code() ) ; // RETURN
+  }
+  //
+  std::cout << "  I am here 6 " << std::endl ;
+  //
+  info () << " Condition: " << m_condition_cov -> name()    << "   "
+          << ( m_condition_cov ->isValid() ? "  Valid;  " : "Invalid; " ) 
+          << " Validity: "  << m_condition_cov -> validSince ().format ( true ) 
+          << " -> "         << m_condition_cov -> validTill  ().format ( true )  << endreq ;
+  //
+  h1 -> Copy ( m_hc      ) ;
+  //
+  ++counter("#CONDB update") ;
+  //
+  return StatusCode::SUCCESS;
+}
 // ============================================================================
 // specific algorithm execution 
 // ============================================================================
 StatusCode TrackScaleState::execute ()
 {
   // get the tracks to scale
-  LHCb::Tracks* trackCont = getIfExists<LHCb::Tracks> ( m_input );
+  LHCb::Tracks* tracks = getIfExists<LHCb::Tracks> ( m_input );
+  //
+  if ( LIKELY ( NULL!= tracks) ) {}
+  else 
+  { return Warning ( "No tracks at location '" + m_input + "'" , StatusCode::SUCCESS ) ; }
   //
   /// perform the action for new run 
   const LHCb::ODIN* odin = get<LHCb::ODIN>( evtSvc() , LHCb::ODINLocation::Default) ;
@@ -778,51 +822,61 @@ StatusCode TrackScaleState::execute ()
   // get the magnetic field sign
   const int polarity = m_down ? -1 : 1 ;
   //
-  StatEntity& scale = counter("SCALE") ;
+  StatEntity& scale = counter("SCALE"     ) ;
+  StatEntity& cov2  = counter("SCALECOV2" ) ;
   //
-  StateCovModify CovMod;
   // loop and do the scaling
-  if ( LIKELY (NULL!=trackCont) ) {
-    for ( LHCb::Tracks::iterator it = trackCont->begin() ; 
-          it != trackCont->end(); ++it )
+  for ( LHCb::Tracks::iterator itrack = tracks->begin() ; 
+        itrack != tracks->end(); ++itrack )
+  {
+    LHCb::Track* track = *itrack ;
+    if ( 0 == track ) { continue ; }
+    //
+    // scale only LONG tracks 
+    if ( LHCb::Track::Long != track->type () ) { continue ; } // scale only Long tracks 
+    //
+    typedef std::vector<LHCb::State*> STATES ;
+    const STATES& states = track->states();
+    //
+    const int idp = track->charge()*polarity; // charge * magnet polarity
+    //
+    const double p = track->p() ;
+    //
+    // scale factor for the covariace matrix
+    const double sf = histo_val ( m_hc , p , 1.0 ) ;
+    //
+    cov2 += sf ;
+    // loop over the states for the given track 
+    for ( STATES::const_iterator istate = states.begin(); 
+          istate != states.end(); ++istate ) 
     {
-      LHCb::Track* track = *it ;
-      if ( 0 == track ) { continue ; }
+      LHCb::State* state = *istate ;
+      if ( 0 == state ) { continue ; }
       //
-      typedef std::vector<LHCb::State*> STATES ;
-      const STATES& theStates = track->states();
+      const double qOverP = state->qOverP(); 
       //
-      const int idp = track->charge()*polarity; // charge * magnet polarity
+      const double tx = state -> tx () ;
+      const double ty = state -> ty () ;
+      // 
+      // calculate  the scale factor :
+      const double theScale = m_scaler -> eval ( tx , ty , idp , m_run_offset ) 
+        + m_deltaScale + m_delta_slope ;
       //
-      // loop over the states for the given track 
-      for ( STATES::const_iterator iterState = theStates.begin(); 
-            iterState != theStates.end(); ++iterState ) 
-      {
-        LHCb::State* state = *iterState ;
-        if ( 0 == state ) { continue ; }
-        //
-        const double qOverP = state->qOverP(); 
-        //
-        const double tx = state -> tx () ;
-        const double ty = state -> ty () ;
-        // 
-        // calculate  the scale factor :
-        const double theScale = m_scaler -> eval (tx , ty , idp , m_run_offset ) 
-          + m_deltaScale + m_delta_slope ;
-        //
-        scale += theScale ;
-        //
-        // the actual scaling: 
-        state -> setQOverP ( qOverP / theScale ) ;          // THE ACTUAL SCALING 
-        //
-        // scale slopes:                                    // ATTENTION!
-        state -> setTx ( tx * m_slope ) ;
-        state -> setTy ( ty * m_slope ) ;      
-        //
-	state -> setCovariance ( CovMod.CorrectCovMatrix( state ) ); //Scaling of the covMatrix
-      } //                                           end of loop over the states   
-    } //                                             end loop over the tracks 
-  } //                                             if tracks exist
+      scale += theScale  ;
+      //
+      // the actual scaling: 
+      //
+      state -> setQOverP ( qOverP / theScale ) ;          // THE ACTUAL SCALING 
+      //
+      // scale slopes:                                    // ATTENTION!
+      //
+      state -> setTx ( tx * m_slope ) ;
+      state -> setTy ( ty * m_slope ) ;      
+      //
+      // scale the covariance matrix 
+      scaleCov ( state -> covariance () , sf ) ;     // scale covariance matrix 
+    } //                                           end of loop over the states   
+  } //                                             end loop over the tracks 
   //
   return StatusCode::SUCCESS;
 }

@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-04-13 - Vanya Belyaev
+
+ - TrackScaleState
+   TrackSmearState - make use of new conditions in CONDDB/SIMCOND  
+
 !========================= DaVinciTools v23r6 2013-04-05 =========================
 
 ! 2013-03-27 - Anton Poluektov 
