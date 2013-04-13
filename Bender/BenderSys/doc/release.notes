@@ -23,6 +23,18 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v22r5>  2013-03-15 Bender v22r5   based on the DaVinci v33r3</A>
+
+It is rather similar to v22r4*-family, but based on the fresh DaVinci v33r3 
+picking up all goodies and bug-fixes.
+
+<li>
+To minimize code duplication the verison of MicroDST-module 
+from PhysConf package is in use. 
+For certain (rare) situations it could cause 
+some conflicts (to be resolved for next version of PhysConf)
+
+
 <A NAME=v22r4p2>2013-03-14 Bender v22r4p2 based on the DaVinci v33r2</A>
 <A NAME=v22r4p1>2013-03-13 Bender v22r4p1 based on the DaVinci v33r2</A>
 
