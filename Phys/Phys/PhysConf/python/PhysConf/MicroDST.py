@@ -41,7 +41,11 @@ def killDAQ ( nodes = [ '/Event/DAQ' , '/Event/pRec' ] , logger = None )  :
     #
     from Configurables import EventNodeKiller
     killer = EventNodeKiller ( "KillDAQ" )
-    killer.Nodes += nodes 
+
+    for node in nodes :
+        if node in killer.Nodes : continue 
+        killer.Nodes.append ( node ) 
+        
     try : 
         from Gaudi.Configuration import getConfigurable
         conf   = getConfigurable ( 'DaVinciEventInitSeq' ) 

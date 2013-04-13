@@ -5,6 +5,11 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2013-04-13 - Vanya Belyaev
+
+ - MicroDST: 
+    killDAQ - minor protection against the double deletion 
+
 !========================= PhysConf v1r19 2013-04-05 =========================
 
 ! 2013-03-24 - Vanya Belyaev
