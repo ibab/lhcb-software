@@ -83,7 +83,7 @@ def makeParser ( usage = None ,
         dest    = 'DataType'  ,
         type    = 'str'       , 
         help    = "``DataType''    attribute to be specified for DaVinci [default : %default]" ,
-        default = '2011'  
+        default = '2012'  
         )
     ## 
     parser.add_option (
@@ -195,6 +195,7 @@ def dataType ( files ) :
         elif 0 <= f.find ( 'Collision10' ) : dtype = '2010'
         elif 0 <= f.find ( 'Collision11' ) : dtype = '2011'
         elif 0 <= f.find ( 'Collision12' ) : dtype = '2012'
+        elif 0 <= f.find ( 'Collision13' ) : dtype = '2013'
         elif 0 <= f.find ( 'MC09' ) :
             dtype = '2009'
             simu  = True 

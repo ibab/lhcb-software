@@ -52,9 +52,11 @@ __all__= (
     'treatPions'    , ## add information about pions 
     'treatKaons'    , ## add information about kaons 
     'treatProtons'  , ## add information about protons
+    'treatPhotons'  , ## add information about photons
     'treatMuons'    , ## add information about muons 
     'treatTracks'   , ## add information about the tracks
     'treatKine'     , ## add detailed information for particle ,
+    'fillMasses'    , ## masses of sub-combinations
     'addRecSummary' , ## add rec-summary information
     'addGecInfo'    , ## add some GEC-info 
     )
@@ -100,6 +102,9 @@ def _fill_initialize ( self ) :
     self._maxTrChi2   = MAXTREE ( ISBASIC & HASTRACK , TRCHI2DOF    )
     self._maxTrGhost  = MAXTREE ( ISBASIC & HASTRACK , TRGHOSTPROB  )
     self._minTrIPchi2 = MINTREE ( ISBASIC & HASTRACK , BPVIPCHI2()  )
+    #
+    self._min_CL_gamma  = MINTREE ( 'gamma' == ID , CL ) 
+    self._min_Et_gamma  = MINTREE ( 'gamma' == ID , PT ) / GeV 
     #
     ##
     self._EtC          = PINFO   ( 55001 , -100 * GeV ) 
@@ -147,7 +152,10 @@ def _fill_finalize   ( self ) :
     self._min_dll_Mu  = None 
     self._min_Pt      = None 
     self._min_Eta     = None 
-    self._max_Eta     = None 
+    self._max_Eta     = None
+    #
+    self._min_Et_gamma = None 
+    self._min_CL_gamma = None 
     #
     self._maxTrChi2   = None 
     self._maxTrGhost  = None 
@@ -253,6 +261,37 @@ def treatProtons ( self         ,
                          'n_proton'    + suffix       , 10        )
 
 # ==============================================================================
+## add photon information into n-tuple
+#  @param tup   n-tuple
+#  @param p     the particle 
+def treatPhotons ( self         ,
+                   tup          ,
+                   p            ,
+                   suffix  = '' ) :
+    
+    ## 
+    if hasattr ( p , 'particle' ) : p = p.particle() 
+    #
+    ## get all protons form decay tree
+    #
+    good   = LHCb.Particle.ConstVector()
+    p.children ( self._gamma , good ) 
+    #
+    sc = tup.column_float ( 'minEt_gamma'  + suffix , self._min_Et_gamma ( p ) ) 
+    sc = tup.column_float ( 'minCl_gamma'  + suffix , self._min_CL_gamma ( p ) ) 
+    #
+    tup.fArrayP ( 'e_photon'    + suffix       , P   / GeV , 
+                  'et_photon'   + suffix       , PT  / GeV , 
+                  'CL_photon'   + suffix       , CL        , 
+                  LHCb.Particle.Range ( good ) ,
+                  'n_photon'    + suffix       , 10        )
+    tup.fArrayP ( 'eta_photon'  + suffix       , ETA       , 
+                  'tx_photon'   + suffix       , PX / PZ   , 
+                  'ty_photon'   + suffix       , PY / PZ   , 
+                  LHCb.Particle.Range ( good ) ,
+                  'n_photon'    + suffix       , 10        )
+    
+# ==============================================================================
 ## add muon information into n-tuple
 #  @param tup   n-tuple
 #  @param p     the particle 
@@ -318,9 +357,9 @@ def treatTracks ( self         ,
             m2min = min ( m2min , m2 )
             
     sc = tup.column_float ( 'm2min_track'   + suffix , m2min                  )    
-    sc = tup.column_float ( 'minPt_track'   + suffix , self._minPt      ( p ) )
-    sc = tup.column_float ( 'minEta_track'  + suffix , self._minEta     ( p ) )
-    sc = tup.column_float ( 'maxEta_track'  + suffix , self._maxEta     ( p ) )
+    sc = tup.column_float ( 'minPt_track'   + suffix , self._min_Pt     ( p ) )
+    sc = tup.column_float ( 'minEta_track'  + suffix , self._min_Eta    ( p ) )
+    sc = tup.column_float ( 'maxEta_track'  + suffix , self._max_Eta    ( p ) )
     sc = tup.column_float ( 'maxChi2_track' + suffix , self._maxTrChi2  ( p ) )
     sc = tup.column_float ( 'maxTrGh_track' + suffix , self._maxTrGhost ( p ) )
     
@@ -375,6 +414,29 @@ def treatKine ( self          ,
     
     tup.column_bool ( 'good' + suffix ,  ok )
         
+    return SUCCESS
+
+# =============================================================================
+## fill information about masses 
+def fillMasses ( self        ,
+                 tup         ,
+                 b           ,
+                 suffix = '' ) :
+    """
+    fill infomation about masses         
+    """
+    nc = b.nChildren()
+    for i in range ( 1 , nc + 1 )  :
+        for j in range ( i + 1 , nc + 1 ) :
+            m2 = MASS ( i , j )
+            tup.column_float ( 'm%s%s' % ( i , j ) + suffix , m2 ( b ) / GeV )
+            for k in range ( j + 1 , nc + 1 ) :
+                m3 = MASS ( i , j , k )
+                tup.column_float ( 'm%s%s%s' % ( i , j , k ) + suffix , m3 ( b ) / GeV )
+                for l in range ( k + 1 , nc + 1 ) :
+                    m4 = MASS ( i , j , k , l )
+                    tup.column_float ( 'm%s%s%s%s' % ( i , j , k , l ) + suffix , m4 ( b ) / GeV )
+                    
     return SUCCESS
 
 # =============================================================================
@@ -443,9 +505,12 @@ def addGecInfo  ( self  ,
 LoKi.Algo.treatPions      =  treatPions
 LoKi.Algo.treatKaons      =  treatKaons
 LoKi.Algo.treatProtons    =  treatProtons
+LoKi.Algo.treatPhotons    =  treatPhotons
 LoKi.Algo.treatMuons      =  treatMuons
 LoKi.Algo.treatTracks     =  treatTracks
 LoKi.Algo.treatKine       =  treatKine
+
+LoKi.Algo.fillMasses      =  fillMasses
 
 LoKi.Algo.addRecSummary   =  addRecSummary 
 LoKi.Algo.addGecInfo      =  addGecInfo 

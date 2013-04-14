@@ -66,7 +66,7 @@ def killDAQ ( nodes = [ '/Event/DAQ' , '/Event/pRec' ] , logger_ = None )  :
     Configure node killing agents for uDST processing
     """
     #
-    from PhysConf.MicroDst import killDAQ as _killDAQ
+    from PhysConf.MicroDST import killDAQ as _killDAQ
     #
     return _killDAQ ( nodes , logger ) 
 
@@ -80,7 +80,7 @@ def uDstConf ( rootInTes           ,
     Various settings for mDst
     
     """
-    from PhysConf.MicroDst import uDstConf as _uDstConf 
+    from PhysConf.MicroDST import uDstConf as _uDstConf 
     #
     return _uDstConf ( rootInTes , nodes , logger ) 
 
@@ -92,7 +92,7 @@ def uDstConf13b ( rootInTes , logger_ = None ) :
     Various settings for mDst (version for Stirpping13b processing)
     
     """
-    from PhysConf.MicroDst import uDstConf as _uDstConf13b 
+    from PhysConf.MicroDST import uDstConf as _uDstConf13b 
     #
     return _uDstConf13b ( rootInTes , nodes , logger ) 
 
