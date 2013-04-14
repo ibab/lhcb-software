@@ -24,6 +24,7 @@
 // ============================================================================
 // LHCbMath
 // ============================================================================
+#include "LHCbMath/LHCbMath.h"
 #include "LHCbMath/Kinematics.h"
 #include "LHCbMath/MatrixUtils.h"
 #include "LHCbMath/MatrixTransforms.h"
@@ -83,6 +84,12 @@ namespace
   const double s_middle2 = s_middle * s_middle             ;
   const double s_large   = 10  * Gaudi::Units::centimeter  ;
   const double s_large2  = s_large  * s_large              ; 
+  // ==========================================================================
+  /** @var s_equal 
+   *  equality comparison 
+   *  @see LHCb::Math::Equal_To
+   */
+  const LHCb::Math::Equal_To<double> s_equal ; // equailty comparison 
   // ==========================================================================
 }
 // ============================================================================
@@ -266,9 +273,19 @@ StatusCode LoKi::VertexFitter::_iterate
     // distance in the absolute position 
     const double d1 = ROOT::Math::Mag        ( (*x) - x0 ) ;
     // distance in the chi2 units 
-    const double d2 = ROOT::Math::Similarity ( (*x) - x0 , *ci ) ;
+    double d2 = ROOT::Math::Similarity ( (*x) - x0 , *ci ) ;
     if ( d2 < 0 ) 
-    { _Warning ( "_iterate: negative chi2 detected, ignore" , sc ) ; }
+    { 
+      if ( abs ( d2 ) < std::min ( m_DistanceChi2  , 0.01 ) || s_equal ( d2 , 0 ) ) 
+      {
+        d2 = 0 ; 
+        _Warning ( "_iterate: small negative chi2 detected, adjusted" , sc ) ; 
+      }
+      else 
+      { 
+        _Warning ( "_iterate: large negative chi2 detected, ignore"   , sc ) ; 
+      }
+    }
     //
     // termination conditions:
     //
@@ -391,7 +408,23 @@ StatusCode LoKi::VertexFitter::fit
   // update the vertex parameters:
   vertex.setPosition  ( Gaudi::XYZPoint ( x(0) , x(1) , x(2) ) ) ;
   vertex.setCovMatrix ( c    ) ;
-  vertex.setChi2      ( LoKi::KalmanFilter::chi2 ( m_entries ) ) ;
+  //
+  double chi2 =  LoKi::KalmanFilter::chi2 ( m_entries ) ;
+  //
+  if ( chi2 < 0 ) 
+  { 
+    if ( abs ( chi2 ) < std::min ( m_DistanceChi2 , 0.01 ) || s_equal ( chi2 , 0 ) ) 
+    {
+      chi2 = 0 ; 
+      _Warning ( "fit(): small negative chi2 detected, adjusted" , sc ) ; 
+    }
+    else 
+    { 
+      _Warning ( "fit(): large negative chi2 detected, ignore"   , sc ) ; 
+    }
+  }
+  //
+  vertex.setChi2      ( chi2 ) ;
   vertex.setNDoF      ( LoKi::KalmanFilter::nDoF ( m_entries ) ) ;
   // fill the vertex 
   vertex.clearOutgoingParticles() ;
@@ -480,10 +513,47 @@ StatusCode LoKi::VertexFitter::fit
   //
   // measured mass & error in measured mass 
   //
-  const double mmass =  mm_v.M() ;
-  if ( 0 >= mmass ) { _Warning ( "fit(): measured mass       is non-positive" ) ; }
-  const double mmerr = Gaudi::Math::sigmamass ( mm_v , m_mm_c ) ;
-  if ( 0 >= mmerr ) { _Warning ( "fit(): measured mass error is non-positive" ) ; }  
+  double mmerr = Gaudi::Math::sigmamass ( mm_v , m_mm_c ) ;
+  if ( 0 >= mmerr ) 
+  {
+    if      ( mmerr  > -0.1 * Gaudi::Units::MeV ||  s_equal ( mmerr , 0 ) ) 
+    {
+      mmerr = Gaudi::Units::MeV ;
+      _Warning ( "fit(): measured mass error is a bit    non-positive, adjust to 1 MeV" ) ; 
+    }
+    else if ( mmerr  > -1.0 * Gaudi::Units::MeV ) 
+    {
+      _Warning ( "fit(): measured mass error is slightly non-positive, adjust to 1 MeV" ) ; 
+    }
+    else
+    {
+      counter ("bad mass error") += mmerr ;
+      mmerr = Gaudi::Units::MeV ;
+      _Warning ( "fit(): measured mass error is non-positive, adjust to 1 MeV  " ) ; 
+    }    
+  }  
+  //
+  double mmass =  mm_v.M() ;
+  if ( 0 > mmass ) 
+  {
+    if      ( mmass  > -0.1 * Gaudi::Units::MeV ||  s_equal ( mmerr , 0 ) ) 
+    {
+      mmass = Gaudi::Units::MeV ;
+      _Warning ( "fit(): measured mass is a bit    non-positive , adjust to 1 MeV" ) ; 
+    }
+    else if ( mmass  > -0.5 * mmerr ) 
+    {
+      mmass = Gaudi::Units::MeV ;
+      _Warning ( "fit(): measured mass is slightly non-positive , adjust to 1 MeV" ) ; 
+    }
+    else 
+    {
+      counter ("bad mass ") += mmass ;
+      mmass = Gaudi::Units::MeV ;
+      _Warning ( "fit(): measured mass is non-positive , adjust to 1 MeV" ) ; 
+    }    
+  }
+  //
   particle.setMeasuredMass    ( mmass ) ;
   particle.setMeasuredMassErr ( mmerr ) ;
   //
@@ -743,6 +813,37 @@ StatusCode LoKi::VertexFitter::initialize()
   {
     m_prints = 10 ;
     warning () << "Redefine 'MaxPrints' property to " << m_prints << endmsg ;
+  }
+  //
+  if ( m_DistanceChi2 < 0.0005 ) 
+  {
+    m_DistanceChi2 = 0.0005 ;
+    info () << "Redefine 'DeltaChi2' property to " << m_DistanceChi2 << endmsg ;
+  }
+  //
+  if ( m_DistanceMax < 0.001 * Gaudi::Units::micrometer ) 
+  {
+    m_DistanceMax = 0.001 * Gaudi::Units::micrometer ;
+    info () << "Redefine 'DeltaDistance' property to " << m_DistanceMax << endmsg ;
+  }
+  //
+  if ( m_nIterMaxI  > 100 ) 
+  {
+    m_nIterMaxI = 100 ;
+    info () << "Redefine 'MaxIterations' property to " << m_nIterMaxI << endmsg ;
+  }
+  //
+  if ( m_nIterMaxII > 100 ) 
+  {
+    m_nIterMaxII = 100 ;
+    info () << "Redefine 'MaxIterForAdd' property to " << m_nIterMaxII << endmsg ;
+  }
+  //
+  if ( m_transport_tolerance < 0.1 * Gaudi::Units::micrometer ) 
+  {
+    m_transport_tolerance = 0.1 * Gaudi::Units::micrometer ;
+    info () << "Redefine 'TransportTolerance' property to " <<
+      m_transport_tolerance << endmsg ;
   }
   //
   return StatusCode::SUCCESS ;
