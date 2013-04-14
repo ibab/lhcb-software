@@ -49,7 +49,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2012-06-17
      */
-    class FourMomentum : public LoKi::GenTypes::GFunc 
+    class GAUDI_API FourMomentum : public LoKi::GenTypes::GFunc 
     {
     public:
       // ======================================================================
@@ -101,13 +101,19 @@ namespace LoKi
       /**  get the rapidity y0  
        *  \f$ y_0 = \frac{1}{2}\log \frac{ E + p }{ E - p } \f$ 
        */
-      double  y0  ( const LoKi::LorentzVector& lv ) const ;
+      double  y0     ( const LoKi::LorentzVector& lv ) const ;
       // get the angle phi 
-      double  phi ( const LoKi::LorentzVector& lv ) const ;
+      double  phi    ( const LoKi::LorentzVector& lv ) const ;
       // get the pseudorapidity 
-      double  eta ( const LoKi::LorentzVector& lv ) const ;
+      double  eta    ( const LoKi::LorentzVector& lv ) const ;
+      // get beta-factor 
+      double  beta   ( const LoKi::LorentzVector& lv ) const ;
+      // get gamma-factor 
+      double  gamma  ( const LoKi::LorentzVector& lv ) const ;      
+      // get beta*gamma-factor 
+      double  bgamma ( const LoKi::LorentzVector& lv ) const ;      
       /// adjust delta phi into the range of [-180:180]degrees 
-      double adjust ( double angle ) const ;
+      double adjust  ( double angle ) const ;
       // ======================================================================
     protected:
       // ======================================================================
@@ -796,18 +802,18 @@ namespace LoKi
         : LoKi::GenParticles::FourMomentum ( c1 ) {} ;
       /// constructor from two selectors
       Phi ( const LoKi::GenChild::Selector& c1 ,
-                 const LoKi::GenChild::Selector& c2 ) 
+            const LoKi::GenChild::Selector& c2 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 ) {} ;
       /// constructor from three selectors
       Phi ( const LoKi::GenChild::Selector& c1 ,
-                 const LoKi::GenChild::Selector& c2 ,
-                 const LoKi::GenChild::Selector& c3 ) 
+            const LoKi::GenChild::Selector& c2 ,
+            const LoKi::GenChild::Selector& c3 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 , c3 ) {} ;
       /// constructor from four selectors
       Phi ( const LoKi::GenChild::Selector& c1 ,
-                 const LoKi::GenChild::Selector& c2 ,
-                 const LoKi::GenChild::Selector& c3 ,
-                 const LoKi::GenChild::Selector& c4 ) 
+            const LoKi::GenChild::Selector& c2 ,
+            const LoKi::GenChild::Selector& c3 ,
+            const LoKi::GenChild::Selector& c4 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 , c3 , c4 ) {} ;
       /// contructor from list of selectors 
       Phi ( const LoKi::GenChild::Selector::Vector& cs ) 
@@ -817,18 +823,18 @@ namespace LoKi
         : LoKi::GenParticles::FourMomentum ( c1 ) {} ;
       /// constructor from two selectors
       Phi ( const LoKi::GenTypes::GCuts&    c1 ,
-                 const LoKi::GenTypes::GCuts&    c2 ) 
+            const LoKi::GenTypes::GCuts&    c2 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 ) {} ;
       /// constructor from three selectors
       Phi ( const LoKi::GenTypes::GCuts&    c1 ,
-                 const LoKi::GenTypes::GCuts&    c2 ,
-                 const LoKi::GenTypes::GCuts&    c3 ) 
+            const LoKi::GenTypes::GCuts&    c2 ,
+            const LoKi::GenTypes::GCuts&    c3 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 , c3 ) {} ;
       /// constructor from four selectors
       Phi ( const LoKi::GenTypes::GCuts&    c1 ,
-                 const LoKi::GenTypes::GCuts&    c2 ,
-                 const LoKi::GenTypes::GCuts&    c3 ,
-                 const LoKi::GenTypes::GCuts&    c4 ) 
+            const LoKi::GenTypes::GCuts&    c2 ,
+            const LoKi::GenTypes::GCuts&    c3 ,
+            const LoKi::GenTypes::GCuts&    c4 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 , c3 , c4 ) {} ;
       /// default constructor
       Phi () : LoKi::GenParticles::FourMomentum () {} ;
@@ -843,7 +849,7 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class Phi
+    /** @class Theta
      *  evaluator of the \f$\phi\f$ for particle and/or combination of daughters 
      *  
      *  @see HepMC::GenParticle 
@@ -861,18 +867,18 @@ namespace LoKi
         : LoKi::GenParticles::FourMomentum ( c1 ) {} ;
       /// constructor from two selectors
       Theta ( const LoKi::GenChild::Selector& c1 ,
-                 const LoKi::GenChild::Selector& c2 ) 
+              const LoKi::GenChild::Selector& c2 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 ) {} ;
       /// constructor from three selectors
       Theta ( const LoKi::GenChild::Selector& c1 ,
-                 const LoKi::GenChild::Selector& c2 ,
-                 const LoKi::GenChild::Selector& c3 ) 
+              const LoKi::GenChild::Selector& c2 ,
+              const LoKi::GenChild::Selector& c3 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 , c3 ) {} ;
       /// constructor from four selectors
       Theta ( const LoKi::GenChild::Selector& c1 ,
-                 const LoKi::GenChild::Selector& c2 ,
-                 const LoKi::GenChild::Selector& c3 ,
-                 const LoKi::GenChild::Selector& c4 ) 
+              const LoKi::GenChild::Selector& c2 ,
+              const LoKi::GenChild::Selector& c3 ,
+              const LoKi::GenChild::Selector& c4 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 , c3 , c4 ) {} ;
       /// contructor from list of selectors 
       Theta ( const LoKi::GenChild::Selector::Vector& cs ) 
@@ -882,18 +888,18 @@ namespace LoKi
         : LoKi::GenParticles::FourMomentum ( c1 ) {} ;
       /// constructor from two selectors
       Theta ( const LoKi::GenTypes::GCuts&    c1 ,
-                 const LoKi::GenTypes::GCuts&    c2 ) 
+              const LoKi::GenTypes::GCuts&    c2 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 ) {} ;
       /// constructor from three selectors
       Theta ( const LoKi::GenTypes::GCuts&    c1 ,
-                 const LoKi::GenTypes::GCuts&    c2 ,
-                 const LoKi::GenTypes::GCuts&    c3 ) 
+              const LoKi::GenTypes::GCuts&    c2 ,
+              const LoKi::GenTypes::GCuts&    c3 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 , c3 ) {} ;
       /// constructor from four selectors
       Theta ( const LoKi::GenTypes::GCuts&    c1 ,
-                 const LoKi::GenTypes::GCuts&    c2 ,
-                 const LoKi::GenTypes::GCuts&    c3 ,
-                 const LoKi::GenTypes::GCuts&    c4 ) 
+              const LoKi::GenTypes::GCuts&    c2 ,
+              const LoKi::GenTypes::GCuts&    c3 ,
+              const LoKi::GenTypes::GCuts&    c4 ) 
         : LoKi::GenParticles::FourMomentum ( c1 , c2 , c3 , c4 ) {} ;
       /// default constructor
       Theta () : LoKi::GenParticles::FourMomentum () {} ;
@@ -901,6 +907,92 @@ namespace LoKi
       virtual ~Theta () ;
       /// MANDATORY: clone method ("virtual destructor")
       virtual  Theta* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: nice printout
+      virtual std::ostream& fillStream ( std::ostream& s )const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Beta
+     *  evaluator of the \f$\beta\f$ for particle and/or combination of daughters 
+     *  
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::Cuts::GBETA
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-04-14
+     */
+    class GAUDI_API Beta : public LoKi::GenTypes::GFunc 
+    {
+    public:
+      // ======================================================================
+      /// default constructor
+      Beta () ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Beta () ;
+      /// MANDATORY: clone method ("virtual destructor")
+      virtual  Beta* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: nice printout
+      virtual std::ostream& fillStream ( std::ostream& s )const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // get beta-factor 
+      double  beta      ( const HepMC::GenParticle* p ) const ;
+      // get gamma-factor 
+      double  gamma     ( const HepMC::GenParticle* p ) const ;      
+      // get beta*gamma-factor 
+      double  betagamma ( const HepMC::GenParticle* p ) const ;      
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Gamma
+     *  evaluator of the \f$\gamma\f$ for particle and/or combination of daughters 
+     *  
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::Cuts::GGAMMA
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-04-14
+     */
+    class GAUDI_API Gamma : public LoKi::GenParticles::Beta
+    {
+    public:
+      // ======================================================================
+      /// default constructor
+      Gamma () ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Gamma () ;
+      /// MANDATORY: clone method ("virtual destructor")
+      virtual  Gamma* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: nice printout
+      virtual std::ostream& fillStream ( std::ostream& s )const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class BetaGamma
+     *  evaluator of the \f$\beta\gamma\f$ for particle and/or combination of daughters 
+     *  
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::Cuts::GBETAGAMMA
+     *  @see LoKi::Cuts::GBGAMMA
+     *  @see LoKi::Cuts::GBG
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-04-14
+     */
+    class GAUDI_API BetaGamma : public LoKi::GenParticles::Beta
+    {
+    public:
+      // ======================================================================
+      /// default constructor
+      BetaGamma () ;
+      /// MANDATORY: virtual destructor 
+      virtual ~BetaGamma () ;
+      /// MANDATORY: clone method ("virtual destructor")
+      virtual  BetaGamma* clone() const ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL: nice printout
@@ -1351,6 +1443,36 @@ namespace LoKi
      *  @see LoKi::GenParticles::DeltaR2
      */
     typedef LoKi::GenParticles::DeltaR2                                  GDR2 ;    
+    // ========================================================================
+    /** @var GBETA 
+     *  get \f$\beta\f$ for the particle 
+     *  @see LoKi::GenParticles::Beta
+     */
+    const LoKi::GenParticles::Beta                                      GBETA ;
+    // ========================================================================
+    /** @var GGAMMA 
+     *  get \f$\gamma\f$ for the particle 
+     *  @see LoKi::GenParticles::Gamma
+     */
+    const LoKi::GenParticles::Gamma                                    GGAMMA ;
+    // ========================================================================
+    /** @var GBETAGAMMA 
+     *  get \f$\beta\gamma\f$ for the particle 
+     *  @see LoKi::GenParticles::BetaGamma
+     */
+    const LoKi::GenParticles::BetaGamma                            GBETAGAMMA ;
+    // ========================================================================
+    /** @var GBGAMMA 
+     *  get \f$\beta\gamma\f$ for the particle 
+     *  @see LoKi::GenParticles::BetaGamma
+     */
+    const LoKi::GenParticles::BetaGamma                               GBGAMMA ;
+    // ========================================================================
+    /** @var GBG
+     *  get \f$\beta\gamma\f$ for the particle 
+     *  @see LoKi::GenParticles::BetaGamma
+     */
+    const LoKi::GenParticles::BetaGamma                                   GBG ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

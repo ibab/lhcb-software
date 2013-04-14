@@ -2,8 +2,14 @@
 // =============================================================================
 // Include files 
 // =============================================================================
+// LHCbMath
+// =============================================================================
+#include "LHCbMath/LHCbMath.h"
+// =============================================================================
 // Local
 // =============================================================================
+#include "LoKi/Constants.h"
+#include "LoKi/Kinematics.h"
 #include "LoKi/GenParticles4.h"
 #include "LoKi/GenChildSelector.h"
 // =============================================================================
@@ -32,6 +38,16 @@
  *  Last modification $Date: 2012-01-29 14:43:08 +0100 (Sun, 29 Jan 2012) $
  *                 by $Author: ibelyaev $
  */
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  /** @var s_equal
+   *  comparison criteria for doubles 
+   */
+  const LHCb::Math::Equal_To<double> s_equal ; 
+  // ==========================================================================
+}
 // ============================================================================
 // constructor from one selector
 // ============================================================================
@@ -245,6 +261,29 @@ double LoKi::GenParticles::FourMomentum::phi
 // ============================================================================
 double LoKi::GenParticles::FourMomentum::eta
 ( const LoKi::LorentzVector& lv ) const { return lv . Eta() ; }
+// ==========================================================================
+// get the beta
+// ============================================================================
+double LoKi::GenParticles::FourMomentum::beta
+( const LoKi::LorentzVector& lv ) const { return lv . Beta  () ; }
+// ==========================================================================
+// get the gamma
+// ============================================================================
+double LoKi::GenParticles::FourMomentum::gamma
+( const LoKi::LorentzVector& lv ) const { return lv . Gamma () ; }
+// ==========================================================================
+// get the beta*gamma
+// ============================================================================
+double LoKi::GenParticles::FourMomentum::bgamma
+( const LoKi::LorentzVector& lv ) const 
+{ 
+  //
+  const double m = lv.M () ;
+  //
+  if ( s_equal ( m , 0 ) ) { return LoKi::Constants::PositiveInfinity ; }
+  //
+  return lv.P () / m ;  
+}
 // ==========================================================================
 
 
@@ -675,6 +714,169 @@ LoKi::GenParticles::Theta::operator()
 std::ostream& 
 LoKi::GenParticles::Theta::fillStream ( std::ostream& s ) const 
 { return print_ ( s , "GPOLAR" , "GTHETA" ) ; }
+
+
+
+
+// ============================================================================
+// default constructor
+// ============================================================================
+LoKi::GenParticles::Beta::Beta() 
+  : LoKi::GenTypes::GFunc () 
+{} 
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::GenParticles::Beta::~Beta(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual destructor")
+// ============================================================================
+LoKi::GenParticles::Beta*
+LoKi::GenParticles::Beta::clone() const 
+{ return new LoKi::GenParticles::Beta ( *this ) ; }
+// ============================================================================
+// get beta-factor 
+// ============================================================================
+double LoKi::GenParticles::Beta::beta   ( const HepMC::GenParticle* p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "HepMC::GenParticle* points to NULL, return -1 ") ;
+    return -1 ;
+  }
+  //
+  return LoKi::LorentzVector ( p->momentum() ).Beta() ;
+  //
+}
+// ============================================================================
+// get gamma-factor 
+// ============================================================================
+double LoKi::GenParticles::Beta::gamma   ( const HepMC::GenParticle* p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "HepMC::GenParticle* points to NULL, return -1 ") ;
+    return -1 ;
+  }
+  //
+  const LoKi::LorentzVector lv ( p->momentum() ) ;
+  //
+  const double m = lv.M () ;
+  const double E = lv.E () ;
+  //
+  if ( s_equal ( E , m ) ) { return 1 ; } 
+  //
+  if ( s_equal ( m , 0 ) ) 
+  {
+    //
+    //
+    Error ( "Light-like particle, return +infinity") ;
+    return LoKi::Constants::PositiveInfinity ;
+  }
+  //
+  return E / m ;
+  //
+}
+// ============================================================================
+// get gamma-factor 
+// ============================================================================
+double LoKi::GenParticles::Beta::betagamma   ( const HepMC::GenParticle* p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "HepMC::GenParticle* points to NULL, return -1 ") ;
+    return -1 ;
+  }
+  //
+  const LoKi::LorentzVector lv ( p->momentum() ) ;
+  const double P = lv.P () ;
+  if ( s_equal ( P , 0 ) ) { return 0 ; }
+  //
+  const double m = lv.M () ;
+  if ( s_equal ( m , 0 ) ) 
+  {
+    //
+    Error ( "Light-like particle, return +infinity") ;
+    return LoKi::Constants::PositiveInfinity ;
+  }
+  //
+  return P / m ;
+  //
+}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::Beta::result_type 
+LoKi::GenParticles::Beta::operator()
+  ( LoKi::GenParticles::Beta::argument p ) const { return beta ( p ) ; }
+// ============================================================================
+// OPTIONAL: nice printout
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::Beta::fillStream ( std::ostream& s ) const 
+{ return s << "GBETA"; }
+
+
+
+// ============================================================================
+// default constructor
+// ============================================================================
+LoKi::GenParticles::Gamma::Gamma() 
+  : LoKi::GenParticles::Beta () 
+{} 
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::GenParticles::Gamma::~Gamma(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual destructor")
+// ============================================================================
+LoKi::GenParticles::Gamma*
+LoKi::GenParticles::Gamma::clone() const 
+{ return new LoKi::GenParticles::Gamma ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::Gamma::result_type 
+LoKi::GenParticles::Gamma::operator()
+  ( LoKi::GenParticles::Gamma::argument p ) const { return gamma ( p ) ; }
+// ============================================================================
+// OPTIONAL: nice printout
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::Gamma::fillStream ( std::ostream& s ) const 
+{ return s << "GGAMMA"; }
+
+
+// ============================================================================
+// default constructor
+// ============================================================================
+LoKi::GenParticles::BetaGamma::BetaGamma() 
+  : LoKi::GenParticles::Beta () 
+{} 
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::GenParticles::BetaGamma::~BetaGamma(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual destructor")
+// ============================================================================
+LoKi::GenParticles::BetaGamma*
+LoKi::GenParticles::BetaGamma::clone() const 
+{ return new LoKi::GenParticles::BetaGamma ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::BetaGamma::result_type 
+LoKi::GenParticles::BetaGamma::operator()
+  ( LoKi::GenParticles::BetaGamma::argument p ) const { return betagamma ( p ) ; }
+// ============================================================================
+// OPTIONAL: nice printout
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::BetaGamma::fillStream ( std::ostream& s ) const 
+{ return s << "GBETAGAMMA"; }
+// ============================================================================
 
 
 

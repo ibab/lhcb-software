@@ -252,6 +252,17 @@ GETA      = LoKi.GenParticles.PseudoRapidity ()
 ## @see LoKi::Cuts::GPSEUDORAPIDITY
 GPSEUDORAPIDITY = LoKi.GenParticles.PseudoRapidity 
 
+## @see LoKi::Cuts::GBETA 
+GBETA      = LoKi.GenParticles.Beta      ()
+## @see LoKi::Cuts::GGAMMA
+GGAMMA     = LoKi.GenParticles.Gamma     ()
+## @see LoKi::Cuts::GBETAGAMMA 
+GBETAGAMMA = LoKi.GenParticles.BetaGamma ()
+## @see LoKi::Cuts::GBGAMMA 
+GBGAMMA    = LoKi.GenParticles.BetaGamma ()
+## @see LoKi::Cuts::GBG
+GBG        = LoKi.GenParticles.BetaGamma ()
+
 ## @see LoKi::Cuts::GY
 GY        = LoKi.GenParticles.Rapidity ()
 ## @see LoKi::Cuts::GRAPIDITY
@@ -272,6 +283,12 @@ GTHETA    = LoKi.GenParticles.Theta  ()
 ## @see LoKi::Cuts::GASYMUTH
 GPOLAR    = LoKi.GenParticles.Theta
 
+## @see LoKi::Cuts::GFLIGHTPV 
+GFLIGHTPV = LoKi.GenParticles.Flight ( True  ) 
+## @see LoKi::Cuts::GPVFLIGHT
+GPVFLIGHT = LoKi.GenParticles.Flight ( True  ) 
+## @see LoKi::Cuts::GFLIGHT
+GFLIGHT   = LoKi.GenParticles.Flight ( False ) 
 
 
 ## @see LoKi::Cuts::GCOUNT
