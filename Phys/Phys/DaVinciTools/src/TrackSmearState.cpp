@@ -49,33 +49,45 @@
 #include "TH1D.h"
 #include "TGraph.h"
 // ============================================================================
-/** @class TrackScaleState TrackScaleState.h
+/** @class TrackSmearState TrackSmearState.h
  *
  *  Smear the track momenta
  *
  *  @author M.Needham
  *  @date   30/05/2006
  *  
+ *  Use on MC-(x)DST to smear the track momenta *before* your 
+ *  user algorithms sequence:
+ *
+ *  @code
+ *
+ *  from Configurables import TrackSmearState as SMEAR
+ *
+ *  smear = SMEAR( 'Smear' )  ## default configuration is perfectly fine 
+ *
+ *  daVinci = DaVinci ( ... ) 
+ *  daVinci.UserAlgortithms  = [ smear ]
+ *  
+ *  seq = ... ## analysis sequence  
+ *  daVinci.UserAlgortithms += [ seq    ]
+ *  
  *  @endcode
  *
- *  Other properties:
+ *  Important properties:
  *  - "Input"       : TES location of input tracks (no need to redefine)
- *  - "DeltaScale"  : global modification for the scale factor 
+ *  - "Fudge"       : fudge factor for momenutm smearing 
  * 
  *  Properties that allows to modify the parameters from CONDDB 
  *  - "CONDDBpath"  : the path in CONDB
  * 
- *  - "Delta"         : global modification for the scale factor 
- *  - "IdpPlusHisto"  : histogram for "IdpPlus"
- *  - "IdpMinusHisto" : histogram for "IdpMinus"
- *  - "RunOffsets"    : histogram for run-dependen offsets
+ *  - "SmearHisto"    : \f$\delta p/p\f$-histogram for smearing 
  * 
  *  CondDB is activated in case : 
  *  - NO VALID OPTIONS for histograms are specified 
  *  - valid CONDD path is specifiede
  *
- *  OPTION is actiavted in case 
- *  - all three input histos are specified - it overrides CONDB access 
+ *  OPTION is activated in case 
+ *  - valid input histogram is specified - it overrides CONDB access 
  *
  * How to specify the histograms as options? 
  *  
@@ -86,52 +98,23 @@
  *  
  *  root_file = TFile( ... , 'READ')
  *
- *  h1        = root_file.Get('ipd-plus' )
- *  h2        = root_file.Get('ipd-minus')
- *  h_offsets = ... 
- * 
- *  from Configurables import TrackScaleState as SCALER
+ *  ## get Matt's graph 
+ *  graph    = root_file.Get('res' ) 
  *
- *  scaler = SCALER() 
- *  scaler.IdpPlusHisto  = h1.toString() 
- *  scaler.IdpMinusHisto = h2.toString() 
- *  scaler.RunOffsets    = h_offsets.toString() 
+ *  ## convert it to the histogram
+ *  histo  = graph.GetHistogram ()
+ *  histo += graph                  ## NB!!!
+ * 
+ *  from Configurables import TrackSmearState as SMEAR
+ *
+ *  smear = SMEAR() 
+ *  smear.SmearHisto    = histo.toString() 
  * 
  *  ## as alternatively one can use XML:
- *  scaler.IdpPlusHisto  = h1.toXML() 
- *  scaler.IdpMinusHisto = h2.toXML() 
- *  scaler.RunOffsets    = h_offsets.toXML() 
+ *  smear.SmearHisto    = histo.toXml () 
  *
  *  @endcode 
  *
- *  The dedicated script calib.py is provided for :
- *   - conversion of run off-set table into offset-histo
- *   - converison of histos into CONDB format
- *
- *  Other cross-checks: Track slope test:
- *  
- *   - "ScaleSlope" 
- *   - "DeltaSlope" 
- *
- *  @code 
- * 
- *  from Configurables import TrackScaleState as SCALER
- *
- *  ## conservative setting:
- *  scaler = SCALER(
- *       'Scaler' , 
- *       ScaleSlope = 1 - 1.0e-3 ,
- *       DeltaSlope =     0.9e-3 ,
- *       )
- *  
- *  ## settings in accordance to Delta m_s paper:
- *  scaler = SCALER(
- *       'Scaler' , 
- *       ScaleSlope = 1 -  2.0e-4 ,
- *       DeltaSlope =      2.0e-4 
- *       )
- *     
- *  @endcode 
  */
 class TrackSmearState : public extends1<GaudiAlgorithm,IIncidentListener>
 {

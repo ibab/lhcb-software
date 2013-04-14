@@ -92,24 +92,32 @@
  *  
  *  @endcode
  *
- *  Other properties:
- *  - "Input"       : TES location of input tracks (no need to redefine)
- *  - "DeltaScale"  : global modification for the scale factor 
+ *  Important properties:
+ *  - "Input"         : TES location of input tracks (no need to redefine)
+ *  - "DeltaScale"    : global modification for the scale factor 
  * 
  *  Properties that allows to modify the parameters from CONDDB 
- *  - "CONDDBpath"  : the path in CONDB
+ *  - "CONDDBpath"    : the path in CONDB
  * 
  *  - "Delta"         : global modification for the scale factor 
- *  - "IdpPlusHisto"  : histogram for "IdpPlus"
- *  - "IdpMinusHisto" : histogram for "IdpMinus"
- *  - "RunOffsets"    : histogram for run-dependen offsets
+ *  - "IdpPlusHisto"  : "IdpPlus",  2D-histogram of scaling factor as function of \f$t_x,t_y\f$ for \f$q \times B>0\f$
+ *  - "IdpMinusHisto" : "IdpMinus", 2D-histogram of scaling factor as function of \f$t_x,t_y\f$ for \f$q \times B<0\f$
+ *  - "RunOffsets"    : 1D-histogram for run-dependen offsets
+ *  - "CovScaleHisto" : 1D-historam of scaling factor for covariance matrix as function of p 
  * 
- *  CondDB is activated in case : 
- *  - NO VALID OPTIONS for histograms are specified 
- *  - valid CONDD path is specifiede
+ *  For momentum scaling CondDB is activated in case : 
+ *  - NO VALID OPTIONS for three histograms are specified 
+ *  - valid CONDD path is specified
  *
- *  OPTION is actiavted in case 
- *  - all three input histos are specified - it overrides CONDB access 
+ *  For monmentum scaling OPTION is activated in case 
+ *  - three input valid histos are specified - it overrides CONDB access 
+ *
+ *  For covariance scaling CondDB is activated in case : 
+ *  - NO VALID OPTIONS for input histogram is specified 
+ *  - valid CONDD path is specified
+ *
+ *  For covariance scaling OPTION is activated in case 
+ *  - input valid histo is specified - it overrides CONDB access 
  *
  * How to specify the histograms as options? 
  *  
@@ -120,21 +128,24 @@
  *  
  *  root_file = TFile( ... , 'READ')
  *
- *  h1        = root_file.Get('ipd-plus' )
- *  h2        = root_file.Get('ipd-minus')
- *  h_offsets = ... 
- * 
+ *  h1          = root_file.Get('ipd-plus' )
+ *  h2          = root_file.Get('ipd-minus')
+ *  h_offsets   = ... 
+ *  h_cov_scale = ... 
+ *
  *  from Configurables import TrackScaleState as SCALER
  *
  *  scaler = SCALER() 
  *  scaler.IdpPlusHisto  = h1.toString() 
  *  scaler.IdpMinusHisto = h2.toString() 
  *  scaler.RunOffsets    = h_offsets.toString() 
+ *  scaler.CovScaleHisto = h_cov_scale.toString() 
  * 
  *  ## as alternatively one can use XML:
  *  scaler.IdpPlusHisto  = h1.toXML() 
  *  scaler.IdpMinusHisto = h2.toXML() 
  *  scaler.RunOffsets    = h_offsets.toXML() 
+ *  scaler.CovScaleHisto = h_cov_scale.toXML() 
  *
  *  @endcode 
  *
@@ -508,6 +519,11 @@ TrackScaleState::TrackScaleState
     ( "DeltaSlope"    , 
       m_delta_slope   ,
       "Compensation factor for track slopes scaling" ) ;
+  // 
+  declareProperty 
+    ( "CovScaleHisto" , 
+      m_hc_str ,
+      "The 1D-historam for covarinace scaling factor as function of momenta" ) ;
   //
 }
 // ============================================================================
