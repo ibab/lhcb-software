@@ -1,6 +1,6 @@
 // $Id$
 // ============================================================================
-#ifndef LOKI_MCVERTEXCUTS_H 
+#ifndef LOKI_MCVERTEXCUTS_H
 #define LOKI_MCVERTEXCUTS_H 1
 // ============================================================================
 // Include files
@@ -12,85 +12,78 @@
 // ============================================================================
 /** @file
  *
- *  This file is a part of LoKi project - 
+ *  This file is a part of LoKi project -
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
  *
  *  The package has been designed with the kind help from
- *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
- *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+ *  contributions and advices from G.Raven, J.van Tilburg,
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
+ *  By usage of this code one clearly states the disagreement
+ *  with the smear campaign of Dr.O.Callot et al.:
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2001-01-23
  */
 // ============================================================================
 namespace LoKi
 {
   // ==========================================================================
-  namespace Cuts 
+  namespace Cuts
   {
-    // Suppress Intel compiler warnings about missing default constructor
-    // In this case the compiler generated constructor is fine, since there are
-    // no member data to be initialised
-    #ifdef __INTEL_COMPILER
-      #pragma warning(disable:854)
-      #pragma warning(push)
-    #endif
     // ========================================================================
-    /** Minimum from 2 functions 
-     *  
-     *  @code 
-     *  
+    /** Minimum from 2 functions
+     *
+     *  @code
+     *
      *  MCVFun f1 = ... ;
      *  MCVFun f2 = ... ;
-     *  
+     *
      *  MCVFun f = MCVMIN( f1 , f2 ) ;
-     *  
-     *  @endcode 
-     *  
+     *
+     *  @endcode
+     *
      *  @see LoKi::Min
      */
     typedef LoKi::Min<const LHCb::MCVertex*>                           MCVMIN ;
     // ========================================================================
-    /** Maxumum from 2 functions 
-     *  
-     *  @code 
-     *  
+    /** Maxumum from 2 functions
+     *
+     *  @code
+     *
      *  MCVFun f1 = ... ;
      *  MCVFun f2 = ... ;
-     *  
+     *
      *  MCVFun f = MCVMAX( f1 , f2 ) ;
-     *  
-     *  @endcode 
-     *  
+     *
+     *  @endcode
+     *
      *  @see LoKi::Max
      */
     typedef LoKi::Max<const LHCb::MCVertex*>                           MCVMAX ;
     // ========================================================================
     /** Simple "switch"
-     *  The function evaluated the predicate and returns 
-     *  one of the predefined values, depending on result on 
+     *  The function evaluated the predicate and returns
+     *  one of the predefined values, depending on result on
      *  predicate evaluation.
      *  In some sense it is a conversion of "predicate" to "function"
-     * 
      *
-     *  @see LoKi::SipleSwitch 
+     *
+     *  @see LoKi::SipleSwitch
      *
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      */
     typedef LoKi::SimpleSwitch<const LHCb::MCVertex*>              MCVSSWITCH ;
-    // ========================================================================    
+    // ========================================================================
     /** switch"
-     *  The function evaluates the predicate and returns 
-     *  the values of one of the predefined functions, 
+     *  The function evaluates the predicate and returns
+     *  the values of one of the predefined functions,
      *  depending on result on predicate evaluation.
-     * 
      *
-     *  @see LoKi::Switch 
+     *
+     *  @see LoKi::Switch
      *
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      */
@@ -98,13 +91,13 @@ namespace LoKi
     // ========================================================================
     /** @var MCVTYPE
      *  the type of MC vertex ( MCVertex::type )
-     * 
+     *
      *  @code
-     * 
+     *
      *   const LHCb::MCVertex* v  = ...         ;
      *   const double    t  = MCVTYPE (  v ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see MCVertex
      *  @see LoKi::MCVertices::TypeOfMCVertex
@@ -113,17 +106,17 @@ namespace LoKi
      */
     const LoKi::MCVertices::TypeOfMCVertex                            MCVTYPE ;
     // ========================================================================
-    /** @var MCVVALID 
+    /** @var MCVVALID
      *
-     *  The trivial checker of "the validity" of the pointer to 
+     *  The trivial checker of "the validity" of the pointer to
      *   LHCb::MCVertex objects
      *
      *  @code
-     * 
+     *
      *   const MCVertex* v  = ...         ;
      *   const bool valid =   = MCVVALID ( v ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Valid
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -133,13 +126,13 @@ namespace LoKi
     // ========================================================================
     /** @var MCVTOF
      *  the time of flight for  MC vertex ( MCVertex::timeOfFlight )
-     * 
+     *
      *  @code
-     * 
+     *
      *   const LHCb::MCVertex* v  = ...         ;
      *   const double    t  = MCVTOF (  v ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see MCVertex
      *  @see LoKi::MCVertices::TimeOfFLight
@@ -149,145 +142,145 @@ namespace LoKi
     const LoKi::MCVertices::TimeOfFlight                               MCVTOF ;
     // ========================================================================
     /** @var MCVX
-     *  the x-position of       MC vertex 
-     * 
+     *  the x-position of       MC vertex
+     *
      *  @code
-     * 
+     *
      *   const LHCb::MCVertex* v  = ...         ;
      *   const double    x  = MCVX   (  v ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see MCVertex
-     *  @see LoKi::MCVertices::VertexPositionX  
+     *  @see LoKi::MCVertices::VertexPositionX
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-07-07
      */
     const LoKi::MCVertices::VertexPositionX                              MCVX ;
     // ========================================================================
     /** @var MCVY
-     *  the y-position of       MC vertex 
-     * 
+     *  the y-position of       MC vertex
+     *
      *  @code
-     * 
+     *
      *   const LHCb::MCVertex* v  = ...         ;
      *   const double    y  = MCVY   (  v ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see MCVertex
-     *  @see LoKi::MCVertices::VertexPositionY  
+     *  @see LoKi::MCVertices::VertexPositionY
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-07-07
      */
     const LoKi::MCVertices::VertexPositionY                              MCVY ;
     // ========================================================================
     /** @var MCVZ
-     *  the z-position of       MC vertex 
-     * 
+     *  the z-position of       MC vertex
+     *
      *  @code
-     * 
+     *
      *   const LHCb::MCVertex* v  = ...         ;
      *   const double    z  = MCVZ   (  v ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see MCVertex
-     *  @see LoKi::MCVertices::VertexPositionZ  
+     *  @see LoKi::MCVertices::VertexPositionZ
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-07-07
      */
     const LoKi::MCVertices::VertexPositionZ                              MCVZ ;
     // ========================================================================
     /** @var MCVTIME
-     *  the "time" of MC vertex 
-     * 
-     *  @code 
+     *  the "time" of MC vertex
      *
-     *  const LHCb::MCVertex* vertex = ... ; 
+     *  @code
+     *
+     *  const LHCb::MCVertex* vertex = ... ;
      *  const double time = MCVTIME ( vertex ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
-     *  @see LoKi::MCVertices::VertexTime 
+     *  @see LoKi::MCVertices::VertexTime
      *  @see LHCb::MCVertex
-     *  
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
     const LoKi::MCVertices::VertexTime                                MCVTIME ;
     // ========================================================================
     /** @var MCPRIMARY
-     *  evaluates to "true" for  primary vertices 
-     * 
-     *  @code 
+     *  evaluates to "true" for  primary vertices
      *
-     *  const LHCb::MCVertex* vertex = ... ; 
+     *  @code
+     *
+     *  const LHCb::MCVertex* vertex = ... ;
      *  const bool primary = MCPRIMARY ( vertex ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::MCVertices::Primary
      *  @see LHCb::MCVertex
-     *  
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
-    const LoKi::MCVertices::Primary                                 MCPRIMARY ; 
-    // ========================================================================    
+    const LoKi::MCVertices::Primary                                 MCPRIMARY ;
+    // ========================================================================
     /** @var MCISPRIMARY
-     *  evaluates to "true" for  primary vertices 
-     * 
-     *  @code 
+     *  evaluates to "true" for  primary vertices
      *
-     *  const LHCb::MCVertex* vertex = ... ; 
+     *  @code
+     *
+     *  const LHCb::MCVertex* vertex = ... ;
      *  const bool primary = MCISPRIMARY ( vertex ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::MCVertices::Primary
      *  @see LHCb::MCVertex
-     *  
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
     const LoKi::MCVertices::Primary                               MCISPRIMARY ;
     // ========================================================================
     /** @var MCISDECAY
-     *  evaluates to "true" for 'decay' vertices 
-     * 
-     *  @code 
+     *  evaluates to "true" for 'decay' vertices
      *
-     *  const LHCb::MCVertex* vertex = ... ; 
+     *  @code
+     *
+     *  const LHCb::MCVertex* vertex = ... ;
      *  const bool decay = MCISDECAY ( vertex ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::MCVertices::Decay
      *  @see LHCb::MCVertex
-     *  
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
     const LoKi::MCVertices::Decay                                   MCISDECAY ;
-    // ========================================================================    
-    /** the distance for MC vertex from given point, 
+    // ========================================================================
+    /** the distance for MC vertex from given point,
      *  given (MC)Vertex or collision
-     * 
+     *
      *  @code
-     * 
+     *
      *   const LoKi::Point3D& point = ... ;
      *   const LHCb::MCVertex*      v0    = ... ;
      *   const Collision*     coll  = ... ;
      *
-     *  
+     *
      *   const LHCb::MCVertex* vertex  = ...         ;
      *
      *   // evaluate the distance from point
      *   MCVFun       dist1 = MCVDIST ( point  ) ;
      *   const double d1    = dist1   ( vertex ) ;
-     *    
-     *   // evaluate the distance from vertex 
+     *
+     *   // evaluate the distance from vertex
      *   MCVFun       dist2 = MCVDIST ( v0     ) ;
      *   const double d2    = dist2   ( vertex ) ;
      *
@@ -295,7 +288,7 @@ namespace LoKi
      *   MCVFun       dist3 = MCVDIST ( coll   ) ;
      *   const double d3    = dist3   ( vertex ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see MCVertex
      *  @see LoKi::MCVertices::MCVertexDistance
@@ -304,115 +297,111 @@ namespace LoKi
      */
     typedef LoKi::MCVertices::MCVertexDistance                        MCVDIST ;
     // ========================================================================
-    /** the adaptor for MC vertex function to be interpreted as 
+    /** the adaptor for MC vertex function to be interpreted as
      *  MC particle function
-     *  it acts using the rule 
-     *  
-     *  @code 
+     *  it acts using the rule
      *
-     *  result = fun( MCParticle* p ) = vfun( p->originVertex() ) 
-     *  
-     *  @endcode 
-     * 
+     *  @code
+     *
+     *  result = fun( MCParticle* p ) = vfun( p->originVertex() )
+     *
+     *  @endcode
+     *
      *  Usage:
-     * 
-     *  @code 
+     *
+     *  @code
      *
      *  const MCParticle* p = ... ;
      *  // z-coordinate of particle origin:
      *  MCFun fun = MCVXFUN ( MCVZ ) ;
      *  const double z = fun ( p ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Adapters::VFuncAsFun
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2004-03-01 
+     *  @date   2004-03-01
      */
     typedef LoKi::MCVertices::MCVFunAsMCFun                           MCVXFUN ;
     // ========================================================================
-    /** the adaptor for MC vertex function to be interpreted as 
+    /** the adaptor for MC vertex function to be interpreted as
      *  MC particle function
-     *  it acts using the rule 
-     *  
-     *  @code 
+     *  it acts using the rule
      *
-     *  result = fun( MCParticle* p ) = vfun( p->primaryVertex() ) 
-     *  
-     *  @endcode 
-     * 
+     *  @code
+     *
+     *  result = fun( MCParticle* p ) = vfun( p->primaryVertex() )
+     *
+     *  @endcode
+     *
      *  Usage:
-     * 
-     *  @code 
+     *
+     *  @code
      *
      *  const MCParticle* p = ... ;
      *  // z-coordinate of particle origin:
      *  MCFun fun = MCVXFUN ( MCVZ ) ;
      *  const double z = fun ( p ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Adapters::VFuncAsFun
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2004-03-01 
+     *  @date   2004-03-01
      */
     typedef LoKi::MCVertices::MCVPFunAsMCFun                         MCVPXFUN ;
-    // ========================================================================    
-    /** the adaptor for MC vertex function to be interpreted as 
+    // ========================================================================
+    /** the adaptor for MC vertex function to be interpreted as
      *  MC particle function
-     *  it acts using the rule 
-     *  
-     *  @code 
+     *  it acts using the rule
      *
-     *  result = fun( MCParticle* p ) = vfun( p->primaryVertex() ) 
-     *  
-     *  @endcode 
-     * 
+     *  @code
+     *
+     *  result = fun( MCParticle* p ) = vfun( p->primaryVertex() )
+     *
+     *  @endcode
+     *
      *  Usage:
-     * 
-     *  @code 
+     *
+     *  @code
      *
      *  const MCParticle* p = ... ;
      *  // z-coordinate of the first end-vertex:
      *  MCFun fun = MCVFUN ( 0 , MCVZ ) ;
      *  const double z = fun ( p ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::MCVertices::MCVFunction
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date   2011-10-21
      */
     typedef LoKi::MCVertices::MCVFunction                              MCVFUN ;
-    // ========================================================================    
+    // ========================================================================
     const LoKi::Constant<const LHCb::MCVertex*,bool>   MCVTRUE     ( true  )  ;
-    // ========================================================================    
+    // ========================================================================
     const LoKi::Constant<const LHCb::MCVertex*,bool>   MCVFALSE    ( false )  ;
-    // ========================================================================    
+    // ========================================================================
     const LoKi::Constant<const LHCb::MCVertex*,bool>   MCVALL    =   MCVTRUE  ;
-    // ========================================================================    
+    // ========================================================================
     const LoKi::Constant<const LHCb::MCVertex*,bool>   MCVNONE   =   MCVFALSE ;
-    // ========================================================================    
+    // ========================================================================
     const LoKi::Constant<const LHCb::MCVertex*,double> MCVONE      ( 1.0   )  ;
-    // ========================================================================    
+    // ========================================================================
     const LoKi::Constant<const LHCb::MCVertex*,double> MCVZERO     ( 0.0   )  ;
-    // ========================================================================    
-    /** @var MCVKEY 
+    // ========================================================================
+    /** @var MCVKEY
      *  get the key for the MC-vertex
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2011-02-14
      */
     const LoKi::MCVertices::Key                                        MCVKEY ;
-
-    #ifdef __INTEL_COMPILER
-      #pragma warning(pop) // End disable ICC warning #854
-    #endif
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 #endif // LOKI_MCVERTEXCUTS_H
 // ============================================================================

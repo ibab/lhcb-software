@@ -3,16 +3,19 @@
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-related part of restructurized LoKi project
 ! -----------------------------------------------------------------------------
-! 
-!   This file is a part of LoKi project - 
+!
+!   This file is a part of LoKi project -
 !     "C++ ToolKit  for Smart and Friendly Physics Analysis"
-! 
+!
 !   The package has been designed with the kind help from
-!   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
-!   contributions and advices from G.Raven, J.van Tilburg, 
+!   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+!   contributions and advices from G.Raven, J.van Tilburg,
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2013-04-15 - Marco Clemencic
+ - Added default constructors to fix compilation errors with clang.
 
 !========================= LoKiMC v10r7 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
@@ -20,50 +23,50 @@
 
 !========================= LoKiMC v10r6 2012-06-25 =========================
 ! 2012-06-16 - Vanya Belyaev
- - imporove treatment of children 
+ - imporove treatment of children
 
 ! 2012-05-24 - Vanya Belyaev
- - imporove streamers, 
-   make dictionaries lighter 
+ - imporove streamers,
+   make dictionaries lighter
 
 !========================= LoKiMC v10r5 2012-05-24 =========================
 ! 2012-05-19 - Vanya Belyaev
- - add more rrshift/call decorators 
+ - add more rrshift/call decorators
 
 !========================= LoKiMC v10r4 2012-01-31 =========================
 ! 2012-01-29 - Vanya Belyaev
- - add dumping functors 
+ - add dumping functors
 
 !========================= LoKiMC v10r3 2011-11-07 =========================
 ! 2011-10-21 - Vanya Belyaev
- - MCVFUN 
-   adaptor for MC-vertex 
+ - MCVFUN
+   adaptor for MC-vertex
 
 !========================= LoKiMC v10r2 2011-07-25 =========================
 ! 2011-07-23 - Vanya Belyaev
- - more decorators for LHCb.MCParticle 
+ - more decorators for LHCb.MCParticle
 
 ! 2011-07-03 - Vanya Belyaev
- - small polishing of python iterators 
+ - small polishing of python iterators
 
 ! 2011-06-20 - Vanya Belyaev
  - LoKi/MCDecayChain.h
-    fix Coverity reports 22945/22946 
+    fix Coverity reports 22945/22946
 
 !========================= LoKiMC v10r1 2011-06-14 =========================
 ! 2011-06-05 - Vanya Belyaev
- - reduce warnings for ICC compiler 
+ - reduce warnings for ICC compiler
 
 ! 2011-06-02 - Vanya Belyaev
 
- - add "CutVal" to the list of known types 
- - add MC-filter 
+ - add "CutVal" to the list of known types
+ - add MC-filter
  - cmt/requirements
-    version increment to v10r1 
+    version increment to v10r1
 
 !========================= LoKiMC v10r0 2011-04-04 =========================
 ! 2011-03-18 - Vanya Belyaev
- - add protetcion against double lock 
+ - add protetcion against double lock
 
 ! 2011-03-10 - Vanya Belyaev
  - kill bad concept of 'Element'-functor
@@ -72,11 +75,11 @@
 ! 2011-02-21 - Marco Cattaneo
  - Suppress Intel compiler warnings about missing default constructor
    In this case the compiler generated constructor is fine, since there are
-   no member data to be initialised 
+   no member data to be initialised
 
 ! 2011-02-20 - Vanya Belyaev
 
- - undo ICC-fixed 
+ - undo ICC-fixed
 
 ! 2011-02-20 - Vanya Belyaev
 
@@ -86,7 +89,7 @@
 
 ! 2011-02-14 - Vanya Belyaev
 
- - add more symbols 
+ - add more symbols
 
  - cmt/requirements
     version increment to v9r5
@@ -94,9 +97,9 @@
 !========================= LoKiMC v9r4 2011-01-31 =========================
 ! 2011-01-26 - Vanya Belyaev
  - MCDecays.cpp:
-    Drastical speedup of worst case of PHOTOS-matcher 
+    Drastical speedup of worst case of PHOTOS-matcher
 
- - add many GAUDI_API directives 
+ - add many GAUDI_API directives
  - cmt/requirements
     version increment to v9r4
 
@@ -109,45 +112,45 @@
 
 ! 2010-10-25 - Vanya Belyaev
 
- - add new symbol MCNUM 
+ - add new symbol MCNUM
 
 ! 2010-10-24 - Vanya Belyaev
 
- - add concept of 'stable' particle into decay descriptors 
+ - add concept of 'stable' particle into decay descriptors
 
  - cmt/requirements
-    version increment to v9r3 
+    version increment to v9r3
 
 !========================== LoKiMC v9r2 2010-09-28 ============================
 ! 2010-09-28 - Vanya Belyaev
  - LoKiMC/trees.py
     fix for new structure of LoKiCore
  - cmt/requirements
-    version increment to v9r2 
+    version increment to v9r2
 
 !========================== LoKiMC v9r1 2010-06-18 ============================
 ! 2010-06-06 - Vanya Belyaev
  - fix typo
 
 ! 2010-06-05 - Vanya Belyaev
- - improve sources 
+ - improve sources
 
 
 ! 2010-06-02 - Vanya Belyaev
 
- - add symbols for evaluation of 
-   cos(thetta_tr), sin(phi_tr), cos(phi_tr) 
+ - add symbols for evaluation of
+   cos(thetta_tr), sin(phi_tr), cos(phi_tr)
 
 ! 2010-05-31 - Vanya Belyaev
  - add "Child-Selector:
- - add functions for evaluation of various polarization angles 
+ - add functions for evaluation of various polarization angles
 
 ! 2010-05-30 - Vanya Belyaev
 
- - polish for vairosu MC-functions 
+ - polish for vairosu MC-functions
 
- - cmt/requirements 
-    versioin increment to v9r1 
+ - cmt/requirements
+    versioin increment to v9r1
 
 
 !========================== LoKiMC v9r0 2010-04-26 ============================
@@ -155,33 +158,33 @@
 
  - LoKiMC/functions.py
 
-    LoKi.NamedRange -> Gaudi.NamedRange 
+    LoKi.NamedRange -> Gaudi.NamedRange
 
 ! 2010-04-06 - Vanya Belyaev
- - replace LoKi::Raneg by Gaudi::Range 
- - add new operators 
- - cmt/requirements 
-    version increment to v9r0 
+ - replace LoKi::Raneg by Gaudi::Range
+ - add new operators
+ - cmt/requirements
+    version increment to v9r0
 
 
 !========================== LoKiMC v8r9 2010-02-24 ============================
 ! 2010-02-18 - Vanya Belyaev
 - add new symbols
-     MCFROMDECAYS     LoKi::MCParticles::FromDecays 
+     MCFROMDECAYS     LoKi::MCParticles::FromDecays
                to check if particle comes 'only from decays'
-     MCFROMXS         LoKi::MCParticles::FromInteractions 
+     MCFROMXS         LoKi::MCParticles::FromInteractions
                to check if particle comes 'from secondary interactions'
 
-     The checks are done using LHCb::MCVertex::MCVertexType, 
+     The checks are done using LHCb::MCVertex::MCVertexType,
       thus it is "not perfect"
 
 ! 2010-02-18 - Vanya Belyaev
  - add new suymbols
-    MCINANCESTORS   to check the certain condition for ancestors 
-    MCNINANCESTORS  to count the certain condition for ancestors 
+    MCINANCESTORS   to check the certain condition for ancestors
+    MCNINANCESTORS  to count the certain condition for ancestors
 
  - cmt/requirements
-     version incrememet to v8r9 
+     version incrememet to v8r9
 
 !========================== LoKiMC v8r8 2010-02-14 ============================
 ! 2010-02-14 - Marco Cattaneo
@@ -192,12 +195,12 @@
  - Remove dependency on DaVinciMCKernel (task #13906)
 
 ! 2010-02-10 - Vanya Belyaev
- Add new symbols 
+ Add new symbols
     MCY    LoKi::MCParticles::Rapidity   for evaluation of rapidity  (y)
-    MCY0   LoKi::MCParticles::Rapidity0  for evaluation of rapidity0 (y_0) 
+    MCY0   LoKi::MCParticles::Rapidity0  for evaluation of rapidity0 (y_0)
 
- - cmt/requirements 
-    version increment to v8r8 
+ - cmt/requirements
+    version increment to v8r8
 
 !========================== LoKiMC v8r7 2009-09-02 ============================
 ! 2009-09-02 - Marco Cattaneo
@@ -205,61 +208,61 @@
 
 ! 2009-08-19 - Vanya BELYAEV
 
- - DecTree   ( MCDECTREE ) 
+ - DecTree   ( MCDECTREE )
 
     allow extraction of marked elements, however it can be rather slow
 
 
 ! 2009-08-12 - Vanya BELYAEV
 
- - add useful typedef 
+ - add useful typedef
 
 !========================== LoKiMC v8r6 2009-07-13 ============================
 ! 2009-07-12 - Vanya BELYAEV
 
- - minor fix to please Bender 
- - cmt/requirements 
-    version increment to v8r6 
+ - minor fix to please Bender
+ - cmt/requirements
+    version increment to v8r6
 
 !========================== LoKiMC v8r5 2009-06-29 ============================
 ! 2009-06-28 - Vanya Belyaev
 
- - improvement for decay finder 
+ - improvement for decay finder
 
- - cmt/requirmements 
+ - cmt/requirmements
 
     version increment to v8r5
- 
+
 
 !========================== LoKiMC v8r4 2009-06-16 ============================
 ! 2009-06-02 - Vanya BELYAEV
- - polishing of decay finder 
+ - polishing of decay finder
 
 ! 2009-05-27 - Vanya BELYAEV
  - new tool LoKi::MCDecay
-      new decay finder 
- - cmt/requirements 
+      new decay finder
+ - cmt/requirements
       version increment to v8r4
-     
+
 !========================== LoKiMC v8r3 2009-05-25 ============================
 ! 2009-05-21 - Vanya BELYAEV
  - improve the printout of MC decay (add []os for oscillated particles)
  - change the default printout, now "decayOnly" flag is "true"
 
 ! 2009-05-14 - Vanya Belyaev
- - clean-up the trees  
+ - clean-up the trees
 
 ! 2009-05-11 - Vanya Belyaev
  - fix for change in Kernel/PartProp
 
 ! 2009-05-09 - Vanya BELYAEV
- - remove unnesessary std::unary/binary_function bases 
+ - remove unnesessary std::unary/binary_function bases
  - cmt/requirements
-   version incremen to v8r3 
+   version incremen to v8r3
 
 !========================== LoKiMC v8r2 2009-05-07 ============================
 ! 2009-05-06 - Vanya BELYAEV
- - few improvements for new decay finder 
+ - few improvements for new decay finder
 
 ! 2009-03-13 - Juan PALACIOS
  - BuildTrees{.h, .cpp}
@@ -270,14 +273,14 @@
  - Add CLHEP dependency for OSX
 
 ! 2008-12-18 - Ivan Belyaev
- -  add the trees 
+ -  add the trees
 
 !========================== LoKiMC v8r0 2008-11-19 ============================
 ! 2008-11-19 - Marco Cattaneo
  - Fix for Windows compilation
 
 ! 2008-11-02 - Vanya BELYAEV
- - remove artificial assignment operators 
+ - remove artificial assignment operators
  - disable generation of assignement operators for reflex-dictionaries
  - fixes for very strange messages about "unknown type z" ???
 
@@ -286,124 +289,124 @@
  - fixes for LCG-preview
 
     Reflex tries to generate the stubs for "operator="
-    but we do NOT NEED these operators (they are disabled 
+    but we do NOT NEED these operators (they are disabled
     through non-assignable bases.. Looks like somebug in Reflex)
 
 
 ! 2008-10-29 - Vanya BELYAEV
- - fixes for gcc43 compilation 
+ - fixes for gcc43 compilation
 
 ! 2008-10-19 - Vanya BELYAEV
- - change the structure of decorators in LoKiCore v8r0 
+ - change the structure of decorators in LoKiCore v8r0
 
  - cmt/requirements
 
-    version increment to v8r0 
+    version increment to v8r0
 
 !========================== LoKiMC v7r6 2008-09-04 ============================
 ! 2008-08-04 - Vanya BELYAEV
 
- - LoKi/MCDecays.h 
+ - LoKi/MCDecays.h
 
-    improve Doxygen comments  
+    improve Doxygen comments
 
 !========================== LoKiMC v7r5 2008-07-16 ============================
 ! 2008-07-10 - Vanya BELYAEV
 
- - add the function LoKi::MCVertices::decayVertex to access the decay vertex 
+ - add the function LoKi::MCVertices::decayVertex to access the decay vertex
 
 
 ! 2008-07-09 - Vanya BELYAEV
 
- - many changed for (MC) Decay Finder 
+ - many changed for (MC) Decay Finder
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version increment to v7r5 
- 
+    version increment to v7r5
+
 
 !========================== LoKiMC v7r4 2008-06-30 ============================
 ! 2008-06-12 - Vanya BELYAEV
  - LoKi/MCDecays.h
    src/MCDecays.cpp
-    implements the MC-trees (functors which acts on the decay structure), 
+    implements the MC-trees (functors which acts on the decay structure),
     needed for implementation of new (MC)DecayFinders
 
  - fix many  Doxygen warnings  (tanks to Marco Cattaneo)
 
- - cmt/requiremens 
-   version imcrement to v7r4 
+ - cmt/requiremens
+   version imcrement to v7r4
 
 !========================== LoKiMC v7r3 2008-05-05 ============================
 ! 2008-05-05 - Marco Cattaneo
  - Fix a few doxygen warnings, many more remain to be fixed
 
  - LoKi/MCSections.h, src/MCSections.cpp
-     add functions to produce "sections" for the decay trees 
+     add functions to produce "sections" for the decay trees
 
  - LoKi/MCChild.h,  src/MCChild.cpp
-     add "daughters" 
+     add "daughters"
 
- - cmt/reqirements 
-		  version increment to v7r3 
+ - cmt/reqirements
+		  version increment to v7r3
 
 !========================== LoKiMC v7r2 2008-04-03 ============================
 ! 2008-03-30 - Vanya BELYAEV
- - new streamers/shift __rshift__ operators 
- - better printout of boolean constants 
+ - new streamers/shift __rshift__ operators
+ - better printout of boolean constants
  - cmt/requirements
-     version increment to v7r2 
+     version increment to v7r2
 
 !========================== LoKiMC v7r1 2008-02-19 ============================
 ! 2008-02-19 - Vanya BELYAEV
 
- - update all *hybrid* stuff to cover all "functional" functors 
+ - update all *hybrid* stuff to cover all "functional" functors
 
 ! 2008-02-15 - Marco Cattaneo
  - Remove dict for std::vector<const LHCb::MCVertex*>, now in MCEvent
 
 ! 2008-02-11 - Vanya BELYAEV
- - various minor fixes for new Gaudi/ROOT/Reflex 
+ - various minor fixes for new Gaudi/ROOT/Reflex
  - cmt/requirements
-    version increment to v7r1 
+    version increment to v7r1
 
 !========================== LoKiMC v7r0 2007-12-09 ============================
 
 ! 2007-12-09 - Vanya BELYAEV
- - implement "sources" 
+ - implement "sources"
    new files: LoKi/MCSources.h & src/MCSources.cpp
 
 
 ! 2007-12-01 - Vanya BELYAEV
  - upgrade for the new major version of LoKi v7r0 (The powerful streamers)
- - cmt/requirements 
-   version increment to v7r0 
+ - cmt/requirements
+   version increment to v7r0
 
 !========================== LoKiMC v6r1 2007-10-08 ============================
 ! 2007-10-07 - Vanya BELYAEV
- - cmt/requirements 
-    increment version to v6r1 
-    use new pattern for python modules 
+ - cmt/requirements
+    increment version to v6r1
+    use new pattern for python modules
 
 !========================== LoKiMC v6r0 2007-09-04 ============================
 ! 2007-08-20 - Vanya Belyaev
- - increment the major version to v6r0 
+ - increment the major version to v6r0
 
 ! 2007-08-20 - Patrick Koppenburg
  - LoKi/MCFinderObj.h
-   . Adapt to new interface of MCDecayFinder: replace all 
+   . Adapt to new interface of MCDecayFinder: replace all
      LHCb::MCParticle::Vector by ConstVector.
 
 ! 2007-07-26 - Vanya BELYAEV
  - src/Components/HybridMCParticleArrayFilter.cpp
-  add LoKi::Hybrid::MCParticleArrayFilter 
-   the first "hybrid" implementation of new interface 
-   IMCParticleArrayFilter 
+  add LoKi::Hybrid::MCParticleArrayFilter
+   the first "hybrid" implementation of new interface
+   IMCParticleArrayFilter
 
 ! 2007-07-23 - Vanya BELYAEV
  - many minor fixes to speedup compilation, reduce dictionaries
-    and improve Doxygen 
- - cmt/requirements 
+    and improve Doxygen
+ - cmt/requirements
     version increment to v3r1
 
 !========================== LoKiMC v3r0 2007-06-11 ============================
@@ -416,7 +419,7 @@
    src/MCFinderDicts.cpp
 
   Modified files:
-   
+
     LoKi/MCChild.h
     LoKi/MCFinder.h
     dict/LoKiMC.xml
@@ -429,16 +432,16 @@
  - Adapt to new location for MCInterfaces includes
 
 ! 2007-06-04 - Vanya BELYAEV
- - add many STL-like algorithms into namespace LoKi::MCAlgs, 
-   the most suitbale instances are added into LoKi::Dicts::Algs 
+ - add many STL-like algorithms into namespace LoKi::MCAlgs,
+   the most suitbale instances are added into LoKi::Dicts::Algs
  - make a coherent  (with respect to generator/HepMC)
-   treatment of "children"   (LoKi::Child). Add many 
-   functions into namespace LoKi::Child 
+   treatment of "children"   (LoKi::Child). Add many
+   functions into namespace LoKi::Child
 
  - New files:
     LoKi/MCAlgsDicts.h
     src/MCAlgsDicts.cpp
- - Modified files: 
+ - Modified files:
     LoKi/MCAlgs.h
     LoKi/MCChild.h
     dict/LoKiMC.xml
@@ -449,19 +452,19 @@
  - add 2 new functions (wrappers for IMCRecontructioble tool)
 
     LoKi::MCParticle::MCRecontructible    (alias MCREC)
-       the function which returns the recontruction category 
+       the function which returns the recontruction category
     LoKi::MCParticle::MCRecontructibleAs  (alias MCRECAS)
-       the predicate which checks the recontruction category 
+       the predicate which checks the recontruction category
 
 ! 2007-06-01 - Vanya BELYAEV
- - prepare for the major version v3r0 : 
-     all dictionaries are built locally 
+ - prepare for the major version v3r0 :
+     all dictionaries are built locally
 
  - New files:
 
    dict/LoKiMC.xml
    dict/LoKiMCDict.h
-  
+
    python/LoKiMC/__init__.py
    python/LoKiMC/decorators.py
    python/LoKiMC/functions.py
@@ -473,8 +476,8 @@
    LoKi/MCFinderObj.h
    LoKi/MCTypes.h
 
- - cmt/requiremensts 
-    version increment to v3r0 
+ - cmt/requiremensts
+    version increment to v3r0
 
 
 !========================== LoKiMC v2r2p1 2007-04-19 ===================
@@ -484,28 +487,28 @@
 !========================== LoKiMC v2r2 2007-03-04 ====================
 
 ! 2007-03-04 - Vanya BELYAEV
- - LoKi/MCPArticles.h , LoKi/MCParticleCuts.h, 
-   src/MCParticles.cpp 
-    add new functions DeltaPhi, DeltaEta and DeltaR2, 
+ - LoKi/MCPArticles.h , LoKi/MCParticleCuts.h,
+   src/MCParticles.cpp
+    add new functions DeltaPhi, DeltaEta and DeltaR2,
     very useful for Jets-studies
   - cmt/requirements
-    version increment to v2r2 
- 
+    version increment to v2r2
+
 !========================== LoKiMC v2r1 2007-02-23 ====================
 
 ! 2007-02-23 - Vanya BELYAEV
- - LoKi/MCParticles.h 
+ - LoKi/MCParticles.h
      replace "struct" -> "class"
- - cmt/requirements 
-     version increment to v2r1 
+ - cmt/requirements
+     version increment to v2r1
 
 !========================== LoKiMC v2r0 2007-01-23 ====================
 
 ! 2007-01-23 - Vanya BELYAEV
- - LoKi/MCParticleCuts.h 
-   LoKi/MCVertexCuts.h  
+ - LoKi/MCParticleCuts.h
+   LoKi/MCVertexCuts.h
 
-     add fuctions MCVALID& MCVVALID 
+     add fuctions MCVALID& MCVVALID
 
 !========================== LoKiMC v2r0 2007-01-09 ====================
 ! 2007-01-09 - Florence RANJARD
@@ -513,21 +516,21 @@
 
 !========================== LoKiMC v1r6 2006-11-25 ===================
 
-! 2006-11-29 - Vanya BELYAEV 
+! 2006-11-29 - Vanya BELYAEV
  - LoKi/BuiltMCTrees.h, src/BuiltMCTrees.cpp
    add few concrete functions (for Bender)
 
- - cmt/requirments 
-    version incrmenent to v1r6 
+ - cmt/requirments
+    version incrmenent to v1r6
 
 !========================== LoKiMC v1r5 2006-11-25 ===================
 ! 2006-11-25 - Vanya BELYAEV
- - src/PrintMCDecay.h 
-   improve the printout 
- - many tiny improvements doe Doxygen documentation  
- - cmt/requirements 
-   version increment to v1r5 
- 
+ - src/PrintMCDecay.h
+   improve the printout
+ - many tiny improvements doe Doxygen documentation
+ - cmt/requirements
+   version increment to v1r5
+
 
 !========================== LoKiMC v1r4 2006-11-09 ===================
 
@@ -535,19 +538,19 @@
 
 - LoKi/PrintMCDecay.h
    src/PrintMCDecay.h
-     1) move all functions into the namespace LoKi::Print 
-     2) add an maximum recursion level 
- - cmt/requirements 
-     version increment to v1r4 
+     1) move all functions into the namespace LoKi::Print
+     2) add an maximum recursion level
+ - cmt/requirements
+     version increment to v1r4
 
 !========================== LoKiMC v1r3 2006-10-26 ===================
 
 ! 2006-10-26 - Vanya BELYAEV
 
  - technical fixes for SLC4 platform
-   fix an compilation error and many compilation warnings 
+   fix an compilation error and many compilation warnings
 
- - retag as v1r3 
+ - retag as v1r3
 
 !========================== LoKiMC v1r3 2006-10-11 ===================
 ! 2006-10-10 - Vanya BELYAEV
@@ -557,172 +560,172 @@
    LoKi/MCVertexCuts.h
    LoKi/MCVertices.h
    src/MCFinderObj.cpp
-     many tiny fixes for good&valid reflex/python dictionaries 
- - cmt/requirements 
-    version incrmeent to v1r3 
+     many tiny fixes for good&valid reflex/python dictionaries
+ - cmt/requirements
+    version incrmeent to v1r3
 
 !========================== LoKiMC v1r2 2006-09-06 ===================
 
 ! 2006-09-06 - Vanya BELYAEV
  - LoKi/MCTypes.h
-   replace hand-made definition of MCContainer to delegation to 
+   replace hand-made definition of MCContainer to delegation to
     LHCb::MCPArticles::ConstVector
 
-   TODO: the same need to be done with MCVertices 
+   TODO: the same need to be done with MCVertices
 
  - cmt/requirements
 
-    version increment to v1r2 
+    version increment to v1r2
 
 !========================== LoKiMC v1r1 2006-05-29 ===================
 
 ! 2006-05-27 - Vanya BELYAEV
  - LoKi/PrintMCDecay.h, src/PrintMCDecay.cpp
-   new utilities LoKi::printMCDecay and LoKi::printDecay 
-   for printout of MC-decay tree 
+   new utilities LoKi::printMCDecay and LoKi::printDecay
+   for printout of MC-decay tree
  - cmt/requirements
-   versionincrement to v1r1 
+   versionincrement to v1r1
 
 ! 2006-02-09 - Vanya BELYAEV
 
  - LoKi/MCAlgs.h
 
-   few trivial, but efficient highly recirsive pseudo-algorithms  
-   to counting/checking the particles from MC-decay trees: 
+   few trivial, but efficient highly recirsive pseudo-algorithms
+   to counting/checking the particles from MC-decay trees:
 
-    /** @fn count_if 
+    /** @fn count_if
      *  the trivial algorithm to count number of MC particles
-     *  in the tree, which satisfy the certain criteria 
+     *  in the tree, which satisfy the certain criteria
      *
-     *  @code 
+     *  @code
      *
      *  const LHCb::MCParticle* B = .. ;
      *
-     *  const size_n muons = 
+     *  const size_n muons =
      *     LoKi::MCAlgs::count_if( B , "mu+" == MCABSID ) ;
-     * 
-     *  @endcode 
+     *
+     *  @endcode
      *
      *
      *  @see LHCb::MCParticle
-     *  @see LoKi::Cuts::MCABSID 
+     *  @see LoKi::Cuts::MCABSID
      *
-     *  @param   particle pointer to MC particle  
-     *  @param   predicate criteria 
+     *  @param   particle pointer to MC particle
+     *  @param   predicate criteria
      *  @return  number of aprticles which satisfy the criteria
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-09
      */
     template <class PREDICATE>
-    inline size_t  LoKi::MCAlgs::count_if 
-    ( const LHCb::MCParticle* particle   , 
+    inline size_t  LoKi::MCAlgs::count_if
+    ( const LHCb::MCParticle* particle   ,
       const PREDICATE&        predicate ) ;
 
 
-    /** @fn count_if 
+    /** @fn count_if
      *  the trivial algorithm to count number of MC particles
-     *  in the tree, which satisfy the certain criteria 
+     *  in the tree, which satisfy the certain criteria
      *
      *  Count number of muons in the decay tree of the B:
      *
-     *  @code 
+     *  @code
      *
      *  const LHCb::MCVertex* vx = .. ;
      *
-     *  const size_n muons = 
+     *  const size_n muons =
      *     LoKi::MCAlgs::count_if ( vx , "mu+" == MCABSID ) ;
-     * 
-     *  @endcode 
+     *
+     *  @endcode
      *
      *  @see LHCb::MCVertex
-     *  @see LoKi::Cuts::MCABSID 
+     *  @see LoKi::Cuts::MCABSID
      *
-     *  @param   vertex pointer to MC vertex 
-     *  @param   predicate criteria 
+     *  @param   vertex pointer to MC vertex
+     *  @param   predicate criteria
      *  @return  number of aprticles which satisfy the criteria
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-09
      */
    template <class PREDICATE>
-    inline size_t  LoKi::MCAlgs::count_if 
-    ( const LHCb::MCVertex* vertex    , 
+    inline size_t  LoKi::MCAlgs::count_if
+    ( const LHCb::MCVertex* vertex    ,
       const PREDICATE&      predicate ) ;
 
-    /** @fn found 
-     *  trivial algorithm which returns true if 
-     *  the exist at least one particle in the tree which satisfy 
+    /** @fn found
+     *  trivial algorithm which returns true if
+     *  the exist at least one particle in the tree which satisfy
      *  the certain criteria
      *
-     *  Check the presence of high-PT muon in the 
+     *  Check the presence of high-PT muon in the
      *   decay tree of the particle:
      *
-     *  @code 
-     *  
+     *  @code
+     *
      *  const LHCb::MCParticle* B = ... ;
-     *  
+     *
      *  MCCut lepton = "mu+" == MCABSID && PT > 2 * GeV ;
-     * 
+     *
      *  const bool good = found ( B , lepton ) ;
-     * 
-     *  @endcode 
+     *
+     *  @endcode
      *
      *  @see LoKi::Types::MCCut
-     *  @see LoKi::Cuts::MCABSID 
-     *  @see LoKi::Cuts::MCPT 
+     *  @see LoKi::Cuts::MCABSID
+     *  @see LoKi::Cuts::MCPT
      *
-     *  @param   particle pointer to MC particle  
-     *  @param   predicate criteria 
+     *  @param   particle pointer to MC particle
+     *  @param   predicate criteria
      *  @return  number of aprticles which satisfy the criteria
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-09
      */
     template <class PREDICATE>
-    inline bool LoKi::MCAlgs::found  
-    ( const LHCb::MCParticle* particle  , 
+    inline bool LoKi::MCAlgs::found
+    ( const LHCb::MCParticle* particle  ,
       const PREDICATE&        predicate ) ;
 
-    /** @fn found 
-     *  trivial algorithm which returns true if 
-     *  the exist at least one particle in the tree which satisfy 
+    /** @fn found
+     *  trivial algorithm which returns true if
+     *  the exist at least one particle in the tree which satisfy
      *  the certain criteria
      *
-     *  @code 
-     *  
+     *  @code
+     *
      *  const LHCb::MCVertex* vx = ... ;
-     *  
+     *
      *  MCCut lepton = "mu+" == MCABSID && PT > 2 * GeV ;
-     * 
+     *
      *  const bool good = found ( vx , lepton ) ;
-     * 
-     *  @endcode 
+     *
+     *  @endcode
      *
      *  @see LoKi::Types::MCCut
-     *  @see LoKi::Cuts::MCABSID 
-     *  @see LoKi::Cuts::MCPT 
-     *  
-     *  @param   vertex  pointer to MC vertex 
-     *  @param   predicate criteria 
+     *  @see LoKi::Cuts::MCABSID
+     *  @see LoKi::Cuts::MCPT
+     *
+     *  @param   vertex  pointer to MC vertex
+     *  @param   predicate criteria
      *  @return  number of aprticles which satisfy the criteria
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-09
      */
      template <class PREDICATE>
-     inline bool LoKi::McAlgs::found  
-    ( const LHCb::MCVertex*   vertex    , 
+     inline bool LoKi::McAlgs::found
+    ( const LHCb::MCVertex*   vertex    ,
       const PREDICATE&        predicate ) ;
 
 
  - LoKi/MCExtract.h
- 
+
     A bit more efficient, but buch more elegant redesign/reimplementations
-    of funtions  
-        - LoKi::Extract::mcPatricles 
-        - LoKi::Extract::getMCParticles 
+    of funtions
+        - LoKi::Extract::mcPatricles
+        - LoKi::Extract::getMCParticles
 
 
-! 2006-01-24 - Vanya BELYAEV  
- - New import: the basic functors and cuts for MCParticles/MCVertices 
+! 2006-01-24 - Vanya BELYAEV
+ - New import: the basic functors and cuts for MCParticles/MCVertices
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------

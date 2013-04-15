@@ -1,6 +1,6 @@
 // $Id: $
 // ============================================================================
-// Include files 
+// Include files
 // ============================================================================
 // STD/ STL
 // ============================================================================
@@ -10,13 +10,13 @@
 // ============================================================================
 #include "LoKi/FirstN.h"
 // ============================================================================
-/** @file 
+/** @file
  *  Implementation file for class LoKi::FirstN
  *
- *  @see LoKi::FirstN 
+ *  @see LoKi::FirstN
  *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
- *  @date   2011-10-30 
- * 
+ *  @date   2011-10-30
+ *
  *                    $Revision$
  *  Last modification $Date$
  *                 by $Author$
@@ -25,23 +25,23 @@
 // constructor
 // ============================================================================
 LoKi::FirstN::FirstN ( const unsigned int N )                    // constructor
-  : m_N ( N ) 
+  : m_N ( N )
 {}
 // ============================================================================
 // destructor
 // ============================================================================
 LoKi::FirstN::~FirstN () {}
 // ============================================================================
-// printout 
+// printout
 // ============================================================================
-std::ostream& 
+std::ostream&
 LoKi::FirstN::fillStream ( std::ostream& s ) const
 { return s << " FirstN(" <<  m_N << ") " ; }
 // ============================================================================
-// output operator 
+// output operator
 // ============================================================================
-std::ostream& 
-operator<< ( std::ostream& s , const LoKi::FirstN& o ) 
+std::ostream&
+LoKi::operator<< ( std::ostream& s , const FirstN& o )
 { return o.fillStream  ( s ) ; }
 // ============================================================================
 
@@ -54,48 +54,48 @@ LoKi::Reverse::Reverse(){}
 // ============================================================================
 LoKi::Reverse::~Reverse(){}
 // ============================================================================
-// printout 
+// printout
 // ============================================================================
-std::ostream& 
+std::ostream&
 LoKi::Reverse::fillStream ( std::ostream& s ) const
 { return s << " reverse " ; }
 // ============================================================================
-// output operator 
+// output operator
 // ============================================================================
-std::ostream& 
-operator<< ( std::ostream& s , const LoKi::Reverse& o ) 
+std::ostream&
+LoKi::operator<< ( std::ostream& s , const LoKi::Reverse& o )
 { return o.fillStream  ( s ) ; }
 // ============================================================================
 
 // ============================================================================
-// constructor 
+// constructor
 // ============================================================================
 LoKi::Sort::Sort
-( const int  N          , // ALL 
-  const bool ascending  ) 
-  : m_N         ( N         ) 
-  , m_ascending ( ascending ) 
+( const int  N          , // ALL
+  const bool ascending  )
+  : m_N         ( N         )
+  , m_ascending ( ascending )
 {}
 // ============================================================================
-// virtual destructor 
+// virtual destructor
 // ============================================================================
 LoKi::Sort::~Sort (){}
 // ============================================================================
-// printout 
+// printout
 // ============================================================================
-std::ostream& 
+std::ostream&
 LoKi::Sort::fillStream ( std::ostream& s ) const
-{ 
+{
   s << " Sort(" ;
   if ( !m_ascending || 0 <= m_N ) { s << "," << m_N     ; }
   if ( !m_ascending || 0 <= m_N ) { s << "," << "False" ; }
   return s << ") " ;
-}  
+}
 // ============================================================================
-// output operator 
+// output operator
 // ============================================================================
-std::ostream& 
-operator<< ( std::ostream& s , const LoKi::Sort& o ) 
+std::ostream&
+LoKi::operator<< ( std::ostream& s , const LoKi::Sort& o )
 { return o.fillStream  ( s ) ; }
 // ============================================================================
 

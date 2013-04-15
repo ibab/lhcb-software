@@ -1,6 +1,6 @@
 // $Id: L0Cuts.h,v 1.3 2010-03-12 12:23:55 ibelyaev Exp $
 // ============================================================================
-#ifndef LOKI_L0CUTS_H 
+#ifndef LOKI_L0CUTS_H
 #define LOKI_L0CUTS_H 1
 // ============================================================================
 // Include files
@@ -9,191 +9,184 @@
 // ============================================================================
 #include "LoKi/L0.h"
 // ============================================================================
-namespace LoKi 
+namespace LoKi
 {
   // ==========================================================================
-  namespace Cuts 
-  {   
-    // Suppress Intel compiler warnings about missing default constructor
-    // In this case the compiler generated constructor is fine, since there are
-    // no member data to be initialised
-    #ifdef __INTEL_COMPILER
-      #pragma warning(disable:854)
-      #pragma warning(push)
-    #endif
+  namespace Cuts
+  {
     // ========================================================================
     /** @typedef L0_CHANNEL
-     *  Accessor to check the channel decision 
-     * 
-     *  @code 
-     * 
+     *  Accessor to check the channel decision
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
-     *   const std::vector<std::string>& channels = ... ; 
+     *
+     *   const std::vector<std::string>& channels = ... ;
      *
      *   const L0_CHANNEL d1 = L0_CHANNEL (  1             , 0 ) ;
      *   const L0_CHANNEL d2 = L0_CHANNEL ( 'channel name' , 0 ) ;
      *   const L0_CHANNEL d2 = L0_CHANNEL (  channels      , 0 ) ;
-     * 
+     *
      *   const bool dec1 = d1 ( l0 ) ;
      *   const bool dec2 = d2 ( l0 ) ;
      *   const bool dec3 = d3 ( l0 ) ;
      *
-     *  @endcode 
-     *     
+     *  @endcode
+     *
      *  @see LoKi::Cuts::L0_CHDECISION
      *  @see LoKi::L0::ChannelDecision
-     *  @see LHCb::L0DUReport::channelDecision 
-     *  @see LHCb::L0DUReport::channelDecisionByName  
+     *  @see LHCb::L0DUReport::channelDecision
+     *  @see LHCb::L0DUReport::channelDecisionByName
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
     typedef LoKi::L0::ChannelDecision                              L0_CHANNEL ;
     // ========================================================================
     /** @typedef L0_CHDECISION
-     *  Accessor to check the channel decision 
-     * 
-     *  @code 
-     * 
+     *  Accessor to check the channel decision
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
-     *   const std::vector<std::string>& channels = ... ; 
+     *
+     *   const std::vector<std::string>& channels = ... ;
      *
      *   const L0_CHDECISION d1 = L0_CHDECISION (  1             , 0 ) ;
      *   const L0_CHDECISION d2 = L0_CHDECISION ( 'channel name' , 0 ) ;
      *   const L0_CHDECISION d3 = L0_CHDECISION (  channels      , 0 ) ;
-     * 
+     *
      *   const bool dec1 = d1 ( l0 ) ;
      *   const bool dec2 = d2 ( l0 ) ;
      *   const bool dec3 = d3 ( l0 ) ;
      *
-     *  @endcode 
-     *     
+     *  @endcode
+     *
      *  @see LoKi::Cuts::L0_CHANNEL
      *  @see LoKi::L0::ChannelDecision
-     *  @see LHCb::L0DUReport::channelDecision 
-     *  @see LHCb::L0DUReport::channelDecisionByName  
+     *  @see LHCb::L0DUReport::channelDecision
+     *  @see LHCb::L0DUReport::channelDecisionByName
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
     typedef LoKi::L0::ChannelDecision                           L0_CHDECISION ;
     // ========================================================================
     /** @typedef L0_CHPREDECISION
-     *  Accessor to check the channel PRE-decision 
-     * 
-     *  @code 
-     * 
+     *  Accessor to check the channel PRE-decision
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
-     *   const std::vector<std::string>& channels = ... ; 
+     *
+     *   const std::vector<std::string>& channels = ... ;
      *
      *   const L0_CHPREDECISION d1 = L0_CHPREDECISION (  1             , 0 ) ;
      *   const L0_CHPREDECISION d2 = L0_CHPREDECISION ( 'channel name' , 0 ) ;
      *   const L0_CHPREDECISION d2 = L0_CHPREDECISION (  channels      , 0 ) ;
-     * 
+     *
      *   const bool dec1 = d1 ( l0 ) ;
      *   const bool dec2 = d2 ( l0 ) ;
      *   const bool dec3 = d3 ( l0 ) ;
      *
-     *  @endcode 
-     *     
+     *  @endcode
+     *
      *  @see LoKi::L0::ChannelPreDecision
-     *  @see LHCb::L0DUReport::channelPreDecision 
-     *  @see LHCb::L0DUReport::channelPreDecisionByName  
+     *  @see LHCb::L0DUReport::channelPreDecision
+     *  @see LHCb::L0DUReport::channelPreDecisionByName
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
     typedef LoKi::L0::ChannelPreDecision                      L0_CHPREDECISION ;
     // ========================================================================
     /** @typedef L0_CONDITION
-     *  Accessor to check the condition value 
-     * 
-     *  @code 
-     * 
+     *  Accessor to check the condition value
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
-     *   const std::vector<std::string>& conditions = ... ; 
+     *
+     *   const std::vector<std::string>& conditions = ... ;
      *
      *   const L0_CONDITION c1 = L0_CONDITION (  1               , 0 ) ;
      *   const L0_CONDITION c2 = L0_CONDIITON ( 'condiiton name' , 0 ) ;
      *   const L0_CONDITION c3 = L0_CONDITION (  conditions      , 0 ) ;
-     * 
+     *
      *   const bool con1 = c1 ( l0 ) ;
      *   const bool con2 = c2 ( l0 ) ;
      *   const bool con3 = c3 ( l0 ) ;
      *
-     *  @endcode 
-     *     
+     *  @endcode
+     *
      *  @see LoKi::L0::ConditionValue
      *  @see LHCb::L0DUReport::conditionValue
-     *  @see LHCb::L0DUReport::conditionValueByName  
+     *  @see LHCb::L0DUReport::conditionValueByName
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
     typedef LoKi::L0::ConditionValue                             L0_CONDITION ;
     // ========================================================================
     /** @typedef L0_DATA
-     *  Simple accessor to 'dataValue' for L0 
-     * 
-     *  @code 
-     * 
+     *  Simple accessor to 'dataValue' for L0
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   const std::string& name = ... ;
      *
      *   const L0_DATA data = L0_DATA ( name  ) ;
-     *  
+     *
      *   double value = data ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::DataValue
-     *  @see LHCb::L0DUReport::dataValue  
+     *  @see LHCb::L0DUReport::dataValue
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
     typedef  LoKi::L0::DataValue                                      L0_DATA ;
     // ========================================================================
     /** @typedef L0_DECISION
-     *  Simple accessor to LHCb::L0DUReport::decision 
-     * 
-     *  @code 
-     * 
+     *  Simple accessor to LHCb::L0DUReport::decision
+     *
+     *  @code
+     *
      *   const L0_DECISION decision = L0_DECISION ( 4) ;
      *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   bool ok = decision ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::Decision
      *  @see LHCb::L0DUReport::decision
      *  @see LHCb::L0DUDecision
-     *  @see LoKi::Cuts::L0_DECISION_PHYSICS 
+     *  @see LoKi::Cuts::L0_DECISION_PHYSICS
      *  @see LoKi::Cuts::L0_DECISION_BEAM1
-     *  @see LoKi::Cuts::L0_DECISION_BEAM2 
+     *  @see LoKi::Cuts::L0_DECISION_BEAM2
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
     typedef LoKi::L0::Decision                                    L0_DECISION ;
     // ========================================================================
     /** @var L0_DECISION_BEAM1
-     *  Simple accessor to LHCb::L0DUReport::decision 
-     * 
-     *  @code 
-     * 
+     *  Simple accessor to LHCb::L0DUReport::decision
+     *
+     *  @code
+     *
      *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   bool ok = L0_DECISION_BEAM1 ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::Decision
      *  @see LoKi::Cuts::L0_DECISION
-     *  @see LoKi::Cuts::L0_DECISION_PHYSICS 
-     *  @see LoKi::Cuts::L0_DECISION_BEAM2 
+     *  @see LoKi::Cuts::L0_DECISION_PHYSICS
+     *  @see LoKi::Cuts::L0_DECISION_BEAM2
      *  @see LHCb::L0DUReport::decision
      *  @see LHCb::L0DUDecision
      *  @see LHCb::L0DUDecision::Beam1
@@ -203,20 +196,20 @@ namespace LoKi
     const LoKi::L0::Decision  L0_DECISION_BEAM1 ( LHCb::L0DUDecision::Beam1 ) ;
     // ========================================================================
     /** @var L0_DECISION_BEAM2
-     *  Simple accessor to LHCb::L0DUReport::decision 
-     * 
-     *  @code 
-     * 
+     *  Simple accessor to LHCb::L0DUReport::decision
+     *
+     *  @code
+     *
      *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   bool ok = L0_DECISION_BEAM2 ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::Decision
      *  @see LoKi::Cuts::L0_DECISION
-     *  @see LoKi::Cuts::L0_DECISION_PHYSICS 
+     *  @see LoKi::Cuts::L0_DECISION_PHYSICS
      *  @see LoKi::Cuts::L0_DECISION_BEAM1
      *  @see LHCb::L0DUReport::decision
      *  @see LHCb::L0DUDecision
@@ -226,16 +219,16 @@ namespace LoKi
      */
     const LoKi::L0::Decision  L0_DECISION_BEAM2 ( LHCb::L0DUDecision::Beam2 ) ;
     // ========================================================================
-    /** @var L0_DECISION_PHYSICS 
-     *  Simple accessor to LHCb::L0DUReport::decision 
-     * 
-     *  @code 
-     * 
+    /** @var L0_DECISION_PHYSICS
+     *  Simple accessor to LHCb::L0DUReport::decision
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   bool ok = L0_DECISION_PHYSICS ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::Decision
      *  @see LoKi::Cuts::L0_DECISION
@@ -243,26 +236,26 @@ namespace LoKi
      *  @see LoKi::Cuts::L0_DECISION_BEAM2
      *  @see LHCb::L0DUReport::decision
      *  @see LHCb::L0DUDecision
-     *  @see LHCb::L0DUDecision::Physics 
+     *  @see LHCb::L0DUDecision::Physics
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
     const LoKi::L0::Decision L0_DECISION_PHYSICS ( LHCb::L0DUDecision::Physics );
     // ========================================================================
     /** @typedef L0_DIGIT
-     *  Simple accessor to 'dataDigit' for L0 
-     * 
-     *  @code 
-     * 
+     *  Simple accessor to 'dataDigit' for L0
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   const std::string& name = ... ;
      *
      *   const L0_DIGIT digit = L0_DIGIT ( name  ) ;
-     *  
+     *
      *   double value = digit  ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::DataDigit
      *  @see LHCb::L0DUReport::dataDigit
@@ -273,14 +266,14 @@ namespace LoKi
     // ========================================================================
     /** @var L0_FORCEBIT
      *  Simple accessor to 'force bit'
-     * 
-     *  @code 
-     * 
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   bool force = L0_FORCEBIT( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::ForceBit
      *  @see LHCb::L0DUReport::forceBit
@@ -289,41 +282,41 @@ namespace LoKi
      */
     const LoKi::L0::ForceBit                                      L0_FORCEBIT ;
     // ========================================================================
-    /** @typedef L0_SUMET 
-     *  Simple accessor to 'sum-et' by L0 
-     * 
-     *  @code 
-     * 
+    /** @typedef L0_SUMET
+     *  Simple accessor to 'sum-et' by L0
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   const L0_SUMET sumEt = L0_SUMET( 0 ) ;
-     *  
+     *
      *   double energy = sumEt( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Cuts::L0_SUMET0
      *  @see LoKi::L0::SumEt
-     *  @see LHCb::L0DUReport::sumEt 
+     *  @see LHCb::L0DUReport::sumEt
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
     typedef  LoKi::L0::SumEt                                         L0_SUMET ;
     // ========================================================================
-    /** @var L0_SUMET0 
+    /** @var L0_SUMET0
      *  Simple accessor to 'sum-et' by L0 in bx=0
-     * 
-     *  @code 
-     * 
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   double energy = L0_SUMET0 ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Cuts::L0_SUMET
      *  @see LoKi::L0::SumEt
-     *  @see LHCb::L0DUReport::sumEt 
+     *  @see LHCb::L0DUReport::sumEt
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
@@ -331,37 +324,37 @@ namespace LoKi
     // ========================================================================
     /** @typedef L0_SUMDECISION
      *  Simple accessor to 'decison form summary'
-     * 
-     *  @code 
-     * 
+     *
+     *  @code
+     *
      *   const L0_SUMDECISION  dec = L0SUMDECISON ( mask , bx ) ;
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   bool decision = dec ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::SumDecision
      *  @see LoKi::Cuts::L0_SUMDECISION_PHYSICS
      *  @see LoKi::Cuts::L0_SUMDECISION_BEAM1
      *  @see LoKi::Cuts::L0_SUMDECISION_BEAM2
      *  @see LHCb::L0DUReport::decisionFromSummary
-     *  @see LHCb::L0DUDecision::Type 
+     *  @see LHCb::L0DUDecision::Type
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
     typedef LoKi::L0::SumDecision                               L0_SUMDECISION ;
     // ========================================================================
-    /** @var L0_SUMDECISION_BEAM1 
+    /** @var L0_SUMDECISION_BEAM1
      *  Simple accessor to 'decison from summary'
-     * 
-     *  @code 
-     * 
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   bool decision = L0_SUMDECISION_BEAM1 ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::SumDecision
      *  @see LoKi::Cuts::L0_SUMDECISION
@@ -374,16 +367,16 @@ namespace LoKi
      */
     const LoKi::L0::SumDecision L0_SUMDECISION_BEAM1 ( LHCb::L0DUDecision::Beam1 ) ;
     // ========================================================================
-    /** @var L0_SUMDECISION_BEAM2 
+    /** @var L0_SUMDECISION_BEAM2
      *  Simple accessor to 'decison from summary'
-     * 
-     *  @code 
-     * 
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   bool decision = L0_SUMDECISION_BEAM2 ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::SumDecision
      *  @see LoKi::Cuts::L0_SUMDECISION
@@ -398,14 +391,14 @@ namespace LoKi
     // ========================================================================
     /** @var L0_SUMDECISION_PHYSICS
      *  Simple accessor to 'decison from summary'
-     * 
-     *  @code 
-     * 
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   bool decision = L0_SUMDECISION_PHYSICS ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::SumDecision
      *  @see LoKi::Cuts::L0_SUMDECISION
@@ -420,14 +413,14 @@ namespace LoKi
     // ========================================================================
     /** @var L0_TCK
      *  Simple accessor to 'trigger configuration key'
-     * 
-     *  @code 
-     * 
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   double tck = L0_TCK ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::Tck
      *  @see LHCb::L0DUReport::tck
@@ -438,14 +431,14 @@ namespace LoKi
     // ========================================================================
     /** @var L0_TIMING
      *  Simple accessor to 'timing bit'
-     * 
-     *  @code 
-     * 
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
+     *
      *   bool timingBit = L0_TIMINGBIT ( l0 ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::L0::TimingBit
      *  @see LHCb::L0DUReport::timingTriggerBit
@@ -454,67 +447,63 @@ namespace LoKi
      */
     const LoKi::L0::TimingBit                                    L0_TIMINGBIT ;
     // ========================================================================
-    /** @typedef L0_TRIGGER 
-     *  Accessor to check the trigger decision 
-     * 
-     *  @code 
-     * 
+    /** @typedef L0_TRIGGER
+     *  Accessor to check the trigger decision
+     *
+     *  @code
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
-     * 
-     *   const std::vector<std::string>& triggers = ... ; 
+     *
+     *   const std::vector<std::string>& triggers = ... ;
      *
      *   const L0_TRIGGER t1 = L0_TRIGGER (  1             , 0 ) ;
      *   const L0_TRIGGER t2 = L0_TRIGGER ( 'trigger name' , 0 ) ;
      *   const L0_TRIGGER t3 = L0_TRIGGER (  triggers      , 0 ) ;
-     * 
+     *
      *   const bool trig1 = t1 ( l0 ) ;
      *   const bool trig2 = t2 ( l0 ) ;
      *   const bool trig3 = t3 ( l0 ) ;
      *
-     *  @endcode 
-     *     
+     *  @endcode
+     *
      *  @see LoKi::L0::TriggerDecision
      *  @see LHCb::L0DUReport::triggerDecision
-     *  @see LHCb::L0DUReport::triggerDecisionByName  
+     *  @see LHCb::L0DUReport::triggerDecisionByName
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
     typedef LoKi::L0::TriggerDecision                              L0_TRIGGER ;
     // ========================================================================
-    /** @var L0_VALID 
+    /** @var L0_VALID
      *  Tricial functor to check th wvalidity of L0DUReport object.
      *  Unlike all other L0-functors, is also accepts zero pointer.
      *  It acts according the rule:
-     *  @code 
-     *     return 0 != l0 && l0->valid() 
-     *  @endcode 
-     *   
-     *  @code 
+     *  @code
+     *     return 0 != l0 && l0->valid()
+     *  @endcode
+     *
+     *  @code
      *
      *    const LHCb::L0DUReport* l0 = ... ;
      *
      *    const bool valid = L0_VALID ( l0 ) ;
      *
-     *  @code 
-     *  
-     *  @see LoKi::L0::Valid 
-     *  @see LHCb::L0DUReport 
-     *  @see LHCb::L0DUReport::valid 
+     *  @code
+     *
+     *  @see LoKi::L0::Valid
+     *  @see LHCb::L0DUReport
+     *  @see LHCb::L0DUReport::valid
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-01-08
      */
     const LoKi::L0::Valid                                            L0_VALID ;
-
-    #ifdef __INTEL_COMPILER
-      #pragma warning(pop) // End disable ICC warning #854
-    #endif
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts
   // ==========================================================================
-} //                                                      end of namespace LoKi 
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 #endif // LOKI_L0CUTS_H
 // ============================================================================

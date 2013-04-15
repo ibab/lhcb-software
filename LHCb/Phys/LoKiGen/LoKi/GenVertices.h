@@ -1,6 +1,6 @@
 // $Id$
 // ============================================================================
-#ifndef LOKI_GENVERTICES_H 
+#ifndef LOKI_GENVERTICES_H
 #define LOKI_GENVERTICES_H 1
 // ============================================================================
 // Include files
@@ -17,41 +17,41 @@
 // ============================================================================
 /** @file LoKi/GenVertices.h
  *
- *  This file is a part of LoKi project - 
+ *  This file is a part of LoKi project -
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
  *
  *  The package has been designed with the kind help from
- *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
- *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+ *  contributions and advices from G.Raven, J.van Tilburg,
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
+ *  By usage of this code one clearly states the disagreement
+ *  with the smear campaign of Dr.O.Callot et al.:
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-02-08 
- * 
+ *  @date 2006-02-08
+ *
  *                    $Revision$
  *  Last modification $Date$
  *                 by $Author$
  */
-namespace LoKi 
+namespace LoKi
 {
   // ==========================================================================
   /** @namespace LoKi::GenVertices GenVertices.h LoKi/GenVertices.h
-   *  
-   *  Collection of LoKi functions and predicates to manipulate with 
-   *  generator (HepMC) information 
+   *
+   *  Collection of LoKi functions and predicates to manipulate with
+   *  generator (HepMC) information
    *
    *  @author Vanya  BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-02-08
    */
-  namespace GenVertices 
+  namespace GenVertices
   {
     // ========================================================================
-    /** @class BarCode 
-     *  the most primitive function - it return the "barcode" 
+    /** @class BarCode
+     *  the most primitive function - it return the "barcode"
      *  of HepMC::GenVertex object
      *
      *  @see LoKi::Cuts::GVBAR
@@ -60,76 +60,82 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class GAUDI_API BarCode : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API BarCode : public LoKi::GenTypes::GVFunc
     {
     public:
       // ======================================================================
+      /// MANDATORY: default constructor
+      BarCode() {}
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  BarCode* clone() const ;
-      /// MANDATORY: virtual destructor 
+      /// MANDATORY: virtual destructor
       virtual ~BarCode() ;
-      /// MANDATORY: the only one essential method 
+      /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     } ;
-    // ========================================================================    
+    // ========================================================================
     /** @class PositionX
      *
-     *  the most primitive function - it return the position 
+     *  the most primitive function - it return the position
      *  of HepMC::GenVertex object
      *
-     *  @see LoKi::Cuts::GVX 
+     *  @see LoKi::Cuts::GVX
      *  @see HepMC::GenVertex
      *
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class GAUDI_API PositionX : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API PositionX : public LoKi::GenTypes::GVFunc
     {
     public:
       // ======================================================================
+      /// MANDATORY: default constructor
+      PositionX() {}
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  PositionX* clone() const ;
-      /// MANDATORY: virtual destructor 
+      /// MANDATORY: virtual destructor
       virtual ~PositionX() ;
-      /// MANDATORY: the only one essential method 
+      /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     } ;
     // ========================================================================
     /** @class PositionY
      *
-     *  the most primitive function - it return the position 
+     *  the most primitive function - it return the position
      *  of HepMC::GenVertex object
      *
-     *  @see LoKi::Cuts::GVY 
+     *  @see LoKi::Cuts::GVY
      *  @see HepMC::GenVertex
      *
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class GAUDI_API PositionY : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API PositionY : public LoKi::GenTypes::GVFunc
     {
     public:
       // ======================================================================
+      /// MANDATORY: default constructor
+      PositionY() {}
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  PositionY* clone() const ;
-      /// MANDATORY: virtual destructor 
+      /// MANDATORY: virtual destructor
       virtual ~PositionY() ;
-      /// MANDATORY: the only one essential method 
+      /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     } ;
     // ========================================================================
     /** @class PositionZ
      *
-     *  the most primitive function - it return the position 
+     *  the most primitive function - it return the position
      *  of HepMC::GenVertex object
      *
      *  @see LoKi::Cuts::GVZ
@@ -138,24 +144,26 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class  GAUDI_API PositionZ : public LoKi::GenTypes::GVFunc 
+    class  GAUDI_API PositionZ : public LoKi::GenTypes::GVFunc
     {
     public:
       // ======================================================================
+      /// MANDATORY: default constructor
+      PositionZ() {}
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  PositionZ* clone() const ;
-      /// MANDATORY: virtual destructor 
+      /// MANDATORY: virtual destructor
       virtual ~PositionZ() ;
-      /// MANDATORY: the only one essential method 
+      /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     } ;
     // ========================================================================
     /** @class PositionT
      *
-     *  the most primitive function - it return the time component of 
+     *  the most primitive function - it return the time component of
      *  the position for HepMC::GenVertex object
      *
      *  @see LoKi::Cuts::GVT
@@ -164,24 +172,26 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class GAUDI_API PositionT : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API PositionT : public LoKi::GenTypes::GVFunc
     {
     public:
       // ======================================================================
+      /// MANDATORY: default constructor
+      PositionT() {}
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  PositionT* clone() const ;
-      /// MANDATORY: virtual destructor 
+      /// MANDATORY: virtual destructor
       virtual ~PositionT() ;
-      /// MANDATORY: the only one essential method 
+      /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     } ;
     // ========================================================================
     /** @class Rho
      *
-     *  the most primitive function - it return the rho-position (cylindrical) 
+     *  the most primitive function - it return the rho-position (cylindrical)
      *  HepMC::GenVertex object
      *
      *  @see LoKi::Cuts::GVRHO
@@ -190,23 +200,25 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2012-02-13
      */
-    class GAUDI_API Rho : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API Rho : public LoKi::GenTypes::GVFunc
     {
     public:
       // ======================================================================
+      /// MANDATORY: default constructor
+      Rho() {}
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  Rho* clone() const ;
-      /// MANDATORY: virtual destructor 
+      /// MANDATORY: virtual destructor
       virtual ~Rho() ;
-      /// MANDATORY: the only one essential method 
+      /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     } ;
-    // ========================================================================    
+    // ========================================================================
     /** @class CountIF
-     *  simple class which counts how many particles 
+     *  simple class which counts how many particles
      *  satisfy the certain criteria
      *
      *  @see LoKi::Cuts::GVCOUNT
@@ -216,40 +228,40 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class GAUDI_API CountIF : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API CountIF : public LoKi::GenTypes::GVFunc
     {
     public:
       // ======================================================================
       /** constructor from the criteria and "range"
        *  @param cut the criteria
-       *  @param range search region 
-       *  @see HepMC::IteratorRange 
+       *  @param range search region
+       *  @see HepMC::IteratorRange
        */
-      CountIF 
-      ( const LoKi::Types::GCuts& cut   , 
+      CountIF
+      ( const LoKi::Types::GCuts& cut   ,
         HepMC::IteratorRange      range ) ;
       /** constructor from the criteria and "range"
-       *  @param range search region 
+       *  @param range search region
        *  @param cut the criteria
-       *  @see HepMC::IteratorRange 
+       *  @see HepMC::IteratorRange
        */
-      CountIF 
+      CountIF
       ( HepMC::IteratorRange      range ,
         const LoKi::Types::GCuts& cut   ) ;
-      /// copy constructor 
+      /// copy constructor
       CountIF ( const CountIF& right ) ;
       /// virtual destructor
       virtual ~CountIF();
       /// MANDATORY: clone method ("virtual contructor")
       virtual CountIF* clone() const ;
-      /// MANDATORY: the only one essential method 
+      /// MANDATORY: the only one essential method
       virtual result_type operator() ( argument v ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     private:
       // ======================================================================
-      // the default constructor is disabled 
+      // the default constructor is disabled
       CountIF () ;
       // ======================================================================
     private:
@@ -258,10 +270,10 @@ namespace LoKi
       HepMC::IteratorRange m_range ;
       // ======================================================================
     } ;
-    // ========================================================================    
+    // ========================================================================
     /** @class SumIF
-     *  simple class which accumulates the function values 
-     *  for particles from the given range which 
+     *  simple class which accumulates the function values
+     *  for particles from the given range which
      *  satisfy the certain criteria
      *
      *  @see LoKi::Cuts::GVSUM
@@ -271,70 +283,70 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class GAUDI_API SumIF : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API SumIF : public LoKi::GenTypes::GVFunc
     {
     public:
       // ======================================================================
-      /** constructor from the function and the "range" 
-       *  @param fun function to be accuulated  
-       *  @param range search region 
-       *  @see HepMC::IteratorRange 
+      /** constructor from the function and the "range"
+       *  @param fun function to be accuulated
+       *  @param range search region
+       *  @see HepMC::IteratorRange
        */
-      SumIF 
+      SumIF
       ( const LoKi::Types::GFunc& fun   ,
         HepMC::IteratorRange      range ) ;
       /** constructor from the function and the "range"
-       *  @param fun function to be accuulated  
-       *  @param range search region 
-       *  @see HepMC::IteratorRange 
+       *  @param fun function to be accuulated
+       *  @param range search region
+       *  @see HepMC::IteratorRange
        */
-      SumIF 
+      SumIF
       ( HepMC::IteratorRange      range ,
         const LoKi::Types::GFunc& fun   ) ;
-      /** constructor from the function, "range" and criteria 
-       *  @param fun function to be accuulated  
-       *  @param range search region 
+      /** constructor from the function, "range" and criteria
+       *  @param fun function to be accuulated
+       *  @param range search region
        *  @param cut the criteria
-       *  @see HepMC::IteratorRange 
+       *  @see HepMC::IteratorRange
        */
-      SumIF 
+      SumIF
       ( const LoKi::Types::GFunc& fun   ,
-        HepMC::IteratorRange      range , 
+        HepMC::IteratorRange      range ,
         const LoKi::Types::GCuts& cut   ) ;
-      /** constructor from the function, "range" and criteria 
-       *  @param fun function to be accuulated  
+      /** constructor from the function, "range" and criteria
+       *  @param fun function to be accuulated
        *  @param cut the criteria
-       *  @param range search region 
-       *  @see HepMC::IteratorRange 
+       *  @param range search region
+       *  @see HepMC::IteratorRange
        */
-      SumIF 
+      SumIF
       ( const LoKi::Types::GFunc& fun   ,
         const LoKi::Types::GCuts& cut   ,
         HepMC::IteratorRange      range ) ;
-      /** constructor from the function, "range" and criteria 
+      /** constructor from the function, "range" and criteria
        *  @param cut the criteria
-       *  @param fun function to be accuulated  
-       *  @param range search region 
-       *  @see HepMC::IteratorRange 
+       *  @param fun function to be accuulated
+       *  @param range search region
+       *  @see HepMC::IteratorRange
        */
-      SumIF 
+      SumIF
       ( const LoKi::Types::GCuts& cut   ,
         const LoKi::Types::GFunc& fun   ,
         HepMC::IteratorRange      range ) ;
-      /// copy constructor 
+      /// copy constructor
       SumIF ( const SumIF& right ) ;
       /// virtual destructor
       virtual ~SumIF();
       /// MANDATORY: clone method ("virtual contructor")
       virtual SumIF* clone() const ;
-      /// MANDATORY: the only one essential method 
+      /// MANDATORY: the only one essential method
       virtual result_type operator() ( argument v ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     private:
       // ======================================================================
-      // the default constructor is disabled 
+      // the default constructor is disabled
       SumIF () ;
       // ======================================================================
     private:

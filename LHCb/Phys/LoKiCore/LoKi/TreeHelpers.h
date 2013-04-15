@@ -1,6 +1,6 @@
 // $Id$
 // ============================================================================
-#ifndef LOKI_TREEHELPERS_H 
+#ifndef LOKI_TREEHELPERS_H
 #define LOKI_TREEHELPERS_H 1
 // ============================================================================
 // Include files
@@ -16,37 +16,37 @@
 namespace Decays
 {
   // ==========================================================================
-  namespace Parsers 
+  namespace Parsers
   {
     // ========================================================================
-    /** @class Tree 
-     *  simple (type-neutral) representation of the decay tree 
-     *  Helper class for implementation of actual trees 
+    /** @class Tree
+     *  simple (type-neutral) representation of the decay tree
+     *  Helper class for implementation of actual trees
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-05-22
      */
-    class Tree 
+    class Tree
     {
-    public : 
+    public :
       // ======================================================================
-      /// the vector of trees 
+      /// the vector of trees
       typedef std::vector<Decays::Parsers::Tree>                        Trees ;
       // ======================================================================
     public:
       // ======================================================================
-      /// default constructor 
+      /// default constructor
       Tree () ;
-      /// constructor from the decay head  
-      Tree ( const Decays::iNode& head           , 
+      /// constructor from the decay head
+      Tree ( const Decays::iNode& head           ,
              const bool           stable = false ) ;
       // ======================================================================
-    public: // operators 
+    public: // operators
       // ======================================================================
-      /// add to the daughters 
+      /// add to the daughters
       Tree& operator+= ( const Tree&          tree      ) ;
       Tree& operator+= ( const Decays::iNode& node      ) ;
       Tree& operator+= ( const Trees&         trees     ) ;
-      /// add to the optional 
+      /// add to the optional
       Tree& operator%= ( const Tree&          tree      ) ;
       Tree& operator%= ( const Decays::iNode& node      ) ;
       Tree& operator%= ( const Trees&         trees     ) ;
@@ -56,14 +56,14 @@ namespace Decays
       Tree& operator|= ( const Trees&         trees     ) ;
       /// AND
       Tree& operator&= ( const Tree&          tree      ) ;
-      Tree& operator&= ( const Decays::iNode& node      ) ; 
+      Tree& operator&= ( const Decays::iNode& node      ) ;
       Tree& operator&= ( const Trees&         trees     ) ;
      // ======================================================================
-    public: // configuration 
+    public: // configuration
       // =====================================================================
       Tree& operator += ( const Decays::Trees::Arrow&       arr  ) ;
       Tree& operator += ( const Decays::Trees::Oscillation& osc  ) ;
-      // inclusive 
+      // inclusive
       Tree& operator += ( const bool                        inc  ) ;
       // negated
       Tree& operator *= ( const bool                        neg  ) ;
@@ -81,8 +81,8 @@ namespace Decays
       bool                       stable     () const { return m_stable       ; }
       const Trees&  ored     () const { return m_or       ; }
       const Trees&  anded    () const { return m_and      ; }
-      const Trees&  children () const { return m_children ; }      
-      const Trees&  optional () const { return m_optional ; }      
+      const Trees&  children () const { return m_children ; }
+      const Trees&  optional () const { return m_optional ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -91,44 +91,44 @@ namespace Decays
       // ======================================================================
     private:
       // ======================================================================
-      /// the decay head (single node) 
+      /// the decay head (single node)
       Decays::Node  m_head ;
-      /// vector of OR-ed  trees 
+      /// vector of OR-ed  trees
       Trees m_or            ;
-      /// vector of AND-ed trees 
+      /// vector of AND-ed trees
       Trees m_and           ;
       // ======================================================================
     private:
       // ======================================================================
-      /// the arrow type 
-      Decays::Trees::Arrow       m_arrow      ;                   // decay type 
+      /// the arrow type
+      Decays::Trees::Arrow       m_arrow      ;                   // decay type
       /// oscillated?
       Decays::Trees::Oscillation m_oscillated ;                 // oscillated ?
-      /// inclusive 
+      /// inclusive
       bool                       m_inclusive  ;                 //    inclusive
-      /// negation 
+      /// negation
       bool                       m_negated    ;                 //    negation?
-      /// mark 
+      /// mark
       bool                       m_marked     ;                 //      marked?
-      /// stable ? 
+      /// stable ?
       bool                       m_stable     ;                 //      stable?
       // ======================================================================
     private:
       // ======================================================================
       /// children
       Trees m_children ;                                    //         children
-      /// optional nodes 
-      Trees m_optional ;                                    //   optional nodes 
+      /// optional nodes
+      Trees m_optional ;                                    //   optional nodes
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace Decays
+    std::ostream& operator<<( std::ostream& s , const Tree& t ) ;
+    // ========================================================================
+  } // end of namespace Parsers
   // ==========================================================================
-} // end of namespace Parsers 
+} // end of namespace Decays
 // ============================================================================
-std::ostream& operator<<( std::ostream& s , const Decays::Parsers::Tree& t ) ;
-// ============================================================================
-// The END 
+// The END
 // ============================================================================
 #endif // LOKI_TREEHELPERS_H
 // ============================================================================

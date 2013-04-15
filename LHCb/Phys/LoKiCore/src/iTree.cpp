@@ -1,8 +1,8 @@
 // $Id$
 // ============================================================================
-// Include files 
+// Include files
 // ============================================================================
-// STD & STL 
+// STD & STL
 // ============================================================================
 #include <sstream>
 // ============================================================================
@@ -10,35 +10,35 @@
 // ============================================================================
 #include "LoKi/iTree.h"
 // ============================================================================
-/** @file 
+/** @file
  *  Implementation file for class Decays::iTree
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date   2009-05-06 
+ *  @date   2009-05-06
  */
 // ============================================================================
-// conversion to the string 
+// conversion to the string
 // ============================================================================
-std::string Decays::iTree::toString() const 
+std::string Decays::iTree::toString() const
 {
   std::ostringstream s ;
   fillStream ( s ) ;
   return s.str () ;
 }
 // ============================================================================
-// destructor 
+// destructor
 // ============================================================================
 Decays::iTree::~iTree() {}
 // ============================================================================
 /*  The standard output stream operator for the sub-tree
- *  @param s the reference to the outptu stream 
- *  @param o the decay tree objects 
+ *  @param s the reference to the outptu stream
+ *  @param o the decay tree objects
  *  @return the reference to the outptu stream
  */
 // ============================================================================
-std::ostream& operator<< ( std::ostream& s , const Decays::iTree& o )
+std::ostream& Decays::operator<< ( std::ostream& s , const iTree& o )
 { return o.fillStream ( s ) ; }
 // ============================================================================
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================

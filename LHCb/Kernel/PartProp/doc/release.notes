@@ -1,13 +1,17 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-! Purpose     : 
+! Purpose     :
 ! -----------------------------------------------------------------------------
+
+! 2013-04-15 - Marco Clemencic
+ - Move 'operator<<' inside a namespace to fix compilation errors with clang.
+ - Added default constructors to fix compilation errors with clang.
 
 !========================= PartProp v1r15 2013-02-04 =========================
 ! 2013-02-01 - Vanya Belyaev
- - define std::abs for ParticleID and ParticleProperty classes 
-   - it appears to be very useful for generic algorithms 
+ - define std::abs for ParticleID and ParticleProperty classes
+   - it appears to be very useful for generic algorithms
 
 !========================= PartProp v1r14 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
@@ -31,7 +35,7 @@
 !========================= PartProp v1r10 2011-07-25 =========================
 ! 2011-07-21 - Marco Cattaneo
  - Create MSG::VERBOSE and MSG::DEBUG messages only when output level requires
-   it, also using UNLIKELY macro 
+   it, also using UNLIKELY macro
 
 !========================= PartProp v1r9 2011-01-31 =========================
 ! 2011-01-13 - Marco Cattaneo
@@ -40,9 +44,9 @@
 !========================= PartProp v1r8 2010-11-27 =========================
 ! 2010-11-12 - Vanya Belyaev
  - add printout for  set<LHCb::ParticleID>
- - add GAUDI_API declarations 
- - cmt/requirements 
-   version increment to v1r8 
+ - add GAUDI_API declarations
+ - cmt/requirements
+   version increment to v1r8
 
 !========================= PartProp v1r7 2010-10-25 =========================
 
@@ -50,131 +54,131 @@
 
  - python/PartProp/PartPropAlg.py
      make use of DDDBConf to pick up the table of particle properties from DB
-  
+
  - python/PartProp/DumpParticleProperties.py
  - scripts/dump_ParticleProperties
 
-     simple script to dump the particle property table 
+     simple script to dump the particle property table
 
-   aliases:  dump_particle_properties 
-             ParticleProperties 
-             ParticlePropertiesTable 
+   aliases:  dump_particle_properties
+             ParticleProperties
+             ParticlePropertiesTable
 
- - cmt/requirements 
-   version increment to v1r7 
+ - cmt/requirements
+   version increment to v1r7
 
 !======================== PartProp v1r6 2010-01-20 ============================
 ! 2010-01-06 - Vanya Belyaev
  - rename printAsTable functions with return valeu std::ostream& to printAsTable_
-   ( see bug #59009) and to remove them form dictionaries 
+   ( see bug #59009) and to remove them form dictionaries
 
 ! 2010-01-04 - Vanya BELYAEV
   -  add printAsTable function for std::vector<LHCb::ParticleID>
-  - cmt/requirements 
-    version increment to v1r6 
+  - cmt/requirements
+    version increment to v1r6
 
 ! 2010-01-03 - Vanya BELYAEV
  - src/IParticlePropertySvc.cpp
     fix compiler warning for Win32 platform, see bug #59882
- - cmt/requirements 
-    version increment to v1r5p1 
+ - cmt/requirements
+    version increment to v1r5p1
 
 !======================== PartProp v1r5 2009-10-16 ============================
 ! 2009-09-17 - Vanya Belyaev
  - python/PartProp/Nodes.py
-     fix for invald class name 
- - cmt/requirements 
-     version increment to v1r5 
+     fix for invald class name
+ - cmt/requirements
+     version increment to v1r5
 
 !======================== PartProp v1r4 2009-07-28 ============================
 ! 2009-07-18 - Vanya BELYAEV
 
  - Kernel/ParticleID.h
 
-       fix threeCharge/jSpin/sSpin/lSpin/isMeson bypasses for B0L & B0H 
+       fix threeCharge/jSpin/sSpin/lSpin/isMeson bypasses for B0L & B0H
 
  - provide the iterator for the service:
 
-       >>> svc = ...  # get the service 
-       >>> for pp in svc : print pp.particle() 
+       >>> svc = ...  # get the service
+       >>> for pp in svc : print pp.particle()
 
- - provide the decorators for Decays::Symbols 
+ - provide the decorators for Decays::Symbols
 
        >>> for PartProp.decorators import Symbols
 
-       ## print all symbols  
-       >>> for s in Symbols : print s     
+       ## print all symbols
+       >>> for s in Symbols : print s
 
        ## print the help for each symbols
-       >>> for s in Symbols : print Symbols.symbol ( s ) 
+       >>> for s in Symbols : print Symbols.symbol ( s )
 
- - cmt/requirements 
+ - cmt/requirements
 
-       version increment to v1r4 
+       version increment to v1r4
 
 !======================== PartProp v1r3 2009-06-16 ============================
 ! 2009-06-03 - Vanya BELYAEV
- - python/PartProp/Nodes.py 
-    fix a typo 
+ - python/PartProp/Nodes.py
+    fix a typo
 
 ! 2009-06-02 - Vanya BELYAEV
- - further polishing of nodes & service 
+ - further polishing of nodes & service
 
 !======================== PartProp v1r2 2009-05-30 ============================
-! 2009-05-30 - Vanya BELYAEV 
+! 2009-05-30 - Vanya BELYAEV
  - put a proper fix for operator|= and operator&=
- - undo the previous patch with dictionaries 
+ - undo the previous patch with dictionaries
 
 ! 2009-05-29 - Vanya BELYAEV
-     temporary fix: 
+     temporary fix:
 
            exclude "|=" and "&=" operators from the dictionary
 
      better solution needs to be found.
 
 ! 2009-05-24 - Vanya BELYAEV
- - add the missing dictionary 
+ - add the missing dictionary
 
 ! 2009-05-22 - Vanya BELYAEV
- - substitute SubNodes with NodeList 
+ - substitute SubNodes with NodeList
 
 ! 2009-05-14 - Vanya BELYAEV
- - add &= and |= operators 
+ - add &= and |= operators
 
 ! 2009-05-13 - Vanya Belyaev
- - (undo): move the operators 
-    back form local namespace Decays 
+ - (undo): move the operators
+    back form local namespace Decays
     to the global namespace
 
 ! 2009-05-11 - Vanya Belyaev
- - fix typo 
+ - fix typo
 
 ! 2009-05-11 - Vanya BELYAEV
- - Kernel/Nodes.h 
-     move unnecessary concrete symbols into a separate file 
+ - Kernel/Nodes.h
+     move unnecessary concrete symbols into a separate file
  - Kernel/Symbols.h
-     make it singleton 
+     make it singleton
  - src/Components/ParticlePropertySvc.cpp
-     remove the duplicated list of symbols 
+     remove the duplicated list of symbols
 
 ! 2009-05-07 - Vanya BELYAEV
  - Kernel/Symbols.h
    src/Symbols.cpp
-    new class Decays::Symbols, which contains the information about the 
+    new class Decays::Symbols, which contains the information about the
     allowed symbols for decay descriptors.
  - dict/PartProp.xml
-    add dictionary for class Decays::Symbols 
- - cmt/requirements 
-    version incremen to v1r2 
+    add dictionary for class Decays::Symbols
+ - cmt/requirements
+    version incremen to v1r2
 
 !======================== PartProp v1r1 2009-05-07 ============================
 ! 2009-05-06 - Vanya BELYAEV
  - src/Component/ParticleProperty.cpp
-    add few symbols, protected for cc-operations 
- - Kernel/Nodes.h , 
-   src/Nodes.cpp  , 
+    add few symbols, protected for cc-operations
+ - Kernel/Nodes.h ,
+   src/Nodes.cpp  ,
    python/PartProp/Nodes.py
-    add the nodes for evaluation of SSpin, LSpin & Nucleus 
+    add the nodes for evaluation of SSpin, LSpin & Nucleus
 
 ! 2009-04-17 - Marco Cattaneo
  - Replace endreq by endmsg
@@ -184,7 +188,7 @@
  - add few very simple methods to LHCb::ParticleProperty class
 
     - selfcc
-    - threeCharge 
+    - threeCharge
 
  - src/Component/PartPropAlg.cpp
 
@@ -192,13 +196,13 @@
 
  - python/PartProp/decorators.py
 
-    - instrument LHCb.ParticleProperty.__getattr__ to delegate the search 
-      for attributes to underlyig LHCb.ParticleID object. 
-      It allows to ask LHCb.ParticleProperty directly all the 
-      attributes for LHCbParticleID objects      
+    - instrument LHCb.ParticleProperty.__getattr__ to delegate the search
+      for attributes to underlyig LHCb.ParticleID object.
+      It allows to ask LHCb.ParticleProperty directly all the
+      attributes for LHCbParticleID objects
 
  - cmt/requirments
-    - version increment to v1r1 
+    - version increment to v1r1
 
 !======================== PartProp v1r0p1 2009-02-18 ==========================
 ! 2009-01-20 - Marco Cattaneo
@@ -207,8 +211,8 @@
 
 !======================== PartProp v1r0 2009-01-12 ============================
 ! 2009-01-10 - Ivan Belyaev
- - Nodes.h, Nodes.cpp 
-   disable operator&= and |=  
+ - Nodes.h, Nodes.cpp
+   disable operator&= and |=
 
 ! 2008-12-16 - Marco Cattaneo
  - Fix gcc 4.3 warning
@@ -234,24 +238,24 @@
 ! 2008-12-03 - Vanya BELYAEV
 
  - Kernel/Decay.h, src/Decay.cpp
-      "Decay" from LHCbKernel package 
+      "Decay" from LHCbKernel package
        LHCb::Decay -> Decays::Decay
 
  - Kernel/iNode.h,Nodes.h src/iNode.cpp,Nodes.cpp
        Import nodes from LoKi
        "LoKi::Decays" -> "Decays"
 
- - update the examples and tests 
+ - update the examples and tests
 
 
 ! 2008-12-03 - Vanya BELYAEV
- - add the possiibilty to make "CC"-ing for the decay descriptors 
- - update the tests and examples 
+ - add the possiibilty to make "CC"-ing for the decay descriptors
+ - update the tests and examples
 
 ! 2008-12-01 - Vanya BELYAEV
- - the first import 
+ - the first import
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------
 

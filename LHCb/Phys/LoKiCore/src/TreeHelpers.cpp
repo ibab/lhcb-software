@@ -1,8 +1,8 @@
 // $Id$
 // ============================================================================
-// Include files 
+// Include files
 // ============================================================================
-// STD & STL 
+// STD & STL
 // ============================================================================
 #include <sstream>
 // ============================================================================
@@ -18,90 +18,90 @@
 // ============================================================================
 #include "LoKi/TreeHelpers.h"
 // ============================================================================
-/** @file  
+/** @file
  *  Implementation file for class Decays::Parsers::Tree
- *  @date 2009-05-22 
+ *  @date 2009-05-22
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
 // ============================================================================
-namespace 
+namespace
 {
   // ==========================================================================
-  inline bool noHead ( const Decays::Parsers::Tree& t ) 
-  { 
+  inline bool noHead ( const Decays::Parsers::Tree& t )
+  {
     if ( t.head().valid () ) { return false ; }
     //
     const Decays::iNode* inode = &(t.head())  ;
     //
-    return !inode->valid() && 
-      0 != dynamic_cast<const Decays::Nodes::Invalid*> ( inode ) ;  
+    return !inode->valid() &&
+      0 != dynamic_cast<const Decays::Nodes::Invalid*> ( inode ) ;
   }
   // ==========================================================================
 }
 // ============================================================================
-// default constructor 
+// default constructor
 // ============================================================================
 Decays::Parsers::Tree::Tree()
-  : m_head  ( Decays::Nodes::Invalid() ) 
+  : m_head  ( Decays::Nodes::Invalid() )
   , m_or    ()
   , m_and   ()
   , m_arrow      ( Decays::Trees::Single    )
-  , m_oscillated ( Decays::Trees::Undefined ) 
-  , m_inclusive  ( false                    )                 
-  , m_negated    ( false                    )                 
-  , m_marked     ( false                    )                 
-  , m_stable     ( false                    )                 
-  , m_children () 
+  , m_oscillated ( Decays::Trees::Undefined )
+  , m_inclusive  ( false                    )
+  , m_negated    ( false                    )
+  , m_marked     ( false                    )
+  , m_stable     ( false                    )
+  , m_children ()
   , m_optional ()
 {}
 // ============================================================================
-// constructor from the decay head  
+// constructor from the decay head
 // ============================================================================
 Decays::Parsers::Tree::Tree
-( const Decays::iNode& head   , 
-  const bool           stable ) 
-  : m_head  ( head ) 
+( const Decays::iNode& head   ,
+  const bool           stable )
+  : m_head  ( head )
   , m_or    ()
   , m_and   ()
   , m_arrow      ( Decays::Trees::Single    )
-  , m_oscillated ( Decays::Trees::Undefined ) 
-  , m_inclusive  ( false                    )                 
-  , m_negated    ( false                    )                 
-  , m_marked     ( false                    )                 
-  , m_stable     ( stable                   )                 
-  , m_children () 
+  , m_oscillated ( Decays::Trees::Undefined )
+  , m_inclusive  ( false                    )
+  , m_negated    ( false                    )
+  , m_marked     ( false                    )
+  , m_stable     ( stable                   )
+  , m_children ()
   , m_optional ()
 {}
 
 // ============================================================================
 // configuration
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator+= ( const Decays::Trees::Oscillation& osc ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator+= ( const Decays::Trees::Oscillation& osc )
 { m_oscillated = osc ;  return *this ; }
 // ============================================================================
 // configuration
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator+= ( const Decays::Trees::Arrow& arr ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator+= ( const Decays::Trees::Arrow& arr )
 { m_arrow = arr ;  return *this ; }
 // ============================================================================
 // configuration
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator+= ( const bool inclusive ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator+= ( const bool inclusive )
 { m_inclusive = inclusive ;  return *this ; }
 // ============================================================================
 // configuration
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator*= ( const bool negated  ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator*= ( const bool negated  )
 { m_negated = negated  ;  return *this ; }
 // ============================================================================
 // configuration
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator/= ( const bool marked  ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator/= ( const bool marked  )
 { m_marked = marked  ;  return *this ; }
 // ============================================================================
 
@@ -110,54 +110,54 @@ Decays::Parsers::Tree::operator/= ( const bool marked  )
 // ============================================================================
 // Operators
 // ============================================================================
-// add to daughters 
+// add to daughters
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator+= ( const Decays::Parsers::Tree& tree ) 
-{ 
-  m_children.push_back ( tree ) ; 
-  return *this ; 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator+= ( const Decays::Parsers::Tree& tree )
+{
+  m_children.push_back ( tree ) ;
+  return *this ;
 }
 // ============================================================================
-// add to daughters 
+// add to daughters
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator+= ( const Decays::Parsers::Tree::Trees& trees ) 
-{ 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator+= ( const Decays::Parsers::Tree::Trees& trees )
+{
   m_children.insert ( m_children.end() , trees.begin() , trees.end() ) ;
-  return *this ; 
+  return *this ;
 }
 // ============================================================================
-// add to daughters 
+// add to daughters
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator+= ( const Decays::iNode& tree ) 
-{ 
-  m_children.push_back ( tree ) ; 
-  return *this ; 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator+= ( const Decays::iNode& tree )
+{
+  m_children.push_back ( tree ) ;
+  return *this ;
 }
 // ============================================================================
 
 // ============================================================================
-// add to optional 
+// add to optional
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator%= ( const Decays::Parsers::Tree& tree ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator%= ( const Decays::Parsers::Tree& tree )
 { m_optional.push_back ( tree ) ;  return *this ; }
 // ============================================================================
-// add to optional 
+// add to optional
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator%= ( const Decays::Parsers::Tree::Trees& trees ) 
-{ 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator%= ( const Decays::Parsers::Tree::Trees& trees )
+{
   m_optional.insert ( m_optional.end() , trees.begin() , trees.end() ) ;
-  return *this ; 
+  return *this ;
 }
 // ============================================================================
-// add to optional 
+// add to optional
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator%= ( const Decays::iNode& tree ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator%= ( const Decays::iNode& tree )
 { m_optional.push_back ( tree ) ;  return *this ; }
 // ============================================================================
 
@@ -165,33 +165,33 @@ Decays::Parsers::Tree::operator%= ( const Decays::iNode& tree )
 // ============================================================================
 // OR
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator|= ( const Decays::Parsers::Tree& tree ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator|= ( const Decays::Parsers::Tree& tree )
 {
-  if  ( noHead ( *this ) 
-        && m_children.empty() && m_optional.empty() && m_and.empty() 
-        && !m_negated && !m_marked ) 
+  if  ( noHead ( *this )
+        && m_children.empty() && m_optional.empty() && m_and.empty()
+        && !m_negated && !m_marked )
   { m_or .push_back ( tree ) ; return *this ; }                       // RETURN
-  // make temporary tree 
+  // make temporary tree
   Tree tmp ;
   tmp |= *this ;
   tmp |=  tree ;
-  return (*this) = tmp ; // ASSIGN! 
+  return (*this) = tmp ; // ASSIGN!
 }
 // ============================================================================
 // OR
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator|=( const Decays::iNode& tree ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator|=( const Decays::iNode& tree )
 { return (*this) |= Tree ( tree ) ; }
 // ============================================================================
 // OR
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator|=( const Decays::Parsers::Tree::Trees& trees ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator|=( const Decays::Parsers::Tree::Trees& trees )
 {
-  for ( Trees::const_iterator it = trees.begin() ; trees.end() != it ; ++it ) 
-  { (*this) |= (*it) ; }                                             // ASSIGN! 
+  for ( Trees::const_iterator it = trees.begin() ; trees.end() != it ; ++it )
+  { (*this) |= (*it) ; }                                             // ASSIGN!
   return *this ;
 }
 // ============================================================================
@@ -199,33 +199,33 @@ Decays::Parsers::Tree::operator|=( const Decays::Parsers::Tree::Trees& trees )
 // ============================================================================
 // AND
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator&= ( const Decays::Parsers::Tree& tree ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator&= ( const Decays::Parsers::Tree& tree )
 {
-  if  ( noHead ( *this ) 
-        && m_children.empty() && m_optional.empty() && m_or.empty() 
-        && !m_negated && !m_marked ) 
-  { m_and .push_back ( tree ) ; return *this ; }                       // RETURN 
-  // make temporary tree 
+  if  ( noHead ( *this )
+        && m_children.empty() && m_optional.empty() && m_or.empty()
+        && !m_negated && !m_marked )
+  { m_and .push_back ( tree ) ; return *this ; }                       // RETURN
+  // make temporary tree
   Tree tmp ;
   tmp &= *this ;
   tmp &=  tree ;
-  return (*this) = tmp ; // ASSIGN! 
+  return (*this) = tmp ; // ASSIGN!
 }
 // ============================================================================
 // AND
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator&=( const Decays::iNode& tree ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator&=( const Decays::iNode& tree )
 { return (*this) &= Tree ( tree ) ; }
 // ============================================================================
-// AND 
+// AND
 // ============================================================================
-Decays::Parsers::Tree& 
-Decays::Parsers::Tree::operator&=( const Decays::Parsers::Tree::Trees& trees ) 
+Decays::Parsers::Tree&
+Decays::Parsers::Tree::operator&=( const Decays::Parsers::Tree::Trees& trees )
 {
-  for ( Trees::const_iterator it = trees.begin() ; trees.end() != it ; ++it ) 
-  { (*this) &= (*it) ; }                                             // ASSIGN! 
+  for ( Trees::const_iterator it = trees.begin() ; trees.end() != it ; ++it )
+  { (*this) &= (*it) ; }                                             // ASSIGN!
   return *this ;
 }
 // ============================================================================
@@ -235,75 +235,75 @@ Decays::Parsers::Tree::operator&=( const Decays::Parsers::Tree::Trees& trees )
 
 
 // ============================================================================
-// printout 
+// printout
 // ============================================================================
-std::ostream& Decays::Parsers::Tree::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Parsers::Tree::fillStream ( std::ostream& s ) const
 {
   if  ( m_marked  ) { s << " ^" ; }
   if  ( m_negated ) { s << " ~" ; }
-  
+
   typedef Trees::const_iterator CIT ;
-  if      ( !m_or.empty() ) 
+  if      ( !m_or.empty() )
   {
     s << " (" ;
-    for ( CIT it = m_or.begin() ; m_or.end() != it ; ++it ) 
+    for ( CIT it = m_or.begin() ; m_or.end() != it ; ++it )
     {
-      if ( it != m_or.begin() ) { s << " ||" ; } 
+      if ( it != m_or.begin() ) { s << " ||" ; }
       s << " " << (*it) ;
     }
-    return s << " ) " ;                                                // RETURN 
+    return s << " ) " ;                                                // RETURN
   }
-  else if ( !m_and.empty() ) 
+  else if ( !m_and.empty() )
   {
     s << " (" ;
-    for ( CIT it = m_and.begin() ; m_and.end() != it ; ++it ) 
+    for ( CIT it = m_and.begin() ; m_and.end() != it ; ++it )
     {
       if ( it != m_and.begin() ) { s << " &&" ; }
       s << " " << (*it) ;
     }
-    return s << " ) " ;                                               // RETURN 
+    return s << " ) " ;                                               // RETURN
   }
-  
+
   if ( m_children.empty() && m_optional.empty() ) { return s << m_head  ; } // RETURN
-  
-  
+
+
   if  ( m_stable  ) { return s << "<"  << m_head << ">" ; }   // RETURN
 
   s << " (" ;
-  switch  ( m_oscillated ) 
+  switch  ( m_oscillated )
   {
-  case Decays::Trees::Oscillated    : 
-    s << " [" << m_head << "]os "  ; break ;   
-  case Decays::Trees::NotOscillated : 
-    s << " [" << m_head << "]nos " ; break ;   
+  case Decays::Trees::Oscillated    :
+    s << " [" << m_head << "]os "  ; break ;
+  case Decays::Trees::NotOscillated :
+    s << " [" << m_head << "]nos " ; break ;
   default : s << m_head ;
   }
-  
+
   s << " " << Decays::Trees::arrow ( m_arrow ) ;
-  
+
   for ( CIT ic = m_children.begin() ; m_children.end() != ic ; ++ic )
   { s << " "  << (*ic) ; }
-  
+
   for ( CIT io = m_optional.begin() ; m_optional.end() != io ; ++io )
   { s << " {" << (*io)  << "}"; }
-  
+
   if ( m_inclusive ) { s << " ..." ; }
-  // 
+  //
   return s << " ) " ;
 }
 // ============================================================================
-// convert to string 
+// convert to string
 // ============================================================================
-std::string Decays::Parsers::Tree::toString() const 
+std::string Decays::Parsers::Tree::toString() const
 {
   std::ostringstream s ;
   fillStream ( s ) ;
   return s.str() ;
 }
 // ============================================================================
-// operator 
+// operator
 // ============================================================================
-std::ostream& operator<< ( std::ostream& s , const Decays::Parsers::Tree& t )  
+std::ostream& Decays::Parsers::operator<< ( std::ostream& s , const Tree& t )
 { return t.fillStream ( s ) ; }
 // ============================================================================
 
@@ -311,5 +311,5 @@ std::ostream& operator<< ( std::ostream& s , const Decays::Parsers::Tree& t )
 
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================

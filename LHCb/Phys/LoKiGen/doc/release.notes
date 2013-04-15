@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-04-15 - Marco Clemencic
+ - Added default constructors to fix compilation errors with clang.
+
 ! 2013-04-14 - Vanya Belyaev
 
  - add GFLIGHT, GPVFLIGHT, GBETA , GGGAMMA and GBETAGAMMA symbols 
@@ -33,65 +36,65 @@
 !========================= LoKiGen v10r9 2012-10-22 =========================
 ! 2012-10-19 - Vanya Belyaev
  - bug fix in 4-vector-functors
-   many tahnks to Regis Lefevre for problem report 
+   many tahnks to Regis Lefevre for problem report
 
 !========================= LoKiGen v10r8 2012-06-25 =========================
 ! 2012-06-18 - Vanya Belyaev
- - redesign kinematical functors 
+ - redesign kinematical functors
 
 ! 2012-06-16 - Vanya Belyaev
- - improge child selection 
+ - improge child selection
 
 ! 2012-05-24 - Vanya Belyaev
- - more improvements for decorators 
+ - more improvements for decorators
 
 !========================= LoKiGen v10r7 2012-05-24 =========================
 ! 2012-05-19 - Vanya Belyaev
- - add more rrshift/calls decorators 
+ - add more rrshift/calls decorators
 
 !========================= LoKiGen v10r6 2012-02-28 =========================
 ! 2012-02-13 - Vanya Belyaev
- - add GVRHO functor for Marc-Olivier 
+ - add GVRHO functor for Marc-Olivier
 
 !========================= LoKiGen v10r5 2012-01-31 =========================
 ! 2012-01-29 - Vanya Belyaev
- - add dumping functors 
+ - add dumping functors
 
 ! 2012-01-28 - Vanya Belyaev
- - add various functors for polarizations 
+ - add various functors for polarizations
 
 ! 2012-01-26 - Vanya Belyaev
- - add GCOSPOL functor 
+ - add GCOSPOL functor
 
 !========================= LoKiGen v10r4 2011-12-14 =========================
 ! 2011-12-13 - Vanya Belyaev
  - add GCHILD/GCHILDFUN and GCHILDCUT functors on Jibo's request
 
 ! 2011-11-11 - Vanya Belyaev
- - fix the oscillation flags in decay tree matching functions 
+ - fix the oscillation flags in decay tree matching functions
 
 !========================= LoKiGen v10r3 2011-07-25 =========================
 ! 2011-07-25 - Vanya Belyaev
  - fix ICC compliler warning
 
 ! 2011-07-23 - Vanya Belyaev
- - more decorators for HepMC.GenParticle 
+ - more decorators for HepMC.GenParticle
 
 ! 2011-07-15 - Alexey Novoselov
- - add useful constructor for GDECTREE functors 
+ - add useful constructor for GDECTREE functors
 
 ! 2011-07-03 - Vanya Belyaev
- - small polishing of python iterators 
+ - small polishing of python iterators
 
 !========================= LoKiGen v10r2 2011-06-14 =========================
 ! 2011-06-05 - Vanya Belyaev
- - reduce compilation warnings for ICC compiler 
+ - reduce compilation warnings for ICC compiler
 
 ! 2011-06-04 - Vanya Belyaev
- - better printout of decay chains 
+ - better printout of decay chains
 
-! 2011-06-02 - Vanya Belyaev  
- - add LoKi::GenFilter algorithm to allow some filtering based on 
+! 2011-06-02 - Vanya Belyaev
+ - add LoKi::GenFilter algorithm to allow some filtering based on
   properties of generator event.
 
  - cmt/requirements
@@ -99,8 +102,8 @@
 
 !========================= LoKiGen v10r1 2011-04-26 =========================
 ! 2011-04-09 - Vanya Belyaev
- - add missing "cutvals" into Tool/Factory interface 
-   they are needed for generic cut-tool in Gauss 
+ - add missing "cutvals" into Tool/Factory interface
+   they are needed for generic cut-tool in Gauss
 
 !========================= LoKiGen v10r0 2011-04-04 =========================
 ! 2011-03-18 - Vanya Belyaev
@@ -113,7 +116,7 @@
 ! 2011-02-21 - Marco Cattaneo
  - Suppress Intel compiler warnings about missing default constructor
    In this case the compiler generated constructor is fine, since there are
-   no member data to be intialised 
+   no member data to be intialised
 
 !========================= LoKiGen v9r5 2011-01-31 =========================
 ! 2011-01-13 - Marco Cattaneo
