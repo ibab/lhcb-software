@@ -18,7 +18,6 @@ use  PhysEvent                 v*   Event
 use  MCEvent                   v*   Event
 use  RecEvent                  v*   Event
 use  MCEvent                   v*   Event
-use  ChargedProtoANNPIDParam   v*
 use  RecInterfaces             v*   Rec
 use  neurobayes_expert         v*   LCG_Interfaces
 
