@@ -1013,7 +1013,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
     def __MakeBu2D0TauNuWS__(self):
         """
         Bu selection:
-        [B- -> D~0 tau-]cc,
+        [B- -> D0 tau+]cc,
         use of wrong charge combination is useful for background subtraction
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
@@ -1023,7 +1023,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
         CombBu2D0TauNuWS = CombineParticles(        
-            DecayDescriptors = ["[B- -> D~0 tau-]cc"],
+            DecayDescriptors = ["[B- -> D0 tau+]cc"],
             DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
             CombinationCut = self.BplusCombCut,
             MotherCut      = self.BCut,
