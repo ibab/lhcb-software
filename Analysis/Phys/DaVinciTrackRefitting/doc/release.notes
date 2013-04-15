@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+! 2013-04-15 - Paul Seyfert
+ - cleanup of example script
+
 !========================= DaVinciTrackRefitting v1r3 2013-04-05 =========================
 
 ! 2013-02-27 - Chris Jones
