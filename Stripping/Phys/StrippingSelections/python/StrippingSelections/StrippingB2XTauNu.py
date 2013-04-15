@@ -46,8 +46,8 @@ all.printCuts()
 
 '''
 __author__ = [ 'Donal Hill','Conor Fitzpatrick' ]
-__date__ = '2012-8-23'
-__version = '$Revision: 1.1 $'
+__date__ = '2013-4-12'
+__version = '$Revision: 1.2 $'
 
 #### Next is the dictionary of all tunable cuts ########
 
@@ -104,8 +104,8 @@ confdict={
     'Dstar_PT'         : 1250.0,   #MeV, 1250 in StdLooseD*
     'Dstar_VCHI2'      : 10.0,     #MeV, 25 in StdLooseD*WithD02KPi 
     'Dstar_MassW'      : 50.0,     #MeV, 50 MeV in StdLooseD*WithD02KPi
-    'Dstar_DeltaM_low'  : 135.0,
-    'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD*
+    'Dstar_DeltaM_low'  : 135.0,  #MeV
+    'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD* 
     #Muon and J/psi cuts
     'Muon_TRCHI2DOF'    : 3.0,
     'Muon_PT'           : 1000.0,  #MeV
@@ -125,12 +125,14 @@ confdict={
     #Ghost Prob cut on all tracks apart from slow pion
     'TRGHP'             : 0.4,
     #Slow pion ghost prob
-    'TRGHP_slowPi'      : 0.6
-    
+    'TRGHP_slowPi'      : 0.6,
+    #HLT1 trigger
+    'TisTosSpecs'       : { 'Hlt1TrackAllL0Decision%TOS' : 0 }    
     }
 
 
 from StrippingUtils.Utils import LineBuilder
+
 
 default_name="B2XTauNu"
 
@@ -273,7 +275,9 @@ class B2XTauNuAllLinesConf(LineBuilder):
         #Ghost prob cut on all tracks apart from slow pion
         'TRGHP',
         #Slow pion ghost prob
-        'TRGHP_slowPi'
+        'TRGHP_slowPi',
+        #HLT1 decision
+        'TisTosSpecs'
         ]
     
     __confdict__={}
@@ -414,6 +418,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         ### Now make all the selections ###
 
+        #self.filterTisTos()
         self.__FilterDstars__()
         self.__FilterDplus__()
         self.__FilterD0__()
@@ -443,131 +448,231 @@ class B2XTauNuAllLinesConf(LineBuilder):
         from StrippingConf.StrippingLine import StrippingLine
         from PhysSelPython.Wrappers import SelectionSequence
 
+        
+        #TisTos filter
+        def filterTisTos(name,Input,myTisTosSpecs):
+            
+            from Configurables import TisTosParticleTagger
+            from PhysSelPython.Wrappers import Selection
+            myTagger = TisTosParticleTagger(name + "_TisTosTagger")
+            myTagger.TisTosSpecs = myTisTosSpecs
+            
+            # To speed it up, TisTos only with tracking system
+            myTagger.ProjectTracksToCalo = False
+            myTagger.CaloClustForCharged = False
+            myTagger.CaloClustForNeutral = False
+            myTagger.TOSFrac = { 4:0.0, 5:0.0 }
+            
+            return Selection(name + "_SelTisTos",
+                             Algorithm = myTagger,
+                             RequiredSelections = [ Input ] )
 
-        ### Now make B stripping lines ###
+
+        ##TisTos definition
+        self.TOSBd2DstarTauNu = filterTisTos("TOSBd2DstarTauNu",
+                                             Input = self.B0d2DstarTauNuSel,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
+
+        ### Now make B stripping line ###
         Bd2DstarTauNuLine=StrippingLine("Bd2DstarTauNuFor"+self._name,
                                         prescale = config['Prescale_B0d2DstarTauNu'],
                                         postscale = config['Postscale'],
-                                        algos = [ self.B0d2DstarTauNuSel ]
+                                        algos = [ self.TOSBd2DstarTauNu ]
                                         )
         self.registerLine(Bd2DstarTauNuLine)
+        
+
+        self.TOSBd2DstarTauNuWS = filterTisTos("TOSBd2DstarTauNuWS",
+                                             Input = self.B0d2DstarTauNuSelWS,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
         
         Bd2DstarTauNuWSLine=StrippingLine("Bd2DstarTauNuWSFor"+self._name,
                                           prescale = config['Prescale_B0d2DstarTauNu'],
                                           postscale = config['Postscale'],
-                                          algos = [ self.B0d2DstarTauNuSelWS ]
+                                          algos = [ self.TOSBd2DstarTauNuWS ]
                                           )
         self.registerLine(Bd2DstarTauNuWSLine)
 
+        self.TOSBd2DstarTauNuNonPhys = filterTisTos("TOSBd2DstarTauNuNonPhys",
+                                             Input = self.B0d2DstarTauNuSelNonPhysTau,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
 
         Bd2DstarTauNuNonPhysTauLine=StrippingLine("Bd2DstarTauNuNonPhysTauFor"+self._name,
                                           prescale = config['Prescale_B0d2DstarTauNu'],
                                           postscale = config['Postscale'],
-                                          algos = [ self.B0d2DstarTauNuSelNonPhysTau ]
+                                          algos = [ self.TOSBd2DstarTauNuNonPhys ]
                                           )
         self.registerLine(Bd2DstarTauNuNonPhysTauLine)
         
+
+        self.TOSBd2DTauNu = filterTisTos("TOSBd2DTauNu",
+                                             Input = self.B0d2DTauNuSel,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
         
         Bd2DTauNuLine=StrippingLine("Bd2DTauNuFor"+self._name,
                                     prescale = config['Prescale_B0d2DTauNu'],
                                     postscale = config['Postscale'],
-                                    algos = [ self.B0d2DTauNuSel ]
+                                    algos = [ self.TOSBd2DTauNu ]
                                     )
         self.registerLine(Bd2DTauNuLine)
-        
+
+        self.TOSBd2DTauNuWS = filterTisTos("TOSBd2DTauNuWS",
+                                             Input = self.B0d2DTauNuSelWS,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
         
         Bd2DTauNuWSLine=StrippingLine("Bd2DTauNuWSFor"+self._name,
                                       prescale = config['Prescale_B0d2DTauNu'],
                                       postscale = config['Postscale'],
-                                      algos = [ self.B0d2DTauNuSelWS ]
+                                      algos = [ self.TOSBd2DTauNuWS ]
                                       )
         self.registerLine(Bd2DTauNuWSLine)
+
+        self.TOSBd2DTauNuNonPhys = filterTisTos("TOSBd2DTauNuNonPhys",
+                                             Input = self.B0d2DTauNuSelNonPhysTau,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
 
         Bd2DTauNuNonPhysTauLine=StrippingLine("Bd2DTauNuNonPhysTauFor"+self._name,
                                       prescale = config['Prescale_B0d2DTauNu'],
                                       postscale = config['Postscale'],
-                                      algos = [ self.B0d2DTauNuSelNonPhysTau ]
+                                      algos = [ self.TOSBd2DTauNuNonPhys ]
                                       )
         self.registerLine(Bd2DTauNuNonPhysTauLine)
 
+        self.TOSBu2D0TauNu = filterTisTos("TOSBu2D0TauNu",
+                                             Input = self.Bu2D0TauNuSel,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
         
         Bu2D0TauNuLine=StrippingLine("Bu2D0TauNuFor"+self._name,
                                      prescale = config['Prescale_Bu2D0TauNu'],
                                      postscale = config['Postscale'],
-                                     algos = [ self.Bu2D0TauNuSel ]
+                                     algos = [ self.TOSBu2D0TauNu ]
                                      )
         self.registerLine(Bu2D0TauNuLine)
+
+        self.TOSBu2D0TauNuWS = filterTisTos("TOSBu2D0TauNuWS",
+                                             Input = self.Bu2D0TauNuSelWS,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
         
         Bu2D0TauNuWSLine=StrippingLine("Bu2D0TauNuWSFor"+self._name,
                                        prescale = config['Prescale_Bu2D0TauNu'],
                                        postscale = config['Postscale'],
-                                       algos = [ self.Bu2D0TauNuSelWS ]
+                                       algos = [ self.TOSBu2D0TauNuWS ]
                                        )
         self.registerLine(Bu2D0TauNuWSLine)
+
+        self.TOSBu2D0TauNuNonPhys = filterTisTos("TOSBu2D0TauNuNonPhys",
+                                             Input = self.Bu2D0TauNuSelNonPhysTau,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
 
         Bu2D0TauNuNonPhysTauLine=StrippingLine("Bu2D0TauNuNonPhysTauFor"+self._name,
                                        prescale = config['Prescale_Bu2D0TauNu'],
                                        postscale = config['Postscale'],
-                                       algos = [ self.Bu2D0TauNuSelNonPhysTau ]
+                                       algos = [ self.TOSBu2D0TauNuNonPhys ]
                                        )
         self.registerLine(Bu2D0TauNuNonPhysTauLine)
-        
+
+        self.TOSBc2JpsiTauNu = filterTisTos("TOSBc2JpsiTauNu",
+                                             Input = self.Bc2JpsiTauNuSel,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
         
         Bc2JpsiTauNuLine=StrippingLine("Bc2JpsiTauNuFor"+self._name,
                                        prescale = config['Prescale_Bc2JpsiTauNu'],
                                        postscale = config['Postscale'],
-                                       algos = [ self.Bc2JpsiTauNuSel ]
+                                       algos = [ self.TOSBc2JpsiTauNu ]
                                        )
         self.registerLine(Bc2JpsiTauNuLine)
+
+        self.TOSBc2JpsiTauNuNonPhys = filterTisTos("TOSBc2JpsiTauNuNonPhys",
+                                             Input = self.Bc2JpsiTauNuSelNonPhysTau,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
 
         Bc2JpsiTauNuNonPhysTauLine=StrippingLine("Bc2JpsiTauNuNonPhysTauFor"+self._name,
                                        prescale = config['Prescale_Bc2JpsiTauNu'],
                                        postscale = config['Postscale'],
-                                       algos = [ self.Bc2JpsiTauNuSelNonPhysTau ]
+                                       algos = [ self.TOSBc2JpsiTauNuNonPhys ]
                                        )
         self.registerLine(Bc2JpsiTauNuNonPhysTauLine)
-        
+
+        self.TOSBs2DsTauNu = filterTisTos("TOSBs2DsTauNu",
+                                             Input = self.B0s2DsTauNuSel,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
         
         Bs2DsTauNuLine=StrippingLine("Bs2DsTauNuFor"+self._name,
                                      prescale = config['Prescale_B0s2DsTauNu'],
                                      postscale = config['Postscale'],
-                                     algos = [ self.B0s2DsTauNuSel ]
+                                     algos = [ self.TOSBs2DsTauNu ]
                                      )
         self.registerLine(Bs2DsTauNuLine)
+
+        self.TOSBs2DsTauNuWS = filterTisTos("TOSBs2DsTauNuWS",
+                                             Input = self.B0s2DsTauNuSelWS,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
         
         Bs2DsTauNuWSLine=StrippingLine("Bs2DsTauNuWSFor"+self._name,
                                        prescale = config['Prescale_B0s2DsTauNu'],
                                        postscale = config['Postscale'],
-                                       algos = [ self.B0s2DsTauNuSelWS ]
+                                       algos = [ self.TOSBs2DsTauNuWS ]
                                        )
         self.registerLine(Bs2DsTauNuWSLine)
+
+        self.TOSBs2DsTauNuNonPhys = filterTisTos("TOSBs2DsTauNuNonPhys",
+                                             Input = self.B0s2DsTauNuSelNonPhysTau,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
 
         Bs2DsTauNuNonPhysTauLine=StrippingLine("Bs2DsTauNuNonPhysTauFor"+self._name,
                                        prescale = config['Prescale_B0s2DsTauNu'],
                                        postscale = config['Postscale'],
-                                       algos = [ self.B0s2DsTauNuSelNonPhysTau ]
+                                       algos = [ self.TOSBs2DsTauNuNonPhys ]
                                        )
         self.registerLine(Bs2DsTauNuNonPhysTauLine)
 
+        self.TOSBd2DdoubleStarTauNu = filterTisTos("TOSBd2DdoubleStarTauNu",
+                                             Input = self.B0d2DdoubleStarTauNuSel,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
 
         Bd2DdoubleStarTauNuLine=StrippingLine("Bd2DdoubleStarTauNuFor"+self._name,
                                         prescale = config['Prescale_B0d2DdoubleStarTauNu'],
                                         postscale = config['Postscale'],
-                                        algos = [ self.B0d2DdoubleStarTauNuSel ]
+                                        algos = [ self.TOSBd2DdoubleStarTauNu ]
                                         )
         self.registerLine(Bd2DdoubleStarTauNuLine)
+        
+        self.TOSBd2DdoubleStarTauNuWS = filterTisTos("TOSBd2DdoubleStarTauNuWS",
+                                             Input = self.B0d2DdoubleStarTauNuSelWS,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
         
         Bd2DdoubleStarTauNuWSLine=StrippingLine("Bd2DdoubleStarTauNuWSFor"+self._name,
                                           prescale = config['Prescale_B0d2DdoubleStarTauNu'],
                                           postscale = config['Postscale'],
-                                          algos = [ self.B0d2DdoubleStarTauNuSelWS ]
+                                          algos = [ self.TOSBd2DdoubleStarTauNuWS ]
                                           )
         self.registerLine(Bd2DdoubleStarTauNuWSLine)
+
+        self.TOSBd2DdoubleStarTauNuNonPhys = filterTisTos("TOSBd2DdoubleStarTauNuNonPhys",
+                                             Input = self.B0d2DdoubleStarTauNuSelNonPhysTau,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
 
         Bd2DdoubleStarTauNuNonPhysTauLine=StrippingLine("Bd2DdoubleStarTauNuNonPhysTauFor"+self._name,
                                           prescale = config['Prescale_B0d2DdoubleStarTauNu'],
                                           postscale = config['Postscale'],
-                                          algos = [ self.B0d2DdoubleStarTauNuSelNonPhysTau ]
+                                          algos = [ self.TOSBd2DdoubleStarTauNuNonPhys ]
                                           )
         self.registerLine(Bd2DdoubleStarTauNuNonPhysTauLine)
         
@@ -631,27 +736,26 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
     ############ Functions to make Selections #######################
 
-  
     def __FilterDstars__(self):
-
+        
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-
+        
         DstarsForB0d = FilterDesktop(
             Code = self.totalDstarCut
             )
         MyStdDstars = DataOnDemand(Location = 'Phys/StdLooseDstarWithD02KPi/Particles')
         SelDstarsForB0d = Selection("SelDstarsFor"+self._name,
-                                   Algorithm=DstarsForB0d, RequiredSelections = [MyStdDstars])
+                                    Algorithm=DstarsForB0d, RequiredSelections = [MyStdDstars])
         
         self.DstarSel=SelDstarsForB0d
-
-
+        
+        
     def __FilterDplus__(self):
-
+            
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-
+        
         DplusForB0d = FilterDesktop(
             Code = self.totalDplusCut
             )
@@ -660,66 +764,66 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                    Algorithm=DplusForB0d, RequiredSelections = [MyStdDplus])
         
         self.DplusSel=SelDplusForB0d
-
-
         
+            
+            
     def __FilterD0__(self):
-
+        
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-
+        
         D0ForBu = FilterDesktop(
             Code = self.totalD0Cut
             )
         MyStdD0 = DataOnDemand(Location = 'Phys/StdLooseD02KPi/Particles')
         SelD0ForBu = Selection("SelD0For"+self._name,
-                                   Algorithm=D0ForBu, RequiredSelections = [MyStdD0])
+                               Algorithm=D0ForBu, RequiredSelections = [MyStdD0])
         
         self.D0Sel=SelD0ForBu
-
-
+        
+            
     def __FilterDs__(self):
-
+        
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-
+        
         DsForB0s = FilterDesktop(
             Code = self.totalDsCut
             )
         MyStdDs = DataOnDemand(Location = 'Phys/StdLooseDsplus2KKPi/Particles')
         SelDsForB0s = Selection("SelDsFor"+self._name,
-                                   Algorithm=DsForB0s, RequiredSelections = [MyStdDs])
+                                Algorithm=DsForB0s, RequiredSelections = [MyStdDs])
         
         self.DsSel=SelDsForB0s
-
-
+        
+        
     def __FilterJpsi2MuMu__(self):
-
-
+        
+        
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         from PhysSelPython.Wrappers import Selection, DataOnDemand
         from CommonParticles import StdLooseJpsi2MuMu
-
+            
         JpsiForBc = FilterDesktop(
             Code = self.totalJpsiCut
             )
         MyStdLooseJpsi2MuMu = DataOnDemand(Location = 'Phys/StdLooseJpsi2MuMu/Particles')
         SelJpsiForBc = Selection("SelJpsiFor"+self._name,
-                                   Algorithm=JpsiForBc, RequiredSelections = [MyStdLooseJpsi2MuMu])
+                                 Algorithm=JpsiForBc, RequiredSelections = [MyStdLooseJpsi2MuMu])
         
         self.JpsiSel=SelJpsiForBc
-
-
+        
+        
     def __MakeDdoubleStar2DstarPi__(self):
         """
         [D_1(2420)0 -> D*(2010)+ pi-]cc, [D*_2(2460)0 -> D*(2010)+ pi-]cc
         useful for understanding background in B0 -> D* tau
         """
-
+        
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection, DataOnDemand
         from StandardParticles import StdLoosePions
-
+        
         
         CombDdoubleStar2DstarPi = CombineParticles(        
             DecayDescriptors = ["[D_1(2420)0 -> D*(2010)+ pi-]cc", "[D*_2(2460)0 -> D*(2010)+ pi-]cc" ],
@@ -728,7 +832,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
             )
         
         SelDdoubleStar2DstarPi = Selection("SelDdoubleStar2DstarPi", Algorithm=CombDdoubleStar2DstarPi,
-                                    RequiredSelections = [self.DstarSel,StdLoosePions])
+                                           RequiredSelections = [self.DstarSel,StdLoosePions])
         
         self.DdoubleStar2DstarPiSel=SelDdoubleStar2DstarPi
         
@@ -794,7 +898,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
         CombBd2DstarTauNuNonPhysTau = CombineParticles(        
-            DecayDescriptors = ["[B0 -> D*(2010)- tau+]cc", "[B0 -> D*(2010)+ tau+]cc"],
+            DecayDescriptors = ["[B0 -> D*(2010)- tau+]cc"],#, "[B0 -> D*(2010)+ tau+]cc"],
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )
@@ -868,7 +972,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
         CombBd2DTauNuNonPhysTau = CombineParticles(        
-            DecayDescriptors = ["[B0 -> D- tau+]cc", "[B0 -> D+ tau+]cc"],
+            DecayDescriptors = ["[B0 -> D- tau+]cc"],#, "[B0 -> D+ tau+]cc"],
             DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
@@ -944,7 +1048,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
         CombBu2D0TauNuNonPhysTau = CombineParticles(        
-            DecayDescriptors = ["[B- -> D0 tau-]cc", "[B- -> D~0 tau-]cc" ],
+            DecayDescriptors = ["[B- -> D0 tau-]cc"],#, "[B- -> D~0 tau-]cc" ],
             DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
             CombinationCut = self.BplusCombCut,
             MotherCut      = self.BCut,
@@ -969,7 +1073,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
         CombBc2JpsiTauNu = CombineParticles(        
-            DecayDescriptors = ["[B_c+ -> J/psi(1S) tau+]cc"],
+            DecayDescriptors = ["B_c+ -> J/psi(1S) tau+", "B_c- -> J/psi(1S) tau-" ],
             CombinationCut = self.BcCombCut,
             MotherCut      = self.BCut,
             )
@@ -992,7 +1096,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
         CombBc2JpsiTauNuNonPhysTau = CombineParticles(        
-            DecayDescriptors = ["[B_c+ -> J/psi(1S) tau+]cc"],
+            DecayDescriptors = ["B_c+ -> J/psi(1S) tau+", "B_c- -> J/psi(1S) tau-" ],
             CombinationCut = self.BcCombCut,
             MotherCut      = self.BCut,
             )
@@ -1066,7 +1170,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
         CombBs2DsTauNuNonPhysTau = CombineParticles(        
-            DecayDescriptors = ["[B_s0 -> D_s+ tau+]cc", "[B_s0 -> D_s+ tau-]cc" ],
+            DecayDescriptors = ["[B_s0 -> D_s+ tau+]cc"],#, "[B_s0 -> D_s+ tau-]cc" ],
             DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
             CombinationCut = self.BsCombCut,
             MotherCut      = self.BCut,
@@ -1140,7 +1244,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
         CombBd2DdoubleStarTauNuNonPhysTau = CombineParticles(        
-            DecayDescriptors = ["[B~0 -> D_1(2420)~0 tau-]cc", "[B~0 -> D*_2(2460)~0 tau-]cc", "[B~0 -> D_1(2420)~0 tau+]cc", "[B~0 -> D*_2(2460)~0 tau+]cc" ],
+            DecayDescriptors = ["[B~0 -> D_1(2420)~0 tau-]cc", "[B~0 -> D*_2(2460)~0 tau-]cc"],#, "[B~0 -> D_1(2420)~0 tau+]cc", "[B~0 -> D*_2(2460)~0 tau+]cc" ],
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )

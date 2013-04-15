@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2013-04-15 - Donal Hill
+ - Added Hlt1TrackAllL0Decision_TOS to all lines in StrippingB2XTauNu.py
 
 ! 2013-04-12 - Anton Poluektov 
  - Tighter proton PID for D0PPbarFULLDST line in Beauty2Charm
