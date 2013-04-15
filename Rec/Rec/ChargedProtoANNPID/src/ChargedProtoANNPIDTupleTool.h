@@ -40,7 +40,9 @@ namespace ANNGlobalPID
     /// Destructor
     virtual ~ChargedProtoANNPIDTupleTool( );
 
-    virtual StatusCode initialize();   ///< Algorithm initialization
+    virtual StatusCode initialize(); ///< Algorithm initialization
+
+    virtual StatusCode finalize();   ///< Algorithm finalization
 
   public:
 
@@ -50,11 +52,15 @@ namespace ANNGlobalPID
 
   private:
 
-    StringInputs m_variablesS;  ///< ProtoParticle variables as strings to add to the ntuple
-    IntInputs    m_variablesI;  ///< ProtoParticle variables as ints to add to the ntuple
+    StringInputs m_variables;  ///< ProtoParticle variables as strings to add to the ntuple
 
     /// Use RICH tool to get MCParticle associations for Tracks (To avoid Linker details)
     const Rich::Rec::MC::IMCTruthTool * m_truth;
+
+    /// map of accessor objects for each variable by name
+    typedef std::map< std::string, const ChargedProtoANNPIDToolBase::Input* > Inputs;
+    // variables to fill
+    Inputs m_inputs;
 
   };
 

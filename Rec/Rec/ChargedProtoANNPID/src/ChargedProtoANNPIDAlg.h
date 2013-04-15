@@ -33,9 +33,6 @@
 // TMVA
 #include "TMVA/Reader.h"
 
-// interfaces
-#include "TrackInterfaces/ITrackSelector.h"
-
 // boost
 #include "boost/lexical_cast.hpp"
 #include "boost/assign/list_of.hpp"
@@ -84,20 +81,26 @@ namespace ANNGlobalPID
     class ANNHelper
     {
     protected:
+      /// Typedef for list of inputs
+      typedef ChargedProtoANNPIDAlgBase::Input::ConstVector Inputs;
+    protected:
       /// No default constructor
-      ANNHelper() : m_parent(NULL) { }
+      ANNHelper() : m_ok( false ) { }
     public:
       /** Constructor from information
        *  @param inputs The list of inputs needed for this network
        *  @param parent Point to parent algorithm
        */
-      ANNHelper( const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
-                 const ChargedProtoANNPIDAlgBase *           parent )
-        : m_inputs ( inputs ),
-          m_parent ( parent ),
+      ANNHelper( const ChargedProtoANNPIDAlgBase::StringInputs& inputs,
+                 const ChargedProtoANNPIDAlgBase *              parent )
+        : m_inputs ( parent->getInputs(inputs) ),
           m_ok     ( false  ) { }
       /// Destructor
-      virtual ~ANNHelper() { }
+      virtual ~ANNHelper() 
+      {
+        for ( Inputs::const_iterator iIn = m_inputs.begin();
+              iIn != m_inputs.end(); ++iIn ) { delete *iIn; }
+      }
     public:
       /// Are we configured properly
       inline bool isOK() const { return m_ok; }
@@ -106,9 +109,10 @@ namespace ANNGlobalPID
       /// Number of inputs to the ANN
       inline unsigned int nInputs() const { return m_inputs.size(); }
     protected:
-      ChargedProtoANNPIDAlgBase::IntInputs m_inputs; ///< The list of inputs for this network
-      const ChargedProtoANNPIDAlgBase *    m_parent; ///< Pointer to parent algorithm
-      bool m_ok; ///< Is this reader configured properly
+      /// The list of inputs for this network
+      Inputs m_inputs;
+      /// Is this reader configured properly
+      bool m_ok; 
     };
 
     /** @class ANNHelper ChargedProtoANNPIDAlg.h
@@ -130,9 +134,9 @@ namespace ANNGlobalPID
        *  @param parent Point to parent algorithm
        *  @param suppressPrintout Supress all output from NeuroBayes
        */
-      NeuroBayesANN( const std::string &                  paramFileName,
-                     const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
-                     const ChargedProtoANNPIDAlgBase *           parent,
+      NeuroBayesANN( const std::string &                     paramFileName,
+                     const ChargedProtoANNPIDAlgBase::StringInputs& inputs,
+                     const ChargedProtoANNPIDAlgBase *              parent,
                      const bool suppressPrintout = true )
         : ANNHelper ( inputs, parent ),
           m_expert  ( new Expert(paramFileName.c_str(),-2) ),
@@ -168,19 +172,19 @@ namespace ANNGlobalPID
        *  @param inputs The list of inputs needed for this network
        *  @param parent Point to parent algorithm
        */
-      TMVAReaderANN( const std::string &                  paramFileName,
-                     const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
-                     const ChargedProtoANNPIDAlgBase *           parent )
+      TMVAReaderANN( const std::string &                     paramFileName,
+                     const ChargedProtoANNPIDAlgBase::StringInputs& inputs,
+                     const ChargedProtoANNPIDAlgBase *              parent )
         : ANNHelper ( inputs, parent ),
           m_reader  ( new TMVA::Reader( parent->msgLevel(MSG::DEBUG) ?
                                         "!Color:!Silent" : "!Color:Silent" ) ),
           m_inArray ( new float[inputs.size()] )
       {
         int i = 0;
-        for ( ChargedProtoANNPIDAlgBase::IntInputs::const_iterator iIn = inputs.begin();
+        for ( ChargedProtoANNPIDAlgBase::StringInputs::const_iterator iIn = inputs.begin();
               iIn != inputs.end(); ++iIn, ++i )
         {
-          m_reader->AddVariable( (parent->stringID(*iIn)).c_str(), &(m_inArray[i]) );
+          m_reader->AddVariable( (*iIn).c_str(), &(m_inArray[i]) );
         }
         m_reader->BookMVA( "PID", paramFileName.c_str() );
         m_ok = true;
@@ -216,12 +220,11 @@ namespace ANNGlobalPID
       TMVAImpANN( const std::string & config,
                   const std::string & particle,
                   const std::string & track,
-                  const ChargedProtoANNPIDAlgBase::StringInputs& sInputs,
-                  const ChargedProtoANNPIDAlgBase::IntInputs&    iInputs,
-                  const ChargedProtoANNPIDAlgBase *               parent )
-        : ANNHelper ( iInputs, parent ),
-          m_reader  ( tmvaFactory().create( config, particle, track, sInputs ) ),
-          m_vars    ( iInputs.size() )
+                  const ChargedProtoANNPIDAlgBase::StringInputs& inputs,
+                  const ChargedProtoANNPIDAlgBase *              parent )
+        : ANNHelper ( inputs, parent ),
+          m_reader  ( tmvaFactory().create( config, particle, track, inputs ) ),
+          m_vars    ( inputs.size() )
       {
         m_ok = ( m_reader && m_reader->IsStatusClean() );
       }
@@ -248,20 +251,26 @@ namespace ANNGlobalPID
     {
     public:
       /// Vector of cuts
-      typedef std::vector<Cut> Vector;
+      typedef std::vector<const Cut*> ConstVector;
     private:
       /// Delimitor enum
       enum Delim { UNDEFINED = -1, GT, LT, GE, LE };
     public:
-      /// Default from Constructor
+      /// Constructor
       Cut( const std::string& desc = "NOTDEFINED",
            const ChargedProtoANNPIDAlgBase * parent = NULL );
+      /// Destructor
+      ~Cut( ) { delete m_variable; }
+    private:
+      /// No Copy Constructor
+      Cut( const Cut& ) { }
+    public:
       /// Is this object well defined
       bool isOK() const { return m_OK; }
       /// Does the ProtoParticle pass the cut
       bool isSatisfied( const LHCb::ProtoParticle * proto ) const
       {
-        const double var = m_parent->getInput( proto, m_variable );
+        const double var = m_variable->value(proto);
         return ( m_delim == GT ? var >  m_cut :
                  m_delim == LT ? var <  m_cut :
                  m_delim == GE ? var >= m_cut :
@@ -286,21 +295,14 @@ namespace ANNGlobalPID
         return ok;
       }
     private:
-      const ChargedProtoANNPIDAlgBase * m_parent; ///< Pointer to parent algorithm
       std::string m_desc; ///< The cut description
       bool m_OK;          ///< Is this cut well defined
-      int m_variable;     ///< The variable ID number
+      const ChargedProtoANNPIDAlgBase::Input * m_variable;  ///< The variable to cut on
       double m_cut;       ///< The cut value
       Delim m_delim;      ///< The delimitor
     };
 
   private:
-
-    /// Track selector type
-    std::string m_trSelType;
-
-    /// Track selector tool
-    ITrackSelector * m_trSel;
 
     /// Configuration file
     std::string m_configFile;
@@ -318,7 +320,10 @@ namespace ANNGlobalPID
     bool m_suppressANNPrintout;
 
     /// Vector of cuts to apply
-    Cut::Vector m_cuts;
+    Cut::ConstVector m_cuts;
+
+    /// The track type for this instance
+    LHCb::Track::Types m_tkType;
 
   };
 

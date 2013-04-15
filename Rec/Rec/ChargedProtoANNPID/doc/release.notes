@@ -4,6 +4,23 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-04-15 - Chris Jones
+ - Rework the code to compute the input variables to the ANN PID networks,
+   to remove the remaining CPU overheads.
+ - Remove the use of a full track selector tool, as we are only using it to
+   select the correct track type. More efficient to just do it directly.
+ - No longer print a warning if the ANNPID is being replaced for a given
+   ProtoParticle, as this is normal when applied as a recalibration. 
+   Also, saves a little more CPU due to the string manipulations that 
+   where required.
+
+! 2013-04-12 - Chris Jones
+ - Add new MC12TuneV2 network tuning :-
+  . Based on high statistics training using new MC12 inclusive B samples. 
+  . Uses TMVA instead of Neurobayes as MVA technology. 
+   . Gives slightly PID better performance.
+   . Much faster implementation due to use of compiled TMVA macros.
+
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 

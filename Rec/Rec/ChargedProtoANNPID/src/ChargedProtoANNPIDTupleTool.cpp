@@ -66,7 +66,7 @@ ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& typ
                    ("CaloBremMatch")("CaloBremChi2")("BremPIDe")
                    // VELO
                    ("VeloCharge");
-  declareProperty( "Variables", m_variablesS = tmp);
+  declareProperty( "Variables", m_variables = tmp);
 
   // Turn off Tuple printing during finalize
   setProperty( "NTuplePrint", false );
@@ -90,14 +90,29 @@ StatusCode ChargedProtoANNPIDTupleTool::initialize()
   m_truth = tool<Rich::Rec::MC::IMCTruthTool>( "Rich::Rec::MC::MCTruthTool",
                                                "MCTruth", this );
 
-  // get int IDs (faster lookup than with the string IDs..)
-  m_variablesI = variableIDs( m_variablesS );
-  if ( m_variablesI.size() != m_variablesS.size() )
-  {
-    return Error( "Error in defining the ntuple entries" );
-  }
 
+  // Get a vector of input accessor objects for the configured variables
+  for ( StringInputs::const_iterator i = m_variables.begin(); 
+        i != m_variables.end(); ++i )
+  {
+    m_inputs[*i] = getInput( *i );
+  }
+ 
   return sc;
+}
+
+//=============================================================================
+//  Finalize
+//=============================================================================
+StatusCode ChargedProtoANNPIDTupleTool::finalize()
+{
+  // Clean Up
+  for ( Inputs::const_iterator iIn = m_inputs.begin();
+        iIn != m_inputs.end(); ++iIn )
+  { delete iIn->second; }
+  m_inputs.clear();
+  // return
+  return ChargedProtoANNPIDToolBase::finalize();
 }
 
 //=============================================================================
@@ -115,12 +130,11 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
   Tuple tuple = nTuple( "annInputs", "ProtoParticle PID Information for ANN Training" );
 
   // Loop over reconstruction variables
-  StringInputs::const_iterator inputS = m_variablesS.begin();
-  IntInputs::const_iterator    inputI = m_variablesI.begin();
-  for ( ; inputS != m_variablesS.end() && inputI != m_variablesI.end(); ++inputS, ++inputI )
+  for ( Inputs::const_iterator iIn = m_inputs.begin();
+        iIn != m_inputs.end(); ++iIn )
   {
     // get the variable and fill ntuple
-    sc = sc && tuple->column( *inputS, (float)getInput(proto,*inputI) );
+    sc = sc && tuple->column( iIn->first, (float) iIn->second->value(proto) );
   }
 
   // PID info

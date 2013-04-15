@@ -16,21 +16,17 @@
 
 using namespace ANNGlobalPID;
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDAlg )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
-                                                ISvcLocator* pSvcLocator )
-    : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
-      m_trSel                   ( NULL               ),
-      m_netHelper               ( NULL               )
+ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
+                                              ISvcLocator* pSvcLocator )
+  : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
+    m_netHelper               ( NULL               ),
+    m_tkType                  ( LHCb::Track::TypeUnknown )
 {
   // JOs
   declareProperty( "Configuration",       m_configFile );
-  declareProperty( "TrackSelectorType",   m_trSelType = "TrackSelector" );
   declareProperty( "NetworkVersion",      m_netVersion = "MC12TuneV1"   );
   declareProperty( "SuppressANNPrintout", m_suppressANNPrintout = true  );
   // turn off histos and ntuples
@@ -53,7 +49,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // ParamFile root
-  const std::string paramEnv = "CHARGEDPROTOANNPIDPARAMROOT";
+  const std::string paramEnv = "CHARGEDPROTOANNPIDROOT";
   if ( !getenv(paramEnv.c_str()) ) return Error( "$"+paramEnv+" not set" );
   const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) +
                                   "/data/" + m_netVersion + "/" );
@@ -73,6 +69,13 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     // Read the track Type
     std::string trackType;
     config >> trackType;
+    if      ( "Long"       == trackType ) { m_tkType = LHCb::Track::Long; }
+    else if ( "Downstream" == trackType ) { m_tkType = LHCb::Track::Downstream; }
+    else if ( "Upstream"   == trackType ) { m_tkType = LHCb::Track::Upstream; }
+    else
+    {
+      return Error( "Unsupported track type '" + trackType + "'" );
+    }
 
     // Track selection cuts file name
     std::string cutsFile;
@@ -96,8 +99,8 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
         if ( !cut.empty() && cut.find("#") == std::string::npos )
         {
           // try and make a cut for this string
-          m_cuts.push_back( Cut(cut,this) );
-          if ( !m_cuts.back().isOK() )
+          m_cuts.push_back( new Cut(cut,this) );
+          if ( !m_cuts.back()->isOK() )
           { return Error( "Failed to decode selection cut '" + cut + "'" ); }
         }
       }
@@ -120,20 +123,20 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
 
       // Create cut objects
       bool ok = true;
-      m_cuts.push_back( Cut( "TrackP                > "+minP,         this ) );
-      ok &= m_cuts.back().isOK();
-      m_cuts.push_back( Cut( "TrackPt               > "+minPt,        this ) );
-      ok &= m_cuts.back().isOK();
-      m_cuts.push_back( Cut( "TrackChi2PerDof       < "+maxChiSq,     this ) );
-      ok &= m_cuts.back().isOK();
-      m_cuts.push_back( Cut( "TrackLikelihood       > "+minLikeli,    this ) );
-      ok &= m_cuts.back().isOK();
-      m_cuts.push_back( Cut( "TrackGhostProbability < "+maxGhostProb, this ) );
-      ok &= m_cuts.back().isOK();
+      m_cuts.push_back( new Cut( "TrackP                > "+minP,         this ) );
+      ok &= m_cuts.back()->isOK();
+      m_cuts.push_back( new Cut( "TrackPt               > "+minPt,        this ) );
+      ok &= m_cuts.back()->isOK();
+      m_cuts.push_back( new Cut( "TrackChi2PerDof       < "+maxChiSq,     this ) );
+      ok &= m_cuts.back()->isOK();
+      m_cuts.push_back( new Cut( "TrackLikelihood       > "+minLikeli,    this ) );
+      ok &= m_cuts.back()->isOK();
+      m_cuts.push_back( new Cut( "TrackGhostProbability < "+maxGhostProb, this ) );
+      ok &= m_cuts.back()->isOK();
       if ( trackPreSel == "TrackPreSelIsMuon" )
       {
-        m_cuts.push_back( Cut( "MuonIsMuon > 0.5", this ) );
-        ok &= m_cuts.back().isOK();
+        m_cuts.push_back( new Cut( "MuonIsMuon > 0.5", this ) );
+        ok &= m_cuts.back()->isOK();
       }
       if ( !ok ) { return Error( "Failed to decode old style track cuts" ); }
 
@@ -178,8 +181,8 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     {
       // First see if we have a built in C++ implementation for this case
       m_netHelper = new TMVAImpANN( m_netVersion, particleType, trackType,
-                                    inputs, variableIDs(inputs), this );
-      if ( !m_netHelper || !m_netHelper->isOK() )
+                                    inputs, this );
+      if ( !m_netHelper->isOK() )
       {
         // No, so try again with a TMVA Reader
         warning() << "Compiled TMVA implementation not available for "
@@ -187,9 +190,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
                   << " -> Reverting to XML Reader"
                   << endmsg;
         delete m_netHelper;
-        m_netHelper = new TMVAReaderANN( paramFileName,
-                                         variableIDs(inputs),
-                                         this );
+        m_netHelper = new TMVAReaderANN( paramFileName, inputs, this );
       }
     }
     else if ( "NeuroBayes" == annType )
@@ -197,27 +198,13 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
       debug() << "Using NeuroBayes Expert implementation" << endmsg;
       // FPE Guard for NB call
       FPE::Guard guard(true);
-      m_netHelper = new NeuroBayesANN( paramFileName,
-                                       variableIDs(inputs),
-                                       this,
+      m_netHelper = new NeuroBayesANN( paramFileName, inputs, this,
                                        m_suppressANNPrintout );
     }
     else
     {
       return Error( "Unknown ANN type '"+annType+"'" );
     }
-
-    // Set options for owned TrackSelector
-    const std::string trSelName = "TrackSelector";
-    const StringArrayProperty tkProp( "TrackTypes", boost::assign::list_of(trackType) );
-    IJobOptionsSvc * joSvc = svc<IJobOptionsSvc>("JobOptionsSvc");
-    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, tkProp );
-    sc = sc && release(joSvc);
-    if ( sc.isFailure() )
-    { return Error( "Problems setting TrackSelector Properties" ); }
-
-    // get an instance of the track selector
-    m_trSel = tool<ITrackSelector>( m_trSelType, trSelName, this );
 
     // print a summary of the configuration
     if ( msgLevel(MSG::DEBUG) )
@@ -248,7 +235,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
 //=============================================================================
 StatusCode ChargedProtoANNPIDAlg::execute()
 {
-  
+
   // Load the charged ProtoParticles
   LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>( m_protoPath );
   if ( !protos ) return StatusCode::SUCCESS;
@@ -262,24 +249,24 @@ StatusCode ChargedProtoANNPIDAlg::execute()
     // Select Tracks
     if ( !proto->track() )
     { return Error( "Charged ProtoParticle has NULL Track pointer" ); }
-    if ( !m_trSel->accept(*(proto->track())) ) continue;
+    if ( !proto->track()->checkType(m_tkType) ) continue;
 
     // Clear current ANN PID information
     if ( proto->hasInfo(m_protoInfo) )
     {
-      std::ostringstream mess;
-      mess << "ProtoParticle already has '" << m_protoInfo
-           << "' information -> Replacing.";
-      Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
+//       std::ostringstream mess;
+//       mess << "ProtoParticle already has '" << m_protoInfo
+//            << "' information -> Replacing.";
+//       Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
       proto->eraseInfo(m_protoInfo);
     }
 
     // ANN Track Selection.
     bool ok = true;
-    for ( Cut::Vector::const_iterator iC = m_cuts.begin();
+    for ( Cut::ConstVector::const_iterator iC = m_cuts.begin();
           iC != m_cuts.end(); ++iC )
     {
-      if ( !(*iC).isSatisfied(proto) ) { ok = false; break; }
+      if ( !(*iC)->isSatisfied(proto) ) { ok = false; break; }
     }
     if ( !ok ) continue;
 
@@ -301,10 +288,9 @@ StatusCode ChargedProtoANNPIDAlg::execute()
 //=============================================================================
 ChargedProtoANNPIDAlg::Cut::Cut( const std::string& desc,
                                  const ChargedProtoANNPIDAlgBase * parent )
-  : m_parent(parent),
-    m_desc(desc),
+  : m_desc(desc),
     m_OK(false),
-    m_variable(0),
+    m_variable(NULL),
     m_cut(0),
     m_delim(UNDEFINED)
 {
@@ -321,8 +307,8 @@ ChargedProtoANNPIDAlg::Cut::Cut( const std::string& desc,
   while ( i != j ) { matches.push_back( *i++ ); }
   if ( matches.size() == 3 )
   {
-    // Get the variable ID from its name
-    m_variable = m_parent->variableID( matches[0] );
+    // Get the variable from its name
+    m_variable = parent->getInput( matches[0] );
 
     // Delimitor
     m_OK = setDelim( matches[1] );
@@ -344,10 +330,10 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
 {
   // Fill the array of network inputs
   unsigned int input = 0;
-  for ( ChargedProtoANNPIDAlgBase::IntInputs::const_iterator iIn = m_inputs.begin();
+  for ( Inputs::const_iterator iIn = m_inputs.begin();
         iIn != m_inputs.end(); ++iIn, ++input )
   {
-    m_inArray[input] = static_cast<float>(m_parent->getInput(proto,*iIn));
+    m_inArray[input] = static_cast<float>( (*iIn)->value(proto) );
   }
 
   // FPE Guard for NB call
@@ -393,20 +379,14 @@ ChargedProtoANNPIDAlg::TMVAReaderANN::getOutput( const LHCb::ProtoParticle * pro
 {
   // Fill the array of network inputs
   unsigned int input = 0;
-  for ( ChargedProtoANNPIDAlgBase::IntInputs::const_iterator iIn = m_inputs.begin();
+  for ( Inputs::const_iterator iIn = m_inputs.begin();
         iIn != m_inputs.end(); ++iIn, ++input )
   {
-    m_inArray[input] = static_cast<float>(m_parent->getInput(proto,*iIn));
+    m_inArray[input] = static_cast<float>( (*iIn)->value(proto) );
   }
 
   // get the output
   double mvaOut = m_reader->EvaluateMVA("PID");
-
-  // Scale to range 0 - 1
-  // Not needed for EstimatorType=CE networks
-  //   const double e = 0.002;
-  //   mvaOut = ( 1 + std::sqrt(std::pow(mvaOut,2)+4.0*e) -
-  //              std::sqrt(std::pow(mvaOut-1.0,2)+4.0*e) ) / 2.0;
 
   // Final sanity check
   if      ( mvaOut > 1.0 ) { mvaOut = 1.0; }
@@ -425,10 +405,10 @@ ChargedProtoANNPIDAlg::TMVAImpANN::getOutput( const LHCb::ProtoParticle * proto 
 {
   // Fill the array of network inputs
   unsigned int input = 0;
-  for ( ChargedProtoANNPIDAlgBase::IntInputs::const_iterator iIn = m_inputs.begin();
+  for ( Inputs::const_iterator iIn = m_inputs.begin();
         iIn != m_inputs.end(); ++iIn, ++input )
   {
-    m_vars[input] = m_parent->getInput(proto,*iIn);
+    m_vars[input] = (*iIn)->value(proto);
   }
 
   // get the output
@@ -450,8 +430,16 @@ StatusCode ChargedProtoANNPIDAlg::finalize()
   // Clean Up
   delete m_netHelper;
   m_netHelper = NULL;
+  for ( Cut::ConstVector::const_iterator iC = m_cuts.begin();
+        iC != m_cuts.end(); ++iC ) { delete *iC; }
+  m_cuts.clear();
   // return
   return ChargedProtoANNPIDAlgBase::finalize();
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDAlg )
 
 //=============================================================================

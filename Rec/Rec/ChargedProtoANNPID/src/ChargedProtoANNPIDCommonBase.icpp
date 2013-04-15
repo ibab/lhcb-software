@@ -105,105 +105,17 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::recSummary() const
 }
 //=============================================================================
 
-template <class PBASE>
-const typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::StringToInt &
-ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringToIntMap() const
-{
-  static const StringToInt sToI = boost::assign::map_list_of
-    ( "RichUsedAero"          , (int)LHCb::ProtoParticle::LastGlobal + 1  )
-    ( "RichUsedR1Gas"         , (int)LHCb::ProtoParticle::LastGlobal + 2  )
-    ( "RichUsedR2Gas"         , (int)LHCb::ProtoParticle::LastGlobal + 3  )
-    ( "RichAboveElThres"      , (int)LHCb::ProtoParticle::LastGlobal + 4  )
-    ( "RichAboveMuThres"      , (int)LHCb::ProtoParticle::LastGlobal + 5  )
-    ( "RichAbovePiThres"      , (int)LHCb::ProtoParticle::LastGlobal + 6  )
-    ( "RichAboveKaThres"      , (int)LHCb::ProtoParticle::LastGlobal + 7  )
-    ( "RichAbovePrThres"      , (int)LHCb::ProtoParticle::LastGlobal + 8  )
-    ( "MuonIsLooseMuon"       , (int)LHCb::ProtoParticle::LastGlobal + 9  )
-    ( "MuonIsMuon"            , (int)LHCb::ProtoParticle::LastGlobal + 10 )
-    ( "TrackLikelihood"       , (int)LHCb::ProtoParticle::LastGlobal + 11 )
-    ( "TrackGhostProbability" , (int)LHCb::ProtoParticle::LastGlobal + 12 )
-    ( "NumProtoParticles"     , (int)LHCb::ProtoParticle::LastGlobal + 13 )
-    ( "NumCaloHypos"          , (int)LHCb::ProtoParticle::LastGlobal + 14 )
-    ( "NumLongTracks"         , (int)LHCb::ProtoParticle::LastGlobal + 15 )
-    ( "NumDownstreamTracks"   , (int)LHCb::ProtoParticle::LastGlobal + 16 )
-    ( "NumUpstreamTracks"     , (int)LHCb::ProtoParticle::LastGlobal + 17 )
-    ( "NumVeloTracks"         , (int)LHCb::ProtoParticle::LastGlobal + 18 )
-    ( "NumTTracks"            , (int)LHCb::ProtoParticle::LastGlobal + 19 )
-    ( "NumPVs"                , (int)LHCb::ProtoParticle::LastGlobal + 20 )
-    ( "NumSPDHits"            , (int)LHCb::ProtoParticle::LastGlobal + 21 )
-    ( "NumRich1Hits"          , (int)LHCb::ProtoParticle::LastGlobal + 22 )
-    ( "NumRich2Hits"          , (int)LHCb::ProtoParticle::LastGlobal + 23 )
-    ( "TrackFitMatchChi2"     , (int)LHCb::ProtoParticle::LastGlobal + 24 )
-    ( "TrackFitVeloChi2"      , (int)LHCb::ProtoParticle::LastGlobal + 25 )
-    ( "TrackFitVeloNDoF"      , (int)LHCb::ProtoParticle::LastGlobal + 26 )
-    ( "TrackFitTChi2"         , (int)LHCb::ProtoParticle::LastGlobal + 27 )
-    ( "TrackFitTNDoF"         , (int)LHCb::ProtoParticle::LastGlobal + 28 )
-    ( "TrackCloneDist"        , (int)LHCb::ProtoParticle::LastGlobal + 29 )
-    ( "NumMuonTracks"         , (int)LHCb::ProtoParticle::LastGlobal + 30 )
-    ( "TrackMatchChi2"        , (int)LHCb::ProtoParticle::LastGlobal + 31 )
-    ;
-  return sToI;
-}
-//=============================================================================
-
 //=============================================================================
 template <class PBASE>
-std::string
-ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringID( const int id ) const
+typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::Input::ConstVector 
+ANNGlobalPID::
+ChargedProtoANNPIDCommonBase<PBASE>::getInputs( const StringInputs& names ) const
 {
-  std::string name("");
-  // special cases
-  for ( StringToInt::const_iterator iI = stringToIntMap().begin();
-        iI != stringToIntMap().end(); ++iI )
-  {
-    if ( iI->second == id )
-    {
-      name = iI->first;
-      break;
-    }
-  }
-  // defaults from ProtoParticle
-  if ( name.empty() )
-  {
-    std::ostringstream _name;
-    _name << (LHCb::ProtoParticle::additionalInfo)(id);
-    name = _name.str();
-  }
-  return name;
-}
-//=============================================================================
-
-//=============================================================================
-template <class PBASE>
-int
-ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableID( const std::string & name ) const
-{
-  int id(0);
-  // special cases
-  StringToInt::const_iterator iI = stringToIntMap().find(name);
-  if ( iI != stringToIntMap().end() )
-  {
-    id = iI->second;
-  }
-  else // Default, use enum from ProtoParticle
-  {
-    id = (int)LHCb::ProtoParticle::convertExtraInfo(name);
-  }
-  // return
-  return id;
-}
-//=============================================================================
-
-//=============================================================================
-template <class PBASE>
-typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::IntInputs
-ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableIDs( const StringInputs & names ) const
-{
-  IntInputs inputs;
+  typename Input::ConstVector inputs;
   inputs.reserve(names.size());
   for ( StringInputs::const_iterator i = names.begin(); i != names.end(); ++i )
   {
-    inputs.push_back( variableID(*i) );
+    inputs.push_back( getInput(*i) );
   }
   return inputs;
 }
@@ -211,261 +123,81 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableIDs( const StringInpu
 
 //=============================================================================
 template <class PBASE>
-double
-ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoParticle * proto,
-                                                             const int input ) const
+const typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::Input *
+ANNGlobalPID::
+ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
 {
-  double var(0);
+  Input * input = NULL;
 
-  static LHCb::MuonPID tmpMPID;
-  static LHCb::RichPID tmpRPID;
-
-  // -----------------------------------------------------------------------------------------------
-  // not in the ProtoParticles
-  // -----------------------------------------------------------------------------------------------
-
-  if ( (int)LHCb::ProtoParticle::TrackP == input )
-  {
-    const double MaxP = 5000.0 * Gaudi::Units::GeV;
-    var = proto->track()->p();
-    if ( var > MaxP ) var = -999;
-  }
-  else if ( (int)LHCb::ProtoParticle::TrackPt == input )
-  {
-    const double MaxPt = 1000.0 * Gaudi::Units::GeV;
-    var = proto->track()->pt();
-    if ( var > MaxPt ) var = -999;
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+13 == input )
-  {
-    const LHCb::ProtoParticles * protos = dynamic_cast<const LHCb::ProtoParticles *>(proto->parent());
-    var = ( protos ? static_cast<double>(protos->size()) : -999 );
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+14 == input )
-  {
-    var = static_cast<double>(proto->calo().size());
-  }
-
-  // -----------------------------------------------------------------------------------------------
   // Tracking variables
-  // -----------------------------------------------------------------------------------------------
+  if      ( "TrackP"                == name ) { input = new InTrackP(); }
+  else if ( "TrackPt"               == name ) { input = new InTrackPt(); }
+  else if ( "TrackLikelihood"       == name ) { input = new InTrackLikelihood(); }
+  else if ( "TrackGhostProbability" == name ) { input = new InTrackGhostProb(); }
+  else if ( "TrackCloneDist"        == name ) { input = new InTrackCloneDist(); }
+  else if ( "TrackFitMatchChi2"     == name ) { input = new InTrackExInfo(LHCb::Track::FitMatchChi2); }
+  else if ( "TrackFitVeloChi2"      == name ) { input = new InTrackExInfo(LHCb::Track::FitVeloChi2); }
+  else if ( "TrackFitVeloNDoF"      == name ) { input = new InTrackExInfo(LHCb::Track::FitVeloNDoF); }
+  else if ( "TrackFitTChi2"         == name ) { input = new InTrackExInfo(LHCb::Track::FitTChi2); }
+  else if ( "TrackFitTNDoF"         == name ) { input = new InTrackExInfo(LHCb::Track::FitTNDoF); }
+  else if ( "TrackMatchChi2"        == name ) { input = new InTrackExInfo(LHCb::Track::MatchChi2); }
 
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+11 == input )
-  {
-    var = proto->track()->likelihood();
-    if ( var < -120.0 ) var = -999.0; // Strange distribution
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+12 == input )
-  {
-    var = proto->track()->ghostProbability();
-    if ( var < 0.00001 ) var = -999.0; // Move delta at 0 to -999 for NeuroBayes
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+24 == input )
-  {
-    var = proto->track()->info(LHCb::Track::FitMatchChi2,-999);
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+25 == input )
-  {
-    var = proto->track()->info(LHCb::Track::FitVeloChi2,-999);
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+26 == input )
-  {
-    var = proto->track()->info(LHCb::Track::FitVeloNDoF,-999);
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+27 == input )
-  {
-    var = proto->track()->info(LHCb::Track::FitTChi2,-999);
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+28 == input )
-  {
-    var = proto->track()->info(LHCb::Track::FitTNDoF,-999);
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+29 == input )
-  {
-    var = proto->track()->info(LHCb::Track::CloneDist,-999);
-    if ( var < 0 ) var = -999;
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+31 == input )
-  {
-    var = proto->track()->info(LHCb::Track::MatchChi2,-999);
-  }
+  // Rich Variables
+  else if ( "RichUsedAero"     == name ) { input = new InRichUsedAerogel(); }
+  else if ( "RichUsedR1Gas"    == name ) { input = new InRichUsedR1Gas(); }  
+  else if ( "RichUsedR2Gas"    == name ) { input = new InRichUsedR2Gas(); }
+  else if ( "RichAboveElThres" == name ) { input = new InRichAboveElThres(); }
+  else if ( "RichAboveMuThres" == name ) { input = new InRichAboveMuThres(); }
+  else if ( "RichAbovePiThres" == name ) { input = new InRichAbovePiThres(); }
+  else if ( "RichAboveKaThres" == name ) { input = new InRichAboveKaThres(); }
+  else if ( "RichAbovePrThres" == name ) { input = new InRichAbovePrThres(); }
+  else if ( "RichDLLe"         == name ) { input = new InRichDLL(Rich::Electron); }
+  else if ( "RichDLLmu"        == name ) { input = new InRichDLL(Rich::Muon); }
+  else if ( "RichDLLpi"        == name ) { input = new InRichDLL(Rich::Pion); }
+  else if ( "RichDLLk"         == name ) { input = new InRichDLL(Rich::Kaon); }
+  else if ( "RichDLLp"         == name ) { input = new InRichDLL(Rich::Proton); }
+  else if ( "RichDLLbt"        == name ) { input = new InRichDLL(Rich::BelowThreshold); }
 
-  // -----------------------------------------------------------------------------------------------
-  // Global Event Quantities
-  // -----------------------------------------------------------------------------------------------
+  // Muon variables
+  else if ( "MuonIsLooseMuon" == name ) { input = new InMuonIsMuonLoose(); }
+  else if ( "MuonIsMuon"      == name ) { input = new InMuonIsMuon(); }
+  else if ( "MuonNShared"     == name ) { input = new InMuonNShared(); }
+  else if ( "MuonMuLL"        == name ) { input = new InMuonLLMu(); }
+  else if ( "MuonBkgLL"       == name ) { input = new InMuonLLBkg(); }
 
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+15 == input )
+  // GEC Variables
+  else if ( "NumProtoParticles"   == name ) { input = new InNumProtos(); }
+  else if ( "NumCaloHypos"        == name ) { input = new InNumCaloHypos(); }
+  else if ( "NumLongTracks"       == name ) { input = new InRecSummary(LHCb::RecSummary::nLongTracks,this); }
+  else if ( "NumDownstreamTracks" == name ) { input = new InRecSummary(LHCb::RecSummary::nDownstreamTracks,this); }
+  else if ( "NumUpstreamTracks"   == name ) { input = new InRecSummary(LHCb::RecSummary::nUpstreamTracks,this); }
+  else if ( "NumVeloTracks"       == name ) { input = new InRecSummary(LHCb::RecSummary::nVeloTracks,this); }
+  else if ( "NumTTracks"          == name ) { input = new InRecSummary(LHCb::RecSummary::nTTracks,this); }
+  else if ( "NumPVs"              == name ) { input = new InRecSummary(LHCb::RecSummary::nPVs,this); }
+  else if ( "NumSPDHits"          == name ) { input = new InRecSummary(LHCb::RecSummary::nSPDhits,this); }
+  else if ( "NumRich1Hits"        == name ) { input = new InRecSummary(LHCb::RecSummary::nRich1Hits,this); }
+  else if ( "NumRich2Hits"        == name ) { input = new InRecSummary(LHCb::RecSummary::nRich2Hits,this); }
+  else if ( "NumMuonTracks"       == name ) { input = new InRecSummary(LHCb::RecSummary::nMuonTracks,this); }
+
+  // Proto Extra Info variables with specific default requirements, not -999
+  else if ( "InAccMuon"    == name ) { input = new InProtoExInfo( LHCb::ProtoParticle::InAccMuon, 0 ); }
+  else if ( "InAccEcal"    == name ) { input = new InProtoExInfo( LHCb::ProtoParticle::InAccEcal, 0 ); }
+  else if ( "InAccHcal"    == name ) { input = new InProtoExInfo( LHCb::ProtoParticle::InAccHcal, 0 ); }
+  else if ( "InAccPrs"     == name ) { input = new InProtoExInfo( LHCb::ProtoParticle::InAccPrs,  0 ); }
+  else if ( "InAccSpd"     == name ) { input = new InProtoExInfo( LHCb::ProtoParticle::InAccSpd,  0 ); }
+  else if ( "InAccBrem"    == name ) { input = new InProtoExInfo( LHCb::ProtoParticle::InAccBrem, 0 ); }
+  else if ( "CaloEcalChi2" == name ) { input = new InCaloEcalChi2(); }
+  else if ( "CaloBremChi2" == name ) { input = new InCaloBremChi2(); }
+  else if ( "CaloClusChi2" == name ) { input = new InCaloClusChi2(); }
+
+  // Generic ProtoParticle Extra Info
+  else { input = new InProtoExInfo( LHCb::ProtoParticle::convertExtraInfo(name) ); }
+
+  if ( !input )
   {
-    var = recSummary()->info( LHCb::RecSummary::nLongTracks, 0 );
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+16 == input )
-  {
-    var = recSummary()->info( LHCb::RecSummary::nDownstreamTracks, 0 );
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+17 == input )
-  {
-    var = recSummary()->info( LHCb::RecSummary::nUpstreamTracks, 0 );
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+18 == input )
-  {
-    var = recSummary()->info( LHCb::RecSummary::nVeloTracks, 0 );
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+19 == input )
-  {
-    var = recSummary()->info( LHCb::RecSummary::nTTracks, 0 );
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+20 == input )
-  {
-    var = recSummary()->info( LHCb::RecSummary::nPVs, 0 );
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+21 == input )
-  {
-    var = recSummary()->info( LHCb::RecSummary::nSPDhits, 0 );
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+22 == input )
-  {
-    var = recSummary()->info( LHCb::RecSummary::nRich1Hits, 0 );
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+23 == input )
-  {
-    var = recSummary()->info( LHCb::RecSummary::nRich2Hits, 0 );
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+30 == input )
-  {
-    var = recSummary()->info( LHCb::RecSummary::nMuonTracks, 0 );
+    this->Exception( "Failed to create input object for '" + name + "'" );
   }
 
-  // -----------------------------------------------------------------------------------------------
-  // special case ( variables with specific default requirements, not -999 )
-  // -----------------------------------------------------------------------------------------------
-
-  else if ( (int)LHCb::ProtoParticle::InAccEcal == input )
-  {
-    var = proto->info(LHCb::ProtoParticle::InAccEcal,0);
-  }
-  else if ( (int)LHCb::ProtoParticle::InAccHcal == input )
-  {
-    var = proto->info(LHCb::ProtoParticle::InAccHcal,0);
-  }
-  else if ( (int)LHCb::ProtoParticle::InAccPrs == input )
-  {
-    var = proto->info(LHCb::ProtoParticle::InAccPrs,0);
-  }
-  else if ( (int)LHCb::ProtoParticle::InAccSpd == input )
-  {
-    var = proto->info(LHCb::ProtoParticle::InAccSpd,0);
-  }
-  else if ( (int)LHCb::ProtoParticle::InAccBrem == input )
-  {
-    var = proto->info(LHCb::ProtoParticle::InAccBrem,0);
-  }
-  else if ( (int)LHCb::ProtoParticle::CaloEcalChi2 == input )
-  {
-    var = proto->info(LHCb::ProtoParticle::CaloEcalChi2,-999);
-    if      ( var < -100    ) { var = -999; }
-    else if ( var > 9999.99 ) { var = -999; }
-  }
-  else if ( (int)LHCb::ProtoParticle::CaloBremChi2 == input )
-  {
-    var = proto->info(LHCb::ProtoParticle::CaloBremChi2,-999);
-    if      ( var < -100    ) { var = -999; }
-    else if ( var > 9999.99 ) { var = -999; }
-  }
-  else if ( (int)LHCb::ProtoParticle::CaloClusChi2 == input )
-  {
-    var = proto->info(LHCb::ProtoParticle::CaloClusChi2,-999);
-    if      ( var < -100   ) { var = -999; }
-    else if ( var > 999.99 ) { var = -999; }
-  }
-  else if ( (int)LHCb::ProtoParticle::InAccMuon == input )
-  {
-    var = proto->info(LHCb::ProtoParticle::InAccMuon,0);
-  }
-  else if ( (int)LHCb::ProtoParticle::MuonNShared == input )
-  {
-    var = proto->info(LHCb::ProtoParticle::MuonNShared,-1.0) + 1.0;
-  }
-
-  // -----------------------------------------------------------------------------------------------
-  // special cases ( variables without a ProtoParticle entry )
-  // -----------------------------------------------------------------------------------------------
-
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+1 == input )
-  {
-    tmpRPID.setPidResultCode( static_cast<int>(proto->info(LHCb::ProtoParticle::RichPIDStatus,0)) );
-    var = tmpRPID.usedAerogel();
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+2 == input )
-  {
-    tmpRPID.setPidResultCode( static_cast<int>(proto->info(LHCb::ProtoParticle::RichPIDStatus,0)) );
-    var = tmpRPID.usedRich1Gas();
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+3 == input )
-  {
-    tmpRPID.setPidResultCode( static_cast<int>(proto->info(LHCb::ProtoParticle::RichPIDStatus,0)) );
-    var = tmpRPID.usedRich2Gas();
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+4 == input )
-  {
-    tmpRPID.setPidResultCode( static_cast<int>(proto->info(LHCb::ProtoParticle::RichPIDStatus,0)) );
-    var = tmpRPID.electronHypoAboveThres();
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+5 == input )
-  {
-    tmpRPID.setPidResultCode( static_cast<int>(proto->info(LHCb::ProtoParticle::RichPIDStatus,0)) );
-    var = tmpRPID.muonHypoAboveThres();
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+6 == input )
-  {
-    tmpRPID.setPidResultCode( static_cast<int>(proto->info(LHCb::ProtoParticle::RichPIDStatus,0)) );
-    var = tmpRPID.pionHypoAboveThres();
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+7 == input )
-  {
-    tmpRPID.setPidResultCode( static_cast<int>(proto->info(LHCb::ProtoParticle::RichPIDStatus,0)) );
-    var = tmpRPID.kaonHypoAboveThres();
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+8 == input )
-  {
-    tmpRPID.setPidResultCode( static_cast<int>(proto->info(LHCb::ProtoParticle::RichPIDStatus,0)) );
-    var = tmpRPID.protonHypoAboveThres();
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+9 == input )
-  {
-    tmpMPID.setStatus( static_cast<int>(proto->info(LHCb::ProtoParticle::MuonPIDStatus,0)) );
-    var = tmpMPID.IsMuonLoose();
-  }
-  else if ( (int)LHCb::ProtoParticle::LastGlobal+10 == input )
-  {
-    tmpMPID.setStatus( static_cast<int>(proto->info(LHCb::ProtoParticle::MuonPIDStatus,0)) );
-    var = tmpMPID.IsMuon();
-  }
-
-  // -----------------------------------------------------------------------------------------------
-  // Finally the non special cases
-  // -----------------------------------------------------------------------------------------------
-
-  else
-  {
-    var = proto->info( (LHCb::ProtoParticle::additionalInfo)input, -999 );
-  }
-
-  // Check information is OK
-
-  // Not Finite ?
-  if ( !lfin(var) )
-  {
-    this->Warning( "Variable " + stringID(input) + " is infinite -> Setting to 0" ).ignore();
-    var = 0.0;
-  }
-  // NaN ?
-  if ( lnan(var) )
-  {
-    this->Warning( "Variable " + stringID(input) + " is NaN -> Setting to 0" ).ignore();
-    var = 0.0;
-  }
-
-  // return the variable
-  return var;
+  return input;
 }
 //=============================================================================
