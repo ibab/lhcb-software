@@ -16,7 +16,8 @@ gaudi_depends_on_subdirs(Det/FTDet
                          Kernel/LHCbKernel
                          Kernel/LHCbMath
                          OT/OTDAQ
-                         Tr/TrackInterfaces)
+                         Tr/TrackInterfaces
+                         Tr/TrackKernel)
 
 include(GaudiObjDesc)
 

@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2013-04-15 - Marco Cattaneo and Wouter Hulsbergen
+ - Add dependency on Tr/TrackKernel, needed by previous change
+
 ! 2013-04-11 - Wouter Hulsbergen
  - removed spurious factor 2 in VPLite error
  - added new measurement class OriginConstraint
