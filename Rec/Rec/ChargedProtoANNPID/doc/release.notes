@@ -20,6 +20,10 @@
   . Uses TMVA instead of Neurobayes as MVA technology. 
    . Gives slightly PID better performance.
    . Much faster implementation due to use of compiled TMVA macros.
+  . Config files have now been imported from the Paramfiles package 
+    ChargedProtoANNPIDParam directly into this package. 
+  . Dropped support for obsolete tunings (parameters not imported). 
+    Only MC12TuneV1 and MC12TuneV2 now supported.
 
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
