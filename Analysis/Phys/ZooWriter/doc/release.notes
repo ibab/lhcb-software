@@ -4,6 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2013-04-15 - Paul Seyfert
+ - small fixes to Rules.mk by M. Schiller (copy&paste from
+   PhysFit/B2DXFitters) for Mac OS X compatibility
+
 ! 2013-04-09 - Paul Seyfert
  - fixed readout of ghostprobability in case tracks are refitted
    NB: I didn't fully check if refitting has other undesired features

@@ -380,11 +380,11 @@ FLAVOURDET2:='/^[^\#]/ { if ("__SUNPRO_C" != $$6) { print "SunPro"; } else { \
 CC_FLAVOUR:=$(shell $(ECHO) $(FLAVOURDET1) | $(CC) -E - | $(AWK) $(FLAVOURDET2))
 CXX_FLAVOUR:=$(shell $(ECHO) $(FLAVOURDET1) | $(CXX) -E - | $(AWK) $(FLAVOURDET2))
 # Fortran detection relies on flags
-FC_FLAVOUR:=$(shell $(FC) --version 2>&1 | $(SED) -e 's/ /\n/g' | \
+FC_FLAVOUR:=$(shell $(TEST) -n "$(FC)" && $(FC) --version 2>&1 | $(SED) -e 's/ /\n/g' | \
 	   $(GREP) -E '(GNU|Intel|Open64|PathScale)' | $(HEAD) -1)
 ifeq ($(FC_FLAVOUR),)
 # unsure so far, check for SunPro, else Unknown
-FC_FLAVOUR:=$(shell $(FC) -V 2>&1 | $(GREP) -q 'Sun' && $(ECHO) 'SunPro' || \
+FC_FLAVOUR:=$(shell $(TEST) -n "$(FC)" && $(FC) -V 2>&1 | $(GREP) -q 'Sun' && $(ECHO) 'SunPro' || \
     $(ECHO) 'Unknown')
 endif
 endif
@@ -397,11 +397,13 @@ ECHOMSG := $(ECHO) -e
 ifeq ($(filter $(TMPLINKOPT),$(LDFLAGS)),)
 LDFLAGS += $(TMPLINKOPT)
 endif
+CPUFLAGS := $(shell $(GREP) "flags" /proc/cpuinfo | $(HEAD) -1)
 endif
 # echo on Darwin/MacOS X works a bit differently
 ifeq ($(UNAME_SYS),Darwin)
 ECHO := echo
 ECHOMSG := $(ECHO)
+CPUFLAGS := ""
 endif
 
 #######################################################################
@@ -480,21 +482,21 @@ TUNEFLAGS.GNU ?= -ffast-math -fno-math-errno \
     i <= NF; ++i) if ($$i ~ /[0-9]*\.[0-9]*\.[0-9]*$$/) { \
     if ($$i < "4.") tunefl = "-mtune=opteron"; else tunefl = \
     "-mtune=native"; }; } END { print tunefl; }') \
-    $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+    $(shell $(ECHO) $(CPUFLAGS) | \
     $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
     -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
     -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
     $(GREP) -- '-m')
 # accept only last floating point feature (assume it's best)
 TUNEFLAGS.Intel ?= \
-    $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+    $(shell $(ECHO) $(CPUFLAGS) | \
     $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
     -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
     -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
     $(GREP) -- '-m' | $(TAIL) -1)
 TUNEFLAGS.Clang ?= -march=native -mtune=native -ffast-math \
     -fno-math-errno \
-    $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+    $(shell $(ECHO) $(CPUFLAGS) | \
     $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
     -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
     -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
@@ -502,7 +504,7 @@ TUNEFLAGS.Clang ?= -march=native -mtune=native -ffast-math \
 # Open64's CPU feature detection does not work for sse4/avx
 TUNEFLAGS.Open64 ?= -march=auto -OPT:Ofast -OPT:ro=3 \
     −fno−math−errno −ffast−math \
-    $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+    $(shell $(ECHO) $(CPUFLAGS) | \
     $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
     -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
     -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
@@ -510,7 +512,7 @@ TUNEFLAGS.Open64 ?= -march=auto -OPT:Ofast -OPT:ro=3 \
 # accept only last floating point feature (assume it's best)
 TUNEFLAGS.PathScale ?= -march=auto -OPT:Ofast -OPT:ro=3 \
     −fno−math−errno −ffast−math \
-    $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+    $(shell $(ECHO) $(CPUFLAGS) | \
     $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
     -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
     -e 's/ /\n/g' | $(GREP) -- '-m' | $(TAIL) -1)
