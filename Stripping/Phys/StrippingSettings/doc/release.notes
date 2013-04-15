@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2013-04-15 - Mika Vesterinen
+ - Removed B2XTauNu from 20r1p1 in Semileptonics.
+
+! 2013-04-15 - Mika Vesterinen
  - Added TISTOS specs to B2XTauNu in Semileptonic dictionaries for 20r0p1 and 20r1p1
 
 ! 2013-04-13 - Mika Vesterinen
