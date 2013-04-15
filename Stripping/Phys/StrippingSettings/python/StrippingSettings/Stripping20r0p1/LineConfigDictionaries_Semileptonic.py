@@ -57,8 +57,8 @@ B2XTauNu = {
     'Dstar_PT'         : 1250.0,   #MeV, 1250 in StdLooseD*
     'Dstar_VCHI2'      : 10.0,     #MeV, 25 in StdLooseD*WithD02KPi 
     'Dstar_MassW'      : 50.0,     #MeV, 50 MeV in StdLooseD*WithD02KPi
-    'Dstar_DeltaM_low'  : 135.0,
-    'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD*
+    'Dstar_DeltaM_low'  : 135.0,  #MeV
+    'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD* 
     #Muon and J/psi cuts
     'Muon_TRCHI2DOF'    : 3.0,
     'Muon_PT'           : 1000.0,  #MeV
@@ -78,7 +78,9 @@ B2XTauNu = {
     #Ghost Prob cut on all tracks apart from slow pion
     'TRGHP'             : 0.4,
     #Slow pion ghost prob
-    'TRGHP_slowPi'      : 0.6
+    'TRGHP_slowPi'      : 0.6,
+    #HLT1 trigger
+    'TisTosSpecs'       : { 'Hlt1TrackAllL0Decision%TOS' : 0 }    
     },
     'STREAMS' : {
     'BhadronCompleteEvent' : [
