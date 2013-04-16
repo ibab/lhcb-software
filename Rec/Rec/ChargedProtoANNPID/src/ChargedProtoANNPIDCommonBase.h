@@ -105,6 +105,10 @@ namespace ANNGlobalPID
     class Input
     {
     public:
+      /// Destructor 
+      virtual ~Input() { }
+    public:
+      /// Access the input value for a given ProtoParticle
       virtual double value( const LHCb::ProtoParticle * proto ) const = 0;
     public:
       /// Type for a vector of inputs
@@ -119,8 +123,8 @@ namespace ANNGlobalPID
                      const double def = -999 )
         : m_info(info), m_def(def) { }
     private:
-      LHCb::ProtoParticle::additionalInfo m_info;
-      double m_def;
+      const LHCb::ProtoParticle::additionalInfo m_info;
+      const double m_def;
     public:
       virtual double value( const LHCb::ProtoParticle * proto ) const
       {
@@ -134,7 +138,7 @@ namespace ANNGlobalPID
     public:
       InTrackExInfo( const int info ) : m_info(info) { }
     private:
-      int m_info;
+      const int m_info;
     public:
       virtual double value( const LHCb::ProtoParticle * proto ) const
       {
@@ -427,7 +431,7 @@ namespace ANNGlobalPID
   public:
 
     /** Get the Input object for a given input name
-     *  @attention Created on the heap, and user takes ownership
+     *  @attention Created on the heap therefore user takes ownership
      */
     const Input * getInput( const std::string& name ) const;
 

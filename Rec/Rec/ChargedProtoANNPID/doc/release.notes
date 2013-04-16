@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-04-16 - Chris Jones
- - Update the CMT requirements file to only enable Neurobayes on platoforms
+ - Update the CMT requirements file to only enable Neurobayes on platforms
    that it supports (CMake to follow).
  - Small update to the python configurable for use in the 'on-demand'
    recalibration of the ANNPID in DaVinci.
