@@ -1,3 +1,7 @@
+2013-04-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/lcg-*: added support for gcc 4.8.0 and clang 3.2
+
 2013-03-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/lcg-*-4.6.3: added wrapper for gcc 4.6.3
