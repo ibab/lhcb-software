@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-16 - Thomas Blake
+ - Updated radiative lines for Stripping 20r0p1 and 20r1p1 
+
 ! 2013-04-16 - Lucio Anderlini
  - Harder cuts to ChiC lines (BandQ dicts) for S20r0p1 and S20r1p1
  - Dictionaries updated

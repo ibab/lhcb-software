@@ -92,7 +92,7 @@ Bd2eeKstarBDT = {
         'ElectronIPCHI2'          :    1.   ,
         'ElectronPIDepi'          :   -2.   ,          
         #
-        'eeCuts'                  : "(VFASPF(VCHI2)<16) & ((MM<1.5*GeV) | ((MM>2.2*GeV) & (MM<4.2*GeV)))",
+        'eeCuts'                  : "(VFASPF(VCHI2)<16) & ((MM<1.2*GeV) | ((MM>2.2*GeV) & (MM<4.2*GeV)))",
         #
         'KaonPT'                  :  400.   ,  # MeV 
         'KaonP'                   : 3000.   ,  # MeV  
@@ -119,7 +119,9 @@ Bd2eeKstarBDT = {
         'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'
         },
     'WGs'    : [ 'RD' ],
-    'STREAMS' : [ 'Radiative' ]
+    'STREAMS' : {
+    'Radiative' :  [ 'StrippingBd2eeKstarBDTLine2' ]
+    }
     }
 
 
