@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2013-04-16 - Marco Clemencic
+ - Fixed Clang warnings.
+
 ! 2013-04-02 - Marco Cattaneo
  - In CaloFillRawBuffer:
    . Fix UNINIT_CTOR defect

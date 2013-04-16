@@ -90,7 +90,9 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
     m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
   }
   else {
-    return( Error( "Invalid detector Num =  " + m_detectorNum ) );
+    std::ostringstream os;
+    os << "Invalid detector Num =  " << m_detectorNum;
+    return( Error( os.str() ) );
   }
 
 
@@ -160,7 +162,7 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
       }catch(GaudiException &exc){
         counter("Duplicate Spd 'digit'") += 1;
         std::ostringstream os("");
-        os << "Duplicate digit for channel " << *itD << endmsg;
+        os << "Duplicate digit for channel " << *itD;
         Warning(os.str(),StatusCode::SUCCESS).ignore();
         int card =  m_spdTool->deCalo()->cardNumber( *itD );
         int tell1=  m_spdTool->deCalo()->cardToTell1( card);
@@ -188,7 +190,7 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
       }catch(GaudiException &exc){
         counter("Duplicate Spd 'ADC'") += 1;
         std::ostringstream os("");
-        os << "Duplicate ADC for channel " << *itD << endmsg;
+        os << "Duplicate ADC for channel " << *itD;
         Warning(os.str(),StatusCode::SUCCESS).ignore();
         int card =  m_spdTool->deCalo()->cardNumber( *itD );
         int tell1=  m_spdTool->deCalo()->cardToTell1( card);
@@ -228,7 +230,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
       }catch(GaudiException &exc){
         counter("Duplicate CaloDigit") += 1;
         std::ostringstream os("");
-        os << "Duplicate digit for channel " << itD->cellID() << endmsg;
+        os << "Duplicate digit for channel " << itD->cellID();
         Warning(os.str(),StatusCode::SUCCESS).ignore();
         int card =  m_energyTool->deCalo()->cardNumber( itD->cellID() );
         int tell1=  m_energyTool->deCalo()->cardToTell1( card);
@@ -263,7 +265,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
       }catch(GaudiException &exc){
         counter("Duplicate CaloDigit") += 1;
         std::ostringstream os("");
-        os << "Duplicate digit for channel " << itA->cellID() << endmsg;
+        os << "Duplicate digit for channel " << itA->cellID();
         Warning(os.str(),StatusCode::SUCCESS).ignore();
         int card =  m_energyTool->deCalo()->cardNumber( itA->cellID() );
         int tell1=  m_energyTool->deCalo()->cardToTell1( card);
@@ -301,7 +303,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
         }catch(GaudiException &exc){
           counter("Duplicate CaloDigit") += 1;
           std::ostringstream os("");
-          os << "Duplicate digit for channel " << itA->cellID() << endmsg;
+          os << "Duplicate digit for channel " << itA->cellID();
           Warning(os.str(),StatusCode::SUCCESS).ignore();
           int card =  m_energyTool->deCalo()->cardNumber( itA->cellID() );
           int tell1=  m_energyTool->deCalo()->cardToTell1( card);
