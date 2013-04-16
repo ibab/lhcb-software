@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!  2013-04-16 - Wouter Hulsbergen
+ - HitPattern: add VP and VL
+
 ! 2013-04-09 - Chris Jones
  - Move Kernel/StandardPacker.h into Event/EventPacker
 

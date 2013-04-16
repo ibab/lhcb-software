@@ -8,9 +8,9 @@ namespace LHCb
     
     HitPattern::HitPattern( const std::vector<LHCbID>& ids  ) {
 
-	for( std::vector<LHCbID>::const_iterator id = ids.begin() ;
+      for( std::vector<LHCbID>::const_iterator id = ids.begin() ;
 	     id != ids.end(); ++id) {
-	    switch( id->detectorType() ) {
+  	  switch( id->detectorType() ) {
 		case LHCbID::Velo:
 		{
 		    LHCb::VeloChannelID veloid = id->veloID() ;
@@ -38,6 +38,48 @@ namespace LHCb
 		      m_veloPhiC.set(station) ;
 		      
 		    }
+		}
+		break ;
+        	case LHCbID::VL:
+		{
+		  LHCb::VLChannelID veloid = id->vlID() ;
+		  unsigned int station = (veloid.sensor()%64)/2 ;
+		  unsigned int side    = (veloid.sensor()%2) ;
+		  unsigned int type    = (veloid.sensor()/64) ;
+		  switch( side+2*type) {
+		    case 0:
+		      m_veloRA.set(station) ;
+		      break ;
+		    case 1:
+		      m_veloRC.set(station) ; 
+		      break;
+		    case 2:
+		      m_veloPhiA.set(station) ;
+		      break;
+		    case 3:
+		      m_veloPhiC.set(station) ;
+		  }
+		}
+		break ;
+                case LHCbID::VP:
+		{
+		  // FIXME: WH: the problem is that we have some
+		  // interesting logic to cpmpute velo holes, which
+		  // doesn't work for VP. this is not very neat, but
+		  // it is a solution for now. I may also have swapped
+		  // A and C side.
+		  LHCb::VPChannelID vpid = id->vpID() ;
+		  unsigned int station = vpid.station() ;
+		  switch( vpid.sidepos() ) {
+		  case 0:
+		    m_veloRA.set(station) ;
+		    m_veloPhiA.set(station) ;
+		    break ;
+		  case 1:
+		    m_veloRC.set(station) ; 
+		    m_veloPhiC.set(station) ;
+		    break;
+		  }		    
 		}
 		break ;
 		case LHCbID::UT:
@@ -89,8 +131,6 @@ namespace LHCb
 		    m_muon.set( muonid.station() ) ;
 		}
 		break ;
-		default:
-		    ;
 	    }
 	}
     }
