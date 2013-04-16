@@ -18,6 +18,8 @@ Purpose: LHCb reconstruction program
 - Changes to tests
   . Pick up options files for input files from PRConfig package. This is
     future proofing for changes to physical location of input data
+  . Remove enabling of ANN Neurobayes printout from tests using 2011 or 2012
+    data, since NeuroBayes is no longer run by default for these DataTypes
 
 - Changes to example options
   . Remove options files that are duplicated in PRConfig package 
