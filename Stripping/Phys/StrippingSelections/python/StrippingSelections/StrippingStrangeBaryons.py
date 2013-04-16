@@ -30,7 +30,7 @@ from GaudiKernel.SystemOfUnits import MeV
 
 config_default = { #PID cuts
                    'checkPV'   : True,
-                   'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')",
+                   'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')",
                    'ProtonPIDppi'              :       -5.,  #(PIDp-PIDpi) > -5                   
                    'PionPIDpiK'              :       0.,   #(PIDp-PIDK) > 0
                    
@@ -181,6 +181,9 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
            
            
            
+           #print "Lambda0MassWindow: %(Lambda0MassWindow)s*MeV " % self.config
+      	   #print "Lambda0MassWindowPost: %(Lambda0MassWindowPost)s*MeV" % self.config
+           #print "this stripping Line is used, signed Florin"
            
            #Create Lambdas
            Lambda2pPiL = createCombinationSel(OutputList = "Lambda2pPiL"+ self.name,
@@ -254,6 +257,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
               #PostVertexCuts = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s) & (LV01 > %(COS_L_Xi)s)" %self.config
               #PostVertexCuts = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s) " %self.config
               #PostVertexCuts += "(BPVVDCHI2 > %s)" %self.config[FDCHI2]
+              myPostVertexCuts += " & (BPVIPCHI2()<1000)" # new cut
               
               Ximinus2LambdaPi = createCombinationSel(OutputList = OutputList,
                                                       DecayDescriptor = "[Xi- -> Lambda0 pi-]cc",
@@ -265,7 +269,8 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                                       # PostVertexCuts  = "(VFASPF(VCHI2)< %(CHI2VTX_Xi)s)" %self.config
                                                       )
               
-              Ximinus2LambdaPiLine = StrippingLine (OutputList+self.name,  HLT = "HLT_PASS('Hlt1MBNoBiasDecision')" , algos = [Ximinus2LambdaPi])
+              #print "1st HLT = ", "%(HLT)s" %self.config
+              Ximinus2LambdaPiLine = StrippingLine (OutputList+self.name,  HLT = "%(HLT)s" %self.config , algos = [Ximinus2LambdaPi])
               self.registerLine (Ximinus2LambdaPiLine)
 
 
@@ -276,6 +281,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
               #print "Make %s"%OutputList
               myPostVertexCuts = "(VFASPF(VCHI2)< %%(CHI2VTX_Omega)s) & (BPVVDCHI2 > %%(%s)s) & "\
                                                         "((CHILD(PX,1)*CHILD(PX,0)+CHILD(PY,1)*CHILD(PY,0)+CHILD(PZ,1)*CHILD(PZ,0))/(CHILD(P,1)*CHILD(P,0)) > %%(COS_L_Xi)s)" % (FDCHI2)
+              myPostVertexCuts += " & (BPVIPCHI2()<1000)" # new cut 
               Omegaminus2LambdaK = createCombinationSel(OutputList = OutputList,
                                                         DecayDescriptor = "[Omega- -> Lambda0 K-]cc",
                                                         DaughterLists = DaughterLists,
@@ -287,7 +293,8 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                                         #"((CHILD(PX,1)*CHILD(PX,0)+CHILD(PY,1)*CHILD(PY,0)+CHILD(PZ,1)*CHILD(PZ,0))/(CHILD(P,1)*CHILD(P,0)) > %(COS_L_Xi)s)" %self.config
                                                         #"(LV01 > %(COS_L_Xi)s) " %self.config
                                                         )
-              Omegaminus2LambdaKLine = StrippingLine(OutputList+self.name,  HLT = "HLT_PASS('Hlt1MBNoBiasDecision')", algos = [Omegaminus2LambdaK])
+       	      # print "2nd HLT = ", "%(HLT)s" %self.config
+              Omegaminus2LambdaKLine = StrippingLine(OutputList+self.name,  HLT = "%(HLT)s" %self.config, algos = [Omegaminus2LambdaK])
               self.registerLine (Omegaminus2LambdaKLine)             
 
 
