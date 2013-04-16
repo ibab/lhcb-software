@@ -71,53 +71,54 @@ def _fill_initialize ( self ) :
     """
     Initialize the internal machinery 
     """
-    self._pions       = LoKi.Child.Selector ( 'pi+'   == ABSID )
-    self._kaons       = LoKi.Child.Selector ( 'K+'    == ABSID )
-    self._protons     = LoKi.Child.Selector ( 'p+'    == ABSID )
-    self._muons       = LoKi.Child.Selector ( 'mu+'   == ABSID )
-    self._gamma       = LoKi.Child.Selector ( 'gamma' == ID    )
-    self._pi0         = LoKi.Child.Selector ( 'pi0'   == ID    )
-    self._tracks      = LoKi.Child.Selector (       HASTRACK   )
-    self._basic       = LoKi.Child.Selector (        ISBASIC   )
+    self._pions         = LoKi.Child.Selector ( 'pi+'   == ABSID )
+    self._kaons         = LoKi.Child.Selector ( 'K+'    == ABSID )
+    self._protons       = LoKi.Child.Selector ( 'p+'    == ABSID )
+    self._muons         = LoKi.Child.Selector ( 'mu+'   == ABSID )
+    self._gamma         = LoKi.Child.Selector ( 'gamma' == ID    )
+    self._pi0           = LoKi.Child.Selector ( 'pi0'   == ID    )
+    self._tracks        = LoKi.Child.Selector (       HASTRACK   )
+    self._basic         = LoKi.Child.Selector (        ISBASIC   )
     #
-    self._ctau        = BPVLTIME (    ) * c_light
-    self._ctau_9      = BPVLTIME (  9 ) * c_light
-    self._ctau_25     = BPVLTIME ( 25 ) * c_light
-    self._lv01        = LV01  
-    self._vchi2       = VFASPF       ( VCHI2     )
-    self._vchi2ndf    = VFASPF       ( VCHI2PDOF )
-    self._dtfchi2     = DTF_CHI2NDOF ( True      )
-    self._ipchi2      = BPVIPCHI2    ()
-    self._dls         = LoKi.Particles.DecayLengthSignificanceDV () 
+    self._ctau          = BPVLTIME (    ) * c_light
+    self._ctau_9        = BPVLTIME (  9 ) * c_light
+    self._ctau_25       = BPVLTIME ( 25 ) * c_light
+    self._lv01          = LV01  
+    self._vchi2         = VFASPF       ( VCHI2     )
+    self._vchi2ndf      = VFASPF       ( VCHI2PDOF )
+    self._dtfchi2       = DTF_CHI2NDOF ( True      )
+    self._ipchi2        = BPVIPCHI2    ()
+    self._dls           = LoKi.Particles.DecayLengthSignificanceDV () 
     #
-    self._min_dll_K   = MINTREE ( 'K+'  == ABSID   , PIDK  - PIDpi ) 
-    self._min_dll_Pi  = MINTREE ( 'pi+' == ABSID   , PIDpi - PIDK  ) 
-    self._min_dll_PK  = MINTREE ( 'p+'  == ABSID   , PIDp  - PIDK  ) 
-    self._min_dll_Ppi = MINTREE ( 'p+'  == ABSID   , PIDp  - PIDpi ) 
-    self._min_dll_Mu  = MINTREE ( 'mu+' == ABSID   , PIDmu - PIDpi ) 
-    self._min_Pt      = MINTREE ( ISBASIC & HASTRACK , PT  ) / GeV 
-    self._min_Eta     = MINTREE ( ISBASIC & HASTRACK , ETA ) 
-    self._max_Eta     = MAXTREE ( ISBASIC & HASTRACK , ETA )
+    self._min_dll_K     = MINTREE ( 'K+'  == ABSID   , PIDK  - PIDpi ) 
+    self._min_dll_Pi    = MINTREE ( 'pi+' == ABSID   , PIDpi - PIDK  ) 
+    self._min_dll_PK    = MINTREE ( 'p+'  == ABSID   , PIDp  - PIDK  ) 
+    self._min_dll_Ppi   = MINTREE ( 'p+'  == ABSID   , PIDp  - PIDpi ) 
+    self._min_dll_Mu    = MINTREE ( 'mu+' == ABSID   , PIDmu - PIDpi )
     #
-    self._maxTrChi2   = MAXTREE ( ISBASIC & HASTRACK , TRCHI2DOF    )
-    self._maxTrGhost  = MAXTREE ( ISBASIC & HASTRACK , TRGHOSTPROB  )
-    self._minTrIPchi2 = MINTREE ( ISBASIC & HASTRACK , BPVIPCHI2()  )
+    self._min_Pt        = MINTREE ( ISBASIC & HASTRACK , PT  ) / GeV 
+    self._min_Eta       = MINTREE ( ISBASIC & HASTRACK , ETA ) 
+    self._max_Eta       = MAXTREE ( ISBASIC & HASTRACK , ETA )
     #
     self._min_CL_gamma  = MINTREE ( 'gamma' == ID , CL ) 
     self._min_Et_gamma  = MINTREE ( 'gamma' == ID , PT ) / GeV 
     #
-    ##
-    self._EtC          = PINFO   ( 55001 , -100 * GeV ) 
-    self._PtC          = PINFO   ( 55002 , -100 * GeV )  
-    self._maxEtC       = MAXTREE ( 'mu+' == ABSID , self._EtC ) 
-    self._maxPtC       = MAXTREE ( 'mu+' == ABSID , self._PtC )
-    ## 
-    self._EcalE        = PPINFO  ( LHCb.ProtoParticle.CaloEcalE , -100 * GeV ) 
-    self._HcalE        = PPINFO  ( LHCb.ProtoParticle.CaloHcalE , -100 * GeV )  
-    self._maxEcalE     = MAXTREE ( 'mu+' == ABSID , self._EcalE )
-    self._maxHcalE     = MAXTREE ( 'mu+' == ABSID , self._HcalE )
+    self._maxTrChi2     = MAXTREE ( ISBASIC & HASTRACK , TRCHI2DOF    )
+    self._maxTrGhost    = MAXTREE ( ISBASIC & HASTRACK , TRGHOSTPROB  )
+    self._minTrIPchi2   = MINTREE ( ISBASIC & HASTRACK , BPVIPCHI2()  )
     #
-    self._delta_m2     = LoKi.PhysKinematics.deltaM2 
+    ##
+    self._EtC           = PINFO   ( 55001 , -100 * GeV ) 
+    self._PtC           = PINFO   ( 55002 , -100 * GeV )  
+    self._maxEtC        = MAXTREE ( 'mu+' == ABSID , self._EtC ) 
+    self._maxPtC        = MAXTREE ( 'mu+' == ABSID , self._PtC )
+    ## 
+    self._EcalE         = PPINFO  ( LHCb.ProtoParticle.CaloEcalE , -100 * GeV ) 
+    self._HcalE         = PPINFO  ( LHCb.ProtoParticle.CaloHcalE , -100 * GeV )  
+    self._maxEcalE      = MAXTREE ( 'mu+' == ABSID , self._EcalE )
+    self._maxHcalE      = MAXTREE ( 'mu+' == ABSID , self._HcalE )
+    #
+    self._delta_m2      = LoKi.PhysKinematics.deltaM2 
     #
     return SUCCESS 
 
@@ -127,41 +128,42 @@ def _fill_finalize   ( self ) :
     """
     Finalie the internal machinery 
     """
-    self._pions       = None 
-    self._kaons       = None 
-    self._protons     = None 
-    self._muons       = None 
-    self._gamma       = None 
-    self._pi0         = None 
-    self._tracks      = None 
-    self._basic       = None 
+    self._pions        = None 
+    self._kaons        = None 
+    self._protons      = None 
+    self._muons        = None 
+    self._gamma        = None 
+    self._pi0          = None 
+    self._tracks       = None 
+    self._basic        = None 
     #
-    self._ctau_9      = None 
-    self._ctau_25     = None 
-    self._lv01        = None 
-    self._vchi2       = None 
-    self._vchi2ndf    = None 
-    self._dtfchi2     = None 
-    self._ipchi2      = None 
-    self._dls         = None 
+    self._ctau         = None 
+    self._ctau_9       = None 
+    self._ctau_25      = None 
+    self._lv01         = None 
+    self._vchi2        = None 
+    self._vchi2ndf     = None 
+    self._dtfchi2      = None 
+    self._ipchi2       = None 
+    self._dls          = None 
     #
-    self._min_dll_K   = None 
-    self._min_dll_Pi  = None 
-    self._min_dll_PK  = None 
-    self._min_dll_Ppi = None 
-    self._min_dll_Mu  = None 
-    self._min_Pt      = None 
-    self._min_Eta     = None 
-    self._max_Eta     = None
+    self._min_dll_K    = None 
+    self._min_dll_Pi   = None 
+    self._min_dll_PK   = None 
+    self._min_dll_Ppi  = None 
+    self._min_dll_Mu   = None
+    #
+    self._min_Pt       = None 
+    self._min_Eta      = None 
+    self._max_Eta      = None
     #
     self._min_Et_gamma = None 
     self._min_CL_gamma = None 
     #
-    self._maxTrChi2   = None 
-    self._maxTrGhost  = None 
-    self._minTrIPchi2 = None 
+    self._maxTrChi2    = None 
+    self._maxTrGhost   = None 
+    self._minTrIPchi2  = None 
     #
-    ##
     self._EtC          = None 
     self._PtC          = None 
     self._maxEtC       = None 
@@ -290,7 +292,7 @@ def treatPhotons ( self         ,
                   'ty_photon'   + suffix       , PY / PZ   , 
                   LHCb.Particle.Range ( good ) ,
                   'n_photon'    + suffix       , 10        )
-    
+
 # ==============================================================================
 ## add muon information into n-tuple
 #  @param tup   n-tuple
@@ -387,26 +389,31 @@ def treatKine ( self          ,
     """
     if hasattr ( p , 'particle' ) : p = p.particle() 
     ##
-    tup.column_int   ( 'pid'   + suffix , int ( ID      ( p ) )              )
-    tup.column_float ( 'pt'    + suffix ,       PT      ( p )          / GeV )
-    tup.column_float ( 'm'     + suffix ,        M      ( p )          / GeV )
-    tup.column_float ( 'y'     + suffix ,        Y      ( p )                )
-    tup.column_float ( 'phi'   + suffix ,      PHI      ( p )                )
-    tup.column_float ( 'eta'   + suffix ,      ETA      ( p )                )
-    ##
-    ## 4-vector 
+    tup.column_int   ( 'pid'   + suffix , int ( ID      ( p ) )     )
+    tup.column_float ( 'pt'    + suffix ,       PT      ( p ) / GeV )
+    tup.column_float ( 'm'     + suffix ,        M      ( p ) / GeV )
+    tup.column_float ( 'phi'   + suffix ,      PHI      ( p )       )
+    tup.column_float ( 'eta'   + suffix ,      ETA      ( p )       )
+    #
+    ## 4-vector
+    #
     tup.column       ( 'p4'    + suffix , p.momentum() / GeV  )
     tup.column_float ( 'c2ip'  + suffix , self._ipchi2  ( p ) )
     ##
-    if not p.isBasicParticle() and p.endVertex() : 
-        tup.column_float ( 'lv01'    + suffix , self._lv01     ( p ) )
-        tup.column_float ( 'ctau'    + suffix , self._ctau     ( p ) )
-        tup.column_float ( 'ctau9'   + suffix , self._ctau_9   ( p ) )
-        tup.column_float ( 'ctau25'  + suffix , self._ctau_25  ( p ) )
-        tup.column_float ( 'dtf'     + suffix , self._dtfchi2  ( p ) )
-        tup.column_float ( 'dls'     + suffix , self._dls      ( p ) )
-        tup.column_float ( 'vchi2'   + suffix , self._vchi2    ( p ) )
-        tup.column_float ( 'vchi2ndf'+ suffix , self._vchi2ndf ( p ) )
+    if not p.isBasicParticle() :
+        
+        tup.column_float ( 'y'     + suffix , Y          ( p ) )
+        tup.column_float ( 'lv01'  + suffix , self._lv01 ( p ) )
+        
+        if p.endVertex() :
+            
+            tup.column_float ( 'ctau'    + suffix , self._ctau     ( p ) )
+            tup.column_float ( 'ctau9'   + suffix , self._ctau_9   ( p ) )
+            tup.column_float ( 'ctau25'  + suffix , self._ctau_25  ( p ) )
+            tup.column_float ( 'dtf'     + suffix , self._dtfchi2  ( p ) )
+            tup.column_float ( 'dls'     + suffix , self._dls      ( p ) )
+            tup.column_float ( 'vchi2'   + suffix , self._vchi2    ( p ) )
+            tup.column_float ( 'vchi2ndf'+ suffix , self._vchi2ndf ( p ) )
         
     ##
     ok = True 

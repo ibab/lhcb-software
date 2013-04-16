@@ -5,6 +5,10 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2013-04-16 - Vanya Belyaev
+
+ - typo fix in GenCuts.py 
+
 ! ==================== Phys/BenderTools v22r5p1  2013-04-14 ====================
 
 ! 2013-04-14 - Vanya Belyaev

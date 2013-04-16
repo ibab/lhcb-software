@@ -171,12 +171,13 @@ class GenCuts(AlgoMC) :
             ## take care about multiple candidates 
             n += 1
             
-            tup.column ( 'st'   , int ( GTATUS ( p ) ) )
-            tup.column ( 'y'    ,  GY ( p )            )
-            tup.column ( 'pt'   , GPT ( p ) / GeV      )
-            tup.column ( 'hasB' , not beauty.empty() , 0  , 1 ) 
-            tup.column ( 'n'    , n , 1 , 7 ) 
-            tup.column ( 'acc'  , acc , 0 , 1 )
+            tup.column_int   ( 'id'   , int ( GID     ( p ) ) )
+            tup.column_int   ( 'st'   , int ( GSTATUS ( p ) ) )
+            tup.column_float ( 'y'    ,  GY ( p )             )
+            tup.column_float ( 'pt'   , GPT ( p ) / GeV       )
+            tup.column_bool  ( 'hasB' , not beauty.empty()    ) 
+            tup.column       ( 'n'    , n   , 1 , 100 ) 
+            tup.column_bool  ( 'acc'  , acc )
             
             tup.write ()
             
