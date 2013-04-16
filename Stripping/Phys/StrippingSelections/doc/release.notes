@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-16 - Ronan Wallace
+ - Tweaks in StrippingStrangeBaryons.py.
+
 ! 2013-04-17 - Lucio Anderlini (for Edwige Tourfier)
  - Hardened cuts to ChiCConv lines (MuonPT and MuonP)
 
