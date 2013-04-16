@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
+! 2013-04-17 - Lucio Anderlini (for Edwige Tourfier)
+ - Hardened cuts to ChiCConv lines (MuonPT and MuonP)
+
 ! 2013-04-15 - Donal Hill
  - Reverted Bu2D0TauNuWS line to its previous configuration - no longer need to re-run the Bu2D0TauNu lines in Stripping20r1p1
 

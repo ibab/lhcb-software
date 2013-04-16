@@ -12,11 +12,12 @@ __all__ = ('StrippingChiCJPsiGammaConvConf')
 #config_params =  {
 config =  {
     'trackChi2'               :    3.0
-    , 'MuPTMin'               :    300 #MeV
+    , 'MuPTMin'               :    400 #MeV #Can be tightened to 600 MeV
+    , 'MuPMin'               :    8000 #MeV
     , 'JPsiMassMin'           :    3.0 # GeV
     , 'JPsiMassMax'           :    3.2 # GeV
-    , 'JPsiPTMin'           :     1.9 # GeV
-    , 'JPsi_PIDmu'           :    0. 
+    , 'JPsiPTMin'             :     2 # GeV
+    , 'JPsi_PIDmu'            :    0. 
     , 'JPsiVertexChi2'        :   25.0
     , 'UpsilonMassMin'        :    9.0  #GeV
     , 'UpsilonMassMax'        :    12.9 #GeV
@@ -54,7 +55,8 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
     
     __configuration_keys__ = ( 
         'trackChi2'             # :    5.0
-        , 'MuPTMin'             # :    300 #MeV
+        , 'MuPTMin'             # :    400 #MeV
+        , 'MuPMin'             # :    8000 #MeV
         , 'JPsiMassMin'         # :    2.8 #GeV
         , 'JPsiMassMax'         # :    3.4 #GeV
         , 'JPsiVertexChi2'      # :   25.0
@@ -87,6 +89,7 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
 
         self.SelJPsi           = self.filterDiMu(name+"JPsi",
                                                  MuonPT   = config['MuPTMin'],
+                                                 MuonP    = config['MuPMin'],
                                                  MuonTRCHI2DOF  = config['trackChi2'],
                                                  MuonPID      = config['JPsi_PIDmu'],
                                                  MuMuMinMass    = config['JPsiMassMin'],
@@ -97,6 +100,7 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
 
         self.SelUpsilon           = self.filterDiMu(name+"Upsilon",
                                                     MuonPT   = config['MuPTMin'],
+                                                    MuonP    = config['MuPMin'],
                                                     MuonTRCHI2DOF  = config['trackChi2'],
                                                     MuonPID      = config['Upsilon_PIDmu'],
                                                     MuMuMinMass    = config['UpsilonMassMin'],
@@ -189,6 +193,7 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
     ######################################################################################################################  
     def filterDiMu( self, name,
                       MuonPT,
+                      MuonP,
                       MuonTRCHI2DOF,
                       MuonPID,
                       MuMuMinMass,
@@ -200,6 +205,7 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
         _StdLooseDiMuon = DataOnDemand( Location = 'Phys/StdLooseDiMuon/Particles' )
         
         MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s )  & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)  & (MINTREE('mu+'==ABSID,PIDmu)> %(MuonPID)s)" % locals()
+        MuonCut += "(MINTREE('mu+'==ABSID,P) > %(MuonP)s )" % locals()
 #        MuonCut = " (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)  & (MINTREE('mu+'==ABSID,PIDmu)> %(MuonPID)s )" % locals()
         
         MuMuCut = "(MM > %(MuMuMinMass)s *GeV) & (MM < %(MuMuMaxMass)s *GeV) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s *GeV)" % locals()
