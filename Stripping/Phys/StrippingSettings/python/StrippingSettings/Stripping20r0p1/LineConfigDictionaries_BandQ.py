@@ -25,31 +25,32 @@ HeavyBaryons = {
 ChiCJPsiGammaConv = {                                  
     'BUILDERTYPE'  : 'StrippingChiCJPsiGammaConvConf', 
     'CONFIG'       : {                                 
-    'trackChi2'               :    3.0                 
-    , 'MuPTMin'               :    300 #MeV            
-    , 'JPsiMassMin'           :    3.0 # GeV           
-    , 'JPsiMassMax'           :    3.2 # GeV           
-    , 'JPsiPTMin'           :     1.9 # GeV            
-    , 'JPsi_PIDmu'           :    0.                   
-    , 'JPsiVertexChi2'        :   25.0                 
-    , 'UpsilonMassMin'        :    9.0  #GeV           
-    , 'UpsilonMassMax'        :    12.9 #GeV           
-    , 'UpsilonVertexChi2'     :   25.0                 
-    , 'UpsilonPTMin'          :    0.9 # GeV           
-    , 'Upsilon_PIDmu'         :    0.                  
-    , 'eDLLe'                 :   0.0                  
-    , 'GammaEEMass'           :   100.0 #MeV           
-    , 'GammaEEPt'             :   580.0 #MeV           
-    , 'mMinChiCRaw'           :   2.9 #GeV             
-    , 'mMaxChiCRaw'           :   4.8 #GeV             
-    , 'mMinChiCFit'           :   3.0 #GeV             
-    , 'mMaxChiCFit'           :   4.7 ##GeV            
-    , 'mMinChiBRaw'           :   9.4 #GeV             
-    , 'mMaxChiBRaw'           :   13.2 #GeV            
-    , 'mMinChiBFit'           :   9.5 #GeV             
-    , 'mMaxChiBFit'           :   13.0  #GeV           
-    , 'PrescaleChi'          :   1.0                   
-    , 'PostscaleChi'         :   1.0                   
+    'trackChi2'               :    3.0
+    , 'MuPTMin'               :    400 #MeV #Can be tightened to 600 MeV
+    , 'MuPMin'               :    8000 #MeV
+    , 'JPsiMassMin'           :    3.0 # GeV
+    , 'JPsiMassMax'           :    3.2 # GeV
+    , 'JPsiPTMin'             :     2 # GeV
+    , 'JPsi_PIDmu'            :    0. 
+    , 'JPsiVertexChi2'        :   25.0
+    , 'UpsilonMassMin'        :    9.0  #GeV
+    , 'UpsilonMassMax'        :    12.9 #GeV
+    , 'UpsilonVertexChi2'     :   25.0
+    , 'UpsilonPTMin'          :    0.9 # GeV
+    , 'Upsilon_PIDmu'         :    0. 
+    , 'eDLLe'                 :   0.0
+    , 'GammaEEMass'           :   100.0 #MeV
+    , 'GammaEEPt'             :   580.0 #MeV
+    , 'mMinChiCRaw'           :   2.9 #GeV
+    , 'mMaxChiCRaw'           :   4.8 #GeV
+    , 'mMinChiCFit'           :   3.0 #GeV
+    , 'mMaxChiCFit'           :   4.7 ##GeV
+    , 'mMinChiBRaw'           :   9.4 #GeV
+    , 'mMaxChiBRaw'           :   13.2 #GeV
+    , 'mMinChiBFit'           :   9.5 #GeV
+    , 'mMaxChiBFit'           :   13.0  #GeV
+    , 'PrescaleChi'          :   1.0
+    , 'PostscaleChi'         :   1.0
     },                                                 
     'STREAMS' : { 'Dimuon': 
                     [
