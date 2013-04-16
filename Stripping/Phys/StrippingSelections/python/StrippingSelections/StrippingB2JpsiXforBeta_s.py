@@ -261,11 +261,19 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Jpsi2MuMuForBetasDetached = self.createSubSel( OutputList = "Jpsi2MuMuDetachedforBetaS" + self.name,
                                                        InputList  = self.JpsiList,
                                                        Cuts = "(BPVDLS > 3)" )
-	
-        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetached ],
-                                                       HLT = "HLT_PASS_RE('Hlt2DiMuonDetachedJPsiDecision')&"\
-                                                       "(HLT_PASS_RE('Hlt1DiMuonHighMassDecision')|HLT_PASS_RE('Hlt1TrackMuonDecision')|HLT_PASS_RE('Hlt1TrackAllL0Decision'))",
-                                                       prescale = self.config["Jpsi2MuMuDetachedPrescale"] )
+
+	Jpsi2MuMuForBetasDetachedHlt1TOS = self.filterTisTos( name = "Jpsi2MuMuForBetasDetachedHlt1TOS", 
+							DiMuonInput = Jpsi2MuMuForBetasDetached, 
+							myTisTosSpecs = { "Hlt1DiMuonHighMassDecision%TOS" : 0  }
+                                                                  )
+
+	Jpsi2MuMuForBetasDetached = self.filterTisTos( name = "Jpsi2MuMuForBetasDetached",
+                                                              DiMuonInput = Jpsi2MuMuForBetasDetachedHlt1TOS,
+                                                              myTisTosSpecs = { "Hlt2DiMuonDetachedJPsiDecision%TOS" : 0 }
+                                                              )
+
+        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetached ], prescale =self.config["Jpsi2MuMuDetachedPrescale"] )
+
         
         #Jpsi2MuMuForBetasDetached = self.createSubSel(  OutputList = self.JpsiList.name() + "Detached" + self.name,
         #                                                InputList  = self.JpsiList,
@@ -624,5 +632,22 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                                          Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )] )
 
         self.registerLine(Lambdab2JpsippiDetachedLine)
-        
+
+    def filterTisTos( self, name, DiMuonInput, myTisTosSpecs ) :
+
+	from Configurables import TisTosParticleTagger
+	
+	myTagger = TisTosParticleTagger(name + "_TisTosTagger")
+	myTagger.TisTosSpecs = myTisTosSpecs
+	
+	# To speed it up, TisTos only with tracking system
+	
+	myTagger.ProjectTracksToCalo = False
+	myTagger.CaloClustForCharged = False
+	myTagger.CaloClustForNeutral = False
+	myTagger.TOSFrac = { 4:0.0, 5:0.0 }
+
+    	return Selection(name + "_SelTisTos",
+                     Algorithm = myTagger,
+                     RequiredSelections = [ DiMuonInput ] ) 
 

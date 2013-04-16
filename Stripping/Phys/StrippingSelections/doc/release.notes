@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-16 - Francesca Dordei
+ - Retention rate reduction of B2CC Jpsi2MuMuDetached line
+
 ! 2013-04-16 - Ronan Wallace
  - Tweaks in StrippingStrangeBaryons.py.
 
