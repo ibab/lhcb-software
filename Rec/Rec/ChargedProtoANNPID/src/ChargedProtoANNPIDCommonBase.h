@@ -293,7 +293,7 @@ namespace ANNGlobalPID
         return ( proto->richPID() ? proto->richPID()->particleDeltaLL(m_type) : -999 );
       }
     };
-
+    
     /// Muon IsMuon flag
     class InMuonIsMuon : public Input
     {

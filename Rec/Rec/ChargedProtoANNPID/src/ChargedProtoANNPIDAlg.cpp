@@ -27,8 +27,8 @@ ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
 {
   // JOs
   declareProperty( "Configuration",       m_configFile );
-  declareProperty( "NetworkVersion",      m_netVersion = "MC12TuneV1"   );
-  declareProperty( "SuppressANNPrintout", m_suppressANNPrintout = true  );
+  declareProperty( "NetworkVersion",      m_netVersion = "MC12TuneV2"  );
+  declareProperty( "SuppressANNPrintout", m_suppressANNPrintout = true );
   // turn off histos and ntuples
   setProperty( "HistoProduce",   false );
   setProperty( "NTupleProduce",  false );
@@ -193,6 +193,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
         m_netHelper = new TMVAReaderANN( paramFileName, inputs, this );
       }
     }
+#ifdef _ENABLE_NEUROBAYES
     else if ( "NeuroBayes" == annType )
     {
       debug() << "Using NeuroBayes Expert implementation" << endmsg;
@@ -201,6 +202,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
       m_netHelper = new NeuroBayesANN( paramFileName, inputs, this,
                                        m_suppressANNPrintout );
     }
+#endif
     else
     {
       return Error( "Unknown ANN type '"+annType+"'" );
@@ -321,6 +323,7 @@ ChargedProtoANNPIDAlg::Cut::Cut( const std::string& desc,
   boost::erase_all( m_desc, " " );
 }
 
+#ifdef _ENABLE_NEUROBAYES
 //=============================================================================
 // Get ANN output for NeuroBayes network helper
 //=============================================================================
@@ -369,6 +372,7 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
   // return final output
   return nnOut;
 }
+#endif
 
 //=============================================================================
 // Get ANN output for TMVA Reader helper

@@ -21,18 +21,28 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                   ,"RecoSequencer" : None    # The sequencer to use
                   ,"OutputLevel" : INFO      # The printout level to use
                   ,"ProtoParticlesLocation" : None
-                  ,"NetworkVersions" : { "Upgrade" : "MC12TuneV2", 
-                                         "2012"    : "MC12TuneV2", 
+                  ,"NetworkVersions" : { "2012"    : "MC12TuneV2", 
                                          "2011"    : "MC12TuneV2", 
                                          "2010"    : "MC12TuneV1",
                                          "2009"    : "MC12TuneV1",
                                          "2008"    : "MC12TuneV1",
-                                         "MC09"    : "MC12TuneV1" }
+                                         "MC09"    : "MC12TuneV1",
+                                         "DEFAULT" : "MC12TuneV2" }
                   ,"DataType"   : "" # Type of data, propagated from application
                   ,"TrackTypes" : ["Long","Downstream","Upstream"]
                   ,"PIDTypes"   : ["Electron","Muon","Pion","Kaon","Proton","Ghost"]
                   ,"SuppressANNPrintout" : True
                   }
+    
+    ## Get the ANN PID Tune for a given datatype
+    def tune(self,dataType):
+        nnConfigs = self.getProp("NetworkVersions")
+        if dataType in nnConfigs :
+            annVersion = nnConfigs[dataType]
+        else :
+            annVersion = nnConfigs["DEFAULT"]
+            log.warning( "No explicit tuning for DataType='%s'. Using default '%s'"%(dataType,annVersion) )
+        return annVersion
 
     ## Apply the configuration to the given sequence
     def applyConf(self):
@@ -45,7 +55,10 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
         nnpidseq = self.getProp("RecoSequencer")
 
         dataType   = self.getProp("DataType")
-        annVersion = self.getProp("NetworkVersions")[dataType]
+        annVersion = self.tune(dataType)
+        
+        nameroot = "ANNGPID"
+        if self.name() != "ChargedProtoANNPIDConf" : nameroot = self.name()
 
         # Loop over track types
         for track in self.getProp("TrackTypes") :
@@ -54,7 +67,7 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
             for pid in self.getProp("PIDTypes") :
 
                 # Network algorithm
-                nn = ANNGlobalPID__ChargedProtoANNPIDAlg("ANNGPID"+track+pid)
+                nn = ANNGlobalPID__ChargedProtoANNPIDAlg(nameroot+track+pid)
 
                 # Set configuration for this track and PID combination
                 nn.Configuration = "GlobalPID_"+pid+"_"+track+"_ANN.txt"

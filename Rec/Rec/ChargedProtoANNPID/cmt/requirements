@@ -13,17 +13,27 @@ branches          cmt doc src python
 #============================================================================
 # Used packages.
 #============================================================================
-use  GaudiAlg                  v*
-use  PhysEvent                 v*   Event
-use  MCEvent                   v*   Event
-use  RecEvent                  v*   Event
-use  MCEvent                   v*   Event
-use  RecInterfaces             v*   Rec
-use  neurobayes_expert         v*   LCG_Interfaces
+use  GaudiAlg            v*
+use  PhysEvent           v*   Event
+use  MCEvent             v*   Event
+use  RecEvent            v*   Event
+use  MCEvent             v*   Event
+use  RecInterfaces       v*   Rec
 
 private
 macro_append Boost_linkopts " $(Boost_linkopts_regex) "
 macro_append ROOT_linkopts  " -lMLP -lTMVA "
+end_private
+
+# Only enable NB on platforms that support it
+private
+macro use_NB_expert "" \
+      target-i686   "neurobayes_expert v* LCG_Interfaces" \
+      target-x86_64 "neurobayes_expert v* LCG_Interfaces"
+use $(use_NB_expert)
+macro_append cppflags      "" \
+             target-i686   " -D_ENABLE_NEUROBAYES " \
+             target-x86_64 " -D_ENABLE_NEUROBAYES "
 end_private
 
 #============================================================================

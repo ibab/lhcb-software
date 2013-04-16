@@ -4,6 +4,12 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-04-16 - Chris Jones
+ - Update the CMT requirements file to only enable Neurobayes on platoforms
+   that it supports (CMake to follow).
+ - Small update to the python configurable for use in the 'on-demand'
+   recalibration of the ANNPID in DaVinci.
+
 ! 2013-04-15 - Chris Jones
  - Rework the code to compute the input variables to the ANN PID networks,
    to remove the remaining CPU overheads.

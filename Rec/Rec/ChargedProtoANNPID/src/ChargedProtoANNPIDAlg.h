@@ -28,7 +28,9 @@
 #include "Event/ProtoParticle.h"
 
 // NeuroBayes
+#ifdef _ENABLE_NEUROBAYES
 #include "NeuroBayesExpert.hh"
+#endif
 
 // TMVA
 #include "TMVA/Reader.h"
@@ -115,6 +117,7 @@ namespace ANNGlobalPID
       bool m_ok; 
     };
 
+#ifdef _ENABLE_NEUROBAYES
     /** @class ANNHelper ChargedProtoANNPIDAlg.h
      *
      *  Helper class for NeuroBayes networks
@@ -153,6 +156,7 @@ namespace ANNGlobalPID
       float * m_inArray;  ///< Working array for network inputs
       bool m_suppressPrintout; ///< Suppress any printout from NeuroBayes
     };
+#endif
 
     /** @class TMVAReaderANN ChargedProtoANNPIDAlg.h
      *
