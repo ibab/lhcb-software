@@ -1,7 +1,7 @@
 
 __author__ = ['William Sutcliffe']
-__date__ = '28/03/2013'
-__version__ = '$Revision: 1.1 $'
+__date__ = '16/04/2013'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Lb->p mu nu exclusive reconstruction
@@ -59,27 +59,27 @@ Last modification $Date: 2013-March-28 $
 
 confdict= {
     "GEC_nLongTrk"        : 250.   ,#adimensional
-    "TRGHOSTPROB"         : 0.35    ,#adimensional
+    "TRGHOSTPROB"         : 0.35   ,#adimensional
     #Muon Cuts
-    "MuonGHOSTPROB"       : 0.35    ,#adimensional
+    "MuonGHOSTPROB"       : 0.35   ,#adimensional
     "MuonTRCHI2"          : 4.     ,#adimensional
     "MuonP"               : 3000.  ,#MeV
     "MuonPT"              : 1600.  ,#MeV
-    "MuonMINIPCHI2"       : 12     ,#adminensional
+    "MuonMINIPCHI2"       : 12.    ,#adminensional
     #Proton Cuts 
     "ProtonTRCHI2"        : 6.     ,#adimensional
     "ProtonP"             : 15000. ,#MeV
     "ProtonPT"            : 1000.  ,#MeV
     "ProtonPIDK"          : 0.     ,#adimensional 
     "ProtonPIDp"          : 5.     ,#adimensional
-    "ProtonMINIPCHI2"     : 16     ,#adminensional
+    "ProtonMINIPCHI2"     : 16.    ,#adminensional
     #B Mother Cuts
     "BVCHI2DOF"           : 4.     ,#adminensional
     "BDIRA"               : 0.999  ,#adminensional
-    "BFDCHI2HIGH"         : 125.   ,#adimensional
+    "BFDCHI2HIGH"         : 150.   ,#adimensional
     "BPVIPChi2"           : 25.    ,#adminensional  
-    "pMuMassLow"          : 2150.  ,#MeV
-    "pMuMassLowTight"     : 2800.  ,#MeV
+    "pMuMassLow"          : 2250.  ,#MeV
+    "pMuMassLowTight"     : 2900.  ,#MeV
     "pMuMassUpper"        : 5600.  ,#MeV
     "pMuPT"               : 1500.  ,#MeV
     "PassymLow"           : -0.4   ,#adminensional
