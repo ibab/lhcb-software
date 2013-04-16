@@ -26,11 +26,11 @@ god_build_headers(xml/*.xml)
 gaudi_add_library(TrackFitEvent
                   src/*.cpp
                   PUBLIC_HEADERS Event
-                  INCLUDE_DIRS Event/DigiEvent OT/OTDAQ Tr/TrackInterfaces
-                  LINK_LIBRARIES FTDetLib MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib MCEvent TrackEvent LHCbKernel LHCbMathLib)
+                  INCLUDE_DIRS Event/DigiEvent OT/OTDAQ Tr/TrackInterfaces Tr/TrackKernel
+                  LINK_LIBRARIES FTDetLib MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib MCEvent TrackEvent TrackKernel LHCbKernel LHCbMathLib)
 
 god_build_dictionary(xml/*.xml
                      EXTEND Event/lcgDict.h
-                     INCLUDE_DIRS Event/DigiEvent OT/OTDAQ Tr/TrackInterfaces
-                     LINK_LIBRARIES FTDetLib MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib MCEvent TrackEvent LHCbKernel LHCbMathLib TrackFitEvent)
+                     INCLUDE_DIRS Event/DigiEvent OT/OTDAQ Tr/TrackInterfaces Tr/TrackKernel
+                     LINK_LIBRARIES FTDetLib MuonDetLib OTDetLib STDetLib VPDetLib VeloDetLib MCEvent TrackEvent TrackKernel LHCbKernel LHCbMathLib TrackFitEvent)
 
