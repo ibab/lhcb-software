@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-16 - William Sutcliffe
+ - Tightened M_pmu and FDchi2 cuts for StrippingLb2pMuNu lines
+
 ! 2013-04-16 - Francesca Dordei
  - Retention rate reduction of B2CC Jpsi2MuMuDetached line
 
