@@ -8,6 +8,7 @@
 #include "GaudiUtils/Aida2ROOT.h"
 
 // from Event
+#include "Event/MCHeader.h"
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
 #include "Event/State.h"
@@ -290,11 +291,22 @@ StatusCode TrackIPResolutionChecker::execute()
     plot1D( it->second, "PV/TruePVNumTracksH1","Number of reconstructed tracks in true PVs", 0.5, 50.5, 50 ) ;
     if( it->second >= m_minNumTracksReconstructablePV ) reconstructabletruepvs.push_back( it->first) ;
   }
-  
-  plot2D( reconstructabletruepvs.size(), pvs.size(), "PV/NumPVsVsNumTruePVs","Number of PVs vs number of true reconstructable PVs",
-	  -0.5,10.5,-0.5,10.5,11,11) ;
-  
-  BOOST_FOREACH(const LHCb::RecVertex* pv, pvs) {
+ 
+  plot2D( reconstructabletruepvs.size(), pvs.size(),
+	  "PV/NumPVsVsNumTrueReconstructablePVs","Number of PVs vs number of true reconstructable PVs",
+	  -0.5,20.5,-0.5,20.5,21,21) ;
+    
+  // we also just like to have the total number of true PVs
+  const LHCb::MCHeader* mcheader = get<const LHCb::MCHeader*>(LHCb::MCHeaderLocation::Default) ;
+  size_t numtruepvs = mcheader->numOfPrimaryVertices() ;
+  plot1D( numtruepvs, "PV/NumTruePVs", "Number of true PVs",-0.5,20.5,21) ;
+
+  // we also want to keep track of efficiency
+  std::map< const LHCb::MCVertex*, bool > foundtruepvs ;
+  BOOST_FOREACH( const LHCb::MCVertex* pv, mcheader->primaryVertices() )
+    foundtruepvs[pv] = false ;
+
+   BOOST_FOREACH(const LHCb::RecVertex* pv, pvs) {
     // plot the number of tracks per PV
     plot1D( pv->tracks().size(), "PV/RecoPVNumTracksH1","Number of reconstructed tracks in reconstructed PVs", 0.5, 50.5, 50 ) ;
     
@@ -309,6 +321,7 @@ StatusCode TrackIPResolutionChecker::execute()
       }
     }
     if( truepv ) {
+      foundtruepvs[truepv] = true ;
       Gaudi::XYZVector delta = pv->position() -truepv->position() ;
       plot1D(delta.x(),"PV/dxH1","x_{PV} - x_{true}", -0.1,0.1) ;
       plot1D(delta.y(),"PV/dyH1","y_{PV} - y_{true}", -0.1,0.1) ;
@@ -319,6 +332,15 @@ StatusCode TrackIPResolutionChecker::execute()
     }
   }
 
+  // make a plot of PV efficiency versus Z
+  for( std::map< const LHCb::MCVertex*, bool >::const_iterator it = foundtruepvs.begin() ;
+	it!= foundtruepvs.end(); ++it) {
+    profile1D( it->first->position().z(), it->second, "PV/PVEfficiencyVsZ", "PV efficiency versus Z",
+	       -100, 100 ) ;
+  }
+
+
+
   // Finally, we also want to monitor the reconstructed IP, so the IP with respect to the reconstructed PVs.
   if( !pvs.empty() ) {
     BOOST_FOREACH(const LHCb::Track* track, tracks)
@@ -327,8 +349,8 @@ StatusCode TrackIPResolutionChecker::execute()
       // distinghuish secondaries, from primaries, from ghosts
       bool hasMCMatch = mcparticle && mcparticle->originVertex() ;
       bool isFromPV   = hasMCMatch && mcparticle->originVertex()->isPrimary() ;
-          std::string prefix = isFromPV ? "IPRecPV/TruePrimary/" :
-          ( hasMCMatch ? "IPRecPV/TrueSecondary/" : "IPRecPV/Ghost/" ) ;
+      std::string prefix = isFromPV ? "IPRecPV/TruePrimary/" :
+        ( hasMCMatch ? "IPRecPV/TrueSecondary/" : "IPRecPV/Ghost/" ) ;
           
           
       // find the closest PV, again using the minimal distance
@@ -340,13 +362,13 @@ StatusCode TrackIPResolutionChecker::execute()
       Gaudi::XYZVector trkdir( state.slopes().Unit() ) ;
       
       BOOST_FOREACH(const LHCb::RecVertex* thispv, pvs) {
-	Gaudi::XYZVector dx = trkpos - thispv->position()  ;
-	Gaudi::XYZVector delta = dx - trkdir * dx.Dot(trkdir) ;
-	double ip2 = delta.Mag2() ;
-	if( pv==0 || ip2 < bestip2 ) {
-	  bestip2 = ip2 ;
-	  pv = thispv ;
-	}
+          Gaudi::XYZVector dx = trkpos - thispv->position()  ;
+          Gaudi::XYZVector delta = dx - trkdir * dx.Dot(trkdir) ;
+          double ip2 = delta.Mag2() ;
+          if( pv==0 || ip2 < bestip2 ) {
+              bestip2 = ip2 ;
+              pv = thispv ;
+          }
       }
       
       plot1D( std::sqrt(bestip2), prefix + "IP3DH1","IP 3D wrt to reconstructed vertex",0,maxip) ;
@@ -369,7 +391,7 @@ StatusCode TrackIPResolutionChecker::execute()
 	2*ty*pv->covMatrix()(1,2)+ ty*ty * pv->covMatrix()(2,2)  ;
       plot1D( dx / std::sqrt( sigmaY2 ), prefix + "IPyPullH1","IP Y pull wrt reconstructed vertex", -5,5 ) ;
     }
-  }
+  } // end of !pvs.empty()
   
   return StatusCode::SUCCESS ;
 }
