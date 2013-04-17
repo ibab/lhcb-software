@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-04-17 - Marco Clemencic
+ - Ported to CMake the configuration to disable the use of Neurobayes.
+
 ! 2013-04-16 - Chris Jones
  - Update the CMT requirements file to only enable Neurobayes on platforms
    that it supports (CMake to follow).
@@ -16,19 +19,19 @@
  - Remove the use of a full track selector tool, as we are only using it to
    select the correct track type. More efficient to just do it directly.
  - No longer print a warning if the ANNPID is being replaced for a given
-   ProtoParticle, as this is normal when applied as a recalibration. 
-   Also, saves a little more CPU due to the string manipulations that 
+   ProtoParticle, as this is normal when applied as a recalibration.
+   Also, saves a little more CPU due to the string manipulations that
    where required.
 
 ! 2013-04-12 - Chris Jones
  - Add new MC12TuneV2 network tuning :-
-  . Based on high statistics training using new MC12 inclusive B samples. 
-  . Uses TMVA instead of Neurobayes as MVA technology. 
+  . Based on high statistics training using new MC12 inclusive B samples.
+  . Uses TMVA instead of Neurobayes as MVA technology.
    . Gives slightly PID better performance.
    . Much faster implementation due to use of compiled TMVA macros.
-  . Config files have now been imported from the Paramfiles package 
-    ChargedProtoANNPIDParam directly into this package. 
-  . Dropped support for obsolete tunings (parameters not imported). 
+  . Config files have now been imported from the Paramfiles package
+    ChargedProtoANNPIDParam directly into this package.
+  . Dropped support for obsolete tunings (parameters not imported).
     Only MC12TuneV1 and MC12TuneV2 now supported.
 
 ! 2013-04-09 - Marco Cattaneo
@@ -48,9 +51,9 @@
 
 ! 2013-03-13 - Chris Jones
  - Add a TMVAImpFactory to provide instances of compiled TMVA classifers for known
-   configurations. Using compiled classes are roughly 3 times faster than using 
+   configurations. Using compiled classes are roughly 3 times faster than using
 	 the corresponding TMVA::Reader implementation with the XML weights file.
-   If a compiled instance is not registered with the factory for a particular 
+   If a compiled instance is not registered with the factory for a particular
    network configuration, the TMVA::Reader implementation is used as the fallback.
    Currently no C++ implementations are included. This will be added once training
    is complete.
@@ -63,7 +66,7 @@
  - Add support for TMVA based network tunings.
  - Update preselection cut handling to support the new style text file based
    specification the training application now uses.
- - Improve access to the RecSummary data object to prevent multiple loads from 
+ - Improve access to the RecSummary data object to prevent multiple loads from
    the TES each event.
 
 ! 2013-02-18 - Chris Jones
@@ -97,7 +100,7 @@
 
 ! 2012-11-21 - Chris Jones
  - Add missing dependency on Event/MCEvent
- - Add back some 'event size' variables previously removed, as they are useful 
+ - Add back some 'event size' variables previously removed, as they are useful
    for monitoring, if nothing else.
 
 !========================= ChargedProtoANNPID v1r8 2012-08-16 =========================
@@ -115,21 +118,21 @@
  - Make default network tuning for 2010, 2011 and 2012 "MC11aTuneV3"
 
 ! 2012-05-02 - Chris Jones
- - Remove context() specific input track locations in 
+ - Remove context() specific input track locations in
    ChargedProtoANNPIDCommonBase. Default is now the offline location.
 
 !========================= ChargedProtoANNPID v1r6 2012-01-31 ================
 ! 2012-01-20 - Chris Jones
  - The annoying sporadic stderr messages from NeuroBayes seem to have returned.
    So, until understood squash them entirely by redirecting stderr
-   to /dev/null *just* for the m_expert->nb_expert(m_inArray) call. 
+   to /dev/null *just* for the m_expert->nb_expert(m_inArray) call.
    Ugly, brutal, but works.
 
 ! 2012-01-18 - Chris Jones
  - Update the default network tuning, for all DataTypes, to MC11aTuneV2
 
 ! 2012-01-12 - Chris Jones
- - Make the network tuning MC11aTuneV1 the default for all data types, as the 
+ - Make the network tuning MC11aTuneV1 the default for all data types, as the
    improvements will help in all cases.
  - Add a monitor for the ANN PID variables.
 
@@ -138,8 +141,8 @@
    tunings, that appear to have removed the spurious printouts ...
 
 ! 2011-12-21 - Chris Jones
- - Add default net tunings for DataTypes MC09 and 2008 
- - Temporarily switch back to MC10TuneV1 for 2012 and 2011, as the new tunings 
+ - Add default net tunings for DataTypes MC09 and 2008
+ - Temporarily switch back to MC10TuneV1 for 2012 and 2011, as the new tunings
    are causing some annoying vogue printouts from the Neurobayes library ....
 
 ! 2011-12-20 - Chris Jones
@@ -153,7 +156,7 @@
 
 !========================= ChargedProtoANNPID v1r5 2011-07-27 =========================
 ! 2011-05-25 - Chris Jones
- - Add the flag '-2' when creating NeuroBayes Experts, which in future NB 
+ - Add the flag '-2' when creating NeuroBayes Experts, which in future NB
    releases (10.12 onwards) should suppress the messages from NB when loading
    the expertise files.
 
@@ -199,7 +202,7 @@
  - Add python Configurable specifically for the ANN PID
  - Add support for Ghost ID networks
  - Add support for various new ANN input variables
- - Remove support for 'spike' variables. Using them added nothing to 
+ - Remove support for 'spike' variables. Using them added nothing to
    performance and they are ugly in terms of their implementation.
 
 !========================== ChargedProtoANNPID v1r0 2010-09-30 ================
@@ -209,5 +212,5 @@
  - Fix untested StatusCodes
 
 ! 2010-09-28 - Chris Jones
- - First import. New PID package that adds ANN information to each 
+ - First import. New PID package that adds ANN information to each
    ProtoParticle, using the NeuroBayes package.
