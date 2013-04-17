@@ -397,7 +397,9 @@ class CondDB(object):
         import PyCintex
         xmlString = payl['data']
         if (len(xmlString) and not xmlString[0].isdigit()):
-            payl['data'] = PyCintex.gbl.CondDBCompression.compress(xmlString)
+            cstring = PyCintex.gbl.CondDBCompression.compress(xmlString)
+            # Only do the compression when the compressed string length is shorter
+            if (len(cstring) < len(xmlString)): payl['data'] = cstring
         folder.storeObject(fro, unt, payl, chan)
 
     @staticmethod

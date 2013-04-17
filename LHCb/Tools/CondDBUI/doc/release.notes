@@ -3,12 +3,16 @@
 ! package manager : Marco Clemencic
 ! ========================================================================
 
-!========================= CondDBUI v3r21 2013-03-20 =========================
+! 2013-04-17 - Liang Sun
+ - __init__.py: In the storeObject process, only do the compression if the compressed object is smaller in size.
+
 ! 2013-04-17 - Liang Sun
  - __init__.py, Browser/Models.py: Added support to read/write compressed databases. The compression/decompress processes work in the background without user intervention.
 
 ! 2013-03-14 - Liang Sun
  - compress_db_metadata.py, compress_db_metadata_mp.py: new scripts to compress  the content of a CondDB file, both will yield exactly the same results. The later one is supposed to be much faster since it run concurrent tasks with multiprocessing 
+
+!========================= CondDBUI v3r21 2013-03-20 =========================
 
 ! 2013-02-20 - Illya Shapoval
  - ReleaseNotes.py: few handy methods added to fetch DataTypes from RN XML.
