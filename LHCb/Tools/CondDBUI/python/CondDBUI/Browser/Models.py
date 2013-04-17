@@ -11,6 +11,8 @@ from PyCool import cool
 
 from Utils import *
 
+from CondDBUI import CondDB
+
 # Import the dictionary for helper functions
 import PyCintex
 Helpers = PyCintex.gbl.CondDBUI.Helpers
@@ -705,7 +707,7 @@ class CondDBIoVModel(BaseIoVModel):
                                                  tag)
             for o in objects:
                 self._allIoVs.append((o.since(), o.until(),
-                                      dict(o.payload()),
+                                      dict(CondDB.payload(o)),
                                       o.insertionTime()))
             # set actual limits of the content of the cache
             if self._allIoVs: # we may not have found anything
@@ -733,7 +735,7 @@ class CondDBIoVModel(BaseIoVModel):
             for o in objects:
                 # FIXME: probably it could be quicker using a temporary list and append
                 tmp.append((o.since(), o.until(),
-                            dict(o.payload()),
+                            dict(CondDB.payload(o)),
                             o.insertionTime()))
             self._allIoVs = tmp + self._allIoVs
             # set actual limits of the content of the cache

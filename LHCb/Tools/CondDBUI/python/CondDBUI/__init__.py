@@ -392,6 +392,24 @@ class CondDB(object):
         folder = self.db.getFolder(path)
         return folder.payloadSpecification().keys()
 
+    @staticmethod
+    def storeObject(folder, fro, unt, payl, chan):
+        import PyCintex
+        xmlString = payl['data']
+        if (len(xmlString) and not xmlString[0].isdigit()):
+            payl['data'] = PyCintex.gbl.CondDBCompression.compress(xmlString)
+        folder.storeObject(fro, unt, payl, chan)
+
+    @staticmethod
+    def payload(o):
+        payl = o.payload()
+        import PyCintex
+        if (payl):
+            xmlString = o.payload()['data']
+            if (len(xmlString)):
+                payl['data'] = PyCintex.gbl.CondDBCompression.decompress(xmlString)
+        return payl
+
 
     def getPayload(self, path, when, channelID = 0, tag = ''):
         '''
@@ -425,7 +443,7 @@ class CondDB(object):
             except Exception, details:
                 raise Exception, details
             else:
-                return dict(obj.payload())
+                return dict(self.payload(obj))
         else:
             raise Exception, "Impossible to find folder %s"%path
 
@@ -500,7 +518,7 @@ class CondDB(object):
 
             # Fill the object list
             for obj in objIter:
-                payload = dict(obj.payload())
+                payload = dict(self.payload(obj))
                 since = obj.since()
                 until = obj.until()
                 chID = obj.channelId()
@@ -706,7 +724,7 @@ class CondDB(object):
                 _log.debug("\tHashing '%s' ..."%nodeName)
                 for obj in objIter:
                     for k in payload.keys():
-                        hashSumObj.update(obj.payload()[k])
+                        hashSumObj.update((self.payload(obj))[k])
         return hashSumObj
 
     #---------------------------------------------------------------------------------#
@@ -1477,7 +1495,7 @@ class CondDB(object):
                 since = cool.ValidityKey(obj['since'])
                 until = cool.ValidityKey(obj['until'])
                 channelID = obj['channel']
-                folder.storeObject(since, until, payload, cool.ChannelId(channelID))
+                self.storeObject(folder, since, until, payload, cool.ChannelId(channelID))
 
             # Write the data to the DB
             folder.flushStorageBuffer()
@@ -1897,7 +1915,7 @@ def merge( sourceDB, targetDB,
             # loop over the content of the source folder
             for obj in object_iterator:
                 _log.debug(str(obj.since()))
-                tgt_folder.storeObject(obj.since(), obj.until(),
+                CondDB.storeObject(tgt_folder, obj.since(), obj.until(),
                                        obj.payload(), obj.channelId())
             tgt_folder.flushStorageBuffer()
 
