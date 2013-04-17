@@ -198,7 +198,7 @@ class StrippingXic2HHHConf(LineBuilder):
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
                , Proton_PIDp_MIN = 30.                  
                , K_IPCHI2_MIN = 0. 
-               , Comb_MASS_MIN  = 1435. * MeV            
+               , Comb_MASS_MIN  = 1490. * MeV            
                , Comb_MASS_MAX  = 2330. * MeV            
                , Comb_ADOCAMAX_MAX = 0.3 * mm
                , Xic_PT_MIN = config['Xic_PT_MIN']
@@ -359,8 +359,8 @@ def makeTheta2PKS0( name
              ) :
 
     combCuts = "(((AM > %(Comb_MASS_MIN)s)" \
-               "& (AM < 1650 * MeV))" \
-               "| ((AM > 2200 * MeV)" \
+               "& (AM < 1600 * MeV))" \
+               "| ((AM > 2242 * MeV)" \
                "& (AM <  %(Comb_MASS_MAX)s)))" \
                "& (AMAXCHILD(PT) > %(Daug_1of3_PT_MIN)s)" % locals()
 
@@ -427,16 +427,16 @@ default_config = {  'Daug_All_PT_MIN'         : 400.0 * MeV
                   , 'Pi_PIDK_MAX'             : 0.0
                   , 'K_PIDK_MIN'              : 5.0
                   , 'Comb_MASS_MIN'           : 1950.0 * MeV 
-                  , 'Comb_MASS_MAX'           : 3000.0 * MeV 
+                  , 'Comb_MASS_MAX'           : 2800.0 * MeV 
                   , 'Comb_ADOCAMAX_MAX'       : 0.1 * mm
-                  , 'Xic_PT_MIN'              : 1000.0 * MeV
+                  , 'Xic_PT_MIN'              : 1900.0 * MeV
                   , 'Xic_VCHI2VDOF_MAX'       : 10.0
                   , 'Xic_BPVVDCHI2_MIN'       : 5.0
                   , 'Xic_BPVDIRA_MIN'         : 0.9999
                   , 'Xic_BPVLTIME_MAX'        : 0.06 * ns
                   , 'Xic_BPVLTIME_MIN'        : 0.0 * ns
                   , 'HltFilter'               : "HLT_PASS('Hlt2CharmHadD2HHHDecision')"
-                  , 'PrescaleXic2PKPi'        : 1.0
+                  , 'PrescaleXic2PKPi'        : 0.5
                   , 'PostscaleXic2PKPi'       : 1.0
                   , 'PrescaleXic2PKK'         : 1.0
                   , 'PostscaleXic2PKK'        : 1.0
