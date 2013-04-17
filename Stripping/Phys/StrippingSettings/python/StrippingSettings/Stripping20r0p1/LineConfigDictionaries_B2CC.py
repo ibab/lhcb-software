@@ -28,6 +28,7 @@ BetaS = {
          'StrippingBetaSBs2JpsiPhiDetachedLine',
          'StrippingBetaSBd2JpsiKstarPrescaledLine',
          'StrippingBetaSBd2JpsiKstarDetachedLine',
+	 'StrippingBetaSBs2JpsiKstarWideLine',
          'StrippingBetaSBd2JpsiKsPrescaledLine',
          'StrippingBetaSBs2Jpsif0NoIPPrescaledLine',
          'StrippingBetaSBs2Jpsif0NoIPDetachedLine',
