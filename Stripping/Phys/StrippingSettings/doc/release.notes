@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-04-17 - Ronan Wallace
+ - Moved StrangeBaryon dictionary from LineConfigDictionaries_QEE.py to LineConfigDictionaries_Charm.py in Stripping20r0p1.
+
 ! 2013-04-17 - Francesca Dordei
  - Inclusion of the Bs2JPsiKstarwideLine in S20r0p1
 
