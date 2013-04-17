@@ -15,9 +15,12 @@
 #include "AIDA/IProfile1D.h"
 
 #include <boost/foreach.hpp>
-#include <boost/math/special_functions/gamma.hpp>
+
+class TrackParticleMonitor;
 
 namespace {
+
+  typedef double(TrackParticleMonitor::*PDF)(double);
 
   // HISTO IDS / TITLES
   const GaudiAlg::HistoID multID("multiplicity");
@@ -48,88 +51,115 @@ namespace {
   const std::string massTitle("mass [GeV]");
   const GaudiAlg::HistoID masspullID("masspull");
   const std::string masspullTitle("mass pull");
-  const GaudiAlg::HistoID momID("momentum");
-  const std::string momTitle = "momentum [GeV]";
-  const GaudiAlg::HistoID pdifID("momdif");
-  const std::string pdifTitle = "p_{pos} - p_{neg} [GeV]";
-  const GaudiAlg::HistoID ptID("pt");
-  const std::string ptTitle = "pt [GeV]";
-  const GaudiAlg::HistoID etaID("eta");
-  const std::string etaTitle = "eta";
-  const GaudiAlg::HistoID asymID("asym");
-  const std::string asymTitle = "momentum asymmetry";
-  const GaudiAlg::HistoID phimattID("phimatt");
-  const std::string phimattTitle = "decay plane angle w.r.t. magnetic field";
-  const GaudiAlg::HistoID phiangleID("phiangle");
-  const std::string phiangleTitle = "decay plane azimuthal angle";
-  const GaudiAlg::HistoID openingangleID("openingangle");
-  const std::string openingangleTitle = "opening angle";
-  const GaudiAlg::HistoID momH2ID("massVersusMomH2");
-  const std::string momH2Title = "mass vs. momentum [GeV]";
-  const GaudiAlg::HistoID pdifH2ID("massVersusMomDifH2");
-  const std::string pdifH2Title = "mass vs. p_{A} - p_{B} [GeV]";
-  const GaudiAlg::HistoID ptH2ID("massVersusPtH2");
-  const std::string ptH2Title = "mass vs. pt [GeV]";
-  const GaudiAlg::HistoID etaH2ID("massVersusEtaH2");
-  const std::string etaH2Title = "mass [GeV] vs. eta";
-  const GaudiAlg::HistoID tyH2ID("massVersusTyH2");
-  const std::string tyH2Title = "mass [GeV] vs. ty";
-  const GaudiAlg::HistoID asymH2ID("massVersusMomAsymH2");
-  const std::string asymH2Title = "mass [GeV] vs. momentum asymmetry";
-  const GaudiAlg::HistoID phimattH2ID("massVersusPhiMattH2");
-  const std::string phimattH2Title = "mass [GeV] vs. Matt's phi";
-  const GaudiAlg::HistoID phiangleH2ID("massVersusPhiH2");
-  const std::string phiangleH2Title = "mass [GeV] vs. phi";
-  const GaudiAlg::HistoID momProID("massVersusMom");
-  const std::string momProTitle = "mass vs. momentum [GeV]";
-  const GaudiAlg::HistoID pdifProID("massVersusMomDif");
-  const std::string pdifProTitle = "mass vs. p_{A} - p_{B} [GeV]";
-  const GaudiAlg::HistoID ptProID("massVersusPt");
-  const std::string ptProTitle = "mass vs. pt [GeV]";
-  const GaudiAlg::HistoID etaProID("massVersusEta");
-  const std::string etaProTitle = "mass [GeV] vs. eta";
-  const GaudiAlg::HistoID tyProID("massVersusTy");
-  const std::string tyProTitle = "mass [GeV] vs. ty";
-  const GaudiAlg::HistoID asymProID("massVersusMomAsym");
-  const std::string asymProTitle = "mass [GeV] vs. momentum asymmetry";
-  const GaudiAlg::HistoID phimattProID("massVersusPhiMatt");
-  const std::string phimattProTitle = "mass [GeV] vs. Matt's phi";
-  const GaudiAlg::HistoID phiangleProID("massVersusPhi");
-  const std::string phiangleProTitle = "mass [GeV] vs. phi";
   const GaudiAlg::HistoID tophalfID("massPositiveY");
   const std::string tophalfTitle = "mass [GeV] for y>0";
   const GaudiAlg::HistoID bothalfID("massNegativeY");
   const std::string bothalfTitle = "mass [GeV] for y<0";  
 
-  // Variable binning of eta distribution requires regularized gamma function and its inverse
-  double GammaReg(double k, double q) 
-  {
-    return boost::math::gamma_q<double, double>(k,q);
-  }
-  
-  // Modified from Num. Snip. 18.1 (http://numericalsnippets.com/noi/18.1)
-  double InvGammaReg(double k, double g,
-                     double lower = 0.0, double upper = 100000.0, // upper/lower bound for binary search
-                     double prec = 1E-3, int level = 1, int max_level = 100) // acceptance criteria, can be loose
-  {
-    // EDGE CASES
-    if (g == 0.0)
-      return -999.999; // this is an error
-    if (g > 1.0 or g < 0.0)
-      return -1.0;
-    if(level > max_level)
-      return -1.0;
+  const GaudiAlg::HistoID momID("momentum");
+  const std::string momTitle = "momentum [GeV]";
+  const GaudiAlg::HistoID ptID("pt");
+  const std::string ptTitle = "pt [GeV]";
+  const GaudiAlg::HistoID pdifID("momdif");
+  const std::string pdifTitle = "p_{pos} - p_{neg} [GeV]";
+  const GaudiAlg::HistoID asymID("asym");
+  const std::string asymTitle = "momentum asymmetry";
+  const GaudiAlg::HistoID etaID("eta");
+  const std::string etaTitle = "eta";
+  const GaudiAlg::HistoID txID("tx");
+  const std::string txTitle = "tx";
+  const GaudiAlg::HistoID tyID("ty");
+  const std::string tyTitle = "ty";
+  const GaudiAlg::HistoID phimattID("phimatt");
+  const std::string phimattTitle = "decay plane angle w.r.t. magnetic field";
+  const GaudiAlg::HistoID phiangleID("phiangle");
+  const std::string phiangleTitle = "decay plane azimuthal angle";
+  const GaudiAlg::HistoID openangleID("openingangle");
+  const std::string openangleTitle = "opening angle";
 
-    // CLOSE ENOUGH
-    double n = (upper+lower)/2.0;
-    if (fabs(upper-lower) < prec)
-      return n;
+  const GaudiAlg::HistoID momH2ID("massVersusMomH2");
+  const std::string momH2Title = "mass vs. momentum [GeV]";
+  const GaudiAlg::HistoID ptH2ID("massVersusPtH2");
+  const std::string ptH2Title = "mass vs. pt [GeV]";
+  const GaudiAlg::HistoID pdifH2ID("massVersusMomDifH2");
+  const std::string pdifH2Title = "mass vs. p_{A} - p_{B} [GeV]";
+  const GaudiAlg::HistoID asymH2ID("massVersusMomAsymH2");
+  const std::string asymH2Title = "mass [GeV] vs. momentum asymmetry";
+  const GaudiAlg::HistoID etaH2ID("massVersusEtaH2");
+  const std::string etaH2Title = "mass [GeV] vs. eta";
+  const GaudiAlg::HistoID txH2ID("massVersusTxH2");
+  const std::string txH2Title = "mass [GeV] vs. tx";
+  const GaudiAlg::HistoID tyH2ID("massVersusTy2");
+  const std::string tyH2Title = "mass [GeV] vs. ty";
+  const GaudiAlg::HistoID phimattH2ID("massVersusPhiMattH2");
+  const std::string phimattH2Title = "mass [GeV] vs. Matt's phi";
+  const GaudiAlg::HistoID phiangleH2ID("massVersusPhiH2");
+  const std::string phiangleH2Title = "mass [GeV] vs. phi";
+  const GaudiAlg::HistoID openangleH2ID("massVersusOpenAngleH2");
+  const std::string openangleH2Title = "mass [GeV] vs. opening angle";
 
-    // RAISE LOWER BOUND / DROP UPPER BOUND
-    double m = GammaReg(k, n);
-    if(m > g)
-      return InvGammaReg(k,g,n,upper,prec,level+1,max_level);
-    return InvGammaReg(k,g,lower,n,prec,level+1,max_level);
+  const GaudiAlg::HistoID momProID("massVersusMom");
+  const std::string momProTitle = "mass vs. momentum [GeV]";
+  const GaudiAlg::HistoID ptProID("massVersusPt");
+  const std::string ptProTitle = "mass vs. pt [GeV]";
+  const GaudiAlg::HistoID pdifProID("massVersusMomDif");
+  const std::string pdifProTitle = "mass vs. p_{A} - p_{B} [GeV]";
+  const GaudiAlg::HistoID asymProID("massVersusMomAsym");
+  const std::string asymProTitle = "mass [GeV] vs. momentum asymmetry";
+  const GaudiAlg::HistoID etaProID("massVersusEta");
+  const std::string etaProTitle = "mass [GeV] vs. eta";
+  const GaudiAlg::HistoID txProID("massVersusTx");
+  const std::string txProTitle = "mass [GeV] vs. tx";
+  const GaudiAlg::HistoID tyProID("massVersusTy");
+  const std::string tyProTitle = "mass [GeV] vs. ty";
+  const GaudiAlg::HistoID phimattProID("massVersusPhiMatt");
+  const std::string phimattProTitle = "mass [GeV] vs. Matt's phi";
+  const GaudiAlg::HistoID phiangleProID("massVersusPhi");
+  const std::string phiangleProTitle = "mass [GeV] vs. phi";
+  const GaudiAlg::HistoID openangleProID("massVersusOpenAngle");
+  const std::string openangleProTitle = "mass [GeV] vs. opening angle";
+
+  void setBinThresh(int N, double* thresh, double min, double max, TrackParticleMonitor* tpm, PDF func)
+  {
+    
+    // First, numerically integrate to find normalization
+    // Do this in 5N bins, which should be enough within error
+    double norm;    
+    { 
+      norm = 0; 
+      double delta = (max-min)/(5*N);
+      double a = min;
+      for (int i = 0; i < 5*N; i++) {
+        norm += ((tpm->*func)(min + i*delta) + 4*(tpm->*func)(min + (i+0.5)*delta) + (tpm->*func)(min + (i+1)*delta))*delta/6.0;
+      }
+    }
+    
+    double delta = 1.0/N;    
+    double high;
+    double low;
+    double next;
+    double x = min;
+    thresh[0] = x;
+    for (int i = 1; i < N; i++) {
+      high = max;
+      low = x;
+      next = (high + low)/2.0;
+      for (int k = 0; k < 50; k++) {
+        double diff = ((tpm->*func)(x) + 4*(tpm->*func)((x + next)/2.0) + (tpm->*func)(next))*(next-x)/(6.0*norm);
+        if (fabs(diff-delta) <= 1E-4)
+          break;
+        if (diff > delta) {
+          high = next;
+          next = (next+low)/2.0;
+        } else {
+          low = next;
+          next = (next+high)/2.0;
+        }
+      }
+      x = next;
+      thresh[i] = x;
+    }
+    thresh[N] = max;
   }
   
   // Descends to find all proto tracks making up particle
@@ -173,28 +203,132 @@ private:
   const LHCb::IParticlePropertySvc* m_propertysvc;
 
   // PROPERTIES
-  double m_minMass;
+  // Mass
+  double m_minMass; // MeV
+  double mmin; // GeV
   double m_maxMass;
+  double mmax;
   int m_binsMass;
+  double massPDF(double mass) 
+  {
+    return 1;
+  };
+  
+  // P
   double m_maxMom;
-  double m_decayMom; 
+  double pmax;
   double m_threshMom;
+  double pthresh;
+  double m_riseMom;
+  double prise;
+  double m_fallMom;
+  double pfall;
   int m_binsMom;
-  int m_binsMomDif;
+  double momPDF(double mom) 
+  {
+    if (m_threshMom == 0 and m_riseMom == 0 and m_fallMom == 0) // defaults
+      return 1; // flat
+    if (mom < pthresh)
+      return 0;
+    if (m_riseMom == 0) // just exponential
+      return exp(-pfall*mom);
+    return (1-exp(-prise*(mom-pthresh)))*exp(-pfall*mom);
+  };
+
+  // PT
   double m_maxPt;
-  double m_decayPt;
+  double ptmax;
   double m_threshPt;
+  double ptthresh;
+  double m_risePt;
+  double ptrise;
+  double m_fallPt;
+  double ptfall;
   int m_binsPt;
+  double ptPDF(double pt)
+  {
+    if (m_threshPt == 0 and m_risePt == 0 and m_fallPt == 0) // defaults
+      return 1; // flat
+    if (pt < ptthresh)
+      return 0;
+    if (m_risePt == 0) // just exponential
+      return exp(-ptfall*pt);
+    return (1-exp(-ptrise*(pt-ptthresh)))*exp(-ptfall*pt);
+  };
+
+  // PDIF
+  double m_maxMomDif;
+  double pdifmax;
+  double m_fallMomDif;
+  double pdiffall;
+  int m_binsMomDif;
+  double pdifPDF(double pdif) 
+  {
+    if (m_fallMomDif == 0) // defaults
+      return 1; // flat
+    return exp(-pdiffall*fabs(pdif));
+  };
+  
+  // MOM ASYM
+  bool m_powMomAsym;
+  int m_binsMomAsym;
+  double asymPDF(double a)
+  {
+    if (m_powMomAsym == 0) // defaults
+      return 1; // flat
+    return pow(1-a*a,m_powMomAsym);
+  }
+
+  // ETA
   double m_minEta;
   double m_maxEta;
   double m_kEta;
-  double m_decayEta;
+  double m_fallEta;
   int m_binsEta;
+  double etaPDF(double eta) 
+  {
+    if (m_kEta == 1 and m_fallEta == 0) // defaults
+      return 1;
+    return pow(eta,m_kEta-1)*exp(-m_fallEta*eta);
+  };
+
+  // TX AND TY
+  double m_maxTx;
+  double m_fallTx;
+  int m_binsTx;
+  double txPDF(double tx) 
+  {
+    if (m_fallTx == 0)
+      return 1;
+    return exp(-m_fallTx*fabs(tx));
+  }
+  
   double m_maxTy;
+  double m_fallTy;
   int m_binsTy;
-  int m_binsMomAsym;
+  double tyPDF(double ty) 
+  {
+    if (m_fallTy == 0)
+      return 1;
+    return exp(-m_fallTy*fabs(ty));
+  }
+
+  // DECAY PLANE ANGLES
   int m_binsPhiMatt;
   int m_binsPhiAngle;
+
+  // OPENING ANGLE
+  double m_minOpenAngle;
+  double m_maxOpenAngle;
+  double m_kOpenAngle;
+  double m_fallOpenAngle;
+  int m_binsOpenAngle;
+  double openanglePDF(double oa)
+  {
+    if (m_kOpenAngle == 1 and m_fallOpenAngle == 0) // defaults
+      return 1;
+    return pow(oa,m_kOpenAngle+1)*exp(-m_fallOpenAngle*oa);
+  };
 };
 
 // Declaration of the Algorithm Factory
@@ -209,58 +343,98 @@ DECLARE_ALGORITHM_FACTORY( TrackParticleMonitor )
       m_magfieldsvc(0),
       m_stateprovider("TrackStateProvider"),
       m_propertysvc(0),
+
       m_minMass(0*Gaudi::Units::GeV),
       m_maxMass(120.0*Gaudi::Units::GeV),
       m_binsMass(50),
+
       m_maxMom(0),
-      m_decayMom(0),
       m_threshMom(0),
+      m_riseMom(0),
+      m_fallMom(0),
       m_binsMom(20),
-      m_binsMomDif(20),
+
       m_maxPt(0),
-      m_decayPt(0),
       m_threshPt(0),
+      m_risePt(0),
+      m_fallPt(0),
       m_binsPt(20),
+
+      m_maxMomDif(0),
+      m_fallMomDif(0),
+      m_binsMomDif(5),
+
+      m_powMomAsym(0),
+      m_binsMomAsym(5),
+
       m_minEta(2),
       m_maxEta(7),
       m_kEta(1),
-      m_decayEta(0),
+      m_fallEta(0),
       m_binsEta(10),
+
+      m_maxTx(0.2),
+      m_fallTx(0),
+      m_binsTx(20),
       m_maxTy(0.2),
-      m_binsTy(40),
-      m_binsMomAsym(20),
+      m_fallTy(0),
+      m_binsTy(20),     
+
       m_binsPhiMatt(20),
-      m_binsPhiAngle(12)
+      m_binsPhiAngle(12),
+
+      m_minOpenAngle(0),
+      m_maxOpenAngle(0.3),
+      m_kOpenAngle(1),
+      m_fallOpenAngle(0),
+      m_binsOpenAngle(10)
 {
   declareProperty( "InputLocation", m_inputLocation = "" );
-  declareProperty( "MinMass", m_minMass, "Mass window minimum in [MeV]" );
-  declareProperty( "MaxMass", m_maxMass, "Mass window maximum in [MeV]" );
-  declareProperty( "BinsMass", m_binsMass, "Number of mass bins in all 2D histos" );
-  declareProperty( "MaxMom", m_maxMom, "Maximum p in [MeV] for all histos (default: depends on particle mass)" );
-  declareProperty( "DecayMom", m_decayMom,
-                   "Fall rate of momentum distribution in 1/[MeV] (set for optional variable binning in M vs. p)");
-  declareProperty( "ThreshMom", m_threshMom, "Start variable momentum binning in [MeV] ([0,this] makes up lowest bin)");
-  declareProperty( "BinsMom", m_binsMom, "Number of momentum bins in M vs. p (default: 20)");
-  declareProperty( "BinsMomDif", m_binsMomDif, "Number of pdif bins in M vs. pdif (only flat binning)" );
-  declareProperty( "MaxPt", m_maxPt, "Maxmum pt in [MeV] for all histos (default: depends on particle mass)" );
-  declareProperty( "DecayPt", m_decayPt, "Fall rate of pt distribution in 1/[MeV] (for variable binning in M vs. pt)");
-  declareProperty( "ThreshPt", m_threshPt, "Start variable pt binning in [MeV] ([0,this] makes up lowest bin)");
-  declareProperty( "BinsPt", m_binsPt, "Number of pt bins in M vs. pt (default: 20)");
-  declareProperty( "MinEta", m_minEta, "Minimum eta (default: 2)");
-  declareProperty( "MaxEta", m_maxEta, "Maximum eta (default: 7)");
-  declareProperty( "KEta", m_kEta,
-                   "k-factor of eta's gamma-like distribution (set for optional variable binning in M vs. eta)" );
-  declareProperty( "DecayEta", m_decayEta,
-                   "Fall rate of eta's gamma-like distribution (set for optional variable binning in M vs. eta)");
-  declareProperty( "BinsEta", m_binsEta, "Number of eta bins in M vs. eta (default: 10)" );
-  declareProperty( "MaxTy", m_maxTy, "Maximum ty (track verticle slope) for all histos (default: 0.2)" );
-  declareProperty( "BinsTy", m_binsTy, "Number of ty (track verticle slope) bins in M vs. ty (default: 40)" );
-  declareProperty( "BinsMomAsym", m_binsMomAsym, "Number of pasym bins in M vs. pasym (only flat binning)" );
-  declareProperty( "BinsPhiMatt", m_binsPhiMatt,
-                   "Number of 'Matt's phi' (decay plane angle w.r.t. magnetic field) bins in M vs. 'Matt's phi' (default: 20)" );
-  declareProperty( "BinsPhiAngle", m_binsPhiAngle,
-                   "Number of 'phi' (decay plane azimuthal angle) bins in M vs.'phi' (default: 12)" );
+  
+  declareProperty( "MinMass", m_minMass, "Mass window min in MeV (default: 0)" );
+  declareProperty( "MaxMass", m_maxMass, "Mass window max in MeV (default: 120GeV" );
+  declareProperty( "BinsMass", m_binsMass, "# mass bins in all 2D histos (default: 50)" );
 
+  declareProperty( "MaxMom", m_maxMom, "Max momentum in MeV for all histos (default: particle dependent)" );
+  declareProperty( "ThreshMom", m_threshMom, "threshold momentum in MeV (optional)");
+  declareProperty( "RiseMom", m_riseMom,"exp rise rate from threshold in 1/MeV (optional)");
+  declareProperty( "FallMom", m_fallMom,"exp fall rate in 1/MeV (optional)");
+  declareProperty( "BinsMom", m_binsMom, "# momentum bins in M vs. p (default: 20)");
+
+  declareProperty( "MaxPt", m_maxPt, "Max transverse momentum in MeV for all histos (default: particle dependent)" );
+  declareProperty( "ThreshPt", m_threshPt, "threshold transverse momentum in MeV (optional)");
+  declareProperty( "RisePt", m_risePt,"exp rise rate from threshold in 1/MeV (optional)");
+  declareProperty( "FallPt", m_fallPt,"exp fall rate in 1/MeV (optional)");
+  declareProperty( "BinsPt", m_binsPt, "# transverse momentum bins in 2D histo (default: 20)");
+
+  declareProperty( "MaxMomDif", m_maxMomDif, "Max (p+ - p-) magnitude in MeV for all histos (default: particle dependent)" );
+  declareProperty( "FallMomDif", m_fallMomDif, "exp fall rate in 1/MeV (optional)");
+  declareProperty( "BinsMomDif", m_binsMomDif, "# (p+ - p-) bins (pos/neg each) in 2D histo (default: 5)" );
+
+  declareProperty( "PowMomAsym", m_powMomAsym, "power of (p+ - p-)/(p+ + p-) shape");
+  declareProperty( "BinsMomAsym", m_binsMomAsym, "# (p+ - p-)/(p+ + p-) bins (pos/neg each) in 2D histo (default: 5)" );
+
+  declareProperty( "MinEta", m_minEta, "Min eta (default: 2)");
+  declareProperty( "MaxEta", m_maxEta, "Max eta (default: 7)");
+  declareProperty( "KEta", m_kEta,"rise power (optional)" );
+  declareProperty( "FallEta", m_fallEta,"exp fall rate (optional)");
+  declareProperty( "BinsEta", m_binsEta, "# eta bins in 2D histo (default: 10)" );
+
+  declareProperty( "MaxTx", m_maxTx, "Max tx (vertical slope) for all histos (default: 0.2)" );
+  declareProperty( "FallTx", m_fallTx, "exp fall rate (optional)");
+  declareProperty( "BinsTx", m_binsTx, "# tx (vertical slope) bins (pos/neg each) in 2D histo (default: 40)" );
+  declareProperty( "MaxTy", m_maxTy, "Max ty (horizontal slope) for all histos (default: 0.2)" );
+  declareProperty( "FallTy", m_fallTy, "exp fall rate (optional)");
+  declareProperty( "BinsTy", m_binsTy, "# ty (horizontal slope) bins (pos/neg each) in 2D histo (default: 40)" );
+
+  declareProperty( "BinsPhiMatt", m_binsPhiMatt,"# 'Matt's phi' (decay plane angle w.r.t. B) bins (default: 20)" );
+  declareProperty( "BinsPhiAngle", m_binsPhiAngle,"# 'phi' (decay plane azimuthal angle) bins (default: 12)" );
+
+  declareProperty( "MinOpenAngle", m_minOpenAngle, "Min opening angle (default: 0)");
+  declareProperty( "MaxOpenAngle", m_maxOpenAngle, "Max opening angle (default: 0.3)");
+  declareProperty( "KOpenAngle", m_kOpenAngle,"rise power (optional)" );
+  declareProperty( "FallOpenAngle", m_fallOpenAngle,"exp fall rate (optional)");
+  declareProperty( "BinsOpenAngle", m_binsOpenAngle, "# eta bins in 2D histo (default: 10)" );
 }
 
 //=============================================================================
@@ -280,9 +454,9 @@ StatusCode TrackParticleMonitor::initialize()
   m_propertysvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true);
   m_stateprovider.retrieve().ignore();
 
-  // SWITCH TO DEFAULT MOM / PT MAXES
+  // SWITCH TO DEFAULT MOM / PT / PDIF MAXES
   // If user doesn't set m_maxMom or m_maxPt, use defaults
-  // Also catch some sanity errors
+  // Also catch some sanity errors while we're at it
   if (m_maxMom <= 0) {
     if (m_maxMass < 2.3*Gaudi::Units::GeV)
       m_maxMom = 200*Gaudi::Units::GeV;
@@ -295,24 +469,30 @@ StatusCode TrackParticleMonitor::initialize()
     else
       m_maxPt = 3*m_maxMass;
   }
+  if (m_maxMomDif <= 0) {
+    m_maxMomDif = 0.5*m_maxMom;
+  }
   if (m_kEta < 1.0)
     m_kEta = 1.0;
-  if (m_binsMomDif % 2 != 0)
-    m_binsMomDif += 1;
-  
 
   // HISTOGRAM SETTINGS FOR TRACKS
   // Convert everything to GeV
-  double mmin = m_minMass/Gaudi::Units::GeV;
-  double mmax = m_maxMass/Gaudi::Units::GeV;
-  double pthresh = m_threshMom/Gaudi::Units::GeV;
-  double plambda = m_decayMom*Gaudi::Units::GeV;
-  double pmax = m_maxMom/Gaudi::Units::GeV;
-  double ptthresh = m_threshPt/Gaudi::Units::GeV;
-  double ptlambda = m_decayPt*Gaudi::Units::GeV;
-  double ptmax = m_maxPt/Gaudi::Units::GeV;
-  double pdifmin = -0.5*pmax;
-  double pdifmax = 0.5*pmax;
+  mmin = m_minMass/Gaudi::Units::GeV;
+  mmax = m_maxMass/Gaudi::Units::GeV;
+
+  pmax = m_maxMom/Gaudi::Units::GeV;
+  pthresh = m_threshMom/Gaudi::Units::GeV;
+  prise = m_riseMom*Gaudi::Units::GeV;
+  pfall = m_fallMom*Gaudi::Units::GeV;
+
+  ptmax = m_maxPt/Gaudi::Units::GeV;
+  ptthresh = m_threshPt/Gaudi::Units::GeV;
+  ptrise = m_risePt*Gaudi::Units::GeV;
+  ptfall = m_fallPt*Gaudi::Units::GeV;
+
+  pdifmax = m_maxMomDif/Gaudi::Units::GeV;
+  pdiffall = m_fallMomDif*Gaudi::Units::GeV;
+
   double trackChi2, vertexChi2Max;
   double trackPMax, trackPtMax;
   double vtxX, vtxY, vtxZ;
@@ -328,143 +508,133 @@ StatusCode TrackParticleMonitor::initialize()
     vtxX = 2.0; vtxY = 2.0; vtxZ = 200.0;
   }
 
+
   // CALCULATE VARIABLE BIN SIZES
-  std::vector<double> massEdges(m_binsMass+1,0);
-  std::vector<double> pEdges(m_binsMom+1,0);
-  std::vector<double> ptEdges(m_binsPt+1,0);
-  std::vector<double> etaEdges(m_binsEta+1,0);
-
+  
   // massEdges ...
+  std::vector<double> massEdges(m_binsMass+1,0);
   {
-    massEdges[0] = mmin;
-    int n = m_binsMass;
-    double p = 1.0;
-    double dp = 1.0 / n;
-    for (int i = 1; i < n + 1; i++) {
-      p -= dp;
-      massEdges[i] = mmin + (mmax-mmin)*(1-p);
-    }
-
-    // Should already be m_maxMom, but with machine imprecision...
-    massEdges[m_binsMass] = mmax;
+    double edges[m_binsMass+1];
+    setBinThresh(m_binsMass,edges,mmin,mmax,this,&TrackParticleMonitor::massPDF);
+    massEdges.assign(edges,edges+m_binsMass+1);
   }
-  debug() << "MASS BIN EDGES:" << std::endl;
+  info() << "MASS BIN EDGES:" << std::endl;
   for (int i = 0; i < m_binsMass+1; i++)
-    debug() << "BIN " << i << ": " << massEdges[i] << std::endl;
-  debug() << endmsg;
+    info() << "BIN " << i << ": " << massEdges[i] << std::endl;
+  info() << endmsg;
 
   // pEdges ...
+  std::vector<double> pEdges(m_binsMom+1,0);
   {
-    pEdges[0] = 0;
-    int offset;
-    int n;
-    if (pthresh != 0) {
-      pEdges[1] = pthresh;
-      offset = 2;
-      n = m_binsMom-1;
-    } else {
-      offset = 1;
-      n = m_binsMom;
-    }
-
-    double p = 1.0;
-    double dp;
-    
-    if (plambda != 0) {
-      dp = (1.0 - exp(-1.0*plambda*(pmax-pthresh))) / n;
-      for (int i = offset; i < n + offset; i++) {
-        p -= dp;
-        pEdges[i] = pthresh + log(1.0/p)/plambda;
-      }
-    } else {
-      dp = 1.0 / n;
-      for (int i = offset; i < n + offset; i++) {
-        p -= dp;
-        pEdges[i] = pthresh + (pmax-pthresh)*(1-p);
-      }
-    }
-    // Should already be m_maxMom, but with machine imprecision...
-    pEdges[m_binsMom] = pmax;
+    double edges[m_binsMom+1];
+    setBinThresh(m_binsMom,edges,0,pmax,this,&TrackParticleMonitor::momPDF);
+    pEdges.assign(edges,edges+m_binsMom+1);
   }
-  debug() << "P BIN EDGES:" << std::endl;
+  info() << "P BIN EDGES:" << std::endl;
   for (int i = 0; i < m_binsMom+1; i++)
-    debug() << "BIN " << i << ": " << pEdges[i] << std::endl;
-  debug() << endmsg;
+    info() << "BIN " << i << ": " << pEdges[i] << std::endl;
+  info() << endmsg;
 
   //  ptEdges ...
+  std::vector<double> ptEdges(m_binsPt+1,0);
   {
-    ptEdges[0] = 0;
-    int offset;
-    int n;
-    if (ptthresh != 0) {
-      ptEdges[1] = ptthresh;
-      offset = 2;
-      n = m_binsPt-1;
-    } else {
-      offset = 1;
-      n = m_binsPt;
-    }
-
-    double p = 1.0;
-    double dp;
-    
-    if (ptlambda != 0) {
-      dp = (1.0 - exp(-1.0*ptlambda*(ptmax-ptthresh))) / n;
-      for (int i = offset; i < n + offset; i++) {
-        p -= dp;
-        ptEdges[i] = ptthresh + log(1.0/p)/ptlambda;
-      }
-    } else {
-      dp = 1.0 / n;
-      for (int i = offset; i < n + offset; i++) {
-        p -= dp;
-        ptEdges[i] = ptthresh + (ptmax-ptthresh)*(1-p);
-      }
-    }
-    // Should already be ptmax, but with machine imprecision...
-    ptEdges[m_binsPt] = ptmax;
+    double edges[m_binsPt+1];
+    setBinThresh(m_binsPt,edges,0,ptmax,this,&TrackParticleMonitor::ptPDF);
+    ptEdges.assign(edges,edges+m_binsPt+1);
   }
-  debug() << "PT BIN EDGES:" << std::endl;
+  info() << "PT BIN EDGES:" << std::endl;
   for (int i = 0; i < m_binsPt+1; i++)
-    debug() << "BIN " << i << ": " << ptEdges[i] << std::endl;
-  debug() << endmsg;
+    info() << "BIN " << i << ": " << ptEdges[i] << std::endl;
+  info() << endmsg;
+
+  //  pdifEdges ...
+  std::vector<double> pdifEdges(2*m_binsMomDif+1,0);
+  {
+    double edges[m_binsMomDif+1];
+    setBinThresh(m_binsMomDif,edges,0,pdifmax,this,&TrackParticleMonitor::pdifPDF);
+    for (int i = 0; i <= m_binsMomDif; i++) {
+      pdifEdges[m_binsMomDif+i] = edges[i];
+      pdifEdges[m_binsMomDif-i] = -edges[i];      
+    }
+  }
+  info() << "PDIF BIN EDGES:" << std::endl;
+  for (int i = 0; i < 2*m_binsMomDif+1; i++)
+    info() << "BIN " << i << ": " << pdifEdges[i] << std::endl;
+  info() << endmsg;
+
+  // asymEdges ...
+  std::vector<double> asymEdges(2*m_binsMomAsym+1,0);
+  {
+    double edges[m_binsMomAsym+1];
+    setBinThresh(m_binsMomAsym,edges,0,1,this,&TrackParticleMonitor::asymPDF);
+    for (int i = 0; i <= m_binsMomAsym; i++) {
+      asymEdges[m_binsMomAsym+i] = edges[i];
+      asymEdges[m_binsMomAsym-i] = -edges[i];      
+    }
+  }
+  info() << "ASYM BIN EDGES:" << std::endl;
+  for (int i = 0; i < 2*m_binsMomAsym+1; i++)
+    info() << "BIN " << i << ": " << asymEdges[i] << std::endl;
+  info() << endmsg;
+  
 
   //  etaEdges ...
+  std::vector<double> etaEdges(m_binsEta+1,0);
   {
-    int n = m_binsEta;
-    double k = m_kEta;
-    double L = m_decayEta;
-    double m = m_minEta;
-    double M = m_maxEta;
-    double p = GammaReg(k,L*m);
-    double dp;
-
-    etaEdges[0] = m;
-    if (L != 0) {
-      dp = (GammaReg(k,L*m)-GammaReg(k,L*M)) / n;
-      for (int i = 1; i < n + 1; i++) {
-        p -= dp;
-        etaEdges[i] = InvGammaReg(k,p)/L;
-      }
-    } else {
-      dp = 1.0 / n;
-      for (int i = 1; i < n + 1; i++) {
-        p -= dp;
-        etaEdges[i] = m + (M-m)*(1-p);
-      }
-    }
-    // Should already be m_maxEta, but with machine imprecision...
-    etaEdges[m_binsEta] = M;
+    double edges[m_binsEta+1];
+    setBinThresh(m_binsEta,edges,m_minEta,m_maxEta,this,&TrackParticleMonitor::etaPDF);
+    etaEdges.assign(edges,edges+m_binsEta+1);
   }
-  debug() << "ETA BIN EDGES:" << std::endl;
+  info() << "ETA BIN EDGES:" << std::endl;
   for (int i = 0; i < m_binsEta+1; i++)
-    debug() << "BIN " << i << ": " << etaEdges[i] << std::endl;
-  debug() << endmsg;
+    info() << "BIN " << i << ": " << etaEdges[i] << std::endl;
+  info() << endmsg;
+
+  //  txEdges and tyEdges ...
+  std::vector<double> txEdges(2*m_binsTx+1,0);
+  {
+    double edges[m_binsTx+1];
+    setBinThresh(m_binsTx,edges,0,m_maxTx,this,&TrackParticleMonitor::txPDF);
+    for (int i = 0; i <= m_binsTx; i++) {
+      txEdges[m_binsTx+i] = edges[i];
+      txEdges[m_binsTx-i] = -edges[i];      
+    }
+  }
+  info() << "TX BIN EDGES:" << std::endl;
+  for (int i = 0; i < 2*m_binsTx+1; i++)
+    info() << "BIN " << i << ": " << txEdges[i] << std::endl;
+  info() << endmsg;
+
+  std::vector<double> tyEdges(2*m_binsTy+1,0);
+  {
+    double edges[m_binsTy+1];
+    setBinThresh(m_binsTy,edges,0,m_maxTy,this,&TrackParticleMonitor::tyPDF);
+    for (int i = 0; i <= m_binsTy; i++) {
+      tyEdges[m_binsTy+i] = edges[i];
+      tyEdges[m_binsTy-i] = -edges[i];      
+    }
+  }
+  info() << "TY BIN EDGES:" << std::endl;
+  for (int i = 0; i < 2*m_binsTy+1; i++)
+    info() << "BIN " << i << ": " << tyEdges[i] << std::endl;
+  info() << endmsg;
+
+  // openangleEdges ...
+  std::vector<double> openangleEdges(m_binsOpenAngle+1,0);
+  {
+    double edges[m_binsOpenAngle+1];
+    setBinThresh(m_binsOpenAngle,edges,m_minOpenAngle,m_maxOpenAngle,this,&TrackParticleMonitor::openanglePDF);
+    openangleEdges.assign(edges,edges+m_binsOpenAngle+1);
+  }
+  info() << "OPENANGLE BIN EDGES:" << std::endl;
+  for (int i = 0; i < m_binsOpenAngle+1; i++)
+    info() << "BIN " << i << ": " << openangleEdges[i] << std::endl;
+  info() << endmsg;
 
   // CREATE HISTOGRAMS
   setHistoTopDir("Track/");
 
-  // 1D histograms (defaults to 100 bins)
+  // Various track/vertex histograms
   book(multID,multTitle,-0.5,10.5,11);
   book(trackChi2ID,trackChi2Title,0,trackChi2);
   book(trackPID,trackPTitle,0,trackPMax);
@@ -477,39 +647,48 @@ StatusCode TrackParticleMonitor::initialize()
   book(vtxxerrID,vtxxerrTitle,0,0.2,50);
   book(vtxyerrID,vtxyerrTitle,0,0.2,50);
   book(vtxzerrID,vtxzerrTitle,0,2.5,50);
+
+  // Mass histograms
   book(massID,massTitle,mmin,mmax);
   book(masspullID,masspullTitle,-5,5);
-  book(momID,momTitle,0,pmax);
-  book(pdifID,pdifTitle,pdifmin,pdifmax);
-  book(ptID,ptTitle,0,ptmax);
-  book(etaID,etaTitle,m_minEta,m_maxEta);
-  book(asymID,asymTitle,-1,1,m_binsMomAsym);
-  book(phimattID,phimattTitle,0,M_PI);
-  book(phiangleID,phiangleTitle,0,M_PI);
-  book(openingangleID,openingangleTitle,0,0.3);
   book(tophalfID,tophalfTitle,mmin,mmax,m_binsMass);
   book(bothalfID,bothalfTitle,mmin,mmax,m_binsMass);
 
-  // 2D histograms
+  // 1D histograms of bias variables
+  book(momID,momTitle,0,pmax);
+  book(ptID,ptTitle,0,ptmax);
+  book(pdifID,pdifTitle,-1*pdifmax,pdifmax);
+  book(asymID,asymTitle,-1,1,m_binsMomAsym);
+  book(etaID,etaTitle,m_minEta,m_maxEta);
+  book(txID,txTitle,-m_maxTx,m_maxTx);
+  book(tyID,tyTitle,-m_maxTy,m_maxTy);
+  book(phimattID,phimattTitle,0,M_PI);
+  book(phiangleID,phiangleTitle,0,M_PI);
+  book(openangleID,openangleTitle,m_minOpenAngle,m_maxOpenAngle);
+
+  // 2D histograms of mass vs. bias variables
   book2D(momH2ID,momH2Title,pEdges,massEdges);
-  book2D(pdifH2ID,pdifH2Title,pdifmin,pdifmax,m_binsMomDif,mmin,mmax,m_binsMass);
   book2D(ptH2ID,ptH2Title,ptEdges,massEdges);
+  book2D(pdifH2ID,pdifH2Title,pdifEdges,massEdges);
+  book2D(asymH2ID,asymH2Title,asymEdges,massEdges);
   book2D(etaH2ID,etaH2Title,etaEdges,massEdges);
-  book2D(tyH2ID,tyH2Title,-m_maxTy,m_maxTy,m_binsTy,mmin,mmax,m_binsMass);
-  book2D(asymH2ID,asymH2Title,-1,1,m_binsMomAsym,mmin,mmax,m_binsMass);
+  book2D(txH2ID,txH2Title,txEdges,massEdges);
+  book2D(tyH2ID,tyH2Title,tyEdges,massEdges);
   book2D(phimattH2ID,phimattH2Title,0,M_PI,m_binsPhiMatt,mmin,mmax,m_binsMass);
   book2D(phiangleH2ID,phiangleH2Title,-M_PI,M_PI,m_binsPhiAngle,mmin,mmax,m_binsMass);
-
-  // Profiles
+  book2D(openangleH2ID,openangleH2Title,openangleEdges,massEdges);
+  
+  // Profiles of mass vs. bias variables
   bookProfile1D(momProID,momProTitle,pEdges);
-  bookProfile1D(pdifProID,pdifProTitle,pdifmin,pdifmax,m_binsMomDif);
   bookProfile1D(ptProID,ptProTitle,ptEdges);
+  bookProfile1D(pdifProID,pdifProTitle,pdifEdges);
+  bookProfile1D(asymProID,asymProTitle,asymEdges);
   bookProfile1D(etaProID,etaProTitle,etaEdges);
-  bookProfile1D(tyProID,tyProTitle,-m_maxTy,m_maxTy,m_binsTy);
-  bookProfile1D(asymProID,asymProTitle,-1,1,m_binsMomAsym);
+  bookProfile1D(txProID,txProTitle,txEdges);
+  bookProfile1D(tyProID,tyProTitle,tyEdges);
   bookProfile1D(phimattProID,phimattProTitle,0,M_PI,m_binsPhiMatt);
   bookProfile1D(phiangleProID,phiangleProTitle,-M_PI,M_PI,m_binsPhiAngle);
-  
+  bookProfile1D(openangleProID,openangleProTitle,openangleEdges);
 
   // RETURN
   return sc;
@@ -529,7 +708,7 @@ StatusCode TrackParticleMonitor::execute()
 
   LHCb::Particle::Range particles  = get<LHCb::Particle::Range>(m_inputLocation);
   histo(multID)->fill(particles.size());
-  //debug() << "particles: " << particles.size() << endmsg;
+  //info() << "particles: " << particles.size() << endmsg;
 
   BOOST_FOREACH( const LHCb::Particle* particle, particles) {
     
@@ -596,52 +775,60 @@ StatusCode TrackParticleMonitor::execute()
     double mom  = p4.P();
     double pt = p4.Pt();
     double eta = p4.Eta();
+    double tx = p4.x() / p4.z();
     double ty = p4.y() / p4.z();
 
     // DECAY PLANE ANGLES
     Gaudi::XYZVector norm = p3A.Cross( p3B ).Unit();
     double phiangle = std::atan2( norm.y(), norm.x());
     double phimatt  = std::acos( norm.y() );
-    double openingangle = acos( p3A.Dot(p3B)/(ppos*pneg) );
+    double openangle = acos( p3A.Dot(p3B)/(ppos*pneg) );
 
-    // 1D histograms
+    // Mass histograms
     histo(massID)->fill(mass);
     histo(masspullID)->fill(masspull);
-    histo(momID)->fill(mom);
-    histo(pdifID)->fill(pdif);
-    histo(ptID)->fill(pt);
-    histo(etaID)->fill(eta);
-    histo(asymID)->fill(asym);
-    histo(phimattID)->fill(phimatt);
-    histo(phiangleID)->fill(phiangle);
-    histo(openingangleID)->fill(openingangle);
-
-    // 2D histograms
-    histo2D(momH2ID)->fill(mom,mass);
-    histo2D(pdifH2ID)->fill(pdif,mass);
-    histo2D(ptH2ID)->fill(pt,mass);
-    histo2D(etaH2ID)->fill(eta,mass);
-    histo2D(tyH2ID)->fill(ty,mass);
-    histo2D(asymH2ID)->fill(asym,mass);
-    histo2D(phimattH2ID)->fill(phimatt,mass);
-    histo2D(phiangleH2ID)->fill(phiangle,mass);
-    
-    // Profiles
-    profile1D(momProID)->fill(mom,mass);
-    profile1D(pdifProID)->fill(pdif,mass);
-    profile1D(ptProID)->fill(pt,mass);
-    profile1D(etaProID)->fill(eta,mass);
-    profile1D(tyProID)->fill(ty,mass);
-    profile1D(asymProID)->fill(asym,mass);
-    profile1D(phimattProID)->fill(phimatt,mass);
-    profile1D(phiangleProID)->fill(phiangle,mass);
-    
-    // Mass in top/bottom of detector
     if( p3A.y()<0 && p3B.y()<0) 
       plot( mass, bothalfID, bothalfTitle);
     else if (p3A.y()>0 && p3B.y()>0) 
       plot( mass, tophalfID, tophalfTitle);
 
+    // 1D histograms of bias variables
+    histo(momID)->fill(mom);
+    histo(ptID)->fill(pt);
+    histo(pdifID)->fill(pdif);
+    histo(asymID)->fill(asym);
+    histo(etaID)->fill(eta);
+    histo(txID)->fill(tx);
+    histo(tyID)->fill(ty);    
+    histo(phimattID)->fill(phimatt);
+    histo(phiangleID)->fill(phiangle);
+    histo(openangleID)->fill(openangle);
+
+    // 2D histograms of mass vs. bias variables
+    histo2D(momH2ID)->fill(mom,mass);
+    histo2D(ptH2ID)->fill(pt,mass);
+    histo2D(pdifH2ID)->fill(pdif,mass);
+    histo2D(asymH2ID)->fill(asym,mass);
+    histo2D(etaH2ID)->fill(eta,mass);
+    histo2D(txH2ID)->fill(tx,mass);
+    histo2D(tyH2ID)->fill(ty,mass);
+    histo2D(phimattH2ID)->fill(phimatt,mass);
+    histo2D(phiangleH2ID)->fill(phiangle,mass);
+    histo2D(openangleH2ID)->fill(openangle,mass);
+    
+    // Profiles of mass vs. bias variables
+    profile1D(momProID)->fill(mom,mass);
+    profile1D(ptProID)->fill(pt,mass);
+    profile1D(pdifProID)->fill(pdif,mass);
+    profile1D(asymProID)->fill(asym,mass);
+    profile1D(etaProID)->fill(eta,mass);
+    profile1D(txProID)->fill(tx,mass);
+    profile1D(tyProID)->fill(ty,mass);
+    profile1D(phimattProID)->fill(phimatt,mass);
+    profile1D(phiangleProID)->fill(phiangle,mass);
+    profile1D(openangleProID)->fill(openangle,mass);
+    
+    // Memory management
     BOOST_FOREACH( const LHCb::State* s, states) delete s;
   }
   return StatusCode::SUCCESS;

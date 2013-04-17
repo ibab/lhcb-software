@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-04-17 - Jack Wimberley
+ - Improved and simplified variable binning for 2D histograms
+ - A few new histograms (tx, ty, mass vs. tx, mass vs. opening angle)
+
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
