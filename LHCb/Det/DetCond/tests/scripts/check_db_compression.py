@@ -33,22 +33,23 @@ class DetCondCompressionTest(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
         self.testin = 'data'
-        self.testout = '0QlpoOTFBWSZTWa/mnnIAAAEBgCQABAAgADDMDHqCcXckU4UJCv5p5yA='
-#        self.testout = '0QlpoNDFBWSZTWa/mnnIAAAEBgCQABAAgADDMDHqCcXckU4UJCv5p5yA='
-        self.Nmethods = 1 # number of methods
+        self.testout = ['0WFoAOAAABAAA/Td6WFoAAAFpIt42AgAhARwAAAAQz1jMAQADZGF0YQBj8/OtAAEYBGvp8KWQQpkNAQAAAAABWVo=', '1QlpoOTFBWSZTWa/mnnIAAAEBgCQABAAgADDMDHqCcXckU4UJCv5p5yA=']
+        self.Nmethods = 2 # number of methods
     
 #    def tearDown(self):
 #        unittest.TestCase.tearDown(self)
 
     def test_compression(self):
         """Check compression method 0"""
-        ret = PyCintex.gbl.CondDBCompression.compress(self.testin)
-        self.assertEquals(self.testout, ret)
+        for method in range(self.Nmethods):
+            ret = PyCintex.gbl.CondDBCompression.compress(self.testin,method)
+            self.assertEquals(self.testout[method], ret)
         
     def test_decompression(self):
         """Check decompression method""" 
-        ret = PyCintex.gbl.CondDBCompression.decompress(self.testout)
-        self.assertEquals(self.testin, ret)
+        for method in range(self.Nmethods):
+            ret = PyCintex.gbl.CondDBCompression.decompress(self.testout[method])
+            self.assertEquals(self.testin, ret)
         
     def test_decompression_2(self):
         """Check decompression method with random string

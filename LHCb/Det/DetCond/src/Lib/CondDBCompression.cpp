@@ -4,6 +4,9 @@
 
 #include <iostream>
 #include <memory>
+extern "C"{
+#include <ZipLZMA.h>
+}
 
 // local
 #include "DetCond/CondDBCompression.h"
@@ -18,11 +21,19 @@
 //-----------------------------------------------------------------------------
 
 std::string CondDBCompression::compress(const std::string& strin, const int8_t method){
-	char *dest = new char[MAXBUFFSIZE];
+	char *dest = new char[MAXBUFFSIZE]; //Output buffer
 	unsigned int destLen = MAXBUFFSIZE;
 	int retbit(0);
+    int srcsize(0);
+    int tgtsize(0);
     switch (method){
-    case 0:
+    case 0: //LZMA method from ROOT package
+        srcsize = strin.length();
+        R__zipLZMA(9, &srcsize, const_cast<char*>(strin.c_str()), (int*)(&destLen), dest, &retbit);
+        if (retbit == 0) return "";
+        destLen = retbit;
+        break;
+    case 1: //BZ2 method
         retbit = BZ2_bzBuffToBuffCompress(dest, &destLen, const_cast<char*>(strin.c_str()), strin.length(), 9, 0, 0);
         if (retbit != BZ_OK) return "";
         break;
@@ -62,18 +73,25 @@ std::string CondDBCompression::decompress(const std::string& strin){
 	size_t output_length = zdata.length();
 //    std::auto_ptr<unsigned char> zdata(base64_decode(strin.c_str(), strin.length(), &output_length));
     if (output_length){
-    	char* dest = new char[MAXBUFFSIZE];
+    	char* dest = new char[MAXBUFFSIZE]; //Output buffer
     	unsigned int destLen = MAXBUFFSIZE;
     	int retbit(0);
+        int srcsize = strin.length();
         switch (method){
-        case 0:    
+        case 0:
+            R__unzipLZMA((int*)&output_length, (unsigned char*)(const_cast<char*>(zdata.c_str())), (int*)(&destLen), (unsigned char*)(dest), &retbit);    
+            if (retbit == 0) return ""; // empty string if error during compression
+            destLen = retbit;
+            break;
+        case 1:    
             retbit = BZ2_bzBuffToBuffDecompress(dest, &destLen, const_cast<char*>(zdata.c_str()), output_length,0,0);
+            if (retbit != BZ_OK) return ""; // empty string if error during compression
             break;
         default: //Do nothing if method not recognized
             delete [] dest;
             return strin;
         }
-        if (destLen == 0 || retbit) return "";    
+        if (destLen == 0 ) return "";
     	std::string out(dest, destLen);
     	delete [] dest;
         return out;
