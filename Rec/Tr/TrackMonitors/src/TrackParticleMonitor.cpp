@@ -89,7 +89,7 @@ namespace {
   const std::string etaH2Title = "mass [GeV] vs. eta";
   const GaudiAlg::HistoID txH2ID("massVersusTxH2");
   const std::string txH2Title = "mass [GeV] vs. tx";
-  const GaudiAlg::HistoID tyH2ID("massVersusTy2");
+  const GaudiAlg::HistoID tyH2ID("massVersusTyH2");
   const std::string tyH2Title = "mass [GeV] vs. ty";
   const GaudiAlg::HistoID phimattH2ID("massVersusPhiMattH2");
   const std::string phimattH2Title = "mass [GeV] vs. Matt's phi";
