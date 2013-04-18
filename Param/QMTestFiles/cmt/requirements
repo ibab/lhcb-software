@@ -1,0 +1,8 @@
+#============================================================================
+# Created    : 2013-04-16
+# Maintainer : Marco Cattaneo
+#============================================================================
+package           QMTestFiles
+version           v1r0
+branches          cmt doc data
+include_path      none
