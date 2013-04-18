@@ -99,7 +99,7 @@ StatusCode ParticleRefitter::execute(LHCb::Particle* part) {
     m_vt.push_back(Vtx);
   }
 
-  return sc;
+  return mainsc;
 }
 
 
