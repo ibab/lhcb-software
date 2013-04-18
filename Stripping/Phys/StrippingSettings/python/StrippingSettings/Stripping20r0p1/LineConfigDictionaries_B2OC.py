@@ -132,7 +132,7 @@ Beauty2Charm = {
     'STREAMS' : { 
     'BhadronCompleteEvent' : [
     'StrippingB02D0PiPiD2HHFULLDSTBeauty2CharmLine', 
-    'StrippingB02D0KPiD2HHFULLDSTBeauty2CharmLine', 
+#    'StrippingB02D0KPiD2HHFULLDSTBeauty2CharmLine', 
     'StrippingB02DKPiPiD2HHHFULLDSTBeauty2CharmLine', 
     'StrippingB02DPiPiPiD2HHHFULLDSTBeauty2CharmLine', 
     'StrippingB02DDFULLDSTBeauty2CharmLine', 
