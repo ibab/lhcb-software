@@ -205,7 +205,7 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
         _StdLooseDiMuon = DataOnDemand( Location = 'Phys/StdLooseDiMuon/Particles' )
         
         MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s )  & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)  & (MINTREE('mu+'==ABSID,PIDmu)> %(MuonPID)s)" % locals()
-        MuonCut += "(MINTREE('mu+'==ABSID,P) > %(MuonP)s )" % locals()
+        MuonCut += "& (MINTREE('mu+'==ABSID,P) > %(MuonP)s )" % locals()
 #        MuonCut = " (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)  & (MINTREE('mu+'==ABSID,PIDmu)> %(MuonPID)s )" % locals()
         
         MuMuCut = "(MM > %(MuMuMinMass)s *GeV) & (MM < %(MuMuMaxMass)s *GeV) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s *GeV)" % locals()

@@ -237,7 +237,7 @@ def TOSFilter( name = None, sel = None ):
     _filter = TisTosParticleTagger(name+"_TriggerTos")
     #_filter.TisTosSpecs = { "Hlt1Global%TOS" : 0, "Hlt2Global%TOS" : 0 }
     _filter.TisTosSpecs = { "Hlt1.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0 }
-    _filter.NoRegex = True
+    _filter.NoRegex = False
     _sel = Selection("Sel"+name+"_TriggerTos",
                      RequiredSelections = [sel],
                      Algorithm = _filter )

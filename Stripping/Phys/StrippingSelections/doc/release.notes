@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-18 - Anton Poluektov 
+ Small fixes in 
+  - StrippingB2DHHHForBXX.py      (NoRegex = True removed)
+  - StrippingChiCJPsiGammaConv.py (missing "&" added)
+
 ! 2013-04-17 - Lucio Anderlini (for Yury Shcheglov)
  - StrippingXic2HHH.py harder cuts
 
