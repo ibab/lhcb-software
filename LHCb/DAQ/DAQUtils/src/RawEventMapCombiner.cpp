@@ -92,15 +92,11 @@ StatusCode RawEventMapCombiner::execute() {
   for( std::map<LHCb::RawBank::BankType, std::string>::const_iterator ib = m_bankTypes.begin();
          ib!=m_bankTypes.end();++ib)
   {
-    RawEvent* rawEvent =NULL;
+    RawEvent* rawEvent =getIfExists<RawEvent>(ib->second);//try with RootInTes
     
-    if( exist<RawEvent>(ib->second) ) //try with RootInTes
-    {    
-      rawEvent = get<RawEvent>(ib->second);
-    }  
-    else if( exist<RawEvent>(ib->second,false) )  //try without RootInTes
+    if( rawEvent==NULL )  //try without RootInTes
     {
-      rawEvent = get<RawEvent>(ib->second, false);
+      rawEvent = getIfExists<RawEvent>(ib->second, false);
     }
     
     if (rawEvent==NULL) //if still not found it's a problem

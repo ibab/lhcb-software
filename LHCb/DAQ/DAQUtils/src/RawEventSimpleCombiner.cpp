@@ -100,15 +100,11 @@ StatusCode RawEventSimpleCombiner::execute() {
   // get input RawEvents
   for( std::vector<std::string>::const_iterator il=m_inputLocations.begin(); il!=m_inputLocations.end(); il++)
   {
-    RawEvent* rawEvent =NULL;
+    RawEvent* rawEvent =getIfExists<RawEvent>(*il); //try with RootInTes
     
-    if( exist<RawEvent>(*il) ) //try with RootInTes
-    {    
-      rawEvent = get<RawEvent>(*il);
-    }  
-    else if( exist<RawEvent>(*il) )  //try without RootInTes
+    if( rawEvent==NULL )  //try without RootInTes
     {
-      rawEvent = get<RawEvent>(*il, false);
+      rawEvent = getIfExists<RawEvent>(*il, false);
     }
     
     if (rawEvent==NULL)
