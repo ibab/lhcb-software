@@ -16,13 +16,13 @@
        <enum
           desc   = "number of detector layers/regions"
           name   = "Number"
-          value  = "NumVelo=24,NumTT=4,NumT=12, NumMuon=5"
+          value  = "NumVelo=26,NumTT=4,NumT=12, NumMuon=5"
           access = 'PUBLIC'
        />
  
        <typedef
 	   def    = "VeloPattern"
-	   type   = "std::bitset&lt;24&gt;"
+	   type   = "std::bitset&lt;26&gt;"
 	   desc   = "Velo hit pattern"
 	   access = "PUBLIC" />
 
