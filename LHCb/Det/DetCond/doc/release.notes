@@ -4,8 +4,11 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-04-18 - Liang Sun
+ - Two redundant variables removed to quell the warning messages.
+
 ! 2013-04-17 - Liang Sun
- - Added the compression method of LZMA from ROOT with the assigned method number at 0, the method number for BZip2 now changed to 1
+ - Added the compression method of LZMA from ROOT with the assigned method number at 0, the method number for BZip2 now changed to 1.
 
 ! 2013-04-02 - Marco Cattaneo
  - Fix UNINIT_CTOR defects

@@ -25,7 +25,6 @@ std::string CondDBCompression::compress(const std::string& strin, const int8_t m
 	unsigned int destLen = MAXBUFFSIZE;
 	int retbit(0);
     int srcsize(0);
-    int tgtsize(0);
     switch (method){
     case 0: //LZMA method from ROOT package
         srcsize = strin.length();
@@ -76,7 +75,6 @@ std::string CondDBCompression::decompress(const std::string& strin){
     	char* dest = new char[MAXBUFFSIZE]; //Output buffer
     	unsigned int destLen = MAXBUFFSIZE;
     	int retbit(0);
-        int srcsize = strin.length();
         switch (method){
         case 0:
             R__unzipLZMA((int*)&output_length, (unsigned char*)(const_cast<char*>(zdata.c_str())), (int*)(&destLen), (unsigned char*)(dest), &retbit);    
