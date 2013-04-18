@@ -6,6 +6,7 @@
 
 ! 2013-04-15 - Paul Seyfert
  - cleanup of example script
+ - add missing StatusCode checks
 
 !========================= DaVinciTrackRefitting v1r3 2013-04-05 =========================
 

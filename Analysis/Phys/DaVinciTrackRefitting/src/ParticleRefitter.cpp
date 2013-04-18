@@ -69,7 +69,9 @@ StatusCode ParticleRefitter::execute()
   StatusCode sc(StatusCode::SUCCESS);
   for ( ; inputParticles.end() != Piter ; ++Piter) {
     sc = execute(const_cast<LHCb::Particle*>(*Piter));
-    if (sc.isFailure()) return sc;
+    if (sc.isFailure()) {
+      return Warning("Particle Refitting failed, aborting event. (still returning SUCCESS, but not setting FilterPassed true)",StatusCode::SUCCESS,30);
+    }
   }
 
   setFilterPassed(true);
@@ -77,20 +79,23 @@ StatusCode ParticleRefitter::execute()
 }
 
 StatusCode ParticleRefitter::execute(LHCb::Particle* part) {
-  StatusCode sc(StatusCode::SUCCESS);
+  StatusCode mainsc(StatusCode::SUCCESS);
+  StatusCode subsc(StatusCode::SUCCESS);
   if (part->proto() && part->proto()->track()) {
-    sc = m_stateToParticle->state2Particle(part->proto()->track()->firstState(),*part);
+    mainsc = m_stateToParticle->state2Particle(part->proto()->track()->firstState(),*part);
   } else {
     LHCb::Particle::ConstVector daughters = part->daughtersVector();
     part->clearDaughters();
     LHCb::Particle::ConstVector::iterator dau_iter;
     for(dau_iter = daughters.begin(); dau_iter != daughters.end(); ++dau_iter)
     {
-      ParticleRefitter::execute(const_cast<LHCb::Particle*>(*dau_iter));
+      subsc = ParticleRefitter::execute(const_cast<LHCb::Particle*>(*dau_iter));
       part->addToDaughters(*dau_iter);
+      if (subsc.isFailure()) mainsc = subsc;
     }
     LHCb::Vertex* Vtx = new LHCb::Vertex(); // @todo: leave them on TES in future versions
-    sc = m_fit->fit(daughters, *Vtx, *part);
+    subsc = m_fit->fit(daughters, *Vtx, *part);
+    if (subsc.isFailure()) mainsc = subsc;
     m_vt.push_back(Vtx);
   }
 
