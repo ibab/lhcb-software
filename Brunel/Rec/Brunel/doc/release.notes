@@ -18,6 +18,9 @@ Purpose: LHCb reconstruction program
 - Changes to tests
   . Pick up options files for input files from PRConfig package. This is
     future proofing for changes to physical location of input data
+  . Add dependency on PARAM/QMTestFiles, which now contains the small input
+    data files used by 2011-crashes, 2012-crashes and bigevents test, previously
+    in /castor/cern.ch/user/c/cattanem.
   . Remove enabling of ANN Neurobayes printout from tests using 2011 or 2012
     data, since NeuroBayes is no longer run by default for these DataTypes
 

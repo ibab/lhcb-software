@@ -21,6 +21,7 @@ use ParamFiles  v8r*       -no_auto_imports
 use FieldMap    v5r*       -no_auto_imports
 use AppConfig   v3r*       -no_auto_imports
 use PRConfig    v1r*       -no_auto_imports
+use QMTestFiles v1r*       -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages
