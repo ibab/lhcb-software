@@ -128,7 +128,6 @@ namespace {
     { 
       norm = 0; 
       double delta = (max-min)/(5*N);
-      double a = min;
       for (int i = 0; i < 5*N; i++) {
         norm += ((tpm->*func)(min + i*delta) + 4*(tpm->*func)(min + (i+0.5)*delta) + (tpm->*func)(min + (i+1)*delta))*delta/6.0;
       }
@@ -211,7 +210,9 @@ private:
   int m_binsMass;
   double massPDF(double mass) 
   {
-    return 1;
+    if (mass >= 0)
+      return 1;
+    return 0;
   };
   
   // P
