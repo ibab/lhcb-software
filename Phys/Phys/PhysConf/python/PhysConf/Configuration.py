@@ -10,6 +10,7 @@ from Configurables import (EventClockSvc,
                            RecEventTime,
                            TimeDecoderList,
                            OdinTimeDecoder)
+                  
 def configureEventTime() :
     """
     Configure EventClockSvc to get event time from RecHeader first
@@ -34,12 +35,14 @@ class PhysConf(LHCbConfigurableUser) :
         ,  "AllowPIDRerunning" : True    # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
         ,  "EnableUnpack"      : None    # Enable unpacking of DST.
         ,  "CaloReProcessing"  : False   # Force CaloReco reprocessing
+        ,  "AllowPIDRecalib"   : True    # Allow recalibration of the PID information as required
         }
 
     __used_configurables__ = (
+        'DstConf',
         'CaloDstUnPackConf'   ,
         'OffLineCaloRecoConf' ,
-        'OffLineCaloPIDsConf' 
+        'OffLineCaloPIDsConf' ,
         )
     
 #
@@ -107,7 +110,6 @@ class PhysConf(LHCbConfigurableUser) :
             caloSeq.Members += [ CaloProcessor('Offline').caloSequence(),CaloProcessor('Offline').protoSequence()] 
             init.Members += [caloSeq]
         
-
         # For backwards compatibility with MC09, we need the following to rerun
         # the Muon Reco on old data. To be removed AS SOON as this backwards compatibility
         # is no longer needed
@@ -137,6 +139,56 @@ class PhysConf(LHCbConfigurableUser) :
                                         ChargedProtoCombineDLLsAlg )
             rerunPIDSeq.Members += [ ChargedProtoParticleAddMuonInfo("CProtoPAddNewMuon"),
                                      ChargedProtoCombineDLLsAlg("CProtoPCombDLLNewMuon") ]
+
+        # ANN PID recalibration
+        if self.getProp("AllowPIDRecalib") :
+
+            from Gaudi.Configuration import appendPostConfigAction
+            
+            def _ANNPIDReCalib_() :
+
+                from Configurables import ( DstConf, DataOnDemandSvc,
+                                            ChargedProtoANNPIDConf, ChargedProtoParticleMapper,
+                                            ApplicationVersionFilter )
+
+                # Sequence to fill
+                annPIDSeq = GaudiSequencer("ANNPIDSeq")
+
+                # Only rerun on Reco14 samples
+                recoRegex = "v43r2(.*)"
+                annPIDSeq.Members += [
+                    ApplicationVersionFilter( name = "Reco14Filter",
+                                              HeaderLocation = "Rec/Header",
+                                              VersionRegex = recoRegex ) ]
+                
+                # ANN PID Configurable
+                annPIDConf = ChargedProtoANNPIDConf("ReDoANNPID")
+            
+                # Configure Configurable for recalibration of the DST charged protos
+                annPIDConf.DataType = self.getProp("DataType")
+                annPIDConf.RecoSequencer = annPIDSeq
+                annPIDConf.applyConf()
+
+                # Update the DoD sequence to run this at the end
+                chargedLoc = "/Event/Rec/ProtoP/Charged"
+                if chargedLoc in DataOnDemandSvc().AlgMap.keys() :
+                    chargedSeq = DataOnDemandSvc().AlgMap[chargedLoc]
+                    chargedSeq.Members += [annPIDSeq]
+
+                # Now for uDSTs. Update the DoD mappers to run a custom one
+                # for charged Protos, and includes the recalibration
+                cppmapper = ChargedProtoParticleMapper("UnpackChargedPPsMapper")
+                # Clone the settings from the DST configurable
+                cppmapper.ANNPIDTune = annPIDConf.tune(annPIDConf.DataType)
+                cppmapper.TrackTypes = annPIDConf.TrackTypes
+                cppmapper.PIDTypes   = annPIDConf.PIDTypes
+                # Again, only rerun the ANNPID on Reco14 data
+                cppmapper.VersionRegex = recoRegex
+                # Update the DoD mapper lists
+                DataOnDemandSvc().NodeMappingTools = [cppmapper] + DataOnDemandSvc().NodeMappingTools
+                DataOnDemandSvc().AlgMappingTools  = [cppmapper] + DataOnDemandSvc().AlgMappingTools
+
+            appendPostConfigAction( _ANNPIDReCalib_ )
 
         # Compatibility with pre-2011 data, where Rec/Summary and Trigger/RawEvent are missing
         import PhysConf.CheckMissingTESData as DataCheck
