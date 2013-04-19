@@ -4,6 +4,8 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections 
 !-----------------------------------------------------------------------------
 
+!========================= TMVAWeights v1r2 2013-04-19 =========================
+
 ! 2013-03-28 - Anton Poluektov 
  - Added KshhBDT weight files for Rafael Coutinho
 
