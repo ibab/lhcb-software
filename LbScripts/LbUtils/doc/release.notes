@@ -1,3 +1,7 @@
+2013-04-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
 2013-04-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/lcg-*: added support for gcc 4.8.0 and clang 3.2

@@ -1,3 +1,58 @@
+! 2013-04-19 - Marco Clemencic (8723948)
+
+ - generate a simple .dot (graphviz) file for the dependencies of subdirs
+
+   A small file in the dot (graphviz) format containing the declared 
+   dependencies between subdirectories/packages is generated in the build 
+   directory at configuration time.
+
+
+! 2013-04-18 - Pere Mato (2f6ded4)
+
+ - minor update to FindAIDA.cmake
+
+   
+
+! 2013-04-17 - Marco Clemencic (329d5eb)
+
+ - fixed an error in the Qt version of heptools-64d
+
+   
+
+! 2013-04-16 - Marco Clemencic (1d20a7a)
+
+ - fixed setting of GCCXML_CXX_COMPILER for clang
+
+   
+
+! 2013-04-16 - Marco Clemencic (429e034)
+
+ - restored special case for AIDA
+
+   
+
+! 2013-04-11 - Marco Clemencic (454b0e2)
+
+ - added heptools-65rc1.cmake
+
+   
+
+! 2013-04-11 - Marco Clemencic (cc0ea86)
+
+ - Improved FindAIDA and FindROOT, and removed special code in heptools-common.cmake
+
+   
+
+! 2013-03-22 - Marco Clemencic (395e415)
+
+ - enable by default C++11 with gcc 4.7
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7157
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2013-03-05 - Marco Clemencic (625f13a)
 
  - ignore unknown variables when expanding the environment

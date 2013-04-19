@@ -16,7 +16,7 @@ endif()
 if(NOT ROOT_INCLUDE_DIR)
   find_path(ROOT_INCLUDE_DIR TROOT.h
             HINTS ${ROOTSYS}/include $ENV{ROOTSYS}/include
-            PATH_SUFFIXES root
+            PATH_SUFFIXES root root/include
             ${ROOT_OVERRIDE_PATH})
   if(ROOT_INCLUDE_DIR MATCHES "include$")
     # ROOTSYS-style installation

@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: 300a4664dc45b23ce48edf213691f88b52a5bb5c
+# Commit Id: 87239483617617c3f67533d49f1739b3c2e18dc8
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -264,6 +264,8 @@ macro(gaudi_project project version)
   #message(STATUS "${packages}")
   set(packages ${sorted_packages})
   #message(STATUS "${packages}")
+
+  file(WRITE ${CMAKE_BINARY_DIR}/subdirs_deps.dot "digraph subdirs_deps {\n")
   # Add all subdirectories to the project build.
   list(LENGTH packages packages_count)
   set(package_idx 0)
@@ -272,6 +274,7 @@ macro(gaudi_project project version)
     message(STATUS "Adding directory ${package} (${package_idx}/${packages_count})")
     add_subdirectory(${package})
   endforeach()
+  file(APPEND ${CMAKE_BINARY_DIR}/subdirs_deps.dot "}\n")
 
   #--- Special global targets for merging files.
   gaudi_merge_files(ConfDB python ${CMAKE_PROJECT_NAME}_merged_confDb.py)
@@ -802,6 +805,11 @@ function(gaudi_depends_on_subdirs)
     # prevent multiple executions
     set(gaudi_depends_on_subdirs_called TRUE PARENT_SCOPE)
   endif()
+
+  # add the dependencies lines to the DOT dependency graph
+  foreach(d ${ARGN})
+    file(APPEND ${CMAKE_BINARY_DIR}/subdirs_deps.dot "\"${subdir_name}\" -> \"${d}\";\n")
+  endforeach()
 endfunction()
 
 #-------------------------------------------------------------------------------

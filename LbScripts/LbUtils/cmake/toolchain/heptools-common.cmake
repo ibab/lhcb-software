@@ -283,18 +283,9 @@ macro(LCG_AA_project name version)
   set(${name}_native_version ${version})
   set(${name}_base ${LCG_releases}/${name}/${${name}_native_version})
   set(${name}_home ${${name}_base}/${LCG_platform})
-  if(${name} STREQUAL ROOT)
-    # ROOT is special
-    set(ROOT_home ${ROOT_home}/root)
-  endif()
   if(NOT LCG_platform STREQUAL LCG_system)
     # For AA projects we want to be able to fall back on non-debug builds.
-    if(NOT ${name} STREQUAL ROOT)
-      set(${name}_home ${${name}_home} ${${name}_base}/${LCG_system})
-    else()
-      # ROOT is special
-      set(ROOT_home ${ROOT_home} ${ROOT_base}/${LCG_system}/root)
-    endif()
+    set(${name}_home ${${name}_home} ${${name}_base}/${LCG_system})
   endif()
   list(APPEND LCG_projects ${name})
 endmacro()
@@ -391,8 +382,8 @@ macro(LCG_prepare_paths)
   set(DESIRED_QT_VERSION ${_qt_major_version} CACHE STRING "Pick a version of QT to use: 3 or 4")
   mark_as_advanced(DESIRED_QT_VERSION)
 
-  if(comp STREQUAL clang30)
-    set(GCCXML_CXX_COMPILER gcc CACHE STRING "Compiler that GCCXML must use.")
+  if(LCG_COMP MATCHES "clang")
+    set(GCCXML_CXX_COMPILER g++ CACHE STRING "Compiler that GCCXML must use.")
   endif()
 
   # This is not really needed because Xerces has its own version macro, but it was
