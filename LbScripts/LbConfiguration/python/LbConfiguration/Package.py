@@ -52,7 +52,8 @@ package_names = ['XmlDDDB',
                  'PRConfig',
                  'B2OCConfig',
                  'MCStatTools',
-                 'GDMLData']
+                 'GDMLData',
+                 'QMTestFiles']
 
 class PackageConfException(Exception):
     pass
@@ -343,3 +344,5 @@ MCStatTools.setProject("DBASE")#IGNORE:E0602
 
 GDMLData.setHat("Det")#IGNORE:E0602$
 GDMLData.setProject("DBASE")#IGNORE:E0602$
+
+QMTestFiles.setProject("PARAM")#IGNORE:E0602
