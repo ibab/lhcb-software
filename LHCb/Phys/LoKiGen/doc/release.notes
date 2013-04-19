@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-04-19 - Vanya Belyaev
+ - fix warning message for coverity 
+
 ! 2013-04-15 - Marco Clemencic
  - Added default constructors to fix compilation errors with clang.
 

@@ -110,12 +110,6 @@ LoKi::GenParticles::Flight::operator()
     //
   }
   //
-  if ( 0 == v0 ) 
-  {
-    Error ( "HepMC::GenVertex* points to NULL, return -1*km " ) ;
-    return -1 * Gaudi::Units::km ;
-  }
-  //
   // calculate the distance 
   if ( ev == v0 ) { return 0 ; }
   //
