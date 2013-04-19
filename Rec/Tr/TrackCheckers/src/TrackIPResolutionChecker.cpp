@@ -103,42 +103,53 @@ StatusCode TrackIPResolutionChecker::initialize()
 namespace {
   Gaudi::Math::ValueWithError calc3sigmarms(const TH1& h1)
   {
- 
     //finally, the 3sigma RMS. that one is most hard. we want the limits
     //that are 3*RMS such that the RMS within these limits is
     //consistent.
     
     // lets first map the histogram into something more symmetric. the
-    // lazy way. FIXME: not needed for IP3D!
-    TH1F h1pos("h1pos","",h1.GetNbinsX(),0,h1.GetXaxis()->GetXmax()) ;
-    for(int ibin=1; ibin<=h1.GetNbinsX(); ++ibin) 
-      h1pos.Fill( std::abs(h1.GetBinCenter(ibin)), h1.GetBinContent(ibin)) ;
+    // lazy way.
+    const TH1* h1pos = &h1 ;
+    TH1F* ownedh1pos(0) ;
+    if( h1.GetXaxis()->GetXmin() < 0 ) {
+      // create a new histogram that has exactly half the bins and just fill it with abs(x)
+      ownedh1pos = new TH1F("h1pos","",h1.GetNbinsX()/2,0,h1.GetXaxis()->GetXmax()) ;
+      for(int ibin=1; ibin<=h1.GetNbinsX(); ++ibin) 
+	ownedh1pos->Fill( std::abs(h1.GetBinCenter(ibin)), h1.GetBinContent(ibin)) ;
+      h1pos = ownedh1pos ;
+    }
+    
     // now just start counting
     double sumw(0),sumx2w(0) ;
     double xtrunc(0);
-    for(int ibin=1; ibin<=h1pos.GetNbinsX(); ++ibin) {
-      double x = h1pos.GetBinCenter(ibin) ;
-      double c = h1pos.GetBinContent(ibin) ;
-      double up = h1pos.GetXaxis()->GetBinUpEdge(ibin) ;
+    int ibin=1 ;
+    for(; ibin<=h1pos->GetNbinsX(); ++ibin) {
+      double x = h1pos->GetBinCenter(ibin) ;
+      double c = h1pos->GetBinContent(ibin) ;
+      double up = h1pos->GetXaxis()->GetBinUpEdge(ibin) ;
       
       double newsumw   = sumw + c ;
       double newsumx2w = sumx2w + c*x*x ;
-      if(sumw>0 && x > h1pos.GetMean() ) {
+      if(sumw>0 && x > h1pos->GetMean() ) {
 	double newrms    = sqrt(  newsumx2w / newsumw ) ;
 	if( 3 * newrms < up ) {
 	  double drms = newrms - sqrt(  sumx2w / sumw ) ;
-	  double frac = (3*drms)/h1pos.GetXaxis()->GetBinWidth(ibin) ;
+	  double frac = (3*drms)/h1pos->GetXaxis()->GetBinWidth(ibin) ;
 	  //std::cout << frac << std::endl ;
-	  xtrunc = (up - (1-frac)*h1pos.GetXaxis()->GetBinWidth(ibin))/3  ;
+	  xtrunc = (up - (1-frac)*h1pos->GetXaxis()->GetBinWidth(ibin))/3  ;
 	  break ;
 	}
       }
       sumw = newsumw ;
       sumx2w = newsumx2w ;
     }
+    if(ibin>h1pos->GetNbinsX() && sumw>0 )  // just return the rms
+      xtrunc = sqrt( sumx2w / sumw ) ;
+    if(ownedh1pos) delete ownedh1pos ;
     return sumw > 0 ? Gaudi::Math::ValueWithError(xtrunc, xtrunc*xtrunc/sumw) : Gaudi::Math::ValueWithError(0,0) ;
   }
 
+  // return the ultiimate origin vertex of this particle
   const LHCb::MCVertex* findpv(const LHCb::MCParticle& p)
   {
     const LHCb::MCVertex* vertex = p.originVertex() ;
@@ -157,6 +168,30 @@ namespace {
     }
     return vertex ;
   }
+  
+  // count the number of charged stable daughters in the LHCb acceptance for this particle
+  size_t numChargedDaughtersInAcceptance( const LHCb::MCVertex& vertex ) 
+  {
+    size_t rc(0) ;
+    BOOST_FOREACH( const LHCb::MCParticle* particle, vertex.products() ) {
+      // if 'resonance' then just add it
+      const LHCb::MCVertex* endvertex = particle->endVertices().size()>0 ? &(*(particle->endVertices()[0])) : 0 ;
+      if( endvertex && std::abs(endvertex->position().z() - vertex.position().z()) < 0.001*Gaudi::Units::mm )
+	rc += numChargedDaughtersInAcceptance( *endvertex) ;
+      // add charged daughters that live long enough
+      else if(// require that it is charged
+	      particle->particleID().threeCharge()!=0 // charged 
+	      // require a minimum momentum to traverse the velo
+	      && particle->p()>300*Gaudi::Units::MeV 
+	      // require that its eta is within the acceptance
+	      && 1.8 < particle->pseudoRapidity() && particle->pseudoRapidity() < 4.5 
+	      // require that there is no endvertex, or that it is sort-of outside the velo
+	      && (endvertex==0 || (endvertex->position() - vertex.position()).Rho() > 10*Gaudi::Units::cm ) ) {
+	++rc ;
+      }
+    }
+    return rc ;
+  }
 
 }
 
@@ -170,8 +205,13 @@ void TrackIPResolutionChecker::createResolutionProfile( const HistoID& inputname
   if( !h2 ) {
     error() << "Cannot find histogram with name: " << inputname << endreq ;
   } else {
+    std::string title = h2->GetTitle() ;
+    size_t ipos = title.find(" versus") ;
+    if( ipos==std::string::npos ) ipos = title.find(" vs") ;
+    if( ipos!=std::string::npos ) title.insert(ipos," resolution") ;
+    
     TH1* h1 = Gaudi::Utils::Aida2ROOT::aida2root ( book1D(outputname,
-							  h2->GetTitle(),
+							  title.c_str(),
 							  h2->GetXaxis()->GetXmin(),
 							  h2->GetXaxis()->GetXmax(),
 							  h2->GetNbinsX() ) ) ;
@@ -179,7 +219,7 @@ void TrackIPResolutionChecker::createResolutionProfile( const HistoID& inputname
     // now fill it
     for( int ibin=1; ibin<= h2->GetNbinsX(); ++ibin) {
       TH1* h1tmp = h2->ProjectionY("tmp",ibin,ibin) ;
-      if( h1tmp->Integral() > 20 ) {
+      if( h1tmp->Integral() > 5 ) {
 	Gaudi::Math::ValueWithError sigma = calc3sigmarms(*h1tmp) ;
 	h1->SetBinContent(ibin, sigma.value()) ;
 	h1->SetBinError(ibin, sigma.error()) ;
@@ -198,6 +238,9 @@ StatusCode TrackIPResolutionChecker::finalize()
   createResolutionProfile( "IP/IP3DVsInvTruePtH2","IP/IP3DResolutionVsInvTruePt") ;
   createResolutionProfile( "IP/IPxVsInvTruePtH2","IP/IPxResolutionVsInvTruePt") ;
   createResolutionProfile( "IP/IPyVsInvTruePtH2","IP/IPyResolutionVsInvTruePt") ;
+  createResolutionProfile( "PV/dxVersusNTrk","PV/PVXResolutionVsNTrk") ;
+  createResolutionProfile( "PV/dyVersusNTrk","PV/PVYResolutionVsNTrk") ;
+  createResolutionProfile( "PV/dzVersusNTrk","PV/PVZResolutionVsNTrk") ;
 
   return GaudiHistoAlg::finalize();
 }
@@ -224,9 +267,6 @@ StatusCode TrackIPResolutionChecker::execute()
   // get the linker table track -> mcparticle
   LinkedTo<LHCb::MCParticle> linker( evtSvc(), msgSvc(), m_linkerlocation );
 
-  // create the list of true PVs. count how many reconstructed tracks in each PV.
-  std::map< const LHCb::MCVertex*, int > truepvs ;
-  
   // loop over the tracks
   BOOST_FOREACH(const LHCb::Track* track, tracks) {
     const LHCb::MCParticle* mcparticle = linker.first(track) ;
@@ -235,9 +275,9 @@ StatusCode TrackIPResolutionChecker::execute()
       if(mcparticle->momentum().Pz()>0 ) {
 	double trueptGeV = mcparticle->momentum().Pt() / Gaudi::Units::GeV ;
 	plot1D( trueptGeV, "IP/TruePtH1", "true Pt in GeV", 0, 5 ) ;
-    plot1D( mcparticle->p() / Gaudi::Units::GeV, "IP/TruePH1", "true momentum in GeV", 0, 100 ) ;
-    int trackWasFitted = track->fitResult() && !track->fitResult()->nodes().empty() ;
-    plot1D( trackWasFitted, "IP/TrackWasFittedH1","track was fitted by K-filter",-0.5,1.5,2) ;
+	plot1D( mcparticle->p() / Gaudi::Units::GeV, "IP/TruePH1", "true momentum in GeV", 0, 100 ) ;
+	int trackWasFitted = track->fitResult() && !track->fitResult()->nodes().empty() ;
+	plot1D( trackWasFitted, "IP/TrackWasFittedH1","track was fitted by K-filter",-0.5,1.5,2) ;
           
 	if( trueptGeV > 0.2 ) {
 	  double truephi = mcparticle->momentum().Phi() ;
@@ -276,44 +316,20 @@ StatusCode TrackIPResolutionChecker::execute()
 	  plot1D( IPy/std::sqrt( state.covariance()(1,1) ), "IP/IPyPullH1","IP y pull", -5,5) ;
 	}
       }
-      
-      // for computing IPs, we use the true origin vertex, even if this is not a PV.
-      // however, we also need the list of PVs, to look at PV resolution.
-      const LHCb::MCVertex* pv = findpv( *mcparticle ) ;
-      if(pv) truepvs[pv] +=1 ;
     }
   }
 
-  // remove PVs that are not reconstructable
-  std::vector< const LHCb::MCVertex* > reconstructabletruepvs ;
-  for(std::map< const LHCb::MCVertex*, int >::const_iterator it = truepvs.begin() ;
-      it != truepvs.end(); ++it) {
-    plot1D( it->second, "PV/TruePVNumTracksH1","Number of reconstructed tracks in true PVs", 0.5, 50.5, 50 ) ;
-    if( it->second >= m_minNumTracksReconstructablePV ) reconstructabletruepvs.push_back( it->first) ;
-  }
- 
-  plot2D( reconstructabletruepvs.size(), pvs.size(),
-	  "PV/NumPVsVsNumTrueReconstructablePVs","Number of PVs vs number of true reconstructable PVs",
-	  -0.5,20.5,-0.5,20.5,21,21) ;
-    
-  // we also just like to have the total number of true PVs
+  // keep track of which true PVs were found
   const LHCb::MCHeader* mcheader = get<const LHCb::MCHeader*>(LHCb::MCHeaderLocation::Default) ;
-  size_t numtruepvs = mcheader->numOfPrimaryVertices() ;
-  plot1D( numtruepvs, "PV/NumTruePVs", "Number of true PVs",-0.5,20.5,21) ;
-
-  // we also want to keep track of efficiency
-  std::map< const LHCb::MCVertex*, bool > foundtruepvs, foundreconstructabletruepvs ;
-  BOOST_FOREACH( const LHCb::MCVertex* pv, mcheader->primaryVertices() )
-    foundtruepvs[pv] = false ;
-
-   BOOST_FOREACH(const LHCb::RecVertex* pv, pvs) {
+  std::set<const LHCb::MCVertex*> foundpvs ;
+  BOOST_FOREACH(const LHCb::RecVertex* pv, pvs) {
     // plot the number of tracks per PV
     plot1D( pv->tracks().size(), "PV/RecoPVNumTracksH1","Number of reconstructed tracks in reconstructed PVs", 0.5, 50.5, 50 ) ;
     
     // find the closest PV, in absolute distance
     const LHCb::MCVertex* truepv(0) ;
     double bestdistance2 = 0 ;
-    BOOST_FOREACH(const LHCb::MCVertex* thistruepv, reconstructabletruepvs) {
+    BOOST_FOREACH(const LHCb::MCVertex* thistruepv,  mcheader->primaryVertices() ) {
       double distance2 = ( pv->position() - thistruepv->position() ).Mag2() ;
       if( truepv==0 || distance2<bestdistance2 ) {
 	bestdistance2 = distance2 ;
@@ -321,39 +337,42 @@ StatusCode TrackIPResolutionChecker::execute()
       }
     }
     if( truepv ) {
-      foundtruepvs[truepv] = true ;
-      foundreconstructabletruepvs[truepv] = true ;
-        
+      foundpvs.insert( truepv ) ;
       Gaudi::XYZVector delta = pv->position() -truepv->position() ;
-      plot1D(delta.x(),"PV/dxH1","x_{PV} - x_{true}", -0.05,0.05) ;
-      plot1D(delta.y(),"PV/dyH1","y_{PV} - y_{true}", -0.05,0.05) ;
-      plot1D(delta.z(),"PV/dzH1","z_{PV} - z_{true}", -0.4,0.4) ;
-      if( pv->tracks().size()>=10) {
-        plot1D(delta.x(),"PV/dxBigPVH1","x_{PV} - x_{true} (ntrack>=10)", -0.05,0.05) ;
-        plot1D(delta.y(),"PV/dyBigPVH1","y_{PV} - y_{true} (ntrack>=10)", -0.05,0.05) ;
-        plot1D(delta.z(),"PV/dzBigPVH1","z_{PV} - z_{true} (ntrack>=10)", -0.4,0.4) ;
-      }
-      plot1D(delta.x()/std::sqrt(pv->covMatrix()(0,0)),"PV/dxpullH1","x_{PV} - x_{true} pull", -5,5) ;
-      plot1D(delta.y()/std::sqrt(pv->covMatrix()(1,1)),"PV/dypullH1","y_{PV} - y_{true} pull", -5,5) ;
-      plot1D(delta.z()/std::sqrt(pv->covMatrix()(2,2)),"PV/dzpullH1","z_{PV} - z_{true} pull", -5,5) ;
+      plot1D(delta.x(),"PV/dxH1","x_{PV} - x_{PV,true}", -0.08,0.08) ;
+      plot1D(delta.y(),"PV/dyH1","y_{PV} - y_{PV,true}", -0.08,0.08) ;
+      plot1D(delta.z(),"PV/dzH1","z_{PV} - z_{PV,true}", -0.4,0.4) ;
+      plot2D(pv->tracks().size(),delta.x(),"PV/dxVersusNTrk","x_{PV} - x_{PV,true} vs number of tracks",5,105,-0.08,0.08,20,80) ;
+      plot2D(pv->tracks().size(),delta.y(),"PV/dyVersusNTrk","y_{PV} - y_{PV,true} vs number of tracks",5,105,-0.08,0.08,20,80) ;
+      plot2D(pv->tracks().size(),delta.z(),"PV/dzVersusNTrk","z_{PV} - z_{PV,true} vs number of tracks",5,105,-0.4,0.4,20,80) ;
+      plot1D(delta.x()/std::sqrt(pv->covMatrix()(0,0)),"PV/dxpullH1","x_{PV} pull", -5,5) ;
+      plot1D(delta.y()/std::sqrt(pv->covMatrix()(1,1)),"PV/dypullH1","y_{PV} pull", -5,5) ;
+      plot1D(delta.z()/std::sqrt(pv->covMatrix()(2,2)),"PV/dzpullH1","z_{PV} pull", -5,5) ;
     }
   }
 
-  // make a plot of PV efficiency versus Z
-  for( std::map< const LHCb::MCVertex*, bool >::const_iterator it = foundtruepvs.begin() ;
-        it!= foundtruepvs.end(); ++it) {
-        profile1D( it->first->position().z(), it->second, "PV/PVEfficiencyVsZ", "PV efficiency versus Z",
-                  -100, 100 ) ;
-    }
-    
-  for( std::map< const LHCb::MCVertex*, bool >::const_iterator it = foundreconstructabletruepvs.begin() ;
-        it!= foundreconstructabletruepvs.end(); ++it) {
-        profile1D( it->first->position().z(), it->second, "PV/ReconstructablePVEfficiencyVsZ", "PV efficiency versus Z",
-                  -100, 100 ) ;
-    }
-    
+  // plot the total number of true PVs
+  size_t numtruepvs = mcheader->numOfPrimaryVertices() ;
+  plot1D( numtruepvs, "PV/NumTruePVs", "Number of true PVs",-0.5,20.5,21) ;
 
-
+  // make a plot of PV efficiency versus Z and versus number of tracks
+  size_t numreconstructablepvs(0) ;
+  BOOST_FOREACH( const LHCb::MCVertex* pv, mcheader->primaryVertices() ) {
+    size_t numreconstructable =  numChargedDaughtersInAcceptance( *pv ) ;
+    bool found  = foundpvs.find( pv ) != foundpvs.end() ;
+    profile1D( double(numreconstructable), found, 
+	       "PV/PVEfficiencyVsNumReconstructableTracks", "PV efficiency versus num tracks in acceptance",
+	       0.5, 50.5, 50 ) ;
+    if( numreconstructable >=5 ) {
+      profile1D( pv->position().z(), found, "PV/PVEfficiencyVsZ", "PV efficiency versus Z",-100, 100, 40) ;
+      profile1D( numtruepvs, found, "PV/PVEfficiencyVsNumTruePVs", "PV efficiency versus num true PVs",0.5,20.5,20) ;
+      ++numreconstructablepvs ;
+    }
+  }
+  plot2D(numreconstructablepvs , pvs.size(),
+	 "PV/NumPVsVsNumTrueReconstructablePVs","Number of PVs vs number of true reconstructable PVs",
+	 -0.5,20.5,-0.5,20.5,21,21) ;
+  
   // Finally, we also want to monitor the reconstructed IP, so the IP with respect to the reconstructed PVs.
   if( !pvs.empty() ) {
     BOOST_FOREACH(const LHCb::Track* track, tracks)
