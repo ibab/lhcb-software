@@ -119,7 +119,7 @@ namespace {
   const GaudiAlg::HistoID openangleProID("massVersusOpenAngle");
   const std::string openangleProTitle = "mass [GeV] vs. opening angle";
 
-  void setBinThresh(int N, double* thresh, double min, double max, TrackParticleMonitor* tpm, PDF func)
+  void setBinThresh(int N, std::vector<double> &thresh, double min, double max, TrackParticleMonitor* tpm, PDF func)
   {
     
     // First, numerically integrate to find normalization
@@ -138,7 +138,7 @@ namespace {
     double low;
     double next;
     double x = min;
-    thresh[0] = x;
+    thresh[0]= x;
     for (int i = 1; i < N; i++) {
       high = max;
       low = x;
@@ -203,10 +203,8 @@ private:
 
   // PROPERTIES
   // Mass
-  double m_minMass; // MeV
-  double mmin; // GeV
-  double m_maxMass;
-  double mmax;
+  double m_minMass; // initialized as MeV -> converted to GeV
+  double m_maxMass; // etc
   int m_binsMass;
   double massPDF(double mass) 
   {
@@ -217,57 +215,47 @@ private:
   
   // P
   double m_maxMom;
-  double pmax;
   double m_threshMom;
-  double pthresh;
   double m_riseMom;
-  double prise;
   double m_fallMom;
-  double pfall;
   int m_binsMom;
   double momPDF(double mom) 
   {
     if (m_threshMom == 0 and m_riseMom == 0 and m_fallMom == 0) // defaults
       return 1; // flat
-    if (mom < pthresh)
+    if (mom < m_threshMom)
       return 0;
     if (m_riseMom == 0) // just exponential
-      return exp(-pfall*mom);
-    return (1-exp(-prise*(mom-pthresh)))*exp(-pfall*mom);
+      return exp(-m_fallMom*mom);
+    return (1-exp(-m_riseMom*(mom-m_threshMom)))*exp(-m_fallMom*mom);
   };
 
   // PT
   double m_maxPt;
-  double ptmax;
   double m_threshPt;
-  double ptthresh;
   double m_risePt;
-  double ptrise;
   double m_fallPt;
-  double ptfall;
   int m_binsPt;
   double ptPDF(double pt)
   {
     if (m_threshPt == 0 and m_risePt == 0 and m_fallPt == 0) // defaults
       return 1; // flat
-    if (pt < ptthresh)
+    if (pt < m_threshPt)
       return 0;
     if (m_risePt == 0) // just exponential
-      return exp(-ptfall*pt);
-    return (1-exp(-ptrise*(pt-ptthresh)))*exp(-ptfall*pt);
+      return exp(-m_fallPt*pt);
+    return (1-exp(-m_risePt*(pt-m_threshPt)))*exp(-m_fallPt*pt);
   };
 
   // PDIF
   double m_maxMomDif;
-  double pdifmax;
   double m_fallMomDif;
-  double pdiffall;
   int m_binsMomDif;
   double pdifPDF(double pdif) 
   {
     if (m_fallMomDif == 0) // defaults
       return 1; // flat
-    return exp(-pdiffall*fabs(pdif));
+    return exp(-m_fallMomDif*fabs(pdif));
   };
   
   // MOM ASYM
@@ -477,34 +465,38 @@ StatusCode TrackParticleMonitor::initialize()
     m_kEta = 1.0;
 
   // HISTOGRAM SETTINGS FOR TRACKS
-  // Convert everything to GeV
-  mmin = m_minMass/Gaudi::Units::GeV;
-  mmax = m_maxMass/Gaudi::Units::GeV;
+  /* Convert everything to GeV
+     (The only reason they aren't passed in GeV is because MeV are default units)
+     Is this great practice? Maybe not, but it's convenient
+  */
+  
+  m_minMass /= Gaudi::Units::GeV;
+  m_maxMass /= Gaudi::Units::GeV;
 
-  pmax = m_maxMom/Gaudi::Units::GeV;
-  pthresh = m_threshMom/Gaudi::Units::GeV;
-  prise = m_riseMom*Gaudi::Units::GeV;
-  pfall = m_fallMom*Gaudi::Units::GeV;
+  m_maxMom /= Gaudi::Units::GeV;
+  m_threshMom /= Gaudi::Units::GeV;
+  m_riseMom *= Gaudi::Units::GeV;
+  m_fallMom *= Gaudi::Units::GeV;
 
-  ptmax = m_maxPt/Gaudi::Units::GeV;
-  ptthresh = m_threshPt/Gaudi::Units::GeV;
-  ptrise = m_risePt*Gaudi::Units::GeV;
-  ptfall = m_fallPt*Gaudi::Units::GeV;
+  m_maxPt /= Gaudi::Units::GeV;
+  m_threshPt /= Gaudi::Units::GeV;
+  m_risePt *= Gaudi::Units::GeV;
+  m_fallPt *= Gaudi::Units::GeV;
 
-  pdifmax = m_maxMomDif/Gaudi::Units::GeV;
-  pdiffall = m_fallMomDif*Gaudi::Units::GeV;
+  m_maxMomDif /= Gaudi::Units::GeV;
+  m_fallMomDif *= Gaudi::Units::GeV;
 
   double trackChi2, vertexChi2Max;
-  double trackPMax, trackPtMax;
+  double trackM_Pmax, trackM_Ptmax;
   double vtxX, vtxY, vtxZ;
-  if (mmax < 2.3) {
-    trackPMax = 200;
-    trackPtMax = 20;
+  if (m_maxMass < 2.3) {
+    trackM_Pmax = 200;
+    trackM_Ptmax = 20;
     trackChi2 = 5.0; vertexChi2Max = 5.0;
     vtxX = 2.5; vtxY = 2.0; vtxZ = 200.0;
   } else {
-    trackPMax = 20*mmax;
-    trackPtMax = 3*mmax;
+    trackM_Pmax = 20*m_maxMass;
+    trackM_Ptmax = 3*m_maxMass;
     trackChi2 = 10.0; vertexChi2Max = 20;
     vtxX = 2.0; vtxY = 2.0; vtxZ = 200.0;
   }
@@ -514,123 +506,95 @@ StatusCode TrackParticleMonitor::initialize()
   
   // massEdges ...
   std::vector<double> massEdges(m_binsMass+1,0);
-  {
-    double edges[m_binsMass+1];
-    setBinThresh(m_binsMass,edges,mmin,mmax,this,&TrackParticleMonitor::massPDF);
-    massEdges.assign(edges,edges+m_binsMass+1);
-  }
-  info() << "MASS BIN EDGES:" << std::endl;
+  setBinThresh(m_binsMass,massEdges,m_minMass,m_maxMass,this,&TrackParticleMonitor::massPDF);
+  debug() << "MASS BIN EDGES:" << std::endl;
   for (int i = 0; i < m_binsMass+1; i++)
-    info() << "BIN " << i << ": " << massEdges[i] << std::endl;
-  info() << endmsg;
+    debug() << "BIN " << i << ": " << massEdges[i] << std::endl;
+  debug() << endmsg;
 
   // pEdges ...
   std::vector<double> pEdges(m_binsMom+1,0);
-  {
-    double edges[m_binsMom+1];
-    setBinThresh(m_binsMom,edges,0,pmax,this,&TrackParticleMonitor::momPDF);
-    pEdges.assign(edges,edges+m_binsMom+1);
-  }
-  info() << "P BIN EDGES:" << std::endl;
+  setBinThresh(m_binsMom,pEdges,0,m_maxMom,this,&TrackParticleMonitor::momPDF);
+  debug() << "P BIN EDGES:" << std::endl;
   for (int i = 0; i < m_binsMom+1; i++)
-    info() << "BIN " << i << ": " << pEdges[i] << std::endl;
-  info() << endmsg;
+    debug() << "BIN " << i << ": " << pEdges[i] << std::endl;
+  debug() << endmsg;
 
   //  ptEdges ...
   std::vector<double> ptEdges(m_binsPt+1,0);
-  {
-    double edges[m_binsPt+1];
-    setBinThresh(m_binsPt,edges,0,ptmax,this,&TrackParticleMonitor::ptPDF);
-    ptEdges.assign(edges,edges+m_binsPt+1);
-  }
-  info() << "PT BIN EDGES:" << std::endl;
+  setBinThresh(m_binsPt,ptEdges,0,m_maxPt,this,&TrackParticleMonitor::ptPDF);
+  debug() << "PT BIN EDGES:" << std::endl;
   for (int i = 0; i < m_binsPt+1; i++)
-    info() << "BIN " << i << ": " << ptEdges[i] << std::endl;
-  info() << endmsg;
+    debug() << "BIN " << i << ": " << ptEdges[i] << std::endl;
+  debug() << endmsg;
 
   //  pdifEdges ...
   std::vector<double> pdifEdges(2*m_binsMomDif+1,0);
-  {
-    double edges[m_binsMomDif+1];
-    setBinThresh(m_binsMomDif,edges,0,pdifmax,this,&TrackParticleMonitor::pdifPDF);
-    for (int i = 0; i <= m_binsMomDif; i++) {
-      pdifEdges[m_binsMomDif+i] = edges[i];
-      pdifEdges[m_binsMomDif-i] = -edges[i];      
-    }
+  std::vector<double> pdifPosEdges(m_binsMomDif+1,0);
+  setBinThresh(m_binsMomDif,pdifPosEdges,0,m_maxMomDif,this,&TrackParticleMonitor::pdifPDF);
+  for (int i = 0; i <= m_binsMomDif; i++) {
+    pdifEdges[m_binsMomDif+i] = pdifPosEdges[i];
+    pdifEdges[m_binsMomDif-i] = -pdifPosEdges[i];      
   }
-  info() << "PDIF BIN EDGES:" << std::endl;
+  debug() << "PDIF BIN EDGES:" << std::endl;
   for (int i = 0; i < 2*m_binsMomDif+1; i++)
-    info() << "BIN " << i << ": " << pdifEdges[i] << std::endl;
-  info() << endmsg;
+    debug() << "BIN " << i << ": " << pdifEdges[i] << std::endl;
+  debug() << endmsg;
 
   // asymEdges ...
   std::vector<double> asymEdges(2*m_binsMomAsym+1,0);
-  {
-    double edges[m_binsMomAsym+1];
-    setBinThresh(m_binsMomAsym,edges,0,1,this,&TrackParticleMonitor::asymPDF);
-    for (int i = 0; i <= m_binsMomAsym; i++) {
-      asymEdges[m_binsMomAsym+i] = edges[i];
-      asymEdges[m_binsMomAsym-i] = -edges[i];      
-    }
+  std::vector<double> asymPosEdges(m_binsMomAsym+1,0);
+  setBinThresh(m_binsMomAsym,asymPosEdges,0,1,this,&TrackParticleMonitor::asymPDF);
+  for (int i = 0; i <= m_binsMomAsym; i++) {
+    asymEdges[m_binsMomAsym+i] = asymPosEdges[i];
+    asymEdges[m_binsMomAsym-i] = -asymPosEdges[i];      
   }
-  info() << "ASYM BIN EDGES:" << std::endl;
+  debug() << "ASYM BIN EDGES:" << std::endl;
   for (int i = 0; i < 2*m_binsMomAsym+1; i++)
-    info() << "BIN " << i << ": " << asymEdges[i] << std::endl;
-  info() << endmsg;
+    debug() << "BIN " << i << ": " << asymEdges[i] << std::endl;
+  debug() << endmsg;
   
 
   //  etaEdges ...
   std::vector<double> etaEdges(m_binsEta+1,0);
-  {
-    double edges[m_binsEta+1];
-    setBinThresh(m_binsEta,edges,m_minEta,m_maxEta,this,&TrackParticleMonitor::etaPDF);
-    etaEdges.assign(edges,edges+m_binsEta+1);
-  }
-  info() << "ETA BIN EDGES:" << std::endl;
+  setBinThresh(m_binsEta,etaEdges,m_minEta,m_maxEta,this,&TrackParticleMonitor::etaPDF);
+  debug() << "ETA BIN EDGES:" << std::endl;
   for (int i = 0; i < m_binsEta+1; i++)
-    info() << "BIN " << i << ": " << etaEdges[i] << std::endl;
-  info() << endmsg;
+    debug() << "BIN " << i << ": " << etaEdges[i] << std::endl;
+  debug() << endmsg;
 
   //  txEdges and tyEdges ...
   std::vector<double> txEdges(2*m_binsTx+1,0);
-  {
-    double edges[m_binsTx+1];
-    setBinThresh(m_binsTx,edges,0,m_maxTx,this,&TrackParticleMonitor::txPDF);
-    for (int i = 0; i <= m_binsTx; i++) {
-      txEdges[m_binsTx+i] = edges[i];
-      txEdges[m_binsTx-i] = -edges[i];      
-    }
+  std::vector<double> txPosEdges(m_binsTx+1,0);
+  setBinThresh(m_binsTx,txPosEdges,0,m_maxTx,this,&TrackParticleMonitor::txPDF);
+  for (int i = 0; i <= m_binsTx; i++) {
+    txEdges[m_binsTx+i] = txPosEdges[i];
+    txEdges[m_binsTx-i] = -txPosEdges[i];      
   }
-  info() << "TX BIN EDGES:" << std::endl;
+  debug() << "TX BIN EDGES:" << std::endl;
   for (int i = 0; i < 2*m_binsTx+1; i++)
-    info() << "BIN " << i << ": " << txEdges[i] << std::endl;
-  info() << endmsg;
+    debug() << "BIN " << i << ": " << txEdges[i] << std::endl;
+  debug() << endmsg;
 
   std::vector<double> tyEdges(2*m_binsTy+1,0);
-  {
-    double edges[m_binsTy+1];
-    setBinThresh(m_binsTy,edges,0,m_maxTy,this,&TrackParticleMonitor::tyPDF);
-    for (int i = 0; i <= m_binsTy; i++) {
-      tyEdges[m_binsTy+i] = edges[i];
-      tyEdges[m_binsTy-i] = -edges[i];      
-    }
+  std::vector<double> tyPosEdges(m_binsTy+1,0);
+  setBinThresh(m_binsTy,tyPosEdges,0,m_maxTy,this,&TrackParticleMonitor::tyPDF);
+  for (int i = 0; i <= m_binsTy; i++) {
+    tyEdges[m_binsTy+i] = tyPosEdges[i];
+    tyEdges[m_binsTy-i] = -tyPosEdges[i];      
   }
-  info() << "TY BIN EDGES:" << std::endl;
+  debug() << "TY BIN EDGES:" << std::endl;
   for (int i = 0; i < 2*m_binsTy+1; i++)
-    info() << "BIN " << i << ": " << tyEdges[i] << std::endl;
-  info() << endmsg;
+    debug() << "BIN " << i << ": " << tyEdges[i] << std::endl;
+  debug() << endmsg;
 
   // openangleEdges ...
   std::vector<double> openangleEdges(m_binsOpenAngle+1,0);
-  {
-    double edges[m_binsOpenAngle+1];
-    setBinThresh(m_binsOpenAngle,edges,m_minOpenAngle,m_maxOpenAngle,this,&TrackParticleMonitor::openanglePDF);
-    openangleEdges.assign(edges,edges+m_binsOpenAngle+1);
-  }
-  info() << "OPENANGLE BIN EDGES:" << std::endl;
+  setBinThresh(m_binsOpenAngle,openangleEdges,m_minOpenAngle,m_maxOpenAngle,this,&TrackParticleMonitor::openanglePDF);
+  debug() << "OPENANGLE BIN EDGES:" << std::endl;
   for (int i = 0; i < m_binsOpenAngle+1; i++)
-    info() << "BIN " << i << ": " << openangleEdges[i] << std::endl;
-  info() << endmsg;
+    debug() << "BIN " << i << ": " << openangleEdges[i] << std::endl;
+  debug() << endmsg;
 
   // CREATE HISTOGRAMS
   setHistoTopDir("Track/");
@@ -638,8 +602,8 @@ StatusCode TrackParticleMonitor::initialize()
   // Various track/vertex histograms
   book(multID,multTitle,-0.5,10.5,11);
   book(trackChi2ID,trackChi2Title,0,trackChi2);
-  book(trackPID,trackPTitle,0,trackPMax);
-  book(trackPtID,trackPtTitle,0,trackPtMax);
+  book(trackPID,trackPTitle,0,trackM_Pmax);
+  book(trackPtID,trackPtTitle,0,trackM_Ptmax);
   book(vertexChi2ProbID,vertexChi2ProbTitle,0,1);
   book(vertexChi2ID,vertexChi2Title,0,vertexChi2Max);
   book(vtxxID,vtxxTitle,-vtxX,vtxX);
@@ -650,15 +614,15 @@ StatusCode TrackParticleMonitor::initialize()
   book(vtxzerrID,vtxzerrTitle,0,2.5,50);
 
   // Mass histograms
-  book(massID,massTitle,mmin,mmax);
+  book(massID,massTitle,m_minMass,m_maxMass);
   book(masspullID,masspullTitle,-5,5);
-  book(tophalfID,tophalfTitle,mmin,mmax,m_binsMass);
-  book(bothalfID,bothalfTitle,mmin,mmax,m_binsMass);
+  book(tophalfID,tophalfTitle,m_minMass,m_maxMass,m_binsMass);
+  book(bothalfID,bothalfTitle,m_minMass,m_maxMass,m_binsMass);
 
   // 1D histograms of bias variables
-  book(momID,momTitle,0,pmax);
-  book(ptID,ptTitle,0,ptmax);
-  book(pdifID,pdifTitle,-1*pdifmax,pdifmax);
+  book(momID,momTitle,0,m_maxMom);
+  book(ptID,ptTitle,0,m_maxPt);
+  book(pdifID,pdifTitle,-1*m_maxMomDif,m_maxMomDif);
   book(asymID,asymTitle,-1,1,m_binsMomAsym);
   book(etaID,etaTitle,m_minEta,m_maxEta);
   book(txID,txTitle,-m_maxTx,m_maxTx);
@@ -675,8 +639,8 @@ StatusCode TrackParticleMonitor::initialize()
   book2D(etaH2ID,etaH2Title,etaEdges,massEdges);
   book2D(txH2ID,txH2Title,txEdges,massEdges);
   book2D(tyH2ID,tyH2Title,tyEdges,massEdges);
-  book2D(phimattH2ID,phimattH2Title,0,M_PI,m_binsPhiMatt,mmin,mmax,m_binsMass);
-  book2D(phiangleH2ID,phiangleH2Title,-M_PI,M_PI,m_binsPhiAngle,mmin,mmax,m_binsMass);
+  book2D(phimattH2ID,phimattH2Title,0,M_PI,m_binsPhiMatt,m_minMass,m_maxMass,m_binsMass);
+  book2D(phiangleH2ID,phiangleH2Title,-M_PI,M_PI,m_binsPhiAngle,m_minMass,m_maxMass,m_binsMass);
   book2D(openangleH2ID,openangleH2Title,openangleEdges,massEdges);
   
   // Profiles of mass vs. bias variables
