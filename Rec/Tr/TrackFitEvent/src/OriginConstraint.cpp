@@ -11,7 +11,7 @@ namespace LHCb
   {
     m_weight = covariance ;
     m_weight.InvertChol() ;
-  } ;
+  }
 
   LHCb::ChiSquare OriginConstraint::filter( LHCb::State& state,
 					    const Gaudi::TrackVector& reference) const
