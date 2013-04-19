@@ -29,6 +29,7 @@ private:
   std::string m_inputTracksName;
   std::string m_pvName;
   std::string m_outputTracksName;
+  int m_minTHits;
   float  m_minIP;
   float  m_maxIP;
   float  m_minIP2;
@@ -47,5 +48,6 @@ private:
   int m_nIPOK;
   int m_nIPSOK;
   int m_nInput;
+  int m_nHitsOK;
 };
 #endif // FSTSELECTFORWARDTRACKS_H

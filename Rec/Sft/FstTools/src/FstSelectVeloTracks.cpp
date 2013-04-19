@@ -102,6 +102,7 @@ StatusCode FstSelectVeloTracks::execute() {
     else if (track->hasInfo(LHCb::Track::nPRVeloRZExpect)) {
       missed_hits = 2 * track->info(LHCb::Track::nPRVeloRZExpect, -1) - track->nLHCbIDs();
     }
+    // XXX make me configurable
     if (missed_hits >= 3) continue;
 
     ++m_goodNHitsTracks;

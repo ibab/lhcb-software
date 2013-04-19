@@ -29,6 +29,7 @@ FstSelectForwardTracksPartOne::FstSelectForwardTracksPartOne( const std::string&
   declareProperty( "InputTracksName",        m_inputTracksName  = "Sft/Track/Forward" );
   declareProperty( "PVName",                 m_pvName           = "Sft/Vertex/Primary" );
   declareProperty( "OutputTracksName",       m_outputTracksName = "Sft/Track/ForwardFst" );
+  declareProperty( "MinTHits",               m_minTHits         = 16);
   declareProperty( "MinIP",                  m_minIP            = 0.100 * Gaudi::Units::mm );
   declareProperty( "MaxIP",                  m_maxIP            = 3.000 * Gaudi::Units::mm );
   declareProperty( "MinPt",                  m_minPt            = 1.500 * Gaudi::Units::GeV );
@@ -54,17 +55,19 @@ StatusCode FstSelectForwardTracksPartOne::initialize() {
 
   info() << "Input tracks    : " << m_inputTracksName  << endmsg
          << "Output tracks   : " << m_outputTracksName << endmsg
+         << "MinTHits        : " << m_minTHits << endmsg
          << "MinIP           : " << m_minIP << endmsg
          << "MaxIP           : " << m_maxIP << endmsg
          << "MinPt           : " << m_minPt << endmsg
          << "MinP            : " << m_minP << endmsg;
 
   m_nTracks = 0;
-  m_nPtOK   = 0;
+  m_nHitsOK = 0;
+  m_nPtOK = 0;
   m_nChi2OK = 0;
-  m_nIPOK   = 0;
-  m_nIPSOK  = 0;
-  m_nInput  = 0;
+  m_nIPOK = 0;
+  m_nIPSOK = 0;
+  m_nInput = 0;
 
   return StatusCode::SUCCESS;
 }
@@ -78,7 +81,7 @@ StatusCode FstSelectForwardTracksPartOne::execute() {
   LHCb::Tracks* forward  = get<LHCb::Tracks>( m_inputTracksName );
   LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvName );
   LHCb::Tracks* selected = new LHCb::Tracks();
-  put( selected, m_outputTracksName );
+  put(selected, m_outputTracksName);
 
   if (forward->size() > 0) {
     m_nInput++;
@@ -101,8 +104,14 @@ StatusCode FstSelectForwardTracksPartOne::execute() {
       else if (id->isOT()) {
         ++nIDs;
       }
+      // XXX Need to figure out how many hits UT and FT
+      // are worth in the upgrade scenario
+      else if (id->isUT() || id->isFT()) {
+        ++nIDs;
+      }
     }
-    if (nIDs <= 16) continue;
+    if (nIDs <= m_minTHits) continue;
+    ++m_nHitsOK;
 
     if ( !((m_minPt < track->pt()) && (m_minP < track->p())) ) continue;
     ++m_nPtOK;
@@ -127,7 +136,7 @@ StatusCode FstSelectForwardTracksPartOne::execute() {
     if ( bestIP2 > m_maxIP2 || bestIP2 < m_minIP2 ) continue;
     ++m_nIPOK;
     LHCb::Track* goodTrack = track->clone();
-    selected->add( goodTrack );
+    selected->add(goodTrack);
   }
   setFilterPassed( 0 != selected->size() );
   
@@ -144,11 +153,11 @@ StatusCode FstSelectForwardTracksPartOne::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   float eff1 = 100. * float( m_nPtOK )   / float( m_nTracks );
-  float eff2 = 100. * float( m_nChi2OK ) / float( m_nTracks );
+  float eff2 = 100. * float( m_nHitsOK )  / float( m_nTracks );
   float eff3 = 100. * float( m_nIPOK )   / float( m_nTracks );
-  float eff4 = 100. * float( m_nIPSOK )  / float( m_nTracks );
   
   info() << format( "From %7d (%i) tracks:", m_nTracks, m_nInput ) << endmsg;
+  info() << format( "      %6d with THits OK,  %7.2f%%", m_nHitsOK, eff2 ) << endmsg;
   info() << format( "      %6d with Pt&P OK,   %7.2f%%", m_nPtOK,   eff1 ) << endmsg;
   info() << format( "      %6d with IP OK,     %7.2f%%", m_nIPOK,   eff3 ) << endmsg;
 

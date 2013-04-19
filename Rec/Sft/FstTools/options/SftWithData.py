@@ -4,69 +4,40 @@
 # Syntax is:
 #   gaudirun.py SftWithData.py
 ##############################################################################
-
-from Configurables import GaudiSequencer, RecMoniConf, TrackSys, PrDebugTrackingLosses, FastVeloTracking
-from Configurables import PrForwardTracking, PrForwardTool, PrForwardFromPointTool, ToolSvc, PrFTHitManager
-from Configurables import OutputStream
-from Configurables import MessageSvc
+from Gaudi.Configuration import importOptions
+from Gaudi.Configuration import EventSelector, appendPostConfigAction
+from Configurables import Brunel, InputCopyStream
 from FstTools.Configuration import FstConf
 
-from Configurables import Brunel
-import Gaudi.Configuration as GC
+importOptions('$FSTTOOLSROOT/options/Sft.py')
 
-Brunel().DataType = "2012"
-Brunel().Simulation = False
-Brunel().EvtMax = 2000
 
-# Does this remove non L0 events?
-Brunel().RecL0Only = True
-
-Brunel().DDDBtag = "head-20120126"
-Brunel().CondDBtag = "head-20120607"
-
-Brunel().RecoSequence = ["L0", "HLT", "Writer"]
-RecMoniConf().MoniSequence = []
-Brunel().MCLinksSequence = []
-Brunel().MCCheckSequence = []
-Brunel().OutputType = "NONE"
-
-MessageSvc().Format = '% F%50W%S%7W%R%T %0W%M'
-#MessageSvc().setVerbose += ['FastFit', 'DstWriter2', 'STOnlinePosition']
-#MessageSvc().setDebug += ['SimplifiedMaterialLocator']
-#MessageSvc().setVerbose = ['FstForward']
-#MessageSvc().setVerbose += ['ToolSvc.PatTStationHitManager']
-#MessageSvc().setDebug = ['FstVeloTracking']
-#MessageSvc().setDebug = ['HltPVsPV3D']#.PVOfflineTool']
-#MessageSvc().setVerbose = ['SelectFwd1']
-
-#FstConf().TCK = '0x0094003d'
+# Configure trigger emulation
 FstConf().TStationType = "IT+OT"
 FstConf().VeloType = "Velo"
-FstConf().TTType = "none"
-FstConf().TrackFit = "HltFit"
-FstConf().MaxIP = 9999
-FstConf().MinPt = 1700. #MeV
-# Apply after the track fit
-FstConf().MinIPChi2 = 16.1
-FstConf().MaxChi2Ndf = 1.5
-FstConf().FastDecoding = False
-FstConf().Compare = False
+Brunel().EvtMax = 2000
 
-from Gaudi.Configuration import *
+# Output DST
+output_fname = "/tmp/tim.dst"
+InputCopyStream('DstWriter2').Output = "DATAFILE='PFN:%s'"%(output_fname)
 
+# No bias data taken in early 2012, format is MDF, not digi
 #EventSelector().Input =["DATAFILE='PFN:/afs/cern.ch/user/t/thead/w/private/HLT-emulation-data.raw' SVC='LHCb::MDFSelector' OPT='READ'"]
 EventSelector().Input =["DATAFILE='PFN:/dev/shm/HLT-emulation-data.raw' SVC='LHCb::MDFSelector' OPT='READ'"]
 Brunel().InputType = "MDF"
 
-writer = OutputStream('DstWriter2')
-writer.Output = "DATAFILE='PFN:/tmp/tim.dst'"
-writer.OptItemList += ["Fst#999"]
-GaudiSequencer("RecoWriterSeq").Members += [writer]
+Brunel().DataType = "2012"
+Brunel().Simulation = False
+Brunel().DDDBtag = "head-20120126"
+Brunel().CondDBtag = "head-20120607"
+Brunel().MCLinksSequence = []
+Brunel().MCCheckSequence = []
 
-transform = {'.*STOnlinePosition.*': {'OutputLevel': {'.*': '1'}},
-             '.*ITLiteCluster.*': {'OutputLevel': {'.*': '1'}},}
+# Does this remove non L0 events?
+Brunel().RecL0Only = True
 
-def doMyChanges():
+
+def setup_mc_truth_matching():
    from Configurables import GaudiSequencer, PrTrackAssociator, PrChecker
    GaudiSequencer("CaloBanksHandler").Members = []
    GaudiSequencer("DecodeTriggerSeq").Members = []
@@ -75,7 +46,7 @@ def doMyChanges():
    GaudiSequencer("CheckPatSeq" ).Members = [ "PrChecker" ]
    PrChecker().VeloTracks = "/Event/Fst/Track/Velo"
    PrChecker().ForwardTracks = "/Event/Fst/Track/Forward"
-appendPostConfigAction(doMyChanges)
+appendPostConfigAction(setup_mc_truth_matching)
 
 # The magic that is the HLT transform
 import re
