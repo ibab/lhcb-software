@@ -41,9 +41,6 @@ apply_pattern reflex_dictionary                                       \
 macro_append RichKernelDict_cppflags "" \
                           target-icc " -wd177 -wd873"
 
-# Debug flag
-macro_append cppflags "" Linux&target-dbg " -DRICHDEBUG "
-
 private
 # RichKernel Configurable uses the generated configurables 
 macro_append RichKernelGenConfUser_dependencies RichKernelConfDbMerge
