@@ -302,7 +302,7 @@ StatusCode TrackIPResolutionChecker::execute()
   plot1D( numtruepvs, "PV/NumTruePVs", "Number of true PVs",-0.5,20.5,21) ;
 
   // we also want to keep track of efficiency
-  std::map< const LHCb::MCVertex*, bool > foundtruepvs ;
+  std::map< const LHCb::MCVertex*, bool > foundtruepvs, foundreconstructabletruepvs ;
   BOOST_FOREACH( const LHCb::MCVertex* pv, mcheader->primaryVertices() )
     foundtruepvs[pv] = false ;
 
@@ -322,10 +322,17 @@ StatusCode TrackIPResolutionChecker::execute()
     }
     if( truepv ) {
       foundtruepvs[truepv] = true ;
+      foundreconstructabletruepvs[truepv] = true ;
+        
       Gaudi::XYZVector delta = pv->position() -truepv->position() ;
-      plot1D(delta.x(),"PV/dxH1","x_{PV} - x_{true}", -0.1,0.1) ;
-      plot1D(delta.y(),"PV/dyH1","y_{PV} - y_{true}", -0.1,0.1) ;
-      plot1D(delta.z(),"PV/dzH1","z_{PV} - z_{true}", -1,1) ;
+      plot1D(delta.x(),"PV/dxH1","x_{PV} - x_{true}", -0.05,0.05) ;
+      plot1D(delta.y(),"PV/dyH1","y_{PV} - y_{true}", -0.05,0.05) ;
+      plot1D(delta.z(),"PV/dzH1","z_{PV} - z_{true}", -0.4,0.4) ;
+      if( pv->tracks().size()>=10) {
+        plot1D(delta.x(),"PV/dxBigPVH1","x_{PV} - x_{true} (ntrack>=10)", -0.05,0.05) ;
+        plot1D(delta.y(),"PV/dyBigPVH1","y_{PV} - y_{true} (ntrack>=10)", -0.05,0.05) ;
+        plot1D(delta.z(),"PV/dzBigPVH1","z_{PV} - z_{true} (ntrack>=10)", -0.4,0.4) ;
+      }
       plot1D(delta.x()/std::sqrt(pv->covMatrix()(0,0)),"PV/dxpullH1","x_{PV} - x_{true} pull", -5,5) ;
       plot1D(delta.y()/std::sqrt(pv->covMatrix()(1,1)),"PV/dypullH1","y_{PV} - y_{true} pull", -5,5) ;
       plot1D(delta.z()/std::sqrt(pv->covMatrix()(2,2)),"PV/dzpullH1","z_{PV} - z_{true} pull", -5,5) ;
@@ -334,11 +341,17 @@ StatusCode TrackIPResolutionChecker::execute()
 
   // make a plot of PV efficiency versus Z
   for( std::map< const LHCb::MCVertex*, bool >::const_iterator it = foundtruepvs.begin() ;
-	it!= foundtruepvs.end(); ++it) {
-    profile1D( it->first->position().z(), it->second, "PV/PVEfficiencyVsZ", "PV efficiency versus Z",
-	       -100, 100 ) ;
-  }
-
+        it!= foundtruepvs.end(); ++it) {
+        profile1D( it->first->position().z(), it->second, "PV/PVEfficiencyVsZ", "PV efficiency versus Z",
+                  -100, 100 ) ;
+    }
+    
+  for( std::map< const LHCb::MCVertex*, bool >::const_iterator it = foundreconstructabletruepvs.begin() ;
+        it!= foundreconstructabletruepvs.end(); ++it) {
+        profile1D( it->first->position().z(), it->second, "PV/ReconstructablePVEfficiencyVsZ", "PV efficiency versus Z",
+                  -100, 100 ) ;
+    }
+    
 
 
   // Finally, we also want to monitor the reconstructed IP, so the IP with respect to the reconstructed PVs.
