@@ -300,7 +300,7 @@ MicroDSTDiMuon = {
         'MicroDST'                                 :   True   ,
     
         # DiMuon line
-        'DiMuon_Prescale'                          :     .25  ,
+        'DiMuon_Prescale'                          :     .2   ,
         'DiMuon_Postscale'                         :     1.   ,
         'DiMuon_checkPV'                           :  False   ,  
         
