@@ -42,7 +42,7 @@ class PhysConf(LHCbConfigurableUser) :
         'DstConf',
         'CaloDstUnPackConf'   ,
         'OffLineCaloRecoConf' ,
-        'OffLineCaloPIDsConf' ,
+        'OffLineCaloPIDsConf'
         )
     
 #
