@@ -131,7 +131,7 @@ Beauty2Charm = {
     }, 
     'STREAMS' : { 
     'BhadronCompleteEvent' : [
-    'StrippingB02D0PPbarD2HHFULLDSTBeauty2CharmLine'
+#    'StrippingB02D0PPbarD2HHFULLDSTBeauty2CharmLine'
     ]
     },
     'WGs' : [ 'B2OC' ]

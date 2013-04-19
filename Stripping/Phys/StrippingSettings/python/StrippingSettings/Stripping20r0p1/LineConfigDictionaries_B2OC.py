@@ -130,15 +130,19 @@ Beauty2Charm = {
     'GECNTrkMax'   : 250
     }, 
     'STREAMS' : { 
-    'BhadronCompleteEvent' : [
-    'StrippingB02D0PiPiD2HHFULLDSTBeauty2CharmLine', 
-#    'StrippingB02D0KPiD2HHFULLDSTBeauty2CharmLine', 
-    'StrippingB02DKPiPiD2HHHFULLDSTBeauty2CharmLine', 
-    'StrippingB02DPiPiPiD2HHHFULLDSTBeauty2CharmLine', 
-    'StrippingB02DDFULLDSTBeauty2CharmLine', 
-    'StrippingB02D0D0FULLDSTBeauty2CharmLine', 
-    'StrippingB02D0PPbarD2HHFULLDSTBeauty2CharmLine'
-    ]
+      'BhadronCompleteEvent' : [
+        'StrippingB02D0PiPiD2HHFULLDSTBeauty2CharmLine', 
+#        'StrippingB02D0KPiD2HHFULLDSTBeauty2CharmLine', 
+        'StrippingB02DKPiPiD2HHHFULLDSTBeauty2CharmLine', 
+        'StrippingB02DPiPiPiD2HHHFULLDSTBeauty2CharmLine', 
+        'StrippingB02DDFULLDSTBeauty2CharmLine', 
+        'StrippingB02D0D0FULLDSTBeauty2CharmLine', 
+#    'StrippingB02D0PPbarD2HHFULLDSTBeauty2CharmLine'
+      ], 
+      'Bhadron' : [
+        'StrippingB02D0PPbarD2HHBeauty2CharmLine', 
+        'StrippingB02D0PPbarWSD2HHBeauty2CharmLine', 
+      ]
     },
     'WGs' : [ 'B2OC' ]
     }
