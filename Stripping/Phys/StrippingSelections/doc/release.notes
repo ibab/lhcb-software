@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-04-19 - Frederic Dupertuis
+ - Last change to B2CC Jpsi2MuMuDetached line for Stripping20r{0,1}p1 in agreement with stripping coordinators.
+
 ! 2013-04-18 - Anton Poluektov 
  Small fixes in 
   - StrippingB2DHHHForBXX.py      (NoRegex = True removed)

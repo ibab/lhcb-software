@@ -263,16 +263,18 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                        Cuts = "(BPVDLS > 3)" )
 
 	Jpsi2MuMuForBetasDetachedHlt1TOS = self.filterTisTos( name = "Jpsi2MuMuForBetasDetachedHlt1TOS", 
-							DiMuonInput = Jpsi2MuMuForBetasDetached, 
-							myTisTosSpecs = { "Hlt1DiMuonHighMassDecision%TOS" : 0  }
-                                                                  )
-
-	Jpsi2MuMuForBetasDetached = self.filterTisTos( name = "Jpsi2MuMuForBetasDetached",
-                                                              DiMuonInput = Jpsi2MuMuForBetasDetachedHlt1TOS,
-                                                              myTisTosSpecs = { "Hlt2DiMuonDetachedJPsiDecision%TOS" : 0 }
+                                                              DiMuonInput = Jpsi2MuMuForBetasDetached, 
+                                                              myTisTosSpecs = { "Hlt1DiMuonHighMassDecision%TOS" : 0,
+                                                                                "Hlt1TrackMuonDecision%TOS" : 0,
+                                                                                "Hlt1TrackAllL0Decision%TOS" : 0 }
                                                               )
-
-        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetached ], prescale =self.config["Jpsi2MuMuDetachedPrescale"] )
+        
+	Jpsi2MuMuForBetasDetachedTOS = self.filterTisTos( name = "Jpsi2MuMuForBetasDetachedTOS",
+                                                          DiMuonInput = Jpsi2MuMuForBetasDetachedHlt1TOS,
+                                                          myTisTosSpecs = { "Hlt2DiMuonDetachedJPsiDecision%TOS" : 0 }
+                                                          )
+        
+        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetachedTOS ], prescale =self.config["Jpsi2MuMuDetachedPrescale"] )
 
         
         #Jpsi2MuMuForBetasDetached = self.createSubSel(  OutputList = self.JpsiList.name() + "Detached" + self.name,
