@@ -184,11 +184,6 @@ namespace {
 //=============================================================================
 StatusCode TrackIPResolutionCheckerNT::execute()
 {
-    // some constant that should probably become properties
-    const double maxinvpt = 3.0 ;
-    const double maxip = 0.5 ;
-    const int nbinsinvpt = 15 ;
-    
     // get the list of tracks
     const LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_tracklocation);
     
