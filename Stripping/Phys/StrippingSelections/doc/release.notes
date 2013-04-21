@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-Apr-21 - Patrick Spradlin
+ - Updates to cross-section lines for 2.76 TeV stripping.
+   M       StrippingD2HHHForXSec.py
+   M       StrippingD2PhiPiForXSec.py
+   M       StrippingLambdac2PKPiForXSec.py
+   M       StrippingD02K3PiForXSec.py
+   M       StrippingD02KPiGeoForXSec.py
+   M       StrippingD02HHForXSec.py
+
 ! 2013-04-19 - Frederic Dupertuis
  - Last change to B2CC Jpsi2MuMuDetached line for Stripping20r{0,1}p1 in agreement with stripping coordinators.
 

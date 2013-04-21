@@ -4,7 +4,7 @@ D0/D*+ cross-section lines
 Adapted to current stripping framework by P. Spradlin.
 '''
 
-__author__ = ['Marco Gersabeck', 'Patrick Spradlin']
+__author__ = ['Marco Gersabeck', 'Alexandr Kozlinskiy', 'Patrick Spradlin']
 __date__ = '03/09/2010'
 __version__ = '$Revision: 1.4 $'
 
@@ -16,32 +16,33 @@ __all__ = ( 'StrippingD02HHForXSecConf',
 
 from Gaudi.Configuration import *
 from StrippingConf.StrippingLine import StrippingLine
-from GaudiKernel.SystemOfUnits import MeV
+from GaudiKernel.SystemOfUnits import MeV, mm, mrad
 from LHCbKernel.Configuration import *
 #from Configurables import FilterDesktop, CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingUtils.Utils import LineBuilder
 import StandardParticles
-if hasattr(StandardParticles, "StdAllLoosePions"):
-  from StandardParticles import StdAllLoosePions as StdAllLoosePions
+if hasattr(StandardParticles, "StdAllNoPIDsPions"):
+  from StandardParticles import StdAllNoPIDsPions
 else:
-  from StandardParticles import StdNoPIDsPions as StdAllLoosePions
-#from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdAllLoosePions
-from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
-from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
+  from StandardParticles import StdNoPIDsPions as StdAllNoPIDsPions
+if hasattr(StandardParticles, "StdAllNoPIDsKaons"):
+  from StandardParticles import StdAllNoPIDsKaons
+else:
+  from StandardParticles import StdNoPIDsKaons as StdAllNoPIDsKaons
+
 class StrippingD02HHForXSecConf(LineBuilder): # {
 
     __configuration_keys__ = (   'Daug_PT_MIN'
-                               , 'Daug_TRCHI2DOF_MAX'
-                               , 'Daug_MIPCHI2DV_MIN'
-                               , 'D0_BPVVDCHI2_MIN'
-                               , 'D0_BPVDIRA_MIN'
-                               , 'D0_BPVIPCHI2_MAX'
+                               , 'Daug_BPVIPCHI2_MIN'
+                               , 'K_PIDK_MIN'
+                               , 'Pi_PIDK_MAX'
                                , 'D0_ADAMASS_WIN'
-                               , 'D0_ADMASS_WIN'
+                               , 'D0_VCHI2VDOF_MAX'
+                               , 'D0_acosBPVDIRA_MAX'
+                               , 'D0_PVDispCut'
                                , 'Dstar_AMDiff_MAX'
-                               , 'Dstar_MDiff_MAX'
                                , 'Dstar_VCHI2VDOF_MAX'
                                , 'HltFilter'
                                , 'PrescaleD02HH'
@@ -100,20 +101,20 @@ class StrippingD02HHForXSecConf(LineBuilder): # {
         d02HH_name = name + 'D02HH'
         dstar_name  = name + 'Dstar2D0Pi_D02HH'
 
-        self.inPions = StdNoPIDsPions
-        self.inDstarPions = StdAllLoosePions
-        self.inKaons = StdNoPIDsKaons
+        self.inPions = StdAllNoPIDsPions
+        self.inDstarPions = StdAllNoPIDsPions
+        self.inKaons = StdAllNoPIDsKaons
 
         self.selD02HH = makeD02HH( d02HH_name
                                    , inputSel = [ self.inPions, self.inKaons ]
                                    , Daug_PT_MIN        = config['Daug_PT_MIN']
-                                   , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-                                   , Daug_MIPCHI2DV_MIN = config['Daug_MIPCHI2DV_MIN']
+                                   , Daug_BPVIPCHI2_MIN = config['Daug_BPVIPCHI2_MIN']
+                                   , K_PIDK_MIN         = config['K_PIDK_MIN']
+                                   , Pi_PIDK_MAX        = config['Pi_PIDK_MAX']
                                    , D0_ADAMASS_WIN     = config['D0_ADAMASS_WIN']
-                                   , D0_ADMASS_WIN      = config['D0_ADMASS_WIN']
-                                   , D0_BPVVDCHI2_MIN   = config['D0_BPVVDCHI2_MIN']
-                                   , D0_BPVDIRA_MIN     = config['D0_BPVDIRA_MIN']
-                                   , D0_BPVIPCHI2_MAX   = config['D0_BPVIPCHI2_MAX']
+                                   , D0_VCHI2VDOF_MAX   = config['D0_VCHI2VDOF_MAX']
+                                   , D0_acosBPVDIRA_MAX = config['D0_acosBPVDIRA_MAX']
+                                   , D0_PVDispCut       = config['D0_PVDispCut']
                                  )
 
 
@@ -127,10 +128,8 @@ class StrippingD02HHForXSecConf(LineBuilder): # {
 
         self.selDstar2D0Pi_D02HH = makeDstar2D0Pi( dstar_name
                     , inputSel = [ self.inDstarPions, self.selD02HH ]
-                    , Daug_TRCHI2DOF_MAX  = config['Daug_TRCHI2DOF_MAX']
                     , Dstar_AMDiff_MAX    = config['Dstar_AMDiff_MAX']
                     , Dstar_VCHI2VDOF_MAX = config['Dstar_VCHI2VDOF_MAX']
-                    , Dstar_MDiff_MAX     = config['Dstar_MDiff_MAX']
         )
 
         self.line_Dstar2D0Pi_D02HH = self._strippingLine( name = dstar_name + 'Line',
@@ -148,34 +147,49 @@ class StrippingD02HHForXSecConf(LineBuilder): # {
 def makeD02HH( name
                , inputSel
                , Daug_PT_MIN
-               , Daug_TRCHI2DOF_MAX
-               , Daug_MIPCHI2DV_MIN
+               , Daug_BPVIPCHI2_MIN
+               , K_PIDK_MIN
+               , Pi_PIDK_MAX
                , D0_ADAMASS_WIN
-               , D0_ADMASS_WIN
-               , D0_BPVVDCHI2_MIN
-               , D0_BPVDIRA_MIN
-               , D0_BPVIPCHI2_MAX
+               , D0_VCHI2VDOF_MAX
+               , D0_acosBPVDIRA_MAX
+               , D0_PVDispCut
                , decDescriptors = [ "D0 -> pi+ pi-",
                                     "D0 -> K- pi+",
                                     "D0 -> K+ pi-",
                                     "D0 -> K+ K-" ]
              ) : # {
 
+    ## Construct a preambulo to simplify some calculations.
+    lclPreambulo = [
+      "from math import cos"
+      , "bpvdirathresh = cos(%(D0_acosBPVDIRA_MAX)s)" % locals()
+      , "pidFiducialPMin = 3.0 * GeV"
+      , "pidFiducialPMax = 100.0 * GeV"
+    ]
+
     daugCuts = "(PT > %(Daug_PT_MIN)s)" \
-               "& (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" \
-               "& (MIPCHI2DV(PRIMARY) > %(Daug_MIPCHI2DV_MIN)s)" % locals()
+               "& (BPVIPCHI2() > %(Daug_BPVIPCHI2_MIN)s)" % locals()
+
+    pidFiducialCuts = "(HASRICH)" \
+                      "& (in_range(pidFiducialPMin, P, pidFiducialPMax))" \
+                      "& (in_range(2.0, ETA, 5.0))"
+
+    kaonPIDCut = pidFiducialCuts + "& (PIDK-PIDpi > %(K_PIDK_MIN)s)" % locals()
+    pionPIDCut = pidFiducialCuts + "& (PIDK-PIDpi < %(Pi_PIDK_MAX)s)" % locals()
 
     combCuts = "(ADAMASS('D0') < %(D0_ADAMASS_WIN)s)" % locals()
 
-    d0Cuts = "(ADMASS('D0') < %(D0_ADMASS_WIN)s)" \
-             "& (BPVVDCHI2 > %(D0_BPVVDCHI2_MIN)s)" \
-             "& (BPVDIRA > %(D0_BPVDIRA_MIN)s)" \
-             "& (BPVIPCHI2()<%(D0_BPVIPCHI2_MAX)s)" % locals()
+    d0Cuts = "(VFASPF(VCHI2/VDOF) < %(D0_VCHI2VDOF_MAX)s)" \
+             "& (%(D0_PVDispCut)s)" \
+             "& (BPVDIRA > bpvdirathresh)" % locals()
 
 
     _D0 = CombineParticles(
         DecayDescriptors = decDescriptors
-        , DaughtersCuts = { "pi+" : daugCuts, "K+" : daugCuts }
+        , Preambulo = lclPreambulo
+        , DaughtersCuts = { "pi+" : daugCuts + '&' + pionPIDCut, 
+                            "K+"  : daugCuts + '&' + kaonPIDCut }
         , CombinationCut = combCuts
         , MotherCut = d0Cuts
     )
@@ -193,20 +207,17 @@ def makeD02HH( name
 
 def makeDstar2D0Pi( name
                     , inputSel
-                    , Daug_TRCHI2DOF_MAX
                     , Dstar_AMDiff_MAX
                     , Dstar_VCHI2VDOF_MAX
-                    , Dstar_MDiff_MAX
                     , decDescriptors= [ "D*(2010)+ -> D0 pi+",
                                         "D*(2010)- -> D0 pi-" ]
                   ) : # {
 
-    daugCuts = "(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % locals()
+    daugCuts = "(ALL)" % locals()
 
     combCuts = "((AM - AM1) < %(Dstar_AMDiff_MAX)s)" % locals()
 
-    dstarCuts = "(VFASPF(VCHI2/VDOF) < %(Dstar_VCHI2VDOF_MAX)s)" \
-                "& ((M - M1) < %(Dstar_MDiff_MAX)s)" % locals()
+    dstarCuts = "(VFASPF(VCHI2/VDOF) < %(Dstar_VCHI2VDOF_MAX)s)" % locals()
 
     _Dstar = CombineParticles(
         DecayDescriptors = decDescriptors
@@ -225,20 +236,19 @@ def makeDstar2D0Pi( name
 
 
 
-default_config = {  'Daug_PT_MIN'               : 250.0*MeV
-                  , 'Daug_TRCHI2DOF_MAX'        :   9.0
-                  , 'Daug_MIPCHI2DV_MIN'        :   9.0
-                  #
-                  , 'D0_BPVVDCHI2_MIN'          :  16.0
-                  , 'D0_BPVDIRA_MIN'            :   0.9999
-                  , 'D0_BPVIPCHI2_MAX'          : 100.0
+default_config = {
+                    'Daug_PT_MIN'               : 250.0 * MeV
+                  , 'Daug_BPVIPCHI2_MIN'        :   9.0
+                  , 'K_PIDK_MIN'                :   0.0
+                  , 'Pi_PIDK_MAX'               :   0.0
                   , 'D0_ADAMASS_WIN'            :  80.0*MeV
-                  , 'D0_ADMASS_WIN'             :  75.0*MeV
-                  #
+                  , 'D0_VCHI2VDOF_MAX'          :  25.0
+                  , 'D0_acosBPVDIRA_MAX'        :  14.0 * mrad
+                  , 'D0_PVDispCut'              : "(BPVVDCHI2 > 16.0)"
                   , 'Dstar_AMDiff_MAX'          : 160.0*MeV
-                  , 'Dstar_MDiff_MAX'           : 155.0*MeV
                   , 'Dstar_VCHI2VDOF_MAX'       : 100.0
-                  , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
+                  #
+                  , 'HltFilter'          : None
                   #
                   , 'PrescaleD02HH'             :   1.0
                   , 'PrescaleDstar2D0Pi_D02HH'  :   1.0

@@ -22,14 +22,15 @@ from LHCbKernel.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingUtils.Utils import LineBuilder
-#from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
 import StandardParticles
-if hasattr(StandardParticles, "StdAllLoosePions"):
-  from StandardParticles import StdAllLoosePions as StdAllLoosePions
+if hasattr(StandardParticles, "StdAllNoPIDsPions"):
+  from StandardParticles import StdAllNoPIDsPions
 else:
-  from StandardParticles import StdNoPIDsPions as StdAllLoosePions
-#from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdAllLoosePions
-from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
+  from StandardParticles import StdNoPIDsPions as StdAllNoPIDsPions
+if hasattr(StandardParticles, "StdAllNoPIDsKaons"):
+  from StandardParticles import StdAllNoPIDsKaons
+else:
+  from StandardParticles import StdNoPIDsKaons as StdAllNoPIDsKaons
 
 class StrippingD02KPiGeoForXSecConf(LineBuilder): # {
 
@@ -38,7 +39,6 @@ class StrippingD02KPiGeoForXSecConf(LineBuilder): # {
                                , 'D0_ADMASS_WIN'
                                , 'D0_NU_2PT_MIN'
                                , 'D0_BPVVDSIGN_MIN'
-                               , 'SPi_TRCHI2DOF_MAX'
                                , 'Dstar_AMDiff_MAX'
                                , 'Dstar_VCHI2VDOF_MAX'
                                , 'Dstar_MDiff_MAX'
@@ -99,9 +99,9 @@ class StrippingD02KPiGeoForXSecConf(LineBuilder): # {
         d02HH_name = name + 'D02HH'
         dstar_name  = name + 'Dstar2D0Pi_D02HH'
 
-        self.inPions = StdNoPIDsPions
-        self.inDstarPions = StdAllLoosePions
-        self.inKaons = StdNoPIDsKaons
+        self.inPions = StdAllNoPIDsPions
+        self.inDstarPions = StdAllNoPIDsPions
+        self.inKaons = StdAllNoPIDsKaons
 
         self.selD02HH = makeD02HH( d02HH_name
                                    , inputSel = [ self.inPions, self.inKaons ]
@@ -125,7 +125,6 @@ class StrippingD02KPiGeoForXSecConf(LineBuilder): # {
         ##   D0 candidates.  This is included for completeness.
         self.selDstar2D0Pi_D02HH = makeDstar2D0Pi( dstar_name
                     , inputSel = [ self.inDstarPions, self.selD02HH ]
-                    , Daug_TRCHI2DOF_MAX  = config['SPi_TRCHI2DOF_MAX']
                     , Dstar_AMDiff_MAX    = config['Dstar_AMDiff_MAX']
                     , Dstar_VCHI2VDOF_MAX = config['Dstar_VCHI2VDOF_MAX']
                     , Dstar_MDiff_MAX     = config['Dstar_MDiff_MAX']
@@ -197,7 +196,6 @@ def makeD02HH( name
 
 def makeDstar2D0Pi( name
                     , inputSel
-                    , Daug_TRCHI2DOF_MAX
                     , Dstar_AMDiff_MAX
                     , Dstar_VCHI2VDOF_MAX
                     , Dstar_MDiff_MAX
@@ -205,7 +203,7 @@ def makeDstar2D0Pi( name
                                         "D*(2010)- -> D0 pi-" ]
                   ) : # {
 
-    daugCuts = "(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % locals()
+    daugCuts = "(ALL)"
 
     combCuts = "((AM - AM1) < %(Dstar_AMDiff_MAX)s)" % locals()
 
@@ -233,11 +231,11 @@ default_config = {  'D0_ADAMASS_WIN'      : 250.0 * MeV
                   , 'D0_ADMASS_WIN'       : 125.0 * MeV
                   , 'D0_NU_2PT_MIN'       :  14.0
                   , 'D0_BPVVDSIGN_MIN'    :   1.0 * mm
-                  , 'SPi_TRCHI2DOF_MAX'   :   9.0
                   , 'Dstar_AMDiff_MAX'    : 160.0 * MeV
                   , 'Dstar_VCHI2VDOF_MAX' : 100.0
                   , 'Dstar_MDiff_MAX'     : 155.0 * MeV
-                  , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
+                  #, 'HltFilter'           : "HLT_PASS_RE('Hlt1MB.*')"
+                  , 'HltFilter'           : None
                   #
                   , 'PrescaleD02HH'             :   1.0
                   , 'PrescaleDstar2D0Pi_D02HH'  :   1.0

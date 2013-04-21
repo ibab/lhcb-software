@@ -15,36 +15,45 @@ __all__ = ( 'StrippingLambdac2PKPiForXSecConf',
 
 from Gaudi.Configuration import *
 from StrippingConf.StrippingLine import StrippingLine
-from GaudiKernel.SystemOfUnits import MeV, mm, ns
+from GaudiKernel.SystemOfUnits import MeV, mm, ns, mrad
 from LHCbKernel.Configuration import *
 #from Configurables import FilterDesktop, CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
+import StandardParticles
+if hasattr(StandardParticles, "StdAllNoPIDsPions"):
+  from StandardParticles import StdAllNoPIDsPions
+else:
+  from StandardParticles import StdNoPIDsPions as StdAllNoPIDsPions
+if hasattr(StandardParticles, "StdAllNoPIDsKaons"):
+  from StandardParticles import StdAllNoPIDsKaons
+else:
+  from StandardParticles import StdNoPIDsKaons as StdAllNoPIDsKaons
+if hasattr(StandardParticles, "StdAllNoPIDsProtons"):
+  from StandardParticles import StdAllNoPIDsProtons
+else:
+  from StandardParticles import StdNoPIDsProtons as StdAllNoPIDsProtons
 from Configurables import TisTosParticleTagger
 
 class StrippingLambdac2PKPiForXSecConf(LineBuilder): # {
 
     __configuration_keys__ = (   'Daug_All_PT_MIN'
+                               , 'Daug_2of3_PT_MIN'
                                , 'Daug_1of3_PT_MIN'
+                               , 'Daug_All_BPVIPCHI2_MIN'
+                               , 'Daug_2of3_BPVIPCHI2_MIN'
                                , 'Daug_1of3_BPVIPCHI2_MIN'
-                               , 'Daug_P_MIN'
-                               , 'Daug_TRCHI2DOF_MAX'
-                               , 'Daug_BPVIPCHI2_MIN'
-                               , 'Proton_PIDp_MIN'
-                               , 'Pi_PIDK_MAX'
+                               , 'Proton_PIDpPIDpi_MIN'
+                               , 'Proton_PIDpPIDK_MIN'
                                , 'K_PIDK_MIN'
+                               , 'Pi_PIDK_MAX'
                                , 'Comb_ADAMASS_WIN'
                                , 'Comb_ADOCAMAX_MAX'
-                               , 'Lambdac_PT_MIN'
                                , 'Lambdac_VCHI2VDOF_MAX'
-                               , 'Lambdac_BPVVDCHI2_MIN'
-                               , 'Lambdac_BPVDIRA_MIN'
-                               , 'Lambdac_BPVLTIME_MAX'
-                               , 'Lambdac_BPVLTIME_MIN'
+                               , 'Lambdac_acosBPVDIRA_MAX'
+                               , 'Lambdac_PVDispCut'
                                , 'HltFilter'
-                               , 'Hlt2TisTosSpec'
                                , 'PrescaleLambdac2PKPi'
                                , 'PostscaleLambdac2PKPi'
                                , 'PrescaleLambdac2PKK'
@@ -56,6 +65,10 @@ class StrippingLambdac2PKPiForXSecConf(LineBuilder): # {
                              )
 
 
+    ## I think that the purpose for which this wrapper was written has been
+    ##   properly incorporated into the stripping configuration.
+    ## At the very least, i need to check that the argument definition for
+    ##    StrippingLine is the same.
     ## Possible parameters and default values copied from the definition
     ##   of StrippingLine
     def _strippingLine ( self,
@@ -108,114 +121,102 @@ class StrippingLambdac2PKPiForXSecConf(LineBuilder): # {
         lambdac_ppipi_name = name + 'Lambdac2PPiPi'
         lambdac_ppiK_name = name + 'Lambdac2PPiKWS'
 
-        self.inPions   = StdNoPIDsPions
-        self.inKaons   = StdNoPIDsKaons
-        self.inProtons = StdNoPIDsProtons
+        self.inPions   = StdAllNoPIDsPions
+        self.inKaons   = StdAllNoPIDsKaons
+        self.inProtons = StdAllNoPIDsProtons
 
 
         self.combLambdac2PKPi = makeLambdac2PKPi( name = lambdac_name 
                , inputSel = [ self.inPions, self.inKaons, self.inProtons ]
-               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
-               , Daug_1of3_PT_MIN  = config['Daug_1of3_PT_MIN']
+               , Daug_All_PT_MIN         = config['Daug_All_PT_MIN']
+               , Daug_2of3_PT_MIN        = config['Daug_2of3_PT_MIN']
+               , Daug_1of3_PT_MIN        = config['Daug_1of3_PT_MIN']
+               , Daug_All_BPVIPCHI2_MIN  = config['Daug_All_BPVIPCHI2_MIN']
+               , Daug_2of3_BPVIPCHI2_MIN = config['Daug_2of3_BPVIPCHI2_MIN']
                , Daug_1of3_BPVIPCHI2_MIN = config['Daug_1of3_BPVIPCHI2_MIN']
-               , Daug_P_MIN = config['Daug_P_MIN']
-               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Daug_BPVIPCHI2_MIN = config['Daug_BPVIPCHI2_MIN']
-               , Proton_PIDp_MIN = config['Proton_PIDp_MIN']
-               , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
-               , K_PIDK_MIN = config['K_PIDK_MIN']
-               , Comb_ADAMASS_WIN  = config['Comb_ADAMASS_WIN']
-               , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
-               , Lambdac_PT_MIN = config['Lambdac_PT_MIN']
-               , Lambdac_VCHI2VDOF_MAX = config['Lambdac_VCHI2VDOF_MAX']
-               , Lambdac_BPVVDCHI2_MIN = config['Lambdac_BPVVDCHI2_MIN']
-               , Lambdac_BPVDIRA_MIN = config['Lambdac_BPVDIRA_MIN']
-               , Lambdac_BPVLTIME_MAX = config['Lambdac_BPVLTIME_MAX']
-               , Lambdac_BPVLTIME_MIN = config['Lambdac_BPVLTIME_MIN']
+               , Proton_PIDpPIDpi_MIN    = config['Proton_PIDpPIDpi_MIN']
+               , Proton_PIDpPIDK_MIN     = config['Proton_PIDpPIDK_MIN']
+               , K_PIDK_MIN              = config['K_PIDK_MIN']
+               , Pi_PIDK_MAX             = config['Pi_PIDK_MAX']
+               , Comb_ADAMASS_WIN        = config['Comb_ADAMASS_WIN']
+               , Comb_ADOCAMAX_MAX       = config['Comb_ADOCAMAX_MAX']
+               , Lambdac_VCHI2VDOF_MAX   = config['Lambdac_VCHI2VDOF_MAX']
+               , Lambdac_acosBPVDIRA_MAX = config['Lambdac_acosBPVDIRA_MAX']
+               , Lambdac_PVDispCut       = config['Lambdac_PVDispCut']
              )
 
         self.combLambdac2PKK = makeLambdac2PKPi( name = lambdac_pKK_name 
                , inputSel = [ self.inKaons, self.inProtons ]
-               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
-               , Daug_1of3_PT_MIN  = config['Daug_1of3_PT_MIN']
+               , Daug_All_PT_MIN         = config['Daug_All_PT_MIN']
+               , Daug_2of3_PT_MIN        = config['Daug_2of3_PT_MIN']
+               , Daug_1of3_PT_MIN        = config['Daug_1of3_PT_MIN']
+               , Daug_All_BPVIPCHI2_MIN  = config['Daug_All_BPVIPCHI2_MIN']
+               , Daug_2of3_BPVIPCHI2_MIN = config['Daug_2of3_BPVIPCHI2_MIN']
                , Daug_1of3_BPVIPCHI2_MIN = config['Daug_1of3_BPVIPCHI2_MIN']
-               , Daug_P_MIN = config['Daug_P_MIN']
-               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Daug_BPVIPCHI2_MIN = config['Daug_BPVIPCHI2_MIN']
-               , Proton_PIDp_MIN = config['Proton_PIDp_MIN']
-               , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
-               , K_PIDK_MIN = config['K_PIDK_MIN']
-               , Comb_ADAMASS_WIN  = config['Comb_ADAMASS_WIN']
-               , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
-               , Lambdac_PT_MIN = config['Lambdac_PT_MIN']
-               , Lambdac_VCHI2VDOF_MAX = config['Lambdac_VCHI2VDOF_MAX']
-               , Lambdac_BPVVDCHI2_MIN = config['Lambdac_BPVVDCHI2_MIN']
-               , Lambdac_BPVDIRA_MIN = config['Lambdac_BPVDIRA_MIN']
-               , Lambdac_BPVLTIME_MAX = config['Lambdac_BPVLTIME_MAX']
-               , Lambdac_BPVLTIME_MIN = config['Lambdac_BPVLTIME_MIN']
+               , Proton_PIDpPIDpi_MIN    = config['Proton_PIDpPIDpi_MIN']
+               , Proton_PIDpPIDK_MIN     = config['Proton_PIDpPIDK_MIN']
+               , K_PIDK_MIN              = config['K_PIDK_MIN']
+               , Pi_PIDK_MAX             = config['Pi_PIDK_MAX']
+               , Comb_ADAMASS_WIN        = config['Comb_ADAMASS_WIN']
+               , Comb_ADOCAMAX_MAX       = config['Comb_ADOCAMAX_MAX']
+               , Lambdac_VCHI2VDOF_MAX   = config['Lambdac_VCHI2VDOF_MAX']
+               , Lambdac_acosBPVDIRA_MAX = config['Lambdac_acosBPVDIRA_MAX']
+               , Lambdac_PVDispCut       = config['Lambdac_PVDispCut']
                , decDescriptors = [ "[Lambda_c+ -> p+ K- K+]cc" ]
              )
 
         self.combLambdac2PPiPi = makeLambdac2PKPi( name = lambdac_ppipi_name
                , inputSel = [ self.inPions, self.inProtons ]
-               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
-               , Daug_1of3_PT_MIN  = config['Daug_1of3_PT_MIN']
+               , Daug_All_PT_MIN         = config['Daug_All_PT_MIN']
+               , Daug_2of3_PT_MIN        = config['Daug_2of3_PT_MIN']
+               , Daug_1of3_PT_MIN        = config['Daug_1of3_PT_MIN']
+               , Daug_All_BPVIPCHI2_MIN  = config['Daug_All_BPVIPCHI2_MIN']
+               , Daug_2of3_BPVIPCHI2_MIN = config['Daug_2of3_BPVIPCHI2_MIN']
                , Daug_1of3_BPVIPCHI2_MIN = config['Daug_1of3_BPVIPCHI2_MIN']
-               , Daug_P_MIN = config['Daug_P_MIN']
-               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Daug_BPVIPCHI2_MIN = config['Daug_BPVIPCHI2_MIN']
-               , Proton_PIDp_MIN = config['Proton_PIDp_MIN']
-               , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
-               , K_PIDK_MIN = config['K_PIDK_MIN']
-               , Comb_ADAMASS_WIN  = config['Comb_ADAMASS_WIN']
-               , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
-               , Lambdac_PT_MIN = config['Lambdac_PT_MIN']
-               , Lambdac_VCHI2VDOF_MAX = config['Lambdac_VCHI2VDOF_MAX']
-               , Lambdac_BPVVDCHI2_MIN = config['Lambdac_BPVVDCHI2_MIN']
-               , Lambdac_BPVDIRA_MIN = config['Lambdac_BPVDIRA_MIN']
-               , Lambdac_BPVLTIME_MAX = config['Lambdac_BPVLTIME_MAX']
-               , Lambdac_BPVLTIME_MIN = config['Lambdac_BPVLTIME_MIN']
+               , Proton_PIDpPIDpi_MIN    = config['Proton_PIDpPIDpi_MIN']
+               , Proton_PIDpPIDK_MIN     = config['Proton_PIDpPIDK_MIN']
+               , K_PIDK_MIN              = config['K_PIDK_MIN']
+               , Pi_PIDK_MAX             = config['Pi_PIDK_MAX']
+               , Comb_ADAMASS_WIN        = config['Comb_ADAMASS_WIN']
+               , Comb_ADOCAMAX_MAX       = config['Comb_ADOCAMAX_MAX']
+               , Lambdac_VCHI2VDOF_MAX   = config['Lambdac_VCHI2VDOF_MAX']
+               , Lambdac_acosBPVDIRA_MAX = config['Lambdac_acosBPVDIRA_MAX']
+               , Lambdac_PVDispCut       = config['Lambdac_PVDispCut']
                , decDescriptors = [ "[Lambda_c+ -> p+ pi- pi+]cc" ]
              )
 
         self.combLambdac2PPiKWS = makeLambdac2PKPi( name = lambdac_ppiK_name 
                , inputSel = [ self.inPions, self.inKaons, self.inProtons ]
-               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
-               , Daug_1of3_PT_MIN  = config['Daug_1of3_PT_MIN']
+               , Daug_All_PT_MIN         = config['Daug_All_PT_MIN']
+               , Daug_2of3_PT_MIN        = config['Daug_2of3_PT_MIN']
+               , Daug_1of3_PT_MIN        = config['Daug_1of3_PT_MIN']
+               , Daug_All_BPVIPCHI2_MIN  = config['Daug_All_BPVIPCHI2_MIN']
+               , Daug_2of3_BPVIPCHI2_MIN = config['Daug_2of3_BPVIPCHI2_MIN']
                , Daug_1of3_BPVIPCHI2_MIN = config['Daug_1of3_BPVIPCHI2_MIN']
-               , Daug_P_MIN = config['Daug_P_MIN']
-               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Daug_BPVIPCHI2_MIN = config['Daug_BPVIPCHI2_MIN']
-               , Proton_PIDp_MIN = config['Proton_PIDp_MIN']
-               , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
-               , K_PIDK_MIN = config['K_PIDK_MIN']
-               , Comb_ADAMASS_WIN  = config['Comb_ADAMASS_WIN']
-               , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
-               , Lambdac_PT_MIN = config['Lambdac_PT_MIN']
-               , Lambdac_VCHI2VDOF_MAX = config['Lambdac_VCHI2VDOF_MAX']
-               , Lambdac_BPVVDCHI2_MIN = config['Lambdac_BPVVDCHI2_MIN']
-               , Lambdac_BPVDIRA_MIN = config['Lambdac_BPVDIRA_MIN']
-               , Lambdac_BPVLTIME_MAX = config['Lambdac_BPVLTIME_MAX']
-               , Lambdac_BPVLTIME_MIN = config['Lambdac_BPVLTIME_MIN']
+               , Proton_PIDpPIDpi_MIN    = config['Proton_PIDpPIDpi_MIN']
+               , Proton_PIDpPIDK_MIN     = config['Proton_PIDpPIDK_MIN']
+               , K_PIDK_MIN              = config['K_PIDK_MIN']
+               , Pi_PIDK_MAX             = config['Pi_PIDK_MAX']
+               , Comb_ADAMASS_WIN        = config['Comb_ADAMASS_WIN']
+               , Comb_ADOCAMAX_MAX       = config['Comb_ADOCAMAX_MAX']
+               , Lambdac_VCHI2VDOF_MAX   = config['Lambdac_VCHI2VDOF_MAX']
+               , Lambdac_acosBPVDIRA_MAX = config['Lambdac_acosBPVDIRA_MAX']
+               , Lambdac_PVDispCut       = config['Lambdac_PVDispCut']
                , decDescriptors = [ "[Lambda_c+ -> p+ pi- K+]cc" ]
              )
 
 
         self.selLambdac2PKPi = makeTisTos( name = 'Sel' + lambdac_name
-                                           , selection = self.combLambdac2PKPi
-                                           , hltTisTosSpec = config['Hlt2TisTosSpec'])
+                                           , selection = self.combLambdac2PKPi )
 
         self.selLambdac2PKK = makeTisTos( name = 'Sel' + lambdac_pKK_name
-                                           , selection = self.combLambdac2PKK
-                                           , hltTisTosSpec = config['Hlt2TisTosSpec'])
+                                           , selection = self.combLambdac2PKK )
 
         self.selLambdac2PPiPi = makeTisTos( name = 'Sel' + lambdac_ppipi_name
-                                           , selection = self.combLambdac2PPiPi
-                                           , hltTisTosSpec = config['Hlt2TisTosSpec'])
+                                           , selection = self.combLambdac2PPiPi )
 
         self.selLambdac2PPiKWS = makeTisTos( name = 'Sel' + lambdac_ppiK_name
-                                           , selection = self.combLambdac2PPiKWS
-                                           , hltTisTosSpec = config['Hlt2TisTosSpec'])
+                                           , selection = self.combLambdac2PPiKWS )
 
 
         self.line_Lambdac2PKPi = self._strippingLine( name = lambdac_name + 'Line',
@@ -254,50 +255,60 @@ class StrippingLambdac2PKPiForXSecConf(LineBuilder): # {
 def makeLambdac2PKPi( name
                , inputSel
                , Daug_All_PT_MIN
+               , Daug_2of3_PT_MIN
                , Daug_1of3_PT_MIN
+               , Daug_All_BPVIPCHI2_MIN
+               , Daug_2of3_BPVIPCHI2_MIN
                , Daug_1of3_BPVIPCHI2_MIN
-               , Daug_P_MIN
-               , Daug_TRCHI2DOF_MAX
-               , Daug_BPVIPCHI2_MIN
-               , Proton_PIDp_MIN
-               , Pi_PIDK_MAX
+               , Proton_PIDpPIDpi_MIN
+               , Proton_PIDpPIDK_MIN
                , K_PIDK_MIN
-               , Comb_ADAMASS_WIN 
+               , Pi_PIDK_MAX
+               , Comb_ADAMASS_WIN
                , Comb_ADOCAMAX_MAX
-               , Lambdac_PT_MIN
                , Lambdac_VCHI2VDOF_MAX
-               , Lambdac_BPVVDCHI2_MIN
-               , Lambdac_BPVDIRA_MIN
-               , Lambdac_BPVLTIME_MAX
-               , Lambdac_BPVLTIME_MIN
+               , Lambdac_acosBPVDIRA_MAX
+               , Lambdac_PVDispCut
                , decDescriptors = [ "[Lambda_c+ -> p+ K- pi+]cc" ]
              ) : # {
 
-    daugCuts = "(PT > %(Daug_All_PT_MIN)s)" \
-               "& (P > %(Daug_P_MIN)s)" \
-               "& (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" \
-               "& (BPVIPCHI2() > %(Daug_BPVIPCHI2_MIN)s)" % locals()
+    ## Construct a preambulo to simplify some calculations.
+    lclPreambulo = [
+      "from math import cos"
+      , "bpvdirathresh = cos(%(Lambdac_acosBPVDIRA_MAX)s)" % locals()
+      , "pidFiducialPMin = 3.0 * GeV"
+      , "pidFiducialPMax = 100.0 * GeV"
+    ]
 
-    pCuts =  "((PIDp-PIDpi) > %(Proton_PIDp_MIN)s)" % locals()
-    piCuts = "((PIDK-PIDpi) < %(Pi_PIDK_MAX)s)" % locals()
-    kCuts =  "((PIDK-PIDpi) > %(K_PIDK_MIN)s)" % locals()
+
+    daugCuts = "(PT > %(Daug_All_PT_MIN)s)" \
+               "& (BPVIPCHI2() > %(Daug_All_BPVIPCHI2_MIN)s)" % locals()
+
+    pidFiducialCuts = "(HASRICH)" \
+                      "& (in_range(pidFiducialPMin, P, pidFiducialPMax))" \
+                      "& (in_range(2.0, ETA, 5.0))"
+
+    pCuts =  pidFiducialCuts + "& ((PIDp-PIDpi) > %(Proton_PIDpPIDpi_MIN)s)" \
+             "& ((PIDp-PIDK) > %(Proton_PIDpPIDK_MIN)s)" % locals()
+    kCuts =  pidFiducialCuts + "& ((PIDK-PIDpi) > %(K_PIDK_MIN)s)" % locals()
+    piCuts = pidFiducialCuts + "& ((PIDK-PIDpi) < %(Pi_PIDK_MAX)s)" % locals()
 
 
     combCuts = "(ADAMASS('Lambda_c+') < %(Comb_ADAMASS_WIN)s)" \
                "& (AMAXCHILD(PT) > %(Daug_1of3_PT_MIN)s)" \
                "& (AMAXCHILD(BPVIPCHI2()) > %(Daug_1of3_BPVIPCHI2_MIN)s)" \
+               "& (ANUM(PT > %(Daug_2of3_PT_MIN)s) >= 2)" \
+               "& (ANUM(BPVIPCHI2() > %(Daug_2of3_BPVIPCHI2_MIN)s) >= 2)" \
                "& (ADOCAMAX('') < %(Comb_ADOCAMAX_MAX)s)" % locals()
 
-    lambdacCuts = "(PT > %(Lambdac_PT_MIN)s)" \
-                  "& (VFASPF(VCHI2/VDOF) < %(Lambdac_VCHI2VDOF_MAX)s)" \
-                  "& (BPVVDCHI2 > %(Lambdac_BPVVDCHI2_MIN)s)" \
-                  "& (BPVDIRA > %(Lambdac_BPVDIRA_MIN)s)" \
-                  "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(Lambdac_BPVLTIME_MIN)s)" \
-                  "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') < %(Lambdac_BPVLTIME_MAX)s)" % locals()
+    lambdacCuts = "(VFASPF(VCHI2/VDOF) < %(Lambdac_VCHI2VDOF_MAX)s)" \
+                  "& (%(Lambdac_PVDispCut)s)" \
+                  "& (BPVDIRA > bpvdirathresh)" % locals()
 
 
     _Lambdac = CombineParticles(
         DecayDescriptors = decDescriptors
+        , Preambulo = lclPreambulo
         , DaughtersCuts = { "pi+" : daugCuts + '&' + piCuts, 
                             "K+"  : daugCuts + '&' + kCuts, 
                             "p+"  : daugCuts + '&' + pCuts }
@@ -331,33 +342,31 @@ def makeTisTos( name, selection, hltTisTosSpec = { } ) :  # {
 
 
 
-default_config = {  'Daug_All_PT_MIN'       :  400.0 * MeV
-                  , 'Daug_1of3_PT_MIN'      : 1200.0 * MeV
-                  , 'Daug_P_MIN'            : 3200.0 * MeV
-                  , 'Daug_TRCHI2DOF_MAX'    :   10.0
-                  , 'Daug_BPVIPCHI2_MIN'    :    0.5
-                  , 'Daug_1of3_BPVIPCHI2_MIN'   : 4.0
-                  , 'Proton_PIDp_MIN'       :   10.0
-                  , 'Pi_PIDK_MAX'           :    0.0
-                  , 'K_PIDK_MIN'            :   10.0
-                  , 'Comb_ADAMASS_WIN'      :   90.0 * MeV
-                  , 'Comb_ADOCAMAX_MAX'     :    0.1 * mm
-                  , 'Lambdac_PT_MIN'        :    0.0 * MeV
-                  , 'Lambdac_VCHI2VDOF_MAX' :   20.0
-                  , 'Lambdac_BPVVDCHI2_MIN' :    8.0
-                  , 'Lambdac_BPVDIRA_MIN'   :    0.9999
-                  , 'Lambdac_BPVLTIME_MAX'  :    0.0012 * ns
-                  , 'Lambdac_BPVLTIME_MIN'  :    0.0 * ns
-                  , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-                  , 'Hlt2TisTosSpec'     : { }
-                  , 'PrescaleLambdac2PKPi'  :    1.0
-                  , 'PostscaleLambdac2PKPi' :    1.0
-                  , 'PrescaleLambdac2PKK'      : 1.0
-                  , 'PostscaleLambdac2PKK'     : 1.0
-                  , 'PrescaleLambdac2PPiPi'    : 1.0
-                  , 'PostscaleLambdac2PPiPi'   : 1.0
-                  , 'PrescaleLambdac2PPiKWS'   : 1.0
-                  , 'PostscaleLambdac2PPiKWS'  : 1.0
+default_config = {
+                     'Daug_All_PT_MIN'          :  200.0 * MeV
+                   , 'Daug_2of3_PT_MIN'         :  400.0 * MeV
+                   , 'Daug_1of3_PT_MIN'         : 1000.0 * MeV
+                   , 'Daug_All_BPVIPCHI2_MIN'   :    1.0
+                   , 'Daug_2of3_BPVIPCHI2_MIN'  :    2.0
+                   , 'Daug_1of3_BPVIPCHI2_MIN'  :    2.0
+                   , 'Proton_PIDpPIDpi_MIN'     :    0.0
+                   , 'Proton_PIDpPIDK_MIN'      :    0.0
+                   , 'K_PIDK_MIN'               :    0.0
+                   , 'Pi_PIDK_MAX'              :    0.0
+                   , 'Comb_ADAMASS_WIN'         :   90.0 * MeV
+                   , 'Comb_ADOCAMAX_MAX'        :    0.5 * mm
+                   , 'Lambdac_VCHI2VDOF_MAX'    :   20.0
+                   , 'Lambdac_acosBPVDIRA_MAX'  :   14.0 * mrad
+                   , 'Lambdac_PVDispCut'        : "(BPVVDCHI2 > 8.0)"
+                   , 'HltFilter'                :  None
+                   , 'PrescaleLambdac2PKPi'     :    1.0
+                   , 'PostscaleLambdac2PKPi'    :    1.0
+                   , 'PrescaleLambdac2PKK'      :    1.0
+                   , 'PostscaleLambdac2PKK'     :    1.0
+                   , 'PrescaleLambdac2PPiPi'    :   -1.0
+                   , 'PostscaleLambdac2PPiPi'   :   -1.0
+                   , 'PrescaleLambdac2PPiKWS'   :   -1.0
+                   , 'PostscaleLambdac2PPiKWS'  :   -1.0
                  }
 
 

@@ -15,32 +15,38 @@ __all__ = ( 'StrippingD2HHHForXSecConf',
 
 from Gaudi.Configuration import *
 from StrippingConf.StrippingLine import StrippingLine
-from GaudiKernel.SystemOfUnits import MeV
+from GaudiKernel.SystemOfUnits import MeV, mm, mrad
 from LHCbKernel.Configuration import *
 #from Configurables import FilterDesktop, CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsPions, StdLooseKaons
+import StandardParticles
+if hasattr(StandardParticles, "StdAllNoPIDsPions"):
+  from StandardParticles import StdAllNoPIDsPions
+else:
+  from StandardParticles import StdNoPIDsPions as StdAllNoPIDsPions
+if hasattr(StandardParticles, "StdAllNoPIDsKaons"):
+  from StandardParticles import StdAllNoPIDsKaons
+else:
+  from StandardParticles import StdNoPIDsKaons as StdAllNoPIDsKaons
 
 class StrippingD2HHHForXSecConf(LineBuilder): # {
 
-    __configuration_keys__ = (  'Daug_All_IPCHI2_MIN'
-                              , 'Daug_2of3_IPCHI2_MIN'
-                              , 'Daug_1of3_IPCHI2_MIN'
-                              , 'Daug_All_PT_MIN'
+    __configuration_keys__ = (  'Daug_All_PT_MIN'
                               , 'Daug_2of3_PT_MIN'
-                              , 'Daug_P_MIN'
-                              , 'Daug_P_MAX'
-                              , 'Daug_TRCHI2DOF_MAX'
+                              , 'Daug_1of3_PT_MIN'
+                              , 'Daug_All_BPVIPCHI2_MIN'
+                              , 'Daug_2of3_BPVIPCHI2_MIN'
+                              , 'Daug_1of3_BPVIPCHI2_MIN'
                               , 'K_PIDK_MIN'
                               , 'Pi_PIDK_MAX'
                               , 'Comb_AM_MIN'
                               , 'Comb_AM_MAX'
-                              , 'D_M_MIN'
-                              , 'D_M_MAX'
-                              , 'D_BPVDIRA_MIN'
-                              , 'D_BPVVDCHI2_MIN'
+                              , 'Comb_ADOCAMAX_MAX'
+                              , 'D_VCHI2VDOF_MAX'
+                              , 'D_acosBPVDIRA_MAX'
+                              , 'D_PVDispCut'
                               , 'HltFilter'
                               , 'PrescaleD2KPP'
                               , 'PrescaleD2KKP'
@@ -109,30 +115,28 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
         d2PPP_name = name + 'D2PPP'
         d2PPK_name = name + 'D2KPPDCS'
 
-        self.inNoPIDsPions = StdNoPIDsPions
-        self.inLooseKaons  = StdLooseKaons
+        self.inNoPIDsPions = StdAllNoPIDsPions
+        self.inNoPIDsKaons  = StdAllNoPIDsKaons
 
 
         ## The (K- pi+ pi+) final state
         ## No PID lines.  It looks like the Loose PID lines have the
         self.selD2KPP = makeD2HHH( name = d2KPP_name
-               , inputSel = [ self.inNoPIDsPions, self.inLooseKaons ]
-               , Daug_All_IPCHI2_MIN = config['Daug_All_IPCHI2_MIN']
-               , Daug_2of3_IPCHI2_MIN = config['Daug_2of3_IPCHI2_MIN']
-               , Daug_1of3_IPCHI2_MIN = config['Daug_1of3_IPCHI2_MIN']
-               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
-               , Daug_2of3_PT_MIN = config['Daug_2of3_PT_MIN']
-               , Daug_P_MIN = config['Daug_P_MIN']
-               , Daug_P_MAX = config['Daug_P_MAX']
-               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , K_PIDK_MIN = config['K_PIDK_MIN']
-               , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
-               , Comb_AM_MIN = config['Comb_AM_MIN']
-               , Comb_AM_MAX = config['Comb_AM_MAX']
-               , D_M_MIN = config['D_M_MIN']
-               , D_M_MAX = config['D_M_MAX']
-               , D_BPVDIRA_MIN = config['D_BPVDIRA_MIN']
-               , D_BPVVDCHI2_MIN = config['D_BPVVDCHI2_MIN']
+               , inputSel = [ self.inNoPIDsPions, self.inNoPIDsKaons ]
+               , Daug_All_PT_MIN         = config['Daug_All_PT_MIN']
+               , Daug_2of3_PT_MIN        = config['Daug_2of3_PT_MIN']
+               , Daug_1of3_PT_MIN        = config['Daug_1of3_PT_MIN']
+               , Daug_All_BPVIPCHI2_MIN  = config['Daug_All_BPVIPCHI2_MIN']
+               , Daug_2of3_BPVIPCHI2_MIN = config['Daug_2of3_BPVIPCHI2_MIN']
+               , Daug_1of3_BPVIPCHI2_MIN = config['Daug_1of3_BPVIPCHI2_MIN']
+               , K_PIDK_MIN              = config['K_PIDK_MIN']
+               , Pi_PIDK_MAX             = config['Pi_PIDK_MAX']
+               , Comb_AM_MIN             = config['Comb_AM_MIN']
+               , Comb_AM_MAX             = config['Comb_AM_MAX']
+               , Comb_ADOCAMAX_MAX       = config['Comb_ADOCAMAX_MAX']
+               , D_VCHI2VDOF_MAX         = config['D_VCHI2VDOF_MAX']
+               , D_acosBPVDIRA_MAX           = config['D_acosBPVDIRA_MAX']
+               , D_PVDispCut             = config['D_PVDispCut']
                , decDescriptors = ['[D+ -> K- pi+ pi+]cc' ]
              )
 
@@ -147,23 +151,21 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
         ## The (K- K+ pi+) final state
         ## No PID lines.
         self.selD2KKP = makeD2HHH( name = d2KKP_name 
-               , inputSel = [ self.inNoPIDsPions, self.inLooseKaons ]
-               , Daug_All_IPCHI2_MIN = config['Daug_All_IPCHI2_MIN']
-               , Daug_2of3_IPCHI2_MIN = config['Daug_2of3_IPCHI2_MIN']
-               , Daug_1of3_IPCHI2_MIN = config['Daug_1of3_IPCHI2_MIN']
-               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
-               , Daug_2of3_PT_MIN = config['Daug_2of3_PT_MIN']
-               , Daug_P_MIN = config['Daug_P_MIN']
-               , Daug_P_MAX = config['Daug_P_MAX']
-               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , K_PIDK_MIN = config['K_PIDK_MIN']
-               , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
-               , Comb_AM_MIN = config['Comb_AM_MIN']
-               , Comb_AM_MAX = config['Comb_AM_MAX']
-               , D_M_MIN = config['D_M_MIN']
-               , D_M_MAX = config['D_M_MAX']
-               , D_BPVDIRA_MIN = config['D_BPVDIRA_MIN']
-               , D_BPVVDCHI2_MIN = config['D_BPVVDCHI2_MIN']
+               , inputSel = [ self.inNoPIDsPions, self.inNoPIDsKaons ]
+               , Daug_All_PT_MIN         = config['Daug_All_PT_MIN']
+               , Daug_2of3_PT_MIN        = config['Daug_2of3_PT_MIN']
+               , Daug_1of3_PT_MIN        = config['Daug_1of3_PT_MIN']
+               , Daug_All_BPVIPCHI2_MIN  = config['Daug_All_BPVIPCHI2_MIN']
+               , Daug_2of3_BPVIPCHI2_MIN = config['Daug_2of3_BPVIPCHI2_MIN']
+               , Daug_1of3_BPVIPCHI2_MIN = config['Daug_1of3_BPVIPCHI2_MIN']
+               , K_PIDK_MIN              = config['K_PIDK_MIN']
+               , Pi_PIDK_MAX             = config['Pi_PIDK_MAX']
+               , Comb_AM_MIN             = config['Comb_AM_MIN']
+               , Comb_AM_MAX             = config['Comb_AM_MAX']
+               , Comb_ADOCAMAX_MAX       = config['Comb_ADOCAMAX_MAX']
+               , D_VCHI2VDOF_MAX         = config['D_VCHI2VDOF_MAX']
+               , D_acosBPVDIRA_MAX           = config['D_acosBPVDIRA_MAX']
+               , D_PVDispCut             = config['D_PVDispCut']
                , decDescriptors = ['[D+ -> K- K+ pi+]cc' ]
              )
 
@@ -178,23 +180,21 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
 
         ## The (K- K+ K+) final state
         self.selD2KKK = makeD2HHH( name = d2KKK_name 
-               , inputSel = [ self.inLooseKaons ]
-               , Daug_All_IPCHI2_MIN = config['Daug_All_IPCHI2_MIN']
-               , Daug_2of3_IPCHI2_MIN = config['Daug_2of3_IPCHI2_MIN']
-               , Daug_1of3_IPCHI2_MIN = config['Daug_1of3_IPCHI2_MIN']
-               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
-               , Daug_2of3_PT_MIN = config['Daug_2of3_PT_MIN']
-               , Daug_P_MIN = config['Daug_P_MIN']
-               , Daug_P_MAX = config['Daug_P_MAX']
-               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , K_PIDK_MIN = config['K_PIDK_MIN']
-               , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
-               , Comb_AM_MIN = config['Comb_AM_MIN']
-               , Comb_AM_MAX = config['Comb_AM_MAX']
-               , D_M_MIN = config['D_M_MIN']
-               , D_M_MAX = config['D_M_MAX']
-               , D_BPVDIRA_MIN = config['D_BPVDIRA_MIN']
-               , D_BPVVDCHI2_MIN = config['D_BPVVDCHI2_MIN']
+               , inputSel = [ self.inNoPIDsKaons ]
+               , Daug_All_PT_MIN         = config['Daug_All_PT_MIN']
+               , Daug_2of3_PT_MIN        = config['Daug_2of3_PT_MIN']
+               , Daug_1of3_PT_MIN        = config['Daug_1of3_PT_MIN']
+               , Daug_All_BPVIPCHI2_MIN  = config['Daug_All_BPVIPCHI2_MIN']
+               , Daug_2of3_BPVIPCHI2_MIN = config['Daug_2of3_BPVIPCHI2_MIN']
+               , Daug_1of3_BPVIPCHI2_MIN = config['Daug_1of3_BPVIPCHI2_MIN']
+               , K_PIDK_MIN              = config['K_PIDK_MIN']
+               , Pi_PIDK_MAX             = config['Pi_PIDK_MAX']
+               , Comb_AM_MIN             = config['Comb_AM_MIN']
+               , Comb_AM_MAX             = config['Comb_AM_MAX']
+               , Comb_ADOCAMAX_MAX       = config['Comb_ADOCAMAX_MAX']
+               , D_VCHI2VDOF_MAX         = config['D_VCHI2VDOF_MAX']
+               , D_acosBPVDIRA_MAX           = config['D_acosBPVDIRA_MAX']
+               , D_PVDispCut             = config['D_PVDispCut']
                , decDescriptors = ['[D+ -> K- K+ K+]cc' ]
              )
 
@@ -209,23 +209,21 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
         ## The (pi- pi+ pi+) final state
         ## No PID lines. 
         self.selD2PPP = makeD2HHH( name = d2PPP_name
-               , inputSel = [ self.inNoPIDsPions, self.inLooseKaons ]
-               , Daug_All_IPCHI2_MIN = config['Daug_All_IPCHI2_MIN']
-               , Daug_2of3_IPCHI2_MIN = config['Daug_2of3_IPCHI2_MIN']
-               , Daug_1of3_IPCHI2_MIN = config['Daug_1of3_IPCHI2_MIN']
-               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
-               , Daug_2of3_PT_MIN = config['Daug_2of3_PT_MIN']
-               , Daug_P_MIN = config['Daug_P_MIN']
-               , Daug_P_MAX = config['Daug_P_MAX']
-               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , K_PIDK_MIN = config['K_PIDK_MIN']
-               , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
-               , Comb_AM_MIN = config['Comb_AM_MIN']
-               , Comb_AM_MAX = config['Comb_AM_MAX']
-               , D_M_MIN = config['D_M_MIN']
-               , D_M_MAX = config['D_M_MAX']
-               , D_BPVDIRA_MIN = config['D_BPVDIRA_MIN']
-               , D_BPVVDCHI2_MIN = config['D_BPVVDCHI2_MIN']
+               , inputSel = [ self.inNoPIDsPions, self.inNoPIDsKaons ]
+               , Daug_All_PT_MIN         = config['Daug_All_PT_MIN']
+               , Daug_2of3_PT_MIN        = config['Daug_2of3_PT_MIN']
+               , Daug_1of3_PT_MIN        = config['Daug_1of3_PT_MIN']
+               , Daug_All_BPVIPCHI2_MIN  = config['Daug_All_BPVIPCHI2_MIN']
+               , Daug_2of3_BPVIPCHI2_MIN = config['Daug_2of3_BPVIPCHI2_MIN']
+               , Daug_1of3_BPVIPCHI2_MIN = config['Daug_1of3_BPVIPCHI2_MIN']
+               , K_PIDK_MIN              = config['K_PIDK_MIN']
+               , Pi_PIDK_MAX             = config['Pi_PIDK_MAX']
+               , Comb_AM_MIN             = config['Comb_AM_MIN']
+               , Comb_AM_MAX             = config['Comb_AM_MAX']
+               , Comb_ADOCAMAX_MAX       = config['Comb_ADOCAMAX_MAX']
+               , D_VCHI2VDOF_MAX         = config['D_VCHI2VDOF_MAX']
+               , D_acosBPVDIRA_MAX           = config['D_acosBPVDIRA_MAX']
+               , D_PVDispCut             = config['D_PVDispCut']
                , decDescriptors = ['[D+ -> pi- pi+ pi+]cc' ]
              )
 
@@ -240,23 +238,21 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
         ## The (K+ pi- pi+) final state
         ## No PID lines.  It looks like the Loose PID lines have the
         self.selD2PPK = makeD2HHH( name = d2PPK_name
-               , inputSel = [ self.inNoPIDsPions, self.inLooseKaons ]
-               , Daug_All_IPCHI2_MIN = config['Daug_All_IPCHI2_MIN']
-               , Daug_2of3_IPCHI2_MIN = config['Daug_2of3_IPCHI2_MIN']
-               , Daug_1of3_IPCHI2_MIN = config['Daug_1of3_IPCHI2_MIN']
-               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
-               , Daug_2of3_PT_MIN = config['Daug_2of3_PT_MIN']
-               , Daug_P_MIN = config['Daug_P_MIN']
-               , Daug_P_MAX = config['Daug_P_MAX']
-               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , K_PIDK_MIN = config['K_PIDK_MIN']
-               , Pi_PIDK_MAX = config['Pi_PIDK_MAX']
-               , Comb_AM_MIN = config['Comb_AM_MIN']
-               , Comb_AM_MAX = config['Comb_AM_MAX']
-               , D_M_MIN = config['D_M_MIN']
-               , D_M_MAX = config['D_M_MAX']
-               , D_BPVDIRA_MIN = config['D_BPVDIRA_MIN']
-               , D_BPVVDCHI2_MIN = config['D_BPVVDCHI2_MIN']
+               , inputSel = [ self.inNoPIDsPions, self.inNoPIDsKaons ]
+               , Daug_All_PT_MIN         = config['Daug_All_PT_MIN']
+               , Daug_2of3_PT_MIN        = config['Daug_2of3_PT_MIN']
+               , Daug_1of3_PT_MIN        = config['Daug_1of3_PT_MIN']
+               , Daug_All_BPVIPCHI2_MIN  = config['Daug_All_BPVIPCHI2_MIN']
+               , Daug_2of3_BPVIPCHI2_MIN = config['Daug_2of3_BPVIPCHI2_MIN']
+               , Daug_1of3_BPVIPCHI2_MIN = config['Daug_1of3_BPVIPCHI2_MIN']
+               , K_PIDK_MIN              = config['K_PIDK_MIN']
+               , Pi_PIDK_MAX             = config['Pi_PIDK_MAX']
+               , Comb_AM_MIN             = config['Comb_AM_MIN']
+               , Comb_AM_MAX             = config['Comb_AM_MAX']
+               , Comb_ADOCAMAX_MAX       = config['Comb_ADOCAMAX_MAX']
+               , D_VCHI2VDOF_MAX         = config['D_VCHI2VDOF_MAX']
+               , D_acosBPVDIRA_MAX           = config['D_acosBPVDIRA_MAX']
+               , D_PVDispCut             = config['D_PVDispCut']
                , decDescriptors = ['[D+ -> K+ pi- pi+]cc' ]
              )
 
@@ -276,44 +272,56 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
 
 def makeD2HHH( name
                , inputSel
-               , Daug_All_IPCHI2_MIN
-               , Daug_2of3_IPCHI2_MIN
-               , Daug_1of3_IPCHI2_MIN
                , Daug_All_PT_MIN
                , Daug_2of3_PT_MIN
-               , Daug_P_MIN
-               , Daug_P_MAX
-               , Daug_TRCHI2DOF_MAX
+               , Daug_1of3_PT_MIN
+               , Daug_All_BPVIPCHI2_MIN
+               , Daug_2of3_BPVIPCHI2_MIN
+               , Daug_1of3_BPVIPCHI2_MIN
                , K_PIDK_MIN
                , Pi_PIDK_MAX
                , Comb_AM_MIN
                , Comb_AM_MAX
-               , D_M_MIN
-               , D_M_MAX
-               , D_BPVDIRA_MIN
-               , D_BPVVDCHI2_MIN
+               , Comb_ADOCAMAX_MAX
+               , D_VCHI2VDOF_MAX
+               , D_acosBPVDIRA_MAX
+               , D_PVDispCut
                , decDescriptors
              ) : # {
 
+    ## Construct a preambulo to simplify some calculations.
+    lclPreambulo = [
+      "from math import cos"
+      , "bpvdirathresh = cos(%(D_acosBPVDIRA_MAX)s)" % locals()
+      , "pidFiducialPMin = 3.0 * GeV"
+      , "pidFiducialPMax = 100.0 * GeV"
+    ]
+
+
+
     daugCuts = "(PT > %(Daug_All_PT_MIN)s)" \
-               "& (P > %(Daug_P_MIN)s)" \
-               "& (P < %(Daug_P_MAX)s)" \
-               "& (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" \
-               "& (MIPCHI2DV(PRIMARY) > %(Daug_All_IPCHI2_MIN)s)" % locals()
+               "& (BPVIPCHI2() > %(Daug_All_BPVIPCHI2_MIN)s)" % locals()
 
-    kaonPIDCut = "(PIDK-PIDpi > %(K_PIDK_MIN)s)" % locals()
-    pionPIDCut = "(PIDK-PIDpi < %(Pi_PIDK_MAX)s)" % locals()
+    pidFiducialCuts = "(HASRICH)" \
+                      "& (in_range(pidFiducialPMin, P, pidFiducialPMax))" \
+                      "& (in_range(2.0, ETA, 5.0))"
 
-    combCuts = "(AM > %(Comb_AM_MIN)s) & (AM < %(Comb_AM_MAX)s)" \
+    kaonPIDCut = pidFiducialCuts + "& (PIDK-PIDpi > %(K_PIDK_MIN)s)" % locals()
+    pionPIDCut = pidFiducialCuts + "& (PIDK-PIDpi < %(Pi_PIDK_MAX)s)" % locals()
+
+    combCuts = "(in_range(%(Comb_AM_MIN)s, AM, %(Comb_AM_MAX)s))" \
+               "& (AMAXCHILD(PT) > %(Daug_1of3_PT_MIN)s)" \
+               "& (AMAXCHILD(BPVIPCHI2()) > %(Daug_1of3_BPVIPCHI2_MIN)s)"\
                "& (ANUM(PT > %(Daug_2of3_PT_MIN)s) >= 2)" \
-               "& (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Daug_1of3_IPCHI2_MIN)s))"\
-               "& (ANUM(MIPCHI2DV(PRIMARY) > %(Daug_2of3_IPCHI2_MIN)s) >= 2)" % locals()
+               "& (ANUM(BPVIPCHI2() > %(Daug_2of3_BPVIPCHI2_MIN)s) >= 2)" % locals()
 
-    dCuts = "in_range(%(D_M_MIN)s, M, %(D_M_MAX)s)" \
-            "& (BPVDIRA > %(D_BPVDIRA_MIN)s)" \
-            "& (BPVVDCHI2 > %(D_BPVVDCHI2_MIN)s)" % locals()
+    dCuts = "(VFASPF(VCHI2/VDOF) < %(D_VCHI2VDOF_MAX)s)" \
+            "& (%(D_PVDispCut)s)" \
+            "& (BPVDIRA > bpvdirathresh)" % locals()
+
 
     _dplus = CombineParticles( DecayDescriptors = decDescriptors
+                               , Preambulo = lclPreambulo
                                , DaughtersCuts = { "pi+" : daugCuts + '&' + pionPIDCut, 
                                                    "K+" : daugCuts + '&' + kaonPIDCut }
                                , CombinationCut = combCuts
@@ -329,32 +337,31 @@ def makeD2HHH( name
 
 
 
-default_config = {  'Daug_All_IPCHI2_MIN' : 2.0
-                  , 'Daug_2of3_IPCHI2_MIN' : 8.0
-                  , 'Daug_1of3_IPCHI2_MIN' : 30.0
-                  , 'Daug_All_PT_MIN' : 200.0*MeV
-                  , 'Daug_2of3_PT_MIN' : 400.0*MeV
-                  , 'Daug_P_MIN' : 3200.0*MeV
-                  , 'Daug_P_MAX' : 1.0e5 * MeV
-                  , 'Daug_TRCHI2DOF_MAX' : 10.0
-                  , 'K_PIDK_MIN' : 3.0
-                  , 'Pi_PIDK_MAX' : 12.0
-                  , 'Comb_AM_MIN' : 1580.0 *MeV
-                  , 'Comb_AM_MAX' : 2260.0 *MeV
-                  , 'D_M_MIN' : 1780.0 *MeV
-                  , 'D_M_MAX' : 2060.0 *MeV
-                  , 'D_BPVDIRA_MIN' : 0.9999
-                  , 'D_BPVVDCHI2_MIN' : 60.0
-                  , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-                  , 'PrescaleD2KPP' : 1.0
-                  , 'PrescaleD2KKP' : 1.0
-                  , 'PrescaleD2KKK' : -1.0
-                  , 'PrescaleD2PPP' : -1.0
-                  , 'PrescaleD2KPPDCS' : -1.0
-                  , 'PostscaleD2KPP' : 1.0
-                  , 'PostscaleD2KKP' : 1.0
-                  , 'PostscaleD2KKK' : -1.0
-                  , 'PostscaleD2PPP' : -1.0
-                  , 'PostscaleD2KPPDCS' : -1.0
+default_config = {
+                    'Daug_All_PT_MIN'           :  200.0 * MeV
+                  , 'Daug_2of3_PT_MIN'          :  400.0 * MeV
+                  , 'Daug_1of3_PT_MIN'          :  400.0 * MeV
+                  , 'Daug_All_BPVIPCHI2_MIN'    :    2.0
+                  , 'Daug_2of3_BPVIPCHI2_MIN'   :    2.0
+                  , 'Daug_1of3_BPVIPCHI2_MIN'   :    2.0
+                  , 'K_PIDK_MIN'                :    0.0
+                  , 'Pi_PIDK_MAX'               :    0.0
+                  , 'Comb_AM_MIN'               : 1580.0 * MeV
+                  , 'Comb_AM_MAX'               : 2260.0 * MeV
+                  , 'Comb_ADOCAMAX_MAX'         :    0.5 * mm
+                  , 'D_VCHI2VDOF_MAX'           :   20.0
+                  , 'D_acosBPVDIRA_MAX'         :   14.0 * mrad
+                  , 'D_PVDispCut'               : "(BPVVDCHI2 > 40.0)"
+                  , 'HltFilter'                 : None
+                  , 'PrescaleD2KPP'             :    1.0
+                  , 'PrescaleD2KKP'             :    1.0
+                  , 'PrescaleD2KKK'             :   -1.0
+                  , 'PrescaleD2PPP'             :   -1.0
+                  , 'PrescaleD2KPPDCS'          :   -1.0
+                  , 'PostscaleD2KPP'            :    1.0
+                  , 'PostscaleD2KKP'            :    1.0
+                  , 'PostscaleD2KKK'            :   -1.0
+                  , 'PostscaleD2PPP'            :   -1.0
+                  , 'PostscaleD2KPPDCS'         :   -1.0
                  }
 
