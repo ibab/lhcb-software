@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2013-04-21 - Chris Jones
+ - Increase the space for the component name in the sequencer timer printout 
+   to 50, to allow for longer component names.
+
 !========================= DaVinci v33r3 2013-04-08 ===========================
 
 ! 2013-04-08 - Chris Jones

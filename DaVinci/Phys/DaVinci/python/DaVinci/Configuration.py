@@ -281,6 +281,12 @@ class DaVinci(LHCbConfigurableUser) :
             log.warning("Print frequence cannot be 0")
             printfreq = 1000
         EventSelector().PrintFreq = printfreq
+
+        # Change the column size of Timing table
+        from Configurables import TimingAuditor, SequencerTimerTool
+        TimingAuditor().addTool(SequencerTimerTool,name="TIMER")
+        if not TimingAuditor().TIMER.isPropertySet("NameSize"):
+            TimingAuditor().TIMER.NameSize = 50
         
 ################################################################################
 # set EvtMax
