@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-04-21 - Vanya Belyaev
+
+ - add helper python scripts to prepare DB-entries 
+   for momentum/covariance smear/scale 
+
 ! 2013-04-13 - Vanya Belyaev
 
  - TrackScaleState
