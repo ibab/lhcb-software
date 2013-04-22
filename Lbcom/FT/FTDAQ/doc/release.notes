@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : FT/FTDAQ
-! Responsible : Olivier Callot
+! Responsible : 
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+!========================= FTDAQ v1r3 2013-04-22 =========================
 ! 2013-04-05 - Sascha Stahl
  - Added vector of RawEventLocations
 
