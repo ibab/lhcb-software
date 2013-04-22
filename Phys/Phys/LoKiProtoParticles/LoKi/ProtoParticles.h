@@ -192,13 +192,15 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasRichPID() { }
       /// MANDATORY: virtual destructor
       virtual ~HasRichPID() ;
-      /// MANDATORY: clone method ("virtual consructor")
+      /// MANDATORY: clone method ("virtual constructor")
       virtual  HasRichPID* clone() const ;
       /// MANDATORY: the only one essential methdo 
       virtual  result_type operator() ( argument p ) const ;
-      /// OPTIONAL: the nice printtout 
+      /// OPTIONAL: the nice printout 
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     } ;
@@ -215,6 +217,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasMuonPID() { }
       /// MANDATORY: virtual destructor
       virtual ~HasMuonPID() ;
       /// MANDATORY: clone method ("virtual consructor")
@@ -238,6 +242,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasTrack() { }
       /// MANDATORY: virtual destructor
       virtual ~HasTrack () ;
       /// MANDATORY: clone method ("virtual consructor")
@@ -261,6 +267,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Charged() { }
       /// MANDATORY: virtual destructor
       virtual ~Charged () ;
       /// MANDATORY: clone method ("virtual consructor")
@@ -279,6 +287,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Neutral() { }
       /// MANDATORY: virtual destructor
       virtual ~Neutral () ;
       /// MANDATORY: clone method ("virtual consructor")
@@ -301,6 +311,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Calos() { }
       /// MANDATORY: virtual destructor
       virtual ~Calos () ;
       /// MANDATORY: clone method ("virtual consructor")
@@ -324,6 +336,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasAerogel() { }
       /// MANDATORY: virtual destructor
       virtual ~HasAerogel () ;
       /// MANDATORY: clone method ("virtual consructor")
@@ -357,6 +371,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasRich1Gas() { }
       /// MANDATORY: virtual destructor
       virtual ~HasRich1Gas () ;
       /// MANDATORY: clone method ("virtual consructor")
@@ -380,6 +396,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasRich2Gas() { }
       /// MANDATORY: virtual destructor
       virtual ~HasRich2Gas () ;
       /// MANDATORY: clone method ("virtual consructor")
@@ -541,6 +559,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      IsMuon() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsMuon () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -557,7 +577,7 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      /// local muon pid obejcts 
+      /// local muon pid objects 
       mutable LHCb::MuonPID m_muon ;                  // local muon pid obejcts 
       // ======================================================================
     } ;
@@ -571,13 +591,15 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      IsLooseMuon() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsLooseMuon () ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  IsLooseMuon* clone() const ;
       /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
-      /// OPTIONAL: the nice printtout 
+      /// OPTIONAL: the nice printout 
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     } ;
@@ -593,6 +615,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      NShared() { }
       /// MANDATORY: virtual destructor 
       virtual ~NShared () ;
       /// MANDATORY: clone method ("virtual constructor")

@@ -6,6 +6,9 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2013-04-22 - Chris Jones
+ - Fix compilation by clang, by adding missing default constructors
+
 !========================= LoKiProtoParticles v2r1p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
