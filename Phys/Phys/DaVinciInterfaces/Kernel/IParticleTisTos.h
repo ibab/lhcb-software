@@ -100,7 +100,7 @@ public:
       result |= tisTos( *obj );
       if( (result&kTPS) && (result&kTOS) && (result&kTIS) )break;
     }
-    return TisTosTob(result);
+    return result;
   }
 
   /// check for TOS  - may be faster than using tisTos()
