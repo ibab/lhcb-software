@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-04-22 - Chris Jones
+ - Replace forward declarations for event model classes with includes, 
+   as clang requires them.
+
 !========================= MCAssociators v1r3 2013-02-04 =========================
 ! 2013-01-09 - Olivier Callot
  - Pass a NULL message service to the linker constructor, to remove messages.

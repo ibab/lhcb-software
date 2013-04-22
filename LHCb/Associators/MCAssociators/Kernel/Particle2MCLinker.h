@@ -16,12 +16,11 @@
 // DaVinciMCKernel
 #include "Kernel/Particle2MCMethod.h"
 #include "Kernel/MCAssociation.h"
-namespace LHCb
-{
-  class Particle;
-  class MCParticle;
-  class ProtoParticle;
-}
+
+// Event model
+#include "Event/MCParticle.h"
+#include "Event/Particle.h"
+#include "Event/ProtoParticle.h"
 
 /** @class Object2MCLinker Particle2MCLinker.h Kernel/Particle2MCLinker.h
     *
@@ -30,7 +29,6 @@ namespace LHCb
     *  @author Philippe Charpentier
     *  @date   2004-04-29
     */
-
 
 template <class SOURCE=LHCb::Particle>
 class Object2MCLinker
