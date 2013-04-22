@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-04-22 - Chris Jones
+ - More fixes for clang 3.2 compilation.
+
 ! 2013-04-15 - Marco Clemencic
  - Move 'operator<<' inside a namespace to fix compilation errors with clang.
 
