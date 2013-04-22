@@ -1,3 +1,34 @@
+2013-04-22 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r7
+
+	LbConfiguration
+	* python/LbConfiguration/Package.py: Added new package QMTestFiles 
+	* python/LbConfiguration/Project.py: Doubled Rec volume size to 30000000
+	* python/LbConfiguration/Platform.py: Fixed to support Big Box Linux
+
+	LbRelease
+	* python/scripts/svnProjectDeps: Script to list the dependencies of a 
+	project (projects or packages) from SVN.
+	* python/LbRelease/SvnChecker: improved error messages and fixed a minor issue
+	with move of packages
+	* python/LbRelease/SvnChecker: fixed a bug when checking removed files
+	* python/LbRelease/SvnChecker: added checker for the encoding of Python files
+	* doc/SvnCheckers.rst: instructions to deploy the SVN pre-commit hooks
+
+	Lblegacy
+	* scripts/mkMCGentar: Improved to take tar files from MCGenerators_lcgcmt
+	as well as from MCGenerators_hepmc (JIRA LBCORE-78) 
+	* scripts/archive_project: Fix invocation of grid installation checks. 
+	* scripts/mkMCGentar:Fixed with new layout on Genser tar files in
+	 subdirectories. 
+
+	LbUtils
+	* cmake: updated CMake support modules
+	* scripts/lcg-*: added support for gcc 4.8.0 and clang 3.2
+	* scripts/lcg-*-4.6.3: added wrapper for gcc 4.6.3
+	* cmake: updated to the latest version in Gaudi
+
 2013-01-22 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r6
