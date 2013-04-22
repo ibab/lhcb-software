@@ -1,5 +1,5 @@
 // $Id: IParticleTisTos.h,v 1.1 2010-07-21 21:19:26 tskwarni Exp $
-#ifndef IPARTICLETISTOS_H 
+#ifndef IPARTICLETISTOS_H
 #define IPARTICLETISTOS_H 1
 
 // Include files
@@ -10,36 +10,37 @@
 
 #include "Kernel/ITisTos.h"
 
-// from Gaudi
-//#include "GaudiKernel/IAlgTool.h"
-
 #include "Kernel/LHCbID.h"
 
 //forward declarations
-namespace LHCb {
+namespace LHCb
+{
   class Particle;
   class ProtoParticle;
   class Track;
   class RecVertex;
   class Vertex;
-  class HltObjectSummary;  
+  class HltObjectSummary;
 }
 
 /** @class IParticleTisTos IParticleTisTos.h
- *  
+ *
  *
  *  @author Tomasz Skwarnicki
  *  @date   2010-07-08
  *
- * @par Tool purpose 
- *   This tool extends TisTos operations described in @c ITisTos (for LHCbID hit lists) 
+ * @par Tool purpose
+ *   This tool extends TisTos operations described in @c ITisTos (for LHCbID hit lists)
  *   to reconstruction objects: Particle,  RecVertex, Track and their vectors
  */
-class GAUDI_API IParticleTisTos : virtual public ITisTos {
-public: 
+class GAUDI_API IParticleTisTos : virtual public ITisTos
+{
+
+public:
 
   DeclareInterfaceID(IParticleTisTos, 1, 0);
 
+public:
 
   // -------------------------------------------------
   // ------------ inputs
@@ -47,25 +48,25 @@ public:
 
 
   /// Particle input; for composite particles loop over daughters will be executed (true if Signal changed)
-  virtual bool addToSignal( const LHCb::Particle & particle ) = 0;  
+  virtual bool addToSignal( const LHCb::Particle & particle ) = 0;
 
   /// Proto-particle input
-  virtual bool addToSignal( const LHCb::ProtoParticle & protoParticle ) = 0;  
-  
+  virtual bool addToSignal( const LHCb::ProtoParticle & protoParticle ) = 0;
+
   /// Track input
-  virtual bool addToSignal( const LHCb::Track & track ) = 0;  
+  virtual bool addToSignal( const LHCb::Track & track ) = 0;
 
 
   /// Hits input
   virtual bool addToSignal( const std::vector<LHCb::LHCbID> & hits ) =0;
-  
-    
-                    
+
+
+
   // -------------------------------------------------
   // ------------ outputs
   // -------------------------------------------------
 
-  /// completely classify the Trigger object with respect to the Signal (see ITisTis::TisTosTob for the meaning) 
+  /// completely classify the Trigger object with respect to the Signal (see ITisTis::TisTosTob for the meaning)
   virtual unsigned int tisTos(const LHCb::Particle & particle)  =0;
   virtual unsigned int tisTos(const LHCb::RecVertex & recVertex )  =0;
   virtual unsigned int tisTos(const LHCb::Vertex & vertex )  =0;
@@ -73,33 +74,33 @@ public:
   virtual unsigned int tisTos(const std::vector<LHCb::LHCbID> & hits ) =0;
   virtual unsigned int tisTos(const LHCb::HltObjectSummary & hos ) =0;
 
-  
+
   template<class T>
   unsigned int tisTos( const std::vector<T*> & list )
-  {
+  { 
     unsigned int result(0);
     BOOST_FOREACH( const T* obj, list )
-      { 
-        result |= tisTos( *obj );
-        if( (result&kTPS) && (result&kTOS) && (result&kTIS) )break;        
-      }
+    {
+      result |= tisTos( *obj );
+      if ( (result&kTPS) && (result&kTOS) && (result&kTIS) ) break;
+    }
     return result;
   }
 
   /// completely classify the Trigger hit sequence with respect to the Signal, return helper class
-  template <class T> 
-  TisTosTob  tisTosTob(const T& obj){ return TisTosTob(tisTos(obj));  }
-  
+  template <class T>
+  TisTosTob tisTosTob(const T& obj) { return TisTosTob( tisTos(obj) ); }
+
   template<class T>
   unsigned int tisTosTob( const std::vector<T*> & list )
   {
     unsigned int result(0);
     BOOST_FOREACH( const T* obj, list )
-      { 
-        result |= tisTos( *obj );
-        if( (result&kTPS) && (result&kTOS) && (result&kTIS) )break;        
-      }
-    return  TisTosTob(result);
+    {
+      result |= tisTos( *obj );
+      if( (result&kTPS) && (result&kTOS) && (result&kTIS) )break;
+    }
+    return TisTosTob(result);
   }
 
   /// check for TOS  - may be faster than using tisTos()
@@ -109,12 +110,16 @@ public:
   virtual bool tos(const LHCb::Track & track ) =0;
   virtual bool tos(const std::vector<LHCb::LHCbID> & hits ) =0;
   virtual bool tos(const LHCb::HltObjectSummary & hos ) =0;
-  
+
   template<class T>
   bool tos( const std::vector<T*> & list )
   {
-    BOOST_FOREACH( const T* obj, list ){ if( tos(*obj) )return true;    }
-    return false;
+    bool OK = false;
+    BOOST_FOREACH( const T* obj, list ) 
+    {
+      if ( tos(*obj) ) { OK = true; break; }
+    }
+    return OK;
   }
 
   /// check for TIS  - may be faster than using tisTos()
@@ -128,8 +133,12 @@ public:
   template<class T>
   bool tis( const std::vector<T*> & list )
   {
-    BOOST_FOREACH( const T* obj, list ){ if( tis(*obj) )return true;    }
-    return false;
+    bool OK = false;
+    BOOST_FOREACH( const T* obj, list )
+    {
+      if ( tis(*obj) ) { OK = true; break; }  
+    }
+    return OK;
   }
 
   /// check for TUS  (TPS or TOS) - may be faster than using tisTos()
@@ -139,15 +148,19 @@ public:
   virtual bool tus(const LHCb::Track & track ) =0;
   virtual bool tus(const std::vector<LHCb::LHCbID> & hits ) =0;
   virtual bool tus(const LHCb::HltObjectSummary & hos ) =0;
-  
+
 
   template<class T>
   bool tus( const std::vector<T*> & list )
   {
-    BOOST_FOREACH( const T* obj, list ){ if( tus(*obj) )return true;    }
-    return false;
+    bool OK = false;
+    BOOST_FOREACH( const T* obj, list )
+    { 
+      if ( tus(*obj) ) { OK = true; break; }
+    }
+    return OK;
   }
-  
+
   /// analysis string
   virtual std::string analysisReport(const LHCb::Particle & particle) =0 ;
   virtual std::string analysisReport(const LHCb::RecVertex & recVertex) =0 ;
@@ -164,16 +177,13 @@ public:
   virtual void setCaloClustForNeutral(bool onOff) =0;
   virtual void setCompositeTPSviaPartialTOSonly(bool onOff) =0;
   virtual void setFullAnalysisReport(bool onOff) =0;
-  
+
   virtual bool getProjectTracksToCalo() const =0;
   virtual bool getCaloClustForCharged() const =0;
   virtual bool getCaloClustForNeutral() const =0;
   virtual bool getCompositeTPSviaPartialTOSonly() const =0;
-  virtual bool getFullAnalysisReport() const =0;  
-
-protected:
-
-private:
+  virtual bool getFullAnalysisReport() const =0;
 
 };
+
 #endif // IPARTICLETISTOS_H

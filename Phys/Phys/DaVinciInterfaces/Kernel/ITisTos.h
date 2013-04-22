@@ -27,10 +27,14 @@
  *     reversing their roles can change the results.
  *     E.g. the tool may normalize overlap fraction to the hits encountered on the "Trigger" sequence.
  */
-class GAUDI_API ITisTos : virtual public IAlgTool {
+class GAUDI_API ITisTos : virtual public IAlgTool
+{
+
 public: 
 
   DeclareInterfaceID ( ITisTos, 1 , 0 ) ;
+
+public:
 
   /** @par Meaning of TisTosTob result:
    *       TPS    = Trigger Partially on Signal
@@ -46,17 +50,19 @@ public:
   /// values of TisTosTob result (info encoded in bits)
   enum {kUnknown=0,kTPS=1,kTOS=2,kTUS=3,kTIS=4,kTOSandTIS=6,kDecision=8};
 
+public:
+
   /// to help encode/decode TisTosTob result in/from unsigned int
   class TisTosTob
   {
   public:
 
-    TisTosTob():m_tistostob(kUnknown){}
-    TisTosTob(unsigned int value):m_tistostob(value){}
+    TisTosTob() : m_tistostob(kUnknown) { }
+    TisTosTob(unsigned int value) : m_tistostob(value) { }
     TisTosTob(bool tps, bool tos, bool tis){ set_value(tps,tos,tis); }
     TisTosTob(bool tps, bool tos, bool tis, bool dec){ set_value(tps,tos,tis,dec); }
 
-    virtual ~TisTosTob(){};
+    ~TisTosTob() { }
   
     /// check for TIS
     bool tis() const {return ((m_tistostob&kTIS)!=0);}
@@ -70,6 +76,8 @@ public:
     bool decision() const {return ((m_tistostob&kDecision)!=0);}
     /// get entire classification
     unsigned int value() const {return m_tistostob;}
+    /// Conversion operator
+    operator unsigned int () const { return value(); }
 
     /// set TIS (on top of previous value)
     void set_tis(bool tis=true){if(tis){m_tistostob|=kTIS;}else{m_tistostob&=(~kTIS);};}
@@ -85,13 +93,15 @@ public:
     /// set default value i.e. unknown (erase previous value)
     void set_value(){m_tistostob=kUnknown;}
     /// set TisTosTob value (erases previous value)
-    void set_value(bool tps, bool tos, bool tis){ 
+    void set_value(bool tps, bool tos, bool tis)
+    { 
          set_value();
          if(tps)set_tps();
          if(tos)set_tos();
          if(tis)set_tis();
     }
-    void set_value(bool tps, bool tos, bool tis,bool dec){ 
+    void set_value(bool tps, bool tos, bool tis,bool dec)
+    { 
          set_value();
          if(tps)set_tps();
          if(tos)set_tos();
@@ -99,12 +109,13 @@ public:
          if(dec)set_decision();
     }
     
-
   private:
 
     unsigned int m_tistostob;
 
   };
+
+public:
 
   /// erase signal definition (returns true if erased non-empty signal)
   virtual bool setSignal() = 0;
@@ -116,19 +127,20 @@ public:
   virtual bool addSortedHitsToSignal(const std::vector<LHCb::LHCbID> & hits) = 0;
 
   /// set signal to given hits
-  bool setSignal(const std::vector<LHCb::LHCbID> & hits){ 
+  bool setSignal(const std::vector<LHCb::LHCbID> & hits)
+  { 
     bool changed=setSignal(); 
     if(addHitsToSignal(hits))changed=true;
     return changed;
   }
   
   /// set signal to given sorted hits
-  bool setSortedSignal(const std::vector<LHCb::LHCbID> & hits){ 
+  bool setSortedSignal(const std::vector<LHCb::LHCbID> & hits)
+  { 
     bool changed=setSignal(); 
     if(addSortedHitsToSignal(hits))changed=true;
     return changed;
   }
-  
   
   /// retrieve signal definition
   virtual std::vector<LHCb::LHCbID> signal() const = 0;
@@ -137,8 +149,8 @@ public:
   virtual unsigned int tisTosSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const =0;
   
   /// completely classify the Trigger hit sequence with respect to the Signal, return helper class
-  TisTosTob  tisTosTobSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const 
-  { return TisTosTob(tisTosSortedHits(triggerHits));}
+  TisTosTob tisTosTobSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const 
+  { return TisTosTob(tisTosSortedHits(triggerHits)); }
   
   /// check for TOS  - may be faster than using tisTosSortedHits()
   virtual bool tosSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const =0;
@@ -198,10 +210,6 @@ public:
 
   /// utility to sort hits (can be used by user to convert unsorted hits in calls to various methods)
   virtual std::vector<LHCb::LHCbID> sortedHits(const std::vector<LHCb::LHCbID> & hits) const =0;  
-
-protected:
-
-private:
 
 };
 

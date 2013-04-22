@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-04-22 - Chris Jones
+ - Fix some small TisTos related bugs, that causes compilation errors with clang
+
 !========================= DaVinciInterfaces v2r17p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
