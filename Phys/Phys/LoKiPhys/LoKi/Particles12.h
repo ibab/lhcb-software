@@ -166,6 +166,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      ProtoHasRichPID() { }
       /// MANDATORY: virtual destructor 
       virtual ~ProtoHasRichPID() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -197,6 +199,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      ProtoHasMuonPID() { }
       /// MANDATORY: virtual destructor 
       virtual ~ProtoHasMuonPID() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -227,6 +231,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      ProtoHasCaloHypos() { }
       /// MANDATORY: virtual destructor 
       virtual ~ProtoHasCaloHypos() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -255,6 +261,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      IsMuon() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsMuon() {} ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -292,6 +300,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      IsMuonLoose() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsMuonLoose() {} ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -315,6 +325,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      InMuonAcceptance() { }
       /// MANDATORY: virtual destructor 
       virtual ~InMuonAcceptance () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -439,6 +451,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      NShared() { }
       /// MANDATORY: virtual destructor 
       virtual ~NShared () ;
       /// MANDATORY: clone method ("virtual constructor")

@@ -57,6 +57,8 @@ namespace LoKi
     {      
     public:
       // ======================================================================
+      /// Default Constructor
+      IsPrimary() { }
       /// MANDATORY: clone method ("virtual constructor")
       virtual IsPrimary* clone() const  ;
       /// MANDATORY: the only one essential method 
@@ -82,6 +84,8 @@ namespace LoKi
     { 
     public:
       // ======================================================================
+      /// Default Constructor
+      Technique() { }
       /// MANDATORY: clone method ("virtual constructor")
       virtual Technique* clone() const ;
       /// MANDATOY: the only one essential method 
@@ -107,6 +111,8 @@ namespace LoKi
     {      
     public:
       // ======================================================================
+      /// Default Constructor
+      VertexChi2() { }
       /// MANDATORY: virtual destructor 
       virtual ~VertexChi2() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -137,6 +143,8 @@ namespace LoKi
     {      
     public:
       // ======================================================================
+      /// Default Constructor
+      VertexChi2PerDoF() { }
       /// MANDATORY: virtual destructor 
       virtual ~VertexChi2PerDoF() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -148,8 +156,8 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      double chi2PerDoF( const LHCb::VertexBase& v ) const 
-      { return v.chi2() / v.nDoF()  ; }
+      inline double chi2PerDoF( const LHCb::VertexBase& v ) const 
+      { return v.nDoF() != 0 ? v.chi2() / v.nDoF() : 0 ; }
       // ======================================================================
     };
     // ========================================================================
@@ -170,6 +178,8 @@ namespace LoKi
     {      
     public:
       // ======================================================================
+      /// Default Constructor
+      VertexDoF() { }
       /// MANDATORY: clone method ("virtual constructor")
       virtual VertexDoF* clone() const ;
       /// MANDATORY: the only one essential method 
@@ -193,6 +203,8 @@ namespace LoKi
     {      
     public:
       // ======================================================================
+      /// Default Constructor
+      PositionX() { }
       /// MANDATORY: clone method ("virtual constructor")
       virtual PositionX* clone() const ;
       /// MANDATORY: the only one essential method 
@@ -216,6 +228,8 @@ namespace LoKi
     {      
     public:
       // ======================================================================
+      /// Default Constructor
+      PositionY() { }
       /// MANDATORY: clone method ("virtual constructor")
       virtual PositionY* clone() const ;
       /// MANDATORY: the only one essential method 
@@ -239,6 +253,8 @@ namespace LoKi
     {      
     public:
       // ======================================================================
+      /// Default Constructor
+      PositionZ() { }
       /// MANDATORY: clone method ("virtual constructor")
       virtual PositionZ* clone() const ;
       /// MANDATORY: the only one essential method 
@@ -265,6 +281,8 @@ namespace LoKi
     {      
     public:
       // ======================================================================
+      /// Default Constructor
+      NumberOfOutgoing() { }
       /// MANDATORY: clone method ("virtual constructor")
       virtual NumberOfOutgoing* clone() const ;
       /// MANDATORY: the only one essential method 
@@ -389,6 +407,8 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {    
     public:
+      /// Default Constructor
+      NumberOfTracks() { }
       /// MANDATORY: clone method ("virtual constructor")
       virtual NumberOfTracks* clone() const ;
       /// MANDATORY: the only one essential method 
@@ -418,6 +438,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Chi2Prob() { }
       /// MANDATORY: virtual destructor:
       virtual ~Chi2Prob() { }
       /// MANDATORY: clone method ("virtual constructor")
@@ -441,6 +463,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      IsVertex() { }
       /// MANDATORY: clone method ("virtual constructor")
       virtual IsVertex* clone() const  ;
       /// MANDATORY: the only one essential method 
@@ -462,6 +486,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      IsRecVertex() { }
       /// MANDATORY: clone method ("virtual constructor")
       virtual IsRecVertex* clone() const  ;
       /// MANDATORY: the only one essential method 

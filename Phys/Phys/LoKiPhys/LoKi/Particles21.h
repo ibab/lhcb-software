@@ -28,6 +28,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      DeltaNominalMass() { }
       /// MANDATORY: virtual destructor 
       virtual ~DeltaNominalMass () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -59,6 +61,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      AbsDeltaNominalMass() { }
       /// MANDATORY: virtual destructor 
       virtual ~AbsDeltaNominalMass () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -90,6 +94,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      DeltaNominalMassChi2() { }
       /// MANDATORY: virtual destructor 
       virtual ~DeltaNominalMassChi2 () {}
       /// MANDATORY: clone method ("virtual constructor")

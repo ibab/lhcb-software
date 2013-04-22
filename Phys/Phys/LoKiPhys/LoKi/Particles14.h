@@ -126,6 +126,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      ArmenterosPodolanski() { }
       /// MANDATORY: virtual destructor 
       virtual ~ArmenterosPodolanski () {}
       /// MANDATORY: virtual destructor 

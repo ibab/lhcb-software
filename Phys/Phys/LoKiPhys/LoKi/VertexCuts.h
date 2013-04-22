@@ -199,7 +199,7 @@ namespace LoKi
     // ========================================================================
     /** @var ISPRIMARY
      *     
-     *  trivial predicate whcih evaluates to truw for primary vertices 
+     *  trivial predicate which evaluates to truw for primary vertices 
      *  it relies on th emethod LHCb::Vertex::isPrimary
      *
      *  @code 

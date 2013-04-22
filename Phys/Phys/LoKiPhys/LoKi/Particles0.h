@@ -65,6 +65,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasKey() { }
       /// clone method (mandatory!)
       virtual HasKey* clone() const { return new HasKey(*this); }
       /// the only one essential method 
@@ -194,6 +196,8 @@ namespace LoKi
     {  
     public:
       // ======================================================================
+      /// Default Contructor
+      Identifier() { }
       /// clone method (mandatory!)
       virtual Identifier* clone() const ;
       /// the only one essential method 
@@ -217,6 +221,8 @@ namespace LoKi
     {  
     public:
       // ======================================================================
+      /// Default Constructor
+      AbsIdentifier() { }
       /// clone method (mandatory!)
       virtual AbsIdentifier* clone() const ;
       /// the only one essential method 
@@ -241,6 +247,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Charge() { }
       /// clone method (mandatory!)
       virtual Charge* clone() const ;
       /// the only one essential method 
@@ -267,6 +275,8 @@ namespace LoKi
     {  
     public:
       // ======================================================================
+      /// Default Constructor
+      SumCharge() { }
       /// clone method (mandatory!)
       virtual SumCharge* clone() const ;
       /// the only one essential method 
@@ -289,6 +299,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Contructor
+      Momentum() { }
       /// clone method (mandatory!)
       virtual Momentum* clone() const ;
       /// the only one essential method 
@@ -308,6 +320,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Contructor
+      Momentum2() { }
       /// clone method (mandatory!)
       virtual Momentum2* clone() const  ;
       /// the only one essential method 
@@ -328,6 +342,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Contructor
+      Energy() { }
       /// clone method (mandatory!)
       virtual Energy* clone() const ;
       /// the only one essential method 
@@ -348,6 +364,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Contructor
+      TransverseMomentum() { }
       /// clone method (mandatory!)
       virtual TransverseMomentum* clone() const ;
       /// the only one essential method 
@@ -368,6 +386,8 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// Default Contructor
+      MomentumX() { }
       /// clone method (mandatory!)
       virtual MomentumX* clone() const ;
       /// the only one essential method 
@@ -388,6 +408,8 @@ namespace LoKi
     {     
     public:
       // ======================================================================
+      /// Default Contructor
+      MomentumY() { }
       /// clone method (mandatory!)
       virtual MomentumY* clone() const ;
       /// the only one essential method 
@@ -408,6 +430,8 @@ namespace LoKi
     {     
     public:
       // ======================================================================
+      /// Default Contructor
+      MomentumZ() { }
       /// clone method (mandatory!)
       virtual MomentumZ* clone() const ;
       /// the only one essential method 
@@ -432,6 +456,8 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// Default Contructor
+      PseudoRapidity() { }
       /// clone method (mandatory!)
       virtual PseudoRapidity* clone() const ;
       /// the only one essential method 
@@ -472,6 +498,8 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// Default Contructor
+      Rapidity() { }
       /// clone method (mandatory!)
       virtual Rapidity* clone() const ;
       /// the only one essential method 
@@ -495,6 +523,8 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// Default Contructor
+      Rapidity0() { }
       /// clone method (mandatory!)
       virtual Rapidity0* clone() const ;
       /// the only one essential method 
@@ -515,6 +545,8 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// Default Contructor
+      Phi() { }
       /// clone method (mandatory!)
       virtual Phi* clone() const { return new Phi ( *this ) ; }
       /// the only one essential method 
@@ -553,6 +585,8 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// Default Contructor
+      Theta() { }
       /// clone method (mandatory!)
       virtual Theta* clone() const ;
       /// the only one essential method 
@@ -573,6 +607,8 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// Default Constructor
+      Mass() { }
       /// clone method (mandatory!)
       virtual Mass* clone() const { return new Mass( *this ) ; }
       /// the only one essential method 
@@ -596,6 +632,8 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// Default Constructor
+      MeasuredMass() { }
       /// clone method (mandatory!)
       virtual MeasuredMass* clone() const ;
       /// the only one essential method 
@@ -1030,6 +1068,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      ConfidenceLevel() { }
       /// clone method (mandatory!)
       virtual ConfidenceLevel* clone() const ;
       /// the only one essential method 
@@ -1056,6 +1096,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Weight() { }
       /// clone method (mandatory!)
       virtual Weight* clone() const ;
       /// the only one essential method 
@@ -1082,6 +1124,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      IsBasic() { }
       /// clone method (mandatory!)
       virtual IsBasic* clone() const ;
       /// the only one essential method 
@@ -1107,6 +1151,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      NumberOfDaughters() { }
       /// clone method (mandatory!)
       virtual NumberOfDaughters* clone() const ;
       /// the only one essential method 
@@ -1133,6 +1179,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasProto() { }
       /// clone method (mandatory!)
       virtual HasProto* clone() const ;
       /// the only one essential method 
@@ -1159,6 +1207,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasVertex() { }
       /// clone method (mandatory!)
       virtual HasVertex* clone() const ;
       /// the only one essential method 
@@ -1185,6 +1235,9 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasTrack() { }
+      /// Destructor
       virtual ~HasTrack() {}
       /// clone method (mandatory!)
       virtual HasTrack* clone() const { return new HasTrack(*this) ; }
@@ -1355,6 +1408,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      NominalMass() { }
       /// MANDATORY: virtual destructor 
       virtual ~NominalMass() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -1387,7 +1442,7 @@ namespace LoKi
       virtual  Cov2* clone() const ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument p ) const ;
-      /// OPTIONAL: the specific printout 
+      /// OPTIONAL: the specific printout
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     private:
@@ -1414,6 +1469,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Perr2() { }
       /// MANDATORY: virtual destructor 
       virtual ~Perr2 () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -1437,6 +1494,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      PTerr2() { }
       /// MANDATORY: virtual destructor 
       virtual ~PTerr2 () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -1460,6 +1519,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      M2err2() { }
       /// MANDATORY: virtual destructor 
       virtual ~M2err2 () ;
       /// MANDATORY: clone method ("virtual constructor")

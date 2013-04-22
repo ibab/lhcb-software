@@ -67,6 +67,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      DHCoplanarity() { }
       /// MANDATORY : virtual destrcutor 
       virtual ~DHCoplanarity() ;
       /// MANDATORY: clone method ("virtual destructor") 
