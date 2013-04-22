@@ -3,6 +3,7 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+!========================= VeloDAQ v6r9p1 2013-04-22 =========================
 ! 2013-04-08 - Marco Cattaneo
  - Add __init.py__ to please CMake
 
