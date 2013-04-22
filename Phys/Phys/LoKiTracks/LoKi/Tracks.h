@@ -61,6 +61,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Key() { }
       /// MANDATORY: virtual destructor  
       virtual ~Key () ;
       /// MANDATORY: clone method ("virtual constructor")  
@@ -82,6 +84,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      InTES() { }
       /// MANDATORY: virtual destructor  
       virtual ~InTES () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -104,7 +108,9 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /// MANDATORY: virtual destrcutor  
+      /// Default Constructor
+      Charge() { }
+      /// MANDATORY: virtual destructor  
       virtual ~Charge () {}
       /// MANDATORY: clone method ("virtual constructor")  
       virtual  Charge* clone() const { return new Charge(*this) ; }
@@ -127,6 +133,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      TransverseMomentum() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~TransverseMomentum() {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -150,6 +158,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Momentum() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~Momentum() {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -172,6 +182,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      MomentumX() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~MomentumX () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -194,6 +206,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      MomentumY() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~MomentumY () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -216,6 +230,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      MomentumZ() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~MomentumZ () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -473,6 +489,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Chi2() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~Chi2 () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -495,6 +513,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Chi2PerDoF() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~Chi2PerDoF () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -517,6 +537,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      ProbChi2() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~ProbChi2 () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -612,7 +634,9 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /// MANDATORY: virtual destrcutor  
+      /// Default Constructor
+      Type() { }
+      /// MANDATORY: virtual destructor  
       virtual ~Type() {} 
       /// MANDATORY: clone method ("virtual constructor")  
       virtual  Type* clone() const { return new Type(*this) ; }
@@ -733,6 +757,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      NVeloMissed() { }
       /// MANDATORY: virtual destructor 
       virtual ~NVeloMissed() ;
       /// MANDATORY: clone method (virtual constructor) 
@@ -757,6 +783,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      NTHits() { }
       /// MANDATORY: virtual destructor 
       virtual ~NTHits () ;
       /// MANDATORY: clone method (virtual constructor) 
@@ -780,6 +808,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasT() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~HasT() {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -802,6 +832,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasVelo() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~HasVelo() {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -824,6 +856,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      HasTT() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~HasTT () {}
       /// MANDATORY: clone method ("virtual constructor")  
