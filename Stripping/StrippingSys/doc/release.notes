@@ -3,6 +3,18 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v6r2p4 2013-04-22 =========================
+
+* Phys/StrippingSelections
+  - Many changes for Stripping20r0p1 and Stripping20r1p1. Also some lines for the 
+    2.76TeV stripping. 
+
+* Phys/StrippingSettings
+  - Final settings for Stripping20r0p1 and Stripping20r1p1.
+ 
+* Phys/StrippingArchive
+  - Add Stripping 20r0p1
+
 !========================= StrippingSys v6r5 2013-04-05 =========================
 
 * Phys/CommonParticles: 
