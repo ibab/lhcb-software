@@ -1,0 +1,33 @@
+package Controller
+version v0r1
+author "Markus Frank"
+
+branches Controller cmt src
+use OnlineKernel v* Online
+use DIM          v* Online
+
+apply_pattern install_more_includes more=Controller
+
+#-----Linker library
+library Controller *.cpp
+apply_pattern ld_library_path
+apply_pattern linker_library library=Controller
+
+#---------------------------------------------------------------------------
+private
+use UPI          v* Online -no_auto_imports
+application  internal_fsm_test ../main/main.cpp
+macro_append internal_fsm_test_cppflags     " -DFUNCTION=internal_fsm_test "
+macro_append internal_fsm_test_dependencies " Controller "
+
+application  external_fsm_test ../main/main1.cpp
+macro_append external_fsm_test_cppflags     " -DFUNCTION=external_fsm_test "
+macro_append external_fsm_test_dependencies " Controller "
+
+application  external_fsm_client ../main/main2.cpp
+macro_append external_fsm_client_cppflags     " -DFUNCTION=external_fsm_client "
+macro_append external_fsm_client_dependencies " Controller "
+
+application  fsm_upi ../main/fsm_upi.cpp -import=UPI
+macro_append fsm_upi_cppflags     " -DFUNCTION=fsm_upi "
+macro_append fsm_upi_dependencies " Controller "
