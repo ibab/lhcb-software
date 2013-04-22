@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OTMonitor
 ################################################################################
-gaudi_subdir(OTMonitor v3r5)
+gaudi_subdir(OTMonitor v3r5p1)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Event/DigiEvent
