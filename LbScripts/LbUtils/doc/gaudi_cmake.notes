@@ -1,3 +1,9 @@
+! 2013-04-22 - Marco Clemencic (31f5179)
+
+ - restored special ROOT sections of heptools-common for backward compat.
+
+   
+
 ! 2013-04-19 - Marco Clemencic (8723948)
 
  - generate a simple .dot (graphviz) file for the dependencies of subdirs
