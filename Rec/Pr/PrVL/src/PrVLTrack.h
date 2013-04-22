@@ -19,12 +19,14 @@ public:
 
   bool valid() const {return m_valid;}
   void setValid(const bool flag) {m_valid = flag;}
-  void setBackward(const bool flag) {m_backward = flag;} 
   bool backward() const {return m_backward;}
-  void setZone(const unsigned int zone) {m_zone = zone;}
-  unsigned int zone() const {return m_zone;}
-  void setMissedSensors(const int nMiss) {m_missedSensors = nMiss;}
+  void setBackward(const bool flag) {m_backward = flag;} 
+  unsigned int rZone() const {return m_rzone;}
+  void setRZone(const unsigned int zone) {m_rzone = zone;}
+  bool overlap() const {return m_overlap;}
+  void setOverlap(const bool flag) {m_overlap = flag;}
   int missedSensors() const {return m_missedSensors;}
+  void setMissedSensors(const int nMiss) {m_missedSensors = nMiss;}
 
   PrVLHits& rHits() {return m_rHits;}
   PrVLHits& phiHits() {return m_phiHits;}
@@ -38,26 +40,22 @@ public:
     const double dz = z - m_sz / m_s0; 
     return m_trErr2 * (1. + dz * dz); 
   }
-  double rChi2() {
+  double rChi2() const {
     double chi2 = 0.;
     PrVLHits::const_iterator it;
     for (it = m_rHits.begin(); it != m_rHits.end(); ++it) {
-      const double d = m_r0 + (*it)->z() * m_tr - (*it)->rGlobal();
+      const double d = m_r0 + (*it)->z() * m_tr - (*it)->r();
       chi2 += (*it)->weight() * d * d;
     }
-    return chi2 / (m_rHits.size() - 2);
+    return chi2 / (m_rHits.size() - 2.);
   }
+  unsigned int rZone(double z, bool& right);
   double rInterpolated(double z);
-
-  void setSpaceParametersFromR(const double cphi, const double sphi) {
-    m_x0 = m_r0 * cphi;
-    m_y0 = m_r0 * sphi;
-    m_tx = m_tr * cphi;
-    m_ty = m_tr * sphi;
-  }
 
   void addRHit(PrVLHit* hit);
   void removeRHit(PrVLHit* hit);
+  void addPhiHit(PrVLHit* hit);
+  void removePhiHit(PrVLHit* hit);
 
   unsigned int nbUsedRHits() const {return m_nbUsedRHits;}
   void tagUsedRHits() {
@@ -68,13 +66,21 @@ public:
   }
   void untagUsedRHits() {
     PrVLHits::iterator it;
-    for (it= m_rHits.begin(); it != m_rHits.end(); ++it) {
-      (*it)->clearUsed();
+    for (it = m_rHits.begin(); it != m_rHits.end(); ++it) {
+      (*it)->unsetUsed();
     }
   }
-  unsigned int nbUnusedPhiHits() {
-    int nUnused = 0;
-    PrVLHits::iterator it;
+  unsigned int nbUsedPhiHits() const {
+    unsigned int nUsed = 0;
+    PrVLHits::const_iterator it;
+    for (it = m_phiHits.begin(); it != m_phiHits.end(); ++it) {
+      if ((*it)->nUsed() > 0) ++nUsed;
+    }
+    return nUsed;
+  }
+  unsigned int nbUnusedPhiHits() const {
+    unsigned int nUnused = 0;
+    PrVLHits::const_iterator it;
     for (it = m_phiHits.begin(); it != m_phiHits.end(); ++it) {
       if (0 == (*it)->nUsed()) ++nUnused;
     }
@@ -88,15 +94,11 @@ public:
   }
 
   void setPhiClusters(PrVLTrack& track,
-                      double cosPhi, double sinPhi,
-                      PrVLHits::const_iterator it1, 
-                      PrVLHits::const_iterator it2);
-  void setPhiClusters(PrVLTrack& track,
                       double x0, double tx, double y0, double ty,
                       PrVLHit* h1, PrVLHit* h2, PrVLHit* h3);
   void setPhiClusters(PrVLHit* r1, int zone, 
                       PrVLHit* h1, PrVLHit* h2, PrVLHit* h3);
-  void addPhiCluster(PrVLHit* hit);
+
   bool addPhiCluster(PrVLHit* hit, double maxChi2);
   void addPhiClusters(PrVLHits& hits) {
     PrVLHits::const_iterator it;
@@ -108,17 +110,18 @@ public:
 
   void fitTrack();
 
-  bool removeWorstMultiple(double maxChi2, unsigned int minExpected);
-  bool removeWorstRAndPhi(double maxChi2, unsigned int minExpected );
+  bool removeWorstRAndPhi(double maxChi2, unsigned int minPhi);
 
   void solve();
 
   double distance(PrVLHit* hit) {
-    return hit->distance(m_x0 + hit->z() * m_tx, m_y0 + hit->z() * m_ty); 
+    return hit->distance(m_x0 + hit->z() * m_tx, 
+                         m_y0 + hit->z() * m_ty); 
   }
  
   double chi2(PrVLHit* hit) { 
-    return hit->chi2(m_x0 + hit->z() * m_tx, m_y0 + hit->z() * m_ty); 
+    return hit->chi2(m_x0 + hit->z() * m_tx, 
+                     m_y0 + hit->z() * m_ty); 
   }
 
   double xAtHit(PrVLHit* hit) {return m_x0 + m_tx * hit->z();}
@@ -144,7 +147,7 @@ public:
   void updatePhiWeights() {
     PrVLHits::iterator it;
     for (it = m_phiHits.begin(); it != m_phiHits.end(); ++it) {
-      (*it)->setPhiWeight(xAtHit(*it), yAtHit(*it));
+      (*it)->setWeight(xAtHit(*it), yAtHit(*it));
     }
     fitTrack();
   }
@@ -203,14 +206,14 @@ public:
       int nbUsed = 0;
       for (it = m_phiHits.begin(); it != m_phiHits.end(); ++it) {
         m_qFactor += chi2(*it);
-        if (0 != (*it)->nUsed()) ++nbUsed;
+        nbUsed += (*it)->nUsed();
       }
-      m_qFactor /= (m_rHits.size() + m_phiHits.size() - 4);
+      m_qFactor /= (m_rHits.size() + m_phiHits.size() - 4.);
       m_qFactor += 2. * nbUsed / double(m_phiHits.size());
     }
     return m_qFactor;
   }
- 
+
   LHCb::StateVector state(double z) {
     LHCb::StateVector temp;
     temp.setX(m_x0 + z * m_tx);
@@ -223,25 +226,38 @@ public:
   }
 
   double zBeam() { 
-    return -(m_x0 * m_tx + m_y0 * m_ty) / (m_tx * m_tx + m_ty * m_ty); 
+    return -(m_x0 * m_tx + m_y0 * m_ty) / (m_tx * m_tx + m_ty * m_ty);
   }
 
   Gaudi::TrackSymMatrix covariance(double z);
 
   struct DecreasingByRLength {
-    bool operator() (const PrVLTrack& lhs, const PrVLTrack& rhs) const { 
+    bool operator() (const PrVLTrack& lhs, const PrVLTrack& rhs) const {
+      if (lhs.nbRHits() == rhs.nbRHits()) {
+        return lhs.rChi2() < rhs.rChi2();
+      } 
       return lhs.nbRHits() > rhs.nbRHits(); 
     }
   };
 
+  struct DecreasingByPhiLength {
+    bool operator() (const PrVLTrack& lhs, const PrVLTrack& rhs) const {
+      if (lhs.nbPhiHits() == rhs.nbPhiHits()) {
+        return lhs.m_qFactor < rhs.m_qFactor;
+      }
+      return lhs.nbPhiHits() > rhs.nbPhiHits(); 
+    }
+  };
+
 private:
+  unsigned int m_rzone;
+  double m_overlap;
+  bool m_backward;  
   double m_s0;
   double m_sr;
   double m_sz;
   double m_srz;
   double m_sz2;
-  unsigned int m_zone;
-  bool m_backward;  
   double m_r0;
   double m_tr;
   double m_r0Err2;
@@ -257,6 +273,7 @@ private:
   double m_y0;
   double m_tx;
   double m_ty;
+
   double m_qFactor;
   
   // Fit cumulative values

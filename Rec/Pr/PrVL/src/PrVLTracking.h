@@ -3,6 +3,7 @@
 
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 #include "PrKernel/IPrDebugTool.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 // Det/VLDet
@@ -16,7 +17,8 @@
  *
  */
 
-class PrVLTracking : public GaudiAlgorithm {
+//class PrVLTracking : public GaudiAlgorithm {
+class PrVLTracking : public GaudiTupleAlg {
 public: 
   /// Constructor
   PrVLTracking(const std::string& name, ISvcLocator* pSvcLocator);
@@ -25,29 +27,35 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute();       ///< Algorithm execution
-  virtual StatusCode finalize();      ///< Algorithm finalization
 
 private:
 
   void findQuadruplets(DeVLRSensor* sensor0, const bool forward);
   void findTriplets(DeVLRSensor* sensor0, const bool forward);
-  int extendTrack(PrVLTrack& track, unsigned int sensor,
-                  const unsigned int zone, const bool forward, 
-                  const bool unused);
+  void extendTrack(PrVLTrack& track, unsigned int sensor,
+                   const unsigned int zone, const bool forward);
   void extendTrackOtherSide(PrVLTrack& track, unsigned int sensor,
                             unsigned int zone, const bool forward,
-                            const bool unused);
-  void findSpaceTracks(PrVLTrack& input);
-  void makeLHCbTracks(LHCb::Tracks* tracks);
+                            const bool next);
+  void cleanupRZ();
+  void findPhiHits(PrVLTrack& seed, const bool unused);
+  void findPhiHitsOverlap(PrVLTrack& seed, const bool unused);
+  int findSpaceTracksPhi(PrVLTrack& seed);
+  bool findSpaceTracksXY(PrVLTrack& seed);
+  void makeLHCbTracks();
   void mergeClones(PrVLTracks& tracks);
-  void mergeSpaceClones();
+  void mergeSpaceClones(const bool forward);
+  void findUnusedR(DeVLRSensor* sensor0, const bool forward);
   void findUnusedPhi();
   void buildHits();
-  PrVLHit* closestHit(PrVLHits& hits, const double r, const double tol, 
-                      const bool unused); 
-  bool addPhiHit(PrVLHits& hits, PrVLTrack& track);
-  bool addOtherSidePhiHit(PrVLHits& hits, PrVLTrack& track, 
-                          unsigned int sensor);
+  PrVLHit* closestRHit(PrVLHits& hits, const double r, const double tol, 
+                       const bool unused); 
+  PrVLHit* closestPhiHit(PrVLHits& hits, const double phi, const double tol, 
+                         const bool unused); 
+  PrVLHit* closestPhiHit(PrVLHits& hits, const double x, const double y, 
+                         const double tol, const bool unused); 
+  bool addPhiHit(PrVLHits& hits, PrVLTrack& track, const double maxChi2);
+
   bool matchKey(const PrVLHit* hit) {
     bool ok = false;
     if (m_debugTool) {
@@ -60,56 +68,61 @@ private:
   void printRZTrack(PrVLTrack& track);
   void printTrack(PrVLTrack& track);
 
-  std::string m_trackLocation;
-  
   bool m_forward;
   bool m_backward;
  
   /// Minimal Z of a vertex for forward tracks
   double m_zVertexMin;
-  /// Maximal Z of a vertex for defining last sensor in backward tracks
-  double m_zVertexMax;      
-  double m_zVertexMaxBack;  
-  /// Maximum RZ slope considered
-  double m_maxRSlope;       
-  /// R match tolerance in a quadruplet, in units of strip pitch
+  /// Maximal Z of a vertex for backward tracks
+  double m_zVertexMax; 
+  
+  /// Parameters for RZ tracking
+  double m_maxRSlope4;
+  double m_maxRSlope3;       
   double m_rTol4;      
-  /// R match tolerance in a triplet, in units of strip pitch
-  double m_rTol3;      
-  /// R match tolerance for extending tracks
+  double m_rTol3;
   double m_rTolExtra; 
-  /// R match tolerance for other side hits
   double m_rTolOverlap; 
-  /// Maximum number of consecutive missed sensors
   int m_maxMissed;       
-  /// Minimum number of hits on track to tag as used
   unsigned int m_minToTag;  
 
+  /// Parameters for space tracking
+  double m_xTolOverlap;
   double m_phiTol;
-  double m_phiTolOverlap;
-  double m_d2Max;
-  double m_fractionFound;
+  double m_xyTol;
+  double m_fractionPhi;
+  double m_fractionShared;
+  double m_fractionUsed; 
   double m_maxChi2PerHit;
   double m_maxChi2ToAdd;
-  double m_maxQFactor;
-  double m_maxQFactor3;
-  double m_deltaQuality;
-  double m_fractionForMerge;
+  double m_maxQXy;
+  double m_maxQPhi;
+  double m_maxQRPhi;
 
+  /// Parameters for clone merging
+  double m_fractionForMerge;
   double m_maxDistToMerge;
   double m_maxDeltaSlopeToMerge;
 
+  /// Parameters for recovery
   unsigned int m_maxRZForExtra;
   double m_phiUnusedFirstTol;
   double m_phiUnusedSecondTol;
 
   /// Pointer to detector element
   DeVL* m_det;
+  /// Number of stations
+  unsigned int m_nStations;
+  /// List of possible Phi hits matching an RZ seed track
+  std::vector<PrVLHits> m_phiHits;
   /// Number of zones in an R sensor
   unsigned int m_nZonesR;
   /// Number of zones in a Phi sensor
   unsigned int m_nZonesPhi;
-  
+  /// Bisectors and phi ranges of R zones
+  std::vector<double> m_cosPhi;
+  std::vector<double> m_sinPhi;
+  std::vector<double> m_tolPhi;
   /// Hits of an event grouped by sensor and zone
   std::vector<std::vector<PrVLHits> > m_hits;
   /// Vector of hit objects (to avoid newing)
@@ -121,7 +134,7 @@ private:
   IPrDebugTool* m_debugTool;
   int m_wantedKey;
 
-  bool m_doTiming;
+  bool m_timing;
   ISequencerTimerTool* m_timerTool;
   int m_timeTotal;
   int m_timePrepare;
@@ -133,7 +146,8 @@ private:
   int m_timeUnused;
   int m_timeFinal;
 
-  PrVLTracks m_rzTracks;  
+  PrVLTracks m_rzTracks; 
+  PrVLTracks m_rzTracksSkipped; 
   PrVLTracks m_spaceTracks;  
 
 };

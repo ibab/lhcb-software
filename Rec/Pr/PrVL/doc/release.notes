@@ -3,6 +3,9 @@
 ! Purpose     : Track reconstruction for VL
 !-----------------------------------------------------------------------------
 
+! 2013-04-2 - Heinrich Schindler
+ - modifications for compact design 
+
 !========================= PrVL v1r0 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.

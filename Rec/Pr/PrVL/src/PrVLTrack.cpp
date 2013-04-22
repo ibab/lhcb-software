@@ -11,27 +11,19 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PrVLTrack::PrVLTrack(  ) :
-    m_s0(0.),
-    m_sr(0.),
-    m_sz(0.),
-    m_srz(0.),
-    m_sz2(0.),
-    m_zone(0),
-    m_backward(false),
-    m_r0(-999.), m_tr(-999.),
-    m_r0Err2(999.), m_trErr2(999.),
+PrVLTrack::PrVLTrack() :
+    m_rzone(0), m_overlap(false), m_backward(false),
+    m_s0(0.), m_sr(0.), m_sz(0.), m_srz(0.), m_sz2(0.),
+    m_r0(-999.), m_tr(-999.),  m_r0Err2(999.), m_trErr2(999.),
     m_nbUsedRHits(0),
     m_missedSensors(-1),
     m_valid(true),
-    m_x0(0.), m_y0(0.),
-    m_tx(0.), m_ty(0.),
+    m_x0(0.), m_y0(0.), m_tx(0.), m_ty(0.), 
     m_qFactor(0.),
     m_sa2(0.), m_sa2z(0.), m_sa2z2(0.),
     m_sab(0.), m_sabz(0.), m_sabz2(0.),
     m_sb2(0.), m_sb2z(0.), m_sb2z2(0.),
-    m_sac(0.), m_sacz(0.), 
-    m_sbc(0.), m_sbcz(0.) {
+    m_sac(0.), m_sacz(0.), m_sbc(0.), m_sbcz(0.) {
   m_rHits.reserve(20);
   m_phiHits.reserve(20);
 }
@@ -44,19 +36,19 @@ void PrVLTrack::addRHit(PrVLHit* hit) {
   if (0 != hit->nUsed()) ++m_nbUsedRHits;
   const double z = hit->z();
   const double w = hit->weight();
-  const double r = hit->rGlobal();
+  const double r = hit->r();
   m_s0 += w;
   m_sr += w * r;
   m_sz += w * z;
   m_srz += w * r * z;
   m_sz2 += w * z * z;
   if (m_rHits.size() > 2) {
-    double den = m_sz2 * m_s0 - m_sz * m_sz;
-    if (fabs(den) < 1.e-9) den = 1.;
-    m_tr = (m_srz * m_s0  - m_sr  * m_sz) / den;
-    m_r0 = (m_sr  * m_sz2 - m_srz * m_sz) / den;
-    m_trErr2 = m_s0 / den;
-    m_r0Err2 = m_sz2 / den;
+    double det = m_sz2 * m_s0 - m_sz * m_sz;
+    if (fabs(det) < 1.e-9) det = 1.;
+    m_tr = (m_srz * m_s0  - m_sr  * m_sz) / det;
+    m_r0 = (m_sr  * m_sz2 - m_srz * m_sz) / det;
+    m_trErr2 = m_s0 / det;
+    m_r0Err2 = m_sz2 / det;
   }
 
 }
@@ -67,89 +59,83 @@ void PrVLTrack::addRHit(PrVLHit* hit) {
 void PrVLTrack::removeRHit(PrVLHit* hit) {
 
   // Remove the hit.
-  m_rHits.erase(std::remove(m_rHits.begin(), m_rHits.end(), hit), m_rHits.end()); 
-  if (0 != hit->nUsed()) --m_nbUsedRHits;
+  PrVLHits::iterator it = std::find(m_rHits.begin(), m_rHits.end(), hit);
+  if (m_rHits.end() == it) return;
+  m_rHits.erase(it);
+  if (hit->nUsed() > 0) --m_nbUsedRHits;
   const double z = hit->z();
   const double w = hit->weight();
-  const double r = hit->rGlobal();
+  const double r = hit->r();
   m_s0 -= w;
   m_sr -= w * r;
   m_sz  -= w * z;
   m_srz -= w * r * z;
   m_sz2 -= w * z * z;
   if (m_rHits.size() > 2) {
-    double den = (m_sz2 * m_s0 - m_sz * m_sz);
-    if (fabs(den) < 1.e-9) den = 1.;
-    m_tr = (m_srz * m_s0  - m_sr  * m_sz) / den;
-    m_r0 = (m_sr  * m_sz2 - m_srz * m_sz) / den;
-    m_trErr2 = m_s0 / den;
-    m_r0Err2 = m_sz2 / den;
+    double det = m_sz2 * m_s0 - m_sz * m_sz;
+    if (fabs(det) < 1.e-9) det = 1.;
+    m_tr = (m_srz * m_s0  - m_sr  * m_sz) / det;
+    m_r0 = (m_sr  * m_sz2 - m_srz * m_sz) / det;
+    m_trErr2 = m_s0 / det;
+    m_r0Err2 = m_sz2 / det;
   }
   
 }
 
 //============================================================================
-/// Return the interpolated radius
+/// Return the (interpolated) R sensor zone
 //============================================================================
-double PrVLTrack::rInterpolated(double z) {
+unsigned int PrVLTrack::rZone(double z, bool& right) {
 
-  PrVLHits::const_iterator itF, itN, itNN;
+  PrVLHits::const_iterator it0 = m_rHits.begin();
+  PrVLHits::const_iterator it1 = it0 + 1;
+  PrVLHits::const_iterator it;
   if (m_rHits.front()->z() > m_rHits.back()->z()) {
-    itN = m_rHits.begin();
-    itF = itN + 1;
-    for (itNN = itF + 1; m_rHits.end() != itNN; ++itNN) {
-      if ((*itF)->z() < z) break;
-      itN = itF;
-      itF = itNN;
+    for (it = it1 + 1; it != m_rHits.end(); ++it) {
+      if ((*it1)->z() < z) break;
+      it0 = it1;
+      it1 = it;
     }
   } else {
-    itN = m_rHits.begin();
-    itF = itN + 1;
-    for (itNN = itF + 1; m_rHits.end() != itNN; ++itNN) {
-      if ((*itF)->z() > z) break;
-      itN = itF;
-      itF = itNN;
+    for (it = it1 + 1; it != m_rHits.end(); ++it) {
+      if ((*it1)->z() > z) break;
+      it0 = it1;
+      it1 = it;
     }
   }
-  double zRatio = (z - (*itN)->z()) / ((*itF)->z( ) - (*itN)->z());
-  return (zRatio * (*itF)->rGlobal() + (1. - zRatio) * (*itN)->rGlobal());
+  const double zRatio = (z - (*it0)->z()) / ((*it1)->z() - (*it0)->z());
+  if (zRatio < 0.5) {
+    right = (*it0)->right();
+    return (*it0)->zone();
+  }
+  right = (*it1)->right();
+  return (*it1)->zone();
 
 }
 
-//=========================================================================
-/// Initialize a track from an existing one
-//=========================================================================
-void PrVLTrack::setPhiClusters(PrVLTrack& track,
-                               double cosPhi, double sinPhi,
-                               PrVLHits::const_iterator it1, 
-                               PrVLHits::const_iterator it2) {
-                             
-  m_rHits.clear();
-  PrVLHits::const_iterator ith;
-  for (ith = track.rHits().begin(); ith != track.rHits().end(); ++ith) {
-    m_rHits.push_back(*ith);
+//============================================================================
+/// Calculated the interpolated radius
+//============================================================================
+double PrVLTrack::rInterpolated(double z) {
+  
+  PrVLHits::const_iterator it0 = m_rHits.begin();
+  PrVLHits::const_iterator it1 = it0 + 1;
+  PrVLHits::const_iterator it;
+  if (m_rHits.front()->z() > m_rHits.back()->z()) {
+    for (it = it1 + 1; it != m_rHits.end(); ++it) {
+      if ((*it1)->z() < z) break;
+      it0 = it1;
+      it1 = it;
+    }
+  } else {
+    for (it = it1 + 1; it != m_rHits.end(); ++it) {
+      if ((*it1)->z() > z) break;
+      it0 = it1;
+      it1 = it;
+    }
   }
-  m_zone = track.zone();
-  m_missedSensors = track.missedSensors();
-  m_backward = track.backward();  
-
-  m_phiHits.clear();
-  m_qFactor = -1.;
-  double sumGlobal = 0.; 
-  for (ith = it1; ith != it2; ++ith) {
-    sumGlobal += (*ith)->dGlobal();
-    m_phiHits.push_back(*ith);
-  }
-  std::sort(m_phiHits.begin(), m_phiHits.end(), PrVLHit::DecreasingByZ());
-
-  const double sinDPhi = sumGlobal / m_phiHits.size();
-  const double cosDPhi = sqrt(1. - sinDPhi * sinDPhi); 
-  const double xStart = 1000. * (cosPhi * cosDPhi - sinPhi * sinDPhi);
-  const double yStart = 1000. * (cosPhi * sinDPhi + sinPhi * cosDPhi);
-  for (ith = m_rHits.begin(); ith != m_rHits.end(); ++ith) {
-    (*ith)->setStartingPoint(xStart, yStart);
-  }
-  fitTrack();
+  double zRatio = (z - (*it0)->z()) / ((*it1)->z( ) - (*it0)->z());
+  return (zRatio * (*it1)->r() + (1. - zRatio) * (*it0)->r());
 
 }
 
@@ -167,7 +153,7 @@ void PrVLTrack::setPhiClusters(PrVLTrack& track,
                              y0 + ty * (*ith)->z());
     m_rHits.push_back(*ith);
   }
-  m_zone = track.zone();
+  m_rzone = track.rZone();
   m_missedSensors = track.missedSensors();
   m_backward = track.backward();
 
@@ -188,7 +174,7 @@ void PrVLTrack::setPhiClusters(PrVLHit* r1, int zone,
                              
   m_rHits.clear();
   m_rHits.push_back(r1);
-  m_zone = zone;
+  m_rzone = zone;
   m_missedSensors = 0;
   m_backward = false;
   m_phiHits.clear();
@@ -250,74 +236,17 @@ void PrVLTrack::solve() {
   const double e2 = c1 * a3 - a1 * c3;
   const double ec = c1 * ac - a1 * cc;
   
-  double den = e1 * d2 - d1 * e2;
-  if (0 != den) den = 1. / den;
-  m_ty = (d1 * ec - e1 * dc) * den;
-  m_y0 = (e2 * dc - d2 * ec) * den;
+  double det = e1 * d2 - d1 * e2;
+  if (0 != det) det = 1. / det;
+  m_ty = (d1 * ec - e1 * dc) * det;
+  m_y0 = (e2 * dc - d2 * ec) * det;
   m_tx = - (ac + a2 * m_y0 + a3 * m_ty) / a1;
   m_x0 = - (m_sac + m_sa2z * m_tx + m_sab * m_y0 + m_sabz * m_ty) / m_sa2;
 
 }
 
-//============================================================================
-/// Fit, remove highest Chi2 in phi until OK or less than minExpected
-//============================================================================
-bool PrVLTrack::removeWorstMultiple(double maxChi2, unsigned int minExpected) {
-
-  PrVLHits::iterator ith;
-  int nbDiffSensors = 0;
-  double highest = 1000.;
-  while (m_phiHits.size() >= minExpected) {
-    highest = -1.;
-    PrVLHits::iterator worst = m_phiHits.end();
-    unsigned int prevSensor = 999;
-    for (ith = m_phiHits.begin(); ith != m_phiHits.end(); ++ith) {
-      unsigned int nextSensor = 999;
-      unsigned int mySensor = (*ith)->sensor();
-      if (ith != m_phiHits.end() - 1) {
-        nextSensor = (*(ith + 1))->sensor();
-      }
-      if (mySensor == prevSensor || mySensor == nextSensor) {
-        const double c2 = chi2(*ith);
-        if (c2 > highest) {
-          highest = c2;
-          worst = ith;
-        }
-      }
-      if (mySensor != prevSensor) ++nbDiffSensors;
-      prevSensor = mySensor;
-    }
-    if (nbDiffSensors < 3) return false;
-    if (highest < 0.) break;
-    subtractToFit(*worst);
-    m_phiHits.erase(worst);
-  }
-  solve();
-
-  // Now filter the rest, i.e. sensors with a single hit
-  while (m_phiHits.size() >= minExpected) {
-    highest = -1.;
-    PrVLHits::iterator worst = m_phiHits.end();
-    for (ith = m_phiHits.begin(); ith != m_phiHits.end(); ++ith) {
-      const double chi2 = (*ith)->chi2(m_x0 + (*ith)->z() * m_tx, 
-                                       m_y0 + (*ith)->z() * m_ty);
-      if (chi2 > highest) {
-        highest = chi2;
-        worst = ith;
-      }
-    }
-    if (highest < maxChi2) break;
-    if (m_phiHits.size() < minExpected) break;
-    subtractToFit(*worst);
-    m_phiHits.erase(worst);
-    solve();
-  }
-  return highest < maxChi2;
-  
-}
-
 //=========================================================================
-//  Fit, remove highest Chi2 in R and phi until OK
+// Remove hits highest Chi2 in R and Phi until OK
 //=========================================================================
 bool PrVLTrack::removeWorstRAndPhi(double maxChi2, unsigned int minExpected) {
 
@@ -385,12 +314,26 @@ bool PrVLTrack::addPhiCluster(PrVLHit* hit, double maxChi2) {
 //============================================================================
 /// Add a Phi cluster to the track
 //============================================================================
-void PrVLTrack::addPhiCluster(PrVLHit* hit) {
+void PrVLTrack::addPhiHit(PrVLHit* hit) {
 
   m_phiHits.push_back(hit);
   addToFit(hit);
   solve();
   
+}
+
+//============================================================================
+/// Remove a Phi cluster from the track
+//============================================================================
+void PrVLTrack::removePhiHit(PrVLHit* hit) {
+
+  // Remove the hit.
+  PrVLHits::iterator it = std::find(m_phiHits.begin(), m_phiHits.end(), hit);
+  if (m_phiHits.end() == it) return;
+  subtractToFit(hit);
+  m_phiHits.erase(it);
+  solve();
+
 }
 
 //=========================================================================
@@ -405,7 +348,7 @@ bool PrVLTrack::addBestRCluster(PrVLHits& hits, const double z,
   PrVLHit* best = 0;
   PrVLHits::iterator ith;
   for (ith = hits.begin(); ith != hits.end(); ++ith) {
-    const double dist = fabs(rPred - (*ith)->rLocal());
+    const double dist = fabs(rPred - (*ith)->r());
     double chi2 = (*ith)->weight() * dist * dist;
     if (chi2 < maxChi2) {
       maxChi2 = chi2;

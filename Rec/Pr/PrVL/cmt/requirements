@@ -14,7 +14,6 @@ use    DigiEvent  v*      Event
 use    TrackEvent v*      Event
 use    PrKernel   v*      Pr 
 use    GaudiAlg   v*
-
 include_path      none
 #============================================================================
 # Component library building rule
