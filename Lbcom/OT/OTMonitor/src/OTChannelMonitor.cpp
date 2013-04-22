@@ -40,6 +40,7 @@ DECLARE_ALGORITHM_FACTORY( OTChannelMonitor )
 OTChannelMonitor::OTChannelMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator ),
+    m_otdet(NULL),
     m_numEvents(0),
     m_isOnline(false),
     m_scaleHistos(true),
@@ -192,8 +193,6 @@ StatusCode OTChannelMonitor::execute() {
   }
   
   return sc ;
-
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
