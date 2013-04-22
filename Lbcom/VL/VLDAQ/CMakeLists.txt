@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VLDAQ
 ################################################################################
-gaudi_subdir(VLDAQ v1r3)
+gaudi_subdir(VLDAQ v1r4)
 
 gaudi_depends_on_subdirs(Det/VLDet
                          Event/DAQEvent
