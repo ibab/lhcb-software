@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PrVL
 ################################################################################
-gaudi_subdir(PrVL v1r0)
+gaudi_subdir(PrVL v1r1)
 
 gaudi_depends_on_subdirs(Det/VLDet
                          Event/DigiEvent
