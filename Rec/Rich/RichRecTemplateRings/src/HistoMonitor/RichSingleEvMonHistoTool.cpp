@@ -1,11 +1,6 @@
 // $Id: RichSingleEvMonHistoTool.cpp,v 1.3 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
 
-
-//#include "GaudiKernel/DataObject.h"
-//#include "HistogramSvc/Generic1D.h"
-//#include "HistogramSvc/H1D.h"
-////#include "GaudiPI.h"
 #include "TH1D.h"
 #include "TH2D.h"
 
@@ -13,11 +8,6 @@
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/HistogramBase.h"
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-//#include<TFile.h>
-
-
 
 // local
 #include "RichSingleEvMonHistoTool.h"

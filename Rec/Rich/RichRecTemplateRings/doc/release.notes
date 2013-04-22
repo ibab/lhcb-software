@@ -4,6 +4,9 @@
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
 
+! 2013-04-22 - Chris Jones
+ - Fic clang32 compilation
+
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
