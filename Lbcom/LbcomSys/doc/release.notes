@@ -6,6 +6,28 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v13r6>2013-04-23 LbcomSys v13r6</A></H1><PRE>
+This version uses Gaudi v23r7 and LHCb v35r5
+
+- Packages modified: FT/FTDAQ v1r3, L0/L0Calo v11r10, L0/L0DU v10r27p2,
+    OT/OTMonitor v3r5p1, Rich/RichDAQ v3r40, ST/STTools v4r14p1,
+    Velo/VeloDAQ v6r9p1, VL/VLDAQ v1r4, VP/VPDAQ v2r2
+
+- In FT/FTDAQ v1r3, VL/VLDAQ v1r4, VP/VPDAQ v2r2
+  . Added vector of RawEventLocations to support split RawEvent
+
+- In L0/L0Calo v11r10
+  . Fix clang32 compilation
+
+- In L0/L0DU v10r27p2, ST/STTools v4r14p1, Velo/VeloDAQ v6r9p1
+  . Add __init.py__ to please CMake
+
+- In OT/OTMonitor v3r5p1
+  . Fix trivial UNINIT_CTOR and UNREACHABLE Coverity defects
+
+- In Rich/RichDAQ v3r40
+  . Fix compilation error with gcc 4.7
+
 </PRE><H1><A NAME=v13r5>2013-03-25 LbcomSys v13r5</A></H1><PRE>
 This version uses Gaudi v23r7 and LHCb v35r5
 
