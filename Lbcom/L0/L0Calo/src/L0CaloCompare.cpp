@@ -5,9 +5,6 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// AIDA
-#include "AIDA/IHistogram1D.h"
-
 // Event
 #include "Event/L0CaloCandidate.h"
 #include "Event/RawEvent.h"

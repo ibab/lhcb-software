@@ -5,7 +5,6 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // AIDA
-#include "AIDA/IHistogram1D.h"
 #include "AIDA/IAxis.h"
 
 // Event
@@ -26,24 +25,24 @@ DECLARE_ALGORITHM_FACTORY( L0CaloMonit )
 //=============================================================================
 // Standard constructor
 //=============================================================================
-L0CaloMonit::L0CaloMonit( const std::string& name, 
-				ISvcLocator* pSvcLocator ) : 
-  Calo2Dview ( name , pSvcLocator ),
-  m_ecal(NULL),
-  m_hcal(NULL),
-  m_nEvents(0),
-  m_bcidHist(NULL)
-{ 
-  declareProperty( "FullMonitoring"      , m_fullMonitoring  = false ) ;  
-  declareProperty( "InputDataSuffix"     , m_inputDataSuffix = ""    ) ;  
-  declareProperty( "UpdateFrequency"     , m_updateFrequency = -1    ) ;  
-  declareProperty( "LookForHotCells"     , m_lookForHotCells = false ) ;  
+  L0CaloMonit::L0CaloMonit( const std::string& name,
+                            ISvcLocator* pSvcLocator ) :
+    Calo2Dview ( name , pSvcLocator ),
+    m_ecal(NULL),
+    m_hcal(NULL),
+    m_nEvents(0),
+    m_bcidHist(NULL)
+{
+  declareProperty( "FullMonitoring"      , m_fullMonitoring  = false ) ;
+  declareProperty( "InputDataSuffix"     , m_inputDataSuffix = ""    ) ;
+  declareProperty( "UpdateFrequency"     , m_updateFrequency = -1    ) ;
+  declareProperty( "LookForHotCells"     , m_lookForHotCells = false ) ;
   declareProperty( "AlarmThresholdRatio" , m_alarmThresholdRatio = 5 ) ;
 
   // Initialize names of histograms
   // Names of Et histogrames
   m_histName.reserve( 15 ) ; m_histName.resize( 15 , "" ) ;
-  
+
   m_histName[ L0DUBase::CaloType::Electron        ] = "EtEle" ;
   m_histName[ L0DUBase::CaloType::Photon          ] = "EtPho" ;
   m_histName[ L0DUBase::CaloType::Hadron          ] = "EtHad" ;
@@ -101,7 +100,7 @@ L0CaloMonit::L0CaloMonit( const std::string& name,
 L0CaloMonit::~L0CaloMonit() { }
 
 //=============================================================================
-// Initialisation. 
+// Initialisation.
 //=============================================================================
 StatusCode L0CaloMonit::initialize() {
 
@@ -109,7 +108,7 @@ StatusCode L0CaloMonit::initialize() {
 
   if ( sc.isFailure() ) return sc;  // error printed already by Calo2Dview
 
- if( msgLevel(MSG::DEBUG) )  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) )  debug() << "==> Initialize" << endmsg;
 
   // Initialize event counters
   m_nEvents       = 0 ;
@@ -117,11 +116,11 @@ StatusCode L0CaloMonit::initialize() {
   // Retrieve the ECAL detector element, build cards
   m_ecal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
   // Retrieve the HCAL detector element, build cards
-  m_hcal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );  
+  m_hcal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
 
   // Book all histograms created by monitoring algorithm
-  if( msgLevel(MSG::DEBUG) ) 
-    debug() << "==> Default Monitoring histograms booking " << endmsg;  
+  if( msgLevel(MSG::DEBUG) )
+    debug() << "==> Default Monitoring histograms booking " << endmsg;
 
   // Et and multiplicity spectra histogram first
   m_etHist.reserve( 7 ) ; m_etHist.resize( 7 , 0 ) ;
@@ -132,10 +131,10 @@ StatusCode L0CaloMonit::initialize() {
   // Then histograms to count number of times a cell is hit
   // only is "LookForHotCells" is activated
   if ( m_lookForHotCells ) {
-    IHistogram1D * h( 0 ) ;
-    std::vector< IHistogram1D * > v( 3 , h ) ;
+    AIDA::IHistogram1D * h( 0 ) ;
+    std::vector< AIDA::IHistogram1D * > v( 3 , h ) ;
     m_freqHist.reserve( 5 ) ; m_freqHist.resize( 5 , v ) ;
-    for ( i = 0 ; i <= L0DUBase::CaloType::Pi0Global ; ++i ) 
+    for ( i = 0 ; i <= L0DUBase::CaloType::Pi0Global ; ++i )
       bookFreqHist( i , m_freqHist ) ;
   }
 
@@ -147,19 +146,19 @@ StatusCode L0CaloMonit::initialize() {
     if ( L0DUBase::CaloType::Hadron == i ) det = "Hcal" ;
     m_mapName[ i ]  = det + "Map" + abbrev( i ) ;
     m_mapTitle[ i ] = fullName( i ) + " " + det + " map" ;
-    bookCalo2D( m_mapName[ i ] , m_mapTitle[ i ] , det ) ; 
+    bookCalo2D( m_mapName[ i ] , m_mapTitle[ i ] , det ) ;
   }
-  
-  // Now book hits per board, only activated when Full monitoring is set 
+
+  // Now book hits per board, only activated when Full monitoring is set
   // to true
   // Also "Et" spectra histograms for all TVB candidates are booked
   if ( m_fullMonitoring ) {
-    if( msgLevel(MSG::DEBUG) ) 
-      debug() << "==> Full Monitoring histograms booking" << endmsg ;   
-    IHistogram1D * h( 0 ) ;
-    std::vector< IHistogram1D* > v( 14 , h ) ;
+    if( msgLevel(MSG::DEBUG) )
+      debug() << "==> Full Monitoring histograms booking" << endmsg ;
+    AIDA::IHistogram1D * h( 0 ) ;
+    std::vector< AIDA::IHistogram1D* > v( 14 , h ) ;
     m_crateHist.reserve( 7 ) ; m_crateHist.resize( 7 , v ) ;
-    for ( i = 0 ; i <= L0DUBase::CaloType::Pi0Global ; ++i ) 
+    for ( i = 0 ; i <= L0DUBase::CaloType::Pi0Global ; ++i )
       bookCrateHist( i , m_crateHist ) ;
     m_etFullHist.reserve( 15 ) ; m_etFullHist.resize( 15 , 0 ) ;
     for ( i = 0 ; i <= L0DUBase::CaloType::SumEtSlave2In ; ++i )
@@ -167,8 +166,8 @@ StatusCode L0CaloMonit::initialize() {
   }
 
   m_bcidHist = GaudiHistoAlg::book( "BCId" , "BCId" , 0 , 3564 , 3564 ) ;
- 
-  return StatusCode::SUCCESS; 
+
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -176,55 +175,55 @@ StatusCode L0CaloMonit::initialize() {
 //=============================================================================
 StatusCode L0CaloMonit::execute() {
 
-  // Read input data in default L0Calo container, ie what is sent to 
+  // Read input data in default L0Calo container, ie what is sent to
   // L0DU.
-  // Input data suffix is used to select if we read the L0Calo data 
-  // (from the L0Calo TELL1) 
+  // Input data suffix is used to select if we read the L0Calo data
+  // (from the L0Calo TELL1)
   // or the result of the simulation/emulation
   if( msgLevel(MSG::DEBUG) ) debug() << "Execute will read "
-    << LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix 
-	  << endmsg ;
+                                     << LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix
+                                     << endmsg ;
 
   LHCb::L0CaloCandidates * candidates = getIfExists<LHCb::L0CaloCandidates>
     ( LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix );
-  if( NULL == candidates ) return Warning( "No data at " + LHCb::L0CaloCandidateLocation::Default + 
+  if( NULL == candidates ) return Warning( "No data at " + LHCb::L0CaloCandidateLocation::Default +
                                            m_inputDataSuffix, StatusCode::SUCCESS );
 
   LHCb::L0CaloCandidates::iterator cand ;
 
-  m_nEvents++ ; 
+  m_nEvents++ ;
 
   // Read ODIN bank to obtain BCId and event number
-  ulonglong event( 0 ) ; 
-  unsigned int BCId( 4000 ) ; 
+  ulonglong event( 0 ) ;
+  unsigned int BCId( 4000 ) ;
 
   LHCb::ODIN * odin = getIfExists< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
   if ( NULL != odin ) {
-    event = odin->eventNumber() ; 
-    BCId = odin->bunchId() ; 
+    event = odin->eventNumber() ;
+    BCId = odin->bunchId() ;
   }
 
   // Fill BCId histogram
   m_bcidHist -> fill( BCId , 1. ) ;
 
   // Loop over default candidates
-  for ( cand = candidates -> begin() ; candidates -> end() != cand ; 
-	++cand ) { 
+  for ( cand = candidates -> begin() ; candidates -> end() != cand ;
+        ++cand ) {
     LHCb::L0CaloCandidate * theCand = (*cand) ;
 
-    if( msgLevel(MSG::DEBUG) ) 
-      debug() << " Event " << event << " Type  = " << theCand -> type() 
+    if( msgLevel(MSG::DEBUG) )
+      debug() << " Event " << event << " Type  = " << theCand -> type()
               << " Et  = " << theCand -> etCode() << endmsg ;
 
     defaultMonitoring( theCand ) ;
   }
 
   // Check regularly for hot cells
-  if ( ( m_updateFrequency > 0 ) && ( m_lookForHotCells ) ) { 
-    int goForCheck = m_nEvents % m_updateFrequency ; 
-    if ( 0 == goForCheck ) { 
-      if( msgLevel(MSG::DEBUG) ) 
-        debug() << "m_nEvents = " << m_nEvents << " go for check ..." << endmsg ; 
+  if ( ( m_updateFrequency > 0 ) && ( m_lookForHotCells ) ) {
+    int goForCheck = m_nEvents % m_updateFrequency ;
+    if ( 0 == goForCheck ) {
+      if( msgLevel(MSG::DEBUG) )
+        debug() << "m_nEvents = " << m_nEvents << " go for check ..." << endmsg ;
       printHotCellSummary( ) ;
     }
   }
@@ -236,17 +235,17 @@ StatusCode L0CaloMonit::execute() {
 
     LHCb::L0CaloCandidates* candidatesF = getIfExists<LHCb::L0CaloCandidates>
       ( LHCb::L0CaloCandidateLocation::Full + m_inputDataSuffix ) ;
-    if ( NULL == candidatesF ) return Warning( "No data at " + LHCb::L0CaloCandidateLocation::Full + 
+    if ( NULL == candidatesF ) return Warning( "No data at " + LHCb::L0CaloCandidateLocation::Full +
                                                m_inputDataSuffix, StatusCode::SUCCESS ) ;
 
     LHCb::L0CaloCandidates::const_iterator candF ;
 
-    for ( candF = candidatesF->begin() ; candidatesF->end() != candF ; 
-          ++candF ) 
+    for ( candF = candidatesF->begin() ; candidatesF->end() != candF ;
+          ++candF )
       m_etFullHist[ (*candF) -> type() ] -> fill( (*candF) -> etCode() , 1. ) ;
   }
-  
-  return StatusCode::SUCCESS; 
+
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -259,40 +258,40 @@ StatusCode L0CaloMonit::finalize() {
   if ( ( m_updateFrequency < 0 ) && ( m_lookForHotCells ) )
     printHotCellSummary() ;
 
-  std::vector< std::vector< IHistogram1D * > >::iterator it ;
+  std::vector< std::vector< AIDA::IHistogram1D * > >::iterator it ;
   for ( it = m_crateHist.begin() ; m_crateHist.end() != it ; ++it )
     (*it).clear() ;
   m_crateHist.clear() ;
   m_etHist.clear() ;
-  
+
   return Calo2Dview::finalize() ;
 }
 
 //=============================================================================
 // Fill histograms for the default monitoring
 //=============================================================================
-void L0CaloMonit::defaultMonitoring( const LHCb::L0CaloCandidate * cand ) { 
+void L0CaloMonit::defaultMonitoring( const LHCb::L0CaloCandidate * cand ) {
   // Cell ID of the candidate
-  LHCb::CaloCellID caloCell = cand -> id() ; 
-  
-  // Type of the candidate (L0DUBase::CaloType) 
+  LHCb::CaloCellID caloCell = cand -> id() ;
+
+  // Type of the candidate (L0DUBase::CaloType)
   int type = cand -> type() ;
   int card = -1 ;
-  
+
   switch ( type ) {
-    
+
   case L0DUBase::CaloType::Electron:
   case L0DUBase::CaloType::Photon:
   case L0DUBase::CaloType::Hadron:
   case L0DUBase::CaloType::Pi0Local:
   case L0DUBase::CaloType::Pi0Global:
-    
+
     m_etHist[ type ] -> fill( cand -> etCode() , 1. ) ;
     card = detector( type ) -> cardNumber( caloCell ) ;
-    
-    if ( m_lookForHotCells ) 
+
+    if ( m_lookForHotCells )
       m_freqHist[ type ][ caloCell.area() ] -> fill( caloCell.all() , 1. ) ;
-    
+
     if ( m_fullMonitoring ) {
       int crate = detector( type ) -> cardCrate( card ) ;
       int cardSlot = detector( type ) -> cardSlot( card ) ;
@@ -301,12 +300,12 @@ void L0CaloMonit::defaultMonitoring( const LHCb::L0CaloCandidate * cand ) {
     }
     fillCalo2D( m_mapName[ type ] , caloCell , 1. , m_mapTitle[ type ] ) ;
     break ;
-    
+
   case L0DUBase::CaloType::SumEt:
   case L0DUBase::CaloType::SpdMult:
     m_etHist[ type ] -> fill( cand -> etCode() , 1. ) ;
     break ;
-    
+
   default:
     break ;
   }
@@ -317,63 +316,63 @@ void L0CaloMonit::defaultMonitoring( const LHCb::L0CaloCandidate * cand ) {
 //=============================================================================
 void L0CaloMonit::printHotCellSummary( ) {
   info() << "=========================Hot cells ========================="
-	 << endmsg ; 
+         << endmsg ;
   info() << "============================================================"
-	 << endmsg ;
+         << endmsg ;
 
-  for ( int i = 0 ; i <= L0DUBase::CaloType::Pi0Global ; ++i ) { 
+  for ( int i = 0 ; i <= L0DUBase::CaloType::Pi0Global ; ++i ) {
     int caloType = 1 ;
-    int nArea = 3 ; 
-    if ( L0DUBase::CaloType::Hadron == i ) { 
+    int nArea = 3 ;
+    if ( L0DUBase::CaloType::Hadron == i ) {
       nArea = 2 ;
       caloType = 2 ;
     }
-    
+
     for ( int j = 0 ; j < nArea ; ++j ) {
-      info() << "===        " << fullName( i ) 
-	     << " Candidates " << area( j ) << " region              ===" 
-	     << endmsg ; 
-      SearchForHotCellsAndReset( m_freqHist[ i ][ j ] , caloType ) ; 
+      info() << "===        " << fullName( i )
+             << " Candidates " << area( j ) << " region              ==="
+             << endmsg ;
+      SearchForHotCellsAndReset( m_freqHist[ i ][ j ] , caloType ) ;
     }
     info() << "============================================================"
-	   << endmsg ;
+           << endmsg ;
   }
 }
 
 
 //=============================================================================
-// Search for hot cells in the frequency histograms 
+// Search for hot cells in the frequency histograms
 // and then reset the histogram
 //=============================================================================
-void L0CaloMonit::SearchForHotCellsAndReset( IHistogram1D * hist , 
-						const int type ) { 
-  // Number of entries in the histogram 
+void L0CaloMonit::SearchForHotCellsAndReset( AIDA::IHistogram1D * hist ,
+                                             const int type ) {
+  // Number of entries in the histogram
   int nIn = hist -> entries() ;
 
-  const IAxis& xAxis = hist->axis() ; 
+  const IAxis& xAxis = hist->axis() ;
 
   // Number of bins in the histogram
-  int nBin = xAxis.bins() ; 
+  int nBin = xAxis.bins() ;
 
   // Transfer histogram in vector
   std::vector< int > data ;
-  data.reserve( nBin ) ; 
+  data.reserve( nBin ) ;
 
   // Count number of cells hit
   int nUsedCells = 0 ;
   int i = 0 ;
   for ( i = 0 ; i < nBin ; i++) {
-    data.push_back( hist -> binEntries( i ) ) ; 
-    if ( 0 != data[ i ] ) nUsedCells++ ; 
-  } 
-  
+    data.push_back( hist -> binEntries( i ) ) ;
+    if ( 0 != data[ i ] ) nUsedCells++ ;
+  }
+
   if ( nUsedCells == 0 ) {
     info() << " ===> No hot channels for this region " << endmsg ;
     return ;
   }
 
   // Compute the mean occupancy of the are
-  double meanOcc = ( (double) nIn ) / ( (double) nUsedCells ) ; 
+  double meanOcc = ( (double) nIn ) / ( (double) nUsedCells ) ;
 
   // Find hot channels
   std::vector< int > hotChannels ;
@@ -381,90 +380,90 @@ void L0CaloMonit::SearchForHotCellsAndReset( IHistogram1D * hist ,
     // Declare a hot cell when its number of hits is larger than
     // N times the mean occupancy
     // where N is set by options (AlarmThresholdRatio)
-    if ( data[i] > meanOcc * m_alarmThresholdRatio ) 
-      hotChannels.push_back( i ) ; 
+    if ( data[i] > meanOcc * m_alarmThresholdRatio )
+      hotChannels.push_back( i ) ;
 
-  if ( ! hotChannels.empty() ) { 
+  if ( ! hotChannels.empty() ) {
     // Print the hot cells on screen
     info() << "Number of hit cells : " << nUsedCells
-	   << " mean occupancy : "     << meanOcc 
-	   << " alarm threshold : "    << m_alarmThresholdRatio*meanOcc
-	   << endmsg ; 
+           << " mean occupancy : "     << meanOcc
+           << " alarm threshold : "    << m_alarmThresholdRatio*meanOcc
+           << endmsg ;
     info() << "---------------------------------------------------------------"
-	   << endmsg ; 
-    info() 
+           << endmsg ;
+    info()
       << "|   Data     |    Hot(?) Cell    |    Crate    | Slot     |"
-      << "   Channel   |" << endmsg ; 
+      << "   Channel   |" << endmsg ;
     info() << "---------------------------------------------------------------"
-	   << endmsg ; 
+           << endmsg ;
 
-    int card( -999 ), crate( -999 ) , cardSlot( -999 ) , channelNum( 0 ) , 
-      cellChannel( 0 ) ; 
+    int card( -999 ), crate( -999 ) , cardSlot( -999 ) , channelNum( 0 ) ,
+      cellChannel( 0 ) ;
     double idAll( -1. ) ;
     std::vector< LHCb::CaloCellID >::const_iterator itc ;
-    
+
     for ( std::vector< int >::iterator it = hotChannels.begin() ;
-          it != hotChannels.end() ; ++it ) { 
-      
+          it != hotChannels.end() ; ++it ) {
+
       // Find the Cell ID from the x coordinate of the bin
-      idAll = xAxis.binLowerEdge( (*it) ) ; 
-      LHCb::CaloCellID caloCell( (int)idAll ) ; 
-      
+      idAll = xAxis.binLowerEdge( (*it) ) ;
+      LHCb::CaloCellID caloCell( (int)idAll ) ;
+
       // Find useful information to print to allow locating the hot cell
       // crate, card slot and channel number in the card
-      card  = detector( type ) -> cardNumber( caloCell) ; 
-      crate = detector( type ) -> cardCrate(card) ; 
+      card  = detector( type ) -> cardNumber( caloCell) ;
+      crate = detector( type ) -> cardCrate(card) ;
       cardSlot = detector( type ) -> cardSlot(card) ;
-      
-      for ( itc = detector( type ) -> cardChannels( card ).begin() ; 
-            itc != detector( type ) -> cardChannels( card ).end() ; 
+
+      for ( itc = detector( type ) -> cardChannels( card ).begin() ;
+            itc != detector( type ) -> cardChannels( card ).end() ;
             ++itc ) {
-        if ( (*itc) == caloCell) { 
+        if ( (*itc) == caloCell) {
           cellChannel = channelNum ;
           break ;
         }
-        channelNum++ ; 
-      } 
-      
+        channelNum++ ;
+      }
+
       info() << "|     " << data[ (*it) ] << "     |   " << caloCell
-             << "    |     " <<crate << "     |     " 
-             << cardSlot << "      |  " << "   |   " 
-             << cellChannel << "  |  " << endmsg ; 
+             << "    |     " <<crate << "     |     "
+             << cardSlot << "      |  " << "   |   "
+             << cellChannel << "  |  " << endmsg ;
       info() << "-----------------------------------------------------------"
-             << endmsg ; 
-    }  
+             << endmsg ;
+    }
   } else {
     info() << " ===> No hot channels for this region " << endmsg ;
   }
-  hist->reset() ; 
+  hist->reset() ;
 }
 
 //=============================================================================
 // Book a "Et" histogram
 //=============================================================================
-void L0CaloMonit::bookEtHist( const unsigned int i , 
-				 std::vector< IHistogram1D *> & hist , 
-				 const std::string & suffix ) {
-  hist[ i ] = GaudiHistoAlg::book( m_histName[ i ] + suffix , 
-				   m_histTitle[ i ] + suffix ,
-				   0 , m_maxScale[ i ] , m_maxScale[ i ] ) ;
+void L0CaloMonit::bookEtHist( const unsigned int i ,
+                              std::vector< AIDA::IHistogram1D *> & hist ,
+                              const std::string & suffix ) {
+  hist[ i ] = GaudiHistoAlg::book( m_histName[ i ] + suffix ,
+                                   m_histTitle[ i ] + suffix ,
+                                   0 , m_maxScale[ i ] , m_maxScale[ i ] ) ;
 }
 
 //=============================================================================
 // Book a "Frequency" histogram
 //=============================================================================
-void L0CaloMonit::bookFreqHist( const unsigned int i , 
-				   std::vector< std::vector< IHistogram1D *> >&
-				   hist ) {
+void L0CaloMonit::bookFreqHist( const unsigned int i ,
+                                std::vector< std::vector< AIDA::IHistogram1D *> >&
+                                hist ) {
   unsigned int nZone( 0 ) ;
   if ( i != L0DUBase::CaloType::Hadron ) nZone = 3 ;
   else nZone = 2 ;
 
   hist[ i ].reserve( nZone ) ;
-  
+
   int cellMin( 0 ) , cellMax( 0 ) ;
 
-  // Inner = 2 , Middle = 1 , Outer = 0 
+  // Inner = 2 , Middle = 1 , Outer = 0
   for ( unsigned int j = 0 ; j < nZone ; ++j ) {
     if ( L0DUBase::CaloType::Hadron == i ) {
       switch( j ) {
@@ -481,28 +480,28 @@ void L0CaloMonit::bookFreqHist( const unsigned int i ,
       }
     }
 
-    hist[ i ][ j ] = 
+    hist[ i ][ j ] =
       GaudiHistoAlg::book( "Freq" + abbrev( i ) + area( j ) ,
-			   fullName( i ) + " Candidate occurence " + area( j ) ,
-			   cellMin , cellMax , cellMax - cellMin ) ;
+                           fullName( i ) + " Candidate occurence " + area( j ) ,
+                           cellMin , cellMax , cellMax - cellMin ) ;
   }
 }
 
 //=============================================================================
 // Book a "Crate" histogram
 //=============================================================================
-void L0CaloMonit::bookCrateHist( const unsigned int i , 
-				    std::vector< std::vector< IHistogram1D *> >&
-				    hist ) {
+void L0CaloMonit::bookCrateHist( const unsigned int i ,
+                                 std::vector< std::vector< AIDA::IHistogram1D *> >&
+                                 hist ) {
   unsigned int nCrates( 0 ) ;
   if ( i != L0DUBase::CaloType::Hadron ) nCrates = 14 ;
   else nCrates = 4 ;
-  
+
   hist[ i ].reserve( nCrates ) ;
-  
-  for ( unsigned int j = 0 ; j < nCrates ; ++j ) 
-    hist[ i ][ j ] = 
+
+  for ( unsigned int j = 0 ; j < nCrates ; ++j )
+    hist[ i ][ j ] =
       GaudiHistoAlg::book( abbrev( i ) + "Crate" + crateNumber( i , j ) ,
-			   fullName( i ) + " crate " + crateNumber( i , j ) ,
-			   0 , 16 , 16 ) ;
+                           fullName( i ) + " crate " + crateNumber( i , j ) ,
+                           0 , 16 , 16 ) ;
 }

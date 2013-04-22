@@ -3,6 +3,9 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2013-04-22 - Chris Jones
+ - Fix clang32 compilation
+
 !========================= L0Calo v11r9 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.

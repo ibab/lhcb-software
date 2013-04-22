@@ -2,14 +2,15 @@
 #define L0CALOMONIT_H 1
 
 // Include files
-// from Gaudi 
+// from Gaudi
 #include "CaloUtils/Calo2Dview.h"
 // from Event
 #include "Event/L0DUBase.h"
 
+// AIDA
+#include "AIDA/IHistogram1D.h"
+
 // Forward declarations
-class IHistogram1D ;
-class IHistogram2D ;
 class DeCalorimeter ;
 namespace LHCb {
   class L0CaloCandidate ;
@@ -27,13 +28,13 @@ namespace LHCb {
 
 class L0CaloMonit: public Calo2Dview {
 
- public:
+public:
   /// Standard constructor
   L0CaloMonit( const std::string& name , ISvcLocator* pSvcLocator ) ;
-  
+
   /// Standard destructor
-  virtual ~L0CaloMonit( ) ; 
-  
+  virtual ~L0CaloMonit( ) ;
+
   /// Initialization: book histograms
   virtual StatusCode initialize() ;
 
@@ -43,18 +44,16 @@ class L0CaloMonit: public Calo2Dview {
   /// Finalization: print hot cells
   virtual StatusCode finalize  () ;
 
- protected:
-  
- private:
+private:
 
   /** Automatic search for hot cells from L0 Calo trigger histograms and hits
    *  and print the information about the hot cells.
-   *  @param[in] hist  Histogram of hit cells for a given type of L0Calo 
+   *  @param[in] hist  Histogram of hit cells for a given type of L0Calo
    *                   candidate and a given area of ECAL or HCAL.
    *                   The histogram is reset once the function is executed
    *  @param[in] type  The type of candidate corresponding to the histogram
    */
-  void SearchForHotCellsAndReset( IHistogram1D * hist , const int type ) ; 
+  void SearchForHotCellsAndReset( AIDA::IHistogram1D * hist , const int type ) ;
 
   DeCalorimeter * m_ecal ; ///< Pointer to Ecal detector element
   DeCalorimeter * m_hcal ; ///< Pointer to Hcal detector element
@@ -67,46 +66,46 @@ class L0CaloMonit: public Calo2Dview {
    *  to select between different sources (data or emulation)
    *  Set by option.
    */
-  std::string m_inputDataSuffix ; 
+  std::string m_inputDataSuffix ;
 
   /** Frequency with which the search of hot cells is launched.
    *  Set by option.
    *  @sa SearchForHotCellsAndReset
    */
-  int  m_updateFrequency ; 
+  int  m_updateFrequency ;
 
   /** Ratio to declare a cell hot.
    *  Set by option.
    *  @sa SearchForHotCellsAndReset
    */
-  int m_alarmThresholdRatio ; 
+  int m_alarmThresholdRatio ;
 
   /** Activate or desactivate hot cell automatic search.
    *  Set by option.
    *  @sa SearchForHotCellsAndReset
    */
-  bool  m_lookForHotCells ; 
+  bool  m_lookForHotCells ;
 
   /// BCId histogram
-  IHistogram1D * m_bcidHist ;
+  AIDA::IHistogram1D * m_bcidHist ;
 
   /// Et Spectra histogram. Index of vector is type L0DUBase::CaloType
-  std::vector< IHistogram1D *> m_etHist ;
+  std::vector< AIDA::IHistogram1D *> m_etHist ;
 
-  /** Et Spectra histogram for the full monitoring. 
+  /** Et Spectra histogram for the full monitoring.
    *  Index of vector is type L0DUBase::CaloType
    */
-  std::vector< IHistogram1D *> m_etFullHist ;
+  std::vector< AIDA::IHistogram1D *> m_etFullHist ;
 
   /** Frequency histogram. Index of vector is type L0DUBase::CaloType
    *  and area of detector.
    */
-  std::vector< std::vector< IHistogram1D *> > m_freqHist ;
+  std::vector< std::vector< AIDA::IHistogram1D *> > m_freqHist ;
 
   /** Crate histogram. Index of vector is type L0DUBase::CaloType
    *  and crate number (renumbering from 0).
    */
-  std::vector< std::vector< IHistogram1D *> > m_crateHist ;
+  std::vector< std::vector< AIDA::IHistogram1D *> > m_crateHist ;
 
   /// Name of 2D map histograms
   std::vector< std::string > m_mapName ;
@@ -123,29 +122,29 @@ class L0CaloMonit: public Calo2Dview {
    *  @param[out] hist   vector of IHistogram1D to book
    *  @param[in]  suffix empty or "Full"
    */
-  void bookEtHist( const unsigned int i , std::vector< IHistogram1D *> & hist , 
-		   const std::string& suffix ) ;
+  void bookEtHist( const unsigned int i , std::vector< AIDA::IHistogram1D *> & hist ,
+                   const std::string& suffix ) ;
 
   /** Auxiliary function to book one frequency histogram
    *  @param[in]  i      type of candidate (L0DUBase::CaloType)
    *  @param[out] hist   vector of IHistogram1D to book
    */
-  void bookFreqHist( const unsigned int i , 
-		     std::vector< std::vector< IHistogram1D *> > & hist ) ;
+  void bookFreqHist( const unsigned int i ,
+                     std::vector< std::vector< AIDA::IHistogram1D *> > & hist ) ;
 
   /** Auxiliary function to book one crate histogram
    *  @param[in]  i      type of candidate (L0DUBase::CaloType)
    *  @param[out] hist   vector of IHistogram1D to book
    */
-  void bookCrateHist( const unsigned int i , 
-		      std::vector< std::vector< IHistogram1D *> > & hist ) ;
+  void bookCrateHist( const unsigned int i ,
+                      std::vector< std::vector< AIDA::IHistogram1D *> > & hist ) ;
 
   /** Auxiliary function to fill histograms for the default monitoring
    *  @param[in] cand  L0CaloCandidate to use to fill histograms
    */
   void defaultMonitoring( const LHCb::L0CaloCandidate * cand ) ;
 
-  /** Auxiliary function to print the location of the hot cells for 
+  /** Auxiliary function to print the location of the hot cells for
    *  all candidate types.
    */
   void printHotCellSummary( ) ;

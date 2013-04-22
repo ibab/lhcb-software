@@ -5,7 +5,8 @@
 // Include files
 #include "CaloUtils/Calo2Dview.h"
 
-class IHistogram1D ;
+// AIDA
+#include "AIDA/IHistogram1D.h"
 
 /** @class L0CaloCompare L0CaloCompare.h
  *
@@ -13,8 +14,11 @@ class IHistogram1D ;
  *  Scans the L0CaloCandidate and fills histograms.
  *
  */
-class L0CaloCompare: public Calo2Dview {
+class L0CaloCompare: public Calo2Dview
+{
+
 public:
+
   /// Standard constructor
   L0CaloCompare(const std::string& name, ISvcLocator* pSvcLocator );
   
@@ -24,24 +28,25 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   
-protected:
-  
 private:
+
   /// Prints name of candidate
   std::string candidateTypeName( int type ) const ;
 
+private:
+
   bool m_fullMonitoring ;
 
-  IHistogram1D*            m_histSpdMult_Comp ; 
-  IHistogram1D*            m_histSumEt_Comp ;
-  IHistogram1D*            m_histEleErrorC  ;
-  IHistogram1D*            m_histPhoErrorC  ;
-  IHistogram1D*            m_histHadErrorC  ;
-  IHistogram1D*            m_histPilErrorC  ;
-  IHistogram1D*            m_histPigErrorC  ;
+  AIDA::IHistogram1D*            m_histSpdMult_Comp ; 
+  AIDA::IHistogram1D*            m_histSumEt_Comp ;
+  AIDA::IHistogram1D*            m_histEleErrorC  ;
+  AIDA::IHistogram1D*            m_histPhoErrorC  ;
+  AIDA::IHistogram1D*            m_histHadErrorC  ;
+  AIDA::IHistogram1D*            m_histPilErrorC  ;
+  AIDA::IHistogram1D*            m_histPigErrorC  ;
 
-  IHistogram1D*            m_histTotalCount ;
-  IHistogram1D*            m_histErrorCount ;
+  AIDA::IHistogram1D*            m_histTotalCount ;
+  AIDA::IHistogram1D*            m_histErrorCount ;
 
   std::string              m_referenceDataSuffix ;
   std::string              m_checkDataSuffix ;
@@ -53,7 +58,7 @@ private:
   std::vector< std::string >  m_errorCounterName ;
   std::vector< std::string >  m_errorCounterTitle ;
 
-  std::vector<IHistogram1D*>  m_errorCounterHisto ;
+  std::vector<AIDA::IHistogram1D*>  m_errorCounterHisto ;
 
   std::set< unsigned int > m_idles ; ///< List of idle BCIds
   /// Vector of Idles BCIds (to set via job options)
