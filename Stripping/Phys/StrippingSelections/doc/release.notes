@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r23 2013-04-22 =========================
+
 ! 2013-Apr-21 - Patrick Spradlin
  - Updates to cross-section lines for 2.76 TeV stripping.
    M       StrippingD2HHHForXSec.py
