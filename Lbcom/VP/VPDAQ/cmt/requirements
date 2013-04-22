@@ -2,7 +2,7 @@
 # Maintainer : Marcin Kucharczyk
 #
 package           VPDAQ
-version           v2r1
+version           v2r2
 
 # Structure, i.e. directories to process. 
 #============================================================================

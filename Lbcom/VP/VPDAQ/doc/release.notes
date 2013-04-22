@@ -4,6 +4,7 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+!========================= VPDAQ v2r2 2013-04-22 =========================
 ! 2013-04-11 - Sascha Stahl
  - Added back acccdidentally removed protection for RawEventLocations.
 
