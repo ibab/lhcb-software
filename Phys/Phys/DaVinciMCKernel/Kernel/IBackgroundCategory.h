@@ -200,7 +200,7 @@ public:
 public:
 
   /// Destructor
-  virtual ~IBackgroundCategory(){};
+  virtual ~IBackgroundCategory() {}
 
   /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IBackgroundCategory; }
@@ -220,7 +220,7 @@ public:
   getDaughtersAndPartners( const LHCb::Particle* ) = 0 ;
 
   /// Returns the map between enum values and enum names of the categories
-  const std::map<int, std::string>& getCategoryMap(){return m_cat;};
+  const std::map<int, std::string>& getCategoryMap() { return m_cat; }
 
 protected:
 
