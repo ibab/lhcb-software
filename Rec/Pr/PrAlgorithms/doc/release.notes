@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-04-22 - Sascha Stahl
+ - Added check for backward velo tracks in PrForwardTracking.
+
 !========================= PrAlgorithms v1r3 2013-03-25 =========================
 ! 2013-03-25 - Marco Cattaneo
  - Use stable_sort in PrSeedingXLayers, to get same results in gcc43 and gcc46

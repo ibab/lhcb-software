@@ -112,7 +112,9 @@ StatusCode PrForwardTracking::execute() {
 
   LHCb::Tracks* velo = get<LHCb::Tracks>( m_inputName );
   for ( LHCb::Tracks::iterator itV = velo->begin(); velo->end() != itV; ++itV ) {
-    m_forwardTool->extendTrack( *itV, result );
+    bool ok = !((*itV)->checkFlag( LHCb::Track::Invalid) );
+    ok = ok && (!((*itV)->checkFlag( LHCb::Track::Backward) ));
+    if (ok) m_forwardTool->extendTrack( *itV, result );
   }
   
   //============================================================
