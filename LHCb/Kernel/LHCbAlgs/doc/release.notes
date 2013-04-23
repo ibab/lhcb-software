@@ -4,6 +4,8 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r56 2013-04-23 =========================
+
 ! 2013-04-19 - Chris Jones
  - Add a new simple little algorithm, ApplicationVersionFilter, that 
    selects/rejects events based on a regex filter on the application version.
