@@ -90,7 +90,7 @@ smear     = PARAM (
 document = DDDB(
     CONDITION (
     smear    ,
-    comment = 'Momentum Smearing %s %s %s ' % ( sim , reco , year )
+    comment = 'Momentum Smearing %s %s %s ' % ( sim , reco , year ),
     name    = 'MomentumSmear'
     ),
     )   
