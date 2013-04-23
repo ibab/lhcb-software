@@ -23,12 +23,14 @@
 </argument>
 <argument name="args">
 	<set>
-		<text>$APPCONFIGOPTS/Gauss/Sim08-Beam3500GeV-md100-2011-nu2.py</text>
+		<text>$APPCONFIGOPTS/Gauss/Beam7000GeV-md100-nu3.8.py</text>
 		<text>$DECFILESROOT/options/10000000.py</text>
 		<text>$LBPYTHIAROOT/options/Pythia.py</text>
+                <text>$APPCONFIGOPTS/Gauss/G4PL_LHEP_EmNoCuts.py</text>
+		<text>$GAUSSOPTS/Gauss-Upgrade-Reference.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-DBTags.py</text>
-		<text>$GAUSSOPTS/Gauss-Upgrade-Reference.py</text>
+
 	</set>
 </argument>
 <argument name="exit_code">

@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-04-23 - Paul Szczypka
+ - Updated upgrade qmtest scripts (not references).
+
 !======================== Gauss v46r0p1 2013-04-04 ===========================
 ! 2013-03-29 - Paul Szczypka
  - Removed old VL qmtest
