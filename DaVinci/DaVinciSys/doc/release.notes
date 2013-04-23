@@ -7,6 +7,14 @@ Purpose             : LHCb physics analysis application
 
 New development release based on the LHCb v35r5 stack.
 
+A patch on top of DaVinci v33r3 that includes automatic recalibration
+of the ANNPID information using the latest MC2012 tunings, when running
+on Reco14 data.
+
+</PRE><H1><A NAME=v33r3>2013-04-08 DaVinci v33r3</A></H1><PRE>
+
+New development release based on the LHCb v35r5 stack.
+
 Executive Summary :-
 
 - Changes to DaVinci Application

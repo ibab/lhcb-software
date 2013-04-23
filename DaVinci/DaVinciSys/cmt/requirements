@@ -1,10 +1,17 @@
 package DaVinciSys
-version v33r3
+version v33r3p1
 
 branches doc cmt
 
-use  DaVinci         v33r3  Phys
+use  DaVinci         v33r3p1  Phys
 use  DaVinciTests    v2r16
+
+# Temporary inclusions
+use EventPacker          v3r0    Event
+use ChargedProtoANNPID   v2r0    Rec
+use PhysConf             v1r20   Phys
+use DaVinciTools         v23r7   Phys
+use StrippingSelections  v3r23   Phys
 
 # Declare this as a container package
 apply_pattern container_package
