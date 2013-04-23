@@ -4,6 +4,8 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v2r0 2013-04-23 =========================
+
 ! 2013-04-17 - Marco Clemencic
  - Ported to CMake the configuration to disable the use of Neurobayes.
 
