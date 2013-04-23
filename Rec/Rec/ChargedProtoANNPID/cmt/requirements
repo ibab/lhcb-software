@@ -39,6 +39,7 @@ apply_pattern    component_library library=ChargedProtoANNPID
 private
 macro_append     cppflags "" \
                  target-gcc " -Wno-variadic-macros "
+# Only enable NB on platforms that support it
 macro_append     cppflags "" \
                  target-i686   " -D_ENABLE_NEUROBAYES " \
                  target-x86_64 " -D_ENABLE_NEUROBAYES "
