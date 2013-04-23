@@ -28,6 +28,6 @@ application  external_fsm_client ../main/main2.cpp
 macro_append external_fsm_client_cppflags     " -DFUNCTION=external_fsm_client "
 macro_append external_fsm_client_dependencies " Controller "
 
-application  fsm_upi ../main/fsm_upi.cpp -import=UPI
-macro_append fsm_upi_cppflags     " -DFUNCTION=fsm_upi "
+application  fsm_upi ../main/fsm_upi.cpp ../main/ControlMenu.cpp -import=UPI
+macro_append fsm_upi_cppflags     " -DFUNCTION=fsm_upi_controlmenu "
 macro_append fsm_upi_dependencies " Controller "
