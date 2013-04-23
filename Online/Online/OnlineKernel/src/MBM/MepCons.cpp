@@ -46,7 +46,7 @@ namespace {
           break;
       }
       unsigned int vetomask[4] = {0,0,0,0};
-      unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
+      unsigned int trmask[4]   = {~0U,~0U,~0U,~0U};
       addRequest(evtyp,trmask,vetomask,BM_MASK_ANY,BM_REQ_ALL,BM_FREQ_PERC,100.);
       ::lib_rtl_output(LIB_RTL_INFO," EVENT Type (2=EVENT, 1=MEP): %d\n", evtyp);
       ::lib_rtl_output(LIB_RTL_INFO," MEP    buffer start: %08X\n",m_mepID->mepStart);

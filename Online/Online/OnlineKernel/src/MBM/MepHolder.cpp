@@ -16,7 +16,7 @@ namespace {
       include();
       m_bmid = m_mepID->mepBuffer;
       unsigned int vetomask[4] = {0,0,0,0};
-      unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
+      unsigned int trmask[4]   = {~0U,~0U,~0U,~0U};
       addRequest(EVENT_TYPE_MEP,trmask,vetomask,BM_MASK_ANY,BM_REQ_ALL,BM_FREQ_PERC,100.);
       ::lib_rtl_output(LIB_RTL_INFO," MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::lib_rtl_output(LIB_RTL_INFO," EVENT  buffer start: %08X\n",m_mepID->evtStart);

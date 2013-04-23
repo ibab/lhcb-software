@@ -17,7 +17,7 @@ extern "C" int rtl_testffx(int,char **) {
   };
   for (size_t i=0; i<sizeof(mask)/sizeof(mask[0]); ++i)  {
     for (int start=0; start < 32; ++start)  {
-      int val[2] = {mask[i], 0};
+      unsigned int val[2] = {mask[i], 0};
       int len = 32-start;
       int pos = 0;
       int s = start;
