@@ -57,7 +57,7 @@ int PubArea::ExitHandler(void* param)  {
   void* m_ptr = hdl->address;
   PubAreaHeader *head = (PubAreaHeader*)(m_ptr);
   PubAreaIndex  *ind  = (PubAreaIndex*)((char*)(m_ptr) + sizeof(PubAreaHeader));
-  if ( head > 0 )  {
+  if ( head )  {
     for ( int i = 0; i < head->NumIndex; i++, ind++)  {
       if ( strcmp(LocalProcess, ind->SlotProcess) == 0 )
         ind->InUse = 0;

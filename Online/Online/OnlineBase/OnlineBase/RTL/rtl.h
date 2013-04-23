@@ -14,6 +14,7 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   #include <ctime>
   #ifndef _WIN32
     #include <semaphore.h>
+    #include <unistd.h>
   #endif
   #ifndef __CXX_CONST
     #define __CXX_CONST const

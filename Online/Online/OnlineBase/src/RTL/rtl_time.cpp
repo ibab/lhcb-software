@@ -1,4 +1,4 @@
-#include "RTL/rtl.h"
+#include "rtl_internal.h"
 #include "RTL/time.h"
 #include <cstring>
 

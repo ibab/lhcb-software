@@ -4,6 +4,7 @@
 static CheckpointRestoreWrapper* _get() { return 0; }
 #else
 #include <dlfcn.h>
+#include <unistd.h>
 static CheckpointRestoreWrapper* _get() {
   typedef CheckpointRestoreWrapper* (*f_t)();
   union {
