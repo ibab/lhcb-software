@@ -407,7 +407,6 @@ void PrVLTracking::findQuadruplets(DeVLRSensor* sensor0, const bool forward) {
       const double z2 = sensor2->z();
       const double z3 = sensor3->z();
       // Avoid extrapolation over too large distance.
-      if (fabs(z3 - z0) > 250.) continue;
       const double zFrac = (z2 - z0) / (z3 - z0);
       double rMin = 0., rMax = 0.;
       // Loop over the hits in the first sensor.
@@ -587,7 +586,6 @@ void PrVLTracking::findTriplets(DeVLRSensor* sensor0, const bool forward) {
       const double z1 = sensor1->z();
       const double z2 = sensor2->z();
       // Avoid extrapolation over too large distance.
-      if (fabs(z2 - z0) > 250.) continue;
       const double zFrac = (z1 - z0) / (z2 - z0);
       double rMin = 0., rMax = 0.;
       // Loop over the hits in the first sensor.
@@ -1249,12 +1247,20 @@ void PrVLTracking::cleanupRZ() {
       std::sort((*itt).rHits().begin(), (*itt).rHits().end(),
                 PrVLHit::IncreasingByZ());
     }
-    if (3 == (*itt).nbRHits()) continue;
-    if ((*itt).rHits().front()->sensor() >= 34 &&
-        (*itt).rHits().front()->sensor() <= 37 &&
-        (*itt).missedSensors() > 0 && 
-        (*itt).rHits().front()->nUsed() > 0) {
-      (*itt).removeRHit((*itt).rHits().front());
+    PrVLHits::iterator ith;
+    unsigned int nRight = 0;
+    unsigned int nLeft = 0;
+    for (ith = (*itt).rHits().begin(); ith != (*itt).rHits().end(); ++ith) {
+      if ((*ith)->right()) {
+        ++nRight;
+      } else {
+        ++nLeft;
+      }
+    }
+    if (nLeft > 2 && nRight > 2) {
+      (*itt).setOverlap(true);
+    } else {
+      (*itt).setOverlap(false);
     }
   }
   std::stable_sort(m_rzTracks.begin(), m_rzTracks.end(), 
