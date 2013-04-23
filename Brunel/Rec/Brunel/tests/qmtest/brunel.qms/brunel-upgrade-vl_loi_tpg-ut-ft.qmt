@@ -10,7 +10,7 @@
     <text>$APPCONFIGOPTS/Brunel/Upgrade-RichPmt.py</text>
     <text>$APPCONFIGOPTS/Brunel/patchUpgrade1.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130320"; LHCbApp().CondDBtag="simcond-20121001-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/VL_LoI_TPG-UT-FT/VL_LoI_TPG-UT-FT.digi'"]; CondDB().AllLocalTagsByDataType = ["VL_LoI_TPG+UT","FT"];</text>
+    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130408"; LHCbApp().CondDBtag="simcond-20121001-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/VL_LoI_TPG-UT-FT/VL_LoI_TPG-UT-FT.xdigi'"]; CondDB().AllLocalTagsByDataType = ["VL_LoI_TPG+UT","FT"];</text>
     </set></argument>
   <argument name="reference"><text>../refs/brunel-upgrade-vl_loi_tpg-ut-ft.ref</text></argument>
   <argument name="validator"><text>

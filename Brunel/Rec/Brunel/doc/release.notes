@@ -3,6 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Updated upgrade qmtests and references.
+
 - Changes to configuration
   . Add python/Brunel/__init__.py to please CMake
 
