@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-04-23 - Marco Clemencic
+ - Fixed Eclipse static analyzer warning.
+
 ! 2013-04-12 - Marco Clemencic
  - Move 'operator<<' inside a namespace to fix compilation errors with clang.
  - Added default constructors to fix compilation errors with clang.

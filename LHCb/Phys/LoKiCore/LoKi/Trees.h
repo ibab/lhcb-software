@@ -311,7 +311,7 @@ namespace Decays
       ( typename Decays::iTree_<PARTICLE>::Collection& o ) const
       { return m_tree.tree().collect ( o ) ; }
       /// reset the cache
-      inline void reset () const { return m_tree.reset() ; }
+      inline void reset () const { m_tree.reset() ; }
       /// the specific printout
       inline std::ostream& fillStream( std::ostream& s ) const
       { return m_tree.fillStream ( s ) ; }
