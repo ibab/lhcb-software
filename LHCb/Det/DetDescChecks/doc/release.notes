@@ -5,6 +5,10 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2013-04-23 - Illya Shapoval
+ - Added loaddddb2012-ariadne.qmt test to load CondDB using the Ariadne driven
+   tags configuration.
+
 !========================= DetDescChecks v5r9 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
