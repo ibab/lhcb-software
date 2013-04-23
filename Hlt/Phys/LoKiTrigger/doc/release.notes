@@ -4,7 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
-
+! 2013-04-23 - Roel Aaij
+ - Add check to ensure the number of previously upgraded tracks found in the TES
+   is equal to the expected number.
 
 !========================= LoKiTrigger v12r8p1 2013-02-28 =========================
 ! 2013-02-27 - Rob Lambert

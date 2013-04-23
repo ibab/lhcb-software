@@ -5,6 +5,7 @@
 // STD & STL 
 // ============================================================================
 #include <climits>
+#include <sstream>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -279,8 +280,18 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
   // We don't own the track, so if it's already flagged, just return the seed
   else if ( !owner() ) { output.push_back( seed ); }
   // find in the list of recontructed 
-  else { find ( seed , output , otracks ) ; } // find in the list of recontructed 
-  //
+  else
+  { 
+     // Find previously upgraded tracks and check if the number is correct.
+     size_t n = find ( seed , output , otracks ) ;
+     if ( size_t(info + 0.5) != n )
+     {
+        std::stringstream msg;
+        msg << "Number of previously upgraded tracks: " << size_t(info + 0.5) 
+            << " does not match number of found tracks: " << n << ".";
+        Assert( false, msg.str() ) ;
+     }
+  }
   return StatusCode::SUCCESS ;
 }
 // ======================================================================      
