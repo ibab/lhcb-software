@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Event/EventPacker
-! Responsible : Olivier Callot
+! Responsible : Chris Jones
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
+
+!========================= EventPacker v3r0 2013-04-23 =========================
 
 ! 2013-04-19 - Chris Jones
  - Add a new mapper tool, ChargedProtoParticleMapper, for charged 
