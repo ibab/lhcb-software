@@ -9,6 +9,7 @@ from Configurables import ( CondDBEntityResolver,
                             XmlParserSvc )
 from DetCond.Configuration import CondDB
 from datetime import datetime, timedelta
+import xmlrpclib
 
 __all__ = ["DDDBConf"]
 
@@ -18,12 +19,14 @@ class DDDBConf(ConfigurableUser):
     """
     __slots__ = { "DbRoot"    : "conddb:/lhcb.xml",
                   "DataType"  : "2012",
-                  "Simulation": False
+                  "Simulation": False,
+                  "AutoTags"  : False
                    }
     _propertyDocDct = {
                        'DbRoot' : """ Root file of the detector description """,
-                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2012", "2011", "2010", "2009","2008","MC09","Upgrade"] """,
+                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2013", "2012", "2011", "2010", "2009","2008","MC09","Upgrade"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
+                       'AutoTags'  : """ Perform automatic resolution of CondDB tags """
                        }
 
     __used_configurables__ = [ CondDB ]
@@ -93,12 +96,40 @@ class DDDBConf(ConfigurableUser):
             if not sim:
                 log.info("%s data is _always_ simulation", dataType )
 
-        # calls the specific configuration function for the requested data type
-        self.__data_types_handlers__[dataType](self)
+        if not self.getProp('AutoTags'):
+            # calls the specific configuration function for the requested data type
+            self.__data_types_handlers__[dataType](self)
+        else:
+            log.info("Ariadne driven configuration requested for CondDB")
+            datatype = self.getProp("DataType")
+            cond_type = 'LHCBCONDTag' if not CondDB().getProp("Simulation") else 'SIMCONDTag'
+            question = {'detector_type': datatype, 'DDDBTag': None, cond_type: None, 'DQFLAGSTag': None}
+            self.__auto_tags_conf__(question, criterion = 'latest_LHCBCOND_DDDB')
 
         # Get particle properties table from condDB
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc( ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt' )
+
+    def __auto_tags_conf__(self, question, criterion):
+        """ Automatic configuration of CondDB tags through the Ariadne system """
+
+        log.debug("Connecting to Ariadne XMLRPC gateway...")
+        proxy = xmlrpclib.ServerProxy("http://ariadne-lhcb.cern.ch/xmlrpc/", allow_none = True)
+
+        log.info("Querying Ariadne for a configuration thread...")
+        log.debug("Question to Ariadne: %s"%question)
+        response = proxy.queryAriadne(question, criterion)
+        log.info("Got response from Ariadne, configuring CondDB..")
+        log.debug("Response from Ariadne is: %s" %question)
+
+        cond_type = 'LHCBCONDTag' if not CondDB().getProp("Simulation") else 'SIMCONDTag'
+        for p in ['DDDB', cond_type.rstrip('Tag'), 'DQFLAGS']:
+            tag = response.get(p + 'Tag')
+            if not tag:
+                raise RuntimeError("No tag found in Ariadne's response for partition %s"%p)
+            CondDB().Tags[p] = tag
+            log.info("Tag '%s' is set for partition '%s'" %(tag, p))
+
 
     def __set_tag__(self, partitions, tag):
         cdb = CondDB()
@@ -113,7 +144,7 @@ class DDDBConf(ConfigurableUser):
     def __set_init_time__(self, utcDatetime):
         """
         Configure the initialization time using the lower between the proposed time and
-        the current time,
+        the current time
         """
         utcDatetime = min(datetime.utcnow(), utcDatetime)
         from Configurables import EventClockSvc
