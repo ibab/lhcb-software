@@ -32,8 +32,6 @@ namespace Al {
   class Equations;
   class Residuals ;
 }
-class IHistogram1D ;
-class IHistogram2D ;
 
 /** @class PVResolution
  *
