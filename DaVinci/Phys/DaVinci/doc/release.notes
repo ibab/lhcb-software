@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= DaVinci v33r3p1 2013-04-23 =========================
+
 ! 2013-04-21 - Chris Jones
  - Increase the space for the component name in the sequencer timer printout 
    to 50, to allow for longer component names.
@@ -26,7 +28,7 @@
       - RootInTES property is propagated to DaVinciUserSequnces and 
         all its members unless the corresponding 'RootInTES' 
         property is set explicitly
-   This action should minimize number of problems for running analysis on uDst
+   This action should minimize number of problems for running analyses on uDst
 
 !========================= DaVinci v33r2 2013-02-21 ===========================
 

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinci
 ################################################################################
-gaudi_subdir(DaVinci v33r2)
+gaudi_subdir(DaVinci v33r3p1)
 
 gaudi_depends_on_subdirs(AnalysisSys
                          Calo/CaloDAQ
