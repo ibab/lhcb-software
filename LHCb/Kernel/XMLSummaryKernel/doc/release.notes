@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2013-04-23 - Marco Clemencic
+ - Fixed Eclipse static analyzer warning.
+
 !========================= XMLSummaryKernel v1r9 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
@@ -38,7 +41,7 @@
 
 ! 2011-12-20 - Rob Lambert
  - Migrate tests to Gaudi v23r0, no POOL, and different exit codes.
- - Tests now depend on IOHelper, and tehrefore GaudiConf, 
+ - Tests now depend on IOHelper, and tehrefore GaudiConf,
    declare the dependency to avoid make -j problems
 
 !========================= XMLSummaryKernel v1r3 2011-12-14 =========================
@@ -57,7 +60,7 @@
 
 !========================= XMLSummaryKernel v1r1 2011-07-27 =========================
 ! 2011-07-27 - Rob Lambert
- - Fix bug in XMLSummary where a dummy input file was filled even if there 
+ - Fix bug in XMLSummary where a dummy input file was filled even if there
    was no input defined or used
 
 !======================== XmlSummaryKernel v1r0p2 2010-09-27 =================

@@ -56,11 +56,11 @@ XMLSummarySvc::XMLSummarySvc(const std::string& name, ISvcLocator* svc )
   declareProperty("xmlfile",m_xmlfile="summary.xml");
   //declare the schema to read.
   declareProperty("xsdfile",m_xsdfile="$XMLSUMMARYBASEROOT/xml/XMLSummary.xsd");
-  //declare the list of simple counters to write. 
+  //declare the list of simple counters to write.
   //These counters must be passed, "declared", by their algorithms. RegularExpressions are allowed
   declareProperty("CounterList",
                   m_counterList=std::vector<std::string>(1,".*"));
-  //declare the list of stat entities to write. 
+  //declare the list of stat entities to write.
   //These counters must be passed, "declared", by their algorithms. RegularExpressions are allowed
   declareProperty("StatEntityList",
                   m_statEntityList=std::vector<std::string>(1,".*"));
@@ -91,17 +91,17 @@ XMLSummarySvc::initialize()
   log << MSG::DEBUG << "initialize" << endmsg;
 
   //prepare the incident service
-  sc = prepareIncSvc(); 
+  sc = prepareIncSvc();
   if (!sc.isSuccess()) log << MSG::WARNING << "could not init incSvc" << endmsg;
-  
+
   //prepare the IODataManager service
   sc=service("IODataManager", m_ioDataManager);//, false);//,false);
   if(!sc.isSuccess() || m_ioDataManager== NULL) return StatusCode::FAILURE;
-  
+
   //get the python object, then initialize it
   sc=prepareXML();
   if(!sc.isSuccess()) return sc;
-  
+
   PyObject_CallMethod(m_summary, chr("set_step"), chr("s"), chr("initialize"));
 
   //temp
@@ -116,7 +116,7 @@ XMLSummarySvc::initialize()
     if((*it) == NULL) continue;
     if((*it)->pfn() != "") filenames.push_back((*it)->pfn());
   }
-  
+
 
   //fill the initial list of filenames
   for(std::vector<std::string>::const_iterator i=filenames.begin();
@@ -153,51 +153,51 @@ XMLSummarySvc::finalize()
     log << MSG::DEBUG << "no longer configured" << endmsg;
     return Service::finalize();
   }
-  
+
   //add own counter
   addCounter(name(),"handled",m_handled);
-  
+
   //need to get return code from AppMgr
-  
+
   int gaudiReturn=0;
-  
+
   SmartIF<IProperty> appmgr(serviceLocator()->service("ApplicationMgr"));
   gaudiReturn=Gaudi::getAppReturnCode(appmgr);
-  
-  
+
+
   //IntegerProperty returnCode("ReturnCode",0);
-  
+
   //const IntegerProperty returnCode=(const IntegerProperty) getProperty("ReturnCode");//Gaudi::Utils::getProperty(&returnCode);
-  
-  //log << MSG::VERBOSE << "state " << FSMState() 
+
+  //log << MSG::VERBOSE << "state " << FSMState()
   //    << " running " << Gaudi::StateMachine::RUNNING << endmsg;
   //IInterface* iface = Gaudi::createApplicationMgr();
   //SmartIF<IProperty> appmgr(iface);
-  
+
   //int gaudiReturn=returnCode.value();
   //Gaudi::getAppReturnCode(this);
   //getProperty(this,"ReturnCode");
   //Gaudi::getAppReturnCode(m_propertyMgr);
   log << MSG::DEBUG << "gaudi return code" << gaudiReturn << endmsg;
-  
-  
+
+
   //write collected counters
-  PyObject_CallMethod(m_summary, chr("set_step"), chr("s,i"), chr("finalize"), 
+  PyObject_CallMethod(m_summary, chr("set_step"), chr("s,i"), chr("finalize"),
                       int(gaudiReturn==0));
-  
+
   log << MSG::INFO << "filling counters..." << endmsg;
   fillcounters().ignore();
   log << MSG::INFO << "counters filled OK" << endmsg;
-  
+
   //finally add memory usage
   fillUsage().ignore();
-  
+
   printXML(MSG::DEBUG).ignore();
   writeXML(MSG::INFO).ignore();
-  
+
   //stop once finalize is called!
   m_summary=NULL;
-  
+
   return Service::finalize();
 
 }
@@ -214,7 +214,7 @@ void XMLSummarySvc::addCounter(
   NameStatPair c(full_name,count);
   NameStatTypePair ct(c,saveType);
   m_addedCounters.push_back(ct);
-  
+
   return;
 }
 
@@ -225,17 +225,17 @@ void XMLSummarySvc::addCounter(
 			       const Gaudi::CounterSummary::SaveType saveType)
 {
   StatEntity newEnt=*(count.entity());
-  return addCounter(alg,name,newEnt,saveType);
+  addCounter(alg,name,newEnt,saveType);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 inline bool XMLSummarySvc::isConfigured() const
-{ 
+{
   if (m_summary==NULL || !m_configured) return false;
   PyObject* res=PyObject_CallMethod(m_summary, chr("test"), chr(""));
   if (res==NULL || res==Py_None) return false;
   return res==Py_True;
-  
+
 }
 void XMLSummarySvc::handle( const Incident& incident )
 {
@@ -243,25 +243,25 @@ void XMLSummarySvc::handle( const Incident& incident )
 #ifdef GAUDI_FILE_INCIDENTS
 
   MsgStream log( msgSvc(), name() );
-  
+
   if (!isConfigured())
   {
-    log << MSG::DEBUG << "the summary object is no longer available " 
+    log << MSG::DEBUG << "the summary object is no longer available "
         << incident.type() << " Ignored" << endmsg;
     return;
-    
+
   }
 
-  if(incident.type()!=m_endIncident && incident.type()!=m_beginIncident) 
+  if(incident.type()!=m_endIncident && incident.type()!=m_beginIncident)
     log << MSG::VERBOSE << incident.type() << ":" << incident.source() << endmsg;
   //elif(incident.source()=="EventLoopMgr")
-    
+
   //std::string GUID="";m_GUID;
   std::string filename=m_filename;
   std::string method="fill_input";
   std::string status="";
   int addevents=0;
-  
+
   if(incident.type()==IncidentType::BeginInputFile)
     {
       status="part";
@@ -282,7 +282,7 @@ void XMLSummarySvc::handle( const Incident& incident )
       //use end name so that no race conditions occur between end file and end event
       filename=m_filename=incident.source();
       m_hasinput=true;
-      
+
     }
   else if(incident.type()==IncidentType::EndOutputFile)
     {
@@ -297,7 +297,7 @@ void XMLSummarySvc::handle( const Incident& incident )
       //to failed files, possibly could produce a race condition
       filename=incident.source();
       m_hasinput=true;
-      
+
     }
   else if(incident.type()==IncidentType::FailOutputFile)
     {
@@ -325,17 +325,17 @@ void XMLSummarySvc::handle( const Incident& incident )
       addevents=1;
       filename=incident.source();
     }
-  
-  
+
+
   //only fill input if there is input to fill!, i.e. if EndEvent but not m_hasinput, then skip it
   if(incident.type()!=m_endIncident || m_hasinput)
   {
-  
+
     //actually add to the summary
     std::string GUID=file2GUID(filename);
     if(incident.type()!=m_endIncident && incident.type()!=m_beginIncident)
       log << MSG::VERBOSE << method <<"(" << filename << "," << GUID << "," << status << "," << addevents << ")" << endmsg;
-    
+
     PyObject_CallMethod(m_summary,
                         chr(method.c_str()),
                         chr("s,s,s,d"),
@@ -344,36 +344,36 @@ void XMLSummarySvc::handle( const Incident& incident )
                         chr(status.c_str()),
                         double(addevents));
   }
-  
+
   fillUsage().ignore();
   m_handled++;
-  
+
   //never write at begin event!
   if ( incident.type()!=m_beginIncident && (
        //write all major file events
        (incident.type()==IncidentType::EndInputFile
        || incident.type()==IncidentType::FailInputFile
-       || incident.type()==IncidentType::FailOutputFile 
+       || incident.type()==IncidentType::FailOutputFile
        || incident.type()==IncidentType::BeginInputFile
         || m_handled.flag()==1)
        //write every freq end events
        || (incident.type()==m_endIncident && m_freq>0 && int(m_ended.flag())%m_freq ==0) )
        )
     {
-      
-      PyObject_CallMethod(m_summary, 
-                          chr("set_step"), 
-                          chr("s"), 
+
+      PyObject_CallMethod(m_summary,
+                          chr("set_step"),
+                          chr("s"),
                           chr("execute"));
       printXML();
       writeXML();
     }
 
 #endif //GAUDI_FILE_INCIDENTS
-  
+
   return;
 
-  
+
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -386,7 +386,7 @@ StatusCode XMLSummarySvc::fillcounters()
     MsgStream log( msgSvc(), name() );
     log << MSG::DEBUG << "the summary object is no longer available" << endmsg;
     return StatusCode::FAILURE;
-    
+
   }
   //fill all counters, in correct order
   Gaudi::CounterSummary::SaveType saveType=Gaudi::CounterSummary::SaveSimpleCounter;
@@ -398,11 +398,11 @@ StatusCode XMLSummarySvc::fillcounters()
       if(saveType!=i->second) continue;
       fillcounter(*i).ignore();
     }
-      
+
     if(saveType==Gaudi::CounterSummary::SaveAlwaysStatEntity) break;
     saveType=Gaudi::CounterSummary::SaveType(saveType+1);
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -413,30 +413,30 @@ StatusCode XMLSummarySvc::fillcounter(const NameStatTypePair & count)
     MsgStream log( msgSvc(), name() );
     log << MSG::DEBUG << "the summary object is no longer available" << endmsg;
     return StatusCode::FAILURE;
-    
+
   }
-  
+
   std::string type_name="fill_counter";
   bool stat_ent=false;
   bool check=false;
   switch (count.second)
     {
     case Gaudi::CounterSummary::SaveSimpleCounter:
-      type_name="fill_counter"; 
+      type_name="fill_counter";
       check=Gaudi::Utils::RegEx::matchOr(count.first.first,m_counterList);
       break;
     case Gaudi::CounterSummary::SaveStatEntity:
-      type_name="fill_counter"; 
+      type_name="fill_counter";
       check=Gaudi::Utils::RegEx::matchOr(count.first.first,m_statEntityList);
-      stat_ent=true; 
+      stat_ent=true;
       break;
     case Gaudi::CounterSummary::SaveAlwaysSimpleCounter:
-      type_name="fill_lumi"; 
+      type_name="fill_lumi";
       check=true;
       break;
     case Gaudi::CounterSummary::SaveAlwaysStatEntity:
-      type_name="fill_lumi"; 
-      stat_ent=true; 
+      type_name="fill_lumi";
+      stat_ent=true;
       check=true;
       break;
     default:
@@ -468,7 +468,7 @@ StatusCode XMLSummarySvc::fillcounter(const NameStatTypePair & count)
 		      double(count.first.second.flag())
 		      );
   //printXML(MSG::VERBOSE).ignore();
-	
+
   return StatusCode::SUCCESS;
 }
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -485,12 +485,12 @@ StatusCode XMLSummarySvc::writeXML(MSG::Level lev)
   {
     MsgStream log( msgSvc(), name() );
     log << MSG::DEBUG << "the summary object is no longer available" << endmsg;
-    log << lev << "xml file not written as PyObject was lost" << endmsg; 
+    log << lev << "xml file not written as PyObject was lost" << endmsg;
     return StatusCode::FAILURE;
-    
+
   }
-  
-  log << MSG::VERBOSE << "ready to write xml file " << m_xmlfile << " " << m_summary << endmsg;  
+
+  log << MSG::VERBOSE << "ready to write xml file " << m_xmlfile << " " << m_summary << endmsg;
   PyObject_CallMethod(m_summary, chr("write"), chr("s"),chr(m_xmlfile.c_str()));
   log << lev << "Wrote xml file " << m_xmlfile << endmsg;
   return StatusCode::SUCCESS;
@@ -501,9 +501,9 @@ StatusCode XMLSummarySvc::printXML(MSG::Level lev) const
   if (!isConfigured())
   {
     log << MSG::DEBUG << "the summary object is no longer available" << endmsg;
-    log << lev << "xml file not written as PyObject was lost" << endmsg; 
+    log << lev << "xml file not written as PyObject was lost" << endmsg;
     return StatusCode::FAILURE;
-    
+
   }
   log << MSG::VERBOSE << "ready to write to screen " << m_xmlfile << " " << m_summary << endmsg;
   PyObject* res=PyObject_CallMethod(m_summary, chr("xml"), chr(""));
@@ -512,7 +512,7 @@ StatusCode XMLSummarySvc::printXML(MSG::Level lev) const
     log << MSG::DEBUG << "Cannot print XML" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   log << lev << PyString_AsString(res) << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -539,7 +539,7 @@ StatusCode XMLSummarySvc::prepareIncSvc()
 
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "registered with incSvc" << endmsg;
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -547,27 +547,27 @@ StatusCode XMLSummarySvc::prepareXML()
 {
 
   MsgStream log( msgSvc(), name() );
-  
+
   //Initialize the python session... may not be needed?
   Py_Initialize();
-  
+
   //Import the python module
   //import XMLSummaryBase.summary
   PyObject* pName=PyString_FromString("XMLSummaryBase.summary");
   m_summary = PyImport_Import(pName);
   if (m_summary==NULL) return StatusCode::FAILURE;
-  
+
   //Get the summary class object from the module
   //XMLSummaryBase.summary.Summary
   m_summary = PyObject_GetAttrString(m_summary, "Summary");
   if (m_summary==NULL) return StatusCode::FAILURE;
-  
+
   //Call the class to make an instance
   //XMLSummaryBase.summary.Summary(m_xsdfile)
   PyObject* schema=PyString_FromString(chr(m_xsdfile.c_str()));
   m_summary=PyObject_CallFunctionObjArgs(m_summary, schema, NULL);
   if (m_summary==NULL) return StatusCode::FAILURE;
-  
+
   log << MSG::DEBUG << "xml summary object created" << endmsg;
   m_configured=true;
   return StatusCode::SUCCESS;
@@ -575,13 +575,13 @@ StatusCode XMLSummarySvc::prepareXML()
 std::string XMLSummarySvc::file2GUID(const std::string & filename)
 {
   MsgStream log( msgSvc(), name() );
-  
+
   FidMap::iterator j = m_fidMap.find(filename);
   if (j != m_fidMap.end() ) return j->second;
   std::string shortname=AFN2name(filename);
   j = m_fidMap.find(shortname);
   if (j != m_fidMap.end() ) return j->second;
-  
+
   const Gaudi::IDataConnection * con=m_ioDataManager->connection(shortname);
   if(!con) con=m_ioDataManager->connection(shortname);
   if(!con) return "";
@@ -589,7 +589,7 @@ std::string XMLSummarySvc::file2GUID(const std::string & filename)
   m_fidMap[shortname]=con->fid();
   return con->fid();
   //return "";
-  
+
 }
 std::string XMLSummarySvc::AFN2name(const std::string & filename) const
 {
@@ -613,7 +613,7 @@ StatusCode XMLSummarySvc::fillUsage()
     MsgStream log( msgSvc(), name() );
     log << MSG::DEBUG << "the summary object is no longer available" << endmsg;
     return StatusCode::FAILURE;
-    
+
   }
   int mem = System::virtualMemoryPeak();
   PyObject_CallMethod(m_summary, chr("fill_memory"),
@@ -630,5 +630,5 @@ StatusCode XMLSummarySvc::stop()
   log << MSG::DEBUG << "STOPPED" << endmsg;
   m_stopped=true;
   return Service::stop();
-  
+
 }
