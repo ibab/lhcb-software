@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-04-23 - Chris Jones
+ - Move 'operator<<' for MD5 inside a namespace to fix compilation 
+   errors with clang.
+
 ! 2013-04-22 - Chris Jones
  - More fixes for clang 3.2 compilation.
 

@@ -103,11 +103,9 @@ Gaudi::Math::MD5::createFromStringRep(const std::string& val) {
 }
 
 
-ostream& operator<<(ostream& os, const Gaudi::Math::MD5& x) {
-   return os << x.str();
+ostream& Gaudi::Math::operator<<(ostream& os, const Gaudi::Math::MD5& x) {
+  return os << x.str();
 }
-
-
 
 
 /*

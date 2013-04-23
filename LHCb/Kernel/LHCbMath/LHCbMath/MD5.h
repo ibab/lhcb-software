@@ -65,8 +65,10 @@ namespace Gaudi
 
            value_type m_value;
     };
+
+    std::ostream& operator<<(std::ostream& os, const Gaudi::Math::MD5& x) ;
+
   } // end of namespace Math
 } // end of namespace Gaudi
 
-std::ostream& operator<<(std::ostream& os, const Gaudi::Math::MD5& x) ;
 #endif
