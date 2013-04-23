@@ -4,6 +4,15 @@
 ! Purpose     : Package for making fits to 2D histograms (mass vs. VARIABLE)
 !-----------------------------------------------------------------------------
 
+! 2013-04-23 - Jack Wimberley
+- Added MassBiasesMonitor, which reproduces most of the functionality
+	of TrackParticleMonitor but without the TrackStateVertex fit
+	and adds a 2D histogram of mass vs. run
+- The bins for runs are by default by a string in the file,
+	taken from Maurizio's IOV definitions and the operations Dashboard
+- This can be overridden with the property IOVData, which should be
+	passed a string of the same format (mock tab-delimited file)
+
 ! 2013-04-10 - Jack Wimberley
 - Arithmetic fixes in calculating bin centers/widths
 

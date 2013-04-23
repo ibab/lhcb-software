@@ -46,48 +46,50 @@ namespace {
   
   // DECAY CONSTANTS
 
-  const int NumRes = 2;
+  const int NumRes = 4;
   int res = 0; // The particular decay for this execution; initialized at the command line
   
   const string ID[NumRes] =
     {
       "Jpsi2MuMu"
       , "Ups1S2MuMu"
-      //      , "Z02MuMu",
-      //      , "DstarWithD02Kpi"
+      , "Z02MuMu"
+      , "D02Kpi"
     }; // Short form decay string, e.g. Jpsi2MuMu  
   const string Head[NumRes] =
     {
       "Jpsi"
       , "Ups1S"
-      //      , "Z0"
-      //      , "D0"
+      , "Z0"
+      , "D0"
     }; // Short form decay particle
   const string Decay[NumRes] =
     {
       "J/psi(1S) -> mu+ mu-"
       , "Upsilon(1S) -> mu+ mu-"
-      //      , "Z0 -> mu+ mu-"
-      //      , "[D*(2010)+ -> (D0 => K- pi+) pi+]cc"
+      , "Z0 -> mu+ mu-"
+      , "[D*(2010)+ -> (D0 => K- pi+) pi+]cc"
     }; // Long form LHCb decay, e.g. J/psi(1S) -> mu+ mu-
   const string Particle[NumRes] =
     {
       "J/psi(1S)"
       , "Upsilon(1S)"
-      //      , "Z0"
-      //      , "D0"
+      , "Z0"
+      , "D0"
     }; // Long form LHCb particle name, e.g. J/psi(1S)
   const double Mass[NumRes] = 
     {
       3.096916
       , 9.4603026
-      //      , 91.1876
-      //      , 1.86484
+      , 91.1876
+      , 1.86484
     }; // Resonance mass; starting value for fit
   const double Width[NumRes] =
     {
       0.08,
       0.05,
+      10.00,
+      0.08
     }; // Starting width for fit
 
   // ----------------------------------------------------------------------------------------------------
@@ -124,15 +126,15 @@ namespace {
   // Polynomial backgrounds
   RooRealVar c1("c1","c1",0,-10,10);
   RooRealVar c2("c2","c2",0,-10,10);
-  RooChebychev bkg_p0("bkg_p1","bkg (P0)",mass,RooArgList());
+  RooChebychev bkg_p0("bkg_p0","bkg (P0)",mass,RooArgList());
   RooChebychev bkg_p1("bkg_p1","bkg (P1)",mass,RooArgList(c1));
   RooChebychev bkg_p2("bkg_p2","bkg (P2)",mass,RooArgList(c1,c2));  
 
   // Combinations
   RooRealVar frac("frac","frac",0.7,0,1);
-  RooAddPdf model_cb_exp("model","model",RooArgList(signal_cb,bkg_exp),RooArgList(frac)); // J/psi and Ups
+  RooAddPdf model_cb_exp("model_cb_exp","model_cb_exp",RooArgList(signal_cb,bkg_exp),RooArgList(frac)); // J/psi, Ups(#s), Z0
+  RooAddPdf model_g_p0("model_g_p0","model_g_p0",RooArgList(signal_g,bkg_p0),RooArgList(frac)); // D0, KS, Lambda
   /* Create others as needed, such as 
-     - D0, KS, Lambda decays : Gaussian / Constant
      - phi : Voigtian / threshold
      - Others for testing purposes
   */
@@ -140,6 +142,8 @@ namespace {
   RooAbsPdf* ResModel[NumRes] = {
     &model_cb_exp
     , &model_cb_exp
+    , &model_cb_exp
+    , &model_g_p0
   };
 
   // Doesn't seem to be a native function for this, sadly
@@ -266,7 +270,7 @@ int main( int argc, char** argv) {
   // STRING ARGUMENTS
   string HistoFile = argv[2];
   if (verbose) cout << HistoFile << endl;
-  string rootDirectoryFile = "Track/TPM"; // string(argv[3]);
+  string rootDirectoryFile = string(argv[3]);
   if (verbose) cout << rootDirectoryFile << endl;
   string OutputDirectory = string(argv[4]);
   if (verbose) cout << OutputDirectory << endl;
@@ -320,7 +324,7 @@ int main( int argc, char** argv) {
     Hist.Print("v");
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter totFitter(&mass,&model_cb_exp,&vars,OutputDirectory);
+    SplitFitter totFitter(&mass,model,&vars,OutputDirectory);
     if (verbose) cout << "Fitting over all data" << endl;
     vector<binValsAndErrs> data = totFitter.fit(&Hist,"fitTotal",false);
   }
@@ -332,7 +336,7 @@ int main( int argc, char** argv) {
 
   bool split_mom = true;
   if (split_mom) {
-    if (verbose) cout << "Fitting over each mom bins separately:" << endl;
+    if (verbose) cout << "Fitting over each mom bin separately:" << endl;
 
     // MAKE ROO DATA OBJECT
     string massVmomStr = rootDirectoryFile + "/massVersusMomH2";
@@ -342,40 +346,41 @@ int main( int argc, char** argv) {
     Hist_mom.Print("v");
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter momFitter(&mass,&model_cb_exp,&vars,&momCat,OutputDirectory);
+    SplitFitter momFitter(&mass,model,&vars,&momCat,OutputDirectory);
     momFitter.fitpath.Add(new RooCmdArg(Range("all")));
     vector<binValsAndErrs> data = momFitter.fit(&Hist_mom,"fitSplit_mom",false);
     plotMakerAndSaver(fout,massVmom_th2,data,"mom","P","P [GeV]");
   }
 
   // ----------------------------------------------------------------------------------------------------
-  // ETA-SPLIT SIMULTANEOUS FITS
+  // PT-SPLIT SIMULTANEOUS FITS
   // ----------------------------------------------------------------------------------------------------
-  
-  bool split_eta = true;
-  if (split_eta) {
-    if (verbose) cout << "Fitting over eta bins separately:" << endl;
-    
+
+  bool split_pt = true;
+  if (split_pt) {
+    if (verbose) cout << "Fitting over each pt bin separately:" << endl;
+
     // MAKE ROO DATA OBJECT
-    string massVetaStr = rootDirectoryFile + "/massVersusEtaH2";
-    TH2D* massVeta_th2 = (TH2D*)(inputFile.Get(massVetaStr.c_str()));
-    RooCategory etaCat ("etaCat","etaCat");
-    RooDataHist Hist_eta = splitDataHistFromTH2D("massVetaH2","massVetaH2",mass,etaCat,massVeta_th2);
+    string massVptStr = rootDirectoryFile + "/massVersusPtH2";
+    TH2D* massVpt_th2 = (TH2D*)(inputFile.Get(massVptStr.c_str()));
+    RooCategory ptCat ("ptCat","ptCat");
+    RooDataHist Hist_pt = splitDataHistFromTH2D("massVptH2","massVptH2",mass,ptCat,massVpt_th2);
+    Hist_pt.Print("v");
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter etaFitter(&mass,&model_cb_exp,&vars,&etaCat,OutputDirectory);
-    etaFitter.fitpath.Add(new RooCmdArg(Range("all")));
-    vector<binValsAndErrs> data = etaFitter.fit(&Hist_eta,"fitSplit_eta",false);
-    plotMakerAndSaver(fout,massVeta_th2,data,"eta","#eta","#eta");
+    SplitFitter ptFitter(&mass,model,&vars,&ptCat,OutputDirectory);
+    ptFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    vector<binValsAndErrs> data = ptFitter.fit(&Hist_pt,"fitSplit_pt",false);
+    plotMakerAndSaver(fout,massVpt_th2,data,"pt","PT","PT [GeV]");
   }
-  
+
   // ----------------------------------------------------------------------------------------------------
   // MOMDIFF-SPLIT SIMULTANEOUS FITS
   // ----------------------------------------------------------------------------------------------------
    
   bool split_momdiff = true;
   if (split_momdiff) {
-    if (verbose) cout << "Fitting over each momdiffs bins separately:" << endl;
+    if (verbose) cout << "Fitting over each momdiffs bin separately:" << endl;
      
      // MAKE ROO DATA OBJECT
      string massVmomdiffStr = rootDirectoryFile + "/massVersusMomDifH2";
@@ -384,7 +389,7 @@ int main( int argc, char** argv) {
      RooDataHist Hist_momdiff = splitDataHistFromTH2D("massVmomdiffH2","massVmomdiffH2",mass,momdiffCat,massVmomdiff_th2);
      
      // CREATE FITTER OBJECT; PERFORM FIT
-     SplitFitter momdiffFitter(&mass,&model_cb_exp,&vars,&momdiffCat,OutputDirectory);
+     SplitFitter momdiffFitter(&mass,model,&vars,&momdiffCat,OutputDirectory);
      momdiffFitter.fitpath.Add(new RooCmdArg(Range("all")));
      vector<binValsAndErrs> data = momdiffFitter.fit(&Hist_momdiff,"fitSplit_momdiff",false);
      plotMakerAndSaver(fout,massVmomdiff_th2,data,"momdiff","p^{+}-p^{-}","p^{+}-p^{-} [GeV]");
@@ -396,7 +401,7 @@ int main( int argc, char** argv) {
   
   bool split_momasym = true;
   if (split_momasym) {
-    if (verbose) cout << "Fitting over each momasym bins separately:" << endl;
+    if (verbose) cout << "Fitting over each momasym bin separately:" << endl;
      
      // MAKE ROO DATA OBJECT
      string massVmomasymStr = rootDirectoryFile + "/massVersusMomAsymH2";
@@ -405,20 +410,85 @@ int main( int argc, char** argv) {
      RooDataHist Hist_momasym = splitDataHistFromTH2D("massVmomasymH2","massVmomasymH2",mass,momasymCat,massVmomasym_th2);
      
      // CREATE FITTER OBJECT; PERFORM FIT
-     SplitFitter momasymFitter(&mass,&model_cb_exp,&vars,&momasymCat,OutputDirectory);
+     SplitFitter momasymFitter(&mass,model,&vars,&momasymCat,OutputDirectory);
      momasymFitter.fitpath.Add(new RooCmdArg(Range("all")));
      vector<binValsAndErrs> data = momasymFitter.fit(&Hist_momasym,"fitSplit_momasym",false);
      plotMakerAndSaver(fout,massVmomasym_th2,data,"momasym","(p^{+}-p^{-})/(p^{+}+p^{-})","(p^{+}-p^{-})/(p^{+}+p^{-})");
   }
   
   // ----------------------------------------------------------------------------------------------------
-  // PHID-SPLIT SIMULTANEOUS FITS
+  // ETA-SPLIT SIMULTANEOUS FITS
+  // ----------------------------------------------------------------------------------------------------
+  
+  bool split_eta = true;
+  if (split_eta) {
+    if (verbose) cout << "Fitting over eta bin separately:" << endl;
+    
+    // MAKE ROO DATA OBJECT
+    string massVetaStr = rootDirectoryFile + "/massVersusEtaH2";
+    TH2D* massVeta_th2 = (TH2D*)(inputFile.Get(massVetaStr.c_str()));
+    RooCategory etaCat ("etaCat","etaCat");
+    RooDataHist Hist_eta = splitDataHistFromTH2D("massVetaH2","massVetaH2",mass,etaCat,massVeta_th2);
+    
+    // CREATE FITTER OBJECT; PERFORM FIT
+    SplitFitter etaFitter(&mass,model,&vars,&etaCat,OutputDirectory);
+    etaFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    vector<binValsAndErrs> data = etaFitter.fit(&Hist_eta,"fitSplit_eta",false);
+    plotMakerAndSaver(fout,massVeta_th2,data,"eta","#eta","#eta");
+  }
+  
+  // ----------------------------------------------------------------------------------------------------
+  // TX-SPLIT SIMULTANEOUS FITS
+  // ----------------------------------------------------------------------------------------------------
+
+  bool split_tx = true;
+  if (split_tx) {
+    if (verbose) cout << "Fitting over each tx bin separately:" << endl;
+
+    // MAKE ROO DATA OBJECT
+    string massVtxStr = rootDirectoryFile + "/massVersusTxH2";
+    TH2D* massVtx_th2 = (TH2D*)(inputFile.Get(massVtxStr.c_str()));
+    RooCategory txCat ("txCat","txCat");
+    RooDataHist Hist_tx = splitDataHistFromTH2D("massVtxH2","massVtxH2",mass,txCat,massVtx_th2);
+    Hist_tx.Print("v");
+    
+    // CREATE FITTER OBJECT; PERFORM FIT
+    SplitFitter txFitter(&mass,model,&vars,&txCat,OutputDirectory);
+    txFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    vector<binValsAndErrs> data = txFitter.fit(&Hist_tx,"fitSplit_tx",false);
+    plotMakerAndSaver(fout,massVtx_th2,data,"tx","Tx","Tx");
+  }
+
+  // ----------------------------------------------------------------------------------------------------
+  // TY-SPLIT SIMULTANEOUS FITS
+  // ----------------------------------------------------------------------------------------------------
+
+  bool split_ty = true;
+  if (split_ty) {
+    if (verbose) cout << "Fitting over each ty bin separately:" << endl;
+
+    // MAKE ROO DATA OBJECT
+    string massVtyStr = rootDirectoryFile + "/massVersusTyH2";
+    TH2D* massVty_th2 = (TH2D*)(inputFile.Get(massVtyStr.c_str()));
+    RooCategory tyCat ("tyCat","tyCat");
+    RooDataHist Hist_ty = splitDataHistFromTH2D("massVtyH2","massVtyH2",mass,tyCat,massVty_th2);
+    Hist_ty.Print("v");
+    
+    // CREATE FITTER OBJECT; PERFORM FIT
+    SplitFitter tyFitter(&mass,model,&vars,&tyCat,OutputDirectory);
+    tyFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    vector<binValsAndErrs> data = tyFitter.fit(&Hist_ty,"fitSplit_ty",false);
+    plotMakerAndSaver(fout,massVty_th2,data,"ty","Ty","Ty");
+  }
+
+  // ----------------------------------------------------------------------------------------------------
+  // PHID-SPLIT SIMULTANEOUS FITS (decay plane angle w.r.t. magnetic field)
   // ----------------------------------------------------------------------------------------------------
   
   
   bool split_phid = true;
   if (split_phid) {
-    if (verbose) cout << "Fitting over each phids bins separately:" << endl;
+    if (verbose) cout << "Fitting over each phids bin separately:" << endl;
     
     // MAKE ROO DATA OBJECT
     string massVphidStr = rootDirectoryFile + "/massVersusPhiMattH2";
@@ -427,10 +497,79 @@ int main( int argc, char** argv) {
     RooDataHist Hist_phid = splitDataHistFromTH2D("massVphidH2","massVphidH2",mass,phidCat,massVphid_th2);
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter phiFitter(&mass,&model_cb_exp,&vars,&phidCat,OutputDirectory);
+    SplitFitter phiFitter(&mass,model,&vars,&phidCat,OutputDirectory);
     phiFitter.fitpath.Add(new RooCmdArg(Range("all")));
     vector<binValsAndErrs> data = phiFitter.fit(&Hist_phid,"fitSplit_phid",false);
     plotMakerAndSaver(fout,massVphid_th2,data,"phid","#phi_{d}","#phi_{d}");
+  }
+  
+  
+  // ----------------------------------------------------------------------------------------------------
+  // PHI-SPLIT SIMULTANEOUS FITS (decay plane azimuthal angle)
+  // ----------------------------------------------------------------------------------------------------
+  
+  
+  bool split_phi = true;
+  if (split_phi) {
+    if (verbose) cout << "Fitting over each phi bin separately:" << endl;
+    
+    // MAKE ROO DATA OBJECT
+    string massVphiStr = rootDirectoryFile + "/massVersusPhiH2";
+    TH2D* massVphi_th2 = (TH2D*)(inputFile.Get(massVphiStr.c_str()));
+    RooCategory phiCat ("phiCat","phiCat");
+    RooDataHist Hist_phi = splitDataHistFromTH2D("massVphiH2","massVphiH2",mass,phiCat,massVphi_th2);
+    
+    // CREATE FITTER OBJECT; PERFORM FIT
+    SplitFitter phiFitter(&mass,model,&vars,&phiCat,OutputDirectory);
+    phiFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    vector<binValsAndErrs> data = phiFitter.fit(&Hist_phi,"fitSplit_phi",false);
+    plotMakerAndSaver(fout,massVphi_th2,data,"phi","#phi","#phi");
+  }
+  
+  
+  // ----------------------------------------------------------------------------------------------------
+  // THETA-SPLIT SIMULTANEOUS FITS (opening angle)
+  // ----------------------------------------------------------------------------------------------------
+  
+  
+  bool split_theta = true;
+  if (split_theta) {
+    if (verbose) cout << "Fitting over each theta bin separately:" << endl;
+    
+    // MAKE ROO DATA OBJECT
+    string massVthetaStr = rootDirectoryFile + "/massVersusOpenAngleH2";
+    TH2D* massVtheta_th2 = (TH2D*)(inputFile.Get(massVthetaStr.c_str()));
+    RooCategory thetaCat ("thetaCat","thetaCat");
+    RooDataHist Hist_theta = splitDataHistFromTH2D("massVthetaH2","massVthetaH2",mass,thetaCat,massVtheta_th2);
+    
+    // CREATE FITTER OBJECT; PERFORM FIT
+    SplitFitter phiFitter(&mass,model,&vars,&thetaCat,OutputDirectory);
+    phiFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    vector<binValsAndErrs> data = phiFitter.fit(&Hist_theta,"fitSplit_theta",false);
+    plotMakerAndSaver(fout,massVtheta_th2,data,"theta","#theta","#theta");
+  }
+
+
+  // ----------------------------------------------------------------------------------------------------
+  // THETA-SPLIT SIMULTANEOUS FITS (opening angle)
+  // ----------------------------------------------------------------------------------------------------
+  
+  
+  bool split_time = true;
+  if (split_time) {
+    if (verbose) cout << "Fitting over each run bin separately:" << endl;
+    
+    // MAKE ROO DATA OBJECT
+    string massVtimeStr = rootDirectoryFile + "/massVersusTimeH2";
+    TH2D* massVtime_th2 = (TH2D*)(inputFile.Get(massVtimeStr.c_str()));
+    RooCategory timeCat ("timeCat","timeCat");
+    RooDataHist Hist_time = splitDataHistFromTH2D("massVtimeH2","massVtimeH2",mass,timeCat,massVtime_th2);
+    
+    // CREATE FITTER OBJECT; PERFORM FIT
+    SplitFitter phiFitter(&mass,model,&vars,&timeCat,OutputDirectory);
+    phiFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    vector<binValsAndErrs> data = phiFitter.fit(&Hist_time,"fitSplit_time",false);
+    plotMakerAndSaver(fout,massVtime_th2,data,"run","run","run");
   }
   
   
