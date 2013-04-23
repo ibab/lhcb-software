@@ -37,7 +37,7 @@
    FastDOCAToBeamLine functor
 
 ! 2012-04-09 - Vanya Belyaev
- - remove track-cloning for beam-line functios 
+ - remove track-cloning for beam-line functions 
 
 ! 2012-03-30 - Vanya Belyaev
  - add beam-line functor
