@@ -17,11 +17,6 @@
 #include "GaudiKernel/Transform3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
 
-// forward declarations
-class IHistogram1D;
-class IHistogram2D;
-
-
 typedef std::vector<std::string> VectorName;   
 
 /** @class MuonBackground MuonBackground.h
