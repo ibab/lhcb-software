@@ -58,6 +58,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default constructor
+      Size() { }
       /// MANDATORY: virtual destructor 
       virtual ~Size() {}
       /// MANDATORY: clone method ("virtual constructor")
