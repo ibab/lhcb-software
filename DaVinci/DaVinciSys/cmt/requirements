@@ -3,20 +3,23 @@ version v33r3p1
 
 branches doc cmt
 
+# Packages
 use  DaVinci         v33r3p1  Phys
 use  DaVinciTests    v2r16
 
 # Temporary inclusions
-use EventPacker          v3r0    Event
-use ChargedProtoANNPID   v2r0    Rec
-use PhysConf             v1r20   Phys
-use DaVinciTools         v23r7   Phys
-use StrippingSelections  v3r23   Phys
-use LHCbAlgs             v2r56   Kernel
+use EventPacker          v3r0     Event
+use ChargedProtoANNPID   v2r0     Rec
+use PhysConf             v1r20    Phys
+use DaVinciTools         v23r7    Phys
+use StrippingSelections  v3r23    Phys
+use LHCbAlgs             v2r56    Kernel
+use DetCond              v12r29p2 Det
 
 # Declare this as a container package
 apply_pattern container_package
 
+# For running tests
 alias DaVinciTests "cmt TestProject"
 
 # Allow the generation of the SAM QMTest
