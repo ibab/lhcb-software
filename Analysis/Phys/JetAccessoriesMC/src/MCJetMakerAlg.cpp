@@ -590,14 +590,15 @@ StatusCode LoKi::MCJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   jet->addInfo ( JetWidth , width );
 
   LoKi::Types::Fun isV0 =  LoKi::Cuts::INFO( HasV0 , -10.);
-  LoKi::Types::Fun FractionChargedHadron = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , ( ABSID == "pi+" || ABSID == "K+" || ABSID == "p+" ) && ( isV0 < 0. ) , 0. );
+  LoKi::Types::Fun FractionChargedHadron = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , ( ( isV0 < 0.0001 ) && ( ABSID == "pi+" || ABSID == "K+" || ABSID == "p+" ) ) , 0. );
   jet->addInfo ( ChargedHadron  , FractionChargedHadron(jet)/LoKi::Cuts::E(jet) );
   LoKi::Types::Fun FractionMuon = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , ABSID == "mu+" , 0. );
   jet->addInfo ( Muon  , FractionMuon(jet)/LoKi::Cuts::E(jet) );
   LoKi::Types::Fun FractionElectron = LoKi::Cuts::SUMTREE( LoKi::Cuts::E ,  ABSID == "e+" , 0. );
   jet->addInfo ( Electron  , FractionElectron(jet)/LoKi::Cuts::E(jet) );
 
-  LoKi::Types::Fun FractionCharged = FractionChargedHadron + FractionMuon + FractionElectron;
+  
+  LoKi::Types::Fun FractionCharged = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , ( ABSID == "pi+" || ABSID == "K+" || ABSID == "p+" || ABSID == "mu+" || ABSID == "e+" ) , 0. );
   jet->addInfo ( Charged  , FractionCharged(jet)/LoKi::Cuts::E(jet) );
 
   LoKi::Types::Fun FractionPhoton = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , ABSID == "gamma" , 0. );
@@ -607,7 +608,7 @@ StatusCode LoKi::MCJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   LoKi::Types::Fun FractionNeutralHadron = LoKi::Cuts::SUMTREE( LoKi::Cuts::E ,( ABSID == "KL0" || ABSID == "n0")  , 0. );
   jet->addInfo (  NeutralHadron , FractionNeutralHadron(jet)/LoKi::Cuts::E(jet) );
 
-  LoKi::Types::Fun FractionNeutral = FractionPhoton + FractionPi0 +  FractionNeutralHadron ;
+  LoKi::Types::Fun FractionNeutral =  LoKi::Cuts::SUMTREE( LoKi::Cuts::E , ( ABSID == "gamma" || ABSID == "KL0" || ABSID == "n0" || ABSID == "pi0" ) , 0. ); ;
   jet->addInfo ( Neutral  , FractionNeutral(jet)/LoKi::Cuts::E(jet) );
 
   LoKi::Types::Fun FractionV0 = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , isV0 > 0. , 0. );
