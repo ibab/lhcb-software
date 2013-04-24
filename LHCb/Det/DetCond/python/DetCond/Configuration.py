@@ -196,7 +196,7 @@ class CondDB(ConfigurableUser):
         from CondDBUI.Admin.TagsFilter import last_gt_lts
         rel_notes = None
         if self.getProp('Upgrade'):
-            rel_notes = os.path.join(os.environ['SQLITEUPGRADEDBPATH'], '..', 'doc', 'release_notes.xml')
+            rel_notes = os.path.join('$SQLITEUPGRADEDBPATH', '..', 'doc', 'release_notes.xml')
 
         for partition in partitions:
             gt, lts = None, []
@@ -234,7 +234,7 @@ class CondDB(ConfigurableUser):
         from CondDBUI.Admin.TagsFilter import all_lts
         rel_notes = None
         if self.getProp('Upgrade'):
-            rel_notes = os.path.join(os.environ['SQLITEUPGRADEDBPATH'], '..', 'doc', 'release_notes.xml')
+            rel_notes = os.path.join('$SQLITEUPGRADEDBPATH', '..', 'doc', 'release_notes.xml')
 
         for partition in partitions:
             local_tags = []
@@ -436,7 +436,7 @@ class CondDB(ConfigurableUser):
                 del conns[p]
             # Override connection strings for Upgrade case
             if self.getProp('Simulation') and self.getProp('Upgrade') and type(partition[p]) is CondDBAccessSvc:
-                partition[p].ConnectionString = os.path.join('sqlite_file:' + os.environ['SQLITEUPGRADEDBPATH'], p + '.db', p)
+                partition[p].ConnectionString = os.path.join('sqlite_file:$SQLITEUPGRADEDBPATH', p + '.db', p)
             # Override tags
             if p in tags and p != "ONLINE":
                 partition[p].DefaultTAG = tags[p]

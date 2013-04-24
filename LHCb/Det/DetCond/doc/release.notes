@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-04-24 - Illya Shapoval
+ - A bug fix: an expansion of the SQLITEUPGRADEDBPATH env. variable is prevented.
+
 ! 2013-04-18 - Liang Sun
  - Two redundant variables removed to quell the warning messages.
 
@@ -20,7 +23,7 @@
 
 ! 2013-03-18 - Vanya Belyaev
 
- - comment usage of python module from removed package HistoStrings 
+ - comment usage of python module from removed package HistoStrings
 
 ! 2013-03-12 - Marco Clemencic
  - Added hints to Coverity to fix a few flas positives:
