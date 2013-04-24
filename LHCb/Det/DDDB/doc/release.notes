@@ -4,6 +4,10 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2013-04-24 - Illya Shapoval
+ - When forming an Ariadne query, a preference is given to DDDBConf().Simulation
+   instead of CondDB().Simulation property.
+
 ! 2013-04-23 - Illya Shapoval
  - 'AutoTags' property added. If set to True, an automatic Ariadne-driven
    CondDB configuration is used according to the datatype set.

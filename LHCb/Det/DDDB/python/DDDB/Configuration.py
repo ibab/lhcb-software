@@ -102,7 +102,7 @@ class DDDBConf(ConfigurableUser):
         else:
             log.info("Ariadne driven configuration requested for CondDB")
             datatype = self.getProp("DataType")
-            cond_type = 'LHCBCONDTag' if not CondDB().getProp("Simulation") else 'SIMCONDTag'
+            cond_type = 'LHCBCONDTag' if not self.getProp("Simulation") else 'SIMCONDTag'
             question = {'detector_type': datatype, 'DDDBTag': None, cond_type: None, 'DQFLAGSTag': None}
             self.__auto_tags_conf__(question, criterion = 'latest_LHCBCOND_DDDB')
 
@@ -122,13 +122,13 @@ class DDDBConf(ConfigurableUser):
         log.info("Got response from Ariadne, configuring CondDB..")
         log.debug("Response from Ariadne is: %s" %question)
 
-        cond_type = 'LHCBCONDTag' if not CondDB().getProp("Simulation") else 'SIMCONDTag'
+        cond_type = 'LHCBCONDTag' if not self.getProp("Simulation") else 'SIMCONDTag'
         for p in ['DDDB', cond_type.rstrip('Tag'), 'DQFLAGS']:
             tag = response.get(p + 'Tag')
             if not tag:
                 raise RuntimeError("No tag found in Ariadne's response for partition %s"%p)
             CondDB().Tags[p] = tag
-            log.info("Tag '%s' is set for partition '%s'" %(tag, p))
+            log.info("Ariadne driven configuration: Tag '%s' is set for partition '%s'" %(tag, p))
 
 
     def __set_tag__(self, partitions, tag):
@@ -241,7 +241,7 @@ class DDDBConf(ConfigurableUser):
         Default database for Upgrade MonteCarlo production and analysis
         """
         # Need also to change connection string to DDDB
-        CondDB().PartitionConnectionString = { "DDDB":"sqlite_file:$SQLITEDBPATH/DDDB_upgrade.db/DDDB"}
+        CondDB().PartitionConnectionString = {"DDDB":"sqlite_file:$SQLITEDBPATH/DDDB_upgrade.db/DDDB"}
 
     __data_types_handlers__ =  { "2013": __2013_conf__,
                                  "2012": __2012_conf__,
