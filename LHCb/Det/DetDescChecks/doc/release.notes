@@ -5,6 +5,9 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2013-04-24 - Illya Shapoval
+ - Another new test added: loaddddb-sim-2012-ariadne.qmt.
+
 ! 2013-04-23 - Illya Shapoval
  - Added loaddddb2012-ariadne.qmt test to load CondDB using the Ariadne driven
    tags configuration.

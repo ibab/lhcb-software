@@ -12,7 +12,7 @@
 from Gaudi.Configuration import *
 from Configurables import DDDBConf
 
-DDDBConf(DataType = "2012", AutoTags = True)
+DDDBConf(DataType = "2012", Simulation = True, AutoTags = True)
 
 </text></argument>
 <argument name="validator"><text>
