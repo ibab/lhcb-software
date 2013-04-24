@@ -287,7 +287,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
      if ( size_t(info + 0.5) != n )
      {
         std::stringstream msg;
-        msg << "Number of previously upgraded tracks: " << size_t(info + 0.5) 
+        msg << trTool() << ": Number of previously upgraded tracks: " << size_t(info + 0.5) 
             << " does not match number of found tracks: " << n << ".";
         Assert( false, msg.str() ) ;
      }
