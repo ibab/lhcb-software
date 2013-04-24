@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Brought upgrade qmtest references in line with current HEAD.
+
  - Updated qmtest upgrade references and options.
  - Added tests/options/db-latest-upgrade.py
 
