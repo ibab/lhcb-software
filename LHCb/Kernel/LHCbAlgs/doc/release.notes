@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-04-25 - Paul Szczypka
+ - Added it and ot to known detector list.
+
 !========================= LHCbAlgs v2r56 2013-04-23 =========================
 
 ! 2013-04-19 - Chris Jones

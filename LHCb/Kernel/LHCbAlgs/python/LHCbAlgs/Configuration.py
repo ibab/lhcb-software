@@ -74,6 +74,8 @@ class LHCbApp(LHCbConfigurableUser):
         "puveto"     : "PuVeto",
         "muon"       : "Muon",
         "muonnom1"   : "MuonNoM1",
+        "it"         : "IT",
+        "ot"         : "OT",
         "tt"         : "TT",
         "ut"         : "UT",
         "ft"         : "FT",
