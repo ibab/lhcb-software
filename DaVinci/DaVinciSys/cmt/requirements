@@ -8,7 +8,7 @@ use  DaVinci         v33r3p1  Phys
 use  DaVinciTests    v2r16
 
 # Temporary inclusions
-use EventPacker          v3r0     Event
+use EventPacker          v2r21p1  Event
 use ChargedProtoANNPID   v2r0     Rec
 use PhysConf             v1r20    Phys
 use DaVinciTools         v23r7    Phys
