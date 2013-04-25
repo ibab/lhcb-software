@@ -2,6 +2,8 @@
 #include <iostream>
 #ifndef _WIN32
 #include <stdlib.h>
+#else
+#include <unistd.h>
 #endif
 #include <map>
 #include <cstdlib>
