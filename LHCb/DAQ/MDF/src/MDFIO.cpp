@@ -147,7 +147,7 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
         log1 << MSG::INFO << "Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information." << endmsg;
       }
       else   {
-        unsigned int trMask[4] = {~0,~0,~0,~0};
+        unsigned int trMask[4] = {~0u,~0u,~0u,~0u};
         const OnlineRunInfo* odin_info = odin[0]->begin<OnlineRunInfo>();
         MDFHeader::SubHeader inf = hdrBank->begin<MDFHeader>()->subHeader();
         MsgStream log1(m_msgSvc, m_parent);
@@ -272,7 +272,7 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
 }
 
 RawBank* LHCb::MDFIO::createDummyMDFHeader( RawEvent* raw, size_t len ) {
-  unsigned int trMask[] = {~0,~0,~0,~0};
+  unsigned int trMask[] = {~0u,~0u,~0u,~0u};
   RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
   MDFHeader* hdr = (MDFHeader*)hdrBank->data();
   hdr->setChecksum(0);

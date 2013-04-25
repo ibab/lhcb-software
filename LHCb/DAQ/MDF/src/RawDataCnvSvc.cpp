@@ -586,7 +586,7 @@ RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, MDFDescriptor& result)   {
       if ( m_ioMgr->seek(ent->connection, offset, SEEK_SET) != -1 )  {
         setupMDFIO(msgSvc(),dataProvider());
         result = readBanks(ent);
-        if ( result.first > 0 )  {
+        if ( result.first )  {
           return StatusCode::SUCCESS;
         }
         return error("Failed read raw data input from:"+par[0]);

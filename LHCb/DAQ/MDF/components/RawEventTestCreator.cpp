@@ -38,7 +38,7 @@ namespace LHCb  {
     virtual StatusCode execute()  {
       int i, cnt, *p;
       static int trNumber = -1;
-      unsigned int trMask[] = {~0,~0,~0,~0};
+      unsigned int trMask[] = {~0u,~0u,~0u,~0u};
       ++trNumber;
       unsigned int run_no = 1 + trNumber/10000;
       RawEvent* raw = new RawEvent();

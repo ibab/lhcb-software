@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2013-04-25 - Markus Frank
+ - Fixed warnings for gcc47
+
 !========================= MDF v3r36 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
