@@ -27,6 +27,7 @@ DeUTModule::DeUTModule( const std::string& name ) :
   m_detRegion(0u),
   m_firstSector(0u),
   m_column(0u),
+  m_numSectors(0),
   m_parent(NULL),
   m_prodID(0),
   m_versionString("DC11"),

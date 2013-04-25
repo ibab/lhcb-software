@@ -26,7 +26,9 @@ using namespace boost::lambda;
 
 DeITLayer::DeITLayer( const std::string& name ) :
   DeSTLayer( name ),
-  m_parent(NULL)
+  m_parent(NULL),
+  m_firstSector(NULL),
+  m_lastSector(NULL)
 { 
   // constructor
 }
