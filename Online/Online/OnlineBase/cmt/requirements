@@ -28,10 +28,11 @@ setup_script  $(ONLINEBASEROOT)/scripts/onlinepatches
 macro ONLINE_CPPFLAGS " -ansi -pedantic -Wall -Woverloaded-virtual -Wnon-virtual-dtor " WIN32 ""
 macro_append ONLINE_CPPFLAGS " -Wwrite-strings -Wpointer-arith -Wreturn-type -Wunused -pthread " WIN32 ""
 macro_append ONLINE_CPPFLAGS " -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
-macro_append ONLINE_CPPFLAGS     "" \
-	target-vc9 " -wd4996 " \
-	target-vc7 "" \
-	target-gcc " -W -Wno-long-long -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend "
+macro_append ONLINE_CPPFLAGS "" \
+	target-vc9   " -wd4996 " \
+	target-vc7   "" \
+	target-gcc   " -W -Wno-long-long -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend " \
+	target-clang " -W -Wno-long-long -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend "
 
 private
 macro_append  use_includes ' $(ppcmd)"$(ONLINEBASEROOT)/OnlineBase" '
