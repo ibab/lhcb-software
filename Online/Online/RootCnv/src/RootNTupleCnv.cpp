@@ -635,8 +635,8 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
       if ( status.isSuccess() )  {
         status = m_dbMgr->commitOutput(path, true);
         if ( status.isSuccess() ) {
-          string spar[]   = { path, cntName};
-          unsigned long ipar[] = { (unsigned long)con, ~0x0 };
+          string spar[] = { path, cntName};
+          unsigned long ipar[] = { (unsigned long)con, ~0x0u };
           status = m_dbMgr->createAddress(repSvcType(),pObj->clID(),spar,ipar,pAddr);
           if ( status.isSuccess() ) {
             RootAddress* rpA = dynamic_cast<RootAddress*>(pAddr);

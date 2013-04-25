@@ -277,7 +277,7 @@ RootEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) cons
       RootEvtSelectorContext::Files::const_iterator fileit = pctxt->fileIterator();
       if ( fileit != pctxt->files().end() ) {
         const string par[2] = {pctxt->fid(), m_rootName};
-        const unsigned long ipar[2] = {0,ent};
+        const unsigned long ipar[2] = {0,(unsigned long)ent};
         return m_dbMgr->createAddress(m_dbMgr->repSvcType(),m_rootCLID,&par[0],&ipar[0],pAddr);
       }
     }
