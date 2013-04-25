@@ -63,7 +63,6 @@ public:
    *  @return status code 
    */
   virtual StatusCode initialize   () ;
-  virtual StatusCode finalize   () ;
   virtual StatusCode execute  () ;
   // ========================================================================    
 
@@ -93,15 +92,17 @@ private:
  */
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCJets2JetsAlg );
+DECLARE_ALGORITHM_FACTORY( MCJets2JetsAlg )
 
 StatusCode MCJets2JetsAlg::initialize   ()
 {
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
   if( m_jetALocation.empty() || m_jetBLocation.empty() )return Error("No input locations is specified") ;
   if( m_jetMatcherName.empty() || m_jetBLocation.empty() )return Error("No jet matching tool specified") ;
   if (m_output.empty())return Error ( "No OutputTable is specified" ) ;
   if (m_output2.empty())return Error ( "No OutputInverseTable is specified" ) ;
-  return GaudiAlgorithm::initialize(); // must be executed first
+  return sc;
 }
 
 StatusCode MCJets2JetsAlg::execute   () 
@@ -109,7 +110,7 @@ StatusCode MCJets2JetsAlg::execute   ()
   // Get the jets
   const LHCb::Particles* PartsA    = get<LHCb::Particles>(m_jetALocation);
   const LHCb::Particles* PartsB    = get<LHCb::Particles>(m_jetBLocation);
-  if (PartsA->size()==0 || PartsB->size()==0 ){
+  if ( PartsA->empty() || PartsB->empty() ){
     Warning("No jets to match in the event") ;
     setFilterPassed ( false ); 
     return StatusCode::SUCCESS ;
@@ -150,12 +151,6 @@ StatusCode MCJets2JetsAlg::execute   ()
   setFilterPassed ( true ) ;
   
   return StatusCode::SUCCESS ;
-}
-StatusCode MCJets2JetsAlg::finalize() {
-
-  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();
 }
 
 // ===========================================================================

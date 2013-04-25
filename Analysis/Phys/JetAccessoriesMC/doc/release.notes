@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-04-25 - Chris Jones
+ - Add more missing calls to initialize() and finalize()
+
 ! 2013-04-24 - Victor Coco
  - Add the MC2Jet associators, configuration for them and new relation interface
 
