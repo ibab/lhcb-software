@@ -66,7 +66,7 @@ namespace LoKi
     virtual void makeRelation( const IRelateJets::Jets& StdPrimaryJets,
                                const IRelateJets::Jets& StdSecondaryJets ,
                                IRelateJets::Table &tableMC2R ,
-                               §IRelateJets::Table &tableR2MC ) const ;
+                               IRelateJets::Table &tableR2MC ) const ;
 
     virtual void handle( const Incident& );
 
