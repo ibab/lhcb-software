@@ -106,8 +106,8 @@ public:
   StatusCode finalize();
 
   /// Get/Set the decay string to find
-  std::string decay( void ) { return m_source; }
-  StatusCode setDecay( std::string decay );
+  const std::string& decay( void ) { return m_source; }
+  StatusCode setDecay( const std::string& decay );
 
   std::string revert( void );
 

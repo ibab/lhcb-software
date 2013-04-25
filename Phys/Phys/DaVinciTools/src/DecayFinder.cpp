@@ -106,7 +106,7 @@ StatusCode DecayFinder::finalize()
   return GaudiTool::finalize();
 }
 //=============================================================================
-StatusCode DecayFinder::setDecay( std::string decay )
+StatusCode DecayFinder::setDecay( const std::string& decay )
 {
 
   Descriptor *old_decay = m_decay;

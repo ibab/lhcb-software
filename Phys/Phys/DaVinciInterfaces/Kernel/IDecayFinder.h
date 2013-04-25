@@ -20,16 +20,18 @@
  *  @author Olivier Dormond
  *  @date   23/04/2002
  */
-class GAUDI_API IDecayFinder : virtual public IAlgTool {
+class GAUDI_API IDecayFinder : virtual public IAlgTool
+{
+
 public:
 
   DeclareInterfaceID(IDecayFinder, 4, 0);
   
   /// Get the decay string to find
-  virtual std::string decay( void ) = 0;
+  virtual const std::string& decay( void ) = 0;
 
   /// Get the decay string to find
-  virtual StatusCode setDecay( std::string decay ) = 0;
+  virtual StatusCode setDecay( const std::string& decay ) = 0;
 
   virtual std::string revert( void ) = 0;
 
