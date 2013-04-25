@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2013-04-25 - Marco Cattaneo
+ - Remove an unused member variable, fixes an UNINIT_CTOR defect
+
 !========================= MuonDet v9r10 2013-03-20 =========================
 ! 2013-02-25 - Marco Cattaneo for Danilo Piparo
  - In DeMuonDetector.h: (see https://savannah.cern.ch/bugs/?100553)
