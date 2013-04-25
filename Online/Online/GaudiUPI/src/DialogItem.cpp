@@ -56,39 +56,39 @@ DialogItem::~DialogItem() {
 }
 
 bool DialogItem::isString() const   {
-  if      ( strstr(m_fmt.c_str(),"s") > 0 ) 
+  if      ( ::strstr(m_fmt.c_str(),"s") ) 
     return 1;
-  else if ( strstr(m_fmt.c_str(),"S") > 0 ) 
+  else if ( ::strstr(m_fmt.c_str(),"S") ) 
     return 1;
-  else if ( strstr(m_fmt.c_str(),"a") > 0 ) 
+  else if ( ::strstr(m_fmt.c_str(),"a") ) 
     return 1;
-  else if ( strstr(m_fmt.c_str(),"A") > 0 ) 
+  else if ( ::strstr(m_fmt.c_str(),"A") ) 
     return 1;
   else
     return 0;
 }
 
 bool DialogItem::isReal() const {
-  if      ( strstr(m_fmt.c_str(),"f") > 0 ) 
+  if      ( ::strstr(m_fmt.c_str(),"f") ) 
     return 1;
-  else if ( strstr(m_fmt.c_str(),"F") > 0 ) 
+  else if ( ::strstr(m_fmt.c_str(),"F") ) 
     return 1;
   else
     return 0;
 }
 
 bool DialogItem::isInteger() const    {
-  if      ( strstr(m_fmt.c_str(),"d") > 0 ) 
+  if      ( ::strstr(m_fmt.c_str(),"d") ) 
     return 1;
-  else if ( strstr(m_fmt.c_str(),"D") > 0 ) 
+  else if ( ::strstr(m_fmt.c_str(),"D") ) 
     return 1;
-  else if ( strstr(m_fmt.c_str(),"i") > 0 ) 
+  else if ( ::strstr(m_fmt.c_str(),"i") ) 
     return 1;
-  else if ( strstr(m_fmt.c_str(),"I") > 0 ) 
+  else if ( ::strstr(m_fmt.c_str(),"I") ) 
     return 1;
-  else if ( strstr(m_fmt.c_str(),"x") > 0 ) 
+  else if ( ::strstr(m_fmt.c_str(),"x") ) 
     return 1;
-  else if ( strstr(m_fmt.c_str(),"X") > 0 ) 
+  else if ( ::strstr(m_fmt.c_str(),"X") ) 
     return 1;
   else
     return 0;
