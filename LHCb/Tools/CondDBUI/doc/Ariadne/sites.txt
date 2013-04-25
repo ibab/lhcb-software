@@ -1,0 +1,7 @@
+{'type': 'site', 'name': 'CondDB-CERN'}
+{'type': 'site', 'name': 'CondDB-CNAF'}
+{'type': 'site', 'name': 'CondDB-GRIDKA'}
+{'type': 'site', 'name': 'CondDB-IN2P3'}
+{'type': 'site', 'name': 'CondDB-NIKHEF'}
+{'type': 'site', 'name': 'CondDB-PIC'}
+{'type': 'site', 'name': 'CondDB-RAL'}

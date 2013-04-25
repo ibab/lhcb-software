@@ -20,9 +20,11 @@ _app = None
 
 
 def payloadSpecEq(pl1, pl2):
+
     if len(pl1) != len(pl2):
         return False
     pl1k, pl2k = pl1.keys(), pl2.keys()
+
     for k in pl1k:
         if not k in pl2k:
             return False
