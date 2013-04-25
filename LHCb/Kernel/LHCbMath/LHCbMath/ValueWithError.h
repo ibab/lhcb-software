@@ -410,6 +410,26 @@ namespace Gaudi
     ( const size_t n , 
       const size_t N ) ;
     // ========================================================================
+    /** simple evaluation of efficiency from statistically independend
+     * "exclusive" samples "accepted" and "rejected"
+     *  \f$ \varepsilon = \frac{1}{ 1 + \frac{N_{rejected}}{N_accepted}}\f$ 
+     *  @param accepted  (IN) accepted sample 
+     *  @param rejected  (IN) rejected sample 
+     */
+    GAUDI_API 
+    ValueWithError exclusiveEff
+    ( const ValueWithError& accepted , 
+      const ValueWithError& rejected ) ;
+    // ========================================================================
+    /** simple evaluation of efficiency using Zech's prescription 
+     *  @param accepted  (IN) accepted sub-sample 
+     *  @param total     (IN) total     sample 
+     */
+    GAUDI_API 
+    ValueWithError zechEff
+    ( const ValueWithError& accepted , 
+      const ValueWithError& total    ) ;
+    // ========================================================================
     /** evaluate pow(a,b)
      *  @param a (INPUT) the base 
      *  @param b (INPUT) the exponent 

@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-04-25 - Vanya Belyaev
+ -  add few helper functions into ValueWithError
+
 ! 2013-04-23 - Chris Jones
  - Move 'operator<<' for MD5 inside a namespace to fix compilation 
    errors with clang.

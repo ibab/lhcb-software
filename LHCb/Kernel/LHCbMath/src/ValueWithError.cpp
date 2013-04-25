@@ -765,6 +765,46 @@ Gaudi::Math::ValueWithError Gaudi::Math::agrestiCoullEff
   return Gaudi::Math::ValueWithError  ( eff , c2 ) ;
 }
 // ============================================================================
+/*  Simple evaluation of efficiency from statistically independend
+ *  "exclusive" samples "accepted" and "rejected"
+ *  \f$ \varepsilon = \frac{1}{ 1 + \frac{N_{rejected}}{N_accepted}}\f$ 
+ *  @param accepted  (IN) accepted sample 
+ *  @param rejected  (IN) rejected sample 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::exclusiveEff
+( const Gaudi::Math::ValueWithError& accepted , 
+  const Gaudi::Math::ValueWithError& rejected )
+{
+  const bool z_a = _zero ( accepted.value() ) ;
+  const bool z_r = _zero ( rejected.value() ) ;
+  return 
+    z_a ? ( z_r ? ValueWithError ( 1, 1 ) : ( 1. - 1. / ( 1. + accepted / rejected ) ) )  :
+    1. / ( 1. + rejected / accepted ) ;
+}
+// ============================================================================
+/*  Simple evaluation of efficiency using Zech's prescription 
+ *  @param accepted  (IN) accepted sub-sample 
+ *  @param total     (IN) total     sample 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::zechEff
+( const Gaudi::Math::ValueWithError& accepted , 
+  const Gaudi::Math::ValueWithError& total    ) 
+{
+  //
+  const double e   =        accepted.value () / total.value () ;
+  const double v2  = total.value() * total.value() ;
+  const double t1  =           total.cov2  () / v2 ;
+  const double t2  =        accepted.cov2  () / v2 ;
+  //
+  const double c2  = e * e * t1  + ( 1 - 2 * e ) * t2 ;
+  //
+  return Gaudi::Math::ValueWithError ( e , c2 ) ;
+}
+// ============================================================================
 /*  evaluate pow(a,b)
  *  @param a (INPUT) the base
  *  @param b (INPUT) the exponent
