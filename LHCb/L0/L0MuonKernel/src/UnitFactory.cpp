@@ -11,7 +11,7 @@
 
 L0Muon::UnitFactory* L0Muon::UnitFactory::m_instance=0;
 
-L0Muon::UnitFactory::UnitFactory() {
+L0Muon::UnitFactory::UnitFactory() : m_topUnit(0) {
 }
 
 L0Muon::UnitFactory::~UnitFactory() {

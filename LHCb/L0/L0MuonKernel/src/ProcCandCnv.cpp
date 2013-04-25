@@ -9,12 +9,14 @@
 */
 L0Muon::ProcCandCnv::ProcCandCnv(){
   m_quarter=0;
+  this->clearRef();
 }
 /**
    Constructor.
 */
 L0Muon::ProcCandCnv::ProcCandCnv(int quarter){
   m_quarter=quarter;
+  this->clearRef();
 
   char buf[4096];
   

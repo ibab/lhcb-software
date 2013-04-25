@@ -4,6 +4,9 @@
 ! Purpose     :
 !------------------------------------------------------------------------------
 
+! 2013-04-25 - Marco Cattaneo
+ - Fix UNINIT_CTOR warnings
+
 !========================= L0MuonKernel v9r9 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

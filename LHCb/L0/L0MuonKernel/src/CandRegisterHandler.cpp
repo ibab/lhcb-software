@@ -1,10 +1,8 @@
-// $Id: CandRegisterHandler.cpp,v 1.3 2008-07-11 15:29:08 jucogan Exp $
-
 #include <cmath>
 #include <vector>
 #include "L0MuonKernel/CandRegisterHandler.h"
 
-L0Muon::CandRegisterHandler::CandRegisterHandler() {
+L0Muon::CandRegisterHandler::CandRegisterHandler() : m_candRegister(NULL) {
 }
 
 L0Muon::CandRegisterHandler::CandRegisterHandler(Register * candRegister) {
