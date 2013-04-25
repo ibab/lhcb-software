@@ -16,8 +16,11 @@
 #include <signal.h>
 #include <fstream>
 
-#ifdef _POSIX_C_SOURCE
+#ifdef _POSIX_C_SOURCE    // Gets redefined in python.h
 #undef _POSIX_C_SOURCE
+#endif
+#ifdef _XOPEN_SOURCE    // Gets redefined in python.h
+#undef _XOPEN_SOURCE
 #endif
 #include "Python.h"
 #ifndef _WIN32
