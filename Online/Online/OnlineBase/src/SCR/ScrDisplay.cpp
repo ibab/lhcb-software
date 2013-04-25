@@ -98,6 +98,7 @@ size_t ScrDisplay::draw_line_normal(const char* format,...)  {
   char buffer[1024];
   va_start( args, format );
   int len = ::vsprintf(buffer, format, args);
+  va_end(args);
   for(int j=0; j<len && j<m_area.width; ++j)
     print_char(j+1, m_currLine, flags, buffer[j]);
   for(int i=len; i < m_area.width; ++i)
@@ -111,6 +112,7 @@ size_t ScrDisplay::draw_line_reverse(const char* format,...)  {
   char buffer[1024];
   va_start( args, format );
   int len = ::vsprintf(buffer, format, args);
+  va_end(args);
   for(int j=0; j<len && j<m_area.width; ++j)
     print_char(j+1, m_currLine, flags, buffer[j]);
   for(int i=len; i < m_area.width; ++i)
@@ -124,6 +126,7 @@ size_t ScrDisplay::draw_line_bold(const char* format,...)  {
   char buffer[1024];
   va_start( args, format );
   int len = ::vsprintf(buffer, format, args);
+  va_end(args);
   for(int j=0; j<len && j<m_area.width; ++j)
     print_char(j+1, m_currLine, flags, buffer[j]);
   for(int i=len; i < m_area.width; ++i)
@@ -167,14 +170,14 @@ void ScrDisplay::end_update() {
   ::scrc_fflush (pb);
 }
 
-ScrDisplay::ScrDisplay(int w, int h) : MonitorDisplay(), m_pb(0)  {
+ScrDisplay::ScrDisplay(int w, int h) : MonitorDisplay(), m_pb(0), m_display(0)  {
   m_position.x = m_position.y = 2;
   m_area.height = h;
   m_area.width =  w;
   m_currLine = 1;
 }
 
-ScrDisplay::ScrDisplay() : MonitorDisplay(), m_pb(0)  {
+ScrDisplay::ScrDisplay() : MonitorDisplay(), m_pb(0), m_display(0)  {
   m_position.x = m_position.y = 2;
   m_area.height = 0;
   m_area.width =  0;

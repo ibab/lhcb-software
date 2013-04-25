@@ -203,6 +203,7 @@ int scrc_delete_pasteboard (Pasteboard *pb) {
   while ((d = pb->paste.first))    {
     d->disp->paste = 0;
     list_remove_entry (d);
+    if ( d == pb->paste.first ) break;
   }
 
   toascii();

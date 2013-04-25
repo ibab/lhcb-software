@@ -117,12 +117,12 @@ void TimeSensor::add( Interactor* interactor, void* newperiod, void* data)    {
 
 //----------------------------------------------------------------------------
 void TimeSensor::add( Interactor* interactor, int timesec, void* data ) {
-  char times[24];
+  char times[64];
   int day      = (timesec)/86400;
   int hour     = (timesec - day*86400)/3600;
   int minute   = (timesec - day*86400 - hour*3600)/60;
   int sec      = (timesec - day*86400 - hour*3600 - minute*60);
-  ::sprintf(times, "%d %d:%d:%d.0", day, hour, minute, sec); 
+  ::snprintf(times,sizeof(times),"%d %d:%d:%d.0", day, hour, minute, sec); 
   add( interactor, times, data );
 }
 

@@ -38,8 +38,8 @@ namespace {
   static const char *node()  {
     static char n[64] = "";
     if ( n[0] == 0 )  {
-      lib_rtl_get_node_name(n,sizeof(n)-3);
-      strcat(n,"::");
+      ::lib_rtl_get_node_name(n,sizeof(n)-3);
+      ::strncat(n,"::",sizeof(n));
     }
     return n;
   }
@@ -165,10 +165,11 @@ void AmsSensor::remove( Interactor* interactor, const Address* source )   {
       InteractorTable::iterator i = s_interactorTable.find(as);
       if ( i != s_interactorTable.end() )  {
         if( (*i).second == interactor )  {
+	  AmsSource* a = as;
           s_interactorTable.erase(i);
           if ( last_as ) last_as->setNext(as->next());
-          else           SourceHead = as->next();
-          delete as; 
+          else           as = SourceHead = as->next();
+          delete a;
         }
       }
       else      {
@@ -192,12 +193,13 @@ int AmsSensor::send( const Message* msg, const Address& dest)   {
 int AmsSensor::receive( Message** msg, Address* src, int timeout )  {
   char source[128];
   unsigned int  facility;
-  Message* message = (Message*)(new char[ MAXMSGSIZE + 4 ]);
+  char* ptr = new char[ MAXMSGSIZE + 4 ];
+  Message* message = (Message*)ptr;
   size_t size = MAXMSGSIZE;
   int status = ::amsc_get_message((int*)message+1,&size,source,(char*)src->node_process.c_str(),
     timeout, &facility, src->facility, 0);
   if ( AMS_SUCCESS != status )  {
-    delete message;
+    delete [] ptr;
     return status;
   }
   message->size = size;
@@ -214,7 +216,8 @@ void AmsSensor::dispatch( void* /* id */ )  {
   int status = ::amsc_spy_next_message(spym,&len,source,&src.facility,&size);
   if ( AMS_SUCCESS != status ) return;
   src.node_process = source;
-  Message* msg = (Message*)(ptr = new char[ size + 8 ]);
+  ptr = new char[ size + 8 ];
+  Message* msg = (Message*)ptr;
   status = ::amsc_read_message((int*)msg+1,&size,source,&src.facility,0);
   src.node_process = source;
   if ( AMS_SUCCESS == status )  {
@@ -234,7 +237,7 @@ void AmsSensor::dispatch( void* /* id */ )  {
       }
     }        
   }
-  delete msg;
+  delete [] ptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -250,7 +253,7 @@ int AmsSensor::dispatchBroadCast()   {
   }
   src.node_process = source;
   memset(msg,0,sizeof(msg));
-  strcpy(msg+4,"IAMDEAD");
+  ::strncpy(msg+4,"IAMDEAD",sizeof(msg)-4);
   message->size = strlen(msg+4);
   src.facility = ~0;
   for( AmsSource* as = SourceHead; as; as = as->next() )  {

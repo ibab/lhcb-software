@@ -35,7 +35,7 @@ MouseEvent::MouseEvent(int key, int x_val, int y_val, unsigned int ms)
 }
 
 /// Standard constructor
-MouseSensor::MouseSensor() : Sensor(WT_FACILITY_SCR_MOUSE,"ScrMouseSensor",true) {
+MouseSensor::MouseSensor() : Sensor(WT_FACILITY_SCR_MOUSE,"ScrMouseSensor",true),m_pasteboard(0) {
 }
 
 /// Standard destructor

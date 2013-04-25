@@ -88,8 +88,14 @@ TanInterface::TanInterface() : m_channel(0) {
   const char* tan_host = ::getenv("TAN_NODE");
   int status = ::lib_rtl_get_node_name(m_pcHostName, sizeof (m_pcHostName));
   m_portAllocated = 0;
+  ::memset(&m_sinudp,0,sizeof(m_sinudp));
+  ::memset(&m_sintcp,0,sizeof(m_sintcp));
+
   if ( status < 0 )                                                  goto Error;
-  if ( tan_host   ) ::strncpy(m_pcHostName, tan_host, sizeof (m_pcHostName));
+  if ( tan_host   )  {
+    ::strncpy(m_pcHostName, tan_host, sizeof (m_pcHostName));
+    m_pcHostName[sizeof(m_pcHostName)-1]=0;
+  }
   h = hostByName(m_pcHostName);
   if ( h == 0 )                                                      goto Error;
   dot  = strchr(m_pcHostName,'.');
@@ -97,12 +103,11 @@ TanInterface::TanInterface() : m_channel(0) {
   if ( dot && !isdigit(m_pcHostName[0]) ) *dot = 0;
 
 #ifdef _VMS
-  memcpy (&m_sinudp.sin_addr, *h->h_addr_list, h->h_length);
+  ::memcpy (&m_sinudp.sin_addr, *h->h_addr_list, h->h_length);
 #else
-  memcpy (&m_sinudp.sin_addr, h->h_addr, h->h_length);
+  ::memcpy (&m_sinudp.sin_addr, h->h_addr, h->h_length);
 #endif
   m_sinudp.sin_family = AF_INET;
-  ::memset(m_sinudp.sin_zero,0,sizeof(m_sinudp.sin_zero));
   ::memcpy(&m_sintcp,&m_sinudp,sizeof(m_sintcp));
 
   //::fprintf(stdout,"%s> TAN interface [%s]: Host=%s [%s]\n",
@@ -239,7 +244,7 @@ void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
       ::strncpy (node, name, n = p - name);
       node [n] = 0;
     }
-    if (proc!= 0) ::strcpy (proc, p + 2);
+    if (proc!= 0) ::strcpy(proc, p+2);
   }
   else if ( 0 != (p=strchr(name,'@')) )    {
     s = 1;

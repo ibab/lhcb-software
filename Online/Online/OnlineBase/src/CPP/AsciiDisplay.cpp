@@ -67,6 +67,7 @@ size_t AsciiDisplay::draw_line_normal(const char* format,...)  {
   char buffer[1024];
   va_start( args, format );
   /* size_t len = */ ::vsprintf(buffer, format, args);
+  va_end(args);
 #if 0
   print_char(1, m_currLine, VERT_BAR);
   for(size_t j=0; j<len && j<TERM_WIDTH-1; ++j)
@@ -85,6 +86,7 @@ size_t AsciiDisplay::draw_line_reverse(const char* format,...)  {
   char buffer[1024];
   va_start( args, format );
   /* size_t len = */ ::vsprintf(buffer, format, args);
+  va_end(args);
 #if 0
   print_char(1, m_currLine, VERT_BAR);
   for(size_t j=0; j<len && j<TERM_WIDTH-1; ++j)
@@ -103,6 +105,7 @@ size_t AsciiDisplay::draw_line_bold(const char* format,...)  {
   char buffer[1024];
   va_start( args, format );
   /* size_t len = */ ::vsprintf(buffer, format, args);
+  va_end(args);
 #if 0
   print_char(1, m_currLine, VERT_BAR);
   for(size_t j=0; j<len && j<TERM_WIDTH-1; ++j)
@@ -167,13 +170,13 @@ size_t AsciiDisplay::height() const {
 }
 
 AsciiDisplay::AsciiDisplay() 
-  : MonitorDisplay(), m_pasteboard(0), m_display(0), m_color(YELLOW)  
+  : MonitorDisplay(), m_pasteboard(0), m_display(0), m_color(YELLOW), m_width(0), m_height(0)
 {
 }
 
 /// Default Constructor with title
 AsciiDisplay::AsciiDisplay(const std::string& title) 
-  : MonitorDisplay(), m_pasteboard(0), m_display(0), m_color(YELLOW), m_title(title) 
+  : MonitorDisplay(), m_pasteboard(0), m_display(0), m_color(YELLOW), m_width(0), m_height(0), m_title(title) 
 {
 }
 

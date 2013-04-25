@@ -575,7 +575,7 @@ Options:
   if ( !srv ) goto Options;
   if ( !nowait )  {
     srv->run();
-    delete srv;
   }
+  delete srv;
   return 0x1;
 }
