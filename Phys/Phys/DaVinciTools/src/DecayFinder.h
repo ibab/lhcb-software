@@ -1,5 +1,5 @@
 // $Id$
-#ifndef TOOLS_DECAYFINDER_H 
+#ifndef TOOLS_DECAYFINDER_H
 #define TOOLS_DECAYFINDER_H 1
 
 //#define YYDEBUG 1
@@ -22,9 +22,9 @@ class IDataProviderSvc;
 struct yy_buffer_state;
 
 /** @class DecayFinder DecayFinder.h
- *  
+ *
  *  This tool allows you to search a vector of Particle for a specific decay.
- *  The decay is given thru the property 'Decay' as a string which describe
+ *  The decay is given through the property 'Decay' as a string which describe
  *  what you are looking for. The syntax of this expression has been designed
  *  to be as powerful as possible. It can express inclusive decays as well as
  *  (almost) any set of decay.
@@ -90,19 +90,20 @@ struct yy_buffer_state;
  */
 class DecayFinder : public GaudiTool, virtual public IDecayFinder
 {
+
 public:
+
   /// Standard Constructor
   DecayFinder( const std::string& type,
                const std::string& name,
                const IInterface* parent );
 
-  /// Destructor 
+  /// Destructor
   virtual ~DecayFinder( ); ///< Destructor
 
   StatusCode initialize( void );
 
   StatusCode finalize();
-  
 
   /// Get/Set the decay string to find
   std::string decay( void ) { return m_source; }
@@ -138,7 +139,7 @@ public:
    *  @param leaf, a bool indicating whether to include all particles or only
    *         the one at the ends of the branches. (Default: all)
    */
-  void descendants( const LHCb::Particle *head, 
+  void descendants( const LHCb::Particle *head,
                     LHCb::Particle::ConstVector& result,
                     bool leaf=false );
 
@@ -150,7 +151,7 @@ public:
    *  particles seperated from the decay by a ':' and/or by putting a '^' before
    *  any particle in the decay.
    */
-  void decayMembers( const LHCb::Particle *head, 
+  void decayMembers( const LHCb::Particle *head,
                      LHCb::Particle::ConstVector& members );
 
   /// Get a vector of pairs <mother, products> for all sub-trees.
@@ -168,6 +169,7 @@ public:
                    noteq_rel };
 
 private:
+
   /// The opaque representation of a particle matcher
   class ParticleMatcher
   {
@@ -175,13 +177,13 @@ private:
     //
     ParticleMatcher( const LHCb::IParticlePropertySvc *ppSvc );
     ParticleMatcher( ParticleMatcher &copy );
-    ParticleMatcher( std::string *name, 
+    ParticleMatcher( std::string *name,
                      const LHCb::IParticlePropertySvc *ppSvc );
     ParticleMatcher( Quarks q1, Quarks q2, Quarks q3,
                      const LHCb::IParticlePropertySvc *ppSvc );
     ParticleMatcher( Quantums quantum, Relations relation, double value,
                      const LHCb::IParticlePropertySvc *ppSvc );
-    bool test( const LHCb::Particle *part, 
+    bool test( const LHCb::Particle *part,
                LHCb::Particle::ConstVector *collect=NULL );
     void setLift( void ) { lift = true; }
     bool getLift( void ) { return lift; }
@@ -200,7 +202,7 @@ private:
     void setStable( void ) { stable = true; }
     bool getStable( void ) { return stable; }
     bool getExact( void ) { return !qmark && !inverse
-                              && !conjugate && (type==id); }
+        && !conjugate && (type==id); }
     void conjugateID( void );
     std::string describe( void );
   private:
@@ -228,12 +230,12 @@ private:
   public:
     Descriptor( const LHCb::IParticlePropertySvc *ppSvc, double resonnanceThreshold );
     Descriptor( Descriptor &copy );
-    Descriptor( ParticleMatcher *mother, 
+    Descriptor( ParticleMatcher *mother,
                 const LHCb::IParticlePropertySvc *ppSvc,
                 double resonnanceThreshold );
-    
+
     ~Descriptor();
-    
+
     template<class Iter> bool test( const Iter first, const Iter last,
                                     const LHCb::Particle*& previous_result ) {
       Iter start;
@@ -244,7 +246,7 @@ private:
       }
       if( previous_result )
         start++;
-      
+
       if( mother == NULL ) { // No mother == pp collision
         std::list<const LHCb::Particle*> prims;
         Iter i;
@@ -262,12 +264,12 @@ private:
           getAlternate()->test(first,last,previous_result);
         return false;
       }
-      
+
       Iter part_i;
       part_i = (previous_result ? start : first);
       while( (part_i != last) && (test(*part_i) == false) )
         part_i++;
-      
+
       if( part_i != last ) {
         previous_result = *part_i;
         return true;
@@ -305,21 +307,21 @@ private:
     bool skipResonnance;
     bool elipsis;
     double m_resThreshold;
-    
+
     const LHCb::IParticlePropertySvc *m_ppSvc;
-    
+
     Descriptor *alternate;
   };
 
   class DescriptorError
   {
   public:
-    DescriptorError( std::string s ) : msg(s) {}
+    DescriptorError( const std::string& s ) : msg(s) {}
     std::string &cause( void ) { return msg; }
   private:
     std::string msg;
   };
-  
+
   const LHCb::IParticlePropertySvc *m_ppSvc;
   IDataProviderSvc *m_EDS;
   std::string m_source;
@@ -327,12 +329,12 @@ private:
   std::vector<ParticleMatcher *> *m_members;
   double m_resThreshold;
 
-  bool compile( std::string &decay );
+  bool compile( const std::string &decay );
 
 #include "recparser.h"
 
   int yparse( void );
-  void yerror( char *msg ) { throw DescriptorError(msg); }
+  void yerror( const std::string& msg ) { throw DescriptorError(msg); }
 
   int ylex( void );
 

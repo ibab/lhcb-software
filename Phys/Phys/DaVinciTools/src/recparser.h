@@ -55,7 +55,8 @@
 #define AS_Q 307
 #define AT_Q 308
 #define AB_Q 309
-union YYSTYPE {
+union YYSTYPE
+ {
   std::string *text;
   double dval;
   Quarks quarkval;

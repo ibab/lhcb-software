@@ -94,17 +94,15 @@ StatusCode DecayFinder::initialize()
             << endreq;
     return StatusCode::SUCCESS;
   }
-  
+
   debug() << "Could not compile the decay description" << endreq;
   return StatusCode::FAILURE;
 }
 //=============================================================================
 StatusCode DecayFinder::finalize()
 {
-
   //  if (m_ppSvc ) delete m_ppSvc;
   //  if (m_EDS )   delete m_EDS;
-
   return GaudiTool::finalize();
 }
 //=============================================================================
@@ -175,7 +173,7 @@ std::string DecayFinder::revert( void )
 #include "reclexer.icpp"
 #include "recparser.icpp"
 
-bool DecayFinder::compile( std::string &source )
+bool DecayFinder::compile( const std::string &source )
 {
   yy_buffer_state *bs = yy_scan_string( source.c_str() );
   try
@@ -631,7 +629,7 @@ std::string DecayFinder::ParticleMatcher::describe( void )
     result += "## MUST NOT COMPILE ##";
     break;
   case id:
-    {  
+    {
       const LHCb::ParticleProperty* ppp = m_ppSvc->find( LHCb::ParticleID( parms.stdHepID ) );
       if (0==ppp){result += "## UNKNOWN Particle ##";}
       else{result += ppp->particle();};
