@@ -18,7 +18,8 @@ namespace CHECKPOINTING_NAMESPACE  {
    * @author  M.Frank
    * @version 1.0
    */
-  _ALIGN(struct) FileDesc {
+  _ALIGN(class) FileDesc {
+  public:
     struct stat statbuf;
     int    name_len;
     int    fd;
@@ -228,7 +229,8 @@ namespace CHECKPOINTING_NAMESPACE  {
   class FileMap {
   public:
 
-    struct MapInfo {
+    class MapInfo {
+    public:
       void*       addr;
       std::size_t len;
       MapInfo(void* a, std::size_t s) : addr(a), len(s) {}

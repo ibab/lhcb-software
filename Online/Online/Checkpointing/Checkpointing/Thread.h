@@ -36,7 +36,8 @@ namespace CHECKPOINTING_NAMESPACE {
    * @author  M.Frank
    * @version 1.0
    */
-  struct Thread {
+  class Thread {
+  public:
     typedef int tid_t;
     Thread  *next;                      // next thread in 'threads' list
     Thread **prev;                      // prev thread in 'threads' list

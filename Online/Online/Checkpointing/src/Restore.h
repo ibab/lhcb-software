@@ -7,7 +7,7 @@
  */
 namespace CHECKPOINTING_NAMESPACE  {
 
-  struct FileDesc;
+  class FileDesc;
 
   /// Print file descriptor information
   STATIC(void) checkpoint_file_print(int lvl, const FileDesc* d);
@@ -18,7 +18,7 @@ namespace CHECKPOINTING_NAMESPACE  {
   /// Read file descriptor information from memory block
   STATIC(int) checkpoint_file_read(FileDesc* d, const void* addr, bool restore);
 
-  struct Process;
+  class Process;
   /// Read process descriptor header from memory
   STATIC(int) checkpointing_process_read_header(Process*, const void* addr);
   /// Read process descriptor trailer from memory
@@ -42,8 +42,8 @@ namespace CHECKPOINTING_NAMESPACE  {
   STATIC(int) checkpointing_process_fread_memory(Process*,int fd);
   STATIC(int) checkpointing_process_fread(Process* p, int fd);
 
-  struct AreaHandler;
-  struct Area;
+  class AreaHandler;
+  class Area;
   STATIC(int) checkpointing_process_map_memory(const AreaHandler* ,const Area& a, const unsigned char* data, int data_len);
   STATIC(int) checkpointing_process_fmap_memory(const AreaHandler* ,const Area& a, int fd, int data_len);
   STATIC(int) checkpointing_area_datalength(const Area* a);
@@ -56,7 +56,7 @@ namespace CHECKPOINTING_NAMESPACE  {
 
   STATIC(int) checkpointing_area_map(const Area& a,int fd_in,const unsigned char* in,int data_len);
 
-  struct SysInfo;
+  class SysInfo;
   struct Stack;
   typedef void (*checkpointing_string_handler_t)(void* param, const char* s);
 
@@ -99,7 +99,7 @@ namespace CHECKPOINTING_NAMESPACE  {
   /// Print content to stack saved in context
   STATIC(void) checkpointing_print_stack(const char* comment);
 
-  struct Thread;
+  class Thread;
   /**  Thread execution wrapper
    *
    *   Simply call the object function.
@@ -161,7 +161,7 @@ namespace CHECKPOINTING_NAMESPACE  {
   /// Write the memory areas to checkpoint file
   STATIC(int) checkpointing_memory_write(int fd);
 
-  struct Area;
+  class Area;
   /// Write all mapped libraries to file identified by fileno fd_out
   STATIC(int) checkpointing_libs_fwrite(int fd);
   /// Write single library content to file identified by fileno fd_out

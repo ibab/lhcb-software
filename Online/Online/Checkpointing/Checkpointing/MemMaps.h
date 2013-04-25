@@ -23,7 +23,8 @@ namespace CHECKPOINTING_NAMESPACE {
    * @author  M.Frank
    * @version 1.0
    */
-  _ALIGN(struct) Area {
+  _ALIGN(class) Area {
+  public:
     /// Length of the file name
     int     name_len;
     /// File protection bytes

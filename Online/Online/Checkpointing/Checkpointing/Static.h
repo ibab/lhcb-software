@@ -27,9 +27,8 @@ namespace CHECKPOINTING_NAMESPACE    {
    * @author  M.Frank
    * @version 1.0
    */
-  _ALIGN(struct) SysInfo {
-
-
+  _ALIGN(class) SysInfo {
+  public:
     enum RestartTypes {
       RESTART_NORMAL = 0,
       RESTART_CHECKPOINT = 1

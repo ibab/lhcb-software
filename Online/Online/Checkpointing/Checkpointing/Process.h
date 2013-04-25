@@ -17,7 +17,7 @@ namespace CHECKPOINTING_NAMESPACE {
    * @author  M.Frank
    * @version 1.0
    */
-  struct Process {
+  class Process {
     public:
     enum Flags {
       PROCESS_READ,
