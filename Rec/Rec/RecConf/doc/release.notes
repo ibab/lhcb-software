@@ -4,6 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2013-04-25 - Sascha Stahl
+ - Added checks if detector exists to monitoring sequence. 
+ - Removed obsolete upgrade stuff in RecSysConf.
+
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 

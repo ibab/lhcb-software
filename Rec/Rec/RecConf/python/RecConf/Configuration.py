@@ -1,4 +1,3 @@
-
 ## @package RecConf
 #  High level configuration tools for REC
 #  @author Rob Lambert
@@ -181,11 +180,7 @@ class RecSysConf(LHCbConfigurableUser):
                                                        "RawBankReadoutStatusConverter/MuonProcStatus", 
                                                        "RawBankReadoutStatusFilter/MuonROFilter",  MuonIDSeq ]
            
-            if self.getProp("DataType") == 'Upgrade' and "VELOPIX" in recoSeq:
-                from RecoUpgrade import RecoTrackingUpgrade
-                RecoTrackingUpgrade.ConfigVeloPixProvider( MuonIDAlg().myMuIDTool.fitter )
-                
-
+      
         # PROTO
         if "PROTO" in recoSeq:
             self.setOtherProps(GlobalRecoConf(),["DataType","SpecialData",
@@ -232,6 +227,7 @@ class RecMoniConf(LHCbConfigurableUser):
        ,"Context"      : "Offline"
        ,"DataType"     : ""
        ,"Simulation"   : False         # Simulated data
+       ,"Detectors"    : ['Velo','TT','IT','OT','Rich','Tr','Calo','Muon','L0']
         }
 
     _propertyDocDct = { 
@@ -245,30 +241,59 @@ class RecMoniConf(LHCbConfigurableUser):
        }
 
     ## Known monitoring sequences, all run by default
-    KnownMoniSubdets        = ["GENERAL","CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO","Hlt"] 
+    #KnownMoniSubdets        = ["GENERAL","CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO","Hlt"]
+    #KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
+    KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","OT","ST"]
+    KnownMoniGeneral        = ["GENERAL","Tr","PROTO","Hlt"]
+    KnownMoniSubdets        = KnownMoniSubdets + KnownMoniGeneral
     KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
+    
 
     def expertHistos(self): return self.getProp("Histograms") == "Expert"
     
     ## Apply the configuration
     def applyConf(self):
-
+        # Build list of existing detectors
+        dets = []
+        for det in self.getProp("Detectors"):
+            dets.append(det.upper())
+        # general monitoring
+        for det in self.KnownMoniGeneral:
+            dets.append(det)
+        # For compatibility reasons
+        if [det for det in ['IT', 'TT'] if det in dets]:
+            dets.append("ST")
+        if [det for det in ['SPD', 'PRS', 'ECAL', 'HCAL'] if det in dets]:
+            dets.append("CALO")
+        if [det for det in ['RICH1', 'RICH2'] if det in dets]:
+            dets.append("RICH")
+            
         # Set up monitoring (i.e. not using MC truth)
+        moniSeq = []
         if not self.isPropertySet("MoniSequence"):
+            # Build default monitoring
             if self.expertHistos():
-                moniSeq = self.KnownExpertMoniSubdets
+                moniDets = self.KnownExpertMoniSubdets
             else:
-                moniSeq = self.KnownMoniSubdets
+                moniDets = self.KnownMoniSubdets
+            # create overlap
+            for det in moniDets:
+                if det in dets:
+                    moniSeq.append(det)
             self.MoniSequence = moniSeq
         else:
             for seq in self.getProp("MoniSequence"):
                 if self.expertHistos():
                     if seq not in self.KnownExpertMoniSubdets:
                         log.warning("Unknown subdet '%s' in MoniSequence"%seq)
+                    if seq not in dets:
+                        log.warning("Detector unknown '%s'"%seq)    
                 else:
                     if seq not in self.KnownMoniSubdets:
                         log.warning("Unknown subdet '%s' in MoniSequence"%seq)
-        moniSeq = self.getProp("MoniSequence")
+                    if seq not in dets:
+                        log.warning("Detector unknown '%s'"%seq)    
+            moniSeq = self.getProp("MoniSequence")
         from Configurables import ProcessPhase
         ProcessPhase("Moni").DetectorList += moniSeq
 
@@ -341,10 +366,7 @@ class RecMoniConf(LHCbConfigurableUser):
             VeloRecMonitors().setProp("MoniSequence", GaudiSequencer("MoniVELOSeq"))
             #importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')
 
-        if "Tr" in moniSeq :
-            from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
-            ConfiguredTrackMonitorSequence(Name='MoniTrSeq')
-
+   
         if "OT" in moniSeq :
             from TrackMonitors.ConfiguredTrackMonitors import ConfiguredOTMonitorSequence
             ConfiguredOTMonitorSequence(Name='MoniOTSeq')
@@ -361,10 +383,15 @@ class RecMoniConf(LHCbConfigurableUser):
 
         if "ST" in moniSeq :
             from Configurables import ST__STClusterMonitor, GaudiSequencer
-            GaudiSequencer( "MoniSTSeq" ).Members += [ ST__STClusterMonitor("TTClusterMonitor"),
-                                                       ST__STClusterMonitor("ITClusterMonitor")]
+            GaudiSequencer( "MoniSTSeq" ).Members += [ ST__STClusterMonitor("TTClusterMonitor")]
             ST__STClusterMonitor("TTClusterMonitor").DetType = "TT" ## default anyway 
+            GaudiSequencer( "MoniSTSeq" ).Members += [ ST__STClusterMonitor("ITClusterMonitor")]
             ST__STClusterMonitor("ITClusterMonitor").DetType = "IT"
+
+        if "Tr" in moniSeq :
+            from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
+            ConfiguredTrackMonitorSequence(Name='MoniTrSeq')
+
 
         if "PROTO" in moniSeq :
             from Configurables import ( ChargedProtoParticleMoni, GaudiSequencer,
