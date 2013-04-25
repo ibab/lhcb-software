@@ -1,0 +1,22 @@
+<TasksInventory>
+
+  <!--  The task definition: command-line, arguments          -->
+  <!--  and all FMC startup parameters                        -->
+  <Task name="MEPInit" user="online" group="onliners" count="1">
+    <command name="/home/online/start_mep_init.sh"/>
+    <argument name="-node"         value="@NODE"/>
+    <argument name="-a1"           value="bla"/>
+    <fmcpar   name="define"        value="ENV_1=VALUE_1"/>
+    <fmcpar   name="define"        value="ENV_2=VALUE_2"/>
+    <fmcpar   name="define"        value="ENV_3=VALUE_3"/>
+    <fmcpar   name="workdirectory" value="/home/online"/>
+    <fmcpar   name="priority"      value="15"/>
+    <fmcpar   name="nice"          value="15"/>
+    <fmcpar   name="affinity"      value="1"/>
+    <fmcpar   name="stdout"        value="/tmp/logGaudi.fifo"/>
+    <fmcpar   name="stderr"        value="/tmp/logGaudi.fifo"/>
+    <ioparam  name="input"         value="Events"/>
+    <ioparam  name="output"        value="Send"/>
+  </Task>
+
+</TasksInventory>
