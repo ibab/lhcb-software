@@ -196,7 +196,7 @@ class CondDB(ConfigurableUser):
         from CondDBUI.Admin.TagsFilter import last_gt_lts
         rel_notes = None
         if self.getProp('Upgrade'):
-            rel_notes = os.path.join('$SQLITEUPGRADEDBPATH', '..', 'doc', 'release_notes.xml')
+            rel_notes = os.path.join(os.environ['SQLITEUPGRADEDBPATH'], '..', 'doc', 'release_notes.xml')
 
         for partition in partitions:
             gt, lts = None, []
@@ -234,7 +234,7 @@ class CondDB(ConfigurableUser):
         from CondDBUI.Admin.TagsFilter import all_lts
         rel_notes = None
         if self.getProp('Upgrade'):
-            rel_notes = os.path.join('$SQLITEUPGRADEDBPATH', '..', 'doc', 'release_notes.xml')
+            rel_notes = os.path.join(os.environ['SQLITEUPGRADEDBPATH'], '..', 'doc', 'release_notes.xml')
 
         for partition in partitions:
             local_tags = []

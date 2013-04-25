@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-04-25 - Marco Clemencic
+ - Fixed an issue with the previous change (the environment variable expansion
+   was prevented in too many places).
+
 ! 2013-04-24 - Illya Shapoval
  - A bug fix: an expansion of the SQLITEUPGRADEDBPATH env. variable is prevented.
 
