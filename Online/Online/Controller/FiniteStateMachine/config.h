@@ -36,6 +36,14 @@ namespace FiniteStateMachine {
     const T& operator*() const  { return *ptr; }
   };
 
+  /// Utility function to access the package ROOT directory
+  std::string controller_root();
+  /// Utility function to access the package binary directory
+  std::string controller_bindir();
+  /// Utility function to access the package library directory
+  std::string controller_libdir();
+  /// Path to gentest.exe file
+  std::string gentest_path();
 }      //  End namespace 
 
 #endif // ONLINE_FINITESTATEMACHINE_CONFIG_H

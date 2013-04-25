@@ -17,7 +17,6 @@
 // C/C++ include files
 #include <vector>
 
-
 /* 
  *  FiniteStateMachine namespace declaration
  */
@@ -35,18 +34,19 @@ namespace FiniteStateMachine   {
   protected:
 
     /// Timeout table for various transitions
-    TimeoutTable        m_timeouts;
+    TimeoutTable              m_timeouts;
     /// ID of the DIM command to send commands to the slave
-    std::pair<int,int>  m_dimState;
-    int                 m_tmo;
+    std::pair<int,int>        m_dimState;
+    /// General transition timeout, if no other is specified.
+    int                       m_tmo;
     /// Process identifier of the created (alive) slave process
-    int                 m_pid;
+    int                       m_pid;
     /// ID of timeout timer
-    TimerID             m_timerID;
+    TimerID                   m_timerID;
     /// Name of the DIM command to receive the slave's state information
-    std::string         m_commandName;
+    std::string               m_commandName;
     /// String with start command
-    std::string         m_cmd;
+    std::string               m_cmd;
     /// Pointer array with process arguments (to be set by the sub-class)
     std::vector<std::string>  m_argv;
     /// Pointer array with environment variables (to be set by the sub-class)
@@ -74,6 +74,10 @@ namespace FiniteStateMachine   {
     DimSlave(const Type* typ, const std::string& nam, Machine* machine);
     /// Standatrd destructor
     virtual ~DimSlave();
+    /// Set the command line value
+    void setCommand(const std::string& cmd)  {  m_cmd = cmd;  }
+    /// Access the command string 
+    const std::string& command() const       {  return m_cmd; }
     /// Start slave process
     virtual ErrCond start();
     /// Kill slave process

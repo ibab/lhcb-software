@@ -54,7 +54,7 @@ namespace UPI {
     CtrlSlave(ControlMenu* handler, const Type* typ, const std::string& nam,Machine* machine) 
       : DimSlave(typ,nam,machine), m_handler(handler) 
     {
-      m_cmd   = "/afs/cern.ch/lhcb/software/releases/ONLINE/ONLINE_v4r68/InstallArea/x86_64-slc5-gcc46-dbg/bin/gentest.exe";
+      m_cmd   = FiniteStateMachine::gentest_path();
       m_argv += "CTRL_0","libController.so","controller_fsm_test","-name=CTRL_0";
       cloneEnv();
     }

@@ -25,6 +25,7 @@
 // C/C++ include files
 #include <iostream>
 #include <cstdio>
+#include <cerrno>
 
 using namespace std;
 using namespace boost::assign; // bring 'operator+=()' into scope
@@ -35,19 +36,22 @@ typedef FSM::ErrCond ErrCond;
 namespace   {
   struct ExternalSlave : public DimSlave {
     ExternalSlave(const Type* typ, const string& nam, Machine* machine) : DimSlave(typ,nam,machine)   {
-      m_cmd = "/afs/cern.ch/user/f/frankb/cmtuser/Gaudi_v23r5/InstallArea/x86_64-slc5-gcc46-dbg/bin/external_fsm_client.exe";
+      m_cmd = controller_bindir() + "/external_fsm_client.exe";
       m_argv += name(),"-name="+name();
       cloneEnv();
     }
     virtual ~ExternalSlave() {}
   };
-}
+  static void help_fun() {
+    ::printf("Invalid arguments to test executable.\n");
+    ::exit(EINVAL);
+  }
+  static string make_slave_name(int i) {
+    char text[32];
+    ::sprintf(text,"SLAVE_%d",i);
+    return text;
+  }
 
-static void help_fun() {}
-static string make_slave_name(int i) {
-  char text[32];
-  ::sprintf(text,"SLAVE_%d",i);
-  return text;
 }
 
 extern "C" int external_fsm_client(int argc, char** argv)  {
