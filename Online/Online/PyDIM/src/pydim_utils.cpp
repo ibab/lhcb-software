@@ -17,6 +17,9 @@
 
 // includes
 extern "C" {
+#ifdef _XOPEN_SOURCE
+#undef _XOPEN_SOURCE
+#endif
 #include <Python.h>
 #include "structmember.h"
 }

@@ -15,6 +15,9 @@
 #ifdef _POSIX_C_SOURCE  // This is already defined on linux and will cause a warning!
 #undef _POSIX_C_SOURCE
 #endif
+#ifdef _XOPEN_SOURCE
+#undef _XOPEN_SOURCE
+#endif
 extern "C" {
 #include <Python.h>
 #include "structmember.h"
@@ -1629,8 +1632,3 @@ PyMODINIT_FUNC initdimc(void)
   dic_disable_padding();
   dis_disable_padding();
 }
-
-
-
-
-
