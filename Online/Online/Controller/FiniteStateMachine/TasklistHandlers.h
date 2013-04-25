@@ -1,0 +1,93 @@
+/*============================================================
+**
+**      Finite state machine implementation to control 
+**      and manipulate process groups
+**
+**  AUTHORS:
+**
+**      M.Frank  CERN/LHCb
+**
+**==========================================================*/
+#ifndef ONLINE_FINITESTATEMACHINE_TASKLISTHANDLERS_H
+#define ONLINE_FINITESTATEMACHINE_TASKLISTHANDLERS_H
+
+// Framework include files
+#include "FiniteStateMachine/Tasklist.h"
+
+// Forward declarations
+namespace DD4hep { namespace XML { struct Handle_t; }}
+// Forward declarations
+typedef DD4hep::XML::Handle_t xml_h;
+
+/* 
+ *  FiniteStateMachine namespace declaration
+ */
+namespace FiniteStateMachine   {
+
+  /**@class TasklistPrinter  Tasklisthandlers.h FiniteStateMachine/Tasklisthandlers.h
+   *
+   * @author  M.Frank
+   * @date    01/03/2013
+   * @version 0.1
+   */
+  struct TasklistPrinter  {  
+    struct Args      {  void operator()(const xml_h& h);  };
+    struct Params    {  void operator()(const xml_h& h);  };
+    void operator()(const xml_h& h);
+  };
+
+  /**@class TasklistAnalyzer  Tasklisthandlers.h FiniteStateMachine/Tasklisthandlers.h
+   *
+   * @author  M.Frank
+   * @date    01/03/2013
+   * @version 0.1
+   */
+  struct TasklistAnalyzer  {  
+    /// Definition of the task type
+    typedef Tasklist::Task Task;
+    /**@class TasklistAnalyzer::Args  Tasklisthandlers.h FiniteStateMachine/Tasklisthandlers.h
+     *
+     * @author  M.Frank
+     * @date    01/03/2013
+     * @version 0.1
+     */
+    struct Args      {  
+      /// Reference to current task object
+      Task* task;  
+    public:
+      /// Constructor
+      Args(Task* t);
+      /// Action operator when analyzing data
+      void operator()(const xml_h& h);
+    };
+    /**@class TasklistAnalyzer::Params  Tasklisthandlers.h FiniteStateMachine/Tasklisthandlers.h
+     *
+     * @author  M.Frank
+     * @date    01/03/2013
+     * @version 0.1
+     */
+    struct Params    {
+      /// Reference to current task object
+      Task* task;
+      /// Constructor
+      Params(Task* t);
+      /// Action operator when analyzing data
+      void operator()(const xml_h& h);   
+    };
+    /// Reference to task list
+    Tasklist& tasks;
+    /// Constructor
+    TasklistAnalyzer(Tasklist& t);
+    /// Action operator when analyzing data
+    void operator()(const xml_h& h);
+  };
+
+  /// Constructor
+  inline TasklistAnalyzer::TasklistAnalyzer(Tasklist& t) : tasks(t) {}
+  /// Constructor
+  inline TasklistAnalyzer::Args::Args(Task* t) : task(t)       {}
+  /// Constructor
+  inline TasklistAnalyzer::Params::Params(Task* t) : task(t)   {}
+}      //  End namespace 
+#endif //  ONLINE_FINITESTATEMACHINE_TASKLISTHANDLERS_H
+
