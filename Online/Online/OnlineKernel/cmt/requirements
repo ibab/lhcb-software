@@ -29,7 +29,7 @@ macro_append  use_includes            ' $(ppcmd)"$(OnlineKernel_cmtpath)/$(cmt_i
 macro_append  use_linkopts            ' -ldl ' WIN32 ''
 path_remove PYTHONPATH                '/OnlineKernel/'    WIN32 '\OnlineKernel\'
 path_append PYTHONPATH                $(ONLINEKERNELROOT)/python
-
+set           GENTEST_EXE             $(ONLINEKERNELROOT)/$(CMTCONFIG)/gentest.exe
 ###  macro cpp 'gcc32 -m32 '
 ###  macro shlibbuilder 'g++32 -m32 $(cmt_installarea_linkopts) '
 
