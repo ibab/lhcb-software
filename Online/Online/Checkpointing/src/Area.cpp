@@ -50,7 +50,7 @@ int Area::streamOut(void* ptr, bool write_nulls)    const {
 	// invalidate shared memory pages so that the next read to it 
 	// (when we are writing them to ckpt file) will cause them 
 	// to be reloaded from the disk 
-	if ( mtcp_sys_msync(low,size,MS_INVALIDATE) < 0 ){
+	if ( mtcp_sys_msync(low,size,MS_INVALIDATE) ){
 	  mtcp_output(MTCP_FATAL,"sync_shared_memory: error %d Invalidating %X at %p from %s + %X",
 		      mtcp_sys_errno,size,low,my_name,offset);
 	}
@@ -98,7 +98,7 @@ int Area::write(int fd, bool write_nulls)    const {
 	// invalidate shared memory pages so that the next read to it 
 	// (when we are writing them to ckpt file) will cause them 
 	// to be reloaded from the disk 
-	if ( mtcp_sys_msync(low,size,MS_INVALIDATE) < 0 ){
+	if ( mtcp_sys_msync(low,size,MS_INVALIDATE) ){
 	  mtcp_output(MTCP_FATAL,"sync_shared_memory: error %d Invalidating %X at %p from %s + %X",
 		      mtcp_sys_errno,size,low,my_name,offset);
 	}

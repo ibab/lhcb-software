@@ -109,7 +109,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_reopen(FileDesc* d) {
 /// Read file descriptor information from memory block
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_read(FileDesc* d, const void* addr, bool restore) {
   unsigned char* in = (unsigned char*)addr;
-  if ( in > 0 ) {
+  if ( in ) {
     int  is_sock = 0, is_pipe = 0;
     long len = sizeof(FileDesc)-sizeof(d->name);
     in += checkMarker(in,FILE_BEGIN_MARKER);
