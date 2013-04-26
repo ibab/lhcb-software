@@ -267,7 +267,7 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
 	bool hdr_filled = false;
 	MDFHeader* hdr, *hdr0;
 	typedef vector<RawBank*> _V;
-	unsigned int trMask[4] = {~0,~0,~0,0x100};  /// !!! MAGIC Number 0x100 for reconstructed events in routing
+	unsigned int trMask[4] = {~0u,~0u,~0u,0x100u};  /// !!! MAGIC Number 0x100 for reconstructed events in routing
 	const _V& hdr_banks=raw_org->banks(RawBank::DAQ);
 	const _V& odin=raw_org->banks(RawBank::ODIN);
 	// Get proper trigger mask for new MDF header

@@ -602,7 +602,7 @@ StatusCode SerializeNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAdd
         os << '}';
       }
       string spar[]   = { os.str(), pRegistry->identifier() };
-      unsigned long ipar[] = { ~0x0, 0x0 };
+      unsigned long ipar[] = { ~0x0u, 0x0u };
       log() << MSG::INFO << "NTUPLE:" << spar[1] << endmsg 
 	    << spar[0] << endmsg;
       StatusCode status = m_dbMgr->createAddress(repSvcType(),pObj->clID(),spar,ipar,pAddr);
