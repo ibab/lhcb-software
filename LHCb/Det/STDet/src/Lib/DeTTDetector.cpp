@@ -1,4 +1,3 @@
-
 #include "STDet/DeTTDetector.h"
 #include "DetDesc/IGeometryInfo.h"
 
@@ -63,7 +62,7 @@ DeSTSector* DeTTDetector::findSector(const Gaudi::XYZPoint& aPoint){
   DeSTSector* aSector = 0;
   DeSTStation* tStation = findStation(aPoint);
   if (0 != tStation){
-    DeTTStation* aStation = dynamic_cast<DeTTStation*>(tStation);
+    DeTTStation* aStation = static_cast<DeTTStation*>(tStation);
     DeTTLayer* aLayer = aStation->findLayer(aPoint);    
     if (0 != aLayer){
       DeTTHalfModule* aModule = aLayer->findHalfModule(aPoint);

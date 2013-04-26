@@ -1,4 +1,3 @@
-// $Id: DeSTSensor.cpp,v 1.7 2009-09-15 11:36:37 jvantilb Exp $
 #include "STDet/DeSTSensor.h"
 
 #include "DetDesc/IGeometryInfo.h"

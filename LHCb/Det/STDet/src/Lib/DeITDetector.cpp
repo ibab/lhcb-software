@@ -61,7 +61,7 @@ DeSTSector* DeITDetector::findSector(const Gaudi::XYZPoint& aPoint){
   DeSTSector* aSector = 0;
   DeSTStation* tStation = findStation(aPoint);
   if (0 != tStation){
-    DeITStation* aStation = dynamic_cast<DeITStation*>(tStation);
+    DeITStation* aStation = static_cast<DeITStation*>(tStation);
     DeITBox* aBox = aStation->findBox(aPoint);    
     if (0 != aBox){
       DeITLayer* aLayer = aBox->findLayer(aPoint);

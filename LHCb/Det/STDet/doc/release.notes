@@ -3,6 +3,10 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2013-04-26 - Marco Cattaneo
+ - Replace some unnecessary dynamic_cast by static_cast, fixes FORWARD_NULL 
+   defects
+
 ! 2013-04-25 - Marco Cattaneo
  - Fix UNINIT_CTOR defects
 
