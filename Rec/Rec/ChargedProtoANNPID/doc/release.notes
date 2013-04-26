@@ -4,6 +4,10 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2012-04-26 - Chris Jones
+ - Move the TMVA 'MC12TuneV2' compiled MVA namespace into the ANNGlobalPID
+   namespace.
+
 !========================= ChargedProtoANNPID v2r0 2013-04-23 =========================
 
 ! 2013-04-17 - Marco Clemencic

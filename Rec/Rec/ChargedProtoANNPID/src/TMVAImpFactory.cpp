@@ -6,35 +6,34 @@
 // So the TMVA networks pick up the std:: functions
 using namespace std;
 
-// The MC12TuneV2 networks
-namespace MC12TuneV2
+namespace ANNGlobalPID
 {
-  using namespace ANNGlobalPID;
-  // Long tracks
+
+  // The MC12TuneV2 networks
+  namespace MC12TuneV2
+  {
+    // Long tracks
 #include "tmva/MC12TuneV2/GlobalPID_Electron_Long_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Muon_Long_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Pion_Long_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Kaon_Long_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Proton_Long_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Ghost_Long_TMVA.class.C"
-  // Downstream
+    // Downstream
 #include "tmva/MC12TuneV2/GlobalPID_Electron_Downstream_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Muon_Downstream_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Pion_Downstream_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Kaon_Downstream_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Proton_Downstream_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Ghost_Downstream_TMVA.class.C"
-  // Upstream
+    // Upstream
 #include "tmva/MC12TuneV2/GlobalPID_Electron_Upstream_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Muon_Upstream_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Pion_Upstream_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Kaon_Upstream_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Proton_Upstream_TMVA.class.C"
 #include "tmva/MC12TuneV2/GlobalPID_Ghost_Upstream_TMVA.class.C"
-}
-
-namespace ANNGlobalPID
-{
+  }
 
   // Standard constructor
   TMVAImpFactory::TMVAImpFactory()
@@ -79,3 +78,4 @@ namespace ANNGlobalPID
   }
 
 }
+
