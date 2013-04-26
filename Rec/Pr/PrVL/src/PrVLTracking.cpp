@@ -783,11 +783,6 @@ void PrVLTracking::findPhiHits(PrVLTrack& seed, const bool unused) {
         }
         const double x = rPred * cPhiS;
         const double y = rPred * sPhiS;
-        if (x != x || y != y) {
-          info() << "NAN" << endmsg;
-          printRZTrack(seed);
-          info() << "rpred = " << rPred << endmsg;
-        }
         (*ith)->setX(x);
         (*ith)->setY(y);
         (*ith)->setZ(sensor->z(x, y));
@@ -848,6 +843,8 @@ void PrVLTracking::findPhiHitsOverlap(PrVLTrack& seed, const bool unused) {
         (*ith)->setX(x);
         (*ith)->setY(y);
         (*ith)->setZ(sensor->z(x, y));
+        // For lower half tracks shift angle to handle left/right transitions.
+        if (y < 0.) phiS += Gaudi::Units::pi;
         (*ith)->setPhi(phiS);
         (*ith)->setWeight(rPred);
         m_phiHits[station].push_back(*ith);
