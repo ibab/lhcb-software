@@ -3454,8 +3454,8 @@ def hToGraph2 ( h1 , bias ) :
     if abs ( bias ) > 1 :
         raise ValueErorr, ' Illegal value for "bias" parameter '
     
-    funcx = lambda x,y : ( x.value() , x.error()*(1+bias) , x.error()*(1-bias) ) 
-    funcy = lambda x,y : ( y.value() , y.error()          , y.error()          ) 
+    funcx = lambda x,y : ( x.value() + x.error()*bias , x.error()*(1+bias) , x.error()*(1-bias) ) 
+    funcy = lambda x,y : ( y.value()                  , y.error()          , y.error()          ) 
         
     return hToGraph_ ( h1 , funcx , funcy ) 
 
@@ -3470,7 +3470,7 @@ def hToGraph3 ( h1 , bias ) :
     Useful for overlay of very similar plots
 
     >>> h1 = ....
-    >>> g2 = h1.asGraph2 ( 0.1 ) ## shift for 10% of bin width
+    >>> g2 = h1.asGraph2 ( 0.1 ) ## shift for 0.1 (absolute)
     
     """
     for p in h1.iteritems() :
@@ -3478,8 +3478,8 @@ def hToGraph3 ( h1 , bias ) :
         if x.error() < abs ( bias ) :
             raise ValueErorr, ' Illegal value for "bias" parameter '
         
-    funcx = lambda x,y : ( x.value() , x.error()+bias , x.error()-bias )
-    funcy = lambda x,y : ( y.value() , y.error()      , y.error()      ) 
+    funcx = lambda x,y : ( x.value() + bias , x.error()+bias , x.error()-bias )
+    funcy = lambda x,y : ( y.value()        , y.error()      , y.error()      ) 
         
     return hToGraph_ ( h1 , funcx , funcy ) 
 

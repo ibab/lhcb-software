@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-04-26 - Vanya Belyaev
+
+ - PyRoUts: minor fix for  histo -> graph transformatioin methods  
+
 !========================= AnalysisPython v2r19 2013-04-05 =========================
 
 ! 2013-03-31 - Vanya Belyaev
