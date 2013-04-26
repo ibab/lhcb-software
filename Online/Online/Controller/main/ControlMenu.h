@@ -13,17 +13,19 @@
 
 // Framework include files
 #include "FiniteStateMachine/Slave.h"
+#include "FiniteStateMachine/DimSlave.h"
 #include "FiniteStateMachine/Machine.h"
 #include "CPP/Interactor.h"
 #include "RTL/rtl.h"
+#include <cstring>
 
 namespace UPI {
 
-  typedef FiniteStateMachine::FSM     FSM;
-  typedef FiniteStateMachine::Type    Type;
-  typedef FiniteStateMachine::Slave   Slave;
-  typedef FiniteStateMachine::Machine Machine;
-  struct  CtrlSlave;
+  typedef FiniteStateMachine::FSM        FSM;
+  typedef FiniteStateMachine::Type       Type;
+  typedef FiniteStateMachine::Slave      Slave;
+  typedef FiniteStateMachine::Machine    Machine;
+  typedef FiniteStateMachine::DimSlave   DimSlave;
 
   struct ControlMenu : public Interactor  {
     /// Menu id
@@ -35,21 +37,37 @@ namespace UPI {
     char             m_killCmd[16];
     char             m_errorCmd[16];
     char             m_modeCmd[32];
+    char             m_slvTypeCmd[32];
     char             m_partitionCmd[32];
     char             m_configCmd[32];
     char             m_runinfoCmd[32];
 
     Machine*         m_machine;
-    CtrlSlave*       m_slave;
+    DimSlave*        m_slave;
+    bool             m_config_exists;
 
   public:
     struct SlaveTag {
       ControlMenu* ctrl;
       char*       line;
       int         id, svc;
-      SlaveTag() : ctrl(0), line(0), id(0), svc(0) {}
-      SlaveTag(ControlMenu* c, int l, char* p) : ctrl(c), line(p), id(l), svc(0) {}
-      ~SlaveTag() { if ( line ) delete line; }
+      std::string name;
+      SlaveTag() : ctrl(0), line(0), id(0), svc(0), name() {}
+      SlaveTag(const SlaveTag& c) :ctrl(c.ctrl),line(0),id(c.id),svc(c.svc),name(c.name) {
+       line=c.line?strcpy(new char[strlen(c.line)+1],c.line):0; 
+      }
+      SlaveTag(ControlMenu* c, const std::string& n, int l, char* p=0) : ctrl(c), line(p), id(l), svc(0), name(n) {}
+      ~SlaveTag() { 
+	if ( line ) delete line; 
+      }
+      SlaveTag& operator=(const SlaveTag& c) { 
+	ctrl=c.ctrl; 
+	line=c.line?strcpy(new char[strlen(c.line)+1],c.line):0; 
+	id=c.id; 
+	svc=c.svc; 
+	name=c.name; 
+	return *this;
+      }
     };
     SlaveTag m_dim[64];
     int numSlaves() const { return m_numSlaves; }
@@ -65,6 +83,10 @@ namespace UPI {
     void stopSlaveIO();
     /// Start the controller task
     void startController();
+    /// Start the controller task
+    void startControllerConfig();
+    /// Start the controller task
+    void startControllerNoConfig();
     /// Kill the controller task
     void killController();
     /// Invoke transition on FSM machine
