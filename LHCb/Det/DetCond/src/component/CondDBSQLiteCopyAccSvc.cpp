@@ -38,13 +38,6 @@ CondDBSQLiteCopyAccSvc::CondDBSQLiteCopyAccSvc( const std::string& name, ISvcLoc
 // initialize
 //=============================================================================
 StatusCode CondDBSQLiteCopyAccSvc::initialize(){
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-#warning CondDBSQLiteCopyAccSvc cannot work with -std=c++0x (http://boost.2283326.n4.nabble.com/Filesystem-problems-with-g-std-c-0x-td2639716.html)
-  MsgStream log(msgSvc(), name() );
-  log << MSG::ERROR << "CondDBSQLiteCopyAccSvc cannot work with -std=c++0x "
-    "(http://boost.2283326.n4.nabble.com/Filesystem-problems-with-g-std-c-0x-td2639716.html)" << endmsg;
-  return StatusCode::FAILURE;
-#else
   //before initializing the parent, I have to copy the file
   StatusCode sc = setProperties();
   if ( ! sc.isSuccess() ) {
@@ -126,7 +119,6 @@ StatusCode CondDBSQLiteCopyAccSvc::initialize(){
 
   // Initialize the base class.
   return CondDBAccessSvc::initialize();
-#endif
 }
 
 //=============================================================================
