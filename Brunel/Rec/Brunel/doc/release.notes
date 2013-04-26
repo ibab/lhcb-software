@@ -3,14 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-- Pass information of detectors to RecMoniConf.
-
-- Brought upgrade qmtest references in line with the current HEAD.
-
-- Updated upgrade qmtests and references.
-
 - Changes to configuration
   . Add python/Brunel/__init__.py to please CMake
+  . Pass information of detectors to RecMoniConf.
 
 - Changes to references to reflect changes since v44r3
   . Add support for reprocessing from split RawEvent (FTDAQ, VLDAQ, VPDAQ)
@@ -20,8 +15,12 @@ Purpose: LHCb reconstruction program
   . Fix small bug in STMeasurement, measurement type incorrectly set for UT
   . Updated VP/VL geometrry
   . Minor optimisations in RichDet
+  . New MC12TuneV2 ANN PID tuning and minor optimisations (ChargedProtoANNPID)
+  . Fixes to monitoring sequence to allow for missing detectors in Upgrade
+    confiurations (RecConf)
 
 - Changes to tests
+  . Update test files and references for latest fixes to upgrade geometries
   . Pick up options files for input files from PRConfig package. This is
     future proofing for changes to physical location of input data
   . Add dependency on PARAM/QMTestFiles, which now contains the small input
