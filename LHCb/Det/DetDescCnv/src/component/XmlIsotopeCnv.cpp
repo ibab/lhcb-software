@@ -1,4 +1,3 @@
-// $Id: XmlIsotopeCnv.cpp,v 1.8 2009-04-17 12:25:18 cattanem Exp $
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -161,7 +160,7 @@ StatusCode XmlIsotopeCnv::i_fillObj (xercesc::DOMElement* childElement,
   MsgStream log(msgSvc(), "XmlElementCnv" );
   
   // gets the object
-  Isotope* dataObj = dynamic_cast<Isotope*> (refpObject);
+  Isotope* dataObj = static_cast<Isotope*> (refpObject);
   // gets the element's name
   const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name

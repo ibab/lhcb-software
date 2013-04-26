@@ -190,7 +190,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
                                          DataObject* refpObject,
                                          IOpaqueAddress* address) {
   // gets the object
-  DetectorElement* dataObj = dynamic_cast<DetectorElement*> (refpObject);
+  DetectorElement* dataObj = static_cast<DetectorElement*> (refpObject);
   // gets the element's name
   const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name

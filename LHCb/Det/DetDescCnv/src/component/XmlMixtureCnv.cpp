@@ -164,7 +164,7 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
   MsgStream log(msgSvc(), "XmlMixtureCnv" );
   
   // gets the object
-  Mixture* dataObj = dynamic_cast<Mixture*> (refpObject);
+  Mixture* dataObj = static_cast<Mixture*> (refpObject);
   // gets the element's name
   const XMLCh* tagName = childElement->getNodeName();
   
@@ -287,7 +287,7 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
 StatusCode XmlMixtureCnv::i_processObj (DataObject* refpObject,
                                         IOpaqueAddress* address) {
   // gets the object
-  Mixture* dataObj = dynamic_cast<Mixture*> (refpObject);
+  Mixture* dataObj = static_cast<Mixture*> (refpObject);
   // Material is (hopefully) converted so
   // in case of mixture we have to compute some stuff    
 

@@ -119,7 +119,7 @@ StatusCode XmlBaseConditionCnv::initialize() {
 StatusCode XmlBaseConditionCnv::fillObjRefs (IOpaqueAddress* /*childElement*/,
                                              DataObject* refpObject) {
   // gets the object
-  Condition* dataObj = dynamic_cast<Condition*> (refpObject);
+  Condition* dataObj = static_cast<Condition*> (refpObject);
 
   // initialise it and return the status
   return dataObj->initialize();
@@ -133,7 +133,7 @@ StatusCode XmlBaseConditionCnv::fillObjRefs (IOpaqueAddress* /*childElement*/,
 StatusCode XmlBaseConditionCnv::updateObjRefs (IOpaqueAddress* /*childElement*/,
                                                DataObject* refpObject) {
   // gets the object
-  Condition* dataObj = dynamic_cast<Condition*> (refpObject);
+  Condition* dataObj = static_cast<Condition*> (refpObject);
 
   // initialise it and return the status
   return dataObj->initialize();
@@ -165,7 +165,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
                                            DataObject* refpObject,
                                            IOpaqueAddress* address) {
   // gets the object
-  Condition* dataObj = dynamic_cast<Condition*> (refpObject);
+  Condition* dataObj = static_cast<Condition*> (refpObject);
   // gets the element's name
   const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name

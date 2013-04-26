@@ -4,6 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2013-04-26 - Marco Cattaneo
+ - Replace some unnecessary dynamic_cast by static_cast, fixes FORWARD_NULL 
+   defects
+
 ! 2013-04-02 - Marco Cattaneo
  - Fix UNINIT_CTOR defect
 

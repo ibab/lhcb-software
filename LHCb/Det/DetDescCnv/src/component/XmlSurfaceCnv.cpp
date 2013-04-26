@@ -1,5 +1,3 @@
-// $Id: XmlSurfaceCnv.cpp,v 1.6 2009-04-17 12:25:18 cattanem Exp $
-
 // Include files
 #include <cstdlib>
 #include <iostream>
@@ -149,7 +147,7 @@ StatusCode XmlSurfaceCnv::i_fillObj (xercesc::DOMElement* childElement,
   MsgStream log(msgSvc(), "XmlSurfaceCnv" );
   
   // gets the object
-  Surface* dataObj = dynamic_cast<Surface*> (refpObject);
+  Surface* dataObj = static_cast<Surface*> (refpObject);
   // gets the element's name
   const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name
