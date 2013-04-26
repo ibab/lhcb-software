@@ -7,15 +7,6 @@ branches doc cmt
 use  DaVinci         v33r3p2  Phys
 use  DaVinciTests    v2r16
 
-# Temporary inclusions
-use EventPacker          v2r21p1  Event
-use ChargedProtoANNPID   v1r13    Rec
-use PhysConf             v1r20    Phys
-use DaVinciTools         v23r7    Phys
-use StrippingSelections  v3r23    Phys
-use LHCbAlgs             v2r56    Kernel
-use DetCond              v12r29p2 Det
-
 # Declare this as a container package
 apply_pattern container_package
 
