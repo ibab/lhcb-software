@@ -1,5 +1,3 @@
-// $Id: MuonBasicGeometry.cpp,v 1.8 2010-03-17 16:19:07 cattanem Exp $
-
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h"
@@ -60,7 +58,8 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
     
   }
   bool isM1defined=m_isM1defined;
-  log << MSG::DEBUG << "Retrieved M1 definition status: " << isM1defined <<endmsg;
+  if( log.level() <= MSG::DEBUG )
+    log << MSG::DEBUG << "Retrieved M1 definition status: " << isM1defined <<endmsg;
   m_partition=m_stationNumber*m_regionNumber;
   
 }

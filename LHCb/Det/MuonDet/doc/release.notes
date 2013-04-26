@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2013-04-26 - Marco Cattaneo
+ - Fix unprotected DEBUGs from recent changes
+
 ! 2013-04-25 - Marco Cattaneo
  - Remove an unused member variable, fixes an UNINIT_CTOR defect
 

@@ -25,15 +25,11 @@
 DeMuonDetector::DeMuonDetector() : m_msgStream(NULL),
                                    m_isM1defined(true)     
 {
-
-  bool debug = false;
-  if(debug) std::cout<< "Building the Detector !!!" <<std::endl;
   m_detSvc = 0;
   m_stations = 0;
   m_regions = 0;
   m_chamberLayout = 0;
   m_hitNotInGap = 0;
-
 }
 
 /// Standard Destructor
@@ -1119,10 +1115,10 @@ void DeMuonDetector::fillGeoArray()
     //get the dimensions of the inner rectangular
     if(debug)msgStream()<<MSG::INFO<<" inside loop "<<endmsg;
 
-    msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
+    if(debug)msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
     if (testForFilter(*itSt) == true)
       continue;
-    msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
+    if(debug)msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
 
     double minX=100000;
     double minY=100000;

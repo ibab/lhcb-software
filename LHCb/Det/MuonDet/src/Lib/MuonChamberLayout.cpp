@@ -1680,7 +1680,7 @@ Tile2ChamberNum(const LHCb::MuonTileID& tile){
     fillChambersVector(this->dataSvc());
     msgStream() << MSG::INFO <<" Called initialization "<<endmsg;
     if( 0 == m_logVertGridX.size() ){
-      msgStream() << MSG::DEBUG <<" Initialization failed!"<<endmsg;
+      msgStream() << MSG::INFO <<" Initialization failed!"<<endmsg;
       return m_chaVect;
     }
   }
