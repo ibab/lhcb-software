@@ -152,8 +152,9 @@ DimSlave& DimSlave::stopTimer()  {
 /// DTQ overload to process timeout(s)
 void DimSlave::tmoHandler(void* tag)  {
   if ( tag ) {
-    DimSlave* s = *(DimSlave**)tag;
-    s->handleTimeout();
+    DimSlave* slave = (DimSlave*)tag;
+    //DimSlave* s = *(DimSlave**)tag;
+    slave->handleTimeout();
   }
 }
 
@@ -168,7 +169,6 @@ void DimSlave::handleTimeout()  {
     }
   }
 }
-
 
 /// Handle timeout on unload transition according to timer ID
 void DimSlave::handleUnloadTimeout()  {
