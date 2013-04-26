@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-04-26 - Liang Sun
+ - Removed all references to BZip2. We still need 32Bit machines
+
 ! 2013-04-26 - Marco Clemencic
  - Removed the temporary hack used for C++11 (it was needed only because Boost
    was not yet built with C++11 enabled).

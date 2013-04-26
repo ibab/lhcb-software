@@ -34,7 +34,7 @@ class DetCondCompressionTest(unittest.TestCase):
         unittest.TestCase.setUp(self)
         self.testin = 'data'
         self.testout = ['0WFoAOAAABAAA/Td6WFoAAAFpIt42AgAhARwAAAAQz1jMAQADZGF0YQBj8/OtAAEYBGvp8KWQQpkNAQAAAAABWVo=', '1QlpoOTFBWSZTWa/mnnIAAAEBgCQABAAgADDMDHqCcXckU4UJCv5p5yA=']
-        self.Nmethods = 2 # number of methods
+        self.Nmethods = 1 # number of methods
     
 #    def tearDown(self):
 #        unittest.TestCase.tearDown(self)

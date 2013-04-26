@@ -1,5 +1,4 @@
 // Include files
-#include <bzlib.h>
 #include <string.h>
 
 #include <iostream>
@@ -32,25 +31,11 @@ std::string CondDBCompression::compress(const std::string& strin, const int8_t m
         if (retbit == 0) return "";
         destLen = retbit;
         break;
-    case 1: //BZ2 method
-        retbit = BZ2_bzBuffToBuffCompress(dest, &destLen, const_cast<char*>(strin.c_str()), strin.length(), 9, 0, 0);
-        if (retbit != BZ_OK) return "";
-        break;
     default: //Do nothing if method not recognized
         delete [] dest;
         return strin;
     }
 	
-/*    if (retbit == BZ_MEM_ERROR){
-		std::cerr << "Insufficient memory for BZ2_bzBuffToBuffCompress" << std::endl;
-		return "";
-	}
-	else if (retbit == BZ_OUTBUFF_FULL){
-		std::cerr << "The size of the compressed data exceeds "
-				<< "*destLen in BZ2_bzBuffToBuffCompress" << std::endl;
-		return "";
-	}*/
-
     std::string deststr(dest, destLen);
 	delete [] dest;
 	std::string out;
@@ -81,10 +66,6 @@ std::string CondDBCompression::decompress(const std::string& strin){
             if (retbit == 0) return ""; // empty string if error during compression
             destLen = retbit;
             break;
-        case 1:    
-            retbit = BZ2_bzBuffToBuffDecompress(dest, &destLen, const_cast<char*>(zdata.c_str()), output_length,0,0);
-            if (retbit != BZ_OK) return ""; // empty string if error during compression
-            break;
         default: //Do nothing if method not recognized
             delete [] dest;
             return strin;
@@ -93,25 +74,6 @@ std::string CondDBCompression::decompress(const std::string& strin){
     	std::string out(dest, destLen);
     	delete [] dest;
         return out;
-/*    	if (retbit == BZ_OK)  return out;
-    	else if (retbit == BZ_MEM_ERROR){
-    		std::cerr << "Insufficient memory for BZ2_bzBuffToBuffDecompress" << std::endl;
-    		return "";
-    	}
-    	else if (retbit == BZ_OUTBUFF_FULL){
-    		std::cerr << "The size of the compressed data exceeds "
-    				<< "*destLen in BZ2_bzBuffToBuffDecompress" << std::endl;
-    		return "";
-    	}
-    	else if (retbit == BZ_DATA_ERROR ) { std::cerr << "BZ_DATA_ERROR"<<std::endl;
-            return "";
-        }
-    	else if (retbit == BZ_DATA_ERROR_MAGIC ) { std::cerr << "BZ_DATA_ERROR_MAGIC"<<std::endl;
-            return "";
-        }
-    	else if (retbit == BZ_UNEXPECTED_EOF ) { std::cerr << "BZ_UNEXPECTED_EOF"<<std::endl;
-            return "";
-        }*/
     }
     return strin; // Do nothing if the string fails the compression process
 }
