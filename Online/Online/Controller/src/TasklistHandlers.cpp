@@ -119,12 +119,10 @@ void TasklistAnalyzer::Params::operator()(const xml_h& h)  {
   else if ( nam == "stdout"                 ) fmc_par = "-O " + val;
   else if ( nam == "affinity"               ) fmc_par = "-a " + val;
   else if ( nam == "daemon"                 ) fmc_par = "-d ";
+  else if ( nam == "utgid"                  ) task->utgid = val;
   else if ( nam == "output"                 ) task->ioParams.push_back(make_pair(nam,val));
   else if ( nam == "input"                  ) task->ioParams.push_back(make_pair(nam,val));
-  else if ( nam == "utgid"                  )  {
-    fmc_par = "-u " + val;
-    task->utgid = val;
-  }
+
   if ( !fmc_par.empty() )  {
     task->fmcParams.push_back(make_pair(nam,fmc_par));
   }

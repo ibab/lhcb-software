@@ -50,11 +50,11 @@ namespace FiniteStateMachine {
     /// Instance accessor
     static TaskManager& instance(const std::string& node);
     /// Start a process
-    int start(const std::string& fmc_args, const std::string& cmd, const std::string& args);
+    int start(const std::string& utgid, const std::string& fmc_args, const std::string& cmd, const std::string& args) const;
     /// Kill a process
-    int stop(int sig_nyum, int wait_before_kill, int kill_sig);
+    int stop(const std::string& utgid, int sig_num, int wait_before_kill)  const;
     /// Kill a process
-    int kill(int sig_nyum);
+    int kill(const std::string& utgid, int sig_num) const;
   };   //  End class State
 }      //  End namespace 
 #endif //  ONLINE_FINITESTATEMACHINE_TASKMANAGER

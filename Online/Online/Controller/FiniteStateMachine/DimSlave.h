@@ -86,9 +86,11 @@ namespace FiniteStateMachine   {
     virtual ErrCond sendRequest(const Transition* tr);
 
     /// Handle timeout according to timer ID
-    void handleTimeout();
+    virtual void handleTimeout();
+    /// Handle timeout on unload transition according to timer ID
+    virtual void handleUnloadTimeout();
     /// Handle state updates for a particular slave
-    void handleState(const std::string& msg);
+    virtual void handleState(const std::string& msg);
 
     /// Add entry in transition timeout table (timeout in seconds)
     DimSlave& addTimeout(const Transition* param, int tmp);

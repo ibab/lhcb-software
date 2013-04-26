@@ -3,49 +3,49 @@
   <!--  The task definition: command-line, arguments          -->
   <!--  and all FMC startup parameters                        -->
   <task name="MEPInit" user="online" group="onliners">
-    <command>/home/online/runFarmTask.sh</command>
+    <command>runFarmTask.sh</command>
     <argument name="-type"         value="${NAME}"/>
     <argument name="-runinfo"      value="${RUNINFO}"/>
     <argument name="-partition"    value="${PARTITION}"/>
     <fmcparam name="utgid"         value="${PARTITION}_${NODE}_${NAME}_${INSTANCE}"/>
-    <fmcparam name="workdirectory" value="/home/online"/>
-    <fmcparam name="stdout"        value="/tmp/logHlt2.fifo"/>
-    <fmcparam name="stderr"        value="/tmp/logHlt2.fifo"/>
+    <fmcparam name="workdirectory" value="/home/frankm"/>
+    <fmcparam name="stdout"        value="/tmp/logSrv.fifo"/>
+    <fmcparam name="stderr"        value="/tmp/logSrv.fifo"/>
   </task>
 
   <task name="MEPRx" user="online" group="onliners">
-    <command>/home/online/runFarmTask.sh</command>
+    <command>runFarmTask.sh</command>
     <argument name="-type"         value="${NAME}"/>
     <argument name="-runinfo"      value="${RUNINFO}"/>
     <argument name="-partition"    value="${PARTITION}"/>
     <fmcparam name="utgid"         value="${PARTITION}_${NODE}_${NAME}_${INSTANCE}"/>
-    <fmcparam name="workdirectory" value="/home/online"/>
-    <fmcparam name="stdout"        value="/tmp/logHlt2.fifo"/>
-    <fmcparam name="stderr"        value="/tmp/logHlt2.fifo"/>
+    <fmcparam name="workdirectory" value="/home/frankm"/>
+    <fmcparam name="stdout"        value="/tmp/logSrv.fifo"/>
+    <fmcparam name="stderr"        value="/tmp/logSrv.fifo"/>
     <ioparam  name="output"        value="Events"/>
   </task>
 
   <task name="DiskWR" user="online" group="onliners">
-    <command>/home/online/runFarmTask.sh</command>
+    <command>runFarmTask.sh</command>
     <argument name="-type"         value="${NAME}"/>
     <argument name="-runinfo"      value="${RUNINFO}"/>
     <argument name="-partition"    value="${PARTITION}"/>
     <fmcparam name="utgid"         value="${PARTITION}_${NODE}_${NAME}_${INSTANCE}"/>
-    <fmcparam name="workdirectory" value="/home/online"/>
-    <fmcparam name="stdout"        value="/tmp/logHlt2.fifo"/>
-    <fmcparam name="stderr"        value="/tmp/logHlt2.fifo"/>
+    <fmcparam name="workdirectory" value="/home/frankm"/>
+    <fmcparam name="stdout"        value="/tmp/logSrv.fifo"/>
+    <fmcparam name="stderr"        value="/tmp/logSrv.fifo"/>
     <ioparam  name="input"         value="Send"/>
   </task>
 
   <task name="Hlt2" user="online" group="onliners" instances="NUMBER_OF_INSTANCES">
-    <command>/home/online/runFarmTask.sh</command>
+    <command>runFarmTask.sh</command>
     <argument name="-type"         value="${NAME}"/>
     <argument name="-runinfo"      value="${RUNINFO}"/>
     <argument name="-partition"    value="${PARTITION}"/>
     <fmcparam name="utgid"         value="${PARTITION}_${NODE}_${NAME}_${INSTANCE}"/>
-    <fmcparam name="workdirectory" value="/home/online"/>
-    <fmcparam name="stdout"        value="/tmp/logHlt2.fifo"/>
-    <fmcparam name="stderr"        value="/tmp/logHlt2.fifo"/>
+    <fmcparam name="workdirectory" value="/home/frankm"/>
+    <fmcparam name="stdout"        value="/tmp/logSrv.fifo"/>
+    <fmcparam name="stderr"        value="/tmp/logSrv.fifo"/>
     <ioparam  name="input"         value="Events"/>
     <ioparam  name="output"        value="Send"/>
   </task>

@@ -44,9 +44,9 @@ namespace {
 TaskManager::TaskManager(const string& node)   {
   string n = RTL::str_upper(node);
   m_node     = n;
-  m_start = "/FMC/"+n+"/start";
-  m_stop  = "/FMC/"+n+"/stop";
-  m_kill  = "/FMC/"+n+"/kill";
+  m_start = "/FMC/"+n+"/task_manager/start";
+  m_stop  = "/FMC/"+n+"/task_manager/stop";
+  m_kill  = "/FMC/"+n+"/task_manager/kill";
 }
 
 /// Standard destructor
@@ -71,25 +71,25 @@ TaskManager& TaskManager::operator=(const TaskManager& c)  {
 }
 
 /// Instance accessor
-static TaskManager& TaskManager::instance(const string& node)  {
-  static map<string,TaskManager> m;
-  map<string,TaskManager> i=m.find(node);
+TaskManager& TaskManager::instance(const string& node)  {
+  static map<string,TaskManager*> m;
+  map<string,TaskManager*>::iterator i=m.find(node);
   if ( i == m.end() ) {
-    i = m.insert(make_pair(node,TaskManager(node))).second;
+    i = m.insert(make_pair(node,new TaskManager(node))).first;
   }
-  return (*i).second;
+  return *((*i).second);
 }
 
 /// Start a process
-int TaskManager::start(const string& fmc_args, const string& cmd, const string& args)  {
-  return _execDim(m_start,"-m %s %s %s %s",m_node.c_str(),fmc_args.c_str(),cmd.c_str(),args.c_str());
+int TaskManager::start(const std::string& utgid, const string& fmc_args, const string& cmd, const string& args)  const {
+  return _execDim(m_start,"-u %s %s %s %s",utgid.c_str(),fmc_args.c_str(),cmd.c_str(),args.c_str());
 }
 /// Kill a process
-int TaskManager::stop(int sig_nyum, int wait_before_kill, int kill_sig)  {
-  return _execDim(m_stop,"-m %s -s %d",m_node.c_str(),kill_sig);
+int TaskManager::stop(const std::string& utgid, int sig_num, int wait_before_kill)  const {
+  return _execDim(m_stop,"-s %d -d %d %s",sig_num,wait_before_kill,utgid.c_str());
 }
 
 /// Kill a process
-int TaskManager::kill(int sig_nyum)  {
-  return _execDim(m_stop,"-m %s -s %d",m_node.c_str(),sig_num);
+int TaskManager::kill(const std::string& utgid, int sig_num)  const {
+  return _execDim(m_stop,"-s %d %s",sig_num,utgid.c_str());
 }

@@ -1,7 +1,7 @@
 #include "ControlMenu.h"
 
 #include <boost/assign/std/vector.hpp>
-#include "FiniteStateMachine/DimSlave.h"
+#include "FiniteStateMachine/FmcSlave.h"
 #include "CPP/IocSensor.h"
 #include <cstring>
 
@@ -45,13 +45,13 @@ namespace UPI {
   using namespace boost::assign;
 
   IocSensor& ioc() {  return IocSensor::instance();  }
-
+#if 0
   struct CtrlSlave : public FiniteStateMachine::DimSlave {
     int m_out[2];
     ControlMenu* m_handler;
 
     /// Standard constructor
-    CtrlSlave(ControlMenu* handler, const Type* typ, const std::string& nam,Machine* machine) 
+    CtrlSlave(ControlMenu* handler,Machine* machine, const Type* typ, const std::string& nam, const std::string& ) 
       : DimSlave(typ,nam,machine), m_handler(handler) 
     {
       m_cmd   = FiniteStateMachine::gentest_path();
@@ -99,6 +99,65 @@ namespace UPI {
 	}
       }
       return FSM::SUCCESS;
+    }
+    /// IOC handler
+    void handleIoc(const Event& event)   {
+      DimSlave::handleIoc(event);
+      switch(event.type)  {
+      case SLAVE_LIMBO:
+	ioc().send(m_handler,CMD_UPDATE_SLAVE,this);
+	break;
+      case SLAVE_STARTING:
+      case SLAVE_FAILED:
+      case SLAVE_KILLED:
+      case SLAVE_FINISHED:
+      case SLAVE_TRANSITION_TIMEOUT:
+	ioc().send(m_handler,CMD_UPDATE_SLAVE,this);
+	break;
+      case SLAVE_TRANSITION:
+	ioc().send(m_handler,SLAVE_TRANSITION,this);
+	break;
+      case SLAVE_ALIVE:
+	ioc().send(this,SLAVE_FINISHED,event.data);
+	ioc().send(m_handler,CMD_UPDATE_SLAVE,this);
+	return;
+      default:
+	break;
+      }
+    }
+    int processIO() {
+      FILE* f = ::fdopen(m_out[0],"r");
+      char* line = 0;
+      size_t len = 0;
+      while( ::getline(&line,&len,f) != -1 )   {
+	ioc().send(ctrl,CMD_UPI_WRITE_MESSAGE,::strdup(line));
+      }
+      ::free(line);
+      ::fclose(f);
+      ioc().send(m_handler,CMD_UPI_WRITE_MESSAGE,::strdup("Slave died! controlling thread exiting....."));
+      ioc().send(m_handler,CMD_STOP_SLAVEIO,m_handler);
+      return 1;
+    }
+  };
+#endif
+  struct CtrlSlave : public FiniteStateMachine::FmcSlave {
+    ControlMenu* m_handler;
+    int          m_instances;
+    /// Standard constructor
+    CtrlSlave(ControlMenu* handler,Machine* machine, const Type* typ, const std::string& nam, const std::string& config, int instances) 
+      : FmcSlave(typ,nam,machine,false), m_handler(handler), m_instances(instances)
+    {
+      char text[32];
+      ::snprintf(text,sizeof(text),"%d",m_instances);
+      m_cmd    = "runFarmCtrl.sh";
+      fmc_args = "-g onliners -n online -w /home/frankm -O /tmp/logSrv.fifo -E /tmp/logSrv.fifo";
+      cmd_args = "-count="+std::string(text)+" -runinfo=bla.py -taskconfig="+config+" -partition=LHCb -mode=normal";
+    }
+    /// Standard destructor
+    virtual ~CtrlSlave() {
+    }
+    int processIO() {
+      return 1;
     }
     /// IOC handler
     void handleIoc(const Event& event)   {
@@ -187,7 +246,7 @@ ControlMenu::ControlMenu(Interactor*) : m_id(0), m_numSlaves(2), m_thread(0), m_
   m_machine->setCompletionAction(Callback::make(this,&ControlMenu::update));
   m_machine->setFailAction(Callback::make(this,&ControlMenu::update));
 
-  m_machine->addSlave(m_slave=new CtrlSlave(this,daq,"CTRL_0",m_machine));
+  m_machine->addSlave(m_slave=new CtrlSlave(this,m_machine,daq,"CTRL_0","TaskList.xml",2));
   ::upic_open_window();
   ::upic_open_menu(m_id,0,0,"FSM Controller test facility",RTL::processName().c_str(),RTL::nodeName().c_str());
   ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
@@ -257,18 +316,8 @@ void ControlMenu::slave_handler(void* tag, void* addr, int* size) {
 }
 
 int ControlMenu::ctrl_thread_routine(void* arg)  {
-  ControlMenu* ctrl = (ControlMenu*)arg;
-  FILE* f = ::fdopen(ctrl->m_slave->m_out[0],"r");
-  char* line = 0;
-  size_t len = 0;
-  while( ::getline(&line,&len,f) != -1 )   {
-    ioc().send(ctrl,CMD_UPI_WRITE_MESSAGE,::strdup(line));
-  }
-  ::free(line);
-  ::fclose(f);
-  ioc().send(ctrl,CMD_UPI_WRITE_MESSAGE,::strdup("Slave died! controlling thread exiting....."));
-  ioc().send(ctrl,CMD_STOP_SLAVEIO,ctrl);
-  return 1;
+  CtrlSlave* s = (CtrlSlave*)arg;
+  return s->processIO();
 }
 
 /// Update function when FSM machine completes transitions
@@ -285,7 +334,7 @@ void ControlMenu::startController()   {
 /// Start the slave IO pump
 void ControlMenu::startSlaveIO()   {
   if ( 0 == m_thread )  {
-    int ret = ::lib_rtl_start_thread(ctrl_thread_routine,this,&m_thread);
+    int ret = ::lib_rtl_start_thread(ctrl_thread_routine,m_slave,&m_thread);
     if ( lib_rtl_is_success(ret) )   {
       ::upic_write_message("Started the IO thread....","");
       //m_slave->start(0);

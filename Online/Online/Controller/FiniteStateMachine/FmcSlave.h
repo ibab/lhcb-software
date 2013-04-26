@@ -50,8 +50,8 @@ namespace FiniteStateMachine   {
     virtual ErrCond kill();
     /// Send transition request to the slave
     virtual ErrCond sendRequest(const Transition* tr);
-    /// Start slave process using FMC
-    virtual ErrCond fmcStart();
+    /// Handle timeout on unload transition according to timer ID
+    virtual void handleUnloadTimeout();
   };   //  End class DimSlave
 }      //  End namespace 
 #endif //  ONLINE_CONTROLLER_FMCSLAVE_H

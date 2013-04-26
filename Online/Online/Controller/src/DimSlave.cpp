@@ -159,28 +159,36 @@ void DimSlave::tmoHandler(void* tag)  {
 
 /// Handle timeout according to timer ID
 void DimSlave::handleTimeout()  {
-  int status;
   if ( SLAVE_EXECUTING == currentState() )  {
     if ( m_timerID.second == SLAVE_TRANSITION_TIMEOUT )  {
       send(SLAVE_TRANSITION_TIMEOUT);
     }
-    else if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT ) {
-      display(ERROR,"%s> unload command unsuccessful. Send SIGTERM. State:%s",c_name(),metaStateName());	  
-      ::kill(m_pid,SIGTERM);
-      pid_t pid = ::waitpid(-1,&status,WNOHANG);
-      if ( pid < 0 ) startTimer(SLAVE_TERMINATE_TIMEOUT);
-      else m_pid = 0;
+    else {
+      handleUnloadTimeout();
     }
-    else if ( m_timerID.second == SLAVE_TERMINATE_TIMEOUT ) {
-      display(ERROR,"%s> unload command unsuccessful. Send SIGKILL. State:%s",c_name(),metaStateName());	  
-      m_timerID = TimerID(0,0);
-      ::kill(m_pid,SIGKILL);
-      pid_t pid = ::waitpid(-1,&status,0);
-      if ( pid < 0 )    {
-	display(ERROR,"%s> FAILED to kill slave. Curr State:%s",c_name(),metaStateName());	  
-      }
-      m_pid = 0;
+  }
+}
+
+
+/// Handle timeout on unload transition according to timer ID
+void DimSlave::handleUnloadTimeout()  {
+  int status = 0;
+  if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT ) {
+    display(ERROR,"%s> unload command unsuccessful. Send SIGTERM. State:%s",c_name(),metaStateName());	  
+    ::kill(m_pid,SIGTERM);
+    pid_t pid = ::waitpid(-1,&status,WNOHANG);
+    if ( pid < 0 ) startTimer(SLAVE_TERMINATE_TIMEOUT);
+    else m_pid = 0;
+  }
+  else if ( m_timerID.second == SLAVE_TERMINATE_TIMEOUT ) {
+    display(ERROR,"%s> unload command unsuccessful. Send SIGKILL. State:%s",c_name(),metaStateName());	  
+    m_timerID = TimerID(0,0);
+    ::kill(m_pid,SIGKILL);
+    pid_t pid = ::waitpid(-1,&status,0);
+    if ( pid < 0 )    {
+      display(ERROR,"%s> FAILED to kill slave. Curr State:%s",c_name(),metaStateName());	  
     }
+    m_pid = 0;
   }
 }
 

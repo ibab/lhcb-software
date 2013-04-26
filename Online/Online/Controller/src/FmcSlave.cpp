@@ -13,6 +13,7 @@
 #include "FiniteStateMachine/Type.h"
 #include "FiniteStateMachine/State.h"
 #include "FiniteStateMachine/Machine.h"
+#include "FiniteStateMachine/TaskManager.h"
 #include "CPP/IocSensor.h"
 #include "RTL/rtl.h"
 extern "C" {
@@ -46,20 +47,14 @@ FmcSlave::FmcSlave(const Type* typ, const string& nam, Machine* machine, bool in
 FmcSlave::~FmcSlave() {
 }
 
-/// Start slave process using FMC
-ErrCond FmcSlave::fmcStart()    {
-  string cmd = fmc_args + " " + m_cmd + " " + cmd_args;
-  cout << cmd << endl;
-  return FSM::SUCCESS;
-}
-
 /// Start slave process
 ErrCond FmcSlave::start()  {
   if ( isInternal() )  {
     send(SLAVE_ALIVE,0);
     return FSM::WAIT_ACTION;
   }
-  return fmcStart();
+  TaskManager::instance(RTL::nodeNameShort()).start(name(),fmc_args,m_cmd,cmd_args);
+  return FSM::SUCCESS;
 }
 
 /// Kill slave process
@@ -83,4 +78,9 @@ ErrCond FmcSlave::sendRequest(const Transition* tr)  {
     return isInternal() ? send(SLAVE_FINISHED,tr->to()) : DimSlave::sendRequest(tr);
   }
   return FSM::FAIL;
+}
+
+/// Handle timeout on unload transition according to timer ID
+void FmcSlave::handleUnloadTimeout()  {
+  TaskManager::instance(RTL::nodeNameShort()).stop(name(),SIGTERM,15);
 }
