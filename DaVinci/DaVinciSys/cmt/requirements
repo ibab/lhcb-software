@@ -1,15 +1,15 @@
 package DaVinciSys
-version v33r3p1
+version v33r3p2
 
 branches doc cmt
 
 # Packages
-use  DaVinci         v33r3p1  Phys
+use  DaVinci         v33r3p2  Phys
 use  DaVinciTests    v2r16
 
 # Temporary inclusions
 use EventPacker          v2r21p1  Event
-use ChargedProtoANNPID   v2r0     Rec
+use ChargedProtoANNPID   v1r13    Rec
 use PhysConf             v1r20    Phys
 use DaVinciTools         v23r7    Phys
 use StrippingSelections  v3r23    Phys
