@@ -66,6 +66,10 @@ namespace FiniteStateMachine   {
     const State* currState ()  const      { return m_currState;        }
     /// Rule direction
     int direction() const                 { return m_direction;        }
+    /// Is the rule directed towards the master
+    bool toMaster() const        { return m_direction == SLAVE2MASTER; }
+    /// Is the rule directed towards the master
+    bool toSlave() const         { return m_direction == MASTER2SLAVE; }
     /// Check if a rule applies to a given slave state
     bool operator()(const State* slave_state, Direction direction)  const;
   };   //  End class Rule

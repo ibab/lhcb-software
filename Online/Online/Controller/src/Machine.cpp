@@ -75,6 +75,7 @@ Machine::Machine(const Type *typ, const string& nam)
   m_fsm.addTransition(MACH_ACTIVE,   MACH_CHK_SLV,  "Active->ChkSlv",  cb.make(&Machine::startTransition));
   m_fsm.addTransition(MACH_ACTIVE,   MACH_EXEC_ACT, "ChkSlv->WaitAct", cb.make(&Machine::doAction));
   m_fsm.addTransition(MACH_EXEC_ACT, MACH_EXEC_ACT, "WaitAct->WaitAct",cb.make(&Machine::nullAction));
+  m_fsm.addTransition(MACH_CHK_SLV,  MACH_CHK_SLV,  "ChkSlv->ChkSlv",  cb.make(&Machine::nullAction));
   m_fsm.addTransition(MACH_CHK_SLV,  MACH_EXEC_ACT, "ChkSlv->WaitAct", cb.make(&Machine::doAction));
   m_fsm.addTransition(MACH_EXEC_ACT, MACH_INACTION, "WaitAct->WaitIA", cb.make(&Machine::doInAction));
   m_fsm.addTransition(MACH_INACTION, MACH_IDLE,     "WaitIact->Idle",  cb.make(&Machine::finishTransition));
@@ -135,6 +136,9 @@ void Machine::handleIoc(const Event& event)   {
     break;
   case Slave::SLAVE_TRANSITION:   /// State change by slave. Handle the request.
     ioc().send(m_handler,Slave::SLAVE_TRANSITION,event.data);
+    break;
+  case Slave::SLAVE_FAILED:
+    checkSlaves();
     break;
   case Machine::MACH_EXEC_ACT:
     status = m_fsm.invokeTransition(MACH_EXEC_ACT,this);
@@ -254,10 +258,12 @@ ErrCond Machine::checkSlaves()   {
   if ( tr )  {
     // Here we only enter in the presence of slaves!
     CheckStateSlave check = for_each(sl.begin(),sl.end(),CheckStateSlave(tr));
-    if ( tr->killActive() && check.dead < sl.size() ) return FSM::WAIT_ACTION;
-    if ( tr->create()     && check.dead > 0         ) return FSM::WAIT_ACTION;
-    if ( tr->checkLimbo() && check.dead > 0         ) return FSM::WAIT_ACTION;
-    if ( check.fail>0 ) return FSM::FAIL;
+    if ( tr->killActive() && check.dead < sl.size() )
+      return FSM::WAIT_ACTION;
+    else if ( tr->create()     && check.dead > 0    )
+      return FSM::WAIT_ACTION;
+    else if ( tr->checkLimbo() && check.dead > 0    )
+      return FSM::WAIT_ACTION;
     // Either the transition is finished or all slaves should be dead now....
     if ( check.count == sl.size() )
       return ret_success(this,MACH_EXEC_ACT);
@@ -265,6 +271,13 @@ ErrCond Machine::checkSlaves()   {
       return ret_success(this,MACH_EXEC_ACT);
     else if ( !tr->checkLimbo() && check.fail==0 && check.dead+check.count==sl.size() )
       return ret_success(this,MACH_EXEC_ACT);
+    else if ( check.fail>0 && check.count+check.fail == sl.size() )   {
+      display(ALWAYS,"%s> Executing %s. Invoke MACH_FAIL. count:%d fail:%d dead:%d",
+	      c_name(),tr->c_name(), int(check.count), int(check.fail), int(check.dead));
+      return ret_failure(this);
+    }
+    else if ( check.fail>0 ) 
+      return FSM::FAIL;
     return FSM::FAIL;
   }
   return FSM::TRANNOTFOUND;
@@ -356,10 +369,10 @@ ErrCond Machine::finishTransition (const void* user_param)  {
 /// Execute state leave action
 ErrCond Machine::doFail (const void* user_param)  {
   TransitionActionMap::const_iterator i = m_transActions.find(currTrans());
+  ErrCond ret = ret_success(this,MACH_IDLE); // Must be first to allow transition chains
   if ( i != m_transActions.end() )
     (*i).second.fail().execute(user_param);
   m_fail.execute(user_param);
-  ErrCond ret = ret_success(this,MACH_IDLE);
   // Need to invoke error processing due to dead child in steady state
   ioc().send(m_handler,Slave::SLAVE_FAILED,this);
   return ret;

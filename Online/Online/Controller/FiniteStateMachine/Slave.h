@@ -77,7 +77,9 @@ namespace FiniteStateMachine {
     /// Access the current rule to be applied
     const Rule*  rule() const                             {  return m_rule;                 }
     /// Retrieve reference to current State structure name
-    const char* c_state ()  const                         {  return m_state->c_name();      }
+    const char* c_state ()  const;
+    /// Retrieve reference to managing machine structure name
+    const char* c_machine ()  const;
     /// Check if the slave is limbo
     bool isLimbo() const           {  return m_meta==SLAVE_LIMBO || m_meta==SLAVE_STARTING; }
 
@@ -113,7 +115,7 @@ namespace FiniteStateMachine {
     /// Callback, when the slave invoked a transition himself (called on receipt of answer message). Invoke using IOC SLAVE_FINISHED_TRANS
     virtual ErrCond transitionSlave(const State* state);
     /// Callback, when transition failed (called on receipt of answer message). Invoke using IOC SLAVE_FAILED
-    virtual ErrCond transitionFailed(const State* state);
+    virtual ErrCond transitionFailed();
 
   };   //  End class State
 }      //  End namespace 

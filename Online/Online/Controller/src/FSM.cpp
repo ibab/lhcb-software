@@ -34,6 +34,7 @@ namespace FiniteStateMachine  {
 
 // Standard constructor
 FSM::FSM()  {
+  m_targetState       = 0;
   m_currentState      = 0;
   m_previousState     = 0;
   m_currentTransition = 0;
@@ -42,6 +43,7 @@ FSM::FSM()  {
 
 // Standard constructor
 FSM::FSM(MicFSMState curr)  {
+  m_targetState       = curr;
   m_currentState      = curr;
   m_previousState     = curr;
   m_currentTransition = 0;
@@ -76,6 +78,7 @@ FSM::ErrCond FSM::addTransition(MicFSMState from, MicFSMState to,
   }
   return FSM::SUCCESS;                   // return always true
 }
+#include "RTL/rtl.h"
 
 //----------------------------------------------------------------------------
 FSM::ErrCond FSM::removeTransition(MicFSMState from, MicFSMState to)    {
@@ -99,11 +102,12 @@ FSM::ErrCond FSM::removeTransition(MicFSMState from, MicFSMState to)    {
   }
   return FSM::TRANNOTFOUND;             // return false (not found)
 }
-
+#include "FiniteStateMachine/TypedObject.h"
 //----------------------------------------------------------------------------
 FSM::ErrCond FSM::invokeTransition(MicFSMState target, const void* user_param)   {
   for(MicFSMTransition* tr = m_transitionHead; tr; tr = tr->next)  {
     if( tr->from == m_currentState && tr->to == target )  {
+      m_targetState = target;
       m_currentTransition = tr;              // Set the current transition 
       //std::cout << "Transition from state:" << m_currentState << " to state: " << int(target) << std::endl;
       if( tr->action )        {              // Check if action routine exists 
@@ -119,6 +123,7 @@ FSM::ErrCond FSM::invokeTransition(MicFSMState target, const void* user_param)  
       return FSM::SUCCESS;                   // return success
     }
   }
-  std::cout << "Unknown transition from state:" << m_currentState << " to state: " << int(target) << std::endl;
+  TypedObject::display(TypedObject::ALWAYS,"FSM[%s]> Unknown transition from state:%d to state %d",
+		       RTL::processName().c_str(),m_currentState,int(target));
   return FSM::TRANNOTFOUND;                  // return false (not found)
 }

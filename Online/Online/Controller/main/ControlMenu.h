@@ -34,6 +34,7 @@ namespace UPI {
     lib_rtl_thread_t m_thread;
     char             m_slaveCmd[128];
     char             m_stateCmd[128];
+    char             m_tmoCmd[16];
     char             m_killCmd[16];
     char             m_errorCmd[16];
     char             m_modeCmd[32];
@@ -103,6 +104,8 @@ namespace UPI {
     void killSlave(int which);
     /// Send slave to state error via DIM command
     void errorSlave(int which);
+    /// Send slave to state error via triggered timeout
+    void timeoutSlave(int which);
 
     /// Update function when FSM machine completes transitions
     FSM::ErrCond update();

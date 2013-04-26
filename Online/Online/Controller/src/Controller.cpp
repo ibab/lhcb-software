@@ -27,11 +27,10 @@ using namespace FiniteStateMachine::DAQ;
 
 /// Constructor
 Controller::Controller(const string&  nam, Machine* m)
- : CommandTarget(nam), m_machine(m)
+  : CommandTarget(nam), m_machine(m), m_queueExit(false)
 {
-  m->setFailAction(Callback::make(this,&Controller::publish));
+  m->setFailAction(Callback::make(this,&Controller::fail));
   m->setCompletionAction(Callback::make(this,&Controller::publish));
-  m->setInAction(m->type()->state(ST_NAME_OFFLINE),Callback::make(this,&Controller::invokeDeath));
   publish();
 }
 
@@ -39,16 +38,24 @@ Controller::Controller(const string&  nam, Machine* m)
 Controller::~Controller() {
 }
 
-/// Entering stte OFFLINE. Send death signal to self.
-FSM::ErrCond Controller::invokeDeath()  {
-  IocSensor::instance().send(this,Slave::SLAVE_DEAD,this);
-  return publish();
+/// Publish state information when transition failed. 
+FSM::ErrCond Controller::fail()  {
+  const Transition* tr = m_machine->currTrans();
+  // Nothing to do, since failure will be handled with IOC SLAVE_FAILED
+  display(ALWAYS,"Controller: %s> FAILED to invoke transition %s from %s",
+	  c_name(),tr ? tr->c_name() : "", m_machine->c_state());
+  IocSensor::instance().send(this,ERROR_PROCESS,this);
+  return FSM::SUCCESS;
 }
 
 /// Publish state information when transition is completed
 FSM::ErrCond Controller::publish()  {
   string state = m_machine->c_state();
-  return declareState(state);
+  ErrCond ret = declareState(state);
+  if ( m_queueExit && state == ST_NAME_OFFLINE )  {
+    IocSensor::instance().send(this,EXIT_PROCESS,this);
+  }
+  return ret;
 }
 
 /// Interrupt handling routine
@@ -57,16 +64,16 @@ void Controller::handle(const Event& ev)    {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type)  {
-    case Slave::SLAVE_DEAD:
+    case EXIT_PROCESS:
       ::lib_rtl_sleep(500);
       ::exit(0);
       break;
+    case ERROR_PROCESS:
+      m_machine->invokeTransition(ST_NAME_ERROR,Rule::SLAVE2MASTER);
+      break;
+    case Slave::SLAVE_FAILED:
+      break;
     case Slave::SLAVE_TRANSITION:  // Forwarded from Machine
-#if 0
-      display(ALWAYS,"%s> Invoke transition from %s to %s --- %p",
-	      c_name(),m_machine->c_state(),slave->c_state(),
-	      m_machine->state()->findTrans(slave->c_state()));
-#endif
       if ( m_machine->state() != slave->state() ) 
 	m_machine->invokeTransition(slave->c_state(),Rule::SLAVE2MASTER);
       break;
@@ -74,7 +81,7 @@ void Controller::handle(const Event& ev)    {
       m_machine->invokeTransition((const State*)ev.data);
       break;
     default:
-      display(ALWAYS,"%s> ERROR: Invoke transition from %s",c_name(),m_machine->c_state());
+      display(ALWAYS,"Controller: %s> ERROR: Invoke transition from %s",c_name(),m_machine->c_state());
       m_machine->invokeTransition((const State*)ev.data);
       break;
     }
@@ -97,7 +104,8 @@ FSM::ErrCond Controller::invokeTransition(const string& transition)  {
   if ( ret != FSM::SUCCESS )   {
     setTargetState(ERROR);
     ret = m_machine->invokeTransition(ST_NAME_ERROR,Rule::SLAVE2MASTER);
-    display(ALWAYS,"Unknown transition:%s Moving to ERROR!",transition.c_str());
+    display(ALWAYS,"Unknown transition:%s from state %s. Moving to ERROR!",
+	    transition.c_str(),state->c_name());
   }
   return ret;
 }
@@ -108,10 +116,10 @@ void Controller::commandHandler()   {
   std::string cmd = getString();
   display(NOLOG,"%s> Received transition request:%s",c_name(),cmd.c_str());
   if ( !m_machine->isIdle() )  {
-    display(ERROR,"Machine is not idle!");
-    return;
+    display(ERROR,"%s> Machine is not idle!",c_name());
+    m_machine->goIdle();
   }
-  else if ( cmd == "load"  )  {
+  if ( cmd == "load"  )  {
     setTargetState(NOT_READY);
     invokeTransition(cmd);
   }
@@ -132,6 +140,7 @@ void Controller::commandHandler()   {
     invokeTransition(cmd);
   }
   else if ( cmd == "unload"   )  {
+    m_queueExit = true;
     setTargetState(UNKNOWN);
     invokeTransition(cmd);
   }

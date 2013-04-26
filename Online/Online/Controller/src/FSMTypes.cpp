@@ -35,7 +35,9 @@ static Type* defineDAQType()    {
   Tr*  stop      = daq->addTransition("stop",      running,     ready);
   Tr*  unload    = daq->addTransition("unload",    not_ready,   offline, KILL);
 
+  Tr*  reset0    = daq->addTransition("reset",     not_ready,   not_ready);
   Tr*  reset1    = daq->addTransition("reset",     ready,       not_ready);
+  Tr*  reset2    = daq->addTransition("reset",     error,       not_ready);
   Tr*  recover   = daq->addTransition("recover",   error,       offline);
 
   Tr*  daq_err0  = daq->addTransition(not_ready,   error,       NO_CHECKS);
@@ -61,7 +63,18 @@ static Type* defineDAQType()    {
   daq->addRule      (RESET3,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
   daq->addRule      (RESET4,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
 
+  daq->addRule      (reset0,     daq, ST_NAME_NOT_READY, ST_NAME_NOT_READY);
+  daq->addRule      (reset0,     daq, ST_NAME_READY,     ST_NAME_NOT_READY);
+  daq->addRule      (reset0,     daq, ST_NAME_ERROR,     ST_NAME_NOT_READY);
+  daq->addRule      (reset1,     daq, ST_NAME_NOT_READY, ST_NAME_NOT_READY);
   daq->addRule      (reset1,     daq, ST_NAME_READY,     ST_NAME_NOT_READY);
+  daq->addRule      (reset1,     daq, ST_NAME_ERROR,     ST_NAME_NOT_READY);
+
+  daq->addRule      (reset2,     daq, ST_NAME_NOT_READY, ST_NAME_NOT_READY);
+  daq->addRule      (reset2,     daq, ST_NAME_READY,     ST_NAME_NOT_READY);
+  daq->addRule      (reset2,     daq, ST_NAME_RUNNING,   ST_NAME_READY);
+  daq->addRule      (reset2,     daq, ST_NAME_ERROR,     ST_NAME_NOT_READY);
+
   daq->addPredicate (load,       daq, ST_NAME_OFFLINE,   ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_RUNNING);
   daq->addRule      (load,       daq, ST_NAME_OFFLINE,   ST_NAME_NOT_READY);
 

@@ -35,8 +35,14 @@ namespace FiniteStateMachine   {
   public:
     typedef FSM::ErrCond ErrCond;
   protected:
+    enum { EXIT_PROCESS=99998,
+	   ERROR_PROCESS=99999
+    };
+
     /// Reference to machine object
     Machine* m_machine;
+    /// Flag if on next occurrence of OFFLINE we should exit
+    bool m_queueExit;
 
   public:
     /// Constructor
@@ -48,8 +54,8 @@ namespace FiniteStateMachine   {
     /// Interactor Interrupt handling routine
     virtual void handle(const Event& ev);
 
-    /// Entering stte OFFLINE. Send death signal to self.
-    ErrCond invokeDeath();
+    /// Publish state information when transition failed. 
+    ErrCond fail();
     /// Publish state information when transition is completed
     ErrCond publish();
     /// Invoke single transition request on machine

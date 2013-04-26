@@ -64,8 +64,11 @@ namespace FiniteStateMachine {
     /// Standard destructor
     virtual ~CommandTarget();
 
+    /// Currently declared state
+    const std::string& state() const {  return m_stateName; }
+
     /// Declare process state to DIM service
-    ErrCond declareState(const std::string& new_state);
+    ErrCond declareState(const std::string& new_state, const std::string& opt="");
 
     /// Declare FSM sub-state
     ErrCond declareSubState(SubState new_state);
@@ -92,7 +95,8 @@ namespace FiniteStateMachine {
    * @version 0.1
    */
   class DAQCommandTarget : public CommandTarget  {
-
+    /// Flag to indicate that next transition will timeout
+    bool m_timeout;
   public:
     /// Constructor
     DAQCommandTarget(const std::string& nam);

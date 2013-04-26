@@ -48,11 +48,11 @@ CommandTarget::~CommandTarget()   {
 }
 
 /// Declare process state to DIM service
-FSM::ErrCond CommandTarget::declareState(const std::string& new_state)  {
+FSM::ErrCond CommandTarget::declareState(const std::string& new_state, const std::string& opt)  {
   std::string old_state = m_stateName;
   m_prevStateName = m_stateName;
   m_stateName = new_state;
-  display(ALWAYS,"%s> Declare state:%s",c_name(),m_stateName.c_str());
+  display(ALWAYS,"%s> Declare state:%s  %s",c_name(),m_stateName.c_str(),opt.c_str());
   m_service->updateService((char*)m_stateName.c_str());
   if ( new_state == ST_NAME_ERROR )
     declareSubState(FAILED_ACTION);
@@ -95,7 +95,7 @@ CommandTarget& CommandTarget::run()  {
 
 /// Constructor
 DAQCommandTarget::DAQCommandTarget(const std::string& nam)  
-  : CommandTarget(nam)
+  : CommandTarget(nam), m_timeout(false)
 {
   declareState(ST_NAME_OFFLINE);
 }
@@ -116,7 +116,17 @@ void DAQCommandTarget::commandHandler()   {
   // Decouple as quickly as possible from the DIM command loop !
   std::string cmd = getString();
   display(NOLOG,"%s> Received transition request:%s",c_name(),cmd.c_str());
-  if ( cmd == "load"  )
+  if ( m_timeout )  {
+    display(NOLOG,"%s> Ignore transition request:%s for TIMEOUT",c_name(),cmd.c_str());
+    m_timeout = false;
+    return;
+  }
+  else if ( cmd == "TIMEOUT" )  {
+    display(NOLOG,"%s> Will TIMEOUT next request.",c_name());
+    m_timeout = true;
+    return;
+  }
+  else if ( cmd == "load"  )
     setTargetState(NOT_READY);
   else if ( cmd == "configure")
     setTargetState(READY);
@@ -136,6 +146,8 @@ void DAQCommandTarget::commandHandler()   {
     setTargetState(OFFLINE);
   else if ( cmd == "RESET" )
     setTargetState(OFFLINE);
+  else if ( cmd == "ERROR" )
+    setTargetState(ERROR);
   else   {
     setTargetState(ERROR);
     return;

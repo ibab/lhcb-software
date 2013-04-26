@@ -48,6 +48,7 @@ namespace FiniteStateMachine   {
   protected:
     MicFSMState        m_currentState;           // Current state
     MicFSMState        m_previousState;          // Previous state
+    MicFSMState        m_targetState;            // Previous state
     MicFSMTransition*  m_currentTransition;      // Current transition
     MicFSMTransition*  m_transitionHead;         // Transition head list
   public:
@@ -57,6 +58,7 @@ namespace FiniteStateMachine   {
     /// Standard destructor
     virtual ~FSM();
     void setCurrentState(MicFSMState s)  { m_currentState = s;     }
+    MicFSMState targetState()    const   { return m_targetState;   }
     MicFSMState currentState()   const   { return m_currentState;  }
     MicFSMState previousState()  const   { return m_previousState; }
     ErrCond addTransition   (MicFSMState from, MicFSMState to,const std::string& condition,const Callback& act);

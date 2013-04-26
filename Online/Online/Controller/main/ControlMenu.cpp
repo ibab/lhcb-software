@@ -170,24 +170,23 @@ namespace UPI {
     void handleIoc(const Event& event)   {
       DimSlave::handleIoc(event);
       switch(event.type)  {
-      case SLAVE_LIMBO:
-	ioc().send(handler,CMD_UPDATE_SLAVE,this);
-	break;
-      case SLAVE_STARTING:
-      case SLAVE_FAILED:
-      case SLAVE_KILLED:
-      case SLAVE_FINISHED:
-      case SLAVE_TRANSITION_TIMEOUT:
-	ioc().send(handler,CMD_UPDATE_SLAVE,this);
-	break;
       case SLAVE_TRANSITION:
 	ioc().send(handler,SLAVE_TRANSITION,this);
+	ioc().send(handler,CMD_UPDATE_SLAVE,this);
 	break;
       case SLAVE_ALIVE:
 	ioc().send(this,SLAVE_FINISHED,event.data);
 	ioc().send(handler,CMD_UPDATE_SLAVE,this);
 	return;
+
+      case SLAVE_LIMBO:
+      case SLAVE_STARTING:
+      case SLAVE_FAILED:
+      case SLAVE_KILLED:
+      case SLAVE_FINISHED:
+      case SLAVE_TRANSITION_TIMEOUT:
       default:
+	ioc().send(handler,CMD_UPDATE_SLAVE,this);
 	break;
       }
     }
@@ -243,7 +242,7 @@ static const char* s_stateList[]  = {"OFFLINE","NOT_READY","READY","RUNNING","ER
 
 /// Standard constructor with object setup through parameters
 ControlMenu::ControlMenu(const std::string& config) 
-  : m_id(0), m_numSlaves(2), m_thread(0), m_machine(0), m_slave(0)
+  : m_id(0), m_numSlaves(3), m_thread(0), m_machine(0), m_slave(0)
 {
   TypedObject::setPrinter(this,print_routine);
   string line = "------------------------------------------------------------";
@@ -251,6 +250,7 @@ ControlMenu::ControlMenu(const std::string& config)
   m_id = UpiSensor::instance().newID();
   ::strcpy(m_killCmd,"Kill");
   ::strcpy(m_errorCmd,"ERROR");
+  ::strcpy(m_tmoCmd,"TIMEOUT");
   ::strcpy(m_modeCmd,s_modeList[0]);
   ::strcpy(m_slaveCmd,s_cmdList[0]);
   ::strcpy(m_stateCmd,s_stateList[0]);
@@ -373,7 +373,8 @@ void ControlMenu::startControllerNoConfig()   {
   for(int i=0; i<m_numSlaves; ++i)  {
     ::upic_set_param(m_killCmd, 1,"A4",m_killCmd, 0,0,0,0,1);
     ::upic_set_param(m_errorCmd,2,"A5",m_errorCmd,0,0,0,0,1);
-    ::sprintf(text,"SLAVE_%d  ^^^^ Send to ^^^^^  ",i);
+    ::upic_set_param(m_tmoCmd,  3,"A7",m_tmoCmd,0,0,0,0,1);
+    ::sprintf(text,"SLAVE_%d  ^^^^ Send to ^^^^^  Force ^^^^^^^",i);
     ::upic_insert_command(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*i,  text,""); 
     ::upic_insert_comment(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*i+1,"          ------------------",""); 
     ::sprintf(text,"SLAVE_%d",i);
@@ -416,7 +417,8 @@ void ControlMenu::startControllerConfig()   {
     for(size_t i=0; i<tasks.size(); ++i)  {
       ::upic_set_param(m_killCmd, 1,"A4",m_killCmd, 0,0,0,0,1);
       ::upic_set_param(m_errorCmd,2,"A5",m_errorCmd,0,0,0,0,1);
-      ::sprintf(text,"%-32s  ^^^^ Send to ^^^^^  ",tasks[i].c_str());
+      ::upic_set_param(m_tmoCmd,  3,"A7",m_tmoCmd,0,0,0,0,1);
+      ::sprintf(text,"%-24s  ^^^^ Send to ^^^^^  Force ^^^^^^^",tasks[i].c_str());
       ::upic_insert_command(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*i,  text,""); 
       ::upic_insert_comment(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*i+1,"          ------------------",""); 
       ::sprintf(text,"%s/status",tasks[i].c_str());
@@ -483,7 +485,8 @@ void ControlMenu::executeTransition(const string& transition)   {
   const State*      st = m_machine->state();
   const Transition* tr = st->findTransByName(transition);
   if ( !tr )  {
-    ::upic_write_message(("There is no valid transition "+transition+" from state "+st->name()).c_str(),"");
+    ::upic_write_message((m_machine->name()+"> There is no valid transition "+transition+
+			  " from state "+st->name()).c_str(),"");
     return;
   }
   m_machine->invokeTransition(tr);
@@ -494,7 +497,8 @@ void ControlMenu::gotoState(const string& state)   {
   const State*      st = m_machine->state();
   const Transition* tr = st->findTrans(state);
   if ( !tr )  {
-    ::upic_write_message(("There is no valid transition from state "+st->name()+" to state "+state).c_str(),"");
+    ::upic_write_message((m_machine->name()+"> There is no valid transition from state "+
+			  st->name()+" to state "+state).c_str(),"");
     return;
   }
   m_machine->invokeTransition(tr,Rule::SLAVE2MASTER);
@@ -505,7 +509,8 @@ void ControlMenu::setMachineState(const string& state_name)   {
   const Type*  type  = m_machine->type();
   const State* state = type->state(state_name);
   if ( !state )  {
-    ::upic_write_message(("There is no valid state "+state_name+" in FSM type "+type->name()).c_str(),"");
+    ::upic_write_message((m_machine->name()+"> There is no valid state "+
+			  state_name+" in FSM type "+type->name()).c_str(),"");
     return;
   }
   m_machine->setState(state).setTarget(0);
@@ -531,13 +536,28 @@ void ControlMenu::errorSlave(int which)   {
   char cmd[128];
   char data[] = {"ERROR"};
   const SlaveTag& tag = m_dim[which];
-  ::sprintf(cmd,"%s/EXIT",tag.name.c_str());
+  ::sprintf(cmd,"%s",tag.name.c_str());
   string msg = cmd;
   int ret = ::dic_cmnd_service(cmd,data,strlen(data)+1);
   if ( ret == 1 )
-    msg += "> Successfully sent command to slave's command datapoint.";
+    msg += "> Successfully sent ERROR command to slave's command datapoint.";
   else
-    msg += "> Failed to send command to slave's command datapoint.";
+    msg += "> Failed to send ERROR command to slave's command datapoint.";
+  ::upic_write_message(msg.c_str(),"");
+}
+
+/// Send slave to state error via triggered timeout
+void ControlMenu::timeoutSlave(int which)   {
+  char cmd[128];
+  char data[] = {"TIMEOUT"};
+  const SlaveTag& tag = m_dim[which];
+  ::sprintf(cmd,"%s",tag.name.c_str());
+  string msg = cmd;
+  int ret = ::dic_cmnd_service(cmd,data,strlen(data)+1);
+  if ( ret == 1 )
+    msg += "> Successfully sent TIMEOUT command to slave's command datapoint.";
+  else
+    msg += "> Failed to send TIMEOUT command to slave's command datapoint.";
   ::upic_write_message(msg.c_str(),"");
 }
 
@@ -614,7 +634,9 @@ void ControlMenu::handle(const Event& ev)   {
       ::lib_rtl_sleep(1000);
       ::exit(2);
     case CMD_KILL_SLAVE:
-      ev.iocData()<100 ? killSlave(ev.iocData()%100) : errorSlave(ev.iocData()%100);
+      if      ( ev.iocData()<100 ) killSlave(ev.iocData()%100);
+      else if ( ev.iocData()<200 ) errorSlave(ev.iocData()%100);
+      else timeoutSlave(ev.iocData()%100);
       return;
 
     case CMD_CONFIG_FSM:

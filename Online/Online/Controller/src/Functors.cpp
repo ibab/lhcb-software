@@ -89,16 +89,31 @@ void CheckStateSlave::operator()(const Slave* s)   {
   const Type*  slType  = s->type();
   const Rule*  slRule  = s->rule();
   const Transition::Rules& r = object->rules();
-  if ( s->isLimbo() ) { ++dead; return; }
-  // Check if all rules for this type are fulfilled
-  for(Transition::Rules::const_iterator i=r.begin(); i != r.end(); ++i)  {
-    const Rule* rule = (*i);
-    if ( rule->type() == slType )  {
-      if      ( slRule==rule && slState==rule->targetState() )	++count;  // Slave fulfills state criteria
-      else if ( slState == rule->targetState() )  ++count;  // Slave fulfills state criteria
-      else if ( !slRule ) ++count; // There was nothing to be done.
-      else ++fail;  // What can I do: there was a rule, but the slave did not go to the target state
-      break;
+  if ( s->isLimbo() ) { 
+    //s->display(s->ALWAYS,"%s> DEAD Metastate:%s",s->c_name(),s->metaStateName());
+    ++dead; 
+  }
+  else if ( s->currentState() == Slave::SLAVE_FAILED ) { 
+    //s->display(s->ALWAYS,"%s> FAILED Metastate:%s",s->c_name(),s->metaStateName());
+    ++fail; 
+  }
+  else if ( s->currentState() == Slave::SLAVE_EXECUTING ) { 
+    //s->display(s->ALWAYS,"%s> EXECUTING - ignore Metastate:%s",s->c_name(),s->metaStateName());
+  }
+  else   {  // Check if all rules for this type are fulfilled
+    for(Transition::Rules::const_iterator i=r.begin(); i != r.end(); ++i)  {
+      const Rule* rule = (*i);
+      if ( rule->type() == slType )  {
+	if      ( slRule==rule && slState==rule->targetState() )	++count;  // Slave fulfills state criteria
+	else if ( slState == rule->targetState() )  ++count;  // Slave fulfills state criteria
+	else if ( slState == rule->currState() )  {}   // Slave fulfills state criteria, has not yet answered
+	else if ( !slRule ) ++count; // There was nothing to be done.
+	else {++fail;  // What can I do: there was a rule, but the slave did not go to the target state
+	  s->display(s->ALWAYS,"%s FAILED Metastate:%s [Rule not fulfilled] State:%s",
+		     s->c_name(),s->metaStateName(),slState->c_name());
+	}
+	break;
+      }
     }
   }
 }
@@ -150,8 +165,9 @@ void PrintObject::operator()(const MachineHandle& h) const  {
 
 /// Operator invoked for each machine during printing.
 void PrintObject::operator()(const Slave* s) const  {
-  s->display(TypedObject::ALWAYS,"%s+  Slave: %s of type %s: State:%-12s Meta-state:%s",
-	     prefix.c_str(),s->c_name(),s->type()->c_name(),s->c_state(),s->metaStateName());
+  s->display(TypedObject::ALWAYS,"%s+  Slave: %s of type %s: State:%-12s Meta-state:%s managed by %s",
+	     prefix.c_str(),s->c_name(),s->type()->c_name(),s->c_state(),
+	     s->metaStateName(),s->c_machine());
 }
 
 /// Operator invoked for each Transition object printing.

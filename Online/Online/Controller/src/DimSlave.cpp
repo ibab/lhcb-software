@@ -140,15 +140,24 @@ void DimSlave::handleState(const string& msg)  {
 
   const State* state = type()->state(msg);
   const Transition* transition = state ? m_state->findTrans(state) : 0;
-  if ( starting )
+  if ( starting )   {
     send(SLAVE_ALIVE,type()->initialState());
-  else if ( transition )
-    send(SLAVE_FINISHED,state);
-  else if ( state )
-    send(SLAVE_TRANSITION,state);
-  else
-    send(SLAVE_FAILED,state);
-
+  }
+  else if ( transition )  {
+    //send(SLAVE_FINISHED,state);
+    transitionDone(state);
+    return;
+  }
+  else if ( state )  {
+    //send(SLAVE_TRANSITION,state);
+    transitionSlave(state);
+    return;
+  }
+  else  {
+    //send(SLAVE_FAILED,state);
+    transitionFailed();
+    return;
+  }
   display(ALWAYS,"%s::%s> Slave state:%s Meta-state:%s",
 	  RTL::processName().c_str(),c_name(),msg.c_str(),metaStateName());
 }

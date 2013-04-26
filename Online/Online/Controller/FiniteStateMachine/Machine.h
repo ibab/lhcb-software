@@ -114,6 +114,7 @@ namespace FiniteStateMachine {
     std::size_t numSlaves()  const                {  return m_slaves.size();                   }
     /// Check if the machine is in idle state
     bool isIdle()  const                          {  return m_fsm.currentState() == MACH_IDLE; }
+    int  targetState() const                      {  return m_fsm.targetState();               }
     /// Meta state name of current meta-state
     const char* currentMetaName()  const;
     /// Meta state name of target meta-state
