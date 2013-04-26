@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-04-26 - Vanya Belyaev
+ - StackScaleState.cpp : suppress debug printout 
+
 ! 2012-04-25 - Chris Jones
  - Use std::string instead of char* in DecayFinder
 

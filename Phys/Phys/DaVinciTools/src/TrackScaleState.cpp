@@ -769,25 +769,14 @@ StatusCode TrackScaleState::i_updateSCALE ()
 StatusCode TrackScaleState::i_updateCOV2 ()
 {
   //
-  std::cout << "  I am here 1 " << std::endl ;
-  //
   if ( !m_condition_cov ) { return StatusCode::FAILURE ; }  //               RETURN
-  //
-  //
-  std::cout << "  I am here 2 " << std::endl ;
   //
   const TH1D* h1 = 0 ;
   //
   try 
   {
     //
-    std::cout << "  I am here 3-1" << std::endl ;
-    std::cout << m_condition_cov->toXml() << std::endl ;
-    std::cout << "  I am here 3-2" << std::endl ;
-    //
     h1 = DetDesc::Params::paramAsHisto1D ( m_condition_cov , "Scale"   ) ;
-    //
-    std::cout << "  I am here 4 " << std::endl ;
     //
    if ( 0 == h1 ) 
     { 
@@ -795,16 +784,12 @@ StatusCode TrackScaleState::i_updateCOV2 ()
       return Error ( "Unable to get 'Scale' from CONDDB") ; 
     }
    //
-   std::cout << "  I am here 5 " << std::endl ;
-   //
   }
   catch ( GaudiException& e ) 
   {
     ++counter("#CONDB problem") ;
     return Error("Unable to get data from CONDDB" , e.code() ) ; // RETURN
   }
-  //
-  std::cout << "  I am here 6 " << std::endl ;
   //
   info () << " Condition: " << m_condition_cov -> name()    << "   "
           << ( m_condition_cov ->isValid() ? "  Valid;  " : "Invalid; " ) 
