@@ -89,16 +89,14 @@ static Type* defineDAQSteerType() {
   const State* error     = typ->addState(ST_NAME_ERROR);
 
   Tr*  create    = typ->addTransition("create",    unknown,   offline,   CHECK|CREATE);
-  Tr*  load      = typ->addTransition("load",      offline,   not_ready);
+  Tr*  load      = typ->addTransition("load",      offline,   not_ready  CHECK|CREATE);
   Tr*  configure = typ->addTransition("configure", not_ready, ready);
   Tr*  start     = typ->addTransition("start",     ready,     running);
   Tr*  stop      = typ->addTransition("stop",      running,   ready);
   Tr*  unload    = typ->addTransition("unload",    not_ready, offline, KILL);
   Tr*  destroy   = typ->addTransition("destroy",   offline,   unknown, KILL);
 
-  //Tr*  reset0    = typ->addTransition("reset",     not_ready, not_ready);
   Tr*  reset1    = typ->addTransition("reset",     ready,     not_ready);
-  //Tr*  reset2    = typ->addTransition("reset",     running,   not_ready);
   Tr*  recover   = typ->addTransition("recover",   error,     offline);
 
   Tr*  daq_err0  = typ->addTransition(not_ready,   error,     NO_CHECKS);
@@ -117,23 +115,7 @@ static Type* defineDAQSteerType() {
   typ->addRule      (daq_err2,   daq, ST_NAME_ANY,       ST_NAME_ERROR);
   typ->addRule      (recover,    daq, ST_NAME_ERROR,     ST_NAME_OFFLINE);
 
-  Tr* off2off = typ->addTransition("RESET", offline,     offline,        NO_CHECKS);
-  //typ->addRule      (off2off,    daq, ST_NAME_RUNNING,   ST_NAME_READY);
-  //typ->addRule      (off2off,    daq, ST_NAME_READY,     ST_NAME_NOT_READY);
-  //typ->addRule      (off2off,    daq, ST_NAME_NOT_READY, ST_NAME_OFFLINE);
-  //typ->addRule      (off2off,    daq, ST_NAME_OFFLINE,   ST_NAME_OFFLINE);
-
-  //typ->addRule      (RESET1,  daq, ST_NAME_ANY,       ST_NAME_OFFLINE, Rule::SLAVE2MASTER);
-  typ->addRule      (RESET0,     daq, ST_NAME_ANY,         ST_NAME_OFFLINE);
-  typ->addRule      (RESET1,     daq, ST_NAME_ANY,         ST_NAME_OFFLINE);
-  typ->addRule      (RESET2,     daq, ST_NAME_ANY,         ST_NAME_OFFLINE);
-  typ->addRule      (RESET3,     daq, ST_NAME_ANY,         ST_NAME_OFFLINE);
-  typ->addRule      (RESET4,     daq, ST_NAME_ANY,         ST_NAME_OFFLINE);
-
-  //typ->addRule      (reset0,     daq, ST_NAME_ANY,       ST_NAME_NOT_READY);
   typ->addRule      (reset1,     daq, ST_NAME_READY,       ST_NAME_NOT_READY);
-  //typ->addRule      (reset2,     daq, ST_NAME_ANY,       ST_NAME_NOT_READY);
-
   typ->addRule      (load,       daq, ST_NAME_OFFLINE,   ST_NAME_NOT_READY);
   typ->addPredicate (configure,  daq, ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_RUNNING);
   typ->addRule      (configure,  daq, ST_NAME_NOT_READY, ST_NAME_READY);
@@ -144,6 +126,12 @@ static Type* defineDAQSteerType() {
   typ->addRule      (stop,       daq, ST_NAME_RUNNING,   ST_NAME_READY);
   typ->addRule      (unload,     daq, ST_NAME_NOT_READY, ST_NAME_OFFLINE);
   typ->addRule      (destroy,    daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+
+  typ->addRule      (RESET0,     daq, ST_NAME_ANY,         ST_NAME_OFFLINE);
+  typ->addRule      (RESET1,     daq, ST_NAME_ANY,         ST_NAME_OFFLINE);
+  typ->addRule      (RESET2,     daq, ST_NAME_ANY,         ST_NAME_OFFLINE);
+  typ->addRule      (RESET3,     daq, ST_NAME_ANY,         ST_NAME_OFFLINE);
+  typ->addRule      (RESET4,     daq, ST_NAME_ANY,         ST_NAME_OFFLINE);
   return typ;
 }
 
