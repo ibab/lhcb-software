@@ -51,13 +51,13 @@ namespace UPI {
 
   IocSensor& ioc() {  return IocSensor::instance();  }
 #if 0
-  struct CtrlSlave : public FiniteStateMachine::DimSlave {
+  struct CtrlSlave : public FiniteStateMachine::NativeDimSlave {
     int m_out[2];
     ControlMenu* m_handler;
 
     /// Standard constructor
     CtrlSlave(ControlMenu* handler,Machine* machine, const Type* typ, const std::string& nam, const std::string& ) 
-      : DimSlave(typ,nam,machine), m_handler(handler) 
+      : NativeDimSlave(typ,nam,machine), m_handler(handler) 
     {
       m_cmd   = FiniteStateMachine::gentest_path();
       m_argv += "CTRL_0","libController.so","controller_fsm_test","-name=CTRL_0";

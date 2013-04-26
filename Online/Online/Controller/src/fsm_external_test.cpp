@@ -14,7 +14,7 @@
 #include "FiniteStateMachine/Functors.h"
 #include "FiniteStateMachine/TestAutoTrans.h"
 #include "FiniteStateMachine/Controller.h"
-#include "FiniteStateMachine/DimSlave.h"
+#include "FiniteStateMachine/NativeDimSlave.h"
 
 #include "CPP/IocSensor.h"
 #include "RTL/rtl.h"
@@ -34,8 +34,8 @@ using namespace FiniteStateMachine::DAQ;
 typedef FSM::ErrCond ErrCond;
 
 namespace   {
-  struct ExternalSlave : public DimSlave {
-    ExternalSlave(const Type* typ, const string& nam, Machine* machine) : DimSlave(typ,nam,machine)   {
+  struct ExternalSlave : public NativeDimSlave {
+    ExternalSlave(const Type* typ, const string& nam, Machine* machine) : NativeDimSlave(typ,nam,machine)   {
       m_cmd = controller_bindir() + "/external_fsm_client.exe";
       m_argv += name(),"-name="+name();
       cloneEnv();

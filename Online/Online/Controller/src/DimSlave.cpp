@@ -11,34 +11,18 @@
 // Framework include files
 #include "FiniteStateMachine/DimSlave.h"
 #include "FiniteStateMachine/Type.h"
-#include "FiniteStateMachine/State.h"
-#include "FiniteStateMachine/Machine.h"
-#include "CPP/IocSensor.h"
 #include "RTL/rtl.h"
 extern "C" {
 #include "dic.h"
 #include "dim.h"
 }
 
-// C/C++ include files
-#include <boost/assign/std/vector.hpp>
-#include <iostream>
-#include <cstdio>
-#include <cerrno>
-#include <memory>
-#include <unistd.h>
-#include <signal.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
 using namespace FiniteStateMachine;
 using namespace std;
 
-typedef FSM::ErrCond ErrCond;
-
 /// Class Constructor
 DimSlave::DimSlave(const Type* typ, const string& nam, Machine* machine) 
-  : Slave(typ,nam,machine), m_dimState(0,0), m_pid(0), m_timerID(0,0), m_commandName()
+  : Slave(typ,nam,machine), m_dimState(0,0), m_timerID(0,0), m_commandName()
 {
   m_commandName = nam;
   m_tmo = 3;
@@ -63,47 +47,19 @@ DimSlave& DimSlave::cloneEnv()  {
   return *this;
 }
 
-/// Start slave process
-ErrCond DimSlave::start()  {
-  int ret = 0;
-  vector<char*> argv, envp;
-  for(size_t i=0; i<m_argv.size();++i) argv.push_back((char*)m_argv[i].c_str());
-  for(size_t i=0; i<m_envp.size();++i) envp.push_back((char*)m_envp[i].c_str());
-  argv.push_back(0);
-  envp.push_back(0);
-  if ( m_pid == 0 )  {
-    switch((m_pid = ::fork()))  {
-    case -1:  // Error
-      return FSM::FAIL;
-    case 0:   // Child
-      ret = ::execve(m_cmd.c_str(),&argv[0],&envp[0]);
-      if ( ret != 0 )  {
-      }
-      return FSM::SUCCESS;
-    default:  // Parent
-      return FSM::WAIT_ACTION;
-    }
-  }
-  return FSM::SUCCESS;
-}
-
 /// Kill slave process
-ErrCond DimSlave::kill()  {
+FSM::ErrCond DimSlave::kill()  {
   stopTimer();
-  if ( m_pid != 0 )  {
-    int ret = ::dic_cmnd_service((char*)m_commandName.c_str(),(char*)"unload",7);
-    display(ALWAYS,"%s::%s> %s command to slave. Curr State:%s",
-	    RTL::processName().c_str(),c_name(),
-	    ret != 1 ? "FAILED to send UNLOAD" : "Sent unload",metaStateName());	  
-    startTimer(SLAVE_UNLOAD_TIMEOUT);
-    return FSM::WAIT_ACTION;
-  }
-  // Slave is already dead. 
-  return FSM::SUCCESS;
+  int ret = ::dic_cmnd_service((char*)m_commandName.c_str(),(char*)"unload",7);
+  display(ALWAYS,"%s::%s> %s command to slave. Curr State:%s",
+	  RTL::processName().c_str(),c_name(),
+	  ret != 1 ? "FAILED to send UNLOAD" : "Sent unload",metaStateName());	  
+  startTimer(SLAVE_UNLOAD_TIMEOUT);
+  return FSM::WAIT_ACTION;
 }
 
 /// Send transition request to the slave
-ErrCond DimSlave::sendRequest(const Transition* tr)  {
+FSM::ErrCond DimSlave::sendRequest(const Transition* tr)  {
   if ( tr )  {
     const char* data = tr->name().c_str();
     int len = tr->name().length();
@@ -149,15 +105,6 @@ DimSlave& DimSlave::stopTimer()  {
   return *this;
 }
 
-/// DTQ overload to process timeout(s)
-void DimSlave::tmoHandler(void* tag)  {
-  if ( tag ) {
-    DimSlave* slave = (DimSlave*)tag;
-    //DimSlave* s = *(DimSlave**)tag;
-    slave->handleTimeout();
-  }
-}
-
 /// Handle timeout according to timer ID
 void DimSlave::handleTimeout()  {
   if ( SLAVE_EXECUTING == currentState() )  {
@@ -172,23 +119,8 @@ void DimSlave::handleTimeout()  {
 
 /// Handle timeout on unload transition according to timer ID
 void DimSlave::handleUnloadTimeout()  {
-  int status = 0;
-  if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT ) {
-    display(ERROR,"%s> unload command unsuccessful. Send SIGTERM. State:%s",c_name(),metaStateName());	  
-    ::kill(m_pid,SIGTERM);
-    pid_t pid = ::waitpid(-1,&status,WNOHANG);
-    if ( pid < 0 ) startTimer(SLAVE_TERMINATE_TIMEOUT);
-    else m_pid = 0;
-  }
-  else if ( m_timerID.second == SLAVE_TERMINATE_TIMEOUT ) {
-    display(ERROR,"%s> unload command unsuccessful. Send SIGKILL. State:%s",c_name(),metaStateName());	  
-    m_timerID = TimerID(0,0);
-    ::kill(m_pid,SIGKILL);
-    pid_t pid = ::waitpid(-1,&status,0);
-    if ( pid < 0 )    {
-      display(ERROR,"%s> FAILED to kill slave. Curr State:%s",c_name(),metaStateName());	  
-    }
-    m_pid = 0;
+  if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT )   {
+    display(ERROR,"%s> unload command unsuccessful. FAILURE - insufficient implementation. State:%s",c_name(),metaStateName());	  
   }
 }
 
@@ -199,18 +131,9 @@ void DimSlave::handleState(const string& msg)  {
   stopTimer();
   if ( msg.empty() )    {  // No-link ?
     if ( !starting )  {
-      int status = 0;
       display(NOLOG,"%s::%s> Slave DEAD. Curr State:%s",
 	      RTL::processName().c_str(),c_name(),metaStateName());
-      pid_t pid = ::waitpid(m_pid,&status,WNOHANG);
-      if ( pid > 0 )   {
-	send(SLAVE_LIMBO,m_state);
-	m_pid = 0;
-      }
-      else  {
-	display(NOLOG,"%s::%s> Looks like fake slave DEATH. Curr State:%s",
-		RTL::processName().c_str(),c_name(),metaStateName());
-      }
+      send(SLAVE_LIMBO,m_state);
     }
     return;
   }
@@ -248,5 +171,13 @@ void DimSlave::stateHandler(void* tag, void* address, int* size) {
     DimSlave*     s = *(DimSlave**)tag;
     const char* msg = (const char*)address;
     s->handleState(len > 0 ? string(msg) : string(""));
+  }
+}
+
+/// DTQ overload to process timeout(s)
+void DimSlave::tmoHandler(void* tag)  {
+  if ( tag ) {
+    DimSlave* slave = (DimSlave*)tag;
+    slave->handleTimeout();
   }
 }

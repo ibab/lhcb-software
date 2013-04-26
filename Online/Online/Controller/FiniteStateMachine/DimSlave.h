@@ -24,23 +24,30 @@ namespace FiniteStateMachine   {
 
   /**@class DimSlave  DimSlave.h FiniteStateMachine/DimSlave.h
    *
+   * Basic implmentation of a slave process proxy, which uses DIM
+   * for the inter process communication.
+   *
+   * Otherwise no OS dependent commands are used to fork and kill
+   * the processes.
+   *
    * @author  M.Frank
    * @date    01/03/2013
    * @version 0.1
    */
   class DimSlave : public Slave   {
-    typedef std::pair<void*,unsigned long> TimerID;
-    typedef std::map<const void*,int> TimeoutTable; 
   protected:
+    /// TimerID definition
+    typedef std::pair<void*,unsigned long> TimerID;
+    /// Definition of the timeout table
+    typedef std::map<const void*,int> TimeoutTable; 
 
+  protected:
     /// Timeout table for various transitions
     TimeoutTable              m_timeouts;
     /// ID of the DIM command to send commands to the slave
     std::pair<int,int>        m_dimState;
     /// General transition timeout, if no other is specified.
     int                       m_tmo;
-    /// Process identifier of the created (alive) slave process
-    int                       m_pid;
     /// ID of timeout timer
     TimerID                   m_timerID;
     /// Name of the DIM command to receive the slave's state information
@@ -78,8 +85,8 @@ namespace FiniteStateMachine   {
     void setCommand(const std::string& cmd)  {  m_cmd = cmd;  }
     /// Access the command string 
     const std::string& command() const       {  return m_cmd; }
-    /// Start slave process
-    virtual ErrCond start();
+    /// Start slave process. Must be implemented by sub-class
+    virtual ErrCond start() = 0;
     /// Kill slave process
     virtual ErrCond kill();
     /// Send transition request to the slave

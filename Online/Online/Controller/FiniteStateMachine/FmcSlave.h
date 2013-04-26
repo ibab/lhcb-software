@@ -46,8 +46,6 @@ namespace FiniteStateMachine   {
 
     /// Start slave process
     virtual ErrCond start();
-    /// Kill slave process
-    virtual ErrCond kill();
     /// Send transition request to the slave
     virtual ErrCond sendRequest(const Transition* tr);
     /// Handle timeout on unload transition according to timer ID
