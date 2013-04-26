@@ -34,9 +34,14 @@ namespace UPI {
     char             m_stateCmd[128];
     char             m_killCmd[16];
     char             m_errorCmd[16];
+    char             m_modeCmd[32];
+    char             m_partitionCmd[32];
+    char             m_configCmd[32];
+    char             m_runinfoCmd[32];
+
     Machine*         m_machine;
     CtrlSlave*       m_slave;
-    
+
   public:
     struct SlaveTag {
       ControlMenu* ctrl;
@@ -46,12 +51,12 @@ namespace UPI {
       SlaveTag(ControlMenu* c, int l, char* p) : ctrl(c), line(p), id(l), svc(0) {}
       ~SlaveTag() { if ( line ) delete line; }
     };
-    SlaveTag m_dim[32];
+    SlaveTag m_dim[64];
     int numSlaves() const { return m_numSlaves; }
 
   public:
     /// Standard constructor with object setup through parameters
-    ControlMenu(Interactor* parent);
+    ControlMenu(const std::string& config);
     /// Standard destructor
     virtual ~ControlMenu();
     /// Start slave's IO pump

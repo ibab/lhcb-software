@@ -7,7 +7,7 @@
 
 enum  _commands {
   CMD_BACKSPACE = -1,
-  CMD_START_CTRL = 1,
+  CMD_CONFIG_FSM = 1,
   CMD_START_SLAVEIO,
   CMD_STOP_SLAVEIO,
   COM_MACH_STATE,
@@ -17,6 +17,11 @@ enum  _commands {
 
   COM_SLAVE_STATE,
   CMD_SLAVE_RESET,
+
+  CMD_SET_PARTITION,
+  CMD_SET_RUNINFO,
+  CMD_SET_CONFIG,
+  CMD_SET_MODE,
 
   COM_LINE_0,
   COM_LINE_1,
@@ -141,44 +146,34 @@ namespace UPI {
   };
 #endif
   struct CtrlSlave : public FiniteStateMachine::FmcSlave {
-    ControlMenu* m_handler;
-    int          m_instances;
+    ControlMenu* handler;
     /// Standard constructor
-    CtrlSlave(ControlMenu* handler,Machine* machine, const Type* typ, const std::string& nam, const std::string& config, int instances) 
-      : FmcSlave(typ,nam,machine,false), m_handler(handler), m_instances(instances)
-    {
-      char text[32];
-      ::snprintf(text,sizeof(text),"%d",m_instances);
-      m_cmd    = "runFarmCtrl.sh";
-      fmc_args = "-g onliners -n online -w /home/frankm -O /tmp/logSrv.fifo -E /tmp/logSrv.fifo";
-      cmd_args = "-count="+std::string(text)+" -runinfo=bla.py -taskconfig="+config+" -partition=LHCb -mode=normal";
-    }
+    CtrlSlave(ControlMenu* h, Machine* machine, const Type* typ, const std::string& nam) 
+      : FmcSlave(typ,nam,machine,false), handler(h)    {    }
     /// Standard destructor
-    virtual ~CtrlSlave() {
-    }
-    int processIO() {
-      return 1;
-    }
+    virtual ~CtrlSlave()       {                   }
+    /// Nothing to do here
+    int processIO()            {      return 1;    }
     /// IOC handler
     void handleIoc(const Event& event)   {
       DimSlave::handleIoc(event);
       switch(event.type)  {
       case SLAVE_LIMBO:
-	ioc().send(m_handler,CMD_UPDATE_SLAVE,this);
+	ioc().send(handler,CMD_UPDATE_SLAVE,this);
 	break;
       case SLAVE_STARTING:
       case SLAVE_FAILED:
       case SLAVE_KILLED:
       case SLAVE_FINISHED:
       case SLAVE_TRANSITION_TIMEOUT:
-	ioc().send(m_handler,CMD_UPDATE_SLAVE,this);
+	ioc().send(handler,CMD_UPDATE_SLAVE,this);
 	break;
       case SLAVE_TRANSITION:
-	ioc().send(m_handler,SLAVE_TRANSITION,this);
+	ioc().send(handler,SLAVE_TRANSITION,this);
 	break;
       case SLAVE_ALIVE:
 	ioc().send(this,SLAVE_FINISHED,event.data);
-	ioc().send(m_handler,CMD_UPDATE_SLAVE,this);
+	ioc().send(handler,CMD_UPDATE_SLAVE,this);
 	return;
       default:
 	break;
@@ -189,13 +184,16 @@ namespace UPI {
 
 #include "FiniteStateMachine/Type.h"
 #include "FiniteStateMachine/FSMTypes.h"
+#include "FiniteStateMachine/XmlTaskConfiguration.h"
 #include "UPI/UpiSensor.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include "UPI/upidef.h"
+#include "RTL/strdef.h"
 #include "dis.hxx"
 #include "dic.hxx"
 #include <string>
+#include <sstream>
 
 using namespace UPI;
 using namespace std;
@@ -225,51 +223,59 @@ namespace UPI {
     ::upic_write_message(text,"");
   }
 }
+static const char* s_partList[]   = {"LHCb","LHCb1","LHCb2","FEST","RICH","VELO"};
+static const char* s_modeList[]   = {"NORMAL","FORKING","CHECKPOINTING"};
 static const char* s_cmdList[]    = {"create","load","configure","start","stop","reset","unload","destroy","recover"};
 static const char* s_stateList[]  = {"OFFLINE","NOT_READY","READY","RUNNING","ERROR","PAUSED","UNKNOWN"};
 
 /// Standard constructor with object setup through parameters
-ControlMenu::ControlMenu(Interactor*) : m_id(0), m_numSlaves(2), m_thread(0), m_machine(0), m_slave(0)  {
-  char text[128];
+ControlMenu::ControlMenu(const std::string& config) 
+  : m_id(0), m_numSlaves(2), m_thread(0), m_machine(0), m_slave(0)
+{
   TypedObject::setPrinter(this,print_routine);
-
+  string line = "------------------------------------------------------------";
   m_id = UpiSensor::instance().newID();
   ::strcpy(m_killCmd,"Kill");
   ::strcpy(m_errorCmd,"ERROR");
+  ::strcpy(m_modeCmd,s_modeList[0]);
   ::strcpy(m_slaveCmd,s_cmdList[0]);
   ::strcpy(m_stateCmd,s_stateList[0]);
+  ::strcpy(m_runinfoCmd,"OnlineEnv.py");
+  ::strcpy(m_partitionCmd,s_partList[0]);
+  ::strcpy(m_configCmd,config.empty() ? "Tasklist.xml" : config.c_str());
 
-  Type* typ = fsm_type("DAQSteer");
-  Type* daq = fsm_type("DAQ");
-  m_machine = new Machine(typ,RTL::processName()+"::DAQ");
-  m_machine->setHandler(this);
-  m_machine->setCompletionAction(Callback::make(this,&ControlMenu::update));
-  m_machine->setFailAction(Callback::make(this,&ControlMenu::update));
-
-  m_machine->addSlave(m_slave=new CtrlSlave(this,m_machine,daq,"CTRL_0","TaskList.xml",2));
   ::upic_open_window();
   ::upic_open_menu(m_id,0,0,"FSM Controller test facility",RTL::processName().c_str(),RTL::nodeName().c_str());
   ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
-  ::sprintf(text,"FSM Machine State:%s",m_machine->c_state());
-  ::upic_add_comment(COM_MACH_STATE,text,"");
-  ::sprintf(text,"FSM Machine Meta: %s",m_machine->currentMetaName());
-  ::upic_add_comment(COM_MACH_METASTATE,text,"");
-  ::upic_add_comment(COM_LINE_1,"----------------------------------------","");
-  ::sprintf(text,"CTRL FSM State:%s",m_slave->c_state());
-  ::upic_add_comment(COM_CTRL_STATE,text,"");
-  ::sprintf(text,"CTRL FSM Meta: %s",m_slave->metaStateName());
-  ::upic_add_comment(COM_CTRL_METASTATE,text,"");
-  ::upic_add_comment(COM_LINE_2,"----------------------------------------","");
-
+  ::upic_add_comment(COM_MACH_STATE,       "FSM Machine State: ----","");
+  ::upic_add_comment(COM_MACH_METASTATE,   "FSM Machine Meta:  ----","");
+  ::upic_add_comment(COM_LINE_1,           line.c_str(),"");
+  ::upic_add_comment(COM_CTRL_STATE,       "CTRL FSM State:    ----","");
+  ::upic_add_comment(COM_CTRL_METASTATE,   "CTRL FSM Meta:     ----","");
+  ::upic_add_comment(COM_LINE_2,           line.c_str(),"");
   ::upic_set_param  (&m_numSlaves,1, "I3", m_numSlaves, 0,0,0,0,0);
-  ::upic_add_command(CMD_NUM_SLAVES,       "Number of slaves: ^^^        ","");
-  ::upic_add_command(CMD_START_CTRL,       "Start Controller             ","");
+  ::upic_add_command(CMD_NUM_SLAVES,       "Number of slaves: ^^^                   ","");
+  ::upic_set_param  (m_partitionCmd, 1, "A15", m_partitionCmd, 0,0,s_partList,sizeof(s_partList)/sizeof(s_partList[0]),1);
+  ::upic_add_command(CMD_SET_PARTITION,    "Select partition: ^^^^^^^^^^^^^^        ",""); 
+  ::upic_set_param  (m_configCmd,1, "A20", m_configCmd, 0,0,0,0,0);
+  ::upic_add_command(CMD_SET_CONFIG,       "Task Config:      ^^^^^^^^^^^^^^^^^^^   ","");
+  ::upic_set_param  (m_runinfoCmd,1, "A20", m_runinfoCmd, 0,0,0,0,0);
+  ::upic_add_command(CMD_SET_RUNINFO,      "Run Info:         ^^^^^^^^^^^^^^^^^^^   ","");
+  ::upic_set_param  (m_modeCmd, 1, "A20", m_modeCmd, 0,0,s_modeList,sizeof(s_modeList)/sizeof(s_modeList[0]),1);
+  ::upic_add_command(CMD_SET_MODE,         "Running mode:     ^^^^^^^^^^^^^^^^^^^   ",""); 
+  ::upic_add_comment(COM_LINE_3,           line.c_str(),"");
+  ::upic_add_command(CMD_CONFIG_FSM,       "Configure FSM and slave                 ","");
   ::upic_set_param  (m_slaveCmd, 1, "A15", m_slaveCmd, 0,0,s_cmdList,sizeof(s_cmdList)/sizeof(s_cmdList[0]),1);
-  ::upic_add_command(CMD_SEND_CTRL,        "Send  ^^^^^^^^^^^^^^         ",""); 
-  ::upic_add_command(CMD_SLAVE_RESET,      "Reset slaves                 ","");
+  ::upic_add_command(CMD_SEND_CTRL,        "Send  ^^^^^^^^^^^^^^                    ",""); 
+  ::upic_add_command(CMD_SLAVE_RESET,      "Reset slaves                            ","");
   ::upic_set_param  (m_stateCmd, 1, "A15", m_stateCmd, 0,0,s_stateList,sizeof(s_stateList)/sizeof(s_stateList[0]),1);
-  ::upic_add_command(CMD_SETSTATE_CTRL,    "Set my state  ^^^^^^^^^^^^^^ ",""); 
-  ::upic_add_comment(COM_LINE_3,"----------------------------------------","");
+  ::upic_add_command(CMD_SETSTATE_CTRL,    "Set my state  ^^^^^^^^^^^^^^            ",""); 
+  ::upic_add_comment(COM_LINE_4,           line.c_str(),"");
+  //::upic_add_command(CMD_KILL_CTRL,        "Kill  Controller             ",""); 
+  ::upic_add_command(CMD_CLOSE,            "Close                                   ","");
+  ::upic_add_comment(COM_LINE_5,           line.c_str(),"");
+  ::memset(m_dim,0,sizeof(m_dim));
+#if 0
   for(int i=0; i<10; ++i)  {
     ::upic_set_param(m_killCmd, 1,"A4",m_killCmd, 0,0,0,0,1);
     ::upic_set_param(m_errorCmd,2,"A5",m_errorCmd,0,0,0,0,1);
@@ -280,9 +286,8 @@ ControlMenu::ControlMenu(Interactor*) : m_id(0), m_numSlaves(2), m_thread(0), m_
     m_dim[i] = SlaveTag(this,CMD_KILL_SLAVE+2*i+1,0);
     m_dim[i].svc = ::dic_info_service(text,MONITORED,0,0,0,slave_handler,(long)&m_dim[i],0,0);   
   }
-  ::upic_add_comment(COM_LINE_4,"----------------------------------------","");
-  ::upic_add_command(CMD_KILL_CTRL,        "Kill  Controller             ",""); 
-  ::upic_add_command(CMD_CLOSE,            "Close                        ","");
+#endif
+  ::upic_add_comment(COM_LINE_6,line.c_str(),"");
   ::upic_close_menu();
   ::upic_set_cursor(m_id,CMD_SEND_CTRL,0);
   UpiSensor::instance().add(this,m_id);
@@ -297,9 +302,9 @@ ControlMenu::~ControlMenu()  {
   if ( type ) delete type;
   m_machine = 0;
   m_slave = 0;
-UpiSensor::instance().remove(this,m_id);
-::upic_delete_menu(m_id);
-::upic_write_message("Close window.","");
+  UpiSensor::instance().remove(this,m_id);
+  ::upic_delete_menu(m_id);
+  ::upic_write_message("Close window.","");
 }
 
 /// DimInfo overload to process slave states
@@ -329,6 +334,46 @@ FSM::ErrCond ControlMenu::update()      {
 
 /// Start the controller task
 void ControlMenu::startController()   {
+  string node = RTL::str_upper(RTL::nodeNameShort());
+  Type* typ = fsm_type("DAQSteer");
+  Type* daq = fsm_type("DAQ");
+  stringstream args;
+
+  m_machine = new Machine(typ,RTL::processName()+"::DAQ");
+  m_machine->setCompletionAction(Callback::make(this,&ControlMenu::update));
+  m_machine->setFailAction(Callback::make(this,&ControlMenu::update));
+  m_machine->setHandler(this);
+
+  args.str("");
+  args << m_partitionCmd << "_" << node << "_CTRL_0";
+  m_slave = new CtrlSlave(this,m_machine,daq,args.str());
+  m_slave->setCommand("runFarmCtrl.sh");
+  m_slave->fmc_args = "-g onliners -n online -w /home/frankm -O /tmp/logSrv.fifo -E /tmp/logSrv.fifo";
+  args.str("");
+  args << "-count=" << m_numSlaves 
+       << " -runinfo=bla.py"
+       << " -taskconfig=" << m_configCmd
+       << " -partition=" << m_partitionCmd
+       << " -mode=normal";
+  m_slave->cmd_args = args.str();
+  m_machine->addSlave(m_slave);
+
+  XmlTaskConfiguration cfg(m_partitionCmd,m_configCmd,m_runinfoCmd,m_modeCmd,m_numSlaves);
+  vector<string> tasks;
+  if ( cfg.getTasks(tasks) )  {
+    char text[256];
+    for(size_t i=0; i<tasks.size(); ++i)  {
+      ::upic_set_param(m_killCmd, 1,"A4",m_killCmd, 0,0,0,0,1);
+      ::upic_set_param(m_errorCmd,2,"A5",m_errorCmd,0,0,0,0,1);
+      ::sprintf(text,"%-32s  ^^^^ Send to ^^^^^  ",tasks[i].c_str());
+      ::upic_insert_command(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*i,  text,""); 
+      ::upic_insert_comment(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*i+1,"          ------------------",""); 
+      ::sprintf(text,"%s/status",tasks[i].c_str());
+      m_dim[i] = SlaveTag(this,CMD_KILL_SLAVE+2*i+1,0);
+      m_dim[i].svc = ::dic_info_service(text,MONITORED,0,0,0,slave_handler,(long)&m_dim[i],0,0);   
+    }
+  }
+  ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
 
 /// Start the slave IO pump
@@ -479,6 +524,18 @@ void ControlMenu::handle(const Event& ev)   {
     case CMD_UPDATE_MACHINE:
       updateMachineState();
       return;
+    case CMD_SET_PARTITION:
+      clean_str(m_partitionCmd,sizeof(m_partitionCmd));
+      return;
+    case CMD_SET_CONFIG:
+      clean_str(m_configCmd,sizeof(m_configCmd));
+      return;
+    case CMD_SET_RUNINFO:
+      clean_str(m_runinfoCmd,sizeof(m_runinfoCmd));
+      return;
+    case CMD_SET_MODE:
+      clean_str(m_modeCmd,sizeof(m_modeCmd));
+      return;
     case CMD_SETSTATE_CTRL:
       clean_str(m_stateCmd,sizeof(m_stateCmd));
       setMachineState(m_stateCmd);
@@ -504,6 +561,10 @@ void ControlMenu::handle(const Event& ev)   {
     case CMD_KILL_SLAVE:
       ev.iocData()<100 ? killSlave(ev.iocData()%100) : errorSlave(ev.iocData()%100);
       return;
+
+    case CMD_CONFIG_FSM:
+      startController();
+      return;
     default:
       return;
     }
@@ -512,10 +573,14 @@ void ControlMenu::handle(const Event& ev)   {
     switch(ev.command_id) {
     case CMD_SETSTATE_CTRL:
     case CMD_SEND_CTRL:
-    case CMD_START_CTRL:
+    case CMD_CONFIG_FSM:
     case CMD_KILL_CTRL:
     case CMD_CLOSE:
     case CMD_SLAVE_RESET:
+    case CMD_SET_PARTITION:
+    case CMD_SET_RUNINFO:
+    case CMD_SET_CONFIG:
+    case CMD_SET_MODE:
       ioc().send(this,ev.command_id,this);
       return;
     case CMD_BACKSPACE:
@@ -531,11 +596,16 @@ void ControlMenu::handle(const Event& ev)   {
     return;
   }
 }
+static void help_menu() {}
 
-extern "C" int fsm_upi_controlmenu(int, char**)  {
+extern "C" int fsm_upi_controlmenu(int argc, char** argv)  {
+  string config;
   int srows, scols, cols, rows, col, row;
+  RTL::CLI cli(argc, argv, help_menu);
   UpiSensor& s = UpiSensor::instance();
-  UPI::ControlMenu ctrl(0);
+  cli.getopt("config",2,config);
+  UPI::ControlMenu ctrl(config);
+
   ::dis_start_serving((char*)RTL::processName().c_str());
   ::upic_get_screen_size(&srows, &scols);
   ::upic_get_message_window(&rows, &cols,&row, &col);
