@@ -33,7 +33,8 @@ static Type* defineDAQType()    {
   Tr*  configure = daq->addTransition("configure", not_ready,   ready);
   Tr*  start     = daq->addTransition("start",     ready,       running);
   Tr*  stop      = daq->addTransition("stop",      running,     ready);
-  Tr*  unload    = daq->addTransition("unload",    not_ready,   offline, KILL);
+  Tr*  unload1   = daq->addTransition("unload",    not_ready,   offline, KILL);
+  Tr*  unload2   = daq->addTransition("unload",    offline,     offline, KILL);
 
   Tr*  reset0    = daq->addTransition("reset",     not_ready,   not_ready);
   Tr*  reset1    = daq->addTransition("reset",     ready,       not_ready);
@@ -85,7 +86,8 @@ static Type* defineDAQType()    {
   daq->addRule      (start,      daq, ST_NAME_READY,     ST_NAME_RUNNING);
 
   daq->addRule      (stop,       daq, ST_NAME_RUNNING,   ST_NAME_READY);
-  daq->addRule      (unload,     daq, ST_NAME_NOT_READY, ST_NAME_OFFLINE);
+  daq->addRule      (unload1,    daq, ST_NAME_NOT_READY, ST_NAME_OFFLINE);
+  daq->addRule      (unload2,    daq, ST_NAME_OFFLINE,   ST_NAME_OFFLINE);
   return daq;
 }
 
