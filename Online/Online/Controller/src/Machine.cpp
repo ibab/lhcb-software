@@ -151,8 +151,9 @@ void Machine::handleIoc(const Event& event)   {
 /// Invoke FSM transition
 ErrCond Machine::invokeTransition (const Transition* transition, Rule::Direction direction)   {
   if ( transition )  {
-    m_direction = direction;
     setTarget(transition);
+    m_fsm.setCurrentState(MACH_IDLE);
+    m_direction = direction;
     return m_fsm.invokeTransition(MACH_OUTACTION,this);
   }
   return FSM::TRANNOTFOUND;

@@ -40,7 +40,12 @@ bool FindTransitionByStateName::operator()(const Transition* t) const
 
 /// Operator invoked for each slave to be started
 void SlaveStarter::operator()(Slave* s)    {
-  if ( s->currentState() == Slave::SLAVE_LIMBO )  {
+  int st = s->currentState();
+  if ( st == Slave::SLAVE_ALIVE || st == Slave::SLAVE_EXECUTING )
+    ++count;
+  else if ( st == Slave::SLAVE_FAILED )
+    ++fail;
+  else if ( st == Slave::SLAVE_LIMBO )  {
     FSM::ErrCond sc = s->start();
     if ( sc == FSM::WAIT_ACTION  ) ++dead;
     else if ( sc == FSM::SUCCESS ) ++count;
