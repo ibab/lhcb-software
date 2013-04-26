@@ -367,7 +367,7 @@ int ROMon::read(Memory& memory) {
   int cnt = SysFile("/proc/meminfo").read(buff,sizeof(buff));
   if( cnt > 0 )  {
     int *is = &memory.memTotal, *ie = &memory._last;
-    for(char* p=buff, *item; p>0 && p<buff+cnt && is < ie; ++is, p=::strchr(item,'\n')) {
+    for(char* p=buff, *item; p != 0 && p < buff+cnt && is < ie; ++is, p=::strchr(item,'\n')) {
       while(*p=='\n')++p;
       if ( (item=::strchr(p,':')) )  {
         for(++item;::isspace(*item);)++item;
@@ -388,7 +388,7 @@ int ROMon::readInfo(CPUset& info, size_t max_len) {
     CPUset::Cores::iterator corIt = info.cores.reset();
     CPUset::Cores::iterator begin = corIt;
     ro_get_node_name(info.name,sizeof(info.name));
-    for( p=buff; p>0 && p<buff+cnt; ) {
+    for( p=buff; p != 0 && p < buff+cnt; ) {
       desc = p;
       if ( (p=::strchr(desc,'\n')) ) { *p = 0; ++p; }
       item = ::strchr(desc,':');
@@ -448,7 +448,7 @@ int ROMon::readStat(CPUset& info, size_t max_len, size_t num_cores) {
     CPUset::Cores::iterator ci = info.cores.begin();
     CPUset::Cores::iterator begin = ci;
     ro_gettime(&info.time,&info.millitm);
-    for (char *p=buff, *desc=p, *end=buff+cnt; p>0 && p<end; desc=++p ) {
+    for (char *p=buff, *desc=p, *end=buff+cnt; p != 0 && p < end; desc=++p ) {
       if ( (p=::strchr(desc,'\n')) ) *p = 0;
       switch(desc[0]) {
       case 'b':     // BOOT TIME
