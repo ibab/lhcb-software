@@ -157,8 +157,8 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle*
       tuple->column( prefix+"_Hlt2Phys_TIS", classifiedDec.tis());
       tuple->column( prefix+"_Hlt2Phys_TOS", classifiedDec.tos());
     }
-
-    if(m_doHlt2)
+    /*
+    if(m_doStripping)
     {
 
       //Do the Hlt2
@@ -169,7 +169,7 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle*
       tuple->column( prefix+"_StrippingGlobal_TIS", classifiedDec.tis());
       tuple->column( prefix+"_StrippingGlobal_TOS", classifiedDec.tos());
     }
-
+    */
   }// if the PID is in the given list
 
   return StatusCode::SUCCESS;
@@ -245,7 +245,7 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle*
       tuple->column( prefix+"_"+name+"_TOS", tos);
     }
   }
-
+  /*
   if( m_verboseStripping )
   {
     //Now loop over all the subtriggers
@@ -259,7 +259,7 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle*
       tuple->column( prefix+"_"+name+"_TOS", tos);
     }
   }
-
+  */
   return StatusCode::SUCCESS;
 }
 

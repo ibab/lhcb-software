@@ -7,7 +7,6 @@
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Kernel/ITriggerTisTos.h"
 
-class IP2VVPartAngleCalculator;
 
 /** @class TupleToolTISTOS TupleToolTISTOS.h
  *
@@ -19,7 +18,7 @@ class IP2VVPartAngleCalculator;
  *
  *  Saved values for each trigger:
  *
- *  Decision : the trigger decision, 1 is pass, 0 is fail
+ *  Dec      : the trigger decision, 1 is pass, 0 is fail
  *  TIS      : was the event tis? 1 is yes, 0 is no.
  *  TOS      : was the event tos? 1 is yes, 0 is no.
  *
