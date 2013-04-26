@@ -23,6 +23,15 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v22r5p2> 2013-04-26 Bender v22r5p2 based on the DaVinci v33r3p2</A>
+
+It is rather similar to v22r4*-family, but based on the fresh DaVinci v33r3p2 
+picking up all goodies and bug-fixes.
+
+<li>
+few minor features are fixes with Phys/BenderTools package
+</li>
+
 <A NAME=v22r5p1> 2013-04-14 Bender v22r5p1 based on the DaVinci v33r3</A>
 
 It is rather similar to v22r4*-family, but based on the fresh DaVinci v33r3 
