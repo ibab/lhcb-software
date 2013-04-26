@@ -1,8 +1,6 @@
 // $Id: DumpOMAlarms.cpp,v 1.8 2010-09-21 10:39:50 ggiacomo Exp $
 #include <iostream>
 #ifndef _WIN32
-#include <stdlib.h>
-#else
 #include <unistd.h>
 #endif
 #include <map>
