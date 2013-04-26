@@ -1,8 +1,4 @@
-// $Id: MuonStationCabling.cpp,v 1.3 2007-02-27 11:13:57 asatta Exp $
-// Include files 
-
-
-
+// Include files
 // local
 #include "MuonDet/MuonStationCabling.h"
 #include <iostream>
@@ -47,7 +43,7 @@ StatusCode MuonStationCabling::addL1Name(std::string name)
 /// except for the properties of a generic DataObject
 void MuonStationCabling::update( Condition& obj ){
   Condition::update((Condition&)obj);
-  MuonStationCabling* obj1=dynamic_cast<MuonStationCabling*> (&obj);
+  MuonStationCabling* obj1=static_cast<MuonStationCabling*> (&obj);
   m_numberOfL1Board=obj1->getNumberOfL1Board();
   m_listOfL1.clear();
   m_listOfL1=obj1->getAllL1Names();
@@ -59,7 +55,7 @@ void MuonStationCabling::update( Condition& obj ){
 void MuonStationCabling::update( ValidDataObject& obj ){
 Condition& cc=dynamic_cast<Condition&>(obj);
  Condition::update((Condition&)cc);
-MuonStationCabling* obj1=dynamic_cast<MuonStationCabling*> (&obj);
+MuonStationCabling* obj1=static_cast<MuonStationCabling*> (&obj);
   m_numberOfL1Board=obj1->getNumberOfL1Board();
   m_listOfL1.clear();
   m_listOfL1=obj1->getAllL1Names();

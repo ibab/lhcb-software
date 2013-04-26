@@ -4,6 +4,8 @@
 !----------------------------------------------------------------------------
 
 ! 2013-04-26 - Marco Cattaneo
+ - Replace some unnecessary dynamic_cast by static_cast, fixes some FORWARD_NULL 
+   defects
  - Fix unprotected DEBUGs from recent changes
 
 ! 2013-04-25 - Marco Cattaneo

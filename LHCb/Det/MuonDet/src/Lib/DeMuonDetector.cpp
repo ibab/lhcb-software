@@ -754,7 +754,7 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
   double dy = box->yHalfLength();
   Condition* aGrid = 
   myChPtr->condition(myChPtr->getGridName());
-  MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
+  MuonChamberGrid* theGrid = static_cast<MuonChamberGrid*>(aGrid);
   double xcenter_norma=-1;
   double ycenter_norma=-1;  
   StatusCode sc=theGrid->getPCCenter(fe,xcenter_norma,ycenter_norma);
@@ -872,7 +872,7 @@ void DeMuonDetector::fillGeoInfo()
 
           
           Condition* bGrid = (chPt)->condition(chPt->getGridName());
-          MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(bGrid);
+          MuonChamberGrid* theGrid = static_cast<MuonChamberGrid*>(bGrid);
           
           int nreadout=1;
           if(theGrid->getGrid2SizeY()>1)nreadout=2;
