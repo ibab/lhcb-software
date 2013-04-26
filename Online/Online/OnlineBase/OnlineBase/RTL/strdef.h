@@ -28,6 +28,13 @@ int str_lowcase(__CXX_CONSTANT char* src, char* dst, size_t dest_len);
 #endif /* __cplusplus      */
 
 #ifdef __cplusplus
+#include <string>
+namespace RTL {
+  std::string str_lower(const std::string& str);
+  std::string str_upper(const std::string& str);
+  std::string str_replace(const std::string& str, const std::string& pattern, const std::string& replacement);
+}
+
 inline const char* strstr_safe(const char* p1, const char* p2)  { return ::strstr((char*)p1,p2);   }
 inline const char* strchr_safe(const char* p1, char p2)         { return ::strchr((char*)p1,p2);   }
 
